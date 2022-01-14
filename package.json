@@ -1,0 +1,28 @@
+{
+	"name": "statsify",
+	"description": "",
+	"version": "0.0.0",
+	"workspaces": [
+		"apps/*",
+		"packages/*"
+	],
+	"private": true,
+	"devDependencies": {
+		"git-cz": "^4.8.0",
+		"turbo": "^1.0.28"
+	},
+	"scripts": {
+		"build": "turbo build",
+		"commit": "git-cz --disable-emoji"
+	},
+	"turbo": {
+		"baseBranch": "origin/main",
+		"pipeline": {
+			"build": {
+				"dependsOn": [
+					"^build"
+				]
+			}
+		}
+	}
+}
