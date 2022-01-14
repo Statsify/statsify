@@ -1,0 +1,62 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "warnOnUnsupportedTypeScriptVersion": false,
+    "project": "./tsconfig.eslint.json"
+  },
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-member-accessibility": ["error"],
+    "@typescript-eslint/ban-ts-comment": [
+      "error",
+      {
+        "minimumDescriptionLength": 3,
+        "ts-check": true,
+        "ts-expect-error": "allow-with-description",
+        "ts-ignore": "allow-with-description",
+        "ts-nocheck": true
+      }
+    ],
+    "default-param-last": "off",
+    "@typescript-eslint/default-param-last": ["error"],
+    "@typescript-eslint/member-ordering": [
+      "error",
+      {
+        "default": [
+          "signature",
+          "public-instance-field",
+          "protected-instance-field",
+          "private-instance-field",
+          "instance-field",
+          "public-static-field",
+          "protected-static-field",
+          "private-static-field",
+          "static-field",
+          "public-constructor",
+          "protected-constructor",
+          "private-constructor",
+          "constructor",
+          "public-instance-method",
+          "protected-instance-method",
+          "private-instance-method",
+          "instance-method",
+          "public-static-method",
+          "protected-static-method",
+          "private-static-method",
+          "static-method"
+        ]
+      }
+    ]
+  }
+}
