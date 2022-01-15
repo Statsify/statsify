@@ -1,0 +1,14 @@
+{
+  "name": "@statsify/schemas",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist",
+    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w"
+  },
+  "dependencies": {
+    "@nestjs/swagger": "^5.1.5",
+    "@typegoose/typegoose": "^9.5.0"
+  }
+}
