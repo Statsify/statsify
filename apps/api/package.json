@@ -5,12 +5,14 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node --enable-source-maps .",
-    "build": "swc src  --config-file ../../.swcrc --out-dir dist"
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist",
+    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w"
   },
   "dependencies": {
     "@nestjs/common": "^8.2.5",
     "@nestjs/core": "^8.2.5",
     "@nestjs/platform-fastify": "^8.2.5",
+    "@statsify/logger": "*",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.2"
   }

@@ -11,8 +11,10 @@
     "@swc/cli": "^0.1.55",
     "@swc/core": "^1.2.129",
     "@swc/helpers": "^0.3.2",
+    "@types/node": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.9.1",
     "@typescript-eslint/parser": "^5.9.1",
+    "chokidar": "^3.5.2",
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -23,7 +25,9 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "commit": "git-cz --disable-emoji"
+    "build:watch": "turbo run build:watch --parallel --no-cache",
+    "commit": "git-cz --disable-emoji",
+    "api": "yarn workspace api"
   },
   "turbo": {
     "baseBranch": "origin/main",
@@ -31,6 +35,11 @@
       "build": {
         "dependsOn": [
           "^build"
+        ]
+      },
+      "build:watch": {
+        "dependsOn": [
+          "^build:watch"
         ]
       }
     }
