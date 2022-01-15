@@ -8,6 +8,8 @@
   ],
   "private": true,
   "devDependencies": {
+    "@commitlint/cli": "^16.0.2",
+    "@commitlint/config-conventional": "^16.0.0",
     "@swc/cli": "^0.1.55",
     "@swc/core": "^1.2.129",
     "@swc/helpers": "^0.3.2",
@@ -15,10 +17,10 @@
     "@typescript-eslint/eslint-plugin": "^5.9.1",
     "@typescript-eslint/parser": "^5.9.1",
     "chokidar": "^3.5.2",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "git-cz": "^4.8.0",
     "prettier": "^2.5.1",
     "turbo": "^1.0.28",
     "typescript": "^4.5.4"
@@ -27,7 +29,7 @@
     "build": "turbo run build",
     "build:watch": "turbo run build:watch --parallel --no-cache",
     "lint": "eslint './{packages,apps}/**/*.{ts,tsx,js,jsx}' --fix",
-    "commit": "git-cz --disable-emoji",
+    "commit": "git cz",
     "api": "yarn workspace api"
   },
   "turbo": {
@@ -43,6 +45,20 @@
           "^build:watch"
         ]
       }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Statsify/statsify.git"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
     }
   },
   "packageManager": "yarn@3.1.1"
