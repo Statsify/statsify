@@ -1,8 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import type { Constructor } from '@statsify/util';
 import { Prop } from '@typegoose/typegoose';
+import type { BasePropOptions } from '@typegoose/typegoose/lib/types';
 
-type Constructor<T> = new (...args: any[]) => T;
-type Type = () => Constructor<any>;
+type Type = () => Constructor;
 
 export interface FieldOptions {
   hide?: boolean;
@@ -19,6 +20,8 @@ export interface FieldOptions {
   ref?: Type;
   description?: string;
   example?: string;
+  default?: any;
+  leaderboard?: boolean;
 }
 
 export function Field(type: Type): PropertyDecorator;
@@ -32,27 +35,41 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
     prop = Prop({ type: options });
     api = ApiProperty({ type: options() });
   } else if (typeof options === 'object') {
-    prop = Prop({
+    const opts: BasePropOptions = {
       enum: options.enum,
       type: options.type,
       required: options.required,
       unique: options.unique,
       index: options.index,
       sparse: options.sparse,
-      lowercase: options.lowercase,
-      uppercase: options.uppercase,
-      ref: options.ref,
-    });
+    };
 
-    api = ApiProperty({
-      enum: options.enum,
-      enumName: options.enumName,
-      type: options?.type?.(),
-      required: options.required,
-      name: options.name,
-      description: options.description,
-      example: options.example,
-    });
+    if (options.uppercase) {
+      opts.uppercase = true;
+    }
+
+    if (options.lowercase) {
+      opts.lowercase = true;
+    }
+
+    if (options.ref) {
+      opts.ref = options.ref;
+    }
+
+    prop = Prop(opts);
+
+    api = options.hide
+      ? ApiHideProperty()
+      : ApiProperty({
+          enum: options.enum,
+          enumName: options.enumName,
+          type: options?.type?.(),
+          required: options.required,
+          name: options.name,
+          description: options.description,
+          example: options.example,
+          default: options.default,
+        });
   } else {
     prop = Prop();
     api = ApiProperty();

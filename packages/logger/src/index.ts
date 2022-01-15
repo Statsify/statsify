@@ -3,21 +3,14 @@ import chalk from 'chalk';
 
 const defaultLogLevels: LogLevel[] = ['log', 'error', 'warn', 'debug', 'verbose'];
 
-export interface LoggerOptions extends ConsoleLoggerOptions {
-  icon?: string;
-}
-
 export class Logger implements LoggerService {
-  protected options: LoggerOptions;
   private originalContext?: string;
   private static lastTimeStampAt?: number;
 
-  public constructor(protected context?: string, options: LoggerOptions = {}) {
-    this.options = {
-      icon: '📈',
-      logLevels: defaultLogLevels,
-      ...options,
-    };
+  public constructor(protected context?: string, protected options: ConsoleLoggerOptions = {}) {
+    if (!this.options.logLevels) {
+      this.options.logLevels = defaultLogLevels;
+    }
 
     if (context) {
       this.originalContext = context;
@@ -45,7 +38,7 @@ export class Logger implements LoggerService {
 
     const { messages, context } = this.getContextAndMessages([message, ...optionalParams]);
 
-    this.printMessage(messages, context, 'error', 'stderr');
+    this.printMessage(messages, context, 'error', 'stderr', '📉');
   }
 
   public warn(message: any, context?: string): void;
@@ -97,7 +90,7 @@ export class Logger implements LoggerService {
   }
 
   public isLevelEnabled(level: LogLevel) {
-    return this.options.logLevels.includes(level);
+    return this.options.logLevels?.includes(level) ?? false;
   }
 
   private getContextAndMessages(messages: unknown[]) {
@@ -151,7 +144,8 @@ export class Logger implements LoggerService {
     messages: unknown[],
     context = 'Default',
     logLevel: LogLevel = 'log',
-    writeStreamType: 'stdout' | 'stderr' = 'stdout'
+    writeStreamType: 'stdout' | 'stderr' = 'stdout',
+    icon = '📈'
   ) {
     const color = this.getColorByLogLevel(logLevel);
 
@@ -159,7 +153,7 @@ export class Logger implements LoggerService {
       const output = typeof message === 'object' ? JSON.stringify(message) : message;
       const timeStamp = this.getTimeStamp();
 
-      const computedMessage = `${chalk.bold`${this.options.icon}`} ${chalk.hex(color)(
+      const computedMessage = `${chalk.bold`${icon}`} ${chalk.hex(color)(
         context
       )} ${chalk.gray`${timeStamp}ms`} ${output}\n`;
 

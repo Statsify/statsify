@@ -8,4 +8,19 @@ export class PlayerService {
   public constructor(
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>
   ) {}
+
+  /**
+   *
+   * @param tag uuid or username
+   */
+  public findOne(tag: string) {
+    const type = tag.length > 16 ? 'uuid' : 'usernameToLower';
+
+    return this.playerModel
+      .findOne()
+      .where(type)
+      .equals(tag.replace(/-/g, '').toLowerCase())
+      .lean()
+      .exec();
+  }
 }
