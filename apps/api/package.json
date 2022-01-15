@@ -1,0 +1,17 @@
+{
+  "name": "api",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node .",
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist"
+  },
+  "dependencies": {
+    "@nestjs/common": "^8.2.5",
+    "@nestjs/core": "^8.2.5",
+    "@nestjs/platform-fastify": "^8.2.5",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^7.5.2"
+  }
+}

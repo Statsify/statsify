@@ -9,7 +9,7 @@
     "skipDefaultLibCheck": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
-    "target": "ES5",
+    "target": "ES2018",
     "baseUrl": "."
   },
   "exclude": ["node_modules", "dist"]
