@@ -11,7 +11,7 @@ import { PlayerModule } from './player/player.module';
     TypegooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
-        uri: configService.get('MONGODB_URI'),
+        uri: configService.get<string>('MONGODB_URI') ?? '',
         useNewUrlParser: true,
         useUnifiedTopology: true,
       }),

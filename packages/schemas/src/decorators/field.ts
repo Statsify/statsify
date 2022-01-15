@@ -17,6 +17,8 @@ export interface FieldOptions {
   lowercase?: boolean;
   uppercase?: boolean;
   ref?: Type;
+  description?: string;
+  example?: string;
 }
 
 export function Field(type: Type): PropertyDecorator;
@@ -45,8 +47,11 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
     api = ApiProperty({
       enum: options.enum,
       enumName: options.enumName,
-      type: options.type(),
+      type: options?.type?.(),
       required: options.required,
+      name: options.name,
+      description: options.description,
+      example: options.example,
     });
   } else {
     prop = Prop();

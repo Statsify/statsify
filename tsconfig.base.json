@@ -9,7 +9,8 @@
     "skipDefaultLibCheck": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
-    "target": "ES2018"
+    "target": "ES2018",
+    "strict": true
   },
   "exclude": ["node_modules", "dist"]
 }
