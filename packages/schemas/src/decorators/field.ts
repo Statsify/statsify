@@ -22,6 +22,8 @@ export interface FieldOptions {
   example?: string;
   default?: any;
   leaderboard?: boolean;
+
+  aliases?: string[];
 }
 
 export function Field(type: Type): PropertyDecorator;

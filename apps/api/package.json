@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@m8a/nestjs-typegoose": "^8.0.2",
+    "@nestjs/axios": "^0.0.4",
     "@nestjs/common": "^8.2.5",
     "@nestjs/config": "^1.1.6",
     "@nestjs/core": "^8.2.5",
@@ -19,7 +20,9 @@
     "@statsify/schemas": "*",
     "@typegoose/typegoose": "^9.5.0",
     "fastify-swagger": "^4.13.1",
+    "handlebars": "^4.7.7",
     "mongoose": "^6.1.6",
+    "point-of-view": "^5.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.2"
   }
