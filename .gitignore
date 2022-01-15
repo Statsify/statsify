@@ -3,3 +3,13 @@ dist
 node_modules
 .turbo
 yarn.lock
+package-lock.json
+.yarn/install-state.gz
+.yarn/build-state.yml
+*.tsbuildinfo
+*.zip
+*.tar
+*.tar.xz
+*.tar.gz
+*.7z
+*.rar
