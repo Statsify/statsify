@@ -3,27 +3,21 @@ import chalk from 'chalk';
 
 const defaultLogLevels: LogLevel[] = ['log', 'error', 'warn', 'debug', 'verbose'];
 
-export interface LoggerOptions {
-  context?: string;
+export interface LoggerOptions extends ConsoleLoggerOptions {
   icon?: string;
-  options?: ConsoleLoggerOptions;
 }
 
 export class Logger implements LoggerService {
-  protected context?: string;
-  protected options: ConsoleLoggerOptions;
+  protected options: LoggerOptions;
   private originalContext?: string;
-  private icon: string;
   private static lastTimeStampAt?: number;
 
-  public constructor({ context, icon = '📈', options = {} }: LoggerOptions = {}) {
-    this.context = context;
-    this.icon = icon;
-    this.options = options;
-
-    if (!options.logLevels) {
-      options.logLevels = defaultLogLevels;
-    }
+  public constructor(protected context?: string, options: LoggerOptions = {}) {
+    this.options = {
+      icon: '📈',
+      logLevels: defaultLogLevels,
+      ...options,
+    };
 
     if (context) {
       this.originalContext = context;
@@ -165,7 +159,7 @@ export class Logger implements LoggerService {
       const output = typeof message === 'object' ? JSON.stringify(message) : message;
       const timeStamp = this.getTimeStamp();
 
-      const computedMessage = `${chalk.bold`${this.icon}`} ${chalk.hex(color)(
+      const computedMessage = `${chalk.bold`${this.options.icon}`} ${chalk.hex(color)(
         context
       )} ${chalk.gray`${timeStamp}ms`} ${output}\n`;
 
