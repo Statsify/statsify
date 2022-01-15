@@ -26,6 +26,7 @@
   "scripts": {
     "build": "turbo run build",
     "build:watch": "turbo run build:watch --parallel --no-cache",
+    "lint": "eslint './{packages,apps}/**/*.{ts,tsx,js,jsx}' --fix",
     "commit": "git-cz --disable-emoji",
     "api": "yarn workspace api"
   },

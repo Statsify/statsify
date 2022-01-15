@@ -1,6 +1,6 @@
-import { Logger } from '@statsify/logger';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
+import { Logger } from '@statsify/logger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
