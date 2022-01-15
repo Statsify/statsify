@@ -1,0 +1,10 @@
+{
+  "name": "@statsify/math",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist",
+    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w"
+  }
+}
