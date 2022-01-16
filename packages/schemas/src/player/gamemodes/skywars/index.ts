@@ -106,13 +106,14 @@ export class SkyWars {
     this.doubles.normal.kit = normalKit;
 
     this.overall.insane = deepAdd(this.solo.insane, this.doubles.insane);
+    this.overall.insane.kit = insaneKit;
+
     SkyWarsGameMode.applyRatios(this.overall.insane);
 
     this.overall.normal = deepAdd(this.solo.normal, this.doubles.normal);
-    this.overall.insane.kit = insaneKit;
     this.overall.normal.kit = normalKit;
 
-    SkyWarsGameMode.applyRatios(this.overall.insane);
+    SkyWarsGameMode.applyRatios(this.overall.normal);
 
     this.labs = new SkyWarsLabs(data);
   }
