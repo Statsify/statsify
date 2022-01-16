@@ -8,7 +8,7 @@
     "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w"
   },
   "dependencies": {
-    "chalk": "4.1.2"
+    "chalk": "5.0.0"
   },
   "devDependencies": {
     "@nestjs/common": "^8.2.5"
