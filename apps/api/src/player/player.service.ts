@@ -26,7 +26,11 @@ export class PlayerService {
       .lean()
       .exec();
 
-    if (cachedPlayer && cacheLevel !== HypixelCache.LIVE && Date.now() < cachedPlayer.expiresAt) {
+    if (
+      cachedPlayer &&
+      ((Date.now() < cachedPlayer.expiresAt && cacheLevel === HypixelCache.CACHE) ||
+        cacheLevel === HypixelCache.CACHE_ONLY)
+    ) {
       return {
         ...cachedPlayer,
         cached: true,
