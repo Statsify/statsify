@@ -38,13 +38,16 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
     api = ApiProperty({ type: options() });
   } else if (typeof options === 'object') {
     const opts: BasePropOptions = {
-      enum: options.enum,
       type: options.type,
       required: options.required,
       unique: options.unique,
       index: options.index,
       sparse: options.sparse,
     };
+
+    if (options.enum) {
+      opts.enum = options.enum;
+    }
 
     if (options.uppercase) {
       opts.uppercase = true;

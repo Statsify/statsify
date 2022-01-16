@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@nestjs/swagger": "^5.1.5",
+    "@statsify/math": "*",
     "@statsify/util": "*",
     "@typegoose/typegoose": "^9.5.0"
   }
