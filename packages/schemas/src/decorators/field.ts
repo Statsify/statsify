@@ -24,6 +24,8 @@ export interface FieldOptions {
   leaderboard?: boolean;
 
   aliases?: string[];
+
+  sort?: 'ASC' | 'DESC';
 }
 
 export function Field(type: Type): PropertyDecorator;
