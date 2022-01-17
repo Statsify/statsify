@@ -9,6 +9,7 @@ import { Paintball } from './gamemodes/paintball';
 import { Quake } from './gamemodes/quake';
 import { SkyWars } from './gamemodes/skywars';
 import { TurboKartRacers } from './gamemodes/turbokartracers';
+import { VampireZ } from './gamemodes/vampirez';
 
 export class PlayerStats {
   @Field()
@@ -37,6 +38,9 @@ export class PlayerStats {
 
   @Field()
   public turbokartracers: TurboKartRacers;
+
+  @Field()
+  public vampirez: VampireZ;
   public constructor(data: APIData = {}) {
     this.arcade = new Arcade(data?.stats?.Arcade ?? {}, data?.achievements ?? {});
     this.arenabrawl = new ArenaBrawl(data?.stats?.Arena ?? {});
@@ -47,5 +51,6 @@ export class PlayerStats {
     this.quake = new Quake(data?.stats?.Quake ?? {}, data?.achievements ?? {});
     this.skywars = new SkyWars(data?.stats?.SkyWars ?? {});
     this.turbokartracers = new TurboKartRacers(data?.stats?.GingerBread ?? {});
+    this.vampirez = new VampireZ(data?.stats?.VampireZ ?? {});
   }
 }
