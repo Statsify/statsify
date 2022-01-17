@@ -8,6 +8,7 @@ import { BuildBattle } from './gamemodes/buildbattle';
 import { CopsAndCrims } from './gamemodes/copsandcrims';
 import { General } from './gamemodes/general';
 import { MegaWalls } from './gamemodes/megawalls';
+import { MurderMystery } from './gamemodes/murdermystery';
 import { Paintball } from './gamemodes/paintball';
 import { Quake } from './gamemodes/quake';
 import { SkyWars } from './gamemodes/skywars';
@@ -44,6 +45,9 @@ export class PlayerStats {
 
   @Field()
   public megawalls: MegaWalls;
+
+  @Field()
+  public murdermystery: MurderMystery;
 
   @Field()
   public paintball: Paintball;
@@ -86,6 +90,10 @@ export class PlayerStats {
     this.copsandcrims = new CopsAndCrims(data?.stats?.MCGO ?? {});
     this.general = new General(data);
     this.megawalls = new MegaWalls(data?.stats?.Walls3 ?? {});
+    this.murdermystery = new MurderMystery(
+      data?.stats?.MurderMystery ?? {},
+      data?.achievements ?? {}
+    );
     this.paintball = new Paintball(data?.stats?.Paintball ?? {});
     this.quake = new Quake(data?.stats?.Quake ?? {}, data?.achievements ?? {});
     this.skywars = new SkyWars(data?.stats?.SkyWars ?? {});
