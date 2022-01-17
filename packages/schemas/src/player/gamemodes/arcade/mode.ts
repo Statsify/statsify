@@ -99,7 +99,7 @@ export class EnderSpleef {
   @Field({ default: 'none' })
   public trail: string;
 
-  @Field()
+  @Field({ leaderboard: false })
   public powerupActivations: number;
 
   @Field()
