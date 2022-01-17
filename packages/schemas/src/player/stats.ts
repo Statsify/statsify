@@ -6,6 +6,7 @@ import { BedWars } from './gamemodes/bedwars';
 import { BlitzSG } from './gamemodes/blitzsg';
 import { General } from './gamemodes/general';
 import { Paintball } from './gamemodes/paintball';
+import { Quake } from './gamemodes/quake';
 import { SkyWars } from './gamemodes/skywars';
 
 export class PlayerStats {
@@ -28,6 +29,9 @@ export class PlayerStats {
   public paintball: Paintball;
 
   @Field()
+  public quake: Quake;
+
+  @Field()
   public skywars: SkyWars;
   public constructor(data: APIData = {}) {
     this.arcade = new Arcade(data?.stats?.Arcade ?? {}, data?.achievements ?? {});
@@ -36,6 +40,7 @@ export class PlayerStats {
     this.blitzsg = new BlitzSG(data?.stats?.HungerGames ?? {});
     this.general = new General(data);
     this.paintball = new Paintball(data?.stats?.Paintball ?? {});
+    this.quake = new Quake(data?.stats?.Quake ?? {}, data?.achievements ?? {});
     this.skywars = new SkyWars(data?.stats?.SkyWars ?? {});
   }
 }
