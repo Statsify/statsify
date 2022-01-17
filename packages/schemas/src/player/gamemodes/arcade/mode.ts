@@ -3,7 +3,7 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../decorators';
 
 export class MiniWalls {
-  @Field()
+  @Field({ default: 'Soldier' })
   public kit: string;
 
   @Field()
@@ -17,6 +17,9 @@ export class MiniWalls {
 
   @Field()
   public kdr: number;
+
+  @Field()
+  public fkdr: number;
 
   @Field()
   public finalKills: number;
@@ -35,12 +38,14 @@ export class MiniWalls {
 
   @Field()
   public witherKills: number;
+
   public constructor(data: APIData) {
-    this.kit = data.miniwalls_activeKit || 'None';
+    this.kit = data.miniwalls_activeKit || 'Soldier';
     this.wins = data.wins_mini_walls;
     this.kills = data.kills_mini_walls;
     this.deaths = data.deaths_mini_walls;
     this.kdr = ratio(this.kills, this.deaths);
+    this.fkdr = ratio(this.kills + this.finalKills, this.deaths);
     this.arrowsShot = data.arrows_shot_mini_walls;
     this.arrowsHit = data.arrows_hit_mini_walls;
     this.bowAccuracy = ratio(this.arrowsHit, this.arrowsShot);
@@ -95,9 +100,17 @@ export class EnderSpleef {
   @Field({ default: 'none' })
   public trail: string;
 
+  @Field({ leaderboard: false })
+  public powerupActivations: number;
+
+  @Field()
+  public blocksBroken: number;
+
   public constructor(data: APIData) {
     this.wins = data.wins_ender;
     this.trail = data.enderspleef_trail || 'none';
+    this.powerupActivations = data.powerup_activations_ender;
+    this.blocksBroken = data.blocks_destroyed_ender;
   }
 }
 
@@ -108,9 +121,17 @@ export class FarmHunt {
   @Field()
   public poopCollected: number;
 
+  @Field()
+  public kills: number;
+
+  @Field()
+  public tauntsUsed: number;
+
   public constructor(data: APIData) {
     this.wins = data.wins_farm_hunt;
     this.poopCollected = add(data.poop_collected, data.poop_collected_farm_hunt);
+    this.kills = data.kills_farm_hunt;
+    this.tauntsUsed = data.taunts_used_farm_hunt;
   }
 }
 
@@ -196,9 +217,13 @@ export class HideAndSeekMode {
   @Field()
   public partyPooperWins: number;
 
+  @Field()
+  public propHuntWins: number;
+
   public constructor(data: APIData, mode: string) {
     this.wins = data[`${mode}_wins_hide_and_seek`];
     this.partyPooperWins = data[`party_pooper_${mode}_wins_hide_and_seek`];
+    this.propHuntWins = data[`prop_hunt_${mode}_wins_hide_and_seek`];
   }
 }
 
@@ -221,13 +246,17 @@ export class HideAndSeek {
 
 export class HypixelSays {
   @Field()
-  public gamesPlayed: number;
+  public points: number;
+
+  @Field()
+  public roundsWon: number;
 
   @Field()
   public wins: number;
 
   public constructor(data: APIData) {
-    this.gamesPlayed = add(data.rounds_simon_says, data.rounds_santa_says);
+    this.points = add(data.rounds_simon_says, data.rounds_santa_says);
+    this.roundsWon = add(data.round_wins_simon_says, data.round_wins_santa_says);
     this.wins = add(data.wins_simon_says, data.wins_santa_says);
   }
 }
@@ -236,8 +265,16 @@ export class PartyGames {
   @Field()
   public wins: number;
 
+  @Field()
+  public starsEarned: number;
+
+  @Field()
+  public roundsWon: number;
+
   public constructor(data: APIData) {
     this.wins = add(data.wins_party, data.wins_party_2, data.wins_party_3);
+    this.starsEarned = data.total_stars_party;
+    this.roundsWon = data.round_wins_party;
   }
 }
 
@@ -319,8 +356,11 @@ export class Zombies {
   @Field({ leaderboard: false })
   public bestRound: number;
 
-  @Field()
+  @Field({ leaderboard: false })
   public aliens: number;
+
+  @Field()
+  public wins: number;
 
   public constructor(data: APIData) {
     this.downs = data.times_knocked_down_zombies;
@@ -332,5 +372,6 @@ export class Zombies {
     this.kdr = ratio(this.kills, this.deaths);
     this.bestRound = data.best_round_zombies;
     this.aliens = data.best_round_zombies_alienarcadium;
+    this.wins = data.wins_zombies;
   }
 }
