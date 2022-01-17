@@ -10,6 +10,7 @@ import { General } from './gamemodes/general';
 import { Paintball } from './gamemodes/paintball';
 import { Quake } from './gamemodes/quake';
 import { SkyWars } from './gamemodes/skywars';
+import { SmashHeroes } from './gamemodes/smashheroes';
 import { SpeedUHC } from './gamemodes/speeduhc';
 import { TurboKartRacers } from './gamemodes/turbokartracers';
 import { UHC } from './gamemodes/uhc';
@@ -49,6 +50,9 @@ export class PlayerStats {
   public skywars: SkyWars;
 
   @Field()
+  public smashheroes: SmashHeroes;
+
+  @Field()
   public speeduhc: SpeedUHC;
 
   @Field()
@@ -76,6 +80,7 @@ export class PlayerStats {
     this.paintball = new Paintball(data?.stats?.Paintball ?? {});
     this.quake = new Quake(data?.stats?.Quake ?? {}, data?.achievements ?? {});
     this.skywars = new SkyWars(data?.stats?.SkyWars ?? {});
+    this.smashheroes = new SmashHeroes(data?.stats?.SuperSmash ?? {});
     this.speeduhc = new SpeedUHC(data?.stats?.SpeedUHC ?? {});
     this.turbokartracers = new TurboKartRacers(data?.stats?.GingerBread ?? {});
     this.uhc = new UHC(data?.stats?.UHC ?? {});
