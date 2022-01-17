@@ -4,6 +4,7 @@ import { Arcade } from './gamemodes/arcade';
 import { ArenaBrawl } from './gamemodes/arenabrawl';
 import { BedWars } from './gamemodes/bedwars';
 import { BlitzSG } from './gamemodes/blitzsg';
+import { BuildBattle } from './gamemodes/buildbattle';
 import { General } from './gamemodes/general';
 import { Paintball } from './gamemodes/paintball';
 import { Quake } from './gamemodes/quake';
@@ -27,6 +28,9 @@ export class PlayerStats {
 
   @Field()
   public blitzsg: BlitzSG;
+
+  @Field()
+  public buildbattle: BuildBattle;
 
   @Field()
   public general: General;
@@ -62,6 +66,7 @@ export class PlayerStats {
     this.arenabrawl = new ArenaBrawl(data?.stats?.Arena ?? {});
     this.bedwars = new BedWars(data?.stats?.Bedwars ?? {});
     this.blitzsg = new BlitzSG(data?.stats?.HungerGames ?? {});
+    this.buildbattle = new BuildBattle(data?.stats?.BuildBattle ?? {});
     this.general = new General(data);
     this.paintball = new Paintball(data?.stats?.Paintball ?? {});
     this.quake = new Quake(data?.stats?.Quake ?? {}, data?.achievements ?? {});
