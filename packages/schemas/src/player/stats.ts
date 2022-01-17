@@ -11,6 +11,7 @@ import { SkyWars } from './gamemodes/skywars';
 import { TurboKartRacers } from './gamemodes/turbokartracers';
 import { VampireZ } from './gamemodes/vampirez';
 import { Walls } from './gamemodes/walls';
+import { Warlords } from './gamemodes/warlords';
 
 export class PlayerStats {
   @Field()
@@ -45,6 +46,9 @@ export class PlayerStats {
 
   @Field()
   public walls: Walls;
+
+  @Field()
+  public warlords: Warlords;
   public constructor(data: APIData = {}) {
     this.arcade = new Arcade(data?.stats?.Arcade ?? {}, data?.achievements ?? {});
     this.arenabrawl = new ArenaBrawl(data?.stats?.Arena ?? {});
@@ -57,5 +61,6 @@ export class PlayerStats {
     this.turbokartracers = new TurboKartRacers(data?.stats?.GingerBread ?? {});
     this.vampirez = new VampireZ(data?.stats?.VampireZ ?? {});
     this.walls = new Walls(data?.stats?.Walls ?? {});
+    this.warlords = new Warlords(data?.stats?.Battleground ?? {});
   }
 }
