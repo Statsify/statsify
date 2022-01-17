@@ -12,6 +12,7 @@ import { Quake } from './gamemodes/quake';
 import { SkyWars } from './gamemodes/skywars';
 import { SmashHeroes } from './gamemodes/smashheroes';
 import { SpeedUHC } from './gamemodes/speeduhc';
+import { TNTGames } from './gamemodes/tntgames';
 import { TurboKartRacers } from './gamemodes/turbokartracers';
 import { UHC } from './gamemodes/uhc';
 import { VampireZ } from './gamemodes/vampirez';
@@ -56,6 +57,9 @@ export class PlayerStats {
   public speeduhc: SpeedUHC;
 
   @Field()
+  public tntgames: TNTGames;
+
+  @Field()
   public turbokartracers: TurboKartRacers;
 
   @Field()
@@ -82,6 +86,7 @@ export class PlayerStats {
     this.skywars = new SkyWars(data?.stats?.SkyWars ?? {});
     this.smashheroes = new SmashHeroes(data?.stats?.SuperSmash ?? {});
     this.speeduhc = new SpeedUHC(data?.stats?.SpeedUHC ?? {});
+    this.tntgames = new TNTGames(data?.stats?.TNTGames ?? {}, data?.achievements ?? {});
     this.turbokartracers = new TurboKartRacers(data?.stats?.GingerBread ?? {});
     this.uhc = new UHC(data?.stats?.UHC ?? {});
     this.vampirez = new VampireZ(data?.stats?.VampireZ ?? {});
