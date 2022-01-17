@@ -7,6 +7,7 @@ import { BlitzSG } from './gamemodes/blitzsg';
 import { BuildBattle } from './gamemodes/buildbattle';
 import { CopsAndCrims } from './gamemodes/copsandcrims';
 import { General } from './gamemodes/general';
+import { MegaWalls } from './gamemodes/megawalls';
 import { Paintball } from './gamemodes/paintball';
 import { Quake } from './gamemodes/quake';
 import { SkyWars } from './gamemodes/skywars';
@@ -40,6 +41,9 @@ export class PlayerStats {
 
   @Field()
   public general: General;
+
+  @Field()
+  public megawalls: MegaWalls;
 
   @Field()
   public paintball: Paintball;
@@ -81,6 +85,7 @@ export class PlayerStats {
     this.buildbattle = new BuildBattle(data?.stats?.BuildBattle ?? {});
     this.copsandcrims = new CopsAndCrims(data?.stats?.MCGO ?? {});
     this.general = new General(data);
+    this.megawalls = new MegaWalls(data?.stats?.Walls3 ?? {});
     this.paintball = new Paintball(data?.stats?.Paintball ?? {});
     this.quake = new Quake(data?.stats?.Quake ?? {}, data?.achievements ?? {});
     this.skywars = new SkyWars(data?.stats?.SkyWars ?? {});
