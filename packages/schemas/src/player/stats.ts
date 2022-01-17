@@ -9,6 +9,7 @@ import { Paintball } from './gamemodes/paintball';
 import { Quake } from './gamemodes/quake';
 import { SkyWars } from './gamemodes/skywars';
 import { TurboKartRacers } from './gamemodes/turbokartracers';
+import { UHC } from './gamemodes/uhc';
 import { VampireZ } from './gamemodes/vampirez';
 import { Walls } from './gamemodes/walls';
 import { Warlords } from './gamemodes/warlords';
@@ -42,6 +43,9 @@ export class PlayerStats {
   public turbokartracers: TurboKartRacers;
 
   @Field()
+  public uhc: UHC;
+
+  @Field()
   public vampirez: VampireZ;
 
   @Field()
@@ -59,6 +63,7 @@ export class PlayerStats {
     this.quake = new Quake(data?.stats?.Quake ?? {}, data?.achievements ?? {});
     this.skywars = new SkyWars(data?.stats?.SkyWars ?? {});
     this.turbokartracers = new TurboKartRacers(data?.stats?.GingerBread ?? {});
+    this.uhc = new UHC(data?.stats?.UHC ?? {});
     this.vampirez = new VampireZ(data?.stats?.VampireZ ?? {});
     this.walls = new Walls(data?.stats?.Walls ?? {});
     this.warlords = new Warlords(data?.stats?.Battleground ?? {});
