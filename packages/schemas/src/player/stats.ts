@@ -10,6 +10,7 @@ import { General } from './gamemodes/general';
 import { MegaWalls } from './gamemodes/megawalls';
 import { MurderMystery } from './gamemodes/murdermystery';
 import { Paintball } from './gamemodes/paintball';
+import { Parkour } from './gamemodes/parkour';
 import { Quake } from './gamemodes/quake';
 import { SkyWars } from './gamemodes/skywars';
 import { SmashHeroes } from './gamemodes/smashheroes';
@@ -51,6 +52,9 @@ export class PlayerStats {
 
   @Field()
   public paintball: Paintball;
+
+  @Field()
+  public parkour: Parkour;
 
   @Field()
   public quake: Quake;
@@ -95,6 +99,7 @@ export class PlayerStats {
       data?.achievements ?? {}
     );
     this.paintball = new Paintball(data?.stats?.Paintball ?? {});
+    this.parkour = new Parkour(data?.parkourCompletions ?? {});
     this.quake = new Quake(data?.stats?.Quake ?? {}, data?.achievements ?? {});
     this.skywars = new SkyWars(data?.stats?.SkyWars ?? {});
     this.smashheroes = new SmashHeroes(data?.stats?.SuperSmash ?? {});
