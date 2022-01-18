@@ -19,19 +19,15 @@ export class SpeedUHC {
   @Field()
   public score: number;
 
-  @Field({ leaderboard: false })
+  @Field({ getter: (target: SpeedUHC) => getLevelIndex(target.score) + 1 })
   public level: number;
 
-  @Field()
+  @Field({ getter: (target: SpeedUHC) => titleScores[getLevelIndex(target.score)].title })
   public title: string;
 
   public constructor(data: APIData) {
     this.coins = data.coins;
-    this.score = data.score ?? 0;
-
-    const index = getLevelIndex(this.score);
-    this.level = index + 1;
-    this.title = titleScores[index].title;
+    this.score = data.score;
 
     this.overall = new SpeedUHCMode(data, '');
     this.solo = new SpeedUHCMode(data, 'solo');

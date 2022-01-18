@@ -17,7 +17,7 @@ export class UHC {
   @Field()
   public coins: number;
 
-  @Field()
+  @Field({ getter: (target: UHC) => getLevelIndex(target.score) + 1 })
   public level: number;
 
   @Field()
@@ -26,22 +26,22 @@ export class UHC {
   @Field({ default: 'none' })
   public kit: string;
 
-  @Field()
+  @Field({
+    getter: (target: UHC) => titleScores[getLevelIndex(target.score)].title,
+  })
   public title: string;
 
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.score = data.score;
 
-    const index = getLevelIndex(this.score);
-    this.level = index + 1;
-    this.title = titleScores[index].title;
     this.kit = data.equippedKit ?? 'none';
 
     this.solo = new UHCMode(data, 'solo');
     this.teams = new UHCMode(data, '');
 
     this.overall = deepAdd(
+      UHCMode,
       this.solo,
       this.teams,
       new UHCMode(data, 'no diamonds'),

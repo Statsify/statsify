@@ -57,7 +57,7 @@ export class Parkour {
   public tourney: number;
   public constructor(data: APIData) {
     const getTime = (key: string): number =>
-      data[key].sort((a: any, b: any) => a.timeTook - b.timeTook)[0]?.timeTook;
+      data[key]?.sort?.((a: any, b: any) => a.timeTook - b.timeTook)[0]?.timeTook;
 
     this.bedwars = getTime('Bedwars');
     this.skywars = getTime('SkywarsAug2017');

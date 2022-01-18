@@ -109,6 +109,7 @@ export class BedWarsMode {
   }
 
   public static applyRatios(data: BedWarsMode) {
+    data.wlr = ratio(data.wins, data.losses);
     data.kdr = ratio(data.kills, data.deaths);
     data.fkdr = ratio(data.finalKills, data.finalDeaths);
     data.bblr = ratio(data.bedsBroken, data.bedsLost);
@@ -135,7 +136,7 @@ export class DreamsBedWarsMode {
   public constructor(data: APIData, mode: string) {
     this.doubles = new BedWarsMode(data, `eight_two_${mode}`);
     this.fours = new BedWarsMode(data, `four_four_${mode}`);
-    this.overall = deepAdd(this.doubles, this.fours);
+    this.overall = deepAdd(BedWarsMode, this.doubles, this.fours);
     BedWarsMode.applyRatios(this.overall);
   }
 }

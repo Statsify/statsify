@@ -31,19 +31,27 @@ export class SkyWars {
   @Field()
   public lootChests: number;
 
-  @Field({ leaderboard: false })
+  @Field({ default: '⋆' })
+  public star: string;
+
+  @Field({ getter: (target: SkyWars) => getLevel(target.xp) })
   public level: number;
 
-  @Field()
+  @Field({ getter: (target: SkyWars) => getFormattedLevel(getLevel(target.xp), target.star) })
   public levelFormatted: string;
 
-  @Field()
+  @Field({ getter: (target: SkyWars) => getFormattedLevel(getLevel(target.xp) + 1, target.star) })
   public nextLevelFormatted: string;
 
-  @Field()
+  @Field({ getter: (target: SkyWars) => getPresColor(getLevel(target.xp)) })
   public levelColor: Color;
 
-  @Field()
+  @Field({
+    getter: (target: SkyWars) => {
+      const { current, total } = getLevelProgress(target.xp);
+      return new Progression(current, total);
+    },
+  })
   public levelProgression: Progression;
 
   @Field()
@@ -59,7 +67,7 @@ export class SkyWars {
   public labs: SkyWarsLabs;
 
   public constructor(data: APIData) {
-    this.xp = data.skywars_experience || 0;
+    this.xp = data.skywars_experience;
     this.coins = data.coins;
     this.souls = data.souls;
     this.shards = data.shard;
@@ -76,21 +84,10 @@ export class SkyWars {
       data.skywars_golden_boxes
     );
 
-    this.level = getLevel(this.xp);
-
-    const star = (data.levelFormatted || '⋆').replace(
+    this.star = (data.levelFormatted || '⋆').replace(
       /1|2|3|4|5|6|7|8|9|0|a|b|c|d|e|f|k|r|l|§/g,
       ''
     );
-
-    this.levelFormatted = getFormattedLevel(this.level, star);
-
-    this.levelColor = getPresColor(this.level);
-    this.nextLevelFormatted = getFormattedLevel(this.level + 1, star);
-
-    const { current, total } = getLevelProgress(this.xp);
-
-    this.levelProgression = new Progression(current, total);
 
     const normalKit = parseKit(data.activeKit_SOLO_random ? 'random' : data.activeKit_SOLO);
     const insaneKit = parseKit(data.activeKit_TEAMS_random ? 'random' : data.activeKit_TEAMS);
@@ -105,12 +102,12 @@ export class SkyWars {
     this.doubles.insane.kit = insaneKit;
     this.doubles.normal.kit = normalKit;
 
-    this.overall.insane = deepAdd(this.solo.insane, this.doubles.insane);
+    this.overall.insane = deepAdd(SkyWarsGameMode, this.solo.insane, this.doubles.insane);
     this.overall.insane.kit = insaneKit;
 
     SkyWarsGameMode.applyRatios(this.overall.insane);
 
-    this.overall.normal = deepAdd(this.solo.normal, this.doubles.normal);
+    this.overall.normal = deepAdd(SkyWarsGameMode, this.solo.normal, this.doubles.normal);
     this.overall.normal.kit = normalKit;
 
     SkyWarsGameMode.applyRatios(this.overall.normal);

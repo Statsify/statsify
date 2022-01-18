@@ -45,7 +45,7 @@ export class MiniWalls {
     this.kills = data.kills_mini_walls;
     this.deaths = data.deaths_mini_walls;
     this.kdr = ratio(this.kills, this.deaths);
-    this.fkdr = ratio(this.kills + this.finalKills, this.deaths);
+    this.fkdr = ratio(add(this.kills, this.deaths), this.deaths);
     this.arrowsShot = data.arrows_shot_mini_walls;
     this.arrowsHit = data.arrows_hit_mini_walls;
     this.bowAccuracy = ratio(this.arrowsHit, this.arrowsShot);
@@ -240,7 +240,7 @@ export class HideAndSeek {
   public constructor(data: APIData) {
     this.seeker = new HideAndSeekMode(data, 'seeker');
     this.hider = new HideAndSeekMode(data, 'hider');
-    this.overall = deepAdd(this.seeker, this.hider);
+    this.overall = deepAdd(HideAndSeekMode, this.seeker, this.hider);
   }
 }
 
@@ -288,9 +288,16 @@ export class PixelPainters {
 }
 
 export class ThrowOut {
+  @Field()
   public wins: number;
+
+  @Field()
   public kills: number;
+
+  @Field()
   public deaths: number;
+
+  @Field()
   public kdr: number;
 
   public constructor(data: APIData) {

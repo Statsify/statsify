@@ -19,16 +19,37 @@ export class BedWars {
   @Field({ leaderboard: false })
   public level: number;
 
-  @Field()
+  @Field({ getter: (target: BedWars) => getFormattedLevel(target.level) })
   public levelFormatted: string;
 
-  @Field()
+  @Field({
+    getter: (target: BedWars) => {
+      const formatted = getFormattedLevel(target.level);
+
+      return formatted[1] === '7' && target.level > 1000
+        ? new Color(`§${formatted[4]}` as ColorCode)
+        : new Color(`§${formatted[1]}` as ColorCode);
+    },
+  })
   public levelColor: Color;
 
-  @Field()
+  @Field({
+    getter: (target: BedWars) => {
+      const flooredLevel = Math.floor(target.level);
+      let exp = target.exp;
+
+      for (let i = 0; i < flooredLevel; i++) {
+        exp -= getExpReq(i);
+      }
+
+      return new Progression(exp, getExpReq(flooredLevel + 1));
+    },
+  })
   public levelProgression: Progression;
 
-  @Field()
+  @Field({
+    getter: (target: BedWars) => getFormattedLevel(target.level + 1),
+  })
   public nextLevelFormatted: string;
 
   @Field()
@@ -60,24 +81,6 @@ export class BedWars {
     this.exp = data.Experience || 0;
     this.level = +getLevel(this.exp).toFixed(2);
 
-    this.levelFormatted = getFormattedLevel(this.level);
-
-    this.levelColor =
-      this.levelFormatted[1] === '7' && this.level > 1000
-        ? new Color(`§${this.levelFormatted[4]}` as ColorCode)
-        : new Color(`§${this.levelFormatted[1]}` as ColorCode);
-
-    const flooredLevel = Math.floor(this.level);
-    let exp = this.exp;
-
-    for (let i = 0; i < flooredLevel; i++) {
-      exp -= getExpReq(i);
-    }
-
-    this.levelProgression = new Progression(exp, getExpReq(flooredLevel + 1));
-
-    this.nextLevelFormatted = getFormattedLevel(flooredLevel + 1);
-
     this.lootChests = add(
       data.bedwars_boxes,
       data.bedwars_christmas_boxes,
@@ -93,7 +96,7 @@ export class BedWars {
     this.threes = new BedWarsMode(data, 'four_three');
     this.fours = new BedWarsMode(data, 'four_four');
     this['4v4'] = new BedWarsMode(data, 'two_four');
-    this.core = deepSub(this.overall, this['4v4']);
+    this.core = deepSub(BedWarsMode, this.overall, this['4v4']);
     BedWarsMode.applyRatios(this.core);
 
     this.dreams = new DreamsBedWars(data);

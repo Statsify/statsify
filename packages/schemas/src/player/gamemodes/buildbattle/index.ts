@@ -1,5 +1,5 @@
 import { APIData } from '@statsify/util';
-import { Color, ColorCode } from '../../../color';
+import { Color } from '../../../color';
 import { Field } from '../../../decorators';
 import {
   BuildBattleGuessTheBuild,
@@ -40,13 +40,19 @@ export class BuildBattle {
   @Field()
   public superVotes: number;
 
-  @Field()
+  @Field({ getter: (target: BuildBattle) => titleScores[getTitleIndex(target.score)].title })
   public title: string;
 
-  @Field()
+  @Field({
+    getter: (target: BuildBattle) => {
+      const index = getTitleIndex(target.score);
+
+      return `${titleScores[index].color}${titleScores[index].title}`;
+    },
+  })
   public titleFormatted: string;
 
-  @Field()
+  @Field({ getter: (target: BuildBattle) => titleScores[getTitleIndex(target.score)].color })
   public titleColor: Color;
 
   public constructor(data: APIData) {
@@ -61,11 +67,5 @@ export class BuildBattle {
     this.gamesPlayed = data.games_played;
     this.votes = data.total_votes;
     this.superVotes = data.super_votes;
-
-    const index = getTitleIndex(this.score);
-
-    this.title = titleScores[index].title;
-    this.titleColor = new Color(titleScores[index].color as ColorCode);
-    this.titleFormatted = `${this.titleColor.toString()}${this.title}`;
   }
 }

@@ -1,4 +1,4 @@
-import type { APIData } from '@statsify/util';
+import { APIData } from '@statsify/util';
 import { Color } from '../color';
 import { Field } from '../decorators';
 import { PlayerStats } from './stats';
@@ -29,7 +29,7 @@ export class Player {
   @Field({ default: 'Unknown' })
   public version: string;
 
-  @Field()
+  @Field({ default: 'DEFAULT' })
   public rank: string;
 
   @Field()

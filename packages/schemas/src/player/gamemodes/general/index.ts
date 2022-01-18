@@ -15,7 +15,7 @@ export class General {
   @Field()
   public networkExp: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: false, default: 1 })
   public networkLevel: number;
 
   @Field()

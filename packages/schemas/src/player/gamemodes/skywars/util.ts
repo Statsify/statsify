@@ -114,7 +114,7 @@ export const getPresColor = (star: number): Color => {
   return colors[index == -1 ? 0 : index].color;
 };
 
-export const parseKit = (kit: string): string => {
+export const parseKit = (kit = ''): string => {
   return kit
     .substring(kit.lastIndexOf('solo_') !== -1 ? kit.lastIndexOf('solo_') + 5 : 0)
     .substring(kit.lastIndexOf('team_') !== -1 ? kit.lastIndexOf('team_') + 5 : 0);

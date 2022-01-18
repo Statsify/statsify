@@ -44,7 +44,7 @@ export class ArenaBrawl {
     this.solo = new ArenaBrawlMode(data, '1v1');
     this.doubles = new ArenaBrawlMode(data, '2v2');
     this.fours = new ArenaBrawlMode(data, '4v4');
-    this.overall = deepAdd(this.solo, this.doubles, this.fours);
+    this.overall = deepAdd(ArenaBrawlMode, this.solo, this.doubles, this.fours);
 
     ArenaBrawlMode.applyRatios(this.overall);
 

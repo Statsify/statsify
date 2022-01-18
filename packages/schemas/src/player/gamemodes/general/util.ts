@@ -9,7 +9,7 @@ export class GeneralUtil {
     return (Math.pow((networkLevel + 2.5) * 50, 2) - 30625) / 2;
   }
 
-  public static getQuests(questData: APIData) {
+  public static getQuests(questData: APIData = {}) {
     let quests = 0;
 
     Object.keys(questData).forEach((quest) => {
@@ -23,7 +23,7 @@ export class GeneralUtil {
     return quests;
   }
 
-  public static getChallenges({ all_time: allTime = {} }: APIData) {
+  public static getChallenges({ all_time: allTime = {} }: APIData = {}) {
     let challenges = 0;
 
     Object.values(allTime).forEach((challenge) => {

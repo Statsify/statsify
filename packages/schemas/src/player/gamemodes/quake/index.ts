@@ -26,7 +26,7 @@ export class Quake {
     this.solo = new QuakeMode(data, '');
     this.teams = new QuakeMode(data, 'teams');
 
-    this.overall = deepAdd(this.solo, this.teams);
+    this.overall = deepAdd(QuakeMode, this.solo, this.teams);
     QuakeMode.applyRatios(this.overall);
 
     this.coins = data.coins;

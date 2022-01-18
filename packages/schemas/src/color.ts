@@ -52,15 +52,11 @@ export class Color {
   public id: ColorId;
 
   public constructor(code: ColorCode | ColorHex | ColorId) {
-    const color = colors.find((c) => c.code === code || c.hex === code || c.id === code);
+    const color = colors.find((c) => c.code === code || c.hex === code || c.id === code)!;
 
-    if (!color) {
-      throw new Error(`Invalid color: ${code}`);
-    }
-
-    this.code = color.code;
-    this.hex = color.hex;
-    this.id = color.id;
+    this.code = color?.code;
+    this.hex = color?.hex;
+    this.id = color?.id;
   }
 
   public toString() {

@@ -7,8 +7,13 @@ export class VampireZ {
   @Field()
   public coins: number;
 
+  @Field()
   public overall: VampireZLife;
+
+  @Field()
   public human: VampireZLife;
+
+  @Field()
   public vampire: VampireZLife;
 
   public constructor(data: APIData) {
@@ -17,7 +22,7 @@ export class VampireZ {
     this.human = new VampireZLife(data, 'human');
     this.vampire = new VampireZLife(data, 'vampire');
 
-    this.overall = deepAdd(this.human, this.vampire);
+    this.overall = deepAdd(VampireZLife, this.human, this.vampire);
     VampireZLife.applyRatios(this.overall);
   }
 }

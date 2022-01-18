@@ -6,5 +6,8 @@
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w"
+  },
+  "dependencies": {
+    "@statsify/util": "*"
   }
 }

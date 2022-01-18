@@ -1,9 +1,11 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import type { Constructor } from '@statsify/util';
+import { Constructor, noop } from '@statsify/util';
 import { Prop } from '@typegoose/typegoose';
 import type { BasePropOptions } from '@typegoose/typegoose/lib/types';
 
 type Type = () => Constructor;
+export type Getter<T> = (target: T) => any;
+type LeaderboardSort = 'ASC' | 'DESC';
 
 export interface FieldOptions {
   hide?: boolean;
@@ -25,7 +27,20 @@ export interface FieldOptions {
 
   aliases?: string[];
 
-  sort?: 'ASC' | 'DESC';
+  sort?: LeaderboardSort;
+
+  getter?: Getter<any>;
+}
+
+export interface FieldMetadata {
+  name: string;
+  default: any;
+  aliases: string[];
+  sort: LeaderboardSort;
+  isLeaderboard: boolean;
+  type: any;
+
+  getter?: Getter<any>;
 }
 
 export function Field(type: Type): PropertyDecorator;
@@ -34,6 +49,12 @@ export function Field(): PropertyDecorator;
 export function Field(options?: Type | FieldOptions): PropertyDecorator {
   let prop: PropertyDecorator;
   let api: PropertyDecorator;
+
+  let defaultValue: any;
+  let sort: LeaderboardSort = 'DESC';
+  let isLeaderboard = true;
+  let name: string;
+  let getter: Getter<any>;
 
   if (typeof options === 'function') {
     prop = Prop({ type: options });
@@ -63,7 +84,18 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
       opts.ref = options.ref;
     }
 
-    prop = Prop(opts);
+    defaultValue = options.default;
+    sort = options.sort ?? 'DESC';
+    isLeaderboard = options.leaderboard ?? true;
+    name = options.name ?? '';
+
+    if (options.getter) {
+      getter = options.getter;
+      isLeaderboard = false;
+      prop = noop;
+    } else {
+      prop = Prop(opts);
+    }
 
     api = options.hide
       ? ApiHideProperty()
@@ -83,6 +115,36 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
   }
 
   return (target, propertyKey) => {
+    const type = Reflect.getMetadata('design:type', target, propertyKey);
+
+    const isNumber = type === Number;
+    const isBoolean = type === Boolean;
+    const isString = type === String;
+
+    isLeaderboard = isLeaderboard && isNumber;
+
+    const fallback = defaultValue
+      ? defaultValue
+      : isNumber
+      ? 0
+      : isBoolean
+      ? false
+      : isString
+      ? ''
+      : undefined;
+
+    const metadata: FieldMetadata = {
+      default: fallback,
+      sort,
+      isLeaderboard,
+      name: name || (propertyKey as string),
+      aliases: [],
+      type,
+      getter,
+    };
+
+    Reflect.defineMetadata('statsify:field', metadata, target, propertyKey);
+
     prop(target, propertyKey);
     api(target, propertyKey);
   };

@@ -14,3 +14,6 @@ export const findScoreIndex = <T extends { req: number }>(data: T[], score = 0):
 export const findScore = <T extends { req: number }>(data: T[], score = 0): T => {
   return data[findScoreIndex(data, score)];
 };
+
+export const isObject = (value: any): value is object =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
