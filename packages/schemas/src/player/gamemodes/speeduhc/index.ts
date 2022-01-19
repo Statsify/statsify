@@ -19,7 +19,7 @@ export class SpeedUHC {
   @Field()
   public score: number;
 
-  @Field({ default: 'None' })
+  @Field({ default: 'none' })
   public activeMastery: string;
 
   @Field({ getter: (target: SpeedUHC) => getLevelIndex(target.score) + 1 })
