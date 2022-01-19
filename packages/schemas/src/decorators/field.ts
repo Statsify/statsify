@@ -10,7 +10,7 @@ type LeaderboardSort = 'ASC' | 'DESC';
 export interface FieldOptions {
   hide?: boolean;
   name?: string;
-  enum?: any[] | Record<string, any>;
+  enum?: any[];
   enumName?: string;
   type?: Type;
   required?: boolean;
@@ -21,7 +21,7 @@ export interface FieldOptions {
   uppercase?: boolean;
   ref?: Type;
   description?: string;
-  example?: string;
+  example?: string | number;
   default?: any;
   leaderboard?: boolean;
 
