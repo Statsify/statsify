@@ -1,6 +1,7 @@
 import { ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Field } from '../../../decorators';
+import { PaintballPerks } from './perks';
 
 export class Paintball {
   @Field()
@@ -21,6 +22,9 @@ export class Paintball {
   @Field()
   public shotsFired: number;
 
+  @Field({ default: 'none' })
+  public hat: string;
+
   @Field()
   public wins: number;
 
@@ -30,6 +34,9 @@ export class Paintball {
   @Field({ leaderboard: false })
   public skr: number;
 
+  @Field()
+  public perks: PaintballPerks;
+
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.forceFieldTime = data.forcefieldTime;
@@ -38,7 +45,9 @@ export class Paintball {
     this.killstreaks = data.killstreaks;
     this.shotsFired = data.shots_fired;
     this.wins = data.wins;
+    this.hat = data.hat;
     this.kdr = ratio(this.kills, this.deaths);
     this.skr = ratio(this.shotsFired, this.kills);
+    this.perks = new PaintballPerks(data);
   }
 }
