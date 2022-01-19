@@ -2,10 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from '@statsify/logger';
+import { setGlobalOptions } from '@typegoose/typegoose';
 import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  setGlobalOptions({ schemaOptions: { _id: false } });
+
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
     logger: new Logger(),
   });

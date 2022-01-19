@@ -3,7 +3,7 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../decorators';
 
 export class MiniWalls {
-  @Field({ default: 'Soldier' })
+  @Field({ default: 'soldier' })
   public kit: string;
 
   @Field()
@@ -40,7 +40,7 @@ export class MiniWalls {
   public witherKills: number;
 
   public constructor(data: APIData) {
-    this.kit = data.miniwalls_activeKit || 'Soldier';
+    this.kit = data.miniwalls_activeKit || 'soldier';
     this.wins = data.wins_mini_walls;
     this.kills = data.kills_mini_walls;
     this.deaths = data.deaths_mini_walls;

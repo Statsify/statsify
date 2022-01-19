@@ -11,6 +11,11 @@ export class PlayerController {
   @ApiOkResponse({ type: Player })
   @Get()
   public async getPlayer(@Query('player') tag: string) {
-    return this.playerService.deserialize(new Player());
+    const player = await this.playerService.findOne(tag);
+
+    return {
+      success: !!player,
+      player,
+    };
   }
 }

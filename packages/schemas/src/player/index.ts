@@ -5,13 +5,13 @@ import { PlayerStats } from './stats';
 import { PlayerUtil } from './util';
 
 export class Player {
-  @Field({ unique: true, index: true })
+  @Field({ unique: true, index: true, required: true })
   public uuid: string;
 
   @Field()
   public username: string;
 
-  @Field({ index: true, lowercase: true })
+  @Field({ index: true, lowercase: true, required: true })
   public usernameToLower: string;
 
   @Field({ leaderboard: false })

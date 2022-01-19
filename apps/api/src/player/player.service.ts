@@ -2,6 +2,7 @@ import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
 import { deserialize, Player, serialize } from '@statsify/schemas';
 import type { ReturnModelType } from '@typegoose/typegoose';
+import { HypixelCache } from '../hypixel/cache.enum';
 import { HypixelService } from '../hypixel/hypixel.service';
 
 @Injectable()
@@ -15,14 +16,44 @@ export class PlayerService {
    *
    * @param tag uuid or username
    */
-  public async findOne(tag: string) {
+  public async findOne(tag: string, cacheLevel = HypixelCache.CACHE) {
+    const type = tag.length > 16 ? 'uuid' : 'usernameToLower';
+
+    let cachedPlayer = (await this.playerModel
+      .findOne()
+      .where(type)
+      .equals(tag.replace(/-/g, '').toLowerCase())
+      .lean()
+      .exec()) as Player;
+
+    if (cachedPlayer) {
+      cachedPlayer = this.deserialize(cachedPlayer);
+    }
+
+    if (
+      cachedPlayer &&
+      cacheLevel !== HypixelCache.LIVE &&
+      (cacheLevel == HypixelCache.CACHE_ONLY || cachedPlayer.expiresAt > Date.now())
+    ) {
+      return {
+        ...cachedPlayer,
+        cached: true,
+      };
+    }
+
     const player = await this.hypixelService.getPlayer(tag);
 
     if (player) {
-      return player;
+      player.expiresAt = Date.now() + 1000 * 60 * 60 * 24;
+
+      const doc = this.serialize(player);
+
+      await this.playerModel.replaceOne({ uuid: player.uuid }, doc, { upsert: true });
+
+      return this.deserialize(player);
     }
 
-    return null;
+    return cachedPlayer ? { ...cachedPlayer, cached: true } : null;
   }
 
   public serialize(instance: Player) {

@@ -60,13 +60,27 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
     prop = Prop({ type: options });
     api = ApiProperty({ type: options() });
   } else if (typeof options === 'object') {
-    const opts: BasePropOptions = {
-      type: options.type,
-      required: options.required,
-      unique: options.unique,
-      index: options.index,
-      sparse: options.sparse,
-    };
+    const opts: BasePropOptions = {};
+
+    if (options.type) {
+      opts.type = options.type;
+    }
+
+    if (options.required) {
+      opts.required = options.required;
+    }
+
+    if (options.unique) {
+      opts.unique = options.unique;
+    }
+
+    if (options.index) {
+      opts.index = options.index;
+    }
+
+    if (options.sparse) {
+      opts.sparse = options.sparse;
+    }
 
     if (options.enum) {
       opts.enum = options.enum;
