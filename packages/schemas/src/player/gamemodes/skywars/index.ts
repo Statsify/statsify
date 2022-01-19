@@ -84,10 +84,7 @@ export class SkyWars {
       data.skywars_golden_boxes
     );
 
-    this.star = (data.levelFormatted || '⋆').replace(
-      /1|2|3|4|5|6|7|8|9|0|a|b|c|d|e|f|k|r|l|§/g,
-      ''
-    );
+    this.star = (data.levelFormatted || '⋆').replace(/[0-9]|[a-f]|k|r|l|§/g, '');
 
     const normalKit = parseKit(data.activeKit_SOLO_random ? 'random' : data.activeKit_SOLO);
     const insaneKit = parseKit(data.activeKit_TEAMS_random ? 'random' : data.activeKit_TEAMS);
