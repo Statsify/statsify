@@ -21,6 +21,9 @@ export class SpeedUHCMode {
   @Field()
   public kdr: number;
 
+  @Field()
+  public assists: number;
+
   public constructor(data: APIData, mode: string) {
     mode = mode ? `_${mode}` : mode;
 
@@ -28,6 +31,7 @@ export class SpeedUHCMode {
     this.losses = data[`losses${mode}`];
     this.kills = data[`kills${mode}`];
     this.deaths = data[`deaths${mode}`];
+    this.assists = data[`assists${mode}`];
 
     this.wlr = ratio(this.wins, this.losses);
     this.kdr = ratio(this.kills, this.deaths);

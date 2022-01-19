@@ -19,6 +19,9 @@ export class SpeedUHC {
   @Field()
   public score: number;
 
+  @Field({ default: 'None' })
+  public activeMastery: string;
+
   @Field({ getter: (target: SpeedUHC) => getLevelIndex(target.score) + 1 })
   public level: number;
 
@@ -28,6 +31,7 @@ export class SpeedUHC {
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.score = data.score;
+    this.activeMastery = data.activeMasterPerk;
 
     this.overall = new SpeedUHCMode(data, '');
     this.solo = new SpeedUHCMode(data, 'solo');
