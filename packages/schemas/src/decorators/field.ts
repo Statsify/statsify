@@ -30,6 +30,7 @@ export interface FieldOptions {
   sort?: LeaderboardSort;
 
   getter?: Getter<any>;
+  store?: boolean;
 }
 
 export interface FieldMetadata {
@@ -39,8 +40,8 @@ export interface FieldMetadata {
   sort: LeaderboardSort;
   isLeaderboard: boolean;
   type: any;
-
   getter?: Getter<any>;
+  store: boolean;
 }
 
 export function Field(type: Type): PropertyDecorator;
@@ -55,6 +56,7 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
   let isLeaderboard = true;
   let name: string;
   let getter: Getter<any>;
+  let store = true;
 
   if (typeof options === 'function') {
     prop = Prop({ type: options });
@@ -107,6 +109,9 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
       getter = options.getter;
       isLeaderboard = false;
       prop = noop;
+    } else if (options?.store === false) {
+      prop = noop;
+      store = false;
     } else {
       prop = Prop(opts);
     }
@@ -155,6 +160,7 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
       aliases: [],
       type,
       getter,
+      store,
     };
 
     Reflect.defineMetadata('statsify:field', metadata, target, propertyKey);

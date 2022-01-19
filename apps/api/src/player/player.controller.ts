@@ -1,6 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { Player } from '@statsify/schemas';
+import { HypixelCache } from '../hypixel/cache.enum';
 import { PlayerService } from './player.service';
 
 @Controller('/player')
@@ -11,7 +12,7 @@ export class PlayerController {
   @ApiOkResponse({ type: Player })
   @Get()
   public async getPlayer(@Query('player') tag: string) {
-    const player = await this.playerService.findOne(tag);
+    const player = await this.playerService.findOne(tag, HypixelCache.LIVE);
 
     return {
       success: !!player,

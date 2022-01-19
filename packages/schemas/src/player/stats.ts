@@ -6,6 +6,7 @@ import { BedWars } from './gamemodes/bedwars';
 import { BlitzSG } from './gamemodes/blitzsg';
 import { BuildBattle } from './gamemodes/buildbattle';
 import { CopsAndCrims } from './gamemodes/copsandcrims';
+import { Duels } from './gamemodes/duels';
 import { General } from './gamemodes/general';
 import { MegaWalls } from './gamemodes/megawalls';
 import { MurderMystery } from './gamemodes/murdermystery';
@@ -40,6 +41,9 @@ export class PlayerStats {
 
   @Field()
   public copsandcrims: CopsAndCrims;
+
+  @Field()
+  public duels: Duels;
 
   @Field()
   public general: General;
@@ -92,6 +96,7 @@ export class PlayerStats {
     this.blitzsg = new BlitzSG(data?.stats?.HungerGames ?? {});
     this.buildbattle = new BuildBattle(data?.stats?.BuildBattle ?? {});
     this.copsandcrims = new CopsAndCrims(data?.stats?.MCGO ?? {});
+    this.duels = new Duels(data?.stats?.Duels ?? {});
     this.general = new General(data);
     this.megawalls = new MegaWalls(data?.stats?.Walls3 ?? {});
     this.murdermystery = new MurderMystery(

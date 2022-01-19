@@ -1,11 +1,11 @@
 import { Logger } from '@statsify/logger';
 import { isObject } from '@statsify/util';
 import { FieldMetadata, Getter } from '../decorators';
+import { getConstructor, getPropertyNames } from './shared';
 
 export const deserialize = <T>(instance: T, data: T) => {
-  //@ts-ignore - TS doesn't know about the constructor
-  const constructor = instance.constructor as Constructor<T>;
-  const propertyKeys = Object.getOwnPropertyNames(constructor.prototype).filter(
+  const constructor = getConstructor(instance);
+  const propertyKeys = getPropertyNames(constructor).filter(
     (key) => key !== 'constructor'
   ) as (keyof T)[];
 
@@ -35,7 +35,7 @@ export const deserialize = <T>(instance: T, data: T) => {
         instance[propertyKey],
         data[propertyKey] ?? ({} as T[keyof T])
       );
-    } else if (!metadata.getter) {
+    } else if (!metadata.getter && metadata.store) {
       instance[propertyKey] = data[propertyKey] ?? metadata.default;
     }
   }
