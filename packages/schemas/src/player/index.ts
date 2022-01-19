@@ -1,6 +1,7 @@
 import { APIData } from '@statsify/util';
 import { Color } from '../color';
 import { Field } from '../decorators';
+import { PlayerSocials } from './socials';
 import { PlayerStats } from './stats';
 import { PlayerUtil } from './util';
 
@@ -48,6 +49,9 @@ export class Player {
   public displayName: string;
 
   @Field()
+  public socials: PlayerSocials;
+
+  @Field()
   public stats: PlayerStats;
 
   @Field({ leaderboard: false, description: "The time the player's cache expires " })
@@ -75,6 +79,8 @@ export class Player {
     this.plusColor = PlayerUtil.getPlusColor(this.rank, data?.rankPlusColor);
     this.prefixName = `${PlayerUtil.getRankColor(this.rank).toString()}${this.username}`;
     this.displayName = PlayerUtil.getDisplayName(this.username, this.rank, this.plusColor.code);
+
+    this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});
 
     this.stats = new PlayerStats(data);
 

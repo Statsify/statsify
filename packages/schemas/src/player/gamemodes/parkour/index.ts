@@ -15,7 +15,7 @@ export class Parkour {
   public copsandcrims: number;
 
   @Field({ sort: 'ASC' })
-  public bltizsg: number;
+  public blitzsg: number;
 
   @Field({ sort: 'ASC' })
   public housing: number;
@@ -63,7 +63,7 @@ export class Parkour {
     this.skywars = getTime('SkywarsAug2017');
     this.murdermystery = getTime('MurderMystery');
     this.copsandcrims = getTime('CopsnCrims');
-    this.bltizsg = getTime('BlitzLobby');
+    this.blitzsg = getTime('BlitzLobby');
     this.housing = getTime('Housing');
     this.arcade = getTime('ArcadeGames');
     this.buildbattle = getTime('BuildBattle');
