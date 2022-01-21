@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { Logger } from '@statsify/logger';
-import { Guild, Player } from '@statsify/schemas';
+import { Guild, Player, RecentGame } from '@statsify/schemas';
 import { APIData } from '@statsify/util';
 import { catchError, lastValueFrom, map, Observable, of, throwError } from 'rxjs';
 
@@ -35,6 +35,19 @@ export class HypixelService {
         catchError((err) => {
           this.logger.error(`Error getting guild ${tag} with ${type}: ${err.message}`);
           return of(null);
+        })
+      )
+    );
+  }
+
+  public getRecentGames(uuid: string): Promise<RecentGame[]> {
+    return lastValueFrom(
+      this.request<APIData>(`/recentgames?uuid=${uuid}`).pipe(
+        map((data) => data.games),
+        map((games) => games.map((game: APIData) => new RecentGame(game))),
+        catchError((err) => {
+          this.logger.error(`Error getting recent games for ${uuid}: ${err.message}`);
+          return of([]);
         })
       )
     );

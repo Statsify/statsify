@@ -112,6 +112,7 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
     } else if (options?.store === false) {
       prop = noop;
       store = false;
+      isLeaderboard = false;
     } else {
       prop = Prop(opts);
     }
