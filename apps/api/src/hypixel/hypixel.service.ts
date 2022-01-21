@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { Logger } from '@statsify/logger';
-import { Player } from '@statsify/schemas';
+import { Guild, Player } from '@statsify/schemas';
 import { APIData } from '@statsify/util';
 import { catchError, lastValueFrom, map, Observable, of, throwError } from 'rxjs';
 
@@ -20,6 +20,20 @@ export class HypixelService {
         map((player) => new Player(player)),
         catchError((err) => {
           this.logger.error(`Error getting player ${tag}: ${err.message}`);
+          return of(null);
+        })
+      )
+    );
+  }
+
+  public getGuild(tag: string, type: 'name' | 'id' | 'player') {
+    const url = `/guild?${type}=${tag}`;
+    return lastValueFrom(
+      this.request<APIData>(url).pipe(
+        map((data) => data.guild),
+        map((guild) => new Guild(guild)),
+        catchError((err) => {
+          this.logger.error(`Error getting guild ${tag} with ${type}: ${err.message}`);
           return of(null);
         })
       )
