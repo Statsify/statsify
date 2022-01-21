@@ -1,7 +1,8 @@
 import { APIData } from '@statsify/util';
 import { Field } from '../decorators';
 import { GuildMember } from './member';
-import { getLevel, GuildRank } from './util';
+import { GuildRank } from './rank';
+import { getLevel } from './util';
 
 export class Guild {
   @Field()

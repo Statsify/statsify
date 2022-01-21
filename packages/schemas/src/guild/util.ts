@@ -1,6 +1,3 @@
-import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
-
 export const getLevel = (exp: number) => {
   const required = [
     100000, 150000, 250000, 500000, 750000, 1000000, 1250000, 1500000, 2000000, 2500000, 2500000,
@@ -26,24 +23,3 @@ export const getLevel = (exp: number) => {
 
   return { level: 1000, nextLevelExp: 0 };
 };
-
-export class GuildRank {
-  @Field()
-  public name: string;
-
-  @Field()
-  public tag: string;
-
-  @Field()
-  public priority: number;
-
-  @Field()
-  public default: boolean;
-
-  public constructor(data: APIData) {
-    this.name = data.name;
-    this.default = data.default;
-    this.tag = data.tag;
-    this.priority = data.priority;
-  }
-}
