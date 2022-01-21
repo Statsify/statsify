@@ -1,5 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
+import { GetGuildDto } from './guild.dto';
 import { GuildService } from './guild.service';
 
 @Controller('/guild')
@@ -8,10 +9,7 @@ export class GuildController {
 
   @ApiOperation({ summary: 'Get a Guild', tags: ['guilds'] })
   @Get()
-  public async getGuild(
-    @Query('guild') tag: string,
-    @Query('type') type: 'name' | 'id' | 'player'
-  ) {
+  public async getGuild(@Query() { guild: tag, type }: GetGuildDto) {
     return this.guildService.findOne(tag, type);
   }
 }

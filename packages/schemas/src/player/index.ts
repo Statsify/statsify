@@ -65,7 +65,10 @@ export class Player {
   public resetMinute: number;
 
   @Field()
-  public leaderboardBanned: boolean;
+  public leaderboardBanned?: boolean;
+
+  @Field()
+  public cached?: boolean;
 
   public constructor(data: APIData = {}) {
     this.uuid = data.uuid;

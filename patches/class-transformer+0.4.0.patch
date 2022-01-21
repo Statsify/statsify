@@ -1,0 +1,39 @@
+diff --git a/node_modules/class-transformer/cjs/TransformOperationExecutor.js b/node_modules/class-transformer/cjs/TransformOperationExecutor.js
+index 81aec2a..9c1e13b 100644
+--- a/node_modules/class-transformer/cjs/TransformOperationExecutor.js
++++ b/node_modules/class-transformer/cjs/TransformOperationExecutor.js
+@@ -251,7 +251,7 @@ class TransformOperationExecutor {
+                     if ((this.transformationType === enums_1.TransformationType.PLAIN_TO_CLASS ||
+                         this.transformationType === enums_1.TransformationType.CLASS_TO_CLASS) &&
+                         // eslint-disable-next-line @typescript-eslint/unbound-method
+-                        ((descriptor && !descriptor.set) || newValue[newValueKey] instanceof Function))
++                        ((descriptor && !descriptor.set && !('value' in descriptor)) || newValue[newValueKey] instanceof Function))
+                         //  || TransformationType === TransformationType.CLASS_TO_CLASS
+                         continue;
+                 }
+diff --git a/node_modules/class-transformer/esm2015/TransformOperationExecutor.js b/node_modules/class-transformer/esm2015/TransformOperationExecutor.js
+index 0ce77a6..0fb863c 100644
+--- a/node_modules/class-transformer/esm2015/TransformOperationExecutor.js
++++ b/node_modules/class-transformer/esm2015/TransformOperationExecutor.js
+@@ -248,7 +248,7 @@ export class TransformOperationExecutor {
+                     if ((this.transformationType === TransformationType.PLAIN_TO_CLASS ||
+                         this.transformationType === TransformationType.CLASS_TO_CLASS) &&
+                         // eslint-disable-next-line @typescript-eslint/unbound-method
+-                        ((descriptor && !descriptor.set) || newValue[newValueKey] instanceof Function))
++                        ((descriptor && !descriptor.set && !('value' in descriptor)) || newValue[newValueKey] instanceof Function))
+                         //  || TransformationType === TransformationType.CLASS_TO_CLASS
+                         continue;
+                 }
+diff --git a/node_modules/class-transformer/esm5/TransformOperationExecutor.js b/node_modules/class-transformer/esm5/TransformOperationExecutor.js
+index a92e6d5..7283f0c 100644
+--- a/node_modules/class-transformer/esm5/TransformOperationExecutor.js
++++ b/node_modules/class-transformer/esm5/TransformOperationExecutor.js
+@@ -251,7 +251,7 @@ var TransformOperationExecutor = /** @class */ (function () {
+                     if ((this_1.transformationType === TransformationType.PLAIN_TO_CLASS ||
+                         this_1.transformationType === TransformationType.CLASS_TO_CLASS) &&
+                         // eslint-disable-next-line @typescript-eslint/unbound-method
+-                        ((descriptor && !descriptor.set) || newValue[newValueKey] instanceof Function))
++                        ((descriptor && !descriptor.set && !('value' in descriptor)) || newValue[newValueKey] instanceof Function))
+                         return "continue";
+                 }
+                 if (!this_1.options.enableCircularCheck || !this_1.isCircular(subValue)) {

@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -14,6 +15,8 @@ async function bootstrap() {
   });
 
   app.setGlobalPrefix('/api');
+
+  app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder().setTitle('Statsify API').setVersion('1.0').build();
 
