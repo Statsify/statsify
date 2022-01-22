@@ -7,17 +7,13 @@
     "rangeStrategy": "bump",
     "packageRules": [
       {
-        "assignees": ["jacobk999"],
-        "commitMessagePrefix": "chore(deps)",
-        "labels": ["dependencies"]
-      },
-      {
         "matchUpdateTypes": ["minor", "patch"],
         "matchCurrentVersion": "!/^0/",
-        "automerge": true
+        "automerge": true,
+        "commitMessagePrefix": "chore(deps)"
       },
       {
-        "matchPackagePatterns": ["discord-api-types"],
+        "matchPackagePatterns": ["discord-api-types", "class-transformer", "chalk"],
         "enabled": false
       },
       {
