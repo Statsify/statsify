@@ -1,19 +1,20 @@
 import { APIData } from '@statsify/util';
 import { Color } from '../color';
 import { Field } from '../decorators';
+import { GameCode } from '../game';
 import { ExpByGame } from './expbygame';
 import { GuildMember } from './member';
 import { GuildRank } from './rank';
 import { getLevel } from './util';
 
 export class Guild {
-  @Field({ index: true })
+  @Field({ index: true, unique: true, required: true })
   public id: string;
 
   @Field()
   public name: string;
 
-  @Field({ index: true })
+  @Field({ index: true, lowercase: true, required: true })
   public nameToLower: string;
 
   @Field()
@@ -25,17 +26,17 @@ export class Guild {
   @Field({ getter: (target: Guild) => getLevel(target.exp).nextLevelExp })
   public nextLevelExp: number;
 
-  @Field()
+  @Field(() => [GuildMember])
   public members: GuildMember[];
 
-  @Field()
+  @Field(() => [GuildRank])
   public ranks: GuildRank[];
 
   @Field()
   public achievements: object;
 
-  @Field()
-  public preferredGames: string[];
+  @Field(() => [String])
+  public preferredGames: GameCode[];
 
   @Field({ default: true })
   public publiclyListed: boolean;
@@ -55,15 +56,33 @@ export class Guild {
   @Field()
   public expByGame: ExpByGame;
 
-  public constructor(data: APIData) {
+  @Field({ leaderboard: false })
+  public expiresAt: number;
+
+  @Field({ store: false })
+  public cached?: boolean;
+
+  public constructor(data: APIData = {}) {
     this.id = data._id;
     this.name = data.name;
-    this.nameToLower = this.name.toLowerCase();
+    this.nameToLower = this.name?.toLowerCase();
+
+    this.achievements = data.achievements;
+    this.preferredGames = data.preferredGames ?? [];
+    this.publiclyListed = data.publiclyListed;
+
+    this.exp = data.exp;
+
+    this.tag = data.tag;
+    this.tagColor = new Color(data.tagColor ?? 'GRAY');
+    this.expByGame = new ExpByGame(data.guildExpByGameType ?? {});
 
     this.members = [];
 
-    for (const member of data.members) {
-      this.members.push(new GuildMember(member));
+    if (data.members) {
+      for (const member of data.members) {
+        this.members.push(new GuildMember(member));
+      }
     }
 
     this.ranks = [
@@ -75,15 +94,10 @@ export class Guild {
       }),
     ];
 
-    for (const rank of data.ranks) {
-      this.ranks.push(new GuildRank(rank));
+    if (data.ranks) {
+      for (const rank of data.ranks) {
+        this.ranks.push(new GuildRank(rank));
+      }
     }
-
-    this.achievements = data.achievements;
-    this.preferredGames = data.preferredGames;
-    this.publiclyListed = data.publiclyListed;
-    this.tag = data.tag;
-    this.tagColor = new Color(data.tagColor ?? 'GRAY');
-    this.expByGame = new ExpByGame(data.guildExpByGameType ?? {});
   }
 }

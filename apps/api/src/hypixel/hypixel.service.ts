@@ -4,12 +4,19 @@ import { Logger } from '@statsify/logger';
 import { Guild, Player, RecentGame } from '@statsify/schemas';
 import { APIData } from '@statsify/util';
 import { catchError, lastValueFrom, map, Observable, of, throwError } from 'rxjs';
+import { HypixelCache } from './cache.enum';
 
 @Injectable()
 export class HypixelService {
   private readonly logger = new Logger('HypixelService');
 
   public constructor(private readonly httpService: HttpService) {}
+
+  public shouldCache(expirey: number, cache: HypixelCache): boolean {
+    return (
+      cache !== HypixelCache.LIVE && (cache == HypixelCache.CACHE_ONLY || expirey > Date.now())
+    );
+  }
 
   public getPlayer(tag: string) {
     const url = `/player?${tag.length > 16 ? 'uuid' : 'name'}=${tag}`;

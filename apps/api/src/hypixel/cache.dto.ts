@@ -10,5 +10,5 @@ export class CacheDto {
     description: 'Describes whether to return live data or cached data.',
     required: false,
   })
-  public cache?: HypixelCache = HypixelCache.CACHE;
+  public cache: HypixelCache = HypixelCache.CACHE;
 }

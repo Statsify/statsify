@@ -14,7 +14,7 @@ export class GuildMember {
   @Field()
   public questParticipation: number;
 
-  @Field()
+  @Field(() => [Number])
   public expHistory: number[];
 
   public constructor(data: APIData) {

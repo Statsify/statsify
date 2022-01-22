@@ -3,7 +3,8 @@ import { Constructor, noop } from '@statsify/util';
 import { Prop } from '@typegoose/typegoose';
 import type { BasePropOptions } from '@typegoose/typegoose/lib/types';
 
-type Type = () => Constructor;
+type Ref = () => Constructor;
+type Type = Ref | (() => Constructor[]);
 export type Getter<T> = (target: T) => any;
 type LeaderboardSort = 'ASC' | 'DESC';
 
@@ -19,7 +20,7 @@ export interface FieldOptions {
   sparse?: boolean;
   lowercase?: boolean;
   uppercase?: boolean;
-  ref?: Type;
+  ref?: Ref;
   description?: string;
   example?: string | number;
   default?: any;

@@ -16,7 +16,7 @@ export class PlayerService {
    *
    * @param tag uuid or username
    */
-  public async findOne(tag: string, cacheLevel = HypixelCache.CACHE) {
+  public async findOne(tag: string, cacheLevel: HypixelCache) {
     const type = tag.length > 16 ? 'uuid' : 'usernameToLower';
 
     let cachedPlayer = (await this.playerModel
@@ -30,11 +30,7 @@ export class PlayerService {
       cachedPlayer = this.deserialize(cachedPlayer);
     }
 
-    if (
-      cachedPlayer &&
-      cacheLevel !== HypixelCache.LIVE &&
-      (cacheLevel == HypixelCache.CACHE_ONLY || cachedPlayer.expiresAt > Date.now())
-    ) {
+    if (cachedPlayer && this.hypixelService.shouldCache(cachedPlayer.expiresAt, cacheLevel)) {
       return {
         ...cachedPlayer,
         cached: true,
@@ -44,7 +40,7 @@ export class PlayerService {
     const player = await this.hypixelService.getPlayer(tag);
 
     if (player) {
-      player.expiresAt = Date.now() + 1000 * 60 * 60 * 24;
+      player.expiresAt = Date.now() + 300000;
 
       const doc = this.serialize(player);
 
