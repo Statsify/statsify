@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { Logger } from '@statsify/logger';
-import { Guild, Player, RecentGame } from '@statsify/schemas';
+import { Guild, Player, RecentGame, Status } from '@statsify/schemas';
 import { APIData } from '@statsify/util';
 import { catchError, lastValueFrom, map, Observable, of, throwError } from 'rxjs';
 import { HypixelCache } from './cache.enum';
@@ -47,6 +47,16 @@ export class HypixelService {
         map((data) => data.games),
         map((games) => games.map((game: APIData) => new RecentGame(game))),
         catchError(() => of([]))
+      )
+    );
+  }
+
+  public getStatus(uuid: string) {
+    return lastValueFrom(
+      this.request<APIData>(`/status?uuid=${uuid}`).pipe(
+        map((data) => data.session),
+        map((status) => new Status(status)),
+        catchError(() => of(null))
       )
     );
   }

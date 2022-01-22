@@ -13,7 +13,7 @@ export class GetPlayerDto extends CacheDto {
   public player: string;
 }
 
-export class GetRecentGamesDto {
+export class GetWithUuidDto {
   @IsString()
   @MaxLength(36)
   @MinLength(32)

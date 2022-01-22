@@ -1,8 +1,8 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Player, RecentGame } from '@statsify/schemas';
+import { Player, RecentGame, Status } from '@statsify/schemas';
 import { HypixelService } from '../hypixel/hypixel.service';
-import { GetPlayerDto, GetRecentGamesDto } from './player.dto';
+import { GetPlayerDto, GetWithUuidDto } from './player.dto';
 import { PlayerService } from './player.service';
 
 @ApiTags('players')
@@ -28,7 +28,24 @@ export class PlayerController {
   @ApiOperation({ summary: 'Get the Recent Games of a Player' })
   @ApiOkResponse({ type: [RecentGame] })
   @Get('/recentgames')
-  public async getRecentGames(@Query() { uuid }: GetRecentGamesDto) {
-    return this.hypixelService.getRecentGames(uuid);
+  public async getRecentGames(@Query() { uuid }: GetWithUuidDto) {
+    const games = await this.hypixelService.getRecentGames(uuid);
+
+    return {
+      success: !!games.length,
+      games,
+    };
+  }
+
+  @ApiOperation({ summary: 'Get the Status of a Player' })
+  @ApiOkResponse({ type: Status })
+  @Get('/status')
+  public async getStatus(@Query() { uuid }: GetWithUuidDto) {
+    const status = await this.hypixelService.getStatus(uuid);
+
+    return {
+      success: !!status,
+      status,
+    };
   }
 }

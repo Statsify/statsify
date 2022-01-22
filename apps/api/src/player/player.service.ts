@@ -15,7 +15,9 @@ export class PlayerService {
 
   /**
    *
-   * @param tag uuid or username
+   * @param tag UUID or username
+   * @param cacheLevel What type of data to return (cached/live)
+   * @param selector (optional) A selector to select specific fields
    */
   public async findOne<T extends PlayerSelector>(
     tag: string,
