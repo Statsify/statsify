@@ -5,13 +5,13 @@ export class GuildRank {
   @Field()
   public name: string;
 
-  @Field()
-  public tag: string;
+  @Field({ required: false })
+  public tag?: string;
 
   @Field()
   public priority: number;
 
-  @Field()
+  @Field({ default: false })
   public default: boolean;
 
   public constructor(data: APIData) {

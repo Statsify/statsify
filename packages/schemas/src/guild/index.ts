@@ -1,17 +1,19 @@
 import { APIData } from '@statsify/util';
+import { Color } from '../color';
 import { Field } from '../decorators';
+import { ExpByGame } from './expbygame';
 import { GuildMember } from './member';
 import { GuildRank } from './rank';
 import { getLevel } from './util';
 
 export class Guild {
-  @Field()
+  @Field({ index: true })
   public id: string;
 
   @Field()
   public name: string;
 
-  @Field()
+  @Field({ index: true })
   public nameToLower: string;
 
   @Field()
@@ -35,29 +37,31 @@ export class Guild {
   @Field()
   public preferredGames: string[];
 
-  @Field()
+  @Field({ default: true })
   public publiclyListed: boolean;
 
   @Field()
   public tag: string;
 
   @Field()
-  public tagColor: string;
+  public tagColor: Color;
+
+  @Field({
+    getter: (target: Guild) =>
+      target.tag ? `${target.tagColor}[${target.tag}${target.tagColor}]` : '',
+  })
+  public tagFormatted: string;
 
   @Field()
-  public expByGame: object;
+  public expByGame: ExpByGame;
 
   public constructor(data: APIData) {
     this.id = data._id;
     this.name = data.name;
     this.nameToLower = this.name.toLowerCase();
 
-    const levelInfo = getLevel(data.exp);
-
-    this.level = levelInfo.level;
-    this.nextLevelExp = levelInfo.nextLevelExp;
-
     this.members = [];
+
     for (const member of data.members) {
       this.members.push(new GuildMember(member));
     }
@@ -70,6 +74,7 @@ export class Guild {
         defualt: false,
       }),
     ];
+
     for (const rank of data.ranks) {
       this.ranks.push(new GuildRank(rank));
     }
@@ -78,7 +83,7 @@ export class Guild {
     this.preferredGames = data.preferredGames;
     this.publiclyListed = data.publiclyListed;
     this.tag = data.tag;
-    this.tagColor = data.tagColor;
-    this.expByGame = data.guildExpByGameType;
+    this.tagColor = new Color(data.tagColor ?? 'GRAY');
+    this.expByGame = new ExpByGame(data.guildExpByGameType ?? {});
   }
 }
