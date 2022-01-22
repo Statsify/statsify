@@ -10,7 +10,7 @@
         "matchUpdateTypes": ["minor", "patch"],
         "matchCurrentVersion": "!/^0/",
         "automerge": true,
-        "commitMessagePrefix": "chore(deps)"
+        "commitMessagePrefix": "chore(deps):"
       },
       {
         "matchPackagePatterns": ["discord-api-types", "class-transformer", "chalk"],
