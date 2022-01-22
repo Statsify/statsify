@@ -5,14 +5,17 @@ import { DocumentType, ReturnModelType } from '@typegoose/typegoose';
 import { FilterQuery } from 'mongoose';
 import { HypixelCache } from '../hypixel/cache.enum';
 import { HypixelService } from '../hypixel/hypixel.service';
+import { PlayerService } from '../player/player.service';
 import { GuildQueryType } from './guild.dto';
 
 @Injectable()
 export class GuildService {
   public constructor(
     private readonly hypixelService: HypixelService,
+    private readonly playerService: PlayerService,
     @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>
   ) {}
+
   public async findOne(
     tag: string,
     type: GuildQueryType,
@@ -41,12 +44,44 @@ export class GuildService {
     );
 
     if (!guild) {
-      if (cachedGuild) {
+      if (cachedGuild && type !== GuildQueryType.PLAYER) {
         await this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec();
       }
 
       return null;
     }
+
+    const memberMap = Object.fromEntries(
+      (cachedGuild?.members ?? []).map((member) => [member.uuid, member])
+    );
+
+    const fetchMembers = guild.members.map(async (member) => {
+      const cacheMember = memberMap[member.uuid];
+
+      //Get username/displayName
+      if (cacheMember && Date.now() < cacheMember.expiresAt) {
+        member.displayName = cacheMember.displayName;
+        member.username = cacheMember.username;
+      } else {
+        const player = await this.playerService.findOne(member.uuid, HypixelCache.CACHE_ONLY, {
+          username: true,
+          displayName: true,
+        });
+
+        if (player) {
+          member.username = player.username;
+          member.displayName = player.displayName;
+          member.expiresAt = Date.now() + 86400000;
+        } else {
+          //Try again in 5 minutes
+          member.expiresAt = Date.now() + 300000;
+        }
+      }
+
+      return member;
+    });
+
+    guild.members = await Promise.all(fetchMembers);
 
     guild.expiresAt = Date.now() + 300000;
 

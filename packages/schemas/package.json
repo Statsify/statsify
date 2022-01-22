@@ -13,5 +13,8 @@
     "@statsify/math": "*",
     "@statsify/util": "*",
     "@typegoose/typegoose": "^9.5.0"
+  },
+  "devDependencies": {
+    "type-fest": "^2.10.0"
   }
 }

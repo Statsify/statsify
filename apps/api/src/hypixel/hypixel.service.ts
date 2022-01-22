@@ -25,10 +25,7 @@ export class HypixelService {
       this.request<APIData>(url).pipe(
         map((data) => data.player),
         map((player) => new Player(player)),
-        catchError((err) => {
-          this.logger.error(`Error getting player ${tag}: ${err.message}`);
-          return of(null);
-        })
+        catchError(() => of(null))
       )
     );
   }
@@ -39,10 +36,7 @@ export class HypixelService {
       this.request<APIData>(url).pipe(
         map((data) => data.guild),
         map((guild) => new Guild(guild)),
-        catchError((err) => {
-          this.logger.error(`Error getting guild ${tag} with ${type}: ${err.message}`);
-          return of(null);
-        })
+        catchError(() => of(null))
       )
     );
   }
@@ -52,10 +46,7 @@ export class HypixelService {
       this.request<APIData>(`/recentgames?uuid=${uuid}`).pipe(
         map((data) => data.games),
         map((games) => games.map((game: APIData) => new RecentGame(game))),
-        catchError((err) => {
-          this.logger.error(`Error getting recent games for ${uuid}: ${err.message}`);
-          return of([]);
-        })
+        catchError(() => of([]))
       )
     );
   }

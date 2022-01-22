@@ -2,6 +2,7 @@ import { APIData } from '@statsify/util';
 import { Color } from '../color';
 import { Field } from '../decorators';
 import { GameCode } from '../game';
+import { Achievements } from './achievements';
 import { ExpByGame } from './expbygame';
 import { GuildMember } from './member';
 import { GuildRank } from './rank';
@@ -33,7 +34,7 @@ export class Guild {
   public ranks: GuildRank[];
 
   @Field()
-  public achievements: object;
+  public achievements: Achievements;
 
   @Field(() => [String])
   public preferredGames: GameCode[];
@@ -67,7 +68,7 @@ export class Guild {
     this.name = data.name;
     this.nameToLower = this.name?.toLowerCase();
 
-    this.achievements = data.achievements;
+    this.achievements = new Achievements(data.achievements ?? {});
     this.preferredGames = data.preferredGames ?? [];
     this.publiclyListed = data.publiclyListed;
 

@@ -9,6 +9,12 @@ export class GuildMember {
   public uuid: string;
 
   @Field()
+  public displayName?: string;
+
+  @Field()
+  public username?: string;
+
+  @Field()
   public joinTime: number;
 
   @Field()
@@ -16,6 +22,9 @@ export class GuildMember {
 
   @Field(() => [Number])
   public expHistory: number[];
+
+  @Field({ leaderboard: false })
+  public expiresAt: number;
 
   public constructor(data: APIData) {
     this.rank = data.rank;
