@@ -36,19 +36,19 @@ $ yarn workspace {app or package name} add {dependency}
 $ yarn lint
 ```
 
-# 💁 Contributing
+## 💁 Contributing
 * Follow the guidelines in `.github/CONTRIBUTING.md`
 
-# 😕 Help
+## 😕 Help
 * If you require support join our [`Discord`] and create a ticket in the `#create-ticket` channel
 
 
-# 📙 Features
+## 📙 Features
 - Image Profiles
 - Leaderboards
 - Historical Stats
 
-# 🔗 Links
+## 🔗 Links
 - [`Website`]
 - [`Bot Invite`]
 - [`Discord`]
