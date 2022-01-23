@@ -28,7 +28,7 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.2"
   },
-  "imports" :{
+  "imports": {
     "#dtos/*": "./dist/dtos/*.js",
     "#guild/*": "./dist/guild/*.js",
     "#hypixel/*": "./dist/hypixel/*.js",

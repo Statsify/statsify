@@ -57,6 +57,12 @@ export class Guild {
   @Field()
   public expByGame: ExpByGame;
 
+  @Field(() => [Number])
+  public expHistory: number[];
+
+  @Field(() => [Number])
+  public scaledExpHistory: number[];
+
   @Field({ leaderboard: false })
   public expiresAt: number;
 

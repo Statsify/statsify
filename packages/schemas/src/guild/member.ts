@@ -34,6 +34,7 @@ export class GuildMember {
 
     this.expHistory = Object.entries(data.expHistory)
       .sort()
-      .map((d) => d[1] as number);
+      .reverse()
+      .map(([, exp]) => exp as number);
   }
 }
