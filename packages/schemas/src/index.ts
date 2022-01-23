@@ -1,4 +1,5 @@
 export * from './friends';
+export * from './gamecounts';
 export * from './guild';
 export * from './player';
 export * from './recentgame';
