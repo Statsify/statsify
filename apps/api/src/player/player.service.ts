@@ -17,7 +17,7 @@ export class PlayerService {
    *
    * @param tag UUID or username
    * @param cacheLevel What type of data to return (cached/live)
-   * @param selector (optional) A selector to select specific fields
+   * @param selector (optional) A mogno selector to select specific fields
    */
   public async findOne<T extends PlayerSelector>(
     tag: string,
@@ -64,6 +64,12 @@ export class PlayerService {
     return cachedPlayer ?? null;
   }
 
+  /**
+   *
+   * @param tag UUID or username
+   * @param page The page of friends to return
+   * @returns null or an object containing an array of friends
+   */
   public async findFriends(tag: string, page: number) {
     const player = await this.findOne(tag, HypixelCache.CACHE_ONLY, {
       displayName: true,
@@ -92,6 +98,7 @@ export class PlayerService {
     const pageMin = page * pageSize;
     const pageMax = pageMin + pageSize;
 
+    //Loop through all the friends to make sure data to retained in mongo
     for (let i = 0; i < friends.friends.length; i++) {
       const friend = friends.friends[i];
       const cachedFriend = friendMap[friend.uuid];
@@ -103,8 +110,10 @@ export class PlayerService {
         friend.expiresAt = cachedFriend.expiresAt;
       }
 
+      //If they are not in the page range don't bother requesting them
       if (!inPageRange) continue;
 
+      //Only request friend data if there is no cached data or the cache is expired
       if (
         !cachedFriend ||
         !this.hypixelService.shouldCache(cachedFriend.expiresAt, HypixelCache.CACHE)

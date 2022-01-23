@@ -1,6 +1,9 @@
 import { APIData } from '@statsify/util';
 import { Field } from '../decorators';
 
+/**
+ * Removes some useless broken games from the `guildExpByGameType` field such as `SMP` or `SKYBLOCK`
+ */
 export class ExpByGame {
   @Field()
   public SKYWARS: number;

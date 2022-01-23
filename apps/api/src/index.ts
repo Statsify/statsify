@@ -8,6 +8,7 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  //Removes the `_id` fields created from sub classes of documents
   setGlobalOptions({ schemaOptions: { _id: false } });
 
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
@@ -16,10 +17,13 @@ async function bootstrap() {
 
   app.setGlobalPrefix('/api');
 
+  //Validation using `class-validator` and `class-transformer`
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
+  //Swagger/Redoc docs
   const config = new DocumentBuilder().setTitle('Statsify API').setVersion('1.0').build();
 
+  //Fastify template renderer for Redoc
   app.setViewEngine({
     engine: {
       handlebars: require('handlebars'),

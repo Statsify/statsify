@@ -12,6 +12,11 @@ export class GuildController {
   @ApiOkResponse({ type: Guild })
   @Get()
   public async getGuild(@Query() { guild: tag, type, cache }: GetGuildDto) {
-    return this.guildService.findOne(tag, type, cache);
+    const guild = await this.guildService.findOne(tag, type, cache);
+
+    return {
+      success: !!guild,
+      guild,
+    };
   }
 }

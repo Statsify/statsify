@@ -36,7 +36,14 @@ export const games = [
   { name: 'Idle', code: 'IDLE', id: -6 },
 ];
 
+/**
+ * The full game name
+ */
 export type GameCode = typeof games[number]['code'];
+
+/**
+ * A number that represents a game.
+ */
 export type GameId = typeof games[number]['id'];
 export type GameName = typeof games[number]['name'];
 

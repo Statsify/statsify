@@ -61,13 +61,17 @@ export class Player {
   @Field({ leaderboard: false, description: "The time the player's cache expires " })
   public expiresAt: number;
 
-  @Field({ leaderboard: false, description: "The time the player's historical stats reset" })
+  @Field({
+    leaderboard: false,
+    required: false,
+    description: "The time the player's historical stats reset",
+  })
   public resetMinute: number;
 
-  @Field()
+  @Field({ required: false })
   public leaderboardBanned?: boolean;
 
-  @Field()
+  @Field({ required: false })
   public cached?: boolean;
 
   public constructor(data: APIData = {}) {
@@ -75,6 +79,7 @@ export class Player {
     this.username = data.displayname;
     this.usernameToLower = this.username?.toLowerCase();
 
+    //The first login provided by hypixel is not fully accurate for very old players, it is better to ues the `_id` field
     this.firstLogin = parseInt(data._id?.substring(0, 8) ?? 0, 16) * 1000;
     this.lastLogin = data.lastLogin ?? 0;
     this.lastLogout = data.lastLogout ?? 0;
@@ -93,6 +98,7 @@ export class Player {
 
     this.stats = new PlayerStats(data);
 
+    //These will all be filled in by a service
     this.expiresAt = 0;
     this.resetMinute = 0;
     this.leaderboardBanned = false;

@@ -30,17 +30,6 @@ type Prev = [
   ...0[]
 ];
 
-/**
- * @example ```ts
- *type Selector<T extends Player> = {
-  [K in Paths<T>]?: boolean
- }
-
- type Selection<T extends Player, O> = {
-  [K in keyof O]: K extends Paths<T> ? Get<T, K> : never
- }
- * ```
- */
 export type Paths<T, D extends number = 10> = [D] extends [never]
   ? never
   : T extends object

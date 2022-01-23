@@ -5,7 +5,7 @@ import type { BasePropOptions } from '@typegoose/typegoose/lib/types';
 
 type Ref = () => Constructor;
 type Type = Ref | (() => Constructor[]);
-export type Getter<T> = (target: T) => any;
+type Getter<T> = (target: T) => any;
 type LeaderboardSort = 'ASC' | 'DESC';
 
 export interface FieldOptions {
@@ -45,6 +45,10 @@ export interface FieldMetadata {
   store: boolean;
 }
 
+/**
+ * @description A decorator that adds properties to the mongodb schema, swagger docs, and controlls the creation of leaderboards. This decorator is also used to determine values to remove/add during serialization/deserialization.
+ * @param type either a function returning the constructor of the property type or an object of options
+ */
 export function Field(type: Type): PropertyDecorator;
 export function Field(options: FieldOptions): PropertyDecorator;
 export function Field(): PropertyDecorator;

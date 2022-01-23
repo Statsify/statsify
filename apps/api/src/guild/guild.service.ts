@@ -26,7 +26,8 @@ export class GuildService {
     const queries: Record<GuildQueryType, FilterQuery<DocumentType<Guild>>> = {
       [GuildQueryType.ID]: { id: tag },
       [GuildQueryType.NAME]: { nameToLower: tag },
-      [GuildQueryType.PLAYER]: { $elemMatch: { uuid: tag } },
+      //Searches through the members for a matching uuid
+      [GuildQueryType.PLAYER]: { members: { $elemMatch: { uuid: tag } } },
     };
 
     const cachedGuild = await this.guildModel.findOne(queries[type]).lean().exec();
@@ -45,6 +46,7 @@ export class GuildService {
 
     if (!guild) {
       if (cachedGuild && type !== GuildQueryType.PLAYER) {
+        //If the guild is cached however hypixel doesn't return any data for it and it wasn't searched for by a player then the guild does not exist
         await this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec();
       }
 
@@ -62,6 +64,7 @@ export class GuildService {
       if (cacheMember && Date.now() < cacheMember.expiresAt) {
         member.displayName = cacheMember.displayName;
         member.username = cacheMember.username;
+        member.expiresAt = cacheMember.expiresAt;
       } else {
         const player = await this.playerService.findOne(member.uuid, HypixelCache.CACHE_ONLY, {
           username: true,
@@ -71,6 +74,8 @@ export class GuildService {
         if (player) {
           member.username = player.username;
           member.displayName = player.displayName;
+
+          //Cache names for a day
           member.expiresAt = Date.now() + 86400000;
         } else {
           //Try again in 5 minutes
@@ -83,6 +88,7 @@ export class GuildService {
 
     guild.members = await Promise.all(fetchMembers);
 
+    //Cache guilds responses for 5 minutes
     guild.expiresAt = Date.now() + 300000;
 
     await this.guildModel

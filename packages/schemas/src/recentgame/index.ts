@@ -6,19 +6,19 @@ export class RecentGame {
   @Field({ store: false })
   public startedAt: number;
 
-  @Field({ store: false })
+  @Field()
   public game: Game;
 
-  @Field({ store: false, required: false })
+  @Field({ required: false })
   public mode?: string;
 
-  @Field({ store: false, required: false })
+  @Field({ required: false })
   public map?: string;
 
-  @Field({ store: false, required: false })
+  @Field({ required: false })
   public endedAt?: number;
 
-  @Field({ store: false, required: false })
+  @Field({ required: false })
   public gameLength?: number;
 
   public constructor(data: APIData = {}) {

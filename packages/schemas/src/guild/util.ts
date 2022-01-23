@@ -1,8 +1,14 @@
+/**
+ *
+ * @param exp The guild's exp
+ * @returns The guild's level and the required exp to reach the next level
+ */
 export const getLevel = (exp: number) => {
   const required = [
     100000, 150000, 250000, 500000, 750000, 1000000, 1250000, 1500000, 2000000, 2500000, 2500000,
     2500000, 2500000, 2500000, 3000000,
   ];
+
   let level = 0;
 
   for (let i = 0; i <= 1000; i += 1) {

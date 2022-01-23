@@ -1,6 +1,9 @@
 import type { APIData } from '@statsify/util';
 import { Color, ColorCode, ColorId } from '../color';
 
+/**
+ * A set of utility functions for getting things like `rank`, `displayName` and `plusColor`
+ */
 export class PlayerUtil {
   public static getRank(data: APIData) {
     let rank = 'DEFAULT';
@@ -38,6 +41,7 @@ export class PlayerUtil {
       'MVP+': new Color('RED'),
       'MVP++': new Color('RED'),
       'bMVP++': new Color('RED'),
+      MVP: new Color('AQUA'),
       VIP: new Color('GREEN'),
       'VIP+': new Color('GOLD'),
       'PIG+++': new Color('AQUA'),

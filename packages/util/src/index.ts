@@ -4,6 +4,12 @@ export type Constructor<T = any> = new (...args: any[]) => T;
 
 export const noop = <T>() => null as unknown as T;
 
+/**
+ * @description Finds the element in the array where the `score` value is is greater than the `req` value but less than the next `req`.
+ * @param data An array of objects with a `req` property
+ * @param score The value to compare against
+ * @returns The index of the element that meets the condition
+ */
 export const findScoreIndex = <T extends { req: number }>(data: T[], score = 0): number => {
   return data.findIndex(
     ({ req }, index, arr) =>
@@ -11,10 +17,22 @@ export const findScoreIndex = <T extends { req: number }>(data: T[], score = 0):
   );
 };
 
+/**
+ *
+ * @description Finds the element in the array where the `score` value is is greater than the `req` value but less than the next `req`.
+ * @param data An array of objects with a `req` property
+ * @param score The value to compare against
+ * @returns The element that meets the condition
+ */
 export const findScore = <T extends { req: number }>(data: T[], score = 0): T => {
   return data[findScoreIndex(data, score)];
 };
 
+/**
+ *
+ * @param value any sort of value
+ * @returns Whether or not the value is an object, not null and is not an array
+ */
 export const isObject = (value: any): value is object =>
   typeof value === 'object' && value !== null && !Array.isArray(value);
 

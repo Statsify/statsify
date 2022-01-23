@@ -9,11 +9,11 @@ export class Status {
   @Field()
   public game: Game;
 
-  @Field()
-  public mode: string;
+  @Field({ required: false })
+  public mode?: string;
 
-  @Field()
-  public map: string;
+  @Field({ required: false })
+  public map?: string;
 
   public constructor(data: APIData) {
     this.online = data.online;

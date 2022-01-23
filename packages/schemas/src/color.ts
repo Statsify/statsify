@@ -20,7 +20,12 @@ export const colors = [
 ] as const;
 
 export type ColorCode = typeof colors[number]['code'];
+
 export type ColorHex = typeof colors[number]['hex'];
+
+/**
+ * The name of the color in all caps
+ */
 export type ColorId = typeof colors[number]['id'];
 
 export class Color {
