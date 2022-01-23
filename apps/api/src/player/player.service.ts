@@ -101,8 +101,9 @@ export class PlayerService {
       if (cachedFriend && cachedFriend.displayName) {
         friend.displayName = cachedFriend.displayName;
         friend.expiresAt = cachedFriend.expiresAt;
-        if (!inPageRange) continue;
       }
+
+      if (!inPageRange) continue;
 
       if (
         !cachedFriend ||
