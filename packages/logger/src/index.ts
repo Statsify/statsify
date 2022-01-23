@@ -4,7 +4,7 @@ import chalk from 'chalk';
 const defaultLogLevels: LogLevel[] = ['log', 'error', 'warn', 'debug', 'verbose'];
 
 /**
- * A logger implemntating the NestJS LoggerService interface. However can be used anywhere.
+ * A logger implementing the NestJS LoggerService interface. However can be used anywhere.
  * Outputs: {icon} {context} {time} {message}
  * @implements {LoggerService}
  */
