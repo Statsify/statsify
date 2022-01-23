@@ -1,7 +1,7 @@
+import { GetGuildDto } from '#dtos/guild.dto';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { Guild } from '@statsify/schemas';
-import { GetGuildDto } from './guild.dto';
 import { GuildService } from './guild.service';
 
 @Controller('/guild')

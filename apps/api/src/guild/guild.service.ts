@@ -1,12 +1,12 @@
+import { GuildQueryType } from '#dtos/guild.dto';
+import { HypixelCache } from '#hypixel/cache.enum';
+import { HypixelService } from '#hypixel/hypixel.service';
+import { PlayerService } from '#player/player.service';
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
 import { deserialize, Guild, serialize } from '@statsify/schemas';
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose';
 import { FilterQuery } from 'mongoose';
-import { HypixelCache } from '../hypixel/cache.enum';
-import { HypixelService } from '../hypixel/hypixel.service';
-import { PlayerService } from '../player/player.service';
-import { GuildQueryType } from './guild.dto';
 
 @Injectable()
 export class GuildService {

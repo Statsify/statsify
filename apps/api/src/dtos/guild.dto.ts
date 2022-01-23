@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
-import { CacheDto } from '../hypixel/cache.dto';
+import { CacheDto } from './cache.dto';
 
 export enum GuildQueryType {
   ID = 'ID',

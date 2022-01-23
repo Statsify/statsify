@@ -2,7 +2,13 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "importsNotUsedAsValues": "preserve",
-    "strictPropertyInitialization": false
+    "strictPropertyInitialization": false,
+    "paths": {
+      "#dtos/*": ["./src/dtos/*"],
+      "#guild/*": ["./src/guild/*"],
+      "#hypixel/*": ["./src/hypixel/*"],
+      "#player/*": ["./src/player/*"],
+    }
   },
   "include": ["src"]
 }

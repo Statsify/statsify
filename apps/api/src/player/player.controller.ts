@@ -1,8 +1,8 @@
+import { CachedPlayerDto, FriendDto, UuidDto } from '#dtos/player.dto';
+import { HypixelService } from '#hypixel/hypixel.service';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Player, RecentGame, Status } from '@statsify/schemas';
-import { HypixelService } from '../hypixel/hypixel.service';
-import { GetPlayerDto, GetWithUuidDto } from './player.dto';
+import { Friends, Player, RecentGame, Status } from '@statsify/schemas';
 import { PlayerService } from './player.service';
 
 @ApiTags('players')
@@ -16,7 +16,7 @@ export class PlayerController {
   @ApiOperation({ summary: 'Get a Player' })
   @ApiOkResponse({ type: Player })
   @Get()
-  public async getPlayer(@Query() { player: tag, cache }: GetPlayerDto) {
+  public async getPlayer(@Query() { player: tag, cache }: CachedPlayerDto) {
     const player = await this.playerService.findOne(tag, cache);
 
     return {
@@ -28,7 +28,7 @@ export class PlayerController {
   @ApiOperation({ summary: 'Get the Recent Games of a Player' })
   @ApiOkResponse({ type: [RecentGame] })
   @Get('/recentgames')
-  public async getRecentGames(@Query() { uuid }: GetWithUuidDto) {
+  public async getRecentGames(@Query() { uuid }: UuidDto) {
     const games = await this.hypixelService.getRecentGames(uuid);
 
     return {
@@ -40,12 +40,24 @@ export class PlayerController {
   @ApiOperation({ summary: 'Get the Status of a Player' })
   @ApiOkResponse({ type: Status })
   @Get('/status')
-  public async getStatus(@Query() { uuid }: GetWithUuidDto) {
+  public async getStatus(@Query() { uuid }: UuidDto) {
     const status = await this.hypixelService.getStatus(uuid);
 
     return {
       success: !!status,
       status,
+    };
+  }
+
+  @ApiOperation({ summary: 'Get the Friends of a Player' })
+  @ApiOkResponse({ type: Friends })
+  @Get('/friends')
+  public async getFriends(@Query() { player: tag, page }: FriendDto) {
+    const friends = await this.playerService.findFriends(tag, page);
+
+    return {
+      success: !!friends,
+      friends,
     };
   }
 }

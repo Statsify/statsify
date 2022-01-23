@@ -1,3 +1,4 @@
+export * from './friends';
 export * from './guild';
 export * from './player';
 export * from './recentgame';

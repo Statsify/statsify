@@ -1,16 +1,16 @@
+import { HypixelCache } from '#hypixel/cache.enum';
+import { HypixelService } from '#hypixel/hypixel.service';
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
-import { deserialize, Player, serialize } from '@statsify/schemas';
+import { deserialize, Friends, Player, serialize } from '@statsify/schemas';
 import type { ReturnModelType } from '@typegoose/typegoose';
-import { HypixelCache } from '../hypixel/cache.enum';
-import { HypixelService } from '../hypixel/hypixel.service';
 import { PlayerSelection, PlayerSelector } from './player.select';
-
 @Injectable()
 export class PlayerService {
   public constructor(
     private readonly hypixelService: HypixelService,
-    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>
+    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
+    @InjectModel(Friends) private readonly friendsModel: ReturnModelType<typeof Friends>
   ) {}
 
   /**
@@ -62,6 +62,71 @@ export class PlayerService {
     }
 
     return cachedPlayer ?? null;
+  }
+
+  public async findFriends(tag: string, page: number) {
+    const player = await this.findOne(tag, HypixelCache.CACHE_ONLY, {
+      displayName: true,
+      uuid: true,
+    });
+
+    if (!player) return null;
+
+    const cachedFriends = await this.friendsModel
+      .findOne()
+      .where('uuid')
+      .equals(player.uuid)
+      .lean()
+      .exec();
+
+    const pageSize = 8;
+
+    const friends = await this.hypixelService.getFriends(player.uuid);
+
+    if (!friends) return null;
+
+    const friendMap = Object.fromEntries(
+      (cachedFriends?.friends ?? []).map((friend) => [friend.uuid, friend])
+    );
+
+    const pageMin = page * pageSize;
+    const pageMax = pageMin + pageSize;
+
+    for (let i = 0; i < friends.friends.length; i++) {
+      const friend = friends.friends[i];
+      const cachedFriend = friendMap[friend.uuid];
+
+      const inPageRange = i >= pageMin && i < pageMax;
+
+      if (cachedFriend && cachedFriend.displayName) {
+        friend.displayName = cachedFriend.displayName;
+        friend.expiresAt = cachedFriend.expiresAt;
+        if (!inPageRange) continue;
+      }
+
+      if (
+        !cachedFriend ||
+        !this.hypixelService.shouldCache(cachedFriend.expiresAt, HypixelCache.CACHE)
+      ) {
+        const friendData = await this.findOne(friend.uuid, HypixelCache.CACHE_ONLY, {
+          displayName: true,
+        });
+
+        friend.displayName = friendData ? friendData.displayName : `Error ${friend.uuid}`;
+
+        friend.expiresAt = Date.now() + 86400000;
+      }
+    }
+
+    await this.friendsModel
+      .replaceOne({ uuid: player.uuid }, friends, { upsert: true })
+      .lean()
+      .exec();
+
+    friends.displayName = player.displayName;
+    friends.friends = friends.friends.slice(pageMin, pageMax);
+
+    return friends;
   }
 
   public serialize(instance: Player) {
