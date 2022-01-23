@@ -8,6 +8,7 @@
       "#guild/*": ["./src/guild/*"],
       "#hypixel/*": ["./src/hypixel/*"],
       "#player/*": ["./src/player/*"],
+      "#hypixel-resources/*": ["./src/hypixel-resources/*"]
     }
   },
   "include": ["src"]

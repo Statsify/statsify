@@ -32,6 +32,7 @@
     "#dtos/*": "./dist/dtos/*.js",
     "#guild/*": "./dist/guild/*.js",
     "#hypixel/*": "./dist/hypixel/*.js",
+    "#hypixel-resources/*": "./dist/hypixel-resources/*.js",
     "#player/*": "./dist/player/*.js"
   }
 }

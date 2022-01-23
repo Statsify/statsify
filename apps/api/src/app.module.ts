@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { GuildModule } from './guild/guild.module';
+import { HypixelResourcesModule } from './hypixel-resources/hypixel-resources.module';
 import { PlayerModule } from './player/player.module';
 
 @Module({
@@ -19,6 +20,7 @@ import { PlayerModule } from './player/player.module';
     }),
     PlayerModule,
     GuildModule,
+    HypixelResourcesModule,
   ],
   controllers: [AppController],
 })
