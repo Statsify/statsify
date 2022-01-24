@@ -1,4 +1,4 @@
-import { GetGuildDto } from '#dtos/guild.dto';
+import { GuildDto } from '#dtos/guild.dto';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { Guild } from '@statsify/schemas';
@@ -11,7 +11,7 @@ export class GuildController {
   @ApiOperation({ summary: 'Get a Guild', tags: ['guilds'] })
   @ApiOkResponse({ type: Guild })
   @Get()
-  public async getGuild(@Query() { guild: tag, type, cache }: GetGuildDto) {
+  public async getGuild(@Query() { guild: tag, type, cache }: GuildDto) {
     const guild = await this.guildService.findOne(tag, type, cache);
 
     return {

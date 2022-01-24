@@ -8,7 +8,7 @@ export enum GuildQueryType {
   PLAYER = 'PLAYER',
 }
 
-export class GetGuildDto extends CacheDto {
+export class GuildDto extends CacheDto {
   @IsString()
   @MinLength(1)
   @MaxLength(36)

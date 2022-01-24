@@ -3,6 +3,7 @@ export * from './gamecounts';
 export * from './guild';
 export * from './player';
 export * from './recentgame';
+export * from './skin';
 export * from './status';
 export * from './util/deserialize';
 export * from './util/selector';

@@ -19,6 +19,7 @@
     "@statsify/logger": "*",
     "@statsify/schemas": "*",
     "@typegoose/typegoose": "^9.5.0",
+    "canvas": "^2.9.0",
     "class-transformer": "0.4.0",
     "class-validator": "^0.13.2",
     "fastify-swagger": "^4.13.1",
@@ -33,6 +34,7 @@
     "#guild/*": "./dist/guild/*.js",
     "#hypixel/*": "./dist/hypixel/*.js",
     "#hypixel-resources/*": "./dist/hypixel-resources/*.js",
-    "#player/*": "./dist/player/*.js"
+    "#player/*": "./dist/player/*.js",
+    "#skin/*": "./dist/skin/*.js"
   }
 }

@@ -1,4 +1,6 @@
-import { CachedPlayerDto, FriendDto, UuidDto } from '#dtos/player.dto';
+import { CachedPlayerDto } from '#dtos/cached-player.dto';
+import { FriendDto } from '#dtos/friend.dto';
+import { UuidDto } from '#dtos/uuid.dto';
 import { HypixelService } from '#hypixel/hypixel.service';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';

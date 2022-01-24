@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { GuildModule } from './guild/guild.module';
 import { HypixelResourcesModule } from './hypixel-resources/hypixel-resources.module';
 import { PlayerModule } from './player/player.module';
+import { SkinModule } from './skin/skin.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { PlayerModule } from './player/player.module';
     PlayerModule,
     GuildModule,
     HypixelResourcesModule,
+    SkinModule,
   ],
   controllers: [AppController],
 })
