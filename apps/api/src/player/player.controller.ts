@@ -4,7 +4,7 @@ import { UuidDto } from '#dtos/uuid.dto';
 import { HypixelService } from '#hypixel/hypixel.service';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Friends, Player, RecentGame, Status } from '@statsify/schemas';
+import { Friends, Player, RankedSkyWars, RecentGame, Status } from '@statsify/schemas';
 import { PlayerService } from './player.service';
 
 @ApiTags('players')
@@ -60,6 +60,18 @@ export class PlayerController {
     return {
       success: !!friends,
       friends,
+    };
+  }
+
+  @ApiOperation({ summary: 'Get the Ranked SkyWars rating and position of a Player' })
+  @ApiOkResponse({ type: RankedSkyWars })
+  @Get('/rankedskywars')
+  public async getRankedSkyWars(@Query() { uuid }: UuidDto) {
+    const rankedSkyWars = await this.hypixelService.getRankedSkyWars(uuid);
+
+    return {
+      success: !!rankedSkyWars,
+      rankedSkyWars,
     };
   }
 }

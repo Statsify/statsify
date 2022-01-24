@@ -2,6 +2,7 @@ export * from './friends';
 export * from './gamecounts';
 export * from './guild';
 export * from './player';
+export * from './rankedskywars';
 export * from './recentgame';
 export * from './skin';
 export * from './status';
