@@ -13,7 +13,6 @@ import { MurderMystery } from './gamemodes/murdermystery';
 import { Paintball } from './gamemodes/paintball';
 import { Parkour } from './gamemodes/parkour';
 import { Quake } from './gamemodes/quake';
-import { Seasonal } from './gamemodes/seasonal';
 import { SkyWars } from './gamemodes/skywars';
 import { SmashHeroes } from './gamemodes/smashheroes';
 import { SpeedUHC } from './gamemodes/speeduhc';
@@ -65,9 +64,6 @@ export class PlayerStats {
   public quake: Quake;
 
   @Field()
-  public seasonal: Seasonal;
-
-  @Field()
   public skywars: SkyWars;
 
   @Field()
@@ -110,7 +106,6 @@ export class PlayerStats {
     this.paintball = new Paintball(data?.stats?.Paintball ?? {});
     this.parkour = new Parkour(data?.parkourCompletions ?? {});
     this.quake = new Quake(data?.stats?.Quake ?? {}, data?.achievements ?? {});
-    this.seasonal = new Seasonal(data?.stats?.Arcade ?? {});
     this.skywars = new SkyWars(data?.stats?.SkyWars ?? {});
     this.smashheroes = new SmashHeroes(data?.stats?.SuperSmash ?? {});
     this.speeduhc = new SpeedUHC(data?.stats?.SpeedUHC ?? {});

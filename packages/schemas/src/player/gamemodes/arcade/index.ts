@@ -15,6 +15,7 @@ import {
   MiniWalls,
   PartyGames,
   PixelPainters,
+  Seasonal,
   ThrowOut,
   Zombies,
 } from './mode';
@@ -71,6 +72,9 @@ export class Arcade {
   @Field()
   public captureTheWool: CaptureTheWool;
 
+  @Field()
+  public seasonal: Seasonal;
+
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
     this.miniwalls = new MiniWalls(data);
@@ -89,5 +93,6 @@ export class Arcade {
     this.throwOut = new ThrowOut(data);
     this.pixelPainters = new PixelPainters(data);
     this.captureTheWool = new CaptureTheWool(ap);
+    this.seasonal = new Seasonal(data);
   }
 }
