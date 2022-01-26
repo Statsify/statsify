@@ -85,3 +85,31 @@ export const prettify = (s: string): string =>
     .replace(/\w\S*/g, (t) => t.charAt(0).toUpperCase() + t.substring(1).toLowerCase());
 
 export const removeFormatting = (s: string): string => s.replace(/§./g, '');
+
+/**
+ *
+ * @param data The object to be flattened
+ * @param prefix The prefix to be added to the keys
+ * @param dest The object to be flattened into
+ * @returns The flattened object
+ * @example ```ts
+ * flatten({ a: { b: 1, c: 2 }, d: 3 }); // { 'a.b': 1, 'a.c': 2, 'd': 3 }
+ * ```
+ */
+export const flatten = <T>(data: T, prefix = '', dest: APIData = {}): APIData => {
+  if (isObject(data)) {
+    Object.keys(data ?? {}).forEach((key) => {
+      const tmpPrefix = prefix.length > 0 ? prefix + '.' + key : prefix + key;
+      flatten(data[key as keyof T], tmpPrefix, dest);
+    });
+  } else if (Array.isArray(data)) {
+    data.forEach((item, i) => {
+      const tmpPrefix = prefix.length > 0 ? prefix + '.' + i : prefix + i;
+      flatten(item, tmpPrefix, dest);
+    });
+  } else {
+    dest[prefix] = data;
+  }
+
+  return dest;
+};

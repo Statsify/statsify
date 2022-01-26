@@ -2,7 +2,7 @@ import { CachedPlayerDto } from '#dtos/cached-player.dto';
 import { FriendDto } from '#dtos/friend.dto';
 import { UuidDto } from '#dtos/uuid.dto';
 import { HypixelService } from '#hypixel/hypixel.service';
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Logger, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Friends, Player, RankedSkyWars, RecentGame, Status } from '@statsify/schemas';
 import { PlayerService } from './player.service';
@@ -10,6 +10,8 @@ import { PlayerService } from './player.service';
 @ApiTags('players')
 @Controller('/player')
 export class PlayerController {
+  private readonly logger = new Logger('PlayerController');
+
   public constructor(
     private readonly playerService: PlayerService,
     private readonly hypixelService: HypixelService

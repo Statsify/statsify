@@ -1,5 +1,6 @@
 import { HypixelCache } from '#hypixel/cache.enum';
 import { HypixelService } from '#hypixel/hypixel.service';
+import { LeaderboardService } from '#leaderboards/leaderboard.service';
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
 import { deserialize, Friends, Player, serialize } from '@statsify/schemas';
@@ -9,6 +10,7 @@ import { PlayerSelection, PlayerSelector } from './player.select';
 export class PlayerService {
   public constructor(
     private readonly hypixelService: HypixelService,
+    private readonly leaderboardService: LeaderboardService,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
     @InjectModel(Friends) private readonly friendsModel: ReturnModelType<typeof Friends>
   ) {}
@@ -17,7 +19,7 @@ export class PlayerService {
    *
    * @param tag UUID or username
    * @param cacheLevel What type of data to return (cached/live)
-   * @param selector (optional) A mogno selector to select specific fields
+   * @param selector (optional) A mongo selector to select specific fields
    */
   public async findOne<T extends PlayerSelector>(
     tag: string,
@@ -53,8 +55,12 @@ export class PlayerService {
 
     if (player) {
       player.expiresAt = Date.now() + 300000;
+      player.leaderboardBanned = cachedPlayer?.leaderboardBanned ?? false;
+      player.resetMinute = cachedPlayer?.resetMinute;
 
       const doc = this.serialize(player);
+
+      this.leaderboardService.addLeaderboards(Player, player, 'id', player.leaderboardBanned);
 
       await this.playerModel.replaceOne({ uuid: player.uuid }, doc, { upsert: true });
 

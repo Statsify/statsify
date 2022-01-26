@@ -10,6 +10,9 @@ export class Player {
   @Field({ unique: true, index: true, required: true })
   public uuid: string;
 
+  @Field({ unique: true, index: true, required: true })
+  public id: string;
+
   @Field()
   public username: string;
 
@@ -66,7 +69,7 @@ export class Player {
     required: false,
     description: "The time the player's historical stats reset",
   })
-  public resetMinute: number;
+  public resetMinute?: number;
 
   @Field({ required: false })
   public leaderboardBanned?: boolean;
@@ -76,6 +79,7 @@ export class Player {
 
   public constructor(data: APIData = {}) {
     this.uuid = data.uuid;
+    this.id = data._id;
     this.username = data.displayname;
     this.usernameToLower = this.username?.toLowerCase();
 

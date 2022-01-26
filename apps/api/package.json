@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@m8a/nestjs-typegoose": "^8.0.2",
+    "@nestjs-modules/ioredis": "^1.0.0",
     "@nestjs/axios": "^0.0.5",
     "@nestjs/common": "^8.2.6",
     "@nestjs/config": "^1.1.6",
@@ -24,6 +25,7 @@
     "class-validator": "^0.13.2",
     "fastify-swagger": "^4.13.1",
     "handlebars": "^4.7.7",
+    "ioredis": "^4.28.3",
     "mongoose": "^6.1.7",
     "point-of-view": "^5.0.0",
     "reflect-metadata": "^0.1.13",
@@ -35,6 +37,10 @@
     "#hypixel/*": "./dist/hypixel/*.js",
     "#hypixel-resources/*": "./dist/hypixel-resources/*.js",
     "#player/*": "./dist/player/*.js",
-    "#skin/*": "./dist/skin/*.js"
+    "#skin/*": "./dist/skin/*.js",
+    "#leaderboards/*": "./dist/leaderboards/*.js"
+  },
+  "devDependencies": {
+    "@types/ioredis": "^4"
   }
 }
