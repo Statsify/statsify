@@ -8,13 +8,13 @@
     "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w"
   },
   "dependencies": {
-    "@nestjs/swagger": "^5.1.5",
+    "@nestjs/swagger": "^5.2.0",
     "@statsify/logger": "workspace:^",
     "@statsify/math": "*",
     "@statsify/util": "*",
     "@typegoose/typegoose": "^9.5.0"
   },
   "devDependencies": {
-    "type-fest": "^2.10.0"
+    "type-fest": "^2.11.1"
   }
 }
