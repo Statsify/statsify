@@ -19,17 +19,17 @@
     "@nestjs/swagger": "^5.2.0",
     "@statsify/logger": "*",
     "@statsify/schemas": "*",
-    "@typegoose/typegoose": "^9.5.0",
+    "@typegoose/typegoose": "^9.6.2",
     "canvas": "^2.9.0",
     "class-transformer": "0.4.0",
     "class-validator": "^0.13.2",
-    "fastify-swagger": "^4.13.1",
+    "fastify-swagger": "^4.15.0",
     "handlebars": "^4.7.7",
-    "ioredis": "^4.28.3",
-    "mongoose": "^6.1.8",
+    "ioredis": "^4.28.5",
+    "mongoose": "^6.2.1",
     "point-of-view": "^5.1.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.5.2"
+    "rxjs": "^7.5.4"
   },
   "imports": {
     "#dtos/*": "./dist/dtos/*.js",
