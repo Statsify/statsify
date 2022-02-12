@@ -7,31 +7,32 @@ import { Constructor, flatten } from '@statsify/util';
 export class LeaderboardService {
   public constructor(@InjectRedis() private readonly redis: Redis) {}
 
-  public async addLeaderboards<T>(
+  public addLeaderboards<T>(
     constructor: Constructor<T>,
     instance: T,
     idField: keyof T,
     remove = false
   ) {
+    const pipeline = this.redis.pipeline();
     const name = constructor.name.toLowerCase();
-    const fields = this.getLeaderboardFields(constructor);
+    const fields = this.getLeaderboardFields(instance);
     const flatInstance = flatten(instance);
 
     const id = instance[idField] as unknown as string;
 
-    const leaderboards = fields
+    fields
       .filter((field) => remove || (flatInstance[field] && typeof flatInstance[field] === 'number'))
-      .map(async (field) => {
+      .forEach((field) => {
         const value = flatInstance[field];
 
         if (remove || value === 0 || Number.isNaN(value)) {
-          await this.redis.zrem(`${name}.${field}`, id);
+          pipeline.zrem(`${name}.${field}`, id);
         } else {
-          await this.redis.zadd(`${name}.${field}`, value, id);
+          pipeline.zadd(`${name}.${field}`, value, id);
         }
       });
 
-    return Promise.all(leaderboards);
+    return pipeline.exec();
   }
 
   public async getLeaderboard<T>(
@@ -57,7 +58,7 @@ export class LeaderboardService {
     return response;
   }
 
-  public getLeaderboardFields(constructor: Constructor) {
-    return getLeaderboardFields(constructor);
+  public getLeaderboardFields<T>(instance: T) {
+    return getLeaderboardFields(instance);
   }
 }

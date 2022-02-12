@@ -51,7 +51,7 @@ export class PlayerService {
       return cachedPlayer;
     }
 
-    const player = await this.hypixelService.getPlayer(tag);
+    const player = await this.hypixelService.getPlayer(cachedPlayer?.uuid ?? tag);
 
     if (player) {
       player.expiresAt = Date.now() + 300000;
@@ -60,7 +60,7 @@ export class PlayerService {
 
       const doc = this.serialize(player);
 
-      this.leaderboardService.addLeaderboards(Player, player, 'id', player.leaderboardBanned);
+      this.leaderboardService.addLeaderboards(Player, player, 'uuid', player.leaderboardBanned);
 
       await this.playerModel.replaceOne({ uuid: player.uuid }, doc, { upsert: true });
 

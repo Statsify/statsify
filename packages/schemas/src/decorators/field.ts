@@ -3,10 +3,10 @@ import { Constructor, noop } from '@statsify/util';
 import { Prop } from '@typegoose/typegoose';
 import type { BasePropOptions } from '@typegoose/typegoose/lib/types';
 
-type Ref = () => Constructor;
-type Type = Ref | (() => Constructor[]);
-type Getter<T> = (target: T) => any;
-type LeaderboardSort = 'ASC' | 'DESC';
+export type Ref = () => Constructor;
+export type Type = Ref | (() => Constructor[]);
+export type Getter<T> = (target: T) => any;
+export type LeaderboardSort = 'ASC' | 'DESC';
 
 export interface FieldOptions {
   hide?: boolean;

@@ -4,7 +4,7 @@ import { FieldMetadata } from '../decorators';
 import { getConstructor, getPropertyNames } from './shared';
 
 export const serialize = <T>(constructor: Constructor<T>, instance: T) => {
-  const propertyKeys = getPropertyNames(constructor);
+  const propertyKeys = getPropertyNames(instance);
 
   for (const propertyKey of propertyKeys) {
     if (typeof instance[propertyKey] === 'function') continue;

@@ -13,8 +13,8 @@ export const getConstructor = <T>(instance: T): Constructor<T> => instance.const
  * @param constructor The constructor to check
  * @returns A list of property names in the constructor
  */
-export const getPropertyNames = <T>(constructor: Constructor<T>): (keyof T)[] => {
-  let obj = constructor.prototype;
+export const getPropertyNames = <T>(instance: T): (keyof T)[] => {
+  let obj = instance;
   const result = new Set<keyof T>();
   const filtered = ['name', 'arguments', 'caller', 'apply', 'bind', 'call', '__proto__', 'length'];
 

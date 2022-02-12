@@ -5,9 +5,7 @@ import { getConstructor, getPropertyNames } from './shared';
 
 export const deserialize = <T>(instance: T, data: T) => {
   const constructor = getConstructor(instance);
-  const propertyKeys = getPropertyNames(constructor).filter(
-    (key) => key !== 'constructor'
-  ) as (keyof T)[];
+  const propertyKeys = getPropertyNames(instance);
 
   const getters: [keyof T, Getter<any>][] = [];
 

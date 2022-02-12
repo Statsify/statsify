@@ -13,7 +13,7 @@
     "@nestjs-modules/ioredis": "^1.0.0",
     "@nestjs/axios": "^0.0.5",
     "@nestjs/common": "^8.2.6",
-    "@nestjs/config": "^1.1.6",
+    "@nestjs/config": "^1.1.7",
     "@nestjs/core": "^8.2.6",
     "@nestjs/platform-fastify": "^8.2.6",
     "@nestjs/swagger": "^5.2.0",
@@ -21,7 +21,7 @@
     "@statsify/schemas": "*",
     "@typegoose/typegoose": "^9.6.2",
     "canvas": "^2.9.0",
-    "class-transformer": "0.4.0",
+    "class-transformer": "0.5.1",
     "class-validator": "^0.13.2",
     "fastify-swagger": "^4.15.0",
     "handlebars": "^4.7.7",
@@ -41,6 +41,6 @@
     "#leaderboards/*": "./dist/leaderboards/*.js"
   },
   "devDependencies": {
-    "@types/ioredis": "^4"
+    "@types/ioredis": "^4.28.8"
   }
 }

@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { Logger } from '@statsify/logger';
 import {
   Friends,
   Gamecounts,
@@ -16,6 +17,8 @@ import { HypixelCache } from './cache.enum';
 
 @Injectable()
 export class HypixelService {
+  private readonly logger = new Logger('HypixelService');
+
   public constructor(private readonly httpService: HttpService) {}
 
   public shouldCache(expirey: number, cache: HypixelCache): boolean {
@@ -108,7 +111,10 @@ export class HypixelService {
   private request<T>(url: string): Observable<T> {
     return this.httpService.get(url).pipe(
       map((res) => res.data),
-      catchError((err) => throwError(() => new Error(err.message)))
+      catchError((err) => {
+        this.logger.error(`Error requesting ${url}: ${err.message}`);
+        return throwError(() => new Error(err.message));
+      })
     );
   }
 }
