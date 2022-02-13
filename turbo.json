@@ -1,0 +1,17 @@
+{
+  "baseBranch": "origin/main",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "build:watch": {
+      "outputs": ["dist/**"],
+      "dependsOn": ["^build:watch"]
+    },
+    "test:types": {
+      "outputs": [],
+      "dependsOn": ["^test:types"]
+    }
+  }
+}

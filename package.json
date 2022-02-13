@@ -33,26 +33,6 @@
     "commit": "git cz",
     "api": "yarn workspace api"
   },
-  "turbo": {
-    "baseBranch": "origin/main",
-    "pipeline": {
-      "build": {
-        "dependsOn": [
-          "^build"
-        ]
-      },
-      "build:watch": {
-        "dependsOn": [
-          "^build:watch"
-        ]
-      },
-      "test:types": {
-        "dependsOn": [
-          "^test:types"
-        ]
-      }
-    }
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Statsify/statsify.git"
