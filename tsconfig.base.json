@@ -7,6 +7,7 @@
     "moduleResolution": "Node",
     "module": "CommonJS",
     "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
     "target": "ES2018",

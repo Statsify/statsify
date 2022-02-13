@@ -5,7 +5,8 @@
   "types": "src/index.ts",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
-    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w"
+    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w",
+    "test:types": "tsc --noEmit"
   },
   "dependencies": {
     "@nestjs/swagger": "^5.2.0",

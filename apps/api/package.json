@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
-    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w"
+    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w",
+    "test:types": "tsc --noEmit"
   },
   "dependencies": {
     "@m8a/nestjs-typegoose": "^8.0.2",
