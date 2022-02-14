@@ -1,0 +1,37 @@
+name: Tests
+on: [push, pull_request]
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install node.js v16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      - name: Turbo cache
+        id: turbo-cache
+        uses: actions/cache@v2
+        with:
+          path: .turbo
+          key: turbo-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ github.job }}-${{ github.ref_name }}-
+
+      - name: Install dependencies
+        run: yarn --immutable
+
+      - name: Lint
+        run: yarn lint --cache-dir=".turbo"
+
+      - name: Typecheck
+        run: yarn test:types --cache-dir=".turbo"
+
+      - name: Build
+        run: yarn build --cache-dir=".turbo"

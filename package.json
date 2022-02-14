@@ -30,7 +30,7 @@
     "build": "turbo run build",
     "build:watch": "turbo run build:watch --parallel --no-cache",
     "test:types": "turbo run test:types",
-    "lint": "eslint './{packages,apps}/**/*.{ts,tsx,js,jsx}' --fix",
+    "lint": "turbo run lint",
     "commit": "git cz",
     "api": "yarn workspace api",
     "postinstall": "husky install"

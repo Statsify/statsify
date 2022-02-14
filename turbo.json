@@ -12,6 +12,10 @@
     "test:types": {
       "outputs": [],
       "dependsOn": ["^test:types"]
+    },
+    "lint": {
+      "outputs": [],
+      "dependsOn": ["^lint"]
     }
   }
 }

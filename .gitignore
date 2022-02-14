@@ -2,7 +2,6 @@
 dist
 node_modules
 .turbo
-yarn.lock
 package-lock.json
 .yarn/install-state.gz
 .yarn/build-state.yml

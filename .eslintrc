@@ -5,7 +5,7 @@
     "ecmaVersion": 2020,
     "sourceType": "module",
     "warnOnUnsupportedTypeScriptVersion": false,
-    "project": "./tsconfig.eslint.json"
+    "project": "../../tsconfig.eslint.json"
   },
   "plugins": ["@typescript-eslint"],
   "extends": [

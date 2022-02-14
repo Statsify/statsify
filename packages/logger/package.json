@@ -6,7 +6,8 @@
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w",
-    "test:types": "tsc --noEmit"
+    "test:types": "tsc --noEmit",
+    "lint": "eslint './src/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
     "chalk": "4.1.2"
