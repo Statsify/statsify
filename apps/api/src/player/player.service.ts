@@ -5,6 +5,7 @@ import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
 import { deserialize, Friends, Player, serialize } from '@statsify/schemas';
 import type { ReturnModelType } from '@typegoose/typegoose';
+import short from 'short-uuid';
 import { PlayerSelection, PlayerSelector } from './player.select';
 @Injectable()
 export class PlayerService {
@@ -60,9 +61,15 @@ export class PlayerService {
 
       const doc = this.serialize(player);
 
+      const uuid = player.uuid;
+
+      player.uuid = short(short.constants.cookieBase90).fromUUID(uuid);
+
       this.leaderboardService.addLeaderboards(Player, player, 'uuid', player.leaderboardBanned);
 
-      await this.playerModel.replaceOne({ uuid: player.uuid }, doc, { upsert: true });
+      await this.playerModel.replaceOne({ uuid }, doc, { upsert: true });
+
+      player.uuid = uuid;
 
       return this.deserialize(player);
     }

@@ -31,7 +31,8 @@
     "mongoose": "^6.2.1",
     "point-of-view": "^5.1.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.5.4"
+    "rxjs": "^7.5.4",
+    "short-uuid": "^4.2.0"
   },
   "imports": {
     "#dtos/*": "./dist/dtos/*.js",
