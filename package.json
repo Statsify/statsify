@@ -33,6 +33,7 @@
     "lint": "turbo run lint",
     "commit": "git cz",
     "api": "yarn workspace api",
+    "site": "yarn workspace site",
     "postinstall": "husky install"
   },
   "repository": {

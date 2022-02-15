@@ -13,3 +13,5 @@ package-lock.json
 *.7z
 *.rar
 .swc
+.next
+.vercel

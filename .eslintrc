@@ -5,9 +5,21 @@
     "ecmaVersion": 2020,
     "sourceType": "module",
     "warnOnUnsupportedTypeScriptVersion": false,
-    "project": "../../tsconfig.eslint.json"
+    "project": "./tsconfig.eslint.json"
   },
   "plugins": ["@typescript-eslint"],
+  "overrides": [
+    {
+      "files": ["*.tsx"],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended",
+        "plugin:@next/next/recommended"
+      ]
+    }
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
