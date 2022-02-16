@@ -21,7 +21,7 @@ export class HistoricalService {
   @Cron(CronExpression.EVERY_MINUTE)
   public async resetPlayers() {
     const date = new Date();
-    const minute = date.getHours() * 60 + date.getMinutes();
+    const minute = this.getMinute(date);
 
     const players = await this.dailyModel
       .find({ resetMinute: minute })
@@ -29,12 +29,7 @@ export class HistoricalService {
       .lean()
       .exec();
 
-    const type =
-      date.getDate() === 1
-        ? HistoricalType.MONTHLY
-        : date.getDay() === 1
-        ? HistoricalType.WEEKLY
-        : HistoricalType.DAILY;
+    const type = this.getType(date);
 
     players.forEach(async ({ uuid }) => {
       const player = await this.playerService.findOne(uuid, HypixelCache.LIVE);
@@ -54,5 +49,50 @@ export class HistoricalService {
 
     if (isWeekly) await this.weeklyModel.replaceOne({ uuid: doc.uuid }, doc, { upsert: true });
     if (isMonthly) await this.monthlyModel.replaceOne({ uuid: doc.uuid }, doc, { upsert: true });
+
+    return this.playerService.deserialize(player);
+  }
+
+  public async findOne(
+    tag: string,
+    type: HistoricalType
+  ): Promise<[newPlayer: Player | null, oldPlayer: Player | null, isNew?: boolean]> {
+    const newPlayer = await this.playerService.findOne(tag, HypixelCache.LIVE);
+
+    if (!newPlayer) return [null, null];
+
+    const models = {
+      [HistoricalType.DAILY]: this.dailyModel,
+      [HistoricalType.WEEKLY]: this.weeklyModel,
+      [HistoricalType.MONTHLY]: this.monthlyModel,
+    };
+
+    let oldPlayer = (await models[type].findOne({ uuid: newPlayer.uuid }).lean().exec()) as Player;
+    let isNew = false;
+
+    if (!oldPlayer) {
+      const date = new Date();
+      const minute = this.getMinute(date);
+      const type = this.getType(date);
+
+      newPlayer.resetMinute = minute;
+
+      oldPlayer = await this.resetPlayer(newPlayer, type);
+      isNew = true;
+    }
+
+    return [newPlayer, this.playerService.deserialize(oldPlayer), isNew];
+  }
+
+  private getMinute(date: Date) {
+    return date.getHours() * 60 + date.getMinutes();
+  }
+
+  private getType(date: Date) {
+    return date.getDate() === 1
+      ? HistoricalType.MONTHLY
+      : date.getDay() === 1
+      ? HistoricalType.WEEKLY
+      : HistoricalType.DAILY;
   }
 }
