@@ -6,6 +6,9 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { Player } from '@statsify/schemas';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { HistoricalType } from './historical-type.enum';
+import { Daily } from './models/daily.model';
+import { Monthly } from './models/monthly.model';
+import { Weekly } from './models/weekly.model';
 
 @Injectable()
 export class HistoricalService {
@@ -13,9 +16,9 @@ export class HistoricalService {
 
   public constructor(
     private readonly playerService: PlayerService,
-    @InjectModel(Player) private readonly dailyModel: ReturnModelType<typeof Player>,
-    @InjectModel(Player) private readonly weeklyModel: ReturnModelType<typeof Player>,
-    @InjectModel(Player) private readonly monthlyModel: ReturnModelType<typeof Player>
+    @InjectModel(Daily) private readonly dailyModel: ReturnModelType<typeof Player>,
+    @InjectModel(Weekly) private readonly weeklyModel: ReturnModelType<typeof Player>,
+    @InjectModel(Monthly) private readonly monthlyModel: ReturnModelType<typeof Player>
   ) {}
 
   @Cron(CronExpression.EVERY_MINUTE)
@@ -43,6 +46,8 @@ export class HistoricalService {
     const player = await this.playerService.findOne(tag, HypixelCache.LIVE);
 
     if (!player) return null;
+
+    player.resetMinute = this.getMinute(new Date());
 
     return this.resetPlayer(player, type);
   }
