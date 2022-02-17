@@ -39,6 +39,14 @@ export class HistoricalService {
     });
   }
 
+  public async findAndReset(tag: string, type: HistoricalType) {
+    const player = await this.playerService.findOne(tag, HypixelCache.LIVE);
+
+    if (!player) return null;
+
+    return this.resetPlayer(player, type);
+  }
+
   public async resetPlayer(player: Player, resetType: HistoricalType) {
     const isMonthly = resetType === HistoricalType.MONTHLY;
     const isWeekly = resetType === HistoricalType.WEEKLY || isMonthly;

@@ -1,7 +1,9 @@
 import { HistoricalDto } from '#dtos/historical.dto';
-import { Controller, Get, Query } from '@nestjs/common';
+import { PlayerDto } from '#dtos/player.dto';
+import { Controller, Delete, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Player } from '@statsify/schemas';
+import { HistoricalType } from './historical-type.enum';
 import { HistoricalService } from './historical.service';
 
 @ApiTags('players')
@@ -28,5 +30,16 @@ export class HistoricalController {
       newPlayer,
       isNew,
     };
+  }
+
+  @ApiOperation({ summary: 'Reset the Historical stats of a Player' })
+  @ApiOkResponse({ type: Player })
+  @Delete()
+  public async deleteHistoricalStats(@Query() { player: tag }: PlayerDto) {
+    const player = await this.historicalService.findAndReset(tag, HistoricalType.MONTHLY);
+
+    if (!player) return { success: false };
+
+    return { success: true, player };
   }
 }
