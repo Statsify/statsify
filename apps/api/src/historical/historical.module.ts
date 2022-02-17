@@ -3,12 +3,13 @@ import { TypegooseModule } from '@m8a/nestjs-typegoose';
 import { Module } from '@nestjs/common';
 import { HistoricalController } from './historical.controller';
 import { HistoricalService } from './historical.service';
-import { Daily } from './models/daily.model';
-import { Monthly } from './models/monthly.model';
-import { Weekly } from './models/weekly.model';
+import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from './models';
 
 @Module({
-  imports: [PlayerModule, TypegooseModule.forFeature([Daily, Weekly, Monthly])],
+  imports: [
+    PlayerModule,
+    TypegooseModule.forFeature([Daily, Weekly, Monthly, LastDay, LastWeek, LastMonth]),
+  ],
   controllers: [HistoricalController],
   providers: [HistoricalService],
 })
