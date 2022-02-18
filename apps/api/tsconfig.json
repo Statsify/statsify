@@ -6,6 +6,7 @@
     "paths": {
       "#dtos/*": ["./src/dtos/*"],
       "#guild/*": ["./src/guild/*"],
+      "#historical/*": ["./src/historical/*"],
       "#hypixel/*": ["./src/hypixel/*"],
       "#player/*": ["./src/player/*"],
       "#hypixel-resources/*": ["./src/hypixel-resources/*"],

@@ -37,7 +37,7 @@ $ yarn lint
 ```
 
 ## 💁 Contributing
-* Follow the guidelines in `.github/CONTRIBUTING.md`
+* Follow the guidelines in [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md)
 
 ## 😕 Help
 * If you require support join our [`Discord`] and create a ticket in the `#create-ticket` channel
@@ -58,7 +58,7 @@ $ yarn lint
 [`website`]: https://statsify.net
 [`bot invite`]: https://statsify.net/invite
 [`discord`]: https://statsify.net/discord
-[`donate`]: `https://statsify.net/donate`
+[`donate`]: https://statsify.net/donate
 [`node.js`]: https://nodejs.org/en/download/current/
 [`redis`]: https://redis.io
 [`mongodb`]: https://www.mongodb.com/

@@ -59,17 +59,15 @@ export class PlayerService {
       player.leaderboardBanned = cachedPlayer?.leaderboardBanned ?? false;
       player.resetMinute = cachedPlayer?.resetMinute;
 
-      const doc = this.serialize(player);
-
       const uuid = player.uuid;
-
       player.uuid = short(short.constants.cookieBase90).fromUUID(uuid);
 
       this.leaderboardService.addLeaderboards(Player, player, 'uuid', player.leaderboardBanned);
 
-      await this.playerModel.replaceOne({ uuid }, doc, { upsert: true });
-
       player.uuid = uuid;
+      const doc = this.serialize(player);
+
+      await this.playerModel.replaceOne({ uuid }, doc, { upsert: true });
 
       return this.deserialize(player);
     }

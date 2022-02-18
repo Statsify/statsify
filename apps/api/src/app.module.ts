@@ -1,4 +1,5 @@
 import { GuildModule } from '#guild/guild.module';
+import { HistoricalModule } from '#historical/historical.module';
 import { HypixelResourcesModule } from '#hypixel-resources/hypixel-resources.module';
 import { LeaderboardModule } from '#leaderboards/leaderboard.module';
 import { PlayerModule } from '#player/player.module';
@@ -7,6 +8,7 @@ import { TypegooseModule } from '@m8a/nestjs-typegoose';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 
 @Module({
@@ -30,11 +32,13 @@ import { AppController } from './app.controller';
       }),
       inject: [ConfigService],
     }),
+    ScheduleModule.forRoot(),
     PlayerModule,
     GuildModule,
     HypixelResourcesModule,
     SkinModule,
     LeaderboardModule,
+    HistoricalModule,
   ],
   controllers: [AppController],
 })
