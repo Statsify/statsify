@@ -12,8 +12,12 @@ export class LeaderboardController {
 
   @Post('/player')
   @ApiOperation({ summary: 'Get a Player Leaderboard' })
-  public async getPlayerLeaderboard(@Body() { field }: LeaderboardDto) {
-    const lb = await this.leaderboardService.getLeaderboard(Player, field, 0, 10);
+  public async getPlayerLeaderboard(@Body() { field, page }: LeaderboardDto) {
+    const pageSize = 10;
+    const top = page * pageSize;
+    const bottom = top + pageSize;
+
+    const lb = await this.leaderboardService.getLeaderboard(Player, field, top, bottom);
 
     const translator = short(short.constants.cookieBase90);
     return lb.map((player) => ({
