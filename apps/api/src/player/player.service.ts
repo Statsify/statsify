@@ -73,7 +73,7 @@ export class PlayerService {
       player.leaderboardBanned = cachedPlayer?.leaderboardBanned ?? false;
       player.resetMinute = cachedPlayer?.resetMinute;
 
-      await this.saveOne(player);
+      this.saveOne(player);
 
       return this.deserialize(player);
     } else if (cachedPlayer) {
@@ -184,6 +184,8 @@ export class PlayerService {
       if (flat[field]) delete flat[field];
     });
 
+    await this.playerModel.replaceOne({ uuid: player.uuid }, flat, { upsert: true });
+
     await this.leaderboardService.addLeaderboards(
       Player,
       doc,
@@ -191,8 +193,6 @@ export class PlayerService {
       fields,
       player.leaderboardBanned ?? false
     );
-
-    await this.playerModel.replaceOne({ uuid: player.uuid }, flat, { upsert: true });
   }
 
   private mergeDocuments(mongoDoc: any, redisDoc: Record<string, number>) {
