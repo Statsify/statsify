@@ -113,3 +113,30 @@ export const flatten = <T>(data: T, prefix = '', dest: APIData = {}): APIData =>
 
   return dest;
 };
+
+/**
+ *
+ * @param data The object to be unflattened
+ * @example ```ts
+ * unflatten({ 'stats.bedwars.wins': 1 }); // { stats: { bedwars: { wins: 1 } } }
+ * ```
+ */
+export const unflatten = <T>(obj: APIData): T => {
+  const tmp: APIData = {};
+  Object.keys(obj).forEach((k) => {
+    if (k.includes('.')) {
+      const path = k.split('.');
+      const x = path.pop();
+      const body = path.reduce((cur, p) => {
+        if (!(p in cur)) cur[p] = {};
+        return cur[p];
+      }, tmp);
+
+      body[x ?? ''] = obj[k];
+    } else {
+      tmp[k] = obj[k];
+    }
+  });
+
+  return tmp as T;
+};

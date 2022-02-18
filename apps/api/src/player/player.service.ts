@@ -4,6 +4,7 @@ import { LeaderboardService } from '#leaderboards/leaderboard.service';
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
 import { deserialize, Friends, Player, serialize } from '@statsify/schemas';
+import { flatten, unflatten } from '@statsify/util';
 import type { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
 import { PlayerSelection, PlayerSelector } from './player.select';
@@ -35,7 +36,7 @@ export class PlayerService {
   ): Promise<Player | PlayerSelection<T> | null> {
     const type = tag.length > 16 ? 'uuid' : 'usernameToLower';
 
-    let cachedPlayer: Player | null = await this.playerModel
+    const cachedPlayer: Player | null = await this.playerModel
       .findOne()
       .where(type)
       .equals(tag.replace(/-/g, '').toLowerCase())
@@ -43,13 +44,26 @@ export class PlayerService {
       .lean()
       .exec();
 
+    let redisSelector: string[] | undefined = undefined;
+
+    if (selector) {
+      redisSelector = Object.keys(selector).filter(
+        (field) => selector[field as keyof typeof selector]
+      );
+    }
+
     if (cachedPlayer) {
-      cachedPlayer = this.deserialize(cachedPlayer);
       cachedPlayer.cached = true;
     }
 
     if (cachedPlayer && this.hypixelService.shouldCache(cachedPlayer.expiresAt, cacheLevel)) {
-      return cachedPlayer;
+      const redisDoc = await this.leaderboardService.getLeaderboardDocument(
+        Player,
+        cachedPlayer.shortUuid,
+        redisSelector
+      );
+
+      return this.mergeDocuments(cachedPlayer, redisDoc);
     }
 
     const player = await this.hypixelService.getPlayer(cachedPlayer?.uuid ?? tag);
@@ -59,20 +73,20 @@ export class PlayerService {
       player.leaderboardBanned = cachedPlayer?.leaderboardBanned ?? false;
       player.resetMinute = cachedPlayer?.resetMinute;
 
-      const uuid = player.uuid;
-      player.uuid = short(short.constants.cookieBase90).fromUUID(uuid);
-
-      this.leaderboardService.addLeaderboards(Player, player, 'uuid', player.leaderboardBanned);
-
-      player.uuid = uuid;
-      const doc = this.serialize(player);
-
-      await this.playerModel.replaceOne({ uuid }, doc, { upsert: true });
+      await this.saveOne(player);
 
       return this.deserialize(player);
+    } else if (cachedPlayer) {
+      const redisDoc = await this.leaderboardService.getLeaderboardDocument(
+        Player,
+        cachedPlayer.shortUuid,
+        redisSelector
+      );
+
+      return this.mergeDocuments(cachedPlayer, redisDoc);
     }
 
-    return cachedPlayer ?? null;
+    return null;
   }
 
   /**
@@ -156,5 +170,37 @@ export class PlayerService {
 
   public deserialize(data: Player) {
     return deserialize(new Player(), data);
+  }
+
+  private async saveOne(player: Player) {
+    player.shortUuid = short(short.constants.cookieBase90).fromUUID(player.uuid);
+
+    const doc = this.serialize(player);
+
+    const fields = this.leaderboardService.getLeaderboardFields(Player);
+    const flat = flatten(doc);
+
+    fields.forEach((field) => {
+      if (flat[field]) delete flat[field];
+    });
+
+    await this.leaderboardService.addLeaderboards(
+      Player,
+      doc,
+      'shortUuid',
+      fields,
+      player.leaderboardBanned ?? false
+    );
+
+    await this.playerModel.replaceOne({ uuid: player.uuid }, flat, { upsert: true });
+  }
+
+  private mergeDocuments(mongoDoc: any, redisDoc: Record<string, number>) {
+    return this.deserialize(
+      unflatten<Player>({
+        ...mongoDoc,
+        ...redisDoc,
+      })
+    );
   }
 }
