@@ -12,7 +12,7 @@ A Hypixel and Minecraft focused Discord Bot
 -   [`Node.js`]: For running code (`v16`)
 -   *[`Yarn`]*\*: Installing packages and running scripts (`npm install -g yarn`)
 -   [`MongoDB`]: For Persistent data ([`Atlas`])
--   *[`Redis`]*\*: For Leaderboards, ([`Redis Cloud`])
+-   [`Redis`]: For Leaderboards, ([`Redis Cloud`])
 -   [`Hypixel API Key`]: For requesting Hypixel data, Run `/api new` on hypixel.net
 
 \* is Optional
