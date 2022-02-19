@@ -1,4 +1,4 @@
-import { HeadDto } from '#dtos/head.dto';
+import { HeadDto } from '#dtos';
 import { ErrorResponse } from '#responses';
 import { Controller, Get, Query, StreamableFile } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOperation, ApiTags } from '@nestjs/swagger';

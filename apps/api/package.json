@@ -36,7 +36,7 @@
     "short-uuid": "^4.2.0"
   },
   "imports": {
-    "#dtos/*": "./dist/dtos/*.js",
+    "#dtos": "./dist/dtos/index.js",
     "#guild/*": "./dist/guild/*.js",
     "#historical/*": "./dist/historical/*.js",
     "#hypixel/*": "./dist/hypixel/*.js",
