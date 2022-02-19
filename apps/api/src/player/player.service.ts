@@ -7,6 +7,7 @@ import { deserialize, Friends, Player, serialize } from '@statsify/schemas';
 import type { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
 import { PlayerSelection, PlayerSelector } from './player.select';
+
 @Injectable()
 export class PlayerService {
   public constructor(

@@ -2,9 +2,16 @@ import { CachedPlayerDto } from '#dtos/cached-player.dto';
 import { FriendDto } from '#dtos/friend.dto';
 import { UuidDto } from '#dtos/uuid.dto';
 import { HypixelService } from '#hypixel/hypixel.service';
+import {
+  ErrorResponse,
+  GetFriendsResponse,
+  GetPlayerResponse,
+  GetRankedSkyWarsResponse,
+  GetRecentGamesResponse,
+  GetStatusResponse,
+} from '#responses';
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Friends, Player, RankedSkyWars, RecentGame, Status } from '@statsify/schemas';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PlayerService } from './player.service';
 
 @ApiTags('players')
@@ -16,7 +23,8 @@ export class PlayerController {
   ) {}
 
   @ApiOperation({ summary: 'Get a Player' })
-  @ApiOkResponse({ type: Player })
+  @ApiOkResponse({ type: GetPlayerResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
   @Get()
   public async getPlayer(@Query() { player: tag, cache }: CachedPlayerDto) {
     const player = await this.playerService.findOne(tag, cache);
@@ -28,7 +36,8 @@ export class PlayerController {
   }
 
   @ApiOperation({ summary: 'Get the Recent Games of a Player' })
-  @ApiOkResponse({ type: [RecentGame] })
+  @ApiOkResponse({ type: GetRecentGamesResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
   @Get('/recentgames')
   public async getRecentGames(@Query() { uuid }: UuidDto) {
     const games = await this.hypixelService.getRecentGames(uuid);
@@ -40,7 +49,8 @@ export class PlayerController {
   }
 
   @ApiOperation({ summary: 'Get the Status of a Player' })
-  @ApiOkResponse({ type: Status })
+  @ApiOkResponse({ type: GetStatusResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
   @Get('/status')
   public async getStatus(@Query() { uuid }: UuidDto) {
     const status = await this.hypixelService.getStatus(uuid);
@@ -52,7 +62,8 @@ export class PlayerController {
   }
 
   @ApiOperation({ summary: 'Get the Friends of a Player' })
-  @ApiOkResponse({ type: Friends })
+  @ApiOkResponse({ type: GetFriendsResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
   @Get('/friends')
   public async getFriends(@Query() { player: tag, page }: FriendDto) {
     const friends = await this.playerService.findFriends(tag, page);
@@ -64,7 +75,8 @@ export class PlayerController {
   }
 
   @ApiOperation({ summary: 'Get the Ranked SkyWars rating and position of a Player' })
-  @ApiOkResponse({ type: RankedSkyWars })
+  @ApiOkResponse({ type: GetRankedSkyWarsResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
   @Get('/rankedskywars')
   public async getRankedSkyWars(@Query() { uuid }: UuidDto) {
     const rankedSkyWars = await this.hypixelService.getRankedSkyWars(uuid);

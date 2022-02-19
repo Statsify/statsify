@@ -1,7 +1,7 @@
 import { HypixelService } from '#hypixel/hypixel.service';
+import { ErrorResponse, GetGamecountsResponse, GetWatchdogResponse } from '#responses';
 import { Controller, Get } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Gamecounts, Watchdog } from '@statsify/schemas';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('hypixel-resources')
 @Controller(`/hypixelresources`)
@@ -10,7 +10,8 @@ export class HypixelResourcesController {
 
   @Get(`/watchdog`)
   @ApiOperation({ summary: 'Get Watchdog Stats' })
-  @ApiOkResponse({ type: Watchdog })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiOkResponse({ type: GetWatchdogResponse })
   public async getWatchdog() {
     const watchdog = await this.hypixelService.getWatchdog();
 
@@ -22,7 +23,8 @@ export class HypixelResourcesController {
 
   @Get(`/gamecounts`)
   @ApiOperation({ summary: 'Get Hypixel Gamecounts' })
-  @ApiOkResponse({ type: Gamecounts })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiOkResponse({ type: GetGamecountsResponse })
   public async getGamecounts() {
     const gamecounts = await this.hypixelService.getGamecounts();
 
