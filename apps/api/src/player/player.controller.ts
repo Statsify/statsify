@@ -1,6 +1,4 @@
-import { CachedPlayerDto } from '#dtos/cached-player.dto';
-import { FriendDto } from '#dtos/friend.dto';
-import { UuidDto } from '#dtos/uuid.dto';
+import { CachedPlayerDto, FriendDto, UuidDto } from '#dtos';
 import { HypixelService } from '#hypixel/hypixel.service';
 import {
   ErrorResponse,

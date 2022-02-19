@@ -4,7 +4,7 @@
     "importsNotUsedAsValues": "preserve",
     "strictPropertyInitialization": false,
     "paths": {
-      "#dtos/*": ["./src/dtos/*"],
+      "#dtos": ["./src/dtos"],
       "#guild/*": ["./src/guild/*"],
       "#historical/*": ["./src/historical/*"],
       "#hypixel/*": ["./src/hypixel/*"],

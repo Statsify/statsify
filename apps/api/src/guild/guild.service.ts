@@ -1,4 +1,3 @@
-import { GuildQueryType } from '#dtos/guild.dto';
 import { HypixelCache } from '#hypixel/cache.enum';
 import { HypixelService } from '#hypixel/hypixel.service';
 import { PlayerService } from '#player/player.service';
@@ -7,6 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { deserialize, Guild, serialize } from '@statsify/schemas';
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose';
 import { FilterQuery } from 'mongoose';
+import { GuildQuery } from './guild-query.enum';
 
 @Injectable()
 export class GuildService {
@@ -16,18 +16,14 @@ export class GuildService {
     @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>
   ) {}
 
-  public async findOne(
-    tag: string,
-    type: GuildQueryType,
-    cache: HypixelCache
-  ): Promise<Guild | null> {
+  public async findOne(tag: string, type: GuildQuery, cache: HypixelCache): Promise<Guild | null> {
     tag = tag.toLowerCase().replace(/-/g, '');
 
-    const queries: Record<GuildQueryType, FilterQuery<DocumentType<Guild>>> = {
-      [GuildQueryType.ID]: { id: tag },
-      [GuildQueryType.NAME]: { nameToLower: tag },
+    const queries: Record<GuildQuery, FilterQuery<DocumentType<Guild>>> = {
+      [GuildQuery.ID]: { id: tag },
+      [GuildQuery.NAME]: { nameToLower: tag },
       //Searches through the members for a matching uuid
-      [GuildQueryType.PLAYER]: { members: { $elemMatch: { uuid: tag } } },
+      [GuildQuery.PLAYER]: { members: { $elemMatch: { uuid: tag } } },
     };
 
     const cachedGuild = await this.guildModel.findOne(queries[type]).lean().exec();
@@ -41,11 +37,11 @@ export class GuildService {
 
     const guild = await this.hypixelService.getGuild(
       tag,
-      type.toLowerCase() as Lowercase<GuildQueryType>
+      type.toLowerCase() as Lowercase<GuildQuery>
     );
 
     if (!guild) {
-      if (cachedGuild && type !== GuildQueryType.PLAYER) {
+      if (cachedGuild && type !== GuildQuery.PLAYER) {
         //If the guild is cached however hypixel doesn't return any data for it and it wasn't searched for by a player then the guild does not exist
         await this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec();
       }

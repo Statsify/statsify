@@ -1,5 +1,4 @@
-import { HistoricalDto } from '#dtos/historical.dto';
-import { PlayerDto } from '#dtos/player.dto';
+import { HistoricalDto, PlayerDto } from '#dtos';
 import { ErrorResponse, GetHistoricalResponse, GetPlayerResponse } from '#responses';
 import { Controller, Delete, Get, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
