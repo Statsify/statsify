@@ -42,6 +42,7 @@
     "#hypixel/*": "./dist/hypixel/*.js",
     "#hypixel-resources/*": "./dist/hypixel-resources/*.js",
     "#player/*": "./dist/player/*.js",
+    "#responses": "./dist/responses/index.js",
     "#skin/*": "./dist/skin/*.js",
     "#leaderboards/*": "./dist/leaderboards/*.js"
   },
