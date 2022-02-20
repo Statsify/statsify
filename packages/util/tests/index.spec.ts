@@ -33,7 +33,7 @@ describe('isObject', () => {
 });
 
 describe('romanNumeral', () => {
-  it('should give the correct roman numberal', () => {
+  it('should give the correct roman numeral', () => {
     expect(romanNumeral(1)).toBe('I');
     expect(romanNumeral(4)).toBe('IV');
     expect(romanNumeral(5)).toBe('V');

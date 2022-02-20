@@ -30,11 +30,11 @@
     "typescript": "^4.5.5"
   },
   "scripts": {
-    "build": "turbo run build --parallel",
+    "build": "turbo run build --parallel --cache-dir='.turbo'",
     "build:watch": "turbo run build:watch --parallel --no-cache",
-    "test:types": "turbo run test:types",
-    "test": "turbo run test --parallel",
-    "lint": "turbo run lint --parallel",
+    "test:types": "turbo run test:types --cache-dir='.turbo'",
+    "test": "turbo run test --parallel --cache-dir='.turbo'",
+    "lint": "turbo run lint --parallel --cache-dir='.turbo'",
     "commit": "git cz",
     "api": "yarn workspace api",
     "site": "yarn workspace site",

@@ -34,13 +34,13 @@ jobs:
         run: yarn --immutable
 
       - name: Lint
-        run: yarn lint --cache-dir=".turbo"
+        run: yarn lint
 
       - name: Typecheck
-        run: yarn test:types --cache-dir=".turbo"
+        run: yarn test:types
 
       - name: Build
-        run: yarn build --cache-dir=".turbo"
+        run: yarn build
 
       - name: Test
-        run: yarn test --cache-dir=".turbo"
+        run: yarn test
