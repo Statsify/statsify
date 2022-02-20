@@ -13,6 +13,6 @@
     "chalk": "4.1.2"
   },
   "devDependencies": {
-    "@nestjs/common": "^8.2.6"
+    "@nestjs/common": "^8.3.1"
   }
 }
