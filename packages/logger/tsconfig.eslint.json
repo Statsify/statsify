@@ -1,3 +1,5 @@
 {
   "extends": "./tsconfig.json",
+  "include": ["src", "tests", "jest.config.js"],
+  "exclude": ["dist"]
 }

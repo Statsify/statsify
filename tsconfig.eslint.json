@@ -1,4 +1,11 @@
 {
   "extends": "./tsconfig.base.json",
-  "include": ["packages/**/*.ts", "packages/**/*.tsx", "apps/**/*.ts", "apps/**/*.tsx"]
+  "include": [
+    "packages/**/*.ts",
+    "packages/**/*.tsx",
+    "apps/**/*.ts",
+    "apps/**/*.tsx",
+    "packages/**/jest.config.js",
+    "apps/**/jest.config.js"
+  ]
 }
