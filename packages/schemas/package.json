@@ -17,6 +17,6 @@
     "@typegoose/typegoose": "^9.6.2"
   },
   "devDependencies": {
-    "type-fest": "^2.11.2"
+    "type-fest": "^2.12.0"
   }
 }
