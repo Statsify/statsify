@@ -3,17 +3,6 @@
   "compilerOptions": {
     "importsNotUsedAsValues": "preserve",
     "strictPropertyInitialization": false,
-    "paths": {
-      "#dtos": ["./src/dtos"],
-      "#guild/*": ["./src/guild/*"],
-      "#historical/*": ["./src/historical/*"],
-      "#hypixel/*": ["./src/hypixel/*"],
-      "#player/*": ["./src/player/*"],
-      "#hypixel-resources/*": ["./src/hypixel-resources/*"],
-      "#responses": ["./src/responses"],
-      "#skin/*": ["./src/skin/*"],
-      "#leaderboards/*": ["./src/leaderboards/*"]
-    }
   },
   "include": ["src"]
 }

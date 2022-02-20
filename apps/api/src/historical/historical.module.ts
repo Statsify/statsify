@@ -1,6 +1,6 @@
-import { PlayerModule } from '#player/player.module';
 import { TypegooseModule } from '@m8a/nestjs-typegoose';
 import { Module } from '@nestjs/common';
+import { PlayerModule } from '../player';
 import { HistoricalController } from './historical.controller';
 import { HistoricalService } from './historical.service';
 import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from './models';

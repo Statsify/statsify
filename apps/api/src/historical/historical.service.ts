@@ -1,10 +1,10 @@
-import { HypixelCache } from '#hypixel/cache.enum';
-import { PlayerService } from '#player/player.service';
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Player } from '@statsify/schemas';
 import { ReturnModelType } from '@typegoose/typegoose';
+import { HypixelCache } from '../hypixel';
+import { PlayerService } from '../player';
 import { HistoricalType } from './historical-type.enum';
 import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from './models';
 

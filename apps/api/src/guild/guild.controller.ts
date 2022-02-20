@@ -1,7 +1,7 @@
-import { GuildDto } from '#dtos';
-import { ErrorResponse, GetGuildResponse } from '#responses';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { GuildDto } from '../dtos';
+import { ErrorResponse, GetGuildResponse } from '../responses';
 import { GuildService } from './guild.service';
 
 @Controller('/guild')

@@ -1166,6 +1166,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/testing@npm:^8.3.1":
+  version: 8.3.1
+  resolution: "@nestjs/testing@npm:8.3.1"
+  dependencies:
+    optional: 0.1.4
+    tslib: 2.3.1
+  peerDependencies:
+    "@nestjs/common": ^8.0.0
+    "@nestjs/core": ^8.0.0
+    "@nestjs/microservices": ^8.0.0
+    "@nestjs/platform-express": ^8.0.0
+  peerDependenciesMeta:
+    "@nestjs/microservices":
+      optional: true
+    "@nestjs/platform-express":
+      optional: true
+  checksum: af5305e24ab81e962a0b94c8607606462e7e44ae79f93c730a8b96a20a933f91b7fc848a1a22e8226a8dc763674d68593fbff3ba2f444e8c3954593c0405b50b
+  languageName: node
+  linkType: hard
+
 "@next/env@npm:12.1.0":
   version: 12.1.0
   resolution: "@next/env@npm:12.1.0"
@@ -2175,6 +2195,7 @@ __metadata:
     "@nestjs/platform-fastify": ^8.3.1
     "@nestjs/schedule": ^1.0.2
     "@nestjs/swagger": ^5.2.0
+    "@nestjs/testing": ^8.3.1
     "@statsify/logger": "*"
     "@statsify/schemas": "*"
     "@typegoose/typegoose": ^9.6.2
@@ -6268,6 +6289,13 @@ __metadata:
   version: 10.0.0
   resolution: "openapi-types@npm:10.0.0"
   checksum: 8cc8b5bf40ea10b1f9c56fb05aada74bfe3d9e94e141464561a5c3cd0a933906e57d9bf4e059219ec8e63a97a69e0655d21c9dd3f4de1ff4f71672d10664cfc0
+  languageName: node
+  linkType: hard
+
+"optional@npm:0.1.4":
+  version: 0.1.4
+  resolution: "optional@npm:0.1.4"
+  checksum: 81fd9884eac9c13b3624821f99aa825b71d46ffd547cd3f8cf9e1dfb0165e531448005288455895550f804bdd66459e4e7ae6e753805b8bf11a5983050d5b7c4
   languageName: node
   linkType: hard
 

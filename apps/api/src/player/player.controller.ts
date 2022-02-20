@@ -1,5 +1,7 @@
-import { CachedPlayerDto, FriendDto, UuidDto } from '#dtos';
-import { HypixelService } from '#hypixel/hypixel.service';
+import { Controller, Get, Query } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CachedPlayerDto, FriendDto, UuidDto } from '../dtos';
+import { HypixelService } from '../hypixel';
 import {
   ErrorResponse,
   GetFriendsResponse,
@@ -7,9 +9,7 @@ import {
   GetRankedSkyWarsResponse,
   GetRecentGamesResponse,
   GetStatusResponse,
-} from '#responses';
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+} from '../responses';
 import { PlayerService } from './player.service';
 
 @ApiTags('players')
