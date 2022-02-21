@@ -2,8 +2,8 @@
   "baseBranch": "origin/main",
   "pipeline": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**"]
+      "outputs": ["dist/**", ".next/**"],
+      "dependsOn": ["^build"]
     },
     "build:watch": {
       "outputs": ["dist/**"],
@@ -12,6 +12,10 @@
     "test:types": {
       "outputs": [],
       "dependsOn": ["^test:types"]
+    },
+    "test": {
+      "outputs": [],
+      "dependsOn": ["^build", "^test"]
     },
     "lint": {
       "outputs": [],

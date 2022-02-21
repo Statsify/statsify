@@ -8,7 +8,8 @@
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w",
     "test:types": "tsc --noEmit",
-    "lint": "eslint './src/**/*.{ts,tsx,js,jsx}' --fix"
+    "test": "jest",
+    "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
     "@m8a/nestjs-typegoose": "^8.0.2",
@@ -35,18 +36,8 @@
     "rxjs": "^7.5.4",
     "short-uuid": "^4.2.0"
   },
-  "imports": {
-    "#dtos": "./dist/dtos/index.js",
-    "#guild/*": "./dist/guild/*.js",
-    "#historical/*": "./dist/historical/*.js",
-    "#hypixel/*": "./dist/hypixel/*.js",
-    "#hypixel-resources/*": "./dist/hypixel-resources/*.js",
-    "#player/*": "./dist/player/*.js",
-    "#responses": "./dist/responses/index.js",
-    "#skin/*": "./dist/skin/*.js",
-    "#leaderboards/*": "./dist/leaderboards/*.js"
-  },
   "devDependencies": {
+    "@nestjs/testing": "^8.3.1",
     "@types/cron": "^1.7.3",
     "@types/ioredis": "^4.28.8"
   }

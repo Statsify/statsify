@@ -1,11 +1,10 @@
-import { HypixelCache } from '#hypixel/cache.enum';
-import { HypixelService } from '#hypixel/hypixel.service';
-import { LeaderboardService } from '#leaderboards/leaderboard.service';
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
 import { deserialize, Friends, Player, serialize } from '@statsify/schemas';
 import type { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
+import { HypixelCache, HypixelService } from '../hypixel';
+import { LeaderboardService } from '../leaderboards';
 import { PlayerSelection, PlayerSelector } from './player.select';
 
 @Injectable()

@@ -1,9 +1,9 @@
-import { GuildModule } from '#guild/guild.module';
-import { HistoricalModule } from '#historical/historical.module';
-import { HypixelResourcesModule } from '#hypixel-resources/hypixel-resources.module';
-import { LeaderboardModule } from '#leaderboards/leaderboard.module';
-import { PlayerModule } from '#player/player.module';
-import { SkinModule } from '#skin/skin.module';
+import { GuildModule } from './guild';
+import { HistoricalModule } from './historical';
+import { HypixelResourcesModule } from './hypixel-resources';
+import { LeaderboardModule } from './leaderboards';
+import { PlayerModule } from './player';
+import { SkinModule } from './skin';
 import { TypegooseModule } from '@m8a/nestjs-typegoose';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { Module } from '@nestjs/common';
