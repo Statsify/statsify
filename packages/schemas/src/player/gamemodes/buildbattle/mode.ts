@@ -1,12 +1,15 @@
 import { APIData } from '@statsify/util';
 import { Field } from '../../../decorators';
-
-export class BuildBattleOverall {
+export class BuildBattleGuessTheBuild {
   @Field()
   public wins: number;
 
+  @Field()
+  public correctGuesses: number;
+
   public constructor(data: APIData) {
-    this.wins = data.wins;
+    this.wins = data.wins_guess_the_build;
+    this.correctGuesses = data.correct_guesses;
   }
 }
 
@@ -23,24 +26,20 @@ export class BuildBattleMultiplayerMode {
   }
 }
 
+export class BuildBattleOverall {
+  @Field()
+  public wins: number;
+
+  public constructor(data: APIData) {
+    this.wins = data.wins;
+  }
+}
+
 export class BuildBattlePro {
   @Field()
   public wins: number;
 
   public constructor(data: APIData) {
     this.wins = data.wins_solo_pro;
-  }
-}
-
-export class BuildBattleGuessTheBuild {
-  @Field()
-  public wins: number;
-
-  @Field()
-  public correctGuesses: number;
-
-  public constructor(data: APIData) {
-    this.wins = data.wins_guess_the_build;
-    this.correctGuesses = data.correct_guesses;
   }
 }

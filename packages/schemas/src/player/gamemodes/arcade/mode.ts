@@ -9,10 +9,7 @@ import {
   ScubaSimulator,
 } from './seasonal-mode';
 
-export class MiniWalls {
-  @Field({ default: 'soldier' })
-  public kit: string;
-
+export class BlockingDead {
   @Field()
   public wins: number;
 
@@ -20,45 +17,12 @@ export class MiniWalls {
   public kills: number;
 
   @Field()
-  public deaths: number;
-
-  @Field()
-  public kdr: number;
-
-  @Field()
-  public fkdr: number;
-
-  @Field()
-  public finalKills: number;
-
-  @Field()
-  public arrowsShot: number;
-
-  @Field()
-  public arrowsHit: number;
-
-  @Field()
-  public bowAccuracy: number;
-
-  @Field()
-  public witherDamage: number;
-
-  @Field()
-  public witherKills: number;
+  public headshots: number;
 
   public constructor(data: APIData) {
-    this.kit = data.miniwalls_activeKit || 'soldier';
-    this.wins = data.wins_mini_walls;
-    this.kills = data.kills_mini_walls;
-    this.deaths = data.deaths_mini_walls;
-    this.kdr = ratio(this.kills, this.deaths);
-    this.fkdr = ratio(add(this.kills, this.deaths), this.deaths);
-    this.arrowsShot = data.arrows_shot_mini_walls;
-    this.arrowsHit = data.arrows_hit_mini_walls;
-    this.bowAccuracy = ratio(this.arrowsHit, this.arrowsShot);
-    this.finalKills = data.final_kills_mini_walls;
-    this.witherDamage = data.wither_damage_mini_walls;
-    this.witherKills = data.wither_kills_mini_walls;
+    this.wins = data.wins_dayone;
+    this.kills = data.kills_dayone;
+    this.headshots = data.headshots_dayone;
   }
 }
 
@@ -84,6 +48,18 @@ export class BountyHunters {
     this.deaths = data.deaths_oneinthequiver;
     this.kdr = ratio(this.kills, this.deaths);
     this.bountyKills = data.bounty_kills_oneinthequiver;
+  }
+}
+export class CaptureTheWool {
+  @Field()
+  public kills: number;
+
+  @Field()
+  public captures: number;
+
+  public constructor(ap: APIData) {
+    this.kills = ap.arcade_ctw_slayer;
+    this.captures = ap.arcade_ctw_oh_sheep;
   }
 }
 
@@ -196,27 +172,6 @@ export class GalaxyWars {
   }
 }
 
-export class HoleInTheWall {
-  @Field()
-  public wins: number;
-
-  @Field()
-  public gamesPlayed: number;
-
-  @Field()
-  public highestScoreQualifications: number;
-
-  @Field()
-  public highestScoreFinals: number;
-
-  public constructor(data: APIData) {
-    this.wins = data.wins_hole_in_the_wall;
-    this.gamesPlayed = data.rounds_hole_in_the_wall;
-    this.highestScoreQualifications = data.hitw_record_q;
-    this.highestScoreFinals = data.hitw_record_f;
-  }
-}
-
 export class HideAndSeekMode {
   @Field()
   public wins: number;
@@ -251,6 +206,27 @@ export class HideAndSeek {
   }
 }
 
+export class HoleInTheWall {
+  @Field()
+  public wins: number;
+
+  @Field()
+  public gamesPlayed: number;
+
+  @Field()
+  public highestScoreQualifications: number;
+
+  @Field()
+  public highestScoreFinals: number;
+
+  public constructor(data: APIData) {
+    this.wins = data.wins_hole_in_the_wall;
+    this.gamesPlayed = data.rounds_hole_in_the_wall;
+    this.highestScoreQualifications = data.hitw_record_q;
+    this.highestScoreFinals = data.hitw_record_f;
+  }
+}
+
 export class HypixelSays {
   @Field()
   public points: number;
@@ -265,6 +241,59 @@ export class HypixelSays {
     this.points = add(data.rounds_simon_says, data.rounds_santa_says);
     this.roundsWon = add(data.round_wins_simon_says, data.round_wins_santa_says);
     this.wins = add(data.wins_simon_says, data.wins_santa_says);
+  }
+}
+
+export class MiniWalls {
+  @Field({ default: 'soldier' })
+  public kit: string;
+
+  @Field()
+  public wins: number;
+
+  @Field()
+  public kills: number;
+
+  @Field()
+  public deaths: number;
+
+  @Field()
+  public kdr: number;
+
+  @Field()
+  public fkdr: number;
+
+  @Field()
+  public finalKills: number;
+
+  @Field()
+  public arrowsShot: number;
+
+  @Field()
+  public arrowsHit: number;
+
+  @Field()
+  public bowAccuracy: number;
+
+  @Field()
+  public witherDamage: number;
+
+  @Field()
+  public witherKills: number;
+
+  public constructor(data: APIData) {
+    this.kit = data.miniwalls_activeKit || 'soldier';
+    this.wins = data.wins_mini_walls;
+    this.kills = data.kills_mini_walls;
+    this.deaths = data.deaths_mini_walls;
+    this.kdr = ratio(this.kills, this.deaths);
+    this.fkdr = ratio(add(this.kills, this.deaths), this.deaths);
+    this.arrowsShot = data.arrows_shot_mini_walls;
+    this.arrowsHit = data.arrows_hit_mini_walls;
+    this.bowAccuracy = ratio(this.arrowsHit, this.arrowsShot);
+    this.finalKills = data.final_kills_mini_walls;
+    this.witherDamage = data.wither_damage_mini_walls;
+    this.witherKills = data.wither_kills_mini_walls;
   }
 }
 
@@ -293,28 +322,6 @@ export class PixelPainters {
     this.wins = data.wins_draw_their_thing;
   }
 }
-
-export class ThrowOut {
-  @Field()
-  public wins: number;
-
-  @Field()
-  public kills: number;
-
-  @Field()
-  public deaths: number;
-
-  @Field()
-  public kdr: number;
-
-  public constructor(data: APIData) {
-    this.wins = data.wins_throw_out;
-    this.kills = data.kills_throw_out;
-    this.deaths = data.deaths_throw_out;
-    this.kdr = ratio(this.kills, this.deaths);
-  }
-}
-
 export class Seasonal {
   @Field()
   public totalWins: number;
@@ -351,7 +358,7 @@ export class Seasonal {
   }
 }
 
-export class BlockingDead {
+export class ThrowOut {
   @Field()
   public wins: number;
 
@@ -359,25 +366,16 @@ export class BlockingDead {
   public kills: number;
 
   @Field()
-  public headshots: number;
+  public deaths: number;
+
+  @Field()
+  public kdr: number;
 
   public constructor(data: APIData) {
-    this.wins = data.wins_dayone;
-    this.kills = data.kills_dayone;
-    this.headshots = data.headshots_dayone;
-  }
-}
-
-export class CaptureTheWool {
-  @Field()
-  public kills: number;
-
-  @Field()
-  public captures: number;
-
-  public constructor(ap: APIData) {
-    this.kills = ap.arcade_ctw_slayer;
-    this.captures = ap.arcade_ctw_oh_sheep;
+    this.wins = data.wins_throw_out;
+    this.kills = data.kills_throw_out;
+    this.deaths = data.deaths_throw_out;
+    this.kdr = ratio(this.kills, this.deaths);
   }
 }
 
