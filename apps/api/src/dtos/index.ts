@@ -5,5 +5,6 @@ export * from './guild.dto';
 export * from './head.dto';
 export * from './historical-type.dto';
 export * from './historical.dto';
+export * from './leaderboard.dto';
 export * from './player.dto';
 export * from './uuid.dto';

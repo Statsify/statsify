@@ -1,8 +1,8 @@
-import { LeaderboardDto } from '#dtos/leaderboard.dto';
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Player } from '@statsify/schemas';
 import short from 'short-uuid';
+import { LeaderboardDto } from '../dtos';
 import { LeaderboardService } from './leaderboard.service';
 
 @ApiTags('leaderboards')
