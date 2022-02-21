@@ -25,10 +25,13 @@ export class Arcade {
   public coins: number;
 
   @Field()
-  public miniwalls: MiniWalls;
+  public blockingDead: BlockingDead;
 
   @Field()
   public bountyHunters: BountyHunters;
+
+  @Field()
+  public captureTheWool: CaptureTheWool;
 
   @Field()
   public dragonWars: DragonWars;
@@ -43,56 +46,52 @@ export class Arcade {
   public football: Football;
 
   @Field()
-  public blockingDead: BlockingDead;
-
-  @Field()
   public galaxyWars: GalaxyWars;
-
-  @Field()
-  public holeInTheWall: HoleInTheWall;
 
   @Field()
   public hideAndSeek: HideAndSeek;
 
   @Field()
+  public holeInTheWall: HoleInTheWall;
+
+  @Field()
   public hypixelSays: HypixelSays;
+
+  @Field()
+  public miniwalls: MiniWalls;
 
   @Field()
   public partyGames: PartyGames;
 
   @Field()
-  public zombies: Zombies;
+  public pixelPainters: PixelPainters;
 
+  @Field()
+  public seasonal: Seasonal;
   @Field()
   public throwOut: ThrowOut;
 
   @Field()
-  public pixelPainters: PixelPainters;
-
-  @Field()
-  public captureTheWool: CaptureTheWool;
-
-  @Field()
-  public seasonal: Seasonal;
+  public zombies: Zombies;
 
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
-    this.miniwalls = new MiniWalls(data);
+    this.blockingDead = new BlockingDead(data);
     this.bountyHunters = new BountyHunters(data);
+    this.captureTheWool = new CaptureTheWool(ap);
     this.dragonWars = new DragonWars(data);
     this.enderSpleef = new EnderSpleef(data);
     this.farmHunt = new FarmHunt(data);
     this.football = new Football(data);
-    this.blockingDead = new BlockingDead(data);
     this.galaxyWars = new GalaxyWars(data);
-    this.holeInTheWall = new HoleInTheWall(data);
     this.hideAndSeek = new HideAndSeek(data);
+    this.holeInTheWall = new HoleInTheWall(data);
     this.hypixelSays = new HypixelSays(data);
+    this.miniwalls = new MiniWalls(data);
     this.partyGames = new PartyGames(data);
-    this.zombies = new Zombies(data);
-    this.throwOut = new ThrowOut(data);
     this.pixelPainters = new PixelPainters(data);
-    this.captureTheWool = new CaptureTheWool(ap);
     this.seasonal = new Seasonal(data);
+    this.throwOut = new ThrowOut(data);
+    this.zombies = new Zombies(data);
   }
 }

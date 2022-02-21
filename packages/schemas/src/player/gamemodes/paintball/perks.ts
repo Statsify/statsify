@@ -3,33 +3,32 @@ import { Field } from '../../../decorators';
 
 export class PaintballPerks {
   @Field({ leaderboard: false })
-  public godfather: number;
+  public adrenaline: number;
 
   @Field({ leaderboard: false })
   public endurance: number;
 
   @Field({ leaderboard: false })
-  public superluck: number;
-
-  @Field({ leaderboard: false })
   public fortune: number;
 
   @Field({ leaderboard: false })
-  public adrenaline: number;
+  public godfather: number;
+
+  @Field({ leaderboard: false })
+  public headstart: number;
+  @Field({ leaderboard: false })
+  public superluck: number;
 
   @Field({ leaderboard: false })
   public transfusion: number;
 
-  @Field({ leaderboard: false })
-  public headstart: number;
-
   public constructor(data: APIData) {
-    this.godfather = data.godfather;
-    this.endurance = data.endurance;
-    this.superluck = data.superluck;
-    this.fortune = data.fortune;
     this.adrenaline = data.adrenaline;
-    this.transfusion = data.transfusion;
+    this.endurance = data.endurance;
+    this.fortune = data.fortune;
+    this.godfather = data.godfather;
     this.headstart = data.headstart;
+    this.superluck = data.superluck;
+    this.transfusion = data.transfusion;
   }
 }
