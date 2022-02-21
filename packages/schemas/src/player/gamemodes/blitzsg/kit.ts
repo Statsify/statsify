@@ -6,7 +6,7 @@ export class BlitzSGKit {
   @Field()
   public gamesPlayed: number;
 
-  @Field({ getter: (target: BlitzSGKit) => (target.level === undefined ? 0 : target.level + 1) })
+  @Field({ leaderboard: false })
   public level: number;
 
   @Field()
@@ -66,19 +66,20 @@ export class BlitzSGKit {
       'armorer',
     ];
 
-    const specialKits = ['donkeytamer', 'warrior', 'ranger', 'phoenix'];
+    const specialKits = ['donkeytamer', 'warrior', 'ranger', 'phoenix', 'milkman'];
 
     if (kit in data) {
-      this.level = data[kit];
-    } else if (defaultKits.includes(kit)) {
-      this.level = 0;
+      this.level = data[kit] + 1;
+    } else if (defaultKits.includes(kit) && this.exp > 0) {
+      this.level = 1;
     } else if (specialKits.includes(kit)) {
-      const prestiges = [0, 100, 250, 500, 1000, 1500, 2000, 2500, 5000, 10000];
+      const prestiges = [1, 100, 250, 500, 1000, 1500, 2000, 2500, 5000, 10000];
 
-      this.level = findScoreIndex(
-        prestiges.map((n) => ({ req: n })),
-        this.exp
-      );
+      this.level =
+        findScoreIndex(
+          prestiges.map((n) => ({ req: n })),
+          this.exp
+        ) + 1;
     }
   }
 }

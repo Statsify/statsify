@@ -1,8 +1,7 @@
 import { ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Field } from '../../../decorators';
-
-export class TNTRun {
+export class BowSpleef {
   @Field()
   public wins: number;
 
@@ -13,13 +12,13 @@ export class TNTRun {
   public wlr: number;
 
   @Field()
-  public record: number;
+  public hits: number;
 
   public constructor(data: APIData) {
-    this.wins = data.wins_tntrun;
-    this.losses = data.deaths_tntrun;
+    this.wins = data.wins_bowspleef;
+    this.losses = data.deaths_bowspleef;
     this.wlr = ratio(this.wins, this.losses);
-    this.record = data.record_tntrun;
+    this.hits = data.tags_bowspleef;
   }
 }
 
@@ -56,7 +55,7 @@ export class PVPRun {
   }
 }
 
-export class BowSpleef {
+export class TNTRun {
   @Field()
   public wins: number;
 
@@ -67,13 +66,13 @@ export class BowSpleef {
   public wlr: number;
 
   @Field()
-  public hits: number;
+  public record: number;
 
   public constructor(data: APIData) {
-    this.wins = data.wins_bowspleef;
-    this.losses = data.deaths_bowspleef;
+    this.wins = data.wins_tntrun;
+    this.losses = data.deaths_tntrun;
     this.wlr = ratio(this.wins, this.losses);
-    this.hits = data.tags_bowspleef;
+    this.record = data.record_tntrun;
   }
 }
 

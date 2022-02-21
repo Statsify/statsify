@@ -2,6 +2,22 @@ import { deepAdd, ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Field } from '../../../decorators';
 
+export class BedWarsModeAverages {
+  @Field({ leaderboard: false })
+  public kills: number;
+
+  @Field({ leaderboard: false })
+  public finalKills: number;
+
+  @Field({ leaderboard: false })
+  public bedsBroken: number;
+
+  public constructor(kills: number, finalKills: number, bedsBroken: number, gamesPlayed: number) {
+    this.kills = ratio(kills, gamesPlayed);
+    this.finalKills = ratio(finalKills, gamesPlayed);
+    this.bedsBroken = ratio(bedsBroken, gamesPlayed);
+  }
+}
 export class BedWarsModeItemsCollected {
   @Field()
   public iron: number;
@@ -20,23 +36,6 @@ export class BedWarsModeItemsCollected {
     this.gold = data[`${mode}gold_resources_collected_bedwars`];
     this.diamond = data[`${mode}diamond_resources_collected_bedwars`];
     this.emerald = data[`${mode}emerald_resources_collected_bedwars`];
-  }
-}
-
-export class BedWarsModeAverages {
-  @Field({ leaderboard: false })
-  public kills: number;
-
-  @Field({ leaderboard: false })
-  public finalKills: number;
-
-  @Field({ leaderboard: false })
-  public bedsBroken: number;
-
-  public constructor(kills: number, finalKills: number, bedsBroken: number, gamesPlayed: number) {
-    this.kills = ratio(kills, gamesPlayed);
-    this.finalKills = ratio(finalKills, gamesPlayed);
-    this.bedsBroken = ratio(bedsBroken, gamesPlayed);
   }
 }
 
@@ -143,37 +142,36 @@ export class DreamsBedWarsMode {
 
 export class DreamsBedWars {
   @Field()
+  public armed: DreamsBedWarsMode;
+
+  @Field()
   public castle: BedWarsMode;
-
-  @Field()
-  public ultimate: DreamsBedWarsMode;
-
-  @Field()
-  public rush: DreamsBedWarsMode;
-
-  @Field()
-  public voidless: DreamsBedWarsMode;
 
   @Field()
   public lucky: DreamsBedWarsMode;
 
   @Field()
-  public armed: DreamsBedWarsMode;
+  public rush: DreamsBedWarsMode;
+
+  @Field()
+  public swap: DreamsBedWarsMode;
+  @Field()
+  public ultimate: DreamsBedWarsMode;
 
   @Field()
   public underworld: DreamsBedWarsMode;
 
   @Field()
-  public swap: DreamsBedWarsMode;
+  public voidless: DreamsBedWarsMode;
 
   public constructor(data: APIData) {
-    this.castle = new BedWarsMode(data, 'castle');
-    this.ultimate = new DreamsBedWarsMode(data, 'ultimate');
-    this.rush = new DreamsBedWarsMode(data, 'rush');
-    this.voidless = new DreamsBedWarsMode(data, 'voidless');
-    this.lucky = new DreamsBedWarsMode(data, 'lucky');
     this.armed = new DreamsBedWarsMode(data, 'armed');
-    this.underworld = new DreamsBedWarsMode(data, 'underworld');
+    this.castle = new BedWarsMode(data, 'castle');
+    this.lucky = new DreamsBedWarsMode(data, 'lucky');
+    this.rush = new DreamsBedWarsMode(data, 'rush');
     this.swap = new DreamsBedWarsMode(data, 'swap');
+    this.ultimate = new DreamsBedWarsMode(data, 'ultimate');
+    this.underworld = new DreamsBedWarsMode(data, 'underworld');
+    this.voidless = new DreamsBedWarsMode(data, 'voidless');
   }
 }

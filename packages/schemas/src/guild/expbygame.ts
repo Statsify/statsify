@@ -6,97 +6,96 @@ import { Field } from '../decorators';
  */
 export class ExpByGame {
   @Field()
-  public SKYWARS: number;
-
-  @Field()
-  public PROTOTYPE: number;
-
-  @Field()
   public ARCADE: number;
-
-  @Field()
-  public DUELS: number;
-
-  @Field()
-  public MCGO: number;
-
-  @Field()
-  public UHC: number;
-
-  @Field()
-  public BUILD_BATTLE: number;
-
-  @Field()
-  public GINGERBREAD: number;
-
-  @Field()
-  public BEDWARS: number;
-
-  @Field()
-  public WALLS: number;
-
-  @Field()
-  public SPEED_UHC: number;
-
-  @Field()
-  public PAINTBALL: number;
 
   @Field()
   public ARENA: number;
 
   @Field()
-  public TNTGAMES: number;
-
-  @Field()
-  public PIT: number;
-
-  @Field()
   public BATTLEGROUND: number;
+
+  @Field()
+  public BEDWARS: number;
+
+  @Field()
+  public BUILD_BATTLE: number;
+
+  @Field()
+  public DUELS: number;
+
+  @Field()
+  public GINGERBREAD: number;
+
+  @Field()
+  public HOUSING: number;
+  @Field()
+  public MCGO: number;
 
   @Field()
   public MURDER_MYSTERY: number;
 
   @Field()
-  public VAMPIREZ: number;
+  public PAINTBALL: number;
 
   @Field()
-  public SURVIVAL_GAMES: number;
+  public PIT: number;
 
   @Field()
-  public SUPER_SMASH: number;
-
-  @Field()
-  public WALLS3: number;
+  public PROTOTYPE: number;
 
   @Field()
   public QUAKECRAFT: number;
 
   @Field()
-  public HOUSING: number;
+  public SKYWARS: number;
+
+  @Field()
+  public SPEED_UHC: number;
+
+  @Field()
+  public SUPER_SMASH: number;
+
+  @Field()
+  public SURVIVAL_GAMES: number;
+
+  @Field()
+  public TNTGAMES: number;
+
+  @Field()
+  public UHC: number;
+
+  @Field()
+  public VAMPIREZ: number;
+
+  @Field()
+  public WALLS3: number;
+
+  @Field()
+  public WALLS: number;
 
   public constructor(data: APIData) {
-    this.SKYWARS = data.SKYWARS;
-    this.PROTOTYPE = data.PROTOTYPE;
     this.ARCADE = data.ARCADE;
-    this.DUELS = data.DUELS;
-    this.MCGO = data.MCGO;
-    this.UHC = data.UHC;
-    this.BUILD_BATTLE = data.BUILD_BATTLE;
-    this.GINGERBREAD = data.GINGERBREAD;
-    this.BEDWARS = data.BEDWARS;
-    this.WALLS = data.WALLS;
-    this.SPEED_UHC = data.SPEED_UHC;
-    this.PAINTBALL = data.PAINTBALL;
     this.ARENA = data.ARENA;
-    this.TNTGAMES = data.TNTGAMES;
-    this.PIT = data.PIT;
     this.BATTLEGROUND = data.BATTLEGROUND;
-    this.MURDER_MYSTERY = data.MURDER_MYSTERY;
-    this.VAMPIREZ = data.VAMPIREZ;
-    this.SURVIVAL_GAMES = data.SURVIVAL_GAMES;
-    this.SUPER_SMASH = data.SUPER_SMASH;
-    this.WALLS3 = data.WALLS3;
-    this.QUAKECRAFT = data.QUAKECRAFT;
+    this.BEDWARS = data.BEDWARS;
+    this.BUILD_BATTLE = data.BUILD_BATTLE;
+    this.DUELS = data.DUELS;
+    this.GINGERBREAD = data.GINGERBREAD;
     this.HOUSING = data.HOUSING;
+    this.MCGO = data.MCGO;
+    this.MURDER_MYSTERY = data.MURDER_MYSTERY;
+    this.PAINTBALL = data.PAINTBALL;
+    this.PIT = data.PIT;
+    this.PROTOTYPE = data.PROTOTYPE;
+    this.QUAKECRAFT = data.QUAKECRAFT;
+    this.SKYWARS = data.SKYWARS;
+    this.SPEED_UHC = data.SPEED_UHC;
+    this.SUPER_SMASH = data.SUPER_SMASH;
+    this.SURVIVAL_GAMES = data.SURVIVAL_GAMES;
+    this.TNTGAMES = data.TNTGAMES;
+    this.UHC = data.UHC;
+    this.VAMPIREZ = data.VAMPIREZ;
+    this.WALLS = data.WALLS;
+    this.WALLS3 = data.WALLS3;
   }
 }

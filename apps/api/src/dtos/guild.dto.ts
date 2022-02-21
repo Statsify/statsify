@@ -1,12 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
+import { GuildQuery } from '../guild';
 import { CacheDto } from './cache.dto';
-
-export enum GuildQueryType {
-  ID = 'ID',
-  NAME = 'NAME',
-  PLAYER = 'PLAYER',
-}
 
 export class GuildDto extends CacheDto {
   @IsString()
@@ -18,13 +13,13 @@ export class GuildDto extends CacheDto {
   })
   public guild: string;
 
-  @IsEnum(GuildQueryType)
+  @IsEnum(GuildQuery)
   @ApiProperty({
-    enum: GuildQueryType,
-    enumName: 'GuildQueryType',
-    example: GuildQueryType.ID,
+    enum: GuildQuery,
+    enumName: 'GuildQuery',
+    example: GuildQuery.ID,
     description:
       'The way you want to query the guild, either search by the name, the uuid of a guild member or the guild id',
   })
-  public type: GuildQueryType;
+  public type: GuildQuery;
 }

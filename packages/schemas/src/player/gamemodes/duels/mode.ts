@@ -3,7 +3,6 @@ import { APIData } from '@statsify/util';
 import { Color } from '../../../color';
 import { Field } from '../../../decorators';
 import { getTitle } from './util';
-
 export class BaseDuelsGameMode {
   @Field()
   public bestWinstreak: number;
@@ -80,73 +79,6 @@ export class BaseDuelsGameMode {
   }
 }
 
-export class SingleDuelsGameMode extends BaseDuelsGameMode {
-  @Field({ store: false })
-  public titlePrefix: string;
-
-  @Field({
-    getter: (target: SingleDuelsGameMode) => getTitle(target.wins, target.titlePrefix).raw,
-  })
-  public title: string;
-
-  @Field({
-    getter: (target: SingleDuelsGameMode) => getTitle(target.wins, target.titlePrefix).color,
-  })
-  public titleColor: Color;
-
-  @Field({
-    getter: (target: SingleDuelsGameMode) => getTitle(target.wins, target.titlePrefix).formatted,
-  })
-  public titleFormatted: string;
-
-  public constructor(data: APIData, title: string, mode: string) {
-    super(data, mode);
-    this.titlePrefix = title;
-  }
-}
-
-export class MultiDuelsGameMode {
-  @Field({ store: false })
-  public titlePrefix: string;
-
-  @Field({
-    getter: (target: MultiDuelsGameMode) => getTitle(target.overall.wins, target.titlePrefix).raw,
-  })
-  public title: string;
-
-  @Field({
-    getter: (target: MultiDuelsGameMode) => getTitle(target.overall.wins, target.titlePrefix).color,
-  })
-  public titleColor: Color;
-
-  @Field({
-    getter: (target: MultiDuelsGameMode) =>
-      getTitle(target.overall.wins, target.titlePrefix).formatted,
-  })
-  public titleFormatted: string;
-
-  @Field()
-  public overall: BaseDuelsGameMode;
-
-  @Field()
-  public solo: BaseDuelsGameMode;
-
-  @Field()
-  public doubles: BaseDuelsGameMode;
-
-  public constructor(data: APIData, title: string, short: string, long: string) {
-    this.solo = new BaseDuelsGameMode(data, `${short}_duel`);
-    this.doubles = new BaseDuelsGameMode(data, `${short}_doubles`);
-
-    this.overall = deepAdd(BaseDuelsGameMode, this.solo, this.doubles);
-    BaseDuelsGameMode.applyRatios(this.overall);
-    this.overall.bestWinstreak = data[`best_${long}_winstreak`];
-    this.overall.winstreak = data[`current_${long}_winstreak`];
-
-    this.titlePrefix = title;
-  }
-}
-
 export class BridgeDuelsMode extends BaseDuelsGameMode {
   @Field()
   public goals: number;
@@ -159,17 +91,6 @@ export class BridgeDuelsMode extends BaseDuelsGameMode {
     this.goals = data[`${mode}_goals`] || data[`${mode}_captures`];
 
     BaseDuelsGameMode.applyRatios(this);
-  }
-}
-
-export class UHCDuelsMode extends BaseDuelsGameMode {
-  @Field()
-  public gapplesAte: number;
-
-  public constructor(data: APIData, mode: string) {
-    super(data, mode);
-
-    this.gapplesAte = data[`${mode}_golden_apples_eaten`];
   }
 }
 
@@ -237,6 +158,83 @@ export class BridgeDuels {
     this.overall.bestWinstreak = data.best_bridge_winstreak;
 
     BaseDuelsGameMode.applyRatios(this.overall);
+  }
+}
+export class MultiDuelsGameMode {
+  @Field({ store: false })
+  public titlePrefix: string;
+
+  @Field({
+    getter: (target: MultiDuelsGameMode) => getTitle(target.overall.wins, target.titlePrefix).raw,
+  })
+  public title: string;
+
+  @Field({
+    getter: (target: MultiDuelsGameMode) => getTitle(target.overall.wins, target.titlePrefix).color,
+  })
+  public titleColor: Color;
+
+  @Field({
+    getter: (target: MultiDuelsGameMode) =>
+      getTitle(target.overall.wins, target.titlePrefix).formatted,
+  })
+  public titleFormatted: string;
+
+  @Field()
+  public overall: BaseDuelsGameMode;
+
+  @Field()
+  public solo: BaseDuelsGameMode;
+
+  @Field()
+  public doubles: BaseDuelsGameMode;
+
+  public constructor(data: APIData, title: string, short: string, long: string) {
+    this.solo = new BaseDuelsGameMode(data, `${short}_duel`);
+    this.doubles = new BaseDuelsGameMode(data, `${short}_doubles`);
+
+    this.overall = deepAdd(BaseDuelsGameMode, this.solo, this.doubles);
+    BaseDuelsGameMode.applyRatios(this.overall);
+    this.overall.bestWinstreak = data[`best_${long}_winstreak`];
+    this.overall.winstreak = data[`current_${long}_winstreak`];
+
+    this.titlePrefix = title;
+  }
+}
+
+export class SingleDuelsGameMode extends BaseDuelsGameMode {
+  @Field({ store: false })
+  public titlePrefix: string;
+
+  @Field({
+    getter: (target: SingleDuelsGameMode) => getTitle(target.wins, target.titlePrefix).raw,
+  })
+  public title: string;
+
+  @Field({
+    getter: (target: SingleDuelsGameMode) => getTitle(target.wins, target.titlePrefix).color,
+  })
+  public titleColor: Color;
+
+  @Field({
+    getter: (target: SingleDuelsGameMode) => getTitle(target.wins, target.titlePrefix).formatted,
+  })
+  public titleFormatted: string;
+
+  public constructor(data: APIData, title: string, mode: string) {
+    super(data, mode);
+    this.titlePrefix = title;
+  }
+}
+
+export class UHCDuelsMode extends BaseDuelsGameMode {
+  @Field()
+  public gapplesAte: number;
+
+  public constructor(data: APIData, mode: string) {
+    super(data, mode);
+
+    this.gapplesAte = data[`${mode}_golden_apples_eaten`];
   }
 }
 

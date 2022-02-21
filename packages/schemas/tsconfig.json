@@ -4,5 +4,5 @@
     "strictPropertyInitialization": false,
     "importsNotUsedAsValues": "preserve"
   },
-  "include": ["src"]
+  "include": ["src", "tests"]
 }

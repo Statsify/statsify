@@ -1,6 +1,6 @@
-import { HistoricalType } from '#historical/historical-type.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum } from 'class-validator';
+import { HistoricalType } from '../historical';
 
 export class HistoricalTypeDto {
   @ApiProperty({

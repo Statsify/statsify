@@ -81,25 +81,28 @@ export class BlitzSG {
   public meatmaster?: BlitzSGKit;
 
   @Field({ required: false })
+  public milkman?: BlitzSGKit;
+
+  @Field({ required: false })
   public necromancer?: BlitzSGKit;
 
   @Field({ required: false })
   public paladin?: BlitzSGKit;
 
   @Field({ required: false })
-  public random?: BlitzSGKit;
-
-  @Field({ required: false })
-  public ranger?: BlitzSGKit;
-
-  @Field({ required: false })
-  public rambo?: BlitzSGKit;
+  public phoenix?: BlitzSGKit;
 
   @Field({ required: false })
   public pigman?: BlitzSGKit;
 
   @Field({ required: false })
-  public phoenix?: BlitzSGKit;
+  public rambo?: BlitzSGKit;
+
+  @Field({ required: false })
+  public random?: BlitzSGKit;
+
+  @Field({ required: false })
+  public ranger?: BlitzSGKit;
 
   @Field({ required: false })
   public reaper?: BlitzSGKit;
@@ -116,6 +119,8 @@ export class BlitzSG {
   @Field({ required: false })
   public shadowknight?: BlitzSGKit;
 
+  @Field({ required: false })
+  public shark?: BlitzSGKit;
   @Field({ required: false })
   public slimeyslime?: BlitzSGKit;
 
@@ -177,18 +182,20 @@ export class BlitzSG {
     this['jockey'] = new BlitzSGKit(data, 'jockey');
     this['knight'] = new BlitzSGKit(data, 'knight');
     this['meatmaster'] = new BlitzSGKit(data, 'meatmaster');
+    this['milkman'] = new BlitzSGKit(data, 'milkman');
     this['necromancer'] = new BlitzSGKit(data, 'necromancer');
     this['paladin'] = new BlitzSGKit(data, 'paladin');
+    this['phoenix'] = new BlitzSGKit(data, 'phoenix');
+    this['pigman'] = new BlitzSGKit(data, 'pigman');
+    this['rambo'] = new BlitzSGKit(data, 'rambo');
     this['random'] = new BlitzSGKit(data, 'random');
     this['ranger'] = new BlitzSGKit(data, 'ranger');
-    this['rambo'] = new BlitzSGKit(data, 'rambo');
-    this['pigman'] = new BlitzSGKit(data, 'pigman');
-    this['phoenix'] = new BlitzSGKit(data, 'phoenix');
     this['reaper'] = new BlitzSGKit(data, 'reaper');
     this['reddragon'] = new BlitzSGKit(data, 'reddragon');
     this['rogue'] = new BlitzSGKit(data, 'rogue');
     this['scout'] = new BlitzSGKit(data, 'scout');
     this['shadowknight'] = new BlitzSGKit(data, 'shadow knight');
+    this['shark'] = new BlitzSGKit(data, 'shark');
     this['slimeyslime'] = new BlitzSGKit(data, 'slimeyslime');
     this['snowman'] = new BlitzSGKit(data, 'snowman');
     this['speleologist'] = new BlitzSGKit(data, 'speleologist');
