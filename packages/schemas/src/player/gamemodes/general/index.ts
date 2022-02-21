@@ -10,7 +10,10 @@ export class General {
   public challenges: number;
 
   @Field()
-  public quests: number;
+  public giftsSent: number;
+
+  @Field()
+  public karma: number;
 
   @Field()
   public networkExp: number;
@@ -19,28 +22,24 @@ export class General {
   public networkLevel: number;
 
   @Field()
-  public karma: number;
-
-  @Field()
-  public giftsSent: number;
+  public quests: number;
 
   @Field()
   public ranksGifts: number;
 
   public constructor(data: APIData = {}) {
-    this.networkExp = data.networkExp;
-
-    this.networkLevel = GeneralUtil.getNetworkLevel(this.networkExp);
-
     this.achievementPoints = data.achievementPoints;
-
-    this.karma = data.karma;
-
-    this.quests = GeneralUtil.getQuests(data.quests);
 
     this.challenges = Math.max(
       GeneralUtil.getChallenges(data.challenges),
       data.achievements?.general_challenger ?? 0
     );
+    this.karma = data.karma;
+
+    this.networkExp = data.networkExp;
+
+    this.networkLevel = GeneralUtil.getNetworkLevel(this.networkExp);
+
+    this.quests = GeneralUtil.getQuests(data.quests);
   }
 }

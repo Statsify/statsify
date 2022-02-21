@@ -1,23 +1,6 @@
 import { APIData } from '@statsify/util';
 import { Field } from '../../../decorators';
 
-export class ScubaSimulator {
-  @Field()
-  public wins: number;
-
-  @Field()
-  public points: number;
-
-  @Field()
-  public itemsFound: number;
-
-  public constructor(data: APIData) {
-    this.wins = data.wins_scuba_simulator;
-    this.points = data.total_points_scuba_simulator;
-    this.itemsFound = data.items_found_scuba_simulator;
-  }
-}
-
 export class EasterSimulator {
   @Field()
   public wins: number;
@@ -67,5 +50,22 @@ export class SantaSimulator {
   public constructor(data: APIData) {
     this.wins = data.wins_santa_simulator;
     this.delivered = data.delivered_santa_simulator;
+  }
+}
+
+export class ScubaSimulator {
+  @Field()
+  public wins: number;
+
+  @Field()
+  public points: number;
+
+  @Field()
+  public itemsFound: number;
+
+  public constructor(data: APIData) {
+    this.wins = data.wins_scuba_simulator;
+    this.points = data.total_points_scuba_simulator;
+    this.itemsFound = data.items_found_scuba_simulator;
   }
 }

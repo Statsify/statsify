@@ -81,25 +81,28 @@ export class BlitzSG {
   public meatmaster?: BlitzSGKit;
 
   @Field({ required: false })
+  public milkman?: BlitzSGKit;
+
+  @Field({ required: false })
   public necromancer?: BlitzSGKit;
 
   @Field({ required: false })
   public paladin?: BlitzSGKit;
 
   @Field({ required: false })
-  public random?: BlitzSGKit;
-
-  @Field({ required: false })
-  public ranger?: BlitzSGKit;
-
-  @Field({ required: false })
-  public rambo?: BlitzSGKit;
+  public phoenix?: BlitzSGKit;
 
   @Field({ required: false })
   public pigman?: BlitzSGKit;
 
   @Field({ required: false })
-  public phoenix?: BlitzSGKit;
+  public rambo?: BlitzSGKit;
+
+  @Field({ required: false })
+  public random?: BlitzSGKit;
+
+  @Field({ required: false })
+  public ranger?: BlitzSGKit;
 
   @Field({ required: false })
   public reaper?: BlitzSGKit;
@@ -116,6 +119,8 @@ export class BlitzSG {
   @Field({ required: false })
   public shadowknight?: BlitzSGKit;
 
+  @Field({ required: false })
+  public shark?: BlitzSGKit;
   @Field({ required: false })
   public slimeyslime?: BlitzSGKit;
 
@@ -146,11 +151,6 @@ export class BlitzSG {
   @Field({ required: false })
   public wolftamer?: BlitzSGKit;
 
-  @Field({ required: false })
-  public milkman?: BlitzSGKit;
-
-  @Field({ required: false })
-  public shark?: BlitzSGKit;
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.kit = data.defaultkit || 'none';

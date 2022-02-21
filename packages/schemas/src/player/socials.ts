@@ -3,10 +3,9 @@ import { Field } from '../decorators';
 
 export class PlayerSocials {
   @Field({ required: false })
-  public twitter?: string;
-
+  public discord?: string;
   @Field({ required: false })
-  public youtube?: string;
+  public forums?: string;
 
   @Field({ required: false })
   public instagram?: string;
@@ -15,17 +14,17 @@ export class PlayerSocials {
   public twitch?: string;
 
   @Field({ required: false })
-  public forums?: string;
+  public twitter?: string;
 
   @Field({ required: false })
-  public discord?: string;
+  public youtube?: string;
 
   public constructor(data: APIData) {
-    this.twitter = data.TWITTER;
-    this.youtube = data.YOUTUBE;
+    this.discord = data.DISCORD;
+    this.forums = data.HYPIXEL;
     this.instagram = data.INSTAGRAM;
     this.twitch = data.TWITCH;
-    this.forums = data.HYPIXEL;
-    this.discord = data.DISCORD;
+    this.twitter = data.TWITTER;
+    this.youtube = data.YOUTUBE;
   }
 }
