@@ -55,6 +55,7 @@ export class PlayerLeaderboardService {
     );
 
     const translator = short(short.constants.cookieBase90);
+
     const data = leaderboard.map((player, index) => {
       const stats = additionalStats[index];
 

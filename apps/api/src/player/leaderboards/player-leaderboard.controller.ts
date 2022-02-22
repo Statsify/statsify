@@ -24,7 +24,9 @@ export class PlayerLeaderboardsController {
       res.status(400);
 
       return {
-        error: 'Invalid field or page',
+        statusCode: 400,
+        message: ['Provided player has no rankings'],
+        error: 'Bad Request',
       };
     }
 
