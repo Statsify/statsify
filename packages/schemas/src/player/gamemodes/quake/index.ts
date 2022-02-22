@@ -27,9 +27,8 @@ export class Quake {
     this.teams = new QuakeMode(data, 'teams');
 
     this.overall = deepAdd(QuakeMode, this.solo, this.teams);
+
     QuakeMode.applyRatios(this.overall);
-    QuakeMode.applyRatios(this.solo);
-    QuakeMode.applyRatios(this.teams);
 
     this.coins = data.coins;
     this.highestKillstreaks = data.highest_killstreak;
