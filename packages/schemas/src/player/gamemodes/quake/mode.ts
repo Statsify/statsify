@@ -40,6 +40,8 @@ export class QuakeMode {
     this.killstreaks = data[`killstreaks${mode}`];
     this.shotsFired = data[`shots_fired${mode}`];
     this.distanceTraveled = data[`distance_travelled${mode}`];
+
+    QuakeMode.applyRatios(this);
   }
 
   public static applyRatios(data: QuakeMode) {
