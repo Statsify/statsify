@@ -58,6 +58,10 @@ export class LeaderboardService {
     return response;
   }
 
+  public async getLeaderboardRanking<T>(constructor: Constructor<T>, field: string, id: string) {
+    return this.redis.zrevrank(`${constructor.name.toLowerCase()}.${field}`, id);
+  }
+
   public async getLeaderboardDocument<T>(
     constructor: Constructor<T>,
     id: string,

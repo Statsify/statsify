@@ -1,11 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { getLeaderboardFields, Player } from '@statsify/schemas';
 import { Transform } from 'class-transformer';
 import { IsEnum, IsInt, Min } from 'class-validator';
+import { UuidDto } from './uuid.dto';
 
 const fields = getLeaderboardFields(new Player({}));
 
-export class LeaderboardDto {
+export class LeaderboardDto extends PartialType(UuidDto) {
   @IsEnum(fields)
   @ApiProperty({ enum: fields })
   public field: string;
