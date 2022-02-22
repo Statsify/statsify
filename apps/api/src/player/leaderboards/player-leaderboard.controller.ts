@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Response } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import type { FastifyReply } from 'fastify';
-import { LeaderboardDto } from '../../dtos/leaderboard.dto';
+import { PlayerLeaderboardDto } from '../../dtos/player-leaderboard.dto';
 import { PlayerKeys } from '../player.select';
 import { PlayerLeaderboardService } from './player-leaderboard.service';
 
@@ -12,7 +12,7 @@ export class PlayerLeaderboardsController {
   @Post()
   @ApiOperation({ summary: 'Get a Player Leaderboard' })
   public async getPlayerLeaderboard(
-    @Body() { field, page, uuid }: LeaderboardDto,
+    @Body() { field, page, uuid }: PlayerLeaderboardDto,
     @Response({ passthrough: true }) res: FastifyReply
   ) {
     const leaderboard = await this.playerLeaderboardService.getLeaderboard(

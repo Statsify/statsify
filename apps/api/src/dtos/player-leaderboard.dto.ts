@@ -6,7 +6,7 @@ import { UuidDto } from './uuid.dto';
 
 const fields = getLeaderboardFields(new Player({}));
 
-export class LeaderboardDto extends PartialType(UuidDto) {
+export class PlayerLeaderboardDto extends PartialType(UuidDto) {
   @IsEnum(fields)
   @ApiProperty({ enum: fields })
   public field: string;
