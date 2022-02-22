@@ -1,5 +1,6 @@
 import { APIData } from '@statsify/util';
 import { Field } from '../../../decorators';
+
 export class BuildBattleGuessTheBuild {
   @Field()
   public wins: number;

@@ -37,7 +37,7 @@ export class SkyWars {
   @Field({ getter: (target: SkyWars) => getLevel(target.xp) })
   public level: number;
 
-  @Field({ getter: (target: SkyWars) => getFormattedLevel(getLevel(target.xp), target.star) })
+  @Field()
   public levelFormatted: string;
 
   @Field({ getter: (target: SkyWars) => getFormattedLevel(getLevel(target.xp) + 1, target.star) })
@@ -85,6 +85,8 @@ export class SkyWars {
     );
 
     this.star = (data.levelFormatted || '⋆').replace(/[0-9]|[a-f]|k|r|l|§/g, '');
+
+    this.levelFormatted = getFormattedLevel(getLevel(this.xp), this.star);
 
     const normalKit = parseKit(data.activeKit_SOLO_random ? 'random' : data.activeKit_SOLO);
     const insaneKit = parseKit(data.activeKit_TEAMS_random ? 'random' : data.activeKit_TEAMS);

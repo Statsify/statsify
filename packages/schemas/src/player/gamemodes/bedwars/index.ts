@@ -19,7 +19,7 @@ export class BedWars {
   @Field({ leaderboard: false })
   public level: number;
 
-  @Field({ getter: (target: BedWars) => getFormattedLevel(target.level) })
+  @Field()
   public levelFormatted: string;
 
   @Field({
@@ -80,6 +80,7 @@ export class BedWars {
     this.coins = data.coins;
     this.exp = data.Experience || 0;
     this.level = +getLevel(this.exp).toFixed(2);
+    this.levelFormatted = getFormattedLevel(this.level);
 
     this.lootChests = add(
       data.bedwars_boxes,

@@ -43,13 +43,7 @@ export class BuildBattle {
   @Field({ getter: (target: BuildBattle) => titleScores[getTitleIndex(target.score)].title })
   public title: string;
 
-  @Field({
-    getter: (target: BuildBattle) => {
-      const index = getTitleIndex(target.score);
-
-      return `${titleScores[index].color}${titleScores[index].title}`;
-    },
-  })
+  @Field()
   public titleFormatted: string;
 
   @Field({ getter: (target: BuildBattle) => titleScores[getTitleIndex(target.score)].color })
@@ -67,5 +61,9 @@ export class BuildBattle {
     this.gamesPlayed = data.games_played;
     this.votes = data.total_votes;
     this.superVotes = data.super_votes;
+
+    const index = getTitleIndex(this.score);
+
+    this.titleFormatted = `${titleScores[index].color}${titleScores[index].title}`;
   }
 }

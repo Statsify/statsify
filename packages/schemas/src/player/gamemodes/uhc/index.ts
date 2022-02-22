@@ -21,6 +21,9 @@ export class UHC {
   public level: number;
 
   @Field()
+  public levelFormatted: string;
+
+  @Field()
   public score: number;
 
   @Field({ default: 'none' })
@@ -36,6 +39,8 @@ export class UHC {
     this.score = data.score;
 
     this.kit = data.equippedKit ?? 'none';
+
+    this.levelFormatted = `§6[${getLevelIndex(this.score) + 1}✫]`;
 
     this.solo = new UHCMode(data, 'solo');
     this.teams = new UHCMode(data, '');
