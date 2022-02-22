@@ -13,7 +13,10 @@ export class BedWars {
   @Field()
   public lootChests: number;
 
-  @Field()
+  @Field({
+    name: 'EXP',
+    additionalFields: ['stats.bedwars.overall.kills', 'stats.bedwars.overall.deaths'],
+  })
   public exp: number;
 
   @Field({ leaderboard: false })

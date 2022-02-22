@@ -1,5 +1,5 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { Constructor, noop } from '@statsify/util';
+import { Constructor, noop, prettify } from '@statsify/util';
 import { Prop } from '@typegoose/typegoose';
 import type { BasePropOptions } from '@typegoose/typegoose/lib/types';
 
@@ -32,17 +32,25 @@ export interface FieldOptions {
 
   getter?: Getter<any>;
   store?: boolean;
+  extraDisplay?: string;
+  additionalFields?: string[];
+}
+
+export interface LeaderboardOptions {
+  sort: LeaderboardSort;
+  name: string;
+  aliases: string[];
+  additionalFields: string[];
+  extraDisplay?: string;
 }
 
 export interface FieldMetadata {
-  name: string;
   default: any;
-  aliases: string[];
-  sort: LeaderboardSort;
   isLeaderboard: boolean;
   type: any;
   getter?: Getter<any>;
   store: boolean;
+  leaderboardOptions: LeaderboardOptions;
 }
 
 /**
@@ -62,6 +70,8 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
   let name: string;
   let getter: Getter<any>;
   let store = true;
+  let extraDisplay: string;
+  let additionalFields: string[] = [];
 
   if (typeof options === 'function') {
     prop = Prop({ type: options });
@@ -109,6 +119,8 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
     sort = options.sort ?? 'DESC';
     isLeaderboard = options.leaderboard ?? true;
     name = options.name ?? '';
+    extraDisplay = options.extraDisplay ?? '';
+    additionalFields = options.additionalFields ?? [];
 
     if (options.getter) {
       getter = options.getter;
@@ -160,10 +172,14 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
 
     const metadata: FieldMetadata = {
       default: fallback,
-      sort,
+      leaderboardOptions: {
+        sort,
+        name: name || prettify(propertyKey as string),
+        aliases: [],
+        additionalFields,
+        extraDisplay,
+      },
       isLeaderboard,
-      name: name || (propertyKey as string),
-      aliases: [],
       type,
       getter,
       store,
