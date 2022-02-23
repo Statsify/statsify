@@ -140,3 +140,11 @@ export const unflatten = <T>(obj: APIData): T => {
 
   return tmp as T;
 };
+
+/**
+ *
+ * @param constructor
+ * @returns An instance of the class using objects as arguments
+ */
+export const mockClass = <T>(constructor: Constructor<T>): T =>
+  new constructor(...Array.from({ length: constructor.length }).fill({}));

@@ -1,7 +1,7 @@
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
 import { getLeaderboardFields } from '@statsify/schemas';
-import { Constructor, flatten } from '@statsify/util';
+import { Constructor, flatten, mockClass } from '@statsify/util';
 
 @Injectable()
 export class LeaderboardService {
@@ -97,8 +97,6 @@ export class LeaderboardService {
   }
 
   public getLeaderboardFields<T>(constructor: Constructor<T>) {
-    return getLeaderboardFields(
-      new constructor(...Array.from({ length: constructor.length }).fill({}))
-    );
+    return getLeaderboardFields(mockClass(constructor));
   }
 }

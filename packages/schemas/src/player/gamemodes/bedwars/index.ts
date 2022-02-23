@@ -15,7 +15,11 @@ export class BedWars {
 
   @Field({
     name: 'EXP',
-    additionalFields: ['stats.bedwars.overall.kills', 'stats.bedwars.overall.deaths'],
+    additionalFields: [
+      'stats.bedwars.overall.wins',
+      'stats.bedwars.overall.finalKills',
+      'stats.bedwars.overall.fkdr',
+    ],
   })
   public exp: number;
 
