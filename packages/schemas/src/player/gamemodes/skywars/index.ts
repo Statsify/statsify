@@ -97,7 +97,7 @@ export class SkyWars {
     this.solo.insane.kit = insaneKit;
     this.solo.normal.kit = normalKit;
 
-    this.doubles = new SkyWarsMode(data, 'doubles');
+    this.doubles = new SkyWarsMode(data, 'team');
     this.doubles.insane.kit = insaneKit;
     this.doubles.normal.kit = normalKit;
 
