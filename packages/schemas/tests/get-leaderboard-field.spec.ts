@@ -30,9 +30,16 @@ describe('getLeaderboardField', () => {
 
     expect(getLeaderboardField(instance, 'fieldB.wlr')).toEqual({
       sort: 'DESC',
-      name: 'Wlr',
+      name: 'WLR',
       aliases: [],
       additionalFields: ['fieldB.wins', 'fieldB.losses'],
+    });
+
+    expect(getLeaderboardField(instance, 'fieldB.wins')).toEqual({
+      sort: 'DESC',
+      name: 'Wins',
+      aliases: [],
+      additionalFields: ['fieldB.losses', 'fieldB.wlr'],
     });
   });
 });

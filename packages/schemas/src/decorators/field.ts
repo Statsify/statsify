@@ -174,7 +174,11 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
       default: fallback,
       leaderboardOptions: {
         sort,
-        name: name || prettify(propertyKey as string),
+        name:
+          name ||
+          (['wlr', 'kdr', 'fkdr', 'bblr'].includes(propertyKey as string)
+            ? (propertyKey as string).toUpperCase()
+            : prettify(propertyKey as string)),
         aliases: [],
         additionalFields,
         extraDisplay,
