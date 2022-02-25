@@ -78,6 +78,27 @@ export class PlayerLeaderboardService {
     return { additionalFieldNames, fieldName, data };
   }
 
+  public async getLeaderboardRankings(fields: PlayerKeys[], uuid: string) {
+    const translator = short(short.constants.cookieBase90);
+
+    const shortUuid = translator.fromUUID(uuid);
+
+    const pipeline = this.redis.pipeline();
+
+    fields.forEach((field) => {
+      pipeline.zrevrank(`${Player.name.toLowerCase()}.${field}`, shortUuid);
+    });
+
+    const responses = await pipeline.exec();
+
+    return responses.map((response, index) => {
+      const field = fields[index];
+      const rank = Number(response[1] ?? 0);
+
+      return { field, rank };
+    });
+  }
+
   public async getLeaderboardRanking(field: PlayerKeys, uuid: string) {
     return this.leaderboardService.getLeaderboardRanking(Player, field, uuid);
   }
