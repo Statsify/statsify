@@ -3,13 +3,15 @@ import { Module } from '@nestjs/common';
 import { Friends, Player } from '@statsify/schemas';
 import { HypixelModule } from '../hypixel';
 import { LeaderboardModule } from '../leaderboards';
+import { PlayerLeaderboardsController } from './leaderboards/player-leaderboard.controller';
+import { PlayerLeaderboardService } from './leaderboards/player-leaderboard.service';
 import { PlayerController } from './player.controller';
 import { PlayerService } from './player.service';
 
 @Module({
   imports: [HypixelModule, LeaderboardModule, TypegooseModule.forFeature([Player, Friends])],
-  controllers: [PlayerController],
-  providers: [PlayerService],
+  controllers: [PlayerController, PlayerLeaderboardsController],
+  providers: [PlayerService, PlayerLeaderboardService],
   exports: [PlayerService],
 })
 export class PlayerModule {}

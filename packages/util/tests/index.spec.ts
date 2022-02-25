@@ -1,4 +1,12 @@
-import { findScore, flatten, isObject, removeFormatting, romanNumeral } from '../src';
+import {
+  findScore,
+  flatten,
+  isObject,
+  mockClass,
+  removeFormatting,
+  romanNumeral,
+  unflatten,
+} from '../src';
 
 describe('findScore', () => {
   const scores = [{ req: 0 }, { req: 10 }, { req: 20 }, { req: 30 }];
@@ -57,5 +65,26 @@ describe('flatten', () => {
     expect(flatten({ a: { b: { c: 1 } } })).toMatchObject({ 'a.b.c': 1 });
     expect(flatten({ a: { b: { c: 1, d: 2 } } })).toMatchObject({ 'a.b.c': 1, 'a.b.d': 2 });
     expect(flatten({ a: [{ b: { c: 1 } }] })).toMatchObject({ 'a.0.b.c': 1 });
+  });
+});
+
+describe('unflatten', () => {
+  it('should unflatten objects', () => {
+    expect(unflatten({ 'a.b.c': 1 })).toMatchObject({ a: { b: { c: 1 } } });
+    expect(unflatten({ 'a.b.c': 1, 'a.b.d': 2 })).toMatchObject({ a: { b: { c: 1, d: 2 } } });
+  });
+});
+
+describe('mockClass', () => {
+  it("should create instances of classes that don't rely on methods of parameters", () => {
+    class Test {
+      public constructor(public a: string) {
+        a[0];
+      }
+    }
+
+    const mock = mockClass(Test);
+
+    expect(mock).toBeInstanceOf(Test);
   });
 });

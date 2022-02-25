@@ -1,3 +1,4 @@
+import { mockClass } from '@statsify/util';
 import { FieldMetadata } from '../decorators';
 import { getConstructor, getPropertyNames } from './shared';
 
@@ -22,9 +23,7 @@ export const getLeaderboardFields = <T>(instance: T) => {
     } else if (primitiveTypes.includes(metadata.type)) {
       continue;
     } else {
-      const fields = getLeaderboardFields(
-        new metadata.type(...Array.from({ length: metadata.type.length }).fill({}))
-      );
+      const fields = getLeaderboardFields(mockClass(metadata.type));
       leaderboardFields.push(...fields.map((field) => `${propertyKey}.${field}`));
     }
   }

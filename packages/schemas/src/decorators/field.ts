@@ -32,17 +32,25 @@ export interface FieldOptions {
 
   getter?: Getter<any>;
   store?: boolean;
+  extraDisplay?: string;
+  additionalFields?: string[];
+}
+
+export interface LeaderboardOptions {
+  sort: LeaderboardSort;
+  name: string;
+  aliases: string[];
+  additionalFields: string[];
+  extraDisplay?: string;
 }
 
 export interface FieldMetadata {
-  name: string;
   default: any;
-  aliases: string[];
-  sort: LeaderboardSort;
   isLeaderboard: boolean;
   type: any;
   getter?: Getter<any>;
   store: boolean;
+  leaderboardOptions: LeaderboardOptions;
 }
 
 /**
@@ -62,6 +70,8 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
   let name: string;
   let getter: Getter<any>;
   let store = true;
+  let extraDisplay: string;
+  let additionalFields: string[] = [];
 
   if (typeof options === 'function') {
     prop = Prop({ type: options });
@@ -109,6 +119,8 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
     sort = options.sort ?? 'DESC';
     isLeaderboard = options.leaderboard ?? true;
     name = options.name ?? '';
+    extraDisplay = options.extraDisplay ?? '';
+    additionalFields = options.additionalFields ?? [];
 
     if (options.getter) {
       getter = options.getter;
@@ -158,12 +170,27 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
       ? ''
       : undefined;
 
+    if (!name) {
+      name = propertyKey as string;
+      if (['wlr', 'kdr', 'fkdr', 'bblr'].includes(name)) name = name.toUpperCase();
+      else {
+        //Convert camelCase to have spaces
+        name = name
+          .replace(/((?<!^)[A-Z](?![A-Z]))(?=\S)/g, ' $1')
+          .replace(/^./, (s) => s.toUpperCase());
+      }
+    }
+
     const metadata: FieldMetadata = {
       default: fallback,
-      sort,
+      leaderboardOptions: {
+        sort,
+        name,
+        aliases: [],
+        additionalFields,
+        extraDisplay,
+      },
       isLeaderboard,
-      name: name || (propertyKey as string),
-      aliases: [],
       type,
       getter,
       store,

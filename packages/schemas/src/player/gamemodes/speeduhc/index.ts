@@ -25,6 +25,9 @@ export class SpeedUHC {
   @Field({ getter: (target: SpeedUHC) => getLevelIndex(target.score) + 1 })
   public level: number;
 
+  @Field()
+  public levelFormatted: string;
+
   @Field({ getter: (target: SpeedUHC) => titleScores[getLevelIndex(target.score)].title })
   public title: string;
 
@@ -36,5 +39,7 @@ export class SpeedUHC {
     this.overall = new SpeedUHCMode(data, '');
     this.solo = new SpeedUHCMode(data, 'solo');
     this.teams = new SpeedUHCMode(data, 'team');
+
+    this.levelFormatted = `§d[${getLevelIndex(this.score) + 1}❋]`;
   }
 }

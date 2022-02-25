@@ -105,9 +105,7 @@ export class BridgeDuels {
   })
   public titleColor: Color;
 
-  @Field({
-    getter: (target: BridgeDuels) => getTitle(target.overall.wins, 'Bridge').formatted,
-  })
+  @Field()
   public titleFormatted: string;
 
   @Field()
@@ -157,6 +155,8 @@ export class BridgeDuels {
     this.overall.winstreak = data.current_bridge_winstreak;
     this.overall.bestWinstreak = data.best_bridge_winstreak;
 
+    this.titleFormatted = getTitle(this.overall.wins, 'Bridge').formatted;
+
     BaseDuelsGameMode.applyRatios(this.overall);
   }
 }
@@ -174,10 +174,7 @@ export class MultiDuelsGameMode {
   })
   public titleColor: Color;
 
-  @Field({
-    getter: (target: MultiDuelsGameMode) =>
-      getTitle(target.overall.wins, target.titlePrefix).formatted,
-  })
+  @Field()
   public titleFormatted: string;
 
   @Field()
@@ -199,6 +196,8 @@ export class MultiDuelsGameMode {
     this.overall.winstreak = data[`current_${long}_winstreak`];
 
     this.titlePrefix = title;
+
+    this.titleFormatted = getTitle(this.overall.wins, this.titlePrefix).formatted;
   }
 }
 
@@ -216,14 +215,13 @@ export class SingleDuelsGameMode extends BaseDuelsGameMode {
   })
   public titleColor: Color;
 
-  @Field({
-    getter: (target: SingleDuelsGameMode) => getTitle(target.wins, target.titlePrefix).formatted,
-  })
+  @Field()
   public titleFormatted: string;
 
   public constructor(data: APIData, title: string, mode: string) {
     super(data, mode);
     this.titlePrefix = title;
+    this.titleFormatted = getTitle(this.wins, this.titlePrefix).formatted;
   }
 }
 
@@ -249,9 +247,7 @@ export class UHCDuels {
   })
   public titleColor: Color;
 
-  @Field({
-    getter: (target: UHCDuels) => getTitle(target.overall.wins, 'UHC').formatted,
-  })
+  @Field()
   public titleFormatted: string;
 
   @Field()
@@ -279,6 +275,8 @@ export class UHCDuels {
 
     this.overall.winstreak = data.current_uhc_winstreak;
     this.overall.bestWinstreak = data.best_uhc_winstreak;
+
+    this.titleFormatted = getTitle(this.overall.wins, 'UHC').formatted;
 
     BaseDuelsGameMode.applyRatios(this.overall);
   }

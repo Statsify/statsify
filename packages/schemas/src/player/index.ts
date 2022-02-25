@@ -10,6 +10,9 @@ export class Player {
   @Field({ unique: true, index: true, required: true })
   public uuid: string;
 
+  @Field({ unique: true, index: true, required: true })
+  public shortUuid: string;
+
   @Field()
   public username: string;
 

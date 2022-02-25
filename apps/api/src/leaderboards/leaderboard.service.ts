@@ -1,7 +1,7 @@
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
 import { getLeaderboardFields } from '@statsify/schemas';
-import { Constructor, flatten } from '@statsify/util';
+import { Constructor, flatten, mockClass } from '@statsify/util';
 
 @Injectable()
 export class LeaderboardService {
@@ -11,11 +11,11 @@ export class LeaderboardService {
     constructor: Constructor<T>,
     instance: T,
     idField: keyof T,
+    fields: string[] = this.getLeaderboardFields(constructor),
     remove = false
   ) {
     const pipeline = this.redis.pipeline();
     const name = constructor.name.toLowerCase();
-    const fields = this.getLeaderboardFields(instance);
     const flatInstance = flatten(instance);
 
     const id = instance[idField] as unknown as string;
@@ -58,7 +58,45 @@ export class LeaderboardService {
     return response;
   }
 
-  public getLeaderboardFields<T>(instance: T) {
-    return getLeaderboardFields(instance);
+  public async getLeaderboardRanking<T>(constructor: Constructor<T>, field: string, id: string) {
+    return this.redis.zrevrank(`${constructor.name.toLowerCase()}.${field}`, id);
+  }
+
+  public async getLeaderboardDocument<T>(
+    constructor: Constructor<T>,
+    id: string,
+    selector?: string[]
+  ) {
+    const pipeline = this.redis.pipeline();
+    const name = constructor.name.toLowerCase();
+
+    if (!selector) {
+      selector = this.getLeaderboardFields(constructor);
+    }
+
+    selector.forEach((field) => {
+      pipeline.zscore(`${name}.${field}`, id);
+    });
+
+    const scores = await pipeline.exec();
+
+    const response: Record<string, number> = {};
+
+    for (let i = 0; i < selector.length; i++) {
+      const field = selector[i];
+      const score = scores[i][1];
+
+      if (score !== null) {
+        response[field] = Number(score);
+      } else {
+        response[field] = 0;
+      }
+    }
+
+    return response;
+  }
+
+  public getLeaderboardFields<T>(constructor: Constructor<T>) {
+    return getLeaderboardFields(mockClass(constructor));
   }
 }

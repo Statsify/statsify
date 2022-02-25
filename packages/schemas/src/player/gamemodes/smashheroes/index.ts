@@ -21,6 +21,9 @@ export class SmashHeroes {
   @Field({ leaderboard: false })
   public level: number;
 
+  @Field()
+  public levelFormatted: string;
+
   @Field({ default: 'none' })
   public kit: string;
 
@@ -33,5 +36,6 @@ export class SmashHeroes {
     this.coins = data.coins;
     this.level = data.smashLevel;
     this.kit = data.active_class ?? 'none';
+    this.levelFormatted = `§b${this.level}§6✶`;
   }
 }

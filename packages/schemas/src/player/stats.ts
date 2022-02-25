@@ -30,7 +30,7 @@ export class PlayerStats {
   @Field()
   public arenabrawl: ArenaBrawl;
 
-  @Field()
+  @Field({ extraDisplay: 'stats.bedwars.levelFormatted' })
   public bedwars: BedWars;
 
   @Field()
