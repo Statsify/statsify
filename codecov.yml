@@ -1,0 +1,31 @@
+coverage:
+  status:
+    project:
+      default: off
+      api:
+        flags: api
+      logger:
+        flags: logger
+      math:
+        flags: math
+      schemas:
+        flags: schemas
+      util:
+        flags: util
+
+flags:
+  api:
+    paths:
+      - apps/api
+  logger:
+    paths:
+      - packages/logger
+  math:
+    paths:
+      - packages/math
+  schemas:
+    paths:
+      - packages/schemas
+  util:
+    paths:
+      - packages/util
