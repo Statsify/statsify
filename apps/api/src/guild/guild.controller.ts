@@ -8,7 +8,7 @@ import { GuildService } from './guild.service';
 export class GuildController {
   public constructor(private readonly guildService: GuildService) {}
 
-  @ApiOperation({ summary: 'Get a Guild', tags: ['guilds'] })
+  @ApiOperation({ summary: 'Get a Guild' })
   @ApiOkResponse({ type: GetGuildResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Get()

@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Response } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import type { FastifyReply } from 'fastify';
 import { PlayerLeaderboardDto } from '../../dtos/player-leaderboard.dto';
 import { PlayerRankingsDto } from '../../dtos/player-rankings.dto';
@@ -8,7 +8,6 @@ import { PostPlayerRankingsResponse } from '../../responses/post.player-rankings
 import { PlayerKeys } from '../player.select';
 import { PlayerLeaderboardService } from './player-leaderboard.service';
 
-@ApiTags('leaderboards')
 @Controller('/player/leaderboards')
 export class PlayerLeaderboardsController {
   public constructor(private readonly playerLeaderboardService: PlayerLeaderboardService) {}
