@@ -1,0 +1,19 @@
+{
+  "name": "discord-bot",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node --enable-source-maps .",
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist",
+    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w",
+    "test:types": "tsc --noEmit",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "tiny-discord": "github:timotejroiko/tiny-discord#master"
+  }
+}

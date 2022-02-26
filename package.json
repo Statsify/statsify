@@ -39,6 +39,7 @@
     "lint": "turbo run lint --parallel --cache-dir='.turbo'",
     "commit": "git cz",
     "api": "yarn workspace api",
+    "discord-bot": "yarn workspace discord-bot",
     "site": "yarn workspace site",
     "postinstall": "husky install"
   },
