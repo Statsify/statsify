@@ -3,6 +3,8 @@ import {
   flatten,
   isObject,
   mockClass,
+  noop,
+  prettify,
   removeFormatting,
   romanNumeral,
   unflatten,
@@ -15,6 +17,15 @@ describe('findScore', () => {
     expect(findScore(scores, 25)).toMatchObject({ req: 20 });
     expect(findScore(scores, 35)).toMatchObject({ req: 30 });
     expect(findScore(scores, 0)).toMatchObject({ req: 0 });
+  });
+});
+
+describe('isNull', () => {
+  it('returns null', () => {
+    expect(noop).toBeInstanceOf(Function);
+
+    const test = noop();
+    expect(test).toBeNull();
   });
 });
 
@@ -42,6 +53,7 @@ describe('isObject', () => {
 
 describe('romanNumeral', () => {
   it('should give the correct roman numeral', () => {
+    expect(romanNumeral(-1)).toBe('I');
     expect(romanNumeral(1)).toBe('I');
     expect(romanNumeral(4)).toBe('IV');
     expect(romanNumeral(5)).toBe('V');
@@ -54,9 +66,22 @@ describe('romanNumeral', () => {
   });
 });
 
+describe('prettify', () => {
+  it('should format the string in a nice way', () => {
+    expect(prettify('statsify')).toBe('Statsify');
+    expect(prettify('two words')).toBe('Two Words');
+    expect(prettify('rEVERSE cAPS')).toBe('Reverse Caps');
+    expect(prettify('im_seperated_by_underscores')).toBe('Im Seperated By Underscores');
+    expect(prettify('im__seperated__by__double__underscores')).toBe(
+      'Im  Seperated  By  Double  Underscores'
+    );
+  });
+});
+
 describe('removeFormatting', () => {
   it('should remove formatting', () => {
     expect(removeFormatting('§ahello§r world')).toBe('hello world');
+    expect(removeFormatting('hello world')).toBe('hello world');
   });
 });
 
