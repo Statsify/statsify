@@ -1,4 +1,4 @@
-import { Constructor, isObject } from '@statsify/util';
+import { Constructor, getConstructor, isObject } from '@statsify/util';
 
 /**
  *
@@ -36,8 +36,7 @@ const deep = <T>(
 
   for (const key in args[0]) {
     if (isObject(args[0][key])) {
-      //@ts-ignore - TS doesn't know about the constructor
-      const constructor = args[0][key].constructor;
+      const constructor = getConstructor(args[0][key]);
       obj[key] = deep(fn, constructor, ...args.map((a) => a[key]));
     } else {
       obj[key] = fn(...args.map((a) => a[key] as unknown as number));

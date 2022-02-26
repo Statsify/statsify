@@ -1,6 +1,6 @@
-import { mockClass } from '@statsify/util';
+import { getConstructor, mockClass } from '@statsify/util';
 import { FieldMetadata } from '../decorators';
-import { getConstructor, getPropertyNames } from './shared';
+import { getPropertyNames } from './shared';
 
 const primitiveTypes = [String, Number, Boolean, Symbol, BigInt, undefined];
 

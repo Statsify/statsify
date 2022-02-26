@@ -1,5 +1,12 @@
 export type APIData = Record<string, any>;
 
+/**
+ *
+ * @param instance A class instance
+ * @returns The constructor of the instance
+ */
+//@ts-ignore - TS doesn't know about the constructor
+export const getConstructor = <T>(instance: T): Constructor<T> => instance.constructor;
 export type Constructor<T = any> = new (...args: any[]) => T;
 
 export const noop = <T>() => null as unknown as T;
