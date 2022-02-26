@@ -4,6 +4,8 @@ coverage:
       default: off
       api:
         flags: api
+      discord-bot:
+        flags: discord-bot
       logger:
         flags: logger
       math:
@@ -17,6 +19,9 @@ flags:
   api:
     paths:
       - apps/api
+  discord-bot:
+    paths:
+      - apps/discord-bot
   logger:
     paths:
       - packages/logger

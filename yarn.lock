@@ -3233,6 +3233,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"discord-bot@workspace:apps/discord-bot":
+  version: 0.0.0-use.local
+  resolution: "discord-bot@workspace:apps/discord-bot"
+  dependencies:
+    dotenv: ^16.0.0
+    tiny-discord: "github:timotejroiko/tiny-discord#master"
+  languageName: unknown
+  linkType: soft
+
 "doctrine@npm:^3.0.0":
   version: 3.0.0
   resolution: "doctrine@npm:3.0.0"
@@ -3267,7 +3276,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:16.0.0":
+"dotenv@npm:16.0.0, dotenv@npm:^16.0.0":
   version: 16.0.0
   resolution: "dotenv@npm:16.0.0"
   checksum: 664cebb51f0a9a1d1b930f51f0271e72e26d62feaecc9dc03df39453dd494b4e724809ca480fb3ec3213382b1ed3f791aaeb83569a137f9329ce58efd4853dbf
@@ -7649,6 +7658,13 @@ __metadata:
   version: 2.3.8
   resolution: "through@npm:2.3.8"
   checksum: a38c3e059853c494af95d50c072b83f8b676a9ba2818dcc5b108ef252230735c54e0185437618596c790bbba8fcdaef5b290405981ffa09dce67b1f1bf190cbd
+  languageName: node
+  linkType: hard
+
+"tiny-discord@github:timotejroiko/tiny-discord#master":
+  version: 0.0.1
+  resolution: "tiny-discord@https://github.com/timotejroiko/tiny-discord.git#commit=f805a2f166bbe05abb82635d5cee6e9f9fc83741"
+  checksum: 35c7861f41270524d9ccdc1bda211f8972a080b39318cb41e169921b2b1810cf496f6b6b25ada4b98c30448fd3d328ad10d7209274db8abe853e1d54672dbaf8
   languageName: node
   linkType: hard
 

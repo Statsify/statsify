@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "importsNotUsedAsValues": "preserve",
+    "strictPropertyInitialization": false,
+  },
+  "include": ["src"]
+}
