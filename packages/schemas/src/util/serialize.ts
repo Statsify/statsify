@@ -1,7 +1,7 @@
 import { Logger } from '@statsify/logger';
-import { Constructor, isObject } from '@statsify/util';
+import { Constructor, getConstructor, isObject } from '@statsify/util';
 import { FieldMetadata } from '../decorators';
-import { getConstructor, getPropertyNames } from './shared';
+import { getPropertyNames } from './shared';
 
 export const serialize = <T>(constructor: Constructor<T>, instance: T) => {
   const propertyKeys = getPropertyNames(instance);

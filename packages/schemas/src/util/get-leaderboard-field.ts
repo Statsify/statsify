@@ -1,6 +1,6 @@
-import { mockClass } from '@statsify/util';
+import { getConstructor, mockClass } from '@statsify/util';
 import { FieldMetadata, LeaderboardOptions, LeaderboardSort } from '../decorators';
-import { getConstructor, getPropertyNames } from './shared';
+import { getPropertyNames } from './shared';
 
 export const getLeaderboardField = <T>(instance: T, field: string): LeaderboardOptions => {
   let extraDisplay: string | undefined;

@@ -1,7 +1,7 @@
 import { Logger } from '@statsify/logger';
-import { isObject } from '@statsify/util';
+import { getConstructor, isObject } from '@statsify/util';
 import { FieldMetadata, Getter } from '../decorators';
-import { getConstructor, getPropertyNames } from './shared';
+import { getPropertyNames } from './shared';
 
 export const deserialize = <T>(instance: T, data: T) => {
   const constructor = getConstructor(instance);
