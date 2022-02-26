@@ -1,7 +1,15 @@
 import type { ConsoleLoggerOptions, LoggerService, LogLevel } from '@nestjs/common';
 import chalk from 'chalk';
 
-const defaultLogLevels: LogLevel[] = ['log', 'error', 'warn', 'debug', 'verbose'];
+export const defaultLogLevels: LogLevel[] = ['log', 'error', 'warn', 'debug', 'verbose'];
+
+export const logColors: Record<LogLevel, string> = {
+  debug: '#C700E7',
+  warn: '#FAB627',
+  error: '#DA4E38',
+  verbose: '#6469F5',
+  log: '#36D494',
+};
 
 /**
  * A logger implementing the NestJS LoggerService interface. However can be used anywhere.
@@ -117,18 +125,7 @@ export class Logger implements LoggerService {
   }
 
   private getColorByLogLevel(logLevel: LogLevel) {
-    switch (logLevel) {
-      case 'debug':
-        return '#C700E7';
-      case 'warn':
-        return '#FAB627';
-      case 'error':
-        return '#DA4E38';
-      case 'verbose':
-        return '#6469F5';
-      default:
-        return '#36D494';
-    }
+    return logColors[logLevel];
   }
 
   private getTimeStamp() {
