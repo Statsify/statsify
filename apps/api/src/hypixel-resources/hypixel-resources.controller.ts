@@ -1,9 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { HypixelService } from '../hypixel';
 import { ErrorResponse, GetGamecountsResponse, GetWatchdogResponse } from '../responses';
 
-@ApiTags('hypixel-resources')
 @Controller(`/hypixelresources`)
 export class HypixelResourcesController {
   public constructor(private readonly hypixelService: HypixelService) {}

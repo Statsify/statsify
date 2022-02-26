@@ -1,11 +1,10 @@
 import { Controller, Delete, Get, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { HistoricalDto, PlayerDto } from '../dtos';
 import { ErrorResponse, GetHistoricalResponse, GetPlayerResponse } from '../responses';
 import { HistoricalType } from './historical-type.enum';
 import { HistoricalService } from './historical.service';
 
-@ApiTags('players')
 @Controller('/historical')
 export class HistoricalController {
   public constructor(private readonly historicalService: HistoricalService) {}

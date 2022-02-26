@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { CachedPlayerDto, FriendDto, UuidDto } from '../dtos';
 import { HypixelService } from '../hypixel';
 import {
@@ -12,7 +12,6 @@ import {
 } from '../responses';
 import { PlayerService } from './player.service';
 
-@ApiTags('players')
 @Controller('/player')
 export class PlayerController {
   public constructor(
