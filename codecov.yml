@@ -1,20 +1,3 @@
-coverage:
-  status:
-    project:
-      default: off
-      api:
-        flags: api
-      discord-bot:
-        flags: discord-bot
-      logger:
-        flags: logger
-      math:
-        flags: math
-      schemas:
-        flags: schemas
-      util:
-        flags: util
-
 flags:
   api:
     paths:
@@ -34,3 +17,35 @@ flags:
   util:
     paths:
       - packages/util
+
+coverage:
+  status:
+    project:
+      default:
+        target: 40%
+        threshold: 3%
+        flags:
+          - api
+          - discord-bot
+          - logger
+          - math
+          - schemas
+          - util
+      api:
+        flags:
+          - api
+      discord-bot:
+        flags:
+          - discord-bot
+      logger:
+        flags:
+          - logger
+      math:
+        flags:
+          - math
+      schemas:
+        flags:
+          - schemas
+      util:
+        flags:
+          - util
