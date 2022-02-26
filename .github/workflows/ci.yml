@@ -46,8 +46,6 @@ jobs:
         run: yarn test:coverage
 
       - name: Codecov Upload
-        uses: codecov/codecov-action
+        uses: codecov/codecov-action@v2
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: coverage/
           fail_ci_if_error: true
