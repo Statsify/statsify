@@ -2,7 +2,9 @@ import { Body, Controller, Post, Response } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import type { FastifyReply } from 'fastify';
 import { PlayerLeaderboardDto } from '../../dtos/player-leaderboard.dto';
+import { PlayerRankingsDto } from '../../dtos/player-rankings.dto';
 import { PostPlayerLeaderboardResponse } from '../../responses/post.player-leaderboard.response';
+import { PostPlayerRankingsResponse } from '../../responses/post.player-rankings.response';
 import { PlayerKeys } from '../player.select';
 import { PlayerLeaderboardService } from './player-leaderboard.service';
 
@@ -33,5 +35,12 @@ export class PlayerLeaderboardsController {
     }
 
     return leaderboard;
+  }
+
+  @Post('/rankings')
+  @ApiOperation({ summary: 'Get a Player Rankings' })
+  @ApiOkResponse({ type: [PostPlayerRankingsResponse] })
+  public async getPlayerRankings(@Body() { fields, uuid }: PlayerRankingsDto) {
+    return this.playerLeaderboardService.getLeaderboardRankings(fields as PlayerKeys[], uuid);
   }
 }

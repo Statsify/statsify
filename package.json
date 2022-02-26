@@ -35,9 +35,11 @@
     "build:watch": "turbo run build:watch --parallel --no-cache",
     "test:types": "turbo run test:types --cache-dir='.turbo'",
     "test": "turbo run test --parallel --cache-dir='.turbo'",
+    "test:coverage": "turbo run test:coverage --parallel --cache-dir='.turbo'",
     "lint": "turbo run lint --parallel --cache-dir='.turbo'",
     "commit": "git cz",
     "api": "yarn workspace api",
+    "discord-bot": "yarn workspace discord-bot",
     "site": "yarn workspace site",
     "postinstall": "husky install"
   },

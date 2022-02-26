@@ -1,10 +1,9 @@
 import { Controller, Get, Query, StreamableFile } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOperation } from '@nestjs/swagger';
 import { HeadDto } from '../dtos';
 import { ErrorResponse } from '../responses';
 import { SkinService } from './skin.service';
 
-@ApiTags('skins')
 @Controller('/skin')
 export class SkinController {
   public constructor(private readonly skinService: SkinService) {}
