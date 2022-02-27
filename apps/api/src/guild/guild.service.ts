@@ -1,5 +1,6 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
+import { Logger } from '@statsify/logger';
 import { deserialize, Guild, serialize } from '@statsify/schemas';
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose';
 import { FilterQuery } from 'mongoose';
@@ -9,6 +10,8 @@ import { GuildQuery } from './guild-query.enum';
 
 @Injectable()
 export class GuildService {
+  private readonly logger = new Logger('GuildService');
+
   public constructor(
     private readonly hypixelService: HypixelService,
     private readonly playerService: PlayerService,
@@ -52,8 +55,7 @@ export class GuildService {
       (cachedGuild?.members ?? []).map((member) => [member.uuid, member])
     );
 
-    guild.expHistory = [];
-    guild.scaledExpHistory = [];
+    const guildExpHistory: Record<string, number> = {};
 
     const fetchMembers = guild.members.map(async (member) => {
       const cacheMember = memberMap[member.uuid];
@@ -75,23 +77,67 @@ export class GuildService {
 
           //Cache names for a day
           member.expiresAt = Date.now() + 86400000;
-        } else {
-          //Try again in 5 minutes
-          member.expiresAt = Date.now() + 300000;
         }
       }
 
-      member.expHistory.forEach((exp, index) => {
-        guild.expHistory[index] = guild.expHistory[index] ? guild.expHistory[index] + exp : exp;
-      });
+      if (!member.username) {
+        this.logger.error(`Could not username data for player: ${member.uuid}`);
+
+        member.username = `ERROR ${member.uuid}`;
+        member.displayName = member.username;
+
+        //Try again in 5 minutes
+        member.expiresAt = Date.now() + 300000;
+      }
+
+      const combinedExpHistory: Record<string, number> = {
+        ...cacheMember?.expHistoryDays?.reduce(
+          (acc, day, index) => ({ ...acc, [day]: cacheMember.expHistory[index] }),
+          {}
+        ),
+        ...member.expHistoryDays.reduce(
+          (acc, day, index) => ({ ...acc, [day]: member.expHistory[index] }),
+          {}
+        ),
+      };
+
+      Object.entries(combinedExpHistory)
+        .sort()
+        .reverse()
+        .slice(0, 30)
+        .forEach(([day, exp], index) => {
+          member.expHistory[index] = exp;
+          member.expHistoryDays[index] = day;
+          guildExpHistory[day] = guildExpHistory[day] ? guildExpHistory[day] + exp : exp;
+
+          if (index < 7) member.weekly += exp;
+          member.monthly += exp;
+        });
 
       return member;
     });
 
     guild.members = await Promise.all(fetchMembers);
 
-    //Scale all expHistory values
-    guild.scaledExpHistory = guild.expHistory.map((exp) => this.scaleGexp(exp));
+    Object.entries(guildExpHistory)
+      .sort()
+      .reverse()
+      .slice(0, 30)
+      .forEach(([day, exp], index) => {
+        const scaled = this.scaleGexp(exp);
+
+        guild.expHistory[index] = exp;
+        guild.expHistoryDays[index] = day;
+        guild.scaledExpHistory[index] = scaled;
+
+        if (index < 7) {
+          guild.weekly += exp;
+          guild.scaledWeekly += scaled;
+        }
+
+        guild.monthly += exp;
+        guild.scaledMonthly += scaled;
+      });
 
     //Cache guilds responses for 5 minutes
     guild.expiresAt = Date.now() + 300000;
