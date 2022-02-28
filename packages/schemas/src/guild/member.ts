@@ -23,6 +23,15 @@ export class GuildMember {
   @Field(() => [Number])
   public expHistory: number[];
 
+  @Field(() => [String])
+  public expHistoryDays: string[];
+
+  @Field()
+  public weekly: number;
+
+  @Field()
+  public monthly: number;
+
   @Field({ leaderboard: false })
   public expiresAt: number;
 
@@ -32,9 +41,12 @@ export class GuildMember {
     this.joinTime = data.joined;
     this.questParticipation = data.questParticipation;
 
-    this.expHistory = Object.entries(data.expHistory)
-      .sort()
-      .reverse()
-      .map(([, exp]) => exp as number);
+    this.expHistory = [];
+    this.expHistoryDays = [];
+
+    Object.entries(data.expHistory as Record<string, number>).forEach(([day, exp], index) => {
+      this.expHistory[index] = exp;
+      this.expHistoryDays[index] = day;
+    });
   }
 }

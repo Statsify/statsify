@@ -1,6 +1,6 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Delete, Get, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { CachedPlayerDto, FriendDto, UuidDto } from '../dtos';
+import { CachedPlayerDto, FriendDto, PlayerDto, UuidDto } from '../dtos';
 import { HypixelService } from '../hypixel';
 import {
   ErrorResponse,
@@ -10,6 +10,7 @@ import {
   GetRecentGamesResponse,
   GetStatusResponse,
 } from '../responses';
+import { SuccessResponse } from '../responses/success.response';
 import { PlayerService } from './player.service';
 
 @Controller('/player')
@@ -29,6 +30,18 @@ export class PlayerController {
     return {
       success: !!player,
       player,
+    };
+  }
+
+  @ApiOperation({ summary: 'Deletes a Player' })
+  @ApiOkResponse({ type: SuccessResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @Delete()
+  public async deletePlayer(@Query() { player }: PlayerDto) {
+    const deleted = await this.playerService.deleteOne(player);
+
+    return {
+      success: !!deleted,
     };
   }
 

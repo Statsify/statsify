@@ -60,8 +60,23 @@ export class Guild {
   @Field(() => [Number])
   public expHistory: number[];
 
+  @Field(() => [String])
+  public expHistoryDays: string[];
+
   @Field(() => [Number])
   public scaledExpHistory: number[];
+
+  @Field()
+  public weekly: number;
+
+  @Field()
+  public monthly: number;
+
+  @Field()
+  public scaledWeekly: number;
+
+  @Field()
+  public scaledMonthly: number;
 
   @Field({ leaderboard: false })
   public expiresAt: number;
@@ -84,6 +99,14 @@ export class Guild {
     this.tagColor = new Color(data.tagColor ?? 'GRAY');
     this.expByGame = new ExpByGame(data.guildExpByGameType ?? {});
 
+    this.weekly = 0;
+    this.scaledWeekly = 0;
+    this.monthly = 0;
+    this.scaledMonthly = 0;
+
+    this.expHistory = [];
+    this.expHistoryDays = [];
+    this.scaledExpHistory = [];
     this.members = [];
 
     if (data.members) {
