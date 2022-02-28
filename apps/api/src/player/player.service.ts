@@ -164,6 +164,32 @@ export class PlayerService {
     return friends;
   }
 
+  /**
+   *
+   * @param uuid UUID of the player
+   * @description Deletes a player from mongo and redis
+   */
+  public async deleteOne(tag: string) {
+    const player = await this.playerModel
+      .findOneAndDelete()
+      .where(tag.length > 16 ? 'uuid' : 'usernameToLower')
+      .equals(tag.replace(/-/g, '').toLowerCase())
+      .lean()
+      .exec();
+
+    if (!player) return null;
+
+    await this.leaderboardService.addLeaderboards(
+      Player,
+      player,
+      'shortUuid',
+      this.leaderboardService.getLeaderboardFields(Player),
+      true
+    );
+
+    return true;
+  }
+
   public serialize(instance: Player) {
     return serialize(Player, instance);
   }
