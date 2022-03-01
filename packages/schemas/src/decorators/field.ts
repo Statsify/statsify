@@ -1,5 +1,5 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { Constructor, noop } from '@statsify/util';
+import { Constructor, noop, prettify } from '@statsify/util';
 import { Prop } from '@typegoose/typegoose';
 import type { BasePropOptions } from '@typegoose/typegoose/lib/types';
 
@@ -173,12 +173,7 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
     if (!name) {
       name = propertyKey as string;
       if (['wlr', 'kdr', 'fkdr', 'bblr'].includes(name)) name = name.toUpperCase();
-      else {
-        //Convert camelCase to have spaces
-        name = name
-          .replace(/((?<!^)[A-Z](?![A-Z]))(?=\S)/g, ' $1')
-          .replace(/^./, (s) => s.toUpperCase());
-      }
+      else name = prettify(name);
     }
 
     const metadata: FieldMetadata = {

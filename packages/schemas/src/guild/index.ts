@@ -19,9 +19,12 @@ export class Guild {
   public nameToLower: string;
 
   @Field()
+  public nameFormatted: string;
+
+  @Field()
   public exp: number;
 
-  @Field({ getter: (target: Guild) => getLevel(target.exp).level })
+  @Field({ leaderboard: false })
   public level: number;
 
   @Field({ getter: (target: Guild) => getLevel(target.exp).nextLevelExp })
@@ -89,14 +92,18 @@ export class Guild {
     this.name = data.name;
     this.nameToLower = this.name?.toLowerCase();
 
+    this.tag = data.tag;
+    this.tagColor = new Color(data.tagColor ?? 'GRAY');
+    this.nameFormatted = `${this.tagColor}${this.name}${
+      this.tag ? ` ${this.tagColor}[${this.tag}${this.tagColor}]` : ''
+    }`;
+
     this.achievements = new Achievements(data.achievements ?? {});
     this.preferredGames = data.preferredGames ?? [];
     this.publiclyListed = data.publiclyListed;
 
     this.exp = data.exp;
-
-    this.tag = data.tag;
-    this.tagColor = new Color(data.tagColor ?? 'GRAY');
+    this.level = getLevel(this.exp).level;
     this.expByGame = new ExpByGame(data.guildExpByGameType ?? {});
 
     this.weekly = 0;
