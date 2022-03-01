@@ -7,7 +7,7 @@ import {
   prettify,
   removeFormatting,
   romanNumeral,
-  unflatten,
+  unflatten
 } from '../src';
 
 describe('findScore', () => {
@@ -68,13 +68,15 @@ describe('romanNumeral', () => {
 
 describe('prettify', () => {
   it('should format the string in a nice way', () => {
-    expect(prettify('statsify')).toBe('Statsify');
+    expect(prettify('normal')).toBe('Normal');
     expect(prettify('two words')).toBe('Two Words');
-    expect(prettify('rEVERSE cAPS')).toBe('Reverse Caps');
-    expect(prettify('im_seperated_by_underscores')).toBe('Im Seperated By Underscores');
-    expect(prettify('im__seperated__by__double__underscores')).toBe(
-      'Im  Seperated  By  Double  Underscores'
-    );
+    expect(prettify('snake_case')).toBe('Snake Case');
+    expect(prettify('double__snake__case')).toBe('Double  Snake  Case');
+    expect(prettify('switchy_Snake_Case')).toBe('Switchy Snake Case');
+    expect(prettify('CAPS_SNAKE_CASE')).toBe('Caps Snake Case');
+    expect(prettify('camelCase')).toBe('Camel Case');
+    expect(prettify('Pascal Case')).toBe('Pascal Case');
+    expect(prettify('sTuDlY cAPs')).toBe('Studly Caps');
   });
 });
 
