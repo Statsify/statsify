@@ -1,5 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Response } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import type { FastifyReply } from 'fastify';
 import { GuildLeaderboardDto } from '../../dtos';
 import { ErrorResponse, PostGuildLeaderboardResponse } from '../../responses';
 import { GuildLeaderboardService } from './guild-leaderboard.service';
@@ -12,7 +13,22 @@ export class GuildLeaderboardController {
   @ApiOperation({ summary: 'Get a Guild Leaderboard' })
   @ApiOkResponse({ type: PostGuildLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
-  public async getGuildLeaderboard(@Body() { field, page }: GuildLeaderboardDto) {
-    return this.guildLeaderboardService.getLeaderboard(field, page);
+  public async getGuildLeaderboard(
+    @Body() { field, page, name }: GuildLeaderboardDto,
+    @Response({ passthrough: true }) res: FastifyReply
+  ) {
+    const leaderboard = await this.guildLeaderboardService.getLeaderboard(field, name ?? page);
+
+    if (!leaderboard) {
+      res.status(400);
+
+      return {
+        statusCode: 400,
+        message: ['Provided guild has no rankings'],
+        error: 'Bad Request',
+      };
+    }
+
+    return leaderboard;
   }
 }
