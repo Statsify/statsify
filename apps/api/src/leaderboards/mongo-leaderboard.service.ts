@@ -94,9 +94,37 @@ export class MongoLeaderboardService {
   public async getLeaderboardRanking<T>(
     constructor: Constructor<T>,
     field: string,
+    filter: Record<string, any>
+  ): Promise<number | null>;
+  public async getLeaderboardRanking<T>(
+    constructor: Constructor<T>,
+    field: string,
     value: number
+  ): Promise<number | null>;
+  public async getLeaderboardRanking<T>(
+    constructor: Constructor<T>,
+    field: string,
+    valueOrFilter: number | Record<string, any>
   ): Promise<number | null> {
     const model = getModelForClass(constructor);
+
+    let value: number;
+
+    if (typeof valueOrFilter === 'object') {
+      const filter = valueOrFilter;
+
+      const item = await model
+        .findOne(filter)
+        .select({ [field]: true })
+        .lean()
+        .exec();
+
+      if (!item) return null;
+
+      value = flatten(item)[field];
+    } else {
+      value = valueOrFilter;
+    }
 
     return model.countDocuments().where(field).gte(value).lean().exec();
   }

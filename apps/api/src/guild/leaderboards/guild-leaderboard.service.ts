@@ -61,6 +61,17 @@ export class GuildLeaderboardService {
     };
   }
 
+  public async getLeaderboardRanking(field: string, name: string) {
+    const rank = await this.leaderboardService.getLeaderboardRanking(Guild, field, {
+      nameToLower: name.toLowerCase(),
+    });
+
+    return {
+      field,
+      rank,
+    };
+  }
+
   public getFieldMetadata(field: string) {
     return getLeaderboardField(new Guild({}), field);
   }

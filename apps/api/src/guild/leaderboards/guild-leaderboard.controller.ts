@@ -1,8 +1,12 @@
 import { Body, Controller, Post, Response } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import type { FastifyReply } from 'fastify';
-import { GuildLeaderboardDto } from '../../dtos';
-import { ErrorResponse, PostGuildLeaderboardResponse } from '../../responses';
+import { GuildLeaderboardDto, GuildRankingDto } from '../../dtos';
+import {
+  ErrorResponse,
+  PostGuildLeaderboardResponse,
+  PostGuildRankingsResponse,
+} from '../../responses';
 import { GuildLeaderboardService } from './guild-leaderboard.service';
 
 @Controller('/guild/leaderboards')
@@ -30,5 +34,13 @@ export class GuildLeaderboardController {
     }
 
     return leaderboard;
+  }
+
+  @Post('/rankings')
+  @ApiOperation({ summary: 'Get a Guild Ranking' })
+  @ApiOkResponse({ type: PostGuildRankingsResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  public async getGuildRanking(@Body() { field, name }: GuildRankingDto) {
+    return this.guildLeaderboardService.getLeaderboardRanking(field, name);
   }
 }

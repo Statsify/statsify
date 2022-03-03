@@ -7,7 +7,7 @@ import {
   prettify,
   removeFormatting,
   romanNumeral,
-  unflatten
+  unflatten,
 } from '../src';
 
 describe('findScore', () => {
