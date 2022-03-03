@@ -1,10 +1,13 @@
 import { Body, Controller, Post, Response } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import type { FastifyReply } from 'fastify';
 import { PlayerLeaderboardDto } from '../../dtos/player-leaderboard.dto';
 import { PlayerRankingsDto } from '../../dtos/player-rankings.dto';
-import { PostPlayerLeaderboardResponse } from '../../responses/post.player-leaderboard.response';
-import { PostPlayerRankingsResponse } from '../../responses/post.player-rankings.response';
+import {
+  ErrorResponse,
+  PostPlayerLeaderboardResponse,
+  PostPlayerRankingsResponse,
+} from '../../responses';
 import { PlayerKeys } from '../player.select';
 import { PlayerLeaderboardService } from './player-leaderboard.service';
 
@@ -15,6 +18,7 @@ export class PlayerLeaderboardsController {
   @Post()
   @ApiOperation({ summary: 'Get a Player Leaderboard' })
   @ApiOkResponse({ type: PostPlayerLeaderboardResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
   public async getPlayerLeaderboard(
     @Body() { field, page, uuid }: PlayerLeaderboardDto,
     @Response({ passthrough: true }) res: FastifyReply
@@ -40,6 +44,7 @@ export class PlayerLeaderboardsController {
   @Post('/rankings')
   @ApiOperation({ summary: 'Get a Player Rankings' })
   @ApiOkResponse({ type: [PostPlayerRankingsResponse] })
+  @ApiBadRequestResponse({ type: ErrorResponse })
   public async getPlayerRankings(@Body() { fields, uuid }: PlayerRankingsDto) {
     return this.playerLeaderboardService.getLeaderboardRankings(fields as PlayerKeys[], uuid);
   }
