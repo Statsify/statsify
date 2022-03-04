@@ -5,16 +5,17 @@ export class CommandResolvable {
   public type: ApplicationCommandType;
   public name: string;
   public description: string;
-  public options: any[];
+  public options?: any[];
 
   public constructor({ name, description }: CommandMetadata) {
     this.name = name;
     this.description = description;
     this.type = ApplicationCommandType.ChatInput;
-    this.options = [];
   }
 
   public addSubCommand({ name, description }: SubCommandMetadata) {
+    this.options ??= [];
+
     this.options.push({
       name,
       description,
@@ -23,6 +24,8 @@ export class CommandResolvable {
   }
 
   public addSubCommandGroup(group: CommandResolvable) {
+    this.options ??= [];
+
     this.options.push({
       ...group,
       type: ApplicationCommandOptionType.SubcommandGroup,

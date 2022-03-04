@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@statsify/util": "workspace:^",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "tiny-discord": "github:timotejroiko/tiny-discord#master"
   }
 }
