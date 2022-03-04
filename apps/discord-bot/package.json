@@ -13,7 +13,10 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
+    "@statsify/util": "workspace:^",
+    "discord-api-types": "^0.27.3",
     "dotenv": "^16.0.0",
+    "reflect-metadata": "^0.1.13",
     "tiny-discord": "github:timotejroiko/tiny-discord#master"
   }
 }
