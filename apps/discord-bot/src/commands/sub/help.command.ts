@@ -1,4 +1,4 @@
-import { Command, SubCommand } from '../lib/command';
+import { Command, SubCommand } from '@statsify/discord';
 
 @Command({
   name: 'belp',
@@ -27,13 +27,3 @@ export class HelpCommand {
     console.log('Help subcommand');
   }
 }
-
-/**
- * Command/
- * SubCommands/
- * SubCommand Groups/
- * Arguments
- * Command Name/
- * Command Description/
- * Cooldowns
- */

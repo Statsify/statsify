@@ -1357,6 +1357,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@statsify/discord@workspace:^, @statsify/discord@workspace:packages/discord":
+  version: 0.0.0-use.local
+  resolution: "@statsify/discord@workspace:packages/discord"
+  dependencies:
+    "@statsify/util": "workspace:^"
+    reflect-metadata: ^0.1.13
+  languageName: unknown
+  linkType: soft
+
 "@statsify/logger@*, @statsify/logger@workspace:^, @statsify/logger@workspace:packages/logger":
   version: 0.0.0-use.local
   resolution: "@statsify/logger@workspace:packages/logger"
@@ -3261,6 +3270,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "discord-bot@workspace:apps/discord-bot"
   dependencies:
+    "@statsify/discord": "workspace:^"
     "@statsify/util": "workspace:^"
     discord-api-types: ^0.27.3
     dotenv: ^16.0.0
