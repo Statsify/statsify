@@ -1,20 +1,9 @@
 import { Command, SubCommand } from '@statsify/discord';
 
 @Command({
-  name: 'belp',
-  description: 'Belp!',
-})
-export class BelpCommand {
-  @SubCommand({ name: 'h3', description: 'h3' })
-  public he3() {
-    return 'he3';
-  }
-}
-
-@Command({
   name: 'help',
   description: 'Displays this message.',
-  groups: [BelpCommand],
+  groups: [],
   cooldown: 5,
 })
 export class HelpCommand {
@@ -27,13 +16,3 @@ export class HelpCommand {
     console.log('Help subcommand');
   }
 }
-
-/**
- * Command/
- * SubCommands/
- * SubCommand Groups/
- * Arguments
- * Command Name/
- * Command Description/
- * Cooldowns
- */
