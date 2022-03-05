@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@statsify/util": "workspace:^",
+    "discord-api-types": "^0.27.3",
     "reflect-metadata": "^0.1.13",
     "tiny-discord": "github:timotejroiko/tiny-discord#master"
   }

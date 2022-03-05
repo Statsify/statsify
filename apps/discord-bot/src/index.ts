@@ -1,14 +1,19 @@
-import { CommandLoader, CommandPoster } from '@statsify/discord';
+import { CommandListener, CommandLoader, CommandPoster } from '@statsify/discord';
 import { config } from 'dotenv';
 import path from 'path';
 import 'reflect-metadata';
-import { InteractionServer, RestClient } from 'tiny-discord';
+import { InteractionServer, RestClient, WebsocketShard } from 'tiny-discord';
 
 config({ path: '../../.env' });
 
 async function bootstrap() {
   const client = new RestClient({ token: process.env.DISCORD_BOT_TOKEN });
-  const server = new InteractionServer({ key: process.env.DISCORD_BOT_PUBLIC_KEY });
+
+  const port = process.env.DISCORD_BOT_PORT;
+
+  const listener = port
+    ? new CommandListener(new InteractionServer({ key: process.env.DISCORD_BOT_PUBLIC_KEY }), port)
+    : new CommandListener(new WebsocketShard({ token: process.env.DISCORD_BOT_TOKEN, intents: 1 }));
 
   const commands = await CommandLoader.load(path.join(__dirname, './commands'));
   const poster = new CommandPoster(client);
@@ -19,17 +24,7 @@ async function bootstrap() {
     process.env.DISCORD_BOT_GUILD
   );
 
-  server.on('interaction', (interaction) => {
-    console.log(interaction);
-    return {
-      type: 4,
-      data: {
-        content: 'test',
-      },
-    };
-  });
-
-  await server.listen(process.env.DISCORD_BOT_PORT);
+  await listener.listen();
 }
 
 bootstrap();

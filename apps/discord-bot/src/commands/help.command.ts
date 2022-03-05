@@ -1,7 +1,6 @@
 import { Command } from '@statsify/discord';
 
 @Command({
-  name: 'help',
   description: 'Displays this message.',
   groups: [],
   cooldown: 5,
