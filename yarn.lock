@@ -1357,6 +1357,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@statsify/discord@workspace:^, @statsify/discord@workspace:packages/discord":
+  version: 0.0.0-use.local
+  resolution: "@statsify/discord@workspace:packages/discord"
+  dependencies:
+    "@statsify/util": "workspace:^"
+    discord-api-types: ^0.27.3
+    reflect-metadata: ^0.1.13
+    tiny-discord: "github:timotejroiko/tiny-discord#master"
+  languageName: unknown
+  linkType: soft
+
 "@statsify/logger@*, @statsify/logger@workspace:^, @statsify/logger@workspace:packages/logger":
   version: 0.0.0-use.local
   resolution: "@statsify/logger@workspace:packages/logger"
@@ -1387,7 +1398,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@statsify/util@*, @statsify/util@workspace:packages/util":
+"@statsify/util@*, @statsify/util@workspace:^, @statsify/util@workspace:packages/util":
   version: 0.0.0-use.local
   resolution: "@statsify/util@workspace:packages/util"
   languageName: unknown
@@ -3226,11 +3237,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"discord-api-types@npm:^0.27.3":
+  version: 0.27.3
+  resolution: "discord-api-types@npm:0.27.3"
+  checksum: c22d87e787fae6cffd9d23972a3d196d4b43f2fb6deeed50181e7c9d4e823a4fd30a3e1d0e0b3b48a7c284ae2b39fbe960dee988375c7d4072df445f30ac440e
+  languageName: node
+  linkType: hard
+
 "discord-bot@workspace:apps/discord-bot":
   version: 0.0.0-use.local
   resolution: "discord-bot@workspace:apps/discord-bot"
   dependencies:
+    "@statsify/discord": "workspace:^"
+    "@statsify/util": "workspace:^"
+    discord-api-types: ^0.27.3
     dotenv: ^16.0.0
+    reflect-metadata: ^0.1.13
     tiny-discord: "github:timotejroiko/tiny-discord#master"
   languageName: unknown
   linkType: soft

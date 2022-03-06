@@ -12,7 +12,9 @@ body:
       label: Which package is this bug report for?
       options:
         - api
+        - discord-bot
         - site
+        - discord
         - logger
         - math
         - schemas

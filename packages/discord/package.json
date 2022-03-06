@@ -1,10 +1,9 @@
 {
-  "name": "discord-bot",
+  "name": "@statsify/discord",
   "version": "0.0.0",
-  "private": true,
   "main": "dist/index.js",
+  "types": "src/index.ts",
   "scripts": {
-    "start": "node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w",
     "test:types": "tsc --noEmit",
@@ -13,10 +12,8 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@statsify/discord": "workspace:^",
     "@statsify/util": "workspace:^",
     "discord-api-types": "^0.27.3",
-    "dotenv": "^16.0.0",
     "reflect-metadata": "^0.1.13",
     "tiny-discord": "github:timotejroiko/tiny-discord#master"
   }
