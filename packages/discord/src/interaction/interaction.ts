@@ -1,5 +1,9 @@
-import { InteractionResponseType, InteractionType } from 'discord-api-types/v10';
-import type { Interaction as DiscordInteraction, RestClient } from 'tiny-discord';
+import { InteractionType } from 'discord-api-types/v10';
+import type {
+  Interaction as DiscordInteraction,
+  InteractionResponse,
+  RestClient,
+} from 'tiny-discord';
 import type { InteractionContent } from './interaction.content';
 
 export class Interaction {
@@ -29,18 +33,12 @@ export class Interaction {
     return this.data.type === InteractionType.ModalSubmit;
   }
 
-  public defer() {
-    return this.reply({}, this.getRecommendedDefferResponseType());
+  public isPingInteraction() {
+    return this.data.type === InteractionType.Ping;
   }
 
-  public reply(
-    data: InteractionContent,
-    responseType: InteractionResponseType = this.getRecommendendReplyResponseType()
-  ) {
-    return this.rest.post(`/interactions/${this.data.id}/${this.data.token}/callback`, {
-      type: responseType,
-      data,
-    });
+  public reply(data: InteractionResponse) {
+    return this.rest.post(`/interactions/${this.data.id}/${this.data.token}/callback`, data);
   }
 
   public editReply(data: InteractionContent) {
@@ -71,22 +69,5 @@ export class Interaction {
     return this.rest.delete(
       `/webhooks/${this.applicationId}/${this.data.token}/messages/${messageId}`
     );
-  }
-
-  private getRecommendendReplyResponseType() {
-    if (this.isAutocompleteInteraction())
-      return InteractionResponseType.ApplicationCommandAutocompleteResult;
-    if (this.isCommandInteraction()) return InteractionResponseType.ChannelMessageWithSource;
-    if (this.isMessageComponentInteraction()) return InteractionResponseType.UpdateMessage;
-
-    return InteractionResponseType.Pong;
-  }
-
-  private getRecommendedDefferResponseType() {
-    if (this.isCommandInteraction())
-      return InteractionResponseType.DeferredChannelMessageWithSource;
-    if (this.isMessageComponentInteraction()) return InteractionResponseType.DeferredMessageUpdate;
-
-    return InteractionResponseType.Pong;
   }
 }

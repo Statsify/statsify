@@ -1,22 +1,17 @@
-import { CommandListener, CommandLoader, CommandPoster, Interaction } from '@statsify/discord';
+import { CommandLoader, CommandPoster } from '@statsify/discord';
 import { config } from 'dotenv';
 import path from 'path';
 import 'reflect-metadata';
 import { InteractionServer, RestClient, WebsocketShard } from 'tiny-discord';
+import { CommandListener } from './command.listener';
 
 config({ path: '../../.env' });
 
 async function bootstrap() {
-  const client = new RestClient({ token: process.env.DISCORD_BOT_TOKEN });
-
-  const port = process.env.DISCORD_BOT_PORT;
-
-  const listener = port
-    ? new CommandListener(new InteractionServer({ key: process.env.DISCORD_BOT_PUBLIC_KEY }), port)
-    : new CommandListener(new WebsocketShard({ token: process.env.DISCORD_BOT_TOKEN, intents: 1 }));
-
+  const rest = new RestClient({ token: process.env.DISCORD_BOT_TOKEN });
   const commands = await CommandLoader.load(path.join(__dirname, './commands'));
-  const poster = new CommandPoster(client);
+
+  const poster = new CommandPoster(rest);
 
   await poster.post(
     commands,
@@ -24,17 +19,14 @@ async function bootstrap() {
     process.env.DISCORD_BOT_GUILD
   );
 
-  listener.on('interaction', (_interaction) => {
-    const interaction = new Interaction(
-      client,
-      _interaction,
-      process.env.DISCORD_BOT_APPLICATION_ID
-    );
+  const port = process.env.DISCORD_BOT_PORT;
 
-    interaction.reply({
-      content: 'Hello World!',
-    });
-  });
+  const listener = new CommandListener(
+    port
+      ? new InteractionServer({ key: process.env.DISCORD_BOT_PUBLIC_KEY })
+      : new WebsocketShard({ token: process.env.DISCORD_BOT_TOKEN, intents: 1 }),
+    rest
+  );
 
   await listener.listen();
 }
