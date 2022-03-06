@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord-api-types/v10';
-import { Command, CommandBuilder, SubCommand } from '../src';
+import { Argument, Command, CommandBuilder, SubCommand } from '../src';
 
 describe('CommandBuilder', () => {
   it('should read basic metadata', () => {
@@ -87,6 +87,25 @@ describe('CommandBuilder', () => {
           ],
         },
       ],
+    });
+  });
+
+  it('should read arguments', () => {
+    const arg: Argument = {
+      name: 'test',
+      description: 'test',
+      required: true,
+      type: ApplicationCommandOptionType.String,
+    };
+
+    @Command({ description: 'test', args: [arg] })
+    class TestCommand {}
+
+    expect(CommandBuilder.scan(new TestCommand())).toEqual({
+      name: 'test',
+      description: 'test',
+      type: ApplicationCommandType.ChatInput,
+      options: [arg],
     });
   });
 });

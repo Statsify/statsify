@@ -1,10 +1,11 @@
 import type { Constructor } from '@statsify/util';
+import type { Argument } from '../arguments';
 
 export interface CommandMetadata {
   name: string;
   description: string;
   groups?: Constructor<any>[];
-  args?: Constructor<any>[];
+  args?: Argument[];
   cooldown?: number;
 }
 

@@ -7,19 +7,21 @@ export class CommandResolvable {
   public description: string;
   public options?: any[];
 
-  public constructor({ name, description }: CommandMetadata) {
+  public constructor({ name, description, args }: CommandMetadata) {
     this.name = name;
     this.description = description;
     this.type = ApplicationCommandType.ChatInput;
+    this.options = args;
   }
 
-  public addSubCommand({ name, description }: SubCommandMetadata) {
+  public addSubCommand({ name, description, args }: SubCommandMetadata) {
     this.options ??= [];
 
     this.options.push({
       name,
       description,
       type: ApplicationCommandOptionType.Subcommand,
+      options: args,
     });
   }
 
