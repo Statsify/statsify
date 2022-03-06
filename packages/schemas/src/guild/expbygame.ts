@@ -28,6 +28,7 @@ export class ExpByGame {
 
   @Field()
   public HOUSING: number;
+
   @Field()
   public MCGO: number;
 

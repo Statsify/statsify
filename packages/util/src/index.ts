@@ -86,10 +86,21 @@ export const romanNumeral = (num: number): string => {
   return Array(+digits.join('') + 1).join('M') + roman;
 };
 
-export const prettify = (s: string): string =>
-  s
+export const prettify = (s: string): string => {
+  let newString = s;
+
+  // Convert camelCase to Snake_Case (if applicable)
+  if (!['_', ' '].some((s) => newString.includes(s))) {
+    newString =
+      newString.charAt(0).toLowerCase() +
+      newString.substring(1).replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+  }
+
+  // Convert snake_case to Title Case
+  return newString
     .replace(/_/g, ' ')
     .replace(/\w\S*/g, (t) => t.charAt(0).toUpperCase() + t.substring(1).toLowerCase());
+};
 
 export const removeFormatting = (s: string): string => s.replace(/§./g, '');
 
