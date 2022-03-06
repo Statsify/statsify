@@ -18,7 +18,6 @@ export class CommandListener extends AbstractCommandListener {
   }
 
   public onInteraction(interaction: Interaction): InteractionResponse {
-    if (interaction.isPingInteraction()) return { type: InteractionResponseType.Pong };
     if (interaction.isMessageComponentInteraction())
       return { type: InteractionResponseType.DeferredMessageUpdate };
     if (interaction.isCommandInteraction())
