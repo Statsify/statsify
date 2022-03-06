@@ -1,4 +1,4 @@
-import { CommandListener, CommandLoader, CommandPoster } from '@statsify/discord';
+import { CommandListener, CommandLoader, CommandPoster, Interaction } from '@statsify/discord';
 import { config } from 'dotenv';
 import path from 'path';
 import 'reflect-metadata';
@@ -23,6 +23,18 @@ async function bootstrap() {
     process.env.DISCORD_BOT_APPLICATION_ID,
     process.env.DISCORD_BOT_GUILD
   );
+
+  listener.on('interaction', (_interaction) => {
+    const interaction = new Interaction(
+      client,
+      _interaction,
+      process.env.DISCORD_BOT_APPLICATION_ID
+    );
+
+    interaction.reply({
+      content: 'Hello World!',
+    });
+  });
 
   await listener.listen();
 }

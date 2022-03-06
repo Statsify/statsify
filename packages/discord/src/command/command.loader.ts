@@ -6,6 +6,8 @@ import { CommandBuilder } from './command.builder';
 import type { CommandResolvable } from './command.resolvable';
 
 export class CommandLoader {
+  private static readonly logger = new Logger('CommandLoader');
+
   public static async load(dir: string) {
     const commands = new Map<string, CommandResolvable>();
     const files = await this.getCommandFiles(dir);
@@ -29,9 +31,7 @@ export class CommandLoader {
       try {
         return CommandBuilder.scan(mockClass(command[key]));
       } catch {
-        new Logger('@statsify/discord').error(
-          `Failed to load command in ${file} with import ${key}`
-        );
+        this.logger.error(`Failed to load command in ${file} with import ${key}`);
       }
     });
   }

@@ -1,4 +1,5 @@
 import { Logger } from '@statsify/logger';
+import { readFile, writeFile } from 'fs/promises';
 import type { RestClient } from 'tiny-discord';
 import type { CommandResolvable } from './command.resolvable';
 
@@ -14,6 +15,8 @@ export class CommandPoster {
   ) {
     const commandsToPost = Array.from(commands.values());
 
+    if (!(await this.shouldPost(commandsToPost))) return;
+
     const res = await this.client.put(
       `/applications/${applicationId}${guildId ? `/guilds/${guildId}` : ''}/commands`,
       commandsToPost
@@ -24,5 +27,22 @@ export class CommandPoster {
     } else {
       this.logger.log(`Successfully posted ${commandsToPost.length} commands`);
     }
+  }
+
+  private async shouldPost(commands: CommandResolvable[]) {
+    const stringified = JSON.stringify(commands);
+
+    const file = await readFile('./commands.json', 'utf8').catch(() => null);
+
+    await writeFile('./commands.json', stringified);
+
+    if (!file) return true;
+
+    if (stringified === file) {
+      this.logger.log('No changes to commands, skipping');
+      return false;
+    }
+
+    return true;
   }
 }

@@ -1,5 +1,5 @@
 import { Logger } from '@statsify/logger';
-import { GatewayDispatchEvents, InteractionResponseType } from 'discord-api-types/v10';
+import { APIUser, GatewayDispatchEvents, InteractionResponseType } from 'discord-api-types/v10';
 import EventEmitter from 'events';
 import type { InteractionServer, WebsocketShard } from 'tiny-discord';
 
@@ -43,8 +43,10 @@ export class CommandListener extends EventEmitter {
   }
 
   private handleWebsocketShard(client: WebsocketShard) {
-    client.on('ready', () => {
-      this.logger.log(`Connected to gateway with WebsocketShard`);
+    client.on('ready', (data) => {
+      this.logger.log(
+        `Connected to gateway with WebsocketShard on ${(data.user as APIUser).username}`
+      );
     });
 
     client.on('event', (event) => {
