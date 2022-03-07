@@ -20,6 +20,8 @@ export const serialize = <T>(constructor: Constructor<T>, instance: T) => {
       continue;
     }
 
+    if (metadata.skipSerialization) continue;
+
     if (metadata.getter) {
       delete instance[propertyKey];
       continue;

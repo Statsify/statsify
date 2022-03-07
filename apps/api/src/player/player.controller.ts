@@ -1,9 +1,12 @@
 import { Controller, Delete, Get, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { CachedPlayerDto, FriendDto, PlayerDto, UuidDto } from '../dtos';
+import { CachedPlayerDto, FriendDto } from '../dtos';
+import { PlayerDto } from '../dtos/player.dto';
+import { UuidDto } from '../dtos/uuid.dto';
 import { HypixelService } from '../hypixel';
 import {
   ErrorResponse,
+  GetAchievementsResponse,
   GetFriendsResponse,
   GetPlayerResponse,
   GetRankedSkyWarsResponse,
@@ -94,6 +97,19 @@ export class PlayerController {
     return {
       success: !!rankedSkyWars,
       rankedSkyWars,
+    };
+  }
+
+  @ApiOperation({ summary: 'Get the Achievements of a Player' })
+  @ApiOkResponse({ type: GetAchievementsResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @Get('/achievements')
+  public async getAchievements(@Query() { player: tag }: PlayerDto) {
+    const data = await this.playerService.findAchievements(tag);
+
+    return {
+      success: !!data,
+      ...data,
     };
   }
 }

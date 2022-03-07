@@ -1,6 +1,7 @@
 import { Controller, Delete, Get, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { HistoricalDto, PlayerDto } from '../dtos';
+import { HistoricalDto } from '../dtos';
+import { PlayerDto } from '../dtos/player.dto';
 import { ErrorResponse, GetHistoricalResponse, GetPlayerResponse } from '../responses';
 import { HistoricalType } from './historical-type.enum';
 import { HistoricalService } from './historical.service';

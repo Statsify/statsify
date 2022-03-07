@@ -1,6 +1,6 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
-import { deserialize, Friends, Player, serialize } from '@statsify/schemas';
+import { Achievements, deserialize, Friends, Player, serialize } from '@statsify/schemas';
 import { flatten, unflatten } from '@statsify/util';
 import type { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
@@ -63,7 +63,7 @@ export class PlayerService {
         redisSelector
       );
 
-      return this.mergeDocuments(cachedPlayer, redisDoc);
+      return this.mergeDocuments(cachedPlayer, redisDoc, !selector);
     }
 
     const player = await this.hypixelService.getPlayer(cachedPlayer?.uuid ?? tag);
@@ -83,7 +83,7 @@ export class PlayerService {
         redisSelector
       );
 
-      return this.mergeDocuments(cachedPlayer, redisDoc);
+      return this.mergeDocuments(cachedPlayer, redisDoc, !selector);
     }
 
     return null;
@@ -164,9 +164,32 @@ export class PlayerService {
     return friends;
   }
 
+  public async findAchievements(tag: string) {
+    const [player, resources] = await Promise.all([
+      this.findOne(tag, HypixelCache.CACHE, {
+        uuid: true,
+        displayName: true,
+        oneTimeAchievements: true,
+        tieredAchievements: true,
+        goldAchievements: true,
+        expiresAt: true,
+      }),
+      this.hypixelService.getResources('achievements'),
+    ]);
+
+    if (!player || !resources) return null;
+
+    return {
+      uuid: player.uuid,
+      displayName: player.displayName,
+      goldAchievements: player.goldAchievements ?? false,
+      achievements: new Achievements(player, resources.achievements),
+    };
+  }
+
   /**
    *
-   * @param uuid UUID of the player
+   * @param tag UUID or Username of the player
    * @description Deletes a player from mongo and redis
    */
   public async deleteOne(tag: string) {
@@ -221,12 +244,14 @@ export class PlayerService {
     );
   }
 
-  private mergeDocuments(mongoDoc: any, redisDoc: Record<string, number>) {
-    return this.deserialize(
-      unflatten<Player>({
-        ...mongoDoc,
-        ...redisDoc,
-      })
-    );
+  private mergeDocuments(mongoDoc: any, redisDoc: Record<string, number>, deserialize = true) {
+    const result = unflatten<Player>({
+      ...redisDoc,
+      ...mongoDoc,
+    });
+
+    if (deserialize) return this.deserialize(result);
+
+    return result;
   }
 }
