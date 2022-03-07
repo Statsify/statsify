@@ -25,15 +25,13 @@ export interface FieldOptions {
   example?: string | number;
   default?: any;
   leaderboard?: boolean;
-
   aliases?: string[];
-
   sort?: LeaderboardSort;
-
   getter?: Getter<any>;
   store?: boolean;
   extraDisplay?: string;
   additionalFields?: string[];
+  skipSerialization?: boolean;
 }
 
 export interface LeaderboardOptions {
@@ -51,6 +49,7 @@ export interface FieldMetadata {
   getter?: Getter<any>;
   store: boolean;
   leaderboardOptions: LeaderboardOptions;
+  skipSerialization: boolean;
 }
 
 /**
@@ -72,6 +71,7 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
   let store = true;
   let extraDisplay: string;
   let additionalFields: string[] = [];
+  let skipSerialization = false;
 
   if (typeof options === 'function') {
     prop = Prop({ type: options });
@@ -121,6 +121,7 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
     name = options.name ?? '';
     extraDisplay = options.extraDisplay ?? '';
     additionalFields = options.additionalFields ?? [];
+    skipSerialization = options.skipSerialization ?? false;
 
     if (options.getter) {
       getter = options.getter;
@@ -189,6 +190,7 @@ export function Field(options?: Type | FieldOptions): PropertyDecorator {
       type,
       getter,
       store,
+      skipSerialization,
     };
 
     Reflect.defineMetadata('statsify:field', metadata, target, propertyKey);

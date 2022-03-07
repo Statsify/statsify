@@ -1,3 +1,4 @@
+export * from './achievements';
 export * from './friends';
 export * from './gamecounts';
 export * from './guild';

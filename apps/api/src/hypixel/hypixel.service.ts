@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { Logger } from '@statsify/logger';
 import {
   Friends,
@@ -18,12 +19,13 @@ import { HypixelCache } from './cache.enum';
 @Injectable()
 export class HypixelService {
   private readonly logger = new Logger('HypixelService');
+  private resources = new Map<string, APIData>();
 
   public constructor(private readonly httpService: HttpService) {}
 
   public shouldCache(expirey: number, cache: HypixelCache): boolean {
     return (
-      cache !== HypixelCache.LIVE && (cache == HypixelCache.CACHE_ONLY || expirey > Date.now())
+      cache !== HypixelCache.LIVE && (cache == HypixelCache.CACHE_ONLY || Date.now() < expirey)
     );
   }
 
@@ -106,6 +108,28 @@ export class HypixelService {
         catchError(() => of(null))
       )
     );
+  }
+
+  public async getResources(resource: string, forceUpdate = false) {
+    if (this.resources.has(resource) && !forceUpdate) return this.resources.get(resource);
+
+    const resource$ = this.request<APIData>(`/resources/${resource}`).pipe(
+      map((data) => data),
+      catchError(() => of(null))
+    );
+
+    const resourceData = await lastValueFrom(resource$);
+
+    if (resourceData) this.resources.set(resource, resourceData);
+
+    return this.resources.get(resource);
+  }
+
+  @Cron(CronExpression.EVERY_12_HOURS)
+  public updateResources() {
+    this.getResources('achievements', true);
+    this.getResources('challenges', true);
+    this.getResources('quests', true);
   }
 
   private request<T>(url: string): Observable<T> {

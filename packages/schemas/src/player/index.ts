@@ -1,4 +1,5 @@
 import { APIData } from '@statsify/util';
+import { modelOptions as ModelOptions, Severity } from '@typegoose/typegoose';
 import { Color } from '../color';
 import { Field } from '../decorators';
 import { Game } from '../game';
@@ -6,6 +7,7 @@ import { PlayerSocials } from './socials';
 import { PlayerStats } from './stats';
 import { PlayerUtil } from './util';
 
+@ModelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class Player {
   @Field({ unique: true, index: true, required: true })
   public uuid: string;
@@ -61,6 +63,15 @@ export class Player {
   @Field()
   public stats: PlayerStats;
 
+  @Field({ type: () => [String] })
+  public oneTimeAchievements: string[];
+
+  @Field({ leaderboard: false, skipSerialization: true })
+  public tieredAchievements: Record<string, number>;
+
+  @Field()
+  public goldAchievements: boolean;
+
   @Field({ leaderboard: false, description: "The time the player's cache expires " })
   public expiresAt: number;
 
@@ -100,6 +111,10 @@ export class Player {
     this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});
 
     this.stats = new PlayerStats(data);
+
+    this.oneTimeAchievements = data?.achievementsOneTime ?? [];
+    this.tieredAchievements = data?.achievements ?? {};
+    this.goldAchievements = data?.vanityMeta?.packages?.includes('goldachievementmenu') ?? false;
 
     //These will all be filled in by a service
     this.expiresAt = 0;

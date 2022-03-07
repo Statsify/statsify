@@ -23,6 +23,11 @@ export const deserialize = <T>(instance: T, data: T) => {
       continue;
     }
 
+    if (metadata.skipSerialization) {
+      instance[propertyKey] = data[propertyKey];
+      continue;
+    }
+
     if (metadata.getter) {
       getters.push([propertyKey, metadata.getter]);
       continue;
