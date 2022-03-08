@@ -75,7 +75,7 @@ export class SpeedUHC {
     this.masterBaker = new SpeedUHCMastery(data, 'master_baker');
     this.invigorate = new SpeedUHCMastery(data, 'invigorate');
     this.huntsman = new SpeedUHCMastery(data, 'huntsman');
-    this.fortune = new SpeedUHCMastery(data, 'huntsman');
+    this.fortune = new SpeedUHCMastery(data, 'fortune');
     this.vampirism = new SpeedUHCMastery(data, 'vampirism');
 
     this.levelFormatted = `§d[${getLevelIndex(this.score) + 1}❋]`;

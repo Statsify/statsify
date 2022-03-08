@@ -22,7 +22,7 @@ export class SpeedUHCMastery {
   public kdr: number;
 
   public constructor(data: APIData, mastery: string) {
-    mastery = mastery ? `_mastery_${mastery}` : mastery;
+    mastery = `_mastery_${mastery}`;
 
     this.wins = data[`wins${mastery}`];
     this.losses = data[`losses${mastery}`];
