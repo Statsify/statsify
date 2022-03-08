@@ -26,6 +26,9 @@ export class Achievements {
   public copsandcrims: AchievementsGame;
 
   @Field()
+  public crazywalls: AchievementsGame;
+
+  @Field()
   public duels: AchievementsGame;
 
   @Field()
@@ -35,13 +38,13 @@ export class Achievements {
   public general: AchievementsGame;
 
   @Field()
-  public turbokartracers: AchievementsGame;
-
-  @Field()
   public halloween: AchievementsGame;
 
   @Field()
   public housing: AchievementsGame;
+
+  @Field()
+  public megawalls: AchievementsGame;
 
   @Field()
   public murdermystery: AchievementsGame;
@@ -65,19 +68,19 @@ export class Achievements {
   public skywars: AchievementsGame;
 
   @Field()
+  public smashheroes: AchievementsGame;
+
+  @Field()
   public speeduhc: AchievementsGame;
 
   @Field()
   public summer: AchievementsGame;
 
   @Field()
-  public smashheroes: AchievementsGame;
-
-  @Field()
   public tntgames: AchievementsGame;
 
   @Field()
-  public crazywalls: AchievementsGame;
+  public turbokartracers: AchievementsGame;
 
   @Field()
   public uhc: AchievementsGame;
@@ -87,9 +90,6 @@ export class Achievements {
 
   @Field()
   public walls: AchievementsGame;
-
-  @Field()
-  public megawalls: AchievementsGame;
 
   @Field()
   public warlords: AchievementsGame;

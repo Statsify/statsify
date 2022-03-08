@@ -33,9 +33,9 @@ export abstract class AbstractCommandListener {
   }
 
   public listen() {
-    if (typeof this.port === 'number') {
-      this.logger.log(`Listenening with InteractionServer on port ${this.port}`);
-      return (this.client as InteractionServer).listen(this.port);
+    if (this.port !== undefined) {
+      this.logger.log(`Listening with InteractionServer on port ${this.port}`);
+      return (this.client as InteractionServer).listen(this.port as number);
     }
 
     this.logger.log(`Connecting to gateway with WebsocketShard`);
