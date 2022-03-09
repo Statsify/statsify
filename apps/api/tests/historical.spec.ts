@@ -3,8 +3,9 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { Test } from '@nestjs/testing';
 import { Player } from '@statsify/schemas';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
+import { AuthService } from '../src/auth/auth.service';
 import { HistoricalController, HistoricalService, HistoricalType } from '../src/historical';
-import { testUsername } from './test.constants';
+import { testKey, testUsername } from './test.constants';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -16,6 +17,10 @@ describe('Historical', () => {
     findAndReset: jest.fn().mockResolvedValue(new Player()),
   };
 
+  const authService = {
+    limited: jest.fn().mockResolvedValue(true),
+  };
+
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [HistoricalController],
@@ -23,6 +28,10 @@ describe('Historical', () => {
       .useMocker((token) => {
         if (token === HistoricalService) {
           return historicalService;
+        }
+
+        if (token === AuthService) {
+          return authService;
         }
 
         if (typeof token === 'function') {
@@ -45,6 +54,9 @@ describe('Historical', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/historical?player=${testUsername}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(400);
@@ -54,6 +66,9 @@ describe('Historical', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/historical?player=${testUsername}&type=${HistoricalType.DAILY}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(200);

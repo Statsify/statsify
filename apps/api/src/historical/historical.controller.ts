@@ -1,5 +1,6 @@
 import { Controller, Delete, Get, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { Auth, AuthRole } from '../auth';
 import { HistoricalDto } from '../dtos';
 import { PlayerDto } from '../dtos/player.dto';
 import { ErrorResponse, GetHistoricalResponse, GetPlayerResponse } from '../responses';
@@ -14,6 +15,7 @@ export class HistoricalController {
   @ApiOkResponse({ type: GetHistoricalResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Get()
+  @Auth({ weight: 2 })
   public async getHistoricalStats(@Query() { player: tag, type }: HistoricalDto) {
     const [newPlayer, oldPlayer, isNew] = await this.historicalService.findOne(tag, type);
 
@@ -36,6 +38,7 @@ export class HistoricalController {
   @ApiOkResponse({ type: GetPlayerResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Delete()
+  @Auth({ role: AuthRole.MEMBER })
   public async deleteHistoricalStats(@Query() { player: tag }: PlayerDto) {
     const player = await this.historicalService.findAndReset(tag, HistoricalType.MONTHLY);
 

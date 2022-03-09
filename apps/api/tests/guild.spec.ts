@@ -3,8 +3,9 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { Test } from '@nestjs/testing';
 import { Guild } from '@statsify/schemas';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
+import { AuthService } from '../src/auth/auth.service';
 import { GuildController, GuildQuery, GuildService } from '../src/guild';
-import { testUsername } from './test.constants';
+import { testKey, testUsername } from './test.constants';
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -15,6 +16,10 @@ describe('Guild', () => {
     findOne: jest.fn().mockResolvedValue(new Guild()),
   };
 
+  const authService = {
+    limited: jest.fn().mockResolvedValue(true),
+  };
+
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [GuildController],
@@ -22,6 +27,10 @@ describe('Guild', () => {
       .useMocker((token) => {
         if (token === GuildService) {
           return guildService;
+        }
+
+        if (token === AuthService) {
+          return authService;
         }
 
         if (typeof token === 'function') {
@@ -44,6 +53,9 @@ describe('Guild', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/guild?guild=${testUsername}&type=${GuildQuery.NAME}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(200);
@@ -59,6 +71,9 @@ describe('Guild', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/guild?guild=${testUsername}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(400);
