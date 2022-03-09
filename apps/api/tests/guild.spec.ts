@@ -2,43 +2,18 @@ import { ValidationPipe } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { Guild } from '@statsify/schemas';
-import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
-import { AuthService } from '../src/auth/auth.service';
-import { GuildController, GuildQuery, GuildService } from '../src/guild';
+import { GuildController, GuildQuery } from '../src/guild';
+import { useMocker } from './mocks';
 import { testKey, testUsername } from './test.constants';
-
-const moduleMocker = new ModuleMocker(global);
 
 describe('Guild', () => {
   let app: NestFastifyApplication;
-
-  const guildService = {
-    findOne: jest.fn().mockResolvedValue(new Guild()),
-  };
-
-  const authService = {
-    limited: jest.fn().mockResolvedValue(true),
-  };
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [GuildController],
     })
-      .useMocker((token) => {
-        if (token === GuildService) {
-          return guildService;
-        }
-
-        if (token === AuthService) {
-          return authService;
-        }
-
-        if (typeof token === 'function') {
-          const mockMetadata = moduleMocker.getMetadata(token) as MockFunctionMetadata<any, any>;
-          const Mock = moduleMocker.generateFromMetadata(mockMetadata);
-          return new Mock();
-        }
-      })
+      .useMocker(useMocker)
       .compile();
 
     app = moduleRef.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

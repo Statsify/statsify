@@ -2,55 +2,18 @@ import { ValidationPipe } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { Friends, Player, RankedSkyWars, Status } from '@statsify/schemas';
-import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
-import { AuthService } from '../src/auth/auth.service';
-import { HypixelService } from '../src/hypixel';
-import { PlayerController, PlayerService } from '../src/player';
+import { PlayerController } from '../src/player';
+import { useMocker } from './mocks';
 import { testKey, testUsername, testUuid } from './test.constants';
-
-const moduleMocker = new ModuleMocker(global);
 
 describe('Player', () => {
   let app: NestFastifyApplication;
-
-  const playerService = {
-    findOne: jest.fn().mockResolvedValue(new Player()),
-    findFriends: jest.fn().mockResolvedValue(new Friends({})),
-  };
-
-  const hypixelService = {
-    getRecentGames: jest.fn().mockResolvedValue([]),
-    getStatus: jest.fn().mockResolvedValue(new Status({})),
-    getRankedSkyWars: jest.fn().mockResolvedValue(new RankedSkyWars({})),
-  };
-
-  const authService = {
-    limited: jest.fn().mockResolvedValue(true),
-  };
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [PlayerController],
     })
-      .useMocker((token) => {
-        if (token === PlayerService) {
-          return playerService;
-        }
-
-        if (token === HypixelService) {
-          return hypixelService;
-        }
-
-        if (token === AuthService) {
-          return authService;
-        }
-
-        if (typeof token === 'function') {
-          const mockMetadata = moduleMocker.getMetadata(token) as MockFunctionMetadata<any, any>;
-          const Mock = moduleMocker.generateFromMetadata(mockMetadata);
-          return new Mock();
-        }
-      })
+      .useMocker(useMocker)
       .compile();
 
     app = moduleRef.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
