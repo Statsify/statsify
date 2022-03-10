@@ -1,5 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { Auth } from '../auth';
 import { GuildDto } from '../dtos';
 import { ErrorResponse, GetGuildResponse } from '../responses';
 import { GuildService } from './guild.service';
@@ -12,6 +13,7 @@ export class GuildController {
   @ApiOkResponse({ type: GetGuildResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Get()
+  @Auth({ weight: 120 })
   public async getGuild(@Query() { guild: tag, type, cache }: GuildDto) {
     const guild = await this.guildService.findOne(tag, type, cache);
 

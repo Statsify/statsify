@@ -2,46 +2,18 @@ import { ValidationPipe } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { Friends, Player, RankedSkyWars, Status } from '@statsify/schemas';
-import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
-import { HypixelService } from '../src/hypixel';
-import { PlayerController, PlayerService } from '../src/player';
-import { testUsername, testUuid } from './test.constants';
-
-const moduleMocker = new ModuleMocker(global);
+import { PlayerController } from '../src/player';
+import { useMocker } from './mocks';
+import { testKey, testUsername, testUuid } from './test.constants';
 
 describe('Player', () => {
   let app: NestFastifyApplication;
-
-  const playerService = {
-    findOne: jest.fn().mockResolvedValue(new Player()),
-    findFriends: jest.fn().mockResolvedValue(new Friends({})),
-  };
-
-  const hypixelService = {
-    getRecentGames: jest.fn().mockResolvedValue([]),
-    getStatus: jest.fn().mockResolvedValue(new Status({})),
-    getRankedSkyWars: jest.fn().mockResolvedValue(new RankedSkyWars({})),
-  };
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       controllers: [PlayerController],
     })
-      .useMocker((token) => {
-        if (token === PlayerService) {
-          return playerService;
-        }
-
-        if (token === HypixelService) {
-          return hypixelService;
-        }
-
-        if (typeof token === 'function') {
-          const mockMetadata = moduleMocker.getMetadata(token) as MockFunctionMetadata<any, any>;
-          const Mock = moduleMocker.generateFromMetadata(mockMetadata);
-          return new Mock();
-        }
-      })
+      .useMocker(useMocker)
       .compile();
 
     app = moduleRef.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -56,6 +28,9 @@ describe('Player', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player?player=${testUsername}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(200);
@@ -70,6 +45,9 @@ describe('Player', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player?player=${testUuid}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(200);
@@ -84,6 +62,9 @@ describe('Player', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player/recentgames?uuid=${testUsername}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(400);
@@ -93,6 +74,9 @@ describe('Player', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player/recentgames?uuid=${testUuid}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(200);
@@ -107,6 +91,9 @@ describe('Player', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player/status?uuid=${testUsername}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(400);
@@ -116,6 +103,9 @@ describe('Player', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player/status?uuid=${testUuid}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(200);
@@ -130,6 +120,9 @@ describe('Player', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player/friends?player=${testUsername}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(400);
@@ -139,6 +132,9 @@ describe('Player', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player/friends?player=${testUuid}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(400);
@@ -148,6 +144,9 @@ describe('Player', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player/friends?player=${testUuid}&page=0`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(200);
@@ -162,6 +161,9 @@ describe('Player', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player/rankedskywars?uuid=${testUsername}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(400);
@@ -171,6 +173,9 @@ describe('Player', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player/rankedskywars?uuid=${testUuid}`,
+      headers: {
+        'x-api-key': testKey,
+      },
     });
 
     expect(result.statusCode).toEqual(200);

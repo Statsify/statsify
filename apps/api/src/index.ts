@@ -21,7 +21,18 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   //Swagger/Redoc docs
-  const config = new DocumentBuilder().setTitle('Statsify API').setVersion('1.0').build();
+  const config = new DocumentBuilder()
+    .setTitle('Statsify API')
+    .setVersion('1.0')
+    .setDescription(
+      '# Introduction\nThis is the official Statsify API documentation. [Website](https://statsify.net/) - [GitHub](https://github.com/Statsify/stats)\n# Authentication\n\n<!-- ReDoc-Inject: <security-definitions> -->'
+    )
+    .addSecurity('ApiKey', {
+      type: 'apiKey',
+      in: 'header',
+      name: 'x-api-key',
+    })
+    .build();
 
   //Fastify template renderer for Redoc
   app.setViewEngine({

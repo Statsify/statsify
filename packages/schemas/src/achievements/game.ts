@@ -26,11 +26,11 @@ export class AchievementsGame {
     oneTime: string[],
     tiered: Record<string, number>
   ) {
-    data = data[gameName];
+    data = data[gameName] ?? {};
 
     this.points = 0;
 
-    this.oneTime = Object.entries(data.one_time as Record<string, IOneTimeAchievement>).map(
+    this.oneTime = Object.entries((data.one_time as Record<string, IOneTimeAchievement>) ?? {}).map(
       ([key, ach]) => {
         const unlocked = oneTime.includes(`${gameName}_${key}`.toLowerCase());
         const achievement = new OneTimeAchievement(ach, unlocked);
@@ -41,7 +41,7 @@ export class AchievementsGame {
       }
     );
 
-    this.tiered = Object.entries(data.tiered as Record<string, ITieredAchievement>).map(
+    this.tiered = Object.entries((data.tiered as Record<string, ITieredAchievement>) ?? {}).map(
       ([key, ach]) => {
         const value = tiered[`${gameName}_${key}`.toLowerCase()] ?? 0;
         const achievement = new TieredAchievement(ach, value);
