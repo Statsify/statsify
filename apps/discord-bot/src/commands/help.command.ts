@@ -1,4 +1,5 @@
-import { Command, Interaction, SubCommand } from '@statsify/discord';
+import { Command, CommandContext, Interaction, SubCommand } from '@statsify/discord';
+import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 import { BelpCommand } from './belp';
 
 @Command({
@@ -9,11 +10,21 @@ import { BelpCommand } from './belp';
 export class HelpCommand {
   public count = 0;
 
-  @SubCommand({ description: 'Displays this message.' })
-  public good(interaction: Interaction) {
+  @SubCommand({
+    description: 'Displays this message.',
+    args: [
+      {
+        name: 'test',
+        type: ApplicationCommandOptionType.String,
+        description: 'test',
+        required: true,
+      },
+    ],
+  })
+  public good(context: CommandContext) {
     this.count++;
 
-    return interaction.sendFollowup({ content: `help good: ${this.count}` });
+    console.log(context.option('test'));
   }
 
   @SubCommand({ description: 'Displays this message.' })

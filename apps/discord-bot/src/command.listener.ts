@@ -1,4 +1,9 @@
-import { AbstractCommandListener, CommandResolvable, Interaction } from '@statsify/discord';
+import {
+  AbstractCommandListener,
+  CommandContext,
+  CommandResolvable,
+  Interaction,
+} from '@statsify/discord';
 import { ApplicationCommandOptionType, InteractionResponseType } from 'discord-api-types/v10';
 import type {
   InteractionResponse,
@@ -39,7 +44,9 @@ export class CommandListener extends AbstractCommandListener {
 
     [command, data] = this.getCommandAndData(command, data);
 
-    command.execute(interaction);
+    const context = new CommandContext(interaction, data);
+
+    command.execute(context);
 
     return { type: InteractionResponseType.DeferredChannelMessageWithSource };
   }

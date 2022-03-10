@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord-api-types/v10';
-import type { Interaction } from '../interaction';
+import type { CommandContext } from './command.context';
 import type { CommandMetadata } from './command.interface';
 
 export class CommandResolvable {
@@ -24,10 +24,10 @@ export class CommandResolvable {
     this.methodName = methodName;
   }
 
-  public execute(interaction: Interaction) {
+  public execute(context: CommandContext) {
     const method = this.target[this.methodName];
 
-    return method.apply(this.target, [interaction]);
+    return method.apply(this.target, [context]);
   }
 
   public addSubCommand(subcommand: CommandResolvable) {

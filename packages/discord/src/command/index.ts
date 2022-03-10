@@ -5,3 +5,4 @@ export * from './command.loader';
 export * from './command.poster';
 export * from './command.resolvable';
 export * from './subcommand.decorator';
+export * from './command.context';
