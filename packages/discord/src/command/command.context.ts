@@ -18,4 +18,8 @@ export class CommandContext {
 
     return data.value as unknown as T;
   }
+
+  public reply(content: string) {
+    return this.interaction.sendFollowup({ content });
+  }
 }
