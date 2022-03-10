@@ -20,6 +20,6 @@ export function Auth({ weight = 1, role = AuthRole.MEMBER }: AuthDecoratorOption
     SetMetadata('auth-weight', weight),
     SetMetadata('auth-role', role),
     UseGuards(AuthGuard),
-    ApiSecurity('basic')
+    ApiSecurity('ApiKey')
   );
 }

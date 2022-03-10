@@ -24,7 +24,14 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('Statsify API')
     .setVersion('1.0')
-    .addSecurity('basic', { type: 'apiKey', scheme: 'basic', in: 'header', name: 'x-api-key' })
+    .setDescription(
+      '# Introduction\nThis is the official Statsify API documentation. [Website](https://statsify.net/) - [GitHub](https://github.com/Statsify/stats)\n# Authentication\n\n<!-- ReDoc-Inject: <security-definitions> -->'
+    )
+    .addSecurity('ApiKey', {
+      type: 'apiKey',
+      in: 'header',
+      name: 'x-api-key',
+    })
     .build();
 
   //Fastify template renderer for Redoc
