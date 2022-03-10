@@ -7,6 +7,7 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
+import { createHash } from 'crypto';
 import { uuid } from 'short-uuid';
 import { AuthRole } from './auth.role';
 
@@ -17,9 +18,11 @@ export class AuthService {
   public constructor(@InjectRedis() private readonly redis: Redis) {}
 
   public async limited(apiKey: string, weight: number, role: AuthRole): Promise<boolean> {
-    const keyInfo = await this.redis.hmget(`key:${apiKey}`, 'role', 'limit');
+    const hash = this.hash(apiKey);
 
-    if (keyInfo[0] === null || keyInfo[1] === null) throw new UnauthorizedException();
+    const [name, ...keyInfo] = await this.redis.hmget(`key:${hash}`, 'name', 'role', 'limit');
+
+    if (name === null) throw new UnauthorizedException();
 
     const [apiKeyRole, apiKeyLimit] = keyInfo.map(Number);
 
@@ -30,13 +33,13 @@ export class AuthService {
     const time = Date.now();
     const expirey = 60000;
 
-    const key = `ratelimit:${apiKey}`;
+    const key = `ratelimit:${hash}`;
 
     pipeline.zremrangebyscore(key, 0, time - expirey);
     pipeline.zadd(key, time, `${uuid()}:${weight}`);
     pipeline.zrange(key, 0, -1, 'WITHSCORES');
-    pipeline.hincrby(`key:${apiKey}`, 'requests', weight);
-    pipeline.expire(key, expirey);
+    pipeline.hincrby(`key:${hash}`, 'requests', weight);
+    pipeline.expire(key, expirey / 1000);
 
     const [, , requests] = await pipeline.exec();
 
@@ -48,12 +51,35 @@ export class AuthService {
 
     if (weightedTotal > apiKeyLimit) {
       this.logger.warn(
-        `${apiKey} has exceeded their request limit of ${apiKeyLimit} and has requested ${weightedTotal} times`
+        `${name} has exceeded their request limit of ${apiKeyLimit} and has requested ${weightedTotal} times`
       );
 
       throw new HttpException('Too Many Requests', 429);
     }
 
     return true;
+  }
+
+  public async createKey(name: string): Promise<string> {
+    const apiKey = uuid().replace(/-/g, '');
+    const hash = this.hash(apiKey);
+
+    await this.redis.hmset(
+      `key:${hash}`,
+      'name',
+      name,
+      'role',
+      AuthRole.MEMBER,
+      'limit',
+      30,
+      'requests',
+      0
+    );
+
+    return apiKey;
+  }
+
+  private hash(apiKey: string): string {
+    return createHash('sha256').update(apiKey).digest('hex');
   }
 }

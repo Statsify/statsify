@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './auth';
 import { GuildModule } from './guild';
 import { HistoricalModule } from './historical';
 import { HypixelResourcesModule } from './hypixel-resources';
