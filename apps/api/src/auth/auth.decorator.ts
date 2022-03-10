@@ -1,4 +1,5 @@
 import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
+import { ApiSecurity } from '@nestjs/swagger';
 import { AuthGuard } from './auth.guard';
 import { AuthRole } from './auth.role';
 
@@ -18,6 +19,7 @@ export function Auth({ weight = 1, role = AuthRole.MEMBER }: AuthDecoratorOption
   return applyDecorators(
     SetMetadata('auth-weight', weight),
     SetMetadata('auth-role', role),
-    UseGuards(AuthGuard)
+    UseGuards(AuthGuard),
+    ApiSecurity('basic')
   );
 }
