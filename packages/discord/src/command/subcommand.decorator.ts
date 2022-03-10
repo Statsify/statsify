@@ -1,15 +1,13 @@
-import type { SubCommandOptions } from './command.interface';
+import type { SubCommandMetadata, SubCommandOptions } from './command.interface';
 
 export function SubCommand(options: SubCommandOptions): MethodDecorator {
   return (target, propertyKey) => {
-    Reflect.defineMetadata(
-      'statsify:subcommand',
-      {
-        ...options,
-        name: options.name ?? (propertyKey as string).toLowerCase(),
-      },
-      target,
-      propertyKey
-    );
+    const metadata: SubCommandMetadata = {
+      ...options,
+      name: options.name ?? (propertyKey as string).toLowerCase(),
+      methodName: propertyKey as string,
+    };
+
+    Reflect.defineMetadata('statsify:subcommand', metadata, target, propertyKey);
   };
 }

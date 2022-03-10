@@ -15,7 +15,7 @@ export class CommandBuilder {
       throw new Error(`Command metadata not found on ${target.name}`);
     }
 
-    const commandResolvable = new CommandResolvable(commandMetadata);
+    const commandResolvable = new CommandResolvable(commandMetadata, target);
 
     (commandMetadata.groups ?? []).forEach((group) => {
       const groupResolvable = CommandBuilder.scan(mockClass(group));
@@ -33,7 +33,9 @@ export class CommandBuilder {
 
       if (!subcommandMetadata) continue;
 
-      commandResolvable.addSubCommand(subcommandMetadata);
+      const subcommandResolvable = new CommandResolvable(subcommandMetadata, target);
+
+      commandResolvable.addSubCommand(subcommandResolvable);
     }
 
     return commandResolvable;

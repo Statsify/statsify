@@ -1,18 +1,19 @@
 import type { Constructor } from '@statsify/util';
 import type { Argument } from '../arguments';
 
-export interface CommandMetadata {
-  name: string;
+export interface CommandOptions {
+  name?: string;
   description: string;
   groups?: Constructor<any>[];
   args?: Argument[];
   cooldown?: number;
 }
 
-export type SubCommandMetadata = Omit<CommandMetadata, 'groups'>;
+export type SubCommandOptions = Omit<CommandOptions, 'groups'>;
 
-export interface CommandOptions extends Omit<CommandMetadata, 'name'> {
-  name?: string;
+export interface CommandMetadata extends Omit<CommandOptions, 'name'> {
+  name: string;
+  methodName: string;
 }
 
-export type SubCommandOptions = Omit<CommandOptions, 'groups'>;
+export type SubCommandMetadata = Omit<CommandMetadata, 'groups'>;

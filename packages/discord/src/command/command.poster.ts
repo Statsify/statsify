@@ -23,7 +23,11 @@ export class CommandPoster {
     );
 
     if (res.status !== 200) {
-      this.logger.error(`Failed to post commands: ${res.status}`);
+      this.logger.error(
+        `Failed to post commands with reason: ${JSON.stringify(
+          (res.body as Record<string, any>)?.errors ?? {}
+        )}, and status: ${res.status}`
+      );
     } else {
       this.logger.log(`Successfully posted ${commandsToPost.length} commands`);
     }
