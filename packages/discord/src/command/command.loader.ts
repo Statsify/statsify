@@ -1,9 +1,9 @@
 import { Logger } from '@statsify/logger';
-import { mockClass } from '@statsify/util';
 import { statSync } from 'fs';
 import { readdir } from 'fs/promises';
 import { CommandBuilder } from './command.builder';
 import type { CommandResolvable } from './command.resolvable';
+import { Container } from 'typedi';
 
 export class CommandLoader {
   private static readonly logger = new Logger('CommandLoader');
@@ -29,7 +29,7 @@ export class CommandLoader {
 
     return Object.keys(command).map((key) => {
       try {
-        return CommandBuilder.scan(mockClass(command[key]));
+        return CommandBuilder.scan(Container.get(command[key]));
       } catch {
         this.logger.error(`Failed to load command in ${file} with import ${key}`);
       }

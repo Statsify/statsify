@@ -18,6 +18,7 @@
     "discord-api-types": "^0.27.3",
     "dotenv": "^16.0.0",
     "reflect-metadata": "^0.1.13",
-    "tiny-discord": "github:timotejroiko/tiny-discord#master"
+    "tiny-discord": "github:timotejroiko/tiny-discord#master",
+    "typedi": "^0.10.0"
   }
 }

@@ -25,7 +25,8 @@ async function bootstrap() {
     port
       ? new InteractionServer({ key: process.env.DISCORD_BOT_PUBLIC_KEY })
       : new WebsocketShard({ token: process.env.DISCORD_BOT_TOKEN, intents: 1 }),
-    rest
+    rest,
+    commands
   );
 
   await listener.listen();

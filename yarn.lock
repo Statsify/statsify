@@ -1365,6 +1365,7 @@ __metadata:
     discord-api-types: ^0.27.3
     reflect-metadata: ^0.1.13
     tiny-discord: "github:timotejroiko/tiny-discord#master"
+    typedi: ^0.10.0
   languageName: unknown
   linkType: soft
 
@@ -3254,6 +3255,7 @@ __metadata:
     dotenv: ^16.0.0
     reflect-metadata: ^0.1.13
     tiny-discord: "github:timotejroiko/tiny-discord#master"
+    typedi: ^0.10.0
   languageName: unknown
   linkType: soft
 
@@ -8040,6 +8042,13 @@ __metadata:
   dependencies:
     is-typedarray: ^1.0.0
   checksum: 99c11aaa8f45189fcfba6b8a4825fd684a321caa9bd7a76a27cf0c7732c174d198b99f449c52c3818107430b5f41c0ccbbfb75cb2ee3ca4a9451710986d61a60
+  languageName: node
+  linkType: hard
+
+"typedi@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "typedi@npm:0.10.0"
+  checksum: d26491e3684677d898f745b2ea5403cad4e03f7ed87b35d0a1cc80cbb4837d50042e100574da77d56dd04e3f0270a6f7df18270171c828bec6b93cefbac059a3
   languageName: node
   linkType: hard
 

@@ -1,6 +1,7 @@
-import { getConstructor, mockClass } from '@statsify/util';
+import { getConstructor } from '@statsify/util';
 import type { CommandMetadata, SubCommandMetadata } from './command.interface';
 import { CommandResolvable } from './command.resolvable';
+import { Container } from 'typedi';
 
 export class CommandBuilder {
   public static scan(target: any) {
@@ -15,10 +16,10 @@ export class CommandBuilder {
       throw new Error(`Command metadata not found on ${target.name}`);
     }
 
-    const commandResolvable = new CommandResolvable(commandMetadata);
+    const commandResolvable = new CommandResolvable(commandMetadata, target);
 
     (commandMetadata.groups ?? []).forEach((group) => {
-      const groupResolvable = CommandBuilder.scan(mockClass(group));
+      const groupResolvable = CommandBuilder.scan(Container.get(group));
       commandResolvable.addSubCommandGroup(groupResolvable);
     });
 
@@ -33,7 +34,9 @@ export class CommandBuilder {
 
       if (!subcommandMetadata) continue;
 
-      commandResolvable.addSubCommand(subcommandMetadata);
+      const subcommandResolvable = new CommandResolvable(subcommandMetadata, target);
+
+      commandResolvable.addSubCommand(subcommandResolvable);
     }
 
     return commandResolvable;

@@ -1,4 +1,4 @@
-import { InteractionType } from 'discord-api-types/v10';
+import { APIGuildMember, InteractionType } from 'discord-api-types/v10';
 import type {
   Interaction as DiscordInteraction,
   InteractionResponse,
@@ -35,6 +35,22 @@ export class Interaction {
 
   public isPingInteraction() {
     return this.data.type === InteractionType.Ping;
+  }
+
+  public getData(): any {
+    return this.data.data;
+  }
+
+  public getChannelId() {
+    return this.data.channel_id;
+  }
+
+  public getGuildId() {
+    return this.data.guild_id;
+  }
+
+  public getUserId() {
+    return (this.data.member as APIGuildMember)?.user?.id;
   }
 
   public reply(data: InteractionResponse) {
