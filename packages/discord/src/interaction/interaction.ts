@@ -60,7 +60,7 @@ export class Interaction {
   public editReply(data: InteractionContent) {
     return this.rest.patch(
       `/webhooks/${this.applicationId}/${this.data.token}/messages/@original`,
-      data
+      this.convertToApiData(data)
     );
   }
 
@@ -71,13 +71,16 @@ export class Interaction {
   }
 
   public sendFollowup(data: InteractionContent) {
-    return this.rest.post(`/webhooks/${this.applicationId}/${this.data.token}`, data);
+    return this.rest.post(
+      `/webhooks/${this.applicationId}/${this.data.token}`,
+      this.convertToApiData(data)
+    );
   }
 
   public editFollowup(messageId: string, data: InteractionContent) {
     return this.rest.patch(
       `/webhooks/${this.applicationId}/${this.data.token}/messages/${messageId}`,
-      data
+      this.convertToApiData(data)
     );
   }
 
@@ -85,5 +88,17 @@ export class Interaction {
     return this.rest.delete(
       `/webhooks/${this.applicationId}/${this.data.token}/messages/${messageId}`
     );
+  }
+
+  public convertToApiData(data: InteractionContent) {
+    return {
+      content: data.content,
+      tts: data.tts,
+      flags: data.ephemeral ? 1 << 6 : undefined,
+      allowed_mentions: data.mentions,
+      embeds: data.embeds,
+      attachments: data.attachments,
+      components: data.components,
+    };
   }
 }

@@ -46,9 +46,21 @@ export class CommandListener extends AbstractCommandListener {
 
     const context = new CommandContext(interaction, data);
 
-    command.execute(context);
+    const response = command.execute(context);
 
-    return { type: InteractionResponseType.DeferredChannelMessageWithSource };
+    if (response instanceof Promise) {
+      response.then((res) => {
+        if (typeof res === 'object') context.reply(res);
+      });
+    } else if (typeof response === 'object')
+      return {
+        type: InteractionResponseType.ChannelMessageWithSource,
+        data: interaction.convertToApiData(response),
+      };
+
+    return {
+      type: InteractionResponseType.DeferredChannelMessageWithSource,
+    };
   }
 
   private getCommandAndData(
