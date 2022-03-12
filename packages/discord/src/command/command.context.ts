@@ -1,5 +1,5 @@
 import type { APIApplicationCommandInteractionDataBasicOption } from 'discord-api-types/v10';
-import type { Interaction } from '../interaction';
+import type { Interaction, InteractionContent } from '../interaction';
 
 export class CommandContext {
   public constructor(private readonly interaction: Interaction, private readonly data: any) {}
@@ -19,7 +19,7 @@ export class CommandContext {
     return data.value as unknown as T;
   }
 
-  public reply(content: string) {
-    return this.interaction.sendFollowup({ content });
+  public reply(data: InteractionContent) {
+    return this.interaction.editReply(data);
   }
 }
