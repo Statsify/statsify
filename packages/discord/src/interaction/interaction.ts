@@ -91,7 +91,7 @@ export class Interaction {
   }
 
   public convertToApiData(data: InteractionContent) {
-    return {
+    const res = {
       content: data.content,
       tts: data.tts,
       flags: data.ephemeral ? 1 << 6 : undefined,
@@ -100,5 +100,13 @@ export class Interaction {
       attachments: data.attachments,
       components: data.components,
     };
+
+    if (data.files)
+      return {
+        files: data.files,
+        payload_json: res,
+      };
+
+    return res;
   }
 }
