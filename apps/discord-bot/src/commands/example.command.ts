@@ -1,4 +1,4 @@
-import { Command, CommandContext } from '@statsify/discord';
+import { Command, CommandContext, EmbedBuilder } from '@statsify/discord';
 import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 import { ExampleService } from '../services/example.service';
 
@@ -18,14 +18,11 @@ export class ExampleCommand {
   public constructor(private readonly exampleService: ExampleService) {}
 
   public run(context: CommandContext) {
-    return {
-      embeds: [
-        {
-          title: 'Example',
-          description: context.option('message'),
-        },
-      ],
-      ephemeral: true,
-    };
+    const embed = new EmbedBuilder()
+      .title('Example Command')
+      .description(context.option('message'))
+      .build();
+
+    return { embeds: [embed] };
   }
 }
