@@ -1357,6 +1357,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@statsify/assets@workspace:packages/assets":
+  version: 0.0.0-use.local
+  resolution: "@statsify/assets@workspace:packages/assets"
+  languageName: unknown
+  linkType: soft
+
 "@statsify/discord@workspace:^, @statsify/discord@workspace:packages/discord":
   version: 0.0.0-use.local
   resolution: "@statsify/discord@workspace:packages/discord"
