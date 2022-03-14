@@ -1,16 +1,23 @@
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-let hasAssets = false;
+const hasRequiredAssets = () => {
+  if (!existsSync('../../assets/minecraft-textures'))
+    throw new Error('Add a 1.8.9 texture pack to assets/minecraft-textures');
+};
 
-const checkAssets = () => {
-  if (hasAssets) return hasAssets;
+let hasPrivateAssets = false;
 
-  const file = readFileSync('../../assets/renovate.json');
+const checkPrivateAssets = () => {
+  if (hasPrivateAssets) return hasPrivateAssets;
 
-  hasAssets = !!file;
+  const file = readFileSync('../../assets/package.json');
 
-  return !!hasAssets;
+  hasPrivateAssets = !!file;
+
+  hasRequiredAssets();
+
+  return !!hasPrivateAssets;
 };
 
 /**
@@ -20,7 +27,17 @@ const checkAssets = () => {
  * @returns the asset if available, otherwise null
  */
 export const importAsset = async <T>(file: string): Promise<T | null> => {
-  if (!checkAssets()) return null;
+  if (!checkPrivateAssets()) return null;
 
   return import(join('../../../assets/', file));
+};
+
+/**
+ *
+ * @param texturePath the path inside of the texture path, it starts already inside of `/assets/minecraft`
+ * @returns the full path to the texture
+ */
+export const getMinecraftTexturePath = (texturePath: string) => {
+  checkPrivateAssets();
+  return join(`../../assets/minecraft-textures/assets/minecraft/`, texturePath);
 };

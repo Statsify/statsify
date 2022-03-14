@@ -1,5 +1,6 @@
 import { Controller, Get, Query, StreamableFile } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOperation } from '@nestjs/swagger';
+import { Auth } from '../auth';
 import { HeadDto } from '../dtos';
 import { ErrorResponse } from '../responses';
 import { SkinService } from './skin.service';
@@ -10,6 +11,7 @@ export class SkinController {
 
   @Get('/head')
   @ApiOperation({ summary: 'Get a Player Head' })
+  @Auth()
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getHead(@Query() { uuid, size }: HeadDto) {
     const head = await this.skinService.getHead(uuid, size);

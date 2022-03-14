@@ -1357,7 +1357,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@statsify/assets@workspace:packages/assets":
+"@statsify/assets@workspace:^, @statsify/assets@workspace:packages/assets":
   version: 0.0.0-use.local
   resolution: "@statsify/assets@workspace:packages/assets"
   languageName: unknown
@@ -2216,6 +2216,7 @@ __metadata:
     "@nestjs/schedule": ^1.0.2
     "@nestjs/swagger": ^5.2.0
     "@nestjs/testing": ^8.4.0
+    "@statsify/assets": "workspace:^"
     "@statsify/logger": "*"
     "@statsify/schemas": "*"
     "@typegoose/typegoose": ^9.7.0
