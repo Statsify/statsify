@@ -10,12 +10,16 @@ A Hypixel and Minecraft focused Discord Bot
 ## 💻 Developing
 ### ⚒️ Requirements
 -   [`Node.js`]: For running code (`v16`)
--   *[`Yarn`]*\*: Installing packages and running scripts (`npm install -g yarn`)
+-   [`Yarn`]: Installing packages and running scripts (`npm install -g yarn`)
 -   [`MongoDB`]: For Persistent data ([`Atlas`])
 -   [`Redis`]: For Leaderboards, ([`Redis Cloud`])
 -   [`Hypixel API Key`]: For requesting Hypixel data, Run `/api new` on hypixel.net
 
-\* is Optional
+
+### 🖼️ Assets
+* We do not publicly provide our assets (backgrounds, icons, etc)
+* In the future we do plan to provide demo assets
+* In addition, you must provide a 1.8.9 texture pack in the `assets/minecraft-textures`
 
 ### 🚀 Running
 * The codebase is split into apps and packages

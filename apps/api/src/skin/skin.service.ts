@@ -1,6 +1,7 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import { getMinecraftTexturePath } from '@statsify/assets';
 import { Skin } from '@statsify/schemas';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { createCanvas, loadImage, type Image } from 'canvas';
@@ -58,7 +59,7 @@ export class SkinService {
     slim?: boolean
   ): Promise<{ skin: Image; slim: boolean }> {
     if (!skinUrl) {
-      return this.resolveSkin(`../../assets/api/defaultSkin.png`, false);
+      return this.resolveSkin(getMinecraftTexturePath('textures/entity/steve.png'), false);
     }
 
     const skin = await loadImage(skinUrl);
