@@ -17,3 +17,4 @@ package-lock.json
 .
 coverage
 apps/discord-bot/commands.json
+assets/**/*
