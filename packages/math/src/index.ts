@@ -18,8 +18,6 @@ export const add = (...args: number[]): number => args.reduce((a, b) => (a ?? 0)
 
 export const sub = (...args: number[]): number => args.reduce((a, b) => (a ?? 0) - (b ?? 0));
 
-export const radians = (deg: number): number => (deg * Math.PI) / 180;
-
 /**
  *
  * @param fn The function to call on all non object values

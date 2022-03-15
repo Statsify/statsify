@@ -26,7 +26,6 @@
     "@statsify/logger": "*",
     "@statsify/schemas": "*",
     "@typegoose/typegoose": "^9.7.0",
-    "canvas": "^2.9.0",
     "class-transformer": "0.5.1",
     "class-validator": "^0.13.2",
     "fastify-swagger": "^5.0.0",
@@ -36,7 +35,8 @@
     "point-of-view": "^5.1.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.4",
-    "short-uuid": "^4.2.0"
+    "short-uuid": "^4.2.0",
+    "skia-canvas": "^0.9.29"
   },
   "devDependencies": {
     "@nestjs/testing": "^8.4.0",

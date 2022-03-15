@@ -1,4 +1,4 @@
-import { add, deepAdd, deepSub, radians, ratio, sub } from '../src';
+import { add, deepAdd, deepSub, ratio, sub } from '../src';
 
 describe('basic math', () => {
   it('should add numbers together', () => {
@@ -19,13 +19,6 @@ describe('basic math', () => {
     expect(ratio(1, 3)).toBe(0.33);
     expect(ratio(1, undefined)).toBe(1);
     expect(ratio(1, 0)).toBe(1);
-  });
-
-  it('should calculate radians', () => {
-    expect(radians(720)).toBe(Math.PI * 4);
-    expect(radians(360)).toBe(Math.PI * 2);
-    expect(radians(180)).toBe(Math.PI);
-    expect(radians(90)).toBe(Math.PI * 0.5);
   });
 });
 
