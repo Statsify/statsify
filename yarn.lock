@@ -1392,7 +1392,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@statsify/schemas@*, @statsify/schemas@workspace:packages/schemas":
+"@statsify/schemas@*, @statsify/schemas@workspace:^, @statsify/schemas@workspace:packages/schemas":
   version: 0.0.0-use.local
   resolution: "@statsify/schemas@workspace:packages/schemas"
   dependencies:
@@ -3275,9 +3275,12 @@ __metadata:
   resolution: "discord-bot@workspace:apps/discord-bot"
   dependencies:
     "@statsify/discord": "workspace:^"
+    "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
+    "@typegoose/typegoose": ^9.7.0
     discord-api-types: ^0.27.3
     dotenv: ^16.0.0
+    mongoose: ^6.2.6
     reflect-metadata: ^0.1.13
     skia-canvas: ^0.9.29
     tiny-discord: "github:timotejroiko/tiny-discord#master"
@@ -6018,6 +6021,21 @@ __metadata:
     ms: 2.1.3
     sift: 16.0.0
   checksum: 7f163e4cedf7b6cbc19c41501f644db036b8b5272051ecb77b3dd9727fee4b595b6e17e4fd83a012b27eb72d8c1026864fc354fd39ec5830173f7a9b0fbad58a
+  languageName: node
+  linkType: hard
+
+"mongoose@npm:^6.2.6":
+  version: 6.2.6
+  resolution: "mongoose@npm:6.2.6"
+  dependencies:
+    bson: ^4.2.2
+    kareem: 2.3.4
+    mongodb: 4.3.1
+    mpath: 0.8.4
+    mquery: 4.0.2
+    ms: 2.1.3
+    sift: 16.0.0
+  checksum: 95ea67a2c6ff2e0052b4aa738c52ad9e911fe60425e3b3474c5ac5d29defdebcdac57813803339fe527969736d5a61074810570810f03aa83dc849d2f09301aa
   languageName: node
   linkType: hard
 
