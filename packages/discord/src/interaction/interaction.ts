@@ -53,6 +53,10 @@ export class Interaction {
     return (this.data.member as APIGuildMember)?.user?.id;
   }
 
+  public getLocale() {
+    return (this.data as any).locale ?? 'en-US';
+  }
+
   public reply(data: InteractionResponse) {
     return this.rest.post(`/interactions/${this.data.id}/${this.data.token}/callback`, data);
   }
