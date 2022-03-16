@@ -11,13 +11,19 @@ let hasPrivateAssets = false;
 const checkPrivateAssets = () => {
   if (hasPrivateAssets) return hasPrivateAssets;
 
-  const file = readFileSync('../../assets/package.json');
+  try {
+    const file = readFileSync('../../assets/package.json');
 
-  hasPrivateAssets = !!file;
+    hasPrivateAssets = !!file;
 
-  hasRequiredAssets();
+    hasRequiredAssets();
 
-  return !!hasPrivateAssets;
+    return !!hasPrivateAssets;
+  } catch {
+    hasRequiredAssets();
+
+    return false;
+  }
 };
 
 /**

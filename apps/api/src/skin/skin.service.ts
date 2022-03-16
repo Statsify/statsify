@@ -1,23 +1,25 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { getMinecraftTexturePath } from '@statsify/assets';
+import { getMinecraftTexturePath, importAsset } from '@statsify/assets';
 import { Skin } from '@statsify/schemas';
 import { ReturnModelType } from '@typegoose/typegoose';
-import { createCanvas, loadImage, type Image } from 'canvas';
 import { catchError, lastValueFrom, map, of } from 'rxjs';
+import { Canvas, loadImage, type Image } from 'skia-canvas';
 
 @Injectable()
 export class SkinService {
+  private skinRenderer: ((skin: Image, slim: boolean) => Promise<Buffer>) | null;
+
   public constructor(
     private readonly httpService: HttpService,
     @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
   ) {}
 
-  public async getHead(uuid: string, size: number) {
+  public async getHead(uuid: string, size: number): Promise<Buffer> {
     const { skin } = await this.findOne(uuid);
 
-    const canvas = createCanvas(size, size);
+    const canvas = new Canvas(size, size);
     const ctx = canvas.getContext('2d');
     ctx.imageSmoothingEnabled = false;
 
@@ -27,7 +29,30 @@ export class SkinService {
     ctx.drawImage(skin, 8, 8, 8, 8, 0, 0, size, size);
     ctx.drawImage(skin, 40, 8, 8, 8, 0, 0, size, size);
 
-    return canvas.toBuffer();
+    return canvas.toBuffer('png');
+  }
+
+  public async getRender(uuid: string): Promise<Buffer> {
+    const { skin, slim } = await this.findOne(uuid);
+
+    const renderer = await this.getSkinRenderer();
+
+    if (!renderer) {
+      const canvas = new Canvas(380, 640);
+      const ctx = canvas.getContext('2d');
+
+      const skin = await loadImage(`https://crafatar.com/renders/body/${uuid}?overlay`);
+
+      const scale = 2;
+      const width = skin.width * scale;
+      const height = skin.height * scale;
+
+      ctx.drawImage(skin, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+
+      return canvas.toBuffer('png');
+    }
+
+    return renderer(skin, slim);
   }
 
   public async findOne(uuid: string) {
@@ -78,5 +103,17 @@ export class SkinService {
         catchError(() => of(null))
       )
     );
+  }
+
+  private async getSkinRenderer() {
+    if (this.skinRenderer) return this.skinRenderer;
+
+    const renderer = await importAsset<any>('skin-renderer');
+
+    if (!renderer) return null;
+
+    this.skinRenderer = renderer.renderSkin;
+
+    return this.skinRenderer;
   }
 }
