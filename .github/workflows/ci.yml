@@ -23,7 +23,7 @@ jobs:
 
       - name: Turbo cache
         id: turbo-cache
-        uses: actions/cache@937d24475381cd9c75ae6db12cb4e79714b926ed # tag=v2
+        uses: actions/cache@4b0cf6cc4619e737324ddfcec08fff2413359514 # tag=v3
         with:
           path: .turbo
           key: turbo-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
