@@ -9,6 +9,9 @@ export class QuakeMode {
   @Field()
   public kills: number;
 
+  @Field({ leaderboard: false })
+  public postUpdateKills: number;
+
   @Field()
   public deaths: number;
 
@@ -35,6 +38,7 @@ export class QuakeMode {
 
     this.wins = data[`wins${mode}`];
     this.kills = data[`kills${mode}`];
+    this.postUpdateKills = data[`kills_since_update_feb_2017${mode}`];
     this.deaths = data[`deaths${mode}`];
     this.headShots = data[`headshots${mode}`];
     this.killstreaks = data[`killstreaks${mode}`];
@@ -46,6 +50,6 @@ export class QuakeMode {
 
   public static applyRatios(data: QuakeMode) {
     data.kdr = ratio(data.kills, data.deaths);
-    data.hkr = ratio(data.headShots, data.kills);
+    data.hkr = ratio(data.headShots, data.postUpdateKills);
   }
 }
