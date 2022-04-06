@@ -14,14 +14,15 @@
   },
   "dependencies": {
     "@statsify/discord": "workspace:^",
+    "@statsify/jsx": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@typegoose/typegoose": "^9.7.1",
+    "canvas": "^2.9.1",
     "discord-api-types": "^0.27.3",
     "dotenv": "^16.0.0",
     "mongoose": "^6.2.8",
     "reflect-metadata": "^0.1.13",
-    "skia-canvas": "^0.9.29",
     "tiny-discord": "github:timotejroiko/tiny-discord#master",
     "typedi": "^0.10.0"
   }
