@@ -21,10 +21,11 @@ export class CopsAndCrims {
 
   public constructor(data: APIData) {
     this.coins = data.coins;
-    this.wins = add(data.game_wins, data.game_wins_deathmatch, data.game_wins_gungame);
 
     this.defusal = new Defusal(data);
     this.deathmatch = new Deathmatch(data);
     this.gunGame = new GunGame(data);
+
+    this.wins = add(this.defusal.wins, this.deathmatch.wins, this.gunGame.wins);
   }
 }
