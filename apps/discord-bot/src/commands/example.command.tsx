@@ -1,26 +1,28 @@
-import { Command } from '@statsify/discord';
-import { JSX, useComponentHeight, useComponentWidth } from '@statsify/jsx';
-import { Table } from '../components/Table';
+import { Command, CommandContext } from '@statsify/discord';
+import { FontRenderer, JSX, useComponentHeight, useComponentWidth } from '@statsify/jsx';
+import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 
 @Command({
   description: 'Displays this message.',
-  args: [],
+  args: [
+    {
+      name: 'text',
+      description: 'The text to display.',
+      type: ApplicationCommandOptionType.String,
+      required: true,
+    },
+  ],
   cooldown: 5,
 })
 export class ExampleCommand {
-  public async run() {
+  public async run(context: CommandContext) {
+    const renderer = new FontRenderer();
+    await renderer.loadImages();
+
     const table = (
-      <Table
-        rows={[
-          { data: [{ title: 'Final Kills', value: '10', color: '§7' }] },
-          {
-            data: [
-              { title: 'Final Deaths?', value: '10', color: '§7' },
-              { title: 'Final KD', value: '11', color: '§f' },
-            ],
-          },
-        ]}
-      />
+      <box>
+        <text renderer={renderer}>{context.option('text')}</text>
+      </box>
     );
 
     const width = useComponentWidth(table);

@@ -166,3 +166,5 @@ export const unflatten = <T>(obj: APIData): T => {
  */
 export const mockClass = <T>(constructor: Constructor<T>): T =>
   new constructor(...Array.from({ length: constructor.length }).fill({}));
+
+export * from './minecraft-colors';

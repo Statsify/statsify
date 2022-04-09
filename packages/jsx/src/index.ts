@@ -2,7 +2,9 @@ import type { BoxProps, DivProps, ImageProps, TextProps } from './components';
 import type { ElementNode, FC as FCInternal, PropsWithChildren } from './jsx';
 
 /* eslint-disable @typescript-eslint/no-namespace */
+export * from './colors';
 export * from './components';
+export * from './font';
 export * from './hooks';
 export * as JSX from './jsx';
 
