@@ -83,8 +83,6 @@ export class FontRenderer {
   }
 
   public lex(text: string): TextNode[][] {
-    console.log(text);
-
     const lines = text.split('\n');
 
     return lines.map((line) => {

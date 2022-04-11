@@ -16,6 +16,7 @@ export interface BoxProps {
   location?: JSX.StyleLocation;
   direction?: JSX.StyleDirection;
   border?: BoxBorderRadius;
+  shadow?: number;
 }
 
 export const Box: JSX.RawFC<BoxProps> = ({
@@ -28,6 +29,7 @@ export const Box: JSX.RawFC<BoxProps> = ({
   location = 'center',
   direction = 'row',
   border = { topLeft: 4, topRight: 4, bottomLeft: 4, bottomRight: 4 },
+  shadow = 4,
 }) => ({
   name: 'Box',
   render: (ctx, { x, y, width, height, padding }) => {
@@ -44,39 +46,67 @@ export const Box: JSX.RawFC<BoxProps> = ({
     width = Math.round(width);
     height = Math.round(height);
 
-    /**
-     * Background
-     */
-    ctx.fillRect(x + 4, y, width - 8, height);
+    const drawAndReplace = (
+      fn: () => void,
+      imageDataLoc: { x: number; y: number; width: number; height: number }[]
+    ) => {
+      const backup = imageDataLoc.map(({ x, y, width, height }) => ({
+        x,
+        y,
+        imageData: width > 0 && height > 0 ? ctx.getImageData(x, y, width, height) : null,
+      }));
 
-    //Left Side
-    ctx.fillRect(x, y + border.topLeft, 4, height - (border.bottomLeft + border.topLeft));
+      fn();
 
-    //Right Side
-    ctx.fillRect(
-      x + width - 4,
-      y + border.topRight,
-      4,
-      height - (border.bottomRight + border.topRight)
-    );
+      backup.forEach(({ x, y, imageData }) => imageData && ctx.putImageData(imageData, x, y));
+    };
 
-    /**
-     * Shadow
-     */
+    const corners = (x: number, y: number) => [
+      {
+        x,
+        y,
+        width: border.topLeft,
+        height: border.topLeft,
+      },
+      {
+        x,
+        y: y + height - border.bottomLeft,
+        width: border.bottomLeft,
+        height: border.bottomLeft,
+      },
+      {
+        x: x + width - border.topRight,
+        y,
+        width: border.topRight,
+        height: border.topRight,
+      },
+      {
+        x: x + width - border.bottomRight,
+        y: y + height - border.bottomRight,
+        width: border.bottomRight,
+        height: border.bottomRight,
+      },
+    ];
 
-    ctx.fillStyle = `rgba(0, 0, 0, 0.30)`;
+    drawAndReplace(() => ctx.fillRect(x, y, width, height), corners(x, y));
 
-    ctx.fillRect(
-      x + width,
-      y + (border.topRight + 4),
-      4,
-      height - (border.topRight + border.bottomRight)
-    );
+    if (!shadow) return;
 
-    if (border.bottomRight !== 0)
-      ctx.fillRect(x + width - border.bottomRight, y + height - border.bottomRight, 4, 4);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
 
-    ctx.fillRect(x + (border.bottomLeft + 4), y + height, width - (border.bottomRight + 4), 4);
+    drawAndReplace(() => {
+      ctx.fillRect(x + shadow, y + height, width, shadow);
+      ctx.fillRect(x + width, y + shadow, shadow, height - shadow);
+
+      if (border.bottomRight !== 0) {
+        ctx.fillRect(
+          x + width - border.bottomRight,
+          y + height - border.bottomRight,
+          border.bottomRight,
+          border.bottomRight
+        );
+      }
+    }, corners(x + shadow, y + shadow));
   },
   dimension: {
     padding,

@@ -1,27 +1,27 @@
-import { Command, CommandContext } from '@statsify/discord';
+import { Command } from '@statsify/discord';
 import { FontRenderer, JSX, useComponentHeight, useComponentWidth } from '@statsify/jsx';
-import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 
 @Command({
   description: 'Displays this message.',
-  args: [
-    {
-      name: 'text',
-      description: 'The text to display.',
-      type: ApplicationCommandOptionType.String,
-      required: true,
-    },
-  ],
+  args: [],
   cooldown: 5,
 })
 export class ExampleCommand {
-  public async run(context: CommandContext) {
+  public async run() {
     const renderer = new FontRenderer();
     await renderer.loadImages();
 
     const table = (
-      <box>
-        <text renderer={renderer}>{context.option('text')}</text>
+      <box
+        border={{
+          bottomLeft: 4,
+          topLeft: 4,
+          bottomRight: 4,
+          topRight: 4,
+        }}
+        shadow={2}
+      >
+        <text renderer={renderer}>Hello World</text>
       </box>
     );
 
