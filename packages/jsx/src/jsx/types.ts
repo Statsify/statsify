@@ -50,11 +50,9 @@ export interface ElementNodeBiDirectional {
 }
 
 export interface ElementNode {
-  name: string;
   style: Style;
   render: Render;
   children?: ElementNode[];
-  props?: Record<string, any>;
   x: ElementNodeBiDirectional;
   y: ElementNodeBiDirectional;
 }

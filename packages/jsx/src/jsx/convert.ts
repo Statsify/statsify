@@ -23,7 +23,6 @@ export const elementToNode = (element: Element): ElementNode => {
   const margin = spacingToCompleteSpacing(element.dimension.margin);
 
   return {
-    name: element.name,
     x: {
       size: element.dimension.width,
       padding1: padding.left,
@@ -40,9 +39,8 @@ export const elementToNode = (element: Element): ElementNode => {
       margin2: margin.bottom,
       direction: element.style.direction === 'row' ? 'column' : 'row',
     },
-    props: element.props,
     style: element.style,
-    children: [...(element.children as ElementNode[])],
+    children: element.children as ElementNode[],
     render: element.render,
   };
 };

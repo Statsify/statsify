@@ -1,3 +1,4 @@
+import type { ImageData } from 'canvas';
 import type * as JSX from '../jsx';
 
 export interface BoxBorderRadius {
@@ -18,6 +19,45 @@ export interface BoxProps {
   border?: BoxBorderRadius;
   shadow?: number;
 }
+
+type ImageDataLocation = [x: number, y: number, width: number, height: number];
+
+const drawAndReplace = (
+  ctx: CanvasRenderingContext2D,
+  fn: (ctx: CanvasRenderingContext2D) => void,
+  imageDataLoc: ImageDataLocation[]
+) => {
+  const backup = imageDataLoc.map(
+    ([x, y, width, height]) =>
+      [x, y, width > 0 && height > 0 ? ctx.getImageData(x, y, width, height) : null] as [
+        number,
+        number,
+        ImageData | null
+      ]
+  );
+
+  fn(ctx);
+
+  backup.forEach(([x, y, imageData]) => imageData && ctx.putImageData(imageData, x, y));
+};
+
+const corners = (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  border: BoxBorderRadius
+): ImageDataLocation[] => [
+  [x, y, border.topLeft, border.topLeft],
+  [x, y + height - border.bottomLeft, border.bottomLeft, border.bottomLeft],
+  [x + width - border.topRight, y, border.topRight, border.topRight],
+  [
+    x + width - border.bottomRight,
+    y + height - border.bottomRight,
+    border.bottomRight,
+    border.bottomRight,
+  ],
+];
 
 export const Box: JSX.RawFC<BoxProps> = ({
   children,
@@ -46,67 +86,33 @@ export const Box: JSX.RawFC<BoxProps> = ({
     width = Math.round(width);
     height = Math.round(height);
 
-    const drawAndReplace = (
-      fn: () => void,
-      imageDataLoc: { x: number; y: number; width: number; height: number }[]
-    ) => {
-      const backup = imageDataLoc.map(({ x, y, width, height }) => ({
-        x,
-        y,
-        imageData: width > 0 && height > 0 ? ctx.getImageData(x, y, width, height) : null,
-      }));
-
-      fn();
-
-      backup.forEach(({ x, y, imageData }) => imageData && ctx.putImageData(imageData, x, y));
-    };
-
-    const corners = (x: number, y: number) => [
-      {
-        x,
-        y,
-        width: border.topLeft,
-        height: border.topLeft,
-      },
-      {
-        x,
-        y: y + height - border.bottomLeft,
-        width: border.bottomLeft,
-        height: border.bottomLeft,
-      },
-      {
-        x: x + width - border.topRight,
-        y,
-        width: border.topRight,
-        height: border.topRight,
-      },
-      {
-        x: x + width - border.bottomRight,
-        y: y + height - border.bottomRight,
-        width: border.bottomRight,
-        height: border.bottomRight,
-      },
-    ];
-
-    drawAndReplace(() => ctx.fillRect(x, y, width, height), corners(x, y));
+    drawAndReplace(
+      ctx,
+      (ctx) => ctx.fillRect(x, y, width, height),
+      corners(x, y, width, height, border)
+    );
 
     if (!shadow) return;
 
     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
 
-    drawAndReplace(() => {
-      ctx.fillRect(x + shadow, y + height, width, shadow);
-      ctx.fillRect(x + width, y + shadow, shadow, height - shadow);
+    drawAndReplace(
+      ctx,
+      (ctx) => {
+        ctx.fillRect(x + shadow, y + height, width, shadow);
+        ctx.fillRect(x + width, y + shadow, shadow, height - shadow);
 
-      if (border.bottomRight !== 0) {
-        ctx.fillRect(
-          x + width - border.bottomRight,
-          y + height - border.bottomRight,
-          border.bottomRight,
-          border.bottomRight
-        );
-      }
-    }, corners(x + shadow, y + shadow));
+        if (border.bottomRight !== 0) {
+          ctx.fillRect(
+            x + width - border.bottomRight,
+            y + height - border.bottomRight,
+            border.bottomRight,
+            border.bottomRight
+          );
+        }
+      },
+      corners(x + shadow, y + shadow, width, height, border)
+    );
   },
   dimension: {
     padding,

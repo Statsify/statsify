@@ -14,16 +14,12 @@ export const createElement = (
   props: any,
   ...children: ElementNode[]
 ): ElementNode => {
-  children = children.flat(Infinity);
+  children = children.flat();
 
   if (typeof type === 'string' && type in intrinsic) {
     return elementToNode(intrinsic[type as keyof typeof intrinsic]({ ...props, children }));
   } else if (typeof type === 'function') {
-    return {
-      ...type({ ...props, children }),
-      props: props,
-      name: type.name,
-    };
+    return type({ ...props, children });
   }
 
   throw new Error(`Unknown JSX element, with type ${type}`);

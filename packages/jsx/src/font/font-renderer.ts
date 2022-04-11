@@ -1,10 +1,10 @@
 import { getMinecraftTexturePath } from '@statsify/assets';
-import { Canvas, loadImage } from 'canvas';
+import { Canvas, ImageData, loadImage } from 'canvas';
 import { readdir } from 'fs/promises';
 import { join } from 'path';
 import positions from '../../positions.json';
 import sizes from '../../sizes.json';
-import { mcShadow } from '../colors';
+import { mcShadow, RGB } from '../colors';
 import { TextNode, Token, tokens } from './tokens';
 
 type CharacterSizes = Record<string, { start?: number; width?: number }>;
@@ -15,7 +15,7 @@ interface Sizes {
 }
 
 export class FontRenderer {
-  private images: Map<string, Canvas> = new Map();
+  private images: Map<string, CanvasRenderingContext2D> = new Map();
   private sizes: Sizes = sizes;
   private positions: string[][] = positions;
 
@@ -35,7 +35,7 @@ export class FontRenderer {
 
       ctx.drawImage(image, 0, 0);
 
-      this.images.set(file.replace('unicode_page_', '').replace('.png', ''), canvas);
+      this.images.set(file.replace('unicode_page_', '').replace('.png', ''), ctx);
     }
   }
 
@@ -73,8 +73,21 @@ export class FontRenderer {
       for (const { text, color, bold, italic, underline, size, shadow } of row) {
         if (size > largestSize) largestSize = size;
 
+        const adjustY = y + size;
+
         for (const char of text) {
-          x += this.fillCharacter(ctx, char, x, y, size, bold, italic, underline, color, shadow);
+          x += this.fillCharacter(
+            ctx,
+            char,
+            Math.round(x),
+            Math.round(adjustY),
+            size,
+            bold,
+            italic,
+            underline,
+            color,
+            shadow
+          );
         }
       }
 
@@ -143,8 +156,8 @@ export class FontRenderer {
     return isAscii ? this.images.get('ascii') : this.images.get(`${unicode[0]}${unicode[1]}`);
   }
 
-  private getTextureScale(image: Canvas) {
-    return image.width / 256;
+  private getTextureScale(image: CanvasRenderingContext2D) {
+    return image.canvas.width / 256;
   }
 
   private getCharacterIndexLocation(unicode: string, isAscii: boolean) {
@@ -252,83 +265,147 @@ export class FontRenderer {
 
     const { x: charX, y: charY, width, height, scale, isAscii, image, size } = metadata;
 
-    const drawPlainCharacter = (x: number, y: number, color: [number, number, number]) => {
-      const imageContext = image.getContext('2d');
-
-      let canvasX = 0;
-      let canvasY = 0;
-
-      for (let imgX = 0; imgX < width; imgX++) {
-        for (let imgY = 0; imgY < height; imgY++) {
-          const imageData = imageContext.getImageData(charX + imgX, charY + imgY, 1, 1);
-
-          if (imageData.data[3] > 0) {
-            imageData.data[0] = color[0];
-            imageData.data[1] = color[1];
-            imageData.data[2] = color[2];
-            imageData.data[3] = 255;
-
-            let offset = 0;
-
-            if (italic) {
-              if (imgY < 2 * scale) offset = 2;
-              else if (imgY < 6 * scale) offset = 1;
-              else if (imgY < 10 * scale) offset = 0;
-              else if (imgY < 14 * scale) offset = -1;
-              else if (imgY < 16 * scale) offset = -2;
-
-              offset *= scale * size;
-            }
-
-            const baseX = x + offset + canvasX;
-            const baseY = y + canvasY;
-
-            for (let sX = 0; sX < size; sX++) {
-              for (let sY = 0; sY < size; sY++) {
-                ctx.putImageData(imageData, baseX + sX, baseY + sY);
-              }
-            }
-          }
-
-          canvasY += size;
-        }
-
-        canvasY = 0;
-        canvasX += size;
-      }
-    };
-
-    const drawUnderline = (x: number, y: number, color: [number, number, number]) => {
-      ctx.fillStyle = `rgba(${color.join(', ')}, 1)`;
-
-      ctx.fillRect(
-        x - 2 * scale * size,
-        y + 16 * scale * size,
-        (width + 4) * scale * size,
-        size * scale * 2
-      );
-    };
-
-    const drawCharacter = (x: number, y: number, color: [number, number, number]) => {
-      drawPlainCharacter(x, y, color);
-
-      if (underline) drawUnderline(x, y, color);
-
-      if (bold) {
-        drawPlainCharacter(x + scale * size, y, color);
-        if (isAscii) drawPlainCharacter(x + 2 * scale * size, y, color);
-        if (underline) drawUnderline(x + 2 * scale * size, y, color);
-      }
-    };
+    const imageData = image.getImageData(charX, charY, width, height);
+    const resizeFactor = size * scale;
 
     if (shadow) {
       const shadowColor = mcShadow(color);
       const offset = isAscii ? 2 : 1;
-      drawCharacter(x + offset * scale * size, y + offset * scale * size, shadowColor);
+
+      this.fillFormattedCharacter(
+        ctx,
+        imageData,
+        x + offset * resizeFactor,
+        y + offset * resizeFactor,
+        width,
+        scale,
+        size,
+        resizeFactor,
+        shadowColor,
+        underline,
+        bold,
+        italic,
+        isAscii
+      );
     }
 
-    drawCharacter(x, y, color);
+    this.fillFormattedCharacter(
+      ctx,
+      imageData,
+      x,
+      y,
+      width,
+      scale,
+      size,
+      resizeFactor,
+      color,
+      underline,
+      bold,
+      italic,
+      isAscii
+    );
 
     return this.getCharacterSpacing(char, isAscii, size, scale, width, bold);
+  }
+
+  private fillFormattedCharacter(
+    ctx: CanvasRenderingContext2D,
+    imageData: ImageData,
+    x: number,
+    y: number,
+    width: number,
+    scale: number,
+    size: number,
+    resizeFactor: number,
+    color: RGB,
+    underline: boolean,
+    bold: boolean,
+    italic: boolean,
+    isAscii: boolean
+  ) {
+    this.fillPlainCharacter(ctx, imageData, x, y, width, scale, size, color, italic);
+
+    if (underline) this.fillUnderline(ctx, x, y, width, resizeFactor, color);
+
+    if (bold) {
+      this.fillPlainCharacter(
+        ctx,
+        imageData,
+        x + resizeFactor,
+        y,
+        width,
+        scale,
+        size,
+        color,
+        italic
+      );
+
+      if (isAscii)
+        this.fillPlainCharacter(
+          ctx,
+          imageData,
+          x + 2 * resizeFactor,
+          y,
+          width,
+          scale,
+          size,
+          color,
+          italic
+        );
+      if (underline) this.fillUnderline(ctx, x + 2 * resizeFactor, y, width, resizeFactor, color);
+    }
+  }
+
+  private fillPlainCharacter(
+    ctx: CanvasRenderingContext2D,
+    imageData: ImageData,
+    x: number,
+    y: number,
+    width: number,
+    scale: number,
+    size: number,
+    [r, g, b]: RGB,
+    italic: boolean
+  ) {
+    ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+
+    for (let i = 0; i < imageData.data.length; i += 4) {
+      if (imageData.data[i + 3] === 0) continue;
+
+      const canvasX = (i / 4) % width;
+      const canvasY = Math.floor(i / 4 / width);
+
+      let offset = 0;
+
+      if (italic) {
+        if (canvasY < 2 * scale) offset = 2;
+        else if (canvasY < 6 * scale) offset = 1;
+        else if (canvasY < 10 * scale) offset = 0;
+        else if (canvasY < 14 * scale) offset = -1;
+        else if (canvasY < 16 * scale) offset = -2;
+
+        offset *= scale * size;
+      }
+
+      ctx.fillRect(x + offset + canvasX * size, y + canvasY * size, size, size);
+    }
+  }
+
+  private fillUnderline(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    resizeFactor: number,
+    [r, g, b]: RGB
+  ) {
+    ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+
+    ctx.fillRect(
+      x - 2 * resizeFactor,
+      y + 16 * resizeFactor,
+      (width + 4) * resizeFactor,
+      resizeFactor * 2
+    );
   }
 }

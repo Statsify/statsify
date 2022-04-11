@@ -68,14 +68,30 @@ const render = (ctx: CanvasRenderingContext2D, instruction: Instruction, x: numb
   });
 };
 
-export const createRender = (node: ElementNode, width: number, height: number) => {
-  const canvas = new Canvas(width, height);
+export function createRender(canvas: Canvas, element: ElementNode): Canvas;
+export function createRender(node: ElementNode, width: number, height: number): Canvas;
+export function createRender(
+  nodeOrCanvas: ElementNode | Canvas,
+  widthOrElement: number | ElementNode,
+  height?: number
+): Canvas {
+  let canvas: Canvas;
+  let node: ElementNode;
+
+  if (typeof widthOrElement === 'number') {
+    canvas = new Canvas(widthOrElement, height as number);
+    node = nodeOrCanvas as ElementNode;
+  } else {
+    canvas = nodeOrCanvas as Canvas;
+    node = widthOrElement as ElementNode;
+  }
+
+  const instructions = createInstructions(node, canvas.width, canvas.height);
+
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
-
-  const instructions = createInstructions(node, width, height);
 
   render(ctx, instructions, 0, 0);
 
   return canvas;
-};
+}

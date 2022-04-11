@@ -51,7 +51,7 @@ const color: Token = {
 };
 
 const size: Token = {
-  regex: /^<\d>/,
+  regex: /^\^\d\^/,
   effect: (_, [match]) => ({
     size: parseInt(match.substring(1, match.length - 1)),
   }),
