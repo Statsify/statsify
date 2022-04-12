@@ -11,7 +11,7 @@ import { HistoricalService } from './historical.service';
 export class HistoricalController {
   public constructor(private readonly historicalService: HistoricalService) {}
 
-  @ApiOperation({ summary: 'Get the Historical stats of a Player' })
+  @ApiOperation({ summary: 'Get the Historical stats of a Player', tags: ['Historical'] })
   @ApiOkResponse({ type: GetHistoricalResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Get()
@@ -34,7 +34,7 @@ export class HistoricalController {
     };
   }
 
-  @ApiOperation({ summary: 'Reset the Historical stats of a Player' })
+  @ApiOperation({ summary: 'Reset the Historical stats of a Player', tags: ['Historical'] })
   @ApiOkResponse({ type: GetPlayerResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Delete()

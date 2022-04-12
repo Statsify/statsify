@@ -15,7 +15,7 @@ export class GuildLeaderboardController {
   public constructor(private readonly guildLeaderboardService: GuildLeaderboardService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Get a Guild Leaderboard' })
+  @ApiOperation({ summary: 'Get a Guild Leaderboard', tags: ['Guild Leaderboards'] })
   @ApiOkResponse({ type: PostGuildLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 10 })
@@ -39,7 +39,7 @@ export class GuildLeaderboardController {
   }
 
   @Post('/rankings')
-  @ApiOperation({ summary: 'Get a Guild Ranking' })
+  @ApiOperation({ summary: 'Get a Guild Ranking', tags: ['Guild Leaderboards'] })
   @ApiOkResponse({ type: PostGuildRankingsResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })

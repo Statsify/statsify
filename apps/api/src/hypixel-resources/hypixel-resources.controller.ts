@@ -9,7 +9,7 @@ export class HypixelResourcesController {
   public constructor(private readonly hypixelService: HypixelService) {}
 
   @Get(`/watchdog`)
-  @ApiOperation({ summary: 'Get Watchdog Stats' })
+  @ApiOperation({ summary: 'Get Watchdog Stats', tags: ['Hypixel Resources'] })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiOkResponse({ type: GetWatchdogResponse })
   @Auth()
@@ -23,7 +23,7 @@ export class HypixelResourcesController {
   }
 
   @Get(`/gamecounts`)
-  @ApiOperation({ summary: 'Get Hypixel Gamecounts' })
+  @ApiOperation({ summary: 'Get Hypixel Gamecounts', tags: ['Hypixel Resources'] })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiOkResponse({ type: GetGamecountsResponse })
   @Auth()
