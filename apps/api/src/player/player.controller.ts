@@ -25,7 +25,7 @@ export class PlayerController {
     private readonly hypixelService: HypixelService
   ) {}
 
-  @ApiOperation({ summary: 'Get a Player' })
+  @ApiOperation({ summary: 'Get a Player', tags: ['Player'] })
   @ApiOkResponse({ type: GetPlayerResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()
@@ -39,7 +39,7 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Deletes a Player' })
+  @ApiOperation({ summary: 'Deletes a Player', tags: ['Player'] })
   @ApiOkResponse({ type: SuccessResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
@@ -52,7 +52,7 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Get the Recent Games of a Player' })
+  @ApiOperation({ summary: 'Get the Recent Games of a Player', tags: ['Player'] })
   @ApiOkResponse({ type: GetRecentGamesResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()
@@ -66,7 +66,7 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Get the Status of a Player' })
+  @ApiOperation({ summary: 'Get the Status of a Player', tags: ['Player'] })
   @ApiOkResponse({ type: GetStatusResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()
@@ -80,7 +80,7 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Get the Friends of a Player' })
+  @ApiOperation({ summary: 'Get the Friends of a Player', tags: ['Player'] })
   @ApiOkResponse({ type: GetFriendsResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 10 })
@@ -94,7 +94,10 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Get the Ranked SkyWars rating and position of a Player' })
+  @ApiOperation({
+    summary: 'Get the Ranked SkyWars rating and position of a Player',
+    tags: ['Player'],
+  })
   @ApiOkResponse({ type: GetRankedSkyWarsResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()
@@ -108,7 +111,7 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Get the Achievements of a Player' })
+  @ApiOperation({ summary: 'Get the Achievements of a Player', tags: ['Player'] })
   @ApiOkResponse({ type: GetAchievementsResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()

@@ -17,7 +17,7 @@ export class PlayerLeaderboardsController {
   public constructor(private readonly playerLeaderboardService: PlayerLeaderboardService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Get a Player Leaderboard' })
+  @ApiOperation({ summary: 'Get a Player Leaderboard', tags: ['Player Leaderboards'] })
   @ApiOkResponse({ type: PostPlayerLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
@@ -44,7 +44,7 @@ export class PlayerLeaderboardsController {
   }
 
   @Post('/rankings')
-  @ApiOperation({ summary: 'Get a Player Rankings' })
+  @ApiOperation({ summary: 'Get a Player Rankings', tags: ['Player Leaderboards'] })
   @ApiOkResponse({ type: [PostPlayerRankingsResponse] })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 5 })

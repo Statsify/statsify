@@ -11,7 +11,7 @@ export class SkinController {
   public constructor(private readonly skinService: SkinService) {}
 
   @Get('/head')
-  @ApiOperation({ summary: 'Get a Player Head' })
+  @ApiOperation({ summary: 'Get a Player Head', tags: ['Skins'] })
   @Auth()
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getHead(@Query() { uuid, size }: HeadDto) {
@@ -21,7 +21,7 @@ export class SkinController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get a Player Render' })
+  @ApiOperation({ summary: 'Get a Player Render', tags: ['Skins'] })
   @Auth()
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getRender(@Query() { uuid }: UuidDto) {
