@@ -2,9 +2,9 @@ import { APIData } from '@statsify/util';
 import { modelOptions as ModelOptions, Severity } from '@typegoose/typegoose';
 import { Color } from '../color';
 import { Field } from '../decorators';
-import { Game } from '../game';
 import { PlayerSocials } from './socials';
 import { PlayerStats } from './stats';
+import { PlayerStatus } from './status';
 import { PlayerUtil } from './util';
 
 @ModelOptions({ options: { allowMixed: Severity.ALLOW } })
@@ -20,21 +20,6 @@ export class Player {
 
   @Field({ index: true, lowercase: true, required: true })
   public usernameToLower: string;
-
-  @Field({ leaderboard: false })
-  public firstLogin: number;
-
-  @Field({ leaderboard: false })
-  public lastLogin: number;
-
-  @Field({ leaderboard: false })
-  public lastLogout: number;
-
-  @Field()
-  public online: boolean;
-
-  @Field({ default: 'Unknown' })
-  public version: string;
 
   @Field({ default: 'DEFAULT' })
   public rank: string;
@@ -55,13 +40,13 @@ export class Player {
   public displayName: string;
 
   @Field()
-  public lastGame: Game;
-
-  @Field()
   public socials: PlayerSocials;
 
   @Field()
   public stats: PlayerStats;
+
+  @Field()
+  public status: PlayerStatus;
 
   @Field({ type: () => [String] })
   public oneTimeAchievements: string[];
@@ -93,24 +78,16 @@ export class Player {
     this.username = data.displayname;
     this.usernameToLower = this.username?.toLowerCase();
 
-    //The first login provided by hypixel is not fully accurate for very old players, it is better to ues the `_id` field
-    this.firstLogin = parseInt(data._id?.substring(0, 8) ?? 0, 16) * 1000;
-    this.lastLogin = data.lastLogin ?? 0;
-    this.lastLogout = data.lastLogout ?? 0;
-
-    this.online = this.lastLogin > this.lastLogout;
-    this.version = data.mcVersionRp ?? 'Unknown';
-
     this.rank = PlayerUtil.getRank(data);
     this.plusColor = PlayerUtil.getPlusColor(this.rank, data?.rankPlusColor);
     this.prefixName = `${PlayerUtil.getRankColor(this.rank).toString()}${this.username}`;
     this.displayName = PlayerUtil.getDisplayName(this.username, this.rank, this.plusColor.code);
 
-    this.lastGame = new Game(data.mostRecentGameType ?? 'LIMBO');
-
     this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});
 
     this.stats = new PlayerStats(data);
+
+    this.status = new PlayerStatus(data);
 
     this.oneTimeAchievements = data?.achievementsOneTime ?? [];
     this.tieredAchievements = data?.achievements ?? {};
