@@ -1,0 +1,78 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "command": "yarn",
+      "args": [
+        "build"
+      ],
+      "label": "build",
+      "group": "build",
+      "presentation": {
+        "echo": false,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "close": true,
+        "clear": false
+      },
+      "detail": "Builds monorepo using turbo"
+    },
+    {
+      "type": "shell",
+      "command": "yarn",
+      "args": [
+        "build:watch"
+      ],
+      "label": "build:watch",
+      "presentation": {
+        "echo": true,
+        "reveal": "silent",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": false,
+        "clear": false
+      },
+      "detail": "Runs in the background watching for file changes",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "yarn",
+      "args": [
+        "test"
+      ],
+      "label": "test",
+      "group": "test",
+      "dependsOn": [
+        "build"
+      ],
+      "detail": "Tests monorepo using turbo"
+    },
+    {
+      "type": "shell",
+      "command": "yarn",
+      "args": [
+        "test:types"
+      ],
+      "label": "test:types",
+      "dependsOn": [
+        "build"
+      ]
+    },
+    {
+      "type": "shell",
+      "command": "yarn",
+      "args": [
+        "test:coverage"
+      ],
+      "label": "test:coverage",
+      "dependsOn": [
+        "build"
+      ],
+    }
+  ]
+}

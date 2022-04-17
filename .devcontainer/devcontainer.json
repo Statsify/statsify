@@ -1,0 +1,65 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.231.5/containers/typescript-node
+{
+  "name": "Statsify",
+  "build": {
+    "dockerfile": "Dockerfile",
+    // Update 'VARIANT' to pick a Node version: 16, 14, 12.
+    // Append -bullseye or -buster to pin to an OS version.
+    // Use -bullseye variants on local on arm64/Apple Silicon.
+    "args": { 
+      "VARIANT": "16"
+    }
+  },
+
+  // Set *default* container specific settings.json values on container create.
+  "settings": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnSave": true,
+    "terminal.integrated.defaultProfile.linux": "zsh",
+    "terminal.explorerKind": "integrated",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": true,
+      "source.fixAll.eslint": true
+    },
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "[handlebars]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[css]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[json]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+},
+
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "christian-kohler.path-intellisense",
+    "vivaxy.vscode-conventional-commits",
+    "mikestead.dotenv",
+    "ms-azuretools.vscode-docker",
+    "eg2.vscode-npm-script",
+    "christian-kohler.npm-intellisense"
+  ],
+
+  "runArgs": [ "--privileged" ],
+
+  "onCreateCommand": "wget -c https://github.com/InventivetalentDev/minecraft-assets/archive/refs/tags/1.8.9.tar.gz -O - | tar -xz --transform s/minecraft-assets-1.8.9/minecraft-textures/ -C assets/",
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "/workspaces/statsify/.devcontainer/install.sh",
+
+  "postStartCommand": "sudo /etc/init.d/redis-server start",
+
+  // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  "remoteUser": "node",
+  "features": {
+    "git": "latest",
+    "github-cli": "latest",
+    "rust": "latest"
+  }
+}
