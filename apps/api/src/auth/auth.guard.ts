@@ -29,9 +29,9 @@ export class AuthGuard implements CanActivate {
     const keyInfo = await this.authService.limited(apiKey, weight, role);
 
     context.switchToHttp().getResponse<FastifyReply>().headers({
-      'x-Ratelimit-Used': keyInfo.used,
-      'x-Ratelimit-Total': keyInfo.limit,
-      'x-Ratelimit-Timeout': keyInfo.resetTime,
+      'x-ratelimit-used': keyInfo.used,
+      'x-ratelimit-total': keyInfo.limit,
+      'x-ratelimit-timeout': keyInfo.resetTime,
     });
 
     return keyInfo.canActivate;
