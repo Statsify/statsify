@@ -7,6 +7,7 @@
     "warnOnUnsupportedTypeScriptVersion": false,
     "project": "./tsconfig.eslint.json"
   },
+  "ignorePatterns": ["apps/scripts/**"],
   "plugins": ["@typescript-eslint"],
   "overrides": [
     {

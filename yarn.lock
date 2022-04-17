@@ -7107,6 +7107,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"scripts@workspace:apps/scripts":
+  version: 0.0.0-use.local
+  resolution: "scripts@workspace:apps/scripts"
+  languageName: unknown
+  linkType: soft
+
 "secure-json-parse@npm:^2.0.0":
   version: 2.4.0
   resolution: "secure-json-parse@npm:2.4.0"

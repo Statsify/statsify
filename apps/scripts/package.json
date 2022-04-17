@@ -1,0 +1,11 @@
+{
+  "name": "scripts",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node --enable-source-maps .",
+    "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix",
+    "test": "node src/test.js"
+  }
+}
