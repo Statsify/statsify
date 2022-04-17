@@ -42,6 +42,7 @@ export const elementToNode = (element: Element): ElementNode => {
     style: element.style,
     children: element.children as ElementNode[],
     render: element.render,
+    context: element.context,
   };
 };
 

@@ -1,7 +1,7 @@
 import { FontRenderer, JSX, useComponentHeight, useComponentWidth } from '@statsify/jsx';
 import { Image } from 'canvas';
+import { Skin } from '../Skin';
 import { Sidebar, SidebarItem } from './Sidebar';
-import { Skin } from './Skin';
 
 export interface HeaderProps {
   renderer: FontRenderer;

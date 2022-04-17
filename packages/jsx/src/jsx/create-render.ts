@@ -1,6 +1,5 @@
-import { Canvas, CanvasRenderingContext2D } from 'canvas';
-import { createInstructions } from './create-instructions';
-import type { ElementNode, Instruction } from './types';
+import type { Canvas, CanvasRenderingContext2D } from 'canvas';
+import type { Instruction } from './types';
 import { getPositionalDelta, getTotalSize } from './util';
 
 const render = (ctx: CanvasRenderingContext2D, instruction: Instruction, x: number, y: number) => {
@@ -68,26 +67,7 @@ const render = (ctx: CanvasRenderingContext2D, instruction: Instruction, x: numb
   });
 };
 
-export function createRender(canvas: Canvas, element: ElementNode): Canvas;
-export function createRender(node: ElementNode, width: number, height: number): Canvas;
-export function createRender(
-  nodeOrCanvas: ElementNode | Canvas,
-  widthOrElement: number | ElementNode,
-  height?: number
-): Canvas {
-  let canvas: Canvas;
-  let node: ElementNode;
-
-  if (typeof widthOrElement === 'number') {
-    canvas = new Canvas(widthOrElement, height as number);
-    node = nodeOrCanvas as ElementNode;
-  } else {
-    canvas = nodeOrCanvas as Canvas;
-    node = widthOrElement as ElementNode;
-  }
-
-  const instructions = createInstructions(node, canvas.width, canvas.height);
-
+export function createRender(canvas: Canvas, instructions: Instruction): Canvas {
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
 

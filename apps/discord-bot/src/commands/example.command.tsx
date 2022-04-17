@@ -1,6 +1,6 @@
 import { Command } from '@statsify/discord';
 import { FontRenderer, JSX } from '@statsify/jsx';
-import { loadImage } from 'canvas';
+import { Canvas, loadImage } from 'canvas';
 import { Header, Table } from '../components';
 
 @Command({
@@ -9,19 +9,18 @@ import { Header, Table } from '../components';
   cooldown: 5,
 })
 export class ExampleCommand {
-  public async run() {
-    const renderer = new FontRenderer();
-    await renderer.loadImages();
+  public constructor(private readonly fontRenderer: FontRenderer) {}
 
+  public async run() {
     const player = {
-      prefixName: '§6Amony',
+      prefixName: '§6WWWWWWWWWWWWWWWWWW',
       uuid: '96f645ba026b4e45bc34dd8f0531334c',
     };
 
     const level = `§b[17Ω]`;
 
     const stats = {
-      wins: (2985).toLocaleString(),
+      wins: `${(2985).toLocaleString()}`,
       kills: (25879).toLocaleString(),
       deaths: (9666).toLocaleString(),
       losses: (9337).toLocaleString(),
@@ -35,17 +34,17 @@ export class ExampleCommand {
 
     const skin = await loadImage(`https://visage.surgeplay.com/full/${player.uuid}.png`);
 
-    const width = 900;
+    const width = 860;
     const height = 600;
 
-    const containerWidth = width * 0.9;
+    const containerWidth = width * 0.95;
     const containerHeight = height * 0.9;
 
     const profile = (
       <div width="100%" height="100%">
         <div direction="column" width={containerWidth} height={containerHeight} align="center">
           <Header
-            renderer={renderer}
+            renderer={this.fontRenderer}
             skin={skin}
             sidebar={[
               ['Coins', '4,783,624', '§6'],
@@ -62,12 +61,12 @@ export class ExampleCommand {
             playerDescription={`§bSky§eWars §7Level: ${level}\n§7Progress: §b2,222§7/§a10,000\n${level} §8[§b■■■■■■§7■■■■§8] ${level}`}
           />
           <Table
-            renderer={renderer}
+            renderer={this.fontRenderer}
             rows={[
               {
                 data: [
                   ['Kills', stats.kills],
-                  ['Wins', stats.wins],
+                  ['Wins §^2^§8[§7#§f16k§8]', stats.wins],
                 ],
                 color: '§a',
               },
@@ -98,9 +97,10 @@ export class ExampleCommand {
       </div>
     );
 
-    const canvas = JSX.createRender(profile, width, height);
+    const canvas = new Canvas(width, height);
 
-    const buffer = canvas.toBuffer();
+    const instructions = JSX.createInstructions(profile, canvas.width, canvas.height);
+    const buffer = JSX.createRender(canvas, instructions).toBuffer();
 
     return {
       files: [{ name: 'example.png', data: buffer, type: 'image/png' }],

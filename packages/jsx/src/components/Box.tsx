@@ -94,7 +94,7 @@ export const Box: JSX.RawFC<BoxProps> = ({
 
     if (!shadow) return;
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.42)';
 
     drawAndReplace(
       ctx,

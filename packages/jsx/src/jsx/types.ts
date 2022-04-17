@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import type { CanvasRenderingContext2D } from 'canvas';
 
+export type ElementContext = any;
+
 export type StyleLocation = 'start' | 'end' | 'center';
 export type StyleDirection = 'row' | 'column';
 export type StyleAlign = 'default' | 'center';
@@ -55,6 +57,7 @@ export interface ElementNode {
   children?: ElementNode[];
   x: ElementNodeBiDirectional;
   y: ElementNodeBiDirectional;
+  context?: ElementContext;
 }
 
 export interface Element {
@@ -64,6 +67,7 @@ export interface Element {
   children?: ElementNode[] | ElementNode;
   props?: Record<string, any>;
   dimension: ElementDimension;
+  context?: ElementContext;
 }
 
 export interface InstructionBiDirectional extends ElementNodeBiDirectional {
