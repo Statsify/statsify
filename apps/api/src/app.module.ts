@@ -1,7 +1,6 @@
 import { TypegooseModule } from '@m8a/nestjs-typegoose';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth';
@@ -14,24 +13,11 @@ import { SkinModule } from './skin';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: '../../.env' }),
-    TypegooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI', ''),
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }),
-      inject: [ConfigService],
-    }),
-    RedisModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        config: {
-          url: configService.get<string>('REDIS_URL', ''),
-        },
-      }),
-      inject: [ConfigService],
+    TypegooseModule.forRoot(process.env.MONGODB_URI, {}),
+    RedisModule.forRoot({
+      config: {
+        url: process.env.REDIS_URL,
+      },
     }),
     ScheduleModule.forRoot(),
     PlayerModule,
