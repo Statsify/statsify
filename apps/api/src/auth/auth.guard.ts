@@ -1,7 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import type { FastifyRequest } from 'fastify';
-import { Observable } from 'rxjs';
+import type { FastifyReply, FastifyRequest } from 'fastify';
 import { AuthRole } from './auth.role';
 import { AuthService } from './auth.service';
 
@@ -12,7 +11,7 @@ export class AuthGuard implements CanActivate {
     private readonly authService: AuthService
   ) {}
 
-  public canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+  public async canActivate(context: ExecutionContext): Promise<boolean> {
     const handler = context.getHandler();
 
     const weight = this.reflector.get<number>('auth-weight', handler);
@@ -27,6 +26,14 @@ export class AuthGuard implements CanActivate {
 
     if (!apiKey) throw new UnauthorizedException();
 
-    return this.authService.limited(apiKey, weight, role);
+    const keyInfo = await this.authService.limited(apiKey, weight, role);
+
+    context.switchToHttp().getResponse<FastifyReply>().headers({
+      'x-ratelimit-used': keyInfo.used,
+      'x-ratelimit-total': keyInfo.limit,
+      'x-ratelimit-timeout': keyInfo.resetTime,
+    });
+
+    return keyInfo.canActivate;
   }
 }
