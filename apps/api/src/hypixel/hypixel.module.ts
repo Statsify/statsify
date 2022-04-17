@@ -7,7 +7,7 @@ import { HypixelService } from './hypixel.service';
     HttpModule.register({
       baseURL: `https://api.hypixel.net/`,
       headers: {
-        'API-Key': process.env.HYPIXEL_API_KEY as string,
+        'API-Key': process.env.HYPIXEL_API_KEY,
       },
       timeout: Number(process.env.HYPIXEL_API_TIMEOUT) ?? 5000,
     }),
