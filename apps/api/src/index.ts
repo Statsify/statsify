@@ -4,8 +4,12 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from '@statsify/logger';
 import { setGlobalOptions } from '@typegoose/typegoose';
+import { config } from 'dotenv';
 import { join } from 'path';
+import { version } from '../../../package.json';
 import { AppModule } from './app.module';
+
+config({ path: '../../.env' });
 
 async function bootstrap() {
   //Removes the `_id` fields created from sub classes of documents
@@ -23,9 +27,9 @@ async function bootstrap() {
   //Swagger/Redoc docs
   const config = new DocumentBuilder()
     .setTitle('Statsify API')
-    .setVersion('1.0')
+    .setVersion(version)
     .setDescription(
-      '# Introduction\nThis is the official Statsify API documentation. [Website](https://statsify.net/) - [GitHub](https://github.com/Statsify/stats)\n# Authentication\n\n<!-- ReDoc-Inject: <security-definitions> -->'
+      '# Introduction\nThis is the official Statsify API documentation. [Website](https://statsify.net/) - [GitHub](https://github.com/Statsify/statsify)\n# Authentication\n\n<!-- ReDoc-Inject: <security-definitions> -->'
     )
     .addSecurity('ApiKey', {
       type: 'apiKey',
