@@ -16,7 +16,7 @@
     "@statsify/logger": "workspace:^",
     "@statsify/math": "*",
     "@statsify/util": "*",
-    "@typegoose/typegoose": "^9.7.1"
+    "@typegoose/typegoose": "^9.8.0"
   },
   "devDependencies": {
     "type-fest": "^2.12.2"

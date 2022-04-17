@@ -11,7 +11,7 @@
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
     "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.2.165",
+    "@swc/core": "^1.2.167",
     "@swc/helpers": "^0.3.8",
     "@swc/jest": "^0.2.20",
     "@types/jest": "^27.4.1",
@@ -27,7 +27,7 @@
     "jest": "^27.5.1",
     "jest-mock": "^27.5.1",
     "prettier": "^2.6.2",
-    "turbo": "^1.2.2",
+    "turbo": "^1.2.4",
     "typescript": "^4.6.3"
   },
   "scripts": {
