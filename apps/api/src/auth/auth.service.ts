@@ -17,7 +17,7 @@ export class AuthService {
 
   public constructor(@InjectRedis() private readonly redis: Redis) {}
 
-  public async limited(apiKey: string, weight: number, role: AuthRole): Promise<boolean> {
+  public async limited(apiKey: string, weight: number, role: AuthRole) {
     const hash = this.hash(apiKey);
 
     const [name, ...keyInfo] = await this.redis.hmget(`key:${hash}`, 'name', 'role', 'limit');
@@ -49,6 +49,8 @@ export class AuthService {
       .filter((_, i) => i % 2 === 0)
       .reduce((acc, key) => acc + Number(key.split(':')[1]), 0);
 
+    const resetTime = 60000 - (time - requests[1][1]);
+
     if (weightedTotal > apiKeyLimit) {
       this.logger.warn(
         `${name} has exceeded their request limit of ${apiKeyLimit} and has requested ${weightedTotal} times`
@@ -57,7 +59,12 @@ export class AuthService {
       throw new HttpException('Too Many Requests', 429);
     }
 
-    return true;
+    return {
+      canActivate: true,
+      used: weightedTotal,
+      limit: apiKeyLimit,
+      resetTime,
+    };
   }
 
   public async createKey(name: string): Promise<string> {
