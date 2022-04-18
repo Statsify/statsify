@@ -12,10 +12,10 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (process.env.IGNORE_AUTH) {
+    if (process.env.IGNORE_AUTH == true) {
       return true;
     }
-    
+
     const handler = context.getHandler();
 
     const weight = this.reflector.get<number>('auth-weight', handler);
