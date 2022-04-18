@@ -46,6 +46,7 @@
     "api": "yarn workspace api",
     "discord-bot": "yarn workspace discord-bot",
     "site": "yarn workspace site",
+    "scripts": "yarn workspace scripts",
     "postinstall": "husky install"
   },
   "repository": {
