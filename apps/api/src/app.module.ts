@@ -2,6 +2,7 @@ import { TypegooseModule } from '@m8a/nestjs-typegoose';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
+import { config } from 'dotenv';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth';
 import { GuildModule } from './guild';
@@ -11,9 +12,16 @@ import { LeaderboardModule } from './leaderboards';
 import { PlayerModule } from './player';
 import { SkinModule } from './skin';
 
+config({ path: '../../.env' });
 @Module({
   imports: [
-    TypegooseModule.forRoot(process.env.MONGODB_URI, {}),
+    TypegooseModule.forRootAsync({
+      useFactory: () => ({
+        uri: process.env.MONGODB_URI,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }),
+    }),
     RedisModule.forRoot({
       config: {
         url: process.env.REDIS_URL,
