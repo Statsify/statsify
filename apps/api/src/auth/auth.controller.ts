@@ -1,6 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Post, Query } from '@nestjs/common';
 import { ApiExcludeEndpoint } from '@nestjs/swagger';
-import { KeyDto } from '../dtos/key.dto';
+import { AddKeyDto, KeyHeaderDto, KeyParamDto } from '../dtos/key.dto';
 import { Auth } from './auth.decorator';
 import { AuthRole } from './auth.role';
 import { AuthService } from './auth.service';
@@ -12,7 +12,20 @@ export class AuthController {
   @Post('/key')
   @Auth({ role: AuthRole.ADMIN })
   @ApiExcludeEndpoint()
-  public async createKey(@Body() { name }: KeyDto): Promise<string> {
+  public async createKey(@Body() { name }: AddKeyDto): Promise<string> {
     return this.authService.createKey(name);
+  }
+
+  @Get('/key')
+  @Auth()
+  public async getKey(
+    @Query() { key }: KeyParamDto,
+    @Headers() { 'x-api-key': keyHeader }: KeyHeaderDto
+  ) {
+    const keyData = await this.authService.getKey(key ?? keyHeader);
+    return {
+      success: !!keyData,
+      key: keyData,
+    };
   }
 }
