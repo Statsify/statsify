@@ -2,7 +2,6 @@ import { flatten } from '@statsify/util';
 import { Field } from '../src/metadata';
 import { deserialize } from '../src/metadata/deserialize';
 
-//TODO write better tests for this
 describe('deserialize', () => {
   class TesterB {
     @Field()
