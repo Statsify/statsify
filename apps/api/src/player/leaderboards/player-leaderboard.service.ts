@@ -49,6 +49,7 @@ export class PlayerLeaderboardService {
       name: fieldName,
       additionalFields,
       extraDisplay,
+      formatter,
     } = LeaderboardScanner.getLeaderboardField(Player, field) as LeaderboardEnabledMetadata & {
       additionalFields: FlattenKeys<Player>[];
       extraDisplay: FlattenKeys<Player>;
@@ -59,6 +60,10 @@ export class PlayerLeaderboardService {
       ['displayName', ...additionalFields, ...(extraDisplay ? [extraDisplay] : [])]
     );
 
+    const additionalFieldMetadata = additionalFields.map((key) =>
+      LeaderboardScanner.getLeaderboardField(Player, key)
+    );
+
     const data = leaderboard.map((player, index) => {
       const stats = additionalStats[index];
       let name = stats.displayName;
@@ -67,18 +72,23 @@ export class PlayerLeaderboardService {
 
       return {
         uuid: translator.toUUID(player.id).replace(/-/g, ''),
-        field: player.score,
-        additionalFields: additionalFields.map((key: FlattenKeys<Player>) => stats[key]),
+        field: formatter ? formatter(player.score) : player.score,
+        additionalFields: additionalFields.map((key: FlattenKeys<Player>, index) => {
+          if (additionalFieldMetadata[index].formatter)
+            return additionalFieldMetadata[index].formatter?.(stats[key]);
+
+          return stats[key];
+        }),
         name,
         position: player.index + 1,
       };
     });
 
-    const additionalFieldNames = additionalFields.map(
-      (key) => LeaderboardScanner.getLeaderboardField(Player, key).name
-    );
-
-    return { additionalFieldNames, fieldName, data };
+    return {
+      additionalFieldNames: additionalFieldMetadata.map(({ name }) => name),
+      fieldName,
+      data,
+    };
   }
 
   public async getLeaderboardRankings(fields: FlattenKeys<Player>[], uuid: string) {

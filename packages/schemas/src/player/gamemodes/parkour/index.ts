@@ -49,6 +49,7 @@ export class Parkour {
 
   @Field({ leaderboard: { sort: 'ASC' } })
   public tourney: number;
+
   @Field({ leaderboard: { sort: 'ASC' } })
   public uhc: number;
 

@@ -1,9 +1,10 @@
 import { prettify } from '@statsify/util';
 import { Field, MetadataEntry, MetadataScanner } from '../src/metadata';
-import { FieldMetadata } from '../src/metadata/metadata.interface';
+import { defaultFormatter } from '../src/metadata/field/get-leaderboard-metadata';
+import { FieldMetadata, LeaderboardEnabledMetadata } from '../src/metadata/metadata.interface';
 
 const stringMetadata: FieldMetadata = {
-  leaderboard: { enabled: false },
+  leaderboard: { enabled: false, additionalFields: [] },
   type: { type: String, array: false, primitive: true },
   store: { required: true, serialize: true, deserialize: true, store: true, default: '' },
 };
@@ -15,7 +16,7 @@ describe('metadata', () => {
       public fieldA: string;
     }
 
-    expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry>([['fieldA', stringMetadata]]);
+    expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry[]>([['fieldA', stringMetadata]]);
   });
 
   it('should read and write basic number metadata', () => {
@@ -24,7 +25,7 @@ describe('metadata', () => {
       public fieldA: number;
     }
 
-    expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry>([
+    expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry[]>([
       [
         'fieldA',
         {
@@ -34,7 +35,7 @@ describe('metadata', () => {
             additionalFields: [],
             aliases: [],
             sort: 'DESC',
-            extraDisplay: undefined,
+            formatter: defaultFormatter,
           },
           type: { type: Number, array: false, primitive: true },
           store: { required: true, serialize: true, deserialize: true, store: true, default: 0 },
@@ -49,11 +50,11 @@ describe('metadata', () => {
       public fieldA: number;
     }
 
-    expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry>([
+    expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry[]>([
       [
         'fieldA',
         {
-          leaderboard: { enabled: false },
+          leaderboard: { enabled: false, additionalFields: [] },
           type: { type: Number, array: false, primitive: true },
           store: { required: true, serialize: true, deserialize: true, store: true, default: 0 },
         },
@@ -67,7 +68,7 @@ describe('metadata', () => {
       public fieldA: string[];
     }
 
-    expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry>([
+    expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry[]>([
       [
         'fieldA',
         {
@@ -100,7 +101,7 @@ describe('metadata', () => {
       public fieldB: NestedClazz;
     }
 
-    expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry>([
+    expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry[]>([
       ['fieldA', stringMetadata],
       ['fieldB.fieldA', stringMetadata],
       ['fieldB.fieldB.fieldA', stringMetadata],
@@ -118,9 +119,33 @@ describe('metadata', () => {
       public fieldB: string;
     }
 
-    expect(MetadataScanner.scan(ChildClazz)).toEqual<MetadataEntry>([
+    expect(MetadataScanner.scan(ChildClazz)).toEqual<MetadataEntry[]>([
       ['fieldA', stringMetadata],
       ['fieldB', stringMetadata],
     ]);
+  });
+
+  it(`should carry down metadata`, () => {
+    class ParentClazz {
+      @Field({ leaderboard: { additionalFields: ['fieldA'], extraDisplay: 'fieldA' } })
+      public fieldA: ChildClazz;
+    }
+
+    class ChildClazz {
+      @Field()
+      public fieldB: number;
+    }
+
+    const [[, { leaderboard }]] = MetadataScanner.scan(ParentClazz);
+
+    expect(leaderboard).toEqual<LeaderboardEnabledMetadata>({
+      enabled: true,
+      name: prettify('fieldB'),
+      additionalFields: ['fieldA'],
+      extraDisplay: 'fieldA',
+      formatter: defaultFormatter,
+      aliases: [],
+      sort: 'DESC',
+    });
   });
 });

@@ -2,10 +2,10 @@ import { Constructor } from '@statsify/util';
 import { METADATA_KEY } from './constants';
 import { ClassMetadata, FieldMetadata } from './metadata.interface';
 
-export type MetadataEntry = [string, FieldMetadata][];
+export type MetadataEntry = [string, FieldMetadata];
 
 export class MetadataScanner {
-  private static tokens: Map<Constructor, MetadataEntry> = new Map();
+  private static tokens: Map<Constructor, MetadataEntry[]> = new Map();
 
   public static scan(target: Constructor) {
     if (this.tokens.has(target)) return this.tokens.get(target)!;
@@ -17,15 +17,14 @@ export class MetadataScanner {
     return metadata;
   }
 
-  //TODO(jacobk999): Make this bring some metadata values down to the children. For example if a object has the metadata for additional leaderboard fields all of its keys/values should also have this metadata by default
-  private static getMetadataEntries(constructor: Constructor, base = ''): MetadataEntry {
+  private static getMetadataEntries(constructor: Constructor, base = ''): MetadataEntry[] {
     const classMetadata = Reflect.getMetadata(METADATA_KEY, constructor.prototype) as ClassMetadata;
 
     if (!classMetadata) return [];
 
     const entries = Object.entries(classMetadata);
 
-    const metadataEntries: MetadataEntry = [];
+    const metadataEntries: MetadataEntry[] = [];
 
     for (const [key, value] of entries) {
       const path = `${base ? `${base}.` : ''}${key}`;
@@ -35,7 +34,26 @@ export class MetadataScanner {
         continue;
       }
 
-      metadataEntries.push(...this.getMetadataEntries(value.type.type, path));
+      //Carry the metadata down to the children
+      const subMetadataEntries = this.getMetadataEntries(value.type.type, path).map(
+        ([path, { store, leaderboard, type }]) => {
+          if (!leaderboard.additionalFields || !leaderboard.additionalFields.length)
+            leaderboard.additionalFields = value.leaderboard.additionalFields;
+
+          if (!leaderboard.extraDisplay) leaderboard.extraDisplay = value.leaderboard.extraDisplay;
+
+          return [
+            path,
+            {
+              store,
+              leaderboard,
+              type,
+            },
+          ] as MetadataEntry;
+        }
+      );
+
+      metadataEntries.push(...subMetadataEntries);
     }
 
     return metadataEntries;
