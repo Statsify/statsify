@@ -11,6 +11,6 @@
     "ioredis": "^5.0.4"
   },
   "devDependencies": {
-    "@types/inquirer": "^8"
+    "@types/inquirer": "^8.2.1"
   }
 }

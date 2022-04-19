@@ -13,7 +13,7 @@
         "commitMessagePrefix": "chore(deps):"
       },
       {
-        "matchPackagePatterns": ["discord-api-types", "class-transformer", "chalk"],
+        "matchPackagePatterns": ["chalk"],
         "enabled": false
       },
       {
