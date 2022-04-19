@@ -86,6 +86,35 @@ export class AuthService {
     return apiKey;
   }
 
+  public async getKey(apiKey: string): Promise<any> {
+    const hash = this.hash(apiKey);
+    const key = `ratelimit:${hash}`;
+
+    const pipeline = this.redis.pipeline();
+    pipeline.hmget(`key:${hash}`, 'name', 'requests', 'limit');
+    pipeline.zrange(key, 0, -1, 'WITHSCORES');
+
+    const [keydata, requests] = await pipeline.exec();
+
+    const [name, lifetimeRequests, limit] = keydata[1];
+
+    const recentRequests = (requests[1] as string[])
+      .filter((_, i) => i % 2 === 0)
+      .reduce((acc, key) => acc + Number(key.split(':')[1]), 0);
+
+    const time = Date.now();
+
+    const resetTime = 60000 - (time - Number(requests[1][1]));
+
+    return {
+      name,
+      lifetimeRequests: Number(lifetimeRequests),
+      recentRequests,
+      resetTime,
+      limit: Number(limit),
+    };
+  }
+
   private hash(apiKey: string): string {
     return createHash('sha256').update(apiKey).digest('hex');
   }

@@ -13,7 +13,13 @@ import { SkinModule } from './skin';
 
 @Module({
   imports: [
-    TypegooseModule.forRoot(process.env.MONGODB_URI, {}),
+    TypegooseModule.forRootAsync({
+      useFactory: () => ({
+        uri: process.env.MONGODB_URI,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }),
+    }),
     RedisModule.forRoot({
       config: {
         url: process.env.REDIS_URL,
