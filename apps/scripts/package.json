@@ -2,9 +2,15 @@
   "name": "scripts",
   "version": "0.0.0",
   "private": true,
-  "main": "dist/index.js",
   "scripts": {
-    "start": "node --enable-source-maps .",
-    "test": "node src/test.js"
+    "create-key": "node -r dotenv/config src/create-key.mjs dotenv_config_path=../../.env"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "inquirer": "^8.2.2",
+    "ioredis": "^5.0.4"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^8"
   }
 }
