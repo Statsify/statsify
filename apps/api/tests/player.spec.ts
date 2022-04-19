@@ -1,8 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { deserialize, Friends, Player, RankedSkyWars, Status } from '@statsify/schemas';
-import { flatten } from '@statsify/util';
 import { PlayerController } from '../src/player';
 import { useMocker } from './mocks';
 import { testKey, testUsername, testUuid } from './test.constants';
@@ -35,10 +33,6 @@ describe('Player', () => {
     });
 
     expect(result.statusCode).toEqual(200);
-
-    const response = result.json();
-
-    expect(response.success).toBe(true);
   });
 
   it(`/GET player?player=uuid`, async () => {
@@ -51,10 +45,6 @@ describe('Player', () => {
     });
 
     expect(result.statusCode).toEqual(200);
-
-    const response = result.json();
-
-    expect(response.success).toBe(true);
   });
 
   it(`/GET player/recentgames?uuid=username`, async () => {
@@ -79,11 +69,6 @@ describe('Player', () => {
     });
 
     expect(result.statusCode).toEqual(200);
-
-    expect(result.json()).toEqual({
-      success: false,
-      games: [],
-    });
   });
 
   it(`/GET player/status?uuid=username`, async () => {
@@ -108,11 +93,6 @@ describe('Player', () => {
     });
 
     expect(result.statusCode).toEqual(200);
-
-    expect(result.json()).toEqual({
-      success: true,
-      status: new Status({}),
-    });
   });
 
   it('/GET player/friends?player=username', async () => {
@@ -149,11 +129,6 @@ describe('Player', () => {
     });
 
     expect(result.statusCode).toEqual(200);
-
-    expect(result.json()).toEqual({
-      success: true,
-      friends: new Friends({}),
-    });
   });
 
   it(`/GET player/rankedskywars?uuid=username`, async () => {
@@ -178,11 +153,6 @@ describe('Player', () => {
     });
 
     expect(result.statusCode).toEqual(200);
-
-    expect(result.json()).toEqual({
-      success: true,
-      rankedSkyWars: new RankedSkyWars({}),
-    });
   });
 
   afterAll(async () => {

@@ -1,7 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { Gamecounts, Watchdog } from '@statsify/schemas';
 import { HypixelResourcesController } from '../src/hypixel-resources';
 import { useMocker } from './mocks';
 import { testKey } from './test.constants';
@@ -34,11 +33,6 @@ describe('HypixelResources', () => {
     });
 
     expect(result.statusCode).toEqual(200);
-
-    expect(result.json()).toEqual({
-      success: true,
-      watchdog: new Watchdog({}),
-    });
   });
 
   it(`/GET hypixelresources/gamecounts`, async () => {
@@ -51,11 +45,6 @@ describe('HypixelResources', () => {
     });
 
     expect(result.statusCode).toEqual(200);
-
-    expect(result.json()).toEqual({
-      success: true,
-      gamecounts: new Gamecounts(),
-    });
   });
 
   afterAll(async () => {

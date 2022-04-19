@@ -12,6 +12,4 @@ export const playerService: MockClass<PlayerService> = {
     achievements: new Achievements({}, {}),
   }),
   deleteOne: jest.fn().mockResolvedValue(true),
-  serialize: jest.fn().mockReturnValue(new Player()),
-  deserialize: jest.fn().mockReturnValue(new Player()),
 };
