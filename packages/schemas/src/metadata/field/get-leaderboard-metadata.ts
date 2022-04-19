@@ -20,6 +20,7 @@ export const getLeaderboardMetadata = (
       enabled: false,
       additionalFields: leaderboardOptions?.additionalFields || [],
       extraDisplay: leaderboardOptions?.extraDisplay,
+      formatter: leaderboardOptions?.formatter,
     };
   }
 
