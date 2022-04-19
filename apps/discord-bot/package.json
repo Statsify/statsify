@@ -17,7 +17,7 @@
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@typegoose/typegoose": "^9.8.0",
-    "discord-api-types": "^0.27.3",
+    "discord-api-types": "^0.31.2",
     "dotenv": "^16.0.0",
     "mongoose": "^6.3.0",
     "reflect-metadata": "^0.1.13",
