@@ -1,6 +1,6 @@
 import { add } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { BowSpleef, PVPRun, TNTRun, TNTTag, Wizards } from './mode';
 
 export class TNTGames {

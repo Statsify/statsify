@@ -1,5 +1,5 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { SmashHeroesMode } from './mode';
 
 export class SmashHeroes {
@@ -18,13 +18,13 @@ export class SmashHeroes {
   @Field()
   public coins: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public level: number;
 
   @Field()
   public levelFormatted: string;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public kit: string;
 
   public constructor(data: APIData) {

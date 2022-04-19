@@ -30,12 +30,10 @@ describe('math with classes', () => {
   const a = new TestClass(1, 2);
   const b = new TestClass(1, 2);
   it('should add numbers together', () => {
-    expect(deepAdd(TestClass, a, b)).toBeInstanceOf(TestClass);
-    expect(deepAdd(TestClass, a, b)).toMatchObject(new TestClass(2, 4));
+    expect(deepAdd(a, b)).toMatchObject(new TestClass(2, 4));
   });
 
   it('should subtract numbers', () => {
-    expect(deepSub(TestClass, a, b)).toBeInstanceOf(TestClass);
-    expect(deepSub(TestClass, a, b)).toMatchObject(new TestClass(0, 0));
+    expect(deepSub(a, b)).toMatchObject(new TestClass(0, 0));
   });
 });

@@ -1,7 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { Guild } from '@statsify/schemas';
 import { GuildController, GuildQuery } from '../src/guild';
 import { useMocker } from './mocks';
 import { testKey, testUsername } from './test.constants';
@@ -34,12 +33,6 @@ describe('Guild', () => {
     });
 
     expect(result.statusCode).toEqual(200);
-
-    expect(result.json()).toEqual({
-      success: true,
-      // Weird hack to make this test pass
-      guild: JSON.parse(JSON.stringify(new Guild())),
-    });
   });
 
   it(`/GET guild?guild=name`, async () => {

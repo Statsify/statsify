@@ -1,6 +1,6 @@
 import { deepAdd } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { QuakeMode } from './mode';
 
 export class Quake {
@@ -26,7 +26,7 @@ export class Quake {
     this.solo = new QuakeMode(data, '');
     this.teams = new QuakeMode(data, 'teams');
 
-    this.overall = deepAdd(QuakeMode, this.solo, this.teams);
+    this.overall = deepAdd(this.solo, this.teams);
 
     QuakeMode.applyRatios(this.overall);
 

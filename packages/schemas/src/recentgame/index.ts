@@ -1,24 +1,24 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
 import { Game } from '../game';
+import { Field } from '../metadata';
 
 export class RecentGame {
-  @Field({ store: false })
+  @Field({ store: { store: false } })
   public startedAt: number;
 
   @Field()
   public game: Game;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public mode?: string;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public map?: string;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public endedAt?: number;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public gameLength?: number;
 
   public constructor(data: APIData = {}) {

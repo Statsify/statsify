@@ -1,7 +1,7 @@
 import { add, deepSub } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Color, ColorCode } from '../../../color';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { Progression } from '../../../progression';
 import { BedWarsMode, DreamsBedWars } from './mode';
 import { getExpReq, getFormattedLevel, getLevel } from './util';
@@ -14,49 +14,30 @@ export class BedWars {
   public lootChests: number;
 
   @Field({
-    name: 'EXP',
-    additionalFields: [
-      'stats.bedwars.overall.wins',
-      'stats.bedwars.overall.finalKills',
-      'stats.bedwars.overall.fkdr',
-    ],
+    leaderboard: {
+      name: 'EXP',
+      additionalFields: [
+        'stats.bedwars.overall.wins',
+        'stats.bedwars.overall.finalKills',
+        'stats.bedwars.overall.fkdr',
+      ],
+    },
   })
   public exp: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public level: number;
 
   @Field()
   public levelFormatted: string;
 
-  @Field({
-    getter: (target: BedWars) => {
-      const formatted = getFormattedLevel(target.level);
-
-      return formatted[1] === '7' && target.level > 1000
-        ? new Color(`§${formatted[4]}` as ColorCode)
-        : new Color(`§${formatted[1]}` as ColorCode);
-    },
-  })
+  @Field()
   public levelColor: Color;
 
-  @Field({
-    getter: (target: BedWars) => {
-      const flooredLevel = Math.floor(target.level);
-      let exp = target.exp;
-
-      for (let i = 0; i < flooredLevel; i++) {
-        exp -= getExpReq(i);
-      }
-
-      return new Progression(exp, getExpReq(flooredLevel + 1));
-    },
-  })
+  @Field()
   public levelProgression: Progression;
 
-  @Field({
-    getter: (target: BedWars) => getFormattedLevel(target.level + 1),
-  })
+  @Field()
   public nextLevelFormatted: string;
 
   @Field()
@@ -88,6 +69,21 @@ export class BedWars {
     this.exp = data.Experience || 0;
     this.level = +getLevel(this.exp).toFixed(2);
     this.levelFormatted = getFormattedLevel(this.level);
+    this.nextLevelFormatted = getFormattedLevel(this.level + 1);
+
+    this.levelColor =
+      this.levelFormatted[1] === '7' && this.level > 1000
+        ? new Color(`§${this.levelFormatted[4]}` as ColorCode)
+        : new Color(`§${this.levelFormatted[1]}` as ColorCode);
+
+    const flooredLevel = Math.floor(this.level);
+    let exp = this.exp;
+
+    for (let i = 0; i < flooredLevel; i++) {
+      exp -= getExpReq(i);
+    }
+
+    this.levelProgression = new Progression(exp, getExpReq(flooredLevel + 1));
 
     this.lootChests = add(
       data.bedwars_boxes,
@@ -104,8 +100,11 @@ export class BedWars {
     this.threes = new BedWarsMode(data, 'four_three');
     this.fours = new BedWarsMode(data, 'four_four');
     this['4v4'] = new BedWarsMode(data, 'two_four');
-    this.core = deepSub(BedWarsMode, this.overall, this['4v4']);
+
+    this.core = deepSub(this.overall, this['4v4']);
     BedWarsMode.applyRatios(this.core);
+
+    this.core.winstreak = this.overall.winstreak;
 
     this.dreams = new DreamsBedWars(data);
   }

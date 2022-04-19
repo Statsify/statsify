@@ -1,8 +1,8 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 
 export class Skin {
-  @Field({ index: true, required: true, unique: true })
+  @Field({ mongo: { index: true, unique: true } })
   public uuid: string;
 
   @Field()
@@ -11,7 +11,7 @@ export class Skin {
   @Field()
   public skinUrl: string;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public slim?: boolean;
 
   @Field()

@@ -1,6 +1,6 @@
 import { deepAdd } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { VampireZLife } from './life';
 
 export class VampireZ {
@@ -22,7 +22,7 @@ export class VampireZ {
     this.human = new VampireZLife(data, 'human');
     this.vampire = new VampireZLife(data, 'vampire');
 
-    this.overall = deepAdd(VampireZLife, this.human, this.vampire);
+    this.overall = deepAdd(this.human, this.vampire);
     VampireZLife.applyRatios(this.overall);
   }
 }

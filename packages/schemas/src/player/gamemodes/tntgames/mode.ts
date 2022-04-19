@@ -1,6 +1,7 @@
 import { ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
+
 export class BowSpleef {
   @Field()
   public wins: number;
@@ -83,7 +84,7 @@ export class TNTTag {
   @Field()
   public kills: number;
 
-  @Field({ default: 1 })
+  @Field({ store: { default: 1 } })
   public speed: number;
 
   @Field()

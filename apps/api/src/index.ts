@@ -4,12 +4,9 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from '@statsify/logger';
 import { setGlobalOptions } from '@typegoose/typegoose';
-import { config } from 'dotenv';
 import { join } from 'path';
 import { version } from '../../../package.json';
 import { AppModule } from './app.module';
-
-config({ path: '../../.env' });
 
 async function bootstrap() {
   //Removes the `_id` fields created from sub classes of documents

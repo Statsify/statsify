@@ -1,12 +1,11 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
-import { getLeaderboardField, Player } from '@statsify/schemas';
-import { flatten } from '@statsify/util';
+import { LeaderboardEnabledMetadata, LeaderboardScanner, Player } from '@statsify/schemas';
+import { flatten, FlattenKeys } from '@statsify/util';
 import { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
 import { LeaderboardService } from '../../leaderboards';
-import { PlayerKeys } from '../player.select';
 
 @Injectable()
 export class PlayerLeaderboardService {
@@ -16,7 +15,7 @@ export class PlayerLeaderboardService {
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>
   ) {}
 
-  public async getLeaderboard(field: PlayerKeys, pageOrUuid: number | string) {
+  public async getLeaderboard(field: FlattenKeys<Player>, pageOrUuid: number | string) {
     const pageSize = 10;
     const translator = short(short.constants.cookieBase90);
 
@@ -46,39 +45,53 @@ export class PlayerLeaderboardService {
       bottom - 1
     );
 
-    const options = this.getFieldMetadata(field);
-    const fieldName = options.name;
-    const additionalFields = options.additionalFields as PlayerKeys[];
-    const extraDisplay = options.extraDisplay;
+    const {
+      name: fieldName,
+      additionalFields,
+      extraDisplay,
+      formatter,
+    } = LeaderboardScanner.getLeaderboardField(Player, field) as LeaderboardEnabledMetadata & {
+      additionalFields: FlattenKeys<Player>[];
+      extraDisplay: FlattenKeys<Player>;
+    };
 
     const additionalStats = await this.fetchPlayerStats(
       leaderboard.map(({ id }) => id),
-      ['displayName', ...additionalFields, ...(extraDisplay ? [extraDisplay] : [])] as PlayerKeys[]
+      ['displayName', ...additionalFields, ...(extraDisplay ? [extraDisplay] : [])]
+    );
+
+    const additionalFieldMetadata = additionalFields.map((key) =>
+      LeaderboardScanner.getLeaderboardField(Player, key)
     );
 
     const data = leaderboard.map((player, index) => {
       const stats = additionalStats[index];
       let name = stats.displayName;
 
-      if (extraDisplay) {
-        name = `${stats[extraDisplay]} ${name}`;
-      }
+      if (extraDisplay) name = `${stats[extraDisplay]} ${name}`;
 
       return {
         uuid: translator.toUUID(player.id).replace(/-/g, ''),
-        field: player.score,
-        additionalFields: additionalFields.map((key) => stats[key]),
+        field: formatter ? formatter(player.score) : player.score,
+        additionalFields: additionalFields.map((key: FlattenKeys<Player>, index) => {
+          if (additionalFieldMetadata[index].formatter)
+            return additionalFieldMetadata[index].formatter?.(stats[key]);
+
+          return stats[key];
+        }),
         name,
         position: player.index + 1,
       };
     });
 
-    const additionalFieldNames = additionalFields.map((key) => this.getFieldMetadata(key).name);
-
-    return { additionalFieldNames, fieldName, data };
+    return {
+      additionalFieldNames: additionalFieldMetadata.map(({ name }) => name),
+      fieldName,
+      data,
+    };
   }
 
-  public async getLeaderboardRankings(fields: PlayerKeys[], uuid: string) {
+  public async getLeaderboardRankings(fields: FlattenKeys<Player>[], uuid: string) {
     const translator = short(short.constants.cookieBase90);
 
     const shortUuid = translator.fromUUID(uuid);
@@ -99,23 +112,23 @@ export class PlayerLeaderboardService {
     });
   }
 
-  public async getLeaderboardRanking(field: PlayerKeys, uuid: string) {
+  public async getLeaderboardRanking(field: FlattenKeys<Player>, uuid: string) {
     return this.leaderboardService.getLeaderboardRanking(Player, field, uuid);
   }
 
-  public async fetchPlayerStats(uuids: string[], selector: PlayerKeys[]) {
+  public async fetchPlayerStats(uuids: string[], selector: FlattenKeys<Player>[]) {
     const select = Object.fromEntries(selector.map((key) => [key, 1]));
 
-    const players = await Promise.all(
+    const players = (await Promise.all(
       uuids.map((uuid) =>
         this.playerModel.findOne().where('shortUuid').equals(uuid).select(select).lean().exec()
       )
-    );
+    )) as Player[];
 
     const pipeline = this.redis.pipeline();
     const name = Player.name.toLowerCase();
 
-    const requests: [index: number, key: string][] = [];
+    const requests: [index: number, key: FlattenKeys<Player>][] = [];
 
     const flatPlayers = players.map((player, index) => {
       const flat = flatten(player);
@@ -133,13 +146,12 @@ export class PlayerLeaderboardService {
 
     responses.forEach((response, ind) => {
       const [index, key] = requests[ind];
-      flatPlayers[index][key] = Number(response[1] ?? 0);
+      const flatPlayer = flatPlayers[index];
+
+      //@ts-ignore Typescript doesn't know what the value should be for this key; However since it is a leaderboard field it has to be a number
+      flatPlayer[key] = Number(response[1] ?? 0);
     });
 
     return flatPlayers;
-  }
-
-  public getFieldMetadata(field: PlayerKeys) {
-    return getLeaderboardField(new Player(), field);
   }
 }

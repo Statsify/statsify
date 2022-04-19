@@ -1,13 +1,13 @@
-import { Field } from './decorators';
+import { Field } from './metadata';
 
 export class Progression {
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public current: number;
 
-  @Field({ leaderboard: false, required: false })
+  @Field({ leaderboard: { enabled: false } })
   public max?: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public percent: number;
 
   public constructor(current: number, max: number) {

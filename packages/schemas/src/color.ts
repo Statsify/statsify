@@ -1,4 +1,4 @@
-import { Field } from './decorators';
+import { Field } from './metadata';
 
 export const colors = [
   { code: '§0', hex: '#000000', id: 'BLACK' },
@@ -30,29 +30,35 @@ export type ColorId = typeof colors[number]['id'];
 
 export class Color {
   @Field({
-    enum: colors.map((c) => c.code),
-    enumName: 'ColorCode',
-    example: colors[0].code,
+    docs: {
+      enum: colors.map((c) => c.code),
+      enumName: 'ColorCode',
+      examples: [colors[0].code],
+      description: 'A Minecraft color code',
+    },
     type: () => String,
-    description: 'A Minecraft color code',
   })
   public code: ColorCode;
 
   @Field({
-    enum: colors.map((c) => c.hex),
-    enumName: 'ColorHex',
-    example: colors[0].hex,
+    docs: {
+      enum: colors.map((c) => c.hex),
+      enumName: 'ColorHex',
+      examples: [colors[0].hex],
+      description: 'A hex color code',
+    },
     type: () => String,
-    description: 'A hex color code',
   })
   public hex: ColorHex;
 
   @Field({
-    enum: colors.map((c) => c.id),
-    enumName: 'ColorId',
-    example: colors[0].id,
+    docs: {
+      enum: colors.map((c) => c.id),
+      enumName: 'ColorId',
+      examples: [colors[0].id],
+      description: 'A name of a Minecraft color',
+    },
     type: () => String,
-    description: 'A name of a Minecraft color',
   })
   public id: ColorId;
 

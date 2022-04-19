@@ -1,5 +1,6 @@
-import { deserialize } from '../src';
-import { Field } from '../src/decorators';
+import { flatten } from '@statsify/util';
+import { Field } from '../src/metadata';
+import { deserialize } from '../src/metadata/deserialize';
 
 describe('deserialize', () => {
   class TesterB {
@@ -14,33 +15,32 @@ describe('deserialize', () => {
     @Field()
     public field2: number;
 
-    @Field({ leaderboard: false })
+    @Field({ leaderboard: { enabled: false } })
     public field3: number;
 
-    @Field({ getter: () => 2 })
+    @Field({ store: { store: false } })
     public field4: number;
 
-    @Field({ store: false })
-    public field5: number;
-
     @Field()
-    public field6: TesterB;
+    public field5: TesterB;
 
     public constructor() {
-      this.field6 = new TesterB();
+      this.field1 = 'field1';
+      this.field2 = 0;
+      this.field3 = 3;
+      this.field5 = new TesterB();
     }
   }
 
-  it('should correctly populate fields', () => {
-    const result = deserialize(new Tester(), { field1: 'field1', field3: 2, field5: 10 } as Tester);
+  it('should correctly add fields', () => {
+    const result = deserialize(Tester, flatten(new Tester()));
 
     expect(result).toEqual({
       field1: 'field1',
       field2: 0,
-      field3: 2,
-      field4: 2,
-      field5: undefined,
-      field6: {
+      field3: 3,
+      field4: 0,
+      field5: {
         field1: 0,
       },
     });

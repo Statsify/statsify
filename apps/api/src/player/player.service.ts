@@ -1,12 +1,19 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
-import { Achievements, deserialize, Friends, Player, serialize } from '@statsify/schemas';
-import { flatten, unflatten } from '@statsify/util';
+import {
+  Achievements,
+  deserialize,
+  Friends,
+  LeaderboardScanner,
+  Player,
+  Selector,
+  serialize,
+} from '@statsify/schemas';
+import { Flatten, flatten, FlattenKeys } from '@statsify/util';
 import type { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
 import { HypixelCache, HypixelService } from '../hypixel';
 import { LeaderboardService } from '../leaderboards';
-import { PlayerSelection, PlayerSelector } from './player.select';
 
 @Injectable()
 export class PlayerService {
@@ -23,67 +30,31 @@ export class PlayerService {
    * @param cacheLevel What type of data to return (cached/live)
    * @param selector (optional) A mongo selector to select specific fields
    */
-  public async findOne<T extends PlayerSelector>(
+  public async findOne(
     tag: string,
     cacheLevel: HypixelCache,
-    selector: T
-  ): Promise<PlayerSelection<T> | null>;
-  public async findOne(tag: string, cacheLevel: HypixelCache): Promise<Player | null>;
-  public async findOne<T extends PlayerSelector>(
-    tag: string,
-    cacheLevel: HypixelCache,
-    selector?: T
-  ): Promise<Player | PlayerSelection<T> | null> {
-    const type = tag.length > 16 ? 'uuid' : 'usernameToLower';
+    selector?: Selector<Player>
+  ): Promise<Player | null> {
+    const mongoPlayer = await this.findMongoDocument(tag, selector);
 
-    const cachedPlayer: Player | null = await this.playerModel
-      .findOne()
-      .where(type)
-      .equals(tag.replace(/-/g, '').toLowerCase())
-      .select(selector)
-      .lean()
-      .exec();
-
-    let redisSelector: string[] | undefined = undefined;
-
-    if (selector) {
-      redisSelector = Object.keys(selector).filter(
-        (field) => selector[field as keyof typeof selector]
-      );
+    if (mongoPlayer && this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)) {
+      return this.resolveCachedDocument(mongoPlayer, selector);
     }
 
-    if (cachedPlayer) {
-      cachedPlayer.cached = true;
-    }
-
-    if (cachedPlayer && this.hypixelService.shouldCache(cachedPlayer.expiresAt, cacheLevel)) {
-      const redisDoc = await this.leaderboardService.getLeaderboardDocument(
-        Player,
-        cachedPlayer.shortUuid,
-        redisSelector
-      );
-
-      return this.mergeDocuments(cachedPlayer, redisDoc, !selector);
-    }
-
-    const player = await this.hypixelService.getPlayer(cachedPlayer?.uuid ?? tag);
+    const player = await this.hypixelService.getPlayer(mongoPlayer?.uuid ?? tag);
 
     if (player) {
       player.expiresAt = Date.now() + 300000;
-      player.leaderboardBanned = cachedPlayer?.leaderboardBanned ?? false;
-      player.resetMinute = cachedPlayer?.resetMinute;
+      player.leaderboardBanned = mongoPlayer?.leaderboardBanned ?? false;
+      player.resetMinute = mongoPlayer?.resetMinute;
 
-      this.saveOne(player);
+      const flatPlayer = flatten(player);
 
-      return this.deserialize(player);
-    } else if (cachedPlayer) {
-      const redisDoc = await this.leaderboardService.getLeaderboardDocument(
-        Player,
-        cachedPlayer.shortUuid,
-        redisSelector
-      );
+      this.saveOne(flatPlayer);
 
-      return this.mergeDocuments(cachedPlayer, redisDoc, !selector);
+      return deserialize(Player, flatPlayer);
+    } else if (mongoPlayer) {
+      return this.resolveCachedDocument(mongoPlayer, selector);
     }
 
     return null;
@@ -170,6 +141,8 @@ export class PlayerService {
         uuid: true,
         displayName: true,
         oneTimeAchievements: true,
+        //TODO(jacobk999)
+        //@ts-ignore fix this later
         tieredAchievements: true,
         goldAchievements: true,
         expiresAt: true,
@@ -193,65 +166,91 @@ export class PlayerService {
    * @description Deletes a player from mongo and redis
    */
   public async deleteOne(tag: string) {
-    const player = await this.playerModel
-      .findOneAndDelete()
-      .where(tag.length > 16 ? 'uuid' : 'usernameToLower')
-      .equals(tag.replace(/-/g, '').toLowerCase())
-      .lean()
-      .exec();
+    const player = await this.findMongoDocument(tag, {});
 
     if (!player) return null;
 
+    //Remove all sorted sets the player is in
     await this.leaderboardService.addLeaderboards(
       Player,
       player,
       'shortUuid',
-      this.leaderboardService.getLeaderboardFields(Player),
+      LeaderboardScanner.getLeaderboardFields(Player),
       true
     );
 
     return true;
   }
 
-  public serialize(instance: Player) {
-    return serialize(Player, instance);
+  private async findMongoDocument(
+    tag: string,
+    selector: Selector<Player> = {}
+  ): Promise<Flatten<Player> | null> {
+    const type = tag.length > 16 ? 'uuid' : 'usernameToLower';
+
+    const mongoPlayer: Player | null = await this.playerModel
+      .findOne()
+      .where(type)
+      .equals(tag.replace(/-/g, '').toLowerCase())
+      .select(selector)
+      .lean()
+      .exec();
+
+    if (!mongoPlayer) return null;
+
+    mongoPlayer.cached = true;
+
+    return flatten(mongoPlayer);
   }
 
-  public deserialize(data: Player) {
-    return deserialize(new Player(), data);
-  }
-
-  private async saveOne(player: Player) {
+  private async saveOne(player: Flatten<Player>) {
     player.shortUuid = short(short.constants.cookieBase90).fromUUID(player.uuid);
 
-    const doc = this.serialize(player);
+    //Serialize and flatten the player
+    const serializedPlayer = serialize(Player, player);
 
-    const fields = this.leaderboardService.getLeaderboardFields(Player);
-    const flat = flatten(doc);
+    const fields = LeaderboardScanner.getLeaderboardFields(Player);
 
+    //Remove all leaderboard fields for the mongo document
     fields.forEach((field) => {
-      if (flat[field]) delete flat[field];
+      if (serializedPlayer[field]) delete serializedPlayer[field];
     });
 
-    await this.playerModel.replaceOne({ uuid: player.uuid }, flat, { upsert: true });
+    await this.playerModel.replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true });
 
     await this.leaderboardService.addLeaderboards(
       Player,
-      doc,
+      player,
       'shortUuid',
       fields,
       player.leaderboardBanned ?? false
     );
   }
 
-  private mergeDocuments(mongoDoc: any, redisDoc: Record<string, number>, deserialize = true) {
-    const result = unflatten<Player>({
-      ...redisDoc,
-      ...mongoDoc,
+  private async resolveCachedDocument(mongoPlayer: Flatten<Player>, selector?: Selector<Player>) {
+    let redisSelector: string[] | undefined = undefined;
+
+    //If a selector is provided only query the keys whose values are truthy
+    if (selector) {
+      redisSelector = Object.keys(selector).filter(
+        (key) => selector[key as keyof Selector<Player>]
+      );
+    } else {
+      redisSelector = LeaderboardScanner.getLeaderboardFields(Player);
+    }
+
+    //Only select keys that are not in the mongo document
+    redisSelector = redisSelector.filter((key) => !(key in mongoPlayer));
+
+    const redisPlayer = await this.leaderboardService.getLeaderboardDocument(
+      Player,
+      mongoPlayer.shortUuid,
+      redisSelector as FlattenKeys<Player>[]
+    );
+
+    return deserialize(Player, {
+      ...redisPlayer,
+      ...mongoPlayer,
     });
-
-    if (deserialize) return this.deserialize(result);
-
-    return result;
   }
 }

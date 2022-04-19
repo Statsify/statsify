@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { getLeaderboardField, Guild } from '@statsify/schemas';
-import { flatten } from '@statsify/util';
+import { Guild, LeaderboardScanner } from '@statsify/schemas';
+import { flatten, FlattenKeys } from '@statsify/util';
 import { MongoLeaderboardService } from '../../leaderboards';
 
 @Injectable()
 export class GuildLeaderboardService {
   public constructor(private readonly leaderboardService: MongoLeaderboardService) {}
 
-  public async getLeaderboard(field: string, pageOrName: number | string) {
+  public async getLeaderboard(field: FlattenKeys<Guild>, pageOrName: number | string) {
     let leaderboard: { index: number; data: Record<string, any> }[];
 
-    const options = this.getFieldMetadata(field);
-    const fieldName = options.name;
+    const { name: fieldName } = LeaderboardScanner.getLeaderboardField(Guild, field);
 
     const selector = {
       [field]: true,
@@ -61,7 +60,7 @@ export class GuildLeaderboardService {
     };
   }
 
-  public async getLeaderboardRanking(field: string, name: string) {
+  public async getLeaderboardRanking(field: FlattenKeys<Guild>, name: string) {
     const rank = await this.leaderboardService.getLeaderboardRanking(Guild, field, {
       nameToLower: name.toLowerCase(),
     });
@@ -70,9 +69,5 @@ export class GuildLeaderboardService {
       field,
       rank,
     };
-  }
-
-  public getFieldMetadata(field: string) {
-    return getLeaderboardField(new Guild({}), field);
   }
 }

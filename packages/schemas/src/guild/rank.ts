@@ -1,17 +1,17 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 
 export class GuildRank {
   @Field()
   public name: string;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public tag?: string;
 
   @Field()
   public priority: number;
 
-  @Field({ default: false })
+  @Field({ store: { default: false } })
   public default: boolean;
 
   public constructor(data: APIData) {

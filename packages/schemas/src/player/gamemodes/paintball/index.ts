@@ -1,6 +1,6 @@
 import { ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { PaintballPerks } from './perks';
 
 export class Paintball {
@@ -22,7 +22,7 @@ export class Paintball {
   @Field()
   public shotsFired: number;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public hat: string;
 
   @Field()
@@ -31,7 +31,7 @@ export class Paintball {
   @Field()
   public kdr: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public skr: number;
 
   @Field()

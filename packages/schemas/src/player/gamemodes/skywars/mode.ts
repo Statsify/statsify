@@ -1,9 +1,9 @@
 import { add, ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 
 export class SkyWarsGameModeAverages {
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public kills: number;
 
   public constructor(kills: number, gamesPlayed: number) {
@@ -42,7 +42,7 @@ export class SkyWarsGameMode {
   @Field()
   public averages: SkyWarsGameModeAverages;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public kit?: string;
 
   public constructor(data: APIData, mode: string) {

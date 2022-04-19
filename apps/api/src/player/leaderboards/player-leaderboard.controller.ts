@@ -9,7 +9,6 @@ import {
   PostPlayerLeaderboardResponse,
   PostPlayerRankingsResponse,
 } from '../../responses';
-import { PlayerKeys } from '../player.select';
 import { PlayerLeaderboardService } from './player-leaderboard.service';
 
 @Controller('/player/leaderboards')
@@ -25,10 +24,7 @@ export class PlayerLeaderboardsController {
     @Body() { field, page, uuid }: PlayerLeaderboardDto,
     @Response({ passthrough: true }) res: FastifyReply
   ) {
-    const leaderboard = await this.playerLeaderboardService.getLeaderboard(
-      field as PlayerKeys,
-      uuid ?? page
-    );
+    const leaderboard = await this.playerLeaderboardService.getLeaderboard(field, uuid ?? page);
 
     if (!leaderboard) {
       res.status(400);
@@ -49,6 +45,6 @@ export class PlayerLeaderboardsController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 5 })
   public async getPlayerRankings(@Body() { fields, uuid }: PlayerRankingsDto) {
-    return this.playerLeaderboardService.getLeaderboardRankings(fields as PlayerKeys[], uuid);
+    return this.playerLeaderboardService.getLeaderboardRankings(fields, uuid);
   }
 }

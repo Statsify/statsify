@@ -1,4 +1,4 @@
-import { Field } from './decorators';
+import { Field } from './metadata';
 
 export const games = [
   { name: 'Arcade', code: 'ARCADE', id: 14 },
@@ -49,25 +49,27 @@ export type GameName = typeof games[number]['name'];
 
 export class Game {
   @Field({
-    enum: games.map((g) => g.id),
-    enumName: 'GameId',
-    example: games[0].id,
+    docs: {
+      enum: games.map((g) => g.id),
+      enumName: 'GameId',
+      examples: ['' + games[0].id],
+    },
     type: () => String,
   })
   public id: GameId;
 
   @Field({
-    enum: games.map((g) => g.code),
-    enumName: 'GameCode',
-    example: games[0].code,
+    docs: { enum: games.map((g) => g.code), enumName: 'GameCode', examples: [games[0].code] },
     type: () => String,
   })
   public code: GameCode;
 
   @Field({
-    enum: games.map((g) => g.name),
-    enumName: 'GameName',
-    example: games[0].name,
+    docs: {
+      enum: games.map((g) => g.name),
+      enumName: 'GameName',
+      examples: [games[0].name],
+    },
     type: () => String,
   })
   public name: GameName;
