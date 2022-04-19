@@ -1,6 +1,6 @@
 import { add, deepAdd, ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import {
   EasterSimulator,
   GrinchSimulator,
@@ -80,10 +80,10 @@ export class EnderSpleef {
   @Field()
   public wins: number;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public trail: string;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public powerupActivations: number;
 
   @Field()
@@ -202,7 +202,7 @@ export class HideAndSeek {
   public constructor(data: APIData) {
     this.seeker = new HideAndSeekMode(data, 'seeker');
     this.hider = new HideAndSeekMode(data, 'hider');
-    this.overall = deepAdd(HideAndSeekMode, this.seeker, this.hider);
+    this.overall = deepAdd(this.seeker, this.hider);
   }
 }
 
@@ -245,7 +245,7 @@ export class HypixelSays {
 }
 
 export class MiniWalls {
-  @Field({ default: 'soldier' })
+  @Field({ store: { default: 'soldier' } })
   public kit: string;
 
   @Field()
@@ -401,10 +401,10 @@ export class Zombies {
   @Field()
   public kdr: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public bestRound: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public aliens: number;
 
   @Field()

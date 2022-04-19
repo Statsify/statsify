@@ -1,4 +1,4 @@
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 import { IOneTimeAchievement } from './iachievement';
 
 export class OneTimeAchievement {

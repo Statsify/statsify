@@ -1,5 +1,5 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { GeneralUtil } from './util';
 
 export class General {
@@ -18,7 +18,7 @@ export class General {
   @Field()
   public networkExp: number;
 
-  @Field({ leaderboard: false, default: 1 })
+  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public networkLevel: number;
 
   @Field()

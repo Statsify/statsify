@@ -1,6 +1,6 @@
 import { deepAdd } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { ArenaBrawlMode } from './mode';
 
 export class ArenaBrawl {
@@ -19,19 +19,19 @@ export class ArenaBrawl {
   @Field()
   public magicalChests: number;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public offensive: string;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public utility: string;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public ultimate: string;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public support: string;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public rune: string;
 
   @Field()
@@ -44,7 +44,7 @@ export class ArenaBrawl {
     this.solo = new ArenaBrawlMode(data, '1v1');
     this.doubles = new ArenaBrawlMode(data, '2v2');
     this.fours = new ArenaBrawlMode(data, '4v4');
-    this.overall = deepAdd(ArenaBrawlMode, this.solo, this.doubles, this.fours);
+    this.overall = deepAdd(this.solo, this.doubles, this.fours);
 
     ArenaBrawlMode.applyRatios(this.overall);
 

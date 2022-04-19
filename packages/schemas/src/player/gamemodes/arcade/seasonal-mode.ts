@@ -1,5 +1,5 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 
 export class EasterSimulator {
   @Field()

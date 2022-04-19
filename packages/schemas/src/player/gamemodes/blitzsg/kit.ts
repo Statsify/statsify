@@ -1,18 +1,18 @@
 import { add, ratio, sub } from '@statsify/math';
 import { APIData, findScoreIndex } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 
 export class BlitzSGKit {
   @Field()
   public gamesPlayed: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public level: number;
 
   @Field()
   public exp: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public prestige: number;
 
   @Field()
@@ -33,7 +33,7 @@ export class BlitzSGKit {
   @Field()
   public wlr: number;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public playTime?: number;
 
   public constructor(data: APIData, kit: string) {

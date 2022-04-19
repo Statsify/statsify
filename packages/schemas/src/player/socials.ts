@@ -1,22 +1,22 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 
 export class PlayerSocials {
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public discord?: string;
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public forums?: string;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public instagram?: string;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public twitch?: string;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public twitter?: string;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public youtube?: string;
 
   public constructor(data: APIData) {

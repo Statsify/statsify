@@ -1,23 +1,23 @@
-import { Constructor, flatten } from '@statsify/util';
+import { Constructor, flatten, FlattenKeys } from '@statsify/util';
 import { getModelForClass } from '@typegoose/typegoose';
 
 export class MongoLeaderboardService {
   public async getLeaderboard<T>(
     constructor: Constructor<T>,
-    field: string,
+    field: FlattenKeys<T>,
     selector: Record<string, boolean>,
     filter: Record<string, any>
   ): Promise<{ data: Record<string, any>; index: number }[] | null>;
   public async getLeaderboard<T>(
     constructor: Constructor<T>,
-    field: string,
+    field: FlattenKeys<T>,
     selector: Record<string, boolean>,
     top: number,
     bottom: number
   ): Promise<{ data: Record<string, any>; index: number }[]>;
   public async getLeaderboard<T>(
     constructor: Constructor<T>,
-    field: string,
+    field: FlattenKeys<T>,
     selector: Record<string, boolean>,
     topOrFilter: number | Record<string, any>,
     bottom?: number
@@ -27,12 +27,12 @@ export class MongoLeaderboardService {
     if (typeof topOrFilter === 'object') {
       const filter = topOrFilter;
 
-      const item = await model.findOne(filter).select(selector).lean().exec();
+      const item = (await model.findOne(filter).select(selector).lean().exec()) as T;
 
       if (!item) return null;
 
       const flatItem = flatten(item);
-      const value = flatItem[field];
+      const value = flatItem[field] as number;
 
       if (!value) return null;
 
@@ -41,7 +41,7 @@ export class MongoLeaderboardService {
       const [higherData, ranking] = await Promise.all([
         model
           .find()
-          .where(field)
+          .where(field as string)
           .gte(value)
           .select(selector)
           .sort({ [field]: -1 })
@@ -61,7 +61,7 @@ export class MongoLeaderboardService {
 
       const lower = await model
         .find()
-        .where(field)
+        .where(field as string)
         .lt(value)
         .select(selector)
         .sort({ [field]: -1 })
@@ -93,17 +93,17 @@ export class MongoLeaderboardService {
 
   public async getLeaderboardRanking<T>(
     constructor: Constructor<T>,
-    field: string,
+    field: FlattenKeys<T>,
     filter: Record<string, any>
   ): Promise<number | null>;
   public async getLeaderboardRanking<T>(
     constructor: Constructor<T>,
-    field: string,
+    field: FlattenKeys<T>,
     value: number
   ): Promise<number | null>;
   public async getLeaderboardRanking<T>(
     constructor: Constructor<T>,
-    field: string,
+    field: FlattenKeys<T>,
     valueOrFilter: number | Record<string, any>
   ): Promise<number | null> {
     const model = getModelForClass(constructor);
@@ -113,19 +113,24 @@ export class MongoLeaderboardService {
     if (typeof valueOrFilter === 'object') {
       const filter = valueOrFilter;
 
-      const item = await model
+      const item = (await model
         .findOne(filter)
         .select({ [field]: true })
         .lean()
-        .exec();
+        .exec()) as T;
 
       if (!item) return null;
 
-      value = flatten(item)[field];
+      value = flatten(item)[field] as number;
     } else {
       value = valueOrFilter;
     }
 
-    return model.countDocuments().where(field).gte(value).lean().exec();
+    return model
+      .countDocuments()
+      .where(field as string)
+      .gte(value)
+      .lean()
+      .exec();
   }
 }

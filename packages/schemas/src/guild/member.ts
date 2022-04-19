@@ -1,5 +1,5 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 
 export class GuildMember {
   @Field()
@@ -20,10 +20,10 @@ export class GuildMember {
   @Field()
   public questParticipation: number;
 
-  @Field(() => [Number])
+  @Field({ type: () => [Number] })
   public expHistory: number[];
 
-  @Field(() => [String])
+  @Field({ type: () => [String] })
   public expHistoryDays: string[];
 
   @Field()
@@ -32,7 +32,7 @@ export class GuildMember {
   @Field()
   public monthly: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public expiresAt: number;
 
   public constructor(data: APIData) {

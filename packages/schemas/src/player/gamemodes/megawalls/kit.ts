@@ -1,6 +1,6 @@
 import { ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 
 export class MegaWallsKit {
   @Field()
@@ -30,16 +30,16 @@ export class MegaWallsKit {
   @Field()
   public fkdr: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public assists: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public timePlayed: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public witherDamage: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public witherKills: number;
 
   public constructor(data: APIData, kit: string) {

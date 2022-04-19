@@ -1,7 +1,7 @@
 import { APIData } from '@statsify/util';
 import { modelOptions as ModelOptions, Severity } from '@typegoose/typegoose';
 import { Color } from '../color';
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 import { PlayerSocials } from './socials';
 import { PlayerStats } from './stats';
 import { PlayerStatus } from './status';
@@ -9,33 +9,37 @@ import { PlayerUtil } from './util';
 
 @ModelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class Player {
-  @Field({ unique: true, index: true, required: true })
+  @Field({ mongo: { unique: true, index: true }, store: { required: true } })
   public uuid: string;
 
-  @Field({ unique: true, index: true, required: true })
+  @Field({ mongo: { unique: true, index: true }, store: { required: true } })
   public shortUuid: string;
 
   @Field()
   public username: string;
 
-  @Field({ index: true, lowercase: true, required: true })
+  @Field({ mongo: { index: true, lowercase: true }, store: { required: true } })
   public usernameToLower: string;
 
-  @Field({ default: 'DEFAULT' })
+  @Field({ store: { default: 'DEFAULT' } })
   public rank: string;
 
   @Field()
   public plusColor: Color;
 
   @Field({
-    description: "The player's name with their rank color as seen in game lobbies",
-    example: '§bj4cobi',
+    docs: {
+      description: "The player's name with their rank color as seen in game lobbies",
+      examples: ['§bj4cobi'],
+    },
   })
   public prefixName: string;
 
   @Field({
-    description: "The player's name with their formatted rank",
-    example: '§b[MVP§c+] j4cobi',
+    docs: {
+      description: "The player's name with their formatted rank",
+      examples: ['§b[MVP§c+] j4cobi'],
+    },
   })
   public displayName: string;
 
@@ -51,26 +55,29 @@ export class Player {
   @Field({ type: () => [String] })
   public oneTimeAchievements: string[];
 
-  @Field({ leaderboard: false, skipSerialization: true })
+  @Field({ leaderboard: { enabled: false }, store: { serialize: false } })
   public tieredAchievements: Record<string, number>;
 
   @Field()
   public goldAchievements: boolean;
 
-  @Field({ leaderboard: false, description: "The time the player's cache expires " })
+  @Field({
+    leaderboard: { enabled: false },
+    docs: { description: "The time the player's cache expires" },
+  })
   public expiresAt: number;
 
   @Field({
-    leaderboard: false,
-    required: false,
-    description: "The time the player's historical stats reset",
+    leaderboard: { enabled: false },
+    store: { required: false },
+    docs: { description: "The time the player's historical stats reset" },
   })
   public resetMinute?: number;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public leaderboardBanned?: boolean;
 
-  @Field({ required: false, store: false })
+  @Field({ store: { required: false, store: false } })
   public cached?: boolean;
 
   public constructor(data: APIData = {}) {

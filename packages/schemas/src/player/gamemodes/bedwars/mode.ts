@@ -1,15 +1,15 @@
 import { deepAdd, ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 
 export class BedWarsModeAverages {
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public kills: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public finalKills: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public bedsBroken: number;
 
   public constructor(kills: number, finalKills: number, bedsBroken: number, gamesPlayed: number) {
@@ -82,7 +82,7 @@ export class BedWarsMode {
   @Field()
   public bblr: number;
 
-  @Field({ description: 'Average stat per gamesPlayed' })
+  @Field({ docs: { description: 'Average stat per gamesPlayed' } })
   public averages: BedWarsModeAverages;
 
   @Field()
@@ -135,7 +135,7 @@ export class DreamsBedWarsMode {
   public constructor(data: APIData, mode: string) {
     this.doubles = new BedWarsMode(data, `eight_two_${mode}`);
     this.fours = new BedWarsMode(data, `four_four_${mode}`);
-    this.overall = deepAdd(BedWarsMode, this.doubles, this.fours);
+    this.overall = deepAdd(this.doubles, this.fours);
     BedWarsMode.applyRatios(this.overall);
   }
 }

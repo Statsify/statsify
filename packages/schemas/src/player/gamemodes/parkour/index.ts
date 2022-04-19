@@ -1,58 +1,58 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 
 export class Parkour {
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public arcade: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public bedwars: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public blitzsg: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public buildbattle: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public classic: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public copsandcrims: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public duels: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public housing: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public mainLobby: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public megawalls: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public murdermystery: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public proto: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public skywars: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public smashheroes: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public tntgames: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public tourney: number;
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public uhc: number;
 
-  @Field({ sort: 'ASC' })
+  @Field({ leaderboard: { sort: 'ASC' } })
   public warlords: number;
 
   public constructor(data: APIData) {

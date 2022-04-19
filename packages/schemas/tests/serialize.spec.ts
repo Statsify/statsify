@@ -1,6 +1,7 @@
-import { serialize } from '../src';
-import { Field } from '../src/decorators';
+import { flatten } from '@statsify/util';
+import { Field, serialize } from '../src/metadata';
 
+//TODO write better tests for this
 describe('serialize', () => {
   class TesterB {
     @Field()
@@ -14,29 +15,25 @@ describe('serialize', () => {
     @Field()
     public field2: number;
 
-    @Field({ leaderboard: false })
+    @Field({ leaderboard: { enabled: false } })
     public field3: number;
 
-    @Field({ getter: () => 2 })
+    @Field({ store: { store: false } })
     public field4: number;
 
-    @Field({ store: false })
-    public field5: number;
-
     @Field()
-    public field6: TesterB;
+    public field5: TesterB;
 
     public constructor() {
       this.field1 = 'field1';
       this.field2 = 0;
       this.field3 = 3;
-      this.field5 = 5;
-      this.field6 = new TesterB();
+      this.field5 = new TesterB();
     }
   }
 
   it('should correctly remove fields', () => {
-    const result = serialize(Tester, new Tester());
+    const result = serialize(Tester, flatten(new Tester()));
 
     expect(result).toEqual({
       field1: 'field1',

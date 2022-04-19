@@ -1,6 +1,6 @@
 import { deepAdd } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { UHCMode } from './mode';
 import { getLevelIndex, titleScores } from './util';
 
@@ -17,7 +17,7 @@ export class UHC {
   @Field()
   public coins: number;
 
-  @Field({ getter: (target: UHC) => getLevelIndex(target.score) + 1 })
+  @Field()
   public level: number;
 
   @Field()
@@ -26,12 +26,10 @@ export class UHC {
   @Field()
   public score: number;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public kit: string;
 
-  @Field({
-    getter: (target: UHC) => titleScores[getLevelIndex(target.score)].title,
-  })
+  @Field()
   public title: string;
 
   public constructor(data: APIData) {
@@ -40,13 +38,16 @@ export class UHC {
 
     this.kit = data.equippedKit ?? 'none';
 
-    this.levelFormatted = `§6[${getLevelIndex(this.score) + 1}✫]`;
+    const index = getLevelIndex(this.score);
+
+    this.level = index + 1;
+    this.levelFormatted = `§6[${this.level}✫]`;
+    this.title = titleScores[index].title;
 
     this.solo = new UHCMode(data, 'solo');
     this.teams = new UHCMode(data, '');
 
     this.overall = deepAdd(
-      UHCMode,
       this.solo,
       this.teams,
       new UHCMode(data, 'no diamonds'),

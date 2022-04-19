@@ -1,6 +1,6 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
 import { Game } from '../game';
+import { Field } from '../metadata';
 
 export class Status {
   @Field()
@@ -9,10 +9,10 @@ export class Status {
   @Field()
   public game: Game;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public mode?: string;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public map?: string;
 
   public constructor(data: APIData) {

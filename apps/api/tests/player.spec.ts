@@ -1,7 +1,8 @@
 import { ValidationPipe } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { Friends, Player, RankedSkyWars, Status } from '@statsify/schemas';
+import { deserialize, Friends, Player, RankedSkyWars, Status } from '@statsify/schemas';
+import { flatten } from '@statsify/util';
 import { PlayerController } from '../src/player';
 import { useMocker } from './mocks';
 import { testKey, testUsername, testUuid } from './test.constants';
@@ -35,10 +36,9 @@ describe('Player', () => {
 
     expect(result.statusCode).toEqual(200);
 
-    expect(result.json()).toEqual({
-      success: true,
-      player: new Player(),
-    });
+    const response = result.json();
+
+    expect(response.success).toBe(true);
   });
 
   it(`/GET player?player=uuid`, async () => {
@@ -52,10 +52,9 @@ describe('Player', () => {
 
     expect(result.statusCode).toEqual(200);
 
-    expect(result.json()).toEqual({
-      success: true,
-      player: new Player(),
-    });
+    const response = result.json();
+
+    expect(response.success).toBe(true);
   });
 
   it(`/GET player/recentgames?uuid=username`, async () => {

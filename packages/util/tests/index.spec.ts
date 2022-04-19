@@ -89,17 +89,19 @@ describe('removeFormatting', () => {
 
 describe('flatten', () => {
   it('should flatten objects', () => {
+    expect(flatten({ a: 1 })).toMatchObject({ a: 1 });
     expect(flatten({ a: { b: { c: 1 } } })).toMatchObject({ 'a.b.c': 1 });
     expect(flatten({ a: { b: { c: 1, d: 2 } } })).toMatchObject({ 'a.b.c': 1, 'a.b.d': 2 });
-    expect(flatten({ a: [{ b: { c: 1 } }] })).toMatchObject({ 'a.0.b.c': 1 });
+    expect(flatten({ a: [{ b: { c: 1 } }] })).toMatchObject({ a: [{ b: { c: 1 } }] });
   });
 });
 
 describe('unflatten', () => {
   it('should unflatten objects', () => {
+    expect(unflatten({ a: 1 })).toMatchObject({ a: 1 });
     expect(unflatten({ 'a.b.c': 1 })).toMatchObject({ a: { b: { c: 1 } } });
     expect(unflatten({ 'a.b.c': 1, 'a.b.d': 2 })).toMatchObject({ a: { b: { c: 1, d: 2 } } });
-    expect(unflatten({ a: 1 })).toMatchObject({ a: 1 });
+    expect(unflatten({ a: [{ b: { c: 1 } }] })).toMatchObject({ a: [{ b: { c: 1 } }] });
   });
 });
 

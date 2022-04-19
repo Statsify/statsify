@@ -1,11 +1,11 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 
 export class Friend {
   @Field()
   public uuid: string;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public displayName?: string;
 
   @Field()

@@ -1,7 +1,7 @@
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
-import { getLeaderboardFields } from '@statsify/schemas';
-import { Constructor, flatten, mockClass } from '@statsify/util';
+import { LeaderboardScanner } from '@statsify/schemas';
+import { Constructor, Flatten, FlattenKeys } from '@statsify/util';
 
 @Injectable()
 export class LeaderboardService {
@@ -9,26 +9,27 @@ export class LeaderboardService {
 
   public addLeaderboards<T>(
     constructor: Constructor<T>,
-    instance: T,
-    idField: keyof T,
-    fields: string[] = this.getLeaderboardFields(constructor),
+    instance: Flatten<T>,
+    idField: FlattenKeys<T>,
+    fields: FlattenKeys<T>[] = LeaderboardScanner.getLeaderboardFields(
+      constructor
+    ) as FlattenKeys<T>[],
     remove = false
   ) {
     const pipeline = this.redis.pipeline();
     const name = constructor.name.toLowerCase();
-    const flatInstance = flatten(instance);
 
     const id = instance[idField] as unknown as string;
 
     fields
-      .filter((field) => remove || (flatInstance[field] && typeof flatInstance[field] === 'number'))
+      .filter((field) => remove || (instance[field] && typeof instance[field] === 'number'))
       .forEach((field) => {
-        const value = flatInstance[field];
+        const value = instance[field];
 
         if (remove || value === 0 || Number.isNaN(value)) {
           pipeline.zrem(`${name}.${field}`, id);
         } else {
-          pipeline.zadd(`${name}.${field}`, value, id);
+          pipeline.zadd(`${name}.${field}`, value as string, id);
         }
       });
 
@@ -65,14 +66,12 @@ export class LeaderboardService {
   public async getLeaderboardDocument<T>(
     constructor: Constructor<T>,
     id: string,
-    selector?: string[]
+    selector?: FlattenKeys<T>[]
   ) {
     const pipeline = this.redis.pipeline();
     const name = constructor.name.toLowerCase();
 
-    if (!selector) {
-      selector = this.getLeaderboardFields(constructor);
-    }
+    if (!selector) selector = LeaderboardScanner.getLeaderboardFields(constructor);
 
     selector.forEach((field) => {
       pipeline.zscore(`${name}.${field}`, id);
@@ -87,16 +86,12 @@ export class LeaderboardService {
       const score = scores[i][1];
 
       if (score !== null) {
-        response[field] = Number(score);
+        response[field as string] = Number(score);
       } else {
-        response[field] = 0;
+        response[field as string] = 0;
       }
     }
 
     return response;
-  }
-
-  public getLeaderboardFields<T>(constructor: Constructor<T>) {
-    return getLeaderboardFields(mockClass(constructor));
   }
 }

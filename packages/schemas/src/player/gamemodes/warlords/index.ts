@@ -1,6 +1,6 @@
 import { add, ratio, sub } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { WarlordsClass } from './class';
 
 export class Warlords {
@@ -16,7 +16,7 @@ export class Warlords {
   @Field()
   public shaman: WarlordsClass;
 
-  @Field({ default: 'warrior' })
+  @Field({ store: { default: 'warrior' } })
   public class: string;
 
   @Field()

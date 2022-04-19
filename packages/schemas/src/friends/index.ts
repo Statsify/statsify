@@ -1,18 +1,18 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 import { Friend } from './friend';
 
 export class Friends {
-  @Field({ index: true, unique: true, required: true })
+  @Field({ mongo: { index: true, unique: true }, store: { required: true } })
   public uuid: string;
 
-  @Field(() => [Friend])
+  @Field({ type: () => [Friend] })
   public friends: Friend[];
 
   @Field()
   public length: number;
 
-  @Field({ store: false })
+  @Field({ store: { store: false } })
   public displayName: string;
 
   public constructor(data: APIData) {

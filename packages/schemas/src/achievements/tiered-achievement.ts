@@ -1,4 +1,4 @@
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 import { ITieredAchievement, ITieredAchievementTier } from './iachievement';
 
 class TieredAchievementTier {
@@ -29,10 +29,10 @@ export class TieredAchievement {
   @Field()
   public description: string;
 
-  @Field({ description: "The current tier's points" })
+  @Field({ docs: { description: "The current tier's points" } })
   public points: number;
 
-  @Field({ description: 'Total unlocked points' })
+  @Field({ docs: { description: 'Total unlocked points' } })
   public unlockedPoints: number;
 
   @Field({ type: () => [TieredAchievementTier] })

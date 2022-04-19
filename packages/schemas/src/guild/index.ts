@@ -1,7 +1,7 @@
 import { APIData } from '@statsify/util';
 import { Color } from '../color';
-import { Field } from '../decorators';
 import { GameCode } from '../game';
+import { Field } from '../metadata';
 import { Achievements } from './achievements';
 import { ExpByGame } from './expbygame';
 import { GuildMember } from './member';
@@ -9,13 +9,13 @@ import { GuildRank } from './rank';
 import { getLevel } from './util';
 
 export class Guild {
-  @Field({ index: true, unique: true, required: true })
+  @Field({ mongo: { index: true, unique: true }, store: { required: true } })
   public id: string;
 
   @Field()
   public name: string;
 
-  @Field({ index: true, lowercase: true, required: true })
+  @Field({ mongo: { index: true, lowercase: true }, store: { required: true } })
   public nameToLower: string;
 
   @Field()
@@ -24,25 +24,25 @@ export class Guild {
   @Field()
   public exp: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public level: number;
 
-  @Field({ getter: (target: Guild) => getLevel(target.exp).nextLevelExp })
+  @Field({ leaderboard: { enabled: false } })
   public nextLevelExp: number;
 
-  @Field(() => [GuildMember])
+  @Field({ type: () => [GuildMember] })
   public members: GuildMember[];
 
-  @Field(() => [GuildRank])
+  @Field({ type: () => [GuildRank] })
   public ranks: GuildRank[];
 
   @Field()
   public achievements: Achievements;
 
-  @Field(() => [String])
+  @Field({ type: () => [String] })
   public preferredGames: GameCode[];
 
-  @Field({ default: true })
+  @Field({ store: { default: true } })
   public publiclyListed: boolean;
 
   @Field()
@@ -51,22 +51,19 @@ export class Guild {
   @Field()
   public tagColor: Color;
 
-  @Field({
-    getter: (target: Guild) =>
-      target.tag ? `${target.tagColor}[${target.tag}${target.tagColor}]` : '',
-  })
+  @Field()
   public tagFormatted: string;
 
   @Field()
   public expByGame: ExpByGame;
 
-  @Field(() => [Number])
+  @Field({ type: () => [Number] })
   public expHistory: number[];
 
-  @Field(() => [String])
+  @Field({ type: () => [String] })
   public expHistoryDays: string[];
 
-  @Field(() => [Number])
+  @Field({ type: () => [Number] })
   public scaledExpHistory: number[];
 
   @Field()
@@ -81,10 +78,10 @@ export class Guild {
   @Field()
   public scaledMonthly: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public expiresAt: number;
 
-  @Field({ store: false })
+  @Field({ store: { store: false } })
   public cached?: boolean;
 
   public constructor(data: APIData = {}) {
@@ -94,8 +91,10 @@ export class Guild {
 
     this.tag = data.tag;
     this.tagColor = new Color(data.tagColor ?? 'GRAY');
+    this.tagFormatted = this.tag ? `${this.tagColor}[${this.tag}${this.tagColor}]` : '';
+
     this.nameFormatted = `${this.tagColor}${this.name}${
-      this.tag ? ` ${this.tagColor}[${this.tag}${this.tagColor}]` : ''
+      this.tagFormatted ? ` ${this.tagFormatted}` : ''
     }`;
 
     this.achievements = new Achievements(data.achievements ?? {});
@@ -103,7 +102,11 @@ export class Guild {
     this.publiclyListed = data.publiclyListed;
 
     this.exp = data.exp;
-    this.level = getLevel(this.exp).level;
+
+    const { level, nextLevelExp } = getLevel(this.exp);
+
+    this.level = level;
+    this.nextLevelExp = nextLevelExp;
     this.expByGame = new ExpByGame(data.guildExpByGameType ?? {});
 
     this.weekly = 0;

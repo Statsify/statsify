@@ -106,63 +106,10 @@ export const removeFormatting = (s: string): string => s.replace(/§./g, '');
 
 /**
  *
- * @param data The object to be flattened
- * @param prefix The prefix to be added to the keys
- * @param dest The object to be flattened into
- * @returns The flattened object
- * @example ```ts
- * flatten({ a: { b: 1, c: 2 }, d: 3 }); // { 'a.b': 1, 'a.c': 2, 'd': 3 }
- * ```
- */
-export const flatten = <T>(data: T, prefix = '', dest: APIData = {}): APIData => {
-  if (isObject(data)) {
-    Object.keys(data ?? {}).forEach((key) => {
-      const tmpPrefix = prefix.length > 0 ? prefix + '.' + key : prefix + key;
-      flatten(data[key as keyof T], tmpPrefix, dest);
-    });
-  } else if (Array.isArray(data)) {
-    data.forEach((item, i) => {
-      const tmpPrefix = prefix.length > 0 ? prefix + '.' + i : prefix + i;
-      flatten(item, tmpPrefix, dest);
-    });
-  } else {
-    dest[prefix] = data;
-  }
-
-  return dest;
-};
-
-/**
- *
- * @param data The object to be unflattened
- * @example ```ts
- * unflatten({ 'stats.bedwars.wins': 1 }); // { stats: { bedwars: { wins: 1 } } }
- * ```
- */
-export const unflatten = <T>(obj: APIData): T => {
-  const tmp: APIData = {};
-  Object.keys(obj).forEach((k) => {
-    if (k.includes('.')) {
-      const path = k.split('.');
-      const x = path.pop();
-      const body = path.reduce((cur, p) => {
-        if (!(p in cur)) cur[p] = {};
-        return cur[p];
-      }, tmp);
-
-      body[x ?? ''] = obj[k];
-    } else {
-      tmp[k] = obj[k];
-    }
-  });
-
-  return tmp as T;
-};
-
-/**
- *
  * @param constructor
  * @returns An instance of the class using objects as arguments
  */
 export const mockClass = <T>(constructor: Constructor<T>): T =>
   new constructor(...Array.from({ length: constructor.length }).fill({}));
+
+export * from './flat';
