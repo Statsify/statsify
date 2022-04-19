@@ -2893,7 +2893,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commitizen@npm:^4.0.3":
+"commitizen@npm:^4.0.3, commitizen@npm:^4.2.4":
   version: 4.2.4
   resolution: "commitizen@npm:4.2.4"
   dependencies:
@@ -7659,6 +7659,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.19.0
     "@typescript-eslint/parser": ^5.19.0
     chokidar: ^3.5.3
+    commitizen: ^4.2.4
     cz-conventional-changelog: ^3.3.0
     eslint: ^8.13.0
     eslint-config-prettier: ^8.5.0
