@@ -1,25 +1,25 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 
 export class PaintballPerks {
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public adrenaline: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public endurance: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public fortune: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public godfather: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public headstart: number;
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public superluck: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public transfusion: number;
 
   public constructor(data: APIData) {

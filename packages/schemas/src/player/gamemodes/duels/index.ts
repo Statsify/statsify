@@ -1,5 +1,5 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { BridgeDuels, MultiDuelsGameMode, SingleDuelsGameMode, UHCDuels } from './mode';
 
 export class Duels {

@@ -1,7 +1,7 @@
 import { deepAdd, ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Color } from '../../../color';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { getTitle } from './util';
 export class BaseDuelsGameMode {
   @Field()
@@ -95,14 +95,10 @@ export class BridgeDuelsMode extends BaseDuelsGameMode {
 }
 
 export class BridgeDuels {
-  @Field({
-    getter: (target: BridgeDuels) => getTitle(target.overall.wins, 'Bridge').raw,
-  })
+  @Field()
   public title: string;
 
-  @Field({
-    getter: (target: BridgeDuels) => getTitle(target.overall.wins, 'Bridge').color,
-  })
+  @Field()
   public titleColor: Color;
 
   @Field()
@@ -142,7 +138,6 @@ export class BridgeDuels {
     this.ctf = new BridgeDuelsMode(data, 'capture_threes');
 
     this.overall = deepAdd(
-      BridgeDuelsMode,
       this.solo,
       this.doubles,
       this.threes,
@@ -155,23 +150,23 @@ export class BridgeDuels {
     this.overall.winstreak = data.current_bridge_winstreak;
     this.overall.bestWinstreak = data.best_bridge_winstreak;
 
-    this.titleFormatted = getTitle(this.overall.wins, 'Bridge').formatted;
-
     BaseDuelsGameMode.applyRatios(this.overall);
+
+    const { formatted, color, raw } = getTitle(this.overall.wins, 'Bridge');
+
+    this.title = raw;
+    this.titleColor = color;
+    this.titleFormatted = formatted;
   }
 }
 export class MultiDuelsGameMode {
-  @Field({ store: false })
+  @Field({ store: { store: false } })
   public titlePrefix: string;
 
-  @Field({
-    getter: (target: MultiDuelsGameMode) => getTitle(target.overall.wins, target.titlePrefix).raw,
-  })
+  @Field()
   public title: string;
 
-  @Field({
-    getter: (target: MultiDuelsGameMode) => getTitle(target.overall.wins, target.titlePrefix).color,
-  })
+  @Field()
   public titleColor: Color;
 
   @Field()
@@ -190,29 +185,29 @@ export class MultiDuelsGameMode {
     this.solo = new BaseDuelsGameMode(data, `${short}_duel`);
     this.doubles = new BaseDuelsGameMode(data, `${short}_doubles`);
 
-    this.overall = deepAdd(BaseDuelsGameMode, this.solo, this.doubles);
+    this.overall = deepAdd(this.solo, this.doubles);
     BaseDuelsGameMode.applyRatios(this.overall);
     this.overall.bestWinstreak = data[`best_${long}_winstreak`];
     this.overall.winstreak = data[`current_${long}_winstreak`];
 
     this.titlePrefix = title;
 
-    this.titleFormatted = getTitle(this.overall.wins, this.titlePrefix).formatted;
+    const { formatted, color, raw } = getTitle(this.overall.wins, this.titlePrefix);
+
+    this.title = raw;
+    this.titleColor = color;
+    this.titleFormatted = formatted;
   }
 }
 
 export class SingleDuelsGameMode extends BaseDuelsGameMode {
-  @Field({ store: false })
+  @Field({ store: { store: false } })
   public titlePrefix: string;
 
-  @Field({
-    getter: (target: SingleDuelsGameMode) => getTitle(target.wins, target.titlePrefix).raw,
-  })
+  @Field()
   public title: string;
 
-  @Field({
-    getter: (target: SingleDuelsGameMode) => getTitle(target.wins, target.titlePrefix).color,
-  })
+  @Field()
   public titleColor: Color;
 
   @Field()
@@ -221,7 +216,12 @@ export class SingleDuelsGameMode extends BaseDuelsGameMode {
   public constructor(data: APIData, title: string, mode: string) {
     super(data, mode);
     this.titlePrefix = title;
-    this.titleFormatted = getTitle(this.wins, this.titlePrefix).formatted;
+
+    const { formatted, color, raw } = getTitle(this.wins, this.titlePrefix);
+
+    this.title = raw;
+    this.titleColor = color;
+    this.titleFormatted = formatted;
   }
 }
 
@@ -237,14 +237,10 @@ export class UHCDuelsMode extends BaseDuelsGameMode {
 }
 
 export class UHCDuels {
-  @Field({
-    getter: (target: UHCDuels) => getTitle(target.overall.wins, 'UHC').raw,
-  })
+  @Field()
   public title: string;
 
-  @Field({
-    getter: (target: UHCDuels) => getTitle(target.overall.wins, 'UHC').color,
-  })
+  @Field()
   public titleColor: Color;
 
   @Field()
@@ -271,13 +267,17 @@ export class UHCDuels {
     this.fours = new UHCDuelsMode(data, 'uhc_four');
     this.deathmatch = new UHCDuelsMode(data, 'uhc_meetup');
 
-    this.overall = deepAdd(UHCDuelsMode, this.solo, this.doubles, this.fours, this.deathmatch);
+    this.overall = deepAdd(this.solo, this.doubles, this.fours, this.deathmatch);
 
     this.overall.winstreak = data.current_uhc_winstreak;
     this.overall.bestWinstreak = data.best_uhc_winstreak;
 
-    this.titleFormatted = getTitle(this.overall.wins, 'UHC').formatted;
-
     BaseDuelsGameMode.applyRatios(this.overall);
+
+    const { formatted, color, raw } = getTitle(this.overall.wins, 'UHC');
+
+    this.title = raw;
+    this.titleColor = color;
+    this.titleFormatted = formatted;
   }
 }

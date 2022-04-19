@@ -1,6 +1,6 @@
 import { deepAdd } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 import { WatchdogMode } from './mode';
 
 export class Watchdog {
@@ -16,6 +16,6 @@ export class Watchdog {
   public constructor(data: APIData) {
     this.watchdog = new WatchdogMode(data, 'watchdog');
     this.staff = new WatchdogMode(data, 'staff');
-    this.overall = deepAdd(WatchdogMode, this.watchdog, this.staff);
+    this.overall = deepAdd(this.watchdog, this.staff);
   }
 }

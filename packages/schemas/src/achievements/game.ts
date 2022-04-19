@@ -1,5 +1,5 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 import { IOneTimeAchievement, ITieredAchievement } from './iachievement';
 import { OneTimeAchievement } from './one-time-achievement';
 import { TieredAchievement } from './tiered-achievement';

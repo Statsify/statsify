@@ -1,4 +1,4 @@
-import { Constructor, getConstructor, isObject } from '@statsify/util';
+import { isObject } from '@statsify/util';
 
 /**
  *
@@ -25,23 +25,16 @@ export const sub = (...args: number[]): number => args.reduce((a, b) => (a ?? 0)
  * @param args An array of instances of the constructor
  * @returns A new instance of the constructor with all non object values manipulated by the `fn` function
  */
-const deep = <T>(
-  fn: (...args: number[]) => unknown,
-  constructor: Constructor<T>,
-  ...args: T[]
-): T => {
+const deep = <T>(fn: (...args: number[]) => unknown, ...args: T[]): T => {
   const obj: Record<string, unknown> = {};
 
   for (const key in args[0]) {
     if (isObject(args[0][key])) {
-      const constructor = getConstructor(args[0][key]);
-      obj[key] = deep(fn, constructor, ...args.map((a) => a[key]));
+      obj[key] = deep(fn, ...args.map((a) => a[key]));
     } else {
       obj[key] = fn(...args.map((a) => a[key] as unknown as number));
     }
   }
-
-  Object.setPrototypeOf(obj, constructor.prototype);
 
   return obj as T;
 };
@@ -55,8 +48,7 @@ const deep = <T>(
  * const obj = deepAdd(SomeClass, new SomeClass({ a: 1, b: 2 }), new SomeClass({ a: 3, b: 4 })); //SomeClass { a: 4, b: 6 }
  * ```
  */
-export const deepAdd = <T>(constructor: Constructor<T>, ...args: T[]): T =>
-  deep(add, constructor, ...args);
+export const deepAdd = <T>(...args: T[]): T => deep(add, ...args);
 
 /**
  *
@@ -67,5 +59,4 @@ export const deepAdd = <T>(constructor: Constructor<T>, ...args: T[]): T =>
  * const obj = deepSub(SomeClass, new SomeClass({ a: 1, b: 2 }), new SomeClass({ a: 3, b: 4 })); //SomeClass { a: -2, b: -2 }
  * ```
  */
-export const deepSub = <T>(constructor: Constructor<T>, ...args: T[]): T =>
-  deep(sub, constructor, ...args);
+export const deepSub = <T>(...args: T[]): T => deep(sub, ...args);

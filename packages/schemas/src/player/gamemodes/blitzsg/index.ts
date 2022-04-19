@@ -1,6 +1,6 @@
 import { sub } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { BlitzSGKit } from './kit';
 import { BlitzSGMode, BlitzSGOverall } from './mode';
 
@@ -8,7 +8,7 @@ export class BlitzSG {
   @Field()
   public coins: number;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public kit: string;
 
   @Field()
@@ -20,135 +20,135 @@ export class BlitzSG {
   @Field()
   public doubles: BlitzSGMode;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public arachnologist?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public archer?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public armorer?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public astronaut?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public baker?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public blaze?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public creepertamer?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public diver?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public donkeytamer?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public farmer?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public fisherman?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public florist?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public golem?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public guardian?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public horsetamer?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public hunter?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public hypetrain?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public jockey?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public knight?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public meatmaster?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public milkman?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public necromancer?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public paladin?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public phoenix?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public pigman?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public rambo?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public random?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public ranger?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public reaper?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public reddragon?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public rogue?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public scout?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public shadowknight?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public shark?: BlitzSGKit;
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public slimeyslime?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public snowman?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public speleologist?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public tim?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public toxicologist?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public troll?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public viking?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public warlock?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public warrior?: BlitzSGKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public wolftamer?: BlitzSGKit;
 
   public constructor(data: APIData) {

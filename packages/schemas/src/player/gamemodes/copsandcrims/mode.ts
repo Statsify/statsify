@@ -1,6 +1,6 @@
 import { ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 
 export class Defusal {
   @Field()
@@ -84,7 +84,7 @@ export class GunGame {
   @Field()
   public assists: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public fastestWin: number;
 
   public constructor(data: APIData) {

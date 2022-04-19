@@ -1,5 +1,5 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 
 /**
  * Removes some useless broken games from the `guildExpByGameType` field such as `SMP` or `SKYBLOCK`

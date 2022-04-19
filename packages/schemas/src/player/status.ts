@@ -1,6 +1,6 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
 import { Game } from '../game';
+import { Field } from '../metadata';
 
 function findLastAction(data: APIData): { action: string; time: number } {
   const actions: { action: string; time: number }[] = [];
@@ -172,19 +172,19 @@ function findLastAction(data: APIData): { action: string; time: number } {
 }
 
 export class PlayerStatus {
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public firstLogin: number;
 
   @Field()
   public lastAction: string;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public lastActionTime: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public lastLogin: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public lastLogout: number;
 
   @Field()
@@ -193,7 +193,7 @@ export class PlayerStatus {
   @Field()
   public statusHidden: boolean;
 
-  @Field({ default: 'Unknown' })
+  @Field({ store: { default: 'Unknown' } })
   public version: string;
 
   @Field()

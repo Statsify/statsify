@@ -1,5 +1,5 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { SpeedUHCMastery } from './mastery';
 import { SpeedUHCMode } from './mode';
 import { getLevelIndex, titleScores } from './util';
@@ -20,16 +20,16 @@ export class SpeedUHC {
   @Field()
   public score: number;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public activeMastery: string;
 
-  @Field({ getter: (target: SpeedUHC) => getLevelIndex(target.score) + 1 })
+  @Field()
   public level: number;
 
   @Field()
   public levelFormatted: string;
 
-  @Field({ getter: (target: SpeedUHC) => titleScores[getLevelIndex(target.score)].title })
+  @Field()
   public title: string;
 
   @Field()
@@ -78,6 +78,9 @@ export class SpeedUHC {
     this.fortune = new SpeedUHCMastery(data, 'fortune');
     this.vampirism = new SpeedUHCMastery(data, 'vampirism');
 
-    this.levelFormatted = `§d[${getLevelIndex(this.score) + 1}❋]`;
+    const index = getLevelIndex(this.score);
+    this.level = index + 1;
+    this.levelFormatted = `§d[${this.level}❋]`;
+    this.title = titleScores[index].title;
   }
 }

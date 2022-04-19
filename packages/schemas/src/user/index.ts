@@ -1,10 +1,10 @@
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 
 export class User {
-  @Field({ index: true, unique: true })
+  @Field({ mongo: { index: true, unique: true } })
   public id: string;
 
-  @Field({ required: false, sparse: true })
+  @Field({ mongo: { sparse: true }, store: { required: false } })
   public uuid?: string;
 
   @Field()

@@ -2,6 +2,7 @@ import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
 import { Logger } from '@statsify/logger';
 import { deserialize, Guild, serialize } from '@statsify/schemas';
+import { flatten } from '@statsify/util';
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose';
 import { FilterQuery } from 'mongoose';
 import { HypixelCache, HypixelService } from '../hypixel';
@@ -142,22 +143,15 @@ export class GuildService {
     //Cache guilds responses for 5 minutes
     guild.expiresAt = Date.now() + 300000;
 
+    const flatGuild = flatten(guild);
+
     await this.guildModel
-      .replaceOne({ id: guild.id }, this.serialize(guild), { upsert: true })
+      .replaceOne({ id: guild.id }, serialize(Guild, flatGuild), { upsert: true })
       .lean()
       .exec();
 
-    return this.deserialize(guild);
+    return deserialize(Guild, flatGuild);
   }
-
-  public serialize(instance: Guild) {
-    return serialize(Guild, instance);
-  }
-
-  public deserialize(data: Guild) {
-    return deserialize(new Guild(), data);
-  }
-
   private scaleGexp(exp: number) {
     if (exp <= 200000) return exp;
     if (exp <= 700000) return (exp - 200000) / 10 + 200000;

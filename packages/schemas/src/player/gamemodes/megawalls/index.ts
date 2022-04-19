@@ -1,16 +1,16 @@
 import { ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 import { MegaWallsKit } from './kit';
 
 export class MegaWalls {
   @Field()
   public coins: number;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public class: string;
 
-  @Field({ default: 'none' })
+  @Field({ store: { default: 'none' } })
   public warCry: string;
 
   @Field()
@@ -55,75 +55,75 @@ export class MegaWalls {
   @Field()
   public witherKills: number;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public arcanist?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public assassin?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public automaton?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public blaze?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public cow?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public creeper?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public dreadlord?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public enderman?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public golem?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public herobrine?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public hunter?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public moleman?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public phoenix?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public pigman?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public pirate?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public renegade?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public shaman?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public shark?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public skeleton?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public snowman?: MegaWallsKit;
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public spider?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public squid?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public werewolf?: MegaWallsKit;
 
-  @Field({ required: false })
+  @Field({ store: { required: false } })
   public zombie?: MegaWallsKit;
 
   public constructor(data: APIData) {

@@ -1,6 +1,6 @@
 import { APIData } from '@statsify/util';
-import { Color } from '../../../color';
-import { Field } from '../../../decorators';
+import { Color, ColorCode } from '../../../color';
+import { Field } from '../../../metadata';
 import {
   BuildBattleGuessTheBuild,
   BuildBattleMultiplayerMode,
@@ -40,13 +40,13 @@ export class BuildBattle {
   @Field()
   public superVotes: number;
 
-  @Field({ getter: (target: BuildBattle) => titleScores[getTitleIndex(target.score)].title })
+  @Field()
   public title: string;
 
   @Field()
   public titleFormatted: string;
 
-  @Field({ getter: (target: BuildBattle) => titleScores[getTitleIndex(target.score)].color })
+  @Field()
   public titleColor: Color;
 
   public constructor(data: APIData) {
@@ -63,7 +63,10 @@ export class BuildBattle {
     this.superVotes = data.super_votes;
 
     const index = getTitleIndex(this.score);
+    const { color, title } = titleScores[index];
 
-    this.titleFormatted = `${titleScores[index].color}${titleScores[index].title}`;
+    this.title = title;
+    this.titleColor = new Color(color as ColorCode);
+    this.titleFormatted = `${color}${title}`;
   }
 }

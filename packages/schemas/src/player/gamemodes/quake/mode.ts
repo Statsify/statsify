@@ -1,6 +1,6 @@
 import { ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
-import { Field } from '../../../decorators';
+import { Field } from '../../../metadata';
 
 export class QuakeMode {
   @Field()
@@ -18,7 +18,7 @@ export class QuakeMode {
   @Field()
   public headShots: number;
 
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public hkr: number;
 
   @Field()

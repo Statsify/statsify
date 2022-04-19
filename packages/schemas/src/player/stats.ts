@@ -1,5 +1,5 @@
 import type { APIData } from '@statsify/util';
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 import { Arcade } from './gamemodes/arcade';
 import { ArenaBrawl } from './gamemodes/arenabrawl';
 import { BedWars } from './gamemodes/bedwars';
@@ -30,7 +30,7 @@ export class PlayerStats {
   @Field()
   public arenabrawl: ArenaBrawl;
 
-  @Field({ extraDisplay: 'stats.bedwars.levelFormatted' })
+  @Field({ leaderboard: { extraDisplay: 'stats.bedwars.levelFormatted' } })
   public bedwars: BedWars;
 
   @Field()
@@ -89,6 +89,7 @@ export class PlayerStats {
 
   @Field()
   public warlords: Warlords;
+
   public constructor(data: APIData = {}) {
     this.arcade = new Arcade(data?.stats?.Arcade ?? {}, data?.achievements ?? {});
     this.arenabrawl = new ArenaBrawl(data?.stats?.Arena ?? {});

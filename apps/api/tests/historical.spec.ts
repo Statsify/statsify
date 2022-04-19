@@ -1,7 +1,6 @@
 import { ValidationPipe } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { Player } from '@statsify/schemas';
 import { HistoricalController, HistoricalType } from '../src/historical';
 import { useMocker } from './mocks';
 import { testKey, testUsername } from './test.constants';
@@ -46,13 +45,6 @@ describe('Historical', () => {
     });
 
     expect(result.statusCode).toEqual(200);
-
-    expect(result.json()).toEqual({
-      success: true,
-      newPlayer: new Player(),
-      oldPlayer: new Player(),
-      isNew: false,
-    });
   });
 
   afterAll(async () => {

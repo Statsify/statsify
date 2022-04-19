@@ -1,13 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { getLeaderboardFields, Guild } from '@statsify/schemas';
+import { Guild, LeaderboardScanner } from '@statsify/schemas';
+import { FlattenKeys } from '@statsify/util';
 import { IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
 
-const fields = getLeaderboardFields(new Guild({}));
+const fields = LeaderboardScanner.getLeaderboardFields(Guild);
 
 export class GuildRankingDto {
   @IsEnum(fields)
   @ApiProperty({ enum: fields })
-  public field: string;
+  public field: FlattenKeys<Guild>;
 
   @IsString()
   @MinLength(1)

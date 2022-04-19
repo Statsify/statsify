@@ -1,7 +1,8 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { Player } from '@statsify/schemas';
+import { deserialize, Player, serialize } from '@statsify/schemas';
+import { Flatten, flatten } from '@statsify/util';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { HypixelCache } from '../hypixel';
 import { PlayerService } from '../player';
@@ -59,12 +60,14 @@ export class HistoricalService {
     const isWeekly =
       resetType === HistoricalType.WEEKLY || resetType === HistoricalType.LAST_WEEK || isMonthly;
 
-    const doc = this.playerService.serialize(player);
+    const flatPlayer = flatten(player);
+
+    const doc = serialize(Player, flatPlayer);
 
     const reset = async (
       model: ReturnModelType<typeof Player>,
       lastModel: ReturnModelType<typeof Player>,
-      doc: Player
+      doc: Flatten<Player>
     ) => {
       const last = await model
         .findOneAndReplace({ uuid: doc.uuid }, doc, { upsert: true })
@@ -82,7 +85,7 @@ export class HistoricalService {
     if (isWeekly) await reset(this.weeklyModel, this.lastWeekModel, doc);
     if (isMonthly) await reset(this.monthlyModel, this.lastMonthModel, doc);
 
-    return this.playerService.deserialize(player);
+    return deserialize(Player, flatPlayer);
   }
 
   public async findOne(
@@ -115,7 +118,7 @@ export class HistoricalService {
       isNew = true;
     }
 
-    return [newPlayer, this.playerService.deserialize(oldPlayer), isNew];
+    return [newPlayer, deserialize(Player, flatten(oldPlayer)), isNew];
   }
 
   private getMinute(date: Date) {

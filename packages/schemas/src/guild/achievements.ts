@@ -1,11 +1,11 @@
 import { APIData } from '@statsify/util';
-import { Field } from '../decorators';
+import { Field } from '../metadata';
 
 /**
  * Better names for the guild achievements
  */
 export class Achievements {
-  @Field({ leaderboard: false })
+  @Field({ leaderboard: { enabled: false } })
   public playerCount: number;
 
   @Field()
