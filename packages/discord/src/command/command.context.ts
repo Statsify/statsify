@@ -22,4 +22,8 @@ export class CommandContext {
   public reply(data: InteractionContent) {
     return this.interaction.editReply(data);
   }
+
+  public getInteraction() {
+    return this.interaction;
+  }
 }

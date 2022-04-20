@@ -21,7 +21,7 @@ async function bootstrap() {
 
   const port = process.env.DISCORD_BOT_PORT;
 
-  const listener = new CommandListener(
+  const listener = CommandListener.create(
     port
       ? new InteractionServer({ key: process.env.DISCORD_BOT_PUBLIC_KEY })
       : new WebsocketShard({ token: process.env.DISCORD_BOT_TOKEN, intents: 1 }),
