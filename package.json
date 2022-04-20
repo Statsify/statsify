@@ -11,7 +11,7 @@
     "@commitlint/cli": "^16.2.3",
     "@commitlint/config-conventional": "^16.2.1",
     "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.2.168",
+    "@swc/core": "^1.2.170",
     "@swc/helpers": "^0.3.8",
     "@swc/jest": "^0.2.20",
     "@types/jest": "^27.4.1",

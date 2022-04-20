@@ -86,7 +86,7 @@ export class AuthService {
     return apiKey;
   }
 
-  public async getKey(apiKey: string): Promise<any> {
+  public async getKey(apiKey: string) {
     const hash = this.hash(apiKey);
     const key = `ratelimit:${hash}`;
 

@@ -4,10 +4,12 @@ import path from 'path';
 import 'reflect-metadata';
 import { InteractionServer, RestClient, WebsocketShard } from 'tiny-discord';
 import { CommandListener } from './command.listener';
+import { loadFont } from './services/font.service';
 
 config({ path: '../../.env' });
 
 async function bootstrap() {
+  await loadFont();
   const rest = new RestClient({ token: process.env.DISCORD_BOT_TOKEN });
   const commands = await CommandLoader.load(path.join(__dirname, './commands'));
 
