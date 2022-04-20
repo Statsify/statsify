@@ -14,6 +14,7 @@
   "dependencies": {
     "@statsify/assets": "workspace:^",
     "@statsify/util": "workspace:^",
-    "canvas": "^2.9.1"
+    "canvas": "^2.9.1",
+    "typedi": "^0.10.0"
   }
 }

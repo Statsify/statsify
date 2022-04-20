@@ -1,13 +1,22 @@
-import type { FontRenderer } from '../font';
+import { Container } from 'typedi';
+import { FontRenderer } from '../font';
 import type * as JSX from '../jsx';
 
 export interface TextProps {
   margin?: JSX.Spacing;
   children: string[] | string;
-  renderer: FontRenderer;
+
+  /**
+   * The font renderer to use for the text. Changing this can allow for different fonts to be used
+   */
+  renderer?: FontRenderer;
 }
 
-export const Text: JSX.RawFC<TextProps, string[]> = ({ margin, children, renderer }) => {
+export const Text: JSX.RawFC<TextProps, string[]> = ({
+  margin,
+  children,
+  renderer = Container.get(FontRenderer),
+}) => {
   const text = [...children].join('');
   const nodes = renderer.lex(text);
 

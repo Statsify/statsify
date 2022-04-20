@@ -1,10 +1,9 @@
-import { FontRenderer, JSX, useComponentHeight, useComponentWidth } from '@statsify/jsx';
+import { JSX, useComponentHeight, useComponentWidth } from '@statsify/jsx';
 import { Image } from 'canvas';
 import { Skin } from '../Skin';
 import { Sidebar, SidebarItem } from './Sidebar';
 
 export interface HeaderProps {
-  renderer: FontRenderer;
   skin: Image;
   sidebar: SidebarItem[];
   width: number;
@@ -14,7 +13,6 @@ export interface HeaderProps {
 }
 
 export const Header: JSX.FC<HeaderProps> = ({
-  renderer,
   skin: skinImage,
   sidebar: sidebarItems,
   width,
@@ -22,7 +20,7 @@ export const Header: JSX.FC<HeaderProps> = ({
   playerName,
   playerDescription,
 }) => {
-  const sidebar = <Sidebar renderer={renderer} items={sidebarItems} />;
+  const sidebar = <Sidebar items={sidebarItems} />;
 
   const headerHeight = useComponentHeight(sidebar) - 8;
 
@@ -32,13 +30,13 @@ export const Header: JSX.FC<HeaderProps> = ({
 
   const nameTag = (
     <box width="100%">
-      <text renderer={renderer}>§^4^{playerName}</text>
+      <text>§^4^{playerName}</text>
     </box>
   );
 
   const gameTag = (
     <box width="100%">
-      <text renderer={renderer}>{gameTitle}</text>
+      <text>{gameTitle}</text>
     </box>
   );
 
@@ -53,7 +51,7 @@ export const Header: JSX.FC<HeaderProps> = ({
           {nameTag}
           <box direction="column" width="100%" height={remainingHeaderHeight}>
             {playerDescription.split('\n').map((line) => (
-              <text renderer={renderer}>{line}</text>
+              <text>{line}</text>
             ))}
           </box>
         </div>

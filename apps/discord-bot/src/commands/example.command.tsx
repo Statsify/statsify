@@ -1,5 +1,5 @@
 import { Command } from '@statsify/discord';
-import { FontRenderer, JSX } from '@statsify/jsx';
+import { JSX } from '@statsify/jsx';
 import { Canvas, loadImage } from 'canvas';
 import { Header, Table } from '../components';
 
@@ -9,8 +9,6 @@ import { Header, Table } from '../components';
   cooldown: 5,
 })
 export class ExampleCommand {
-  public constructor(private readonly fontRenderer: FontRenderer) {}
-
   public async run() {
     const player = {
       prefixName: '§6WWWWWWWWWWWWWWWWWW',
@@ -40,11 +38,10 @@ export class ExampleCommand {
     const containerWidth = width * 0.95;
     const containerHeight = height * 0.9;
 
-    const profile = (
+    const Profile = () => (
       <div width="100%" height="100%">
         <div direction="column" width={containerWidth} height={containerHeight} align="center">
           <Header
-            renderer={this.fontRenderer}
             skin={skin}
             sidebar={[
               ['Coins', '4,783,624', '§6'],
@@ -61,7 +58,6 @@ export class ExampleCommand {
             playerDescription={`§bSky§eWars §7Level: ${level}\n§7Progress: §b2,222§7/§a10,000\n${level} §8[§b■■■■■■§7■■■■§8] ${level}`}
           />
           <Table
-            renderer={this.fontRenderer}
             rows={[
               {
                 data: [
@@ -99,7 +95,7 @@ export class ExampleCommand {
 
     const canvas = new Canvas(width, height);
 
-    const instructions = JSX.createInstructions(profile, canvas.width, canvas.height);
+    const instructions = JSX.createInstructions(<Profile />, canvas.width, canvas.height);
     const buffer = JSX.createRender(canvas, instructions).toBuffer();
 
     return {
