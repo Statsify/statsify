@@ -12,8 +12,13 @@ import type {
   WebsocketShard,
 } from 'tiny-discord';
 
+export type InteractionHook = (interaction: Interaction) => any;
+
 export class CommandListener extends AbstractCommandListener {
-  public constructor(
+  private hooks: Map<string, InteractionHook>;
+  private static instance: CommandListener;
+
+  private constructor(
     client: WebsocketShard | InteractionServer,
     rest: RestClient,
     private commands: Map<string, CommandResolvable>
@@ -24,13 +29,28 @@ export class CommandListener extends AbstractCommandListener {
       process.env.DISCORD_BOT_APPLICATION_ID,
       process.env.DISCORD_BOT_PORT as number
     );
+
+    this.hooks = new Map();
+  }
+
+  public addInteractionHook(id: string, hook: InteractionHook) {
+    this.hooks.set(id, hook);
+  }
+
+  public removeInteractionHook(id: string) {
+    this.hooks.delete(id);
   }
 
   public onInteraction(interaction: Interaction): InteractionResponse {
     if (interaction.isCommandInteraction()) return this.onCommand(interaction);
 
-    if (interaction.isMessageComponentInteraction())
+    if (interaction.isMessageComponentInteraction()) {
+      const hook = this.hooks.get(interaction.getCustomId());
+
+      hook?.(interaction);
+
       return { type: InteractionResponseType.DeferredMessageUpdate };
+    }
 
     return { type: InteractionResponseType.Pong };
   }
@@ -89,5 +109,18 @@ export class CommandListener extends AbstractCommandListener {
     }
 
     return [command, data];
+  }
+
+  public static create(
+    client: WebsocketShard | InteractionServer,
+    rest: RestClient,
+    commands: Map<string, CommandResolvable>
+  ) {
+    this.instance = new CommandListener(client, rest, commands);
+    return this.instance;
+  }
+
+  public static getInstance() {
+    return this.instance;
   }
 }
