@@ -1,7 +1,6 @@
-import { Command, CommandContext, EmbedBuilder } from '@statsify/discord';
+import { Command, CommandContext } from '@statsify/discord';
 import { ApplicationCommandOptionType } from 'discord-api-types/v10';
-import { Canvas } from 'skia-canvas';
-import { ExampleService } from '../services/example.service';
+import { ApiService } from '../services/api.service';
 
 @Command({
   description: 'Displays this message.',
@@ -16,23 +15,15 @@ import { ExampleService } from '../services/example.service';
   cooldown: 5,
 })
 export class ExampleCommand {
-  public constructor(private readonly exampleService: ExampleService) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
-    const canvas = new Canvas(100, 100);
-    const ctx = canvas.getContext('2d');
+    const tag = context.option<string>('message');
 
-    ctx.fillStyle = '#ff0000';
-    ctx.fillRect(0, 0, 100, 100);
+    const player = await this.apiService.getPlayer(tag);
 
-    const buffer = await canvas.toBuffer('png');
-
-    const embed = new EmbedBuilder().title('Example').thumbnail('attachment://example.png').build();
-
-    await context.reply({
-      files: [{ name: 'example.png', data: buffer, type: 'image/png' }],
-      content: 'hello',
-      embeds: [embed],
-    });
+    return {
+      content: `${player.username} is ${player.stats.general.networkLevel} level | ${player.stats.general.karma} karma`,
+    };
   }
 }

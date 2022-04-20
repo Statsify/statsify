@@ -1372,7 +1372,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@statsify/logger@*, @statsify/logger@workspace:^, @statsify/logger@workspace:packages/logger":
+"@statsify/logger@workspace:^, @statsify/logger@workspace:packages/logger":
   version: 0.0.0-use.local
   resolution: "@statsify/logger@workspace:packages/logger"
   dependencies:
@@ -1381,28 +1381,28 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@statsify/math@*, @statsify/math@workspace:packages/math":
+"@statsify/math@workspace:^, @statsify/math@workspace:packages/math":
   version: 0.0.0-use.local
   resolution: "@statsify/math@workspace:packages/math"
   dependencies:
-    "@statsify/util": "*"
+    "@statsify/util": "workspace:^"
   languageName: unknown
   linkType: soft
 
-"@statsify/schemas@*, @statsify/schemas@workspace:^, @statsify/schemas@workspace:packages/schemas":
+"@statsify/schemas@workspace:^, @statsify/schemas@workspace:packages/schemas":
   version: 0.0.0-use.local
   resolution: "@statsify/schemas@workspace:packages/schemas"
   dependencies:
     "@nestjs/swagger": ^5.2.1
     "@statsify/logger": "workspace:^"
-    "@statsify/math": "*"
-    "@statsify/util": "*"
+    "@statsify/math": "workspace:^"
+    "@statsify/util": "workspace:^"
     "@typegoose/typegoose": ^9.7.1
     type-fest: ^2.12.2
   languageName: unknown
   linkType: soft
 
-"@statsify/util@*, @statsify/util@workspace:^, @statsify/util@workspace:packages/util":
+"@statsify/util@workspace:^, @statsify/util@workspace:packages/util":
   version: 0.0.0-use.local
   resolution: "@statsify/util@workspace:packages/util"
   languageName: unknown
@@ -2243,8 +2243,8 @@ __metadata:
     "@nestjs/swagger": ^5.2.1
     "@nestjs/testing": ^8.4.4
     "@statsify/assets": "workspace:^"
-    "@statsify/logger": "*"
-    "@statsify/schemas": "*"
+    "@statsify/logger": "workspace:^"
+    "@statsify/schemas": "workspace:^"
     "@typegoose/typegoose": ^9.8.0
     "@types/cron": ^1.7.3
     "@types/ioredis": ^4.28.10
@@ -2375,7 +2375,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:0.26.1":
+"axios@npm:0.26.1, axios@npm:^0.26.1":
   version: 0.26.1
   resolution: "axios@npm:0.26.1"
   dependencies:
@@ -3363,6 +3363,7 @@ __metadata:
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
     "@typegoose/typegoose": ^9.8.0
+    axios: ^0.26.1
     discord-api-types: ^0.31.2
     dotenv: ^16.0.0
     mongoose: ^6.3.0

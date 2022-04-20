@@ -17,6 +17,7 @@
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@typegoose/typegoose": "^9.8.0",
+    "axios": "^0.26.1",
     "discord-api-types": "^0.31.2",
     "dotenv": "^16.0.0",
     "mongoose": "^6.3.0",

@@ -1,9 +1,9 @@
 import { Logger } from '@statsify/logger';
 import { statSync } from 'fs';
 import { readdir } from 'fs/promises';
+import { Container } from 'typedi';
 import { CommandBuilder } from './command.builder';
 import type { CommandResolvable } from './command.resolvable';
-import { Container } from 'typedi';
 
 export class CommandLoader {
   private static readonly logger = new Logger('CommandLoader');
@@ -27,13 +27,15 @@ export class CommandLoader {
   private static async importCommand(file: string) {
     const command = await import(file);
 
-    return Object.keys(command).map((key) => {
-      try {
-        return CommandBuilder.scan(Container.get(command[key]));
-      } catch {
-        this.logger.error(`Failed to load command in ${file} with import ${key}`);
-      }
-    });
+    return Object.keys(command)
+      .filter((key) => key !== 'default')
+      .map((key) => {
+        try {
+          return CommandBuilder.scan(Container.get(command[key]));
+        } catch {
+          this.logger.error(`Failed to load command in ${file} with import ${key}`);
+        }
+      });
   }
 
   private static async getCommandFiles(dir: string): Promise<string[]> {
