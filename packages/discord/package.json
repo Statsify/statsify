@@ -15,7 +15,7 @@
     "@statsify/util": "workspace:^",
     "discord-api-types": "^0.31.2",
     "reflect-metadata": "^0.1.13",
-    "tiny-discord": "github:timotejroiko/tiny-discord#master",
+    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=ea92c1161f4a6266ad82552da694692feb083f65",
     "typedi": "^0.10.0"
   }
 }

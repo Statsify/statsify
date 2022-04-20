@@ -113,3 +113,4 @@ export const mockClass = <T>(constructor: Constructor<T>): T =>
   new constructor(...Array.from({ length: constructor.length }).fill({}));
 
 export * from './flat';
+export * from './minecraft-colors';

@@ -1,17 +1,19 @@
 {
-  "name": "@statsify/math",
+  "name": "@statsify/jsx",
   "version": "0.0.0",
   "main": "dist/index.js",
   "types": "src/index.ts",
   "scripts": {
-    "build": "swc src  --config-file ../../.swcrc --out-dir dist",
-    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w",
+    "build": "swc src --out-dir dist",
+    "build:watch": "swc src --out-dir dist -w",
     "test:types": "tsc --noEmit",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@statsify/util": "workspace:^"
+    "@statsify/assets": "workspace:^",
+    "@statsify/util": "workspace:^",
+    "canvas": "^2.9.1"
   }
 }

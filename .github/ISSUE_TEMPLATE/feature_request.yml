@@ -16,6 +16,7 @@ body:
         - site
         - assets
         - discord
+        - jsx
         - logger
         - math
         - schemas
