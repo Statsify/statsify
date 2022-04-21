@@ -5,8 +5,7 @@ defaultLogLevels.forEach((logLevel) => {
     it(`should ${logLevel}`, () => {
       const logger = new Logger(logLevel);
 
-      //@ts-ignore Set timestamp to 0ms to make tests pass
-      Logger.lastTimeStampAt = 0;
+      Logger['lastTimeStampAt'] = 0;
 
       const mock = jest.fn();
 

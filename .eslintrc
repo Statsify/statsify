@@ -2,12 +2,13 @@
   "root": true,
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2020,
-    "sourceType": "module",
-    "warnOnUnsupportedTypeScriptVersion": false,
-    "project": "./tsconfig.eslint.json"
+    "ecmaVersion": "latest"
   },
-  "ignorePatterns": ["apps/scripts/**"],
+  "env": {
+    "commonjs": true,
+    "es2022": true,
+    "node": true
+  },
   "plugins": ["@typescript-eslint"],
   "overrides": [
     {
@@ -16,8 +17,7 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:prettier/recommended",
-        "plugin:@next/next/recommended"
+        "plugin:prettier/recommended"
       ]
     }
   ],
