@@ -57,6 +57,10 @@ export class Interaction {
     return (this.data as any).locale ?? 'en-US';
   }
 
+  public getCustomId(): string {
+    return this.getData().custom_id;
+  }
+
   public reply(data: InteractionResponse) {
     return this.rest.post(`/interactions/${this.data.id}/${this.data.token}/callback`, data);
   }
