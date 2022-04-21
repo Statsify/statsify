@@ -10,7 +10,7 @@ import type {
 import { Interaction } from '../interaction';
 
 export abstract class AbstractCommandListener {
-  private readonly logger = new Logger('CommandListener');
+  protected readonly logger = new Logger('CommandListener');
 
   public constructor(
     client: InteractionServer,

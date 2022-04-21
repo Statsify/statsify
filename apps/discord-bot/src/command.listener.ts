@@ -2,6 +2,7 @@ import {
   AbstractCommandListener,
   CommandContext,
   CommandResolvable,
+  ContentResponse,
   Interaction,
 } from '@statsify/discord';
 import { ApplicationCommandOptionType, InteractionResponseType } from 'discord-api-types/v10';
@@ -66,17 +67,32 @@ export class CommandListener extends AbstractCommandListener {
 
     const context = new CommandContext(interaction, data);
 
-    const response = command.execute(context);
+    try {
+      const response = command.execute(context);
 
-    if (response instanceof Promise) {
-      response.then((res) => {
-        if (typeof res === 'object') context.reply(res);
-      });
-    } else if (typeof response === 'object')
-      return {
-        type: InteractionResponseType.ChannelMessageWithSource,
-        data: interaction.convertToApiData(response),
-      };
+      if (response instanceof Promise)
+        response
+          .then((res) => {
+            if (typeof res === 'object') context.reply(res);
+          })
+          .catch((err) => {
+            if (err instanceof ContentResponse) context.reply(err);
+            else this.logger.error(err);
+          });
+      else if (typeof response === 'object')
+        return {
+          type: InteractionResponseType.ChannelMessageWithSource,
+          data: interaction.convertToApiData(response),
+        };
+    } catch (err) {
+      if (err instanceof ContentResponse)
+        return {
+          type: InteractionResponseType.ChannelMessageWithSource,
+          data: interaction.convertToApiData(err),
+        };
+
+      this.logger.error(err);
+    }
 
     return {
       type: InteractionResponseType.DeferredChannelMessageWithSource,

@@ -1,17 +1,19 @@
 import { APIActionRowComponent, ComponentType } from 'discord-api-types/v10';
 import type { ButtonBuilder } from './button.builder';
 
+export type ActionRowComponent = ButtonBuilder;
+
 export class ActionRowBuilder {
   protected data: APIActionRowComponent<any>;
 
-  public constructor() {
+  public constructor(components: ActionRowComponent[] = []) {
     this.data = {
-      components: [] as any[],
+      components,
       type: ComponentType.ActionRow,
     };
   }
 
-  public component(component: ButtonBuilder): this {
+  public component(component: ActionRowComponent): this {
     this.data.components.push(component);
     return this;
   }

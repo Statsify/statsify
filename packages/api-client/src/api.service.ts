@@ -1,4 +1,5 @@
 import Axios, { AxiosInstance, Method } from 'axios';
+import { HypixelCache } from './hypixel-cache.enum';
 import type {
   GetAchievementsResponse,
   GetFriendsResponse,
@@ -21,8 +22,11 @@ export class ApiService {
     });
   }
 
-  public async getPlayer(tag: string) {
-    const res = await this.request<GetPlayerResponse>(`/player`, { player: tag });
+  public async getPlayer(tag: string, cacheLevel: HypixelCache) {
+    const res = await this.request<GetPlayerResponse>(`/player`, {
+      player: tag,
+      cache: cacheLevel,
+    });
 
     if (!res.player) {
       throw new Error(`Player not found: ${tag}`);
