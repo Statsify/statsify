@@ -23,6 +23,7 @@ export class AuthController {
     @Headers() { 'x-api-key': keyHeader }: KeyHeaderDto
   ) {
     const keyData = await this.authService.getKey(key ?? keyHeader);
+
     return {
       success: !!keyData,
       key: keyData,

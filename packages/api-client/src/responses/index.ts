@@ -1,3 +1,4 @@
+export * from './delete.player.response';
 export * from './error.response';
 export * from './get.achievements.response';
 export * from './get.friends.response';

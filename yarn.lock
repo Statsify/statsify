@@ -1354,6 +1354,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@statsify/api-client@workspace:^, @statsify/api-client@workspace:packages/api-client":
+  version: 0.0.0-use.local
+  resolution: "@statsify/api-client@workspace:packages/api-client"
+  dependencies:
+    "@nestjs/swagger": ^5.2.1
+    "@statsify/schemas": "workspace:^"
+    axios: ^0.26.1
+  languageName: unknown
+  linkType: soft
+
 "@statsify/assets@workspace:^, @statsify/assets@workspace:packages/assets":
   version: 0.0.0-use.local
   resolution: "@statsify/assets@workspace:packages/assets"
@@ -2242,6 +2252,7 @@ __metadata:
     "@nestjs/schedule": ^1.1.0
     "@nestjs/swagger": ^5.2.1
     "@nestjs/testing": ^8.4.4
+    "@statsify/api-client": "workspace:^"
     "@statsify/assets": "workspace:^"
     "@statsify/logger": "workspace:^"
     "@statsify/schemas": "workspace:^"
@@ -3359,6 +3370,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "discord-bot@workspace:apps/discord-bot"
   dependencies:
+    "@statsify/api-client": "workspace:^"
     "@statsify/discord": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"

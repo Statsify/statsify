@@ -13,6 +13,7 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
+    "@statsify/api-client": "workspace:^",
     "@statsify/discord": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",

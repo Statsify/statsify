@@ -1,11 +1,12 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
+import { HypixelCache } from '@statsify/api-client';
 import { Logger } from '@statsify/logger';
 import { deserialize, Guild, serialize } from '@statsify/schemas';
 import { flatten } from '@statsify/util';
 import { DocumentType, ReturnModelType } from '@typegoose/typegoose';
 import { FilterQuery } from 'mongoose';
-import { HypixelCache, HypixelService } from '../hypixel';
+import { HypixelService } from '../hypixel';
 import { PlayerService } from '../player';
 import { GuildQuery } from './guild-query.enum';
 

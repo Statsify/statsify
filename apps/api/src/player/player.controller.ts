@@ -1,12 +1,7 @@
 import { Controller, Delete, Get, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { AuthRole } from '../auth';
-import { Auth } from '../auth/auth.decorator';
-import { CachedPlayerDto, FriendDto } from '../dtos';
-import { PlayerDto } from '../dtos/player.dto';
-import { UuidDto } from '../dtos/uuid.dto';
-import { HypixelService } from '../hypixel';
 import {
+  DeletePlayerResponse,
   ErrorResponse,
   GetAchievementsResponse,
   GetFriendsResponse,
@@ -14,8 +9,13 @@ import {
   GetRankedSkyWarsResponse,
   GetRecentGamesResponse,
   GetStatusResponse,
-} from '../responses';
-import { SuccessResponse } from '../responses/success.response';
+} from '@statsify/api-client';
+import { AuthRole } from '../auth';
+import { Auth } from '../auth/auth.decorator';
+import { CachedPlayerDto, FriendDto } from '../dtos';
+import { PlayerDto } from '../dtos/player.dto';
+import { UuidDto } from '../dtos/uuid.dto';
+import { HypixelService } from '../hypixel';
 import { PlayerService } from './player.service';
 
 @Controller('/player')
@@ -40,7 +40,7 @@ export class PlayerController {
   }
 
   @ApiOperation({ summary: 'Deletes a Player', tags: ['Player'] })
-  @ApiOkResponse({ type: SuccessResponse })
+  @ApiOkResponse({ type: DeletePlayerResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
   @Delete()

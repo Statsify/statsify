@@ -22,8 +22,6 @@ export class ExampleCommand {
 
     const player = await this.apiService.getPlayer(tag);
 
-    return {
-      content: `${player.username} is ${player.stats.general.networkLevel} level | ${player.stats.general.karma} karma`,
-    };
+    return { content: `Hello ${player.username}` };
   }
 }

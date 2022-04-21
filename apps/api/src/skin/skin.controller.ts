@@ -1,9 +1,9 @@
 import { Controller, Get, Query, StreamableFile } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOperation } from '@nestjs/swagger';
+import { ErrorResponse } from '@statsify/api-client';
 import { Auth } from '../auth';
 import { HeadDto } from '../dtos';
 import { UuidDto } from '../dtos/uuid.dto';
-import { ErrorResponse } from '../responses';
 import { SkinService } from './skin.service';
 
 @Controller('/skin')

@@ -1,5 +1,6 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable } from '@nestjs/common';
+import { HypixelCache } from '@statsify/api-client';
 import {
   Achievements,
   deserialize,
@@ -12,7 +13,7 @@ import {
 import { Flatten, flatten, FlattenKeys } from '@statsify/util';
 import type { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
-import { HypixelCache, HypixelService } from '../hypixel';
+import { HypixelService } from '../hypixel';
 import { LeaderboardService } from '../leaderboards';
 
 @Injectable()

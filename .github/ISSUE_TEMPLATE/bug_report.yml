@@ -11,9 +11,11 @@ body:
     attributes:
       label: Which package is this bug report for?
       options:
+        - general
         - api
         - discord-bot
         - site
+        - api-client
         - assets
         - discord
         - logger
