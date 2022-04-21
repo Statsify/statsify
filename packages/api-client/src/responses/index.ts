@@ -5,6 +5,7 @@ export * from './get.friends.response';
 export * from './get.gamecounts.response';
 export * from './get.guild.response';
 export * from './get.historical.response';
+export * from './get.key.response';
 export * from './get.player.response';
 export * from './get.rankedskywars.response';
 export * from './get.recentgames.response';

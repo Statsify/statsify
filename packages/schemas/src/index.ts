@@ -2,6 +2,7 @@ export * from './achievements';
 export * from './friends';
 export * from './gamecounts';
 export * from './guild';
+export * from './key';
 export * from './metadata/deserialize';
 export * from './metadata/metadata.interface';
 export * from './metadata/serialize';

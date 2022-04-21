@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Key } from '@statsify/schemas';
 import { SuccessResponse } from './success.response';
 
-//TODO add KeyData
 export class GetKeyResponse extends SuccessResponse {
   @ApiProperty()
-  public keyData: any;
+  public key: Key;
 }
