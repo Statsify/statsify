@@ -20,33 +20,46 @@ async function createKey({ name, key, role, limit }) {
 
 const roles = ['user', 'admin'];
 
+async function getUserPreferences() {
+  if (process.argv.includes('--noninteractive')) {
+    return {
+      name: 'TESTKEY',
+      key: 'TESTKEY',
+      role: 'admin',
+      limit: 120,
+    };
+  } else {
+    return await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'name',
+        message: 'What is your name?',
+      },
+      {
+        type: 'input',
+        name: 'key',
+        message: 'What is the api key?',
+        default: () => randomUUID(),
+      },
+      {
+        type: 'list',
+        name: 'role',
+        message: 'What is the role of the api key?',
+        choices: roles,
+        default: 'admin',
+      },
+      {
+        type: 'number',
+        name: 'limit',
+        message: 'What is the limit for requests per minute?',
+        default: 120,
+      },
+    ]);
+  }
+}
+
 async function bootstrap() {
-  const { name, key, role, limit } = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'name',
-      message: 'What is your name?',
-    },
-    {
-      type: 'input',
-      name: 'key',
-      message: 'What is the api key?',
-      default: () => randomUUID(),
-    },
-    {
-      type: 'list',
-      name: 'role',
-      message: 'What is the role of the api key?',
-      choices: roles,
-      default: 'admin',
-    },
-    {
-      type: 'number',
-      name: 'limit',
-      message: 'What is the limit for requests per minute?',
-      default: 120,
-    },
-  ]);
+  const { name, key, role, limit } = await getUserPreferences();
 
   await createKey({ name, key, role, limit });
 
