@@ -1,6 +1,6 @@
 import { JSX } from '@statsify/jsx';
 
-export type RowData = [title: string, value: string, color?: string];
+export type RowData = [title: string, value: string | number, color?: string];
 
 export interface RowProps {
   color?: string;
@@ -16,7 +16,7 @@ export const Row: JSX.FC<RowProps> = ({ color = '§f', data }) => (
         }${title}`}</text>
         <text margin={{ top: 2, bottom: 12, left: 10, right: 10 }}>{`§^4^${
           dataColor ?? color
-        }${value}`}</text>
+        }${value.toLocaleString()}`}</text>
       </box>
     ))}
   </div>

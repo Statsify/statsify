@@ -1,34 +1,32 @@
-import { Command } from '@statsify/discord';
+import { Command, CommandContext } from '@statsify/discord';
 import { JSX } from '@statsify/jsx';
 import { Canvas, loadImage } from 'canvas';
+import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 import { Header, Table } from '../components';
+import { ApiService } from '../services/api.service';
 
 @Command({
   description: 'Displays this message.',
-  args: [],
+  args: [
+    {
+      name: 'player',
+      description: 'The player to get the stats for.',
+      required: true,
+      type: ApplicationCommandOptionType.String,
+    },
+  ],
   cooldown: 5,
 })
 export class ExampleCommand {
-  public async run() {
-    const player = {
-      prefixName: '§6WWWWWWWWWWWWWWWWWW',
-      uuid: '96f645ba026b4e45bc34dd8f0531334c',
-    };
+  public constructor(private readonly apiService: ApiService) {}
 
-    const level = `§b[17Ω]`;
+  public async run(context: CommandContext) {
+    const tag = context.option<string>('player');
+    const player = await this.apiService.getPlayer(tag);
 
-    const stats = {
-      wins: `${(2985).toLocaleString()}`,
-      kills: (25879).toLocaleString(),
-      deaths: (9666).toLocaleString(),
-      losses: (9337).toLocaleString(),
-      assists: (3039).toLocaleString(),
-      playtime: '11d 4h',
-      kdr: (2.68).toLocaleString(),
-      wlr: (0.32).toLocaleString(),
-    };
-
-    const mode = 'Overall';
+    const { skywars } = player.stats;
+    const mode = 'overall';
+    const stats = skywars[mode].overall;
 
     const skin = await loadImage(`https://visage.surgeplay.com/full/${player.uuid}.png`);
 
@@ -44,25 +42,25 @@ export class ExampleCommand {
           <Header
             skin={skin}
             sidebar={[
-              ['Coins', '4,783,624', '§6'],
-              ['Loot Chests', '188', '§e'],
-              ['Tokens', '1,210,000', '§a'],
-              ['Souls', '21,026', '§b'],
-              ['Heads', '2,367', '§d'],
-              ['Shards', '17,981', '§3'],
-              ['Opals', '1', '§9'],
+              ['Coins', skywars.coins, '§6'],
+              ['Loot Chests', skywars.lootChests, '§e'],
+              ['Tokens', skywars.tokens, '§a'],
+              ['Souls', skywars.souls, '§b'],
+              ['Heads', skywars.heads, '§d'],
+              ['Shards', skywars.shards, '§3'],
+              ['Opals', skywars.opals, '§9'],
             ]}
             width={containerWidth}
             gameTitle={`§l§bSky§eWars §fStats §r§o(${mode})`}
             playerName={player.prefixName}
-            playerDescription={`§bSky§eWars §7Level: ${level}\n§7Progress: §b2,222§7/§a10,000\n${level} §8[§b■■■■■■§7■■■■§8] ${level}`}
+            playerDescription={`§bSky§eWars §7Level: ${skywars.levelFormatted}\n§7Progress: §b2,222§7/§a10,000\n${skywars.levelFormatted} §8[§b■■■■■■§7■■■■§8] ${skywars.levelFormatted}`}
           />
           <Table
             rows={[
               {
                 data: [
                   ['Kills', stats.kills],
-                  ['Wins §^2^§8[§7#§f16k§8]', stats.wins],
+                  ['Wins', stats.wins],
                 ],
                 color: '§a',
               },
@@ -76,7 +74,7 @@ export class ExampleCommand {
               {
                 data: [
                   ['Assists', stats.assists],
-                  ['Playtime', stats.playtime],
+                  ['Playtime', stats.playTime],
                 ],
                 color: '§e',
               },
@@ -100,7 +98,6 @@ export class ExampleCommand {
 
     return {
       files: [{ name: 'example.png', data: buffer, type: 'image/png' }],
-      content: 'hello',
     };
   }
 }
