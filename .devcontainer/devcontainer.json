@@ -51,7 +51,7 @@
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "/workspaces/statsify/.devcontainer/install.sh",
 
-  "postStartCommand": "sudo /etc/init.d/redis-server start",
+  "postStartCommand": "sudo /etc/init.d/redis-server start && yarn scripts create-key --noninteractive",
 
   // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
   "remoteUser": "node",
