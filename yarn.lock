@@ -1308,7 +1308,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@statsify/jsx@workspace:packages/jsx"
   dependencies:
-    "@statsify/assets": "workspace:^"
     "@statsify/util": "workspace:^"
     canvas: ^2.9.1
     typedi: ^0.10.0
@@ -3289,6 +3288,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "discord-bot@workspace:apps/discord-bot"
   dependencies:
+    "@statsify/assets": "workspace:^"
     "@statsify/discord": "workspace:^"
     "@statsify/jsx": "workspace:^"
     "@statsify/schemas": "workspace:^"

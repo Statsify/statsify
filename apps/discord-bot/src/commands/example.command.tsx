@@ -1,15 +1,31 @@
-import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/jsx';
+import { Command, CommandContext } from '@statsify/discord';
+import { FontRenderer, JSX } from '@statsify/jsx';
+import { BaseThemeContext, IntrinsicRenders } from '@statsify/jsx/src/jsx';
 import { Canvas, loadImage } from 'canvas';
+import { ApplicationCommandOptionType } from 'discord-api-types/v10';
+import Container from 'typedi';
 import { Header, Table } from '../components';
 
 @Command({
   description: 'Displays this message.',
-  args: [],
+  args: [
+    {
+      name: 'theme',
+      description: 'The theme to use',
+      type: ApplicationCommandOptionType.String,
+      required: true,
+      choices: [
+        { name: 'Default', value: 'default' },
+        { name: 'Faithful', value: 'faithful' },
+      ],
+    },
+  ],
   cooldown: 5,
 })
 export class ExampleCommand {
-  public async run() {
+  public async run(context: CommandContext) {
+    const theme = context.option<string>('theme');
+
     const player = {
       prefixName: '§6WWWWWWWWWWWWWWWWWW',
       uuid: '96f645ba026b4e45bc34dd8f0531334c',
@@ -95,12 +111,41 @@ export class ExampleCommand {
 
     const canvas = new Canvas(width, height);
 
-    const instructions = JSX.createInstructions(<Profile />, canvas.width, canvas.height);
-    const buffer = JSX.createRender(canvas, instructions).toBuffer();
+    const instructions = JSX.createInstructions(
+      <Profile />,
+      canvas.width,
+      canvas.height,
+      this.getThemeRenders(theme)
+    );
+
+    const buffer = JSX.createRender(canvas, instructions, this.getThemeContext(theme)).toBuffer();
 
     return {
       files: [{ name: 'example.png', data: buffer, type: 'image/png' }],
-      content: 'hello',
+    };
+  }
+
+  private getThemeContext(theme: string): BaseThemeContext {
+    if (theme === 'default') {
+      return {
+        renderer: Container.get(FontRenderer),
+      };
+    }
+
+    return {
+      renderer: Container.get('HD_RENDERER'),
+    };
+  }
+
+  private getThemeRenders(theme: string): Partial<IntrinsicRenders> {
+    if (theme === 'default') {
+      return {};
+    }
+
+    return {
+      div: (ctx, _, { x, y, width, height }) => {
+        ctx.fillRect(x, y, width, height);
+      },
     };
   }
 }

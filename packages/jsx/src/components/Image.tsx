@@ -1,26 +1,31 @@
 import type { Image as CanvasImage } from 'canvas';
 import type * as JSX from '../jsx';
 
-export interface ImageProps {
+export interface ImageRenderProps {
   image: CanvasImage;
+}
+
+export interface ImageProps extends ImageRenderProps {
   width?: number | JSX.Percentage;
   height?: number | JSX.Percentage;
 }
 
-export const Image: JSX.RawFC<ImageProps> = ({
+export const component: JSX.RawFC<ImageProps> = ({
   image,
   height = image.height,
   width = image.width,
   children,
 }) => ({
   name: 'Image',
-  render: (ctx, { x, y, width, height }) => {
-    ctx.drawImage(image, x, y, width, height);
-  },
   dimension: {
     width,
     height,
   },
   style: { location: 'center', direction: 'row', align: 'center' },
+  props: { image },
   children,
 });
+
+export const render: JSX.Render<ImageRenderProps> = (ctx, { image }, { x, y, width, height }) => {
+  ctx.drawImage(image, x, y, width, height);
+};

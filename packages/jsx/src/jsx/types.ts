@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import type { CanvasRenderingContext2D } from 'canvas';
+import type { FontRenderer } from '../font';
+import type { IntrinsicElement } from './instrinsics';
 
-export type ElementContext = any;
+export interface BaseThemeContext {
+  renderer: FontRenderer;
+}
 
 export type StyleLocation = 'start' | 'end' | 'center';
 export type StyleDirection = 'row' | 'column';
@@ -40,7 +44,12 @@ export interface Location {
   margin: CompleteSpacing;
 }
 
-export type Render = (ctx: CanvasRenderingContext2D, location: Location) => void;
+export type Render<T = unknown, K extends BaseThemeContext = BaseThemeContext> = (
+  ctx: CanvasRenderingContext2D,
+  props: T,
+  location: Location,
+  theme: K
+) => void;
 
 export interface ElementNodeBiDirectional {
   size?: number | Percentage;
@@ -53,21 +62,18 @@ export interface ElementNodeBiDirectional {
 
 export interface ElementNode {
   style: Style;
-  render: Render;
   children?: ElementNode[];
+  props: any;
+  type: IntrinsicElement;
   x: ElementNodeBiDirectional;
   y: ElementNodeBiDirectional;
-  context?: ElementContext;
 }
 
-export interface Element {
-  name: string;
+export interface Element<T = unknown> {
   style: Style;
-  render: Render;
   children?: ElementNode[] | ElementNode;
-  props?: Record<string, any>;
+  props: T;
   dimension: ElementDimension;
-  context?: ElementContext;
 }
 
 export interface InstructionBiDirectional extends ElementNodeBiDirectional {
@@ -77,6 +83,7 @@ export interface InstructionBiDirectional extends ElementNodeBiDirectional {
 export interface Instruction extends ElementNode {
   x: InstructionBiDirectional;
   y: InstructionBiDirectional;
+  render: Render;
   children?: Instruction[];
 }
 
@@ -85,4 +92,10 @@ export type PropsWithChildren<T, K = ElementNode> = T & {
 };
 
 export type FC<T = {}, K = ElementNode> = (props: PropsWithChildren<T, K>) => ElementNode;
-export type RawFC<T = {}, K = ElementNode> = (props: PropsWithChildren<T, K>) => Element;
+
+/**
+ * T is the type of the element's props
+ * K is the type of the element's render function props
+ * C is the type of the element's children
+ */
+export type RawFC<T = {}, K = T, C = ElementNode> = (props: PropsWithChildren<T, C>) => Element<K>;

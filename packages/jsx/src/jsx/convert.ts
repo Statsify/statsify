@@ -1,3 +1,4 @@
+import type { IntrinsicElement } from './instrinsics';
 import type { CompleteSpacing, Element, ElementNode, Percentage, Spacing } from './types';
 
 export const spacingToCompleteSpacing = (spacing?: Spacing): CompleteSpacing => {
@@ -18,31 +19,34 @@ export const spacingToCompleteSpacing = (spacing?: Spacing): CompleteSpacing => 
   };
 };
 
-export const elementToNode = (element: Element): ElementNode => {
-  const padding = spacingToCompleteSpacing(element.dimension.padding);
-  const margin = spacingToCompleteSpacing(element.dimension.margin);
+export const elementToNode = (
+  type: IntrinsicElement,
+  { dimension, style, children, props }: Element
+): ElementNode => {
+  const padding = spacingToCompleteSpacing(dimension.padding);
+  const margin = spacingToCompleteSpacing(dimension.margin);
 
   return {
     x: {
-      size: element.dimension.width,
+      size: dimension.width,
       padding1: padding.left,
       padding2: padding.right,
       margin1: margin.left,
       margin2: margin.right,
-      direction: element.style.direction,
+      direction: style.direction,
     },
     y: {
-      size: element.dimension.height,
+      size: dimension.height,
       padding1: padding.top,
       padding2: padding.bottom,
       margin1: margin.top,
       margin2: margin.bottom,
-      direction: element.style.direction === 'row' ? 'column' : 'row',
+      direction: style.direction === 'row' ? 'column' : 'row',
     },
-    style: element.style,
-    children: element.children as ElementNode[],
-    render: element.render,
-    context: element.context,
+    style,
+    type,
+    props,
+    children: children as ElementNode[],
   };
 };
 
