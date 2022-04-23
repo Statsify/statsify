@@ -15,6 +15,7 @@ export interface BoxRenderProps {
   shadowOpacity: number;
   color: RGBA;
   outline: boolean;
+  outlineSize: number;
   outlineColor: RGBA;
 }
 
@@ -42,26 +43,35 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   shadowDistance = 4,
   shadowOpacity = 0.42,
   outline = false,
+  outlineSize = 4,
   outlineColor,
-}) => ({
-  name: 'Box',
-  dimension: {
-    padding,
-    margin,
-    width,
-    height,
-  },
-  style: { location, direction, align: 'default' },
-  props: {
-    border,
-    color: parseColor(color),
-    shadowDistance,
-    shadowOpacity,
-    outline,
-    outlineColor: parseColor(outlineColor ?? color),
-  },
-  children,
-});
+}) => {
+  const rgbColor = parseColor(color);
+
+  const outlineColorRgb: RGBA = outlineColor
+    ? parseColor(outlineColor)
+    : [rgbColor[0], rgbColor[1], rgbColor[2], 1];
+
+  return {
+    dimension: {
+      padding,
+      margin,
+      width,
+      height,
+    },
+    style: { location, direction, align: 'default' },
+    props: {
+      border,
+      color: rgbColor,
+      shadowDistance,
+      shadowOpacity,
+      outline,
+      outlineSize,
+      outlineColor: outlineColorRgb,
+    },
+    children,
+  };
+};
 
 type ImageDataLocation = [x: number, y: number, width: number, height: number];
 
@@ -104,7 +114,7 @@ const corners = (
 
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
-  { color, border, shadowDistance, shadowOpacity, outline, outlineColor },
+  { color, border, shadowDistance, shadowOpacity, outline, outlineSize, outlineColor },
   { x, y, width, height, padding }
 ) => {
   ctx.fillStyle = `rgba(${color.join(', ')})`;
@@ -124,8 +134,6 @@ export const render: JSX.Render<BoxRenderProps> = (
   width = Math.round(width);
   height = Math.round(height);
 
-  const outlineWidth = 4;
-
   drawAndReplace(
     ctx,
     (ctx) => {
@@ -134,10 +142,10 @@ export const render: JSX.Render<BoxRenderProps> = (
       if (!outline) return;
 
       ctx.strokeRect(
-        x + outlineWidth / 2,
-        y + outlineWidth / 2,
-        width - outlineWidth,
-        height - outlineWidth
+        x + outlineSize / 2,
+        y + outlineSize / 2,
+        width - outlineSize,
+        height - outlineSize
       );
     },
     corners(x, y, width, height, border)
