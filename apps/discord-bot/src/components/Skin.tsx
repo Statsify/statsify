@@ -3,7 +3,7 @@ import { Image } from 'canvas';
 
 export interface SkinProps {
   skin: Image;
-  height: number;
+  height?: number;
 }
 
 export const Skin: JSX.FC<SkinProps> = ({ skin, height }) => (

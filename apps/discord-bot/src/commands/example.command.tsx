@@ -1,10 +1,9 @@
 import { Command, CommandContext } from '@statsify/discord';
 import { FontRenderer, JSX } from '@statsify/jsx';
-import { BaseThemeContext, IntrinsicRenders } from '@statsify/jsx/src/jsx';
 import { Canvas, loadImage } from 'canvas';
 import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 import Container from 'typedi';
-import { Header, Table } from '../components';
+import { Header, HeaderBody, Table } from '../components';
 
 @Command({
   description: 'Displays this message.',
@@ -68,10 +67,9 @@ export class ExampleCommand {
               ['Shards', '17,981', '§3'],
               ['Opals', '1', '§9'],
             ]}
+            body={(height) => <HeaderBody height={height} description="Hello World" title="Hi" />}
             width={containerWidth}
-            gameTitle={`§l§bSky§eWars §fStats §r§o(${mode})`}
-            playerName={player.prefixName}
-            playerDescription={`§bSky§eWars §7Level: ${level}\n§7Progress: §b2,222§7/§a10,000\n${level} §8[§b■■■■■■§7■■■■§8] ${level}`}
+            name={player.prefixName}
           />
           <Table
             rows={[
@@ -125,7 +123,7 @@ export class ExampleCommand {
     };
   }
 
-  private getThemeContext(theme: string): BaseThemeContext {
+  private getThemeContext(theme: string): JSX.BaseThemeContext {
     if (theme === 'default') {
       return {
         renderer: Container.get(FontRenderer),
@@ -137,7 +135,7 @@ export class ExampleCommand {
     };
   }
 
-  private getThemeRenders(theme: string): Partial<IntrinsicRenders> {
+  private getThemeRenders(theme: string): Partial<JSX.IntrinsicRenders> {
     if (theme === 'default') {
       return {};
     }
