@@ -105,12 +105,12 @@ const swc = async (existingFolders) => {
     .forEach((folder) => deleteDirectories(folder));
 };
 
-const all = async () => {
-  await nodeModules();
-  await turboRepo();
-  await dist();
-  await coverage();
-  await swc();
+const all = async (activeFolders) => {
+  await nodeModules(activeFolders);
+  await turboRepo(activeFolders);
+  await dist(activeFolders);
+  await coverage(activeFolders);
+  await swc(activeFolders);
 };
 
 const deleteDirectories = (file) => rmSync(file, { recursive: true, force: true });

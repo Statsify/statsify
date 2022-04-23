@@ -6,7 +6,7 @@ export const inquirerLogger = (title, message, newLine = true) => {
   );
 };
 
-export const inquirerConfirmation = async (message = 'Are you sure?', selected = false) =>
+export const inquirerConfirmation = async (message = 'Are you sure?', selected = true) =>
   (
     await inquirer.prompt([
       {

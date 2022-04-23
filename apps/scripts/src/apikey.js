@@ -3,7 +3,7 @@
 import { createHash, randomUUID } from 'crypto';
 import inquirer from 'inquirer';
 import Redis from 'ioredis';
-import { inquirerLogger } from './constants.js';
+import { inquirerConfirmation, inquirerLogger } from './constants.js';
 const redis = new Redis(process.env.REDIS_URL);
 
 // TODO unify functions (one createKey)
@@ -151,22 +151,16 @@ const createNewKey = async () => {
 };
 
 const deleteKey = async () => {
-  const { deletedKey, confirmation } = await inquirer.prompt([
+  const { deletedKey } = await inquirer.prompt([
     {
       type: 'list',
       name: 'deletedKey',
       message: 'Which API Key?',
       choices: await getKeyNames(),
     },
-    {
-      type: 'confirm',
-      name: 'confirmation',
-      message: 'Are you sure?',
-      default: false,
-    },
   ]);
 
-  if (!confirmation) return;
+  if (!(await inquirerConfirmation(false))) return;
 
   const activeKeys = await getKeys();
 
@@ -196,7 +190,7 @@ const listKeys = async () => {
 };
 
 const editKey = async () => {
-  const { editedKey, field, confirmation } = await inquirer.prompt([
+  const { editedKey, field } = await inquirer.prompt([
     {
       type: 'list',
       name: 'editedKey',
@@ -209,15 +203,9 @@ const editKey = async () => {
       message: 'Which Field?',
       choices: ['name', 'role', 'limit'],
     },
-    {
-      type: 'confirm',
-      name: 'confirmation',
-      message: 'Are you sure?',
-      default: false,
-    },
   ]);
 
-  if (!confirmation) return;
+  if (!(await inquirerConfirmation(true))) return;
 
   const activeKeys = await getKeys();
 
