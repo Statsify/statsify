@@ -7,7 +7,7 @@
     // Update 'VARIANT' to pick a Node version: 16, 14, 12.
     // Append -bullseye or -buster to pin to an OS version.
     // Use -bullseye variants on local on arm64/Apple Silicon.
-    "args": { 
+    "args": {
       "VARIANT": "16"
     }
   },
@@ -51,7 +51,7 @@
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "/workspaces/statsify/.devcontainer/install.sh",
 
-  "postStartCommand": "sudo /etc/init.d/redis-server start && yarn scripts create-key --noninteractive",
+  "postStartCommand": "sudo /etc/init.d/redis-server start && yarn scripts apikey --nonInteractiveKeyCreation",
 
   // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
   "remoteUser": "node",
