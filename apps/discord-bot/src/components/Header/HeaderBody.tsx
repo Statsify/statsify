@@ -18,9 +18,9 @@ export const HeaderBody: JSX.FC<HeaderBodyProps> = ({
   );
 
   const description = (
-    <box width="100%">
+    <box width="100%" direction="column">
       {descriptionStr.split('\n').map((t) => (
-        <text>{t}</text>
+        <text margin={1}>{t}</text>
       ))}
     </box>
   );

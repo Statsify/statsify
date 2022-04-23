@@ -30,6 +30,8 @@ export class ExampleCommand {
       uuid: '96f645ba026b4e45bc34dd8f0531334c',
     };
 
+    const level = `§b[17Ω]`;
+
     const stats = {
       wins: `${(2985).toLocaleString()}`,
       kills: (25879).toLocaleString(),
@@ -44,7 +46,7 @@ export class ExampleCommand {
     const skin = await loadImage(`https://visage.surgeplay.com/full/${player.uuid}.png`);
 
     const width = 860;
-    const height = 600;
+    const height = 500;
 
     const containerWidth = width * 0.95;
     const containerHeight = height * 0.9;
@@ -54,16 +56,22 @@ export class ExampleCommand {
         <div direction="column" width={containerWidth} height={containerHeight} align="center">
           <Header
             skin={skin}
-            // sidebar={[
-            //   ['Coins', '4,783,624', '§6'],
-            //   ['Loot Chests', '188', '§e'],
-            //   ['Tokens', '1,210,000', '§a'],
-            //   ['Souls', '21,026', '§b'],
-            //   ['Heads', '2,367', '§d'],
-            //   ['Shards', '17,981', '§3'],
-            //   ['Opals', '1', '§9'],
-            // ]}
-            body={(height) => <HeaderBody height={height} description="Hello World" title="Hi" />}
+            sidebar={[
+              ['Coins', '4,783,624', '§6'],
+              ['Loot Chests', '188', '§e'],
+              ['Tokens', '1,210,000', '§a'],
+              ['Souls', '21,026', '§b'],
+              ['Heads', '2,367', '§d'],
+              ['Shards', '17,981', '§3'],
+              ['Opals', '1', '§9'],
+            ]}
+            body={(height) => (
+              <HeaderBody
+                height={height}
+                description={`§bSky§eWars §7Level: ${level}\n§7Progress: §b2,222§7/§a10,000\n${level} §8[§b■■■■■■§7■■■■§8] ${level}`}
+                title="§l§bSky§eWars §fStats §r(§oOverall§r)"
+              />
+            )}
             width={containerWidth}
             name={player.prefixName}
           />
@@ -71,15 +79,17 @@ export class ExampleCommand {
             rows={[
               {
                 data: [
-                  ['Kills', stats.kills],
                   ['Wins §^2^§8[§7#§f16k§8]', stats.wins],
+                  ['Losses', stats.losses],
+                  ['WLR', stats.wlr],
                 ],
                 color: '§a',
               },
               {
                 data: [
+                  ['Kills', stats.kills],
                   ['Deaths', stats.deaths],
-                  ['Losses', stats.losses],
+                  ['KDR', stats.kdr],
                 ],
                 color: '§c',
               },
@@ -87,23 +97,22 @@ export class ExampleCommand {
                 data: [
                   ['Assists', stats.assists],
                   ['Playtime', stats.playtime],
+                  ['Kit', 'Pyrotechnic'],
                 ],
                 color: '§e',
               },
-              {
-                data: [
-                  ['KDR', stats.kdr],
-                  ['WLR', stats.wlr],
-                ],
-                color: '§6',
-              },
             ]}
+            width={containerWidth}
           />
         </div>
       </div>
     );
 
     const canvas = new Canvas(width, height);
+
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#FFF';
+    ctx.fillRect(0, 0, width, height);
 
     const instructions = JSX.createInstructions(
       <Profile />,
@@ -136,10 +145,6 @@ export class ExampleCommand {
       return {};
     }
 
-    return {
-      div: (ctx, _, { x, y, width, height }) => {
-        ctx.fillRect(x, y, width, height);
-      },
-    };
+    return {};
   }
 }

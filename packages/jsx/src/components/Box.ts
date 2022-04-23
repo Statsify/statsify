@@ -26,6 +26,7 @@ export interface BoxProps extends Omit<Partial<BoxRenderProps>, 'color' | 'outli
   margin?: JSX.Spacing;
   location?: JSX.StyleLocation;
   direction?: JSX.StyleDirection;
+  align?: JSX.StyleAlign;
   color?: string;
   outlineColor?: string;
 }
@@ -38,6 +39,7 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   padding,
   location = 'center',
   direction = 'row',
+  align = 'default',
   border = { topLeft: 4, topRight: 4, bottomLeft: 4, bottomRight: 4 },
   color = 'rgba(0, 0, 0, 0.5)',
   shadowDistance = 4,
@@ -59,7 +61,7 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
       width,
       height,
     },
-    style: { location, direction, align: 'default' },
+    style: { location, direction, align },
     props: {
       border,
       color: rgbColor,
