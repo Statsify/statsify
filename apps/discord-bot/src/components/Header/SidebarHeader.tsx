@@ -1,7 +1,9 @@
 import { JSX, useComponentHeight, useComponentWidth } from '@statsify/jsx';
+import type { Image } from 'canvas';
+import { Skin } from '../Skin';
 
 export interface SidebarHeaderProps {
-  skin: JSX.ElementNode;
+  skin: Image;
   bodyEl: (height?: number) => JSX.ElementNode;
   sidebar: JSX.ElementNode;
   name: JSX.ElementNode;
@@ -10,7 +12,7 @@ export interface SidebarHeaderProps {
 
 export const SidebarHeader: JSX.FC<SidebarHeaderProps> = ({
   name,
-  skin,
+  skin: skinImage,
   sidebar,
   bodyEl,
   width,
@@ -32,7 +34,7 @@ export const SidebarHeader: JSX.FC<SidebarHeaderProps> = ({
     body = bodyEl(headerHeight - nameHeight);
   }
 
-  skin.y.size = headerHeight;
+  const skin = <Skin skin={skinImage} height={headerHeight} />;
 
   const inner = (
     <div direction="column">

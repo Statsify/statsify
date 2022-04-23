@@ -3,6 +3,7 @@ import type * as JSX from '../jsx';
 
 export interface ImageRenderProps {
   image: CanvasImage;
+  crop?: [sx: number, sy: number, sw: number, sh: number];
 }
 
 export interface ImageProps extends ImageRenderProps {
@@ -14,6 +15,7 @@ export const component: JSX.RawFC<ImageProps> = ({
   image,
   height = image.height,
   width = image.width,
+  crop,
   children,
 }) => ({
   name: 'Image',
@@ -22,10 +24,14 @@ export const component: JSX.RawFC<ImageProps> = ({
     height,
   },
   style: { location: 'center', direction: 'row', align: 'center' },
-  props: { image },
+  props: { image, crop },
   children,
 });
 
-export const render: JSX.Render<ImageRenderProps> = (ctx, { image }, { x, y, width, height }) => {
-  ctx.drawImage(image, x, y, width, height);
+export const render: JSX.Render<ImageRenderProps> = (
+  ctx,
+  { image, crop },
+  { x, y, width, height }
+) => {
+  ctx.drawImage(image, ...(crop ?? []), x, y, width, height);
 };

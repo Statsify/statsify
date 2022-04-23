@@ -1,15 +1,23 @@
 import { JSX, useComponentHeight, useComponentWidth } from '@statsify/jsx';
+import type { Image } from 'canvas';
+import { Skin } from '../Skin';
 
 export interface SidebarHeaderProps {
-  skin: JSX.ElementNode;
+  skin: Image;
   body: JSX.ElementNode;
   name: JSX.ElementNode;
   width: number;
 }
 
-export const SidebarlessHeader: JSX.FC<SidebarHeaderProps> = ({ name, skin, body, width }) => {
+export const SidebarlessHeader: JSX.FC<SidebarHeaderProps> = ({
+  name,
+  skin: skinImage,
+  body,
+  width,
+}) => {
   const headerHeight = useComponentHeight(name) + useComponentHeight(body) - 8;
-  skin.y.size = headerHeight;
+
+  const skin = <Skin skin={skinImage} height={headerHeight} />;
 
   const bodyWidth = width - useComponentWidth(skin);
 

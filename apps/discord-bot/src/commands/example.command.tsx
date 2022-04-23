@@ -30,8 +30,6 @@ export class ExampleCommand {
       uuid: '96f645ba026b4e45bc34dd8f0531334c',
     };
 
-    const level = `§b[17Ω]`;
-
     const stats = {
       wins: `${(2985).toLocaleString()}`,
       kills: (25879).toLocaleString(),
@@ -42,8 +40,6 @@ export class ExampleCommand {
       kdr: (2.68).toLocaleString(),
       wlr: (0.32).toLocaleString(),
     };
-
-    const mode = 'Overall';
 
     const skin = await loadImage(`https://visage.surgeplay.com/full/${player.uuid}.png`);
 
@@ -58,15 +54,15 @@ export class ExampleCommand {
         <div direction="column" width={containerWidth} height={containerHeight} align="center">
           <Header
             skin={skin}
-            sidebar={[
-              ['Coins', '4,783,624', '§6'],
-              ['Loot Chests', '188', '§e'],
-              ['Tokens', '1,210,000', '§a'],
-              ['Souls', '21,026', '§b'],
-              ['Heads', '2,367', '§d'],
-              ['Shards', '17,981', '§3'],
-              ['Opals', '1', '§9'],
-            ]}
+            // sidebar={[
+            //   ['Coins', '4,783,624', '§6'],
+            //   ['Loot Chests', '188', '§e'],
+            //   ['Tokens', '1,210,000', '§a'],
+            //   ['Souls', '21,026', '§b'],
+            //   ['Heads', '2,367', '§d'],
+            //   ['Shards', '17,981', '§3'],
+            //   ['Opals', '1', '§9'],
+            // ]}
             body={(height) => <HeaderBody height={height} description="Hello World" title="Hi" />}
             width={containerWidth}
             name={player.prefixName}
