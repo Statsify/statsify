@@ -4,6 +4,15 @@ import { BridgeDuels, MultiDuelsGameMode, SingleDuelsGameMode, UHCDuels } from '
 
 export class Duels {
   @Field()
+  public pingRange: number;
+
+  @Field()
+  public coins: number;
+
+  @Field()
+  public lootChests: number;
+
+  @Field()
   public overall: SingleDuelsGameMode;
 
   @Field()
