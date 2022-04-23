@@ -6,7 +6,7 @@ import inquirer from 'inquirer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import util from 'util';
-import { inquirerConfirmation, inquirerLogger } from './constants.js';
+import { inquirerConfirmation, inquirerLogger } from './utils.js';
 
 const __exec = util.promisify(exec);
 const __filename = fileURLToPath(import.meta.url);

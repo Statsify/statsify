@@ -3,7 +3,7 @@
 import { createHash, randomUUID } from 'crypto';
 import inquirer from 'inquirer';
 import Redis from 'ioredis';
-import { inquirerConfirmation, inquirerLogger } from './constants.js';
+import { inquirerConfirmation, inquirerLogger } from './utils.js';
 const redis = new Redis(process.env.REDIS_URL);
 
 // TODO unify functions (one createKey)
