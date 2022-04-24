@@ -10,6 +10,7 @@ body:
     id: package
     attributes:
       label: Which package is this bug report for?
+      multiple: true
       options:
         - api
         - discord-bot
