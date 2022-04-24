@@ -3,6 +3,15 @@ import { Field } from '../../../metadata';
 import { BridgeDuels, MultiDuelsGameMode, SingleDuelsGameMode, UHCDuels } from './mode';
 
 export class Duels {
+  @Field({ store: { default: 300 }, leaderboard: { enabled: false } })
+  public pingRange: number;
+
+  @Field()
+  public coins: number;
+
+  @Field()
+  public lootChests: number;
+
   @Field()
   public overall: SingleDuelsGameMode;
 
@@ -71,5 +80,9 @@ export class Duels {
     this.skywars = new MultiDuelsGameMode(data, 'SkyWars', 'sw', 'skywars');
     this.sumo = new SingleDuelsGameMode(data, 'Sumo', 'sumo_duel');
     this.uhc = new UHCDuels(data);
+
+    this.pingRange = data?.pingPreference ?? 300;
+    this.coins = data.coins;
+    this.lootChests = data.duels_chests;
   }
 }
