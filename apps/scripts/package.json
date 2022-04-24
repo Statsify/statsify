@@ -2,10 +2,13 @@
   "name": "scripts",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "create-key": "node -r dotenv/config src/create-key.mjs dotenv_config_path=../../.env"
+    "apikey": "node -r dotenv/config src/apikey.js dotenv_config_path=../../.env",
+    "purge": "node -r dotenv/config src/purge.js dotenv_config_path=../../.env"
   },
   "dependencies": {
+    "chalk": "^5.0.1",
     "dotenv": "^16.0.0",
     "inquirer": "^8.2.2",
     "ioredis": "^5.0.4"
