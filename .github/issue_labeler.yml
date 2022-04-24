@@ -1,32 +1,32 @@
 "api":
-  - "### Which package is the feature request for\?\\n\\n.*api"
+  - "### Which package is the feature request for\\?\\n\\n.*api"
 
 "discord-bot":
-  - "### Which package is the feature request for\?\\n\\n.*discord-bot"
+  - "### Which package is the feature request for\\?\\n\\n.*discord-bot"
 
 "scripts":
-  - "### Which package is the feature request for\?\\n\\n.*scripts"
+  - "### Which package is the feature request for\\?\\n\\n.*scripts"
 
 "site":
-  - "### Which package is the feature request for\?\\n\\n.*site"
+  - "### Which package is the feature request for\\?\\n\\n.*site"
 
 "@statsify/assets":
-  - "### Which package is the feature request for\?\\n\\n.*@statsify\/assets"
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/assets"
 
 "@statsify/discord":
-  - "### Which package is the feature request for\?\\n\\n.*@statsify\/discord"
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/discord"
 
 "@statsify/jsx":
-  - "### Which package is the feature request for\?\\n\\n.*@statsify\/jsx"
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/jsx"
 
 "@statsify/logger":
-  - "### Which package is the feature request for\?\\n\\n.*@statsify\/logger"
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/logger"
 
 "@statsify/math":
-  - "### Which package is the feature request for\?\\n\\n.*@statsify\/math"
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/math"
 
 "@statsify/schemas":
-  - "### Which package is the feature request for\?\\n\\n.*@statsify\/schemas"
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/schemas"
 
 "@statsify/util":
-  - "### Which package is the feature request for\?\\n\\n.*@statsify\/util"
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/util"
