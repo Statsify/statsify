@@ -1,4 +1,4 @@
-name: Labeler
+name: "PR Labeler"
 on:
 - pull_request_target
 
@@ -12,3 +12,4 @@ jobs:
     - uses: actions/labeler@v4
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        configuration-path: .github/pr_labeler.yml
