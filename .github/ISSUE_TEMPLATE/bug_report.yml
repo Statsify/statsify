@@ -15,13 +15,13 @@ body:
         - api
         - discord-bot
         - site
-        - assets
-        - discord
-        - jsx
-        - logger
-        - math
-        - schemas
-        - util
+        - "@statsify/assets"
+        - "@statsify/discord"
+        - "@statsify/jsx"
+        - "@statsify/logger"
+        - "@statsify/math"
+        - "@statsify/schemas"
+        - "@statsify/util"
     validations:
       required: true
   - type: textarea
