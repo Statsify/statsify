@@ -10,6 +10,9 @@
 "site":
   - "### Which package is the feature request for\\?\\n\\n.*site"
 
+"verify-server":
+  - "### Which package is the feature request for\\?\\n\\n.*discord-bot"
+
 "@statsify/assets":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/assets"
 

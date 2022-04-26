@@ -10,6 +10,9 @@
 "site":
   - apps/site/**/*
 
+"verify-server":
+  - apps/verify-server/**/*
+
 "@statsify/assets":
   - packages/assets/**/*
 
