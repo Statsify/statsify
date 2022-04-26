@@ -1,4 +1,4 @@
-export * from './Box';
-export * from './Div';
-export * from './Image';
-export * from './Text';
+export * as Box from './Box';
+export * as Div from './Div';
+export * as Image from './Image';
+export * as Text from './Text';

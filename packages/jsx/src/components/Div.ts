@@ -11,7 +11,9 @@ export interface DivProps {
   align?: JSX.StyleAlign;
 }
 
-export const Div: JSX.RawFC<DivProps> = ({
+export type DivRenderProps = unknown;
+
+export const component: JSX.RawFC<DivProps, DivRenderProps> = ({
   children,
   width,
   height,
@@ -29,6 +31,9 @@ export const Div: JSX.RawFC<DivProps> = ({
     width,
     height,
   },
+  props: {},
   style: { location, direction, align },
   children,
 });
+
+export const render: JSX.Render<DivRenderProps> = noop;

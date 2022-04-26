@@ -10,6 +10,7 @@ config({ path: '../../.env' });
 
 async function bootstrap() {
   await loadFont();
+
   const rest = new RestClient({ token: process.env.DISCORD_BOT_TOKEN });
   const commands = await CommandLoader.load(path.join(__dirname, './commands'));
 

@@ -1,8 +1,14 @@
 import type { Canvas, CanvasRenderingContext2D } from 'canvas';
-import type { Instruction } from './types';
+import type { BaseThemeContext, Instruction } from './types';
 import { getPositionalDelta, getTotalSize } from './util';
 
-const render = (ctx: CanvasRenderingContext2D, instruction: Instruction, x: number, y: number) => {
+const render = <T extends BaseThemeContext>(
+  ctx: CanvasRenderingContext2D,
+  theme: T,
+  instruction: Instruction,
+  x: number,
+  y: number
+) => {
   x += instruction.x.margin1;
   y += instruction.y.margin1;
 
@@ -25,7 +31,7 @@ const render = (ctx: CanvasRenderingContext2D, instruction: Instruction, x: numb
     },
   };
 
-  instruction.render(ctx, location);
+  instruction.render(ctx, instruction.props, location, theme);
 
   if (!instruction.children?.length) return;
 
@@ -57,21 +63,25 @@ const render = (ctx: CanvasRenderingContext2D, instruction: Instruction, x: numb
       const centerDelta = (instruction[oppSide].size - oppSize) / 2;
 
       oppSide === 'x' ? (x += centerDelta) : (y += centerDelta);
-      render(ctx, child, x, y);
+      render(ctx, theme, child, x, y);
       oppSide === 'x' ? (x -= centerDelta) : (y -= centerDelta);
     } else {
-      render(ctx, child, x, y);
+      render(ctx, theme, child, x, y);
     }
 
     applyDelta(size);
   });
 };
 
-export function createRender(canvas: Canvas, instructions: Instruction): Canvas {
+export function createRender<T extends BaseThemeContext = BaseThemeContext>(
+  canvas: Canvas,
+  instructions: Instruction,
+  theme: T
+): Canvas {
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
 
-  render(ctx, instructions, 0, 0);
+  render(ctx, theme, instructions, 0, 0);
 
   return canvas;
 }
