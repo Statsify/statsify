@@ -37,7 +37,7 @@
       "name": "Verify Server",
       "runtimeExecutable": "yarn",
       "cwd": "${workspaceFolder}",
-      "runtimeArgs": ["verify-start", "start"],
+      "runtimeArgs": ["verify-server", "start"],
       "outputCapture": "std"
     }
   ]

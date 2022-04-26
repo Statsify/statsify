@@ -11,7 +11,7 @@
   - "### Which package is the feature request for\\?\\n\\n.*site"
 
 "verify-server":
-  - "### Which package is the feature request for\\?\\n\\n.*verify-script"
+  - "### Which package is the feature request for\\?\\n\\n.*verify-server"
 
 "@statsify/assets":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/assets"
