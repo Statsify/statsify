@@ -30,6 +30,15 @@
       "cwd": "${workspaceFolder}",
       "runtimeArgs": ["discord-bot", "start"],
       "outputCapture": "std"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Verify Server",
+      "runtimeExecutable": "yarn",
+      "cwd": "${workspaceFolder}",
+      "runtimeArgs": ["verify-start", "start"],
+      "outputCapture": "std"
     }
   ]
 }
