@@ -1,4 +1,5 @@
 import { Constructor } from '@statsify/util';
+import { BasePropOptions } from '@typegoose/typegoose/lib/types';
 import {
   LeaderboardDisabledMetadata,
   LeaderboardEnabledMetadata,
@@ -20,18 +21,10 @@ export type DocOptions = Partial<{
   max: number;
 }>;
 
-export type MongoOptions = Partial<{
-  index: boolean;
-  unique: boolean;
-  sparse: boolean;
-  lowercase: boolean;
-  uppercase: boolean;
-}>;
-
 export interface FieldOptions {
   type?: TypeOptions;
   leaderboard?: LeaderboardOptions;
   store?: StoreOptions;
   docs?: DocOptions;
-  mongo?: MongoOptions;
+  mongo?: Partial<BasePropOptions>;
 }
