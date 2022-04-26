@@ -1,30 +1,16 @@
 import { Command, CommandContext } from '@statsify/discord';
 import { FontRenderer, JSX } from '@statsify/jsx';
 import { Canvas, loadImage } from 'canvas';
-import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 import Container from 'typedi';
 import { Header, HeaderBody, Table } from '../components';
 
 @Command({
   description: 'Displays this message.',
-  args: [
-    {
-      name: 'theme',
-      description: 'The theme to use',
-      type: ApplicationCommandOptionType.String,
-      required: true,
-      choices: [
-        { name: 'Default', value: 'default' },
-        { name: 'Faithful', value: 'faithful' },
-      ],
-    },
-  ],
+  args: [],
   cooldown: 5,
 })
 export class ExampleCommand {
   public async run(context: CommandContext) {
-    const theme = context.option<string>('theme');
-
     const player = {
       prefixName: '§6WWWWWWWWWWWWWWWWWW',
       uuid: '96f645ba026b4e45bc34dd8f0531334c',
@@ -114,37 +100,14 @@ export class ExampleCommand {
     ctx.fillStyle = '#FFF';
     ctx.fillRect(0, 0, width, height);
 
-    const instructions = JSX.createInstructions(
-      <Profile />,
-      canvas.width,
-      canvas.height,
-      this.getThemeRenders(theme)
-    );
+    const instructions = JSX.createInstructions(<Profile />, canvas.width, canvas.height);
 
-    const buffer = JSX.createRender(canvas, instructions, this.getThemeContext(theme)).toBuffer();
+    const buffer = JSX.createRender(canvas, instructions, {
+      renderer: Container.get(FontRenderer),
+    }).toBuffer();
 
     return {
       files: [{ name: 'example.png', data: buffer, type: 'image/png' }],
     };
-  }
-
-  private getThemeContext(theme: string): JSX.BaseThemeContext {
-    if (theme === 'default') {
-      return {
-        renderer: Container.get(FontRenderer),
-      };
-    }
-
-    return {
-      renderer: Container.get('HD_RENDERER'),
-    };
-  }
-
-  private getThemeRenders(theme: string): Partial<JSX.IntrinsicRenders> {
-    if (theme === 'default') {
-      return {};
-    }
-
-    return {};
   }
 }
