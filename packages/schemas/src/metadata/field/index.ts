@@ -52,9 +52,9 @@ export function Field({
 
     //Typegoose options
     prop({
-      ...mongoOptions,
       type: type.type,
       required: store.required,
+      ...mongoOptions,
     })(target, propertyKey);
   };
 }
