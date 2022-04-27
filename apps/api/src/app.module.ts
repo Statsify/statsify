@@ -10,6 +10,7 @@ import { HypixelResourcesModule } from './hypixel-resources';
 import { LeaderboardModule } from './leaderboards';
 import { PlayerModule } from './player';
 import { SkinModule } from './skin';
+import { UserModule } from './user';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { SkinModule } from './skin';
     LeaderboardModule,
     HistoricalModule,
     AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
 })

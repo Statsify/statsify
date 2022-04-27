@@ -1,5 +1,5 @@
 import { Controller, Delete, Get, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthRole } from '../auth';
 import { Auth } from '../auth/auth.decorator';
 import { CachedPlayerDto, FriendDto } from '../dtos';
@@ -19,13 +19,14 @@ import { SuccessResponse } from '../responses/success.response';
 import { PlayerService } from './player.service';
 
 @Controller('/player')
+@ApiTags('Player')
 export class PlayerController {
   public constructor(
     private readonly playerService: PlayerService,
     private readonly hypixelService: HypixelService
   ) {}
 
-  @ApiOperation({ summary: 'Get a Player', tags: ['Player'] })
+  @ApiOperation({ summary: 'Get a Player' })
   @ApiOkResponse({ type: GetPlayerResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()
@@ -39,7 +40,7 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Deletes a Player', tags: ['Player'] })
+  @ApiOperation({ summary: 'Deletes a Player' })
   @ApiOkResponse({ type: SuccessResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
@@ -52,7 +53,7 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Get the Recent Games of a Player', tags: ['Player'] })
+  @ApiOperation({ summary: 'Get the Recent Games of a Player' })
   @ApiOkResponse({ type: GetRecentGamesResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()
@@ -66,7 +67,7 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Get the Status of a Player', tags: ['Player'] })
+  @ApiOperation({ summary: 'Get the Status of a Player' })
   @ApiOkResponse({ type: GetStatusResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()
@@ -80,7 +81,7 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Get the Friends of a Player', tags: ['Player'] })
+  @ApiOperation({ summary: 'Get the Friends of a Player' })
   @ApiOkResponse({ type: GetFriendsResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 10 })
@@ -94,10 +95,7 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({
-    summary: 'Get the Ranked SkyWars rating and position of a Player',
-    tags: ['Player'],
-  })
+  @ApiOperation({ summary: 'Get the Ranked SkyWars rating and position of a Player' })
   @ApiOkResponse({ type: GetRankedSkyWarsResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()
@@ -111,7 +109,7 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Get the Achievements of a Player', tags: ['Player'] })
+  @ApiOperation({ summary: 'Get the Achievements of a Player' })
   @ApiOkResponse({ type: GetAchievementsResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()

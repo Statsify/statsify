@@ -7,9 +7,15 @@ export class User {
   @Field({ mongo: { sparse: true }, store: { required: false } })
   public uuid?: string;
 
-  @Field()
+  @Field({ store: { required: false } })
+  public verifiedAt?: number;
+
+  @Field({ store: { required: false } })
+  public unverifiedAt?: number;
+
+  @Field({ store: { required: false } })
   public credits?: number;
 
-  @Field()
-  public locale: string;
+  @Field({ store: { required: false } })
+  public locale?: string;
 }
