@@ -1,9 +1,22 @@
+import { Logger } from '@statsify/logger';
 import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 const hasRequiredAssets = () => {
-  if (!existsSync('../../assets/minecraft-textures'))
-    throw new Error('Add a 1.8.9 texture pack to assets/minecraft-textures');
+  const logger = new Logger('@statsify/assets');
+  let missing = false;
+
+  if (!existsSync('../../assets/minecraft-textures')) {
+    logger.error('Add a 1.8.9 texture pack to assets/minecraft-textures');
+    missing = true;
+  }
+
+  if (!existsSync('../../assets/logos')) {
+    logger.error('Add statsify logos to assets/logos');
+    missing = true;
+  }
+
+  if (missing) throw new Error('Missing assets');
 };
 
 let hasPrivateAssets = false;
@@ -44,6 +57,10 @@ export const importAsset = async <T>(file: string): Promise<T | null> => {
  * @returns the full path to the texture
  */
 export const getMinecraftTexturePath = (texturePath: string) => {
+  return join(getImagePath(`minecraft-textures/assets/minecraft/`), texturePath);
+};
+
+export const getImagePath = (imagePath: string) => {
   checkPrivateAssets();
-  return join(`../../assets/minecraft-textures/assets/minecraft/`, texturePath);
+  return join(`../../assets/`, imagePath);
 };

@@ -1309,6 +1309,8 @@ __metadata:
 "@statsify/assets@workspace:^, @statsify/assets@workspace:packages/assets":
   version: 0.0.0-use.local
   resolution: "@statsify/assets@workspace:packages/assets"
+  dependencies:
+    "@statsify/logger": "workspace:^"
   languageName: unknown
   linkType: soft
 
@@ -8748,6 +8750,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "verify-server@workspace:apps/verify-server"
   dependencies:
+    "@statsify/assets": "workspace:^"
     "@statsify/logger": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
