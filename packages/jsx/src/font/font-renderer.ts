@@ -1,11 +1,13 @@
-import { getMinecraftTexturePath } from '@statsify/assets';
 import { Canvas, ImageData, loadImage } from 'canvas';
 import { readdir } from 'fs/promises';
 import { join } from 'path';
-import positions from '../../positions.json';
-import sizes from '../../sizes.json';
+import _positions from '../../positions.json';
+import _sizes from '../../sizes.json';
 import { mcShadow, RGB } from '../colors';
 import { TextNode, Token, tokens } from './tokens';
+
+const sizes: Sizes = _sizes;
+const positions: string[][] = _positions;
 
 type CharacterSizes = Record<string, { start?: number; width?: number }>;
 
@@ -16,17 +18,14 @@ interface Sizes {
 
 export class FontRenderer {
   private images: Map<string, CanvasRenderingContext2D> = new Map();
-  private sizes: Sizes = sizes;
-  private positions: string[][] = positions;
 
-  public async loadImages() {
-    const fontDir = getMinecraftTexturePath('textures/font');
-    const files = await readdir(fontDir);
+  public async loadImages(fontPath: string) {
+    const files = await readdir(fontPath);
 
     const pictures = files.filter((file) => file.endsWith('.png'));
 
     for (const file of pictures) {
-      const image = await loadImage(join(fontDir, file));
+      const image = await loadImage(join(fontPath, file));
 
       const canvas = new Canvas(image.width, image.height);
       const ctx = canvas.getContext('2d');
@@ -149,7 +148,7 @@ export class FontRenderer {
   }
 
   private isAscii(unicode: string) {
-    return unicode.toUpperCase() in this.sizes.ascii;
+    return unicode.toUpperCase() in sizes.ascii;
   }
 
   private getCharacterImage(unicode: string, isAscii: boolean) {
@@ -162,8 +161,8 @@ export class FontRenderer {
 
   private getCharacterIndexLocation(unicode: string, isAscii: boolean) {
     if (isAscii) {
-      const y = this.positions.findIndex((row) => row.includes(unicode));
-      const x = this.positions[y].indexOf(unicode);
+      const y = positions.findIndex((row) => row.includes(unicode));
+      const x = positions[y].indexOf(unicode);
 
       return {
         x,
@@ -188,7 +187,7 @@ export class FontRenderer {
 
     const scale = this.getTextureScale(image);
 
-    const characterSize = this.sizes[isAscii ? 'ascii' : `unicode`][unicode.toUpperCase()];
+    const characterSize = sizes[isAscii ? 'ascii' : `unicode`][unicode.toUpperCase()];
 
     const startOffset = characterSize?.start ?? 0;
     const width = characterSize?.width ?? 0;

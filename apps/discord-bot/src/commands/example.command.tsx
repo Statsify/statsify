@@ -1,7 +1,8 @@
-import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/jsx';
+import { Command, CommandContext } from '@statsify/discord';
+import { FontRenderer, JSX } from '@statsify/jsx';
 import { Canvas, loadImage } from 'canvas';
-import { Header, Table } from '../components';
+import Container from 'typedi';
+import { Header, HeaderBody, Table } from '../components';
 
 @Command({
   description: 'Displays this message.',
@@ -9,7 +10,7 @@ import { Header, Table } from '../components';
   cooldown: 5,
 })
 export class ExampleCommand {
-  public async run() {
+  public async run(context: CommandContext) {
     const player = {
       prefixName: '§6WWWWWWWWWWWWWWWWWW',
       uuid: '96f645ba026b4e45bc34dd8f0531334c',
@@ -28,12 +29,10 @@ export class ExampleCommand {
       wlr: (0.32).toLocaleString(),
     };
 
-    const mode = 'Overall';
-
     const skin = await loadImage(`https://visage.surgeplay.com/full/${player.uuid}.png`);
 
     const width = 860;
-    const height = 600;
+    const height = 500;
 
     const containerWidth = width * 0.95;
     const containerHeight = height * 0.9;
@@ -52,24 +51,31 @@ export class ExampleCommand {
               ['Shards', '17,981', '§3'],
               ['Opals', '1', '§9'],
             ]}
+            body={(height) => (
+              <HeaderBody
+                height={height}
+                description={`§bSky§eWars §7Level: ${level}\n§7Progress: §b2,222§7/§a10,000\n${level} §8[§b■■■■■■§7■■■■§8] ${level}`}
+                title="§l§bSky§eWars §fStats §r(§oOverall§r)"
+              />
+            )}
             width={containerWidth}
-            gameTitle={`§l§bSky§eWars §fStats §r§o(${mode})`}
-            playerName={player.prefixName}
-            playerDescription={`§bSky§eWars §7Level: ${level}\n§7Progress: §b2,222§7/§a10,000\n${level} §8[§b■■■■■■§7■■■■§8] ${level}`}
+            name={player.prefixName}
           />
           <Table
             rows={[
               {
                 data: [
-                  ['Kills', stats.kills],
                   ['Wins §^2^§8[§7#§f16k§8]', stats.wins],
+                  ['Losses', stats.losses],
+                  ['WLR', stats.wlr],
                 ],
                 color: '§a',
               },
               {
                 data: [
+                  ['Kills', stats.kills],
                   ['Deaths', stats.deaths],
-                  ['Losses', stats.losses],
+                  ['KDR', stats.kdr],
                 ],
                 color: '§c',
               },
@@ -77,17 +83,12 @@ export class ExampleCommand {
                 data: [
                   ['Assists', stats.assists],
                   ['Playtime', stats.playtime],
+                  ['Kit', 'Pyrotechnic'],
                 ],
                 color: '§e',
               },
-              {
-                data: [
-                  ['KDR', stats.kdr],
-                  ['WLR', stats.wlr],
-                ],
-                color: '§6',
-              },
             ]}
+            width={containerWidth}
           />
         </div>
       </div>
@@ -95,12 +96,18 @@ export class ExampleCommand {
 
     const canvas = new Canvas(width, height);
 
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#FFF';
+    ctx.fillRect(0, 0, width, height);
+
     const instructions = JSX.createInstructions(<Profile />, canvas.width, canvas.height);
-    const buffer = JSX.createRender(canvas, instructions).toBuffer();
+
+    const buffer = JSX.createRender(canvas, instructions, {
+      renderer: Container.get(FontRenderer),
+    }).toBuffer();
 
     return {
       files: [{ name: 'example.png', data: buffer, type: 'image/png' }],
-      content: 'hello',
     };
   }
 }
