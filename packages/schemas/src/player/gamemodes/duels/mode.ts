@@ -65,8 +65,14 @@ export class BaseDuelsGameMode {
     this.bowShots = data[`${prefix}bow_shots`];
     this.bowHits = data[`${prefix}bow_hits`];
     this.blocksPlaced = data[`${prefix}blocks_placed`];
-    this.winstreak = data[`current_winstreak_mode_${mode}`];
-    this.bestWinstreak = data[`best_winstreak_mode_${mode}`];
+
+    if (mode == '') {
+      this.winstreak = data.current_winstreak;
+      this.bestWinstreak = data.best_overall_winstreak;
+    } else {
+      this.winstreak = data[`current_winstreak_mode_${mode}`];
+      this.bestWinstreak = data[`best_winstreak_mode_${mode}`];
+    }
 
     BaseDuelsGameMode.applyRatios(this);
   }

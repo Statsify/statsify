@@ -1,5 +1,5 @@
 import { Controller, Get, Query, StreamableFile } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ErrorResponse } from '@statsify/api-client';
 import { Auth } from '../auth';
 import { HeadDto } from '../dtos';
@@ -7,11 +7,12 @@ import { UuidDto } from '../dtos/uuid.dto';
 import { SkinService } from './skin.service';
 
 @Controller('/skin')
+@ApiTags('Skins')
 export class SkinController {
   public constructor(private readonly skinService: SkinService) {}
 
   @Get('/head')
-  @ApiOperation({ summary: 'Get a Player Head', tags: ['Skins'] })
+  @ApiOperation({ summary: 'Get a Player Head' })
   @Auth()
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getHead(@Query() { uuid, size }: HeadDto) {
@@ -21,7 +22,7 @@ export class SkinController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Get a Player Render', tags: ['Skins'] })
+  @ApiOperation({ summary: 'Get a Player Render' })
   @Auth()
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getRender(@Query() { uuid }: UuidDto) {

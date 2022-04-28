@@ -1,0 +1,38 @@
+"api":
+  - apps/api/**/*
+
+"discord-bot":
+  - apps/discord-bot/**/*
+
+"scripts":
+  - apps/scripts/**/*
+
+"site":
+  - apps/site/**/*
+
+"verify-server":
+  - apps/verify-server/**/*
+
+"@statsify/api-client":
+  - packages/api-client/**/*
+
+"@statsify/assets":
+  - packages/assets/**/*
+
+"@statsify/discord":
+  - packages/discord/**/*
+
+"@statsify/jsx":
+  - packages/jsx/**/*
+
+"@statsify/logger":
+  - packages/logger/**/*
+
+"@statsify/math":
+  - packages/math/**/*
+
+"@statsify/schemas":
+  - packages/schemas/**/*
+
+"@statsify/util":
+  - packages/util/**/*

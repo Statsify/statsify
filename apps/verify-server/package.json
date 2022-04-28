@@ -1,0 +1,23 @@
+{
+  "name": "verify-server",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node -r dotenv/config --enable-source-maps . dotenv_config_path=../../.env",
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist",
+    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w",
+    "test:types": "tsc --noEmit",
+    "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
+  },
+  "dependencies": {
+    "@statsify/assets": "workspace:^",
+    "@statsify/logger": "workspace:^",
+    "@statsify/schemas": "workspace:^",
+    "@statsify/util": "workspace:^",
+    "@typegoose/typegoose": "^9.8.1",
+    "dotenv": "^16.0.0",
+    "minecraft-protocol": "^1.34.0",
+    "mongoose": "^6.3.1"
+  }
+}

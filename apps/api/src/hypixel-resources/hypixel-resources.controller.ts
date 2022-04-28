@@ -1,15 +1,16 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ErrorResponse, GetGamecountsResponse, GetWatchdogResponse } from '@statsify/api-client';
 import { Auth } from '../auth';
 import { HypixelService } from '../hypixel';
 
 @Controller(`/hypixelresources`)
+@ApiTags('Hypixel Resources')
 export class HypixelResourcesController {
   public constructor(private readonly hypixelService: HypixelService) {}
 
   @Get(`/watchdog`)
-  @ApiOperation({ summary: 'Get Watchdog Stats', tags: ['Hypixel Resources'] })
+  @ApiOperation({ summary: 'Get Watchdog Stats' })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiOkResponse({ type: GetWatchdogResponse })
   @Auth()
@@ -23,7 +24,7 @@ export class HypixelResourcesController {
   }
 
   @Get(`/gamecounts`)
-  @ApiOperation({ summary: 'Get Hypixel Gamecounts', tags: ['Hypixel Resources'] })
+  @ApiOperation({ summary: 'Get Hypixel Gamecounts' })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiOkResponse({ type: GetGamecountsResponse })
   @Auth()

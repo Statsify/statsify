@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Response } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   ErrorResponse,
   PostPlayerLeaderboardResponse,
@@ -12,11 +12,12 @@ import { PlayerRankingsDto } from '../../dtos/player-rankings.dto';
 import { PlayerLeaderboardService } from './player-leaderboard.service';
 
 @Controller('/player/leaderboards')
+@ApiTags('Player Leaderboards')
 export class PlayerLeaderboardsController {
   public constructor(private readonly playerLeaderboardService: PlayerLeaderboardService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Get a Player Leaderboard', tags: ['Player Leaderboards'] })
+  @ApiOperation({ summary: 'Get a Player Leaderboard' })
   @ApiOkResponse({ type: PostPlayerLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
@@ -40,7 +41,7 @@ export class PlayerLeaderboardsController {
   }
 
   @Post('/rankings')
-  @ApiOperation({ summary: 'Get a Player Rankings', tags: ['Player Leaderboards'] })
+  @ApiOperation({ summary: 'Get a Player Rankings' })
   @ApiOkResponse({ type: [PostPlayerRankingsResponse] })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 5 })
