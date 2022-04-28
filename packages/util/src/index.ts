@@ -112,5 +112,27 @@ export const removeFormatting = (s: string): string => s.replace(/§./g, '');
 export const mockClass = <T>(constructor: Constructor<T>): T =>
   new constructor(...Array.from({ length: constructor.length }).fill({}));
 
+//Format milliseconds to a human readable string
+export const formatTime = (ms: number): string => {
+  if (ms < 1000) return `${ms}ms`;
+
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  const time = {
+    day: days,
+    hour: hours % 24,
+    minute: minutes % 60,
+    second: seconds % 60,
+  };
+
+  return Object.entries(time)
+    .filter(([, val]) => val > 0)
+    .map(([key, val]) => `${val} ${key}${val > 1 ? 's' : ''}`)
+    .join(', ');
+};
+
 export * from './flat';
 export * from './minecraft-colors';

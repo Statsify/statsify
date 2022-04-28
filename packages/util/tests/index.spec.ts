@@ -1,6 +1,7 @@
 import {
   findScore,
   flatten,
+  formatTime,
   isObject,
   mockClass,
   noop,
@@ -116,5 +117,25 @@ describe('mockClass', () => {
     const mock = mockClass(Test);
 
     expect(mock).toBeInstanceOf(Test);
+  });
+});
+
+describe('formatTime', () => {
+  it('should format time', () => {
+    const second = 1000;
+    const minute = 60 * second;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+
+    expect(formatTime(0)).toBe('0ms');
+    expect(formatTime(second)).toBe('1 second');
+    expect(formatTime(second * 2)).toBe('2 seconds');
+    expect(formatTime(minute)).toBe('1 minute');
+    expect(formatTime(hour)).toBe('1 hour');
+    expect(formatTime(day)).toBe('1 day');
+    expect(formatTime(day + hour + minute + second)).toBe('1 day, 1 hour, 1 minute, 1 second');
+    expect(formatTime((day + hour + minute + second) * 2)).toBe(
+      '2 days, 2 hours, 2 minutes, 2 seconds'
+    );
   });
 });

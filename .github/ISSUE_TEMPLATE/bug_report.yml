@@ -15,6 +15,7 @@ body:
         - api
         - discord-bot
         - site
+        - verify-server
         - "@statsify/assets"
         - "@statsify/discord"
         - "@statsify/jsx"

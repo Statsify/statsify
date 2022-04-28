@@ -8,6 +8,7 @@ export * from './get.player.response';
 export * from './get.rankedskywars.response';
 export * from './get.recentgames.response';
 export * from './get.status.response';
+export * from './get.user.response';
 export * from './get.watchdog.response';
 export * from './post.guild-leaderboard.response';
 export * from './post.guild-rankings.response';
