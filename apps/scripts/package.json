@@ -6,7 +6,7 @@
   "scripts": {
     "apikey": "node -r dotenv/config src/apikey.js dotenv_config_path=../../.env",
     "purge": "node -r dotenv/config src/purge.js dotenv_config_path=../../.env",
-    "createenv": "node src/createenv.js"
+    "create-env": "node src/create-env.js"
   },
   "dependencies": {
     "chalk": "^5.0.1",
