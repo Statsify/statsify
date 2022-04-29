@@ -2,7 +2,6 @@ import Axios, { AxiosInstance, Method } from 'axios';
 import { HypixelCache } from './hypixel-cache.enum';
 import {
   DeletePlayerResponse,
-  ErrorResponse,
   GetAchievementsResponse,
   GetFriendsResponse,
   GetGamecountsResponse,
@@ -37,11 +36,11 @@ export class ApiService {
       cache: cacheLevel,
     });
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.player) {
+      throw new Error(`Player "${tag}" had no data.`);
     }
 
-    return res?.player;
+    return res.player;
   }
 
   public async deletePlayer(tag: string) {
@@ -49,8 +48,8 @@ export class ApiService {
       player: tag,
     });
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.success) {
+      throw new Error(`Deleting player ${tag} failed.`);
     }
 
     return res.success;
@@ -59,8 +58,8 @@ export class ApiService {
   public async getRecentGames(tag: string) {
     const res = await this.request<GetRecentGamesResponse>(`/player/recentgames`, { uuid: tag });
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.games) {
+      throw new Error(`The player "${tag}" has no recent games available.`);
     }
 
     return res.games;
@@ -69,8 +68,8 @@ export class ApiService {
   public async getStatus(tag: string) {
     const res = await this.request<GetStatusResponse>(`/player/status`, { uuid: tag });
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.status) {
+      throw new Error(`The player "${tag}" had no status data.`);
     }
 
     return res.status;
@@ -79,8 +78,8 @@ export class ApiService {
   public async getFriends(tag: string, page = 0) {
     const res = await this.request<GetFriendsResponse>(`/player/friends`, { player: tag, page });
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.friends) {
+      throw new Error(`The player "${tag}" has no friend data.`);
     }
 
     return res.friends;
@@ -91,8 +90,8 @@ export class ApiService {
       uuid: tag,
     });
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.rankedSkyWars) {
+      throw new Error(`The player "${tag}" has no ranked skywars data.`);
     }
 
     return res.rankedSkyWars;
@@ -103,8 +102,8 @@ export class ApiService {
       player: tag,
     });
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.achievements) {
+      throw new Error(`The player "${tag}" has no achievement data.`);
     }
 
     return res;
@@ -121,8 +120,8 @@ export class ApiService {
       'POST'
     );
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.data) {
+      throw new Error(`The leaderboard "${field}" returned no data on page ${page}.`);
     }
 
     return res;
@@ -135,25 +134,25 @@ export class ApiService {
       'POST'
     );
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.rank) {
+      throw new Error(`The player "${uuid}" has no ranking data.`);
     }
 
     return res;
   }
 
-  public async getGuild(tag: string, type: 'ID' | 'NAME' | 'PLAYER', cacheLevel: HypixelCache) {
+  public async getGuild(guild: string, type: 'ID' | 'NAME' | 'PLAYER', cacheLevel: HypixelCache) {
     const res = await this.request<GetGuildResponse>(`/guild`, {
-      guild: tag,
+      guild,
       type,
       cache: cacheLevel,
     });
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.guild) {
+      throw new Error(`The Guild ${type} "${guild}" has no data.`);
     }
 
-    return res;
+    return res.guild;
   }
 
   public async getGuildLeaderboard(field: string, page = 0, name?: string) {
@@ -167,8 +166,8 @@ export class ApiService {
       'POST'
     );
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.data) {
+      throw new Error(`The guild leaderboard "${field}" returned no data on page ${page}.`);
     }
 
     return res;
@@ -181,8 +180,8 @@ export class ApiService {
       'POST'
     );
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.rank) {
+      throw new Error(`The guild "${name}" has no ranking data.`);
     }
 
     return res;
@@ -191,21 +190,21 @@ export class ApiService {
   public async getWatchdogStats() {
     const res = await this.request<GetWatchdogResponse>(`/hypixelresources/watchdog`);
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.watchdog) {
+      throw new Error('No Watchdog data is available.');
     }
 
-    return res;
+    return res.watchdog;
   }
 
   public async getGameCounts() {
     const res = await this.request<GetGamecountsResponse>(`/hypixelresources/gamecounts`);
 
-    if ((res as unknown as ErrorResponse).error) {
-      throw new Error((res as unknown as ErrorResponse).message[0]);
+    if (!res.gamecounts) {
+      throw new Error('No Game Count data is available.');
     }
 
-    return res;
+    return res.gamecounts;
   }
 
   public async getPlayerHead(uuid: string) {
@@ -227,7 +226,7 @@ export class ApiService {
       throw new Error('No key data was available.');
     }
 
-    return res;
+    return res.key;
   }
 
   public async getDiscordUser(tag: string) {
@@ -237,7 +236,7 @@ export class ApiService {
       throw new Error(`The user "${tag}" has no data available.`);
     }
 
-    return res;
+    return res.user;
   }
 
   public async verifyUser(code: string, id: string) {
@@ -247,13 +246,13 @@ export class ApiService {
       throw new Error(`Verification with code "${code}" for "${id}" has no data available.`);
     }
 
-    return res;
+    return res.user;
   }
 
   public async unverifyUser(tag: string) {
     const res = await this.request<GetUserResponse>(`/user`, { tag }, 'DELETE');
 
-    return res;
+    return res.user;
   }
 
   private async request<T>(
