@@ -1,7 +1,8 @@
 import { ValidationPipe } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { GuildController, GuildQuery } from '../src/guild';
+import { GuildQuery } from '@statsify/api-client';
+import { GuildController } from '../src/guild';
 import { useMocker } from './mocks';
 import { testKey, testUsername } from './test.constants';
 

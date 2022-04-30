@@ -15,11 +15,11 @@
     },
     "test": {
       "outputs": [],
-      "dependsOn": ["^build", "^test"]
+      "dependsOn": ["build", "^test"]
     },
     "test:coverage": {
       "outputs": ["coverage"],
-      "dependsOn": ["^test:coverage"]
+      "dependsOn": ["build", "^test:coverage"]
     },
     "lint": {
       "outputs": [],

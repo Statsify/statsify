@@ -1,10 +1,14 @@
 import { Controller, Delete, Get, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ErrorResponse, GetHistoricalResponse, GetPlayerResponse } from '@statsify/api-client';
+import {
+  ErrorResponse,
+  GetHistoricalResponse,
+  GetPlayerResponse,
+  HistoricalType,
+} from '@statsify/api-client';
 import { Auth, AuthRole } from '../auth';
 import { HistoricalDto } from '../dtos/historical.dto';
 import { PlayerDto } from '../dtos/player.dto';
-import { HistoricalType } from './historical-type.enum';
 import { HistoricalService } from './historical.service';
 
 @Controller('/historical')
