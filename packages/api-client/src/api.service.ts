@@ -1,12 +1,23 @@
 import Axios, { AxiosInstance, Method } from 'axios';
+import { GuildQuery, HistoricalType } from './enums';
 import {
+  ErrorResponse,
   GetAchievementsResponse,
   GetFriendsResponse,
+  GetGamecountsResponse,
+  GetGuildResponse,
+  GetHistoricalResponse,
+  GetKeyResponse,
   GetPlayerResponse,
   GetRankedSkyWarsResponse,
   GetRecentGamesResponse,
   GetStatusResponse,
   GetUserResponse,
+  GetWatchdogResponse,
+  PostGuildLeaderboardResponse,
+  PostGuildRankingsResponse,
+  PostPlayerLeaderboardResponse,
+  PostPlayerRankingsResponse,
 } from './responses';
 
 export class ApiService {
@@ -61,8 +72,109 @@ export class ApiService {
     });
   }
 
+  public getPlayerLeaderboard(field: string, page: number): Promise<PostPlayerLeaderboardResponse>;
+  public getPlayerLeaderboard(field: string, uuid: string): Promise<PostPlayerLeaderboardResponse>;
+  public getPlayerLeaderboard(
+    field: string,
+    pageOrUuid: number | string
+  ): Promise<PostPlayerLeaderboardResponse> {
+    return this.request<PostPlayerLeaderboardResponse>(
+      '/player/leaderboards',
+      {
+        field,
+        [typeof pageOrUuid === 'number' ? 'page' : 'uuid']: pageOrUuid,
+      },
+      'POST'
+    );
+  }
+
+  public getPlayerRankings(fields: string[], uuid: string) {
+    return this.request<PostPlayerRankingsResponse>(
+      '/player/leaderboards/rankings',
+      { fields, uuid },
+      'POST'
+    );
+  }
+
+  public getGuild(tag: string, type: GuildQuery) {
+    return this.requestKey<GetGuildResponse, 'guild'>(`/guild`, 'guild', {
+      guild: tag,
+      type,
+    });
+  }
+
+  public getGuildLeaderboard(field: string, page: number): Promise<PostGuildLeaderboardResponse>;
+  public getGuildLeaderboard(field: string, name: string): Promise<PostGuildLeaderboardResponse>;
+  public getGuildLeaderboard(
+    field: string,
+    pageOrName: number | string
+  ): Promise<PostGuildLeaderboardResponse> {
+    return this.request<PostGuildLeaderboardResponse>(
+      '/guild/leaderboards',
+      {
+        field,
+        [typeof pageOrName === 'number' ? 'page' : 'name']: pageOrName,
+      },
+      'POST'
+    );
+  }
+
+  public getGuildRanking(fields: string, name: string) {
+    return this.request<PostGuildRankingsResponse>(
+      '/guild/leaderboards/rankings',
+      { fields, name },
+      'POST'
+    );
+  }
+
+  public async getWatchdog() {
+    return this.requestKey<GetWatchdogResponse, 'watchdog'>(
+      `/hypixelresources/watchdog`,
+      'watchdog'
+    );
+  }
+
+  public async getGameCounts() {
+    return this.requestKey<GetGamecountsResponse, 'gamecounts'>(
+      `/hypixelresources/gamecounts`,
+      'gamecounts'
+    );
+  }
+
+  public async getPlayerHead(uuid: string) {
+    return this.request(`/skin/head`, { uuid });
+  }
+
+  public getPlayerSkin(uuid: string) {
+    return this.request(`/skin`, { uuid });
+  }
+
+  public getPlayerHistorical(tag: string, type: HistoricalType) {
+    return this.request<GetHistoricalResponse>(`/historical`, { player: tag, type });
+  }
+
+  public resetPlayerHistorical(tag: string) {
+    return this.request<GetPlayerResponse>(`/historical`, { player: tag }, 'DELETE');
+  }
+
+  public getKey() {
+    return this.requestKey<GetKeyResponse, 'key'>(`/auth/key`, 'key');
+  }
+
   public getUser(tag: string) {
     return this.request<GetUserResponse>(`/user`, { tag })
+      .then((data) => data.user ?? null)
+      .catch(() => null);
+  }
+
+  public verifyUser(code: string, id: string) {
+    return this.request<GetUserResponse>(`/user`, { code, id }, 'PUT')
+      .then((data) => data.user ?? null)
+      .catch(() => null);
+  }
+
+  public unverifyUser(tag: string) {
+    return this.request<GetUserResponse>(`/user`, { tag }, 'DELETE')
       .then((data) => data.user ?? null)
       .catch(() => null);
   }
@@ -95,8 +207,9 @@ export class ApiService {
       });
 
       return res.data;
-    } catch (err) {
-      throw new Error(`Failed to request: ${(err as any).message}`);
+    } catch (err: any) {
+      if (err.error) throw new Error((err as ErrorResponse).message.join('\n'));
+      throw err;
     }
   }
 }
