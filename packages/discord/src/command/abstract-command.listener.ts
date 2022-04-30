@@ -61,7 +61,7 @@ export abstract class AbstractCommandListener {
       );
     });
 
-    client.on('event', (event) => {
+    client.on('event', async (event) => {
       if (event.t !== GatewayDispatchEvents.InteractionCreate) return;
 
       const interaction = new Interaction(
@@ -70,9 +70,11 @@ export abstract class AbstractCommandListener {
         this.applicationId
       );
 
-      interaction.reply(this.onInteraction(interaction));
+      interaction.reply(await this.onInteraction(interaction));
     });
   }
 
-  public abstract onInteraction(interaction: Interaction): InteractionResponse;
+  public abstract onInteraction(
+    interaction: Interaction
+  ): InteractionResponse | Promise<InteractionResponse>;
 }

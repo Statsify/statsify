@@ -12,7 +12,7 @@ import { ApiService } from '../services/api.service';
     {
       name: 'player',
       description: 'The player to get the stats for.',
-      required: true,
+      required: false,
       type: ApplicationCommandOptionType.String,
     },
   ],
@@ -22,8 +22,7 @@ export class ExampleCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
-    const tag = context.option<string>('player');
-    const player = await this.apiService.getPlayer(tag);
+    const player = await this.apiService.getPlayer(context.option('player'), context.user);
 
     const { skywars } = player.stats;
 

@@ -12,11 +12,13 @@ import type {
   RestClient,
   WebsocketShard,
 } from 'tiny-discord';
+import { ApiService } from './services/api.service';
 
 export type InteractionHook = (interaction: Interaction) => any;
 
 export class CommandListener extends AbstractCommandListener {
   private hooks: Map<string, InteractionHook>;
+  private readonly apiService: ApiService;
   private static instance: CommandListener;
 
   private constructor(
@@ -31,6 +33,7 @@ export class CommandListener extends AbstractCommandListener {
       process.env.DISCORD_BOT_PORT as number
     );
 
+    this.apiService = new ApiService();
     this.hooks = new Map();
   }
 
@@ -42,7 +45,9 @@ export class CommandListener extends AbstractCommandListener {
     this.hooks.delete(id);
   }
 
-  public onInteraction(interaction: Interaction): InteractionResponse {
+  public onInteraction(
+    interaction: Interaction
+  ): InteractionResponse | Promise<InteractionResponse> {
     if (interaction.isCommandInteraction()) return this.onCommand(interaction);
 
     if (interaction.isMessageComponentInteraction()) {
@@ -56,7 +61,7 @@ export class CommandListener extends AbstractCommandListener {
     return { type: InteractionResponseType.Pong };
   }
 
-  public onCommand(interaction: Interaction): InteractionResponse {
+  public async onCommand(interaction: Interaction): Promise<InteractionResponse> {
     let data = interaction.getData();
 
     let command = this.commands.get(data.name);
@@ -65,7 +70,9 @@ export class CommandListener extends AbstractCommandListener {
 
     [command, data] = this.getCommandAndData(command, data);
 
-    const context = new CommandContext(interaction, data);
+    const user = await this.apiService.getUser(interaction.getUserId());
+
+    const context = new CommandContext(interaction, user, data);
 
     try {
       const response = command.execute(context);

@@ -16,4 +16,3 @@ export * from './post.guild-leaderboard.response';
 export * from './post.guild-rankings.response';
 export * from './post.player-leaderboard.response';
 export * from './post.player-rankings.response';
-

@@ -1,12 +1,12 @@
 import Axios, { AxiosInstance, Method } from 'axios';
-import { HypixelCache } from './hypixel-cache.enum';
-import type {
+import {
   GetAchievementsResponse,
   GetFriendsResponse,
   GetPlayerResponse,
   GetRankedSkyWarsResponse,
   GetRecentGamesResponse,
   GetStatusResponse,
+  GetUserResponse,
 } from './responses';
 
 export class ApiService {
@@ -22,67 +22,64 @@ export class ApiService {
     });
   }
 
-  public async getPlayer(tag: string, cacheLevel: HypixelCache) {
-    const res = await this.request<GetPlayerResponse>(`/player`, {
+  public getPlayer(tag: string) {
+    return this.requestKey<GetPlayerResponse, 'player'>(`/player`, 'player', {
       player: tag,
-      cache: cacheLevel,
     });
-
-    if (!res.player) {
-      throw new Error(`Player not found: ${tag}`);
-    }
-
-    return res.player;
   }
 
-  public async getRecentGames(tag: string) {
-    const res = await this.request<GetRecentGamesResponse>(`/player/recentgames`, { uuid: tag });
-
-    if (!res.games) {
-      throw new Error(`Recent games not found: ${tag}`);
-    }
-
-    return res.games;
-  }
-
-  public async getStatus(tag: string) {
-    const res = await this.request<GetStatusResponse>(`/player/status`, { uuid: tag });
-
-    if (!res.status) {
-      throw new Error(`Status not found: ${tag}`);
-    }
-
-    return res.status;
-  }
-
-  public async getFriends(tag: string, page = 0) {
-    const res = await this.request<GetFriendsResponse>(`/player/friends`, { player: tag, page });
-
-    if (!res.friends) {
-      throw new Error(`Friends not found: ${tag}`);
-    }
-
-    return res.friends;
-  }
-
-  public async getRankedSkyWars(tag: string) {
-    const res = await this.request<GetRankedSkyWarsResponse>(`/player/rankedskywars`, {
+  public getRecentGames(tag: string) {
+    return this.requestKey<GetRecentGamesResponse, 'games'>(`/player/recentgames`, 'games', {
       uuid: tag,
     });
-
-    if (!res.rankedSkyWars) {
-      throw new Error(`Ranked Sky Wars not found: ${tag}`);
-    }
-
-    return res.rankedSkyWars;
   }
 
-  public async getAchievements(tag: string) {
-    const res = await this.request<GetAchievementsResponse>(`/player/achievements`, {
+  public getStatus(tag: string) {
+    return this.requestKey<GetStatusResponse, 'status'>(`/player/status`, 'status', {
+      uuid: tag,
+    });
+  }
+
+  public getFriends(tag: string, page = 0) {
+    return this.requestKey<GetFriendsResponse, 'friends'>(`/player/friends`, 'friends', {
+      player: tag,
+      page,
+    });
+  }
+
+  public getRankedSkyWars(tag: string) {
+    return this.requestKey<GetRankedSkyWarsResponse, 'rankedSkyWars'>(
+      `/player/rankedskywars`,
+      'rankedSkyWars',
+      { uuid: tag }
+    );
+  }
+
+  public getAchievements(tag: string) {
+    return this.request<GetAchievementsResponse>(`/player/achievements`, {
       player: tag,
     });
+  }
 
-    return res;
+  public getUser(tag: string) {
+    return this.request<GetUserResponse>(`/user`, { tag })
+      .then((data) => data.user ?? null)
+      .catch(() => null);
+  }
+
+  private async requestKey<T, K extends keyof T>(
+    url: string,
+    key: K,
+    params?: Record<string, unknown>,
+    method: Method = 'GET'
+  ) {
+    const data = await this.request<T>(url, params, method);
+
+    if (data[key] === undefined || data[key] === null) {
+      throw new Error(`Key not found: ${key}`);
+    }
+
+    return data[key];
   }
 
   private async request<T>(
