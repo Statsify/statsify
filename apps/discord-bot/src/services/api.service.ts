@@ -26,10 +26,38 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super.getPlayer(input).catch(() => {
-      throw new ErrorResponse(
-        'Invalid Player',
-        `A player by the ${type} of \`${input}\` could not be found!`
-      );
+      throw this.missingPlayer(type, tag);
+    });
+  }
+
+  /**
+   *
+   * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
+   * @param page Page number to get.
+   * @param user User to use if no tag is provided.
+   * @returns The friends of the player at the page.
+   */
+  public override async getFriends(tag: string, page: number, user: User | null = null) {
+    const [formattedTag, type] = this.parseTag(tag);
+    const input = await this.resolveTag(formattedTag, type, user);
+
+    return super.getFriends(input, page).catch(() => {
+      throw this.missingPlayer(type, tag);
+    });
+  }
+
+  /**
+   *
+   * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
+   * @param user User to use if no tag is provided.
+   * @returns The achievements of the player.
+   */
+  public override async getAchievements(tag: string, user: User | null = null) {
+    const [formattedTag, type] = this.parseTag(tag);
+    const input = await this.resolveTag(formattedTag, type, user);
+
+    return super.getAchievements(input).catch(() => {
+      throw this.missingPlayer(type, tag);
     });
   }
 
@@ -71,6 +99,13 @@ export class ApiService extends StatsifyApiService {
     throw new ErrorResponse(
       'Invalid Search',
       "We couldn't tell what you were looking for!\nPlease enter a username, uuid, or discord mention."
+    );
+  }
+
+  private missingPlayer(type: PlayerTag, tag: string) {
+    return new ErrorResponse(
+      'Invalid Player',
+      `A player by the ${type} of \`${tag}\` could not be found!`
     );
   }
 }

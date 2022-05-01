@@ -18,7 +18,7 @@ import {
   PostGuildLeaderboardResponse,
   PostGuildRankingsResponse,
   PostPlayerLeaderboardResponse,
-  PostPlayerRankingsResponse
+  PostPlayerRankingsResponse,
 } from './responses';
 
 export class ApiService {
@@ -207,7 +207,11 @@ export class ApiService {
         params,
       });
 
-      return res.data;
+      const data = res.data;
+
+      if (data.success === false) throw new Error('API request was unsuccessful');
+
+      return data;
     } catch (err: any) {
       if (err.error) throw new Error((err as ErrorResponse).message.join('\n'));
       throw err;
