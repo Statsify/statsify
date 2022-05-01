@@ -11,7 +11,7 @@
   "dependencies": {
     "chalk": "^5.0.1",
     "dotenv": "^16.0.0",
-    "inquirer": "^8.2.2",
+    "inquirer": "^8.2.4",
     "ioredis": "^5.0.4"
   },
   "devDependencies": {
