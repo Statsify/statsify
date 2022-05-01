@@ -1,4 +1,5 @@
 import Axios, { AxiosInstance, Method } from 'axios';
+import { loadImage } from 'skia-canvas';
 import { GuildQuery, HistoricalType } from './enums';
 import {
   ErrorResponse,
@@ -17,17 +18,17 @@ import {
   PostGuildLeaderboardResponse,
   PostGuildRankingsResponse,
   PostPlayerLeaderboardResponse,
-  PostPlayerRankingsResponse,
+  PostPlayerRankingsResponse
 } from './responses';
 
 export class ApiService {
   private axios: AxiosInstance;
 
-  public constructor(apiRoute: string, apiKey: string) {
+  public constructor(private apiRoute: string, private apiKey: string) {
     this.axios = Axios.create({
-      baseURL: apiRoute,
+      baseURL: this.apiRoute,
       headers: {
-        'x-api-key': apiKey,
+        'x-api-key': this.apiKey,
       },
       timeout: 5000,
     });
@@ -142,11 +143,11 @@ export class ApiService {
   }
 
   public async getPlayerHead(uuid: string) {
-    return this.request(`/skin/head`, { uuid });
+    return this.requestImage(`/skin/head`, { uuid });
   }
 
   public getPlayerSkin(uuid: string) {
-    return this.request(`/skin`, { uuid });
+    return this.requestImage(`/skin`, { uuid });
   }
 
   public getPlayerHistorical(tag: string, type: HistoricalType) {
@@ -211,5 +212,9 @@ export class ApiService {
       if (err.error) throw new Error((err as ErrorResponse).message.join('\n'));
       throw err;
     }
+  }
+
+  private requestImage(url: string, params?: Record<string, unknown>) {
+    return loadImage(this.axios.getUri({ url, params: { key: this.apiKey, ...params } }));
   }
 }

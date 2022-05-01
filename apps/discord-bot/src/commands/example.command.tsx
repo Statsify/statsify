@@ -1,7 +1,7 @@
 import { Command, CommandContext } from '@statsify/discord';
 import { FontRenderer, JSX } from '@statsify/jsx';
-import { Canvas, loadImage } from 'canvas';
 import { ApplicationCommandOptionType } from 'discord-api-types/v10';
+import { Canvas } from 'skia-canvas';
 import Container from 'typedi';
 import { Header, HeaderBody, Table } from '../components';
 import { ApiService } from '../services/api.service';
@@ -31,7 +31,7 @@ export class ExampleCommand {
       levelFormatted: level,
     } = skywars;
 
-    const skin = await loadImage(`https://visage.surgeplay.com/full/${player.uuid}.png`);
+    const skin = await this.apiService.getPlayerSkin(player.uuid);
 
     const width = 860;
     const height = 500;
@@ -104,9 +104,9 @@ export class ExampleCommand {
 
     const instructions = JSX.createInstructions(<Profile />, canvas.width, canvas.height);
 
-    const buffer = JSX.createRender(canvas, instructions, {
+    const buffer = await JSX.createRender(canvas, instructions, {
       renderer: Container.get(FontRenderer),
-    }).toBuffer();
+    }).toBuffer('png');
 
     return {
       files: [{ name: 'example.png', data: buffer, type: 'image/png' }],

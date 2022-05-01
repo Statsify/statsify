@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import type { CanvasRenderingContext2D } from 'canvas';
+import type { CanvasRenderingContext2D } from 'skia-canvas';
 import type { FontRenderer } from '../font';
 import type { IntrinsicElement } from './instrinsics';
 

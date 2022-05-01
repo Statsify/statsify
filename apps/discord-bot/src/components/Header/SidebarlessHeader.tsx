@@ -1,5 +1,5 @@
 import { JSX, useComponentHeight, useComponentWidth } from '@statsify/jsx';
-import type { Image } from 'canvas';
+import type { Image } from 'skia-canvas';
 import { Skin } from '../Skin';
 
 export interface SidebarHeaderProps {

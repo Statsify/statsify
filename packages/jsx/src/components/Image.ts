@@ -1,4 +1,4 @@
-import type { Image as CanvasImage } from 'canvas';
+import type { Image as CanvasImage } from 'skia-canvas';
 import type * as JSX from '../jsx';
 
 export interface ImageRenderProps {
@@ -33,5 +33,12 @@ export const render: JSX.Render<ImageRenderProps> = (
   { image, crop },
   { x, y, width, height }
 ) => {
-  ctx.drawImage(image, ...(crop ?? []), x, y, width, height);
+  ctx.drawImage(
+    image,
+    ...(crop ?? ([] as unknown as [number, number, number, number])),
+    x,
+    y,
+    width,
+    height
+  );
 };

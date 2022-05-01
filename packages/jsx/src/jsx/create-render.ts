@@ -1,4 +1,4 @@
-import type { Canvas, CanvasRenderingContext2D } from 'canvas';
+import type { Canvas, CanvasRenderingContext2D } from 'skia-canvas';
 import type { BaseThemeContext, Instruction } from './types';
 import { getPositionalDelta, getTotalSize } from './util';
 

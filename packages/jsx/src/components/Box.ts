@@ -1,4 +1,4 @@
-import type { ImageData } from 'canvas';
+import type { CanvasRenderingContext2D, ImageData } from 'skia-canvas';
 import { parseColor, RGBA } from '../colors';
 import type * as JSX from '../jsx';
 
