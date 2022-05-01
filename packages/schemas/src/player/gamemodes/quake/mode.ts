@@ -21,6 +21,9 @@ export class QuakeMode {
   @Field({ leaderboard: { enabled: false } })
   public hkr: number;
 
+  @Field({ leaderboard: { enabled: false } })
+  public kwr: number;
+
   @Field()
   public killstreaks: number;
 
@@ -47,5 +50,6 @@ export class QuakeMode {
   public static applyRatios(data: QuakeMode) {
     data.kdr = ratio(data.kills, data.deaths);
     data.hkr = ratio(data.headShots, data.kills);
+    data.kwr = ratio(data.kills, data.wins);
   }
 }
