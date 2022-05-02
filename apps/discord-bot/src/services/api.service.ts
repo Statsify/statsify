@@ -76,6 +76,12 @@ export class ApiService extends StatsifyApiService {
     });
   }
 
+  /**
+   *
+   * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
+   * @param user User to use if no tag is provided.
+   * @returns The player's ranked skywars stats
+   */
   public override async getRankedSkyWars(tag: string, user: User | null = null) {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);

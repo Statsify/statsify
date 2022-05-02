@@ -11,7 +11,7 @@ import {
   RankedSkyWars,
   RecentGame,
   Status,
-  Watchdog
+  Watchdog,
 } from '@statsify/schemas';
 import { APIData } from '@statsify/util';
 import { catchError, lastValueFrom, map, Observable, of, throwError } from 'rxjs';
