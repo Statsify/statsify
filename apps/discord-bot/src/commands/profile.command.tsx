@@ -18,7 +18,7 @@ import { ApiService } from '../services/api.service';
   ],
   cooldown: 5,
 })
-export class ExampleCommand {
+export class ProfileCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {

@@ -41,14 +41,18 @@ export class ApiService {
   }
 
   public getRecentGames(tag: string) {
-    return this.requestKey<GetRecentGamesResponse, 'games'>(`/player/recentgames`, 'games', {
-      uuid: tag,
-    });
+    return this.requestKey<GetRecentGamesResponse, 'recentGames'>(
+      `/player/recentgames`,
+      'recentGames',
+      {
+        player: tag,
+      }
+    );
   }
 
   public getStatus(tag: string) {
     return this.requestKey<GetStatusResponse, 'status'>(`/player/status`, 'status', {
-      uuid: tag,
+      player: tag,
     });
   }
 
@@ -63,7 +67,7 @@ export class ApiService {
     return this.requestKey<GetRankedSkyWarsResponse, 'rankedSkyWars'>(
       `/player/rankedskywars`,
       'rankedSkyWars',
-      { uuid: tag }
+      { player: tag }
     );
   }
 

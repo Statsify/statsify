@@ -14,7 +14,6 @@ import { AuthRole } from '../auth';
 import { Auth } from '../auth/auth.decorator';
 import { CachedPlayerDto, FriendDto } from '../dtos';
 import { PlayerDto } from '../dtos/player.dto';
-import { UuidDto } from '../dtos/uuid.dto';
 import { HypixelService } from '../hypixel';
 import { PlayerService } from './player.service';
 
@@ -58,12 +57,12 @@ export class PlayerController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()
   @Get('/recentgames')
-  public async getRecentGames(@Query() { uuid }: UuidDto) {
-    const games = await this.hypixelService.getRecentGames(uuid);
+  public async getRecentGames(@Query() { player: tag }: PlayerDto) {
+    const recentGames = await this.playerService.findRecentGames(tag);
 
     return {
-      success: !!games.length,
-      games,
+      success: !!recentGames,
+      recentGames,
     };
   }
 
@@ -72,8 +71,8 @@ export class PlayerController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()
   @Get('/status')
-  public async getStatus(@Query() { uuid }: UuidDto) {
-    const status = await this.hypixelService.getStatus(uuid);
+  public async getStatus(@Query() { player: tag }: PlayerDto) {
+    const status = await this.playerService.findStatus(tag);
 
     return {
       success: !!status,
@@ -100,8 +99,8 @@ export class PlayerController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth()
   @Get('/rankedskywars')
-  public async getRankedSkyWars(@Query() { uuid }: UuidDto) {
-    const rankedSkyWars = await this.hypixelService.getRankedSkyWars(uuid);
+  public async getRankedSkyWars(@Query() { player: tag }: PlayerDto) {
+    const rankedSkyWars = await this.playerService.findRankedSkyWars(tag);
 
     return {
       success: !!rankedSkyWars,

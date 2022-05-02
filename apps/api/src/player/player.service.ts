@@ -142,8 +142,6 @@ export class PlayerService {
         uuid: true,
         displayName: true,
         oneTimeAchievements: true,
-        //TODO(jacobk999)
-        //@ts-ignore fix this later
         tieredAchievements: true,
         goldAchievements: true,
         expiresAt: true,
@@ -159,6 +157,63 @@ export class PlayerService {
       goldAchievements: player.goldAchievements ?? false,
       achievements: new Achievements(player, resources.achievements),
     };
+  }
+
+  public async findStatus(tag: string) {
+    const player = await this.findOne(tag, HypixelCache.CACHE_ONLY, {
+      uuid: true,
+      displayName: true,
+      status: true,
+    });
+
+    if (!player) return null;
+
+    const status = await this.hypixelService.getStatus(player.uuid);
+
+    if (!status) return null;
+
+    status.displayName = player.displayName;
+    status.uuid = player.uuid;
+    status.actions = player.status;
+
+    return status;
+  }
+
+  public async findRecentGames(tag: string) {
+    const player = await this.findOne(tag, HypixelCache.CACHE_ONLY, {
+      uuid: true,
+      displayName: true,
+    });
+
+    if (!player) return null;
+
+    const games = await this.hypixelService.getRecentGames(player.uuid);
+
+    if (!games) return null;
+
+    return {
+      uuid: player.uuid,
+      displayName: player.displayName,
+      games,
+    };
+  }
+
+  public async findRankedSkyWars(tag: string) {
+    const player = await this.findOne(tag, HypixelCache.CACHE_ONLY, {
+      uuid: true,
+      displayName: true,
+    });
+
+    if (!player) return null;
+
+    const ranked = await this.hypixelService.getRankedSkyWars(player.uuid);
+
+    if (!ranked) return null;
+
+    ranked.uuid = player.uuid;
+    ranked.displayName = player.displayName;
+
+    return ranked;
   }
 
   /**

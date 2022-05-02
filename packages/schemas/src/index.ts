@@ -8,7 +8,7 @@ export * from './metadata/metadata.interface';
 export * from './metadata/serialize';
 export * from './player';
 export * from './rankedskywars';
-export * from './recentgame';
+export * from './recentgames';
 export * from './skin';
 export * from './status';
 export * from './user';

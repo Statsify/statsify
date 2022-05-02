@@ -11,7 +11,7 @@ import {
   RankedSkyWars,
   RecentGame,
   Status,
-  Watchdog,
+  Watchdog
 } from '@statsify/schemas';
 import { APIData } from '@statsify/util';
 import { catchError, lastValueFrom, map, Observable, of, throwError } from 'rxjs';
@@ -136,7 +136,10 @@ export class HypixelService {
     return this.httpService.get(url).pipe(
       map((res) => res.data),
       catchError((err) => {
-        this.logger.error(`Error requesting ${url}: ${err.message}`);
+        //Ranked SkyWars returns a 404 if the player has not played ranked skywars
+        if (!url.includes('/player/ranked/skywars'))
+          this.logger.error(`Error requesting ${url}: ${err.message}`);
+
         return throwError(() => new Error(err.message));
       })
     );

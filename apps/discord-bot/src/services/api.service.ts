@@ -33,6 +33,36 @@ export class ApiService extends StatsifyApiService {
   /**
    *
    * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
+   * @param user User to use if no tag is provided.
+   * @returns The player's recent games
+   */
+  public override async getRecentGames(tag: string, user: User | null = null) {
+    const [formattedTag, type] = this.parseTag(tag);
+    const input = await this.resolveTag(formattedTag, type, user);
+
+    return super.getRecentGames(input).catch(() => {
+      throw this.missingPlayer(type, tag);
+    });
+  }
+
+  /**
+   *
+   * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
+   * @param user User to use if no tag is provided.
+   * @returns The player's status
+   */
+  public override async getStatus(tag: string, user: User | null = null) {
+    const [formattedTag, type] = this.parseTag(tag);
+    const input = await this.resolveTag(formattedTag, type, user);
+
+    return super.getStatus(input).catch(() => {
+      throw this.missingPlayer(type, tag);
+    });
+  }
+
+  /**
+   *
+   * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
    * @param page Page number to get.
    * @param user User to use if no tag is provided.
    * @returns The friends of the player at the page.
@@ -42,6 +72,15 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super.getFriends(input, page).catch(() => {
+      throw this.missingPlayer(type, tag);
+    });
+  }
+
+  public override async getRankedSkyWars(tag: string, user: User | null = null) {
+    const [formattedTag, type] = this.parseTag(tag);
+    const input = await this.resolveTag(formattedTag, type, user);
+
+    return super.getRankedSkyWars(input).catch(() => {
       throw this.missingPlayer(type, tag);
     });
   }
