@@ -1,6 +1,12 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
-import { Injectable } from '@nestjs/common';
-import { HypixelCache } from '@statsify/api-client';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  HypixelCache,
+  PlayerNotFoundException,
+  RankedSkyWarsNotFoundException,
+  RecentGamesNotFoundException,
+  StatusNotFoundException,
+} from '@statsify/api-client';
 import {
   Achievements,
   deserialize,
@@ -73,7 +79,7 @@ export class PlayerService {
       uuid: true,
     });
 
-    if (!player) return null;
+    if (!player) throw new PlayerNotFoundException();
 
     const cachedFriends = await this.friendsModel
       .findOne()
@@ -149,7 +155,10 @@ export class PlayerService {
       this.hypixelService.getResources('achievements'),
     ]);
 
-    if (!player || !resources) return null;
+    if (!player) throw new PlayerNotFoundException();
+
+    if (!resources)
+      throw new InternalServerErrorException('hypixel achievement resources not found');
 
     return {
       uuid: player.uuid,
@@ -166,11 +175,11 @@ export class PlayerService {
       status: true,
     });
 
-    if (!player) return null;
+    if (!player) throw new NotFoundException('player');
 
     const status = await this.hypixelService.getStatus(player.uuid);
 
-    if (!status) return null;
+    if (!status) throw new StatusNotFoundException(player);
 
     status.displayName = player.displayName;
     status.uuid = player.uuid;
@@ -185,11 +194,11 @@ export class PlayerService {
       displayName: true,
     });
 
-    if (!player) return null;
+    if (!player) throw new PlayerNotFoundException();
 
     const games = await this.hypixelService.getRecentGames(player.uuid);
 
-    if (!games) return null;
+    if (!games) throw new RecentGamesNotFoundException(player);
 
     return {
       uuid: player.uuid,
@@ -204,11 +213,11 @@ export class PlayerService {
       displayName: true,
     });
 
-    if (!player) return null;
+    if (!player) throw new PlayerNotFoundException();
 
     const ranked = await this.hypixelService.getRankedSkyWars(player.uuid);
 
-    if (!ranked) return null;
+    if (!ranked) throw new RankedSkyWarsNotFoundException(player);
 
     ranked.uuid = player.uuid;
     ranked.displayName = player.displayName;

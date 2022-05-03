@@ -1,4 +1,12 @@
-import { ApiService as StatsifyApiService } from '@statsify/api-client';
+import {
+  ApiService as StatsifyApiService,
+  GuildNotFoundException,
+  GuildQuery,
+  PlayerNotFoundException,
+  RankedSkyWarsNotFoundException,
+  RecentGamesNotFoundException,
+  StatusNotFoundException,
+} from '@statsify/api-client';
 import { User } from '@statsify/schemas';
 import short from 'short-uuid';
 import { Service } from 'typedi';
@@ -25,8 +33,13 @@ export class ApiService extends StatsifyApiService {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super.getPlayer(input).catch(() => {
-      throw this.missingPlayer(type, tag);
+    return super.getPlayer(input).catch((err) => {
+      if (!err.response || !err.response.data) throw this.unknownError();
+      const error = err.response.data as PlayerNotFoundException;
+
+      if (error.message === 'player') throw this.missingPlayer(type, tag);
+
+      throw this.unknownError();
     });
   }
 
@@ -40,8 +53,21 @@ export class ApiService extends StatsifyApiService {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super.getRecentGames(input).catch(() => {
-      throw this.missingPlayer(type, tag);
+    return super.getRecentGames(input).catch((err) => {
+      if (!err.response || !err.response.data) throw this.unknownError();
+      const error = err.response.data as RecentGamesNotFoundException | PlayerNotFoundException;
+
+      if (error.message === 'player') throw this.missingPlayer(type, tag);
+
+      if (error.message === 'recentGames')
+        throw new ErrorResponse(
+          'Recent Games not found',
+          `Recent games for ${
+            (error as RecentGamesNotFoundException).displayName
+          } could not be found`
+        );
+
+      throw this.unknownError();
     });
   }
 
@@ -55,8 +81,19 @@ export class ApiService extends StatsifyApiService {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super.getStatus(input).catch(() => {
-      throw this.missingPlayer(type, tag);
+    return super.getStatus(input).catch((err) => {
+      if (!err.response || !err.response.data) throw this.unknownError();
+      const error = err.response.data as StatusNotFoundException | PlayerNotFoundException;
+
+      if (error.message === 'player') throw this.missingPlayer(type, tag);
+
+      if (error.message === 'status')
+        throw new ErrorResponse(
+          'Status not found',
+          `A status for ${(error as StatusNotFoundException).displayName} could not be found`
+        );
+
+      throw this.unknownError();
     });
   }
 
@@ -71,8 +108,13 @@ export class ApiService extends StatsifyApiService {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super.getFriends(input, page).catch(() => {
-      throw this.missingPlayer(type, tag);
+    return super.getFriends(input, page).catch((err) => {
+      if (!err.response || !err.response.data) throw this.unknownError();
+      const error = err.response.data as PlayerNotFoundException;
+
+      if (error.message === 'player') throw this.missingPlayer(type, tag);
+
+      throw this.unknownError();
     });
   }
 
@@ -86,8 +128,19 @@ export class ApiService extends StatsifyApiService {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super.getRankedSkyWars(input).catch(() => {
-      throw this.missingPlayer(type, tag);
+    return super.getRankedSkyWars(input).catch((err) => {
+      if (!err.response || !err.response.data) throw this.unknownError();
+      const error = err.response.data as RankedSkyWarsNotFoundException | PlayerNotFoundException;
+
+      if (error.message === 'player') throw this.missingPlayer(type, tag);
+
+      if (error.message === 'rankedSkyWars')
+        throw new ErrorResponse(
+          'Ranked SkyWars stats not found',
+          `${(error as RankedSkyWarsNotFoundException).displayName} has no Ranked SkyWars stats.`
+        );
+
+      throw this.unknownError();
     });
   }
 
@@ -101,8 +154,49 @@ export class ApiService extends StatsifyApiService {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super.getAchievements(input).catch(() => {
-      throw this.missingPlayer(type, tag);
+    return super.getAchievements(input).catch((err) => {
+      if (!err.response || !err.response.data) throw this.unknownError();
+      const error = err.response.data as PlayerNotFoundException;
+
+      if (error.message === 'player') throw this.missingPlayer(type, tag);
+
+      throw this.unknownError();
+    });
+  }
+
+  public override async getGuild(tag: string, type?: GuildQuery, user: User | null = null) {
+    let input: string;
+    let playerType: PlayerTag;
+
+    if (!type) {
+      if (!tag || this.isDiscordId(tag)) type = GuildQuery.PLAYER;
+      else if (tag.match(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)) type = GuildQuery.ID;
+      else if (tag.includes(' ') || tag.length > 16) type = GuildQuery.NAME;
+      else type = GuildQuery.NAME;
+    }
+
+    if (type === GuildQuery.PLAYER) {
+      const [formattedTag, type] = this.parseTag(tag);
+      playerType = type;
+      input = await this.resolveTag(formattedTag, type, user);
+    } else {
+      input = tag;
+    }
+
+    return super.getGuild(input, type).catch((err) => {
+      if (!err.response || !err.response.data) throw this.unknownError();
+
+      const error = err.response.data as GuildNotFoundException | PlayerNotFoundException;
+
+      if (error.message === 'guild')
+        throw new ErrorResponse(
+          'Invalid Guild',
+          `A guild by the ${type?.toLowerCase()} of \`${tag}\` could not be found!`
+        );
+
+      if (error.message === 'player') throw this.missingPlayer(playerType, tag);
+
+      throw this.unknownError();
     });
   }
 
@@ -133,8 +227,7 @@ export class ApiService extends StatsifyApiService {
     if (length >= 32 && length <= 36) return [tag.replace(/-/g, ''), 'uuid'];
     if (length <= 16) return [tag, 'username'];
 
-    if (Boolean(tag.match(/^<@!?(\d{17,19})>$/)) || Boolean(tag.match(/^\d{17,19}$/m)))
-      return [tag.replace(/<@|!|>/g, ''), 'discordId'];
+    if (this.isDiscordId(tag)) return [tag.replace(/<@|!|>/g, ''), 'discordId'];
 
     if (length == 20) {
       const shortUuid = this.translator.toUUID(tag);
@@ -152,5 +245,16 @@ export class ApiService extends StatsifyApiService {
       'Invalid Player',
       `A player by the ${type} of \`${tag}\` could not be found!`
     );
+  }
+
+  private unknownError() {
+    return new ErrorResponse(
+      'An Unknown Error Occurred',
+      'Something went wrong, please try again later.'
+    );
+  }
+
+  private isDiscordId(tag: string) {
+    return Boolean(tag.match(/^<@!?(\d{17,19})>$/)) || Boolean(tag.match(/^\d{17,19}$/m));
   }
 }

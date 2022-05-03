@@ -1376,6 +1376,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@statsify/api-client@workspace:packages/api-client"
   dependencies:
+    "@nestjs/common": ^8.4.4
     "@nestjs/swagger": ^5.2.1
     "@statsify/schemas": "workspace:^"
     axios: ^0.27.2

@@ -2,7 +2,6 @@ import Axios, { AxiosInstance, Method } from 'axios';
 import { loadImage } from 'skia-canvas';
 import { GuildQuery, HistoricalType } from './enums';
 import {
-  ErrorResponse,
   GetAchievementsResponse,
   GetFriendsResponse,
   GetGamecountsResponse,
@@ -204,22 +203,17 @@ export class ApiService {
     params?: Record<string, unknown>,
     method: Method = 'GET'
   ): Promise<T> {
-    try {
-      const res = await this.axios.request({
-        url,
-        method,
-        params,
-      });
+    const res = await this.axios.request({
+      url,
+      method,
+      params,
+    });
 
-      const data = res.data;
+    const data = res.data;
 
-      if (data.success === false) throw new Error('API request was unsuccessful');
+    if (data.success === false) throw new Error('API request was unsuccessful');
 
-      return data;
-    } catch (err: any) {
-      if (err.error) throw new Error((err as ErrorResponse).message.join('\n'));
-      throw err;
-    }
+    return data;
   }
 
   private requestImage(url: string, params?: Record<string, unknown>) {

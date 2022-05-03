@@ -1,5 +1,11 @@
 import { Controller, Delete, Get, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import {
   DeletePlayerResponse,
   ErrorResponse,
@@ -9,29 +15,32 @@ import {
   GetRankedSkyWarsResponse,
   GetRecentGamesResponse,
   GetStatusResponse,
+  PlayerNotFoundException,
+  RankedSkyWarsNotFoundException,
+  RecentGamesNotFoundException,
+  StatusNotFoundException,
 } from '@statsify/api-client';
 import { AuthRole } from '../auth';
 import { Auth } from '../auth/auth.decorator';
 import { CachedPlayerDto, FriendDto } from '../dtos';
 import { PlayerDto } from '../dtos/player.dto';
-import { HypixelService } from '../hypixel';
 import { PlayerService } from './player.service';
 
 @Controller('/player')
 @ApiTags('Player')
 export class PlayerController {
-  public constructor(
-    private readonly playerService: PlayerService,
-    private readonly hypixelService: HypixelService
-  ) {}
+  public constructor(private readonly playerService: PlayerService) {}
 
   @ApiOperation({ summary: 'Get a Player' })
   @ApiOkResponse({ type: GetPlayerResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: PlayerNotFoundException })
   @Auth()
   @Get()
   public async getPlayer(@Query() { player: tag, cache }: CachedPlayerDto) {
     const player = await this.playerService.findOne(tag, cache);
+
+    if (!player) throw new PlayerNotFoundException();
 
     return {
       success: !!player,
@@ -55,6 +64,8 @@ export class PlayerController {
   @ApiOperation({ summary: 'Get the Recent Games of a Player' })
   @ApiOkResponse({ type: GetRecentGamesResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: RecentGamesNotFoundException })
+  @ApiNotFoundResponse({ type: PlayerNotFoundException })
   @Auth()
   @Get('/recentgames')
   public async getRecentGames(@Query() { player: tag }: PlayerDto) {
@@ -69,6 +80,8 @@ export class PlayerController {
   @ApiOperation({ summary: 'Get the Status of a Player' })
   @ApiOkResponse({ type: GetStatusResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: StatusNotFoundException })
+  @ApiNotFoundResponse({ type: PlayerNotFoundException })
   @Auth()
   @Get('/status')
   public async getStatus(@Query() { player: tag }: PlayerDto) {
@@ -83,6 +96,7 @@ export class PlayerController {
   @ApiOperation({ summary: 'Get the Friends of a Player' })
   @ApiOkResponse({ type: GetFriendsResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: PlayerNotFoundException })
   @Auth({ weight: 10 })
   @Get('/friends')
   public async getFriends(@Query() { player: tag, page }: FriendDto) {
@@ -97,6 +111,8 @@ export class PlayerController {
   @ApiOperation({ summary: 'Get the Ranked SkyWars rating and position of a Player' })
   @ApiOkResponse({ type: GetRankedSkyWarsResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: RankedSkyWarsNotFoundException })
+  @ApiNotFoundResponse({ type: PlayerNotFoundException })
   @Auth()
   @Get('/rankedskywars')
   public async getRankedSkyWars(@Query() { player: tag }: PlayerDto) {
@@ -111,6 +127,7 @@ export class PlayerController {
   @ApiOperation({ summary: 'Get the Achievements of a Player' })
   @ApiOkResponse({ type: GetAchievementsResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: PlayerNotFoundException })
   @Auth()
   @Get('/achievements')
   public async getAchievements(@Query() { player: tag }: PlayerDto) {
