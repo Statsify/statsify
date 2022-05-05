@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { HypixelCache } from '@statsify/api-client';
 import { IsEnum, IsOptional } from 'class-validator';
-import { HypixelCache } from '../hypixel';
 
 export class CacheDto {
   @ApiProperty({

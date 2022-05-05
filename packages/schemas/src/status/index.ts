@@ -1,8 +1,18 @@
 import { APIData } from '@statsify/util';
 import { Game } from '../game';
 import { Field } from '../metadata';
+import { PlayerStatus } from '../player/status';
 
 export class Status {
+  @Field()
+  public uuid: string;
+
+  @Field()
+  public displayName: string;
+
+  @Field()
+  public actions: PlayerStatus;
+
   @Field()
   public online: boolean;
 

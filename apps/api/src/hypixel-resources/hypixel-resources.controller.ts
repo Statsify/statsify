@@ -1,8 +1,8 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ErrorResponse, GetGamecountsResponse, GetWatchdogResponse } from '@statsify/api-client';
 import { Auth } from '../auth';
 import { HypixelService } from '../hypixel';
-import { ErrorResponse, GetGamecountsResponse, GetWatchdogResponse } from '../responses';
 
 @Controller(`/hypixelresources`)
 @ApiTags('Hypixel Resources')

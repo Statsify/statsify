@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { HypixelCache } from '@statsify/api-client';
 import { Logger } from '@statsify/logger';
 import {
   Friends,
@@ -14,7 +15,6 @@ import {
 } from '@statsify/schemas';
 import { APIData } from '@statsify/util';
 import { catchError, lastValueFrom, map, Observable, of, throwError } from 'rxjs';
-import { HypixelCache } from './cache.enum';
 
 @Injectable()
 export class HypixelService {
@@ -136,7 +136,10 @@ export class HypixelService {
     return this.httpService.get(url).pipe(
       map((res) => res.data),
       catchError((err) => {
-        this.logger.error(`Error requesting ${url}: ${err.message}`);
+        //Ranked SkyWars returns a 404 if the player has not played ranked skywars
+        if (!url.includes('/player/ranked/skywars'))
+          this.logger.error(`Error requesting ${url}: ${err.message}`);
+
         return throwError(() => new Error(err.message));
       })
     );

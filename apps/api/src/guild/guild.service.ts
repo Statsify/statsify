@@ -1,13 +1,12 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { GuildQuery, HypixelCache } from '@statsify/api-client';
 import { Logger } from '@statsify/logger';
 import { deserialize, Guild, serialize } from '@statsify/schemas';
 import { flatten } from '@statsify/util';
-import { DocumentType, ReturnModelType } from '@typegoose/typegoose';
-import { FilterQuery } from 'mongoose';
-import { HypixelCache, HypixelService } from '../hypixel';
+import { ReturnModelType } from '@typegoose/typegoose';
+import { HypixelService } from '../hypixel';
 import { PlayerService } from '../player';
-import { GuildQuery } from './guild-query.enum';
 
 @Injectable()
 export class GuildService {
@@ -22,14 +21,29 @@ export class GuildService {
   public async findOne(tag: string, type: GuildQuery, cache: HypixelCache): Promise<Guild | null> {
     tag = tag.toLowerCase().replace(/-/g, '');
 
-    const queries: Record<GuildQuery, FilterQuery<DocumentType<Guild>>> = {
-      [GuildQuery.ID]: { id: tag },
-      [GuildQuery.NAME]: { nameToLower: tag },
-      //Searches through the members for a matching uuid
-      [GuildQuery.PLAYER]: { members: { $elemMatch: { uuid: tag } } },
-    };
+    let cachedGuild: Guild | null = null;
 
-    const cachedGuild = await this.guildModel.findOne(queries[type]).lean().exec();
+    if (type === GuildQuery.PLAYER) {
+      const player = await this.playerService.findOne(tag, HypixelCache.CACHE_ONLY, {
+        uuid: true,
+      });
+
+      if (!player) throw new NotFoundException(`player`);
+
+      tag = player.uuid;
+
+      cachedGuild = (await this.guildModel
+        .findOne({ members: { $elemMatch: { uuid: player.uuid } } })
+        .lean()
+        .exec()) as Guild;
+    } else {
+      cachedGuild = (await this.guildModel
+        .findOne()
+        .where(type === GuildQuery.ID ? 'id' : 'nameToLower')
+        .equals(tag)
+        .lean()
+        .exec()) as Guild;
+    }
 
     if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
       return {
@@ -49,7 +63,8 @@ export class GuildService {
         await this.guildModel.deleteOne({ id: cachedGuild.id }).lean().exec();
       }
 
-      return null;
+      //The guild does not exist
+      throw new NotFoundException(`guild`);
     }
 
     const memberMap = Object.fromEntries(
@@ -67,10 +82,12 @@ export class GuildService {
         member.username = cacheMember.username;
         member.expiresAt = cacheMember.expiresAt;
       } else {
-        const player = await this.playerService.findOne(member.uuid, HypixelCache.CACHE_ONLY, {
-          username: true,
-          displayName: true,
-        });
+        const player = await this.playerService
+          .findOne(member.uuid, HypixelCache.CACHE_ONLY, {
+            username: true,
+            displayName: true,
+          })
+          .catch(() => null);
 
         if (player) {
           member.username = player.username;

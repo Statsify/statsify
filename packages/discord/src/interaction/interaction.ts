@@ -49,8 +49,8 @@ export class Interaction {
     return this.data.guild_id;
   }
 
-  public getUserId() {
-    return (this.data.member as APIGuildMember)?.user?.id;
+  public getUserId(): string {
+    return (this.data.member as APIGuildMember)?.user?.id as string;
   }
 
   public getLocale() {

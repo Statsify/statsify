@@ -7,6 +7,7 @@ import {
   Logger,
   UnauthorizedException,
 } from '@nestjs/common';
+import { Key } from '@statsify/schemas';
 import { createHash } from 'crypto';
 import { uuid } from 'short-uuid';
 import { AuthRole } from './auth.role';
@@ -86,7 +87,7 @@ export class AuthService {
     return apiKey;
   }
 
-  public async getKey(apiKey: string) {
+  public async getKey(apiKey: string): Promise<Key> {
     const hash = this.hash(apiKey);
     const key = `ratelimit:${hash}`;
 

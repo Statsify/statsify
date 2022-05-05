@@ -1,6 +1,6 @@
 import { JSX } from '@statsify/jsx';
 
-export type SidebarItem = [title: string, value: string, color: string];
+export type SidebarItem = [title: string, value: string | number, color: string];
 
 export interface SidebarProps {
   items: SidebarItem[];

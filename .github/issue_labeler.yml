@@ -13,6 +13,9 @@
 "verify-server":
   - "### Which package is the feature request for\\?\\n\\n.*verify-server"
 
+"@statsify/api-client":
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/api-client"
+
 "@statsify/assets":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/assets"
 
