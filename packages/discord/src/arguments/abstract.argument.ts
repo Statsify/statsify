@@ -3,11 +3,10 @@ import type {
   ApplicationCommandOptionType,
   ChannelType,
 } from 'discord-api-types/v10';
-import { InteractionResponse } from 'tiny-discord';
 import type { CommandContext } from '../command';
 
 export interface AbstractArgument {
-  autocompleteHandler?(context: CommandContext): InteractionResponse;
+  autocompleteHandler?(context: CommandContext): APIApplicationCommandOptionChoice[];
 }
 
 export abstract class AbstractArgument {

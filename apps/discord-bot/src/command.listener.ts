@@ -102,24 +102,32 @@ export class CommandListener extends AbstractCommandListener {
   }
 
   private onAutocomplete(interaction: Interaction): InteractionResponse {
+    const defaultResponse = {
+      type: InteractionResponseType.ApplicationCommandAutocompleteResult,
+      data: { choices: [] },
+    };
+
     let data = interaction.getData();
 
     let command = this.commands.get(data.name);
 
-    if (!command) return { type: InteractionResponseType.Pong };
+    if (!command) return defaultResponse;
 
     [command, data] = this.getCommandAndData(command, data);
 
     const focusedOption = data.options.find((opt: any) => opt.focused);
-    if (!focusedOption) return { type: InteractionResponseType.Pong };
+    if (!focusedOption) return defaultResponse;
 
     const autocompleteArg = command.args.find((opt) => opt.name === focusedOption.name);
-    if (!autocompleteArg) return { type: InteractionResponseType.Pong };
+    if (!autocompleteArg) return defaultResponse;
 
     const context = new CommandContext(interaction, data);
     const response = autocompleteArg.autocompleteHandler?.(context);
 
-    return response || { type: InteractionResponseType.Pong };
+    return {
+      type: InteractionResponseType.ApplicationCommandAutocompleteResult,
+      data: { choices: response },
+    };
   }
 
   private onMessageComponent(interaction: Interaction): InteractionResponse {
