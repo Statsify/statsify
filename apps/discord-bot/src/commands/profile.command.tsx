@@ -1,28 +1,21 @@
 import { Command, CommandContext } from '@statsify/discord';
 import { FontRenderer, JSX } from '@statsify/jsx';
-import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 import { Canvas } from 'skia-canvas';
 import Container from 'typedi';
+import { PlayerArgument } from '../arguments';
 import { Header, HeaderBody, Table } from '../components';
 import { ApiService } from '../services/api.service';
 
 @Command({
   description: 'Displays this message.',
-  args: [
-    {
-      name: 'player',
-      description: 'The player to get the stats for.',
-      required: false,
-      type: ApplicationCommandOptionType.String,
-    },
-  ],
+  args: [PlayerArgument],
   cooldown: 5,
 })
 export class ProfileCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
-    const player = await this.apiService.getPlayer(context.option('player'), context.user);
+    const player = await this.apiService.getPlayer(context.option('player'), context.getUser());
 
     const { skywars } = player.stats;
 

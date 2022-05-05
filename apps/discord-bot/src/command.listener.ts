@@ -49,19 +49,13 @@ export class CommandListener extends AbstractCommandListener {
     interaction: Interaction
   ): InteractionResponse | Promise<InteractionResponse> {
     if (interaction.isCommandInteraction()) return this.onCommand(interaction);
-
-    if (interaction.isMessageComponentInteraction()) {
-      const hook = this.hooks.get(interaction.getCustomId());
-
-      hook?.(interaction);
-
-      return { type: InteractionResponseType.DeferredMessageUpdate };
-    }
+    if (interaction.isAutocompleteInteraction()) return this.onAutocomplete(interaction);
+    if (interaction.isMessageComponentInteraction()) return this.onMessageComponent(interaction);
 
     return { type: InteractionResponseType.Pong };
   }
 
-  public async onCommand(interaction: Interaction): Promise<InteractionResponse> {
+  private async onCommand(interaction: Interaction): Promise<InteractionResponse> {
     let data = interaction.getData();
 
     let command = this.commands.get(data.name);
@@ -72,7 +66,8 @@ export class CommandListener extends AbstractCommandListener {
 
     const user = await this.apiService.getUser(interaction.getUserId());
 
-    const context = new CommandContext(interaction, user, data);
+    const context = new CommandContext(interaction, data);
+    context.setUser(user);
 
     try {
       const response = command.execute(context);
@@ -104,6 +99,41 @@ export class CommandListener extends AbstractCommandListener {
     return {
       type: InteractionResponseType.DeferredChannelMessageWithSource,
     };
+  }
+
+  private onAutocomplete(interaction: Interaction): InteractionResponse {
+    const defaultResponse = {
+      type: InteractionResponseType.ApplicationCommandAutocompleteResult,
+      data: { choices: [] },
+    };
+
+    let data = interaction.getData();
+
+    let command = this.commands.get(data.name);
+
+    if (!command) return defaultResponse;
+
+    [command, data] = this.getCommandAndData(command, data);
+
+    const focusedOption = data.options.find((opt: any) => opt.focused);
+    if (!focusedOption) return defaultResponse;
+
+    const autocompleteArg = command.args.find((opt) => opt.name === focusedOption.name);
+    if (!autocompleteArg) return defaultResponse;
+
+    const context = new CommandContext(interaction, data);
+    const response = autocompleteArg.autocompleteHandler?.(context);
+
+    return {
+      type: InteractionResponseType.ApplicationCommandAutocompleteResult,
+      data: { choices: response },
+    };
+  }
+
+  private onMessageComponent(interaction: Interaction): InteractionResponse {
+    const hook = this.hooks.get(interaction.getCustomId());
+    hook?.(interaction);
+    return { type: InteractionResponseType.DeferredMessageUpdate };
   }
 
   private getCommandAndData(

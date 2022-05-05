@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord-api-types/v10';
-import { Argument, Command, CommandBuilder, SubCommand } from '../src';
+import { AbstractArgument, Command, CommandBuilder, SubCommand } from '../src';
 
 describe('CommandBuilder', () => {
   it('should read basic metadata', () => {
@@ -10,6 +10,7 @@ describe('CommandBuilder', () => {
       name: 'test',
       description: 'test',
       type: ApplicationCommandType.ChatInput,
+      options: [],
     });
   });
 
@@ -31,6 +32,7 @@ describe('CommandBuilder', () => {
           name: 'subcommand',
           description: 'test',
           type: ApplicationCommandOptionType.Subcommand,
+          options: [],
         },
       ],
     });
@@ -52,6 +54,7 @@ describe('CommandBuilder', () => {
           name: 'group',
           description: 'test',
           type: ApplicationCommandOptionType.SubcommandGroup,
+          options: [],
         },
       ],
     });
@@ -83,6 +86,7 @@ describe('CommandBuilder', () => {
               name: 'subcommand',
               description: 'test',
               type: ApplicationCommandOptionType.Subcommand,
+              options: [],
             },
           ],
         },
@@ -91,21 +95,21 @@ describe('CommandBuilder', () => {
   });
 
   it('should read arguments', () => {
-    const arg: Argument = {
-      name: 'test',
-      description: 'test',
-      required: true,
-      type: ApplicationCommandOptionType.String,
-    };
+    class Arg extends AbstractArgument {
+      public name = 'test';
+      public description = 'test';
+      public required = true;
+      public type = ApplicationCommandOptionType.String;
+    }
 
-    @Command({ description: 'test', args: [arg] })
+    @Command({ description: 'test', args: [Arg] })
     class TestCommand {}
 
     expect(CommandBuilder.scan(new TestCommand()).toJSON()).toEqual({
       name: 'test',
       description: 'test',
       type: ApplicationCommandType.ChatInput,
-      options: [arg],
+      options: [new Arg()],
     });
   });
 });
