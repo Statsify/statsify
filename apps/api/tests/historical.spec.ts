@@ -1,7 +1,8 @@
 import { ValidationPipe } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { HistoricalController, HistoricalType } from '../src/historical';
+import { HistoricalType } from '@statsify/api-client';
+import { HistoricalController } from '../src/historical';
 import { useMocker } from './mocks';
 import { testKey, testUsername } from './test.constants';
 

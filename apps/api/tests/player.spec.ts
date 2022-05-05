@@ -47,22 +47,10 @@ describe('Player', () => {
     expect(result.statusCode).toEqual(200);
   });
 
-  it(`/GET player/recentgames?uuid=username`, async () => {
+  it(`/GET player/recentgames?player=username`, async () => {
     const result = await app.inject({
       method: 'GET',
-      url: `/player/recentgames?uuid=${testUsername}`,
-      headers: {
-        'x-api-key': testKey,
-      },
-    });
-
-    expect(result.statusCode).toEqual(400);
-  });
-
-  it(`/GET player/recentgames?uuid=uuid`, async () => {
-    const result = await app.inject({
-      method: 'GET',
-      url: `/player/recentgames?uuid=${testUuid}`,
+      url: `/player/recentgames?player=${testUsername}`,
       headers: {
         'x-api-key': testKey,
       },
@@ -71,22 +59,34 @@ describe('Player', () => {
     expect(result.statusCode).toEqual(200);
   });
 
-  it(`/GET player/status?uuid=username`, async () => {
+  it(`/GET player/recentgames?player=uuid`, async () => {
     const result = await app.inject({
       method: 'GET',
-      url: `/player/status?uuid=${testUsername}`,
+      url: `/player/recentgames?player=${testUuid}`,
       headers: {
         'x-api-key': testKey,
       },
     });
 
-    expect(result.statusCode).toEqual(400);
+    expect(result.statusCode).toEqual(200);
   });
 
-  it(`/GET player/status?uuid=uuid`, async () => {
+  it(`/GET player/status?player=username`, async () => {
     const result = await app.inject({
       method: 'GET',
-      url: `/player/status?uuid=${testUuid}`,
+      url: `/player/status?player=${testUsername}`,
+      headers: {
+        'x-api-key': testKey,
+      },
+    });
+
+    expect(result.statusCode).toEqual(200);
+  });
+
+  it(`/GET player/status?player=uuid`, async () => {
+    const result = await app.inject({
+      method: 'GET',
+      url: `/player/status?player=${testUuid}`,
       headers: {
         'x-api-key': testKey,
       },
@@ -131,22 +131,22 @@ describe('Player', () => {
     expect(result.statusCode).toEqual(200);
   });
 
-  it(`/GET player/rankedskywars?uuid=username`, async () => {
+  it(`/GET player/rankedskywars?player=username`, async () => {
     const result = await app.inject({
       method: 'GET',
-      url: `/player/rankedskywars?uuid=${testUsername}`,
+      url: `/player/rankedskywars?player=${testUsername}`,
       headers: {
         'x-api-key': testKey,
       },
     });
 
-    expect(result.statusCode).toEqual(400);
+    expect(result.statusCode).toEqual(200);
   });
 
-  it(`/GET player/rankedskywars?uuid=uuid`, async () => {
+  it(`/GET player/rankedskywars?player=uuid`, async () => {
     const result = await app.inject({
       method: 'GET',
-      url: `/player/rankedskywars?uuid=${testUuid}`,
+      url: `/player/rankedskywars?player=${testUuid}`,
       headers: {
         'x-api-key': testKey,
       },

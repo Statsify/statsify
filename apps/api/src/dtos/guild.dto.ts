@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { GuildQuery } from '@statsify/api-client';
 import { IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
-import { GuildQuery } from '../guild';
 import { CacheDto } from './cache.dto';
 
 export class GuildDto extends CacheDto {

@@ -1,6 +1,6 @@
 import { JSX } from '@statsify/jsx';
 
-export type RowData = [title: string, value: string, color?: string];
+export type RowData = [title: string, value: string | number, color?: string];
 
 export interface RowProps {
   color?: string;

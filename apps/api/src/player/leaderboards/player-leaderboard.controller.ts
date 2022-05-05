@@ -1,14 +1,14 @@
 import { Body, Controller, Post, Response } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { FastifyReply } from 'fastify';
-import { Auth } from '../../auth';
-import { PlayerLeaderboardDto } from '../../dtos/player-leaderboard.dto';
-import { PlayerRankingsDto } from '../../dtos/player-rankings.dto';
 import {
   ErrorResponse,
   PostPlayerLeaderboardResponse,
   PostPlayerRankingsResponse,
-} from '../../responses';
+} from '@statsify/api-client';
+import type { FastifyReply } from 'fastify';
+import { Auth } from '../../auth';
+import { PlayerLeaderboardDto } from '../../dtos/player-leaderboard.dto';
+import { PlayerRankingsDto } from '../../dtos/player-rankings.dto';
 import { PlayerLeaderboardService } from './player-leaderboard.service';
 
 @Controller('/player/leaderboards')

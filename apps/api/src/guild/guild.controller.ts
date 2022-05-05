@@ -1,8 +1,19 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import {
+  ErrorResponse,
+  GetGuildResponse,
+  GuildNotFoundException,
+  PlayerNotFoundException,
+} from '@statsify/api-client';
 import { Auth } from '../auth';
 import { GuildDto } from '../dtos';
-import { ErrorResponse, GetGuildResponse } from '../responses';
 import { GuildService } from './guild.service';
 
 @Controller('/guild')
@@ -13,6 +24,8 @@ export class GuildController {
   @ApiOperation({ summary: 'Get a Guild' })
   @ApiOkResponse({ type: GetGuildResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: PlayerNotFoundException })
+  @ApiNotFoundResponse({ type: GuildNotFoundException })
   @Get()
   @Auth({ weight: 120 })
   public async getGuild(@Query() { guild: tag, type, cache }: GuildDto) {

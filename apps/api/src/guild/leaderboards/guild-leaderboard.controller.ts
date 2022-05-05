@@ -1,13 +1,13 @@
 import { Body, Controller, Post, Response } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import type { FastifyReply } from 'fastify';
-import { Auth } from '../../auth';
-import { GuildLeaderboardDto, GuildRankingDto } from '../../dtos';
 import {
   ErrorResponse,
   PostGuildLeaderboardResponse,
   PostGuildRankingsResponse,
-} from '../../responses';
+} from '@statsify/api-client';
+import type { FastifyReply } from 'fastify';
+import { Auth } from '../../auth';
+import { GuildLeaderboardDto, GuildRankingDto } from '../../dtos';
 import { GuildLeaderboardService } from './guild-leaderboard.service';
 
 @Controller('/guild/leaderboards')

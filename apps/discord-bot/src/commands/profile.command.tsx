@@ -1,35 +1,37 @@
 import { Command, CommandContext } from '@statsify/discord';
 import { FontRenderer, JSX } from '@statsify/jsx';
-import { Canvas, loadImage } from 'canvas';
+import { ApplicationCommandOptionType } from 'discord-api-types/v10';
+import { Canvas } from 'skia-canvas';
 import Container from 'typedi';
 import { Header, HeaderBody, Table } from '../components';
+import { ApiService } from '../services/api.service';
 
 @Command({
   description: 'Displays this message.',
-  args: [],
+  args: [
+    {
+      name: 'player',
+      description: 'The player to get the stats for.',
+      required: false,
+      type: ApplicationCommandOptionType.String,
+    },
+  ],
   cooldown: 5,
 })
-export class ExampleCommand {
+export class ProfileCommand {
+  public constructor(private readonly apiService: ApiService) {}
+
   public async run(context: CommandContext) {
-    const player = {
-      prefixName: '§6WWWWWWWWWWWWWWWWWW',
-      uuid: '96f645ba026b4e45bc34dd8f0531334c',
-    };
+    const player = await this.apiService.getPlayer(context.option('player'), context.user);
 
-    const level = `§b[17Ω]`;
+    const { skywars } = player.stats;
 
-    const stats = {
-      wins: `${(2985).toLocaleString()}`,
-      kills: (25879).toLocaleString(),
-      deaths: (9666).toLocaleString(),
-      losses: (9337).toLocaleString(),
-      assists: (3039).toLocaleString(),
-      playtime: '11d 4h',
-      kdr: (2.68).toLocaleString(),
-      wlr: (0.32).toLocaleString(),
-    };
+    const {
+      overall: { overall: stats },
+      levelFormatted: level,
+    } = skywars;
 
-    const skin = await loadImage(`https://visage.surgeplay.com/full/${player.uuid}.png`);
+    const skin = await this.apiService.getPlayerSkin(player.uuid);
 
     const width = 860;
     const height = 500;
@@ -43,13 +45,13 @@ export class ExampleCommand {
           <Header
             skin={skin}
             sidebar={[
-              ['Coins', '4,783,624', '§6'],
-              ['Loot Chests', '188', '§e'],
-              ['Tokens', '1,210,000', '§a'],
-              ['Souls', '21,026', '§b'],
-              ['Heads', '2,367', '§d'],
-              ['Shards', '17,981', '§3'],
-              ['Opals', '1', '§9'],
+              ['Coins', skywars.coins, '§6'],
+              ['Loot Chests', skywars.lootChests, '§e'],
+              ['Tokens', skywars.tokens, '§a'],
+              ['Souls', skywars.souls, '§b'],
+              ['Heads', skywars.heads, '§d'],
+              ['Shards', skywars.shards, '§3'],
+              ['Opals', skywars.opals, '§9'],
             ]}
             body={(height) => (
               <HeaderBody
@@ -82,7 +84,7 @@ export class ExampleCommand {
               {
                 data: [
                   ['Assists', stats.assists],
-                  ['Playtime', stats.playtime],
+                  ['Playtime', stats.playTime],
                   ['Kit', 'Pyrotechnic'],
                 ],
                 color: '§e',
@@ -102,9 +104,9 @@ export class ExampleCommand {
 
     const instructions = JSX.createInstructions(<Profile />, canvas.width, canvas.height);
 
-    const buffer = JSX.createRender(canvas, instructions, {
+    const buffer = await JSX.createRender(canvas, instructions, {
       renderer: Container.get(FontRenderer),
-    }).toBuffer();
+    }).toBuffer('png');
 
     return {
       files: [{ name: 'example.png', data: buffer, type: 'image/png' }],
