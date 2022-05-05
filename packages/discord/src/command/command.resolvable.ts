@@ -11,6 +11,7 @@ export class CommandResolvable {
   public name: string;
   public description: string;
   public options?: any[];
+  public args: AbstractArgument[];
 
   private target: any;
   private methodName: string;
@@ -19,7 +20,11 @@ export class CommandResolvable {
     this.name = name;
     this.description = description;
     this.type = ApplicationCommandType.ChatInput;
-    this.options = args?.map((a) => (a instanceof AbstractArgument ? a : new a()));
+
+    const argsResolved = (args ?? [])?.map((a) => (a instanceof AbstractArgument ? a : new a()));
+
+    this.args = argsResolved;
+    this.options = argsResolved;
 
     this.target = target;
     this.methodName = methodName;

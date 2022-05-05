@@ -14,7 +14,7 @@ export class GuildCommand {
     const guild = await this.apiService.getGuild(
       context.option<string>('query'),
       context.option<GuildQuery>('type'),
-      context.user
+      context.getUser()
     );
 
     return {

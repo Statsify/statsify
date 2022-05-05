@@ -4,11 +4,19 @@ import type { APIApplicationCommandInteractionDataBasicOption } from 'discord-ap
 import type { Interaction, InteractionContent } from '../interaction';
 
 export class CommandContext {
-  public constructor(
-    private readonly interaction: Interaction,
-    public readonly user: User | null,
-    private readonly data: any
-  ) {}
+  private user: User | null;
+
+  public constructor(private readonly interaction: Interaction, private readonly data: any) {
+    this.user = null;
+  }
+
+  public getUser() {
+    return this.user;
+  }
+
+  public setUser(user: User | null) {
+    this.user = user;
+  }
 
   public option<T>(name: string, defaultValue: T): T;
   public option<T>(name: string): T;

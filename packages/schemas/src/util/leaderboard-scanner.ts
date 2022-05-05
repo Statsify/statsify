@@ -3,21 +3,16 @@ import { MetadataScanner } from '../metadata';
 import { LeaderboardEnabledMetadata } from '../metadata/metadata.interface';
 
 export class LeaderboardScanner {
-  private static tokens: Map<Constructor, string[]> = new Map();
-
-  public static getLeaderboardFields<T>(constructor: Constructor<T>): FlattenKeys<T>[] {
-    if (this.tokens.has(constructor))
-      return LeaderboardScanner.tokens.get(constructor) as FlattenKeys<T>[];
-
+  public static getLeaderboardMetadata<T>(constructor: Constructor<T>) {
     const metadata = MetadataScanner.scan(constructor);
 
-    const fields = metadata
-      .filter(([, { leaderboard }]) => leaderboard.enabled)
-      .map(([key]) => key);
+    const fields = metadata.filter(([, { leaderboard }]) => leaderboard.enabled);
 
-    this.tokens.set(constructor, fields);
+    return fields;
+  }
 
-    return fields as FlattenKeys<T>[];
+  public static getLeaderboardFields<T>(constructor: Constructor<T>): FlattenKeys<T>[] {
+    return this.getLeaderboardMetadata(constructor).map(([key]) => key) as FlattenKeys<T>[];
   }
 
   public static getLeaderboardField<T>(

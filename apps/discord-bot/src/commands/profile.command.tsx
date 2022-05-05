@@ -15,7 +15,7 @@ export class ProfileCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
-    const player = await this.apiService.getPlayer(context.option('player'), context.user);
+    const player = await this.apiService.getPlayer(context.option('player'), context.getUser());
 
     const { skywars } = player.stats;
 

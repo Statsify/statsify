@@ -10,6 +10,7 @@ describe('CommandBuilder', () => {
       name: 'test',
       description: 'test',
       type: ApplicationCommandType.ChatInput,
+      options: [],
     });
   });
 
@@ -31,6 +32,7 @@ describe('CommandBuilder', () => {
           name: 'subcommand',
           description: 'test',
           type: ApplicationCommandOptionType.Subcommand,
+          options: [],
         },
       ],
     });
@@ -52,6 +54,7 @@ describe('CommandBuilder', () => {
           name: 'group',
           description: 'test',
           type: ApplicationCommandOptionType.SubcommandGroup,
+          options: [],
         },
       ],
     });
@@ -83,6 +86,7 @@ describe('CommandBuilder', () => {
               name: 'subcommand',
               description: 'test',
               type: ApplicationCommandOptionType.Subcommand,
+              options: [],
             },
           ],
         },
