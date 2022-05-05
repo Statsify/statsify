@@ -2,11 +2,26 @@ import { Command, CommandContext } from '@statsify/discord';
 import { FontRenderer, JSX } from '@statsify/jsx';
 import { Canvas, loadImage } from 'canvas';
 import Container from 'typedi';
+import {
+  ChoiceArgument,
+  GuildArgument,
+  MojangPlayerArgument,
+  NumberArgument,
+  PlayerArgument,
+  TextArgument,
+} from '../arguments';
 import { Header, HeaderBody, Table } from '../components';
 
 @Command({
   description: 'Displays this message.',
-  args: [],
+  args: [
+    TextArgument,
+    NumberArgument,
+    new ChoiceArgument('choice', '1', '2', '3'),
+    new PlayerArgument('hyplayer'),
+    new MojangPlayerArgument(),
+    ...GuildArgument,
+  ],
   cooldown: 5,
 })
 export class ExampleCommand {

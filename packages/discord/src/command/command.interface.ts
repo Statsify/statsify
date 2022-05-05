@@ -1,11 +1,11 @@
 import type { Constructor } from '@statsify/util';
-import type { Argument } from '../arguments';
+import type { AbstractArgument } from '../arguments';
 
 export interface CommandOptions {
   name?: string;
   description: string;
   groups?: Constructor<any>[];
-  args?: Argument[];
+  args?: (AbstractArgument | Constructor<AbstractArgument>)[];
   cooldown?: number;
 }
 

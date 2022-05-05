@@ -1,7 +1,7 @@
 import { getConstructor } from '@statsify/util';
+import { Container } from 'typedi';
 import type { CommandMetadata, SubCommandMetadata } from './command.interface';
 import { CommandResolvable } from './command.resolvable';
-import { Container } from 'typedi';
 
 export class CommandBuilder {
   public static scan(target: any) {
