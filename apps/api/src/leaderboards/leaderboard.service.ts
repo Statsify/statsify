@@ -83,7 +83,7 @@ export class LeaderboardService {
 
     for (let i = 0; i < selector.length; i++) {
       const field = selector[i];
-      const score = scores[i][1];
+      const score = scores?.[i]?.[1];
 
       if (score !== null) {
         response[field as string] = Number(score);
