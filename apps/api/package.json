@@ -30,7 +30,7 @@
     "class-validator": "^0.13.2",
     "fastify-swagger": "^5.2.0",
     "handlebars": "^4.7.7",
-    "ioredis": "4.28.5",
+    "ioredis": "5.0.4",
     "mongoose": "^6.3.2",
     "point-of-view": "^5.2.1",
     "reflect-metadata": "^0.1.13",
