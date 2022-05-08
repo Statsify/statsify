@@ -1,6 +1,6 @@
-import { Canvas, ImageData, loadImage } from 'canvas';
 import { readdir } from 'fs/promises';
 import { join } from 'path';
+import { Canvas, CanvasRenderingContext2D, ImageData, loadImage } from 'skia-canvas';
 import _positions from '../../positions.json';
 import _sizes from '../../sizes.json';
 import { mcShadow, RGB } from '../colors';

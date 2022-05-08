@@ -12,10 +12,12 @@ body:
       label: Which package is the feature request for?
       multiple: true
       options:
+        - general
         - api
         - discord-bot
         - site
         - verify-server
+        - "@statsify/api-client"
         - "@statsify/assets"
         - "@statsify/discord"
         - "@statsify/jsx"

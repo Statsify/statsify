@@ -13,6 +13,9 @@
 "verify-server":
   - apps/verify-server/**/*
 
+"@statsify/api-client":
+  - packages/api-client/**/*
+
 "@statsify/assets":
   - packages/assets/**/*
 

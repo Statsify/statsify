@@ -1,7 +1,6 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "importsNotUsedAsValues": "preserve",
     "jsx": "react",
     "jsxFactory": "JSX.createElement"
   },

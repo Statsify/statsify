@@ -1,4 +1,5 @@
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord-api-types/v10';
+import { AbstractArgument } from '../arguments';
 import type { CommandContext } from './command.context';
 import type { CommandMetadata } from './command.interface';
 
@@ -10,6 +11,7 @@ export class CommandResolvable {
   public name: string;
   public description: string;
   public options?: any[];
+  public args: AbstractArgument[];
 
   private target: any;
   private methodName: string;
@@ -18,7 +20,11 @@ export class CommandResolvable {
     this.name = name;
     this.description = description;
     this.type = ApplicationCommandType.ChatInput;
-    this.options = args;
+
+    const argsResolved = (args ?? [])?.map((a) => (a instanceof AbstractArgument ? a : new a()));
+
+    this.args = argsResolved;
+    this.options = argsResolved;
 
     this.target = target;
     this.methodName = methodName;

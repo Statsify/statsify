@@ -4,14 +4,14 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "importsNotUsedAsValues": "preserve",
-    "strictPropertyInitialization": false,
     "moduleResolution": "Node",
     "module": "CommonJS",
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
-    "target": "ES2018",
+    "strictPropertyInitialization": false,
+    "target": "ES2022",
     "strict": true
   },
   "exclude": ["node_modules"]

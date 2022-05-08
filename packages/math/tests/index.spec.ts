@@ -4,14 +4,14 @@ describe('basic math', () => {
   it('should add numbers together', () => {
     expect(add(1, 2)).toBe(3);
     expect(add(1, 2, 3)).toBe(6);
-    expect(add(1, 2, undefined)).toBe(3);
+    expect(add(1, 2, undefined as unknown as number)).toBe(3);
   });
 
   it('should subtract numbers', () => {
     expect(sub(2, 1)).toBe(1);
     expect(sub(1, 2)).toBe(-1);
     expect(sub(1, 2, 3)).toBe(-4);
-    expect(sub(1, 2, undefined)).toBe(-1);
+    expect(sub(1, 2, undefined as unknown as number)).toBe(-1);
   });
 
   it('should calculate ratios', () => {

@@ -1,8 +1,8 @@
-import { Controller, Get, Query, Delete } from '@nestjs/common';
+import { Controller, Delete, Get, Put, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ErrorResponse, GetUserResponse } from '@statsify/api-client';
 import { Auth, AuthRole } from '../auth';
 import { UserDto, VerifyCodeDto } from '../dtos';
-import { ErrorResponse, GetUserResponse } from '../responses';
 import { UserService } from './user.service';
 
 @Controller('/user')
@@ -24,7 +24,7 @@ export class UserController {
     };
   }
 
-  @Get('/verify')
+  @Put()
   @ApiOkResponse({ type: GetUserResponse })
   @ApiOperation({ summary: 'Verify a user' })
   @ApiBadRequestResponse({ type: ErrorResponse })
@@ -38,7 +38,7 @@ export class UserController {
     };
   }
 
-  @Delete('/unverify')
+  @Delete()
   @ApiOperation({ summary: 'Unverify a user' })
   @ApiOkResponse({ type: GetUserResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })

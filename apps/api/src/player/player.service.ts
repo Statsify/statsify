@@ -1,5 +1,12 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  HypixelCache,
+  PlayerNotFoundException,
+  RankedSkyWarsNotFoundException,
+  RecentGamesNotFoundException,
+  StatusNotFoundException,
+} from '@statsify/api-client';
 import {
   Achievements,
   deserialize,
@@ -12,7 +19,7 @@ import {
 import { Flatten, flatten, FlattenKeys } from '@statsify/util';
 import type { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
-import { HypixelCache, HypixelService } from '../hypixel';
+import { HypixelService } from '../hypixel';
 import { LeaderboardService } from '../leaderboards';
 
 @Injectable()
@@ -72,7 +79,7 @@ export class PlayerService {
       uuid: true,
     });
 
-    if (!player) return null;
+    if (!player) throw new PlayerNotFoundException();
 
     const cachedFriends = await this.friendsModel
       .findOne()
@@ -141,8 +148,6 @@ export class PlayerService {
         uuid: true,
         displayName: true,
         oneTimeAchievements: true,
-        //TODO(jacobk999)
-        //@ts-ignore fix this later
         tieredAchievements: true,
         goldAchievements: true,
         expiresAt: true,
@@ -150,7 +155,10 @@ export class PlayerService {
       this.hypixelService.getResources('achievements'),
     ]);
 
-    if (!player || !resources) return null;
+    if (!player) throw new PlayerNotFoundException();
+
+    if (!resources)
+      throw new InternalServerErrorException('hypixel achievement resources not found');
 
     return {
       uuid: player.uuid,
@@ -158,6 +166,63 @@ export class PlayerService {
       goldAchievements: player.goldAchievements ?? false,
       achievements: new Achievements(player, resources.achievements),
     };
+  }
+
+  public async findStatus(tag: string) {
+    const player = await this.findOne(tag, HypixelCache.CACHE_ONLY, {
+      uuid: true,
+      displayName: true,
+      status: true,
+    });
+
+    if (!player) throw new NotFoundException('player');
+
+    const status = await this.hypixelService.getStatus(player.uuid);
+
+    if (!status) throw new StatusNotFoundException(player);
+
+    status.displayName = player.displayName;
+    status.uuid = player.uuid;
+    status.actions = player.status;
+
+    return status;
+  }
+
+  public async findRecentGames(tag: string) {
+    const player = await this.findOne(tag, HypixelCache.CACHE_ONLY, {
+      uuid: true,
+      displayName: true,
+    });
+
+    if (!player) throw new PlayerNotFoundException();
+
+    const games = await this.hypixelService.getRecentGames(player.uuid);
+
+    if (!games) throw new RecentGamesNotFoundException(player);
+
+    return {
+      uuid: player.uuid,
+      displayName: player.displayName,
+      games,
+    };
+  }
+
+  public async findRankedSkyWars(tag: string) {
+    const player = await this.findOne(tag, HypixelCache.CACHE_ONLY, {
+      uuid: true,
+      displayName: true,
+    });
+
+    if (!player) throw new PlayerNotFoundException();
+
+    const ranked = await this.hypixelService.getRankedSkyWars(player.uuid);
+
+    if (!ranked) throw new RankedSkyWarsNotFoundException(player);
+
+    ranked.uuid = player.uuid;
+    ranked.displayName = player.displayName;
+
+    return ranked;
   }
 
   /**

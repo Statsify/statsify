@@ -1,3 +1,3 @@
 import { Flatten } from '@statsify/util';
 
-export type Selector<T> = { [K in keyof Flatten<T>]?: boolean };
+export type Selector<T> = { [K in keyof (T & Flatten<T>)]?: boolean };

@@ -1,8 +1,22 @@
+import type { User } from '@statsify/schemas';
+import { noop } from '@statsify/util';
 import type { APIApplicationCommandInteractionDataBasicOption } from 'discord-api-types/v10';
 import type { Interaction, InteractionContent } from '../interaction';
 
 export class CommandContext {
-  public constructor(private readonly interaction: Interaction, private readonly data: any) {}
+  private user: User | null;
+
+  public constructor(private readonly interaction: Interaction, private readonly data: any) {
+    this.user = null;
+  }
+
+  public getUser() {
+    return this.user;
+  }
+
+  public setUser(user: User | null) {
+    this.user = user;
+  }
 
   public option<T>(name: string, defaultValue: T): T;
   public option<T>(name: string): T;
@@ -12,8 +26,7 @@ export class CommandContext {
     );
 
     if (!data) {
-      if (defaultValue !== undefined) return defaultValue;
-      throw new Error(`No option found with name ${name}`);
+      return defaultValue ?? noop();
     }
 
     return data.value as unknown as T;

@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (process.env.IGNORE_AUTH == true) {
+    if (process.env.IGNORE_AUTH?.toLowerCase() === 'true') {
       return true;
     }
 

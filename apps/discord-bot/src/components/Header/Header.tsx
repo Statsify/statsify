@@ -1,5 +1,5 @@
 import { JSX } from '@statsify/jsx';
-import { Image } from 'canvas';
+import { Image } from 'skia-canvas';
 import { Sidebar, SidebarItem } from '../Sidebar';
 import { HeaderNametag } from './HeaderNametag';
 import { SidebarHeader } from './SidebarHeader';
