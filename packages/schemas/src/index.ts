@@ -7,6 +7,7 @@ export * from './metadata/deserialize';
 export * from './metadata/metadata.interface';
 export * from './metadata/serialize';
 export * from './player';
+export { rankMap } from './player/util';
 export * from './rankedskywars';
 export * from './recentgames';
 export * from './skin';
@@ -16,3 +17,4 @@ export * from './util/leaderboard-scanner';
 export * from './util/selector';
 export * from './verify-codes';
 export * from './watchdog';
+
