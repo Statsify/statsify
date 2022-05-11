@@ -6,13 +6,21 @@
   "scripts": {
     "apikey": "node -r dotenv/config src/apikey.js dotenv_config_path=../../.env",
     "purge": "node -r dotenv/config src/purge.js dotenv_config_path=../../.env",
-    "create-env": "node src/create-env.js"
+    "create-env": "node src/create-env.js",
+    "rank-emojis": "node -r dotenv/config src/rank-emojis.js dotenv_config_path=../../.env"
   },
   "dependencies": {
+    "@statsify/assets": "workspace:^",
+    "@statsify/jsx": "workspace:^",
+    "@statsify/logger": "workspace:^",
+    "@statsify/schemas": "workspace:^",
+    "@statsify/util": "workspace:^",
     "chalk": "^5.0.1",
     "dotenv": "^16.0.0",
     "inquirer": "^8.2.4",
-    "ioredis": "^5.0.4"
+    "ioredis": "^5.0.4",
+    "skia-canvas": "^0.9.29",
+    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab"
   },
   "devDependencies": {
     "@types/inquirer": "^8.2.1"

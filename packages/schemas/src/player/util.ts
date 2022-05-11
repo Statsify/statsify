@@ -1,6 +1,23 @@
 import type { APIData } from '@statsify/util';
 import { Color, ColorCode, ColorId } from '../color';
 
+export const rankMap: Record<string, (color: string) => string> = {
+  'MVP+': (plusColor) => `§b[MVP${plusColor}+§b]`,
+  'MVP++': (plusColor) => `§6[MVP${plusColor}++§6]`,
+  'bMVP++': (plusColor) => `§b[MVP${plusColor}++§b]`,
+  MVP: () => '§b[MVP]',
+  'VIP+': () => `§a[VIP§6+§a]`,
+  VIP: () => `§a[VIP]`,
+  YOUTUBE: () => `§c[§fYOUTUBE§c]`,
+  'PIG+++': () => `§d[PIG§b+++§d]`,
+  GM: () => '§2[GM]',
+  ADMIN: () => `§c[ADMIN]`,
+  OWNER: () => `§c[OWNER]`,
+  MOJANG: () => `§6[MOJANG]`,
+  EVENTS: () => `§6[EVENTS]`,
+  DEFAULT: () => `§7`,
+};
+
 /**
  * A set of utility functions for getting things like `rank`, `displayName` and `plusColor`
  */
@@ -97,34 +114,7 @@ export class PlayerUtil {
   }
 
   public static getDisplayName(username: string, rank: string, plusColor: ColorCode) {
-    const rankMap: Record<string, string> = {
-      'MVP+': `§b[MVP${plusColor}+§b]`,
-      'MVP++': `§6[MVP${plusColor}++§6]`,
-      'bMVP++': `§b[MVP${plusColor}++§b]`,
-      MVP: '§b[MVP]',
-      'VIP+': `§a[VIP${plusColor}+§a]`,
-      VIP: `§a[VIP]`,
-      YOUTUBE: `§c[§fYOUTUBE§c]`,
-      'PIG+++': `§d[PIG${plusColor}+++§d]`,
-      HELPER: `§9[HELPER]`,
-      MOD: `§2[MOD]`,
-      GM: '§2[GM]',
-      ADMIN: `§c[ADMIN]`,
-      OWNER: `§c[OWNER]`,
-      SLOTH: `§c[SLOTH]`,
-      ANGUS: `§c[ANGUS]`,
-      APPLE: '§6[APPLE]',
-      MOJANG: `§6[MOJANG]`,
-      'BUILD TEAM': `§3[BUILD TEAM]`,
-      EVENTS: `§6[EVENTS]`,
-      MINISTER: `§c[MINISTER]`,
-      MAYOR: `§d[MAYOR]`,
-      DEFAULT: `§7`,
-      MCP: `§c[MCP]`,
-    };
-
-    const colorRank = rankMap[rank];
-
+    const colorRank = rankMap[rank](plusColor);
     return `${colorRank}${colorRank === '§7' ? '' : ' '}${username}`;
   }
 
