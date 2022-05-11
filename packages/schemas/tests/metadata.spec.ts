@@ -126,14 +126,14 @@ describe('metadata', () => {
   });
 
   it(`should carry down metadata`, () => {
-    class ParentClazz {
-      @Field({ leaderboard: { additionalFields: ['fieldA'], extraDisplay: 'fieldA' } })
-      public fieldA: ChildClazz;
-    }
-
     class ChildClazz {
       @Field()
       public fieldB: number;
+    }
+
+    class ParentClazz {
+      @Field({ leaderboard: { additionalFields: ['fieldA'], extraDisplay: 'fieldA' } })
+      public fieldA: ChildClazz;
     }
 
     const [[, { leaderboard }]] = MetadataScanner.scan(ParentClazz);

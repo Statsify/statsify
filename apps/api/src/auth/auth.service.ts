@@ -42,7 +42,11 @@ export class AuthService {
     pipeline.hincrby(`key:${hash}`, 'requests', weight);
     pipeline.expire(key, expirey / 1000);
 
-    const [, , requests] = await pipeline.exec();
+    const pipelineResult = await pipeline.exec();
+
+    if (!pipelineResult) throw new InternalServerErrorException();
+
+    const [, , requests] = pipelineResult;
 
     if (requests[0]) throw new InternalServerErrorException();
 
@@ -50,7 +54,7 @@ export class AuthService {
       .filter((_, i) => i % 2 === 0)
       .reduce((acc, key) => acc + Number(key.split(':')[1]), 0);
 
-    const resetTime = 60000 - (time - requests[1][1]);
+    const resetTime = 60000 - (time - (requests[1] as [Error | null, number])[1]);
 
     if (weightedTotal > apiKeyLimit) {
       this.logger.warn(
@@ -95,9 +99,13 @@ export class AuthService {
     pipeline.hmget(`key:${hash}`, 'name', 'requests', 'limit');
     pipeline.zrange(key, 0, -1, 'WITHSCORES');
 
-    const [keydata, requests] = await pipeline.exec();
+    const pipelineResult = await pipeline.exec();
 
-    const [name, lifetimeRequests, limit] = keydata[1];
+    if (!pipelineResult) throw new InternalServerErrorException();
+
+    const [keydata, requests] = pipelineResult;
+
+    const [name, lifetimeRequests, limit] = keydata[1] as [string, number, number];
 
     const recentRequests = (requests[1] as string[])
       .filter((_, i) => i % 2 === 0)
@@ -105,7 +113,7 @@ export class AuthService {
 
     const time = Date.now();
 
-    const resetTime = 60000 - (time - Number(requests[1][1]));
+    const resetTime = 60000 - (time - Number((requests[1] as [Error | null, number])[1]));
 
     return {
       name,

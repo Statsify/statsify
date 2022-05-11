@@ -1,6 +1,6 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { LeaderboardEnabledMetadata, LeaderboardScanner, Player } from '@statsify/schemas';
 import { flatten, FlattenKeys } from '@statsify/util';
 import { ReturnModelType } from '@typegoose/typegoose';
@@ -104,6 +104,8 @@ export class PlayerLeaderboardService {
 
     const responses = await pipeline.exec();
 
+    if (!responses) throw new InternalServerErrorException();
+
     return responses.map((response, index) => {
       const field = fields[index];
       const rank = Number(response[1] ?? 0);
@@ -143,6 +145,8 @@ export class PlayerLeaderboardService {
     });
 
     const responses = await pipeline.exec();
+
+    if (!responses) throw new InternalServerErrorException();
 
     responses.forEach((response, ind) => {
       const [index, key] = requests[ind];
