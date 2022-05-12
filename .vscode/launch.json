@@ -19,7 +19,7 @@
       "name": "Site",
       "runtimeExecutable": "yarn",
       "cwd": "${workspaceFolder}",
-      "runtimeArgs": ["site", "start"],
+      "runtimeArgs": ["site", "dev"],
       "outputCapture": "std"
     },
     {
