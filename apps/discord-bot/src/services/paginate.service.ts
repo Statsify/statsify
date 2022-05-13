@@ -2,9 +2,8 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   CommandContext,
-  InteractionContent,
+  InteractionContent
 } from '@statsify/discord';
-import { APIButtonComponentWithCustomId } from 'discord-api-types/v10';
 import { Service } from 'typedi';
 import { CommandListener } from '../command.listener';
 
@@ -30,18 +29,18 @@ export class PaginateService {
     const backward = new ButtonBuilder().label('backward');
     const forward = new ButtonBuilder().label('forward');
 
-    const row = new ActionRowBuilder().component(backward).component(forward).build();
+    const row = new ActionRowBuilder().component(backward).component(forward).build(context.t);
 
     const listener = CommandListener.getInstance();
 
-    listener.addInteractionHook(this.getCustomId(backward), () => {
+    listener.addInteractionHook(backward.getCustomId(), () => {
       page = page == 0 ? pages.length - 1 : page - 1;
       content = pages[page];
 
       context.reply(content);
     });
 
-    listener.addInteractionHook(this.getCustomId(forward), async () => {
+    listener.addInteractionHook(forward.getCustomId(), async () => {
       page = page == pages.length - 1 ? 0 : page + 1;
       content = pages[page];
 
@@ -49,8 +48,8 @@ export class PaginateService {
     });
 
     setTimeout(() => {
-      listener.removeInteractionHook(this.getCustomId(backward));
-      listener.removeInteractionHook(this.getCustomId(forward));
+      listener.removeInteractionHook(backward.getCustomId());
+      listener.removeInteractionHook(forward.getCustomId());
 
       context.reply({
         ...content,
@@ -62,9 +61,5 @@ export class PaginateService {
       ...content,
       components: [row],
     });
-  }
-
-  private getCustomId(button: ButtonBuilder) {
-    return (button['data'] as APIButtonComponentWithCustomId).custom_id;
   }
 }

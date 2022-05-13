@@ -1,4 +1,5 @@
 import { APIActionRowComponent, ComponentType } from 'discord-api-types/v10';
+import { TFunction } from 'i18next';
 import type { ButtonBuilder } from './button.builder';
 
 export type ActionRowComponent = ButtonBuilder;
@@ -18,8 +19,8 @@ export class ActionRowBuilder {
     return this;
   }
 
-  public build(): APIActionRowComponent<any> {
-    this.data.components = this.data.components.map((c) => c.build());
+  public build(locale: TFunction): APIActionRowComponent<any> {
+    this.data.components = this.data.components.map((c) => c.build(locale));
     return this.data;
   }
 }

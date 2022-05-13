@@ -2,7 +2,7 @@ import { APIGuildMember, InteractionType } from 'discord-api-types/v10';
 import type {
   Interaction as DiscordInteraction,
   InteractionResponse,
-  RestClient,
+  RestClient
 } from 'tiny-discord';
 import type { InteractionContent } from './interaction.content';
 

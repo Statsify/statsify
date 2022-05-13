@@ -1,4 +1,5 @@
 import type { APIEmbed } from 'discord-api-types/v10';
+import i18next from 'i18next';
 import { EmbedBuilder } from '../src';
 
 describe('EmbedBuilder', () => {
@@ -14,7 +15,7 @@ describe('EmbedBuilder', () => {
       .author('authorName', 'authorIcon', 'authorUrl')
       .thumbnail('thumbnail')
       .url('url')
-      .build();
+      .build(i18next.t);
 
     expect(embed).toEqual<APIEmbed>({
       title: 'title',

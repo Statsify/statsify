@@ -5,12 +5,12 @@ import {
   PlayerNotFoundException,
   RankedSkyWarsNotFoundException,
   RecentGamesNotFoundException,
-  StatusNotFoundException,
+  StatusNotFoundException
 } from '@statsify/api-client';
+import { ErrorMessage } from '@statsify/discord';
 import { User } from '@statsify/schemas';
 import short from 'short-uuid';
 import { Service } from 'typedi';
-import { ErrorResponse } from '../util';
 
 type PlayerTag = 'username' | 'uuid' | 'discordId' | 'none';
 
@@ -60,7 +60,7 @@ export class ApiService extends StatsifyApiService {
       if (error.message === 'player') throw this.missingPlayer(type, tag);
 
       if (error.message === 'recentGames')
-        throw new ErrorResponse(
+        throw new ErrorMessage(
           'Recent Games not found',
           `Recent games for ${
             (error as RecentGamesNotFoundException).displayName
@@ -88,7 +88,7 @@ export class ApiService extends StatsifyApiService {
       if (error.message === 'player') throw this.missingPlayer(type, tag);
 
       if (error.message === 'status')
-        throw new ErrorResponse(
+        throw new ErrorMessage(
           'Status not found',
           `A status for ${(error as StatusNotFoundException).displayName} could not be found`
         );
@@ -135,7 +135,7 @@ export class ApiService extends StatsifyApiService {
       if (error.message === 'player') throw this.missingPlayer(type, tag);
 
       if (error.message === 'rankedSkyWars')
-        throw new ErrorResponse(
+        throw new ErrorMessage(
           'Ranked SkyWars stats not found',
           `${(error as RankedSkyWarsNotFoundException).displayName} has no Ranked SkyWars stats.`
         );
@@ -189,7 +189,7 @@ export class ApiService extends StatsifyApiService {
       const error = err.response.data as GuildNotFoundException | PlayerNotFoundException;
 
       if (error.message === 'guild')
-        throw new ErrorResponse(
+        throw new ErrorMessage(
           'Invalid Guild',
           `A guild by the ${type?.toLowerCase()} of \`${tag}\` could not be found!`
         );
@@ -205,7 +205,7 @@ export class ApiService extends StatsifyApiService {
       const searchedUser = await this.getUser(tag);
       if (searchedUser?.uuid) return searchedUser.uuid;
 
-      throw new ErrorResponse(
+      throw new ErrorMessage(
         'Missing Verification',
         `<@${tag}> is not **verified**. To mention them, they must run \`/verify\` to verify their account.`
       );
@@ -213,7 +213,7 @@ export class ApiService extends StatsifyApiService {
 
     if (type === 'none') {
       if (user?.uuid) return user.uuid;
-      throw new ErrorResponse('Missing Verification', 'You are not verified');
+      throw new ErrorMessage('Missing Verification', 'You are not verified');
     }
 
     return tag;
@@ -234,21 +234,21 @@ export class ApiService extends StatsifyApiService {
       return [shortUuid.replace(/-/g, ''), 'uuid'];
     }
 
-    throw new ErrorResponse(
+    throw new ErrorMessage(
       'Invalid Search',
       "We couldn't tell what you were looking for!\nPlease enter a username, uuid, or discord mention."
     );
   }
 
   private missingPlayer(type: PlayerTag, tag: string) {
-    return new ErrorResponse(
+    return new ErrorMessage(
       'Invalid Player',
       `A player by the ${type} of \`${tag}\` could not be found!`
     );
   }
 
   private unknownError() {
-    return new ErrorResponse(
+    return new ErrorMessage(
       'An Unknown Error Occurred',
       'Something went wrong, please try again later.'
     );

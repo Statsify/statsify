@@ -1,6 +1,7 @@
 import type { User } from '@statsify/schemas';
 import { noop } from '@statsify/util';
 import type { APIApplicationCommandInteractionDataBasicOption } from 'discord-api-types/v10';
+import i18next, { TFunction } from 'i18next';
 import type { Interaction, InteractionContent } from '../interaction';
 
 export class CommandContext {
@@ -30,6 +31,10 @@ export class CommandContext {
     }
 
     return data.value as unknown as T;
+  }
+
+  public t(...args: Parameters<TFunction>) {
+    return i18next.getFixedT(this.interaction.getLocale())(...args);
   }
 
   public reply(data: InteractionContent) {

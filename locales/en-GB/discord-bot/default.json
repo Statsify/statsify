@@ -1,0 +1,14 @@
+{
+  "games": {
+    "bedwars": "BedWars"
+  },
+  "stats": {
+    "wins": "wins",
+    "losses": "losses",
+    "kills": "kills",
+    "deaths": "deaths",
+    "assists": "assists"
+  },
+  "int": "{{value, int}}",
+  "double": "{{value, double}}"
+}

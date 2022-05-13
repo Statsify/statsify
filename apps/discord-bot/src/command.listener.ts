@@ -2,17 +2,17 @@ import {
   AbstractCommandListener,
   CommandContext,
   CommandResolvable,
-  ContentResponse,
   Interaction,
+  Message
 } from '@statsify/discord';
 import { ApplicationCommandOptionType, InteractionResponseType } from 'discord-api-types/v10';
 import type {
   InteractionResponse,
   InteractionServer,
   RestClient,
-  WebsocketShard,
+  WebsocketShard
 } from 'tiny-discord';
-import { ApiService } from './services/api.service';
+import { ApiService } from './services';
 
 export type InteractionHook = (interaction: Interaction) => any;
 
@@ -75,22 +75,22 @@ export class CommandListener extends AbstractCommandListener {
       if (response instanceof Promise)
         response
           .then((res) => {
-            if (typeof res === 'object') context.reply(res);
+            if (typeof res === 'object') context.reply(this.localize(context, new Message(res)));
           })
           .catch((err) => {
-            if (err instanceof ContentResponse) context.reply(err);
+            if (err instanceof Message) context.reply(this.localize(context, err));
             else this.logger.error(err);
           });
       else if (typeof response === 'object')
         return {
           type: InteractionResponseType.ChannelMessageWithSource,
-          data: interaction.convertToApiData(response),
+          data: interaction.convertToApiData(this.localize(context, new Message(response))),
         };
     } catch (err) {
-      if (err instanceof ContentResponse)
+      if (err instanceof Message)
         return {
           type: InteractionResponseType.ChannelMessageWithSource,
-          data: interaction.convertToApiData(err),
+          data: interaction.convertToApiData(this.localize(context, err)),
         };
 
       this.logger.error(err);
@@ -162,6 +162,10 @@ export class CommandListener extends AbstractCommandListener {
     }
 
     return [command, data];
+  }
+
+  private localize(context: CommandContext, message: Message) {
+    return message.build(context.t);
   }
 
   public static create(
