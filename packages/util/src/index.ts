@@ -142,4 +142,3 @@ export const formatTime = (ms: number): string => {
 
 export * from './flat';
 export * from './minecraft-colors';
-

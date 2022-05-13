@@ -2,7 +2,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   CommandContext,
-  InteractionContent
+  InteractionContent,
 } from '@statsify/discord';
 import { Service } from 'typedi';
 import { CommandListener } from '../command.listener';

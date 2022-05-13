@@ -4,7 +4,7 @@ import type {
   APIEmbedField,
   APIEmbedFooter,
   APIEmbedImage,
-  APIEmbedThumbnail
+  APIEmbedThumbnail,
 } from 'discord-api-types/v10';
 import { TFunction } from 'i18next';
 import { LocalizationString, translateField, translateObject } from './localize';

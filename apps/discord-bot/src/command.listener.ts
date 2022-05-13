@@ -3,14 +3,14 @@ import {
   CommandContext,
   CommandResolvable,
   Interaction,
-  Message
+  Message,
 } from '@statsify/discord';
 import { ApplicationCommandOptionType, InteractionResponseType } from 'discord-api-types/v10';
 import type {
   InteractionResponse,
   InteractionServer,
   RestClient,
-  WebsocketShard
+  WebsocketShard,
 } from 'tiny-discord';
 import { ApiService } from './services';
 

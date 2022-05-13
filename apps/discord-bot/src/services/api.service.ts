@@ -5,7 +5,7 @@ import {
   PlayerNotFoundException,
   RankedSkyWarsNotFoundException,
   RecentGamesNotFoundException,
-  StatusNotFoundException
+  StatusNotFoundException,
 } from '@statsify/api-client';
 import { ErrorMessage } from '@statsify/discord';
 import { User } from '@statsify/schemas';
