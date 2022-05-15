@@ -40,6 +40,6 @@
   },
   "devDependencies": {
     "@nestjs/testing": "^8.4.5",
-    "@types/cron": "^1.7.3"
+    "@types/cron": "^2.0.0"
   }
 }
