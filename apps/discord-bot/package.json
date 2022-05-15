@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
-    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w",
     "test:types": "tsc --noEmit",
     "test": "jest",
     "test:coverage": "jest --coverage",
