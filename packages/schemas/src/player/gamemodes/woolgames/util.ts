@@ -2,13 +2,14 @@ import { findScore } from '@statsify/util';
 
 export const getExpReq = (level: number) => {
   const progress = level % 100;
-  if (progress > 3) return 5000;
+  if (progress > 4) return 5000;
 
   const levels: Record<number, number> = {
     0: 0,
     1: 1000,
     2: 2000,
-    3: 3500,
+    3: 3000,
+    4: 4000,
   };
 
   return levels[progress];
@@ -19,7 +20,7 @@ export const getLevel = (exp = 0): number => {
   let level = prestiges * 100;
   let remainingExp = exp - prestiges * 487000;
 
-  for (let i = 0; i < 4; ++i) {
+  for (let i = 0; i < 5; ++i) {
     const expForNextLevel = getExpReq(i);
     if (remainingExp < expForNextLevel) break;
     level++;
