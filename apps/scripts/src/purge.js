@@ -1,28 +1,38 @@
-// ! I (ugcodrr) am not liable for any damages or loss of data caused by this script.
-
-import { exec } from 'child_process';
-import { readdirSync, rmSync, statSync } from 'fs';
+import { exec as _exec } from 'child_process';
+import { rm } from 'fs/promises';
 import inquirer from 'inquirer';
-import path from 'path';
+import { dirname, join, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import util from 'util';
-import { inquirerConfirmation, inquirerLogger } from './utils.js';
+import { promisify } from 'util';
+import { fetchWorkspaces, inquirerConfirmation, inquirerLogger, ROOT } from './utils.js';
 
-const __exec = util.promisify(exec);
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = dirname(__filename);
 
-const flatten = (lists) => lists.reduce((a, b) => a.concat(b), []);
+/**
+ *
+ * @param {string} script
+ */
+const exec = (script) =>
+  promisify(_exec)(script, {
+    shell: true,
+    stdio: 'inherit',
+    cwd: resolve(__dirname, '../../../'),
+  });
 
-const getDirectories = (srcpath) =>
-  readdirSync(srcpath)
-    .map((file) => path.join(srcpath, file))
-    .filter((path) => statSync(path).isDirectory());
+const workspaces = [...(await fetchWorkspaces('apps')), ...(await fetchWorkspaces('packages'))];
 
-const getDirectoriesRecursive = (srcpath) => [
-  srcpath,
-  ...flatten(getDirectories(srcpath).map(getDirectoriesRecursive)),
-];
+/**
+ *
+ * @param {string} path
+ * @param {string[]} _workspaces
+ * @returns {Promise<void>}
+ */
+function deleteFromWorkspaces(path, _workspaces = workspaces) {
+  return Promise.all(
+    _workspaces.map((workspace) => rm(join(workspace, path), { recursive: true, force: true }))
+  );
+}
 
 const purge = async () => {
   const { method } = await inquirer.prompt([
@@ -30,89 +40,50 @@ const purge = async () => {
       type: 'list',
       name: 'method',
       message: 'Purge Action?',
-      choices: ['node_modules', '.turbo', 'dist', 'coverage', 'swc', 'ALL'],
+      choices: ['node_modules', '.turbo', 'dist', 'coverage', '.swc', 'ALL'],
       default: 'create',
     },
   ]);
 
-  const activeFolders = await getDirectoriesRecursive(path.resolve(__dirname, '../../../'));
+  if (!(await inquirerConfirmation())) return;
 
-  if (method === 'node_modules') await nodeModules(activeFolders);
-  else if (method === '.turbo') await turboRepo(activeFolders);
-  else if (method === 'dist') await dist(activeFolders);
-  else if (method === 'coverage') await coverage(activeFolders);
-  else if (method === 'swc') await swc(activeFolders);
-  else if (method === 'ALL') await all(activeFolders);
+  if (method === 'node_modules') await nodeModules();
+  else if (method === '.turbo') await turboRepo();
+  else if (method === 'dist') await dist();
+  else if (method === 'coverage') await coverage();
+  else if (method === '.swc') await swc();
+  else if (method === 'ALL') await all();
   process.exit(0);
 };
 
-const nodeModules = async (existingFolders) => {
-  if (!(await inquirerConfirmation())) return;
-
-  await existingFolders
-    .filter((folder) => folder.includes('node_modules'))
-    .forEach((folder) => deleteDirectories(folder));
+const nodeModules = async () => {
+  await deleteFromWorkspaces('node_modules', [ROOT, ...workspaces]);
 
   if (!(await inquirerConfirmation('Recreate node_modules'))) return;
 
-  await __exec('yarn', {
-    shell: true,
-    stdio: 'inherit',
-    cwd: path.resolve(__dirname, '../../../'),
-  });
+  await exec('yarn');
 
   inquirerLogger('Recreater', 'node_modules installed');
 };
 
-const turboRepo = async (existingFolders) => {
-  if (!(await inquirerConfirmation())) return;
-
-  await existingFolders
-    .filter((folder) => folder.includes('.turbo'))
-    .forEach((folder) => deleteDirectories(folder));
-};
-
-const dist = async (existingFolders) => {
-  if (!(await inquirerConfirmation())) return;
-
-  await existingFolders
-    .filter((folder) => folder.includes('dist'))
-    .forEach((folder) => deleteDirectories(folder));
+const dist = async () => {
+  await deleteFromWorkspaces('dist');
 
   if (!(await inquirerConfirmation('Recreate dist'))) return;
 
-  await __exec('yarn build', {
-    shell: true,
-    stdio: 'inherit',
-    cwd: path.resolve(__dirname, '../../../'),
-  });
+  await exec('yarn build');
 
   inquirerLogger('Recreater', 'monorepo freshly built');
 };
 
-const coverage = async (existingFolders) => {
-  if (!(await inquirerConfirmation())) return;
+const turboRepo = () => deleteFromWorkspaces('.turbo', [ROOT, ...workspaces]);
+const coverage = () => deleteFromWorkspaces('coverage');
+const swc = () => deleteFromWorkspaces('.swc');
 
-  await existingFolders
-    .filter((folder) => folder.includes('coverage'))
-    .forEach((folder) => deleteDirectories(folder));
+const all = async () => {
+  await nodeModules();
+  await dist();
+  await Promise.all([turboRepo(), coverage(), swc()]);
 };
-const swc = async (existingFolders) => {
-  if (!(await inquirerConfirmation())) return;
-
-  await existingFolders
-    .filter((folder) => folder.includes('swc'))
-    .forEach((folder) => deleteDirectories(folder));
-};
-
-const all = async (activeFolders) => {
-  await nodeModules(activeFolders);
-  await turboRepo(activeFolders);
-  await dist(activeFolders);
-  await coverage(activeFolders);
-  await swc(activeFolders);
-};
-
-const deleteDirectories = (file) => rmSync(file, { recursive: true, force: true });
 
 purge();

@@ -5,7 +5,6 @@
   "types": "src/index.ts",
   "scripts": {
     "build": "swc src --out-dir dist",
-    "build:watch": "swc src --out-dir dist -w",
     "test:types": "tsc --noEmit",
     "test": "jest",
     "test:coverage": "jest --coverage",

@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node -r dotenv/config --enable-source-maps . dotenv_config_path=../../.env",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
-    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w",
     "test:types": "tsc --noEmit",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },

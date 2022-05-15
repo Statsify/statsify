@@ -9,10 +9,6 @@
       "outputs": ["dist/**", ".next/**"],
       "dependsOn": ["^build"]
     },
-    "build:watch": {
-      "outputs": ["dist/**"],
-      "dependsOn": ["^build:watch"]
-    },
     "test:types": {
       "outputs": [],
       "dependsOn": ["^test:types"]

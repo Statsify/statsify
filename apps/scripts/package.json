@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "apikey": "node -r dotenv/config src/apikey.js dotenv_config_path=../../.env",
+    "api-key": "node -r dotenv/config src/api-key.js dotenv_config_path=../../.env",
+    "build-watch": "node src/build-watch.js",
     "purge": "node -r dotenv/config src/purge.js dotenv_config_path=../../.env",
-    "create-env": "node src/create-env.js",
     "rank-emojis": "node -r dotenv/config src/rank-emojis.js dotenv_config_path=../../.env"
   },
   "dependencies": {
@@ -15,7 +15,9 @@
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
+    "@swc/core": "^1.2.183",
     "chalk": "^5.0.1",
+    "chokidar": "^3.5.3",
     "dotenv": "^16.0.1",
     "inquirer": "^8.2.4",
     "ioredis": "^5.0.4",
