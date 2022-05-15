@@ -7,7 +7,7 @@ jobs:
   labeler:
     runs-on: ubuntu-latest
     steps:
-    - uses: github/issue-labeler@829a8bf1b184f74cc575b5435093a92c7b846983 # tag=v2.4
+    - uses: github/issue-labeler@6ca237433dbbb8e475241b7f38f4600d9e296c57 # tag=v2.5
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
         configuration-path: .github/issue_labeler.yml
