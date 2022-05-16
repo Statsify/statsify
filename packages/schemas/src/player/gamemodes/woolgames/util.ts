@@ -4,13 +4,7 @@ export const getExpReq = (level: number) => {
   const progress = level % 100;
   if (progress > 4) return 5000;
 
-  const levels: Record<number, number> = {
-    0: 0,
-    1: 1000,
-    2: 2000,
-    3: 3000,
-    4: 4000,
-  };
+  const levels = [0, 1000, 2000, 3000, 4000];
 
   return levels[progress];
 };
@@ -47,7 +41,7 @@ const applyFormat = ({ format }: { format: string[] }, n: number) => {
 export const getFormattedLevel = (star: number): string => {
   star = Math.floor(star);
 
-  const prestigeColors: { req: number; format: string[] }[] = [{ req: 0, format: ['§7[', '✫]'] }]; // empty until we know what the stars are
+  const prestigeColors: { req: number; format: string[] }[] = [{ req: 0, format: ['§7[', '✫]'] }];
 
   return applyFormat(findScore(prestigeColors, star), star);
 };

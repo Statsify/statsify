@@ -2,7 +2,7 @@ import { APIData } from '@statsify/util';
 import { Color, ColorCode } from '../../../color';
 import { Field } from '../../../metadata';
 import { Progression } from '../../../progression';
-import { WoolWarsStats } from './class';
+import { WoolWarsClass } from './class';
 import { getExpReq, getFormattedLevel, getLevel } from './util';
 
 export class WoolGames {
@@ -31,7 +31,28 @@ export class WoolGames {
   public nextLevelFormatted: string;
 
   @Field()
-  public WoolWars: WoolWarsStats;
+  public overall: WoolWarsClass;
+
+  @Field()
+  public tank: WoolWarsClass;
+
+  @Field()
+  public archer: WoolWarsClass;
+
+  @Field()
+  public builder: WoolWarsClass;
+
+  @Field()
+  public swordsman: WoolWarsClass;
+
+  @Field()
+  public engineer: WoolWarsClass;
+
+  @Field()
+  public golem: WoolWarsClass;
+
+  @Field()
+  public assault: WoolWarsClass;
 
   public constructor(data: APIData) {
     this.coins = data?.coins ?? 0;
@@ -54,8 +75,16 @@ export class WoolGames {
       exp -= getExpReq(i);
     }
 
-    this.levelProgression = new Progression(exp, getExpReq(flooredLevel + 1));
+    this.levelProgression = new Progression(exp, getExpReq(flooredLevel));
 
-    this.WoolWars = new WoolWarsStats(data?.wool_wars?.stats ?? {});
+    this.overall = new WoolWarsClass(data);
+
+    this.tank = new WoolWarsClass(data?.classes?.tank);
+    this.archer = new WoolWarsClass(data?.classes?.archer);
+    this.builder = new WoolWarsClass(data?.classes?.builder);
+    this.swordsman = new WoolWarsClass(data?.classes?.swordsman);
+    this.engineer = new WoolWarsClass(data?.classes?.engineer);
+    this.golem = new WoolWarsClass(data?.classes?.golem);
+    this.assault = new WoolWarsClass(data?.classes?.assult);
   }
 }
