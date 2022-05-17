@@ -74,6 +74,9 @@ export class ExpByGame {
   @Field()
   public WALLS: number;
 
+  @Field()
+  public WOOL_GAMES: number;
+
   public constructor(data: APIData) {
     this.ARCADE = data.ARCADE;
     this.ARENA = data.ARENA;
@@ -98,5 +101,6 @@ export class ExpByGame {
     this.VAMPIREZ = data.VAMPIREZ;
     this.WALLS = data.WALLS;
     this.WALLS3 = data.WALLS3;
+    this.WOOL_GAMES = data.WOOL_GAMES;
   }
 }

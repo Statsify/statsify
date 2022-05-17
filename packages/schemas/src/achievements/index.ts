@@ -94,6 +94,9 @@ export class Achievements {
   @Field()
   public warlords: AchievementsGame;
 
+  @Field()
+  public woolwars: AchievementsGame;
+
   public constructor(player: Partial<Player>, data: APIData) {
     const oneTime = player.oneTimeAchievements ?? [];
     const tiered = player.tieredAchievements ?? {};
@@ -128,5 +131,6 @@ export class Achievements {
     this.walls = new AchievementsGame(data, 'walls', oneTime, tiered);
     this.megawalls = new AchievementsGame(data, 'walls3', oneTime, tiered);
     this.warlords = new AchievementsGame(data, 'warlords', oneTime, tiered);
+    this.woolwars = new AchievementsGame(data, 'woolgames', oneTime, tiered);
   }
 }
