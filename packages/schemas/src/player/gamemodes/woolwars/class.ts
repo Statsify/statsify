@@ -13,6 +13,9 @@ export class WoolWarsClass {
   public losses: number;
 
   @Field()
+  public wlr: number;
+
+  @Field()
   public kills: number;
 
   @Field()
@@ -34,18 +37,19 @@ export class WoolWarsClass {
   public woolPlaced: number;
 
   public constructor(data: APIData) {
-    this.wins = data?.wins ?? 0;
-    this.gamesPlayed = data?.games_played ?? 0;
+    this.wins = data.wins;
+    this.gamesPlayed = data.games_played;
     this.losses = this.gamesPlayed - this.wins;
+    this.wlr = ratio(this.wins, this.losses);
 
-    this.kills = data?.kills ?? 0;
-    this.deaths = data?.deaths ?? 0;
+    this.kills = data.kills;
+    this.deaths = data.deaths;
     this.kdr = ratio(this.kills, this.deaths);
 
-    this.assists = data?.assists ?? 0;
+    this.assists = data.assists;
 
-    this.powerups = data?.powerups_gotten ?? 0;
-    this.blocksBroken = data?.blocks_broken ?? 0;
-    this.woolPlaced = data?.wool_placed ?? 0;
+    this.powerups = data.powerups_gotten;
+    this.blocksBroken = data.blocks_broken;
+    this.woolPlaced = data.wool_placed;
   }
 }

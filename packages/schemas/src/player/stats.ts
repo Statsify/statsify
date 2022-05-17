@@ -22,7 +22,7 @@ import { UHC } from './gamemodes/uhc';
 import { VampireZ } from './gamemodes/vampirez';
 import { Walls } from './gamemodes/walls';
 import { Warlords } from './gamemodes/warlords';
-import { WoolGames } from './gamemodes/woolgames';
+import { WoolWars } from './gamemodes/woolwars';
 
 export class PlayerStats {
   @Field()
@@ -92,7 +92,7 @@ export class PlayerStats {
   public warlords: Warlords;
 
   @Field()
-  public woolgames: WoolGames;
+  public woolwars: WoolWars;
 
   public constructor(data: APIData = {}) {
     this.arcade = new Arcade(data?.stats?.Arcade ?? {}, data?.achievements ?? {});
@@ -120,6 +120,6 @@ export class PlayerStats {
     this.vampirez = new VampireZ(data?.stats?.VampireZ ?? {});
     this.walls = new Walls(data?.stats?.Walls ?? {});
     this.warlords = new Warlords(data?.stats?.Battleground ?? {});
-    this.woolgames = new WoolGames(data?.stats?.WoolGames ?? {});
+    this.woolwars = new WoolWars(data?.stats?.WoolGames ?? {});
   }
 }

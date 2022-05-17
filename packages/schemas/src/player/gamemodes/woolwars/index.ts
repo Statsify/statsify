@@ -5,7 +5,7 @@ import { Progression } from '../../../progression';
 import { WoolWarsClass } from './class';
 import { getExpReq, getFormattedLevel, getLevel } from './util';
 
-export class WoolGames {
+export class WoolWars {
   @Field()
   public coins: number;
 
@@ -77,14 +77,14 @@ export class WoolGames {
 
     this.levelProgression = new Progression(exp, getExpReq(flooredLevel));
 
-    this.overall = new WoolWarsClass(data);
+    this.overall = new WoolWarsClass(data?.wool_wars?.stats);
 
-    this.tank = new WoolWarsClass(data?.classes?.tank);
-    this.archer = new WoolWarsClass(data?.classes?.archer);
-    this.builder = new WoolWarsClass(data?.classes?.builder);
-    this.swordsman = new WoolWarsClass(data?.classes?.swordsman);
-    this.engineer = new WoolWarsClass(data?.classes?.engineer);
-    this.golem = new WoolWarsClass(data?.classes?.golem);
-    this.assault = new WoolWarsClass(data?.classes?.assult);
+    this.tank = new WoolWarsClass(data?.wool_wars?.stats?.classes?.tank);
+    this.archer = new WoolWarsClass(data?.wool_wars?.stats?.classes?.archer);
+    this.builder = new WoolWarsClass(data?.wool_wars?.stats?.classes?.builder);
+    this.swordsman = new WoolWarsClass(data?.wool_wars?.stats?.classes?.swordsman);
+    this.engineer = new WoolWarsClass(data?.wool_wars?.stats?.classes?.engineer);
+    this.golem = new WoolWarsClass(data?.wool_wars?.stats?.classes?.golem);
+    this.assault = new WoolWarsClass(data?.wool_wars?.stats?.classes?.assult);
   }
 }

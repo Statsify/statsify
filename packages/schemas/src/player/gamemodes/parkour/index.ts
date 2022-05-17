@@ -57,7 +57,7 @@ export class Parkour {
   public warlords: number;
 
   @Field({ leaderboard: { sort: 'ASC' } })
-  public woolgames: number;
+  public woolwars: number;
 
   public constructor(data: APIData) {
     const getTime = (key: string): number =>
@@ -81,6 +81,6 @@ export class Parkour {
     this.tourney = getTime('Tourney');
     this.uhc = getTime('uhc');
     this.warlords = getTime('Warlords');
-    this.woolgames = getTime('WoolGames');
+    this.woolwars = getTime('WoolGames');
   }
 }

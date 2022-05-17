@@ -34,6 +34,7 @@ export const games = [
   { name: 'VampireZ', code: 'VAMPIREZ', id: 7 },
   { name: 'Walls', code: 'WALLS', id: 3 },
   { name: 'Warlords', code: 'BATTLEGROUND', id: 23 },
+  { name: 'Wool Wars', code: 'WOOL_GAMES', id: 68 },
 ];
 
 /**
