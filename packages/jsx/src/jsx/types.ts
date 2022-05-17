@@ -26,13 +26,15 @@ export interface CompleteSpacing {
 
 export type Spacing = number | Partial<CompleteSpacing>;
 
-export type Percentage = `${number}%`;
+export type Percent = `${number}%`;
+export type Fraction = `${number}/${number}`;
+export type Measurement = number | Percent | Fraction;
 
 export interface ElementDimension {
   padding?: Spacing;
   margin?: Spacing;
-  width?: number | Percentage;
-  height?: number | Percentage;
+  width?: Measurement;
+  height?: Measurement;
 }
 
 export interface Location {
@@ -52,7 +54,7 @@ export type Render<T = unknown, K extends BaseThemeContext = BaseThemeContext> =
 ) => void;
 
 export interface ElementNodeBiDirectional {
-  size?: number | Percentage;
+  size?: Measurement;
   padding1: number;
   padding2: number;
   margin1: number;
@@ -87,9 +89,12 @@ export interface Instruction extends ElementNode {
   children?: Instruction[];
 }
 
-export type PropsWithChildren<T, K = ElementNode> = T & {
-  children?: K | K[] | undefined;
-};
+export type PropsWithChildren<T, K = ElementNode> = T &
+  (T extends { children: any }
+    ? {}
+    : {
+        children?: K | K[] | undefined;
+      });
 
 export type FC<T = {}, K = ElementNode> = (props: PropsWithChildren<T, K>) => ElementNode;
 

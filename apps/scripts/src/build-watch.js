@@ -1,6 +1,6 @@
-import { transformFile } from '@swc/core';
+import { transform } from '@swc/core';
 import { watch } from 'chokidar';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { mkdir, rm, writeFile } from 'fs/promises';
 import { createRequire } from 'module';
 import { basename, join } from 'path';
@@ -71,26 +71,33 @@ async function handleFile(path) {
 
   if (!configFile) return;
 
-  let { code, map } = await transformFile(path, { configFile });
+  try {
+    const file = readFileSync(path, { encoding: 'utf8' });
+    if (!file) return;
 
-  const srcFileName = basename(path);
-  const distFileName = srcFileName.replace(FILE_ENDING_REGEX, '.js');
-  const distFolder = path.replace('src', 'dist').replace(srcFileName, '');
+    let { code, map } = await transform(file, { configFile });
 
-  let files = [mkdir(distFolder, { recursive: true })];
+    const srcFileName = basename(path);
+    const distFileName = srcFileName.replace(FILE_ENDING_REGEX, '.js');
+    const distFolder = path.replace('src', 'dist').replace(srcFileName, '');
 
-  if (map) {
-    const mapFileName = distFileName + '.map';
-    code += `\n//# sourceMappingURL=${mapFileName}`;
-    files.push(writeFile(join(distFolder, mapFileName), map));
+    let files = [mkdir(distFolder, { recursive: true })];
+
+    if (map) {
+      const mapFileName = distFileName + '.map';
+      code += `\n//# sourceMappingURL=${mapFileName}`;
+      files.push(writeFile(join(distFolder, mapFileName), map));
+    }
+
+    files.push(writeFile(join(distFolder, distFileName), code));
+
+    await Promise.all(files);
+
+    logger.setContext(workspace);
+    logger.log(`COMPILE ${srcFileName} -> ${distFileName}`);
+  } catch (err) {
+    console.error(err);
   }
-
-  files.push(writeFile(join(distFolder, distFileName), code));
-
-  await Promise.all(files);
-
-  logger.setContext(workspace);
-  logger.log(`COMPILE ${srcFileName} -> ${distFileName}`);
 }
 
 async function deleteFile(path) {

@@ -56,35 +56,23 @@ export class ProfileCommand {
             width={containerWidth}
             name={player.prefixName}
           />
-          <Table
-            rows={[
-              {
-                data: [
-                  ['Wins §^2^§8[§7#§f16k§8]', stats.wins],
-                  ['Losses', stats.losses],
-                  ['WLR', stats.wlr],
-                ],
-                color: '§a',
-              },
-              {
-                data: [
-                  ['Kills', stats.kills],
-                  ['Deaths', stats.deaths],
-                  ['KDR', stats.kdr],
-                ],
-                color: '§c',
-              },
-              {
-                data: [
-                  ['Assists', stats.assists],
-                  ['Playtime', stats.playTime],
-                  ['Kit', 'Pyrotechnic'],
-                ],
-                color: '§e',
-              },
-            ]}
-            width={containerWidth}
-          />
+          <Table.table>
+            <Table.tr>
+              <Table.td title="Wins" value={stats.wins} color="§a" />
+              <Table.td title="Losses" value={stats.losses} color="§a" />
+              <Table.td title="WLR" value={stats.wlr} color="§a" />
+            </Table.tr>
+            <Table.tr>
+              <Table.td title="Kills" value={stats.kills} color="§c" />
+              <Table.td title="Deaths" value={stats.deaths} color="§c" />
+              <Table.td title="KDR" value={stats.kdr} color="§c" />
+            </Table.tr>
+            <Table.tr>
+              <Table.td title="Assists" value={stats.assists} color="§e" />
+              <Table.td title="Playtime" value={stats.playTime} color="§e" />
+              <Table.td title="Kit" value="Pyrotechnic" color="§e" />
+            </Table.tr>
+          </Table.table>
         </div>
       </div>
     );

@@ -1,4 +1,4 @@
-import { fromPercentToValue } from './convert';
+import { convertMeasurementToValue } from './convert';
 import type {
   ElementNode,
   ElementNodeBiDirectional,
@@ -6,13 +6,13 @@ import type {
   InstructionBiDirectional,
 } from './types';
 
-export const parsePercentSize = (
+export const parseMeasurements = (
   bidirectional: ElementNodeBiDirectional,
   size: number,
   shrink = true
 ) => {
   if (typeof bidirectional.size === 'string') {
-    bidirectional.size = size * fromPercentToValue(bidirectional.size);
+    bidirectional.size = size * convertMeasurementToValue(bidirectional.size);
     bidirectional.size -= bidirectional.margin1 + bidirectional.margin2;
   }
 

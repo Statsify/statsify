@@ -2,8 +2,8 @@ import { noop } from '@statsify/util';
 import type * as JSX from '../jsx';
 
 export interface DivProps {
-  width?: number | JSX.Percentage;
-  height?: number | JSX.Percentage;
+  width?: JSX.Measurement;
+  height?: JSX.Measurement;
   padding?: JSX.Spacing;
   margin?: JSX.Spacing;
   location?: JSX.StyleLocation;

@@ -1,5 +1,5 @@
 import type { IntrinsicElement } from './instrinsics';
-import type { CompleteSpacing, Element, ElementNode, Percentage, Spacing } from './types';
+import type { CompleteSpacing, Element, ElementNode, Measurement, Spacing } from './types';
 
 export const spacingToCompleteSpacing = (spacing?: Spacing): CompleteSpacing => {
   if (typeof spacing === 'number') {
@@ -50,5 +50,10 @@ export const elementToNode = (
   };
 };
 
-export const fromPercentToValue = (percent: Percentage): number =>
-  parseInt(percent.replace(/%/g, '')) * 0.01;
+export const convertMeasurementToValue = (measurement: Measurement): number => {
+  if (typeof measurement === 'number') return measurement;
+  if (measurement.endsWith('%')) return parseFloat(measurement.replace('%', '')) / 100;
+
+  const [num, denom] = measurement.split('/').map((v) => parseInt(v, 10));
+  return num / denom;
+};

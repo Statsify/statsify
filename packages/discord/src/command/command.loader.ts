@@ -31,7 +31,10 @@ export class CommandLoader {
       .filter((key) => key !== 'default')
       .map((key) => {
         try {
-          return CommandBuilder.scan(Container.get(command[key]));
+          const constructor = command[key];
+          const instance = Container.get(constructor);
+
+          return CommandBuilder.scan(instance, constructor);
         } catch {
           this.logger.error(`Failed to load command in ${file} with import ${key}`);
         }

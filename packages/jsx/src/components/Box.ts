@@ -20,8 +20,8 @@ export interface BoxRenderProps {
 }
 
 export interface BoxProps extends Omit<Partial<BoxRenderProps>, 'color' | 'outlineColor'> {
-  width?: number | JSX.Percentage;
-  height?: number | JSX.Percentage;
+  width?: JSX.Measurement;
+  height?: JSX.Measurement;
   padding?: JSX.Spacing;
   margin?: JSX.Spacing;
   location?: JSX.StyleLocation;
