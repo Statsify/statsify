@@ -40,3 +40,5 @@ export class TNTGames {
     this.tntTag = new TNTTag(data, ap);
   }
 }
+
+export * from './mode';

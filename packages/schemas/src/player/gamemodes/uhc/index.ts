@@ -60,3 +60,5 @@ export class UHC {
     UHCMode.applyRatios(this.overall);
   }
 }
+
+export * from './mode';

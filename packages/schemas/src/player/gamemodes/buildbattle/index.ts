@@ -70,3 +70,5 @@ export class BuildBattle {
     this.titleFormatted = `${color}${title}`;
   }
 }
+
+export * from './mode';

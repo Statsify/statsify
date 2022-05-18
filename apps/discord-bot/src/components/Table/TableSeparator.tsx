@@ -2,6 +2,7 @@ import { JSX, useComponentHeight } from '@statsify/jsx';
 
 export interface TableSeparatorProps {
   title?: string;
+  children: JSX.Children;
 }
 
 export const TableSeparator: JSX.FC<TableSeparatorProps> = ({ children, title }) => {
@@ -32,7 +33,9 @@ export const TableSeparator: JSX.FC<TableSeparatorProps> = ({ children, title })
   return (
     <div width="100%" direction="column">
       {topDivider}
-      <div width="100%">{children}</div>
+      <div width="100%" direction="column">
+        {children}
+      </div>
       {bottomDivider}
     </div>
   );

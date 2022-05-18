@@ -39,3 +39,5 @@ export class SmashHeroes {
     this.levelFormatted = `§b${this.level}§6✶`;
   }
 }
+
+export * from './mode';

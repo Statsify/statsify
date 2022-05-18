@@ -35,3 +35,5 @@ export class Quake {
     this.godLikes = ap.quake_godlikes;
   }
 }
+
+export * from './mode';

@@ -171,3 +171,5 @@ export class MegaWalls {
     this.zombie = new MegaWallsKit(data, 'zombie');
   }
 }
+
+export * from './kit';

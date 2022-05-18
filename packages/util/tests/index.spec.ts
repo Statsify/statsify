@@ -127,15 +127,33 @@ describe('formatTime', () => {
     const hour = 60 * minute;
     const day = 24 * hour;
 
-    expect(formatTime(0)).toBe('0ms');
-    expect(formatTime(second)).toBe('1 second');
-    expect(formatTime(second * 2)).toBe('2 seconds');
-    expect(formatTime(minute)).toBe('1 minute');
-    expect(formatTime(hour)).toBe('1 hour');
-    expect(formatTime(day)).toBe('1 day');
-    expect(formatTime(day + hour + minute + second)).toBe('1 day, 1 hour, 1 minute, 1 second');
-    expect(formatTime((day + hour + minute + second) * 2)).toBe(
+    expect(formatTime(0, { short: false, entries: 4 })).toBe('0ms');
+    expect(formatTime(second, { short: false, entries: 4 })).toBe('1 second');
+    expect(formatTime(second * 2, { short: false, entries: 4 })).toBe('2 seconds');
+    expect(formatTime(minute, { short: false, entries: 4 })).toBe('1 minute');
+    expect(formatTime(hour, { short: false, entries: 4 })).toBe('1 hour');
+    expect(formatTime(day, { short: false, entries: 4 })).toBe('1 day');
+    expect(formatTime(day + hour + minute + second, { short: false, entries: 4 })).toBe(
+      '1 day, 1 hour, 1 minute, 1 second'
+    );
+    expect(formatTime((day + hour + minute + second) * 2, { short: false, entries: 4 })).toBe(
       '2 days, 2 hours, 2 minutes, 2 seconds'
+    );
+
+    expect(formatTime(0, { short: true, entries: 4 })).toBe('0ms');
+    expect(formatTime(second, { short: true, entries: 4 })).toBe('1s');
+    expect(formatTime(second * 2, { short: true, entries: 4 })).toBe('2s');
+    expect(formatTime(minute, { short: true, entries: 4 })).toBe('1m');
+    expect(formatTime(hour, { short: true, entries: 4 })).toBe('1h');
+    expect(formatTime(day, { short: true, entries: 4 })).toBe('1d');
+    expect(formatTime(day + hour + minute + second, { short: true, entries: 4 })).toBe(
+      '1d, 1h, 1m, 1s'
+    );
+    expect(formatTime((day + hour + minute + second) * 2, { short: true, entries: 4 })).toBe(
+      '2d, 2h, 2m, 2s'
+    );
+    expect(formatTime((day + hour + minute + second) * 2, { short: true, entries: 2 })).toBe(
+      '2d, 2h'
     );
   });
 });

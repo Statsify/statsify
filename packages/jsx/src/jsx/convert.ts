@@ -1,5 +1,5 @@
 import type { IntrinsicElement } from './instrinsics';
-import type { CompleteSpacing, Element, ElementNode, Measurement, Spacing } from './types';
+import type { CompleteSpacing, ElementNode, Measurement, RawElement, Spacing } from './types';
 
 export const spacingToCompleteSpacing = (spacing?: Spacing): CompleteSpacing => {
   if (typeof spacing === 'number') {
@@ -21,7 +21,7 @@ export const spacingToCompleteSpacing = (spacing?: Spacing): CompleteSpacing => 
 
 export const elementToNode = (
   type: IntrinsicElement,
-  { dimension, style, children, props }: Element
+  { dimension, style, children, props }: RawElement
 ): ElementNode => {
   const padding = spacingToCompleteSpacing(dimension.padding);
   const margin = spacingToCompleteSpacing(dimension.margin);

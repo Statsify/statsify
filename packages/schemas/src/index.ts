@@ -1,5 +1,7 @@
 export * from './achievements';
+export * from './color';
 export * from './friends';
+export * from './game';
 export * from './gamecounts';
 export * from './guild';
 export * from './key';
@@ -8,6 +10,7 @@ export * from './metadata/metadata.interface';
 export * from './metadata/serialize';
 export * from './player';
 export { rankMap } from './player/util';
+export * from './progression';
 export * from './rankedskywars';
 export * from './recentgames';
 export * from './skin';

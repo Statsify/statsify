@@ -1,10 +1,11 @@
-import { JSX } from '@statsify/jsx';
+import { JSX, useChildren } from '@statsify/jsx';
 
 export interface TableRow {
-  children: JSX.ElementNode[];
+  children: JSX.Children;
 }
 
-export const TableRow: JSX.FC<TableRow> = ({ children = [] }) => {
+export const TableRow: JSX.FC<TableRow> = ({ children: _children }) => {
+  const children = useChildren(_children);
   const length = children.length;
 
   return (

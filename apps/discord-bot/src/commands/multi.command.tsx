@@ -1,8 +1,9 @@
 import { Command } from '@statsify/discord';
 import { FontRenderer, JSX } from '@statsify/jsx';
 import { Canvas } from 'skia-canvas';
-import Container from 'typedi';
+import { Container as ClassContainer } from 'typedi';
 import { Header, HeaderBody, Table } from '../components';
+import { Container } from '../components/Container';
 import { ApiService } from '../services/api.service';
 
 @Command({
@@ -15,9 +16,6 @@ export class MultimodeCommand {
   public async run() {
     const width = 1200;
     const height = 600;
-
-    const containerWidth = width * 0.95;
-    const containerHeight = height * 0.9;
 
     const skin = await this.apiService.getPlayerSkin('618a96fec8b0493fa89427891049550b');
 
@@ -39,34 +37,37 @@ export class MultimodeCommand {
     );
 
     const Profile = () => (
-      <div width="100%" height="100%">
-        <div direction="column" width={containerWidth} height={containerHeight} align="center">
-          <Header
-            skin={skin}
-            sidebar={[
-              ['Coins', `153,185`, '§6'],
-              ['Overall Wins', 3, '§e'],
-              ['Blocks Ran', '7,755', '§7'],
-            ]}
-            body={(height) => (
-              <HeaderBody
-                height={height}
-                description={`Description`}
-                title="§l§cTNT Games §fStats"
-              />
-            )}
-            width={containerWidth}
-            name={'§6j4cobi'}
-          />
-          <div direction="column">
-            <div direction="row">
-              <HalfTable />
-              <HalfTable />
+      <Container width={width} height={height} percent={95}>
+        {(width) => (
+          <div>
+            <Header
+              skin={skin}
+              sidebar={[
+                ['Coins', `153,185`, '§6'],
+                ['Overall Wins', 3, '§e'],
+                ['Blocks Ran', '7,755', '§7'],
+              ]}
+              width={width}
+              name={'§6j4cobi'}
+            >
+              {(height) => (
+                <HeaderBody
+                  height={height}
+                  description={`Description`}
+                  title="§l§cTNT Games §fStats"
+                />
+              )}
+            </Header>
+            <div direction="column">
+              <div direction="row">
+                <HalfTable />
+                <HalfTable />
+              </div>
+              <TableRow />
             </div>
-            <TableRow />
           </div>
-        </div>
-      </div>
+        )}
+      </Container>
     );
 
     const canvas = new Canvas(width, height);
@@ -78,7 +79,7 @@ export class MultimodeCommand {
     const instructions = JSX.createInstructions(<Profile />, canvas.width, canvas.height);
 
     const buffer = await JSX.createRender(canvas, instructions, {
-      renderer: Container.get(FontRenderer),
+      renderer: ClassContainer.get(FontRenderer),
     }).toBuffer('png');
 
     return {

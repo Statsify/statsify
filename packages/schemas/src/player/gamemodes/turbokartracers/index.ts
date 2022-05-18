@@ -35,3 +35,5 @@ export class TurboKartRacers {
     this.trophies = new TurboKartRacersTrophies(data);
   }
 }
+
+export * from './trophy';

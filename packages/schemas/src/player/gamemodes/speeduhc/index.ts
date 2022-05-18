@@ -84,3 +84,6 @@ export class SpeedUHC {
     this.title = titleScores[index].title;
   }
 }
+
+export * from './mastery';
+export * from './mode';

@@ -29,3 +29,5 @@ export class CopsAndCrims {
     this.wins = add(this.defusal.wins, this.deathmatch.wins, this.gunGame.wins);
   }
 }
+
+export * from './mode';
