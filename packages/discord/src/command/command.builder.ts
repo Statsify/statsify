@@ -1,25 +1,20 @@
-import { getConstructor } from '@statsify/util';
+import { Constructor } from '@statsify/util';
 import { Container } from 'typedi';
 import type { CommandMetadata, SubCommandMetadata } from './command.interface';
 import { CommandResolvable } from './command.resolvable';
 
 export class CommandBuilder {
-  public static scan(target: any) {
-    const constructor = getConstructor(target);
-
-    const commandMetadata = Reflect.getMetadata(
-      'statsify:command',
-      getConstructor(target)
-    ) as CommandMetadata;
+  public static scan<T>(target: T, constructor: Constructor<T>) {
+    const commandMetadata = Reflect.getMetadata('statsify:command', constructor) as CommandMetadata;
 
     if (!commandMetadata) {
-      throw new Error(`Command metadata not found on ${target.name}`);
+      throw new Error(`Command metadata not found on ${constructor.name}`);
     }
 
     const commandResolvable = new CommandResolvable(commandMetadata, target);
 
     (commandMetadata.groups ?? []).forEach((group) => {
-      const groupResolvable = CommandBuilder.scan(Container.get(group));
+      const groupResolvable = CommandBuilder.scan(Container.get(group), group);
       commandResolvable.addSubCommandGroup(groupResolvable);
     });
 

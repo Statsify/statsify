@@ -86,3 +86,5 @@ export class Duels {
     this.lootChests = data.duels_chests;
   }
 }
+
+export * from './mode';

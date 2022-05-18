@@ -16,7 +16,8 @@ const codeCreatedMessage = (code: string, time: Date) => {
   expireTime -= new Date().getTime();
 
   return `§9§lStatsify Verification Server\n\n§r§7Your verification code is §c§l${code}§r§7\n\nHead back over to §5Discord §r§7and run §f§l/verify code:${code}§r§7\nYour code will expire in §8${formatTime(
-    expireTime
+    expireTime,
+    { short: false, entries: 4 }
   )}§r§7.`;
 };
 

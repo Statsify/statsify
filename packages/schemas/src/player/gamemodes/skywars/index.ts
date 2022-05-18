@@ -91,27 +91,32 @@ export class SkyWars {
 
     const normalKit = parseKit(data.activeKit_SOLO_random ? 'random' : data.activeKit_SOLO);
     const insaneKit = parseKit(data.activeKit_TEAMS_random ? 'random' : data.activeKit_TEAMS);
+    const chooseKit = (insane: number, normal: number) => (insane > normal ? insaneKit : normalKit);
 
     this.overall = new SkyWarsMode(data, '');
 
     this.solo = new SkyWarsMode(data, 'solo');
     this.solo.insane.kit = insaneKit;
     this.solo.normal.kit = normalKit;
+    this.solo.overall.kit = chooseKit(this.solo.insane.wins, this.solo.normal.wins);
 
     this.doubles = new SkyWarsMode(data, 'team');
     this.doubles.insane.kit = insaneKit;
     this.doubles.normal.kit = normalKit;
+    this.doubles.overall.kit = chooseKit(this.doubles.insane.wins, this.doubles.normal.wins);
 
     this.overall.insane = deepAdd(this.solo.insane, this.doubles.insane);
     this.overall.insane.kit = insaneKit;
-
     SkyWarsGameMode.applyRatios(this.overall.insane);
 
     this.overall.normal = deepAdd(this.solo.normal, this.doubles.normal);
     this.overall.normal.kit = normalKit;
-
     SkyWarsGameMode.applyRatios(this.overall.normal);
+
+    this.overall.overall.kit = chooseKit(this.overall.insane.wins, this.overall.normal.wins);
 
     this.labs = new SkyWarsLabs(data);
   }
 }
+
+export * from './mode';

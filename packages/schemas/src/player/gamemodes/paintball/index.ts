@@ -51,3 +51,5 @@ export class Paintball {
     this.perks = new PaintballPerks(data);
   }
 }
+
+export * from './perks';

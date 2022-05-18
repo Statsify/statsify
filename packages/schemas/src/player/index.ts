@@ -107,6 +107,7 @@ export class Player {
   }
 }
 
+export * from './gamemodes';
 export * from './socials';
 export * from './stats';
 export * from './status';

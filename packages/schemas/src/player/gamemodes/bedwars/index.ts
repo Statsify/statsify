@@ -109,3 +109,5 @@ export class BedWars {
     this.dreams = new DreamsBedWars(data);
   }
 }
+
+export * from './mode';

@@ -49,3 +49,5 @@ export class Quake {
       .join('');
   }
 }
+
+export * from './mode';

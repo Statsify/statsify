@@ -1,6 +1,6 @@
 import { intrinsicRenders, IntrinsicRenders } from './instrinsics';
 import type { BaseThemeContext, ElementNode, Instruction } from './types';
-import { computeMinSize, innerSize, parsePercentSize } from './util';
+import { computeMinSize, innerSize, parseMeasurements } from './util';
 
 export const _createInstructions = <C extends BaseThemeContext>(
   node: ElementNode,
@@ -8,8 +8,8 @@ export const _createInstructions = <C extends BaseThemeContext>(
   height: number,
   intrinsicElements: IntrinsicRenders<C>
 ): Instruction => {
-  node.x = parsePercentSize(node.x, width);
-  node.y = parsePercentSize(node.y, height);
+  node.x = parseMeasurements(node.x, width);
+  node.y = parseMeasurements(node.y, height);
 
   //@ts-ignore IGNORE FOR NOW
   (node as Instruction).render = intrinsicElements[node.type];
