@@ -36,7 +36,8 @@ export class WoolWarsClass {
   @Field()
   public woolPlaced: number;
 
-  public constructor(data: APIData) {
+  // set default to be {}
+  public constructor(data: APIData = {}) {
     this.wins = data.wins;
     this.gamesPlayed = data.games_played;
     this.losses = this.gamesPlayed - this.wins;

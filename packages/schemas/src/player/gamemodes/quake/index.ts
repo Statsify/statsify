@@ -42,7 +42,7 @@ export class Quake {
     // NINE_POINT_ZERO becomes 9.0
     // ALWAYS in seconds
     this.trigger = data.trigger
-      .toLowerCase()
+      ?.toLowerCase()
       .split('_')
       // Converts string numbers to actually number && remove the 'point'
       .map((trigger: string) => (indexes.indexOf(trigger) > -1 ? indexes.indexOf(trigger) : '.'))
