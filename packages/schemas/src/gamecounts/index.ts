@@ -46,6 +46,7 @@ export class Gamecounts {
 
   @Field()
   public QUEUE: number;
+
   @Field()
   public REPLAY: number;
 
@@ -79,6 +80,9 @@ export class Gamecounts {
   @Field()
   public WALLS3: number;
 
+  @Field()
+  public WOOL_GAMES: number;
+
   public constructor(data: APIData = {}) {
     this.ARCADE = data.ARCADE?.players;
     this.BATTLEGROUND = data.BATTLEGROUND?.players;
@@ -106,5 +110,6 @@ export class Gamecounts {
     this.TOURNAMENT_LOBBY = data.TOURNAMENT_LOBBY?.players;
     this.UHC = data.UHC?.players;
     this.WALLS3 = data.WALLS3?.players;
+    this.WOOL_GAMES = data.WOOL_GAMES?.players;
   }
 }
