@@ -208,3 +208,6 @@ export class BlitzSG {
     this['wolftamer'] = new BlitzSGKit(data, 'wolftamer');
   }
 }
+
+export * from './kit';
+export * from './mode';

@@ -79,7 +79,10 @@ export class CommandListener extends AbstractCommandListener {
           })
           .catch((err) => {
             if (err instanceof ContentResponse) context.reply(err);
-            else this.logger.error(err);
+            else {
+              console.error(err);
+              this.logger.error(err);
+            }
           });
       else if (typeof response === 'object')
         return {
@@ -93,6 +96,7 @@ export class CommandListener extends AbstractCommandListener {
           data: interaction.convertToApiData(err),
         };
 
+      console.error(err);
       this.logger.error(err);
     }
 

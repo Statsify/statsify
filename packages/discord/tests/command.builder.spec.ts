@@ -6,7 +6,7 @@ describe('CommandBuilder', () => {
     @Command({ description: 'test' })
     class TestCommand {}
 
-    expect(CommandBuilder.scan(new TestCommand()).toJSON()).toEqual({
+    expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
       name: 'test',
       description: 'test',
       type: ApplicationCommandType.ChatInput,
@@ -23,7 +23,7 @@ describe('CommandBuilder', () => {
       }
     }
 
-    expect(CommandBuilder.scan(new TestCommand()).toJSON()).toEqual({
+    expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
       name: 'test',
       description: 'test',
       type: ApplicationCommandType.ChatInput,
@@ -45,7 +45,7 @@ describe('CommandBuilder', () => {
     @Command({ description: 'test', groups: [GroupCommand] })
     class TestCommand {}
 
-    expect(CommandBuilder.scan(new TestCommand()).toJSON()).toEqual({
+    expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
       name: 'test',
       description: 'test',
       type: ApplicationCommandType.ChatInput,
@@ -72,7 +72,7 @@ describe('CommandBuilder', () => {
     @Command({ description: 'test', groups: [GroupCommand] })
     class TestCommand {}
 
-    expect(CommandBuilder.scan(new TestCommand()).toJSON()).toEqual({
+    expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
       name: 'test',
       description: 'test',
       type: ApplicationCommandType.ChatInput,
@@ -105,7 +105,7 @@ describe('CommandBuilder', () => {
     @Command({ description: 'test', args: [Arg] })
     class TestCommand {}
 
-    expect(CommandBuilder.scan(new TestCommand()).toJSON()).toEqual({
+    expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
       name: 'test',
       description: 'test',
       type: ApplicationCommandType.ChatInput,

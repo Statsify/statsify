@@ -26,3 +26,5 @@ export class VampireZ {
     VampireZLife.applyRatios(this.overall);
   }
 }
+
+export * from './life';

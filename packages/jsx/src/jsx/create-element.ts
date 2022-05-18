@@ -2,12 +2,14 @@ import { elementToNode } from './convert';
 import { IntrinsicElement, intrinsicElements } from './instrinsics';
 import type { ElementNode, FC } from './types';
 
+type Element = ElementNode | string | number | null;
+
 export const createElement = (
   type: IntrinsicElement | FC,
   props: any,
-  ...children: ElementNode[]
-): ElementNode => {
-  children = children.flat();
+  ...children: Element[]
+): ElementNode | null => {
+  children = children.flat().filter((child) => child);
 
   if (typeof type === 'string' && type in intrinsicElements) {
     return elementToNode(type, intrinsicElements[type]({ ...props, children }));

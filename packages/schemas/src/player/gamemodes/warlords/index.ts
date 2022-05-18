@@ -88,3 +88,5 @@ export class Warlords {
     this.assists = data.assists;
   }
 }
+
+export * from './class';

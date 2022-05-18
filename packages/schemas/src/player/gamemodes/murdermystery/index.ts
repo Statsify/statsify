@@ -57,3 +57,5 @@ export class MurderMystery {
     this.infection = new MurderMysteryMode(data, 'MURDER_INFECTION');
   }
 }
+
+export * from './mode';
