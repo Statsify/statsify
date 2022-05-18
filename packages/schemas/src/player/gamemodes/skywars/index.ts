@@ -34,7 +34,7 @@ export class SkyWars {
   @Field({ store: { default: '⋆' } })
   public star: string;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public level: number;
 
   @Field()

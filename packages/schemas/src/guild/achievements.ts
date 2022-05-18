@@ -6,7 +6,7 @@ import { Field } from '../metadata';
  */
 export class Achievements {
   @Field({ leaderboard: { enabled: false } })
-  public playerCount: number;
+  public maxOnlinePlayerCount: number;
 
   @Field()
   public dailyGuildWins: number;
@@ -15,7 +15,7 @@ export class Achievements {
   public dailyGexp: number;
 
   public constructor(data: APIData) {
-    this.playerCount = data.ONLINE_PLAYERS;
+    this.maxOnlinePlayerCount = data.ONLINE_PLAYERS;
     this.dailyGuildWins = data.WINNERS;
     this.dailyGexp = data.EXPERIENCE_KINGS;
   }

@@ -28,9 +28,6 @@
     "plugin:prettier/recommended"
   ],
   "rules": {
-    "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/explicit-member-accessibility": ["error"],
     "@typescript-eslint/ban-ts-comment": [
       "error",
       {
@@ -41,8 +38,10 @@
         "ts-nocheck": true
       }
     ],
-    "default-param-last": "off",
     "@typescript-eslint/default-param-last": ["error"],
+    "@typescript-eslint/explicit-member-accessibility": ["error"],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/member-ordering": [
       "error",
       {
@@ -70,6 +69,10 @@
           "static-method"
         ]
       }
-    ]
+    ],
+    "no-constant-binary-expression": ["error"],
+    "no-constructor-return": ["error"],
+    "no-duplicate-imports": ["error"],
+    "require-atomic-updates": ["error"]
   }
 }

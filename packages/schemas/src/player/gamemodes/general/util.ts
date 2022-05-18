@@ -1,3 +1,4 @@
+import { roundTo } from '@statsify/math';
 import { APIData } from '@statsify/util';
 
 export class GeneralUtil {
@@ -15,7 +16,7 @@ export class GeneralUtil {
   }
 
   public static getNetworkLevel(networkExp = 0) {
-    return networkExp ? +(Math.sqrt(networkExp * 2 + 30625) / 50 - 2.5).toFixed(2) : 1;
+    return networkExp ? roundTo(Math.sqrt(networkExp * 2 + 30625) / 50 - 2.5) : 1;
   }
 
   public static getQuests(questData: APIData = {}) {

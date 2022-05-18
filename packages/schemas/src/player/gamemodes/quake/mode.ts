@@ -30,6 +30,15 @@ export class QuakeMode {
   @Field()
   public distanceTraveled: number;
 
+  @Field()
+  public wkr: number;
+
+  @Field()
+  public winRate: number;
+
+  @Field()
+  public shotAccuracy: number;
+
   public constructor(data: APIData, mode: string) {
     mode = mode ? `_${mode}` : mode;
 
@@ -46,6 +55,9 @@ export class QuakeMode {
 
   public static applyRatios(data: QuakeMode) {
     data.kdr = ratio(data.kills, data.deaths);
+    data.wkr = ratio(data.wins, data.kills);
     data.hkr = ratio(data.headShots, data.kills);
+    data.winRate = ratio(25, data.wkr);
+    data.shotAccuracy = ratio(data.kills, data.shotsFired, 100);
   }
 }

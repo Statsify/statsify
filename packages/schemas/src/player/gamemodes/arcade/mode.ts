@@ -9,6 +9,7 @@ import {
   ScubaSimulator,
 } from './seasonal-mode';
 
+// TODO(eatmyvenom): Add more arcade stats
 export class BlockingDead {
   @Field()
   public wins: number;
@@ -131,11 +132,15 @@ export class Football {
   @Field()
   public powerKicks: number;
 
+  @Field({ leaderboard: { enabled: false } })
+  public totalKicks: number;
+
   public constructor(data: APIData) {
     this.wins = data.wins_soccer;
     this.goals = data.goals_soccer;
     this.kicks = data.kicks_soccer;
     this.powerKicks = data.powerkicks_soccer;
+    this.totalKicks = add(this.kicks, this.powerKicks);
   }
 }
 

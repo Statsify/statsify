@@ -1,5 +1,5 @@
+import { ratio } from '@statsify/math';
 import { Field } from './metadata';
-
 export class Progression {
   @Field({ leaderboard: { enabled: false } })
   public current: number;
@@ -15,7 +15,7 @@ export class Progression {
 
     if (max) {
       this.max = max;
-      this.percent = current / max;
+      this.percent = ratio(current, max);
     } else {
       this.percent = 1;
     }

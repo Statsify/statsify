@@ -32,7 +32,7 @@ export class Paintball {
   public kdr: number;
 
   @Field({ leaderboard: { enabled: false } })
-  public skr: number;
+  public shotAccuracy: number;
 
   @Field()
   public perks: PaintballPerks;
@@ -47,7 +47,7 @@ export class Paintball {
     this.wins = data.wins;
     this.hat = data.hat;
     this.kdr = ratio(this.kills, this.deaths);
-    this.skr = ratio(this.shotsFired, this.kills);
+    this.shotAccuracy = ratio(this.kills, this.shotsFired, 100);
     this.perks = new PaintballPerks(data);
   }
 }

@@ -26,10 +26,18 @@ export class MurderMysteryMode {
 
   @Field()
   public thrownKnifeKills: number;
+  @Field()
+  public murderKills?: number;
+
+  @Field()
+  public survivorKills?: number;
+
+  @Field()
+  public infectedKills?: number;
 
   public constructor(data: APIData, mode: string) {
     mode = mode ? `_${mode}` : mode;
-
+    console.log(mode);
     this.wins = data[`wins${mode}`];
     this.gamesPlayed = data[`games${mode}`];
     this.kills = data[`kills${mode}`];

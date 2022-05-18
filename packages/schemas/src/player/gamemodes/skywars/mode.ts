@@ -37,7 +37,7 @@ export class SkyWarsGameMode {
   public assists: number;
 
   @Field()
-  public playTime: number;
+  public playtime: number;
 
   @Field()
   public averages: SkyWarsGameModeAverages;
@@ -54,7 +54,7 @@ export class SkyWarsGameMode {
     this.deaths = data[`deaths${mode}`];
     this.gamesPlayed = add(this.wins, this.losses);
     this.assists = data[`assists${mode}`];
-    this.playTime = data[`time_played${mode}`];
+    this.playtime = data[`time_played${mode}`];
 
     SkyWarsGameMode.applyRatios(this);
   }

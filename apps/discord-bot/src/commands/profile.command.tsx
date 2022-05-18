@@ -77,7 +77,7 @@ export class ProfileCommand {
               {
                 data: [
                   ['Assists', stats.assists],
-                  ['Playtime', stats.playTime],
+                  ['Playtime', stats.playtime],
                   ['Kit', 'Pyrotechnic'],
                 ],
                 color: '§e',
