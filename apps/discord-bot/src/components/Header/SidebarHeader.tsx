@@ -19,13 +19,13 @@ export const SidebarHeader: JSX.FC<SidebarHeaderProps> = ({
 }) => {
   let body = bodyEl();
 
-  const bodyHeight = useComponentHeight(body) - 8;
+  const innerHeight = useComponentHeight(body) + useComponentHeight(name) - 8;
   const sidebarHeight = useComponentHeight(sidebar) - 8;
 
   let headerHeight: number;
 
-  if (bodyHeight > sidebarHeight) {
-    headerHeight = bodyHeight;
+  if (innerHeight > sidebarHeight) {
+    headerHeight = innerHeight;
     sidebar.y.size = headerHeight;
   } else {
     headerHeight = sidebarHeight;

@@ -118,8 +118,36 @@ export const removeFormatting = (s: string): string => s.replace(/§./g, '');
 export const mockClass = <T>(constructor: Constructor<T>): T =>
   new constructor(...Array.from({ length: constructor.length }).fill({}));
 
+export interface FormatTimeOptions {
+  /**
+   * Whether or not to use `s`, `m`, `h`, `d` or `seconds`, `minutes`, `hours`, `days`
+   * @default true
+   */
+  short?: boolean;
+
+  /**
+   * How many units to display
+   * @default 2
+   *
+   * @example
+   * ```ts
+   * formatTime(90060000 , { short: true, units: 1 })
+   * // => 1d
+   * ```
+   *@example
+   * ```ts
+   * formatTime(90060000 , { short: true, units: 2 })
+   * // => 1d 1h
+   *```
+   */
+  entries?: number;
+}
+
 //Format milliseconds to a human readable string
-export const formatTime = (ms: number): string => {
+export const formatTime = (
+  ms: number,
+  { short = true, entries = 2 }: FormatTimeOptions = {}
+): string => {
   if (ms < 1000) return `${ms}ms`;
 
   const seconds = Math.floor(ms / 1000);
@@ -127,16 +155,19 @@ export const formatTime = (ms: number): string => {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  const time = {
-    day: days,
-    hour: hours % 24,
-    minute: minutes % 60,
-    second: seconds % 60,
-  };
+  const time = [
+    { value: days, short: 'd', long: 'day' },
+    { value: hours % 24, short: 'h', long: 'hour' },
+    { value: minutes % 60, short: 'm', long: 'minute' },
+    { value: seconds % 60, short: 's', long: 'second' },
+  ];
 
-  return Object.entries(time)
-    .filter(([, val]) => val > 0)
-    .map(([key, val]) => `${val} ${key}${val > 1 ? 's' : ''}`)
+  return time
+    .filter(({ value }) => value > 0)
+    .map(
+      (unit) => `${unit.value}${short ? unit.short : ` ${unit.long}${unit.value > 1 ? 's' : ''}`}`
+    )
+    .splice(0, entries)
     .join(', ');
 };
 

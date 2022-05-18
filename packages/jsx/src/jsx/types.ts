@@ -26,13 +26,15 @@ export interface CompleteSpacing {
 
 export type Spacing = number | Partial<CompleteSpacing>;
 
-export type Percentage = `${number}%`;
+export type Percent = `${number}%`;
+export type Fraction = `${number}/${number}`;
+export type Measurement = number | Percent | Fraction;
 
 export interface ElementDimension {
   padding?: Spacing;
   margin?: Spacing;
-  width?: number | Percentage;
-  height?: number | Percentage;
+  width?: Measurement;
+  height?: Measurement;
 }
 
 export interface Location {
@@ -52,7 +54,7 @@ export type Render<T = unknown, K extends BaseThemeContext = BaseThemeContext> =
 ) => void;
 
 export interface ElementNodeBiDirectional {
-  size?: number | Percentage;
+  size?: Measurement;
   padding1: number;
   padding2: number;
   margin1: number;
@@ -69,7 +71,7 @@ export interface ElementNode {
   y: ElementNodeBiDirectional;
 }
 
-export interface Element<T = unknown> {
+export interface RawElement<T = unknown> {
   style: Style;
   children?: ElementNode[] | ElementNode;
   props: T;
@@ -87,15 +89,20 @@ export interface Instruction extends ElementNode {
   children?: Instruction[];
 }
 
-export type PropsWithChildren<T, K = ElementNode> = T & {
-  children?: K | K[] | undefined;
-};
+export type Children<T = ElementNode> = T extends ElementNode ? T | T[] : T;
 
-export type FC<T = {}, K = ElementNode> = (props: PropsWithChildren<T, K>) => ElementNode;
+export type PropsWithChildren<T, K = Children | undefined> = T &
+  (K extends undefined ? { children?: K } : { children: K });
+
+export type FC<T = {}> = (
+  props: T extends { children: any } ? T : PropsWithChildren<T>
+) => ElementNode | null;
 
 /**
  * T is the type of the element's props
  * K is the type of the element's render function props
  * C is the type of the element's children
  */
-export type RawFC<T = {}, K = T, C = ElementNode> = (props: PropsWithChildren<T, C>) => Element<K>;
+export type RawFC<T = {}, K = T, C = Children | undefined> = (
+  props: PropsWithChildren<T, C>
+) => RawElement<K>;

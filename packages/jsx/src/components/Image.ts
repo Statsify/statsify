@@ -7,8 +7,8 @@ export interface ImageRenderProps {
 }
 
 export interface ImageProps extends ImageRenderProps {
-  width?: number | JSX.Percentage;
-  height?: number | JSX.Percentage;
+  width?: JSX.Measurement;
+  height?: JSX.Measurement;
 }
 
 export const component: JSX.RawFC<ImageProps> = ({

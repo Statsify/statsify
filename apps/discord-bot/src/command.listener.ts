@@ -93,6 +93,7 @@ export class CommandListener extends AbstractCommandListener {
           data: interaction.convertToApiData(this.localize(context, err)),
         };
 
+      console.error(err);
       this.logger.error(err);
     }
 

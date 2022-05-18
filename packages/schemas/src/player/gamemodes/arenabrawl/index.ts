@@ -58,3 +58,5 @@ export class ArenaBrawl {
     this.coins = data.coins;
   }
 }
+
+export * from './mode';

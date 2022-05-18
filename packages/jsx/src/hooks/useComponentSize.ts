@@ -1,11 +1,11 @@
 import type { ElementNode, InstructionBiDirectional } from '../jsx';
-import { getTotalSize, parsePercentSize } from '../jsx/util';
+import { getTotalSize, parseMeasurements } from '../jsx/util';
 
 const useComponentSize = (node: ElementNode, side: 'x' | 'y', containerSize?: number): number => {
   let bidirectional = node[side];
 
   if (containerSize) {
-    bidirectional = parsePercentSize(node[side], containerSize, false);
+    bidirectional = parseMeasurements(node[side], containerSize, false);
   }
 
   if (typeof bidirectional.size === 'number')

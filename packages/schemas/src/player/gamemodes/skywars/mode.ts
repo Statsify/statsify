@@ -42,8 +42,9 @@ export class SkyWarsGameMode {
   @Field()
   public averages: SkyWarsGameModeAverages;
 
-  @Field({ store: { required: false } })
-  public kit?: string;
+  //Kit gets applied in the main class
+  @Field()
+  public kit: string;
 
   public constructor(data: APIData, mode: string) {
     mode = mode ? `_${mode}` : mode;
@@ -54,7 +55,9 @@ export class SkyWarsGameMode {
     this.deaths = data[`deaths${mode}`];
     this.gamesPlayed = add(this.wins, this.losses);
     this.assists = data[`assists${mode}`];
-    this.playTime = data[`time_played${mode}`];
+
+    //Convert to milliseconds
+    this.playTime = (data[`time_played${mode}`] ?? 0) * 1000;
 
     SkyWarsGameMode.applyRatios(this);
   }

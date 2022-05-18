@@ -5,7 +5,6 @@
   "types": "src/index.ts",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
-    "build:watch": "swc src  --config-file ../../.swcrc --out-dir dist -w",
     "test:types": "tsc --noEmit",
     "test": "jest",
     "test:coverage": "jest --coverage",
@@ -15,6 +14,6 @@
     "chalk": "4.1.2"
   },
   "devDependencies": {
-    "@nestjs/common": "^8.4.4"
+    "@nestjs/common": "^8.4.5"
   }
 }
