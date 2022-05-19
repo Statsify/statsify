@@ -30,9 +30,6 @@ export class QuakeMode {
   @Field({ leaderboard: { enabled: false } })
   public distanceTraveled: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
-  public wkr: number;
-
   @Field({ leaderboard: { enabled: false } })
   public winRate: number;
 
@@ -55,9 +52,8 @@ export class QuakeMode {
 
   public static applyRatios(data: QuakeMode) {
     data.kdr = ratio(data.kills, data.deaths);
-    data.wkr = ratio(data.wins, data.kills);
     data.hkr = ratio(data.headShots, data.kills);
-    data.winRate = ratio(25, data.wkr);
+    data.winRate = ratio(25, ratio(data.wins, data.kills));
     data.shotAccuracy = ratio(data.kills, data.shotsFired, 100);
   }
 }
