@@ -3,7 +3,7 @@ import { APIData } from '@statsify/util';
 import { Color, ColorCode } from '../../../color';
 import { Field } from '../../../metadata';
 import { Progression } from '../../../progression';
-import { BedWarsMode, DreamsBedWars } from './mode';
+import { BedWarsMode, ChallengesBedWars, DreamsBedWars } from './mode';
 import { getExpReq, getFormattedLevel, getLevel } from './util';
 
 export class BedWars {
@@ -64,6 +64,9 @@ export class BedWars {
   @Field()
   public dreams: DreamsBedWars;
 
+  @Field()
+  public challenges: ChallengesBedWars;
+
   public constructor(data: APIData = {}) {
     this.coins = data.coins;
     this.exp = data.Experience || 0;
@@ -107,6 +110,8 @@ export class BedWars {
     this.core.winstreak = this.overall.winstreak;
 
     this.dreams = new DreamsBedWars(data);
+
+    this.challenges = new ChallengesBedWars(data);
   }
 }
 
