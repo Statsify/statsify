@@ -30,7 +30,7 @@ export class QuakeMode {
   @Field({ leaderboard: { enabled: false } })
   public distanceTraveled: number;
 
-  @Field()
+  @Field({ leaderboard: { sort: 'ASC' } })
   public wkr: number;
 
   @Field({ leaderboard: { enabled: false } })
