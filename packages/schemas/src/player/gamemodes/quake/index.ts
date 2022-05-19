@@ -24,8 +24,8 @@ export class Quake {
   @Field()
   public godLikes: number;
 
-  @Field({ type: () => [String] })
-  public trigger: string[];
+  @Field({ leaderboard: { enabled: false }, store: { default: 1.3 } })
+  public trigger: number;
 
   public constructor(data: APIData, ap: APIData) {
     this.solo = new QuakeMode(data, '');
@@ -41,12 +41,13 @@ export class Quake {
 
     // NINE_POINT_ZERO becomes 9.0
     // ALWAYS in seconds
-    this.trigger = data.trigger
-      ?.toLowerCase()
-      .split('_')
-      // Converts string numbers to actually number && remove the 'point'
-      .map((trigger: string) => (indexes.indexOf(trigger) > -1 ? indexes.indexOf(trigger) : '.'))
-      .join('');
+    this.trigger =
+      +data.trigger
+        ?.toLowerCase()
+        .split('_')
+        // Converts string numbers to actually number && remove the 'point'
+        .map((trigger: string) => (indexes.indexOf(trigger) > -1 ? indexes.indexOf(trigger) : '.'))
+        .join('') || 1.3;
   }
 }
 

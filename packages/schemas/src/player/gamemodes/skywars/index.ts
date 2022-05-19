@@ -62,7 +62,7 @@ export class SkyWars {
   public labs: SkyWarsLabs;
 
   public constructor(data: APIData) {
-    this.xp = data.skywars_experience;
+    this.xp = data.skywars_experience ?? 0;
     this.coins = data.coins;
     this.souls = data.souls;
     this.shards = data.shard;

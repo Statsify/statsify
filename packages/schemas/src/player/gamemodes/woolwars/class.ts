@@ -1,4 +1,4 @@
-import { ratio } from '@statsify/math';
+import { ratio, sub } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 
@@ -36,11 +36,10 @@ export class WoolWarsClass {
   @Field()
   public woolPlaced: number;
 
-  // set default to be {}
   public constructor(data: APIData = {}) {
     this.wins = data.wins;
     this.gamesPlayed = data.games_played;
-    this.losses = this.gamesPlayed - this.wins;
+    this.losses = sub(this.gamesPlayed, this.wins);
     this.wlr = ratio(this.wins, this.losses);
 
     this.kills = data.kills;

@@ -11,7 +11,7 @@ export class Progression {
   public percent: number;
 
   public constructor(current: number, max: number) {
-    this.current = current;
+    this.current = current || 0;
 
     if (max) {
       this.max = max;

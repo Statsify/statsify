@@ -19,6 +19,7 @@ describe('basic math', () => {
     expect(ratio(1, 3)).toBe(0.33);
     expect(ratio(1, undefined)).toBe(1);
     expect(ratio(1, 0)).toBe(1);
+    expect(ratio(NaN, 1)).toBe(0);
   });
 });
 

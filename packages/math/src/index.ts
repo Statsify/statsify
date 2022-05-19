@@ -23,7 +23,7 @@ export const ratio = (n1 = 0, n2 = 0, multiply = 1) =>
     ? roundTo((n1 / n2) * multiply)
     : n1 === 0 && n2 === 0
     ? 0
-    : roundTo(n1 * multiply);
+    : roundTo(n1 * multiply) || 0;
 
 export const add = (...args: number[]): number => args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
 

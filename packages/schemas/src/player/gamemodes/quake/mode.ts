@@ -27,16 +27,16 @@ export class QuakeMode {
   @Field()
   public shotsFired: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public distanceTraveled: number;
 
   @Field()
   public wkr: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public winRate: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public shotAccuracy: number;
 
   public constructor(data: APIData, mode: string) {
