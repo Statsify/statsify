@@ -54,10 +54,10 @@ export class WoolWars {
   @Field()
   public assault: WoolWarsClass;
 
-  public constructor(data: APIData = {}) {
+  public constructor(data: APIData) {
     this.coins = data.coins;
-    this.layers = data.progression?.available_layers ?? 0;
-    this.exp = data.progression?.experience ?? 0;
+    this.layers = data.progression?.available_layers;
+    this.exp = data.progression?.experience;
 
     this.level = +getLevel(this.exp).toFixed(2);
     this.levelFormatted = getFormattedLevel(this.level);
@@ -77,14 +77,14 @@ export class WoolWars {
 
     this.levelProgression = new Progression(exp, getExpReq(flooredLevel));
 
-    this.overall = new WoolWarsClass(data?.wool_wars?.stats);
+    this.overall = new WoolWarsClass(data.wool_wars?.stats);
 
-    this.tank = new WoolWarsClass(data?.wool_wars?.stats?.classes?.tank);
-    this.archer = new WoolWarsClass(data?.wool_wars?.stats?.classes?.archer);
-    this.builder = new WoolWarsClass(data?.wool_wars?.stats?.classes?.builder);
-    this.swordsman = new WoolWarsClass(data?.wool_wars?.stats?.classes?.swordsman);
-    this.engineer = new WoolWarsClass(data?.wool_wars?.stats?.classes?.engineer);
-    this.golem = new WoolWarsClass(data?.wool_wars?.stats?.classes?.golem);
-    this.assault = new WoolWarsClass(data?.wool_wars?.stats?.classes?.assult);
+    this.tank = new WoolWarsClass(data.wool_wars?.stats?.classes?.tank);
+    this.archer = new WoolWarsClass(data.wool_wars?.stats?.classes?.archer);
+    this.builder = new WoolWarsClass(data.wool_wars?.stats?.classes?.builder);
+    this.swordsman = new WoolWarsClass(data.wool_wars?.stats?.classes?.swordsman);
+    this.engineer = new WoolWarsClass(data.wool_wars?.stats?.classes?.engineer);
+    this.golem = new WoolWarsClass(data.wool_wars?.stats?.classes?.golem);
+    this.assault = new WoolWarsClass(data.wool_wars?.stats?.classes?.assult);
   }
 }

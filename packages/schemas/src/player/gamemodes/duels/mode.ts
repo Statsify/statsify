@@ -31,22 +31,22 @@ export class BaseDuelsGameMode {
   @Field()
   public kdr: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public swings: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public hits: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public meleeAccuracy: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public bowShots: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public bowHits: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public bowAccuracy: number;
 
   @Field()

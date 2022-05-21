@@ -1,3 +1,4 @@
+/* eslint-disable require-atomic-updates */
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { GuildQuery, HypixelCache } from '@statsify/api-client';

@@ -39,7 +39,7 @@ export class WoolWarsClass {
   public constructor(data: APIData = {}) {
     this.wins = data.wins;
     this.gamesPlayed = data.games_played;
-    this.losses = sub(this.gamesPlayed - this.wins);
+    this.losses = sub(this.gamesPlayed, this.wins);
     this.wlr = ratio(this.wins, this.losses);
 
     this.kills = data.kills;
