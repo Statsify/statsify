@@ -2,17 +2,28 @@ import { isObject } from '@statsify/util';
 
 /**
  *
+ * @param n The number to round
+ * @param precision How many digits to round to
+ * @returns The rounded number
+ */
+export const roundTo = (n: number, precision = 2) => {
+  const factor = Math.pow(10, precision);
+  return Math.round(n * factor) / factor;
+};
+
+/**
+ *
  * @param n1 The numerator of the fraction
  * @param n2 The denominator of the fraction
- * @param multiply Whether to multiply the numerator and denominator, useful for things like `bowAccuracy`
+ * @param multiply Whether to multiply the numerator and denominator, useful for percents, such as `bowAccuracy`
  * @returns The value of the fraction * the `multiply` value rounded to 2 decimal places
  */
 export const ratio = (n1 = 0, n2 = 0, multiply = 1) =>
-  +(isFinite(n1 / n2)
-    ? +((n1 / n2) * multiply).toFixed(2)
+  isFinite(n1 / n2)
+    ? roundTo((n1 / n2) * multiply)
     : n1 === 0 && n2 === 0
     ? 0
-    : (+n1 * multiply).toFixed(2));
+    : roundTo(n1 * multiply) || 0;
 
 export const add = (...args: number[]): number => args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
 

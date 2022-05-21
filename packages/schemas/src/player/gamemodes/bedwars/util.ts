@@ -1,3 +1,4 @@
+import { roundTo } from '@statsify/math';
 import { findScore } from '@statsify/util';
 
 export const getExpReq = (level: number) => {
@@ -26,7 +27,7 @@ export const getLevel = (exp = 0): number => {
     remainingExp -= expForNextLevel;
   }
 
-  return parseFloat((level + remainingExp / getExpReq(level + 1)).toFixed(2));
+  return roundTo(level + remainingExp / getExpReq(level + 1));
 };
 
 export const getFormattedLevel = (star: number): string => {

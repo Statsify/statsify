@@ -1,6 +1,7 @@
 import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 
+// TODO(eatmyvenom): Add more arcade stats
 export class EasterSimulator {
   @Field()
   public wins: number;

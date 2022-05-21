@@ -50,6 +50,10 @@ export const importAsset = async <T>(file: string): Promise<T | null> => {
 
   return import(join('../../../assets/', file));
 };
+export const getImagePath = (imagePath: string) => {
+  checkPrivateAssets();
+  return join(`../../assets/`, imagePath);
+};
 
 /**
  *
@@ -58,9 +62,4 @@ export const importAsset = async <T>(file: string): Promise<T | null> => {
  */
 export const getMinecraftTexturePath = (texturePath: string) => {
   return join(getImagePath(`minecraft-textures/assets/minecraft/`), texturePath);
-};
-
-export const getImagePath = (imagePath: string) => {
-  checkPrivateAssets();
-  return join(`../../assets/`, imagePath);
 };

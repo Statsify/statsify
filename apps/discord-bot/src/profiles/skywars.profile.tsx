@@ -39,7 +39,7 @@ const SkyWarsModeTable: JSX.FC<SkyWarsModeTableProps> = ({ modeStats, mode, widt
         <If condition={isOverall}>
           <Table.tr>
             <Table.td title="Assists" value={stats.assists} color="§a" size={size} />
-            <Table.td title="Playtime" value={formatTime(stats.playTime)} color="§c" size={size} />
+            <Table.td title="Playtime" value={formatTime(stats.playtime)} color="§c" size={size} />
             <Table.td title="Kit" value={prettify(stats.kit)} color="§6" size={size} />
           </Table.tr>
         </If>

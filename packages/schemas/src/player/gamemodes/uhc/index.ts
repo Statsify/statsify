@@ -17,7 +17,7 @@ export class UHC {
   @Field()
   public coins: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public level: number;
 
   @Field()
