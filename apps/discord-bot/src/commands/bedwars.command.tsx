@@ -1,10 +1,10 @@
+import { PlayerArgument } from '#arguments';
+import { BedWarsProfile } from '#profiles/bedwars.profile';
+import { ApiService } from '#services';
 import { Command, CommandContext } from '@statsify/discord';
 import { FontRenderer, JSX } from '@statsify/jsx';
 import { Canvas } from 'skia-canvas';
 import Container from 'typedi';
-import { PlayerArgument } from '../arguments';
-import { BedWarsProfile } from '../profiles/bedwars.profile';
-import { ApiService } from '../services/api.service';
 
 @Command({
   description: 'Displays this message.',
@@ -38,7 +38,14 @@ export class BedWarsCommand {
         ctx.fillRect(0, 0, width, height);
 
         const instructions = JSX.createInstructions(
-          <BedWarsProfile player={player} skin={skin} mode={mode} width={width} height={height} />,
+          <BedWarsProfile
+            player={player}
+            skin={skin}
+            mode={mode}
+            width={width}
+            height={height}
+            t={context.t()}
+          />,
           canvas.width,
           canvas.height
         );

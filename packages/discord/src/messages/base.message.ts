@@ -1,10 +1,9 @@
 import type { RemoveMethods } from '@statsify/util';
 import { APIAllowedMentions, APIAttachment } from 'discord-api-types/v10';
-import { TFunction } from 'i18next';
 import { InteractionAttachment, InteractionContent } from '../interaction';
 import { ActionRowBuilder } from './components';
 import { EmbedBuilder } from './embed';
-import { LocalizationString, translateField } from './localize';
+import { LocalizationString, LocalizeFunction, translateField } from './localize';
 
 export type IMessage = RemoveMethods<Message>;
 
@@ -22,7 +21,7 @@ export class Message {
     Object.assign(this, data);
   }
 
-  public build(locale: TFunction): InteractionContent {
+  public build(locale: LocalizeFunction): InteractionContent {
     return {
       attachments: this.attachments,
       components: this.components?.map((component) => component.build(locale)),

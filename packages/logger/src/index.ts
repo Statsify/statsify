@@ -49,7 +49,10 @@ export class Logger implements LoggerService {
       return;
     }
 
-    const { messages, context } = this.getContextAndMessages([message, ...optionalParams]);
+    const { messages, context } = this.getContextAndMessages([
+      message instanceof Error ? message.stack : message,
+      ...optionalParams,
+    ]);
 
     this.printMessage(messages, context, 'error', 'stderr', '📉');
   }

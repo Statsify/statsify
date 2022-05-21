@@ -2,7 +2,14 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react",
-    "jsxFactory": "JSX.createElement"
+    "jsxFactory": "JSX.createElement",
+    "baseUrl": "./src",
+    "paths": {
+      "#arguments": ["./arguments"],
+      "#components": ["./components"],
+      "#profiles/*": ["./profiles/*"],
+      "#services": ["./services"]
+    }
   },
   "include": ["src"]
 }

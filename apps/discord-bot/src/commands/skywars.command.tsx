@@ -38,7 +38,14 @@ export class SkyWarsCommand {
         ctx.fillRect(0, 0, width, height);
 
         const instructions = JSX.createInstructions(
-          <SkyWarsProfile player={player} skin={skin} mode={mode} width={width} height={height} />,
+          <SkyWarsProfile
+            player={player}
+            skin={skin}
+            mode={mode}
+            width={width}
+            height={height}
+            t={context.t()}
+          />,
           canvas.width,
           canvas.height
         );

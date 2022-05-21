@@ -7,15 +7,43 @@ export interface ContainerProps {
   /**
    * 1-100
    */
-  percent: number;
+  percent?: number;
 
   children: JSX.Children | JSX.Children<(width: number, height: number) => JSX.Children>;
 }
 
+/**
+ *
+ * @description Restricts the children to a percentage of the container
+ * @example
+ * ```ts
+ * <Container width={100} height={100} percent={50}>
+ *  <box width={100} height={100} />
+ * </Container>
+ * ```
+ * @example
+ * ```ts
+ * <Container width={100} height={100}>
+ *  <box width={100} height={100} />
+ * </Container>
+ * ```
+ * @example
+ * ```ts
+ * <Container width={100} height={100} percent={50}>
+ *  {(width, height) => <box width={width} height={height} />}
+ * </Container>
+ * ```
+ * @example
+ * ```ts
+ * <Container width={100} height={100}>
+ *  {(width, height) => <box width={width} height={height} />}
+ * </Container>
+ * ```
+ */
 export const Container: JSX.FC<ContainerProps> = ({
   width,
   height,
-  percent,
+  percent = 90,
   children: _children,
 }) => {
   const containerWidth = (width * percent) / 100;

@@ -1,11 +1,21 @@
 import { JSX } from '@statsify/jsx';
 
-export type SidebarItem = [title: string, value: string | number, color: string];
+export type SidebarItem = [title: string, value: string, color: string];
 
 export interface SidebarProps {
   items: SidebarItem[];
 }
 
+/**
+ *
+ * @example
+ * ```ts
+ * <Sidebar items=[
+ *  [t('stats.coins'), t(stats.coins), '§6'],
+ *  [t('stats.lootChests'), t(stats.lootChests), '§e']
+ * ] />
+ * ```
+ */
 export const Sidebar: JSX.FC<SidebarProps> = ({ items }) => (
   <box direction="column">
     {items.map(([title, value, color]) => (

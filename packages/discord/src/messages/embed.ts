@@ -6,8 +6,7 @@ import type {
   APIEmbedImage,
   APIEmbedThumbnail,
 } from 'discord-api-types/v10';
-import { TFunction } from 'i18next';
-import { LocalizationString, translateField, translateObject } from './localize';
+import { LocalizationString, LocalizeFunction, translateField, translateObject } from './localize';
 
 type Field = [name: LocalizationString, value: LocalizationString, inline?: boolean];
 
@@ -111,7 +110,7 @@ export class EmbedBuilder {
     return new EmbedBuilder(this);
   }
 
-  public build(locale: TFunction): APIEmbed {
+  public build(locale: LocalizeFunction): APIEmbed {
     return {
       title: translateField(locale, this.#title),
       description: translateField(locale, this.#description),

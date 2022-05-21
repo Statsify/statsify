@@ -2,11 +2,17 @@ import { JSX } from '@statsify/jsx';
 
 export interface TableDataProps {
   title: string;
-  value: string | number;
+  value: string;
   color: string;
   size?: 'small' | 'regular';
 }
 
+/**
+ * @example
+ * ```ts
+ * <Table.td title="Wins" value="1" color="§a" />
+ * ```
+ */
 export const TableData: JSX.FC<TableDataProps> = ({ title, value, color, size = 'regular' }) => {
   if (size === 'small') {
     return (

@@ -6,6 +6,20 @@ export interface SkinProps {
   height?: number;
 }
 
+/**
+ *
+ * @example
+ * ```ts
+ * const skin = new Image();
+ * <Skin skin={skin}/>
+ * ```
+ *
+ * @example
+ * ```ts
+ * const skin = new Image();
+ * <Skin skin={skin} height={120} />
+ * ```
+ */
 export const Skin: JSX.FC<SkinProps> = ({ skin, height }) => {
   const width = 125;
   const scale = skin.width / width;

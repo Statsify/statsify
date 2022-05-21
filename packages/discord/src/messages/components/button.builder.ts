@@ -1,7 +1,6 @@
 import { randomUUID } from 'crypto';
 import { APIButtonComponentBase, ButtonStyle, ComponentType } from 'discord-api-types/v10';
-import { TFunction } from 'i18next';
-import { LocalizationString, translateField } from '../localize';
+import { LocalizationString, LocalizeFunction, translateField } from '../localize';
 
 export class ButtonBuilder {
   #label: LocalizationString;
@@ -48,7 +47,7 @@ export class ButtonBuilder {
   }
 
   public build(
-    locale: TFunction
+    locale: LocalizeFunction
   ): APIButtonComponentBase<any> & { custom_id?: string; url?: string } {
     return {
       label: translateField(locale, this.#label),

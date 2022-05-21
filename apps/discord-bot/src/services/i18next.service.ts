@@ -8,15 +8,15 @@ export class I18NextService {
 
     const languages = await readdir('../../locales');
 
-    const namespaces = (await readdir(`../../locales/${defaultLanguage}/discord-bot`)).map(
-      (p) => p.split('.')[0]
+    const namespaces = (await readdir(`../../locales/${defaultLanguage}/discord-bot`)).map((p) =>
+      p.replace('.json', '')
     );
 
     await i18next.use(Backend).init({
       backend: {
         loadPath: '../../locales/{{lng}}/discord-bot/{{ns}}.json',
       },
-      debug: true,
+      debug: false,
       fallbackLng: defaultLanguage,
       lng: defaultLanguage,
       supportedLngs: languages,
@@ -33,13 +33,14 @@ export class I18NextService {
 
   private static format(value: any, format?: string | undefined, lng?: string): string {
     switch (format) {
-      case 'int':
-        return Intl.NumberFormat(lng, { maximumFractionDigits: 0 }).format(value as number);
-      case 'double':
+      case 'number': {
+        const digits = Number.isInteger(+value) ? 0 : 2;
+
         return Intl.NumberFormat(lng, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
+          maximumFractionDigits: digits,
+          minimumFractionDigits: digits,
         }).format(value as number);
+      }
     }
 
     return value;
