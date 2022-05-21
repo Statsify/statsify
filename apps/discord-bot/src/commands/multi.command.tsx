@@ -1,10 +1,9 @@
+import { Container, Header, HeaderBody, Table } from '#components';
+import { ApiService } from '#services';
 import { Command } from '@statsify/discord';
 import { FontRenderer, JSX } from '@statsify/jsx';
 import { Canvas } from 'skia-canvas';
 import { Container as ClassContainer } from 'typedi';
-import { Header, HeaderBody, Table } from '../components';
-import { Container } from '../components/Container';
-import { ApiService } from '../services/api.service';
 
 @Command({
   description: 'Multi-mode command',
@@ -44,7 +43,7 @@ export class MultimodeCommand {
               skin={skin}
               sidebar={[
                 ['Coins', `153,185`, '§6'],
-                ['Overall Wins', 3, '§e'],
+                ['Overall Wins', '3', '§e'],
                 ['Blocks Ran', '7,755', '§7'],
               ]}
               width={width}

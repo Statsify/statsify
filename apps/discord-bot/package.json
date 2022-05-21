@@ -7,8 +7,6 @@
     "start": "node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
@@ -22,11 +20,22 @@
     "axios": "^0.27.2",
     "discord-api-types": "^0.32.1",
     "dotenv": "^16.0.1",
+    "i18next": "^21.7.1",
+    "i18next-fs-backend": "^1.1.4",
     "mongoose": "^6.3.3",
     "reflect-metadata": "^0.1.13",
     "short-uuid": "^4.2.0",
     "skia-canvas": "^0.9.29",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab",
     "typedi": "^0.10.0"
+  },
+  "devDependencies": {
+    "@types/i18next-fs-backend": "^1.1.2"
+  },
+  "imports": {
+    "#arguments": "./dist/arguments/index.js",
+    "#components": "./dist/components/index.js",
+    "#profiles/*": "./dist/profiles/*.js",
+    "#services": "./dist/services/index.js"
   }
 }

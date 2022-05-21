@@ -5,6 +5,18 @@ export interface TableSeparatorProps {
   children: JSX.Children;
 }
 
+/**
+ * @example
+ * ```ts
+ * <Table.ts title="Divider">
+ *  <Table.tr>
+ *    <Table.td title="Wins" value="1" color="§a" />
+ *    <Table.td title="Losses" value="1" color="§c" />
+ *    <Table.td title="WLR" value="1" color="§6" />
+ *  </Table.tr>
+ * </Table.ts>
+ * ```
+ */
 export const TableSeparator: JSX.FC<TableSeparatorProps> = ({ children, title }) => {
   const border = 4;
 

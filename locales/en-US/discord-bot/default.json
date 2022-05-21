@@ -1,0 +1,31 @@
+{
+  "stats": {
+    "wins": "Wins",
+    "losses": "Losses",
+    "wlr": "WLR",
+    "finalKills": "Final Kills",
+    "finalDeaths": "Final Deaths",
+    "fkdr": "FKDR",
+    "kills": "Kills",
+    "deaths": "Deaths",
+    "kdr": "KDR",
+    "bedsBroken": "Beds Broken",
+    "bedsLost": "Beds Lost",
+    "bblr": "BBLR",
+    "assists": "Assists",
+    "kit": "Kit",
+    "playtime": "Playtime",
+    "coins": "Coins",
+    "lootChests": "Loot Chests",
+    "iron": "Iron",
+    "gold": "Gold",
+    "diamonds": "Diamonds",
+    "emeralds": "Emeralds",
+    "tokens": "Tokens",
+    "souls": "Souls",
+    "heads": "Heads",
+    "shards": "Shards",
+    "opals": "Opals"
+  },
+  "number": "{{value, number}}"
+}
