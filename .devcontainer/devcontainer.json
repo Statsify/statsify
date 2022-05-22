@@ -16,12 +16,7 @@
   "settings": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.formatOnSave": true,
-    "terminal.integrated.defaultProfile.linux": "zsh",
-    "terminal.explorerKind": "integrated",
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": true,
-      "source.fixAll.eslint": true
-    },
+    "editor.codeActionsOnSave": ["source.organizeImports", "source.fixAll.eslint"],
     "typescript.tsdk": "node_modules/typescript/lib",
     "[handlebars]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
@@ -31,9 +26,14 @@
     },
     "[json]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "explorer.experimental.fileNesting.patterns": {
+      "package.json": "package-lock.json, .npmrc, yarn.lock, .yarnrc, pnpm-lock.yaml, tsconfig.*.json, tsconfig.json, jest.config.js, turbo.json, README.md, LICENSE, cliff.toml, .prettierrc, .eslintrc, .yarnrc.yml, .swcrc, .gitignore, .eslintignore, .env, .env.schema, renovate.json, .gitmodules"
+    },
+    "[jsonc]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
-},
-
+  },
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
     "dbaeumer.vscode-eslint",
@@ -46,7 +46,7 @@
     "christian-kohler.npm-intellisense"
   ],
 
-  "runArgs": [ "--privileged" ],
+  "runArgs": ["--privileged"],
 
   // Use 'postCreateCommand' to run commands after the container is created.
   "postCreateCommand": "/workspaces/statsify/.devcontainer/install.sh",
@@ -57,7 +57,6 @@
   "remoteUser": "node",
   "features": {
     "git": "latest",
-    "github-cli": "latest",
-    "rust": "latest"
+    "github-cli": "latest"
   }
 }
