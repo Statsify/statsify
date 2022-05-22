@@ -13,8 +13,8 @@
   "dependencies": {
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "discord-api-types": "^0.32.1",
-    "i18next": "^21.7.1",
+    "discord-api-types": "^0.33.0",
+    "i18next": "^21.8.3",
     "reflect-metadata": "^0.1.13",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab",
     "typedi": "^0.10.0"
