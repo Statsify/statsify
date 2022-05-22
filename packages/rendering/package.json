@@ -1,5 +1,5 @@
 {
-  "name": "@statsify/jsx",
+  "name": "@statsify/rendering",
   "version": "0.0.0",
   "main": "dist/index.js",
   "types": "src/index.ts",

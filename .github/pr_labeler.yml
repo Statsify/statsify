@@ -22,8 +22,8 @@
 "@statsify/discord":
   - packages/discord/**/*
 
-"@statsify/jsx":
-  - packages/jsx/**/*
+"@statsify/rendering":
+  - packages/rendering/**/*
 
 "@statsify/logger":
   - packages/logger/**/*

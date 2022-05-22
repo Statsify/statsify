@@ -1,4 +1,4 @@
-import { JSX, useChildren } from '@statsify/jsx';
+import { JSX, useChildren } from '@statsify/rendering';
 import { Image } from 'skia-canvas';
 import { Sidebar, SidebarItem } from '../Sidebar';
 import { HeaderNametag } from './HeaderNametag';

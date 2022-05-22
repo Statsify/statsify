@@ -1,6 +1,6 @@
 import { Container, formatProgression, Header, HeaderBody, SidebarItem, Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { JSX } from '@statsify/jsx';
+import { JSX } from '@statsify/rendering';
 import type { Player } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import type { Image } from 'skia-canvas';

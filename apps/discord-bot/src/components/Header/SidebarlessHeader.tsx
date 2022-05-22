@@ -1,4 +1,4 @@
-import { JSX, useComponentHeight, useComponentWidth } from '@statsify/jsx';
+import { JSX, useComponentHeight, useComponentWidth } from '@statsify/rendering';
 import type { Image } from 'skia-canvas';
 import { Skin } from '../Skin';
 

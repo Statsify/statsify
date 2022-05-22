@@ -6,7 +6,7 @@ import { RestClient } from 'tiny-discord';
 const require = createRequire(import.meta.url);
 
 const { getMinecraftTexturePath } = require('@statsify/assets');
-const { FontRenderer } = require('@statsify/jsx');
+const { FontRenderer } = require('@statsify/rendering');
 const { rankMap } = require('@statsify/schemas');
 const { minecraftColors } = require('@statsify/util');
 const { Logger } = require('@statsify/logger');

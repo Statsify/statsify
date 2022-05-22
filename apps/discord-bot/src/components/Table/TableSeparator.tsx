@@ -1,4 +1,4 @@
-import { JSX, useComponentHeight } from '@statsify/jsx';
+import { JSX, useComponentHeight } from '@statsify/rendering';
 
 export interface TableSeparatorProps {
   title?: string;

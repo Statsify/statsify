@@ -1,4 +1,4 @@
-import { JSX } from '@statsify/jsx';
+import { JSX } from '@statsify/rendering';
 
 export type SidebarItem = [title: string, value: string, color: string];
 

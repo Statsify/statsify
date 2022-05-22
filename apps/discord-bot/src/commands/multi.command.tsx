@@ -1,7 +1,7 @@
 import { Container, Header, HeaderBody, Table } from '#components';
 import { ApiService } from '#services';
 import { Command } from '@statsify/discord';
-import { FontRenderer, JSX } from '@statsify/jsx';
+import { FontRenderer, JSX } from '@statsify/rendering';
 import { Canvas } from 'skia-canvas';
 import { Container as ClassContainer } from 'typedi';
 

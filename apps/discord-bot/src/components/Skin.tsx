@@ -1,4 +1,4 @@
-import { JSX } from '@statsify/jsx';
+import { JSX } from '@statsify/rendering';
 import { Image } from 'skia-canvas';
 
 export interface SkinProps {

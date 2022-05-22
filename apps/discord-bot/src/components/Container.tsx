@@ -1,4 +1,4 @@
-import { JSX, useChildren } from '@statsify/jsx';
+import { JSX, useChildren } from '@statsify/rendering';
 
 export interface ContainerProps {
   width: number;

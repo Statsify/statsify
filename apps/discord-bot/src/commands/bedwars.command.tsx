@@ -2,7 +2,7 @@ import { PlayerArgument } from '#arguments';
 import { BedWarsProfile } from '#profiles/bedwars.profile';
 import { ApiService } from '#services';
 import { Command, CommandContext } from '@statsify/discord';
-import { FontRenderer, JSX } from '@statsify/jsx';
+import { FontRenderer, JSX } from '@statsify/rendering';
 import { Canvas } from 'skia-canvas';
 import Container from 'typedi';
 

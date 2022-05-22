@@ -20,7 +20,7 @@ body:
         - "@statsify/api-client"
         - "@statsify/assets"
         - "@statsify/discord"
-        - "@statsify/jsx"
+        - "@statsify/rendering"
         - "@statsify/logger"
         - "@statsify/math"
         - "@statsify/schemas"

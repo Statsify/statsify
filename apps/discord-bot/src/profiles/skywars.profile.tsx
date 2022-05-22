@@ -8,7 +8,7 @@ import {
   Table,
 } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { JSX } from '@statsify/jsx';
+import { JSX } from '@statsify/rendering';
 import type { Player, SkyWarsMode } from '@statsify/schemas';
 import { formatTime, prettify } from '@statsify/util';
 import type { Image } from 'skia-canvas';

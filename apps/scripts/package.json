@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@statsify/assets": "workspace:^",
-    "@statsify/jsx": "workspace:^",
     "@statsify/logger": "workspace:^",
+    "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/core": "^1.2.189",
