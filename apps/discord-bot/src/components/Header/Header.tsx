@@ -1,7 +1,7 @@
-import { Skin } from '#components';
 import { JSX } from '@statsify/rendering';
 import { Image } from 'skia-canvas';
 import { Sidebar, SidebarItem } from '../Sidebar';
+import { Skin } from '../Skin';
 import { HeaderNametag } from './HeaderNametag';
 import { SidebarHeader } from './SidebarHeader';
 import { SidebarlessHeader } from './SidebarlessHeader';
