@@ -1,40 +1,52 @@
-import type { ElementNode, InstructionBiDirectional } from '../jsx';
-import { getTotalSize, parseMeasurements } from '../jsx/util';
+import type { ElementNode } from '../jsx';
+import { computeMinSize, getTotalSize, parseMeasurements } from '../jsx/util';
 
-const useComponentSize = (node: ElementNode, side: 'x' | 'y', containerSize?: number): number => {
+interface UseComponentSizeOptions {
+  size?: number;
+  includeMargin?: boolean;
+  includePadding?: boolean;
+  includeSize?: boolean;
+}
+
+const useComponentSize = (
+  node: ElementNode,
+  side: 'x' | 'y',
+  {
+    size: containerSize,
+    includeMargin = true,
+    includePadding = true,
+    includeSize = true,
+  }: UseComponentSizeOptions = {}
+): number => {
   let bidirectional = node[side];
 
+  if (!includeSize)
+    return getTotalSize(bidirectional, {
+      margin: includeMargin,
+      padding: includePadding,
+      size: false,
+    });
+
   if (containerSize) {
-    bidirectional = parseMeasurements(node[side], containerSize, false);
+    bidirectional = parseMeasurements(bidirectional, containerSize, false);
   }
 
   if (typeof bidirectional.size === 'number')
-    return getTotalSize(bidirectional as InstructionBiDirectional);
+    return getTotalSize(bidirectional, {
+      margin: includeMargin,
+      padding: includePadding,
+      size: true,
+    });
 
-  let minSize = 0;
-
-  switch (bidirectional.direction) {
-    case 'row':
-      minSize = (node.children ?? []).reduce(
-        (acc, child) => acc + useComponentSize(child, side, containerSize),
-        0
-      );
-      break;
-    case 'column':
-      minSize = node.children?.length
-        ? Math.max(...node.children.map((child) => useComponentSize(child, side, containerSize)))
-        : 0;
-      break;
-  }
-
-  return getTotalSize({
-    ...bidirectional,
-    size: minSize,
+  return computeMinSize(node, side, {
+    margin: includeMargin,
+    padding: includePadding,
+    size: true,
   });
 };
 
-export const useComponentWidth = (node: ElementNode, width?: number) =>
-  useComponentSize(node, 'x', width);
+export const useComponentWidth = (node: ElementNode, opts?: UseComponentSizeOptions) =>
+  useComponentSize(node, 'x', opts);
 
-export const useComponentHeight = (node: ElementNode, height?: number) =>
-  useComponentSize(node, 'y', height);
+export const useComponentHeight = (node: ElementNode, opts?: UseComponentSizeOptions) =>
+  useComponentSize(node, 'y', opts);

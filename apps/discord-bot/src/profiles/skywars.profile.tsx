@@ -58,20 +58,11 @@ const SkyWarsModeTable: JSX.FC<SkyWarsModeTableProps> = ({ modeStats, mode, widt
 export interface SkyWarsProfileProps {
   skin: Image;
   player: Player;
-  width: number;
-  height: number;
   mode: 'overall' | 'solo' | 'doubles';
   t: LocalizeFunction;
 }
 
-export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
-  skin,
-  player,
-  mode,
-  width,
-  height,
-  t,
-}) => {
+export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({ skin, player, mode, t }) => {
   const skywars = player.stats.skywars;
   const modeStats = skywars[mode];
 
@@ -86,30 +77,25 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
   ];
 
   return (
-    <Container width={width} height={height} percent={95}>
-      {(width) => (
-        <div direction="column">
-          <Header skin={skin} name={player.prefixName} width={width} sidebar={sidebar}>
-            {(height) => (
-              <HeaderBody
-                title={`§l§bSky§eWars §fStats §r(§o${prettify(mode)}§r)`}
-                description={`§bSky§eWars §7Level: ${skywars.levelFormatted}\n${formatProgression(
-                  t,
-                  skywars.levelProgression,
-                  skywars.levelFormatted,
-                  skywars.nextLevelFormatted
-                )}`}
-                height={height}
-              />
-            )}
-          </Header>
-          <SkyWarsModeTable mode="overall" modeStats={modeStats} t={t} />
-          <div direction="row">
-            <SkyWarsModeTable width="50%" mode="insane" modeStats={modeStats} t={t} />
-            <SkyWarsModeTable width="50%" mode="normal" modeStats={modeStats} t={t} />
-          </div>
+    <Container>
+      <div direction="column">
+        <Header skin={skin} name={player.prefixName} sidebar={sidebar}>
+          <HeaderBody
+            title={`§l§bSky§eWars §fStats §r(§o${prettify(mode)}§r)`}
+            description={`§bSky§eWars §7Level: ${skywars.levelFormatted}\n${formatProgression(
+              t,
+              skywars.levelProgression,
+              skywars.levelFormatted,
+              skywars.nextLevelFormatted
+            )}`}
+          />
+        </Header>
+        <SkyWarsModeTable mode="overall" modeStats={modeStats} t={t} />
+        <div direction="row">
+          <SkyWarsModeTable width="50%" mode="insane" modeStats={modeStats} t={t} />
+          <SkyWarsModeTable width="50%" mode="normal" modeStats={modeStats} t={t} />
         </div>
-      )}
+      </div>
     </Container>
   );
 };

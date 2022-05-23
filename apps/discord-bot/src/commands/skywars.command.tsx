@@ -1,7 +1,5 @@
 import { Command, CommandContext } from '@statsify/discord';
-import { FontRenderer, JSX } from '@statsify/rendering';
-import { Canvas } from 'skia-canvas';
-import Container from 'typedi';
+import { JSX } from '@statsify/rendering';
 import { PlayerArgument } from '../arguments';
 import { SkyWarsProfile } from '../profiles/skywars.profile';
 import { ApiService } from '../services/api.service';
@@ -21,39 +19,16 @@ export class SkyWarsCommand {
     const width = 860;
     const height = 750;
 
-    const canvas = new Canvas(width, height);
-
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#FFF';
-    ctx.fillRect(0, 0, width, height);
-
     const modes = ['overall'] as const;
 
     const images = await Promise.all(
-      modes.map((mode) => {
-        const canvas = new Canvas(width, height);
-
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#FFF';
-        ctx.fillRect(0, 0, width, height);
-
-        const instructions = JSX.createInstructions(
-          <SkyWarsProfile
-            player={player}
-            skin={skin}
-            mode={mode}
-            width={width}
-            height={height}
-            t={context.t()}
-          />,
-          canvas.width,
-          canvas.height
-        );
-
-        return JSX.createRender(canvas, instructions, {
-          renderer: Container.get(FontRenderer),
-        }).toBuffer('png');
-      })
+      modes.map((mode) =>
+        JSX.render(
+          <SkyWarsProfile player={player} skin={skin} mode={mode} t={context.t()} />,
+          width,
+          height
+        ).toBuffer('png')
+      )
     );
 
     return {

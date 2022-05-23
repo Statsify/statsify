@@ -1,16 +1,25 @@
 import { JSX, useChildren } from '@statsify/rendering';
+import { Background } from './Background';
 
-export interface ContainerProps {
-  width: number;
-  height: number;
-
+interface BaseContainerProps {
   /**
-   * 1-100
+   * @default 95
+   * @description The percent size of the container. The number should be 1-100.
    */
   percent?: number;
+}
 
+interface DefinedSizeContainerProps extends BaseContainerProps {
+  width: number;
+  height: number;
   children: JSX.Children | JSX.Children<(width: number, height: number) => JSX.Children>;
 }
+
+interface UndefinedSizeContainerProps extends BaseContainerProps {
+  children: JSX.Children;
+}
+
+export type ContainerProps = DefinedSizeContainerProps | UndefinedSizeContainerProps;
 
 /**
  *
@@ -29,6 +38,18 @@ export interface ContainerProps {
  * ```
  * @example
  * ```ts
+ * <Container>
+ *  <box width={100} height={100} />
+ * </Container>
+ * ```
+ * @example
+ * ```ts
+ * <Container percent={50}>
+ *  <box width={100} height={100} />
+ * </Container>
+ * ```
+ * @example
+ * ```ts
  * <Container width={100} height={100} percent={50}>
  *  {(width, height) => <box width={width} height={height} />}
  * </Container>
@@ -40,30 +61,28 @@ export interface ContainerProps {
  * </Container>
  * ```
  */
-export const Container: JSX.FC<ContainerProps> = ({
-  width,
-  height,
-  percent = 90,
-  children: _children,
-}) => {
-  const containerWidth = (width * percent) / 100;
-  const containerHeight = (height * percent) / 100;
+export const Container: JSX.FC<ContainerProps> = (props) => {
+  const percent = props.percent ?? 95;
+  const containerWidth =
+    'width' in props ? (props.width * percent) / 100 : (`${percent}%` as const);
+  const containerHeight =
+    'height' in props ? (props.height * percent) / 100 : (`${percent}%` as const);
 
-  const children = useChildren(_children);
+  const children = useChildren(props.children);
 
   let inner: JSX.Children;
 
   if (typeof children[0] === 'function') {
-    inner = children[0](containerWidth, containerHeight);
+    inner = children[0](containerWidth as number, containerHeight as number);
   } else {
     inner = children as JSX.ElementNode[];
   }
 
   return (
-    <div width="100%" height="100%">
+    <Background>
       <div direction="column" width={containerWidth} height={containerHeight} align="center">
         {inner}
       </div>
-    </div>
+    </Background>
   );
 };

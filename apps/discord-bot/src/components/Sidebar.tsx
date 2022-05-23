@@ -17,7 +17,7 @@ export interface SidebarProps {
  * ```
  */
 export const Sidebar: JSX.FC<SidebarProps> = ({ items }) => (
-  <box direction="column">
+  <box direction="column" height="100%">
     {items.map(([title, value, color]) => (
       <div>
         <text margin={{ top: 2, bottom: 2, left: 10, right: 2 }}>{`${color}● §f${title}:`}</text>

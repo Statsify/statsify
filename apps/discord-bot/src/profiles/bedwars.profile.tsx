@@ -8,20 +8,11 @@ import type { Image } from 'skia-canvas';
 export interface BedWarsProfileProps {
   skin: Image;
   player: Player;
-  width: number;
-  height: number;
   mode: 'overall' | 'solo' | 'doubles' | 'threes' | 'fours' | '4v4';
   t: LocalizeFunction;
 }
 
-export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
-  skin,
-  player,
-  mode,
-  width,
-  height,
-  t,
-}) => {
+export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({ skin, player, mode, t }) => {
   const bedwars = player.stats.bedwars;
   const stats = bedwars[mode];
 
@@ -35,47 +26,40 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
   ];
 
   return (
-    <Container width={width} height={height} percent={95}>
-      {(width) => (
-        <div direction="column">
-          <Header skin={skin} name={player.prefixName} width={width} sidebar={sidebar}>
-            {(height) => (
-              <HeaderBody
-                title={`§l§cBed§fWars §fStats §r(§o${prettify(mode)}§r)`}
-                description={`§cBed§fWars §7Level: ${bedwars.levelFormatted}\n${formatProgression(
-                  t,
-                  bedwars.levelProgression,
-                  bedwars.levelFormatted,
-                  bedwars.nextLevelFormatted
-                )}`}
-                height={height}
-              />
-            )}
-          </Header>
-          <Table.table width={width}>
-            <Table.tr>
-              <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-              <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
-              <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
-            </Table.tr>
-            <Table.tr>
-              <Table.td title={t('stats.finalKills')} value={t(stats.finalKills)} color="§a" />
-              <Table.td title={t('stats.finalDeaths')} value={t(stats.finalDeaths)} color="§c" />
-              <Table.td title={t('stats.fkdr')} value={t(stats.fkdr)} color="§6" />
-            </Table.tr>
-            <Table.tr>
-              <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
-              <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
-              <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
-            </Table.tr>
-            <Table.tr>
-              <Table.td title={t('stats.bedsBroken')} value={t(stats.bedsBroken)} color="§a" />
-              <Table.td title={t('stats.bedsLost')} value={t(stats.bedsLost)} color="§c" />
-              <Table.td title={t('stats.bblr')} value={t(stats.bblr)} color="§6" />
-            </Table.tr>
-          </Table.table>
-        </div>
-      )}
+    <Container>
+      <Header skin={skin} name={player.prefixName} sidebar={sidebar}>
+        <HeaderBody
+          title={`§l§cBed§fWars §fStats §r(§r§o${prettify(mode)}§r)`}
+          description={`§cBed§fWars §7Level: ${bedwars.levelFormatted}\n${formatProgression(
+            t,
+            bedwars.levelProgression,
+            bedwars.levelFormatted,
+            bedwars.nextLevelFormatted
+          )}`}
+        />
+      </Header>
+      <Table.table>
+        <Table.tr>
+          <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
+          <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
+          <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
+        </Table.tr>
+        <Table.tr>
+          <Table.td title={t('stats.finalKills')} value={t(stats.finalKills)} color="§a" />
+          <Table.td title={t('stats.finalDeaths')} value={t(stats.finalDeaths)} color="§c" />
+          <Table.td title={t('stats.fkdr')} value={t(stats.fkdr)} color="§6" />
+        </Table.tr>
+        <Table.tr>
+          <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
+          <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
+          <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
+        </Table.tr>
+        <Table.tr>
+          <Table.td title={t('stats.bedsBroken')} value={t(stats.bedsBroken)} color="§a" />
+          <Table.td title={t('stats.bedsLost')} value={t(stats.bedsLost)} color="§c" />
+          <Table.td title={t('stats.bblr')} value={t(stats.bblr)} color="§6" />
+        </Table.tr>
+      </Table.table>
     </Container>
   );
 };
