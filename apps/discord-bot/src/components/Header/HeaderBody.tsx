@@ -1,38 +1,21 @@
-import { JSX, useComponentHeight } from '@statsify/jsx';
+import { JSX } from '@statsify/rendering';
 
 export interface HeaderBodyProps {
   description: string;
   title: string;
-  height?: number;
 }
 
-export const HeaderBody: JSX.FC<HeaderBodyProps> = ({
-  description: descriptionStr,
-  title: titleStr,
-  height,
-}) => {
-  const title = (
-    <box width="100%">
-      <text>{titleStr}</text>
-    </box>
-  );
-
-  const description = (
-    <box width="100%" direction="column">
-      {descriptionStr.split('\n').map((t) => (
-        <text margin={1}>{t}</text>
-      ))}
-    </box>
-  );
-
-  if (height) {
-    description.y.size = height - useComponentHeight(title);
-  }
-
+export const HeaderBody: JSX.FC<HeaderBodyProps> = ({ description, title }) => {
   return (
-    <div direction="column">
-      {description}
-      {title}
+    <div direction="column" width="remaining" height="remaining">
+      <box width="100%" direction="column" height="remaining">
+        {description.split('\n').map((t) => (
+          <text margin={1}>{t}</text>
+        ))}
+      </box>
+      <box width="100%">
+        <text>{title}</text>
+      </box>
     </div>
   );
 };

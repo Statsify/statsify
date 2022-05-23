@@ -7,7 +7,7 @@ export interface BaseThemeContext {
   renderer: FontRenderer;
 }
 
-export type StyleLocation = 'start' | 'end' | 'center';
+export type StyleLocation = 'start' | 'center' | 'end';
 export type StyleDirection = 'row' | 'column';
 export type StyleAlign = 'default' | 'center';
 
@@ -28,7 +28,7 @@ export type Spacing = number | Partial<CompleteSpacing>;
 
 export type Percent = `${number}%`;
 export type Fraction = `${number}/${number}`;
-export type Measurement = number | Percent | Fraction;
+export type Measurement = number | Percent | Fraction | 'remaining';
 
 export interface ElementDimension {
   padding?: Spacing;

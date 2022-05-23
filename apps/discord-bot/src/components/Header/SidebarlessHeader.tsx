@@ -1,33 +1,17 @@
-import { JSX, useComponentHeight, useComponentWidth } from '@statsify/jsx';
-import type { Image } from 'skia-canvas';
-import { Skin } from '../Skin';
+import { JSX, useComponentHeight } from '@statsify/rendering';
 
 export interface SidebarHeaderProps {
-  skin: Image;
+  skin: JSX.ElementNode;
   body: JSX.ElementNode;
-  name: JSX.ElementNode;
-  width: number;
 }
 
-export const SidebarlessHeader: JSX.FC<SidebarHeaderProps> = ({
-  name,
-  skin: skinImage,
-  body,
-  width,
-}) => {
-  const headerHeight = useComponentHeight(name) + useComponentHeight(body) - 8;
-
-  const skin = <Skin skin={skinImage} height={headerHeight} />;
-
-  const bodyWidth = width - useComponentWidth(skin);
+export const SidebarlessHeader: JSX.FC<SidebarHeaderProps> = ({ skin, body }) => {
+  const headerHeight = useComponentHeight(body);
 
   return (
-    <div>
+    <div width="100%" height={headerHeight}>
       {skin}
-      <div width={bodyWidth} direction="column">
-        {name}
-        {body}
-      </div>
+      {body}
     </div>
   );
 };

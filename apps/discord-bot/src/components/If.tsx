@@ -1,4 +1,4 @@
-import { JSX } from '@statsify/jsx';
+import { JSX } from '@statsify/rendering';
 import { noop } from '@statsify/util';
 
 export interface IfProps {

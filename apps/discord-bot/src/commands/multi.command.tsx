@@ -1,9 +1,7 @@
 import { Container, Header, HeaderBody, Table } from '#components';
 import { ApiService } from '#services';
 import { Command } from '@statsify/discord';
-import { FontRenderer, JSX } from '@statsify/jsx';
-import { Canvas } from 'skia-canvas';
-import { Container as ClassContainer } from 'typedi';
+import { JSX } from '@statsify/rendering';
 
 @Command({
   description: 'Multi-mode command',
@@ -36,53 +34,30 @@ export class MultimodeCommand {
     );
 
     const Profile = () => (
-      <Container width={width} height={height} percent={95}>
-        {(width) => (
-          <div>
-            <Header
-              skin={skin}
-              sidebar={[
-                ['Coins', `153,185`, '§6'],
-                ['Overall Wins', '3', '§e'],
-                ['Blocks Ran', '7,755', '§7'],
-              ]}
-              width={width}
-              name={'§6j4cobi'}
-            >
-              {(height) => (
-                <HeaderBody
-                  height={height}
-                  description={`Description`}
-                  title="§l§cTNT Games §fStats"
-                />
-              )}
-            </Header>
-            <div direction="column">
-              <div direction="row">
-                <HalfTable />
-                <HalfTable />
-              </div>
-              <TableRow />
-            </div>
-          </div>
-        )}
+      <Container>
+        <Header
+          skin={skin}
+          sidebar={[
+            ['Coins', `153,185`, '§6'],
+            ['Overall Wins', '3', '§e'],
+            ['Blocks Ran', '7,755', '§7'],
+          ]}
+          name={'§6j4cobi'}
+        >
+          <HeaderBody description={`Description`} title="§l§cTNT Games §fStats" />
+        </Header>
+        <div direction="row">
+          <HalfTable />
+          <HalfTable />
+        </div>
+        <TableRow />
       </Container>
     );
 
-    const canvas = new Canvas(width, height);
-
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#FFF';
-    ctx.fillRect(0, 0, width, height);
-
-    const instructions = JSX.createInstructions(<Profile />, canvas.width, canvas.height);
-
-    const buffer = await JSX.createRender(canvas, instructions, {
-      renderer: ClassContainer.get(FontRenderer),
-    }).toBuffer('png');
+    const image = await JSX.render(<Profile />, width, height).toBuffer('png');
 
     return {
-      files: [{ name: 'example.png', data: buffer, type: 'image/png' }],
+      files: [{ name: 'example.png', data: image, type: 'image/png' }],
     };
   }
 }

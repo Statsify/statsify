@@ -13,7 +13,7 @@
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/discord": "workspace:^",
-    "@statsify/jsx": "workspace:^",
+    "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@typegoose/typegoose": "^9.8.1",

@@ -1,4 +1,4 @@
-import { JSX } from '@statsify/jsx';
+import { JSX } from '@statsify/rendering';
 
 export interface TableDataProps {
   title: string;

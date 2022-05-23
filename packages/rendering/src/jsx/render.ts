@@ -1,8 +1,12 @@
-import type { Canvas, CanvasRenderingContext2D } from 'skia-canvas';
-import type { BaseThemeContext, Instruction } from './types';
+import { Canvas, type CanvasRenderingContext2D } from 'skia-canvas';
+import Container from 'typedi';
+import { FontRenderer } from '../font';
+import { createInstructions } from './create-instructions';
+import type { IntrinsicRenders } from './instrinsics';
+import type { BaseThemeContext, ElementNode, Instruction } from './types';
 import { getPositionalDelta, getTotalSize } from './util';
 
-const render = <T extends BaseThemeContext>(
+const _render = <T extends BaseThemeContext>(
   ctx: CanvasRenderingContext2D,
   theme: T,
   instruction: Instruction,
@@ -63,25 +67,30 @@ const render = <T extends BaseThemeContext>(
       const centerDelta = (instruction[oppSide].size - oppSize) / 2;
 
       oppSide === 'x' ? (x += centerDelta) : (y += centerDelta);
-      render(ctx, theme, child, x, y);
+      _render(ctx, theme, child, x, y);
       oppSide === 'x' ? (x -= centerDelta) : (y -= centerDelta);
     } else {
-      render(ctx, theme, child, x, y);
+      _render(ctx, theme, child, x, y);
     }
 
     applyDelta(size);
   });
 };
 
-export function createRender<T extends BaseThemeContext = BaseThemeContext>(
-  canvas: Canvas,
-  instructions: Instruction,
-  theme: T
+export function render<T extends BaseThemeContext = BaseThemeContext>(
+  node: ElementNode,
+  width: number,
+  height: number,
+  theme?: T,
+  intrinsicElements?: Partial<IntrinsicRenders<T>>
 ): Canvas {
+  const instructions = createInstructions(node, width, height, intrinsicElements);
+
+  const canvas = new Canvas(width, height);
   const ctx = canvas.getContext('2d');
   ctx.imageSmoothingEnabled = false;
 
-  render(ctx, theme, instructions, 0, 0);
+  _render(ctx, theme ?? { renderer: Container.get(FontRenderer) }, instructions, 0, 0);
 
   return canvas;
 }

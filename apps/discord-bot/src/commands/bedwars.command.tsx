@@ -2,9 +2,7 @@ import { PlayerArgument } from '#arguments';
 import { BedWarsProfile } from '#profiles/bedwars.profile';
 import { ApiService } from '#services';
 import { Command, CommandContext } from '@statsify/discord';
-import { FontRenderer, JSX } from '@statsify/jsx';
-import { Canvas } from 'skia-canvas';
-import Container from 'typedi';
+import { JSX } from '@statsify/rendering';
 
 @Command({
   description: 'Displays this message.',
@@ -21,39 +19,16 @@ export class BedWarsCommand {
     const width = 860;
     const height = 550;
 
-    const canvas = new Canvas(width, height);
-
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = '#FFF';
-    ctx.fillRect(0, 0, width, height);
-
     const modes = ['overall'] as const;
 
     const images = await Promise.all(
-      modes.map((mode) => {
-        const canvas = new Canvas(width, height);
-
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = '#FFF';
-        ctx.fillRect(0, 0, width, height);
-
-        const instructions = JSX.createInstructions(
-          <BedWarsProfile
-            player={player}
-            skin={skin}
-            mode={mode}
-            width={width}
-            height={height}
-            t={context.t()}
-          />,
-          canvas.width,
-          canvas.height
-        );
-
-        return JSX.createRender(canvas, instructions, {
-          renderer: Container.get(FontRenderer),
-        }).toBuffer('png');
-      })
+      modes.map((mode) =>
+        JSX.render(
+          <BedWarsProfile player={player} skin={skin} mode={mode} t={context.t()} />,
+          width,
+          height
+        ).toBuffer('png')
+      )
     );
 
     return {

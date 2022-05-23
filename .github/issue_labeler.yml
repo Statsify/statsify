@@ -22,8 +22,8 @@
 "@statsify/discord":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/discord"
 
-"@statsify/jsx":
-  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/jsx"
+"@statsify/rendering":
+  - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/rendering"
 
 "@statsify/logger":
   - "### Which package is the feature request for\\?\\n\\n.*@statsify\\/logger"

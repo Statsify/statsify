@@ -1,9 +1,8 @@
-import { JSX } from '@statsify/jsx';
+import { JSX } from '@statsify/rendering';
 import { Image } from 'skia-canvas';
 
 export interface SkinProps {
   skin: Image;
-  height?: number;
 }
 
 /**
@@ -20,16 +19,12 @@ export interface SkinProps {
  * <Skin skin={skin} height={120} />
  * ```
  */
-export const Skin: JSX.FC<SkinProps> = ({ skin, height }) => {
+export const Skin: JSX.FC<SkinProps> = ({ skin }) => {
   const width = 125;
-  const scale = skin.width / width;
 
   return (
-    <box width={width} height={height ?? width}>
-      <img
-        image={skin}
-        crop={[0, 0, skin.width, height ? Math.round(height * scale) : skin.width]}
-      />
+    <box width={width} height="remaining">
+      <img image={skin} height="100%" />
     </box>
   );
 };
