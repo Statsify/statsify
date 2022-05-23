@@ -1,4 +1,3 @@
-import type { CanvasRenderingContext2D, ImageData } from 'skia-canvas';
 import { parseColor, RGBA } from '../colors';
 import type * as JSX from '../jsx';
 
@@ -75,45 +74,6 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   };
 };
 
-type ImageDataLocation = [x: number, y: number, width: number, height: number];
-
-const drawAndReplace = (
-  ctx: CanvasRenderingContext2D,
-  fn: (ctx: CanvasRenderingContext2D) => void,
-  imageDataLoc: ImageDataLocation[]
-) => {
-  const backup = imageDataLoc.map(
-    ([x, y, width, height]) =>
-      [x, y, width > 0 && height > 0 ? ctx.getImageData(x, y, width, height) : null] as [
-        number,
-        number,
-        ImageData | null
-      ]
-  );
-
-  fn(ctx);
-
-  backup.forEach(([x, y, imageData]) => imageData && ctx.putImageData(imageData, x, y));
-};
-
-const corners = (
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  border: BoxBorderRadius
-): ImageDataLocation[] => [
-  [x, y, border.topLeft, border.topLeft],
-  [x, y + height - border.bottomLeft, border.bottomLeft, border.bottomLeft],
-  [x + width - border.topRight, y, border.topRight, border.topRight],
-  [
-    x + width - border.bottomRight,
-    y + height - border.bottomRight,
-    border.bottomRight,
-    border.bottomRight,
-  ],
-];
-
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
   { color, border, shadowDistance, shadowOpacity, outline, outlineSize, outlineColor },
@@ -123,7 +83,7 @@ export const render: JSX.Render<BoxRenderProps> = (
 
   outlineColor[3] = 1;
   ctx.strokeStyle = `rgba(${outlineColor.join(', ')})`;
-  ctx.lineWidth = 4;
+  ctx.lineWidth = outlineSize;
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -136,43 +96,53 @@ export const render: JSX.Render<BoxRenderProps> = (
   width = Math.round(width);
   height = Math.round(height);
 
-  drawAndReplace(
-    ctx,
-    (ctx) => {
-      ctx.fillRect(x, y, width, height);
+  ctx.beginPath();
+  ctx.moveTo(x + border.topLeft, y);
+  ctx.lineTo(x + width - border.topRight, y);
+  ctx.lineTo(x + width - border.topRight, y + border.topRight);
+  ctx.lineTo(x + width, y + border.topRight);
+  ctx.lineTo(x + width, y + height - border.bottomRight);
+  ctx.lineTo(x + width - border.bottomRight, y + height - border.bottomRight);
+  ctx.lineTo(x + width - border.bottomRight, y + height);
+  ctx.lineTo(x + border.bottomLeft, y + height);
+  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft);
+  ctx.lineTo(x, y + height - border.bottomLeft);
+  ctx.lineTo(x, y + border.topLeft);
+  ctx.lineTo(x + border.topLeft, y + border.topLeft);
+  ctx.closePath();
+  ctx.fill();
 
-      if (!outline) return;
-
-      ctx.strokeRect(
-        x + outlineSize / 2,
-        y + outlineSize / 2,
-        width - outlineSize,
-        height - outlineSize
-      );
-    },
-    corners(x, y, width, height, border)
-  );
+  if (outline) ctx.stroke();
 
   if (!shadowDistance) return;
 
   color[3] = shadowOpacity;
   ctx.fillStyle = `rgba(${color.join(', ')})`;
 
-  drawAndReplace(
-    ctx,
-    (ctx) => {
-      ctx.fillRect(x + shadowDistance, y + height, width, shadowDistance);
-      ctx.fillRect(x + width, y + shadowDistance, shadowDistance, height - shadowDistance);
+  ctx.beginPath();
+  ctx.moveTo(x + width, y + shadowDistance + border.topRight);
+  ctx.lineTo(x + width + shadowDistance, y + shadowDistance + border.topRight);
+  ctx.lineTo(x + width + shadowDistance, y + height - border.bottomRight + shadowDistance);
+  ctx.lineTo(x + width, y + height - border.bottomRight + shadowDistance);
+  ctx.closePath();
+  ctx.fill();
 
-      if (border.bottomRight !== 0) {
-        ctx.fillRect(
-          x + width - border.bottomRight,
-          y + height - border.bottomRight,
-          border.bottomRight,
-          border.bottomRight
-        );
-      }
-    },
-    corners(x + shadowDistance, y + shadowDistance, width, height, border)
+  ctx.beginPath();
+  ctx.moveTo(x + border.bottomLeft + shadowDistance, y + height);
+  ctx.lineTo(x + border.bottomLeft + shadowDistance, y + height + shadowDistance);
+  ctx.lineTo(
+    x + width + shadowDistance - (border.bottomRight || shadowDistance),
+    y + height + shadowDistance
   );
+  ctx.lineTo(x + width + shadowDistance - (border.bottomRight || shadowDistance), y + height);
+  ctx.closePath();
+  ctx.fill();
+
+  if (border.bottomRight !== 0)
+    ctx.fillRect(
+      x + width - border.bottomRight,
+      y + height - border.bottomRight,
+      border.bottomRight,
+      border.bottomRight
+    );
 };
