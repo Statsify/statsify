@@ -1,3 +1,6 @@
-[submodule "assets"]
-	path = assets
+[submodule "assets/public"]
+	path = assets/public
+	url = https://github.com/Statsify/public-assets
+[submodule "assets/private"]
+	path = assets/private
 	url = https://github.com/Statsify/assets

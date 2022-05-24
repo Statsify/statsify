@@ -1,43 +1,13 @@
-import { Logger } from '@statsify/logger';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync } from 'fs';
 import { join } from 'path';
 
-const hasRequiredAssets = () => {
-  const logger = new Logger('@statsify/assets');
-  let missing = false;
+const PATH = '../../assets';
+const PRIVATE_PATH = join(PATH, 'private');
 
-  if (!existsSync('../../assets/minecraft-textures')) {
-    logger.error('Add a 1.8.9 texture pack to assets/minecraft-textures');
-    missing = true;
-  }
+const hasPrivateAssets = existsSync(PRIVATE_PATH);
 
-  if (!existsSync('../../assets/logos')) {
-    logger.error('Add statsify logos to assets/logos');
-    missing = true;
-  }
-
-  if (missing) throw new Error('Missing assets');
-};
-
-let hasPrivateAssets = false;
-
-const checkPrivateAssets = () => {
-  if (hasPrivateAssets) return hasPrivateAssets;
-
-  try {
-    const file = readFileSync('../../assets/package.json');
-
-    hasPrivateAssets = !!file;
-
-    hasRequiredAssets();
-
-    return !!hasPrivateAssets;
-  } catch {
-    hasRequiredAssets();
-
-    return false;
-  }
-};
+const checkAsset = (file: string) =>
+  hasPrivateAssets && existsSync(join(PRIVATE_PATH, file)) ? 'private' : 'public';
 
 /**
  *
@@ -46,20 +16,16 @@ const checkPrivateAssets = () => {
  * @returns the asset if available, otherwise null
  */
 export const importAsset = async <T>(file: string): Promise<T | null> => {
-  if (!checkPrivateAssets()) return null;
+  if (checkAsset(file.endsWith('.js') ? file : `${file}.js`) === 'public') return null;
+  return import(join('../', PRIVATE_PATH, file));
+};
 
-  return import(join('../../../assets/', file));
-};
-export const getImagePath = (imagePath: string) => {
-  checkPrivateAssets();
-  return join(`../../assets/`, imagePath);
-};
+export const getImagePath = (imagePath: string) => join(PATH, checkAsset(imagePath), imagePath);
 
 /**
  *
  * @param texturePath the path inside of the texture path, it starts already inside of `/assets/minecraft`
  * @returns the full path to the texture
  */
-export const getMinecraftTexturePath = (texturePath: string) => {
-  return join(getImagePath(`minecraft-textures/assets/minecraft/`), texturePath);
-};
+export const getMinecraftTexturePath = (texturePath: string) =>
+  join(getImagePath(`minecraft-textures/assets/minecraft/`), texturePath);
