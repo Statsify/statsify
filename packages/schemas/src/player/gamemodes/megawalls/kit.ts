@@ -1,4 +1,4 @@
-import { ratio } from '@statsify/math';
+import { add, ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 
@@ -25,6 +25,9 @@ export class MegaWallsKit {
   public finalKills: number;
 
   @Field()
+  public finalAssists: number;
+
+  @Field()
   public finalDeaths: number;
 
   @Field()
@@ -42,6 +45,9 @@ export class MegaWallsKit {
   @Field({ leaderboard: { enabled: false } })
   public witherKills: number;
 
+  @Field()
+  public points: number;
+
   public constructor(data: APIData, kit: string) {
     kit = kit ? `${kit}_` : kit;
 
@@ -54,6 +60,7 @@ export class MegaWallsKit {
     this.kdr = ratio(this.kills, this.deaths);
 
     this.finalKills = data[`${kit}final_kills`];
+    this.finalAssists = data[`${kit}final_assists`];
     this.finalDeaths = data[`${kit}final_deaths`];
     this.fkdr = ratio(this.finalKills, this.finalDeaths);
 
@@ -61,5 +68,7 @@ export class MegaWallsKit {
     this.timePlayed = data[`${kit}time_played`];
     this.witherDamage = data[`${kit}wither_damage`];
     this.witherKills = data[`${kit}wither_kills`];
+
+    this.points = add(this.finalKills, this.finalAssists, this.wins * 10);
   }
 }
