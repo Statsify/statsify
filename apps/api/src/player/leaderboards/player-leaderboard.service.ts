@@ -19,6 +19,17 @@ export class PlayerLeaderboardService {
     const pageSize = 10;
     const translator = short(short.constants.cookieBase90);
 
+    const {
+      name: fieldName,
+      additionalFields,
+      extraDisplay,
+      formatter,
+      sort,
+    } = LeaderboardScanner.getLeaderboardField(Player, field) as LeaderboardEnabledMetadata & {
+      additionalFields: FlattenKeys<Player>[];
+      extraDisplay: FlattenKeys<Player>;
+    };
+
     let top: number;
     let bottom: number;
 
@@ -27,7 +38,7 @@ export class PlayerLeaderboardService {
       bottom = top + pageSize;
     } else {
       const shortUuid = translator.fromUUID(pageOrUuid);
-      const ranking = await this.getLeaderboardRanking(field, shortUuid);
+      const ranking = await this.getLeaderboardRanking(field, shortUuid, sort);
 
       if (ranking === null) {
         return null;
@@ -42,18 +53,9 @@ export class PlayerLeaderboardService {
       Player,
       field,
       top,
-      bottom - 1
+      bottom - 1,
+      sort
     );
-
-    const {
-      name: fieldName,
-      additionalFields,
-      extraDisplay,
-      formatter,
-    } = LeaderboardScanner.getLeaderboardField(Player, field) as LeaderboardEnabledMetadata & {
-      additionalFields: FlattenKeys<Player>[];
-      extraDisplay: FlattenKeys<Player>;
-    };
 
     const additionalStats = await this.fetchPlayerStats(
       leaderboard.map(({ id }) => id),
@@ -99,7 +101,9 @@ export class PlayerLeaderboardService {
     const pipeline = this.redis.pipeline();
 
     fields.forEach((field) => {
-      pipeline.zrevrank(`${Player.name.toLowerCase()}.${field}`, shortUuid);
+      if (LeaderboardScanner.getLeaderboardField(Player, field).sort === 'ASC')
+        pipeline.zrank(`${Player.name.toLowerCase()}.${field}`, shortUuid);
+      else pipeline.zrevrank(`${Player.name.toLowerCase()}.${field}`, shortUuid);
     });
 
     const responses = await pipeline.exec();
@@ -108,14 +112,18 @@ export class PlayerLeaderboardService {
 
     return responses.map((response, index) => {
       const field = fields[index];
-      const rank = Number(response[1] ?? 0);
+      const rank = Number(response[1] ?? -1) + 1;
 
       return { field, rank };
     });
   }
 
-  public async getLeaderboardRanking(field: FlattenKeys<Player>, uuid: string) {
-    return this.leaderboardService.getLeaderboardRanking(Player, field, uuid);
+  public async getLeaderboardRanking(
+    field: FlattenKeys<Player>,
+    uuid: string,
+    sort?: 'ASC' | 'DESC'
+  ) {
+    return this.leaderboardService.getLeaderboardRanking(Player, field, uuid, sort);
   }
 
   public async fetchPlayerStats(uuids: string[], selector: FlattenKeys<Player>[]) {

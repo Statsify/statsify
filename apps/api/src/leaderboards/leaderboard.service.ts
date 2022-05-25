@@ -27,9 +27,9 @@ export class LeaderboardService {
         const value = instance[field];
 
         if (remove || value === 0 || Number.isNaN(value)) {
-          pipeline.zrem(`${name}.${field}`, id);
+          pipeline.zrem(`${name}.${String(field)}`, id);
         } else {
-          pipeline.zadd(`${name}.${field}`, value as string, id);
+          pipeline.zadd(`${name}.${String(field)}`, value as string, id);
         }
       });
 
@@ -40,12 +40,15 @@ export class LeaderboardService {
     constructor: Constructor<T>,
     field: string,
     top: number,
-    bottom: number
+    bottom: number,
+    sort = 'DESC'
   ) {
     const name = constructor.name.toLowerCase();
     field = `${name}.${field}`;
 
-    const scores = await this.redis.zrevrange(field, top, bottom, 'WITHSCORES');
+    const scores = await (sort === 'ASC'
+      ? this.redis.zrange(field, top, bottom, 'WITHSCORES')
+      : this.redis.zrevrange(field, top, bottom, 'WITHSCORES'));
 
     const response: { id: string; score: number; index: number }[] = [];
 
@@ -59,7 +62,14 @@ export class LeaderboardService {
     return response;
   }
 
-  public async getLeaderboardRanking<T>(constructor: Constructor<T>, field: string, id: string) {
+  public async getLeaderboardRanking<T>(
+    constructor: Constructor<T>,
+    field: string,
+    id: string,
+    sort = 'DESC'
+  ) {
+    if (sort === 'ASC') return this.redis.zrank(`${constructor.name.toLowerCase()}.${field}`, id);
+
     return this.redis.zrevrank(`${constructor.name.toLowerCase()}.${field}`, id);
   }
 
@@ -74,7 +84,7 @@ export class LeaderboardService {
     if (!selector) selector = LeaderboardScanner.getLeaderboardFields(constructor);
 
     selector.forEach((field) => {
-      pipeline.zscore(`${name}.${field}`, id);
+      pipeline.zscore(`${name}.${String(field)}`, id);
     });
 
     const scores = await pipeline.exec();
