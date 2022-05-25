@@ -3,7 +3,8 @@ import type * as JSX from '../jsx';
 
 type CanvasImage = _Image | Canvas;
 
-type ImageCrop = [sx: number, sy: number, sw: number, sh: number];
+type ImageCropLocation = [sx: number, sy: number, sw: number, sh: number];
+type ImageCrop = 'none' | 'resize' | ImageCropLocation;
 
 export interface ImageRenderProps {
   image: CanvasImage;
@@ -37,7 +38,9 @@ export const render: JSX.Render<ImageRenderProps> = (
   { image, crop },
   { x, y, width, height }
 ) => {
-  if (!crop) {
+  if (!crop || crop === 'none') {
+    crop = [0, 0, image.width, image.height];
+  } else if (crop === 'resize') {
     const scale = image.width / width;
     crop = [0, 0, image.width, Math.round(height * scale)];
   }

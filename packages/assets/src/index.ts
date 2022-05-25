@@ -1,5 +1,6 @@
-import { existsSync } from 'fs';
+import { existsSync, readdirSync } from 'fs';
 import { join } from 'path';
+import { Image, loadImage } from 'skia-canvas';
 
 const PATH = '../../assets';
 const PRIVATE_PATH = join(PATH, 'private');
@@ -29,3 +30,27 @@ export const getImagePath = (imagePath: string) => join(PATH, checkAsset(imagePa
  */
 export const getMinecraftTexturePath = (texturePath: string) =>
   join(getImagePath(`minecraft-textures/assets/minecraft/`), texturePath);
+
+let backgrounds: string[] = [];
+
+function getBackgroundPaths() {
+  if (backgrounds.length) return backgrounds;
+  backgrounds = readdirSync(getImagePath('out/backgrounds'));
+  return backgrounds;
+}
+
+export function getBackground(path: string): Promise<Image>;
+export function getBackground(game: string, mode: string): Promise<Image>;
+export function getBackground(pathOrGame: string, mode?: string): Promise<Image> {
+  if (!hasPrivateAssets) return loadImage(getImagePath('out/backgrounds/background.png'));
+
+  if (typeof mode === 'string') {
+    const path = `${pathOrGame}_${mode}_`;
+    const backgrounds = getBackgroundPaths().filter((p) => p.startsWith(path));
+    const background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+
+    return loadImage(getImagePath(`out/backgrounds/${background}`));
+  }
+
+  return loadImage(getImagePath(`out/backgrounds/${pathOrGame}.png`));
+}

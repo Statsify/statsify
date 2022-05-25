@@ -1,5 +1,6 @@
 import { Container, Header, HeaderBody, Table } from '#components';
 import { ApiService } from '#services';
+import { getBackground } from '@statsify/assets';
 import { Command } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
 
@@ -33,8 +34,10 @@ export class MultimodeCommand {
       </Table.table>
     );
 
+    const background = await getBackground('tntgames', 'overall');
+
     const Profile = () => (
-      <Container>
+      <Container background={background}>
         <Header
           skin={skin}
           sidebar={[

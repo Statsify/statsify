@@ -1420,6 +1420,7 @@ __metadata:
   resolution: "@statsify/assets@workspace:packages/assets"
   dependencies:
     "@statsify/logger": "workspace:^"
+    skia-canvas: ^0.9.29
   languageName: unknown
   linkType: soft
 
