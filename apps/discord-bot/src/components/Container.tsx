@@ -1,4 +1,5 @@
 import { JSX, useChildren } from '@statsify/rendering';
+import { Image } from 'skia-canvas';
 import { Background } from './Background';
 
 interface BaseContainerProps {
@@ -7,6 +8,8 @@ interface BaseContainerProps {
    * @description The percent size of the container. The number should be 1-100.
    */
   percent?: number;
+
+  background: Image;
 }
 
 interface DefinedSizeContainerProps extends BaseContainerProps {
@@ -26,37 +29,37 @@ export type ContainerProps = DefinedSizeContainerProps | UndefinedSizeContainerP
  * @description Restricts the children to a percentage of the container
  * @example
  * ```ts
- * <Container width={100} height={100} percent={50}>
+ * <Container background={background} width={100} height={100} percent={50}>
  *  <box width={100} height={100} />
  * </Container>
  * ```
  * @example
  * ```ts
- * <Container width={100} height={100}>
+ * <Container background={background} width={100} height={100}>
  *  <box width={100} height={100} />
  * </Container>
  * ```
  * @example
  * ```ts
- * <Container>
+ * <Container background={background}>
  *  <box width={100} height={100} />
  * </Container>
  * ```
  * @example
  * ```ts
- * <Container percent={50}>
+ * <Container background={background} percent={50}>
  *  <box width={100} height={100} />
  * </Container>
  * ```
  * @example
  * ```ts
- * <Container width={100} height={100} percent={50}>
+ * <Container background={background} width={100} height={100} percent={50}>
  *  {(width, height) => <box width={width} height={height} />}
  * </Container>
  * ```
  * @example
  * ```ts
- * <Container width={100} height={100}>
+ * <Container background={background} width={100} height={100}>
  *  {(width, height) => <box width={width} height={height} />}
  * </Container>
  * ```
@@ -79,7 +82,7 @@ export const Container: JSX.FC<ContainerProps> = (props) => {
   }
 
   return (
-    <Background>
+    <Background background={props.background}>
       <div direction="column" width={containerWidth} height={containerHeight} align="center">
         {inner}
       </div>

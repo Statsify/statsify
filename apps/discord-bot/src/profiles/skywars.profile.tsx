@@ -9,9 +9,9 @@ import {
 } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
-import type { Player, SkyWarsMode } from '@statsify/schemas';
+import type { SkyWarsMode } from '@statsify/schemas';
 import { formatTime, prettify } from '@statsify/util';
-import type { Image } from 'skia-canvas';
+import { BaseProfileProps } from './base.profile';
 
 interface SkyWarsModeTableProps {
   modeStats: SkyWarsMode;
@@ -55,14 +55,17 @@ const SkyWarsModeTable: JSX.FC<SkyWarsModeTableProps> = ({ modeStats, mode, widt
   );
 };
 
-export interface SkyWarsProfileProps {
-  skin: Image;
-  player: Player;
+export interface SkyWarsProfileProps extends BaseProfileProps {
   mode: 'overall' | 'solo' | 'doubles';
-  t: LocalizeFunction;
 }
 
-export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({ skin, player, mode, t }) => {
+export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
+  skin,
+  player,
+  background,
+  mode,
+  t,
+}) => {
   const skywars = player.stats.skywars;
   const modeStats = skywars[mode];
 
@@ -77,7 +80,7 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({ skin, player, mode
   ];
 
   return (
-    <Container>
+    <Container background={background}>
       <div direction="column">
         <Header skin={skin} name={player.prefixName} sidebar={sidebar}>
           <HeaderBody

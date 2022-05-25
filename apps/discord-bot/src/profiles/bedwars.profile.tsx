@@ -1,18 +1,19 @@
 import { Container, formatProgression, Header, HeaderBody, SidebarItem, Table } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
-import type { Player } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
-import type { Image } from 'skia-canvas';
+import { BaseProfileProps } from './base.profile';
 
-export interface BedWarsProfileProps {
-  skin: Image;
-  player: Player;
+export interface BedWarsProfileProps extends BaseProfileProps {
   mode: 'overall' | 'solo' | 'doubles' | 'threes' | 'fours' | '4v4';
-  t: LocalizeFunction;
 }
 
-export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({ skin, player, mode, t }) => {
+export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
+  skin,
+  player,
+  background,
+  mode,
+  t,
+}) => {
   const bedwars = player.stats.bedwars;
   const stats = bedwars[mode];
 
@@ -26,7 +27,7 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({ skin, player, mode
   ];
 
   return (
-    <Container>
+    <Container background={background}>
       <Header skin={skin} name={player.prefixName} sidebar={sidebar}>
         <HeaderBody
           title={`§l§cBed§fWars §fStats §r(§r§o${prettify(mode)}§r)`}

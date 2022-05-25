@@ -1,3 +1,4 @@
+import { getBackground } from '@statsify/assets';
 import { Command, CommandContext } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
 import { PlayerArgument } from '../arguments';
@@ -21,10 +22,18 @@ export class SkyWarsCommand {
 
     const modes = ['overall'] as const;
 
+    const background = await getBackground('skywars', 'overall');
+
     const images = await Promise.all(
       modes.map((mode) =>
         JSX.render(
-          <SkyWarsProfile player={player} skin={skin} mode={mode} t={context.t()} />,
+          <SkyWarsProfile
+            background={background}
+            player={player}
+            skin={skin}
+            mode={mode}
+            t={context.t()}
+          />,
           width,
           height
         ).toBuffer('png')

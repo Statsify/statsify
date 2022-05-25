@@ -1,6 +1,7 @@
 import { PlayerArgument } from '#arguments';
 import { BedWarsProfile } from '#profiles/bedwars.profile';
 import { ApiService } from '#services';
+import { getBackground } from '@statsify/assets';
 import { Command, CommandContext } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
 
@@ -21,10 +22,18 @@ export class BedWarsCommand {
 
     const modes = ['overall'] as const;
 
+    const background = await getBackground('bedwars', 'overall');
+
     const images = await Promise.all(
       modes.map((mode) =>
         JSX.render(
-          <BedWarsProfile player={player} skin={skin} mode={mode} t={context.t()} />,
+          <BedWarsProfile
+            background={background}
+            player={player}
+            skin={skin}
+            mode={mode}
+            t={context.t()}
+          />,
           width,
           height
         ).toBuffer('png')

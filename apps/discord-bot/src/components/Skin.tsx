@@ -24,7 +24,7 @@ export const Skin: JSX.FC<SkinProps> = ({ skin }) => {
 
   return (
     <box width={width} height="remaining">
-      <img image={skin} height="100%" />
+      <img image={skin} height="100%" crop="resize" />
     </box>
   );
 };
