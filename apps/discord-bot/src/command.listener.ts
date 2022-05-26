@@ -2,9 +2,12 @@ import {
   AbstractCommandListener,
   CommandContext,
   CommandResolvable,
+  ErrorMessage,
   Interaction,
   Message,
 } from '@statsify/discord';
+import { User } from '@statsify/schemas';
+import { formatTime } from '@statsify/util';
 import { ApplicationCommandOptionType, InteractionResponseType } from 'discord-api-types/v10';
 import type {
   InteractionResponse,
@@ -18,6 +21,7 @@ export type InteractionHook = (interaction: Interaction) => any;
 
 export class CommandListener extends AbstractCommandListener {
   private hooks: Map<string, InteractionHook>;
+  private cooldowns: Map<string, Map<string, number>>;
   private readonly apiService: ApiService;
   private static instance: CommandListener;
 
@@ -35,6 +39,7 @@ export class CommandListener extends AbstractCommandListener {
 
     this.apiService = new ApiService();
     this.hooks = new Map();
+    this.cooldowns = new Map();
   }
 
   public addInteractionHook(id: string, hook: InteractionHook) {
@@ -62,14 +67,18 @@ export class CommandListener extends AbstractCommandListener {
 
     if (!command) return { type: InteractionResponseType.Pong };
 
+    const userId = interaction.getUserId();
+
     [command, data] = this.getCommandAndData(command, data);
 
-    const user = await this.apiService.getUser(interaction.getUserId());
+    const user = await this.apiService.getUser(userId);
 
     const context = new CommandContext(interaction, data);
     context.setUser(user);
 
     try {
+      this.isOnCooldown(command, user, userId);
+
       const response = command.execute(context);
 
       if (response instanceof Promise)
@@ -166,6 +175,48 @@ export class CommandListener extends AbstractCommandListener {
 
   private localize(context: CommandContext, message: Message) {
     return message.build(context.t());
+  }
+
+  private isOnCooldown(command: CommandResolvable, user: User | null, userId: string) {
+    const cooldownForCommand = this.cooldowns.get(command.name);
+
+    let reduction = 1;
+
+    if (user?.premium) reduction = 0.3;
+    else if (user?.serverMember) reduction = 0.8;
+    else if (user?.uuid) reduction = 0.9;
+
+    const now = Date.now();
+    const newCooldown = now + command.cooldown * 1000 * reduction;
+
+    if (!cooldownForCommand) {
+      const cooldownForCommand = new Map();
+      cooldownForCommand.set(userId, newCooldown);
+      this.cooldowns.set(command.name, cooldownForCommand);
+
+      return;
+    }
+
+    const cooldown = cooldownForCommand.get(userId);
+
+    if (!cooldown) {
+      cooldownForCommand.set(userId, newCooldown);
+      return;
+    }
+
+    if (now >= cooldown) {
+      cooldownForCommand.set(userId, newCooldown);
+      return;
+    }
+
+    throw new ErrorMessage(
+      (t) => t('cooldown.title'),
+      (t) =>
+        t('cooldown.description', {
+          time: formatTime(cooldown - now, { short: true, entries: 2 }),
+          command: command.name,
+        })
+    );
   }
 
   public static create(

@@ -9,7 +9,7 @@ export interface CommandOptions {
   cooldown?: number;
 }
 
-export type SubCommandOptions = Omit<CommandOptions, 'groups'>;
+export type SubCommandOptions = Omit<CommandOptions, 'groups' | 'cooldown'>;
 
 export interface CommandMetadata extends Omit<CommandOptions, 'name'> {
   name: string;
