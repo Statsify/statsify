@@ -20,6 +20,7 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
   player,
   background,
   logo,
+  premium,
   mode,
   t,
 }) => {
@@ -70,7 +71,7 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
           <Table.td title={t('stats.bblr')} value={t(stats.bblr)} color="§6" />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} />
+      <Footer logo={logo} premium={premium} />
     </Container>
   );
 };

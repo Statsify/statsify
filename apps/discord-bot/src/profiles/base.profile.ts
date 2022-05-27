@@ -7,5 +7,6 @@ export interface BaseProfileProps {
   player: Player;
   background: Image;
   logo: Image;
+  premium: boolean | undefined;
   t: LocalizeFunction;
 }

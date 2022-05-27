@@ -26,7 +26,7 @@ async function bootstrap() {
 
   const verifyCodesModel = getModelForClass(VerifyCode);
 
-  const serverLogo = readFileSync(getAssetPath('logos/logo64.png'), { encoding: 'base64' });
+  const serverLogo = readFileSync(getAssetPath('logos/logo_64.png'), { encoding: 'base64' });
 
   const server = createServer({
     host: process.env.VERIFY_SERVER_IP,
