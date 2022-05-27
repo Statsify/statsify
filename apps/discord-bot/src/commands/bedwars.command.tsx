@@ -1,49 +1,53 @@
-import { PlayerArgument } from '#arguments';
+import { BaseProfileProps } from '#profiles/base.profile';
 import { BedWarsProfile } from '#profiles/bedwars.profile';
-import { ApiService } from '#services';
-import { getBackground, getLogo } from '@statsify/assets';
-import { Command, CommandContext } from '@statsify/discord';
+import { Command } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
+import { BEDWARS_MODES } from '@statsify/schemas';
+import { HypixelCommand } from './base.hypixel-command';
 
-@Command({
-  description: 'Displays this message.',
-  args: [PlayerArgument],
-  cooldown: 5,
-})
-export class BedWarsCommand {
-  public constructor(private readonly apiService: ApiService) {}
-
-  public async run(context: CommandContext) {
-    const player = await this.apiService.getPlayer(context.option('player'), context.getUser());
-    const skin = await this.apiService.getPlayerSkin(player.uuid);
-
-    const width = 860;
-    const height = 580;
-
-    const modes = ['overall'] as const;
-
-    const background = await getBackground('bedwars', 'overall');
-    const logo = await getLogo();
-
-    const images = await Promise.all(
-      modes.map((mode) =>
-        JSX.render(
-          <BedWarsProfile
-            background={background}
-            player={player}
-            skin={skin}
-            mode={mode}
-            logo={logo}
-            t={context.t()}
-          />,
-          width,
-          height
-        ).toBuffer('png')
-      )
-    );
-
+@Command({ description: 'Displays this message.' })
+export class BedWarsCommand extends HypixelCommand<typeof BEDWARS_MODES> {
+  public getDimensions(): { width: number; height: number } {
     return {
-      files: images.map((image) => ({ name: 'image.png', data: image, type: 'image/png' })),
+      width: 870,
+      height: 580,
     };
+  }
+
+  public getBackground(
+    mode: 'overall' | 'core' | 'solo' | 'doubles' | 'threes' | 'fours' | '4v4'
+  ): [game: string, mode: string] {
+    let map: string;
+
+    switch (mode) {
+      case 'overall':
+      case 'core':
+        map = 'overall';
+        break;
+      case 'solo':
+      case 'doubles':
+        map = 'eight';
+        break;
+      case 'threes':
+      case 'fours':
+        map = 'four';
+        break;
+      case '4v4':
+        map = '4v4';
+        break;
+    }
+
+    return ['bedwars', map];
+  }
+
+  public getModes(): readonly ['overall', 'core', 'solo', 'doubles', 'threes', 'fours', '4v4'] {
+    return BEDWARS_MODES;
+  }
+
+  public getProfile(
+    base: BaseProfileProps,
+    mode: 'overall' | 'core' | 'solo' | 'doubles' | 'threes' | 'fours' | '4v4'
+  ): JSX.ElementNode {
+    return <BedWarsProfile {...base} mode={mode} />;
   }
 }

@@ -1,13 +1,14 @@
 import { APIActionRowComponent, ComponentType } from 'discord-api-types/v10';
 import { LocalizeFunction } from '../localize';
 import type { ButtonBuilder } from './button.builder';
+import type { SelectMenuBuilder } from './select-menu.builder';
 
-export type ActionRowComponent = ButtonBuilder;
+export type ActionRowComponent = ButtonBuilder | SelectMenuBuilder;
 
 export class ActionRowBuilder {
   protected data: APIActionRowComponent<any>;
 
-  public constructor(components: ActionRowComponent[] = []) {
+  public constructor(components: ActionRowComponent[]) {
     this.data = {
       components,
       type: ComponentType.ActionRow,

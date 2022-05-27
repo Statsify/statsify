@@ -3,6 +3,8 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { MegaWallsKit } from './kit';
 
+export const MEGAWALLS_MODES = ['overall'] as const;
+
 export class MegaWalls {
   @Field()
   public coins: number;

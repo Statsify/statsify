@@ -2,6 +2,25 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { BridgeDuels, MultiDuelsGameMode, SingleDuelsGameMode, UHCDuels } from './mode';
 
+export const DUELS_MODES = [
+  'overall',
+  'arena',
+  'blitzsg',
+  'bow',
+  'bowSpleef',
+  'boxing',
+  'bridge',
+  'classic',
+  'combo',
+  'megawalls',
+  'nodebuff',
+  'op',
+  'parkour',
+  'skywars',
+  'sumo',
+  'uhc',
+] as const;
+
 export class Duels {
   @Field({ store: { default: 300 }, leaderboard: { enabled: false } })
   public pingRange: number;

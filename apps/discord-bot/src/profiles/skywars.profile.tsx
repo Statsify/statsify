@@ -10,7 +10,7 @@ import {
 } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
-import type { SkyWarsMode } from '@statsify/schemas';
+import type { SkyWarsMode, SKYWARS_MODES } from '@statsify/schemas';
 import { formatTime, prettify } from '@statsify/util';
 import { BaseProfileProps } from './base.profile';
 
@@ -57,7 +57,7 @@ const SkyWarsModeTable: JSX.FC<SkyWarsModeTableProps> = ({ modeStats, mode, widt
 };
 
 export interface SkyWarsProfileProps extends BaseProfileProps {
-  mode: 'overall' | 'solo' | 'doubles';
+  mode: typeof SKYWARS_MODES[number];
 }
 
 export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({

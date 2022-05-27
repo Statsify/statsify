@@ -3,6 +3,8 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { WarlordsClass } from './class';
 
+export const WARLORDS_MODES = ['overall'] as const;
+
 export class Warlords {
   @Field()
   public mage: WarlordsClass;

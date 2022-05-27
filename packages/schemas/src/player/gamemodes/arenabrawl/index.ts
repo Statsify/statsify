@@ -3,6 +3,8 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { ArenaBrawlMode } from './mode';
 
+export const ARENA_BRAWL_MODES = ['overall', 'solo', 'doubles', 'fours'] as const;
+
 export class ArenaBrawl {
   @Field()
   public overall: ArenaBrawlMode;

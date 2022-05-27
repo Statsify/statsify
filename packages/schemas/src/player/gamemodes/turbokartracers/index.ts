@@ -3,6 +3,8 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { TurboKartRacersTrophies } from './trophy';
 
+export const TURBO_KART_RACERS_MODES = ['overall'] as const;
+
 export class TurboKartRacers {
   @Field()
   public coins: number;

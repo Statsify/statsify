@@ -4,6 +4,8 @@ import { Field } from '../../../metadata';
 import { BlitzSGKit } from './kit';
 import { BlitzSGMode, BlitzSGOverall } from './mode';
 
+export const BLITZSG_MODES = ['overall', 'solo', 'doubles'] as const;
+
 export class BlitzSG {
   @Field()
   public coins: number;

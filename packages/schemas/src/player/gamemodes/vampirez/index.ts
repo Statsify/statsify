@@ -3,6 +3,8 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { VampireZLife } from './life';
 
+export const VAMPIREZ_MODES = ['overall', 'human', 'vampire'] as const;
+
 export class VampireZ {
   @Field()
   public coins: number;
