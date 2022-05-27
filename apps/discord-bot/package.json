@@ -20,7 +20,7 @@
     "axios": "^0.27.2",
     "discord-api-types": "^0.33.0",
     "dotenv": "^16.0.1",
-    "i18next": "^21.8.3",
+    "i18next": "^21.8.4",
     "i18next-fs-backend": "^1.1.4",
     "mongoose": "^6.3.4",
     "reflect-metadata": "^0.1.13",
@@ -36,6 +36,7 @@
     "#arguments": "./dist/arguments/index.js",
     "#components": "./dist/components/index.js",
     "#profiles/*": "./dist/profiles/*.js",
-    "#services": "./dist/services/index.js"
+    "#services": "./dist/services/index.js",
+    "#constants": "./dist/constants.js"
   }
 }

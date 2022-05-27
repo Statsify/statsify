@@ -192,7 +192,7 @@ export class ApiService {
     const data = await this.request<T>(url, params, method);
 
     if (data[key] === undefined || data[key] === null) {
-      throw new Error(`Key not found: ${key}`);
+      throw new Error(`Key not found: ${String(key)}`);
     }
 
     return data[key];

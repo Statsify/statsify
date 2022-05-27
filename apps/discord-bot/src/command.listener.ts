@@ -1,8 +1,8 @@
+import { WARNING_COLOR } from '#constants';
 import {
   AbstractCommandListener,
   CommandContext,
   CommandResolvable,
-  ErrorMessage,
   Interaction,
   Message,
 } from '@statsify/discord';
@@ -15,6 +15,7 @@ import type {
   RestClient,
   WebsocketShard,
 } from 'tiny-discord';
+import { ErrorMessage } from './error.message';
 import { ApiService } from './services';
 
 export type InteractionHook = (interaction: Interaction) => any;
@@ -214,11 +215,8 @@ export class CommandListener extends AbstractCommandListener {
 
     throw new ErrorMessage(
       (t) => t('cooldown.title'),
-      (t) =>
-        t('cooldown.description', {
-          time: formatTime(cooldown - now, { short: true, entries: 2 }),
-          command: command.name,
-        })
+      (t) => t('cooldown.description', { time: formatTime(cooldown - now), command: command.name }),
+      { color: WARNING_COLOR }
     );
   }
 

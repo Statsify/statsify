@@ -24,7 +24,7 @@ export const deserialize = <T>(constructor: Constructor<T>, instance: Flatten<T>
 
     // If the value is numimercal round it to 2 digits of precision
     if (typeof deserialized[key] === 'number')
-      deserialized[key] = roundTo(deserialized[key] as number) as any;
+      deserialized[key] = roundTo(deserialized[key] as unknown as number) as any;
   }
 
   //Unflatten the object to return the original type

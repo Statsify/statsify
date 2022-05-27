@@ -9,7 +9,8 @@
       "#arguments": ["./arguments"],
       "#components": ["./components"],
       "#profiles/*": ["./profiles/*"],
-      "#services": ["./services"]
+      "#services": ["./services"],
+      "#constants": ["./constants"]
     }
   },
   "include": ["src"]
