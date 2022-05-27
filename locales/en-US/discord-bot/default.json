@@ -27,5 +27,9 @@
     "shards": "Shards",
     "opals": "Opals"
   },
+  "cooldown": {
+    "title": "Active Cooldown",
+    "description": "Please wait `{{time}}` before reusing `{{command}}`."
+  },
   "number": "{{value, number}}"
 }

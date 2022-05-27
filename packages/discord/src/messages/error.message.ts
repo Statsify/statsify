@@ -1,4 +1,4 @@
-import { Message } from './base.message';
+import { IMessage, Message } from './base.message';
 import { ActionRowBuilder, ButtonBuilder } from './components';
 import { EmbedBuilder } from './embed';
 import { LocalizationString } from './localize';
@@ -10,6 +10,11 @@ export class ErrorMessage extends Message {
     ...buttons: ButtonBuilder[]
   ) {
     const embed = new EmbedBuilder().title(title).description(description).color(0xff0000);
-    super({ embeds: [embed], components: buttons ? [new ActionRowBuilder(buttons)] : undefined });
+
+    const data: IMessage = { embeds: [embed] };
+
+    if (buttons.length > 0) data.components = [new ActionRowBuilder(buttons)];
+
+    super(data);
   }
 }
