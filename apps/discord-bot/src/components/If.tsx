@@ -3,7 +3,7 @@ import { noop } from '@statsify/util';
 
 export interface IfProps {
   condition: boolean;
-  children: JSX.Children;
+  children: JSX.Children | JSX.Children<() => JSX.Children>;
 }
 
 /**
@@ -17,6 +17,9 @@ export interface IfProps {
  * ```
  */
 export const If: JSX.FC<IfProps> = ({ condition, children }) => {
-  if (condition) return <div>{children}</div>;
+  if (condition) {
+    return <>{typeof children === 'function' ? children() : children}</>;
+  }
+
   return noop();
 };

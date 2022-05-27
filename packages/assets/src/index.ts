@@ -57,4 +57,5 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
   return getImage(`out/backgrounds/${pathOrGame}.png`);
 }
 
-export const getLogo = (size = 26) => getImage(`logos/logo${size}.png`);
+export const getLogo = (premium = false, size = 26) =>
+  getImage(`logos/${premium ? 'premium_' : ''}logo_${size}.png`);

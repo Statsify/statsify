@@ -18,12 +18,20 @@ export abstract class HypixelCommand<T extends ReadonlyArray<any>> {
   ) {}
 
   public async run(context: CommandContext) {
-    const player = await this.apiService.getPlayer(context.option('player'), context.getUser());
-    const skin = await this.apiService.getPlayerSkin(player.uuid);
-    const logo = await getLogo();
+    const user = context.getUser();
+
+    const player = await this.apiService.getWithUser(
+      user,
+      this.apiService.getPlayer,
+      context.option('player')
+    );
+
+    const [logo, skin] = await Promise.all([
+      getLogo(user?.premium),
+      this.apiService.getPlayerSkin(player.uuid),
+    ]);
 
     const { width, height } = this.getDimensions();
-
     const modes = this.getModes();
 
     const pages: PaginateInteractionContentGenerator[] = modes.map((mode) => ({
@@ -39,6 +47,8 @@ export abstract class HypixelCommand<T extends ReadonlyArray<any>> {
               background,
               logo,
               t,
+              premium: user?.premium,
+              badge: player.user?.badge,
             },
             mode
           ),

@@ -8,6 +8,7 @@ import { SidebarlessHeader } from './SidebarlessHeader';
 
 interface SidebarlessHeaderProps {
   skin: Image;
+  badge?: Image;
   name: string;
   children: JSX.ElementNode;
 }
@@ -47,7 +48,7 @@ export type HeaderProps = SidebarHeaderProps | SidebarlessHeaderProps;
 export const Header: JSX.FC<HeaderProps> = (props) => {
   const body = (
     <div direction="column" width="remaining" height="100%">
-      <HeaderNametag name={props.name} />
+      <HeaderNametag name={props.name} badge={props.badge} />
       {props.children}
     </div>
   );

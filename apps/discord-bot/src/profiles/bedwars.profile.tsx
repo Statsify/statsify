@@ -21,6 +21,8 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
   player,
   background,
   logo,
+  premium,
+  badge,
   mode,
   t,
 }) => {
@@ -38,7 +40,7 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} sidebar={sidebar}>
+      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
         <HeaderBody
           title={`§l§cBed§fWars §fStats §r(§r§o${prettify(mode)}§r)`}
           description={`§cBed§fWars §7Level: ${bedwars.levelFormatted}\n${formatProgression(
@@ -71,7 +73,7 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
           <Table.td title={t('stats.bblr')} value={t(stats.bblr)} color="§6" />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} />
+      <Footer logo={logo} premium={premium} />
     </Container>
   );
 };
