@@ -14,16 +14,23 @@ export class BedWarsCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
-    const player = await this.apiService.getPlayer(context.option('player'), context.getUser());
+    const user = context.getUser();
+
+    const player = await this.apiService.getWithUser(
+      user,
+      this.apiService.getPlayer,
+      context.option('player')
+    );
+
     const skin = await this.apiService.getPlayerSkin(player.uuid);
 
-    const width = 860;
+    const width = 870;
     const height = 580;
 
     const modes = ['overall'] as const;
 
     const background = await getBackground('bedwars', 'overall');
-    const logo = await getLogo();
+    const logo = await getLogo(user?.premium);
 
     const images = await Promise.all(
       modes.map((mode) =>
@@ -34,6 +41,8 @@ export class BedWarsCommand {
             skin={skin}
             mode={mode}
             logo={logo}
+            badge={user?.badge}
+            premium={user?.premium}
             t={context.t()}
           />,
           width,

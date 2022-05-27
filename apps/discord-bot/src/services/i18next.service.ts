@@ -1,3 +1,4 @@
+import { abbreviationNumber } from '@statsify/util';
 import { readdir } from 'fs/promises';
 import i18next from 'i18next';
 import Backend from 'i18next-fs-backend';
@@ -35,6 +36,8 @@ export class I18NextService {
     switch (format) {
       case 'number': {
         const digits = Number.isInteger(+value) ? 0 : 2;
+
+        if ((value as number) >= 1_000_000) return abbreviationNumber(value);
 
         return Intl.NumberFormat(lng, {
           maximumFractionDigits: digits,

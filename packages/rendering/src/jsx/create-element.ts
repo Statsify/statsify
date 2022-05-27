@@ -2,6 +2,8 @@ import { elementToNode } from './convert';
 import { IntrinsicElement, intrinsicElements } from './instrinsics';
 import type { ElementNode, FC } from './types';
 
+export const Fragment: FC = ({ children }) => children as unknown as null;
+
 type Element = ElementNode | string | number | null;
 
 export const createElement = (

@@ -65,6 +65,8 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
   player,
   background,
   logo,
+  premium,
+  badge,
   mode,
   t,
 }) => {
@@ -83,7 +85,7 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} sidebar={sidebar}>
+      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
         <HeaderBody
           title={`§l§bSky§eWars §fStats §r(§o${prettify(mode)}§r)`}
           description={`§bSky§eWars §7Level: ${skywars.levelFormatted}\n${formatProgression(
@@ -99,7 +101,7 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
         <SkyWarsModeTable width="50%" mode="insane" modeStats={modeStats} t={t} />
         <SkyWarsModeTable width="50%" mode="normal" modeStats={modeStats} t={t} />
       </div>
-      <Footer logo={logo} />
+      <Footer logo={logo} premium={premium} />
     </Container>
   );
 };
