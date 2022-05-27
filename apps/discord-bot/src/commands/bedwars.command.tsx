@@ -15,10 +15,16 @@ export class BedWarsCommand {
 
   public async run(context: CommandContext) {
     const user = context.getUser();
-    const player = await this.apiService.getPlayer(context.option('player'), user);
+
+    const player = await this.apiService.getWithUser(
+      user,
+      this.apiService.getPlayer,
+      context.option('player')
+    );
+
     const skin = await this.apiService.getPlayerSkin(player.uuid);
 
-    const width = 860;
+    const width = 870;
     const height = 580;
 
     const modes = ['overall'] as const;
@@ -35,6 +41,7 @@ export class BedWarsCommand {
             skin={skin}
             mode={mode}
             logo={logo}
+            badge={user?.badge}
             premium={user?.premium}
             t={context.t()}
           />,

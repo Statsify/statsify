@@ -171,5 +171,11 @@ export const formatTime = (
     .join(', ');
 };
 
+export const abbreviationNumber = (num: number): string => {
+  const abbreviation = ['', '', 'M', 'B', 'T'];
+  const base = Math.floor(Math.log(num) / Math.log(1000));
+  return `${(num / Math.pow(1000, base)).toFixed(2)}${abbreviation[base]}`;
+};
+
 export * from './flat';
 export * from './minecraft-colors';

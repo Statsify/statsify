@@ -15,10 +15,16 @@ export class SkyWarsCommand {
 
   public async run(context: CommandContext) {
     const user = context.getUser();
-    const player = await this.apiService.getPlayer(context.option('player'), user);
+
+    const player = await this.apiService.getWithUser(
+      user,
+      this.apiService.getPlayer,
+      context.option('player')
+    );
+
     const skin = await this.apiService.getPlayerSkin(player.uuid);
 
-    const width = 860;
+    const width = 870;
     const height = 780;
 
     const modes = ['overall'] as const;
@@ -36,6 +42,7 @@ export class SkyWarsCommand {
             mode={mode}
             logo={logo}
             premium={user?.premium}
+            badge={player.user?.badge}
             t={context.t()}
           />,
           width,

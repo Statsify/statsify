@@ -4,7 +4,7 @@ import { Background } from './Background';
 
 interface BaseContainerProps {
   /**
-   * @default 95
+   * @default 97
    * @description The percent size of the container. The number should be 1-100.
    */
   percent?: number;
@@ -65,7 +65,7 @@ export type ContainerProps = DefinedSizeContainerProps | UndefinedSizeContainerP
  * ```
  */
 export const Container: JSX.FC<ContainerProps> = (props) => {
-  const percent = props.percent ?? 95;
+  const percent = props.percent ?? 97;
   const containerWidth =
     'width' in props ? (props.width * percent) / 100 : (`${percent}%` as const);
   const containerHeight =
