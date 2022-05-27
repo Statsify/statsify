@@ -32,7 +32,7 @@ export class MongoLeaderboardService {
       if (!item) return null;
 
       const flatItem = flatten(item);
-      const value = flatItem[field] as number;
+      const value = flatItem[field] as unknown as number;
 
       if (!value) return null;
 
@@ -121,7 +121,7 @@ export class MongoLeaderboardService {
 
       if (!item) return null;
 
-      value = flatten(item)[field] as number;
+      value = flatten(item)[field] as unknown as number;
     } else {
       value = valueOrFilter;
     }

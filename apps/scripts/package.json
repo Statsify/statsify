@@ -15,7 +15,7 @@
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/core": "^1.2.189",
+    "@swc/core": "^1.2.194",
     "chalk": "^5.0.1",
     "chokidar": "^3.5.3",
     "dotenv": "^16.0.1",

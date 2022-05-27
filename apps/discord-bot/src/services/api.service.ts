@@ -7,10 +7,10 @@ import {
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from '@statsify/api-client';
-import { ErrorMessage } from '@statsify/discord';
 import { User } from '@statsify/schemas';
 import short from 'short-uuid';
 import { Service } from 'typedi';
+import { ErrorMessage } from '../error.message';
 
 type PlayerTag = 'username' | 'uuid' | 'discordId' | 'none';
 

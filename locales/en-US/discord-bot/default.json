@@ -31,5 +31,25 @@
     "title": "Active Cooldown",
     "description": "Please wait `{{time}}` before reusing `{{command}}`."
   },
+  "verification": {
+    "alreadyVerified": {
+      "title": "Hello World",
+      "description": "You have already verified your account."
+    },
+    "noCode": {
+      "title": "Hello World",
+      "description": "You have not entered a verification code."
+    },
+    "invalidCode": {
+      "title": "Hello World",
+      "description": "The verification code you entered is invalid."
+    },
+    "notVerified": {
+      "title": "Hello World",
+      "description": "You have not verified your account to unverify it."
+    },
+    "successfulVerification": "You verified your account to {{displayName}}",
+    "successfulUnverification": "You are now unverified"
+  },
   "number": "{{value, number}}"
 }

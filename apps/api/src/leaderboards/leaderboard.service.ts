@@ -22,14 +22,14 @@ export class LeaderboardService {
     const id = instance[idField] as unknown as string;
 
     fields
-      .filter((field) => remove || (instance[field] && typeof instance[field] === 'number'))
+      .filter((field) => remove || typeof instance[field] === 'number')
       .forEach((field) => {
-        const value = instance[field];
+        const value = instance[field] as unknown as number;
 
         if (remove || value === 0 || Number.isNaN(value)) {
           pipeline.zrem(`${name}.${String(field)}`, id);
         } else {
-          pipeline.zadd(`${name}.${String(field)}`, value as string, id);
+          pipeline.zadd(`${name}.${String(field)}`, value, id);
         }
       });
 
