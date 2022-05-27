@@ -4,6 +4,8 @@ import { SpeedUHCMastery } from './mastery';
 import { SpeedUHCMode } from './mode';
 import { getLevelIndex, titleScores } from './util';
 
+export const SPEED_UHC_MODES = ['overall', 'solo', 'teams'] as const;
+
 export class SpeedUHC {
   @Field()
   public overall: SpeedUHCMode;

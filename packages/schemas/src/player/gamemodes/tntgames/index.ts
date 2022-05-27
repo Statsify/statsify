@@ -3,6 +3,8 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { BowSpleef, PVPRun, TNTRun, TNTTag, Wizards } from './mode';
 
+export const TNT_GAMES_MODES = ['tntRun', 'pvpRun', 'bowSpleef', 'wizards', 'tntTag'] as const;
+
 export class TNTGames {
   @Field()
   public coins: number;

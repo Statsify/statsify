@@ -2,6 +2,8 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { SmashHeroesMode } from './mode';
 
+export const SMASH_HEROES_MODES = ['overall', 'solo', 'teams'] as const;
+
 export class SmashHeroes {
   @Field()
   public overall: SmashHeroesMode;

@@ -8,11 +8,12 @@ import {
   Table,
 } from '#components';
 import { JSX } from '@statsify/rendering';
+import { BEDWARS_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from './base.profile';
 
 export interface BedWarsProfileProps extends BaseProfileProps {
-  mode: 'overall' | 'solo' | 'doubles' | 'threes' | 'fours' | '4v4';
+  mode: typeof BEDWARS_MODES[number];
 }
 
 export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({

@@ -5,6 +5,17 @@ import { Progression } from '../../../progression';
 import { WoolWarsClass } from './class';
 import { getExpReq, getFormattedLevel, getLevel } from './util';
 
+export const WOOL_WARS_MODES = [
+  'overall',
+  'tank',
+  'archer',
+  'builder',
+  'swordsman',
+  'engineer',
+  'golem',
+  'assault',
+] as const;
+
 export class WoolWars {
   @Field()
   public coins: number;

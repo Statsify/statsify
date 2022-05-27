@@ -2,6 +2,8 @@ import { ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 
+export const WALLS_MODES = ['overall'] as const;
+
 export class Walls {
   @Field()
   public coins: number;

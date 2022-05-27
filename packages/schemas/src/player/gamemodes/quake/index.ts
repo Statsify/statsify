@@ -3,6 +3,7 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { QuakeMode } from './mode';
 
+export const QUAKE_MODES = ['overall', 'solo', 'teams'] as const;
 const indexes = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
 
 export class Quake {

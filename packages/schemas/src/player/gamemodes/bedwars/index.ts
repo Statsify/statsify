@@ -6,6 +6,27 @@ import { Progression } from '../../../progression';
 import { BedWarsMode, ChallengesBedWars, DreamsBedWars } from './mode';
 import { getExpReq, getFormattedLevel, getLevel } from './util';
 
+export const BEDWARS_MODES = [
+  'overall',
+  'core',
+  'solo',
+  'doubles',
+  'threes',
+  'fours',
+  '4v4',
+] as const;
+
+export const DREAMS_BEDWARS_MODES = [
+  'armed',
+  'castle',
+  'lucky',
+  'rush',
+  'swap',
+  'ultimate',
+  'underworld',
+  'voidless',
+] as const;
+
 export class BedWars {
   @Field()
   public coins: number;

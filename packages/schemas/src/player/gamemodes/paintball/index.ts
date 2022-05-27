@@ -3,6 +3,8 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { PaintballPerks } from './perks';
 
+export const PAINTBALL_MODES = ['overall'] as const;
+
 export class Paintball {
   @Field()
   public coins: number;

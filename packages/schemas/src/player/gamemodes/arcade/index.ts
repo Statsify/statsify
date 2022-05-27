@@ -20,6 +20,26 @@ import {
   Zombies,
 } from './mode';
 
+export const ARCADE_MODES = [
+  'blockingDead',
+  'bountyHunters',
+  'captureTheWool',
+  'dragonWars',
+  'enderSpleef',
+  'farmHunt',
+  'football',
+  'galaxyWars',
+  'hideAndSeek',
+  'holeInTheWall',
+  'hypixelSays',
+  'miniWalls',
+  'partyGames',
+  'pixelPainters',
+  'seasonal',
+  'throwOut',
+  'zombies',
+] as const;
+
 export class Arcade {
   @Field()
   public coins: number;
@@ -68,6 +88,7 @@ export class Arcade {
 
   @Field()
   public seasonal: Seasonal;
+
   @Field()
   public throwOut: ThrowOut;
 

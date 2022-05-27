@@ -6,6 +6,8 @@ import { Progression } from '../../../progression';
 import { SkyWarsGameMode, SkyWarsLabs, SkyWarsMode } from './mode';
 import { getFormattedLevel, getLevel, getLevelProgress, getPresColor, parseKit } from './util';
 
+export const SKYWARS_MODES = ['overall', 'solo', 'doubles'] as const;
+
 export class SkyWars {
   @Field()
   public xp: number;

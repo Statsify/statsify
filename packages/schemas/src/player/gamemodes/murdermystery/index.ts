@@ -3,6 +3,14 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { MurderMysteryMode } from './mode';
 
+export const MURDER_MYSTERY_MODES = [
+  'overall',
+  'classic',
+  'assassins',
+  'doubleUp',
+  'infection',
+] as const;
+
 export class MurderMystery {
   @Field()
   public coins: number;

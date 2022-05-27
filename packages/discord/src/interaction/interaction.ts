@@ -1,4 +1,4 @@
-import { APIGuildMember, InteractionType } from 'discord-api-types/v10';
+import { APIGuildMember, ComponentType, InteractionType } from 'discord-api-types/v10';
 import type {
   Interaction as DiscordInteraction,
   InteractionResponse,
@@ -27,6 +27,19 @@ export class Interaction {
 
   public isMessageComponentInteraction() {
     return this.data.type === InteractionType.MessageComponent;
+  }
+
+  public isButtonInteraction() {
+    return (
+      this.isMessageComponentInteraction() && this.getData().component_type === ComponentType.Button
+    );
+  }
+
+  public isSelectMenuInteraction() {
+    return (
+      this.isMessageComponentInteraction() &&
+      this.getData().component_type === ComponentType.SelectMenu
+    );
   }
 
   public isModalInteraction() {

@@ -4,6 +4,8 @@ import { Field } from '../../../metadata';
 import { UHCMode } from './mode';
 import { getLevelIndex, titleScores } from './util';
 
+export const UHC_MODES = ['overall', 'solo', 'teams'] as const;
+
 export class UHC {
   @Field()
   public overall: UHCMode;
