@@ -6,5 +6,6 @@ export interface BaseProfileProps {
   skin: Image;
   player: Player;
   background: Image;
+  logo: Image;
   t: LocalizeFunction;
 }
