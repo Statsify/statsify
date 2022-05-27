@@ -43,11 +43,11 @@ const textColors = Object.fromEntries(
   minecraftColors.map((color) => [color.code.replace('§', ''), hexToRgb(color.hex)])
 );
 
-const colorRegex = new RegExp(`^${Object.keys(textColors).join('|^')}`);
+const colorRegex = new RegExp(`^${Object.keys(textColors).join('|^')}|^#([A-Fa-f0-9]{6})`);
 
 const color: Token = {
   regex: colorRegex,
-  effect: (part) => ({ color: textColors[part[0]] }),
+  effect: (part) => ({ color: part.startsWith('#') ? hexToRgb(part) : textColors[part[0]] }),
 };
 
 const size: Token = {

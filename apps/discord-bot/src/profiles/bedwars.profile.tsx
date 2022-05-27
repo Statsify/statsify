@@ -1,4 +1,12 @@
-import { Container, formatProgression, Header, HeaderBody, SidebarItem, Table } from '#components';
+import {
+  Container,
+  Footer,
+  formatProgression,
+  Header,
+  HeaderBody,
+  SidebarItem,
+  Table,
+} from '#components';
 import { JSX } from '@statsify/rendering';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from './base.profile';
@@ -11,6 +19,7 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
   skin,
   player,
   background,
+  logo,
   mode,
   t,
 }) => {
@@ -61,6 +70,7 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
           <Table.td title={t('stats.bblr')} value={t(stats.bblr)} color="§6" />
         </Table.tr>
       </Table.table>
+      <Footer logo={logo} />
     </Container>
   );
 };

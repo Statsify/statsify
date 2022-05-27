@@ -14,12 +14,14 @@ export interface ImageRenderProps {
 export interface ImageProps extends ImageRenderProps {
   width?: JSX.Measurement;
   height?: JSX.Measurement;
+  margin?: JSX.Spacing;
 }
 
 export const component: JSX.RawFC<ImageProps> = ({
   image,
   height = image.height,
   width = image.width,
+  margin,
   crop,
   children,
 }) => ({
@@ -27,6 +29,7 @@ export const component: JSX.RawFC<ImageProps> = ({
   dimension: {
     width,
     height,
+    margin,
   },
   style: { location: 'center', direction: 'row', align: 'center' },
   props: { image, crop },

@@ -21,7 +21,9 @@ export const importAsset = async <T>(file: string): Promise<T | null> => {
   return import(join('../', PRIVATE_PATH, file));
 };
 
-export const getImagePath = (imagePath: string) => join(PATH, checkAsset(imagePath), imagePath);
+export const getAssetPath = (path: string) => join(PATH, checkAsset(path), path);
+
+export const getImage = (path: string) => loadImage(getAssetPath(path));
 
 /**
  *
@@ -29,28 +31,30 @@ export const getImagePath = (imagePath: string) => join(PATH, checkAsset(imagePa
  * @returns the full path to the texture
  */
 export const getMinecraftTexturePath = (texturePath: string) =>
-  join(getImagePath(`minecraft-textures/assets/minecraft/`), texturePath);
+  join(getAssetPath(`minecraft-textures/assets/minecraft/`), texturePath);
 
 let backgrounds: string[] = [];
 
 function getBackgroundPaths() {
   if (backgrounds.length) return backgrounds;
-  backgrounds = readdirSync(getImagePath('out/backgrounds'));
+  backgrounds = readdirSync(getAssetPath('out/backgrounds'));
   return backgrounds;
 }
 
 export function getBackground(path: string): Promise<Image>;
 export function getBackground(game: string, mode: string): Promise<Image>;
 export function getBackground(pathOrGame: string, mode?: string): Promise<Image> {
-  if (!hasPrivateAssets) return loadImage(getImagePath('out/backgrounds/background.png'));
+  if (!hasPrivateAssets) return getImage('out/backgrounds/background.png');
 
   if (typeof mode === 'string') {
     const path = `${pathOrGame}_${mode}_`;
     const backgrounds = getBackgroundPaths().filter((p) => p.startsWith(path));
     const background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
-    return loadImage(getImagePath(`out/backgrounds/${background}`));
+    return getImage(`out/backgrounds/${background}`);
   }
 
-  return loadImage(getImagePath(`out/backgrounds/${pathOrGame}.png`));
+  return getImage(`out/backgrounds/${pathOrGame}.png`);
 }
+
+export const getLogo = (size = 26) => getImage(`logos/logo${size}.png`);
