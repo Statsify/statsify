@@ -8,6 +8,7 @@ declare global {
       DISCORD_BOT_TOKEN: string;
       DISCORD_BOT_APPLICATION_ID: string;
       DISCORD_BOT_GUILD?: string;
+      CORE_IDS?: string;
     }
   }
 }
