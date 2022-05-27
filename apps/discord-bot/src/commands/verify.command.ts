@@ -1,4 +1,4 @@
-import { TextArgument } from '#arguments';
+import { NumberArgument } from '#arguments';
 import { SUCCESS_COLOR } from '#constants';
 import { ApiService } from '#services';
 import { Command, CommandContext, EmbedBuilder, IMessage } from '@statsify/discord';
@@ -6,7 +6,7 @@ import { ErrorMessage } from '../error.message';
 
 @Command({
   description: 'Displays a message',
-  args: [new TextArgument('code', 'HI', false)],
+  args: [new NumberArgument('code', 1000, 9999)],
   cooldown: 5,
 })
 export class VerifyCommand {
@@ -22,7 +22,7 @@ export class VerifyCommand {
         (t) => t('verification.alreadyVerified.description')
       );
 
-    const code = context.option<string>('code');
+    const code = context.option<number>('code');
 
     if (!code)
       throw new ErrorMessage(
@@ -30,7 +30,7 @@ export class VerifyCommand {
         (t) => t('verification.noCode.description')
       );
 
-    user = await this.apiService.verifyUser(code, userId);
+    user = await this.apiService.verifyUser(`${code}`, userId);
 
     if (!user)
       throw new ErrorMessage(
