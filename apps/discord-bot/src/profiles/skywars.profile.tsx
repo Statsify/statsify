@@ -1,5 +1,6 @@
 import {
   Container,
+  Footer,
   formatProgression,
   Header,
   HeaderBody,
@@ -63,6 +64,7 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
   skin,
   player,
   background,
+  logo,
   mode,
   t,
 }) => {
@@ -81,24 +83,23 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
 
   return (
     <Container background={background}>
-      <div direction="column">
-        <Header skin={skin} name={player.prefixName} sidebar={sidebar}>
-          <HeaderBody
-            title={`§l§bSky§eWars §fStats §r(§o${prettify(mode)}§r)`}
-            description={`§bSky§eWars §7Level: ${skywars.levelFormatted}\n${formatProgression(
-              t,
-              skywars.levelProgression,
-              skywars.levelFormatted,
-              skywars.nextLevelFormatted
-            )}`}
-          />
-        </Header>
-        <SkyWarsModeTable mode="overall" modeStats={modeStats} t={t} />
-        <div direction="row">
-          <SkyWarsModeTable width="50%" mode="insane" modeStats={modeStats} t={t} />
-          <SkyWarsModeTable width="50%" mode="normal" modeStats={modeStats} t={t} />
-        </div>
+      <Header skin={skin} name={player.prefixName} sidebar={sidebar}>
+        <HeaderBody
+          title={`§l§bSky§eWars §fStats §r(§o${prettify(mode)}§r)`}
+          description={`§bSky§eWars §7Level: ${skywars.levelFormatted}\n${formatProgression(
+            t,
+            skywars.levelProgression,
+            skywars.levelFormatted,
+            skywars.nextLevelFormatted
+          )}`}
+        />
+      </Header>
+      <SkyWarsModeTable mode="overall" modeStats={modeStats} t={t} />
+      <div direction="row">
+        <SkyWarsModeTable width="50%" mode="insane" modeStats={modeStats} t={t} />
+        <SkyWarsModeTable width="50%" mode="normal" modeStats={modeStats} t={t} />
       </div>
+      <Footer logo={logo} />
     </Container>
   );
 };

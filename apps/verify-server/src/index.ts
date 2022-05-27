@@ -1,4 +1,4 @@
-import { getImagePath } from '@statsify/assets';
+import { getAssetPath } from '@statsify/assets';
 import { Logger } from '@statsify/logger';
 import { VerifyCode } from '@statsify/schemas';
 import { formatTime } from '@statsify/util';
@@ -26,7 +26,7 @@ async function bootstrap() {
 
   const verifyCodesModel = getModelForClass(VerifyCode);
 
-  const serverLogo = readFileSync(getImagePath('logos/logo64.png'), { encoding: 'base64' });
+  const serverLogo = readFileSync(getAssetPath('logos/logo64.png'), { encoding: 'base64' });
 
   const server = createServer({
     host: process.env.VERIFY_SERVER_IP,

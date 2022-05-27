@@ -1,4 +1,4 @@
-import { getBackground } from '@statsify/assets';
+import { getBackground, getLogo } from '@statsify/assets';
 import { Command, CommandContext } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
 import { PlayerArgument } from '../arguments';
@@ -18,11 +18,12 @@ export class SkyWarsCommand {
     const skin = await this.apiService.getPlayerSkin(player.uuid);
 
     const width = 860;
-    const height = 750;
+    const height = 780;
 
     const modes = ['overall'] as const;
 
     const background = await getBackground('skywars', 'overall');
+    const logo = await getLogo();
 
     const images = await Promise.all(
       modes.map((mode) =>
@@ -32,6 +33,7 @@ export class SkyWarsCommand {
             player={player}
             skin={skin}
             mode={mode}
+            logo={logo}
             t={context.t()}
           />,
           width,
