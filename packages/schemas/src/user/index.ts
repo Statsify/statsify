@@ -20,5 +20,8 @@ export class User {
   public locale?: string;
 
   @Field({ store: { required: false } })
+  public serverMember?: boolean;
+
+  @Field({ store: { required: false } })
   public premium?: boolean;
 }
