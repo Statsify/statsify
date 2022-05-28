@@ -28,6 +28,7 @@ export class I18NextService {
       defaultNS: 'default',
       interpolation: {
         format: this.format,
+        escapeValue: false,
       },
     });
   }

@@ -1,4 +1,4 @@
-import { add, deepSub, roundTo } from '@statsify/math';
+import { add, deepSub } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Color, ColorCode } from '../../../color';
 import { Field } from '../../../metadata';
@@ -91,7 +91,7 @@ export class BedWars {
   public constructor(data: APIData = {}) {
     this.coins = data.coins;
     this.exp = data.Experience || 0;
-    this.level = roundTo(getLevel(this.exp));
+    this.level = getLevel(this.exp);
     this.levelFormatted = getFormattedLevel(this.level);
     this.nextLevelFormatted = getFormattedLevel(this.level + 1);
 
