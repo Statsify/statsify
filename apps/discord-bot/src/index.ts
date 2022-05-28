@@ -1,16 +1,15 @@
+import { FontLoaderService, I18nLoaderService } from '#services';
 import { CommandLoader, CommandPoster } from '@statsify/discord';
-import { config } from 'dotenv';
 import path from 'path';
 import 'reflect-metadata';
 import { InteractionServer, RestClient, WebsocketShard } from 'tiny-discord';
+import Container from 'typedi';
 import { CommandListener } from './command.listener';
-import { FontService, I18NextService } from './services';
-
-config({ path: '../../.env' });
 
 async function bootstrap() {
-  await I18NextService.init();
-  await FontService.init();
+  await Promise.all(
+    [I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init())
+  );
 
   const rest = new RestClient({ token: process.env.DISCORD_BOT_TOKEN });
   const commands = await CommandLoader.load(path.join(__dirname, './commands'));

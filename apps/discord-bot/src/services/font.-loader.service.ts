@@ -1,13 +1,14 @@
 import { getMinecraftTexturePath } from '@statsify/assets';
 import { FontRenderer } from '@statsify/rendering';
-import Container from 'typedi';
+import Container, { Service } from 'typedi';
 
 const renderer = new FontRenderer();
 
 Container.set(FontRenderer, renderer);
 
-export class FontService {
-  public static async init() {
+@Service()
+export class FontLoaderService {
+  public async init() {
     await renderer.loadImages(getMinecraftTexturePath('textures/font'));
   }
 }

@@ -5,7 +5,7 @@ import { Command, CommandContext, EmbedBuilder, IMessage } from '@statsify/disco
 import { ErrorMessage } from '../error.message';
 
 @Command({
-  description: 'Displays a message',
+  description: (t) => t('commands.verify'),
   args: [new NumberArgument('code', 1000, 9999)],
   cooldown: 5,
 })

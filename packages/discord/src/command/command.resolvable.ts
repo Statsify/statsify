@@ -1,5 +1,7 @@
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord-api-types/v10';
+import i18next from 'i18next';
 import { AbstractArgument } from '../arguments';
+import { translateField, translateToAllLanguages } from '../messages/localize';
 import type { CommandContext } from './command.context';
 import type { CommandMetadata } from './command.interface';
 
@@ -11,9 +13,10 @@ export class CommandResolvable {
   public name: string;
   public description: string;
   public options?: any[];
+  public description_localizations: Record<string, string>;
+
   public args: AbstractArgument[];
   public cooldown: number;
-
   private target: any;
   private methodName: string;
 
@@ -22,7 +25,9 @@ export class CommandResolvable {
     target: any
   ) {
     this.name = name;
-    this.description = description;
+    this.description = translateField(i18next.getFixedT('en-US'), description);
+    this.description_localizations = translateToAllLanguages(description);
+
     this.type = ApplicationCommandType.ChatInput;
     this.cooldown = cooldown;
 
@@ -61,6 +66,7 @@ export class CommandResolvable {
     return {
       name: this.name,
       description: this.description,
+      description_localizations: this.description_localizations,
       type: this.type,
       options: this.options?.map((o) => (o.toJSON ? o.toJSON() : o)),
     };

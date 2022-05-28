@@ -28,6 +28,21 @@
     "shards": "Shards",
     "opals": "Opals"
   },
+  "commands": {
+    "bedwars": "Bedwars command",
+    "skywars": "Skywars command",
+    "verify": "Verify command",
+    "unverify": "Unverify command"
+  },
+  "arguments": {
+    "choice": "Choice",
+    "guild-query": "Guild query",
+    "mojang-player": "Mojang player",
+    "number": "Number",
+    "player-leaderboard": "Player leaderboard",
+    "player": "player",
+    "text": "text"
+  },
   "cooldown": {
     "title": "Active Cooldown",
     "description": "Please wait `{{time}}` before reusing `{{command}}`."

@@ -27,5 +27,8 @@
     "shards": "Fragments",
     "opals": "Opales"
   },
+  "commands": {
+    "bedwars": "Bedwars2222222 command"
+  },
   "number": "{{value, number}}"
 }

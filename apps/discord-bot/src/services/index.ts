@@ -1,4 +1,4 @@
 export * from './api.service';
-export * from './font.service';
-export * from './i18next.service';
+export * from './font.-loader.service';
+export * from './i18n-loader.service';
 export * from './paginate.service';

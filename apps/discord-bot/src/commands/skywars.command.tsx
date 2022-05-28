@@ -5,7 +5,7 @@ import { JSX } from '@statsify/rendering';
 import { SKYWARS_MODES } from '@statsify/schemas';
 import { HypixelCommand } from './base.hypixel-command';
 
-@Command({ description: 'Displays this message.' })
+@Command({ description: (t) => t('commands.skywars') })
 export class SkyWarsCommand extends HypixelCommand<typeof SKYWARS_MODES> {
   public getDimensions(): { width: number; height: number } {
     return {

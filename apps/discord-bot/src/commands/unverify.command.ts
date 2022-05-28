@@ -3,7 +3,7 @@ import { ApiService } from '#services';
 import { Command, CommandContext, EmbedBuilder, IMessage } from '@statsify/discord';
 import { ErrorMessage } from '../error.message';
 
-@Command({ description: 'Displays a message', cooldown: 5 })
+@Command({ description: (t) => t('commands.unverify'), cooldown: 5 })
 export class UnverifyCommand {
   public constructor(private readonly apiService: ApiService) {}
 

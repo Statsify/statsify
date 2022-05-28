@@ -1,4 +1,4 @@
-import { AbstractArgument, CommandContext } from '@statsify/discord';
+import { AbstractArgument, CommandContext, LocalizationString } from '@statsify/discord';
 import { LeaderboardScanner, Player } from '@statsify/schemas';
 import {
   APIApplicationCommandOptionChoice,
@@ -11,10 +11,15 @@ const fields = LeaderboardScanner.getLeaderboardMetadata(Player).map(([key]) =>
 
 export class PlayerLeaderboardArgument extends AbstractArgument {
   public name = 'leaderboard';
-  public description = 'Shows the leaderboard for the given metric.';
+  public description: LocalizationString;
   public type = ApplicationCommandOptionType.String;
   public required = true;
   public autocomplete = true;
+
+  public constructor() {
+    super();
+    this.description = (t) => t('arguments.player-leaderboard');
+  }
 
   public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, '').toLowerCase().split(' ');

@@ -9,6 +9,7 @@ describe('CommandBuilder', () => {
     expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
       name: 'test',
       description: 'test',
+      description_localizations: {},
       type: ApplicationCommandType.ChatInput,
       options: [],
     });
@@ -26,11 +27,13 @@ describe('CommandBuilder', () => {
     expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
       name: 'test',
       description: 'test',
+      description_localizations: {},
       type: ApplicationCommandType.ChatInput,
       options: [
         {
           name: 'subcommand',
           description: 'test',
+          description_localizations: {},
           type: ApplicationCommandOptionType.Subcommand,
           options: [],
         },
@@ -49,10 +52,12 @@ describe('CommandBuilder', () => {
       name: 'test',
       description: 'test',
       type: ApplicationCommandType.ChatInput,
+      description_localizations: {},
       options: [
         {
           name: 'group',
           description: 'test',
+          description_localizations: {},
           type: ApplicationCommandOptionType.SubcommandGroup,
           options: [],
         },
@@ -75,16 +80,19 @@ describe('CommandBuilder', () => {
     expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
       name: 'test',
       description: 'test',
+      description_localizations: {},
       type: ApplicationCommandType.ChatInput,
       options: [
         {
           name: 'group',
           description: 'test',
+          description_localizations: {},
           type: ApplicationCommandOptionType.SubcommandGroup,
           options: [
             {
               name: 'subcommand',
               description: 'test',
+              description_localizations: {},
               type: ApplicationCommandOptionType.Subcommand,
               options: [],
             },
@@ -108,8 +116,17 @@ describe('CommandBuilder', () => {
     expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
       name: 'test',
       description: 'test',
+      description_localizations: {},
       type: ApplicationCommandType.ChatInput,
-      options: [new Arg()],
+      options: [
+        {
+          name: 'test',
+          description: 'test',
+          description_localizations: {},
+          type: ApplicationCommandOptionType.String,
+          required: true,
+        },
+      ],
     });
   });
 });
