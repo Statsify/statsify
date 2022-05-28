@@ -1,4 +1,4 @@
-import { AbstractArgument } from '@statsify/discord';
+import { AbstractArgument, LocalizationString } from '@statsify/discord';
 import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 
 export class TextArgument extends AbstractArgument {
@@ -6,7 +6,7 @@ export class TextArgument extends AbstractArgument {
 
   public constructor(
     public name = 'content',
-    public description = 'Text input',
+    public description: LocalizationString = (t) => t('arguments.text'),
     public required = true
   ) {
     super();

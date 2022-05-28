@@ -1,4 +1,4 @@
-import {
+import i18next, {
   StringMap,
   TFunctionDetailedResult,
   TFunctionKeys,
@@ -94,4 +94,13 @@ export const translateObject = <T extends Record<string, LocalizationString | an
   }
 
   return obj;
+};
+
+export const translateToAllLanguages = (key: LocalizationString): Record<string, string> => {
+  if (!Array.isArray(i18next.options.preload)) return {};
+
+  return i18next.options.preload.reduce(
+    (acc, lang) => ({ ...acc, [lang]: translateField(i18next.getFixedT(lang), key) }),
+    {}
+  );
 };

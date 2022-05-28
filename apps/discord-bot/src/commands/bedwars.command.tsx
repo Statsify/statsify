@@ -5,7 +5,7 @@ import { JSX } from '@statsify/rendering';
 import { BEDWARS_MODES } from '@statsify/schemas';
 import { HypixelCommand } from './base.hypixel-command';
 
-@Command({ description: 'Displays this message.' })
+@Command({ description: (t) => t('commands.bedwars') })
 export class BedWarsCommand extends HypixelCommand<typeof BEDWARS_MODES> {
   public getDimensions(): { width: number; height: number } {
     return {

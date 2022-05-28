@@ -3,7 +3,10 @@ import type {
   ApplicationCommandOptionType,
   ChannelType,
 } from 'discord-api-types/v10';
+import i18next from 'i18next';
 import type { CommandContext } from '../command';
+import { LocalizationString } from '../messages';
+import { translateField, translateToAllLanguages } from '../messages/localize';
 
 export interface AbstractArgument {
   autocompleteHandler?(context: CommandContext): APIApplicationCommandOptionChoice[];
@@ -11,7 +14,7 @@ export interface AbstractArgument {
 
 export abstract class AbstractArgument {
   public abstract name: string;
-  public abstract description: string;
+  public abstract description: LocalizationString;
   public abstract type: ApplicationCommandOptionType;
   public abstract required: boolean;
   public choices?: APIApplicationCommandOptionChoice[];
@@ -19,4 +22,21 @@ export abstract class AbstractArgument {
   public min_value?: number;
   public max_value?: number;
   public autocomplete?: boolean;
+
+  public toJSON() {
+    const description = translateField(i18next.getFixedT('en-US'), this.description);
+
+    return {
+      name: this.name,
+      description,
+      description_localizations: translateToAllLanguages(this.description),
+      type: this.type,
+      required: this.required,
+      choices: this.choices,
+      channel_types: this.channel_types,
+      min_value: this.min_value,
+      max_value: this.max_value,
+      autocomplete: this.autocomplete,
+    };
+  }
 }

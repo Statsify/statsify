@@ -1,9 +1,10 @@
 import type { Constructor } from '@statsify/util';
 import type { AbstractArgument } from '../arguments';
+import { LocalizationString } from '../messages';
 
 export interface CommandOptions {
   name?: string;
-  description: string;
+  description: LocalizationString;
   groups?: Constructor<any>[];
   args?: (AbstractArgument | Constructor<AbstractArgument>)[];
   cooldown?: number;
