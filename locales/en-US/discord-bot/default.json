@@ -1,5 +1,6 @@
 {
   "stats": {
+    "winstreak": "Winstreak",
     "wins": "Wins",
     "losses": "Losses",
     "wlr": "WLR",

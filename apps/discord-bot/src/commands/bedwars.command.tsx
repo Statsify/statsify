@@ -10,7 +10,7 @@ export class BedWarsCommand extends HypixelCommand<typeof BEDWARS_MODES> {
   public getDimensions(): { width: number; height: number } {
     return {
       width: 870,
-      height: 580,
+      height: 590,
     };
   }
 

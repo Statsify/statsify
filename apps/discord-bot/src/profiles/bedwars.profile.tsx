@@ -38,6 +38,8 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
     [t('stats.emeralds'), t(stats.itemsCollected.emerald), '§2'],
   ];
 
+  if (stats.winstreak) sidebar.push([t('stats.winstreak'), t(stats.winstreak), '§a']);
+
   return (
     <Container background={background}>
       <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
