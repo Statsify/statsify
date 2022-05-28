@@ -1,6 +1,6 @@
 import { PlayerArgument } from '#arguments';
 import { BaseProfileProps } from '#profiles/base.profile';
-import { ApiService, PaginateInteractionContentGenerator, PaginateService } from '#services';
+import { ApiService, Page, PaginateService } from '#services';
 import { getBackground, getLogo } from '@statsify/assets';
 import { Command, CommandContext } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
@@ -34,7 +34,7 @@ export abstract class HypixelCommand<T extends ReadonlyArray<any>> {
     const { width, height } = this.getDimensions();
     const modes = this.getModes();
 
-    const pages: PaginateInteractionContentGenerator[] = modes.map((mode) => ({
+    const pages: Page[] = modes.map((mode) => ({
       label: prettify(mode),
       generator: async (t) => {
         const background = await getBackground(...this.getBackground(mode));

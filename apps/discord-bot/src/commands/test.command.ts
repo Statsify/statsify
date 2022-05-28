@@ -1,15 +1,21 @@
-import { ApiService } from '#services';
-import { Command } from '@statsify/discord';
+import { PaginateService } from '#services';
+import { Command, CommandContext } from '@statsify/discord';
 
 @Command({ description: 'Hello' })
 export class TestCommand {
-  public constructor(private readonly apiService: ApiService) {}
+  public constructor(private readonly paginateService: PaginateService) {}
 
-  public run() {
-    const ranks = ['§b[MVP§8+§b] j4cobi', '§b[MVP§8++§b] j4cobi', '§c[§fYOUTUBE§c] Manhal_IQ_'];
-
-    return {
-      content: ranks.map((rank) => `${this.apiService.emojiDisplayName(rank)}`).join('\n'),
-    };
+  public run(context: CommandContext) {
+    return this.paginateService.scrollingPagination(context, [
+      () => ({
+        content: 'Hello',
+      }),
+      () => ({
+        content: 'Bye',
+      }),
+      () => ({
+        content: 'EEE',
+      }),
+    ]);
   }
 }
