@@ -58,9 +58,6 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
           <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
           <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
           <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
-          {/* <If condition={Boolean(stats.winstreak)}>
-            <Table.td title={t('stats.winstreak')} value={t(stats.winstreak)} color="§e" />
-          </If> */}
         </Table.tr>
         <Table.tr>
           <Table.td title={t('stats.finalKills')} value={t(stats.finalKills)} color="§a" />
