@@ -52,5 +52,43 @@
     "successfulVerification": "You verified your account to {{displayName}}",
     "successfulUnverification": "You are now unverified"
   },
+  "errors": {
+    "unknown": {
+      "title": "An Unknown Error Occurred",
+      "description": "Something went wrong, please try again later"
+    },
+    "invalidPlayer": {
+      "title": "Invalid Player",
+      "description": "A player by the {{type}} of `{{tag}}` could not be found!"
+    },
+    "invalidSearch": {
+      "title": "Invalid Search",
+      "description": "We couldn't tell what you were looking for!\nPlease enter a username, uuid, or discord mention"
+    },
+    "missingSelfVerification": {
+      "title": "Missing Verification",
+      "description": "You are not verified"
+    },
+    "missingMentionVerification": {
+      "title": "Missing Verification",
+      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account"
+    },
+    "invalidGuild": {
+      "title": "Invalid Guild",
+      "description": "A guild by the {{type}} of `{{tag}}` could not be found!"
+    },
+    "noRankedSkyWars": {
+      "title": "Ranked SkyWars Stats Not Found",
+      "description": "Ranked SkyWars stats for {{displayName}} could not be found!"
+    },
+    "noRecentGames": {
+      "title": "Recent Games Not Found",
+      "description": "Recent games for {{displayName}} could not be found!"
+    },
+    "noStatus": {
+      "title": "Status Not Found",
+      "description": "A status for {{displayName}} could not be found!"
+    }
+  },
   "number": "{{value, number}}"
 }

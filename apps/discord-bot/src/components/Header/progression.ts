@@ -2,7 +2,10 @@ import { LocalizeFunction } from '@statsify/discord';
 import type { Progression } from '@statsify/schemas';
 
 const xpBar = (percentage: number): string => {
-  return `§r§8[§b${'■'.repeat(percentage)}§7${'■'.repeat(10 - percentage)}§8]`;
+  const max = 10;
+  const count = Math.ceil(max * percentage);
+
+  return `§r§8[§b${'■'.repeat(count)}§7${'■'.repeat(max - count)}§8]`;
 };
 
 export const formatProgression = (

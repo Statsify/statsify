@@ -39,11 +39,10 @@ export class VerifyCommand {
       );
 
     const player = await this.apiService.getPlayer(user?.uuid as string);
+    const displayName = this.apiService.emojiDisplayName(player.displayName);
 
     const embed = new EmbedBuilder()
-      .description((t) =>
-        t('verification.successfulVerification', { displayName: player.displayName })
-      )
+      .description((t) => t('verification.successfulVerification', { displayName }))
       .color(SUCCESS_COLOR);
 
     return {
