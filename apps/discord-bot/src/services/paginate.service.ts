@@ -18,22 +18,26 @@ import { CommandListener } from '../command.listener';
 
 type PaginateInteractionContent = IMessage | Message | EmbedBuilder | Canvas;
 
-export type PaginateInteractionContentGenerator = {
+type PaginateInteractionContentGenerator = (
+  t: LocalizeFunction
+) => PaginateInteractionContent | Promise<PaginateInteractionContent>;
+
+export interface Page {
   label: LocalizationString;
-  generator: (
-    t: LocalizeFunction
-  ) => PaginateInteractionContent | Promise<PaginateInteractionContent>;
-};
+  generator: PaginateInteractionContentGenerator;
+}
 
 type PageController = ButtonBuilder[] | [SelectMenuBuilder];
 
 @Service()
 export class PaginateService {
-  public async paginate(
-    context: CommandContext,
-    pages: PaginateInteractionContentGenerator[],
-    timeout = 300000
-  ) {
+  /**
+   *
+   * @param context The context of the command
+   * @param pages The array of pages to paginate against
+   * @param timeout When to stop the pagination (ms), defaults to 300000
+   */
+  public async paginate(context: CommandContext, pages: Page[], timeout = 300000) {
     if (pages.length === 1) return context.reply(await this.getMessage(context, [], 0, pages));
 
     const userId = context.getInteraction().getUserId();
@@ -83,10 +87,73 @@ export class PaginateService {
     context.reply(message);
   }
 
-  private getPageController(
+  /**
+   *
+   * @param context The context of the command
+   * @param pages The array of pages to paginate against
+   * @param index  The starting page
+   * @param timeout When to stop the pagination (ms), defaults to 300000
+   */
+  public async scrollingPagination(
+    context: CommandContext,
     pages: PaginateInteractionContentGenerator[],
-    index: number
-  ): PageController {
+    index = 0,
+    timeout = 300000
+  ) {
+    const userId = context.getInteraction().getUserId();
+    const cache = new Map<number, InteractionContent>();
+
+    const controller = [
+      new ButtonBuilder().label('backward'),
+      new ButtonBuilder().label('forward'),
+    ];
+
+    const listener = CommandListener.getInstance();
+
+    controller.forEach((component, i) => {
+      listener.addInteractionHook(component.getCustomId(), async (interaction) => {
+        let page: number;
+
+        if (i === 0) {
+          //Backwards
+          page = index == 0 ? pages.length - 1 : index - 1;
+        } else {
+          //Forwards
+          page = index == pages.length - 1 ? 0 : index + 1;
+        }
+
+        const message = cache.has(page)
+          ? cache.get(page)!
+          : await this.getMessage(context, controller, page, pages);
+
+        cache.set(page, message);
+
+        if (interaction.getUserId() === userId) {
+          // eslint-disable-next-line require-atomic-updates
+          index = page;
+          return context.reply(message);
+        }
+
+        return interaction.sendFollowup({ ...message, components: [], ephemeral: true });
+      });
+    });
+
+    setTimeout(() => {
+      controller.forEach((component) => listener.removeInteractionHook(component.getCustomId()));
+
+      context.reply({
+        ...cache.get(index)!,
+        components: [],
+      });
+    }, timeout);
+
+    const message = await this.getMessage(context, controller, index, pages);
+    cache.set(index, message);
+
+    context.reply(message);
+  }
+
+  private getPageController(pages: Page[], index: number): PageController {
     if (pages.length > 5) {
       const controller = new SelectMenuBuilder();
 
@@ -113,12 +180,13 @@ export class PaginateService {
     context: CommandContext,
     controller: PageController,
     index: number,
-    pages: PaginateInteractionContentGenerator[]
+    pages: Page[] | PaginateInteractionContentGenerator[]
   ) {
-    this.setActiveControl(controller, index);
-
     const t = context.t();
-    const pageContent = await pages[index].generator(t);
+    const content = pages[index];
+    const isScrolling = typeof content === 'function';
+    const pageContent = await (isScrolling ? content(t) : content.generator(t));
+    if (!isScrolling) this.setActiveControl(controller, index);
 
     let page: Message;
 
