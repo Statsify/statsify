@@ -4,6 +4,7 @@ import { Field } from '../../../metadata';
 import { VampireZLife } from './life';
 
 export const VAMPIREZ_MODES = ['overall', 'human', 'vampire'] as const;
+export type VampireZModes = typeof VAMPIREZ_MODES;
 
 export class VampireZ {
   @Field()

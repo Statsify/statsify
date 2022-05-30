@@ -29,7 +29,7 @@ export class MetadataScanner {
     for (const [key, value] of entries) {
       const path = `${base ? `${base}.` : ''}${key}`;
 
-      if (value.type.primitive) {
+      if (value.type.primitive || value.type.array) {
         metadataEntries.push([path, value]);
         continue;
       }

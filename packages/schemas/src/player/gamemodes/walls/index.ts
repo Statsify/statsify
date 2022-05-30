@@ -3,6 +3,7 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 
 export const WALLS_MODES = ['overall'] as const;
+export type WallsModes = typeof WALLS_MODES;
 
 export class Walls {
   @Field()

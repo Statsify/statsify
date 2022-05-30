@@ -20,6 +20,7 @@ export const DUELS_MODES = [
   'sumo',
   'uhc',
 ] as const;
+export type DuelsModes = typeof DUELS_MODES;
 
 export class Duels {
   @Field({ store: { default: 300 }, leaderboard: { enabled: false } })

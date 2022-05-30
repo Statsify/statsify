@@ -5,6 +5,7 @@ import { UHCMode } from './mode';
 import { getLevelIndex, titleScores } from './util';
 
 export const UHC_MODES = ['overall', 'solo', 'teams'] as const;
+export type UHCModes = typeof UHC_MODES;
 
 export class UHC {
   @Field()

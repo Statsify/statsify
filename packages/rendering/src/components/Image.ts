@@ -19,8 +19,8 @@ export interface ImageProps extends ImageRenderProps {
 
 export const component: JSX.RawFC<ImageProps> = ({
   image,
-  height = image.height,
   width = image.width,
+  height = image.height,
   margin,
   crop,
   children,

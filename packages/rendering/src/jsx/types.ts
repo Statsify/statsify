@@ -7,14 +7,13 @@ export interface BaseThemeContext {
   renderer: FontRenderer;
 }
 
-export type StyleLocation = 'start' | 'center' | 'end';
+export type StyleLocation = 'left' | 'center' | 'right';
 export type StyleDirection = 'row' | 'column';
-export type StyleAlign = 'default' | 'center';
 
 export interface Style {
   location: StyleLocation;
   direction: StyleDirection;
-  align: StyleAlign;
+  align: StyleLocation;
 }
 
 export interface CompleteSpacing {
@@ -55,6 +54,7 @@ export type Render<T = unknown, K extends BaseThemeContext = BaseThemeContext> =
 
 export interface ElementNodeBiDirectional {
   size?: Measurement;
+  minSize: number;
   padding1: number;
   padding2: number;
   margin1: number;
@@ -85,7 +85,6 @@ export interface InstructionBiDirectional extends ElementNodeBiDirectional {
 export interface Instruction extends ElementNode {
   x: InstructionBiDirectional;
   y: InstructionBiDirectional;
-  render: Render;
   children?: Instruction[];
 }
 

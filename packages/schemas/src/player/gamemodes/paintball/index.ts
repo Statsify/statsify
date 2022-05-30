@@ -4,6 +4,7 @@ import { Field } from '../../../metadata';
 import { PaintballPerks } from './perks';
 
 export const PAINTBALL_MODES = ['overall'] as const;
+export type PaintballModes = typeof PAINTBALL_MODES;
 
 export class Paintball {
   @Field()

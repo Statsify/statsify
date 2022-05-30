@@ -70,7 +70,7 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
   mode,
   t,
 }) => {
-  const skywars = player.stats.skywars;
+  const { skywars } = player.stats;
   const modeStats = skywars[mode];
 
   const sidebar: SidebarItem[] = [
@@ -97,7 +97,7 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
         />
       </Header>
       <SkyWarsModeTable mode="overall" modeStats={modeStats} t={t} />
-      <div direction="row">
+      <div direction="row" width="100%">
         <SkyWarsModeTable width="50%" mode="insane" modeStats={modeStats} t={t} />
         <SkyWarsModeTable width="50%" mode="normal" modeStats={modeStats} t={t} />
       </div>

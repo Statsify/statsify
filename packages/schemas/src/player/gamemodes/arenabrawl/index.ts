@@ -4,6 +4,7 @@ import { Field } from '../../../metadata';
 import { ArenaBrawlMode } from './mode';
 
 export const ARENA_BRAWL_MODES = ['overall', 'solo', 'doubles', 'fours'] as const;
+export type ArenaBrawlModes = typeof ARENA_BRAWL_MODES;
 
 export class ArenaBrawl {
   @Field()

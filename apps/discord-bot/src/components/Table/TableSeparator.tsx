@@ -39,11 +39,11 @@ export const TableSeparator: JSX.FC<TableSeparatorProps> = ({ children, title })
       height={title ? Math.round(topDividerHeight / 2) : topDividerHeight}
       border={{ topLeft: 0, topRight: 0, bottomRight: border, bottomLeft: border }}
       padding={0}
-    ></box>
+    />
   );
 
   return (
-    <div width="100%" direction="column">
+    <div width="100%" direction="column" margin={{ top: 4, bottom: 4 }}>
       {topDivider}
       <div width="100%" direction="column">
         {children}

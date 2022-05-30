@@ -26,7 +26,18 @@
     "souls": "Souls",
     "heads": "Heads",
     "shards": "Shards",
-    "opals": "Opals"
+    "opals": "Opals",
+    "networkLevel": "Network Level",
+    "karma": "Karma",
+    "achievementPoints": "Achievement Points",
+    "quests": "Quests",
+    "challenges": "Challenges",
+    "giftsSent": "Gifts Sent",
+    "ranksGifted": "Ranks Gifted",
+    "friends": "Friends",
+    "guildQuests": "Guild Quests",
+    "dailyGexp": "Daily GEXP",
+    "weeklyGexp": "Weekly GEXP"
   },
   "commands": {
     "bedwars": "Bedwars command",

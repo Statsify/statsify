@@ -67,12 +67,10 @@ export class FontRenderer {
     for (const row of nodes) {
       x = tempX;
 
-      let largestSize = row[0].size;
+      const largestSize = Math.max(...row.map((node) => node.size));
 
       for (const { text, color, bold, italic, underline, size, shadow } of row) {
-        if (size > largestSize) largestSize = size;
-
-        const adjustY = y + size;
+        const adjustY = y + size + (largestSize - size) * 5;
 
         for (const char of text) {
           x += this.fillCharacter(

@@ -1,4 +1,4 @@
-import { JSX } from '@statsify/rendering';
+import { JSX, useChildren } from '@statsify/rendering';
 import { noop } from '@statsify/util';
 
 export interface IfProps {
@@ -16,9 +16,10 @@ export interface IfProps {
  * </If>
  * ```
  */
-export const If: JSX.FC<IfProps> = ({ condition, children }) => {
+export const If: JSX.FC<IfProps> = ({ condition, children: _children }) => {
+  const children = useChildren(_children);
   if (condition) {
-    return <>{typeof children === 'function' ? children() : children}</>;
+    return <>{typeof children[0] === 'function' ? children[0]() : children}</>;
   }
 
   return noop();

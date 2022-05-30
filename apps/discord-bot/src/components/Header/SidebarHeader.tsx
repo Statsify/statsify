@@ -1,4 +1,4 @@
-import { JSX, useComponentHeight } from '@statsify/rendering';
+import { JSX } from '@statsify/rendering';
 
 export interface SidebarHeaderProps {
   skin: JSX.ElementNode;
@@ -7,12 +7,8 @@ export interface SidebarHeaderProps {
 }
 
 export const SidebarHeader: JSX.FC<SidebarHeaderProps> = ({ skin, sidebar, body }) => {
-  const bodyHeight = useComponentHeight(body);
-  const sidebarHeight = useComponentHeight(sidebar);
-  const headerHeight = Math.max(bodyHeight, sidebarHeight);
-
   return (
-    <div height={headerHeight}>
+    <div width="100%">
       {skin}
       {body}
       {sidebar}

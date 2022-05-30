@@ -5,6 +5,7 @@ import { SpeedUHCMode } from './mode';
 import { getLevelIndex, titleScores } from './util';
 
 export const SPEED_UHC_MODES = ['overall', 'solo', 'teams'] as const;
+export type SpeedUHCModes = typeof SPEED_UHC_MODES;
 
 export class SpeedUHC {
   @Field()

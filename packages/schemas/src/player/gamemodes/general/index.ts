@@ -2,6 +2,9 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { GeneralUtil } from './util';
 
+export const GENERAL_MODES = ['overall'] as const;
+export type GeneralModes = typeof GENERAL_MODES;
+
 export class General {
   @Field()
   public achievementPoints: number;
