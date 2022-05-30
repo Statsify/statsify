@@ -10,6 +10,7 @@ import {
 import { getTitleIndex, titleScores } from './util';
 
 export const BUILD_BATTLE_MODES = ['overall', 'solo', 'teams', 'pro', 'guessTheBuild'] as const;
+export type BuildBattleModes = typeof BUILD_BATTLE_MODES;
 
 export class BuildBattle {
   @Field()

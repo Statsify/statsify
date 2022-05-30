@@ -3,7 +3,7 @@ import { GeneralProfile } from '#profiles/general.profile';
 import { GuildQuery } from '@statsify/api-client';
 import { Command } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
-import { Guild, Player } from '@statsify/schemas';
+import { GeneralModes, GENERAL_MODES, Guild, Player } from '@statsify/schemas';
 import { HypixelCommand, ProfileData } from './base.hypixel-command';
 
 interface PreProfileData {
@@ -12,9 +12,9 @@ interface PreProfileData {
 }
 
 @Command({ description: (t) => t('commands.general') })
-export class GeneralCommand extends HypixelCommand<never, PreProfileData> {
-  public getBackground(): [game: string, mode: string] {
-    return ['hypixel', 'overall'];
+export class GeneralCommand extends HypixelCommand<GeneralModes, PreProfileData> {
+  public constructor() {
+    super(GENERAL_MODES);
   }
 
   public async getPreProfileData(player: Player): Promise<PreProfileData> {
@@ -32,7 +32,7 @@ export class GeneralCommand extends HypixelCommand<never, PreProfileData> {
 
   public getProfile(
     base: BaseProfileProps,
-    { data }: ProfileData<never, PreProfileData>
+    { data }: ProfileData<GeneralModes, PreProfileData>
   ): JSX.ElementNode {
     return <GeneralProfile {...base} friends={data.friends} guild={data.guild} />;
   }

@@ -1,6 +1,9 @@
 import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 
+export const PARKOUR_MODES = ['overall'] as const;
+export type ParkourModes = typeof PARKOUR_MODES;
+
 export class Parkour {
   @Field({ leaderboard: { sort: 'ASC' } })
   public arcade: number;

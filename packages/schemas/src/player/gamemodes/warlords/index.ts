@@ -4,6 +4,7 @@ import { Field } from '../../../metadata';
 import { WarlordsClass } from './class';
 
 export const WARLORDS_MODES = ['overall'] as const;
+export type WarlordsModes = typeof WARLORDS_MODES;
 
 export class Warlords {
   @Field()

@@ -39,6 +39,7 @@ export const ARCADE_MODES = [
   'throwOut',
   'zombies',
 ] as const;
+export type ArcadeModes = typeof ARCADE_MODES;
 
 export class Arcade {
   @Field()

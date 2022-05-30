@@ -4,6 +4,7 @@ import { Field } from '../../../metadata';
 import { MegaWallsKit } from './kit';
 
 export const MEGAWALLS_MODES = ['overall'] as const;
+export type MegaWallsModes = typeof MEGAWALLS_MODES;
 
 export class MegaWalls {
   @Field()

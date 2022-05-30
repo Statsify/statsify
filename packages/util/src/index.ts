@@ -6,6 +6,20 @@ export type RemoveMethods<T> = Pick<
   { [Key in keyof T]: T[Key] extends Function ? never : Key }[keyof T]
 >;
 
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
+  ? I
+  : never;
+type LastOf<T> = UnionToIntersection<T extends any ? () => T : never> extends () => infer R
+  ? R
+  : never;
+
+type Push<T extends any[], V> = [...T, V];
+
+// TS4.1+
+export type TuplifyUnion<T, L = LastOf<T>, N = [T] extends [never] ? true : false> = true extends N
+  ? []
+  : Push<TuplifyUnion<Exclude<T, L>>, L>;
+
 /**
  *
  * @param instance A class instance

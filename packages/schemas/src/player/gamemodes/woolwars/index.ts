@@ -15,6 +15,7 @@ export const WOOL_WARS_MODES = [
   'golem',
   'assault',
 ] as const;
+export type WoolWarsModes = typeof WOOL_WARS_MODES;
 
 export class WoolWars {
   @Field()

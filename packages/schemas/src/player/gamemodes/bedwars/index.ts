@@ -15,6 +15,7 @@ export const BEDWARS_MODES = [
   'fours',
   '4v4',
 ] as const;
+export type BedWarsModes = typeof BEDWARS_MODES;
 
 export const DREAMS_BEDWARS_MODES = [
   'armed',
@@ -26,6 +27,7 @@ export const DREAMS_BEDWARS_MODES = [
   'underworld',
   'voidless',
 ] as const;
+export type DreamsBedWarsModes = typeof DREAMS_BEDWARS_MODES;
 
 export class BedWars {
   @Field()

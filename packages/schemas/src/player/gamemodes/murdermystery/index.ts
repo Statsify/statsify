@@ -10,6 +10,7 @@ export const MURDER_MYSTERY_MODES = [
   'doubleUp',
   'infection',
 ] as const;
+export type MurderMysteryModes = typeof MURDER_MYSTERY_MODES;
 
 export class MurderMystery {
   @Field()
