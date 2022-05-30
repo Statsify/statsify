@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { JSX } from '../src';
 
 describe('createInstructions with no relative sizes', () => {
@@ -24,10 +25,10 @@ describe('createInstructions with no relative sizes', () => {
       </div>
     );
 
-    const insturctions = JSX.createInstructions(parent);
+    const instructions = JSX.createInstructions(parent);
 
-    expect(insturctions.x.size).toBe(10);
-    expect(insturctions.y.size).toBe(10);
+    expect(instructions.x.size).toBe(10);
+    expect(instructions.y.size).toBe(10);
   });
 });
 
@@ -65,7 +66,7 @@ describe('createInstructions with relative sizes', () => {
   });
 
   test('normalizing percentage widths', () => {
-    const insturctions = JSX.createInstructions(
+    const instructions = JSX.createInstructions(
       <div>
         <div width="50%">
           <div width={12} height={10} />
@@ -76,14 +77,14 @@ describe('createInstructions with relative sizes', () => {
       </div>
     );
 
-    expect(insturctions.x.size).toBe(12 * 2);
-    expect(insturctions.y.size).toBe(12);
-    expect(insturctions.children![0].x.size).toBe(12);
-    expect(insturctions.children![1].y.size).toBe(12);
+    expect(instructions.x.size).toBe(12 * 2);
+    expect(instructions.y.size).toBe(12);
+    expect(instructions.children![0].x.size).toBe(12);
+    expect(instructions.children![1].y.size).toBe(12);
   });
 
   test('calculating parent size by using reverse percentages', () => {
-    const insturctions = JSX.createInstructions(
+    const instructions = JSX.createInstructions(
       <div>
         <div width="95%" height="95%">
           <div width={95} height={95} />
@@ -91,8 +92,8 @@ describe('createInstructions with relative sizes', () => {
       </div>
     );
 
-    expect(insturctions.x.size).toBe(100);
-    expect(insturctions.y.size).toBe(100);
+    expect(instructions.x.size).toBe(100);
+    expect(instructions.y.size).toBe(100);
   });
 });
 
@@ -107,10 +108,10 @@ describe('createInstructions with remaining sizes', () => {
       </div>
     );
 
-    const insturctions = JSX.createInstructions(parent);
+    const instructions = JSX.createInstructions(parent);
 
-    expect(insturctions.x.size).toBe(10);
-    expect(insturctions.children![1].x.size).toBe(6);
+    expect(instructions.x.size).toBe(10);
+    expect(instructions.children![1].x.size).toBe(6);
   });
 
   test('a basic remaining size on the other axis', () => {
@@ -124,12 +125,12 @@ describe('createInstructions with remaining sizes', () => {
       </div>
     );
 
-    const insturctions = JSX.createInstructions(parent);
+    const instructions = JSX.createInstructions(parent);
 
-    expect(insturctions.y.size).toBe(parentHeight);
-    expect(insturctions.children![0].y.size).toBe(parentHeight);
-    expect(insturctions.children![1].y.size).toBe(parentHeight);
-    expect(insturctions.children![2].y.size).toBe(parentHeight);
+    expect(instructions.y.size).toBe(parentHeight);
+    expect(instructions.children![0].y.size).toBe(parentHeight);
+    expect(instructions.children![1].y.size).toBe(parentHeight);
+    expect(instructions.children![2].y.size).toBe(parentHeight);
   });
 });
 
