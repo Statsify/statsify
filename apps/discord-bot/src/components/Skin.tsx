@@ -23,8 +23,8 @@ export const Skin: JSX.FC<SkinProps> = ({ skin }) => {
   const width = 125;
 
   return (
-    <box width={width} height="remaining">
-      <img image={skin} height="100%" crop="resize" />
+    <box height="100%" padding={0}>
+      <img image={skin} width={width} height="100%" crop="resize" />
     </box>
   );
 };

@@ -7,6 +7,7 @@ import type * as JSX from '../jsx';
 export interface TextProps {
   margin?: JSX.Spacing;
   children: (string | number) | (string | number)[];
+  align?: JSX.StyleLocation;
 }
 
 export interface TextRenderProps {
@@ -16,6 +17,7 @@ export interface TextRenderProps {
 export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps['children']> = ({
   margin = 6,
   children,
+  align = 'center',
 }) => {
   const text = useChildren(children).join('');
 
@@ -31,7 +33,7 @@ export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps['childre
       width,
       height,
     },
-    style: { location: 'center', direction: 'row', align: 'center' },
+    style: { location: 'center', direction: 'row', align },
     props: { text: nodes },
     children: [],
   };

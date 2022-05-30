@@ -25,16 +25,21 @@ export class GuildService {
     let cachedGuild: Guild | null = null;
 
     if (type === GuildQuery.PLAYER) {
-      const player = await this.playerService.findOne(tag, HypixelCache.CACHE_ONLY, {
-        uuid: true,
-      });
+      tag = tag.replace(/-/g, '');
+      const isUuid = tag.length > 16;
 
-      if (!player) throw new NotFoundException(`player`);
+      if (!isUuid) {
+        const player = await this.playerService.findOne(tag, HypixelCache.CACHE_ONLY, {
+          uuid: true,
+        });
 
-      tag = player.uuid;
+        if (!player) throw new NotFoundException(`player`);
+
+        tag = player.uuid;
+      }
 
       cachedGuild = (await this.guildModel
-        .findOne({ members: { $elemMatch: { uuid: player.uuid } } })
+        .findOne({ members: { $elemMatch: { uuid: tag } } })
         .lean()
         .exec()) as Guild;
     } else {
@@ -48,7 +53,7 @@ export class GuildService {
 
     if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
       return {
-        ...cachedGuild,
+        ...deserialize(Guild, flatten(cachedGuild)),
         cached: true,
       };
     }

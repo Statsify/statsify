@@ -8,7 +8,7 @@ export interface DivProps {
   margin?: JSX.Spacing;
   location?: JSX.StyleLocation;
   direction?: JSX.StyleDirection;
-  align?: JSX.StyleAlign;
+  align?: JSX.StyleLocation;
 }
 
 export type DivRenderProps = unknown;
@@ -17,7 +17,7 @@ export const component: JSX.RawFC<DivProps, DivRenderProps> = ({
   children,
   width,
   height,
-  align = 'default',
+  align = 'left',
   direction = 'row',
   location = 'center',
   margin,

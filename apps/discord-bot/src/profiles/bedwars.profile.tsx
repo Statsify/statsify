@@ -26,7 +26,7 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
   mode,
   t,
 }) => {
-  const bedwars = player.stats.bedwars;
+  const { bedwars } = player.stats;
   const stats = bedwars[mode];
 
   const sidebar: SidebarItem[] = [

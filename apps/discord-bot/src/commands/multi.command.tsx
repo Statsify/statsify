@@ -12,9 +12,6 @@ export class MultimodeCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   public async run() {
-    const width = 1200;
-    const height = 600;
-
     const skin = await this.apiService.getPlayerSkin('618a96fec8b0493fa89427891049550b');
 
     const TableRow = () => (
@@ -57,7 +54,7 @@ export class MultimodeCommand {
       </Container>
     );
 
-    const image = await JSX.render(<Profile />, width, height).toBuffer('png');
+    const image = await JSX.render(<Profile />).toBuffer('png');
 
     return {
       files: [{ name: 'example.png', data: image, type: 'image/png' }],

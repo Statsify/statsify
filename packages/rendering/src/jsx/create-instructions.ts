@@ -1,93 +1,68 @@
-import { intrinsicRenders, IntrinsicRenders } from './instrinsics';
-import type { BaseThemeContext, ElementNode, Instruction } from './types';
-import { computeMinSize, getTotalSize, innerSize, parseMeasurements } from './util';
+import { toDecimal } from './convert';
+import type { ElementNode, Fraction, Instruction, Percent } from './types';
+import { getTotalSize } from './util';
 
-export const _createInstructions = <C extends BaseThemeContext>(
-  node: ElementNode,
-  width: number,
-  height: number,
-  intrinsicElements: IntrinsicRenders<C>
-): Instruction => {
-  node.x = parseMeasurements(node.x, width);
-  node.y = parseMeasurements(node.y, height);
+export const createInstructions = (node: ElementNode): Instruction => {
+  const hasDefinedWidth = typeof node.x.size === 'number';
+  const hasDefinedHeight = typeof node.y.size === 'number';
 
-  //@ts-ignore Add the render function to the node, and start transformation to instruction
-  (node as Instruction).render = intrinsicElements[node.type];
+  if (!hasDefinedWidth) node.x.size = node.x.minSize;
+  if (!hasDefinedHeight) node.y.size = node.y.minSize;
 
-  if (node.children?.length) {
-    const inner = {
-      x: innerSize(node.x, width),
-      y: innerSize(node.y, height),
-    };
+  if (!node.children?.length) return node as Instruction;
 
-    type Side = 'x' | 'y';
-    let side: Side;
-    let otherSide: Side;
+  const side = node.style.direction === 'row' ? 'x' : 'y';
+  const otherSide = side === 'x' ? 'y' : 'x';
 
-    if (node.style.direction === 'row') {
-      side = 'x';
-      otherSide = 'y';
-    } else {
-      side = 'y';
-      otherSide = 'x';
+  let paddlessSideLength = node[side].size as number;
+
+  const remaining: number[] = [];
+
+  for (let i = 0; i < node.children.length; i++) {
+    const child = node.children[i];
+
+    paddlessSideLength -= getTotalSize(child[side], { size: false });
+  }
+
+  let remainingSide = paddlessSideLength;
+
+  for (let i = 0; i < node.children.length; i++) {
+    const child = node.children[i];
+
+    if (typeof child[otherSide].size === 'string') {
+      const size =
+        (node[otherSide].size as number) - getTotalSize(child[otherSide], { size: false });
+
+      child[otherSide].size =
+        child[otherSide].size === 'remaining'
+          ? size
+          : size * toDecimal(child[otherSide].size as Percent | Fraction);
     }
 
-    let remaining = inner[side];
-
-    const childrenWithRemainingSizes = [];
-
-    for (let i = 0; i < node.children.length; i++) {
-      const child = node.children[i];
-
-      if (child[otherSide].size === 'remaining') {
-        //Subtract the margin and padding from the constant size for the size of the child
-        child[otherSide].size =
-          inner[otherSide] -
-          getTotalSize(child[otherSide], { margin: true, padding: true, size: false });
-      }
-
+    if (typeof child[side].size === 'string') {
       if (child[side].size === 'remaining') {
-        //Subtract the margin and padding from the remaining size
-        remaining -= getTotalSize(child[side], { margin: true, padding: true, size: false });
-        childrenWithRemainingSizes.push(i);
-        //It won't be possible to compute the size of the child if it's remaining, so skip for now
+        remaining.push(i);
         continue;
       }
 
-      const childInstruction = _createInstructions(child, inner.x, inner.y, intrinsicElements);
-
-      node.children[i] = childInstruction;
-
-      //Remove the child's size, margin, and padding from the remaining size
-      remaining -= getTotalSize(childInstruction[side]);
+      child[side].size = paddlessSideLength * toDecimal(child[side].size as Percent | Fraction);
+      remainingSide -= child[side].size as number;
     }
 
-    if (childrenWithRemainingSizes.length) {
-      //Split the remaining space equally between all the remaining children
-      const splitRemainingSize = remaining / childrenWithRemainingSizes.length;
+    remainingSide -= child[side].size as number;
 
-      for (const i of childrenWithRemainingSizes) {
-        const child = node.children[i];
-        child[side].size = splitRemainingSize;
-        const childInstruction = _createInstructions(child, inner.x, inner.y, intrinsicElements);
-        node.children[i] = childInstruction;
-      }
-    }
+    node.children[i] = createInstructions(child);
+  }
 
-    node.x.size = computeMinSize(node, 'x', { margin: false, padding: false });
-    node.y.size = computeMinSize(node, 'y', { margin: false, padding: false });
+  if (!remaining.length) return node as Instruction;
+
+  const remainingSideLength = remainingSide / remaining.length;
+
+  for (let i = 0; i < remaining.length; i++) {
+    const child = node.children[remaining[i]];
+    child[side].size = remainingSideLength;
+    node.children[remaining[i]] = createInstructions(child);
   }
 
   return node as Instruction;
 };
-
-export const createInstructions = <C extends BaseThemeContext>(
-  node: ElementNode,
-  width: number,
-  height: number,
-  intrinsicElements?: Partial<IntrinsicRenders<C>>
-) =>
-  _createInstructions(node, width, height, {
-    ...intrinsicRenders,
-    ...intrinsicElements,
-  });
