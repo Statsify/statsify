@@ -40,7 +40,9 @@ import {
   WallsModes,
   WALLS_MODES,
   WarlordsModes,
+  WARLORDS_MODES,
   WoolWarsModes,
+  WOOL_WARS_MODES,
 } from '@statsify/schemas';
 
 export const ERROR_COLOR = 0xff0000;
@@ -190,6 +192,11 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ['vampirez', 'overall'];
     case WALLS_MODES:
       return ['walls', 'overall'];
+    case WARLORDS_MODES:
+      return ['warlords', 'overall'];
+    //TODO(amony): add woolwars backgrounds
+    case WOOL_WARS_MODES:
+      return ['hypixel', 'overall'];
     default:
       return ['default', ''];
   }

@@ -1,4 +1,4 @@
-import { add, deepAdd, deepSub } from '@statsify/math';
+import { add, deepSub } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Color, ColorCode } from '../../../color';
 import { Field } from '../../../metadata';
@@ -119,14 +119,13 @@ export class BedWars {
         ? new Color(`§${this.levelFormatted[4]}` as ColorCode)
         : new Color(`§${this.levelFormatted[1]}` as ColorCode);
 
-    const flooredLevel = Math.floor(this.level);
     let exp = this.exp;
 
-    for (let i = 0; i < flooredLevel; i++) {
+    for (let i = 0; i < this.level; i++) {
       exp -= getExpReq(i);
     }
 
-    this.levelProgression = new Progression(exp, getExpReq(flooredLevel + 1));
+    this.levelProgression = new Progression(exp, getExpReq(this.level + 1));
 
     this.lootChests = add(
       data.bedwars_boxes,

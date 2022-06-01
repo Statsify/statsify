@@ -59,7 +59,12 @@
     "warCry": "War Cry",
     "witherDamage": "Wither Damage",
     "witherKills": "Wither Kills",
-    "points": "Points"
+    "points": "Points",
+    "powerups": "Powerups",
+    "wool": "Wool",
+    "layers": "Layers",
+    "woolPlaced": "Wool Placed",
+    "woolBroken": "Wool Broken"
   },
   "commands": {
     "bedwars": "Bedwars command",
