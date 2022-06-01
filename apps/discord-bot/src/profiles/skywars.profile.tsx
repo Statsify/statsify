@@ -17,41 +17,39 @@ import { BaseProfileProps } from './base.profile';
 interface SkyWarsModeTableProps {
   modeStats: SkyWarsMode;
   mode: 'overall' | 'insane' | 'normal';
-  width?: JSX.Measurement;
   t: LocalizeFunction;
+  width?: JSX.Measurement;
 }
 
-const SkyWarsModeTable: JSX.FC<SkyWarsModeTableProps> = ({ modeStats, mode, width, t }) => {
+const SkyWarsModeTable: JSX.FC<SkyWarsModeTableProps> = ({ width, modeStats, mode, t }) => {
   const stats = modeStats[mode];
   const isOverall = mode === 'overall';
   const size = isOverall ? 'regular' : 'small';
 
   return (
     <Table.table width={width}>
-      <Table.ts title={`§e${prettify(mode)}`}>
+      <Table.tr>
+        <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" size={size} />
+        <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" size={size} />
+        <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" size={size} />
+      </Table.tr>
+      <Table.tr>
+        <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" size={size} />
+        <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" size={size} />
+        <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" size={size} />
+      </Table.tr>
+      <If condition={isOverall}>
         <Table.tr>
-          <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" size={size} />
-          <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" size={size} />
-          <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" size={size} />
+          <Table.td title={t('stats.assists')} value={t(stats.assists)} color="§a" size={size} />
+          <Table.td
+            title={t('stats.playtime')}
+            value={formatTime(stats.playtime)}
+            color="§c"
+            size={size}
+          />
+          <Table.td title={t('stats.kit')} value={prettify(stats.kit)} color="§6" size={size} />
         </Table.tr>
-        <Table.tr>
-          <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" size={size} />
-          <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" size={size} />
-          <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" size={size} />
-        </Table.tr>
-        <If condition={isOverall}>
-          <Table.tr>
-            <Table.td title={t('stats.assists')} value={t(stats.assists)} color="§a" size={size} />
-            <Table.td
-              title={t('stats.playtime')}
-              value={formatTime(stats.playtime)}
-              color="§c"
-              size={size}
-            />
-            <Table.td title={t('stats.kit')} value={prettify(stats.kit)} color="§6" size={size} />
-          </Table.tr>
-        </If>
-      </Table.ts>
+      </If>
     </Table.table>
   );
 };
@@ -87,7 +85,7 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
     <Container background={background}>
       <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
         <HeaderBody
-          title={`§l§bSky§eWars §fStats §r(§o${prettify(mode)}§r)`}
+          title={`§l§bSky§eWars §fStats §r(${prettify(mode)})`}
           description={`§bSky§eWars §7Level: ${skywars.levelFormatted}\n${formatProgression(
             t,
             skywars.levelProgression,
@@ -97,10 +95,6 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
         />
       </Header>
       <SkyWarsModeTable mode="overall" modeStats={modeStats} t={t} />
-      <div direction="row" width="100%">
-        <SkyWarsModeTable width="50%" mode="insane" modeStats={modeStats} t={t} />
-        <SkyWarsModeTable width="50%" mode="normal" modeStats={modeStats} t={t} />
-      </div>
       <Footer logo={logo} premium={premium} />
     </Container>
   );

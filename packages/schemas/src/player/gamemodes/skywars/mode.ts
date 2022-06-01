@@ -2,15 +2,6 @@ import { add, ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 
-export class SkyWarsGameModeAverages {
-  @Field({ leaderboard: { enabled: false } })
-  public kills: number;
-
-  public constructor(kills: number, gamesPlayed: number) {
-    this.kills = ratio(kills, gamesPlayed);
-  }
-}
-
 export class SkyWarsGameMode {
   @Field()
   public wins: number;
@@ -39,9 +30,6 @@ export class SkyWarsGameMode {
   @Field()
   public playtime: number;
 
-  @Field()
-  public averages: SkyWarsGameModeAverages;
-
   //Kit gets applied in the main class
   @Field()
   public kit: string;
@@ -65,7 +53,6 @@ export class SkyWarsGameMode {
   public static applyRatios(data: SkyWarsGameMode) {
     data.kdr = ratio(data.kills, data.deaths);
     data.wlr = ratio(data.wins, data.losses);
-    data.averages = new SkyWarsGameModeAverages(data.kills, data.gamesPlayed);
   }
 }
 

@@ -3,10 +3,10 @@ import { BedWarsProfile } from '#profiles/bedwars.profile';
 import { Command } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
 import { BedWarsModes, BEDWARS_MODES } from '@statsify/schemas';
-import { HypixelCommand, ProfileData } from './base.hypixel-command';
+import { BaseHypixelCommand, ProfileData } from './base.hypixel-command';
 
 @Command({ description: (t) => t('commands.bedwars') })
-export class BedWarsCommand extends HypixelCommand<BedWarsModes> {
+export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
   public constructor() {
     super(BEDWARS_MODES);
   }

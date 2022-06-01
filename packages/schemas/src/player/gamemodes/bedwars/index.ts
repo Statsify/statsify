@@ -1,9 +1,9 @@
-import { add, deepSub } from '@statsify/math';
+import { add, deepAdd, deepSub } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Color, ColorCode } from '../../../color';
 import { Field } from '../../../metadata';
 import { Progression } from '../../../progression';
-import { BedWarsMode, ChallengesBedWars, DreamsBedWars } from './mode';
+import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from './mode';
 import { getExpReq, getFormattedLevel, getLevel } from './util';
 
 export const BEDWARS_MODES = [
@@ -14,10 +14,6 @@ export const BEDWARS_MODES = [
   'threes',
   'fours',
   '4v4',
-] as const;
-export type BedWarsModes = typeof BEDWARS_MODES;
-
-export const DREAMS_BEDWARS_MODES = [
   'armed',
   'castle',
   'lucky',
@@ -27,7 +23,7 @@ export const DREAMS_BEDWARS_MODES = [
   'underworld',
   'voidless',
 ] as const;
-export type DreamsBedWarsModes = typeof DREAMS_BEDWARS_MODES;
+export type BedWarsModes = typeof BEDWARS_MODES;
 
 export class BedWars {
   @Field()
@@ -85,7 +81,28 @@ export class BedWars {
   public '4v4': BedWarsMode;
 
   @Field()
-  public dreams: DreamsBedWars;
+  public armed: BedWarsMode;
+
+  @Field()
+  public castle: BedWarsMode;
+
+  @Field()
+  public lucky: BedWarsMode;
+
+  @Field()
+  public rush: BedWarsMode;
+
+  @Field()
+  public swap: BedWarsMode;
+
+  @Field()
+  public ultimate: BedWarsMode;
+
+  @Field()
+  public underworld: BedWarsMode;
+
+  @Field()
+  public voidless: BedWarsMode;
 
   @Field()
   public challenges: ChallengesBedWars;
@@ -127,12 +144,20 @@ export class BedWars {
     this.fours = new BedWarsMode(data, 'four_four');
     this['4v4'] = new BedWarsMode(data, 'two_four');
 
+    this.castle = new BedWarsMode(data, 'castle');
+
+    this.armed = DreamsBedWarsMode.new(data, 'armed');
+    this.lucky = DreamsBedWarsMode.new(data, 'lucky');
+    this.rush = DreamsBedWarsMode.new(data, 'rush');
+    this.swap = DreamsBedWarsMode.new(data, 'swap');
+    this.ultimate = DreamsBedWarsMode.new(data, 'ultimate');
+    this.underworld = DreamsBedWarsMode.new(data, 'underworld');
+    this.voidless = DreamsBedWarsMode.new(data, 'voidless');
+
     this.core = deepSub(this.overall, this['4v4']);
     BedWarsMode.applyRatios(this.core);
 
     this.core.winstreak = this.overall.winstreak;
-
-    this.dreams = new DreamsBedWars(data);
 
     this.challenges = new ChallengesBedWars(data);
   }

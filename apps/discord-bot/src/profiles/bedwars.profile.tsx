@@ -44,7 +44,7 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
     <Container background={background}>
       <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
         <HeaderBody
-          title={`§l§cBed§fWars §fStats §r(§r§o${prettify(mode)}§r)`}
+          title={`§l§cBed§fWars §fStats §r(${prettify(mode)})`}
           description={`§cBed§fWars §7Level: ${bedwars.levelFormatted}\n${formatProgression(
             t,
             bedwars.levelProgression,

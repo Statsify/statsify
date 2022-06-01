@@ -3,7 +3,7 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { BowSpleef, PVPRun, TNTRun, TNTTag, Wizards } from './mode';
 
-export const TNT_GAMES_MODES = ['tntRun', 'pvpRun', 'bowSpleef', 'wizards', 'tntTag'] as const;
+export const TNT_GAMES_MODES = ['overall'] as const;
 export type TNTGamesModes = typeof TNT_GAMES_MODES;
 
 export class TNTGames {

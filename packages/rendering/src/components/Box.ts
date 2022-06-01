@@ -35,7 +35,7 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   width,
   height,
   margin = 4,
-  padding = { left: 5, right: 5 },
+  padding = { left: 8, right: 8 },
   location = 'center',
   direction = 'row',
   align = 'left',

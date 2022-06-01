@@ -2,22 +2,6 @@ import { deepAdd, ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 
-export class BedWarsModeAverages {
-  @Field({ leaderboard: { enabled: false } })
-  public kills: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public finalKills: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public bedsBroken: number;
-
-  public constructor(kills: number, finalKills: number, bedsBroken: number, gamesPlayed: number) {
-    this.kills = ratio(kills, gamesPlayed);
-    this.finalKills = ratio(finalKills, gamesPlayed);
-    this.bedsBroken = ratio(bedsBroken, gamesPlayed);
-  }
-}
 export class BedWarsModeItemsCollected {
   @Field()
   public iron: number;
@@ -82,9 +66,6 @@ export class BedWarsMode {
   @Field()
   public bblr: number;
 
-  @Field({ docs: { description: 'Average stat per gamesPlayed' } })
-  public averages: BedWarsModeAverages;
-
   @Field()
   public itemsCollected: BedWarsModeItemsCollected;
 
@@ -112,67 +93,19 @@ export class BedWarsMode {
     data.kdr = ratio(data.kills, data.deaths);
     data.fkdr = ratio(data.finalKills, data.finalDeaths);
     data.bblr = ratio(data.bedsBroken, data.bedsLost);
+  }
+}
 
-    data.averages = new BedWarsModeAverages(
-      data.kills,
-      data.finalKills,
-      data.bedsBroken,
-      data.gamesPlayed
+export class DreamsBedWarsMode extends BedWarsMode {
+  public static new(data: APIData, mode: string) {
+    const stats = deepAdd(
+      new BedWarsMode(data, `eight_two_${mode}`),
+      new BedWarsMode(data, `four_four_${mode}`)
     );
-  }
-}
 
-export class DreamsBedWarsMode {
-  @Field()
-  public overall: BedWarsMode;
-
-  @Field()
-  public doubles: BedWarsMode;
-
-  @Field()
-  public fours: BedWarsMode;
-
-  public constructor(data: APIData, mode: string) {
-    this.doubles = new BedWarsMode(data, `eight_two_${mode}`);
-    this.fours = new BedWarsMode(data, `four_four_${mode}`);
-    this.overall = deepAdd(this.doubles, this.fours);
-    BedWarsMode.applyRatios(this.overall);
-  }
-}
-
-export class DreamsBedWars {
-  @Field()
-  public armed: DreamsBedWarsMode;
-
-  @Field()
-  public castle: BedWarsMode;
-
-  @Field()
-  public lucky: DreamsBedWarsMode;
-
-  @Field()
-  public rush: DreamsBedWarsMode;
-
-  @Field()
-  public swap: DreamsBedWarsMode;
-  @Field()
-  public ultimate: DreamsBedWarsMode;
-
-  @Field()
-  public underworld: DreamsBedWarsMode;
-
-  @Field()
-  public voidless: DreamsBedWarsMode;
-
-  public constructor(data: APIData) {
-    this.armed = new DreamsBedWarsMode(data, 'armed');
-    this.castle = new BedWarsMode(data, 'castle');
-    this.lucky = new DreamsBedWarsMode(data, 'lucky');
-    this.rush = new DreamsBedWarsMode(data, 'rush');
-    this.swap = new DreamsBedWarsMode(data, 'swap');
-    this.ultimate = new DreamsBedWarsMode(data, 'ultimate');
-    this.underworld = new DreamsBedWarsMode(data, 'underworld');
-    this.voidless = new DreamsBedWarsMode(data, 'voidless');
+    BedWarsMode.applyRatios(stats);
+    stats.winstreak = 0;
+    return stats;
   }
 }
 

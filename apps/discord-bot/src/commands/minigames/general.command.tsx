@@ -4,7 +4,7 @@ import { GuildQuery } from '@statsify/api-client';
 import { Command } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
 import { GeneralModes, GENERAL_MODES, Guild, Player } from '@statsify/schemas';
-import { HypixelCommand, ProfileData } from './base.hypixel-command';
+import { BaseHypixelCommand, ProfileData } from './base.hypixel-command';
 
 interface PreProfileData {
   guild?: Guild;
@@ -12,7 +12,7 @@ interface PreProfileData {
 }
 
 @Command({ description: (t) => t('commands.general') })
-export class GeneralCommand extends HypixelCommand<GeneralModes, PreProfileData> {
+export class GeneralCommand extends BaseHypixelCommand<GeneralModes, PreProfileData> {
   public constructor() {
     super(GENERAL_MODES);
   }

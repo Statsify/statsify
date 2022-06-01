@@ -15,6 +15,7 @@ import {
   GeneralModes,
   GENERAL_MODES,
   MegaWallsModes,
+  MEGAWALLS_MODES,
   MurderMysteryModes,
   MURDER_MYSTERY_MODES,
   PaintballModes,
@@ -92,8 +93,9 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
         case '4v4':
           map = '4v4';
           break;
-        case 'overall':
-        case 'core':
+        case 'castle':
+          map = 'castle';
+          break;
         default:
           map = 'overall';
           break;
@@ -151,6 +153,8 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
     case PARKOUR_MODES:
     case GENERAL_MODES:
       return ['hypixel', 'overall'];
+    case MEGAWALLS_MODES:
+      return ['megawalls', 'overall'];
     case MURDER_MYSTERY_MODES:
       return ['murdermystery', 'overall'];
     case PAINTBALL_MODES:

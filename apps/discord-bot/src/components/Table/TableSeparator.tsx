@@ -26,7 +26,7 @@ export const TableSeparator: JSX.FC<TableSeparatorProps> = ({ children, title })
       border={{ topLeft: border, topRight: border, bottomLeft: 0, bottomRight: 0 }}
       padding={0}
     >
-      {title ? <text margin={1}>§l{title}</text> : <div></div>}
+      {title ? <text margin={{ top: 1, left: 8, right: 8, bottom: 1 }}>§l{title}</text> : <></>}
     </box>
   );
 

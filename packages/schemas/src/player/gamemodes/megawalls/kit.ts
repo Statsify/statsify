@@ -37,7 +37,7 @@ export class MegaWallsKit {
   public assists: number;
 
   @Field({ leaderboard: { enabled: false } })
-  public timePlayed: number;
+  public playtime: number;
 
   @Field({ leaderboard: { enabled: false } })
   public witherDamage: number;
@@ -56,6 +56,7 @@ export class MegaWallsKit {
     this.wlr = ratio(this.wins, this.losses);
 
     this.kills = data[`${kit}kills`];
+    this.assists = data[`${kit}assists`];
     this.deaths = data[`${kit}deaths`];
     this.kdr = ratio(this.kills, this.deaths);
 
@@ -64,8 +65,7 @@ export class MegaWallsKit {
     this.finalDeaths = data[`${kit}final_deaths`];
     this.fkdr = ratio(this.finalKills, this.finalDeaths);
 
-    this.assists = data[`${kit}assists`];
-    this.timePlayed = data[`${kit}time_played`];
+    this.playtime = (data[`${kit}time_played`] ?? 0) * 1000;
     this.witherDamage = data[`${kit}wither_damage`];
     this.witherKills = data[`${kit}wither_kills`];
 

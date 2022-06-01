@@ -14,7 +14,7 @@ export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
   data: K;
 }
 
-export interface HypixelCommand<T extends GamesWithBackgrounds, K = never> {
+export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   getPreProfileData?(player: Player): K | Promise<K>;
 }
 
@@ -23,7 +23,7 @@ export interface HypixelCommand<T extends GamesWithBackgrounds, K = never> {
   args: [PlayerArgument],
   cooldown: 5,
 })
-export abstract class HypixelCommand<T extends GamesWithBackgrounds, K = never> {
+export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   protected readonly apiService: ApiService;
   protected readonly paginateService: PaginateService;
 

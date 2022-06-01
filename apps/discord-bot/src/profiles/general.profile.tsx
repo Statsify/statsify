@@ -57,6 +57,7 @@ export const GeneralProfile: JSX.FC<GeneralProfileProps> = ({
         name={`${player.displayName}§^2^${guild?.tag ? ` ${guild.tagFormatted}` : ''}`}
         skin={skin}
         badge={badge}
+        size={3}
       >
         <GeneralProfileHeaderBody guild={guild} status={status} />
       </Header>
@@ -80,22 +81,13 @@ export const GeneralProfile: JSX.FC<GeneralProfileProps> = ({
           <Table.td title={t('stats.ranksGifted')} value={t(general.ranksGifts)} color="§5" />
         </Table.tr>
         <If condition={Boolean(guild)}>
+          {/*//TODO(jacobk999): make these work */}
           {() => (
-            <Table.ts title="§2Guild">
-              <Table.tr>
-                <Table.td title={t('stats.guildQuests')} value={t(0)} color="§2" />
-                <Table.td
-                  title={`${t('stats.dailyGexp')} §^2^§8[§7#§f1§8/§728§8]`}
-                  value={t(0)}
-                  color="§2"
-                />
-                <Table.td
-                  title={`${t('stats.weeklyGexp')} §^2^§8[§7#§f1§8/§728§8]`}
-                  value={t(0)}
-                  color="§2"
-                />
-              </Table.tr>
-            </Table.ts>
+            <Table.tr>
+              <Table.td title={t('stats.guildQuests')} value={t(0)} color="§2" />
+              <Table.td title={t('stats.dailyGexp')} value={t(0)} color="§2" />
+              <Table.td title={t('stats.weeklyGexp')} value={t(0)} color="§2" />
+            </Table.tr>
           )}
         </If>
       </Table.table>
