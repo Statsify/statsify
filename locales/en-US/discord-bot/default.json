@@ -66,7 +66,10 @@
     "woolPlaced": "Wool Placed",
     "woolBroken": "Wool Broken",
     "title": "Title",
-    "activeMastery": "Active Mastery"
+    "mastery": "Mastery",
+    "headsEaten": "Heads Eaten",
+    "ultimatesCrafted": "Ultimates Crafted",
+    "extraUltimates": "Extra Ultimates"
   },
   "commands": {
     "bedwars": "Bedwars command",

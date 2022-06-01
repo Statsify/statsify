@@ -4,11 +4,11 @@ import { SpeedUHCMode, SPEED_UHC_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from './base.profile';
 
-export interface BedWarsProfileProps extends BaseProfileProps {
+export interface SpeedUHCProfileProps extends BaseProfileProps {
   mode: typeof SPEED_UHC_MODES[number];
 }
 
-export const SpeedUHCProfile: JSX.FC<BedWarsProfileProps> = ({
+export const SpeedUHCProfile: JSX.FC<SpeedUHCProfileProps> = ({
   skin,
   player,
   background,
@@ -25,7 +25,7 @@ export const SpeedUHCProfile: JSX.FC<BedWarsProfileProps> = ({
     [t('stats.coins'), t(speeduhc.coins), '§6'],
     [t('stats.score'), t(speeduhc.score), '§b'],
     [t('stats.title'), speeduhc.title, '§e'],
-    [t('stats.activeMastery'), prettify(speeduhc.activeMastery), '§a'],
+    [t('stats.mastery'), prettify(speeduhc.activeMastery), '§a'],
   ];
 
   return (
