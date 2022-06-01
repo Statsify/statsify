@@ -4,7 +4,20 @@ import { SpeedUHCMastery } from './mastery';
 import { SpeedUHCMode } from './mode';
 import { getLevelIndex, titleScores } from './util';
 
-export const SPEED_UHC_MODES = ['overall', 'solo', 'teams'] as const;
+export const SPEED_UHC_MODES = [
+  'overall',
+  'solo',
+  'teams',
+  'wildSpecialist',
+  'guardian',
+  'sniper',
+  'berserk',
+  'masterBaker',
+  'invigorate',
+  'huntsman',
+  'fortune',
+  'vampirism',
+] as const;
 export type SpeedUHCModes = typeof SPEED_UHC_MODES;
 
 export class SpeedUHC {
@@ -65,7 +78,7 @@ export class SpeedUHC {
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.score = data.score;
-    this.activeMastery = data.activeMasterPerk;
+    this.activeMastery = (data.activeMasterPerk ?? 'none').replace('mastery_', '');
 
     this.overall = new SpeedUHCMode(data, '');
     this.solo = new SpeedUHCMode(data, 'solo');

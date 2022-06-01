@@ -29,6 +29,7 @@ import {
   SmashHeroesModes,
   SMASH_HEROES_MODES,
   SpeedUHCModes,
+  SPEED_UHC_MODES,
   TNTGamesModes,
   TNT_GAMES_MODES,
   TurboKartRacersModes,
@@ -186,6 +187,7 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ['tntgames', 'overall'];
     case TURBO_KART_RACERS_MODES:
       return ['turbokartracers', 'overall'];
+    case SPEED_UHC_MODES:
     case UHC_MODES:
       return ['uhc', 'overall'];
     case VAMPIREZ_MODES:

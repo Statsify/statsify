@@ -64,7 +64,9 @@
     "wool": "Wool",
     "layers": "Layers",
     "woolPlaced": "Wool Placed",
-    "woolBroken": "Wool Broken"
+    "woolBroken": "Wool Broken",
+    "title": "Title",
+    "activeMastery": "Active Mastery"
   },
   "commands": {
     "bedwars": "Bedwars command",

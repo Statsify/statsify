@@ -5,7 +5,7 @@ import { JSX } from '@statsify/rendering';
 import { SmashHeroesModes, SMASH_HEROES_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, ProfileData } from './base.hypixel-command';
 
-@Command({ description: (t) => t('commands.bedwars') })
+@Command({ description: (t) => t('commands.smashheroes') })
 export class SmashHeroesCommand extends BaseHypixelCommand<SmashHeroesModes> {
   public constructor() {
     super(SMASH_HEROES_MODES);
