@@ -1,5 +1,5 @@
 import { BaseProfileProps } from '#profiles/base.profile';
-import { BuildBattleProfile } from '#profiles/buildbattle.command';
+import { BuildBattleProfile } from '#profiles/buildbattle.profile';
 import { Command } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
 import { BuildBattleModes, BUILD_BATTLE_MODES } from '@statsify/schemas';
