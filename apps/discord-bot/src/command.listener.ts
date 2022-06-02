@@ -65,7 +65,6 @@ export class CommandListener extends AbstractCommandListener {
 
   private async onCommand(interaction: Interaction): Promise<InteractionResponse> {
     let data = interaction.getData();
-
     let command = this.commands.get(data.name);
 
     if (!command) return { type: InteractionResponseType.Pong };

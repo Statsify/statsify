@@ -1,4 +1,4 @@
-import { add, deepAdd, deepSub } from '@statsify/math';
+import { add, deepSub } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Color, ColorCode } from '../../../color';
 import { Field } from '../../../metadata';

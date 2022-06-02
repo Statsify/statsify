@@ -22,10 +22,10 @@ export class Quake {
   public coins: number;
 
   @Field()
-  public highestKillstreaks: number;
+  public highestKillstreak: number;
 
   @Field()
-  public godLikes: number;
+  public godlikes: number;
 
   @Field({ leaderboard: { enabled: false }, store: { default: 1.3 } })
   public trigger: number;
@@ -39,8 +39,8 @@ export class Quake {
     QuakeMode.applyRatios(this.overall);
 
     this.coins = data.coins;
-    this.highestKillstreaks = data.highest_killstreak;
-    this.godLikes = ap.quake_godlikes;
+    this.highestKillstreak = data.highest_killstreak;
+    this.godlikes = ap.quake_godlikes;
 
     // NINE_POINT_ZERO becomes 9.0
     // ALWAYS in seconds

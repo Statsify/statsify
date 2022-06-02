@@ -1,5 +1,5 @@
 import { BaseProfileProps } from '#profiles/base.profile';
-import { MurderMysteryProfile } from '#profiles/murdermystery.command';
+import { MurderMysteryProfile } from '#profiles/murdermystery.profile';
 import { Command } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
 import { MurderMysteryModes, MURDER_MYSTERY_MODES } from '@statsify/schemas';

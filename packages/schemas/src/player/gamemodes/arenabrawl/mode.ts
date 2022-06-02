@@ -29,7 +29,6 @@ export class ArenaBrawlMode {
     this.deaths = data[`deaths_${mode}`];
     this.wins = data[`wins_${mode}`];
     this.losses = data[`losses_${mode}`];
-    this.streaks = data[`wins_streaks_${mode}`];
 
     ArenaBrawlMode.applyRatios(this);
   }

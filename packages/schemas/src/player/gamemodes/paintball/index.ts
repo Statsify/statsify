@@ -11,7 +11,7 @@ export class Paintball {
   public coins: number;
 
   @Field()
-  public forceFieldTime: number;
+  public forcefieldTime: number;
 
   @Field()
   public kills: number;
@@ -42,7 +42,7 @@ export class Paintball {
 
   public constructor(data: APIData) {
     this.coins = data.coins;
-    this.forceFieldTime = data.forcefieldTime;
+    this.forcefieldTime = data.forcefieldTime * 1000;
     this.kills = data.kills;
     this.deaths = data.deaths;
     this.killstreaks = data.killstreaks;
