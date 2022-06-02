@@ -58,17 +58,8 @@ interface KitBlitzSGTableProps {
 }
 
 const KitBlitzSGTable: JSX.FC<KitBlitzSGTableProps> = ({ stats, t }) => {
-  let level = stats.prestige ? `§6${'✫'.repeat(stats.prestige)}` : romanNumeral(stats.level);
-  const colors = ['§a', '§a', '§2', '§2', '§e', '§e', '§6', '§6', '§c', '§4'];
-  if (stats.level === 10) level = `§l${level}`;
-
   return (
     <Table.table>
-      <Table.tr>
-        <Table.td title={t('stats.playtime')} value={formatTime(stats?.playtime ?? 0)} color="§e" />
-        <Table.td title={t('stats.level')} value={level} color={colors[stats.level - 1]} />
-        <Table.td title={t('stats.gamesPlayed')} value={t(stats.gamesPlayed)} color="§b" />
-      </Table.tr>
       <Table.tr>
         <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
         <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
@@ -78,6 +69,10 @@ const KitBlitzSGTable: JSX.FC<KitBlitzSGTableProps> = ({ stats, t }) => {
         <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
         <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
         <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
+      </Table.tr>
+      <Table.tr>
+        <Table.td title={t('stats.playtime')} value={formatTime(stats.playtime)} color="§e" />
+        <Table.td title={t('stats.gamesPlayed')} value={t(stats.gamesPlayed)} color="§b" />
       </Table.tr>
     </Table.table>
   );
@@ -110,9 +105,17 @@ export const BlitzSGProfile: JSX.FC<BlitzSGProfileProps> = ({
     case 'overall':
       table = <OverallBlitzSGTable blitzsg={blitzsg} t={t} />;
       break;
-    default:
-      table = <KitBlitzSGTable stats={blitzsg[mode]} t={t} />;
+    default: {
+      const colors = ['§a', '§a', '§2', '§2', '§e', '§e', '§6', '§6', '§c', '§4'];
+      const stats = blitzsg[mode];
+
+      let level = stats.prestige ? `§6${'✫'.repeat(stats.prestige)}` : romanNumeral(stats.level);
+      if (stats.level === 10) level = `§l${level}`;
+      sidebar.push([t('stats.level'), level, colors[stats.level - 1]]);
+
+      table = <KitBlitzSGTable stats={stats} t={t} />;
       break;
+    }
   }
 
   return (

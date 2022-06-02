@@ -15,7 +15,7 @@
     "bedsLost": "Beds Lost",
     "bblr": "BBLR",
     "assists": "Assists",
-    "kit": "Kit",
+    "kit": "Current Kit",
     "playtime": "Playtime",
     "coins": "Coins",
     "lootChests": "Loot Chests",
@@ -110,7 +110,10 @@
     "roundWins": "Round Wins",
     "headshotKills": "Headshot Kills",
     "bombsPlanted": "Bombs Planted",
-    "bombsDefused": "Bombs Defused"
+    "bombsDefused": "Bombs Defused",
+    "overallWins": "Overall Wins",
+    "soloWins": "Solo Wins",
+    "doublesWins": "Doubles Wins"
   },
   "commands": {
     "arenabrawl": "Arena Brawl command",

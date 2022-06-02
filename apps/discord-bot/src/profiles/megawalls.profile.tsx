@@ -55,9 +55,9 @@ export const MegaWallsProfile: JSX.FC<MegaWallsProfileProps> = ({
         </Table.tr>
         <Table.tr>
           <Table.td title={t('stats.playtime')} value={formatTime(stats.playtime)} color="§a" />
-          <Table.td title={t('stats.witherKills')} value={t(stats.witherKills)} color="§e" />
           <Table.td title={t('stats.witherDamage')} value={t(stats.witherDamage)} color="§c" />
-          <Table.td title={t('stats.points')} value={t(stats.points)} color="§6" />
+          <Table.td title={t('stats.witherKills')} value={t(stats.witherKills)} color="§6" />
+          <Table.td title={t('stats.points')} value={t(stats.points)} color="§e" />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} premium={premium} />
