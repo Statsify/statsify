@@ -133,8 +133,6 @@ export class GuildService {
           member.expHistory[index] = exp;
           member.expHistoryDays[index] = day;
           guildExpHistory[day] = guildExpHistory[day] ? guildExpHistory[day] + exp : exp;
-
-          if (index < 7) member.weekly += exp;
           member.monthly += exp;
         });
 

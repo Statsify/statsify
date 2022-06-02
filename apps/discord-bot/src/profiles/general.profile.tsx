@@ -50,6 +50,7 @@ export const GeneralProfile: JSX.FC<GeneralProfileProps> = ({
 }) => {
   const { general } = player.stats;
   const { status } = player;
+  const member = guild?.members.find((m) => m.uuid === player.uuid);
 
   return (
     <Container background={background}>
@@ -80,13 +81,16 @@ export const GeneralProfile: JSX.FC<GeneralProfileProps> = ({
           <Table.td title={t('stats.giftsSent')} value={t(general.giftsSent)} color="§5" />
           <Table.td title={t('stats.ranksGifted')} value={t(general.ranksGifts)} color="§5" />
         </Table.tr>
-        <If condition={Boolean(guild)}>
-          {/*//TODO(jacobk999): make these work */}
-          {() => (
+        <If condition={member}>
+          {(member) => (
             <Table.tr>
-              <Table.td title={t('stats.guildQuests')} value={t(0)} color="§2" />
-              <Table.td title={t('stats.dailyGexp')} value={t(0)} color="§2" />
-              <Table.td title={t('stats.weeklyGexp')} value={t(0)} color="§2" />
+              <Table.td
+                title={t('stats.guildQuests')}
+                value={t(member.questParticipation)}
+                color="§2"
+              />
+              <Table.td title={t('stats.dailyGexp')} value={t(member.daily)} color="§2" />
+              <Table.td title={t('stats.weeklyGexp')} value={t(member.weekly)} color="§2" />
             </Table.tr>
           )}
         </If>

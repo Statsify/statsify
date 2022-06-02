@@ -69,7 +69,7 @@ export class WoolWars {
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.layers = data.progression?.available_layers;
-    this.exp = Math.round(data.progression?.experience);
+    this.exp = Math.round(data.progression?.experience ?? 0);
 
     this.level = getLevel(this.exp);
     this.levelFormatted = getFormattedLevel(this.level);

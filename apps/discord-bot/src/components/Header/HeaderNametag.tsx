@@ -11,7 +11,7 @@ export interface HeaderNametagProps {
 export const HeaderNametag: JSX.FC<HeaderNametagProps> = ({ name, badge, size = 4 }) => {
   return (
     <box width="100%">
-      <If condition={Boolean(badge)}>{() => <img image={badge as Image} />}</If>
+      <If condition={badge}>{(badge) => <img image={badge} />}</If>
       <text>
         §^{size}^{name}
       </text>

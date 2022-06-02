@@ -18,7 +18,7 @@ const MultiDuelsGameModeModeTable: JSX.FC<MultiDuelsGameModeModeTableProps> = ({
   return (
     <Table.table width="1/3">
       <Table.ts title={`§6${prettify(title)}`}>
-        <If condition={Boolean(stats.bestWinstreak)}>
+        <If condition={stats.bestWinstreak}>
           <Table.tr>
             <Table.td title={t('stats.winstreak')} value={t(stats.winstreak)} color="§e" />
             <Table.td title={t('stats.bestWinstreak')} value={t(stats.bestWinstreak)} color="§e" />

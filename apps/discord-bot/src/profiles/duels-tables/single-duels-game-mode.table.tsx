@@ -11,7 +11,7 @@ interface SingleDuelsGameModeTableProps {
 export const SingleDuelsGameModeTable: JSX.FC<SingleDuelsGameModeTableProps> = ({ stats, t }) => {
   return (
     <Table.table>
-      <If condition={Boolean(stats.bestWinstreak)}>
+      <If condition={stats.bestWinstreak}>
         <Table.tr>
           <Table.td title={t('stats.winstreak')} value={t(stats.winstreak)} color="§e" />
           <Table.td title={t('stats.bestWinstreak')} value={t(stats.bestWinstreak)} color="§e" />
