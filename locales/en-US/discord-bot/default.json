@@ -69,7 +69,8 @@
     "mastery": "Mastery",
     "headsEaten": "Heads Eaten",
     "ultimatesCrafted": "Ultimates Crafted",
-    "extraUltimates": "Extra Ultimates"
+    "extraUltimates": "Extra Ultimates",
+    "level": "Level"
   },
   "commands": {
     "bedwars": "Bedwars command",
