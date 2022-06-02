@@ -43,15 +43,15 @@ export const MegaWallsProfile: JSX.FC<MegaWallsProfileProps> = ({
         </Table.tr>
         <Table.tr>
           <Table.td title={t('stats.finalKills')} value={t(stats.finalKills)} color="§a" />
-          <Table.td title={t('stats.finalAssists')} value={t(stats.finalAssists)} color="§e" />
           <Table.td title={t('stats.finalDeaths')} value={t(stats.finalDeaths)} color="§c" />
           <Table.td title={t('stats.fkdr')} value={t(stats.fkdr)} color="§6" />
+          <Table.td title={t('stats.finalAssists')} value={t(stats.finalAssists)} color="§e" />
         </Table.tr>
         <Table.tr>
           <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
-          <Table.td title={t('stats.assists')} value={t(stats.assists)} color="§e" />
           <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
           <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
+          <Table.td title={t('stats.assists')} value={t(stats.assists)} color="§e" />
         </Table.tr>
         <Table.tr>
           <Table.td title={t('stats.playtime')} value={formatTime(stats.playtime)} color="§a" />

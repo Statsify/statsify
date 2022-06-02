@@ -29,6 +29,7 @@ import {
   SmashHeroesModes,
   SMASH_HEROES_MODES,
   SpeedUHCModes,
+  SPEED_UHC_MODES,
   TNTGamesModes,
   TNT_GAMES_MODES,
   TurboKartRacersModes,
@@ -40,7 +41,9 @@ import {
   WallsModes,
   WALLS_MODES,
   WarlordsModes,
+  WARLORDS_MODES,
   WoolWarsModes,
+  WOOL_WARS_MODES,
 } from '@statsify/schemas';
 
 export const ERROR_COLOR = 0xff0000;
@@ -184,12 +187,18 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ['tntgames', 'overall'];
     case TURBO_KART_RACERS_MODES:
       return ['turbokartracers', 'overall'];
+    case SPEED_UHC_MODES:
     case UHC_MODES:
       return ['uhc', 'overall'];
     case VAMPIREZ_MODES:
       return ['vampirez', 'overall'];
     case WALLS_MODES:
       return ['walls', 'overall'];
+    case WARLORDS_MODES:
+      return ['warlords', 'overall'];
+    //TODO(amony): add woolwars backgrounds
+    case WOOL_WARS_MODES:
+      return ['hypixel', 'overall'];
     default:
       return ['default', ''];
   }

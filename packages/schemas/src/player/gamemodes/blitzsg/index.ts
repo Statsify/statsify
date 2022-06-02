@@ -4,7 +4,53 @@ import { Field } from '../../../metadata';
 import { BlitzSGKit } from './kit';
 import { BlitzSGMode, BlitzSGOverall } from './mode';
 
-export const BLITZSG_MODES = ['overall', 'solo', 'doubles'] as const;
+export const BLITZSG_MODES = [
+  'overall',
+  'arachnologist',
+  'archer',
+  'armorer',
+  'astronaut',
+  'baker',
+  'blaze',
+  'creepertamer',
+  'diver',
+  'donkeytamer',
+  'farmer',
+  'fisherman',
+  'florist',
+  'golem',
+  'guardian',
+  'horsetamer',
+  'hunter',
+  'hypetrain',
+  'jockey',
+  'knight',
+  'meatmaster',
+  'milkman',
+  'necromancer',
+  'paladin',
+  'phoenix',
+  'pigman',
+  'rambo',
+  'random',
+  'ranger',
+  'reaper',
+  'reddragon',
+  'rogue',
+  'scout',
+  'shadowknight',
+  'shark',
+  'slimeyslime',
+  'snowman',
+  'speleologist',
+  'tim',
+  'toxicologist',
+  'troll',
+  'viking',
+  'warlock',
+  'warrior',
+  'wolftamer',
+] as const;
 export type BlitzSGModes = typeof BLITZSG_MODES;
 
 export class BlitzSG {
@@ -24,135 +70,135 @@ export class BlitzSG {
   public doubles: BlitzSGMode;
 
   @Field({ store: { required: false } })
-  public arachnologist?: BlitzSGKit;
+  public arachnologist: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public archer?: BlitzSGKit;
+  public archer: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public armorer?: BlitzSGKit;
+  public armorer: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public astronaut?: BlitzSGKit;
+  public astronaut: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public baker?: BlitzSGKit;
+  public baker: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public blaze?: BlitzSGKit;
+  public blaze: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public creepertamer?: BlitzSGKit;
+  public creepertamer: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public diver?: BlitzSGKit;
+  public diver: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public donkeytamer?: BlitzSGKit;
+  public donkeytamer: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public farmer?: BlitzSGKit;
+  public farmer: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public fisherman?: BlitzSGKit;
+  public fisherman: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public florist?: BlitzSGKit;
+  public florist: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public golem?: BlitzSGKit;
+  public golem: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public guardian?: BlitzSGKit;
+  public guardian: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public horsetamer?: BlitzSGKit;
+  public horsetamer: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public hunter?: BlitzSGKit;
+  public hunter: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public hypetrain?: BlitzSGKit;
+  public hypetrain: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public jockey?: BlitzSGKit;
+  public jockey: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public knight?: BlitzSGKit;
+  public knight: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public meatmaster?: BlitzSGKit;
+  public meatmaster: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public milkman?: BlitzSGKit;
+  public milkman: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public necromancer?: BlitzSGKit;
+  public necromancer: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public paladin?: BlitzSGKit;
+  public paladin: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public phoenix?: BlitzSGKit;
+  public phoenix: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public pigman?: BlitzSGKit;
+  public pigman: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public rambo?: BlitzSGKit;
+  public rambo: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public random?: BlitzSGKit;
+  public random: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public ranger?: BlitzSGKit;
+  public ranger: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public reaper?: BlitzSGKit;
+  public reaper: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public reddragon?: BlitzSGKit;
+  public reddragon: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public rogue?: BlitzSGKit;
+  public rogue: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public scout?: BlitzSGKit;
+  public scout: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public shadowknight?: BlitzSGKit;
+  public shadowknight: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public shark?: BlitzSGKit;
+  public shark: BlitzSGKit;
   @Field({ store: { required: false } })
-  public slimeyslime?: BlitzSGKit;
+  public slimeyslime: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public snowman?: BlitzSGKit;
+  public snowman: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public speleologist?: BlitzSGKit;
+  public speleologist: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public tim?: BlitzSGKit;
+  public tim: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public toxicologist?: BlitzSGKit;
+  public toxicologist: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public troll?: BlitzSGKit;
+  public troll: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public viking?: BlitzSGKit;
+  public viking: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public warlock?: BlitzSGKit;
+  public warlock: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public warrior?: BlitzSGKit;
+  public warrior: BlitzSGKit;
 
   @Field({ store: { required: false } })
-  public wolftamer?: BlitzSGKit;
+  public wolftamer: BlitzSGKit;
 
   public constructor(data: APIData) {
     this.coins = data.coins;

@@ -22,7 +22,7 @@ export const inquirerConfirmation = async (message = 'Are you sure?', selected =
 
 export const ROOT = '../../';
 export const FILE_ENDINGS = ['.tsx', '.mts', '.cts', '.ts'];
-export const FILE_ENDING_REGEX = new RegExp(FILE_ENDINGS.join('|'));
+export const FILE_ENDING_REGEX = new RegExp(/\.tsx|\.mts|\.cts|\.ts/);
 
 /**
  *

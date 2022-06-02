@@ -2,7 +2,7 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { SmashHeroesMode } from './mode';
 
-export const SMASH_HEROES_MODES = ['overall', 'solo', 'teams'] as const;
+export const SMASH_HEROES_MODES = ['overall', 'solo', 'doubles', 'teams'] as const;
 export type SmashHeroesModes = typeof SMASH_HEROES_MODES;
 
 export class SmashHeroes {

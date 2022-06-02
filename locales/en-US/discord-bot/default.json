@@ -95,7 +95,18 @@
     "highestKillstreak": "Highest Killstreak",
     "winRate": "Win Rate",
     "headshots": "Headshots",
-    "KWR": "KWR"
+    "kwr": "KWR",
+    "powerups": "Powerups",
+    "wool": "Wool",
+    "layers": "Layers",
+    "woolPlaced": "Wool Placed",
+    "woolBroken": "Wool Broken",
+    "title": "Title",
+    "mastery": "Mastery",
+    "headsEaten": "Heads Eaten",
+    "ultimatesCrafted": "Ultimates Crafted",
+    "extraUltimates": "Extra Ultimates",
+    "level": "Level"
   },
   "commands": {
     "arenabrawl": "Arena Brawl command",
