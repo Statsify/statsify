@@ -1838,7 +1838,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/luxon@npm:*":
+"@types/luxon@npm:*, @types/luxon@npm:^2":
   version: 2.3.2
   resolution: "@types/luxon@npm:2.3.2"
   checksum: b9fe79118681f4bb9f2e37696a7df992a82683ba4448e7ad1af8cc241443ffc64ef08fdeaad749de9e6259b42b0d4b6540d7e880bca39bb504e0f3863d503c98
@@ -3411,11 +3411,13 @@ __metadata:
     "@statsify/util": "workspace:^"
     "@typegoose/typegoose": ^9.8.1
     "@types/i18next-fs-backend": ^1.1.2
+    "@types/luxon": ^2
     axios: ^0.27.2
     discord-api-types: ^0.33.1
     dotenv: ^16.0.1
     i18next: ^21.8.5
     i18next-fs-backend: ^1.1.4
+    luxon: ^2.4.0
     mongoose: ^6.3.4
     reflect-metadata: ^0.1.13
     short-uuid: ^4.2.0
@@ -5887,6 +5889,13 @@ __metadata:
   version: 1.28.0
   resolution: "luxon@npm:1.28.0"
   checksum: 5250cb9f138b6048eeb0b3a9044a4ac994d0058f680c72a0da4b6aeaec8612460385639cba2b1052ef6d5564879e9ed144d686f26d9d97b38ab920d82e18281c
+  languageName: node
+  linkType: hard
+
+"luxon@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "luxon@npm:2.4.0"
+  checksum: 6071028d65cc3d3bdab5e6a3995dd97411c92bb3b3163a02deb7b7014318ad3a6fd750ae77131c42141b717c14aef8880d3130f265281d500ef2365f7265b3f3
   languageName: node
   linkType: hard
 

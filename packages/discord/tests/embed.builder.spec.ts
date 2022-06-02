@@ -1,6 +1,7 @@
 import type { APIEmbed } from 'discord-api-types/v10';
 import i18next from 'i18next';
 import { EmbedBuilder } from '../src';
+import { getLocalizeFunction } from '../src/messages/localize';
 
 describe('EmbedBuilder', () => {
   it('should create an embed', () => {
@@ -15,7 +16,7 @@ describe('EmbedBuilder', () => {
       .author('authorName', 'authorIcon', 'authorUrl')
       .thumbnail('thumbnail')
       .url('url')
-      .build(i18next.t);
+      .build(getLocalizeFunction(i18next.language));
 
     expect(embed).toEqual<APIEmbed>({
       title: 'title',

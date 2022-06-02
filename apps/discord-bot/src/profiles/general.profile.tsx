@@ -1,18 +1,26 @@
 import { Container, Footer, Header, If, Table } from '#components';
+import { LocalizeFunction } from '@statsify/discord';
 import { JSX } from '@statsify/rendering';
 import { Guild, PlayerStatus } from '@statsify/schemas';
-import { formatTime } from '@statsify/util';
+import { DateTime } from 'luxon';
 import { BaseProfileProps } from './base.profile';
 
 interface GeneralProfileHeaderBodyProps {
   guild?: Guild;
   status: PlayerStatus;
+  t: LocalizeFunction;
 }
 
-const GeneralProfileHeaderBody: JSX.FC<GeneralProfileHeaderBodyProps> = ({ guild, status }) => {
+const GeneralProfileHeaderBody: JSX.FC<GeneralProfileHeaderBodyProps> = ({ guild, status, t }) => {
   const online = status.online ? '§aOnline' : '§cOffline';
-  const firstLogin = `§7First Login: §3${formatTime(status.firstLogin)}`;
-  const lastLogin = `§7Last Login: §3${status.lastLogin ? formatTime(status.lastLogout) : 'N/A'}`;
+
+  const format = "LL/dd/yy',' hh:mm a";
+
+  const firstLogin = DateTime.fromMillis(status.firstLogin).toFormat(format, { locale: t.locale });
+
+  const lastLogin = status.lastLogin
+    ? DateTime.fromMillis(status.lastLogin).toFormat(format, { locale: t.locale })
+    : 'N/A';
 
   return (
     <div height="remaining" width="remaining" direction="row">
@@ -25,8 +33,8 @@ const GeneralProfileHeaderBody: JSX.FC<GeneralProfileHeaderBodyProps> = ({ guild
         </box>
       </div>
       <box height="100%" direction="column">
-        <text align="left">{firstLogin}</text>
-        <text align="left">{lastLogin}</text>
+        <text align="left">§7First Login: §3{firstLogin}</text>
+        <text align="left">§7Last Login: §3{lastLogin}</text>
       </box>
     </div>
   );
@@ -60,7 +68,7 @@ export const GeneralProfile: JSX.FC<GeneralProfileProps> = ({
         badge={badge}
         size={3}
       >
-        <GeneralProfileHeaderBody guild={guild} status={status} />
+        <GeneralProfileHeaderBody guild={guild} status={status} t={t} />
       </Header>
       <Table.table>
         <Table.tr>
