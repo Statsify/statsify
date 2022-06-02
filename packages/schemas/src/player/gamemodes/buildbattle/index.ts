@@ -52,6 +52,8 @@ export class BuildBattle {
   @Field()
   public titleColor: Color;
 
+  @Field({ leaderboard: { enabled: false } })
+  public latest: number;
   public constructor(data: APIData) {
     this.overall = new BuildBattleOverall(data);
     this.solo = new BuildBattleMultiplayerMode(data, 'solo');
@@ -59,6 +61,7 @@ export class BuildBattle {
     this.pro = new BuildBattlePro(data);
     this.guessTheBuild = new BuildBattleGuessTheBuild(data);
 
+    this.latest = data.wins_solo_normal_latest;
     this.coins = data.coins;
     this.score = data.score;
     this.gamesPlayed = data.games_played;

@@ -10,6 +10,7 @@ import {
   BuildBattleModes,
   BUILD_BATTLE_MODES,
   CopsAndCrimsModes,
+  COPS_AND_CRIMS_MODES,
   DuelsModes,
   DUELS_MODES,
   GeneralModes,
@@ -114,6 +115,9 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ['blitzsg', 'overall'];
     case BUILD_BATTLE_MODES:
       return ['buildbattle', 'overall'];
+    //TODO(amony): add cops and crims backgrounds
+    case COPS_AND_CRIMS_MODES:
+      return ['hypixel', 'overall'];
     case DUELS_MODES: {
       let map: string;
 

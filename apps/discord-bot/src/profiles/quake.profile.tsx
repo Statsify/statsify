@@ -41,7 +41,7 @@ export const QuakeProfile: JSX.FC<QuakeProfileProps> = ({
         <Table.tr>
           <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
           <Table.td title={t('stats.winRate')} value={`${stats.winRate}%`} color="§c" />
-          <Table.td title={t('stats.KWR')} value={t(stats.kwr)} color="§6" />
+          <Table.td title={t('stats.kwr')} value={t(stats.kwr)} color="§6" />
         </Table.tr>
         <Table.tr>
           <Table.td title={t('stats.shotsFired')} value={t(stats.shotsFired)} color="§c" />

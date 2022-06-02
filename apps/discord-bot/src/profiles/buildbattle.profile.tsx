@@ -60,6 +60,7 @@ export const BuildBattleProfile: JSX.FC<BaseProfileProps> = ({
           stats={[[t('stats.wins'), t(buildbattle.overall.wins)]]}
         />
         <BuildBattleModeTable title="Pro" stats={[[t('stats.wins'), t(buildbattle.pro.wins)]]} />
+        <BuildBattleModeTable title="1.14" stats={[[t('stats.wins'), t(buildbattle.latest)]]} />
       </div>
       <div width="100%">
         <BuildBattleModeTable
