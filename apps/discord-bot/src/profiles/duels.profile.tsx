@@ -4,8 +4,8 @@ import { DuelsModes } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from './base.profile';
 import {
-  MultiDuelsGameModeTable,
   BridgeDuelsTable,
+  MultiDuelsGameModeTable,
   SingleDuelsGameModeTable,
   UHCDuelsTable,
 } from './duels-tables';
@@ -55,7 +55,10 @@ export const DuelsProfile: JSX.FC<DuelsProfileProps> = ({
   return (
     <Container background={background}>
       <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody title={`§l§bDuels §fStats §r(${prettify(mode)})`} description={`Description`} />
+        <HeaderBody
+          title={`§l§bDuels §fStats §r(${prettify(mode)})`}
+          description={`§d${prettify(mode)} Title\n${duels[mode].titleFormatted}`}
+        />
       </Header>
       {table}
       <Footer logo={logo} premium={premium} />

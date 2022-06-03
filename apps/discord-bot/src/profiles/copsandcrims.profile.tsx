@@ -22,7 +22,7 @@ export const CopsAndCrimsProfile: JSX.FC<CopsAndCrimsProfileProps> = ({
 
   const sidebar: SidebarItem[] = [
     [t('stats.coins'), t(copsandcrims.coins), '§6'],
-    [t('stats.wins'), t(copsandcrims.wins), '§a'],
+    [t('stats.overallWins'), t(copsandcrims.wins), '§a'],
   ];
 
   let table: JSX.ElementNode;
@@ -69,8 +69,8 @@ export const CopsAndCrimsProfile: JSX.FC<CopsAndCrimsProfileProps> = ({
       table = (
         <>
           <Table.tr>
-            <Table.td title={t('stats.wins')} value={t(copsandcrims[mode].wins)} color="§a" />
             <Table.td title={t('stats.kills')} value={t(copsandcrims[mode].kills)} color="§a" />
+            <Table.td title={t('stats.wins')} value={t(copsandcrims[mode].wins)} color="§a" />
           </Table.tr>
           <Table.tr>
             <Table.td title={t('stats.deaths')} value={t(copsandcrims[mode].deaths)} color="§c" />
