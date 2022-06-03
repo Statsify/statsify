@@ -1,7 +1,6 @@
 import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord-api-types/v10';
-import i18next from 'i18next';
 import { AbstractArgument } from '../arguments';
-import { translateField, translateToAllLanguages } from '../messages/localize';
+import { getLocalizeFunction, translateField, translateToAllLanguages } from '../messages/localize';
 import type { CommandContext } from './command.context';
 import type { CommandMetadata } from './command.interface';
 
@@ -25,7 +24,7 @@ export class CommandResolvable {
     target: any
   ) {
     this.name = name;
-    this.description = translateField(i18next.getFixedT('en-US'), description);
+    this.description = translateField(getLocalizeFunction('en_US'), description);
     this.description_localizations = translateToAllLanguages(description);
 
     this.type = ApplicationCommandType.ChatInput;

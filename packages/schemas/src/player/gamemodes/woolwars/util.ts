@@ -1,5 +1,7 @@
 import { findScore } from '@statsify/util';
 
+//TODO(jacobk999): Figure out how leveling works after 100
+
 export const getExpReq = (level: number) => {
   const progress = level % 100;
   if (progress > 4) return 5000;
@@ -10,9 +12,9 @@ export const getExpReq = (level: number) => {
 };
 
 export const getLevel = (exp = 0): number => {
-  const prestiges = Math.floor(exp / 487000);
+  const prestiges = Math.floor(exp / 490000);
   let level = prestiges * 100;
-  let remainingExp = exp - prestiges * 487000;
+  let remainingExp = exp - prestiges * 490000;
 
   for (let i = 0; i < 5; ++i) {
     const expForNextLevel = getExpReq(i);
@@ -21,7 +23,7 @@ export const getLevel = (exp = 0): number => {
     remainingExp -= expForNextLevel;
   }
 
-  return parseFloat((level + remainingExp / getExpReq(level + 1)).toFixed(2));
+  return Math.floor(level + remainingExp / getExpReq(level + 1));
 };
 
 const applyFormat = ({ format }: { format: string[] }, n: number) => {
@@ -41,7 +43,10 @@ const applyFormat = ({ format }: { format: string[] }, n: number) => {
 export const getFormattedLevel = (star: number): string => {
   star = Math.floor(star);
 
-  const prestigeColors: { req: number; format: string[] }[] = [{ req: 0, format: ['§7[', '✫]'] }];
+  const prestigeColors: { req: number; format: string[] }[] = [
+    { req: 0, format: ['§7[', '✫]'] },
+    { req: 100, format: ['§f[', '✫]'] },
+  ];
 
   return applyFormat(findScore(prestigeColors, star), star);
 };

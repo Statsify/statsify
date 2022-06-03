@@ -1,12 +1,13 @@
 import i18next, {
   StringMap,
+  TFunction,
   TFunctionDetailedResult,
   TFunctionKeys,
   TFunctionResult,
   TOptions,
 } from 'i18next';
 
-export interface LocalizeFunction {
+interface ILocalizeFunction {
   // basic usage
   <
     TResult extends TFunctionResult = string,
@@ -65,6 +66,22 @@ export interface LocalizeFunction {
     key: number
   ): TResult;
 }
+
+export type LocalizeFunction = ILocalizeFunction & { locale: string };
+
+export const getLocalizeFunction = (locale: string): LocalizeFunction => {
+  const fixedT = i18next.getFixedT(locale);
+
+  const t = (...args: Parameters<LocalizeFunction>) => {
+    if (typeof args[0] === 'number') return fixedT('number', { value: args[0] });
+    return fixedT(...(args as unknown as Parameters<TFunction>));
+  };
+
+  Object.defineProperty(t, 'locale', { value: locale });
+
+  return t as LocalizeFunction;
+};
+
 export type LocalizationString = string | number | ((t: LocalizeFunction) => TFunctionResult);
 
 const shouldTranslate = (str: LocalizationString): boolean => {
@@ -100,7 +117,7 @@ export const translateToAllLanguages = (key: LocalizationString): Record<string,
   if (!Array.isArray(i18next.options.preload)) return {};
 
   return i18next.options.preload.reduce(
-    (acc, lang) => ({ ...acc, [lang]: translateField(i18next.getFixedT(lang), key) }),
+    (acc, lang) => ({ ...acc, [lang]: translateField(getLocalizeFunction(lang), key) }),
     {}
   );
 };

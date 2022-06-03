@@ -3,10 +3,9 @@ import type {
   ApplicationCommandOptionType,
   ChannelType,
 } from 'discord-api-types/v10';
-import i18next from 'i18next';
 import type { CommandContext } from '../command';
 import { LocalizationString } from '../messages';
-import { translateField, translateToAllLanguages } from '../messages/localize';
+import { getLocalizeFunction, translateField, translateToAllLanguages } from '../messages/localize';
 
 export interface AbstractArgument {
   autocompleteHandler?(context: CommandContext): APIApplicationCommandOptionChoice[];
@@ -24,7 +23,7 @@ export abstract class AbstractArgument {
   public autocomplete?: boolean;
 
   public toJSON() {
-    const description = translateField(i18next.getFixedT('en-US'), this.description);
+    const description = translateField(getLocalizeFunction('en_US'), this.description);
 
     return {
       name: this.name,

@@ -29,7 +29,10 @@ export class TurboKartRacers {
   public gamesPlayed: number;
 
   @Field({ leaderboard: { enabled: false } })
-  public winRate: number;
+  public trophyRate: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public goldRate: number;
 
   public constructor(data: APIData) {
     this.coins = data.coins;
@@ -40,13 +43,14 @@ export class TurboKartRacers {
       data.hypixelgp_plays,
       data.junglerush_plays
     );
-    this.winRate = ratio(data.wins, this.gamesPlayed, 100);
+    this.trophyRate = ratio(data.wins, this.gamesPlayed, 100);
     this.grandPrixTokens = data.grand_prix_tokens;
     this.lapsCompleted = data.laps_completed;
     this.boxesPickedUp = data.box_pickups;
     this.coinsPickedUp = data.coins_picked_up;
 
     this.trophies = new TurboKartRacersTrophies(data);
+    this.goldRate = ratio(this.trophies.gold, this.gamesPlayed, 100);
   }
 }
 

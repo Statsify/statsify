@@ -10,7 +10,7 @@ import {
 import { JSX } from '@statsify/rendering';
 import { BEDWARS_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
-import { BaseProfileProps } from './base.profile';
+import { BaseProfileProps } from '../base.hypixel-command';
 
 export interface BedWarsProfileProps extends BaseProfileProps {
   mode: typeof BEDWARS_MODES[number];
@@ -44,7 +44,7 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
     <Container background={background}>
       <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
         <HeaderBody
-          title={`§l§cBed§fWars §fStats §r(§r§o${prettify(mode)}§r)`}
+          title={`§l§cBed§fWars §fStats §r(${prettify(mode)})`}
           description={`§cBed§fWars §7Level: ${bedwars.levelFormatted}\n${formatProgression(
             t,
             bedwars.levelProgression,

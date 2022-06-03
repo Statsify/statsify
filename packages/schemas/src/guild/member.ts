@@ -27,6 +27,9 @@ export class GuildMember {
   public expHistoryDays: string[];
 
   @Field()
+  public daily: number;
+
+  @Field()
   public weekly: number;
 
   @Field()
@@ -44,9 +47,15 @@ export class GuildMember {
     this.expHistory = [];
     this.expHistoryDays = [];
 
+    this.daily = 0;
+    this.weekly = 0;
+    this.monthly = 0;
+
     Object.entries(data.expHistory as Record<string, number>).forEach(([day, exp], index) => {
       this.expHistory[index] = exp;
       this.expHistoryDays[index] = day;
+      if (index === 0) this.daily = exp;
+      this.weekly += exp;
     });
   }
 }

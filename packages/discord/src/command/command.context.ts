@@ -1,9 +1,8 @@
 import type { User } from '@statsify/schemas';
 import { noop } from '@statsify/util';
 import type { APIApplicationCommandInteractionDataBasicOption } from 'discord-api-types/v10';
-import i18next, { TFunction } from 'i18next';
 import type { Interaction, InteractionContent } from '../interaction';
-import { LocalizeFunction } from '../messages/localize';
+import { getLocalizeFunction, LocalizeFunction } from '../messages/localize';
 
 export class CommandContext {
   private user: User | null;
@@ -35,12 +34,7 @@ export class CommandContext {
   }
 
   public t(): LocalizeFunction {
-    const t = i18next.getFixedT(this.interaction.getLocale());
-
-    return (...args: Parameters<LocalizeFunction>) => {
-      if (typeof args[0] === 'number') return t('number', { value: args[0] });
-      return t(...(args as unknown as Parameters<TFunction>));
-    };
+    return getLocalizeFunction(this.interaction.getLocale());
   }
 
   public reply(data: InteractionContent) {

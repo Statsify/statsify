@@ -3,7 +3,7 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { Deathmatch, Defusal, GunGame } from './mode';
 
-export const COPS_AND_CRIMS_MODES = ['overall', 'defusal', 'deathmatch', 'gunGame'] as const;
+export const COPS_AND_CRIMS_MODES = ['defusal', 'deathmatch', 'gunGame'] as const;
 export type CopsAndCrimsModes = typeof COPS_AND_CRIMS_MODES;
 
 export class CopsAndCrims {

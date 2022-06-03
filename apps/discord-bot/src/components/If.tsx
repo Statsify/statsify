@@ -1,26 +1,17 @@
 import { JSX, useChildren } from '@statsify/rendering';
 import { noop } from '@statsify/util';
 
-export interface IfProps {
-  condition: boolean;
-  children: JSX.Children | JSX.Children<() => JSX.Children>;
+export interface IfProps<T> {
+  condition: T | undefined | null | false;
+  children: JSX.Children | JSX.Children<(data: T) => JSX.Children>;
 }
 
-/**
- *
- * @description Conditionally show a component based on a boolean `condition` prop
- * @example
- * ```ts
- * <If condition={true} >
- *  <box><text>Hello World</text></box>
- * </If>
- * ```
- */
-export const If: JSX.FC<IfProps> = ({ condition, children: _children }) => {
+export function If<T>({ children: _children, condition }: IfProps<T>): JSX.ElementNode | null {
   const children = useChildren(_children);
+
   if (condition) {
-    return <>{typeof children[0] === 'function' ? children[0]() : children}</>;
+    return <>{typeof children[0] === 'function' ? children[0](condition) : children}</>;
   }
 
   return noop();
-};
+}

@@ -1,9 +1,34 @@
-import { ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 import { MegaWallsKit } from './kit';
 
-export const MEGAWALLS_MODES = ['overall'] as const;
+export const MEGAWALLS_MODES = [
+  'overall',
+  'arcanist',
+  'assassin',
+  'automaton',
+  'blaze',
+  'cow',
+  'creeper',
+  'dreadlord',
+  'enderman',
+  'golem',
+  'herobrine',
+  'hunter',
+  'moleman',
+  'phoenix',
+  'pigman',
+  'pirate',
+  'renegade',
+  'shaman',
+  'shark',
+  'skeleton',
+  'snowman',
+  'spider',
+  'squid',
+  'werewolf',
+  'zombie',
+] as const;
 export type MegaWallsModes = typeof MEGAWALLS_MODES;
 
 export class MegaWalls {
@@ -17,137 +42,86 @@ export class MegaWalls {
   public warCry: string;
 
   @Field()
-  public gamesPlayed: number;
-
-  @Field()
-  public wins: number;
-
-  @Field()
-  public losses: number;
-
-  @Field()
-  public wlr: number;
-
-  @Field()
-  public kills: number;
-
-  @Field()
-  public deaths: number;
-
-  @Field()
-  public assists: number;
-
-  @Field()
-  public kdr: number;
-
-  @Field()
-  public finalKills: number;
-
-  @Field()
-  public finalAssists: number;
-
-  @Field()
-  public finalDeaths: number;
-
-  @Field()
-  public fkdr: number;
-
-  @Field()
-  public witherDamage: number;
-
-  @Field()
-  public witherKills: number;
+  public overall: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public arcanist?: MegaWallsKit;
+  public arcanist: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public assassin?: MegaWallsKit;
+  public assassin: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public automaton?: MegaWallsKit;
+  public automaton: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public blaze?: MegaWallsKit;
+  public blaze: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public cow?: MegaWallsKit;
+  public cow: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public creeper?: MegaWallsKit;
+  public creeper: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public dreadlord?: MegaWallsKit;
+  public dreadlord: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public enderman?: MegaWallsKit;
+  public enderman: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public golem?: MegaWallsKit;
+  public golem: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public herobrine?: MegaWallsKit;
+  public herobrine: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public hunter?: MegaWallsKit;
+  public hunter: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public moleman?: MegaWallsKit;
+  public moleman: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public phoenix?: MegaWallsKit;
+  public phoenix: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public pigman?: MegaWallsKit;
+  public pigman: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public pirate?: MegaWallsKit;
+  public pirate: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public renegade?: MegaWallsKit;
+  public renegade: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public shaman?: MegaWallsKit;
+  public shaman: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public shark?: MegaWallsKit;
+  public shark: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public skeleton?: MegaWallsKit;
+  public skeleton: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public snowman?: MegaWallsKit;
-  @Field({ store: { required: false } })
-  public spider?: MegaWallsKit;
+  public snowman: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public squid?: MegaWallsKit;
+  public spider: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public werewolf?: MegaWallsKit;
+  public squid: MegaWallsKit;
 
   @Field({ store: { required: false } })
-  public zombie?: MegaWallsKit;
+  public werewolf: MegaWallsKit;
+
+  @Field({ store: { required: false } })
+  public zombie: MegaWallsKit;
 
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.class = data.chosen_class ?? 'none';
     this.warCry = data.war_cry ?? 'none';
-    this.gamesPlayed = data.games_played;
-    this.wins = data.wins;
-    this.losses = data.losses;
-    this.wlr = ratio(this.wins, this.losses);
-    this.kills = data.kills;
-    this.assists = data.assists;
-    this.deaths = data.deaths;
-    this.kdr = ratio(this.kills, this.deaths);
-    this.finalKills = data.final_kills;
-    this.finalAssists = data.final_assists;
-    this.finalDeaths = data.final_deaths;
-    this.fkdr = ratio(this.finalKills, this.finalDeaths);
-    this.witherDamage = data.wither_damage;
-    this.witherKills = data.wither_kills;
 
+    this.overall = new MegaWallsKit(data, '');
     this.arcanist = new MegaWallsKit(data, 'arcanist');
     this.assassin = new MegaWallsKit(data, 'assassin');
     this.automaton = new MegaWallsKit(data, 'automaton');

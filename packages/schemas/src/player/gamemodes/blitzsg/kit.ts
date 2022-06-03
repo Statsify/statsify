@@ -34,7 +34,7 @@ export class BlitzSGKit {
   public wlr: number;
 
   @Field({ store: { required: false } })
-  public playtime?: number;
+  public playtime: number;
 
   public constructor(data: APIData, kit: string) {
     this.gamesPlayed = data[`games_played_${kit}`];
@@ -42,15 +42,15 @@ export class BlitzSGKit {
     this.exp = data[`exp_${kit}`];
     this.prestige = data[`p${kit}`];
 
-    this.wins = add(data[`wins_${kit}`], data[`wins_teams_${kit}`]);
-    this.losses = this.deaths;
-    this.wlr = ratio(this.wins, this.losses);
-
     this.kills = data[`kills_${kit}`];
     this.deaths = sub(this.gamesPlayed, this.wins);
     this.kdr = ratio(this.kills, this.deaths);
 
-    this.playtime = data[`time_played_${kit}`];
+    this.wins = add(data[`wins_${kit}`], data[`wins_teams_${kit}`]);
+    this.losses = this.deaths;
+    this.wlr = ratio(this.wins, this.losses);
+
+    this.playtime = (data[`time_played_${kit}`] ?? 0) * 1000;
 
     const defaultKits = [
       'archer',

@@ -10,11 +10,13 @@ import {
   BuildBattleModes,
   BUILD_BATTLE_MODES,
   CopsAndCrimsModes,
+  COPS_AND_CRIMS_MODES,
   DuelsModes,
   DUELS_MODES,
   GeneralModes,
   GENERAL_MODES,
   MegaWallsModes,
+  MEGAWALLS_MODES,
   MurderMysteryModes,
   MURDER_MYSTERY_MODES,
   PaintballModes,
@@ -28,6 +30,7 @@ import {
   SmashHeroesModes,
   SMASH_HEROES_MODES,
   SpeedUHCModes,
+  SPEED_UHC_MODES,
   TNTGamesModes,
   TNT_GAMES_MODES,
   TurboKartRacersModes,
@@ -39,7 +42,9 @@ import {
   WallsModes,
   WALLS_MODES,
   WarlordsModes,
+  WARLORDS_MODES,
   WoolWarsModes,
+  WOOL_WARS_MODES,
 } from '@statsify/schemas';
 
 export const ERROR_COLOR = 0xff0000;
@@ -92,8 +97,9 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
         case '4v4':
           map = '4v4';
           break;
-        case 'overall':
-        case 'core':
+        case 'castle':
+          map = 'castle';
+          break;
         default:
           map = 'overall';
           break;
@@ -109,6 +115,9 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ['blitzsg', 'overall'];
     case BUILD_BATTLE_MODES:
       return ['buildbattle', 'overall'];
+    //TODO(amony): add cops and crims backgrounds
+    case COPS_AND_CRIMS_MODES:
+      return ['hypixel', 'overall'];
     case DUELS_MODES: {
       let map: string;
 
@@ -151,6 +160,8 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
     case PARKOUR_MODES:
     case GENERAL_MODES:
       return ['hypixel', 'overall'];
+    case MEGAWALLS_MODES:
+      return ['megawalls', 'overall'];
     case MURDER_MYSTERY_MODES:
       return ['murdermystery', 'overall'];
     case PAINTBALL_MODES:
@@ -180,12 +191,18 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ['tntgames', 'overall'];
     case TURBO_KART_RACERS_MODES:
       return ['turbokartracers', 'overall'];
+    case SPEED_UHC_MODES:
     case UHC_MODES:
       return ['uhc', 'overall'];
     case VAMPIREZ_MODES:
       return ['vampirez', 'overall'];
     case WALLS_MODES:
       return ['walls', 'overall'];
+    case WARLORDS_MODES:
+      return ['warlords', 'overall'];
+    //TODO(amony): add woolwars backgrounds
+    case WOOL_WARS_MODES:
+      return ['hypixel', 'overall'];
     default:
       return ['default', ''];
   }

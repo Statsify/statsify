@@ -6,7 +6,7 @@ import { Progression } from '../../../progression';
 import { SkyWarsGameMode, SkyWarsLabs, SkyWarsMode } from './mode';
 import { getFormattedLevel, getLevel, getLevelProgress, getPresColor, parseKit } from './util';
 
-export const SKYWARS_MODES = ['overall', 'solo', 'doubles'] as const;
+export const SKYWARS_MODES = ['overall', 'solo', 'doubles', 'labs'] as const;
 export type SkyWarsModes = typeof SKYWARS_MODES;
 
 export class SkyWars {

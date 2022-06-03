@@ -69,9 +69,9 @@ export class WoolWars {
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.layers = data.progression?.available_layers;
-    this.exp = data.progression?.experience;
+    this.exp = Math.round(data.progression?.experience ?? 0);
 
-    this.level = +getLevel(this.exp).toFixed(2);
+    this.level = getLevel(this.exp);
     this.levelFormatted = getFormattedLevel(this.level);
     this.nextLevelFormatted = getFormattedLevel(this.level + 1);
 
@@ -80,14 +80,13 @@ export class WoolWars {
         ? new Color(`§${this.levelFormatted[4]}` as ColorCode)
         : new Color(`§${this.levelFormatted[1]}` as ColorCode);
 
-    const flooredLevel = Math.floor(this.level);
     let exp = this.exp;
 
-    for (let i = 0; i < flooredLevel; i++) {
+    for (let i = 0; i < this.level; i++) {
       exp -= getExpReq(i);
     }
 
-    this.levelProgression = new Progression(exp, getExpReq(flooredLevel));
+    this.levelProgression = new Progression(exp, getExpReq(this.level));
 
     this.overall = new WoolWarsClass(data.wool_wars?.stats);
 
