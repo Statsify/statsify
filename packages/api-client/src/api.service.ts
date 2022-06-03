@@ -145,8 +145,8 @@ export class ApiService {
     );
   }
 
-  public async getPlayerHead(uuid: string) {
-    return this.requestImage(`/skin/head`, { uuid });
+  public async getPlayerHead(uuid: string, size?: number) {
+    return this.requestImage(`/skin/head`, { uuid, size });
   }
 
   public getPlayerSkin(uuid: string) {
