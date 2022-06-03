@@ -8,7 +8,6 @@
     "paths": {
       "#arguments": ["./arguments"],
       "#components": ["./components"],
-      "#profiles/*": ["./profiles/*"],
       "#services": ["./services"],
       "#constants": ["./constants"]
     }

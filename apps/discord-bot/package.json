@@ -37,7 +37,6 @@
   "imports": {
     "#arguments": "./dist/arguments/index.js",
     "#components": "./dist/components/index.js",
-    "#profiles/*": "./dist/profiles/*.js",
     "#services": "./dist/services/index.js",
     "#constants": "./dist/constants.js"
   }
