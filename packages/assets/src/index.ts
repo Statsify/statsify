@@ -3,7 +3,7 @@ import { join } from 'path';
 import { Image, loadImage } from 'skia-canvas';
 
 const PATH = '../../assets';
-const PRIVATE_PATH = join(PATH, 'private');
+const PRIVATE_PATH = join(PATH, 'private', 'package.json');
 
 const hasPrivateAssets = existsSync(PRIVATE_PATH);
 
