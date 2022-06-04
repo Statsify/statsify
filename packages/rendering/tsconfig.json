@@ -3,5 +3,5 @@
   "compilerOptions": {
     "jsx": "preserve"
   },
-  "include": ["src"]
+  "include": ["src", "tests"]
 }
