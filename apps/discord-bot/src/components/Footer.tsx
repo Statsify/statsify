@@ -1,4 +1,3 @@
-import { JSX } from '@statsify/rendering';
 import type { Image } from 'skia-canvas';
 
 export interface FooterProps {
@@ -6,7 +5,7 @@ export interface FooterProps {
   premium: boolean | undefined;
 }
 
-export const Footer: JSX.FC<FooterProps> = ({ logo, premium = false }) => {
+export const Footer = ({ logo, premium = false }: FooterProps) => {
   const margin = 8;
 
   const text = premium

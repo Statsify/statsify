@@ -1,5 +1,4 @@
-import { Container, Footer, Header, HeaderBody, If, SidebarItem, Table } from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, Header, If, SidebarItem, Table } from '#components';
 import { SpeedUHCMode, SPEED_UHC_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -8,7 +7,7 @@ export interface SpeedUHCProfileProps extends BaseProfileProps {
   mode: typeof SPEED_UHC_MODES[number];
 }
 
-export const SpeedUHCProfile: JSX.FC<SpeedUHCProfileProps> = ({
+export const SpeedUHCProfile = ({
   skin,
   player,
   background,
@@ -17,7 +16,7 @@ export const SpeedUHCProfile: JSX.FC<SpeedUHCProfileProps> = ({
   badge,
   mode,
   t,
-}) => {
+}: SpeedUHCProfileProps) => {
   const { speeduhc } = player.stats;
   const stats = speeduhc[mode];
 
@@ -30,12 +29,14 @@ export const SpeedUHCProfile: JSX.FC<SpeedUHCProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§bSpeed§6UHC §fStats §r(${prettify(mode)})`}
-          description={`§bSpeed§6UHC §7Level: ${speeduhc.levelFormatted}`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§bSpeed§6UHC §fStats §r(${prettify(mode)})`}
+        description={`§bSpeed§6UHC §7Level: ${speeduhc.levelFormatted}`}
+      />
       <Table.table>
         <Table.tr>
           <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />

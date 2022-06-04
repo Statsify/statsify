@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { ArenaBrawlModes, ARENA_BRAWL_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
 import { ArenaBrawlProfile } from './arenabrawl.profile';
@@ -13,7 +12,7 @@ export class ArenaBrawlCommand extends BaseHypixelCommand<ArenaBrawlModes> {
   public getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<ArenaBrawlModes, never>
-  ): JSX.ElementNode {
+  ): JSX.Element {
     return <ArenaBrawlProfile {...base} mode={mode} />;
   }
 }

@@ -1,5 +1,4 @@
-import { Container, Footer, Header, HeaderBody, SidebarItem, Table } from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { CopsAndCrimsModes } from '@statsify/schemas';
 import { formatTime, prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -8,7 +7,7 @@ export interface CopsAndCrimsProfileProps extends BaseProfileProps {
   mode: CopsAndCrimsModes[number];
 }
 
-export const CopsAndCrimsProfile: JSX.FC<CopsAndCrimsProfileProps> = ({
+export const CopsAndCrimsProfile = ({
   skin,
   player,
   background,
@@ -17,7 +16,7 @@ export const CopsAndCrimsProfile: JSX.FC<CopsAndCrimsProfileProps> = ({
   badge,
   mode,
   t,
-}) => {
+}: CopsAndCrimsProfileProps) => {
   const { copsandcrims } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -25,7 +24,7 @@ export const CopsAndCrimsProfile: JSX.FC<CopsAndCrimsProfileProps> = ({
     [t('stats.overallWins'), t(copsandcrims.wins), '§a'],
   ];
 
-  let table: JSX.ElementNode;
+  let table: JSX.Element;
 
   switch (mode) {
     case 'defusal':
@@ -104,12 +103,13 @@ export const CopsAndCrimsProfile: JSX.FC<CopsAndCrimsProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§bCops and Crims §fStats §r(${prettify(mode)})`}
-          description={`Description`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§bCops and Crims §fStats §r(${prettify(mode)})`}
+      />
       <Table.table>{table}</Table.table>
       <Footer logo={logo} premium={premium} />
     </Container>

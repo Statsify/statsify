@@ -1,4 +1,4 @@
-import { JSX, useChildren } from '@statsify/rendering';
+import { useChildren } from '@statsify/rendering';
 
 export interface TableRow {
   children: JSX.Children;
@@ -14,7 +14,7 @@ export interface TableRow {
  * </Table.tr>
  * ```
  */
-export const TableRow: JSX.FC<TableRow> = ({ children: _children }) => {
+export const TableRow = ({ children: _children }: TableRow) => {
   const children = useChildren(_children);
   const length = children.length;
 

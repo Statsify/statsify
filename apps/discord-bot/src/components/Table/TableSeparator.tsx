@@ -1,4 +1,4 @@
-import { JSX, useComponentHeight } from '@statsify/rendering';
+import { useComponentHeight } from '@statsify/rendering';
 
 export interface TableSeparatorProps {
   title?: string;
@@ -17,7 +17,7 @@ export interface TableSeparatorProps {
  * </Table.ts>
  * ```
  */
-export const TableSeparator: JSX.FC<TableSeparatorProps> = ({ children, title }) => {
+export const TableSeparator = ({ children, title }: TableSeparatorProps) => {
   const border = 4;
 
   const topDivider = (

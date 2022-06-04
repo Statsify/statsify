@@ -1,6 +1,5 @@
-import { toDecimal } from './convert';
 import type { ElementNode, Fraction, Instruction, Percent } from './types';
-import { getTotalSize } from './util';
+import { getTotalSize, toDecimal } from './util';
 
 export const createInstructions = (node: ElementNode): Instruction => {
   const hasDefinedWidth = typeof node.x.size === 'number';

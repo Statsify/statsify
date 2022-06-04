@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { BedWarsModes, BEDWARS_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
 import { BedWarsProfile } from './bedwars.profile';
@@ -13,7 +12,7 @@ export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
   public getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<BedWarsModes, never>
-  ): JSX.ElementNode {
+  ): JSX.Element {
     return <BedWarsProfile {...base} mode={mode} />;
   }
 }

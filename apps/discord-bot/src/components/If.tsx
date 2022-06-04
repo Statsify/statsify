@@ -1,12 +1,12 @@
-import { JSX, useChildren } from '@statsify/rendering';
+import { useChildren } from '@statsify/rendering';
 import { noop } from '@statsify/util';
 
 export interface IfProps<T> {
   condition: T | undefined | null | false;
-  children: JSX.Children | JSX.Children<(data: T) => JSX.Children>;
+  children: JSX.Element | JSX.Children<(data: T) => JSX.Children>;
 }
 
-export function If<T>({ children: _children, condition }: IfProps<T>): JSX.ElementNode | null {
+export function If<T>({ children: _children, condition }: IfProps<T>): JSX.Element | null {
   const children = useChildren(_children);
 
   if (condition) {

@@ -4,9 +4,11 @@ import type { TextNode } from '../font/tokens';
 import { useChildren } from '../hooks';
 import type * as JSX from '../jsx';
 
+type Text = string | number;
+
 export interface TextProps {
   margin?: JSX.Spacing;
-  children: (string | number) | (string | number)[];
+  children?: Text | Text[];
   align?: JSX.StyleLocation;
 }
 

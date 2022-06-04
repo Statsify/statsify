@@ -1,6 +1,5 @@
 import { Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { HoleInTheWall } from '@statsify/schemas';
 
 interface HoleInTheWallTableProps {
@@ -8,7 +7,7 @@ interface HoleInTheWallTableProps {
   t: LocalizeFunction;
 }
 
-export const HoleInTheWallTable: JSX.FC<HoleInTheWallTableProps> = ({ stats, t }) => {
+export const HoleInTheWallTable = ({ stats, t }: HoleInTheWallTableProps) => {
   return (
     <Table.table>
       <Table.tr>

@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { BlitzSGKit, BlitzSGModes, BLITZSG_MODES, Player } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
 import { BlitzSGProfile } from './blitzsg.profile';
@@ -23,7 +22,7 @@ export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
   public getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<BlitzSGModes, never>
-  ): JSX.ElementNode {
+  ): JSX.Element {
     return <BlitzSGProfile {...base} mode={mode} />;
   }
 }

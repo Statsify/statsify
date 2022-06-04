@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { DuelsModes, DUELS_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
 import { DuelsProfile } from './duels.profile';
@@ -10,7 +9,7 @@ export class DuelsCommand extends BaseHypixelCommand<DuelsModes> {
     super(DUELS_MODES);
   }
 
-  public getProfile(base: BaseProfileProps, { mode }: ProfileData<DuelsModes>): JSX.ElementNode {
+  public getProfile(base: BaseProfileProps, { mode }: ProfileData<DuelsModes>): JSX.Element {
     return <DuelsProfile {...base} mode={mode} />;
   }
 }

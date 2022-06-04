@@ -1,4 +1,17 @@
-import type { ElementNodeBiDirectional, Instruction, InstructionBiDirectional } from './types';
+import type {
+  ElementNodeBiDirectional,
+  Fraction,
+  Instruction,
+  InstructionBiDirectional,
+  Percent,
+} from './types';
+
+export const toDecimal = (measurement: Percent | Fraction): number => {
+  if (measurement.endsWith('%')) return parseFloat(measurement.replace('%', '')) / 100;
+
+  const [num, denom] = measurement.split('/').map((v) => parseInt(v, 10));
+  return num / denom;
+};
 
 export const innerSize = (bidirectional: ElementNodeBiDirectional, size: number) =>
   ((bidirectional.size as number) ?? size) - (bidirectional.padding1 + bidirectional.padding2);
