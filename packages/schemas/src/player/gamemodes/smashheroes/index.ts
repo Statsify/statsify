@@ -65,22 +65,31 @@ export class SmashHeroes {
 
   @Field()
   public skullfire: SmashHeroesKit;
+
   @Field()
   public karakot: SmashHeroesKit;
+
   @Field()
   public bulk: SmashHeroesKit;
+
   @Field()
   public botman: SmashHeroesKit;
+
   @Field()
   public sanic: SmashHeroesKit;
+
   @Field()
   public marauder: SmashHeroesKit;
+
   @Field()
   public voidCrawler: SmashHeroesKit;
+
   @Field()
   public pug: SmashHeroesKit;
+
   @Field()
   public sergeantShield: SmashHeroesKit;
+
   @Field()
   public cryomancer: SmashHeroesKit;
 
@@ -114,12 +123,12 @@ export class SmashHeroes {
 
     this.coins = data.coins;
     this.level = data.smashLevel;
-    this.kit = className[data.active_class] ?? 'None';
+    this.kit = classNames[data.active_class] ?? 'none';
     this.levelFormatted = `§b${this.level ?? 0}§6✶`;
   }
 }
 
-const className: { [key: string]: string } = {
+const classNames: Record<string, string> = {
   BOTMUN: 'Botmon',
   CAKE_MONSTER: 'Cake Monster',
   DUSK_CRAWLER: 'Void Crawler',
