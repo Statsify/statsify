@@ -1,6 +1,7 @@
 export * from './blocking-dead.table';
 export * from './bounty-hunters.table';
 export * from './capture-the-wool.table';
+export * from './creeper-attack.table';
 export * from './dragon-wars.table';
 export * from './ender-spleef.table';
 export * from './farm-hunt.table';
