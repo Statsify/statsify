@@ -4,6 +4,7 @@ import {
   BlockingDead,
   BountyHunters,
   CaptureTheWool,
+  CreeperAttack,
   DragonWars,
   EnderSpleef,
   FarmHunt,
@@ -21,9 +22,11 @@ import {
 } from './mode';
 
 export const ARCADE_MODES = [
+  'overall',
   'blockingDead',
   'bountyHunters',
   'captureTheWool',
+  'creeperAttack',
   'dragonWars',
   'enderSpleef',
   'farmHunt',
@@ -46,6 +49,9 @@ export class Arcade {
   public coins: number;
 
   @Field()
+  public wins: number;
+
+  @Field()
   public blockingDead: BlockingDead;
 
   @Field()
@@ -53,6 +59,9 @@ export class Arcade {
 
   @Field()
   public captureTheWool: CaptureTheWool;
+
+  @Field()
+  public creeperAttack: CreeperAttack;
 
   @Field()
   public dragonWars: DragonWars;
@@ -79,7 +88,7 @@ export class Arcade {
   public hypixelSays: HypixelSays;
 
   @Field()
-  public miniwalls: MiniWalls;
+  public miniWalls: MiniWalls;
 
   @Field()
   public partyGames: PartyGames;
@@ -98,9 +107,11 @@ export class Arcade {
 
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
+    this.wins = ap.arcade_arcade_winner;
     this.blockingDead = new BlockingDead(data);
     this.bountyHunters = new BountyHunters(data);
     this.captureTheWool = new CaptureTheWool(ap);
+    this.creeperAttack = new CreeperAttack(data);
     this.dragonWars = new DragonWars(data);
     this.enderSpleef = new EnderSpleef(data);
     this.farmHunt = new FarmHunt(data);
@@ -109,7 +120,7 @@ export class Arcade {
     this.hideAndSeek = new HideAndSeek(data);
     this.holeInTheWall = new HoleInTheWall(data);
     this.hypixelSays = new HypixelSays(data);
-    this.miniwalls = new MiniWalls(data);
+    this.miniWalls = new MiniWalls(data);
     this.partyGames = new PartyGames(data);
     this.pixelPainters = new PixelPainters(data);
     this.seasonal = new Seasonal(data);
