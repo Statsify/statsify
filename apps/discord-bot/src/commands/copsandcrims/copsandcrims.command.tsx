@@ -5,7 +5,7 @@ import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypix
 import { CopsAndCrimsProfile } from './copsandcrims.profile';
 
 @Command({ description: (t) => t('commands.copsandcrims') })
-export class CopsAndCrimCommand extends BaseHypixelCommand<CopsAndCrimsModes> {
+export class CopsAndCrimsCommand extends BaseHypixelCommand<CopsAndCrimsModes> {
   public constructor() {
     super(COPS_AND_CRIMS_MODES);
   }

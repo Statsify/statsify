@@ -69,6 +69,6 @@ export class MegaWallsKit {
     this.witherDamage = data[`${kit}wither_damage`];
     this.witherKills = data[`${kit}wither_kills`];
 
-    this.points = add(this.finalKills, this.finalAssists, this.wins * 10);
+    this.points = add(this.finalKills, this.finalAssists, this.wins * 10) || 0;
   }
 }
