@@ -42,7 +42,7 @@ export class Paintball {
 
   public constructor(data: APIData) {
     this.coins = data.coins;
-    this.forcefieldTime = data.forcefieldTime * 1000;
+    this.forcefieldTime = (data.forcefieldTime ?? 0) * 1000;
     this.kills = data.kills;
     this.deaths = data.deaths;
     this.killstreaks = data.killstreaks;

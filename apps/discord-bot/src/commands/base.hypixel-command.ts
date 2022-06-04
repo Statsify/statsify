@@ -24,6 +24,7 @@ export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
   data: K;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   getPreProfileData?(player: Player): K | Promise<K>;
   filterModes?(player: Player): string[];
