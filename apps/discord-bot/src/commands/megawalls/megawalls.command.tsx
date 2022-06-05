@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { MegaWallsModes, MEGAWALLS_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
 import { MegaWallsProfile } from './megawalls.profile';
@@ -13,7 +12,7 @@ export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
   public getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<MegaWallsModes, never>
-  ): JSX.ElementNode {
+  ): JSX.Element {
     return <MegaWallsProfile {...base} mode={mode} />;
   }
 }

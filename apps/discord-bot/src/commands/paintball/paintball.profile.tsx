@@ -1,8 +1,8 @@
-import { Container, Footer, Header, HeaderBody, SidebarItem, Table } from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { formatTime, prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
-export const PaintballProfile: JSX.FC<BaseProfileProps> = ({
+
+export const PaintballProfile = ({
   skin,
   player,
   background,
@@ -10,7 +10,7 @@ export const PaintballProfile: JSX.FC<BaseProfileProps> = ({
   premium,
   badge,
   t,
-}) => {
+}: BaseProfileProps) => {
   const { paintball } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -22,9 +22,13 @@ export const PaintballProfile: JSX.FC<BaseProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody title={`§l§bPaint§fball §fStats`} description={`description`} />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§bPaint§fball §fStats`}
+      />
       <Table.table>
         <Table.tr>
           <Table.td title={t('stats.wins')} value={t(paintball.wins)} color="§a" />
@@ -40,55 +44,56 @@ export const PaintballProfile: JSX.FC<BaseProfileProps> = ({
           <Table.td title={t('stats.deaths')} value={t(paintball.deaths)} color="§c" />
           <Table.td title={t('stats.kdr')} value={t(paintball.kdr)} color="§6" />
         </Table.tr>
+        <Table.ts title={`§6Perks`}>
+          <Table.tr>
+            <Table.td
+              title={t('stats.adrenaline')}
+              value={t(paintball.perks.adrenaline)}
+              color="§c"
+              size="small"
+            />
+            <Table.td
+              title={t('stats.endurance')}
+              value={t(paintball.perks.endurance)}
+              color="§6"
+              size="small"
+            />
+            <Table.td
+              title={t('stats.fortune')}
+              value={t(paintball.perks.fortune)}
+              color="§b"
+              size="small"
+            />
+          </Table.tr>
+          <Table.tr>
+            <Table.td
+              title={t('stats.godfather')}
+              value={t(paintball.perks.godfather)}
+              color="§a"
+              size="small"
+            />
+            <Table.td
+              title={t('stats.headstart')}
+              value={t(paintball.perks.headstart)}
+              color="§c"
+              size="small"
+            />
+            <Table.td
+              title={t('stats.superluck')}
+              value={t(paintball.perks.superluck)}
+              color="§6"
+              size="small"
+            />
+            <Table.td
+              title={t('stats.transfusion')}
+              value={t(paintball.perks.transfusion)}
+              color="§b"
+              size="small"
+            />
+          </Table.tr>
+        </Table.ts>
       </Table.table>
-      <Table.ts title={`§6Perks`}>
-        <Table.tr>
-          <Table.td
-            title={t('stats.adrenaline')}
-            value={t(paintball.perks.adrenaline)}
-            color="§c"
-            size="small"
-          />
-          <Table.td
-            title={t('stats.endurance')}
-            value={t(paintball.perks.endurance)}
-            color="§6"
-            size="small"
-          />
-          <Table.td
-            title={t('stats.fortune')}
-            value={t(paintball.perks.fortune)}
-            color="§b"
-            size="small"
-          />
-        </Table.tr>
-        <Table.tr>
-          <Table.td
-            title={t('stats.godfather')}
-            value={t(paintball.perks.godfather)}
-            color="§a"
-            size="small"
-          />
-          <Table.td
-            title={t('stats.headstart')}
-            value={t(paintball.perks.headstart)}
-            color="§c"
-            size="small"
-          />
-          <Table.td
-            title={t('stats.superluck')}
-            value={t(paintball.perks.superluck)}
-            color="§6"
-            size="small"
-          />
-          <Table.td
-            title={t('stats.transfusion')}
-            value={t(paintball.perks.transfusion)}
-            color="§b"
-            size="small"
-          />
-        </Table.tr>
-      </Table.ts>
+
       <Footer logo={logo} premium={premium} />
     </Container>
   );

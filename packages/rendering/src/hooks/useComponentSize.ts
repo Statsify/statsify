@@ -1,5 +1,4 @@
-import type { ElementNode } from '../jsx';
-import { getTotalSize } from '../jsx/util';
+import { ElementNode, getTotalSize } from '../jsx';
 
 interface UseComponentSizeOptions {
   includeMargin?: boolean;

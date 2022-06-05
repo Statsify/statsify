@@ -1,7 +1,7 @@
-import { Container, Footer, Header, HeaderBody, SidebarItem, Table } from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { BaseProfileProps } from '../base.hypixel-command';
-export const TurboKartRacersProfile: JSX.FC<BaseProfileProps> = ({
+
+export const TurboKartRacersProfile = ({
   skin,
   player,
   background,
@@ -9,7 +9,7 @@ export const TurboKartRacersProfile: JSX.FC<BaseProfileProps> = ({
   premium,
   badge,
   t,
-}) => {
+}: BaseProfileProps) => {
   const { turbokartracers } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -22,12 +22,13 @@ export const TurboKartRacersProfile: JSX.FC<BaseProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§#ffd700Turbo §#c0c0c0Kart §#cd7f32Racers §fStats`}
-          description={`description`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§#ffd700Turbo §#c0c0c0Kart §#cd7f32Racers §fStats`}
+      />
       <Table.table>
         <Table.tr>
           <Table.td title={t('stats.goldRate')} value={`${turbokartracers.goldRate}%`} color="§6" />

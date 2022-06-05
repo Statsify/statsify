@@ -1,13 +1,4 @@
-import {
-  Container,
-  Footer,
-  formatProgression,
-  Header,
-  HeaderBody,
-  SidebarItem,
-  Table,
-} from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, formatProgression, Header, SidebarItem, Table } from '#components';
 import { WOOL_WARS_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -16,7 +7,7 @@ export interface WoolWarsProfileProps extends BaseProfileProps {
   mode: typeof WOOL_WARS_MODES[number];
 }
 
-export const WoolWarsProfile: JSX.FC<WoolWarsProfileProps> = ({
+export const WoolWarsProfile = ({
   skin,
   player,
   background,
@@ -25,7 +16,7 @@ export const WoolWarsProfile: JSX.FC<WoolWarsProfileProps> = ({
   badge,
   mode,
   t,
-}) => {
+}: WoolWarsProfileProps) => {
   const { woolwars } = player.stats;
   const stats = woolwars[mode];
 
@@ -39,17 +30,19 @@ export const WoolWarsProfile: JSX.FC<WoolWarsProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§cWool§9Wars §fStats §r(${prettify(mode)})`}
-          description={`§cWool§9Wars §7Level: ${woolwars.levelFormatted}\n${formatProgression(
-            t,
-            woolwars.levelProgression,
-            woolwars.levelFormatted,
-            woolwars.nextLevelFormatted
-          )}`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§cWool§9Wars §fStats §r(${prettify(mode)})`}
+        description={`§cWool§9Wars §7Level: ${woolwars.levelFormatted}\n${formatProgression(
+          t,
+          woolwars.levelProgression,
+          woolwars.levelFormatted,
+          woolwars.nextLevelFormatted
+        )}`}
+      />
       <Table.table>
         <Table.tr>
           <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />

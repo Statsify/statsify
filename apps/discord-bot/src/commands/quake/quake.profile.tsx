@@ -1,5 +1,4 @@
-import { Container, Footer, Header, HeaderBody, SidebarItem, Table } from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { QUAKE_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -8,7 +7,7 @@ export interface QuakeProfileProps extends BaseProfileProps {
   mode: typeof QUAKE_MODES[number];
 }
 
-export const QuakeProfile: JSX.FC<QuakeProfileProps> = ({
+export const QuakeProfile = ({
   skin,
   player,
   background,
@@ -17,7 +16,7 @@ export const QuakeProfile: JSX.FC<QuakeProfileProps> = ({
   badge,
   mode,
   t,
-}) => {
+}: QuakeProfileProps) => {
   const { quake } = player.stats;
   const stats = quake[mode];
 
@@ -31,12 +30,13 @@ export const QuakeProfile: JSX.FC<QuakeProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§5Quake §fStats §r(${prettify(mode)})`}
-          description={`descritpnion`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§5Quake §fStats §r(${prettify(mode)})`}
+      />
       <Table.table>
         <Table.tr>
           <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />

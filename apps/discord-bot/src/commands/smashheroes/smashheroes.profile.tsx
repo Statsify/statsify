@@ -1,5 +1,4 @@
-import { Container, Footer, Header, HeaderBody, SidebarItem, Table } from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { SMASH_HEROES_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -8,7 +7,7 @@ export interface SmashHeroesProfile extends BaseProfileProps {
   mode: typeof SMASH_HEROES_MODES[number];
 }
 
-export const SmashHeroesProfile: JSX.FC<SmashHeroesProfile> = ({
+export const SmashHeroesProfile = ({
   skin,
   player,
   background,
@@ -17,7 +16,7 @@ export const SmashHeroesProfile: JSX.FC<SmashHeroesProfile> = ({
   badge,
   mode,
   t,
-}) => {
+}: SmashHeroesProfile) => {
   const { smashheroes } = player.stats;
   const stats = smashheroes[mode];
 
@@ -28,12 +27,14 @@ export const SmashHeroesProfile: JSX.FC<SmashHeroesProfile> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§dSmash §eHeroes §fStats §r(${prettify(mode)})`}
-          description={`§dSmash §eHeroes §7Level: ${smashheroes.levelFormatted}`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§dSmash §eHeroes §fStats §r(${prettify(mode)})`}
+        description={`§dSmash §eHeroes §7Level: ${smashheroes.levelFormatted}`}
+      />
       <Table.table>
         <Table.tr>
           <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />

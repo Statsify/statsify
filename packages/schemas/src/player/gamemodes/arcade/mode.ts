@@ -438,7 +438,7 @@ export class ZombiesMap {
     map = map ? `_${map}` : '';
 
     this.wins = data[`wins_zombies${map}`];
-    this.fastestWin = data[`fastest_time_30_zombies${map ? `${map}_normal` : ''}`];
+    this.fastestWin = (data[`fastest_time_30_zombies${map ? `${map}_normal` : ''}`] ?? 0) * 1000;
     this.kills = data[`zombie_kills_zombies${map}`];
     this.deaths = data[`deaths_zombies${map}`];
     this.playersRevived = data[`players_revived_zombies${map}`];

@@ -1,6 +1,5 @@
 import { Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { MiniWalls } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 
@@ -9,7 +8,7 @@ interface MiniWallsTableProps {
   t: LocalizeFunction;
 }
 
-export const MiniWallsTable: JSX.FC<MiniWallsTableProps> = ({ stats, t }) => {
+export const MiniWallsTable = ({ stats, t }: MiniWallsTableProps) => {
   return (
     <Table.table>
       <Table.tr>

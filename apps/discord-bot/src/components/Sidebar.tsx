@@ -1,5 +1,3 @@
-import { JSX } from '@statsify/rendering';
-
 export type SidebarItem = [title: string, value: string, color: string];
 
 export interface SidebarProps {
@@ -16,7 +14,7 @@ export interface SidebarProps {
  * ] />
  * ```
  */
-export const Sidebar: JSX.FC<SidebarProps> = ({ items }) => (
+export const Sidebar = ({ items }: SidebarProps) => (
   <box direction="column" height="100%" padding={0}>
     {items.map(([title, value, color]) => (
       <div>

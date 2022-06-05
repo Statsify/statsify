@@ -1,6 +1,5 @@
 import { Container, Footer, Header, If, Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { Guild, PlayerStatus } from '@statsify/schemas';
 import { DateTime } from 'luxon';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -11,7 +10,7 @@ interface GeneralProfileHeaderBodyProps {
   t: LocalizeFunction;
 }
 
-const GeneralProfileHeaderBody: JSX.FC<GeneralProfileHeaderBodyProps> = ({ guild, status, t }) => {
+const GeneralProfileHeaderBody = ({ guild, status, t }: GeneralProfileHeaderBodyProps) => {
   const online = status.online ? '§aOnline' : '§cOffline';
 
   const format = "LL/dd/yy',' hh:mm a";
@@ -45,7 +44,7 @@ export interface GeneralProfileProps extends BaseProfileProps {
   friends?: number;
 }
 
-export const GeneralProfile: JSX.FC<GeneralProfileProps> = ({
+export const GeneralProfile = ({
   background,
   logo,
   player,
@@ -55,7 +54,7 @@ export const GeneralProfile: JSX.FC<GeneralProfileProps> = ({
   premium,
   guild,
   friends = 0,
-}) => {
+}: GeneralProfileProps) => {
   const { general } = player.stats;
   const { status } = player;
   const member = guild?.members.find((m) => m.uuid === player.uuid);

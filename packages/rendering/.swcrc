@@ -10,8 +10,8 @@
       "legacyDecorator": true,
       "decoratorMetadata": true,
       "react": {
-        "pragma": "JSX.createElement",
-        "pragmaFrag": "JSX.Fragment"
+        "runtime": "automatic",
+        "importSource": "@statsify/rendering"
       }
     },
     "target": "es2018",

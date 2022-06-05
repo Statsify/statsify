@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { ArcadeModes, ARCADE_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
 import { ArcadeProfile } from './arcade.profile';
@@ -10,7 +9,7 @@ export class ArcadeCommand extends BaseHypixelCommand<ArcadeModes> {
     super(ARCADE_MODES);
   }
 
-  public getProfile(base: BaseProfileProps, { mode }: ProfileData<ArcadeModes>): JSX.ElementNode {
+  public getProfile(base: BaseProfileProps, { mode }: ProfileData<ArcadeModes>): JSX.Element {
     return <ArcadeProfile {...base} mode={mode} />;
   }
 }

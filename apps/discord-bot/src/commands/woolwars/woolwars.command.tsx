@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { WoolWarsModes, WOOL_WARS_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
 import { WoolWarsProfile } from './woolwars.profile';
@@ -13,7 +12,7 @@ export class WoolWarsCommand extends BaseHypixelCommand<WoolWarsModes> {
   public getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<WoolWarsModes, never>
-  ): JSX.ElementNode {
+  ): JSX.Element {
     return <WoolWarsProfile {...base} mode={mode} />;
   }
 }

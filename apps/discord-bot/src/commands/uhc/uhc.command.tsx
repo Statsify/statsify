@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { UHCModes, UHC_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
 import { UHCProfile } from './uhc.profile';
@@ -10,10 +9,7 @@ export class UHCCommand extends BaseHypixelCommand<UHCModes> {
     super(UHC_MODES);
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<UHCModes, never>
-  ): JSX.ElementNode {
+  public getProfile(base: BaseProfileProps, { mode }: ProfileData<UHCModes, never>): JSX.Element {
     return <UHCProfile {...base} mode={mode} />;
   }
 }
