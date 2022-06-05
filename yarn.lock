@@ -2332,7 +2332,7 @@ __metadata:
     handlebars: ^4.7.7
     ioredis: 5.0.5
     mongoose: ^6.3.4
-    point-of-view: ^5.3.0
+    point-of-view: ^6.2.1
     reflect-metadata: ^0.1.13
     rxjs: ^7.5.5
     short-uuid: ^4.2.0
@@ -6868,13 +6868,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"point-of-view@npm:^5.3.0":
-  version: 5.3.0
-  resolution: "point-of-view@npm:5.3.0"
+"point-of-view@npm:^6.2.1":
+  version: 6.2.1
+  resolution: "point-of-view@npm:6.2.1"
   dependencies:
     fastify-plugin: ^3.0.0
     hashlru: ^2.3.0
-  checksum: 5f397ad1bd165938125eb1f8b92ff45422823e23b1b08f031ca5a1cbe02637cfc1e740eb8da2c84389224e170ed59e6fe1579404651fa4ab0c7120cb29d1dbf1
+  checksum: af1d21c9a91444c2c2314acb3348d3a74754d2eb04702d335892c4e51dfb81e4e0d4c7a3bf0cdf6580f0715149eed4a4f6e5c5c874beae78e71891d389bcc2b0
   languageName: node
   linkType: hard
 
