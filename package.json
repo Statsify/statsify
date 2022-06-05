@@ -37,6 +37,7 @@
     "test": "turbo run test --parallel --cache-dir='.turbo'",
     "test:coverage": "turbo run test:coverage --parallel --cache-dir='.turbo'",
     "lint": "turbo run lint --parallel --cache-dir='.turbo'",
+    "postinstall": "yarn assets/public install",
     "pre-commit": "yarn lint && yarn test:types && yarn test && git add .",
     "commit": "yarn pre-commit && git cz",
     "api": "yarn workspace api",
