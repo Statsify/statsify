@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { BuildBattleModes, BUILD_BATTLE_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps } from '../base.hypixel-command';
 import { BuildBattleProfile } from './buildbattle.profile';
@@ -10,7 +9,7 @@ export class BuildBattleCommand extends BaseHypixelCommand<BuildBattleModes> {
     super(BUILD_BATTLE_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.ElementNode {
+  public getProfile(base: BaseProfileProps): JSX.Element {
     return <BuildBattleProfile {...base} />;
   }
 }

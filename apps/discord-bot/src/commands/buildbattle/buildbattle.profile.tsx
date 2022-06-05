@@ -1,5 +1,4 @@
-import { Container, Footer, Header, HeaderBody, SidebarItem, Table } from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { BaseProfileProps } from '../base.hypixel-command';
 
 interface BuildBattleModeTableProps {
@@ -8,11 +7,7 @@ interface BuildBattleModeTableProps {
   width?: JSX.Measurement;
 }
 
-const BuildBattleModeTable: JSX.FC<BuildBattleModeTableProps> = ({
-  title,
-  stats,
-  width = 'remaining',
-}) => {
+const BuildBattleModeTable = ({ title, stats, width = 'remaining' }: BuildBattleModeTableProps) => {
   const colors = ['§b', '§5'];
 
   return (
@@ -28,7 +23,7 @@ const BuildBattleModeTable: JSX.FC<BuildBattleModeTableProps> = ({
   );
 };
 
-export const BuildBattleProfile: JSX.FC<BaseProfileProps> = ({
+export const BuildBattleProfile = ({
   player,
   background,
   logo,
@@ -36,7 +31,7 @@ export const BuildBattleProfile: JSX.FC<BaseProfileProps> = ({
   t,
   badge,
   premium,
-}) => {
+}: BaseProfileProps) => {
   const { buildbattle } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -48,12 +43,14 @@ export const BuildBattleProfile: JSX.FC<BaseProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          description={`§dBuild Battle Title\n${buildbattle.titleFormatted}`}
-          title="§l§6Build Battle §fStats"
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title="§l§6Build Battle §fStats"
+        description={`§dBuild Battle Title\n${buildbattle.titleFormatted}`}
+      />
       <div width="100%">
         <BuildBattleModeTable
           title="Overall"

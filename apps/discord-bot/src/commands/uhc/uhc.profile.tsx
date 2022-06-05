@@ -1,5 +1,4 @@
-import { Container, Footer, Header, HeaderBody, SidebarItem, Table } from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { UHC_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -8,7 +7,7 @@ export interface UHCProfileProps extends BaseProfileProps {
   mode: typeof UHC_MODES[number];
 }
 
-export const UHCProfile: JSX.FC<UHCProfileProps> = ({
+export const UHCProfile = ({
   skin,
   player,
   background,
@@ -17,7 +16,7 @@ export const UHCProfile: JSX.FC<UHCProfileProps> = ({
   badge,
   mode,
   t,
-}) => {
+}: UHCProfileProps) => {
   const { uhc } = player.stats;
   const stats = uhc[mode];
 
@@ -30,12 +29,14 @@ export const UHCProfile: JSX.FC<UHCProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§6UHC §fStats §r(${prettify(mode)})`}
-          description={`§6UHC §7Level: ${uhc.levelFormatted}`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§6UHC §fStats §r(${prettify(mode)})`}
+        description={`§6UHC §7Level: ${uhc.levelFormatted}`}
+      />
       <Table.table>
         <Table.tr>
           <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§e" />

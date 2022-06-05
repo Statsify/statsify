@@ -1,13 +1,14 @@
-import type { IntrinsicElement } from './instrinsics';
-import type { CompleteSpacing, ElementNode, Fraction, Percent, RawElement, Spacing } from './types';
-import { getTotalSize } from './util';
-
-export const toDecimal = (measurement: Percent | Fraction): number => {
-  if (measurement.endsWith('%')) return parseFloat(measurement.replace('%', '')) / 100;
-
-  const [num, denom] = measurement.split('/').map((v) => parseInt(v, 10));
-  return num / denom;
-};
+import {
+  CompleteSpacing,
+  ElementNode,
+  Fraction,
+  getTotalSize,
+  IntrinsicElement,
+  Percent,
+  RawElement,
+  Spacing,
+  toDecimal,
+} from '../jsx';
 
 const spacingToCompleteSpacing = (spacing?: Spacing): CompleteSpacing => {
   if (typeof spacing === 'number') {

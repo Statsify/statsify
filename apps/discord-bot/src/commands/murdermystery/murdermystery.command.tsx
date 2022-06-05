@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { MurderMysteryModes, MURDER_MYSTERY_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps } from '../base.hypixel-command';
 import { MurderMysteryProfile } from './murdermystery.profile';
@@ -10,7 +9,7 @@ export class MurderMysteryCommand extends BaseHypixelCommand<MurderMysteryModes>
     super(MURDER_MYSTERY_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.ElementNode {
+  public getProfile(base: BaseProfileProps): JSX.Element {
     return <MurderMysteryProfile {...base} />;
   }
 }

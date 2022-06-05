@@ -1,5 +1,4 @@
-import { Container, Footer, Header, HeaderBody, SidebarItem, Table } from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { MEGAWALLS_MODES } from '@statsify/schemas';
 import { formatTime, prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -8,7 +7,7 @@ export interface MegaWallsProfileProps extends BaseProfileProps {
   mode: typeof MEGAWALLS_MODES[number];
 }
 
-export const MegaWallsProfile: JSX.FC<MegaWallsProfileProps> = ({
+export const MegaWallsProfile = ({
   skin,
   player,
   background,
@@ -17,7 +16,7 @@ export const MegaWallsProfile: JSX.FC<MegaWallsProfileProps> = ({
   badge,
   mode,
   t,
-}) => {
+}: MegaWallsProfileProps) => {
   const { megawalls } = player.stats;
   const stats = megawalls[mode];
 
@@ -29,12 +28,13 @@ export const MegaWallsProfile: JSX.FC<MegaWallsProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§cMega§7Walls §fStats §r(${prettify(mode)})`}
-          description={`Description`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§cMega§7Walls §fStats §r(${prettify(mode)})`}
+      />
       <Table.table>
         <Table.tr>
           <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />

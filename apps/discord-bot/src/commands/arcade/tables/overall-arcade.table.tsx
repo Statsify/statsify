@@ -1,6 +1,5 @@
 import { Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { Arcade } from '@statsify/schemas';
 
 interface OverallArcadeTableProps {
@@ -8,7 +7,7 @@ interface OverallArcadeTableProps {
   t: LocalizeFunction;
 }
 
-export const OverallArcadeTable: JSX.FC<OverallArcadeTableProps> = ({ stats, t }) => {
+export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
   const rowSize = 4;
 
   const games: [string, number][] = [

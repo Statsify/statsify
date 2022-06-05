@@ -1,6 +1,5 @@
-import { Container, Footer, Header, HeaderBody, SidebarItem, Table } from '#components';
+import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { BlitzSG, BlitzSGKit, BLITZSG_MODES } from '@statsify/schemas';
 import { formatTime, prettify, romanNumeral } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -10,7 +9,7 @@ interface OverallBlitzSGTableProps {
   t: LocalizeFunction;
 }
 
-const OverallBlitzSGTable: JSX.FC<OverallBlitzSGTableProps> = ({ blitzsg, t }) => (
+const OverallBlitzSGTable = ({ blitzsg, t }: OverallBlitzSGTableProps) => (
   <Table.table>
     <Table.ts title="§6Overall">
       <Table.tr>
@@ -57,7 +56,7 @@ interface KitBlitzSGTableProps {
   t: LocalizeFunction;
 }
 
-const KitBlitzSGTable: JSX.FC<KitBlitzSGTableProps> = ({ stats, t }) => {
+const KitBlitzSGTable = ({ stats, t }: KitBlitzSGTableProps) => {
   return (
     <Table.table>
       <Table.tr>
@@ -82,7 +81,7 @@ export interface BlitzSGProfileProps extends BaseProfileProps {
   mode: typeof BLITZSG_MODES[number];
 }
 
-export const BlitzSGProfile: JSX.FC<BlitzSGProfileProps> = ({
+export const BlitzSGProfile = ({
   skin,
   player,
   background,
@@ -91,7 +90,7 @@ export const BlitzSGProfile: JSX.FC<BlitzSGProfileProps> = ({
   badge,
   mode,
   t,
-}) => {
+}: BlitzSGProfileProps) => {
   const { blitzsg } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -99,7 +98,7 @@ export const BlitzSGProfile: JSX.FC<BlitzSGProfileProps> = ({
     [t('stats.kit'), prettify(blitzsg.kit), '§e'],
   ];
 
-  let table: JSX.ElementNode;
+  let table: JSX.Element;
 
   switch (mode) {
     case 'overall':
@@ -120,12 +119,13 @@ export const BlitzSGProfile: JSX.FC<BlitzSGProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§2Blitz§6SG §fStats §r(${prettify(mode)})`}
-          description={`description`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§2Blitz§6SG §fStats §r(${prettify(mode)})`}
+      />
       {table}
       <Footer logo={logo} premium={premium} />
     </Container>

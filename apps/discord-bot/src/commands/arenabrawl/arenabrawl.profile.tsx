@@ -1,5 +1,4 @@
-import { Container, Footer, Header, HeaderBody, SidebarItem, Table } from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { ARENA_BRAWL_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -8,7 +7,7 @@ export interface ArenaBrawlProfileProps extends BaseProfileProps {
   mode: typeof ARENA_BRAWL_MODES[number];
 }
 
-export const ArenaBrawlProfile: JSX.FC<ArenaBrawlProfileProps> = ({
+export const ArenaBrawlProfile = ({
   skin,
   player,
   background,
@@ -17,7 +16,7 @@ export const ArenaBrawlProfile: JSX.FC<ArenaBrawlProfileProps> = ({
   badge,
   mode,
   t,
-}) => {
+}: ArenaBrawlProfileProps) => {
   const { arenabrawl } = player.stats;
   const stats = arenabrawl[mode];
 
@@ -30,12 +29,13 @@ export const ArenaBrawlProfile: JSX.FC<ArenaBrawlProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§6Arena Brawl §fStats §r(${prettify(mode)})`}
-          description={`description`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§6Arena Brawl §fStats §r(${prettify(mode)})`}
+      />
       <Table.table>
         <Table.tr>
           <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />

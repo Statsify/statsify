@@ -1,7 +1,6 @@
-import { JSX } from '@statsify/rendering';
-
 export interface TableProps {
   width?: JSX.Measurement;
+  children: JSX.Children;
 }
 
 /**
@@ -23,7 +22,7 @@ export interface TableProps {
  * </Table.table>
  * ```
  */
-export const Table: JSX.FC<TableProps> = ({ width = '100%', children }) => (
+export const Table = ({ width = '100%', children }: TableProps) => (
   <div width={width} direction="column">
     {children}
   </div>

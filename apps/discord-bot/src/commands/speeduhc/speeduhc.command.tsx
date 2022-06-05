@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { SpeedUHCModes, SPEED_UHC_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
 import { SpeedUHCProfile } from './speeduhc.profile';
@@ -13,7 +12,7 @@ export class SpeedUHCCommand extends BaseHypixelCommand<SpeedUHCModes> {
   public getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<SpeedUHCModes, never>
-  ): JSX.ElementNode {
+  ): JSX.Element {
     return <SpeedUHCProfile {...base} mode={mode} />;
   }
 }

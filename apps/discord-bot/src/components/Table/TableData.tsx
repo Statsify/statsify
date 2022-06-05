@@ -1,5 +1,3 @@
-import { JSX } from '@statsify/rendering';
-
 export interface TableDataProps {
   title: string;
   value: string;
@@ -13,7 +11,7 @@ export interface TableDataProps {
  * <Table.td title="Wins" value="1" color="§a" />
  * ```
  */
-export const TableData: JSX.FC<TableDataProps> = ({ title, value, color, size = 'regular' }) => {
+export const TableData = ({ title, value, color, size = 'regular' }: TableDataProps) => {
   if (size === 'small') {
     return (
       <box direction="column" location="center" width="100%">

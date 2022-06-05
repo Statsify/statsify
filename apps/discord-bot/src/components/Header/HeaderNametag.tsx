@@ -1,4 +1,3 @@
-import { JSX } from '@statsify/rendering';
 import type { Image } from 'skia-canvas';
 import { If } from '../If';
 
@@ -8,7 +7,7 @@ export interface HeaderNametagProps {
   size?: number;
 }
 
-export const HeaderNametag: JSX.FC<HeaderNametagProps> = ({ name, badge, size = 4 }) => {
+export const HeaderNametag = ({ name, badge, size = 4 }: HeaderNametagProps) => {
   return (
     <box width="100%">
       <If condition={badge}>{(badge) => <img image={badge} />}</If>

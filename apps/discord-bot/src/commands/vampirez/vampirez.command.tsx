@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { VampireZModes, VAMPIREZ_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps } from '../base.hypixel-command';
 import { VampireZProfile } from './vampirez.profile';
@@ -10,7 +9,7 @@ export class VampireZCommand extends BaseHypixelCommand<VampireZModes> {
     super(VAMPIREZ_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.ElementNode {
+  public getProfile(base: BaseProfileProps): JSX.Element {
     return <VampireZProfile {...base} />;
   }
 }

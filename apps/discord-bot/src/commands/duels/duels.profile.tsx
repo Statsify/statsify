@@ -1,5 +1,4 @@
-import { Container, Footer, Header, HeaderBody, SidebarItem } from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, Header, SidebarItem } from '#components';
 import { DuelsModes } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -8,13 +7,13 @@ import {
   MultiDuelsGameModeTable,
   SingleDuelsGameModeTable,
   UHCDuelsTable,
-} from './duels-tables';
+} from './tables';
 
 export interface DuelsProfileProps extends BaseProfileProps {
   mode: DuelsModes[number];
 }
 
-export const DuelsProfile: JSX.FC<DuelsProfileProps> = ({
+export const DuelsProfile = ({
   skin,
   player,
   background,
@@ -23,7 +22,7 @@ export const DuelsProfile: JSX.FC<DuelsProfileProps> = ({
   badge,
   mode,
   t,
-}) => {
+}: DuelsProfileProps) => {
   const { duels } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -33,7 +32,7 @@ export const DuelsProfile: JSX.FC<DuelsProfileProps> = ({
     [t('stats.blocksPlaced'), t(duels.overall.blocksPlaced), '§9'],
   ];
 
-  let table: JSX.ElementNode;
+  let table: JSX.Element;
 
   switch (mode) {
     case 'bridge':
@@ -54,12 +53,14 @@ export const DuelsProfile: JSX.FC<DuelsProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§bDuels §fStats §r(${prettify(mode)})`}
-          description={`§d${prettify(mode)} Title\n${duels[mode].titleFormatted}`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§bDuels §fStats §r(${prettify(mode)})`}
+        description={`§d${prettify(mode)} Title\n${duels[mode].titleFormatted}`}
+      />
       {table}
       <Footer logo={logo} premium={premium} />
     </Container>

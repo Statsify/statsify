@@ -1,4 +1,3 @@
-import { JSX } from '@statsify/rendering';
 import { Image } from 'skia-canvas';
 
 export interface SkinProps {
@@ -12,14 +11,8 @@ export interface SkinProps {
  * const skin = new Image();
  * <Skin skin={skin}/>
  * ```
- *
- * @example
- * ```ts
- * const skin = new Image();
- * <Skin skin={skin} height={120} />
- * ```
  */
-export const Skin: JSX.FC<SkinProps> = ({ skin }) => {
+export const Skin = ({ skin }: SkinProps) => {
   const width = 125;
 
   return (
