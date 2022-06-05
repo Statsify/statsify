@@ -1,9 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "react",
-    "jsxFactory": "JSX.createElement",
-    "jsxFragmentFactory": "JSX.Fragment",
+    "jsx": "preserve",
     "baseUrl": "./src",
     "paths": {
       "#arguments": ["./arguments"],

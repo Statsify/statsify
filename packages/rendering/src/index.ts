@@ -1,20 +1,24 @@
-import type { ElementNode, FC as FCInternal, IntrinsicProps } from './jsx';
-
+/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-namespace */
 export * from './colors';
-export * from './components';
 export * from './font';
 export * from './hooks';
-export * as JSX from './jsx';
+export * from './jsx';
+
+import type * as JSXInternal from './jsx';
 
 declare global {
   namespace JSX {
     //@ts-ignore Typescript for the love of god won't let me override this interface
-    type IntrinsicElements = IntrinsicProps;
+    type IntrinsicElements = JSXInternal.IntrinsicProps;
 
-    type FC = FCInternal;
+    type FC<T = {}> = JSXInternal.FC<T>;
 
     //@ts-ignore Typescript for the love of god won't let me override this interface
-    type Element = ElementNode;
+    type Element = JSXInternal.ElementNode;
+
+    type Children<T = Element> = JSXInternal.Children<T>;
+
+    type Measurement = JSXInternal.Measurement;
   }
 }

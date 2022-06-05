@@ -3,7 +3,7 @@ import { GamesWithBackgrounds, mapBackground } from '#constants';
 import { ApiService, Page, PaginateService } from '#services';
 import { getBackground, getLogo } from '@statsify/assets';
 import { Command, CommandContext, LocalizeFunction } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
+import { render } from '@statsify/rendering';
 import type { Player } from '@statsify/schemas';
 import { noop, prettify } from '@statsify/util';
 import type { Image } from 'skia-canvas';
@@ -24,6 +24,7 @@ export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
   data: K;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   getPreProfileData?(player: Player): K | Promise<K>;
   filterModes?(player: Player): string[];
@@ -79,12 +80,12 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
           { mode: mode as T[number], data }
         );
 
-        return JSX.render(profile);
+        return render(profile);
       },
     }));
 
     return this.paginateService.paginate(context, pages);
   }
 
-  public abstract getProfile(base: BaseProfileProps, extra: ProfileData<T, K>): JSX.ElementNode;
+  public abstract getProfile(base: BaseProfileProps, extra: ProfileData<T, K>): JSX.Element;
 }

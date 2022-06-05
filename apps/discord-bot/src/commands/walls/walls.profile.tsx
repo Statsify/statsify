@@ -1,7 +1,7 @@
-import { Container, Footer, Header, HeaderBody, SidebarItem, Table } from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { BaseProfileProps } from '../base.hypixel-command';
-export const WallsProfile: JSX.FC<BaseProfileProps> = ({
+
+export const WallsProfile = ({
   skin,
   player,
   background,
@@ -9,16 +9,20 @@ export const WallsProfile: JSX.FC<BaseProfileProps> = ({
   premium,
   badge,
   t,
-}) => {
+}: BaseProfileProps) => {
   const { walls } = player.stats;
 
   const sidebar: SidebarItem[] = [[t('stats.coins'), t(walls.coins), '§6']];
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody title={`§l§eWalls §fStats`} description={`description`} />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§eWalls §fStats`}
+      />
       <Table.table>
         <Table.tr>
           <Table.td title={t('stats.wins')} value={t(walls.wins)} color="§a" />

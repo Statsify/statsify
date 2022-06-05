@@ -31,7 +31,7 @@ export class SkyWarsGameMode {
   public playtime: number;
 
   //Kit gets applied in the main class
-  @Field()
+  @Field({ store: { default: 'none' } })
   public kit: string;
 
   public constructor(data: APIData, mode: string) {

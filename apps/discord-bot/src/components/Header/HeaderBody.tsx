@@ -1,11 +1,17 @@
-import { JSX } from '@statsify/rendering';
-
 export interface HeaderBodyProps {
-  description: string;
+  description?: string;
   title: string;
 }
 
-export const HeaderBody: JSX.FC<HeaderBodyProps> = ({ description, title }) => {
+export const HeaderBody = ({ description, title }: HeaderBodyProps) => {
+  if (!description) {
+    return (
+      <box width="remaining" height="remaining">
+        <text>{title}</text>
+      </box>
+    );
+  }
+
   return (
     <div direction="column" width="remaining" height="remaining">
       <box

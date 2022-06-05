@@ -1,4 +1,4 @@
-import { JSX, useChildren } from '@statsify/rendering';
+import { useChildren } from '@statsify/rendering';
 import { Image } from 'skia-canvas';
 import { Background } from './Background';
 
@@ -64,7 +64,7 @@ export type ContainerProps = DefinedSizeContainerProps | UndefinedSizeContainerP
  * </Container>
  * ```
  */
-export const Container: JSX.FC<ContainerProps> = (props) => {
+export const Container = (props: ContainerProps) => {
   const percent = props.percent ?? 97;
   const containerWidth =
     'width' in props ? (props.width * percent) / 100 : (`${percent}%` as const);
@@ -78,7 +78,7 @@ export const Container: JSX.FC<ContainerProps> = (props) => {
   if (typeof children[0] === 'function') {
     inner = children[0](containerWidth as number, containerHeight as number);
   } else {
-    inner = children as JSX.ElementNode[];
+    inner = children as JSX.Element[];
   }
 
   return (

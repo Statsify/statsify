@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { SkyWarsModes, SKYWARS_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
 import { SkyWarsProfile } from './skywars.profile';
@@ -13,7 +12,7 @@ export class SkyWarsCommand extends BaseHypixelCommand<SkyWarsModes> {
   public getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<SkyWarsModes, never>
-  ): JSX.ElementNode {
+  ): JSX.Element {
     return <SkyWarsProfile {...base} mode={mode} />;
   }
 }

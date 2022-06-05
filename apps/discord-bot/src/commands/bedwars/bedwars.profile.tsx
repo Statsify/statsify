@@ -1,13 +1,4 @@
-import {
-  Container,
-  Footer,
-  formatProgression,
-  Header,
-  HeaderBody,
-  SidebarItem,
-  Table,
-} from '#components';
-import { JSX } from '@statsify/rendering';
+import { Container, Footer, formatProgression, Header, SidebarItem, Table } from '#components';
 import { BEDWARS_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -16,7 +7,7 @@ export interface BedWarsProfileProps extends BaseProfileProps {
   mode: typeof BEDWARS_MODES[number];
 }
 
-export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
+export const BedWarsProfile = ({
   skin,
   player,
   background,
@@ -25,7 +16,7 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
   badge,
   mode,
   t,
-}) => {
+}: BedWarsProfileProps) => {
   const { bedwars } = player.stats;
   const stats = bedwars[mode];
 
@@ -42,17 +33,19 @@ export const BedWarsProfile: JSX.FC<BedWarsProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§cBed§fWars §fStats §r(${prettify(mode)})`}
-          description={`§cBed§fWars §7Level: ${bedwars.levelFormatted}\n${formatProgression(
-            t,
-            bedwars.levelProgression,
-            bedwars.levelFormatted,
-            bedwars.nextLevelFormatted
-          )}`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§cBed§fWars §fStats §r(${prettify(mode)})`}
+        description={`§cBed§fWars §7Level: ${bedwars.levelFormatted}\n${formatProgression(
+          t,
+          bedwars.levelProgression,
+          bedwars.levelFormatted,
+          bedwars.nextLevelFormatted
+        )}`}
+      />
       <Table.table>
         <Table.tr>
           <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />

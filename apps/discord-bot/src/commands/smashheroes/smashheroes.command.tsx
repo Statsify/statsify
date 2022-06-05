@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { SmashHeroesModes, SMASH_HEROES_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
 import { SmashHeroesProfile } from './smashheroes.profile';
@@ -13,7 +12,7 @@ export class SmashHeroesCommand extends BaseHypixelCommand<SmashHeroesModes> {
   public getProfile(
     base: BaseProfileProps,
     { mode }: ProfileData<SmashHeroesModes, never>
-  ): JSX.ElementNode {
+  ): JSX.Element {
     return <SmashHeroesProfile {...base} mode={mode} />;
   }
 }

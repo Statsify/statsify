@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { TNTGamesModes, TNT_GAMES_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps } from '../base.hypixel-command';
 import { TNTGamesProfile } from './tntgames.profile';
@@ -10,7 +9,7 @@ export class TNTGamesCommand extends BaseHypixelCommand<TNTGamesModes> {
     super(TNT_GAMES_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.ElementNode {
+  public getProfile(base: BaseProfileProps): JSX.Element {
     return <TNTGamesProfile {...base} />;
   }
 }

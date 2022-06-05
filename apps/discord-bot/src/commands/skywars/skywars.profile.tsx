@@ -1,14 +1,5 @@
-import {
-  Container,
-  Footer,
-  formatProgression,
-  Header,
-  HeaderBody,
-  SidebarItem,
-  Table,
-} from '#components';
+import { Container, Footer, formatProgression, Header, SidebarItem, Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import type { SkyWarsGameMode, SkyWarsLabs, SKYWARS_MODES } from '@statsify/schemas';
 import { formatTime, prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -18,7 +9,7 @@ interface SkyWarsOverallTableProps {
   stats: SkyWarsGameMode;
 }
 
-const SkyWarsOverallTable: JSX.FC<SkyWarsOverallTableProps> = ({ t, stats }) => (
+const SkyWarsOverallTable = ({ t, stats }: SkyWarsOverallTableProps) => (
   <Table.table>
     <Table.tr>
       <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
@@ -43,7 +34,7 @@ interface SkyWarsLabsTableProps {
   stats: SkyWarsLabs;
 }
 
-const SkyWarsLabsTable: JSX.FC<SkyWarsLabsTableProps> = ({ t, stats }) => {
+const SkyWarsLabsTable = ({ t, stats }: SkyWarsLabsTableProps) => {
   const modes = ['lucky', 'rush', 'slime', 'tntMadness'] as const;
   const colors = ['§e', '§b', '§a', '§c'] as const;
 
@@ -82,7 +73,7 @@ export interface SkyWarsProfileProps extends BaseProfileProps {
   mode: typeof SKYWARS_MODES[number];
 }
 
-export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
+export const SkyWarsProfile = ({
   skin,
   player,
   background,
@@ -91,7 +82,7 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
   badge,
   mode,
   t,
-}) => {
+}: SkyWarsProfileProps) => {
   const { skywars } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -104,7 +95,7 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
     [t('stats.opals'), t(skywars.opals), '§9'],
   ];
 
-  let table: JSX.ElementNode;
+  let table: JSX.Element;
 
   switch (mode) {
     case 'labs':
@@ -117,17 +108,19 @@ export const SkyWarsProfile: JSX.FC<SkyWarsProfileProps> = ({
 
   return (
     <Container background={background}>
-      <Header skin={skin} name={player.prefixName} badge={badge} sidebar={sidebar}>
-        <HeaderBody
-          title={`§l§bSky§eWars §fStats §r(${prettify(mode)})`}
-          description={`§bSky§eWars §7Level: ${skywars.levelFormatted}\n${formatProgression(
-            t,
-            skywars.levelProgression,
-            skywars.levelFormatted,
-            skywars.nextLevelFormatted
-          )}`}
-        />
-      </Header>
+      <Header
+        skin={skin}
+        name={player.prefixName}
+        badge={badge}
+        sidebar={sidebar}
+        title={`§l§bSky§eWars §fStats §r(${prettify(mode)})`}
+        description={`§bSky§eWars §7Level: ${skywars.levelFormatted}\n${formatProgression(
+          t,
+          skywars.levelProgression,
+          skywars.levelFormatted,
+          skywars.nextLevelFormatted
+        )}`}
+      />
       {table}
       <Footer logo={logo} premium={premium} />
     </Container>

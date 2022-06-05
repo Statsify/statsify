@@ -1,65 +1,57 @@
-import { JSX } from '@statsify/rendering';
+import { useChildren } from '@statsify/rendering';
 import { Image } from 'skia-canvas';
 import { Sidebar, SidebarItem } from '../Sidebar';
 import { Skin } from '../Skin';
+import { HeaderBody } from './HeaderBody';
 import { HeaderNametag } from './HeaderNametag';
-import { SidebarHeader } from './SidebarHeader';
-import { SidebarlessHeader } from './SidebarlessHeader';
 
-interface SidebarlessHeaderProps {
+interface BaseHeaderProps {
   skin: Image;
   badge?: Image;
   size?: number;
   name: string;
-  children: JSX.ElementNode;
+}
+
+interface SidebarlessHeaderProps extends BaseHeaderProps {
+  title: string;
+  description?: string;
 }
 
 interface SidebarHeaderProps extends SidebarlessHeaderProps {
   sidebar: SidebarItem[];
 }
 
-export type HeaderProps = SidebarHeaderProps | SidebarlessHeaderProps;
+interface CustomHeaderBodyProps extends BaseHeaderProps {
+  children: JSX.Children;
+}
 
-/**
- *
- * @example With sidebar
- * ```ts
- * const skin = new Image();
- * const player = { prefixName: "j4cobi" };
- * const sidebar: SidebarItem = [
- *  ['Item', '10', '§a'],
- *  ['Item', '10', '§a'],
- *  ['Item', '10', '§a'],
- * ];
- *
- * <Header skin={skin} name={player.prefixName} sidebar={sidebar}>
- *  <HeaderBody title="Title" description="Description" height={height} />
- * </Header>
- * ```
- * @example Sidebarless
- * ```ts
- * const skin = new Image();
- * const player = { prefixName: "j4cobi" };
- *
- * <Header skin={skin} name={player.prefixName}>
- *  <HeaderBody title="Title" description="Description"/>
- * </Header>
- * ```
- */
-export const Header: JSX.FC<HeaderProps> = (props) => {
-  const body = (
-    <div direction="column" width="remaining" height="100%">
-      <HeaderNametag name={props.name} badge={props.badge} size={props.size} />
-      {props.children}
-    </div>
-  );
+export type HeaderProps = SidebarlessHeaderProps | SidebarHeaderProps | CustomHeaderBodyProps;
 
+export const Header = (props: HeaderProps) => {
   const skin = <Skin skin={props.skin} />;
 
-  if ('sidebar' in props && props.sidebar.length) {
-    const sidebar = <Sidebar items={props.sidebar} />;
-    return <SidebarHeader sidebar={sidebar} skin={skin} body={body} />;
+  const sidebar =
+    'sidebar' in props && props.sidebar.length ? <Sidebar items={props.sidebar} /> : <></>;
+
+  let body: JSX.Element;
+
+  if ('title' in props) {
+    body = <HeaderBody title={props.title} description={props.description} />;
+  } else if ('children' in props) {
+    const children = useChildren(props.children);
+    body = <>{children}</>;
+  } else {
+    throw new Error('Invalid header props, could not determine body');
   }
 
-  return <SidebarlessHeader skin={skin} body={body} />;
+  return (
+    <div width="100%">
+      {skin}
+      <div direction="column" width="remaining" height="100%">
+        <HeaderNametag name={props.name} badge={props.badge} size={props.size} />
+        {body}
+      </div>
+      {sidebar}
+    </div>
+  );
 };

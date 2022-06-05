@@ -1,5 +1,4 @@
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { PaintballModes, PAINTBALL_MODES } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps } from '../base.hypixel-command';
 import { PaintballProfile } from './paintball.profile';
@@ -10,7 +9,7 @@ export class PaintballCommand extends BaseHypixelCommand<PaintballModes> {
     super(PAINTBALL_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.ElementNode {
+  public getProfile(base: BaseProfileProps): JSX.Element {
     return <PaintballProfile {...base} />;
   }
 }

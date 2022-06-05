@@ -1,6 +1,5 @@
 import { GuildQuery } from '@statsify/api-client';
 import { Command } from '@statsify/discord';
-import { JSX } from '@statsify/rendering';
 import { GeneralModes, GENERAL_MODES, Guild, Player } from '@statsify/schemas';
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
 import { GeneralProfile } from './general.profile';
@@ -32,7 +31,7 @@ export class GeneralCommand extends BaseHypixelCommand<GeneralModes, PreProfileD
   public getProfile(
     base: BaseProfileProps,
     { data }: ProfileData<GeneralModes, PreProfileData>
-  ): JSX.ElementNode {
+  ): JSX.Element {
     return <GeneralProfile {...base} friends={data.friends} guild={data.guild} />;
   }
 }
