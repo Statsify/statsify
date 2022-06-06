@@ -9,13 +9,17 @@ export class BowSpleef {
   @Field()
   public hits: number;
 
+  @Field({ leaderboard: { enabled: false } })
+  public losses: number;
+
   @Field()
   public wlr: number;
 
   public constructor(data: APIData) {
     this.wins = data.wins_bowspleef;
     this.hits = data.tags_bowspleef;
-    this.wlr = ratio(this.wins, data.hits_bowspleef);
+    this.losses = data.deaths_bowspleef;
+    this.wlr = ratio(this.wins, this.losses);
   }
 }
 
@@ -32,16 +36,23 @@ export class PVPRun {
   @Field()
   public kills: number;
 
+  @Field({ leaderboard: { enabled: false } })
+  public deaths: number;
+
   public constructor(data: APIData) {
     this.wins = data.wins_pvprun;
     this.kills = data.kills_pvprun;
-    this.wlr = ratio(this.wins, data.deaths_pvprun);
+    this.deaths = data.deaths_pvprun;
+    this.wlr = ratio(this.wins, this.deaths);
   }
 }
 
 export class TNTRun {
   @Field()
   public wins: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public losses: number;
 
   @Field()
   public wlr: number;
@@ -51,8 +62,9 @@ export class TNTRun {
 
   public constructor(data: APIData) {
     this.wins = data.wins_tntrun;
-    this.wlr = ratio(this.wins, data.deaths_tntrun);
-    this.record = data.record_tntrun;
+    this.losses = data.losses_tntrun;
+    this.wlr = ratio(this.wins, this.losses);
+    this.record = data.record_tntrun * 1000;
   }
 }
 
@@ -81,11 +93,15 @@ export class Wizards {
   public kills: number;
 
   @Field()
+  public deaths: number;
+
+  @Field()
   public kdr: number;
 
   public constructor(data: APIData) {
     this.wins = data.wins_capture;
     this.kills = data.kills_capture;
-    this.kdr = ratio(this.kills, data.deaths_capture);
+    this.deaths = data.deaths_capture;
+    this.kdr = ratio(this.kills, this.deaths);
   }
 }
