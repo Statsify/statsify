@@ -64,7 +64,7 @@ export class TNTRun {
     this.wins = data.wins_tntrun;
     this.losses = data.losses_tntrun;
     this.wlr = ratio(this.wins, this.losses);
-    this.record = data.record_tntrun * 1000;
+    this.record = (data.record_tntrun ?? 0) * 1000;
   }
 }
 
