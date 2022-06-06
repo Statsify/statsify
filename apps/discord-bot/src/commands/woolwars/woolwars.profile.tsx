@@ -1,5 +1,5 @@
-import { Container, Footer, formatProgression, Header, SidebarItem, Table } from '#components';
-import { WOOL_WARS_MODES } from '@statsify/schemas';
+import { Container, Footer, formatProgression, Header, If, SidebarItem, Table } from '#components';
+import { WoolWarsOverall, WOOL_WARS_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
@@ -44,11 +44,18 @@ export const WoolWarsProfile = ({
         )}`}
       />
       <Table.table>
-        <Table.tr>
-          <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-          <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
-          <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
-        </Table.tr>
+        <If condition={mode === 'overall'}>
+          {() => {
+            const overall = stats as WoolWarsOverall;
+            return (
+              <Table.tr>
+                <Table.td title={t('stats.wins')} value={t(overall.wins)} color="§a" />
+                <Table.td title={t('stats.losses')} value={t(overall.losses)} color="§c" />
+                <Table.td title={t('stats.wlr')} value={t(overall.wlr)} color="§6" />
+              </Table.tr>
+            );
+          }}
+        </If>
         <Table.tr>
           <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
           <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />

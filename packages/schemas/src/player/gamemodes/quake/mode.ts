@@ -18,9 +18,6 @@ export class QuakeMode {
   @Field()
   public headshots: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public kwr: number;
-
   @Field()
   public killstreaks: number;
 
@@ -48,14 +45,12 @@ export class QuakeMode {
     this.headshots = data[`headshots${mode}`];
     this.killstreaks = data[`killstreaks${mode}`];
     this.shotsFired = data[`shots_fired${mode}`];
-    this.distanceTraveled = data[`distance_travelled${mode}`];
     this.postUpdateKills = data[`kills_since_update_feb_2017${mode}`];
     QuakeMode.applyRatios(this);
   }
 
   public static applyRatios(data: QuakeMode) {
     data.kdr = ratio(data.kills, data.deaths);
-    data.kwr = ratio(data.kills, data.wins);
     data.winRate = ratio(25, ratio(data.kills, data.wins), 100);
     data.shotAccuracy = ratio(data.postUpdateKills, data.shotsFired, 100);
   }

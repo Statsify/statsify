@@ -65,7 +65,7 @@ export class MegaWallsKit {
     this.finalDeaths = data[`${kit}final_deaths`];
     this.fkdr = ratio(this.finalKills, this.finalDeaths);
 
-    this.playtime = (data[`${kit}time_played`] ?? 0) * 1000;
+    this.playtime = (data[`${kit}time_played`] ?? 0) * 60000;
     this.witherDamage = data[`${kit}wither_damage`];
     this.witherKills = data[`${kit}wither_kills`];
 

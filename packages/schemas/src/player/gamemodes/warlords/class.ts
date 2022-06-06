@@ -20,6 +20,7 @@ export class WarlordsClass {
 
   public constructor(data: APIData, mode: string) {
     this.wins = data[`wins_${mode}`];
+
     this.damage = data[`damage_${mode}`];
     this.prevent = data[`damage_prevented_${mode}`];
     this.healing = data[`heal_${mode}`];

@@ -24,9 +24,9 @@ export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
     ['Mini Walls', stats.miniWalls.wins],
     ['Party Games', stats.partyGames.wins],
     ['Pixel Painters', stats.pixelPainters.wins],
+    ['Seasonal', stats.seasonal.totalWins],
     ['Throw Out', stats.throwOut.wins],
     ['Zombies', stats.zombies.overall.wins],
-    ['Seasonal', stats.seasonal.totalWins],
   ];
 
   games.sort((a, b) => b[1] - a[1]);
@@ -35,12 +35,14 @@ export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
     games.slice(i * rowSize, (i + 1) * rowSize)
   );
 
+  const colors = ['§a', '§e', '§6', '§c'];
+
   return (
     <Table.table>
-      {rows.map((row) => (
+      {rows.map((row, index) => (
         <Table.tr>
           {row.map((game) => (
-            <Table.td title={game[0]} value={t(game[1])} color="§a" />
+            <Table.td title={game[0]} value={t(game[1])} color={colors[index]} />
           ))}
         </Table.tr>
       ))}

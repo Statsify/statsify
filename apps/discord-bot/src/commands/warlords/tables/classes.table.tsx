@@ -11,11 +11,11 @@ interface WarlordsClassColumnProps {
 const WarlordsClassColumn = ({ title, stats, t }: WarlordsClassColumnProps) => {
   return (
     <Table.ts title={title}>
-      <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§6" />
+      <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§e" />
       <Table.td title={t('stats.damage')} value={t(stats.damage)} color="§c" />
       <Table.td title={t('stats.healing')} value={t(stats.healing)} color="§a" />
       <Table.td title={t('stats.prevent')} value={t(stats.prevent)} color="§b" />
-      <Table.td title={t('stats.total')} value={t(stats.total)} color="§a" />
+      <Table.td title={t('stats.total')} value={t(stats.total)} color="§6" />
     </Table.ts>
   );
 };

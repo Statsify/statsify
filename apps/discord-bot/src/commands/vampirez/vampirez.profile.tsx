@@ -1,21 +1,22 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
 import { VampireZLife } from '@statsify/schemas';
-import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
-interface VampireZColumnProps {
+interface VampireZRowProps {
   mode: string;
   stats: VampireZLife;
   t: LocalizeFunction;
 }
 
-const VampireZColumn = ({ mode, stats, t }: VampireZColumnProps) => (
-  <Table.ts title={`§6${prettify(mode)}`}>
-    <Table.td title={t(`stats.wins`)} value={t(stats.wins)} color="§e" />
-    <Table.td title={t(`stats.kills`)} value={t(stats.kills)} color="§a" />
-    <Table.td title={t(`stats.deaths`)} value={t(stats.deaths)} color="§c" />
-    <Table.td title={t(`stats.kdr`)} value={t(stats.kdr)} color="§6" />
+const VampireZRow = ({ mode, stats, t }: VampireZRowProps) => (
+  <Table.ts title={mode}>
+    <Table.tr>
+      <Table.td title={t(`stats.wins`)} value={t(stats.wins)} color="§e" />
+      <Table.td title={t(`stats.kills`)} value={t(stats.kills)} color="§a" />
+      <Table.td title={t(`stats.deaths`)} value={t(stats.deaths)} color="§c" />
+      <Table.td title={t(`stats.kdr`)} value={t(stats.kdr)} color="§6" />
+    </Table.tr>
   </Table.ts>
 );
 
@@ -39,14 +40,12 @@ export const VampireZProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§cVampire§7Z §fStats`}
+        title={`§l§4VampireZ §fStats`}
       />
       <Table.table>
-        <Table.tr>
-          <VampireZColumn mode="overall" stats={vampirez.overall} t={t} />
-          <VampireZColumn mode="human" stats={vampirez.human} t={t} />
-          <VampireZColumn mode="vampire" stats={vampirez.vampire} t={t} />
-        </Table.tr>
+        <VampireZRow mode="§6Overall" stats={vampirez.overall} t={t} />
+        <VampireZRow mode="§eHuman" stats={vampirez.human} t={t} />
+        <VampireZRow mode="§4Vampire" stats={vampirez.vampire} t={t} />
       </Table.table>
       <Footer logo={logo} premium={premium} />
     </Container>

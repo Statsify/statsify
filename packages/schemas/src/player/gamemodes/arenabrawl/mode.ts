@@ -21,9 +21,6 @@ export class ArenaBrawlMode {
   @Field()
   public kdr: number;
 
-  @Field()
-  public streaks: number;
-
   public constructor(data: APIData, mode: string) {
     this.kills = data[`kills_${mode}`];
     this.deaths = data[`deaths_${mode}`];

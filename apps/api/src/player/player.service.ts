@@ -51,7 +51,7 @@ export class PlayerService {
     const player = await this.hypixelService.getPlayer(mongoPlayer?.uuid ?? tag);
 
     if (player) {
-      player.expiresAt = Date.now() + 300000;
+      player.expiresAt = Date.now() + 120000;
       player.leaderboardBanned = mongoPlayer?.leaderboardBanned ?? false;
       player.resetMinute = mongoPlayer?.resetMinute;
 

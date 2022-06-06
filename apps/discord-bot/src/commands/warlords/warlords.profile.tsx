@@ -58,7 +58,7 @@ export const WarlordsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title="§l§cWar§5lords §fStats"
+        title="§l§eWarlords §fStats"
       />
       {table}
       <Footer logo={logo} premium={premium} />

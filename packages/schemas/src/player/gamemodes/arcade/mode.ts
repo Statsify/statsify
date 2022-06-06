@@ -5,11 +5,9 @@ import {
   EasterSimulator,
   GrinchSimulator,
   HalloweenSimulator,
-  SantaSimulator,
   ScubaSimulator,
 } from './seasonal-mode';
 
-// TODO(eatmyvenom): Add more arcade stats
 export class BlockingDead {
   @Field()
   public wins: number;
@@ -156,16 +154,11 @@ export class Football {
 
   @Field()
   public powerKicks: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public totalKicks: number;
-
   public constructor(data: APIData) {
     this.wins = data.wins_soccer;
     this.goals = data.goals_soccer;
     this.kicks = data.kicks_soccer;
     this.powerKicks = data.powerkicks_soccer;
-    this.totalKicks = add(this.kicks, this.powerKicks);
   }
 }
 
@@ -188,9 +181,6 @@ export class GalaxyWars {
   @Field()
   public rebelKills: number;
 
-  @Field()
-  public shotsFired: number;
-
   public constructor(data: APIData) {
     this.wins = data.sw_game_wins;
     this.kills = data.sw_kills;
@@ -198,7 +188,6 @@ export class GalaxyWars {
     this.kdr = ratio(this.kills, this.deaths);
     this.empireKills = data.sw_empire_kills;
     this.rebelKills = data.sw_rebel_kills;
-    this.shotsFired = data.sw_shots_fired;
   }
 }
 
@@ -295,15 +284,6 @@ export class MiniWalls {
   public finalKills: number;
 
   @Field()
-  public arrowsShot: number;
-
-  @Field()
-  public arrowsHit: number;
-
-  @Field()
-  public bowAccuracy: number;
-
-  @Field()
   public witherDamage: number;
 
   @Field()
@@ -314,10 +294,7 @@ export class MiniWalls {
     this.wins = data.wins_mini_walls;
     this.kills = data.kills_mini_walls;
     this.deaths = data.deaths_mini_walls;
-    this.kdr = ratio(add(this.kills, this.deaths), this.deaths);
-    this.arrowsShot = data.arrows_shot_mini_walls;
-    this.arrowsHit = data.arrows_hit_mini_walls;
-    this.bowAccuracy = ratio(this.arrowsHit, this.arrowsShot);
+    this.kdr = ratio(this.kills, this.deaths);
     this.finalKills = data.final_kills_mini_walls;
     this.witherDamage = data.wither_damage_mini_walls;
     this.witherKills = data.wither_kills_mini_walls;
@@ -363,23 +340,18 @@ export class Seasonal {
   public halloweenSimulator: HalloweenSimulator;
 
   @Field()
-  public santaSimulator: SantaSimulator;
-
-  @Field()
   public scubaSimulator: ScubaSimulator;
 
   public constructor(data: APIData) {
     this.easterSimulator = new EasterSimulator(data);
     this.grinchSimulator = new GrinchSimulator(data);
     this.halloweenSimulator = new HalloweenSimulator(data);
-    this.santaSimulator = new SantaSimulator(data);
     this.scubaSimulator = new ScubaSimulator(data);
 
     this.totalWins = add(
       this.easterSimulator.wins,
       this.grinchSimulator.wins,
       this.halloweenSimulator.wins,
-      this.santaSimulator.wins,
       this.scubaSimulator.wins
     );
   }
@@ -410,26 +382,14 @@ export class ZombiesMap {
   @Field()
   public wins: number;
 
-  @Field()
+  @Field({ leaderboard: { sort: 'ASC' } })
   public fastestWin: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public kills: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public deaths: number;
-
-  @Field()
-  public playersRevived: number;
-
-  @Field()
-  public downs: number;
-
-  @Field()
-  public doorsOpened: number;
-
-  @Field()
-  public windowsRepaired: number;
 
   @Field({ leaderboard: { enabled: false } })
   public bestRound: number;
@@ -441,10 +401,6 @@ export class ZombiesMap {
     this.fastestWin = (data[`fastest_time_30_zombies${map ? `${map}_normal` : ''}`] ?? 0) * 1000;
     this.kills = data[`zombie_kills_zombies${map}`];
     this.deaths = data[`deaths_zombies${map}`];
-    this.playersRevived = data[`players_revived_zombies${map}`];
-    this.downs = data[`times_knocked_down_zombies${map}`];
-    this.doorsOpened = data[`doors_opened_zombies${map}`];
-    this.windowsRepaired = data[`windows_repaired_zombies${map}`];
     this.bestRound = data[`best_round_zombies${map}`];
   }
 }

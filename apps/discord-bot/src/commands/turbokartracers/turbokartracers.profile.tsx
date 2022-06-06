@@ -27,7 +27,7 @@ export const TurboKartRacersProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§#ffd700Turbo §#c0c0c0Kart §#cd7f32Racers §fStats`}
+        title={`§l§aTurbo Kart Racers §fStats`}
       />
       <Table.table>
         <Table.tr>
@@ -35,7 +35,7 @@ export const TurboKartRacersProfile = ({
           <Table.td
             title={t('stats.trophyRate')}
             value={`${turbokartracers.trophyRate}%`}
-            color="§7"
+            color="§b"
           />
           <Table.td
             title={t('stats.gamesPlayed')}

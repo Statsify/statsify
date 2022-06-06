@@ -128,8 +128,8 @@
     "hiderWins": "Hider Wins",
     "seekerWins": "Seeker Wins",
     "wallsFaced": "Walls Faced",
-    "highestScoreQualifications": "Qualifers PB",
-    "highestScoreFinals": "Finals PB",
+    "highestScoreQualifications": "Qualifiers Personal Best",
+    "highestScoreFinals": "Finals Personal Best",
     "bowAccuracy": "Bow Accuracy",
     "eggsFound": "Eggs Found",
     "giftsFound": "Gifts Found",
@@ -139,11 +139,11 @@
     "doorsOpened": "Doors Opened",
     "fastestWin": "Fastest Win",
     "bestRound": "Best Round",
-    "animalWins": "Animal Wins",
-    "hunterWins": "Hunter Wins",
-    "animalKills": "Animal Kills",
-    "hunterKills": "Hunter Kills",
-    "starsEarned": "Stars Earned"
+    "starsEarned": "Stars Earned",
+    "damage": "Damage",
+    "healing": "Healing",
+    "prevent": "Prevent",
+    "total": "Total"
   },
   "commands": {
     "arcade": "Arcade Games command",

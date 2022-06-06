@@ -35,9 +35,6 @@ export class BuildBattle {
   public score: number;
 
   @Field()
-  public gamesPlayed: number;
-
-  @Field()
   public votes: number;
 
   @Field()
@@ -64,7 +61,7 @@ export class BuildBattle {
     this.latest = data.wins_solo_normal_latest;
     this.coins = data.coins;
     this.score = data.score;
-    this.gamesPlayed = data.games_played;
+
     this.votes = data.total_votes;
     this.superVotes = data.super_votes;
 

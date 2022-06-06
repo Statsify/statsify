@@ -1,3 +1,4 @@
+import { add } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 
@@ -23,12 +24,12 @@ export class PaintballPerks {
   public transfusion: number;
 
   public constructor(data: APIData) {
-    this.adrenaline = data.adrenaline;
-    this.endurance = data.endurance;
-    this.fortune = data.fortune;
-    this.godfather = data.godfather;
-    this.headstart = data.headstart;
-    this.superluck = data.superluck;
-    this.transfusion = data.transfusion;
+    this.adrenaline = add(data.adrenaline, 1);
+    this.endurance = add(data.endurance, 1);
+    this.fortune = add(data.fortune, 1);
+    this.godfather = add(data.godfather, 1);
+    this.headstart = data.headstart; // Only one properly returned in API
+    this.superluck = add(data.superluck, 1);
+    this.transfusion = add(data.transfusion, 1);
   }
 }

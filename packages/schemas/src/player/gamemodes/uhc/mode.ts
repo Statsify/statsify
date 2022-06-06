@@ -18,10 +18,10 @@ export class UHCMode {
   @Field()
   public headsEaten: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public ultimatesCrafted: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public extraUltimates: number;
 
   public constructor(data: APIData, mode: string) {

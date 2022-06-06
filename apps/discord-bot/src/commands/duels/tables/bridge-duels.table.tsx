@@ -9,11 +9,13 @@ interface BridgeDuelsModeColumnProps {
   t: LocalizeFunction;
 }
 
+const formatMode = (title: string) => prettify(title).replace('Ctf', 'CTF');
+
 const BridgeDuelsModeColumn = ({ title, stats, t }: BridgeDuelsModeColumnProps) => (
-  <Table.ts title={`§6${prettify(title)}`}>
+  <Table.ts title={`§b${formatMode(title)}`}>
     <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
     <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
-    <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§b" />
+    <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
   </Table.ts>
 );
 

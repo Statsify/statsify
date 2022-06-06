@@ -23,8 +23,8 @@ export const ArenaBrawlProfile = ({
   const sidebar: SidebarItem[] = [
     [t('stats.coins'), t(arenabrawl.coins), '§6'],
     [t('stats.keys'), t(arenabrawl.keys), '§e'],
-    [t('stats.magicalChests'), t(arenabrawl.magicalChests), '§5'],
-    [t('stats.rune'), prettify(arenabrawl.rune), '§2'],
+    [t('stats.magicalChests'), t(arenabrawl.magicalChests), '§a'],
+    [t('stats.rune'), prettify(arenabrawl.rune), '§9'],
   ];
 
   return (

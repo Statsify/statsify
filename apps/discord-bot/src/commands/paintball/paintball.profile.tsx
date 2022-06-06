@@ -49,19 +49,19 @@ export const PaintballProfile = ({
             <Table.td
               title={t('stats.adrenaline')}
               value={t(paintball.perks.adrenaline)}
-              color="§c"
+              color="§4"
               size="small"
             />
             <Table.td
               title={t('stats.endurance')}
               value={t(paintball.perks.endurance)}
-              color="§6"
+              color="§d"
               size="small"
             />
             <Table.td
               title={t('stats.fortune')}
               value={t(paintball.perks.fortune)}
-              color="§b"
+              color="§2"
               size="small"
             />
           </Table.tr>
@@ -69,7 +69,7 @@ export const PaintballProfile = ({
             <Table.td
               title={t('stats.godfather')}
               value={t(paintball.perks.godfather)}
-              color="§a"
+              color="§e"
               size="small"
             />
             <Table.td

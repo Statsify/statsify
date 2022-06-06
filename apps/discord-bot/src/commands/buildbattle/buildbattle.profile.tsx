@@ -8,7 +8,7 @@ interface BuildBattleModeTableProps {
 }
 
 const BuildBattleModeTable = ({ title, stats, width = 'remaining' }: BuildBattleModeTableProps) => {
-  const colors = ['§b', '§5'];
+  const colors = ['§a', '§6'];
 
   return (
     <Table.table width={width}>
