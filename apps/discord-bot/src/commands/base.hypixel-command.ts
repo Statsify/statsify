@@ -8,6 +8,7 @@ import type { Player } from '@statsify/schemas';
 import { noop, prettify } from '@statsify/util';
 import type { Image } from 'skia-canvas';
 import Container from 'typedi';
+import { getTheme } from '../themes';
 
 export interface BaseProfileProps {
   skin: Image;
@@ -80,7 +81,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
           { mode: mode as T[number], data }
         );
 
-        return render(profile);
+        return render(profile, getTheme(user?.theme));
       },
     }));
 
