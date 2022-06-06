@@ -20,6 +20,6 @@ export class MurderMysteryMode {
     this.wins = data[`wins${mode}`];
     this.gamesPlayed = data[`games${mode}`];
     this.kills = data[`kills${mode}`];
-    this.kdr = ratio(this.kills, data[`kills${mode}`]);
+    this.kdr = ratio(this.kills, data[`deaths${mode}`]);
   }
 }
