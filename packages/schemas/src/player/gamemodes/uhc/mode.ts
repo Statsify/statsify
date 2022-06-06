@@ -18,7 +18,7 @@ export class UHCMode {
   @Field()
   public headsEaten: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public ultimatesCrafted: number;
 
   @Field({ leaderboard: { enabled: false } })

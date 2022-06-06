@@ -140,11 +140,10 @@
     "fastestWin": "Fastest Win",
     "bestRound": "Best Round",
     "starsEarned": "Stars Earned",
-    "damage": "Damange",
+    "damage": "Damage",
     "healing": "Healing",
     "prevent": "Prevent",
-    "total": "Total",
-    "exp": "EXP"
+    "total": "Total"
   },
   "commands": {
     "arcade": "Arcade Games command",

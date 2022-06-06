@@ -111,7 +111,6 @@ export const BlitzSGProfile = ({
       let level = stats.prestige ? `§6${'✫'.repeat(stats.prestige)}` : romanNumeral(stats.level);
       if (stats.level === 10) level = `§l${level}`;
       sidebar.push([t('stats.level'), level, colors[stats.level - 1]]);
-      sidebar.push([t('stats.exp'), t(stats.exp), '§b']);
       table = <KitBlitzSGTable stats={stats} t={t} />;
       break;
     }
