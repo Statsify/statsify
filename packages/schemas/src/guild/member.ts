@@ -42,7 +42,7 @@ export class GuildMember {
     this.rank = data.rank;
     this.uuid = data.uuid;
     this.joinTime = data.joined;
-    this.questParticipation = data.questParticipation;
+    this.questParticipation = data.questParticipation ?? 0;
 
     this.expHistory = [];
     this.expHistoryDays = [];

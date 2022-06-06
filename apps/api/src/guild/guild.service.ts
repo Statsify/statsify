@@ -110,8 +110,8 @@ export class GuildService {
         member.username = `ERROR ${member.uuid}`;
         member.displayName = member.username;
 
-        //Try again in 5 minutes
-        member.expiresAt = Date.now() + 300000;
+        //Try again in 10 minutes
+        member.expiresAt = Date.now() + 600000;
       }
 
       const combinedExpHistory: Record<string, number> = {
@@ -161,8 +161,8 @@ export class GuildService {
         guild.scaledMonthly += scaled;
       });
 
-    //Cache guilds responses for 5 minutes
-    guild.expiresAt = Date.now() + 300000;
+    //Cache guilds responses for 10 minutes
+    guild.expiresAt = Date.now() + 600000;
 
     const flatGuild = flatten(guild);
 

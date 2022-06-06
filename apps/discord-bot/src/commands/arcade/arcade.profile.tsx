@@ -42,7 +42,7 @@ export const ArcadeProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t('stats.coins'), t(arcade.coins), '§6'],
-    [t('stats.overallWins'), t(arcade.wins), '§a'],
+    [t('stats.overallWins'), t(arcade.wins), '§b'],
   ];
 
   let table: JSX.Element;
@@ -114,7 +114,7 @@ export const ArcadeProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§bArcade §fStats §r(${prettify(mode)})`}
+        title={`§l§cA§6r§ec§aa§bd§de §fStats §r(${prettify(mode)})`}
       />
       {table}
       <Footer logo={logo} premium={premium} />

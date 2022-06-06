@@ -38,9 +38,6 @@ export class MegaWalls {
   @Field({ store: { default: 'none' } })
   public class: string;
 
-  @Field({ store: { default: 'none' } })
-  public warCry: string;
-
   @Field()
   public overall: MegaWallsKit;
 
@@ -119,7 +116,6 @@ export class MegaWalls {
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.class = data.chosen_class ?? 'none';
-    this.warCry = data.war_cry ?? 'none';
 
     this.overall = new MegaWallsKit(data, '');
     this.arcanist = new MegaWallsKit(data, 'arcanist');

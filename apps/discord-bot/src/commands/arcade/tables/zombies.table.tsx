@@ -16,9 +16,9 @@ const ZombiesMapColumn = ({ title, stats, t }: ZombiesMapColumnProps) => {
       : [t('stats.bestRound'), t(stats.bestRound)];
 
   return (
-    <Table.ts title={`§6${title}`}>
+    <Table.ts title={title}>
       <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" size="small" />
-      <Table.td title={mapStat[0]} value={mapStat[1]} color="§c" size="small" />
+      <Table.td title={mapStat[0]} value={mapStat[1]} color="§e" size="small" />
     </Table.ts>
   );
 };
@@ -33,16 +33,17 @@ export const ZombiesTable = ({ stats, t }: ZombiesTableProps) => {
 
   return (
     <Table.table>
+      <Table.ts title="§6Overall">
+        <Table.tr>
+          <Table.td title={t('stats.wins')} value={t(overall.wins)} color="§a" />
+          <Table.td title={t('stats.kills')} value={t(overall.kills)} color="§e" />
+          <Table.td title={t('stats.deaths')} value={t(overall.deaths)} color="§c" />
+        </Table.tr>
+      </Table.ts>
       <Table.tr>
-        <Table.td title={t('stats.wins')} value={t(overall.wins)} color="§a" />
-        <Table.td title={t('stats.doorsOpened')} value={t(overall.doorsOpened)} color="§e" />
-        <Table.td title={t('stats.kills')} value={t(overall.kills)} color="§6" />
-        <Table.td title={t('stats.deaths')} value={t(overall.deaths)} color="§b" />
-      </Table.tr>
-      <Table.tr>
-        <ZombiesMapColumn title="Dead End" stats={deadEnd} t={t} />
-        <ZombiesMapColumn title="Bad Blood" stats={badBlood} t={t} />
-        <ZombiesMapColumn title="Alien Arcadium" stats={alienArcadium} t={t} />
+        <ZombiesMapColumn title="§#813781Dead End" stats={deadEnd} t={t} />
+        <ZombiesMapColumn title="§#8f1721Bad Blood" stats={badBlood} t={t} />
+        <ZombiesMapColumn title="§#75ae00Alien Arcadium" stats={alienArcadium} t={t} />
       </Table.tr>
     </Table.table>
   );

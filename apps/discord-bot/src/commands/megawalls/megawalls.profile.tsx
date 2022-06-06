@@ -23,7 +23,6 @@ export const MegaWallsProfile = ({
   const sidebar: SidebarItem[] = [
     [t('stats.coins'), t(megawalls.coins), '§6'],
     [t('stats.class'), prettify(megawalls.class), '§e'],
-    [t('stats.warCry'), prettify(megawalls.warCry), '§7'],
   ];
 
   return (
@@ -33,7 +32,7 @@ export const MegaWallsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§cMega§7Walls §fStats §r(${prettify(mode)})`}
+        title={`§l§7MegaWalls §fStats §r(${prettify(mode)})`}
       />
       <Table.table>
         <Table.tr>

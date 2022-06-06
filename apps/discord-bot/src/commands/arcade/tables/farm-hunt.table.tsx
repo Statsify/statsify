@@ -9,19 +9,29 @@ interface FarmHuntTableProps {
 
 export const FarmHuntTable = ({ stats, t }: FarmHuntTableProps) => (
   <Table.table>
-    <Table.tr>
-      <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-      <Table.td title={t('stats.animalWins')} value={t(stats.animalWins)} color="§e" />
-      <Table.td title={t('stats.hunterWins')} value={t(stats.hunterWins)} color="§b" />
-    </Table.tr>
-    <Table.tr>
-      <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
-      <Table.td title={t('stats.animalKills')} value={t(stats.animalKills)} color="§e" />
-      <Table.td title={t('stats.hunterKills')} value={t(stats.hunterKills)} color="§b" />
-    </Table.tr>
-    <Table.tr>
-      <Table.td title={t('stats.tauntsUsed')} value={t(stats.tauntsUsed)} color="§a" />
-      <Table.td title={t('stats.poopCollected')} value={t(stats.poopCollected)} color="§b" />
-    </Table.tr>
+    <Table.ts title="§6Overall">
+      <Table.tr>
+        <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§e" />
+        <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
+        <Table.td title={t('stats.tauntsUsed')} value={t(stats.tauntsUsed)} color="§b" />
+        <Table.td
+          title={t('stats.poopCollected')}
+          value={t(stats.poopCollected)}
+          color="§#a7673f"
+        />
+      </Table.tr>
+    </Table.ts>
+    <Table.ts title="§6Animal">
+      <Table.tr>
+        <Table.td title={t('stats.wins')} value={t(stats.animalWins)} color="§e" />
+        <Table.td title={t('stats.kills')} value={t(stats.animalKills)} color="§a" />
+      </Table.tr>
+    </Table.ts>
+    <Table.ts title="§6Hunter">
+      <Table.tr>
+        <Table.td title={t('stats.wins')} value={t(stats.hunterWins)} color="§e" />
+        <Table.td title={t('stats.kills')} value={t(stats.hunterKills)} color="§a" />
+      </Table.tr>
+    </Table.ts>
   </Table.table>
 );

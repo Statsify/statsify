@@ -13,9 +13,6 @@ export class MurderMysteryMode {
   public kills: number;
 
   @Field()
-  public deaths: number;
-
-  @Field()
   public kdr: number;
   public constructor(data: APIData, mode: string) {
     mode = mode ? `_${mode}` : mode;
@@ -23,7 +20,6 @@ export class MurderMysteryMode {
     this.wins = data[`wins${mode}`];
     this.gamesPlayed = data[`games${mode}`];
     this.kills = data[`kills${mode}`];
-    this.deaths = data[`deaths${mode}`];
-    this.kdr = ratio(this.kills, this.deaths);
+    this.kdr = ratio(this.kills, data[`kills${mode}`]);
   }
 }

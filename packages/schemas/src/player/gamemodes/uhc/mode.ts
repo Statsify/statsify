@@ -21,7 +21,7 @@ export class UHCMode {
   @Field()
   public ultimatesCrafted: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public extraUltimates: number;
 
   public constructor(data: APIData, mode: string) {

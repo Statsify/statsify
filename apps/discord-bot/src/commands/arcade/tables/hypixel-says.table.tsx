@@ -11,8 +11,8 @@ export const HypixelSaysTable = ({ stats, t }: HypixelSaysTableProps) => (
   <Table.table>
     <Table.tr>
       <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-      <Table.td title={t('stats.points')} value={t(stats.points)} color="§e" />
-      <Table.td title={t('stats.roundWins')} value={t(stats.roundsWon)} color="§b" />
+      <Table.td title={t('stats.roundWins')} value={t(stats.roundsWon)} color="§e" />
+      <Table.td title={t('stats.points')} value={t(stats.points)} color="§b" />
     </Table.tr>
   </Table.table>
 );

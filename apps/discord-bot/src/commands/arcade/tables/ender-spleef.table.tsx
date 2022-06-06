@@ -10,12 +10,12 @@ interface EnderSpleefTableProps {
 export const EnderSpleefTable = ({ stats, t }: EnderSpleefTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§e" />
-      <Table.td title={t('stats.blocksBroken')} value={t(stats.blocksBroken)} color="§a" />
+      <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
+      <Table.td title={t('stats.blocksBroken')} value={t(stats.blocksBroken)} color="§c" />
       <Table.td
         title={t('stats.powerupActivations')}
         value={t(stats.powerupActivations)}
-        color="§b"
+        color="§6"
       />
     </Table.tr>
   </Table.table>

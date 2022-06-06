@@ -12,18 +12,18 @@ export const HoleInTheWallTable = ({ stats, t }: HoleInTheWallTableProps) => {
     <Table.table>
       <Table.tr>
         <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-        <Table.td title={t('stats.wallsFaced')} value={t(stats.wallsFaced)} color="§e" />
+        <Table.td title={t('stats.wallsFaced')} value={t(stats.wallsFaced)} color="§c" />
       </Table.tr>
       <Table.tr>
         <Table.td
           title={t('stats.highestScoreQualifications')}
           value={t(stats.highestScoreQualifications)}
-          color="§a"
+          color="§b"
         />
         <Table.td
           title={t('stats.highestScoreFinals')}
           value={t(stats.highestScoreFinals)}
-          color="§e"
+          color="§6"
         />
       </Table.tr>
     </Table.table>

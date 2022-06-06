@@ -11,9 +11,6 @@ export class BaseDuelsGameMode {
   public winstreak: number;
 
   @Field()
-  public gamesPlayed: number;
-
-  @Field()
   public wins: number;
 
   @Field()
@@ -32,40 +29,15 @@ export class BaseDuelsGameMode {
   public kdr: number;
 
   @Field({ leaderboard: { enabled: false } })
-  public swings: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public hits: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public meleeAccuracy: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public bowShots: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public bowHits: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public bowAccuracy: number;
-
-  @Field()
   public blocksPlaced: number;
-
   public constructor(data: APIData, mode: string) {
     const prefix = mode ? `${mode}_` : mode;
 
-    this.gamesPlayed = data[`${prefix}rounds_played`];
     this.wins = data[`${prefix}wins`];
     this.losses = data[`${prefix}losses`];
     this.kills = data[`${prefix}kills`];
     this.deaths = data[`${prefix}deaths`];
-    this.hits = data[`${prefix}melee_hits`];
-    this.swings = data[`${prefix}melee_swings`];
-    this.bowShots = data[`${prefix}bow_shots`];
-    this.bowHits = data[`${prefix}bow_hits`];
     this.blocksPlaced = data[`${prefix}blocks_placed`];
-
     if (mode == '') {
       this.winstreak = data.current_winstreak;
       this.bestWinstreak = data.best_overall_winstreak;
@@ -80,22 +52,15 @@ export class BaseDuelsGameMode {
   public static applyRatios(data: BaseDuelsGameMode) {
     data.wlr = ratio(data.wins, data.losses);
     data.kdr = ratio(data.kills, data.deaths);
-    data.meleeAccuracy = ratio(data.hits, data.swings, 100);
-    data.bowAccuracy = ratio(data.bowHits, data.bowShots, 100);
   }
 }
 
 export class BridgeDuelsMode extends BaseDuelsGameMode {
-  @Field()
-  public goals: number;
-
   public constructor(data: APIData, mode: string) {
     super(data, mode);
 
     this.kills = data[`${mode}_bridge_kills`];
     this.deaths = data[`${mode}_bridge_deaths`];
-    this.goals = data[`${mode}_goals`] || data[`${mode}_captures`];
-
     BaseDuelsGameMode.applyRatios(this);
   }
 }

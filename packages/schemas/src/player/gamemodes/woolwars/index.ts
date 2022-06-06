@@ -2,7 +2,7 @@ import { APIData } from '@statsify/util';
 import { Color, ColorCode } from '../../../color';
 import { Field } from '../../../metadata';
 import { Progression } from '../../../progression';
-import { WoolWarsClass } from './class';
+import { WoolWarsClass, WoolWarsOverall } from './class';
 import { getExpReq, getFormattedLevel, getLevel } from './util';
 
 export const WOOL_WARS_MODES = [
@@ -43,7 +43,7 @@ export class WoolWars {
   public nextLevelFormatted: string;
 
   @Field()
-  public overall: WoolWarsClass;
+  public overall: WoolWarsOverall;
 
   @Field()
   public tank: WoolWarsClass;
@@ -88,7 +88,7 @@ export class WoolWars {
 
     this.levelProgression = new Progression(exp, getExpReq(this.level));
 
-    this.overall = new WoolWarsClass(data.wool_wars?.stats);
+    this.overall = new WoolWarsOverall(data.wool_wars?.stats);
 
     this.tank = new WoolWarsClass(data.wool_wars?.stats?.classes?.tank);
     this.archer = new WoolWarsClass(data.wool_wars?.stats?.classes?.archer);
@@ -99,3 +99,5 @@ export class WoolWars {
     this.assault = new WoolWarsClass(data.wool_wars?.stats?.classes?.assult);
   }
 }
+
+export * from './class';
