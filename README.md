@@ -18,7 +18,7 @@ A Hypixel and Minecraft focused Discord Bot
 
 ### 🖼️ Assets
 * Currently we supply public assets for development as a [git submodule](https://github.com/Statsify/public-assets)
-* In addition, you must provide a 1.8.9 texture pack in the `assets/public/minecraft-textures`
+* In addition, you must provide a 1.8.9 texture pack in the `assets/public/minecraft-textures/default`
 
 ### 🚀 Running
 * The codebase is split into apps and packages
