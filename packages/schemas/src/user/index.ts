@@ -1,6 +1,11 @@
 import type { Image } from 'skia-canvas';
 import { Field } from '../metadata';
 
+export enum UserTheme {
+  DEFAULT = 'default',
+  HD = 'hd',
+}
+
 export class User {
   @Field({ mongo: { index: true, unique: true } })
   public id: string;
@@ -29,4 +34,7 @@ export class User {
   //TODO: figure out how we want to store badges
   @Field({ store: { required: false } })
   public badge?: Image;
+
+  @Field({ type: () => String, store: { required: false } })
+  public theme?: UserTheme;
 }

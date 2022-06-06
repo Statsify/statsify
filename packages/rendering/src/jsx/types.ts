@@ -1,10 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import type { CanvasRenderingContext2D } from 'skia-canvas';
 import type { FontRenderer } from '../font';
-import type { IntrinsicElement } from './instrinsics';
+import type { IntrinsicElement, IntrinsicRenders } from './instrinsics';
 
 export interface BaseThemeContext {
   renderer: FontRenderer;
+}
+
+export interface Theme<T extends BaseThemeContext> {
+  context: T;
+  elements: Partial<IntrinsicRenders<T>>;
 }
 
 export type StyleLocation = 'left' | 'center' | 'right';

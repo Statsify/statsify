@@ -28,10 +28,13 @@ export const getImage = (path: string) => loadImage(getAssetPath(path));
 /**
  *
  * @param texturePath the path inside of the texture path, it starts already inside of `/assets/minecraft`
+ * @param pack default
  * @returns the full path to the texture
  */
-export const getMinecraftTexturePath = (texturePath: string) =>
-  join(getAssetPath(`minecraft-textures/assets/minecraft/`), texturePath);
+export const getMinecraftTexturePath = (texturePath: string, pack = 'default') => {
+  if (!hasPrivateAssets) pack = 'default';
+  return join(getAssetPath(`minecraft-textures/${pack}/assets/minecraft/`), texturePath);
+};
 
 let backgrounds: string[] = [];
 

@@ -3,7 +3,7 @@ import Container from 'typedi';
 import { FontRenderer } from '../font';
 import { createInstructions } from './create-instructions';
 import { intrinsicRenders, IntrinsicRenders } from './instrinsics';
-import type { BaseThemeContext, ElementNode, Instruction } from './types';
+import type { BaseThemeContext, ElementNode, Instruction, Theme } from './types';
 import { getPositionalDelta, getTotalSize } from './util';
 
 const _render = <T extends BaseThemeContext>(
@@ -82,8 +82,7 @@ const _render = <T extends BaseThemeContext>(
 
 export function render<T extends BaseThemeContext = BaseThemeContext>(
   node: ElementNode,
-  theme?: T,
-  intrinsicElements?: Partial<IntrinsicRenders<T>>
+  theme?: Theme<T>
 ): Canvas {
   const instructions = createInstructions(node);
 
@@ -96,8 +95,8 @@ export function render<T extends BaseThemeContext = BaseThemeContext>(
 
   _render(
     ctx,
-    theme ?? ({ renderer: Container.get(FontRenderer) } as T),
-    { ...intrinsicRenders, ...intrinsicElements },
+    theme?.context ?? ({ renderer: Container.get(FontRenderer) } as T),
+    { ...intrinsicRenders, ...theme?.elements },
     instructions,
     0,
     0
