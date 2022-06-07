@@ -16,6 +16,7 @@ export const SpeedUHCProfile = ({
   badge,
   mode,
   t,
+  time,
 }: SpeedUHCProfileProps) => {
   const { speeduhc } = player.stats;
   const stats = speeduhc[mode];
@@ -36,6 +37,7 @@ export const SpeedUHCProfile = ({
         sidebar={sidebar}
         title={`§l§bSpeed§6UHC §fStats §r(${prettify(mode)})`}
         description={`§bSpeed§6UHC §7Level: ${speeduhc.levelFormatted}`}
+        time={time}
       />
       <Table.table>
         <Table.tr>

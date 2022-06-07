@@ -17,4 +17,4 @@ export interface CommandMetadata extends Omit<CommandOptions, 'name'> {
   methodName: string;
 }
 
-export type SubCommandMetadata = Omit<CommandMetadata, 'groups'>;
+export type SubCommandMetadata = Record<string, Omit<CommandMetadata, 'groups'>>;

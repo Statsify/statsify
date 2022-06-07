@@ -6,5 +6,4 @@ export const leaderboardService: MockClass<LeaderboardService> = {
   getLeaderboard: jest.fn().mockResolvedValue([]),
   getLeaderboardRanking: jest.fn().mockResolvedValue(1),
   getLeaderboardDocument: jest.fn().mockResolvedValue({}),
-  getLeaderboardFields: jest.fn().mockResolvedValue([]),
 };

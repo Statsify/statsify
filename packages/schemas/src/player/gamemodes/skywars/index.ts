@@ -11,7 +11,7 @@ export type SkyWarsModes = typeof SKYWARS_MODES;
 
 export class SkyWars {
   @Field()
-  public xp: number;
+  public exp: number;
 
   @Field()
   public coins: number;
@@ -50,7 +50,7 @@ export class SkyWars {
   public levelColor: Color;
 
   @Field()
-  public levelProgression: Progression;
+  public progression: Progression;
 
   @Field()
   public overall: SkyWarsMode;
@@ -65,7 +65,7 @@ export class SkyWars {
   public labs: SkyWarsLabs;
 
   public constructor(data: APIData) {
-    this.xp = data.skywars_experience ?? 0;
+    this.exp = data.skywars_experience ?? 0;
     this.coins = data.coins;
     this.souls = data.souls;
     this.shards = data.shard;
@@ -83,12 +83,12 @@ export class SkyWars {
     );
 
     this.star = (data.levelFormatted || '⋆').replace(/[0-9]|[a-f]|k|r|l|§/g, '');
-    this.level = getLevel(this.xp);
+    this.level = getLevel(this.exp);
     this.levelFormatted = getFormattedLevel(this.level, this.star);
     this.levelColor = getPresColor(this.level);
 
-    const { current, total } = getLevelProgress(this.xp);
-    this.levelProgression = new Progression(current, total);
+    const { current, total } = getLevelProgress(this.exp);
+    this.progression = new Progression(current, total);
 
     this.nextLevelFormatted = getFormattedLevel(this.level + 1, this.star);
 

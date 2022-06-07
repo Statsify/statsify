@@ -9,6 +9,7 @@ export const TurboKartRacersProfile = ({
   premium,
   badge,
   t,
+  time,
 }: BaseProfileProps) => {
   const { turbokartracers } = player.stats;
 
@@ -28,6 +29,7 @@ export const TurboKartRacersProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l§aTurbo Kart Racers §fStats`}
+        time={time}
       />
       <Table.table>
         <Table.tr>

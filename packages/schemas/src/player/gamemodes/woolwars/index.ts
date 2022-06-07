@@ -37,7 +37,7 @@ export class WoolWars {
   public levelColor: Color;
 
   @Field()
-  public levelProgression: Progression;
+  public progression: Progression;
 
   @Field()
   public nextLevelFormatted: string;
@@ -86,7 +86,7 @@ export class WoolWars {
       exp -= getExpReq(i);
     }
 
-    this.levelProgression = new Progression(exp, getExpReq(this.level));
+    this.progression = new Progression(exp, getExpReq(this.level));
 
     this.overall = new WoolWarsOverall(data.wool_wars?.stats);
 

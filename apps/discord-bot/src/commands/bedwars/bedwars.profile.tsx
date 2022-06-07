@@ -1,4 +1,12 @@
-import { Container, Footer, formatProgression, Header, SidebarItem, Table } from '#components';
+import {
+  Container,
+  Footer,
+  formatProgression,
+  Header,
+  HistoricalProgression,
+  SidebarItem,
+  Table,
+} from '#components';
 import { BEDWARS_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -16,6 +24,7 @@ export const BedWarsProfile = ({
   badge,
   mode,
   t,
+  time,
 }: BedWarsProfileProps) => {
   const { bedwars } = player.stats;
   const stats = bedwars[mode];
@@ -41,10 +50,11 @@ export const BedWarsProfile = ({
         title={`§l§cBed§fWars §fStats §r(${prettify(mode)})`}
         description={`§cBed§fWars §7Level: ${bedwars.levelFormatted}\n${formatProgression(
           t,
-          bedwars.levelProgression,
+          bedwars.progression,
           bedwars.levelFormatted,
           bedwars.nextLevelFormatted
         )}`}
+        time={time}
       />
       <Table.table>
         <Table.tr>
@@ -67,6 +77,15 @@ export const BedWarsProfile = ({
           <Table.td title={t('stats.bedsLost')} value={t(stats.bedsLost)} color="§c" />
           <Table.td title={t('stats.bblr')} value={t(stats.bblr)} color="§6" />
         </Table.tr>
+        <HistoricalProgression
+          time={time}
+          progression={bedwars.progression}
+          current={bedwars.levelFormatted}
+          next={bedwars.nextLevelFormatted}
+          t={t}
+          level={bedwars.level}
+          exp={bedwars.exp}
+        />
       </Table.table>
       <Footer logo={logo} premium={premium} />
     </Container>

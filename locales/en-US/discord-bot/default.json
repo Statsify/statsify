@@ -143,7 +143,9 @@
     "damage": "Damage",
     "healing": "Healing",
     "prevent": "Prevent",
-    "total": "Total"
+    "total": "Total",
+    "levelsGained": "Levels Gained",
+    "expGained": "EXP Gained"
   },
   "commands": {
     "arcade": "Arcade Games command",

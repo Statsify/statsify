@@ -1,19 +1,22 @@
+import { HistoricalType } from '@statsify/api-client';
 import { useChildren } from '@statsify/rendering';
 import { Image } from 'skia-canvas';
 import { Sidebar, SidebarItem } from '../Sidebar';
 import { Skin } from '../Skin';
 import { HeaderBody } from './HeaderBody';
 import { HeaderNametag } from './HeaderNametag';
+import { HistoricalHeader } from './HistoricalHeader';
 
 interface BaseHeaderProps {
   skin: Image;
   badge?: Image;
   size?: number;
   name: string;
+  time: 'LIVE' | HistoricalType;
+  title: string;
 }
 
 interface SidebarlessHeaderProps extends BaseHeaderProps {
-  title: string;
   description?: string;
 }
 
@@ -29,26 +32,28 @@ export type HeaderProps = SidebarlessHeaderProps | SidebarHeaderProps | CustomHe
 
 export const Header = (props: HeaderProps) => {
   const skin = <Skin skin={props.skin} />;
+  const nameTag = <HeaderNametag name={props.name} badge={props.badge} size={props.size} />;
+
+  if (props.time !== 'LIVE')
+    return <HistoricalHeader nameTag={nameTag} skin={skin} title={props.title} time={props.time} />;
 
   const sidebar =
     'sidebar' in props && props.sidebar.length ? <Sidebar items={props.sidebar} /> : <></>;
 
   let body: JSX.Element;
 
-  if ('title' in props) {
-    body = <HeaderBody title={props.title} description={props.description} />;
-  } else if ('children' in props) {
+  if ('children' in props) {
     const children = useChildren(props.children);
     body = <>{children}</>;
   } else {
-    throw new Error('Invalid header props, could not determine body');
+    body = <HeaderBody title={props.title} description={props.description} />;
   }
 
   return (
     <div width="100%">
       {skin}
       <div direction="column" width="remaining" height="100%">
-        <HeaderNametag name={props.name} badge={props.badge} size={props.size} />
+        {nameTag}
         {body}
       </div>
       {sidebar}

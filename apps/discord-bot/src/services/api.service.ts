@@ -2,6 +2,7 @@ import {
   ApiService as StatsifyApiService,
   GuildNotFoundException,
   GuildQuery,
+  HistoricalType,
   PlayerNotFoundException,
   RankedSkyWarsNotFoundException,
   RecentGamesNotFoundException,
@@ -36,6 +37,24 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super.getPlayer(input).catch((err) => {
+      if (!err.response || !err.response.data) throw this.unknownError();
+      const error = err.response.data as PlayerNotFoundException;
+
+      if (error.message === 'player') throw this.missingPlayer(type, tag);
+
+      throw this.unknownError();
+    });
+  }
+
+  public override async getPlayerHistorical(
+    tag: string,
+    historicalType: HistoricalType,
+    user: User | null = null
+  ) {
+    const [formattedTag, type] = this.parseTag(tag);
+    const input = await this.resolveTag(formattedTag, type, user);
+
+    return super.getPlayerHistorical(input, historicalType).catch((err) => {
       if (!err.response || !err.response.data) throw this.unknownError();
       const error = err.response.data as PlayerNotFoundException;
 

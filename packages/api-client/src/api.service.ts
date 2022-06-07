@@ -154,7 +154,10 @@ export class ApiService {
   }
 
   public getPlayerHistorical(tag: string, type: HistoricalType) {
-    return this.request<GetHistoricalResponse>(`/historical`, { player: tag, type });
+    return this.requestKey<GetHistoricalResponse, 'player'>(`/historical`, 'player', {
+      player: tag,
+      type,
+    });
   }
 
   public resetPlayerHistorical(tag: string) {

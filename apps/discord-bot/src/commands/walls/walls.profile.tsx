@@ -9,6 +9,7 @@ export const WallsProfile = ({
   premium,
   badge,
   t,
+  time,
 }: BaseProfileProps) => {
   const { walls } = player.stats;
 
@@ -22,6 +23,7 @@ export const WallsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l§eWalls §fStats`}
+        time={time}
       />
       <Table.table>
         <Table.tr>

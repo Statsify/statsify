@@ -16,6 +16,7 @@ export const CopsAndCrimsProfile = ({
   badge,
   mode,
   t,
+  time,
 }: CopsAndCrimsProfileProps) => {
   const { copsandcrims } = player.stats;
 
@@ -102,6 +103,7 @@ export const CopsAndCrimsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l§bCops and Crims §fStats §r(${prettify(mode)})`}
+        time={time}
       />
       {table}
       <Footer logo={logo} premium={premium} />

@@ -1,6 +1,7 @@
 import { PlayerArgument } from '#arguments';
 import { GamesWithBackgrounds, mapBackground } from '#constants';
 import { ApiService, Page, PaginateService } from '#services';
+import { HistoricalType } from '@statsify/api-client';
 import { getBackground, getLogo } from '@statsify/assets';
 import { Command, CommandContext, LocalizeFunction } from '@statsify/discord';
 import { render } from '@statsify/rendering';
@@ -18,6 +19,7 @@ export interface BaseProfileProps {
   premium?: boolean;
   badge?: Image;
   t: LocalizeFunction;
+  time: 'LIVE' | HistoricalType;
 }
 
 export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
@@ -77,6 +79,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
             t,
             premium: user?.premium,
             badge: player.user?.badge,
+            time: 'LIVE',
           },
           { mode: mode as T[number], data }
         );

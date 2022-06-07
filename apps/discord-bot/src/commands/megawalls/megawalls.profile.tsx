@@ -16,6 +16,7 @@ export const MegaWallsProfile = ({
   badge,
   mode,
   t,
+  time,
 }: MegaWallsProfileProps) => {
   const { megawalls } = player.stats;
   const stats = megawalls[mode];
@@ -33,6 +34,7 @@ export const MegaWallsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l§7MegaWalls §fStats §r(${prettify(mode)})`}
+        time={time}
       />
       <Table.table>
         <Table.tr>

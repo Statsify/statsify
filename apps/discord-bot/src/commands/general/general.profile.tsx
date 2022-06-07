@@ -54,6 +54,7 @@ export const GeneralProfile = ({
   premium,
   guild,
   friends = 0,
+  time,
 }: GeneralProfileProps) => {
   const { general } = player.stats;
   const { status } = player;
@@ -66,6 +67,8 @@ export const GeneralProfile = ({
         skin={skin}
         badge={badge}
         size={3}
+        title="§lGeneral Stats"
+        time={time}
       >
         <GeneralProfileHeaderBody guild={guild} status={status} t={t} />
       </Header>

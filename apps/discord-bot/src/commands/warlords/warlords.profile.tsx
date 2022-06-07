@@ -17,6 +17,7 @@ export const WarlordsProfile = ({
   badge,
   premium,
   mode,
+  time,
 }: WarlordsProfileProps) => {
   const { warlords } = player.stats;
 
@@ -59,6 +60,7 @@ export const WarlordsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title="§l§eWarlords §fStats"
+        time={time}
       />
       {table}
       <Footer logo={logo} premium={premium} />

@@ -2,11 +2,21 @@ import { InjectModel } from '@m8a/nestjs-typegoose';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { HistoricalType, HypixelCache } from '@statsify/api-client';
+import { ratio, sub } from '@statsify/math';
 import { deserialize, Player, serialize } from '@statsify/schemas';
 import { Flatten, flatten } from '@statsify/util';
 import { ReturnModelType } from '@typegoose/typegoose';
+import { isObject } from 'class-validator';
 import { PlayerService } from '../player';
 import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from './models';
+
+const RATIOS = ['wlr', 'kdr', 'fkdr', 'bblr'];
+const RATIO_KEYS = [
+  ['wins', 'losses'],
+  ['kills', 'deaths'],
+  ['finalKills', 'finalDeaths'],
+  ['bedsBroken', 'bedsLost'],
+];
 
 @Injectable()
 export class HistoricalService {
@@ -87,13 +97,46 @@ export class HistoricalService {
     return deserialize(Player, flatPlayer);
   }
 
-  public async findOne(
+  public async findOneAndMerge(tag: string, type: HistoricalType): Promise<Player | null> {
+    const [newPlayer, oldPlayer, isNew] = await this.findOne(tag, type);
+    if (!newPlayer || !oldPlayer) return null;
+
+    const merged = this.merge(oldPlayer, newPlayer);
+
+    merged.isNew = isNew;
+
+    return merged;
+  }
+
+  private async findOne(
     tag: string,
     type: HistoricalType
   ): Promise<[newPlayer: Player | null, oldPlayer: Player | null, isNew?: boolean]> {
-    const newPlayer = await this.playerService.findOne(tag, HypixelCache.LIVE);
+    let newPlayer: Player;
 
-    if (!newPlayer) return [null, null];
+    if (
+      [HistoricalType.LAST_DAY, HistoricalType.LAST_WEEK, HistoricalType.LAST_MONTH].includes(type)
+    ) {
+      const lastMap = {
+        [HistoricalType.LAST_DAY]: this.dailyModel,
+        [HistoricalType.LAST_WEEK]: this.weeklyModel,
+        [HistoricalType.LAST_MONTH]: this.monthlyModel,
+      };
+
+      const player = await lastMap[type as keyof typeof lastMap]
+        .findOne({ uuid: tag })
+        .lean()
+        .exec();
+
+      if (!player) return [null, null];
+
+      newPlayer = deserialize(Player, flatten(player));
+    } else {
+      const player = await this.playerService.findOne(tag, HypixelCache.LIVE);
+      if (!player) return [null, null];
+
+      newPlayer = player;
+    }
 
     const models = {
       [HistoricalType.DAILY]: this.dailyModel,
@@ -118,6 +161,50 @@ export class HistoricalService {
     }
 
     return [newPlayer, deserialize(Player, flatten(oldPlayer)), isNew];
+  }
+
+  private merge<T>(oldOne: T, newOne: T): T {
+    const merged = {} as T;
+
+    const keys = Object.keys({ ...oldOne, ...newOne });
+
+    for (const _key of keys) {
+      const key = _key as keyof T;
+      const newOneType = typeof newOne[key];
+
+      if (typeof oldOne[key] === 'number' || newOneType === 'number') {
+        const ratioIndex = RATIOS.indexOf(_key as string);
+
+        if (ratioIndex !== -1) {
+          const numerator = sub(
+            newOne[RATIO_KEYS[ratioIndex][0] as unknown as keyof T] as unknown as number,
+            oldOne[RATIO_KEYS[ratioIndex][0] as unknown as keyof T] as unknown as number
+          );
+
+          const denominator = sub(
+            newOne[RATIO_KEYS[ratioIndex][1] as unknown as keyof T] as unknown as number,
+            oldOne[RATIO_KEYS[ratioIndex][1] as unknown as keyof T] as unknown as number
+          );
+
+          merged[key] = ratio(numerator, denominator) as unknown as T[keyof T];
+        } else {
+          merged[key] = sub(
+            newOne[key] as unknown as number,
+            oldOne[key] as unknown as number
+          ) as unknown as T[keyof T];
+        }
+      } else if (newOneType === 'string') {
+        merged[key] = newOne[key];
+      } else if (isObject(newOne[key])) {
+        if (key === 'progression') {
+          merged[key] = newOne[key];
+        } else {
+          merged[key] = this.merge(oldOne[key] ?? {}, newOne[key] ?? {}) as unknown as T[keyof T];
+        }
+      }
+    }
+
+    return merged;
   }
 
   private getMinute(date: Date) {

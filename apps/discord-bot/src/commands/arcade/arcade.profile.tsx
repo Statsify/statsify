@@ -37,6 +37,7 @@ export const ArcadeProfile = ({
   badge,
   mode,
   t,
+  time,
 }: ArcadeProfileProps) => {
   const { arcade } = player.stats;
 
@@ -115,6 +116,7 @@ export const ArcadeProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l§cA§6r§ec§aa§bd§de §fStats §r(${prettify(mode)})`}
+        time={time}
       />
       {table}
       <Footer logo={logo} premium={premium} />

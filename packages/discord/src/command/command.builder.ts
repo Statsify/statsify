@@ -18,19 +18,15 @@ export class CommandBuilder {
       commandResolvable.addSubCommandGroup(groupResolvable);
     });
 
-    const methodNames = Object.getOwnPropertyNames(constructor.prototype);
+    const subcommandMetadata = Reflect.getMetadata(
+      'statsify:subcommand',
+      target
+    ) as SubCommandMetadata;
 
-    for (const methodName of methodNames) {
-      const subcommandMetadata = Reflect.getMetadata(
-        'statsify:subcommand',
-        target,
-        methodName
-      ) as SubCommandMetadata;
+    if (!subcommandMetadata) return commandResolvable;
 
-      if (!subcommandMetadata) continue;
-
-      const subcommandResolvable = new CommandResolvable(subcommandMetadata, target);
-
+    for (const subcommand of Object.values(subcommandMetadata)) {
+      const subcommandResolvable = new CommandResolvable(subcommand, target);
       commandResolvable.addSubCommand(subcommandResolvable);
     }
 

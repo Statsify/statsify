@@ -16,6 +16,7 @@ export const ArenaBrawlProfile = ({
   badge,
   mode,
   t,
+  time,
 }: ArenaBrawlProfileProps) => {
   const { arenabrawl } = player.stats;
   const stats = arenabrawl[mode];
@@ -35,6 +36,7 @@ export const ArenaBrawlProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l§6Arena Brawl §fStats §r(${prettify(mode)})`}
+        time={time}
       />
       <Table.table>
         <Table.tr>

@@ -6,5 +6,5 @@ export const historicalService: MockClass<HistoricalService> = {
   resetPlayers: jest.fn(),
   findAndReset: jest.fn().mockResolvedValue(new Player()),
   resetPlayer: jest.fn().mockResolvedValue(new Player()),
-  findOne: jest.fn().mockResolvedValue([new Player(), new Player(), false]),
+  findOneAndMerge: jest.fn().mockResolvedValue(new Player()),
 };
