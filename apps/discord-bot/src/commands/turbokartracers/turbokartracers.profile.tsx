@@ -48,24 +48,20 @@ export const TurboKartRacersProfile = ({
         <Table.tr>
           <Table.td
             title={t('stats.goldTrophies')}
-            value={t(turbokartracers.trophies.gold)}
+            value={t(turbokartracers.gold)}
             color="§#ffd700"
           />
           <Table.td
             title={t('stats.silverTrophies')}
-            value={t(turbokartracers.trophies.silver)}
+            value={t(turbokartracers.silver)}
             color="§#c0c0c0"
           />
           <Table.td
             title={t('stats.bronzeTrophies')}
-            value={t(turbokartracers.trophies.bronze)}
+            value={t(turbokartracers.bronze)}
             color="§#cd7f32"
           />
-          <Table.td
-            title={t('stats.totalTrophies')}
-            value={t(turbokartracers.trophies.total)}
-            color="§a"
-          />
+          <Table.td title={t('stats.totalTrophies')} value={t(turbokartracers.total)} color="§a" />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} premium={premium} />

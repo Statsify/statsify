@@ -10,13 +10,18 @@ import { isObject } from 'class-validator';
 import { PlayerService } from '../player';
 import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from './models';
 
-const RATIOS = ['wlr', 'kdr', 'fkdr', 'bblr'];
+const RATIOS = ['wlr', 'kdr', 'fkdr', 'bblr', 'shotAccuracy', 'winRate', 'goldRate', 'trophyRate'];
+
 const RATIO_KEYS = [
   ['wins', 'losses'],
   ['kills', 'deaths'],
   ['finalKills', 'finalDeaths'],
   ['bedsBroken', 'bedsLost'],
-];
+  ['kills', 'shotFired', 100],
+  ['wins', 'gamesPlayed', 100],
+  ['gold', 'gamesPlayed', 100],
+  ['total', 'gamesPlayed', 100],
+] as const;
 
 @Injectable()
 export class HistoricalService {
@@ -186,7 +191,11 @@ export class HistoricalService {
             oldOne[RATIO_KEYS[ratioIndex][1] as unknown as keyof T] as unknown as number
           );
 
-          merged[key] = ratio(numerator, denominator) as unknown as T[keyof T];
+          merged[key] = ratio(
+            numerator,
+            denominator,
+            RATIO_KEYS[ratioIndex][2] ?? 1
+          ) as unknown as T[keyof T];
         } else {
           merged[key] = sub(
             newOne[key] as unknown as number,
