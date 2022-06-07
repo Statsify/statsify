@@ -1,7 +1,6 @@
 import { add, ratio } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
-import { TurboKartRacersTrophies } from './trophy';
 
 export const TURBO_KART_RACERS_MODES = ['overall'] as const;
 export type TurboKartRacersModes = typeof TURBO_KART_RACERS_MODES;
@@ -23,10 +22,19 @@ export class TurboKartRacers {
   public coinsPickedUp: number;
 
   @Field()
-  public trophies: TurboKartRacersTrophies;
+  public gamesPlayed: number;
 
   @Field()
-  public gamesPlayed: number;
+  public gold: number;
+
+  @Field()
+  public silver: number;
+
+  @Field()
+  public bronze: number;
+
+  @Field()
+  public total: number;
 
   @Field({ leaderboard: { enabled: false } })
   public trophyRate: number;
@@ -43,15 +51,18 @@ export class TurboKartRacers {
       data.hypixelgp_plays,
       data.junglerush_plays
     );
-    this.trophyRate = ratio(data.wins, this.gamesPlayed, 100);
+
     this.grandPrixTokens = data.grand_prix_tokens;
     this.lapsCompleted = data.laps_completed;
     this.boxesPickedUp = data.box_pickups;
     this.coinsPickedUp = data.coins_picked_up;
 
-    this.trophies = new TurboKartRacersTrophies(data);
-    this.goldRate = ratio(this.trophies.gold, this.gamesPlayed, 100);
+    this.bronze = data.bronze_trophy;
+    this.silver = data.silver_trophy;
+    this.gold = data.gold_trophy;
+    this.total = add(this.gold, this.silver, this.bronze);
+
+    this.goldRate = ratio(this.gold, this.gamesPlayed, 100);
+    this.trophyRate = ratio(this.total, this.gamesPlayed, 100);
   }
 }
-
-export * from './trophy';

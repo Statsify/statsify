@@ -4,5 +4,4 @@ import { MockClass } from './mock.type';
 export const guildLeaderboardService: MockClass<GuildLeaderboardService> = {
   getLeaderboard: jest.fn().mockResolvedValue([]),
   getLeaderboardRanking: jest.fn().mockResolvedValue({ field: '', rank: 1 }),
-  getFieldMetadata: jest.fn(),
 };

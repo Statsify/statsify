@@ -10,4 +10,5 @@ export const authService: MockClass<AuthService> = {
     resetTime: 999,
   }),
   createKey: jest.fn().mockResolvedValue(testUuid),
+  getKey: jest.fn(),
 };

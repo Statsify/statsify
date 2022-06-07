@@ -26,6 +26,7 @@ export const MurderMysteryProfile = ({
   t,
   badge,
   premium,
+  time,
 }: BaseProfileProps) => {
   const { murdermystery } = player.stats;
 
@@ -45,6 +46,7 @@ export const MurderMysteryProfile = ({
         badge={badge}
         sidebar={sidebar}
         title="§l§4Murder Mystery §fStats"
+        time={time}
       />
       <Table.table>
         <Table.tr>

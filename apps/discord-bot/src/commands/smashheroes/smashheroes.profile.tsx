@@ -16,6 +16,7 @@ export const SmashHeroesProfile = ({
   badge,
   mode,
   t,
+  time,
 }: SmashHeroesProfile) => {
   const { smashheroes } = player.stats;
   const stats = smashheroes[mode];
@@ -34,6 +35,7 @@ export const SmashHeroesProfile = ({
         sidebar={sidebar}
         title={`§l§dSmash §eHeroes §fStats §r(${prettify(mode)})`}
         description={`§dSmash §eHeroes §7Level: ${smashheroes.levelFormatted}`}
+        time={time}
       />
       <Table.table>
         <Table.tr>

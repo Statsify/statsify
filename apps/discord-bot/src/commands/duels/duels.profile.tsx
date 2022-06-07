@@ -22,6 +22,7 @@ export const DuelsProfile = ({
   badge,
   mode,
   t,
+  time,
 }: DuelsProfileProps) => {
   const { duels } = player.stats;
 
@@ -60,6 +61,7 @@ export const DuelsProfile = ({
         sidebar={sidebar}
         title={`§l§bDuels §fStats §r(${prettify(mode)})`}
         description={`§d${prettify(mode)} Title\n${duels[mode].titleFormatted}`}
+        time={time}
       />
       {table}
       <Footer logo={logo} premium={premium} />

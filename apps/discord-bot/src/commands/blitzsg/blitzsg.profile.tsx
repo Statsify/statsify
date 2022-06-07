@@ -90,6 +90,7 @@ export const BlitzSGProfile = ({
   badge,
   mode,
   t,
+  time,
 }: BlitzSGProfileProps) => {
   const { blitzsg } = player.stats;
 
@@ -124,6 +125,7 @@ export const BlitzSGProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l§2Blitz§6SG §fStats §r(${prettify(mode)})`}
+        time={time}
       />
       {table}
       <Footer logo={logo} premium={premium} />

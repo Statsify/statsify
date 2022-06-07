@@ -10,6 +10,7 @@ export const PaintballProfile = ({
   premium,
   badge,
   t,
+  time,
 }: BaseProfileProps) => {
   const { paintball } = player.stats;
 
@@ -28,6 +29,7 @@ export const PaintballProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l§bPaint§fball §fStats`}
+        time={time}
       />
       <Table.table>
         <Table.tr>

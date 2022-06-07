@@ -1,4 +1,13 @@
-import { Container, Footer, formatProgression, Header, If, SidebarItem, Table } from '#components';
+import {
+  Container,
+  Footer,
+  formatProgression,
+  Header,
+  HistoricalProgression,
+  If,
+  SidebarItem,
+  Table,
+} from '#components';
 import { WoolWarsOverall, WOOL_WARS_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
@@ -16,6 +25,7 @@ export const WoolWarsProfile = ({
   badge,
   mode,
   t,
+  time,
 }: WoolWarsProfileProps) => {
   const { woolwars } = player.stats;
   const stats = woolwars[mode];
@@ -38,10 +48,11 @@ export const WoolWarsProfile = ({
         title={`§l§cWool§9Wars §fStats §r(${prettify(mode)})`}
         description={`§cWool§9Wars §7Level: ${woolwars.levelFormatted}\n${formatProgression(
           t,
-          woolwars.levelProgression,
+          woolwars.progression,
           woolwars.levelFormatted,
           woolwars.nextLevelFormatted
         )}`}
+        time={time}
       />
       <Table.table>
         <If condition={mode === 'overall'}>
@@ -62,6 +73,15 @@ export const WoolWarsProfile = ({
           <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
           <Table.td title={t('stats.assists')} value={t(stats.assists)} color="§e" />
         </Table.tr>
+        <HistoricalProgression
+          time={time}
+          progression={woolwars.progression}
+          current={woolwars.levelFormatted}
+          next={woolwars.nextLevelFormatted}
+          t={t}
+          level={woolwars.level}
+          exp={woolwars.exp}
+        />
       </Table.table>
       <Footer logo={logo} premium={premium} />
     </Container>

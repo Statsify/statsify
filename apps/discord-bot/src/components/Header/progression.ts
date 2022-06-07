@@ -12,10 +12,18 @@ export const formatProgression = (
   t: LocalizeFunction,
   progression: Progression,
   currentLevel: string,
-  nextLevel: string
-) =>
-  progression.max
-    ? `§7Progress: §b${t(progression.current)}§7/§a${t(progression.max)}\n${currentLevel} ${xpBar(
-        progression.percent
-      )} ${nextLevel}`
-    : `§b§lMAXED`;
+  nextLevel: string,
+  showProgress = true
+) => {
+  if (progression.max) {
+    let output = '§^2^';
+
+    if (showProgress)
+      output += `§7Progress: §b${t(progression.current)}§7/§a${t(progression.max)}\n`;
+
+    output += `${currentLevel} ${xpBar(progression.percent)} ${nextLevel}`;
+    return output;
+  }
+
+  return `§^2^§b§lMAXED`;
+};

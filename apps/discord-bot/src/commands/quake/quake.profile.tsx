@@ -16,6 +16,7 @@ export const QuakeProfile = ({
   badge,
   mode,
   t,
+  time,
 }: QuakeProfileProps) => {
   const { quake } = player.stats;
   const stats = quake[mode];
@@ -35,6 +36,7 @@ export const QuakeProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l§5Quake §fStats §r(${prettify(mode)})`}
+        time={time}
       />
       <Table.table>
         <Table.tr>

@@ -27,6 +27,7 @@ export const TNTGamesProfile = ({
   t,
   badge,
   premium,
+  time,
 }: BaseProfileProps) => {
   const { tntgames } = player.stats;
 
@@ -44,6 +45,7 @@ export const TNTGamesProfile = ({
         badge={badge}
         sidebar={sidebar}
         title="§l§cTNT Games §fStats"
+        time={time}
       />
       <Table.table>
         <Table.tr>

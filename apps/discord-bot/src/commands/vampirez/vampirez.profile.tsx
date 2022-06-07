@@ -28,6 +28,7 @@ export const VampireZProfile = ({
   premium,
   badge,
   t,
+  time,
 }: BaseProfileProps) => {
   const { vampirez } = player.stats;
 
@@ -41,6 +42,7 @@ export const VampireZProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l§4VampireZ §fStats`}
+        time={time}
       />
       <Table.table>
         <VampireZRow mode="§6Overall" stats={vampirez.overall} t={t} />

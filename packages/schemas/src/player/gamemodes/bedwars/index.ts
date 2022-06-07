@@ -54,7 +54,7 @@ export class BedWars {
   public levelColor: Color;
 
   @Field()
-  public levelProgression: Progression;
+  public progression: Progression;
 
   @Field()
   public nextLevelFormatted: string;
@@ -125,7 +125,7 @@ export class BedWars {
       exp -= getExpReq(i);
     }
 
-    this.levelProgression = new Progression(exp, getExpReq(this.level + 1));
+    this.progression = new Progression(exp, getExpReq(this.level + 1));
 
     this.lootChests = add(
       data.bedwars_boxes,

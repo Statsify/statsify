@@ -202,7 +202,7 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ['warlords', 'overall'];
     //TODO(amony): add woolwars backgrounds
     case WOOL_WARS_MODES:
-      return ['hypixel', 'overall'];
+      return ['woolwars', 'overall'];
     default:
       return ['default', ''];
   }

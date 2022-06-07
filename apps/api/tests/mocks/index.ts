@@ -1,4 +1,4 @@
-import { InjectionToken } from '@nestjs/common';
+import { MockFactory } from '@nestjs/testing';
 import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
 import { AuthService } from '../../src/auth/auth.service';
 import { GuildService } from '../../src/guild';
@@ -20,7 +20,7 @@ import { skinService } from './skin.mock';
 
 const moduleMocker = new ModuleMocker(global);
 
-export const useMocker = (token: InjectionToken) => {
+export const useMocker: MockFactory = (token) => {
   switch (token) {
     case AuthService:
       return authService;

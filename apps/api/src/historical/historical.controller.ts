@@ -22,20 +22,11 @@ export class HistoricalController {
   @Get()
   @Auth({ weight: 2 })
   public async getHistoricalStats(@Query() { player: tag, type }: HistoricalDto) {
-    const [newPlayer, oldPlayer, isNew] = await this.historicalService.findOne(tag, type);
-
-    if (!newPlayer)
-      return {
-        success: false,
-        oldPlayer: null,
-        newPlayer: null,
-      };
+    const player = await this.historicalService.findOneAndMerge(tag, type);
 
     return {
-      success: true,
-      oldPlayer,
-      newPlayer,
-      isNew,
+      success: !!player,
+      player,
     };
   }
 

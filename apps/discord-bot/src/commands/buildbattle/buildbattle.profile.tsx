@@ -31,6 +31,7 @@ export const BuildBattleProfile = ({
   t,
   badge,
   premium,
+  time,
 }: BaseProfileProps) => {
   const { buildbattle } = player.stats;
 
@@ -50,6 +51,7 @@ export const BuildBattleProfile = ({
         sidebar={sidebar}
         title="§l§6Build Battle §fStats"
         description={`§dBuild Battle Title\n${buildbattle.titleFormatted}`}
+        time={time}
       />
       <div width="100%">
         <BuildBattleModeTable

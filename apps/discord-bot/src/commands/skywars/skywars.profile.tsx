@@ -1,4 +1,12 @@
-import { Container, Footer, formatProgression, Header, SidebarItem, Table } from '#components';
+import {
+  Container,
+  Footer,
+  formatProgression,
+  Header,
+  HistoricalProgression,
+  SidebarItem,
+  Table,
+} from '#components';
 import { LocalizeFunction } from '@statsify/discord';
 import type { SkyWarsGameMode, SkyWarsLabs, SKYWARS_MODES } from '@statsify/schemas';
 import { formatTime, prettify } from '@statsify/util';
@@ -10,7 +18,7 @@ interface SkyWarsOverallTableProps {
 }
 
 const SkyWarsOverallTable = ({ t, stats }: SkyWarsOverallTableProps) => (
-  <Table.table>
+  <>
     <Table.tr>
       <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
       <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
@@ -26,7 +34,7 @@ const SkyWarsOverallTable = ({ t, stats }: SkyWarsOverallTableProps) => (
       <Table.td title={t('stats.playtime')} value={formatTime(stats.playtime)} color="§c" />
       <Table.td title={t('stats.kit')} value={prettify(stats.kit)} color="§6" />
     </Table.tr>
-  </Table.table>
+  </>
 );
 
 interface SkyWarsLabsTableProps {
@@ -39,7 +47,7 @@ const SkyWarsLabsTable = ({ t, stats }: SkyWarsLabsTableProps) => {
   const colors = ['§e', '§b', '§a', '§c'] as const;
 
   return (
-    <Table.table>
+    <>
       <Table.tr>
         {modes.map((mode, index) => {
           const color = colors[index];
@@ -65,7 +73,7 @@ const SkyWarsLabsTable = ({ t, stats }: SkyWarsLabsTableProps) => {
           );
         })}
       </Table.tr>
-    </Table.table>
+    </>
   );
 };
 
@@ -82,6 +90,7 @@ export const SkyWarsProfile = ({
   badge,
   mode,
   t,
+  time,
 }: SkyWarsProfileProps) => {
   const { skywars } = player.stats;
 
@@ -116,12 +125,24 @@ export const SkyWarsProfile = ({
         title={`§l§bSky§eWars §fStats §r(${prettify(mode)})`}
         description={`§bSky§eWars §7Level: ${skywars.levelFormatted}\n${formatProgression(
           t,
-          skywars.levelProgression,
+          skywars.progression,
           skywars.levelFormatted,
           skywars.nextLevelFormatted
         )}`}
+        time={time}
       />
-      {table}
+      <Table.table>
+        {table}
+        <HistoricalProgression
+          time={time}
+          progression={skywars.progression}
+          current={skywars.levelFormatted}
+          next={skywars.nextLevelFormatted}
+          t={t}
+          level={skywars.level}
+          exp={skywars.exp}
+        />
+      </Table.table>
       <Footer logo={logo} premium={premium} />
     </Container>
   );
