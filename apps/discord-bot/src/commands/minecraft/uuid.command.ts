@@ -19,10 +19,10 @@ export class UUIDCommand {
     const thumbURL = `https://crafatar.com/avatars/${player.uuid}?size=160&default=MHF_Steve&overlay&id=c958a4c0ca23485299ffc2cab67aea3e`;
 
     const embed = new EmbedBuilder()
-      .field((t) => t('stats.uuid.description.username'), `\`${player.username}\``)
-      .field((t) => t('stats.uuid.description.uuid'), `\`${player.uuid}\``)
+      .field((t) => t('embeds.uuid.description.username'), `\`${player.username}\``)
+      .field((t) => t('embeds.uuid.description.uuid'), `\`${player.uuid}\``)
       .field(
-        (t) => t('stats.uuid.description.shortUUID'),
+        (t) => t('embeds.uuid.description.shortUUID'),
         `${player.shortUuid.replace(/`/g, '\\`')}`
       )
       .color(INFO_COLOR)
