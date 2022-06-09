@@ -22,7 +22,7 @@ export class HistoricalController {
   @Get()
   @Auth({ weight: 2 })
   public async getHistoricalStats(@Query() { player: tag, type }: HistoricalDto) {
-    const player = await this.historicalService.findOneAndMerge(tag, type);
+    const player = await this.historicalService.get(tag, type);
 
     return {
       success: !!player,
@@ -36,7 +36,7 @@ export class HistoricalController {
   @Delete()
   @Auth({ role: AuthRole.MEMBER })
   public async deleteHistoricalStats(@Query() { player: tag }: PlayerDto) {
-    const player = await this.historicalService.findAndReset(tag, HistoricalType.MONTHLY);
+    const player = await this.historicalService.getAndReset(tag, HistoricalType.MONTHLY);
 
     if (!player) return { success: false };
 
