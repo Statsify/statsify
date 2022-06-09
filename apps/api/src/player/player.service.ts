@@ -37,7 +37,7 @@ export class PlayerService {
    * @param cacheLevel What type of data to return (cached/live)
    * @param selector (optional) A mongo selector to select specific fields
    */
-  public async findOne(
+  public async get(
     tag: string,
     cacheLevel: HypixelCache,
     selector?: Selector<Player>
@@ -73,8 +73,8 @@ export class PlayerService {
    * @param page The page of friends to return
    * @returns null or an object containing an array of friends
    */
-  public async findFriends(tag: string, page: number) {
-    const player = await this.findOne(tag, HypixelCache.CACHE_ONLY, {
+  public async getFriends(tag: string, page: number) {
+    const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
       displayName: true,
       uuid: true,
     });
@@ -121,7 +121,7 @@ export class PlayerService {
         !cachedFriend ||
         !this.hypixelService.shouldCache(cachedFriend.expiresAt, HypixelCache.CACHE)
       ) {
-        const friendData = await this.findOne(friend.uuid, HypixelCache.CACHE_ONLY, {
+        const friendData = await this.get(friend.uuid, HypixelCache.CACHE_ONLY, {
           displayName: true,
         });
 
@@ -142,9 +142,9 @@ export class PlayerService {
     return friends;
   }
 
-  public async findAchievements(tag: string) {
+  public async getAchievements(tag: string) {
     const [player, resources] = await Promise.all([
-      this.findOne(tag, HypixelCache.CACHE, {
+      this.get(tag, HypixelCache.CACHE, {
         uuid: true,
         displayName: true,
         oneTimeAchievements: true,
@@ -168,8 +168,8 @@ export class PlayerService {
     };
   }
 
-  public async findStatus(tag: string) {
-    const player = await this.findOne(tag, HypixelCache.CACHE_ONLY, {
+  public async getStatus(tag: string) {
+    const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
       uuid: true,
       displayName: true,
       status: true,
@@ -188,8 +188,8 @@ export class PlayerService {
     return status;
   }
 
-  public async findRecentGames(tag: string) {
-    const player = await this.findOne(tag, HypixelCache.CACHE_ONLY, {
+  public async getRecentGames(tag: string) {
+    const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
       uuid: true,
       displayName: true,
     });
@@ -207,8 +207,8 @@ export class PlayerService {
     };
   }
 
-  public async findRankedSkyWars(tag: string) {
-    const player = await this.findOne(tag, HypixelCache.CACHE_ONLY, {
+  public async getRankedSkyWars(tag: string) {
+    const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
       uuid: true,
       displayName: true,
     });
@@ -230,7 +230,7 @@ export class PlayerService {
    * @param tag UUID or Username of the player
    * @description Deletes a player from mongo and redis
    */
-  public async deleteOne(tag: string) {
+  public async delete(tag: string) {
     const player = await this.findMongoDocument(tag, {});
 
     if (!player) return null;

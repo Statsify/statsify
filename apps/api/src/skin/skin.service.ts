@@ -17,7 +17,7 @@ export class SkinService {
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
-    const { skin } = await this.findOne(uuid);
+    const { skin } = await this.getSkin(uuid);
 
     const canvas = new Canvas(size, size);
     const ctx = canvas.getContext('2d');
@@ -33,7 +33,7 @@ export class SkinService {
   }
 
   public async getRender(uuid: string): Promise<Buffer> {
-    const { skin, slim } = await this.findOne(uuid);
+    const { skin, slim } = await this.getSkin(uuid);
 
     const renderer = await this.getSkinRenderer();
 
@@ -55,7 +55,7 @@ export class SkinService {
     return renderer(skin, slim);
   }
 
-  public async findOne(uuid: string) {
+  public async getSkin(uuid: string) {
     uuid = uuid.replace(/-/g, '');
 
     const skin = await this.skinModel.findOne().where('uuid').equals(uuid).lean().exec();
@@ -64,7 +64,7 @@ export class SkinService {
       return this.resolveSkin(skin.skinUrl, skin.slim);
     }
 
-    const skinData = await this.getSkin(uuid);
+    const skinData = await this.requestSkin(uuid);
 
     //Possibly the service is down or we are ratelimited
     if (!skinData) {
@@ -95,7 +95,7 @@ export class SkinService {
     };
   }
 
-  private async getSkin(uuid: string) {
+  private async requestSkin(uuid: string) {
     return lastValueFrom(
       this.httpService.get(`/session/minecraft/profile/${uuid}`).pipe(
         map((data) => data.data),
