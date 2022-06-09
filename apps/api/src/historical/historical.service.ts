@@ -51,24 +51,24 @@ export class HistoricalService {
     const type = this.getType(date);
 
     players.forEach(async ({ uuid }) => {
-      const player = await this.playerService.findOne(uuid, HypixelCache.LIVE);
+      const player = await this.playerService.get(uuid, HypixelCache.LIVE);
 
-      if (player) this.resetPlayer(player, type);
+      if (player) this.reset(player, type);
       else this.logger.error(`Could not reset player with uuid ${uuid}`);
     });
   }
 
-  public async findAndReset(tag: string, type: HistoricalType) {
-    const player = await this.playerService.findOne(tag, HypixelCache.LIVE);
+  public async getAndReset(tag: string, type: HistoricalType) {
+    const player = await this.playerService.get(tag, HypixelCache.LIVE);
 
     if (!player) return null;
 
     player.resetMinute = this.getMinute(new Date());
 
-    return this.resetPlayer(player, type);
+    return this.reset(player, type);
   }
 
-  public async resetPlayer(player: Player, resetType: HistoricalType) {
+  public async reset(player: Player, resetType: HistoricalType) {
     const isMonthly =
       resetType === HistoricalType.MONTHLY || resetType === HistoricalType.LAST_MONTH;
     const isWeekly =
@@ -102,8 +102,8 @@ export class HistoricalService {
     return deserialize(Player, flatPlayer);
   }
 
-  public async findOneAndMerge(tag: string, type: HistoricalType): Promise<Player | null> {
-    const [newPlayer, oldPlayer, isNew] = await this.findOne(tag, type);
+  public async get(tag: string, type: HistoricalType): Promise<Player | null> {
+    const [newPlayer, oldPlayer, isNew] = await this.getRaw(tag, type);
     if (!newPlayer || !oldPlayer) return null;
 
     const merged = this.merge(oldPlayer, newPlayer);
@@ -113,7 +113,7 @@ export class HistoricalService {
     return merged;
   }
 
-  private async findOne(
+  private async getRaw(
     tag: string,
     type: HistoricalType
   ): Promise<[newPlayer: Player | null, oldPlayer: Player | null, isNew?: boolean]> {
@@ -137,7 +137,7 @@ export class HistoricalService {
 
       newPlayer = deserialize(Player, flatten(player));
     } else {
-      const player = await this.playerService.findOne(tag, HypixelCache.LIVE);
+      const player = await this.playerService.get(tag, HypixelCache.LIVE);
       if (!player) return [null, null];
 
       newPlayer = player;
@@ -161,7 +161,7 @@ export class HistoricalService {
 
       newPlayer.resetMinute = minute;
 
-      oldPlayer = await this.resetPlayer(newPlayer, HistoricalType.MONTHLY);
+      oldPlayer = await this.reset(newPlayer, HistoricalType.MONTHLY);
       isNew = true;
     }
 

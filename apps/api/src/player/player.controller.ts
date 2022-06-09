@@ -38,7 +38,7 @@ export class PlayerController {
   @Auth()
   @Get()
   public async getPlayer(@Query() { player: tag, cache }: CachedPlayerDto) {
-    const player = await this.playerService.findOne(tag, cache);
+    const player = await this.playerService.get(tag, cache);
 
     if (!player) throw new PlayerNotFoundException();
 
@@ -54,7 +54,7 @@ export class PlayerController {
   @Auth({ role: AuthRole.ADMIN })
   @Delete()
   public async deletePlayer(@Query() { player }: PlayerDto) {
-    const deleted = await this.playerService.deleteOne(player);
+    const deleted = await this.playerService.delete(player);
 
     return {
       success: !!deleted,
@@ -69,7 +69,7 @@ export class PlayerController {
   @Auth()
   @Get('/recentgames')
   public async getRecentGames(@Query() { player: tag }: PlayerDto) {
-    const recentGames = await this.playerService.findRecentGames(tag);
+    const recentGames = await this.playerService.getRecentGames(tag);
 
     return {
       success: !!recentGames,
@@ -85,7 +85,7 @@ export class PlayerController {
   @Auth()
   @Get('/status')
   public async getStatus(@Query() { player: tag }: PlayerDto) {
-    const status = await this.playerService.findStatus(tag);
+    const status = await this.playerService.getStatus(tag);
 
     return {
       success: !!status,
@@ -100,7 +100,7 @@ export class PlayerController {
   @Auth({ weight: 10 })
   @Get('/friends')
   public async getFriends(@Query() { player: tag, page }: FriendDto) {
-    const friends = await this.playerService.findFriends(tag, page);
+    const friends = await this.playerService.getFriends(tag, page);
 
     return {
       success: !!friends,
@@ -116,7 +116,7 @@ export class PlayerController {
   @Auth()
   @Get('/rankedskywars')
   public async getRankedSkyWars(@Query() { player: tag }: PlayerDto) {
-    const rankedSkyWars = await this.playerService.findRankedSkyWars(tag);
+    const rankedSkyWars = await this.playerService.getRankedSkyWars(tag);
 
     return {
       success: !!rankedSkyWars,
@@ -131,7 +131,7 @@ export class PlayerController {
   @Auth()
   @Get('/achievements')
   public async getAchievements(@Query() { player: tag }: PlayerDto) {
-    const data = await this.playerService.findAchievements(tag);
+    const data = await this.playerService.getAchievements(tag);
 
     return {
       success: !!data,

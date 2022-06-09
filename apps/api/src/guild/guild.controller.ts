@@ -29,7 +29,7 @@ export class GuildController {
   @Get()
   @Auth({ weight: 120 })
   public async getGuild(@Query() { guild: tag, type, cache }: GuildDto) {
-    const guild = await this.guildService.findOne(tag, type, cache);
+    const guild = await this.guildService.get(tag, type, cache);
 
     return {
       success: !!guild,

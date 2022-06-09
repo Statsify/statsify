@@ -3,5 +3,5 @@ import { GuildService } from '../../src/guild';
 import { MockClass } from './mock.type';
 
 export const guildService: MockClass<GuildService> = {
-  findOne: jest.fn().mockResolvedValue(new Guild()),
+  get: jest.fn().mockResolvedValue(new Guild()),
 };

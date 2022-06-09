@@ -16,7 +16,7 @@ export class UserController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
   public async getUser(@Query() { tag }: UserDto) {
-    const user = await this.userService.findOne(tag);
+    const user = await this.userService.get(tag);
 
     return {
       success: !!user,

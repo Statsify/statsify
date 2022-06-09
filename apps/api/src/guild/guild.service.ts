@@ -19,7 +19,7 @@ export class GuildService {
     @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>
   ) {}
 
-  public async findOne(tag: string, type: GuildQuery, cache: HypixelCache): Promise<Guild | null> {
+  public async get(tag: string, type: GuildQuery, cache: HypixelCache): Promise<Guild | null> {
     tag = tag.toLowerCase().replace(/-/g, '');
 
     let cachedGuild: Guild | null = null;
@@ -29,7 +29,7 @@ export class GuildService {
       const isUuid = tag.length > 16;
 
       if (!isUuid) {
-        const player = await this.playerService.findOne(tag, HypixelCache.CACHE_ONLY, {
+        const player = await this.playerService.get(tag, HypixelCache.CACHE_ONLY, {
           uuid: true,
         });
 
@@ -89,7 +89,7 @@ export class GuildService {
         member.expiresAt = cacheMember.expiresAt;
       } else {
         const player = await this.playerService
-          .findOne(member.uuid, HypixelCache.CACHE_ONLY, {
+          .get(member.uuid, HypixelCache.CACHE_ONLY, {
             username: true,
             displayName: true,
           })

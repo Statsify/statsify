@@ -10,7 +10,7 @@ export class UserService {
     @InjectModel(VerifyCode) private readonly verifyCodeModel: ReturnModelType<typeof VerifyCode>
   ) {}
 
-  public findOne(idOrUuid: string): Promise<User | null> {
+  public get(idOrUuid: string): Promise<User | null> {
     const [tag, type] = this.parseTag(idOrUuid);
     return this.userModel.findOne().where(type).equals(tag).lean().exec();
   }
