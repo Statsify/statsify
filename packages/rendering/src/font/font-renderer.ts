@@ -92,18 +92,21 @@ export class FontRenderer {
     }
   }
 
-  public lex(text: string): TextNode[][] {
+  public lex(text: string, inputState: Partial<TextNode> = {}): TextNode[][] {
     const lines = text.split('\n');
 
     return lines.map((line) => {
-      let state: Omit<TextNode, 'text'> = {
+      const defualtState: Omit<TextNode, 'text'> = {
         bold: false,
         italic: false,
         underline: false,
         color: [255, 255, 255],
         size: 2,
         shadow: true,
+        ...inputState,
       };
+
+      let state = defualtState;
 
       line = line.startsWith('§') ? line : `§f${line}`;
 
@@ -123,7 +126,7 @@ export class FontRenderer {
             }
           }
 
-          const effect = token?.effect(part, matches as RegExpMatchArray);
+          const effect = token?.effect(part, matches as RegExpMatchArray, defualtState);
           let text = effect?.text ?? part;
 
           if (matches) text = text.substring(matches[0].length);

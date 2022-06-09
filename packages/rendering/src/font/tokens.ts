@@ -13,7 +13,11 @@ export interface TextNode {
 
 export interface Token {
   regex: RegExp;
-  effect: (part: string, matches: RegExpMatchArray) => Partial<TextNode>;
+  effect: (
+    part: string,
+    matches: RegExpMatchArray,
+    defaultState: Omit<TextNode, 'text'>
+  ) => Partial<TextNode>;
 }
 
 const bold: Token = { regex: /^l/, effect: () => ({ bold: true }) };
@@ -30,13 +34,7 @@ const underline: Token = {
 
 const reset: Token = {
   regex: /^r/,
-  effect: () => ({
-    italic: false,
-    bold: false,
-    underline: false,
-    color: [255, 255, 255],
-    size: 2,
-  }),
+  effect: (_, __, defaultState) => defaultState,
 };
 
 const textColors = Object.fromEntries(
