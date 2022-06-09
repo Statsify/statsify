@@ -155,6 +155,14 @@
         "shortUUID": "Short UUID"
       }
     },
+    "skin": {
+      "description": {
+        "username": "Username"
+      },
+      "components": {
+        "apply": "Apply"
+      }
+    },
     "namehistory": {
       "title": "Name History",
       "description": {
