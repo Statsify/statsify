@@ -147,6 +147,35 @@
     "levelsGained": "Levels Gained",
     "expGained": "EXP Gained"
   },
+  "embeds": {
+    "uuid": {
+      "description": {
+        "username": "Username",
+        "uuid": "UUID",
+        "shortUUID": "Short UUID"
+      }
+    },
+    "namehistory": {
+      "title": "Name History",
+      "description": {
+        "originalName": "Original Name"
+      }
+    },
+    "colors": {
+      "title": "Minecraft Color Codes",
+      "description": {
+        "color": "Color",
+        "mainHex": "Main Hex",
+        "shadowHex": "Shadow Hex",
+        "obfuscated": "Obfuscated",
+        "bold": "Bold",
+        "strikethrough": "Strikethrough",
+        "underline": "Underline",
+        "italic": "Italic",
+        "reset": "Reset"
+      }
+    }
+  },
   "commands": {
     "arcade": "Arcade Games command",
     "arenabrawl": "Arena Brawl command",
