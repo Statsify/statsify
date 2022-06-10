@@ -56,9 +56,10 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
       context.option('player')
     );
 
-    const [logo, skin] = await Promise.all([
+    const [logo, skin, badge] = await Promise.all([
       getLogo(user?.premium),
       this.apiService.getPlayerSkin(player.uuid),
+      this.apiService.getUserBadge(player.uuid),
     ]);
 
     const data: K = (await this.getPreProfileData?.(player)) ?? noop();
@@ -78,7 +79,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
             logo,
             t,
             premium: user?.premium,
-            badge: player.user?.badge,
+            badge,
             time: 'LIVE',
           },
           { mode: mode as T[number], data }

@@ -174,6 +174,10 @@ export class ApiService {
       .catch(() => null);
   }
 
+  public getUserBadge(tag: string) {
+    return this.requestImage(`/user/badge`, { tag }).catch(() => undefined);
+  }
+
   public verifyUser(code: string, id: string) {
     return this.request<GetUserResponse>(`/user`, { code, id }, 'PUT')
       .then((data) => data.user ?? null)

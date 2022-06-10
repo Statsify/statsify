@@ -1,7 +1,9 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { getAssetPath, getLogoPath } from '@statsify/assets';
 import { User, VerifyCode } from '@statsify/schemas';
 import { ReturnModelType } from '@typegoose/typegoose';
+import { readFile, writeFile } from 'fs/promises';
 
 @Injectable()
 export class UserService {
@@ -13,6 +15,37 @@ export class UserService {
   public get(idOrUuid: string): Promise<User | null> {
     const [tag, type] = this.parseTag(idOrUuid);
     return this.userModel.findOne().where(type).equals(tag).lean().exec();
+  }
+
+  public async getBadge(idOrUuid: string): Promise<Buffer> {
+    const [tag, type] = this.parseTag(idOrUuid);
+    const user = await this.userModel.findOne().where(type).equals(tag).lean().exec();
+
+    if (!user) throw new NotFoundException(`user`);
+
+    let badgePath: string | undefined = undefined;
+
+    if (user.hasBadge && user.premium) {
+      badgePath = this.getBadgePath(user.id);
+    } else if (user.premium) {
+      badgePath = getLogoPath(user.premium);
+    } else if (user.uuid) {
+      badgePath = getAssetPath(`logos/verified_logo_30.png`);
+    }
+
+    if (!badgePath) throw new NotFoundException(`badge`);
+
+    return readFile(badgePath);
+  }
+
+  public async updateBadge(idOrUuid: string, badge: Buffer): Promise<void> {
+    const [tag, type] = this.parseTag(idOrUuid);
+    const user = await this.userModel.findOne().where(type).equals(tag).lean().exec();
+
+    if (!user) throw new NotFoundException(`user`);
+
+    await this.userModel.updateOne({ hasBadge: true }).where('id').equals(user.id).lean().exec();
+    await writeFile(this.getBadgePath(user.id), badge);
   }
 
   public async verifyUser(code: string, id: string): Promise<User | null> {
@@ -65,5 +98,9 @@ export class UserService {
     const type = tag.length >= 32 ? 'uuid' : 'id';
 
     return [tag, type];
+  }
+
+  private getBadgePath(id: string) {
+    return `${process.env.API_MEDIA_ROOT}/badges/${id}.png`;
   }
 }

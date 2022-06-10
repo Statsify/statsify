@@ -1,4 +1,3 @@
-import type { Image } from 'skia-canvas';
 import { Field } from '../metadata';
 
 export enum UserTheme {
@@ -31,9 +30,8 @@ export class User {
   @Field({ store: { required: false } })
   public premium?: boolean;
 
-  //TODO: figure out how we want to store badges
   @Field({ store: { required: false } })
-  public badge?: Image;
+  public hasBadge?: boolean;
 
   @Field({ type: () => String, store: { required: false } })
   public theme?: UserTheme;
