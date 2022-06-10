@@ -45,7 +45,7 @@ export class MojangApiService {
 
   public async checkName(name: string) {
     try {
-      const { data } = await this.ashcon.get<AshconResponse>(name);
+      const data = await this.getData<AshconResponse>(name);
       return { name: data.username, uuid: data.uuid };
     } catch (e: any) {
       if (!e.response || !e.response.data) throw this.unknownError();

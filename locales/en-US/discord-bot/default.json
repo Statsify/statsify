@@ -186,6 +186,8 @@
     },
     "available": {
       "description": {
+        "uuid": "UUID",
+        "namemc": "NameMC",
         "username": "Username",
         "status": "Status"
       },

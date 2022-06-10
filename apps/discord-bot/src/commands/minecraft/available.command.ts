@@ -14,30 +14,43 @@ export class AvailableCommand {
 
     if (!nameInfo) {
       const embed = new EmbedBuilder()
-        .field((t) => t('embeds.available.description.username'), name)
+        .field((t) => t('embeds.available.description.username'), `\`${name}\``)
         .field(
-          (t) => `*${t('embeds.available.description.status')}`,
-          (t) => t('generic.available')
+          (t) => t('embeds.available.description.namemc'),
+          `[\`Here\`](https://namemc.com/profile/${name})`
+        )
+        .field(
+          (t) => t('embeds.available.description.status'),
+          (t) => `\`${t('available')}*\``
         )
         .footer((t) => `*${t('embeds.available.footer.available')}`)
         .color(SUCCESS_COLOR);
+
       return {
-        emebds: [embed],
+        embeds: [embed],
       };
     } else {
       const thumbURL = this.mojangApiService.faceIconUrl(nameInfo.uuid);
 
       const embed = new EmbedBuilder()
-        .field((t) => t('embeds.available.description.username'), name)
+        .field((t) => t('embeds.available.description.username'), `\`${name}\``)
+        .field(
+          (t) => t('embeds.available.description.uuid'),
+          `\`${nameInfo.uuid.replace(/-/g, '')}\``
+        )
+        .field(
+          (t) => t('embeds.available.description.namemc'),
+          `[\`Here\`](https://namemc.com/profile/${nameInfo.uuid.replace(/-/g, '')})`
+        )
         .field(
           (t) => t('embeds.available.description.status'),
-          (t) => t('generic.unavailable')
+          (t) => `\`${t('unavailable')}\``
         )
         .color(WARNING_COLOR)
         .thumbnail(thumbURL);
 
       return {
-        emebds: [embed],
+        embeds: [embed],
       };
     }
   }
