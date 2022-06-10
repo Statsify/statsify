@@ -1,6 +1,9 @@
 import type { User } from '@statsify/schemas';
 import { noop } from '@statsify/util';
-import type { APIApplicationCommandInteractionDataBasicOption } from 'discord-api-types/v10';
+import {
+  APIApplicationCommandInteractionDataBasicOption,
+  ApplicationCommandOptionType,
+} from 'discord-api-types/v10';
 import type { Interaction, InteractionContent } from '../interaction';
 import { getLocalizeFunction, LocalizeFunction } from '../messages/localize';
 
@@ -28,6 +31,10 @@ export class CommandContext {
 
     if (!data) {
       return defaultValue ?? noop();
+    }
+
+    if (data.type === ApplicationCommandOptionType.Attachment) {
+      return this.data.resolved.attachments[data.value];
     }
 
     return data.value as unknown as T;

@@ -203,6 +203,10 @@
       "title": "Hello World",
       "description": "You have not verified your account to unverify it."
     },
+    "requiredVerification": {
+      "title": "Hello World",
+      "description": "You are required to be verified to use this command."
+    },
     "successfulVerification": "You verified your account to {{displayName}}",
     "successfulUnverification": "You are now unverified"
   },
@@ -226,6 +230,10 @@
     "missingMentionVerification": {
       "title": "Missing Verification",
       "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account"
+    },
+    "missingSelfPremium": {
+      "title": "Missing Premium",
+      "description": "You are not a premium."
     },
     "invalidGuild": {
       "title": "Invalid Guild",

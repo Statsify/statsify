@@ -18,6 +18,7 @@ import {
   PostGuildRankingsResponse,
   PostPlayerLeaderboardResponse,
   PostPlayerRankingsResponse,
+  PutUserBadgeResponse,
 } from './responses';
 
 export class ApiService {
@@ -178,6 +179,13 @@ export class ApiService {
     return this.requestImage(`/user/badge`, { tag }).catch(() => undefined);
   }
 
+  public updateUserBadge(tag: string, badge: Buffer) {
+    this.request<PutUserBadgeResponse>(`user/badge`, { tag }, 'PUT', {
+      body: badge,
+      headers: { 'Content-Type': 'image/png' },
+    });
+  }
+
   public verifyUser(code: string, id: string) {
     return this.request<GetUserResponse>(`/user`, { code, id }, 'PUT')
       .then((data) => data.user ?? null)
@@ -207,13 +215,16 @@ export class ApiService {
 
   private async request<T>(
     url: string,
-    params?: Record<string, unknown>,
-    method: Method = 'GET'
+    params: Record<string, unknown> | undefined,
+    method: Method = 'GET',
+    { body, headers }: any = {}
   ): Promise<T> {
     const res = await this.axios.request({
       url,
       method,
       params,
+      headers,
+      data: body,
     });
 
     const data = res.data;
