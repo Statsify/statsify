@@ -152,6 +152,7 @@
       "description": {
         "username": "Username",
         "uuid": "UUID",
+        "trimmedUUID": "Trimmed UUID",
         "shortUUID": "Short UUID"
       }
     },
@@ -181,6 +182,15 @@
         "underline": "Underline",
         "italic": "Italic",
         "reset": "Reset"
+      }
+    },
+    "available": {
+      "description": {
+        "username": "Username",
+        "status": "Status"
+      },
+      "footer": {
+        "available": "Unless the name is temporarily or permanently blocked by Mojang."
       }
     }
   },
@@ -281,5 +291,7 @@
       "description": "A status for {{displayName}} could not be found!"
     }
   },
+  "available": "Available",
+  "unavailable": "Unavailable",
   "number": "{{value, number}}"
 }

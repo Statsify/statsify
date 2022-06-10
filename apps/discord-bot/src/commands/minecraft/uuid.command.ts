@@ -16,6 +16,10 @@ export class UUIDCommand {
     const embed = new EmbedBuilder()
       .field((t) => t('embeds.uuid.description.username'), `\`${player.username}\``)
       .field((t) => t('embeds.uuid.description.uuid'), `\`${player.uuid}\``)
+      .field(
+        (t) => t('embeds.uuid.description.trimmedUUID'),
+        `\`${player.uuid.replace(/-/g, '')}\``
+      )
       .field((t) => t('embeds.uuid.description.shortUUID'), shortUuid.replace(/`/g, '\\`'))
       .color(INFO_COLOR)
       .thumbnail(thumbURL);
