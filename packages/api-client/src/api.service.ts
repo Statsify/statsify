@@ -1,4 +1,4 @@
-import Axios, { AxiosInstance, Method } from 'axios';
+import Axios, { AxiosInstance, AxiosRequestHeaders, Method } from 'axios';
 import { loadImage } from 'skia-canvas';
 import { GuildQuery, HistoricalType } from './enums';
 import {
@@ -20,6 +20,11 @@ import {
   PostPlayerRankingsResponse,
   PutUserBadgeResponse,
 } from './responses';
+
+interface ExtraData {
+  headers?: AxiosRequestHeaders;
+  body?: Record<string, unknown> | Buffer | string;
+}
 
 export class ApiService {
   private axios: AxiosInstance;
@@ -83,22 +88,18 @@ export class ApiService {
     field: string,
     pageOrUuid: number | string
   ): Promise<PostPlayerLeaderboardResponse> {
-    return this.request<PostPlayerLeaderboardResponse>(
-      '/player/leaderboards',
-      {
+    return this.request<PostPlayerLeaderboardResponse>('/player/leaderboards', {}, 'POST', {
+      body: {
         field,
         [typeof pageOrUuid === 'number' ? 'page' : 'uuid']: pageOrUuid,
       },
-      'POST'
-    );
+    });
   }
 
   public getPlayerRankings(fields: string[], uuid: string) {
-    return this.request<PostPlayerRankingsResponse>(
-      '/player/leaderboards/rankings',
-      { fields, uuid },
-      'POST'
-    );
+    return this.request<PostPlayerRankingsResponse>('/player/leaderboards/rankings', {}, 'POST', {
+      body: { fields, uuid },
+    });
   }
 
   public getGuild(tag: string, type: GuildQuery) {
@@ -114,22 +115,18 @@ export class ApiService {
     field: string,
     pageOrName: number | string
   ): Promise<PostGuildLeaderboardResponse> {
-    return this.request<PostGuildLeaderboardResponse>(
-      '/guild/leaderboards',
-      {
+    return this.request<PostGuildLeaderboardResponse>('/guild/leaderboards', {}, 'POST', {
+      body: {
         field,
         [typeof pageOrName === 'number' ? 'page' : 'name']: pageOrName,
       },
-      'POST'
-    );
+    });
   }
 
   public getGuildRanking(fields: string, name: string) {
-    return this.request<PostGuildRankingsResponse>(
-      '/guild/leaderboards/rankings',
-      { fields, name },
-      'POST'
-    );
+    return this.request<PostGuildRankingsResponse>('/guild/leaderboards/rankings', {}, 'POST', {
+      body: { fields, name },
+    });
   }
 
   public async getWatchdog() {
@@ -217,7 +214,7 @@ export class ApiService {
     url: string,
     params: Record<string, unknown> | undefined,
     method: Method = 'GET',
-    { body, headers }: any = {}
+    { body, headers }: ExtraData = {}
   ): Promise<T> {
     const res = await this.axios.request({
       url,
