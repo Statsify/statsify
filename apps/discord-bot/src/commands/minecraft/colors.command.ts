@@ -3,7 +3,7 @@ import { Command, EmbedBuilder } from '@statsify/discord';
 import { hexToRgb, mcShadow, rgbToHex } from '@statsify/rendering';
 import { minecraftColors } from '@statsify/util';
 
-const colors: { [key: string]: string } = {
+const colors: Record<string, string> = {
   '0': '<:black:734293805502562383>',
   '1': '<:dark_blue:734293805465075843>',
   '2': '<:dark_green:734293805360218153>',
@@ -22,7 +22,7 @@ const colors: { [key: string]: string } = {
   f: '<:white:734293804915359786>',
 };
 
-const modifiers: { [key: string]: string } = {
+const modifiers: Record<string, string> = {
   k: '<a:obfuscatedone:874707376429744188><a:obfuscatedtwo:874707376186470491><a:obfuscatedthree:874707376266162287><a:obfuscatedfour:874707376882741248><:obfuscatedfive:874707376329085000>',
   l: '<:boldone:874702922523500554><:boldtwo:874702922833879060><:boldthree:874702922305376260><:boldfour:874702922301202533><:boldfive:874702922544455680>',
   m: '<:strikethroughone:874704307382026241><:strikethroughtwo:874704307335872532><:strikethroughthree:874704307105189949><:strikethroughfour:874704307382026242><:strikethroughfive:874704307017121855>',
@@ -51,7 +51,7 @@ export class ColorsCommand {
         }
 
         desc += '\n';
-        desc += `${modifiers.k} \`&k\` • ||${t('embeds.colors.description.obfuscated')}||\n`;
+        desc += `${modifiers.k} \`&k\` • ${t('embeds.colors.description.obfuscated')}\n`;
         desc += `${modifiers.l} \`&l\` • **${t('embeds.colors.description.bold')}**\n`;
         desc += `${modifiers.m} \`&m\` • ~~${t('embeds.colors.description.strikethrough')}~~\n`;
         desc += `${modifiers.n} \`&n\` • _${t('embeds.colors.description.underline')}_\n`;

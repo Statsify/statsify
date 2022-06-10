@@ -32,28 +32,43 @@ export class MojangApiService {
     });
   }
 
-  public async getName(uuid: string) {
-    try {
-      const { data } = await this.ashcon.get<AshconResponse>(uuid);
-      return data.username;
-    } catch (e: any) {
+  public async getPlayer(uuid: string) {
+    return this.getData<AshconResponse>(uuid).catch((e) => {
       if (!e.response || !e.response.data) throw this.unknownError();
       const error = e.response.data as AshconErrorResponse;
 
       if (error.code === 404) throw this.missingPlayer('uuid', uuid);
+
+      throw this.unknownError();
+    });
+  }
+
+  public async checkName(name: string) {
+    try {
+      const { data } = await this.ashcon.get<AshconResponse>(name);
+      return { name: data.username, uuid: data.uuid };
+    } catch (e: any) {
+      if (!e.response || !e.response.data) throw this.unknownError();
+
+      return;
     }
   }
 
-  public async getNameHistory(tag: string) {
-    try {
-      const { data } = await this.ashcon.get<AshconResponse>(tag);
-      return data.username_history;
-    } catch (e: any) {
-      if (!e.response || !e.response.data) throw this.unknownError();
-      const error = e.response.data as AshconErrorResponse;
+  public faceIconUrl(uuid: string) {
+    return `https://crafatar.com/avatars/${uuid.replace(
+      /-/g,
+      ''
+    )}?size=160&default=MHF_Steve&overlay&id=c958a4c0ca23485299ffc2cab67aea3e`;
+  }
 
-      if (error.code === 404) throw this.missingPlayer('name', tag);
+  private async getData<T>(input: string): Promise<T> {
+    const { data } = await this.ashcon.get<T>(input);
+
+    if (!data) {
+      throw this.unknownError();
     }
+
+    return data;
   }
 
   private unknownError() {
