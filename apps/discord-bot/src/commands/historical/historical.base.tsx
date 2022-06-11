@@ -7,6 +7,7 @@ import { Command, CommandContext, SubCommand } from '@statsify/discord';
 import { render } from '@statsify/rendering';
 import {
   ARCADE_MODES,
+  ARENA_BRAWL_MODES,
   BEDWARS_MODES,
   BLITZSG_MODES,
   BUILD_BATTLE_MODES,
@@ -73,7 +74,7 @@ export class HistoricalBase {
 
   @SubCommand({ description: (t) => t('commands.arenabrawl'), args })
   public arenabrawl(context: CommandContext) {
-    return this.run(context, BEDWARS_MODES, (base, mode) => (
+    return this.run(context, ARENA_BRAWL_MODES, (base, mode) => (
       <BedWarsProfile {...base} mode={mode} />
     ));
   }

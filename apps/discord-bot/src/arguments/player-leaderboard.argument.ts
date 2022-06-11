@@ -1,13 +1,29 @@
 import { AbstractArgument, CommandContext, LocalizationString } from '@statsify/discord';
-import { LeaderboardScanner, Player } from '@statsify/schemas';
+import { ClassMetadata, LeaderboardScanner, METADATA_KEY, PlayerStats } from '@statsify/schemas';
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from 'discord-api-types/v10';
+import Fuse from 'fuse.js';
 
-const fields = LeaderboardScanner.getLeaderboardMetadata(Player).map(([key]) =>
-  key.replace('stats.', '').replace(/\./g, ' ').toLowerCase()
+const entries = Object.entries(
+  Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
 );
+
+const fields = entries.reduce((acc, [prefix, value]) => {
+  const list = LeaderboardScanner.getLeaderboardMetadata(value.type.type).map(
+    ([key, { leaderboard }]) => ({ key, name: leaderboard.name })
+  );
+
+  const fuse = new Fuse(list, {
+    keys: ['key', 'name'],
+    includeScore: false,
+    shouldSort: true,
+    threshold: 0.5,
+  });
+
+  return { ...acc, [prefix]: fuse };
+}, {} as Record<keyof PlayerStats, Fuse<{ name: string; key: string }>>);
 
 export class PlayerLeaderboardArgument extends AbstractArgument {
   public name = 'leaderboard';
@@ -16,18 +32,22 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
   public required = true;
   public autocomplete = true;
 
-  public constructor() {
+  public constructor(private prefix: keyof PlayerStats) {
     super();
     this.description = (t) => t('arguments.player-leaderboard');
   }
 
   public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
-    const currentValue = context.option<string>(this.name, '').toLowerCase().split(' ');
+    const currentValue = context.option<string>(this.name, '').toLowerCase();
 
-    //TODO(jacobk999):  use some sort of fuzzy searching
-    return fields
-      .filter((field) => currentValue.some((value) => field.includes(value)))
-      .splice(0, 25)
-      .map((field) => ({ name: field, value: field }));
+    const fuse = fields[this.prefix];
+
+    return fuse
+      .search(currentValue)
+      .map((result) => ({
+        name: result.item.name,
+        value: result.item.key,
+      }))
+      .splice(0, 25);
   }
 }

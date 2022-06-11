@@ -102,8 +102,10 @@ export const LeaderboardProfile = ({
         <text>§^3^§l{name}</text>
       </box>
       <div width="100%">
-        {columnsList.map((c) => (
-          <div direction="column">{c}</div>
+        {columnsList.map((c, index) => (
+          <div direction="column" width={index === 1 ? 'remaining' : undefined}>
+            {c}
+          </div>
         ))}
       </div>
       <Footer

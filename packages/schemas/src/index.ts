@@ -5,6 +5,7 @@ export * from './game';
 export * from './gamecounts';
 export * from './guild';
 export * from './key';
+export { METADATA_KEY } from './metadata/constants';
 export * from './metadata/deserialize';
 export * from './metadata/metadata.interface';
 export * from './metadata/serialize';

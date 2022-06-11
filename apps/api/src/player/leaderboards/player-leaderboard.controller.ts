@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Response } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   ErrorResponse,
@@ -6,7 +6,6 @@ import {
   PostPlayerLeaderboardResponse,
   PostPlayerRankingsResponse,
 } from '@statsify/api-client';
-import type { FastifyReply } from 'fastify';
 import { Auth } from '../../auth';
 import { PlayerLeaderboardDto } from '../../dtos/player-leaderboard.dto';
 import { PlayerRankingsDto } from '../../dtos/player-rankings.dto';
@@ -22,10 +21,7 @@ export class PlayerLeaderboardsController {
   @ApiOkResponse({ type: PostPlayerLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
-  public async getPlayerLeaderboard(
-    @Body() { field, page, player, position }: PlayerLeaderboardDto,
-    @Response({ passthrough: true }) res: FastifyReply
-  ) {
+  public getPlayerLeaderboard(@Body() { field, page, player, position }: PlayerLeaderboardDto) {
     let input: number | string;
     let type: LeaderboardQuery;
 
@@ -40,19 +36,7 @@ export class PlayerLeaderboardsController {
       type = LeaderboardQuery.PAGE;
     }
 
-    const leaderboard = await this.playerLeaderboardService.getLeaderboard(field, input, type);
-
-    if (!leaderboard) {
-      res.status(400);
-
-      return {
-        statusCode: 400,
-        message: ['Provided player has no rankings'],
-        error: 'Bad Request',
-      };
-    }
-
-    return leaderboard;
+    return this.playerLeaderboardService.getLeaderboard(field, input, type);
   }
 
   @Post('/rankings')

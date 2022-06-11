@@ -1,7 +1,7 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { HypixelCache, LeaderboardQuery } from '@statsify/api-client';
+import { HypixelCache, LeaderboardQuery, PlayerNotFoundException } from '@statsify/api-client';
 import { LeaderboardEnabledMetadata, LeaderboardScanner, Player } from '@statsify/schemas';
 import { flatten } from '@statsify/util';
 import { ReturnModelType } from '@typegoose/typegoose';
@@ -45,14 +45,14 @@ export class PlayerLeaderboardService {
 
         if (tag.length <= 16) {
           const player = await this.playerSerivce.get(tag, HypixelCache.CACHE_ONLY, { uuid: true });
-          if (!player) return null;
+          if (!player) throw new PlayerNotFoundException();
           tag = player.uuid;
         }
 
         const shortUuid = translator.fromUUID(tag);
         const ranking = await this.getLeaderboardRanking(field, shortUuid, sort);
 
-        if (ranking === null) return null;
+        if (ranking === null) throw new PlayerNotFoundException();
         highlight = ranking;
 
         top = ranking - (ranking % 10);

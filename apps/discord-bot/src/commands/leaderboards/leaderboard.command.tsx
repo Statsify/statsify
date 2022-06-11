@@ -1,3 +1,5 @@
+import { PlayerLeaderboardArgument } from '#arguments';
+import { GamesWithBackgrounds, mapBackground } from '#constants';
 import { ApiService } from '#services';
 import { LeaderboardQuery } from '@statsify/api-client';
 import { getBackground, getLogo } from '@statsify/assets';
@@ -10,9 +12,35 @@ import {
   Interaction,
   LocalizeFunction,
   ModalBuilder,
+  SubCommand,
   TextInputBuilder,
 } from '@statsify/discord';
 import { render } from '@statsify/rendering';
+import {
+  ARCADE_MODES,
+  ARENA_BRAWL_MODES,
+  BEDWARS_MODES,
+  BLITZSG_MODES,
+  BUILD_BATTLE_MODES,
+  COPS_AND_CRIMS_MODES,
+  DUELS_MODES,
+  GENERAL_MODES,
+  MEGAWALLS_MODES,
+  MURDER_MYSTERY_MODES,
+  PAINTBALL_MODES,
+  PlayerStats,
+  QUAKE_MODES,
+  SKYWARS_MODES,
+  SMASH_HEROES_MODES,
+  SPEED_UHC_MODES,
+  TNT_GAMES_MODES,
+  TURBO_KART_RACERS_MODES,
+  UHC_MODES,
+  VAMPIREZ_MODES,
+  WALLS_MODES,
+  WARLORDS_MODES,
+  WOOL_WARS_MODES,
+} from '@statsify/schemas';
 import { ButtonStyle, InteractionResponseType } from 'discord-api-types/v10';
 import type { Image } from 'skia-canvas';
 import { CommandListener } from '../../command.listener';
@@ -35,17 +63,199 @@ interface LeaderboardParams {
 export class PlayerLeaderboardCommand {
   public constructor(private readonly apiService: ApiService) {}
 
-  public async run(context: CommandContext) {
+  @SubCommand({
+    description: (t) => t('commands.arcade'),
+    args: [new PlayerLeaderboardArgument('arcade')],
+  })
+  public arcade(context: CommandContext) {
+    return this.run(context, 'arcade', ARCADE_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.arenabrawl'),
+    args: [new PlayerLeaderboardArgument('arenabrawl')],
+  })
+  public arenabrawl(context: CommandContext) {
+    return this.run(context, 'arenabrawl', ARENA_BRAWL_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.bedwars'),
+    args: [new PlayerLeaderboardArgument('bedwars')],
+  })
+  public bedwars(context: CommandContext) {
+    return this.run(context, 'bedwars', BEDWARS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.blitzsg'),
+    args: [new PlayerLeaderboardArgument('blitzsg')],
+  })
+  public blitzsg(context: CommandContext) {
+    return this.run(context, 'blitzsg', BLITZSG_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.buildbattle'),
+    args: [new PlayerLeaderboardArgument('buildbattle')],
+  })
+  public buildbattle(context: CommandContext) {
+    return this.run(context, 'buildbattle', BUILD_BATTLE_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.copsandcrims'),
+    args: [new PlayerLeaderboardArgument('copsandcrims')],
+  })
+  public copsandcrims(context: CommandContext) {
+    return this.run(context, 'copsandcrims', COPS_AND_CRIMS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.duels'),
+    args: [new PlayerLeaderboardArgument('duels')],
+  })
+  public duels(context: CommandContext) {
+    return this.run(context, 'duels', DUELS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.general'),
+    args: [new PlayerLeaderboardArgument('general')],
+  })
+  public general(context: CommandContext) {
+    return this.run(context, 'general', GENERAL_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.megawalls'),
+    args: [new PlayerLeaderboardArgument('megawalls')],
+  })
+  public megawalls(context: CommandContext) {
+    return this.run(context, 'megawalls', MEGAWALLS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.murdermystery'),
+    args: [new PlayerLeaderboardArgument('murdermystery')],
+  })
+  public murdermystery(context: CommandContext) {
+    return this.run(context, 'murdermystery', MURDER_MYSTERY_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.paintball'),
+    args: [new PlayerLeaderboardArgument('paintball')],
+  })
+  public paintball(context: CommandContext) {
+    return this.run(context, 'paintball', PAINTBALL_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.quake'),
+    args: [new PlayerLeaderboardArgument('quake')],
+  })
+  public quake(context: CommandContext) {
+    return this.run(context, 'quake', QUAKE_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.skywars'),
+    args: [new PlayerLeaderboardArgument('skywars')],
+  })
+  public skywars(context: CommandContext) {
+    return this.run(context, 'skywars', SKYWARS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.smashheroes'),
+    args: [new PlayerLeaderboardArgument('smashheroes')],
+  })
+  public smashheroes(context: CommandContext) {
+    return this.run(context, 'smashheroes', SMASH_HEROES_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.speeduhc'),
+    args: [new PlayerLeaderboardArgument('speeduhc')],
+  })
+  public speeduhc(context: CommandContext) {
+    return this.run(context, 'speeduhc', SPEED_UHC_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.tntgames'),
+    args: [new PlayerLeaderboardArgument('tntgames')],
+  })
+  public tntgames(context: CommandContext) {
+    return this.run(context, 'tntgames', TNT_GAMES_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.turbokartracers'),
+    args: [new PlayerLeaderboardArgument('turbokartracers')],
+  })
+  public turbokartracers(context: CommandContext) {
+    return this.run(context, 'turbokartracers', TURBO_KART_RACERS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.uhc'),
+    args: [new PlayerLeaderboardArgument('uhc')],
+  })
+  public uhc(context: CommandContext) {
+    return this.run(context, 'uhc', UHC_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.vampirez'),
+    args: [new PlayerLeaderboardArgument('vampirez')],
+  })
+  public vampirez(context: CommandContext) {
+    return this.run(context, 'vampirez', VAMPIREZ_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.walls'),
+    args: [new PlayerLeaderboardArgument('walls')],
+  })
+  public walls(context: CommandContext) {
+    return this.run(context, 'walls', WALLS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.warlords'),
+    args: [new PlayerLeaderboardArgument('warlords')],
+  })
+  public warlords(context: CommandContext) {
+    return this.run(context, 'warlords', WARLORDS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.woolwars'),
+    args: [new PlayerLeaderboardArgument('woolwars')],
+  })
+  public woolwars(context: CommandContext) {
+    return this.run(context, 'woolwars', WOOL_WARS_MODES);
+  }
+
+  private async run<T extends GamesWithBackgrounds>(
+    context: CommandContext,
+    prefix: keyof PlayerStats,
+    modes: T
+  ) {
     const userId = context.getInteraction().getUserId();
     const user = context.getUser();
     const t = context.t();
     const cache = new Map<number, IMessage>();
 
-    const field = 'stats.bedwars.overall.wins';
+    const leaderboard = context.option<string>('leaderboard');
+
+    const field = `stats.${prefix}.${leaderboard.replace(/ /g, '.')}`;
     let currentPage = 0;
 
     const [background, logo] = await Promise.all([
-      getBackground('hypixel', 'overall'),
+      getBackground(...mapBackground(modes, modes[0])),
       getLogo(user?.premium),
     ]);
 
@@ -57,14 +267,14 @@ export class PlayerLeaderboardCommand {
     };
 
     const up = new ButtonBuilder()
-      .emoji('<:up:985251630645665832>')
+      .emoji('<:up:985258085553688588> ')
       .style(ButtonStyle.Success)
       .disable(true);
 
-    const down = new ButtonBuilder().emoji('<:down:985251631962660926>').style(ButtonStyle.Danger);
+    const down = new ButtonBuilder().emoji('<:down:985258087915077644>').style(ButtonStyle.Danger);
 
     const search = new ButtonBuilder()
-      .emoji('<:search:985251631576801351>')
+      .emoji('<:search:985258087189463111>')
       .style(ButtonStyle.Primary);
 
     const changePage = (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
@@ -198,8 +408,8 @@ export class PlayerLeaderboardCommand {
     if (!leaderboard || !leaderboard?.data.length) {
       const message = {
         ...new ErrorMessage(
-          (t) => t('leaderboard.error.title'),
-          (t) => t('leaderboard.error.description')
+          (t) => t('errors.leaderboardPlayerNotFound.title'),
+          (t) => t('errors.leaderboardPlayerNotFound.description')
         ),
         ephemeral: true,
       };

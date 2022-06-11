@@ -43,10 +43,10 @@ export class PlayerStats {
   @Field({ leaderboard: { fieldName: 'Cops And Crims' } })
   public copsandcrims: CopsAndCrims;
 
-  @Field({ leaderboard: { fieldName: 'Duels' } })
+  @Field({ leaderboard: { fieldName: 'Duels -' } })
   public duels: Duels;
 
-  @Field({ leaderboard: { fieldName: 'General' } })
+  @Field({ leaderboard: { fieldName: 'General -' } })
   public general: General;
 
   @Field({ leaderboard: { fieldName: 'MegaWalls' } })
@@ -58,7 +58,7 @@ export class PlayerStats {
   @Field({ leaderboard: { fieldName: 'Paintball' } })
   public paintball: Paintball;
 
-  @Field({ leaderboard: { fieldName: 'Parkour' } })
+  @Field({ leaderboard: { fieldName: 'Parkour -' } })
   public parkour: Parkour;
 
   @Field({ leaderboard: { fieldName: 'Quake' } })

@@ -92,7 +92,7 @@ export class ApiService {
         field,
         [type]: input,
       },
-    }).catch(() => null);
+    });
   }
 
   public getPlayerRankings(fields: string[], uuid: string) {
