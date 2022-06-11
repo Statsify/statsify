@@ -203,7 +203,7 @@ export class PaginateService {
       page = new Message(pageContent);
     }
 
-    if (controller.length) {
+    if (controller.length && pages.length > 1) {
       page.components = [new ActionRowBuilder(controller)];
     }
 
