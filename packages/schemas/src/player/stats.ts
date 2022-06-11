@@ -37,7 +37,9 @@ export class PlayerStats {
   @Field({ leaderboard: { fieldName: 'BlitzSG' } })
   public blitzsg: BlitzSG;
 
-  @Field({ leaderboard: { fieldName: 'Build Battle' } })
+  @Field({
+    leaderboard: { fieldName: 'Build Battle', extraDisplay: 'stats.buildbattle.titleFormatted' },
+  })
   public buildbattle: BuildBattle;
 
   @Field({ leaderboard: { fieldName: 'Cops And Crims' } })
@@ -64,13 +66,15 @@ export class PlayerStats {
   @Field({ leaderboard: { fieldName: 'Quake' } })
   public quake: Quake;
 
-  @Field({ leaderboard: { fieldName: 'SkyWars' } })
+  @Field({ leaderboard: { fieldName: 'SkyWars', extraDisplay: 'stats.skywars.levelFormatted' } })
   public skywars: SkyWars;
 
-  @Field({ leaderboard: { fieldName: 'Smash Heroes' } })
+  @Field({
+    leaderboard: { fieldName: 'Smash Heroes', extraDisplay: 'stats.smashheroes.levelFormatted' },
+  })
   public smashheroes: SmashHeroes;
 
-  @Field({ leaderboard: { fieldName: 'SpeedUHC' } })
+  @Field({ leaderboard: { fieldName: 'SpeedUHC', extraDisplay: 'stats.speeduhc.levelFormatted' } })
   public speeduhc: SpeedUHC;
 
   @Field({ leaderboard: { fieldName: 'TNT Games' } })
@@ -79,7 +83,7 @@ export class PlayerStats {
   @Field({ leaderboard: { fieldName: 'Turbo Kart Racers' } })
   public turbokartracers: TurboKartRacers;
 
-  @Field({ leaderboard: { fieldName: 'UHC' } })
+  @Field({ leaderboard: { fieldName: 'UHC', extraDisplay: 'stats.uhc.levelFormatted' } })
   public uhc: UHC;
 
   @Field({ leaderboard: { fieldName: 'VampireZ' } })
@@ -91,7 +95,7 @@ export class PlayerStats {
   @Field({ leaderboard: { fieldName: 'Warlords' } })
   public warlords: Warlords;
 
-  @Field({ leaderboard: { fieldName: 'WoolWars' } })
+  @Field({ leaderboard: { fieldName: 'WoolWars', extraDisplay: 'stats.woolwars.levelFormatted' } })
   public woolwars: WoolWars;
 
   public constructor(data: APIData = {}) {

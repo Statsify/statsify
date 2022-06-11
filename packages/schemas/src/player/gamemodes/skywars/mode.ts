@@ -84,15 +84,6 @@ export class SkyWarsLabMode {
 
 export class SkyWarsLabs {
   @Field()
-  public overall: SkyWarsGameMode;
-
-  @Field()
-  public solo: SkyWarsGameMode;
-
-  @Field()
-  public doubles: SkyWarsGameMode;
-
-  @Field()
   public tntMadness: SkyWarsLabMode;
 
   @Field()
@@ -105,9 +96,6 @@ export class SkyWarsLabs {
   public slime: SkyWarsLabMode;
 
   public constructor(data: APIData) {
-    this.overall = new SkyWarsGameMode(data, 'lab');
-    this.solo = new SkyWarsGameMode(data, 'lab_solo');
-    this.doubles = new SkyWarsGameMode(data, 'lab_team');
     this.tntMadness = new SkyWarsLabMode(data, 'tnt_madness');
     this.lucky = new SkyWarsLabMode(data, 'lucky_blocks');
     this.rush = new SkyWarsLabMode(data, 'rush');

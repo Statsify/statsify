@@ -90,7 +90,7 @@ export class PlayerLeaderboardService {
       const stats = additionalStats[index];
       let name = stats.displayName;
 
-      if (extraDisplay) name = `${stats[extraDisplay]} ${name}`;
+      if (extraDisplay) name = `${stats[extraDisplay]}§r ${name}`;
 
       const field = formatter ? formatter(player.score) : player.score;
 

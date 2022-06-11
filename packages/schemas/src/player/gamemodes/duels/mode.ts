@@ -3,6 +3,7 @@ import { APIData } from '@statsify/util';
 import { Color } from '../../../color';
 import { Field } from '../../../metadata';
 import { getTitle } from './util';
+
 export class BaseDuelsGameMode {
   @Field()
   public bestWinstreak: number;
