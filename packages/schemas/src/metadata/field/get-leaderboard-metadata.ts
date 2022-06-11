@@ -7,9 +7,6 @@ const getLeaderboardName = (field: string) => {
   return prettify(field);
 };
 
-//It is safe to assume that value is a number because this will only be used for leaderboard fields
-export const defaultFormatter = <T>(value: T) => (value as unknown as number).toLocaleString();
-
 export const getLeaderboardMetadata = (
   typeMetadata: TypeMetadata,
   propertyKey: string,
@@ -31,6 +28,6 @@ export const getLeaderboardMetadata = (
     aliases: leaderboardOptions?.aliases || [],
     additionalFields: leaderboardOptions?.additionalFields || [],
     extraDisplay: leaderboardOptions?.extraDisplay,
-    formatter: leaderboardOptions?.formatter ?? defaultFormatter,
+    formatter: leaderboardOptions?.formatter,
   };
 };

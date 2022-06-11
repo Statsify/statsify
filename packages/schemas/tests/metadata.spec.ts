@@ -1,6 +1,5 @@
 import { prettify } from '@statsify/util';
 import { Field, MetadataEntry, MetadataScanner } from '../src/metadata';
-import { defaultFormatter } from '../src/metadata/field/get-leaderboard-metadata';
 import { FieldMetadata, LeaderboardEnabledMetadata } from '../src/metadata/metadata.interface';
 
 const stringMetadata: FieldMetadata = {
@@ -35,7 +34,6 @@ describe('metadata', () => {
             additionalFields: [],
             aliases: [],
             sort: 'DESC',
-            formatter: defaultFormatter,
           },
           type: { type: Number, array: false, primitive: true },
           store: { required: true, serialize: true, deserialize: true, store: true, default: 0 },
@@ -143,7 +141,6 @@ describe('metadata', () => {
       name: prettify('fieldB'),
       additionalFields: ['fieldA'],
       extraDisplay: 'fieldA',
-      formatter: defaultFormatter,
       aliases: [],
       sort: 'DESC',
     });

@@ -15,10 +15,13 @@ import type {
   RestClient,
   WebsocketShard,
 } from 'tiny-discord';
+import Container from 'typedi';
 import { ErrorMessage } from './error.message';
 import { ApiService } from './services';
 
-export type InteractionHook = (interaction: Interaction) => any;
+export type InteractionHook = (
+  interaction: Interaction
+) => InteractionResponse | void | Promise<any>;
 
 export class CommandListener extends AbstractCommandListener {
   private hooks: Map<string, InteractionHook>;
@@ -40,16 +43,16 @@ export class CommandListener extends AbstractCommandListener {
     );
 
     this.coreIds = process.env.CORE_IDS?.replace(/ /, '').split(',') ?? [];
-    this.apiService = new ApiService();
+    this.apiService = Container.get(ApiService);
     this.hooks = new Map();
     this.cooldowns = new Map();
   }
 
-  public addInteractionHook(id: string, hook: InteractionHook) {
+  public addHook(id: string, hook: InteractionHook) {
     this.hooks.set(id, hook);
   }
 
-  public removeInteractionHook(id: string) {
+  public removeHook(id: string) {
     this.hooks.delete(id);
   }
 
@@ -59,6 +62,7 @@ export class CommandListener extends AbstractCommandListener {
     if (interaction.isCommandInteraction()) return this.onCommand(interaction);
     if (interaction.isAutocompleteInteraction()) return this.onAutocomplete(interaction);
     if (interaction.isMessageComponentInteraction()) return this.onMessageComponent(interaction);
+    if (interaction.isModalInteraction()) return this.onModal(interaction);
 
     return { type: InteractionResponseType.Pong };
   }
@@ -86,22 +90,22 @@ export class CommandListener extends AbstractCommandListener {
       if (response instanceof Promise)
         response
           .then((res) => {
-            if (typeof res === 'object') context.reply(this.localize(context, new Message(res)));
+            if (typeof res === 'object') context.reply(res);
           })
           .catch((err) => {
-            if (err instanceof Message) context.reply(this.localize(context, err));
+            if (err instanceof Message) context.reply(err);
             else this.logger.error(err);
           });
       else if (typeof response === 'object')
         return {
           type: InteractionResponseType.ChannelMessageWithSource,
-          data: interaction.convertToApiData(this.localize(context, new Message(response))),
+          data: interaction.convertToApiData(response),
         };
     } catch (err) {
       if (err instanceof Message)
         return {
           type: InteractionResponseType.ChannelMessageWithSource,
-          data: interaction.convertToApiData(this.localize(context, err)),
+          data: interaction.convertToApiData(err),
         };
 
       this.logger.error(err);
@@ -143,8 +147,17 @@ export class CommandListener extends AbstractCommandListener {
 
   private onMessageComponent(interaction: Interaction): InteractionResponse {
     const hook = this.hooks.get(interaction.getCustomId());
-    hook?.(interaction);
+
+    const res = hook?.(interaction);
+
+    if (res && !(res instanceof Promise)) return res;
+
     return { type: InteractionResponseType.DeferredMessageUpdate };
+  }
+
+  private onModal(interaction: Interaction): InteractionResponse {
+    //Currently the message component handler is the same implementation as the modal handler
+    return this.onMessageComponent(interaction);
   }
 
   private getCommandAndData(
@@ -173,10 +186,6 @@ export class CommandListener extends AbstractCommandListener {
     }
 
     return [command, data];
-  }
-
-  private localize(context: CommandContext, message: Message) {
-    return message.build(context.t());
   }
 
   private isOnCooldown(command: CommandResolvable, user: User | null, userId: string) {

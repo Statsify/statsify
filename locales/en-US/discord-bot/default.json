@@ -244,5 +244,18 @@
       "description": "A status for {{displayName}} could not be found!"
     }
   },
+  "leaderboard": {
+    "playerInput": {
+      "label": "Player",
+      "placeholder": "Enter a player's name"
+    },
+    "positionInput": {
+      "label": "Position",
+      "placeholder": "Enter a position"
+    },
+    "modal": {
+      "title": "Leaderboard Search"
+    }
+  },
   "number": "{{value, number}}"
 }
