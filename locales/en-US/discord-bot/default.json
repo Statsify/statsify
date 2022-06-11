@@ -246,12 +246,12 @@
   },
   "leaderboard": {
     "playerInput": {
-      "label": "Player",
-      "placeholder": "Enter a player's name"
+      "label": "Search by a Player",
+      "placeholder": "Enter a player's name, ex: j4cobi"
     },
     "positionInput": {
-      "label": "Position",
-      "placeholder": "Enter a position"
+      "label": "Search by a Position",
+      "placeholder": "Enter a position, ex: 5000"
     },
     "modal": {
       "title": "Leaderboard Search"

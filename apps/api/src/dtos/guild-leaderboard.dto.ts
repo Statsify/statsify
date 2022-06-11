@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Guild, LeaderboardScanner } from '@statsify/schemas';
-import { FlattenKeys } from '@statsify/util';
 import { Transform } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, IsString, MaxLength, Min, MinLength } from 'class-validator';
 
@@ -9,7 +8,7 @@ const fields = LeaderboardScanner.getLeaderboardFields(Guild);
 export class GuildLeaderboardDto {
   @IsEnum(fields)
   @ApiProperty({ enum: fields })
-  public field: FlattenKeys<Guild>;
+  public field: string;
 
   @Transform((params) => +params.value)
   @IsInt()

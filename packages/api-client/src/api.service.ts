@@ -1,6 +1,7 @@
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method } from 'axios';
 import { loadImage } from 'skia-canvas';
 import { GuildQuery, HistoricalType } from './enums';
+import { LeaderboardQuery } from './enums/leaderboard-query.enum';
 import {
   GetAchievementsResponse,
   GetFriendsResponse,
@@ -81,18 +82,17 @@ export class ApiService {
     });
   }
 
-  public getPlayerLeaderboard(field: string, page: number): Promise<PostPlayerLeaderboardResponse>;
-  public getPlayerLeaderboard(field: string, uuid: string): Promise<PostPlayerLeaderboardResponse>;
   public getPlayerLeaderboard(
     field: string,
-    pageOrUuid: number | string
-  ): Promise<PostPlayerLeaderboardResponse> {
+    input: string | number,
+    type: LeaderboardQuery
+  ): Promise<PostPlayerLeaderboardResponse | null> {
     return this.request<PostPlayerLeaderboardResponse>('/player/leaderboards', {}, 'POST', {
       body: {
         field,
-        [typeof pageOrUuid === 'number' ? 'page' : 'uuid']: pageOrUuid,
+        [type]: input,
       },
-    });
+    }).catch(() => null);
   }
 
   public getPlayerRankings(fields: string[], uuid: string) {

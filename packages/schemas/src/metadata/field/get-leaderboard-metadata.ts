@@ -12,19 +12,24 @@ export const getLeaderboardMetadata = (
   propertyKey: string,
   leaderboardOptions?: LeaderboardOptions
 ): LeaderboardMetadata => {
+  const name = leaderboardOptions?.fieldName ?? getLeaderboardName(propertyKey);
+
   if (typeMetadata.type !== Number || leaderboardOptions?.enabled === false) {
     return {
       enabled: false,
       additionalFields: leaderboardOptions?.additionalFields || [],
       extraDisplay: leaderboardOptions?.extraDisplay,
       formatter: leaderboardOptions?.formatter,
+      fieldName: name,
+      name,
     };
   }
 
   return {
     enabled: true,
     sort: leaderboardOptions?.sort || 'DESC',
-    name: leaderboardOptions?.name ?? getLeaderboardName(propertyKey),
+    fieldName: name,
+    name,
     aliases: leaderboardOptions?.aliases || [],
     additionalFields: leaderboardOptions?.additionalFields || [],
     extraDisplay: leaderboardOptions?.extraDisplay,

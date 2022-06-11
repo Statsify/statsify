@@ -13,10 +13,9 @@ import {
   Friends,
   LeaderboardScanner,
   Player,
-  Selector,
   serialize,
 } from '@statsify/schemas';
-import { Flatten, flatten, FlattenKeys } from '@statsify/util';
+import { Flatten, flatten } from '@statsify/util';
 import type { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
 import { HypixelService } from '../hypixel';
@@ -40,7 +39,7 @@ export class PlayerService {
   public async get(
     tag: string,
     cacheLevel: HypixelCache,
-    selector?: Selector<Player>
+    selector?: Record<string, boolean>
   ): Promise<Player | null> {
     const mongoPlayer = await this.findMongoDocument(tag, selector);
 
@@ -249,7 +248,7 @@ export class PlayerService {
 
   private async findMongoDocument(
     tag: string,
-    selector: Selector<Player> = {}
+    selector: Record<string, boolean> = {}
   ): Promise<Flatten<Player> | null> {
     const type = tag.length > 16 ? 'uuid' : 'usernameToLower';
 
@@ -292,14 +291,15 @@ export class PlayerService {
     );
   }
 
-  private async resolveCachedDocument(mongoPlayer: Flatten<Player>, selector?: Selector<Player>) {
+  private async resolveCachedDocument(
+    mongoPlayer: Flatten<Player>,
+    selector?: Record<string, boolean>
+  ) {
     let redisSelector: string[] | undefined = undefined;
 
     //If a selector is provided only query the keys whose values are truthy
     if (selector) {
-      redisSelector = Object.keys(selector).filter(
-        (key) => selector[key as keyof Selector<Player>]
-      );
+      redisSelector = Object.keys(selector).filter((key) => selector[key]);
     } else {
       redisSelector = LeaderboardScanner.getLeaderboardFields(Player);
     }
@@ -310,7 +310,7 @@ export class PlayerService {
     const redisPlayer = await this.leaderboardService.getLeaderboardDocument(
       Player,
       mongoPlayer.shortUuid,
-      redisSelector as FlattenKeys<Player>[]
+      redisSelector
     );
 
     return deserialize(Player, {

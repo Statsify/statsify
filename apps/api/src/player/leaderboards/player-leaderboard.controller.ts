@@ -2,6 +2,7 @@ import { Body, Controller, Post, Response } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   ErrorResponse,
+  LeaderboardQuery,
   PostPlayerLeaderboardResponse,
   PostPlayerRankingsResponse,
 } from '@statsify/api-client';
@@ -22,10 +23,24 @@ export class PlayerLeaderboardsController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
   public async getPlayerLeaderboard(
-    @Body() { field, page, uuid }: PlayerLeaderboardDto,
+    @Body() { field, page, player, position }: PlayerLeaderboardDto,
     @Response({ passthrough: true }) res: FastifyReply
   ) {
-    const leaderboard = await this.playerLeaderboardService.getLeaderboard(field, uuid ?? page);
+    let input: number | string;
+    let type: LeaderboardQuery;
+
+    if (player) {
+      input = player;
+      type = LeaderboardQuery.PLAYER;
+    } else if (position) {
+      input = position;
+      type = LeaderboardQuery.POSITION;
+    } else {
+      input = page;
+      type = LeaderboardQuery.PAGE;
+    }
+
+    const leaderboard = await this.playerLeaderboardService.getLeaderboard(field, input, type);
 
     if (!leaderboard) {
       res.status(400);

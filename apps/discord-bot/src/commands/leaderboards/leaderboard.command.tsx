@@ -1,10 +1,13 @@
 import { ApiService } from '#services';
+import { LeaderboardQuery } from '@statsify/api-client';
 import { getBackground, getLogo } from '@statsify/assets';
 import {
   ActionRowBuilder,
   ButtonBuilder,
   Command,
   CommandContext,
+  IMessage,
+  Interaction,
   LocalizeFunction,
   ModalBuilder,
   TextInputBuilder,
@@ -13,16 +16,30 @@ import { render } from '@statsify/rendering';
 import { ButtonStyle, InteractionResponseType } from 'discord-api-types/v10';
 import type { Image } from 'skia-canvas';
 import { CommandListener } from '../../command.listener';
+import { ErrorMessage } from '../../error.message';
 import { LeaderboardProfile } from './leaderboard.profile';
+
+interface BaseLeaderboardProps {
+  t: LocalizeFunction;
+  background: Image;
+  logo: Image;
+  premium?: boolean;
+}
+
+interface LeaderboardParams {
+  input: string | number;
+  type: LeaderboardQuery;
+}
 
 @Command({ description: (t) => t('commands.leaderboard') })
 export class PlayerLeaderboardCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
+    const userId = context.getInteraction().getUserId();
     const user = context.getUser();
     const t = context.t();
-    const cache = new Map<number, Buffer>();
+    const cache = new Map<number, IMessage>();
 
     const field = 'stats.bedwars.overall.wins';
     let currentPage = 0;
@@ -32,54 +49,59 @@ export class PlayerLeaderboardCommand {
       getLogo(user?.premium),
     ]);
 
-    const up = new ButtonBuilder()
-      .label('UP')
-      .style(ButtonStyle.Secondary)
-      .disable(currentPage === 0);
+    const props: BaseLeaderboardProps = {
+      t,
+      background,
+      logo,
+      premium: user?.premium,
+    };
 
-    const down = new ButtonBuilder().label('DOWN').style(ButtonStyle.Secondary);
-    const search = new ButtonBuilder().label('SEARCH').style(ButtonStyle.Secondary);
+    const up = new ButtonBuilder()
+      .emoji('<:up:985251630645665832>')
+      .style(ButtonStyle.Success)
+      .disable(true);
+
+    const down = new ButtonBuilder().emoji('<:down:985251631962660926>').style(ButtonStyle.Danger);
+
+    const search = new ButtonBuilder()
+      .emoji('<:search:985251631576801351>')
+      .style(ButtonStyle.Primary);
+
+    const changePage = (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
+      const params = fn();
+      const [message, page] = await this.getLeaderboard(cache, field, params, props);
+
+      if (interaction.getUserId() === userId && !message.ephemeral) {
+        up.disable(page === 0);
+        currentPage = page || currentPage;
+        const row = new ActionRowBuilder([up, down, search]);
+
+        context.reply({
+          ...message,
+          components: [row],
+          attachments: [],
+        });
+      } else {
+        interaction.sendFollowup({ ...message, ephemeral: true });
+      }
+    };
 
     const listener = CommandListener.getInstance();
 
-    const changePage = (getPage: () => number) => async () => {
-      const page = getPage();
-
-      const buffer = await this.getLeaderboard(
-        cache,
-        field,
-        page,
-        t,
-        background,
-        logo,
-        user?.premium
-      );
-
-      up.disable(page === 0);
-
-      const row = new ActionRowBuilder([up, down, search]);
-
-      context.reply({
-        files: [{ name: 'leaderboard.png', data: buffer, type: 'image/png' }],
-        components: [row],
-        attachments: [],
-      });
-    };
-
     listener.addHook(
       up.getCustomId(),
-      changePage(() => {
-        currentPage -= 1;
-        return currentPage;
-      })
+      changePage(() => ({
+        input: currentPage - 1,
+        type: LeaderboardQuery.PAGE,
+      }))
     );
 
     listener.addHook(
       down.getCustomId(),
-      changePage(() => {
-        currentPage += 1;
-        return currentPage;
-      })
+      changePage(() => ({
+        input: currentPage + 1,
+        type: LeaderboardQuery.PAGE,
+      }))
     );
 
     const playerInput = new TextInputBuilder()
@@ -108,56 +130,82 @@ export class PlayerLeaderboardCommand {
       const playerInput = data.components[0].components[0].value;
       const positionInput = data.components[1].components[0].value;
 
-      interaction.sendFollowup({
-        content: 'You searched for ' + playerInput + ' at position ' + positionInput,
-      });
+      changePage(() =>
+        playerInput
+          ? { input: playerInput, type: LeaderboardQuery.PLAYER }
+          : { input: positionInput, type: LeaderboardQuery.POSITION }
+      )(interaction);
     });
 
     const row = new ActionRowBuilder([up, down, search]);
 
-    const buffer = await this.getLeaderboard(
+    const [message, page] = await this.getLeaderboard(
       cache,
       field,
-      currentPage,
-      t,
-      background,
-      logo,
-      user?.premium
+      { input: currentPage, type: LeaderboardQuery.PAGE },
+      props
     );
 
-    return {
-      files: [{ name: 'leaderboard.png', data: buffer, type: 'image/png' }],
-      components: [row],
-    };
+    setTimeout(() => {
+      listener.removeHook(up.getCustomId());
+      listener.removeHook(down.getCustomId());
+      listener.removeHook(search.getCustomId());
+      listener.removeHook(modal.getCustomId());
+
+      context.reply({
+        ...cache.get(currentPage)!,
+        embeds: [],
+        components: [],
+        attachments: [],
+      });
+    }, 300_000);
+
+    // eslint-disable-next-line require-atomic-updates
+    currentPage = page || currentPage;
+
+    return { ...message, components: [row] };
   }
 
   private async getLeaderboard(
-    cache: Map<number, Buffer>,
+    cache: Map<number, IMessage>,
     field: string,
-    page: number,
-    t: LocalizeFunction,
-    background: Image,
-    logo: Image,
-    premium?: boolean
-  ): Promise<Buffer> {
-    if (cache.has(page)) return cache.get(page)!;
+    params: LeaderboardParams,
+    props: BaseLeaderboardProps
+  ): Promise<[message: IMessage, page: number | null]> {
+    if (params.type === LeaderboardQuery.PAGE && cache.has(params.input as number)) {
+      const page = params.input as number;
+      return [cache.get(page)!, page];
+    }
 
-    const buffer = await this.fetchLeaderboard(field, page, t, background, logo, premium);
+    const [message, page] = await this.fetchLeaderboard(field, params, props);
 
-    cache.set(page, buffer);
+    if (params.type === LeaderboardQuery.PAGE && page) cache.set(page, message);
 
-    return buffer;
+    return [message, page];
   }
 
   private async fetchLeaderboard(
     field: string,
-    page: number,
-    t: LocalizeFunction,
-    background: Image,
-    logo: Image,
-    premium?: boolean
-  ) {
-    const leaderboard = await this.apiService.getPlayerLeaderboard(field, page);
+    params: LeaderboardParams,
+    props: BaseLeaderboardProps
+  ): Promise<[message: IMessage, page: number | null]> {
+    const leaderboard = await this.apiService.getPlayerLeaderboard(
+      field,
+      params.input,
+      params.type
+    );
+
+    if (!leaderboard || !leaderboard?.data.length) {
+      const message = {
+        ...new ErrorMessage(
+          (t) => t('leaderboard.error.title'),
+          (t) => t('leaderboard.error.description')
+        ),
+        ephemeral: true,
+      };
+
+      return [message, null];
+    }
 
     const leaderboardData = await Promise.all(
       leaderboard.data.map(async (d) => ({
@@ -168,18 +216,20 @@ export class PlayerLeaderboardCommand {
 
     const canvas = render(
       <LeaderboardProfile
-        background={background}
-        logo={logo}
-        premium={premium}
-        fieldName={leaderboard.fieldName}
-        additionalFieldNames={leaderboard.additionalFieldNames}
+        {...props}
+        name={leaderboard.name}
+        fields={leaderboard.fields}
         data={leaderboardData}
-        t={t}
       />
     );
 
     const buffer = await canvas.toBuffer('png');
 
-    return buffer;
+    const message = {
+      files: [{ name: 'leaderboard.png', data: buffer, type: 'image/png' }],
+      embeds: [],
+    };
+
+    return [message, leaderboard.page];
   }
 }

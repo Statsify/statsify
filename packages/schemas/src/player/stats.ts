@@ -25,73 +25,73 @@ import { Warlords } from './gamemodes/warlords';
 import { WoolWars } from './gamemodes/woolwars';
 
 export class PlayerStats {
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Arcade' } })
   public arcade: Arcade;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'ArenaBrawl' } })
   public arenabrawl: ArenaBrawl;
 
-  @Field({ leaderboard: { extraDisplay: 'stats.bedwars.levelFormatted' } })
+  @Field({ leaderboard: { fieldName: 'BedWars', extraDisplay: 'stats.bedwars.levelFormatted' } })
   public bedwars: BedWars;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'BlitzSG' } })
   public blitzsg: BlitzSG;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Build Battle' } })
   public buildbattle: BuildBattle;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Cops And Crims' } })
   public copsandcrims: CopsAndCrims;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Duels' } })
   public duels: Duels;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'General' } })
   public general: General;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'MegaWalls' } })
   public megawalls: MegaWalls;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Murder Mystery' } })
   public murdermystery: MurderMystery;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Paintball' } })
   public paintball: Paintball;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Parkour' } })
   public parkour: Parkour;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Quake' } })
   public quake: Quake;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'SkyWars' } })
   public skywars: SkyWars;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Smash Heroes' } })
   public smashheroes: SmashHeroes;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'SpeedUHC' } })
   public speeduhc: SpeedUHC;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'TNT Games' } })
   public tntgames: TNTGames;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Turbo Kart Racers' } })
   public turbokartracers: TurboKartRacers;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'UHC' } })
   public uhc: UHC;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'VampireZ' } })
   public vampirez: VampireZ;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Walls' } })
   public walls: Walls;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Warlords' } })
   public warlords: Warlords;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'WoolWars' } })
   public woolwars: WoolWars;
 
   public constructor(data: APIData = {}) {

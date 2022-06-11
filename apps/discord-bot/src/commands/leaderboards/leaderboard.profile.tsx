@@ -4,18 +4,18 @@ import type { Image } from 'skia-canvas';
 
 export interface LeaderboardData {
   name: string;
-  field: number | string;
-  additionalFields: (number | string)[];
+  fields: (number | string)[];
   skin: Image;
   position: number;
+  highlight?: boolean;
 }
 
 export interface LeaderboardProfileProps {
   background: Image;
   logo: Image;
   premium?: boolean;
-  fieldName: string;
-  additionalFieldNames: string[];
+  fields: string[];
+  name: string;
   data: LeaderboardData[];
   t: LocalizeFunction;
 }
@@ -24,9 +24,9 @@ export const LeaderboardProfile = ({
   background,
   logo,
   premium,
-  fieldName,
-  additionalFieldNames,
   data,
+  fields,
+  name,
   t,
 }: LeaderboardProfileProps) => {
   const columnsList: JSX.Element[][] = [];
@@ -43,7 +43,7 @@ export const LeaderboardProfile = ({
     column = 0;
   };
 
-  ['Pos', 'Player', fieldName, ...additionalFieldNames].forEach((field) =>
+  ['Pos', 'Player', ...fields].forEach((field) =>
     add(
       <box width="100%" border={{ topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }}>
         <text>§l{field}</text>
@@ -54,29 +54,41 @@ export const LeaderboardProfile = ({
   reset();
 
   data.forEach((d) => {
+    const isHighlighted = d.highlight ?? false;
+    // const color = isHighlighted ? 'rgba(255, 255, 255, 0.5)' : undefined;
+    const color = undefined;
+    const prefix = isHighlighted ? '§l' : '';
+    const outline = isHighlighted;
+
     add(
-      <box width="100%">
+      <box width="100%" outline={outline} color={color}>
         <text>#§l{t(d.position) as string}</text>
       </box>
     );
 
     add(
       <div width="100%">
-        <box padding={{ left: 12, right: 12, top: 4, bottom: 4 }}>
+        <box padding={{ left: 12, right: 12, top: 4, bottom: 4 }} outline={outline} color={color}>
           <img image={d.skin} />
         </box>
-        <box width="remaining" direction="column">
-          <text align="left">{d.name}</text>
+        <box width="remaining" direction="column" outline={outline} color={color}>
+          <text align="left">
+            {prefix}
+            {d.name}
+          </text>
         </box>
       </div>
     );
 
-    [d.field, ...d.additionalFields].forEach((field) => {
+    d.fields.forEach((field) => {
       const formatted = typeof field === 'number' ? t(field) : field;
 
       add(
-        <box width="100%">
-          <text>{formatted}</text>
+        <box width="100%" outline={outline} color={color}>
+          <text>
+            {prefix}
+            {formatted}
+          </text>
         </box>
       );
     });
@@ -87,7 +99,7 @@ export const LeaderboardProfile = ({
   return (
     <Container background={background}>
       <box width="100%">
-        <text>§^3^§l{fieldName}</text>
+        <text>§^3^§l{name}</text>
       </box>
       <div width="100%">
         {columnsList.map((c) => (

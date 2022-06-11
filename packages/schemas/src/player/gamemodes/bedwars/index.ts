@@ -34,7 +34,7 @@ export class BedWars {
 
   @Field({
     leaderboard: {
-      name: 'EXP',
+      fieldName: 'EXP',
       additionalFields: [
         'stats.bedwars.overall.wins',
         'stats.bedwars.overall.finalKills',

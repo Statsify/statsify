@@ -2,10 +2,21 @@ import { prettify } from '@statsify/util';
 import { Field, MetadataEntry, MetadataScanner } from '../src/metadata';
 import { FieldMetadata, LeaderboardEnabledMetadata } from '../src/metadata/metadata.interface';
 
-const stringMetadata: FieldMetadata = {
-  leaderboard: { enabled: false, additionalFields: [] },
-  type: { type: String, array: false, primitive: true },
-  store: { required: true, serialize: true, deserialize: true, store: true, default: '' },
+const stringMetadata = (name: string): FieldMetadata => {
+  const fieldName = prettify(
+    name.substring(name.lastIndexOf('.') > -1 ? name.lastIndexOf('.') + 1 : 0)
+  );
+
+  return {
+    leaderboard: {
+      enabled: false,
+      additionalFields: [],
+      name: name.split('.').map(prettify).join(' '),
+      fieldName,
+    },
+    type: { type: String, array: false, primitive: true },
+    store: { required: true, serialize: true, deserialize: true, store: true, default: '' },
+  };
 };
 
 describe('metadata', () => {
@@ -15,7 +26,9 @@ describe('metadata', () => {
       public fieldA: string;
     }
 
-    expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry[]>([['fieldA', stringMetadata]]);
+    expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry[]>([
+      ['fieldA', stringMetadata('fieldA')],
+    ]);
   });
 
   it('should read and write basic number metadata', () => {
@@ -31,6 +44,7 @@ describe('metadata', () => {
           leaderboard: {
             enabled: true,
             name: prettify('fieldA'),
+            fieldName: prettify('fieldA'),
             additionalFields: [],
             aliases: [],
             sort: 'DESC',
@@ -52,7 +66,12 @@ describe('metadata', () => {
       [
         'fieldA',
         {
-          leaderboard: { enabled: false, additionalFields: [] },
+          leaderboard: {
+            enabled: false,
+            additionalFields: [],
+            name: prettify('fieldA'),
+            fieldName: prettify('fieldA'),
+          },
           type: { type: Number, array: false, primitive: true },
           store: { required: true, serialize: true, deserialize: true, store: true, default: 0 },
         },
@@ -70,7 +89,7 @@ describe('metadata', () => {
       [
         'fieldA',
         {
-          ...stringMetadata,
+          ...stringMetadata('fieldA'),
           type: { type: String, array: true, primitive: true },
         },
       ],
@@ -100,9 +119,9 @@ describe('metadata', () => {
     }
 
     expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry[]>([
-      ['fieldA', stringMetadata],
-      ['fieldB.fieldA', stringMetadata],
-      ['fieldB.fieldB.fieldA', stringMetadata],
+      ['fieldA', stringMetadata('fieldA')],
+      ['fieldB.fieldA', stringMetadata('fieldB.fieldA')],
+      ['fieldB.fieldB.fieldA', stringMetadata('fieldB.fieldB.fieldA')],
     ]);
   });
 
@@ -118,8 +137,8 @@ describe('metadata', () => {
     }
 
     expect(MetadataScanner.scan(ChildClazz)).toEqual<MetadataEntry[]>([
-      ['fieldA', stringMetadata],
-      ['fieldB', stringMetadata],
+      ['fieldA', stringMetadata('fieldA')],
+      ['fieldB', stringMetadata('fieldB')],
     ]);
   });
 
@@ -138,7 +157,8 @@ describe('metadata', () => {
 
     expect(leaderboard).toEqual<LeaderboardEnabledMetadata>({
       enabled: true,
-      name: prettify('fieldB'),
+      name: 'Field A Field B',
+      fieldName: prettify('fieldB'),
       additionalFields: ['fieldA'],
       extraDisplay: 'fieldA',
       aliases: [],

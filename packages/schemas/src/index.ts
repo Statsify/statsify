@@ -17,6 +17,5 @@ export * from './skin';
 export * from './status';
 export * from './user';
 export * from './util/leaderboard-scanner';
-export * from './util/selector';
 export * from './verify-codes';
 export * from './watchdog';

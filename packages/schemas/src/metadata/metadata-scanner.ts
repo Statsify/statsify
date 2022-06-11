@@ -17,7 +17,11 @@ export class MetadataScanner {
     return metadata;
   }
 
-  private static getMetadataEntries(constructor: Constructor, base = ''): MetadataEntry[] {
+  private static getMetadataEntries(
+    constructor: Constructor,
+    base = '',
+    baseName = ''
+  ): MetadataEntry[] {
     const classMetadata = Reflect.getMetadata(METADATA_KEY, constructor.prototype) as ClassMetadata;
 
     if (!classMetadata) return [];
@@ -26,35 +30,34 @@ export class MetadataScanner {
 
     const metadataEntries: MetadataEntry[] = [];
 
-    for (const [key, value] of entries) {
+    entries.forEach(([key, value]) => {
       const path = `${base ? `${base}.` : ''}${key}`;
+      const name = `${baseName ? `${baseName} ` : ''}${value.leaderboard.name}`;
 
-      if (value.type.primitive || value.type.array) {
-        metadataEntries.push([path, value]);
-        continue;
-      }
+      if (value.type.primitive || value.type.array)
+        return metadataEntries.push([
+          path,
+          { ...value, leaderboard: { ...value.leaderboard, name } },
+        ]);
 
       //Carry the metadata down to the children
-      const subMetadataEntries = this.getMetadataEntries(value.type.type, path).map(
-        ([path, { store, leaderboard, type }]) => {
-          if (!leaderboard.additionalFields || !leaderboard.additionalFields.length)
-            leaderboard.additionalFields = value.leaderboard.additionalFields;
+      const subMetadataEntries = this.getMetadataEntries(value.type.type, path, name).map(
+        ([path, metadata]) => {
+          if (
+            !metadata.leaderboard.additionalFields ||
+            !metadata.leaderboard.additionalFields.length
+          )
+            metadata.leaderboard.additionalFields = value.leaderboard.additionalFields;
 
-          if (!leaderboard.extraDisplay) leaderboard.extraDisplay = value.leaderboard.extraDisplay;
+          if (!metadata.leaderboard.extraDisplay)
+            metadata.leaderboard.extraDisplay = value.leaderboard.extraDisplay;
 
-          return [
-            path,
-            {
-              store,
-              leaderboard,
-              type,
-            },
-          ] as MetadataEntry;
+          return [path, metadata] as MetadataEntry;
         }
       );
 
       metadataEntries.push(...subMetadataEntries);
-    }
+    });
 
     return metadataEntries;
   }
