@@ -177,7 +177,7 @@ export class ApiService {
   }
 
   public updateUserBadge(tag: string, badge: Buffer) {
-    this.request<PutUserBadgeResponse>(`user/badge`, { tag }, 'PUT', {
+    return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, 'PUT', {
       body: badge,
       headers: { 'Content-Type': 'image/png' },
     });

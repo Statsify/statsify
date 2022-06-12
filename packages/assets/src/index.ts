@@ -54,6 +54,8 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
     const backgrounds = getBackgroundPaths().filter((p) => p.startsWith(path));
     const background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
+    if (!background) throw new Error(`No background found for ${pathOrGame}_${mode}`);
+
     return getImage(`out/backgrounds/${background}`);
   }
 

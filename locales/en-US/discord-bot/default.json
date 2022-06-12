@@ -281,5 +281,13 @@
       "title": "Leaderboard Search"
     }
   },
+  "config": {
+    "badge": {
+      "profile": "This is how your badge is displayed",
+      "set": "$t(emojis:check) Successfully updated your badge.",
+      "view": "$t(emojis:eye) Your current badge:",
+      "reset": "$t(emojis:reset) Successfully reset your badge."
+    }
+  },
   "number": "{{value, number}}"
 }

@@ -276,15 +276,13 @@ export class LeaderboardCommand {
     };
 
     const up = new ButtonBuilder()
-      .emoji('<:up:985258085553688588> ')
+      .emoji(t('emojis:up') + ' ')
       .style(ButtonStyle.Success)
       .disable(true);
 
-    const down = new ButtonBuilder().emoji('<:down:985258087915077644>').style(ButtonStyle.Danger);
+    const down = new ButtonBuilder().emoji(t('emojis:down') + '').style(ButtonStyle.Danger);
 
-    const search = new ButtonBuilder()
-      .emoji('<:search:985258087189463111>')
-      .style(ButtonStyle.Primary);
+    const search = new ButtonBuilder().emoji(t('emojis:search') + '').style(ButtonStyle.Primary);
 
     const changePage = (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
       const params = fn();
@@ -389,6 +387,7 @@ export class LeaderboardCommand {
   ): Promise<[message: IMessage, page: number | null]> {
     if (params.type === LeaderboardQuery.PAGE && cache.has(params.input as number)) {
       const page = params.input as number;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return [cache.get(page)!, page];
     }
 
