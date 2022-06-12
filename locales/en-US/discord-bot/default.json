@@ -223,6 +223,10 @@
       "title": "Invalid Search",
       "description": "We couldn't tell what you were looking for!\nPlease enter a username, uuid, or discord mention"
     },
+    "missingFile": {
+      "title": "Missing File",
+      "description": "You did not provide a file and it is required LOL"
+    },
     "missingSelfVerification": {
       "title": "Missing Verification",
       "description": "You are not verified"

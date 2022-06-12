@@ -1,4 +1,4 @@
-import { FileArgument } from '#arguments';
+import { ChoiceArgument, FileArgument } from '#arguments';
 import { ApiService } from '#services';
 import { Command, CommandContext, IMessage } from '@statsify/discord';
 import { APIAttachment } from 'discord-api-types/v10';
@@ -7,7 +7,7 @@ import { ErrorMessage } from '../error.message';
 
 @Command({
   description: (t) => t('commands.badge'),
-  args: [FileArgument],
+  args: [new ChoiceArgument('mode', 'set', 'reset', 'view'), new FileArgument()],
   cooldown: 5,
 })
 export class BadgeCommand {
@@ -15,6 +15,8 @@ export class BadgeCommand {
 
   public async run(context: CommandContext): Promise<IMessage> {
     const userId = context.getInteraction().getUserId();
+    const file = context.option<APIAttachment | null>('file');
+    const mode = context.option<'view' | 'set' | 'reset'>('mode', file ? 'set' : 'view');
     const user = context.getUser();
 
     if (!user?.uuid)
@@ -29,40 +31,54 @@ export class BadgeCommand {
         (t) => t('errors.missingSelfPremium.description')
       );
 
-    const badgeFile = context.option<APIAttachment>('file');
+    switch (mode) {
+      case 'view': {
+        // Always show badge
+        return {
+          content: 'View',
+        };
+      }
 
-    const canvas = new Canvas(32, 32);
-    const ctx = canvas.getContext('2d');
+      case 'set': {
+        if (!file)
+          throw new ErrorMessage(
+            (t) => t('errors.missingFile.title'),
+            (t) => t('errors.missingFile.description')
+          );
 
-    const badge = await loadImage(badgeFile.url);
+        const canvas = new Canvas(32, 32);
+        const ctx = canvas.getContext('2d');
 
-    const hRatio = canvas.width / badge.width;
-    const vRatio = canvas.height / badge.height;
-    const ratio = Math.min(hRatio, vRatio);
+        const badge = await loadImage(file.url);
 
-    let width;
-    let height;
-    if (badge.width < 32 && badge.height < 32) {
-      width = badge.width;
-      height = badge.height;
+        const ratio = Math.min(canvas.width / badge.width, canvas.height / badge.height);
+        const scaled = badge.width > 32 || badge.height > 32;
+
+        ctx.drawImage(
+          badge,
+          0,
+          0,
+          badge.width,
+          badge.height,
+          (canvas.width - badge.width) / 2,
+          (canvas.height - badge.height) / 2,
+          scaled ? badge.width * ratio : badge.width,
+          scaled ? badge.height * ratio : badge.height
+        );
+
+        this.apiService.updateUserBadge(userId, await canvas.toBuffer('png'));
+
+        return {
+          content: 'Set',
+        };
+      }
+
+      case 'reset': {
+        // Always reset
+        return {
+          content: 'Reset',
+        };
+      }
     }
-
-    ctx.drawImage(
-      badge,
-      0,
-      0,
-      badge.width,
-      badge.height,
-      (canvas.width - badge.width) / 2,
-      (canvas.height - badge.height) / 2,
-      width ?? badge.width * ratio,
-      height ?? badge.height * ratio
-    );
-
-    this.apiService.updateUserBadge(userId, await canvas.toBuffer('png'));
-
-    return {
-      content: 'Updated',
-    };
   }
 }
