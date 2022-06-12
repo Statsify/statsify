@@ -4,9 +4,8 @@ import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 export class FileArgument extends AbstractArgument {
   public description: LocalizationString;
   public type = ApplicationCommandOptionType.Attachment;
-  public required = false;
 
-  public constructor(public name = 'file') {
+  public constructor(public name = 'file', public required = false) {
     super();
     this.description = (t) => t('arguments.file');
   }

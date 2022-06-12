@@ -23,7 +23,7 @@ export class BadgeCommand {
 
   @SubCommand({
     description: (t) => t('commands.badge.set'),
-    args: [FileArgument],
+    args: [new FileArgument('icon', true)],
   })
   public set(context: CommandContext) {
     return this.run(context, 'set');
@@ -75,8 +75,8 @@ export class BadgeCommand {
       case 'set': {
         if (!file)
           throw new ErrorMessage(
-            (t) => t('errors.missingFile.title'),
-            (t) => t('errors.missingFile.description')
+            (t) => t('errors.unknown.title'),
+            (t) => t('errors.unknown.description')
           );
 
         const canvas = new Canvas(32, 32);
