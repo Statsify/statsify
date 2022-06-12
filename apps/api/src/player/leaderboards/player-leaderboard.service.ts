@@ -29,6 +29,7 @@ export class PlayerLeaderboardService {
       formatter,
       sort,
       name,
+      hidden,
     } = LeaderboardScanner.getLeaderboardField(Player, field) as LeaderboardEnabledMetadata;
 
     let top: number;
@@ -101,18 +102,27 @@ export class PlayerLeaderboardService {
         return stats[key];
       });
 
+      const fields = [];
+
+      if (!hidden) fields.push(field);
+      fields.push(...additionalValues);
+
       return {
         uuid: translator.toUUID(player.id).replace(/-/g, ''),
-        fields: [field, ...additionalValues],
+        fields,
         name,
         position: player.index + 1,
         highlight: player.index === highlight,
       };
     });
 
+    const fields = [];
+    if (!hidden) fields.push(fieldName);
+    fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
+
     return {
       name: name,
-      fields: [fieldName, ...additionalFieldMetadata.map(({ fieldName }) => fieldName)],
+      fields,
       data,
       page: top / pageSize,
     };

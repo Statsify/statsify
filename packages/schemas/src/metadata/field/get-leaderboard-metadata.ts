@@ -32,6 +32,7 @@ export const getLeaderboardMetadata = (
     sort: leaderboardOptions?.sort || 'DESC',
     fieldName: name,
     name,
+    hidden: leaderboardOptions?.hidden,
     aliases: leaderboardOptions?.aliases || [],
     additionalFields: leaderboardOptions?.additionalFields || [],
     extraDisplay: leaderboardOptions?.extraDisplay,

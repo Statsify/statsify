@@ -4,64 +4,64 @@ import { Field } from '../../../metadata';
 export const PARKOUR_MODES = ['overall'] as const;
 export type ParkourModes = typeof PARKOUR_MODES;
 
-const fieldOptions = { leaderboard: { sort: 'ASC', formatter: formatTime } };
+const fieldOptions = { sort: 'ASC', formatter: formatTime };
 
 export class Parkour {
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Arcade Lobby' } })
   public arcade: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'BedWars Lobby' } })
   public bedwars: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'BlitzSG Lobby' } })
   public blitzsg: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Build Battle Lobby' } })
   public buildbattle: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Classic Lobby' } })
   public classic: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Cops and Crims Lobby' } })
   public copsandcrims: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Duels Lobby' } })
   public duels: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Housing Lobby' } })
   public housing: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Main Lobby' } })
   public mainLobby: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'MegaWalls Lobby' } })
   public megawalls: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Murder Mystery Lobby' } })
   public murdermystery: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Prototype Lobby' } })
   public proto: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'SkyWars Lobby' } })
   public skywars: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Smash Heroes Lobby' } })
   public smashheroes: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'TNT Games Lobby' } })
   public tntgames: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Tournament Lobby' } })
   public tourney: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'UHC Lobby' } })
   public uhc: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Warlords Lobby' } })
   public warlords: number;
 
-  @Field(fieldOptions)
+  @Field({ leaderboard: { ...fieldOptions, fieldName: 'WoolWars Lobby' } })
   public woolwars: number;
 
   public constructor(data: APIData) {

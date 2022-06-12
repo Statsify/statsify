@@ -51,6 +51,11 @@ export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
   enabled: true;
 
   /**
+   * Whether or not to show the stat in the leaderboard page
+   */
+  hidden?: boolean;
+
+  /**
    * Whether or not to sort the leaderboard ascending or descending.
    */
   sort: 'ASC' | 'DESC';

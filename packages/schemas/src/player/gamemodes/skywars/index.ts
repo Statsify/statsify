@@ -10,7 +10,17 @@ export const SKYWARS_MODES = ['overall', 'solo', 'doubles', 'labs'] as const;
 export type SkyWarsModes = typeof SKYWARS_MODES;
 
 export class SkyWars {
-  @Field()
+  @Field({
+    leaderboard: {
+      fieldName: 'Level',
+      hidden: true,
+      additionalFields: [
+        'stats.skywars.overall.wins',
+        'stats.skywars.overall.kills',
+        'stats.skywars.overall.kdr',
+      ],
+    },
+  })
   public exp: number;
 
   @Field()

@@ -6,27 +6,6 @@ export type RemoveMethods<T> = Pick<
   { [Key in keyof T]: T[Key] extends Function ? never : Key }[keyof T]
 >;
 
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void
-  ? I
-  : never;
-type LastOf<T> = UnionToIntersection<T extends any ? () => T : never> extends () => infer R
-  ? R
-  : never;
-
-type Push<T extends any[], V> = [...T, V];
-
-// TS4.1+
-export type TuplifyUnion<T, L = LastOf<T>, N = [T] extends [never] ? true : false> = true extends N
-  ? []
-  : Push<TuplifyUnion<Exclude<T, L>>, L>;
-
-/**
- *
- * @param instance A class instance
- * @returns The constructor of the instance
- */
-//@ts-ignore - TS doesn't know about the constructor
-export const getConstructor = <T>(instance: T): Constructor<T> => instance.constructor;
 export type Constructor<T = any> = new (...args: any[]) => T;
 
 export const noop = <T>() => null as unknown as T;
@@ -124,14 +103,6 @@ export const prettify = (s: string): string => {
 
 export const removeFormatting = (s: string): string => s.replace(/§./g, '');
 
-/**
- *
- * @param constructor
- * @returns An instance of the class using objects as arguments
- */
-export const mockClass = <T>(constructor: Constructor<T>): T =>
-  new constructor(...Array.from({ length: constructor.length }).fill({}));
-
 export interface FormatTimeOptions {
   /**
    * Whether or not to use `s`, `m`, `h`, `d` or `seconds`, `minutes`, `hours`, `days`
@@ -162,7 +133,7 @@ export const formatTime = (
   ms: number,
   { short = true, entries = 2 }: FormatTimeOptions = {}
 ): string => {
-  if (ms < 1000) return `${ms}ms`;
+  if (ms < 1000) return `${ms}${short ? 'ms' : ' milliseconds'}`;
 
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
@@ -174,6 +145,7 @@ export const formatTime = (
     { value: hours % 24, short: 'h', long: 'hour' },
     { value: minutes % 60, short: 'm', long: 'minute' },
     { value: seconds % 60, short: 's', long: 'second' },
+    { value: ms - seconds * 1000, short: 'ms', long: 'millisecond' },
   ];
 
   return time
