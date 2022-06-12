@@ -1,5 +1,5 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { MEGAWALLS_MODES } from '@statsify/schemas';
+import { FormattedGame, MEGAWALLS_MODES } from '@statsify/schemas';
 import { formatTime, prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
@@ -33,7 +33,7 @@ export const MegaWallsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§7MegaWalls §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.MEGAWALLS} §fStats §r(${prettify(mode)})`}
         time={time}
       />
       <Table.table>

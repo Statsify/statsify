@@ -248,8 +248,12 @@
       "description": "Search for a valid leaderboard"
     },
     "leaderboardPlayerNotFound": {
-      "title": "We can't find the player u looking for",
-      "description": "We can't find the player use lookin for"
+      "title": "Invalid Player or Position",
+      "description": "We can't find the player you are looking for"
+    },
+    "leaderboardEmpty": {
+      "title": "Leaderboard Empty",
+      "description": "There are no more players for this leaderboard"
     }
   },
   "leaderboard": {

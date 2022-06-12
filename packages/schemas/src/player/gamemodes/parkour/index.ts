@@ -1,67 +1,68 @@
 import { APIData, formatTime } from '@statsify/util';
+import { FormattedGame } from '../../../game';
 import { Field } from '../../../metadata';
 
 export const PARKOUR_MODES = ['overall'] as const;
 export type ParkourModes = typeof PARKOUR_MODES;
 
-const fieldOptions = { sort: 'ASC', formatter: formatTime };
+const fieldOptions = { sort: 'ASC', formatter: formatTime, fieldName: 'Time' };
 
 export class Parkour {
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Arcade Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.ARCADE} Lobby` } })
   public arcade: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'BedWars Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.BEDWARS} Lobby` } })
   public bedwars: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'BlitzSG Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.BLITZSG} Lobby` } })
   public blitzsg: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Build Battle Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.BUILD_BATTLE} Lobby` } })
   public buildbattle: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Classic Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: 'Classic Lobby' } })
   public classic: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Cops and Crims Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.COPS_AND_CRIMS} Lobby` } })
   public copsandcrims: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Duels Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.DUELS} Lobby` } })
   public duels: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Housing Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: 'Housing Lobby' } })
   public housing: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Main Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: 'Main Lobby' } })
   public mainLobby: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'MegaWalls Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.MEGAWALLS} Lobby` } })
   public megawalls: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Murder Mystery Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.MURDER_MYSTERY} Lobby` } })
   public murdermystery: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Prototype Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: 'Prototype Lobby' } })
   public proto: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'SkyWars Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.SKYWARS} Lobby` } })
   public skywars: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Smash Heroes Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.SMASH_HEROES} Lobby` } })
   public smashheroes: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'TNT Games Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.TNT_GAMES} Lobby` } })
   public tntgames: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Tournament Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: 'Tournament Lobby' } })
   public tourney: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'UHC Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.UHC} Lobby` } })
   public uhc: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'Warlords Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.WARLORDS} Lobby` } })
   public warlords: number;
 
-  @Field({ leaderboard: { ...fieldOptions, fieldName: 'WoolWars Lobby' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.WOOLWARS} Lobby` } })
   public woolwars: number;
 
   public constructor(data: APIData) {

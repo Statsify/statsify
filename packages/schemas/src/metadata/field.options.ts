@@ -3,9 +3,7 @@ import { BasePropOptions } from '@typegoose/typegoose/lib/types';
 import { LeaderboardEnabledMetadata, StoreMetadata } from './metadata.interface';
 
 export type TypeOptions = () => Constructor | [Constructor];
-export type LeaderboardOptions =
-  | Omit<BasePropOptions, 'name'>
-  | Partial<Omit<LeaderboardEnabledMetadata, 'name'>>;
+export type LeaderboardOptions = BasePropOptions | Partial<LeaderboardEnabledMetadata>;
 export type StoreOptions = Partial<StoreMetadata>;
 
 export type DocOptions = Partial<{

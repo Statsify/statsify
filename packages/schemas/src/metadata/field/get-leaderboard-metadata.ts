@@ -14,7 +14,8 @@ export const getLeaderboardMetadata = (
   propertyKey: string,
   leaderboardOptions?: LeaderboardOptions
 ): LeaderboardMetadata => {
-  const name = leaderboardOptions?.fieldName ?? getLeaderboardName(propertyKey);
+  const fieldName = leaderboardOptions?.fieldName ?? getLeaderboardName(propertyKey);
+  const name = leaderboardOptions?.name ?? fieldName;
 
   if (typeMetadata.type !== Number || leaderboardOptions?.enabled === false) {
     return {
@@ -22,7 +23,7 @@ export const getLeaderboardMetadata = (
       additionalFields: leaderboardOptions?.additionalFields || [],
       extraDisplay: leaderboardOptions?.extraDisplay,
       formatter: leaderboardOptions?.formatter,
-      fieldName: name,
+      fieldName,
       name,
     };
   }
@@ -30,7 +31,7 @@ export const getLeaderboardMetadata = (
   return {
     enabled: true,
     sort: leaderboardOptions?.sort || 'DESC',
-    fieldName: name,
+    fieldName,
     name,
     hidden: leaderboardOptions?.hidden,
     aliases: leaderboardOptions?.aliases || [],

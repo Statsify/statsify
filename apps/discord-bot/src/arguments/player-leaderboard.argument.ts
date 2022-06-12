@@ -1,5 +1,6 @@
 import { AbstractArgument, CommandContext, LocalizationString } from '@statsify/discord';
 import { ClassMetadata, LeaderboardScanner, METADATA_KEY, PlayerStats } from '@statsify/schemas';
+import { removeFormatting } from '@statsify/util';
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
@@ -12,7 +13,7 @@ const entries = Object.entries(
 
 const fields = entries.reduce((acc, [prefix, value]) => {
   const list = LeaderboardScanner.getLeaderboardMetadata(value.type.type).map(
-    ([key, { leaderboard }]) => ({ value: key, name: leaderboard.name })
+    ([key, { leaderboard }]) => ({ value: key, name: removeFormatting(leaderboard.name) })
   );
 
   const fuse = new Fuse(list, {
@@ -20,7 +21,7 @@ const fields = entries.reduce((acc, [prefix, value]) => {
     includeScore: false,
     shouldSort: true,
     isCaseSensitive: false,
-    threshold: 0.5,
+    threshold: 0.3,
     ignoreLocation: true,
   });
 

@@ -410,11 +410,23 @@ export class PlayerLeaderboardCommand {
       params.type
     );
 
-    if (!leaderboard || !leaderboard?.data.length) {
+    if (!leaderboard) {
       const message = {
         ...new ErrorMessage(
           (t) => t('errors.leaderboardPlayerNotFound.title'),
           (t) => t('errors.leaderboardPlayerNotFound.description')
+        ),
+        ephemeral: true,
+      };
+
+      return [message, null];
+    }
+
+    if (!leaderboard?.data.length) {
+      const message = {
+        ...new ErrorMessage(
+          (t) => t('errors.leaderboardEmpty.title'),
+          (t) => t('errors.leaderboardEmpty.description')
         ),
         ephemeral: true,
       };

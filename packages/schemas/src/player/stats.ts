@@ -1,4 +1,5 @@
 import type { APIData } from '@statsify/util';
+import { FormattedGame } from '../game';
 import { Field } from '../metadata';
 import { Arcade } from './gamemodes/arcade';
 import { ArenaBrawl } from './gamemodes/arenabrawl';
@@ -25,77 +26,99 @@ import { Warlords } from './gamemodes/warlords';
 import { WoolWars } from './gamemodes/woolwars';
 
 export class PlayerStats {
-  @Field({ leaderboard: { fieldName: 'Arcade -' } })
+  @Field({ leaderboard: { fieldName: `${FormattedGame.ARCADE} -` } })
   public arcade: Arcade;
 
-  @Field({ leaderboard: { fieldName: 'ArenaBrawl' } })
+  @Field({ leaderboard: { fieldName: FormattedGame.ARENA_BRAWL } })
   public arenabrawl: ArenaBrawl;
 
-  @Field({ leaderboard: { fieldName: 'BedWars', extraDisplay: 'stats.bedwars.levelFormatted' } })
+  @Field({
+    leaderboard: { fieldName: FormattedGame.BEDWARS, extraDisplay: 'stats.bedwars.levelFormatted' },
+  })
   public bedwars: BedWars;
 
-  @Field({ leaderboard: { fieldName: 'BlitzSG' } })
+  @Field({ leaderboard: { fieldName: FormattedGame.BLITZSG } })
   public blitzsg: BlitzSG;
 
   @Field({
-    leaderboard: { fieldName: 'Build Battle', extraDisplay: 'stats.buildbattle.titleFormatted' },
+    leaderboard: {
+      fieldName: FormattedGame.BUILD_BATTLE,
+      extraDisplay: 'stats.buildbattle.titleFormatted',
+    },
   })
   public buildbattle: BuildBattle;
 
-  @Field({ leaderboard: { fieldName: 'Cops And Crims' } })
+  @Field({ leaderboard: { fieldName: FormattedGame.COPS_AND_CRIMS } })
   public copsandcrims: CopsAndCrims;
 
-  @Field({ leaderboard: { fieldName: 'Duels -' } })
+  @Field({ leaderboard: { fieldName: `${FormattedGame.DUELS} -` } })
   public duels: Duels;
 
-  @Field({ leaderboard: { fieldName: 'General -' } })
+  @Field({ leaderboard: { fieldName: `${FormattedGame.GENERAL} -` } })
   public general: General;
 
-  @Field({ leaderboard: { fieldName: 'MegaWalls' } })
+  @Field({ leaderboard: { fieldName: FormattedGame.MEGAWALLS } })
   public megawalls: MegaWalls;
 
-  @Field({ leaderboard: { fieldName: 'Murder Mystery' } })
+  @Field({ leaderboard: { fieldName: FormattedGame.MURDER_MYSTERY } })
   public murdermystery: MurderMystery;
 
-  @Field({ leaderboard: { fieldName: 'Paintball' } })
+  @Field({ leaderboard: { fieldName: FormattedGame.PAINTBALL } })
   public paintball: Paintball;
 
-  @Field({ leaderboard: { fieldName: 'Parkour -' } })
+  @Field({ leaderboard: { fieldName: `${FormattedGame.PARKOUR} -` } })
   public parkour: Parkour;
 
-  @Field({ leaderboard: { fieldName: 'Quake' } })
+  @Field({ leaderboard: { fieldName: FormattedGame.QUAKE } })
   public quake: Quake;
 
-  @Field({ leaderboard: { fieldName: 'SkyWars', extraDisplay: 'stats.skywars.levelFormatted' } })
+  @Field({
+    leaderboard: { fieldName: FormattedGame.SKYWARS, extraDisplay: 'stats.skywars.levelFormatted' },
+  })
   public skywars: SkyWars;
 
   @Field({
-    leaderboard: { fieldName: 'Smash Heroes', extraDisplay: 'stats.smashheroes.levelFormatted' },
+    leaderboard: {
+      fieldName: FormattedGame.SMASH_HEROES,
+      extraDisplay: 'stats.smashheroes.levelFormatted',
+    },
   })
   public smashheroes: SmashHeroes;
 
-  @Field({ leaderboard: { fieldName: 'SpeedUHC', extraDisplay: 'stats.speeduhc.levelFormatted' } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.SPEED_UHC,
+      extraDisplay: 'stats.speeduhc.levelFormatted',
+    },
+  })
   public speeduhc: SpeedUHC;
 
-  @Field({ leaderboard: { fieldName: 'TNT Games' } })
+  @Field({ leaderboard: { fieldName: FormattedGame.TNT_GAMES } })
   public tntgames: TNTGames;
 
-  @Field({ leaderboard: { fieldName: 'Turbo Kart Racers' } })
+  @Field({ leaderboard: { fieldName: FormattedGame.TURBO_KART_RACERS } })
   public turbokartracers: TurboKartRacers;
 
-  @Field({ leaderboard: { fieldName: 'UHC', extraDisplay: 'stats.uhc.levelFormatted' } })
+  @Field({
+    leaderboard: { fieldName: FormattedGame.UHC, extraDisplay: 'stats.uhc.levelFormatted' },
+  })
   public uhc: UHC;
 
-  @Field({ leaderboard: { fieldName: 'VampireZ' } })
+  @Field({ leaderboard: { fieldName: FormattedGame.VAMPIREZ } })
   public vampirez: VampireZ;
 
-  @Field({ leaderboard: { fieldName: 'Walls' } })
+  @Field({ leaderboard: { fieldName: FormattedGame.WALLS } })
   public walls: Walls;
 
-  @Field({ leaderboard: { fieldName: 'Warlords' } })
+  @Field({ leaderboard: { fieldName: FormattedGame.WARLORDS } })
   public warlords: Warlords;
 
-  @Field({ leaderboard: { fieldName: 'WoolWars', extraDisplay: 'stats.woolwars.levelFormatted' } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.WOOLWARS,
+      extraDisplay: 'stats.woolwars.levelFormatted',
+    },
+  })
   public woolwars: WoolWars;
 
   public constructor(data: APIData = {}) {
