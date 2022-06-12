@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@statsify/util": "workspace:^",
-    "skia-canvas": "^0.9.29",
+    "skia-canvas": "^0.9.30",
     "typedi": "^0.10.0"
   }
 }
