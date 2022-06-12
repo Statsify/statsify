@@ -61,7 +61,7 @@ interface LeaderboardParams {
 }
 
 @Command({ description: (t) => t('commands.leaderboard') })
-export class PlayerLeaderboardCommand {
+export class LeaderboardCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({

@@ -1,6 +1,9 @@
 import type { User } from '@statsify/schemas';
 import { noop } from '@statsify/util';
-import type { APIApplicationCommandInteractionDataBasicOption } from 'discord-api-types/v10';
+import {
+  APIApplicationCommandInteractionDataBasicOption,
+  ApplicationCommandOptionType,
+} from 'discord-api-types/v10';
 import type { Interaction } from '../interaction';
 import { IMessage, Message } from '../messages';
 import { LocalizeFunction } from '../messages/localize';
