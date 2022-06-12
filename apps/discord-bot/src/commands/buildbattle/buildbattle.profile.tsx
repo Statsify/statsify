@@ -59,7 +59,7 @@ export const BuildBattleProfile = ({
           stats={[[t('stats.wins'), t(buildbattle.overall.wins)]]}
         />
         <BuildBattleModeTable title="Pro" stats={[[t('stats.wins'), t(buildbattle.pro.wins)]]} />
-        <BuildBattleModeTable title="1.14" stats={[[t('stats.wins'), t(buildbattle.latest)]]} />
+        <BuildBattleModeTable title="1.14" stats={[[t('stats.wins'), t(buildbattle.latestWins)]]} />
       </div>
       <div width="100%">
         <BuildBattleModeTable

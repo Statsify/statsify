@@ -1,10 +1,10 @@
 import { Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { UHCDuels, UHCDuelsMode } from '@statsify/schemas';
+import { BaseDuelsGameMode, UHCDuels } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 
 interface UHCDuelsModeColumnProps {
-  stats: UHCDuelsMode;
+  stats: BaseDuelsGameMode;
   title: string;
   t: LocalizeFunction;
 }

@@ -12,18 +12,20 @@ const entries = Object.entries(
 
 const fields = entries.reduce((acc, [prefix, value]) => {
   const list = LeaderboardScanner.getLeaderboardMetadata(value.type.type).map(
-    ([key, { leaderboard }]) => ({ key, name: leaderboard.name })
+    ([key, { leaderboard }]) => ({ value: key, name: leaderboard.name })
   );
 
   const fuse = new Fuse(list, {
-    keys: ['key', 'name'],
+    keys: ['name', 'key'],
     includeScore: false,
     shouldSort: true,
+    isCaseSensitive: false,
     threshold: 0.5,
+    ignoreLocation: true,
   });
 
-  return { ...acc, [prefix]: fuse };
-}, {} as Record<keyof PlayerStats, Fuse<{ name: string; key: string }>>);
+  return { ...acc, [prefix]: [fuse, list] };
+}, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);
 
 export class PlayerLeaderboardArgument extends AbstractArgument {
   public name = 'leaderboard';
@@ -40,14 +42,13 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
   public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, '').toLowerCase();
 
-    const fuse = fields[this.prefix];
+    const [fuse, list] = fields[this.prefix];
+
+    if (!currentValue) return list.slice(0, 25);
 
     return fuse
       .search(currentValue)
-      .map((result) => ({
-        name: result.item.name,
-        value: result.item.key,
-      }))
-      .splice(0, 25);
+      .map((result) => result.item)
+      .slice(0, 25);
   }
 }

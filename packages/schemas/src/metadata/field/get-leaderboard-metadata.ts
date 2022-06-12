@@ -1,9 +1,11 @@
 import { prettify } from '@statsify/util';
+import { RATIOS, RATIO_STATS } from '../../ratios';
 import { LeaderboardOptions } from '../field.options';
 import { LeaderboardMetadata, TypeMetadata } from '../metadata.interface';
 
 const getLeaderboardName = (field: string) => {
-  if (['wlr', 'kdr', 'fkdr', 'bblr'].includes(field)) return field.toUpperCase();
+  const ratioIndex = RATIOS.indexOf(field);
+  if (ratioIndex > -1) return RATIO_STATS[ratioIndex][3];
   return prettify(field);
 };
 

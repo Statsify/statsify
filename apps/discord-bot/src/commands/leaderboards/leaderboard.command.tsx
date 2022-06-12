@@ -28,6 +28,7 @@ import {
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
+  PARKOUR_MODES,
   PlayerStats,
   QUAKE_MODES,
   SKYWARS_MODES,
@@ -149,6 +150,14 @@ export class PlayerLeaderboardCommand {
   })
   public paintball(context: CommandContext) {
     return this.run(context, 'paintball', PAINTBALL_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t('commands.parkour'),
+    args: [new PlayerLeaderboardArgument('parkour')],
+  })
+  public parkour(context: CommandContext) {
+    return this.run(context, 'parkour', PARKOUR_MODES);
   }
 
   @SubCommand({
@@ -362,12 +371,8 @@ export class PlayerLeaderboardCommand {
       listener.removeHook(search.getCustomId());
       listener.removeHook(modal.getCustomId());
 
-      context.reply({
-        ...cache.get(currentPage)!,
-        embeds: [],
-        components: [],
-        attachments: [],
-      });
+      context.reply({ embeds: [], components: [] });
+      cache.clear();
     }, 300_000);
 
     // eslint-disable-next-line require-atomic-updates

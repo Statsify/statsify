@@ -15,13 +15,13 @@ export class QuakeMode {
   @Field()
   public kdr: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public headshots: number;
 
   @Field()
   public killstreaks: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public shotsFired: number;
 
   @Field({ leaderboard: { enabled: false } })

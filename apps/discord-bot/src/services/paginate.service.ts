@@ -75,9 +75,10 @@ export class PaginateService {
       controller.forEach((component) => listener.removeHook(component.getCustomId()));
 
       context.reply({
-        ...cache.get(index)!,
         components: [],
       });
+
+      cache.clear();
     }, timeout);
 
     const message = await this.getMessage(context, controller, index, pages);
@@ -141,9 +142,10 @@ export class PaginateService {
       controller.forEach((component) => listener.removeHook(component.getCustomId()));
 
       context.reply({
-        ...cache.get(index)!,
         components: [],
       });
+
+      cache.clear();
     }, timeout);
 
     const message = await this.getMessage(context, controller, index, pages);

@@ -2,6 +2,16 @@ import { Container, Footer } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
 import type { Image } from 'skia-canvas';
 
+const formatPosition = (t: LocalizeFunction, position: number): string => {
+  let color = '§f';
+
+  if (position === 1) color = '§#ffd700';
+  else if (position === 2) color = '§#c0c0c0';
+  else if (position === 3) color = '§#cd7f32';
+
+  return `${color}#§l${t(position)}`;
+};
+
 export interface LeaderboardData {
   name: string;
   fields: (number | string)[];
@@ -54,28 +64,23 @@ export const LeaderboardProfile = ({
   reset();
 
   data.forEach((d) => {
-    const isHighlighted = d.highlight ?? false;
-    // const color = isHighlighted ? 'rgba(255, 255, 255, 0.5)' : undefined;
-    const color = undefined;
-    const prefix = isHighlighted ? '§l' : '';
-    const outline = isHighlighted;
+    const highlight = d.highlight
+      ? { color: 'rgba(255, 255, 255, 0.35)', shadowOpacity: 0.3 }
+      : undefined;
 
     add(
-      <box width="100%" outline={outline} color={color}>
-        <text>#§l{t(d.position) as string}</text>
+      <box width="100%" {...highlight}>
+        <text>{formatPosition(t, d.position)}</text>
       </box>
     );
 
     add(
       <div width="100%">
-        <box padding={{ left: 12, right: 12, top: 4, bottom: 4 }} outline={outline} color={color}>
+        <box padding={{ left: 12, right: 12, top: 4, bottom: 4 }} {...highlight}>
           <img image={d.skin} />
         </box>
-        <box width="remaining" direction="column" outline={outline} color={color}>
-          <text align="left">
-            {prefix}
-            {d.name}
-          </text>
+        <box width="remaining" direction="column" {...highlight}>
+          <text align="left">{d.name}</text>
         </box>
       </div>
     );
@@ -84,11 +89,8 @@ export const LeaderboardProfile = ({
       const formatted = typeof field === 'number' ? t(field) : field;
 
       add(
-        <box width="100%" outline={outline} color={color}>
-          <text>
-            {prefix}
-            {formatted}
-          </text>
+        <box width="100%" {...highlight}>
+          <text>{formatted}</text>
         </box>
       );
     });

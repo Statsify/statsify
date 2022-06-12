@@ -8,13 +8,13 @@ import {
   Table,
 } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import type { SkyWarsGameMode, SkyWarsLabs, SKYWARS_MODES } from '@statsify/schemas';
+import type { SkyWarsLabs, SkyWarsMode, SKYWARS_MODES } from '@statsify/schemas';
 import { formatTime, prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
 interface SkyWarsOverallTableProps {
   t: LocalizeFunction;
-  stats: SkyWarsGameMode;
+  stats: SkyWarsMode;
 }
 
 const SkyWarsOverallTable = ({ t, stats }: SkyWarsOverallTableProps) => (
@@ -111,7 +111,7 @@ export const SkyWarsProfile = ({
       table = <SkyWarsLabsTable t={t} stats={skywars[mode]} />;
       break;
     default:
-      table = <SkyWarsOverallTable t={t} stats={skywars[mode].overall} />;
+      table = <SkyWarsOverallTable t={t} stats={skywars[mode]} />;
       break;
   }
 

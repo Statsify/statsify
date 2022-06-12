@@ -24,7 +24,7 @@ export class MegaWallsKit {
   @Field()
   public finalKills: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public finalAssists: number;
 
   @Field()
@@ -45,7 +45,7 @@ export class MegaWallsKit {
   @Field({ leaderboard: { enabled: false } })
   public witherKills: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public points: number;
 
   public constructor(data: APIData, kit: string) {

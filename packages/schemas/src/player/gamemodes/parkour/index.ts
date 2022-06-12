@@ -1,65 +1,67 @@
-import { APIData } from '@statsify/util';
+import { APIData, formatTime } from '@statsify/util';
 import { Field } from '../../../metadata';
 
 export const PARKOUR_MODES = ['overall'] as const;
 export type ParkourModes = typeof PARKOUR_MODES;
 
+const fieldOptions = { leaderboard: { sort: 'ASC', formatter: formatTime } };
+
 export class Parkour {
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public arcade: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public bedwars: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public blitzsg: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public buildbattle: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public classic: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public copsandcrims: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public duels: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public housing: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public mainLobby: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public megawalls: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public murdermystery: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public proto: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public skywars: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public smashheroes: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public tntgames: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public tourney: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public uhc: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public warlords: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field(fieldOptions)
   public woolwars: number;
 
   public constructor(data: APIData) {

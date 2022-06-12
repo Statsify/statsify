@@ -1,5 +1,5 @@
 import { add, deepAdd, ratio } from '@statsify/math';
-import { APIData } from '@statsify/util';
+import { APIData, formatTime } from '@statsify/util';
 import { Field } from '../../../metadata';
 import {
   EasterSimulator,
@@ -15,7 +15,7 @@ export class BlockingDead {
   @Field()
   public kills: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public headshots: number;
 
   public constructor(data: APIData) {
@@ -94,7 +94,7 @@ export class EnderSpleef {
   @Field({ leaderboard: { enabled: false } })
   public powerupActivations: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public blocksBroken: number;
 
   public constructor(data: APIData) {
@@ -124,7 +124,7 @@ export class FarmHunt {
   @Field()
   public hunterKills: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public tauntsUsed: number;
 
   @Field()
@@ -154,6 +154,7 @@ export class Football {
 
   @Field()
   public powerKicks: number;
+
   public constructor(data: APIData) {
     this.wins = data.wins_soccer;
     this.goals = data.goals_soccer;
@@ -382,7 +383,7 @@ export class ZombiesMap {
   @Field()
   public wins: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { sort: 'ASC', formatter: formatTime } })
   public fastestWin: number;
 
   @Field({ leaderboard: { enabled: false } })
