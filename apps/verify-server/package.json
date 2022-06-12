@@ -14,9 +14,9 @@
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@typegoose/typegoose": "^9.8.1",
+    "@typegoose/typegoose": "^9.9.0",
     "dotenv": "^16.0.1",
-    "minecraft-protocol": "^1.34.0",
-    "mongoose": "^6.3.4"
+    "minecraft-protocol": "^1.35.0",
+    "mongoose": "^6.3.6"
   }
 }
