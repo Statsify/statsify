@@ -25,7 +25,7 @@ import { Warlords } from './gamemodes/warlords';
 import { WoolWars } from './gamemodes/woolwars';
 
 export class PlayerStats {
-  @Field({ leaderboard: { fieldName: 'Arcade' } })
+  @Field({ leaderboard: { fieldName: 'Arcade -' } })
   public arcade: Arcade;
 
   @Field({ leaderboard: { fieldName: 'ArenaBrawl' } })
