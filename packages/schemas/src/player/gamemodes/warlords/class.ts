@@ -15,7 +15,7 @@ export class WarlordsClass {
   @Field()
   public healing: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public total: number;
 
   public constructor(data: APIData, mode: string) {

@@ -1,5 +1,5 @@
 import { Container, Footer, Header, SidebarItem } from '#components';
-import { DuelsModes } from '@statsify/schemas';
+import { DuelsModes, FormattedGame } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 import {
@@ -59,7 +59,7 @@ export const DuelsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§bDuels §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.DUELS} §fStats §r(${prettify(mode)})`}
         description={`§d${prettify(mode)} Title\n${duels[mode].titleFormatted}`}
         time={time}
       />

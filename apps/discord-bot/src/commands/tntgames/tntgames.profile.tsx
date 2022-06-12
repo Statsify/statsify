@@ -1,4 +1,5 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
+import { FormattedGame } from '@statsify/schemas';
 import { formatTime } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
@@ -44,7 +45,7 @@ export const TNTGamesProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title="§l§cTNT Games §fStats"
+        title={`§l${FormattedGame.TNT_GAMES} §fStats`}
         time={time}
       />
       <Table.table>

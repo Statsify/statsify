@@ -1,5 +1,5 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { QUAKE_MODES } from '@statsify/schemas';
+import { FormattedGame, QUAKE_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
@@ -35,7 +35,7 @@ export const QuakeProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§5Quake §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.QUAKE} §fStats §r(${prettify(mode)})`}
         time={time}
       />
       <Table.table>

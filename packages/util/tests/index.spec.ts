@@ -3,7 +3,6 @@ import {
   flatten,
   formatTime,
   isObject,
-  mockClass,
   noop,
   prettify,
   removeFormatting,
@@ -106,29 +105,19 @@ describe('unflatten', () => {
   });
 });
 
-describe('mockClass', () => {
-  it("should create instances of classes that don't rely on methods of parameters", () => {
-    class Test {
-      public constructor(public a: string) {
-        a[0];
-      }
-    }
-
-    const mock = mockClass(Test);
-
-    expect(mock).toBeInstanceOf(Test);
-  });
-});
-
 describe('formatTime', () => {
   it('should format time', () => {
+    const milliseconds = 500;
     const second = 1000;
     const minute = 60 * second;
     const hour = 60 * minute;
     const day = 24 * hour;
 
-    expect(formatTime(0, { short: false, entries: 4 })).toBe('0ms');
+    expect(formatTime(0, { short: false, entries: 4 })).toBe('0 milliseconds');
     expect(formatTime(second, { short: false, entries: 4 })).toBe('1 second');
+    expect(formatTime(second + milliseconds, { short: false, entries: 4 })).toBe(
+      '1 second, 500 milliseconds'
+    );
     expect(formatTime(second * 2, { short: false, entries: 4 })).toBe('2 seconds');
     expect(formatTime(minute, { short: false, entries: 4 })).toBe('1 minute');
     expect(formatTime(hour, { short: false, entries: 4 })).toBe('1 hour');

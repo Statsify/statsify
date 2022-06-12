@@ -1,5 +1,5 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { WARLORDS_MODES } from '@statsify/schemas';
+import { FormattedGame, WARLORDS_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 import { WarlordsClassTable } from './tables';
@@ -59,7 +59,7 @@ export const WarlordsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title="§l§eWarlords §fStats"
+        title={`§l${FormattedGame.WARLORDS} §fStats`}
         time={time}
       />
       {table}

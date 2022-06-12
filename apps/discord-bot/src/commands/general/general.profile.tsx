@@ -1,6 +1,6 @@
 import { Container, Footer, Header, If, Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { Guild, PlayerStatus } from '@statsify/schemas';
+import { FormattedGame, Guild, PlayerStatus } from '@statsify/schemas';
 import { DateTime } from 'luxon';
 import { BaseProfileProps } from '../base.hypixel-command';
 
@@ -67,7 +67,7 @@ export const GeneralProfile = ({
         skin={skin}
         badge={badge}
         size={3}
-        title="§lGeneral Stats"
+        title={`§l${FormattedGame.GENERAL} Stats`}
         time={time}
       >
         <GeneralProfileHeaderBody guild={guild} status={status} t={t} />

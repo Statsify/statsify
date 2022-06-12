@@ -12,11 +12,12 @@ export class MurderMysteryMode {
   @Field()
   public kills: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public deaths: number;
 
   @Field()
   public kdr: number;
+
   public constructor(data: APIData, mode: string) {
     mode = mode ? `_${mode}` : mode;
 

@@ -1,15 +1,15 @@
 import { ratio } from '@statsify/math';
-import { APIData } from '@statsify/util';
+import { APIData, formatTime } from '@statsify/util';
 import { Field } from '../../../metadata';
 
 export class BowSpleef {
   @Field()
   public wins: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public hits: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public losses: number;
 
   @Field()
@@ -36,14 +36,11 @@ export class PVPRun {
   @Field()
   public kills: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public deaths: number;
-
   public constructor(data: APIData) {
     this.wins = data.wins_pvprun;
     this.kills = data.kills_pvprun;
-    this.deaths = data.deaths_pvprun;
-    this.wlr = ratio(this.wins, this.deaths);
+    this.losses = data.deaths_pvprun;
+    this.wlr = ratio(this.wins, this.losses);
   }
 }
 
@@ -51,13 +48,13 @@ export class TNTRun {
   @Field()
   public wins: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public losses: number;
 
   @Field()
   public wlr: number;
 
-  @Field()
+  @Field({ leaderboard: { formatter: formatTime } })
   public record: number;
 
   public constructor(data: APIData) {
@@ -75,7 +72,7 @@ export class TNTTag {
   @Field()
   public kills: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public tags: number;
 
   public constructor(data: APIData, ap: APIData) {

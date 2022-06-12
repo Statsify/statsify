@@ -1,6 +1,7 @@
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method } from 'axios';
 import { loadImage } from 'skia-canvas';
 import { GuildQuery, HistoricalType } from './enums';
+import { LeaderboardQuery } from './enums/leaderboard-query.enum';
 import {
   GetAchievementsResponse,
   GetFriendsResponse,
@@ -35,7 +36,7 @@ export class ApiService {
       headers: {
         'x-api-key': this.apiKey,
       },
-      timeout: 5000,
+      timeout: 10_000,
     });
   }
 
@@ -82,16 +83,15 @@ export class ApiService {
     });
   }
 
-  public getPlayerLeaderboard(field: string, page: number): Promise<PostPlayerLeaderboardResponse>;
-  public getPlayerLeaderboard(field: string, uuid: string): Promise<PostPlayerLeaderboardResponse>;
   public getPlayerLeaderboard(
     field: string,
-    pageOrUuid: number | string
-  ): Promise<PostPlayerLeaderboardResponse> {
+    input: string | number,
+    type: LeaderboardQuery
+  ): Promise<PostPlayerLeaderboardResponse | null> {
     return this.request<PostPlayerLeaderboardResponse>('/player/leaderboards', {}, 'POST', {
       body: {
         field,
-        [typeof pageOrUuid === 'number' ? 'page' : 'uuid']: pageOrUuid,
+        [type]: input,
       },
     });
   }
@@ -143,8 +143,8 @@ export class ApiService {
     );
   }
 
-  public async getPlayerHead(uuid: string) {
-    return this.requestImage(`/skin/head`, { uuid });
+  public async getPlayerHead(uuid: string, size?: number) {
+    return this.requestImage(`/skin/head`, { uuid, size });
   }
 
   public getPlayerSkin(uuid: string) {

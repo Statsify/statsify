@@ -1,5 +1,5 @@
 import { add, ratio, sub } from '@statsify/math';
-import { APIData, findScoreIndex } from '@statsify/util';
+import { APIData, findScoreIndex, formatTime } from '@statsify/util';
 import { Field } from '../../../metadata';
 
 export class BlitzSGKit {
@@ -33,7 +33,7 @@ export class BlitzSGKit {
   @Field()
   public wlr: number;
 
-  @Field({ store: { required: false } })
+  @Field({ store: { required: false }, leaderboard: { formatter: formatTime } })
   public playtime: number;
 
   public constructor(data: APIData, kit: string) {

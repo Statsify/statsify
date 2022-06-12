@@ -21,13 +21,18 @@ export function Field({
     const leaderboard = getLeaderboardMetadata(type, propertyKey as string, leaderboardOptions);
     const store = getStoreMetadata(type, leaderboard, storeOptions);
 
-    metadata[propertyKey as string] = {
-      type,
-      leaderboard,
-      store,
-    };
-
-    Reflect.defineMetadata(METADATA_KEY, metadata, target);
+    Reflect.defineMetadata(
+      METADATA_KEY,
+      {
+        ...metadata,
+        [propertyKey as string]: {
+          type,
+          leaderboard,
+          store,
+        },
+      },
+      target
+    );
 
     //Swagger api doc options
     const apiProperty = docsOptions?.hide

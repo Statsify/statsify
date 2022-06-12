@@ -3,6 +3,7 @@ import {
   GuildNotFoundException,
   GuildQuery,
   HistoricalType,
+  LeaderboardQuery,
   PlayerNotFoundException,
   RankedSkyWarsNotFoundException,
   RecentGamesNotFoundException,
@@ -10,6 +11,7 @@ import {
 } from '@statsify/api-client';
 import { Color, User } from '@statsify/schemas';
 import { removeFormatting } from '@statsify/util';
+import { AxiosError } from 'axios';
 import short from 'short-uuid';
 import { Service } from 'typedi';
 import emojiRanks from '../../emojis.json';
@@ -249,6 +251,21 @@ export class ApiService extends StatsifyApiService {
       if (error.message === 'player') throw this.missingPlayer(playerType, tag);
 
       throw this.unknownError();
+    });
+  }
+
+  public override getPlayerLeaderboard(
+    field: string,
+    input: string | number,
+    type: LeaderboardQuery
+  ) {
+    return super.getPlayerLeaderboard(field, input, type).catch((err: AxiosError) => {
+      if ((err.response?.data as PlayerNotFoundException).statusCode === 404) return null;
+
+      throw new ErrorMessage(
+        (t) => t('errors.leaderboardNotFound.title'),
+        (t) => t('errors.leaderboardNotFound.description')
+      );
     });
   }
 

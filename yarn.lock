@@ -3415,6 +3415,7 @@ __metadata:
     axios: ^0.27.2
     discord-api-types: ^0.33.1
     dotenv: ^16.0.1
+    fuse.js: ^6.6.2
     i18next: ^21.8.5
     i18next-fs-backend: ^1.1.4
     luxon: ^2.4.0
@@ -4241,6 +4242,13 @@ __metadata:
   version: 1.0.1
   resolution: "functional-red-black-tree@npm:1.0.1"
   checksum: ca6c170f37640e2d94297da8bb4bf27a1d12bea3e00e6a3e007fd7aa32e37e000f5772acf941b4e4f3cf1c95c3752033d0c509af157ad8f526e7f00723b9eb9f
+  languageName: node
+  linkType: hard
+
+"fuse.js@npm:^6.6.2":
+  version: 6.6.2
+  resolution: "fuse.js@npm:6.6.2"
+  checksum: 17ae758ce205276ebd88bd9c9f088a100be0b4896abac9f6b09847151269d1690f41d7f98ff5813d4a58973162dbd99d0072ce807020fee6f9de60170f6b08eb
   languageName: node
   linkType: hard
 

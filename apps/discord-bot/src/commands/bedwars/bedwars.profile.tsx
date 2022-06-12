@@ -7,7 +7,7 @@ import {
   SidebarItem,
   Table,
 } from '#components';
-import { BEDWARS_MODES } from '@statsify/schemas';
+import { BEDWARS_MODES, FormattedGame } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
@@ -47,8 +47,10 @@ export const BedWarsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§cBed§fWars §fStats §r(${prettify(mode)})`}
-        description={`§cBed§fWars §7Level: ${bedwars.levelFormatted}\n${formatProgression(
+        title={`§l${FormattedGame.BEDWARS} §fStats §r(${prettify(mode)})`}
+        description={`${FormattedGame.BEDWARS} §7Level: ${
+          bedwars.levelFormatted
+        }\n${formatProgression(
           t,
           bedwars.progression,
           bedwars.levelFormatted,

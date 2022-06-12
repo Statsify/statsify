@@ -10,7 +10,7 @@ export class Paintball {
   @Field()
   public coins: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public forcefieldTime: number;
 
   @Field()
@@ -22,7 +22,7 @@ export class Paintball {
   @Field()
   public killstreaks: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public shotsFired: number;
 
   @Field({ store: { default: 'none' } })

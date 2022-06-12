@@ -3,25 +3,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { HistoricalType, HypixelCache } from '@statsify/api-client';
 import { ratio, sub } from '@statsify/math';
-import { deserialize, Player, serialize } from '@statsify/schemas';
+import { deserialize, Player, RATIOS, RATIO_STATS, serialize } from '@statsify/schemas';
 import { Flatten, flatten } from '@statsify/util';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { isObject } from 'class-validator';
 import { PlayerService } from '../player';
 import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from './models';
-
-const RATIOS = ['wlr', 'kdr', 'fkdr', 'bblr', 'shotAccuracy', 'winRate', 'goldRate', 'trophyRate'];
-
-const RATIO_KEYS = [
-  ['wins', 'losses'],
-  ['kills', 'deaths'],
-  ['finalKills', 'finalDeaths'],
-  ['bedsBroken', 'bedsLost'],
-  ['kills', 'shotFired', 100],
-  ['wins', 'gamesPlayed', 100],
-  ['gold', 'gamesPlayed', 100],
-  ['total', 'gamesPlayed', 100],
-] as const;
 
 @Injectable()
 export class HistoricalService {
@@ -178,23 +165,23 @@ export class HistoricalService {
       const newOneType = typeof newOne[key];
 
       if (typeof oldOne[key] === 'number' || newOneType === 'number') {
-        const ratioIndex = RATIOS.indexOf(_key as string);
+        const ratioIndex = RATIOS.indexOf(_key);
 
         if (ratioIndex !== -1) {
           const numerator = sub(
-            newOne[RATIO_KEYS[ratioIndex][0] as unknown as keyof T] as unknown as number,
-            oldOne[RATIO_KEYS[ratioIndex][0] as unknown as keyof T] as unknown as number
+            newOne[RATIO_STATS[ratioIndex][0] as unknown as keyof T] as unknown as number,
+            oldOne[RATIO_STATS[ratioIndex][0] as unknown as keyof T] as unknown as number
           );
 
           const denominator = sub(
-            newOne[RATIO_KEYS[ratioIndex][1] as unknown as keyof T] as unknown as number,
-            oldOne[RATIO_KEYS[ratioIndex][1] as unknown as keyof T] as unknown as number
+            newOne[RATIO_STATS[ratioIndex][1] as unknown as keyof T] as unknown as number,
+            oldOne[RATIO_STATS[ratioIndex][1] as unknown as keyof T] as unknown as number
           );
 
           merged[key] = ratio(
             numerator,
             denominator,
-            RATIO_KEYS[ratioIndex][2] ?? 1
+            RATIO_STATS[ratioIndex][4] ?? 1
           ) as unknown as T[keyof T];
         } else {
           merged[key] = sub(

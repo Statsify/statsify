@@ -8,7 +8,7 @@ import {
   SidebarItem,
   Table,
 } from '#components';
-import { WoolWarsOverall, WOOL_WARS_MODES } from '@statsify/schemas';
+import { FormattedGame, WoolWarsOverall, WOOL_WARS_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
@@ -45,8 +45,10 @@ export const WoolWarsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§cWool§9Wars §fStats §r(${prettify(mode)})`}
-        description={`§cWool§9Wars §7Level: ${woolwars.levelFormatted}\n${formatProgression(
+        title={`§l${FormattedGame.WOOLWARS} §fStats §r(${prettify(mode)})`}
+        description={`${FormattedGame.WOOLWARS} §7Level: ${
+          woolwars.levelFormatted
+        }\n${formatProgression(
           t,
           woolwars.progression,
           woolwars.levelFormatted,

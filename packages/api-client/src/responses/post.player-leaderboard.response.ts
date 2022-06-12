@@ -4,8 +4,8 @@ class PlayerLeaderboardItem {
   @ApiProperty()
   public uuid: string;
 
-  @ApiProperty({ description: 'The main stat being requested' })
-  public field: number;
+  @ApiProperty({ type: [Number], description: 'The leaderboard fields returned', isArray: true })
+  public fields: number[];
 
   @ApiProperty({
     description:
@@ -13,24 +13,23 @@ class PlayerLeaderboardItem {
   })
   public name: string;
 
-  @ApiProperty({
-    type: [Number],
-    description:
-      'Additional stats that are also provided for the provided stat. For example if you request `kills` you will also receive `deaths` and `kdr`',
-  })
-  public additionalFields: number[];
-
   @ApiProperty()
   public position: number;
+
+  @ApiProperty({ required: false, description: 'Whether the player was the searched for player' })
+  public highlight?: boolean;
 }
 
 export class PostPlayerLeaderboardResponse {
-  @ApiProperty({ description: 'The name of the requested leaderboard' })
-  public fieldName: string;
-
-  @ApiProperty({ type: [String], description: 'The names of the additional fields' })
-  public additionalFieldNames: string[];
+  @ApiProperty({ type: [String], description: 'The name of the requested leaderboard fields' })
+  public fields: string[];
 
   @ApiProperty({ type: [PlayerLeaderboardItem] })
   public data: PlayerLeaderboardItem[];
+
+  @ApiProperty()
+  public page: number;
+
+  @ApiProperty()
+  public name: string;
 }

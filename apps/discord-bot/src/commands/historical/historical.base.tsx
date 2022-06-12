@@ -7,6 +7,7 @@ import { Command, CommandContext, SubCommand } from '@statsify/discord';
 import { render } from '@statsify/rendering';
 import {
   ARCADE_MODES,
+  ARENA_BRAWL_MODES,
   BEDWARS_MODES,
   BLITZSG_MODES,
   BUILD_BATTLE_MODES,
@@ -32,6 +33,7 @@ import { prettify } from '@statsify/util';
 import Container from 'typedi';
 import { getTheme } from '../../themes';
 import { ArcadeProfile } from '../arcade/arcade.profile';
+import { ArenaBrawlProfile } from '../arenabrawl/arenabrawl.profile';
 import type { BaseProfileProps } from '../base.hypixel-command';
 import { BedWarsProfile } from '../bedwars/bedwars.profile';
 import { BlitzSGProfile } from '../blitzsg/blitzsg.profile';
@@ -73,8 +75,8 @@ export class HistoricalBase {
 
   @SubCommand({ description: (t) => t('commands.arenabrawl'), args })
   public arenabrawl(context: CommandContext) {
-    return this.run(context, BEDWARS_MODES, (base, mode) => (
-      <BedWarsProfile {...base} mode={mode} />
+    return this.run(context, ARENA_BRAWL_MODES, (base, mode) => (
+      <ArenaBrawlProfile {...base} mode={mode} />
     ));
   }
 

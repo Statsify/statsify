@@ -1,5 +1,5 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { SMASH_HEROES_MODES } from '@statsify/schemas';
+import { FormattedGame, SMASH_HEROES_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
@@ -33,8 +33,8 @@ export const SmashHeroesProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§dSmash §eHeroes §fStats §r(${prettify(mode)})`}
-        description={`§dSmash §eHeroes §7Level: ${smashheroes.levelFormatted}`}
+        title={`§l${FormattedGame.SMASH_HEROES} §fStats §r(${prettify(mode)})`}
+        description={`${FormattedGame.SMASH_HEROES} §7Level: ${smashheroes.levelFormatted}`}
         time={time}
       />
       <Table.table>
