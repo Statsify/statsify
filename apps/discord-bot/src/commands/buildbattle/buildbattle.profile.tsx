@@ -1,4 +1,5 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
+import { FormattedGame } from '@statsify/schemas';
 import { BaseProfileProps } from '../base.hypixel-command';
 
 interface BuildBattleModeTableProps {
@@ -49,7 +50,7 @@ export const BuildBattleProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title="§l§6Build Battle §fStats"
+        title={`§l${FormattedGame.BUILD_BATTLE} §fStats`}
         description={`§dBuild Battle Title\n${buildbattle.titleFormatted}`}
         time={time}
       />
@@ -59,7 +60,7 @@ export const BuildBattleProfile = ({
           stats={[[t('stats.wins'), t(buildbattle.overall.wins)]]}
         />
         <BuildBattleModeTable title="Pro" stats={[[t('stats.wins'), t(buildbattle.pro.wins)]]} />
-        <BuildBattleModeTable title="1.14" stats={[[t('stats.wins'), t(buildbattle.latest)]]} />
+        <BuildBattleModeTable title="1.14" stats={[[t('stats.wins'), t(buildbattle.latestWins)]]} />
       </div>
       <div width="100%">
         <BuildBattleModeTable

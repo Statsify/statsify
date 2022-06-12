@@ -32,52 +32,60 @@ export class Duels {
   @Field()
   public lootChests: number;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: 'stats.duels.overall.titleFormatted' } })
   public overall: SingleDuelsGameMode;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: 'stats.duels.arena.titleFormatted' } })
   public arena: SingleDuelsGameMode;
 
-  @Field()
+  @Field({
+    leaderboard: { fieldName: 'BlitzSG', extraDisplay: 'stats.duels.blitzsg.titleFormatted' },
+  })
   public blitzsg: SingleDuelsGameMode;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: 'stats.duels.bow.titleFormatted' } })
   public bow: SingleDuelsGameMode;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: 'stats.duels.bowSpleef.titleFormatted' } })
   public bowSpleef: SingleDuelsGameMode;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: 'stats.duels.boxing.titleFormatted' } })
   public boxing: SingleDuelsGameMode;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: 'stats.duels.bridge.titleFormatted' } })
   public bridge: BridgeDuels;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: 'stats.duels.classic.titleFormatted' } })
   public classic: SingleDuelsGameMode;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: 'stats.duels.combo.titleFormatted' } })
   public combo: SingleDuelsGameMode;
 
-  @Field()
+  @Field({
+    leaderboard: { fieldName: 'MegaWalls', extraDisplay: 'stats.duels.megawalls.titleFormatted' },
+  })
   public megawalls: MultiDuelsGameMode;
 
-  @Field()
+  @Field({
+    leaderboard: { fieldName: 'NoDebuff', extraDisplay: 'stats.duels.nodebuff.titleFormatted' },
+  })
   public nodebuff: SingleDuelsGameMode;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'OP', extraDisplay: 'stats.duels.op.titleFormatted' } })
   public op: MultiDuelsGameMode;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: 'stats.duels.parkour.titleFormatted' } })
   public parkour: SingleDuelsGameMode;
 
-  @Field()
+  @Field({
+    leaderboard: { fieldName: 'SkyWars', extraDisplay: 'stats.duels.skywars.titleFormatted' },
+  })
   public skywars: MultiDuelsGameMode;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: 'stats.duels.sumo.titleFormatted' } })
   public sumo: SingleDuelsGameMode;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'UHC', extraDisplay: 'stats.duels.uhc.titleFormatted' } })
   public uhc: UHCDuels;
 
   public constructor(data: APIData) {

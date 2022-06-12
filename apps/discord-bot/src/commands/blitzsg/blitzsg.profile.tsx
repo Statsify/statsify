@@ -1,6 +1,6 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { BlitzSG, BlitzSGKit, BLITZSG_MODES } from '@statsify/schemas';
+import { BlitzSG, BlitzSGKit, BLITZSG_MODES, FormattedGame } from '@statsify/schemas';
 import { formatTime, prettify, romanNumeral } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
@@ -124,7 +124,7 @@ export const BlitzSGProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§2Blitz§6SG §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.BLITZSG} §fStats §r(${prettify(mode)})`}
         time={time}
       />
       {table}

@@ -8,13 +8,13 @@ import {
   Table,
 } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import type { SkyWarsGameMode, SkyWarsLabs, SKYWARS_MODES } from '@statsify/schemas';
+import { FormattedGame, SkyWarsLabs, SkyWarsMode, SKYWARS_MODES } from '@statsify/schemas';
 import { formatTime, prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
 interface SkyWarsOverallTableProps {
   t: LocalizeFunction;
-  stats: SkyWarsGameMode;
+  stats: SkyWarsMode;
 }
 
 const SkyWarsOverallTable = ({ t, stats }: SkyWarsOverallTableProps) => (
@@ -111,7 +111,7 @@ export const SkyWarsProfile = ({
       table = <SkyWarsLabsTable t={t} stats={skywars[mode]} />;
       break;
     default:
-      table = <SkyWarsOverallTable t={t} stats={skywars[mode].overall} />;
+      table = <SkyWarsOverallTable t={t} stats={skywars[mode]} />;
       break;
   }
 
@@ -122,8 +122,10 @@ export const SkyWarsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§bSky§eWars §fStats §r(${prettify(mode)})`}
-        description={`§bSky§eWars §7Level: ${skywars.levelFormatted}\n${formatProgression(
+        title={`§l${FormattedGame.SKYWARS} §r(${prettify(mode)})`}
+        description={`${FormattedGame.SKYWARS} §7Level: ${
+          skywars.levelFormatted
+        }\n${formatProgression(
           t,
           skywars.progression,
           skywars.levelFormatted,

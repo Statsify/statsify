@@ -1,4 +1,5 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
+import { FormattedGame } from '@statsify/schemas';
 import { BaseProfileProps } from '../base.hypixel-command';
 
 export const WallsProfile = ({
@@ -22,7 +23,7 @@ export const WallsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§eWalls §fStats`}
+        title={`§l${FormattedGame.WALLS}} §fStats`}
         time={time}
       />
       <Table.table>

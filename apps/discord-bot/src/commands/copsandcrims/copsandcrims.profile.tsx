@@ -1,5 +1,5 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { CopsAndCrimsModes } from '@statsify/schemas';
+import { CopsAndCrimsModes, FormattedGame } from '@statsify/schemas';
 import { formatTime, prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
@@ -102,7 +102,7 @@ export const CopsAndCrimsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§bCops and Crims §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.COPS_AND_CRIMS} §fStats §r(${prettify(mode)})`}
         time={time}
       />
       {table}

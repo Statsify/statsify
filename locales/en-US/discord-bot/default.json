@@ -242,6 +242,31 @@
     "noStatus": {
       "title": "Status Not Found",
       "description": "A status for {{displayName}} could not be found!"
+    },
+    "leaderboardNotFound": {
+      "title": "Invalid Leaderboard",
+      "description": "Search for a valid leaderboard"
+    },
+    "leaderboardPlayerNotFound": {
+      "title": "Invalid Player or Position",
+      "description": "We can't find the player you are looking for"
+    },
+    "leaderboardEmpty": {
+      "title": "Leaderboard Empty",
+      "description": "There are no more players for this leaderboard"
+    }
+  },
+  "leaderboard": {
+    "playerInput": {
+      "label": "Search by a Player",
+      "placeholder": "Enter a player's name, ex: j4cobi"
+    },
+    "positionInput": {
+      "label": "Search by a Position",
+      "placeholder": "Enter a position, ex: 5000"
+    },
+    "modal": {
+      "title": "Leaderboard Search"
     }
   },
   "number": "{{value, number}}"

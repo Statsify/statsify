@@ -1,4 +1,4 @@
-import { Constructor, FlattenKeys } from '@statsify/util';
+import { Constructor } from '@statsify/util';
 import { MetadataScanner } from '../metadata';
 import { LeaderboardEnabledMetadata } from '../metadata/metadata.interface';
 
@@ -11,8 +11,8 @@ export class LeaderboardScanner {
     return fields;
   }
 
-  public static getLeaderboardFields<T>(constructor: Constructor<T>): FlattenKeys<T>[] {
-    return this.getLeaderboardMetadata(constructor).map(([key]) => key) as FlattenKeys<T>[];
+  public static getLeaderboardFields<T>(constructor: Constructor<T>): string[] {
+    return this.getLeaderboardMetadata(constructor).map(([key]) => key);
   }
 
   public static getLeaderboardField<T>(

@@ -13,12 +13,11 @@ export interface BoxRenderProps {
   shadowDistance: number;
   shadowOpacity: number;
   color: RGBA;
-  outline: boolean;
+  outline?: RGBA;
   outlineSize: number;
-  outlineColor: RGBA;
 }
 
-export interface BoxProps extends Omit<Partial<BoxRenderProps>, 'color' | 'outlineColor'> {
+export interface BoxProps extends Omit<Partial<BoxRenderProps>, 'color' | 'outline'> {
   width?: JSX.Measurement;
   height?: JSX.Measurement;
   padding?: JSX.Spacing;
@@ -27,7 +26,7 @@ export interface BoxProps extends Omit<Partial<BoxRenderProps>, 'color' | 'outli
   direction?: JSX.StyleDirection;
   align?: JSX.StyleLocation;
   color?: string;
-  outlineColor?: string;
+  outline?: string | boolean;
 }
 
 export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
@@ -43,15 +42,13 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   color = 'rgba(0, 0, 0, 0.5)',
   shadowDistance = 4,
   shadowOpacity = 0.42,
-  outline = false,
   outlineSize = 4,
-  outlineColor,
+  outline,
 }) => {
   const rgbColor = parseColor(color);
 
-  const outlineColorRgb: RGBA = outlineColor
-    ? parseColor(outlineColor)
-    : [rgbColor[0], rgbColor[1], rgbColor[2], 1];
+  const outlineColor: RGBA | undefined =
+    outline === true ? rgbColor : outline ? parseColor(outline) : undefined;
 
   return {
     dimension: {
@@ -66,9 +63,8 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
       color: rgbColor,
       shadowDistance,
       shadowOpacity,
-      outline,
       outlineSize,
-      outlineColor: outlineColorRgb,
+      outline: outlineColor,
     },
     children,
   };
@@ -76,14 +72,10 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
 
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
-  { color, border, shadowDistance, shadowOpacity, outline, outlineSize, outlineColor },
+  { color, border, shadowDistance, shadowOpacity, outline, outlineSize },
   { x, y, width, height, padding }
 ) => {
   ctx.fillStyle = `rgba(${color.join(', ')})`;
-
-  outlineColor[3] = 1;
-  ctx.strokeStyle = `rgba(${outlineColor.join(', ')})`;
-  ctx.lineWidth = outlineSize;
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -123,7 +115,11 @@ export const render: JSX.Render<BoxRenderProps> = (
 
   ctx.globalCompositeOperation = 'source-over';
 
-  if (outline) ctx.stroke();
+  if (outline) {
+    ctx.strokeStyle = `rgba(${outline.join(', ')})`;
+    ctx.lineWidth = outlineSize;
+    ctx.stroke();
+  }
 
   if (!shadowDistance) return;
 

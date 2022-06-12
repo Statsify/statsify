@@ -1,6 +1,7 @@
-import Axios, { AxiosInstance, Method } from 'axios';
+import Axios, { AxiosInstance, AxiosRequestHeaders, Method } from 'axios';
 import { loadImage } from 'skia-canvas';
 import { GuildQuery, HistoricalType } from './enums';
+import { LeaderboardQuery } from './enums/leaderboard-query.enum';
 import {
   GetAchievementsResponse,
   GetFriendsResponse,
@@ -20,6 +21,11 @@ import {
   PostPlayerRankingsResponse,
 } from './responses';
 
+interface ExtraData {
+  headers?: AxiosRequestHeaders;
+  body?: Record<string, unknown> | Buffer | string;
+}
+
 export class ApiService {
   private axios: AxiosInstance;
 
@@ -29,7 +35,7 @@ export class ApiService {
       headers: {
         'x-api-key': this.apiKey,
       },
-      timeout: 5000,
+      timeout: 10_000,
     });
   }
 
@@ -76,28 +82,23 @@ export class ApiService {
     });
   }
 
-  public getPlayerLeaderboard(field: string, page: number): Promise<PostPlayerLeaderboardResponse>;
-  public getPlayerLeaderboard(field: string, uuid: string): Promise<PostPlayerLeaderboardResponse>;
   public getPlayerLeaderboard(
     field: string,
-    pageOrUuid: number | string
-  ): Promise<PostPlayerLeaderboardResponse> {
-    return this.request<PostPlayerLeaderboardResponse>(
-      '/player/leaderboards',
-      {
+    input: string | number,
+    type: LeaderboardQuery
+  ): Promise<PostPlayerLeaderboardResponse | null> {
+    return this.request<PostPlayerLeaderboardResponse>('/player/leaderboards', {}, 'POST', {
+      body: {
         field,
-        [typeof pageOrUuid === 'number' ? 'page' : 'uuid']: pageOrUuid,
+        [type]: input,
       },
-      'POST'
-    );
+    });
   }
 
   public getPlayerRankings(fields: string[], uuid: string) {
-    return this.request<PostPlayerRankingsResponse>(
-      '/player/leaderboards/rankings',
-      { fields, uuid },
-      'POST'
-    );
+    return this.request<PostPlayerRankingsResponse>('/player/leaderboards/rankings', {}, 'POST', {
+      body: { fields, uuid },
+    });
   }
 
   public getGuild(tag: string, type: GuildQuery) {
@@ -113,22 +114,18 @@ export class ApiService {
     field: string,
     pageOrName: number | string
   ): Promise<PostGuildLeaderboardResponse> {
-    return this.request<PostGuildLeaderboardResponse>(
-      '/guild/leaderboards',
-      {
+    return this.request<PostGuildLeaderboardResponse>('/guild/leaderboards', {}, 'POST', {
+      body: {
         field,
         [typeof pageOrName === 'number' ? 'page' : 'name']: pageOrName,
       },
-      'POST'
-    );
+    });
   }
 
   public getGuildRanking(fields: string, name: string) {
-    return this.request<PostGuildRankingsResponse>(
-      '/guild/leaderboards/rankings',
-      { fields, name },
-      'POST'
-    );
+    return this.request<PostGuildRankingsResponse>('/guild/leaderboards/rankings', {}, 'POST', {
+      body: { fields, name },
+    });
   }
 
   public async getWatchdog() {
@@ -145,8 +142,8 @@ export class ApiService {
     );
   }
 
-  public async getPlayerHead(uuid: string) {
-    return this.requestImage(`/skin/head`, { uuid });
+  public async getPlayerHead(uuid: string, size?: number) {
+    return this.requestImage(`/skin/head`, { uuid, size });
   }
 
   public getPlayerSkin(uuid: string) {
@@ -203,13 +200,16 @@ export class ApiService {
 
   private async request<T>(
     url: string,
-    params?: Record<string, unknown>,
-    method: Method = 'GET'
+    params: Record<string, unknown> | undefined,
+    method: Method = 'GET',
+    { body, headers }: ExtraData = {}
   ): Promise<T> {
     const res = await this.axios.request({
       url,
       method,
       params,
+      headers,
+      data: body,
     });
 
     const data = res.data;

@@ -3,11 +3,12 @@ import { APIData } from '@statsify/util';
 import { Color } from '../../../color';
 import { Field } from '../../../metadata';
 import { getTitle } from './util';
+
 export class BaseDuelsGameMode {
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public bestWinstreak: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public winstreak: number;
 
   @Field()
@@ -30,6 +31,7 @@ export class BaseDuelsGameMode {
 
   @Field({ leaderboard: { enabled: false } })
   public blocksPlaced: number;
+
   public constructor(data: APIData, mode: string) {
     const prefix = mode ? `${mode}_` : mode;
 
@@ -196,17 +198,6 @@ export class SingleDuelsGameMode extends BaseDuelsGameMode {
   }
 }
 
-export class UHCDuelsMode extends BaseDuelsGameMode {
-  @Field()
-  public gapplesAte: number;
-
-  public constructor(data: APIData, mode: string) {
-    super(data, mode);
-
-    this.gapplesAte = data[`${mode}_golden_apples_eaten`];
-  }
-}
-
 export class UHCDuels {
   @Field()
   public title: string;
@@ -218,25 +209,25 @@ export class UHCDuels {
   public titleFormatted: string;
 
   @Field()
-  public overall: UHCDuelsMode;
+  public overall: BaseDuelsGameMode;
 
   @Field()
-  public solo: UHCDuelsMode;
+  public solo: BaseDuelsGameMode;
 
   @Field()
-  public doubles: UHCDuelsMode;
+  public doubles: BaseDuelsGameMode;
 
   @Field()
-  public fours: UHCDuelsMode;
+  public fours: BaseDuelsGameMode;
 
   @Field()
-  public deathmatch: UHCDuelsMode;
+  public deathmatch: BaseDuelsGameMode;
 
   public constructor(data: APIData) {
-    this.solo = new UHCDuelsMode(data, 'uhc_duel');
-    this.doubles = new UHCDuelsMode(data, 'uhc_doubles');
-    this.fours = new UHCDuelsMode(data, 'uhc_four');
-    this.deathmatch = new UHCDuelsMode(data, 'uhc_meetup');
+    this.solo = new BaseDuelsGameMode(data, 'uhc_duel');
+    this.doubles = new BaseDuelsGameMode(data, 'uhc_doubles');
+    this.fours = new BaseDuelsGameMode(data, 'uhc_four');
+    this.deathmatch = new BaseDuelsGameMode(data, 'uhc_meetup');
 
     this.overall = deepAdd(this.solo, this.doubles, this.fours, this.deathmatch);
 

@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { Guild, LeaderboardScanner } from '@statsify/schemas';
-import { flatten, FlattenKeys } from '@statsify/util';
+import { flatten } from '@statsify/util';
 import { MongoLeaderboardService } from '../../leaderboards';
 
 @Injectable()
 export class GuildLeaderboardService {
   public constructor(private readonly leaderboardService: MongoLeaderboardService) {}
 
-  public async getLeaderboard(field: FlattenKeys<Guild>, pageOrName: number | string) {
+  public async getLeaderboard(field: string, pageOrName: number | string) {
     let leaderboard: { index: number; data: Record<string, any> }[];
 
-    const { name: fieldName } = LeaderboardScanner.getLeaderboardField(Guild, field);
+    const { name, fieldName } = LeaderboardScanner.getLeaderboardField(Guild, field);
 
     const selector = {
       [field]: true,
@@ -45,22 +45,21 @@ export class GuildLeaderboardService {
     }
 
     return {
-      fieldName,
-      additionalFieldNames: ['Level'],
+      fields: [fieldName, 'Level'],
+      name,
       data: leaderboard.map((guild) => {
         const flatGuild = flatten(guild.data);
 
         return {
-          field: flatGuild[field],
+          fields: [flatGuild[field], flatGuild.level],
           name: flatGuild.nameFormatted,
-          additionalFields: [flatGuild.level],
           position: guild.index + 1,
         };
       }),
     };
   }
 
-  public async getLeaderboardRanking(field: FlattenKeys<Guild>, name: string) {
+  public async getLeaderboardRanking(field: string, name: string) {
     const rank = await this.leaderboardService.getLeaderboardRanking(Guild, field, {
       nameToLower: name.toLowerCase(),
     });

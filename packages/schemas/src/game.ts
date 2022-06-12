@@ -37,6 +37,32 @@ export const games = [
   { name: 'Wool Wars', code: 'WOOL_GAMES', id: 68 },
 ];
 
+export enum FormattedGame {
+  ARCADE = '§cA§6r§ec§aa§bd§de§f',
+  ARENA_BRAWL = '§6Arena Brawl§f',
+  BEDWARS = '§cBed§fWars§f',
+  BLITZSG = '§2Blitz§6SG§f',
+  BUILD_BATTLE = '§6Build Battle§f',
+  COPS_AND_CRIMS = '§bCops and Crims§f',
+  DUELS = '§bDuels§f',
+  GENERAL = '§fGeneral§f',
+  MEGAWALLS = '§7MegaWalls§f',
+  MURDER_MYSTERY = '§4Murder Mystery§f',
+  PAINTBALL = '§bPaint§fball§f',
+  PARKOUR = '§fParkour',
+  QUAKE = '§5Quake§f',
+  SKYWARS = '§bSky§eWars§f',
+  SMASH_HEROES = '§dSmash §eHeroes§f',
+  SPEED_UHC = '§bSpeed§6UHC§f',
+  TNT_GAMES = '§cTNT Games§f',
+  TURBO_KART_RACERS = '§aTurbo Kart Racers§f',
+  UHC = '§6UHC§f',
+  VAMPIREZ = '§4VampireZ§f',
+  WALLS = '§eWalls§f',
+  WARLORDS = '§eWarlords§f',
+  WOOLWARS = '§cWool§9Wars§f',
+}
+
 /**
  * The full game name
  */

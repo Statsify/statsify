@@ -1,4 +1,5 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
+import { FormattedGame } from '@statsify/schemas';
 import { BaseProfileProps } from '../base.hypixel-command';
 
 export const TurboKartRacersProfile = ({
@@ -28,7 +29,7 @@ export const TurboKartRacersProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§aTurbo Kart Racers §fStats`}
+        title={`§l${FormattedGame.TURBO_KART_RACERS} §fStats`}
         time={time}
       />
       <Table.table>

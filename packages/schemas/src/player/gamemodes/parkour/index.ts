@@ -1,65 +1,68 @@
-import { APIData } from '@statsify/util';
+import { APIData, formatTime } from '@statsify/util';
+import { FormattedGame } from '../../../game';
 import { Field } from '../../../metadata';
 
 export const PARKOUR_MODES = ['overall'] as const;
 export type ParkourModes = typeof PARKOUR_MODES;
 
+const fieldOptions = { sort: 'ASC', formatter: formatTime, fieldName: 'Time' };
+
 export class Parkour {
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.ARCADE} Lobby` } })
   public arcade: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.BEDWARS} Lobby` } })
   public bedwars: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.BLITZSG} Lobby` } })
   public blitzsg: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.BUILD_BATTLE} Lobby` } })
   public buildbattle: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: 'Classic Lobby' } })
   public classic: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.COPS_AND_CRIMS} Lobby` } })
   public copsandcrims: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.DUELS} Lobby` } })
   public duels: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: 'Housing Lobby' } })
   public housing: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: 'Main Lobby' } })
   public mainLobby: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.MEGAWALLS} Lobby` } })
   public megawalls: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.MURDER_MYSTERY} Lobby` } })
   public murdermystery: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: 'Prototype Lobby' } })
   public proto: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.SKYWARS} Lobby` } })
   public skywars: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.SMASH_HEROES} Lobby` } })
   public smashheroes: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.TNT_GAMES} Lobby` } })
   public tntgames: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: 'Tournament Lobby' } })
   public tourney: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.UHC} Lobby` } })
   public uhc: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.WARLORDS} Lobby` } })
   public warlords: number;
 
-  @Field({ leaderboard: { sort: 'ASC' } })
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.WOOLWARS} Lobby` } })
   public woolwars: number;
 
   public constructor(data: APIData) {

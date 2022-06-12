@@ -1,5 +1,5 @@
 import { Container, Footer, Header, If, SidebarItem, Table } from '#components';
-import { SpeedUHCMode, SPEED_UHC_MODES } from '@statsify/schemas';
+import { FormattedGame, SpeedUHCMode, SPEED_UHC_MODES } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
@@ -35,8 +35,8 @@ export const SpeedUHCProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§bSpeed§6UHC §fStats §r(${prettify(mode)})`}
-        description={`§bSpeed§6UHC §7Level: ${speeduhc.levelFormatted}`}
+        title={`§l${FormattedGame.SPEED_UHC} §fStats §r(${prettify(mode)})`}
+        description={`${FormattedGame.SPEED_UHC} §7Level: ${speeduhc.levelFormatted}`}
         time={time}
       />
       <Table.table>

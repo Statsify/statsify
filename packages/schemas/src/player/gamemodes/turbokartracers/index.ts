@@ -9,16 +9,16 @@ export class TurboKartRacers {
   @Field()
   public coins: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public grandPrixTokens: number;
 
   @Field()
   public lapsCompleted: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public boxesPickedUp: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public coinsPickedUp: number;
 
   @Field()

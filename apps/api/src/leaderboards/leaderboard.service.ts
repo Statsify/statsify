@@ -1,7 +1,7 @@
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
 import { LeaderboardScanner } from '@statsify/schemas';
-import { Constructor, Flatten, FlattenKeys } from '@statsify/util';
+import { Constructor, Flatten } from '@statsify/util';
 
 @Injectable()
 export class LeaderboardService {
@@ -10,10 +10,8 @@ export class LeaderboardService {
   public addLeaderboards<T>(
     constructor: Constructor<T>,
     instance: Flatten<T>,
-    idField: FlattenKeys<T>,
-    fields: FlattenKeys<T>[] = LeaderboardScanner.getLeaderboardFields(
-      constructor
-    ) as FlattenKeys<T>[],
+    idField: keyof T,
+    fields: string[] = LeaderboardScanner.getLeaderboardFields(constructor),
     remove = false
   ) {
     const pipeline = this.redis.pipeline();
@@ -76,7 +74,7 @@ export class LeaderboardService {
   public async getLeaderboardDocument<T>(
     constructor: Constructor<T>,
     id: string,
-    selector?: FlattenKeys<T>[]
+    selector?: string[]
   ) {
     const pipeline = this.redis.pipeline();
     const name = constructor.name.toLowerCase();
