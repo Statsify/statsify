@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
+import { randomUUID } from 'crypto';
 import { Service } from 'typedi';
 import { ErrorMessage } from '../error.message';
 
@@ -58,7 +59,7 @@ export class MojangApiService {
     return `https://crafatar.com/avatars/${uuid.replace(
       /-/g,
       ''
-    )}?size=160&default=MHF_Steve&overlay&id=c958a4c0ca23485299ffc2cab67aea3e`;
+    )}?size=160&default=MHF_Steve&overlay&id=${randomUUID()}`;
   }
 
   private async getData<T>(input: string): Promise<T> {
