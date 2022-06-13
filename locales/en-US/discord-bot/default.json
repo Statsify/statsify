@@ -305,6 +305,10 @@
     "leaderboardEmpty": {
       "title": "Leaderboard Empty",
       "description": "There are no more players for this leaderboard"
+    },
+    "invalidServer": {
+      "title": "Invalid Server",
+      "description": "The server you are looking for either doesn't exist or is offline"
     }
   },
   "leaderboard": {

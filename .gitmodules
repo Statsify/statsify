@@ -4,3 +4,6 @@
 [submodule "assets/private"]
 	path = assets/private
 	url = https://github.com/Statsify/assets
+[submodule "assets/server-mappings"]
+	path = assets/server-mappings
+	url = https://github.com/LunarClient/ServerMappings.git
