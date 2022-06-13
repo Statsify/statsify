@@ -4,7 +4,7 @@ import { ApiService, MojangApiService } from '#services';
 import { Command, CommandContext, EmbedBuilder } from '@statsify/discord';
 import { Canvas } from 'skia-canvas/lib';
 
-@Command({ description: 'commands.skin', args: [new MojangPlayerArgument()] })
+@Command({ description: 'commands.skin', args: [MojangPlayerArgument] })
 export class SkinCommand {
   public constructor(
     private readonly apiService: ApiService,
@@ -12,7 +12,13 @@ export class SkinCommand {
   ) {}
 
   public async run(context: CommandContext) {
-    const player = await this.mojangApiService.getPlayer(context.option('player'));
+    const user = context.getUser();
+
+    const player = await this.mojangApiService.getWithUser(
+      user,
+      this.mojangApiService.getPlayer,
+      context.option<string>('player')
+    );
 
     const skin = await this.apiService.getPlayerSkin(player.uuid);
     const canvas = new Canvas(skin.width, skin.height);

@@ -3,7 +3,7 @@ import { INFO_COLOR } from '#constants';
 import { MojangApiService, PaginateService } from '#services';
 import { Command, CommandContext, EmbedBuilder } from '@statsify/discord';
 
-@Command({ description: 'commands.namehistory', args: [new MojangPlayerArgument()] })
+@Command({ description: 'commands.namehistory', args: [MojangPlayerArgument] })
 export class NameHistoryCommand {
   public constructor(
     private readonly mojangApiService: MojangApiService,
@@ -11,7 +11,14 @@ export class NameHistoryCommand {
   ) {}
 
   public async run(context: CommandContext) {
-    const player = await this.mojangApiService.getPlayer(context.option('player'));
+    const user = context.getUser();
+
+    const player = await this.mojangApiService.getWithUser(
+      user,
+      this.mojangApiService.getPlayer,
+      context.option<string>('player')
+    );
+
     const thumbURL = this.mojangApiService.faceIconUrl(player.uuid);
     const nameHistory = player.username_history.reverse();
 

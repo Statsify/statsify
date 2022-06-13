@@ -1,7 +1,8 @@
+import { User } from '@statsify/schemas';
 import axios, { AxiosInstance } from 'axios';
 import { randomUUID } from 'crypto';
 import { Service } from 'typedi';
-import { ErrorMessage } from '../error.message';
+import { ApiService } from './api.service';
 
 interface AshconResponse {
   uuid: string;
@@ -26,21 +27,24 @@ interface AshconErrorResponse {
 export class MojangApiService {
   private ashcon: AxiosInstance;
 
-  public constructor() {
+  public constructor(private readonly apiService: ApiService) {
     this.ashcon = axios.create({
       baseURL: 'https://api.ashcon.app/mojang/v2/user/',
       timeout: 10000,
     });
   }
 
-  public async getPlayer(uuid: string) {
-    return this.getData<AshconResponse>(uuid).catch((e) => {
-      if (!e.response || !e.response.data) throw this.unknownError();
+  public async getPlayer(tag: string, user: User | null = null) {
+    const [formattedTag, type] = this.apiService.parseTag(tag);
+    const input = await this.apiService.resolveTag(formattedTag, type, user);
+
+    return this.getData<AshconResponse>(input).catch((e) => {
+      if (!e.response || !e.response.data) throw this.apiService.unknownError();
       const error = e.response.data as AshconErrorResponse;
 
-      if (error.code === 404) throw this.missingPlayer('uuid', uuid);
+      if (error.code === 404) throw this.apiService.missingPlayer(type, input);
 
-      throw this.unknownError();
+      throw this.apiService.unknownError();
     });
   }
 
@@ -49,10 +53,18 @@ export class MojangApiService {
       const data = await this.getData<AshconResponse>(name);
       return { name: data.username, uuid: data.uuid };
     } catch (e: any) {
-      if (!e.response || !e.response.data) throw this.unknownError();
+      if (!e.response || !e.response.data) throw this.apiService.unknownError();
 
       return;
     }
+  }
+
+  public async getWithUser<T extends (...args: any[]) => Promise<K>, K extends { uuid: string }>(
+    user: User | null,
+    fn: T,
+    ...args: Parameters<T>
+  ): Promise<Awaited<ReturnType<T>> & { user: User | null }> {
+    return this.apiService.getWithUser(user, fn.bind(this) as T, ...args);
   }
 
   public faceIconUrl(uuid: string) {
@@ -66,23 +78,9 @@ export class MojangApiService {
     const { data } = await this.ashcon.get<T>(input);
 
     if (!data) {
-      throw this.unknownError();
+      throw this.apiService.unknownError();
     }
 
     return data;
-  }
-
-  private unknownError() {
-    return new ErrorMessage(
-      (t) => t('errors.unknown.title'),
-      (t) => t('errors.unknown.description')
-    );
-  }
-
-  private missingPlayer(type: string, tag: string) {
-    return new ErrorMessage(
-      (t) => t('errors.invalidPlayer.title'),
-      (t) => t('errors.invalidPlayer.description', { type, tag })
-    );
   }
 }

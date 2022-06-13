@@ -9,7 +9,14 @@ export class UUIDCommand {
   public constructor(private readonly mojangApiService: MojangApiService) {}
 
   public async run(context: CommandContext) {
-    const player = await this.mojangApiService.getPlayer(context.option('player'));
+    const user = context.getUser();
+
+    const player = await this.mojangApiService.getWithUser(
+      user,
+      this.mojangApiService.getPlayer,
+      context.option<string>('player')
+    );
+
     const thumbURL = this.mojangApiService.faceIconUrl(player.uuid);
     const shortUuid = short(short.constants.cookieBase90).fromUUID(player.uuid);
 
@@ -24,8 +31,6 @@ export class UUIDCommand {
       .color(INFO_COLOR)
       .thumbnail(thumbURL);
 
-    return {
-      embeds: [embed],
-    };
+    return { embeds: [embed] };
   }
 }

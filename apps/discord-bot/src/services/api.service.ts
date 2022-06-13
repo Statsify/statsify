@@ -291,7 +291,28 @@ export class ApiService extends StatsifyApiService {
     return `${space ? ' ' : ''}${emoji}${removeFormatting(name)}`;
   }
 
-  private async resolveTag(tag: string, type: PlayerTag, user: User | null) {
+  public parseTag(tag: string): [input: string, type: PlayerTag] {
+    if (!tag) return ['', 'none'];
+
+    const length = tag.length;
+
+    if (length >= 32 && length <= 36) return [tag.replace(/-/g, ''), 'uuid'];
+    if (length <= 16) return [tag, 'username'];
+
+    if (this.isDiscordId(tag)) return [tag.replace(/<@|!|>/g, ''), 'discordId'];
+
+    if (length == 20) {
+      const shortUuid = this.translator.toUUID(tag);
+      return [shortUuid.replace(/-/g, ''), 'uuid'];
+    }
+
+    throw new ErrorMessage(
+      (t) => t('errors.invalidSearch.title'),
+      (t) => t('errors.invalidSearch.description')
+    );
+  }
+
+  public async resolveTag(tag: string, type: PlayerTag, user: User | null) {
     if (type === 'discordId') {
       const searchedUser = await this.getUser(tag);
       if (searchedUser?.uuid) return searchedUser.uuid;
@@ -313,35 +334,14 @@ export class ApiService extends StatsifyApiService {
     return tag;
   }
 
-  private parseTag(tag: string): [input: string, type: PlayerTag] {
-    if (!tag) return ['', 'none'];
-
-    const length = tag.length;
-
-    if (length >= 32 && length <= 36) return [tag.replace(/-/g, ''), 'uuid'];
-    if (length <= 16) return [tag, 'username'];
-
-    if (this.isDiscordId(tag)) return [tag.replace(/<@|!|>/g, ''), 'discordId'];
-
-    if (length == 20) {
-      const shortUuid = this.translator.toUUID(tag);
-      return [shortUuid.replace(/-/g, ''), 'uuid'];
-    }
-
-    throw new ErrorMessage(
-      (t) => t('errors.invalidSearch.title'),
-      (t) => t('errors.invalidSearch.description')
-    );
-  }
-
-  private missingPlayer(type: PlayerTag, tag: string) {
+  public missingPlayer(type: PlayerTag, tag: string) {
     return new ErrorMessage(
       (t) => t('errors.invalidPlayer.title'),
       (t) => t('errors.invalidPlayer.description', { type, tag })
     );
   }
 
-  private unknownError() {
+  public unknownError() {
     return new ErrorMessage(
       (t) => t('errors.unknown.title'),
       (t) => t('errors.unknown.description')

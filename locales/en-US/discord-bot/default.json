@@ -189,7 +189,9 @@
         "uuid": "UUID",
         "namemc": "NameMC",
         "username": "Username",
-        "status": "Status"
+        "status": "Status",
+        "invalidCharacters": "Invalid Characters",
+        "tooLong": "Too Long"
       },
       "footer": {
         "available": "Unless the name is temporarily or permanently blocked by Mojang."

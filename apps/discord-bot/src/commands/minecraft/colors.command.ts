@@ -41,22 +41,19 @@ export class ColorsCommand {
           'embeds.colors.description.mainHex'
         )} • ${t('embeds.colors.description.shadowHex')}**\n`;
 
-        for (const color of minecraftColors) {
-          desc +=
-            `${colors[color.code.slice(1)]} ` +
-            `\`${color.code.replace('§', '&')}\` • ` +
-            `\`${color.hex}\` • ` +
-            `\`${rgbToHex(mcShadow(hexToRgb(color.hex)))}\`` +
-            `\n`;
-        }
+        minecraftColors.forEach((color) => {
+          desc += `${colors[color.code.slice(1)]} \`${color.code}\` • \`${
+            color.hex
+          }\` • \`${rgbToHex(mcShadow(hexToRgb(color.hex)))}\`\n`;
+        });
 
         desc += '\n';
-        desc += `${modifiers.k} \`&k\` • ${t('embeds.colors.description.obfuscated')}\n`;
-        desc += `${modifiers.l} \`&l\` • **${t('embeds.colors.description.bold')}**\n`;
-        desc += `${modifiers.m} \`&m\` • ~~${t('embeds.colors.description.strikethrough')}~~\n`;
-        desc += `${modifiers.n} \`&n\` • _${t('embeds.colors.description.underline')}_\n`;
-        desc += `${modifiers.o} \`&o\` • *${t('embeds.colors.description.italic')}*\n`;
-        desc += `${modifiers.r} \`&r\` • ${t('embeds.colors.description.reset')}\n`;
+        desc += `${modifiers.k} \`§k\` • ${t('embeds.colors.description.obfuscated')}\n`;
+        desc += `${modifiers.l} \`§l\` • **${t('embeds.colors.description.bold')}**\n`;
+        desc += `${modifiers.m} \`§m\` • ~~${t('embeds.colors.description.strikethrough')}~~\n`;
+        desc += `${modifiers.n} \`§n\` • _${t('embeds.colors.description.underline')}_\n`;
+        desc += `${modifiers.o} \`§o\` • *${t('embeds.colors.description.italic')}*\n`;
+        desc += `${modifiers.r} \`§r\` • ${t('embeds.colors.description.reset')}\n`;
 
         return desc;
       })
