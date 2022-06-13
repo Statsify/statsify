@@ -145,7 +145,8 @@
     "prevent": "Prevent",
     "total": "Total",
     "levelsGained": "Levels Gained",
-    "expGained": "EXP Gained"
+    "expGained": "EXP Gained",
+    "exp": "EXP"
   },
   "embeds": {
     "uuid": {

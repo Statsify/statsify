@@ -1,5 +1,5 @@
-import { TextArgument } from '#arguments';
-import { Container, ProgressBar } from '#components';
+import { ServerArgument } from '#arguments';
+import { Container } from '#components';
 import { getBackground } from '@statsify/assets';
 import { Command, CommandContext, IMessage } from '@statsify/discord';
 import { render } from '@statsify/rendering';
@@ -41,7 +41,7 @@ interface Server {
 
 @Command({
   description: (t) => t('commands.server'),
-  args: [new TextArgument('server', (t) => t('arguments.server'), true)],
+  args: [ServerArgument],
 })
 export class ServerCommand {
   private readonly axios: AxiosInstance;
@@ -62,27 +62,31 @@ export class ServerCommand {
       getBackground('bedwars', 'overall'),
     ]);
 
+    console.log(server.motd.raw);
+
     const canvas = render(
       <Container background={background}>
-        <box width="100%">
-          <img margin={8} image={serverLogo} />
-          <div direction="column" width="remaining" height="100%">
-            <text margin={2}>§l§^3^{server.name}</text>
-            <text margin={2}>§b{server.hostname}</text>
-          </div>
+        <box direction="column" width="100%">
+          <text>
+            §l{server.name}§r - §b{server.hostname}
+          </text>
         </box>
+        <div width="100%">
+          <box>
+            <img margin={8} image={serverLogo} />
+          </box>
+          <box width="remaining" height="100%" padding={{ left: 8, right: 4, top: 4, bottom: 4 }}>
+            <div width={510} height="100%" direction="column">
+              {server.motd.raw.map((m) => (
+                <text align="left" margin={{ top: 2, bottom: 2 }}>
+                  {m}
+                </text>
+              ))}
+            </div>
+          </box>
+        </div>
         <box width="100%" direction="column">
-          {server.motd.raw.map((m) => (
-            <text>{m.trim()}</text>
-          ))}
-        </box>
-        <box width="100%" direction="column">
-          <ProgressBar
-            numerator={server.players.online}
-            denominator={server.players.max}
-            color="rgb(59, 164, 93)"
-            t={t}
-          />
+          <text>{`§a${t(server.players.online)}§8/§7${t(server.players.max)}`}</text>
         </box>
       </Container>
     );

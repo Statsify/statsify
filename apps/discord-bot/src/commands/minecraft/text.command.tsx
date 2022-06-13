@@ -4,12 +4,12 @@ import { render } from '@statsify/rendering';
 
 @Command({
   description: (t) => t('commands.text'),
-  args: [new TextArgument('content'), new NumberArgument('size')],
+  args: [new TextArgument('content'), new NumberArgument('size', 1, 9)],
 })
 export class TextCommand {
   public async run(context: CommandContext): Promise<IMessage> {
     const content = context.option<string>('content').trim();
-    const size = context.option<number>('size') ?? 3;
+    const size = Math.min(context.option<number>('size', 2), 9);
 
     const text = content
       .replace(/\\&/g, '󰀀')
