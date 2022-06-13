@@ -1,5 +1,5 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { ARENA_BRAWL_MODES } from '@statsify/schemas';
+import { ARENA_BRAWL_MODES, FormattedGame } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from '../base.hypixel-command';
 
@@ -35,7 +35,7 @@ export const ArenaBrawlProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§6Arena Brawl §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.ARENA_BRAWL} §fStats §r(${prettify(mode)})`}
         time={time}
       />
       <Table.table>

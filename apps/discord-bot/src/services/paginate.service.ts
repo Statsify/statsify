@@ -2,7 +2,6 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   EmbedBuilder,
-  InteractionContent,
   Message,
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
@@ -42,7 +41,7 @@ export class PaginateService {
 
     const userId = context.getInteraction().getUserId();
 
-    const cache = new Map<number, InteractionContent>();
+    const cache = new Map<number, Message>();
     let index = 0;
 
     const controller = this.getPageController(pages, index);
@@ -50,7 +49,7 @@ export class PaginateService {
     const listener = CommandListener.getInstance();
 
     controller.forEach((component, i) => {
-      listener.addInteractionHook(component.getCustomId(), async (interaction) => {
+      listener.addHook(component.getCustomId(), async (interaction) => {
         let page = 0;
 
         if (interaction.isButtonInteraction()) page = i;
@@ -73,12 +72,13 @@ export class PaginateService {
     });
 
     setTimeout(() => {
-      controller.forEach((component) => listener.removeInteractionHook(component.getCustomId()));
+      controller.forEach((component) => listener.removeHook(component.getCustomId()));
 
       context.reply({
-        ...cache.get(index)!,
         components: [],
       });
+
+      cache.clear();
     }, timeout);
 
     const message = await this.getMessage(context, controller, index, pages);
@@ -101,7 +101,7 @@ export class PaginateService {
     timeout = 300000
   ) {
     const userId = context.getInteraction().getUserId();
-    const cache = new Map<number, InteractionContent>();
+    const cache = new Map<number, Message>();
 
     const controller = [
       new ButtonBuilder().label('backward'),
@@ -111,7 +111,7 @@ export class PaginateService {
     const listener = CommandListener.getInstance();
 
     controller.forEach((component, i) => {
-      listener.addInteractionHook(component.getCustomId(), async (interaction) => {
+      listener.addHook(component.getCustomId(), async (interaction) => {
         let page: number;
 
         if (i === 0) {
@@ -139,12 +139,13 @@ export class PaginateService {
     });
 
     setTimeout(() => {
-      controller.forEach((component) => listener.removeInteractionHook(component.getCustomId()));
+      controller.forEach((component) => listener.removeHook(component.getCustomId()));
 
       context.reply({
-        ...cache.get(index)!,
         components: [],
       });
+
+      cache.clear();
     }, timeout);
 
     const message = await this.getMessage(context, controller, index, pages);
@@ -181,7 +182,7 @@ export class PaginateService {
     controller: PageController,
     index: number,
     pages: Page[] | PaginateInteractionContentGenerator[]
-  ) {
+  ): Promise<Message> {
     const t = context.t();
     const content = pages[index];
     const isScrolling = typeof content === 'function';
@@ -207,7 +208,7 @@ export class PaginateService {
       page.components = [new ActionRowBuilder(controller)];
     }
 
-    return page.build(t);
+    return page;
   }
 
   private setActiveControl(controller: PageController, index: number) {

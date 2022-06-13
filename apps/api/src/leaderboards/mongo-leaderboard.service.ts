@@ -1,23 +1,23 @@
-import { Constructor, flatten, FlattenKeys } from '@statsify/util';
+import { Constructor, flatten } from '@statsify/util';
 import { getModelForClass } from '@typegoose/typegoose';
 
 export class MongoLeaderboardService {
   public async getLeaderboard<T>(
     constructor: Constructor<T>,
-    field: FlattenKeys<T>,
+    field: string,
     selector: Record<string, boolean>,
     filter: Record<string, any>
   ): Promise<{ data: Record<string, any>; index: number }[] | null>;
   public async getLeaderboard<T>(
     constructor: Constructor<T>,
-    field: FlattenKeys<T>,
+    field: string,
     selector: Record<string, boolean>,
     top: number,
     bottom: number
   ): Promise<{ data: Record<string, any>; index: number }[]>;
   public async getLeaderboard<T>(
     constructor: Constructor<T>,
-    field: FlattenKeys<T>,
+    field: string,
     selector: Record<string, boolean>,
     topOrFilter: number | Record<string, any>,
     bottom?: number
@@ -93,17 +93,17 @@ export class MongoLeaderboardService {
 
   public async getLeaderboardRanking<T>(
     constructor: Constructor<T>,
-    field: FlattenKeys<T>,
+    field: string,
     filter: Record<string, any>
   ): Promise<number | null>;
   public async getLeaderboardRanking<T>(
     constructor: Constructor<T>,
-    field: FlattenKeys<T>,
+    field: string,
     value: number
   ): Promise<number | null>;
   public async getLeaderboardRanking<T>(
     constructor: Constructor<T>,
-    field: FlattenKeys<T>,
+    field: string,
     valueOrFilter: number | Record<string, any>
   ): Promise<number | null> {
     const model = getModelForClass(constructor);

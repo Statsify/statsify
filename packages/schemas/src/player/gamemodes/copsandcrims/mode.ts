@@ -18,7 +18,7 @@ export class Defusal {
   @Field()
   public kdr: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public headshotKills: number;
 
   @Field()

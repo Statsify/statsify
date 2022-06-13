@@ -1,6 +1,6 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { VampireZLife } from '@statsify/schemas';
+import { FormattedGame, VampireZLife } from '@statsify/schemas';
 import { BaseProfileProps } from '../base.hypixel-command';
 
 interface VampireZRowProps {
@@ -41,7 +41,7 @@ export const VampireZProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§4VampireZ §fStats`}
+        title={`§l${FormattedGame.VAMPIREZ} §fStats`}
         time={time}
       />
       <Table.table>

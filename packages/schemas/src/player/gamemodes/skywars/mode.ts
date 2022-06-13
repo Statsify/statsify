@@ -1,8 +1,8 @@
 import { add, ratio } from '@statsify/math';
-import { APIData } from '@statsify/util';
+import { APIData, formatTime } from '@statsify/util';
 import { Field } from '../../../metadata';
 
-export class SkyWarsGameMode {
+export class SkyWarsMode {
   @Field()
   public wins: number;
 
@@ -27,7 +27,7 @@ export class SkyWarsGameMode {
   @Field()
   public assists: number;
 
-  @Field()
+  @Field({ leaderboard: { formatter: formatTime } })
   public playtime: number;
 
   //Kit gets applied in the main class
@@ -47,10 +47,10 @@ export class SkyWarsGameMode {
     //Convert to milliseconds
     this.playtime = (data[`time_played${mode}`] ?? 0) * 1000;
 
-    SkyWarsGameMode.applyRatios(this);
+    SkyWarsMode.applyRatios(this);
   }
 
-  public static applyRatios(data: SkyWarsGameMode) {
+  public static applyRatios(data: SkyWarsMode) {
     data.kdr = ratio(data.kills, data.deaths);
     data.wlr = ratio(data.wins, data.losses);
   }
@@ -84,15 +84,6 @@ export class SkyWarsLabMode {
 
 export class SkyWarsLabs {
   @Field()
-  public overall: SkyWarsGameMode;
-
-  @Field()
-  public solo: SkyWarsGameMode;
-
-  @Field()
-  public doubles: SkyWarsGameMode;
-
-  @Field()
   public tntMadness: SkyWarsLabMode;
 
   @Field()
@@ -105,29 +96,9 @@ export class SkyWarsLabs {
   public slime: SkyWarsLabMode;
 
   public constructor(data: APIData) {
-    this.overall = new SkyWarsGameMode(data, 'lab');
-    this.solo = new SkyWarsGameMode(data, 'lab_solo');
-    this.doubles = new SkyWarsGameMode(data, 'lab_team');
     this.tntMadness = new SkyWarsLabMode(data, 'tnt_madness');
     this.lucky = new SkyWarsLabMode(data, 'lucky_blocks');
     this.rush = new SkyWarsLabMode(data, 'rush');
     this.slime = new SkyWarsLabMode(data, 'slime');
-  }
-}
-
-export class SkyWarsMode {
-  @Field()
-  public overall: SkyWarsGameMode;
-
-  @Field()
-  public insane: SkyWarsGameMode;
-
-  @Field()
-  public normal: SkyWarsGameMode;
-
-  public constructor(data: APIData, mode: string) {
-    this.overall = new SkyWarsGameMode(data, mode);
-    this.insane = new SkyWarsGameMode(data, `${mode}_insane`);
-    this.normal = new SkyWarsGameMode(data, `${mode}_normal`);
   }
 }

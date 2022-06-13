@@ -1,6 +1,6 @@
 import { Container, Footer, Header, SidebarItem, Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
-import { MurderMysteryMode } from '@statsify/schemas';
+import { FormattedGame, MurderMysteryMode } from '@statsify/schemas';
 import { BaseProfileProps } from '../base.hypixel-command';
 
 interface MurderMysteryModeColumnProps {
@@ -45,7 +45,7 @@ export const MurderMysteryProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title="§l§4Murder Mystery §fStats"
+        title={`§l${FormattedGame.MURDER_MYSTERY} §fStats`}
         time={time}
       />
       <Table.table>

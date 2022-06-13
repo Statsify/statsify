@@ -1,16 +1,26 @@
-import { add, deepAdd } from '@statsify/math';
+import { add } from '@statsify/math';
 import { APIData } from '@statsify/util';
 import { Color } from '../../../color';
 import { Field } from '../../../metadata';
 import { Progression } from '../../../progression';
-import { SkyWarsGameMode, SkyWarsLabs, SkyWarsMode } from './mode';
+import { SkyWarsLabs, SkyWarsMode } from './mode';
 import { getFormattedLevel, getLevel, getLevelProgress, getPresColor, parseKit } from './util';
 
 export const SKYWARS_MODES = ['overall', 'solo', 'doubles', 'labs'] as const;
 export type SkyWarsModes = typeof SKYWARS_MODES;
 
 export class SkyWars {
-  @Field()
+  @Field({
+    leaderboard: {
+      fieldName: 'Level',
+      hidden: true,
+      additionalFields: [
+        'stats.skywars.overall.wins',
+        'stats.skywars.overall.kills',
+        'stats.skywars.overall.kdr',
+      ],
+    },
+  })
   public exp: number;
 
   @Field()
@@ -94,29 +104,26 @@ export class SkyWars {
 
     const normalKit = parseKit(data.activeKit_SOLO_random ? 'random' : data.activeKit_SOLO);
     const insaneKit = parseKit(data.activeKit_TEAMS_random ? 'random' : data.activeKit_TEAMS);
-    const chooseKit = (insane: number, normal: number) => (insane > normal ? insaneKit : normalKit);
+
+    const soloInsaneWins = data[`wins_solo_insane`];
+    const soloNormalWins = data[`wins_solo_normal`];
+    const doublesInsaneWins = data[`wins_team_insane`];
+    const doublesNormalWins = data[`wins_team_normal`];
+
+    const chooseKit = (insane = 0, normal = 0) => (insane > normal ? insaneKit : normalKit);
 
     this.overall = new SkyWarsMode(data, '');
 
     this.solo = new SkyWarsMode(data, 'solo');
-    this.solo.insane.kit = insaneKit;
-    this.solo.normal.kit = normalKit;
-    this.solo.overall.kit = chooseKit(this.solo.insane.wins, this.solo.normal.wins);
+    this.solo.kit = chooseKit(soloInsaneWins, soloNormalWins);
 
     this.doubles = new SkyWarsMode(data, 'team');
-    this.doubles.insane.kit = insaneKit;
-    this.doubles.normal.kit = normalKit;
-    this.doubles.overall.kit = chooseKit(this.doubles.insane.wins, this.doubles.normal.wins);
+    this.doubles.kit = chooseKit(doublesInsaneWins, doublesNormalWins);
 
-    this.overall.insane = deepAdd(this.solo.insane, this.doubles.insane);
-    this.overall.insane.kit = insaneKit;
-    SkyWarsGameMode.applyRatios(this.overall.insane);
-
-    this.overall.normal = deepAdd(this.solo.normal, this.doubles.normal);
-    this.overall.normal.kit = normalKit;
-    SkyWarsGameMode.applyRatios(this.overall.normal);
-
-    this.overall.overall.kit = chooseKit(this.overall.insane.wins, this.overall.normal.wins);
+    this.overall.kit = chooseKit(
+      add(soloInsaneWins, doublesInsaneWins),
+      add(soloNormalWins, doublesNormalWins)
+    );
 
     this.labs = new SkyWarsLabs(data);
   }

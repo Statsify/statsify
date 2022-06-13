@@ -1,5 +1,5 @@
 import { Container, Footer, Header, SidebarItem } from '#components';
-import { ArcadeModes } from '@statsify/schemas';
+import { ArcadeModes, FormattedGame } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 import { BaseProfileProps } from 'commands/base.hypixel-command';
 import {
@@ -115,7 +115,7 @@ export const ArcadeProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l§cA§6r§ec§aa§bd§de §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.ARCADE} §fStats §r(${prettify(mode)})`}
         time={time}
       />
       {table}

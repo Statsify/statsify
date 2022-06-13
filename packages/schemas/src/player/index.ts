@@ -46,7 +46,7 @@ export class Player {
   @Field()
   public socials: PlayerSocials;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: '' } })
   public stats: PlayerStats;
 
   @Field()

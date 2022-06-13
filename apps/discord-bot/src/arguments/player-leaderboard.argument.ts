@@ -1,13 +1,32 @@
 import { AbstractArgument, CommandContext, LocalizationString } from '@statsify/discord';
-import { LeaderboardScanner, Player } from '@statsify/schemas';
+import { ClassMetadata, LeaderboardScanner, METADATA_KEY, PlayerStats } from '@statsify/schemas';
+import { removeFormatting } from '@statsify/util';
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from 'discord-api-types/v10';
+import Fuse from 'fuse.js';
 
-const fields = LeaderboardScanner.getLeaderboardMetadata(Player).map(([key]) =>
-  key.replace('stats.', '').replace(/\./g, ' ').toLowerCase()
+const entries = Object.entries(
+  Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
 );
+
+const fields = entries.reduce((acc, [prefix, value]) => {
+  const list = LeaderboardScanner.getLeaderboardMetadata(value.type.type).map(
+    ([key, { leaderboard }]) => ({ value: key, name: removeFormatting(leaderboard.name) })
+  );
+
+  const fuse = new Fuse(list, {
+    keys: ['name', 'key'],
+    includeScore: false,
+    shouldSort: true,
+    isCaseSensitive: false,
+    threshold: 0.3,
+    ignoreLocation: true,
+  });
+
+  return { ...acc, [prefix]: [fuse, list] };
+}, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);
 
 export class PlayerLeaderboardArgument extends AbstractArgument {
   public name = 'leaderboard';
@@ -16,18 +35,21 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
   public required = true;
   public autocomplete = true;
 
-  public constructor() {
+  public constructor(private prefix: keyof PlayerStats) {
     super();
     this.description = (t) => t('arguments.player-leaderboard');
   }
 
   public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
-    const currentValue = context.option<string>(this.name, '').toLowerCase().split(' ');
+    const currentValue = context.option<string>(this.name, '').toLowerCase();
 
-    //TODO(jacobk999):  use some sort of fuzzy searching
-    return fields
-      .filter((field) => currentValue.some((value) => field.includes(value)))
-      .splice(0, 25)
-      .map((field) => ({ name: field, value: field }));
+    const [fuse, list] = fields[this.prefix];
+
+    if (!currentValue) return list.slice(0, 25);
+
+    return fuse
+      .search(currentValue)
+      .map((result) => result.item)
+      .slice(0, 25);
   }
 }

@@ -36,11 +36,7 @@ export class HypixelService {
       this.request<APIData>(url).pipe(
         map((data) => data.player),
         map((player) => new Player(player)),
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        catchError((err) => {
-          // console.log(err);
-          return of(null);
-        })
+        catchError(() => of(null))
       )
     );
   }

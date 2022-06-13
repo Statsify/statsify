@@ -1,9 +1,15 @@
 import { randomUUID } from 'crypto';
-import { APIButtonComponentBase, ButtonStyle, ComponentType } from 'discord-api-types/v10';
+import {
+  APIButtonComponentBase,
+  APIMessageComponentEmoji,
+  ButtonStyle,
+  ComponentType,
+} from 'discord-api-types/v10';
 import { LocalizationString, LocalizeFunction, translateField } from '../localize';
 
 export class ButtonBuilder {
   #label: LocalizationString;
+  #emoji: APIMessageComponentEmoji;
   #style: ButtonStyle;
   #custom_id?: string;
   #disabled: boolean;
@@ -16,6 +22,15 @@ export class ButtonBuilder {
 
   public label(label: LocalizationString): this {
     this.#label = label;
+    return this;
+  }
+
+  public emoji(emoji: string): this {
+    const animated = emoji.startsWith('<a:');
+    const name = emoji.replace(/<:|<a:|>/g, '');
+    const id = name.split(':')[1];
+
+    this.#emoji = { name: name.replace(id, ''), animated, id };
     return this;
   }
 
@@ -52,6 +67,7 @@ export class ButtonBuilder {
     return {
       label: translateField(locale, this.#label),
       style: this.#style,
+      emoji: this.#emoji,
       custom_id: this.#custom_id,
       disabled: this.#disabled,
       type: ComponentType.Button,

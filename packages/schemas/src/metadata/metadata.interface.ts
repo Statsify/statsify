@@ -29,6 +29,18 @@ interface BaseLeaderboardMetadata {
    * A function that will be ran when a leaderboard is requested, it will change the format of the number. For example if the field is a time, it will make the time human readable
    */
   formatter?: <T>(value: T) => string;
+
+  /**
+   * The pretty print name of the leaderboard.
+   * @example Wins
+   */
+  fieldName?: string;
+
+  /**
+   * The complete leaderboard name
+   * @example BedWars Overall Wins
+   */
+  name: string;
 }
 
 export interface LeaderboardDisabledMetadata extends BaseLeaderboardMetadata {
@@ -39,14 +51,14 @@ export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
   enabled: true;
 
   /**
+   * Whether or not to show the stat in the leaderboard page
+   */
+  hidden?: boolean;
+
+  /**
    * Whether or not to sort the leaderboard ascending or descending.
    */
   sort: 'ASC' | 'DESC';
-
-  /**
-   * The pretty print name of the leaderboard.
-   */
-  name: string;
 
   /**
    * Aliases for accessing leaderboard.

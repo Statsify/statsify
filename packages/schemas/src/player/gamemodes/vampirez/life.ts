@@ -14,6 +14,7 @@ export class VampireZLife {
 
   @Field()
   public kdr: number;
+
   public constructor(data: APIData, mode: string) {
     this.wins = data[`${mode}_wins`];
     this.kills = data[`${mode}_kills`];

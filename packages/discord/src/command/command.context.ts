@@ -1,8 +1,9 @@
 import type { User } from '@statsify/schemas';
 import { noop } from '@statsify/util';
 import type { APIApplicationCommandInteractionDataBasicOption } from 'discord-api-types/v10';
-import type { Interaction, InteractionContent } from '../interaction';
-import { getLocalizeFunction, LocalizeFunction } from '../messages/localize';
+import type { Interaction } from '../interaction';
+import { IMessage, Message } from '../messages';
+import { LocalizeFunction } from '../messages/localize';
 
 export class CommandContext {
   private user: User | null;
@@ -34,10 +35,10 @@ export class CommandContext {
   }
 
   public t(): LocalizeFunction {
-    return getLocalizeFunction(this.interaction.getLocale());
+    return this.interaction.t();
   }
 
-  public reply(data: InteractionContent) {
+  public reply(data: Message | IMessage) {
     return this.interaction.editReply(data);
   }
 

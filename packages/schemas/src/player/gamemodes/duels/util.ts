@@ -70,7 +70,7 @@ export const getTitle = (wins: number, prefix: string) => {
 
   const formatted = `${bold ? '§l' : ''}${color.code}${prefix}${semi ? '§l' : ''}${title}${
     index > 1 ? ` ${romanNumeral(index)}` : ''
-  }`;
+  }§r`;
 
   return {
     formatted,
