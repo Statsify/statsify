@@ -310,6 +310,10 @@
     "invalidServer": {
       "title": "Invalid Server",
       "description": "The server you are looking for either doesn't exist or is offline"
+    },
+    "noCape": {
+      "title": "Missing Cape",
+      "description": "There is no cape lmao"
     }
   },
   "leaderboard": {

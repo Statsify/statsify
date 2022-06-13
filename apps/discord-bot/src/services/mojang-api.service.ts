@@ -4,7 +4,7 @@ import { randomUUID } from 'crypto';
 import { Service } from 'typedi';
 import { ApiService } from './api.service';
 
-interface AshconResponse {
+export interface AshconResponse {
   uuid: string;
   username: string;
   username_history: { username: string; changed_at?: string }[];
