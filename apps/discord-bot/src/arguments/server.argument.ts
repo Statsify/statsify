@@ -1,10 +1,12 @@
+import { getServerMappings } from '@statsify/assets';
 import { AbstractArgument, CommandContext, LocalizationString } from '@statsify/discord';
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from 'discord-api-types/v10';
 import Fuse from 'fuse.js';
-import servers from '../../../../assets/server-mappings/servers.json';
+
+const servers = getServerMappings();
 
 const fuse = new Fuse(servers, {
   keys: ['id', 'name', 'addresses'],

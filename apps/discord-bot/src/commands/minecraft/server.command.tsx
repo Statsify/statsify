@@ -1,12 +1,13 @@
 import { ServerArgument } from '#arguments';
 import { Container } from '#components';
-import { getBackground } from '@statsify/assets';
+import { getBackground, getServerMappings } from '@statsify/assets';
 import { Command, CommandContext, IMessage } from '@statsify/discord';
 import { render } from '@statsify/rendering';
 import axios, { AxiosInstance } from 'axios';
 import { loadImage } from 'skia-canvas/lib';
-import servers from '../../../../../assets/server-mappings/servers.json';
 import { ErrorMessage } from '../../error.message';
+
+const servers = getServerMappings();
 
 interface Server {
   ip: string;
@@ -61,8 +62,6 @@ export class ServerCommand {
       loadImage(server.icon),
       getBackground('bedwars', 'overall'),
     ]);
-
-    console.log(server.motd.raw);
 
     const canvas = render(
       <Container background={background}>

@@ -1,4 +1,4 @@
-import { existsSync, readdirSync } from 'fs';
+import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { Image, loadImage } from 'skia-canvas';
 
@@ -62,3 +62,10 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
 
 export const getLogo = (premium = false, size = 26) =>
   getImage(`logos/${premium ? 'premium_' : ''}logo_${size}.png`);
+
+export const getServerMappings = () =>
+  JSON.parse(readFileSync('../../assets/server-mappings/servers.json', 'utf8')) as {
+    id: string;
+    name: string;
+    addresses: string[];
+  }[];
