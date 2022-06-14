@@ -31,7 +31,7 @@ export const BuildBattleProfile = ({
   skin,
   t,
   badge,
-  premium,
+  tier,
   time,
 }: BaseProfileProps) => {
   const { buildbattle } = player.stats;
@@ -85,7 +85,7 @@ export const BuildBattleProfile = ({
           ]}
         />
       </div>
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

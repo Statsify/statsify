@@ -21,7 +21,7 @@ export const WoolWarsProfile = ({
   player,
   background,
   logo,
-  premium,
+  tier,
   badge,
   mode,
   t,
@@ -85,7 +85,7 @@ export const WoolWarsProfile = ({
           exp={woolwars.exp}
         />
       </Table.table>
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

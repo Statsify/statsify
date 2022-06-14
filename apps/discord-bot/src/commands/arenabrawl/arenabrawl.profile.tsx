@@ -12,7 +12,7 @@ export const ArenaBrawlProfile = ({
   player,
   background,
   logo,
-  premium,
+  tier,
   badge,
   mode,
   t,
@@ -80,7 +80,7 @@ export const ArenaBrawlProfile = ({
           </Table.tr>
         </Table.ts>
       </Table.table>
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

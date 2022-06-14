@@ -15,7 +15,7 @@ export const WarlordsProfile = ({
   skin,
   t,
   badge,
-  premium,
+  tier,
   mode,
   time,
 }: WarlordsProfileProps) => {
@@ -63,7 +63,7 @@ export const WarlordsProfile = ({
         time={time}
       />
       {table}
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

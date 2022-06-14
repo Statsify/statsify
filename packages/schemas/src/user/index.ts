@@ -1,9 +1,14 @@
-import type { Image } from 'skia-canvas';
 import { Field } from '../metadata';
 
 export enum UserTheme {
   DEFAULT = 'default',
   HD = 'hd',
+}
+
+export enum UserTier {
+  NONE = 0,
+  PREMIUM = 404,
+  CORE = 999,
 }
 
 export class User {
@@ -28,13 +33,16 @@ export class User {
   @Field({ store: { required: false } })
   public serverMember?: boolean;
 
-  @Field({ store: { required: false } })
-  public premium?: boolean;
+  @Field({ type: () => Number, store: { required: false } })
+  public tier?: UserTier;
 
-  //TODO: figure out how we want to store badges
   @Field({ store: { required: false } })
-  public badge?: Image;
+  public hasBadge?: boolean;
 
   @Field({ type: () => String, store: { required: false } })
   public theme?: UserTheme;
+
+  public static isPremium(tier = UserTier.NONE): boolean {
+    return tier >= UserTier.PREMIUM;
+  }
 }

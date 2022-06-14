@@ -12,9 +12,9 @@ import {
 import { Color, User } from '@statsify/schemas';
 import { removeFormatting } from '@statsify/util';
 import { AxiosError } from 'axios';
+import { t } from 'i18next';
 import short from 'short-uuid';
 import { Service } from 'typedi';
-import emojiRanks from '../../emojis.json';
 import { ErrorMessage } from '../error.message';
 
 type PlayerTag = 'username' | 'uuid' | 'discordId' | 'none';
@@ -275,17 +275,17 @@ export class ApiService extends StatsifyApiService {
 
     const unformattedRank = removeFormatting(rank);
 
+    const COLORED_RANKS = ['MVP+', 'MVP++'];
+
     let emoji: string;
 
-    if (unformattedRank in emojiRanks) {
-      emoji = emojiRanks[unformattedRank as keyof typeof emojiRanks];
-      emoji += ' ';
-    } else {
+    if (COLORED_RANKS.includes(unformattedRank)) {
       const rankColor = unformattedRank === 'MVP++' && rank.startsWith('§b') ? 'b' : '';
       const plusColor = new Color(`§${rank[rank.indexOf('+') - 1]}`);
-      const key = `${rankColor}${unformattedRank}_${plusColor.id}`;
-
-      emoji = emojiRanks[key as keyof typeof emojiRanks];
+      emoji = t(`emojis:ranks.${rankColor}${unformattedRank}_${plusColor.id}`);
+    } else {
+      emoji = t(`emojis:ranks.${unformattedRank}`);
+      emoji += '';
     }
 
     return `${space ? ' ' : ''}${emoji}${removeFormatting(name)}`;

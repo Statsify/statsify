@@ -214,9 +214,10 @@ export class HistoricalBase {
       this.time
     );
 
-    const [logo, skin] = await Promise.all([
-      getLogo(user?.premium),
+    const [logo, skin, badge] = await Promise.all([
+      getLogo(user?.tier),
       this.apiService.getPlayerSkin(player.uuid),
+      this.apiService.getUserBadge(player.uuid),
     ]);
 
     const pages: Page[] = modes.map((mode) => ({
@@ -231,8 +232,8 @@ export class HistoricalBase {
             background,
             logo,
             t,
-            premium: user?.premium,
-            badge: player.user?.badge,
+            tier: user?.tier,
+            badge,
             time: this.time,
           },
           mode

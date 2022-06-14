@@ -25,7 +25,7 @@ export const MurderMysteryProfile = ({
   skin,
   t,
   badge,
-  premium,
+  tier,
   time,
 }: BaseProfileProps) => {
   const { murdermystery } = player.stats;
@@ -57,7 +57,7 @@ export const MurderMysteryProfile = ({
           <MurderMysteryModeColumn title="Infection" stats={murdermystery.infection} t={t} />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

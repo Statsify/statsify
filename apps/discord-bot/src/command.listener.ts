@@ -6,7 +6,7 @@ import {
   Interaction,
   Message,
 } from '@statsify/discord';
-import { User } from '@statsify/schemas';
+import { User, UserTier } from '@statsify/schemas';
 import { formatTime } from '@statsify/util';
 import { ApplicationCommandOptionType, InteractionResponseType } from 'discord-api-types/v10';
 import type {
@@ -26,7 +26,6 @@ export type InteractionHook = (
 export class CommandListener extends AbstractCommandListener {
   private hooks: Map<string, InteractionHook>;
   private cooldowns: Map<string, Map<string, number>>;
-  private coreIds: string[];
   private readonly apiService: ApiService;
   private static instance: CommandListener;
 
@@ -42,7 +41,6 @@ export class CommandListener extends AbstractCommandListener {
       process.env.DISCORD_BOT_PORT as number
     );
 
-    this.coreIds = process.env.CORE_IDS?.replace(/ /, '').split(',') ?? [];
     this.apiService = Container.get(ApiService);
     this.hooks = new Map();
     this.cooldowns = new Map();
@@ -193,8 +191,8 @@ export class CommandListener extends AbstractCommandListener {
 
     let reduction = 1;
 
-    if (this.coreIds.includes(userId)) reduction = 0;
-    else if (user?.premium) reduction = 0.3;
+    if (user?.tier === UserTier.CORE) reduction = 0;
+    else if (user?.tier === UserTier.PREMIUM) reduction = 0.3;
     else if (user?.serverMember) reduction = 0.8;
     else if (user?.uuid) reduction = 0.9;
 

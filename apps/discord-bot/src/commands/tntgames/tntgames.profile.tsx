@@ -27,7 +27,7 @@ export const TNTGamesProfile = ({
   skin,
   t,
   badge,
-  premium,
+  tier,
   time,
 }: BaseProfileProps) => {
   const { tntgames } = player.stats;
@@ -92,7 +92,7 @@ export const TNTGamesProfile = ({
           />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

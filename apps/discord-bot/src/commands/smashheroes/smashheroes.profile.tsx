@@ -12,7 +12,7 @@ export const SmashHeroesProfile = ({
   player,
   background,
   logo,
-  premium,
+  tier,
   badge,
   mode,
   t,
@@ -49,7 +49,7 @@ export const SmashHeroesProfile = ({
           <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

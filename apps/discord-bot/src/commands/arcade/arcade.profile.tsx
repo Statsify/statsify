@@ -33,7 +33,7 @@ export const ArcadeProfile = ({
   player,
   background,
   logo,
-  premium,
+  tier,
   badge,
   mode,
   t,
@@ -119,7 +119,7 @@ export const ArcadeProfile = ({
         time={time}
       />
       {table}
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };
