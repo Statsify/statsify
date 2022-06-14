@@ -3,7 +3,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { getAssetPath, getLogoPath } from '@statsify/assets';
 import { User, VerifyCode } from '@statsify/schemas';
 import { ReturnModelType } from '@typegoose/typegoose';
-import { readFile, writeFile } from 'fs/promises';
+import { readFile, rm, writeFile } from 'fs/promises';
 
 @Injectable()
 export class UserService {
@@ -46,6 +46,21 @@ export class UserService {
 
     await this.userModel.updateOne({ hasBadge: true }).where('id').equals(user.id).lean().exec();
     await writeFile(this.getBadgePath(user.id), badge);
+  }
+
+  public async deleteBadge(idOrUuid: string): Promise<void> {
+    const [tag, type] = this.parseTag(idOrUuid);
+
+    const user = await this.userModel
+      .findOneAndUpdate({ hasBadge: false })
+      .where(type)
+      .equals(tag)
+      .lean()
+      .exec();
+
+    if (!user) throw new NotFoundException(`user`);
+
+    await rm(this.getBadgePath(user.id));
   }
 
   public async verifyUser(code: string, id: string): Promise<User | null> {

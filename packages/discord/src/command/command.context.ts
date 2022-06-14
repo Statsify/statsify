@@ -35,7 +35,7 @@ export class CommandContext {
     }
 
     if (data.type === ApplicationCommandOptionType.Attachment) {
-      return this.data.resolved.attachments[data.value];
+      return this.getInteraction().getData().resolved.attachments[data.value];
     }
 
     return data.value as unknown as T;

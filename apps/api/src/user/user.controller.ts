@@ -36,10 +36,21 @@ export class UserController {
 
   @Put(`/badge`)
   @ApiOkResponse({ type: PutUserBadgeResponse })
+  @ApiOperation({ summary: 'Set a User Badge' })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
   public async setUserBadge(@Query() { tag }: UserDto, @Body() body: Buffer) {
     await this.userService.updateBadge(tag, body);
+    return { success: true };
+  }
+
+  @Delete(`/badge`)
+  @ApiOkResponse({ type: PutUserBadgeResponse })
+  @ApiOperation({ summary: 'Reset a User Badge' })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @Auth({ role: AuthRole.ADMIN })
+  public async deleteUserBadge(@Query() { tag }: UserDto) {
+    await this.userService.deleteBadge(tag);
     return { success: true };
   }
 

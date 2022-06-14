@@ -23,7 +23,7 @@ export class BadgeCommand {
 
   @SubCommand({
     description: (t) => t('commands.badge.set'),
-    args: [new FileArgument('icon', true)],
+    args: [new FileArgument('badge', true)],
   })
   public set(context: CommandContext) {
     return this.run(context, 'set');
@@ -38,7 +38,7 @@ export class BadgeCommand {
 
   private async run(context: CommandContext, mode: 'view' | 'set' | 'reset'): Promise<IMessage> {
     const userId = context.getInteraction().getUserId();
-    const file = context.option<APIAttachment | null>('file');
+    const file = context.option<APIAttachment | null>('badge');
     const user = context.getUser();
     const t = context.t();
 
@@ -56,7 +56,7 @@ export class BadgeCommand {
 
     switch (mode) {
       case 'view': {
-        const badge = await this.apiService.getUserBadge(user.uuid);
+        const badge = await this.apiService.getUserBadge(userId);
 
         if (!badge)
           throw new ErrorMessage(
@@ -64,7 +64,7 @@ export class BadgeCommand {
             (t) => t('errors.unknown.description')
           );
 
-        const profile = await this.getProfile(user, badge, t);
+        const profile = await this.getProfile(t, user, badge);
 
         return {
           content: t('config.badge.view') as string,
@@ -81,6 +81,12 @@ export class BadgeCommand {
 
         const canvas = new Canvas(32, 32);
         const ctx = canvas.getContext('2d');
+
+        if (!['image/png', 'image/jpeg', 'image/gif'].includes(file.content_type ?? ''))
+          throw new ErrorMessage(
+            (t) => t('errors.unsupportedFileType.title'),
+            (t) => t('errors.unsupportedFileType.description')
+          );
 
         const badge = await loadImage(file.url);
 
@@ -103,7 +109,7 @@ export class BadgeCommand {
         );
 
         await this.apiService.updateUserBadge(userId, await canvas.toBuffer('png'));
-        const profile = await this.getProfile(user, canvas, t);
+        const profile = await this.getProfile(t, user, canvas);
 
         return {
           content: t('config.badge.set') as string,
@@ -112,17 +118,10 @@ export class BadgeCommand {
       }
 
       case 'reset': {
-        // TODO: Implement Actual Reset
+        await this.apiService.deleteUserBadge(userId);
+        const badge = await this.apiService.getUserBadge(userId);
 
-        const badge = await this.apiService.getUserBadge(user.uuid);
-
-        if (!badge)
-          throw new ErrorMessage(
-            (t) => t('errors.unknown.title'),
-            (t) => t('errors.unknown.description')
-          );
-
-        const profile = await this.getProfile(user, badge, t);
+        const profile = await this.getProfile(t, user, badge);
 
         return {
           content: t('config.badge.reset') as string,
@@ -132,7 +131,7 @@ export class BadgeCommand {
     }
   }
 
-  private async getProfile(user: User, badge: Image | Canvas, t: LocalizeFunction) {
+  private async getProfile(t: LocalizeFunction, user: User, badge?: Image | Canvas) {
     if (!user?.uuid)
       throw new ErrorMessage(
         (t) => t('errors.unknown.title'),

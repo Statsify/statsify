@@ -255,6 +255,10 @@
       "title": "Status Not Found",
       "description": "A status for {{displayName}} could not be found!"
     },
+    "unsupportedFileType": {
+      "title": "Unsupported File Type",
+      "description": "The file you provided is not a supported file type!!!!!!!"
+    },
     "leaderboardNotFound": {
       "title": "Invalid Leaderboard",
       "description": "Search for a valid leaderboard"

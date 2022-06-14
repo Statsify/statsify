@@ -183,6 +183,10 @@ export class ApiService {
     });
   }
 
+  public deleteUserBadge(tag: string) {
+    return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, 'DELETE');
+  }
+
   public verifyUser(code: string, id: string) {
     return this.request<GetUserResponse>(`/user`, { code, id }, 'PUT')
       .then((data) => data.user ?? null)
