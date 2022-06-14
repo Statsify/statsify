@@ -8,14 +8,12 @@ export class Friend {
   @Field({ store: { required: false } })
   public displayName?: string;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public createdAt: number;
 
-  @Field()
-  public expiresAt: number;
-
   public constructor(uuid: string, data: APIData) {
-    this.uuid = data.uuidSender === uuid ? data.uuidReceiver : data.uuidSender;
-    this.createdAt = data.started;
+    this.uuid = uuid;
+    this.displayName = data.display;
+    this.createdAt = data.time;
   }
 }

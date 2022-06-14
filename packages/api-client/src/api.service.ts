@@ -62,10 +62,9 @@ export class ApiService {
     });
   }
 
-  public getFriends(tag: string, page = 0) {
-    return this.requestKey<GetFriendsResponse, 'friends'>(`/player/friends`, 'friends', {
+  public getFriends(tag: string) {
+    return this.requestKey<GetFriendsResponse, 'data'>(`/player/friends`, 'data', {
       player: tag,
-      page,
     });
   }
 

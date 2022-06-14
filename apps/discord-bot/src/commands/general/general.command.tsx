@@ -20,11 +20,14 @@ export class GeneralCommand extends BaseHypixelCommand<GeneralModes, PreProfileD
       .getGuild(player.uuid, GuildQuery.PLAYER)
       .catch(() => undefined);
 
-    const friends = await this.apiService.getFriends(player.uuid, 0).catch(() => ({ length: 0 }));
+    const friends = await this.apiService
+      .getFriends(player.uuid)
+      .then((data) => data.friends.length ?? 0)
+      .catch(() => 0);
 
     return {
       guild,
-      friends: friends.length,
+      friends: friends,
     };
   }
 

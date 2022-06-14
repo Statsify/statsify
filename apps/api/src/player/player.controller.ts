@@ -22,7 +22,7 @@ import {
 } from '@statsify/api-client';
 import { AuthRole } from '../auth';
 import { Auth } from '../auth/auth.decorator';
-import { CachedPlayerDto, FriendDto } from '../dtos';
+import { CachedPlayerDto } from '../dtos';
 import { PlayerDto } from '../dtos/player.dto';
 import { PlayerService } from './player.service';
 
@@ -99,12 +99,12 @@ export class PlayerController {
   @ApiNotFoundResponse({ type: PlayerNotFoundException })
   @Auth({ weight: 10 })
   @Get('/friends')
-  public async getFriends(@Query() { player: tag, page }: FriendDto) {
-    const friends = await this.playerService.getFriends(tag, page);
+  public async getFriends(@Query() { player: tag, cache }: CachedPlayerDto) {
+    const friends = await this.playerService.getFriends(tag, cache);
 
     return {
       success: !!friends,
-      friends,
+      data: friends,
     };
   }
 

@@ -74,8 +74,8 @@ export class HypixelService {
 
   public getFriends(uuid: string) {
     return lastValueFrom(
-      this.request<APIData>(`/friends?uuid=${uuid}`).pipe(
-        map((data) => new Friends(data)),
+      this.httpService.get(`/friends/${uuid}`, { baseURL: 'https://api.sk1er.club' }).pipe(
+        map((data) => new Friends(data.data)),
         catchError(() => of(null))
       )
     );

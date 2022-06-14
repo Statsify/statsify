@@ -1,7 +1,12 @@
 /* eslint-disable require-atomic-updates */
 import { InjectModel } from '@m8a/nestjs-typegoose';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { GuildQuery, HypixelCache } from '@statsify/api-client';
+import { Injectable } from '@nestjs/common';
+import {
+  GuildNotFoundException,
+  GuildQuery,
+  HypixelCache,
+  PlayerNotFoundException,
+} from '@statsify/api-client';
 import { Logger } from '@statsify/logger';
 import { deserialize, Guild, GuildMember, Player, serialize } from '@statsify/schemas';
 import { flatten } from '@statsify/util';
@@ -42,7 +47,7 @@ export class GuildService {
 
     if (!guild) {
       await this.handleGuildNotFound(cachedGuild, tag, type);
-      throw new NotFoundException(`guild`);
+      throw new GuildNotFoundException();
     }
 
     //The cached guild doesn't match the one we got from the API, just ignore the cached guild
@@ -150,7 +155,7 @@ export class GuildService {
         guildId: true,
       });
 
-      if (!player) throw new NotFoundException(`player`);
+      if (!player) throw new PlayerNotFoundException();
 
       if (!player.guildId) return [null, player.uuid];
 

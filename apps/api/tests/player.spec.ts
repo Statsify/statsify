@@ -104,25 +104,13 @@ describe('Player', () => {
       },
     });
 
-    expect(result.statusCode).toEqual(400);
+    expect(result.statusCode).toEqual(200);
   });
 
   it(`/GET player/friends?player=uuid`, async () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player/friends?player=${testUuid}`,
-      headers: {
-        'x-api-key': testKey,
-      },
-    });
-
-    expect(result.statusCode).toEqual(400);
-  });
-
-  it(`/GET player/friends?player=uuid&page=0`, async () => {
-    const result = await app.inject({
-      method: 'GET',
-      url: `/player/friends?player=${testUuid}&page=0`,
       headers: {
         'x-api-key': testKey,
       },

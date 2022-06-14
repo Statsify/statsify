@@ -69,10 +69,10 @@ export class PlayerService {
   /**
    *
    * @param tag UUID or username
-   * @param page The page of friends to return
+   * @param cacheLevel What type of data to return (cached/live)
    * @returns null or an object containing an array of friends
    */
-  public async getFriends(tag: string, page: number) {
+  public async getFriends(tag: string, cacheLevel: HypixelCache) {
     const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
       displayName: true,
       uuid: true,
@@ -87,56 +87,28 @@ export class PlayerService {
       .lean()
       .exec();
 
-    const pageSize = 8;
+    if (cachedFriends) {
+      cachedFriends.cached = true;
+
+      if (this.hypixelService.shouldCache(cachedFriends.expiresAt, cacheLevel))
+        return cachedFriends;
+    }
 
     const friends = await this.hypixelService.getFriends(player.uuid);
 
-    if (!friends) return null;
-
-    const friendMap = Object.fromEntries(
-      (cachedFriends?.friends ?? []).map((friend) => [friend.uuid, friend])
-    );
-
-    const pageMin = page * pageSize;
-    const pageMax = pageMin + pageSize;
-
-    //Loop through all the friends to make sure data to retained in mongo
-    for (let i = 0; i < friends.friends.length; i++) {
-      const friend = friends.friends[i];
-      const cachedFriend = friendMap[friend.uuid];
-
-      const inPageRange = i >= pageMin && i < pageMax;
-
-      if (cachedFriend && cachedFriend.displayName) {
-        friend.displayName = cachedFriend.displayName;
-        friend.expiresAt = cachedFriend.expiresAt;
-      }
-
-      //If they are not in the page range don't bother requesting them
-      if (!inPageRange) continue;
-
-      //Only request friend data if there is no cached data or the cache is expired
-      if (
-        !cachedFriend ||
-        !this.hypixelService.shouldCache(cachedFriend.expiresAt, HypixelCache.CACHE)
-      ) {
-        const friendData = await this.get(friend.uuid, HypixelCache.CACHE_ONLY, {
-          displayName: true,
-        });
-
-        friend.displayName = friendData ? friendData.displayName : `Error ${friend.uuid}`;
-
-        friend.expiresAt = Date.now() + 86400000;
-      }
+    if (!friends) {
+      if (cachedFriends) return cachedFriends;
+      throw new NotFoundException('friends');
     }
+
+    friends.displayName = player.displayName;
+    friends.uuid = player.uuid;
+    friends.expiresAt = Date.now() + 3_600_000;
 
     await this.friendsModel
       .replaceOne({ uuid: player.uuid }, friends, { upsert: true })
       .lean()
       .exec();
-
-    friends.displayName = player.displayName;
-    friends.friends = friends.friends.slice(pageMin, pageMax);
 
     return friends;
   }
