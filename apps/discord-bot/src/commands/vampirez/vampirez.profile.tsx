@@ -25,7 +25,7 @@ export const VampireZProfile = ({
   player,
   background,
   logo,
-  premium,
+  tier,
   badge,
   t,
   time,
@@ -49,7 +49,7 @@ export const VampireZProfile = ({
         <VampireZRow mode="§eHuman" stats={vampirez.human} t={t} />
         <VampireZRow mode="§4Vampire" stats={vampirez.vampire} t={t} />
       </Table.table>
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

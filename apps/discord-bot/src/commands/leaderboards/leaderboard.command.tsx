@@ -37,6 +37,7 @@ import {
   TNT_GAMES_MODES,
   TURBO_KART_RACERS_MODES,
   UHC_MODES,
+  UserTier,
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
@@ -52,7 +53,7 @@ interface BaseLeaderboardProps {
   t: LocalizeFunction;
   background: Image;
   logo: Image;
-  premium?: boolean;
+  tier?: UserTier;
 }
 
 interface LeaderboardParams {
@@ -61,7 +62,7 @@ interface LeaderboardParams {
 }
 
 @Command({ description: (t) => t('commands.leaderboard') })
-export class PlayerLeaderboardCommand {
+export class LeaderboardCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({
@@ -265,26 +266,24 @@ export class PlayerLeaderboardCommand {
 
     const [background, logo] = await Promise.all([
       getBackground(...mapBackground(modes, modes[0])),
-      getLogo(user?.premium),
+      getLogo(user?.tier),
     ]);
 
     const props: BaseLeaderboardProps = {
       t,
       background,
       logo,
-      premium: user?.premium,
+      tier: user?.tier,
     };
 
     const up = new ButtonBuilder()
-      .emoji('<:up:985258085553688588> ')
+      .emoji(t('emojis:up') + ' ')
       .style(ButtonStyle.Success)
       .disable(true);
 
-    const down = new ButtonBuilder().emoji('<:down:985258087915077644>').style(ButtonStyle.Danger);
+    const down = new ButtonBuilder().emoji(t('emojis:down') + '').style(ButtonStyle.Danger);
 
-    const search = new ButtonBuilder()
-      .emoji('<:search:985258087189463111>')
-      .style(ButtonStyle.Primary);
+    const search = new ButtonBuilder().emoji(t('emojis:search') + '').style(ButtonStyle.Primary);
 
     const changePage = (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
       const params = fn();
@@ -389,6 +388,7 @@ export class PlayerLeaderboardCommand {
   ): Promise<[message: IMessage, page: number | null]> {
     if (params.type === LeaderboardQuery.PAGE && cache.has(params.input as number)) {
       const page = params.input as number;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return [cache.get(page)!, page];
     }
 

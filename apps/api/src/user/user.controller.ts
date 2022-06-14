@@ -1,6 +1,6 @@
-import { Controller, Delete, Get, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Put, Query, StreamableFile } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ErrorResponse, GetUserResponse } from '@statsify/api-client';
+import { ErrorResponse, GetUserResponse, PutUserBadgeResponse } from '@statsify/api-client';
 import { Auth, AuthRole } from '../auth';
 import { UserDto, VerifyCodeDto } from '../dtos';
 import { UserService } from './user.service';
@@ -22,6 +22,36 @@ export class UserController {
       success: !!user,
       user,
     };
+  }
+
+  @Get(`/badge`)
+  @ApiOperation({ summary: 'Get a User Badge' })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @Auth({ role: AuthRole.ADMIN })
+  public async getUserBadge(@Query() { tag }: UserDto) {
+    const badge = await this.userService.getBadge(tag);
+
+    return new StreamableFile(badge, { type: 'image/png' });
+  }
+
+  @Put(`/badge`)
+  @ApiOkResponse({ type: PutUserBadgeResponse })
+  @ApiOperation({ summary: 'Set a User Badge' })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @Auth({ role: AuthRole.ADMIN })
+  public async setUserBadge(@Query() { tag }: UserDto, @Body() body: Buffer) {
+    await this.userService.updateBadge(tag, body);
+    return { success: true };
+  }
+
+  @Delete(`/badge`)
+  @ApiOkResponse({ type: PutUserBadgeResponse })
+  @ApiOperation({ summary: 'Reset a User Badge' })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @Auth({ role: AuthRole.ADMIN })
+  public async deleteUserBadge(@Query() { tag }: UserDto) {
+    await this.userService.deleteBadge(tag);
+    return { success: true };
   }
 
   @Put()

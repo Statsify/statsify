@@ -1,3 +1,4 @@
+import { UserTier } from '@statsify/schemas';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { Image, loadImage } from 'skia-canvas';
@@ -54,14 +55,13 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
     const backgrounds = getBackgroundPaths().filter((p) => p.startsWith(path));
     const background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
+    if (!background) throw new Error(`No background found for ${pathOrGame}_${mode}`);
+
     return getImage(`out/backgrounds/${background}`);
   }
 
   return getImage(`out/backgrounds/${pathOrGame}.png`);
 }
-
-export const getLogo = (premium = false, size = 26) =>
-  getImage(`logos/${premium ? 'premium_' : ''}logo_${size}.png`);
 
 export const getServerMappings = () =>
   JSON.parse(readFileSync('../../assets/server-mappings/servers.json', 'utf8')) as {
@@ -69,3 +69,21 @@ export const getServerMappings = () =>
     name: string;
     addresses: string[];
   }[];
+
+export const getLogo = (tier?: UserTier, size?: number) => loadImage(getLogoPath(tier, size));
+
+export const getLogoPath = (tier: UserTier = UserTier.NONE, size = 26) => {
+  let path: string;
+
+  switch (tier) {
+    case UserTier.NONE:
+      path = '';
+      break;
+    case UserTier.PREMIUM:
+    case UserTier.CORE:
+      path = 'premium_';
+      break;
+  }
+
+  return getAssetPath(`logos/${path}logo_${size}.png`);
+};

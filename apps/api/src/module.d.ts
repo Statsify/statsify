@@ -2,6 +2,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       API_PORT: number;
+      API_MEDIA_ROOT: string;
       IGNORE_AUTH?: string;
       MONGODB_URI: string;
       REDIS_URL: string;

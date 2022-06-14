@@ -12,7 +12,7 @@ export const UHCProfile = ({
   player,
   background,
   logo,
-  premium,
+  tier,
   badge,
   mode,
   t,
@@ -56,7 +56,7 @@ export const UHCProfile = ({
           <Table.td title={t('stats.extraUltimates')} value={t(stats.extraUltimates)} color="§d" />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

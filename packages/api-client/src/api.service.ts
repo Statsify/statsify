@@ -19,6 +19,7 @@ import {
   PostGuildRankingsResponse,
   PostPlayerLeaderboardResponse,
   PostPlayerRankingsResponse,
+  PutUserBadgeResponse,
 } from './responses';
 
 interface ExtraData {
@@ -169,6 +170,21 @@ export class ApiService {
     return this.request<GetUserResponse>(`/user`, { tag })
       .then((data) => data.user ?? null)
       .catch(() => null);
+  }
+
+  public getUserBadge(tag: string) {
+    return this.requestImage(`/user/badge`, { tag }).catch(() => undefined);
+  }
+
+  public updateUserBadge(tag: string, badge: Buffer) {
+    return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, 'PUT', {
+      body: badge,
+      headers: { 'Content-Type': 'image/png' },
+    });
+  }
+
+  public deleteUserBadge(tag: string) {
+    return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, 'DELETE');
   }
 
   public verifyUser(code: string, id: string) {

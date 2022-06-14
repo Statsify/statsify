@@ -51,7 +51,7 @@ export const GeneralProfile = ({
   skin,
   t,
   badge,
-  premium,
+  tier,
   guild,
   friends = 0,
   time,
@@ -105,7 +105,7 @@ export const GeneralProfile = ({
           )}
         </If>
       </Table.table>
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

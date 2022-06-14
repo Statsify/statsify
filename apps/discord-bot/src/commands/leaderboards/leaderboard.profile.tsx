@@ -1,5 +1,6 @@
 import { Container, Footer } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
+import { UserTier } from '@statsify/schemas';
 import type { Image } from 'skia-canvas';
 
 const formatPosition = (t: LocalizeFunction, position: number): string => {
@@ -23,7 +24,7 @@ export interface LeaderboardData {
 export interface LeaderboardProfileProps {
   background: Image;
   logo: Image;
-  premium?: boolean;
+  tier?: UserTier;
   fields: string[];
   name: string;
   data: LeaderboardData[];
@@ -33,7 +34,7 @@ export interface LeaderboardProfileProps {
 export const LeaderboardProfile = ({
   background,
   logo,
-  premium,
+  tier,
   data,
   fields,
   name,
@@ -112,7 +113,7 @@ export const LeaderboardProfile = ({
       </div>
       <Footer
         logo={logo}
-        premium={premium}
+        tier={tier}
         border={{ bottomLeft: 4, bottomRight: 4, topLeft: 0, topRight: 0 }}
       />
     </Container>

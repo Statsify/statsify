@@ -1,4 +1,5 @@
 export * from './choice.argument';
+export * from './file.argument';
 export * from './guild.argument';
 export * from './mojang-player.argument';
 export * from './number.argument';

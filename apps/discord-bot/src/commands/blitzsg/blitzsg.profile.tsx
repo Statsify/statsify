@@ -86,7 +86,7 @@ export const BlitzSGProfile = ({
   player,
   background,
   logo,
-  premium,
+  tier,
   badge,
   mode,
   t,
@@ -130,7 +130,7 @@ export const BlitzSGProfile = ({
         time={time}
       />
       {table}
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

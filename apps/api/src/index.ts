@@ -4,15 +4,25 @@ import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from '@statsify/logger';
 import { setGlobalOptions } from '@typegoose/typegoose';
+import { mkdir } from 'fs/promises';
 import { join } from 'path';
 import { version } from '../../../package.json';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
+  await mkdir(join(process.env.API_MEDIA_ROOT, 'badges'), { recursive: true });
+
   //Removes the `_id` fields created from sub classes of documents
   setGlobalOptions({ schemaOptions: { _id: false } });
 
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter(), {
+  const adapter = new FastifyAdapter();
+
+  // This parses the content for when PNGs are sent to the API
+  adapter
+    .getInstance()
+    .addContentTypeParser('image/png', { parseAs: 'buffer' }, (_, body, done) => done(null, body));
+
+  const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
     logger: new Logger(),
   });
 
