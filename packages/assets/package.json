@@ -10,6 +10,6 @@
   },
   "dependencies": {
     "@statsify/logger": "workspace:^",
-    "skia-canvas": "^0.9.29"
+    "skia-canvas": "^0.9.30"
   }
 }
