@@ -83,6 +83,9 @@ export class Player {
   @Field({ store: { required: false, store: false } })
   public isNew?: boolean;
 
+  @Field({ store: { required: false } })
+  public guildId?: string;
+
   public constructor(data: APIData = {}) {
     this.uuid = data.uuid;
     this.username = data.displayname;

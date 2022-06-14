@@ -2,7 +2,7 @@ import { APIData } from '@statsify/util';
 import { Color } from '../color';
 import { GameCode } from '../game';
 import { Field } from '../metadata';
-import { Achievements } from './achievements';
+import { GuildAchievements } from './achievements';
 import { ExpByGame } from './expbygame';
 import { GuildMember } from './member';
 import { GuildRank } from './rank';
@@ -37,7 +37,7 @@ export class Guild {
   public ranks: GuildRank[];
 
   @Field()
-  public achievements: Achievements;
+  public achievements: GuildAchievements;
 
   @Field({ type: () => [String] })
   public preferredGames: GameCode[];
@@ -97,7 +97,7 @@ export class Guild {
       this.tagFormatted ? ` ${this.tagFormatted}` : ''
     }`;
 
-    this.achievements = new Achievements(data.achievements ?? {});
+    this.achievements = new GuildAchievements(data.achievements ?? {});
     this.preferredGames = data.preferredGames ?? [];
     this.publiclyListed = data.publiclyListed;
 
@@ -141,3 +141,6 @@ export class Guild {
     }
   }
 }
+
+export * from './achievements';
+export * from './member';
