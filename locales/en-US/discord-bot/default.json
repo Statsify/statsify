@@ -197,6 +197,39 @@
       "footer": {
         "available": "Unless the name is temporarily or permanently blocked by Mojang."
       }
+    },
+    "invite": {
+      "title": "Statsify Links",
+      "description": "Click the link below to invite the bot to your discord server."
+    },
+    "ping": {
+      "title": "Statsify Credits",
+      "pong": "Pong!",
+      "core": "Core",
+      "contributors": "Contributors"
+    },
+    "help": {
+      "title": "Statsify Help",
+      "games": {
+        "title": "Games",
+        "description": "Statsify supports majority of the games on Hypixel. To check your stats in a game run /[game]. For example you can run /bedwars to check your bedwars stats."
+      },
+      "leaderboards": {
+        "title": "Leaderboards",
+        "description": "Statsify offers 1000s of leaderboards through the /leaderboard command. Run /leaderboard then pick the gamemode, and pick a leaderboard to view. You can hit the search button to search for a certain player or position. You can also hit the up and down buttons to view more pages."
+      },
+      "historical": {
+        "title": "Historical",
+        "description": "Statsify lets you check your daily, weekly, and monthly stats through /daily, /weekly and /monthly."
+      },
+      "minecraft": {
+        "title": "Minecraft",
+        "description": "You can view general minecraft information such as skins, uuids, capes through /skin, /uuid, and /cape respectively. Statsify also has commands to generate minecraft text through /text. View minecraft colors through /colors and preview minecraft servers through /server."
+      },
+      "misc": {
+        "title": "Misc",
+        "description": "You can do something with statsify"
+      }
     }
   },
   "commands": {
@@ -354,6 +387,14 @@
       "view": "$t(emojis:eye) Your current badge:",
       "reset": "$t(emojis:reset) Successfully reset your badge."
     }
+  },
+  "socials": {
+    "invite": "[Invite](https://discord.com/oauth2/authorize?client_id={{id}}&permissions=388168&scope=applications.commands%20bot&response_type=code&redirect_uri=https%3A%2F%2Fstatsify.net%2Fbot%2Fthanks)",
+    "discord": "[Discord](https://discord.com/invite/5VgxMQY)",
+    "premium": "[Premium](https://statsify.net/premium)",
+    "website": "[Website](https://statsify.net/)",
+    "forums": "[Forums](https://statsify.net/forums)",
+    "github": "[GitHub](https://github.com/Statsify/statsify)"
   },
   "number": "{{value, number}}"
 }
