@@ -7,7 +7,7 @@ export const TurboKartRacersProfile = ({
   player,
   background,
   logo,
-  premium,
+  tier,
   badge,
   t,
   time,
@@ -65,7 +65,7 @@ export const TurboKartRacersProfile = ({
           <Table.td title={t('stats.totalTrophies')} value={t(turbokartracers.total)} color="§a" />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

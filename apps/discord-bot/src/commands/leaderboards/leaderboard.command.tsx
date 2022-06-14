@@ -37,6 +37,7 @@ import {
   TNT_GAMES_MODES,
   TURBO_KART_RACERS_MODES,
   UHC_MODES,
+  UserTier,
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
@@ -52,7 +53,7 @@ interface BaseLeaderboardProps {
   t: LocalizeFunction;
   background: Image;
   logo: Image;
-  premium?: boolean;
+  tier?: UserTier;
 }
 
 interface LeaderboardParams {
@@ -265,14 +266,14 @@ export class LeaderboardCommand {
 
     const [background, logo] = await Promise.all([
       getBackground(...mapBackground(modes, modes[0])),
-      getLogo(user?.premium),
+      getLogo(user?.tier),
     ]);
 
     const props: BaseLeaderboardProps = {
       t,
       background,
       logo,
-      premium: user?.premium,
+      tier: user?.tier,
     };
 
     const up = new ButtonBuilder()

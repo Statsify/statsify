@@ -18,7 +18,7 @@ export const DuelsProfile = ({
   player,
   background,
   logo,
-  premium,
+  tier,
   badge,
   mode,
   t,
@@ -64,7 +64,7 @@ export const DuelsProfile = ({
         time={time}
       />
       {table}
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

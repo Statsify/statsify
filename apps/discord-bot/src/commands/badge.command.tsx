@@ -48,7 +48,7 @@ export class BadgeCommand {
         (t) => t('verification.requiredVerification.description')
       );
 
-    if (!user.premium)
+    if (User.isPremium(user.tier))
       throw new ErrorMessage(
         (t) => t('errors.missingSelfPremium.title'),
         (t) => t('errors.missingSelfPremium.description')
@@ -141,7 +141,7 @@ export class BadgeCommand {
     const [player, skin, logo, background] = await Promise.all([
       this.apiService.getPlayer(user.uuid),
       this.apiService.getPlayerSkin(user.uuid),
-      getLogo(user.premium),
+      getLogo(user.tier),
       getBackground('hypixel', 'overall'),
     ]);
 
@@ -154,7 +154,7 @@ export class BadgeCommand {
             <box width="100%">
               <text>{t('config.badge.profile') as string}</text>
             </box>
-            <Footer logo={logo} premium={user.premium}></Footer>
+            <Footer logo={logo} tier={user.tier}></Footer>
           </div>
         </div>
       </Container>,

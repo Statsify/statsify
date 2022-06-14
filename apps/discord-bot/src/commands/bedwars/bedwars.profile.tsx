@@ -20,7 +20,7 @@ export const BedWarsProfile = ({
   player,
   background,
   logo,
-  premium,
+  tier,
   badge,
   mode,
   t,
@@ -89,7 +89,7 @@ export const BedWarsProfile = ({
           exp={bedwars.exp}
         />
       </Table.table>
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

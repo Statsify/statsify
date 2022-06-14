@@ -1,3 +1,4 @@
+import { UserTier } from '@statsify/schemas';
 import { existsSync, readdirSync } from 'fs';
 import { join } from 'path';
 import { Image, loadImage } from 'skia-canvas';
@@ -62,7 +63,20 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
   return getImage(`out/backgrounds/${pathOrGame}.png`);
 }
 
-export const getLogo = (hasPremium = false, size = 26) => loadImage(getLogoPath(hasPremium, size));
+export const getLogo = (tier?: UserTier, size?: number) => loadImage(getLogoPath(tier, size));
 
-export const getLogoPath = (hasPremium = false, size = 26) =>
-  getAssetPath(`logos/${hasPremium ? 'premium_' : ''}logo_${size}.png`);
+export const getLogoPath = (tier: UserTier = UserTier.NONE, size = 26) => {
+  let path: string;
+
+  switch (tier) {
+    case UserTier.NONE:
+      path = '';
+      break;
+    case UserTier.PREMIUM:
+    case UserTier.CORE:
+      path = 'premium_';
+      break;
+  }
+
+  return getAssetPath(`logos/${path}logo_${size}.png`);
+};

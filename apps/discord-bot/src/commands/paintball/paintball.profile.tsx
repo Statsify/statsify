@@ -8,7 +8,7 @@ export const PaintballProfile = ({
   player,
   background,
   logo,
-  premium,
+  tier,
   badge,
   t,
   time,
@@ -97,7 +97,7 @@ export const PaintballProfile = ({
         </Table.ts>
       </Table.table>
 
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

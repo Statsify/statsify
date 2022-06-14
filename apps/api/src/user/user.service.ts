@@ -23,12 +23,14 @@ export class UserService {
 
     if (!user) throw new NotFoundException(`user`);
 
+    const isPremium = User.isPremium(user.tier);
+
     let badgePath: string | undefined = undefined;
 
-    if (user.hasBadge && user.premium) {
+    if (user.hasBadge && isPremium) {
       badgePath = this.getBadgePath(user.id);
-    } else if (user.premium) {
-      badgePath = getLogoPath(user.premium);
+    } else if (isPremium) {
+      badgePath = getLogoPath(user.tier);
     } else if (user.uuid) {
       badgePath = getAssetPath(`logos/verified_logo_30.png`);
     }

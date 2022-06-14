@@ -7,7 +7,7 @@ export const WallsProfile = ({
   player,
   background,
   logo,
-  premium,
+  tier,
   badge,
   t,
   time,
@@ -39,7 +39,7 @@ export const WallsProfile = ({
           <Table.td title={t('stats.assists')} value={t(walls.assists)} color="§e" />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} premium={premium} />
+      <Footer logo={logo} tier={tier} />
     </Container>
   );
 };

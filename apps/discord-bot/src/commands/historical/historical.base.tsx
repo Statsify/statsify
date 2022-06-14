@@ -215,7 +215,7 @@ export class HistoricalBase {
     );
 
     const [logo, skin, badge] = await Promise.all([
-      getLogo(user?.premium),
+      getLogo(user?.tier),
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
     ]);
@@ -232,7 +232,7 @@ export class HistoricalBase {
             background,
             logo,
             t,
-            premium: user?.premium,
+            tier: user?.tier,
             badge,
             time: this.time,
           },

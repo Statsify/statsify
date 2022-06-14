@@ -5,7 +5,7 @@ import { HistoricalType } from '@statsify/api-client';
 import { getBackground, getLogo } from '@statsify/assets';
 import { Command, CommandContext, LocalizeFunction } from '@statsify/discord';
 import { render } from '@statsify/rendering';
-import type { Player } from '@statsify/schemas';
+import type { Player, UserTier } from '@statsify/schemas';
 import { noop, prettify } from '@statsify/util';
 import type { Image } from 'skia-canvas';
 import Container from 'typedi';
@@ -16,7 +16,7 @@ export interface BaseProfileProps {
   player: Player;
   background: Image;
   logo: Image;
-  premium?: boolean;
+  tier?: UserTier;
   badge?: Image;
   t: LocalizeFunction;
   time: 'LIVE' | HistoricalType;
@@ -57,7 +57,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     );
 
     const [logo, skin, badge] = await Promise.all([
-      getLogo(user?.premium),
+      getLogo(user?.tier),
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
     ]);
@@ -78,7 +78,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
             background,
             logo,
             t,
-            premium: user?.premium,
+            tier: user?.tier,
             badge,
             time: 'LIVE',
           },
