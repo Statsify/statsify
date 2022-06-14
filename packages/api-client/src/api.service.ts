@@ -3,7 +3,6 @@ import { loadImage } from 'skia-canvas';
 import { GuildQuery, HistoricalType } from './enums';
 import { LeaderboardQuery } from './enums/leaderboard-query.enum';
 import {
-  GetAchievementsResponse,
   GetFriendsResponse,
   GetGamecountsResponse,
   GetGuildResponse,
@@ -74,12 +73,6 @@ export class ApiService {
       'rankedSkyWars',
       { player: tag }
     );
-  }
-
-  public getAchievements(tag: string) {
-    return this.request<GetAchievementsResponse>(`/player/achievements`, {
-      player: tag,
-    });
   }
 
   public getPlayerLeaderboard(

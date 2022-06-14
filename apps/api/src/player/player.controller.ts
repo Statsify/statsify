@@ -9,7 +9,6 @@ import {
 import {
   DeletePlayerResponse,
   ErrorResponse,
-  GetAchievementsResponse,
   GetFriendsResponse,
   GetPlayerResponse,
   GetRankedSkyWarsResponse,
@@ -121,21 +120,6 @@ export class PlayerController {
     return {
       success: !!rankedSkyWars,
       rankedSkyWars,
-    };
-  }
-
-  @ApiOperation({ summary: 'Get the Achievements of a Player' })
-  @ApiOkResponse({ type: GetAchievementsResponse })
-  @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiNotFoundResponse({ type: PlayerNotFoundException })
-  @Auth()
-  @Get('/achievements')
-  public async getAchievements(@Query() { player: tag }: PlayerDto) {
-    const data = await this.playerService.getAchievements(tag);
-
-    return {
-      success: !!data,
-      ...data,
     };
   }
 }

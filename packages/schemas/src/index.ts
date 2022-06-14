@@ -1,4 +1,3 @@
-export * from './achievements';
 export * from './color';
 export * from './friends';
 export * from './game';

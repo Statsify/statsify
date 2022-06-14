@@ -1,5 +1,5 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   HypixelCache,
   PlayerNotFoundException,
@@ -7,14 +7,7 @@ import {
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from '@statsify/api-client';
-import {
-  Achievements,
-  deserialize,
-  Friends,
-  LeaderboardScanner,
-  Player,
-  serialize,
-} from '@statsify/schemas';
+import { deserialize, Friends, LeaderboardScanner, Player, serialize } from '@statsify/schemas';
 import { Flatten, flatten } from '@statsify/util';
 import type { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
@@ -44,7 +37,7 @@ export class PlayerService {
     const mongoPlayer = await this.findMongoDocument(tag, selector);
 
     if (mongoPlayer && this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)) {
-      return this.resolveCachedDocument(mongoPlayer, selector);
+      return deserialize(Player, mongoPlayer);
     }
 
     const player = await this.hypixelService.getPlayer(mongoPlayer?.uuid ?? tag);
@@ -53,6 +46,7 @@ export class PlayerService {
       player.expiresAt = Date.now() + 120000;
       player.leaderboardBanned = mongoPlayer?.leaderboardBanned ?? false;
       player.resetMinute = mongoPlayer?.resetMinute;
+      player.guildId = mongoPlayer?.guildId;
 
       const flatPlayer = flatten(player);
 
@@ -60,7 +54,7 @@ export class PlayerService {
 
       return deserialize(Player, flatPlayer);
     } else if (mongoPlayer) {
-      return this.resolveCachedDocument(mongoPlayer, selector);
+      return deserialize(Player, mongoPlayer);
     }
 
     return null;
@@ -111,32 +105,6 @@ export class PlayerService {
       .exec();
 
     return friends;
-  }
-
-  public async getAchievements(tag: string) {
-    const [player, resources] = await Promise.all([
-      this.get(tag, HypixelCache.CACHE, {
-        uuid: true,
-        displayName: true,
-        oneTimeAchievements: true,
-        tieredAchievements: true,
-        goldAchievements: true,
-        expiresAt: true,
-      }),
-      this.hypixelService.getResources('achievements'),
-    ]);
-
-    if (!player) throw new PlayerNotFoundException();
-
-    if (!resources)
-      throw new InternalServerErrorException('hypixel achievement resources not found');
-
-    return {
-      uuid: player.uuid,
-      displayName: player.displayName,
-      goldAchievements: player.goldAchievements ?? false,
-      achievements: new Achievements(player, resources.achievements),
-    };
   }
 
   public async getStatus(tag: string) {
@@ -245,14 +213,9 @@ export class PlayerService {
     //Serialize and flatten the player
     const serializedPlayer = serialize(Player, player);
 
-    const fields = LeaderboardScanner.getLeaderboardFields(Player);
-
-    //Remove all leaderboard fields for the mongo document
-    fields.forEach((field) => {
-      if (serializedPlayer[field]) delete serializedPlayer[field];
-    });
-
     await this.playerModel.replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true });
+
+    const fields = LeaderboardScanner.getLeaderboardFields(Player);
 
     await this.leaderboardService.addLeaderboards(
       Player,
@@ -261,33 +224,5 @@ export class PlayerService {
       fields,
       player.leaderboardBanned ?? false
     );
-  }
-
-  private async resolveCachedDocument(
-    mongoPlayer: Flatten<Player>,
-    selector?: Record<string, boolean>
-  ) {
-    let redisSelector: string[] | undefined = undefined;
-
-    //If a selector is provided only query the keys whose values are truthy
-    if (selector) {
-      redisSelector = Object.keys(selector).filter((key) => selector[key]);
-    } else {
-      redisSelector = LeaderboardScanner.getLeaderboardFields(Player);
-    }
-
-    //Only select keys that are not in the mongo document
-    redisSelector = redisSelector.filter((key) => !(key in mongoPlayer));
-
-    const redisPlayer = await this.leaderboardService.getLeaderboardDocument(
-      Player,
-      mongoPlayer.shortUuid,
-      redisSelector
-    );
-
-    return deserialize(Player, {
-      ...redisPlayer,
-      ...mongoPlayer,
-    });
   }
 }

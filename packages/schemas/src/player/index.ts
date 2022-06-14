@@ -52,12 +52,6 @@ export class Player {
   @Field()
   public status: PlayerStatus;
 
-  @Field({ type: () => [String] })
-  public oneTimeAchievements: string[];
-
-  @Field({ leaderboard: { enabled: false }, store: { serialize: false } })
-  public tieredAchievements: Record<string, number>;
-
   @Field()
   public goldAchievements: boolean;
 
@@ -102,8 +96,6 @@ export class Player {
 
     this.status = new PlayerStatus(data);
 
-    this.oneTimeAchievements = data?.achievementsOneTime ?? [];
-    this.tieredAchievements = data?.achievements ?? {};
     this.goldAchievements = data?.vanityMeta?.packages?.includes('goldachievementmenu') ?? false;
 
     //These will all be filled in by a service
