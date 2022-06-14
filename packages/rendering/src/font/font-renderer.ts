@@ -69,7 +69,7 @@ export class FontRenderer {
 
       const largestSize = Math.max(...row.map((node) => node.size));
 
-      for (const { text, color, bold, italic, underline, size, shadow } of row) {
+      for (const { text, color, bold, italic, underline, strikethrough, size, shadow } of row) {
         const adjustY = y + size + (largestSize - size) * 5;
 
         for (const char of text) {
@@ -82,6 +82,7 @@ export class FontRenderer {
             bold,
             italic,
             underline,
+            strikethrough,
             color,
             shadow
           );
@@ -92,18 +93,22 @@ export class FontRenderer {
     }
   }
 
-  public lex(text: string): TextNode[][] {
+  public lex(text: string, inputState: Partial<TextNode> = {}): TextNode[][] {
     const lines = text.split('\n');
 
     return lines.map((line) => {
-      let state: Omit<TextNode, 'text'> = {
+      const defualtState: Omit<TextNode, 'text'> = {
         bold: false,
         italic: false,
         underline: false,
+        strikethrough: false,
         color: [255, 255, 255],
         size: 2,
         shadow: true,
+        ...inputState,
       };
+
+      let state = defualtState;
 
       line = line.startsWith('§') ? line : `§f${line}`;
 
@@ -123,7 +128,7 @@ export class FontRenderer {
             }
           }
 
-          const effect = token?.effect(part, matches as RegExpMatchArray);
+          const effect = token?.effect(part, matches as RegExpMatchArray, defualtState);
           let text = effect?.text ?? part;
 
           if (matches) text = text.substring(matches[0].length);
@@ -251,11 +256,10 @@ export class FontRenderer {
     bold: boolean,
     italic: boolean,
     underline: boolean,
+    strikethrough: boolean,
     color: [number, number, number],
     shadow: boolean
   ): number {
-    if (char === ' ') return this.getCharacterSpacing(' ', false, textSize, 1, 0, bold);
-
     const metadata = this.getCharacterMetadata(char, textSize);
 
     if (!metadata) return 0;
@@ -280,6 +284,7 @@ export class FontRenderer {
         resizeFactor,
         shadowColor,
         underline,
+        strikethrough,
         bold,
         italic,
         isAscii
@@ -297,6 +302,7 @@ export class FontRenderer {
       resizeFactor,
       color,
       underline,
+      strikethrough,
       bold,
       italic,
       isAscii
@@ -316,6 +322,7 @@ export class FontRenderer {
     resizeFactor: number,
     color: RGB,
     underline: boolean,
+    strikethrough: boolean,
     bold: boolean,
     italic: boolean,
     isAscii: boolean
@@ -323,6 +330,7 @@ export class FontRenderer {
     this.fillPlainCharacter(ctx, imageData, x, y, width, scale, size, color, italic);
 
     if (underline) this.fillUnderline(ctx, x, y, width, resizeFactor, color);
+    if (strikethrough) this.fillStrikethrough(ctx, x, y, width, resizeFactor, color);
 
     if (bold) {
       this.fillPlainCharacter(
@@ -337,19 +345,12 @@ export class FontRenderer {
         italic
       );
 
+      const offset = x + 2 * resizeFactor;
+
       if (isAscii)
-        this.fillPlainCharacter(
-          ctx,
-          imageData,
-          x + 2 * resizeFactor,
-          y,
-          width,
-          scale,
-          size,
-          color,
-          italic
-        );
-      if (underline) this.fillUnderline(ctx, x + 2 * resizeFactor, y, width, resizeFactor, color);
+        this.fillPlainCharacter(ctx, imageData, offset, y, width, scale, size, color, italic);
+      if (underline) this.fillUnderline(ctx, offset, y, width, resizeFactor, color);
+      if (strikethrough) this.fillStrikethrough(ctx, offset, y, width, resizeFactor, color);
     }
   }
 
@@ -388,7 +389,7 @@ export class FontRenderer {
     }
   }
 
-  private fillUnderline(
+  private fillLine(
     ctx: CanvasRenderingContext2D,
     x: number,
     y: number,
@@ -398,11 +399,28 @@ export class FontRenderer {
   ) {
     ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
 
-    ctx.fillRect(
-      x - 2 * resizeFactor,
-      y + 16 * resizeFactor,
-      (width + 4) * resizeFactor,
-      resizeFactor * 2
-    );
+    ctx.fillRect(x - 2 * resizeFactor, y, (width + 2) * (resizeFactor * 2), resizeFactor * 2);
+  }
+
+  private fillUnderline(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    resizeFactor: number,
+    color: RGB
+  ) {
+    return this.fillLine(ctx, x, y + 16 * resizeFactor, width, resizeFactor, color);
+  }
+
+  private fillStrikethrough(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    resizeFactor: number,
+    color: RGB
+  ) {
+    return this.fillLine(ctx, x, y + 6 * resizeFactor, width, resizeFactor, color);
   }
 }

@@ -64,6 +64,7 @@ export class PaginateService {
 
         if (interaction.getUserId() === userId) {
           index = page;
+          this.setActiveControl(controller, index);
           return context.reply(message);
         }
 
@@ -187,7 +188,6 @@ export class PaginateService {
     const content = pages[index];
     const isScrolling = typeof content === 'function';
     const pageContent = await (isScrolling ? content(t) : content.generator(t));
-    if (!isScrolling) this.setActiveControl(controller, index);
 
     let page: Message;
 
@@ -204,7 +204,7 @@ export class PaginateService {
       page = new Message(pageContent);
     }
 
-    if (controller.length) {
+    if (controller.length && pages.length > 1) {
       page.components = [new ActionRowBuilder(controller)];
     }
 

@@ -145,7 +145,59 @@
     "prevent": "Prevent",
     "total": "Total",
     "levelsGained": "Levels Gained",
-    "expGained": "EXP Gained"
+    "expGained": "EXP Gained",
+    "exp": "EXP"
+  },
+  "embeds": {
+    "uuid": {
+      "description": {
+        "username": "Username",
+        "uuid": "UUID",
+        "trimmedUUID": "Trimmed UUID",
+        "shortUUID": "Short UUID"
+      }
+    },
+    "skin": {
+      "description": {
+        "username": "Username"
+      },
+      "components": {
+        "apply": "Apply"
+      }
+    },
+    "namehistory": {
+      "title": "Name History",
+      "description": {
+        "originalName": "Original Name"
+      }
+    },
+    "colors": {
+      "title": "Minecraft Color Codes",
+      "description": {
+        "color": "Color",
+        "mainHex": "Main Hex",
+        "shadowHex": "Shadow Hex",
+        "obfuscated": "Obfuscated",
+        "bold": "Bold",
+        "strikethrough": "Strikethrough",
+        "underline": "Underline",
+        "italic": "Italic",
+        "reset": "Reset"
+      }
+    },
+    "available": {
+      "description": {
+        "uuid": "UUID",
+        "namemc": "NameMC",
+        "username": "Username",
+        "status": "Status",
+        "invalidCharacters": "Invalid Characters",
+        "tooLong": "Too Long"
+      },
+      "footer": {
+        "available": "Unless the name is temporarily or permanently blocked by Mojang."
+      }
+    }
   },
   "commands": {
     "arcade": "Arcade Games command",
@@ -270,6 +322,14 @@
     "leaderboardEmpty": {
       "title": "Leaderboard Empty",
       "description": "There are no more players for this leaderboard"
+    },
+    "invalidServer": {
+      "title": "Invalid Server",
+      "description": "The server you are looking for either doesn't exist or is offline"
+    },
+    "noCape": {
+      "title": "Missing Cape",
+      "description": "There is no cape lmao"
     }
   },
   "leaderboard": {
@@ -285,6 +345,8 @@
       "title": "Leaderboard Search"
     }
   },
+  "available": "Available",
+  "unavailable": "Unavailable",
   "config": {
     "badge": {
       "profile": "This is how your badge is displayed",

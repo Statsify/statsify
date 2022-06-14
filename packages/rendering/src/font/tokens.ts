@@ -7,13 +7,18 @@ export interface TextNode {
   bold: boolean;
   italic: boolean;
   underline: boolean;
+  strikethrough: boolean;
   size: number;
   shadow: boolean;
 }
 
 export interface Token {
   regex: RegExp;
-  effect: (part: string, matches: RegExpMatchArray) => Partial<TextNode>;
+  effect: (
+    part: string,
+    matches: RegExpMatchArray,
+    defaultState: Omit<TextNode, 'text'>
+  ) => Partial<TextNode>;
 }
 
 const bold: Token = { regex: /^l/, effect: () => ({ bold: true }) };
@@ -24,19 +29,23 @@ const italic: Token = {
 };
 
 const underline: Token = {
-  regex: /^u/,
+  regex: /^n|^u/,
   effect: () => ({ underline: true }),
+};
+
+const strikethrough: Token = {
+  regex: /^m/,
+  effect: () => ({ strikethrough: true }),
+};
+
+const obfuscated: Token = {
+  regex: /^k/,
+  effect: () => ({}),
 };
 
 const reset: Token = {
   regex: /^r/,
-  effect: () => ({
-    italic: false,
-    bold: false,
-    underline: false,
-    color: [255, 255, 255],
-    size: 2,
-  }),
+  effect: (_, __, defaultState) => defaultState,
 };
 
 const textColors = Object.fromEntries(
@@ -47,7 +56,11 @@ const colorRegex = new RegExp(`^${Object.keys(textColors).join('|^')}|^#([A-Fa-f
 
 const color: Token = {
   regex: colorRegex,
-  effect: (part) => ({ color: part.startsWith('#') ? hexToRgb(part) : textColors[part[0]] }),
+  effect: (part) => ({
+    color: part.startsWith('#') ? hexToRgb(part) : textColors[part[0]],
+    strikethrough: false,
+    underline: false,
+  }),
 };
 
 const size: Token = {
@@ -57,4 +70,13 @@ const size: Token = {
   }),
 };
 
-export const tokens: Token[] = [color, bold, reset, size, italic, underline];
+export const tokens: Token[] = [
+  color,
+  bold,
+  reset,
+  size,
+  italic,
+  underline,
+  strikethrough,
+  obfuscated,
+];

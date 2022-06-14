@@ -1,5 +1,5 @@
 import { UserTier } from '@statsify/schemas';
-import { existsSync, readdirSync } from 'fs';
+import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { Image, loadImage } from 'skia-canvas';
 
@@ -62,6 +62,13 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
 
   return getImage(`out/backgrounds/${pathOrGame}.png`);
 }
+
+export const getServerMappings = () =>
+  JSON.parse(readFileSync('../../assets/server-mappings/servers.json', 'utf8')) as {
+    id: string;
+    name: string;
+    addresses: string[];
+  }[];
 
 export const getLogo = (tier?: UserTier, size?: number) => loadImage(getLogoPath(tier, size));
 

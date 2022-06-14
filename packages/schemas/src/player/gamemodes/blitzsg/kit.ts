@@ -6,7 +6,7 @@ export class BlitzSGKit {
   @Field()
   public gamesPlayed: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public level: number;
 
   @Field()
@@ -81,5 +81,7 @@ export class BlitzSGKit {
           this.exp
         ) + 1;
     }
+
+    this.level = this.level ?? 1;
   }
 }

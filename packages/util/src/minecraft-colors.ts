@@ -6,7 +6,7 @@ export const minecraftColors = [
   { code: '§4', hex: '#AA0000', id: 'DARK_RED' },
   { code: '§5', hex: '#AA00AA', id: 'DARK_PURPLE' },
   { code: '§6', hex: '#FFAA00', id: 'GOLD' },
-  { code: '§7', hex: '#BAB6B6', id: 'GRAY' },
+  { code: '§7', hex: '#AAAAAA', id: 'GRAY' },
   { code: '§8', hex: '#555555', id: 'DARK_GRAY' },
   { code: '§9', hex: '#5555FF', id: 'BLUE' },
   { code: '§a', hex: '#55FF55', id: 'GREEN' },
@@ -14,5 +14,5 @@ export const minecraftColors = [
   { code: '§c', hex: '#FF5555', id: 'RED' },
   { code: '§d', hex: '#FF55FF', id: 'LIGHT_PURPLE' },
   { code: '§e', hex: '#FFFF55', id: 'YELLOW' },
-  { code: '§f', hex: '#F2F2F2', id: 'WHITE' },
+  { code: '§f', hex: '#FFFFFF', id: 'WHITE' },
 ];
