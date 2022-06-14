@@ -1,6 +1,6 @@
 import { TypegooseModule } from '@m8a/nestjs-typegoose';
 import { Module } from '@nestjs/common';
-import { Guild } from '@statsify/schemas';
+import { Guild, Player } from '@statsify/schemas';
 import { HypixelModule } from '../hypixel';
 import { LeaderboardModule } from '../leaderboards';
 import { PlayerModule } from '../player';
@@ -10,7 +10,12 @@ import { GuildLeaderboardController } from './leaderboards/guild-leaderboard.con
 import { GuildLeaderboardService } from './leaderboards/guild-leaderboard.service';
 
 @Module({
-  imports: [HypixelModule, PlayerModule, LeaderboardModule, TypegooseModule.forFeature([Guild])],
+  imports: [
+    HypixelModule,
+    PlayerModule,
+    LeaderboardModule,
+    TypegooseModule.forFeature([Guild, Player]),
+  ],
   controllers: [GuildController, GuildLeaderboardController],
   providers: [GuildService, GuildLeaderboardService],
 })

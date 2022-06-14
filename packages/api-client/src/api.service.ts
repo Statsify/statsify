@@ -3,7 +3,6 @@ import { loadImage } from 'skia-canvas';
 import { GuildQuery, HistoricalType } from './enums';
 import { LeaderboardQuery } from './enums/leaderboard-query.enum';
 import {
-  GetAchievementsResponse,
   GetFriendsResponse,
   GetGamecountsResponse,
   GetGuildResponse,
@@ -62,10 +61,9 @@ export class ApiService {
     });
   }
 
-  public getFriends(tag: string, page = 0) {
-    return this.requestKey<GetFriendsResponse, 'friends'>(`/player/friends`, 'friends', {
+  public getFriends(tag: string) {
+    return this.requestKey<GetFriendsResponse, 'data'>(`/player/friends`, 'data', {
       player: tag,
-      page,
     });
   }
 
@@ -75,12 +73,6 @@ export class ApiService {
       'rankedSkyWars',
       { player: tag }
     );
-  }
-
-  public getAchievements(tag: string) {
-    return this.request<GetAchievementsResponse>(`/player/achievements`, {
-      player: tag,
-    });
   }
 
   public getPlayerLeaderboard(

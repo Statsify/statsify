@@ -38,6 +38,9 @@ export class GuildMember {
   @Field({ leaderboard: { enabled: false } })
   public expiresAt: number;
 
+  @Field()
+  public guildId?: string;
+
   public constructor(data: APIData) {
     this.rank = data.rank;
     this.uuid = data.uuid;

@@ -4,7 +4,7 @@ import { Field } from '../metadata';
 /**
  * Better names for the guild achievements
  */
-export class Achievements {
+export class GuildAchievements {
   @Field({ leaderboard: { enabled: false } })
   public maxOnlinePlayerCount: number;
 

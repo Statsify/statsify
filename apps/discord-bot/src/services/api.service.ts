@@ -149,15 +149,14 @@ export class ApiService extends StatsifyApiService {
   /**
    *
    * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
-   * @param page Page number to get.
    * @param user User to use if no tag is provided.
    * @returns The friends of the player at the page.
    */
-  public override async getFriends(tag: string, page: number, user: User | null = null) {
+  public override async getFriends(tag: string, user: User | null = null) {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super.getFriends(input, page).catch((err) => {
+    return super.getFriends(input).catch((err) => {
       if (!err.response || !err.response.data) throw this.unknownError();
       const error = err.response.data as PlayerNotFoundException;
 
@@ -193,26 +192,6 @@ export class ApiService extends StatsifyApiService {
           (t) => t('errors.noRankedSkyWars.description', { displayName })
         );
       }
-
-      throw this.unknownError();
-    });
-  }
-
-  /**
-   *
-   * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
-   * @param user User to use if no tag is provided.
-   * @returns The achievements of the player.
-   */
-  public override async getAchievements(tag: string, user: User | null = null) {
-    const [formattedTag, type] = this.parseTag(tag);
-    const input = await this.resolveTag(formattedTag, type, user);
-
-    return super.getAchievements(input).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
-      const error = err.response.data as PlayerNotFoundException;
-
-      if (error.message === 'player') throw this.missingPlayer(type, tag);
 
       throw this.unknownError();
     });

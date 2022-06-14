@@ -1,5 +1,5 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   HypixelCache,
   PlayerNotFoundException,
@@ -7,14 +7,7 @@ import {
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from '@statsify/api-client';
-import {
-  Achievements,
-  deserialize,
-  Friends,
-  LeaderboardScanner,
-  Player,
-  serialize,
-} from '@statsify/schemas';
+import { deserialize, Friends, LeaderboardScanner, Player, serialize } from '@statsify/schemas';
 import { Flatten, flatten } from '@statsify/util';
 import type { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
@@ -44,7 +37,7 @@ export class PlayerService {
     const mongoPlayer = await this.findMongoDocument(tag, selector);
 
     if (mongoPlayer && this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)) {
-      return this.resolveCachedDocument(mongoPlayer, selector);
+      return deserialize(Player, mongoPlayer);
     }
 
     const player = await this.hypixelService.getPlayer(mongoPlayer?.uuid ?? tag);
@@ -53,6 +46,7 @@ export class PlayerService {
       player.expiresAt = Date.now() + 120000;
       player.leaderboardBanned = mongoPlayer?.leaderboardBanned ?? false;
       player.resetMinute = mongoPlayer?.resetMinute;
+      player.guildId = mongoPlayer?.guildId;
 
       const flatPlayer = flatten(player);
 
@@ -60,7 +54,7 @@ export class PlayerService {
 
       return deserialize(Player, flatPlayer);
     } else if (mongoPlayer) {
-      return this.resolveCachedDocument(mongoPlayer, selector);
+      return deserialize(Player, mongoPlayer);
     }
 
     return null;
@@ -69,10 +63,10 @@ export class PlayerService {
   /**
    *
    * @param tag UUID or username
-   * @param page The page of friends to return
+   * @param cacheLevel What type of data to return (cached/live)
    * @returns null or an object containing an array of friends
    */
-  public async getFriends(tag: string, page: number) {
+  public async getFriends(tag: string, cacheLevel: HypixelCache) {
     const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
       displayName: true,
       uuid: true,
@@ -87,84 +81,30 @@ export class PlayerService {
       .lean()
       .exec();
 
-    const pageSize = 8;
+    if (cachedFriends) {
+      cachedFriends.cached = true;
+
+      if (this.hypixelService.shouldCache(cachedFriends.expiresAt, cacheLevel))
+        return cachedFriends;
+    }
 
     const friends = await this.hypixelService.getFriends(player.uuid);
 
-    if (!friends) return null;
-
-    const friendMap = Object.fromEntries(
-      (cachedFriends?.friends ?? []).map((friend) => [friend.uuid, friend])
-    );
-
-    const pageMin = page * pageSize;
-    const pageMax = pageMin + pageSize;
-
-    //Loop through all the friends to make sure data to retained in mongo
-    for (let i = 0; i < friends.friends.length; i++) {
-      const friend = friends.friends[i];
-      const cachedFriend = friendMap[friend.uuid];
-
-      const inPageRange = i >= pageMin && i < pageMax;
-
-      if (cachedFriend && cachedFriend.displayName) {
-        friend.displayName = cachedFriend.displayName;
-        friend.expiresAt = cachedFriend.expiresAt;
-      }
-
-      //If they are not in the page range don't bother requesting them
-      if (!inPageRange) continue;
-
-      //Only request friend data if there is no cached data or the cache is expired
-      if (
-        !cachedFriend ||
-        !this.hypixelService.shouldCache(cachedFriend.expiresAt, HypixelCache.CACHE)
-      ) {
-        const friendData = await this.get(friend.uuid, HypixelCache.CACHE_ONLY, {
-          displayName: true,
-        });
-
-        friend.displayName = friendData ? friendData.displayName : `Error ${friend.uuid}`;
-
-        friend.expiresAt = Date.now() + 86400000;
-      }
+    if (!friends) {
+      if (cachedFriends) return cachedFriends;
+      throw new NotFoundException('friends');
     }
+
+    friends.displayName = player.displayName;
+    friends.uuid = player.uuid;
+    friends.expiresAt = Date.now() + 3_600_000;
 
     await this.friendsModel
       .replaceOne({ uuid: player.uuid }, friends, { upsert: true })
       .lean()
       .exec();
 
-    friends.displayName = player.displayName;
-    friends.friends = friends.friends.slice(pageMin, pageMax);
-
     return friends;
-  }
-
-  public async getAchievements(tag: string) {
-    const [player, resources] = await Promise.all([
-      this.get(tag, HypixelCache.CACHE, {
-        uuid: true,
-        displayName: true,
-        oneTimeAchievements: true,
-        tieredAchievements: true,
-        goldAchievements: true,
-        expiresAt: true,
-      }),
-      this.hypixelService.getResources('achievements'),
-    ]);
-
-    if (!player) throw new PlayerNotFoundException();
-
-    if (!resources)
-      throw new InternalServerErrorException('hypixel achievement resources not found');
-
-    return {
-      uuid: player.uuid,
-      displayName: player.displayName,
-      goldAchievements: player.goldAchievements ?? false,
-      achievements: new Achievements(player, resources.achievements),
-    };
   }
 
   public async getStatus(tag: string) {
@@ -273,14 +213,9 @@ export class PlayerService {
     //Serialize and flatten the player
     const serializedPlayer = serialize(Player, player);
 
-    const fields = LeaderboardScanner.getLeaderboardFields(Player);
-
-    //Remove all leaderboard fields for the mongo document
-    fields.forEach((field) => {
-      if (serializedPlayer[field]) delete serializedPlayer[field];
-    });
-
     await this.playerModel.replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true });
+
+    const fields = LeaderboardScanner.getLeaderboardFields(Player);
 
     await this.leaderboardService.addLeaderboards(
       Player,
@@ -289,33 +224,5 @@ export class PlayerService {
       fields,
       player.leaderboardBanned ?? false
     );
-  }
-
-  private async resolveCachedDocument(
-    mongoPlayer: Flatten<Player>,
-    selector?: Record<string, boolean>
-  ) {
-    let redisSelector: string[] | undefined = undefined;
-
-    //If a selector is provided only query the keys whose values are truthy
-    if (selector) {
-      redisSelector = Object.keys(selector).filter((key) => selector[key]);
-    } else {
-      redisSelector = LeaderboardScanner.getLeaderboardFields(Player);
-    }
-
-    //Only select keys that are not in the mongo document
-    redisSelector = redisSelector.filter((key) => !(key in mongoPlayer));
-
-    const redisPlayer = await this.leaderboardService.getLeaderboardDocument(
-      Player,
-      mongoPlayer.shortUuid,
-      redisSelector
-    );
-
-    return deserialize(Player, {
-      ...redisPlayer,
-      ...mongoPlayer,
-    });
   }
 }

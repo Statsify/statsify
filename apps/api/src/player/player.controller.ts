@@ -9,7 +9,6 @@ import {
 import {
   DeletePlayerResponse,
   ErrorResponse,
-  GetAchievementsResponse,
   GetFriendsResponse,
   GetPlayerResponse,
   GetRankedSkyWarsResponse,
@@ -22,7 +21,7 @@ import {
 } from '@statsify/api-client';
 import { AuthRole } from '../auth';
 import { Auth } from '../auth/auth.decorator';
-import { CachedPlayerDto, FriendDto } from '../dtos';
+import { CachedPlayerDto } from '../dtos';
 import { PlayerDto } from '../dtos/player.dto';
 import { PlayerService } from './player.service';
 
@@ -99,12 +98,12 @@ export class PlayerController {
   @ApiNotFoundResponse({ type: PlayerNotFoundException })
   @Auth({ weight: 10 })
   @Get('/friends')
-  public async getFriends(@Query() { player: tag, page }: FriendDto) {
-    const friends = await this.playerService.getFriends(tag, page);
+  public async getFriends(@Query() { player: tag, cache }: CachedPlayerDto) {
+    const friends = await this.playerService.getFriends(tag, cache);
 
     return {
       success: !!friends,
-      friends,
+      data: friends,
     };
   }
 
@@ -121,21 +120,6 @@ export class PlayerController {
     return {
       success: !!rankedSkyWars,
       rankedSkyWars,
-    };
-  }
-
-  @ApiOperation({ summary: 'Get the Achievements of a Player' })
-  @ApiOkResponse({ type: GetAchievementsResponse })
-  @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiNotFoundResponse({ type: PlayerNotFoundException })
-  @Auth()
-  @Get('/achievements')
-  public async getAchievements(@Query() { player: tag }: PlayerDto) {
-    const data = await this.playerService.getAchievements(tag);
-
-    return {
-      success: !!data,
-      ...data,
     };
   }
 }

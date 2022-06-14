@@ -3,21 +3,23 @@ import { Field } from '../metadata';
 import { Friend } from './friend';
 
 export class Friends {
-  @Field({ mongo: { index: true, unique: true }, store: { required: true } })
-  public uuid: string;
-
   @Field({ type: () => [Friend] })
   public friends: Friend[];
 
-  @Field()
-  public length: number;
+  @Field({ mongo: { index: true, unique: true } })
+  public uuid: string;
 
-  @Field({ store: { store: false } })
+  @Field()
   public displayName: string;
 
-  public constructor(data: APIData) {
-    this.uuid = data.uuid;
-    this.friends = (data?.records ?? []).map((friend: APIData) => new Friend(this.uuid, friend));
-    this.length = this.friends.length;
+  @Field({ leaderboard: { enabled: false } })
+  public expiresAt: number;
+
+  @Field({ store: { store: false } })
+  public cached?: boolean;
+
+  public constructor(data: APIData = {}) {
+    const records = Object.entries(data);
+    this.friends = records.map(([uuid, friend]) => new Friend(uuid, friend));
   }
 }

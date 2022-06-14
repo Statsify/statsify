@@ -158,7 +158,10 @@ export class PlayerLeaderboardService {
   }
 
   public async fetchPlayerStats(uuids: string[], selector: string[]) {
-    const select = Object.fromEntries(selector.map((key) => [key, 1]));
+    const select = selector.reduce((acc, key) => {
+      acc[key] = true;
+      return acc;
+    }, {} as Record<string, boolean>);
 
     const players = (await Promise.all(
       uuids.map((uuid) =>
@@ -166,35 +169,6 @@ export class PlayerLeaderboardService {
       )
     )) as Player[];
 
-    const pipeline = this.redis.pipeline();
-    const name = Player.name.toLowerCase();
-
-    const requests: [index: number, key: string][] = [];
-
-    const flatPlayers = players.map((player, index) => {
-      const flat = flatten(player);
-      selector.forEach((key) => {
-        if (!flat[key]) {
-          pipeline.zscore(`${name}.${key}`, uuids[index]);
-          requests.push([index, key]);
-        }
-      });
-
-      return flat;
-    });
-
-    const responses = await pipeline.exec();
-
-    if (!responses) throw new InternalServerErrorException();
-
-    responses.forEach((response, ind) => {
-      const [index, key] = requests[ind];
-      const flatPlayer = flatPlayers[index];
-
-      //@ts-ignore Typescript doesn't know what the value should be for this key; However since it is a leaderboard field it has to be a number
-      flatPlayer[key] = Number(response[1] ?? 0);
-    });
-
-    return flatPlayers;
+    return players.map((player) => flatten(player));
   }
 }
