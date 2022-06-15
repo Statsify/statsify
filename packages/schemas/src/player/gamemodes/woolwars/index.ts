@@ -24,7 +24,17 @@ export class WoolWars {
   @Field({ leaderboard: { enabled: false } })
   public layers: number;
 
-  @Field()
+  @Field({
+    leaderboard: {
+      fieldName: 'Level',
+      hidden: true,
+      additionalFields: [
+        'stats.woolwars.overall.wins',
+        'stats.woolwars.overall.kills',
+        'stats.woolwars.overall.kdr',
+      ],
+    },
+  })
   public exp: number;
 
   @Field({ leaderboard: { enabled: false } })

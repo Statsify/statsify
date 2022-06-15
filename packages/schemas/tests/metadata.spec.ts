@@ -48,6 +48,7 @@ describe('metadata', () => {
             additionalFields: [],
             aliases: [],
             sort: 'DESC',
+            limit: 10_000,
           },
           type: { type: Number, array: false, primitive: true },
           store: { required: true, serialize: true, deserialize: true, store: true, default: 0 },
@@ -163,6 +164,7 @@ describe('metadata', () => {
       extraDisplay: 'fieldA',
       aliases: [],
       sort: 'DESC',
+      limit: 10_000,
     });
   });
 });

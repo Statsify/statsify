@@ -7,7 +7,8 @@
     "api-key": "node -r dotenv/config src/api-key.js dotenv_config_path=../../.env",
     "build-watch": "node src/build-watch.js",
     "purge": "node -r dotenv/config src/purge.js dotenv_config_path=../../.env",
-    "rank-emojis": "node -r dotenv/config src/rank-emojis.js dotenv_config_path=../../.env"
+    "rank-emojis": "node -r dotenv/config src/rank-emojis.js dotenv_config_path=../../.env",
+    "limit-redis": "node -r dotenv/config src/limit-redis.js dotenv_config_path=../../.env"
   },
   "dependencies": {
     "@statsify/assets": "workspace:^",

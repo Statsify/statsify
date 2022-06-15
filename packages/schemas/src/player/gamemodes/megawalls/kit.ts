@@ -3,34 +3,34 @@ import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
 
 export class MegaWallsKit {
-  @Field()
+  @Field({ leaderboard: { limit: 10_000 } })
   public wins: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 5_000 } })
   public losses: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 10_000 } })
   public wlr: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 10_000 } })
   public kills: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 5_000 } })
   public deaths: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 10_000 } })
   public kdr: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 10_000 } })
   public finalKills: number;
 
   @Field({ leaderboard: { enabled: false } })
   public finalAssists: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 5_000 } })
   public finalDeaths: number;
 
-  @Field()
+  @Field({ leaderboard: { limit: 10_000 } })
   public fkdr: number;
 
   @Field({ leaderboard: { enabled: false } })
@@ -70,5 +70,47 @@ export class MegaWallsKit {
     this.witherKills = data[`${kit}wither_kills`];
 
     this.points = add(this.finalKills, this.finalAssists, (this.wins ?? 0) * 10);
+  }
+}
+
+export class MegaWallsOverall extends MegaWallsKit {
+  @Field()
+  public declare wins: number;
+
+  @Field()
+  public declare losses: number;
+
+  @Field()
+  public declare wlr: number;
+
+  @Field()
+  public declare kills: number;
+
+  @Field()
+  public declare deaths: number;
+
+  @Field()
+  public declare kdr: number;
+
+  @Field()
+  public declare finalKills: number;
+
+  @Field()
+  public declare finalAssists: number;
+
+  @Field()
+  public declare finalDeaths: number;
+
+  @Field()
+  public declare fkdr: number;
+
+  @Field()
+  public declare assists: number;
+
+  @Field()
+  public declare playtime: number;
+
+  public constructor(data: APIData) {
+    super(data, '');
   }
 }

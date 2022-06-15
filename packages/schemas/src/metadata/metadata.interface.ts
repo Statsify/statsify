@@ -64,6 +64,11 @@ export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
    * Aliases for accessing leaderboard.
    */
   aliases: string[];
+
+  /**
+   * How many members to show in the leaderboard.
+   */
+  limit: number;
 }
 
 export type LeaderboardMetadata = LeaderboardDisabledMetadata | LeaderboardEnabledMetadata;
