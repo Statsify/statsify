@@ -61,4 +61,8 @@ export class GuildMember {
       this.weekly += exp;
     });
   }
+
+  public static isGuildMaster(member: GuildMember): boolean {
+    return !!member.rank.match(/^guild\s*master$/i);
+  }
 }

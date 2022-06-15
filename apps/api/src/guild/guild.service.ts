@@ -97,6 +97,8 @@ export class GuildService {
           member.monthly += exp;
         });
 
+      guild.questParticipation = guild.questParticipation + member.questParticipation;
+
       return member;
     });
 
@@ -121,14 +123,11 @@ export class GuildService {
         guild.expHistoryDays[index] = day;
         guild.scaledExpHistory[index] = scaled;
 
-        if (index < 7) {
-          guild.weekly += exp;
-          guild.scaledWeekly += scaled;
-        }
-
+        if (index < 7) guild.weekly += exp;
         guild.monthly += exp;
-        guild.scaledMonthly += scaled;
       });
+
+    guild.daily = guild.expHistory[0];
 
     //Cache guilds responses for 10 minutes
     guild.expiresAt = Date.now() + 600000;

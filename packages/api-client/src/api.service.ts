@@ -115,9 +115,9 @@ export class ApiService {
     });
   }
 
-  public getGuildRanking(fields: string, name: string) {
+  public getGuildRanking(field: string, name: string) {
     return this.request<PostGuildRankingsResponse>('/guild/leaderboards/rankings', {}, 'POST', {
-      body: { fields, name },
+      body: { field, name },
     });
   }
 

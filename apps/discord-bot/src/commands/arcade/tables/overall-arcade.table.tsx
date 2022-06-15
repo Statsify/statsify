@@ -1,6 +1,7 @@
 import { Table } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
 import { Arcade } from '@statsify/schemas';
+import { arrayGroup } from '@statsify/util';
 
 interface OverallArcadeTableProps {
   stats: Arcade;
@@ -31,9 +32,7 @@ export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
 
   games.sort((a, b) => b[1] - a[1]);
 
-  const rows = Array.from({ length: Math.ceil(games.length / rowSize) }, (_, i) =>
-    games.slice(i * rowSize, (i + 1) * rowSize)
-  );
+  const rows = arrayGroup(games, rowSize);
 
   const colors = ['§a', '§e', '§6', '§c'];
 

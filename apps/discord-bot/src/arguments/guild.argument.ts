@@ -1,3 +1,4 @@
+import { GuildQuery } from '@statsify/api-client';
 import { AbstractArgument, LocalizationString } from '@statsify/discord';
 import { ApplicationCommandOptionType } from 'discord-api-types/v10';
 import { ChoiceArgument } from './choice.argument';
@@ -16,7 +17,7 @@ class GuildQueryArgument extends AbstractArgument {
 
 class GuildTypeArgument extends ChoiceArgument {
   public constructor() {
-    super('type', ['name', 'NAME'], ['player', 'PLAYER'], ['id', 'ID']);
+    super('type', ['name', GuildQuery.NAME], ['player', GuildQuery.PLAYER], ['id', GuildQuery.ID]);
   }
 }
 

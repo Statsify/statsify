@@ -48,5 +48,12 @@ export const render: JSX.Render<ImageRenderProps> = (
     crop = [0, 0, image.width, Math.round(height * scale)];
   }
 
-  ctx.drawImage(image, ...crop, x, y, width, height);
+  ctx.drawImage(
+    image,
+    ...crop,
+    Math.round(x),
+    Math.round(y),
+    Math.round(width),
+    Math.round(height)
+  );
 };

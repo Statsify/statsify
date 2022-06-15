@@ -36,9 +36,6 @@
     "giftsSent": "Gifts Sent",
     "ranksGifted": "Ranks Gifted",
     "friends": "Friends",
-    "guildQuests": "Guild Quests",
-    "dailyGexp": "Daily GEXP",
-    "weeklyGexp": "Weekly GEXP",
     "bestTime": "Best Time",
     "tags": "Tags",
     "hits": "Hits",
@@ -146,7 +143,22 @@
     "total": "Total",
     "levelsGained": "Levels Gained",
     "expGained": "EXP Gained",
-    "exp": "EXP"
+    "exp": "EXP",
+    "guild": {
+      "guildMaster": "Guild Master",
+      "createdOn": "Created On",
+      "members": "Guild Members",
+      "rank": "Guild Rank",
+      "quests": "Guild Quests",
+      "level": "Guild Level",
+      "gexpToNextLevel": "GEXP To Next Level",
+      "gexp": "GEXP",
+      "daily": "Daily GEXP",
+      "weekly": "Weekly GEXP",
+      "monthly": "Monthly GEXP",
+      "avgMemberWeeklyGexp": "Avg. Member GEXP",
+      "questsCompleted": "Quests Completed"
+    }
   },
   "embeds": {
     "uuid": {

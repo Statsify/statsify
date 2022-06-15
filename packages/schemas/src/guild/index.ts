@@ -21,6 +21,12 @@ export class Guild {
   @Field()
   public nameFormatted: string;
 
+  @Field({ store: { required: false } })
+  public description?: string;
+
+  @Field({ leaderboard: { enabled: false } })
+  public createdAt: number;
+
   @Field()
   public exp: number;
 
@@ -67,16 +73,16 @@ export class Guild {
   public scaledExpHistory: number[];
 
   @Field()
+  public daily: number;
+
+  @Field()
   public weekly: number;
 
   @Field()
   public monthly: number;
 
   @Field()
-  public scaledWeekly: number;
-
-  @Field()
-  public scaledMonthly: number;
+  public questParticipation: number;
 
   @Field({ leaderboard: { enabled: false } })
   public expiresAt: number;
@@ -88,6 +94,9 @@ export class Guild {
     this.id = data._id;
     this.name = data.name;
     this.nameToLower = this.name?.toLowerCase();
+    this.description = data.description;
+
+    this.createdAt = data.created;
 
     this.tag = data.tag;
     this.tagColor = new Color(data.tagColor ?? 'GRAY');
@@ -109,10 +118,11 @@ export class Guild {
     this.nextLevelExp = nextLevelExp;
     this.expByGame = new ExpByGame(data.guildExpByGameType ?? {});
 
+    this.daily = 0;
     this.weekly = 0;
-    this.scaledWeekly = 0;
     this.monthly = 0;
-    this.scaledMonthly = 0;
+
+    this.questParticipation = 0;
 
     this.expHistory = [];
     this.expHistoryDays = [];
@@ -139,6 +149,8 @@ export class Guild {
         this.ranks.push(new GuildRank(rank));
       }
     }
+
+    this.ranks = this.ranks.sort((a, b) => b.priority - a.priority);
   }
 }
 

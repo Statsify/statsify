@@ -163,5 +163,34 @@ export const abbreviationNumber = (num: number): string => {
   return `${(num / Math.pow(1000, base)).toFixed(2)}${abbreviation[base]}`;
 };
 
+export const arrayGroup = <T extends Array<any> | string>(arr: T, groupSize: number): T[] =>
+  Array.from({ length: Math.ceil(arr.length / groupSize) }, (_, i) =>
+    arr.slice(i * groupSize, (i + 1) * groupSize)
+  ) as T[];
+
+export const wordGroup = (input: string, wordCount: number, list: string[] = []): string[] => {
+  const size = wordCount * 5;
+
+  if (input.length <= size) {
+    list.push(input);
+    return list;
+  }
+
+  let line = input.substring(0, size);
+
+  const lastSpaceRgx = /\s(?!.*\s)/;
+  const index = line.search(lastSpaceRgx) + 1;
+  let nextIndex = size;
+
+  if (index > 0) {
+    line = line.substring(0, index);
+    nextIndex = index;
+  }
+
+  list.push(line);
+
+  return wordGroup(input.substring(nextIndex), wordCount, list);
+};
+
 export * from './flat';
 export * from './minecraft-colors';
