@@ -18,7 +18,14 @@ export class General {
   @Field()
   public karma: number;
 
-  @Field()
+  @Field({
+    leaderboard: {
+      fieldName: 'Network Level',
+      hidden: true,
+      limit: 500_000,
+      additionalFields: ['stats.general.networkLevel'],
+    },
+  })
   public networkExp: number;
 
   @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
