@@ -9,6 +9,32 @@ const getLeaderboardName = (field: string) => {
   return prettify(field);
 };
 
+const getDefaultLeaderboardLimit = (propertyKey: string) => {
+  switch (propertyKey) {
+    case 'exp':
+      return 500_000;
+    case 'wins':
+    case 'wlr':
+    case 'kills':
+    case 'kdr':
+    case 'finalKills':
+    case 'fkdr':
+    case 'bedsBroken':
+    case 'bblr':
+      return 100_000;
+    case 'losses':
+    case 'deaths':
+    case 'finalDeaths':
+    case 'bedsLost':
+    case 'assists':
+    case 'coins':
+    case 'lootChests':
+      return 50_000;
+    default:
+      return 10_000;
+  }
+};
+
 export const getLeaderboardMetadata = (
   typeMetadata: TypeMetadata,
   propertyKey: string,
@@ -38,5 +64,6 @@ export const getLeaderboardMetadata = (
     additionalFields: leaderboardOptions?.additionalFields || [],
     extraDisplay: leaderboardOptions?.extraDisplay,
     formatter: leaderboardOptions?.formatter,
+    limit: leaderboardOptions?.limit ?? getDefaultLeaderboardLimit(propertyKey),
   };
 };

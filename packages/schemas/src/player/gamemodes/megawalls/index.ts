@@ -1,6 +1,6 @@
 import { APIData } from '@statsify/util';
 import { Field } from '../../../metadata';
-import { MegaWallsKit } from './kit';
+import { MegaWallsKit, MegaWallsOverall } from './kit';
 
 export const MEGAWALLS_MODES = [
   'overall',
@@ -39,7 +39,7 @@ export class MegaWalls {
   public class: string;
 
   @Field()
-  public overall: MegaWallsKit;
+  public overall: MegaWallsOverall;
 
   @Field({ store: { required: false } })
   public arcanist: MegaWallsKit;
@@ -117,7 +117,7 @@ export class MegaWalls {
     this.coins = data.coins;
     this.class = data.chosen_class ?? 'none';
 
-    this.overall = new MegaWallsKit(data, '');
+    this.overall = new MegaWallsOverall(data);
     this.arcanist = new MegaWallsKit(data, 'arcanist');
     this.assassin = new MegaWallsKit(data, 'assassin');
     this.automaton = new MegaWallsKit(data, 'automaton');
