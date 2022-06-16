@@ -145,7 +145,20 @@
     "total": "Total",
     "levelsGained": "Levels Gained",
     "expGained": "EXP Gained",
-    "exp": "EXP"
+    "exp": "EXP",
+    "online": "Online",
+    "version": "Version",
+    "loginTime": "Login Time",
+    "game": "Game",
+    "mode": "Mode",
+    "map": "Map",
+    "status": "Status",
+    "offline": "Offline",
+    "logoutTime": "Logout Time",
+    "lastGame": "Last Game",
+    "hidden": "Hidden",
+    "lastActionTime": "Last Action Time",
+    "lastAction": "Last Action"
   },
   "embeds": {
     "uuid": {
@@ -229,6 +242,9 @@
         "title": "Misc",
         "description": "You can do something with statsify"
       }
+    },
+    "gameCounts": {
+      "title": "Hypixel Gamecounts"
     }
   },
   "commands": {
@@ -255,7 +271,10 @@
     "warlords": "Warlords command",
     "woolwars": "Wool Wars command",
     "verify": "Verify command",
-    "unverify": "Unverify command"
+    "unverify": "Unverify command",
+    "gameCounts": "Game counts command",
+    "status": "Status command",
+    "parkour": "Parkour command"
   },
   "arguments": {
     "choice": "Choice",
@@ -375,6 +394,10 @@
   },
   "available": "Available",
   "unavailable": "Unavailable",
+  "players": "Players",
+  "unknown": "Unknown",
+  "ago": "ago",
+  "now": "Now",
   "config": {
     "badge": {
       "profile": "This is how your badge is displayed",
