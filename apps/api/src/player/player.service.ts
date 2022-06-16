@@ -3,7 +3,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   HypixelCache,
   PlayerNotFoundException,
-  RankedSkyWarsNotFoundException,
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from '@statsify/api-client';
@@ -144,24 +143,6 @@ export class PlayerService {
       displayName: player.displayName,
       games,
     };
-  }
-
-  public async getRankedSkyWars(tag: string) {
-    const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
-      uuid: true,
-      displayName: true,
-    });
-
-    if (!player) throw new PlayerNotFoundException();
-
-    const ranked = await this.hypixelService.getRankedSkyWars(player.uuid);
-
-    if (!ranked) throw new RankedSkyWarsNotFoundException(player);
-
-    ranked.uuid = player.uuid;
-    ranked.displayName = player.displayName;
-
-    return ranked;
   }
 
   /**

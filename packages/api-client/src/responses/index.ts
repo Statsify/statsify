@@ -6,7 +6,6 @@ export * from './get.guild.response';
 export * from './get.historical.response';
 export * from './get.key.response';
 export * from './get.player.response';
-export * from './get.rankedskywars.response';
 export * from './get.recentgames.response';
 export * from './get.status.response';
 export * from './get.user.response';

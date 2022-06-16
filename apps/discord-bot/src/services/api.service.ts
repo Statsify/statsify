@@ -5,7 +5,6 @@ import {
   HistoricalType,
   LeaderboardQuery,
   PlayerNotFoundException,
-  RankedSkyWarsNotFoundException,
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from '@statsify/api-client';
@@ -161,37 +160,6 @@ export class ApiService extends StatsifyApiService {
       const error = err.response.data as PlayerNotFoundException;
 
       if (error.message === 'player') throw this.missingPlayer(type, tag);
-
-      throw this.unknownError();
-    });
-  }
-
-  /**
-   *
-   * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
-   * @param user User to use if no tag is provided.
-   * @returns The player's ranked skywars stats
-   */
-  public override async getRankedSkyWars(tag: string, user: User | null = null) {
-    const [formattedTag, type] = this.parseTag(tag);
-    const input = await this.resolveTag(formattedTag, type, user);
-
-    return super.getRankedSkyWars(input).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
-      const error = err.response.data as RankedSkyWarsNotFoundException | PlayerNotFoundException;
-
-      if (error.message === 'player') throw this.missingPlayer(type, tag);
-
-      if (error.message === 'rankedSkyWars') {
-        const displayName = this.emojiDisplayName(
-          (error as RankedSkyWarsNotFoundException).displayName
-        );
-
-        throw new ErrorMessage(
-          (t) => t('errors.noRankedSkyWars.title'),
-          (t) => t('errors.noRankedSkyWars.description', { displayName })
-        );
-      }
 
       throw this.unknownError();
     });

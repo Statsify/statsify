@@ -11,11 +11,9 @@ import {
   ErrorResponse,
   GetFriendsResponse,
   GetPlayerResponse,
-  GetRankedSkyWarsResponse,
   GetRecentGamesResponse,
   GetStatusResponse,
   PlayerNotFoundException,
-  RankedSkyWarsNotFoundException,
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from '@statsify/api-client';
@@ -104,22 +102,6 @@ export class PlayerController {
     return {
       success: !!friends,
       data: friends,
-    };
-  }
-
-  @ApiOperation({ summary: 'Get the Ranked SkyWars rating and position of a Player' })
-  @ApiOkResponse({ type: GetRankedSkyWarsResponse })
-  @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiNotFoundResponse({ type: RankedSkyWarsNotFoundException })
-  @ApiNotFoundResponse({ type: PlayerNotFoundException })
-  @Auth()
-  @Get('/rankedskywars')
-  public async getRankedSkyWars(@Query() { player: tag }: PlayerDto) {
-    const rankedSkyWars = await this.playerService.getRankedSkyWars(tag);
-
-    return {
-      success: !!rankedSkyWars,
-      rankedSkyWars,
     };
   }
 }

@@ -12,7 +12,6 @@ export * from './metadata/serialize';
 export * from './player';
 export { rankMap } from './player/util';
 export * from './progression';
-export * from './rankedskywars';
 export * from './ratios';
 export * from './recentgames';
 export * from './skin';
