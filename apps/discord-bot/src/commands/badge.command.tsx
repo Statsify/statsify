@@ -48,7 +48,7 @@ export class BadgeCommand {
         (t) => t('verification.requiredVerification.description')
       );
 
-    if (User.isPremium(user.tier))
+    if (!User.isPremium(user.tier))
       throw new ErrorMessage(
         (t) => t('errors.missingSelfPremium.title'),
         (t) => t('errors.missingSelfPremium.description')

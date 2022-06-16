@@ -152,10 +152,12 @@
       "level": "Guild Level",
       "gexpToNextLevel": "GEXP To Next Level",
       "gexp": "GEXP",
-      "daily": "Daily GEXP",
-      "weekly": "Weekly GEXP",
-      "monthly": "Monthly GEXP",
-      "avgMemberWeeklyGexp": "Avg. Member GEXP",
+      "scaledGexp": "Scaled GEXP",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "date": "Date",
+      "averageMemberGexp": "Avg. Member GEXP",
       "questsCompleted": "Quests Completed"
     }
   },

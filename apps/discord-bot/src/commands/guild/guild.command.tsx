@@ -7,7 +7,7 @@ import { render } from '@statsify/rendering';
 import { GuildMember } from '@statsify/schemas';
 import { ErrorMessage } from '../../error.message';
 import { getTheme } from '../../themes';
-import { GuildProfile } from './guild.profile';
+import { GuildProfile, GuildProfileProps } from './guild.profile';
 
 @Command({ description: (t) => t('commands.guild') })
 export class GuildCommand {
@@ -44,25 +44,26 @@ export class GuildCommand {
       getBackground('bedwars', 'overall'),
     ]);
 
-    const canvas = render(
-      <GuildProfile
-        guild={guild}
-        guildMaster={guildMaster}
-        skin={skin}
-        background={background}
-        ranking={ranking}
-        logo={logo}
-        tier={user?.tier}
-        t={t}
-        games={games}
-      />,
-      getTheme(user?.theme)
-    );
+    const props: Omit<GuildProfileProps, 'page'> = {
+      guild,
+      guildMaster,
+      skin,
+      background,
+      ranking,
+      logo,
+      tier: user?.tier,
+      t,
+      games,
+    };
 
     return this.paginateService.paginate(context, [
       {
-        label: 'Guild',
-        generator: () => canvas,
+        label: 'Overall',
+        generator: () => render(<GuildProfile {...props} page="overall" />, getTheme(user?.theme)),
+      },
+      {
+        label: 'GEXP',
+        generator: () => render(<GuildProfile {...props} page="gexp" />, getTheme(user?.theme)),
       },
     ]);
   }

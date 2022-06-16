@@ -2,6 +2,7 @@ import { APIData } from '@statsify/util';
 import { Color } from '../color';
 import { GameCode } from '../game';
 import { Field } from '../metadata';
+import { Progression } from '../progression';
 import { GuildAchievements } from './achievements';
 import { ExpByGame } from './expbygame';
 import { GuildMember } from './member';
@@ -33,8 +34,8 @@ export class Guild {
   @Field({ leaderboard: { enabled: false } })
   public level: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public nextLevelExp: number;
+  @Field()
+  public levelProgression: Progression;
 
   @Field({ type: () => [GuildMember] })
   public members: GuildMember[];
@@ -112,10 +113,10 @@ export class Guild {
 
     this.exp = data.exp;
 
-    const { level, nextLevelExp } = getLevel(this.exp);
+    const { level, current, max } = getLevel(this.exp);
 
     this.level = level;
-    this.nextLevelExp = nextLevelExp;
+    this.levelProgression = new Progression(current, max);
     this.expByGame = new ExpByGame(data.guildExpByGameType ?? {});
 
     this.daily = 0;

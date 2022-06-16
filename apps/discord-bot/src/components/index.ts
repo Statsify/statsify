@@ -4,6 +4,7 @@ export * from './Footer';
 export * from './Header';
 export * from './HistoricalProgression';
 export * from './If';
+export * from './Multiline';
 export * from './ProgressBar';
 export * from './Sidebar';
 export * from './Skin';

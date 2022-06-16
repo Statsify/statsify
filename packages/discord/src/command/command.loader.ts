@@ -35,8 +35,9 @@ export class CommandLoader {
           const instance = Container.get(constructor);
 
           return CommandBuilder.scan(instance, constructor);
-        } catch {
+        } catch (err) {
           this.logger.error(`Failed to load command in ${file} with import ${key}`);
+          this.logger.error(err);
         }
       });
   }

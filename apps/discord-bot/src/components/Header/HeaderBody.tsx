@@ -1,3 +1,5 @@
+import { Multiline } from '../Multiline';
+
 export interface HeaderBodyProps {
   description?: string;
   title: string;
@@ -20,9 +22,7 @@ export const HeaderBody = ({ description, title }: HeaderBodyProps) => {
         height="remaining"
         padding={{ bottom: 5, left: 10, right: 10, top: 5 }}
       >
-        {description.split('\n').map((t) => (
-          <text margin={1}>{t}</text>
-        ))}
+        <Multiline>{description}</Multiline>
       </box>
       <box width="100%">
         <text>{title}</text>

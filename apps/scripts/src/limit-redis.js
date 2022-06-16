@@ -23,9 +23,13 @@ await oldLeaderboardPipeline.exec();
 
 const leaderboards = fields.filter(([, value]) => value.leaderboard.enabled);
 
+let memberCount = 0;
+
 leaderboards.forEach(([key, value]) => {
   const path = `${Player.name.toLowerCase()}.${key}`;
   const { sort, limit } = value.leaderboard;
+
+  memberCount += limit;
 
   logger.debug(`Limiting ${path} to ${limit.toLocaleString()} members`);
 
@@ -39,4 +43,5 @@ leaderboards.forEach(([key, value]) => {
 await limitLeaderboardPipeline.exec();
 
 logger.log(`Limited ${leaderboards.length} leaderboards`);
+logger.log(`There are ${memberCount.toLocaleString()} members in the leaderboards`);
 process.exit(0);

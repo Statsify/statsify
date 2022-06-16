@@ -8,14 +8,13 @@ import i18next, {
 } from 'i18next';
 
 interface ILocalizeFunction {
-  // basic usage
   <
     TResult extends TFunctionResult = string,
     TKeys extends TFunctionKeys = string,
     TInterpolationMap extends object = StringMap
   >(
     key: TKeys | TKeys[]
-  ): TResult;
+  ): string;
   <
     TResult extends TFunctionResult = TFunctionDetailedResult<object>,
     TKeys extends TFunctionKeys = string,
@@ -23,7 +22,7 @@ interface ILocalizeFunction {
   >(
     key: TKeys | TKeys[],
     options?: TOptions<TInterpolationMap> & { returnDetails: true; returnObjects: true }
-  ): TResult;
+  ): string;
   <
     TResult extends TFunctionResult = TFunctionDetailedResult,
     TKeys extends TFunctionKeys = string,
@@ -31,7 +30,7 @@ interface ILocalizeFunction {
   >(
     key: TKeys | TKeys[],
     options?: TOptions<TInterpolationMap> & { returnDetails: true }
-  ): TResult;
+  ): string;
   <
     TResult extends TFunctionResult = object,
     TKeys extends TFunctionKeys = string,
@@ -39,7 +38,7 @@ interface ILocalizeFunction {
   >(
     key: TKeys | TKeys[],
     options?: TOptions<TInterpolationMap> & { returnObjects: true }
-  ): TResult;
+  ): string;
   <
     TResult extends TFunctionResult = string,
     TKeys extends TFunctionKeys = string,
@@ -47,8 +46,7 @@ interface ILocalizeFunction {
   >(
     key: TKeys | TKeys[],
     options?: TOptions<TInterpolationMap> | string
-  ): TResult;
-  // overloaded usage
+  ): string;
   <
     TResult extends TFunctionResult = string,
     TKeys extends TFunctionKeys = string,
@@ -57,14 +55,8 @@ interface ILocalizeFunction {
     key: TKeys | TKeys[],
     defaultValue?: string,
     options?: TOptions<TInterpolationMap> | string
-  ): TResult;
-  <
-    TResult extends TFunctionResult = string,
-    TKeys extends TFunctionKeys = string,
-    TInterpolationMap extends object = StringMap
-  >(
-    key: number
-  ): TResult;
+  ): string;
+  (key: number): string;
 }
 
 export type LocalizeFunction = ILocalizeFunction & { locale: string };
