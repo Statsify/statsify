@@ -11,6 +11,9 @@ export class Status {
   public displayName: string;
 
   @Field()
+  public prefixName: string;
+
+  @Field()
   public actions: PlayerStatus;
 
   @Field()
