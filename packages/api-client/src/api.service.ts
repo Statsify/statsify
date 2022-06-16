@@ -9,7 +9,6 @@ import {
   GetHistoricalResponse,
   GetKeyResponse,
   GetPlayerResponse,
-  GetRankedSkyWarsResponse,
   GetRecentGamesResponse,
   GetStatusResponse,
   GetUserResponse,
@@ -65,14 +64,6 @@ export class ApiService {
     return this.requestKey<GetFriendsResponse, 'data'>(`/player/friends`, 'data', {
       player: tag,
     });
-  }
-
-  public getRankedSkyWars(tag: string) {
-    return this.requestKey<GetRankedSkyWarsResponse, 'rankedSkyWars'>(
-      `/player/rankedskywars`,
-      'rankedSkyWars',
-      { player: tag }
-    );
   }
 
   public getPlayerLeaderboard(

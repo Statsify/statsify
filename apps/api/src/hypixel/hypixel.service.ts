@@ -8,7 +8,6 @@ import {
   Gamecounts,
   Guild,
   Player,
-  RankedSkyWars,
   RecentGame,
   Status,
   Watchdog,
@@ -100,16 +99,6 @@ export class HypixelService {
     );
   }
 
-  public getRankedSkyWars(uuid: string) {
-    return lastValueFrom(
-      this.request<APIData>(`/player/ranked/skywars?uuid=${uuid}`).pipe(
-        map((data) => data.result),
-        map((result) => new RankedSkyWars(result)),
-        catchError(() => of(null))
-      )
-    );
-  }
-
   public async getResources(resource: string, forceUpdate = false) {
     if (this.resources.has(resource) && !forceUpdate) return this.resources.get(resource);
 
@@ -136,10 +125,7 @@ export class HypixelService {
     return this.httpService.get(url).pipe(
       map((res) => res.data),
       catchError((err) => {
-        //Ranked SkyWars returns a 404 if the player has not played ranked skywars
-        if (!url.includes('/player/ranked/skywars'))
-          this.logger.error(`Error requesting ${url}: ${err.message}`);
-
+        this.logger.error(`Error requesting ${url}: ${err.message}`);
         return throwError(() => new Error(err.message));
       })
     );
