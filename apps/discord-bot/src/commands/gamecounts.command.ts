@@ -1,6 +1,7 @@
 import { INFO_COLOR } from '#constants';
 import { ApiService, Page, PaginateService } from '#services';
 import { Command, CommandContext, EmbedBuilder } from '@statsify/discord';
+import { games } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 
 @Command({
@@ -13,6 +14,7 @@ export class GameCountsCommand {
   ) {}
 
   public async run(context: CommandContext) {
+    const t = context.t();
     const counts = await this.apiService.getGameCounts();
     const resource = await this.apiService.getResource('games');
     const gameInfo = resource?.games;
@@ -32,9 +34,9 @@ export class GameCountsCommand {
                   .sort((a, b) => b[1].players - a[1].players)
                   .map(
                     ([game, gamePlayers]) =>
-                      `\`•\` ${t(`emojis:games.${game}`)} **${
-                        gameInfo?.[game]?.name ?? prettify(game.toLowerCase())
-                      }**: \`${t(gamePlayers.players)}\``
+                      `\`•\` ${t(`emojis:games.${game}`)} **${this.getGameName(game)}**: \`${t(
+                        gamePlayers.players
+                      )}\``
                   )
                   .join('\n')
             )
@@ -43,9 +45,10 @@ export class GameCountsCommand {
       ...Object.entries(counts)
         .filter(([, gamePlayers]) => gamePlayers.modes && Object.keys(gamePlayers.modes).length > 1)
         .map(([game, gamePlayers]) => {
-          const gameName: string = gameInfo?.[game]?.name ?? prettify(game.toLowerCase());
+          const gameName = this.getGameName(game);
           return {
             label: gameName,
+            emoji: t(`emojis:games.${game}`),
             generator: () =>
               new EmbedBuilder()
                 .title((t) => `${gameName} ${t('players')}`)
@@ -68,5 +71,9 @@ export class GameCountsCommand {
     ];
 
     return this.paginateService.paginate(context, pages);
+  }
+
+  private getGameName(game: string) {
+    return games.find(({ code }) => code == game)?.name ?? prettify(game);
   }
 }

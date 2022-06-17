@@ -212,7 +212,7 @@ export class PlayerStatus {
     this.lastLogout = data.lastLogout ?? 0;
     this.online = this.lastLogin > this.lastLogout;
 
-    this.statusHidden = this.lastLogout == 0;
+    this.statusHidden = this.lastLogout === 0;
 
     this.version = data.mcVersionRp ?? 'Unknown';
 

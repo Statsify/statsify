@@ -109,7 +109,6 @@ export class PlayerService {
   public async getStatus(tag: string) {
     const player = await this.get(tag, HypixelCache.CACHE, {
       uuid: true,
-      displayName: true,
       prefixName: true,
       status: true,
     });
@@ -120,7 +119,6 @@ export class PlayerService {
 
     if (!status) throw new StatusNotFoundException(player);
 
-    status.displayName = player.displayName;
     status.prefixName = player.prefixName;
     status.uuid = player.uuid;
     status.actions = player.status;

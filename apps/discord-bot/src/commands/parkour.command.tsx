@@ -31,20 +31,20 @@ export class ParkourCommand {
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
     ]);
-    const background = await getBackground('default', '');
+    const background = await getBackground('hypixel', 'overall');
 
-    const Times = Object.entries(parkour).map(([field, time]) => [
+    const times = Object.entries(parkour).map(([field, time]) => [
       removeFormatting(
         LeaderboardScanner.getLeaderboardField(Parkour, field).name.replace(/Lobby/g, '').trim()
       ),
       time == 0 ? null : time,
     ]);
 
-    Times.sort((a, b) => (a[1] ?? Number.MAX_VALUE) - (b[1] ?? Number.MAX_VALUE));
+    times.sort((a, b) => (a[1] ?? Number.MAX_VALUE) - (b[1] ?? Number.MAX_VALUE));
 
     const rowSize = 4;
-    const rows = Array.from({ length: Math.ceil(Times.length / rowSize) }, (_, i) =>
-      Times.slice(i * rowSize, (i + 1) * rowSize)
+    const rows = Array.from({ length: Math.ceil(times.length / rowSize) }, (_, i) =>
+      times.slice(i * rowSize, (i + 1) * rowSize)
     );
 
     const container = (

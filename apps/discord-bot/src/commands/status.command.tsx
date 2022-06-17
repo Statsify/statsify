@@ -28,11 +28,10 @@ export class StatusCommand {
       this.apiService.getUserBadge(status.uuid),
     ]);
 
-    let background = await getBackground('default', '');
-
-    if (status.online && status.game.name != 'Limbo') {
-      background = await getBackground(status.game.name.toLowerCase(), 'overall');
-    }
+    const background =
+      status.online && status.game.name != 'Limbo'
+        ? await getBackground(status.game.name.toLowerCase(), 'overall')
+        : await getBackground('hypixel', 'overall');
 
     const container = (
       <Container background={background}>
@@ -64,7 +63,7 @@ export class StatusCommand {
     return (
       <Table.table>
         <Table.tr>
-          <Table.td title="Status" value={`§c${t('stats.hidden')}`} color="§b" />
+          <Table.td title="Status" value={t('stats.hidden')} color="§4" />
         </Table.tr>
         <Table.tr>
           <Table.td
@@ -85,38 +84,33 @@ export class StatusCommand {
   private async onlineTable(status: Status, t: LocalizeFunction) {
     const resource = await this.apiService.getResource('games');
     const gameInfo = resource?.games;
-    const gameCounts = await this.apiService.getGameCounts();
 
     const gameName = gameInfo?.[status.game.code]?.name ?? status.game.name;
 
-    const game = (
-      <Table.tr>
-        <Table.td title={t('stats.game')} value={gameName} color="§a" />
-        <Table.td
-          title={`${gameName} ${t('players')}`}
-          value={t(gameCounts[status.game.code as keyof typeof gameCounts].players)}
-          color="§a"
-        />
-      </Table.tr>
-    );
+    const game = <Table.td title={t('stats.game')} value={gameName} color="§e" />;
 
-    let mode = <></>;
+    let gameRow;
     if (status.mode) {
       const modeName =
         gameInfo[status.game.code]?.modeNames?.[status.mode] ?? prettify(status.mode.toLowerCase());
 
-      mode = (
+      gameRow = (
         <Table.tr>
+          {game}
           <Table.td title={t('stats.mode')} value={modeName} color="§e" />
-          <Table.td title={t('stats.map')} value={status.map ?? t('unknown')} color="§e" />
+          <If condition={status.map}>
+            <Table.td title={t('stats.map')} value={status.map ?? t('unknown')} color="§e" />
+          </If>
         </Table.tr>
       );
+    } else {
+      gameRow = <Table.tr>{game}</Table.tr>;
     }
 
     return (
       <Table.table>
         <Table.tr>
-          <Table.td title={t('stats.status')} value={`§a${t('stats.online')}`} color="§b" />
+          <Table.td title={t('stats.status')} value={'stats.online'} color="§a" />
           <Table.td title={t('stats.version')} value={status.actions.version} color="§b" />
           <Table.td
             title={t('stats.loginTime')}
@@ -124,8 +118,7 @@ export class StatusCommand {
             color="§b"
           />
         </Table.tr>
-        {game}
-        {mode}
+        {gameRow}
       </Table.table>
     );
   }
@@ -134,7 +127,7 @@ export class StatusCommand {
     return (
       <Table.table>
         <Table.tr>
-          <Table.td title="Status" value={`§7${t('stats.offline')}`} color="§b" />
+          <Table.td title="Status" value={t('stats.offline')} color="§c" />
         </Table.tr>
         <Table.tr>
           <Table.td
