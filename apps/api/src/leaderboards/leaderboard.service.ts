@@ -45,9 +45,6 @@ export abstract class LeaderboardService {
   ) {
     const PAGE_SIZE = 10;
 
-    const constructorName = constructor.name.toLowerCase();
-    field = `${constructorName}.${field}`;
-
     const {
       fieldName,
       additionalFields = [],
@@ -68,7 +65,7 @@ export abstract class LeaderboardService {
         bottom = top + PAGE_SIZE;
         break;
       case LeaderboardQuery.INPUT: {
-        const ranking = await this.searchLeaderboardInput(input as string);
+        const ranking = await this.searchLeaderboardInput(input as string, field);
         highlight = ranking;
         top = ranking - (ranking % 10);
         bottom = top + PAGE_SIZE;
@@ -146,13 +143,16 @@ export abstract class LeaderboardService {
     id: string
   ) {
     const pipeline = this.redis.pipeline();
-
     const constructorName = constructor.name.toLowerCase();
 
     fields.forEach((field) => {
-      if (LeaderboardScanner.getLeaderboardField(constructor, field).sort === 'ASC')
+      const { sort } = LeaderboardScanner.getLeaderboardField(constructor, field);
+
+      if (sort === 'ASC') {
         pipeline.zrank(`${constructorName}.${field}`, id);
-      else pipeline.zrevrank(`${constructorName}.${field}`, id);
+      } else {
+        pipeline.zrevrank(`${constructorName}.${field}`, id);
+      }
     });
 
     const responses = await pipeline.exec();
@@ -167,7 +167,7 @@ export abstract class LeaderboardService {
     });
   }
 
-  protected abstract searchLeaderboardInput(input: string): Promise<number>;
+  protected abstract searchLeaderboardInput(input: string, field: string): Promise<number>;
 
   protected abstract getAdditionalStats(
     ids: string[],

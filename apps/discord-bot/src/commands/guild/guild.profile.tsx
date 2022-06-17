@@ -15,6 +15,7 @@ import { ExpByGame } from '@statsify/schemas/src/guild/expbygame';
 import { arrayGroup, wordGroup } from '@statsify/util';
 import { DateTime } from 'luxon';
 import type { Image } from 'skia-canvas';
+import { GexpTable } from './gexp.table';
 
 const LINK_REGEX =
   /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)|[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/g;
@@ -141,16 +142,18 @@ const GuildOverallPage = ({
         <GuildBlock title="Guild Info" width="remaining" height="100%">
           <box {...box}>
             <div location="center">
-              <text {...text}>{`§2${t('stats.guild.guildMaster')}:`}</text>
+              <text {...text}>{`§b${t('stats.guild.guildMaster')}:`}</text>
               <img image={skin} margin={{ left: 8, right: 8 }} />
               <text {...text}>{guildMaster.displayName}</text>
             </div>
             <text {...text}>{`§3${t('stats.guild.createdOn')}: §7${createdAt}`}</text>
-            <text {...text}>{`§7${t('stats.guild.members')}: §f${t(
+            <text {...text}>{`§9${t('stats.guild.members')}: §f${t(
               guild.members.length
             )}§8/§f125`}</text>
-            <text {...text}>{`§e${t('stats.guild.rank')}: §7#§f${t(ranking)}`}</text>
-            <text {...text}>{`§2${t('stats.guild.level')}:§f ${t(guild.level)}`}</text>
+            <text {...text}>{`§2${t('stats.guild.gexp')}:§f ${t(guild.exp)} §8[§7#§f${t(
+              ranking
+            )}§8]`}</text>
+            <text {...text}>{`§e${t('stats.guild.level')}:§f ${t(guild.level)}`}</text>
           </box>
         </GuildBlock>
         <If condition={guild.description}>
@@ -263,43 +266,12 @@ const GuildGexpPage = ({ guild, t }: GuildGexpPageProps) => {
         </Table.table>
       </GuildBlock>
       <GuildBlock title="GEXP History" width="100%">
-        <Table.table>
-          <Table.tr>
-            <box width="100%" border={{ topLeft: 4, bottomLeft: 4, bottomRight: 0, topRight: 0 }}>
-              <text>§7§l{t('stats.guild.date')}</text>
-            </box>
-            <box width="100%" border={{ topLeft: 0, bottomLeft: 0, bottomRight: 0, topRight: 0 }}>
-              <text>§2§l{t('stats.guild.gexp')}</text>
-            </box>
-            <box width="100%" border={{ topLeft: 0, bottomLeft: 0, bottomRight: 4, topRight: 4 }}>
-              <text>§2§l{t('stats.guild.scaledGexp')}</text>
-            </box>
-          </Table.tr>
-          <>
-            {guild.expHistory.slice(0, 7).map((exp, i) => (
-              <Table.tr>
-                <box
-                  width="100%"
-                  border={{ topLeft: 4, bottomLeft: 4, bottomRight: 0, topRight: 0 }}
-                >
-                  <text>§f{guild.expHistoryDays[i].replace(/-/g, '§7-§f')}</text>
-                </box>
-                <box
-                  width="100%"
-                  border={{ topLeft: 0, bottomLeft: 0, bottomRight: 0, topRight: 0 }}
-                >
-                  <text>§2{t(exp)}</text>
-                </box>
-                <box
-                  width="100%"
-                  border={{ topLeft: 0, bottomLeft: 0, bottomRight: 4, topRight: 4 }}
-                >
-                  <text>§2{t(guild.scaledExpHistory[i])}</text>
-                </box>
-              </Table.tr>
-            ))}
-          </>
-        </Table.table>
+        <GexpTable
+          dates={guild.expHistoryDays}
+          expHistory={guild.expHistory}
+          scaledExpHistory={guild.scaledExpHistory}
+          t={t}
+        />
       </GuildBlock>
     </>
   );

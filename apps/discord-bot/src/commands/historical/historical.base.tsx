@@ -207,11 +207,10 @@ export class HistoricalBase {
   ) {
     const user = context.getUser();
 
-    const player = await this.apiService.getWithUser(
-      user,
-      this.apiService.getPlayerHistorical,
+    const player = await this.apiService.getPlayerHistorical(
       context.option('player'),
-      this.time
+      this.time,
+      user
     );
 
     const [logo, skin, badge] = await Promise.all([

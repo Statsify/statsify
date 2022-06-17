@@ -146,6 +146,7 @@
     "guild": {
       "guildMaster": "Guild Master",
       "createdOn": "Created On",
+      "joinedAt": "Joined At",
       "members": "Guild Members",
       "rank": "Guild Rank",
       "quests": "Guild Quests",

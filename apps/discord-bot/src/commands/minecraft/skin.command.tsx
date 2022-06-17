@@ -14,11 +14,7 @@ export class SkinCommand {
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    const player = await this.mojangApiService.getWithUser(
-      user,
-      this.mojangApiService.getPlayer,
-      context.option<string>('player')
-    );
+    const player = await this.mojangApiService.getPlayer(context.option<string>('player'), user);
 
     const skin = await this.apiService.getPlayerSkin(player.uuid);
     const canvas = new Canvas(skin.width, skin.height);

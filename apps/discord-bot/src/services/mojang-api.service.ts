@@ -59,14 +59,6 @@ export class MojangApiService {
     }
   }
 
-  public async getWithUser<T extends (...args: any[]) => Promise<K>, K extends { uuid: string }>(
-    user: User | null,
-    fn: T,
-    ...args: Parameters<T>
-  ): Promise<Awaited<ReturnType<T>> & { user: User | null }> {
-    return this.apiService.getWithUser(user, fn.bind(this) as T, ...args);
-  }
-
   public faceIconUrl(uuid: string) {
     return `https://crafatar.com/avatars/${uuid.replace(
       /-/g,

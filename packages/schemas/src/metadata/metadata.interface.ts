@@ -47,6 +47,8 @@ export interface LeaderboardDisabledMetadata extends BaseLeaderboardMetadata {
   enabled: false;
 }
 
+export type LeaderboardSort = 'ASC' | 'DESC';
+
 export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
   enabled: true;
 
@@ -58,7 +60,7 @@ export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
   /**
    * Whether or not to sort the leaderboard ascending or descending.
    */
-  sort: 'ASC' | 'DESC';
+  sort: LeaderboardSort;
 
   /**
    * Aliases for accessing leaderboard.

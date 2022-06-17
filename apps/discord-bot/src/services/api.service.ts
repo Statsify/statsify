@@ -66,26 +66,6 @@ export class ApiService extends StatsifyApiService {
     });
   }
 
-  public async getWithUser<T extends (...args: any[]) => Promise<K>, K extends { uuid: string }>(
-    user: User | null,
-    fn: T,
-    ...args: Parameters<T>
-  ): Promise<Awaited<ReturnType<T>> & { user: User | null }> {
-    const result = (await fn.bind(this)(...args, user)) as Awaited<ReturnType<T>> & {
-      user: User | null;
-    };
-
-    if (result.uuid === user?.uuid) {
-      result.user = user;
-      return result;
-    }
-
-    user = await this.getUser(result.uuid);
-
-    result.user = user;
-    return result;
-  }
-
   /**
    *
    * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.

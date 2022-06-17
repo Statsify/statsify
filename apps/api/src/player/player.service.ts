@@ -1,5 +1,5 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
   HypixelCache,
   PlayerNotFoundException,
@@ -18,6 +18,7 @@ import { PlayerLeaderboardService } from './leaderboards/player-leaderboard.serv
 export class PlayerService {
   public constructor(
     private readonly hypixelService: HypixelService,
+    @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: PlayerLeaderboardService,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
     @InjectModel(Friends) private readonly friendsModel: ReturnModelType<typeof Friends>
@@ -220,7 +221,7 @@ export class PlayerService {
     await this.playerLeaderboardService.addLeaderboards(
       Player,
       player,
-      'shortUuid',
+      'uuid',
       fields,
       player.leaderboardBanned ?? false
     );
