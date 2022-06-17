@@ -9,6 +9,8 @@ import { GuildMember } from './member';
 import { GuildRank } from './rank';
 import { getLevel } from './util';
 
+const limit = 50_000;
+
 export class Guild {
   @Field({ mongo: { index: true, unique: true }, store: { required: true } })
   public id: string;
@@ -28,7 +30,7 @@ export class Guild {
   @Field({ leaderboard: { enabled: false } })
   public createdAt: number;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Level', hidden: true, additionalFields: ['level'], limit } })
   public exp: number;
 
   @Field({ leaderboard: { enabled: false } })
@@ -73,16 +75,16 @@ export class Guild {
   @Field({ type: () => [Number] })
   public scaledExpHistory: number[];
 
-  @Field()
+  @Field({ leaderboard: { limit } })
   public daily: number;
 
-  @Field()
+  @Field({ leaderboard: { limit } })
   public weekly: number;
 
-  @Field()
+  @Field({ leaderboard: { limit } })
   public monthly: number;
 
-  @Field()
+  @Field({ leaderboard: { limit } })
   public questParticipation: number;
 
   @Field({ leaderboard: { enabled: false } })

@@ -8,7 +8,7 @@ export class GuildRank {
   @Field({ store: { required: false } })
   public tag?: string;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public priority: number;
 
   @Field({ store: { default: false } })

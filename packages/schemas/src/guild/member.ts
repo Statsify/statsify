@@ -17,7 +17,7 @@ export class GuildMember {
   @Field()
   public joinTime: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public questParticipation: number;
 
   @Field({ type: () => [Number] })
@@ -26,13 +26,13 @@ export class GuildMember {
   @Field({ type: () => [String] })
   public expHistoryDays: string[];
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public daily: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public weekly: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public monthly: number;
 
   @Field({ leaderboard: { enabled: false } })
