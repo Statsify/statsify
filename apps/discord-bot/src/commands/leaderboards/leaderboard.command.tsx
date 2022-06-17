@@ -350,7 +350,7 @@ export class LeaderboardCommand {
 
       changePage(() =>
         playerInput
-          ? { input: playerInput, type: LeaderboardQuery.PLAYER }
+          ? { input: playerInput, type: LeaderboardQuery.INPUT }
           : { input: positionInput, type: LeaderboardQuery.POSITION }
       )(interaction);
     });
@@ -437,7 +437,7 @@ export class LeaderboardCommand {
     const leaderboardData = await Promise.all(
       leaderboard.data.map(async (d) => ({
         ...d,
-        skin: await this.apiService.getPlayerHead(d.uuid, 24),
+        skin: await this.apiService.getPlayerHead(d.id, 24),
       }))
     );
 

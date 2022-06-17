@@ -1,72 +1,51 @@
+import { InjectModel } from '@m8a/nestjs-typegoose';
+import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
-import { Guild, LeaderboardScanner } from '@statsify/schemas';
+import { Guild } from '@statsify/schemas';
 import { flatten } from '@statsify/util';
-import { MongoLeaderboardService } from '../../leaderboards';
+import { ReturnModelType } from '@typegoose/typegoose';
+import Redis from 'ioredis';
+import { LeaderboardAdditionalStats, LeaderboardService } from '../../leaderboards';
 
 @Injectable()
-export class GuildLeaderboardService {
-  public constructor(private readonly leaderboardService: MongoLeaderboardService) {}
-
-  public async getLeaderboard(field: string, pageOrName: number | string) {
-    let leaderboard: { index: number; data: Record<string, any> }[];
-
-    const { name, fieldName } = LeaderboardScanner.getLeaderboardField(Guild, field);
-
-    const selector = {
-      [field]: true,
-      nameFormatted: true,
-      nameToLower: true,
-      level: true,
-    };
-
-    if (typeof pageOrName === 'number') {
-      const page = pageOrName;
-      const pageSize = 10;
-      const top = page * pageSize;
-      const bottom = top + pageSize;
-
-      leaderboard = await this.leaderboardService.getLeaderboard(
-        Guild,
-        field,
-        selector,
-        top,
-        bottom
-      );
-    } else {
-      const name = pageOrName;
-
-      const lbData = await this.leaderboardService.getLeaderboard(Guild, field, selector, {
-        nameToLower: name.toLowerCase(),
-      });
-
-      if (!lbData) return null;
-
-      leaderboard = lbData;
-    }
-
-    return {
-      fields: [fieldName, 'Level'],
-      name,
-      data: leaderboard.map((guild) => {
-        const flatGuild = flatten(guild.data);
-
-        return {
-          fields: [flatGuild[field], flatGuild.level],
-          name: flatGuild.nameFormatted,
-          position: guild.index + 1,
-        };
-      }),
-    };
+export class GuildLeaderboardService extends LeaderboardService {
+  public constructor(
+    @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>,
+    @InjectRedis() redis: Redis
+  ) {
+    super(redis);
   }
 
-  public async getLeaderboardRanking(field: string, name: string) {
-    const rank = await this.leaderboardService.getLeaderboardRanking(Guild, field, {
-      nameToLower: name.toLowerCase(),
-    });
+  protected searchLeaderboardInput(input: string): Promise<number> {
+    throw new Error('Method not implemented.');
+  }
 
-    return {
-      field,
-      rank,
-    };
+  protected async getAdditionalStats(
+    ids: string[],
+    fields: string[]
+  ): Promise<LeaderboardAdditionalStats[]> {
+    const selector = fields.reduce((acc, key) => {
+      acc[key] = true;
+      return acc;
+    }, {} as Record<string, boolean>);
+
+    selector.nameFormatted = true;
+
+    return await Promise.all(
+      ids.map(async (id) => {
+        const guild = await this.guildModel
+          .findOne()
+          .where('id')
+          .equals(id)
+          .select(selector)
+          .lean()
+          .exec();
+
+        const additionalStats = flatten(guild) as LeaderboardAdditionalStats;
+        additionalStats.name = additionalStats.nameFormatted;
+
+        return additionalStats;
+      })
+    );
   }
 }

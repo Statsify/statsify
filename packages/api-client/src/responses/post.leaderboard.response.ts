@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-class PlayerLeaderboardItem {
+export class LeaderboardItem {
   @ApiProperty()
-  public uuid: string;
+  public id: string;
 
   @ApiProperty({ type: [Number], description: 'The leaderboard fields returned', isArray: true })
   public fields: number[];
@@ -20,12 +20,12 @@ class PlayerLeaderboardItem {
   public highlight?: boolean;
 }
 
-export class PostPlayerLeaderboardResponse {
+export class PostLeaderboardResponse {
   @ApiProperty({ type: [String], description: 'The name of the requested leaderboard fields' })
   public fields: string[];
 
-  @ApiProperty({ type: [PlayerLeaderboardItem] })
-  public data: PlayerLeaderboardItem[];
+  @ApiProperty({ type: [LeaderboardItem] })
+  public data: LeaderboardItem[];
 
   @ApiProperty()
   public page: number;

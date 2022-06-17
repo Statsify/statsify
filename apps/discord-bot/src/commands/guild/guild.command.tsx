@@ -1,12 +1,14 @@
 import { GuildArgument } from '#arguments';
 import { ApiService, PaginateService } from '#services';
 import { GuildQuery } from '@statsify/api-client';
-import { getBackground, getImage, getLogo } from '@statsify/assets';
+import { getAssetPath, getBackground, getImage, getLogo } from '@statsify/assets';
 import { Command, CommandContext, SubCommand } from '@statsify/discord';
 import { render } from '@statsify/rendering';
 import { GuildMember } from '@statsify/schemas';
+import { readdir } from 'fs/promises';
 import { ErrorMessage } from '../../error.message';
 import { getTheme } from '../../themes';
+import { GuildListProfile, GuildListProfileProps } from './guild-list.profile';
 import { GuildProfile, GuildProfileProps } from './guild.profile';
 
 @Command({ description: (t) => t('commands.guild') })
@@ -20,13 +22,11 @@ export class GuildCommand {
   public async overall(context: CommandContext) {
     const user = context.getUser();
     const t = context.t();
-    const query = context.option<string>('query');
-    const type = context.option<GuildQuery>('type');
 
-    const guild = await this.apiService.getGuild(query, type, user);
+    const guild = await this.getGuild(context);
 
-    const guildRanking = await this.apiService.getGuildRanking('exp', guild.nameToLower);
-    const ranking = guildRanking.rank ?? 0;
+    const guildRanking = await this.apiService.getGuildRankings(['exp'], guild.id);
+    const ranking = guildRanking[0]?.rank ?? 0;
 
     const guildMaster = guild.members.find((m) => GuildMember.isGuildMaster(m));
 
@@ -36,7 +36,13 @@ export class GuildCommand {
         (t) => t('errors.unknown.description')
       );
 
-    const games = await Promise.all(guild.preferredGames.map((g) => getImage(`games/${g}.png`)));
+    const gameIconPaths = await readdir(getAssetPath('games'));
+
+    const gameIcons = Object.fromEntries(
+      await Promise.all(
+        gameIconPaths.map(async (g) => [g.replace('.png', ''), await getImage(`games/${g}`)])
+      )
+    );
 
     const [skin, logo, background] = await Promise.all([
       this.apiService.getPlayerHead(guildMaster.uuid, 16),
@@ -53,7 +59,7 @@ export class GuildCommand {
       logo,
       tier: user?.tier,
       t,
-      games,
+      gameIcons,
     };
 
     return this.paginateService.paginate(context, [
@@ -65,6 +71,51 @@ export class GuildCommand {
         label: 'GEXP',
         generator: () => render(<GuildProfile {...props} page="gexp" />, getTheme(user?.theme)),
       },
+      {
+        label: 'GEXP Per Game',
+        generator: () =>
+          render(<GuildProfile {...props} page="expPerGame" />, getTheme(user?.theme)),
+      },
+      {
+        label: 'Misc',
+        generator: () => render(<GuildProfile {...props} page="misc" />, getTheme(user?.theme)),
+      },
     ]);
+  }
+
+  @SubCommand({ description: (t) => t('commands.list'), args: GuildArgument })
+  public async list(context: CommandContext) {
+    const user = context.getUser();
+    const t = context.t();
+
+    const guild = await this.getGuild(context);
+
+    const [logo, background] = await Promise.all([
+      getLogo(user?.tier),
+      getBackground('bedwars', 'overall'),
+    ]);
+
+    const props: GuildListProfileProps = {
+      guild,
+      background,
+      logo,
+      tier: user?.tier,
+      t,
+    };
+
+    return this.paginateService.paginate(context, [
+      {
+        label: 'List',
+        generator: () => render(<GuildListProfile {...props} />, getTheme(user?.theme)),
+      },
+    ]);
+  }
+
+  private getGuild(context: CommandContext) {
+    const user = context.getUser();
+    const query = context.option<string>('query');
+    const type = context.option<GuildQuery>('type');
+
+    return this.apiService.getGuild(query, type, user);
   }
 }

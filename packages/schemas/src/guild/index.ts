@@ -140,7 +140,7 @@ export class Guild {
       new GuildRank({
         name: 'Guild Master',
         tag: data.hideGmTag ? null : 'GM',
-        priority: Infinity,
+        priority: Number.MAX_SAFE_INTEGER,
         defualt: false,
       }),
     ];
@@ -157,3 +157,4 @@ export class Guild {
 
 export * from './achievements';
 export * from './member';
+export * from './rank';

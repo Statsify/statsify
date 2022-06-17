@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class PostGuildRankingsResponse {
+export class PostLeaderboardRankingsResponse {
   @ApiProperty({ description: 'The name of the requested ranking' })
   public field: string;
 

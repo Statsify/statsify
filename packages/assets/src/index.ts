@@ -80,8 +80,10 @@ export const getLogoPath = (tier: UserTier = UserTier.NONE, size = 26) => {
       path = '';
       break;
     case UserTier.PREMIUM:
-    case UserTier.CORE:
       path = 'premium_';
+      break;
+    case UserTier.CORE:
+      path = 'core_';
       break;
   }
 

@@ -14,10 +14,8 @@ import {
   GetStatusResponse,
   GetUserResponse,
   GetWatchdogResponse,
-  PostGuildLeaderboardResponse,
-  PostGuildRankingsResponse,
-  PostPlayerLeaderboardResponse,
-  PostPlayerRankingsResponse,
+  PostLeaderboardRankingsResponse,
+  PostLeaderboardResponse,
   PutUserBadgeResponse,
 } from './responses';
 
@@ -79,8 +77,8 @@ export class ApiService {
     field: string,
     input: string | number,
     type: LeaderboardQuery
-  ): Promise<PostPlayerLeaderboardResponse | null> {
-    return this.request<PostPlayerLeaderboardResponse>('/player/leaderboards', {}, 'POST', {
+  ): Promise<PostLeaderboardResponse | null> {
+    return this.request<PostLeaderboardResponse>('/player/leaderboards', {}, 'POST', {
       body: {
         field,
         [type]: input,
@@ -89,9 +87,14 @@ export class ApiService {
   }
 
   public getPlayerRankings(fields: string[], uuid: string) {
-    return this.request<PostPlayerRankingsResponse>('/player/leaderboards/rankings', {}, 'POST', {
-      body: { fields, uuid },
-    });
+    return this.request<PostLeaderboardRankingsResponse[]>(
+      '/player/leaderboards/rankings',
+      {},
+      'POST',
+      {
+        body: { fields, uuid },
+      }
+    );
   }
 
   public getGuild(tag: string, type: GuildQuery) {
@@ -101,24 +104,24 @@ export class ApiService {
     });
   }
 
-  public getGuildLeaderboard(field: string, page: number): Promise<PostGuildLeaderboardResponse>;
-  public getGuildLeaderboard(field: string, name: string): Promise<PostGuildLeaderboardResponse>;
-  public getGuildLeaderboard(
-    field: string,
-    pageOrName: number | string
-  ): Promise<PostGuildLeaderboardResponse> {
-    return this.request<PostGuildLeaderboardResponse>('/guild/leaderboards', {}, 'POST', {
+  public getGuildLeaderboard(field: string, input: string | number, type: LeaderboardQuery) {
+    return this.request<PostLeaderboardResponse>('/guild/leaderboards', {}, 'POST', {
       body: {
         field,
-        [typeof pageOrName === 'number' ? 'page' : 'name']: pageOrName,
+        [type]: input,
       },
     });
   }
 
-  public getGuildRanking(field: string, name: string) {
-    return this.request<PostGuildRankingsResponse>('/guild/leaderboards/rankings', {}, 'POST', {
-      body: { field, name },
-    });
+  public getGuildRankings(fields: string[], id: string) {
+    return this.request<PostLeaderboardRankingsResponse[]>(
+      '/guild/leaderboards/rankings',
+      {},
+      'POST',
+      {
+        body: { fields, id },
+      }
+    );
   }
 
   public async getWatchdog() {

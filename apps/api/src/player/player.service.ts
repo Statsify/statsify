@@ -12,13 +12,13 @@ import { Flatten, flatten } from '@statsify/util';
 import type { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
 import { HypixelService } from '../hypixel';
-import { LeaderboardService } from '../leaderboards';
+import { PlayerLeaderboardService } from './leaderboards/player-leaderboard.service';
 
 @Injectable()
 export class PlayerService {
   public constructor(
     private readonly hypixelService: HypixelService,
-    private readonly leaderboardService: LeaderboardService,
+    private readonly playerLeaderboardService: PlayerLeaderboardService,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
     @InjectModel(Friends) private readonly friendsModel: ReturnModelType<typeof Friends>
   ) {}
@@ -175,7 +175,7 @@ export class PlayerService {
     if (!player) return null;
 
     //Remove all sorted sets the player is in
-    await this.leaderboardService.addLeaderboards(
+    await this.playerLeaderboardService.addLeaderboards(
       Player,
       player,
       'shortUuid',
@@ -217,7 +217,7 @@ export class PlayerService {
 
     const fields = LeaderboardScanner.getLeaderboardFields(Player);
 
-    await this.leaderboardService.addLeaderboards(
+    await this.playerLeaderboardService.addLeaderboards(
       Player,
       player,
       'shortUuid',

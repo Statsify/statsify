@@ -3,9 +3,10 @@ import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@ne
 import {
   ErrorResponse,
   LeaderboardQuery,
-  PostPlayerLeaderboardResponse,
-  PostPlayerRankingsResponse,
+  PostLeaderboardRankingsResponse,
+  PostLeaderboardResponse,
 } from '@statsify/api-client';
+import { Player } from '@statsify/schemas';
 import { Auth } from '../../auth';
 import { PlayerLeaderboardDto } from '../../dtos/player-leaderboard.dto';
 import { PlayerRankingsDto } from '../../dtos/player-rankings.dto';
@@ -18,7 +19,7 @@ export class PlayerLeaderboardsController {
 
   @Post()
   @ApiOperation({ summary: 'Get a Player Leaderboard' })
-  @ApiOkResponse({ type: PostPlayerLeaderboardResponse })
+  @ApiOkResponse({ type: PostLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
   public getPlayerLeaderboard(@Body() { field, page, player, position }: PlayerLeaderboardDto) {
@@ -27,7 +28,7 @@ export class PlayerLeaderboardsController {
 
     if (player) {
       input = player;
-      type = LeaderboardQuery.PLAYER;
+      type = LeaderboardQuery.INPUT;
     } else if (position) {
       input = position;
       type = LeaderboardQuery.POSITION;
@@ -36,15 +37,15 @@ export class PlayerLeaderboardsController {
       type = LeaderboardQuery.PAGE;
     }
 
-    return this.playerLeaderboardService.getLeaderboard(field, input, type);
+    return this.playerLeaderboardService.getLeaderboard(Player, field, input, type);
   }
 
   @Post('/rankings')
   @ApiOperation({ summary: 'Get a Player Rankings' })
-  @ApiOkResponse({ type: [PostPlayerRankingsResponse] })
+  @ApiOkResponse({ type: [PostLeaderboardRankingsResponse] })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 5 })
   public async getPlayerRankings(@Body() { fields, uuid }: PlayerRankingsDto) {
-    return this.playerLeaderboardService.getLeaderboardRankings(fields, uuid);
+    return this.playerLeaderboardService.getLeaderboardRankings(Player, fields, uuid);
   }
 }

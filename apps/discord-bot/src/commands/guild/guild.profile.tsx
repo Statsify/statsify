@@ -10,8 +10,9 @@ import {
 import { LocalizeFunction } from '@statsify/discord';
 import { ratio } from '@statsify/math';
 import { StyleLocation } from '@statsify/rendering';
-import { Guild, GuildMember, UserTier } from '@statsify/schemas';
-import { wordGroup } from '@statsify/util';
+import { FormattedGame, GameCodeToName, Guild, GuildMember, UserTier } from '@statsify/schemas';
+import { ExpByGame } from '@statsify/schemas/src/guild/expbygame';
+import { arrayGroup, wordGroup } from '@statsify/util';
 import { DateTime } from 'luxon';
 import type { Image } from 'skia-canvas';
 
@@ -54,13 +55,13 @@ export interface GuildProfileProps {
   guild: Guild;
   guildMaster: GuildMember;
   skin: Image;
-  games: Image[];
+  gameIcons: Record<string, Image>;
   background: Image;
   logo: Image;
   tier?: UserTier;
   t: LocalizeFunction;
   ranking: number;
-  page: 'overall' | 'gexp';
+  page: 'overall' | 'gexp' | 'expPerGame' | 'misc';
 }
 
 export const GuildProfile = ({
@@ -72,7 +73,7 @@ export const GuildProfile = ({
   guildMaster,
   skin,
   ranking,
-  games,
+  gameIcons,
   page,
 }: GuildProfileProps) => {
   let pageEl: JSX.Element;
@@ -80,6 +81,12 @@ export const GuildProfile = ({
   switch (page) {
     case 'gexp':
       pageEl = <GuildGexpPage guild={guild} t={t} />;
+      break;
+    case 'expPerGame':
+      pageEl = <GuildGexpPerGamePage guild={guild} t={t} gameIcons={gameIcons} />;
+      break;
+    case 'misc':
+      pageEl = <GuildMiscPage guild={guild} t={t} />;
       break;
     default:
     case 'overall':
@@ -90,7 +97,7 @@ export const GuildProfile = ({
           guildMaster={guildMaster}
           skin={skin}
           ranking={ranking}
-          games={games}
+          gameIcons={gameIcons}
         />
       );
       break;
@@ -111,14 +118,14 @@ interface GuildOverallPageProps {
   guild: Guild;
   guildMaster: GuildMember;
   skin: Image;
-  games: Image[];
+  gameIcons: Record<string, Image>;
   t: LocalizeFunction;
   ranking: number;
 }
 
 const GuildOverallPage = ({
   guild,
-  games,
+  gameIcons,
   guildMaster,
   ranking,
   skin,
@@ -126,6 +133,7 @@ const GuildOverallPage = ({
 }: GuildOverallPageProps) => {
   const format = "LL/dd/yy',' hh:mm a";
   const createdAt = DateTime.fromMillis(guild.createdAt).toFormat(format, { locale: t.locale });
+  const preferredGames = guild.preferredGames.map((g) => gameIcons[g]);
 
   return (
     <>
@@ -166,10 +174,10 @@ const GuildOverallPage = ({
           </Table.tr>
         </Table.table>
       </GuildBlock>
-      <If condition={games.length > 0}>
+      <If condition={preferredGames.length > 0}>
         <GuildBlock title="Preferred Games" width="100%">
           <box {...box} direction="row">
-            {games.map((g, i) => (
+            {preferredGames.map((g, i) => (
               <img
                 image={g}
                 width={32}
@@ -178,7 +186,7 @@ const GuildOverallPage = ({
                   top: 4,
                   bottom: 4,
                   left: i === 0 ? 0 : 4,
-                  right: i === games.length - 1 ? 0 : 4,
+                  right: i === preferredGames.length - 1 ? 0 : 4,
                 }}
               />
             ))}
@@ -292,6 +300,88 @@ const GuildGexpPage = ({ guild, t }: GuildGexpPageProps) => {
             ))}
           </>
         </Table.table>
+      </GuildBlock>
+    </>
+  );
+};
+
+interface GuildGexpPerGamePageProps {
+  guild: Guild;
+  t: LocalizeFunction;
+  gameIcons: Record<string, Image>;
+}
+
+const GuildGexpPerGamePage = ({ guild, t, gameIcons }: GuildGexpPerGamePageProps) => {
+  const expPerGame = Object.entries(guild.expByGame);
+  const games = expPerGame.filter(([, exp]) => exp > 0).sort((a, b) => b[1] - a[1]);
+
+  const items = arrayGroup(
+    games.map(([game, exp]) => (
+      <box padding={{ left: 8, right: 8, top: 4, bottom: 4 }} width="100%">
+        <img image={gameIcons[game]} width={32} height={32} />
+        <text>§l{FormattedGame[GameCodeToName[game as keyof ExpByGame]]}</text>
+        <div width="remaining" margin={{ left: 4, right: 4 }} />
+        <text>{t(exp)}</text>
+      </box>
+    )),
+    Math.round(games.length / 2)
+  );
+
+  return (
+    <div width="100%">
+      <div width="remaining" direction="column">
+        {items[0]}
+      </div>
+      <box width={8} height="100%" padding={0} />
+      <div width="remaining" direction="column">
+        {items[1]}
+      </div>
+    </div>
+  );
+};
+
+interface GuildMiscPageProps {
+  guild: Guild;
+  t: LocalizeFunction;
+}
+
+const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
+  const ranksGroups = arrayGroup(guild.ranks, 3);
+
+  return (
+    <>
+      <GuildBlock width="100%" title="Guild Achievements">
+        <Table.table>
+          <Table.tr>
+            <Table.td title="Winners" value={t(guild.achievements.dailyGuildWins)} color="§e" />
+            <Table.td title="Experience Kings" value={t(guild.achievements.dailyGexp)} color="§e" />
+            <Table.td
+              title="Online Players"
+              value={t(guild.achievements.maxOnlinePlayerCount)}
+              color="§e"
+            />
+          </Table.tr>
+        </Table.table>
+      </GuildBlock>
+      <GuildBlock width="100%" title="Guild Quests">
+        <Table.table>
+          <Table.tr>
+            <Table.td title="Quests Completed" value={t(guild.questParticipation)} color="§b" />
+          </Table.tr>
+        </Table.table>
+      </GuildBlock>
+      <GuildBlock width="100%" title="Guild Ranks">
+        {ranksGroups.map((ranks) => (
+          <div width="100%">
+            {ranks.map((rank) => (
+              <box width={`1/${ranks.length}`}>
+                <text>
+                  {`${guild.tagColor.code}${rank.name}${rank.tag ? ` [${rank.tag}]` : ''}`}
+                </text>
+              </box>
+            ))}
+          </div>
+        ))}
       </GuildBlock>
     </>
   );

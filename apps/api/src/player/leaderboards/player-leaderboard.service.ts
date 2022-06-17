@@ -1,174 +1,51 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
-import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { HypixelCache, LeaderboardQuery, PlayerNotFoundException } from '@statsify/api-client';
-import { LeaderboardEnabledMetadata, LeaderboardScanner, Player } from '@statsify/schemas';
+import { InjectRedis } from '@nestjs-modules/ioredis';
+import { Injectable } from '@nestjs/common';
+import { Player } from '@statsify/schemas';
 import { flatten } from '@statsify/util';
 import { ReturnModelType } from '@typegoose/typegoose';
-import short from 'short-uuid';
-import { LeaderboardService } from '../../leaderboards';
-import { PlayerService } from '../player.service';
+import Redis from 'ioredis';
+import { LeaderboardAdditionalStats, LeaderboardService } from '../../leaderboards';
 
 @Injectable()
-export class PlayerLeaderboardService {
+export class PlayerLeaderboardService extends LeaderboardService {
   public constructor(
-    private readonly leaderboardService: LeaderboardService,
-    @InjectRedis() private readonly redis: Redis,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
-    private readonly playerSerivce: PlayerService
-  ) {}
-
-  public async getLeaderboard(field: string, input: number | string, type: LeaderboardQuery) {
-    const pageSize = 10;
-    const translator = short(short.constants.cookieBase90);
-
-    const {
-      fieldName,
-      additionalFields = [],
-      extraDisplay,
-      formatter,
-      sort,
-      name,
-      hidden,
-    } = LeaderboardScanner.getLeaderboardField(Player, field) as LeaderboardEnabledMetadata;
-
-    let top: number;
-    let bottom: number;
-    let highlight: number | undefined = undefined;
-
-    switch (type) {
-      case LeaderboardQuery.PAGE:
-        top = (input as number) * pageSize;
-        bottom = top + pageSize;
-        break;
-      case LeaderboardQuery.PLAYER: {
-        let tag = input as string;
-
-        if (tag.length <= 16) {
-          const player = await this.playerSerivce.get(tag, HypixelCache.CACHE_ONLY, { uuid: true });
-          if (!player) throw new PlayerNotFoundException();
-          tag = player.uuid;
-        }
-
-        const shortUuid = translator.fromUUID(tag);
-        const ranking = await this.getLeaderboardRanking(field, shortUuid, sort);
-
-        if (ranking === null) throw new PlayerNotFoundException();
-        highlight = ranking;
-
-        top = ranking - (ranking % 10);
-        bottom = top + pageSize;
-        break;
-      }
-      case LeaderboardQuery.POSITION: {
-        const position = (input as number) - 1;
-        highlight = position;
-
-        top = position - (position % 10);
-        bottom = top + pageSize;
-        break;
-      }
-    }
-
-    const leaderboard = await this.leaderboardService.getLeaderboard(
-      Player,
-      field,
-      top,
-      bottom - 1,
-      sort
-    );
-
-    const additionalStats = await this.fetchPlayerStats(
-      leaderboard.map(({ id }) => id),
-      ['displayName', ...additionalFields, ...(extraDisplay ? [extraDisplay] : [])]
-    );
-
-    const additionalFieldMetadata = additionalFields.map((key) =>
-      LeaderboardScanner.getLeaderboardField(Player, key)
-    );
-
-    const data = leaderboard.map((player, index) => {
-      const stats = additionalStats[index];
-      let name = stats.displayName;
-
-      if (extraDisplay) name = `${stats[extraDisplay]}§r ${name}`;
-
-      const field = formatter ? formatter(player.score) : player.score;
-
-      const additionalValues = additionalFields.map((key, index) => {
-        if (additionalFieldMetadata[index].formatter)
-          return additionalFieldMetadata[index].formatter?.(stats[key]);
-
-        return stats[key];
-      });
-
-      const fields = [];
-
-      if (!hidden) fields.push(field);
-      fields.push(...additionalValues);
-
-      return {
-        uuid: translator.toUUID(player.id).replace(/-/g, ''),
-        fields,
-        name,
-        position: player.index + 1,
-        highlight: player.index === highlight,
-      };
-    });
-
-    const fields = [];
-    if (!hidden) fields.push(fieldName);
-    fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
-
-    return {
-      name: name,
-      fields,
-      data,
-      page: top / pageSize,
-    };
+    @InjectRedis() redis: Redis
+  ) {
+    super(redis);
   }
 
-  public async getLeaderboardRankings(fields: string[], uuid: string) {
-    const translator = short(short.constants.cookieBase90);
-
-    const shortUuid = translator.fromUUID(uuid);
-
-    const pipeline = this.redis.pipeline();
-
-    fields.forEach((field) => {
-      if (LeaderboardScanner.getLeaderboardField(Player, field).sort === 'ASC')
-        pipeline.zrank(`${Player.name.toLowerCase()}.${field}`, shortUuid);
-      else pipeline.zrevrank(`${Player.name.toLowerCase()}.${field}`, shortUuid);
-    });
-
-    const responses = await pipeline.exec();
-
-    if (!responses) throw new InternalServerErrorException();
-
-    return responses.map((response, index) => {
-      const field = fields[index];
-      const rank = Number(response[1] ?? -1) + 1;
-
-      return { field, rank };
-    });
+  protected searchLeaderboardInput(input: string): Promise<number> {
+    throw new Error('Method not implemented.');
   }
 
-  public async getLeaderboardRanking(field: string, uuid: string, sort?: 'ASC' | 'DESC') {
-    return this.leaderboardService.getLeaderboardRanking(Player, field, uuid, sort);
-  }
-
-  public async fetchPlayerStats(uuids: string[], selector: string[]) {
-    const select = selector.reduce((acc, key) => {
+  protected async getAdditionalStats(
+    ids: string[],
+    fields: string[]
+  ): Promise<LeaderboardAdditionalStats[]> {
+    const selector = fields.reduce((acc, key) => {
       acc[key] = true;
       return acc;
     }, {} as Record<string, boolean>);
 
-    const players = (await Promise.all(
-      uuids.map((uuid) =>
-        this.playerModel.findOne().where('shortUuid').equals(uuid).select(select).lean().exec()
-      )
-    )) as Player[];
+    selector.displayName = true;
 
-    return players.map((player) => flatten(player));
+    return await Promise.all(
+      ids.map(async (id) => {
+        const player = await this.playerModel
+          .findOne()
+          .where('uuid')
+          .equals(id)
+          .select(selector)
+          .lean()
+          .exec();
+
+        const additionalStats = flatten(player) as LeaderboardAdditionalStats;
+        additionalStats.name = additionalStats.displayName;
+
+        return additionalStats;
+      })
+    );
   }
 }

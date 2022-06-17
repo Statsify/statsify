@@ -7,7 +7,6 @@ import { AuthModule } from './auth';
 import { GuildModule } from './guild';
 import { HistoricalModule } from './historical';
 import { HypixelResourcesModule } from './hypixel-resources';
-import { LeaderboardModule } from './leaderboards';
 import { PlayerModule } from './player';
 import { SkinModule } from './skin';
 import { UserModule } from './user';
@@ -31,7 +30,6 @@ import { UserModule } from './user';
     GuildModule,
     HypixelResourcesModule,
     SkinModule,
-    LeaderboardModule,
     HistoricalModule,
     AuthModule,
     UserModule,
