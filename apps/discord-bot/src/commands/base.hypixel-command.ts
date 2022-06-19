@@ -7,11 +7,17 @@
  */
 
 import Container from "typedi";
-import { ApiService, Page, PaginateService } from "#services";
-import { Command, CommandContext, LocalizeFunction } from "@statsify/discord";
+import { ApiService } from "#services";
+import {
+  Command,
+  CommandContext,
+  LocalizeFunction,
+  Page,
+  PaginateService,
+  PlayerArgument,
+} from "@statsify/discord";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalType } from "@statsify/api-client";
-import { PlayerArgument } from "#arguments";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "../themes";
 import { noop, prettify } from "@statsify/util";

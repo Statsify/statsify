@@ -14,12 +14,9 @@ import {
   Interaction,
   Message,
 } from "@statsify/discord";
-import { ApiService } from "./services";
-import {
-  ApplicationCommandOptionType,
-  InteractionResponseType,
-} from "discord-api-types/v10";
-import { ErrorMessage } from "./error.message";
+import { ApiService } from "#services";
+import { ErrorMessage } from "error.message";
+import { InteractionResponseType } from "discord-api-types/v10";
 import { User, UserTier } from "@statsify/schemas";
 import { WARNING_COLOR } from "#constants";
 import { formatTime } from "@statsify/util";
@@ -30,12 +27,7 @@ import type {
   WebsocketShard,
 } from "tiny-discord";
 
-export type InteractionHook = (
-  interaction: Interaction
-) => InteractionResponse | void | Promise<any>;
-
 export class CommandListener extends AbstractCommandListener {
-  private hooks: Map<string, InteractionHook>;
   private cooldowns: Map<string, Map<string, number>>;
   private readonly apiService: ApiService;
   private static instance: CommandListener;
@@ -57,27 +49,7 @@ export class CommandListener extends AbstractCommandListener {
     this.cooldowns = new Map();
   }
 
-  public addHook(id: string, hook: InteractionHook) {
-    this.hooks.set(id, hook);
-  }
-
-  public removeHook(id: string) {
-    this.hooks.delete(id);
-  }
-
-  public onInteraction(
-    interaction: Interaction
-  ): InteractionResponse | Promise<InteractionResponse> {
-    if (interaction.isCommandInteraction()) return this.onCommand(interaction);
-    if (interaction.isAutocompleteInteraction()) return this.onAutocomplete(interaction);
-    if (interaction.isMessageComponentInteraction())
-      return this.onMessageComponent(interaction);
-    if (interaction.isModalInteraction()) return this.onModal(interaction);
-
-    return { type: InteractionResponseType.Pong };
-  }
-
-  private async onCommand(interaction: Interaction): Promise<InteractionResponse> {
+  protected async onCommand(interaction: Interaction): Promise<InteractionResponse> {
     let data = interaction.getData();
     let command = this.commands.get(data.name);
 
@@ -89,7 +61,7 @@ export class CommandListener extends AbstractCommandListener {
 
     const user = await this.apiService.getUser(userId);
 
-    const context = new CommandContext(interaction, data);
+    const context = new CommandContext(this, interaction, data);
     context.setUser(user);
 
     try {
@@ -126,7 +98,7 @@ export class CommandListener extends AbstractCommandListener {
     };
   }
 
-  private onAutocomplete(interaction: Interaction): InteractionResponse {
+  protected onAutocomplete(interaction: Interaction): InteractionResponse {
     const defaultResponse = {
       type: InteractionResponseType.ApplicationCommandAutocompleteResult,
       data: { choices: [] },
@@ -146,58 +118,13 @@ export class CommandListener extends AbstractCommandListener {
     const autocompleteArg = command.args.find((opt) => opt.name === focusedOption.name);
     if (!autocompleteArg) return defaultResponse;
 
-    const context = new CommandContext(interaction, data);
+    const context = new CommandContext(this, interaction, data);
     const response = autocompleteArg.autocompleteHandler?.(context);
 
     return {
       type: InteractionResponseType.ApplicationCommandAutocompleteResult,
       data: { choices: response },
     };
-  }
-
-  private onMessageComponent(interaction: Interaction): InteractionResponse {
-    const hook = this.hooks.get(interaction.getCustomId());
-
-    const res = hook?.(interaction);
-
-    if (res && !(res instanceof Promise)) return res;
-
-    return { type: InteractionResponseType.DeferredMessageUpdate };
-  }
-
-  private onModal(interaction: Interaction): InteractionResponse {
-    //Currently the message component handler is the same implementation as the modal handler
-    return this.onMessageComponent(interaction);
-  }
-
-  private getCommandAndData(
-    command: CommandResolvable,
-    data: any
-  ): [command: CommandResolvable, data: any] {
-    if (!data.options || !data.options.length) return [command, data];
-
-    const firstOption = data.options[0];
-
-    const hasSubCommandGroup =
-      firstOption.type === ApplicationCommandOptionType.SubcommandGroup;
-    const findCommand = () =>
-      command.options?.find((opt) => opt.name === firstOption.name);
-
-    if (hasSubCommandGroup) {
-      const group = findCommand();
-      if (!group) return [command, data];
-      return this.getCommandAndData(group, firstOption);
-    }
-
-    const hasSubCommand = firstOption.type === ApplicationCommandOptionType.Subcommand;
-
-    if (hasSubCommand) {
-      const subcommand = findCommand();
-      if (!subcommand) return [command, data];
-      return [subcommand, firstOption];
-    }
-
-    return [command, data];
   }
 
   private isOnCooldown(command: CommandResolvable, user: User | null, userId: string) {

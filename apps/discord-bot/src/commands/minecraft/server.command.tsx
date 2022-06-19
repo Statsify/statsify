@@ -7,12 +7,12 @@
  */
 
 import axios, { AxiosInstance } from "axios";
-import { Command, CommandContext, IMessage } from "@statsify/discord";
+import { Command, CommandContext, IMessage, ServerArgument } from "@statsify/discord";
 import { Container } from "#components";
 import { ErrorMessage } from "../../error.message";
-import { ServerArgument } from "#arguments";
 import { getBackground, getServerMappings } from "@statsify/assets";
-import { loadImage, render } from "@statsify/rendering";
+import { loadImage } from "skia-canvas/lib";
+import { render } from "@statsify/rendering";
 
 const servers = getServerMappings();
 

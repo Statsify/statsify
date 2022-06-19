@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command, CommandContext } from "@statsify/discord";
-import { PaginateService } from "#services";
+import { Command, CommandContext, PaginateService } from "@statsify/discord";
 
 @Command({ description: "Hello" })
 export class TestCommand {

@@ -7,9 +7,13 @@
  */
 
 import { ApiService } from "#services";
-import { Command, CommandContext, LocalizeFunction } from "@statsify/discord";
+import {
+  Command,
+  CommandContext,
+  LocalizeFunction,
+  PlayerArgument,
+} from "@statsify/discord";
 import { Container, Footer, Header, If, Table } from "#components";
-import { PlayerArgument } from "#arguments";
 import { Status, games, modes } from "@statsify/schemas";
 import { formatTime, prettify } from "@statsify/util";
 import { getBackground, getLogo } from "@statsify/assets";

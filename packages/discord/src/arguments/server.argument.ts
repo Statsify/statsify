@@ -11,7 +11,9 @@ import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
+import { AbstractArgument } from "./abstract.argument";
+import { CommandContext } from "../command";
+import { LocalizationString } from "../messages";
 import { getServerMappings } from "@statsify/assets";
 
 const servers = getServerMappings();

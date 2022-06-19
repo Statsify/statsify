@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractArgument, LocalizationString } from "@statsify/discord";
+import { AbstractArgument } from "./abstract.argument";
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
 import { ChoiceArgument } from "./choice.argument";
 import { GuildQuery } from "@statsify/api-client";
+import { LocalizationString } from "../messages";
 
 class GuildQueryArgument extends AbstractArgument {
   public description: LocalizationString;

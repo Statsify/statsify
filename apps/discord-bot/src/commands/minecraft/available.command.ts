@@ -6,9 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command, CommandContext, EmbedBuilder } from "@statsify/discord";
+import {
+  Command,
+  CommandContext,
+  EmbedBuilder,
+  MojangPlayerArgument,
+} from "@statsify/discord";
 import { MojangApiService } from "#services";
-import { MojangPlayerArgument } from "#arguments";
 
 @Command({ description: "commands.available", args: [new MojangPlayerArgument(true)] })
 export class AvailableCommand {

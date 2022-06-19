@@ -8,21 +8,21 @@
 
 import { APIAttachment } from "discord-api-types/v10";
 import { ApiService } from "#services";
-import { Canvas, Image } from "skia-canvas";
+import { Canvas, Image, loadImage } from "skia-canvas/lib";
 import {
   Command,
   CommandContext,
+  FileArgument,
   IMessage,
   LocalizeFunction,
   SubCommand,
 } from "@statsify/discord";
 import { Container, Footer, HeaderNametag, Skin } from "#components";
 import { ErrorMessage } from "../error.message";
-import { FileArgument } from "#arguments";
 import { User } from "@statsify/schemas";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "../themes";
-import { loadImage, render } from "@statsify/rendering";
+import { render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.badge") })
 export class BadgeCommand {

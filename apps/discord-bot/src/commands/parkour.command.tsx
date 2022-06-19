@@ -7,10 +7,9 @@
  */
 
 import { ApiService } from "#services";
-import { Command, CommandContext } from "@statsify/discord";
+import { Command, CommandContext, PlayerArgument } from "@statsify/discord";
 import { Container, Footer, Header, Table } from "#components";
 import { LeaderboardScanner, Parkour } from "@statsify/schemas";
-import { PlayerArgument } from "#arguments";
 import { formatTime, removeFormatting } from "@statsify/util";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "../themes";

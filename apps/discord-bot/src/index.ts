@@ -11,8 +11,8 @@
 
 import Container from "typedi";
 import { CommandListener } from "./command.listener";
-import { CommandLoader, CommandPoster } from "@statsify/discord";
-import { FontLoaderService, I18nLoaderService } from "#services";
+import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
+import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 import { join } from "node:path";
 import "reflect-metadata";

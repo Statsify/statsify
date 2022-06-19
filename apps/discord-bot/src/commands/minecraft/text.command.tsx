@@ -6,8 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command, CommandContext, IMessage } from "@statsify/discord";
-import { NumberArgument, TextArgument } from "#arguments";
+import {
+  Command,
+  CommandContext,
+  IMessage,
+  NumberArgument,
+  TextArgument,
+} from "@statsify/discord";
 import { render } from "@statsify/rendering";
 
 @Command({
