@@ -109,7 +109,7 @@ export class StatusCommand {
     return (
       <Table.table>
         <Table.tr>
-          <Table.td title={t('stats.status')} value={'stats.online'} color="§a" />
+          <Table.td title={t('stats.status')} value={t('stats.online')} color="§a" />
           <Table.td title={t('stats.version')} value={status.actions.version} color="§b" />
           <Table.td
             title={t('stats.loginTime')}
