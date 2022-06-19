@@ -1,7 +1,7 @@
 import { INFO_COLOR } from '#constants';
 import { ApiService, Page, PaginateService } from '#services';
 import { Command, CommandContext, EmbedBuilder } from '@statsify/discord';
-import { games } from '@statsify/schemas';
+import { games, modes } from '@statsify/schemas';
 import { prettify } from '@statsify/util';
 
 @Command({
@@ -59,9 +59,9 @@ export class GameCountsCommand {
                       .sort((a, b) => Number(b[1]) - Number(a[1]))
                       .map(
                         ([mode, players]) =>
-                          `\`•\` **${
-                            gameInfo[game]?.modeNames?.[mode] ?? prettify(mode.toLowerCase())
-                          }**: \`${t(Number(players))}\``
+                          `\`•\` **${this.getModeName(gameInfo, game, mode)}**: \`${t(
+                            Number(players)
+                          )}\``
                       )
                       .join('\n')
                 )
@@ -75,5 +75,13 @@ export class GameCountsCommand {
 
   private getGameName(game: string) {
     return games.find(({ code }) => code == game)?.name ?? prettify(game);
+  }
+
+  private getModeName(
+    gameInfo: Record<string, { modeNames?: Record<string, string> }>,
+    game: string,
+    mode: string
+  ) {
+    return gameInfo[game]?.modeNames?.[mode] ?? modes[game]?.[mode] ?? prettify(mode.toLowerCase());
   }
 }

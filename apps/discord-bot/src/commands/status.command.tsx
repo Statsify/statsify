@@ -4,7 +4,7 @@ import { ApiService } from '#services';
 import { getBackground, getLogo } from '@statsify/assets';
 import { Command, CommandContext, LocalizeFunction } from '@statsify/discord';
 import { render } from '@statsify/rendering';
-import { Status } from '@statsify/schemas';
+import { games, modes, Status } from '@statsify/schemas';
 import { formatTime, prettify } from '@statsify/util';
 import { getTheme } from '../themes';
 
@@ -85,14 +85,13 @@ export class StatusCommand {
     const resource = await this.apiService.getResource('games');
     const gameInfo = resource?.games;
 
-    const gameName = gameInfo?.[status.game.code]?.name ?? status.game.name;
+    const gameName = this.getGameName(status.game.code);
 
     const game = <Table.td title={t('stats.game')} value={gameName} color="§e" />;
 
     let gameRow;
     if (status.mode) {
-      const modeName =
-        gameInfo[status.game.code]?.modeNames?.[status.mode] ?? prettify(status.mode.toLowerCase());
+      const modeName = this.getModeName(gameInfo, status.game.code, status.mode);
 
       gameRow = (
         <Table.tr>
@@ -148,5 +147,17 @@ export class StatusCommand {
     }
 
     return `${formatTime(Date.now() - timestamp, { short: true })} ${t('ago')}`;
+  }
+
+  private getGameName(game: string) {
+    return games.find(({ code }) => code == game)?.name ?? prettify(game);
+  }
+
+  private getModeName(
+    gameInfo: Record<string, { modeNames?: Record<string, string> }>,
+    game: string,
+    mode: string
+  ) {
+    return gameInfo[game]?.modeNames?.[mode] ?? modes[game]?.[mode] ?? prettify(mode.toLowerCase());
   }
 }
