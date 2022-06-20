@@ -1,4 +1,12 @@
-import { Controller, Get, Query } from '@nestjs/common';
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import { Controller, Get , Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   ErrorResponse,
