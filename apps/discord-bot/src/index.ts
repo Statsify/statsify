@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
 import { FontLoaderService, I18nLoaderService } from '#services';
 import { CommandLoader, CommandPoster } from '@statsify/discord';
 import path from 'path';
