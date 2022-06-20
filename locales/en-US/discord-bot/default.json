@@ -143,7 +143,6 @@
     "levelsGained": "Levels Gained",
     "expGained": "EXP Gained",
     "exp": "EXP",
-<<<<<<< HEAD
     "guild": {
       "guildMaster": "Guild Master",
       "createdOn": "Created On",
@@ -161,22 +160,20 @@
       "date": "Date",
       "averageMemberGexp": "Avg. Member GEXP",
       "questsCompleted": "Quests Completed"
-    }
-=======
+    },
     "online": "Online",
+    "offline": "Offline",
     "version": "Version",
     "loginTime": "Login Time",
     "game": "Game",
     "mode": "Mode",
     "map": "Map",
     "status": "Status",
-    "offline": "Offline",
     "logoutTime": "Logout Time",
     "lastGame": "Last Game",
     "hidden": "Hidden",
     "lastActionTime": "Last Action Time",
     "lastAction": "Last Action"
->>>>>>> 0b122a781c701dfe457088b50e2acd2f3e911c2b
   },
   "embeds": {
     "uuid": {
