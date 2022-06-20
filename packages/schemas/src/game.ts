@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
 import { Field } from './metadata';
 
 export const games = [
@@ -67,6 +75,26 @@ export enum GameCodeToName {
   BATTLEGROUND = 'WARLORDS',
   WOOL_GAMES = 'WOOLWARS',
 }
+export const modes: Record<string, Record<string, string>> = {
+  ARCADE: {
+    PARTY: 'Party Games',
+    DEFENDER: 'Creeper Attack',
+    SIMON_SAYS: 'Hypixel Says',
+    DAYONE: 'Blocking Dead',
+    DRAW_THEIR_THING: 'Pixel Painters',
+    ONEINTHEQUIVER: 'Bounty Hunters',
+    SOCCER: 'Football',
+    ENDER: 'Ender Spleef',
+  },
+  BATTLEGROUND: {
+    ctf_mini: 'Capture the Flag',
+  },
+  MCGO: {
+    normal: 'Defusal',
+    deathmatch: 'Team Deathmatch',
+    gungame: 'Gun Game',
+  },
+};
 
 export enum FormattedGame {
   ARCADE = '§cA§6r§ec§aa§bd§de§f',

@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -23,6 +31,7 @@ type PaginateInteractionContentGenerator = (
 
 export interface Page {
   label: LocalizationString;
+  emoji?: string;
   generator: PaginateInteractionContentGenerator;
 }
 
@@ -160,12 +169,13 @@ export class PaginateService {
       const controller = new SelectMenuBuilder();
 
       pages.forEach((page, i) => {
-        controller.option(
-          new SelectMenuOptionBuilder()
-            .label(page.label)
-            .value(`${i}`)
-            .default(i === index)
-        );
+        const menu = new SelectMenuOptionBuilder()
+          .label(page.label)
+          .value(`${i}`)
+          .default(i === index);
+
+        if (page.emoji) menu.emoji(page.emoji);
+        controller.option(menu);
       });
 
       return [controller];

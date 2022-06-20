@@ -9,18 +9,7 @@
     "es2022": true,
     "node": true
   },
-  "plugins": ["@typescript-eslint"],
-  "overrides": [
-    {
-      "files": ["*.tsx"],
-      "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:prettier/recommended"
-      ]
-    }
-  ],
+  "plugins": ["@typescript-eslint", "license-header"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -28,6 +17,7 @@
     "plugin:prettier/recommended"
   ],
   "rules": {
+    "license-header/header": ["error", "../../copyright.js"],
     "@typescript-eslint/ban-ts-comment": [
       "error",
       {

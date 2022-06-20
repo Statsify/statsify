@@ -1,115 +1,136 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
 import { APIData } from '@statsify/util';
 import { Field } from '../metadata';
 
+class GamePlayers {
+  @Field()
+  public players: number;
+
+  @Field()
+  public modes?: Record<string, number>;
+
+  public constructor(game: APIData) {
+    this.players = game?.players;
+    this.modes = game?.modes;
+  }
+}
+
 export class Gamecounts {
   @Field()
-  public ARCADE: number;
+  public ARCADE: GamePlayers;
 
   @Field()
-  public BATTLEGROUND: number;
+  public BATTLEGROUND: GamePlayers;
 
   @Field()
-  public BEDWARS: number;
+  public BEDWARS: GamePlayers;
 
   @Field()
-  public BUILD_BATTLE: number;
+  public BUILD_BATTLE: GamePlayers;
 
   @Field()
-  public DUELS: number;
+  public DUELS: GamePlayers;
 
   @Field()
-  public HOUSING: number;
+  public HOUSING: GamePlayers;
 
   @Field()
-  public IDLE: number;
+  public IDLE: GamePlayers;
 
   @Field()
-  public LEGACY: number;
+  public LEGACY: GamePlayers;
 
   @Field()
-  public LIMBO: number;
+  public LIMBO: GamePlayers;
 
   @Field()
-  public MAIN_LOBBY: number;
+  public MAIN_LOBBY: GamePlayers;
 
   @Field()
-  public MCGO: number;
+  public MCGO: GamePlayers;
 
   @Field()
-  public MURDER_MYSTERY: number;
+  public MURDER_MYSTERY: GamePlayers;
 
   @Field()
-  public PIT: number;
+  public PIT: GamePlayers;
 
   @Field()
-  public PROTOTYPE: number;
+  public PROTOTYPE: GamePlayers;
 
   @Field()
-  public QUEUE: number;
+  public QUEUE: GamePlayers;
 
   @Field()
-  public REPLAY: number;
+  public REPLAY: GamePlayers;
 
   @Field()
-  public SKYBLOCK: number;
+  public SKYBLOCK: GamePlayers;
 
   @Field()
-  public SKYWARS: number;
+  public SKYWARS: GamePlayers;
 
   @Field()
-  public SMP: number;
+  public SMP: GamePlayers;
 
   @Field()
-  public SPEED_UHC: number;
+  public SPEED_UHC: GamePlayers;
 
   @Field()
-  public SUPER_SMASH: number;
+  public SUPER_SMASH: GamePlayers;
 
   @Field()
-  public SURVIVAL_GAMES: number;
+  public SURVIVAL_GAMES: GamePlayers;
 
   @Field()
-  public TNTGAMES: number;
+  public TNTGAMES: GamePlayers;
 
   @Field()
-  public TOURNAMENT_LOBBY: number;
+  public TOURNAMENT_LOBBY: GamePlayers;
 
   @Field()
-  public UHC: number;
+  public UHC: GamePlayers;
 
   @Field()
-  public WALLS3: number;
+  public WALLS3: GamePlayers;
 
   @Field()
-  public WOOL_GAMES: number;
+  public WOOL_GAMES: GamePlayers;
 
   public constructor(data: APIData = {}) {
-    this.ARCADE = data.ARCADE?.players;
-    this.BATTLEGROUND = data.BATTLEGROUND?.players;
-    this.BEDWARS = data.BEDWARS?.players;
-    this.BUILD_BATTLE = data.BUILD_BATTLE?.players;
-    this.DUELS = data.DUELS?.players;
-    this.HOUSING = data.HOUSING?.players;
-    this.IDLE = data.IDLE?.players;
-    this.LEGACY = data.LEGACY?.players;
-    this.LIMBO = data.LIMBO?.players;
-    this.MAIN_LOBBY = data.MAIN_LOBBY?.players;
-    this.MCGO = data.MCGO?.players;
-    this.MURDER_MYSTERY = data.MURDER_MYSTERY?.players;
-    this.PIT = data.PIT?.players;
-    this.PROTOTYPE = data.PROTOTYPE?.players;
-    this.QUEUE = data.QUEUE?.players;
-    this.REPLAY = data.REPLAY?.players;
-    this.SKYBLOCK = data.SKYBLOCK?.players;
-    this.SKYWARS = data.SKYWARS?.players;
-    this.SMP = data.SMP?.players;
-    this.SPEED_UHC = data.SPEED_UHC?.players;
-    this.SUPER_SMASH = data.SUPER_SMASH?.players;
-    this.SURVIVAL_GAMES = data.SURVIVAL_GAMES?.players;
-    this.TNTGAMES = data.TNTGAMES?.players;
-    this.TOURNAMENT_LOBBY = data.TOURNAMENT_LOBBY?.players;
-    this.UHC = data.UHC?.players;
-    this.WALLS3 = data.WALLS3?.players;
-    this.WOOL_GAMES = data.WOOL_GAMES?.players;
+    this.ARCADE = new GamePlayers(data.ARCADE);
+    this.BATTLEGROUND = new GamePlayers(data.BATTLEGROUND);
+    this.BEDWARS = new GamePlayers(data.BEDWARS);
+    this.BUILD_BATTLE = new GamePlayers(data.BUILD_BATTLE);
+    this.DUELS = new GamePlayers(data.DUELS);
+    this.HOUSING = new GamePlayers(data.HOUSING);
+    this.IDLE = new GamePlayers(data.IDLE);
+    this.LEGACY = new GamePlayers(data.LEGACY);
+    this.LIMBO = new GamePlayers(data.LIMBO);
+    this.MAIN_LOBBY = new GamePlayers(data.MAIN_LOBBY);
+    this.MCGO = new GamePlayers(data.MCGO);
+    this.MURDER_MYSTERY = new GamePlayers(data.MURDER_MYSTERY);
+    this.PIT = new GamePlayers(data.PIT);
+    this.PROTOTYPE = new GamePlayers(data.PROTOTYPE);
+    this.QUEUE = new GamePlayers(data.QUEUE);
+    this.REPLAY = new GamePlayers(data.REPLAY);
+    this.SKYBLOCK = new GamePlayers(data.SKYBLOCK);
+    this.SKYWARS = new GamePlayers(data.SKYWARS);
+    this.SMP = new GamePlayers(data.SMP);
+    this.SPEED_UHC = new GamePlayers(data.SPEED_UHC);
+    this.SUPER_SMASH = new GamePlayers(data.SUPER_SMASH);
+    this.SURVIVAL_GAMES = new GamePlayers(data.SURVIVAL_GAMES);
+    this.TNTGAMES = new GamePlayers(data.TNTGAMES);
+    this.TOURNAMENT_LOBBY = new GamePlayers(data.TOURNAMENT_LOBBY);
+    this.UHC = new GamePlayers(data.UHC);
+    this.WALLS3 = new GamePlayers(data.WALLS3);
+    this.WOOL_GAMES = new GamePlayers(data.WOOL_GAMES);
   }
 }

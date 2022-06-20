@@ -1,7 +1,21 @@
-import { Controller, Get } from '@nestjs/common';
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ErrorResponse, GetGamecountsResponse, GetWatchdogResponse } from '@statsify/api-client';
+import {
+  ErrorResponse,
+  GetGamecountsResponse,
+  GetResourceResponse,
+  GetWatchdogResponse,
+} from '@statsify/api-client';
 import { Auth } from '../auth';
+import { ResourceDto } from '../dtos';
 import { HypixelService } from '../hypixel';
 
 @Controller(`/hypixelresources`)
@@ -35,5 +49,14 @@ export class HypixelResourcesController {
       success: !!gamecounts,
       gamecounts,
     };
+  }
+
+  @Get(`/resource`)
+  @ApiOperation({ summary: 'Get a hypixel resource' })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiOkResponse({ type: GetResourceResponse })
+  @Auth()
+  public async getHypixelResource(@Query() { path }: ResourceDto) {
+    return await this.hypixelService.getResources(path);
   }
 }

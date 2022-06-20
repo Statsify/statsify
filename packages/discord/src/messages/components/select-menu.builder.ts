@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
 import { randomUUID } from 'crypto';
 import {
   APIMessageComponentEmoji,
@@ -29,8 +37,12 @@ export class SelectMenuOptionBuilder {
     return this;
   }
 
-  public emoji(emoji: APIMessageComponentEmoji): this {
-    this.#emoji = emoji;
+  public emoji(emoji: string): this {
+    const animated = emoji.startsWith('<a:');
+    const name = emoji.replace(/<:|<a:|>/g, '');
+    const id = name.split(':')[1];
+
+    this.#emoji = { name: name.replace(id, ''), animated, id };
     return this;
   }
 

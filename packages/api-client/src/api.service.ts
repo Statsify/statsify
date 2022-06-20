@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
 import { loadImage } from '@statsify/rendering';
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from 'axios';
 import { GuildQuery, HistoricalType } from './enums';
@@ -9,8 +17,8 @@ import {
   GetHistoricalResponse,
   GetKeyResponse,
   GetPlayerResponse,
-  GetRankedSkyWarsResponse,
   GetRecentGamesResponse,
+  GetResourceResponse,
   GetStatusResponse,
   GetUserResponse,
   GetWatchdogResponse,
@@ -64,14 +72,6 @@ export class ApiService {
     return this.requestKey<GetFriendsResponse, 'data'>(`/player/friends`, 'data', {
       player: tag,
     });
-  }
-
-  public getRankedSkyWars(tag: string) {
-    return this.requestKey<GetRankedSkyWarsResponse, 'rankedSkyWars'>(
-      `/player/rankedskywars`,
-      'rankedSkyWars',
-      { player: tag }
-    );
   }
 
   public getPlayerLeaderboard(
@@ -193,6 +193,12 @@ export class ApiService {
     return this.request<GetUserResponse>(`/user`, { tag }, 'DELETE')
       .then((data) => data.user ?? null)
       .catch(() => null);
+  }
+
+  public getResource(path: string) {
+    return this.request<GetResourceResponse>('/hypixelresources/resource', { path }, 'GET').catch(
+      () => null
+    );
   }
 
   private async requestKey<T, K extends keyof T>(

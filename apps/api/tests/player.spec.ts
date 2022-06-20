@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
 import { ValidationPipe } from '@nestjs/common';
 import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
@@ -111,30 +119,6 @@ describe('Player', () => {
     const result = await app.inject({
       method: 'GET',
       url: `/player/friends?player=${testUuid}`,
-      headers: {
-        'x-api-key': testKey,
-      },
-    });
-
-    expect(result.statusCode).toEqual(200);
-  });
-
-  it(`/GET player/rankedskywars?player=username`, async () => {
-    const result = await app.inject({
-      method: 'GET',
-      url: `/player/rankedskywars?player=${testUsername}`,
-      headers: {
-        'x-api-key': testKey,
-      },
-    });
-
-    expect(result.statusCode).toEqual(200);
-  });
-
-  it(`/GET player/rankedskywars?player=uuid`, async () => {
-    const result = await app.inject({
-      method: 'GET',
-      url: `/player/rankedskywars?player=${testUuid}`,
       headers: {
         'x-api-key': testKey,
       },

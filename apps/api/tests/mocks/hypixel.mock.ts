@@ -1,12 +1,12 @@
-import {
-  Friends,
-  Gamecounts,
-  Guild,
-  Player,
-  RankedSkyWars,
-  Status,
-  Watchdog,
-} from '@statsify/schemas';
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import { Friends, Gamecounts, Guild, Player, Status, Watchdog } from '@statsify/schemas';
 import { HypixelService } from '../../src/hypixel';
 import { MockClass } from './mock.type';
 
@@ -19,7 +19,6 @@ export const hypixelService: MockClass<HypixelService> = {
   getFriends: jest.fn().mockResolvedValue(new Friends({})),
   getWatchdog: jest.fn().mockResolvedValue(new Watchdog({})),
   getGamecounts: jest.fn().mockResolvedValue(new Gamecounts()),
-  getRankedSkyWars: jest.fn().mockResolvedValue(new RankedSkyWars({})),
   getResources: jest.fn().mockResolvedValue({}),
   updateResources: jest.fn(),
 };

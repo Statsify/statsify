@@ -1,3 +1,11 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
 import { Controller, Delete, Get, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -11,11 +19,9 @@ import {
   ErrorResponse,
   GetFriendsResponse,
   GetPlayerResponse,
-  GetRankedSkyWarsResponse,
   GetRecentGamesResponse,
   GetStatusResponse,
   PlayerNotFoundException,
-  RankedSkyWarsNotFoundException,
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from '@statsify/api-client';
@@ -81,7 +87,7 @@ export class PlayerController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiNotFoundResponse({ type: StatusNotFoundException })
   @ApiNotFoundResponse({ type: PlayerNotFoundException })
-  @Auth()
+  @Auth({ weight: 2 })
   @Get('/status')
   public async getStatus(@Query() { player: tag }: PlayerDto) {
     const status = await this.playerService.getStatus(tag);
@@ -104,22 +110,6 @@ export class PlayerController {
     return {
       success: !!friends,
       data: friends,
-    };
-  }
-
-  @ApiOperation({ summary: 'Get the Ranked SkyWars rating and position of a Player' })
-  @ApiOkResponse({ type: GetRankedSkyWarsResponse })
-  @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiNotFoundResponse({ type: RankedSkyWarsNotFoundException })
-  @ApiNotFoundResponse({ type: PlayerNotFoundException })
-  @Auth()
-  @Get('/rankedskywars')
-  public async getRankedSkyWars(@Query() { player: tag }: PlayerDto) {
-    const rankedSkyWars = await this.playerService.getRankedSkyWars(tag);
-
-    return {
-      success: !!rankedSkyWars,
-      rankedSkyWars,
     };
   }
 }

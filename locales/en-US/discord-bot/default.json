@@ -143,6 +143,7 @@
     "levelsGained": "Levels Gained",
     "expGained": "EXP Gained",
     "exp": "EXP",
+<<<<<<< HEAD
     "guild": {
       "guildMaster": "Guild Master",
       "createdOn": "Created On",
@@ -161,6 +162,21 @@
       "averageMemberGexp": "Avg. Member GEXP",
       "questsCompleted": "Quests Completed"
     }
+=======
+    "online": "Online",
+    "version": "Version",
+    "loginTime": "Login Time",
+    "game": "Game",
+    "mode": "Mode",
+    "map": "Map",
+    "status": "Status",
+    "offline": "Offline",
+    "logoutTime": "Logout Time",
+    "lastGame": "Last Game",
+    "hidden": "Hidden",
+    "lastActionTime": "Last Action Time",
+    "lastAction": "Last Action"
+>>>>>>> 0b122a781c701dfe457088b50e2acd2f3e911c2b
   },
   "embeds": {
     "uuid": {
@@ -244,6 +260,9 @@
         "title": "Misc",
         "description": "You can do something with statsify"
       }
+    },
+    "gameCounts": {
+      "title": "Hypixel Gamecounts"
     }
   },
   "commands": {
@@ -270,7 +289,10 @@
     "warlords": "Warlords command",
     "woolwars": "Wool Wars command",
     "verify": "Verify command",
-    "unverify": "Unverify command"
+    "unverify": "Unverify command",
+    "gameCounts": "Game counts command",
+    "status": "Status command",
+    "parkour": "Parkour command"
   },
   "arguments": {
     "choice": "Choice",
@@ -342,10 +364,6 @@
       "title": "Invalid Guild",
       "description": "A guild by the {{type}} of `{{tag}}` could not be found!"
     },
-    "noRankedSkyWars": {
-      "title": "Ranked SkyWars Stats Not Found",
-      "description": "Ranked SkyWars stats for {{displayName}} could not be found!"
-    },
     "noRecentGames": {
       "title": "Recent Games Not Found",
       "description": "Recent games for {{displayName}} could not be found!"
@@ -394,6 +412,10 @@
   },
   "available": "Available",
   "unavailable": "Unavailable",
+  "players": "Players",
+  "unknown": "Unknown",
+  "ago": "ago",
+  "now": "Now",
   "config": {
     "badge": {
       "profile": "This is how your badge is displayed",

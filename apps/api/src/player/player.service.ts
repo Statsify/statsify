@@ -1,9 +1,16 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
   HypixelCache,
   PlayerNotFoundException,
-  RankedSkyWarsNotFoundException,
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from '@statsify/api-client';
@@ -109,9 +116,9 @@ export class PlayerService {
   }
 
   public async getStatus(tag: string) {
-    const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
+    const player = await this.get(tag, HypixelCache.CACHE, {
       uuid: true,
-      displayName: true,
+      prefixName: true,
       status: true,
     });
 
@@ -121,7 +128,7 @@ export class PlayerService {
 
     if (!status) throw new StatusNotFoundException(player);
 
-    status.displayName = player.displayName;
+    status.prefixName = player.prefixName;
     status.uuid = player.uuid;
     status.actions = player.status;
 
@@ -145,24 +152,6 @@ export class PlayerService {
       displayName: player.displayName,
       games,
     };
-  }
-
-  public async getRankedSkyWars(tag: string) {
-    const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
-      uuid: true,
-      displayName: true,
-    });
-
-    if (!player) throw new PlayerNotFoundException();
-
-    const ranked = await this.hypixelService.getRankedSkyWars(player.uuid);
-
-    if (!ranked) throw new RankedSkyWarsNotFoundException(player);
-
-    ranked.uuid = player.uuid;
-    ranked.displayName = player.displayName;
-
-    return ranked;
   }
 
   /**
