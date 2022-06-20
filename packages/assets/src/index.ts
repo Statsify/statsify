@@ -1,7 +1,8 @@
+import { loadImage } from '@statsify/rendering';
 import { UserTier } from '@statsify/schemas';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { Image, loadImage } from 'skia-canvas';
+import { Image } from 'skia-canvas';
 
 const PATH = '../../assets';
 const PRIVATE_PATH = join(PATH, 'private');

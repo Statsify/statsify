@@ -20,8 +20,6 @@ export class PitCommand {
 
     const player = await this.pitPandaService.getPlayer(context.option<string>('player'));
 
-    console.log(player);
-
     const [skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),

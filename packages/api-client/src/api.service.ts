@@ -1,5 +1,5 @@
-import Axios, { AxiosInstance, AxiosRequestHeaders, Method } from 'axios';
-import { loadImage } from 'skia-canvas';
+import { loadImage } from '@statsify/rendering';
+import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from 'axios';
 import { GuildQuery, HistoricalType } from './enums';
 import { LeaderboardQuery } from './enums/leaderboard-query.enum';
 import {
@@ -22,6 +22,7 @@ import {
 interface ExtraData {
   headers?: AxiosRequestHeaders;
   body?: Record<string, unknown> | Buffer | string;
+  responseType?: ResponseType;
 }
 
 export class ApiService {
@@ -213,7 +214,7 @@ export class ApiService {
     url: string,
     params: Record<string, unknown> | undefined,
     method: Method = 'GET',
-    { body, headers }: ExtraData = {}
+    { body, headers, responseType }: ExtraData = {}
   ): Promise<T> {
     const res = await this.axios.request({
       url,
@@ -221,6 +222,7 @@ export class ApiService {
       params,
       headers,
       data: body,
+      responseType,
     });
 
     const data = res.data;

@@ -1462,6 +1462,7 @@ __metadata:
   resolution: "@statsify/rendering@workspace:packages/rendering"
   dependencies:
     "@statsify/util": "workspace:^"
+    axios: ^0.27.2
     skia-canvas: ^0.9.30
     typedi: ^0.10.0
   languageName: unknown
