@@ -37,8 +37,12 @@ export class SelectMenuOptionBuilder {
     return this;
   }
 
-  public emoji(emoji: APIMessageComponentEmoji): this {
-    this.#emoji = emoji;
+  public emoji(emoji: string): this {
+    const animated = emoji.startsWith('<a:');
+    const name = emoji.replace(/<:|<a:|>/g, '');
+    const id = name.split(':')[1];
+
+    this.#emoji = { name: name.replace(id, ''), animated, id };
     return this;
   }
 

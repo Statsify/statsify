@@ -16,7 +16,7 @@ export class Status {
   public uuid: string;
 
   @Field()
-  public displayName: string;
+  public prefixName: string;
 
   @Field()
   public actions: PlayerStatus;

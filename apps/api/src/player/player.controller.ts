@@ -87,7 +87,7 @@ export class PlayerController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiNotFoundResponse({ type: StatusNotFoundException })
   @ApiNotFoundResponse({ type: PlayerNotFoundException })
-  @Auth()
+  @Auth({ weight: 2 })
   @Get('/status')
   public async getStatus(@Query() { player: tag }: PlayerDto) {
     const status = await this.playerService.getStatus(tag);

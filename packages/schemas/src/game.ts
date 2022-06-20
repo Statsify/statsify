@@ -45,6 +45,27 @@ export const games = [
   { name: 'Wool Wars', code: 'WOOL_GAMES', id: 68 },
 ];
 
+export const modes: Record<string, Record<string, string>> = {
+  ARCADE: {
+    PARTY: 'Party Games',
+    DEFENDER: 'Creeper Attack',
+    SIMON_SAYS: 'Hypixel Says',
+    DAYONE: 'Blocking Dead',
+    DRAW_THEIR_THING: 'Pixel Painters',
+    ONEINTHEQUIVER: 'Bounty Hunters',
+    SOCCER: 'Football',
+    ENDER: 'Ender Spleef',
+  },
+  BATTLEGROUND: {
+    ctf_mini: 'Capture the Flag',
+  },
+  MCGO: {
+    normal: 'Defusal',
+    deathmatch: 'Team Deathmatch',
+    gungame: 'Gun Game',
+  },
+};
+
 export enum FormattedGame {
   ARCADE = '§cA§6r§ec§aa§bd§de§f',
   ARENA_BRAWL = '§6Arena Brawl§f',

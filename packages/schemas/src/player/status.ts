@@ -208,7 +208,7 @@ export class PlayerStatus {
   public lastGame: Game;
 
   public constructor(data: APIData) {
-    //The first login provided by hypixel is not fully accurate for very old players, it is better to ues the `_id` field
+    //The first login provided by hypixel is not fully accurate for very old players, it is better to use the `_id` field
     this.firstLogin = parseInt(data._id?.substring(0, 8) ?? 0, 16) * 1000;
 
     const lastAction = findLastAction(data);
@@ -220,7 +220,7 @@ export class PlayerStatus {
     this.lastLogout = data.lastLogout ?? 0;
     this.online = this.lastLogin > this.lastLogout;
 
-    this.statusHidden = data.lastLogout == 0;
+    this.statusHidden = this.lastLogout === 0;
 
     this.version = data.mcVersionRp ?? 'Unknown';
 
