@@ -3594,6 +3594,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-license-header@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "eslint-plugin-license-header@npm:0.4.0"
+  dependencies:
+    requireindex: ^1.2.0
+  checksum: f0923e23c900c044651c54500fc5e7cfb650afbcb46959e5fbb55494911ef2fde62376d553797ada82883b670cdc1dd82c34956ecefb1bfbec53df0f41a618cb
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-prettier@npm:^4.0.0":
   version: 4.0.0
   resolution: "eslint-plugin-prettier@npm:4.0.0"
@@ -7189,6 +7198,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"requireindex@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "requireindex@npm:1.2.0"
+  checksum: 50d8b10a1ff1fdf6aea7a1870bc7bd238b0fb1917d8d7ca17fd03afc38a65dcd7a8a4eddd031f89128b5f0065833d5c92c4fef67f2c04e8624057fe626c9cf94
+  languageName: node
+  linkType: hard
+
 "resolve-cwd@npm:^3.0.0":
   version: 3.0.0
   resolution: "resolve-cwd@npm:3.0.0"
@@ -7783,6 +7799,7 @@ __metadata:
     cz-conventional-changelog: ^3.3.0
     eslint: ^8.18.0
     eslint-config-prettier: ^8.5.0
+    eslint-plugin-license-header: ^0.4.0
     eslint-plugin-prettier: ^4.0.0
     jest: ^28.1.1
     jest-mock: ^28.1.1

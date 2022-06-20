@@ -9,7 +9,7 @@
     "es2022": true,
     "node": true
   },
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "license-header"],
   "overrides": [
     {
       "files": ["*.tsx"],
@@ -28,6 +28,7 @@
     "plugin:prettier/recommended"
   ],
   "rules": {
+    "license-header/header": ["error", "../../copyright.js"],
     "@typescript-eslint/ban-ts-comment": [
       "error",
       {
