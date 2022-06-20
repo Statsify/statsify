@@ -10,7 +10,7 @@ import { MojangPlayerArgument } from '#arguments';
 import { INFO_COLOR } from '#constants';
 import { ApiService, MojangApiService } from '#services';
 import { Command, CommandContext, EmbedBuilder } from '@statsify/discord';
-import { Canvas } from 'skia-canvas/lib';
+import { Canvas } from 'skia-canvas';
 
 @Command({ description: 'commands.skin', args: [MojangPlayerArgument] })
 export class SkinCommand {

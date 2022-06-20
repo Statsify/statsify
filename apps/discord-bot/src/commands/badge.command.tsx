@@ -14,7 +14,7 @@ import { Command, CommandContext, IMessage, LocalizeFunction, SubCommand } from 
 import { loadImage, render } from '@statsify/rendering';
 import { User } from '@statsify/schemas';
 import { APIAttachment } from 'discord-api-types/v10';
-import { Canvas, Image } from 'skia-canvas/lib';
+import { Canvas, Image } from 'skia-canvas';
 import { ErrorMessage } from '../error.message';
 import { getTheme } from '../themes';
 

@@ -10,7 +10,7 @@ import { Container, Footer } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
 import { useComponentWidth } from '@statsify/rendering';
 import { Guild, GuildRank, UserTier } from '@statsify/schemas';
-import type { Image } from 'skia-canvas/lib';
+import type { Image } from 'skia-canvas';
 
 export interface GuildListProfileProps {
   guild: Guild;

@@ -16,17 +16,19 @@ import { GuildMember } from '@statsify/schemas';
 import { readdir } from 'fs/promises';
 import { ErrorMessage } from '../../error.message';
 import { getTheme } from '../../themes';
-import { GuildDailyProfile } from './guild-daily.profile';
 import { GuildListProfile, GuildListProfileProps } from './guild-list.profile';
 import { GuildMemberProfile } from './guild-member.profile';
+import { GuildTopSubCommand } from './guild-top.subcommand';
 import { GuildProfile, GuildProfileProps } from './guild.profile';
 
 @Command({ description: (t) => t('commands.guild') })
-export class GuildCommand {
+export class GuildCommand extends GuildTopSubCommand {
   public constructor(
-    private readonly apiService: ApiService,
+    protected readonly apiService: ApiService,
     private readonly paginateService: PaginateService
-  ) {}
+  ) {
+    super(apiService);
+  }
 
   @SubCommand({ description: (t) => t('commands.guild-overall'), args: GuildArgument })
   public async overall(context: CommandContext) {
@@ -121,34 +123,6 @@ export class GuildCommand {
     ]);
   }
 
-  @SubCommand({ description: (t) => t('commands.guild-daily'), args: GuildArgument })
-  public async daily(context: CommandContext) {
-    const user = context.getUser();
-    const t = context.t();
-
-    const guild = await this.getGuild(context);
-
-    const [logo, background] = await Promise.all([
-      getLogo(user?.tier),
-      getBackground('bedwars', 'overall'),
-    ]);
-
-    const props: GuildListProfileProps = {
-      guild,
-      background,
-      logo,
-      tier: user?.tier,
-      t,
-    };
-
-    return this.paginateService.paginate(context, [
-      {
-        label: 'Daily',
-        generator: () => render(<GuildDailyProfile {...props} />, getTheme(user?.theme)),
-      },
-    ]);
-  }
-
   @SubCommand({ description: (t) => t('commands.guild-member'), args: [PlayerArgument] })
   public async member(context: CommandContext) {
     const user = context.getUser();
@@ -187,13 +161,5 @@ export class GuildCommand {
           ),
       },
     ]);
-  }
-
-  private getGuild(context: CommandContext) {
-    const user = context.getUser();
-    const query = context.option<string>('query');
-    const type = context.option<GuildQuery>('type');
-
-    return this.apiService.getGuild(query, type, user);
   }
 }

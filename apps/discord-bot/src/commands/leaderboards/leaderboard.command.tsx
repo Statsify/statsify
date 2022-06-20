@@ -284,14 +284,9 @@ export class LeaderboardCommand {
       tier: user?.tier,
     };
 
-    const up = new ButtonBuilder()
-      .emoji(t('emojis:up') + ' ')
-      .style(ButtonStyle.Success)
-      .disable(true);
-
-    const down = new ButtonBuilder().emoji(t('emojis:down') + '').style(ButtonStyle.Danger);
-
-    const search = new ButtonBuilder().emoji(t('emojis:search') + '').style(ButtonStyle.Primary);
+    const up = new ButtonBuilder().emoji(t('emojis:up')).style(ButtonStyle.Success).disable(true);
+    const down = new ButtonBuilder().emoji(t('emojis:down')).style(ButtonStyle.Danger);
+    const search = new ButtonBuilder().emoji(t('emojis:search')).style(ButtonStyle.Primary);
 
     const changePage = (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
       const params = fn();

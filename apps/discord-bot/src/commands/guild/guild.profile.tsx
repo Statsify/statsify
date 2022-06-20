@@ -295,7 +295,7 @@ const GuildGexpPerGamePage = ({ guild, t, gameIcons }: GuildGexpPerGamePageProps
   const expPerGame = Object.entries(guild.expByGame);
   const games = expPerGame.filter(([, exp]) => exp > 0).sort((a, b) => b[1] - a[1]);
 
-  const items = arrayGroup(
+  const groups = arrayGroup(
     games.map(([game, exp]) => (
       <box padding={{ left: 8, right: 8, top: 4, bottom: 4 }} width="100%">
         <img image={gameIcons[game]} width={32} height={32} />
@@ -309,13 +309,11 @@ const GuildGexpPerGamePage = ({ guild, t, gameIcons }: GuildGexpPerGamePageProps
 
   return (
     <div width="100%">
-      <div width="remaining" direction="column">
-        {items[0]}
-      </div>
-      <box width={8} height="100%" padding={0} />
-      <div width="remaining" direction="column">
-        {items[1]}
-      </div>
+      {groups.map((item) => (
+        <div width={`1/${groups.length}`} direction="column">
+          {item}
+        </div>
+      ))}
     </div>
   );
 };
