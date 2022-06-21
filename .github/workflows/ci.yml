@@ -34,7 +34,7 @@ jobs:
             turbo-${{ github.job }}-${{ github.ref_name }}-
 
       - name: Install dependencies
-        run: yarn --immutable --ignore-scripts
+        run: yarn --immutable
 
       - name: Typecheck
         run: yarn test:types

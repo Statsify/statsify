@@ -38,7 +38,7 @@ jobs:
 
       # Install your linters here
       - name: Install dependencies
-        run: yarn --immutable --ignore-scripts
+        run: yarn --immutable
 
       - name: Run linters
         uses: wearerequired/lint-action@v2
