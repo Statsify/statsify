@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ValidationPipe } from '@nestjs/common';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { Test } from '@nestjs/testing';
-import { PlayerController } from '../src/player';
-import { useMocker } from './mocks';
-import { testKey, testUsername, testUuid } from './test.constants';
+import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import { PlayerController } from "../src/player";
+import { Test } from "@nestjs/testing";
+import { ValidationPipe } from "@nestjs/common";
+import { testKey, testUsername, testUuid } from "./test.constants";
+import { useMocker } from "./mocks";
 
-describe('Player', () => {
+describe("Player", () => {
   let app: NestFastifyApplication;
 
   beforeAll(async () => {
@@ -33,10 +33,10 @@ describe('Player', () => {
 
   it(`/GET player?player=username`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/player?player=${testUsername}`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 
@@ -45,10 +45,10 @@ describe('Player', () => {
 
   it(`/GET player?player=uuid`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/player?player=${testUuid}`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 
@@ -57,10 +57,10 @@ describe('Player', () => {
 
   it(`/GET player/recentgames?player=username`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/player/recentgames?player=${testUsername}`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 
@@ -69,10 +69,10 @@ describe('Player', () => {
 
   it(`/GET player/recentgames?player=uuid`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/player/recentgames?player=${testUuid}`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 
@@ -81,10 +81,10 @@ describe('Player', () => {
 
   it(`/GET player/status?player=username`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/player/status?player=${testUsername}`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 
@@ -93,22 +93,22 @@ describe('Player', () => {
 
   it(`/GET player/status?player=uuid`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/player/status?player=${testUuid}`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 
     expect(result.statusCode).toEqual(200);
   });
 
-  it('/GET player/friends?player=username', async () => {
+  it("/GET player/friends?player=username", async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/player/friends?player=${testUsername}`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 
@@ -117,10 +117,10 @@ describe('Player', () => {
 
   it(`/GET player/friends?player=uuid`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/player/friends?player=${testUuid}`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 

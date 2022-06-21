@@ -6,14 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractArgument, CommandContext, LocalizationString } from '@statsify/discord';
-import { ClassMetadata, LeaderboardScanner, METADATA_KEY, PlayerStats } from '@statsify/schemas';
-import { removeFormatting } from '@statsify/util';
+import Fuse from "fuse.js";
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
-} from 'discord-api-types/v10';
-import Fuse from 'fuse.js';
+} from "discord-api-types/v10";
+import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
+import {
+  ClassMetadata,
+  LeaderboardScanner,
+  METADATA_KEY,
+  PlayerStats,
+} from "@statsify/schemas";
+import { removeFormatting } from "@statsify/util";
 
 const entries = Object.entries(
   Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
@@ -25,7 +30,7 @@ const fields = entries.reduce((acc, [prefix, value]) => {
   );
 
   const fuse = new Fuse(list, {
-    keys: ['name', 'key'],
+    keys: ["name", "key"],
     includeScore: false,
     shouldSort: true,
     isCaseSensitive: false,
@@ -37,7 +42,7 @@ const fields = entries.reduce((acc, [prefix, value]) => {
 }, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);
 
 export class PlayerLeaderboardArgument extends AbstractArgument {
-  public name = 'leaderboard';
+  public name = "leaderboard";
   public description: LocalizationString;
   public type = ApplicationCommandOptionType.String;
   public required = true;
@@ -45,11 +50,13 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
 
   public constructor(private prefix: keyof PlayerStats) {
     super();
-    this.description = (t) => t('arguments.player-leaderboard');
+    this.description = (t) => t("arguments.player-leaderboard");
   }
 
-  public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
-    const currentValue = context.option<string>(this.name, '').toLowerCase();
+  public autocompleteHandler(
+    context: CommandContext
+  ): APIApplicationCommandOptionChoice[] {
+    const currentValue = context.option<string>(this.name, "").toLowerCase();
 
     const [fuse, list] = fields[this.prefix];
 

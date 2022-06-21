@@ -6,32 +6,32 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { APIData } from '@statsify/util';
-import { FormattedGame } from '../game';
-import { Field } from '../metadata';
-import { Arcade } from './gamemodes/arcade';
-import { ArenaBrawl } from './gamemodes/arenabrawl';
-import { BedWars } from './gamemodes/bedwars';
-import { BlitzSG } from './gamemodes/blitzsg';
-import { BuildBattle } from './gamemodes/buildbattle';
-import { CopsAndCrims } from './gamemodes/copsandcrims';
-import { Duels } from './gamemodes/duels';
-import { General } from './gamemodes/general';
-import { MegaWalls } from './gamemodes/megawalls';
-import { MurderMystery } from './gamemodes/murdermystery';
-import { Paintball } from './gamemodes/paintball';
-import { Parkour } from './gamemodes/parkour';
-import { Quake } from './gamemodes/quake';
-import { SkyWars } from './gamemodes/skywars';
-import { SmashHeroes } from './gamemodes/smashheroes';
-import { SpeedUHC } from './gamemodes/speeduhc';
-import { TNTGames } from './gamemodes/tntgames';
-import { TurboKartRacers } from './gamemodes/turbokartracers';
-import { UHC } from './gamemodes/uhc';
-import { VampireZ } from './gamemodes/vampirez';
-import { Walls } from './gamemodes/walls';
-import { Warlords } from './gamemodes/warlords';
-import { WoolWars } from './gamemodes/woolwars';
+import { Arcade } from "./gamemodes/arcade";
+import { ArenaBrawl } from "./gamemodes/arenabrawl";
+import { BedWars } from "./gamemodes/bedwars";
+import { BlitzSG } from "./gamemodes/blitzsg";
+import { BuildBattle } from "./gamemodes/buildbattle";
+import { CopsAndCrims } from "./gamemodes/copsandcrims";
+import { Duels } from "./gamemodes/duels";
+import { Field } from "../metadata";
+import { FormattedGame } from "../game";
+import { General } from "./gamemodes/general";
+import { MegaWalls } from "./gamemodes/megawalls";
+import { MurderMystery } from "./gamemodes/murdermystery";
+import { Paintball } from "./gamemodes/paintball";
+import { Parkour } from "./gamemodes/parkour";
+import { Quake } from "./gamemodes/quake";
+import { SkyWars } from "./gamemodes/skywars";
+import { SmashHeroes } from "./gamemodes/smashheroes";
+import { SpeedUHC } from "./gamemodes/speeduhc";
+import { TNTGames } from "./gamemodes/tntgames";
+import { TurboKartRacers } from "./gamemodes/turbokartracers";
+import { UHC } from "./gamemodes/uhc";
+import { VampireZ } from "./gamemodes/vampirez";
+import { Walls } from "./gamemodes/walls";
+import { Warlords } from "./gamemodes/warlords";
+import { WoolWars } from "./gamemodes/woolwars";
+import type { APIData } from "@statsify/util";
 
 export class PlayerStats {
   @Field({ leaderboard: { fieldName: `${FormattedGame.ARCADE} -` } })
@@ -41,7 +41,10 @@ export class PlayerStats {
   public arenabrawl: ArenaBrawl;
 
   @Field({
-    leaderboard: { fieldName: FormattedGame.BEDWARS, extraDisplay: 'stats.bedwars.levelFormatted' },
+    leaderboard: {
+      fieldName: FormattedGame.BEDWARS,
+      extraDisplay: "stats.bedwars.levelFormatted",
+    },
   })
   public bedwars: BedWars;
 
@@ -51,7 +54,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.BUILD_BATTLE,
-      extraDisplay: 'stats.buildbattle.titleFormatted',
+      extraDisplay: "stats.buildbattle.titleFormatted",
     },
   })
   public buildbattle: BuildBattle;
@@ -81,14 +84,17 @@ export class PlayerStats {
   public quake: Quake;
 
   @Field({
-    leaderboard: { fieldName: FormattedGame.SKYWARS, extraDisplay: 'stats.skywars.levelFormatted' },
+    leaderboard: {
+      fieldName: FormattedGame.SKYWARS,
+      extraDisplay: "stats.skywars.levelFormatted",
+    },
   })
   public skywars: SkyWars;
 
   @Field({
     leaderboard: {
       fieldName: FormattedGame.SMASH_HEROES,
-      extraDisplay: 'stats.smashheroes.levelFormatted',
+      extraDisplay: "stats.smashheroes.levelFormatted",
     },
   })
   public smashheroes: SmashHeroes;
@@ -96,7 +102,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.SPEED_UHC,
-      extraDisplay: 'stats.speeduhc.levelFormatted',
+      extraDisplay: "stats.speeduhc.levelFormatted",
     },
   })
   public speeduhc: SpeedUHC;
@@ -108,7 +114,10 @@ export class PlayerStats {
   public turbokartracers: TurboKartRacers;
 
   @Field({
-    leaderboard: { fieldName: FormattedGame.UHC, extraDisplay: 'stats.uhc.levelFormatted' },
+    leaderboard: {
+      fieldName: FormattedGame.UHC,
+      extraDisplay: "stats.uhc.levelFormatted",
+    },
   })
   public uhc: UHC;
 
@@ -124,7 +133,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.WOOLWARS,
-      extraDisplay: 'stats.woolwars.levelFormatted',
+      extraDisplay: "stats.woolwars.levelFormatted",
     },
   })
   public woolwars: WoolWars;

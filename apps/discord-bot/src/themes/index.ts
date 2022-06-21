@@ -6,11 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Theme } from '@statsify/rendering';
-import { UserTheme } from '@statsify/schemas';
-import { hdTheme } from './hd';
+import { Theme } from "@statsify/rendering";
+import { UserTheme } from "@statsify/schemas";
+import { hdTheme } from "./hd";
 
-export const getTheme = (theme: UserTheme = UserTheme.DEFAULT): Theme<any> | undefined => {
+export const getTheme = (
+  theme: UserTheme = UserTheme.DEFAULT
+): Theme<any> | undefined => {
   switch (theme) {
     case UserTheme.HD:
       return hdTheme;

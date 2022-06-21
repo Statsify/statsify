@@ -6,26 +6,26 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import short from "short-uuid";
+import { AxiosError } from "axios";
+import { Color, User } from "@statsify/schemas";
+import { ErrorMessage } from "../error.message";
 import {
-  ApiService as StatsifyApiService,
+  GUILD_ID_REGEX,
   GuildNotFoundException,
   GuildQuery,
-  GUILD_ID_REGEX,
   HistoricalType,
   LeaderboardQuery,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
+  ApiService as StatsifyApiService,
   StatusNotFoundException,
-} from '@statsify/api-client';
-import { Color, User } from '@statsify/schemas';
-import { removeFormatting } from '@statsify/util';
-import { AxiosError } from 'axios';
-import { t } from 'i18next';
-import short from 'short-uuid';
-import { Service } from 'typedi';
-import { ErrorMessage } from '../error.message';
+} from "@statsify/api-client";
+import { Service } from "typedi";
+import { removeFormatting } from "@statsify/util";
+import { t } from "i18next";
 
-type PlayerTag = 'username' | 'uuid' | 'discordId' | 'none';
+type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
 @Service()
 export class ApiService extends StatsifyApiService {
@@ -50,7 +50,7 @@ export class ApiService extends StatsifyApiService {
       if (!err.response || !err.response.data) throw this.unknownError();
       const error = err.response.data as PlayerNotFoundException;
 
-      if (error.message === 'player') throw this.missingPlayer(type, tag);
+      if (error.message === "player") throw this.missingPlayer(type, tag);
 
       throw this.unknownError();
     });
@@ -68,7 +68,7 @@ export class ApiService extends StatsifyApiService {
       if (!err.response || !err.response.data) throw this.unknownError();
       const error = err.response.data as PlayerNotFoundException;
 
-      if (error.message === 'player') throw this.missingPlayer(type, tag);
+      if (error.message === "player") throw this.missingPlayer(type, tag);
 
       throw this.unknownError();
     });
@@ -86,18 +86,20 @@ export class ApiService extends StatsifyApiService {
 
     return super.getRecentGames(input).catch((err) => {
       if (!err.response || !err.response.data) throw this.unknownError();
-      const error = err.response.data as RecentGamesNotFoundException | PlayerNotFoundException;
+      const error = err.response.data as
+        | RecentGamesNotFoundException
+        | PlayerNotFoundException;
 
-      if (error.message === 'player') throw this.missingPlayer(type, tag);
+      if (error.message === "player") throw this.missingPlayer(type, tag);
 
-      if (error.message === 'recentGames') {
+      if (error.message === "recentGames") {
         const displayName = this.emojiDisplayName(
           (error as RecentGamesNotFoundException).displayName
         );
 
         throw new ErrorMessage(
-          (t) => t('errors.noRecentGames.title'),
-          (t) => t('errors.noRecentGames.description', { displayName })
+          (t) => t("errors.noRecentGames.title"),
+          (t) => t("errors.noRecentGames.description", { displayName })
         );
       }
 
@@ -117,16 +119,20 @@ export class ApiService extends StatsifyApiService {
 
     return super.getStatus(input).catch((err) => {
       if (!err.response || !err.response.data) throw this.unknownError();
-      const error = err.response.data as StatusNotFoundException | PlayerNotFoundException;
+      const error = err.response.data as
+        | StatusNotFoundException
+        | PlayerNotFoundException;
 
-      if (error.message === 'player') throw this.missingPlayer(type, tag);
+      if (error.message === "player") throw this.missingPlayer(type, tag);
 
-      if (error.message === 'status') {
-        const displayName = this.emojiDisplayName((error as StatusNotFoundException).displayName);
+      if (error.message === "status") {
+        const displayName = this.emojiDisplayName(
+          (error as StatusNotFoundException).displayName
+        );
 
         throw new ErrorMessage(
-          (t) => t('errors.noStatus.title'),
-          (t) => t('errors.noStatus.description', { displayName })
+          (t) => t("errors.noStatus.title"),
+          (t) => t("errors.noStatus.description", { displayName })
         );
       }
 
@@ -148,20 +154,24 @@ export class ApiService extends StatsifyApiService {
       if (!err.response || !err.response.data) throw this.unknownError();
       const error = err.response.data as PlayerNotFoundException;
 
-      if (error.message === 'player') throw this.missingPlayer(type, tag);
+      if (error.message === "player") throw this.missingPlayer(type, tag);
 
       throw this.unknownError();
     });
   }
 
-  public override async getGuild(tag: string, type?: GuildQuery, user: User | null = null) {
+  public override async getGuild(
+    tag: string,
+    type?: GuildQuery,
+    user: User | null = null
+  ) {
     let input: string;
     let playerType: PlayerTag;
 
     if (!type) {
       if (!tag || this.isDiscordId(tag)) type = GuildQuery.PLAYER;
-      else if (tag.match(GUILD_ID_REGEX)) type = GuildQuery.ID;
-      else if (tag.includes(' ') || tag.length > 16) type = GuildQuery.NAME;
+      else if (GUILD_ID_REGEX.test(tag)) type = GuildQuery.ID;
+      else if (tag.includes(" ") || tag.length > 16) type = GuildQuery.NAME;
       else type = GuildQuery.NAME;
     }
 
@@ -178,13 +188,13 @@ export class ApiService extends StatsifyApiService {
 
       const error = err.response.data as GuildNotFoundException | PlayerNotFoundException;
 
-      if (error.message === 'guild')
+      if (error.message === "guild")
         throw new ErrorMessage(
-          (t) => t('errors.invalidGuild.title'),
-          (t) => t('errors.invalidGuild.title', { type: type?.toLowerCase(), tag })
+          (t) => t("errors.invalidGuild.title"),
+          (t) => t("errors.invalidGuild.title", { type: type?.toLowerCase(), tag })
         );
 
-      if (error.message === 'player') throw this.missingPlayer(playerType, tag);
+      if (error.message === "player") throw this.missingPlayer(playerType, tag);
 
       throw this.unknownError();
     });
@@ -199,71 +209,74 @@ export class ApiService extends StatsifyApiService {
       if ((err.response?.data as PlayerNotFoundException).statusCode === 404) return null;
 
       throw new ErrorMessage(
-        (t) => t('errors.leaderboardNotFound.title'),
-        (t) => t('errors.leaderboardNotFound.description')
+        (t) => t("errors.leaderboardNotFound.title"),
+        (t) => t("errors.leaderboardNotFound.description")
       );
     });
   }
 
   public emojiDisplayName(displayName: string, space = true) {
-    const [rank, name] = displayName.replace(/\[|\]/g, '').replace(/_/g, '\\_').split(' ');
+    const [rank, name] = displayName
+      .replaceAll("[|]", "")
+      .replaceAll("_", "\\_")
+      .split(" ");
     if (!rank) return removeFormatting(displayName);
 
     const unformattedRank = removeFormatting(rank);
 
-    const COLORED_RANKS = ['MVP+', 'MVP++'];
+    const COLORED_RANKS = ["MVP+", "MVP++"];
 
     let emoji: string;
 
     if (COLORED_RANKS.includes(unformattedRank)) {
-      const rankColor = unformattedRank === 'MVP++' && rank.startsWith('§b') ? 'b' : '';
-      const plusColor = new Color(`§${rank[rank.indexOf('+') - 1]}`);
+      const rankColor = unformattedRank === "MVP++" && rank.startsWith("§b") ? "b" : "";
+      const plusColor = new Color(`§${rank[rank.indexOf("+") - 1]}`);
       emoji = t(`emojis:ranks.${rankColor}${unformattedRank}_${plusColor.id}`);
     } else {
       emoji = t(`emojis:ranks.${unformattedRank}`);
-      emoji += '';
+      emoji += "";
     }
 
-    return `${space ? ' ' : ''}${emoji}${removeFormatting(name)}`;
+    return `${space ? " " : ""}${emoji}${removeFormatting(name)}`;
   }
 
   public parseTag(tag: string): [input: string, type: PlayerTag] {
-    if (!tag) return ['', 'none'];
+    if (!tag) return ["", "none"];
 
     const length = tag.length;
 
-    if (length >= 32 && length <= 36) return [tag.replace(/-/g, ''), 'uuid'];
-    if (length <= 16) return [tag, 'username'];
+    if (length >= 32 && length <= 36) return [tag.replaceAll("-", ""), "uuid"];
+    if (length <= 16) return [tag, "username"];
 
-    if (this.isDiscordId(tag)) return [tag.replace(/<@|!|>/g, ''), 'discordId'];
+    if (this.isDiscordId(tag)) return [tag.replaceAll("<@|!|>", ""), "discordId"];
 
     if (length == 20) {
       const shortUuid = this.translator.toUUID(tag);
-      return [shortUuid.replace(/-/g, ''), 'uuid'];
+      return [shortUuid.replaceAll("-", ""), "uuid"];
     }
 
     throw new ErrorMessage(
-      (t) => t('errors.invalidSearch.title'),
-      (t) => t('errors.invalidSearch.description')
+      (t) => t("errors.invalidSearch.title"),
+      (t) => t("errors.invalidSearch.description")
     );
   }
 
   public async resolveTag(tag: string, type: PlayerTag, user: User | null) {
-    if (type === 'discordId') {
+    if (type === "discordId") {
       const searchedUser = await this.getUser(tag);
       if (searchedUser?.uuid) return searchedUser.uuid;
 
       throw new ErrorMessage(
-        (t) => t('errors.missingMentionVerification.title'),
-        (t) => t('errors.missingMentionVerification.description', { tag })
+        (t) => t("errors.missingMentionVerification.title"),
+        (t) => t("errors.missingMentionVerification.description", { tag })
       );
     }
 
-    if (type === 'none') {
+    if (type === "none") {
       if (user?.uuid) return user.uuid;
       throw new ErrorMessage(
-        (t) => t('errors.missingSelfVerification.title'),
-        (t) => t('errors.missingSelfVerification.description')
+        (t) => t("errors.missingSelfVerification.title"),
+        (t) => t("errors.missingSelfVerification.description")
       );
     }
 
@@ -272,19 +285,19 @@ export class ApiService extends StatsifyApiService {
 
   public missingPlayer(type: PlayerTag, tag: string) {
     return new ErrorMessage(
-      (t) => t('errors.invalidPlayer.title'),
-      (t) => t('errors.invalidPlayer.description', { type, tag })
+      (t) => t("errors.invalidPlayer.title"),
+      (t) => t("errors.invalidPlayer.description", { type, tag })
     );
   }
 
   public unknownError() {
     return new ErrorMessage(
-      (t) => t('errors.unknown.title'),
-      (t) => t('errors.unknown.description')
+      (t) => t("errors.unknown.title"),
+      (t) => t("errors.unknown.description")
     );
   }
 
   private isDiscordId(tag: string) {
-    return Boolean(tag.match(/^<@!?(\d{17,19})>$/)) || Boolean(tag.match(/^\d{17,19}$/m));
+    return Boolean(/^<@!?(\d{17,19})>$/.test(tag)) || Boolean(/^\d{17,19}$/m.test(tag));
   }
 }

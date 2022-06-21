@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Table } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { CreeperAttack } from '@statsify/schemas';
+import { CreeperAttack } from "@statsify/schemas";
+import { LocalizeFunction } from "@statsify/discord";
+import { Table } from "#components";
 
 interface CreeperAttackTableProps {
   stats: CreeperAttack;
@@ -18,7 +18,7 @@ interface CreeperAttackTableProps {
 export const CreeperAttackTable = ({ stats, t }: CreeperAttackTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t('stats.maxWave')} value={t(stats.maxWave)} color="§a" />
+      <Table.td title={t("stats.maxWave")} value={t(stats.maxWave)} color="§a" />
     </Table.tr>
   </Table.table>
 );

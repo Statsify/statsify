@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { deepAdd, ratio } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Color } from '../../../color';
-import { Field } from '../../../metadata';
-import { getTitle } from './util';
+import { APIData } from "@statsify/util";
+import { Color } from "../../../color";
+import { Field } from "../../../metadata";
+import { deepAdd, ratio } from "@statsify/math";
+import { getTitle } from "./util";
 
 export class BaseDuelsGameMode {
   @Field({ leaderboard: { enabled: false } })
@@ -48,7 +48,7 @@ export class BaseDuelsGameMode {
     this.kills = data[`${prefix}kills`];
     this.deaths = data[`${prefix}deaths`];
     this.blocksPlaced = data[`${prefix}blocks_placed`];
-    if (mode == '') {
+    if (mode == "") {
       this.winstreak = data.current_winstreak;
       this.bestWinstreak = data.best_overall_winstreak;
     } else {
@@ -101,30 +101,30 @@ export class BridgeDuels {
   public fours: BridgeDuelsMode;
 
   @Field()
-  public '2v2v2v2': BridgeDuelsMode;
+  public "2v2v2v2": BridgeDuelsMode;
 
   @Field()
-  public '3v3v3v3': BridgeDuelsMode;
+  public "3v3v3v3": BridgeDuelsMode;
 
   @Field()
   public ctf: BridgeDuelsMode;
 
   public constructor(data: APIData) {
-    this.solo = new BridgeDuelsMode(data, 'bridge_duel');
-    this.doubles = new BridgeDuelsMode(data, 'bridge_doubles');
-    this.threes = new BridgeDuelsMode(data, 'bridge_threes');
-    this.fours = new BridgeDuelsMode(data, 'bridge_four');
-    this['2v2v2v2'] = new BridgeDuelsMode(data, 'bridge_2v2v2v2');
-    this['3v3v3v3'] = new BridgeDuelsMode(data, 'bridge_3v3v3v3');
-    this.ctf = new BridgeDuelsMode(data, 'capture_threes');
+    this.solo = new BridgeDuelsMode(data, "bridge_duel");
+    this.doubles = new BridgeDuelsMode(data, "bridge_doubles");
+    this.threes = new BridgeDuelsMode(data, "bridge_threes");
+    this.fours = new BridgeDuelsMode(data, "bridge_four");
+    this["2v2v2v2"] = new BridgeDuelsMode(data, "bridge_2v2v2v2");
+    this["3v3v3v3"] = new BridgeDuelsMode(data, "bridge_3v3v3v3");
+    this.ctf = new BridgeDuelsMode(data, "capture_threes");
 
     this.overall = deepAdd(
       this.solo,
       this.doubles,
       this.threes,
       this.fours,
-      this['2v2v2v2'],
-      this['3v3v3v3'],
+      this["2v2v2v2"],
+      this["3v3v3v3"],
       this.ctf
     );
 
@@ -133,7 +133,7 @@ export class BridgeDuels {
 
     BaseDuelsGameMode.applyRatios(this.overall);
 
-    const { formatted, color, raw } = getTitle(this.overall.wins, 'Bridge');
+    const { formatted, color, raw } = getTitle(this.overall.wins, "Bridge");
 
     this.title = raw;
     this.titleColor = color;
@@ -232,10 +232,10 @@ export class UHCDuels {
   public deathmatch: BaseDuelsGameMode;
 
   public constructor(data: APIData) {
-    this.solo = new BaseDuelsGameMode(data, 'uhc_duel');
-    this.doubles = new BaseDuelsGameMode(data, 'uhc_doubles');
-    this.fours = new BaseDuelsGameMode(data, 'uhc_four');
-    this.deathmatch = new BaseDuelsGameMode(data, 'uhc_meetup');
+    this.solo = new BaseDuelsGameMode(data, "uhc_duel");
+    this.doubles = new BaseDuelsGameMode(data, "uhc_doubles");
+    this.fours = new BaseDuelsGameMode(data, "uhc_four");
+    this.deathmatch = new BaseDuelsGameMode(data, "uhc_meetup");
 
     this.overall = deepAdd(this.solo, this.doubles, this.fours, this.deathmatch);
 
@@ -244,7 +244,7 @@ export class UHCDuels {
 
     BaseDuelsGameMode.applyRatios(this.overall);
 
-    const { formatted, color, raw } = getTitle(this.overall.wins, 'UHC');
+    const { formatted, color, raw } = getTitle(this.overall.wins, "UHC");
 
     this.title = raw;
     this.titleColor = color;

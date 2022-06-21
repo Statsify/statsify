@@ -13,8 +13,8 @@
  */
 export const getLevel = (exp: number) => {
   const required = [
-    100000, 150000, 250000, 500000, 750000, 1000000, 1250000, 1500000, 2000000, 2500000, 2500000,
-    2500000, 2500000, 2500000, 3000000,
+    100_000, 150_000, 250_000, 500_000, 750_000, 1_000_000, 1_250_000, 1_500_000,
+    2_000_000, 2_500_000, 2_500_000, 2_500_000, 2_500_000, 2_500_000, 3_000_000,
   ];
 
   let level = 0;
@@ -22,8 +22,7 @@ export const getLevel = (exp: number) => {
   for (let i = 0; i <= 1000; i += 1) {
     let need = 0;
 
-    if (i >= required.length) need = required[required.length - 1];
-    else need = required[i];
+    need = i >= required.length ? required.at(-1)! : required[i];
 
     if (exp - need < 0)
       return {

@@ -6,31 +6,33 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { MojangPlayerArgument } from '#arguments';
-import { MojangApiService } from '#services';
-import { Command, CommandContext, EmbedBuilder } from '@statsify/discord';
+import { Command, CommandContext, EmbedBuilder } from "@statsify/discord";
+import { MojangApiService } from "#services";
+import { MojangPlayerArgument } from "#arguments";
 
-@Command({ description: 'commands.available', args: [new MojangPlayerArgument(true)] })
+@Command({ description: "commands.available", args: [new MojangPlayerArgument(true)] })
 export class AvailableCommand {
   public constructor(private readonly mojangApiService: MojangApiService) {}
 
   public async run(context: CommandContext) {
-    const name = context.option<string>('player');
+    const name = context.option<string>("player");
 
     const base = new EmbedBuilder().field(
-      (t) => `${t('embeds.available.description.username')} [${name.length}/16]`,
+      (t) => `${t("embeds.available.description.username")} [${name.length}/16]`,
       `\`${name}\``
     );
 
     const isInvalidLength = name.length > 16;
-    const invalidName = !name.match(/^\w+$/i);
+    const invalidName = !/^\w+$/i.test(name);
 
     if (isInvalidLength || invalidName) {
-      base.color(0xb76ba3).field(
-        (t) => t('embeds.available.description.status'),
+      base.color(0xb7_6b_a3).field(
+        (t) => t("embeds.available.description.status"),
         (t) =>
           `\`${t(
-            `embeds.available.description.${isInvalidLength ? 'tooLong' : 'invalidCharacters'}`
+            `embeds.available.description.${
+              isInvalidLength ? "tooLong" : "invalidCharacters"
+            }`
           )}\``
       );
 
@@ -42,30 +44,30 @@ export class AvailableCommand {
     if (!nameInfo) {
       base
         .field(
-          (t) => t('embeds.available.description.namemc'),
+          (t) => t("embeds.available.description.namemc"),
           `[\`Here\`](https://namemc.com/profile/${name})`
         )
         .field(
-          (t) => t('embeds.available.description.status'),
-          (t) => `\`${t('available')}*\``
+          (t) => t("embeds.available.description.status"),
+          (t) => `\`${t("available")}*\``
         )
-        .footer((t) => `*${t('embeds.available.footer.available')}`)
-        .color(0x00a28a);
+        .footer((t) => `*${t("embeds.available.footer.available")}`)
+        .color(0x00_a2_8a);
     } else {
       base
         .field(
-          (t) => t('embeds.available.description.uuid'),
-          `\`${nameInfo.uuid.replace(/-/g, '')}\``
+          (t) => t("embeds.available.description.uuid"),
+          `\`${nameInfo.uuid.replaceAll("-", "")}\``
         )
         .field(
-          (t) => t('embeds.available.description.namemc'),
-          `[\`Here\`](https://namemc.com/profile/${nameInfo.uuid.replace(/-/g, '')})`
+          (t) => t("embeds.available.description.namemc"),
+          `[\`Here\`](https://namemc.com/profile/${nameInfo.uuid.replaceAll("-", "")})`
         )
         .field(
-          (t) => t('embeds.available.description.status'),
-          (t) => `\`${t('unavailable')}\``
+          (t) => t("embeds.available.description.status"),
+          (t) => `\`${t("unavailable")}\``
         )
-        .color(0xf7c46c)
+        .color(0xf7_c4_6c)
         .thumbnail(this.mojangApiService.faceIconUrl(nameInfo.uuid));
     }
 

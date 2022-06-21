@@ -6,26 +6,31 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { GuildQuery } from '@statsify/api-client';
-import { AbstractArgument, LocalizationString } from '@statsify/discord';
-import { ApplicationCommandOptionType } from 'discord-api-types/v10';
-import { ChoiceArgument } from './choice.argument';
+import { AbstractArgument, LocalizationString } from "@statsify/discord";
+import { ApplicationCommandOptionType } from "discord-api-types/v10";
+import { ChoiceArgument } from "./choice.argument";
+import { GuildQuery } from "@statsify/api-client";
 
 class GuildQueryArgument extends AbstractArgument {
   public description: LocalizationString;
-  public name = 'query';
+  public name = "query";
   public type = ApplicationCommandOptionType.String;
   public required = false;
 
   public constructor() {
     super();
-    this.description = (t) => t('arguments.guild-query');
+    this.description = (t) => t("arguments.guild-query");
   }
 }
 
 class GuildTypeArgument extends ChoiceArgument {
   public constructor() {
-    super('type', ['name', GuildQuery.NAME], ['player', GuildQuery.PLAYER], ['id', GuildQuery.ID]);
+    super(
+      "type",
+      ["name", GuildQuery.NAME],
+      ["player", GuildQuery.PLAYER],
+      ["id", GuildQuery.ID]
+    );
   }
 }
 

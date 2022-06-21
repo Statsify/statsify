@@ -6,6 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from './auth.decorator';
-export * from './auth.module';
-export * from './auth.role';
+export * from "./auth.decorator";
+export * from "./auth.module";
+export * from "./auth.role";

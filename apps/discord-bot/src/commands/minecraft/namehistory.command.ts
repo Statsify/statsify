@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { MojangPlayerArgument } from '#arguments';
-import { INFO_COLOR } from '#constants';
-import { MojangApiService, PaginateService } from '#services';
-import { Command, CommandContext, EmbedBuilder } from '@statsify/discord';
-import { arrayGroup } from '@statsify/util';
+import { Command, CommandContext, EmbedBuilder } from "@statsify/discord";
+import { INFO_COLOR } from "#constants";
+import { MojangApiService, PaginateService } from "#services";
+import { MojangPlayerArgument } from "#arguments";
+import { arrayGroup } from "@statsify/util";
 
-@Command({ description: 'commands.namehistory', args: [MojangPlayerArgument] })
+@Command({ description: "commands.namehistory", args: [MojangPlayerArgument] })
 export class NameHistoryCommand {
   public constructor(
     private readonly mojangApiService: MojangApiService,
@@ -22,7 +22,10 @@ export class NameHistoryCommand {
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    const player = await this.mojangApiService.getPlayer(context.option<string>('player'), user);
+    const player = await this.mojangApiService.getPlayer(
+      context.option<string>("player"),
+      user
+    );
 
     const thumbURL = this.mojangApiService.faceIconUrl(player.uuid);
     const nameHistory = player.username_history.reverse();
@@ -35,20 +38,22 @@ export class NameHistoryCommand {
 
     return this.paginateService.scrollingPagination(
       context,
-      groups.map((history, index) => {
-        return () =>
+      groups.map(
+        (history, index) => () =>
           new EmbedBuilder()
-            .title((t) => t(`${name} ${t('embeds.namehistory.title')} [${nameHistory.length}]`))
+            .title((t) =>
+              t(`${name} ${t("embeds.namehistory.title")} [${nameHistory.length}]`)
+            )
             .description((t) =>
               history
                 .map(({ username, changed_at }) => {
                   const time = changed_at
                     ? `<t:${Math.floor(new Date(changed_at).getTime() / 1000)}:R>`
-                    : `\`${t('embeds.namehistory.description.originalName')}\``;
+                    : `\`${t("embeds.namehistory.description.originalName")}\``;
 
                   return `\`•\` **${username}**: ${time}\n`;
                 })
-                .join('')
+                .join("")
             )
             .footer(
               `Page ${index + 1}/${groups.length} • Viewing ${index * groupSize + 1}-${
@@ -57,8 +62,8 @@ export class NameHistoryCommand {
             )
             .url(`https://namemc.com/profile/${player.uuid}`)
             .color(INFO_COLOR)
-            .thumbnail(thumbURL);
-      })
+            .thumbnail(thumbURL)
+      )
     );
   }
 }

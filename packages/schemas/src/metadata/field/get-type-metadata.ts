@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { primitiveConstructors } from '../constants';
-import { TypeOptions } from '../field.options';
-import { TypeMetadata } from '../metadata.interface';
+import { TypeMetadata } from "../metadata.interface";
+import { TypeOptions } from "../field.options";
+import { primitiveConstructors } from "../constants";
 
 export const getTypeMetadata = (
   typeOptions: TypeOptions | undefined,
@@ -33,7 +33,7 @@ export const getTypeMetadata = (
     };
   }
 
-  const type = Reflect.getMetadata('design:type', target, propertyKey);
+  const type = Reflect.getMetadata("design:type", target, propertyKey);
 
   return {
     type,

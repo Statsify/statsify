@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { randomUUID } from 'crypto';
-import { APIModalInteractionResponseCallbackData } from 'discord-api-types/v10';
-import { LocalizationString, LocalizeFunction, translateField } from '../localize';
-import { ActionRowBuilder } from './action-row.builder';
+import { APIModalInteractionResponseCallbackData } from "discord-api-types/v10";
+import { ActionRowBuilder } from "./action-row.builder";
+import { LocalizationString, LocalizeFunction, translateField } from "../localize";
+import { randomUUID } from "node:crypto";
 
 export class ModalBuilder {
   #custom_id: string;

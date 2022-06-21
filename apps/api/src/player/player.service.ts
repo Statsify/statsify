@@ -6,20 +6,26 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { InjectModel } from '@m8a/nestjs-typegoose';
-import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import short from "short-uuid";
+import { Flatten, flatten } from "@statsify/util";
+import {
+  Friends,
+  LeaderboardScanner,
+  Player,
+  deserialize,
+  serialize,
+} from "@statsify/schemas";
 import {
   HypixelCache,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
   StatusNotFoundException,
-} from '@statsify/api-client';
-import { deserialize, Friends, LeaderboardScanner, Player, serialize } from '@statsify/schemas';
-import { Flatten, flatten } from '@statsify/util';
-import type { ReturnModelType } from '@typegoose/typegoose';
-import short from 'short-uuid';
-import { HypixelService } from '../hypixel';
-import { PlayerLeaderboardService } from './leaderboards/player-leaderboard.service';
+} from "@statsify/api-client";
+import { HypixelService } from "../hypixel";
+import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
+import { InjectModel } from "@m8a/nestjs-typegoose";
+import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service";
+import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class PlayerService {
@@ -44,14 +50,17 @@ export class PlayerService {
   ): Promise<Player | null> {
     const mongoPlayer = await this.findMongoDocument(tag, selector);
 
-    if (mongoPlayer && this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)) {
+    if (
+      mongoPlayer &&
+      this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)
+    ) {
       return deserialize(Player, mongoPlayer);
     }
 
     const player = await this.hypixelService.getPlayer(mongoPlayer?.uuid ?? tag);
 
     if (player) {
-      player.expiresAt = Date.now() + 120000;
+      player.expiresAt = Date.now() + 120_000;
       player.leaderboardBanned = mongoPlayer?.leaderboardBanned ?? false;
       player.resetMinute = mongoPlayer?.resetMinute;
       player.guildId = mongoPlayer?.guildId;
@@ -84,7 +93,7 @@ export class PlayerService {
 
     const cachedFriends = await this.friendsModel
       .findOne()
-      .where('uuid')
+      .where("uuid")
       .equals(player.uuid)
       .lean()
       .exec();
@@ -100,7 +109,7 @@ export class PlayerService {
 
     if (!friends) {
       if (cachedFriends) return cachedFriends;
-      throw new NotFoundException('friends');
+      throw new NotFoundException("friends");
     }
 
     friends.displayName = player.displayName;
@@ -122,7 +131,7 @@ export class PlayerService {
       status: true,
     });
 
-    if (!player) throw new NotFoundException('player');
+    if (!player) throw new NotFoundException("player");
 
     const status = await this.hypixelService.getStatus(player.uuid);
 
@@ -168,7 +177,7 @@ export class PlayerService {
     await this.playerLeaderboardService.addLeaderboards(
       Player,
       player,
-      'shortUuid',
+      "shortUuid",
       LeaderboardScanner.getLeaderboardFields(Player),
       true
     );
@@ -180,12 +189,12 @@ export class PlayerService {
     tag: string,
     selector: Record<string, boolean> = {}
   ): Promise<Flatten<Player> | null> {
-    const type = tag.length > 16 ? 'uuid' : 'usernameToLower';
+    const type = tag.length > 16 ? "uuid" : "usernameToLower";
 
     const mongoPlayer: Player | null = await this.playerModel
       .findOne()
       .where(type)
-      .equals(tag.replace(/-/g, '').toLowerCase())
+      .equals(tag.replaceAll("-", "").toLowerCase())
       .select(selector)
       .lean()
       .exec();
@@ -203,16 +212,20 @@ export class PlayerService {
     //Serialize and flatten the player
     const serializedPlayer = serialize(Player, player);
 
-    const saveMongo = this.playerModel.replaceOne({ uuid: player.uuid }, serializedPlayer, {
-      upsert: true,
-    });
+    const saveMongo = this.playerModel.replaceOne(
+      { uuid: player.uuid },
+      serializedPlayer,
+      {
+        upsert: true,
+      }
+    );
 
     const fields = LeaderboardScanner.getLeaderboardFields(Player);
 
     const saveRedis = this.playerLeaderboardService.addLeaderboards(
       Player,
       player,
-      'uuid',
+      "uuid",
       fields,
       player.leaderboardBanned ?? false
     );

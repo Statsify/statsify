@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from './Background';
-export * from './Container';
-export * from './Footer';
-export * from './Header';
-export * from './HistoricalProgression';
-export * from './If';
-export * from './List';
-export * from './Multiline';
-export * from './ProgressBar';
-export * from './Sidebar';
-export * from './Skin';
-export * from './Table';
+export * from "./Background";
+export * from "./Container";
+export * from "./Footer";
+export * from "./Header";
+export * from "./HistoricalProgression";
+export * from "./If";
+export * from "./List";
+export * from "./Multiline";
+export * from "./ProgressBar";
+export * from "./Sidebar";
+export * from "./Skin";
+export * from "./Table";

@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LocalizeFunction } from '@statsify/discord';
-import type { Progression } from '@statsify/schemas';
+import { LocalizeFunction } from "@statsify/discord";
+import type { Progression } from "@statsify/schemas";
 
 export type ProgressFunction = (pecentage: number) => string;
 
@@ -15,7 +15,7 @@ const xpBar: ProgressFunction = (percentage) => {
   const max = 10;
   const count = Math.ceil(max * percentage);
 
-  return `§r§8[§b${'■'.repeat(count)}§7${'■'.repeat(max - count)}§8]`;
+  return `§r§8[§b${"■".repeat(count)}§7${"■".repeat(max - count)}§8]`;
 };
 
 export const formatProgression = (
@@ -27,7 +27,7 @@ export const formatProgression = (
   progress: ProgressFunction = xpBar
 ) => {
   if (progression.max) {
-    let output = '§^2^';
+    let output = "§^2^";
 
     if (showProgress)
       output += `§7Progress: §b${t(progression.current)}§7/§a${t(progression.max)}\n`;

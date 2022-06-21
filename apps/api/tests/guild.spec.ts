@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ValidationPipe } from '@nestjs/common';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { Test } from '@nestjs/testing';
-import { GuildQuery } from '@statsify/api-client';
-import { GuildController } from '../src/guild';
-import { useMocker } from './mocks';
-import { testKey, testUsername } from './test.constants';
+import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import { GuildController } from "../src/guild";
+import { GuildQuery } from "@statsify/api-client";
+import { Test } from "@nestjs/testing";
+import { ValidationPipe } from "@nestjs/common";
+import { testKey, testUsername } from "./test.constants";
+import { useMocker } from "./mocks";
 
-describe('Guild', () => {
+describe("Guild", () => {
   let app: NestFastifyApplication;
 
   beforeAll(async () => {
@@ -34,10 +34,10 @@ describe('Guild', () => {
 
   it(`/GET guild?guild=name&type=${GuildQuery.NAME}`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/guild?guild=${testUsername}&type=${GuildQuery.NAME}`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 
@@ -46,10 +46,10 @@ describe('Guild', () => {
 
   it(`/GET guild?guild=name`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/guild?guild=${testUsername}`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 

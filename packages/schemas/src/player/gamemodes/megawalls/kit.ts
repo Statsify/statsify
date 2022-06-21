@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { add, ratio } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
+import { APIData } from "@statsify/util";
+import { Field } from "../../../metadata";
+import { add, ratio } from "@statsify/math";
 
 export class MegaWallsKit {
   @Field({ leaderboard: { limit: 10_000 } })
   public wins: number;
 
-  @Field({ leaderboard: { limit: 5_000 } })
+  @Field({ leaderboard: { limit: 5000 } })
   public losses: number;
 
   @Field({ leaderboard: { limit: 10_000 } })
@@ -23,7 +23,7 @@ export class MegaWallsKit {
   @Field({ leaderboard: { limit: 10_000 } })
   public kills: number;
 
-  @Field({ leaderboard: { limit: 5_000 } })
+  @Field({ leaderboard: { limit: 5000 } })
   public deaths: number;
 
   @Field({ leaderboard: { limit: 10_000 } })
@@ -35,7 +35,7 @@ export class MegaWallsKit {
   @Field({ leaderboard: { enabled: false } })
   public finalAssists: number;
 
-  @Field({ leaderboard: { limit: 5_000 } })
+  @Field({ leaderboard: { limit: 5000 } })
   public finalDeaths: number;
 
   @Field({ leaderboard: { limit: 10_000 } })
@@ -73,7 +73,7 @@ export class MegaWallsKit {
     this.finalDeaths = data[`${kit}final_deaths`];
     this.fkdr = ratio(this.finalKills, this.finalDeaths);
 
-    this.playtime = (data[`${kit}time_played`] ?? 0) * 60000;
+    this.playtime = (data[`${kit}time_played`] ?? 0) * 60_000;
     this.witherDamage = data[`${kit}wither_damage`];
     this.witherKills = data[`${kit}wither_kills`];
 
@@ -119,6 +119,6 @@ export class MegaWallsOverall extends MegaWallsKit {
   public declare playtime: number;
 
   public constructor(data: APIData) {
-    super(data, '');
+    super(data, "");
   }
 }

@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { TypegooseModule } from '@m8a/nestjs-typegoose';
-import { Module } from '@nestjs/common';
-import { PlayerModule } from '../player';
-import { HistoricalController } from './historical.controller';
-import { HistoricalService } from './historical.service';
-import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from './models';
+import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
+import { HistoricalController } from "./historical.controller";
+import { HistoricalService } from "./historical.service";
+import { Module } from "@nestjs/common";
+import { PlayerModule } from "../player";
+import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
   imports: [

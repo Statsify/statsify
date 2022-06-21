@@ -6,21 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { InjectModel } from '@m8a/nestjs-typegoose';
-import { Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
-import { HistoricalType, HypixelCache } from '@statsify/api-client';
-import { ratio, sub } from '@statsify/math';
-import { deserialize, Player, RATIOS, RATIO_STATS, serialize } from '@statsify/schemas';
-import { Flatten, flatten } from '@statsify/util';
-import { ReturnModelType } from '@typegoose/typegoose';
-import { isObject } from 'class-validator';
-import { PlayerService } from '../player';
-import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from './models';
+import { Cron, CronExpression } from "@nestjs/schedule";
+import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
+import { Flatten, flatten } from "@statsify/util";
+import { HistoricalType, HypixelCache } from "@statsify/api-client";
+import { InjectModel } from "@m8a/nestjs-typegoose";
+import { Injectable, Logger } from "@nestjs/common";
+import { Player, RATIOS, RATIO_STATS, deserialize, serialize } from "@statsify/schemas";
+import { PlayerService } from "../player";
+import { ReturnModelType } from "@typegoose/typegoose";
+import { isObject } from "class-validator";
+import { ratio, sub } from "@statsify/math";
 
 @Injectable()
 export class HistoricalService {
-  private readonly logger = new Logger('HistoricalService');
+  private readonly logger = new Logger("HistoricalService");
 
   public constructor(
     private readonly playerService: PlayerService,
@@ -29,7 +29,8 @@ export class HistoricalService {
     @InjectModel(Monthly) private readonly monthlyModel: ReturnModelType<typeof Player>,
     @InjectModel(LastDay) private readonly lastDayModel: ReturnModelType<typeof Player>,
     @InjectModel(LastWeek) private readonly lastWeekModel: ReturnModelType<typeof Player>,
-    @InjectModel(LastMonth) private readonly lastMonthModel: ReturnModelType<typeof Player>
+    @InjectModel(LastMonth)
+    private readonly lastMonthModel: ReturnModelType<typeof Player>
   ) {}
 
   @Cron(CronExpression.EVERY_MINUTE)
@@ -67,7 +68,9 @@ export class HistoricalService {
     const isMonthly =
       resetType === HistoricalType.MONTHLY || resetType === HistoricalType.LAST_MONTH;
     const isWeekly =
-      resetType === HistoricalType.WEEKLY || resetType === HistoricalType.LAST_WEEK || isMonthly;
+      resetType === HistoricalType.WEEKLY ||
+      resetType === HistoricalType.LAST_WEEK ||
+      isMonthly;
 
     const flatPlayer = flatten(player);
 
@@ -115,7 +118,11 @@ export class HistoricalService {
     let newPlayer: Player;
 
     if (
-      [HistoricalType.LAST_DAY, HistoricalType.LAST_WEEK, HistoricalType.LAST_MONTH].includes(type)
+      [
+        HistoricalType.LAST_DAY,
+        HistoricalType.LAST_WEEK,
+        HistoricalType.LAST_MONTH,
+      ].includes(type)
     ) {
       const lastMap = {
         [HistoricalType.LAST_DAY]: this.dailyModel,
@@ -147,7 +154,10 @@ export class HistoricalService {
       [HistoricalType.LAST_MONTH]: this.lastMonthModel,
     };
 
-    let oldPlayer = (await models[type].findOne({ uuid: newPlayer.uuid }).lean().exec()) as Player;
+    let oldPlayer = (await models[type]
+      .findOne({ uuid: newPlayer.uuid })
+      .lean()
+      .exec()) as Player;
     let isNew = false;
 
     if (!oldPlayer) {
@@ -172,7 +182,7 @@ export class HistoricalService {
       const key = _key as keyof T;
       const newOneType = typeof newOne[key];
 
-      if (typeof oldOne[key] === 'number' || newOneType === 'number') {
+      if (typeof oldOne[key] === "number" || newOneType === "number") {
         const ratioIndex = RATIOS.indexOf(_key);
 
         if (ratioIndex !== -1) {
@@ -197,13 +207,16 @@ export class HistoricalService {
             oldOne[key] as unknown as number
           ) as unknown as T[keyof T];
         }
-      } else if (newOneType === 'string') {
+      } else if (newOneType === "string") {
         merged[key] = newOne[key];
       } else if (isObject(newOne[key])) {
-        if (key === 'progression') {
+        if (key === "progression") {
           merged[key] = newOne[key];
         } else {
-          merged[key] = this.merge(oldOne[key] ?? {}, newOne[key] ?? {}) as unknown as T[keyof T];
+          merged[key] = this.merge(
+            oldOne[key] ?? {},
+            newOne[key] ?? {}
+          ) as unknown as T[keyof T];
         }
       }
     }

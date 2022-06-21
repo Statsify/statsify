@@ -6,17 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { useChildren } from '@statsify/rendering';
+import { useChildren } from "@statsify/rendering";
 
 export interface MultilineProps {
-  children: JSX.IntrinsicElements['text']['children'];
+  children: JSX.IntrinsicElements["text"]["children"];
 }
 
 export const Multiline = ({ children }: MultilineProps) => (
   <>
     {useChildren(children)
-      .join(' ')
-      .split('\n')
+      .join(" ")
+      .split("\n")
       .map((t) => (
         <text margin={1}>{t}</text>
       ))}

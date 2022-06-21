@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { FormattedGame } from '@statsify/schemas';
-import { BaseProfileProps } from '../base.hypixel-command';
+import { BaseProfileProps } from "../base.hypixel-command";
+import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { FormattedGame } from "@statsify/schemas";
 
 export const TurboKartRacersProfile = ({
   skin,
@@ -23,11 +23,11 @@ export const TurboKartRacersProfile = ({
   const { turbokartracers } = player.stats;
 
   const sidebar: SidebarItem[] = [
-    [t('stats.coins'), t(turbokartracers.coins), '§6'],
-    [t('stats.coinsPickedUp'), t(turbokartracers.coinsPickedUp), '§e'],
-    [t('stats.boxesPickedUp'), t(turbokartracers.boxesPickedUp), '§c'],
-    [t('stats.grandPrixTokens'), t(turbokartracers.grandPrixTokens), '§b'],
-    [t('stats.lapsCompleted'), t(turbokartracers.lapsCompleted), '§2'],
+    [t("stats.coins"), t(turbokartracers.coins), "§6"],
+    [t("stats.coinsPickedUp"), t(turbokartracers.coinsPickedUp), "§e"],
+    [t("stats.boxesPickedUp"), t(turbokartracers.boxesPickedUp), "§c"],
+    [t("stats.grandPrixTokens"), t(turbokartracers.grandPrixTokens), "§b"],
+    [t("stats.lapsCompleted"), t(turbokartracers.lapsCompleted), "§2"],
   ];
 
   return (
@@ -42,35 +42,43 @@ export const TurboKartRacersProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t('stats.goldRate')} value={`${turbokartracers.goldRate}%`} color="§6" />
           <Table.td
-            title={t('stats.trophyRate')}
+            title={t("stats.goldRate")}
+            value={`${turbokartracers.goldRate}%`}
+            color="§6"
+          />
+          <Table.td
+            title={t("stats.trophyRate")}
             value={`${turbokartracers.trophyRate}%`}
             color="§b"
           />
           <Table.td
-            title={t('stats.gamesPlayed')}
+            title={t("stats.gamesPlayed")}
             value={t(turbokartracers.gamesPlayed)}
             color="§a"
           />
         </Table.tr>
         <Table.tr>
           <Table.td
-            title={t('stats.goldTrophies')}
+            title={t("stats.goldTrophies")}
             value={t(turbokartracers.gold)}
             color="§#ffd700"
           />
           <Table.td
-            title={t('stats.silverTrophies')}
+            title={t("stats.silverTrophies")}
             value={t(turbokartracers.silver)}
             color="§#c0c0c0"
           />
           <Table.td
-            title={t('stats.bronzeTrophies')}
+            title={t("stats.bronzeTrophies")}
             value={t(turbokartracers.bronze)}
             color="§#cd7f32"
           />
-          <Table.td title={t('stats.totalTrophies')} value={t(turbokartracers.total)} color="§a" />
+          <Table.td
+            title={t("stats.totalTrophies")}
+            value={t(turbokartracers.total)}
+            color="§a"
+          />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} tier={tier} />

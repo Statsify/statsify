@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { add, ratio, sub } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
-import { WarlordsClass } from './class';
+import { APIData } from "@statsify/util";
+import { Field } from "../../../metadata";
+import { WarlordsClass } from "./class";
+import { add, ratio, sub } from "@statsify/math";
 
-export const WARLORDS_MODES = ['overall', 'classes'] as const;
+export const WARLORDS_MODES = ["overall", "classes"] as const;
 export type WarlordsModes = typeof WARLORDS_MODES;
 
 export class Warlords {
@@ -27,7 +27,7 @@ export class Warlords {
   @Field()
   public shaman: WarlordsClass;
 
-  @Field({ store: { default: 'warrior' } })
+  @Field({ store: { default: "warrior" } })
   public class: string;
 
   @Field()
@@ -58,12 +58,12 @@ export class Warlords {
   public assists: number;
 
   public constructor(data: APIData) {
-    this.mage = new WarlordsClass(data, 'mage');
-    this.warrior = new WarlordsClass(data, 'warrior');
-    this.paladin = new WarlordsClass(data, 'paladin');
-    this.shaman = new WarlordsClass(data, 'shaman');
+    this.mage = new WarlordsClass(data, "mage");
+    this.warrior = new WarlordsClass(data, "warrior");
+    this.paladin = new WarlordsClass(data, "paladin");
+    this.shaman = new WarlordsClass(data, "shaman");
 
-    this.class = data.chosen_class || 'warrior';
+    this.class = data.chosen_class || "warrior";
     this.coins = data.coins;
 
     this.gamesPlayed = Math.ceil(
@@ -100,4 +100,4 @@ export class Warlords {
   }
 }
 
-export * from './class';
+export * from "./class";

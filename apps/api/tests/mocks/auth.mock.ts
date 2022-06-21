@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AuthService } from '../../src/auth/auth.service';
-import { testUuid } from '../test.constants';
-import { MockClass } from './mock.type';
+import { AuthService } from "../../src/auth/auth.service";
+import { MockClass } from "./mock.type";
+import { testUuid } from "../test.constants";
 
 export const authService: MockClass<AuthService> = {
   limited: jest.fn().mockResolvedValue({

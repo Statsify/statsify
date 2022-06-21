@@ -6,25 +6,30 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
+import { Auth } from "../auth";
+import { Controller, Get, Query } from "@nestjs/common";
 import {
   ErrorResponse,
   GetGamecountsResponse,
   GetResourceResponse,
   GetWatchdogResponse,
-} from '@statsify/api-client';
-import { Auth } from '../auth';
-import { ResourceDto } from '../dtos';
-import { HypixelService } from '../hypixel';
+} from "@statsify/api-client";
+import { HypixelService } from "../hypixel";
+import { ResourceDto } from "../dtos";
 
 @Controller(`/hypixelresources`)
-@ApiTags('Hypixel Resources')
+@ApiTags("Hypixel Resources")
 export class HypixelResourcesController {
   public constructor(private readonly hypixelService: HypixelService) {}
 
   @Get(`/watchdog`)
-  @ApiOperation({ summary: 'Get Watchdog Stats' })
+  @ApiOperation({ summary: "Get Watchdog Stats" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiOkResponse({ type: GetWatchdogResponse })
   @Auth()
@@ -38,7 +43,7 @@ export class HypixelResourcesController {
   }
 
   @Get(`/gamecounts`)
-  @ApiOperation({ summary: 'Get Hypixel Gamecounts' })
+  @ApiOperation({ summary: "Get Hypixel Gamecounts" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiOkResponse({ type: GetGamecountsResponse })
   @Auth()
@@ -52,7 +57,7 @@ export class HypixelResourcesController {
   }
 
   @Get(`/resource`)
-  @ApiOperation({ summary: 'Get a hypixel resource' })
+  @ApiOperation({ summary: "Get a hypixel resource" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiOkResponse({ type: GetResourceResponse })
   @Auth()

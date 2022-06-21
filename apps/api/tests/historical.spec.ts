@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ValidationPipe } from '@nestjs/common';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { Test } from '@nestjs/testing';
-import { HistoricalType } from '@statsify/api-client';
-import { HistoricalController } from '../src/historical';
-import { useMocker } from './mocks';
-import { testKey, testUsername } from './test.constants';
+import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import { HistoricalController } from "../src/historical";
+import { HistoricalType } from "@statsify/api-client";
+import { Test } from "@nestjs/testing";
+import { ValidationPipe } from "@nestjs/common";
+import { testKey, testUsername } from "./test.constants";
+import { useMocker } from "./mocks";
 
-describe('Historical', () => {
+describe("Historical", () => {
   let app: NestFastifyApplication;
 
   beforeAll(async () => {
@@ -34,10 +34,10 @@ describe('Historical', () => {
 
   it(`/GET historical?player=username`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/historical?player=${testUsername}`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 
@@ -46,10 +46,10 @@ describe('Historical', () => {
 
   it(`/GET historical?player=username&type=${HistoricalType.DAILY}`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/historical?player=${testUsername}&type=${HistoricalType.DAILY}`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 

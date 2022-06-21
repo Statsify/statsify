@@ -24,12 +24,11 @@ export const noop = <T>() => null as unknown as T;
  * @param score The value to compare against
  * @returns The index of the element that meets the condition
  */
-export const findScoreIndex = <T extends { req: number }>(data: T[], score = 0): number => {
-  return data.findIndex(
+export const findScoreIndex = <T extends { req: number }>(data: T[], score = 0): number =>
+  data.findIndex(
     ({ req }, index, arr) =>
       score >= req && ((arr[index + 1] && score < arr[index + 1].req) || !arr[index + 1])
   );
-};
 
 /**
  *
@@ -38,9 +37,8 @@ export const findScoreIndex = <T extends { req: number }>(data: T[], score = 0):
  * @param score The value to compare against
  * @returns The element that meets the condition
  */
-export const findScore = <T extends { req: number }>(data: T[], score = 0): T => {
-  return data[findScoreIndex(data, score)];
-};
+export const findScore = <T extends { req: number }>(data: T[], score = 0): T =>
+  data[findScoreIndex(data, score)];
 
 /**
  *
@@ -48,68 +46,68 @@ export const findScore = <T extends { req: number }>(data: T[], score = 0): T =>
  * @returns Whether or not the value is an object, not null and is not an array
  */
 export const isObject = (value: any): value is object =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
+  typeof value === "object" && value !== null && !Array.isArray(value);
 
 export const romanNumeral = (num: number): string => {
-  const digits = String(num).split('');
+  const digits = [...String(num)];
   const key = [
-    '',
-    'C',
-    'CC',
-    'CCC',
-    'CD',
-    'D',
-    'DC',
-    'DCC',
-    'DCCC',
-    'CM',
-    '',
-    'X',
-    'XX',
-    'XXX',
-    'XL',
-    'L',
-    'LX',
-    'LXX',
-    'LXXX',
-    'XC',
-    '',
-    'I',
-    'II',
-    'III',
-    'IV',
-    'V',
-    'VI',
-    'VII',
-    'VIII',
-    'IX',
+    "",
+    "C",
+    "CC",
+    "CCC",
+    "CD",
+    "D",
+    "DC",
+    "DCC",
+    "DCCC",
+    "CM",
+    "",
+    "X",
+    "XX",
+    "XXX",
+    "XL",
+    "L",
+    "LX",
+    "LXX",
+    "LXXX",
+    "XC",
+    "",
+    "I",
+    "II",
+    "III",
+    "IV",
+    "V",
+    "VI",
+    "VII",
+    "VIII",
+    "IX",
   ];
 
-  let roman = '';
+  let roman = "";
   let i = 3;
 
-  while (i--) roman = (key[+digits.pop()! + i * 10] ?? '') + roman;
+  while (i--) roman = (key[+digits.pop()! + i * 10] ?? "") + roman;
 
-  return Array(+digits.join('') + 1).join('M') + roman;
+  return Array.from({ length: +digits.join("") + 1 }).join("M") + roman;
 };
 
 export const prettify = (s: string): string => {
   let newString = s;
 
   // Convert camelCase to Snake_Case (if applicable)
-  if (!['_', ' '].some((s) => newString.includes(s))) {
+  if (!["_", " "].some((s) => newString.includes(s))) {
     newString =
       newString.charAt(0).toLowerCase() +
-      newString.substring(1).replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+      newString.slice(1).replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
   }
 
   // Convert snake_case to Title Case
   return newString
-    .replace(/_/g, ' ')
-    .replace(/\w\S*/g, (t) => t.charAt(0).toUpperCase() + t.substring(1).toLowerCase());
+    .replaceAll("_", " ")
+    .replace(/\w\S*/g, (t) => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
 };
 
-export const removeFormatting = (s: string): string => s.replace(/§./g, '');
+export const removeFormatting = (s: string): string => s.replace(/§./g, "");
 
 export interface FormatTimeOptions {
   /**
@@ -135,15 +133,15 @@ export interface FormatTimeOptions {
    */
   entries?: number;
 
-  accuracy?: 'day' | 'hour' | 'minute' | 'second' | 'millisecond';
+  accuracy?: "day" | "hour" | "minute" | "second" | "millisecond";
 }
 
 //Format milliseconds to a human readable string
 export const formatTime = (
   ms: number,
-  { short = true, entries = 2, accuracy = 'millisecond' }: FormatTimeOptions = {}
+  { short = true, entries = 2, accuracy = "millisecond" }: FormatTimeOptions = {}
 ): string => {
-  if (ms < 1000) return `${ms}${short ? 'ms' : ' milliseconds'}`;
+  if (ms < 1000) return `${ms}${short ? "ms" : " milliseconds"}`;
 
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
@@ -151,11 +149,11 @@ export const formatTime = (
   const days = Math.floor(hours / 24);
 
   let time = [
-    { value: days, short: 'd', long: 'day' },
-    { value: hours % 24, short: 'h', long: 'hour' },
-    { value: minutes % 60, short: 'm', long: 'minute' },
-    { value: seconds % 60, short: 's', long: 'second' },
-    { value: ms - seconds * 1000, short: 'ms', long: 'millisecond' },
+    { value: days, short: "d", long: "day" },
+    { value: hours % 24, short: "h", long: "hour" },
+    { value: minutes % 60, short: "m", long: "minute" },
+    { value: seconds % 60, short: "s", long: "second" },
+    { value: ms - seconds * 1000, short: "ms", long: "millisecond" },
   ];
 
   time = time.slice(0, time.findIndex((v) => v.long == accuracy) + 1);
@@ -163,24 +161,32 @@ export const formatTime = (
   return time
     .filter(({ value }) => value > 0)
     .map(
-      (unit) => `${unit.value}${short ? unit.short : ` ${unit.long}${unit.value > 1 ? 's' : ''}`}`
+      (unit) =>
+        `${unit.value}${short ? unit.short : ` ${unit.long}${unit.value > 1 ? "s" : ""}`}`
     )
     .splice(0, entries)
-    .join(', ');
+    .join(", ");
 };
 
 export const abbreviationNumber = (num: number): string => {
-  const abbreviation = ['', '', 'M', 'B', 'T'];
+  const abbreviation = ["", "", "M", "B", "T"];
   const base = Math.floor(Math.log(num) / Math.log(1000));
   return `${(num / Math.pow(1000, base)).toFixed(2)}${abbreviation[base]}`;
 };
 
-export const arrayGroup = <T extends Array<any> | string>(arr: T, groupSize: number): T[] =>
+export const arrayGroup = <T extends Array<any> | string>(
+  arr: T,
+  groupSize: number
+): T[] =>
   Array.from({ length: Math.ceil(arr.length / groupSize) }, (_, i) =>
     arr.slice(i * groupSize, (i + 1) * groupSize)
   ) as T[];
 
-export const wordGroup = (input: string, wordCount: number, list: string[] = []): string[] => {
+export const wordGroup = (
+  input: string,
+  wordCount: number,
+  list: string[] = []
+): string[] => {
   const size = wordCount * 5;
 
   if (input.length <= size) {
@@ -188,21 +194,21 @@ export const wordGroup = (input: string, wordCount: number, list: string[] = [])
     return list;
   }
 
-  let line = input.substring(0, size);
+  let line = input.slice(0, Math.max(0, size));
 
   const lastSpaceRgx = /\s(?!.*\s)/;
   const index = line.search(lastSpaceRgx) + 1;
   let nextIndex = size;
 
   if (index > 0) {
-    line = line.substring(0, index);
+    line = line.slice(0, Math.max(0, index));
     nextIndex = index;
   }
 
   list.push(line);
 
-  return wordGroup(input.substring(nextIndex), wordCount, list);
+  return wordGroup(input.slice(Math.max(0, nextIndex)), wordCount, list);
 };
 
-export * from './flat';
-export * from './minecraft-colors';
+export * from "./flat";
+export * from "./minecraft-colors";

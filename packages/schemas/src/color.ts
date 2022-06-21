@@ -6,25 +6,25 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { minecraftColors as colors } from '@statsify/util';
-import { Field } from './metadata';
+import { Field } from "./metadata";
+import { minecraftColors as colors } from "@statsify/util";
 
-export type ColorCode = typeof colors[number]['code'];
+export type ColorCode = typeof colors[number]["code"];
 
-export type ColorHex = typeof colors[number]['hex'];
+export type ColorHex = typeof colors[number]["hex"];
 
 /**
  * The name of the color in all caps
  */
-export type ColorId = typeof colors[number]['id'];
+export type ColorId = typeof colors[number]["id"];
 
 export class Color {
   @Field({
     docs: {
       enum: colors.map((c) => c.code),
-      enumName: 'ColorCode',
+      enumName: "ColorCode",
       examples: [colors[0].code],
-      description: 'A Minecraft color code',
+      description: "A Minecraft color code",
     },
     type: () => String,
   })
@@ -33,9 +33,9 @@ export class Color {
   @Field({
     docs: {
       enum: colors.map((c) => c.hex),
-      enumName: 'ColorHex',
+      enumName: "ColorHex",
       examples: [colors[0].hex],
-      description: 'A hex color code',
+      description: "A hex color code",
     },
     type: () => String,
   })
@@ -44,9 +44,9 @@ export class Color {
   @Field({
     docs: {
       enum: colors.map((c) => c.id),
-      enumName: 'ColorId',
+      enumName: "ColorId",
       examples: [colors[0].id],
-      description: 'A name of a Minecraft color',
+      description: "A name of a Minecraft color",
     },
     type: () => String,
   })

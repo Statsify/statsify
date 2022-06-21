@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { CopsAndCrimsModes, FormattedGame } from '@statsify/schemas';
-import { formatTime, prettify } from '@statsify/util';
-import { BaseProfileProps } from '../base.hypixel-command';
+import { BaseProfileProps } from "../base.hypixel-command";
+import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { CopsAndCrimsModes, FormattedGame } from "@statsify/schemas";
+import { formatTime, prettify } from "@statsify/util";
 
 export interface CopsAndCrimsProfileProps extends BaseProfileProps {
   mode: CopsAndCrimsModes[number];
@@ -29,51 +29,67 @@ export const CopsAndCrimsProfile = ({
   const { copsandcrims } = player.stats;
 
   const sidebar: SidebarItem[] = [
-    [t('stats.coins'), t(copsandcrims.coins), '§6'],
-    [t('stats.overallWins'), t(copsandcrims.wins), '§a'],
+    [t("stats.coins"), t(copsandcrims.coins), "§6"],
+    [t("stats.overallWins"), t(copsandcrims.wins), "§a"],
   ];
 
   let table: JSX.Element;
 
   switch (mode) {
-    case 'defusal': {
+    case "defusal": {
       const stats = copsandcrims[mode];
 
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-            <Table.td title={t('stats.roundWins')} value={t(stats.roundWins)} color="§b" />
+            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+            <Table.td
+              title={t("stats.roundWins")}
+              value={t(stats.roundWins)}
+              color="§b"
+            />
           </Table.tr>
           <Table.tr>
-            <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
-            <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
-            <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
-            <Table.td title={t('stats.assists')} value={t(stats.assists)} color="§e" />
+            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+            <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
           </Table.tr>
           <Table.tr>
-            <Table.td title={t('stats.bombsDefused')} value={t(stats.bombsDefused)} color="§a" />
-            <Table.td title={t('stats.bombsPlanted')} value={t(stats.bombsPlanted)} color="§c" />
-            <Table.td title={t('stats.headshotKills')} value={t(stats.headshotKills)} color="§6" />
+            <Table.td
+              title={t("stats.bombsDefused")}
+              value={t(stats.bombsDefused)}
+              color="§a"
+            />
+            <Table.td
+              title={t("stats.bombsPlanted")}
+              value={t(stats.bombsPlanted)}
+              color="§c"
+            />
+            <Table.td
+              title={t("stats.headshotKills")}
+              value={t(stats.headshotKills)}
+              color="§6"
+            />
           </Table.tr>
         </Table.table>
       );
 
       break;
     }
-    case 'deathmatch': {
+    case "deathmatch": {
       const stats = copsandcrims[mode];
 
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§e" />
-            <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
+            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§e" />
+            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
           </Table.tr>
           <Table.tr>
-            <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
-            <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
-            <Table.td title={t('stats.assists')} value={t(stats.assists)} color="§e" />
+            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+            <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
           </Table.tr>
         </Table.table>
       );
@@ -81,20 +97,24 @@ export const CopsAndCrimsProfile = ({
       break;
     }
 
-    case 'gunGame': {
+    case "gunGame": {
       const stats = copsandcrims[mode];
 
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-            <Table.td title={t('stats.bestTime')} value={formatTime(stats.fastestWin)} color="§b" />
+            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+            <Table.td
+              title={t("stats.bestTime")}
+              value={formatTime(stats.fastestWin)}
+              color="§b"
+            />
           </Table.tr>
           <Table.tr>
-            <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
-            <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
-            <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
-            <Table.td title={t('stats.assists')} value={t(stats.assists)} color="§e" />
+            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+            <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
           </Table.tr>
         </Table.table>
       );

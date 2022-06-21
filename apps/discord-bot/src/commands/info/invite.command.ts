@@ -6,38 +6,41 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { INFO_COLOR } from '#constants';
-import { getLogoPath } from '@statsify/assets';
-import { Command, EmbedBuilder, IMessage } from '@statsify/discord';
-import { UserTier } from '@statsify/schemas';
-import { readFile } from 'fs/promises';
+import { Command, EmbedBuilder, IMessage } from "@statsify/discord";
+import { INFO_COLOR } from "#constants";
+import { UserTier } from "@statsify/schemas";
+import { getLogoPath } from "@statsify/assets";
+import { readFile } from "node:fs/promises";
 
-@Command({ description: (t) => t('commands.info') })
+@Command({ description: (t) => t("commands.info") })
 export class InviteCommand {
   public async run(): Promise<IMessage> {
     const embed = new EmbedBuilder()
-      .title((t) => t('embeds.invite.title'))
+      .title((t) => t("embeds.invite.title"))
       .color(INFO_COLOR)
       .description((t) => {
-        const description = t('embeds.invite.description');
+        const description = t("embeds.invite.description");
 
         const links = [
-          `**${t('socials.invite', { id: process.env.DISCORD_BOT_APPLICATION_ID })}**`,
-          t('socials.discord'),
-          t('socials.premium'),
-          t('socials.website'),
-          t('socials.github'),
-          t('socials.forums'),
+          `**${t("socials.invite", { id: process.env.DISCORD_BOT_APPLICATION_ID })}**`,
+          t("socials.discord"),
+          t("socials.premium"),
+          t("socials.website"),
+          t("socials.github"),
+          t("socials.forums"),
         ]
           .map((link) => `\`•\` ${link}`)
-          .join('\n');
+          .join("\n");
 
         return `${description}\n\n${links}`;
       })
-      .thumbnail('attachment://logo.png');
+      .thumbnail("attachment://logo.png");
 
     const logo = await readFile(getLogoPath(UserTier.NONE, 64));
 
-    return { embeds: [embed], files: [{ name: 'logo.png', data: logo, type: 'image/png' }] };
+    return {
+      embeds: [embed],
+      files: [{ name: "logo.png", data: logo, type: "image/png" }],
+    };
   }
 }

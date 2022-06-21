@@ -6,18 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from '@statsify/util';
-import { Color, ColorCode } from '../../../color';
-import { Field } from '../../../metadata';
+import { APIData } from "@statsify/util";
 import {
   BuildBattleGuessTheBuild,
   BuildBattleMultiplayerMode,
   BuildBattleOverall,
   BuildBattlePro,
-} from './mode';
-import { getTitleIndex, titleScores } from './util';
+} from "./mode";
+import { Color, ColorCode } from "../../../color";
+import { Field } from "../../../metadata";
+import { getTitleIndex, titleScores } from "./util";
 
-export const BUILD_BATTLE_MODES = ['overall'] as const;
+export const BUILD_BATTLE_MODES = ["overall"] as const;
 export type BuildBattleModes = typeof BUILD_BATTLE_MODES;
 
 export class BuildBattle {
@@ -62,8 +62,8 @@ export class BuildBattle {
 
   public constructor(data: APIData) {
     this.overall = new BuildBattleOverall(data);
-    this.solo = new BuildBattleMultiplayerMode(data, 'solo');
-    this.teams = new BuildBattleMultiplayerMode(data, 'teams');
+    this.solo = new BuildBattleMultiplayerMode(data, "solo");
+    this.teams = new BuildBattleMultiplayerMode(data, "teams");
     this.pro = new BuildBattlePro(data);
     this.guessTheBuild = new BuildBattleGuessTheBuild(data);
 
@@ -83,4 +83,4 @@ export class BuildBattle {
   }
 }
 
-export * from './mode';
+export * from "./mode";

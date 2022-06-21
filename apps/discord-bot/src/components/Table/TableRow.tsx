@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { useChildren } from '@statsify/rendering';
+import { useChildren } from "@statsify/rendering";
 
 export interface TableRow {
   children: JSX.Children;

@@ -6,31 +6,40 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
+import { Auth } from "../../auth";
+import { Body, Controller, Post } from "@nestjs/common";
 import {
   ErrorResponse,
   LeaderboardQuery,
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
-} from '@statsify/api-client';
-import { Player } from '@statsify/schemas';
-import { Auth } from '../../auth';
-import { PlayerLeaderboardDto } from '../../dtos/player-leaderboard.dto';
-import { PlayerRankingsDto } from '../../dtos/player-rankings.dto';
-import { PlayerLeaderboardService } from './player-leaderboard.service';
+} from "@statsify/api-client";
+import { Player } from "@statsify/schemas";
+import { PlayerLeaderboardDto } from "../../dtos/player-leaderboard.dto";
+import { PlayerLeaderboardService } from "./player-leaderboard.service";
+import { PlayerRankingsDto } from "../../dtos/player-rankings.dto";
 
-@Controller('/player/leaderboards')
-@ApiTags('Player Leaderboards')
+@Controller("/player/leaderboards")
+@ApiTags("Player Leaderboards")
 export class PlayerLeaderboardsController {
-  public constructor(private readonly playerLeaderboardService: PlayerLeaderboardService) {}
+  public constructor(
+    private readonly playerLeaderboardService: PlayerLeaderboardService
+  ) {}
 
   @Post()
-  @ApiOperation({ summary: 'Get a Player Leaderboard' })
+  @ApiOperation({ summary: "Get a Player Leaderboard" })
   @ApiOkResponse({ type: PostLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
-  public getPlayerLeaderboard(@Body() { field, page, player, position }: PlayerLeaderboardDto) {
+  public getPlayerLeaderboard(
+    @Body() { field, page, player, position }: PlayerLeaderboardDto
+  ) {
     let input: number | string;
     let type: LeaderboardQuery;
 
@@ -48,8 +57,8 @@ export class PlayerLeaderboardsController {
     return this.playerLeaderboardService.getLeaderboard(Player, field, input, type);
   }
 
-  @Post('/rankings')
-  @ApiOperation({ summary: 'Get a Player Rankings' })
+  @Post("/rankings")
+  @ApiOperation({ summary: "Get a Player Rankings" })
   @ApiOkResponse({ type: [PostLeaderboardRankingsResponse] })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 5 })

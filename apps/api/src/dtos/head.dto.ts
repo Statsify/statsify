@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { IsInt, IsOptional, Max, Min } from 'class-validator';
-import { UuidDto } from './uuid.dto';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsInt, IsOptional, Max, Min } from "class-validator";
+import { Transform } from "class-transformer";
+import { UuidDto } from "./uuid.dto";
 
 export class HeadDto extends UuidDto {
   @IsOptional()
@@ -17,6 +17,11 @@ export class HeadDto extends UuidDto {
   @IsInt()
   @Min(8)
   @Max(800)
-  @ApiProperty({ description: 'The size of the head', default: 160, minimum: 8, maximum: 800 })
+  @ApiProperty({
+    description: "The size of the head",
+    default: 160,
+    minimum: 8,
+    maximum: 800,
+  })
   public size = 160;
 }

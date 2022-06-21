@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { randomUUID } from 'crypto';
 import {
   APIMessageComponentEmoji,
   APISelectMenuComponent,
   APISelectMenuOption,
   ComponentType,
-} from 'discord-api-types/v10';
-import { LocalizationString, LocalizeFunction, translateField } from '../localize';
+} from "discord-api-types/v10";
+import { LocalizationString, LocalizeFunction, translateField } from "../localize";
+import { randomUUID } from "node:crypto";
 
 export class SelectMenuOptionBuilder {
   #label: LocalizationString;
@@ -38,11 +38,11 @@ export class SelectMenuOptionBuilder {
   }
 
   public emoji(emoji: string): this {
-    const animated = emoji.startsWith('<a:');
-    const name = emoji.replace(/<:|<a:|>/g, '');
-    const id = name.split(':')[1];
+    const animated = emoji.startsWith("<a:");
+    const name = emoji.replaceAll("<:|<a:|>", "");
+    const id = name.split(":")[1];
 
-    this.#emoji = { name: name.replace(id, ''), animated, id };
+    this.#emoji = { name: name.replace(id, ""), animated, id };
     return this;
   }
 

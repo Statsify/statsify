@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { add, ratio } from '@statsify/math';
-import { APIData, formatTime } from '@statsify/util';
-import { Field } from '../../../metadata';
+import { APIData, formatTime } from "@statsify/util";
+import { Field } from "../../../metadata";
+import { add, ratio } from "@statsify/math";
 
 export class SkyWarsMode {
   @Field()
@@ -39,7 +39,7 @@ export class SkyWarsMode {
   public playtime: number;
 
   //Kit gets applied in the main class
-  @Field({ store: { default: 'none' } })
+  @Field({ store: { default: "none" } })
   public kit: string;
 
   public constructor(data: APIData, mode: string) {
@@ -104,9 +104,9 @@ export class SkyWarsLabs {
   public slime: SkyWarsLabMode;
 
   public constructor(data: APIData) {
-    this.tntMadness = new SkyWarsLabMode(data, 'tnt_madness');
-    this.lucky = new SkyWarsLabMode(data, 'lucky_blocks');
-    this.rush = new SkyWarsLabMode(data, 'rush');
-    this.slime = new SkyWarsLabMode(data, 'slime');
+    this.tntMadness = new SkyWarsLabMode(data, "tnt_madness");
+    this.lucky = new SkyWarsLabMode(data, "lucky_blocks");
+    this.rush = new SkyWarsLabMode(data, "rush");
+    this.slime = new SkyWarsLabMode(data, "slime");
   }
 }

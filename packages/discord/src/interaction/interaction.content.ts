@@ -11,7 +11,7 @@ import type {
   APIAttachment,
   APIBaseComponent,
   APIEmbed,
-} from 'discord-api-types/v10';
+} from "discord-api-types/v10";
 
 export interface InteractionAttachment {
   name: string;

@@ -6,10 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { loadImage } from '@statsify/rendering';
-import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from 'axios';
-import { GuildQuery, HistoricalType } from './enums';
-import { LeaderboardQuery } from './enums/leaderboard-query.enum';
+import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
   GetFriendsResponse,
   GetGamecountsResponse,
@@ -25,7 +22,10 @@ import {
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
   PutUserBadgeResponse,
-} from './responses';
+} from "./responses";
+import { GuildQuery, HistoricalType } from "./enums";
+import { LeaderboardQuery } from "./enums/leaderboard-query.enum";
+import { loadImage } from "@statsify/rendering";
 
 interface ExtraData {
   headers?: AxiosRequestHeaders;
@@ -40,22 +40,22 @@ export class ApiService {
     this.axios = Axios.create({
       baseURL: this.apiRoute,
       headers: {
-        'x-api-key': this.apiKey,
+        "x-api-key": this.apiKey,
       },
       timeout: 10_000,
     });
   }
 
   public getPlayer(tag: string) {
-    return this.requestKey<GetPlayerResponse, 'player'>(`/player`, 'player', {
+    return this.requestKey<GetPlayerResponse, "player">(`/player`, "player", {
       player: tag,
     });
   }
 
   public getRecentGames(tag: string) {
-    return this.requestKey<GetRecentGamesResponse, 'recentGames'>(
+    return this.requestKey<GetRecentGamesResponse, "recentGames">(
       `/player/recentgames`,
-      'recentGames',
+      "recentGames",
       {
         player: tag,
       }
@@ -63,13 +63,13 @@ export class ApiService {
   }
 
   public getStatus(tag: string) {
-    return this.requestKey<GetStatusResponse, 'status'>(`/player/status`, 'status', {
+    return this.requestKey<GetStatusResponse, "status">(`/player/status`, "status", {
       player: tag,
     });
   }
 
   public getFriends(tag: string) {
-    return this.requestKey<GetFriendsResponse, 'data'>(`/player/friends`, 'data', {
+    return this.requestKey<GetFriendsResponse, "data">(`/player/friends`, "data", {
       player: tag,
     });
   }
@@ -79,19 +79,19 @@ export class ApiService {
     input: string | number,
     type: LeaderboardQuery
   ): Promise<PostLeaderboardResponse | null> {
-    return this.request<PostLeaderboardResponse>('/player/leaderboards', {}, 'POST', {
+    return this.request<PostLeaderboardResponse>("/player/leaderboards", {}, "POST", {
       body: {
         field,
-        [type === LeaderboardQuery.INPUT ? 'player' : type]: input,
+        [type === LeaderboardQuery.INPUT ? "player" : type]: input,
       },
     });
   }
 
   public getPlayerRankings(fields: string[], uuid: string) {
     return this.request<PostLeaderboardRankingsResponse[]>(
-      '/player/leaderboards/rankings',
+      "/player/leaderboards/rankings",
       {},
-      'POST',
+      "POST",
       {
         body: { fields, uuid },
       }
@@ -99,26 +99,30 @@ export class ApiService {
   }
 
   public getGuild(tag: string, type: GuildQuery) {
-    return this.requestKey<GetGuildResponse, 'guild'>(`/guild`, 'guild', {
+    return this.requestKey<GetGuildResponse, "guild">(`/guild`, "guild", {
       guild: tag,
       type,
     });
   }
 
-  public getGuildLeaderboard(field: string, input: string | number, type: LeaderboardQuery) {
-    return this.request<PostLeaderboardResponse>('/guild/leaderboards', {}, 'POST', {
+  public getGuildLeaderboard(
+    field: string,
+    input: string | number,
+    type: LeaderboardQuery
+  ) {
+    return this.request<PostLeaderboardResponse>("/guild/leaderboards", {}, "POST", {
       body: {
         field,
-        [type === LeaderboardQuery.INPUT ? 'guild' : type]: input,
+        [type === LeaderboardQuery.INPUT ? "guild" : type]: input,
       },
     });
   }
 
   public getGuildRankings(fields: string[], id: string) {
     return this.request<PostLeaderboardRankingsResponse[]>(
-      '/guild/leaderboards/rankings',
+      "/guild/leaderboards/rankings",
       {},
-      'POST',
+      "POST",
       {
         body: { fields, id },
       }
@@ -126,16 +130,16 @@ export class ApiService {
   }
 
   public async getWatchdog() {
-    return this.requestKey<GetWatchdogResponse, 'watchdog'>(
+    return this.requestKey<GetWatchdogResponse, "watchdog">(
       `/hypixelresources/watchdog`,
-      'watchdog'
+      "watchdog"
     );
   }
 
   public async getGameCounts() {
-    return this.requestKey<GetGamecountsResponse, 'gamecounts'>(
+    return this.requestKey<GetGamecountsResponse, "gamecounts">(
       `/hypixelresources/gamecounts`,
-      'gamecounts'
+      "gamecounts"
     );
   }
 
@@ -148,18 +152,18 @@ export class ApiService {
   }
 
   public getPlayerHistorical(tag: string, type: HistoricalType) {
-    return this.requestKey<GetHistoricalResponse, 'player'>(`/historical`, 'player', {
+    return this.requestKey<GetHistoricalResponse, "player">(`/historical`, "player", {
       player: tag,
       type,
     });
   }
 
   public resetPlayerHistorical(tag: string) {
-    return this.request<GetPlayerResponse>(`/historical`, { player: tag }, 'DELETE');
+    return this.request<GetPlayerResponse>(`/historical`, { player: tag }, "DELETE");
   }
 
   public getKey() {
-    return this.requestKey<GetKeyResponse, 'key'>(`/auth/key`, 'key');
+    return this.requestKey<GetKeyResponse, "key">(`/auth/key`, "key");
   }
 
   public getUser(tag: string) {
@@ -173,39 +177,41 @@ export class ApiService {
   }
 
   public updateUserBadge(tag: string, badge: Buffer) {
-    return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, 'PUT', {
+    return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, "PUT", {
       body: badge,
-      headers: { 'Content-Type': 'image/png' },
+      headers: { "Content-Type": "image/png" },
     });
   }
 
   public deleteUserBadge(tag: string) {
-    return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, 'DELETE');
+    return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, "DELETE");
   }
 
   public verifyUser(code: string, id: string) {
-    return this.request<GetUserResponse>(`/user`, { code, id }, 'PUT')
+    return this.request<GetUserResponse>(`/user`, { code, id }, "PUT")
       .then((data) => data.user ?? null)
       .catch(() => null);
   }
 
   public unverifyUser(tag: string) {
-    return this.request<GetUserResponse>(`/user`, { tag }, 'DELETE')
+    return this.request<GetUserResponse>(`/user`, { tag }, "DELETE")
       .then((data) => data.user ?? null)
       .catch(() => null);
   }
 
   public getResource(path: string) {
-    return this.request<GetResourceResponse>('/hypixelresources/resource', { path }, 'GET').catch(
-      () => null
-    );
+    return this.request<GetResourceResponse>(
+      "/hypixelresources/resource",
+      { path },
+      "GET"
+    ).catch(() => null);
   }
 
   private async requestKey<T, K extends keyof T>(
     url: string,
     key: K,
     params?: Record<string, unknown>,
-    method: Method = 'GET'
+    method: Method = "GET"
   ) {
     const data = await this.request<T>(url, params, method);
 
@@ -219,7 +225,7 @@ export class ApiService {
   private async request<T>(
     url: string,
     params: Record<string, unknown> | undefined,
-    method: Method = 'GET',
+    method: Method = "GET",
     { body, headers, responseType }: ExtraData = {}
   ): Promise<T> {
     const res = await this.axios.request({
@@ -233,7 +239,7 @@ export class ApiService {
 
     const data = res.data;
 
-    if (data.success === false) throw new Error('API request was unsuccessful');
+    if (data.success === false) throw new Error("API request was unsuccessful");
 
     return data;
   }

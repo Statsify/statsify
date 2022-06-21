@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { useComponentWidth } from '@statsify/rendering';
-import { Guild, GuildRank, UserTier } from '@statsify/schemas';
-import type { Image } from 'skia-canvas';
+import { Container, Footer } from "#components";
+import { Guild, GuildRank, UserTier } from "@statsify/schemas";
+import { LocalizeFunction } from "@statsify/discord";
+import { useComponentWidth } from "@statsify/rendering";
+import type { Image } from "skia-canvas";
 
 export interface GuildListProfileProps {
   guild: Guild;
@@ -20,7 +20,13 @@ export interface GuildListProfileProps {
   tier?: UserTier;
 }
 
-export const GuildListProfile = ({ guild, background, logo, tier, t }: GuildListProfileProps) => {
+export const GuildListProfile = ({
+  guild,
+  background,
+  logo,
+  tier,
+  t,
+}: GuildListProfileProps) => {
   // The width of each member row
   const WIDTH = 1600;
 
@@ -35,7 +41,7 @@ export const GuildListProfile = ({ guild, background, logo, tier, t }: GuildList
 
   guild.members.forEach((member) => {
     rankMap[member.rank] = rankMap[member.rank] ?? [];
-    rankMap[member.rank].push(member.displayName ?? 'ERROR');
+    rankMap[member.rank].push(member.displayName ?? "ERROR");
   });
 
   //A map of the all the ranks in the guild
@@ -47,22 +53,23 @@ export const GuildListProfile = ({ guild, background, logo, tier, t }: GuildList
   const ranks = Object.entries(rankMap)
     .sort(
       ([rankNameA], [rankNameB]) =>
-        (guildRankMap[rankNameB]?.priority ?? 0) - (guildRankMap[rankNameA]?.priority ?? 0)
+        (guildRankMap[rankNameB]?.priority ?? 0) -
+        (guildRankMap[rankNameA]?.priority ?? 0)
     )
     .map(([rankName, members]) => {
       const guildRank = guildRankMap[rankName];
 
       const guildRankName = guildRank
-        ? `${guildRank.name}${guildRank.tag ? ` [${guildRank.tag}]` : ''}`
+        ? `${guildRank.name}${guildRank.tag ? ` [${guildRank.tag}]` : ""}`
         : rankName;
 
       const rows: JSX.Element[][] = [[]];
       let currentRowWidth = 0;
 
-      for (let i = 0; i < members.length; i++) {
+      for (const member of members) {
         const memberBox = (
           <box padding={{ left: 10, right: 10, top: 4, bottom: 4 }}>
-            <text margin={0}>{members[i]}</text>
+            <text margin={0}>{member}</text>
           </box>
         );
 

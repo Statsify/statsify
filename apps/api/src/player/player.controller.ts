@@ -6,14 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Controller, Delete, Get, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
-} from '@nestjs/swagger';
+} from "@nestjs/swagger";
+import { Auth } from "../auth/auth.decorator";
+import { AuthRole } from "../auth";
+import { CachedPlayerDto } from "../dtos";
+import { Controller, Delete, Get, Query } from "@nestjs/common";
 import {
   DeletePlayerResponse,
   ErrorResponse,
@@ -24,19 +27,16 @@ import {
   PlayerNotFoundException,
   RecentGamesNotFoundException,
   StatusNotFoundException,
-} from '@statsify/api-client';
-import { AuthRole } from '../auth';
-import { Auth } from '../auth/auth.decorator';
-import { CachedPlayerDto } from '../dtos';
-import { PlayerDto } from '../dtos/player.dto';
-import { PlayerService } from './player.service';
+} from "@statsify/api-client";
+import { PlayerDto } from "../dtos/player.dto";
+import { PlayerService } from "./player.service";
 
-@Controller('/player')
-@ApiTags('Player')
+@Controller("/player")
+@ApiTags("Player")
 export class PlayerController {
   public constructor(private readonly playerService: PlayerService) {}
 
-  @ApiOperation({ summary: 'Get a Player' })
+  @ApiOperation({ summary: "Get a Player" })
   @ApiOkResponse({ type: GetPlayerResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiNotFoundResponse({ type: PlayerNotFoundException })
@@ -53,7 +53,7 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Deletes a Player' })
+  @ApiOperation({ summary: "Deletes a Player" })
   @ApiOkResponse({ type: DeletePlayerResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
@@ -66,13 +66,13 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Get the Recent Games of a Player' })
+  @ApiOperation({ summary: "Get the Recent Games of a Player" })
   @ApiOkResponse({ type: GetRecentGamesResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiNotFoundResponse({ type: RecentGamesNotFoundException })
   @ApiNotFoundResponse({ type: PlayerNotFoundException })
   @Auth()
-  @Get('/recentgames')
+  @Get("/recentgames")
   public async getRecentGames(@Query() { player: tag }: PlayerDto) {
     const recentGames = await this.playerService.getRecentGames(tag);
 
@@ -82,13 +82,13 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Get the Status of a Player' })
+  @ApiOperation({ summary: "Get the Status of a Player" })
   @ApiOkResponse({ type: GetStatusResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiNotFoundResponse({ type: StatusNotFoundException })
   @ApiNotFoundResponse({ type: PlayerNotFoundException })
   @Auth({ weight: 2 })
-  @Get('/status')
+  @Get("/status")
   public async getStatus(@Query() { player: tag }: PlayerDto) {
     const status = await this.playerService.getStatus(tag);
 
@@ -98,12 +98,12 @@ export class PlayerController {
     };
   }
 
-  @ApiOperation({ summary: 'Get the Friends of a Player' })
+  @ApiOperation({ summary: "Get the Friends of a Player" })
   @ApiOkResponse({ type: GetFriendsResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiNotFoundResponse({ type: PlayerNotFoundException })
   @Auth({ weight: 10 })
-  @Get('/friends')
+  @Get("/friends")
   public async getFriends(@Query() { player: tag, cache }: CachedPlayerDto) {
     const friends = await this.playerService.getFriends(tag, cache);
 

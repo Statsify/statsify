@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ElementNode, getTotalSize } from '../jsx';
+import { ElementNode, getTotalSize } from "../jsx";
 
 interface UseComponentSizeOptions {
   includeMargin?: boolean;
@@ -16,8 +16,12 @@ interface UseComponentSizeOptions {
 
 const useComponentSize = (
   node: ElementNode,
-  side: 'x' | 'y',
-  { includeMargin = true, includePadding = true, includeSize = true }: UseComponentSizeOptions = {}
+  side: "x" | "y",
+  {
+    includeMargin = true,
+    includePadding = true,
+    includeSize = true,
+  }: UseComponentSizeOptions = {}
 ): number =>
   getTotalSize(node[side], {
     margin: includeMargin,
@@ -26,7 +30,7 @@ const useComponentSize = (
   });
 
 export const useComponentWidth = (node: ElementNode, opts?: UseComponentSizeOptions) =>
-  useComponentSize(node, 'x', opts);
+  useComponentSize(node, "x", opts);
 
 export const useComponentHeight = (node: ElementNode, opts?: UseComponentSizeOptions) =>
-  useComponentSize(node, 'y', opts);
+  useComponentSize(node, "y", opts);

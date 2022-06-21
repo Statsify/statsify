@@ -6,18 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PlayerArgument } from '#arguments';
-import { GamesWithBackgrounds, mapBackground } from '#constants';
-import { ApiService, Page, PaginateService } from '#services';
-import { HistoricalType } from '@statsify/api-client';
-import { getBackground, getLogo } from '@statsify/assets';
-import { Command, CommandContext, LocalizeFunction } from '@statsify/discord';
-import { render } from '@statsify/rendering';
-import type { Player, UserTier } from '@statsify/schemas';
-import { noop, prettify } from '@statsify/util';
-import type { Image } from 'skia-canvas';
-import Container from 'typedi';
-import { getTheme } from '../themes';
+import Container from "typedi";
+import { ApiService, Page, PaginateService } from "#services";
+import { Command, CommandContext, LocalizeFunction } from "@statsify/discord";
+import { GamesWithBackgrounds, mapBackground } from "#constants";
+import { HistoricalType } from "@statsify/api-client";
+import { PlayerArgument } from "#arguments";
+import { getBackground, getLogo } from "@statsify/assets";
+import { getTheme } from "../themes";
+import { noop, prettify } from "@statsify/util";
+import { render } from "@statsify/rendering";
+import type { Image } from "skia-canvas";
+import type { Player, UserTier } from "@statsify/schemas";
 
 export interface BaseProfileProps {
   skin: Image;
@@ -27,7 +27,7 @@ export interface BaseProfileProps {
   tier?: UserTier;
   badge?: Image;
   t: LocalizeFunction;
-  time: 'LIVE' | HistoricalType;
+  time: "LIVE" | HistoricalType;
 }
 
 export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
@@ -42,7 +42,7 @@ export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
 }
 
 @Command({
-  description: '',
+  description: "",
   args: [PlayerArgument],
   cooldown: 5,
 })
@@ -58,7 +58,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    const player = await this.apiService.getPlayer(context.option('player'), user);
+    const player = await this.apiService.getPlayer(context.option("player"), user);
 
     const [logo, skin, badge] = await Promise.all([
       getLogo(user?.tier),
@@ -73,7 +73,9 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     const pages: Page[] = filteredModes.map((mode) => ({
       label: prettify(mode),
       generator: async (t) => {
-        const background = await getBackground(...mapBackground(this.modes, mode as T[number]));
+        const background = await getBackground(
+          ...mapBackground(this.modes, mode as T[number])
+        );
 
         const profile = this.getProfile(
           {
@@ -84,7 +86,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
             t,
             tier: user?.tier,
             badge,
-            time: 'LIVE',
+            time: "LIVE",
           },
           { mode: mode as T[number], data }
         );
@@ -96,5 +98,8 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     return this.paginateService.paginate(context, pages);
   }
 
-  public abstract getProfile(base: BaseProfileProps, extra: ProfileData<T, K>): JSX.Element;
+  public abstract getProfile(
+    base: BaseProfileProps,
+    extra: ProfileData<T, K>
+  ): JSX.Element;
 }

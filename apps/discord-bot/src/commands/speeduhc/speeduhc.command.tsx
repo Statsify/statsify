@@ -6,12 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from '@statsify/discord';
-import { SpeedUHCModes, SPEED_UHC_MODES } from '@statsify/schemas';
-import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
-import { SpeedUHCProfile } from './speeduhc.profile';
+import {
+  BaseHypixelCommand,
+  BaseProfileProps,
+  ProfileData,
+} from "../base.hypixel-command";
+import { Command } from "@statsify/discord";
+import { SPEED_UHC_MODES, SpeedUHCModes } from "@statsify/schemas";
+import { SpeedUHCProfile } from "./speeduhc.profile";
 
-@Command({ description: (t) => t('commands.speeduhc') })
+@Command({ description: (t) => t("commands.speeduhc") })
 export class SpeedUHCCommand extends BaseHypixelCommand<SpeedUHCModes> {
   public constructor() {
     super(SPEED_UHC_MODES);

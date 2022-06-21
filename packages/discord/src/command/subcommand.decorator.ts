@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { SubCommandMetadata, SubCommandOptions } from './command.interface';
+import type { SubCommandMetadata, SubCommandOptions } from "./command.interface";
 
 export function SubCommand(options: SubCommandOptions): MethodDecorator {
   return (target, propertyKey) => {
-    const oldMetadata = Reflect.getMetadata('statsify:subcommand', target);
+    const oldMetadata = Reflect.getMetadata("statsify:subcommand", target);
 
     const metadata: SubCommandMetadata = {
       ...oldMetadata,
@@ -22,6 +22,6 @@ export function SubCommand(options: SubCommandOptions): MethodDecorator {
       },
     };
 
-    Reflect.defineMetadata('statsify:subcommand', metadata, target);
+    Reflect.defineMetadata("statsify:subcommand", metadata, target);
   };
 }

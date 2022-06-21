@@ -36,9 +36,6 @@ jobs:
       - name: Install dependencies
         run: yarn --immutable
 
-      - name: Lint
-        run: yarn lint
-
       - name: Typecheck
         run: yarn test:types
 

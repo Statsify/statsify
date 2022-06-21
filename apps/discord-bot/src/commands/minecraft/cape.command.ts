@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { MojangPlayerArgument } from '#arguments';
-import { AshconResponse, MojangApiService, PaginateService } from '#services';
-import { Command, CommandContext } from '@statsify/discord';
-import { loadImage } from '@statsify/rendering';
-import { Canvas, Image } from 'skia-canvas';
-import { ErrorMessage } from '../../error.message';
+import { AshconResponse, MojangApiService, PaginateService } from "#services";
+import { Canvas, Image } from "skia-canvas";
+import { Command, CommandContext } from "@statsify/discord";
+import { ErrorMessage } from "../../error.message";
+import { MojangPlayerArgument } from "#arguments";
+import { loadImage } from "@statsify/rendering";
 
-@Command({ description: (t) => t('commands.cape'), args: [MojangPlayerArgument] })
+@Command({ description: (t) => t("commands.cape"), args: [MojangPlayerArgument] })
 export class CapeCommand {
   public constructor(
     private readonly mojangApiService: MojangApiService,
@@ -23,7 +23,10 @@ export class CapeCommand {
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    const player = await this.mojangApiService.getPlayer(context.option<string>('player'), user);
+    const player = await this.mojangApiService.getPlayer(
+      context.option<string>("player"),
+      user
+    );
 
     const capes = await Promise.all([
       this.getOptifineCape(player.username),
@@ -32,12 +35,15 @@ export class CapeCommand {
 
     const pages = capes
       .filter((c) => !!c.image)
-      .map((c) => ({ label: c.label, generator: () => this.renderCape(c.image as Image) }));
+      .map((c) => ({
+        label: c.label,
+        generator: () => this.renderCape(c.image as Image),
+      }));
 
     if (!pages.length)
       return new ErrorMessage(
-        (t) => t('errors.noCape.title'),
-        (t) => t('errors.noCape.description')
+        (t) => t("errors.noCape.title"),
+        (t) => t("errors.noCape.description")
       );
 
     return this.paginateService.paginate(context, pages);
@@ -45,8 +51,10 @@ export class CapeCommand {
 
   private async getOptifineCape(username: string) {
     return {
-      label: 'Optifine',
-      image: await loadImage(`http://s.optifine.net/capes/${username}.png`).catch(() => null),
+      label: "Optifine",
+      image: await loadImage(`http://s.optifine.net/capes/${username}.png`).catch(
+        () => null
+      ),
     };
   }
 
@@ -55,12 +63,12 @@ export class CapeCommand {
       ? await loadImage(player.textures.cape.url).catch(() => null)
       : null;
 
-    return { label: 'Mojang', image };
+    return { label: "Mojang", image };
   }
 
   private renderCape(cape: Image) {
     const canvas = new Canvas(636, 1024);
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
     let height: number;

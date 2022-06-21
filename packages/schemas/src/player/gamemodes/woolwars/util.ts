@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { findScore } from '@statsify/util';
+import { findScore } from "@statsify/util";
 
 //TODO(jacobk999): Figure out how leveling works after 100
 
@@ -20,9 +20,9 @@ export const getExpReq = (level: number) => {
 };
 
 export const getLevel = (exp = 0): number => {
-  const prestiges = Math.floor(exp / 490000);
+  const prestiges = Math.floor(exp / 490_000);
   let level = prestiges * 100;
-  let remainingExp = exp - prestiges * 490000;
+  let remainingExp = exp - prestiges * 490_000;
 
   for (let i = 0; i < 5; ++i) {
     const expForNextLevel = getExpReq(i);
@@ -39,21 +39,17 @@ const applyFormat = ({ format }: { format: string[] }, n: number) => {
     return `${format[0]}${n}${format[1]}`;
   }
 
-  const nums = n
-    .toString()
-    .split('')
-    .map((v, i) => (v = `${format[i] ?? ''}${v}`))
-    .join();
+  const nums = [...n.toString()].map((v, i) => (v = `${format[i] ?? ""}${v}`)).join(",");
 
-  return `${nums}${format[format.length - 1]}`;
+  return `${nums}${format.at(-1)}`;
 };
 
 export const getFormattedLevel = (star: number): string => {
   star = Math.floor(star);
 
   const prestigeColors: { req: number; format: string[] }[] = [
-    { req: 0, format: ['§7[', '✫]'] },
-    { req: 100, format: ['§f[', '✫]'] },
+    { req: 0, format: ["§7[", "✫]"] },
+    { req: 100, format: ["§f[", "✫]"] },
   ];
 
   return applyFormat(findScore(prestigeColors, star), star);

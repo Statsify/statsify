@@ -6,32 +6,29 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LeaderboardQuery, PostLeaderboardResponse } from '@statsify/api-client';
-import { getLogo } from '@statsify/assets';
 import {
   ActionRowBuilder,
   ButtonBuilder,
   CommandContext,
   IMessage,
   Interaction,
-  LocalizeFunction,
   ModalBuilder,
   TextInputBuilder,
-} from '@statsify/discord';
-import { render } from '@statsify/rendering';
-import { UserTier } from '@statsify/schemas';
-import { ButtonStyle, InteractionResponseType } from 'discord-api-types/v10';
-import type { Image } from 'skia-canvas';
-import { CommandListener } from '../../command.listener';
-import { ErrorMessage } from '../../error.message';
+} from "@statsify/discord";
+import { ButtonStyle, InteractionResponseType } from "discord-api-types/v10";
+import { CommandListener } from "../../command.listener";
+import { ErrorMessage } from "../../error.message";
 import {
-  LeaderboardData,
   LeaderboardProfile,
   LeaderboardProfileProps,
   LeaderboardType,
-} from './leaderboard.profile';
+} from "./leaderboard.profile";
+import { LeaderboardQuery, PostLeaderboardResponse } from "@statsify/api-client";
+import { getLogo } from "@statsify/assets";
+import { render } from "@statsify/rendering";
+import type { Image } from "skia-canvas";
 
-type BaseLeaderboardProps = Omit<LeaderboardProfileProps, 'fields' | 'name' | 'data'>;
+type BaseLeaderboardProps = Omit<LeaderboardProfileProps, "fields" | "name" | "data">;
 
 interface LeaderboardParams {
   input: string | number;
@@ -79,46 +76,50 @@ export class BaseLeaderboardCommand {
       type,
     };
 
-    const up = new ButtonBuilder().emoji(t('emojis:up')).style(ButtonStyle.Success).disable(true);
-    const down = new ButtonBuilder().emoji(t('emojis:down')).style(ButtonStyle.Danger);
+    const up = new ButtonBuilder()
+      .emoji(t("emojis:up"))
+      .style(ButtonStyle.Success)
+      .disable(true);
+    const down = new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger);
 
     const searchDocument = new ButtonBuilder()
       .emoji(t(`emojis:search.${type}`))
       .style(ButtonStyle.Primary);
 
     const searchPosition = new ButtonBuilder()
-      .emoji(t('emojis:search.position'))
+      .emoji(t("emojis:search.position"))
       .style(ButtonStyle.Primary);
 
     let currentPage = 0;
 
-    const changePage = (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
-      const params = fn();
+    const changePage =
+      (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
+        const params = fn();
 
-      const [message, page] = await this.getLeaderboardMessage(
-        cache,
-        type,
-        getLeaderboard,
-        field,
-        params,
-        props,
-        getLeaderboardDataIcon
-      );
+        const [message, page] = await this.getLeaderboardMessage(
+          cache,
+          type,
+          getLeaderboard,
+          field,
+          params,
+          props,
+          getLeaderboardDataIcon
+        );
 
-      if (interaction.getUserId() === userId && !message.ephemeral) {
-        up.disable(page === 0);
-        currentPage = page || currentPage;
-        const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
+        if (interaction.getUserId() === userId && !message.ephemeral) {
+          up.disable(page === 0);
+          currentPage = page || currentPage;
+          const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
 
-        context.reply({
-          ...message,
-          components: [row],
-          attachments: [],
-        });
-      } else {
-        interaction.sendFollowup({ ...message, ephemeral: true });
-      }
-    };
+          context.reply({
+            ...message,
+            components: [row],
+            attachments: [],
+          });
+        } else {
+          interaction.sendFollowup({ ...message, ephemeral: true });
+        }
+      };
 
     const listener = CommandListener.getInstance();
 
@@ -139,7 +140,7 @@ export class BaseLeaderboardCommand {
     );
 
     const documentModal = new ModalBuilder()
-      .title((t) => t('leaderboard.modal.title'))
+      .title((t) => t("leaderboard.modal.title"))
       .component(
         new ActionRowBuilder().component(
           new TextInputBuilder()
@@ -150,12 +151,12 @@ export class BaseLeaderboardCommand {
       );
 
     const positionModal = new ModalBuilder()
-      .title((t) => t('leaderboard.modal.title'))
+      .title((t) => t("leaderboard.modal.title"))
       .component(
         new ActionRowBuilder().component(
           new TextInputBuilder()
-            .label((t) => t('leaderboard.positionInput.label'))
-            .placeholder((t) => t('leaderboard.positionInput.placeholder'))
+            .label((t) => t("leaderboard.positionInput.label"))
+            .placeholder((t) => t("leaderboard.positionInput.placeholder"))
             .required(true)
         )
       );
@@ -173,13 +174,17 @@ export class BaseLeaderboardCommand {
     listener.addHook(documentModal.getCustomId(), async (interaction) => {
       const data = interaction.getData();
       const documentInput = data.components[0].components[0].value;
-      changePage(() => ({ input: documentInput, type: LeaderboardQuery.INPUT }))(interaction);
+      changePage(() => ({ input: documentInput, type: LeaderboardQuery.INPUT }))(
+        interaction
+      );
     });
 
     listener.addHook(positionModal.getCustomId(), async (interaction) => {
       const data = interaction.getData();
       const positionInput = data.components[0].components[0].value;
-      changePage(() => ({ input: positionInput, type: LeaderboardQuery.POSITION }))(interaction);
+      changePage(() => ({ input: positionInput, type: LeaderboardQuery.POSITION }))(
+        interaction
+      );
     });
 
     const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
@@ -265,8 +270,8 @@ export class BaseLeaderboardCommand {
     if (!leaderboard?.data.length) {
       const message = {
         ...new ErrorMessage(
-          (t) => t('errors.leaderboardEmpty.title'),
-          (t) => t('errors.leaderboardEmpty.description')
+          (t) => t("errors.leaderboardEmpty.title"),
+          (t) => t("errors.leaderboardEmpty.description")
         ),
         ephemeral: true,
       };
@@ -274,18 +279,14 @@ export class BaseLeaderboardCommand {
       return [message, null];
     }
 
-    let leaderboardData: LeaderboardData[];
-
-    if (getLeaderboardDataIcon) {
-      leaderboardData = await Promise.all(
-        leaderboard.data.map(async (d) => ({
-          ...d,
-          icon: await getLeaderboardDataIcon(d.id),
-        }))
-      );
-    } else {
-      leaderboardData = leaderboard.data;
-    }
+    const leaderboardData = getLeaderboardDataIcon
+      ? await Promise.all(
+          leaderboard.data.map(async (d) => ({
+            ...d,
+            icon: await getLeaderboardDataIcon(d.id),
+          }))
+        )
+      : leaderboard.data;
 
     const canvas = render(
       <LeaderboardProfile
@@ -296,10 +297,10 @@ export class BaseLeaderboardCommand {
       />
     );
 
-    const buffer = await canvas.toBuffer('png');
+    const buffer = await canvas.toBuffer("png");
 
     const message = {
-      files: [{ name: 'leaderboard.png', data: buffer, type: 'image/png' }],
+      files: [{ name: "leaderboard.png", data: buffer, type: "image/png" }],
       embeds: [],
     };
 

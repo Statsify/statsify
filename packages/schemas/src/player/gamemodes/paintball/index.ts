@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ratio } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
-import { PaintballPerks } from './perks';
+import { APIData } from "@statsify/util";
+import { Field } from "../../../metadata";
+import { PaintballPerks } from "./perks";
+import { ratio } from "@statsify/math";
 
-export const PAINTBALL_MODES = ['overall'] as const;
+export const PAINTBALL_MODES = ["overall"] as const;
 export type PaintballModes = typeof PAINTBALL_MODES;
 
 export class Paintball {
@@ -33,7 +33,7 @@ export class Paintball {
   @Field({ leaderboard: { enabled: false } })
   public shotsFired: number;
 
-  @Field({ store: { default: 'none' } })
+  @Field({ store: { default: "none" } })
   public hat: string;
 
   @Field()
@@ -63,4 +63,4 @@ export class Paintball {
   }
 }
 
-export * from './perks';
+export * from "./perks";

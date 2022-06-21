@@ -6,26 +6,29 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { WARNING_COLOR } from '#constants';
+import Container from "typedi";
 import {
   AbstractCommandListener,
   CommandContext,
   CommandResolvable,
   Interaction,
   Message,
-} from '@statsify/discord';
-import { User, UserTier } from '@statsify/schemas';
-import { formatTime } from '@statsify/util';
-import { ApplicationCommandOptionType, InteractionResponseType } from 'discord-api-types/v10';
+} from "@statsify/discord";
+import { ApiService } from "./services";
+import {
+  ApplicationCommandOptionType,
+  InteractionResponseType,
+} from "discord-api-types/v10";
+import { ErrorMessage } from "./error.message";
+import { User, UserTier } from "@statsify/schemas";
+import { WARNING_COLOR } from "#constants";
+import { formatTime } from "@statsify/util";
 import type {
   InteractionResponse,
   InteractionServer,
   RestClient,
   WebsocketShard,
-} from 'tiny-discord';
-import Container from 'typedi';
-import { ErrorMessage } from './error.message';
-import { ApiService } from './services';
+} from "tiny-discord";
 
 export type InteractionHook = (
   interaction: Interaction
@@ -67,7 +70,8 @@ export class CommandListener extends AbstractCommandListener {
   ): InteractionResponse | Promise<InteractionResponse> {
     if (interaction.isCommandInteraction()) return this.onCommand(interaction);
     if (interaction.isAutocompleteInteraction()) return this.onAutocomplete(interaction);
-    if (interaction.isMessageComponentInteraction()) return this.onMessageComponent(interaction);
+    if (interaction.isMessageComponentInteraction())
+      return this.onMessageComponent(interaction);
     if (interaction.isModalInteraction()) return this.onModal(interaction);
 
     return { type: InteractionResponseType.Pong };
@@ -96,13 +100,13 @@ export class CommandListener extends AbstractCommandListener {
       if (response instanceof Promise)
         response
           .then((res) => {
-            if (typeof res === 'object') context.reply(res);
+            if (typeof res === "object") context.reply(res);
           })
           .catch((err) => {
             if (err instanceof Message) context.reply(err);
             else this.logger.error(err);
           });
-      else if (typeof response === 'object')
+      else if (typeof response === "object")
         return {
           type: InteractionResponseType.ChannelMessageWithSource,
           data: interaction.convertToApiData(response),
@@ -174,8 +178,10 @@ export class CommandListener extends AbstractCommandListener {
 
     const firstOption = data.options[0];
 
-    const hasSubCommandGroup = firstOption.type === ApplicationCommandOptionType.SubcommandGroup;
-    const findCommand = () => command.options?.find((opt) => opt.name === firstOption.name);
+    const hasSubCommandGroup =
+      firstOption.type === ApplicationCommandOptionType.SubcommandGroup;
+    const findCommand = () =>
+      command.options?.find((opt) => opt.name === firstOption.name);
 
     if (hasSubCommandGroup) {
       const group = findCommand();
@@ -228,8 +234,12 @@ export class CommandListener extends AbstractCommandListener {
     }
 
     throw new ErrorMessage(
-      (t) => t('cooldown.title'),
-      (t) => t('cooldown.description', { time: formatTime(cooldown - now), command: command.name }),
+      (t) => t("cooldown.title"),
+      (t) =>
+        t("cooldown.description", {
+          time: formatTime(cooldown - now),
+          command: command.name,
+        }),
       { color: WARNING_COLOR }
     );
   }

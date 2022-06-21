@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Table } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { EnderSpleef } from '@statsify/schemas';
+import { EnderSpleef } from "@statsify/schemas";
+import { LocalizeFunction } from "@statsify/discord";
+import { Table } from "#components";
 
 interface EnderSpleefTableProps {
   stats: EnderSpleef;
@@ -18,10 +18,14 @@ interface EnderSpleefTableProps {
 export const EnderSpleefTable = ({ stats, t }: EnderSpleefTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-      <Table.td title={t('stats.blocksBroken')} value={t(stats.blocksBroken)} color="§c" />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
       <Table.td
-        title={t('stats.powerupActivations')}
+        title={t("stats.blocksBroken")}
+        value={t(stats.blocksBroken)}
+        color="§c"
+      />
+      <Table.td
+        title={t("stats.powerupActivations")}
         value={t(stats.powerupActivations)}
         color="§6"
       />

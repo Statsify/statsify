@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, List } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { Guild, UserTier } from '@statsify/schemas';
-import { arrayGroup } from '@statsify/util';
-import { Image } from 'skia-canvas';
+import { Container, Footer, List } from "#components";
+import { Guild, UserTier } from "@statsify/schemas";
+import { Image } from "skia-canvas";
+import { LocalizeFunction } from "@statsify/discord";
+import { arrayGroup } from "@statsify/util";
 
 export interface GuildTopMember {
   name: string;
@@ -46,28 +46,26 @@ export const GuildTopProfile = ({
   const lists = groups.map((members, i) => (
     <List
       width={`1/${groups.length}`}
-      items={members.map((member, index) => {
-        return (
-          <>
-            <box border={{ bottomLeft: 4, topLeft: 4, bottomRight: 0, topRight: 0 }}>
-              <text>#§l{t(indexOffset + index + (groups[i - 1]?.length ?? 0))}</text>
-            </box>
-            <box
-              width="remaining"
-              border={{ bottomLeft: 0, topLeft: 0, bottomRight: 0, topRight: 0 }}
-              direction="column"
-            >
-              <text align="left">{member.name}</text>
-            </box>
-            <box
-              padding={{ left: 4, right: 4 }}
-              border={{ bottomLeft: 0, topLeft: 0, bottomRight: 4, topRight: 4 }}
-            >
-              <text>{t(member.value)}</text>
-            </box>
-          </>
-        );
-      })}
+      items={members.map((member, index) => (
+        <>
+          <box border={{ bottomLeft: 4, topLeft: 4, bottomRight: 0, topRight: 0 }}>
+            <text>#§l{t(indexOffset + index + (groups[i - 1]?.length ?? 0))}</text>
+          </box>
+          <box
+            width="remaining"
+            border={{ bottomLeft: 0, topLeft: 0, bottomRight: 0, topRight: 0 }}
+            direction="column"
+          >
+            <text align="left">{member.name}</text>
+          </box>
+          <box
+            padding={{ left: 4, right: 4 }}
+            border={{ bottomLeft: 0, topLeft: 0, bottomRight: 4, topRight: 4 }}
+          >
+            <text>{t(member.value)}</text>
+          </box>
+        </>
+      ))}
     />
   ));
 

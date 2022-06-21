@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Table } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { PartyGames } from '@statsify/schemas';
+import { LocalizeFunction } from "@statsify/discord";
+import { PartyGames } from "@statsify/schemas";
+import { Table } from "#components";
 
 interface PartyGamesTableProps {
   stats: PartyGames;
@@ -18,9 +18,9 @@ interface PartyGamesTableProps {
 export const PartyGamesTable = ({ stats, t }: PartyGamesTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-      <Table.td title={t('stats.roundWins')} value={t(stats.roundsWon)} color="§e" />
-      <Table.td title={t('stats.starsEarned')} value={t(stats.starsEarned)} color="§6" />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+      <Table.td title={t("stats.roundWins")} value={t(stats.roundsWon)} color="§e" />
+      <Table.td title={t("stats.starsEarned")} value={t(stats.starsEarned)} color="§6" />
     </Table.tr>
   </Table.table>
 );

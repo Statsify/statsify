@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from './create-instructions';
-export { IntrinsicElement, IntrinsicProps, IntrinsicRenders } from './instrinsics';
-export * from './render';
-export * from './types';
-export * from './util';
+export * from "./create-instructions";
+export { IntrinsicElement, IntrinsicProps, IntrinsicRenders } from "./instrinsics";
+export * from "./render";
+export * from "./types";
+export * from "./util";

@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { minecraftColors } from '@statsify/util';
-import { hexToRgb, RGB } from '../colors';
+import { RGB, hexToRgb } from "../colors";
+import { minecraftColors } from "@statsify/util";
 
 export interface TextNode {
   text: string;
@@ -25,7 +25,7 @@ export interface Token {
   effect: (
     part: string,
     matches: RegExpMatchArray,
-    defaultState: Omit<TextNode, 'text'>
+    defaultState: Omit<TextNode, "text">
   ) => Partial<TextNode>;
 }
 
@@ -57,15 +57,17 @@ const reset: Token = {
 };
 
 const textColors = Object.fromEntries(
-  minecraftColors.map((color) => [color.code.replace('§', ''), hexToRgb(color.hex)])
+  minecraftColors.map((color) => [color.code.replace("§", ""), hexToRgb(color.hex)])
 );
 
-const colorRegex = new RegExp(`^${Object.keys(textColors).join('|^')}|^#([A-Fa-f0-9]{6})`);
+const colorRegex = new RegExp(
+  `^${Object.keys(textColors).join("|^")}|^#([A-Fa-f0-9]{6})`
+);
 
 const color: Token = {
   regex: colorRegex,
   effect: (part) => ({
-    color: part.startsWith('#') ? hexToRgb(part) : textColors[part[0]],
+    color: part.startsWith("#") ? hexToRgb(part) : textColors[part[0]],
     strikethrough: false,
     underline: false,
   }),
@@ -74,7 +76,7 @@ const color: Token = {
 const size: Token = {
   regex: /^\^\d\^/,
   effect: (_, [match]) => ({
-    size: parseInt(match.substring(1, match.length - 1)),
+    size: Number.parseInt(match.slice(1, -1)),
   }),
 };
 

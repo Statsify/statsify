@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { add } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
-import { BowSpleef, PVPRun, TNTRun, TNTTag, Wizards } from './mode';
+import { APIData } from "@statsify/util";
+import { BowSpleef, PVPRun, TNTRun, TNTTag, Wizards } from "./mode";
+import { Field } from "../../../metadata";
+import { add } from "@statsify/math";
 
-export const TNT_GAMES_MODES = ['overall'] as const;
+export const TNT_GAMES_MODES = ["overall"] as const;
 export type TNTGamesModes = typeof TNT_GAMES_MODES;
 
 export class TNTGames {
@@ -52,4 +52,4 @@ export class TNTGames {
   }
 }
 
-export * from './mode';
+export * from "./mode";

@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Percent } from '@statsify/rendering';
-import { Image } from 'skia-canvas';
-import { Background } from './Background';
+import { Background } from "./Background";
+import { Image } from "skia-canvas";
+import { Percent } from "@statsify/rendering";
 
 export interface ContainerProps {
   /**
@@ -22,7 +22,7 @@ export interface ContainerProps {
   children: JSX.Children;
 }
 
-export const Container = ({ background, percent = '97%', children }: ContainerProps) => {
+export const Container = ({ background, percent = "97%", children }: ContainerProps) => {
   const inner = (
     <div direction="column" width={percent} height={percent} align="center">
       {children}

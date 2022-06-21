@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { SkinService } from '../../src/skin';
-import { MockClass } from './mock.type';
+import { MockClass } from "./mock.type";
+import { SkinService } from "../../src/skin";
 
 export const skinService: MockClass<SkinService> = {
   getHead: jest.fn(),

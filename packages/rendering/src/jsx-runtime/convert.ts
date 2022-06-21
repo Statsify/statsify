@@ -10,16 +10,16 @@ import {
   CompleteSpacing,
   ElementNode,
   Fraction,
-  getTotalSize,
   IntrinsicElement,
   Percent,
   RawElement,
   Spacing,
+  getTotalSize,
   toDecimal,
-} from '../jsx';
+} from "../jsx";
 
 const spacingToCompleteSpacing = (spacing?: Spacing): CompleteSpacing => {
-  if (typeof spacing === 'number') {
+  if (typeof spacing === "number") {
     return {
       left: spacing,
       right: spacing,
@@ -36,21 +36,21 @@ const spacingToCompleteSpacing = (spacing?: Spacing): CompleteSpacing => {
   };
 };
 
-type Side = 'x' | 'y';
+type Side = "x" | "y";
 
 const normalizeNode = (node: ElementNode, side: Side, other: Side) => {
   const sideType = typeof node[side].size;
   const otherType = typeof node[other].size;
 
   if (
-    sideType === 'undefined' ||
-    (sideType === 'number' && (node[side].size as number) < node[side].minSize)
+    sideType === "undefined" ||
+    (sideType === "number" && (node[side].size as number) < node[side].minSize)
   )
     node[side].size = node[side].minSize;
 
   if (
-    otherType === 'undefined' ||
-    (otherType === 'number' && (node[other].size as number) < node[other].minSize)
+    otherType === "undefined" ||
+    (otherType === "number" && (node[other].size as number) < node[other].minSize)
   )
     node[other].size = node[other].minSize;
 
@@ -72,17 +72,17 @@ interface SideData {
 
 const gatherSideData = (child: ElementNode, side: Side, data: SideData) => {
   //There can't be anymore children if whole is already 0
-  if (data.percentSpaceLeft === 0) throw new Error('Space required exceeds 100%');
+  if (data.percentSpaceLeft === 0) throw new Error("Space required exceeds 100%");
 
   const paddingAndMargin = getTotalSize(child[side], { size: false });
   data.paddedLength += paddingAndMargin;
 
   const minSize = child[side].minSize;
 
-  if (typeof child[side].size === 'string' && child[side].size !== 'remaining') {
+  if (typeof child[side].size === "string" && child[side].size !== "remaining") {
     const percent = toDecimal(child[side].size as Percent | Fraction);
     data.percentSpaceLeft -= percent;
-    if (data.percentSpaceLeft < 0) throw new Error('Space required exceeds 100%');
+    if (data.percentSpaceLeft < 0) throw new Error("Space required exceeds 100%");
 
     const pixelPercentRatio = minSize / percent;
 
@@ -131,7 +131,7 @@ export const elementToNode = (
       padding2: padding.bottom,
       margin1: margin.top,
       margin2: margin.bottom,
-      direction: style.direction === 'row' ? 'column' : 'row',
+      direction: style.direction === "row" ? "column" : "row",
     },
     style,
     type,
@@ -140,14 +140,14 @@ export const elementToNode = (
   };
 
   if (!node.children?.length) {
-    node.x.minSize = typeof node.x.size === 'number' ? node.x.size : 0;
-    node.y.minSize = typeof node.y.size === 'number' ? node.y.size : 0;
+    node.x.minSize = typeof node.x.size === "number" ? node.x.size : 0;
+    node.y.minSize = typeof node.y.size === "number" ? node.y.size : 0;
 
     return node;
   }
 
-  const side = node.x.direction === 'row' ? 'x' : 'y';
-  const other = side === 'x' ? 'y' : 'x';
+  const side = node.x.direction === "row" ? "x" : "y";
+  const other = side === "x" ? "y" : "x";
 
   let sideData: SideData = {
     percentSpaceLeft: 1,
@@ -161,7 +161,7 @@ export const elementToNode = (
   node.children.forEach((child) => {
     sideData = gatherSideData(child, side, sideData);
 
-    if (typeof child[other].size === 'string' && child[other].size !== 'remaining') {
+    if (typeof child[other].size === "string" && child[other].size !== "remaining") {
       const percent = toDecimal(child[other].size as Percent | Fraction);
 
       const otherSize =

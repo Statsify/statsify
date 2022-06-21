@@ -9,19 +9,19 @@
 import {
   ActionRowBuilder,
   ButtonBuilder,
-  EmbedBuilder,
-  Message,
-  SelectMenuBuilder,
-  SelectMenuOptionBuilder,
   type CommandContext,
+  EmbedBuilder,
   type IMessage,
   type LocalizationString,
   type LocalizeFunction,
-} from '@statsify/discord';
-import { ButtonStyle } from 'discord-api-types/v10';
-import { Canvas } from 'skia-canvas';
-import { Service } from 'typedi';
-import { CommandListener } from '../command.listener';
+  Message,
+  SelectMenuBuilder,
+  SelectMenuOptionBuilder,
+} from "@statsify/discord";
+import { ButtonStyle } from "discord-api-types/v10";
+import { Canvas } from "skia-canvas";
+import { CommandListener } from "../command.listener";
+import { Service } from "typedi";
 
 type PaginateInteractionContent = IMessage | Message | EmbedBuilder | Canvas;
 
@@ -45,8 +45,9 @@ export class PaginateService {
    * @param pages The array of pages to paginate against
    * @param timeout When to stop the pagination (ms), defaults to 300000
    */
-  public async paginate(context: CommandContext, pages: Page[], timeout = 300000) {
-    if (pages.length === 1) return context.reply(await this.getMessage(context, [], 0, pages));
+  public async paginate(context: CommandContext, pages: Page[], timeout = 300_000) {
+    if (pages.length === 1)
+      return context.reply(await this.getMessage(context, [], 0, pages));
 
     const userId = context.getInteraction().getUserId();
 
@@ -108,14 +109,14 @@ export class PaginateService {
     context: CommandContext,
     pages: PaginateInteractionContentGenerator[],
     index = 0,
-    timeout = 300000
+    timeout = 300_000
   ) {
     const userId = context.getInteraction().getUserId();
     const cache = new Map<number, Message>();
 
     const controller = [
-      new ButtonBuilder().label('backward'),
-      new ButtonBuilder().label('forward'),
+      new ButtonBuilder().label("backward"),
+      new ButtonBuilder().label("forward"),
     ];
 
     const listener = CommandListener.getInstance();
@@ -196,7 +197,7 @@ export class PaginateService {
   ): Promise<Message> {
     const t = context.t();
     const content = pages[index];
-    const isScrolling = typeof content === 'function';
+    const isScrolling = typeof content === "function";
     const pageContent = await (isScrolling ? content(t) : content.generator(t));
 
     let page: Message;
@@ -207,7 +208,13 @@ export class PaginateService {
       page = new Message({ embeds: [pageContent] });
     } else if (pageContent instanceof Canvas) {
       page = new Message({
-        files: [{ name: 'image.png', data: await pageContent.toBuffer('png'), type: 'image/png' }],
+        files: [
+          {
+            name: "image.png",
+            data: await pageContent.toBuffer("png"),
+            type: "image/png",
+          },
+        ],
         attachments: [],
       });
     } else {
@@ -228,7 +235,9 @@ export class PaginateService {
     }
 
     controller.forEach((component, i) =>
-      (component as ButtonBuilder).style(i === index ? ButtonStyle.Primary : ButtonStyle.Secondary)
+      (component as ButtonBuilder).style(
+        i === index ? ButtonStyle.Primary : ButtonStyle.Secondary
+      )
     );
   }
 }

@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Table } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { BaseDuelsGameMode, UHCDuels } from '@statsify/schemas';
-import { prettify } from '@statsify/util';
+import { BaseDuelsGameMode, UHCDuels } from "@statsify/schemas";
+import { LocalizeFunction } from "@statsify/discord";
+import { Table } from "#components";
+import { prettify } from "@statsify/util";
 
 interface UHCDuelsModeColumnProps {
   stats: BaseDuelsGameMode;
@@ -19,10 +19,10 @@ interface UHCDuelsModeColumnProps {
 
 const UHCDuelsModeColumn = ({ title, stats, t }: UHCDuelsModeColumnProps) => (
   <Table.ts title={`§6${prettify(title)}`}>
-    <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-    <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
-    <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
-    <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§b" />
+    <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+    <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
+    <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
+    <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§b" />
   </Table.ts>
 );
 
@@ -32,7 +32,7 @@ export interface UHCDuelsTableProps {
 }
 
 export const UHCDuelsTable = ({ stats, t }: UHCDuelsTableProps) => {
-  const modes = ['overall', 'solo', 'doubles', 'fours', 'deathmatch'] as const;
+  const modes = ["overall", "solo", "doubles", "fours", "deathmatch"] as const;
 
   return (
     <Table.table>

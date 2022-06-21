@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Logger } from '@statsify/logger';
-import { readFile, writeFile } from 'fs/promises';
-import type { RestClient } from 'tiny-discord';
-import type { CommandResolvable } from './command.resolvable';
+import { Logger } from "@statsify/logger";
+import { readFile, writeFile } from "node:fs/promises";
+import type { CommandResolvable } from "./command.resolvable";
+import type { RestClient } from "tiny-discord";
 
 export class CommandPoster {
-  private readonly logger = new Logger('CommandPoster');
+  private readonly logger = new Logger("CommandPoster");
 
   public constructor(private readonly client: RestClient) {}
 
@@ -21,12 +21,12 @@ export class CommandPoster {
     applicationId: string,
     guildId?: string
   ) {
-    const commandsToPost = Array.from(commands.values());
+    const commandsToPost = [...commands.values()];
 
     if (!(await this.shouldPost(commandsToPost))) return;
 
     const res = await this.client.put(
-      `/applications/${applicationId}${guildId ? `/guilds/${guildId}` : ''}/commands`,
+      `/applications/${applicationId}${guildId ? `/guilds/${guildId}` : ""}/commands`,
       commandsToPost
     );
 
@@ -44,14 +44,14 @@ export class CommandPoster {
   private async shouldPost(commands: CommandResolvable[]) {
     const stringified = JSON.stringify(commands);
 
-    const file = await readFile('./commands.json', 'utf8').catch(() => null);
+    const file = await readFile("./commands.json", "utf8").catch(() => null);
 
-    await writeFile('./commands.json', stringified);
+    await writeFile("./commands.json", stringified);
 
     if (!file) return true;
 
     if (stringified === file) {
-      this.logger.log('No changes to commands, skipping');
+      this.logger.log("No changes to commands, skipping");
       return false;
     }
 

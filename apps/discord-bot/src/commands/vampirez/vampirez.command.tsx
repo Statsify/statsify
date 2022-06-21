@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from '@statsify/discord';
-import { VampireZModes, VAMPIREZ_MODES } from '@statsify/schemas';
-import { BaseHypixelCommand, BaseProfileProps } from '../base.hypixel-command';
-import { VampireZProfile } from './vampirez.profile';
+import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command";
+import { Command } from "@statsify/discord";
+import { VAMPIREZ_MODES, VampireZModes } from "@statsify/schemas";
+import { VampireZProfile } from "./vampirez.profile";
 
-@Command({ description: (t) => t('commands.vampirez') })
+@Command({ description: (t) => t("commands.vampirez") })
 export class VampireZCommand extends BaseHypixelCommand<VampireZModes> {
   public constructor() {
     super(VAMPIREZ_MODES);

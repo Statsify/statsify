@@ -6,13 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { roundTo } from '@statsify/math';
-import { Constructor, Flatten, unflatten } from '@statsify/util';
-import { MetadataScanner } from './metadata-scanner';
-import { FieldMetadata } from './metadata.interface';
+import { Constructor, Flatten, unflatten } from "@statsify/util";
+import { FieldMetadata } from "./metadata.interface";
+import { MetadataScanner } from "./metadata-scanner";
+import { roundTo } from "@statsify/math";
 
 export const deserialize = <T>(constructor: Constructor<T>, instance: Flatten<T>): T => {
-  const metadataEntries = MetadataScanner.scan(constructor) as [keyof Flatten<T>, FieldMetadata][];
+  const metadataEntries = MetadataScanner.scan(constructor) as [
+    keyof Flatten<T>,
+    FieldMetadata
+  ][];
 
   const deserialized: Flatten<T> = {} as Flatten<T>;
 
@@ -31,7 +34,7 @@ export const deserialize = <T>(constructor: Constructor<T>, instance: Flatten<T>
     if (deserialized[key] === undefined) deserialized[key] = defaultValue;
 
     // If the value is numimercal round it to 2 digits of precision
-    if (typeof deserialized[key] === 'number')
+    if (typeof deserialized[key] === "number")
       deserialized[key] = roundTo(deserialized[key] as unknown as number) as any;
   }
 

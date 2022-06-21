@@ -6,18 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { GuildQuery } from '@statsify/api-client';
-import { Command } from '@statsify/discord';
-import { GeneralModes, GENERAL_MODES, Guild, Player } from '@statsify/schemas';
-import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
-import { GeneralProfile } from './general.profile';
+import {
+  BaseHypixelCommand,
+  BaseProfileProps,
+  ProfileData,
+} from "../base.hypixel-command";
+import { Command } from "@statsify/discord";
+import { GENERAL_MODES, GeneralModes, Guild, Player } from "@statsify/schemas";
+import { GeneralProfile } from "./general.profile";
+import { GuildQuery } from "@statsify/api-client";
 
 interface PreProfileData {
   guild?: Guild;
   friends?: number;
 }
 
-@Command({ description: (t) => t('commands.general') })
+@Command({ description: (t) => t("commands.general") })
 export class GeneralCommand extends BaseHypixelCommand<GeneralModes, PreProfileData> {
   public constructor() {
     super(GENERAL_MODES);
@@ -35,7 +39,7 @@ export class GeneralCommand extends BaseHypixelCommand<GeneralModes, PreProfileD
 
     return {
       guild,
-      friends: friends,
+      friends,
     };
   }
 

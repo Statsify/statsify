@@ -6,18 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { getServerMappings } from '@statsify/assets';
-import { AbstractArgument, CommandContext, LocalizationString } from '@statsify/discord';
+import Fuse from "fuse.js";
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
-} from 'discord-api-types/v10';
-import Fuse from 'fuse.js';
+} from "discord-api-types/v10";
+import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
+import { getServerMappings } from "@statsify/assets";
 
 const servers = getServerMappings();
 
 const fuse = new Fuse(servers, {
-  keys: ['id', 'name', 'addresses'],
+  keys: ["id", "name", "addresses"],
   includeScore: false,
   shouldSort: true,
   isCaseSensitive: false,
@@ -26,7 +26,7 @@ const fuse = new Fuse(servers, {
 });
 
 export class ServerArgument extends AbstractArgument {
-  public name = 'server';
+  public name = "server";
   public description: LocalizationString;
   public type = ApplicationCommandOptionType.String;
   public required = true;
@@ -34,11 +34,13 @@ export class ServerArgument extends AbstractArgument {
 
   public constructor() {
     super();
-    this.description = (t) => t('arguments.server');
+    this.description = (t) => t("arguments.server");
   }
 
-  public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
-    const currentValue = context.option<string>(this.name, '').toLowerCase();
+  public autocompleteHandler(
+    context: CommandContext
+  ): APIApplicationCommandOptionChoice[] {
+    const currentValue = context.option<string>(this.name, "").toLowerCase();
 
     return fuse
       .search(currentValue)

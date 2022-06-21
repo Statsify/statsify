@@ -7,7 +7,7 @@
  */
 
 export enum LeaderboardQuery {
-  PAGE = 'page',
-  INPUT = 'input',
-  POSITION = 'position',
+  PAGE = "page",
+  INPUT = "input",
+  POSITION = "position",
 }

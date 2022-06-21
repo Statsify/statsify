@@ -6,5 +6,5 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from './hypixel.module';
-export * from './hypixel.service';
+export * from "./hypixel.module";
+export * from "./hypixel.service";

@@ -6,23 +6,23 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PaginateService } from '#services';
-import { Command, CommandContext } from '@statsify/discord';
+import { Command, CommandContext } from "@statsify/discord";
+import { PaginateService } from "#services";
 
-@Command({ description: 'Hello' })
+@Command({ description: "Hello" })
 export class TestCommand {
   public constructor(private readonly paginateService: PaginateService) {}
 
   public run(context: CommandContext) {
     return this.paginateService.scrollingPagination(context, [
       () => ({
-        content: 'Hello',
+        content: "Hello",
       }),
       () => ({
-        content: 'Bye',
+        content: "Bye",
       }),
       () => ({
-        content: 'EEE',
+        content: "EEE",
       }),
     ]);
   }

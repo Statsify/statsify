@@ -6,18 +6,25 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from '@statsify/discord';
-import { ArcadeModes, ARCADE_MODES } from '@statsify/schemas';
-import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
-import { ArcadeProfile } from './arcade.profile';
+import { ARCADE_MODES, ArcadeModes } from "@statsify/schemas";
+import { ArcadeProfile } from "./arcade.profile";
+import {
+  BaseHypixelCommand,
+  BaseProfileProps,
+  ProfileData,
+} from "../base.hypixel-command";
+import { Command } from "@statsify/discord";
 
-@Command({ description: (t) => t('commands.arcade') })
+@Command({ description: (t) => t("commands.arcade") })
 export class ArcadeCommand extends BaseHypixelCommand<ArcadeModes> {
   public constructor() {
     super(ARCADE_MODES);
   }
 
-  public getProfile(base: BaseProfileProps, { mode }: ProfileData<ArcadeModes>): JSX.Element {
+  public getProfile(
+    base: BaseProfileProps,
+    { mode }: ProfileData<ArcadeModes>
+  ): JSX.Element {
     return <ArcadeProfile {...base} mode={mode} />;
   }
 }

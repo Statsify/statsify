@@ -6,19 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { loadImage } from '@statsify/rendering';
-import { UserTier } from '@statsify/schemas';
-import { existsSync, readdirSync, readFileSync } from 'fs';
-import { join } from 'path';
-import { Image } from 'skia-canvas';
+import { Image } from "skia-canvas";
+import { UserTier } from "@statsify/schemas";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+import { loadImage } from "@statsify/rendering";
 
-const PATH = '../../assets';
-const PRIVATE_PATH = join(PATH, 'private');
+const PATH = "../../assets";
+const PRIVATE_PATH = join(PATH, "private");
 
-const hasPrivateAssets = existsSync(join(PRIVATE_PATH, 'package.json'));
+const hasPrivateAssets = existsSync(join(PRIVATE_PATH, "package.json"));
 
 const checkAsset = (file: string) =>
-  hasPrivateAssets && existsSync(join(PRIVATE_PATH, file)) ? 'private' : 'public';
+  hasPrivateAssets && existsSync(join(PRIVATE_PATH, file)) ? "private" : "public";
 
 /**
  *
@@ -27,8 +27,8 @@ const checkAsset = (file: string) =>
  * @returns the asset if available, otherwise null
  */
 export const importAsset = async <T>(file: string): Promise<T | null> => {
-  if (checkAsset(file.endsWith('.js') ? file : `${file}.js`) === 'public') return null;
-  return import(join('../', PRIVATE_PATH, file));
+  if (checkAsset(file.endsWith(".js") ? file : `${file}.js`) === "public") return null;
+  return import(join("../", PRIVATE_PATH, file));
 };
 
 export const getAssetPath = (path: string) => join(PATH, checkAsset(path), path);
@@ -41,8 +41,8 @@ export const getImage = (path: string) => loadImage(getAssetPath(path));
  * @param pack default
  * @returns the full path to the texture
  */
-export const getMinecraftTexturePath = (texturePath: string, pack = 'default') => {
-  if (!hasPrivateAssets) pack = 'default';
+export const getMinecraftTexturePath = (texturePath: string, pack = "default") => {
+  if (!hasPrivateAssets) pack = "default";
   return join(getAssetPath(`minecraft-textures/${pack}/assets/minecraft/`), texturePath);
 };
 
@@ -50,16 +50,16 @@ let backgrounds: string[] = [];
 
 function getBackgroundPaths() {
   if (backgrounds.length) return backgrounds;
-  backgrounds = readdirSync(getAssetPath('out/backgrounds'));
+  backgrounds = readdirSync(getAssetPath("out/backgrounds"));
   return backgrounds;
 }
 
 export function getBackground(path: string): Promise<Image>;
 export function getBackground(game: string, mode: string): Promise<Image>;
 export function getBackground(pathOrGame: string, mode?: string): Promise<Image> {
-  if (!hasPrivateAssets) return getImage('out/backgrounds/background.png');
+  if (!hasPrivateAssets) return getImage("out/backgrounds/background.png");
 
-  if (typeof mode === 'string') {
+  if (typeof mode === "string") {
     const path = `${pathOrGame}_${mode}_`;
     const backgrounds = getBackgroundPaths().filter((p) => p.startsWith(path));
     const background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
@@ -73,26 +73,27 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
 }
 
 export const getServerMappings = () =>
-  JSON.parse(readFileSync('../../assets/server-mappings/servers.json', 'utf8')) as {
+  JSON.parse(readFileSync("../../assets/server-mappings/servers.json", "utf8")) as {
     id: string;
     name: string;
     addresses: string[];
   }[];
 
-export const getLogo = (tier?: UserTier, size?: number) => loadImage(getLogoPath(tier, size));
+export const getLogo = (tier?: UserTier, size?: number) =>
+  loadImage(getLogoPath(tier, size));
 
 export const getLogoPath = (tier: UserTier = UserTier.NONE, size = 26) => {
   let path: string;
 
   switch (tier) {
     case UserTier.NONE:
-      path = '';
+      path = "";
       break;
     case UserTier.PREMIUM:
-      path = 'premium_';
+      path = "premium_";
       break;
     case UserTier.CORE:
-      path = 'core_';
+      path = "core_";
       break;
   }
 

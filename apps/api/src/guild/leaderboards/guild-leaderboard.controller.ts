@@ -6,29 +6,31 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from "@nestjs/swagger";
+import { Auth } from "../../auth";
+import { Body, Controller, Post } from "@nestjs/common";
 import {
   ErrorResponse,
   LeaderboardQuery,
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
-} from '@statsify/api-client';
-import { Guild } from '@statsify/schemas';
-import { Auth } from '../../auth';
-import { GuildLeaderboardDto, GuildRankingDto } from '../../dtos';
-import { GuildLeaderboardService } from './guild-leaderboard.service';
+} from "@statsify/api-client";
+import { Guild } from "@statsify/schemas";
+import { GuildLeaderboardDto, GuildRankingDto } from "../../dtos";
+import { GuildLeaderboardService } from "./guild-leaderboard.service";
 
-@Controller('/guild/leaderboards')
+@Controller("/guild/leaderboards")
 export class GuildLeaderboardController {
   public constructor(private readonly guildLeaderboardService: GuildLeaderboardService) {}
 
   @Post()
-  @ApiOperation({ summary: 'Get a Guild Leaderboard', tags: ['Guild Leaderboards'] })
+  @ApiOperation({ summary: "Get a Guild Leaderboard", tags: ["Guild Leaderboards"] })
   @ApiOkResponse({ type: PostLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 10 })
-  public async getGuildLeaderboard(@Body() { field, page, guild, position }: GuildLeaderboardDto) {
+  public async getGuildLeaderboard(
+    @Body() { field, page, guild, position }: GuildLeaderboardDto
+  ) {
     let input: number | string;
     let type: LeaderboardQuery;
 
@@ -53,8 +55,8 @@ export class GuildLeaderboardController {
     return leaderboard;
   }
 
-  @Post('/rankings')
-  @ApiOperation({ summary: 'Get a Guild Ranking', tags: ['Guild Leaderboards'] })
+  @Post("/rankings")
+  @ApiOperation({ summary: "Get a Guild Ranking", tags: ["Guild Leaderboards"] })
   @ApiOkResponse({ type: [PostLeaderboardRankingsResponse] })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })

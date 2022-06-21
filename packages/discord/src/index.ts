@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import 'reflect-metadata';
+import "reflect-metadata";
 
-export * from './arguments';
-export * from './command';
-export * from './interaction';
-export * from './messages';
+export * from "./arguments";
+export * from "./command";
+export * from "./interaction";
+export * from "./messages";

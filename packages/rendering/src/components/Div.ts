@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { noop } from '@statsify/util';
-import type * as JSX from '../jsx';
+import { noop } from "@statsify/util";
+import type * as JSX from "../jsx";
 
 export interface DivProps {
   width?: JSX.Measurement;
@@ -25,13 +25,13 @@ export const component: JSX.RawFC<DivProps, DivRenderProps> = ({
   children,
   width,
   height,
-  align = 'left',
-  direction = 'row',
-  location = 'center',
+  align = "left",
+  direction = "row",
+  location = "center",
   margin,
   padding,
 }) => ({
-  name: 'Div',
+  name: "Div",
   render: noop,
   dimension: {
     margin,

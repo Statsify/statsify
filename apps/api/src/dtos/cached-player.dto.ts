@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { IntersectionType } from '@nestjs/swagger';
-import { CacheDto } from './cache.dto';
-import { PlayerDto } from './player.dto';
+import { CacheDto } from "./cache.dto";
+import { IntersectionType } from "@nestjs/swagger";
+import { PlayerDto } from "./player.dto";
 
 export class CachedPlayerDto extends IntersectionType(PlayerDto, CacheDto) {}

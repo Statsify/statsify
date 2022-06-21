@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Table } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { DragonWars } from '@statsify/schemas';
+import { DragonWars } from "@statsify/schemas";
+import { LocalizeFunction } from "@statsify/discord";
+import { Table } from "#components";
 
 interface DragonWarsTableProps {
   stats: DragonWars;
@@ -18,8 +18,8 @@ interface DragonWarsTableProps {
 export const DragonWarsTable = ({ stats, t }: DragonWarsTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§e" />
-      <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§e" />
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
     </Table.tr>
   </Table.table>
 );

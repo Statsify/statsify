@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { GuildLeaderboardService } from '../../src/guild/leaderboards/guild-leaderboard.service';
-import { MockClass } from './mock.type';
+import { GuildLeaderboardService } from "../../src/guild/leaderboards/guild-leaderboard.service";
+import { MockClass } from "./mock.type";
 
 export const guildLeaderboardService: MockClass<GuildLeaderboardService> = {
   getLeaderboard: jest.fn().mockResolvedValue([]),
-  getLeaderboardRanking: jest.fn().mockResolvedValue({ field: '', rank: 1 }),
+  getLeaderboardRanking: jest.fn().mockResolvedValue({ field: "", rank: 1 }),
 };

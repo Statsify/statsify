@@ -6,20 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Service } from 'typedi';
-import type { CommandMetadata, CommandOptions } from './command.interface';
+import { Service } from "typedi";
+import type { CommandMetadata, CommandOptions } from "./command.interface";
 
 export function Command(options: CommandOptions): ClassDecorator {
   return (target) => {
     const metadata: CommandMetadata = {
-      ...Reflect.getMetadata('statsify:command', target),
+      ...Reflect.getMetadata("statsify:command", target),
       ...options,
-      name: options.name ?? target.name.toLowerCase().replace('command', ''),
-      methodName: 'run',
+      name: options.name ?? target.name.toLowerCase().replace("command", ""),
+      methodName: "run",
     };
 
     Service()(target);
 
-    Reflect.defineMetadata('statsify:command', metadata, target);
+    Reflect.defineMetadata("statsify:command", metadata, target);
   };
 }

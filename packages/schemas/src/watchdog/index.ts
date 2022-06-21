@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { deepAdd } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Field } from '../metadata';
-import { WatchdogMode } from './mode';
+import { APIData } from "@statsify/util";
+import { Field } from "../metadata";
+import { WatchdogMode } from "./mode";
+import { deepAdd } from "@statsify/math";
 
 export class Watchdog {
   @Field()
@@ -22,8 +22,8 @@ export class Watchdog {
   public staff: WatchdogMode;
 
   public constructor(data: APIData) {
-    this.watchdog = new WatchdogMode(data, 'watchdog');
-    this.staff = new WatchdogMode(data, 'staff');
+    this.watchdog = new WatchdogMode(data, "watchdog");
+    this.staff = new WatchdogMode(data, "staff");
     this.overall = deepAdd(this.watchdog, this.staff);
   }
 }

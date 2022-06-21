@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIActionRowComponent, ComponentType } from 'discord-api-types/v10';
-import { LocalizeFunction } from '../localize';
-import type { ButtonBuilder } from './button.builder';
-import type { SelectMenuBuilder } from './select-menu.builder';
-import type { TextInputBuilder } from './text-input.builder';
+import { APIActionRowComponent, ComponentType } from "discord-api-types/v10";
+import { LocalizeFunction } from "../localize";
+import type { ButtonBuilder } from "./button.builder";
+import type { SelectMenuBuilder } from "./select-menu.builder";
+import type { TextInputBuilder } from "./text-input.builder";
 
 export type ActionRowComponent = ButtonBuilder | SelectMenuBuilder | TextInputBuilder;
 

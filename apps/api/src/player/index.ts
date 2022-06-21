@@ -6,6 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from './player.controller';
-export * from './player.module';
-export * from './player.service';
+export * from "./player.controller";
+export * from "./player.module";
+export * from "./player.service";

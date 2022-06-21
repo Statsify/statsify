@@ -6,6 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from './guild.controller';
-export * from './guild.module';
-export * from './guild.service';
+export * from "./guild.controller";
+export * from "./guild.module";
+export * from "./guild.service";

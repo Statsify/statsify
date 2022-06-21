@@ -6,20 +6,23 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { User } from '@statsify/schemas';
-import { noop } from '@statsify/util';
 import {
   APIApplicationCommandInteractionDataBasicOption,
   ApplicationCommandOptionType,
-} from 'discord-api-types/v10';
-import type { Interaction } from '../interaction';
-import { IMessage, Message } from '../messages';
-import { LocalizeFunction } from '../messages/localize';
+} from "discord-api-types/v10";
+import { IMessage, Message } from "../messages";
+import { LocalizeFunction } from "../messages/localize";
+import { noop } from "@statsify/util";
+import type { Interaction } from "../interaction";
+import type { User } from "@statsify/schemas";
 
 export class CommandContext {
   private user: User | null;
 
-  public constructor(private readonly interaction: Interaction, private readonly data: any) {
+  public constructor(
+    private readonly interaction: Interaction,
+    private readonly data: any
+  ) {
     this.user = null;
   }
 
@@ -34,9 +37,9 @@ export class CommandContext {
   public option<T>(name: string, defaultValue: T): T;
   public option<T>(name: string): T;
   public option<T>(name: string, defaultValue?: T): T {
-    const data = (this.data.options as APIApplicationCommandInteractionDataBasicOption[])?.find(
-      (o) => o.name === name
-    );
+    const data = (
+      this.data.options as APIApplicationCommandInteractionDataBasicOption[]
+    )?.find((o) => o.name === name);
 
     if (!data) {
       return defaultValue ?? noop();

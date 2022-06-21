@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { MongoLeaderboardService } from '../../src/leaderboards';
-import { MockClass } from './mock.type';
+import { MockClass } from "./mock.type";
+import { MongoLeaderboardService } from "../../src/leaderboards";
 
 export const mongoLeaderboardService: MockClass<MongoLeaderboardService> = {
   getLeaderboard: jest.fn().mockResolvedValue([]),

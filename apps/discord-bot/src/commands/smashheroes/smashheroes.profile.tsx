@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { FormattedGame, SMASH_HEROES_MODES } from '@statsify/schemas';
-import { prettify } from '@statsify/util';
-import { BaseProfileProps } from '../base.hypixel-command';
+import { BaseProfileProps } from "../base.hypixel-command";
+import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { FormattedGame, SMASH_HEROES_MODES } from "@statsify/schemas";
+import { prettify } from "@statsify/util";
 
 export interface SmashHeroesProfile extends BaseProfileProps {
   mode: typeof SMASH_HEROES_MODES[number];
@@ -30,8 +30,8 @@ export const SmashHeroesProfile = ({
   const stats = smashheroes[mode];
 
   const sidebar: SidebarItem[] = [
-    [t('stats.coins'), t(smashheroes.coins), '§6'],
-    [t('stats.class'), prettify(smashheroes.kit), '§b'],
+    [t("stats.coins"), t(smashheroes.coins), "§6"],
+    [t("stats.class"), prettify(smashheroes.kit), "§b"],
   ];
 
   return (
@@ -47,14 +47,14 @@ export const SmashHeroesProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-          <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
-          <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
+          <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+          <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
+          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
-          <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
-          <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
+          <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} tier={tier} />

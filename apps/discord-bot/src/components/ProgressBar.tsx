@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LocalizeFunction } from '@statsify/discord';
-import { ratio } from '@statsify/math';
+import { LocalizeFunction } from "@statsify/discord";
+import { ratio } from "@statsify/math";
 
 export interface ProgressBarProps {
   color: string;
@@ -25,7 +25,13 @@ export const ProgressBar = ({ color, numerator, denominator, t }: ProgressBarPro
 
   return (
     <div width="100%">
-      <box width="remaining" padding={0} shadowOpacity={0} color="#262626" location="left">
+      <box
+        width="remaining"
+        padding={0}
+        shadowOpacity={0}
+        color="#262626"
+        location="left"
+      >
         <box
           width={`${percentage}%`}
           margin={0}

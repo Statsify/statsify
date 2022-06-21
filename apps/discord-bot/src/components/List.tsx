@@ -11,17 +11,15 @@ export interface ListProps {
   width?: JSX.Measurement;
 }
 
-export const List = ({ width = '100%', items }: ListProps) => {
+export const List = ({ width = "100%", items }: ListProps) => {
   const columns: JSX.Element[][] = [];
   const remainingColumns: number[] = [];
 
-  for (let i = 0; i < items.length; i++) {
-    const item = items[i];
-
+  for (const [i, item] of items.entries()) {
     (item as unknown as JSX.Element[]).forEach((child, index) => {
-      if (i === 0 && child.x.size === 'remaining') remainingColumns.push(index);
+      if (i === 0 && child.x.size === "remaining") remainingColumns.push(index);
 
-      child.x.size = '100%';
+      child.x.size = "100%";
 
       if (columns[index]) columns[index].push(child);
       else columns[index] = [child];
@@ -31,7 +29,10 @@ export const List = ({ width = '100%', items }: ListProps) => {
   return (
     <div width={width}>
       {columns.map((c, index) => (
-        <div direction="column" width={remainingColumns.includes(index) ? 'remaining' : undefined}>
+        <div
+          direction="column"
+          width={remainingColumns.includes(index) ? "remaining" : undefined}
+        >
           {c}
         </div>
       ))}

@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { NumberArgument } from '#arguments';
-import { SUCCESS_COLOR } from '#constants';
-import { ApiService } from '#services';
-import { Command, CommandContext, EmbedBuilder, IMessage } from '@statsify/discord';
-import { ErrorMessage } from '../error.message';
+import { ApiService } from "#services";
+import { Command, CommandContext, EmbedBuilder, IMessage } from "@statsify/discord";
+import { ErrorMessage } from "../error.message";
+import { NumberArgument } from "#arguments";
+import { SUCCESS_COLOR } from "#constants";
 
 @Command({
-  description: (t) => t('commands.verify'),
-  args: [new NumberArgument('code', 1000, 9999)],
+  description: (t) => t("commands.verify"),
+  args: [new NumberArgument("code", 1000, 9999)],
   cooldown: 5,
 })
 export class VerifyCommand {
@@ -26,31 +26,31 @@ export class VerifyCommand {
 
     if (user?.uuid)
       throw new ErrorMessage(
-        (t) => t('verification.alreadyVerified.title'),
-        (t) => t('verification.alreadyVerified.description')
+        (t) => t("verification.alreadyVerified.title"),
+        (t) => t("verification.alreadyVerified.description")
       );
 
-    const code = context.option<number>('code');
+    const code = context.option<number>("code");
 
     if (!code)
       throw new ErrorMessage(
-        (t) => t('verification.noCode.title'),
-        (t) => t('verification.noCode.description')
+        (t) => t("verification.noCode.title"),
+        (t) => t("verification.noCode.description")
       );
 
     user = await this.apiService.verifyUser(`${code}`, userId);
 
     if (!user)
       throw new ErrorMessage(
-        (t) => t('verification.invalidCode.title'),
-        (t) => t('verification.invalidCode.description')
+        (t) => t("verification.invalidCode.title"),
+        (t) => t("verification.invalidCode.description")
       );
 
     const player = await this.apiService.getPlayer(user?.uuid as string);
     const displayName = this.apiService.emojiDisplayName(player.displayName);
 
     const embed = new EmbedBuilder()
-      .description((t) => t('verification.successfulVerification', { displayName }))
+      .description((t) => t("verification.successfulVerification", { displayName }))
       .color(SUCCESS_COLOR);
 
     return {

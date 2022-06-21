@@ -6,30 +6,30 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { add, deepSub } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Color, ColorCode } from '../../../color';
-import { Field } from '../../../metadata';
-import { Progression } from '../../../progression';
-import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from './mode';
-import { getExpReq, getFormattedLevel, getLevel } from './util';
+import { APIData } from "@statsify/util";
+import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from "./mode";
+import { Color, ColorCode } from "../../../color";
+import { Field } from "../../../metadata";
+import { Progression } from "../../../progression";
+import { add, deepSub } from "@statsify/math";
+import { getExpReq, getFormattedLevel, getLevel } from "./util";
 
 export const BEDWARS_MODES = [
-  'overall',
-  'core',
-  'solo',
-  'doubles',
-  'threes',
-  'fours',
-  '4v4',
-  'armed',
-  'castle',
-  'lucky',
-  'rush',
-  'swap',
-  'ultimate',
-  'underworld',
-  'voidless',
+  "overall",
+  "core",
+  "solo",
+  "doubles",
+  "threes",
+  "fours",
+  "4v4",
+  "armed",
+  "castle",
+  "lucky",
+  "rush",
+  "swap",
+  "ultimate",
+  "underworld",
+  "voidless",
 ] as const;
 export type BedWarsModes = typeof BEDWARS_MODES;
 
@@ -42,12 +42,12 @@ export class BedWars {
 
   @Field({
     leaderboard: {
-      fieldName: 'Level',
+      fieldName: "Level",
       hidden: true,
       additionalFields: [
-        'stats.bedwars.overall.wins',
-        'stats.bedwars.overall.finalKills',
-        'stats.bedwars.overall.fkdr',
+        "stats.bedwars.overall.wins",
+        "stats.bedwars.overall.finalKills",
+        "stats.bedwars.overall.fkdr",
       ],
     },
   })
@@ -87,7 +87,7 @@ export class BedWars {
   public core: BedWarsMode;
 
   @Field()
-  public '4v4': BedWarsMode;
+  public "4v4": BedWarsMode;
 
   @Field()
   public armed: BedWarsMode;
@@ -124,7 +124,7 @@ export class BedWars {
     this.nextLevelFormatted = getFormattedLevel(this.level + 1);
 
     this.levelColor =
-      this.levelFormatted[1] === '7' && this.level > 1000
+      this.levelFormatted[1] === "7" && this.level > 1000
         ? new Color(`§${this.levelFormatted[4]}` as ColorCode)
         : new Color(`§${this.levelFormatted[1]}` as ColorCode);
 
@@ -145,24 +145,24 @@ export class BedWars {
       data.bedwars_easter_boxes
     );
 
-    this.overall = new BedWarsMode(data, '');
-    this.solo = new BedWarsMode(data, 'eight_one');
-    this.doubles = new BedWarsMode(data, 'eight_two');
-    this.threes = new BedWarsMode(data, 'four_three');
-    this.fours = new BedWarsMode(data, 'four_four');
-    this['4v4'] = new BedWarsMode(data, 'two_four');
+    this.overall = new BedWarsMode(data, "");
+    this.solo = new BedWarsMode(data, "eight_one");
+    this.doubles = new BedWarsMode(data, "eight_two");
+    this.threes = new BedWarsMode(data, "four_three");
+    this.fours = new BedWarsMode(data, "four_four");
+    this["4v4"] = new BedWarsMode(data, "two_four");
 
-    this.castle = new BedWarsMode(data, 'castle');
+    this.castle = new BedWarsMode(data, "castle");
 
-    this.armed = DreamsBedWarsMode.new(data, 'armed');
-    this.lucky = DreamsBedWarsMode.new(data, 'lucky');
-    this.rush = DreamsBedWarsMode.new(data, 'rush');
-    this.swap = DreamsBedWarsMode.new(data, 'swap');
-    this.ultimate = DreamsBedWarsMode.new(data, 'ultimate');
-    this.underworld = DreamsBedWarsMode.new(data, 'underworld');
-    this.voidless = DreamsBedWarsMode.new(data, 'voidless');
+    this.armed = DreamsBedWarsMode.new(data, "armed");
+    this.lucky = DreamsBedWarsMode.new(data, "lucky");
+    this.rush = DreamsBedWarsMode.new(data, "rush");
+    this.swap = DreamsBedWarsMode.new(data, "swap");
+    this.ultimate = DreamsBedWarsMode.new(data, "ultimate");
+    this.underworld = DreamsBedWarsMode.new(data, "underworld");
+    this.voidless = DreamsBedWarsMode.new(data, "voidless");
 
-    this.core = deepSub(this.overall, this['4v4']);
+    this.core = deepSub(this.overall, this["4v4"]);
     BedWarsMode.applyRatios(this.core);
 
     this.core.winstreak = this.overall.winstreak;
@@ -171,4 +171,4 @@ export class BedWars {
   }
 }
 
-export * from './mode';
+export * from "./mode";

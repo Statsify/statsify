@@ -6,11 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApplicationCommandOptionType, ApplicationCommandType } from 'discord-api-types/v10';
-import { AbstractArgument } from '../arguments';
-import { getLocalizeFunction, translateField, translateToAllLanguages } from '../messages/localize';
-import type { CommandContext } from './command.context';
-import type { CommandMetadata } from './command.interface';
+import { AbstractArgument } from "../arguments";
+import {
+  ApplicationCommandOptionType,
+  ApplicationCommandType,
+} from "discord-api-types/v10";
+import {
+  getLocalizeFunction,
+  translateField,
+  translateToAllLanguages,
+} from "../messages/localize";
+import type { CommandContext } from "./command.context";
+import type { CommandMetadata } from "./command.interface";
 
 export class CommandResolvable {
   public type:
@@ -32,13 +39,15 @@ export class CommandResolvable {
     target: any
   ) {
     this.name = name;
-    this.description = translateField(getLocalizeFunction('en_US'), description);
+    this.description = translateField(getLocalizeFunction("en_US"), description);
     this.description_localizations = translateToAllLanguages(description);
 
     this.type = ApplicationCommandType.ChatInput;
     this.cooldown = cooldown;
 
-    const argsResolved = (args ?? [])?.map((a) => (a instanceof AbstractArgument ? a : new a()));
+    const argsResolved = (args ?? [])?.map((a) =>
+      a instanceof AbstractArgument ? a : new a()
+    );
 
     this.args = argsResolved;
     this.options = argsResolved;

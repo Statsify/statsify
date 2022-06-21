@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { readdir } from 'fs/promises';
-import { join } from 'path';
-import { Canvas, CanvasRenderingContext2D, ImageData } from 'skia-canvas';
-import _positions from '../../positions.json';
-import _sizes from '../../sizes.json';
-import { mcShadow, RGB } from '../colors';
-import { loadImage } from '../hooks';
-import { TextNode, Token, tokens } from './tokens';
+import _positions from "../../positions.json";
+import _sizes from "../../sizes.json";
+import { Canvas, CanvasRenderingContext2D, ImageData } from "skia-canvas";
+import { RGB, mcShadow } from "../colors";
+import { TextNode, Token, tokens } from "./tokens";
+import { join } from "node:path";
+import { loadImage } from "../hooks";
+import { readdir } from "node:fs/promises";
 
 const sizes: Sizes = _sizes;
 const positions: string[][] = _positions;
@@ -31,19 +31,19 @@ export class FontRenderer {
   public async loadImages(fontPath: string) {
     const files = await readdir(fontPath);
 
-    const pictures = files.filter((file) => file.endsWith('.png'));
+    const pictures = files.filter((file) => file.endsWith(".png"));
 
     for (const file of pictures) {
       const image = await loadImage(join(fontPath, file));
 
       const canvas = new Canvas(image.width, image.height);
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
 
       ctx.imageSmoothingEnabled = false;
 
       ctx.drawImage(image, 0, 0);
 
-      this.images.set(file.replace('unicode_page_', '').replace('.png', ''), ctx);
+      this.images.set(file.replace("unicode_page_", "").replace(".png", ""), ctx);
     }
   }
 
@@ -70,7 +70,12 @@ export class FontRenderer {
     return { width, height };
   }
 
-  public fillText(ctx: CanvasRenderingContext2D, nodes: TextNode[][], x: number, y: number) {
+  public fillText(
+    ctx: CanvasRenderingContext2D,
+    nodes: TextNode[][],
+    x: number,
+    y: number
+  ) {
     const tempX = x;
 
     for (const row of nodes) {
@@ -78,7 +83,16 @@ export class FontRenderer {
 
       const largestSize = Math.max(...row.map((node) => node.size));
 
-      for (const { text, color, bold, italic, underline, strikethrough, size, shadow } of row) {
+      for (const {
+        text,
+        color,
+        bold,
+        italic,
+        underline,
+        strikethrough,
+        size,
+        shadow,
+      } of row) {
         const adjustY = y + size + (largestSize - size) * 5;
 
         for (const char of text) {
@@ -103,10 +117,10 @@ export class FontRenderer {
   }
 
   public lex(text: string, inputState: Partial<TextNode> = {}): TextNode[][] {
-    const lines = text.split('\n');
+    const lines = text.split("\n");
 
     return lines.map((line) => {
-      const defualtState: Omit<TextNode, 'text'> = {
+      const defualtState: Omit<TextNode, "text"> = {
         bold: false,
         italic: false,
         underline: false,
@@ -119,11 +133,11 @@ export class FontRenderer {
 
       let state = defualtState;
 
-      line = line.startsWith('§') ? line : `§f${line}`;
+      line = line.startsWith("§") ? line : `§f${line}`;
 
       return line
-        .split('§')
-        .filter((line) => line)
+        .split("§")
+        .filter(Boolean)
         .map((part) => {
           let token: Token | null = null;
           let matches: RegExpMatchArray | null = null;
@@ -140,7 +154,7 @@ export class FontRenderer {
           const effect = token?.effect(part, matches as RegExpMatchArray, defualtState);
           let text = effect?.text ?? part;
 
-          if (matches) text = text.substring(matches[0].length);
+          if (matches) text = text.slice(matches[0].length);
 
           state = { ...state, ...effect };
 
@@ -156,7 +170,7 @@ export class FontRenderer {
 
   private getUnicode(char: string) {
     const hex = (char.codePointAt(0) ?? 0).toString(16);
-    return `${'0000'.substring(0, 4 - hex.length)}${hex}`;
+    return `${"0000".slice(0, Math.max(0, 4 - hex.length))}${hex}`;
   }
 
   private isAscii(unicode: string) {
@@ -164,7 +178,9 @@ export class FontRenderer {
   }
 
   private getCharacterImage(unicode: string, isAscii: boolean) {
-    return isAscii ? this.images.get('ascii') : this.images.get(`${unicode[0]}${unicode[1]}`);
+    return isAscii
+      ? this.images.get("ascii")
+      : this.images.get(`${unicode[0]}${unicode[1]}`);
   }
 
   private getTextureScale(image: CanvasRenderingContext2D) {
@@ -183,8 +199,8 @@ export class FontRenderer {
     }
 
     return {
-      x: parseInt(unicode[3], 16),
-      y: parseInt(unicode[2], 16),
+      x: Number.parseInt(unicode[3], 16),
+      y: Number.parseInt(unicode[2], 16),
     };
   }
 
@@ -199,7 +215,7 @@ export class FontRenderer {
 
     const scale = this.getTextureScale(image);
 
-    const characterSize = sizes[isAscii ? 'ascii' : `unicode`][unicode.toUpperCase()];
+    const characterSize = sizes[isAscii ? "ascii" : `unicode`][unicode.toUpperCase()];
 
     const startOffset = characterSize?.start ?? 0;
     const width = characterSize?.width ?? 0;
@@ -224,7 +240,7 @@ export class FontRenderer {
     width: number,
     bold: boolean
   ) {
-    if (char === ' ') return (4 + (bold ? 1 : 0)) * size;
+    if (char === " ") return (4 + (bold ? 1 : 0)) * size;
 
     let gap = size * (width + 2 * scale);
 
@@ -240,7 +256,7 @@ export class FontRenderer {
   }
 
   private measureCharacter(char: string, textSize: number, bold: boolean): number {
-    if (char === ' ') return this.getCharacterSpacing(' ', false, textSize, 1, 0, bold);
+    if (char === " ") return this.getCharacterSpacing(" ", false, textSize, 1, 0, bold);
 
     const metadata = this.getCharacterMetadata(char, textSize);
 
@@ -357,9 +373,20 @@ export class FontRenderer {
       const offset = x + 2 * resizeFactor;
 
       if (isAscii)
-        this.fillPlainCharacter(ctx, imageData, offset, y, width, scale, size, color, italic);
+        this.fillPlainCharacter(
+          ctx,
+          imageData,
+          offset,
+          y,
+          width,
+          scale,
+          size,
+          color,
+          italic
+        );
       if (underline) this.fillUnderline(ctx, offset, y, width, resizeFactor, color);
-      if (strikethrough) this.fillStrikethrough(ctx, offset, y, width, resizeFactor, color);
+      if (strikethrough)
+        this.fillStrikethrough(ctx, offset, y, width, resizeFactor, color);
     }
   }
 
@@ -408,7 +435,12 @@ export class FontRenderer {
   ) {
     ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
 
-    ctx.fillRect(x - 2 * resizeFactor, y, (width + 2) * (resizeFactor * 2), resizeFactor * 2);
+    ctx.fillRect(
+      x - 2 * resizeFactor,
+      y,
+      (width + 2) * (resizeFactor * 2),
+      resizeFactor * 2
+    );
   }
 
   private fillUnderline(

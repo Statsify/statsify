@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field } from '../metadata';
-import { RecentGame } from './recentgame';
+import { Field } from "../metadata";
+import { RecentGame } from "./recentgame";
 
 export class RecentGames {
   @Field()
@@ -20,4 +20,4 @@ export class RecentGames {
   public games: RecentGame[];
 }
 
-export * from './recentgame';
+export * from "./recentgame";

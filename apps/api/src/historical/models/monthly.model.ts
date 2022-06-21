@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Player } from '@statsify/schemas';
-import { modelOptions as ModelOptions } from '@typegoose/typegoose';
+import { modelOptions as ModelOptions } from "@typegoose/typegoose";
+import { Player } from "@statsify/schemas";
 
-@ModelOptions({ schemaOptions: { collection: 'monthly' } })
+@ModelOptions({ schemaOptions: { collection: "monthly" } })
 export class Monthly extends Player {}

@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from '@nestjs/swagger';
-import { Player, PlayerStatus } from '@statsify/schemas';
-import { NotFoundException } from './base.404';
+import { ApiProperty } from "@nestjs/swagger";
+import { NotFoundException } from "./base.404";
+import { Player, PlayerStatus } from "@statsify/schemas";
 
 export class StatusNotFoundException extends NotFoundException {
   @ApiProperty()
@@ -21,7 +21,7 @@ export class StatusNotFoundException extends NotFoundException {
   public actions: PlayerStatus;
 
   public constructor(player: Player) {
-    super('status');
+    super("status");
 
     this.uuid = player.uuid;
     this.displayName = player.displayName;

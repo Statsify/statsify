@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { deepAdd } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
-import { VampireZLife } from './life';
+import { APIData } from "@statsify/util";
+import { Field } from "../../../metadata";
+import { VampireZLife } from "./life";
+import { deepAdd } from "@statsify/math";
 
-export const VAMPIREZ_MODES = ['overall'] as const;
+export const VAMPIREZ_MODES = ["overall"] as const;
 export type VampireZModes = typeof VAMPIREZ_MODES;
 
 export class VampireZ {
@@ -30,12 +30,12 @@ export class VampireZ {
   public constructor(data: APIData) {
     this.coins = data.coins;
 
-    this.human = new VampireZLife(data, 'human');
-    this.vampire = new VampireZLife(data, 'vampire');
+    this.human = new VampireZLife(data, "human");
+    this.vampire = new VampireZLife(data, "vampire");
 
     this.overall = deepAdd(this.human, this.vampire);
     VampireZLife.applyRatios(this.overall);
   }
 }
 
-export * from './life';
+export * from "./life";

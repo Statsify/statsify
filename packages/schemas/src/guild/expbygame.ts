@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from '@statsify/util';
-import { FormattedGame } from '../game';
-import { Field } from '../metadata';
+import { APIData } from "@statsify/util";
+import { Field } from "../metadata";
+import { FormattedGame } from "../game";
 
 const limit = 50_000;
-const fieldName = 'GEXP';
+const fieldName = "GEXP";
 
 /**
  * Removes some useless broken games from the `guildExpByGameType` field such as `SMP` or `SKYBLOCK`

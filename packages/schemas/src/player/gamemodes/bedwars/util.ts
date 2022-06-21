@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { findScore } from '@statsify/util';
+import { findScore } from "@statsify/util";
 
 export const getExpReq = (level: number) => {
   const progress = level % 100;
@@ -23,9 +23,9 @@ export const getExpReq = (level: number) => {
 };
 
 export const getLevel = (exp = 0): number => {
-  const prestiges = Math.floor(exp / 487000);
+  const prestiges = Math.floor(exp / 487_000);
   let level = prestiges * 100;
-  let remainingExp = exp - prestiges * 487000;
+  let remainingExp = exp - prestiges * 487_000;
 
   for (let i = 0; i < 4; ++i) {
     const expForNextLevel = getExpReq(i);
@@ -54,7 +54,7 @@ export const getFormattedLevel = (star: number): string => {
     {
       req: 1000,
       fn: (n) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         return `§c[§6${nums[0]}§e${nums[1]}§a${nums[2]}§b${nums[3]}§d✫§5]`;
       },
     },
@@ -70,77 +70,77 @@ export const getFormattedLevel = (star: number): string => {
     {
       req: 2000,
       fn: (n) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         return `§8[§7${nums[0]}§f${nums[1]}${nums[2]}§7${nums[3]}§8✪]`;
       },
     },
     {
       req: 2100,
       fn: (n) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         return `§f[${nums[0]}§e${nums[1]}${nums[2]}§6${nums[3]}§l⚝§r§6]`;
       },
     },
     {
       req: 2200,
       fn: (n) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         return `§6[${nums[0]}§f${nums[1]}${nums[2]}§b${nums[3]}§3§l⚝§r§3]`;
       },
     },
     {
       req: 2300,
       fn: (n) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         return `§5[${nums[0]}§d${nums[1]}${nums[2]}§6${nums[3]}§e§l⚝§r§e]`;
       },
     },
     {
       req: 2400,
       fn: (n) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         return `§b[${nums[0]}§f${nums[1]}${nums[2]}§7${nums[3]}§l⚝§r§8]`;
       },
     },
     {
       req: 2500,
       fn: (n) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         return `§f[${nums[0]}§a${nums[1]}${nums[2]}§2${nums[3]}§l⚝§r§2]`;
       },
     },
     {
       req: 2600,
       fn: (n) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         return `§4[${nums[0]}§c${nums[1]}${nums[2]}§d${nums[3]}§l⚝§r§d]`;
       },
     },
     {
       req: 2700,
       fn: (n) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         return `§e[${nums[0]}§f${nums[1]}${nums[2]}§8${nums[3]}§l⚝§r§8]`;
       },
     },
     {
       req: 2800,
       fn: (n) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         return `§a[${nums[0]}§2${nums[1]}${nums[2]}§6${nums[3]}§l⚝§r§e]`;
       },
     },
     {
       req: 2900,
       fn: (n) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         return `§b[${nums[0]}§3${nums[1]}${nums[2]}§9${nums[3]}§l⚝§r§1]`;
       },
     },
     {
       req: 3000,
       fn: (n) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         return `§e[${nums[0]}§6${nums[1]}${nums[2]}§c${nums[3]}§l⚝§r§4]`;
       },
     },

@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from '@statsify/util';
-import { modelOptions as ModelOptions, Severity } from '@typegoose/typegoose';
-import { Color } from '../color';
-import { Field } from '../metadata';
-import { PlayerSocials } from './socials';
-import { PlayerStats } from './stats';
-import { PlayerStatus } from './status';
-import { PlayerUtil } from './util';
+import { APIData } from "@statsify/util";
+import { Color } from "../color";
+import { Field } from "../metadata";
+import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
+import { PlayerSocials } from "./socials";
+import { PlayerStats } from "./stats";
+import { PlayerStatus } from "./status";
+import { PlayerUtil } from "./util";
 
 @ModelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class Player {
@@ -29,7 +29,7 @@ export class Player {
   @Field({ mongo: { index: true, lowercase: true }, store: { required: true } })
   public usernameToLower: string;
 
-  @Field({ store: { default: 'DEFAULT' } })
+  @Field({ store: { default: "DEFAULT" } })
   public rank: string;
 
   @Field()
@@ -38,7 +38,7 @@ export class Player {
   @Field({
     docs: {
       description: "The player's name with their rank color as seen in game lobbies",
-      examples: ['§bj4cobi'],
+      examples: ["§bj4cobi"],
     },
   })
   public prefixName: string;
@@ -46,7 +46,7 @@ export class Player {
   @Field({
     docs: {
       description: "The player's name with their formatted rank",
-      examples: ['§b[MVP§c+] j4cobi'],
+      examples: ["§b[MVP§c+] j4cobi"],
     },
   })
   public displayName: string;
@@ -54,7 +54,7 @@ export class Player {
   @Field()
   public socials: PlayerSocials;
 
-  @Field({ leaderboard: { fieldName: '' } })
+  @Field({ leaderboard: { fieldName: "" } })
   public stats: PlayerStats;
 
   @Field()
@@ -96,7 +96,11 @@ export class Player {
     this.rank = PlayerUtil.getRank(data);
     this.plusColor = PlayerUtil.getPlusColor(this.rank, data?.rankPlusColor);
     this.prefixName = `${PlayerUtil.getRankColor(this.rank).toString()}${this.username}`;
-    this.displayName = PlayerUtil.getDisplayName(this.username, this.rank, this.plusColor.code);
+    this.displayName = PlayerUtil.getDisplayName(
+      this.username,
+      this.rank,
+      this.plusColor.code
+    );
 
     this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});
 
@@ -104,7 +108,8 @@ export class Player {
 
     this.status = new PlayerStatus(data);
 
-    this.goldAchievements = data?.vanityMeta?.packages?.includes('goldachievementmenu') ?? false;
+    this.goldAchievements =
+      data?.vanityMeta?.packages?.includes("goldachievementmenu") ?? false;
 
     //These will all be filled in by a service
     this.expiresAt = 0;
@@ -113,7 +118,7 @@ export class Player {
   }
 }
 
-export * from './gamemodes';
-export * from './socials';
-export * from './stats';
-export * from './status';
+export * from "./gamemodes";
+export * from "./socials";
+export * from "./stats";
+export * from "./status";

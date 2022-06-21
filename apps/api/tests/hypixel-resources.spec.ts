@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ValidationPipe } from '@nestjs/common';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
-import { Test } from '@nestjs/testing';
-import { HypixelResourcesController } from '../src/hypixel-resources';
-import { useMocker } from './mocks';
-import { testKey } from './test.constants';
+import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import { HypixelResourcesController } from "../src/hypixel-resources";
+import { Test } from "@nestjs/testing";
+import { ValidationPipe } from "@nestjs/common";
+import { testKey } from "./test.constants";
+import { useMocker } from "./mocks";
 
-describe('HypixelResources', () => {
+describe("HypixelResources", () => {
   let app: NestFastifyApplication;
 
   beforeAll(async () => {
@@ -33,10 +33,10 @@ describe('HypixelResources', () => {
 
   it(`/GET hypixelresources/watchdog`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/hypixelresources/watchdog`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 
@@ -45,10 +45,10 @@ describe('HypixelResources', () => {
 
   it(`/GET hypixelresources/gamecounts`, async () => {
     const result = await app.inject({
-      method: 'GET',
+      method: "GET",
       url: `/hypixelresources/gamecounts`,
       headers: {
-        'x-api-key': testKey,
+        "x-api-key": testKey,
       },
     });
 

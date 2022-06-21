@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { flatten } from '@statsify/util';
-import { Field, serialize } from '../src/metadata';
+import { Field, serialize } from "../src/metadata";
+import { flatten } from "@statsify/util";
 
-describe('serialize', () => {
+describe("serialize", () => {
   class TesterB {
     @Field()
     public field1: number;
@@ -32,18 +32,18 @@ describe('serialize', () => {
     public field5: TesterB;
 
     public constructor() {
-      this.field1 = 'field1';
+      this.field1 = "field1";
       this.field2 = 0;
       this.field3 = 3;
       this.field5 = new TesterB();
     }
   }
 
-  it('should correctly remove fields', () => {
+  it("should correctly remove fields", () => {
     const result = serialize(Tester, flatten(new Tester()));
 
     expect(result).toEqual({
-      field1: 'field1',
+      field1: "field1",
       field3: 3,
     });
   });

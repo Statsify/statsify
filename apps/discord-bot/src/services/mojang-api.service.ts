@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { User } from '@statsify/schemas';
-import axios, { AxiosInstance } from 'axios';
-import { randomUUID } from 'crypto';
-import { Service } from 'typedi';
-import { ApiService } from './api.service';
+import axios, { AxiosInstance } from "axios";
+import { ApiService } from "./api.service";
+import { Service } from "typedi";
+import { User } from "@statsify/schemas";
+import { randomUUID } from "node:crypto";
 
 export interface AshconResponse {
   uuid: string;
@@ -37,8 +37,8 @@ export class MojangApiService {
 
   public constructor(private readonly apiService: ApiService) {
     this.ashcon = axios.create({
-      baseURL: 'https://api.ashcon.app/mojang/v2/user/',
-      timeout: 10000,
+      baseURL: "https://api.ashcon.app/mojang/v2/user/",
+      timeout: 10_000,
     });
   }
 
@@ -68,9 +68,9 @@ export class MojangApiService {
   }
 
   public faceIconUrl(uuid: string) {
-    return `https://crafatar.com/avatars/${uuid.replace(
-      /-/g,
-      ''
+    return `https://crafatar.com/avatars/${uuid.replaceAll(
+      "-",
+      ""
     )}?size=160&default=MHF_Steve&overlay&id=${randomUUID()}`;
   }
 

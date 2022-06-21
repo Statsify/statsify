@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { If, Table } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { BaseDuelsGameMode, MultiDuelsGameMode } from '@statsify/schemas';
-import { prettify } from '@statsify/util';
+import { BaseDuelsGameMode, MultiDuelsGameMode } from "@statsify/schemas";
+import { If, Table } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { prettify } from "@statsify/util";
 
 interface MultiDuelsGameModeModeTableProps {
   stats: BaseDuelsGameMode;
@@ -17,30 +17,36 @@ interface MultiDuelsGameModeModeTableProps {
   t: LocalizeFunction;
 }
 
-const MultiDuelsGameModeModeTable = ({ title, stats, t }: MultiDuelsGameModeModeTableProps) => {
-  return (
-    <Table.ts title={`§6${prettify(title)}`}>
-      <If condition={stats.bestWinstreak}>
-        <Table.tr>
-          <Table.td title={t('stats.winstreak')} value={t(stats.winstreak)} color="§e" />
-          <Table.td title={t('stats.bestWinstreak')} value={t(stats.bestWinstreak)} color="§e" />
-        </Table.tr>
-      </If>
+const MultiDuelsGameModeModeTable = ({
+  title,
+  stats,
+  t,
+}: MultiDuelsGameModeModeTableProps) => (
+  <Table.ts title={`§6${prettify(title)}`}>
+    <If condition={stats.bestWinstreak}>
       <Table.tr>
-        <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-        <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
+        <Table.td title={t("stats.winstreak")} value={t(stats.winstreak)} color="§e" />
+        <Table.td
+          title={t("stats.bestWinstreak")}
+          value={t(stats.bestWinstreak)}
+          color="§e"
+        />
       </Table.tr>
-      <Table.tr>
-        <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
-        <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
-      </Table.tr>
-      <Table.tr>
-        <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
-        <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
-      </Table.tr>
-    </Table.ts>
-  );
-};
+    </If>
+    <Table.tr>
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+    </Table.tr>
+    <Table.tr>
+      <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
+      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+    </Table.tr>
+    <Table.tr>
+      <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
+      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+    </Table.tr>
+  </Table.ts>
+);
 
 interface MultiDuelsGameModeTableProps {
   stats: MultiDuelsGameMode;
@@ -48,7 +54,7 @@ interface MultiDuelsGameModeTableProps {
 }
 
 export const MultiDuelsGameModeTable = ({ stats, t }: MultiDuelsGameModeTableProps) => {
-  const modes = ['overall', 'solo', 'doubles'] as const;
+  const modes = ["overall", "solo", "doubles"] as const;
 
   return (
     <Table.table>

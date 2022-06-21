@@ -6,18 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PlayerArgument } from '#arguments';
-import { Container, Footer, Header, Table } from '#components';
-import { ApiService } from '#services';
-import { getBackground, getLogo } from '@statsify/assets';
-import { Command, CommandContext } from '@statsify/discord';
-import { render } from '@statsify/rendering';
-import { LeaderboardScanner, Parkour } from '@statsify/schemas';
-import { formatTime, removeFormatting } from '@statsify/util';
-import { getTheme } from '../themes';
+import { ApiService } from "#services";
+import { Command, CommandContext } from "@statsify/discord";
+import { Container, Footer, Header, Table } from "#components";
+import { LeaderboardScanner, Parkour } from "@statsify/schemas";
+import { PlayerArgument } from "#arguments";
+import { formatTime, removeFormatting } from "@statsify/util";
+import { getBackground, getLogo } from "@statsify/assets";
+import { getTheme } from "../themes";
+import { render } from "@statsify/rendering";
 
 @Command({
-  description: (t) => t('commands.parkour'),
+  description: (t) => t("commands.parkour"),
   args: [PlayerArgument],
   cooldown: 5,
 })
@@ -26,7 +26,7 @@ export class ParkourCommand {
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    const player = await this.apiService.getPlayer(context.option('player'), user);
+    const player = await this.apiService.getPlayer(context.option("player"), user);
 
     const { parkour } = player.stats;
 
@@ -36,11 +36,13 @@ export class ParkourCommand {
       this.apiService.getUserBadge(player.uuid),
     ]);
 
-    const background = await getBackground('hypixel', 'overall');
+    const background = await getBackground("hypixel", "overall");
 
     const times = Object.entries(parkour).map(([field, time]) => [
       removeFormatting(
-        LeaderboardScanner.getLeaderboardField(Parkour, field).name.replace(/Lobby/g, '').trim()
+        LeaderboardScanner.getLeaderboardField(Parkour, field)
+          .name.replaceAll("Lobby", "")
+          .trim()
       ),
       time == 0 ? null : time,
     ]);
@@ -59,7 +61,7 @@ export class ParkourCommand {
           skin={skin}
           badge={badge}
           title="Parkour Times"
-          time={'LIVE'}
+          time={"LIVE"}
         />
         <Table.table>
           {rows.map((row) => (
@@ -67,7 +69,11 @@ export class ParkourCommand {
               {row.map((game) => (
                 <Table.td
                   title={`§a§l${game[0]}`}
-                  value={game[1] ? formatTime(game[1], { short: true, accuracy: 'second' }) : 'N/A'}
+                  value={
+                    game[1]
+                      ? formatTime(game[1], { short: true, accuracy: "second" })
+                      : "N/A"
+                  }
                   color="§e"
                 />
               ))}
@@ -79,10 +85,10 @@ export class ParkourCommand {
     );
 
     const canvas = render(container, getTheme(user?.theme));
-    const img = await canvas.toBuffer('png');
+    const img = await canvas.toBuffer("png");
 
     return {
-      files: [{ name: 'parkour.png', data: img, type: 'image/png' }],
+      files: [{ name: "parkour.png", data: img, type: "image/png" }],
     };
   }
 }

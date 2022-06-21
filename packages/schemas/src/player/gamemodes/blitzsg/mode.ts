@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { add, ratio } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
+import { APIData } from "@statsify/util";
+import { Field } from "../../../metadata";
+import { add, ratio } from "@statsify/math";
 
 export class BlitzSGMode {
   @Field()
@@ -20,7 +20,7 @@ export class BlitzSGMode {
   public constructor(data: APIData, mode: string) {
     mode = mode ? `_${mode}` : mode;
 
-    this.wins = data[`wins${mode || '_solo_normal'}`];
+    this.wins = data[`wins${mode || "_solo_normal"}`];
     this.kills = data[`kills${mode}`];
   }
 }

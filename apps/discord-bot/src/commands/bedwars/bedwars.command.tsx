@@ -6,12 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from '@statsify/discord';
-import { BedWarsModes, BEDWARS_MODES } from '@statsify/schemas';
-import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
-import { BedWarsProfile } from './bedwars.profile';
+import { BEDWARS_MODES, BedWarsModes } from "@statsify/schemas";
+import {
+  BaseHypixelCommand,
+  BaseProfileProps,
+  ProfileData,
+} from "../base.hypixel-command";
+import { BedWarsProfile } from "./bedwars.profile";
+import { Command } from "@statsify/discord";
 
-@Command({ description: (t) => t('commands.bedwars') })
+@Command({ description: (t) => t("commands.bedwars") })
 export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
   public constructor() {
     super(BEDWARS_MODES);

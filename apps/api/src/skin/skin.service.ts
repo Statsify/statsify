@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { InjectModel } from '@m8a/nestjs-typegoose';
-import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
-import { getMinecraftTexturePath, importAsset } from '@statsify/assets';
-import { loadImage } from '@statsify/rendering';
-import { Skin } from '@statsify/schemas';
-import { ReturnModelType } from '@typegoose/typegoose';
-import { catchError, lastValueFrom, map, of } from 'rxjs';
-import { Canvas, type Image } from 'skia-canvas';
+import { Canvas, type Image } from "skia-canvas";
+import { HttpService } from "@nestjs/axios";
+import { InjectModel } from "@m8a/nestjs-typegoose";
+import { Injectable } from "@nestjs/common";
+import { ReturnModelType } from "@typegoose/typegoose";
+import { Skin } from "@statsify/schemas";
+import { catchError, lastValueFrom, map, of } from "rxjs";
+import { getMinecraftTexturePath, importAsset } from "@statsify/assets";
+import { loadImage } from "@statsify/rendering";
 
 @Injectable()
 export class SkinService {
@@ -29,16 +29,16 @@ export class SkinService {
     const { skin } = await this.getSkin(uuid);
 
     const canvas = new Canvas(size, size);
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
-    ctx.fillStyle = '#000';
+    ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, size, size);
 
     ctx.drawImage(skin, 8, 8, 8, 8, 0, 0, size, size);
     ctx.drawImage(skin, 40, 8, 8, 8, 0, 0, size, size);
 
-    return canvas.toBuffer('png');
+    return canvas.toBuffer("png");
   }
 
   public async getRender(uuid: string): Promise<Buffer> {
@@ -48,7 +48,7 @@ export class SkinService {
 
     if (!renderer) {
       const canvas = new Canvas(380, 640);
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
 
       const skin = await loadImage(`https://crafatar.com/renders/body/${uuid}?overlay`);
 
@@ -56,18 +56,24 @@ export class SkinService {
       const width = skin.width * scale;
       const height = skin.height * scale;
 
-      ctx.drawImage(skin, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+      ctx.drawImage(
+        skin,
+        (canvas.width - width) / 2,
+        (canvas.height - height) / 2,
+        width,
+        height
+      );
 
-      return canvas.toBuffer('png');
+      return canvas.toBuffer("png");
     }
 
     return renderer(skin, slim);
   }
 
   public async getSkin(uuid: string) {
-    uuid = uuid.replace(/-/g, '');
+    uuid = uuid.replaceAll("-", "");
 
-    const skin = await this.skinModel.findOne().where('uuid').equals(uuid).lean().exec();
+    const skin = await this.skinModel.findOne().where("uuid").equals(uuid).lean().exec();
 
     if (skin && Date.now() < skin.expiresAt) {
       return this.resolveSkin(skin.skinUrl, skin.slim);
@@ -93,7 +99,10 @@ export class SkinService {
     slim?: boolean
   ): Promise<{ skin: Image; slim: boolean }> {
     if (!skinUrl) {
-      return this.resolveSkin(getMinecraftTexturePath('textures/entity/steve.png'), false);
+      return this.resolveSkin(
+        getMinecraftTexturePath("textures/entity/steve.png"),
+        false
+      );
     }
 
     const skin = await loadImage(skinUrl);
@@ -117,7 +126,7 @@ export class SkinService {
   private async getSkinRenderer() {
     if (this.skinRenderer) return this.skinRenderer;
 
-    const renderer = await importAsset<any>('skin-renderer');
+    const renderer = await importAsset<any>("skin-renderer");
 
     if (!renderer) return null;
 

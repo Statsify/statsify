@@ -9,24 +9,30 @@
 import {
   Container,
   Footer,
-  formatProgression,
   If,
   Multiline,
   ProgressFunction,
   Table,
-} from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { ratio } from '@statsify/math';
-import { StyleLocation } from '@statsify/rendering';
-import { FormattedGame, GameCodeToName, Guild, GuildMember, UserTier } from '@statsify/schemas';
-import { ExpByGame } from '@statsify/schemas/src/guild/expbygame';
-import { arrayGroup, wordGroup } from '@statsify/util';
-import { DateTime } from 'luxon';
-import type { Image } from 'skia-canvas';
-import { GexpTable } from './gexp.table';
+  formatProgression,
+} from "#components";
+import { DateTime } from "luxon";
+import { ExpByGame } from "@statsify/schemas/src/guild/expbygame";
+import {
+  FormattedGame,
+  GameCodeToName,
+  Guild,
+  GuildMember,
+  UserTier,
+} from "@statsify/schemas";
+import { GexpTable } from "./gexp.table";
+import { LocalizeFunction } from "@statsify/discord";
+import { StyleLocation } from "@statsify/rendering";
+import { arrayGroup, wordGroup } from "@statsify/util";
+import { ratio } from "@statsify/math";
+import type { Image } from "skia-canvas";
 
 const LINK_REGEX =
-  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)|[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/g;
+  /https?:\/\/(www\.)?[\w#%+.:=@~-]{1,256}\.[\d()A-Za-z]{1,6}\b([\w#%&()+./:=?@~-]*)|[\w#%+.:=@~-]{1,256}\.[\d()A-Za-z]{1,6}\b([\w#%&()+./:=?@~-]*)/g;
 
 interface GuildBlockProps {
   width?: JSX.Measurement;
@@ -48,16 +54,16 @@ const GuildBlock = ({ title, width, height, children }: GuildBlockProps) => (
   </div>
 );
 
-const text: JSX.IntrinsicElements['text'] = {
-  align: 'left' as StyleLocation,
+const text: JSX.IntrinsicElements["text"] = {
+  align: "left" as StyleLocation,
   margin: { top: 1, bottom: 1 },
 };
 
-const box: JSX.IntrinsicElements['box'] = {
+const box: JSX.IntrinsicElements["box"] = {
   padding: { left: 8, right: 8, top: 4, bottom: 4 },
-  width: '100%',
-  height: 'remaining',
-  direction: 'column',
+  width: "100%",
+  height: "remaining",
+  direction: "column",
 };
 
 export interface GuildProfileProps {
@@ -70,7 +76,7 @@ export interface GuildProfileProps {
   tier?: UserTier;
   t: LocalizeFunction;
   ranking: number;
-  page: 'overall' | 'gexp' | 'expPerGame' | 'misc';
+  page: "overall" | "gexp" | "expPerGame" | "misc";
 }
 
 export const GuildProfile = ({
@@ -88,17 +94,17 @@ export const GuildProfile = ({
   let pageEl: JSX.Element;
 
   switch (page) {
-    case 'gexp':
+    case "gexp":
       pageEl = <GuildGexpPage guild={guild} t={t} />;
       break;
-    case 'expPerGame':
+    case "expPerGame":
       pageEl = <GuildGexpPerGamePage guild={guild} t={t} gameIcons={gameIcons} />;
       break;
-    case 'misc':
+    case "misc":
       pageEl = <GuildMiscPage guild={guild} t={t} />;
       break;
     default:
-    case 'overall':
+    case "overall":
       pageEl = (
         <GuildOverallPage
           guild={guild}
@@ -141,7 +147,9 @@ const GuildOverallPage = ({
   t,
 }: GuildOverallPageProps) => {
   const format = "LL/dd/yy',' hh:mm a";
-  const createdAt = DateTime.fromMillis(guild.createdAt).toFormat(format, { locale: t.locale });
+  const createdAt = DateTime.fromMillis(guild.createdAt).toFormat(format, {
+    locale: t.locale,
+  });
   const preferredGames = guild.preferredGames.map((g) => gameIcons[g]);
 
   return (
@@ -150,18 +158,18 @@ const GuildOverallPage = ({
         <GuildBlock title="Guild Info" width="remaining" height="100%">
           <box {...box}>
             <div location="center">
-              <text {...text}>{`§b${t('stats.guild.guildMaster')}:`}</text>
+              <text {...text}>{`§b${t("stats.guild.guildMaster")}:`}</text>
               <img image={skin} margin={{ left: 8, right: 8 }} />
               <text {...text}>{guildMaster.displayName}</text>
             </div>
-            <text {...text}>{`§3${t('stats.guild.createdOn')}: §7${createdAt}`}</text>
-            <text {...text}>{`§9${t('stats.guild.members')}: §f${t(
+            <text {...text}>{`§3${t("stats.guild.createdOn")}: §7${createdAt}`}</text>
+            <text {...text}>{`§9${t("stats.guild.members")}: §f${t(
               guild.members.length
             )}§8/§f125`}</text>
-            <text {...text}>{`§2${t('stats.guild.gexp')}:§f ${t(guild.exp)} §8[§7#§f${t(
+            <text {...text}>{`§2${t("stats.guild.gexp")}:§f ${t(guild.exp)} §8[§7#§f${t(
               ranking
             )}§8]`}</text>
-            <text {...text}>{`§e${t('stats.guild.level')}:§f ${t(guild.level)}`}</text>
+            <text {...text}>{`§e${t("stats.guild.level")}:§f ${t(guild.level)}`}</text>
           </box>
         </GuildBlock>
         <If condition={guild.description}>
@@ -169,7 +177,9 @@ const GuildOverallPage = ({
             <GuildBlock title="Guild Description" height="100%">
               <box {...box}>
                 {wordGroup(description, 10).map((m) => (
-                  <text {...text}>{m.replace(LINK_REGEX, (match) => `§b§u${match}§r`)}</text>
+                  <text {...text}>
+                    {m.replace(LINK_REGEX, (match) => `§b§u${match}§r`)}
+                  </text>
                 ))}
               </box>
             </GuildBlock>
@@ -179,9 +189,17 @@ const GuildOverallPage = ({
       <GuildBlock title="Guild Experience" width="100%">
         <Table.table>
           <Table.tr>
-            <Table.td title={t('stats.guild.daily')} value={t(guild.daily)} color="§2" />
-            <Table.td title={t('stats.guild.weekly')} value={t(guild.weekly)} color="§2" />
-            <Table.td title={t('stats.guild.monthly')} value={t(guild.monthly)} color="§2" />
+            <Table.td title={t("stats.guild.daily")} value={t(guild.daily)} color="§2" />
+            <Table.td
+              title={t("stats.guild.weekly")}
+              value={t(guild.weekly)}
+              color="§2"
+            />
+            <Table.td
+              title={t("stats.guild.monthly")}
+              value={t(guild.monthly)}
+              color="§2"
+            />
           </Table.tr>
         </Table.table>
       </GuildBlock>
@@ -219,10 +237,12 @@ const GuildGexpPage = ({ guild, t }: GuildGexpPageProps) => {
     const max = 40;
     const count = Math.ceil(max * percentage);
 
-    return `§8[${guild.tagColor.code}${'|'.repeat(count)}§7${'|'.repeat(max - count)}§8]§r`;
+    return `§8[${guild.tagColor.code}${"|".repeat(count)}§7${"|".repeat(
+      max - count
+    )}§8]§r`;
   };
 
-  const leveling = `§7${t('stats.guild.level')}: ${guildColor}${t(
+  const leveling = `§7${t("stats.guild.level")}: ${guildColor}${t(
     guild.level
   )}\n${formatProgression(
     t,
@@ -243,29 +263,37 @@ const GuildGexpPage = ({ guild, t }: GuildGexpPageProps) => {
       <GuildBlock title="Guild Experience" width="100%">
         <Table.table>
           <Table.tr>
-            <Table.td title={t('stats.guild.daily')} value={t(guild.daily)} color="§2" />
-            <Table.td title={t('stats.guild.weekly')} value={t(guild.weekly)} color="§2" />
-            <Table.td title={t('stats.guild.monthly')} value={t(guild.monthly)} color="§2" />
+            <Table.td title={t("stats.guild.daily")} value={t(guild.daily)} color="§2" />
+            <Table.td
+              title={t("stats.guild.weekly")}
+              value={t(guild.weekly)}
+              color="§2"
+            />
+            <Table.td
+              title={t("stats.guild.monthly")}
+              value={t(guild.monthly)}
+              color="§2"
+            />
           </Table.tr>
         </Table.table>
       </GuildBlock>
-      <GuildBlock title={t('stats.guild.averageMemberGexp')} width="100%">
+      <GuildBlock title={t("stats.guild.averageMemberGexp")} width="100%">
         <Table.table>
           <Table.tr>
             <Table.td
-              title={t('stats.guild.daily')}
+              title={t("stats.guild.daily")}
               value={t(ratio(guild.daily, guild.members.length))}
               color="§2"
               size="small"
             />
             <Table.td
-              title={t('stats.guild.weekly')}
+              title={t("stats.guild.weekly")}
               value={t(ratio(guild.weekly, guild.members.length))}
               color="§2"
               size="small"
             />
             <Table.td
-              title={t('stats.guild.monthly')}
+              title={t("stats.guild.monthly")}
               value={t(ratio(guild.monthly, guild.members.length))}
               color="§2"
               size="small"
@@ -331,8 +359,16 @@ const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
       <GuildBlock width="100%" title="Guild Achievements">
         <Table.table>
           <Table.tr>
-            <Table.td title="Winners" value={t(guild.achievements.dailyGuildWins)} color="§e" />
-            <Table.td title="Experience Kings" value={t(guild.achievements.dailyGexp)} color="§e" />
+            <Table.td
+              title="Winners"
+              value={t(guild.achievements.dailyGuildWins)}
+              color="§e"
+            />
+            <Table.td
+              title="Experience Kings"
+              value={t(guild.achievements.dailyGexp)}
+              color="§e"
+            />
             <Table.td
               title="Online Players"
               value={t(guild.achievements.maxOnlinePlayerCount)}
@@ -344,7 +380,11 @@ const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
       <GuildBlock width="100%" title="Guild Quests">
         <Table.table>
           <Table.tr>
-            <Table.td title="Quests Completed" value={t(guild.questParticipation)} color="§b" />
+            <Table.td
+              title="Quests Completed"
+              value={t(guild.questParticipation)}
+              color="§b"
+            />
           </Table.tr>
         </Table.table>
       </GuildBlock>
@@ -354,7 +394,9 @@ const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
             {ranks.map((rank) => (
               <box width={`1/${ranks.length}`}>
                 <text>
-                  {`${guild.tagColor.code}${rank.name}${rank.tag ? ` [${rank.tag}]` : ''}`}
+                  {`${guild.tagColor.code}${rank.name}${
+                    rank.tag ? ` [${rank.tag}]` : ""
+                  }`}
                 </text>
               </box>
             ))}

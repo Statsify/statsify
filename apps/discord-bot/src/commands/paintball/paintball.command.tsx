@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from '@statsify/discord';
-import { PaintballModes, PAINTBALL_MODES } from '@statsify/schemas';
-import { BaseHypixelCommand, BaseProfileProps } from '../base.hypixel-command';
-import { PaintballProfile } from './paintball.profile';
+import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command";
+import { Command } from "@statsify/discord";
+import { PAINTBALL_MODES, PaintballModes } from "@statsify/schemas";
+import { PaintballProfile } from "./paintball.profile";
 
-@Command({ description: (t) => t('commands.paintball') })
+@Command({ description: (t) => t("commands.paintball") })
 export class PaintballCommand extends BaseHypixelCommand<PaintballModes> {
   public constructor() {
     super(PAINTBALL_MODES);

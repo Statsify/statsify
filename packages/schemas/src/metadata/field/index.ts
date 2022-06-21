@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
-import { prop } from '@typegoose/typegoose';
-import { METADATA_KEY } from '../constants';
-import { FieldOptions } from '../field.options';
-import { ClassMetadata } from '../metadata.interface';
-import { getLeaderboardMetadata } from './get-leaderboard-metadata';
-import { getStoreMetadata } from './get-store-metadata';
-import { getTypeMetadata } from './get-type-metadata';
+import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
+import { ClassMetadata } from "../metadata.interface";
+import { FieldOptions } from "../field.options";
+import { METADATA_KEY } from "../constants";
+import { getLeaderboardMetadata } from "./get-leaderboard-metadata";
+import { getStoreMetadata } from "./get-store-metadata";
+import { getTypeMetadata } from "./get-type-metadata";
+import { prop } from "@typegoose/typegoose";
 
 export function Field({
   type: typeOptions,
@@ -26,7 +26,11 @@ export function Field({
     const metadata = (Reflect.getMetadata(METADATA_KEY, target) ?? {}) as ClassMetadata;
 
     const type = getTypeMetadata(typeOptions, target, propertyKey);
-    const leaderboard = getLeaderboardMetadata(type, propertyKey as string, leaderboardOptions);
+    const leaderboard = getLeaderboardMetadata(
+      type,
+      propertyKey as string,
+      leaderboardOptions
+    );
     const store = getStoreMetadata(type, leaderboard, storeOptions);
 
     Reflect.defineMetadata(

@@ -6,6 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from './Header';
-export * from './HeaderNametag';
-export * from './progression';
+export * from "./Header";
+export * from "./HeaderNametag";
+export * from "./progression";

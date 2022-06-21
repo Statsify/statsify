@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { add } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
-import { MurderMysteryMode } from './mode';
+import { APIData } from "@statsify/util";
+import { Field } from "../../../metadata";
+import { MurderMysteryMode } from "./mode";
+import { add } from "@statsify/math";
 
-export const MURDER_MYSTERY_MODES = ['overall'] as const;
+export const MURDER_MYSTERY_MODES = ["overall"] as const;
 export type MurderMysteryModes = typeof MURDER_MYSTERY_MODES;
 
 export class MurderMystery {
@@ -61,12 +61,12 @@ export class MurderMystery {
     this.detectiveWins = data.detective_wins;
     this.heroWins = ap.murdermystery_countermeasures;
 
-    this.overall = new MurderMysteryMode(data, '');
-    this.classic = new MurderMysteryMode(data, 'MURDER_CLASSIC');
-    this.assassins = new MurderMysteryMode(data, 'MURDER_ASSASSINS');
-    this.doubleUp = new MurderMysteryMode(data, 'MURDER_DOUBLE_UP');
-    this.infection = new MurderMysteryMode(data, 'MURDER_INFECTION');
+    this.overall = new MurderMysteryMode(data, "");
+    this.classic = new MurderMysteryMode(data, "MURDER_CLASSIC");
+    this.assassins = new MurderMysteryMode(data, "MURDER_ASSASSINS");
+    this.doubleUp = new MurderMysteryMode(data, "MURDER_DOUBLE_UP");
+    this.infection = new MurderMysteryMode(data, "MURDER_INFECTION");
   }
 }
 
-export * from './mode';
+export * from "./mode";

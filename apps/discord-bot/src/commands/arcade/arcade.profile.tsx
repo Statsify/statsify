@@ -6,10 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem } from '#components';
-import { ArcadeModes, FormattedGame } from '@statsify/schemas';
-import { prettify } from '@statsify/util';
-import { BaseProfileProps } from 'commands/base.hypixel-command';
+import { ArcadeModes, FormattedGame } from "@statsify/schemas";
+import { BaseProfileProps } from "commands/base.hypixel-command";
 import {
   BlockingDeadTable,
   BountyHuntersTable,
@@ -30,7 +28,9 @@ import {
   SeasonalTable,
   ThrowOutTable,
   ZombiesTable,
-} from './tables';
+} from "./tables";
+import { Container, Footer, Header, SidebarItem } from "#components";
+import { prettify } from "@statsify/util";
 
 export interface ArcadeProfileProps extends BaseProfileProps {
   mode: ArcadeModes[number];
@@ -50,65 +50,65 @@ export const ArcadeProfile = ({
   const { arcade } = player.stats;
 
   const sidebar: SidebarItem[] = [
-    [t('stats.coins'), t(arcade.coins), '§6'],
-    [t('stats.overallWins'), t(arcade.wins), '§b'],
+    [t("stats.coins"), t(arcade.coins), "§6"],
+    [t("stats.overallWins"), t(arcade.wins), "§b"],
   ];
 
   let table: JSX.Element;
 
   switch (mode) {
-    case 'blockingDead':
+    case "blockingDead":
       table = <BlockingDeadTable stats={arcade[mode]} t={t} />;
       break;
-    case 'bountyHunters':
+    case "bountyHunters":
       table = <BountyHuntersTable stats={arcade[mode]} t={t} />;
       break;
-    case 'captureTheWool':
+    case "captureTheWool":
       table = <CaptureTheWoolTable stats={arcade[mode]} t={t} />;
       break;
-    case 'creeperAttack':
+    case "creeperAttack":
       table = <CreeperAttackTable stats={arcade[mode]} t={t} />;
       break;
-    case 'dragonWars':
+    case "dragonWars":
       table = <DragonWarsTable stats={arcade[mode]} t={t} />;
       break;
-    case 'enderSpleef':
+    case "enderSpleef":
       table = <EnderSpleefTable stats={arcade[mode]} t={t} />;
       break;
-    case 'farmHunt':
+    case "farmHunt":
       table = <FarmHuntTable stats={arcade[mode]} t={t} />;
       break;
-    case 'football':
+    case "football":
       table = <FootballTable stats={arcade[mode]} t={t} />;
       break;
-    case 'galaxyWars':
+    case "galaxyWars":
       table = <GalaxyWarsTable stats={arcade[mode]} t={t} />;
       break;
-    case 'hideAndSeek':
+    case "hideAndSeek":
       table = <HideAndSeekTable stats={arcade[mode]} t={t} />;
       break;
-    case 'holeInTheWall':
+    case "holeInTheWall":
       table = <HoleInTheWallTable stats={arcade[mode]} t={t} />;
       break;
-    case 'hypixelSays':
+    case "hypixelSays":
       table = <HypixelSaysTable stats={arcade[mode]} t={t} />;
       break;
-    case 'miniWalls':
+    case "miniWalls":
       table = <MiniWallsTable stats={arcade[mode]} t={t} />;
       break;
-    case 'partyGames':
+    case "partyGames":
       table = <PartyGamesTable stats={arcade[mode]} t={t} />;
       break;
-    case 'pixelPainters':
+    case "pixelPainters":
       table = <PixelPaintersTable stats={arcade[mode]} t={t} />;
       break;
-    case 'seasonal':
+    case "seasonal":
       table = <SeasonalTable stats={arcade[mode]} t={t} />;
       break;
-    case 'throwOut':
+    case "throwOut":
       table = <ThrowOutTable stats={arcade[mode]} t={t} />;
       break;
-    case 'zombies':
+    case "zombies":
       table = <ZombiesTable stats={arcade[mode]} t={t} />;
       break;
     default:

@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from '@statsify/discord';
-import { InviteCommand } from './invite.command';
+import { Command } from "@statsify/discord";
+import { InviteCommand } from "./invite.command";
 
-@Command({ description: (t) => t('commands.info') })
+@Command({ description: (t) => t("commands.info") })
 export class LinksCommand extends InviteCommand {}

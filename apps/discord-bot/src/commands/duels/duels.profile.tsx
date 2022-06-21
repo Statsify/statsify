@@ -6,16 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem } from '#components';
-import { DuelsModes, FormattedGame } from '@statsify/schemas';
-import { prettify } from '@statsify/util';
-import { BaseProfileProps } from '../base.hypixel-command';
+import { BaseProfileProps } from "../base.hypixel-command";
 import {
   BridgeDuelsTable,
   MultiDuelsGameModeTable,
   SingleDuelsGameModeTable,
   UHCDuelsTable,
-} from './tables';
+} from "./tables";
+import { Container, Footer, Header, SidebarItem } from "#components";
+import { DuelsModes, FormattedGame } from "@statsify/schemas";
+import { prettify } from "@statsify/util";
 
 export interface DuelsProfileProps extends BaseProfileProps {
   mode: DuelsModes[number];
@@ -35,24 +35,24 @@ export const DuelsProfile = ({
   const { duels } = player.stats;
 
   const sidebar: SidebarItem[] = [
-    [t('stats.coins'), t(duels.coins), '§6'],
-    [t('stats.lootChests'), t(duels.lootChests), '§e'],
-    [t('stats.pingRange'), `${t(duels.pingRange)}ms`, '§2'],
-    [t('stats.blocksPlaced'), t(duels.overall.blocksPlaced), '§9'],
+    [t("stats.coins"), t(duels.coins), "§6"],
+    [t("stats.lootChests"), t(duels.lootChests), "§e"],
+    [t("stats.pingRange"), `${t(duels.pingRange)}ms`, "§2"],
+    [t("stats.blocksPlaced"), t(duels.overall.blocksPlaced), "§9"],
   ];
 
   let table: JSX.Element;
 
   switch (mode) {
-    case 'bridge':
+    case "bridge":
       table = <BridgeDuelsTable stats={duels[mode]} t={t} />;
       break;
-    case 'uhc':
+    case "uhc":
       table = <UHCDuelsTable stats={duels[mode]} t={t} />;
       break;
-    case 'skywars':
-    case 'op':
-    case 'megawalls':
+    case "skywars":
+    case "op":
+    case "megawalls":
       table = <MultiDuelsGameModeTable stats={duels[mode]} t={t} />;
       break;
     default:

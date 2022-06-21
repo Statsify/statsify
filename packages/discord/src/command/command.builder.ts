@@ -6,14 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Constructor } from '@statsify/util';
-import { Container } from 'typedi';
-import type { CommandMetadata, SubCommandMetadata } from './command.interface';
-import { CommandResolvable } from './command.resolvable';
+import { CommandResolvable } from "./command.resolvable";
+import { Constructor } from "@statsify/util";
+import { Container } from "typedi";
+import type { CommandMetadata, SubCommandMetadata } from "./command.interface";
 
 export class CommandBuilder {
   public static scan<T>(target: T, constructor: Constructor<T>) {
-    const commandMetadata = Reflect.getMetadata('statsify:command', constructor) as CommandMetadata;
+    const commandMetadata = Reflect.getMetadata(
+      "statsify:command",
+      constructor
+    ) as CommandMetadata;
 
     if (!commandMetadata) {
       throw new Error(`Command metadata not found on ${constructor.name}`);
@@ -27,7 +30,7 @@ export class CommandBuilder {
     });
 
     const subcommandMetadata = Reflect.getMetadata(
-      'statsify:subcommand',
+      "statsify:subcommand",
       target
     ) as SubCommandMetadata;
 

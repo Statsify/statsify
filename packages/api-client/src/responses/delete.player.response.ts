@@ -6,6 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { SuccessResponse } from './success.response';
+import { SuccessResponse } from "./success.response";
 
 export class DeletePlayerResponse extends SuccessResponse {}

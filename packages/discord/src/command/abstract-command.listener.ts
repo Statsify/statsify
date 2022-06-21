@@ -6,19 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Logger } from '@statsify/logger';
-import { APIUser, GatewayDispatchEvents } from 'discord-api-types/v10';
+import { APIUser, GatewayDispatchEvents } from "discord-api-types/v10";
+import { Interaction } from "../interaction";
+import { Logger } from "@statsify/logger";
 import type {
   Interaction as DiscordInteraction,
   InteractionResponse,
   InteractionServer,
   RestClient,
   WebsocketShard,
-} from 'tiny-discord';
-import { Interaction } from '../interaction';
+} from "tiny-discord";
 
 export abstract class AbstractCommandListener {
-  protected readonly logger = new Logger('CommandListener');
+  protected readonly logger = new Logger("CommandListener");
 
   public constructor(
     client: InteractionServer,
@@ -51,11 +51,11 @@ export abstract class AbstractCommandListener {
   }
 
   private handleInteractionServer(client: InteractionServer) {
-    client.on('error', (err) => {
+    client.on("error", (err) => {
       this.logger.error(err);
     });
 
-    client.on('interaction', (_interaction) => {
+    client.on("interaction", (_interaction) => {
       const interaction = new Interaction(this.rest, _interaction, this.applicationId);
 
       return this.onInteraction(interaction);
@@ -63,13 +63,13 @@ export abstract class AbstractCommandListener {
   }
 
   private handleWebsocketShard(client: WebsocketShard) {
-    client.on('ready', (data) => {
+    client.on("ready", (data) => {
       this.logger.log(
         `Connected to gateway with WebsocketShard on ${(data.user as APIUser).username}`
       );
     });
 
-    client.on('event', async (event) => {
+    client.on("event", async (event) => {
       if (event.t !== GatewayDispatchEvents.InteractionCreate) return;
 
       const interaction = new Interaction(

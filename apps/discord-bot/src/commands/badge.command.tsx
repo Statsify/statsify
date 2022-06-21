@@ -6,94 +6,103 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { FileArgument } from '#arguments';
-import { Container, Footer, HeaderNametag, Skin } from '#components';
-import { ApiService } from '#services';
-import { getBackground, getLogo } from '@statsify/assets';
-import { Command, CommandContext, IMessage, LocalizeFunction, SubCommand } from '@statsify/discord';
-import { loadImage, render } from '@statsify/rendering';
-import { User } from '@statsify/schemas';
-import { APIAttachment } from 'discord-api-types/v10';
-import { Canvas, Image } from 'skia-canvas';
-import { ErrorMessage } from '../error.message';
-import { getTheme } from '../themes';
+import { APIAttachment } from "discord-api-types/v10";
+import { ApiService } from "#services";
+import { Canvas, Image } from "skia-canvas";
+import {
+  Command,
+  CommandContext,
+  IMessage,
+  LocalizeFunction,
+  SubCommand,
+} from "@statsify/discord";
+import { Container, Footer, HeaderNametag, Skin } from "#components";
+import { ErrorMessage } from "../error.message";
+import { FileArgument } from "#arguments";
+import { User } from "@statsify/schemas";
+import { getBackground, getLogo } from "@statsify/assets";
+import { getTheme } from "../themes";
+import { loadImage, render } from "@statsify/rendering";
 
-@Command({ description: (t) => t('commands.badge') })
+@Command({ description: (t) => t("commands.badge") })
 export class BadgeCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({
-    description: (t) => t('commands.badge.view'),
+    description: (t) => t("commands.badge.view"),
   })
   public view(context: CommandContext) {
-    return this.run(context, 'view');
+    return this.run(context, "view");
   }
 
   @SubCommand({
-    description: (t) => t('commands.badge.set'),
-    args: [new FileArgument('badge', true)],
+    description: (t) => t("commands.badge.set"),
+    args: [new FileArgument("badge", true)],
   })
   public set(context: CommandContext) {
-    return this.run(context, 'set');
+    return this.run(context, "set");
   }
 
   @SubCommand({
-    description: (t) => t('commands.badge.reset'),
+    description: (t) => t("commands.badge.reset"),
   })
   public reset(context: CommandContext) {
-    return this.run(context, 'reset');
+    return this.run(context, "reset");
   }
 
-  private async run(context: CommandContext, mode: 'view' | 'set' | 'reset'): Promise<IMessage> {
+  private async run(
+    context: CommandContext,
+    mode: "view" | "set" | "reset"
+  ): Promise<IMessage> {
     const userId = context.getInteraction().getUserId();
-    const file = context.option<APIAttachment | null>('badge');
+    const file = context.option<APIAttachment | null>("badge");
     const user = context.getUser();
     const t = context.t();
 
     if (!user?.uuid)
       throw new ErrorMessage(
-        (t) => t('verification.requiredVerification.title'),
-        (t) => t('verification.requiredVerification.description')
+        (t) => t("verification.requiredVerification.title"),
+        (t) => t("verification.requiredVerification.description")
       );
 
     if (!User.isPremium(user.tier))
       throw new ErrorMessage(
-        (t) => t('errors.missingSelfPremium.title'),
-        (t) => t('errors.missingSelfPremium.description')
+        (t) => t("errors.missingSelfPremium.title"),
+        (t) => t("errors.missingSelfPremium.description")
       );
 
     switch (mode) {
-      case 'view': {
+      case "view": {
         const badge = await this.apiService.getUserBadge(userId);
 
         if (!badge)
           throw new ErrorMessage(
-            (t) => t('errors.unknown.title'),
-            (t) => t('errors.unknown.description')
+            (t) => t("errors.unknown.title"),
+            (t) => t("errors.unknown.description")
           );
 
         const profile = await this.getProfile(t, user, badge);
 
         return {
-          content: t('config.badge.view') as string,
-          files: [{ name: 'badge.png', data: profile, type: 'image/png' }],
+          content: t("config.badge.view") as string,
+          files: [{ name: "badge.png", data: profile, type: "image/png" }],
         };
       }
 
-      case 'set': {
+      case "set": {
         if (!file)
           throw new ErrorMessage(
-            (t) => t('errors.unknown.title'),
-            (t) => t('errors.unknown.description')
+            (t) => t("errors.unknown.title"),
+            (t) => t("errors.unknown.description")
           );
 
         const canvas = new Canvas(32, 32);
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
 
-        if (!['image/png', 'image/jpeg', 'image/gif'].includes(file.content_type ?? ''))
+        if (!["image/png", "image/jpeg", "image/gif"].includes(file.content_type ?? ""))
           throw new ErrorMessage(
-            (t) => t('errors.unsupportedFileType.title'),
-            (t) => t('errors.unsupportedFileType.description')
+            (t) => t("errors.unsupportedFileType.title"),
+            (t) => t("errors.unsupportedFileType.description")
           );
 
         const badge = await loadImage(file.url);
@@ -116,24 +125,24 @@ export class BadgeCommand {
           height
         );
 
-        await this.apiService.updateUserBadge(userId, await canvas.toBuffer('png'));
+        await this.apiService.updateUserBadge(userId, await canvas.toBuffer("png"));
         const profile = await this.getProfile(t, user, canvas);
 
         return {
-          content: t('config.badge.set') as string,
-          files: [{ name: 'badge.png', data: profile, type: 'image/png' }],
+          content: t("config.badge.set") as string,
+          files: [{ name: "badge.png", data: profile, type: "image/png" }],
         };
       }
 
-      case 'reset': {
+      case "reset": {
         await this.apiService.deleteUserBadge(userId);
         const badge = await this.apiService.getUserBadge(userId);
 
         const profile = await this.getProfile(t, user, badge);
 
         return {
-          content: t('config.badge.reset') as string,
-          files: [{ name: 'badge.png', data: profile, type: 'image/png' }],
+          content: t("config.badge.reset") as string,
+          files: [{ name: "badge.png", data: profile, type: "image/png" }],
         };
       }
     }
@@ -142,15 +151,15 @@ export class BadgeCommand {
   private async getProfile(t: LocalizeFunction, user: User, badge?: Image | Canvas) {
     if (!user?.uuid)
       throw new ErrorMessage(
-        (t) => t('errors.unknown.title'),
-        (t) => t('errors.unknown.description')
+        (t) => t("errors.unknown.title"),
+        (t) => t("errors.unknown.description")
       );
 
     const [player, skin, logo, background] = await Promise.all([
       this.apiService.getPlayer(user.uuid),
       this.apiService.getPlayerSkin(user.uuid),
       getLogo(user.tier),
-      getBackground('hypixel', 'overall'),
+      getBackground("hypixel", "overall"),
     ]);
 
     const canvas = render(
@@ -160,7 +169,7 @@ export class BadgeCommand {
           <div direction="column" width="remaining" height="100%">
             <HeaderNametag name={player.displayName} badge={badge} size={3} />
             <box width="100%">
-              <text>{t('config.badge.profile') as string}</text>
+              <text>{t("config.badge.profile") as string}</text>
             </box>
             <Footer logo={logo} tier={user.tier}></Footer>
           </div>
@@ -169,6 +178,6 @@ export class BadgeCommand {
       getTheme(user?.theme)
     );
 
-    return canvas.toBuffer('png');
+    return canvas.toBuffer("png");
   }
 }

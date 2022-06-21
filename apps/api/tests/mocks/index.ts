@@ -6,25 +6,25 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { MockFactory } from '@nestjs/testing';
-import { MockFunctionMetadata, ModuleMocker } from 'jest-mock';
-import { AuthService } from '../../src/auth/auth.service';
-import { GuildService } from '../../src/guild';
-import { GuildLeaderboardService } from '../../src/guild/leaderboards/guild-leaderboard.service';
-import { HistoricalService } from '../../src/historical';
-import { HypixelService } from '../../src/hypixel';
-import { LeaderboardService, MongoLeaderboardService } from '../../src/leaderboards';
-import { PlayerService } from '../../src/player';
-import { SkinService } from '../../src/skin';
-import { authService } from './auth.mock';
-import { guildLeaderboardService } from './guild-leaderboard.mock';
-import { guildService } from './guild.mock';
-import { historicalService } from './historical.mock';
-import { hypixelService } from './hypixel.mock';
-import { leaderboardService } from './leaderboard.mock';
-import { mongoLeaderboardService } from './mongo-leaderboard.mock';
-import { playerService } from './player.mock';
-import { skinService } from './skin.mock';
+import { AuthService } from "../../src/auth/auth.service";
+import { GuildLeaderboardService } from "../../src/guild/leaderboards/guild-leaderboard.service";
+import { GuildService } from "../../src/guild";
+import { HistoricalService } from "../../src/historical";
+import { HypixelService } from "../../src/hypixel";
+import { LeaderboardService, MongoLeaderboardService } from "../../src/leaderboards";
+import { MockFactory } from "@nestjs/testing";
+import { MockFunctionMetadata, ModuleMocker } from "jest-mock";
+import { PlayerService } from "../../src/player";
+import { SkinService } from "../../src/skin";
+import { authService } from "./auth.mock";
+import { guildLeaderboardService } from "./guild-leaderboard.mock";
+import { guildService } from "./guild.mock";
+import { historicalService } from "./historical.mock";
+import { hypixelService } from "./hypixel.mock";
+import { leaderboardService } from "./leaderboard.mock";
+import { mongoLeaderboardService } from "./mongo-leaderboard.mock";
+import { playerService } from "./player.mock";
+import { skinService } from "./skin.mock";
 
 const moduleMocker = new ModuleMocker(global);
 
@@ -50,8 +50,11 @@ export const useMocker: MockFactory = (token) => {
       return skinService;
   }
 
-  if (typeof token === 'function') {
-    const mockMetadata = moduleMocker.getMetadata(token) as MockFunctionMetadata<any, any>;
+  if (typeof token === "function") {
+    const mockMetadata = moduleMocker.getMetadata(token) as MockFunctionMetadata<
+      any,
+      any
+    >;
     const Mock = moduleMocker.generateFromMetadata(mockMetadata);
     return new Mock();
   }

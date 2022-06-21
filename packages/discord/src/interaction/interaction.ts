@@ -6,18 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Logger } from '@statsify/logger';
-import { APIGuildMember, ComponentType, InteractionType } from 'discord-api-types/v10';
+import { APIGuildMember, ComponentType, InteractionType } from "discord-api-types/v10";
+import { IMessage, Message } from "../messages";
+import { Logger } from "@statsify/logger";
+import { getLocalizeFunction } from "../messages/localize";
 import type {
   Interaction as DiscordInteraction,
   InteractionResponse,
   RestClient,
   RestResponse,
-} from 'tiny-discord';
-import { IMessage, Message } from '../messages';
-import { getLocalizeFunction } from '../messages/localize';
+} from "tiny-discord";
 
-const logger = new Logger('Interaction Response');
+const logger = new Logger("Interaction Response");
 
 export class Interaction {
   public constructor(
@@ -44,7 +44,8 @@ export class Interaction {
 
   public isButtonInteraction() {
     return (
-      this.isMessageComponentInteraction() && this.getData().component_type === ComponentType.Button
+      this.isMessageComponentInteraction() &&
+      this.getData().component_type === ComponentType.Button
     );
   }
 
@@ -80,7 +81,7 @@ export class Interaction {
   }
 
   public getLocale() {
-    return (this.data as any).locale ?? 'en-US';
+    return (this.data as any).locale ?? "en-US";
   }
 
   public t() {
@@ -93,7 +94,10 @@ export class Interaction {
 
   public async reply(data: InteractionResponse) {
     return this.handleError(
-      await this.rest.post(`/interactions/${this.data.id}/${this.data.token}/callback`, data)
+      await this.rest.post(
+        `/interactions/${this.data.id}/${this.data.token}/callback`,
+        data
+      )
     );
   }
 
@@ -177,17 +181,17 @@ export class Interaction {
     logger.error(message);
   }
 
-  private parseDiscordError(error: any = {}, errorKey = ''): string {
-    if (typeof error.message === 'string')
+  private parseDiscordError(error: any = {}, errorKey = ""): string {
+    if (typeof error.message === "string")
       return `${errorKey.length ? `${errorKey} - ${error.code}` : `${error.code}`}: ${
         error.message
       }`.trim();
 
     const entries = Object.entries(error) as [string, any][];
-    let message = '';
+    let message = "";
 
     for (const [key, value] of entries) {
-      const nextKey = key.startsWith('_')
+      const nextKey = key.startsWith("_")
         ? errorKey
         : errorKey
         ? Number.isNaN(Number(key))
@@ -195,9 +199,10 @@ export class Interaction {
           : `${errorKey}[${key}]`
         : key;
 
-      if (typeof value === 'string') message += value;
-      else if ('_errors' in value)
-        for (const error of value._errors) message += this.parseDiscordError(error, nextKey);
+      if (typeof value === "string") message += value;
+      else if ("_errors" in value)
+        for (const error of value._errors)
+          message += this.parseDiscordError(error, nextKey);
       else message += this.parseDiscordError(value, nextKey);
     }
 

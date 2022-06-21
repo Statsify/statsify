@@ -6,30 +6,30 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Controller, Get, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
-} from '@nestjs/swagger';
+} from "@nestjs/swagger";
+import { Auth } from "../auth";
+import { Controller, Get, Query } from "@nestjs/common";
 import {
   ErrorResponse,
   GetGuildResponse,
   GuildNotFoundException,
   PlayerNotFoundException,
-} from '@statsify/api-client';
-import { Auth } from '../auth';
-import { GuildDto } from '../dtos';
-import { GuildService } from './guild.service';
+} from "@statsify/api-client";
+import { GuildDto } from "../dtos";
+import { GuildService } from "./guild.service";
 
-@Controller('/guild')
-@ApiTags('Guild')
+@Controller("/guild")
+@ApiTags("Guild")
 export class GuildController {
   public constructor(private readonly guildService: GuildService) {}
 
-  @ApiOperation({ summary: 'Get a Guild' })
+  @ApiOperation({ summary: "Get a Guild" })
   @ApiOkResponse({ type: GetGuildResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiNotFoundResponse({ type: PlayerNotFoundException })
