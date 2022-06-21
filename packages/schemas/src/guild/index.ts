@@ -10,11 +10,14 @@ import { APIData } from '@statsify/util';
 import { Color } from '../color';
 import { GameCode } from '../game';
 import { Field } from '../metadata';
+import { Progression } from '../progression';
 import { GuildAchievements } from './achievements';
 import { ExpByGame } from './expbygame';
 import { GuildMember } from './member';
 import { GuildRank } from './rank';
 import { getLevel } from './util';
+
+const limit = 50_000;
 
 export class Guild {
   @Field({ mongo: { index: true, unique: true }, store: { required: true } })
@@ -29,14 +32,20 @@ export class Guild {
   @Field()
   public nameFormatted: string;
 
-  @Field()
+  @Field({ store: { required: false } })
+  public description?: string;
+
+  @Field({ leaderboard: { enabled: false } })
+  public createdAt: number;
+
+  @Field({ leaderboard: { fieldName: 'Level', hidden: true, additionalFields: ['level'], limit } })
   public exp: number;
 
   @Field({ leaderboard: { enabled: false } })
   public level: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public nextLevelExp: number;
+  @Field()
+  public levelProgression: Progression;
 
   @Field({ type: () => [GuildMember] })
   public members: GuildMember[];
@@ -44,7 +53,7 @@ export class Guild {
   @Field({ type: () => [GuildRank] })
   public ranks: GuildRank[];
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Achievements -' } })
   public achievements: GuildAchievements;
 
   @Field({ type: () => [String] })
@@ -62,7 +71,7 @@ export class Guild {
   @Field()
   public tagFormatted: string;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'GEXP -' } })
   public expByGame: ExpByGame;
 
   @Field({ type: () => [Number] })
@@ -74,17 +83,17 @@ export class Guild {
   @Field({ type: () => [Number] })
   public scaledExpHistory: number[];
 
-  @Field()
+  @Field({ leaderboard: { limit, name: 'Daily GEXP', fieldName: 'GEXP' } })
+  public daily: number;
+
+  @Field({ leaderboard: { limit, name: 'Weekly GEXP', fieldName: 'GEXP' } })
   public weekly: number;
 
-  @Field()
+  @Field({ leaderboard: { limit, name: 'Monthly GEXP', fieldName: 'GEXP' } })
   public monthly: number;
 
-  @Field()
-  public scaledWeekly: number;
-
-  @Field()
-  public scaledMonthly: number;
+  @Field({ leaderboard: { limit } })
+  public questParticipation: number;
 
   @Field({ leaderboard: { enabled: false } })
   public expiresAt: number;
@@ -96,6 +105,9 @@ export class Guild {
     this.id = data._id;
     this.name = data.name;
     this.nameToLower = this.name?.toLowerCase();
+    this.description = data.description;
+
+    this.createdAt = data.created;
 
     this.tag = data.tag;
     this.tagColor = new Color(data.tagColor ?? 'GRAY');
@@ -111,16 +123,17 @@ export class Guild {
 
     this.exp = data.exp;
 
-    const { level, nextLevelExp } = getLevel(this.exp);
+    const { level, current, max } = getLevel(this.exp);
 
     this.level = level;
-    this.nextLevelExp = nextLevelExp;
+    this.levelProgression = new Progression(current, max);
     this.expByGame = new ExpByGame(data.guildExpByGameType ?? {});
 
+    this.daily = 0;
     this.weekly = 0;
-    this.scaledWeekly = 0;
     this.monthly = 0;
-    this.scaledMonthly = 0;
+
+    this.questParticipation = 0;
 
     this.expHistory = [];
     this.expHistoryDays = [];
@@ -137,7 +150,7 @@ export class Guild {
       new GuildRank({
         name: 'Guild Master',
         tag: data.hideGmTag ? null : 'GM',
-        priority: Infinity,
+        priority: Number.MAX_SAFE_INTEGER,
         defualt: false,
       }),
     ];
@@ -147,8 +160,11 @@ export class Guild {
         this.ranks.push(new GuildRank(rank));
       }
     }
+
+    this.ranks = this.ranks.sort((a, b) => b.priority - a.priority);
   }
 }
 
 export * from './achievements';
 export * from './member';
+export * from './rank';

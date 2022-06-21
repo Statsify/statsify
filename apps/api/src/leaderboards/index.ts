@@ -6,6 +6,4 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from './leaderboard.module';
 export * from './leaderboard.service';
-export * from './mongo-leaderboard.service';

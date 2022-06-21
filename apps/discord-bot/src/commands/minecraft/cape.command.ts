@@ -9,7 +9,8 @@
 import { MojangPlayerArgument } from '#arguments';
 import { AshconResponse, MojangApiService, PaginateService } from '#services';
 import { Command, CommandContext } from '@statsify/discord';
-import { Canvas, Image, loadImage } from 'skia-canvas';
+import { loadImage } from '@statsify/rendering';
+import { Canvas, Image } from 'skia-canvas';
 import { ErrorMessage } from '../../error.message';
 
 @Command({ description: (t) => t('commands.cape'), args: [MojangPlayerArgument] })
@@ -22,11 +23,7 @@ export class CapeCommand {
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    const player = await this.mojangApiService.getWithUser(
-      user,
-      this.mojangApiService.getPlayer,
-      context.option<string>('player')
-    );
+    const player = await this.mojangApiService.getPlayer(context.option<string>('player'), user);
 
     const capes = await Promise.all([
       this.getOptifineCape(player.username),

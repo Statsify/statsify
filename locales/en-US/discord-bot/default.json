@@ -36,9 +36,6 @@
     "giftsSent": "Gifts Sent",
     "ranksGifted": "Ranks Gifted",
     "friends": "Friends",
-    "guildQuests": "Guild Quests",
-    "dailyGexp": "Daily GEXP",
-    "weeklyGexp": "Weekly GEXP",
     "bestTime": "Best Time",
     "tags": "Tags",
     "hits": "Hits",
@@ -146,14 +143,32 @@
     "levelsGained": "Levels Gained",
     "expGained": "EXP Gained",
     "exp": "EXP",
+    "guild": {
+      "guildMaster": "Guild Master",
+      "createdOn": "Created On",
+      "joinedAt": "Joined At",
+      "members": "Guild Members",
+      "rank": "Guild Rank",
+      "quests": "Guild Quests",
+      "level": "Guild Level",
+      "gexpToNextLevel": "GEXP To Next Level",
+      "gexp": "GEXP",
+      "scaledGexp": "Scaled GEXP",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "date": "Date",
+      "averageMemberGexp": "Avg. Member GEXP",
+      "questsCompleted": "Quests Completed"
+    },
     "online": "Online",
+    "offline": "Offline",
     "version": "Version",
     "loginTime": "Login Time",
     "game": "Game",
     "mode": "Mode",
     "map": "Map",
     "status": "Status",
-    "offline": "Offline",
     "logoutTime": "Logout Time",
     "lastGame": "Last Game",
     "hidden": "Hidden",
@@ -362,9 +377,13 @@
       "title": "Invalid Leaderboard",
       "description": "Search for a valid leaderboard"
     },
-    "leaderboardPlayerNotFound": {
+    "playerLeaderboardNotFound": {
       "title": "Invalid Player or Position",
-      "description": "We can't find the player you are looking for"
+      "description": "We can't find the player you are looking for!?"
+    },
+    "guildLeaderboardNotFound": {
+      "title": "Invalid GUILD or Position",
+      "description": "We can't find the player you are looking for!?"
     },
     "leaderboardEmpty": {
       "title": "Leaderboard Empty",

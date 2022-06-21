@@ -10,10 +10,11 @@ import { InjectModel } from '@m8a/nestjs-typegoose';
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { getMinecraftTexturePath, importAsset } from '@statsify/assets';
+import { loadImage } from '@statsify/rendering';
 import { Skin } from '@statsify/schemas';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { catchError, lastValueFrom, map, of } from 'rxjs';
-import { Canvas, loadImage, type Image } from 'skia-canvas';
+import { Canvas, type Image } from 'skia-canvas';
 
 @Injectable()
 export class SkinService {

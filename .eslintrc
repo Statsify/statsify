@@ -10,17 +10,6 @@
     "node": true
   },
   "plugins": ["@typescript-eslint", "license-header"],
-  "overrides": [
-    {
-      "files": ["*.tsx"],
-      "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:prettier/recommended"
-      ]
-    }
-  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",

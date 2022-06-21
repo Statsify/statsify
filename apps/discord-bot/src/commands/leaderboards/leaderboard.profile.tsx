@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer } from '#components';
+import { Container, Footer, If, List } from '#components';
 import { LocalizeFunction } from '@statsify/discord';
 import { UserTier } from '@statsify/schemas';
+import { prettify } from '@statsify/util';
 import type { Image } from 'skia-canvas';
 
 const formatPosition = (t: LocalizeFunction, position: number): string => {
@@ -21,10 +22,12 @@ const formatPosition = (t: LocalizeFunction, position: number): string => {
   return `${color}#§l${t(position)}`;
 };
 
+export type LeaderboardType = 'player' | 'guild';
+
 export interface LeaderboardData {
-  name: string;
   fields: (number | string)[];
-  skin: Image;
+  name: string;
+  icon?: Image;
   position: number;
   highlight?: boolean;
 }
@@ -37,6 +40,7 @@ export interface LeaderboardProfileProps {
   name: string;
   data: LeaderboardData[];
   t: LocalizeFunction;
+  type: LeaderboardType;
 }
 
 export const LeaderboardProfile = ({
@@ -47,64 +51,50 @@ export const LeaderboardProfile = ({
   fields,
   name,
   t,
+  type,
 }: LeaderboardProfileProps) => {
-  const columnsList: JSX.Element[][] = [];
+  const titles = ['Pos', prettify(type), ...fields].map((field, index) => (
+    <box
+      width={index === 1 ? 'remaining' : '100%'}
+      border={{ topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }}
+    >
+      <text>§l{field}</text>
+    </box>
+  ));
 
-  let column = 0;
-
-  const add = (el: JSX.Element) => {
-    if (columnsList[column]) columnsList[column].push(el);
-    else columnsList[column] = [el];
-    column++;
-  };
-
-  const reset = () => {
-    column = 0;
-  };
-
-  ['Pos', 'Player', ...fields].forEach((field) =>
-    add(
-      <box width="100%" border={{ topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }}>
-        <text>§l{field}</text>
-      </box>
-    )
-  );
-
-  reset();
-
-  data.forEach((d) => {
+  const items = data.map((d) => {
     const highlight = d.highlight
       ? { color: 'rgba(255, 255, 255, 0.35)', shadowOpacity: 0.3 }
       : undefined;
 
-    add(
-      <box width="100%" {...highlight}>
-        <text>{formatPosition(t, d.position)}</text>
-      </box>
-    );
-
-    add(
-      <div width="100%">
-        <box padding={{ left: 12, right: 12, top: 4, bottom: 4 }} {...highlight}>
-          <img image={d.skin} />
-        </box>
-        <box width="remaining" direction="column" {...highlight}>
-          <text align="left">{d.name}</text>
-        </box>
-      </div>
-    );
-
-    d.fields.forEach((field) => {
-      const formatted = typeof field === 'number' ? t(field) : field;
-
-      add(
+    return (
+      <>
         <box width="100%" {...highlight}>
-          <text>{formatted}</text>
+          <text>{formatPosition(t, d.position)}</text>
         </box>
-      );
-    });
+        <div width="remaining">
+          <If condition={d.icon}>
+            {(icon) => (
+              <box padding={{ left: 12, right: 12, top: 4, bottom: 4 }} {...highlight}>
+                <img image={icon} />
+              </box>
+            )}
+          </If>
+          <box width="remaining" direction="column" {...highlight}>
+            <text align="left">{d.name}</text>
+          </box>
+        </div>
+        {d.fields.map((field) => {
+          const formatted = typeof field === 'number' ? t(field) : field;
 
-    reset();
+          return (
+            <box width="100%" {...highlight}>
+              <text>{formatted}</text>
+            </box>
+          );
+        })}
+      </>
+    );
   });
 
   return (
@@ -112,13 +102,7 @@ export const LeaderboardProfile = ({
       <box width="100%">
         <text>§^3^§l{name}</text>
       </box>
-      <div width="100%">
-        {columnsList.map((c, index) => (
-          <div direction="column" width={index === 1 ? 'remaining' : undefined}>
-            {c}
-          </div>
-        ))}
-      </div>
+      <List items={[<>{titles}</>, ...items]} />
       <Footer
         logo={logo}
         tier={tier}

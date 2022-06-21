@@ -7,7 +7,7 @@
  */
 
 import { InjectModel } from '@m8a/nestjs-typegoose';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
   HypixelCache,
   PlayerNotFoundException,
@@ -19,13 +19,14 @@ import { Flatten, flatten } from '@statsify/util';
 import type { ReturnModelType } from '@typegoose/typegoose';
 import short from 'short-uuid';
 import { HypixelService } from '../hypixel';
-import { LeaderboardService } from '../leaderboards';
+import { PlayerLeaderboardService } from './leaderboards/player-leaderboard.service';
 
 @Injectable()
 export class PlayerService {
   public constructor(
     private readonly hypixelService: HypixelService,
-    private readonly leaderboardService: LeaderboardService,
+    @Inject(forwardRef(() => PlayerLeaderboardService))
+    private readonly playerLeaderboardService: PlayerLeaderboardService,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
     @InjectModel(Friends) private readonly friendsModel: ReturnModelType<typeof Friends>
   ) {}
@@ -57,7 +58,7 @@ export class PlayerService {
 
       const flatPlayer = flatten(player);
 
-      this.saveOne(flatPlayer);
+      await this.saveOne(flatPlayer);
 
       return deserialize(Player, flatPlayer);
     } else if (mongoPlayer) {
@@ -164,7 +165,7 @@ export class PlayerService {
     if (!player) return null;
 
     //Remove all sorted sets the player is in
-    await this.leaderboardService.addLeaderboards(
+    await this.playerLeaderboardService.addLeaderboards(
       Player,
       player,
       'shortUuid',
@@ -202,16 +203,20 @@ export class PlayerService {
     //Serialize and flatten the player
     const serializedPlayer = serialize(Player, player);
 
-    await this.playerModel.replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true });
+    const saveMongo = this.playerModel.replaceOne({ uuid: player.uuid }, serializedPlayer, {
+      upsert: true,
+    });
 
     const fields = LeaderboardScanner.getLeaderboardFields(Player);
 
-    await this.leaderboardService.addLeaderboards(
+    const saveRedis = this.playerLeaderboardService.addLeaderboards(
       Player,
       player,
-      'shortUuid',
+      'uuid',
       fields,
       player.leaderboardBanned ?? false
     );
+
+    return Promise.all([saveMongo, saveRedis]);
   }
 }

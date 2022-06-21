@@ -28,12 +28,13 @@ export const getLevel = (exp: number) => {
     if (exp - need < 0)
       return {
         level: Math.round((level + exp / need) * 100) / 100,
-        nextLevelExp: Math.round(need - exp),
+        current: Math.round(exp),
+        max: Math.round(need),
       };
 
     level += 1;
     exp -= need;
   }
 
-  return { level: 1000, nextLevelExp: 0 };
+  return { level: 1000, current: 0, max: 1 };
 };

@@ -22,8 +22,12 @@ export const Footer = ({ logo, tier = UserTier.NONE, border }: FooterProps) => {
   let text: string;
 
   switch (tier) {
-    case UserTier.PREMIUM:
     case UserTier.CORE:
+      // text =
+      // '§#387effs§#1567fft§#184fb6a§#ff4c4ct§#f13030s§#ab1f1fi§#fff586f§#ffee36y§#beb127.§#96fc88n§#47ed31e§#2fa91et';
+      text = '§fstatsify.net';
+      break;
+    case UserTier.PREMIUM:
       text =
         '§#ffdc73s§#ffd865t§#ffd557a§#ffd149t§#ffce3as§#ffc929i§#ffc517f§#ffc006y§#f9ba01.§#f0b202n§#e7ab03e§#dea304t';
       break;

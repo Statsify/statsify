@@ -13,13 +13,13 @@ import { IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
 const fields = LeaderboardScanner.getLeaderboardFields(Guild);
 
 export class GuildRankingDto {
-  @IsEnum(fields)
-  @ApiProperty({ enum: fields })
-  public field: string;
+  @ApiProperty({ enum: fields, type: [String] })
+  @IsEnum(fields, { each: true })
+  public fields: string[];
 
   @IsString()
-  @MinLength(1)
-  @MaxLength(32)
+  @MinLength(24)
+  @MaxLength(24)
   @ApiProperty()
-  public name: string;
+  public id: string;
 }

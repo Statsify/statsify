@@ -10,7 +10,7 @@ import { MojangPlayerArgument } from '#arguments';
 import { INFO_COLOR } from '#constants';
 import { ApiService, MojangApiService } from '#services';
 import { Command, CommandContext, EmbedBuilder } from '@statsify/discord';
-import { Canvas } from 'skia-canvas/lib';
+import { Canvas } from 'skia-canvas';
 
 @Command({ description: 'commands.skin', args: [MojangPlayerArgument] })
 export class SkinCommand {
@@ -22,11 +22,7 @@ export class SkinCommand {
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    const player = await this.mojangApiService.getWithUser(
-      user,
-      this.mojangApiService.getPlayer,
-      context.option<string>('player')
-    );
+    const player = await this.mojangApiService.getPlayer(context.option<string>('player'), user);
 
     const skin = await this.apiService.getPlayerSkin(player.uuid);
     const canvas = new Canvas(skin.width, skin.height);

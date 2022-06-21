@@ -10,6 +10,7 @@ import { MojangPlayerArgument } from '#arguments';
 import { INFO_COLOR } from '#constants';
 import { MojangApiService, PaginateService } from '#services';
 import { Command, CommandContext, EmbedBuilder } from '@statsify/discord';
+import { arrayGroup } from '@statsify/util';
 
 @Command({ description: 'commands.namehistory', args: [MojangPlayerArgument] })
 export class NameHistoryCommand {
@@ -21,11 +22,7 @@ export class NameHistoryCommand {
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    const player = await this.mojangApiService.getWithUser(
-      user,
-      this.mojangApiService.getPlayer,
-      context.option<string>('player')
-    );
+    const player = await this.mojangApiService.getPlayer(context.option<string>('player'), user);
 
     const thumbURL = this.mojangApiService.faceIconUrl(player.uuid);
     const nameHistory = player.username_history.reverse();
@@ -34,9 +31,7 @@ export class NameHistoryCommand {
 
     const name = `${player.username}${player.username.slice(-1) == "s'" ? "'" : "'s"}`;
 
-    const groups = Array.from({ length: Math.ceil(nameHistory.length / groupSize) }, (_, i) =>
-      nameHistory.slice(i * groupSize, (i + 1) * groupSize)
-    );
+    const groups = arrayGroup(nameHistory, groupSize);
 
     return this.paginateService.scrollingPagination(
       context,

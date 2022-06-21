@@ -12,7 +12,7 @@ import type * as JSX from '../jsx';
 type CanvasImage = _Image | Canvas;
 
 type ImageCropLocation = [sx: number, sy: number, sw: number, sh: number];
-type ImageCrop = 'none' | 'resize' | ImageCropLocation;
+type ImageCrop = 'none' | 'resize' | 'height-crop' | ImageCropLocation;
 
 export interface ImageRenderProps {
   image: CanvasImage;
@@ -51,10 +51,38 @@ export const render: JSX.Render<ImageRenderProps> = (
 ) => {
   if (!crop || crop === 'none') {
     crop = [0, 0, image.width, image.height];
-  } else if (crop === 'resize') {
+  } else if (crop === 'height-crop') {
     const scale = image.width / width;
     crop = [0, 0, image.width, Math.round(height * scale)];
+  } else if (crop === 'resize') {
+    const newAspectRatio = width / height;
+
+    let resizeWidth = image.width;
+    let resizeHeight = image.height;
+
+    if (resizeWidth > resizeHeight) {
+      resizeWidth = Math.round(resizeHeight * newAspectRatio);
+    } else {
+      resizeHeight = Math.round(resizeWidth / newAspectRatio);
+    }
+
+    if (resizeWidth > image.width) {
+      resizeWidth = image.width;
+      resizeHeight = Math.round(resizeWidth / newAspectRatio);
+    } else if (resizeHeight > image.height) {
+      resizeHeight = image.height;
+      resizeWidth = Math.round(resizeHeight * newAspectRatio);
+    }
+
+    crop = [0, 0, resizeWidth, resizeHeight];
   }
 
-  ctx.drawImage(image, ...crop, x, y, width, height);
+  ctx.drawImage(
+    image,
+    ...crop,
+    Math.round(x),
+    Math.round(y),
+    Math.round(width),
+    Math.round(height)
+  );
 };

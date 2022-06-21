@@ -29,7 +29,7 @@ export class PlayerLeaderboardDto extends PartialType(PlayerDto) {
   @IsOptional()
   @IsInt()
   @Min(1)
-  @Max(100_000)
-  @ApiProperty({ minimum: 1, maximum: 100_000, type: () => Number, required: true })
+  @Max(500_000)
+  @ApiProperty({ minimum: 1, maximum: 500_000, type: () => Number, required: false })
   public position?: number;
 }

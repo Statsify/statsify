@@ -10,3 +10,5 @@ export * from './api.service';
 export * from './enums';
 export * from './exceptions';
 export * from './responses';
+
+export const GUILD_ID_REGEX = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i;

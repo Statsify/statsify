@@ -11,6 +11,7 @@
   "dependencies": {
     "@nestjs/common": "^8.4.7",
     "@nestjs/swagger": "^5.2.1",
+    "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "axios": "^0.27.2",
     "skia-canvas": "^0.9.30"

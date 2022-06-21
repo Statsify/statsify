@@ -3,40 +3,48 @@ import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
 const { Logger } = require('@statsify/logger');
-const { MetadataScanner, Player } = require('@statsify/schemas');
+const { MetadataScanner, Player, Guild } = require('@statsify/schemas');
+
+const CONSTRUCTORS = [Player, Guild];
 
 const logger = new Logger('Redis Limiter');
-
 const redis = new Redis(process.env.REDIS_URL);
 
-const oldLeaderboardPipeline = redis.pipeline();
-const limitLeaderboardPipeline = redis.pipeline();
+for (const constructor of CONSTRUCTORS) {
+  const oldLeaderboardPipeline = redis.pipeline();
+  const limitLeaderboardPipeline = redis.pipeline();
 
-const fields = MetadataScanner.scan(Player);
+  const name = constructor.name.toLowerCase();
+  const fields = MetadataScanner.scan(constructor);
 
-fields.forEach(([key, value]) => {
-  const path = `${Player.name.toLowerCase()}.${key}`;
-  if (!value.leaderboard.enabled) oldLeaderboardPipeline.del(path);
-});
+  fields.forEach(([key, value]) => {
+    const path = `${name}.${key}`;
+    if (!value.leaderboard.enabled) oldLeaderboardPipeline.del(path);
+  });
 
-await oldLeaderboardPipeline.exec();
+  await oldLeaderboardPipeline.exec();
 
-const leaderboards = fields.filter(([, value]) => value.leaderboard.enabled);
+  const leaderboards = fields.filter(([, value]) => value.leaderboard.enabled);
 
-leaderboards.forEach(([key, value]) => {
-  const path = `${Player.name.toLowerCase()}.${key}`;
-  const { sort, limit } = value.leaderboard;
+  let memberCount = 0;
 
-  logger.debug(`Limiting ${path} to ${limit.toLocaleString()} members`);
+  leaderboards.forEach(([key, value]) => {
+    const path = `${name}.${key}`;
+    const { sort, limit } = value.leaderboard;
 
-  if (sort === 'DESC') {
-    limitLeaderboardPipeline.zremrangebyrank(path, 0, -limit);
-  } else {
-    limitLeaderboardPipeline.zremrangebyrank(path, limit, -1);
-  }
-});
+    memberCount += limit;
 
-await limitLeaderboardPipeline.exec();
+    if (sort === 'DESC') {
+      limitLeaderboardPipeline.zremrangebyrank(path, 0, -limit);
+    } else {
+      limitLeaderboardPipeline.zremrangebyrank(path, limit, -1);
+    }
+  });
 
-logger.log(`Limited ${leaderboards.length} leaderboards`);
+  await limitLeaderboardPipeline.exec();
+
+  logger.log(`Limited ${leaderboards.length} ${name} leaderboards`);
+  logger.log(`There are ${memberCount.toLocaleString()} members in the ${name} leaderboards`);
+}
+
 process.exit(0);

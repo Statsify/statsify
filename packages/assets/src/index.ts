@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { loadImage } from '@statsify/rendering';
 import { UserTier } from '@statsify/schemas';
 import { existsSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { Image, loadImage } from 'skia-canvas';
+import { Image } from 'skia-canvas';
 
 const PATH = '../../assets';
 const PRIVATE_PATH = join(PATH, 'private');
@@ -88,8 +89,10 @@ export const getLogoPath = (tier: UserTier = UserTier.NONE, size = 26) => {
       path = '';
       break;
     case UserTier.PREMIUM:
-    case UserTier.CORE:
       path = 'premium_';
+      break;
+    case UserTier.CORE:
+      path = 'core_';
       break;
   }
 

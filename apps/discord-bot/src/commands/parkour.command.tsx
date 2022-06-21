@@ -26,11 +26,7 @@ export class ParkourCommand {
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    const player = await this.apiService.getWithUser(
-      user,
-      this.apiService.getPlayer,
-      context.option('player')
-    );
+    const player = await this.apiService.getPlayer(context.option('player'), user);
 
     const { parkour } = player.stats;
 
@@ -39,6 +35,7 @@ export class ParkourCommand {
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
     ]);
+
     const background = await getBackground('hypixel', 'overall');
 
     const times = Object.entries(parkour).map(([field, time]) => [

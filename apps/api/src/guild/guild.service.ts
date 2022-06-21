@@ -21,6 +21,7 @@ import { flatten } from '@statsify/util';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { HypixelService } from '../hypixel';
 import { PlayerService } from '../player';
+import { GuildLeaderboardService } from './leaderboards/guild-leaderboard.service';
 
 @Injectable()
 export class GuildService {
@@ -29,6 +30,7 @@ export class GuildService {
   public constructor(
     private readonly hypixelService: HypixelService,
     private readonly playerService: PlayerService,
+    private readonly guildLeaderboardService: GuildLeaderboardService,
     @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>
   ) {}
@@ -105,6 +107,8 @@ export class GuildService {
           member.monthly += exp;
         });
 
+      guild.questParticipation = guild.questParticipation + member.questParticipation;
+
       return member;
     });
 
@@ -129,24 +133,24 @@ export class GuildService {
         guild.expHistoryDays[index] = day;
         guild.scaledExpHistory[index] = scaled;
 
-        if (index < 7) {
-          guild.weekly += exp;
-          guild.scaledWeekly += scaled;
-        }
-
+        if (index < 7) guild.weekly += exp;
         guild.monthly += exp;
-        guild.scaledMonthly += scaled;
       });
+
+    guild.daily = guild.expHistory[0];
 
     //Cache guilds responses for 10 minutes
     guild.expiresAt = Date.now() + 600000;
 
     const flatGuild = flatten(guild);
+    const serializedGuild = serialize(Guild, flatGuild);
 
     await this.guildModel
-      .replaceOne({ id: guild.id }, serialize(Guild, flatGuild), { upsert: true })
+      .replaceOne({ id: guild.id }, serializedGuild, { upsert: true })
       .lean()
       .exec();
+
+    await this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, 'id');
 
     return deserialize(Guild, flatGuild);
   }

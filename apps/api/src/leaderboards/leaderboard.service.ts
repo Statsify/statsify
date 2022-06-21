@@ -7,12 +7,15 @@
  */
 
 import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
-import { Injectable } from '@nestjs/common';
-import { LeaderboardScanner } from '@statsify/schemas';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { LeaderboardQuery } from '@statsify/api-client';
+import { LeaderboardEnabledMetadata, LeaderboardScanner } from '@statsify/schemas';
 import { Constructor, Flatten } from '@statsify/util';
 
+export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
+
 @Injectable()
-export class LeaderboardService {
+export abstract class LeaderboardService {
   public constructor(@InjectRedis() private readonly redis: Redis) {}
 
   public addLeaderboards<T>(
@@ -45,6 +48,143 @@ export class LeaderboardService {
   public async getLeaderboard<T>(
     constructor: Constructor<T>,
     field: string,
+    input: number | string,
+    type: LeaderboardQuery
+  ) {
+    const PAGE_SIZE = 10;
+
+    const {
+      fieldName,
+      additionalFields = [],
+      extraDisplay,
+      formatter,
+      sort,
+      name,
+      hidden,
+    } = LeaderboardScanner.getLeaderboardField(constructor, field) as LeaderboardEnabledMetadata;
+
+    let top: number;
+    let bottom: number;
+    let highlight: number | undefined = undefined;
+
+    switch (type) {
+      case LeaderboardQuery.PAGE:
+        top = (input as number) * PAGE_SIZE;
+        bottom = top + PAGE_SIZE;
+        break;
+      case LeaderboardQuery.INPUT: {
+        const ranking = await this.searchLeaderboardInput(input as string, field);
+        highlight = ranking - 1;
+        top = ranking - (ranking % 10);
+        bottom = top + PAGE_SIZE;
+        break;
+      }
+      case LeaderboardQuery.POSITION: {
+        const position = (input as number) - 1;
+        highlight = position;
+        top = position - (position % 10);
+        bottom = top + PAGE_SIZE;
+        break;
+      }
+    }
+
+    const leaderboard = await this.getLeaderboardFromRedis(
+      constructor,
+      field,
+      top,
+      bottom - 1,
+      sort
+    );
+
+    const additionalFieldMetadata = additionalFields.map((key) =>
+      LeaderboardScanner.getLeaderboardField(constructor, key, false)
+    );
+
+    const additionalStats = await this.getAdditionalStats(
+      leaderboard.map(({ id }) => id),
+      [...additionalFields, ...(extraDisplay ? [extraDisplay] : [])]
+    );
+
+    const data = leaderboard.map((doc, index) => {
+      const stats = additionalStats[index];
+
+      if (extraDisplay) stats.name = `${stats[extraDisplay]}§r ${stats.name}`;
+
+      const field = formatter ? formatter(doc.score) : doc.score;
+
+      const additionalValues = additionalFields.map((key, index) => {
+        if (additionalFieldMetadata[index].formatter)
+          return additionalFieldMetadata[index].formatter?.(stats[key]);
+
+        return stats[key];
+      });
+
+      const fields = [];
+
+      if (!hidden) fields.push(field);
+      fields.push(...additionalValues);
+
+      return {
+        id: doc.id,
+        fields,
+        name: stats.name,
+        position: doc.index + 1,
+        highlight: doc.index === highlight,
+      };
+    });
+
+    const fields = [];
+    if (!hidden) fields.push(fieldName);
+    fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
+
+    return {
+      name: name,
+      fields,
+      data,
+      page: top / PAGE_SIZE,
+    };
+  }
+
+  public async getLeaderboardRankings<T>(
+    constructor: Constructor<T>,
+    fields: string[],
+    id: string
+  ) {
+    const pipeline = this.redis.pipeline();
+    const constructorName = constructor.name.toLowerCase();
+
+    fields.forEach((field) => {
+      const { sort } = LeaderboardScanner.getLeaderboardField(constructor, field);
+
+      if (sort === 'ASC') {
+        pipeline.zrank(`${constructorName}.${field}`, id);
+      } else {
+        pipeline.zrevrank(`${constructorName}.${field}`, id);
+      }
+    });
+
+    const responses = await pipeline.exec();
+
+    if (!responses) throw new InternalServerErrorException();
+
+    return responses.map((response, index) => {
+      const field = fields[index];
+      const rank = Number(response[1] ?? -1) + 1;
+
+      return { field, rank };
+    });
+  }
+
+  protected abstract searchLeaderboardInput(input: string, field: string): Promise<number>;
+
+  protected abstract getAdditionalStats(
+    ids: string[],
+    fields: string[]
+  ): Promise<LeaderboardAdditionalStats[]>;
+
+  private async getLeaderboardFromRedis<T>(
+    constructor: Constructor<T>,
+    field: string,
     top: number,
     bottom: number,
     sort = 'DESC'
@@ -63,49 +203,6 @@ export class LeaderboardService {
       const score = Number(scores[i + 1]);
 
       response.push({ id, score, index: i / 2 + top });
-    }
-
-    return response;
-  }
-
-  public async getLeaderboardRanking<T>(
-    constructor: Constructor<T>,
-    field: string,
-    id: string,
-    sort = 'DESC'
-  ) {
-    if (sort === 'ASC') return this.redis.zrank(`${constructor.name.toLowerCase()}.${field}`, id);
-
-    return this.redis.zrevrank(`${constructor.name.toLowerCase()}.${field}`, id);
-  }
-
-  public async getLeaderboardDocument<T>(
-    constructor: Constructor<T>,
-    id: string,
-    selector?: string[]
-  ) {
-    const pipeline = this.redis.pipeline();
-    const name = constructor.name.toLowerCase();
-
-    if (!selector) selector = LeaderboardScanner.getLeaderboardFields(constructor);
-
-    selector.forEach((field) => {
-      pipeline.zscore(`${name}.${String(field)}`, id);
-    });
-
-    const scores = await pipeline.exec();
-
-    const response: Record<string, number> = {};
-
-    for (let i = 0; i < selector.length; i++) {
-      const field = selector[i];
-      const score = scores?.[i]?.[1];
-
-      if (score !== null) {
-        response[field as string] = Number(score);
-      } else {
-        response[field as string] = 0;
-      }
     }
 
     return response;

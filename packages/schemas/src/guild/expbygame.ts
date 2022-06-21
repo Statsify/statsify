@@ -7,82 +7,86 @@
  */
 
 import { APIData } from '@statsify/util';
+import { FormattedGame } from '../game';
 import { Field } from '../metadata';
+
+const limit = 50_000;
+const fieldName = 'GEXP';
 
 /**
  * Removes some useless broken games from the `guildExpByGameType` field such as `SMP` or `SKYBLOCK`
  */
 export class ExpByGame {
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.ARCADE, fieldName, limit } })
   public ARCADE: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.ARENA_BRAWL, fieldName, limit } })
   public ARENA: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.WARLORDS, fieldName, limit } })
   public BATTLEGROUND: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.BEDWARS, fieldName, limit } })
   public BEDWARS: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.BUILD_BATTLE, fieldName, limit } })
   public BUILD_BATTLE: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.DUELS, fieldName, limit } })
   public DUELS: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.TURBO_KART_RACERS, fieldName, limit } })
   public GINGERBREAD: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.HOUSING, fieldName, limit } })
   public HOUSING: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.COPS_AND_CRIMS, fieldName, limit } })
   public MCGO: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.MURDER_MYSTERY, fieldName, limit } })
   public MURDER_MYSTERY: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.PAINTBALL, fieldName, limit } })
   public PAINTBALL: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.PIT, fieldName, limit } })
   public PIT: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.PROTOTYPE, fieldName, limit } })
   public PROTOTYPE: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.QUAKE, fieldName, limit } })
   public QUAKECRAFT: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.SKYWARS, fieldName, limit } })
   public SKYWARS: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.SPEED_UHC, fieldName, limit } })
   public SPEED_UHC: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.SMASH_HEROES, fieldName, limit } })
   public SUPER_SMASH: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.BLITZSG, fieldName, limit } })
   public SURVIVAL_GAMES: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.TNT_GAMES, fieldName, limit } })
   public TNTGAMES: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.UHC, fieldName, limit } })
   public UHC: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.VAMPIREZ, fieldName, limit } })
   public VAMPIREZ: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.MEGAWALLS, fieldName, limit } })
   public WALLS3: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.WALLS, fieldName, limit } })
   public WALLS: number;
 
-  @Field()
+  @Field({ leaderboard: { name: FormattedGame.WOOLWARS, fieldName, limit } })
   public WOOL_GAMES: number;
 
   public constructor(data: APIData) {

@@ -10,6 +10,7 @@ import {
   ApiService as StatsifyApiService,
   GuildNotFoundException,
   GuildQuery,
+  GUILD_ID_REGEX,
   HistoricalType,
   LeaderboardQuery,
   PlayerNotFoundException,
@@ -71,26 +72,6 @@ export class ApiService extends StatsifyApiService {
 
       throw this.unknownError();
     });
-  }
-
-  public async getWithUser<T extends (...args: any[]) => Promise<K>, K extends { uuid: string }>(
-    user: User | null,
-    fn: T,
-    ...args: Parameters<T>
-  ): Promise<Awaited<ReturnType<T>> & { user: User | null }> {
-    const result = (await fn.bind(this)(...args, user)) as Awaited<ReturnType<T>> & {
-      user: User | null;
-    };
-
-    if (result.uuid === user?.uuid) {
-      result.user = user;
-      return result;
-    }
-
-    user = await this.getUser(result.uuid);
-
-    result.user = user;
-    return result;
   }
 
   /**
@@ -179,7 +160,7 @@ export class ApiService extends StatsifyApiService {
 
     if (!type) {
       if (!tag || this.isDiscordId(tag)) type = GuildQuery.PLAYER;
-      else if (tag.match(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)) type = GuildQuery.ID;
+      else if (tag.match(GUILD_ID_REGEX)) type = GuildQuery.ID;
       else if (tag.includes(' ') || tag.length > 16) type = GuildQuery.NAME;
       else type = GuildQuery.NAME;
     }

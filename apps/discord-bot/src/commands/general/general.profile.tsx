@@ -22,7 +22,6 @@ const GeneralProfileHeaderBody = ({ guild, status, t }: GeneralProfileHeaderBody
   const online = status.online ? '§aOnline' : '§cOffline';
 
   const format = "LL/dd/yy',' hh:mm a";
-
   const firstLogin = DateTime.fromMillis(status.firstLogin).toFormat(format, { locale: t.locale });
 
   const lastLogin = status.lastLogin
@@ -103,12 +102,12 @@ export const GeneralProfile = ({
           {(member) => (
             <Table.tr>
               <Table.td
-                title={t('stats.guildQuests')}
+                title={t('stats.guild.quests')}
                 value={t(member.questParticipation)}
                 color="§2"
               />
-              <Table.td title={t('stats.dailyGexp')} value={t(member.daily)} color="§2" />
-              <Table.td title={t('stats.weeklyGexp')} value={t(member.weekly)} color="§2" />
+              <Table.td title={t('stats.guild.daily')} value={t(member.daily)} color="§2" />
+              <Table.td title={t('stats.guild.weekly')} value={t(member.weekly)} color="§2" />
             </Table.tr>
           )}
         </If>

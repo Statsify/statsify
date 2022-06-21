@@ -10,9 +10,8 @@ import { ServerArgument } from '#arguments';
 import { Container } from '#components';
 import { getBackground, getServerMappings } from '@statsify/assets';
 import { Command, CommandContext, IMessage } from '@statsify/discord';
-import { render } from '@statsify/rendering';
+import { loadImage, render } from '@statsify/rendering';
 import axios, { AxiosInstance } from 'axios';
-import { loadImage } from 'skia-canvas/lib';
 import { ErrorMessage } from '../../error.message';
 
 const servers = getServerMappings();

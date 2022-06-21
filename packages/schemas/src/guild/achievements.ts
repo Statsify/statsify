@@ -9,6 +9,8 @@
 import { APIData } from '@statsify/util';
 import { Field } from '../metadata';
 
+const limit = 50_000;
+
 /**
  * Better names for the guild achievements
  */
@@ -16,10 +18,10 @@ export class GuildAchievements {
   @Field({ leaderboard: { enabled: false } })
   public maxOnlinePlayerCount: number;
 
-  @Field()
+  @Field({ leaderboard: { name: 'Daily Guild Wins', fieldName: 'Wins', limit } })
   public dailyGuildWins: number;
 
-  @Field()
+  @Field({ leaderboard: { name: 'Daily GEXP', fieldName: 'GEXP', limit } })
   public dailyGexp: number;
 
   public constructor(data: APIData) {

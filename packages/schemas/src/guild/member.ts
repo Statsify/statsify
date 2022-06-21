@@ -25,7 +25,7 @@ export class GuildMember {
   @Field()
   public joinTime: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public questParticipation: number;
 
   @Field({ type: () => [Number] })
@@ -34,13 +34,13 @@ export class GuildMember {
   @Field({ type: () => [String] })
   public expHistoryDays: string[];
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public daily: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public weekly: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public monthly: number;
 
   @Field({ leaderboard: { enabled: false } })
@@ -68,5 +68,9 @@ export class GuildMember {
       if (index === 0) this.daily = exp;
       this.weekly += exp;
     });
+  }
+
+  public static isGuildMaster(member: GuildMember): boolean {
+    return !!member.rank.match(/^guild\s*master$/i);
   }
 }

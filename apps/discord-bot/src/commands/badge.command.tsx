@@ -11,10 +11,10 @@ import { Container, Footer, HeaderNametag, Skin } from '#components';
 import { ApiService } from '#services';
 import { getBackground, getLogo } from '@statsify/assets';
 import { Command, CommandContext, IMessage, LocalizeFunction, SubCommand } from '@statsify/discord';
-import { render } from '@statsify/rendering';
+import { loadImage, render } from '@statsify/rendering';
 import { User } from '@statsify/schemas';
 import { APIAttachment } from 'discord-api-types/v10';
-import { Canvas, Image, loadImage } from 'skia-canvas/lib';
+import { Canvas, Image } from 'skia-canvas';
 import { ErrorMessage } from '../error.message';
 import { getTheme } from '../themes';
 
@@ -56,7 +56,7 @@ export class BadgeCommand {
         (t) => t('verification.requiredVerification.description')
       );
 
-    if (User.isPremium(user.tier))
+    if (!User.isPremium(user.tier))
       throw new ErrorMessage(
         (t) => t('errors.missingSelfPremium.title'),
         (t) => t('errors.missingSelfPremium.description')
