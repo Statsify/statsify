@@ -44,7 +44,7 @@ interface GuildTopPageState {
 export class GuildTopSubCommand {
   public constructor(protected readonly apiService: ApiService) {}
 
-  @SubCommand({ description: (t) => t('commands.guild-daily'), args: GuildArgument })
+  @SubCommand({ description: (t) => t('commands.guild-top'), args: GuildArgument })
   public async top(context: CommandContext) {
     const userId = context.getInteraction().getUserId();
     const user = context.getUser();
@@ -54,7 +54,7 @@ export class GuildTopSubCommand {
 
     const [logo, background] = await Promise.all([
       getLogo(user?.tier),
-      getBackground('bedwars', 'overall'),
+      getBackground('hypixel', 'overall'),
     ]);
 
     const props: BaseGuildTopProfileProps = {

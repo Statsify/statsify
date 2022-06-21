@@ -31,11 +31,12 @@ export const GuildMemberProfile = ({
   const format = "LL/dd/yy',' hh:mm a";
   const createdAt = DateTime.fromMillis(member.joinTime).toFormat(format, { locale: t.locale });
 
-  const description = `§7Guild: ${guild.tagColor.code}${guild.name}\n§7${t('stats.guild.rank')}: ${
-    guild.tagColor.code
-  }${member.rank}\n§7${t('stats.guild.joinedAt')}: §3${createdAt}\n§7${t(
-    'stats.guild.quests'
-  )}: §b${t(member.questParticipation)}`;
+  const description = [
+    `§7Guild: ${guild.tagColor.code}${guild.name}`,
+    `§7${t('stats.guild.rank')}: ${guild.tagColor.code}${member.rank}`,
+    `§7${t('stats.guild.joinedAt')}: §3${createdAt}`,
+    `§7${t('stats.guild.quests')}: §b${t(member.questParticipation)}`,
+  ].join('\n');
 
   return (
     <Container background={background}>

@@ -22,7 +22,7 @@ export interface GuildListProfileProps {
 
 export const GuildListProfile = ({ guild, background, logo, tier, t }: GuildListProfileProps) => {
   // The width of each member row
-  const WIDTH = 1000;
+  const WIDTH = 1600;
 
   const header = (
     <box width="100%">
@@ -61,8 +61,8 @@ export const GuildListProfile = ({ guild, background, logo, tier, t }: GuildList
 
       for (let i = 0; i < members.length; i++) {
         const memberBox = (
-          <box padding={{ left: 4, right: 4, top: 2, bottom: 2 }}>
-            <text>{members[i]}</text>
+          <box padding={{ left: 10, right: 10, top: 4, bottom: 4 }}>
+            <text margin={0}>{members[i]}</text>
           </box>
         );
 
@@ -88,11 +88,8 @@ export const GuildListProfile = ({ guild, background, logo, tier, t }: GuildList
           </box>
           <>
             {rows.map((row) => (
-              <div width="100%">
-                {row.map((r) => {
-                  r.x.size = `1/${row.length}`;
-                  return r;
-                })}
+              <div width="100%" location="left">
+                {row}
               </div>
             ))}
           </>

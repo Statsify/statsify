@@ -10,7 +10,7 @@ import { GuildArgument, PlayerArgument } from '#arguments';
 import { ApiService, PaginateService } from '#services';
 import { GuildQuery } from '@statsify/api-client';
 import { getAssetPath, getBackground, getImage, getLogo } from '@statsify/assets';
-import { Command, CommandContext, SubCommand } from '@statsify/discord';
+import { Command, CommandContext, IMessage, SubCommand } from '@statsify/discord';
 import { render } from '@statsify/rendering';
 import { GuildMember } from '@statsify/schemas';
 import { readdir } from 'fs/promises';
@@ -37,9 +37,6 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const guild = await this.getGuild(context);
 
-    const guildRanking = await this.apiService.getGuildRankings(['exp'], guild.id);
-    const ranking = guildRanking[0]?.rank ?? 0;
-
     const guildMaster = guild.members.find((m) => GuildMember.isGuildMaster(m));
 
     if (!guildMaster)
@@ -50,17 +47,22 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const gameIconPaths = await readdir(getAssetPath('games'));
 
-    const gameIcons = Object.fromEntries(
-      await Promise.all(
-        gameIconPaths.map(async (g) => [g.replace('.png', ''), await getImage(`games/${g}`)])
-      )
-    );
+    const gameIconsRequest = gameIconPaths.map(async (g) => [
+      g.replace('.png', ''),
+      await getImage(`games/${g}`),
+    ]);
 
-    const [skin, logo, background] = await Promise.all([
+    const [gameIcons, guildRanking, skin, logo, background] = await Promise.all([
+      Promise.all(gameIconsRequest),
+      this.apiService.getGuildRankings(['exp'], guild.id),
       this.apiService.getPlayerHead(guildMaster.uuid, 16),
       getLogo(user?.tier),
-      getBackground('bedwars', 'overall'),
+      getBackground('hypixel', 'overall'),
     ]);
+
+    const ranking = guildRanking[0]?.rank ?? 0;
+
+    const gameIconsRecord = Object.fromEntries(await gameIcons);
 
     const props: Omit<GuildProfileProps, 'page'> = {
       guild,
@@ -71,7 +73,7 @@ export class GuildCommand extends GuildTopSubCommand {
       logo,
       tier: user?.tier,
       t,
-      gameIcons,
+      gameIcons: gameIconsRecord,
     };
 
     return this.paginateService.paginate(context, [
@@ -96,7 +98,7 @@ export class GuildCommand extends GuildTopSubCommand {
   }
 
   @SubCommand({ description: (t) => t('commands.guild-list'), args: GuildArgument })
-  public async list(context: CommandContext) {
+  public async list(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
     const t = context.t();
 
@@ -104,7 +106,7 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const [logo, background] = await Promise.all([
       getLogo(user?.tier),
-      getBackground('bedwars', 'overall'),
+      getBackground('hypixel', 'overall'),
     ]);
 
     const props: GuildListProfileProps = {
@@ -115,16 +117,16 @@ export class GuildCommand extends GuildTopSubCommand {
       t,
     };
 
-    return this.paginateService.paginate(context, [
-      {
-        label: 'List',
-        generator: () => render(<GuildListProfile {...props} />, getTheme(user?.theme)),
-      },
-    ]);
+    const canvas = render(<GuildListProfile {...props} />, getTheme(user?.theme));
+    const buffer = await canvas.toBuffer('png');
+
+    return {
+      files: [{ name: 'guild-list.png', data: buffer, type: 'image/png' }],
+    };
   }
 
   @SubCommand({ description: (t) => t('commands.guild-member'), args: [PlayerArgument] })
-  public async member(context: CommandContext) {
+  public async member(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
     const t = context.t();
 
@@ -142,24 +144,24 @@ export class GuildCommand extends GuildTopSubCommand {
       getBackground('bedwars', 'overall'),
     ]);
 
-    return this.paginateService.paginate(context, [
-      {
-        label: 'Guild Member',
-        generator: () =>
-          render(
-            <GuildMemberProfile
-              logo={logo}
-              skin={skin}
-              player={player}
-              guild={guild}
-              background={background}
-              t={t}
-              badge={badge}
-              tier={user?.tier}
-            />,
-            getTheme(user?.theme)
-          ),
-      },
-    ]);
+    const canvas = render(
+      <GuildMemberProfile
+        logo={logo}
+        skin={skin}
+        player={player}
+        guild={guild}
+        background={background}
+        t={t}
+        badge={badge}
+        tier={user?.tier}
+      />,
+      getTheme(user?.theme)
+    );
+
+    const buffer = await canvas.toBuffer('png');
+
+    return {
+      files: [{ name: 'guild-member.png', data: buffer, type: 'image/png' }],
+    };
   }
 }

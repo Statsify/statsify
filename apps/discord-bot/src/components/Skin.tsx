@@ -25,7 +25,7 @@ export const Skin = ({ skin }: SkinProps) => {
 
   return (
     <box height="100%" padding={0}>
-      <img image={skin} width={width} height="100%" crop="resize" />
+      <img image={skin} width={width} height="100%" crop="height-crop" />
     </box>
   );
 };
