@@ -58,7 +58,7 @@ export class PlayerService {
 
       const flatPlayer = flatten(player);
 
-      this.saveOne(flatPlayer);
+      await this.saveOne(flatPlayer);
 
       return deserialize(Player, flatPlayer);
     } else if (mongoPlayer) {
@@ -203,16 +203,20 @@ export class PlayerService {
     //Serialize and flatten the player
     const serializedPlayer = serialize(Player, player);
 
-    await this.playerModel.replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true });
+    const saveMongo = this.playerModel.replaceOne({ uuid: player.uuid }, serializedPlayer, {
+      upsert: true,
+    });
 
     const fields = LeaderboardScanner.getLeaderboardFields(Player);
 
-    await this.playerLeaderboardService.addLeaderboards(
+    const saveRedis = this.playerLeaderboardService.addLeaderboards(
       Player,
       player,
       'uuid',
       fields,
       player.leaderboardBanned ?? false
     );
+
+    return Promise.all([saveMongo, saveRedis]);
   }
 }

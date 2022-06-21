@@ -2,7 +2,7 @@
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": ["source.organizeImports", "source.fixAll.eslint"],
+  "editor.codeActionsOnSave": ["source.fixAll.eslint"],
   "typescript.tsdk": "node_modules/typescript/lib",
   "[handlebars]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

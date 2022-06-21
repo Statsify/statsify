@@ -1410,6 +1410,7 @@ __metadata:
   dependencies:
     "@nestjs/common": ^8.4.7
     "@nestjs/swagger": ^5.2.1
+    "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
     axios: ^0.27.2
     skia-canvas: ^0.9.30
@@ -1421,6 +1422,7 @@ __metadata:
   resolution: "@statsify/assets@workspace:packages/assets"
   dependencies:
     "@statsify/logger": "workspace:^"
+    "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
     skia-canvas: ^0.9.30
   languageName: unknown
@@ -2336,6 +2338,7 @@ __metadata:
     "@statsify/api-client": "workspace:^"
     "@statsify/assets": "workspace:^"
     "@statsify/logger": "workspace:^"
+    "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@typegoose/typegoose": ^9.9.0
     "@types/cron": ^2.0.0

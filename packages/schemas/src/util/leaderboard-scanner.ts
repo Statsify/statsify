@@ -8,7 +8,7 @@
 
 import { Constructor } from '@statsify/util';
 import { MetadataScanner } from '../metadata';
-import { LeaderboardEnabledMetadata } from '../metadata/metadata.interface';
+import { LeaderboardEnabledMetadata, LeaderboardMetadata } from '../metadata/metadata.interface';
 
 export class LeaderboardScanner {
   public static getLeaderboardMetadata<T>(constructor: Constructor<T>) {
@@ -25,8 +25,19 @@ export class LeaderboardScanner {
 
   public static getLeaderboardField<T>(
     constructor: Constructor<T>,
-    key: string
-  ): LeaderboardEnabledMetadata {
+    key: string,
+    leaderboardMustBeEnabled?: true
+  ): LeaderboardEnabledMetadata;
+  public static getLeaderboardField<T>(
+    constructor: Constructor<T>,
+    key: string,
+    leaderboardMustBeEnabled: false
+  ): LeaderboardMetadata;
+  public static getLeaderboardField<T>(
+    constructor: Constructor<T>,
+    key: string,
+    leaderboardMustBeEnabled = true
+  ): LeaderboardMetadata {
     const metadata = MetadataScanner.scan(constructor);
 
     const field = metadata.find(([k]) => k === key);
@@ -35,7 +46,7 @@ export class LeaderboardScanner {
 
     const [, { leaderboard }] = field;
 
-    if (!leaderboard.enabled)
+    if (!leaderboard.enabled && leaderboardMustBeEnabled)
       throw new Error(`${key} is not a leaderboard field for ${constructor.name}`);
 
     return leaderboard;

@@ -23,6 +23,7 @@ import {
   SubCommand,
 } from '@statsify/discord';
 import { render, Theme } from '@statsify/rendering';
+import { GuildLeaderboardSubCommand } from '../leaderboards/guild-leaderboard.subcommand';
 import { ButtonStyle } from 'discord-api-types/v10';
 import { CommandListener } from '../../command.listener';
 import { getTheme } from '../../themes';
@@ -41,9 +42,7 @@ interface GuildTopPageState {
   page: number;
 }
 
-export class GuildTopSubCommand {
-  public constructor(protected readonly apiService: ApiService) {}
-
+export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
   @SubCommand({ description: (t) => t('commands.guild-top'), args: GuildArgument })
   public async top(context: CommandContext) {
     const userId = context.getInteraction().getUserId();

@@ -82,7 +82,7 @@ export class ApiService {
     return this.request<PostLeaderboardResponse>('/player/leaderboards', {}, 'POST', {
       body: {
         field,
-        [type]: input,
+        [type === LeaderboardQuery.INPUT ? 'player' : type]: input,
       },
     });
   }
@@ -109,7 +109,7 @@ export class ApiService {
     return this.request<PostLeaderboardResponse>('/guild/leaderboards', {}, 'POST', {
       body: {
         field,
-        [type]: input,
+        [type === LeaderboardQuery.INPUT ? 'guild' : type]: input,
       },
     });
   }

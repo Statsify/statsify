@@ -377,9 +377,13 @@
       "title": "Invalid Leaderboard",
       "description": "Search for a valid leaderboard"
     },
-    "leaderboardPlayerNotFound": {
+    "playerLeaderboardNotFound": {
       "title": "Invalid Player or Position",
-      "description": "We can't find the player you are looking for"
+      "description": "We can't find the player you are looking for!?"
+    },
+    "guildLeaderboardNotFound": {
+      "title": "Invalid GUILD or Position",
+      "description": "We can't find the player you are looking for!?"
     },
     "leaderboardEmpty": {
       "title": "Leaderboard Empty",

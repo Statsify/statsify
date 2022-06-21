@@ -74,7 +74,7 @@ export abstract class LeaderboardService {
         break;
       case LeaderboardQuery.INPUT: {
         const ranking = await this.searchLeaderboardInput(input as string, field);
-        highlight = ranking;
+        highlight = ranking - 1;
         top = ranking - (ranking % 10);
         bottom = top + PAGE_SIZE;
         break;
@@ -97,7 +97,7 @@ export abstract class LeaderboardService {
     );
 
     const additionalFieldMetadata = additionalFields.map((key) =>
-      LeaderboardScanner.getLeaderboardField(constructor, key)
+      LeaderboardScanner.getLeaderboardField(constructor, key, false)
     );
 
     const additionalStats = await this.getAdditionalStats(

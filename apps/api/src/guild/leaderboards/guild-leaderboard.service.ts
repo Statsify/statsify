@@ -9,6 +9,7 @@
 import { InjectModel } from '@m8a/nestjs-typegoose';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Injectable } from '@nestjs/common';
+import { GuildNotFoundException, GUILD_ID_REGEX } from '@statsify/api-client';
 import { Guild } from '@statsify/schemas';
 import { flatten } from '@statsify/util';
 import { ReturnModelType } from '@typegoose/typegoose';
@@ -24,8 +25,25 @@ export class GuildLeaderboardService extends LeaderboardService {
     super(redis);
   }
 
-  protected searchLeaderboardInput(input: string): Promise<number> {
-    throw new Error('Method not implemented.');
+  protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
+    if (!input.match(GUILD_ID_REGEX)) {
+      const guild = await this.guildModel
+        .findOne()
+        .where('nameToLower')
+        .equals(input.toLowerCase())
+        .select({ id: true })
+        .lean()
+        .exec();
+
+      if (!guild) throw new GuildNotFoundException();
+      input = guild.id;
+    }
+
+    const ranking = await this.getLeaderboardRankings(Guild, [field], input);
+
+    if (!ranking || !ranking[0].rank) throw new GuildNotFoundException();
+
+    return ranking[0].rank;
   }
 
   protected async getAdditionalStats(

@@ -43,8 +43,8 @@ export class GuildLeaderboardDto {
 
   @IsOptional()
   @IsString()
-  @MinLength(24)
-  @MaxLength(24)
+  @MinLength(3)
+  @MaxLength(32)
   @ApiProperty({ required: false })
-  public id?: string;
+  public guild?: string;
 }

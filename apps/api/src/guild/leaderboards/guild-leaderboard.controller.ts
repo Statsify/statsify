@@ -28,12 +28,12 @@ export class GuildLeaderboardController {
   @ApiOkResponse({ type: PostLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 10 })
-  public async getGuildLeaderboard(@Body() { field, page, id, position }: GuildLeaderboardDto) {
+  public async getGuildLeaderboard(@Body() { field, page, guild, position }: GuildLeaderboardDto) {
     let input: number | string;
     let type: LeaderboardQuery;
 
-    if (id) {
-      input = id;
+    if (guild) {
+      input = guild;
       type = LeaderboardQuery.INPUT;
     } else if (position) {
       input = position;

@@ -23,6 +23,7 @@
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
+    "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@typegoose/typegoose": "^9.9.0",
     "class-transformer": "0.5.1",

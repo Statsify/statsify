@@ -15,3 +15,4 @@ export * from './player-leaderboard.argument';
 export * from './player.argument';
 export * from './server.argument';
 export * from './text.argument';
+export * from './guild-leaderboard.argument';

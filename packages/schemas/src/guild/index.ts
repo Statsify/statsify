@@ -53,7 +53,7 @@ export class Guild {
   @Field({ type: () => [GuildRank] })
   public ranks: GuildRank[];
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'Achievements -' } })
   public achievements: GuildAchievements;
 
   @Field({ type: () => [String] })
@@ -71,7 +71,7 @@ export class Guild {
   @Field()
   public tagFormatted: string;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: 'GEXP -' } })
   public expByGame: ExpByGame;
 
   @Field({ type: () => [Number] })
@@ -83,13 +83,13 @@ export class Guild {
   @Field({ type: () => [Number] })
   public scaledExpHistory: number[];
 
-  @Field({ leaderboard: { limit } })
+  @Field({ leaderboard: { limit, name: 'Daily GEXP', fieldName: 'GEXP' } })
   public daily: number;
 
-  @Field({ leaderboard: { limit } })
+  @Field({ leaderboard: { limit, name: 'Weekly GEXP', fieldName: 'GEXP' } })
   public weekly: number;
 
-  @Field({ leaderboard: { limit } })
+  @Field({ leaderboard: { limit, name: 'Monthly GEXP', fieldName: 'GEXP' } })
   public monthly: number;
 
   @Field({ leaderboard: { limit } })

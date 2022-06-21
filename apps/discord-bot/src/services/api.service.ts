@@ -10,6 +10,7 @@ import {
   ApiService as StatsifyApiService,
   GuildNotFoundException,
   GuildQuery,
+  GUILD_ID_REGEX,
   HistoricalType,
   LeaderboardQuery,
   PlayerNotFoundException,
@@ -159,7 +160,7 @@ export class ApiService extends StatsifyApiService {
 
     if (!type) {
       if (!tag || this.isDiscordId(tag)) type = GuildQuery.PLAYER;
-      else if (tag.match(/^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i)) type = GuildQuery.ID;
+      else if (tag.match(GUILD_ID_REGEX)) type = GuildQuery.ID;
       else if (tag.includes(' ') || tag.length > 16) type = GuildQuery.NAME;
       else type = GuildQuery.NAME;
     }
