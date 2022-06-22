@@ -6,6 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from './field';
-export * from './metadata-scanner';
-export * from './serialize';
+export * from "./field";
+export * from "./metadata-scanner";
+export * from "./serialize";

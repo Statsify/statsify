@@ -6,12 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from '@statsify/discord';
-import { MegaWallsModes, MEGAWALLS_MODES } from '@statsify/schemas';
-import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
-import { MegaWallsProfile } from './megawalls.profile';
+import {
+  BaseHypixelCommand,
+  BaseProfileProps,
+  ProfileData,
+} from "../base.hypixel-command";
+import { Command } from "@statsify/discord";
+import { MEGAWALLS_MODES, MegaWallsModes } from "@statsify/schemas";
+import { MegaWallsProfile } from "./megawalls.profile";
 
-@Command({ description: (t) => t('commands.megawalls') })
+@Command({ description: (t) => t("commands.megawalls") })
 export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
   public constructor() {
     super(MEGAWALLS_MODES);

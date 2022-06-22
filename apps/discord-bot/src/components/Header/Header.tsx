@@ -6,21 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HistoricalType } from '@statsify/api-client';
-import { useChildren } from '@statsify/rendering';
-import { Image } from 'skia-canvas';
-import { Sidebar, SidebarItem } from '../Sidebar';
-import { Skin } from '../Skin';
-import { HeaderBody } from './HeaderBody';
-import { HeaderNametag } from './HeaderNametag';
-import { HistoricalHeader } from './HistoricalHeader';
+import { HeaderBody } from "./HeaderBody";
+import { HeaderNametag } from "./HeaderNametag";
+import { HistoricalHeader } from "./HistoricalHeader";
+import { HistoricalType } from "@statsify/api-client";
+import { Image } from "skia-canvas";
+import { Sidebar, SidebarItem } from "../Sidebar";
+import { Skin } from "../Skin";
+import { useChildren } from "@statsify/rendering";
 
 interface BaseHeaderProps {
   skin: Image;
   badge?: Image;
   size?: number;
   name: string;
-  time: 'LIVE' | HistoricalType;
+  time: "LIVE" | HistoricalType;
   title: string;
 }
 
@@ -36,21 +36,37 @@ interface CustomHeaderBodyProps extends BaseHeaderProps {
   children: JSX.Children;
 }
 
-export type HeaderProps = SidebarlessHeaderProps | SidebarHeaderProps | CustomHeaderBodyProps;
+export type HeaderProps =
+  | SidebarlessHeaderProps
+  | SidebarHeaderProps
+  | CustomHeaderBodyProps;
 
 export const Header = (props: HeaderProps) => {
   const skin = <Skin skin={props.skin} />;
-  const nameTag = <HeaderNametag name={props.name} badge={props.badge} size={props.size} />;
+  const nameTag = (
+    <HeaderNametag name={props.name} badge={props.badge} size={props.size} />
+  );
 
-  if (props.time !== 'LIVE')
-    return <HistoricalHeader nameTag={nameTag} skin={skin} title={props.title} time={props.time} />;
+  if (props.time !== "LIVE")
+    return (
+      <HistoricalHeader
+        nameTag={nameTag}
+        skin={skin}
+        title={props.title}
+        time={props.time}
+      />
+    );
 
   const sidebar =
-    'sidebar' in props && props.sidebar.length ? <Sidebar items={props.sidebar} /> : <></>;
+    "sidebar" in props && props.sidebar.length ? (
+      <Sidebar items={props.sidebar} />
+    ) : (
+      <></>
+    );
 
   let body: JSX.Element;
 
-  if ('children' in props) {
+  if ("children" in props) {
     const children = useChildren(props.children);
     body = <>{children}</>;
   } else {

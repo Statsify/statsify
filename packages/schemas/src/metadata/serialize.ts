@@ -6,12 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Constructor, Flatten } from '@statsify/util';
-import { MetadataScanner } from './metadata-scanner';
-import { FieldMetadata } from './metadata.interface';
+import { Constructor, Flatten } from "@statsify/util";
+import { FieldMetadata } from "./metadata.interface";
+import { MetadataScanner } from "./metadata-scanner";
 
-export const serialize = <T>(constructor: Constructor<T>, instance: Flatten<T>): Flatten<T> => {
-  const metadataEntries = MetadataScanner.scan(constructor) as [keyof Flatten<T>, FieldMetadata][];
+export const serialize = <T>(
+  constructor: Constructor<T>,
+  instance: Flatten<T>
+): Flatten<T> => {
+  const metadataEntries = MetadataScanner.scan(constructor) as [
+    keyof Flatten<T>,
+    FieldMetadata
+  ][];
 
   const serialized: Flatten<T> = {} as Flatten<T>;
 

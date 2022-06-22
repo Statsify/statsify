@@ -6,12 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from '@statsify/discord';
-import { SkyWarsModes, SKYWARS_MODES } from '@statsify/schemas';
-import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
-import { SkyWarsProfile } from './skywars.profile';
+import {
+  BaseHypixelCommand,
+  BaseProfileProps,
+  ProfileData,
+} from "../base.hypixel-command";
+import { Command } from "@statsify/discord";
+import { SKYWARS_MODES, SkyWarsModes } from "@statsify/schemas";
+import { SkyWarsProfile } from "./skywars.profile";
 
-@Command({ description: (t) => t('commands.skywars') })
+@Command({ description: (t) => t("commands.skywars") })
 export class SkyWarsCommand extends BaseHypixelCommand<SkyWarsModes> {
   public constructor() {
     super(SKYWARS_MODES);

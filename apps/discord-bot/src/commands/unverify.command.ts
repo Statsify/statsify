@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { SUCCESS_COLOR } from '#constants';
-import { ApiService } from '#services';
-import { Command, CommandContext, EmbedBuilder, IMessage } from '@statsify/discord';
-import { ErrorMessage } from '../error.message';
+import { ApiService } from "#services";
+import { Command, CommandContext, EmbedBuilder, IMessage } from "@statsify/discord";
+import { ErrorMessage } from "../error.message";
+import { SUCCESS_COLOR } from "#constants";
 
-@Command({ description: (t) => t('commands.unverify'), cooldown: 5 })
+@Command({ description: (t) => t("commands.unverify"), cooldown: 5 })
 export class UnverifyCommand {
   public constructor(private readonly apiService: ApiService) {}
 
@@ -21,14 +21,14 @@ export class UnverifyCommand {
 
     if (!user?.uuid)
       throw new ErrorMessage(
-        (t) => t('verification.notVerified.title'),
-        (t) => t('verification.notVerified.description')
+        (t) => t("verification.notVerified.title"),
+        (t) => t("verification.notVerified.description")
       );
 
     await this.apiService.unverifyUser(userId);
 
     const embed = new EmbedBuilder()
-      .description((t) => t('verification.successfulUnverification'))
+      .description((t) => t("verification.successfulUnverification"))
       .color(SUCCESS_COLOR);
 
     return {

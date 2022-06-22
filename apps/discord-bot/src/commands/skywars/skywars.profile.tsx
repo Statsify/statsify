@@ -6,19 +6,24 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { BaseProfileProps } from "../base.hypixel-command";
 import {
   Container,
   Footer,
-  formatProgression,
   Header,
   HistoricalProgression,
   SidebarItem,
   Table,
-} from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { FormattedGame, SkyWarsLabs, SkyWarsMode, SKYWARS_MODES } from '@statsify/schemas';
-import { formatTime, prettify } from '@statsify/util';
-import { BaseProfileProps } from '../base.hypixel-command';
+  formatProgression,
+} from "#components";
+import {
+  FormattedGame,
+  SKYWARS_MODES,
+  SkyWarsLabs,
+  SkyWarsMode,
+} from "@statsify/schemas";
+import { LocalizeFunction } from "@statsify/discord";
+import { formatTime, prettify } from "@statsify/util";
 
 interface SkyWarsOverallTableProps {
   t: LocalizeFunction;
@@ -28,19 +33,23 @@ interface SkyWarsOverallTableProps {
 const SkyWarsOverallTable = ({ t, stats }: SkyWarsOverallTableProps) => (
   <>
     <Table.tr>
-      <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-      <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
-      <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+      <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
+      <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
-      <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
-      <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t('stats.assists')} value={t(stats.assists)} color="§a" />
-      <Table.td title={t('stats.playtime')} value={formatTime(stats.playtime)} color="§c" />
-      <Table.td title={t('stats.kit')} value={prettify(stats.kit)} color="§6" />
+      <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§a" />
+      <Table.td
+        title={t("stats.playtime")}
+        value={formatTime(stats.playtime)}
+        color="§c"
+      />
+      <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color="§6" />
     </Table.tr>
   </>
 );
@@ -51,8 +60,8 @@ interface SkyWarsLabsTableProps {
 }
 
 const SkyWarsLabsTable = ({ t, stats }: SkyWarsLabsTableProps) => {
-  const modes = ['lucky', 'rush', 'slime', 'tntMadness'] as const;
-  const colors = ['§e', '§b', '§a', '§c'] as const;
+  const modes = ["lucky", "rush", "slime", "tntMadness"] as const;
+  const colors = ["§e", "§b", "§a", "§c"] as const;
 
   return (
     <>
@@ -103,19 +112,19 @@ export const SkyWarsProfile = ({
   const { skywars } = player.stats;
 
   const sidebar: SidebarItem[] = [
-    [t('stats.coins'), t(skywars.coins), '§6'],
-    [t('stats.lootChests'), t(skywars.lootChests), '§e'],
-    [t('stats.tokens'), t(skywars.tokens), '§a'],
-    [t('stats.souls'), t(skywars.souls), '§b'],
-    [t('stats.heads'), t(skywars.heads), '§d'],
-    [t('stats.shards'), t(skywars.shards), '§3'],
-    [t('stats.opals'), t(skywars.opals), '§9'],
+    [t("stats.coins"), t(skywars.coins), "§6"],
+    [t("stats.lootChests"), t(skywars.lootChests), "§e"],
+    [t("stats.tokens"), t(skywars.tokens), "§a"],
+    [t("stats.souls"), t(skywars.souls), "§b"],
+    [t("stats.heads"), t(skywars.heads), "§d"],
+    [t("stats.shards"), t(skywars.shards), "§3"],
+    [t("stats.opals"), t(skywars.opals), "§9"],
   ];
 
   let table: JSX.Element;
 
   switch (mode) {
-    case 'labs':
+    case "labs":
       table = <SkyWarsLabsTable t={t} stats={skywars[mode]} />;
       break;
     default:

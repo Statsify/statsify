@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ratio } from '@statsify/math';
-import { Field } from './metadata';
+import { Field } from "./metadata";
+import { ratio } from "@statsify/math";
 export class Progression {
   @Field({ leaderboard: { enabled: false } })
   public current: number;

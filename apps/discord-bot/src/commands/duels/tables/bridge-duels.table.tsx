@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Table } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { BridgeDuels, BridgeDuelsMode } from '@statsify/schemas';
-import { prettify } from '@statsify/util';
+import { BridgeDuels, BridgeDuelsMode } from "@statsify/schemas";
+import { LocalizeFunction } from "@statsify/discord";
+import { Table } from "#components";
+import { prettify } from "@statsify/util";
 
 interface BridgeDuelsModeColumnProps {
   stats: BridgeDuelsMode;
@@ -17,13 +17,13 @@ interface BridgeDuelsModeColumnProps {
   t: LocalizeFunction;
 }
 
-const formatMode = (title: string) => prettify(title).replace('Ctf', 'CTF');
+const formatMode = (title: string) => prettify(title).replace("Ctf", "CTF");
 
 const BridgeDuelsModeColumn = ({ title, stats, t }: BridgeDuelsModeColumnProps) => (
   <Table.ts title={`§b${formatMode(title)}`}>
-    <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-    <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
-    <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
+    <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+    <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
+    <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
   </Table.ts>
 );
 
@@ -33,8 +33,8 @@ export interface BridgeDuelsTableProps {
 }
 
 export const BridgeDuelsTable = ({ stats, t }: BridgeDuelsTableProps) => {
-  const firstModes = ['overall', 'solo', 'doubles', 'threes'] as const;
-  const secondModes = ['fours', '2v2v2v2', '3v3v3v3', 'ctf'] as const;
+  const firstModes = ["overall", "solo", "doubles", "threes"] as const;
+  const secondModes = ["fours", "2v2v2v2", "3v3v3v3", "ctf"] as const;
 
   return (
     <Table.table>

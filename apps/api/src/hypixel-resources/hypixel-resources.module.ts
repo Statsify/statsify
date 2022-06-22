@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Module } from '@nestjs/common';
-import { HypixelModule } from '../hypixel';
-import { HypixelResourcesController } from './hypixel-resources.controller';
+import { HypixelModule } from "../hypixel";
+import { HypixelResourcesController } from "./hypixel-resources.controller";
+import { Module } from "@nestjs/common";
 
 @Module({
   imports: [HypixelModule],

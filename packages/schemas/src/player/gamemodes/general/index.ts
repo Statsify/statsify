@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
-import { GeneralUtil } from './util';
+import { APIData } from "@statsify/util";
+import { Field } from "../../../metadata";
+import { GeneralUtil } from "./util";
 
-export const GENERAL_MODES = ['overall'] as const;
+export const GENERAL_MODES = ["overall"] as const;
 export type GeneralModes = typeof GENERAL_MODES;
 
 export class General {
@@ -28,10 +28,10 @@ export class General {
 
   @Field({
     leaderboard: {
-      fieldName: 'Network Level',
+      fieldName: "Network Level",
       hidden: true,
       limit: 500_000,
-      additionalFields: ['stats.general.networkLevel'],
+      additionalFields: ["stats.general.networkLevel"],
     },
   })
   public networkExp: number;

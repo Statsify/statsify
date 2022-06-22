@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Constructor } from '@statsify/util';
-import { LEADERBOARD_RATIO_KEYS } from '../ratios';
-import { METADATA_KEY } from './constants';
-import { ClassMetadata, FieldMetadata } from './metadata.interface';
+import { ClassMetadata, FieldMetadata } from "./metadata.interface";
+import { Constructor } from "@statsify/util";
+import { LEADERBOARD_RATIO_KEYS } from "../ratios";
+import { METADATA_KEY } from "./constants";
 
 export type MetadataEntry = [string, FieldMetadata];
 
@@ -28,10 +28,13 @@ export class MetadataScanner {
 
   private static getMetadataEntries(
     constructor: Constructor,
-    base = '',
-    baseName = ''
+    base = "",
+    baseName = ""
   ): MetadataEntry[] {
-    const classMetadata = Reflect.getMetadata(METADATA_KEY, constructor.prototype) as ClassMetadata;
+    const classMetadata = Reflect.getMetadata(
+      METADATA_KEY,
+      constructor.prototype
+    ) as ClassMetadata;
 
     if (!classMetadata) return [];
 
@@ -41,15 +44,15 @@ export class MetadataScanner {
     const metadataEntries: MetadataEntry[] = [];
 
     entries.forEach(([key, value]) => {
-      const path = `${base ? `${base}.` : ''}${key}`;
-      const name = `${baseName ? `${baseName} ` : ''}${value.leaderboard.name}`;
+      const path = `${base ? `${base}.` : ""}${key}`;
+      const name = `${baseName ? `${baseName} ` : ""}${value.leaderboard.name}`;
 
       for (const ratio of LEADERBOARD_RATIO_KEYS) {
         if (!ratio.includes(key)) continue;
 
         const remainingStats = ratio
           .filter((r) => r !== key && keys.includes(r))
-          .map((r) => `${base ? `${base}.` : ''}${r}`);
+          .map((r) => `${base ? `${base}.` : ""}${r}`);
 
         if (!remainingStats.length) continue;
 

@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from '@statsify/util';
-import { Field } from '../metadata';
+import { APIData } from "@statsify/util";
+import { Field } from "../metadata";
 
 export class GuildMember {
   @Field()
@@ -62,15 +62,17 @@ export class GuildMember {
     this.weekly = 0;
     this.monthly = 0;
 
-    Object.entries(data.expHistory as Record<string, number>).forEach(([day, exp], index) => {
-      this.expHistory[index] = exp;
-      this.expHistoryDays[index] = day;
-      if (index === 0) this.daily = exp;
-      this.weekly += exp;
-    });
+    Object.entries(data.expHistory as Record<string, number>).forEach(
+      ([day, exp], index) => {
+        this.expHistory[index] = exp;
+        this.expHistoryDays[index] = day;
+        if (index === 0) this.daily = exp;
+        this.weekly += exp;
+      }
+    );
   }
 
   public static isGuildMaster(member: GuildMember): boolean {
-    return !!member.rank.match(/^guild\s*master$/i);
+    return !!/^guild\s*master$/i.test(member.rank);
   }
 }

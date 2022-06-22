@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from 'typedi';
-import { RGB } from '../colors';
-import { FontRenderer } from '../font';
-import type { TextNode } from '../font/tokens';
-import { useChildren } from '../hooks';
-import type * as JSX from '../jsx';
+import Container from "typedi";
+import { FontRenderer } from "../font";
+import { RGB } from "../colors";
+import { useChildren } from "../hooks";
+import type * as JSX from "../jsx";
+import type { TextNode } from "../font/tokens";
 
 type Text = string | number;
 
@@ -31,10 +31,10 @@ export interface TextRenderProps {
   text: TextNode[][];
 }
 
-export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps['children']> = ({
+export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps["children"]> = ({
   margin = 6,
   children,
-  align = 'center',
+  align = "center",
   color = [255, 255, 255],
   bold = false,
   italic = false,
@@ -42,7 +42,7 @@ export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps['childre
   size = 2,
   shadow = true,
 }) => {
-  const text = useChildren(children).join('');
+  const text = useChildren(children).join("");
 
   //Get a generic instance of font renderer just to lex and measure the text
   const renderer = Container.get(FontRenderer);
@@ -56,12 +56,17 @@ export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps['childre
       width,
       height,
     },
-    style: { location: 'center', direction: 'row', align },
+    style: { location: "center", direction: "row", align },
     props: { text: nodes },
     children: [],
   };
 };
 
-export const render: JSX.Render<TextRenderProps> = (ctx, { text }, { x, y }, { renderer }) => {
+export const render: JSX.Render<TextRenderProps> = (
+  ctx,
+  { text },
+  { x, y },
+  { renderer }
+) => {
   renderer.fillText(ctx, text, x, y);
 };

@@ -6,23 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Constructor } from '@statsify/util';
-import { StoreOptions } from '../field.options';
-import { LeaderboardMetadata, StoreMetadata, TypeMetadata } from '../metadata.interface';
+import { Constructor } from "@statsify/util";
+import { LeaderboardMetadata, StoreMetadata, TypeMetadata } from "../metadata.interface";
+import { StoreOptions } from "../field.options";
 
 const getDefaultValue = (type: Constructor) =>
-  type === String ? '' : type === Number ? 0 : type === Boolean ? false : undefined;
+  type === String ? "" : type === Number ? 0 : type === Boolean ? false : undefined;
 
 export const getStoreMetadata = (
   typeMetadata: TypeMetadata,
   leaderboardMetadata: LeaderboardMetadata,
   storeOptions?: StoreOptions
-): StoreMetadata => {
-  return {
-    required: storeOptions?.required ?? true,
-    store: (leaderboardMetadata.enabled || storeOptions?.store) ?? true,
-    serialize: storeOptions?.serialize ?? true,
-    deserialize: storeOptions?.deserialize ?? true,
-    default: storeOptions?.default ?? getDefaultValue(typeMetadata.type),
-  };
-};
+): StoreMetadata => ({
+  required: storeOptions?.required ?? true,
+  store: (leaderboardMetadata.enabled || storeOptions?.store) ?? true,
+  serialize: storeOptions?.serialize ?? true,
+  deserialize: storeOptions?.deserialize ?? true,
+  default: storeOptions?.default ?? getDefaultValue(typeMetadata.type),
+});

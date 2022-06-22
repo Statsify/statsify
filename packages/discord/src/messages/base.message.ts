@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { RemoveMethods } from '@statsify/util';
-import { APIAllowedMentions, APIAttachment } from 'discord-api-types/v10';
-import { InteractionAttachment, InteractionContent } from '../interaction';
-import { ActionRowBuilder } from './components';
-import { EmbedBuilder } from './embed';
-import { LocalizationString, LocalizeFunction, translateField } from './localize';
+import { APIAllowedMentions, APIAttachment } from "discord-api-types/v10";
+import { ActionRowBuilder } from "./components";
+import { EmbedBuilder } from "./embed";
+import { InteractionAttachment, InteractionContent } from "../interaction";
+import { LocalizationString, LocalizeFunction, translateField } from "./localize";
+import type { RemoveMethods } from "@statsify/util";
 
 export type IMessage = RemoveMethods<Message>;
 

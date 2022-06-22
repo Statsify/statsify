@@ -6,6 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from './historical.controller';
-export * from './historical.module';
-export * from './historical.service';
+export * from "./historical.controller";
+export * from "./historical.module";
+export * from "./historical.service";

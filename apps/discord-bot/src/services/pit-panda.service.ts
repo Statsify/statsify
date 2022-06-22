@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import axios, { AxiosInstance } from 'axios';
-import { Service } from 'typedi';
+import axios, { AxiosInstance } from "axios";
+import { Service } from "typedi";
 
 interface PitPandaPlayerDoc {
   formattedLevel: string;
@@ -40,8 +40,8 @@ export class PitPandaService {
 
   public constructor() {
     this.axios = axios.create({
-      baseURL: 'https://pitpanda.rocks/api',
-      timeout: 10000,
+      baseURL: "https://pitpanda.rocks/api",
+      timeout: 10_000,
       headers: {},
     });
   }

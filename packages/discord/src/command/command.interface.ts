@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { Constructor } from '@statsify/util';
-import type { AbstractArgument } from '../arguments';
-import { LocalizationString } from '../messages';
+import { LocalizationString } from "../messages";
+import type { AbstractArgument } from "../arguments";
+import type { Constructor } from "@statsify/util";
 
 export interface CommandOptions {
   name?: string;
@@ -18,11 +18,11 @@ export interface CommandOptions {
   cooldown?: number;
 }
 
-export type SubCommandOptions = Omit<CommandOptions, 'groups' | 'cooldown'>;
+export type SubCommandOptions = Omit<CommandOptions, "groups" | "cooldown">;
 
-export interface CommandMetadata extends Omit<CommandOptions, 'name'> {
+export interface CommandMetadata extends Omit<CommandOptions, "name"> {
   name: string;
   methodName: string;
 }
 
-export type SubCommandMetadata = Record<string, Omit<CommandMetadata, 'groups'>>;
+export type SubCommandMetadata = Record<string, Omit<CommandMetadata, "groups">>;

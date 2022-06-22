@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LeaderboardService } from '../../src/leaderboards';
-import { MockClass } from './mock.type';
+import { LeaderboardService } from "../../src/leaderboards";
+import { MockClass } from "./mock.type";
 
 export const leaderboardService: MockClass<LeaderboardService> = {
   addLeaderboards: jest.fn().mockResolvedValue([]),

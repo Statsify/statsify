@@ -6,6 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import {
+  LocalizationString,
+  LocalizeFunction,
+  translateField,
+  translateObject,
+} from "./localize";
 import type {
   APIEmbed,
   APIEmbedAuthor,
@@ -13,21 +19,20 @@ import type {
   APIEmbedFooter,
   APIEmbedImage,
   APIEmbedThumbnail,
-} from 'discord-api-types/v10';
-import { LocalizationString, LocalizeFunction, translateField, translateObject } from './localize';
+} from "discord-api-types/v10";
 
 type Field = [name: LocalizationString, value: LocalizationString, inline?: boolean];
 
-interface LocalizedField extends Omit<APIEmbedField, 'name' | 'value'> {
+interface LocalizedField extends Omit<APIEmbedField, "name" | "value"> {
   name: LocalizationString;
   value: LocalizationString;
 }
 
-interface LocalizedFooter extends Omit<APIEmbedFooter, 'text'> {
+interface LocalizedFooter extends Omit<APIEmbedFooter, "text"> {
   text: LocalizationString;
 }
 
-interface LocalizedAuthor extends Omit<APIEmbedAuthor, 'name'> {
+interface LocalizedAuthor extends Omit<APIEmbedAuthor, "name"> {
   name: LocalizationString;
 }
 
@@ -56,7 +61,11 @@ export class EmbedBuilder {
     return this;
   }
 
-  public field(name: LocalizationString, value: LocalizationString, inline = false): this {
+  public field(
+    name: LocalizationString,
+    value: LocalizationString,
+    inline = false
+  ): this {
     this.#fields = this.#fields || [];
     this.#fields.push({ name, value, inline });
 

@@ -6,6 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export const testUuid = '618a96fec8b0493fa89427891049550b';
-export const testUsername = 'j4cobi';
-export const testKey = 'test-key';
+export const testUuid = "618a96fec8b0493fa89427891049550b";
+export const testUsername = "j4cobi";
+export const testKey = "test-key";

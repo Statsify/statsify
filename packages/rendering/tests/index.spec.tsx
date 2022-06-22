@@ -7,24 +7,24 @@
  */
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { createInstructions } from '../src';
+import { createInstructions } from "../src";
 
-describe('createInstructions with no relative sizes', () => {
-  test('a box with defined sizes', () => {
+describe("createInstructions with no relative sizes", () => {
+  test("a box with defined sizes", () => {
     const instructions = createInstructions(<div width={10} height={10} />);
 
     expect(instructions.x.size).toBe(10);
     expect(instructions.y.size).toBe(10);
   });
 
-  test('a box with no defined sizes and no children', () => {
+  test("a box with no defined sizes and no children", () => {
     const instructions = createInstructions(<div />);
 
     expect(instructions.x.size).toBe(0);
     expect(instructions.y.size).toBe(0);
   });
 
-  test('a parent that is smaller than its child', () => {
+  test("a parent that is smaller than its child", () => {
     const child = <div width={10} height={10} />;
 
     const parent = (
@@ -40,27 +40,27 @@ describe('createInstructions with no relative sizes', () => {
   });
 });
 
-describe('createInstructions with relative sizes', () => {
-  test('percentages that exceed 100%', () => {
+describe("createInstructions with relative sizes", () => {
+  test("percentages that exceed 100%", () => {
     expect(() => (
       <div>
         <div width="51%" />
         <div width="51%" />
       </div>
-    )).toThrow('Space required exceeds 100%');
+    )).toThrow("Space required exceeds 100%");
   });
 
-  test('percentages that are 100% with extra elements', () => {
+  test("percentages that are 100% with extra elements", () => {
     expect(() => (
       <div>
         <div width="50%" />
         <div width="50%" />
         <div width={1} />
       </div>
-    )).toThrow('Space required exceeds 100%');
+    )).toThrow("Space required exceeds 100%");
   });
 
-  test('simple percentage widths', () => {
+  test("simple percentage widths", () => {
     const instructions = createInstructions(
       <div width={10}>
         <div width="50%" />
@@ -73,7 +73,7 @@ describe('createInstructions with relative sizes', () => {
     expect(instructions.children![1].x.size).toBe(5);
   });
 
-  test('normalizing percentage widths', () => {
+  test("normalizing percentage widths", () => {
     const instructions = createInstructions(
       <div>
         <div width="50%">
@@ -91,7 +91,7 @@ describe('createInstructions with relative sizes', () => {
     expect(instructions.children![1].y.size).toBe(12);
   });
 
-  test('calculating parent size by using reverse percentages', () => {
+  test("calculating parent size by using reverse percentages", () => {
     const instructions = createInstructions(
       <div>
         <div width="95%" height="95%">
@@ -105,8 +105,8 @@ describe('createInstructions with relative sizes', () => {
   });
 });
 
-describe('createInstructions with remaining sizes', () => {
-  test('a basic remaining size', () => {
+describe("createInstructions with remaining sizes", () => {
+  test("a basic remaining size", () => {
     const parentHeight = 10;
 
     const parent = (
@@ -122,7 +122,7 @@ describe('createInstructions with remaining sizes', () => {
     expect(instructions.children![1].x.size).toBe(6);
   });
 
-  test('a basic remaining size on the other axis', () => {
+  test("a basic remaining size on the other axis", () => {
     const parentHeight = 10;
 
     const parent = (
@@ -142,8 +142,8 @@ describe('createInstructions with remaining sizes', () => {
   });
 });
 
-describe('JSX Fragments', () => {
-  test('JSX Fragments', () => {
+describe("JSX Fragments", () => {
+  test("JSX Fragments", () => {
     const instructions = createInstructions(
       <div>
         <>

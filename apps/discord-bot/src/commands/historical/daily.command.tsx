@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HistoricalType } from '@statsify/api-client';
-import { Command } from '@statsify/discord';
-import { HistoricalBase } from './historical.base';
+import { Command } from "@statsify/discord";
+import { HistoricalBase } from "./historical.base";
+import { HistoricalType } from "@statsify/api-client";
 
-@Command({ description: (t) => t('commands.daily') })
+@Command({ description: (t) => t("commands.daily") })
 export class DailyCommand extends HistoricalBase {
   public constructor() {
     super(HistoricalType.DAILY);

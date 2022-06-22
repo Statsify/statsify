@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, If, SidebarItem, Table } from '#components';
-import { FormattedGame, SpeedUHCMode, SPEED_UHC_MODES } from '@statsify/schemas';
-import { prettify } from '@statsify/util';
-import { BaseProfileProps } from '../base.hypixel-command';
+import { BaseProfileProps } from "../base.hypixel-command";
+import { Container, Footer, Header, If, SidebarItem, Table } from "#components";
+import { FormattedGame, SPEED_UHC_MODES, SpeedUHCMode } from "@statsify/schemas";
+import { prettify } from "@statsify/util";
 
 export interface SpeedUHCProfileProps extends BaseProfileProps {
   mode: typeof SPEED_UHC_MODES[number];
@@ -30,10 +30,10 @@ export const SpeedUHCProfile = ({
   const stats = speeduhc[mode];
 
   const sidebar: SidebarItem[] = [
-    [t('stats.coins'), t(speeduhc.coins), '§6'],
-    [t('stats.score'), t(speeduhc.score), '§b'],
-    [t('stats.title'), speeduhc.title, '§e'],
-    [t('stats.mastery'), prettify(speeduhc.activeMastery), '§a'],
+    [t("stats.coins"), t(speeduhc.coins), "§6"],
+    [t("stats.score"), t(speeduhc.score), "§b"],
+    [t("stats.title"), speeduhc.title, "§e"],
+    [t("stats.mastery"), prettify(speeduhc.activeMastery), "§a"],
   ];
 
   return (
@@ -49,17 +49,17 @@ export const SpeedUHCProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-          <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
-          <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
+          <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+          <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
+          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
-          <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
-          <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
-          <If condition={Boolean('assists' in stats)}>
+          <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+          <If condition={Boolean("assists" in stats)}>
             <Table.td
-              title={t('stats.assists')}
+              title={t("stats.assists")}
               value={t((stats as SpeedUHCMode).assists)}
               color="§e"
             />

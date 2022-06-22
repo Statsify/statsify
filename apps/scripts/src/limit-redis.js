@@ -1,13 +1,21 @@
-import Redis from 'ioredis';
-import { createRequire } from 'module';
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import Redis from "ioredis";
+import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
-const { Logger } = require('@statsify/logger');
-const { MetadataScanner, Player, Guild } = require('@statsify/schemas');
+const { Logger } = require("@statsify/logger");
+const { MetadataScanner, Player, Guild } = require("@statsify/schemas");
 
 const CONSTRUCTORS = [Player, Guild];
 
-const logger = new Logger('Redis Limiter');
+const logger = new Logger("Redis Limiter");
 const redis = new Redis(process.env.REDIS_URL);
 
 for (const constructor of CONSTRUCTORS) {
@@ -34,7 +42,7 @@ for (const constructor of CONSTRUCTORS) {
 
     memberCount += limit;
 
-    if (sort === 'DESC') {
+    if (sort === "DESC") {
       limitLeaderboardPipeline.zremrangebyrank(path, 0, -limit);
     } else {
       limitLeaderboardPipeline.zremrangebyrank(path, limit, -1);
@@ -44,7 +52,9 @@ for (const constructor of CONSTRUCTORS) {
   await limitLeaderboardPipeline.exec();
 
   logger.log(`Limited ${leaderboards.length} ${name} leaderboards`);
-  logger.log(`There are ${memberCount.toLocaleString()} members in the ${name} leaderboards`);
+  logger.log(
+    `There are ${memberCount.toLocaleString()} members in the ${name} leaderboards`
+  );
 }
 
 process.exit(0);

@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from '@statsify/discord';
-import { WallsModes, WALLS_MODES } from '@statsify/schemas';
-import { BaseHypixelCommand, BaseProfileProps } from '../base.hypixel-command';
-import { WallsProfile } from './walls.profile';
+import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command";
+import { Command } from "@statsify/discord";
+import { WALLS_MODES, WallsModes } from "@statsify/schemas";
+import { WallsProfile } from "./walls.profile";
 
-@Command({ description: (t) => t('commands.walls') })
+@Command({ description: (t) => t("commands.walls") })
 export class WallsCommand extends BaseHypixelCommand<WallsModes> {
   public constructor() {
     super(WALLS_MODES);

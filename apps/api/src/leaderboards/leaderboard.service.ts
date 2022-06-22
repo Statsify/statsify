@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { InjectRedis, Redis } from '@nestjs-modules/ioredis';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { LeaderboardQuery } from '@statsify/api-client';
-import { LeaderboardEnabledMetadata, LeaderboardScanner } from '@statsify/schemas';
-import { Constructor, Flatten } from '@statsify/util';
+import { Constructor, Flatten } from "@statsify/util";
+import { InjectRedis, Redis } from "@nestjs-modules/ioredis";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schemas";
+import { LeaderboardQuery } from "@statsify/api-client";
 
 export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
@@ -31,7 +31,7 @@ export abstract class LeaderboardService {
     const id = instance[idField] as unknown as string;
 
     fields
-      .filter((field) => remove || typeof instance[field] === 'number')
+      .filter((field) => remove || typeof instance[field] === "number")
       .forEach((field) => {
         const value = instance[field] as unknown as number;
 
@@ -61,7 +61,10 @@ export abstract class LeaderboardService {
       sort,
       name,
       hidden,
-    } = LeaderboardScanner.getLeaderboardField(constructor, field) as LeaderboardEnabledMetadata;
+    } = LeaderboardScanner.getLeaderboardField(
+      constructor,
+      field
+    ) as LeaderboardEnabledMetadata;
 
     let top: number;
     let bottom: number;
@@ -138,7 +141,7 @@ export abstract class LeaderboardService {
     fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
 
     return {
-      name: name,
+      name,
       fields,
       data,
       page: top / PAGE_SIZE,
@@ -156,7 +159,7 @@ export abstract class LeaderboardService {
     fields.forEach((field) => {
       const { sort } = LeaderboardScanner.getLeaderboardField(constructor, field);
 
-      if (sort === 'ASC') {
+      if (sort === "ASC") {
         pipeline.zrank(`${constructorName}.${field}`, id);
       } else {
         pipeline.zrevrank(`${constructorName}.${field}`, id);
@@ -175,7 +178,10 @@ export abstract class LeaderboardService {
     });
   }
 
-  protected abstract searchLeaderboardInput(input: string, field: string): Promise<number>;
+  protected abstract searchLeaderboardInput(
+    input: string,
+    field: string
+  ): Promise<number>;
 
   protected abstract getAdditionalStats(
     ids: string[],
@@ -187,14 +193,14 @@ export abstract class LeaderboardService {
     field: string,
     top: number,
     bottom: number,
-    sort = 'DESC'
+    sort = "DESC"
   ) {
     const name = constructor.name.toLowerCase();
     field = `${name}.${field}`;
 
-    const scores = await (sort === 'ASC'
-      ? this.redis.zrange(field, top, bottom, 'WITHSCORES')
-      : this.redis.zrevrange(field, top, bottom, 'WITHSCORES'));
+    const scores = await (sort === "ASC"
+      ? this.redis.zrange(field, top, bottom, "WITHSCORES")
+      : this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
 
     const response: { id: string; score: number; index: number }[] = [];
 

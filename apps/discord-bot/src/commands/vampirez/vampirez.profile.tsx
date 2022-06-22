@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { FormattedGame, VampireZLife } from '@statsify/schemas';
-import { BaseProfileProps } from '../base.hypixel-command';
+import { BaseProfileProps } from "../base.hypixel-command";
+import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { FormattedGame, VampireZLife } from "@statsify/schemas";
+import { LocalizeFunction } from "@statsify/discord";
 
 interface VampireZRowProps {
   mode: string;
@@ -40,7 +40,7 @@ export const VampireZProfile = ({
 }: BaseProfileProps) => {
   const { vampirez } = player.stats;
 
-  const sidebar: SidebarItem[] = [[t('stats.coins'), t(vampirez.coins), '§6']];
+  const sidebar: SidebarItem[] = [[t("stats.coins"), t(vampirez.coins), "§6"]];
 
   return (
     <Container background={background}>

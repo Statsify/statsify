@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Friends, Player, RecentGames, Status } from '@statsify/schemas';
-import { PlayerService } from '../../src/player';
-import { MockClass } from './mock.type';
+import { Friends, Player, RecentGames, Status } from "@statsify/schemas";
+import { MockClass } from "./mock.type";
+import { PlayerService } from "../../src/player";
 
 export const playerService: MockClass<PlayerService> = {
   get: jest.fn().mockResolvedValue(new Player()),

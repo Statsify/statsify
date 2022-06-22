@@ -6,16 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import axios from 'axios';
-import { readFile } from 'fs/promises';
-import { Image } from 'skia-canvas';
+import axios from "axios";
+import { Image } from "skia-canvas";
+import { readFile } from "node:fs/promises";
 
 const bufferToImage = (buffer: Buffer): Image => {
   const image = new Image();
   //@ts-ignore skia-canvas has improper typings for the `src` getter
   image.src = buffer;
 
-  Object.defineProperty(image, '_data', { value: buffer });
+  Object.defineProperty(image, "_data", { value: buffer });
 
   return image;
 };
@@ -23,8 +23,10 @@ const bufferToImage = (buffer: Buffer): Image => {
 export const loadImage = async (url: string | Buffer): Promise<Image> => {
   if (Buffer.isBuffer(url)) return bufferToImage(url);
 
-  if (url.startsWith('http')) {
-    const data = await axios.get(url, { responseType: 'arraybuffer' }).then((res) => res.data);
+  if (url.startsWith("http")) {
+    const data = await axios
+      .get(url, { responseType: "arraybuffer" })
+      .then((res) => res.data);
     const buffer = Buffer.from(data);
     return bufferToImage(buffer);
   }

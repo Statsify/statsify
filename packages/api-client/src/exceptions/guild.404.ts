@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { NotFoundException } from './base.404';
+import { NotFoundException } from "./base.404";
 
 export class GuildNotFoundException extends NotFoundException {
   public constructor() {
-    super('guild');
+    super("guild");
   }
 }

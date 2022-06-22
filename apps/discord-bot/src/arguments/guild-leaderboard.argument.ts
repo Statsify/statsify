@@ -6,22 +6,24 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractArgument, CommandContext, LocalizationString } from '@statsify/discord';
-import { Guild, LeaderboardScanner } from '@statsify/schemas';
-import { removeFormatting } from '@statsify/util';
+import Fuse from "fuse.js";
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
-} from 'discord-api-types/v10';
-import Fuse from 'fuse.js';
+} from "discord-api-types/v10";
+import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
+import { Guild, LeaderboardScanner } from "@statsify/schemas";
+import { removeFormatting } from "@statsify/util";
 
-const list = LeaderboardScanner.getLeaderboardMetadata(Guild).map(([key, { leaderboard }]) => ({
-  value: key,
-  name: removeFormatting(leaderboard.name),
-}));
+const list = LeaderboardScanner.getLeaderboardMetadata(Guild).map(
+  ([key, { leaderboard }]) => ({
+    value: key,
+    name: removeFormatting(leaderboard.name),
+  })
+);
 
 const fuse = new Fuse(list, {
-  keys: ['name', 'key'],
+  keys: ["name", "key"],
   includeScore: false,
   shouldSort: true,
   isCaseSensitive: false,
@@ -30,7 +32,7 @@ const fuse = new Fuse(list, {
 });
 
 export class GuildLeaderboardArgument extends AbstractArgument {
-  public name = 'leaderboard';
+  public name = "leaderboard";
   public description: LocalizationString;
   public type = ApplicationCommandOptionType.String;
   public required = true;
@@ -38,11 +40,13 @@ export class GuildLeaderboardArgument extends AbstractArgument {
 
   public constructor() {
     super();
-    this.description = (t) => t('arguments.guild-leaderboard');
+    this.description = (t) => t("arguments.guild-leaderboard");
   }
 
-  public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
-    const currentValue = context.option<string>(this.name, '').toLowerCase();
+  public autocompleteHandler(
+    context: CommandContext
+  ): APIApplicationCommandOptionChoice[] {
+    const currentValue = context.option<string>(this.name, "").toLowerCase();
 
     if (!currentValue) return list.slice(0, 25);
 

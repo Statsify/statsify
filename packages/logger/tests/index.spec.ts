@@ -6,34 +6,34 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import chalk from 'chalk';
-import { defaultLogLevels, logColors, Logger } from '../src';
+import chalk from "chalk";
+import { Logger, defaultLogLevels, logColors } from "../src";
 defaultLogLevels.forEach((logLevel) => {
   describe(`logging of ${logLevel}`, () => {
     it(`should ${logLevel}`, () => {
       const logger = new Logger(logLevel);
 
-      Logger['lastTimeStampAt'] = 0;
+      Logger["lastTimeStampAt"] = 0;
 
       const mock = jest.fn();
 
       process.stdout.write = mock;
       process.stderr.write = mock;
 
-      logger[logLevel]('message');
+      logger[logLevel]("message");
 
       expect(mock).toHaveBeenCalledWith(
-        `${chalk.bold`${logLevel === 'error' ? '📉' : '📈'}`} ${chalk.hex(logColors[logLevel])(
-          logLevel
-        )} ${chalk.gray`0ms`} message\n`
+        `${chalk.bold`${logLevel === "error" ? "📉" : "📈"}`} ${chalk.hex(
+          logColors[logLevel]
+        )(logLevel)} ${chalk.gray`0ms`} message\n`
       );
     });
   });
 });
 
 describe(`logging levels`, () => {
-  it('should ignore all log levels', () => {
-    const logger = new Logger('default', { logLevels: [] });
+  it("should ignore all log levels", () => {
+    const logger = new Logger("default", { logLevels: [] });
 
     const mock = jest.fn();
 
@@ -41,7 +41,7 @@ describe(`logging levels`, () => {
     process.stderr.write = mock;
 
     defaultLogLevels.forEach((logLevel) => {
-      logger[logLevel]('message');
+      logger[logLevel]("message");
     });
 
     expect(mock).not.toHaveBeenCalled();

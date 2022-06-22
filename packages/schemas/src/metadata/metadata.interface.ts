@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Constructor } from '@statsify/util';
+import { Constructor } from "@statsify/util";
 
 export type Getter<T> = (target: T) => any;
 
@@ -55,7 +55,7 @@ export interface LeaderboardDisabledMetadata extends BaseLeaderboardMetadata {
   enabled: false;
 }
 
-export type LeaderboardSort = 'ASC' | 'DESC';
+export type LeaderboardSort = "ASC" | "DESC";
 
 export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
   enabled: true;
@@ -81,7 +81,9 @@ export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
   limit: number;
 }
 
-export type LeaderboardMetadata = LeaderboardDisabledMetadata | LeaderboardEnabledMetadata;
+export type LeaderboardMetadata =
+  | LeaderboardDisabledMetadata
+  | LeaderboardEnabledMetadata;
 
 export interface StoreMetadata {
   /**

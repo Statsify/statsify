@@ -6,16 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { InjectModel } from '@m8a/nestjs-typegoose';
-import { InjectRedis } from '@nestjs-modules/ioredis';
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { HypixelCache, PlayerNotFoundException } from '@statsify/api-client';
-import { Player } from '@statsify/schemas';
-import { flatten } from '@statsify/util';
-import { ReturnModelType } from '@typegoose/typegoose';
-import Redis from 'ioredis';
-import { LeaderboardAdditionalStats, LeaderboardService } from '../../leaderboards';
-import { PlayerService } from '../player.service';
+import Redis from "ioredis";
+import { HypixelCache, PlayerNotFoundException } from "@statsify/api-client";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
+import { InjectModel } from "@m8a/nestjs-typegoose";
+import { InjectRedis } from "@nestjs-modules/ioredis";
+import { LeaderboardAdditionalStats, LeaderboardService } from "../../leaderboards";
+import { Player } from "@statsify/schemas";
+import { PlayerService } from "../player.service";
+import { ReturnModelType } from "@typegoose/typegoose";
+import { flatten } from "@statsify/util";
 
 @Injectable()
 export class PlayerLeaderboardService extends LeaderboardService {
@@ -30,7 +30,9 @@ export class PlayerLeaderboardService extends LeaderboardService {
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
     if (input.length <= 16) {
-      const player = await this.playerService.get(input, HypixelCache.CACHE_ONLY, { uuid: true });
+      const player = await this.playerService.get(input, HypixelCache.CACHE_ONLY, {
+        uuid: true,
+      });
 
       if (!player) throw new PlayerNotFoundException();
       input = player.uuid;
@@ -58,7 +60,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
       ids.map(async (id) => {
         const player = await this.playerModel
           .findOne()
-          .where('uuid')
+          .where("uuid")
           .equals(id)
           .select(selector)
           .lean()

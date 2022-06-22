@@ -7,25 +7,25 @@
  */
 
 /* eslint-disable require-atomic-updates */
-import { InjectModel } from '@m8a/nestjs-typegoose';
-import { Injectable } from '@nestjs/common';
+import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
+import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service";
 import {
   GuildNotFoundException,
   GuildQuery,
   HypixelCache,
   PlayerNotFoundException,
-} from '@statsify/api-client';
-import { Logger } from '@statsify/logger';
-import { deserialize, Guild, GuildMember, Player, serialize } from '@statsify/schemas';
-import { flatten } from '@statsify/util';
-import { ReturnModelType } from '@typegoose/typegoose';
-import { HypixelService } from '../hypixel';
-import { PlayerService } from '../player';
-import { GuildLeaderboardService } from './leaderboards/guild-leaderboard.service';
+} from "@statsify/api-client";
+import { HypixelService } from "../hypixel";
+import { InjectModel } from "@m8a/nestjs-typegoose";
+import { Injectable } from "@nestjs/common";
+import { Logger } from "@statsify/logger";
+import { PlayerService } from "../player";
+import { ReturnModelType } from "@typegoose/typegoose";
+import { flatten } from "@statsify/util";
 
 @Injectable()
 export class GuildService {
-  private readonly logger = new Logger('GuildService');
+  private readonly logger = new Logger("GuildService");
 
   public constructor(
     private readonly hypixelService: HypixelService,
@@ -89,9 +89,8 @@ export class GuildService {
           (acc, day, index) => ({ ...acc, [day]: cacheMember.expHistory[index] }),
           {}
         ),
-        ...member.expHistoryDays.reduce(
-          (acc, day, index) => ({ ...acc, [day]: member.expHistory[index] }),
-          {}
+        ...Object.fromEntries(
+          member.expHistoryDays.map((day, index) => [day, member.expHistory[index]])
         ),
       };
 
@@ -116,7 +115,7 @@ export class GuildService {
 
     await this.playerModel
       .updateMany({ guildId: guild.id })
-      .where('uuid')
+      .where("uuid")
       .in(requireGuildId)
       .lean()
       .exec();
@@ -140,7 +139,7 @@ export class GuildService {
     guild.daily = guild.expHistory[0];
 
     //Cache guilds responses for 10 minutes
-    guild.expiresAt = Date.now() + 600000;
+    guild.expiresAt = Date.now() + 600_000;
 
     const flatGuild = flatten(guild);
     const serializedGuild = serialize(Guild, flatGuild);
@@ -150,7 +149,7 @@ export class GuildService {
       .lean()
       .exec();
 
-    await this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, 'id');
+    await this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, "id");
 
     return deserialize(Guild, flatGuild);
   }
@@ -173,7 +172,7 @@ export class GuildService {
 
       const guild = (await this.guildModel
         .findOne()
-        .where('id')
+        .where("id")
         .equals(player.guildId)
         .lean()
         .exec()) as Guild;
@@ -183,7 +182,7 @@ export class GuildService {
 
     const guild = (await this.guildModel
       .findOne()
-      .where(type === GuildQuery.ID ? 'id' : 'nameToLower')
+      .where(type === GuildQuery.ID ? "id" : "nameToLower")
       .equals(tag)
       .lean()
       .exec()) as Guild;
@@ -191,15 +190,19 @@ export class GuildService {
     return [guild, tag];
   }
 
-  private async handleGuildNotFound(cachedGuild: Guild | null, tag: string, type: GuildQuery) {
+  private async handleGuildNotFound(
+    cachedGuild: Guild | null,
+    tag: string,
+    type: GuildQuery
+  ) {
     //There is nothing to delete so just escape
     if (!cachedGuild) return;
 
     if (type === GuildQuery.PLAYER) {
       //Remove this guild id from the player document, because the player is no longer in the guild
       return await this.playerModel
-        .updateOne({ $unset: { guildId: '' } })
-        .where('uuid')
+        .updateOne({ $unset: { guildId: "" } })
+        .where("uuid")
         .equals(tag)
         .lean()
         .exec();
@@ -231,7 +234,7 @@ export class GuildService {
       member.guildId = player.guildId;
 
       //Cache names for a day
-      member.expiresAt = Date.now() + 86400000;
+      member.expiresAt = Date.now() + 86_400_000;
       return;
     }
 
@@ -242,13 +245,13 @@ export class GuildService {
       member.displayName = member.username;
 
       //Try again in 10 minutes
-      member.expiresAt = Date.now() + 600000;
+      member.expiresAt = Date.now() + 600_000;
     }
   }
 
   private scaleGexp(exp: number) {
-    if (exp <= 200000) return exp;
-    if (exp <= 700000) return (exp - 200000) / 10 + 200000;
-    return Math.round((exp - 700000) / 33 + 250000);
+    if (exp <= 200_000) return exp;
+    if (exp <= 700_000) return (exp - 200_000) / 10 + 200_000;
+    return Math.round((exp - 700_000) / 33 + 250_000);
   }
 }

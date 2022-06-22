@@ -6,12 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from '@statsify/discord';
-import { WoolWarsModes, WOOL_WARS_MODES } from '@statsify/schemas';
-import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
-import { WoolWarsProfile } from './woolwars.profile';
+import {
+  BaseHypixelCommand,
+  BaseProfileProps,
+  ProfileData,
+} from "../base.hypixel-command";
+import { Command } from "@statsify/discord";
+import { WOOL_WARS_MODES, WoolWarsModes } from "@statsify/schemas";
+import { WoolWarsProfile } from "./woolwars.profile";
 
-@Command({ description: (t) => t('commands.woolwars') })
+@Command({ description: (t) => t("commands.woolwars") })
 export class WoolWarsCommand extends BaseHypixelCommand<WoolWarsModes> {
   public constructor() {
     super(WOOL_WARS_MODES);

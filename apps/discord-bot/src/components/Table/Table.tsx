@@ -30,7 +30,7 @@ export interface TableProps {
  * </Table.table>
  * ```
  */
-export const Table = ({ width = '100%', children }: TableProps) => (
+export const Table = ({ width = "100%", children }: TableProps) => (
   <div width={width} direction="column">
     {children}
   </div>

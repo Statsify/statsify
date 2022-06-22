@@ -6,18 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { InjectModel } from '@m8a/nestjs-typegoose';
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { getAssetPath, getLogoPath } from '@statsify/assets';
-import { User, VerifyCode } from '@statsify/schemas';
-import { ReturnModelType } from '@typegoose/typegoose';
-import { readFile, rm, writeFile } from 'fs/promises';
+import { InjectModel } from "@m8a/nestjs-typegoose";
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { ReturnModelType } from "@typegoose/typegoose";
+import { User, VerifyCode } from "@statsify/schemas";
+import { getAssetPath, getLogoPath } from "@statsify/assets";
+import { readFile, rm, writeFile } from "node:fs/promises";
 
 @Injectable()
 export class UserService {
   public constructor(
     @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>,
-    @InjectModel(VerifyCode) private readonly verifyCodeModel: ReturnModelType<typeof VerifyCode>
+    @InjectModel(VerifyCode)
+    private readonly verifyCodeModel: ReturnModelType<typeof VerifyCode>
   ) {}
 
   public get(idOrUuid: string): Promise<User | null> {
@@ -54,7 +55,12 @@ export class UserService {
 
     if (!user) throw new NotFoundException(`user`);
 
-    await this.userModel.updateOne({ hasBadge: true }).where('id').equals(user.id).lean().exec();
+    await this.userModel
+      .updateOne({ hasBadge: true })
+      .where("id")
+      .equals(user.id)
+      .lean()
+      .exec();
     await writeFile(this.getBadgePath(user.id), badge);
   }
 
@@ -76,7 +82,7 @@ export class UserService {
   public async verifyUser(code: string, id: string): Promise<User | null> {
     const verifyCode = await this.verifyCodeModel
       .findOne()
-      .where('code')
+      .where("code")
       .equals(code)
       .lean()
       .exec();
@@ -87,13 +93,17 @@ export class UserService {
 
     //Unverify anyone previously linked to this UUID
     await this.userModel
-      .updateMany({ uuid }, { $unset: { uuid: '' } })
+      .updateMany({ uuid }, { $unset: { uuid: "" } })
       .lean()
       .exec();
 
     //Link the discord id to the UUID
     const user = await this.userModel
-      .findOneAndUpdate({ id }, { id, uuid, verifiedAt: Date.now() }, { upsert: true, new: true })
+      .findOneAndUpdate(
+        { id },
+        { id, uuid, verifiedAt: Date.now() },
+        { upsert: true, new: true }
+      )
       .lean()
       .exec();
 
@@ -109,7 +119,7 @@ export class UserService {
     const user = await this.userModel
       .findOneAndUpdate(
         { [type]: tag },
-        { $unset: { uuid: '' }, unverifiedAt: Date.now() },
+        { $unset: { uuid: "" }, unverifiedAt: Date.now() },
         { new: true }
       )
       .lean()
@@ -119,8 +129,8 @@ export class UserService {
   }
 
   private parseTag(tag: string): [tag: string, type: string] {
-    tag = tag.replace(/-/g, '');
-    const type = tag.length >= 32 ? 'uuid' : 'id';
+    tag = tag.replaceAll("-", "");
+    const type = tag.length >= 32 ? "uuid" : "id";
 
     return [tag, type];
   }

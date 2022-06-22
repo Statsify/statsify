@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { isObject } from '@statsify/util';
+import { isObject } from "@statsify/util";
 
 /**
  *
@@ -27,15 +27,17 @@ export const roundTo = (n: number, precision = 2) => {
  * @returns The value of the fraction * the `multiply` value rounded to 2 decimal places
  */
 export const ratio = (n1 = 0, n2 = 0, multiply = 1) =>
-  isFinite(n1 / n2)
+  Number.isFinite(n1 / n2)
     ? roundTo((n1 / n2) * multiply)
     : n1 === 0 && n2 === 0
     ? 0
     : roundTo(n1 * multiply) || 0;
 
-export const add = (...args: number[]): number => args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
+export const add = (...args: number[]): number =>
+  args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
 
-export const sub = (...args: number[]): number => args.reduce((a, b) => (a ?? 0) - (b ?? 0));
+export const sub = (...args: number[]): number =>
+  args.reduce((a, b) => (a ?? 0) - (b ?? 0));
 
 /**
  *

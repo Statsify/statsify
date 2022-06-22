@@ -6,9 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { randomUUID } from 'crypto';
-import { APITextInputComponent, ComponentType, TextInputStyle } from 'discord-api-types/v10';
-import { LocalizationString, LocalizeFunction, translateField } from '../localize';
+import {
+  APITextInputComponent,
+  ComponentType,
+  TextInputStyle,
+} from "discord-api-types/v10";
+import { LocalizationString, LocalizeFunction, translateField } from "../localize";
+import { randomUUID } from "node:crypto";
 
 export class TextInputBuilder {
   #custom_id: string;

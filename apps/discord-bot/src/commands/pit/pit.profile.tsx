@@ -6,20 +6,28 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import type { PitPandaPlayer } from '#services';
-import { formatTime } from '@statsify/util';
-import type { BaseProfileProps } from '../base.hypixel-command';
+import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { formatTime } from "@statsify/util";
+import type { BaseProfileProps } from "../base.hypixel-command";
+import type { PitPandaPlayer } from "#services";
 
-export interface PitProfileProps extends Omit<BaseProfileProps, 'player' | 'time'> {
+export interface PitProfileProps extends Omit<BaseProfileProps, "player" | "time"> {
   player: PitPandaPlayer;
 }
 
-export const PitProfile = ({ background, logo, skin, t, badge, tier, player }: PitProfileProps) => {
-  const sidebar: SidebarItem[] = [[t('stats.gold'), `${t(player.gold)}g`, '§6']];
+export const PitProfile = ({
+  background,
+  logo,
+  skin,
+  t,
+  badge,
+  tier,
+  player,
+}: PitProfileProps) => {
+  const sidebar: SidebarItem[] = [[t("stats.gold"), `${t(player.gold)}g`, "§6"]];
 
-  if (player.doc.renown) sidebar.push([t('stats.renown'), `${player.doc.renown}`, '§b']);
-  if (player.doc.bounty) sidebar.push([t('stats.bounty'), `${player.doc.bounty}`, '§6']);
+  if (player.doc.renown) sidebar.push([t("stats.renown"), `${player.doc.renown}`, "§b"]);
+  if (player.doc.bounty) sidebar.push([t("stats.bounty"), `${player.doc.bounty}`, "§6"]);
 
   return (
     <Container background={background}>
@@ -34,19 +42,19 @@ export const PitProfile = ({ background, logo, skin, t, badge, tier, player }: P
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t('stats.kills')} value={t(player.kills)} color="§a" />
-          <Table.td title={t('stats.deaths')} value={t(player.deaths)} color="§c" />
-          <Table.td title={t('stats.kdr')} value={t(player.kdr)} color="§6" />
-          <Table.td title={t('stats.assists')} value={t(player.doc.assists)} color="§e" />
+          <Table.td title={t("stats.kills")} value={t(player.kills)} color="§a" />
+          <Table.td title={t("stats.deaths")} value={t(player.deaths)} color="§c" />
+          <Table.td title={t("stats.kdr")} value={t(player.kdr)} color="§6" />
+          <Table.td title={t("stats.assists")} value={t(player.doc.assists)} color="§e" />
         </Table.tr>
         <Table.tr>
           <Table.td
-            title={t('stats.highestStreak')}
+            title={t("stats.highestStreak")}
             value={t(player.doc.highestStreak)}
             color="§c"
           />
           <Table.td
-            title={t('stats.playtime')}
+            title={t("stats.playtime")}
             value={formatTime(player.doc.playtime * 1000)}
             color="§b"
           />

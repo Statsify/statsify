@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { add, ratio } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
+import { APIData } from "@statsify/util";
+import { Field } from "../../../metadata";
+import { add, ratio } from "@statsify/math";
 
-export const TURBO_KART_RACERS_MODES = ['overall'] as const;
+export const TURBO_KART_RACERS_MODES = ["overall"] as const;
 export type TurboKartRacersModes = typeof TURBO_KART_RACERS_MODES;
 
 export class TurboKartRacers {

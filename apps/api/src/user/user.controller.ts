@@ -6,20 +6,37 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Body, Controller, Delete, Get, Put, Query, StreamableFile } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ErrorResponse, GetUserResponse, PutUserBadgeResponse } from '@statsify/api-client';
-import { Auth, AuthRole } from '../auth';
-import { UserDto, VerifyCodeDto } from '../dtos';
-import { UserService } from './user.service';
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
+import { Auth, AuthRole } from "../auth";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Put,
+  Query,
+  StreamableFile,
+} from "@nestjs/common";
+import {
+  ErrorResponse,
+  GetUserResponse,
+  PutUserBadgeResponse,
+} from "@statsify/api-client";
+import { UserDto, VerifyCodeDto } from "../dtos";
+import { UserService } from "./user.service";
 
-@Controller('/user')
-@ApiTags('User')
+@Controller("/user")
+@ApiTags("User")
 export class UserController {
   public constructor(private readonly userService: UserService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get a User' })
+  @ApiOperation({ summary: "Get a User" })
   @ApiOkResponse({ type: GetUserResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
@@ -33,18 +50,18 @@ export class UserController {
   }
 
   @Get(`/badge`)
-  @ApiOperation({ summary: 'Get a User Badge' })
+  @ApiOperation({ summary: "Get a User Badge" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
   public async getUserBadge(@Query() { tag }: UserDto) {
     const badge = await this.userService.getBadge(tag);
 
-    return new StreamableFile(badge, { type: 'image/png' });
+    return new StreamableFile(badge, { type: "image/png" });
   }
 
   @Put(`/badge`)
   @ApiOkResponse({ type: PutUserBadgeResponse })
-  @ApiOperation({ summary: 'Set a User Badge' })
+  @ApiOperation({ summary: "Set a User Badge" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
   public async setUserBadge(@Query() { tag }: UserDto, @Body() body: Buffer) {
@@ -54,7 +71,7 @@ export class UserController {
 
   @Delete(`/badge`)
   @ApiOkResponse({ type: PutUserBadgeResponse })
-  @ApiOperation({ summary: 'Reset a User Badge' })
+  @ApiOperation({ summary: "Reset a User Badge" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
   public async deleteUserBadge(@Query() { tag }: UserDto) {
@@ -64,7 +81,7 @@ export class UserController {
 
   @Put()
   @ApiOkResponse({ type: GetUserResponse })
-  @ApiOperation({ summary: 'Verify a user' })
+  @ApiOperation({ summary: "Verify a user" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
   public async verifyUser(@Query() { code, id }: VerifyCodeDto) {
@@ -77,7 +94,7 @@ export class UserController {
   }
 
   @Delete()
-  @ApiOperation({ summary: 'Unverify a user' })
+  @ApiOperation({ summary: "Unverify a user" })
   @ApiOkResponse({ type: GetUserResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })

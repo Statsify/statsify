@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseThemeContext, IntrinsicRenders, Theme } from '@statsify/rendering';
-import Container from 'typedi';
+import Container from "typedi";
+import { BaseThemeContext, IntrinsicRenders, Theme } from "@statsify/rendering";
 
 const context: BaseThemeContext = {
-  renderer: Container.get('HDFontRenderer'),
+  renderer: Container.get("HDFontRenderer"),
 };
 
 const elements: Partial<IntrinsicRenders<BaseThemeContext>> = {};

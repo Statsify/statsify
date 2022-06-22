@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class PostLeaderboardRankingsResponse {
-  @ApiProperty({ description: 'The name of the requested ranking' })
+  @ApiProperty({ description: "The name of the requested ranking" })
   public field: string;
 
   @ApiProperty()

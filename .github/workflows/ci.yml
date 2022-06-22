@@ -6,6 +6,11 @@ on:
   pull_request:
     branches:
     - main
+
+permissions:
+  checks: write
+  contents: write
+
 jobs:
   ci:
     name: CI
@@ -36,9 +41,6 @@ jobs:
       - name: Install dependencies
         run: yarn --immutable
 
-      - name: Lint
-        run: yarn lint
-
       - name: Typecheck
         run: yarn test:types
 
@@ -47,3 +49,34 @@ jobs:
 
       - name: Test
         run: yarn test:coverage
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: ["apps/api", "apps/discord-bot", "apps/scripts", "apps/verify-server", "packages/api-client", "packages/assets", "packages/discord", "packages/logger", "packages/math", "packages/rendering", "packages/schemas", "packages/util"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
+
+      - name: Install node.js v16
+        uses: actions/setup-node@eeb10cff27034e7acf239c5d29f62154018672fd # tag=v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+          cache-dependency-path: yarn.lock
+
+      # Install your linters here
+      - name: Install dependencies
+        run: yarn --immutable
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v2
+        with:
+          eslint: true
+          eslint_dir: ${{ matrix.package }}/
+          eslint_extensions: js,jsx,ts,tsx,cjs,mjs,cts,mts
+          auto_fix: true
+          git_name: Statsify Lint
+          commit_message: "style(lint): lint ${{ matrix.package }}"
+          neutral_check_on_warning: true

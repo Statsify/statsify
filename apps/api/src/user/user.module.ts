@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { TypegooseModule } from '@m8a/nestjs-typegoose';
-import { Module } from '@nestjs/common';
-import { User, VerifyCode } from '@statsify/schemas';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
+import { Module } from "@nestjs/common";
+import { TypegooseModule } from "@m8a/nestjs-typegoose";
+import { User, VerifyCode } from "@statsify/schemas";
+import { UserController } from "./user.controller";
+import { UserService } from "./user.service";
 
 @Module({
   imports: [TypegooseModule.forFeature([User, VerifyCode])],

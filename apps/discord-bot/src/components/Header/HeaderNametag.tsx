@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { Canvas, Image } from 'skia-canvas';
-import { If } from '../If';
+import { If } from "../If";
+import type { Canvas, Image } from "skia-canvas";
 
 export interface HeaderNametagProps {
   name: string;
@@ -15,13 +15,11 @@ export interface HeaderNametagProps {
   size?: number;
 }
 
-export const HeaderNametag = ({ name, badge, size = 4 }: HeaderNametagProps) => {
-  return (
-    <box width="100%">
-      <If condition={badge}>{(badge) => <img margin={{ right: 8 }} image={badge} />}</If>
-      <text>
-        §^{size}^{name}
-      </text>
-    </box>
-  );
-};
+export const HeaderNametag = ({ name, badge, size = 4 }: HeaderNametagProps) => (
+  <box width="100%">
+    <If condition={badge}>{(badge) => <img margin={{ right: 8 }} image={badge} />}</If>
+    <text>
+      §^{size}^{name}
+    </text>
+  </box>
+);

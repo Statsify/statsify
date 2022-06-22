@@ -6,18 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { TypegooseModule } from '@m8a/nestjs-typegoose';
-import { HttpModule } from '@nestjs/axios';
-import { Module } from '@nestjs/common';
-import { Skin } from '@statsify/schemas';
-import { SkinController } from './skin.controller';
-import { SkinService } from './skin.service';
+import { HttpModule } from "@nestjs/axios";
+import { Module } from "@nestjs/common";
+import { Skin } from "@statsify/schemas";
+import { SkinController } from "./skin.controller";
+import { SkinService } from "./skin.service";
+import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
   imports: [
     TypegooseModule.forFeature([Skin]),
     HttpModule.register({
-      baseURL: 'https://sessionserver.mojang.com/',
+      baseURL: "https://sessionserver.mojang.com/",
     }),
   ],
   controllers: [SkinController],

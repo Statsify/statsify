@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { FormattedGame, MEGAWALLS_MODES } from '@statsify/schemas';
-import { formatTime, prettify } from '@statsify/util';
-import { BaseProfileProps } from '../base.hypixel-command';
+import { BaseProfileProps } from "../base.hypixel-command";
+import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { FormattedGame, MEGAWALLS_MODES } from "@statsify/schemas";
+import { formatTime, prettify } from "@statsify/util";
 
 export interface MegaWallsProfileProps extends BaseProfileProps {
   mode: typeof MEGAWALLS_MODES[number];
@@ -30,8 +30,8 @@ export const MegaWallsProfile = ({
   const stats = megawalls[mode];
 
   const sidebar: SidebarItem[] = [
-    [t('stats.coins'), t(megawalls.coins), '§6'],
-    [t('stats.class'), prettify(megawalls.class), '§e'],
+    [t("stats.coins"), t(megawalls.coins), "§6"],
+    [t("stats.class"), prettify(megawalls.class), "§e"],
   ];
 
   return (
@@ -46,27 +46,51 @@ export const MegaWallsProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-          <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
-          <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
+          <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+          <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
+          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t('stats.finalKills')} value={t(stats.finalKills)} color="§a" />
-          <Table.td title={t('stats.finalDeaths')} value={t(stats.finalDeaths)} color="§c" />
-          <Table.td title={t('stats.fkdr')} value={t(stats.fkdr)} color="§6" />
-          <Table.td title={t('stats.finalAssists')} value={t(stats.finalAssists)} color="§e" />
+          <Table.td
+            title={t("stats.finalKills")}
+            value={t(stats.finalKills)}
+            color="§a"
+          />
+          <Table.td
+            title={t("stats.finalDeaths")}
+            value={t(stats.finalDeaths)}
+            color="§c"
+          />
+          <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color="§6" />
+          <Table.td
+            title={t("stats.finalAssists")}
+            value={t(stats.finalAssists)}
+            color="§e"
+          />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
-          <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
-          <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
-          <Table.td title={t('stats.assists')} value={t(stats.assists)} color="§e" />
+          <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+          <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t('stats.playtime')} value={formatTime(stats.playtime)} color="§a" />
-          <Table.td title={t('stats.witherDamage')} value={t(stats.witherDamage)} color="§c" />
-          <Table.td title={t('stats.witherKills')} value={t(stats.witherKills)} color="§6" />
-          <Table.td title={t('stats.points')} value={t(stats.points)} color="§e" />
+          <Table.td
+            title={t("stats.playtime")}
+            value={formatTime(stats.playtime)}
+            color="§a"
+          />
+          <Table.td
+            title={t("stats.witherDamage")}
+            value={t(stats.witherDamage)}
+            color="§c"
+          />
+          <Table.td
+            title={t("stats.witherKills")}
+            value={t(stats.witherKills)}
+            color="§6"
+          />
+          <Table.td title={t("stats.points")} value={t(stats.points)} color="§e" />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} tier={tier} />

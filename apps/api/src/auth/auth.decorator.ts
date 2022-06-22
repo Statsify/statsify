@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common';
-import { ApiSecurity } from '@nestjs/swagger';
-import { AuthGuard } from './auth.guard';
-import { AuthRole } from './auth.role';
+import { ApiSecurity } from "@nestjs/swagger";
+import { AuthGuard } from "./auth.guard";
+import { AuthRole } from "./auth.role";
+import { SetMetadata, UseGuards, applyDecorators } from "@nestjs/common";
 
 export interface AuthDecoratorOptions {
   /**
@@ -25,9 +25,9 @@ export interface AuthDecoratorOptions {
 
 export function Auth({ weight = 1, role = AuthRole.MEMBER }: AuthDecoratorOptions = {}) {
   return applyDecorators(
-    SetMetadata('auth-weight', weight),
-    SetMetadata('auth-role', role),
+    SetMetadata("auth-weight", weight),
+    SetMetadata("auth-role", role),
     UseGuards(AuthGuard),
-    ApiSecurity('ApiKey')
+    ApiSecurity("ApiKey")
   );
 }

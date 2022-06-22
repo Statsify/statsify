@@ -7,9 +7,9 @@
  */
 
 /* eslint-disable @typescript-eslint/ban-types */
-import type { CanvasRenderingContext2D } from 'skia-canvas';
-import type { FontRenderer } from '../font';
-import type { IntrinsicElement, IntrinsicRenders } from './instrinsics';
+import type { CanvasRenderingContext2D } from "skia-canvas";
+import type { FontRenderer } from "../font";
+import type { IntrinsicElement, IntrinsicRenders } from "./instrinsics";
 
 export interface BaseThemeContext {
   renderer: FontRenderer;
@@ -20,8 +20,8 @@ export interface Theme<T extends BaseThemeContext> {
   elements: Partial<IntrinsicRenders<T>>;
 }
 
-export type StyleLocation = 'left' | 'center' | 'right';
-export type StyleDirection = 'row' | 'column';
+export type StyleLocation = "left" | "center" | "right";
+export type StyleDirection = "row" | "column";
 
 export interface Style {
   location: StyleLocation;
@@ -40,7 +40,7 @@ export type Spacing = number | Partial<CompleteSpacing>;
 
 export type Percent = `${number}%`;
 export type Fraction = `${number}/${number}`;
-export type Measurement = number | Percent | Fraction | 'remaining';
+export type Measurement = number | Percent | Fraction | "remaining";
 
 export interface ElementDimension {
   padding?: Spacing;

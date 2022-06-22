@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from '@statsify/util';
-import { Game } from '../game';
-import { Field } from '../metadata';
+import { APIData } from "@statsify/util";
+import { Field } from "../metadata";
+import { Game } from "../game";
 
 function findLastAction(data: APIData): { action: string; time: number } {
   const actions: { action: string; time: number }[] = [];
@@ -25,13 +25,13 @@ function findLastAction(data: APIData): { action: string; time: number } {
       lastQuestStart = quest.active.started;
     }
 
-    if (quest.completions && quest.completions[quest.completions.length - 1].time > lastQuestEnd) {
-      lastQuestEnd = quest.completions[quest.completions.length - 1].time;
+    if (quest.completions && quest.completions.at(-1).time > lastQuestEnd) {
+      lastQuestEnd = quest.completions.at(-1).time;
     }
   }
 
-  actions.push({ action: 'QUEST_START', time: lastQuestStart });
-  actions.push({ action: 'QUEST_COMPLETED', time: lastQuestEnd });
+  actions.push({ action: "QUEST_START", time: lastQuestStart });
+  actions.push({ action: "QUEST_COMPLETED", time: lastQuestEnd });
 
   const allPets = data?.petStats ?? {};
 
@@ -54,12 +54,12 @@ function findLastAction(data: APIData): { action: string; time: number } {
   // It really is not necessary to display which pet action was last done
   // Therefore just putting pet is explanation enough to the players last
   // known whereabouts.
-  actions.push({ action: 'PET', time: lastPetTime });
+  actions.push({ action: "PET", time: lastPetTime });
 
   // Since this stat is stored seperately and is timed, it is okay to have
   // as another action since it can show if they are doing this then leaving
   actions.push({
-    action: 'PET_JOURNEY',
+    action: "PET_JOURNEY",
     time: data?.petJourneyTimestamp ?? 0,
   });
 
@@ -67,12 +67,12 @@ function findLastAction(data: APIData): { action: string; time: number } {
     // Lab modes are explained each first time any player enters the game
     // as well as when they click the book while in queue.
     const explains = Object.entries(data?.stats?.SkyWars).filter((e) =>
-      e[0].endsWith('explained_last')
+      e[0].endsWith("explained_last")
     );
 
     if (explains.length > 0) {
       const lastLabExplain = Math.max(...explains.map((e) => e[1] as number));
-      actions.push({ action: 'SW_LAB_MODE_EXPLANATION', time: lastLabExplain });
+      actions.push({ action: "SW_LAB_MODE_EXPLANATION", time: lastLabExplain });
     }
 
     // Every collection of a player head in skywars has a timestamp
@@ -82,14 +82,14 @@ function findLastAction(data: APIData): { action: string; time: number } {
 
     if (swHeads.recent) {
       actions.push({
-        action: 'SW_HEAD_RECENT',
+        action: "SW_HEAD_RECENT",
         time: swHeads.recent?.[swHeads.recent.length - 1]?.time ?? 0,
       });
     }
 
     if (swHeads.prestigious) {
       actions.push({
-        action: 'SW_HEAD_PRESTIGIOUS',
+        action: "SW_HEAD_PRESTIGIOUS",
         time: swHeads.prestigious?.[swHeads.prestigious.length - 1]?.time ?? 0,
       });
     }
@@ -100,21 +100,21 @@ function findLastAction(data: APIData): { action: string; time: number } {
 
     // Pit profile saves are any stat changing, this makes other actions redundant
     // but they do show a little bit more info as to what the player is doing.
-    actions.push({ action: 'PIT_PROFILE_SAVE', time: pitProfile.last_save ?? 0 });
+    actions.push({ action: "PIT_PROFILE_SAVE", time: pitProfile.last_save ?? 0 });
 
     // These other actions are just here for verbosity
     actions.push({
-      action: 'PIT_MIDFIGHT_DISCONNECT',
+      action: "PIT_MIDFIGHT_DISCONNECT",
       time: pitProfile.last_midfight_disconnect ?? 0,
     });
 
     actions.push({
-      action: 'PIT_CONTRACT',
+      action: "PIT_CONTRACT",
       time: pitProfile.last_contract ?? 0,
     });
 
     actions.push({
-      action: 'PIT_TRADE',
+      action: "PIT_TRADE",
       time: Math.max(...(pitProfile.trade_timestamps ?? [0])),
     });
   }
@@ -122,24 +122,24 @@ function findLastAction(data: APIData): { action: string; time: number } {
   // A large number of players do claim these each day, this means
   // it will yield accurate results to within a day on most people
   actions.push({
-    action: 'CLAIM_DAILY_EXP',
+    action: "CLAIM_DAILY_EXP",
     time: data?.eugene?.dailyTwoKExp ?? 0,
   });
 
   actions.push({
-    action: 'CLAIM_REWARD',
+    action: "CLAIM_REWARD",
     time: data?.lastClaimedReward ?? 0,
   });
 
   // Login and logout times are added in case the data is displayed
   // and the player has not hidden their status but is offline.
   actions.push({
-    action: 'LOGIN',
+    action: "LOGIN",
     time: data?.lastLogin ?? 0,
   });
 
   actions.push({
-    action: 'LOGOUT',
+    action: "LOGOUT",
     time: data?.lastLogout ?? 0,
   });
 
@@ -147,7 +147,7 @@ function findLastAction(data: APIData): { action: string; time: number } {
   // little in the way of time stats in the game they are playing.
   if (data?.achievementRewardsNew) {
     const rewardsArr: number[] = Object.values(data?.achievementRewardsNew ?? {});
-    actions.push({ action: 'ACHIEVEMENT_REWARD', time: Math.max(...rewardsArr) });
+    actions.push({ action: "ACHIEVEMENT_REWARD", time: Math.max(...rewardsArr) });
   }
 
   // Many people who just wait in lobbies will be shown on this stat since they
@@ -156,19 +156,19 @@ function findLastAction(data: APIData): { action: string; time: number } {
     const lobbies = Object.values(data.parkourCompletions);
 
     const starts = lobbies.map((l: any) => l[0].timeStart);
-    actions.push({ action: 'LOBBY_PARKOUR', time: Math.max(...starts) });
+    actions.push({ action: "LOBBY_PARKOUR", time: Math.max(...starts) });
   }
 
   if (data.stats) {
     const games = Object.values(data.stats);
 
     const touneyAds = games.map((g: any) => g.lastTourneyAd).filter((v) => !!v);
-    actions.push({ action: 'TOURNAMENT_ADVERTISEMENT', time: Math.max(...touneyAds) });
+    actions.push({ action: "TOURNAMENT_ADVERTISEMENT", time: Math.max(...touneyAds) });
   }
 
   // First login is used as a baseline due to it being literally the oldest timestamp
   // that can be found in a players stats.
-  let lastAction = { action: 'FIRST_LOGIN', time: data?.firstLogin ?? 0 };
+  let lastAction = { action: "FIRST_LOGIN", time: data?.firstLogin ?? 0 };
 
   for (const action of actions) {
     if (action.time > lastAction.time) {
@@ -201,7 +201,7 @@ export class PlayerStatus {
   @Field()
   public statusHidden: boolean;
 
-  @Field({ store: { default: 'Unknown' } })
+  @Field({ store: { default: "Unknown" } })
   public version: string;
 
   @Field()
@@ -209,7 +209,7 @@ export class PlayerStatus {
 
   public constructor(data: APIData) {
     //The first login provided by hypixel is not fully accurate for very old players, it is better to use the `_id` field
-    this.firstLogin = parseInt(data._id?.substring(0, 8) ?? 0, 16) * 1000;
+    this.firstLogin = Number.parseInt(data._id?.slice(0, 8) ?? 0, 16) * 1000;
 
     const lastAction = findLastAction(data);
 
@@ -222,8 +222,8 @@ export class PlayerStatus {
 
     this.statusHidden = this.lastLogout === 0;
 
-    this.version = data.mcVersionRp ?? 'Unknown';
+    this.version = data.mcVersionRp ?? "Unknown";
 
-    this.lastGame = new Game(data.mostRecentGameType ?? 'LIMBO');
+    this.lastGame = new Game(data.mostRecentGameType ?? "LIMBO");
   }
 }

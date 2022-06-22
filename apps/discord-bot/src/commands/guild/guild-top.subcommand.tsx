@@ -8,10 +8,6 @@
 
 /* eslint-disable require-atomic-updates */
 
-import { GuildArgument } from '#arguments';
-import { ApiService } from '#services';
-import { GuildQuery } from '@statsify/api-client';
-import { getBackground, getLogo } from '@statsify/assets';
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -21,21 +17,24 @@ import {
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
   SubCommand,
-} from '@statsify/discord';
-import { render, Theme } from '@statsify/rendering';
-import { GuildLeaderboardSubCommand } from '../leaderboards/guild-leaderboard.subcommand';
-import { ButtonStyle } from 'discord-api-types/v10';
-import { CommandListener } from '../../command.listener';
-import { getTheme } from '../../themes';
+} from "@statsify/discord";
+import { ButtonStyle } from "discord-api-types/v10";
+import { CommandListener } from "../../command.listener";
 import {
+  GUILD_TOP_PAGE_SIZE,
   GuildTopMember,
   GuildTopProfile,
   GuildTopProfileProps,
-  GUILD_TOP_PAGE_SIZE,
-} from './guild-top.profile';
+} from "./guild-top.profile";
+import { GuildArgument } from "#arguments";
+import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.subcommand";
+import { GuildQuery } from "@statsify/api-client";
+import { Theme, render } from "@statsify/rendering";
+import { getBackground, getLogo } from "@statsify/assets";
+import { getTheme } from "../../themes";
 
-type BaseGuildTopProfileProps = Omit<GuildTopProfileProps, 'page' | 'members' | 'title'>;
-type GuildTopKey = 'daily' | 'weekly' | 'monthly' | number;
+type BaseGuildTopProfileProps = Omit<GuildTopProfileProps, "page" | "members" | "title">;
+type GuildTopKey = "daily" | "weekly" | "monthly" | number;
 
 interface GuildTopPageState {
   modeIndex: number;
@@ -43,7 +42,7 @@ interface GuildTopPageState {
 }
 
 export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
-  @SubCommand({ description: (t) => t('commands.guild-top'), args: GuildArgument })
+  @SubCommand({ description: (t) => t("commands.guild-top"), args: GuildArgument })
   public async top(context: CommandContext) {
     const userId = context.getInteraction().getUserId();
     const user = context.getUser();
@@ -53,7 +52,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
     const [logo, background] = await Promise.all([
       getLogo(user?.tier),
-      getBackground('hypixel', 'overall'),
+      getBackground("hypixel", "overall"),
     ]);
 
     const props: BaseGuildTopProfileProps = {
@@ -66,19 +65,19 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
     const theme = getTheme(user?.theme);
 
-    const up = new ButtonBuilder().emoji(t('emojis:up')).style(ButtonStyle.Success);
-    const down = new ButtonBuilder().emoji(t('emojis:down')).style(ButtonStyle.Danger);
+    const up = new ButtonBuilder().emoji(t("emojis:up")).style(ButtonStyle.Success);
+    const down = new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger);
 
     const modes: [GuildTopKey, string][] = [
-      ['daily', 'Today'],
-      ['weekly', 'This Week'],
-      ['monthly', 'This Month'],
-      [1, 'Yesterday'],
-      [2, '3 days ago'],
-      [3, '4 days ago'],
-      [4, '5 days ago'],
-      [5, '6 days ago'],
-      [6, '7 days ago'],
+      ["daily", "Today"],
+      ["weekly", "This Week"],
+      ["monthly", "This Month"],
+      [1, "Yesterday"],
+      [2, "3 days ago"],
+      [3, "4 days ago"],
+      [4, "5 days ago"],
+      [5, "6 days ago"],
+      [6, "7 days ago"],
     ];
 
     const dropdown = new SelectMenuBuilder();
@@ -87,7 +86,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       dropdown.option(
         new SelectMenuOptionBuilder()
           .label(title)
-          .value('' + key)
+          .value(`${key}`)
           .default(index === 0)
       )
     );
@@ -95,7 +94,8 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     const components = [new ActionRowBuilder().component(dropdown)];
 
     const pageCount = Math.ceil(guild.members.length / GUILD_TOP_PAGE_SIZE);
-    if (pageCount > 1) components.push(new ActionRowBuilder().component(up).component(down));
+    if (pageCount > 1)
+      components.push(new ActionRowBuilder().component(up).component(down));
 
     let page = 0;
     let modeIndex = 0;
@@ -174,8 +174,8 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
   protected getGuild(context: CommandContext) {
     const user = context.getUser();
-    const query = context.option<string>('query');
-    const type = context.option<GuildQuery>('type');
+    const query = context.option<string>("query");
+    const type = context.option<GuildQuery>("type");
 
     return this.apiService.getGuild(query, type, user);
   }
@@ -201,7 +201,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     }
 
     return {
-      files: [{ name: 'guild-top.png', data: image, type: 'image/png' }],
+      files: [{ name: "guild-top.png", data: image, type: "image/png" }],
       attachments: [],
       components,
     };
@@ -219,7 +219,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
         (m) =>
           ({
             name: m.displayName,
-            value: typeof key === 'string' ? m[key] : m.expHistory[key],
+            value: typeof key === "string" ? m[key] : m.expHistory[key],
           } as GuildTopMember)
       )
       .sort((a, b) => b.value - a.value)
@@ -230,7 +230,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       theme
     );
 
-    const buffer = await canvas.toBuffer('png');
+    const buffer = await canvas.toBuffer("png");
 
     return buffer;
   }

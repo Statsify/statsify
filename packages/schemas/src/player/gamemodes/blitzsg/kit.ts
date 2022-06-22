@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { add, ratio, sub } from '@statsify/math';
-import { APIData, findScoreIndex, formatTime } from '@statsify/util';
-import { Field } from '../../../metadata';
+import { APIData, findScoreIndex, formatTime } from "@statsify/util";
+import { Field } from "../../../metadata";
+import { add, ratio, sub } from "@statsify/math";
 
 export class BlitzSGKit {
-  @Field({ leaderboard: { limit: 5_000 } })
+  @Field({ leaderboard: { limit: 5000 } })
   public gamesPlayed: number;
 
   @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
@@ -26,7 +26,7 @@ export class BlitzSGKit {
   @Field({ leaderboard: { limit: 10_000 } })
   public kills: number;
 
-  @Field({ leaderboard: { limit: 5_000 } })
+  @Field({ leaderboard: { limit: 5000 } })
   public deaths: number;
 
   @Field({ leaderboard: { limit: 10_000 } })
@@ -61,27 +61,27 @@ export class BlitzSGKit {
     this.playtime = (data[`time_played_${kit}`] ?? 0) * 1000;
 
     const defaultKits = [
-      'archer',
-      'meatmaster',
-      'speleologist',
-      'baker',
-      'knight',
-      'guardian',
-      'scout',
-      'hunter',
-      'hype train',
-      'fisherman',
-      'armorer',
+      "archer",
+      "meatmaster",
+      "speleologist",
+      "baker",
+      "knight",
+      "guardian",
+      "scout",
+      "hunter",
+      "hype train",
+      "fisherman",
+      "armorer",
     ];
 
-    const specialKits = ['donkeytamer', 'warrior', 'ranger', 'phoenix', 'milkman'];
+    const specialKits = ["donkeytamer", "warrior", "ranger", "phoenix", "milkman"];
 
     if (kit in data) {
       this.level = data[kit] + 1;
     } else if (defaultKits.includes(kit) && this.exp > 0) {
       this.level = 1;
     } else if (specialKits.includes(kit)) {
-      const prestiges = [1, 100, 250, 500, 1000, 1500, 2000, 2500, 5000, 10000];
+      const prestiges = [1, 100, 250, 500, 1000, 1500, 2000, 2500, 5000, 10_000];
 
       this.level =
         findScoreIndex(

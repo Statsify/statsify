@@ -6,9 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Constructor } from '@statsify/util';
-import { MetadataScanner } from '../metadata';
-import { LeaderboardEnabledMetadata, LeaderboardMetadata } from '../metadata/metadata.interface';
+import { Constructor } from "@statsify/util";
+import {
+  LeaderboardEnabledMetadata,
+  LeaderboardMetadata,
+} from "../metadata/metadata.interface";
+import { MetadataScanner } from "../metadata";
 
 export class LeaderboardScanner {
   public static getLeaderboardMetadata<T>(constructor: Constructor<T>) {

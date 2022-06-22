@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { prettify } from '@statsify/util';
-import { RATIOS, RATIO_STATS } from '../../ratios';
-import { LeaderboardOptions } from '../field.options';
-import { LeaderboardMetadata, TypeMetadata } from '../metadata.interface';
+import { LeaderboardMetadata, TypeMetadata } from "../metadata.interface";
+import { LeaderboardOptions } from "../field.options";
+import { RATIOS, RATIO_STATS } from "../../ratios";
+import { prettify } from "@statsify/util";
 
 const getLeaderboardName = (field: string) => {
   const ratioIndex = RATIOS.indexOf(field);
@@ -19,24 +19,24 @@ const getLeaderboardName = (field: string) => {
 
 const getDefaultLeaderboardLimit = (propertyKey: string) => {
   switch (propertyKey) {
-    case 'exp':
+    case "exp":
       return 500_000;
-    case 'wins':
-    case 'wlr':
-    case 'kills':
-    case 'kdr':
-    case 'finalKills':
-    case 'fkdr':
-    case 'bedsBroken':
-    case 'bblr':
+    case "wins":
+    case "wlr":
+    case "kills":
+    case "kdr":
+    case "finalKills":
+    case "fkdr":
+    case "bedsBroken":
+    case "bblr":
       return 100_000;
-    case 'losses':
-    case 'deaths':
-    case 'finalDeaths':
-    case 'bedsLost':
-    case 'assists':
-    case 'coins':
-    case 'lootChests':
+    case "losses":
+    case "deaths":
+    case "finalDeaths":
+    case "bedsLost":
+    case "assists":
+    case "coins":
+    case "lootChests":
       return 50_000;
     default:
       return 10_000;
@@ -64,7 +64,7 @@ export const getLeaderboardMetadata = (
 
   return {
     enabled: true,
-    sort: leaderboardOptions?.sort || 'DESC',
+    sort: leaderboardOptions?.sort || "DESC",
     fieldName,
     name,
     hidden: leaderboardOptions?.hidden,

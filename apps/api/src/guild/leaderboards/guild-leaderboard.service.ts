@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { InjectModel } from '@m8a/nestjs-typegoose';
-import { InjectRedis } from '@nestjs-modules/ioredis';
-import { Injectable } from '@nestjs/common';
-import { GuildNotFoundException, GUILD_ID_REGEX } from '@statsify/api-client';
-import { Guild } from '@statsify/schemas';
-import { flatten } from '@statsify/util';
-import { ReturnModelType } from '@typegoose/typegoose';
-import Redis from 'ioredis';
-import { LeaderboardAdditionalStats, LeaderboardService } from '../../leaderboards';
+import Redis from "ioredis";
+import { GUILD_ID_REGEX, GuildNotFoundException } from "@statsify/api-client";
+import { Guild } from "@statsify/schemas";
+import { InjectModel } from "@m8a/nestjs-typegoose";
+import { InjectRedis } from "@nestjs-modules/ioredis";
+import { Injectable } from "@nestjs/common";
+import { LeaderboardAdditionalStats, LeaderboardService } from "../../leaderboards";
+import { ReturnModelType } from "@typegoose/typegoose";
+import { flatten } from "@statsify/util";
 
 @Injectable()
 export class GuildLeaderboardService extends LeaderboardService {
@@ -26,10 +26,10 @@ export class GuildLeaderboardService extends LeaderboardService {
   }
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
-    if (!input.match(GUILD_ID_REGEX)) {
+    if (!GUILD_ID_REGEX.test(input)) {
       const guild = await this.guildModel
         .findOne()
-        .where('nameToLower')
+        .where("nameToLower")
         .equals(input.toLowerCase())
         .select({ id: true })
         .lean()
@@ -61,7 +61,7 @@ export class GuildLeaderboardService extends LeaderboardService {
       ids.map(async (id) => {
         const guild = await this.guildModel
           .findOne()
-          .where('id')
+          .where("id")
           .equals(id)
           .select(selector)
           .lean()

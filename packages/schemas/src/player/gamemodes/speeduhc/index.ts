@@ -6,25 +6,25 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
-import { SpeedUHCMastery } from './mastery';
-import { SpeedUHCMode } from './mode';
-import { getLevelIndex, titleScores } from './util';
+import { APIData } from "@statsify/util";
+import { Field } from "../../../metadata";
+import { SpeedUHCMastery } from "./mastery";
+import { SpeedUHCMode } from "./mode";
+import { getLevelIndex, titleScores } from "./util";
 
 export const SPEED_UHC_MODES = [
-  'overall',
-  'solo',
-  'teams',
-  'wildSpecialist',
-  'guardian',
-  'sniper',
-  'berserk',
-  'masterBaker',
-  'invigorate',
-  'huntsman',
-  'fortune',
-  'vampirism',
+  "overall",
+  "solo",
+  "teams",
+  "wildSpecialist",
+  "guardian",
+  "sniper",
+  "berserk",
+  "masterBaker",
+  "invigorate",
+  "huntsman",
+  "fortune",
+  "vampirism",
 ] as const;
 export type SpeedUHCModes = typeof SPEED_UHC_MODES;
 
@@ -44,7 +44,7 @@ export class SpeedUHC {
   @Field()
   public score: number;
 
-  @Field({ store: { default: 'none' } })
+  @Field({ store: { default: "none" } })
   public activeMastery: string;
 
   @Field()
@@ -86,21 +86,21 @@ export class SpeedUHC {
   public constructor(data: APIData) {
     this.coins = data.coins;
     this.score = data.score;
-    this.activeMastery = (data.activeMasterPerk ?? 'none').replace('mastery_', '');
+    this.activeMastery = (data.activeMasterPerk ?? "none").replace("mastery_", "");
 
-    this.overall = new SpeedUHCMode(data, '');
-    this.solo = new SpeedUHCMode(data, 'solo');
-    this.teams = new SpeedUHCMode(data, 'team');
+    this.overall = new SpeedUHCMode(data, "");
+    this.solo = new SpeedUHCMode(data, "solo");
+    this.teams = new SpeedUHCMode(data, "team");
 
-    this.wildSpecialist = new SpeedUHCMastery(data, 'wild_specialist');
-    this.guardian = new SpeedUHCMastery(data, 'guardian');
-    this.sniper = new SpeedUHCMastery(data, 'sniper');
-    this.berserk = new SpeedUHCMastery(data, 'berserk');
-    this.masterBaker = new SpeedUHCMastery(data, 'master_baker');
-    this.invigorate = new SpeedUHCMastery(data, 'invigorate');
-    this.huntsman = new SpeedUHCMastery(data, 'huntsman');
-    this.fortune = new SpeedUHCMastery(data, 'fortune');
-    this.vampirism = new SpeedUHCMastery(data, 'vampirism');
+    this.wildSpecialist = new SpeedUHCMastery(data, "wild_specialist");
+    this.guardian = new SpeedUHCMastery(data, "guardian");
+    this.sniper = new SpeedUHCMastery(data, "sniper");
+    this.berserk = new SpeedUHCMastery(data, "berserk");
+    this.masterBaker = new SpeedUHCMastery(data, "master_baker");
+    this.invigorate = new SpeedUHCMastery(data, "invigorate");
+    this.huntsman = new SpeedUHCMastery(data, "huntsman");
+    this.fortune = new SpeedUHCMastery(data, "fortune");
+    this.vampirism = new SpeedUHCMastery(data, "vampirism");
 
     const index = getLevelIndex(this.score);
     this.level = index + 1;
@@ -109,5 +109,5 @@ export class SpeedUHC {
   }
 }
 
-export * from './mastery';
-export * from './mode';
+export * from "./mastery";
+export * from "./mode";

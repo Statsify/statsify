@@ -6,13 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { FontLoaderService, I18nLoaderService } from '#services';
-import { CommandLoader, CommandPoster } from '@statsify/discord';
-import path from 'path';
-import 'reflect-metadata';
-import { InteractionServer, RestClient, WebsocketShard } from 'tiny-discord';
-import Container from 'typedi';
-import { CommandListener } from './command.listener';
+// TODO Remove this when/if we migrate to ESM
+/* eslint-disable unicorn/prefer-module */
+
+import Container from "typedi";
+import { CommandListener } from "./command.listener";
+import { CommandLoader, CommandPoster } from "@statsify/discord";
+import { FontLoaderService, I18nLoaderService } from "#services";
+import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
+import { join } from "node:path";
+import "reflect-metadata";
 
 async function bootstrap() {
   await Promise.all(
@@ -20,7 +23,7 @@ async function bootstrap() {
   );
 
   const rest = new RestClient({ token: process.env.DISCORD_BOT_TOKEN });
-  const commands = await CommandLoader.load(path.join(__dirname, './commands'));
+  const commands = await CommandLoader.load(join(__dirname, "./commands"));
 
   const poster = new CommandPoster(rest);
 

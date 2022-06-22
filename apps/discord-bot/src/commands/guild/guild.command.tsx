@@ -6,22 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { GuildArgument, PlayerArgument } from '#arguments';
-import { ApiService, PaginateService } from '#services';
-import { GuildQuery } from '@statsify/api-client';
-import { getAssetPath, getBackground, getImage, getLogo } from '@statsify/assets';
-import { Command, CommandContext, IMessage, SubCommand } from '@statsify/discord';
-import { render } from '@statsify/rendering';
-import { GuildMember } from '@statsify/schemas';
-import { readdir } from 'fs/promises';
-import { ErrorMessage } from '../../error.message';
-import { getTheme } from '../../themes';
-import { GuildListProfile, GuildListProfileProps } from './guild-list.profile';
-import { GuildMemberProfile } from './guild-member.profile';
-import { GuildTopSubCommand } from './guild-top.subcommand';
-import { GuildProfile, GuildProfileProps } from './guild.profile';
+import { ApiService, PaginateService } from "#services";
+import { Command, CommandContext, IMessage, SubCommand } from "@statsify/discord";
+import { ErrorMessage } from "../../error.message";
+import { GuildArgument, PlayerArgument } from "#arguments";
+import { GuildListProfile, GuildListProfileProps } from "./guild-list.profile";
+import { GuildMember } from "@statsify/schemas";
+import { GuildMemberProfile } from "./guild-member.profile";
+import { GuildProfile, GuildProfileProps } from "./guild.profile";
+import { GuildQuery } from "@statsify/api-client";
+import { GuildTopSubCommand } from "./guild-top.subcommand";
+import { getAssetPath, getBackground, getImage, getLogo } from "@statsify/assets";
+import { getTheme } from "../../themes";
+import { readdir } from "node:fs/promises";
+import { render } from "@statsify/rendering";
 
-@Command({ description: (t) => t('commands.guild') })
+@Command({ description: (t) => t("commands.guild") })
 export class GuildCommand extends GuildTopSubCommand {
   public constructor(
     protected readonly apiService: ApiService,
@@ -30,7 +30,7 @@ export class GuildCommand extends GuildTopSubCommand {
     super(apiService);
   }
 
-  @SubCommand({ description: (t) => t('commands.guild-overall'), args: GuildArgument })
+  @SubCommand({ description: (t) => t("commands.guild-overall"), args: GuildArgument })
   public async overall(context: CommandContext) {
     const user = context.getUser();
     const t = context.t();
@@ -41,30 +41,30 @@ export class GuildCommand extends GuildTopSubCommand {
 
     if (!guildMaster)
       throw new ErrorMessage(
-        (t) => t('errors.unknown.title'),
-        (t) => t('errors.unknown.description')
+        (t) => t("errors.unknown.title"),
+        (t) => t("errors.unknown.description")
       );
 
-    const gameIconPaths = await readdir(getAssetPath('games'));
+    const gameIconPaths = await readdir(getAssetPath("games"));
 
     const gameIconsRequest = gameIconPaths.map(async (g) => [
-      g.replace('.png', ''),
+      g.replace(".png", ""),
       await getImage(`games/${g}`),
     ]);
 
     const [gameIcons, guildRanking, skin, logo, background] = await Promise.all([
       Promise.all(gameIconsRequest),
-      this.apiService.getGuildRankings(['exp'], guild.id),
+      this.apiService.getGuildRankings(["exp"], guild.id),
       this.apiService.getPlayerHead(guildMaster.uuid, 16),
       getLogo(user?.tier),
-      getBackground('hypixel', 'overall'),
+      getBackground("hypixel", "overall"),
     ]);
 
     const ranking = guildRanking[0]?.rank ?? 0;
 
     const gameIconsRecord = Object.fromEntries(await gameIcons);
 
-    const props: Omit<GuildProfileProps, 'page'> = {
+    const props: Omit<GuildProfileProps, "page"> = {
       guild,
       guildMaster,
       skin,
@@ -78,26 +78,29 @@ export class GuildCommand extends GuildTopSubCommand {
 
     return this.paginateService.paginate(context, [
       {
-        label: 'Overall',
-        generator: () => render(<GuildProfile {...props} page="overall" />, getTheme(user?.theme)),
+        label: "Overall",
+        generator: () =>
+          render(<GuildProfile {...props} page="overall" />, getTheme(user?.theme)),
       },
       {
-        label: 'GEXP',
-        generator: () => render(<GuildProfile {...props} page="gexp" />, getTheme(user?.theme)),
+        label: "GEXP",
+        generator: () =>
+          render(<GuildProfile {...props} page="gexp" />, getTheme(user?.theme)),
       },
       {
-        label: 'GEXP Per Game',
+        label: "GEXP Per Game",
         generator: () =>
           render(<GuildProfile {...props} page="expPerGame" />, getTheme(user?.theme)),
       },
       {
-        label: 'Misc',
-        generator: () => render(<GuildProfile {...props} page="misc" />, getTheme(user?.theme)),
+        label: "Misc",
+        generator: () =>
+          render(<GuildProfile {...props} page="misc" />, getTheme(user?.theme)),
       },
     ]);
   }
 
-  @SubCommand({ description: (t) => t('commands.guild-list'), args: GuildArgument })
+  @SubCommand({ description: (t) => t("commands.guild-list"), args: GuildArgument })
   public async list(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
     const t = context.t();
@@ -106,7 +109,7 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const [logo, background] = await Promise.all([
       getLogo(user?.tier),
-      getBackground('hypixel', 'overall'),
+      getBackground("hypixel", "overall"),
     ]);
 
     const props: GuildListProfileProps = {
@@ -118,19 +121,19 @@ export class GuildCommand extends GuildTopSubCommand {
     };
 
     const canvas = render(<GuildListProfile {...props} />, getTheme(user?.theme));
-    const buffer = await canvas.toBuffer('png');
+    const buffer = await canvas.toBuffer("png");
 
     return {
-      files: [{ name: 'guild-list.png', data: buffer, type: 'image/png' }],
+      files: [{ name: "guild-list.png", data: buffer, type: "image/png" }],
     };
   }
 
-  @SubCommand({ description: (t) => t('commands.guild-member'), args: [PlayerArgument] })
+  @SubCommand({ description: (t) => t("commands.guild-member"), args: [PlayerArgument] })
   public async member(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
     const t = context.t();
 
-    const player = await this.apiService.getPlayer(context.option('player'), user);
+    const player = await this.apiService.getPlayer(context.option("player"), user);
 
     const guild = await this.apiService.getGuild(
       player.guildId || player.uuid,
@@ -141,7 +144,7 @@ export class GuildCommand extends GuildTopSubCommand {
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
       getLogo(user?.tier),
-      getBackground('bedwars', 'overall'),
+      getBackground("bedwars", "overall"),
     ]);
 
     const canvas = render(
@@ -158,10 +161,10 @@ export class GuildCommand extends GuildTopSubCommand {
       getTheme(user?.theme)
     );
 
-    const buffer = await canvas.toBuffer('png');
+    const buffer = await canvas.toBuffer("png");
 
     return {
-      files: [{ name: 'guild-member.png', data: buffer, type: 'image/png' }],
+      files: [{ name: "guild-member.png", data: buffer, type: "image/png" }],
     };
   }
 }

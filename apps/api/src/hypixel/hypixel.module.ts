@@ -6,16 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HttpModule } from '@nestjs/axios';
-import { Module } from '@nestjs/common';
-import { HypixelService } from './hypixel.service';
+import { HttpModule } from "@nestjs/axios";
+import { HypixelService } from "./hypixel.service";
+import { Module } from "@nestjs/common";
 
 @Module({
   imports: [
     HttpModule.register({
       baseURL: `https://api.hypixel.net/`,
       headers: {
-        'API-Key': process.env.HYPIXEL_API_KEY,
+        "API-Key": process.env.HYPIXEL_API_KEY,
       },
       timeout: Number(process.env.HYPIXEL_API_TIMEOUT) ?? 5000,
     }),

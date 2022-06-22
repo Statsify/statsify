@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ElementNode, FC, IntrinsicElement, PropsWithChildren } from '../jsx';
-import { intrinsicElements } from '../jsx/instrinsics';
-import { elementToNode } from './convert';
+import { ElementNode, FC, IntrinsicElement, PropsWithChildren } from "../jsx";
+import { elementToNode } from "./convert";
+import { intrinsicElements } from "../jsx/instrinsics";
 
 export const Fragment: FC = ({ children }) => children as unknown as null;
 
@@ -16,16 +16,14 @@ type Props = PropsWithChildren<unknown>;
 
 export const jsx = (type: IntrinsicElement | FC, props: Props): ElementNode | null => {
   if (props.children) {
-    if (Array.isArray(props.children)) {
-      props.children = props.children.flat().filter((child) => child);
-    } else {
-      props.children = [props.children];
-    }
+    props.children = Array.isArray(props.children)
+      ? props.children.flat().filter(Boolean)
+      : [props.children];
   }
 
-  if (typeof type === 'string' && type in intrinsicElements) {
+  if (typeof type === "string" && type in intrinsicElements) {
     return elementToNode(type, intrinsicElements[type](props as any));
-  } else if (typeof type === 'function') {
+  } else if (typeof type === "function") {
     return type(props);
   }
 

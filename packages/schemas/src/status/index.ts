@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from '@statsify/util';
-import { Game } from '../game';
-import { Field } from '../metadata';
-import { PlayerStatus } from '../player/status';
+import { APIData } from "@statsify/util";
+import { Field } from "../metadata";
+import { Game } from "../game";
+import { PlayerStatus } from "../player/status";
 
 export class Status {
   @Field()
@@ -35,7 +35,7 @@ export class Status {
 
   public constructor(data: APIData) {
     this.online = data.online;
-    this.game = new Game(data.gameType ?? 'LIMBO');
+    this.game = new Game(data.gameType ?? "LIMBO");
     this.mode = data.mode;
     this.map = data.map;
   }

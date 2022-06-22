@@ -6,22 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from '@statsify/util';
-import { Color, ColorCode } from '../../../color';
-import { Field } from '../../../metadata';
-import { Progression } from '../../../progression';
-import { WoolWarsClass, WoolWarsOverall } from './class';
-import { getExpReq, getFormattedLevel, getLevel } from './util';
+import { APIData } from "@statsify/util";
+import { Color, ColorCode } from "../../../color";
+import { Field } from "../../../metadata";
+import { Progression } from "../../../progression";
+import { WoolWarsClass, WoolWarsOverall } from "./class";
+import { getExpReq, getFormattedLevel, getLevel } from "./util";
 
 export const WOOL_WARS_MODES = [
-  'overall',
-  'tank',
-  'archer',
-  'builder',
-  'swordsman',
-  'engineer',
-  'golem',
-  'assault',
+  "overall",
+  "tank",
+  "archer",
+  "builder",
+  "swordsman",
+  "engineer",
+  "golem",
+  "assault",
 ] as const;
 export type WoolWarsModes = typeof WOOL_WARS_MODES;
 
@@ -34,12 +34,12 @@ export class WoolWars {
 
   @Field({
     leaderboard: {
-      fieldName: 'Level',
+      fieldName: "Level",
       hidden: true,
       additionalFields: [
-        'stats.woolwars.overall.wins',
-        'stats.woolwars.overall.kills',
-        'stats.woolwars.overall.kdr',
+        "stats.woolwars.overall.wins",
+        "stats.woolwars.overall.kills",
+        "stats.woolwars.overall.kdr",
       ],
     },
   })
@@ -94,7 +94,7 @@ export class WoolWars {
     this.nextLevelFormatted = getFormattedLevel(this.level + 1);
 
     this.levelColor =
-      this.levelFormatted[1] === '7' && this.level > 1000
+      this.levelFormatted[1] === "7" && this.level > 1000
         ? new Color(`§${this.levelFormatted[4]}` as ColorCode)
         : new Color(`§${this.levelFormatted[1]}` as ColorCode);
 
@@ -118,4 +118,4 @@ export class WoolWars {
   }
 }
 
-export * from './class';
+export * from "./class";

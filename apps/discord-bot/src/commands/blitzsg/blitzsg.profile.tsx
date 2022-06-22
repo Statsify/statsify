@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { BlitzSG, BlitzSGKit, BLITZSG_MODES, FormattedGame } from '@statsify/schemas';
-import { formatTime, prettify, romanNumeral } from '@statsify/util';
-import { BaseProfileProps } from '../base.hypixel-command';
+import { BLITZSG_MODES, BlitzSG, BlitzSGKit, FormattedGame } from "@statsify/schemas";
+import { BaseProfileProps } from "../base.hypixel-command";
+import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { formatTime, prettify, romanNumeral } from "@statsify/util";
 
 interface OverallBlitzSGTableProps {
   blitzsg: BlitzSG;
@@ -21,18 +21,27 @@ const OverallBlitzSGTable = ({ blitzsg, t }: OverallBlitzSGTableProps) => (
   <Table.table>
     <Table.ts title="§6Overall">
       <Table.tr>
-        <Table.td title={t('stats.wins')} value={t(blitzsg.overall.wins)} color="§e" />
-        <Table.td title={t('stats.kills')} value={t(blitzsg.overall.kills)} color="§a" />
-        <Table.td title={t('stats.deaths')} value={t(blitzsg.overall.deaths)} color="§c" />
-        <Table.td title={t('stats.kdr')} value={t(blitzsg.overall.kdr)} color="§6" />
+        <Table.td title={t("stats.wins")} value={t(blitzsg.overall.wins)} color="§e" />
+        <Table.td title={t("stats.kills")} value={t(blitzsg.overall.kills)} color="§a" />
+        <Table.td
+          title={t("stats.deaths")}
+          value={t(blitzsg.overall.deaths)}
+          color="§c"
+        />
+        <Table.td title={t("stats.kdr")} value={t(blitzsg.overall.kdr)} color="§6" />
       </Table.tr>
     </Table.ts>
     <Table.tr>
       <Table.ts title="§6Solo">
         <Table.tr>
-          <Table.td title={t('stats.wins')} value={t(blitzsg.solo.wins)} color="§e" size="small" />
           <Table.td
-            title={t('stats.kills')}
+            title={t("stats.wins")}
+            value={t(blitzsg.solo.wins)}
+            color="§e"
+            size="small"
+          />
+          <Table.td
+            title={t("stats.kills")}
             value={t(blitzsg.solo.kills)}
             color="§a"
             size="small"
@@ -42,13 +51,13 @@ const OverallBlitzSGTable = ({ blitzsg, t }: OverallBlitzSGTableProps) => (
       <Table.ts title="§6Doubles">
         <Table.tr>
           <Table.td
-            title={t('stats.wins')}
+            title={t("stats.wins")}
             value={t(blitzsg.doubles.wins)}
             color="§e"
             size="small"
           />
           <Table.td
-            title={t('stats.kills')}
+            title={t("stats.kills")}
             value={t(blitzsg.doubles.kills)}
             color="§a"
             size="small"
@@ -64,26 +73,28 @@ interface KitBlitzSGTableProps {
   t: LocalizeFunction;
 }
 
-const KitBlitzSGTable = ({ stats, t }: KitBlitzSGTableProps) => {
-  return (
-    <Table.table>
-      <Table.tr>
-        <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-        <Table.td title={t('stats.losses')} value={t(stats.losses)} color="§c" />
-        <Table.td title={t('stats.wlr')} value={t(stats.wlr)} color="§6" />
-      </Table.tr>
-      <Table.tr>
-        <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
-        <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
-        <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
-      </Table.tr>
-      <Table.tr>
-        <Table.td title={t('stats.playtime')} value={formatTime(stats.playtime)} color="§e" />
-        <Table.td title={t('stats.gamesPlayed')} value={t(stats.gamesPlayed)} color="§b" />
-      </Table.tr>
-    </Table.table>
-  );
-};
+const KitBlitzSGTable = ({ stats, t }: KitBlitzSGTableProps) => (
+  <Table.table>
+    <Table.tr>
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+      <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
+      <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
+    </Table.tr>
+    <Table.tr>
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+    </Table.tr>
+    <Table.tr>
+      <Table.td
+        title={t("stats.playtime")}
+        value={formatTime(stats.playtime)}
+        color="§e"
+      />
+      <Table.td title={t("stats.gamesPlayed")} value={t(stats.gamesPlayed)} color="§b" />
+    </Table.tr>
+  </Table.table>
+);
 
 export interface BlitzSGProfileProps extends BaseProfileProps {
   mode: typeof BLITZSG_MODES[number];
@@ -103,25 +114,27 @@ export const BlitzSGProfile = ({
   const { blitzsg } = player.stats;
 
   const sidebar: SidebarItem[] = [
-    [t('stats.coins'), t(blitzsg.coins), '§6'],
-    [t('stats.kit'), prettify(blitzsg.kit), '§e'],
+    [t("stats.coins"), t(blitzsg.coins), "§6"],
+    [t("stats.kit"), prettify(blitzsg.kit), "§e"],
   ];
 
   let table: JSX.Element;
 
   switch (mode) {
-    case 'overall':
+    case "overall":
       table = <OverallBlitzSGTable blitzsg={blitzsg} t={t} />;
       break;
     default: {
-      const colors = ['§a', '§a', '§2', '§2', '§e', '§e', '§6', '§6', '§c', '§4'];
+      const colors = ["§a", "§a", "§2", "§2", "§e", "§e", "§6", "§6", "§c", "§4"];
       const stats = blitzsg[mode];
 
-      let level = stats.prestige ? `§6${'✫'.repeat(stats.prestige)}` : romanNumeral(stats.level);
+      let level = stats.prestige
+        ? `§6${"✫".repeat(stats.prestige)}`
+        : romanNumeral(stats.level);
 
       if (stats.level === 10) level = `§l${level}`;
-      sidebar.push([t('stats.level'), level, colors[stats.level - 1]]);
-      sidebar.push([t('stats.exp'), t(stats.exp), '§b']);
+      sidebar.push([t("stats.level"), level, colors[stats.level - 1]]);
+      sidebar.push([t("stats.exp"), t(stats.exp), "§b"]);
       table = <KitBlitzSGTable stats={stats} t={t} />;
       break;
     }

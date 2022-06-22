@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from '@statsify/util';
-import { Field } from '../metadata';
-import { Friend } from './friend';
+import { APIData } from "@statsify/util";
+import { Field } from "../metadata";
+import { Friend } from "./friend";
 
 export class Friends {
   @Field({ type: () => [Friend] })

@@ -7,58 +7,58 @@
  */
 
 import {
-  ArcadeModes,
   ARCADE_MODES,
-  ArenaBrawlModes,
   ARENA_BRAWL_MODES,
-  BedWarsModes,
+  ArcadeModes,
+  ArenaBrawlModes,
   BEDWARS_MODES,
-  BlitzSGModes,
   BLITZSG_MODES,
-  BuildBattleModes,
   BUILD_BATTLE_MODES,
-  CopsAndCrimsModes,
+  BedWarsModes,
+  BlitzSGModes,
+  BuildBattleModes,
   COPS_AND_CRIMS_MODES,
-  DuelsModes,
+  CopsAndCrimsModes,
   DUELS_MODES,
-  GeneralModes,
+  DuelsModes,
   GENERAL_MODES,
-  MegaWallsModes,
+  GeneralModes,
   MEGAWALLS_MODES,
-  MurderMysteryModes,
   MURDER_MYSTERY_MODES,
-  PaintballModes,
+  MegaWallsModes,
+  MurderMysteryModes,
   PAINTBALL_MODES,
-  ParkourModes,
   PARKOUR_MODES,
-  QuakeModes,
+  PaintballModes,
+  ParkourModes,
   QUAKE_MODES,
-  SkyWarsModes,
+  QuakeModes,
   SKYWARS_MODES,
-  SmashHeroesModes,
   SMASH_HEROES_MODES,
-  SpeedUHCModes,
   SPEED_UHC_MODES,
+  SkyWarsModes,
+  SmashHeroesModes,
+  SpeedUHCModes,
   TNTGamesModes,
   TNT_GAMES_MODES,
-  TurboKartRacersModes,
   TURBO_KART_RACERS_MODES,
+  TurboKartRacersModes,
   UHCModes,
   UHC_MODES,
-  VampireZModes,
   VAMPIREZ_MODES,
-  WallsModes,
+  VampireZModes,
   WALLS_MODES,
-  WarlordsModes,
   WARLORDS_MODES,
-  WoolWarsModes,
   WOOL_WARS_MODES,
-} from '@statsify/schemas';
+  WallsModes,
+  WarlordsModes,
+  WoolWarsModes,
+} from "@statsify/schemas";
 
-export const ERROR_COLOR = 0xff0000;
-export const SUCCESS_COLOR = 0x00ff00;
-export const INFO_COLOR = 0x187ccd;
-export const WARNING_COLOR = 0xffff00;
+export const ERROR_COLOR = 0xff_00_00;
+export const SUCCESS_COLOR = 0x00_ff_00;
+export const INFO_COLOR = 0x18_7c_cd;
+export const WARNING_COLOR = 0xff_ff_00;
 
 export type GamesWithBackgrounds =
   | ArcadeModes
@@ -94,124 +94,124 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       let map: string;
 
       switch (mode) {
-        case 'solo':
-        case 'doubles':
-          map = 'eight';
+        case "solo":
+        case "doubles":
+          map = "eight";
           break;
-        case 'threes':
-        case 'fours':
-          map = 'four';
+        case "threes":
+        case "fours":
+          map = "four";
           break;
-        case '4v4':
-          map = '4v4';
+        case "4v4":
+          map = "4v4";
           break;
-        case 'castle':
-          map = 'castle';
+        case "castle":
+          map = "castle";
           break;
         default:
-          map = 'overall';
+          map = "overall";
           break;
       }
 
-      return ['bedwars', map];
+      return ["bedwars", map];
     }
     case ARCADE_MODES:
-      return ['arcade', 'overall'];
+      return ["arcade", "overall"];
     case ARENA_BRAWL_MODES:
-      return ['arenabrawl', 'overall'];
+      return ["arenabrawl", "overall"];
     case BLITZSG_MODES:
-      return ['blitzsg', 'overall'];
+      return ["blitzsg", "overall"];
     case BUILD_BATTLE_MODES:
-      return ['buildbattle', 'overall'];
+      return ["buildbattle", "overall"];
     //TODO(amony): add cops and crims backgrounds
     case COPS_AND_CRIMS_MODES:
-      return ['hypixel', 'overall'];
+      return ["hypixel", "overall"];
     case DUELS_MODES: {
       let map: string;
 
       switch (mode) {
-        case 'bowSpleef':
-          map = 'bowspleef';
+        case "bowSpleef":
+          map = "bowspleef";
           break;
-        case 'bridge':
-          map = 'bridge';
+        case "bridge":
+          map = "bridge";
           break;
-        case 'bow':
-        case 'boxing':
-        case 'blitzsg':
-        case 'classic':
-        case 'combo':
-        case 'megawalls':
-        case 'nodebuff':
-        case 'op':
-        case 'uhc':
-          map = 'maps';
+        case "bow":
+        case "boxing":
+        case "blitzsg":
+        case "classic":
+        case "combo":
+        case "megawalls":
+        case "nodebuff":
+        case "op":
+        case "uhc":
+          map = "maps";
           break;
-        case 'parkour':
-          map = 'parkour';
+        case "parkour":
+          map = "parkour";
           break;
-        case 'skywars':
-          map = 'skywars';
+        case "skywars":
+          map = "skywars";
           break;
-        case 'sumo':
-          map = 'sumo';
+        case "sumo":
+          map = "sumo";
           break;
-        case 'overall':
-        case 'arena':
+        case "overall":
+        case "arena":
         default:
-          map = 'overall';
+          map = "overall";
           break;
       }
 
-      return ['duels', map];
+      return ["duels", map];
     }
     case PARKOUR_MODES:
     case GENERAL_MODES:
-      return ['hypixel', 'overall'];
+      return ["hypixel", "overall"];
     case MEGAWALLS_MODES:
-      return ['megawalls', 'overall'];
+      return ["megawalls", "overall"];
     case MURDER_MYSTERY_MODES:
-      return ['murdermystery', 'overall'];
+      return ["murdermystery", "overall"];
     case PAINTBALL_MODES:
-      return ['paintball', 'overall'];
+      return ["paintball", "overall"];
     //PIT
     case QUAKE_MODES:
-      return ['quake', 'overall'];
+      return ["quake", "overall"];
     case SKYWARS_MODES: {
       let map: string;
 
       switch (mode) {
-        case 'solo':
-        case 'doubles':
-          map = 'map';
+        case "solo":
+        case "doubles":
+          map = "map";
           break;
-        case 'overall':
+        case "overall":
         default:
-          map = 'overall';
+          map = "overall";
           break;
       }
 
-      return ['skywars', map];
+      return ["skywars", map];
     }
     case SMASH_HEROES_MODES:
-      return ['smashheroes', 'overall'];
+      return ["smashheroes", "overall"];
     case TNT_GAMES_MODES:
-      return ['tntgames', 'overall'];
+      return ["tntgames", "overall"];
     case TURBO_KART_RACERS_MODES:
-      return ['turbokartracers', 'overall'];
+      return ["turbokartracers", "overall"];
     case SPEED_UHC_MODES:
     case UHC_MODES:
-      return ['uhc', 'overall'];
+      return ["uhc", "overall"];
     case VAMPIREZ_MODES:
-      return ['vampirez', 'overall'];
+      return ["vampirez", "overall"];
     case WALLS_MODES:
-      return ['walls', 'overall'];
+      return ["walls", "overall"];
     case WARLORDS_MODES:
-      return ['warlords', 'overall'];
+      return ["warlords", "overall"];
     //TODO(amony): add woolwars backgrounds
     case WOOL_WARS_MODES:
-      return ['woolwars', 'overall'];
+      return ["woolwars", "overall"];
     default:
-      return ['default', ''];
+      return ["default", ""];
   }
 };

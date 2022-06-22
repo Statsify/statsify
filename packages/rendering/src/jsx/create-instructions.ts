@@ -6,20 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { ElementNode, Fraction, Instruction, Percent } from './types';
-import { getTotalSize, toDecimal } from './util';
+import { getTotalSize, toDecimal } from "./util";
+import type { ElementNode, Fraction, Instruction, Percent } from "./types";
 
 export const createInstructions = (node: ElementNode): Instruction => {
-  const hasDefinedWidth = typeof node.x.size === 'number';
-  const hasDefinedHeight = typeof node.y.size === 'number';
+  const hasDefinedWidth = typeof node.x.size === "number";
+  const hasDefinedHeight = typeof node.y.size === "number";
 
   if (!hasDefinedWidth) node.x.size = node.x.minSize;
   if (!hasDefinedHeight) node.y.size = node.y.minSize;
 
   if (!node.children?.length) return node as Instruction;
 
-  const side = node.style.direction === 'row' ? 'x' : 'y';
-  const otherSide = side === 'x' ? 'y' : 'x';
+  const side = node.style.direction === "row" ? "x" : "y";
+  const otherSide = side === "x" ? "y" : "x";
 
   let paddlessSideLength = node[side].size as number;
 
@@ -36,23 +36,25 @@ export const createInstructions = (node: ElementNode): Instruction => {
   for (let i = 0; i < node.children.length; i++) {
     const child = node.children[i];
 
-    if (typeof child[otherSide].size === 'string') {
+    if (typeof child[otherSide].size === "string") {
       const size =
-        (node[otherSide].size as number) - getTotalSize(child[otherSide], { size: false });
+        (node[otherSide].size as number) -
+        getTotalSize(child[otherSide], { size: false });
 
       child[otherSide].size =
-        child[otherSide].size === 'remaining'
+        child[otherSide].size === "remaining"
           ? size
           : size * toDecimal(child[otherSide].size as Percent | Fraction);
     }
 
-    if (typeof child[side].size === 'string') {
-      if (child[side].size === 'remaining') {
+    if (typeof child[side].size === "string") {
+      if (child[side].size === "remaining") {
         remaining.push(i);
         continue;
       }
 
-      child[side].size = paddlessSideLength * toDecimal(child[side].size as Percent | Fraction);
+      child[side].size =
+        paddlessSideLength * toDecimal(child[side].size as Percent | Fraction);
       remainingSide -= child[side].size as number;
     }
 
@@ -65,10 +67,10 @@ export const createInstructions = (node: ElementNode): Instruction => {
 
   const remainingSideLength = remainingSide / remaining.length;
 
-  for (let i = 0; i < remaining.length; i++) {
-    const child = node.children[remaining[i]];
+  for (const element of remaining) {
+    const child = node.children[element];
     child[side].size = remainingSideLength;
-    node.children[remaining[i]] = createInstructions(child);
+    node.children[element] = createInstructions(child);
   }
 
   return node as Instruction;

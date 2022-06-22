@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
+import { APIData } from "@statsify/util";
 import {
   BlockingDead,
   BountyHunters,
@@ -27,28 +26,29 @@ import {
   Seasonal,
   ThrowOut,
   Zombies,
-} from './mode';
+} from "./mode";
+import { Field } from "../../../metadata";
 
 export const ARCADE_MODES = [
-  'overall',
-  'blockingDead',
-  'bountyHunters',
-  'captureTheWool',
-  'creeperAttack',
-  'dragonWars',
-  'enderSpleef',
-  'farmHunt',
-  'football',
-  'galaxyWars',
-  'hideAndSeek',
-  'holeInTheWall',
-  'hypixelSays',
-  'miniWalls',
-  'partyGames',
-  'pixelPainters',
-  'seasonal',
-  'throwOut',
-  'zombies',
+  "overall",
+  "blockingDead",
+  "bountyHunters",
+  "captureTheWool",
+  "creeperAttack",
+  "dragonWars",
+  "enderSpleef",
+  "farmHunt",
+  "football",
+  "galaxyWars",
+  "hideAndSeek",
+  "holeInTheWall",
+  "hypixelSays",
+  "miniWalls",
+  "partyGames",
+  "pixelPainters",
+  "seasonal",
+  "throwOut",
+  "zombies",
 ] as const;
 export type ArcadeModes = typeof ARCADE_MODES;
 
@@ -137,5 +137,5 @@ export class Arcade {
   }
 }
 
-export * from './mode';
-export * from './seasonal-mode';
+export * from "./mode";
+export * from "./seasonal-mode";

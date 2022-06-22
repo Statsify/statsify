@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { add, deepAdd, ratio } from '@statsify/math';
-import { APIData, formatTime } from '@statsify/util';
-import { Field } from '../../../metadata';
+import { APIData, formatTime } from "@statsify/util";
 import {
   EasterSimulator,
   GrinchSimulator,
   HalloweenSimulator,
   ScubaSimulator,
-} from './seasonal-mode';
+} from "./seasonal-mode";
+import { Field } from "../../../metadata";
+import { add, deepAdd, ratio } from "@statsify/math";
 
 export class BlockingDead {
   @Field()
@@ -96,7 +96,7 @@ export class EnderSpleef {
   @Field()
   public wins: number;
 
-  @Field({ store: { default: 'none' } })
+  @Field({ store: { default: "none" } })
   public trail: string;
 
   @Field({ leaderboard: { enabled: false } })
@@ -107,7 +107,7 @@ export class EnderSpleef {
 
   public constructor(data: APIData) {
     this.wins = data.wins_ender;
-    this.trail = data.enderspleef_trail || 'none';
+    this.trail = data.enderspleef_trail || "none";
     this.powerupActivations = data.powerup_activations_ender;
     this.blocksBroken = data.blocks_destroyed_ender;
   }
@@ -229,8 +229,8 @@ export class HideAndSeek {
   public partyPooper: HideAndSeekMode;
 
   public constructor(data: APIData) {
-    this.propHunt = new HideAndSeekMode(data, 'prop_hunt');
-    this.partyPooper = new HideAndSeekMode(data, 'party_pooper');
+    this.propHunt = new HideAndSeekMode(data, "prop_hunt");
+    this.partyPooper = new HideAndSeekMode(data, "party_pooper");
     this.overall = deepAdd(this.propHunt, this.partyPooper);
   }
 }
@@ -274,7 +274,7 @@ export class HypixelSays {
 }
 
 export class MiniWalls {
-  @Field({ store: { default: 'soldier' } })
+  @Field({ store: { default: "soldier" } })
   public kit: string;
 
   @Field()
@@ -299,7 +299,7 @@ export class MiniWalls {
   public witherKills: number;
 
   public constructor(data: APIData) {
-    this.kit = data.miniwalls_activeKit || 'soldier';
+    this.kit = data.miniwalls_activeKit || "soldier";
     this.wins = data.wins_mini_walls;
     this.kills = data.kills_mini_walls;
     this.deaths = data.deaths_mini_walls;
@@ -391,7 +391,7 @@ export class ZombiesMap {
   @Field()
   public wins: number;
 
-  @Field({ leaderboard: { sort: 'ASC', formatter: formatTime } })
+  @Field({ leaderboard: { sort: "ASC", formatter: formatTime } })
   public fastestWin: number;
 
   @Field({ leaderboard: { enabled: false } })
@@ -404,10 +404,11 @@ export class ZombiesMap {
   public bestRound: number;
 
   public constructor(data: APIData, map?: string) {
-    map = map ? `_${map}` : '';
+    map = map ? `_${map}` : "";
 
     this.wins = data[`wins_zombies${map}`];
-    this.fastestWin = (data[`fastest_time_30_zombies${map ? `${map}_normal` : ''}`] ?? 0) * 1000;
+    this.fastestWin =
+      (data[`fastest_time_30_zombies${map ? `${map}_normal` : ""}`] ?? 0) * 1000;
     this.kills = data[`zombie_kills_zombies${map}`];
     this.deaths = data[`deaths_zombies${map}`];
     this.bestRound = data[`best_round_zombies${map}`];
@@ -429,8 +430,8 @@ export class Zombies {
 
   public constructor(data: APIData) {
     this.overall = new ZombiesMap(data);
-    this.deadEnd = new ZombiesMap(data, 'deadend');
-    this.badBlood = new ZombiesMap(data, 'badblood');
-    this.alienArcadium = new ZombiesMap(data, 'alienarcadium');
+    this.deadEnd = new ZombiesMap(data, "deadend");
+    this.badBlood = new ZombiesMap(data, "badblood");
+    this.alienArcadium = new ZombiesMap(data, "alienarcadium");
   }
 }

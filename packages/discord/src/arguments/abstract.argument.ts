@@ -6,14 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { LocalizationString } from "../messages";
+import {
+  getLocalizeFunction,
+  translateField,
+  translateToAllLanguages,
+} from "../messages/localize";
 import type {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
   ChannelType,
-} from 'discord-api-types/v10';
-import type { CommandContext } from '../command';
-import { LocalizationString } from '../messages';
-import { getLocalizeFunction, translateField, translateToAllLanguages } from '../messages/localize';
+} from "discord-api-types/v10";
+import type { CommandContext } from "../command";
 
 export interface AbstractArgument {
   autocompleteHandler?(context: CommandContext): APIApplicationCommandOptionChoice[];
@@ -31,7 +35,7 @@ export abstract class AbstractArgument {
   public autocomplete?: boolean;
 
   public toJSON() {
-    const description = translateField(getLocalizeFunction('en_US'), this.description);
+    const description = translateField(getLocalizeFunction("en_US"), this.description);
 
     return {
       name: this.name,

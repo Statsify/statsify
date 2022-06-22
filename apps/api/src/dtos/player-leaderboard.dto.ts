@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { LeaderboardScanner, Player } from '@statsify/schemas';
-import { Transform } from 'class-transformer';
-import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
-import { PlayerDto } from './player.dto';
+import { ApiProperty, PartialType } from "@nestjs/swagger";
+import { IsEnum, IsInt, IsOptional, Max, Min } from "class-validator";
+import { LeaderboardScanner, Player } from "@statsify/schemas";
+import { PlayerDto } from "./player.dto";
+import { Transform } from "class-transformer";
 
 const fields = LeaderboardScanner.getLeaderboardFields(Player);
 

@@ -1,9 +1,17 @@
 /**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+/**
  * @type {import('@jest/types').Config.InitialOptions}
  */
 module.exports = {
-  testMatch: ['<rootDir>/tests/**/*.spec.ts'],
+  testMatch: ["<rootDir>/tests/**/*.spec.ts"],
   transform: {
-    '^.+\\.(t|j)sx?$': '@swc/jest',
+    "^.+\\.(t|j)sx?$": "@swc/jest",
   },
 };

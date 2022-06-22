@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, If, Table } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { FormattedGame, Guild, PlayerStatus } from '@statsify/schemas';
-import { DateTime } from 'luxon';
-import { BaseProfileProps } from '../base.hypixel-command';
+import { BaseProfileProps } from "../base.hypixel-command";
+import { Container, Footer, Header, If, Table } from "#components";
+import { DateTime } from "luxon";
+import { FormattedGame, Guild, PlayerStatus } from "@statsify/schemas";
+import { LocalizeFunction } from "@statsify/discord";
 
 interface GeneralProfileHeaderBodyProps {
   guild?: Guild;
@@ -18,21 +18,27 @@ interface GeneralProfileHeaderBodyProps {
   t: LocalizeFunction;
 }
 
-const GeneralProfileHeaderBody = ({ guild, status, t }: GeneralProfileHeaderBodyProps) => {
-  const online = status.online ? '§aOnline' : '§cOffline';
+const GeneralProfileHeaderBody = ({
+  guild,
+  status,
+  t,
+}: GeneralProfileHeaderBodyProps) => {
+  const online = status.online ? "§aOnline" : "§cOffline";
 
   const format = "LL/dd/yy',' hh:mm a";
-  const firstLogin = DateTime.fromMillis(status.firstLogin).toFormat(format, { locale: t.locale });
+  const firstLogin = DateTime.fromMillis(status.firstLogin).toFormat(format, {
+    locale: t.locale,
+  });
 
   const lastLogin = status.lastLogin
     ? DateTime.fromMillis(status.lastLogin).toFormat(format, { locale: t.locale })
-    : 'N/A';
+    : "N/A";
 
   return (
     <div height="remaining" width="remaining" direction="row">
       <div width="remaining" height="100%" direction="column">
         <box width="100%" height="50%">
-          <text>§7Guild: §2{guild?.name ? guild.name : 'N/A'}</text>
+          <text>§7Guild: §2{guild?.name ? guild.name : "N/A"}</text>
         </box>
         <box width="100%" height="50%">
           <text>§7Status: {online}</text>
@@ -70,7 +76,7 @@ export const GeneralProfile = ({
   return (
     <Container background={background}>
       <Header
-        name={`${player.displayName}§^2^${guild?.tag ? ` ${guild.tagFormatted}` : ''}`}
+        name={`${player.displayName}§^2^${guild?.tag ? ` ${guild.tagFormatted}` : ""}`}
         skin={skin}
         badge={badge}
         size={3}
@@ -81,33 +87,57 @@ export const GeneralProfile = ({
       </Header>
       <Table.table>
         <Table.tr>
-          <Table.td title={t('stats.networkLevel')} value={t(general.networkLevel)} color="§6" />
           <Table.td
-            title={t('stats.achievementPoints')}
+            title={t("stats.networkLevel")}
+            value={t(general.networkLevel)}
+            color="§6"
+          />
+          <Table.td
+            title={t("stats.achievementPoints")}
             value={t(general.achievementPoints)}
             color="§6"
           />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t('stats.quests')} value={t(general.quests)} color="§a" />
-          <Table.td title={t('stats.challenges')} value={t(general.challenges)} color="§a" />
+          <Table.td title={t("stats.quests")} value={t(general.quests)} color="§a" />
+          <Table.td
+            title={t("stats.challenges")}
+            value={t(general.challenges)}
+            color="§a"
+          />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t('stats.karma')} value={t(general.karma)} color="§d" />
-          <Table.td title={t('stats.friends')} value={t(friends)} color="§d" />
-          <Table.td title={t('stats.giftsSent')} value={t(general.giftsSent)} color="§5" />
-          <Table.td title={t('stats.ranksGifted')} value={t(general.ranksGifts)} color="§5" />
+          <Table.td title={t("stats.karma")} value={t(general.karma)} color="§d" />
+          <Table.td title={t("stats.friends")} value={t(friends)} color="§d" />
+          <Table.td
+            title={t("stats.giftsSent")}
+            value={t(general.giftsSent)}
+            color="§5"
+          />
+          <Table.td
+            title={t("stats.ranksGifted")}
+            value={t(general.ranksGifts)}
+            color="§5"
+          />
         </Table.tr>
         <If condition={member}>
           {(member) => (
             <Table.tr>
               <Table.td
-                title={t('stats.guild.quests')}
+                title={t("stats.guild.quests")}
                 value={t(member.questParticipation)}
                 color="§2"
               />
-              <Table.td title={t('stats.guild.daily')} value={t(member.daily)} color="§2" />
-              <Table.td title={t('stats.guild.weekly')} value={t(member.weekly)} color="§2" />
+              <Table.td
+                title={t("stats.guild.daily")}
+                value={t(member.daily)}
+                color="§2"
+              />
+              <Table.td
+                title={t("stats.guild.weekly")}
+                value={t(member.weekly)}
+                color="§2"
+              />
             </Table.tr>
           )}
         </If>

@@ -1,21 +1,29 @@
-import { transform } from '@swc/core';
-import { watch } from 'chokidar';
-import { existsSync, readFileSync } from 'fs';
-import { mkdir, rm, writeFile } from 'fs/promises';
-import { createRequire } from 'module';
-import { basename, join } from 'path';
-import { fetchWorkspaces, FILE_ENDINGS, FILE_ENDING_REGEX, ROOT } from './utils.js';
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import { FILE_ENDINGS, FILE_ENDING_REGEX, ROOT, fetchWorkspaces } from "./utils.js";
+import { basename, join } from "node:path";
+import { createRequire } from "node:module";
+import { existsSync, readFileSync } from "node:fs";
+import { mkdir, rm, writeFile } from "node:fs/promises";
+import { transform } from "@swc/core";
+import { watch } from "chokidar";
 
 const require = createRequire(import.meta.url);
-const { Logger } = require('@statsify/logger');
+const { Logger } = require("@statsify/logger");
 
-const IGNORED_WORKSPACES = ['site', 'scripts'];
+const IGNORED_WORKSPACES = ["site", "scripts"];
 
 const logger = new Logger();
 
 const workspaces = [
-  ...(await fetchWorkspaces('apps', IGNORED_WORKSPACES)),
-  ...(await fetchWorkspaces('packages', IGNORED_WORKSPACES)),
+  ...(await fetchWorkspaces("apps", IGNORED_WORKSPACES)),
+  ...(await fetchWorkspaces("packages", IGNORED_WORKSPACES)),
 ];
 
 /**
@@ -23,7 +31,7 @@ const workspaces = [
  * @param {string} path
  */
 function getWorkspaceFromPath(path) {
-  return path.replace(ROOT, '').split('/')[1];
+  return path.replace(ROOT, "").split("/")[1];
 }
 
 /**
@@ -36,14 +44,16 @@ const configs = new Map();
  * @param {string} workspace The workspace
  */
 async function fetchConfig(workspace) {
-  const configPath = join(workspace, '.swcrc');
+  const configPath = join(workspace, ".swcrc");
   if (existsSync(configPath)) return configPath;
-  return join(ROOT, '.swcrc');
+  return join(ROOT, ".swcrc");
 }
 
 await Promise.all(
   workspaces.map((workspace) =>
-    fetchConfig(workspace).then((config) => configs.set(getWorkspaceFromPath(workspace), config))
+    fetchConfig(workspace).then((config) =>
+      configs.set(getWorkspaceFromPath(workspace), config)
+    )
   )
 );
 
@@ -72,19 +82,19 @@ async function handleFile(path) {
   if (!configFile) return;
 
   try {
-    const file = readFileSync(path, { encoding: 'utf8' });
+    const file = readFileSync(path, { encoding: "utf8" });
     if (!file) return;
 
     let { code, map } = await transform(file, { configFile });
 
     const srcFileName = basename(path);
-    const distFileName = srcFileName.replace(FILE_ENDING_REGEX, '.js');
-    const distFolder = path.replace('src', 'dist').replace(srcFileName, '');
+    const distFileName = srcFileName.replace(FILE_ENDING_REGEX, ".js");
+    const distFolder = path.replace("src", "dist").replace(srcFileName, "");
 
     let files = [mkdir(distFolder, { recursive: true })];
 
     if (map) {
-      const mapFileName = distFileName + '.map';
+      const mapFileName = `${distFileName}.map`;
       code += `\n//# sourceMappingURL=${mapFileName}`;
       files.push(writeFile(join(distFolder, mapFileName), map));
     }
@@ -106,8 +116,8 @@ async function deleteFile(path) {
   const workspace = getWorkspaceFromPath(path);
 
   const srcFileName = basename(path);
-  const distFileName = srcFileName.replace(FILE_ENDING_REGEX, '.js');
-  const distPath = path.replace('src', 'dist').replace(srcFileName, distFileName);
+  const distFileName = srcFileName.replace(FILE_ENDING_REGEX, ".js");
+  const distPath = path.replace("src", "dist").replace(srcFileName, distFileName);
 
   await rm(distPath, { force: true });
 
@@ -116,16 +126,16 @@ async function deleteFile(path) {
 }
 
 const watcher = watch(
-  workspaces.map((workspace) => join(workspace, '/src/**/*')),
+  workspaces.map((workspace) => join(workspace, "/src/**/*")),
   { ignored: [/node_modules/] }
 );
 
-watcher.on('ready', () => {
+watcher.on("ready", () => {
   isReady = true;
-  logger.setContext('build-watch');
-  logger.log('Ready');
+  logger.setContext("build-watch");
+  logger.log("Ready");
 });
 
-watcher.on('change', handleFile);
-watcher.on('add', handleFile);
-watcher.on('unlink', deleteFile);
+watcher.on("change", handleFile);
+watcher.on("add", handleFile);
+watcher.on("unlink", deleteFile);

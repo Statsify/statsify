@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { APIData } from '..';
-import type { Flatten } from './flatten';
+import type { APIData } from "..";
+import type { Flatten } from "./flatten";
 
 /**
  *
@@ -21,8 +21,8 @@ export const unflatten = <T>(instance: Flatten<T>): T => {
   const obj = instance as APIData;
 
   Object.keys(obj).forEach((k) => {
-    if (k.includes('.')) {
-      const path = k.split('.');
+    if (k.includes(".")) {
+      const path = k.split(".");
       const x = path.pop();
 
       const body = path.reduce((cur, p) => {
@@ -30,7 +30,7 @@ export const unflatten = <T>(instance: Flatten<T>): T => {
         return cur[p];
       }, result);
 
-      body[x ?? ''] = obj[k];
+      body[x ?? ""] = obj[k];
     } else {
       result[k] = obj[k];
     }

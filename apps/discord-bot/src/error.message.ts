@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ERROR_COLOR } from '#constants';
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -14,8 +13,9 @@ import {
   IMessage,
   LocalizationString,
   Message,
-} from '@statsify/discord';
-import type { APIAttachment } from 'discord-api-types/v10';
+} from "@statsify/discord";
+import { ERROR_COLOR } from "#constants";
+import type { APIAttachment } from "discord-api-types/v10";
 
 interface ErrorMessageOptions {
   color?: number;

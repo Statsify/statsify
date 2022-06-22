@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ratio, sub } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
+import { APIData } from "@statsify/util";
+import { Field } from "../../../metadata";
+import { ratio, sub } from "@statsify/math";
 
 export class WoolWarsClass {
   @Field()

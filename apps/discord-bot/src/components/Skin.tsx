@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Image } from 'skia-canvas';
+import { Image } from "skia-canvas";
 
 export interface SkinProps {
   skin: Image;

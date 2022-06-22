@@ -6,12 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from '@statsify/discord';
-import { WarlordsModes, WARLORDS_MODES } from '@statsify/schemas';
-import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
-import { WarlordsProfile } from './warlords.profile';
+import {
+  BaseHypixelCommand,
+  BaseProfileProps,
+  ProfileData,
+} from "../base.hypixel-command";
+import { Command } from "@statsify/discord";
+import { WARLORDS_MODES, WarlordsModes } from "@statsify/schemas";
+import { WarlordsProfile } from "./warlords.profile";
 
-@Command({ description: (t) => t('commands.warlords') })
+@Command({ description: (t) => t("commands.warlords") })
 export class WarlordsCommand extends BaseHypixelCommand<WarlordsModes> {
   public constructor() {
     super(WARLORDS_MODES);

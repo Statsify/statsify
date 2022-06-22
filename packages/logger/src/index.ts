@@ -6,17 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { ConsoleLoggerOptions, LoggerService, LogLevel } from '@nestjs/common';
-import chalk from 'chalk';
+import chalk from "chalk";
+import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/common";
 
-export const defaultLogLevels: LogLevel[] = ['log', 'error', 'warn', 'debug', 'verbose'];
+export const defaultLogLevels: LogLevel[] = ["log", "error", "warn", "debug", "verbose"];
 
 export const logColors: Record<LogLevel, string> = {
-  debug: '#C700E7',
-  warn: '#FAB627',
-  error: '#DA4E38',
-  verbose: '#6469F5',
-  log: '#36D494',
+  debug: "#C700E7",
+  warn: "#FAB627",
+  error: "#DA4E38",
+  verbose: "#6469F5",
+  log: "#36D494",
 };
 
 /**
@@ -28,7 +28,10 @@ export class Logger implements LoggerService {
   private originalContext?: string;
   private static lastTimeStampAt?: number;
 
-  public constructor(protected context?: string, protected options: ConsoleLoggerOptions = {}) {
+  public constructor(
+    protected context?: string,
+    protected options: ConsoleLoggerOptions = {}
+  ) {
     if (!this.options.logLevels) {
       this.options.logLevels = defaultLogLevels;
     }
@@ -41,19 +44,22 @@ export class Logger implements LoggerService {
   public log(message: any, context?: string): void;
   public log(message: any, ...optionalParams: [...any, string?]): void;
   public log(message: any, ...optionalParams: any[]) {
-    if (!this.isLevelEnabled('log')) {
+    if (!this.isLevelEnabled("log")) {
       return;
     }
 
-    const { messages, context } = this.getContextAndMessages([message, ...optionalParams]);
+    const { messages, context } = this.getContextAndMessages([
+      message,
+      ...optionalParams,
+    ]);
 
-    this.printMessage(messages, context, 'log');
+    this.printMessage(messages, context, "log");
   }
 
   public error(message: any, context?: string): void;
   public error(message: any, ...optionalParams: [...any, string?]): void;
   public error(message: any, ...optionalParams: any[]) {
-    if (!this.isLevelEnabled('error')) {
+    if (!this.isLevelEnabled("error")) {
       return;
     }
 
@@ -62,43 +68,52 @@ export class Logger implements LoggerService {
       ...optionalParams,
     ]);
 
-    this.printMessage(messages, context, 'error', 'stderr', '📉');
+    this.printMessage(messages, context, "error", "stderr", "📉");
   }
 
   public warn(message: any, context?: string): void;
   public warn(message: any, ...optionalParams: [...any, string?]): void;
   public warn(message: any, ...optionalParams: any[]) {
-    if (!this.isLevelEnabled('warn')) {
+    if (!this.isLevelEnabled("warn")) {
       return;
     }
 
-    const { messages, context } = this.getContextAndMessages([message, ...optionalParams]);
+    const { messages, context } = this.getContextAndMessages([
+      message,
+      ...optionalParams,
+    ]);
 
-    this.printMessage(messages, context, 'warn');
+    this.printMessage(messages, context, "warn");
   }
 
   public debug(message: any, context?: string): void;
   public debug(message: any, ...optionalParams: [...any, string?]): void;
   public debug(message: any, ...optionalParams: any[]) {
-    if (!this.isLevelEnabled('debug')) {
+    if (!this.isLevelEnabled("debug")) {
       return;
     }
 
-    const { messages, context } = this.getContextAndMessages([message, ...optionalParams]);
+    const { messages, context } = this.getContextAndMessages([
+      message,
+      ...optionalParams,
+    ]);
 
-    this.printMessage(messages, context, 'debug');
+    this.printMessage(messages, context, "debug");
   }
 
   public verbose(message: any, context?: string): void;
   public verbose(message: any, ...optionalParams: [...any, string?]): void;
   public verbose(message: any, ...optionalParams: any[]): void {
-    if (!this.isLevelEnabled('verbose')) {
+    if (!this.isLevelEnabled("verbose")) {
       return;
     }
 
-    const { messages, context } = this.getContextAndMessages([message, ...optionalParams]);
+    const { messages, context } = this.getContextAndMessages([
+      message,
+      ...optionalParams,
+    ]);
 
-    this.printMessage(messages, context, 'verbose');
+    this.printMessage(messages, context, "verbose");
   }
 
   public setLogLevels(levels: LogLevel[]) {
@@ -122,8 +137,8 @@ export class Logger implements LoggerService {
       return { messages, context: this.context };
     }
 
-    const lastEl = messages[messages.length - 1];
-    const isContext = typeof lastEl === 'string';
+    const lastEl = messages.at(-1);
+    const isContext = typeof lastEl === "string";
 
     if (isContext) {
       return {
@@ -155,15 +170,15 @@ export class Logger implements LoggerService {
 
   private printMessage(
     messages: unknown[],
-    context = 'Default',
-    logLevel: LogLevel = 'log',
-    writeStreamType: 'stdout' | 'stderr' = 'stdout',
-    icon = '📈'
+    context = "Default",
+    logLevel: LogLevel = "log",
+    writeStreamType: "stdout" | "stderr" = "stdout",
+    icon = "📈"
   ) {
     const color = this.getColorByLogLevel(logLevel);
 
     messages.forEach((message) => {
-      const output = typeof message === 'object' ? JSON.stringify(message) : message;
+      const output = typeof message === "object" ? JSON.stringify(message) : message;
       const timeStamp = this.getTimeStamp();
 
       const computedMessage = `${chalk.bold`${icon}`} ${chalk.hex(color)(

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ElementNode } from '../jsx';
+import { ElementNode } from "../jsx";
 
 type Child<T> = [T] extends [ElementNode | ElementNode[]]
   ? ElementNode[]
@@ -14,6 +14,4 @@ type Child<T> = [T] extends [ElementNode | ElementNode[]]
   ? T
   : [T];
 
-export const useChildren = <T>(children: T): Child<T> => {
-  return children as any;
-};
+export const useChildren = <T>(children: T): Child<T> => children as any;

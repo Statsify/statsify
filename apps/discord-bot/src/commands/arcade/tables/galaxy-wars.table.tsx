@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Table } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { GalaxyWars } from '@statsify/schemas';
+import { GalaxyWars } from "@statsify/schemas";
+import { LocalizeFunction } from "@statsify/discord";
+import { Table } from "#components";
 
 interface GalaxyWarsTableProps {
   stats: GalaxyWars;
@@ -18,14 +18,14 @@ interface GalaxyWarsTableProps {
 export const GalaxyWarsTable = ({ stats, t }: GalaxyWarsTableProps) => (
   <Table.table>
     <Table.tr>
-      <Table.td title={t('stats.wins')} value={t(stats.wins)} color="§a" />
-      <Table.td title={t('stats.rebelKills')} value={t(stats.rebelKills)} color="§c" />
-      <Table.td title={t('stats.empireKills')} value={t(stats.empireKills)} color="§6" />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+      <Table.td title={t("stats.rebelKills")} value={t(stats.rebelKills)} color="§c" />
+      <Table.td title={t("stats.empireKills")} value={t(stats.empireKills)} color="§6" />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t('stats.kills')} value={t(stats.kills)} color="§a" />
-      <Table.td title={t('stats.deaths')} value={t(stats.deaths)} color="§c" />
-      <Table.td title={t('stats.kdr')} value={t(stats.kdr)} color="§6" />
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
     </Table.tr>
   </Table.table>
 );

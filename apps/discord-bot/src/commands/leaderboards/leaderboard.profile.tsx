@@ -6,23 +6,36 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, If, List } from '#components';
-import { LocalizeFunction } from '@statsify/discord';
-import { UserTier } from '@statsify/schemas';
-import { prettify } from '@statsify/util';
-import type { Image } from 'skia-canvas';
+import { Container, Footer, If, List } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { UserTier } from "@statsify/schemas";
+import { prettify } from "@statsify/util";
+import type { Image } from "skia-canvas";
 
 const formatPosition = (t: LocalizeFunction, position: number): string => {
-  let color = '§f';
+  let color = "§f";
 
-  if (position === 1) color = '§#ffd700';
-  else if (position === 2) color = '§#c0c0c0';
-  else if (position === 3) color = '§#cd7f32';
+  switch (position) {
+    case 1: {
+      color = "§#ffd700";
+      break;
+    }
+    case 2: {
+      color = "§#c0c0c0";
+      break;
+    }
+    case 3:
+      {
+        color = "§#cd7f32";
+        // No default
+      }
+      break;
+  }
 
   return `${color}#§l${t(position)}`;
 };
 
-export type LeaderboardType = 'player' | 'guild';
+export type LeaderboardType = "player" | "guild";
 
 export interface LeaderboardData {
   fields: (number | string)[];
@@ -53,9 +66,9 @@ export const LeaderboardProfile = ({
   t,
   type,
 }: LeaderboardProfileProps) => {
-  const titles = ['Pos', prettify(type), ...fields].map((field, index) => (
+  const titles = ["Pos", prettify(type), ...fields].map((field, index) => (
     <box
-      width={index === 1 ? 'remaining' : '100%'}
+      width={index === 1 ? "remaining" : "100%"}
       border={{ topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }}
     >
       <text>§l{field}</text>
@@ -64,7 +77,7 @@ export const LeaderboardProfile = ({
 
   const items = data.map((d) => {
     const highlight = d.highlight
-      ? { color: 'rgba(255, 255, 255, 0.35)', shadowOpacity: 0.3 }
+      ? { color: "rgba(255, 255, 255, 0.35)", shadowOpacity: 0.3 }
       : undefined;
 
     return (
@@ -85,7 +98,7 @@ export const LeaderboardProfile = ({
           </box>
         </div>
         {d.fields.map((field) => {
-          const formatted = typeof field === 'number' ? t(field) : field;
+          const formatted = typeof field === "number" ? t(field) : field;
 
           return (
             <box width="100%" {...highlight}>

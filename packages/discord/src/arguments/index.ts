@@ -6,4 +6,4 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from './abstract.argument';
+export * from "./abstract.argument";

@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from '@nestjs/swagger';
-import { Guild, LeaderboardScanner } from '@statsify/schemas';
-import { Transform } from 'class-transformer';
+import { ApiProperty } from "@nestjs/swagger";
+import { Guild, LeaderboardScanner } from "@statsify/schemas";
 import {
   IsEnum,
   IsInt,
@@ -18,7 +17,8 @@ import {
   MaxLength,
   Min,
   MinLength,
-} from 'class-validator';
+} from "class-validator";
+import { Transform } from "class-transformer";
 
 const fields = LeaderboardScanner.getLeaderboardFields(Guild);
 

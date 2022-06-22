@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from '@statsify/util';
-import { Field } from '../metadata';
+import { APIData } from "@statsify/util";
+import { Field } from "../metadata";
 
 const limit = 50_000;
 
@@ -18,10 +18,10 @@ export class GuildAchievements {
   @Field({ leaderboard: { enabled: false } })
   public maxOnlinePlayerCount: number;
 
-  @Field({ leaderboard: { name: 'Daily Guild Wins', fieldName: 'Wins', limit } })
+  @Field({ leaderboard: { name: "Daily Guild Wins", fieldName: "Wins", limit } })
   public dailyGuildWins: number;
 
-  @Field({ leaderboard: { name: 'Daily GEXP', fieldName: 'GEXP', limit } })
+  @Field({ leaderboard: { name: "Daily GEXP", fieldName: "GEXP", limit } })
   public dailyGexp: number;
 
   public constructor(data: APIData) {

@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { flatten } from '@statsify/util';
-import { Field } from '../src/metadata';
-import { deserialize } from '../src/metadata/deserialize';
+import { Field } from "../src/metadata";
+import { deserialize } from "../src/metadata/deserialize";
+import { flatten } from "@statsify/util";
 
-describe('deserialize', () => {
+describe("deserialize", () => {
   class TesterB {
     @Field()
     public field1: number;
@@ -33,18 +33,18 @@ describe('deserialize', () => {
     public field5: TesterB;
 
     public constructor() {
-      this.field1 = 'field1';
+      this.field1 = "field1";
       this.field2 = 0;
       this.field3 = 3;
       this.field5 = new TesterB();
     }
   }
 
-  it('should correctly add fields', () => {
+  it("should correctly add fields", () => {
     const result = deserialize(Tester, flatten(new Tester()));
 
     expect(result).toEqual({
-      field1: 'field1',
+      field1: "field1",
       field2: 0,
       field3: 3,
       field4: 0,

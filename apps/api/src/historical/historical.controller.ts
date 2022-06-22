@@ -6,25 +6,30 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Controller, Delete, Get, Query } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
+import { Auth, AuthRole } from "../auth";
+import { Controller, Delete, Get, Query } from "@nestjs/common";
 import {
   ErrorResponse,
   GetHistoricalResponse,
   GetPlayerResponse,
   HistoricalType,
-} from '@statsify/api-client';
-import { Auth, AuthRole } from '../auth';
-import { HistoricalDto } from '../dtos/historical.dto';
-import { PlayerDto } from '../dtos/player.dto';
-import { HistoricalService } from './historical.service';
+} from "@statsify/api-client";
+import { HistoricalDto } from "../dtos/historical.dto";
+import { HistoricalService } from "./historical.service";
+import { PlayerDto } from "../dtos/player.dto";
 
-@Controller('/historical')
-@ApiTags('Historical')
+@Controller("/historical")
+@ApiTags("Historical")
 export class HistoricalController {
   public constructor(private readonly historicalService: HistoricalService) {}
 
-  @ApiOperation({ summary: 'Get the Historical stats of a Player' })
+  @ApiOperation({ summary: "Get the Historical stats of a Player" })
   @ApiOkResponse({ type: GetHistoricalResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Get()
@@ -38,7 +43,7 @@ export class HistoricalController {
     };
   }
 
-  @ApiOperation({ summary: 'Reset the Historical stats of a Player' })
+  @ApiOperation({ summary: "Reset the Historical stats of a Player" })
   @ApiOkResponse({ type: GetPlayerResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Delete()

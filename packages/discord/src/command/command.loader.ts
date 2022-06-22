@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Logger } from '@statsify/logger';
-import { statSync } from 'fs';
-import { readdir } from 'fs/promises';
-import { Container } from 'typedi';
-import { CommandBuilder } from './command.builder';
-import type { CommandResolvable } from './command.resolvable';
+import { CommandBuilder } from "./command.builder";
+import { Container } from "typedi";
+import { Logger } from "@statsify/logger";
+import { readdir } from "node:fs/promises";
+import { statSync } from "node:fs";
+import type { CommandResolvable } from "./command.resolvable";
 
 export class CommandLoader {
-  private static readonly logger = new Logger('CommandLoader');
+  private static readonly logger = new Logger("CommandLoader");
 
   public static async load(dir: string) {
     const commands = new Map<string, CommandResolvable>();
@@ -36,7 +36,7 @@ export class CommandLoader {
     const command = await import(file);
 
     return Object.keys(command)
-      .filter((key) => key !== 'default')
+      .filter((key) => key !== "default")
       .map((key) => {
         try {
           const constructor = command[key];
@@ -61,7 +61,7 @@ export class CommandLoader {
 
         if (statSync(path).isDirectory()) {
           toLoad.push(...(await this.getCommandFiles(path)));
-        } else if (file.endsWith('.command.js')) {
+        } else if (file.endsWith(".command.js")) {
           toLoad.push(path);
         }
       })

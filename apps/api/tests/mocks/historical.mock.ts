@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Player } from '@statsify/schemas';
-import { HistoricalService } from '../../src/historical';
-import { MockClass } from './mock.type';
+import { HistoricalService } from "../../src/historical";
+import { MockClass } from "./mock.type";
+import { Player } from "@statsify/schemas";
 
 export const historicalService: MockClass<HistoricalService> = {
   resetPlayers: jest.fn(),

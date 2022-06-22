@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Friends, Gamecounts, Guild, Player, Status, Watchdog } from '@statsify/schemas';
-import { HypixelService } from '../../src/hypixel';
-import { MockClass } from './mock.type';
+import { Friends, Gamecounts, Guild, Player, Status, Watchdog } from "@statsify/schemas";
+import { HypixelService } from "../../src/hypixel";
+import { MockClass } from "./mock.type";
 
 export const hypixelService: MockClass<HypixelService> = {
   shouldCache: HypixelService.prototype.shouldCache,

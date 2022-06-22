@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HistoricalType } from '@statsify/api-client';
-import { prettify } from '@statsify/util';
-import { DateTime } from 'luxon';
+import { DateTime } from "luxon";
+import { HistoricalType } from "@statsify/api-client";
+import { prettify } from "@statsify/util";
 
 interface HistoricalHeaderProps {
   skin: JSX.Element;
@@ -17,7 +17,12 @@ interface HistoricalHeaderProps {
   title: string;
 }
 
-export const HistoricalHeader = ({ skin, nameTag, title, time }: HistoricalHeaderProps) => {
+export const HistoricalHeader = ({
+  skin,
+  nameTag,
+  title,
+  time,
+}: HistoricalHeaderProps) => {
   const now = DateTime.now();
   let start: DateTime;
   let end: DateTime;
@@ -56,7 +61,7 @@ export const HistoricalHeader = ({ skin, nameTag, title, time }: HistoricalHeade
         {nameTag}
         <box width="100%">
           <text>
-            {start.toFormat('MM/dd/yy')} - {end.toFormat('MM/dd/yy')}
+            {start.toFormat("MM/dd/yy")} - {end.toFormat("MM/dd/yy")}
           </text>
         </box>
         <div width="100%">

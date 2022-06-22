@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { add } from '@statsify/math';
-import { APIData } from '@statsify/util';
-import { Field } from '../../../metadata';
-import { Deathmatch, Defusal, GunGame } from './mode';
+import { APIData } from "@statsify/util";
+import { Deathmatch, Defusal, GunGame } from "./mode";
+import { Field } from "../../../metadata";
+import { add } from "@statsify/math";
 
-export const COPS_AND_CRIMS_MODES = ['defusal', 'deathmatch', 'gunGame'] as const;
+export const COPS_AND_CRIMS_MODES = ["defusal", "deathmatch", "gunGame"] as const;
 export type CopsAndCrimsModes = typeof COPS_AND_CRIMS_MODES;
 
 export class CopsAndCrims {
@@ -41,4 +41,4 @@ export class CopsAndCrims {
   }
 }
 
-export * from './mode';
+export * from "./mode";

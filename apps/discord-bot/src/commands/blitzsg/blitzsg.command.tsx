@@ -6,12 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from '@statsify/discord';
-import { BlitzSGKit, BlitzSGModes, BLITZSG_MODES, Player } from '@statsify/schemas';
-import { BaseHypixelCommand, BaseProfileProps, ProfileData } from '../base.hypixel-command';
-import { BlitzSGProfile } from './blitzsg.profile';
+import { BLITZSG_MODES, BlitzSGKit, BlitzSGModes, Player } from "@statsify/schemas";
+import {
+  BaseHypixelCommand,
+  BaseProfileProps,
+  ProfileData,
+} from "../base.hypixel-command";
+import { BlitzSGProfile } from "./blitzsg.profile";
+import { Command } from "@statsify/discord";
 
-@Command({ description: (t) => t('commands.blitzsg') })
+@Command({ description: (t) => t("commands.blitzsg") })
 export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
   public constructor() {
     super(BLITZSG_MODES);
@@ -24,7 +28,7 @@ export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
       .sort((a, b) => (blitzsg[b] as BlitzSGKit).exp - (blitzsg[a] as BlitzSGKit).exp)
       .splice(0, 24);
 
-    return ['overall', ...kits];
+    return ["overall", ...kits];
   }
 
   public getProfile(

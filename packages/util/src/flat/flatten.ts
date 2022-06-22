@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, isObject } from '..';
+import { APIData, isObject } from "..";
 
 export type Flatten<T> = Record<string | keyof T, any>;
 
@@ -20,10 +20,10 @@ export type Flatten<T> = Record<string | keyof T, any>;
  * flatten({ a: { b: 1, c: 2 }, d: 3 }); // { 'a.b': 1, 'a.c': 2, 'd': 3 }
  * ```
  */
-export const flatten = <T>(data: T, prefix = '', dest: APIData = {}): Flatten<T> => {
+export const flatten = <T>(data: T, prefix = "", dest: APIData = {}): Flatten<T> => {
   if (isObject(data)) {
     Object.keys(data ?? {}).forEach((key) => {
-      const tmpPrefix = prefix.length > 0 ? prefix + '.' + key : prefix + key;
+      const tmpPrefix = prefix.length > 0 ? `${prefix}.${key}` : prefix + key;
       flatten(data[key as keyof T], tmpPrefix, dest);
     });
   } else {

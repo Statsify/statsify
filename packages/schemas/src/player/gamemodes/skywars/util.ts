@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Color } from '../../../color';
+import { Color } from "../../../color";
 export const getLevel = (xp: number): number => {
   const totalXp = [0, 2, 7, 15, 25, 50, 100, 200, 350, 600, 1000, 1500];
-  if (xp >= 15000) return Math.floor((xp - 15000) / 10000 + 12);
+  if (xp >= 15_000) return Math.floor((xp - 15_000) / 10_000 + 12);
 
   const level = totalXp.findIndex((x) => x * 10 - xp > 0);
   return level;
@@ -20,30 +20,30 @@ export const getLevelProgress = (xp: number): { current: number; total: number }
   const xpToNextLvl = [0, 2, 5, 8, 10, 25, 50, 100, 150, 250, 400, 500]; // * 10
   let currentLevelXp = xp;
 
-  if (xp >= 15000) {
-    currentLevelXp -= 15000;
+  if (xp >= 15_000) {
+    currentLevelXp -= 15_000;
     if (currentLevelXp === 0)
       return {
         current: 0,
-        total: 10000,
+        total: 10_000,
       };
-    if (currentLevelXp > 10000) {
+    if (currentLevelXp > 10_000) {
       do {
-        currentLevelXp -= 10000;
-      } while (currentLevelXp >= 10000);
+        currentLevelXp -= 10_000;
+      } while (currentLevelXp >= 10_000);
     }
 
     return {
       current: currentLevelXp,
-      total: 10000,
+      total: 10_000,
     };
   }
 
   const totalXptoNextLevel = xpToNextLvl[totalXp.findIndex((x) => x * 10 - xp > 0)] * 10;
 
-  for (let i = 0; i < xpToNextLvl.length; i++) {
-    if (currentLevelXp - xpToNextLvl[i] * 10 < 0) break;
-    currentLevelXp -= xpToNextLvl[i] * 10;
+  for (const element of xpToNextLvl) {
+    if (currentLevelXp - element * 10 < 0) break;
+    currentLevelXp -= element * 10;
   }
 
   return {
@@ -68,9 +68,9 @@ export const getFormattedLevel = (level: number, star: string) => {
     {
       req: 50,
       fn: (n: number, m: string) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         if (m.length > 1) {
-          const stars = m.toString().split('');
+          const stars = [...m.toString()];
           return `§c[§6${nums[0]}§e${nums[1]}§b${stars[0]}§a${stars[1]}§d${stars[2]}§5]`;
         } else {
           return `§c[§6${nums[0]}§e${nums[1]}§b${m}§a]`;
@@ -80,9 +80,9 @@ export const getFormattedLevel = (level: number, star: string) => {
     {
       req: 100,
       fn: (n: number, m: string) => {
-        const nums = n.toString().split('');
+        const nums = [...n.toString()];
         if (m.length > 1) {
-          const stars = m.toString().split('');
+          const stars = [...m.toString()];
           return `§c[§l§6${nums[0]}§e${nums[1]}§a${nums[2]}§b${stars[0]}§d${stars[1]}§5${stars[2]}§r§c]`;
         } else {
           return `§c[§l§6${nums[0]}§e${nums[1]}§a${nums[2]}§b${m}§r§d]`;
@@ -100,29 +100,33 @@ export const getFormattedLevel = (level: number, star: string) => {
 
 export const getPresColor = (star: number): Color => {
   const colors = [
-    { level: 0, color: new Color('GRAY') },
-    { level: 5, color: new Color('WHITE') },
-    { level: 10, color: new Color('GOLD') },
-    { level: 15, color: new Color('AQUA') },
-    { level: 20, color: new Color('DARK_GREEN') },
-    { level: 25, color: new Color('DARK_AQUA') },
-    { level: 30, color: new Color('DARK_RED') },
-    { level: 35, color: new Color('LIGHT_PURPLE') },
-    { level: 40, color: new Color('BLUE') },
-    { level: 45, color: new Color('DARK_PURPLE') },
-    { level: 50, color: new Color('RED') },
+    { level: 0, color: new Color("GRAY") },
+    { level: 5, color: new Color("WHITE") },
+    { level: 10, color: new Color("GOLD") },
+    { level: 15, color: new Color("AQUA") },
+    { level: 20, color: new Color("DARK_GREEN") },
+    { level: 25, color: new Color("DARK_AQUA") },
+    { level: 30, color: new Color("DARK_RED") },
+    { level: 35, color: new Color("LIGHT_PURPLE") },
+    { level: 40, color: new Color("BLUE") },
+    { level: 45, color: new Color("DARK_PURPLE") },
+    { level: 50, color: new Color("RED") },
   ];
 
   const index = colors.findIndex(
     ({ level }, index, arr) =>
-      star >= level && ((arr[index + 1] && star < arr[index + 1].level) || !arr[index + 1])
+      star >= level &&
+      ((arr[index + 1] && star < arr[index + 1].level) || !arr[index + 1])
   );
 
   return colors[index == -1 ? 0 : index].color;
 };
 
-export const parseKit = (kit = 'default'): string => {
-  return kit
-    .substring(kit.lastIndexOf('solo_') !== -1 ? kit.lastIndexOf('solo_') + 5 : 0)
-    .substring(kit.lastIndexOf('team_') !== -1 ? kit.lastIndexOf('team_') + 5 : 0);
-};
+export const parseKit = (kit = "default"): string =>
+  kit
+    .slice(
+      Math.max(0, kit.lastIndexOf("solo_") !== -1 ? kit.lastIndexOf("solo_") + 5 : 0)
+    )
+    .slice(
+      Math.max(0, kit.lastIndexOf("team_") !== -1 ? kit.lastIndexOf("team_") + 5 : 0)
+    );

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Multiline } from '../Multiline';
+import { Multiline } from "../Multiline";
 
 export interface HeaderBodyProps {
   description?: string;

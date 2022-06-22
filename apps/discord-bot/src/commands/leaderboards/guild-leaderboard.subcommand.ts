@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { GuildLeaderboardArgument } from '#arguments';
-import { ApiService } from '#services';
-import { getBackground } from '@statsify/assets';
-import { CommandContext, SubCommand } from '@statsify/discord';
-import { BaseLeaderboardCommand } from './base.leaderboard-command';
+import { ApiService } from "#services";
+import { BaseLeaderboardCommand } from "./base.leaderboard-command";
+import { CommandContext, SubCommand } from "@statsify/discord";
+import { GuildLeaderboardArgument } from "#arguments";
+import { getBackground } from "@statsify/assets";
 
 export class GuildLeaderboardSubCommand extends BaseLeaderboardCommand {
   public constructor(protected readonly apiService: ApiService) {
@@ -18,21 +18,21 @@ export class GuildLeaderboardSubCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t('commands.guild-leaderboard'),
+    description: (t) => t("commands.guild-leaderboard"),
     args: [GuildLeaderboardArgument],
   })
   public async leaderboard(context: CommandContext) {
-    const leaderboard = context.option<string>('leaderboard');
+    const leaderboard = context.option<string>("leaderboard");
 
-    const field = leaderboard.replace(/ /g, '.');
-    const background = await getBackground('hypixel', 'overall');
+    const field = leaderboard.replaceAll(" ", ".");
+    const background = await getBackground("hypixel", "overall");
 
     return this.createLeaderboard({
       context,
       background,
       field,
       getLeaderboard: this.apiService.getGuildLeaderboard.bind(this.apiService),
-      type: 'guild',
+      type: "guild",
     });
   }
 }

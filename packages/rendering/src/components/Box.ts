@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { parseColor, RGBA } from '../colors';
-import type * as JSX from '../jsx';
+import { RGBA, parseColor } from "../colors";
+import type * as JSX from "../jsx";
 
 export interface BoxBorderRadius {
   topLeft: number;
@@ -25,7 +25,7 @@ export interface BoxRenderProps {
   outlineSize: number;
 }
 
-export interface BoxProps extends Omit<Partial<BoxRenderProps>, 'color' | 'outline'> {
+export interface BoxProps extends Omit<Partial<BoxRenderProps>, "color" | "outline"> {
   width?: JSX.Measurement;
   height?: JSX.Measurement;
   padding?: JSX.Spacing;
@@ -43,11 +43,11 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   height,
   margin = 4,
   padding = { left: 8, right: 8 },
-  location = 'center',
-  direction = 'row',
-  align = 'left',
+  location = "center",
+  direction = "row",
+  align = "left",
   border = { topLeft: 4, topRight: 4, bottomLeft: 4, bottomRight: 4 },
-  color = 'rgba(0, 0, 0, 0.5)',
+  color = "rgba(0, 0, 0, 0.5)",
   shadowDistance = 4,
   shadowOpacity = 0.42,
   outlineSize = 4,
@@ -83,7 +83,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   { color, border, shadowDistance, shadowOpacity, outline, outlineSize },
   { x, y, width, height, padding }
 ) => {
-  ctx.fillStyle = `rgba(${color.join(', ')})`;
+  ctx.fillStyle = `rgba(${color.join(", ")})`;
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -112,7 +112,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.closePath();
   ctx.fill();
 
-  ctx.globalCompositeOperation = 'overlay';
+  ctx.globalCompositeOperation = "overlay";
 
   const overlay = ctx.createLinearGradient(x, y, x, y + height);
   overlay.addColorStop(0, `rgba(255, 255, 255, 0.15)`);
@@ -121,10 +121,10 @@ export const render: JSX.Render<BoxRenderProps> = (
 
   ctx.fill();
 
-  ctx.globalCompositeOperation = 'source-over';
+  ctx.globalCompositeOperation = "source-over";
 
   if (outline) {
-    ctx.strokeStyle = `rgba(${outline.join(', ')})`;
+    ctx.strokeStyle = `rgba(${outline.join(", ")})`;
     ctx.lineWidth = outlineSize;
     ctx.stroke();
   }
@@ -132,12 +132,15 @@ export const render: JSX.Render<BoxRenderProps> = (
   if (!shadowDistance) return;
 
   color[3] = shadowOpacity;
-  ctx.fillStyle = `rgba(${color.join(', ')})`;
+  ctx.fillStyle = `rgba(${color.join(", ")})`;
 
   ctx.beginPath();
   ctx.moveTo(x + width, y + shadowDistance + border.topRight);
   ctx.lineTo(x + width + shadowDistance, y + shadowDistance + border.topRight);
-  ctx.lineTo(x + width + shadowDistance, y + height - border.bottomRight + shadowDistance);
+  ctx.lineTo(
+    x + width + shadowDistance,
+    y + height - border.bottomRight + shadowDistance
+  );
   ctx.lineTo(x + width, y + height - border.bottomRight + shadowDistance);
   ctx.closePath();
   ctx.fill();
@@ -149,7 +152,10 @@ export const render: JSX.Render<BoxRenderProps> = (
     x + width + shadowDistance - (border.bottomRight || shadowDistance),
     y + height + shadowDistance
   );
-  ctx.lineTo(x + width + shadowDistance - (border.bottomRight || shadowDistance), y + height);
+  ctx.lineTo(
+    x + width + shadowDistance - (border.bottomRight || shadowDistance),
+    y + height
+  );
   ctx.closePath();
   ctx.fill();
 

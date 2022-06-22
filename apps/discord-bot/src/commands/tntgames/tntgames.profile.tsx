@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { FormattedGame } from '@statsify/schemas';
-import { formatTime } from '@statsify/util';
-import { BaseProfileProps } from '../base.hypixel-command';
+import { BaseProfileProps } from "../base.hypixel-command";
+import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { FormattedGame } from "@statsify/schemas";
+import { formatTime } from "@statsify/util";
 
 interface TNTGamesModeColumnProps {
   title: string;
@@ -17,7 +17,7 @@ interface TNTGamesModeColumnProps {
 }
 
 const TNTGamesModeColumn = ({ title, stats }: TNTGamesModeColumnProps) => {
-  const colors = ['§a', '§c', '§6'];
+  const colors = ["§a", "§c", "§6"];
 
   return (
     <Table.ts title={`§6${title}`}>
@@ -41,9 +41,9 @@ export const TNTGamesProfile = ({
   const { tntgames } = player.stats;
 
   const sidebar: SidebarItem[] = [
-    [t('stats.coins'), t(tntgames.coins), '§6'],
-    [t('stats.wins'), t(tntgames.wins), '§e'],
-    [t('stats.blocksRan'), t(tntgames.blocksRan), '§7'],
+    [t("stats.coins"), t(tntgames.coins), "§6"],
+    [t("stats.wins"), t(tntgames.wins), "§e"],
+    [t("stats.blocksRan"), t(tntgames.blocksRan), "§7"],
   ];
 
   return (
@@ -61,41 +61,41 @@ export const TNTGamesProfile = ({
           <TNTGamesModeColumn
             title="PVP Run"
             stats={[
-              [t('stats.wins'), t(tntgames.pvpRun.wins)],
-              [t('stats.kills'), t(tntgames.pvpRun.kills)],
-              [t('stats.wlr'), t(tntgames.pvpRun.wlr)],
+              [t("stats.wins"), t(tntgames.pvpRun.wins)],
+              [t("stats.kills"), t(tntgames.pvpRun.kills)],
+              [t("stats.wlr"), t(tntgames.pvpRun.wlr)],
             ]}
           />
           <TNTGamesModeColumn
             title="TNT Run"
             stats={[
-              [t('stats.wins'), t(tntgames.tntRun.wins)],
-              [t('stats.wlr'), t(tntgames.tntRun.wlr)],
-              [t('stats.bestTime'), formatTime(tntgames.tntRun.record)],
+              [t("stats.wins"), t(tntgames.tntRun.wins)],
+              [t("stats.wlr"), t(tntgames.tntRun.wlr)],
+              [t("stats.bestTime"), formatTime(tntgames.tntRun.record)],
             ]}
           />
           <TNTGamesModeColumn
             title="Wizards"
             stats={[
-              [t('stats.wins'), t(tntgames.wizards.wins)],
-              [t('stats.kills'), t(tntgames.wizards.kills)],
-              [t('stats.kdr'), t(tntgames.wizards.kdr)],
+              [t("stats.wins"), t(tntgames.wizards.wins)],
+              [t("stats.kills"), t(tntgames.wizards.kills)],
+              [t("stats.kdr"), t(tntgames.wizards.kdr)],
             ]}
           />
           <TNTGamesModeColumn
             title="TNT Tag"
             stats={[
-              [t('stats.wins'), t(tntgames.tntTag.wins)],
-              [t('stats.kills'), t(tntgames.tntTag.kills)],
-              [t('stats.tags'), t(tntgames.tntTag.tags)],
+              [t("stats.wins"), t(tntgames.tntTag.wins)],
+              [t("stats.kills"), t(tntgames.tntTag.kills)],
+              [t("stats.tags"), t(tntgames.tntTag.tags)],
             ]}
           />
           <TNTGamesModeColumn
             title="Bow Spleef"
             stats={[
-              [t('stats.wins'), t(tntgames.bowSpleef.wins)],
-              [t('stats.hits'), t(tntgames.bowSpleef.hits)],
-              [t('stats.wlr'), t(tntgames.bowSpleef.wlr)],
+              [t("stats.wins"), t(tntgames.bowSpleef.wins)],
+              [t("stats.hits"), t(tntgames.bowSpleef.hits)],
+              [t("stats.wlr"), t(tntgames.bowSpleef.wlr)],
             ]}
           />
         </Table.tr>

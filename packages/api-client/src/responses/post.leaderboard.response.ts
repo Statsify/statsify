@@ -6,13 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class LeaderboardItem {
   @ApiProperty()
   public id: string;
 
-  @ApiProperty({ type: [Number], description: 'The leaderboard fields returned', isArray: true })
+  @ApiProperty({
+    type: [Number],
+    description: "The leaderboard fields returned",
+    isArray: true,
+  })
   public fields: number[];
 
   @ApiProperty({
@@ -24,12 +28,18 @@ export class LeaderboardItem {
   @ApiProperty()
   public position: number;
 
-  @ApiProperty({ required: false, description: 'Whether the player was the searched for player' })
+  @ApiProperty({
+    required: false,
+    description: "Whether the player was the searched for player",
+  })
   public highlight?: boolean;
 }
 
 export class PostLeaderboardResponse {
-  @ApiProperty({ type: [String], description: 'The name of the requested leaderboard fields' })
+  @ApiProperty({
+    type: [String],
+    description: "The name of the requested leaderboard fields",
+  })
   public fields: string[];
 
   @ApiProperty({ type: [LeaderboardItem] })

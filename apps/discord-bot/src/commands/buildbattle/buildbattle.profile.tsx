@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from '#components';
-import { FormattedGame } from '@statsify/schemas';
-import { BaseProfileProps } from '../base.hypixel-command';
+import { BaseProfileProps } from "../base.hypixel-command";
+import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { FormattedGame } from "@statsify/schemas";
 
 interface BuildBattleModeTableProps {
   title: string;
@@ -16,8 +16,12 @@ interface BuildBattleModeTableProps {
   width?: JSX.Measurement;
 }
 
-const BuildBattleModeTable = ({ title, stats, width = 'remaining' }: BuildBattleModeTableProps) => {
-  const colors = ['§a', '§6'];
+const BuildBattleModeTable = ({
+  title,
+  stats,
+  width = "remaining",
+}: BuildBattleModeTableProps) => {
+  const colors = ["§a", "§6"];
 
   return (
     <Table.table width={width}>
@@ -45,10 +49,10 @@ export const BuildBattleProfile = ({
   const { buildbattle } = player.stats;
 
   const sidebar: SidebarItem[] = [
-    [t('stats.coins'), t(buildbattle.coins), '§6'],
-    [t('stats.score'), t(buildbattle.score), '§a'],
-    [t('stats.votes'), t(buildbattle.votes), '§c'],
-    [t('stats.superVotes'), t(buildbattle.superVotes), '§b'],
+    [t("stats.coins"), t(buildbattle.coins), "§6"],
+    [t("stats.score"), t(buildbattle.score), "§a"],
+    [t("stats.votes"), t(buildbattle.votes), "§c"],
+    [t("stats.superVotes"), t(buildbattle.superVotes), "§b"],
   ];
 
   return (
@@ -65,31 +69,37 @@ export const BuildBattleProfile = ({
       <div width="100%">
         <BuildBattleModeTable
           title="Overall"
-          stats={[[t('stats.wins'), t(buildbattle.overall.wins)]]}
+          stats={[[t("stats.wins"), t(buildbattle.overall.wins)]]}
         />
-        <BuildBattleModeTable title="Pro" stats={[[t('stats.wins'), t(buildbattle.pro.wins)]]} />
-        <BuildBattleModeTable title="1.14" stats={[[t('stats.wins'), t(buildbattle.latestWins)]]} />
+        <BuildBattleModeTable
+          title="Pro"
+          stats={[[t("stats.wins"), t(buildbattle.pro.wins)]]}
+        />
+        <BuildBattleModeTable
+          title="1.14"
+          stats={[[t("stats.wins"), t(buildbattle.latestWins)]]}
+        />
       </div>
       <div width="100%">
         <BuildBattleModeTable
           title="Solo"
           stats={[
-            [t('stats.wins'), t(buildbattle.solo.wins)],
-            [t('stats.maxPoints'), t(buildbattle.solo.maxPoints)],
+            [t("stats.wins"), t(buildbattle.solo.wins)],
+            [t("stats.maxPoints"), t(buildbattle.solo.maxPoints)],
           ]}
         />
         <BuildBattleModeTable
           title="Teams"
           stats={[
-            [t('stats.wins'), t(buildbattle.teams.wins)],
-            [t('stats.maxPoints'), t(buildbattle.teams.maxPoints)],
+            [t("stats.wins"), t(buildbattle.teams.wins)],
+            [t("stats.maxPoints"), t(buildbattle.teams.maxPoints)],
           ]}
         />
         <BuildBattleModeTable
           title="GTB"
           stats={[
-            [t('stats.wins'), t(buildbattle.guessTheBuild.wins)],
-            [t('stats.correctGuesses'), t(buildbattle.guessTheBuild.correctGuesses)],
+            [t("stats.wins"), t(buildbattle.guessTheBuild.wins)],
+            [t("stats.correctGuesses"), t(buildbattle.guessTheBuild.correctGuesses)],
           ]}
         />
       </div>

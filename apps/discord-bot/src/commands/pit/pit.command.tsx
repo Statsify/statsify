@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { PlayerArgument } from '#arguments';
-import { ApiService, PaginateService, PitPandaService } from '#services';
-import { getBackground, getLogo } from '@statsify/assets';
-import { Command, CommandContext } from '@statsify/discord';
-import { render } from '@statsify/rendering';
-import { getTheme } from '../../themes';
-import { PitProfile } from './pit.profile';
+import { ApiService, PaginateService, PitPandaService } from "#services";
+import { Command, CommandContext } from "@statsify/discord";
+import { PitProfile } from "./pit.profile";
+import { PlayerArgument } from "#arguments";
+import { getBackground, getLogo } from "@statsify/assets";
+import { getTheme } from "../../themes";
+import { render } from "@statsify/rendering";
 
-@Command({ description: (t) => t('commands.pit'), args: [PlayerArgument] })
+@Command({ description: (t) => t("commands.pit"), args: [PlayerArgument] })
 export class PitCommand {
   public constructor(
     private readonly pitPandaService: PitPandaService,
@@ -26,13 +26,13 @@ export class PitCommand {
     const user = context.getUser();
     const t = context.t();
 
-    const player = await this.pitPandaService.getPlayer(context.option<string>('player'));
+    const player = await this.pitPandaService.getPlayer(context.option<string>("player"));
 
     const [skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
       getLogo(user?.tier),
-      getBackground('bedwars', 'overall'),
+      getBackground("bedwars", "overall"),
     ]);
 
     const canvas = render(
@@ -50,7 +50,7 @@ export class PitCommand {
 
     return this.paginateService.paginate(context, [
       {
-        label: 'Overall',
+        label: "Overall",
         generator: () => canvas,
       },
     ]);

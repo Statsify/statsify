@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { Canvas, Image as _Image } from 'skia-canvas';
-import type * as JSX from '../jsx';
+import type * as JSX from "../jsx";
+import type { Canvas, Image as _Image } from "skia-canvas";
 
 type CanvasImage = _Image | Canvas;
 
 type ImageCropLocation = [sx: number, sy: number, sw: number, sh: number];
-type ImageCrop = 'none' | 'resize' | 'height-crop' | ImageCropLocation;
+type ImageCrop = "none" | "resize" | "height-crop" | ImageCropLocation;
 
 export interface ImageRenderProps {
   image: CanvasImage;
@@ -33,13 +33,13 @@ export const component: JSX.RawFC<ImageProps> = ({
   crop,
   children,
 }) => ({
-  name: 'Image',
+  name: "Image",
   dimension: {
     width,
     height,
     margin,
   },
-  style: { location: 'center', direction: 'row', align: 'center' },
+  style: { location: "center", direction: "row", align: "center" },
   props: { image, crop },
   children,
 });
@@ -49,12 +49,12 @@ export const render: JSX.Render<ImageRenderProps> = (
   { image, crop },
   { x, y, width, height }
 ) => {
-  if (!crop || crop === 'none') {
+  if (!crop || crop === "none") {
     crop = [0, 0, image.width, image.height];
-  } else if (crop === 'height-crop') {
+  } else if (crop === "height-crop") {
     const scale = image.width / width;
     crop = [0, 0, image.width, Math.round(height * scale)];
-  } else if (crop === 'resize') {
+  } else if (crop === "resize") {
     const newAspectRatio = width / height;
 
     let resizeWidth = image.width;
