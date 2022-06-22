@@ -76,3 +76,7 @@ jobs:
           eslint: true
           eslint_dir: ${{ matrix.package }}/
           eslint_extensions: js,jsx,ts,tsx,cjs,mjs,cts,mts
+          auto_fix: true
+          git_name: Statsify Lint
+          commit_message: "style(lint): lint ${{ matrix.package }}"
+          neutral_check_on_warning: true
