@@ -1,64 +1,72 @@
-import { writeFileSync } from 'fs';
-import { createRequire } from 'module';
-import { Canvas } from 'skia-canvas';
-import { RestClient } from 'tiny-discord';
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
+import { Canvas } from "skia-canvas";
+import { RestClient } from "tiny-discord";
+import { createRequire } from "node:module";
+import { writeFileSync } from "node:fs";
 
 const require = createRequire(import.meta.url);
 
-const { getMinecraftTexturePath } = require('@statsify/assets');
-const { FontRenderer } = require('@statsify/rendering');
-const { rankMap } = require('@statsify/schemas');
-const { minecraftColors } = require('@statsify/util');
-const { Logger } = require('@statsify/logger');
+const { getMinecraftTexturePath } = require("@statsify/assets");
+const { FontRenderer } = require("@statsify/rendering");
+const { rankMap } = require("@statsify/schemas");
+const { minecraftColors } = require("@statsify/util");
+const { Logger } = require("@statsify/logger");
 
-const COLOR_CHANGERS = ['MVP+', 'MVP++', 'bMVP++'];
+const COLOR_CHANGERS = ["MVP+", "MVP++", "bMVP++"];
 const SIZE = 20;
-const RANKS = Object.keys(rankMap).filter((rank) => !['DEFAULT'].includes(rank));
+const RANKS = Object.keys(rankMap).filter((rank) => !["DEFAULT"].includes(rank));
 const EMOJI_LIMIT = 50;
 
 export const ALPHABET = [
-  'a',
-  'b',
-  'c',
-  'd',
-  'e',
-  'f',
-  'g',
-  'h',
-  'i',
-  'j',
-  'k',
-  'l',
-  'm',
-  'n',
-  'o',
-  'p',
-  'q',
-  'r',
-  's',
-  't',
-  'u',
-  'v',
-  'w',
-  'x',
-  'y',
-  'z',
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
 ];
 
-const logger = new Logger('rank-emojis');
+const logger = new Logger("rank-emojis");
 
 const token = process.env.RANK_EMOJI_DISCORD_BOT_TOKEN;
 
 if (!token) {
   logger.error(
-    'Add a discord bot token to create the emoji servers in the RANK_EMOJI_DISCORD_BOT_TOKEN field in the .env'
+    "Add a discord bot token to create the emoji servers in the RANK_EMOJI_DISCORD_BOT_TOKEN field in the .env"
   );
 
   process.exit(1);
 }
 
 const renderer = new FontRenderer();
-await renderer.loadImages(getMinecraftTexturePath('textures/font'));
+await renderer.loadImages(getMinecraftTexturePath("textures/font"));
 
 const emojis = [];
 
@@ -72,7 +80,7 @@ const drawRank = async (formatted) => {
   const { width, height } = renderer.measureText(nodes);
 
   const textCanvas = new Canvas(width, height);
-  const textCtx = textCanvas.getContext('2d');
+  const textCtx = textCanvas.getContext("2d");
   renderer.fillText(textCtx, nodes, 0, 0);
 
   const imageCount = Math.ceil(width / SIZE);
@@ -80,9 +88,9 @@ const drawRank = async (formatted) => {
 
   for (let x = 0; x < imageCount; x++) {
     const canvas = new Canvas(SIZE, SIZE);
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     ctx.drawImage(textCanvas, SIZE * x, 0, SIZE, SIZE, 0, 0, SIZE, SIZE);
-    images.push(await canvas.toDataURL('png'));
+    images.push(await canvas.toDataURL("png"));
   }
 
   return images;
@@ -99,8 +107,7 @@ const drawColorChanger = async (rank, prefixIndex) => {
 
   const sharedImages = {};
 
-  for (let i = 0; i < color0.length; i++) {
-    const img = color0[i];
+  for (const [i, img] of color0.entries()) {
     if (img === color1[i]) sharedImages[i] = img;
   }
 
@@ -109,14 +116,16 @@ const drawColorChanger = async (rank, prefixIndex) => {
   const coloredEmojis = [
     color0,
     color1,
-    ...(await Promise.all(remainingColors.map((color) => drawRank(rankMap[rank](color.code))))),
+    ...(await Promise.all(
+      remainingColors.map((color) => drawRank(rankMap[rank](color.code)))
+    )),
   ];
 
   Object.entries(sharedImages).forEach(([index, image]) => {
     emojis.push({
       buffer: image,
       rank,
-      category: 'SHARED',
+      category: "SHARED",
       index,
       name: `${prefixIndex}${index}`,
     });
@@ -125,8 +134,7 @@ const drawColorChanger = async (rank, prefixIndex) => {
   coloredEmojis.forEach(async (images, index) => {
     const color = minecraftColors[index];
 
-    for (let i = 0; i < images.length; i++) {
-      const image = images[i];
+    for (const [i, image] of images.entries()) {
       if (sharedImages[i]) continue;
 
       emojis.push({
@@ -215,13 +223,13 @@ for (let i = 0; i < serverCount; i++) {
 }
 
 RANKS.filter((rank) => !COLOR_CHANGERS.includes(rank)).forEach((rank) => {
-  json[rank] = json[rank].join('');
+  json[rank] = json[rank].join("");
 });
 
 COLOR_CHANGERS.forEach((rank) => {
   minecraftColors.forEach((color) => {
     const body = {
-      ...json[rank]['SHARED'],
+      ...json[rank]["SHARED"],
       ...json[rank][color.id],
     };
 
@@ -229,10 +237,10 @@ COLOR_CHANGERS.forEach((rank) => {
       .sort()
       .map((key) => body[key])
       .filter(Boolean)
-      .join('');
+      .join("");
   });
 
   delete json[rank];
 });
 
-writeFileSync('../discord-bot/emojis.json', JSON.stringify(json, null, 2));
+writeFileSync("../discord-bot/emojis.json", JSON.stringify(json, null, 2));
