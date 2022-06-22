@@ -20,9 +20,6 @@ export class Player {
   @Field({ mongo: { unique: true, index: true }, store: { required: true } })
   public uuid: string;
 
-  @Field({ mongo: { unique: true, index: true }, store: { required: true } })
-  public shortUuid: string;
-
   @Field()
   public username: string;
 

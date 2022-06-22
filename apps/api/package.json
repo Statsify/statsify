@@ -35,7 +35,6 @@
     "point-of-view": "^5.3.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.5",
-    "short-uuid": "^4.2.0",
     "skia-canvas": "^0.9.30"
   },
   "devDependencies": {
