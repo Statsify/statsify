@@ -47,7 +47,7 @@ jobs:
       - name: Commit Lint
         uses: EndBug/add-and-commit@v9
         with:
-          default_author: github-actions
+          default_author: github_actions
           message: 'style(lint): lint project'
           pathspec_error_handling: ignore
 
