@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import short from "short-uuid";
 import { Command, CommandContext, EmbedBuilder } from "@statsify/discord";
 import { INFO_COLOR } from "#constants";
 import { MojangApiService } from "#services";
@@ -25,7 +24,6 @@ export class UUIDCommand {
     );
 
     const thumbURL = this.mojangApiService.faceIconUrl(player.uuid);
-    const shortUuid = short(short.constants.cookieBase90).fromUUID(player.uuid);
 
     const embed = new EmbedBuilder()
       .field((t) => t("embeds.uuid.description.username"), `\`${player.username}\``)
@@ -33,10 +31,6 @@ export class UUIDCommand {
       .field(
         (t) => t("embeds.uuid.description.trimmedUUID"),
         `\`${player.uuid.replaceAll("-", "")}\``
-      )
-      .field(
-        (t) => t("embeds.uuid.description.shortUUID"),
-        shortUuid.replaceAll("`", "\\`")
       )
       .color(INFO_COLOR)
       .thumbnail(thumbURL);

@@ -17,8 +17,7 @@ import {
 } from "@nestjs/common";
 import { InjectRedis, Redis } from "@nestjs-modules/ioredis";
 import { Key } from "@statsify/schemas";
-import { createHash } from "node:crypto";
-import { uuid } from "short-uuid";
+import { createHash, randomUUID } from "node:crypto";
 
 @Injectable()
 export class AuthService {
@@ -50,7 +49,7 @@ export class AuthService {
     const key = `ratelimit:${hash}`;
 
     pipeline.zremrangebyscore(key, 0, time - expirey);
-    pipeline.zadd(key, time, `${uuid()}:${weight}`);
+    pipeline.zadd(key, time, `${randomUUID()}:${weight}`);
     pipeline.zrange(key, 0, -1, "WITHSCORES");
     pipeline.hincrby(`key:${hash}`, "requests", weight);
     pipeline.expire(key, expirey / 1000);
@@ -86,7 +85,7 @@ export class AuthService {
   }
 
   public async createKey(name: string): Promise<string> {
-    const apiKey = uuid().replaceAll("-", "");
+    const apiKey = randomUUID().replaceAll("-", "");
     const hash = this.hash(apiKey);
 
     await this.redis.hmset(

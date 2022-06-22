@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import short from "short-uuid";
 import { AxiosError } from "axios";
 import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "../error.message";
@@ -29,11 +28,8 @@ type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
 @Service()
 export class ApiService extends StatsifyApiService {
-  private translator: short.Translator;
-
   public constructor() {
     super(process.env.API_ROUTE, process.env.API_KEY);
-    this.translator = short(short.constants.cookieBase90);
   }
 
   /**
@@ -249,11 +245,6 @@ export class ApiService extends StatsifyApiService {
     if (length <= 16) return [tag, "username"];
 
     if (this.isDiscordId(tag)) return [tag.replaceAll("<@|!|>", ""), "discordId"];
-
-    if (length == 20) {
-      const shortUuid = this.translator.toUUID(tag);
-      return [shortUuid.replaceAll("-", ""), "uuid"];
-    }
 
     throw new ErrorMessage(
       (t) => t("errors.invalidSearch.title"),

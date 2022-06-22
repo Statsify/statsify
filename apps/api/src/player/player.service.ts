@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import short from "short-uuid";
 import { Flatten, flatten } from "@statsify/util";
 import {
   Friends,
@@ -177,7 +176,7 @@ export class PlayerService {
     await this.playerLeaderboardService.addLeaderboards(
       Player,
       player,
-      "shortUuid",
+      "uuid",
       LeaderboardScanner.getLeaderboardFields(Player),
       true
     );
@@ -207,8 +206,6 @@ export class PlayerService {
   }
 
   private async saveOne(player: Flatten<Player>) {
-    player.shortUuid = short(short.constants.cookieBase90).fromUUID(player.uuid);
-
     //Serialize and flatten the player
     const serializedPlayer = serialize(Player, player);
 
