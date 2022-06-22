@@ -35,7 +35,7 @@ export class ButtonBuilder {
 
   public emoji(emoji: string): this {
     const animated = emoji.startsWith("<a:");
-    const name = emoji.replaceAll("<:|<a:|>", "");
+    const name = emoji.replace(/<:|<a:|>/g, "");
     const id = name.split(":")[1];
 
     this.#emoji = { name: name.replace(id, ""), animated, id };

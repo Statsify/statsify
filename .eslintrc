@@ -91,7 +91,6 @@
       }
     ],
     "unicorn/no-unsafe-regex": ["error"],
-    "unicorn/prefer-string-replace-all": ["error"],
     "unicorn/prefer-at": ["error"],
     "unicorn/relative-url-style": ["error", "always"],
     "unicorn/import-style": [
@@ -105,6 +104,7 @@
         }
       }
     ],
+    "unicorn/prefer-string-replace-all": ["off"],
     "unicorn/filename-case": ["off"],
     "unicorn/no-static-only-class": ["off"],
     "unicorn/no-process-exit": ["off"],
