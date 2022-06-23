@@ -9,10 +9,17 @@
 import { APIData } from "@statsify/util";
 import { Deathmatch, Defusal, GunGame } from "./mode";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { add } from "@statsify/math";
 
-export const COPS_AND_CRIMS_MODES = ["defusal", "deathmatch", "gunGame"] as const;
-export type CopsAndCrimsModes = typeof COPS_AND_CRIMS_MODES;
+export const COPS_AND_CRIMS_MODES = new GameModes([
+  { api: "defusal", hypixel: "normal" },
+  { api: "deathmatch", hypixel: "deathmatch" },
+  { api: "gunGame", hypixel: "gungame" },
+  { hypixel: "normal_party", formatted: "Challenge" },
+]);
+
+export type CopsAndCrimsModes = IGameModes<typeof COPS_AND_CRIMS_MODES>;
 
 export class CopsAndCrims {
   @Field()

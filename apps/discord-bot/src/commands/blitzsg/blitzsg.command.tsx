@@ -6,7 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BLITZSG_MODES, BlitzSGKit, BlitzSGModes, Player } from "@statsify/schemas";
+import {
+  BLITZSG_MODES,
+  BlitzSGKit,
+  BlitzSGModes,
+  GameMode,
+  Player,
+} from "@statsify/schemas";
 import {
   BaseHypixelCommand,
   BaseProfileProps,
@@ -21,14 +27,21 @@ export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
     super(BLITZSG_MODES);
   }
 
-  public filterModes(player: Player) {
+  public filterModes(
+    player: Player,
+    modes: GameMode<BlitzSGModes>[]
+  ): GameMode<BlitzSGModes>[] {
     const { blitzsg } = player.stats;
+    const [overall, ...kits] = modes;
 
-    const kits = BLITZSG_MODES.slice(1, -1)
-      .sort((a, b) => (blitzsg[b] as BlitzSGKit).exp - (blitzsg[a] as BlitzSGKit).exp)
-      .splice(0, 24);
+    const filteredKits = kits
+      .slice(1, -1)
+      .sort(
+        (a, b) => (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp
+      )
+      .slice(0, 24);
 
-    return ["overall", ...kits];
+    return [overall, ...filteredKits];
   }
 
   public getProfile(

@@ -10,28 +10,46 @@ import { APIData } from "@statsify/util";
 import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from "./mode";
 import { Color, ColorCode } from "../../../color";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { Progression } from "../../../progression";
 import { add, deepSub } from "@statsify/math";
 import { getExpReq, getFormattedLevel, getLevel } from "./util";
 
-export const BEDWARS_MODES = [
-  "overall",
-  "core",
-  "solo",
-  "doubles",
-  "threes",
-  "fours",
-  "4v4",
-  "armed",
-  "castle",
-  "lucky",
-  "rush",
-  "swap",
-  "ultimate",
-  "underworld",
-  "voidless",
-] as const;
-export type BedWarsModes = typeof BEDWARS_MODES;
+export const BEDWARS_MODES = new GameModes([
+  { api: "overall" },
+  { api: "core" },
+  { api: "solo", hypixel: "BEDWARS_EIGHT_ONE" },
+  { api: "doubles", hypixel: "BEDWARS_EIGHT_TWO" },
+  { api: "threes", hypixel: "BEDWARS_FOUR_THREE" },
+  { api: "fours", hypixel: "BEDWARS_FOUR_FOUR" },
+  { api: "4v4", hypixel: "BEDWARS_TWO_FOUR" },
+  { api: "armed" },
+  { api: "castle", hypixel: "BEDWARS_CASTLE" },
+  { api: "lucky" },
+  { api: "rush" },
+  { api: "swap" },
+  { api: "ultimate" },
+  { api: "underworld" },
+  { api: "voidless" },
+
+  { hypixel: "BEDWARS_EIGHT_TWO_ARMED", formatted: "Armed Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_ARMED", formatted: "Armed Fours" },
+  { hypixel: "BEDWARS_EIGHT_TWO_LUCKY", formatted: "Lucky Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_LUCKY", formatted: "Lucky Fours" },
+  { hypixel: "BEDWARS_EIGHT_TWO_RUSH", formatted: "Rush Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_RUSH", formatted: "Rush Fours" },
+  { hypixel: "BEDWARS_EIGHT_TWO_SWAP", formatted: "Swap Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_SWAP", formatted: "Swap Fours" },
+  { hypixel: "BEDWARS_EIGHT_TWO_ULTIMATE", formatted: "Ultimate Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_ULTIMATE", formatted: "Ultimate Fours" },
+  { hypixel: "BEDWARS_EIGHT_TWO_UNDERWORLD", formatted: "Underworld Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_UNDERWORLD", formatted: "Underworld Fours" },
+  { hypixel: "BEDWARS_EIGHT_TWO_VOIDLESS", formatted: "Voidless Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_VOIDLESS", formatted: "Voidless Fours" },
+  { hypixel: "BEDWARS_PRACTICE", formatted: "Practice" },
+]);
+
+export type BedWarsModes = IGameModes<typeof BEDWARS_MODES>;
 
 export class BedWars {
   @Field()

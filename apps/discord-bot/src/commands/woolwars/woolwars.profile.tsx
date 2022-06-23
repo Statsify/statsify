@@ -17,11 +17,16 @@ import {
   Table,
   formatProgression,
 } from "#components";
-import { FormattedGame, WOOL_WARS_MODES, WoolWarsOverall } from "@statsify/schemas";
+import {
+  FormattedGame,
+  GameMode,
+  WoolWarsModes,
+  WoolWarsOverall,
+} from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 
 export interface WoolWarsProfileProps extends BaseProfileProps {
-  mode: typeof WOOL_WARS_MODES[number];
+  mode: GameMode<WoolWarsModes>;
 }
 
 export const WoolWarsProfile = ({
@@ -36,7 +41,7 @@ export const WoolWarsProfile = ({
   time,
 }: WoolWarsProfileProps) => {
   const { woolwars } = player.stats;
-  const stats = woolwars[mode];
+  const stats = woolwars[mode.api];
 
   const sidebar: SidebarItem[] = [
     [t("stats.wool"), t(woolwars.coins), "§6"],
@@ -53,7 +58,7 @@ export const WoolWarsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.WOOLWARS} §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.WOOLWARS} §fStats §r(${mode.formatted})`}
         description={`${FormattedGame.WOOLWARS} §7Level: ${
           woolwars.levelFormatted
         }\n${formatProgression(
@@ -65,7 +70,7 @@ export const WoolWarsProfile = ({
         time={time}
       />
       <Table.table>
-        <If condition={mode === "overall"}>
+        <If condition={mode.api === "overall"}>
           {() => {
             const overall = stats as WoolWarsOverall;
             return (

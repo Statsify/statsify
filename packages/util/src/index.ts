@@ -94,6 +94,8 @@ export const romanNumeral = (num: number): string => {
 export const prettify = (s: string): string => {
   let newString = s;
 
+  if (s === s.toUpperCase()) return prettify(s.toLowerCase());
+
   // Convert camelCase to Snake_Case (if applicable)
   if (!["_", " "].some((s) => newString.includes(s))) {
     newString =

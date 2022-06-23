@@ -9,10 +9,17 @@
 import { APIData } from "@statsify/util";
 import { ArenaBrawlMode } from "./mode";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { deepAdd } from "@statsify/math";
 
-export const ARENA_BRAWL_MODES = ["overall", "solo", "doubles", "fours"] as const;
-export type ArenaBrawlModes = typeof ARENA_BRAWL_MODES;
+export const ARENA_BRAWL_MODES = new GameModes([
+  { api: "overall" },
+  { api: "solo" },
+  { api: "doubles" },
+  { api: "fours" },
+]);
+
+export type ArenaBrawlModes = IGameModes<typeof ARENA_BRAWL_MODES>;
 
 export class ArenaBrawl {
   @Field()

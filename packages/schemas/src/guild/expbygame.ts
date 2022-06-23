@@ -8,7 +8,7 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../metadata";
-import { FormattedGame } from "../game";
+import { FormattedGame, GameCodeMapping } from "../game";
 
 const limit = 50_000;
 const fieldName = "GEXP";
@@ -21,10 +21,10 @@ export class ExpByGame {
   public ARCADE: number;
 
   @Field({ leaderboard: { name: FormattedGame.ARENA_BRAWL, fieldName, limit } })
-  public ARENA: number;
+  public ARENA_BRAWL: number;
 
   @Field({ leaderboard: { name: FormattedGame.WARLORDS, fieldName, limit } })
-  public BATTLEGROUND: number;
+  public WARLORDS: number;
 
   @Field({ leaderboard: { name: FormattedGame.BEDWARS, fieldName, limit } })
   public BEDWARS: number;
@@ -36,13 +36,13 @@ export class ExpByGame {
   public DUELS: number;
 
   @Field({ leaderboard: { name: FormattedGame.TURBO_KART_RACERS, fieldName, limit } })
-  public GINGERBREAD: number;
+  public TURBO_KART_RACERS: number;
 
   @Field({ leaderboard: { name: FormattedGame.HOUSING, fieldName, limit } })
   public HOUSING: number;
 
   @Field({ leaderboard: { name: FormattedGame.COPS_AND_CRIMS, fieldName, limit } })
-  public MCGO: number;
+  public COPS_AND_CRIMS: number;
 
   @Field({ leaderboard: { name: FormattedGame.MURDER_MYSTERY, fieldName, limit } })
   public MURDER_MYSTERY: number;
@@ -57,7 +57,7 @@ export class ExpByGame {
   public PROTOTYPE: number;
 
   @Field({ leaderboard: { name: FormattedGame.QUAKE, fieldName, limit } })
-  public QUAKECRAFT: number;
+  public QUAKE: number;
 
   @Field({ leaderboard: { name: FormattedGame.SKYWARS, fieldName, limit } })
   public SKYWARS: number;
@@ -66,13 +66,13 @@ export class ExpByGame {
   public SPEED_UHC: number;
 
   @Field({ leaderboard: { name: FormattedGame.SMASH_HEROES, fieldName, limit } })
-  public SUPER_SMASH: number;
+  public SMASH_HEROES: number;
 
   @Field({ leaderboard: { name: FormattedGame.BLITZSG, fieldName, limit } })
-  public SURVIVAL_GAMES: number;
+  public BLITZSG: number;
 
   @Field({ leaderboard: { name: FormattedGame.TNT_GAMES, fieldName, limit } })
-  public TNTGAMES: number;
+  public TNT_GAMES: number;
 
   @Field({ leaderboard: { name: FormattedGame.UHC, fieldName, limit } })
   public UHC: number;
@@ -81,38 +81,38 @@ export class ExpByGame {
   public VAMPIREZ: number;
 
   @Field({ leaderboard: { name: FormattedGame.MEGAWALLS, fieldName, limit } })
-  public WALLS3: number;
+  public MEGAWALLS: number;
 
   @Field({ leaderboard: { name: FormattedGame.WALLS, fieldName, limit } })
   public WALLS: number;
 
   @Field({ leaderboard: { name: FormattedGame.WOOLWARS, fieldName, limit } })
-  public WOOL_GAMES: number;
+  public WOOLWARS: number;
 
   public constructor(data: APIData) {
-    this.ARCADE = data.ARCADE;
-    this.ARENA = data.ARENA;
-    this.BATTLEGROUND = data.BATTLEGROUND;
-    this.BEDWARS = data.BEDWARS;
-    this.BUILD_BATTLE = data.BUILD_BATTLE;
-    this.DUELS = data.DUELS;
-    this.GINGERBREAD = data.GINGERBREAD;
-    this.HOUSING = data.HOUSING;
-    this.MCGO = data.MCGO;
-    this.MURDER_MYSTERY = data.MURDER_MYSTERY;
-    this.PAINTBALL = data.PAINTBALL;
-    this.PIT = data.PIT;
-    this.PROTOTYPE = data.PROTOTYPE;
-    this.QUAKECRAFT = data.QUAKECRAFT;
-    this.SKYWARS = data.SKYWARS;
-    this.SPEED_UHC = data.SPEED_UHC;
-    this.SUPER_SMASH = data.SUPER_SMASH;
-    this.SURVIVAL_GAMES = data.SURVIVAL_GAMES;
-    this.TNTGAMES = data.TNTGAMES;
-    this.UHC = data.UHC;
-    this.VAMPIREZ = data.VAMPIREZ;
-    this.WALLS = data.WALLS;
-    this.WALLS3 = data.WALLS3;
-    this.WOOL_GAMES = data.WOOL_GAMES;
+    this.ARCADE = data[GameCodeMapping.ARCADE];
+    this.ARENA_BRAWL = data[GameCodeMapping.ARENA_BRAWL];
+    this.WARLORDS = data[GameCodeMapping.WARLORDS];
+    this.BEDWARS = data[GameCodeMapping.BEDWARS];
+    this.BUILD_BATTLE = data[GameCodeMapping.BUILD_BATTLE];
+    this.DUELS = data[GameCodeMapping.DUELS];
+    this.TURBO_KART_RACERS = data[GameCodeMapping.TURBO_KART_RACERS];
+    this.HOUSING = data[GameCodeMapping.HOUSING];
+    this.COPS_AND_CRIMS = data[GameCodeMapping.COPS_AND_CRIMS];
+    this.MURDER_MYSTERY = data[GameCodeMapping.MURDER_MYSTERY];
+    this.PAINTBALL = data[GameCodeMapping.PAINTBALL];
+    this.PIT = data[GameCodeMapping.PIT];
+    this.PROTOTYPE = data[GameCodeMapping.PROTOTYPE];
+    this.QUAKE = data[GameCodeMapping.QUAKE];
+    this.SKYWARS = data[GameCodeMapping.SKYWARS];
+    this.SPEED_UHC = data[GameCodeMapping.SPEED_UHC];
+    this.SMASH_HEROES = data[GameCodeMapping.SMASH_HEROES];
+    this.BLITZSG = data[GameCodeMapping.BLITZSG];
+    this.TNT_GAMES = data[GameCodeMapping.TNT_GAMES];
+    this.UHC = data[GameCodeMapping.UHC];
+    this.VAMPIREZ = data[GameCodeMapping.VAMPIREZ];
+    this.WALLS = data[GameCodeMapping.WALLS];
+    this.MEGAWALLS = data[GameCodeMapping.MEGAWALLS];
+    this.WOOLWARS = data[GameCodeMapping.WOOLWARS];
   }
 }

@@ -8,11 +8,11 @@
 
 import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
-import { FormattedGame, MEGAWALLS_MODES } from "@statsify/schemas";
+import { FormattedGame, GameMode, MegaWallsModes } from "@statsify/schemas";
 import { formatTime, prettify } from "@statsify/util";
 
 export interface MegaWallsProfileProps extends BaseProfileProps {
-  mode: typeof MEGAWALLS_MODES[number];
+  mode: GameMode<MegaWallsModes>;
 }
 
 export const MegaWallsProfile = ({
@@ -27,7 +27,7 @@ export const MegaWallsProfile = ({
   time,
 }: MegaWallsProfileProps) => {
   const { megawalls } = player.stats;
-  const stats = megawalls[mode];
+  const stats = megawalls[mode.api];
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(megawalls.coins), "§6"],
@@ -41,7 +41,7 @@ export const MegaWallsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.MEGAWALLS} §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.MEGAWALLS} §fStats §r(${mode.formatted})`}
         time={time}
       />
       <Table.table>

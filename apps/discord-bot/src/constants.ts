@@ -22,6 +22,9 @@ import {
   DUELS_MODES,
   DuelsModes,
   GENERAL_MODES,
+  GameCodeMapping,
+  GameId,
+  GameModes,
   GeneralModes,
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
@@ -49,11 +52,12 @@ import {
   VampireZModes,
   WALLS_MODES,
   WARLORDS_MODES,
-  WOOL_WARS_MODES,
+  WOOLWARS_MODES,
   WallsModes,
   WarlordsModes,
   WoolWarsModes,
 } from "@statsify/schemas";
+import { noop, prettify } from "@statsify/util";
 
 export const ERROR_COLOR = 0xff_00_00;
 export const SUCCESS_COLOR = 0x00_ff_00;
@@ -86,7 +90,7 @@ export type GamesWithBackgrounds =
   | WoolWarsModes;
 
 export const mapBackground = <T extends GamesWithBackgrounds>(
-  modes: T,
+  modes: GameModes<T>,
   mode: T[number]
 ): [game: string, mode: string] => {
   switch (modes) {
@@ -209,9 +213,65 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
     case WARLORDS_MODES:
       return ["warlords", "overall"];
     //TODO(amony): add woolwars backgrounds
-    case WOOL_WARS_MODES:
+    case WOOLWARS_MODES:
       return ["woolwars", "overall"];
     default:
       return ["default", ""];
   }
+};
+
+const GAME_ID_TO_MODES: Record<GameId, GameModes<any> | null> = {
+  ARCADE: ARCADE_MODES,
+  ARENA_BRAWL: ARENA_BRAWL_MODES,
+  BEDWARS: BEDWARS_MODES,
+  BLITZSG: BLITZSG_MODES,
+  BUILD_BATTLE: BUILD_BATTLE_MODES,
+  COPS_AND_CRIMS: COPS_AND_CRIMS_MODES,
+  DUELS: DUELS_MODES,
+  GENERAL: GENERAL_MODES,
+  MEGAWALLS: MEGAWALLS_MODES,
+  MURDER_MYSTERY: MURDER_MYSTERY_MODES,
+  PAINTBALL: PAINTBALL_MODES,
+  PARKOUR: PARKOUR_MODES,
+  QUAKE: QUAKE_MODES,
+  SKYWARS: SKYWARS_MODES,
+  SMASH_HEROES: SMASH_HEROES_MODES,
+  SPEED_UHC: SPEED_UHC_MODES,
+  TNT_GAMES: TNT_GAMES_MODES,
+  TURBO_KART_RACERS: TURBO_KART_RACERS_MODES,
+  UHC: UHC_MODES,
+  VAMPIREZ: VAMPIREZ_MODES,
+  WALLS: WALLS_MODES,
+  WARLORDS: WARLORDS_MODES,
+  WOOLWARS: WOOLWARS_MODES,
+  HOUSING: noop(),
+  PIT: noop(),
+  PROTOTYPE: noop(),
+  SKYBLOCK: noop(),
+  SKYCLASH: noop(),
+  TOURNAMENT_LOBBY: noop(),
+  MAIN_LOBBY: noop(),
+  CLASSIC: noop(),
+  CRAZY_WALLS: noop(),
+  QUEUE: noop(),
+  REPLAY: noop(),
+  LIMBO: noop(),
+  IDLE: noop(),
+  SMP: noop(),
+};
+
+export const mapGameIdToBackground = (id: GameId) => {
+  const modes = GAME_ID_TO_MODES[id] ?? GENERAL_MODES;
+  return mapBackground(modes, modes.getApiModes()[0]);
+};
+
+const HYPIXEL_GAME_LIST = Object.fromEntries(
+  Object.entries(GAME_ID_TO_MODES).map(([key, g]) => [key, g?.getHypixelModes()])
+);
+
+export const mapGame = (game: GameId, mode: string) => {
+  if (HYPIXEL_GAME_LIST[game] && mode in HYPIXEL_GAME_LIST[game]!)
+    return HYPIXEL_GAME_LIST[game]![mode];
+
+  return prettify(mode.replace(`${GameCodeMapping[game]}_`, "").replace(game, ""));
 };
