@@ -26,13 +26,16 @@ export class PitCommand {
     const user = context.getUser();
     const t = context.t();
 
-    const player = await this.pitPandaService.getPlayer(context.option<string>("player"));
+    const player = await this.pitPandaService.getPlayer(
+      context.option<string>("player"),
+      user
+    );
 
     const [skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
       getLogo(user?.tier),
-      getBackground("bedwars", "overall"),
+      getBackground("pit", "overall"),
     ]);
 
     const canvas = render(

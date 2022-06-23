@@ -45,8 +45,12 @@ const GeneralProfileHeaderBody = ({
         </box>
       </div>
       <box height="100%" direction="column">
-        <text align="left">§7First Login: §3{firstLogin}</text>
-        <text align="left">§7Last Login: §3{lastLogin}</text>
+        <text align="left">
+          §7{t("stats.firstLogin")}: §3{firstLogin}
+        </text>
+        <text align="left">
+          §7`{t("stats.lastLogin")}`: §3{lastLogin}
+        </text>
       </box>
     </div>
   );

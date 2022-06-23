@@ -173,7 +173,12 @@
     "lastGame": "Last Game",
     "hidden": "Hidden",
     "lastActionTime": "Last Action Time",
-    "lastAction": "Last Action"
+    "lastAction": "Last Action",
+    "firstLogin": "Last Login",
+    "lastLogin": "Last Logout",
+    "renown": "Renown",
+    "bounty": "Bounty",
+    "highestStreak": "Highest Streak"
   },
   "embeds": {
     "uuid": {
@@ -351,7 +356,7 @@
     },
     "missingMentionVerification": {
       "title": "Missing Verification",
-      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account"
+      "description": "{{tag}} is not **verified**. To mention them, they must run `/verify` to verify their account"
     },
     "missingSelfPremium": {
       "title": "Missing Premium",
@@ -368,6 +373,10 @@
     "noStatus": {
       "title": "Status Not Found",
       "description": "A status for {{displayName}} could not be found!"
+    },
+    "noPitStats": {
+      "title": "Pit Stats Not Found",
+      "description": "{{displayName}} has never played The Pit!"
     },
     "unsupportedFileType": {
       "title": "Unsupported File Type",
