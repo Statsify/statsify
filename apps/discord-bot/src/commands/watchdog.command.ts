@@ -44,8 +44,7 @@ export class WatchdogCommand {
             watchdog.staff.lastDay
           )}\``
       )
-      .color(INFO_COLOR)
-      .thumbnail("attachment://logo.png");
+      .color(INFO_COLOR);
 
     return {
       embeds: [embed],
