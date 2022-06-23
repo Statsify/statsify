@@ -18,21 +18,27 @@ const xpBar: ProgressFunction = (percentage) => {
   return `§r§8[§b${"■".repeat(count)}§7${"■".repeat(max - count)}§8]`;
 };
 
+//TODO make this an object for easier configuration of what to show
 export const formatProgression = (
   t: LocalizeFunction,
   progression: Progression,
   currentLevel: string,
   nextLevel: string,
   showProgress = true,
+  showLevel = true,
   progress: ProgressFunction = xpBar
 ) => {
   if (progression.max) {
     let output = "§^2^";
 
     if (showProgress)
-      output += `§7Progress: §b${t(progression.current)}§7/§a${t(progression.max)}\n`;
+      output += `§7Progress: §b${t(progression.current)}§7/§a${t(progression.max)}`;
 
-    output += `${currentLevel} ${progress(progression.percent)} ${nextLevel}`;
+    if (showProgress && showLevel) output += "\n";
+
+    if (showLevel)
+      output += `${currentLevel} ${progress(progression.percent)} ${nextLevel}`;
+
     return output;
   }
 
