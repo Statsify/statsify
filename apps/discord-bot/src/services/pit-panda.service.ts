@@ -7,7 +7,10 @@
  */
 
 import axios, { AxiosInstance } from "axios";
+import { ApiService } from "./api.service";
+import { ErrorMessage } from "../error.message";
 import { Service } from "typedi";
+import { User } from "@statsify/schemas";
 
 interface PitPandaPlayerDoc {
   formattedLevel: string;
@@ -19,12 +22,18 @@ interface PitPandaPlayerDoc {
   bounty?: number;
 }
 
+interface PitPandaPlayerProgress {
+  displayCurrent: number;
+  displayGoal: number;
+}
+
 export interface PitPandaPlayer {
   rankings: Record<string, number | null>;
   uuid: string;
   name: string;
   levelString: string;
   rank: string;
+  xp: string;
   prefix: string;
   gold: number;
   kills: number;
@@ -32,24 +41,38 @@ export interface PitPandaPlayer {
   kdr: number;
   playtime: number;
   doc: PitPandaPlayerDoc;
+
+  xpProgress: PitPandaPlayerProgress;
 }
 
 @Service()
 export class PitPandaService {
   private axios: AxiosInstance;
 
-  public constructor() {
+  public constructor(private readonly apiService: ApiService) {
     this.axios = axios.create({
       baseURL: "https://pitpanda.rocks/api",
       timeout: 10_000,
-      headers: {},
     });
   }
 
-  public getPlayer(tag: string): Promise<PitPandaPlayer> {
+  public async getPlayer(tag: string, user: User | null = null): Promise<PitPandaPlayer> {
+    const [formattedTag, type] = this.apiService.parseTag(tag);
+    const input = await this.apiService.resolveTag(formattedTag, type, user);
+
+    console.log(input);
     return this.axios
-      .get(`/bot/profile/${tag}`)
+      .get(`/bot/profile/${input}`)
       .then((res) => res.data.data)
-      .catch(() => null);
+      .catch((e) => {
+        if (e.response.data.error === "Player has not played the Pit")
+          throw new ErrorMessage(
+            (t) => t("errors.noPitStats.title"),
+            (t) => t("errors.noPitStats.description", { displayName: input })
+          );
+        if (e.response.status === 400) throw this.apiService.missingPlayer(type, input);
+
+        throw this.apiService.unknownError();
+      });
   }
 }

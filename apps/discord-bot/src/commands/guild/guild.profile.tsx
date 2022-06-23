@@ -250,6 +250,7 @@ const GuildGexpPage = ({ guild, t }: GuildGexpPageProps) => {
     `${guildColor}${t(Math.floor(guild.level))}`,
     `${guildColor}${t(Math.floor(guild.level) + 1)}`,
     true,
+    true,
     progression
   )}`;
 

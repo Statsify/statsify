@@ -21,6 +21,7 @@ import {
   StatusNotFoundException,
 } from "@statsify/api-client";
 import { Service } from "typedi";
+import { addAbortSignal } from "node:stream";
 import { removeFormatting } from "@statsify/util";
 import { t } from "i18next";
 
@@ -212,10 +213,7 @@ export class ApiService extends StatsifyApiService {
   }
 
   public emojiDisplayName(displayName: string, space = true) {
-    const [rank, name] = displayName
-      .replaceAll("[|]", "")
-      .replaceAll("_", "\\_")
-      .split(" ");
+    const [rank, name] = displayName.replace(/\|/g, "").replaceAll("_", "\\_").split(" ");
     if (!rank) return removeFormatting(displayName);
 
     const unformattedRank = removeFormatting(rank);
@@ -244,7 +242,7 @@ export class ApiService extends StatsifyApiService {
     if (length >= 32 && length <= 36) return [tag.replaceAll("-", ""), "uuid"];
     if (length <= 16) return [tag, "username"];
 
-    if (this.isDiscordId(tag)) return [tag.replaceAll("<@|!|>", ""), "discordId"];
+    if (this.isDiscordId(tag)) return [tag.replace(/<@|!|>/g, ""), "discordId"];
 
     throw new ErrorMessage(
       (t) => t("errors.invalidSearch.title"),
@@ -255,6 +253,7 @@ export class ApiService extends StatsifyApiService {
   public async resolveTag(tag: string, type: PlayerTag, user: User | null) {
     if (type === "discordId") {
       const searchedUser = await this.getUser(tag);
+      console.log(searchedUser, tag);
       if (searchedUser?.uuid) return searchedUser.uuid;
 
       throw new ErrorMessage(
