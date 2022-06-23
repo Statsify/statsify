@@ -356,7 +356,7 @@
     },
     "missingMentionVerification": {
       "title": "Missing Verification",
-      "description": "{{tag}} is not **verified**. To mention them, they must run `/verify` to verify their account"
+      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account"
     },
     "missingSelfPremium": {
       "title": "Missing Premium",
