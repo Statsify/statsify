@@ -9,15 +9,9 @@
 import { Container, Footer, Header, If, Table } from "#components";
 import { FormattedGame, Status } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
-import { formatTime, prettify } from "@statsify/util";
 import { mapGame } from "#constants";
+import { prettify, relativeTime } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
-
-const relativeTime = (time: number, t: LocalizeFunction) => {
-  const difference = Date.now() - time;
-  if (difference < 60_000) return t("now");
-  return `${formatTime(Date.now() - time, { short: true })} ${t("ago")}`;
-};
 
 interface StatusTableProps {
   status: Status;
@@ -32,7 +26,7 @@ const OnlineTable = ({ status, t }: StatusTableProps) => (
         <Table.td title={t("stats.version")} value={status.actions.version} color="§b" />
         <Table.td
           title={t("stats.loginTime")}
-          value={relativeTime(status.actions.lastLogin, t)}
+          value={relativeTime(status.actions.lastLogin)}
           color="§b"
         />
       </Table.tr>
@@ -67,7 +61,7 @@ const OfflineTable = ({ status, t }: StatusTableProps) => (
     <Table.tr>
       <Table.td
         title={t("stats.logoutTime")}
-        value={relativeTime(status.actions.lastLogout, t)}
+        value={relativeTime(status.actions.lastLogout)}
         color="§a"
       />
       <Table.td
@@ -87,7 +81,7 @@ const HiddenTable = ({ status, t }: StatusTableProps) => (
     <Table.tr>
       <Table.td
         title={t("stats.lastActionTime")}
-        value={relativeTime(status.actions.lastActionTime, t)}
+        value={relativeTime(status.actions.lastActionTime)}
         color="§a"
       />
       <Table.td

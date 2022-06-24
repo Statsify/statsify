@@ -29,15 +29,12 @@ export class StatusCommand {
 
     const status = await this.apiService.getStatus(context.option("player"), user);
 
-    const [logo, skin, badge] = await Promise.all([
+    const [logo, skin, badge, background] = await Promise.all([
       getLogo(user?.tier),
       this.apiService.getPlayerSkin(status.uuid),
       this.apiService.getUserBadge(status.uuid),
+      getBackground(...mapGameIdToBackground(status.game.id ?? "LIMBO")),
     ]);
-
-    const background = await getBackground(
-      ...mapGameIdToBackground(status.game.id ?? "LIMBO")
-    );
 
     const canvas = render(
       <StatusProfile

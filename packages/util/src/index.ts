@@ -134,14 +134,12 @@ export interface FormatTimeOptions {
    *```
    */
   entries?: number;
-
-  accuracy?: "day" | "hour" | "minute" | "second" | "millisecond";
 }
 
 //Format milliseconds to a human readable string
 export const formatTime = (
   ms: number,
-  { short = true, entries = 2, accuracy = "millisecond" }: FormatTimeOptions = {}
+  { short = true, entries = 2 }: FormatTimeOptions = {}
 ): string => {
   if (ms < 1000) return `${ms}${short ? "ms" : " milliseconds"}`;
 
@@ -150,15 +148,13 @@ export const formatTime = (
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  let time = [
+  const time = [
     { value: days, short: "d", long: "day" },
     { value: hours % 24, short: "h", long: "hour" },
     { value: minutes % 60, short: "m", long: "minute" },
     { value: seconds % 60, short: "s", long: "second" },
     { value: ms - seconds * 1000, short: "ms", long: "millisecond" },
   ];
-
-  time = time.slice(0, time.findIndex((v) => v.long == accuracy) + 1);
 
   return time
     .filter(({ value }) => value > 0)
@@ -169,6 +165,8 @@ export const formatTime = (
     .splice(0, entries)
     .join(", ");
 };
+
+export const relativeTime = (time: number) => `${formatTime(Date.now() - time)} ago`;
 
 export const abbreviationNumber = (num: number): string => {
   const abbreviation = ["", "", "M", "B", "T"];

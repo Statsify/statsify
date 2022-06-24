@@ -10,15 +10,19 @@ import { useChildren } from "@statsify/rendering";
 
 export interface MultilineProps {
   children: JSX.IntrinsicElements["text"]["children"];
+  align?: JSX.IntrinsicElements["text"]["align"];
+  margin?: number;
 }
 
-export const Multiline = ({ children }: MultilineProps) => (
+export const Multiline = ({ children, align, margin = 1 }: MultilineProps) => (
   <>
     {useChildren(children)
       .join(" ")
       .split("\n")
       .map((t) => (
-        <text margin={1}>{t}</text>
+        <text align={align} margin={margin}>
+          {t}
+        </text>
       ))}
   </>
 );

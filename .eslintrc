@@ -90,7 +90,7 @@
         "memberSyntaxSortOrder": ["all", "single", "multiple", "none"]
       }
     ],
-    "unicorn/no-unsafe-regex": ["error"],
+    "unicorn/no-unsafe-regex": ["warn"],
     "unicorn/prefer-at": ["error"],
     "unicorn/relative-url-style": ["error", "always"],
     "unicorn/import-style": [
@@ -123,6 +123,7 @@
     "unicorn/no-array-push-push": ["off"],
     "unicorn/number-literal-case": ["off"],
     "unicorn/consistent-destructuring": ["off"],
-    "unicorn/no-useless-switch-case": ["off"]
+    "unicorn/no-useless-switch-case": ["off"],
+    "unicorn/better-regex": ["off"]
   }
 }

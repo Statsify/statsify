@@ -17,10 +17,15 @@ export class RecentGamesNotFoundException extends NotFoundException {
   @ApiProperty()
   public displayName: string;
 
-  public constructor(player: Player) {
-    super("recentGames");
+  @ApiProperty()
+  public prefixName: string;
 
-    this.uuid = player.uuid;
-    this.displayName = player.displayName;
+  public constructor(player: Player) {
+    super({
+      message: "recentGames",
+      uuid: player.uuid,
+      displayName: player.displayName,
+      prefixName: player.prefixName,
+    });
   }
 }

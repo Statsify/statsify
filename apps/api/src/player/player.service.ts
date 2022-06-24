@@ -126,6 +126,7 @@ export class PlayerService {
   public async getStatus(tag: string) {
     const player = await this.get(tag, HypixelCache.CACHE, {
       uuid: true,
+      displayName: true,
       prefixName: true,
       status: true,
     });
@@ -136,6 +137,7 @@ export class PlayerService {
 
     if (!status) throw new StatusNotFoundException(player);
 
+    status.displayName = player.displayName;
     status.prefixName = player.prefixName;
     status.uuid = player.uuid;
     status.actions = player.status;
@@ -147,17 +149,19 @@ export class PlayerService {
     const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
       uuid: true,
       displayName: true,
+      prefixName: true,
     });
 
     if (!player) throw new PlayerNotFoundException();
 
     const games = await this.hypixelService.getRecentGames(player.uuid);
 
-    if (!games) throw new RecentGamesNotFoundException(player);
+    if (!games || !games.length) throw new RecentGamesNotFoundException(player);
 
     return {
       uuid: player.uuid,
       displayName: player.displayName,
+      prefixName: player.prefixName,
       games,
     };
   }
