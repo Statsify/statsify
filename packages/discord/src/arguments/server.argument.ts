@@ -16,17 +16,6 @@ import { CommandContext } from "../command";
 import { LocalizationString } from "../messages";
 import { getServerMappings } from "@statsify/assets";
 
-const servers = getServerMappings();
-
-const fuse = new Fuse(servers, {
-  keys: ["id", "name", "addresses"],
-  includeScore: false,
-  shouldSort: true,
-  isCaseSensitive: false,
-  threshold: 0.3,
-  ignoreLocation: true,
-});
-
 export class ServerArgument extends AbstractArgument {
   public name = "server";
   public description: LocalizationString;
@@ -34,9 +23,22 @@ export class ServerArgument extends AbstractArgument {
   public required = true;
   public autocomplete = true;
 
+  private fuse: Fuse<ReturnType<typeof getServerMappings>[number]>;
+
   public constructor() {
     super();
     this.description = (t) => t("arguments.server");
+
+    const servers = getServerMappings();
+
+    this.fuse = new Fuse(servers, {
+      keys: ["id", "name", "addresses"],
+      includeScore: false,
+      shouldSort: true,
+      isCaseSensitive: false,
+      threshold: 0.3,
+      ignoreLocation: true,
+    });
   }
 
   public autocompleteHandler(
@@ -44,7 +46,7 @@ export class ServerArgument extends AbstractArgument {
   ): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
 
-    return fuse
+    return this.fuse
       .search(currentValue)
       .map((result) => ({ name: result.item.name, value: result.item.addresses[0] }))
       .slice(0, 25);
