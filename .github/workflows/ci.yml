@@ -39,14 +39,16 @@ jobs:
             turbo-${{ github.job }}-${{ github.ref_name }}-
 
       - name: Cache node_modules
+        id: yarn-cache
         uses: actions/cache@c3f1317a9e7b1ef106c153ac8c0f00fed3ddbc0d # tag=v3
         with:
-          path: node_modules
+          path: **/node_modules
           key: yarn-deps-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            yarn-deps-${{ hashFiles('yarn.lock') }}
+            yarn-deps-
 
       - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: yarn --immutable
 
       - name: Lint
