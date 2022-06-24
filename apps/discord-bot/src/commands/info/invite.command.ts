@@ -9,6 +9,7 @@
 import { Command, EmbedBuilder, IMessage } from "@statsify/discord";
 import { INFO_COLOR } from "#constants";
 import { UserTier } from "@statsify/schemas";
+import { env } from "@statsify/util";
 import { getLogoPath } from "@statsify/assets";
 import { readFile } from "node:fs/promises";
 
@@ -22,7 +23,7 @@ export class InviteCommand {
         const description = t("embeds.invite.description");
 
         const links = [
-          `**${t("socials.invite", { id: process.env.DISCORD_BOT_APPLICATION_ID })}**`,
+          `**${t("socials.invite", { id: env("DISCORD_BOT_APPLICATION_ID") })}**`,
           t("socials.discord"),
           t("socials.premium"),
           t("socials.website"),

@@ -11,6 +11,7 @@ import { CommandListener } from "#lib/command.listener";
 import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
 import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
+import { env } from "@statsify/util";
 import { join } from "node:path";
 import "reflect-metadata";
 
@@ -19,23 +20,23 @@ async function bootstrap() {
     [I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init())
   );
 
-  const rest = new RestClient({ token: process.env.DISCORD_BOT_TOKEN });
+  const rest = new RestClient({ token: env("DISCORD_BOT_TOKEN") });
   const commands = await CommandLoader.load(join(__dirname, "./commands"));
 
   const poster = new CommandPoster(rest);
 
   await poster.post(
     commands,
-    process.env.DISCORD_BOT_APPLICATION_ID,
-    process.env.DISCORD_BOT_GUILD
+    env("DISCORD_BOT_APPLICATION_ID"),
+    env("DISCORD_BOT_GUILD")
   );
 
-  const port = process.env.DISCORD_BOT_PORT;
+  const port = env("DISCORD_BOT_PORT", { required: false });
 
   const listener = CommandListener.create(
     port
-      ? new InteractionServer({ key: process.env.DISCORD_BOT_PUBLIC_KEY })
-      : new WebsocketShard({ token: process.env.DISCORD_BOT_TOKEN, intents: 1 }),
+      ? new InteractionServer({ key: env("DISCORD_BOT_PUBLIC_KEY")! })
+      : new WebsocketShard({ token: env("DISCORD_BOT_TOKEN"), intents: 1 }),
     rest,
     commands
   );

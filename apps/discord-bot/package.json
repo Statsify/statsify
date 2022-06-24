@@ -4,7 +4,7 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "start": "node -r dotenv/config --enable-source-maps . dotenv_config_path=../../.env",
+    "start": "node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
@@ -19,7 +19,6 @@
     "@typegoose/typegoose": "^9.9.0",
     "axios": "^0.27.2",
     "discord-api-types": "^0.34.0",
-    "dotenv": "^16.0.1",
     "fuse.js": "^6.6.2",
     "i18next": "^21.8.10",
     "i18next-fs-backend": "^1.1.4",

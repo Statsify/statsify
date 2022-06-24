@@ -1484,6 +1484,8 @@ __metadata:
 "@statsify/util@workspace:^, @statsify/util@workspace:packages/util":
   version: 0.0.0-use.local
   resolution: "@statsify/util@workspace:packages/util"
+  dependencies:
+    dotenv: ^16.0.1
   languageName: unknown
   linkType: soft
 
@@ -3457,7 +3459,6 @@ __metadata:
     "@types/luxon": ^2
     axios: ^0.27.2
     discord-api-types: ^0.34.0
-    dotenv: ^16.0.1
     fuse.js: ^6.6.2
     i18next: ^21.8.10
     i18next-fs-backend: ^1.1.4
@@ -7573,7 +7574,6 @@ __metadata:
     "@types/inquirer": ^8.2.1
     chalk: ^5.0.1
     chokidar: ^3.5.3
-    dotenv: ^16.0.1
     inquirer: ^9.0.0
     ioredis: ^5.0.6
     skia-canvas: ^0.9.30
@@ -8747,7 +8747,6 @@ __metadata:
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
     "@typegoose/typegoose": ^9.9.0
-    dotenv: ^16.0.1
     minecraft-protocol: ^1.35.0
     mongoose: ^6.4.0
   languageName: unknown

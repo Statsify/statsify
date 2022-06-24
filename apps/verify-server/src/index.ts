@@ -10,7 +10,7 @@ import { Logger } from "@statsify/logger";
 import { VerifyCode } from "@statsify/schemas";
 import { connect } from "mongoose";
 import { createServer } from "minecraft-protocol";
-import { formatTime } from "@statsify/util";
+import { env, formatTime } from "@statsify/util";
 import { generateCode } from "./generate-code";
 import { getAssetPath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
@@ -30,7 +30,7 @@ const codeCreatedMessage = (code: string, time: Date) => {
 };
 
 async function bootstrap() {
-  await connect(process.env.MONGODB_URI);
+  await connect(env("MONGODB_URI"));
 
   const verifyCodesModel = getModelForClass(VerifyCode);
 
@@ -39,7 +39,7 @@ async function bootstrap() {
   });
 
   const server = createServer({
-    host: process.env.VERIFY_SERVER_IP,
+    host: env("VERIFY_SERVER_IP"),
     maxPlayers: 2,
     motd: "§9§lStatsify Verification",
     beforePing: (response) => {

@@ -22,14 +22,14 @@ import {
 } from "@statsify/api-client";
 import { LocalizeFunction } from "@statsify/discord";
 import { Service } from "typedi";
-import { removeFormatting } from "@statsify/util";
+import { env, removeFormatting } from "@statsify/util";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
 @Service()
 export class ApiService extends StatsifyApiService {
   public constructor() {
-    super(process.env.API_ROUTE, process.env.API_KEY);
+    super(env("API_ROUTE"), env("API_KEY"));
   }
 
   /**
@@ -258,7 +258,6 @@ export class ApiService extends StatsifyApiService {
   public async resolveTag(tag: string, type: PlayerTag, user: User | null) {
     if (type === "discordId") {
       const searchedUser = await this.getUser(tag);
-      console.log(searchedUser, tag);
       if (searchedUser?.uuid) return searchedUser.uuid;
 
       throw new ErrorMessage(

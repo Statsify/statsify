@@ -55,6 +55,8 @@ export abstract class AbstractCommandListener {
     private applicationId: string,
     private port?: number
   ) {
+    this.hooks = new Map();
+
     if (port) {
       this.handleInteractionServer(this.client as InteractionServer);
     } else {

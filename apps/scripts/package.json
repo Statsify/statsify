@@ -4,11 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "api-key": "node -r dotenv/config src/api-key.js dotenv_config_path=../../.env",
+    "api-key": "node src/api-key.js",
     "build-watch": "node src/build-watch.js",
-    "purge": "node -r dotenv/config src/purge.js dotenv_config_path=../../.env",
-    "rank-emojis": "node -r dotenv/config src/rank-emojis.js dotenv_config_path=../../.env",
-    "limit-redis": "node -r dotenv/config src/limit-redis.js dotenv_config_path=../../.env",
+    "purge": "node src/purge.js",
+    "rank-emojis": "node src/rank-emojis.js",
+    "limit-redis": "node src/limit-redis.js",
     "lint": "TIMING=1 eslint './src/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
@@ -20,7 +20,6 @@
     "@swc/core": "^1.2.204",
     "chalk": "^5.0.1",
     "chokidar": "^3.5.3",
-    "dotenv": "^16.0.1",
     "inquirer": "^9.0.0",
     "ioredis": "^5.0.6",
     "skia-canvas": "^0.9.30",
