@@ -8,7 +8,7 @@
 
 import axios, { AxiosInstance } from "axios";
 import { ApiService } from "./api.service";
-import { ErrorMessage } from "../error.message";
+import { ErrorMessage } from "#lib/error.message";
 import { Service } from "typedi";
 import { User } from "@statsify/schemas";
 

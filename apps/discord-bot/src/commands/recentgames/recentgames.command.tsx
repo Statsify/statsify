@@ -16,7 +16,7 @@ import {
 import { RecentGamesProfile } from "./recentgames.profile";
 import { arrayGroup } from "@statsify/util";
 import { getAssetPath, getBackground, getImage, getLogo } from "@statsify/assets";
-import { getTheme } from "../../themes";
+import { getTheme } from "#themes";
 import { readdir } from "node:fs/promises";
 import { render } from "@statsify/rendering";
 

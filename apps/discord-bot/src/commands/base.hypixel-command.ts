@@ -19,7 +19,7 @@ import {
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalType } from "@statsify/api-client";
 import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "../themes";
+import { getTheme } from "#themes";
 import { noop } from "@statsify/util";
 import { render } from "@statsify/rendering";
 import type { GameMode, GameModes, Player, UserTier } from "@statsify/schemas";

@@ -16,8 +16,8 @@ import {
   TextInputBuilder,
 } from "@statsify/discord";
 import { ButtonStyle, InteractionResponseType } from "discord-api-types/v10";
-import { CommandListener } from "../../command.listener";
-import { ErrorMessage } from "../../error.message";
+import { CommandListener } from "#lib/command.listener";
+import { ErrorMessage } from "#lib/error.message";
 import {
   LeaderboardProfile,
   LeaderboardProfileProps,

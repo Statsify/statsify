@@ -69,7 +69,7 @@ import { WallsProfile } from "../walls/walls.profile";
 import { WarlordsProfile } from "../warlords/warlords.profile";
 import { WoolWarsProfile } from "../woolwars/woolwars.profile";
 import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "../../themes";
+import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 import type { BaseProfileProps } from "../base.hypixel-command";
 
