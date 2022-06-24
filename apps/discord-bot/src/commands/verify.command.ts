@@ -7,9 +7,14 @@
  */
 
 import { ApiService } from "#services";
-import { Command, CommandContext, EmbedBuilder, IMessage } from "@statsify/discord";
+import {
+  Command,
+  CommandContext,
+  EmbedBuilder,
+  IMessage,
+  NumberArgument,
+} from "@statsify/discord";
 import { ErrorMessage } from "../error.message";
-import { NumberArgument } from "#arguments";
 import { SUCCESS_COLOR } from "#constants";
 
 @Command({

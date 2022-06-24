@@ -10,20 +10,26 @@ import {
   APIApplicationCommandInteractionDataBasicOption,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
+import { AbstractCommandListener } from "./abstract-command.listener";
 import { IMessage, Message } from "../messages";
 import { LocalizeFunction } from "../messages/localize";
+import { User } from "@statsify/schemas";
 import { noop } from "@statsify/util";
 import type { Interaction } from "../interaction";
-import type { User } from "@statsify/schemas";
 
 export class CommandContext {
   private user: User | null;
 
   public constructor(
+    private readonly listener: AbstractCommandListener,
     private readonly interaction: Interaction,
     private readonly data: any
   ) {
     this.user = null;
+  }
+
+  public getListener() {
+    return this.listener;
   }
 
   public getUser() {

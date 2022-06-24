@@ -12,13 +12,13 @@ import { Canvas, Image } from "skia-canvas";
 import {
   Command,
   CommandContext,
+  FileArgument,
   IMessage,
   LocalizeFunction,
   SubCommand,
 } from "@statsify/discord";
 import { Container, Footer, HeaderNametag, Skin } from "#components";
 import { ErrorMessage } from "../error.message";
-import { FileArgument } from "#arguments";
 import { User } from "@statsify/schemas";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "../themes";

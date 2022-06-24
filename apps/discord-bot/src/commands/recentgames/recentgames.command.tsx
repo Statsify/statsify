@@ -6,9 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService, PaginateService } from "#services";
-import { Command, CommandContext } from "@statsify/discord";
-import { PlayerArgument } from "#arguments";
+import { ApiService } from "#services";
+import {
+  Command,
+  CommandContext,
+  PaginateService,
+  PlayerArgument,
+} from "@statsify/discord";
 import { RecentGamesProfile } from "./recentgames.profile";
 import { arrayGroup } from "@statsify/util";
 import { getAssetPath, getBackground, getImage, getLogo } from "@statsify/assets";

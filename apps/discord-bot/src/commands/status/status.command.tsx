@@ -7,8 +7,7 @@
  */
 
 import { ApiService } from "#services";
-import { Command, CommandContext, IMessage } from "@statsify/discord";
-import { PlayerArgument } from "#arguments";
+import { Command, CommandContext, IMessage, PlayerArgument } from "@statsify/discord";
 import { StatusProfile } from "./status.profile";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "../../themes";

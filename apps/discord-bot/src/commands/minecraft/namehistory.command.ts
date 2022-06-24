@@ -6,10 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command, CommandContext, EmbedBuilder } from "@statsify/discord";
+import {
+  Command,
+  CommandContext,
+  EmbedBuilder,
+  MojangPlayerArgument,
+  PaginateService,
+} from "@statsify/discord";
 import { INFO_COLOR } from "#constants";
-import { MojangApiService, PaginateService } from "#services";
-import { MojangPlayerArgument } from "#arguments";
+import { MojangApiService } from "#services";
 import { arrayGroup } from "@statsify/util";
 
 @Command({ description: "commands.namehistory", args: [MojangPlayerArgument] })

@@ -4,7 +4,6 @@
     "jsx": "preserve",
     "baseUrl": "./src",
     "paths": {
-      "#arguments": ["./arguments"],
       "#components": ["./components"],
       "#services": ["./services"],
       "#constants": ["./constants"]
