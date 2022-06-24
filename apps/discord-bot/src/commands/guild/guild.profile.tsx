@@ -17,7 +17,7 @@ import {
 } from "#components";
 import { DateTime } from "luxon";
 import { ExpByGame } from "@statsify/schemas/src/guild/expbygame";
-import { FormattedGame, GameId, Guild, GuildMember, UserTier } from "@statsify/schemas";
+import { FormattedGame, Guild, GuildMember, UserTier } from "@statsify/schemas";
 import { GexpTable } from "./gexp.table";
 import { LocalizeFunction } from "@statsify/discord";
 import { StyleLocation } from "@statsify/rendering";

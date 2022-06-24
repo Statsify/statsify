@@ -64,7 +64,6 @@ import { WarlordsProfile } from "../warlords/warlords.profile";
 import { WoolWarsProfile } from "../woolwars/woolwars.profile";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "../../themes";
-import { prettify } from "@statsify/util";
 import { render } from "@statsify/rendering";
 import type { BaseProfileProps } from "../base.hypixel-command";
 

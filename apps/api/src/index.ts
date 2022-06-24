@@ -6,9 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// TODO Remove this when/if we migrate to ESM
-/* eslint-disable unicorn/prefer-module */
-
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";

@@ -23,7 +23,6 @@ import {
   WoolWarsModes,
   WoolWarsOverall,
 } from "@statsify/schemas";
-import { prettify } from "@statsify/util";
 
 export interface WoolWarsProfileProps extends BaseProfileProps {
   mode: GameMode<WoolWarsModes>;
