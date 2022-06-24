@@ -9,5 +9,8 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.1"
   }
 }

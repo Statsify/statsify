@@ -4,7 +4,7 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "start": "node -r dotenv/config --enable-source-maps . dotenv_config_path=../../.env",
+    "start": "node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
     "test": "jest",

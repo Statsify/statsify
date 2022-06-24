@@ -4,7 +4,7 @@
   "private": true,
   "main": "dist/index.js",
   "scripts": {
-    "start": "node -r dotenv/config --enable-source-maps . dotenv_config_path=../../.env",
+    "start": "node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
@@ -15,7 +15,6 @@
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@typegoose/typegoose": "^9.9.0",
-    "dotenv": "^16.0.1",
     "minecraft-protocol": "^1.35.0",
     "mongoose": "^6.4.0"
   }

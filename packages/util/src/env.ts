@@ -6,6 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { config } from "dotenv";
+
+config({ path: "../../.env" });
+
 interface Environment {
   MONGODB_URI: string;
   REDIS_URL: string;
@@ -54,7 +58,8 @@ export const env = <T extends keyof Environment>(
   }
 
   //Convert value to the correct type
-  if (isValueDefined && !Number.isNaN(+value)) return +value as Environment[T];
+  if (isValueDefined && !Number.isNaN(+value) && `${+value}` === value)
+    return +value as Environment[T];
 
   if (value === "true" || value === "false")
     return (value === "true") as unknown as Environment[T];
