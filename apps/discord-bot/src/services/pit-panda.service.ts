@@ -60,7 +60,6 @@ export class PitPandaService {
     const [formattedTag, type] = this.apiService.parseTag(tag);
     const input = await this.apiService.resolveTag(formattedTag, type, user);
 
-    console.log(input);
     return this.axios
       .get(`/bot/profile/${input}`)
       .then((res) => res.data.data)

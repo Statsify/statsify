@@ -18,19 +18,20 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { SkinModule } from "./skin";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 import { UserModule } from "./user";
+import { env } from "@statsify/util";
 
 @Module({
   imports: [
     TypegooseModule.forRootAsync({
       useFactory: () => ({
-        uri: process.env.MONGODB_URI,
+        uri: env("MONGODB_URI"),
         useNewUrlParser: true,
         useUnifiedTopology: true,
       }),
     }),
     RedisModule.forRoot({
       config: {
-        url: process.env.REDIS_URL,
+        url: env("REDIS_URL"),
       },
     }),
     ScheduleModule.forRoot(),

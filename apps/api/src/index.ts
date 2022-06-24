@@ -15,13 +15,14 @@ import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify
 import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe } from "@nestjs/common";
+import { env } from "@statsify/util";
 import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
 import { setGlobalOptions } from "@typegoose/typegoose";
 import { version } from "../../../package.json";
 
 async function bootstrap() {
-  await mkdir(join(process.env.API_MEDIA_ROOT, "badges"), { recursive: true });
+  await mkdir(join(env("API_MEDIA_ROOT"), "badges"), { recursive: true });
 
   //Removes the `_id` fields created from sub classes of documents
   setGlobalOptions({ schemaOptions: { _id: false } });
@@ -70,7 +71,7 @@ async function bootstrap() {
 
   SwaggerModule.setup("swagger", app, document);
 
-  await app.listen(process.env.API_PORT);
+  await app.listen(env("API_PORT"));
 }
 
 bootstrap();

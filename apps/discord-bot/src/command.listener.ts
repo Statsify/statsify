@@ -22,7 +22,7 @@ import {
 import { ErrorMessage } from "./error.message";
 import { User, UserTier } from "@statsify/schemas";
 import { WARNING_COLOR } from "#constants";
-import { formatTime } from "@statsify/util";
+import { env, formatTime } from "@statsify/util";
 import type {
   InteractionResponse,
   InteractionServer,
@@ -48,8 +48,8 @@ export class CommandListener extends AbstractCommandListener {
     super(
       client as InteractionServer,
       rest,
-      process.env.DISCORD_BOT_APPLICATION_ID,
-      process.env.DISCORD_BOT_PORT as number
+      env("DISCORD_BOT_APPLICATION_ID"),
+      env("DISCORD_BOT_PORT", { required: false })!
     );
 
     this.apiService = Container.get(ApiService);
