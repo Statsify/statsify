@@ -7,7 +7,7 @@
  */
 
 import Container from "typedi";
-import { CommandListener } from "./command.listener";
+import { CommandListener } from "#lib/command.listener";
 import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
 import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";

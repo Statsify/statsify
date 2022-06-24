@@ -20,7 +20,7 @@ import {
   SubCommand,
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
-import { CommandListener } from "../../command.listener";
+import { CommandListener } from "#lib/command.listener";
 import {
   GUILD_TOP_PAGE_SIZE,
   GuildTopMember,
@@ -31,7 +31,7 @@ import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.su
 import { GuildQuery } from "@statsify/api-client";
 import { Theme, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "../../themes";
+import { getTheme } from "#themes";
 
 type BaseGuildTopProfileProps = Omit<GuildTopProfileProps, "page" | "members" | "title">;
 type GuildTopKey = "daily" | "weekly" | "monthly" | number;

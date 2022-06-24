@@ -37,6 +37,8 @@
     "#arguments": "./dist/arguments/index.js",
     "#components": "./dist/components/index.js",
     "#services": "./dist/services/index.js",
-    "#constants": "./dist/constants.js"
+    "#constants": "./dist/constants.js",
+    "#themes": "./dist/themes/index.js",
+    "#lib/*": "./dist/lib/*.js"
   }
 }

@@ -16,7 +16,7 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { ErrorMessage } from "../../error.message";
+import { ErrorMessage } from "#lib/error.message";
 import { GuildListProfile, GuildListProfileProps } from "./guild-list.profile";
 import { GuildMember } from "@statsify/schemas";
 import { GuildMemberProfile } from "./guild-member.profile";
@@ -24,7 +24,7 @@ import { GuildProfile, GuildProfileProps } from "./guild.profile";
 import { GuildQuery } from "@statsify/api-client";
 import { GuildTopSubCommand } from "./guild-top.subcommand";
 import { getAssetPath, getBackground, getImage, getLogo } from "@statsify/assets";
-import { getTheme } from "../../themes";
+import { getTheme } from "#themes";
 import { readdir } from "node:fs/promises";
 import { render } from "@statsify/rendering";
 

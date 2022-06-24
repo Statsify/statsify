@@ -10,7 +10,7 @@ import { ApiService } from "#services";
 import { Command, CommandContext, IMessage, PlayerArgument } from "@statsify/discord";
 import { StatusProfile } from "./status.profile";
 import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "../../themes";
+import { getTheme } from "#themes";
 import { mapGameIdToBackground } from "#constants";
 import { render } from "@statsify/rendering";
 

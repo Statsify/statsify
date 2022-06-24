@@ -14,7 +14,7 @@ import {
   Interaction,
 } from "@statsify/discord";
 import { ApiService } from "#services";
-import { ErrorMessage } from "./error.message";
+import { ErrorMessage } from "#lib/error.message";
 import { InteractionResponseType } from "discord-api-types/v10";
 import { User, UserTier } from "@statsify/schemas";
 import { WARNING_COLOR } from "#constants";
