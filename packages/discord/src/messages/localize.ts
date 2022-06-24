@@ -11,57 +11,30 @@
 import i18next, {
   StringMap,
   TFunction,
-  TFunctionDetailedResult,
   TFunctionKeys,
   TFunctionResult,
   TOptions,
 } from "i18next";
 
 interface ILocalizeFunction {
-  <
-    TResult extends TFunctionResult = string,
-    TKeys extends TFunctionKeys = string,
-    TInterpolationMap extends object = StringMap
-  >(
-    key: TKeys | TKeys[]
-  ): string;
-  <
-    TResult extends TFunctionResult = TFunctionDetailedResult<object>,
-    TKeys extends TFunctionKeys = string,
-    TInterpolationMap extends object = StringMap
-  >(
+  <TKeys extends TFunctionKeys = string>(key: TKeys | TKeys[]): string;
+  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
     key: TKeys | TKeys[],
     options?: TOptions<TInterpolationMap> & { returnDetails: true; returnObjects: true }
   ): string;
-  <
-    TResult extends TFunctionResult = TFunctionDetailedResult,
-    TKeys extends TFunctionKeys = string,
-    TInterpolationMap extends object = StringMap
-  >(
+  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
     key: TKeys | TKeys[],
     options?: TOptions<TInterpolationMap> & { returnDetails: true }
   ): string;
-  <
-    TResult extends TFunctionResult = object,
-    TKeys extends TFunctionKeys = string,
-    TInterpolationMap extends object = StringMap
-  >(
+  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
     key: TKeys | TKeys[],
     options?: TOptions<TInterpolationMap> & { returnObjects: true }
   ): string;
-  <
-    TResult extends TFunctionResult = string,
-    TKeys extends TFunctionKeys = string,
-    TInterpolationMap extends object = StringMap
-  >(
+  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
     key: TKeys | TKeys[],
     options?: TOptions<TInterpolationMap> | string
   ): string;
-  <
-    TResult extends TFunctionResult = string,
-    TKeys extends TFunctionKeys = string,
-    TInterpolationMap extends object = StringMap
-  >(
+  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
     key: TKeys | TKeys[],
     defaultValue?: string,
     options?: TOptions<TInterpolationMap> | string

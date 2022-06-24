@@ -10,7 +10,7 @@ import { APIData } from "@statsify/util";
 import { Color } from "../color";
 import { ExpByGame } from "./expbygame";
 import { Field } from "../metadata";
-import { GameCode, GameCodeMapping, GameIdMapping } from "../game";
+import { GameCode, GameIdMapping } from "../game";
 import { GuildAchievements } from "./achievements";
 import { GuildMember } from "./member";
 import { GuildRank } from "./rank";

@@ -16,7 +16,6 @@ import {
 } from "#components";
 import { FormattedGame, Progression } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
-import { ratio } from "@statsify/math";
 import type { BaseProfileProps } from "../base.hypixel-command";
 import type { PitPandaPlayer } from "#services";
 
