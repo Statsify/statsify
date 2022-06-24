@@ -15,7 +15,7 @@ import {
   Message,
 } from "@statsify/discord";
 import { ApiService } from "#services";
-import { ErrorMessage } from "error.message";
+import { ErrorMessage } from "./error.message";
 import { InteractionResponseType } from "discord-api-types/v10";
 import { User, UserTier } from "@statsify/schemas";
 import { WARNING_COLOR } from "#constants";
@@ -76,7 +76,12 @@ export class CommandListener extends AbstractCommandListener {
           })
           .catch((err) => {
             if (err instanceof Message) context.reply(err);
-            else this.logger.error(err);
+            else {
+              this.logger.error(
+                `An error occured when running "${command?.name}" command`
+              );
+              this.logger.error(err.stack);
+            }
           });
       else if (typeof response === "object")
         return {

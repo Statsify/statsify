@@ -10,6 +10,7 @@ export * from "./abstract.argument";
 export * from "./choice.argument";
 export * from "./file.argument";
 export * from "./guild.argument";
+export * from "./guild-leaderboard.argument";
 export * from "./mojang-player.argument";
 export * from "./number.argument";
 export * from "./player-leaderboard.argument";

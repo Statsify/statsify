@@ -12,6 +12,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   CommandContext,
+  GuildArgument,
   IMessage,
   Interaction,
   SelectMenuBuilder,
@@ -26,7 +27,6 @@ import {
   GuildTopProfile,
   GuildTopProfileProps,
 } from "./guild-top.profile";
-import { GuildArgument } from "#arguments";
 import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.subcommand";
 import { GuildQuery } from "@statsify/api-client";
 import { Theme, render } from "@statsify/rendering";

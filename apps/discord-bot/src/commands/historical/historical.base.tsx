@@ -31,7 +31,7 @@ import {
   WARLORDS_MODES,
   WOOL_WARS_MODES,
 } from "@statsify/schemas";
-import { ApiService, HistoricalType } from "@statsify/api-client";
+import { ApiService } from "#services";
 import { ArcadeProfile } from "../arcade/arcade.profile";
 import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile";
 import { BedWarsProfile } from "../bedwars/bedwars.profile";
@@ -49,6 +49,7 @@ import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile";
 import { DuelsProfile } from "../duels/duels.profile";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { GeneralProfile } from "../general/general.profile";
+import { HistoricalType } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile";
 import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile";
 import { PaintballProfile } from "../paintball/paintball.profile";

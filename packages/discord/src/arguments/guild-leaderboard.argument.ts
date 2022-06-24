@@ -11,8 +11,10 @@ import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
+import { AbstractArgument } from "./abstract.argument";
+import { CommandContext } from "../command";
 import { Guild, LeaderboardScanner } from "@statsify/schemas";
+import { LocalizationString } from "../messages";
 import { removeFormatting } from "@statsify/util";
 
 const list = LeaderboardScanner.getLeaderboardMetadata(Guild).map(
