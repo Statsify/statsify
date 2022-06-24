@@ -13,15 +13,13 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { Auth } from "../auth";
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get } from "@nestjs/common";
 import {
   ErrorResponse,
   GetGamecountsResponse,
-  GetResourceResponse,
   GetWatchdogResponse,
 } from "@statsify/api-client";
 import { HypixelService } from "../hypixel";
-import { ResourceDto } from "../dtos";
 
 @Controller(`/hypixelresources`)
 @ApiTags("Hypixel Resources")
@@ -54,14 +52,5 @@ export class HypixelResourcesController {
       success: !!gamecounts,
       gamecounts,
     };
-  }
-
-  @Get(`/resource`)
-  @ApiOperation({ summary: "Get a hypixel resource" })
-  @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiOkResponse({ type: GetResourceResponse })
-  @Auth()
-  public async getHypixelResource(@Query() { path }: ResourceDto) {
-    return await this.hypixelService.getResources(path);
   }
 }
