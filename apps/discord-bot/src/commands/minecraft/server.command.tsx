@@ -11,8 +11,7 @@ import { Command, CommandContext, IMessage, ServerArgument } from "@statsify/dis
 import { Container } from "#components";
 import { ErrorMessage } from "../../error.message";
 import { getBackground, getServerMappings } from "@statsify/assets";
-import { loadImage } from "skia-canvas/lib";
-import { render } from "@statsify/rendering";
+import { loadImage, render } from "@statsify/rendering";
 
 const servers = getServerMappings();
 

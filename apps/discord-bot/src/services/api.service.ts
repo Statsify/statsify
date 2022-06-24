@@ -20,9 +20,9 @@ import {
   ApiService as StatsifyApiService,
   StatusNotFoundException,
 } from "@statsify/api-client";
+import { LocalizeFunction } from "@statsify/discord";
 import { Service } from "typedi";
 import { removeFormatting } from "@statsify/util";
-import { t } from "i18next";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
@@ -89,13 +89,14 @@ export class ApiService extends StatsifyApiService {
       if (error.message === "player") throw this.missingPlayer(type, tag);
 
       if (error.message === "recentGames") {
-        const displayName = this.emojiDisplayName(
-          (error as RecentGamesNotFoundException).displayName
-        );
+        const { displayName } = error as RecentGamesNotFoundException;
 
         throw new ErrorMessage(
           (t) => t("errors.noRecentGames.title"),
-          (t) => t("errors.noRecentGames.description", { displayName })
+          (t) =>
+            t("errors.noRecentGames.description", {
+              displayName: this.emojiDisplayName(t, displayName),
+            })
         );
       }
 
@@ -122,13 +123,14 @@ export class ApiService extends StatsifyApiService {
       if (error.message === "player") throw this.missingPlayer(type, tag);
 
       if (error.message === "status") {
-        const displayName = this.emojiDisplayName(
-          (error as StatusNotFoundException).displayName
-        );
+        const { displayName } = error as StatusNotFoundException;
 
         throw new ErrorMessage(
           (t) => t("errors.noStatus.title"),
-          (t) => t("errors.noStatus.description", { displayName })
+          (t) =>
+            t("errors.noStatus.description", {
+              displayName: this.emojiDisplayName(t, displayName),
+            })
         );
       }
 
@@ -211,11 +213,12 @@ export class ApiService extends StatsifyApiService {
     });
   }
 
-  public emojiDisplayName(displayName: string, space = true) {
+  public emojiDisplayName(t: LocalizeFunction, displayName: string, space = true) {
     const [rank, name] = displayName
-      .replaceAll("[|]", "")
+      .replace(/\[|\]/g, "")
       .replaceAll("_", "\\_")
       .split(" ");
+
     if (!rank) return removeFormatting(displayName);
 
     const unformattedRank = removeFormatting(rank);
@@ -244,7 +247,7 @@ export class ApiService extends StatsifyApiService {
     if (length >= 32 && length <= 36) return [tag.replaceAll("-", ""), "uuid"];
     if (length <= 16) return [tag, "username"];
 
-    if (this.isDiscordId(tag)) return [tag.replaceAll("<@|!|>", ""), "discordId"];
+    if (this.isDiscordId(tag)) return [tag.replace(/<@|!|>/g, ""), "discordId"];
 
     throw new ErrorMessage(
       (t) => t("errors.invalidSearch.title"),
@@ -255,6 +258,7 @@ export class ApiService extends StatsifyApiService {
   public async resolveTag(tag: string, type: PlayerTag, user: User | null) {
     if (type === "discordId") {
       const searchedUser = await this.getUser(tag);
+      console.log(searchedUser, tag);
       if (searchedUser?.uuid) return searchedUser.uuid;
 
       throw new ErrorMessage(

@@ -15,10 +15,20 @@ import {
 } from "./mode";
 import { Color, ColorCode } from "../../../color";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { getTitleIndex, titleScores } from "./util";
 
-export const BUILD_BATTLE_MODES = ["overall"] as const;
-export type BuildBattleModes = typeof BUILD_BATTLE_MODES;
+export const BUILD_BATTLE_MODES = new GameModes([
+  { api: "overall" },
+
+  { hypixel: "BUILD_BATTLE_SOLO_NORMAL_LATEST", formatted: "1.14" },
+  { hypixel: "BUILD_BATTLE_GUESS_THE_BUILD", formatted: "GTB" },
+  { hypixel: "BUILD_BATTLE_TEAMS_NORMAL", formatted: "Teams" },
+  { hypixel: "BUILD_BATTLE_SOLO_NORMAL", formatted: "Solo" },
+  { hypixel: "BUILD_BATTLE_SOLO_PRO", formatted: "Pro" },
+]);
+
+export type BuildBattleModes = IGameModes<typeof BUILD_BATTLE_MODES>;
 
 export class BuildBattle {
   @Field()

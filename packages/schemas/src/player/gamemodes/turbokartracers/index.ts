@@ -8,10 +8,12 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { add, ratio } from "@statsify/math";
 
-export const TURBO_KART_RACERS_MODES = ["overall"] as const;
-export type TurboKartRacersModes = typeof TURBO_KART_RACERS_MODES;
+export const TURBO_KART_RACERS_MODES = new GameModes([{ api: "overall" }]);
+
+export type TurboKartRacersModes = IGameModes<typeof TURBO_KART_RACERS_MODES>;
 
 export class TurboKartRacers {
   @Field()

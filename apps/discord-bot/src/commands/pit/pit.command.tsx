@@ -6,10 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService, PaginateService, PitPandaService } from "#services";
-import { Command, CommandContext } from "@statsify/discord";
+import { ApiService, PitPandaService } from "#services";
+import {
+  Command,
+  CommandContext,
+  PaginateService,
+  PlayerArgument,
+} from "@statsify/discord";
 import { PitProfile } from "./pit.profile";
-import { PlayerArgument } from "#arguments";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "../../themes";
 import { render } from "@statsify/rendering";
@@ -26,13 +30,16 @@ export class PitCommand {
     const user = context.getUser();
     const t = context.t();
 
-    const player = await this.pitPandaService.getPlayer(context.option<string>("player"));
+    const player = await this.pitPandaService.getPlayer(
+      context.option<string>("player"),
+      user
+    );
 
     const [skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
       getLogo(user?.tier),
-      getBackground("bedwars", "overall"),
+      getBackground("pit", "overall"),
     ]);
 
     const canvas = render(

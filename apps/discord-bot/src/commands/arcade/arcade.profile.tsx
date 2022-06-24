@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ArcadeModes, FormattedGame } from "@statsify/schemas";
+import { ArcadeModes, FormattedGame, GameMode } from "@statsify/schemas";
 import { BaseProfileProps } from "commands/base.hypixel-command";
 import {
   BlockingDeadTable,
@@ -30,10 +30,9 @@ import {
   ZombiesTable,
 } from "./tables";
 import { Container, Footer, Header, SidebarItem } from "#components";
-import { prettify } from "@statsify/util";
 
 export interface ArcadeProfileProps extends BaseProfileProps {
-  mode: ArcadeModes[number];
+  mode: GameMode<ArcadeModes>;
 }
 
 export const ArcadeProfile = ({
@@ -54,62 +53,63 @@ export const ArcadeProfile = ({
     [t("stats.overallWins"), t(arcade.wins), "§b"],
   ];
 
+  const { api } = mode;
   let table: JSX.Element;
 
-  switch (mode) {
+  switch (api) {
     case "blockingDead":
-      table = <BlockingDeadTable stats={arcade[mode]} t={t} />;
+      table = <BlockingDeadTable stats={arcade[api]} t={t} />;
       break;
     case "bountyHunters":
-      table = <BountyHuntersTable stats={arcade[mode]} t={t} />;
+      table = <BountyHuntersTable stats={arcade[api]} t={t} />;
       break;
     case "captureTheWool":
-      table = <CaptureTheWoolTable stats={arcade[mode]} t={t} />;
+      table = <CaptureTheWoolTable stats={arcade[api]} t={t} />;
       break;
     case "creeperAttack":
-      table = <CreeperAttackTable stats={arcade[mode]} t={t} />;
+      table = <CreeperAttackTable stats={arcade[api]} t={t} />;
       break;
     case "dragonWars":
-      table = <DragonWarsTable stats={arcade[mode]} t={t} />;
+      table = <DragonWarsTable stats={arcade[api]} t={t} />;
       break;
     case "enderSpleef":
-      table = <EnderSpleefTable stats={arcade[mode]} t={t} />;
+      table = <EnderSpleefTable stats={arcade[api]} t={t} />;
       break;
     case "farmHunt":
-      table = <FarmHuntTable stats={arcade[mode]} t={t} />;
+      table = <FarmHuntTable stats={arcade[api]} t={t} />;
       break;
     case "football":
-      table = <FootballTable stats={arcade[mode]} t={t} />;
+      table = <FootballTable stats={arcade[api]} t={t} />;
       break;
     case "galaxyWars":
-      table = <GalaxyWarsTable stats={arcade[mode]} t={t} />;
+      table = <GalaxyWarsTable stats={arcade[api]} t={t} />;
       break;
     case "hideAndSeek":
-      table = <HideAndSeekTable stats={arcade[mode]} t={t} />;
+      table = <HideAndSeekTable stats={arcade[api]} t={t} />;
       break;
     case "holeInTheWall":
-      table = <HoleInTheWallTable stats={arcade[mode]} t={t} />;
+      table = <HoleInTheWallTable stats={arcade[api]} t={t} />;
       break;
     case "hypixelSays":
-      table = <HypixelSaysTable stats={arcade[mode]} t={t} />;
+      table = <HypixelSaysTable stats={arcade[api]} t={t} />;
       break;
     case "miniWalls":
-      table = <MiniWallsTable stats={arcade[mode]} t={t} />;
+      table = <MiniWallsTable stats={arcade[api]} t={t} />;
       break;
     case "partyGames":
-      table = <PartyGamesTable stats={arcade[mode]} t={t} />;
+      table = <PartyGamesTable stats={arcade[api]} t={t} />;
       break;
     case "pixelPainters":
-      table = <PixelPaintersTable stats={arcade[mode]} t={t} />;
+      table = <PixelPaintersTable stats={arcade[api]} t={t} />;
       break;
     case "seasonal":
-      table = <SeasonalTable stats={arcade[mode]} t={t} />;
+      table = <SeasonalTable stats={arcade[api]} t={t} />;
       break;
     case "throwOut":
-      table = <ThrowOutTable stats={arcade[mode]} t={t} />;
+      table = <ThrowOutTable stats={arcade[api]} t={t} />;
       break;
     case "zombies":
-      table = <ZombiesTable stats={arcade[mode]} t={t} />;
+      table = <ZombiesTable stats={arcade[api]} t={t} />;
       break;
     default:
       table = <OverallArcadeTable stats={arcade} t={t} />;
@@ -123,7 +123,7 @@ export const ArcadeProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.ARCADE} §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.ARCADE} §fStats §r(${mode.formatted})`}
         time={time}
       />
       {table}

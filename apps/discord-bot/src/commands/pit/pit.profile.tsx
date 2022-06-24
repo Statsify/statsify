@@ -6,7 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  Header,
+  SidebarItem,
+  Table,
+  formatProgression,
+} from "#components";
+import { FormattedGame, Progression } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
 import type { PitPandaPlayer } from "#services";
@@ -24,7 +32,10 @@ export const PitProfile = ({
   tier,
   player,
 }: PitProfileProps) => {
-  const sidebar: SidebarItem[] = [[t("stats.gold"), `${t(player.gold)}g`, "§6"]];
+  const sidebar: SidebarItem[] = [
+    [t("stats.gold"), `${t(player.gold)}g`, "§6"],
+    [t("stats.exp"), t(player.xp), "§b"],
+  ];
 
   if (player.doc.renown) sidebar.push([t("stats.renown"), `${player.doc.renown}`, "§b"]);
   if (player.doc.bounty) sidebar.push([t("stats.bounty"), `${player.doc.bounty}`, "§6"]);
@@ -36,7 +47,19 @@ export const PitProfile = ({
         skin={skin}
         time="LIVE"
         title="§l§eThe §aPit §fStats"
-        description=""
+        description={`${FormattedGame.PIT} §7Level: ${
+          player.doc.formattedLevel
+        }\n${formatProgression(
+          t,
+          new Progression(
+            player.xpProgress.displayCurrent,
+            player.xpProgress.displayGoal
+          ),
+          player.doc.formattedLevel,
+          player.doc.formattedLevel,
+          true,
+          false
+        )}`}
         sidebar={sidebar}
         badge={badge}
       />
@@ -55,7 +78,7 @@ export const PitProfile = ({
           />
           <Table.td
             title={t("stats.playtime")}
-            value={formatTime(player.doc.playtime * 1000)}
+            value={formatTime(player.doc.playtime * 60_000)}
             color="§b"
           />
         </Table.tr>

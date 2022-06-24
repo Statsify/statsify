@@ -20,10 +20,10 @@ import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalType } from "@statsify/api-client";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "../themes";
-import { noop, prettify } from "@statsify/util";
+import { noop } from "@statsify/util";
 import { render } from "@statsify/rendering";
+import type { GameMode, GameModes, Player, UserTier } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
-import type { Player, UserTier } from "@statsify/schemas";
 
 export interface BaseProfileProps {
   skin: Image;
@@ -37,14 +37,14 @@ export interface BaseProfileProps {
 }
 
 export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
-  mode: T[number];
+  mode: GameMode<T>;
   data: K;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   getPreProfileData?(player: Player): K | Promise<K>;
-  filterModes?(player: Player): string[];
+  filterModes?(player: Player, modes: GameMode<T>[]): GameMode<T>[];
 }
 
 @Command({
@@ -56,7 +56,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
   protected readonly apiService: ApiService;
   protected readonly paginateService: PaginateService;
 
-  public constructor(protected readonly modes: T) {
+  public constructor(protected readonly modes: GameModes<T>) {
     this.apiService = Container.get(ApiService);
     this.paginateService = Container.get(PaginateService);
   }
@@ -74,14 +74,13 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
 
     const data: K = (await this.getPreProfileData?.(player)) ?? noop();
 
-    const filteredModes = this.filterModes?.(player) ?? this.modes;
+    const allModes = this.modes.getModes();
+    const filteredModes = this.filterModes?.(player, allModes) ?? allModes;
 
     const pages: Page[] = filteredModes.map((mode) => ({
-      label: prettify(mode),
+      label: mode.formatted,
       generator: async (t) => {
-        const background = await getBackground(
-          ...mapBackground(this.modes, mode as T[number])
-        );
+        const background = await getBackground(...mapBackground(this.modes, mode.api));
 
         const profile = this.getProfile(
           {
@@ -94,7 +93,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
             badge,
             time: "LIVE",
           },
-          { mode: mode as T[number], data }
+          { mode, data }
         );
 
         return render(profile, getTheme(user?.theme));

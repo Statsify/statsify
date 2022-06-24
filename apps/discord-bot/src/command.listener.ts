@@ -12,7 +12,6 @@ import {
   CommandContext,
   CommandResolvable,
   Interaction,
-  Message,
 } from "@statsify/discord";
 import { ApiService } from "#services";
 import { ErrorMessage } from "./error.message";
@@ -35,23 +34,23 @@ export class CommandListener extends AbstractCommandListener {
   private constructor(
     client: WebsocketShard | InteractionServer,
     rest: RestClient,
-    private commands: Map<string, CommandResolvable>
+    commands: Map<string, CommandResolvable>
   ) {
     super(
       client as InteractionServer,
       rest,
+      commands,
       process.env.DISCORD_BOT_APPLICATION_ID,
       process.env.DISCORD_BOT_PORT as number
     );
 
     this.apiService = Container.get(ApiService);
-    this.hooks = new Map();
     this.cooldowns = new Map();
   }
 
   protected async onCommand(interaction: Interaction): Promise<InteractionResponse> {
     let data = interaction.getData();
-    let command = this.commands.get(data.name);
+    let command = this.commands.get(data.name)!;
 
     if (!command) return { type: InteractionResponseType.Pong };
 
@@ -64,72 +63,11 @@ export class CommandListener extends AbstractCommandListener {
     const context = new CommandContext(this, interaction, data);
     context.setUser(user);
 
-    try {
-      this.isOnCooldown(command, user, userId);
-
-      const response = command.execute(context);
-
-      if (response instanceof Promise)
-        response
-          .then((res) => {
-            if (typeof res === "object") context.reply(res);
-          })
-          .catch((err) => {
-            if (err instanceof Message) context.reply(err);
-            else {
-              this.logger.error(
-                `An error occured when running "${command?.name}" command`
-              );
-              this.logger.error(err.stack);
-            }
-          });
-      else if (typeof response === "object")
-        return {
-          type: InteractionResponseType.ChannelMessageWithSource,
-          data: interaction.convertToApiData(response),
-        };
-    } catch (err) {
-      if (err instanceof Message)
-        return {
-          type: InteractionResponseType.ChannelMessageWithSource,
-          data: interaction.convertToApiData(err),
-        };
-
-      this.logger.error(err);
-    }
-
-    return {
-      type: InteractionResponseType.DeferredChannelMessageWithSource,
-    };
-  }
-
-  protected onAutocomplete(interaction: Interaction): InteractionResponse {
-    const defaultResponse = {
-      type: InteractionResponseType.ApplicationCommandAutocompleteResult,
-      data: { choices: [] },
-    };
-
-    let data = interaction.getData();
-
-    let command = this.commands.get(data.name);
-
-    if (!command) return defaultResponse;
-
-    [command, data] = this.getCommandAndData(command, data);
-
-    const focusedOption = data.options.find((opt: any) => opt.focused);
-    if (!focusedOption) return defaultResponse;
-
-    const autocompleteArg = command.args.find((opt) => opt.name === focusedOption.name);
-    if (!autocompleteArg) return defaultResponse;
-
-    const context = new CommandContext(this, interaction, data);
-    const response = autocompleteArg.autocompleteHandler?.(context);
-
-    return {
-      type: InteractionResponseType.ApplicationCommandAutocompleteResult,
-      data: { choices: response },
-    };
+    return this.executeCommand(
+      command,
+      context,
+      this.isOnCooldown.bind(this, command, user, userId)
+    );
   }
 
   private isOnCooldown(command: CommandResolvable, user: User | null, userId: string) {
@@ -186,6 +124,7 @@ export class CommandListener extends AbstractCommandListener {
   }
 
   public static getInstance() {
+    if (!this.instance) throw new Error("CommandListener has not been initialized");
     return this.instance;
   }
 }

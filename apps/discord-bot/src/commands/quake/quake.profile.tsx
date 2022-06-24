@@ -8,11 +8,10 @@
 
 import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
-import { FormattedGame, QUAKE_MODES } from "@statsify/schemas";
-import { prettify } from "@statsify/util";
+import { FormattedGame, GameMode, QuakeModes } from "@statsify/schemas";
 
 export interface QuakeProfileProps extends BaseProfileProps {
-  mode: typeof QUAKE_MODES[number];
+  mode: GameMode<QuakeModes>;
 }
 
 export const QuakeProfile = ({
@@ -27,7 +26,7 @@ export const QuakeProfile = ({
   time,
 }: QuakeProfileProps) => {
   const { quake } = player.stats;
-  const stats = quake[mode];
+  const stats = quake[mode.api];
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(quake.coins), "§6"],
@@ -43,7 +42,7 @@ export const QuakeProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.QUAKE} §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.QUAKE} §fStats §r(${mode.formatted})`}
         time={time}
       />
       <Table.table>

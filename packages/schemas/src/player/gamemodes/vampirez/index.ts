@@ -8,11 +8,13 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { VampireZLife } from "./life";
 import { deepAdd } from "@statsify/math";
 
-export const VAMPIREZ_MODES = ["overall"] as const;
-export type VampireZModes = typeof VAMPIREZ_MODES;
+export const VAMPIREZ_MODES = new GameModes([{ api: "overall" }]);
+
+export type VampireZModes = IGameModes<typeof VAMPIREZ_MODES>;
 
 export class VampireZ {
   @Field()

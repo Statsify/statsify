@@ -15,6 +15,7 @@ import {
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   GENERAL_MODES,
+  GameModes,
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
@@ -30,13 +31,17 @@ import {
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
-  WOOL_WARS_MODES,
+  WOOLWARS_MODES,
 } from "@statsify/schemas";
 import { ApiService } from "#services";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command";
-import { Command, CommandContext, SubCommand } from "@statsify/discord";
+import {
+  Command,
+  CommandContext,
+  PlayerLeaderboardArgument,
+  SubCommand,
+} from "@statsify/discord";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
-import { PlayerLeaderboardArgument } from "#arguments";
 import { getBackground } from "@statsify/assets";
 
 @Command({ name: "leaderboard", description: (t) => t("commands.player-leaderboard") })
@@ -226,18 +231,21 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
     args: [new PlayerLeaderboardArgument("woolwars")],
   })
   public woolwars(context: CommandContext) {
-    return this.run(context, "woolwars", WOOL_WARS_MODES);
+    return this.run(context, "woolwars", WOOLWARS_MODES);
   }
 
   private async run<T extends GamesWithBackgrounds>(
     context: CommandContext,
     prefix: keyof PlayerStats,
-    modes: T
+    modes: GameModes<T>
   ) {
     const leaderboard = context.option<string>("leaderboard");
 
     const field = `stats.${prefix}.${leaderboard.replaceAll(" ", ".")}`;
-    const background = await getBackground(...mapBackground(modes, modes[0]));
+
+    const background = await getBackground(
+      ...mapBackground(modes, modes.getModes()[0].api)
+    );
 
     return this.createLeaderboard({
       context,

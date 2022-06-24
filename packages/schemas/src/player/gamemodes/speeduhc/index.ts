@@ -8,25 +8,27 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { SpeedUHCMastery } from "./mastery";
 import { SpeedUHCMode } from "./mode";
 import { getLevelIndex, titleScores } from "./util";
 
-export const SPEED_UHC_MODES = [
-  "overall",
-  "solo",
-  "teams",
-  "wildSpecialist",
-  "guardian",
-  "sniper",
-  "berserk",
-  "masterBaker",
-  "invigorate",
-  "huntsman",
-  "fortune",
-  "vampirism",
-] as const;
-export type SpeedUHCModes = typeof SPEED_UHC_MODES;
+export const SPEED_UHC_MODES = new GameModes([
+  { api: "overall" },
+  { api: "solo", hypixel: "solo_normal" },
+  { api: "teams", hypixel: "team_normal" },
+  { api: "wildSpecialist" },
+  { api: "guardian" },
+  { api: "sniper" },
+  { api: "berserk" },
+  { api: "masterBaker" },
+  { api: "invigorate" },
+  { api: "huntsman" },
+  { api: "fortune" },
+  { api: "vampirism" },
+]);
+
+export type SpeedUHCModes = IGameModes<typeof SPEED_UHC_MODES>;
 
 export class SpeedUHC {
   @Field()

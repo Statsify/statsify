@@ -8,11 +8,11 @@
 
 import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
-import { FormattedGame, SMASH_HEROES_MODES } from "@statsify/schemas";
+import { FormattedGame, GameMode, SmashHeroesModes } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 
 export interface SmashHeroesProfile extends BaseProfileProps {
-  mode: typeof SMASH_HEROES_MODES[number];
+  mode: GameMode<SmashHeroesModes>;
 }
 
 export const SmashHeroesProfile = ({
@@ -27,7 +27,7 @@ export const SmashHeroesProfile = ({
   time,
 }: SmashHeroesProfile) => {
   const { smashheroes } = player.stats;
-  const stats = smashheroes[mode];
+  const stats = smashheroes[mode.api];
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(smashheroes.coins), "§6"],
@@ -41,7 +41,7 @@ export const SmashHeroesProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.SMASH_HEROES} §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.SMASH_HEROES} §fStats §r(${mode.formatted})`}
         description={`${FormattedGame.SMASH_HEROES} §7Level: ${smashheroes.levelFormatted}`}
         time={time}
       />

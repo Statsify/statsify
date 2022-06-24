@@ -69,7 +69,7 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const ranking = guildRanking[0]?.rank ?? 0;
 
-    const gameIconsRecord = Object.fromEntries(await gameIcons);
+    const gameIconsRecord = Object.fromEntries(gameIcons);
 
     const props: Omit<GuildProfileProps, "page"> = {
       guild,

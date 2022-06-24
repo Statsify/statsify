@@ -12,9 +12,11 @@ import {
   GatewayDispatchEvents,
   InteractionResponseType,
 } from "discord-api-types/v10";
+import { CommandContext } from "./command.context";
 import { CommandResolvable } from "./command.resolvable";
 import { Interaction } from "../interaction";
 import { Logger } from "@statsify/logger";
+import { Message } from "../messages";
 import type {
   Interaction as DiscordInteraction,
   InteractionResponse,
@@ -27,20 +29,29 @@ export type InteractionHook = (
   interaction: Interaction
 ) => InteractionResponse | void | Promise<any>;
 
+export type CommandPrecondition = () => void;
+
 export abstract class AbstractCommandListener {
   protected hooks: Map<string, InteractionHook>;
   protected readonly logger = new Logger("CommandListener");
 
-  public constructor(
+  protected constructor(
     client: InteractionServer,
     rest: RestClient,
+    commands: Map<string, CommandResolvable>,
     applicationId: string,
     port: number
   );
-  public constructor(client: WebsocketShard, rest: RestClient, applicationId: string);
-  public constructor(
+  protected constructor(
+    client: WebsocketShard,
+    rest: RestClient,
+    commands: Map<string, CommandResolvable>,
+    applicationId: string
+  );
+  protected constructor(
     private client: WebsocketShard | InteractionServer,
     private rest: RestClient,
+    protected commands: Map<string, CommandResolvable>,
     private applicationId: string,
     private port?: number
   ) {
@@ -67,18 +78,6 @@ export abstract class AbstractCommandListener {
 
     this.logger.log(`Connecting to gateway with WebsocketShard`);
     return (this.client as WebsocketShard).connect();
-  }
-
-  public onInteraction(
-    interaction: Interaction
-  ): InteractionResponse | Promise<InteractionResponse> {
-    if (interaction.isCommandInteraction()) return this.onCommand(interaction);
-    if (interaction.isAutocompleteInteraction()) return this.onAutocomplete(interaction);
-    if (interaction.isMessageComponentInteraction())
-      return this.onMessageComponent(interaction);
-    if (interaction.isModalInteraction()) return this.onModal(interaction);
-
-    return { type: InteractionResponseType.Pong };
   }
 
   protected getCommandAndData(
@@ -111,6 +110,50 @@ export abstract class AbstractCommandListener {
     return [command, data];
   }
 
+  protected executeCommand(
+    command: CommandResolvable,
+    context: CommandContext,
+    ...preconditions: CommandPrecondition[]
+  ) {
+    try {
+      preconditions.forEach((precondition) => precondition());
+
+      const response = command.execute(context);
+
+      if (response instanceof Promise)
+        response
+          .then((res) => {
+            if (typeof res === "object") context.reply(res);
+          })
+          .catch((err) => {
+            if (err instanceof Message) context.reply(err);
+            else {
+              this.logger.error(
+                `An error occurred when running "${command?.name}" command`
+              );
+              this.logger.error(err.stack);
+            }
+          });
+      else if (typeof response === "object")
+        return {
+          type: InteractionResponseType.ChannelMessageWithSource,
+          data: context.getInteraction().convertToApiData(response),
+        };
+    } catch (err) {
+      if (err instanceof Message)
+        return {
+          type: InteractionResponseType.ChannelMessageWithSource,
+          data: context.getInteraction().convertToApiData(err),
+        };
+
+      this.logger.error(err);
+    }
+
+    return {
+      type: InteractionResponseType.DeferredChannelMessageWithSource,
+    };
+  }
+
   protected onMessageComponent(interaction: Interaction): InteractionResponse {
     const hook = this.hooks.get(interaction.getCustomId());
 
@@ -124,6 +167,47 @@ export abstract class AbstractCommandListener {
   protected onModal(interaction: Interaction): InteractionResponse {
     //Currently the message component handler is the same implementation as the modal handler
     return this.onMessageComponent(interaction);
+  }
+
+  protected onAutocomplete(interaction: Interaction): InteractionResponse {
+    const defaultResponse = {
+      type: InteractionResponseType.ApplicationCommandAutocompleteResult,
+      data: { choices: [] },
+    };
+
+    let data = interaction.getData();
+
+    let command = this.commands.get(data.name);
+
+    if (!command) return defaultResponse;
+
+    [command, data] = this.getCommandAndData(command, data);
+
+    const focusedOption = data.options.find((opt: any) => opt.focused);
+    if (!focusedOption) return defaultResponse;
+
+    const autocompleteArg = command.args.find((opt) => opt.name === focusedOption.name);
+    if (!autocompleteArg) return defaultResponse;
+
+    const context = new CommandContext(this, interaction, data);
+    const response = autocompleteArg.autocompleteHandler?.(context);
+
+    return {
+      type: InteractionResponseType.ApplicationCommandAutocompleteResult,
+      data: { choices: response },
+    };
+  }
+
+  private onInteraction(
+    interaction: Interaction
+  ): InteractionResponse | Promise<InteractionResponse> {
+    if (interaction.isCommandInteraction()) return this.onCommand(interaction);
+    if (interaction.isAutocompleteInteraction()) return this.onAutocomplete(interaction);
+    if (interaction.isMessageComponentInteraction())
+      return this.onMessageComponent(interaction);
+    if (interaction.isModalInteraction()) return this.onModal(interaction);
+
+    return { type: InteractionResponseType.Pong };
   }
 
   private handleInteractionServer(client: InteractionServer) {
@@ -159,5 +243,4 @@ export abstract class AbstractCommandListener {
   }
 
   protected abstract onCommand(interaction: Interaction): Promise<InteractionResponse>;
-  protected abstract onAutocomplete(interaction: Interaction): InteractionResponse;
 }

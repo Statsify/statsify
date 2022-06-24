@@ -6,8 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BLITZSG_MODES, BlitzSG, BlitzSGKit, FormattedGame } from "@statsify/schemas";
 import { BaseProfileProps } from "../base.hypixel-command";
+import {
+  BlitzSG,
+  BlitzSGKit,
+  BlitzSGModes,
+  FormattedGame,
+  GameMode,
+} from "@statsify/schemas";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { formatTime, prettify, romanNumeral } from "@statsify/util";
@@ -97,7 +103,7 @@ const KitBlitzSGTable = ({ stats, t }: KitBlitzSGTableProps) => (
 );
 
 export interface BlitzSGProfileProps extends BaseProfileProps {
-  mode: typeof BLITZSG_MODES[number];
+  mode: GameMode<BlitzSGModes>;
 }
 
 export const BlitzSGProfile = ({
@@ -120,13 +126,13 @@ export const BlitzSGProfile = ({
 
   let table: JSX.Element;
 
-  switch (mode) {
+  switch (mode.api) {
     case "overall":
       table = <OverallBlitzSGTable blitzsg={blitzsg} t={t} />;
       break;
     default: {
       const colors = ["§a", "§a", "§2", "§2", "§e", "§e", "§6", "§6", "§c", "§4"];
-      const stats = blitzsg[mode];
+      const stats = blitzsg[mode.api];
 
       let level = stats.prestige
         ? `§6${"✫".repeat(stats.prestige)}`
@@ -147,7 +153,7 @@ export const BlitzSGProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.BLITZSG} §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.BLITZSG} §fStats §r(${mode.formatted})`}
         time={time}
       />
       {table}

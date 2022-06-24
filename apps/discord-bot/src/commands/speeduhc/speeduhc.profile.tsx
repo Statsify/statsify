@@ -8,11 +8,11 @@
 
 import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, If, SidebarItem, Table } from "#components";
-import { FormattedGame, SPEED_UHC_MODES, SpeedUHCMode } from "@statsify/schemas";
+import { FormattedGame, GameMode, SpeedUHCMode, SpeedUHCModes } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 
 export interface SpeedUHCProfileProps extends BaseProfileProps {
-  mode: typeof SPEED_UHC_MODES[number];
+  mode: GameMode<SpeedUHCModes>;
 }
 
 export const SpeedUHCProfile = ({
@@ -27,7 +27,7 @@ export const SpeedUHCProfile = ({
   time,
 }: SpeedUHCProfileProps) => {
   const { speeduhc } = player.stats;
-  const stats = speeduhc[mode];
+  const stats = speeduhc[mode.api];
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(speeduhc.coins), "§6"],
@@ -43,7 +43,7 @@ export const SpeedUHCProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.SPEED_UHC} §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.SPEED_UHC} §fStats §r(${mode.formatted})`}
         description={`${FormattedGame.SPEED_UHC} §7Level: ${speeduhc.levelFormatted}`}
         time={time}
       />

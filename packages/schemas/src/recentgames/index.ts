@@ -17,6 +17,9 @@ export class RecentGames {
   public displayName: string;
 
   @Field()
+  public prefixName: string;
+
+  @Field()
   public games: RecentGame[];
 }
 

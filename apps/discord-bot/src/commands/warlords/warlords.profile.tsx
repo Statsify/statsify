@@ -8,12 +8,12 @@
 
 import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
-import { FormattedGame, WARLORDS_MODES } from "@statsify/schemas";
+import { FormattedGame, GameMode, WarlordsModes } from "@statsify/schemas";
 import { WarlordsClassTable } from "./tables";
 import { prettify } from "@statsify/util";
 
 export interface WarlordsProfileProps extends BaseProfileProps {
-  mode: typeof WARLORDS_MODES[number];
+  mode: GameMode<WarlordsModes>;
 }
 
 export const WarlordsProfile = ({
@@ -36,7 +36,7 @@ export const WarlordsProfile = ({
 
   let table: JSX.Element;
 
-  switch (mode) {
+  switch (mode.api) {
     case "overall":
       table = (
         <Table.table>
@@ -71,7 +71,7 @@ export const WarlordsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.WARLORDS} §fStats`}
+        title={`§l${FormattedGame.WARLORDS} §fStats §r(${mode.formatted})`}
         time={time}
       />
       {table}

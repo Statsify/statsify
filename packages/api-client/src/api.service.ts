@@ -15,7 +15,6 @@ import {
   GetKeyResponse,
   GetPlayerResponse,
   GetRecentGamesResponse,
-  GetResourceResponse,
   GetStatusResponse,
   GetUserResponse,
   GetWatchdogResponse,
@@ -136,7 +135,7 @@ export class ApiService {
     );
   }
 
-  public async getGameCounts() {
+  public async getGamecounts() {
     return this.requestKey<GetGamecountsResponse, "gamecounts">(
       `/hypixelresources/gamecounts`,
       "gamecounts"
@@ -197,14 +196,6 @@ export class ApiService {
     return this.request<GetUserResponse>(`/user`, { tag }, "DELETE")
       .then((data) => data.user ?? null)
       .catch(() => null);
-  }
-
-  public getResource(path: string) {
-    return this.request<GetResourceResponse>(
-      "/hypixelresources/resource",
-      { path },
-      "GET"
-    ).catch(() => null);
   }
 
   private async requestKey<T, K extends keyof T>(

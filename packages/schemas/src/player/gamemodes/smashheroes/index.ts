@@ -8,31 +8,55 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { SmashHeroesKit, SmashHeroesMode } from "./mode";
 
-export const SMASH_HEROES_MODES = [
-  "overall",
-  "solo",
-  "doubles",
-  "teams",
-  "botman",
-  "bulk",
-  "cakeMonster",
-  "cryomancer",
-  "generalCluck",
-  "greenHood",
-  "karakot",
-  "marauder",
-  "pug",
-  "sanic",
-  "sergeantShield",
-  "shoop",
-  "skullfire",
-  "spoderman",
-  "tinman",
-  "voidCrawler",
-] as const;
-export type SmashHeroesModes = typeof SMASH_HEROES_MODES;
+export const SMASH_HEROES_MODES = new GameModes([
+  { api: "overall" },
+  { api: "solo", hypixel: "solo_normal" },
+  { api: "doubles", hypixel: "2v2_normal" },
+  { api: "teams", hypixel: "teams_normal" },
+  { api: "botman" },
+  { api: "bulk" },
+  { api: "cakeMonster" },
+  { api: "cryomancer" },
+  { api: "generalCluck" },
+  { api: "greenHood" },
+  { api: "karakot" },
+  { api: "marauder" },
+  { api: "pug" },
+  { api: "sanic" },
+  { api: "sergeantShield" },
+  { api: "shoop" },
+  { api: "skullfire" },
+  { api: "spoderman" },
+  { api: "tinman" },
+  { api: "voidCrawler" },
+
+  { hypixel: "1v1_normal", formatted: "1v1" },
+  { hypixel: "friends_normal", formatted: "Friends" },
+]);
+
+export type SmashHeroesModes = IGameModes<typeof SMASH_HEROES_MODES>;
+
+enum SmashHeroesClass {
+  BOTMUN = "Botmon",
+  CAKE_MONSTER = "Cake Monster",
+  DUSK_CRAWLER = "Void Crawler",
+  FROSTY = "Cryomancer",
+  GENERAL_CLUCK = "General Cluck",
+  GOKU = "Karakot",
+  GREEN_HOOD = "Green Hood",
+  MARAUDER = "Marauder",
+  PUG = "Pug",
+  SANIC = "Sanic",
+  SERGEANT_SHIELD = "Sgt. Shield",
+  SHOOP_DA_WHOOP = "Shoop",
+  SKULLFIRE = "Skullfire",
+  SPODERMAN = "Spoderman",
+  THE_BULK = "Bulk",
+  TINMAN = "Tinman",
+}
 
 export class SmashHeroes {
   @Field()
@@ -131,28 +155,10 @@ export class SmashHeroes {
 
     this.coins = data.coins;
     this.level = data.smashLevel;
-    this.kit = classNames[data.active_class] ?? "none";
+    this.kit =
+      SmashHeroesClass[data.active_class as keyof typeof SmashHeroesClass] ?? "none";
     this.levelFormatted = `§b${this.level ?? 0}§6✶`;
   }
 }
-
-const classNames: Record<string, string> = {
-  BOTMUN: "Botmon",
-  CAKE_MONSTER: "Cake Monster",
-  DUSK_CRAWLER: "Void Crawler",
-  FROSTY: "Cryomancer",
-  GENERAL_CLUCK: "General Cluck",
-  GOKU: "Karakot",
-  GREEN_HOOD: "Green Hood",
-  MARAUDER: "Marauder",
-  PUG: "Pug",
-  SANIC: "Sanic",
-  SERGEANT_SHIELD: "Sgt. Shield",
-  SHOOP_DA_WHOOP: "Shoop",
-  SKULLFIRE: "Skullfire",
-  SPODERMAN: "Spoderman",
-  THE_BULK: "Bulk",
-  TINMAN: "Tinman",
-};
 
 export * from "./mode";

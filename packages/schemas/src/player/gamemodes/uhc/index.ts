@@ -8,12 +8,18 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { UHCMode } from "./mode";
 import { deepAdd } from "@statsify/math";
 import { getLevelIndex, titleScores } from "./util";
 
-export const UHC_MODES = ["overall", "solo", "teams"] as const;
-export type UHCModes = typeof UHC_MODES;
+export const UHC_MODES = new GameModes([
+  { api: "overall" },
+  { api: "solo", hypixel: "SOLO" },
+  { api: "teams", hypixel: "TEAMS" },
+]);
+
+export type UHCModes = IGameModes<typeof UHC_MODES>;
 
 export class UHC {
   @Field()

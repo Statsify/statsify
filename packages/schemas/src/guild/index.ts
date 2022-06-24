@@ -10,7 +10,7 @@ import { APIData } from "@statsify/util";
 import { Color } from "../color";
 import { ExpByGame } from "./expbygame";
 import { Field } from "../metadata";
-import { GameCode } from "../game";
+import { GameCode, GameIdMapping } from "../game";
 import { GuildAchievements } from "./achievements";
 import { GuildMember } from "./member";
 import { GuildRank } from "./rank";
@@ -120,7 +120,11 @@ export class Guild {
     }`;
 
     this.achievements = new GuildAchievements(data.achievements ?? {});
-    this.preferredGames = data.preferredGames ?? [];
+
+    this.preferredGames = (data.preferredGames ?? [])
+      .map((g: GameCode) => GameIdMapping[g])
+      .filter(Boolean);
+
     this.publiclyListed = data.publiclyListed;
 
     this.exp = data.exp;

@@ -8,11 +8,11 @@
 
 import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
-import { CopsAndCrimsModes, FormattedGame } from "@statsify/schemas";
-import { formatTime, prettify } from "@statsify/util";
+import { CopsAndCrimsModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { formatTime } from "@statsify/util";
 
 export interface CopsAndCrimsProfileProps extends BaseProfileProps {
-  mode: CopsAndCrimsModes[number];
+  mode: GameMode<CopsAndCrimsModes>;
 }
 
 export const CopsAndCrimsProfile = ({
@@ -35,9 +35,9 @@ export const CopsAndCrimsProfile = ({
 
   let table: JSX.Element;
 
-  switch (mode) {
+  switch (mode.api) {
     case "defusal": {
-      const stats = copsandcrims[mode];
+      const stats = copsandcrims[mode.api];
 
       table = (
         <Table.table>
@@ -78,7 +78,7 @@ export const CopsAndCrimsProfile = ({
       break;
     }
     case "deathmatch": {
-      const stats = copsandcrims[mode];
+      const stats = copsandcrims[mode.api];
 
       table = (
         <Table.table>
@@ -98,7 +98,7 @@ export const CopsAndCrimsProfile = ({
     }
 
     case "gunGame": {
-      const stats = copsandcrims[mode];
+      const stats = copsandcrims[mode.api];
 
       table = (
         <Table.table>
@@ -130,7 +130,7 @@ export const CopsAndCrimsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.COPS_AND_CRIMS} §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.COPS_AND_CRIMS} §fStats §r(${mode.formatted})`}
         time={time}
       />
       {table}

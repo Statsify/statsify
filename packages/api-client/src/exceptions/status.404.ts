@@ -18,13 +18,18 @@ export class StatusNotFoundException extends NotFoundException {
   public displayName: string;
 
   @ApiProperty()
+  public prefixName: string;
+
+  @ApiProperty()
   public actions: PlayerStatus;
 
   public constructor(player: Player) {
-    super("status");
-
-    this.uuid = player.uuid;
-    this.displayName = player.displayName;
-    this.actions = player.status;
+    super({
+      message: "status",
+      uuid: player.uuid,
+      displayName: player.displayName,
+      prefixName: player.prefixName,
+      actions: player.status,
+    });
   }
 }

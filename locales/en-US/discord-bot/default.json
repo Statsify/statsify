@@ -173,7 +173,15 @@
     "lastGame": "Last Game",
     "hidden": "Hidden",
     "lastActionTime": "Last Action Time",
-    "lastAction": "Last Action"
+    "lastAction": "Last Action",
+    "firstLogin": "Last Login",
+    "lastLogin": "Last Logout",
+    "lastAction": "Last Action",
+    "started": "Started",
+    "ended": "Ended",
+    "renown": "Renown",
+    "bounty": "Bounty",
+    "highestStreak": "Highest Streak"
   },
   "embeds": {
     "uuid": {
@@ -368,6 +376,10 @@
     "noStatus": {
       "title": "Status Not Found",
       "description": "A status for {{displayName}} could not be found!"
+    },
+    "noPitStats": {
+      "title": "Pit Stats Not Found",
+      "description": "{{displayName}} has never played The Pit!"
     },
     "unsupportedFileType": {
       "title": "Unsupported File Type",

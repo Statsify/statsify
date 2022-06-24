@@ -8,10 +8,12 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { ratio } from "@statsify/math";
 
-export const WALLS_MODES = ["overall"] as const;
-export type WallsModes = typeof WALLS_MODES;
+export const WALLS_MODES = new GameModes([{ api: "overall" }]);
+
+export type WallsModes = IGameModes<typeof WALLS_MODES>;
 
 export class Walls {
   @Field()

@@ -8,7 +8,7 @@
 
 import { APIAttachment } from "discord-api-types/v10";
 import { ApiService } from "#services";
-import { Canvas, Image, loadImage } from "skia-canvas/lib";
+import { Canvas, Image } from "skia-canvas";
 import {
   Command,
   CommandContext,
@@ -22,7 +22,7 @@ import { ErrorMessage } from "../error.message";
 import { User } from "@statsify/schemas";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "../themes";
-import { render } from "@statsify/rendering";
+import { loadImage, render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.badge") })
 export class BadgeCommand {

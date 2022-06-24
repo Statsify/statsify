@@ -8,11 +8,13 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { PaintballPerks } from "./perks";
 import { ratio } from "@statsify/math";
 
-export const PAINTBALL_MODES = ["overall"] as const;
-export type PaintballModes = typeof PAINTBALL_MODES;
+export const PAINTBALL_MODES = new GameModes([{ api: "overall" }]);
+
+export type PaintballModes = IGameModes<typeof PAINTBALL_MODES>;
 
 export class Paintball {
   @Field()

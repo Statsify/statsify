@@ -8,36 +8,38 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { MegaWallsKit, MegaWallsOverall } from "./kit";
 
-export const MEGAWALLS_MODES = [
-  "overall",
-  "arcanist",
-  "assassin",
-  "automaton",
-  "blaze",
-  "cow",
-  "creeper",
-  "dreadlord",
-  "enderman",
-  "golem",
-  "herobrine",
-  "hunter",
-  "moleman",
-  "phoenix",
-  "pigman",
-  "pirate",
-  "renegade",
-  "shaman",
-  "shark",
-  "skeleton",
-  "snowman",
-  "spider",
-  "squid",
-  "werewolf",
-  "zombie",
-] as const;
-export type MegaWallsModes = typeof MEGAWALLS_MODES;
+export const MEGAWALLS_MODES = new GameModes([
+  { api: "overall" },
+  { api: "arcanist" },
+  { api: "assassin" },
+  { api: "automaton" },
+  { api: "blaze" },
+  { api: "cow" },
+  { api: "creeper" },
+  { api: "dreadlord" },
+  { api: "enderman" },
+  { api: "golem" },
+  { api: "herobrine" },
+  { api: "hunter" },
+  { api: "moleman" },
+  { api: "phoenix" },
+  { api: "pigman" },
+  { api: "pirate" },
+  { api: "renegade" },
+  { api: "shaman" },
+  { api: "shark" },
+  { api: "skeleton" },
+  { api: "snowman" },
+  { api: "spider" },
+  { api: "squid" },
+  { api: "werewolf" },
+  { api: "zombie" },
+]);
+
+export type MegaWallsModes = IGameModes<typeof MEGAWALLS_MODES>;
 
 export class MegaWalls {
   @Field()

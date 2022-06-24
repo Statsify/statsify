@@ -17,13 +17,7 @@ import {
 } from "#components";
 import { DateTime } from "luxon";
 import { ExpByGame } from "@statsify/schemas/src/guild/expbygame";
-import {
-  FormattedGame,
-  GameCodeToName,
-  Guild,
-  GuildMember,
-  UserTier,
-} from "@statsify/schemas";
+import { FormattedGame, Guild, GuildMember, UserTier } from "@statsify/schemas";
 import { GexpTable } from "./gexp.table";
 import { LocalizeFunction } from "@statsify/discord";
 import { StyleLocation } from "@statsify/rendering";
@@ -250,6 +244,7 @@ const GuildGexpPage = ({ guild, t }: GuildGexpPageProps) => {
     `${guildColor}${t(Math.floor(guild.level))}`,
     `${guildColor}${t(Math.floor(guild.level) + 1)}`,
     true,
+    true,
     progression
   )}`;
 
@@ -327,7 +322,7 @@ const GuildGexpPerGamePage = ({ guild, t, gameIcons }: GuildGexpPerGamePageProps
     games.map(([game, exp]) => (
       <box padding={{ left: 8, right: 8, top: 4, bottom: 4 }} width="100%">
         <img image={gameIcons[game]} width={32} height={32} />
-        <text>§l{FormattedGame[GameCodeToName[game as keyof ExpByGame]]}</text>
+        <text>§l{FormattedGame[game as keyof ExpByGame]}</text>
         <div width="remaining" margin={{ left: 4, right: 4 }} />
         <text>{t(exp)}</text>
       </box>

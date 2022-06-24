@@ -13,12 +13,16 @@ import {
   BEDWARS_MODES,
   BLITZSG_MODES,
   BUILD_BATTLE_MODES,
+  BlitzSGKit,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   GENERAL_MODES,
+  GameMode,
+  GameModes,
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
+  Player,
   QUAKE_MODES,
   SKYWARS_MODES,
   SMASH_HEROES_MODES,
@@ -29,7 +33,7 @@ import {
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
-  WOOL_WARS_MODES,
+  WOOLWARS_MODES,
 } from "@statsify/schemas";
 import { ApiService } from "#services";
 import { ArcadeProfile } from "../arcade/arcade.profile";
@@ -66,7 +70,6 @@ import { WarlordsProfile } from "../warlords/warlords.profile";
 import { WoolWarsProfile } from "../woolwars/woolwars.profile";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "../../themes";
-import { prettify } from "@statsify/util";
 import { render } from "@statsify/rendering";
 import type { BaseProfileProps } from "../base.hypixel-command";
 
@@ -105,9 +108,24 @@ export class HistoricalBase {
 
   @SubCommand({ description: (t) => t("commands.blitzsg"), args })
   public blitzsg(context: CommandContext) {
-    return this.run(context, BLITZSG_MODES, (base, mode) => (
-      <BlitzSGProfile {...base} mode={mode} />
-    ));
+    return this.run(
+      context,
+      BLITZSG_MODES,
+      (base, mode) => <BlitzSGProfile {...base} mode={mode} />,
+      (player, modes) => {
+        const { blitzsg } = player.stats;
+        const [overall, ...kits] = modes;
+
+        const filteredKits = kits
+          .sort(
+            (a, b) =>
+              (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp
+          )
+          .slice(0, 24);
+
+        return [overall, ...filteredKits];
+      }
+    );
   }
 
   @SubCommand({ description: (t) => t("commands.buildbattle"), args })
@@ -221,21 +239,23 @@ export class HistoricalBase {
 
   @SubCommand({ description: (t) => t("commands.woolwars"), args })
   public woolwars(context: CommandContext) {
-    return this.run(context, WOOL_WARS_MODES, (base, mode) => (
+    return this.run(context, WOOLWARS_MODES, (base, mode) => (
       <WoolWarsProfile {...base} mode={mode} />
     ));
   }
 
   private async run<T extends GamesWithBackgrounds>(
     context: CommandContext,
-    modes: T,
-    getProfile: (base: BaseProfileProps, mode: T[number]) => JSX.Element
+    modes: GameModes<T>,
+    getProfile: (base: BaseProfileProps, mode: GameMode<T>) => JSX.Element,
+    filterModes?: (player: Player, modes: GameMode<T>[]) => GameMode<T>[]
   ) {
     const user = context.getUser();
 
     const player = await this.apiService.getPlayerHistorical(
       context.option("player"),
-      this.time
+      this.time,
+      user
     );
 
     const [logo, skin, badge] = await Promise.all([
@@ -244,12 +264,13 @@ export class HistoricalBase {
       this.apiService.getUserBadge(player.uuid),
     ]);
 
-    const pages: Page[] = modes.map((mode) => ({
-      label: prettify(mode),
+    const allModes = modes.getModes();
+    const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
+
+    const pages: Page[] = displayedModes.map((mode) => ({
+      label: mode.formatted,
       generator: async (t) => {
-        const background = await getBackground(
-          ...mapBackground(modes, mode as T[number])
-        );
+        const background = await getBackground(...mapBackground(modes, mode.api));
 
         const profile = getProfile(
           {

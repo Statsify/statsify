@@ -18,9 +18,10 @@ import {
 } from "#components";
 import {
   FormattedGame,
-  SKYWARS_MODES,
+  GameMode,
   SkyWarsLabs,
   SkyWarsMode,
+  SkyWarsModes,
 } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import { formatTime, prettify } from "@statsify/util";
@@ -95,7 +96,7 @@ const SkyWarsLabsTable = ({ t, stats }: SkyWarsLabsTableProps) => {
 };
 
 export interface SkyWarsProfileProps extends BaseProfileProps {
-  mode: typeof SKYWARS_MODES[number];
+  mode: GameMode<SkyWarsModes>;
 }
 
 export const SkyWarsProfile = ({
@@ -123,12 +124,12 @@ export const SkyWarsProfile = ({
 
   let table: JSX.Element;
 
-  switch (mode) {
+  switch (mode.api) {
     case "labs":
-      table = <SkyWarsLabsTable t={t} stats={skywars[mode]} />;
+      table = <SkyWarsLabsTable t={t} stats={skywars[mode.api]} />;
       break;
     default:
-      table = <SkyWarsOverallTable t={t} stats={skywars[mode]} />;
+      table = <SkyWarsOverallTable t={t} stats={skywars[mode.api]} />;
       break;
   }
 
@@ -139,7 +140,7 @@ export const SkyWarsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.SKYWARS} §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.SKYWARS} §r(${mode.formatted})`}
         description={`${FormattedGame.SKYWARS} §7Level: ${
           skywars.levelFormatted
         }\n${formatProgression(

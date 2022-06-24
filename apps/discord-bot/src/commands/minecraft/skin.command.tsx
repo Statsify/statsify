@@ -7,7 +7,7 @@
  */
 
 import { ApiService, MojangApiService } from "#services";
-import { Canvas } from "skia-canvas/lib";
+import { Canvas } from "skia-canvas";
 import {
   Command,
   CommandContext,

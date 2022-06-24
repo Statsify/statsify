@@ -8,8 +8,9 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../metadata";
+import { GameCodeMapping } from "../game/game";
 
-class GamePlayers {
+export class GamePlayers {
   @Field()
   public players: number;
 
@@ -27,7 +28,7 @@ export class Gamecounts {
   public ARCADE: GamePlayers;
 
   @Field()
-  public BATTLEGROUND: GamePlayers;
+  public WARLORDS: GamePlayers;
 
   @Field()
   public BEDWARS: GamePlayers;
@@ -45,7 +46,22 @@ export class Gamecounts {
   public IDLE: GamePlayers;
 
   @Field()
-  public LEGACY: GamePlayers;
+  public VAMPIREZ: GamePlayers;
+
+  @Field()
+  public TURBO_KART_RACERS: GamePlayers;
+
+  @Field()
+  public WALLS: GamePlayers;
+
+  @Field()
+  public QUAKE: GamePlayers;
+
+  @Field()
+  public PAINTBALL: GamePlayers;
+
+  @Field()
+  public ARENA_BRAWL: GamePlayers;
 
   @Field()
   public LIMBO: GamePlayers;
@@ -54,7 +70,7 @@ export class Gamecounts {
   public MAIN_LOBBY: GamePlayers;
 
   @Field()
-  public MCGO: GamePlayers;
+  public COPS_AND_CRIMS: GamePlayers;
 
   @Field()
   public MURDER_MYSTERY: GamePlayers;
@@ -84,13 +100,13 @@ export class Gamecounts {
   public SPEED_UHC: GamePlayers;
 
   @Field()
-  public SUPER_SMASH: GamePlayers;
+  public SMASH_HEROES: GamePlayers;
 
   @Field()
-  public SURVIVAL_GAMES: GamePlayers;
+  public BLITZSG: GamePlayers;
 
   @Field()
-  public TNTGAMES: GamePlayers;
+  public TNT_GAMES: GamePlayers;
 
   @Field()
   public TOURNAMENT_LOBBY: GamePlayers;
@@ -99,38 +115,61 @@ export class Gamecounts {
   public UHC: GamePlayers;
 
   @Field()
-  public WALLS3: GamePlayers;
+  public MEGAWALLS: GamePlayers;
 
   @Field()
-  public WOOL_GAMES: GamePlayers;
+  public WOOLWARS: GamePlayers;
 
   public constructor(data: APIData = {}) {
-    this.ARCADE = new GamePlayers(data.ARCADE);
-    this.BATTLEGROUND = new GamePlayers(data.BATTLEGROUND);
-    this.BEDWARS = new GamePlayers(data.BEDWARS);
-    this.BUILD_BATTLE = new GamePlayers(data.BUILD_BATTLE);
-    this.DUELS = new GamePlayers(data.DUELS);
-    this.HOUSING = new GamePlayers(data.HOUSING);
-    this.IDLE = new GamePlayers(data.IDLE);
-    this.LEGACY = new GamePlayers(data.LEGACY);
-    this.LIMBO = new GamePlayers(data.LIMBO);
-    this.MAIN_LOBBY = new GamePlayers(data.MAIN_LOBBY);
-    this.MCGO = new GamePlayers(data.MCGO);
-    this.MURDER_MYSTERY = new GamePlayers(data.MURDER_MYSTERY);
-    this.PIT = new GamePlayers(data.PIT);
-    this.PROTOTYPE = new GamePlayers(data.PROTOTYPE);
-    this.QUEUE = new GamePlayers(data.QUEUE);
-    this.REPLAY = new GamePlayers(data.REPLAY);
-    this.SKYBLOCK = new GamePlayers(data.SKYBLOCK);
-    this.SKYWARS = new GamePlayers(data.SKYWARS);
-    this.SMP = new GamePlayers(data.SMP);
-    this.SPEED_UHC = new GamePlayers(data.SPEED_UHC);
-    this.SUPER_SMASH = new GamePlayers(data.SUPER_SMASH);
-    this.SURVIVAL_GAMES = new GamePlayers(data.SURVIVAL_GAMES);
-    this.TNTGAMES = new GamePlayers(data.TNTGAMES);
-    this.TOURNAMENT_LOBBY = new GamePlayers(data.TOURNAMENT_LOBBY);
-    this.UHC = new GamePlayers(data.UHC);
-    this.WALLS3 = new GamePlayers(data.WALLS3);
-    this.WOOL_GAMES = new GamePlayers(data.WOOL_GAMES);
+    this.ARCADE = new GamePlayers(data[GameCodeMapping.ARCADE]);
+    this.WARLORDS = new GamePlayers(data[GameCodeMapping.WARLORDS]);
+    this.BEDWARS = new GamePlayers(data[GameCodeMapping.BEDWARS]);
+    this.BUILD_BATTLE = new GamePlayers(data[GameCodeMapping.BUILD_BATTLE]);
+    this.DUELS = new GamePlayers(data[GameCodeMapping.DUELS]);
+    this.HOUSING = new GamePlayers(data[GameCodeMapping.HOUSING]);
+    this.IDLE = new GamePlayers(data[GameCodeMapping.IDLE]);
+    this.LIMBO = new GamePlayers(data[GameCodeMapping.LIMBO]);
+    this.MAIN_LOBBY = new GamePlayers(data[GameCodeMapping.MAIN_LOBBY]);
+    this.COPS_AND_CRIMS = new GamePlayers(data[GameCodeMapping.COPS_AND_CRIMS]);
+    this.MURDER_MYSTERY = new GamePlayers(data[GameCodeMapping.MURDER_MYSTERY]);
+    this.PIT = new GamePlayers(data[GameCodeMapping.PIT]);
+    this.PROTOTYPE = new GamePlayers(data[GameCodeMapping.PROTOTYPE]);
+    this.QUEUE = new GamePlayers(data[GameCodeMapping.QUEUE]);
+    this.REPLAY = new GamePlayers(data[GameCodeMapping.REPLAY]);
+    this.SKYBLOCK = new GamePlayers(data[GameCodeMapping.SKYBLOCK]);
+    this.SKYWARS = new GamePlayers(data[GameCodeMapping.SKYWARS]);
+    this.SMP = new GamePlayers(data[GameCodeMapping.SMP]);
+    this.SPEED_UHC = new GamePlayers(data[GameCodeMapping.SPEED_UHC]);
+    this.SMASH_HEROES = new GamePlayers(data[GameCodeMapping.SMASH_HEROES]);
+    this.BLITZSG = new GamePlayers(data[GameCodeMapping.BLITZSG]);
+    this.TNT_GAMES = new GamePlayers(data[GameCodeMapping.TNT_GAMES]);
+    this.TOURNAMENT_LOBBY = new GamePlayers(data[GameCodeMapping.TOURNAMENT_LOBBY]);
+    this.UHC = new GamePlayers(data[GameCodeMapping.UHC]);
+    this.MEGAWALLS = new GamePlayers(data[GameCodeMapping.MEGAWALLS]);
+    this.WOOLWARS = new GamePlayers(data[GameCodeMapping.WOOLWARS]);
+
+    this.VAMPIREZ = new GamePlayers({
+      players: data[GameCodeMapping.CLASSIC]?.modes[GameCodeMapping.VAMPIREZ],
+    });
+
+    this.TURBO_KART_RACERS = new GamePlayers({
+      players: data[GameCodeMapping.CLASSIC]?.modes[GameCodeMapping.TURBO_KART_RACERS],
+    });
+
+    this.WALLS = new GamePlayers({
+      players: data[GameCodeMapping.CLASSIC]?.modes[GameCodeMapping.WALLS],
+    });
+
+    this.QUAKE = new GamePlayers({
+      players: data[GameCodeMapping.CLASSIC]?.modes[GameCodeMapping.QUAKE],
+    });
+
+    this.PAINTBALL = new GamePlayers({
+      players: data[GameCodeMapping.CLASSIC]?.modes[GameCodeMapping.PAINTBALL],
+    });
+
+    this.ARENA_BRAWL = new GamePlayers({
+      players: data[GameCodeMapping.CLASSIC]?.modes[GameCodeMapping.ARENA_BRAWL],
+    });
   }
 }
