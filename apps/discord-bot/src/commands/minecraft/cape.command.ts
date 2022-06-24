@@ -14,7 +14,7 @@ import {
   MojangPlayerArgument,
   PaginateService,
 } from "@statsify/discord";
-import { ErrorMessage } from "../../error.message";
+import { ErrorMessage } from "#lib/error.message";
 
 @Command({ description: (t) => t("commands.cape"), args: [MojangPlayerArgument] })
 export class CapeCommand {

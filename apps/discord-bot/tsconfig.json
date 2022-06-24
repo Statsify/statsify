@@ -6,7 +6,9 @@
     "paths": {
       "#components": ["./components"],
       "#services": ["./services"],
-      "#constants": ["./constants"]
+      "#constants": ["./constants"],
+      "#themes": ["./themes"],
+      "#lib/*": ["./lib/*"],
     }
   },
   "include": ["src"]

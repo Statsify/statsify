@@ -18,10 +18,10 @@ import {
   SubCommand,
 } from "@statsify/discord";
 import { Container, Footer, HeaderNametag, Skin } from "#components";
-import { ErrorMessage } from "../error.message";
+import { ErrorMessage } from "#lib/error.message";
 import { User } from "@statsify/schemas";
 import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "../themes";
+import { getTheme } from "#themes";
 import { loadImage, render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.badge") })

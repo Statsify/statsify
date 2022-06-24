@@ -14,7 +14,7 @@ import {
   IMessage,
   NumberArgument,
 } from "@statsify/discord";
-import { ErrorMessage } from "../error.message";
+import { ErrorMessage } from "#lib/error.message";
 import { SUCCESS_COLOR } from "#constants";
 
 @Command({

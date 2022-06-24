@@ -8,7 +8,7 @@
 
 import { AxiosError } from "axios";
 import { Color, User } from "@statsify/schemas";
-import { ErrorMessage } from "../error.message";
+import { ErrorMessage } from "#lib/error.message";
 import {
   GUILD_ID_REGEX,
   GuildNotFoundException,

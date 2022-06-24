@@ -15,7 +15,7 @@ import {
 } from "@statsify/discord";
 import { PitProfile } from "./pit.profile";
 import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "../../themes";
+import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.pit"), args: [PlayerArgument] })
