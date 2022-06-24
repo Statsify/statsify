@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BEDWARS_MODES, FormattedGame } from "@statsify/schemas";
 import { BaseProfileProps } from "../base.hypixel-command";
+import { BedWarsModes, FormattedGame, GameMode } from "@statsify/schemas";
 import {
   Container,
   Footer,
@@ -17,10 +17,9 @@ import {
   Table,
   formatProgression,
 } from "#components";
-import { prettify } from "@statsify/util";
 
 export interface BedWarsProfileProps extends BaseProfileProps {
-  mode: typeof BEDWARS_MODES[number];
+  mode: GameMode<BedWarsModes>;
 }
 
 export const BedWarsProfile = ({
@@ -35,7 +34,7 @@ export const BedWarsProfile = ({
   time,
 }: BedWarsProfileProps) => {
   const { bedwars } = player.stats;
-  const stats = bedwars[mode];
+  const stats = bedwars[mode.api];
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(bedwars.coins), "§6"],
@@ -55,7 +54,7 @@ export const BedWarsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.BEDWARS} §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.BEDWARS} §fStats §r(${mode.formatted})`}
         description={`${FormattedGame.BEDWARS} §7Level: ${
           bedwars.levelFormatted
         }\n${formatProgression(

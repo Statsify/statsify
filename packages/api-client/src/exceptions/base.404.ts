@@ -18,4 +18,16 @@ export class NotFoundException extends BaseNotFoundException {
 
   @ApiProperty()
   public error: string;
+
+  public constructor(objectOrError?: string | any) {
+    let error: any = { statusCode: 404, error: "Not Found" };
+
+    if (typeof objectOrError === "string") {
+      error.message = objectOrError;
+    } else if (typeof objectOrError === "object") {
+      error = { ...error, ...objectOrError };
+    }
+
+    super(error);
+  }
 }

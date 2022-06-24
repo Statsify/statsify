@@ -28,29 +28,31 @@ import {
   Zombies,
 } from "./mode";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 
-export const ARCADE_MODES = [
-  "overall",
-  "blockingDead",
-  "bountyHunters",
-  "captureTheWool",
-  "creeperAttack",
-  "dragonWars",
-  "enderSpleef",
-  "farmHunt",
-  "football",
-  "galaxyWars",
-  "hideAndSeek",
-  "holeInTheWall",
-  "hypixelSays",
-  "miniWalls",
-  "partyGames",
-  "pixelPainters",
-  "seasonal",
-  "throwOut",
-  "zombies",
-] as const;
-export type ArcadeModes = typeof ARCADE_MODES;
+export const ARCADE_MODES = new GameModes([
+  { api: "overall" },
+  { api: "blockingDead", hypixel: "DAYONE" },
+  { api: "bountyHunters", hypixel: "ONEINTHEQUIVER" },
+  { api: "captureTheWool", hypixel: "PVP_CTW" },
+  { api: "creeperAttack", hypixel: "DEFENDER" },
+  { api: "dragonWars", hypixel: "DRAGONWARS2" },
+  { api: "enderSpleef", hypixel: "ENDER" },
+  { api: "farmHunt", hypixel: "FARM_HUNT" },
+  { api: "football", hypixel: "SOCCER" },
+  { api: "galaxyWars", hypixel: "STARWARS" },
+  { api: "hideAndSeek" },
+  { api: "holeInTheWall", hypixel: "HOLE_IN_THE_WALL" },
+  { api: "hypixelSays", hypixel: "SIMON_SAYS" },
+  { api: "miniWalls", hypixel: "MINI_WALLS" },
+  { api: "partyGames", hypixel: "PARTY" },
+  { api: "pixelPainters", hypixel: "DRAW_THEIR_THING" },
+  { api: "seasonal" },
+  { api: "throwOut", hypixel: "THROW_OUT" },
+  { api: "zombies" },
+]);
+
+export type ArcadeModes = IGameModes<typeof ARCADE_MODES>;
 
 export class Arcade {
   @Field()

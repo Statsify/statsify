@@ -8,11 +8,17 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { QuakeMode } from "./mode";
 import { deepAdd } from "@statsify/math";
 
-export const QUAKE_MODES = ["overall", "solo", "teams"] as const;
-export type QuakeModes = typeof QUAKE_MODES;
+export const QUAKE_MODES = new GameModes([
+  { api: "overall" },
+  { api: "solo", hypixel: "solo" },
+  { api: "teams", hypixel: "teams" },
+]);
+
+export type QuakeModes = IGameModes<typeof QUAKE_MODES>;
 
 const indexes = [
   "zero",

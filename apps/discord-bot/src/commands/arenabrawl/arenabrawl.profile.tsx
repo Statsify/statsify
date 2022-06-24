@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARENA_BRAWL_MODES, FormattedGame } from "@statsify/schemas";
+import { ArenaBrawlModes, FormattedGame, GameMode } from "@statsify/schemas";
 import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
 import { prettify } from "@statsify/util";
 
 export interface ArenaBrawlProfileProps extends BaseProfileProps {
-  mode: typeof ARENA_BRAWL_MODES[number];
+  mode: GameMode<ArenaBrawlModes>;
 }
 
 export const ArenaBrawlProfile = ({
@@ -27,7 +27,7 @@ export const ArenaBrawlProfile = ({
   time,
 }: ArenaBrawlProfileProps) => {
   const { arenabrawl } = player.stats;
-  const stats = arenabrawl[mode];
+  const stats = arenabrawl[mode.api];
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(arenabrawl.coins), "§6"],
@@ -43,7 +43,7 @@ export const ArenaBrawlProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.ARENA_BRAWL} §fStats §r(${prettify(mode)})`}
+        title={`§l${FormattedGame.ARENA_BRAWL} §fStats §r(${mode.formatted})`}
         time={time}
       />
       <Table.table>

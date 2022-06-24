@@ -16,6 +16,9 @@ export class Status {
   public uuid: string;
 
   @Field()
+  public displayName: string;
+
+  @Field()
   public prefixName: string;
 
   @Field()

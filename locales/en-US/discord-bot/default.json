@@ -176,6 +176,9 @@
     "lastAction": "Last Action",
     "firstLogin": "Last Login",
     "lastLogin": "Last Logout",
+    "lastAction": "Last Action",
+    "started": "Started",
+    "ended": "Ended",
     "renown": "Renown",
     "bounty": "Bounty",
     "highestStreak": "Highest Streak"

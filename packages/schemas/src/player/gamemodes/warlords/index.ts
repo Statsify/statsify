@@ -8,11 +8,20 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { WarlordsClass } from "./class";
 import { add, ratio, sub } from "@statsify/math";
 
-export const WARLORDS_MODES = ["overall", "classes"] as const;
-export type WarlordsModes = typeof WARLORDS_MODES;
+export const WARLORDS_MODES = new GameModes([
+  { api: "overall" },
+  { api: "classes" },
+
+  { hypixel: "ctf_mini", formatted: "CTF" },
+  { hypixel: "domination", formatted: "Domination" },
+  { hypixel: "team_deathmatch", formatted: "Deathmatch" },
+]);
+
+export type WarlordsModes = IGameModes<typeof WARLORDS_MODES>;
 
 export class Warlords {
   @Field()

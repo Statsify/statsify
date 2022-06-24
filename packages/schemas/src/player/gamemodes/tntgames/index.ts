@@ -9,10 +9,19 @@
 import { APIData } from "@statsify/util";
 import { BowSpleef, PVPRun, TNTRun, TNTTag, Wizards } from "./mode";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { add } from "@statsify/math";
 
-export const TNT_GAMES_MODES = ["overall"] as const;
-export type TNTGamesModes = typeof TNT_GAMES_MODES;
+export const TNT_GAMES_MODES = new GameModes([
+  { api: "overall" },
+  { hypixel: "PVPRUN", formatted: "PVP Run" },
+  { hypixel: "TNTAG", formatted: "TNT Tag" },
+  { hypixel: "TNTRUN", formatted: "TNT Run" },
+  { hypixel: "BOWSPLEEF", formatted: "Bow Spleef" },
+  { hypixel: "CAPTURE", formatted: "Wizards" },
+]);
+
+export type TNTGamesModes = IGameModes<typeof TNT_GAMES_MODES>;
 
 export class TNTGames {
   @Field()

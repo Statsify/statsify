@@ -136,7 +136,7 @@ export class ApiService {
     );
   }
 
-  public async getGameCounts() {
+  public async getGamecounts() {
     return this.requestKey<GetGamecountsResponse, "gamecounts">(
       `/hypixelresources/gamecounts`,
       "gamecounts"

@@ -8,11 +8,20 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { MurderMysteryMode } from "./mode";
 import { add } from "@statsify/math";
 
-export const MURDER_MYSTERY_MODES = ["overall"] as const;
-export type MurderMysteryModes = typeof MURDER_MYSTERY_MODES;
+export const MURDER_MYSTERY_MODES = new GameModes([
+  { api: "overall" },
+
+  { hypixel: "MURDER_DOUBLE_UP", formatted: "Double Up" },
+  { hypixel: "MURDER_INFECTION", formatted: "Infection" },
+  { hypixel: "MURDER_ASSASSINS", formatted: "Assassins" },
+  { hypixel: "MURDER_CLASSIC", formatted: "Classic" },
+]);
+
+export type MurderMysteryModes = IGameModes<typeof MURDER_MYSTERY_MODES>;
 
 export class MurderMystery {
   @Field()

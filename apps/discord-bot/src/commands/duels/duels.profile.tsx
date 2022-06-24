@@ -14,11 +14,10 @@ import {
   UHCDuelsTable,
 } from "./tables";
 import { Container, Footer, Header, SidebarItem } from "#components";
-import { DuelsModes, FormattedGame } from "@statsify/schemas";
-import { prettify } from "@statsify/util";
+import { DuelsModes, FormattedGame, GameMode } from "@statsify/schemas";
 
 export interface DuelsProfileProps extends BaseProfileProps {
-  mode: DuelsModes[number];
+  mode: GameMode<DuelsModes>;
 }
 
 export const DuelsProfile = ({
@@ -42,21 +41,22 @@ export const DuelsProfile = ({
   ];
 
   let table: JSX.Element;
+  const { api } = mode;
 
-  switch (mode) {
+  switch (api) {
     case "bridge":
-      table = <BridgeDuelsTable stats={duels[mode]} t={t} />;
+      table = <BridgeDuelsTable stats={duels[api]} t={t} />;
       break;
     case "uhc":
-      table = <UHCDuelsTable stats={duels[mode]} t={t} />;
+      table = <UHCDuelsTable stats={duels[api]} t={t} />;
       break;
     case "skywars":
     case "op":
     case "megawalls":
-      table = <MultiDuelsGameModeTable stats={duels[mode]} t={t} />;
+      table = <MultiDuelsGameModeTable stats={duels[api]} t={t} />;
       break;
     default:
-      table = <SingleDuelsGameModeTable stats={duels[mode]} t={t} />;
+      table = <SingleDuelsGameModeTable stats={duels[api]} t={t} />;
       break;
   }
 
@@ -67,8 +67,8 @@ export const DuelsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.DUELS} §fStats §r(${prettify(mode)})`}
-        description={`§d${prettify(mode)} Title\n${duels[mode].titleFormatted}`}
+        title={`§l${FormattedGame.DUELS} §fStats §r(${mode.formatted})`}
+        description={`§d${mode.formatted} Title\n${duels[api].titleFormatted}`}
         time={time}
       />
       {table}

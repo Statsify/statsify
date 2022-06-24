@@ -9,21 +9,23 @@
 import { APIData } from "@statsify/util";
 import { Color, ColorCode } from "../../../color";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { Progression } from "../../../progression";
 import { WoolWarsClass, WoolWarsOverall } from "./class";
 import { getExpReq, getFormattedLevel, getLevel } from "./util";
 
-export const WOOL_WARS_MODES = [
-  "overall",
-  "tank",
-  "archer",
-  "builder",
-  "swordsman",
-  "engineer",
-  "golem",
-  "assault",
-] as const;
-export type WoolWarsModes = typeof WOOL_WARS_MODES;
+export const WOOLWARS_MODES = new GameModes([
+  { api: "overall" },
+  { api: "tank" },
+  { api: "archer" },
+  { api: "builder" },
+  { api: "swordsman" },
+  { api: "engineer" },
+  { api: "golem" },
+  { api: "assault" },
+]);
+
+export type WoolWarsModes = IGameModes<typeof WOOLWARS_MODES>;
 
 export class WoolWars {
   @Field()

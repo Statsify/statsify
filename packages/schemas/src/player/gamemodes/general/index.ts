@@ -8,10 +8,11 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes, IGameModes } from "../../../game";
 import { GeneralUtil } from "./util";
 
-export const GENERAL_MODES = ["overall"] as const;
-export type GeneralModes = typeof GENERAL_MODES;
+export const GENERAL_MODES = new GameModes([{ api: "overall" }]);
+export type GeneralModes = IGameModes<typeof GENERAL_MODES>;
 
 export class General {
   @Field()
