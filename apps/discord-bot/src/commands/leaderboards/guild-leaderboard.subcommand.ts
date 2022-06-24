@@ -8,8 +8,7 @@
 
 import { ApiService } from "#services";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command";
-import { CommandContext, SubCommand } from "@statsify/discord";
-import { GuildLeaderboardArgument } from "#arguments";
+import { CommandContext, GuildLeaderboardArgument, SubCommand } from "@statsify/discord";
 import { getBackground } from "@statsify/assets";
 
 export class GuildLeaderboardSubCommand extends BaseLeaderboardCommand {
@@ -24,7 +23,7 @@ export class GuildLeaderboardSubCommand extends BaseLeaderboardCommand {
   public async leaderboard(context: CommandContext) {
     const leaderboard = context.option<string>("leaderboard");
 
-    const field = leaderboard.replaceAll(" ", ".");
+    const field = leaderboard.replace(/ /g, ".");
     const background = await getBackground("hypixel", "overall");
 
     return this.createLeaderboard({

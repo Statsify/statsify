@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractArgument, LocalizationString } from "@statsify/discord";
+import { AbstractArgument } from "./abstract.argument";
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
+import { LocalizationString } from "../messages";
 
 export class NumberArgument extends AbstractArgument {
   public description: LocalizationString;

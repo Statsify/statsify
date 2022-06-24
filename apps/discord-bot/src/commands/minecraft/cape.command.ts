@@ -6,12 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AshconResponse, MojangApiService, PaginateService } from "#services";
-import { Canvas, Image } from "skia-canvas";
-import { Command, CommandContext } from "@statsify/discord";
+import { AshconResponse, MojangApiService } from "#services";
+import { Canvas, Image, loadImage } from "skia-canvas";
+import {
+  Command,
+  CommandContext,
+  MojangPlayerArgument,
+  PaginateService,
+} from "@statsify/discord";
 import { ErrorMessage } from "../../error.message";
-import { MojangPlayerArgument } from "#arguments";
-import { loadImage } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.cape"), args: [MojangPlayerArgument] })
 export class CapeCommand {

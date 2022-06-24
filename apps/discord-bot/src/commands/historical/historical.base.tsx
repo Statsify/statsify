@@ -35,13 +35,20 @@ import {
   WARLORDS_MODES,
   WOOLWARS_MODES,
 } from "@statsify/schemas";
-import { ApiService, Page, PaginateService } from "#services";
+import { ApiService } from "#services";
 import { ArcadeProfile } from "../arcade/arcade.profile";
 import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile";
 import { BedWarsProfile } from "../bedwars/bedwars.profile";
 import { BlitzSGProfile } from "../blitzsg/blitzsg.profile";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile";
-import { Command, CommandContext, SubCommand } from "@statsify/discord";
+import {
+  Command,
+  CommandContext,
+  Page,
+  PaginateService,
+  PlayerArgument,
+  SubCommand,
+} from "@statsify/discord";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile";
 import { DuelsProfile } from "../duels/duels.profile";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
@@ -50,7 +57,6 @@ import { HistoricalType } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile";
 import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile";
 import { PaintballProfile } from "../paintball/paintball.profile";
-import { PlayerArgument } from "#arguments";
 import { QuakeProfile } from "../quake/quake.profile";
 import { SkyWarsProfile } from "../skywars/skywars.profile";
 import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile";
@@ -64,7 +70,6 @@ import { WarlordsProfile } from "../warlords/warlords.profile";
 import { WoolWarsProfile } from "../woolwars/woolwars.profile";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "../../themes";
-import { prettify } from "@statsify/util";
 import { render } from "@statsify/rendering";
 import type { BaseProfileProps } from "../base.hypixel-command";
 

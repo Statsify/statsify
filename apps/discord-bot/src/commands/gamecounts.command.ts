@@ -6,8 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService, Page, PaginateService } from "#services";
-import { Command, CommandContext, EmbedBuilder } from "@statsify/discord";
+import { ApiService } from "#services";
+import {
+  Command,
+  CommandContext,
+  EmbedBuilder,
+  Page,
+  PaginateService,
+} from "@statsify/discord";
 import { FormattedGame, GameId, GamePlayers } from "@statsify/schemas";
 import { INFO_COLOR, mapGame } from "#constants";
 import { removeFormatting } from "@statsify/util";

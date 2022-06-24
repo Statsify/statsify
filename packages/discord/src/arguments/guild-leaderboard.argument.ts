@@ -11,13 +11,21 @@ import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
-import { getServerMappings } from "@statsify/assets";
+import { AbstractArgument } from "./abstract.argument";
+import { CommandContext } from "../command";
+import { Guild, LeaderboardScanner } from "@statsify/schemas";
+import { LocalizationString } from "../messages";
+import { removeFormatting } from "@statsify/util";
 
-const servers = getServerMappings();
+const list = LeaderboardScanner.getLeaderboardMetadata(Guild).map(
+  ([key, { leaderboard }]) => ({
+    value: key,
+    name: removeFormatting(leaderboard.name),
+  })
+);
 
-const fuse = new Fuse(servers, {
-  keys: ["id", "name", "addresses"],
+const fuse = new Fuse(list, {
+  keys: ["name", "key"],
   includeScore: false,
   shouldSort: true,
   isCaseSensitive: false,
@@ -25,8 +33,8 @@ const fuse = new Fuse(servers, {
   ignoreLocation: true,
 });
 
-export class ServerArgument extends AbstractArgument {
-  public name = "server";
+export class GuildLeaderboardArgument extends AbstractArgument {
+  public name = "leaderboard";
   public description: LocalizationString;
   public type = ApplicationCommandOptionType.String;
   public required = true;
@@ -34,7 +42,7 @@ export class ServerArgument extends AbstractArgument {
 
   public constructor() {
     super();
-    this.description = (t) => t("arguments.server");
+    this.description = (t) => t("arguments.guild-leaderboard");
   }
 
   public autocompleteHandler(
@@ -42,9 +50,11 @@ export class ServerArgument extends AbstractArgument {
   ): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
 
+    if (!currentValue) return list.slice(0, 25);
+
     return fuse
       .search(currentValue)
-      .map((result) => ({ name: result.item.name, value: result.item.addresses[0] }))
+      .map((result) => result.item)
       .slice(0, 25);
   }
 }

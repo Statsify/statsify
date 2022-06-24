@@ -6,16 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractArgument, LocalizationString } from "@statsify/discord";
+import { AbstractArgument } from "./abstract.argument";
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
+import { LocalizationString } from "../messages";
 
-export class PlayerArgument extends AbstractArgument {
+export class FileArgument extends AbstractArgument {
   public description: LocalizationString;
-  public type = ApplicationCommandOptionType.String;
-  public required = false;
+  public type = ApplicationCommandOptionType.Attachment;
 
-  public constructor(public name = "player") {
+  public constructor(public name = "file", public required = false) {
     super();
-    this.description = (t) => t("arguments.player");
+    this.description = (t) => t("arguments.file");
   }
 }

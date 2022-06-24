@@ -14,13 +14,10 @@ import {
   type IMessage,
   type LocalizationString,
   type LocalizeFunction,
-  Message,
-  SelectMenuBuilder,
-  SelectMenuOptionBuilder,
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { Canvas } from "skia-canvas";
-import { CommandListener } from "../command.listener";
+import { Message, SelectMenuBuilder, SelectMenuOptionBuilder } from "../messages";
 import { Service } from "typedi";
 
 type PaginateInteractionContent = IMessage | Message | EmbedBuilder | Canvas;
@@ -31,7 +28,6 @@ type PaginateInteractionContentGenerator = (
 
 export interface Page {
   label: LocalizationString;
-  emoji?: string;
   generator: PaginateInteractionContentGenerator;
 }
 
@@ -56,7 +52,7 @@ export class PaginateService {
 
     const controller = this.getPageController(pages, index);
 
-    const listener = CommandListener.getInstance();
+    const listener = context.getListener();
 
     controller.forEach((component, i) => {
       listener.addHook(component.getCustomId(), async (interaction) => {
@@ -119,7 +115,7 @@ export class PaginateService {
       new ButtonBuilder().label("forward"),
     ];
 
-    const listener = CommandListener.getInstance();
+    const listener = context.getListener();
 
     controller.forEach((component, i) => {
       listener.addHook(component.getCustomId(), async (interaction) => {
@@ -170,13 +166,12 @@ export class PaginateService {
       const controller = new SelectMenuBuilder();
 
       pages.forEach((page, i) => {
-        const menu = new SelectMenuOptionBuilder()
-          .label(page.label)
-          .value(`${i}`)
-          .default(i === index);
-
-        if (page.emoji) menu.emoji(page.emoji);
-        controller.option(menu);
+        controller.option(
+          new SelectMenuOptionBuilder()
+            .label(page.label)
+            .value(`${i}`)
+            .default(i === index)
+        );
       });
 
       return [controller];

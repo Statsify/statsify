@@ -8,9 +8,13 @@
 
 import { ApiService, MojangApiService } from "#services";
 import { Canvas } from "skia-canvas";
-import { Command, CommandContext, EmbedBuilder } from "@statsify/discord";
+import {
+  Command,
+  CommandContext,
+  EmbedBuilder,
+  MojangPlayerArgument,
+} from "@statsify/discord";
 import { INFO_COLOR } from "#constants";
-import { MojangPlayerArgument } from "#arguments";
 
 @Command({ description: "commands.skin", args: [MojangPlayerArgument] })
 export class SkinCommand {

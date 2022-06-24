@@ -6,10 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command, CommandContext, EmbedBuilder } from "@statsify/discord";
+import {
+  Command,
+  CommandContext,
+  EmbedBuilder,
+  MojangPlayerArgument,
+} from "@statsify/discord";
 import { INFO_COLOR } from "#constants";
 import { MojangApiService } from "#services";
-import { MojangPlayerArgument } from "#arguments";
 
 @Command({ description: "commands.uuid", args: [new MojangPlayerArgument()] })
 export class UUIDCommand {

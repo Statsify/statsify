@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { GameCode } from "./game";
 import { prettify } from "@statsify/util";
 
 interface StatsifyGameMode<T extends string> {

@@ -6,13 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// TODO Remove this when/if we migrate to ESM
-/* eslint-disable unicorn/prefer-module */
-
 import Container from "typedi";
 import { CommandListener } from "./command.listener";
-import { CommandLoader, CommandPoster } from "@statsify/discord";
-import { FontLoaderService, I18nLoaderService } from "#services";
+import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
+import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 import { env } from "@statsify/util";
 import { join } from "node:path";
