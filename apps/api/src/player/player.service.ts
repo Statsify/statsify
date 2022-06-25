@@ -15,6 +15,7 @@ import {
   serialize,
 } from "@statsify/schemas";
 import {
+  FriendsNotFoundException,
   HypixelCache,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
@@ -108,9 +109,9 @@ export class PlayerService {
 
     const friends = await this.hypixelService.getFriends(player.uuid);
 
-    if (!friends) {
+    if (!friends || !friends.friends.length) {
       if (cachedFriends) return cachedFriends;
-      throw new NotFoundException("friends");
+      throw new FriendsNotFoundException(player);
     }
 
     friends.displayName = player.displayName;

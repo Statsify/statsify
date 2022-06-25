@@ -7,16 +7,14 @@
  */
 
 import { Container, Footer, Header, Table } from "#components";
-import { FormattedGame, LeaderboardScanner, Parkour } from "@statsify/schemas";
+import { FormattedGame, GameId, Parkour } from "@statsify/schemas";
 import { arrayGroup, formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
+import type { Image } from "skia-canvas";
 
-const parkourNames = Object.fromEntries(
-  LeaderboardScanner.getLeaderboardMetadata(Parkour).map(([key, m]) => [
-    key,
-    m.leaderboard.name.replace(" Lobby", ""),
-  ]) as [string, string][]
-);
+interface ParkourProfileProps extends BaseProfileProps {
+  gameIcons: Record<GameId, Image>;
+}
 
 export const ParkourProfile = ({
   skin,
@@ -25,14 +23,24 @@ export const ParkourProfile = ({
   logo,
   tier,
   background,
-}: BaseProfileProps) => {
+  gameIcons,
+}: ParkourProfileProps) => {
   const { parkour } = player.stats;
 
-  const times = Object.entries(parkour)
-    .map(([field, time]) => [parkourNames[field], time])
-    .sort((a, b) => (a[1] ?? Number.MAX_VALUE) - (b[1] ?? Number.MAX_VALUE));
+  const ROW_SIZE = 2;
 
-  const rows = arrayGroup(times, 4);
+  const times = Object.entries(parkour)
+    .sort((a, b) => (a[1] ?? Number.MAX_VALUE) - (b[1] ?? Number.MAX_VALUE))
+    .map(([field, time]) => (
+      <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
+        <img image={gameIcons[field as keyof Parkour]} width={32} height={32} />
+        <text>§l{FormattedGame[field as keyof Parkour]}</text>
+        <div width="remaining" margin={{ left: 4, right: 4 }} />
+        <text>{time ? formatTime(time) : "N/A"}</text>
+      </box>
+    ));
+
+  const groups = arrayGroup(times, ROW_SIZE);
 
   return (
     <Container background={background}>
@@ -44,17 +52,8 @@ export const ParkourProfile = ({
         time="LIVE"
       />
       <Table.table>
-        {rows.map((row) => (
-          <Table.tr>
-            {row.map(([name, time]) => (
-              <Table.td
-                title={`§l${name}`}
-                value={time ? formatTime(time) : "N/A"}
-                color="§f"
-                size="small"
-              />
-            ))}
-          </Table.tr>
+        {groups.map((group) => (
+          <Table.tr>{group}</Table.tr>
         ))}
       </Table.table>
       <Footer logo={logo} tier={tier} />

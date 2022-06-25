@@ -6,18 +6,47 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command";
+import {
+  BaseHypixelCommand,
+  BaseProfileProps,
+  ProfileData,
+} from "../base.hypixel-command";
 import { Command } from "@statsify/discord";
-import { PARKOUR_MODES, ParkourModes } from "@statsify/schemas";
+import { GameId, PARKOUR_MODES, ParkourModes } from "@statsify/schemas";
 import { ParkourProfile } from "./parkour.profile";
+import { getAssetPath, getImage } from "@statsify/assets";
+import { readdir } from "node:fs/promises";
+import type { Image } from "skia-canvas";
+
+interface PreProfileData {
+  gameIcons: Record<GameId, Image>;
+}
 
 @Command({ description: (t) => t("commands.paintball") })
-export class ParkourCommand extends BaseHypixelCommand<ParkourModes> {
+export class ParkourCommand extends BaseHypixelCommand<ParkourModes, PreProfileData> {
   public constructor() {
     super(PARKOUR_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
-    return <ParkourProfile {...base} />;
+  public async getPreProfileData(): Promise<PreProfileData> {
+    const gameIconPaths = await readdir(getAssetPath("games"));
+
+    const gameIconsRequest = await Promise.all(
+      gameIconPaths.map(async (g) => [
+        g.replace(".png", ""),
+        await getImage(`games/${g}`),
+      ])
+    );
+
+    return {
+      gameIcons: Object.fromEntries(gameIconsRequest),
+    };
+  }
+
+  public getProfile(
+    base: BaseProfileProps,
+    { data }: ProfileData<ParkourModes, PreProfileData>
+  ): JSX.Element {
+    return <ParkourProfile {...base} gameIcons={data.gameIcons} />;
   }
 }

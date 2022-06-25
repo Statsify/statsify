@@ -13,9 +13,8 @@ import { LocalizationString } from "../messages";
 export class PlayerArgument extends AbstractArgument {
   public description: LocalizationString;
   public type = ApplicationCommandOptionType.String;
-  public required = false;
 
-  public constructor(public name = "player") {
+  public constructor(public name = "player", public required = false) {
     super();
     this.description = (t) => t("arguments.player");
   }

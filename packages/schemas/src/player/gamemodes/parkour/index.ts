@@ -18,92 +18,92 @@ const fieldOptions = { sort: "ASC", formatter: formatTime, fieldName: "Time" };
 
 export class Parkour {
   @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.ARCADE} Lobby` } })
-  public arcade: number;
+  public ARCADE: number;
 
   @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.BEDWARS} Lobby` } })
-  public bedwars: number;
+  public BEDWARS: number;
 
   @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.BLITZSG} Lobby` } })
-  public blitzsg: number;
+  public BLITZSG: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.BUILD_BATTLE} Lobby` },
   })
-  public buildbattle: number;
+  public BUILD_BATTLE: number;
 
-  @Field({ leaderboard: { ...fieldOptions, name: "Classic Lobby" } })
-  public classic: number;
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.CLASSIC} Lobby` } })
+  public CLASSIC: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.COPS_AND_CRIMS} Lobby` },
   })
-  public copsandcrims: number;
+  public COPS_AND_CRIMS: number;
 
   @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.DUELS} Lobby` } })
-  public duels: number;
+  public DUELS: number;
 
-  @Field({ leaderboard: { ...fieldOptions, name: "Housing Lobby" } })
-  public housing: number;
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.HOUSING} Lobby` } })
+  public HOUSING: number;
 
-  @Field({ leaderboard: { ...fieldOptions, name: "Main Lobby" } })
-  public mainLobby: number;
+  @Field({ leaderboard: { ...fieldOptions, name: FormattedGame.MAIN_LOBBY } })
+  public MAIN_LOBBY: number;
 
   @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.MEGAWALLS} Lobby` } })
-  public megawalls: number;
+  public MEGAWALLS: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.MURDER_MYSTERY} Lobby` },
   })
-  public murdermystery: number;
+  public MURDER_MYSTERY: number;
 
-  @Field({ leaderboard: { ...fieldOptions, name: "Prototype Lobby" } })
-  public proto: number;
+  @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.PROTOTYPE} Lobby` } })
+  public PROTOTYPE: number;
 
   @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.SKYWARS} Lobby` } })
-  public skywars: number;
+  public SKYWARS: number;
 
   @Field({
     leaderboard: { ...fieldOptions, name: `${FormattedGame.SMASH_HEROES} Lobby` },
   })
-  public smashheroes: number;
+  public SMASH_HEROES: number;
 
   @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.TNT_GAMES} Lobby` } })
-  public tntgames: number;
+  public TNT_GAMES: number;
 
-  @Field({ leaderboard: { ...fieldOptions, name: "Tournament Lobby" } })
-  public tourney: number;
+  @Field({ leaderboard: { ...fieldOptions, name: FormattedGame.TOURNAMENT_LOBBY } })
+  public TOURNAMENT_LOBBY: number;
 
   @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.UHC} Lobby` } })
-  public uhc: number;
+  public UHC: number;
 
   @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.WARLORDS} Lobby` } })
-  public warlords: number;
+  public WARLORDS: number;
 
   @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.WOOLWARS} Lobby` } })
-  public woolwars: number;
+  public WOOLWARS: number;
 
   public constructor(data: APIData) {
     const getTime = (key: string): number =>
       data[key]?.sort?.((a: any, b: any) => a.timeTook - b.timeTook)[0]?.timeTook;
 
-    this.arcade = getTime("ArcadeGames");
-    this.bedwars = getTime("Bedwars");
-    this.blitzsg = getTime("BlitzLobby");
-    this.buildbattle = getTime("BuildBattle");
-    this.classic = getTime("Legacy");
-    this.copsandcrims = getTime("CopsnCrims");
-    this.duels = getTime("Duels");
-    this.housing = getTime("Housing");
-    this.mainLobby = getTime("mainLobby2017");
-    this.megawalls = getTime("MegaWalls");
-    this.murdermystery = getTime("MurderMystery");
-    this.proto = getTime("Prototype");
-    this.skywars = getTime("SkywarsAug2017");
-    this.smashheroes = getTime("SuperSmash");
-    this.tntgames = getTime("TNT");
-    this.tourney = getTime("Tourney");
-    this.uhc = getTime("uhc");
-    this.warlords = getTime("Warlords");
-    this.woolwars = getTime("WoolGames");
+    this.ARCADE = getTime("ArcadeGames");
+    this.BEDWARS = getTime("Bedwars");
+    this.BLITZSG = getTime("BlitzLobby");
+    this.BUILD_BATTLE = getTime("BuildBattle");
+    this.CLASSIC = getTime("Legacy");
+    this.COPS_AND_CRIMS = getTime("CopsnCrims");
+    this.DUELS = getTime("Duels");
+    this.HOUSING = getTime("Housing");
+    this.MAIN_LOBBY = getTime("mainLobby2017");
+    this.MEGAWALLS = getTime("MegaWalls");
+    this.MURDER_MYSTERY = getTime("MurderMystery");
+    this.PROTOTYPE = getTime("Prototype");
+    this.SKYWARS = getTime("SkywarsAug2017");
+    this.SMASH_HEROES = getTime("SuperSmash");
+    this.TNT_GAMES = getTime("TNT");
+    this.TOURNAMENT_LOBBY = getTime("Tourney");
+    this.UHC = getTime("uhc");
+    this.WARLORDS = getTime("Warlords");
+    this.WOOLWARS = getTime("WoolGames");
   }
 }

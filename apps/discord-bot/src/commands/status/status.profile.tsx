@@ -122,7 +122,7 @@ export const StatusProfile = ({
         name={status.prefixName}
         skin={skin}
         badge={badge}
-        title="Player Status"
+        title="§l§6Player Status"
         time="LIVE"
       />
       {table}

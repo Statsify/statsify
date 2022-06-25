@@ -7,9 +7,12 @@
  */
 
 import { AxiosError } from "axios";
+import { ButtonBuilder, LocalizeFunction } from "@statsify/discord";
+import { ButtonStyle } from "discord-api-types/v10";
 import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#lib/error.message";
 import {
+  FriendsNotFoundException,
   GUILD_ID_REGEX,
   GuildNotFoundException,
   GuildQuery,
@@ -20,7 +23,6 @@ import {
   ApiService as StatsifyApiService,
   StatusNotFoundException,
 } from "@statsify/api-client";
-import { LocalizeFunction } from "@statsify/discord";
 import { Service } from "typedi";
 import { env, removeFormatting } from "@statsify/util";
 
@@ -154,6 +156,18 @@ export class ApiService extends StatsifyApiService {
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
 
+      if (error.message === "friends") {
+        const displayName = (error as FriendsNotFoundException).displayName;
+
+        throw new ErrorMessage(
+          (t) => t("errors.noFriends.title"),
+          (t) =>
+            t("errors.noFriends.description", {
+              displayName: this.emojiDisplayName(t, displayName),
+            })
+        );
+      }
+
       throw this.unknownError();
     });
   }
@@ -214,12 +228,12 @@ export class ApiService extends StatsifyApiService {
   }
 
   public emojiDisplayName(t: LocalizeFunction, displayName: string, space = true) {
-    const [rank, name] = displayName
-      .replace(/\[|\]/g, "")
-      .replaceAll("_", "\\_")
-      .split(" ");
+    displayName = displayName.replaceAll("_", "\\_");
 
-    if (!rank) return removeFormatting(displayName);
+    const [rank, name] = displayName.replace(/\[|\]/g, "").split(" ");
+
+    //They don't have a rank
+    if (!name) return removeFormatting(displayName);
 
     const unformattedRank = removeFormatting(rank);
 
@@ -278,9 +292,21 @@ export class ApiService extends StatsifyApiService {
   }
 
   public missingPlayer(type: PlayerTag, tag: string) {
+    const buttons: ButtonBuilder[] = [];
+
+    if (type !== "discordId") {
+      const button = new ButtonBuilder()
+        .label("NameMC")
+        .style(ButtonStyle.Link)
+        .url(`https://namemc.com/search?q=${tag}`);
+
+      buttons.push(button);
+    }
+
     return new ErrorMessage(
       (t) => t("errors.invalidPlayer.title"),
-      (t) => t("errors.invalidPlayer.description", { type, tag })
+      (t) => t("errors.invalidPlayer.description", { type, tag }),
+      { buttons }
     );
   }
 

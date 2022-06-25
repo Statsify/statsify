@@ -31,3 +31,5 @@ export class Friends {
     this.friends = records.map(([uuid, friend]) => new Friend(uuid, friend));
   }
 }
+
+export * from "./friend";

@@ -136,24 +136,35 @@ export interface FormatTimeOptions {
   entries?: number;
 }
 
+const MS = 1000;
+const SECONDS = 60;
+const MINUTES = 60;
+const HOURS = 24;
+const MONTHS = 30;
+const YEARS = 12;
+
 //Format milliseconds to a human readable string
 export const formatTime = (
   ms: number,
   { short = true, entries = 2 }: FormatTimeOptions = {}
 ): string => {
-  if (ms < 1000) return `${ms}${short ? "ms" : " milliseconds"}`;
+  if (ms < MS) return `${ms}${short ? "ms" : " milliseconds"}`;
 
-  const seconds = Math.floor(ms / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
+  const seconds = Math.floor(ms / MS);
+  const minutes = Math.floor(seconds / SECONDS);
+  const hours = Math.floor(minutes / MINUTES);
+  const days = Math.floor(hours / HOURS);
+  const months = Math.floor(days / MONTHS);
+  const years = Math.floor(months / YEARS);
 
   const time = [
-    { value: days, short: "d", long: "day" },
-    { value: hours % 24, short: "h", long: "hour" },
-    { value: minutes % 60, short: "m", long: "minute" },
-    { value: seconds % 60, short: "s", long: "second" },
-    { value: ms - seconds * 1000, short: "ms", long: "millisecond" },
+    { value: years, short: "y", long: "year" },
+    { value: months % YEARS, short: "mo", long: "month" },
+    { value: days % MONTHS, short: "d", long: "day" },
+    { value: hours % HOURS, short: "h", long: "hour" },
+    { value: minutes % MINUTES, short: "m", long: "minute" },
+    { value: seconds % SECONDS, short: "s", long: "second" },
+    { value: ms - seconds * MS, short: "ms", long: "millisecond" },
   ];
 
   return time
