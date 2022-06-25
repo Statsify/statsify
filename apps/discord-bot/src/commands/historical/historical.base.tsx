@@ -326,23 +326,23 @@ export class HistoricalBase {
 
     let resetTime = now
       .minus({ hours: now.hour, minutes: now.minute })
-      .plus({ minutes: player.resetMinute!, day: hasResetToday ? 1 : 0 });
+      .plus({ minutes: player.resetMinute! });
 
     const isSunday = now.weekday === 7;
     const isStartOfMonth = now.day === 1;
 
-    if (
+    if (this.time === HistoricalType.DAILY && hasResetToday) {
+      resetTime = resetTime.plus({ days: 1 });
+    } else if (
       this.time === HistoricalType.WEEKLY &&
       ((isSunday && hasResetToday) || !isSunday)
     ) {
-      resetTime = resetTime.plus(isSunday ? { week: 1 } : { days: 6 - now.weekday });
+      resetTime = resetTime.plus({ week: 1 }).minus({ days: isSunday ? 0 : now.weekday });
     } else if (
       this.time === HistoricalType.MONTHLY &&
       ((isStartOfMonth && hasResetToday) || !isStartOfMonth)
     ) {
-      resetTime = resetTime
-        .minus({ days: isStartOfMonth ? 0 : now.day })
-        .plus({ months: 1 });
+      resetTime = resetTime.minus({ days: now.day - 1 }).plus({ months: 1 });
     }
 
     return Math.round(resetTime.toMillis() / 1000);
