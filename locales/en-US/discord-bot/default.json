@@ -174,14 +174,17 @@
     "hidden": "Hidden",
     "lastActionTime": "Last Action Time",
     "lastAction": "Last Action",
-    "firstLogin": "Last Login",
-    "lastLogin": "Last Logout",
-    "lastAction": "Last Action",
+    "firstLogin": "First Login",
+    "lastLogin": "Last Login",
     "started": "Started",
     "ended": "Ended",
     "renown": "Renown",
     "bounty": "Bounty",
     "highestStreak": "Highest Streak"
+  },
+  "historical": {
+    "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
+    "new": "{{displayName}} has had their historical stats checked for the first time, their stats will be updated from now on at this time each day."
   },
   "embeds": {
     "uuid": {

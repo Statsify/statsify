@@ -9,7 +9,12 @@
     "es2022": true,
     "node": true
   },
-  "plugins": ["@typescript-eslint", "license-header", "sort-imports-es6-autofix", "unused-imports"],
+  "plugins": [
+    "@typescript-eslint",
+    "license-header",
+    "sort-imports-es6-autofix",
+    "unused-imports"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -74,10 +79,15 @@
     "@typescript-eslint/no-non-null-assertion": ["off"],
     "@typescript-eslint/no-unused-vars": ["off"],
     "unused-imports/no-unused-imports": "error",
-		"unused-imports/no-unused-vars": [
-			"error",
-			{ "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
-		],
+    "unused-imports/no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
     "arrow-body-style": ["error", "as-needed"],
     "no-constant-binary-expression": ["error"],
     "no-constructor-return": ["error"],
@@ -131,6 +141,17 @@
     "unicorn/consistent-destructuring": ["off"],
     "unicorn/no-useless-switch-case": ["off"],
     "unicorn/better-regex": ["off"],
-    "unicorn/prefer-module": ["off"]
+    "unicorn/prefer-module": ["off"],
+    "unicorn/numeric-separators-style": [
+      "error",
+      {
+        "onlyIfContainsSeparator": true,
+        "number": {
+          "minimumDigits": 5,
+          "groupLength": 3,
+          "onlyIfContainsSeparator": false
+        }
+      }
+    ]
   }
 }

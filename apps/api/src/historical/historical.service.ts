@@ -81,15 +81,19 @@ export class HistoricalService {
       lastModel: ReturnModelType<typeof Player>,
       doc: Flatten<Player>
     ) => {
-      const last = await model
-        .findOneAndReplace({ uuid: doc.uuid }, doc, { upsert: true })
-        .lean()
-        .exec();
+      //findOneAndReplace doesn't unflatten the document so findOne and replaceOne need to be used separately
+      const last = await model.findOne({ uuid: doc.uuid }).lean().exec();
 
-      await lastModel
-        .replaceOne({ uuid: doc.uuid }, (last ?? doc) as Player, { upsert: true })
-        .lean()
-        .exec();
+      doc._id = undefined;
+      if (last) last._id = undefined;
+
+      await Promise.all([
+        model.replaceOne({ uuid: doc.uuid }, doc, { upsert: true }).lean().exec(),
+        lastModel
+          .replaceOne({ uuid: doc.uuid }, (last ?? doc) as Player, { upsert: true })
+          .lean()
+          .exec(),
+      ]);
     };
 
     await reset(this.dailyModel, this.lastDayModel, doc);
@@ -106,6 +110,7 @@ export class HistoricalService {
 
     const merged = this.merge(oldPlayer, newPlayer);
 
+    merged.resetMinute = oldPlayer.resetMinute;
     merged.isNew = isNew;
 
     return merged;
@@ -158,6 +163,7 @@ export class HistoricalService {
       .findOne({ uuid: newPlayer.uuid })
       .lean()
       .exec()) as Player;
+
     let isNew = false;
 
     if (!oldPlayer) {

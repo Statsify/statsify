@@ -50,9 +50,10 @@ import {
   SubCommand,
 } from "@statsify/discord";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile";
+import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
-import { GeneralProfile } from "../general/general.profile";
+import { HistoricalGeneralProfile } from "../general/historical-general.profile";
 import { HistoricalType } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile";
 import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile";
@@ -151,7 +152,9 @@ export class HistoricalBase {
 
   @SubCommand({ description: (t) => t("commands.general"), args })
   public general(context: CommandContext) {
-    return this.run(context, GENERAL_MODES, (base) => <GeneralProfile {...base} />);
+    return this.run(context, GENERAL_MODES, (base) => (
+      <HistoricalGeneralProfile {...base} />
+    ));
   }
 
   @SubCommand({ description: (t) => t("commands.megawalls"), args })
@@ -267,10 +270,26 @@ export class HistoricalBase {
     const allModes = modes.getModes();
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
 
+    const isNotLastHistorical = [
+      HistoricalType.DAILY,
+      HistoricalType.WEEKLY,
+      HistoricalType.MONTHLY,
+    ].includes(this.time);
+
     const pages: Page[] = displayedModes.map((mode) => ({
       label: mode.formatted,
       generator: async (t) => {
         const background = await getBackground(...mapBackground(modes, mode.api));
+
+        let content = player.isNew
+          ? `${t("historical.new", {
+              displayName: this.apiService.emojiDisplayName(t, player.displayName),
+            })}\n\n`
+          : undefined;
+
+        if (isNotLastHistorical)
+          content =
+            (content ?? "") + t("historical.reset", { time: this.getResetTime(player) });
 
         const profile = getProfile(
           {
@@ -286,10 +305,46 @@ export class HistoricalBase {
           mode
         );
 
-        return render(profile, getTheme(user?.theme));
+        const canvas = render(profile, getTheme(user?.theme));
+        const buffer = await canvas.toBuffer("png");
+
+        return {
+          content,
+          files: [{ name: `${this.time}.png`, data: buffer, type: "image/png" }],
+          attachments: [],
+        };
       },
     }));
 
     return this.paginateService.paginate(context, pages);
+  }
+
+  private getResetTime(player: Player) {
+    const now = DateTime.now();
+
+    const hasResetToday = player.resetMinute! <= now.hour * 60 + now.minute;
+
+    let resetTime = now
+      .minus({ hours: now.hour, minutes: now.minute })
+      .plus({ minutes: player.resetMinute! });
+
+    const isSunday = now.weekday === 7;
+    const isStartOfMonth = now.day === 1;
+
+    if (this.time === HistoricalType.DAILY && hasResetToday) {
+      resetTime = resetTime.plus({ days: 1 });
+    } else if (
+      this.time === HistoricalType.WEEKLY &&
+      ((isSunday && hasResetToday) || !isSunday)
+    ) {
+      resetTime = resetTime.plus({ week: 1 }).minus({ days: isSunday ? 0 : now.weekday });
+    } else if (
+      this.time === HistoricalType.MONTHLY &&
+      ((isStartOfMonth && hasResetToday) || !isStartOfMonth)
+    ) {
+      resetTime = resetTime.minus({ days: now.day - 1 }).plus({ months: 1 });
+    }
+
+    return Math.round(resetTime.toMillis() / 1000);
   }
 }
