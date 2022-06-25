@@ -184,7 +184,16 @@
   },
   "historical": {
     "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
-    "new": "{{displayName}} has had their historical stats checked for the first time, their stats will be updated from now on at this time each day."
+    "new": "{{displayName}} has had their historical stats checked for the first time, their stats will be updated from now on at this time each day.",
+    "aboutResetting": "Click the reset button below to reset your historical stats everyday at this time. WARNING: This will delete all of your historical stats and cannot be undone.",
+    "aboutResettingPremium": "Click the reset button below and fill out the modal for when you want your historical stats to reset. WARNING: this will delete all of your historical stats and cannot be undone.",
+    "modal": {
+      "resetTime": "Choose a Reset Time",
+      "timezone": "Choose a Timezone",
+      "title": "Historical Reset Time"
+    },
+    "setResetTime": "Set reset time to <t:{{time}}:t>",
+    "resetButton": "Click to Reset"
   },
   "embeds": {
     "uuid": {

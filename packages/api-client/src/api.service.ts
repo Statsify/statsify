@@ -157,8 +157,12 @@ export class ApiService {
     });
   }
 
-  public resetPlayerHistorical(tag: string) {
-    return this.request<GetPlayerResponse>(`/historical`, { player: tag }, "DELETE");
+  public resetPlayerHistorical(tag: string, resetMinute?: number) {
+    return this.request<GetPlayerResponse>(
+      `/historical`,
+      { player: tag, resetMinute },
+      "DELETE"
+    );
   }
 
   public getKey() {

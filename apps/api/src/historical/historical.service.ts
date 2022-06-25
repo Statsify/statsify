@@ -54,12 +54,12 @@ export class HistoricalService {
     });
   }
 
-  public async getAndReset(tag: string, type: HistoricalType) {
+  public async getAndReset(tag: string, type: HistoricalType, time?: number) {
     const player = await this.playerService.get(tag, HypixelCache.LIVE);
 
     if (!player) return null;
 
-    player.resetMinute = this.getMinute(new Date());
+    player.resetMinute = time ?? this.getMinute(new Date());
 
     return this.reset(player, type);
   }
@@ -84,8 +84,8 @@ export class HistoricalService {
       //findOneAndReplace doesn't unflatten the document so findOne and replaceOne need to be used separately
       const last = await model.findOne({ uuid: doc.uuid }).lean().exec();
 
-      doc._id = undefined;
-      if (last) last._id = undefined;
+      delete doc._id;
+      if (last) delete last._id;
 
       await Promise.all([
         model.replaceOne({ uuid: doc.uuid }, doc, { upsert: true }).lean().exec(),
