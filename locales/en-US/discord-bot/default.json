@@ -380,6 +380,14 @@
       "title": "Status Not Found",
       "description": "A status for {{displayName}} could not be found!"
     },
+    "noFriends": {
+      "title": "Friends Not Found",
+      "description": "{{displayName}} has no friends, :("
+    },
+    "noMutuals": {
+      "title": "No Mutuals",
+      "description": "{{displayNameOne}} and {{displayNameTwo}} have no mutual friends"
+    },
     "noPitStats": {
       "title": "Pit Stats Not Found",
       "description": "{{displayName}} has never played The Pit!"

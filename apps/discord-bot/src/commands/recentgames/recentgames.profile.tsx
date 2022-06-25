@@ -39,7 +39,7 @@ export const RecentGamesProfile = ({
         name={prefixName}
         skin={skin}
         badge={badge}
-        title="Player Recent Games"
+        title="§l§ePlayer Recent Games"
         time="LIVE"
       />
       <Table.table>
