@@ -22,7 +22,7 @@ import { render } from "@statsify/rendering";
 @Command({ description: (t) => t("commands.friends"), args: [PlayerArgument] })
 export class FriendsCommand {
   public constructor(
-    private readonly apiSerivce: ApiService,
+    private readonly apiService: ApiService,
     private readonly paginateService: PaginateService
   ) {}
 
@@ -34,13 +34,13 @@ export class FriendsCommand {
       displayName,
       friends: allFriends,
       uuid,
-    } = await this.apiSerivce.getFriends(context.option("player"), user);
+    } = await this.apiService.getFriends(context.option("player"), user);
 
     const [logo, background, skin, badge] = await Promise.all([
       getLogo(user?.tier),
       getBackground("hypixel", "overall"),
-      this.apiSerivce.getPlayerSkin(uuid),
-      this.apiSerivce.getUserBadge(uuid),
+      this.apiService.getPlayerSkin(uuid),
+      this.apiService.getUserBadge(uuid),
     ]);
 
     return this.paginateService.scrollingPagination(
@@ -52,7 +52,7 @@ export class FriendsCommand {
         const friendsWithSkins = await Promise.all(
           friends.map(async (f) => ({
             ...f,
-            skin: await this.apiSerivce.getPlayerHead(f.uuid, 24),
+            skin: await this.apiService.getPlayerHead(f.uuid, 24),
           }))
         );
 
