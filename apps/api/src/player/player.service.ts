@@ -68,6 +68,8 @@ export class PlayerService {
 
       await this.saveOne(flatPlayer);
 
+      flatPlayer.isNew = !mongoPlayer;
+
       return deserialize(Player, flatPlayer);
     } else if (mongoPlayer) {
       return deserialize(Player, mongoPlayer);

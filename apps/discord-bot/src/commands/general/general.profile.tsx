@@ -49,7 +49,7 @@ const GeneralProfileHeaderBody = ({
           §7{t("stats.firstLogin")}: §3{firstLogin}
         </text>
         <text align="left">
-          §7`{t("stats.lastLogin")}`: §3{lastLogin}
+          §7{t("stats.lastLogin")}: §3{lastLogin}
         </text>
       </box>
     </div>
