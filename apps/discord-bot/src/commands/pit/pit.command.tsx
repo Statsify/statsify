@@ -13,9 +13,11 @@ import {
   PaginateService,
   PlayerArgument,
 } from "@statsify/discord";
+import { PIT_MODES } from "@statsify/schemas";
 import { PitProfile } from "./pit.profile";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
+import { mapBackground } from "#constants";
 import { render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.pit"), args: [PlayerArgument] })
@@ -39,7 +41,7 @@ export class PitCommand {
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
       getLogo(user?.tier),
-      getBackground("pit", "overall"),
+      getBackground(...mapBackground(PIT_MODES, "overall")),
     ]);
 
     const canvas = render(

@@ -92,19 +92,19 @@ export const romanNumeral = (num: number): string => {
 };
 
 export const prettify = (s: string): string => {
-  let newString = s;
-
-  if (s === s.toUpperCase()) return prettify(s.toLowerCase());
+  if (/[a-z]/gi.test(s) && s === s.toUpperCase()) {
+    s = s.toLowerCase();
+  }
 
   // Convert camelCase to Snake_Case (if applicable)
-  if (!["_", " "].some((s) => newString.includes(s))) {
-    newString =
-      newString.charAt(0).toLowerCase() +
-      newString.slice(1).replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+  if (!["_", " "].some((l) => s.includes(l))) {
+    s =
+      s.charAt(0).toLowerCase() +
+      s.slice(1).replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
   }
 
   // Convert snake_case to Title Case
-  return newString
+  return s
     .replaceAll("_", " ")
     .replace(/\w\S*/g, (t) => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
 };

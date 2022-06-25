@@ -29,3 +29,4 @@ export * from "./vampirez";
 export * from "./walls";
 export * from "./warlords";
 export * from "./woolwars";
+export * from "./pit";

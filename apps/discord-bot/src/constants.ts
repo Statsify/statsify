@@ -32,8 +32,10 @@ import {
   MurderMysteryModes,
   PAINTBALL_MODES,
   PARKOUR_MODES,
+  PIT_MODES,
   PaintballModes,
   ParkourModes,
+  PitModes,
   QUAKE_MODES,
   QuakeModes,
   SKYWARS_MODES,
@@ -77,6 +79,7 @@ export type GamesWithBackgrounds =
   | MurderMysteryModes
   | PaintballModes
   | ParkourModes
+  | PitModes
   | QuakeModes
   | SkyWarsModes
   | SmashHeroesModes
@@ -178,7 +181,8 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["murdermystery", "overall"];
     case PAINTBALL_MODES:
       return ["paintball", "overall"];
-    //PIT
+    case PIT_MODES:
+      return ["pit", "overall"];
     case QUAKE_MODES:
       return ["quake", "overall"];
     case SKYWARS_MODES: {
@@ -244,8 +248,8 @@ const GAME_ID_TO_MODES: Record<GameId, GameModes<any> | null> = {
   WALLS: WALLS_MODES,
   WARLORDS: WARLORDS_MODES,
   WOOLWARS: WOOLWARS_MODES,
+  PIT: PIT_MODES,
   HOUSING: noop(),
-  PIT: noop(),
   PROTOTYPE: noop(),
   SKYBLOCK: noop(),
   SKYCLASH: noop(),
@@ -272,6 +276,9 @@ const HYPIXEL_GAME_LIST = Object.fromEntries(
 export const mapGame = (game: GameId, mode: string) => {
   if (HYPIXEL_GAME_LIST[game] && mode in HYPIXEL_GAME_LIST[game]!)
     return HYPIXEL_GAME_LIST[game]![mode];
+
+  //Pit's mode in the  api is also called PIT
+  if (mode === game) return prettify(mode);
 
   return prettify(mode.replace(`${GameCodeMapping[game]}_`, "").replace(game, ""));
 };
