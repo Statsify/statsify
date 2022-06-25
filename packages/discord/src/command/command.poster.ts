@@ -7,6 +7,7 @@
  */
 
 import { Logger } from "@statsify/logger";
+import { parseDiscordError } from "../util/parse-discord-error";
 import { readFile, writeFile } from "node:fs/promises";
 import type { CommandResolvable } from "./command.resolvable";
 import type { RestClient } from "tiny-discord";
@@ -23,7 +24,10 @@ export class CommandPoster {
   ) {
     const commandsToPost = [...commands.values()];
 
-    if (!(await this.shouldPost(commandsToPost))) return;
+    if (!(await this.shouldPost(commands, guildId))) {
+      this.logger.log("No changes to commands, skipping");
+      return;
+    }
 
     const res = await this.client.put(
       `/applications/${applicationId}${guildId ? `/guilds/${guildId}` : ""}/commands`,
@@ -32,8 +36,8 @@ export class CommandPoster {
 
     if (res.status !== 200) {
       this.logger.error(
-        `Failed to post commands with reason: ${JSON.stringify(
-          (res.body as Record<string, any>)?.errors ?? {}
+        `Failed to post commands with reason: ${parseDiscordError(
+          (res.body as Record<string, any>)?.errors
         )}, and status: ${res.status}`
       );
     } else {
@@ -41,20 +45,28 @@ export class CommandPoster {
     }
   }
 
-  private async shouldPost(commands: CommandResolvable[]) {
-    const stringified = JSON.stringify(commands);
-
+  private async shouldPost(commands: Map<string, CommandResolvable>, guildId?: string) {
     const file = await readFile("./commands.json", "utf8").catch(() => null);
 
-    await writeFile("./commands.json", stringified);
+    await writeFile(
+      "./commands.json",
+      JSON.stringify({
+        guildId,
+        commands: Object.fromEntries(commands),
+      })
+    );
 
     if (!file) return true;
 
-    if (stringified === file) {
-      this.logger.log("No changes to commands, skipping");
-      return false;
+    const parsed = JSON.parse(file);
+
+    if (parsed.guildId !== guildId) return true;
+
+    for (const [key, value] of commands) {
+      if (!parsed.commands[key]) return true;
+      if (!value.equals(parsed.commands[key])) return true;
     }
 
-    return true;
+    return false;
   }
 }

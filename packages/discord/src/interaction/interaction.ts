@@ -10,11 +10,12 @@ import { APIGuildMember, ComponentType, InteractionType } from "discord-api-type
 import { IMessage, Message } from "../messages";
 import { Logger } from "@statsify/logger";
 import { getLocalizeFunction } from "../messages/localize";
+import { parseDiscordError } from "../util/parse-discord-error";
 import type {
   Interaction as DiscordInteraction,
   InteractionResponse,
   RestClient,
-  RestResponse,
+  RestRequestOptions,
 } from "tiny-discord";
 
 const logger = new Logger("Interaction Response");
@@ -93,55 +94,49 @@ export class Interaction {
   }
 
   public async reply(data: InteractionResponse) {
-    return this.handleError(
-      await this.rest.post(
-        `/interactions/${this.data.id}/${this.data.token}/callback`,
-        data
-      )
-    );
+    await this.request("Send Interaction Reply", {
+      method: "post",
+      path: `/interactions/${this.data.id}/${this.data.token}/callback`,
+      body: data,
+    });
   }
 
   public async editReply(data: Message | IMessage) {
-    return this.handleError(
-      await this.rest.patch(
-        `/webhooks/${this.applicationId}/${this.data.token}/messages/@original`,
-        this.convertToApiData(data)
-      )
-    );
+    await this.request("Edit Interaction Reply", {
+      method: "patch",
+      path: `/webhooks/${this.applicationId}/${this.data.token}/messages/@original`,
+      body: this.convertToApiData(data),
+    });
   }
 
   public async deleteReply() {
-    return this.handleError(
-      await this.rest.delete(
-        `/webhooks/${this.applicationId}/${this.data.token}/messages/@original`
-      )
-    );
+    await this.request("Delete Interaction Reply", {
+      method: "delete",
+      path: `/webhooks/${this.applicationId}/${this.data.token}/messages/@original`,
+    });
   }
 
   public async sendFollowup(data: Message | IMessage) {
-    return this.handleError(
-      await this.rest.post(
-        `/webhooks/${this.applicationId}/${this.data.token}`,
-        this.convertToApiData(data)
-      )
-    );
+    await this.request("Send Followup Interaction", {
+      method: "post",
+      path: `/webhooks/${this.applicationId}/${this.data.token}`,
+      body: this.convertToApiData(data),
+    });
   }
 
   public async editFollowup(messageId: string, data: Message | IMessage) {
-    return this.handleError(
-      await this.rest.patch(
-        `/webhooks/${this.applicationId}/${this.data.token}/messages/${messageId}`,
-        this.convertToApiData(data)
-      )
-    );
+    await this.request("Edit Followup Interaction", {
+      method: "patch",
+      path: `/webhooks/${this.applicationId}/${this.data.token}/messages/${messageId}`,
+      body: this.convertToApiData(data),
+    });
   }
 
   public async deleteFollowup(messageId: string) {
-    return this.handleError(
-      await this.rest.delete(
-        `/webhooks/${this.applicationId}/${this.data.token}/messages/${messageId}`
-      )
-    );
+    await this.request("Delete Followup Interaction", {
+      method: "delete",
+      path: `/webhooks/${this.applicationId}/${this.data.token}/messages/${messageId}`,
+    });
   }
 
   public convertToApiData(m: Message | IMessage) {
@@ -167,45 +162,18 @@ export class Interaction {
     return res;
   }
 
-  private handleError(response: RestResponse) {
+  private async request(name: string, options: RestRequestOptions) {
+    const response = await this.rest.request(options);
     if (response.status >= 200 && response.status < 300) return response;
 
     const body = response.body as Record<string, any>;
     let message = body.message;
 
     if (body.errors) {
-      const error = this.parseDiscordError(body.errors);
+      const error = parseDiscordError(body.errors);
       message += ` | ${error}`;
     }
 
-    logger.error(message);
-  }
-
-  private parseDiscordError(error: any = {}, errorKey = ""): string {
-    if (typeof error.message === "string")
-      return `${errorKey.length ? `${errorKey} - ${error.code}` : `${error.code}`}: ${
-        error.message
-      }`.trim();
-
-    const entries = Object.entries(error) as [string, any][];
-    let message = "";
-
-    for (const [key, value] of entries) {
-      const nextKey = key.startsWith("_")
-        ? errorKey
-        : errorKey
-        ? Number.isNaN(Number(key))
-          ? `${errorKey}.${key}`
-          : `${errorKey}[${key}]`
-        : key;
-
-      if (typeof value === "string") message += value;
-      else if ("_errors" in value)
-        for (const error of value._errors)
-          message += this.parseDiscordError(error, nextKey);
-      else message += this.parseDiscordError(value, nextKey);
-    }
-
-    return message;
+    logger.error(message, name);
   }
 }

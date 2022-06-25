@@ -87,4 +87,31 @@ export class CommandResolvable {
       options: this.options?.map((o) => (o.toJSON ? o.toJSON() : o)),
     };
   }
+
+  public equals(other: CommandResolvable): boolean {
+    const d = this.toJSON();
+
+    if (
+      d.name !== other.name ||
+      d.description !== other.description ||
+      d.type !== other.type
+    ) {
+      return false;
+    }
+
+    if (this.options?.length && other.options?.length) {
+      if (this.options.length !== other.options.length) return false;
+
+      for (let i = 0; i < this.options.length; i++)
+        if (!this.options[i].equals(other.options[i])) return false;
+    }
+
+    if (d.description_localizations && other.description_localizations) {
+      for (const key in this.description_localizations)
+        if (d.description_localizations[key] !== other.description_localizations[key])
+          return false;
+    }
+
+    return true;
+  }
 }
