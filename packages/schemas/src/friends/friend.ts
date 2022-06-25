@@ -21,7 +21,9 @@ export class Friend {
 
   public constructor(uuid: string, data: APIData) {
     this.uuid = uuid;
-    this.displayName = data.display;
+
+    //Sk1er doesn't know how to use color codes
+    this.displayName = data.display.replace("§7+", "§8+");
     this.createdAt = data.time;
   }
 }

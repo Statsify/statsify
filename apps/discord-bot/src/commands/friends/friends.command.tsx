@@ -48,23 +48,29 @@ export class FriendsCommand {
       arrayGroup(
         allFriends.sort((a, b) => b.createdAt - a.createdAt),
         10
-      ).map(
-        (friends) => () =>
-          render(
-            <FriendsProfile
-              friends={friends}
-              friendCount={allFriends.length}
-              skin={skin}
-              logo={logo}
-              badge={badge}
-              background={background}
-              t={t}
-              tier={user?.tier}
-              displayName={displayName}
-            />,
-            getTheme(user?.theme)
-          )
-      )
+      ).map((friends) => async () => {
+        const friendsWithSkins = await Promise.all(
+          friends.map(async (f) => ({
+            ...f,
+            skin: await this.apiSerivce.getPlayerHead(f.uuid, 24),
+          }))
+        );
+
+        return render(
+          <FriendsProfile
+            friends={friendsWithSkins}
+            friendCount={allFriends.length}
+            skin={skin}
+            logo={logo}
+            badge={badge}
+            background={background}
+            t={t}
+            tier={user?.tier}
+            displayName={displayName}
+          />,
+          getTheme(user?.theme)
+        );
+      })
     );
   }
 }

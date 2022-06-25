@@ -10,9 +10,14 @@ import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, List } from "#components";
 import { Friend } from "@statsify/schemas";
 import { relativeTime } from "@statsify/util";
+import type { Image } from "skia-canvas";
+
+export type FriendWithSkin = Friend & {
+  skin: Image;
+};
 
 export interface FriendsProfileProps extends Omit<BaseProfileProps, "player" | "time"> {
-  friends: Friend[];
+  friends: FriendWithSkin[];
   friendCount: number;
   displayName: string;
 }
@@ -40,6 +45,9 @@ export const FriendsProfile = ({
     <List
       items={friends.map((friend) => (
         <>
+          <box width="100%" padding={{ left: 12, right: 12, top: 4, bottom: 4 }}>
+            <img image={friend.skin} width={24} height={24} />
+          </box>
           <box width="remaining" direction="column">
             <text align="left">{friend.displayName}</text>
           </box>
