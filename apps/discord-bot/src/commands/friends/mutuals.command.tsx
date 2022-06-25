@@ -26,7 +26,7 @@ import { render } from "@statsify/rendering";
 })
 export class MutualsCommand {
   public constructor(
-    private readonly apiSerivce: ApiService,
+    private readonly apiService: ApiService,
     private readonly paginateService: PaginateService
   ) {}
 
@@ -38,13 +38,13 @@ export class MutualsCommand {
       displayName: displayNameOne,
       friends: friendsOne,
       uuid: uuidOne,
-    } = await this.apiSerivce.getFriends(context.option("player1"));
+    } = await this.apiService.getFriends(context.option("player1"));
 
     const {
       displayName: displayNameTwo,
       friends: friendsTwo,
       uuid: uuidTwo,
-    } = await this.apiSerivce.getFriends(context.option("player2"), user);
+    } = await this.apiService.getFriends(context.option("player2"), user);
 
     const mutuals: Mutual[] = [];
 
@@ -65,8 +65,8 @@ export class MutualsCommand {
         (t) => t("errors.noMutuals.title"),
         (t) =>
           t("errors.noMutuals.description", {
-            displayNameOne: this.apiSerivce.emojiDisplayName(t, displayNameOne),
-            displayNameTwo: this.apiSerivce.emojiDisplayName(t, displayNameTwo),
+            displayNameOne: this.apiService.emojiDisplayName(t, displayNameOne),
+            displayNameTwo: this.apiService.emojiDisplayName(t, displayNameTwo),
           })
       );
     }
@@ -74,10 +74,10 @@ export class MutualsCommand {
     const [logo, background, skinOne, skinTwo, badgeOne, badgeTwo] = await Promise.all([
       getLogo(user?.tier),
       getBackground("hypixel", "overall"),
-      this.apiSerivce.getPlayerSkin(uuidOne),
-      this.apiSerivce.getPlayerSkin(uuidTwo),
-      this.apiSerivce.getUserBadge(uuidOne),
-      this.apiSerivce.getUserBadge(uuidTwo),
+      this.apiService.getPlayerSkin(uuidOne),
+      this.apiService.getPlayerSkin(uuidTwo),
+      this.apiService.getUserBadge(uuidOne),
+      this.apiService.getUserBadge(uuidTwo),
     ]);
 
     return this.paginateService.scrollingPagination(
