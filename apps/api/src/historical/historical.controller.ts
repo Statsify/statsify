@@ -22,7 +22,7 @@ import {
 } from "@statsify/api-client";
 import { HistoricalDto } from "../dtos/historical.dto";
 import { HistoricalService } from "./historical.service";
-import { PlayerDto } from "../dtos/player.dto";
+import { ResetPlayerDto } from "../dtos";
 
 @Controller("/historical")
 @ApiTags("Historical")
@@ -48,8 +48,14 @@ export class HistoricalController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Delete()
   @Auth({ role: AuthRole.MEMBER })
-  public async deleteHistoricalStats(@Query() { player: tag }: PlayerDto) {
-    const player = await this.historicalService.getAndReset(tag, HistoricalType.MONTHLY);
+  public async deleteHistoricalStats(
+    @Query() { player: tag, resetMinute }: ResetPlayerDto
+  ) {
+    const player = await this.historicalService.getAndReset(
+      tag,
+      HistoricalType.MONTHLY,
+      resetMinute
+    );
 
     if (!player) return { success: false };
 

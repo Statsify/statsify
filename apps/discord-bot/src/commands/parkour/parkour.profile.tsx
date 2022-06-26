@@ -30,7 +30,7 @@ export const ParkourProfile = ({
   const ROW_SIZE = 2;
 
   const times = Object.entries(parkour)
-    .sort((a, b) => (a[1] ?? Number.MAX_VALUE) - (b[1] ?? Number.MAX_VALUE))
+    .sort((a, b) => (a[1] || Number.MAX_VALUE) - (b[1] || Number.MAX_VALUE))
     .map(([field, time]) => (
       <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
         <img image={gameIcons[field as keyof Parkour]} width={32} height={32} />

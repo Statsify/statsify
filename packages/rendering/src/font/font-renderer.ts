@@ -240,9 +240,8 @@ export class FontRenderer {
     width: number,
     bold: boolean
   ) {
-    if (char === " ") return (4 + (bold ? 1 : 0)) * size;
-
-    let gap = size * (width + 2 * scale);
+    //Minecraft has weird spacing for the space
+    let gap = size * (width + (char == " " ? -2 : 2) * scale);
 
     if (bold) {
       gap += scale * size;
@@ -256,8 +255,6 @@ export class FontRenderer {
   }
 
   private measureCharacter(char: string, textSize: number, bold: boolean): number {
-    if (char === " ") return this.getCharacterSpacing(" ", false, textSize, 1, 0, bold);
-
     const metadata = this.getCharacterMetadata(char, textSize);
 
     if (!metadata) return 0;
