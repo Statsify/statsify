@@ -435,6 +435,14 @@
     "noGTBSolutions": {
       "title": "No GTB Solutions",
       "description": "We couldn't find any solutions for the provided hint"
+    },
+    "invalidResetTime": {
+      "title": "Invalid Reset Time",
+      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`"
+    },
+    "invalidResetTimezone": {
+      "title": "Invalid Reset Timezone",
+      "description": "`{{timezone}}` is not a valid timezone. Enter a timezone similar to `EST` or `PST`"
     }
   },
   "leaderboard": {
