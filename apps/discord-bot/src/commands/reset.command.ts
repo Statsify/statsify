@@ -100,8 +100,21 @@ export class ResetCommand {
         }).toLocal();
 
         if (time.invalidExplanation) {
+          const error = time.invalidExplanation.startsWith("the zone")
+            ? new ErrorMessage(
+                (t) => t("errors.invalidResetTimezone.title"),
+                (t) =>
+                  t("errors.invalidResetTimezone.description", {
+                    timezone: timeZoneInput,
+                  })
+              )
+            : new ErrorMessage(
+                (t) => t("errors.invalidResetTime.title"),
+                (t) => t("errors.invalidResetTime.description", { time: timeInput })
+              );
+
           return interaction.sendFollowup({
-            content: time.invalidExplanation,
+            ...error,
             ephemeral: true,
           });
         }
@@ -111,14 +124,14 @@ export class ResetCommand {
         const resetMinute = time.hour * 60 + time.minute;
         await this.apiService.resetPlayerHistorical(user.uuid!, resetMinute);
 
-        await interaction.sendFollowup({
+        clearTimeout(removeComponentsTimeout);
+
+        await context.reply({
           content: (t) =>
             t("historical.setResetTime", { time: Math.round(time.toMillis() / 1000) }),
+          components: [],
           ephemeral: true,
         });
-
-        clearTimeout(removeComponentsTimeout);
-        await context.getInteraction().deleteReply();
       });
     } else {
       listener.addHook(resetButton.getCustomId(), async () => {

@@ -130,5 +130,13 @@
     "REPLAY": "",
     "TOURNAMENT_LOBBY": "",
     "WOOLWARS": ""
+  },
+  "socials": {
+    "instagram": "<:instagram:874688712401895424>",
+    "twitter": "<:twitter:874688748225458186>",
+    "twitch": "<:twitch:874688836821737502>",
+    "discord": "<:discord:874688375695736882>",
+    "forums": "<:hypixel:874688652180095007>",
+    "youtube": "<:youtube:874688799609856030> "
   }
 }
