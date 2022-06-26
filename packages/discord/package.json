@@ -14,7 +14,7 @@
     "@statsify/assets": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "discord-api-types": "^0.34.0",
+    "discord-api-types": "^0.35.0",
     "fuse.js": "^6.6.2",
     "i18next": "^21.8.10",
     "reflect-metadata": "^0.1.13",
