@@ -8,7 +8,8 @@
 
 import { ApiService } from "#services";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command";
-import { CommandContext, GuildLeaderboardArgument, SubCommand } from "@statsify/discord";
+import { CommandContext, SubCommand } from "@statsify/discord";
+import { GuildLeaderboardArgument } from "./guild-leaderboard.argument";
 import { getBackground } from "@statsify/assets";
 
 export class GuildLeaderboardSubCommand extends BaseLeaderboardCommand {

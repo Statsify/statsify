@@ -280,6 +280,9 @@
     },
     "gameCounts": {
       "title": "Hypixel Gamecounts"
+    },
+    "gtbhelper": {
+      "title": "Possible GTB Solutions"
     }
   },
   "commands": {
@@ -428,6 +431,10 @@
     "noCape": {
       "title": "Missing Cape",
       "description": "There is no cape lmao"
+    },
+    "noGTBSolutions": {
+      "title": "No GTB Solutions",
+      "description": "We couldn't find any solutions for the provided hint"
     }
   },
   "leaderboard": {

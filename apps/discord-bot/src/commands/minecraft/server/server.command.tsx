@@ -7,9 +7,10 @@
  */
 
 import axios, { AxiosInstance } from "axios";
-import { Command, CommandContext, IMessage, ServerArgument } from "@statsify/discord";
+import { Command, CommandContext, IMessage } from "@statsify/discord";
 import { Container } from "#components";
 import { ErrorMessage } from "#lib/error.message";
+import { ServerArgument } from "./server.argument";
 import { getBackground, getServerMappings } from "@statsify/assets";
 import { loadImage, render } from "@statsify/rendering";
 
