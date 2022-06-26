@@ -8,11 +8,12 @@
 
 import axios, { AxiosInstance } from "axios";
 import { Command, CommandContext, IMessage } from "@statsify/discord";
-import { Container } from "#components";
+import { Container, Multiline } from "#components";
 import { ErrorMessage } from "#lib/error.message";
 import { ServerArgument } from "./server.argument";
 import { getBackground, getServerMappings } from "@statsify/assets";
-import { loadImage, render } from "@statsify/rendering";
+import { loadImage } from "skia-canvas";
+import { render } from "@statsify/rendering";
 
 const servers = getServerMappings();
 
@@ -86,12 +87,10 @@ export class ServerCommand {
             height="100%"
             padding={{ left: 8, right: 4, top: 4, bottom: 4 }}
           >
-            <div width={510} height="100%" direction="column">
-              {server.motd.raw.map((m) => (
-                <text align="left" margin={{ top: 2, bottom: 2 }}>
-                  {m}
-                </text>
-              ))}
+            <div height="100%" direction="column">
+              <Multiline margin={2}>
+                {server.motd.raw.map((m) => m.replace(/\s{2,}/g, "")).join("\n")}
+              </Multiline>
             </div>
           </box>
         </div>
@@ -122,8 +121,8 @@ export class ServerCommand {
 
     if (!server || !server.online)
       throw new ErrorMessage(
-        "errors.invalidServer.title",
-        "errors.invalidServer.description"
+        (t) => t("errors.invalidServer.title"),
+        (t) => t("errors.invalidServer.description")
       );
 
     server.hostname = mappedServer?.addresses?.[0] ?? server.hostname;
