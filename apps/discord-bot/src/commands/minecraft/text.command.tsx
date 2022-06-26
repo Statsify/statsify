@@ -13,6 +13,7 @@ import {
   NumberArgument,
   TextArgument,
 } from "@statsify/discord";
+import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
 @Command({
@@ -21,6 +22,7 @@ import { render } from "@statsify/rendering";
 })
 export class TextCommand {
   public async run(context: CommandContext): Promise<IMessage> {
+    const user = context.getUser();
     const content = context.option<string>("content").trim();
     const size = Math.min(context.option<number>("size", 2), 9);
 
@@ -29,7 +31,7 @@ export class TextCommand {
       .replace(/&\S/g, (m) => m.replace("&", "§"))
       .replaceAll("󰀀", "&");
 
-    const canvas = render(<text size={size}>{text}</text>);
+    const canvas = render(<text size={size}>{text}</text>, getTheme(user?.theme));
     const buffer = await canvas.toBuffer("png");
 
     return {
