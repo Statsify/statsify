@@ -33,7 +33,7 @@ export class GTBHelperCommand {
     const groups = arrayGroup(words, Math.ceil(words.length / 3));
 
     groups.forEach((solutions) =>
-      embed.field("\u200b", solutions.map((s) => `\`•\` \`${s}\``).join("\n"), true)
+      embed.field("\u200b", solutions.map((s) => `\`•\` ${s}`).join("\n"), true)
     );
 
     return { embeds: [embed] };
