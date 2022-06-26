@@ -11,9 +11,7 @@ import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractArgument } from "./abstract.argument";
-import { CommandContext } from "../command";
-import { LocalizationString } from "../messages";
+import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import { getServerMappings } from "@statsify/assets";
 
 export class ServerArgument extends AbstractArgument {

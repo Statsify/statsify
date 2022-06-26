@@ -6,14 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BoxBorderRadius } from "@statsify/rendering/src/components/Box";
 import { UserTier } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
 
 export interface FooterProps {
   logo: Image;
   tier?: UserTier;
-  border?: BoxBorderRadius;
+  border?: JSX.IntrinsicElements["box"]["border"];
 }
 
 export const Footer = ({ logo, tier = UserTier.NONE, border }: FooterProps) => {
@@ -23,8 +22,6 @@ export const Footer = ({ logo, tier = UserTier.NONE, border }: FooterProps) => {
 
   switch (tier) {
     case UserTier.CORE:
-      // text =
-      // '§#387effs§#1567fft§#184fb6a§#ff4c4ct§#f13030s§#ab1f1fi§#fff586f§#ffee36y§#beb127.§#96fc88n§#47ed31e§#2fa91et';
       text = "§fstatsify.net";
       break;
     case UserTier.PREMIUM:

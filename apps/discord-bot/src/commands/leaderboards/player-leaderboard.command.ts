@@ -35,13 +35,9 @@ import {
 } from "@statsify/schemas";
 import { ApiService } from "#services";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command";
-import {
-  Command,
-  CommandContext,
-  PlayerLeaderboardArgument,
-  SubCommand,
-} from "@statsify/discord";
+import { Command, CommandContext, SubCommand } from "@statsify/discord";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
+import { PlayerLeaderboardArgument } from "./player-leaderboard.argument";
 import { getBackground } from "@statsify/assets";
 
 @Command({ name: "leaderboard", description: (t) => t("commands.player-leaderboard") })

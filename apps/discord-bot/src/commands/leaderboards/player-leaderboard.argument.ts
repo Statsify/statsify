@@ -11,15 +11,13 @@ import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractArgument } from "./abstract.argument";
+import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import {
   ClassMetadata,
   LeaderboardScanner,
   METADATA_KEY,
   PlayerStats,
 } from "@statsify/schemas";
-import { CommandContext } from "../command";
-import { LocalizationString } from "../messages";
 import { removeFormatting } from "@statsify/util";
 
 const entries = Object.entries(
