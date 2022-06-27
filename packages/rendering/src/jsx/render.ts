@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import Container from "typedi";
 import { Canvas, type CanvasRenderingContext2D } from "skia-canvas";
 import { FontRenderer } from "../font";
@@ -92,10 +93,24 @@ export function render<T extends BaseThemeContext = BaseThemeContext>(
   node: ElementNode,
   theme?: Theme<T>
 ): Canvas {
+  const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+
+  const instructionsTransaction = transaction?.startChild({
+    op: "jsx.createInstructions",
+    description: `Create instructions`,
+  });
+
   const instructions = createInstructions(node);
+
+  instructionsTransaction?.finish();
 
   const width = Math.round(getTotalSize(instructions.x));
   const height = Math.round(getTotalSize(instructions.y));
+
+  const renderTransaction = transaction?.startChild({
+    op: "jsx.render",
+    description: `Render JSX`,
+  });
 
   const canvas = new Canvas(width, height);
   const ctx = canvas.getContext("2d");
@@ -109,6 +124,8 @@ export function render<T extends BaseThemeContext = BaseThemeContext>(
     0,
     0
   );
+
+  renderTransaction?.finish();
 
   return canvas;
 }

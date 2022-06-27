@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import {
   APIUser,
   ApplicationCommandOptionType,
@@ -84,9 +85,10 @@ export abstract class AbstractCommandListener {
 
   protected getCommandAndData(
     command: CommandResolvable,
-    data: any
-  ): [command: CommandResolvable, data: any] {
-    if (!data.options || !data.options.length) return [command, data];
+    data: any,
+    name = command.name
+  ): [command: CommandResolvable, data: any, name: string] {
+    if (!data.options || !data.options.length) return [command, data, name];
 
     const firstOption = data.options[0];
 
@@ -97,19 +99,19 @@ export abstract class AbstractCommandListener {
 
     if (hasSubCommandGroup) {
       const group = findCommand();
-      if (!group) return [command, data];
-      return this.getCommandAndData(group, firstOption);
+      if (!group) return [command, data, name];
+      return this.getCommandAndData(group, firstOption, `${name} ${group.name}`);
     }
 
     const hasSubCommand = firstOption.type === ApplicationCommandOptionType.Subcommand;
 
     if (hasSubCommand) {
       const subcommand = findCommand();
-      if (!subcommand) return [command, data];
-      return [subcommand, firstOption];
+      if (!subcommand) return [command, data, name];
+      return [subcommand, firstOption, `${name} ${subcommand.name}`];
     }
 
-    return [command, data];
+    return [command, data, name];
   }
 
   protected executeCommand(
@@ -117,6 +119,8 @@ export abstract class AbstractCommandListener {
     context: CommandContext,
     ...preconditions: CommandPrecondition[]
   ) {
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+
     try {
       preconditions.forEach((precondition) => precondition());
 
@@ -125,30 +129,39 @@ export abstract class AbstractCommandListener {
       if (response instanceof Promise)
         response
           .then((res) => {
-            if (typeof res === "object") context.reply(res);
+            if (typeof res !== "object") return;
+            transaction?.finish();
+            context.reply(res);
           })
           .catch((err) => {
-            if (err instanceof Message) context.reply(err);
-            else {
-              this.logger.error(
-                `An error occurred when running "${command?.name}" command`
-              );
-              this.logger.error(err.stack);
+            if (err instanceof Message) {
+              transaction?.finish();
+              return context.reply(err);
             }
+
+            this.logger.error(`An error occurred when running "${command?.name}"`);
+            this.logger.error(err);
+            transaction?.finish();
           });
-      else if (typeof response === "object")
+      else if (typeof response === "object") {
+        transaction?.finish();
         return {
           type: InteractionResponseType.ChannelMessageWithSource,
           data: context.getInteraction().convertToApiData(response),
         };
+      }
     } catch (err) {
-      if (err instanceof Message)
+      if (err instanceof Message) {
+        transaction?.finish();
         return {
           type: InteractionResponseType.ChannelMessageWithSource,
           data: context.getInteraction().convertToApiData(err),
         };
+      }
 
+      this.logger.error(`An error occurred when running "${command?.name}"`);
       this.logger.error(err);
+      transaction?.finish();
     }
 
     return {

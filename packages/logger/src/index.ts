@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import chalk from "chalk";
 import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/common";
 
@@ -63,8 +64,16 @@ export class Logger implements LoggerService {
       return;
     }
 
+    if (message instanceof Error) {
+      const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+      transaction?.setStatus("internal_error");
+
+      Sentry.captureException(message);
+      message = message.stack;
+    }
+
     const { messages, context } = this.getContextAndMessages([
-      message instanceof Error ? message.stack : message,
+      message,
       ...optionalParams,
     ]);
 

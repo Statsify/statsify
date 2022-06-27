@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import { Constructor, Flatten } from "@statsify/util";
 import { InjectRedis, Redis } from "@nestjs-modules/ioredis";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
@@ -18,13 +19,20 @@ export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 export abstract class LeaderboardService {
   public constructor(@InjectRedis() private readonly redis: Redis) {}
 
-  public addLeaderboards<T>(
+  public async addLeaderboards<T>(
     constructor: Constructor<T>,
     instance: Flatten<T>,
     idField: keyof T,
     fields: string[] = LeaderboardScanner.getLeaderboardFields(constructor),
     remove = false
   ) {
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+
+    const child = transaction?.startChild({
+      op: "redis",
+      description: `add ${constructor.name} leaderboards`,
+    });
+
     const pipeline = this.redis.pipeline();
     const name = constructor.name.toLowerCase();
 
@@ -42,7 +50,9 @@ export abstract class LeaderboardService {
         }
       });
 
-    return pipeline.exec();
+    await pipeline.exec();
+
+    child?.finish();
   }
 
   public async getLeaderboard<T>(
@@ -153,6 +163,13 @@ export abstract class LeaderboardService {
     fields: string[],
     id: string
   ) {
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+
+    const child = transaction?.startChild({
+      op: "redis",
+      description: `get ${constructor.name} rankigns`,
+    });
+
     const pipeline = this.redis.pipeline();
     const constructorName = constructor.name.toLowerCase();
 
@@ -167,6 +184,8 @@ export abstract class LeaderboardService {
     });
 
     const responses = await pipeline.exec();
+
+    child?.finish();
 
     if (!responses) throw new InternalServerErrorException();
 
@@ -195,12 +214,21 @@ export abstract class LeaderboardService {
     bottom: number,
     sort = "DESC"
   ) {
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+
+    const child = transaction?.startChild({
+      op: "redis",
+      description: `get ${constructor.name} leaderboards`,
+    });
+
     const name = constructor.name.toLowerCase();
     field = `${name}.${field}`;
 
     const scores = await (sort === "ASC"
       ? this.redis.zrange(field, top, bottom, "WITHSCORES")
       : this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
+
+    child?.finish();
 
     const response: { id: string; score: number; index: number }[] = [];
 

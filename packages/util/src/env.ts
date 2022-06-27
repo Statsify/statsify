@@ -33,6 +33,12 @@ interface Environment {
   API_ROUTE: string;
 
   VERIFY_SERVER_IP: string;
+
+  NODE_ENV: "dev" | "beta" | "prod";
+
+  DISCORD_BOT_SENTRY_DSN?: string;
+  API_SENTRY_DSN?: string;
+  VERIFY_SERVER_SENTRY_DSN?: string;
 }
 
 export interface EnvOptions<T extends keyof Environment> {

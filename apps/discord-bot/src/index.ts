@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import Container from "typedi";
 import { CommandListener } from "#lib/command.listener";
 import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
@@ -13,9 +14,22 @@ import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 import { env } from "@statsify/util";
 import { join } from "node:path";
+import "@sentry/tracing";
 import "reflect-metadata";
 
 async function bootstrap() {
+  const sentryDsn = env("DISCORD_BOT_SENTRY_DSN", { required: false });
+
+  if (sentryDsn) {
+    Sentry.init({
+      dsn: sentryDsn,
+      integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
+      normalizeDepth: 3,
+      tracesSampleRate: 1,
+      environment: env("NODE_ENV"),
+    });
+  }
+
   await Promise.all(
     [I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init())
   );
@@ -28,7 +42,7 @@ async function bootstrap() {
   await poster.post(
     commands,
     env("DISCORD_BOT_APPLICATION_ID"),
-    env("DISCORD_BOT_GUILD")
+    env("DISCORD_BOT_GUILD", { required: false })
   );
 
   const port = env("DISCORD_BOT_PORT", { required: false });

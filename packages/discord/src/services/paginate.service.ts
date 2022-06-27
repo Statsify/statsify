@@ -91,7 +91,7 @@ export class PaginateService {
     const message = await this.getMessage(context, controller, index, pages);
     cache.set(index, message);
 
-    context.reply(message);
+    return message;
   }
 
   /**
@@ -158,7 +158,7 @@ export class PaginateService {
     const message = await this.getMessage(context, controller, index, pages);
     cache.set(index, message);
 
-    context.reply(message);
+    return message;
   }
 
   private getPageController(pages: Page[], index: number): PageController {

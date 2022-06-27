@@ -33,12 +33,6 @@ export class User {
   public unverifiedAt?: number;
 
   @Field({ store: { required: false } })
-  public credits?: number;
-
-  @Field({ store: { required: false } })
-  public locale?: string;
-
-  @Field({ store: { required: false } })
   public serverMember?: boolean;
 
   @Field({ type: () => Number, store: { required: false } })

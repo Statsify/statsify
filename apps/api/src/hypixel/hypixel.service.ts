@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import { APIData } from "@statsify/util";
 import { Cron, CronExpression } from "@nestjs/schedule";
 import {
@@ -21,7 +22,7 @@ import { HttpService } from "@nestjs/axios";
 import { HypixelCache } from "@statsify/api-client";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
-import { Observable, catchError, lastValueFrom, map, of, throwError } from "rxjs";
+import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
 
 @Injectable()
 export class HypixelService {
@@ -38,10 +39,8 @@ export class HypixelService {
   }
 
   public getPlayer(tag: string) {
-    const url = `/player?${tag.length > 16 ? "uuid" : "name"}=${tag}`;
-
     return lastValueFrom(
-      this.request<APIData>(url).pipe(
+      this.request<APIData>("/player", { [tag.length > 16 ? "uuid" : "name"]: tag }).pipe(
         map((data) => data.player),
         map((player) => new Player(player)),
         catchError(() => of(null))
@@ -50,9 +49,8 @@ export class HypixelService {
   }
 
   public getGuild(tag: string, type: "name" | "id" | "player") {
-    const url = `/guild?${type}=${tag}`;
     return lastValueFrom(
-      this.request<APIData>(url).pipe(
+      this.request<APIData>("/guild", { [type]: tag }).pipe(
         map((data) => data.guild),
         map((guild) => new Guild(guild)),
         catchError(() => of(null))
@@ -62,7 +60,7 @@ export class HypixelService {
 
   public getRecentGames(uuid: string): Promise<RecentGame[]> {
     return lastValueFrom(
-      this.request<APIData>(`/recentgames?uuid=${uuid}`).pipe(
+      this.request<APIData>(`/recentgames`, { uuid }).pipe(
         map((data) => data.games),
         map((games) => games.map((game: APIData) => new RecentGame(game))),
         catchError(() => of([]))
@@ -72,7 +70,7 @@ export class HypixelService {
 
   public getStatus(uuid: string) {
     return lastValueFrom(
-      this.request<APIData>(`/status?uuid=${uuid}`).pipe(
+      this.request<APIData>(`/status`, { uuid }).pipe(
         map((data) => data.session),
         map((status) => new Status(status)),
         catchError(() => of(null))
@@ -132,8 +130,19 @@ export class HypixelService {
     this.getResources("quests", true);
   }
 
-  private request<T>(url: string): Observable<T> {
-    return this.httpService.get(url).pipe(
+  private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+
+    const child = transaction?.startChild({
+      op: "http.client",
+      description: `GET ${this.httpService.axiosRef.getUri({ url })}`,
+    });
+
+    return this.httpService.get(url, { params }).pipe(
+      tap((res) => {
+        child?.setHttpStatus(res.status);
+        child?.finish();
+      }),
       map((res) => res.data),
       catchError((err) => {
         this.logger.error(`Error requesting ${url}: ${err.message}`);

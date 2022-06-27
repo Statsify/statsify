@@ -6,11 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
+import { SentryInterceptor } from "./sentry/sentry.interceptor";
+import { Integrations as TracingIntegrations } from "@sentry/tracing";
 import { ValidationPipe } from "@nestjs/common";
 import { env } from "@statsify/util";
 import { join } from "node:path";
@@ -19,6 +22,21 @@ import { setGlobalOptions } from "@typegoose/typegoose";
 import { version } from "../../../package.json";
 
 async function bootstrap() {
+  const sentryDsn = env("API_SENTRY_DSN", { required: false });
+
+  if (sentryDsn) {
+    Sentry.init({
+      dsn: sentryDsn,
+      integrations: [
+        new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true }),
+        new TracingIntegrations.Mongo({ useMongoose: true }),
+      ],
+      normalizeDepth: 3,
+      tracesSampleRate: 1,
+      environment: env("NODE_ENV"),
+    });
+  }
+
   await mkdir(join(env("API_MEDIA_ROOT"), "badges"), { recursive: true });
 
   //Removes the `_id` fields created from sub classes of documents
@@ -41,6 +59,9 @@ async function bootstrap() {
 
   //Validation using `class-validator` and `class-transformer`
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  //Sentry
+  app.useGlobalInterceptors(new SentryInterceptor());
 
   //Swagger/Redoc docs
   const config = new DocumentBuilder()
