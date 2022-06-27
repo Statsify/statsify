@@ -56,6 +56,10 @@ async function bootstrap() {
     host: env("VERIFY_SERVER_IP"),
     maxPlayers: 2,
     motd: "§9§lStatsify Verification",
+    version: false,
+    errorHandler: (_, error) => {
+      logger.error(error);
+    },
     beforePing: (response) => {
       //Remove the version from the response
       response.version.name = "";
