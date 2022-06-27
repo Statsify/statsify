@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
   GetFriendsResponse,
@@ -22,8 +23,7 @@ import {
   PostLeaderboardResponse,
   PutUserBadgeResponse,
 } from "./responses";
-import { GuildQuery, HistoricalType } from "./enums";
-import { LeaderboardQuery } from "./enums/leaderboard-query.enum";
+import { GuildQuery, HistoricalType, LeaderboardQuery } from "./enums";
 import { loadImage } from "@statsify/rendering";
 
 interface ExtraData {
@@ -223,6 +223,13 @@ export class ApiService {
     method: Method = "GET",
     { body, headers, responseType }: ExtraData = {}
   ): Promise<T> {
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+
+    const child = transaction?.startChild({
+      op: "http.client",
+      description: `${method} ${url}`,
+    });
+
     const res = await this.axios.request({
       url,
       method,
@@ -232,6 +239,9 @@ export class ApiService {
       responseType,
     });
 
+    child?.setHttpStatus(res.status);
+    child?.finish();
+
     const data = res.data;
 
     if (data.success === false) throw new Error("API request was unsuccessful");
@@ -239,7 +249,19 @@ export class ApiService {
     return data;
   }
 
-  private requestImage(url: string, params?: Record<string, unknown>) {
-    return loadImage(this.axios.getUri({ url, params: { key: this.apiKey, ...params } }));
+  private async requestImage(url: string, params?: Record<string, unknown>) {
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+
+    const child = transaction?.startChild({
+      op: "http.client",
+      description: `GET ${url}`,
+    });
+
+    const uri = this.axios.getUri({ url, params: { key: this.apiKey, ...params } });
+    const image = await loadImage(uri);
+
+    child?.finish();
+
+    return image;
   }
 }

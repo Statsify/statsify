@@ -6,13 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import { Logger } from "@statsify/logger";
-import { VerifyCode } from "@statsify/schemas";
+import { Integrations as TracingIntegrations } from "@sentry/tracing";
+import { UserTier, VerifyCode } from "@statsify/schemas";
 import { connect } from "mongoose";
 import { createServer } from "minecraft-protocol";
 import { env, formatTime } from "@statsify/util";
 import { generateCode } from "./generate-code";
-import { getAssetPath } from "@statsify/assets";
+import { getLogoPath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
 import { readFileSync } from "node:fs";
 
@@ -30,11 +32,23 @@ const codeCreatedMessage = (code: string, time: Date) => {
 };
 
 async function bootstrap() {
+  const sentryDsn = env("VERIFY_SERVER_SENTRY_DSN", { required: false });
+
+  if (sentryDsn) {
+    Sentry.init({
+      dsn: sentryDsn,
+      integrations: [new TracingIntegrations.Mongo({ useMongoose: true })],
+      normalizeDepth: 3,
+      tracesSampleRate: 1,
+      environment: env("NODE_ENV"),
+    });
+  }
+
   await connect(env("MONGODB_URI"));
 
   const verifyCodesModel = getModelForClass(VerifyCode);
 
-  const serverLogo = readFileSync(getAssetPath("logos/logo_64.png"), {
+  const serverLogo = readFileSync(getLogoPath(UserTier.NONE, 64), {
     encoding: "base64",
   });
 
@@ -54,22 +68,28 @@ async function bootstrap() {
   logger.log("Server Started");
 
   server.on("login", async (client) => {
-    logger.verbose(`${client.username} has joined`);
+    try {
+      logger.verbose(`${client.username} has joined`);
 
-    const uuid = client.uuid.replaceAll("-", "");
+      const uuid = client.uuid.replaceAll("-", "");
 
-    const previousVerifyCode = await verifyCodesModel.findOne({ uuid }).lean().exec();
+      const previousVerifyCode = await verifyCodesModel.findOne({ uuid }).lean().exec();
 
-    if (previousVerifyCode)
-      return client.end(
-        codeCreatedMessage(previousVerifyCode.code, previousVerifyCode.expireAt)
+      if (previousVerifyCode)
+        return client.end(
+          codeCreatedMessage(previousVerifyCode.code, previousVerifyCode.expireAt)
+        );
+
+      const code = await generateCode(verifyCodesModel);
+      const verifyCode = await verifyCodesModel.create(new VerifyCode(uuid, code));
+
+      client.end(codeCreatedMessage(verifyCode.code, verifyCode.expireAt));
+      logger.verbose(
+        `${client.username} has been assigned to the code ${verifyCode.code}`
       );
-
-    const code = await generateCode(verifyCodesModel);
-    const verifyCode = await verifyCodesModel.create(new VerifyCode(uuid, code));
-
-    client.end(codeCreatedMessage(verifyCode.code, verifyCode.expireAt));
-    logger.verbose(`${client.username} has been assigned to the code ${verifyCode.code}`);
+    } catch (error) {
+      logger.error(error);
+    }
   });
 }
 

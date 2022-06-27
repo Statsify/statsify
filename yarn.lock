@@ -1418,6 +1418,74 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/core@npm:7.3.0":
+  version: 7.3.0
+  resolution: "@sentry/core@npm:7.3.0"
+  dependencies:
+    "@sentry/hub": 7.3.0
+    "@sentry/types": 7.3.0
+    "@sentry/utils": 7.3.0
+    tslib: ^1.9.3
+  checksum: 176856840462c881c9a2ea30c5af209b64516201e5d7978e3960473fead6fc10547c556185e3636a2eade6856b293d190212825f9e8ff6fe4331fcdb0f6c213a
+  languageName: node
+  linkType: hard
+
+"@sentry/hub@npm:7.3.0":
+  version: 7.3.0
+  resolution: "@sentry/hub@npm:7.3.0"
+  dependencies:
+    "@sentry/types": 7.3.0
+    "@sentry/utils": 7.3.0
+    tslib: ^1.9.3
+  checksum: a052a7c940e1f6af16ca2c61f1e184eaf0d7874598ec4eae3a28c8b5ea6a19cf3b89106768aaeea19deb9816bdd316ec0218764c2e66cc92a87e2e404d6e0dd6
+  languageName: node
+  linkType: hard
+
+"@sentry/node@npm:^7.3.0":
+  version: 7.3.0
+  resolution: "@sentry/node@npm:7.3.0"
+  dependencies:
+    "@sentry/core": 7.3.0
+    "@sentry/hub": 7.3.0
+    "@sentry/types": 7.3.0
+    "@sentry/utils": 7.3.0
+    cookie: ^0.4.1
+    https-proxy-agent: ^5.0.0
+    lru_map: ^0.3.3
+    tslib: ^1.9.3
+  checksum: a92c2d2d1b05136b3c04f39cb87bf459519619c7e4f548f4e2a34145e868edd1ccdd505bcf5d3ff56872ea994530c263deb7ce4c498e9f4e39111c5fcacd342f
+  languageName: node
+  linkType: hard
+
+"@sentry/tracing@npm:^7.3.0":
+  version: 7.3.0
+  resolution: "@sentry/tracing@npm:7.3.0"
+  dependencies:
+    "@sentry/hub": 7.3.0
+    "@sentry/types": 7.3.0
+    "@sentry/utils": 7.3.0
+    tslib: ^1.9.3
+  checksum: e76d217d287d6cf74e2f1aabe57f9167e8d022f7bc0d9c721cb0aabc5e30043729cbfbc910a3c2f7930d211c2e8f7c4150e450ceaf0b50252255b4a63bbe576d
+  languageName: node
+  linkType: hard
+
+"@sentry/types@npm:7.3.0":
+  version: 7.3.0
+  resolution: "@sentry/types@npm:7.3.0"
+  checksum: 3ddbc3c7ebf2caad2d97a4c7a25f14791f642f7baadfa3c02857e433c0377ca7e6df4d3fc7e197717f2d6f8fca876178d01c827b5c1b42adba92115c62e18daf
+  languageName: node
+  linkType: hard
+
+"@sentry/utils@npm:7.3.0":
+  version: 7.3.0
+  resolution: "@sentry/utils@npm:7.3.0"
+  dependencies:
+    "@sentry/types": 7.3.0
+    tslib: ^1.9.3
+  checksum: 2696b1bfad1ad2e8e2aa7dd822fb0546d680b06aa302c3a8e8c8da0577fb9938da094f3eda589b2a1c216e1c84a81a5119b30136fd013de9c3a4513aece55d05
+  languageName: node
+  linkType: hard
+
 "@sinclair/typebox@npm:^0.23.3":
   version: 0.23.5
   resolution: "@sinclair/typebox@npm:0.23.5"
@@ -1449,6 +1517,7 @@ __metadata:
   dependencies:
     "@nestjs/common": ^8.4.7
     "@nestjs/swagger": ^5.2.1
+    "@sentry/node": ^7.3.0
     "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
     axios: ^0.27.2
@@ -1471,6 +1540,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@statsify/discord@workspace:packages/discord"
   dependencies:
+    "@sentry/node": ^7.3.0
     "@statsify/assets": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
@@ -1487,6 +1557,7 @@ __metadata:
   resolution: "@statsify/logger@workspace:packages/logger"
   dependencies:
     "@nestjs/common": ^8.4.7
+    "@sentry/node": ^7.3.0
     chalk: 4.1.2
   languageName: unknown
   linkType: soft
@@ -1503,6 +1574,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@statsify/rendering@workspace:packages/rendering"
   dependencies:
+    "@sentry/node": ^7.3.0
     "@statsify/util": "workspace:^"
     axios: ^0.27.2
     skia-canvas: ^0.9.30
@@ -2389,6 +2461,8 @@ __metadata:
     "@nestjs/schedule": ^2.0.1
     "@nestjs/swagger": ^5.2.1
     "@nestjs/testing": ^8.4.7
+    "@sentry/node": ^7.3.0
+    "@sentry/tracing": ^7.3.0
     "@statsify/api-client": "workspace:^"
     "@statsify/assets": "workspace:^"
     "@statsify/logger": "workspace:^"
@@ -3205,6 +3279,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cookie@npm:^0.4.1":
+  version: 0.4.2
+  resolution: "cookie@npm:0.4.2"
+  checksum: a00833c998bedf8e787b4c342defe5fa419abd96b32f4464f718b91022586b8f1bafbddd499288e75c037642493c83083da426c6a9080d309e3bd90fd11baa9b
+  languageName: node
+  linkType: hard
+
 "cookie@npm:^0.5.0":
   version: 0.5.0
   resolution: "cookie@npm:0.5.0"
@@ -3490,6 +3571,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "discord-bot@workspace:apps/discord-bot"
   dependencies:
+    "@sentry/node": ^7.3.0
+    "@sentry/tracing": ^7.3.0
     "@statsify/api-client": "workspace:^"
     "@statsify/assets": "workspace:^"
     "@statsify/discord": "workspace:^"
@@ -6056,6 +6139,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lru_map@npm:^0.3.3":
+  version: 0.3.3
+  resolution: "lru_map@npm:0.3.3"
+  checksum: ca9dd43c65ed7a4f117c548028101c5b6855e10923ea9d1f635af53ad20c5868ff428c364d454a7b57fe391b89c704982275410c3c5099cca5aeee00d76e169a
+  languageName: node
+  linkType: hard
+
 "luxon@npm:^1.23.x":
   version: 1.28.0
   resolution: "luxon@npm:1.28.0"
@@ -8381,7 +8471,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^1.8.1, tslib@npm:^1.9.0":
+"tslib@npm:^1.8.1, tslib@npm:^1.9.0, tslib@npm:^1.9.3":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
   checksum: dbe628ef87f66691d5d2959b3e41b9ca0045c3ee3c7c7b906cc1e328b39f199bb1ad9e671c39025bd56122ac57dfbf7385a94843b1cc07c60a4db74795829acd
@@ -8784,6 +8874,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "verify-server@workspace:apps/verify-server"
   dependencies:
+    "@sentry/node": ^7.3.0
+    "@sentry/tracing": ^7.3.0
     "@statsify/assets": "workspace:^"
     "@statsify/logger": "workspace:^"
     "@statsify/schemas": "workspace:^"

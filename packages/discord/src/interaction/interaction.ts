@@ -6,7 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIGuildMember, ComponentType, InteractionType } from "discord-api-types/v10";
+import {
+  APIGuildMember,
+  APIUser,
+  ComponentType,
+  InteractionType,
+} from "discord-api-types/v10";
 import { IMessage, Message } from "../messages";
 import { Logger } from "@statsify/logger";
 import { getLocalizeFunction } from "../messages/localize";
@@ -77,8 +82,12 @@ export class Interaction {
     return this.data.guild_id;
   }
 
-  public getUserId(): string {
-    return (this.data.member as APIGuildMember)?.user?.id as string;
+  public getUserId() {
+    return this.getUser().id;
+  }
+
+  public getUser() {
+    return (this.data.user as APIUser) ?? (this.data.member as APIGuildMember).user;
   }
 
   public getLocale() {

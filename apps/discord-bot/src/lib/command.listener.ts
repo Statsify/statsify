@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import Container from "typedi";
 import {
   AbstractCommandListener,
@@ -49,16 +50,40 @@ export class CommandListener extends AbstractCommandListener {
   }
 
   protected async onCommand(interaction: Interaction): Promise<InteractionResponse> {
-    let data = interaction.getData();
-    let command = this.commands.get(data.name)!;
+    const parentData = interaction.getData();
+    const parentCommand = this.commands.get(parentData.name)!;
 
-    if (!command) return { type: InteractionResponseType.Pong };
+    if (!parentCommand) return { type: InteractionResponseType.Pong };
 
-    const userId = interaction.getUserId();
+    const { id, username, discriminator } = interaction.getUser();
+    const locale = interaction.getLocale();
 
-    [command, data] = this.getCommandAndData(command, data);
+    const [command, data, commandName] = this.getCommandAndData(
+      parentCommand,
+      parentData
+    );
 
-    const user = await this.apiService.getUser(userId);
+    const transaction = Sentry.startTransaction({ name: commandName, op: "command" });
+
+    Sentry.configureScope((scope) => scope.setSpan(transaction));
+
+    Sentry.setContext("command", {
+      command: commandName,
+      options: data.options,
+      guild: interaction.getGuildId() ?? null,
+    });
+
+    const user = await this.apiService.getUser(id);
+
+    Sentry.setUser({
+      id,
+      username: `${username}#${discriminator}`,
+      locale,
+      uuid: user?.uuid ?? null,
+      tier: user?.tier ?? 0,
+      serverMember: user?.serverMember ?? false,
+      theme: user?.theme ?? null,
+    });
 
     const context = new CommandContext(this, interaction, data);
     context.setUser(user);
@@ -66,7 +91,7 @@ export class CommandListener extends AbstractCommandListener {
     return this.executeCommand(
       command,
       context,
-      this.isOnCooldown.bind(this, command, user, userId)
+      this.isOnCooldown.bind(this, command, user, id)
     );
   }
 
