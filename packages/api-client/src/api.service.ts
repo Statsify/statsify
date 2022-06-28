@@ -9,6 +9,7 @@
 import * as Sentry from "@sentry/node";
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
+  DeletePlayerResponse,
   GetFriendsResponse,
   GetGamecountsResponse,
   GetGuildResponse,
@@ -49,6 +50,12 @@ export class ApiService {
     return this.requestKey<GetPlayerResponse, "player">(`/player`, "player", {
       player: tag,
     });
+  }
+
+  public deletePlayer(tag: string) {
+    return this.request<DeletePlayerResponse>(`/player`, { player: tag }, "DELETE")
+      .then(() => true)
+      .catch(() => false);
   }
 
   public getRecentGames(tag: string) {
@@ -190,8 +197,12 @@ export class ApiService {
     return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, "DELETE");
   }
 
-  public verifyUser(code: string, id: string) {
-    return this.request<GetUserResponse>(`/user`, { code, id }, "PUT")
+  public verifyUser(codeOrUuid: string, id: string) {
+    return this.request<GetUserResponse>(
+      `/user`,
+      { [codeOrUuid.length >= 32 ? "uuid" : "code"]: codeOrUuid, id },
+      "PUT"
+    )
       .then((data) => data.user ?? null)
       .catch(() => null);
   }

@@ -13,7 +13,6 @@ import {
   InteractionType,
 } from "discord-api-types/v10";
 import { IMessage, Message } from "../messages";
-import { Logger } from "@statsify/logger";
 import { getLocalizeFunction } from "../messages/localize";
 import { parseDiscordError } from "../util/parse-discord-error";
 import type {
@@ -22,8 +21,6 @@ import type {
   RestClient,
   RestRequestOptions,
 } from "tiny-discord";
-
-const logger = new Logger("Interaction Response");
 
 export class Interaction {
   public constructor(
@@ -103,7 +100,7 @@ export class Interaction {
   }
 
   public async reply(data: InteractionResponse) {
-    await this.request("Send Interaction Reply", {
+    await this.request({
       method: "post",
       path: `/interactions/${this.data.id}/${this.data.token}/callback`,
       body: data,
@@ -111,7 +108,7 @@ export class Interaction {
   }
 
   public async editReply(data: Message | IMessage) {
-    await this.request("Edit Interaction Reply", {
+    await this.request({
       method: "patch",
       path: `/webhooks/${this.applicationId}/${this.data.token}/messages/@original`,
       body: this.convertToApiData(data),
@@ -119,14 +116,14 @@ export class Interaction {
   }
 
   public async deleteReply() {
-    await this.request("Delete Interaction Reply", {
+    await this.request({
       method: "delete",
       path: `/webhooks/${this.applicationId}/${this.data.token}/messages/@original`,
     });
   }
 
   public async sendFollowup(data: Message | IMessage) {
-    await this.request("Send Followup Interaction", {
+    await this.request({
       method: "post",
       path: `/webhooks/${this.applicationId}/${this.data.token}`,
       body: this.convertToApiData(data),
@@ -134,7 +131,7 @@ export class Interaction {
   }
 
   public async editFollowup(messageId: string, data: Message | IMessage) {
-    await this.request("Edit Followup Interaction", {
+    await this.request({
       method: "patch",
       path: `/webhooks/${this.applicationId}/${this.data.token}/messages/${messageId}`,
       body: this.convertToApiData(data),
@@ -142,7 +139,7 @@ export class Interaction {
   }
 
   public async deleteFollowup(messageId: string) {
-    await this.request("Delete Followup Interaction", {
+    await this.request({
       method: "delete",
       path: `/webhooks/${this.applicationId}/${this.data.token}/messages/${messageId}`,
     });
@@ -171,7 +168,7 @@ export class Interaction {
     return res;
   }
 
-  private async request(name: string, options: RestRequestOptions) {
+  private async request(options: RestRequestOptions) {
     const response = await this.rest.request(options);
     if (response.status >= 200 && response.status < 300) return response;
 
@@ -183,6 +180,6 @@ export class Interaction {
       message += ` | ${error}`;
     }
 
-    logger.error(message, name);
+    throw new Error(message);
   }
 }

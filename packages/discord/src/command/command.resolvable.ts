@@ -11,6 +11,7 @@ import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
 } from "discord-api-types/v10";
+import { UserTier } from "@statsify/schemas";
 import {
   getLocalizeFunction,
   translateField,
@@ -31,11 +32,20 @@ export class CommandResolvable {
 
   public args: AbstractArgument[];
   public cooldown: number;
+  public tier: UserTier;
+
   private target: any;
   private methodName: string;
 
   public constructor(
-    { name, description, args, methodName, cooldown = 0 }: CommandMetadata,
+    {
+      name,
+      description,
+      args,
+      methodName,
+      cooldown = 0,
+      tier = UserTier.NONE,
+    }: CommandMetadata,
     target: any
   ) {
     this.name = name;
@@ -54,6 +64,7 @@ export class CommandResolvable {
 
     this.target = target;
     this.methodName = methodName;
+    this.tier = tier;
   }
 
   public execute(context: CommandContext) {

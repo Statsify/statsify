@@ -91,11 +91,16 @@ export class CommandListener extends AbstractCommandListener {
     return this.executeCommand(
       command,
       context,
-      this.isOnCooldown.bind(this, command, user, id)
+      this.tierPrecondition.bind(this, command, user),
+      this.cooldownPrecondition.bind(this, command, user, id)
     );
   }
 
-  private isOnCooldown(command: CommandResolvable, user: User | null, userId: string) {
+  private cooldownPrecondition(
+    command: CommandResolvable,
+    user: User | null,
+    userId: string
+  ) {
     const cooldownForCommand = this.cooldowns.get(command.name);
 
     let reduction = 1;

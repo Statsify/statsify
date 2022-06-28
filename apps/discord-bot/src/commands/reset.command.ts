@@ -77,7 +77,7 @@ export class ResetCommand {
       listener.removeHook(resetMinuteModal.getCustomId());
     }, 300_000);
 
-    const isPremium = User.isPremium(user.tier);
+    const isPremium = User.isPremium(user);
 
     if (isPremium) {
       listener.addHook(resetButton.getCustomId(), () => ({

@@ -8242,6 +8242,7 @@ __metadata:
     "@sentry/tracing": ^7.3.0
     "@statsify/api-client": "workspace:^"
     "@statsify/discord": "workspace:^"
+    "@statsify/logger": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
     "@types/i18next-fs-backend": ^1.1.2

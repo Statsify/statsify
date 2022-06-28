@@ -45,7 +45,11 @@ export class CommandListener extends AbstractCommandListener {
     const context = new CommandContext(this, interaction, data);
     context.setUser(user);
 
-    return this.executeCommand(command, context);
+    return this.executeCommand(
+      command,
+      context,
+      this.tierPrecondition.bind(this, command, user)
+    );
   }
 
   public static create(

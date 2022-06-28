@@ -13,37 +13,32 @@ import {
   EmbedBuilder,
   ErrorMessage,
   PlayerArgument,
+  UserArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
 
 @Command({
-  description: (t) => t("commands.force-unverify"),
-  args: [new PlayerArgument("player", true)],
+  description: (t) => t("commands.force-verify"),
+  args: [new UserArgument(), new PlayerArgument("player", true)],
   tier: UserTier.STAFF,
 })
-export class ForceUnverifyCommand {
+export class ForceVerifyCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
+    const userId = context.option<string>("user");
     const player = await this.apiService.getPlayer(context.option("player"));
 
-    const user = await this.apiService.unverifyUser(player.uuid);
+    const user = await this.apiService.verifyUser(player.uuid, userId);
 
-    if (!user)
-      throw new ErrorMessage(
-        (t) => t("errors.missingPlayerVerification.title"),
-        (t) =>
-          t("errors.missingPlayerVerification.description", {
-            displayName: this.apiService.emojiDisplayName(t, player.displayName),
-          })
-      );
+    if (!user) throw new ErrorMessage("errors.unknown");
 
     const embed = new EmbedBuilder()
       .color(STATUS_COLORS.success)
-      .title((t) => t("embeds.forceUnverify.title"))
+      .title((t) => t("embeds.forceVerify.title"))
       .description((t) =>
-        t("embeds.forceUnverify.description", {
+        t("embeds.forceVerify.description", {
           id: user.id,
           displayName: this.apiService.emojiDisplayName(t, player.displayName),
         })

@@ -14,6 +14,7 @@ import {
 } from "@nestjs/swagger";
 import { Auth, AuthRole } from "../auth";
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -84,8 +85,18 @@ export class UserController {
   @ApiOperation({ summary: "Verify a user" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
-  public async verifyUser(@Query() { code, id }: VerifyCodeDto) {
-    const user = await this.userService.verifyUser(code, id);
+  public async verifyUser(@Query() { code, uuid, id }: VerifyCodeDto) {
+    let input: string;
+
+    if (uuid) {
+      input = uuid;
+    } else if (code) {
+      input = code;
+    } else {
+      throw new BadRequestException("No code or uuid provided");
+    }
+
+    const user = await this.userService.verifyUser(input, id);
 
     return {
       success: !!user,

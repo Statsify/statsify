@@ -19,7 +19,7 @@ import {
 } from "@statsify/discord";
 import { Canvas, Image } from "skia-canvas";
 import { Container, Footer, HeaderNametag, Skin } from "#components";
-import { User } from "@statsify/schemas";
+import { User, UserTier } from "@statsify/schemas";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { loadImage, render } from "@statsify/rendering";
@@ -30,6 +30,7 @@ export class BadgeCommand {
 
   @SubCommand({
     description: (t) => t("commands.badge.view"),
+    tier: UserTier.PREMIUM,
   })
   public view(context: CommandContext) {
     return this.run(context, "view");
@@ -37,6 +38,7 @@ export class BadgeCommand {
 
   @SubCommand({
     description: (t) => t("commands.badge.set"),
+    tier: UserTier.PREMIUM,
     args: [new FileArgument("badge", true)],
   })
   public set(context: CommandContext) {
@@ -45,6 +47,7 @@ export class BadgeCommand {
 
   @SubCommand({
     description: (t) => t("commands.badge.reset"),
+    tier: UserTier.PREMIUM,
   })
   public reset(context: CommandContext) {
     return this.run(context, "reset");
@@ -65,21 +68,11 @@ export class BadgeCommand {
         (t) => t("verification.requiredVerification.description")
       );
 
-    if (!User.isPremium(user.tier))
-      throw new ErrorMessage(
-        (t) => t("errors.missingSelfPremium.title"),
-        (t) => t("errors.missingSelfPremium.description")
-      );
-
     switch (mode) {
       case "view": {
         const badge = await this.apiService.getUserBadge(userId);
 
-        if (!badge)
-          throw new ErrorMessage(
-            (t) => t("errors.unknown.title"),
-            (t) => t("errors.unknown.description")
-          );
+        if (!badge) throw new ErrorMessage("errors.unknown");
 
         const profile = await this.getProfile(t, user, badge);
 
