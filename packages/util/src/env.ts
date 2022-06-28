@@ -27,16 +27,21 @@ interface Environment {
   DISCORD_BOT_APPLICATION_ID: string;
   DISCORD_BOT_GUILD?: string;
 
-  RANK_EMOJI_DISCORD_BOT_TOKEN?: string;
-
   API_KEY: string;
   API_ROUTE: string;
 
+  RANK_EMOJI_DISCORD_BOT_TOKEN?: string;
+
   VERIFY_SERVER_IP: string;
+
+  SUPPORT_BOT_TOKEN: string;
+  SUPPORT_BOT_APPLICATION_ID: string;
+  SUPPORT_BOT_GUILD: string;
 
   NODE_ENV: "dev" | "beta" | "prod";
 
   DISCORD_BOT_SENTRY_DSN?: string;
+  SUPPORT_BOT_SENTRY_DSN?: string;
   API_SENTRY_DSN?: string;
   VERIFY_SERVER_SENTRY_DSN?: string;
 }

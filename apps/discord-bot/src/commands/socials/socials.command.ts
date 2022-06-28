@@ -6,15 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService, MojangApiService } from "#services";
 import {
+  ApiService,
   Command,
   CommandContext,
   EmbedBuilder,
   IMessage,
   PlayerArgument,
 } from "@statsify/discord";
-import { INFO_COLOR } from "#constants";
+import { MojangApiService } from "#services";
+import { STATUS_COLORS } from "@statsify/logger";
 
 @Command({ description: (t) => t("commands.socials"), args: [PlayerArgument] })
 export class SocialsCommand {
@@ -35,7 +36,7 @@ export class SocialsCommand {
       .title((t) => this.apiService.emojiDisplayName(t, displayName))
       .author("Player Socials")
       .thumbnail(this.mojangApiService.faceIconUrl(uuid))
-      .color(INFO_COLOR)
+      .color(STATUS_COLORS.info)
       .field(
         (t) => `${t("emojis:socials.discord")} Discord`,
         this.formatSocial(socials.discord, false)

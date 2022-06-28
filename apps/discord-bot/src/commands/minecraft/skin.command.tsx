@@ -6,15 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService, MojangApiService } from "#services";
-import { Canvas } from "skia-canvas";
 import {
+  ApiService,
   Command,
   CommandContext,
   EmbedBuilder,
   MojangPlayerArgument,
 } from "@statsify/discord";
-import { INFO_COLOR } from "#constants";
+import { Canvas } from "skia-canvas";
+import { MojangApiService } from "#services";
+import { STATUS_COLORS } from "@statsify/logger";
 
 @Command({ description: "commands.skin", args: [MojangPlayerArgument] })
 export class SkinCommand {
@@ -37,7 +38,7 @@ export class SkinCommand {
 
     const embed = new EmbedBuilder()
       .field((t) => t("embeds.skin.description.username"), `\`${player.username}\``)
-      .color(INFO_COLOR)
+      .color(STATUS_COLORS.info)
       .image(`attachment://skin.png`);
 
     return {

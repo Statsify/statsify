@@ -13,3 +13,4 @@ export * from "./command";
 export * from "./interaction";
 export * from "./messages";
 export * from "./services";
+export * from "./util/error.message";

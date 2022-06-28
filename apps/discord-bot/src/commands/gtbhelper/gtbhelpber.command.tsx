@@ -6,10 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command, CommandContext, EmbedBuilder } from "@statsify/discord";
-import { ErrorMessage } from "#lib/error.message";
+import { Command, CommandContext, EmbedBuilder, ErrorMessage } from "@statsify/discord";
 import { GTBHelperArgument } from "./gtbhelper.argument";
-import { INFO_COLOR } from "#constants";
+import { STATUS_COLORS } from "@statsify/logger";
 import { arrayGroup } from "@statsify/util";
 import { findSolutions } from "./find-solutions";
 
@@ -28,7 +27,7 @@ export class GTBHelperCommand {
 
     const embed = new EmbedBuilder()
       .title((t) => t("embeds.gtbhelper.title"))
-      .color(INFO_COLOR);
+      .color(STATUS_COLORS.info);
 
     const groups = arrayGroup(words, Math.ceil(words.length / 3));
 

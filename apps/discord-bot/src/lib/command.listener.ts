@@ -10,15 +10,15 @@ import * as Sentry from "@sentry/node";
 import Container from "typedi";
 import {
   AbstractCommandListener,
+  ApiService,
   CommandContext,
   CommandResolvable,
+  ErrorMessage,
   Interaction,
 } from "@statsify/discord";
-import { ApiService } from "#services";
-import { ErrorMessage } from "#lib/error.message";
 import { InteractionResponseType } from "discord-api-types/v10";
+import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
-import { WARNING_COLOR } from "#constants";
 import { env, formatTime } from "@statsify/util";
 import type {
   InteractionResponse,
@@ -135,7 +135,7 @@ export class CommandListener extends AbstractCommandListener {
           time: formatTime(cooldown - now),
           command: command.name,
         }),
-      { color: WARNING_COLOR }
+      { color: STATUS_COLORS.warn }
     );
   }
 

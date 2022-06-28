@@ -8,3 +8,4 @@
 
 export * from "./i18n-loader.service";
 export * from "./paginate.service";
+export * from "./api.service";

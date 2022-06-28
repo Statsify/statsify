@@ -6,16 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService } from "#services";
 import {
+  ApiService,
   Command,
   CommandContext,
   EmbedBuilder,
+  ErrorMessage,
   IMessage,
   NumberArgument,
 } from "@statsify/discord";
-import { ErrorMessage } from "#lib/error.message";
-import { SUCCESS_COLOR } from "#constants";
+import { STATUS_COLORS } from "@statsify/logger";
 
 @Command({
   description: (t) => t("commands.verify"),
@@ -29,34 +29,22 @@ export class VerifyCommand {
     const userId = context.getInteraction().getUserId();
     let user = context.getUser();
 
-    if (user?.uuid)
-      throw new ErrorMessage(
-        (t) => t("verification.alreadyVerified.title"),
-        (t) => t("verification.alreadyVerified.description")
-      );
+    if (user?.uuid) throw new ErrorMessage("verification.alreadyVerified");
 
     const code = context.option<number>("code");
 
-    if (!code)
-      throw new ErrorMessage(
-        (t) => t("verification.noCode.title"),
-        (t) => t("verification.noCode.description")
-      );
+    if (!code) throw new ErrorMessage("verification.noCode");
 
     user = await this.apiService.verifyUser(`${code}`, userId);
 
-    if (!user)
-      throw new ErrorMessage(
-        (t) => t("verification.invalidCode.title"),
-        (t) => t("verification.invalidCode.description")
-      );
+    if (!user) throw new ErrorMessage("verification.invalidCode");
 
     const player = await this.apiService.getPlayer(user?.uuid as string);
     const displayName = this.apiService.emojiDisplayName(context.t(), player.displayName);
 
     const embed = new EmbedBuilder()
       .description((t) => t("verification.successfulVerification", { displayName }))
-      .color(SUCCESS_COLOR);
+      .color(STATUS_COLORS.success);
 
     return {
       embeds: [embed],

@@ -46,6 +46,7 @@
     "commit": "yarn pre-commit && git cz",
     "api": "yarn workspace api",
     "discord-bot": "yarn workspace discord-bot",
+    "support-bot": "yarn workspace support-bot",
     "site": "yarn workspace site",
     "scripts": "yarn workspace scripts",
     "verify-server": "yarn workspace verify-server"

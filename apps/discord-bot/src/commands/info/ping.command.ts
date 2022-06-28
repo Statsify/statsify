@@ -7,7 +7,7 @@
  */
 
 import { Command, EmbedBuilder, IMessage } from "@statsify/discord";
-import { INFO_COLOR } from "#constants";
+import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
 import { getLogoPath } from "@statsify/assets";
 import { readFile } from "node:fs/promises";
@@ -22,7 +22,7 @@ export class PingCommand {
         "`jacob#5432`, `Codr#0002`, `Mo2men#2806`, `connor#5957`"
       )
       .field((t) => t("embeds.ping.contributors"), "`vnmm#6969`")
-      .color(INFO_COLOR)
+      .color(STATUS_COLORS.info)
       .thumbnail("attachment://logo.png");
 
     const logo = await readFile(getLogoPath(UserTier.NONE, 64));

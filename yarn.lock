@@ -8234,6 +8234,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"support-bot@workspace:apps/support-bot":
+  version: 0.0.0-use.local
+  resolution: "support-bot@workspace:apps/support-bot"
+  dependencies:
+    "@sentry/node": ^7.3.0
+    "@sentry/tracing": ^7.3.0
+    "@statsify/api-client": "workspace:^"
+    "@statsify/discord": "workspace:^"
+    "@statsify/schemas": "workspace:^"
+    "@statsify/util": "workspace:^"
+    "@types/i18next-fs-backend": ^1.1.2
+    discord-api-types: ^0.35.0
+    i18next: ^21.8.10
+    i18next-fs-backend: ^1.1.4
+    luxon: ^2.4.0
+    mongoose: ^6.4.0
+    reflect-metadata: ^0.1.13
+    skia-canvas: ^0.9.30
+    tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab"
+    typedi: ^0.10.0
+  languageName: unknown
+  linkType: soft
+
 "supports-color@npm:^5.3.0":
   version: 5.5.0
   resolution: "supports-color@npm:5.5.0"

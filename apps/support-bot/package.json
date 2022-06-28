@@ -1,11 +1,11 @@
 {
-  "name": "discord-bot",
+  "name": "support-bot",
   "version": "0.0.0",
   "private": true,
   "main": "dist/index.js",
   "scripts": {
     "start": "node --enable-source-maps .",
-    "build": "swc src --out-dir dist",
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
@@ -13,15 +13,10 @@
     "@sentry/node": "^7.3.0",
     "@sentry/tracing": "^7.3.0",
     "@statsify/api-client": "workspace:^",
-    "@statsify/assets": "workspace:^",
     "@statsify/discord": "workspace:^",
-    "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@typegoose/typegoose": "^9.9.0",
-    "axios": "^0.27.2",
     "discord-api-types": "^0.35.0",
-    "fuse.js": "^6.6.2",
     "i18next": "^21.8.10",
     "i18next-fs-backend": "^1.1.4",
     "luxon": "^2.4.0",
@@ -32,14 +27,11 @@
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@types/i18next-fs-backend": "^1.1.2",
-    "@types/luxon": "^2"
+    "@types/i18next-fs-backend": "^1.1.2"
   },
   "imports": {
-    "#components": "./dist/components/index.js",
     "#services": "./dist/services/index.js",
     "#constants": "./dist/constants.js",
-    "#themes": "./dist/themes/index.js",
     "#lib/*": "./dist/lib/*.js"
   }
 }

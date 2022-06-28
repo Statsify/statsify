@@ -8,21 +8,21 @@
 
 import {
   ActionRowBuilder,
+  ApiService,
   ButtonBuilder,
   Command,
   CommandContext,
+  ErrorMessage,
   IMessage,
   ModalBuilder,
   TextInputBuilder,
 } from "@statsify/discord";
-import { ApiService } from "#services";
 import {
   ButtonStyle,
   InteractionResponseType,
   TextInputStyle,
 } from "discord-api-types/v10";
 import { DateTime } from "luxon";
-import { ErrorMessage } from "#lib/error.message";
 import { User } from "@statsify/schemas";
 
 @Command({ description: (t) => t("commands.reset") })
@@ -33,11 +33,7 @@ export class ResetCommand {
     const t = context.t();
     const user = context.getUser();
 
-    if (!user?.uuid)
-      throw new ErrorMessage(
-        (t) => t("verification.requiredVerification.title"),
-        (t) => t("verification.requiredVerification.description")
-      );
+    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
 
     const resetButton = new ButtonBuilder()
       .label((t) => t("historical.resetButton"))

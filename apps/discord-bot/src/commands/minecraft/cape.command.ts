@@ -11,10 +11,10 @@ import { Canvas, Image, loadImage } from "skia-canvas";
 import {
   Command,
   CommandContext,
+  ErrorMessage,
   MojangPlayerArgument,
   PaginateService,
 } from "@statsify/discord";
-import { ErrorMessage } from "#lib/error.message";
 
 @Command({ description: (t) => t("commands.cape"), args: [MojangPlayerArgument] })
 export class CapeCommand {
@@ -43,11 +43,7 @@ export class CapeCommand {
         generator: () => this.renderCape(c.image as Image),
       }));
 
-    if (!pages.length)
-      return new ErrorMessage(
-        (t) => t("errors.noCape.title"),
-        (t) => t("errors.noCape.description")
-      );
+    if (!pages.length) return new ErrorMessage("errors.noCape");
 
     return this.paginateService.paginate(context, pages);
   }

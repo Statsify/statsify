@@ -7,7 +7,7 @@
  */
 
 import { Command, EmbedBuilder, IMessage } from "@statsify/discord";
-import { INFO_COLOR } from "#constants";
+import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
 import { env } from "@statsify/util";
 import { getLogoPath } from "@statsify/assets";
@@ -18,7 +18,7 @@ export class InviteCommand {
   public async run(): Promise<IMessage> {
     const embed = new EmbedBuilder()
       .title((t) => t("embeds.invite.title"))
-      .color(INFO_COLOR)
+      .color(STATUS_COLORS.info)
       .description((t) => {
         const description = t("embeds.invite.description");
 

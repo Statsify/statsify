@@ -7,10 +7,10 @@
  */
 
 import { AxiosError } from "axios";
-import { ButtonBuilder, LocalizeFunction } from "@statsify/discord";
+import { ButtonBuilder, LocalizeFunction } from "../messages";
 import { ButtonStyle } from "discord-api-types/v10";
 import { Color, User } from "@statsify/schemas";
-import { ErrorMessage } from "#lib/error.message";
+import { ErrorMessage } from "../util/error.message";
 import {
   FriendsNotFoundException,
   GUILD_ID_REGEX,
@@ -203,7 +203,7 @@ export class ApiService extends StatsifyApiService {
       if (error.message === "guild")
         throw new ErrorMessage(
           (t) => t("errors.invalidGuild.title"),
-          (t) => t("errors.invalidGuild.title", { type: type?.toLowerCase(), tag })
+          (t) => t("errors.invalidGuild.description", { type: type?.toLowerCase(), tag })
         );
 
       if (error.message === "player") throw this.missingPlayer(playerType, tag);
@@ -220,10 +220,7 @@ export class ApiService extends StatsifyApiService {
     return super.getPlayerLeaderboard(field, input, type).catch((err: AxiosError) => {
       if ((err.response?.data as PlayerNotFoundException).statusCode === 404) return null;
 
-      throw new ErrorMessage(
-        (t) => t("errors.leaderboardNotFound.title"),
-        (t) => t("errors.leaderboardNotFound.description")
-      );
+      throw new ErrorMessage("errors.leaderboardNotFound");
     });
   }
 
@@ -263,10 +260,7 @@ export class ApiService extends StatsifyApiService {
 
     if (this.isDiscordId(tag)) return [tag.replace(/<@|!|>/g, ""), "discordId"];
 
-    throw new ErrorMessage(
-      (t) => t("errors.invalidSearch.title"),
-      (t) => t("errors.invalidSearch.description")
-    );
+    throw new ErrorMessage("errors.invalidSearch");
   }
 
   public async resolveTag(tag: string, type: PlayerTag, user: User | null) {
@@ -282,10 +276,7 @@ export class ApiService extends StatsifyApiService {
 
     if (type === "none") {
       if (user?.uuid) return user.uuid;
-      throw new ErrorMessage(
-        (t) => t("errors.missingSelfVerification.title"),
-        (t) => t("errors.missingSelfVerification.description")
-      );
+      throw new ErrorMessage("errors.missingSelfVerification");
     }
 
     return tag;
@@ -311,10 +302,7 @@ export class ApiService extends StatsifyApiService {
   }
 
   public unknownError() {
-    return new ErrorMessage(
-      (t) => t("errors.unknown.title"),
-      (t) => t("errors.unknown.description")
-    );
+    return new ErrorMessage("errors.unknown");
   }
 
   private isDiscordId(tag: string) {

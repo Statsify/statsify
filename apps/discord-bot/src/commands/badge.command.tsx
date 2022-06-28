@@ -7,18 +7,18 @@
  */
 
 import { APIAttachment } from "discord-api-types/v10";
-import { ApiService } from "#services";
-import { Canvas, Image } from "skia-canvas";
 import {
+  ApiService,
   Command,
   CommandContext,
+  ErrorMessage,
   FileArgument,
   IMessage,
   LocalizeFunction,
   SubCommand,
 } from "@statsify/discord";
+import { Canvas, Image } from "skia-canvas";
 import { Container, Footer, HeaderNametag, Skin } from "#components";
-import { ErrorMessage } from "#lib/error.message";
 import { User } from "@statsify/schemas";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";

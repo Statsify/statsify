@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService } from "#services";
-import { Command, EmbedBuilder } from "@statsify/discord";
-import { INFO_COLOR } from "#constants";
+import { ApiService, Command, EmbedBuilder } from "@statsify/discord";
+import { STATUS_COLORS } from "@statsify/logger";
 
 @Command({
   description: (t) => t("commands.watchdog"),
@@ -44,7 +43,7 @@ export class WatchdogCommand {
             watchdog.staff.lastDay
           )}\``
       )
-      .color(INFO_COLOR);
+      .color(STATUS_COLORS.info);
 
     return {
       embeds: [embed],
