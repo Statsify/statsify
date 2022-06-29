@@ -24,14 +24,14 @@ import { env } from "@statsify/util";
   imports: [
     TypegooseModule.forRootAsync({
       useFactory: () => ({
-        uri: env("MONGODB_URI"),
+        uri: env("database.mongoURI"),
         useNewUrlParser: true,
         useUnifiedTopology: true,
       }),
     }),
     RedisModule.forRoot({
       config: {
-        url: env("REDIS_URL"),
+        url: env("database.redisURL"),
       },
     }),
     ScheduleModule.forRoot(),

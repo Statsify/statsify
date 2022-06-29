@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { config } from "dotenv";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 
-config({ path: "../../.env" });
+let config: Environment;
 
 interface Environment {
   MONGODB_URI: string;
@@ -41,16 +42,30 @@ interface Environment {
   VERIFY_SERVER_SENTRY_DSN?: string;
 }
 
-export interface EnvOptions<T extends keyof Environment> {
+const loadConfig = () => {
+  if (existsSync("../../config.json")) {
+    return require("../../config.json");
+  } else if (existsSync(join(__dirname, "../../../config.js"))) {
+    return require(join(__dirname, "../../../config.js"));
+  } else {
+    throw new Error("No config file detected!");
+  }
+};
+
+export interface EnvOptions {
   required?: boolean;
-  default?: Environment[T];
+  default?: any;
 }
 
-export const env = <T extends keyof Environment>(
-  key: T,
-  { required = true, default: defaultValue }: EnvOptions<T> = {}
-): Environment[T] => {
-  const value = (process.env[key] as string) || undefined;
+export const env = (
+  key: string,
+  { required = true, default: defaultValue }: EnvOptions = {}
+) => {
+  if (config === undefined) {
+    config = loadConfig();
+  }
+
+  const value = key.split(".").reduce((a: any, b) => a?.[b], config) || undefined;
 
   const isValueDefined = value !== undefined && value !== "";
 
@@ -59,16 +74,9 @@ export const env = <T extends keyof Environment>(
 
     if (required)
       throw new Error(
-        `Missing required environment variable: ${key}. Add ${key} to your .env`
+        `Missing required environment variable: ${key}. Add ${key} to your config`
       );
   }
 
-  //Convert value to the correct type
-  if (isValueDefined && !Number.isNaN(+value) && `${+value}` === value)
-    return +value as Environment[T];
-
-  if (value === "true" || value === "false")
-    return (value === "true") as unknown as Environment[T];
-
-  return value as Environment[T];
+  return value;
 };

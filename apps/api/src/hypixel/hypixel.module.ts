@@ -16,9 +16,9 @@ import { env } from "@statsify/util";
     HttpModule.register({
       baseURL: `https://api.hypixel.net/`,
       headers: {
-        "API-Key": env("HYPIXEL_API_KEY"),
+        "API-Key": env("hypixelAPI.key"),
       },
-      timeout: env("HYPIXEL_API_TIMEOUT", { default: 5000 }),
+      timeout: env("hypixelAPI.timeout", { default: 5000 }),
     }),
   ],
   providers: [HypixelService],

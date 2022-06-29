@@ -31,7 +31,7 @@ type PlayerTag = "username" | "uuid" | "discordId" | "none";
 @Service()
 export class ApiService extends StatsifyApiService {
   public constructor() {
-    super(env("API_ROUTE"), env("API_KEY"));
+    super(env("apiClient.route"), env("apiClient.key"));
   }
 
   /**

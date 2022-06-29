@@ -23,7 +23,7 @@ export class InviteCommand {
         const description = t("embeds.invite.description");
 
         const links = [
-          `**${t("socials.invite", { id: env("DISCORD_BOT_APPLICATION_ID") })}**`,
+          `**${t("socials.invite", { id: env("discordBot.applicationID") })}**`,
           t("socials.discord"),
           t("socials.premium"),
           t("socials.website"),

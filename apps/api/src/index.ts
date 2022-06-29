@@ -22,7 +22,7 @@ import { setGlobalOptions } from "@typegoose/typegoose";
 import { version } from "../../../package.json";
 
 async function bootstrap() {
-  const sentryDsn = env("API_SENTRY_DSN", { required: false });
+  const sentryDsn = env("sentry.apiDSN", { required: false });
 
   if (sentryDsn) {
     Sentry.init({
@@ -33,11 +33,11 @@ async function bootstrap() {
       ],
       normalizeDepth: 3,
       tracesSampleRate: 1,
-      environment: env("NODE_ENV"),
+      environment: env("nodeEnv"),
     });
   }
 
-  await mkdir(join(env("API_MEDIA_ROOT"), "badges"), { recursive: true });
+  await mkdir(join(env("statsifyAPI.mediaRoot"), "badges"), { recursive: true });
 
   //Removes the `_id` fields created from sub classes of documents
   setGlobalOptions({ schemaOptions: { _id: false } });
@@ -89,7 +89,7 @@ async function bootstrap() {
 
   SwaggerModule.setup("swagger", app, document);
 
-  await app.listen(env("API_PORT"));
+  await app.listen(env("statsifyAPI.port"));
 }
 
 bootstrap();

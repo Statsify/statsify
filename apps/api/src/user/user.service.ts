@@ -137,6 +137,6 @@ export class UserService {
   }
 
   private getBadgePath(id: string) {
-    return `${env("API_MEDIA_ROOT")}/badges/${id}.png`;
+    return `${env("statsifyAPI.mediaRoot")}/badges/${id}.png`;
   }
 }

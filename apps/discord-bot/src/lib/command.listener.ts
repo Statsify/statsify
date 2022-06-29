@@ -41,8 +41,8 @@ export class CommandListener extends AbstractCommandListener {
       client as InteractionServer,
       rest,
       commands,
-      env("DISCORD_BOT_APPLICATION_ID"),
-      env("DISCORD_BOT_PORT", { required: false })!
+      env("discordBot.applicationID"),
+      env("discordBot.port", { required: false })!
     );
 
     this.apiService = Container.get(ApiService);

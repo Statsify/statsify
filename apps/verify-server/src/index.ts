@@ -32,7 +32,7 @@ const codeCreatedMessage = (code: string, time: Date) => {
 };
 
 async function bootstrap() {
-  const sentryDsn = env("VERIFY_SERVER_SENTRY_DSN", { required: false });
+  const sentryDsn = env("sentry.verifyServerDSN", { required: false });
 
   if (sentryDsn) {
     Sentry.init({
@@ -40,11 +40,11 @@ async function bootstrap() {
       integrations: [new TracingIntegrations.Mongo({ useMongoose: true })],
       normalizeDepth: 3,
       tracesSampleRate: 1,
-      environment: env("NODE_ENV"),
+      environment: env("nodeEnv"),
     });
   }
 
-  await connect(env("MONGODB_URI"));
+  await connect(env("database.mongoURI"));
 
   const verifyCodesModel = getModelForClass(VerifyCode);
 
@@ -53,7 +53,7 @@ async function bootstrap() {
   });
 
   const server = createServer({
-    host: env("VERIFY_SERVER_IP"),
+    host: env("verifyServer.hostIP"),
     maxPlayers: 2,
     motd: "§9§lStatsify Verification",
     version: false,

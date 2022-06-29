@@ -18,7 +18,7 @@ import "@sentry/tracing";
 import "reflect-metadata";
 
 async function bootstrap() {
-  const sentryDsn = env("DISCORD_BOT_SENTRY_DSN", { required: false });
+  const sentryDsn = env("sentry.discordBotDSN", { required: false });
 
   if (sentryDsn) {
     Sentry.init({
@@ -26,7 +26,7 @@ async function bootstrap() {
       integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
       normalizeDepth: 3,
       tracesSampleRate: 1,
-      environment: env("NODE_ENV"),
+      environment: env("nodeEnv"),
     });
   }
 
@@ -34,23 +34,23 @@ async function bootstrap() {
     [I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init())
   );
 
-  const rest = new RestClient({ token: env("DISCORD_BOT_TOKEN") });
+  const rest = new RestClient({ token: env("discordBot.token") });
   const commands = await CommandLoader.load(join(__dirname, "./commands"));
 
   const poster = new CommandPoster(rest);
 
   await poster.post(
     commands,
-    env("DISCORD_BOT_APPLICATION_ID"),
-    env("DISCORD_BOT_GUILD", { required: false })
+    env("discordBot.applicationID"),
+    env("discordBot.testingGuild", { required: false })
   );
 
-  const port = env("DISCORD_BOT_PORT", { required: false });
+  const port = env("discordBot.port", { required: false });
 
   const listener = CommandListener.create(
     port
-      ? new InteractionServer({ key: env("DISCORD_BOT_PUBLIC_KEY")! })
-      : new WebsocketShard({ token: env("DISCORD_BOT_TOKEN"), intents: 1 }),
+      ? new InteractionServer({ key: env("discordBot.publicKey")! })
+      : new WebsocketShard({ token: env("discordBot.token"), intents: 1 }),
     rest,
     commands
   );

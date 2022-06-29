@@ -1,5 +1,7 @@
 .env*
 !.env.schema
+config.js
+config.json
 dist
 node_modules
 .turbo
