@@ -9,38 +9,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
-let config: Environment;
-
-interface Environment {
-  MONGODB_URI: string;
-  REDIS_URL: string;
-
-  HYPIXEL_API_KEY: string;
-  HYPIXEL_API_TIMEOUT: number;
-
-  API_PORT: number;
-  API_MEDIA_ROOT: string;
-  IGNORE_AUTH?: boolean;
-
-  DISCORD_BOT_PORT?: number;
-  DISCORD_BOT_PUBLIC_KEY?: string;
-  DISCORD_BOT_TOKEN: string;
-  DISCORD_BOT_APPLICATION_ID: string;
-  DISCORD_BOT_GUILD?: string;
-
-  RANK_EMOJI_DISCORD_BOT_TOKEN?: string;
-
-  API_KEY: string;
-  API_ROUTE: string;
-
-  VERIFY_SERVER_IP: string;
-
-  NODE_ENV: "dev" | "beta" | "prod";
-
-  DISCORD_BOT_SENTRY_DSN?: string;
-  API_SENTRY_DSN?: string;
-  VERIFY_SERVER_SENTRY_DSN?: string;
-}
+let config: any;
 
 const loadConfig = () => {
   if (existsSync("../../config.json")) {
