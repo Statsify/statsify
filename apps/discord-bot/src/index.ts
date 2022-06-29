@@ -35,9 +35,11 @@ async function bootstrap() {
   );
 
   const rest = new RestClient({ token: env("DISCORD_BOT_TOKEN") });
+  Container.set(RestClient, rest);
+
   const commands = await CommandLoader.load(join(__dirname, "./commands"));
 
-  const poster = new CommandPoster(rest);
+  const poster = Container.get(CommandPoster);
 
   await poster.post(
     commands,

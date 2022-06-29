@@ -28,3 +28,4 @@ export * from "./util/leaderboard-scanner";
 export * from "./verify-codes";
 export * from "./watchdog";
 export * from "./ticket";
+export * from "./tags";

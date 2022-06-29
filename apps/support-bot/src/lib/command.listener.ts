@@ -31,6 +31,14 @@ export class CommandListener extends AbstractCommandListener {
     this.apiService = new ApiService(env("API_ROUTE"), env("API_KEY"));
   }
 
+  public addCommand(command: CommandResolvable) {
+    this.commands.set(command.name, command);
+  }
+
+  public removeCommand(name: string) {
+    this.commands.delete(name);
+  }
+
   protected async onCommand(interaction: Interaction): Promise<InteractionResponse> {
     const parentData = interaction.getData();
     const parentCommand = this.commands.get(parentData.name)!;

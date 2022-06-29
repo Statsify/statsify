@@ -10,7 +10,7 @@ import * as Sentry from "@sentry/node";
 import Container from "typedi";
 import { CommandListener } from "#lib/command.listener";
 import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
-import { MongoLoaderService, TicketService } from "#services";
+import { MongoLoaderService, TagService, TicketService } from "#services";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { env } from "@statsify/util";
 import { join } from "node:path";
@@ -44,7 +44,10 @@ async function bootstrap() {
 
   const commands = await CommandLoader.load(join(__dirname, "./commands"));
 
-  const poster = new CommandPoster(rest);
+  const tags = await Container.get(TagService).fetch();
+  tags.forEach((tag) => commands.set(tag.name, tag));
+
+  const poster = Container.get(CommandPoster);
 
   await poster.post(
     commands,

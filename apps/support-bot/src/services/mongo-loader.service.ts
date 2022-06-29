@@ -7,7 +7,7 @@
  */
 
 import Container, { Service } from "typedi";
-import { Ticket } from "@statsify/schemas";
+import { Tag, Ticket } from "@statsify/schemas";
 import { createConnection } from "mongoose";
 import { env } from "@statsify/util";
 import { getModelForClass } from "@typegoose/typegoose";
@@ -17,7 +17,7 @@ export class MongoLoaderService {
   public init() {
     const connection = createConnection(env("MONGODB_URI"));
 
-    const models = [Ticket];
+    const models = [Ticket, Tag];
 
     models.forEach((modelClass) => {
       const model = getModelForClass(modelClass, { existingConnection: connection });
