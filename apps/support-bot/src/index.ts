@@ -10,13 +10,17 @@ import * as Sentry from "@sentry/node";
 import Container from "typedi";
 import { CommandListener } from "#lib/command.listener";
 import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
+import { MongoLoaderService, TicketService } from "#services";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { env } from "@statsify/util";
 import { join } from "node:path";
+import { setGlobalOptions } from "@typegoose/typegoose";
 import "@sentry/tracing";
 import "reflect-metadata";
 
 async function bootstrap() {
+  setGlobalOptions({ schemaOptions: { _id: false } });
+
   const sentryDsn = env("SUPPORT_BOT_SENTRY_DSN", { required: false });
 
   if (sentryDsn) {
@@ -29,9 +33,15 @@ async function bootstrap() {
     });
   }
 
-  await Promise.all([I18nLoaderService].map((service) => Container.get(service).init()));
-
   const rest = new RestClient({ token: env("SUPPORT_BOT_TOKEN") });
+  Container.set(RestClient, rest);
+
+  await Promise.all(
+    [I18nLoaderService, MongoLoaderService].map((service) =>
+      Container.get(service).init()
+    )
+  );
+
   const commands = await CommandLoader.load(join(__dirname, "./commands"));
 
   const poster = new CommandPoster(rest);
@@ -47,6 +57,8 @@ async function bootstrap() {
     rest,
     commands
   );
+
+  Container.get(TicketService).init();
 
   await listener.listen();
 }

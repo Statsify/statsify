@@ -6,8 +6,5 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./i18n-loader.service";
-export * from "./paginate.service";
-export * from "./api.service";
-export * from "./message.service";
-export * from "./channel.service";
+export * from "./ticket.service";
+export * from "./mongo-loader.service";

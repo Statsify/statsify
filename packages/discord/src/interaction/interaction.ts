@@ -14,7 +14,7 @@ import {
 } from "discord-api-types/v10";
 import { IMessage, Message } from "../messages";
 import { getLocalizeFunction } from "../messages/localize";
-import { parseDiscordError } from "../util/parse-discord-error";
+import { parseDiscordResponse } from "../util/parse-discord-error";
 import type {
   Interaction as DiscordInteraction,
   InteractionResponse,
@@ -147,39 +147,11 @@ export class Interaction {
 
   public convertToApiData(m: Message | IMessage) {
     const message = m instanceof Message ? m : new Message(m);
-    const data = message.build(getLocalizeFunction(this.getLocale()));
-
-    const res = {
-      content: data.content,
-      tts: data.tts,
-      flags: data.ephemeral ? 1 << 6 : undefined,
-      allowed_mentions: data.mentions,
-      embeds: data.embeds,
-      attachments: data.attachments,
-      components: data.components,
-    };
-
-    if (data.files)
-      return {
-        files: data.files,
-        payload_json: res,
-      };
-
-    return res;
+    return message.toAPI(getLocalizeFunction(this.getLocale()));
   }
 
   private async request(options: RestRequestOptions) {
     const response = await this.rest.request(options);
-    if (response.status >= 200 && response.status < 300) return response;
-
-    const body = response.body as Record<string, any>;
-    let message = body.message;
-
-    if (body.errors) {
-      const error = parseDiscordError(body.errors);
-      message += ` | ${error}`;
-    }
-
-    throw new Error(message);
+    return parseDiscordResponse(response);
   }
 }

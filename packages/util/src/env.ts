@@ -37,6 +37,9 @@ interface Environment {
   SUPPORT_BOT_TOKEN: string;
   SUPPORT_BOT_APPLICATION_ID: string;
   SUPPORT_BOT_GUILD: string;
+  SUPPORT_BOT_TICKET_CATEGORY: string;
+  SUPPORT_BOT_TICKET_LOGS_CHANNEL: string;
+  SUPPORT_BOT_CREATE_TICKET_CHANNEL: string;
 
   NODE_ENV: "dev" | "beta" | "prod";
 

@@ -80,6 +80,7 @@ export class BaseLeaderboardCommand {
       .emoji(t("emojis:up"))
       .style(ButtonStyle.Success)
       .disable(true);
+
     const down = new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger);
 
     const searchDocument = new ButtonBuilder()

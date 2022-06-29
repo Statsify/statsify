@@ -463,6 +463,18 @@
     "staffOnly": {
       "title": "Staff Only",
       "description": "This command is only available to staff members"
+    },
+    "coreOnly": {
+      "title": "$t(errors.staffOnly.title)",
+      "description": "$t(errors.staffOnly.description)"
+    },
+    "ticketAlreadyExists": {
+      "title": "Ticket Already Exists",
+      "description": "You already have a ticket open here!"
+    },
+    "invalidTicketChannel": {
+      "title": "Invalid Ticket Channel",
+      "description": "You must be in a ticket channel to use this command"
     }
   },
   "leaderboard": {

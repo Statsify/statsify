@@ -8245,6 +8245,7 @@ __metadata:
     "@statsify/logger": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
+    "@typegoose/typegoose": ^9.9.0
     "@types/i18next-fs-backend": ^1.1.2
     discord-api-types: ^0.35.0
     i18next: ^21.8.10

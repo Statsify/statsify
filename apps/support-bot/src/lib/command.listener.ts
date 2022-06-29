@@ -13,9 +13,9 @@ import {
   Interaction,
 } from "@statsify/discord";
 import { ApiService } from "@statsify/api-client";
+import { InteractionResponse, RestClient, WebsocketShard } from "tiny-discord";
 import { InteractionResponseType } from "discord-api-types/v10";
 import { env } from "@statsify/util";
-import type { InteractionResponse, RestClient, WebsocketShard } from "tiny-discord";
 
 export class CommandListener extends AbstractCommandListener {
   private readonly apiService: ApiService;
