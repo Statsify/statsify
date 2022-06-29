@@ -12,8 +12,8 @@ import { join } from "node:path";
 let config: any;
 
 const loadConfig = () => {
-  if (existsSync("../../config.json")) {
-    return require("../../config.json");
+  if (existsSync(join(__dirname, "../../../config.json"))) {
+    return require(join(__dirname, "../../../config.json"));
   } else if (existsSync(join(__dirname, "../../../config.js"))) {
     return require(join(__dirname, "../../../config.js"));
   } else {
