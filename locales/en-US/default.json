@@ -295,6 +295,16 @@
     "deletePlayer": {
       "title": "Player Deleted",
       "description": "{{displayName}} has been removed from the database and leaderboards"
+    },
+    "tags": {
+      "deleted": {
+        "title": "Successfully Deleted Tag",
+        "description": "`{{tag}}` has been deleted"
+      },
+      "rename": {
+        "title": "Successfully Renamed Tag",
+        "description": "`{{originalName}}` has been renamed to `{{newName}}`"
+      }
     }
   },
   "commands": {
@@ -475,6 +485,14 @@
     "invalidTicketChannel": {
       "title": "Invalid Ticket Channel",
       "description": "You must be in a ticket channel to use this command"
+    },
+    "invalidTagName": {
+      "title": "Invalid Tag Name",
+      "description": "The tag name you provided is invalid. It is not possible to create a slash command with this tag name."
+    },
+    "tagNotFound": {
+      "title": "Tag Not Found",
+      "description": "The tag you provided was not found."
     }
   },
   "leaderboard": {

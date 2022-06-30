@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIAttachment } from "discord-api-types/v10";
 import {
   CommandContext,
   CommandPoster,
   CommandResolvable,
   EmbedBuilder,
+  ErrorMessage,
   IMessage,
   UserArgument,
 } from "@statsify/discord";
@@ -38,10 +38,10 @@ export class TagService {
     return commands;
   }
 
-  public async create(name: string, content: string, attachment: APIAttachment | null) {
+  public async create(name: string, content: string, attachment?: string) {
     this.validateName(name);
 
-    const tag = { name, content, attachment: attachment?.url }
+    const tag = { name, content, attachment };
 
     const command = this.createCommand(tag);
 
@@ -54,13 +54,18 @@ export class TagService {
       env("SUPPORT_BOT_GUILD")
     );
 
-    await this.tagModel.replaceOne({ name }, {id,...tag}, { upsert: true }).lean().exec();
+    await this.tagModel
+      .replaceOne({ name }, { id, ...tag }, { upsert: true })
+      .lean()
+      .exec();
+
+    return command;
   }
 
   public createCommand(tag: Omit<Tag, "id">) {
     const metadata: CommandMetadata = {
       name: tag.name,
-      description: "A tag",
+      description: `Sends the tag "${tag.name}"`,
       methodName: "run",
       args: [new UserArgument("user", false)],
       cooldown: 0,
@@ -92,8 +97,6 @@ export class TagService {
   public async delete(name: string) {
     const listener = CommandListener.getInstance();
 
-    
-
     const tag = await this.tagModel
       .findOneAndDelete()
       .where("name")
@@ -101,32 +104,34 @@ export class TagService {
       .lean()
       .exec();
 
-    if (!tag) return;
+    if (!tag) throw new ErrorMessage("errors.tagNotFound");
 
     listener.removeCommand(name);
+
+    await this.commandPoster.delete(
+      tag.id,
+      env("SUPPORT_BOT_APPLICATION_ID"),
+      env("SUPPORT_BOT_GUILD")
+    );
   }
 
   public async rename(originalName: string, newName: string) {
     this.validateName(newName);
 
     const tag = await this.tagModel
-      .findOneAndUpdate()
+      .findOne()
       .where("name")
       .equals(originalName)
-      .set("name", newName)
       .lean()
       .exec();
 
-    if (!tag) return;
+    if (!tag) throw new ErrorMessage("errors.tagNotFound");
 
-    const listener = CommandListener.getInstance();
-    listener.removeCommand(originalName);
-    listener.addCommand(this.createCommand(tag));
+    await this.delete(originalName);
+    await this.create(newName, tag.content, tag.attachment);
   }
 
   private validateName(name: string) {
-    if (!TAG_NAME_REGEX.test(name)) {
-      throw new Error("Invalid tag name");
-    }
+    if (!TAG_NAME_REGEX.test(name)) throw new ErrorMessage("errors.invalidTagName");
   }
 }

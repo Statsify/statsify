@@ -6,17 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { APIAttachment } from "discord-api-types/v10";
 import {
   Command,
   CommandContext,
+  EmbedBuilder,
+  ErrorMessage,
   FileArgument,
+  IMessage,
   SubCommand,
   TextArgument,
 } from "@statsify/discord";
-import { UserTier } from "@statsify/schemas";
-
-const TAG_NAME_REGEX = /^[\w-]{1,32}$/;
+import { STATUS_COLORS } from "@statsify/logger";
 import { TagService } from "#services";
+import { UserTier } from "@statsify/schemas";
 
 @Command({ description: (t) => t("commands.tags") })
 export class TagsCommand {
@@ -31,12 +34,23 @@ export class TagsCommand {
     ],
     tier: UserTier.STAFF,
   })
-  public async create(context: CommandContext) {
-    this.tagService.create(
-      context.option("name"),
-      context.option("content"),
-      context.option("attachment")
-    );
+  public async create(context: CommandContext): Promise<IMessage> {
+    const name = context.option<string>("name");
+    const content = context.option<string>("content");
+    const attachment = context.option<APIAttachment | null>("attachment");
+
+    if (
+      attachment &&
+      !["image/png", "image/jpeg", "image/gif"].includes(attachment.content_type ?? "")
+    )
+      throw new ErrorMessage(
+        (t) => t("errors.unsupportedFileType.title"),
+        (t) => t("errors.unsupportedFileType.description")
+      );
+
+    const command = await this.tagService.create(name, content, attachment?.url);
+
+    return command.execute(context);
   }
 
   @SubCommand({
@@ -44,8 +58,16 @@ export class TagsCommand {
     args: [new TextArgument("name", (t) => t("arguments.tags-name"), true)],
     tier: UserTier.STAFF,
   })
-  public async delete(context: CommandContext) {
-    this.tagService.delete(context.option("name"));
+  public async delete(context: CommandContext): Promise<IMessage> {
+    const name = context.option<string>("name");
+    await this.tagService.delete(name);
+
+    const embed = new EmbedBuilder()
+      .color(STATUS_COLORS.success)
+      .title((t) => t("embeds.tags.deleted.title"))
+      .description((t) => t("embeds.tags.deleted.description", { tag: name }));
+
+    return { embeds: [embed] };
   }
 
   @SubCommand({
@@ -56,7 +78,17 @@ export class TagsCommand {
     ],
     tier: UserTier.STAFF,
   })
-  public async rename(context: CommandContext) {
-    this.tagService.rename(context.option("original"), context.option("new"));
+  public async rename(context: CommandContext): Promise<IMessage> {
+    const originalName = context.option<string>("original");
+    const newName = context.option<string>("new");
+
+    await this.tagService.rename(originalName, newName);
+
+    const embed = new EmbedBuilder()
+      .color(STATUS_COLORS.success)
+      .title((t) => t("embeds.tags.rename.title"))
+      .description((t) => t("embeds.tags.rename.description", { originalName, newName }));
+
+    return { embeds: [embed] };
   }
 }
