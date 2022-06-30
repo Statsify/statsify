@@ -1591,7 +1591,6 @@ __metadata:
     "@statsify/math": "workspace:^"
     "@statsify/util": "workspace:^"
     "@typegoose/typegoose": ^9.9.0
-    type-fest: ^2.14.0
   languageName: unknown
   linkType: soft
 
@@ -8686,13 +8685,6 @@ __metadata:
   version: 1.4.0
   resolution: "type-fest@npm:1.4.0"
   checksum: b011c3388665b097ae6a109a437a04d6f61d81b7357f74cbcb02246f2f5bd72b888ae33631b99871388122ba0a87f4ff1c94078e7119ff22c70e52c0ff828201
-  languageName: node
-  linkType: hard
-
-"type-fest@npm:^2.14.0":
-  version: 2.14.0
-  resolution: "type-fest@npm:2.14.0"
-  checksum: 6c152126418fef3caef573ece729c89b7b949c6e53ba6f6b8606b309061011e005b12b5c707b23825a4c6a0b4293017dd998bad221693a03554789be8a9030db
   languageName: node
   linkType: hard
 

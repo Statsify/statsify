@@ -6,10 +6,117 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { DeepFlatten } from "./flat";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
-let cfg: any;
+export interface Config {
+  database: {
+    /**
+     * The MongoDB Uri used for the whole project
+     */
+    mongoUri: string;
+    /**
+     * The Redis Url used for leaderboards and api keys
+     */
+    redisUrl: string;
+  };
+  hypixelApi: {
+    /**
+     * The Hypixel API Key used for making requests to the Hypixel API
+     */
+    key: string;
+    /**
+     * How much time in milliseconds to wait before cancelling a Hypixel API request
+     * @example 5000
+     */
+    timeout: number;
+  };
+  api: {
+    /**
+     * What port to run the Statsify API on
+     */
+    port: number;
+    /**
+     * What location to store things like badges
+     * @example /tmp
+     */
+    mediaRoot: string;
+    /**
+     * Whether or not to ignore authentication for the Statsify API
+     */
+    ignoreAuth?: boolean;
+  };
+  discordBot: {
+    /**
+     * What port to run the Discord Bot on, this is only required if you want to run the Discord Bot in Interaction Url mode
+     */
+    port?: number;
+    /**
+     * Discord Bot Public Key
+     */
+    publicKey: string;
+    /**
+     * Discord Bot token
+     */
+    token: string;
+    /**
+     * Discord Bot Application ID
+     */
+    applicationId: string;
+    /**
+     * The guild to post slash commands to in development mode
+     */
+    testingGuild: string;
+  };
+  apiClient: {
+    /**
+     * The api key used by the Discord Bot and Support Bot to connect to the Statsify API
+     */
+    key: string;
+    /**
+     * The route to use for the Statsify API
+     * @example http://localhost:3000/api
+     */
+    route: string;
+  };
+  verifyServer: {
+    /**
+     * What ip to listen on for the verify server
+     * @example localhost
+     */
+    hostIp: string;
+  };
+  rankEmojis?: {
+    /**
+     * The Discord Bot token used to create servers for the rank emojis
+     */
+    botToken?: string;
+  };
+  sentry?: {
+    /**
+     * The Sentry Dsn used by the Discord Bot
+     */
+    discordBotDsn?: string;
+    /**
+     * The Sentry Dsn used by the Statsify API
+     */
+    apiDsn?: string;
+    /**
+     * The Sentry Dsn used by the Verify Server
+     */
+    verifyServerDsn?: string;
+  };
+  /**
+   * The current environment the bot is running in
+   * @example dev
+   */
+  environment: "dev" | "beta" | "prod";
+}
+
+type FlatConfig = DeepFlatten<Config>;
+
+let cfg: Config;
 
 const loadConfig = () => {
   if (existsSync(join(__dirname, "../../../config.json"))) {
@@ -21,20 +128,22 @@ const loadConfig = () => {
   }
 };
 
-export interface EnvOptions {
+export interface ConfigOptions<T extends keyof FlatConfig> {
   required?: boolean;
-  default?: any;
+  default?: FlatConfig[T];
 }
 
-export const config = (
-  key: string,
-  { required = true, default: defaultValue }: EnvOptions = {}
-) => {
-  if (cfg === undefined) {
-    cfg = loadConfig();
-  }
+export const config = <T extends keyof FlatConfig>(
+  key: T,
+  { required = true, default: defaultValue }: ConfigOptions<T> = {}
+): FlatConfig[T] => {
+  // Don't load the config while testing
+  if (process.env.JEST_WORKER_ID) return defaultValue as FlatConfig[T];
 
-  const value = key.split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;
+  if (cfg === undefined) cfg = loadConfig();
+
+  const value =
+    (key as string).split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;
 
   const isValueDefined = value !== undefined && value !== "";
 
@@ -43,7 +152,9 @@ export const config = (
 
     if (required)
       throw new Error(
-        `Missing required environment variable: ${key}. Add ${key} to your config`
+        `Missing required environment variable: ${key as string}. Add ${
+          key as string
+        } to your config`
       );
   }
 

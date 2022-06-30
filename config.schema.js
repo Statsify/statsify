@@ -6,6 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+/**
+ * @type {import("@statsify/util").Config}
+ */
 module.exports = {
   database: {
     mongoUri: "",
@@ -17,12 +20,10 @@ module.exports = {
   },
   api: {
     port: 3000,
-    // Where to store user media, ex: badges
     mediaRoot: "",
     ignoreAuth: false,
   },
   discordBot: {
-    // A discord bot port is required to run the bot in interaction url mode, leave it blank to run the bot through the gateway/websocket
     port: undefined,
     publicKey: "",
     token: "",
@@ -34,7 +35,7 @@ module.exports = {
     route: "http://localhost:3000/api",
   },
   verifyServer: {
-    hostIP: "localhost",
+    hostIp: "localhost",
   },
   rankEmojis: {
     botToken: "",
@@ -44,6 +45,5 @@ module.exports = {
     apiDsn: "",
     verifyServerDsn: "",
   },
-  // Can be 'dev', 'beta', or 'prod'
   environment: "dev",
 };

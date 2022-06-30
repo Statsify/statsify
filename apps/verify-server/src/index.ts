@@ -53,7 +53,7 @@ async function bootstrap() {
   });
 
   const server = createServer({
-    host: config("verifyServer.hostIP"),
+    host: config("verifyServer.hostIp"),
     maxPlayers: 2,
     motd: "§9§lStatsify Verification",
     version: false,

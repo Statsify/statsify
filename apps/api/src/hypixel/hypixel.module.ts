@@ -16,9 +16,9 @@ import { config } from "@statsify/util";
     HttpModule.register({
       baseURL: `https://api.hypixel.net/`,
       headers: {
-        "API-Key": config("hypixelAPI.key"),
+        "API-Key": config("hypixelApi.key"),
       },
-      timeout: config("hypixelAPI.timeout", { default: 5000 }),
+      timeout: config("hypixelApi.timeout", { default: 5000 }),
     }),
   ],
   providers: [HypixelService],
