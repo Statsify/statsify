@@ -1591,15 +1591,12 @@ __metadata:
     "@statsify/math": "workspace:^"
     "@statsify/util": "workspace:^"
     "@typegoose/typegoose": ^9.9.0
-    type-fest: ^2.14.0
   languageName: unknown
   linkType: soft
 
 "@statsify/util@workspace:^, @statsify/util@workspace:packages/util":
   version: 0.0.0-use.local
   resolution: "@statsify/util@workspace:packages/util"
-  dependencies:
-    dotenv: ^16.0.1
   languageName: unknown
   linkType: soft
 
@@ -3611,13 +3608,6 @@ __metadata:
   dependencies:
     is-obj: ^2.0.0
   checksum: d5775790093c234ef4bfd5fbe40884ff7e6c87573e5339432870616331189f7f5d86575c5b5af2dcf0f61172990f4f734d07844b1f23482fff09e3c4bead05ea
-  languageName: node
-  linkType: hard
-
-"dotenv@npm:^16.0.1":
-  version: 16.0.1
-  resolution: "dotenv@npm:16.0.1"
-  checksum: f459ffce07b977b7f15d8cc4ee69cdff77d4dd8c5dc8c85d2d485ee84655352c2415f9dd09d42b5b5985ced3be186130871b34e2f3e2569ebc72fbc2e8096792
   languageName: node
   linkType: hard
 
@@ -8695,13 +8685,6 @@ __metadata:
   version: 1.4.0
   resolution: "type-fest@npm:1.4.0"
   checksum: b011c3388665b097ae6a109a437a04d6f61d81b7357f74cbcb02246f2f5bd72b888ae33631b99871388122ba0a87f4ff1c94078e7119ff22c70e52c0ff828201
-  languageName: node
-  linkType: hard
-
-"type-fest@npm:^2.14.0":
-  version: 2.14.0
-  resolution: "type-fest@npm:2.14.0"
-  checksum: 6c152126418fef3caef573ece729c89b7b949c6e53ba6f6b8606b309061011e005b12b5c707b23825a4c6a0b4293017dd998bad221693a03554789be8a9030db
   languageName: node
   linkType: hard
 

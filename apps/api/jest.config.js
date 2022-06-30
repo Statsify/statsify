@@ -19,6 +19,3 @@ module.exports = {
     "^.+\\.(t|j)sx?$": ["@swc/jest", config],
   },
 };
-
-process.env["HYPIXEL_API_KEY"] = "test-key";
-process.env["HYPIXEL_API_TIMEOUT"] = 5000;
