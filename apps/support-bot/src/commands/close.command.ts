@@ -21,6 +21,7 @@ export class CloseCommand {
 
     const deleted = await this.ticketService.close(
       interaction.getChannelId()!,
+      "channel",
       interaction.getUserId(),
       context.option<string>("reason")
     );

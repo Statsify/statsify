@@ -9,7 +9,13 @@
 import * as Sentry from "@sentry/node";
 import Container from "typedi";
 import { CommandListener } from "#lib/command.listener";
-import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
+import {
+  CommandLoader,
+  CommandPoster,
+  EventLoader,
+  I18nLoaderService,
+} from "@statsify/discord";
+import { GatewayIntentBits } from "discord-api-types/v10";
 import { MongoLoaderService, TagService, TicketService } from "#services";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { env } from "@statsify/util";
@@ -55,14 +61,19 @@ async function bootstrap() {
     env("SUPPORT_BOT_GUILD")
   );
 
-  const listener = CommandListener.create(
-    new WebsocketShard({ token: env("SUPPORT_BOT_TOKEN"), intents: 1 }),
-    rest,
-    commands
-  );
+  const websocket = new WebsocketShard({
+    token: env("SUPPORT_BOT_TOKEN"),
+    intents:
+      GatewayIntentBits.Guilds |
+      GatewayIntentBits.GuildMessages |
+      GatewayIntentBits.GuildMembers |
+      GatewayIntentBits.MessageContent,
+  });
 
-  Container.get(TicketService).init();
+  await EventLoader.load(websocket, join(__dirname, "./events"));
+  const listener = CommandListener.create(websocket, rest, commands);
 
+  await Container.get(TicketService).init();
   await listener.listen();
 }
 

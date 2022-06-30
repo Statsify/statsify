@@ -90,7 +90,7 @@ export class TicketService {
 
     tickets.forEach((ticket) => {
       listener.addHook(ticket.channel, (interaction) =>
-        this.close(interaction.getChannelId()!, interaction.getUserId())
+        this.close(interaction.getChannelId()!, "channel", interaction.getUserId())
       );
 
       listener.addHook(
@@ -158,7 +158,7 @@ export class TicketService {
     const listener = CommandListener.getInstance();
 
     listener.addHook(closeTicketButton.getCustomId(), (interaction) =>
-      this.close(interaction.getChannelId()!, interaction.getUserId())
+      this.close(interaction.getChannelId()!, "channel", interaction.getUserId())
     );
 
     listener.addHook(copyUsernameButton.getCustomId(), this.copyUsername.bind(this));
@@ -174,16 +174,22 @@ export class TicketService {
 
   /**
    *
-   * @param channelId The channel id of the ticket
+   * @param channelIdOrOwnerId The channel id or owner's user id of the ticket
+   * @param type Whether channelIdOrOwnerId is a channel id or owner's user id
    * @param userId The closer of the ticket
    * @param reason Why the ticket was closed
    * @returns whether or not the ticket was closed
    */
-  public async close(channelId: string, userId: string, reason?: string) {
+  public async close(
+    channelIdOrOwnerId: string,
+    type: "channel" | "user",
+    userId: string,
+    reason = "N/A"
+  ) {
     const ticket = await this.ticketModel
       .findOneAndDelete()
-      .where("channel")
-      .equals(channelId)
+      .where(type)
+      .equals(channelIdOrOwnerId)
       .lean()
       .exec();
 
@@ -221,7 +227,7 @@ export class TicketService {
           `Owner: <@${ticket.owner}>`,
           `Closer: <@${userId}>`,
           `Participants: ${[...participants].join(", ")}`,
-          `Reason: ${reason ?? "N/A"}`,
+          `Reason: ${reason}`,
         ]
           .map((m) => `\`•\` ${m}`)
           .join("\n")
