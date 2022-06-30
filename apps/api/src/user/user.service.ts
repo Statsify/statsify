@@ -10,7 +10,7 @@ import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ReturnModelType } from "@typegoose/typegoose";
 import { User, VerifyCode } from "@statsify/schemas";
-import { env } from "@statsify/util";
+import { config } from "@statsify/util";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFile, rm, writeFile } from "node:fs/promises";
 
@@ -137,6 +137,6 @@ export class UserService {
   }
 
   private getBadgePath(id: string) {
-    return `${env("statsifyAPI.mediaRoot")}/badges/${id}.png`;
+    return `${config("api.mediaRoot")}/badges/${id}.png`;
   }
 }

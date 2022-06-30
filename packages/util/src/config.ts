@@ -9,7 +9,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
-let config: any;
+let cfg: any;
 
 const loadConfig = () => {
   if (existsSync(join(__dirname, "../../../config.json"))) {
@@ -26,15 +26,15 @@ export interface EnvOptions {
   default?: any;
 }
 
-export const env = (
+export const config = (
   key: string,
   { required = true, default: defaultValue }: EnvOptions = {}
 ) => {
-  if (config === undefined) {
-    config = loadConfig();
+  if (cfg === undefined) {
+    cfg = loadConfig();
   }
 
-  const value = key.split(".").reduce((a: any, b) => a?.[b], config) || undefined;
+  const value = key.split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;
 
   const isValueDefined = value !== undefined && value !== "";
 

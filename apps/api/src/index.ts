@@ -15,14 +15,14 @@ import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry/sentry.interceptor";
 import { Integrations as TracingIntegrations } from "@sentry/tracing";
 import { ValidationPipe } from "@nestjs/common";
-import { env } from "@statsify/util";
+import { config } from "@statsify/util";
 import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
 import { setGlobalOptions } from "@typegoose/typegoose";
 import { version } from "../../../package.json";
 
 async function bootstrap() {
-  const sentryDsn = env("sentry.apiDSN", { required: false });
+  const sentryDsn = config("sentry.apiDsn", { required: false });
 
   if (sentryDsn) {
     Sentry.init({
@@ -33,11 +33,11 @@ async function bootstrap() {
       ],
       normalizeDepth: 3,
       tracesSampleRate: 1,
-      environment: env("nodeEnv"),
+      environment: config("environment"),
     });
   }
 
-  await mkdir(join(env("statsifyAPI.mediaRoot"), "badges"), { recursive: true });
+  await mkdir(join(config("api.mediaRoot"), "badges"), { recursive: true });
 
   //Removes the `_id` fields created from sub classes of documents
   setGlobalOptions({ schemaOptions: { _id: false } });
@@ -64,7 +64,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new SentryInterceptor());
 
   //Swagger/Redoc docs
-  const config = new DocumentBuilder()
+  const redoc = new DocumentBuilder()
     .setTitle("Statsify API")
     .setVersion(version)
     .setDescription(
@@ -85,11 +85,11 @@ async function bootstrap() {
     templates: join(__dirname, "..", "views"),
   });
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, redoc);
 
   SwaggerModule.setup("swagger", app, document);
 
-  await app.listen(env("statsifyAPI.port"));
+  await app.listen(config("api.port"));
 }
 
 bootstrap();

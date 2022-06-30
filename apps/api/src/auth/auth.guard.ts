@@ -15,7 +15,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { env } from "@statsify/util";
+import { config } from "@statsify/util";
 import type { FastifyReply, FastifyRequest } from "fastify";
 
 @Injectable()
@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (env("statsifyAPI.ignoreAuth", { required: false })) {
+    if (config("api.ignoreAuth", { required: false })) {
       return true;
     }
 

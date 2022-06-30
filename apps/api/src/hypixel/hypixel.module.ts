@@ -9,16 +9,16 @@
 import { HttpModule } from "@nestjs/axios";
 import { HypixelService } from "./hypixel.service";
 import { Module } from "@nestjs/common";
-import { env } from "@statsify/util";
+import { config } from "@statsify/util";
 
 @Module({
   imports: [
     HttpModule.register({
       baseURL: `https://api.hypixel.net/`,
       headers: {
-        "API-Key": env("hypixelAPI.key"),
+        "API-Key": config("hypixelAPI.key"),
       },
-      timeout: env("hypixelAPI.timeout", { default: 5000 }),
+      timeout: config("hypixelAPI.timeout", { default: 5000 }),
     }),
   ],
   providers: [HypixelService],

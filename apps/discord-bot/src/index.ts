@@ -12,13 +12,13 @@ import { CommandListener } from "#lib/command.listener";
 import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
 import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
-import { env } from "@statsify/util";
+import { config } from "@statsify/util";
 import { join } from "node:path";
 import "@sentry/tracing";
 import "reflect-metadata";
 
 async function bootstrap() {
-  const sentryDsn = env("sentry.discordBotDSN", { required: false });
+  const sentryDsn = config("sentry.discordBotDsn", { required: false });
 
   if (sentryDsn) {
     Sentry.init({
@@ -26,7 +26,7 @@ async function bootstrap() {
       integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
       normalizeDepth: 3,
       tracesSampleRate: 1,
-      environment: env("nodeEnv"),
+      environment: config("environment"),
     });
   }
 
@@ -34,23 +34,23 @@ async function bootstrap() {
     [I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init())
   );
 
-  const rest = new RestClient({ token: env("discordBot.token") });
+  const rest = new RestClient({ token: config("discordBot.token") });
   const commands = await CommandLoader.load(join(__dirname, "./commands"));
 
   const poster = new CommandPoster(rest);
 
   await poster.post(
     commands,
-    env("discordBot.applicationID"),
-    env("discordBot.testingGuild", { required: false })
+    config("discordBot.applicationId"),
+    config("discordBot.testingGuild", { required: false })
   );
 
-  const port = env("discordBot.port", { required: false });
+  const port = config("discordBot.port", { required: false });
 
   const listener = CommandListener.create(
     port
-      ? new InteractionServer({ key: env("discordBot.publicKey")! })
-      : new WebsocketShard({ token: env("discordBot.token"), intents: 1 }),
+      ? new InteractionServer({ key: config("discordBot.publicKey")! })
+      : new WebsocketShard({ token: config("discordBot.token"), intents: 1 }),
     rest,
     commands
   );

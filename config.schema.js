@@ -8,14 +8,14 @@
 
 module.exports = {
   database: {
-    mongoURI: "",
-    redisURL: "",
+    mongoUri: "",
+    redisUrl: "",
   },
   hypixelAPI: {
     key: "",
     timeout: 5000,
   },
-  statsifyAPI: {
+  api: {
     port: 3000,
     // Where to store user media, ex: badges
     mediaRoot: "",
@@ -26,7 +26,7 @@ module.exports = {
     port: undefined,
     publicKey: "",
     token: "",
-    applicationID: "",
+    applicationId: "",
     testingGuild: "",
   },
   apiClient: {
@@ -40,10 +40,10 @@ module.exports = {
     botToken: "",
   },
   sentry: {
-    discordBotDSN: "",
-    apiDSN: "",
-    verifyServerDSN: "",
+    discordBotDsn: "",
+    apiDsn: "",
+    verifyServerDsn: "",
   },
   // Can be 'dev', 'beta', or 'prod'
-  nodeEnv: "dev",
+  environment: "dev",
 };

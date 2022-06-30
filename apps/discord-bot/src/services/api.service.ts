@@ -24,14 +24,14 @@ import {
   StatusNotFoundException,
 } from "@statsify/api-client";
 import { Service } from "typedi";
-import { env, removeFormatting } from "@statsify/util";
+import { config, removeFormatting } from "@statsify/util";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
 @Service()
 export class ApiService extends StatsifyApiService {
   public constructor() {
-    super(env("apiClient.route"), env("apiClient.key"));
+    super(config("apiClient.route"), config("apiClient.key"));
   }
 
   /**

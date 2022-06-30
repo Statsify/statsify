@@ -19,7 +19,7 @@ import { ErrorMessage } from "#lib/error.message";
 import { InteractionResponseType } from "discord-api-types/v10";
 import { User, UserTier } from "@statsify/schemas";
 import { WARNING_COLOR } from "#constants";
-import { env, formatTime } from "@statsify/util";
+import { config, formatTime } from "@statsify/util";
 import type {
   InteractionResponse,
   InteractionServer,
@@ -41,8 +41,8 @@ export class CommandListener extends AbstractCommandListener {
       client as InteractionServer,
       rest,
       commands,
-      env("discordBot.applicationID"),
-      env("discordBot.port", { required: false })!
+      config("discordBot.applicationId"),
+      config("discordBot.port", { required: false })!
     );
 
     this.apiService = Container.get(ApiService);
