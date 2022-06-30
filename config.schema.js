@@ -14,7 +14,7 @@ module.exports = {
     mongoUri: "",
     redisUrl: "",
   },
-  hypixelAPI: {
+  hypixelApi: {
     key: "",
     timeout: 5000,
   },
@@ -34,6 +34,8 @@ module.exports = {
     createTicketChannel: "",
     ticketLogsChannel: "",
     ticketCategory: "",
+    welcomeChannel: "",
+    unverifiedChannel: "",
     guild: "",
     publicKey: "",
     token: "",

@@ -86,6 +86,16 @@ export interface Config {
     ticketCategory: string;
 
     /**
+     * The channel id where the welcome messages are sent
+     */
+    welcomeChannel: string;
+
+    /**
+     * The channel id where unverified members are sent
+     */
+    unverifiedChannel: string;
+
+    /**
      * The guild id where the support bot is located
      */
     guild: string;
@@ -191,7 +201,7 @@ export const config = <T extends keyof FlatConfig>(
 
     if (required)
       throw new Error(
-        `Missing required environment variable: ${key as string}. Add ${
+        `Missing required environment variable: ${key as string} | Add ${
           key as string
         } to your config`
       );
