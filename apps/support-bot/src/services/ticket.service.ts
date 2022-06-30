@@ -32,7 +32,7 @@ import { Inject, Service } from "typedi";
 import { ReturnModelType } from "@typegoose/typegoose";
 import { STATUS_COLORS } from "@statsify/logger";
 import { Ticket } from "@statsify/schemas";
-import { env } from "@statsify/util";
+import { config } from "@statsify/util";
 
 @Service()
 export class TicketService {
@@ -101,9 +101,9 @@ export class TicketService {
   }
 
   public async create(guildId: string, user: APIUser, username: string, issue: string) {
-    const channel = await this.channelService.create(env("SUPPORT_BOT_GUILD"), {
+    const channel = await this.channelService.create(config("supportBot.guild"), {
       name: `${user.username}-${user.discriminator}`,
-      parent_id: env("SUPPORT_BOT_TICKET_CATEGORY"),
+      parent_id: config("supportBot.ticketCategory"),
       type: ChannelType.GuildText,
       permission_overwrites: [
         {
@@ -244,7 +244,7 @@ export class TicketService {
       ],
     };
 
-    await this.messageService.send(env("SUPPORT_BOT_TICKET_LOGS_CHANNEL"), message);
+    await this.messageService.send(config("supportBot.ticketLogsChannel"), message);
 
     const dm = await this.channelService.create(ticket.owner);
     await this.messageService.send(dm.id, message).catch(() => null);

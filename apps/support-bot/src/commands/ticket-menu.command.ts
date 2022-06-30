@@ -17,7 +17,7 @@ import {
 import { ButtonStyle } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
-import { env } from "@statsify/util";
+import { config } from "@statsify/util";
 
 @Command({ description: (t) => t("commands.ticket-menu"), tier: UserTier.CORE })
 export class TicketMenuCommand {
@@ -43,7 +43,7 @@ export class TicketMenuCommand {
       .style(ButtonStyle.Primary)
       .customId("create-ticket");
 
-    await this.messageService.send(env("SUPPORT_BOT_CREATE_TICKET_CHANNEL"), {
+    await this.messageService.send(config("supportBot.createTicketChannel"), {
       embeds: [embed],
       components: [new ActionRowBuilder().component(button)],
     });

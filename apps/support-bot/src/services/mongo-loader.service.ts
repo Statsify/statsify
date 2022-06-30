@@ -8,14 +8,14 @@
 
 import Container, { Service } from "typedi";
 import { Tag, Ticket } from "@statsify/schemas";
+import { config } from "@statsify/util";
 import { createConnection } from "mongoose";
-import { env } from "@statsify/util";
 import { getModelForClass } from "@typegoose/typegoose";
 
 @Service()
 export class MongoLoaderService {
   public init() {
-    const connection = createConnection(env("MONGODB_URI"));
+    const connection = createConnection(config("database.mongoUri"));
 
     const models = [Ticket, Tag];
 

@@ -15,7 +15,7 @@ import {
 import { ApiService } from "@statsify/api-client";
 import { InteractionResponse, RestClient, WebsocketShard } from "tiny-discord";
 import { InteractionResponseType } from "discord-api-types/v10";
-import { env } from "@statsify/util";
+import { config } from "@statsify/util";
 
 export class CommandListener extends AbstractCommandListener {
   private readonly apiService: ApiService;
@@ -26,9 +26,9 @@ export class CommandListener extends AbstractCommandListener {
     rest: RestClient,
     commands: Map<string, CommandResolvable>
   ) {
-    super(client, rest, commands, env("SUPPORT_BOT_APPLICATION_ID"));
+    super(client, rest, commands, config("supportBot.applicationId"));
 
-    this.apiService = new ApiService(env("API_ROUTE"), env("API_KEY"));
+    this.apiService = new ApiService(config("apiClient.route"), config("apiClient.key"));
   }
 
   public addCommand(command: CommandResolvable) {

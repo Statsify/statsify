@@ -18,7 +18,7 @@ import {
 import { GatewayIntentBits } from "discord-api-types/v10";
 import { MongoLoaderService, TagService, TicketService } from "#services";
 import { RestClient, WebsocketShard } from "tiny-discord";
-import { env } from "@statsify/util";
+import { config } from "@statsify/util";
 import { join } from "node:path";
 import { setGlobalOptions } from "@typegoose/typegoose";
 import "@sentry/tracing";
@@ -27,7 +27,7 @@ import "reflect-metadata";
 async function bootstrap() {
   setGlobalOptions({ schemaOptions: { _id: false } });
 
-  const sentryDsn = env("SUPPORT_BOT_SENTRY_DSN", { required: false });
+  const sentryDsn = config("sentry.supportBotDsn", { required: false });
 
   if (sentryDsn) {
     Sentry.init({
@@ -35,11 +35,11 @@ async function bootstrap() {
       integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
       normalizeDepth: 3,
       tracesSampleRate: 1,
-      environment: env("NODE_ENV"),
+      environment: config("environment"),
     });
   }
 
-  const rest = new RestClient({ token: env("SUPPORT_BOT_TOKEN") });
+  const rest = new RestClient({ token: config("supportBot.token") });
   Container.set(RestClient, rest);
 
   await Promise.all(
@@ -57,12 +57,12 @@ async function bootstrap() {
 
   await poster.post(
     commands,
-    env("SUPPORT_BOT_APPLICATION_ID"),
-    env("SUPPORT_BOT_GUILD")
+    config("supportBot.applicationId"),
+    config("supportBot.guild")
   );
 
   const websocket = new WebsocketShard({
-    token: env("SUPPORT_BOT_TOKEN"),
+    token: config("supportBot.token"),
     intents:
       GatewayIntentBits.Guilds |
       GatewayIntentBits.GuildMessages |

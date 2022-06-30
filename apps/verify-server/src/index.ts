@@ -10,9 +10,9 @@ import * as Sentry from "@sentry/node";
 import { Logger } from "@statsify/logger";
 import { Integrations as TracingIntegrations } from "@sentry/tracing";
 import { UserTier, VerifyCode } from "@statsify/schemas";
+import { config, formatTime } from "@statsify/util";
 import { connect } from "mongoose";
 import { createServer } from "minecraft-protocol";
-import { env, formatTime } from "@statsify/util";
 import { generateCode } from "./generate-code";
 import { getLogoPath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
@@ -32,7 +32,7 @@ const codeCreatedMessage = (code: string, time: Date) => {
 };
 
 async function bootstrap() {
-  const sentryDsn = env("VERIFY_SERVER_SENTRY_DSN", { required: false });
+  const sentryDsn = config("sentry.verifyServerDsn", { required: false });
 
   if (sentryDsn) {
     Sentry.init({
@@ -40,11 +40,11 @@ async function bootstrap() {
       integrations: [new TracingIntegrations.Mongo({ useMongoose: true })],
       normalizeDepth: 3,
       tracesSampleRate: 1,
-      environment: env("NODE_ENV"),
+      environment: config("environment"),
     });
   }
 
-  await connect(env("MONGODB_URI"));
+  await connect(config("database.mongoUri"));
 
   const verifyCodesModel = getModelForClass(VerifyCode);
 
@@ -53,7 +53,7 @@ async function bootstrap() {
   });
 
   const server = createServer({
-    host: env("VERIFY_SERVER_IP"),
+    host: config("verifyServer.hostIp"),
     maxPlayers: 2,
     motd: "§9§lStatsify Verification",
     version: false,

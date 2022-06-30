@@ -13,7 +13,7 @@ import {
 } from "discord-api-types/v10";
 import { Service } from "typedi";
 import { TicketService } from "#services";
-import { env } from "@statsify/util";
+import { config } from "@statsify/util";
 
 @Service()
 export class GuildMemberRemoveEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberRemove> {
@@ -25,14 +25,14 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
 
   public async onEvent(data: GatewayGuildMemberRemoveDispatchData): Promise<void> {
     const guildId = data.guild_id;
-    if (guildId !== env("SUPPORT_BOT_GUILD")) return;
+    if (guildId !== config("supportBot.guild")) return;
 
     const memberId = data.user.id;
 
     await this.ticketService.close(
       memberId,
       "user",
-      env("SUPPORT_BOT_APPLICATION_ID"),
+      config("supportBot.applicationId"),
       "Member left"
     );
   }

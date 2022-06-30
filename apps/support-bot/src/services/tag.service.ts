@@ -21,7 +21,7 @@ import { Inject, Service } from "typedi";
 import { ReturnModelType } from "@typegoose/typegoose";
 import { STATUS_COLORS } from "@statsify/logger";
 import { Tag } from "@statsify/schemas";
-import { env } from "@statsify/util";
+import { config } from "@statsify/util";
 
 const TAG_NAME_REGEX = /^[\w-]{1,32}$/;
 
@@ -50,8 +50,8 @@ export class TagService {
 
     const { id } = await this.commandPoster.post(
       command,
-      env("SUPPORT_BOT_APPLICATION_ID"),
-      env("SUPPORT_BOT_GUILD")
+      config("supportBot.applicationId"),
+      config("supportBot.guild")
     );
 
     await this.tagModel
@@ -110,8 +110,8 @@ export class TagService {
 
     await this.commandPoster.delete(
       tag.id,
-      env("SUPPORT_BOT_APPLICATION_ID"),
-      env("SUPPORT_BOT_GUILD")
+      config("supportBot.applicationId"),
+      config("supportBot.guild")
     );
   }
 

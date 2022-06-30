@@ -9,7 +9,7 @@
 import { Command, EmbedBuilder, IMessage } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
-import { env } from "@statsify/util";
+import { config } from "@statsify/util";
 import { getLogoPath } from "@statsify/assets";
 import { readFile } from "node:fs/promises";
 
@@ -23,7 +23,7 @@ export class InviteCommand {
         const description = t("embeds.invite.description");
 
         const links = [
-          `**${t("socials.invite", { id: env("DISCORD_BOT_APPLICATION_ID") })}**`,
+          `**${t("socials.invite", { id: config("discordBot.applicationId") })}**`,
           t("socials.discord"),
           t("socials.premium"),
           t("socials.website"),
