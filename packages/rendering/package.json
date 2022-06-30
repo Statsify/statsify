@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "swc src --out-dir dist",
-    "test:types": "tsc --noEmit",
+    "test:types": "tsc --noEmit & echo 'type checking done'",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"

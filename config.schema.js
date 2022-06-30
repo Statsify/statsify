@@ -30,6 +30,15 @@ module.exports = {
     applicationId: "",
     testingGuild: "",
   },
+  supportBot: {
+    createTicketChannel: "",
+    ticketLogsChannel: "",
+    ticketCategory: "",
+    guild: "",
+    publicKey: "",
+    token: "",
+    applicationId: "",
+  },
   apiClient: {
     key: "",
     route: "http://localhost:3000/api",
