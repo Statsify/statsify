@@ -96,6 +96,11 @@ export interface Config {
     unverifiedChannel: string;
 
     /**
+     * The member role id
+     */
+    memberRole: string;
+
+    /**
      * The guild id where the support bot is located
      */
     guild: string;

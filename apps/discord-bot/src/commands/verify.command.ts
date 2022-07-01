@@ -14,8 +14,10 @@ import {
   ErrorMessage,
   IMessage,
   NumberArgument,
+  RoleService,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
+import { config } from "@statsify/util";
 
 @Command({
   description: (t) => t("commands.verify"),
@@ -23,7 +25,10 @@ import { STATUS_COLORS } from "@statsify/logger";
   cooldown: 5,
 })
 export class VerifyCommand {
-  public constructor(private readonly apiService: ApiService) {}
+  public constructor(
+    private readonly apiService: ApiService,
+    private readonly roleService: RoleService
+  ) {}
 
   public async run(context: CommandContext): Promise<IMessage> {
     const userId = context.getInteraction().getUserId();
@@ -38,6 +43,10 @@ export class VerifyCommand {
     user = await this.apiService.verifyUser(`${code}`, userId);
 
     if (!user) throw new ErrorMessage("verification.invalidCode");
+
+    await this.roleService
+      .add(config("supportBot.guild"), userId, config("supportBot.memberRole"))
+      .catch(() => null);
 
     const player = await this.apiService.getPlayer(user?.uuid as string);
     const displayName = this.apiService.emojiDisplayName(context.t(), player.displayName);

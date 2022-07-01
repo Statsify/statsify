@@ -16,6 +16,7 @@ import {
   ApiService,
   IMessage,
   MessageService,
+  RoleService,
 } from "@statsify/discord";
 import { Service } from "typedi";
 import { config } from "@statsify/util";
@@ -26,7 +27,8 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
   public constructor(
     private readonly apiService: ApiService,
-    private readonly messageService: MessageService
+    private readonly messageService: MessageService,
+    private readonly roleService: RoleService
   ) {
     super();
   }
@@ -47,6 +49,12 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
   }
 
   private async sendVerifiedMessage(member: APIGuildMember): Promise<IMessage> {
+    await this.roleService.add(
+      config("supportBot.guild"),
+      member.user!.id,
+      config("supportBot.memberRole")
+    );
+
     return {
       content: `<@${member.user!.id}>, Welcome to the server`,
     };

@@ -36,6 +36,7 @@ module.exports = {
     ticketCategory: "",
     welcomeChannel: "",
     unverifiedChannel: "",
+    memberRole: "",
     guild: "",
     publicKey: "",
     token: "",
