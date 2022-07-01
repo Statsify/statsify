@@ -101,6 +101,16 @@ export interface Config {
     memberRole: string;
 
     /**
+     * The premium role id
+     */
+    premiumRole: string;
+
+    /**
+     * The nitro booster role id
+     */
+    nitroBoosterRole: string;
+
+    /**
      * The guild id where the support bot is located
      */
     guild: string;

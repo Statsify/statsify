@@ -37,6 +37,8 @@ module.exports = {
     welcomeChannel: "",
     unverifiedChannel: "",
     memberRole: "",
+    premiumRole: "",
+    nitroBoosterRole: "",
     guild: "",
     publicKey: "",
     token: "",

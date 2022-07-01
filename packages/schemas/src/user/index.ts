@@ -38,6 +38,9 @@ export class User {
   @Field({ store: { required: false } })
   public serverMember?: boolean;
 
+  @Field({ store: { required: false } })
+  public nitroBooster?: boolean;
+
   @Field({ type: () => Number, store: { required: false } })
   public tier?: UserTier;
 
