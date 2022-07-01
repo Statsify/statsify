@@ -11,8 +11,9 @@ import {
   GatewayDispatchEvents,
   GatewayGuildMemberUpdateDispatchData,
 } from "discord-api-types/v10";
-import { AbstractEventListener, RoleService } from "@statsify/discord";
+import { AbstractEventListener, ApiService, RoleService } from "@statsify/discord";
 import { Service } from "typedi";
+import { User } from "@statsify/schemas";
 import { UserService } from "#services";
 import { config } from "@statsify/util";
 
@@ -25,6 +26,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   private loadedPremium: boolean;
 
   public constructor(
+    private readonly apiService: ApiService,
     private readonly userService: UserService,
     private readonly roleService: RoleService
   ) {
@@ -85,6 +87,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   }
 
   private async handlePremiumRemove(member: APIGuildMember) {
+    console.log("REMOVING PREMIUM");
     const memberId = member.user!.id;
     this.premium = this.premium.filter((m) => m !== memberId);
 
@@ -94,6 +97,12 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   }
 
   private async handlePremiumAdd(member: APIGuildMember) {
+    const user = await this.apiService.getUser(member.user!.id);
+
+    // The user already is premium or is staff, don't mass with their tier
+    if (User.isPremium(user)) return;
+
+    console.log("ADDING PREMIUM");
     const memberId = member.user!.id;
     this.premium.push(memberId);
 
@@ -103,15 +112,21 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   }
 
   private async handleNitroBoosterRemove(member: APIGuildMember) {
+    console.log("REMOVING NITRO BOOSTER");
     const memberId = member.user!.id;
     this.nitroBoosters = this.nitroBoosters.filter((m) => m !== memberId);
 
     await this.userService.removeNitroBoosterUser(memberId);
 
-    //TODO(jacobk999): Remove premium role
+    await this.roleService.remove(
+      config("supportBot.guild"),
+      memberId,
+      config("supportBot.premiumRole")
+    );
   }
 
   private async handleNitroBoosterAdd(member: APIGuildMember) {
+    console.log("ADDING NITRO BOOSTER");
     const memberId = member.user!.id;
 
     this.nitroBoosters.push(memberId);
@@ -121,7 +136,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     await this.roleService.add(
       config("supportBot.guild"),
       memberId,
-      config("supportBot.nitroBoosterRole")
+      config("supportBot.premiumRole")
     );
   }
 }

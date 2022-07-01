@@ -30,22 +30,18 @@ export class UserService {
 
   public async addPremiumUser(id: string) {
     await this.userModel
-      .updateOne({ id, tier: UserTier.PREMIUM }, { upsert: true })
-      .where("id")
-      .equals(id)
-      .where("tier")
-      .lt(UserTier.PREMIUM)
+      .updateOne({ id }, { tier: UserTier.PREMIUM }, { upsert: true })
       .lean()
       .exec();
   }
 
   public async removePremiumUser(id: string) {
     await this.userModel
-      .updateOne({ id, $unset: { tier: "" } }, { upsert: true })
-      .where("id")
-      .equals(id)
-      .where("tier")
-      .equals(UserTier.PREMIUM)
+      .updateOne(
+        { id, tier: UserTier.PREMIUM },
+        { $unset: { tier: "" } },
+        { upsert: true }
+      )
       .lean()
       .exec();
   }
@@ -64,18 +60,14 @@ export class UserService {
 
   public async addNitroBoosterUser(id: string) {
     await this.userModel
-      .updateOne({ nitroBooster: true }, { upsert: true })
-      .where("id")
-      .equals(id)
+      .updateOne({ id }, { nitroBooster: true }, { upsert: true })
       .lean()
       .exec();
   }
 
   public async removeNitroBoosterUser(id: string) {
     await this.userModel
-      .updateOne({ $unset: { nitroBooster: "" } }, { upsert: true })
-      .where("id")
-      .equals(id)
+      .updateOne({ id }, { $unset: { nitroBooster: "" } }, { upsert: true })
       .lean()
       .exec();
   }

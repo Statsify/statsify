@@ -18,6 +18,15 @@ export class RoleService {
     const response = await this.rest.put(
       `/guilds/${guildId}/members/${userId}/roles/${roleId}`
     );
+
+    return parseDiscordResponse(response);
+  }
+
+  public async remove(guildId: string, userId: string, roleId: string) {
+    const response = await this.rest.delete(
+      `/guilds/${guildId}/members/${userId}/roles/${roleId}`
+    );
+
     return parseDiscordResponse(response);
   }
 }
