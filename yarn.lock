@@ -1532,6 +1532,7 @@ __metadata:
     "@statsify/util": "workspace:^"
     discord-api-types: ^0.35.0
     i18next: ^21.8.10
+    i18next-fs-backend: ^1.1.4
     reflect-metadata: ^0.1.13
     tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab"
     typedi: ^0.10.0
@@ -1865,15 +1866,6 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: d076bb61f45d0fc42dee496ef8b1c2f8742e15d5e47e90e20d0243386e426c04d4efd408a48875ab432f7960b4ce3414db20ed0fbbfc7bcc89d84e574f6e045a
-  languageName: node
-  linkType: hard
-
-"@types/i18next-fs-backend@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "@types/i18next-fs-backend@npm:1.1.2"
-  dependencies:
-    i18next: ^21.0.1
-  checksum: 567ab61f65231490b272d15311e7eb127cb069743284d3e0527e7cc75671038dcb70feb5da9964b218a3bb28435365179c18bab721c94ed765f28263662e6de0
   languageName: node
   linkType: hard
 
@@ -2924,6 +2916,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chart.js@npm:^3.8.0":
+  version: 3.8.0
+  resolution: "chart.js@npm:3.8.0"
+  checksum: 0360212bf5d534effc8475a1aa705ba7257a315af368b5e8eecf476f0bd57a6bb80ad740e870d552f2d11e134dd1497ccef02950d7e626c21a400ff00ecf59af
+  languageName: node
+  linkType: hard
+
+"chartjs-skia-canvas@https://github.com/jacobk999/chartjs-skia-canvas.git#commit=66b24a7974598a379babadeb29580e149787b0d9":
+  version: 4.1.6
+  resolution: "chartjs-skia-canvas@https://github.com/jacobk999/chartjs-skia-canvas.git#commit=66b24a7974598a379babadeb29580e149787b0d9"
+  dependencies:
+    skia-canvas: ^0.9.30
+    tslib: ^2.3.1
+  peerDependencies:
+    chart.js: ^3.5.1
+  checksum: dbdb7705fbc9d3389f0987a5b149005908ce0757a7a5be6092c0078059b6b9347afeb5669dbef46780492ce4add7cfd47dfe9105ebd9953f7b877e448da18031
+  languageName: node
+  linkType: hard
+
 "chokidar@npm:^3.5.3":
   version: 3.5.3
   resolution: "chokidar@npm:3.5.3"
@@ -3543,13 +3554,10 @@ __metadata:
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
     "@typegoose/typegoose": ^9.9.0
-    "@types/i18next-fs-backend": ^1.1.2
     "@types/luxon": ^2
     axios: ^0.27.2
     discord-api-types: ^0.35.0
     fuse.js: ^6.6.2
-    i18next: ^21.8.10
-    i18next-fs-backend: ^1.1.4
     luxon: ^2.4.0
     mongoose: ^6.4.0
     reflect-metadata: ^0.1.13
@@ -4849,7 +4857,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^21.0.1, i18next@npm:^21.8.10":
+"i18next@npm:^21.8.10":
   version: 21.8.10
   resolution: "i18next@npm:21.8.10"
   dependencies:
@@ -8195,15 +8203,16 @@ __metadata:
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
     "@typegoose/typegoose": ^9.9.0
-    "@types/i18next-fs-backend": ^1.1.2
+    axios: ^0.27.2
+    chart.js: ^3.8.0
+    chartjs-skia-canvas: "https://github.com/jacobk999/chartjs-skia-canvas.git#commit=66b24a7974598a379babadeb29580e149787b0d9"
     discord-api-types: ^0.35.0
-    i18next: ^21.8.10
-    i18next-fs-backend: ^1.1.4
     luxon: ^2.4.0
     mongoose: ^6.4.0
     reflect-metadata: ^0.1.13
     skia-canvas: ^0.9.30
     tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab"
+    toad-scheduler: ^1.6.1
     typedi: ^0.10.0
   languageName: unknown
   linkType: soft
@@ -8445,7 +8454,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.4.0, tslib@npm:^2.1.0, tslib@npm:^2.4.0":
+"tslib@npm:2.4.0, tslib@npm:^2.1.0, tslib@npm:^2.3.1, tslib@npm:^2.4.0":
   version: 2.4.0
   resolution: "tslib@npm:2.4.0"
   checksum: 8c4aa6a3c5a754bf76aefc38026134180c053b7bd2f81338cb5e5ebf96fefa0f417bff221592bf801077f5bf990562f6264fecbc42cd3309b33872cb6fc3b113

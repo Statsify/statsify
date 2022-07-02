@@ -96,6 +96,11 @@ export interface Config {
     unverifiedChannel: string;
 
     /**
+     * The channel id for where to send the hypixel api status message
+     */
+    hypixelApiStatusChannel: string;
+
+    /**
      * The member role id
      */
     memberRole: string;

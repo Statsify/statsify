@@ -10,3 +10,4 @@ export * from "./ticket.service";
 export * from "./mongo-loader.service";
 export * from "./tag.service";
 export * from "./user.service";
+export * from "./hypixel-status.service";

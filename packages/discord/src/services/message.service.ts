@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { APIMessage } from "discord-api-types/v10";
 import { IMessage, Message } from "../messages";
 import { RestClient } from "tiny-discord";
 import { Service } from "typedi";
@@ -16,12 +17,31 @@ import { parseDiscordResponse } from "../util/parse-discord-error";
 export class MessageService {
   public constructor(private readonly rest: RestClient) {}
 
-  public async send(id: string, message: Message | IMessage) {
+  public async send(channelId: string, message: Message | IMessage): Promise<APIMessage> {
     const data = message instanceof Message ? message : new Message(message);
 
     const response = await this.rest.post(
-      `/channels/${id}/messages`,
+      `/channels/${channelId}/messages`,
       data.toAPI(getLocalizeFunction("en-US"))
+    );
+
+    return parseDiscordResponse(response);
+  }
+
+  public async edit(channelId: string, messageId: string, message: Message | IMessage) {
+    const data = message instanceof Message ? message : new Message(message);
+
+    const response = await this.rest.patch(
+      `/channels/${channelId}/messages/${messageId}`,
+      data.toAPI(getLocalizeFunction("en-US"))
+    );
+
+    return parseDiscordResponse(response);
+  }
+
+  public async delete(channelId: string, messageId: string) {
+    const response = await this.rest.delete(
+      `/channels/${channelId}/messages/${messageId}`
     );
 
     return parseDiscordResponse(response);

@@ -19,6 +19,7 @@ import { parseDiscordResponse } from "../util/parse-discord-error";
 @Service()
 export class ChannelService {
   public constructor(private readonly rest: RestClient) {}
+
   public async create(userId: string): Promise<APIDMChannel>;
   public async create(
     guildId: string,
@@ -51,6 +52,14 @@ export class ChannelService {
 
   public async getMessages(channelId: string): Promise<APIMessage[]> {
     const response = await this.rest.get(`/channels/${channelId}/messages`);
+    return parseDiscordResponse(response);
+  }
+
+  public async bulkDelete(channelId: string, messages: string[]) {
+    const response = await this.rest.post(`/channels/${channelId}/messages/bulk-delete`, {
+      messages,
+    });
+
     return parseDiscordResponse(response);
   }
 }

@@ -16,7 +16,12 @@ import {
   I18nLoaderService,
 } from "@statsify/discord";
 import { GatewayIntentBits } from "discord-api-types/v10";
-import { MongoLoaderService, TagService, TicketService } from "#services";
+import {
+  HypixelStatusService,
+  MongoLoaderService,
+  TagService,
+  TicketService,
+} from "#services";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { config } from "@statsify/util";
 import { join } from "node:path";
@@ -43,7 +48,7 @@ async function bootstrap() {
   Container.set(RestClient, rest);
 
   await Promise.all(
-    [I18nLoaderService, MongoLoaderService].map((service) =>
+    [I18nLoaderService, MongoLoaderService, HypixelStatusService].map((service) =>
       Container.get(service).init()
     )
   );
