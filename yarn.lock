@@ -1203,20 +1203,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/schedule@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@nestjs/schedule@npm:2.0.1"
-  dependencies:
-    cron: 2.0.0
-    uuid: 8.3.2
-  peerDependencies:
-    "@nestjs/common": ^6.10.11 || ^7.0.0 || ^8.0.0
-    "@nestjs/core": ^7.0.0 || ^8.0.0
-    reflect-metadata: ^0.1.12
-  checksum: 2819ef98fabcf90cdae1e98ca7c76cac2195b0de0c717f95afafc1df62b9c09f3353a72a942793c2b0642704a04bacb1bddaa2f3637d1e07b9f08f76e605d3f7
-  languageName: node
-  linkType: hard
-
 "@nestjs/swagger@npm:^5.2.1":
   version: 5.2.1
   resolution: "@nestjs/swagger@npm:5.2.1"
@@ -1873,16 +1859,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/cron@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@types/cron@npm:2.0.0"
-  dependencies:
-    "@types/luxon": "*"
-    "@types/node": "*"
-  checksum: 392d2cfca51504140397533c30be8facd2196251074eb26ee09232a7e983144ff1d8364cd64922ed22d142686a4724934a70672fc8353b441fea729ac0ed0611
-  languageName: node
-  linkType: hard
-
 "@types/graceful-fs@npm:^4.1.3":
   version: 4.1.5
   resolution: "@types/graceful-fs@npm:4.1.5"
@@ -1953,7 +1929,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/luxon@npm:*, @types/luxon@npm:^2":
+"@types/luxon@npm:^2":
   version: 2.3.2
   resolution: "@types/luxon@npm:2.3.2"
   checksum: b9fe79118681f4bb9f2e37696a7df992a82683ba4448e7ad1af8cc241443ffc64ef08fdeaad749de9e6259b42b0d4b6540d7e880bca39bb504e0f3863d503c98
@@ -2455,7 +2431,6 @@ __metadata:
     "@nestjs/common": ^8.4.7
     "@nestjs/core": ^8.4.7
     "@nestjs/platform-fastify": ^8.4.7
-    "@nestjs/schedule": ^2.0.1
     "@nestjs/swagger": ^5.2.1
     "@nestjs/testing": ^8.4.7
     "@sentry/node": ^7.3.0
@@ -2466,7 +2441,6 @@ __metadata:
     "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@typegoose/typegoose": ^9.9.0
-    "@types/cron": ^2.0.0
     class-transformer: 0.5.1
     class-validator: ^0.13.2
     fastify-swagger: ^5.2.0
@@ -2477,6 +2451,7 @@ __metadata:
     reflect-metadata: ^0.1.13
     rxjs: ^7.5.5
     skia-canvas: ^0.9.30
+    toad-scheduler: ^1.6.1
   languageName: unknown
   linkType: soft
 
@@ -3321,15 +3296,6 @@ __metadata:
   version: 1.1.1
   resolution: "create-require@npm:1.1.1"
   checksum: a9a1503d4390d8b59ad86f4607de7870b39cad43d929813599a23714831e81c520bddf61bcdd1f8e30f05fd3a2b71ae8538e946eb2786dc65c2bbc520f692eff
-  languageName: node
-  linkType: hard
-
-"cron@npm:2.0.0":
-  version: 2.0.0
-  resolution: "cron@npm:2.0.0"
-  dependencies:
-    luxon: ^1.23.x
-  checksum: 179ec137ada4ceb44cafe51c55491e84954308d7012d2a44539f0dadbbb1ffbbe3072c2f7aaa88595d60bd56e0d536aae2e4aaa4430c869317d6c2abd966988b
   languageName: node
   linkType: hard
 
@@ -6136,13 +6102,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:^1.23.x":
-  version: 1.28.0
-  resolution: "luxon@npm:1.28.0"
-  checksum: 5250cb9f138b6048eeb0b3a9044a4ac994d0058f680c72a0da4b6aeaec8612460385639cba2b1052ef6d5564879e9ed144d686f26d9d97b38ab920d82e18281c
-  languageName: node
-  linkType: hard
-
 "luxon@npm:^2.4.0":
   version: 2.4.0
   resolution: "luxon@npm:2.4.0"
@@ -8408,6 +8367,13 @@ __metadata:
   dependencies:
     is-number: ^7.0.0
   checksum: f76fa01b3d5be85db6a2a143e24df9f60dd047d151062d0ba3df62953f2f697b16fe5dad9b0ac6191c7efc7b1d9dcaa4b768174b7b29da89d4428e64bc0a20ed
+  languageName: node
+  linkType: hard
+
+"toad-scheduler@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "toad-scheduler@npm:1.6.1"
+  checksum: 0f3b16c851d67901360a76bf5c341c6b8f992de85a9b37d9fa498126134c4dc5c83d3b797070f8bcfc6e775e3d9f3ea1d32638de05521c9507701f085008a514
   languageName: node
   linkType: hard
 

@@ -8,7 +8,6 @@
 
 import * as Sentry from "@sentry/node";
 import { APIData } from "@statsify/util";
-import { Cron, CronExpression } from "@nestjs/schedule";
 import {
   Friends,
   Gamecounts,
@@ -121,13 +120,6 @@ export class HypixelService {
     if (resourceData) this.resources.set(resource, resourceData);
 
     return this.resources.get(resource);
-  }
-
-  @Cron(CronExpression.EVERY_12_HOURS)
-  public updateResources() {
-    this.getResources("achievements", true);
-    this.getResources("challenges", true);
-    this.getResources("quests", true);
   }
 
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
