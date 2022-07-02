@@ -13,12 +13,14 @@ import { FontRenderer } from "../font";
 import { IntrinsicRenders, intrinsicRenders } from "./instrinsics";
 import { createInstructions } from "./create-instructions";
 import { getPositionalDelta, getTotalSize } from "./util";
-import type { BaseThemeContext, ElementNode, Instruction, Theme } from "./types";
+import { noop } from "@statsify/util";
+import { writeFileSync } from "node:fs";
+import type { ComputedThemeContext, ElementNode, Instruction, Theme } from "./types";
 
-const _render = <T extends BaseThemeContext>(
+const _render = (
   ctx: CanvasRenderingContext2D,
-  theme: T,
-  intrinsicElements: IntrinsicRenders<T>,
+  context: ComputedThemeContext,
+  intrinsicElements: IntrinsicRenders,
   instruction: Instruction,
   x: number,
   y: number
@@ -45,7 +47,13 @@ const _render = <T extends BaseThemeContext>(
     },
   };
 
-  intrinsicElements[instruction.type](ctx, instruction.props, location, theme);
+  intrinsicElements[instruction.type](
+    ctx,
+    instruction.props,
+    location,
+    context,
+    instruction.component
+  );
 
   if (!instruction.children?.length) return;
 
@@ -77,10 +85,10 @@ const _render = <T extends BaseThemeContext>(
       const centerDelta = (instruction[oppSide].size - oppSize) / 2;
 
       oppSide === "x" ? (x += centerDelta) : (y += centerDelta);
-      _render(ctx, theme, intrinsicElements, child, x, y);
+      _render(ctx, context, intrinsicElements, child, x, y);
       oppSide === "x" ? (x -= centerDelta) : (y -= centerDelta);
     } else if (child.style.align === "left") {
-      _render(ctx, theme, intrinsicElements, child, x, y);
+      _render(ctx, context, intrinsicElements, child, x, y);
     } else {
       throw new Error("Right align is unimplemented");
     }
@@ -89,10 +97,7 @@ const _render = <T extends BaseThemeContext>(
   });
 };
 
-export function render<T extends BaseThemeContext = BaseThemeContext>(
-  node: ElementNode,
-  theme?: Theme<T>
-): Canvas {
+export function render(node: ElementNode, theme?: Theme): Canvas {
   const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
   const instructionsTransaction = transaction?.startChild({
@@ -101,6 +106,8 @@ export function render<T extends BaseThemeContext = BaseThemeContext>(
   });
 
   const instructions = createInstructions(node);
+
+  writeFileSync("./instructions.json", JSON.stringify(instructions, null, 2));
 
   instructionsTransaction?.finish();
 
@@ -116,14 +123,16 @@ export function render<T extends BaseThemeContext = BaseThemeContext>(
   const ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = false;
 
-  _render(
-    ctx,
-    theme?.context ?? ({ renderer: Container.get(FontRenderer) } as T),
-    { ...intrinsicRenders, ...theme?.elements },
-    instructions,
-    0,
-    0
-  );
+  const context: ComputedThemeContext = {
+    renderer: noop(),
+    ...theme?.context,
+    canvasWidth: width,
+    canvasHeight: height,
+  };
+
+  if (!context.renderer) context.renderer = Container.get(FontRenderer);
+
+  _render(ctx, context, { ...intrinsicRenders, ...theme?.elements }, instructions, 0, 0);
 
   renderTransaction?.finish();
 

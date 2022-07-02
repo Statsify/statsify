@@ -31,7 +31,7 @@ export class TextCommand {
       .replace(/&\S/g, (m) => m.replace("&", "§"))
       .replaceAll("󰀀", "&");
 
-    const canvas = render(<text size={size}>{text}</text>, getTheme(user?.theme));
+    const canvas = render(<text size={size}>{text}</text>, getTheme(user));
     const buffer = await canvas.toBuffer("png");
 
     return {

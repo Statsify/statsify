@@ -96,7 +96,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
           { mode, data }
         );
 
-        return render(profile, getTheme(user?.theme));
+        return render(profile, getTheme(user));
       },
     }));
 

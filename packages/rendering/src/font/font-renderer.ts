@@ -9,7 +9,7 @@
 import _positions from "../../positions.json";
 import _sizes from "../../sizes.json";
 import { Canvas, CanvasRenderingContext2D, ImageData } from "skia-canvas";
-import { RGB, mcShadow } from "../colors";
+import { Fill } from "../jsx";
 import { TextNode, Token, tokens } from "./tokens";
 import { join } from "node:path";
 import { loadImage } from "../hooks";
@@ -83,16 +83,7 @@ export class FontRenderer {
 
       const largestSize = Math.max(...row.map((node) => node.size));
 
-      for (const {
-        text,
-        color,
-        bold,
-        italic,
-        underline,
-        strikethrough,
-        size,
-        shadow,
-      } of row) {
+      for (const { text, color, bold, italic, underline, strikethrough, size } of row) {
         const adjustY = y + size + (largestSize - size) * 5;
 
         for (const char of text) {
@@ -106,8 +97,7 @@ export class FontRenderer {
             italic,
             underline,
             strikethrough,
-            color,
-            shadow
+            color
           );
         }
       }
@@ -125,9 +115,8 @@ export class FontRenderer {
         italic: false,
         underline: false,
         strikethrough: false,
-        color: [255, 255, 255],
+        color: "#FFFFFF",
         size: 2,
-        shadow: true,
         ...inputState,
       };
 
@@ -279,8 +268,7 @@ export class FontRenderer {
     italic: boolean,
     underline: boolean,
     strikethrough: boolean,
-    color: [number, number, number],
-    shadow: boolean
+    color: Fill
   ): number {
     const metadata = this.getCharacterMetadata(char, textSize);
 
@@ -291,27 +279,28 @@ export class FontRenderer {
     const imageData = image.getImageData(charX, charY, width, height);
     const resizeFactor = size * scale;
 
-    if (shadow) {
-      const shadowColor = mcShadow(color);
-      const offset = isAscii ? 2 : 1;
+    const offset = isAscii ? 2 : 1;
 
-      this.fillFormattedCharacter(
-        ctx,
-        imageData,
-        x + offset * resizeFactor,
-        y + offset * resizeFactor,
-        width,
-        scale,
-        size,
-        resizeFactor,
-        shadowColor,
-        underline,
-        strikethrough,
-        bold,
-        italic,
-        isAscii
-      );
-    }
+    ctx.filter = "brightness(25%)";
+
+    this.fillFormattedCharacter(
+      ctx,
+      imageData,
+      x + offset * resizeFactor,
+      y + offset * resizeFactor,
+      width,
+      scale,
+      size,
+      resizeFactor,
+      color,
+      underline,
+      strikethrough,
+      bold,
+      italic,
+      isAscii
+    );
+
+    ctx.filter = "brightness(100%)";
 
     this.fillFormattedCharacter(
       ctx,
@@ -342,7 +331,7 @@ export class FontRenderer {
     scale: number,
     size: number,
     resizeFactor: number,
-    color: RGB,
+    color: Fill,
     underline: boolean,
     strikethrough: boolean,
     bold: boolean,
@@ -395,10 +384,10 @@ export class FontRenderer {
     width: number,
     scale: number,
     size: number,
-    [r, g, b]: RGB,
+    color: Fill,
     italic: boolean
   ) {
-    ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+    ctx.fillStyle = color;
 
     for (let i = 0; i < imageData.data.length; i += 4) {
       if (imageData.data[i + 3] === 0) continue;
@@ -428,9 +417,9 @@ export class FontRenderer {
     y: number,
     width: number,
     resizeFactor: number,
-    [r, g, b]: RGB
+    color: Fill
   ) {
-    ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+    ctx.fillStyle = color;
 
     ctx.fillRect(
       x - 2 * resizeFactor,
@@ -446,7 +435,7 @@ export class FontRenderer {
     y: number,
     width: number,
     resizeFactor: number,
-    color: RGB
+    color: Fill
   ) {
     return this.fillLine(ctx, x, y + 16 * resizeFactor, width, resizeFactor, color);
   }
@@ -457,7 +446,7 @@ export class FontRenderer {
     y: number,
     width: number,
     resizeFactor: number,
-    color: RGB
+    color: Fill
   ) {
     return this.fillLine(ctx, x, y + 6 * resizeFactor, width, resizeFactor, color);
   }

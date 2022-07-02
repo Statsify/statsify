@@ -87,22 +87,20 @@ export class GuildCommand extends GuildTopSubCommand {
       {
         label: "Overall",
         generator: () =>
-          render(<GuildProfile {...props} page="overall" />, getTheme(user?.theme)),
+          render(<GuildProfile {...props} page="overall" />, getTheme(user)),
       },
       {
         label: "GEXP",
-        generator: () =>
-          render(<GuildProfile {...props} page="gexp" />, getTheme(user?.theme)),
+        generator: () => render(<GuildProfile {...props} page="gexp" />, getTheme(user)),
       },
       {
         label: "GEXP Per Game",
         generator: () =>
-          render(<GuildProfile {...props} page="expPerGame" />, getTheme(user?.theme)),
+          render(<GuildProfile {...props} page="expPerGame" />, getTheme(user)),
       },
       {
         label: "Misc",
-        generator: () =>
-          render(<GuildProfile {...props} page="misc" />, getTheme(user?.theme)),
+        generator: () => render(<GuildProfile {...props} page="misc" />, getTheme(user)),
       },
     ]);
   }
@@ -127,7 +125,7 @@ export class GuildCommand extends GuildTopSubCommand {
       t,
     };
 
-    const canvas = render(<GuildListProfile {...props} />, getTheme(user?.theme));
+    const canvas = render(<GuildListProfile {...props} />, getTheme(user));
     const buffer = await canvas.toBuffer("png");
 
     return {
@@ -165,7 +163,7 @@ export class GuildCommand extends GuildTopSubCommand {
         badge={badge}
         tier={user?.tier}
       />,
-      getTheme(user?.theme)
+      getTheme(user)
     );
 
     const buffer = await canvas.toBuffer("png");

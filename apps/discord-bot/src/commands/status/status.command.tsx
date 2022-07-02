@@ -45,7 +45,7 @@ export class StatusCommand {
         t={t}
         tier={user?.tier}
       />,
-      getTheme(user?.theme)
+      getTheme(user)
     );
 
     const buffer = await canvas.toBuffer("png");

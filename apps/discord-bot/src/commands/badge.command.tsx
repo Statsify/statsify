@@ -175,7 +175,7 @@ export class BadgeCommand {
           </div>
         </div>
       </Container>,
-      getTheme(user?.theme)
+      getTheme(user)
     );
 
     return canvas.toBuffer("png");

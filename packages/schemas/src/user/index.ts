@@ -7,11 +7,7 @@
  */
 
 import { Field } from "../metadata";
-
-export enum UserTheme {
-  DEFAULT = "default",
-  HD = "hd",
-}
+import { UserTheme } from "./theme";
 
 export enum UserTier {
   NONE = 0,
@@ -48,3 +44,5 @@ export class User {
     return tier >= UserTier.PREMIUM;
   }
 }
+
+export * from "./theme";

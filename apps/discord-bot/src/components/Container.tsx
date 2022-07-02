@@ -30,7 +30,11 @@ export const Container = ({ background, percent = "97%", children }: ContainerPr
   );
 
   if (background) {
-    return <Background background={background}>{inner}</Background>;
+    return (
+      <div>
+        <Background background={background}>{inner}</Background>
+      </div>
+    );
   }
 
   return (

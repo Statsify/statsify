@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { RGBA, parseColor } from "../colors";
+import { Fill } from "../jsx";
 import type * as JSX from "../jsx";
 
 export interface BoxBorderRadius {
@@ -20,8 +20,8 @@ export interface BoxRenderProps {
   border: BoxBorderRadius;
   shadowDistance: number;
   shadowOpacity: number;
-  color: RGBA;
-  outline?: RGBA;
+  color: Fill;
+  outline?: Fill;
   outlineSize: number;
 }
 
@@ -33,8 +33,8 @@ export interface BoxProps extends Omit<Partial<BoxRenderProps>, "color" | "outli
   location?: JSX.StyleLocation;
   direction?: JSX.StyleDirection;
   align?: JSX.StyleLocation;
-  color?: string;
-  outline?: string | boolean;
+  color?: Fill;
+  outline?: Fill | boolean;
 }
 
 export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
@@ -49,14 +49,11 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   border = { topLeft: 4, topRight: 4, bottomLeft: 4, bottomRight: 4 },
   color = "rgba(0, 0, 0, 0.5)",
   shadowDistance = 4,
-  shadowOpacity = 0.42,
+  shadowOpacity = 0.84,
   outlineSize = 4,
   outline,
 }) => {
-  const rgbColor = parseColor(color);
-
-  const outlineColor: RGBA | undefined =
-    outline === true ? rgbColor : outline ? parseColor(outline) : undefined;
+  const outlineColor = outline === true ? color : outline ? outline : undefined;
 
   return {
     dimension: {
@@ -68,7 +65,7 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
     style: { location, direction, align },
     props: {
       border,
-      color: rgbColor,
+      color,
       shadowDistance,
       shadowOpacity,
       outlineSize,
@@ -83,7 +80,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   { color, border, shadowDistance, shadowOpacity, outline, outlineSize },
   { x, y, width, height, padding }
 ) => {
-  ctx.fillStyle = `rgba(${color.join(", ")})`;
+  ctx.fillStyle = color;
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -124,15 +121,16 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.globalCompositeOperation = "source-over";
 
   if (outline) {
-    ctx.strokeStyle = `rgba(${outline.join(", ")})`;
+    ctx.strokeStyle = outline;
     ctx.lineWidth = outlineSize;
     ctx.stroke();
   }
 
   if (!shadowDistance) return;
 
-  color[3] = shadowOpacity;
-  ctx.fillStyle = `rgba(${color.join(", ")})`;
+  //TODO(jacobk999): Fix box shadows
+  ctx.globalAlpha = shadowOpacity;
+  ctx.fillStyle = color;
 
   ctx.beginPath();
   ctx.moveTo(x + width, y + shadowDistance + border.topRight);
@@ -166,4 +164,6 @@ export const render: JSX.Render<BoxRenderProps> = (
       border.bottomRight,
       border.bottomRight
     );
+
+  ctx.globalAlpha = 1;
 };
