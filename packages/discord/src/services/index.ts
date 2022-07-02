@@ -11,4 +11,4 @@ export * from "./paginate.service";
 export * from "./api.service";
 export * from "./message.service";
 export * from "./channel.service";
-export * from "./role.service";
+export * from "./member.service";

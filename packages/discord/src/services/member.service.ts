@@ -11,10 +11,10 @@ import { Service } from "typedi";
 import { parseDiscordResponse } from "../util/parse-discord-error";
 
 @Service()
-export class RoleService {
+export class MemberService {
   public constructor(private readonly rest: RestClient) {}
 
-  public async add(guildId: string, userId: string, roleId: string) {
+  public async addRole(guildId: string, userId: string, roleId: string) {
     const response = await this.rest.put(
       `/guilds/${guildId}/members/${userId}/roles/${roleId}`
     );
@@ -22,10 +22,18 @@ export class RoleService {
     return parseDiscordResponse(response);
   }
 
-  public async remove(guildId: string, userId: string, roleId: string) {
+  public async removeRole(guildId: string, userId: string, roleId: string) {
     const response = await this.rest.delete(
       `/guilds/${guildId}/members/${userId}/roles/${roleId}`
     );
+
+    return parseDiscordResponse(response);
+  }
+
+  public async changeNickname(guildId: string, userId: string, nickname: string) {
+    const response = await this.rest.patch(`/guilds/${guildId}/members/${userId}`, {
+      nickname,
+    });
 
     return parseDiscordResponse(response);
   }

@@ -11,7 +11,7 @@ import {
   GatewayDispatchEvents,
   GatewayGuildMemberUpdateDispatchData,
 } from "discord-api-types/v10";
-import { AbstractEventListener, ApiService, RoleService } from "@statsify/discord";
+import { AbstractEventListener, ApiService, MemberService } from "@statsify/discord";
 import { Service } from "typedi";
 import { User } from "@statsify/schemas";
 import { UserService } from "#services";
@@ -28,7 +28,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   public constructor(
     private readonly apiService: ApiService,
     private readonly userService: UserService,
-    private readonly roleService: RoleService
+    private readonly roleService: MemberService
   ) {
     super();
 
@@ -118,7 +118,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     await this.userService.removeNitroBoosterUser(memberId);
 
-    await this.roleService.remove(
+    await this.roleService.removeRole(
       config("supportBot.guild"),
       memberId,
       config("supportBot.premiumRole")
@@ -133,7 +133,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     await this.userService.addNitroBoosterUser(memberId);
 
-    await this.roleService.add(
+    await this.roleService.addRole(
       config("supportBot.guild"),
       memberId,
       config("supportBot.premiumRole")
