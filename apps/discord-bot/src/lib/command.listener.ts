@@ -20,6 +20,7 @@ import { InteractionResponseType } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
+import { tips } from "../tips";
 import type {
   InteractionResponse,
   InteractionServer,
@@ -88,12 +89,17 @@ export class CommandListener extends AbstractCommandListener {
     const context = new CommandContext(this, interaction, data);
     context.setUser(user);
 
-    return this.executeCommand(
+    const preconditions = [
+      this.tierPrecondition.bind(this, command, user),
+      this.cooldownPrecondition.bind(this, command, user, id),
+    ];
+
+    return this.executeCommand({
       command,
       context,
-      this.tierPrecondition.bind(this, command, user),
-      this.cooldownPrecondition.bind(this, command, user, id)
-    );
+      preconditions,
+      response: this.getTipResponse(commandName, interaction),
+    });
   }
 
   private cooldownPrecondition(
@@ -142,6 +148,29 @@ export class CommandListener extends AbstractCommandListener {
         }),
       { color: STATUS_COLORS.warn }
     );
+  }
+
+  private getTipResponse(
+    commandName: string,
+    interaction: Interaction
+  ): InteractionResponse {
+    const TIP_CHANCE = 1;
+
+    const defaultResponse = {
+      type: InteractionResponseType.DeferredChannelMessageWithSource,
+    };
+
+    if (Math.random() > TIP_CHANCE) return defaultResponse;
+
+    const useableTips = tips.filter((t) => !t.disabled?.includes(commandName));
+    if (!useableTips.length) return defaultResponse;
+
+    const tip = useableTips[Math.floor(Math.random() * useableTips.length)];
+
+    return {
+      type: InteractionResponseType.ChannelMessageWithSource,
+      data: interaction.convertToApiData(tip.message),
+    };
   }
 
   public static create(

@@ -524,11 +524,15 @@
   },
   "socials": {
     "invite": "[Invite](https://discord.com/oauth2/authorize?client_id={{id}}&permissions=388168&scope=applications.commands%20bot&response_type=code&redirect_uri=https%3A%2F%2Fstatsify.net%2Fbot%2Fthanks)",
-    "discord": "[Discord](https://discord.com/invite/5VgxMQY)",
+    "discord": "[Discord](<https://discord.com/invite/5VgxMQY>)",
     "premium": "[Premium](https://statsify.net/premium)",
     "website": "[Website](https://statsify.net/)",
     "forums": "[Forums](https://statsify.net/forums)",
     "github": "[GitHub](https://github.com/Statsify/statsify)"
+  },
+  "tips": {
+    "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get 20% lower cooldowns $t(emojis:heart)",
+    "verify": "Run `/verify` to be able to run commands without inputting your username as well as  get 10% lower cooldowns"
   },
   "number": "{{value, number}}"
 }

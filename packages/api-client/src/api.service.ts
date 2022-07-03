@@ -25,12 +25,19 @@ import {
   PutUserBadgeResponse,
 } from "./responses";
 import { GuildQuery, HistoricalType, HypixelCache, LeaderboardQuery } from "./enums";
+import { UserTheme } from "@statsify/schemas";
 import { loadImage } from "@statsify/rendering";
 
 interface ExtraData {
   headers?: AxiosRequestHeaders;
-  body?: Record<string, unknown> | Buffer | string;
+  body?: Record<string, any> | Buffer | string;
   responseType?: ResponseType;
+}
+
+//TODO: Move dtos in api to @statsify/api-client
+interface UpdateUser {
+  serverMember?: boolean;
+  theme?: UserTheme;
 }
 
 export class ApiService {
@@ -185,6 +192,12 @@ export class ApiService {
 
   public getUser(tag: string) {
     return this.request<GetUserResponse>(`/user`, { tag })
+      .then((data) => data.user ?? null)
+      .catch(() => null);
+  }
+
+  public updateUser(tag: string, update: UpdateUser) {
+    return this.request<GetUserResponse>(`/user`, { tag }, "PATCH", { body: update })
       .then((data) => data.user ?? null)
       .catch(() => null);
   }

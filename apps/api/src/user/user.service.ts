@@ -27,6 +27,11 @@ export class UserService {
     return this.userModel.findOne().where(type).equals(tag).lean().exec();
   }
 
+  public update(idOrUuid: string, user: Partial<User>): Promise<User | null> {
+    const [tag, type] = this.parseTag(idOrUuid);
+    return this.userModel.findOneAndUpdate(user).where(type).equals(tag).lean().exec();
+  }
+
   public async getBadge(idOrUuid: string): Promise<Buffer> {
     const [tag, type] = this.parseTag(idOrUuid);
     const user = await this.userModel.findOne().where(type).equals(tag).lean().exec();

@@ -34,6 +34,13 @@ export type InteractionHook = (
 
 export type CommandPrecondition = () => void;
 
+export interface ExecuteCommandOptions {
+  command: CommandResolvable;
+  context: CommandContext;
+  preconditions?: CommandPrecondition[];
+  response?: InteractionResponse;
+}
+
 export abstract class AbstractCommandListener {
   protected hooks: Map<string, InteractionHook>;
   protected readonly logger = new Logger("CommandListener");
@@ -116,11 +123,12 @@ export abstract class AbstractCommandListener {
     return [command, data, name];
   }
 
-  protected executeCommand(
-    command: CommandResolvable,
-    context: CommandContext,
-    ...preconditions: CommandPrecondition[]
-  ) {
+  protected executeCommand({
+    command,
+    context,
+    preconditions = [],
+    response = { type: InteractionResponseType.DeferredChannelMessageWithSource },
+  }: ExecuteCommandOptions) {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     try {
@@ -166,9 +174,7 @@ export abstract class AbstractCommandListener {
       transaction?.finish();
     }
 
-    return {
-      type: InteractionResponseType.DeferredChannelMessageWithSource,
-    };
+    return response;
   }
 
   protected tierPrecondition(command: CommandResolvable, user: User | null) {

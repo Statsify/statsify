@@ -39,6 +39,7 @@ export class ForceVerifyCommand {
 
     await this.memberService
       .addRole(config("supportBot.guild"), userId, config("supportBot.memberRole"))
+      .then(() => this.apiService.updateUser(userId, { serverMember: true }))
       .catch(() => null);
 
     if (!user) throw new ErrorMessage("errors.unknown");

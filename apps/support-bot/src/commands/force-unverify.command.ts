@@ -46,6 +46,7 @@ export class ForceUnverifyCommand {
 
     await this.memberService
       .addRole(config("supportBot.guild"), user.id, config("supportBot.memberRole"))
+      .then(() => this.apiService.updateUser(user.id, { serverMember: false }))
       .catch(() => null);
 
     const embed = new EmbedBuilder()

@@ -35,6 +35,7 @@ export class UnverifyCommand {
 
     await this.memberService
       .removeRole(config("supportBot.guild"), userId, config("supportBot.memberRole"))
+      .then(() => this.apiService.updateUser(userId, { serverMember: false }))
       .catch(() => null);
 
     const embed = new EmbedBuilder()

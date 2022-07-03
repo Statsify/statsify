@@ -19,6 +19,7 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
   Put,
   Query,
   StreamableFile,
@@ -28,7 +29,7 @@ import {
   GetUserResponse,
   PutUserBadgeResponse,
 } from "@statsify/api-client";
-import { UserDto, VerifyCodeDto } from "../dtos";
+import { UpdateUserDto, UserDto, VerifyCodeDto } from "../dtos";
 import { UserService } from "./user.service";
 
 @Controller("/user")
@@ -43,6 +44,20 @@ export class UserController {
   @Auth({ role: AuthRole.ADMIN })
   public async getUser(@Query() { tag }: UserDto) {
     const user = await this.userService.get(tag);
+
+    return {
+      success: !!user,
+      user,
+    };
+  }
+
+  @Patch()
+  @ApiOperation({ summary: "Update a User" })
+  @ApiOkResponse({ type: GetUserResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @Auth({ role: AuthRole.ADMIN })
+  public async updateUser(@Query() { tag }: UserDto, @Body() body: UpdateUserDto) {
+    const user = await this.userService.update(tag, body);
 
     return {
       success: !!user,

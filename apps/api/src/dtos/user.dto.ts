@@ -7,7 +7,15 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, MaxLength, MinLength } from "class-validator";
+import {
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from "class-validator";
+import { UserTheme } from "@statsify/schemas";
 
 export class UserDto {
   @ApiProperty({ description: "Discord ID or UUID" })
@@ -15,4 +23,14 @@ export class UserDto {
   @MinLength(17)
   @MaxLength(36)
   public tag: string;
+}
+
+export class UpdateUserDto {
+  @IsBoolean()
+  @IsOptional()
+  public serverMember?: boolean;
+
+  @IsOptional()
+  @IsEnum(UserTheme)
+  public theme?: UserTheme;
 }

@@ -46,6 +46,7 @@ export class VerifyCommand {
 
     await this.memberService
       .addRole(config("supportBot.guild"), userId, config("supportBot.memberRole"))
+      .then(() => this.apiService.updateUser(userId, { serverMember: true }))
       .catch(() => null);
 
     const player = await this.apiService.getPlayer(user?.uuid as string);

@@ -13,7 +13,7 @@ import { config } from "@statsify/util";
 import { getLogoPath } from "@statsify/assets";
 import { readFile } from "node:fs/promises";
 
-@Command({ description: (t) => t("commands.info") })
+@Command({ description: (t) => t("commands.invite") })
 export class InviteCommand {
   public async run(): Promise<IMessage> {
     const embed = new EmbedBuilder()
