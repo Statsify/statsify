@@ -24,7 +24,7 @@ import {
   PostLeaderboardResponse,
   PutUserBadgeResponse,
 } from "./responses";
-import { GuildQuery, HistoricalType, LeaderboardQuery } from "./enums";
+import { GuildQuery, HistoricalType, HypixelCache, LeaderboardQuery } from "./enums";
 import { loadImage } from "@statsify/rendering";
 
 interface ExtraData {
@@ -49,6 +49,13 @@ export class ApiService {
   public getPlayer(tag: string) {
     return this.requestKey<GetPlayerResponse, "player">(`/player`, "player", {
       player: tag,
+    });
+  }
+
+  public getCachedPlayer(tag: string) {
+    return this.requestKey<GetPlayerResponse, "player">(`/player`, "player", {
+      player: tag,
+      cache: HypixelCache.CACHE_ONLY,
     });
   }
 

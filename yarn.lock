@@ -2923,15 +2923,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chartjs-skia-canvas@https://github.com/jacobk999/chartjs-skia-canvas.git#commit=66b24a7974598a379babadeb29580e149787b0d9":
+"chartjs-skia-canvas@https://github.com/jacobk999/chartjs-skia-canvas.git":
   version: 4.1.6
-  resolution: "chartjs-skia-canvas@https://github.com/jacobk999/chartjs-skia-canvas.git#commit=66b24a7974598a379babadeb29580e149787b0d9"
+  resolution: "chartjs-skia-canvas@https://github.com/jacobk999/chartjs-skia-canvas.git#commit=b325851b349dba653489464b4524abbc6cf00879"
   dependencies:
     skia-canvas: ^0.9.30
-    tslib: ^2.3.1
+    tslib: ^2.4.0
   peerDependencies:
     chart.js: ^3.5.1
-  checksum: dbdb7705fbc9d3389f0987a5b149005908ce0757a7a5be6092c0078059b6b9347afeb5669dbef46780492ce4add7cfd47dfe9105ebd9953f7b877e448da18031
+  checksum: c206ed4368ee06c1979ca0fc990cf264a25157a99ef624b42a964626642933b269ba66dc9c4691dcfd150587338cf4b662b6e227b64a9617267c001b638854f3
   languageName: node
   linkType: hard
 
@@ -8205,7 +8205,7 @@ __metadata:
     "@typegoose/typegoose": ^9.9.0
     axios: ^0.27.2
     chart.js: ^3.8.0
-    chartjs-skia-canvas: "https://github.com/jacobk999/chartjs-skia-canvas.git#commit=66b24a7974598a379babadeb29580e149787b0d9"
+    chartjs-skia-canvas: "https://github.com/jacobk999/chartjs-skia-canvas.git"
     discord-api-types: ^0.35.0
     luxon: ^2.4.0
     mongoose: ^6.4.0
@@ -8454,7 +8454,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.4.0, tslib@npm:^2.1.0, tslib@npm:^2.3.1, tslib@npm:^2.4.0":
+"tslib@npm:2.4.0, tslib@npm:^2.1.0, tslib@npm:^2.4.0":
   version: 2.4.0
   resolution: "tslib@npm:2.4.0"
   checksum: 8c4aa6a3c5a754bf76aefc38026134180c053b7bd2f81338cb5e5ebf96fefa0f417bff221592bf801077f5bf990562f6264fecbc42cd3309b33872cb6fc3b113

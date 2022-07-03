@@ -30,9 +30,9 @@ export class MemberService {
     return parseDiscordResponse(response);
   }
 
-  public async changeNickname(guildId: string, userId: string, nickname: string) {
+  public async changeNickname(guildId: string, userId: string, nick: string) {
     const response = await this.rest.patch(`/guilds/${guildId}/members/${userId}`, {
-      nickname,
+      nick,
     });
 
     return parseDiscordResponse(response);
