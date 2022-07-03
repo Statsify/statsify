@@ -12,11 +12,13 @@ import {
   CommandContext,
   EmbedBuilder,
   ErrorMessage,
+  MemberService,
   PlayerArgument,
   UserArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
+import { config } from "@statsify/util";
 
 @Command({
   description: (t) => t("commands.force-verify"),
@@ -24,13 +26,20 @@ import { UserTier } from "@statsify/schemas";
   tier: UserTier.STAFF,
 })
 export class ForceVerifyCommand {
-  public constructor(private readonly apiService: ApiService) {}
+  public constructor(
+    private readonly apiService: ApiService,
+    private readonly memberService: MemberService
+  ) {}
 
   public async run(context: CommandContext) {
     const userId = context.option<string>("user");
     const player = await this.apiService.getPlayer(context.option("player"));
 
     const user = await this.apiService.verifyUser(player.uuid, userId);
+
+    await this.memberService
+      .addRole(config("supportBot.guild"), userId, config("supportBot.memberRole"))
+      .catch(() => null);
 
     if (!user) throw new ErrorMessage("errors.unknown");
 

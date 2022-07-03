@@ -1416,6 +1416,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/core@npm:7.4.1":
+  version: 7.4.1
+  resolution: "@sentry/core@npm:7.4.1"
+  dependencies:
+    "@sentry/hub": 7.4.1
+    "@sentry/types": 7.4.1
+    "@sentry/utils": 7.4.1
+    tslib: ^1.9.3
+  checksum: ede9efaac2703d3239879237797da0dba28bc63099e827aae25bd047744838c9ac5f5ca6450848cfe790ccccb5a7bdd76dab370c20b406733e393e9972b053d0
+  languageName: node
+  linkType: hard
+
 "@sentry/hub@npm:7.3.0":
   version: 7.3.0
   resolution: "@sentry/hub@npm:7.3.0"
@@ -1424,6 +1436,17 @@ __metadata:
     "@sentry/utils": 7.3.0
     tslib: ^1.9.3
   checksum: a052a7c940e1f6af16ca2c61f1e184eaf0d7874598ec4eae3a28c8b5ea6a19cf3b89106768aaeea19deb9816bdd316ec0218764c2e66cc92a87e2e404d6e0dd6
+  languageName: node
+  linkType: hard
+
+"@sentry/hub@npm:7.4.1":
+  version: 7.4.1
+  resolution: "@sentry/hub@npm:7.4.1"
+  dependencies:
+    "@sentry/types": 7.4.1
+    "@sentry/utils": 7.4.1
+    tslib: ^1.9.3
+  checksum: ea6bc1624d8b0fe5c8e594940fd60b1bf488ef98694e539677ff8e5083e354349f69c2003c8dd45df42b439f1b1d5ab2ca2fd079e2fe419964f12e3bbb020854
   languageName: node
   linkType: hard
 
@@ -1440,6 +1463,22 @@ __metadata:
     lru_map: ^0.3.3
     tslib: ^1.9.3
   checksum: a92c2d2d1b05136b3c04f39cb87bf459519619c7e4f548f4e2a34145e868edd1ccdd505bcf5d3ff56872ea994530c263deb7ce4c498e9f4e39111c5fcacd342f
+  languageName: node
+  linkType: hard
+
+"@sentry/node@npm:^7.4.1":
+  version: 7.4.1
+  resolution: "@sentry/node@npm:7.4.1"
+  dependencies:
+    "@sentry/core": 7.4.1
+    "@sentry/hub": 7.4.1
+    "@sentry/types": 7.4.1
+    "@sentry/utils": 7.4.1
+    cookie: ^0.4.1
+    https-proxy-agent: ^5.0.0
+    lru_map: ^0.3.3
+    tslib: ^1.9.3
+  checksum: 3736aefd3f1b55fe62b426e01db2a262c8adf59123030a332b755bbb05707a697c9501ded5a7dae122aeed1ca80e37ad83ea3dbd2155f686cbfeddcfc6a6498b
   languageName: node
   linkType: hard
 
@@ -1462,6 +1501,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/types@npm:7.4.1":
+  version: 7.4.1
+  resolution: "@sentry/types@npm:7.4.1"
+  checksum: a0d98c89f8221f10e960b062dd7ad21da7cdb2b2176954d0df37e4d1d645f35ee84da242b642cdfdc0dd86908e787973cd542665bf2d6096cd732c20c10fee77
+  languageName: node
+  linkType: hard
+
 "@sentry/utils@npm:7.3.0":
   version: 7.3.0
   resolution: "@sentry/utils@npm:7.3.0"
@@ -1469,6 +1515,16 @@ __metadata:
     "@sentry/types": 7.3.0
     tslib: ^1.9.3
   checksum: 2696b1bfad1ad2e8e2aa7dd822fb0546d680b06aa302c3a8e8c8da0577fb9938da094f3eda589b2a1c216e1c84a81a5119b30136fd013de9c3a4513aece55d05
+  languageName: node
+  linkType: hard
+
+"@sentry/utils@npm:7.4.1":
+  version: 7.4.1
+  resolution: "@sentry/utils@npm:7.4.1"
+  dependencies:
+    "@sentry/types": 7.4.1
+    tslib: ^1.9.3
+  checksum: 48ead87a43ffc0abdaa49cd035ae31128cc86b89d005e7bbd55b441c6b3241a932a678a4ee6d3fb30e77ae8168c9374f1fa5c759fdf1e259b9fb29c157b53eca
   languageName: node
   linkType: hard
 
@@ -1530,6 +1586,7 @@ __metadata:
     "@statsify/assets": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
+    "@types/i18next-fs-backend": ^1.1.2
     discord-api-types: ^0.35.0
     i18next: ^21.8.10
     i18next-fs-backend: ^1.1.4
@@ -1544,7 +1601,7 @@ __metadata:
   resolution: "@statsify/logger@workspace:packages/logger"
   dependencies:
     "@nestjs/common": ^8.4.7
-    "@sentry/node": ^7.3.0
+    "@sentry/node": ^7.4.1
     chalk: 4.1.2
   languageName: unknown
   linkType: soft
@@ -1866,6 +1923,15 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: d076bb61f45d0fc42dee496ef8b1c2f8742e15d5e47e90e20d0243386e426c04d4efd408a48875ab432f7960b4ce3414db20ed0fbbfc7bcc89d84e574f6e045a
+  languageName: node
+  linkType: hard
+
+"@types/i18next-fs-backend@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@types/i18next-fs-backend@npm:1.1.2"
+  dependencies:
+    i18next: ^21.0.1
+  checksum: 567ab61f65231490b272d15311e7eb127cb069743284d3e0527e7cc75671038dcb70feb5da9964b218a3bb28435365179c18bab721c94ed765f28263662e6de0
   languageName: node
   linkType: hard
 
@@ -4854,6 +4920,15 @@ __metadata:
   version: 1.1.4
   resolution: "i18next-fs-backend@npm:1.1.4"
   checksum: 7da252aa618f82555a99709b0f8afed997b7b20aeb5e66c92fe13f5b676c80b8a3cad24a1e38c599c6ab6e9169c4be87268c30e48cf1965cbcc8a69ff76bd0a4
+  languageName: node
+  linkType: hard
+
+"i18next@npm:^21.0.1":
+  version: 21.8.11
+  resolution: "i18next@npm:21.8.11"
+  dependencies:
+    "@babel/runtime": ^7.17.2
+  checksum: 94b9de3811456c2720b96d54febb89fe66cef3146044cdba9cc35543f93bf04843ccffb191ff4dbed614e7d4a64f2e29391dd514e054331738f2411c1936d85f
   languageName: node
   linkType: hard
 

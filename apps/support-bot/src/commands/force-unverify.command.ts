@@ -12,10 +12,12 @@ import {
   CommandContext,
   EmbedBuilder,
   ErrorMessage,
+  MemberService,
   PlayerArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
+import { config } from "@statsify/util";
 
 @Command({
   description: (t) => t("commands.force-unverify"),
@@ -23,7 +25,10 @@ import { UserTier } from "@statsify/schemas";
   tier: UserTier.STAFF,
 })
 export class ForceUnverifyCommand {
-  public constructor(private readonly apiService: ApiService) {}
+  public constructor(
+    private readonly apiService: ApiService,
+    private readonly memberService: MemberService
+  ) {}
 
   public async run(context: CommandContext) {
     const player = await this.apiService.getPlayer(context.option("player"));
@@ -38,6 +43,10 @@ export class ForceUnverifyCommand {
             displayName: this.apiService.emojiDisplayName(t, player.displayName),
           })
       );
+
+    await this.memberService
+      .addRole(config("supportBot.guild"), user.id, config("supportBot.memberRole"))
+      .catch(() => null);
 
     const embed = new EmbedBuilder()
       .color(STATUS_COLORS.success)

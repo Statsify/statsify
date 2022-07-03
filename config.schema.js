@@ -37,6 +37,7 @@ module.exports = {
     welcomeChannel: "",
     unverifiedChannel: "",
     hypixelApiStatusChannel: "",
+    premiumInfoChannel: "",
     memberRole: "",
     premiumRole: "",
     nitroBoosterRole: "",

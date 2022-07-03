@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src --out-dir dist",
-    "test:types": "tsc --noEmit & echo 'type checking done'",
+    "test:types": "tsc --noEmit",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {

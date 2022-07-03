@@ -11,7 +11,14 @@ import {
   GatewayDispatchEvents,
   GatewayGuildMemberUpdateDispatchData,
 } from "discord-api-types/v10";
-import { AbstractEventListener, ApiService, MemberService } from "@statsify/discord";
+import {
+  AbstractEventListener,
+  ApiService,
+  ChannelService,
+  MemberService,
+  MessageService,
+} from "@statsify/discord";
+import { Logger } from "@statsify/logger";
 import { Service } from "typedi";
 import { User } from "@statsify/schemas";
 import { UserService } from "#services";
@@ -24,11 +31,14 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   private premium: string[];
   private nitroBoosters: string[];
   private loadedPremium: boolean;
+  private readonly logger = new Logger("GuildMemberUpdateEventListener");
 
   public constructor(
     private readonly apiService: ApiService,
     private readonly userService: UserService,
-    private readonly roleService: MemberService
+    private readonly roleService: MemberService,
+    private readonly channelService: ChannelService,
+    private readonly messageService: MessageService
   ) {
     super();
 
@@ -87,13 +97,19 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   }
 
   private async handlePremiumRemove(member: APIGuildMember) {
-    console.log("REMOVING PREMIUM");
     const memberId = member.user!.id;
+    this.logger.verbose(`Removing premium from ${memberId}`);
+
     this.premium = this.premium.filter((m) => m !== memberId);
 
     await this.userService.removePremiumUser(memberId);
 
     //TODO(jacobk999): Send some sort of message telling the user their premium ran out?
+    const { id } = await this.channelService.create(memberId);
+
+    this.messageService
+      .send(id, { content: "You lost your statsify premium" })
+      .catch(() => null);
   }
 
   private async handlePremiumAdd(member: APIGuildMember) {
@@ -102,18 +118,24 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     // The user already is premium or is staff, don't mass with their tier
     if (User.isPremium(user)) return;
 
-    console.log("ADDING PREMIUM");
     const memberId = member.user!.id;
+    this.logger.verbose(`Adding premium to ${memberId}`);
+
     this.premium.push(memberId);
 
     await this.userService.addPremiumUser(memberId);
 
-    //TODO(jacobk999): Send some sort of message saying the user is premium
+    const premiumInfoChannel = config("supportBot.premiumInfoChannel");
+
+    await this.messageService
+      .send(premiumInfoChannel, { content: `<@${memberId}>` })
+      .then((m) => this.messageService.delete(premiumInfoChannel, m.id));
   }
 
   private async handleNitroBoosterRemove(member: APIGuildMember) {
-    console.log("REMOVING NITRO BOOSTER");
     const memberId = member.user!.id;
+    this.logger.verbose(`Removing nitro boost perks from ${memberId}`);
+
     this.nitroBoosters = this.nitroBoosters.filter((m) => m !== memberId);
 
     await this.userService.removeNitroBoosterUser(memberId);
@@ -126,8 +148,8 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   }
 
   private async handleNitroBoosterAdd(member: APIGuildMember) {
-    console.log("ADDING NITRO BOOSTER");
     const memberId = member.user!.id;
+    this.logger.verbose(`Adding nitro boost perks from ${memberId}`);
 
     this.nitroBoosters.push(memberId);
 

@@ -13,8 +13,8 @@ import {
   EmbedBuilder,
   ErrorMessage,
   IMessage,
+  MemberService,
   NumberArgument,
-  RoleService,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { config } from "@statsify/util";
@@ -27,7 +27,7 @@ import { config } from "@statsify/util";
 export class VerifyCommand {
   public constructor(
     private readonly apiService: ApiService,
-    private readonly roleService: RoleService
+    private readonly memberService: MemberService
   ) {}
 
   public async run(context: CommandContext): Promise<IMessage> {
@@ -44,8 +44,8 @@ export class VerifyCommand {
 
     if (!user) throw new ErrorMessage("verification.invalidCode");
 
-    await this.roleService
-      .add(config("supportBot.guild"), userId, config("supportBot.memberRole"))
+    await this.memberService
+      .addRole(config("supportBot.guild"), userId, config("supportBot.memberRole"))
       .catch(() => null);
 
     const player = await this.apiService.getPlayer(user?.uuid as string);
