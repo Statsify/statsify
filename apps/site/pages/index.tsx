@@ -11,7 +11,7 @@ import { Text } from "../components/Text";
 
 const Index = () => (
   <div>
-    <Box width="50%">
+    <Box>
       <Text size={4}>§cStatsify</Text>
     </Box>
   </div>

@@ -44,9 +44,12 @@ const BaseBox = styled.div<Required<Omit<BoxProps, "className" | "children" | "s
     0px ${(props) => props.border.topLeft},
     ${(props) => props.border.topLeft} ${(props) => props.border.topLeft}
   );
-`;
 
-BaseBox.defaultProps = {};
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 
 interface BoxBorder {
   topLeft: string;
@@ -68,8 +71,6 @@ interface BoxProps {
 const ShadowBox = ({
   children,
   className,
-  width = " 100%",
-  height = "100%",
   color = "rgba(0, 0, 0, 0.5)",
   border = {
     bottomLeft: "8px",
@@ -79,7 +80,7 @@ const ShadowBox = ({
   },
 }: BoxProps) => (
   <div className={className}>
-    <BaseBox width={width} height={height} color={color} border={border}>
+    <BaseBox width="100%" height="100%" color={color} border={border}>
       {children}
     </BaseBox>
   </div>
@@ -87,6 +88,8 @@ const ShadowBox = ({
 
 //TODO: Figure out how to add shadow to the boxes
 export const Box = styled(ShadowBox)`
+  width: ${(props) => props.width};
+  height: ${(props) => props.height};
   filter: drop-shadow(
     ${(props) => props.shadow} ${(props) => props.shadow} 0px rgba(0, 0, 0, 0.42)
   );
@@ -94,4 +97,6 @@ export const Box = styled(ShadowBox)`
 
 Box.defaultProps = {
   shadow: "8px",
+  width: "fit-content",
+  height: "fit-content",
 };
