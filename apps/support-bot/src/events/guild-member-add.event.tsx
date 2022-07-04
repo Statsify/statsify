@@ -19,7 +19,11 @@ import {
   MessageService,
 } from "@statsify/discord";
 import { Service } from "typedi";
+import { WelcomeProfile } from "#lib/welcomer.profile";
 import { config } from "@statsify/util";
+import { getBackground } from "@statsify/assets";
+import { loadImage, render } from "@statsify/rendering";
+import type { Image } from "skia-canvas";
 
 @Service()
 export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberAdd> {
@@ -45,7 +49,39 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
       ? await this.sendVerifiedMessage(data)
       : await this.sendUnverifiedMessage(data);
 
+    const [avatar, background] = await Promise.all([
+      this.getDiscordAvatar(data),
+      getBackground("bedwars", "overall"),
+    ]);
+
+    const username = data.user!.username;
+
+    const canvas = render(
+      <WelcomeProfile avatar={avatar} username={username} background={background} />
+    );
+
+    const buffer = await canvas.toBuffer("png");
+
+    message.files = [
+      { name: `welcome-${username}.png`, data: buffer, type: "image/png" },
+    ];
+
     await this.messageService.send(config("supportBot.welcomeChannel"), message);
+  }
+
+  private getDiscordAvatar(member: APIGuildMember): Promise<Image> {
+    const avatar = member.user?.avatar ?? member.avatar;
+
+    if (avatar)
+      return loadImage(
+        `https://cdn.discordapp.com/avatars/${member.user!.id}/${avatar}.png?size=96`
+      );
+
+    return loadImage(
+      `https://cdn.discordapp.com/embed/avatars/${
+        Number(member.user!.discriminator) % 5
+      }.png?size=96`
+    );
   }
 
   private async sendVerifiedMessage(member: APIGuildMember): Promise<IMessage> {
@@ -61,10 +97,19 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
   }
 
   private async sendUnverifiedMessage(member: APIGuildMember): Promise<IMessage> {
+    const unverifiedChannel = config("supportBot.unverifiedChannel");
+
+    //TODO: write a better message explaining verification or maybe show the gif once its ready
+    this.messageService.send(unverifiedChannel, {
+      content: `<@${
+        member.user!.id
+      }>, Run /verify to get access to the rest of the server`,
+    });
+
     return {
-      content: `<@${member.user!.id}>, Head over to <#${config(
-        "supportBot.unverifiedChannel"
-      )}> and follow the instructions in order to verify yourself.`,
+      content: `<@${
+        member.user!.id
+      }>, Head over to <#${unverifiedChannel}> and follow the instructions in order to verify yourself.`,
     };
   }
 }

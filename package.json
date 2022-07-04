@@ -36,7 +36,7 @@
   },
   "scripts": {
     "build": "turbo run build --parallel --cache-dir='.turbo'",
-    "build:watch": "yarn build && yarn scripts build-watch",
+    "build:watch": "yarn build --force && yarn scripts build-watch",
     "test:types": "turbo run test:types --cache-dir='.turbo'",
     "test": "turbo run test --parallel --cache-dir='.turbo'",
     "test:coverage": "turbo run test:coverage --parallel --cache-dir='.turbo'",

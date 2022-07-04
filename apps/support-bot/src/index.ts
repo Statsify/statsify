@@ -15,13 +15,14 @@ import {
   EventLoader,
   I18nLoaderService,
 } from "@statsify/discord";
-import { GatewayIntentBits } from "discord-api-types/v10";
 import {
+  FontLoaderService,
   HypixelStatusService,
   MongoLoaderService,
   TagService,
   TicketService,
 } from "#services";
+import { GatewayIntentBits } from "discord-api-types/v10";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { config } from "@statsify/util";
 import { join } from "node:path";
@@ -48,8 +49,8 @@ async function bootstrap() {
   Container.set(RestClient, rest);
 
   await Promise.all(
-    [I18nLoaderService, MongoLoaderService, HypixelStatusService].map((service) =>
-      Container.get(service).init()
+    [I18nLoaderService, FontLoaderService, MongoLoaderService, HypixelStatusService].map(
+      (service) => Container.get(service).init()
     )
   );
 
@@ -77,8 +78,8 @@ async function bootstrap() {
 
   await EventLoader.load(websocket, join(__dirname, "./events"));
   const listener = CommandListener.create(websocket, rest, commands);
+  Container.get(TicketService).init();
 
-  await Container.get(TicketService).init();
   await listener.listen();
 }
 
