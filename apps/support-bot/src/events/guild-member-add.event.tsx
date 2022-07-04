@@ -91,6 +91,8 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
       config("supportBot.memberRole")
     );
 
+    await this.apiService.updateUser(member.user!.id, { serverMember: true });
+
     return {
       content: `<@${member.user!.id}>, Welcome to the server`,
     };

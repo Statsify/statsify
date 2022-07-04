@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractEventListener } from "@statsify/discord";
+import { AbstractEventListener, ApiService } from "@statsify/discord";
 import {
   GatewayDispatchEvents,
   GatewayGuildMemberRemoveDispatchData,
@@ -19,7 +19,10 @@ import { config } from "@statsify/util";
 export class GuildMemberRemoveEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberRemove> {
   public event = GatewayDispatchEvents.GuildMemberRemove as const;
 
-  public constructor(private readonly ticketService: TicketService) {
+  public constructor(
+    private readonly ticketService: TicketService,
+    private readonly apiService: ApiService
+  ) {
     super();
   }
 
@@ -28,6 +31,8 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
     if (guildId !== config("supportBot.guild")) return;
 
     const memberId = data.user.id;
+
+    await this.apiService.updateUser(memberId, { serverMember: true });
 
     await this.ticketService.close(
       memberId,
