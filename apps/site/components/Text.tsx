@@ -51,6 +51,7 @@ export const Text = ({ size = 2, children }: TextProps) => {
   if (typeof children !== "string") children = children.join("\n");
   if (!children.startsWith("§")) children = `§0${children}`;
 
+  //TODO: load the minecraft font somewhere
   let style: CSSProperties = {
     fontFamily: "Minecraft",
     fontSize: `${size * 10}px`,
