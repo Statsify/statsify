@@ -7,10 +7,13 @@
  */
 
 import { Box } from "../components/Box";
+import { Text } from "../components/Text";
 
 const Index = () => (
   <div>
-    <Box>Hello World</Box>
+    <Box width="50%">
+      <Text size={4}>§cStatsify</Text>
+    </Box>
   </div>
 );
 

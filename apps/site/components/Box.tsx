@@ -9,53 +9,89 @@
 import React, { type ReactNode } from "react";
 import styled from "styled-components";
 
-const background = `rgba(0, 0, 0, 0.5)`;
-
-const border = {
-  topLeft: "4px",
-  topRight: "4px",
-  bottomRight: "4px",
-  bottomLeft: "4px",
-};
-
-const width = "100%";
-const height = "100%";
-
-const BaseBox = styled.div`
-  background: ${background};
-  width: ${width};
-  height: ${height};
-  padding-left: max(${border.topLeft}, ${border.bottomLeft});
-  padding-right: max(${border.topRight}, ${border.bottomRight});
+const BaseBox = styled.div<Required<Omit<BoxProps, "className" | "children" | "shadow">>>`
+  background-color: ${(props) => props.color};
+  width: ${(props) => props.width};
+  height: ${(props) => props.width};
+  padding-left: calc(
+    max(${(props) => props.border.topLeft}, ${(props) => props.border.bottomLeft}) + 5px
+  );
+  padding-right: calc(
+    max(${(props) => props.border.topRight}, ${(props) => props.border.bottomRight}) + 5px
+  );
+  padding-top: calc(
+    max(${(props) => props.border.topRight}, ${(props) => props.border.topLeft})
+  );
+  padding-bottom: calc(
+    max(${(props) => props.border.bottomRight}, ${(props) => props.border.bottomLeft})
+  );
   clip-path: polygon(
-    calc(0px + ${border.topLeft}) 0px,
-    calc(0px + ${width} - ${border.topRight}) 0px,
-    calc(0px + ${width} - ${border.topRight}) calc(0px + ${border.topRight}),
-    calc(0px + ${width}) calc(0px + ${border.topRight}),
-    calc(0px + ${width}) calc(0px + ${height} - ${border.bottomRight}),
-    calc(0px + ${width} - ${border.bottomRight})
-      calc(0px + ${height} - ${border.bottomRight}),
-    calc(0px + ${width} - ${border.bottomRight}) calc(0px + ${height}),
-    calc(0px + ${border.bottomLeft}) calc(0px + ${height}),
-    calc(0px + ${border.bottomLeft}) calc(0px + ${height} - ${border.bottomLeft}),
-    0px calc(0px + ${height} - ${border.bottomLeft}),
-    0px calc(0px + ${border.topLeft}),
-    calc(0px + ${border.topLeft}) calc(0px + ${border.topLeft})
+    ${(props) => props.border.topLeft} 0px,
+    calc(${(props) => props.width} - ${(props) => props.border.topRight}) 0px,
+    calc(${(props) => props.width} - ${(props) => props.border.topRight})
+      ${(props) => props.border.topRight},
+    ${(props) => props.width} ${(props) => props.border.topRight},
+    ${(props) => props.width}
+      calc(${(props) => props.height} - ${(props) => props.border.bottomRight}),
+    calc(${(props) => props.width} - ${(props) => props.border.bottomRight})
+      calc(${(props) => props.height} - ${(props) => props.border.bottomRight}),
+    calc(${(props) => props.width} - ${(props) => props.border.bottomRight})
+      ${(props) => props.height},
+    ${(props) => props.border.bottomLeft} ${(props) => props.height},
+    ${(props) => props.border.bottomLeft}
+      calc(${(props) => props.height} - ${(props) => props.border.bottomLeft}),
+    0px calc(${(props) => props.height} - ${(props) => props.border.bottomLeft}),
+    0px ${(props) => props.border.topLeft},
+    ${(props) => props.border.topLeft} ${(props) => props.border.topLeft}
   );
 `;
 
-const ShadowBox = ({
-  className,
-  children,
-}: {
-  className?: string;
+BaseBox.defaultProps = {};
+
+interface BoxBorder {
+  topLeft: string;
+  topRight: string;
+  bottomRight: string;
+  bottomLeft: string;
+}
+
+interface BoxProps {
   children: ReactNode;
-}) => (
+  className?: string;
+  width?: string;
+  height?: string;
+  border?: BoxBorder;
+  color?: string;
+  shadow?: string;
+}
+
+const ShadowBox = ({
+  children,
+  className,
+  width = " 100%",
+  height = "100%",
+  color = "rgba(0, 0, 0, 0.5)",
+  border = {
+    bottomLeft: "8px",
+    bottomRight: "8px",
+    topLeft: "8px",
+    topRight: "8px",
+  },
+}: BoxProps) => (
   <div className={className}>
-    <BaseBox>{children}</BaseBox>
+    <BaseBox width={width} height={height} color={color} border={border}>
+      {children}
+    </BaseBox>
   </div>
 );
 
+//TODO: Figure out how to add shadow to the boxes
 export const Box = styled(ShadowBox)`
-  filter: drop-shadow(4px 4px 0px rgba(0, 0, 0, 0.42));
+  filter: drop-shadow(
+    ${(props) => props.shadow} ${(props) => props.shadow} 0px rgba(0, 0, 0, 0.42)
+  );
 `;
+
+Box.defaultProps = {
+  shadow: "8px",
+};
