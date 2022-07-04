@@ -6,15 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import styled from "styled-components";
-
-const Button = styled.button`
-  background-color: #f00;
-`;
+import { Box } from "../components/Box";
 
 const Index = () => (
   <div>
-    <Button>Hello World</Button>
+    <Box>Hello World</Box>
   </div>
 );
 
