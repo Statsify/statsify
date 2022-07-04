@@ -14,13 +14,7 @@ const Button = styled.button`
 
 const Index = () => (
   <div>
-    <Button
-      onClick={() => {
-        console.log("clicked");
-      }}
-    >
-      Hello World
-    </Button>
+    <Button>Hello World</Button>
   </div>
 );
 
