@@ -13,28 +13,28 @@ import type { AppProps } from "next/app";
 const GlobalStyle = createGlobalStyle`
    @font-face {
      font-family: "Minecraft";
-     src: url('../public/minecraft.otf');
+     src: url('/fonts/minecraft.otf');
      font-weight: normal;
      font-style: normal;
    }
 
    @font-face {
      font-family: "Minecraft";
-     src: url('../public/minecraft-bold.otf');
+     src: url('/fonts/minecraft-bold.otf');
      font-weight: bold;
      font-style: normal;
    }
 
    @font-face {
      font-family: "Minecraft";
-     src: url('../public/minecraft-italic.otf');
+     src: url('/fonts/minecraft-italic.otf');
      font-weight: normal;
      font-style: italic;
    }
 
    @font-face {
      font-family: "Minecraft";
-     src: url('../public/minecraft-bold-italic.otf');
+     src: url('/fonts/minecraft-bold-italic.otf');
      font-weight: bold;
      font-style: italic;
    }
