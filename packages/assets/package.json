@@ -11,7 +11,9 @@
   "dependencies": {
     "@statsify/logger": "workspace:^",
     "@statsify/rendering": "workspace:^",
-    "@statsify/schemas": "workspace:^",
+    "@statsify/schemas": "workspace:^"
+  },
+  "devDependencies": {
     "skia-canvas": "^0.9.30"
   }
 }

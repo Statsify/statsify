@@ -22,7 +22,9 @@
     "@sentry/node": "^7.3.0",
     "@statsify/util": "workspace:^",
     "axios": "^0.27.2",
-    "skia-canvas": "^0.9.30",
     "typedi": "^0.10.0"
+  },
+  "devDependencies": {
+    "skia-canvas": "^0.9.30"
   }
 }

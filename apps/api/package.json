@@ -36,11 +36,11 @@
     "mongoose": "^6.4.0",
     "point-of-view": "^5.3.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.5.5",
-    "skia-canvas": "^0.9.30"
+    "rxjs": "^7.5.5"
   },
   "devDependencies": {
     "@nestjs/testing": "^8.4.7",
-    "@types/cron": "^2.0.0"
+    "@types/cron": "^2.0.0",
+    "skia-canvas": "^0.9.30"
   }
 }
