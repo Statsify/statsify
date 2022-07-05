@@ -90,9 +90,9 @@ const ShadowBox = ({
 export const Box = styled(ShadowBox)`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
-  filter: drop-shadow(
+  /* filter: drop-shadow(
     ${(props) => props.shadow} ${(props) => props.shadow} 0px rgba(0, 0, 0, 0.42)
-  );
+  ); */
 `;
 
 Box.defaultProps = {

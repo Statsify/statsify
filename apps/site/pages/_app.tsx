@@ -7,6 +7,7 @@
  */
 
 import Head from "next/head";
+import { Layout } from "../components/Layout";
 import { createGlobalStyle } from "styled-components";
 import type { AppProps } from "next/app";
 
@@ -39,12 +40,21 @@ const GlobalStyle = createGlobalStyle`
      font-style: italic;
    }
 
-   html, body {
+   html, body, #__next {
      margin: 0;
      padding: 0;
      width: 100%;
      height: 100%;
      background-color: #1d1d1d;
+   }
+
+   #__next  {
+    display: flex;
+    flex-direction: column;
+   }
+
+   main {
+    flex: 1;
    }
  `;
 
@@ -57,7 +67,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta content="#187ccd" name="theme-color" />
       </Head>
       <GlobalStyle />
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </>
   );
 }
