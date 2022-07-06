@@ -25,7 +25,16 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Bot",
+      "name": "Discord Bot",
+      "runtimeExecutable": "yarn",
+      "cwd": "${workspaceFolder}",
+      "runtimeArgs": ["discord-bot", "start"],
+      "outputCapture": "std"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Support Bot",
       "runtimeExecutable": "yarn",
       "cwd": "${workspaceFolder}",
       "runtimeArgs": ["discord-bot", "start"],

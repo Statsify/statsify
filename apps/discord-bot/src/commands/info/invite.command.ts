@@ -7,18 +7,18 @@
  */
 
 import { Command, EmbedBuilder, IMessage } from "@statsify/discord";
-import { INFO_COLOR } from "#constants";
+import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { getLogoPath } from "@statsify/assets";
 import { readFile } from "node:fs/promises";
 
-@Command({ description: (t) => t("commands.info") })
+@Command({ description: (t) => t("commands.invite") })
 export class InviteCommand {
   public async run(): Promise<IMessage> {
     const embed = new EmbedBuilder()
       .title((t) => t("embeds.invite.title"))
-      .color(INFO_COLOR)
+      .color(STATUS_COLORS.info)
       .description((t) => {
         const description = t("embeds.invite.description");
 

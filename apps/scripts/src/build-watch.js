@@ -7,12 +7,15 @@
  */
 
 import { FILE_ENDINGS, FILE_ENDING_REGEX, ROOT, fetchWorkspaces } from "./utils.js";
-import { basename, join } from "node:path";
+import { basename, dirname, join } from "node:path";
 import { createRequire } from "node:module";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { mkdir, rm, writeFile } from "node:fs/promises";
-import { transform } from "@swc/core";
+import { transformFile } from "@swc/core";
 import { watch } from "chokidar";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const require = createRequire(import.meta.url);
 const { Logger } = require("@statsify/logger");
@@ -82,10 +85,9 @@ async function handleFile(path) {
   if (!configFile) return;
 
   try {
-    const file = readFileSync(path, { encoding: "utf8" });
-    if (!file) return;
-
-    let { code, map } = await transform(file, { configFile });
+    let { code, map } = await transformFile(path, {
+      swcrc: true,
+    });
 
     const srcFileName = basename(path);
     const distFileName = srcFileName.replace(FILE_ENDING_REGEX, ".js");

@@ -20,13 +20,13 @@ export class I18nLoaderService {
 
   public async init() {
     this.languages = await readdir("../../locales");
-    this.namespaces = (
-      await readdir(`../../locales/${this.DEFAULT_LANGUAGE}/discord-bot`)
-    ).map((p) => p.replace(".json", ""));
+    this.namespaces = (await readdir(`../../locales/${this.DEFAULT_LANGUAGE}/`)).map(
+      (p) => p.replace(".json", "")
+    );
 
     await i18next.use(Backend).init({
       backend: {
-        loadPath: "../../locales/{{lng}}/discord-bot/{{ns}}.json",
+        loadPath: "../../locales/{{lng}}/{{ns}}.json",
       },
       debug: false,
       fallbackLng: this.DEFAULT_LANGUAGE,

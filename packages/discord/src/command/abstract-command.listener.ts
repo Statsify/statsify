@@ -15,9 +15,11 @@ import {
 } from "discord-api-types/v10";
 import { CommandContext } from "./command.context";
 import { CommandResolvable } from "./command.resolvable";
+import { ErrorMessage } from "../util/error.message";
 import { Interaction } from "../interaction";
 import { Logger } from "@statsify/logger";
 import { Message } from "../messages";
+import { User, UserTier } from "@statsify/schemas";
 import type {
   Interaction as DiscordInteraction,
   InteractionResponse,
@@ -31,6 +33,13 @@ export type InteractionHook = (
 ) => InteractionResponse | void | Promise<any>;
 
 export type CommandPrecondition = () => void;
+
+export interface ExecuteCommandOptions {
+  command: CommandResolvable;
+  context: CommandContext;
+  preconditions?: CommandPrecondition[];
+  response?: InteractionResponse;
+}
 
 export abstract class AbstractCommandListener {
   protected hooks: Map<string, InteractionHook>;
@@ -114,11 +123,12 @@ export abstract class AbstractCommandListener {
     return [command, data, name];
   }
 
-  protected executeCommand(
-    command: CommandResolvable,
-    context: CommandContext,
-    ...preconditions: CommandPrecondition[]
-  ) {
+  protected executeCommand({
+    command,
+    context,
+    preconditions = [],
+    response = { type: InteractionResponseType.DeferredChannelMessageWithSource },
+  }: ExecuteCommandOptions) {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     try {
@@ -164,9 +174,17 @@ export abstract class AbstractCommandListener {
       transaction?.finish();
     }
 
-    return {
-      type: InteractionResponseType.DeferredChannelMessageWithSource,
-    };
+    return response;
+  }
+
+  protected tierPrecondition(command: CommandResolvable, user: User | null) {
+    if (!command.tier) return;
+    if (!user) throw new ErrorMessage("errors.missingSelfVerification");
+    if ((user.tier ?? UserTier.NONE) < command.tier) {
+      throw new ErrorMessage(
+        `errors.${User.getTierName(command.tier).toLowerCase()}Only`
+      );
+    }
   }
 
   protected onMessageComponent(interaction: Interaction): InteractionResponse {

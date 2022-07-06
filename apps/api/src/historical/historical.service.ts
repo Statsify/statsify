@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Cron, CronExpression } from "@nestjs/schedule";
+import { AsyncTask, SimpleIntervalJob } from "toad-scheduler";
 import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
 import { Flatten, flatten } from "@statsify/util";
 import { HistoricalType, HypixelCache } from "@statsify/api-client";
@@ -18,23 +18,29 @@ import { ReturnModelType } from "@typegoose/typegoose";
 import { isObject } from "class-validator";
 import { ratio, sub } from "@statsify/math";
 
+type PlayerModel = ReturnModelType<typeof Player>;
+
 @Injectable()
 export class HistoricalService {
   private readonly logger = new Logger("HistoricalService");
+  private readonly job: SimpleIntervalJob;
 
   public constructor(
     private readonly playerService: PlayerService,
-    @InjectModel(Daily) private readonly dailyModel: ReturnModelType<typeof Player>,
-    @InjectModel(Weekly) private readonly weeklyModel: ReturnModelType<typeof Player>,
-    @InjectModel(Monthly) private readonly monthlyModel: ReturnModelType<typeof Player>,
-    @InjectModel(LastDay) private readonly lastDayModel: ReturnModelType<typeof Player>,
-    @InjectModel(LastWeek) private readonly lastWeekModel: ReturnModelType<typeof Player>,
-    @InjectModel(LastMonth)
-    private readonly lastMonthModel: ReturnModelType<typeof Player>
-  ) {}
+    @InjectModel(Daily) private readonly dailyModel: PlayerModel,
+    @InjectModel(Weekly) private readonly weeklyModel: PlayerModel,
+    @InjectModel(Monthly) private readonly monthlyModel: PlayerModel,
+    @InjectModel(LastDay) private readonly lastDayModel: PlayerModel,
+    @InjectModel(LastWeek) private readonly lastWeekModel: PlayerModel,
+    @InjectModel(LastMonth) private readonly lastMonthModel: PlayerModel
+  ) {
+    const task = new AsyncTask("historicalReset", this.resetPlayers.bind(this));
+    this.job = new SimpleIntervalJob({ minutes: 1 }, task);
+    this.job.start();
+  }
 
-  @Cron(CronExpression.EVERY_MINUTE)
   public async resetPlayers() {
+    this.logger.debug("Resetting players");
     const date = new Date();
     const minute = this.getMinute(date);
 
@@ -77,8 +83,8 @@ export class HistoricalService {
     const doc = serialize(Player, flatPlayer);
 
     const reset = async (
-      model: ReturnModelType<typeof Player>,
-      lastModel: ReturnModelType<typeof Player>,
+      model: PlayerModel,
+      lastModel: PlayerModel,
       doc: Flatten<Player>
     ) => {
       //findOneAndReplace doesn't unflatten the document so findOne and replaceOne need to be used separately

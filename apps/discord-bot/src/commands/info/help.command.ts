@@ -7,7 +7,7 @@
  */
 
 import { Command, EmbedBuilder, IMessage } from "@statsify/discord";
-import { INFO_COLOR } from "#constants";
+import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
 import { getLogoPath } from "@statsify/assets";
 import { readFile } from "node:fs/promises";
@@ -37,7 +37,7 @@ export class HelpCommand {
         (t) => t("embeds.help.misc.title"),
         (t) => t("embeds.help.misc.description")
       )
-      .color(INFO_COLOR)
+      .color(STATUS_COLORS.info)
       .thumbnail("attachment://logo.png");
 
     const logo = await readFile(getLogoPath(UserTier.NONE, 64));

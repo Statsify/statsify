@@ -7,7 +7,7 @@
  */
 
 import { Command, EmbedBuilder } from "@statsify/discord";
-import { INFO_COLOR } from "#constants";
+import { STATUS_COLORS } from "@statsify/logger";
 import { hexToRgb, mcShadow, rgbToHex } from "@statsify/rendering";
 import { minecraftColors } from "@statsify/util";
 
@@ -49,7 +49,7 @@ export class ColorsCommand {
 
         return desc;
       })
-      .color(INFO_COLOR);
+      .color(STATUS_COLORS.info);
 
     return {
       embeds: [embed],

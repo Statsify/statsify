@@ -41,4 +41,26 @@ export class Message {
       tts: this.tts,
     };
   }
+
+  public toAPI(locale: LocalizeFunction) {
+    const data = this.build(locale);
+
+    const res = {
+      content: data.content,
+      tts: data.tts,
+      flags: data.ephemeral ? 1 << 6 : undefined,
+      allowed_mentions: data.mentions,
+      embeds: data.embeds,
+      attachments: data.attachments,
+      components: data.components,
+    };
+
+    if (data.files)
+      return {
+        files: data.files,
+        payload_json: res,
+      };
+
+    return res;
+  }
 }

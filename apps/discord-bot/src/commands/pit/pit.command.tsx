@@ -6,14 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService, PitPandaService } from "#services";
 import {
+  ApiService,
   Command,
   CommandContext,
   PaginateService,
   PlayerArgument,
 } from "@statsify/discord";
 import { PIT_MODES } from "@statsify/schemas";
+import { PitPandaService } from "#services";
 import { PitProfile } from "./pit.profile";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
