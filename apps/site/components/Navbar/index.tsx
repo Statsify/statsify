@@ -16,13 +16,18 @@ const StyledNav = styled.nav`
   color: white;
   font-family: "Lexend Deca";
   justify-content: space-between;
+  align-items: center;
+`;
+
+const Branding = styled.div`
+  margin: 10px;
 `;
 
 export const Navbar = () => (
   <StyledNav>
-    <div>
+    <Branding>
       <h1>Statsify</h1>
-    </div>
+    </Branding>
     <NavItems>
       <NavItem href="/google">About Us</NavItem>
       <NavItem href="/google">About Us</NavItem>

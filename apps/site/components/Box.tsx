@@ -11,7 +11,9 @@ import styled from "styled-components";
 
 const shadowColor = "rgba(0, 0, 0, 0.42)";
 
-type BaseBoxProps = Required<Omit<BoxProps, "className" | "children" | "shadow">>;
+type BaseBoxProps = Required<
+  Omit<BoxProps, "className" | "children" | "shadow" | "margin">
+>;
 
 const BaseBox = styled.div<BaseBoxProps>`
   background-color: ${(props) => props.color};
@@ -72,11 +74,12 @@ interface BoxProps {
   border?: BoxBorder;
   color?: string;
   shadow?: string;
+  margin?: string;
 }
 
-type ShadowRightBoxProps = Required<Omit<BoxProps, "className" | "children" | "width">>;
-
-// prettier-ignore
+type ShadowRightBoxProps = Required<
+  Omit<BoxProps, "className" | "children" | "width" | "margin">
+>;
 
 const ShadowRightBox = styled.div<ShadowRightBoxProps>`
   min-width: ${(props) => props.shadow};
@@ -85,14 +88,15 @@ const ShadowRightBox = styled.div<ShadowRightBoxProps>`
   padding: 0;
   clip-path: polygon(
     0 calc(${(props) => props.shadow} + ${(props) => props.border.topRight}),
-    ${(props) => props.shadow} calc(${(props) => props.shadow} + ${(props) => props.border.topRight}),
+    ${(props) => props.shadow}
+      calc(${(props) => props.shadow} + ${(props) => props.border.topRight}),
     ${(props) => props.shadow} ${(props) => props.height},
     0 ${(props) => props.height}
   );
 `;
 
 type CornerShadowBoxProps = Required<
-  Omit<BoxProps, "className" | "children" | "width" | "height">
+  Omit<BoxProps, "className" | "children" | "width" | "height" | "margin">
 >;
 
 const CornerShadow = styled.div<CornerShadowBoxProps>`
@@ -117,7 +121,7 @@ const BoxWithRightShadow = ({
   border,
   shadow,
   color,
-}: Required<Omit<BoxProps, "width" | "height" | "className">> & {
+}: Required<Omit<BoxProps, "width" | "height" | "className" | "margin">> & {
   className?: string;
 }) => (
   <div className={className}>
@@ -136,7 +140,9 @@ export const StyledBoxWithRightShadow = styled(BoxWithRightShadow)`
   position: relative;
 `;
 
-type ShadowBottomBoxProps = Required<Omit<BoxProps, "className" | "children" | "height">>;
+type ShadowBottomBoxProps = Required<
+  Omit<BoxProps, "className" | "children" | "height" | "margin">
+>;
 
 const ShadowBottomBox = styled.div<ShadowBottomBoxProps>`
   width: ${(props) => props.width};
@@ -184,9 +190,12 @@ export const Box = styled(BoxWithRightShadowAndBottomShadow)`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+
+  margin: ${(props) => props.margin};
 `;
 
 Box.defaultProps = {
   width: "fit-content",
   height: "fit-content",
+  margin: "4px",
 };

@@ -31,7 +31,7 @@ export const NavItem = ({ href, children }: NavItemProps) => (
 
 export const NavItems = styled.ul`
   list-style-type: none;
-  margin: 0;
+  margin: 10px;
   padding: 0;
   display: flex;
   flex-direction: row;
