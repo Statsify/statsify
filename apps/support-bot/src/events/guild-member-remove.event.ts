@@ -32,7 +32,7 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
 
     const memberId = data.user.id;
 
-    await this.apiService.updateUser(memberId, { serverMember: true });
+    await this.apiService.updateUser(memberId, { serverMember: false });
 
     await this.ticketService.close(
       memberId,

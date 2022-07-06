@@ -12,3 +12,4 @@ export * from "./api.service";
 export * from "./message.service";
 export * from "./channel.service";
 export * from "./member.service";
+export * from "./guild.service";

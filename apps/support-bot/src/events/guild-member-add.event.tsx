@@ -7,6 +7,7 @@
  */
 
 import {
+  APIGuild,
   APIGuildMember,
   GatewayDispatchEvents,
   GatewayGuildMemberAddDispatchData,
@@ -14,6 +15,7 @@ import {
 import {
   AbstractEventListener,
   ApiService,
+  GuildService,
   IMessage,
   MemberService,
   MessageService,
@@ -29,8 +31,11 @@ import type { Image } from "skia-canvas";
 export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberAdd> {
   public event = GatewayDispatchEvents.GuildMemberAdd as const;
 
+  private guild: APIGuild;
+
   public constructor(
     private readonly apiService: ApiService,
+    private readonly guildService: GuildService,
     private readonly messageService: MessageService,
     private readonly roleService: MemberService
   ) {
@@ -40,6 +45,12 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
   public async onEvent(data: GatewayGuildMemberAddDispatchData): Promise<void> {
     const guildId = data.guild_id;
     if (guildId !== config("supportBot.guild")) return;
+
+    if (!this.guild) {
+      this.guild = await this.guildService.get(guildId);
+    } else {
+      this.guild.approximate_member_count!++;
+    }
 
     const memberId = data.user!.id;
 
@@ -57,7 +68,12 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
     const username = data.user!.username;
 
     const canvas = render(
-      <WelcomeProfile avatar={avatar} username={username} background={background} />
+      <WelcomeProfile
+        memberCount={this.guild.approximate_member_count ?? 0}
+        avatar={avatar}
+        username={username}
+        background={background}
+      />
     );
 
     const buffer = await canvas.toBuffer("png");

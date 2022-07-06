@@ -154,7 +154,7 @@ export class CommandListener extends AbstractCommandListener {
     commandName: string,
     interaction: Interaction
   ): InteractionResponse {
-    const TIP_CHANCE = 1;
+    const TIP_CHANCE = 0.2;
 
     const defaultResponse = {
       type: InteractionResponseType.DeferredChannelMessageWithSource,

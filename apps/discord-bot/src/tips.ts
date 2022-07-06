@@ -24,7 +24,10 @@ export interface Tip {
 }
 
 export const tips: Tip[] = [
-  { message: { content: (t) => t("tips.discord") } },
+  {
+    message: { content: (t) => t("tips.discord") },
+    eligible: (user) => Boolean(user?.serverMember),
+  },
   {
     message: { content: (t) => t("tips.verify") },
     eligible: (user) => Boolean(user?.uuid),
