@@ -7,7 +7,7 @@
  */
 
 import axios, { AxiosInstance } from "axios";
-import { ApiService } from "./api.service";
+import { ApiService } from "@statsify/discord";
 import { Service } from "typedi";
 import { User } from "@statsify/schemas";
 import { randomUUID } from "node:crypto";

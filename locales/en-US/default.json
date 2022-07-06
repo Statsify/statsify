@@ -283,6 +283,28 @@
     },
     "gtbhelper": {
       "title": "Possible GTB Solutions"
+    },
+    "forceUnverify": {
+      "title": "Force Unverified",
+      "description": "<@{{id}}> has been unverified from {{displayName}}"
+    },
+    "forceVerify": {
+      "title": "Force Verified",
+      "description": "<@{{id}}> has been verified to {{displayName}}"
+    },
+    "deletePlayer": {
+      "title": "Player Deleted",
+      "description": "{{displayName}} has been removed from the database and leaderboards"
+    },
+    "tags": {
+      "deleted": {
+        "title": "Successfully Deleted Tag",
+        "description": "`{{tag}}` has been deleted"
+      },
+      "rename": {
+        "title": "Successfully Renamed Tag",
+        "description": "`{{originalName}}` has been renamed to `{{newName}}`"
+      }
     }
   },
   "commands": {
@@ -376,9 +398,9 @@
       "title": "Missing Verification",
       "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account"
     },
-    "missingSelfPremium": {
-      "title": "Missing Premium",
-      "description": "You are not a premium."
+    "missingPlayerVerification": {
+      "title": "Missing Verification",
+      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account"
     },
     "invalidGuild": {
       "title": "Invalid Guild",
@@ -443,6 +465,34 @@
     "invalidResetTimezone": {
       "title": "Invalid Reset Timezone",
       "description": "`{{timezone}}` is not a valid timezone. Enter a timezone similar to `EST` or `PST`"
+    },
+    "premiumOnly": {
+      "title": "Missing Premium",
+      "description": "You are not a premium."
+    },
+    "staffOnly": {
+      "title": "Staff Only",
+      "description": "This command is only available to staff members"
+    },
+    "coreOnly": {
+      "title": "$t(errors.staffOnly.title)",
+      "description": "$t(errors.staffOnly.description)"
+    },
+    "ticketAlreadyExists": {
+      "title": "Ticket Already Exists",
+      "description": "You already have a ticket open here!"
+    },
+    "invalidTicketChannel": {
+      "title": "Invalid Ticket Channel",
+      "description": "You must be in a ticket channel to use this command"
+    },
+    "invalidTagName": {
+      "title": "Invalid Tag Name",
+      "description": "The tag name you provided is invalid. It is not possible to create a slash command with this tag name."
+    },
+    "tagNotFound": {
+      "title": "Tag Not Found",
+      "description": "The tag you provided was not found."
     }
   },
   "leaderboard": {
@@ -474,11 +524,15 @@
   },
   "socials": {
     "invite": "[Invite](https://discord.com/oauth2/authorize?client_id={{id}}&permissions=388168&scope=applications.commands%20bot&response_type=code&redirect_uri=https%3A%2F%2Fstatsify.net%2Fbot%2Fthanks)",
-    "discord": "[Discord](https://discord.com/invite/5VgxMQY)",
+    "discord": "[Discord](<https://discord.com/invite/5VgxMQY>)",
     "premium": "[Premium](https://statsify.net/premium)",
     "website": "[Website](https://statsify.net/)",
     "forums": "[Forums](https://statsify.net/forums)",
     "github": "[GitHub](https://github.com/Statsify/statsify)"
+  },
+  "tips": {
+    "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get 20% lower cooldowns $t(emojis:heart)",
+    "verify": "Run `/verify` to be able to run commands without inputting your username as well as  get 10% lower cooldowns"
   },
   "number": "{{value, number}}"
 }

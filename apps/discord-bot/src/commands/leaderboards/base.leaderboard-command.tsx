@@ -10,6 +10,7 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   CommandContext,
+  ErrorMessage,
   IMessage,
   Interaction,
   ModalBuilder,
@@ -17,7 +18,6 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle, InteractionResponseType } from "discord-api-types/v10";
 import { CommandListener } from "#lib/command.listener";
-import { ErrorMessage } from "#lib/error.message";
 import {
   LeaderboardProfile,
   LeaderboardProfileProps,
@@ -80,6 +80,7 @@ export class BaseLeaderboardCommand {
       .emoji(t("emojis:up"))
       .style(ButtonStyle.Success)
       .disable(true);
+
     const down = new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger);
 
     const searchDocument = new ButtonBuilder()

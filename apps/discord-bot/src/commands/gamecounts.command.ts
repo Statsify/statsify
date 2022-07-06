@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService } from "#services";
 import {
+  ApiService,
   Command,
   CommandContext,
   EmbedBuilder,
@@ -15,7 +15,8 @@ import {
   PaginateService,
 } from "@statsify/discord";
 import { FormattedGame, GameId, GamePlayers } from "@statsify/schemas";
-import { INFO_COLOR, mapGame } from "#constants";
+import { STATUS_COLORS } from "@statsify/logger";
+import { mapGame } from "#constants";
 import { removeFormatting } from "@statsify/util";
 
 @Command({
@@ -41,12 +42,12 @@ export class GameCountsCommand {
 
         const embed = new EmbedBuilder()
           .title((t) => `${name} ${t("players")}`)
-          .color(INFO_COLOR)
+          .color(STATUS_COLORS.info)
           .description(
             (t) =>
-              `${this.formatGamecount(t("stats.total"), t(players))}\n\n${list
+              `${this.formatGameCount(t("stats.total"), t(players))}\n\n${list
                 .map(([mode, players]) =>
-                  this.formatGamecount(mapGame(id, mode), t(players))
+                  this.formatGameCount(mapGame(id, mode), t(players))
                 )
                 .join("\n")}`
           );
@@ -63,7 +64,7 @@ export class GameCountsCommand {
     const list = gamecountEntries
       .sort((a, b) => b[1].players - a[1].players)
       .map(([id, { players }]) =>
-        this.formatGamecount(
+        this.formatGameCount(
           removeFormatting(FormattedGame[id]),
           t(players),
           t(`emojis:games.${id}`)
@@ -73,9 +74,9 @@ export class GameCountsCommand {
 
     const overall = new EmbedBuilder()
       .title((t) => t("embeds.gameCounts.title"))
-      .color(INFO_COLOR)
+      .color(STATUS_COLORS.info)
       .description(
-        (t) => `${this.formatGamecount(t("stats.total"), t(total))}\n\n${list}`
+        (t) => `${this.formatGameCount(t("stats.total"), t(total))}\n\n${list}`
       );
 
     const pages: Page[] = [
@@ -89,7 +90,7 @@ export class GameCountsCommand {
     return this.paginateService.paginate(context, pages);
   }
 
-  private formatGamecount(name: string, count: string, emoji?: string) {
+  private formatGameCount(name: string, count: string, emoji?: string) {
     return `\`•\` ${emoji ? `${emoji} ` : ""}**${name}**: \`${count}\``;
   }
 }

@@ -62,6 +62,7 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
   if (typeof mode === "string") {
     const path = `${pathOrGame}_${mode}_`;
     const backgrounds = getBackgroundPaths().filter((p) => p.startsWith(path));
+
     const background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
     if (!background) throw new Error(`No background found for ${pathOrGame}_${mode}`);
@@ -90,6 +91,7 @@ export const getLogoPath = (tier: UserTier = UserTier.NONE, size = 26) => {
       path = "";
       break;
     case UserTier.PREMIUM:
+    case UserTier.STAFF:
       path = "premium_";
       break;
     case UserTier.CORE:

@@ -1203,20 +1203,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/schedule@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@nestjs/schedule@npm:2.0.1"
-  dependencies:
-    cron: 2.0.0
-    uuid: 8.3.2
-  peerDependencies:
-    "@nestjs/common": ^6.10.11 || ^7.0.0 || ^8.0.0
-    "@nestjs/core": ^7.0.0 || ^8.0.0
-    reflect-metadata: ^0.1.12
-  checksum: 2819ef98fabcf90cdae1e98ca7c76cac2195b0de0c717f95afafc1df62b9c09f3353a72a942793c2b0642704a04bacb1bddaa2f3637d1e07b9f08f76e605d3f7
-  languageName: node
-  linkType: hard
-
 "@nestjs/swagger@npm:^5.2.1":
   version: 5.2.1
   resolution: "@nestjs/swagger@npm:5.2.1"
@@ -1430,6 +1416,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/core@npm:7.4.1":
+  version: 7.4.1
+  resolution: "@sentry/core@npm:7.4.1"
+  dependencies:
+    "@sentry/hub": 7.4.1
+    "@sentry/types": 7.4.1
+    "@sentry/utils": 7.4.1
+    tslib: ^1.9.3
+  checksum: ede9efaac2703d3239879237797da0dba28bc63099e827aae25bd047744838c9ac5f5ca6450848cfe790ccccb5a7bdd76dab370c20b406733e393e9972b053d0
+  languageName: node
+  linkType: hard
+
 "@sentry/hub@npm:7.3.0":
   version: 7.3.0
   resolution: "@sentry/hub@npm:7.3.0"
@@ -1438,6 +1436,17 @@ __metadata:
     "@sentry/utils": 7.3.0
     tslib: ^1.9.3
   checksum: a052a7c940e1f6af16ca2c61f1e184eaf0d7874598ec4eae3a28c8b5ea6a19cf3b89106768aaeea19deb9816bdd316ec0218764c2e66cc92a87e2e404d6e0dd6
+  languageName: node
+  linkType: hard
+
+"@sentry/hub@npm:7.4.1":
+  version: 7.4.1
+  resolution: "@sentry/hub@npm:7.4.1"
+  dependencies:
+    "@sentry/types": 7.4.1
+    "@sentry/utils": 7.4.1
+    tslib: ^1.9.3
+  checksum: ea6bc1624d8b0fe5c8e594940fd60b1bf488ef98694e539677ff8e5083e354349f69c2003c8dd45df42b439f1b1d5ab2ca2fd079e2fe419964f12e3bbb020854
   languageName: node
   linkType: hard
 
@@ -1454,6 +1463,22 @@ __metadata:
     lru_map: ^0.3.3
     tslib: ^1.9.3
   checksum: a92c2d2d1b05136b3c04f39cb87bf459519619c7e4f548f4e2a34145e868edd1ccdd505bcf5d3ff56872ea994530c263deb7ce4c498e9f4e39111c5fcacd342f
+  languageName: node
+  linkType: hard
+
+"@sentry/node@npm:^7.4.1":
+  version: 7.4.1
+  resolution: "@sentry/node@npm:7.4.1"
+  dependencies:
+    "@sentry/core": 7.4.1
+    "@sentry/hub": 7.4.1
+    "@sentry/types": 7.4.1
+    "@sentry/utils": 7.4.1
+    cookie: ^0.4.1
+    https-proxy-agent: ^5.0.0
+    lru_map: ^0.3.3
+    tslib: ^1.9.3
+  checksum: 3736aefd3f1b55fe62b426e01db2a262c8adf59123030a332b755bbb05707a697c9501ded5a7dae122aeed1ca80e37ad83ea3dbd2155f686cbfeddcfc6a6498b
   languageName: node
   linkType: hard
 
@@ -1476,6 +1501,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/types@npm:7.4.1":
+  version: 7.4.1
+  resolution: "@sentry/types@npm:7.4.1"
+  checksum: a0d98c89f8221f10e960b062dd7ad21da7cdb2b2176954d0df37e4d1d645f35ee84da242b642cdfdc0dd86908e787973cd542665bf2d6096cd732c20c10fee77
+  languageName: node
+  linkType: hard
+
 "@sentry/utils@npm:7.3.0":
   version: 7.3.0
   resolution: "@sentry/utils@npm:7.3.0"
@@ -1483,6 +1515,16 @@ __metadata:
     "@sentry/types": 7.3.0
     tslib: ^1.9.3
   checksum: 2696b1bfad1ad2e8e2aa7dd822fb0546d680b06aa302c3a8e8c8da0577fb9938da094f3eda589b2a1c216e1c84a81a5119b30136fd013de9c3a4513aece55d05
+  languageName: node
+  linkType: hard
+
+"@sentry/utils@npm:7.4.1":
+  version: 7.4.1
+  resolution: "@sentry/utils@npm:7.4.1"
+  dependencies:
+    "@sentry/types": 7.4.1
+    tslib: ^1.9.3
+  checksum: 48ead87a43ffc0abdaa49cd035ae31128cc86b89d005e7bbd55b441c6b3241a932a678a4ee6d3fb30e77ae8168c9374f1fa5c759fdf1e259b9fb29c157b53eca
   languageName: node
   linkType: hard
 
@@ -1544,8 +1586,10 @@ __metadata:
     "@statsify/assets": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
+    "@types/i18next-fs-backend": ^1.1.2
     discord-api-types: ^0.35.0
     i18next: ^21.8.10
+    i18next-fs-backend: ^1.1.4
     reflect-metadata: ^0.1.13
     tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab"
     typedi: ^0.10.0
@@ -1557,7 +1601,7 @@ __metadata:
   resolution: "@statsify/logger@workspace:packages/logger"
   dependencies:
     "@nestjs/common": ^8.4.7
-    "@sentry/node": ^7.3.0
+    "@sentry/node": ^7.4.1
     chalk: 4.1.2
   languageName: unknown
   linkType: soft
@@ -1873,16 +1917,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/cron@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@types/cron@npm:2.0.0"
-  dependencies:
-    "@types/luxon": "*"
-    "@types/node": "*"
-  checksum: 392d2cfca51504140397533c30be8facd2196251074eb26ee09232a7e983144ff1d8364cd64922ed22d142686a4724934a70672fc8353b441fea729ac0ed0611
-  languageName: node
-  linkType: hard
-
 "@types/graceful-fs@npm:^4.1.3":
   version: 4.1.5
   resolution: "@types/graceful-fs@npm:4.1.5"
@@ -1953,7 +1987,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/luxon@npm:*, @types/luxon@npm:^2":
+"@types/luxon@npm:^2":
   version: 2.3.2
   resolution: "@types/luxon@npm:2.3.2"
   checksum: b9fe79118681f4bb9f2e37696a7df992a82683ba4448e7ad1af8cc241443ffc64ef08fdeaad749de9e6259b42b0d4b6540d7e880bca39bb504e0f3863d503c98
@@ -2455,7 +2489,6 @@ __metadata:
     "@nestjs/common": ^8.4.7
     "@nestjs/core": ^8.4.7
     "@nestjs/platform-fastify": ^8.4.7
-    "@nestjs/schedule": ^2.0.1
     "@nestjs/swagger": ^5.2.1
     "@nestjs/testing": ^8.4.7
     "@sentry/node": ^7.3.0
@@ -2466,7 +2499,6 @@ __metadata:
     "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@typegoose/typegoose": ^9.9.0
-    "@types/cron": ^2.0.0
     class-transformer: 0.5.1
     class-validator: ^0.13.2
     fastify-swagger: ^5.2.0
@@ -2477,6 +2509,7 @@ __metadata:
     reflect-metadata: ^0.1.13
     rxjs: ^7.5.5
     skia-canvas: ^0.9.30
+    toad-scheduler: ^1.6.1
   languageName: unknown
   linkType: soft
 
@@ -2949,6 +2982,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chart.js@npm:^3.8.0":
+  version: 3.8.0
+  resolution: "chart.js@npm:3.8.0"
+  checksum: 0360212bf5d534effc8475a1aa705ba7257a315af368b5e8eecf476f0bd57a6bb80ad740e870d552f2d11e134dd1497ccef02950d7e626c21a400ff00ecf59af
+  languageName: node
+  linkType: hard
+
+"chartjs-skia-canvas@https://github.com/jacobk999/chartjs-skia-canvas.git":
+  version: 4.1.6
+  resolution: "chartjs-skia-canvas@https://github.com/jacobk999/chartjs-skia-canvas.git#commit=b325851b349dba653489464b4524abbc6cf00879"
+  dependencies:
+    skia-canvas: ^0.9.30
+    tslib: ^2.4.0
+  peerDependencies:
+    chart.js: ^3.5.1
+  checksum: c206ed4368ee06c1979ca0fc990cf264a25157a99ef624b42a964626642933b269ba66dc9c4691dcfd150587338cf4b662b6e227b64a9617267c001b638854f3
+  languageName: node
+  linkType: hard
+
 "chokidar@npm:^3.5.3":
   version: 3.5.3
   resolution: "chokidar@npm:3.5.3"
@@ -3324,15 +3376,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cron@npm:2.0.0":
-  version: 2.0.0
-  resolution: "cron@npm:2.0.0"
-  dependencies:
-    luxon: ^1.23.x
-  checksum: 179ec137ada4ceb44cafe51c55491e84954308d7012d2a44539f0dadbbb1ffbbe3072c2f7aaa88595d60bd56e0d536aae2e4aaa4430c869317d6c2abd966988b
-  languageName: node
-  linkType: hard
-
 "cross-spawn@npm:^7.0.2, cross-spawn@npm:^7.0.3":
   version: 7.0.3
   resolution: "cross-spawn@npm:7.0.3"
@@ -3577,13 +3620,10 @@ __metadata:
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
     "@typegoose/typegoose": ^9.9.0
-    "@types/i18next-fs-backend": ^1.1.2
     "@types/luxon": ^2
     axios: ^0.27.2
     discord-api-types: ^0.35.0
     fuse.js: ^6.6.2
-    i18next: ^21.8.10
-    i18next-fs-backend: ^1.1.4
     luxon: ^2.4.0
     mongoose: ^6.4.0
     reflect-metadata: ^0.1.13
@@ -4883,7 +4923,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^21.0.1, i18next@npm:^21.8.10":
+"i18next@npm:^21.0.1":
+  version: 21.8.11
+  resolution: "i18next@npm:21.8.11"
+  dependencies:
+    "@babel/runtime": ^7.17.2
+  checksum: 94b9de3811456c2720b96d54febb89fe66cef3146044cdba9cc35543f93bf04843ccffb191ff4dbed614e7d4a64f2e29391dd514e054331738f2411c1936d85f
+  languageName: node
+  linkType: hard
+
+"i18next@npm:^21.8.10":
   version: 21.8.10
   resolution: "i18next@npm:21.8.10"
   dependencies:
@@ -6133,13 +6182,6 @@ __metadata:
   version: 0.3.3
   resolution: "lru_map@npm:0.3.3"
   checksum: ca9dd43c65ed7a4f117c548028101c5b6855e10923ea9d1f635af53ad20c5868ff428c364d454a7b57fe391b89c704982275410c3c5099cca5aeee00d76e169a
-  languageName: node
-  linkType: hard
-
-"luxon@npm:^1.23.x":
-  version: 1.28.0
-  resolution: "luxon@npm:1.28.0"
-  checksum: 5250cb9f138b6048eeb0b3a9044a4ac994d0058f680c72a0da4b6aeaec8612460385639cba2b1052ef6d5564879e9ed144d686f26d9d97b38ab920d82e18281c
   languageName: node
   linkType: hard
 
@@ -8224,6 +8266,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"support-bot@workspace:apps/support-bot":
+  version: 0.0.0-use.local
+  resolution: "support-bot@workspace:apps/support-bot"
+  dependencies:
+    "@sentry/node": ^7.3.0
+    "@sentry/tracing": ^7.3.0
+    "@statsify/api-client": "workspace:^"
+    "@statsify/discord": "workspace:^"
+    "@statsify/logger": "workspace:^"
+    "@statsify/rendering": "workspace:^"
+    "@statsify/schemas": "workspace:^"
+    "@statsify/util": "workspace:^"
+    "@typegoose/typegoose": ^9.9.0
+    axios: ^0.27.2
+    chart.js: ^3.8.0
+    chartjs-skia-canvas: "https://github.com/jacobk999/chartjs-skia-canvas.git"
+    discord-api-types: ^0.35.0
+    luxon: ^2.4.0
+    mongoose: ^6.4.0
+    reflect-metadata: ^0.1.13
+    skia-canvas: ^0.9.30
+    tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab"
+    toad-scheduler: ^1.6.1
+    typedi: ^0.10.0
+  languageName: unknown
+  linkType: soft
+
 "supports-color@npm:^5.3.0":
   version: 5.5.0
   resolution: "supports-color@npm:5.5.0"
@@ -8383,6 +8452,13 @@ __metadata:
   dependencies:
     is-number: ^7.0.0
   checksum: f76fa01b3d5be85db6a2a143e24df9f60dd047d151062d0ba3df62953f2f697b16fe5dad9b0ac6191c7efc7b1d9dcaa4b768174b7b29da89d4428e64bc0a20ed
+  languageName: node
+  linkType: hard
+
+"toad-scheduler@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "toad-scheduler@npm:1.6.1"
+  checksum: 0f3b16c851d67901360a76bf5c341c6b8f992de85a9b37d9fa498126134c4dc5c83d3b797070f8bcfc6e775e3d9f3ea1d32638de05521c9507701f085008a514
   languageName: node
   linkType: hard
 

@@ -6,6 +6,23 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { RestResponse } from "tiny-discord";
+
+export const parseDiscordResponse = <T>(response: RestResponse): T => {
+  if (response.status >= 200 && response.status < 300) return response.body as T;
+
+  const body = response.body as Record<string, any>;
+
+  let message = body.message;
+
+  if (body.errors) {
+    const error = parseDiscordError(body.errors);
+    message += ` | ${error}`;
+  }
+
+  throw new Error(message);
+};
+
 export const parseDiscordError = (error: any = {}, errorKey = ""): string => {
   if (typeof error.message === "string")
     return `${errorKey.length ? `${errorKey} - ${error.code}` : `${error.code}`}: ${

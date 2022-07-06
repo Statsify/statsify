@@ -12,8 +12,8 @@ import {
   EmbedBuilder,
   MojangPlayerArgument,
 } from "@statsify/discord";
-import { INFO_COLOR } from "#constants";
 import { MojangApiService } from "#services";
+import { STATUS_COLORS } from "@statsify/logger";
 
 @Command({ description: "commands.uuid", args: [new MojangPlayerArgument()] })
 export class UUIDCommand {
@@ -36,7 +36,7 @@ export class UUIDCommand {
         (t) => t("embeds.uuid.description.trimmedUUID"),
         `\`${player.uuid.replaceAll("-", "")}\``
       )
-      .color(INFO_COLOR)
+      .color(STATUS_COLORS.info)
       .thumbnail(thumbURL);
 
     return { embeds: [embed] };

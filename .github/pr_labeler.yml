@@ -4,6 +4,9 @@
 "discord-bot":
   - apps/discord-bot/**/*
 
+"support-bot":
+  - apps/support-bot/**/*
+
 "scripts":
   - apps/scripts/**/*
 

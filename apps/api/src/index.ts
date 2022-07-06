@@ -12,7 +12,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
-import { SentryInterceptor } from "./sentry/sentry.interceptor";
+import { SentryInterceptor } from "./sentry";
 import { Integrations as TracingIntegrations } from "@sentry/tracing";
 import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
