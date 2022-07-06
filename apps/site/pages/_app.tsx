@@ -48,7 +48,8 @@ const GlobalStyle = createGlobalStyle`
    html, body, #__next {
      width: 100%;
      height: 100%;
-     background-color: #FFF;
+     background-color: #1d1d1d;
+     font-family: "Manrope"
    }
 
    #__next  {

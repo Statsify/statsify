@@ -7,21 +7,24 @@
  */
 
 import styled from "styled-components";
+import { Logo } from "../Logo";
 
-export const Box = styled.div`
+const StyledNavbar = styled.nav`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
-  align-items: center;
-  margin: 4px;
 
-  padding-left: 8px;
-  padding-right: 8px;
-  padding-top: 4px;
-  padding-bottom: 4px;
-
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 24px;
-
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.42);
+  width: 100%;
 `;
+
+const Branding = styled.div`
+  filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.8));
+`;
+
+export const Navbar = () => (
+  <StyledNavbar>
+    <Branding>
+      <Logo />
+    </Branding>
+  </StyledNavbar>
+);

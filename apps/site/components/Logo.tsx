@@ -6,12 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Button } from "../components/Button";
+import Image from "next/image";
 
-const Index = () => (
-  <div style={{ minHeight: "100vh" }}>
-    <Button>Hello</Button>
-  </div>
-);
-
-export default Index;
+export const Logo = () => <Image src="/logo.svg" width={395} height={150} />;

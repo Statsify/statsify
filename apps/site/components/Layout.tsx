@@ -7,7 +7,7 @@
  */
 
 import { Footer } from "./Footer";
-import { Navbar } from "./Navbar";
+import { Hero } from "./Hero";
 import { ReactNode } from "react";
 
 export interface LayoutProps {
@@ -16,7 +16,7 @@ export interface LayoutProps {
 
 export const Layout = ({ children }: LayoutProps) => (
   <>
-    <Navbar />
+    <Hero />
     <main>{children}</main>
     <Footer />
   </>

@@ -40,9 +40,10 @@ const modifiers: Record<string, CSSProperties> = {
 export interface TextProps {
   children: string | string[];
   size?: number;
+  className?: string;
 }
 
-export const Text = ({ size = 2, children }: TextProps) => {
+export const Text = ({ size = 2, children, className }: TextProps) => {
   if (typeof children !== "string") children = children.join("\n");
   if (!children.startsWith("§")) children = `§0${children}`;
 
@@ -54,16 +55,16 @@ export const Text = ({ size = 2, children }: TextProps) => {
   };
 
   return (
-    <span>
+    <span style={{ margin: "10px", marginTop: "16px" }}>
       {children.split("§").map((p, i) => {
         if (p.length === 0) return "";
 
         const modifier = modifiers[p[0]];
         style = { ...style, ...modifier };
-        style.filter = `brightness(405%) drop-shadow(${size}px ${size}px 0px ${style.color})`;
+        style.filter = `brightness(405%) drop-shadow(0px ${size}px 0px ${style.color})`;
 
         return (
-          <span style={style} key={i}>
+          <span className={className} style={style} key={i}>
             {p.slice(1)}
           </span>
         );
