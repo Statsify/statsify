@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService } from "#services";
+import { ApiService, CommandContext, SubCommand } from "@statsify/discord";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command";
-import { CommandContext, SubCommand } from "@statsify/discord";
 import { GuildLeaderboardArgument } from "./guild-leaderboard.argument";
 import { getBackground } from "@statsify/assets";
 

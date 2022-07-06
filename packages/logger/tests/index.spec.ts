@@ -7,7 +7,7 @@
  */
 
 import chalk from "chalk";
-import { Logger, defaultLogLevels, logColors } from "../src";
+import { Logger, defaultLogLevels } from "../src";
 defaultLogLevels.forEach((logLevel) => {
   describe(`logging of ${logLevel}`, () => {
     it(`should ${logLevel}`, () => {
@@ -24,7 +24,7 @@ defaultLogLevels.forEach((logLevel) => {
 
       expect(mock).toHaveBeenCalledWith(
         `${chalk.bold`${logLevel === "error" ? "📉" : "📈"}`} ${chalk.hex(
-          logColors[logLevel]
+          logger["getColorByLogLevel"](logLevel).toString(16)
         )(logLevel)} ${chalk.gray`0ms`} message\n`
       );
     });

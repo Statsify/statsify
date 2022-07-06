@@ -14,7 +14,6 @@ import { HypixelResourcesModule } from "./hypixel-resources";
 import { Module } from "@nestjs/common";
 import { PlayerModule } from "./player";
 import { RedisModule } from "@nestjs-modules/ioredis";
-import { ScheduleModule } from "@nestjs/schedule";
 import { SkinModule } from "./skin";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 import { UserModule } from "./user";
@@ -34,7 +33,6 @@ import { config } from "@statsify/util";
         url: config("database.redisUrl"),
       },
     }),
-    ScheduleModule.forRoot(),
     PlayerModule,
     GuildModule,
     HypixelResourcesModule,

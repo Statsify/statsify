@@ -61,11 +61,6 @@ import {
 } from "@statsify/schemas";
 import { noop, prettify } from "@statsify/util";
 
-export const ERROR_COLOR = 0xff0000;
-export const SUCCESS_COLOR = 0x00ff00;
-export const INFO_COLOR = 0x187ccd;
-export const WARNING_COLOR = 0xffff00;
-
 export type GamesWithBackgrounds =
   | ArcadeModes
   | ArenaBrawlModes

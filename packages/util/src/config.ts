@@ -61,13 +61,82 @@ export interface Config {
      */
     token: string;
     /**
-     * Discord Bot Application ID
+     * Discord Bot Application Id
      */
     applicationId: string;
     /**
      * The guild to post slash commands to in development mode
      */
     testingGuild: string;
+  };
+  supportBot: {
+    /**
+     * The channel id where the message with buttons to create tickets is sent
+     */
+    createTicketChannel: string;
+
+    /**
+     * The channel id where ticket logs are sent
+     */
+    ticketLogsChannel: string;
+
+    /**
+     * The category id where ticket channels are created
+     */
+    ticketCategory: string;
+
+    /**
+     * The channel id where the welcome messages are sent
+     */
+    welcomeChannel: string;
+
+    /**
+     * The channel id where unverified members are sent
+     */
+    unverifiedChannel: string;
+
+    /**
+     * The channel id for where to send the hypixel api status message
+     */
+    hypixelApiStatusChannel: string;
+
+    /**
+     * The channel id for premium users to be notified about features they unlocked from getting premium
+     */
+    premiumInfoChannel: string;
+
+    /**
+     * The member role id
+     */
+    memberRole: string;
+
+    /**
+     * The premium role id
+     */
+    premiumRole: string;
+
+    /**
+     * The nitro booster role id
+     */
+    nitroBoosterRole: string;
+
+    /**
+     * The guild id where the support bot is located
+     */
+    guild: string;
+
+    /**
+     * Support Bot Public Key
+     */
+    publicKey: string;
+    /**
+     * Support Bot token
+     */
+    token: string;
+    /**
+     * Support Bot Application Id
+     */
+    applicationId: string;
   };
   apiClient: {
     /**
@@ -106,6 +175,11 @@ export interface Config {
      * The Sentry Dsn used by the Verify Server
      */
     verifyServerDsn?: string;
+
+    /**
+     * The Sentry Dsn used by the Support Bot
+     */
+    supportBotDsn?: string;
   };
   /**
    * The current environment the bot is running in
@@ -152,7 +226,7 @@ export const config = <T extends keyof FlatConfig>(
 
     if (required)
       throw new Error(
-        `Missing required environment variable: ${key as string}. Add ${
+        `Missing required environment variable: ${key as string} | Add ${
           key as string
         } to your config`
       );

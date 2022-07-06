@@ -24,6 +24,7 @@ export const Footer = ({ logo, tier = UserTier.NONE, border }: FooterProps) => {
     case UserTier.CORE:
       text = "§fstatsify.net";
       break;
+    case UserTier.STAFF:
     case UserTier.PREMIUM:
       text =
         "§#ffdc73s§#ffd865t§#ffd557a§#ffd149t§#ffce3as§#ffc929i§#ffc517f§#ffc006y§#f9ba01.§#f0b202n§#e7ab03e§#dea304t";
