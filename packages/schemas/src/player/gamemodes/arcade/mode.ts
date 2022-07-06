@@ -86,9 +86,13 @@ export class DragonWars {
   @Field()
   public kills: number;
 
-  public constructor(data: APIData) {
+  @Field()
+  public mounts: number;
+
+  public constructor(data: APIData, ap: APIData) {
     this.wins = data.wins_dragonwars2;
     this.kills = data.kills_dragonwars2;
+    this.mounts = ap.arcade_dw_dragonborn;
   }
 }
 

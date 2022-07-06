@@ -20,6 +20,7 @@ export const DragonWarsTable = ({ stats, t }: DragonWarsTableProps) => (
     <Table.tr>
       <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§e" />
       <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+      <Table.td title={t("stats.mounts")} value={t(stats.mounts)} color="§6" />
     </Table.tr>
   </Table.table>
 );

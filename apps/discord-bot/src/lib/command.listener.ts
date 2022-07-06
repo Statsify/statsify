@@ -168,7 +168,9 @@ export class CommandListener extends AbstractCommandListener {
 
     if (Math.random() > TIP_CHANCE) return defaultResponse;
 
-    const useableTips = tips.filter((t) => !t.disabled?.includes(commandName));
+    const useableTips = tips.filter(
+      (t) => !t.disabled?.includes(commandName) && !t.uneligible?.(user)
+    );
 
     if (!useableTips.length) return defaultResponse;
 

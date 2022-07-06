@@ -122,7 +122,7 @@ export class Arcade {
     this.bountyHunters = new BountyHunters(data);
     this.captureTheWool = new CaptureTheWool(ap);
     this.creeperAttack = new CreeperAttack(data);
-    this.dragonWars = new DragonWars(data);
+    this.dragonWars = new DragonWars(data, ap);
     this.enderSpleef = new EnderSpleef(data);
     this.farmHunt = new FarmHunt(data);
     this.football = new Football(data);

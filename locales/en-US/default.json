@@ -119,8 +119,8 @@
     "goals": "Goals",
     "kicks": "Kicks",
     "powerKicks": "Power Kicks",
-    "empireKills": "Empire Kills",
-    "rebelKills": "Rebel Kills",
+    "empireKills": "Defender Kills",
+    "rebelKills": "Attacker Kills",
     "hiderWins": "Hider Wins",
     "seekerWins": "Seeker Wins",
     "wallsFaced": "Walls Faced",
@@ -143,6 +143,7 @@
     "levelsGained": "Levels Gained",
     "expGained": "EXP Gained",
     "exp": "EXP",
+    "mounts": "Mounts",
     "guild": {
       "guildMaster": "Guild Master",
       "createdOn": "Created On",

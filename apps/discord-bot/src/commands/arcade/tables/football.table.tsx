@@ -22,8 +22,8 @@ export const FootballTable = ({ stats, t }: FootballTableProps) => (
       <Table.td title={t("stats.goals")} value={t(stats.goals)} color="§b" />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t("stats.kicks")} value={t(stats.kicks)} color="§6" />
-      <Table.td title={t("stats.powerKicks")} value={t(stats.powerKicks)} color="§c" />
+      <Table.td title={t("stats.kicks")} value={t(stats.kicks)} color="§e" />
+      <Table.td title={t("stats.powerKicks")} value={t(stats.powerKicks)} color="§6" />
     </Table.tr>
   </Table.table>
 );
