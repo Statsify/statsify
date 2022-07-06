@@ -40,12 +40,15 @@ const GlobalStyle = createGlobalStyle`
      font-style: italic;
    }
 
+   * {
+    margin: 0;
+    padding: 0;
+   }
+
    html, body, #__next {
-     margin: 0;
-     padding: 0;
      width: 100%;
      height: 100%;
-     background-color: #1d1d1d;
+     background-color: #FFF;
    }
 
    #__next  {

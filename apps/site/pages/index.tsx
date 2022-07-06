@@ -10,7 +10,7 @@ import { Box } from "../components/Box";
 import { Text } from "../components/Text";
 
 const Index = () => (
-  <div>
+  <div style={{ minHeight: "100vh" }}>
     <Box>
       <Text size={4}>§cStatsify</Text>
     </Box>

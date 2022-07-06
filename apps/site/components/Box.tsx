@@ -9,15 +9,21 @@
 import React, { type ReactNode } from "react";
 import styled from "styled-components";
 
-const BaseBox = styled.div<Required<Omit<BoxProps, "className" | "children" | "shadow">>>`
+const shadowColor = "rgba(0, 0, 0, 0.42)";
+
+type BaseBoxProps = Required<Omit<BoxProps, "className" | "children" | "shadow">>;
+
+const BaseBox = styled.div<BaseBoxProps>`
   background-color: ${(props) => props.color};
   width: ${(props) => props.width};
-  height: ${(props) => props.width};
-  padding-left: calc(
-    max(${(props) => props.border.topLeft}, ${(props) => props.border.bottomLeft}) + 5px
+  height: ${(props) => props.height};
+  padding-left: max(
+    ${(props) => props.border.topLeft},
+    ${(props) => props.border.bottomLeft}
   );
-  padding-right: calc(
-    max(${(props) => props.border.topRight}, ${(props) => props.border.bottomRight}) + 5px
+  padding-right: max(
+    ${(props) => props.border.topRight},
+    ${(props) => props.border.bottomRight}
   );
   padding-top: calc(
     max(${(props) => props.border.topRight}, ${(props) => props.border.topLeft})
@@ -26,8 +32,8 @@ const BaseBox = styled.div<Required<Omit<BoxProps, "className" | "children" | "s
     max(${(props) => props.border.bottomRight}, ${(props) => props.border.bottomLeft})
   );
   clip-path: polygon(
-    ${(props) => props.border.topLeft} 0px,
-    calc(${(props) => props.width} - ${(props) => props.border.topRight}) 0px,
+    ${(props) => props.border.topLeft} 0,
+    calc(${(props) => props.width} - ${(props) => props.border.topRight}) 0,
     calc(${(props) => props.width} - ${(props) => props.border.topRight})
       ${(props) => props.border.topRight},
     ${(props) => props.width} ${(props) => props.border.topRight},
@@ -40,8 +46,8 @@ const BaseBox = styled.div<Required<Omit<BoxProps, "className" | "children" | "s
     ${(props) => props.border.bottomLeft} ${(props) => props.height},
     ${(props) => props.border.bottomLeft}
       calc(${(props) => props.height} - ${(props) => props.border.bottomLeft}),
-    0px calc(${(props) => props.height} - ${(props) => props.border.bottomLeft}),
-    0px ${(props) => props.border.topLeft},
+    0 calc(${(props) => props.height} - ${(props) => props.border.bottomLeft}),
+    0 ${(props) => props.border.topLeft},
     ${(props) => props.border.topLeft} ${(props) => props.border.topLeft}
   );
 
@@ -68,7 +74,88 @@ interface BoxProps {
   shadow?: string;
 }
 
-const ShadowBox = ({
+type ShadowRightBoxProps = Required<Omit<BoxProps, "className" | "children" | "width">>;
+
+// prettier-ignore
+
+const ShadowRightBox = styled.div<ShadowRightBoxProps>`
+  min-width: ${(props) => props.shadow};
+  background-color: ${(props) => props.color};
+  margin: 0;
+  padding: 0;
+  clip-path: polygon(
+    0 calc(${(props) => props.shadow} + ${(props) => props.border.topRight}),
+    ${(props) => props.shadow} calc(${(props) => props.shadow} + ${(props) => props.border.topRight}),
+    ${(props) => props.shadow} ${(props) => props.height},
+    0 ${(props) => props.height}
+  );
+`;
+
+type CornerShadowBoxProps = Required<
+  Omit<BoxProps, "className" | "children" | "width" | "height">
+>;
+
+const CornerShadow = styled.div<CornerShadowBoxProps>`
+  min-width: ${(props) => props.shadow};
+  min-height: ${(props) => props.shadow};
+
+  background-color: ${(props) => props.color};
+
+  position: absolute;
+  right: ${(props) => props.shadow};
+  bottom: 0;
+`;
+
+const ChildrenContainer = styled.div`
+  margin-left: 5px;
+  margin-right: 5px;
+`;
+
+const BoxWithRightShadow = ({
+  children,
+  className,
+  border,
+  shadow,
+  color,
+}: Required<Omit<BoxProps, "width" | "height" | "className">> & {
+  className?: string;
+}) => (
+  <div className={className}>
+    <BaseBox width="100%" height="100%" color={color} border={border}>
+      <ChildrenContainer>{children}</ChildrenContainer>
+    </BaseBox>
+    <CornerShadow color={shadowColor} shadow={shadow} border={border} />
+    <ShadowRightBox height="100%" color={shadowColor} shadow={shadow} border={border} />
+  </div>
+);
+
+export const StyledBoxWithRightShadow = styled(BoxWithRightShadow)`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  position: relative;
+`;
+
+type ShadowBottomBoxProps = Required<Omit<BoxProps, "className" | "children" | "height">>;
+
+const ShadowBottomBox = styled.div<ShadowBottomBoxProps>`
+  width: ${(props) => props.width};
+  height: ${(props) => props.shadow};
+  background-color: ${(props) => props.color};
+  margin: 0;
+  padding: 0;
+
+  clip-path: polygon(
+    calc(${(props) => props.border.bottomLeft} + ${(props) => props.shadow}) 0,
+    calc(${(props) => props.border.bottomLeft} + ${(props) => props.shadow})
+      ${(props) => props.shadow},
+    calc(${(props) => props.width} - ${(props) => props.shadow})
+      ${(props) => props.shadow},
+    calc(${(props) => props.width} - ${(props) => props.shadow}) 0
+  );
+`;
+
+const BoxWithRightShadowAndBottomShadow = ({
   children,
   className,
   color = "rgba(0, 0, 0, 0.5)",
@@ -78,25 +165,28 @@ const ShadowBox = ({
     topLeft: "8px",
     topRight: "8px",
   },
+  shadow = "8px",
 }: BoxProps) => (
   <div className={className}>
-    <BaseBox width="100%" height="100%" color={color} border={border}>
-      {children}
-    </BaseBox>
+    <StyledBoxWithRightShadow
+      border={border}
+      children={children}
+      color={color}
+      shadow={shadow}
+    />
+    <ShadowBottomBox width="100%" border={border} color={shadowColor} shadow={shadow} />
   </div>
 );
 
-//TODO: Figure out how to add shadow to the boxes
-export const Box = styled(ShadowBox)`
+export const Box = styled(BoxWithRightShadowAndBottomShadow)`
   width: ${(props) => props.width};
   height: ${(props) => props.height};
-  /* filter: drop-shadow(
-    ${(props) => props.shadow} ${(props) => props.shadow} 0px rgba(0, 0, 0, 0.42)
-  ); */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 `;
 
 Box.defaultProps = {
-  shadow: "8px",
   width: "fit-content",
   height: "fit-content",
 };
