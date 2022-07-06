@@ -98,7 +98,7 @@ export class CommandListener extends AbstractCommandListener {
       command,
       context,
       preconditions,
-      response: this.getTipResponse(commandName, interaction),
+      response: this.getTipResponse(commandName, user, interaction),
     });
   }
 
@@ -152,6 +152,7 @@ export class CommandListener extends AbstractCommandListener {
 
   private getTipResponse(
     commandName: string,
+    user: User | null,
     interaction: Interaction
   ): InteractionResponse {
     const TIP_CHANCE = 0.2;
@@ -159,6 +160,8 @@ export class CommandListener extends AbstractCommandListener {
     const defaultResponse = {
       type: InteractionResponseType.DeferredChannelMessageWithSource,
     };
+
+    if (User.isPremium(user)) return defaultResponse;
 
     if (Math.random() > TIP_CHANCE) return defaultResponse;
 
