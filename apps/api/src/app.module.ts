@@ -8,6 +8,7 @@
 
 import { AppController } from "./app.controller";
 import { AuthModule } from "./auth";
+import { CommandsModule } from "./commands";
 import { GuildModule } from "./guild";
 import { HistoricalModule } from "./historical";
 import { HypixelResourcesModule } from "./hypixel-resources";
@@ -40,6 +41,7 @@ import { config } from "@statsify/util";
     HistoricalModule,
     AuthModule,
     UserModule,
+    CommandsModule,
   ],
   controllers: [AppController],
 })

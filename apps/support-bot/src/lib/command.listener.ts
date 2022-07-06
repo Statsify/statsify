@@ -46,7 +46,11 @@ export class CommandListener extends AbstractCommandListener {
     if (!parentCommand) return { type: InteractionResponseType.Pong };
 
     const id = interaction.getUserId();
-    const [command, data] = this.getCommandAndData(parentCommand, parentData);
+
+    const [command, data, commandName] = this.getCommandAndData(
+      parentCommand,
+      parentData
+    );
 
     const user = await this.apiService.getUser(id);
 
@@ -55,7 +59,7 @@ export class CommandListener extends AbstractCommandListener {
 
     const preconditions = [this.tierPrecondition.bind(this, command, user)];
 
-    return this.executeCommand({ command, context, preconditions });
+    return this.executeCommand({ commandName, command, context, preconditions });
   }
 
   public static create(

@@ -35,6 +35,7 @@ export type InteractionHook = (
 export type CommandPrecondition = () => void;
 
 export interface ExecuteCommandOptions {
+  commandName: string;
   command: CommandResolvable;
   context: CommandContext;
   preconditions?: CommandPrecondition[];
@@ -124,6 +125,7 @@ export abstract class AbstractCommandListener {
   }
 
   protected executeCommand({
+    commandName,
     command,
     context,
     preconditions = [],
@@ -149,7 +151,7 @@ export abstract class AbstractCommandListener {
               return context.reply(err);
             }
 
-            this.logger.error(`An error occurred when running "${command?.name}"`);
+            this.logger.error(`An error occurred when running "${commandName}"`);
             this.logger.error(err);
             transaction?.finish();
           });
@@ -169,7 +171,7 @@ export abstract class AbstractCommandListener {
         };
       }
 
-      this.logger.error(`An error occurred when running "${command?.name}"`);
+      this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
       transaction?.finish();
     }
