@@ -8,8 +8,9 @@
 
 import * as Sentry from "@sentry/node";
 import chalk from "chalk";
+import { DateTime } from "luxon";
+import { config } from "@statsify/util";
 import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/common";
-
 export const defaultLogLevels: LogLevel[] = ["log", "error", "warn", "debug", "verbose"];
 
 export const logColors: Record<LogLevel, string> = {
@@ -19,6 +20,8 @@ export const logColors: Record<LogLevel, string> = {
   verbose: "#6469F5",
   log: "#36D494",
 };
+
+const isProduction = config("environment") === "prod";
 
 /**
  * A logger implementing the NestJS LoggerService interface. However can be used anywhere.
@@ -164,6 +167,8 @@ export class Logger implements LoggerService {
   }
 
   private getTimeStamp() {
+    if (isProduction) return DateTime.now().toFormat("h:mma");
+
     const now = Date.now();
 
     if (!Logger.lastTimeStampAt) {
@@ -192,7 +197,7 @@ export class Logger implements LoggerService {
 
       const computedMessage = `${chalk.bold`${icon}`} ${chalk.hex(color)(
         context
-      )} ${chalk.gray`${timeStamp}ms`} ${output}\n`;
+      )} ${chalk.gray`${timeStamp}${isProduction ? "" : "ms"}`} ${output}\n`;
 
       process[writeStreamType].write(computedMessage);
     });
