@@ -15,3 +15,4 @@ export * from "./head.dto";
 export * from "./user.dto";
 export * from "./verify-code.dto";
 export * from "./reset-player.dto";
+export * from "./command.dto";

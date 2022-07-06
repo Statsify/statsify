@@ -33,9 +33,8 @@ import {
   WARLORDS_MODES,
   WOOLWARS_MODES,
 } from "@statsify/schemas";
-import { ApiService } from "#services";
+import { ApiService, Command, CommandContext, SubCommand } from "@statsify/discord";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command";
-import { Command, CommandContext, SubCommand } from "@statsify/discord";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { PlayerLeaderboardArgument } from "./player-leaderboard.argument";
 import { getBackground } from "@statsify/assets";

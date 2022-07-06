@@ -12,16 +12,23 @@
       "react": {
         "runtime": "automatic",
         "importSource": "@statsify/rendering"
+      },
+      "optimizer": {
+        "simplify": true,
+        "jsonify": {
+          "minCost": 2048
+        }
       }
     },
-    "target": "es2018",
+    "target": "es2022",
     "keepClassNames": true,
-    "loose": true,
-    "externalHelpers": true
+    "loose": false,
+    "externalHelpers": true,
+    "preserveAllComments": false
   },
   "module": {
     "type": "commonjs",
-    "strict": false,
+    "strict": true,
     "strictMode": true,
     "lazy": false,
     "noInterop": false

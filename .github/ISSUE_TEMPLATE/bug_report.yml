@@ -15,7 +15,9 @@ body:
         - general
         - api
         - discord-bot
+        - support-bot
         - site
+        - scripts
         - verify-server
         - "@statsify/api-client"
         - "@statsify/assets"

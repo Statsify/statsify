@@ -14,10 +14,12 @@ import {
 } from "@nestjs/swagger";
 import { Auth, AuthRole } from "../auth";
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
+  Patch,
   Put,
   Query,
   StreamableFile,
@@ -27,7 +29,7 @@ import {
   GetUserResponse,
   PutUserBadgeResponse,
 } from "@statsify/api-client";
-import { UserDto, VerifyCodeDto } from "../dtos";
+import { UpdateUserDto, UserDto, VerifyCodeDto } from "../dtos";
 import { UserService } from "./user.service";
 
 @Controller("/user")
@@ -42,6 +44,20 @@ export class UserController {
   @Auth({ role: AuthRole.ADMIN })
   public async getUser(@Query() { tag }: UserDto) {
     const user = await this.userService.get(tag);
+
+    return {
+      success: !!user,
+      user,
+    };
+  }
+
+  @Patch()
+  @ApiOperation({ summary: "Update a User" })
+  @ApiOkResponse({ type: GetUserResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @Auth({ role: AuthRole.ADMIN })
+  public async updateUser(@Query() { tag }: UserDto, @Body() body: UpdateUserDto) {
+    const user = await this.userService.update(tag, body);
 
     return {
       success: !!user,
@@ -84,8 +100,18 @@ export class UserController {
   @ApiOperation({ summary: "Verify a user" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
-  public async verifyUser(@Query() { code, id }: VerifyCodeDto) {
-    const user = await this.userService.verifyUser(code, id);
+  public async verifyUser(@Query() { code, uuid, id }: VerifyCodeDto) {
+    let input: string;
+
+    if (uuid) {
+      input = uuid;
+    } else if (code) {
+      input = code;
+    } else {
+      throw new BadRequestException("No code or uuid provided");
+    }
+
+    const user = await this.userService.verifyUser(input, id);
 
     return {
       success: !!user,

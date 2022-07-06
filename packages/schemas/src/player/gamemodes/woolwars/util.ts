@@ -8,13 +8,11 @@
 
 import { findScore } from "@statsify/util";
 
-//TODO(jacobk999): Figure out how leveling works after 100
-
 export const getExpReq = (level: number) => {
   const progress = level % 100;
   if (progress > 4) return 5000;
 
-  const levels = [0, 1000, 2000, 3000, 4000];
+  const levels = [level >= 100 ? 5000 : 0, 1000, 2000, 3000, 4000];
 
   return levels[progress];
 };

@@ -27,13 +27,18 @@ export class UserService {
     return this.userModel.findOne().where(type).equals(tag).lean().exec();
   }
 
+  public update(idOrUuid: string, user: Partial<User>): Promise<User | null> {
+    const [tag, type] = this.parseTag(idOrUuid);
+    return this.userModel.findOneAndUpdate(user).where(type).equals(tag).lean().exec();
+  }
+
   public async getBadge(idOrUuid: string): Promise<Buffer> {
     const [tag, type] = this.parseTag(idOrUuid);
     const user = await this.userModel.findOne().where(type).equals(tag).lean().exec();
 
     if (!user) throw new NotFoundException(`user`);
 
-    const isPremium = User.isPremium(user.tier);
+    const isPremium = User.isPremium(user);
 
     let badgePath: string | undefined = undefined;
 
@@ -62,6 +67,7 @@ export class UserService {
       .equals(user.id)
       .lean()
       .exec();
+
     await writeFile(this.getBadgePath(user.id), badge);
   }
 
@@ -80,17 +86,11 @@ export class UserService {
     await rm(this.getBadgePath(user.id));
   }
 
-  public async verifyUser(code: string, id: string): Promise<User | null> {
-    const verifyCode = await this.verifyCodeModel
-      .findOne()
-      .where("code")
-      .equals(code)
-      .lean()
-      .exec();
-
-    if (!verifyCode) return null;
-
-    const { uuid } = verifyCode;
+  public async verifyUser(uuidOrCode: string, id: string): Promise<User | null> {
+    const uuid =
+      uuidOrCode.length >= 32
+        ? uuidOrCode.replace(/-/g, "")
+        : await this.getUuidFromCode(uuidOrCode);
 
     //Unverify anyone previously linked to this UUID
     await this.userModel
@@ -108,9 +108,6 @@ export class UserService {
       .lean()
       .exec();
 
-    //Delete the verify code
-    await this.verifyCodeModel.deleteOne({ code }).lean().exec();
-
     return user;
   }
 
@@ -127,6 +124,19 @@ export class UserService {
       .exec();
 
     return user;
+  }
+
+  private async getUuidFromCode(code: string): Promise<string> {
+    const verifyCode = await this.verifyCodeModel
+      .findOneAndDelete()
+      .where("code")
+      .equals(code)
+      .lean()
+      .exec();
+
+    if (!verifyCode) throw new NotFoundException("verifyCode");
+
+    return verifyCode.uuid;
   }
 
   private parseTag(tag: string): [tag: string, type: string] {

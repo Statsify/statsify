@@ -9,6 +9,8 @@
 import * as Sentry from "@sentry/node";
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
+  DeletePlayerResponse,
+  GetCommandUsageResponse,
   GetFriendsResponse,
   GetGamecountsResponse,
   GetGuildResponse,
@@ -23,13 +25,20 @@ import {
   PostLeaderboardResponse,
   PutUserBadgeResponse,
 } from "./responses";
-import { GuildQuery, HistoricalType, LeaderboardQuery } from "./enums";
+import { GuildQuery, HistoricalType, HypixelCache, LeaderboardQuery } from "./enums";
+import { UserTheme } from "@statsify/schemas";
 import { loadImage } from "@statsify/rendering";
 
 interface ExtraData {
   headers?: AxiosRequestHeaders;
-  body?: Record<string, unknown> | Buffer | string;
+  body?: Record<string, any> | Buffer | string;
   responseType?: ResponseType;
+}
+
+//TODO: Move dtos in api to @statsify/api-client
+interface UpdateUser {
+  serverMember?: boolean;
+  theme?: UserTheme;
 }
 
 export class ApiService {
@@ -49,6 +58,19 @@ export class ApiService {
     return this.requestKey<GetPlayerResponse, "player">(`/player`, "player", {
       player: tag,
     });
+  }
+
+  public getCachedPlayer(tag: string) {
+    return this.requestKey<GetPlayerResponse, "player">(`/player`, "player", {
+      player: tag,
+      cache: HypixelCache.CACHE_ONLY,
+    });
+  }
+
+  public deletePlayer(tag: string) {
+    return this.request<DeletePlayerResponse>(`/player`, { player: tag }, "DELETE")
+      .then(() => true)
+      .catch(() => false);
   }
 
   public getRecentGames(tag: string) {
@@ -175,6 +197,12 @@ export class ApiService {
       .catch(() => null);
   }
 
+  public updateUser(tag: string, update: UpdateUser) {
+    return this.request<GetUserResponse>(`/user`, { tag }, "PATCH", { body: update })
+      .then((data) => data.user ?? null)
+      .catch(() => null);
+  }
+
   public getUserBadge(tag: string) {
     return this.requestImage(`/user/badge`, { tag }).catch(() => undefined);
   }
@@ -190,8 +218,12 @@ export class ApiService {
     return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, "DELETE");
   }
 
-  public verifyUser(code: string, id: string) {
-    return this.request<GetUserResponse>(`/user`, { code, id }, "PUT")
+  public verifyUser(codeOrUuid: string, id: string) {
+    return this.request<GetUserResponse>(
+      `/user`,
+      { [codeOrUuid.length >= 32 ? "uuid" : "code"]: codeOrUuid, id },
+      "PUT"
+    )
       .then((data) => data.user ?? null)
       .catch(() => null);
   }
@@ -200,6 +232,18 @@ export class ApiService {
     return this.request<GetUserResponse>(`/user`, { tag }, "DELETE")
       .then((data) => data.user ?? null)
       .catch(() => null);
+  }
+
+  public getCommandUsage() {
+    return this.requestKey<GetCommandUsageResponse, "usage">(
+      `/commands`,
+      "usage",
+      {}
+    ).catch(() => null);
+  }
+
+  public incrementCommand(command: string) {
+    return this.request(`/commands`, { command }, "PATCH");
   }
 
   private async requestKey<T, K extends keyof T>(

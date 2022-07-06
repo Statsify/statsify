@@ -7,6 +7,7 @@
  */
 
 import { LocalizationString } from "../messages";
+import { UserTier } from "@statsify/schemas";
 import type { AbstractArgument } from "../arguments";
 import type { Constructor } from "@statsify/util";
 
@@ -16,6 +17,11 @@ export interface CommandOptions {
   groups?: Constructor<any>[];
   args?: (AbstractArgument | Constructor<AbstractArgument>)[];
   cooldown?: number;
+
+  /**
+   * The minimum user tier required to use this command.
+   */
+  tier?: UserTier;
 }
 
 export type SubCommandOptions = Omit<CommandOptions, "groups" | "cooldown">;
