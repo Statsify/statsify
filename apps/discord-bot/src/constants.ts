@@ -125,9 +125,8 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["blitzsg", "overall"];
     case BUILD_BATTLE_MODES:
       return ["buildbattle", "overall"];
-    //TODO(amony): add cops and crims backgrounds
     case COPS_AND_CRIMS_MODES:
-      return ["hypixel", "overall"];
+      return ["copsandcrims", "overall"];
     case DUELS_MODES: {
       let map: string;
 
@@ -168,6 +167,7 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["duels", map];
     }
     case PARKOUR_MODES:
+      return ["parkour", "overall"];
     case GENERAL_MODES:
       return ["hypixel", "overall"];
     case MEGAWALLS_MODES:
@@ -211,7 +211,6 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["walls", "overall"];
     case WARLORDS_MODES:
       return ["warlords", "overall"];
-    //TODO(amony): add woolwars backgrounds
     case WOOLWARS_MODES:
       return ["woolwars", "overall"];
     default:
