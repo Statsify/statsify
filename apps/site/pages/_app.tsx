@@ -12,34 +12,6 @@ import { createGlobalStyle } from "styled-components";
 import type { AppProps } from "next/app";
 
 const GlobalStyle = createGlobalStyle`
-   @font-face {
-     font-family: "Minecraft";
-     src: url('/fonts/minecraft.otf');
-     font-weight: normal;
-     font-style: normal;
-   }
-
-   @font-face {
-     font-family: "Minecraft";
-     src: url('/fonts/minecraft-bold.otf');
-     font-weight: bold;
-     font-style: normal;
-   }
-
-   @font-face {
-     font-family: "Minecraft";
-     src: url('/fonts/minecraft-italic.otf');
-     font-weight: normal;
-     font-style: italic;
-   }
-
-   @font-face {
-     font-family: "Minecraft";
-     src: url('/fonts/minecraft-bold-italic.otf');
-     font-weight: bold;
-     font-style: italic;
-   }
-
    * {
     margin: 0;
     padding: 0;
