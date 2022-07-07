@@ -45,7 +45,7 @@ const GlobalStyle = createGlobalStyle`
     width: 10000%;
     height: 100%;
   }
- `;
+`;
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

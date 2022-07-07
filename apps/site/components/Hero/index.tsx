@@ -30,14 +30,14 @@ const StyledHero = styled.div`
 
 const HeroHeader = styled.p`
   font-weight: 800;
-  font-size: 3rem;
+  font-size: 2.5rem;
   text-align: center;
   margin: 8px;
 `;
 
 const HeroDescription = styled.div`
   font-weight: 600;
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin: 8px;
 `;
 

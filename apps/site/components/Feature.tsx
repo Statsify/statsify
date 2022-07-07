@@ -22,7 +22,7 @@ const StyledFeature = styled.div<AlignProps>`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100vw;
+  width: 100%;
   background-color: ${(props) => (props.align === "left" ? "#1d1d1d" : "#111111")};
 `;
 
@@ -64,12 +64,12 @@ const StyledFeatureText = styled.div<AlignProps>`
   width: fit-content;
 
   > h1 {
-    font-size: 3.5rem;
+    font-size: 3.3rem;
     font-weight: 800;
   }
 
   > p {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: normal;
   }
 
@@ -106,11 +106,11 @@ export const Feature = ({ align, title, description, images }: FeatureProps) => 
           showThumbs={false}
           showStatus={false}
           showArrows={false}
+          autoFocus
           infiniteLoop
           swipeable
           emulateTouch
           autoPlay
-          autoFocus={false}
         >
           {images.map((image, index) => (
             <StyledFeatureImageContainer key={index}>
