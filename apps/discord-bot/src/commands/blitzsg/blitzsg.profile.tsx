@@ -119,16 +119,15 @@ export const BlitzSGProfile = ({
 }: BlitzSGProfileProps) => {
   const { blitzsg } = player.stats;
 
-  const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(blitzsg.coins), "§6"],
-    [t("stats.kit"), prettify(blitzsg.kit), "§e"],
-  ];
+  const sidebar: SidebarItem[] = [[t("stats.coins"), t(blitzsg.coins), "§6"]];
 
   let table: JSX.Element;
 
   switch (mode.api) {
     case "overall":
       table = <OverallBlitzSGTable blitzsg={blitzsg} t={t} />;
+
+      sidebar.push([t("stats.kit"), prettify(blitzsg.kit), "§e"]);
       break;
     default: {
       const colors = ["§a", "§a", "§2", "§2", "§e", "§e", "§6", "§6", "§c", "§4"];
