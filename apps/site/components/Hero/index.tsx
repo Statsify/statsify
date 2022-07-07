@@ -27,23 +27,21 @@ const StyledHero = styled.div`
   width: 100%;
 
   color: #ffffff;
+  text-align: center;
+  text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
 `;
 
 const HeroHeader = styled.p`
   font-weight: 800;
-  font-size: 35px;
+  font-size: 3em;
   text-align: center;
   margin: 8px;
-  text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
 `;
 
 const HeroDescription = styled.div`
   font-weight: 600;
-  font-size: 1.5em;
+  font-size: 2em;
   margin: 8px;
-  text-align: center;
-
-  text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
 `;
 
 const HeroButtons = styled.div`
@@ -64,6 +62,7 @@ export const Hero = () => (
     <HeroDescription>
       <Typed
         strings={[
+          "View all your Hypixel stats on Discord",
           "Check your stats in every game",
           "View your leaderboard positions",
           "See your improvements with historical stats",
@@ -75,6 +74,7 @@ export const Hero = () => (
     <HeroButtons>
       <Button>Invite</Button>
       <Button>Discord</Button>
+      <Button>Premium</Button>
     </HeroButtons>
   </StyledHero>
 );

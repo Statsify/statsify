@@ -13,9 +13,8 @@ export const Button = styled.button`
   border-style: none;
   border-radius: 25px;
 
-  font-size: 1.2em;
-  font-family: "Manrope";
-  font-weight: 800;
+  font-size: 1.5em;
+  font-weight: bold;
   text-align: center;
   color: #fff;
 
@@ -29,6 +28,11 @@ export const Button = styled.button`
 
   margin-left: 10px;
   margin-right: 10px;
+
+  @media only screen and (max-device-width: 480px) {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
 
   transition: 0.2s;
 

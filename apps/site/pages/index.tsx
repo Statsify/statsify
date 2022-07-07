@@ -9,7 +9,7 @@
 import { Button } from "../components/Button";
 
 const Index = () => (
-  <div style={{ minHeight: "100vh" }}>
+  <div>
     <Button>Hello</Button>
   </div>
 );

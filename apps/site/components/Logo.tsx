@@ -8,4 +8,11 @@
 
 import Image from "next/image";
 
-export const Logo = () => <Image src="/logo.svg" width={395} height={150} />;
+export interface LogoProps {
+  width?: number;
+  height?: number;
+}
+
+export const Logo = ({ width = 350, height = 150 }: LogoProps) => (
+  <Image src="/logo.svg" width={width} height={height} />
+);

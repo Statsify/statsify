@@ -49,7 +49,7 @@ const GlobalStyle = createGlobalStyle`
      width: 100%;
      height: 100%;
      background-color: #1d1d1d;
-     font-family: "Manrope"
+     font-family: "Lexend Deca";
    }
 
    #__next  {

@@ -6,7 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import Image from "next/image";
+import Link from "next/link";
 import styled from "styled-components";
+import { Logo } from "./Logo";
 
 const StyledFooter = styled.footer`
   width: 100%;
@@ -14,7 +17,79 @@ const StyledFooter = styled.footer`
   color: #ffffff;
   font-family: "Lexend Deca";
   display: flex;
-  min-height: 100px;
+  flex-direction: column;
+  align-items: center;
 `;
 
-export const Footer = () => <StyledFooter>Footer</StyledFooter>;
+const FooterSocials = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  margin-bottom: 10px;
+`;
+
+const FooterLink = styled.div`
+  margin-left: 8px;
+  margin-right: 8px;
+
+  margin-top: 4px;
+  margin-bottom: 4px;
+
+  text-align: center;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+`;
+
+const FooterLinks = styled(FooterSocials)`
+  margin-bottom: 32px;
+
+  @media only screen and (max-device-width: 480px) {
+    flex-direction: column;
+  }
+`;
+
+export const Footer = () => (
+  <StyledFooter>
+    <Logo width={200} height={75} />
+    <FooterSocials>
+      <Link href="/">
+        <FooterLink>
+          <Image src="/socials/discord.svg" width={32} height={32} />
+        </FooterLink>
+      </Link>
+      <Link href="/">
+        <FooterLink>
+          <Image src="/socials/github.png" width={32} height={32} />
+        </FooterLink>
+      </Link>
+      <Link href="/">
+        <FooterLink>
+          <Image src="/socials/patreon.png" width={32} height={32} />
+        </FooterLink>
+      </Link>
+      <Link href="/">
+        <FooterLink>
+          <Image src="/socials/twitter.svg" width={32} height={32} />
+        </FooterLink>
+      </Link>
+    </FooterSocials>
+    <FooterLinks>
+      <Link href="/">
+        <FooterLink>Premium</FooterLink>
+      </Link>
+      <Link href="/">
+        <FooterLink>Support</FooterLink>
+      </Link>
+      <Link href="/">
+        <FooterLink>Terms of Service</FooterLink>
+      </Link>
+      <Link href="/">
+        <FooterLink>Privacy Policy</FooterLink>
+      </Link>
+    </FooterLinks>
+  </StyledFooter>
+);
