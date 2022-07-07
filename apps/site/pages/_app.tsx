@@ -60,6 +60,19 @@ const GlobalStyle = createGlobalStyle`
    main {
     flex: 1;
    }
+
+   .slider {
+    position: relative;
+   }
+
+   .slider::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 100%;
+    width: 10000%;
+    height: 100%;
+  }
  `;
 
 export default function App({ Component, pageProps }: AppProps) {
