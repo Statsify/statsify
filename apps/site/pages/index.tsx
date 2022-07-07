@@ -7,6 +7,7 @@
  */
 
 import styled from "styled-components";
+import { Feature } from "../components/Feature";
 import { StatCircle } from "../components/StatCircle";
 
 const StatCircles = styled.div`
@@ -21,10 +22,30 @@ const StatCircles = styled.div`
 `;
 
 const Index = () => (
-  <StatCircles>
-    <StatCircle title="Servers" value={80_000} />
-    <StatCircle title="Commands Ran" value={45_000_000} />
-  </StatCircles>
+  <>
+    <StatCircles>
+      <StatCircle title="Servers" value={80_000} />
+      <StatCircle title="Commands Ran" value={45_000_000} />
+    </StatCircles>
+    <Feature
+      title="TITLE"
+      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. "
+      images={["/bedwars.png", "/skywars.png"]}
+      align="left"
+    />
+    <Feature
+      title="TITLE"
+      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. "
+      images={["/skywars.png"]}
+      align="right"
+    />
+    <Feature
+      title="TITLE"
+      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. "
+      images={["/bedwars.png"]}
+      align="left"
+    />
+  </>
 );
 
 export default Index;

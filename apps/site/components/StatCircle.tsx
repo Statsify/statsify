@@ -21,6 +21,8 @@ const StyledStatCircleContainer = styled.div`
 
   margin-left: 100px;
   margin-right: 100px;
+
+  width: 150px;
 `;
 
 const StyledStatCircle = styled.div`
@@ -31,6 +33,15 @@ const StyledStatCircle = styled.div`
 
   margin-top: 10px;
   margin-bottom: 10px;
+
+  transition: 0.2s;
+
+  &:hover {
+    border-radius: 50%;
+
+    animation: pulse;
+    animation-duration: 1.05s;
+  }
 `;
 
 const StyledStatCircleTitle = styled.p`
