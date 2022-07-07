@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Image from "next/image";
+import Image from "next/future/image";
 
 export interface LogoProps {
   width?: number;
