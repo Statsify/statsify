@@ -7,8 +7,8 @@
  */
 
 import { BaseDuelsGameMode, MultiDuelsGameMode } from "@statsify/schemas";
-import { If, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
+import { Table } from "#components";
 import { prettify } from "@statsify/util";
 
 interface MultiDuelsGameModeModeTableProps {
@@ -23,16 +23,14 @@ const MultiDuelsGameModeModeTable = ({
   t,
 }: MultiDuelsGameModeModeTableProps) => (
   <Table.ts title={`§6${prettify(title)}`}>
-    <If condition={stats.bestWinstreak}>
-      <Table.tr>
-        <Table.td title={t("stats.winstreak")} value={t(stats.winstreak)} color="§e" />
-        <Table.td
-          title={t("stats.bestWinstreak")}
-          value={t(stats.bestWinstreak)}
-          color="§e"
-        />
-      </Table.tr>
-    </If>
+    <Table.tr>
+      <Table.td title={t("stats.winstreak")} value={t(stats.winstreak)} color="§e" />
+      <Table.td
+        title={t("stats.bestWinstreak")}
+        value={t(stats.bestWinstreak)}
+        color="§e"
+      />
+    </Table.tr>
     <Table.tr>
       <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
       <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
