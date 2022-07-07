@@ -3385,6 +3385,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"countup.js@npm:^2.2.0":
+  version: 2.3.1
+  resolution: "countup.js@npm:2.3.1"
+  checksum: d35a497dc7afd035273362a19e99a41345fdd1d00e73b0a551b1aaafaf4fa8f97c14e7f9d987d9f2847d46764c1cdab7af573a07aaa690c0f454d95a6d113bf7
+  languageName: node
+  linkType: hard
+
 "create-require@npm:^1.1.0":
   version: 1.1.1
   resolution: "create-require@npm:1.1.1"
@@ -7409,6 +7416,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-countup@npm:^6.3.0":
+  version: 6.3.0
+  resolution: "react-countup@npm:6.3.0"
+  dependencies:
+    countup.js: ^2.2.0
+  peerDependencies:
+    react: ">= 16.3.0"
+  checksum: 2ac8dc46e46de6de8ec68a1b6a22848214a0a4339bf1305c3e01ab71cbbe63f4ab94c4424b89881256365b85bb67479d26d63181b27888576aa644d7c7b3a1ce
+  languageName: node
+  linkType: hard
+
 "react-dom@npm:^18.2.0":
   version: 18.2.0
   resolution: "react-dom@npm:18.2.0"
@@ -7980,6 +7998,7 @@ __metadata:
     "@types/styled-components": ^5
     next: ^12.2.0
     react: ^18.2.0
+    react-countup: ^6.3.0
     react-dom: ^18.2.0
     react-typed: ^1.2.0
     styled-components: ^5.3.5

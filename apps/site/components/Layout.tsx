@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Container } from "./Container";
 import { Footer } from "./Footer";
 import { Hero } from "./Hero";
 import { ReactNode } from "react";
@@ -17,7 +18,9 @@ export interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => (
   <>
     <Hero />
-    <main>{children}</main>
+    <main>
+      <Container>{children}</Container>
+    </main>
     <Footer />
   </>
 );

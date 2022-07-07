@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import Image from "next/image";
 import styled from "styled-components";
-import { Logo } from "../Logo";
 
 const StyledNavbar = styled.nav`
   display: flex;
@@ -15,6 +15,8 @@ const StyledNavbar = styled.nav`
   justify-content: center;
 
   width: 100%;
+
+  margin-top: 16px;
 `;
 
 const Branding = styled.div`
@@ -24,7 +26,7 @@ const Branding = styled.div`
 export const Navbar = () => (
   <StyledNavbar>
     <Branding>
-      <Logo />
+      <Image src="/logo.svg" alt="logo" width="350vw" height="100vh" priority />
     </Branding>
   </StyledNavbar>
 );

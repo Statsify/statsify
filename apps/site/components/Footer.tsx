@@ -9,7 +9,6 @@
 import Image from "next/future/image";
 import Link from "next/link";
 import styled from "styled-components";
-import { Logo } from "./Logo";
 
 const StyledFooter = styled.footer`
   width: 100%;
@@ -54,7 +53,7 @@ const FooterLinks = styled(FooterSocials)`
 
 export const Footer = () => (
   <StyledFooter>
-    <Logo width={200} height={75} />
+    <Image src="/logo.svg" alt="logo" width="200vw" height="75vh" />
     <FooterSocials>
       <Link href="/">
         <FooterLink>

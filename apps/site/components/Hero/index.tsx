@@ -33,20 +33,23 @@ const StyledHero = styled.div`
 
 const HeroHeader = styled.p`
   font-weight: 800;
-  font-size: 3em;
+  font-size: 3rem;
   text-align: center;
   margin: 8px;
 `;
 
 const HeroDescription = styled.div`
   font-weight: 600;
-  font-size: 2em;
+  font-size: 2rem;
   margin: 8px;
 `;
 
 const HeroButtons = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
   margin: 8px;
   margin-bottom: 32px;
 
@@ -65,9 +68,12 @@ export const Hero = () => (
           "View all your Hypixel stats on Discord",
           "Check your stats in every game",
           "View your leaderboard positions",
-          "See your improvements with historical stats",
+          "See your improvements with daily stats",
+          "See your improvements with weekly stats",
+          "See your improvements with monthly stats",
         ]}
         typeSpeed={40}
+        backDelay={40}
       />
     </HeroDescription>
     <Divider />
