@@ -18,11 +18,7 @@ const StyledHero = styled.div`
   align-items: center;
   justify-content: center;
 
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    url("/hero.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 
   width: 100%;
 
