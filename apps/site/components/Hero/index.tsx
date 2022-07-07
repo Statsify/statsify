@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import Image from "next/future/image";
 import Typed from "react-typed";
 import styled from "styled-components";
 import { Button } from "../Button";
@@ -18,17 +19,21 @@ const StyledHero = styled.div`
   align-items: center;
   justify-content: center;
 
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    url("/hero.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-attachment: fixed;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 
   width: 100%;
 
   color: #ffffff;
   text-align: center;
   text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
+`;
+
+const HeroContent = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const HeroHeader = styled.p`
@@ -57,24 +62,27 @@ const HeroButtons = styled.div`
 
 export const Hero = () => (
   <StyledHero>
-    <Navbar />
-    <HeroHeader>Hypixel Stats Visualized</HeroHeader>
-    <HeroDescription>
-      <Typed
-        strings={[
-          "View all your Hypixel stats on Discord",
-          "Check your stats in every game",
-          "View your leaderboard positions",
-          "See your improvements with historical stats",
-        ]}
-        typeSpeed={40}
-      />
-    </HeroDescription>
-    <Divider />
-    <HeroButtons>
-      <Button>Invite</Button>
-      <Button>Discord</Button>
-      <Button>Premium</Button>
-    </HeroButtons>
+    <HeroContent>
+      <Navbar />
+      <HeroHeader>Hypixel Stats Visualized</HeroHeader>
+      <HeroDescription>
+        <Typed
+          strings={[
+            "View all your Hypixel stats on Discord",
+            "Check your stats in every game",
+            "View your leaderboard positions",
+            "See your improvements with historical stats",
+          ]}
+          typeSpeed={40}
+        />
+      </HeroDescription>
+      <Divider />
+      <HeroButtons>
+        <Button>Invite</Button>
+        <Button>Discord</Button>
+        <Button>Premium</Button>
+      </HeroButtons>
+    </HeroContent>
+    <Image src="/hero.png" />
   </StyledHero>
 );
