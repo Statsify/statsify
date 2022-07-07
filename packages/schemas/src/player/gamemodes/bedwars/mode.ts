@@ -117,7 +117,6 @@ export class DreamsBedWarsMode extends BedWarsMode {
   }
 }
 
-//TODO(ugcodrr) Show bedwars challenges either in separate command or as another mode/page.
 export class ChallengesBedWars {
   @Field({ leaderboard: { enabled: false } })
   public uniqueChallenges: number;
