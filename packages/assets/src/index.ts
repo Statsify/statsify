@@ -87,15 +87,24 @@ export const getLogoPath = (tier: UserTier = UserTier.NONE, size = 26) => {
   let path: string;
 
   switch (tier) {
-    case UserTier.NONE:
-      path = "";
-      break;
-    case UserTier.PREMIUM:
-    case UserTier.STAFF:
-      path = "premium_";
-      break;
     case UserTier.CORE:
       path = "core_";
+      break;
+    case UserTier.EMERALD:
+    case UserTier.STAFF:
+      path = "emerald_";
+      break;
+    case UserTier.DIAMOND:
+      path = "diamond_";
+      break;
+    case UserTier.GOLD:
+      path = "gold_";
+      break;
+    case UserTier.IRON:
+      path = "iron_";
+      break;
+    case UserTier.NONE:
+      path = "";
       break;
   }
 
