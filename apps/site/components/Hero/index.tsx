@@ -19,7 +19,7 @@ const StyledHero = styled.div`
   justify-content: center;
 
   background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    url("https://media.discordapp.net/attachments/721694078818975817/994347488859390032/woolwars_overall_1.png");
+    url("/hero.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
