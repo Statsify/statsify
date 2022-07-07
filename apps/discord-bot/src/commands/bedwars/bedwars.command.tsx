@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BEDWARS_MODES, BedWarsModes, GameMode, Player } from "@statsify/schemas";
+import { BEDWARS_MODES, BedWarsModes } from "@statsify/schemas";
 import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
 } from "../base.hypixel-command";
-import { BedWarsChallenges, BedWarsProfile } from "./bedwars.profile";
+import { BedWarsProfile } from "./bedwars.profile";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.bedwars") })
@@ -26,22 +26,5 @@ export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
     { mode }: ProfileData<BedWarsModes, never>
   ): JSX.Element {
     return <BedWarsProfile {...base} mode={mode} />;
-  }
-}
-
-@Command({ description: (t) => t("commands.bedwarsChallenges") })
-export class BedWarsChallengesCommand extends BaseHypixelCommand<BedWarsModes> {
-  public constructor() {
-    super(BEDWARS_MODES);
-  }
-
-  public filterModes(
-    player: Player,
-    modes: GameMode<BedWarsModes>[]
-  ): GameMode<BedWarsModes>[] {
-    return [modes[0]];
-  }
-  public getProfile(base: BaseProfileProps): JSX.Element {
-    return <BedWarsChallenges {...base} />;
   }
 }
