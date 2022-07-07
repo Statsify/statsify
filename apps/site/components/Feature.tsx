@@ -41,6 +41,7 @@ const StyledFeatureContainer = styled.div<AlignProps>`
 
   @media only screen and (max-device-width: 480px) {
     flex-direction: column-reverse;
+    width: 90%;
   }
 `;
 
@@ -52,6 +53,7 @@ const StyledFeatureImageContainer = styled.div`
 
   > img {
     border-radius: 3%;
+    width: 100%;
   }
 `;
 
@@ -108,7 +110,7 @@ export const Feature = ({ align, title, description, images }: FeatureProps) => 
           swipeable
           emulateTouch
           autoPlay
-          autoFocus
+          autoFocus={false}
         >
           {images.map((image, index) => (
             <StyledFeatureImageContainer key={index}>
