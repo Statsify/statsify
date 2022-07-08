@@ -7,9 +7,26 @@
  */
 
 import Image from "next/image";
-import bedwarsPicture from "../public/bedwars.png";
-import skywarsPicture from "../public/skywars.png";
+import arcadeProfile from "../public/examples/arcade.png";
+import bedwarsLeaderboard from "../public/examples/bedwars-leaderboard.png";
+import bedwarsProfile from "../public/examples/bedwars.png";
+import blitzsgLeaderboard from "../public/examples/blitzsg-leaderboard.png";
+import buildbattleLeaderboard from "../public/examples/buildbattle-leaderboard.png";
+import dailyMurderMysteryProfile from "../public/examples/daily-murdermystery.png";
+import dailyTNTGamesProfile from "../public/examples/daily-tntgames.png";
+import duelsProfile from "../public/examples/duels.png";
+import friendsProfile from "../public/examples/friends.png";
+import guildMemberProfile from "../public/examples/guild-member.png";
+import guildOvearllProfile from "../public/examples/guild-overall.png";
+import guildOverallGexpProfile from "../public/examples/guild-overall-gexp.png";
+import guildTopProfile from "../public/examples/guild-top.png";
+import mutualsProfile from "../public/examples/mutuals.png";
+import recentGamesProfile from "../public/examples/recentgames.png";
+import skinEmbed from "../public/examples/skin.png";
+import skywarsProfile from "../public/examples/skywars.png";
+import statusProfile from "../public/examples/status.png";
 import styled from "styled-components";
+import woolwarsLeaderboard from "../public/examples/woolwars-leaderboard.png";
 import { Code } from "../components/Code";
 import { Feature } from "../components/Feature";
 import { Invite } from "../components/Invite";
@@ -33,14 +50,6 @@ const StatCircles = styled.div`
   }
 `;
 
-const BedWarsPicture = () => (
-  <Image src={bedwarsPicture} alt="bedwars" layout="intrinsic" />
-);
-
-const SkyWarsPicture = () => (
-  <Image src={skywarsPicture} alt="skywars" layout="intrinsic" />
-);
-
 const Index = () => (
   <>
     <StatCircles>
@@ -49,42 +58,61 @@ const Index = () => (
     </StatCircles>
     <Feature
       title="Players"
-      images={[<BedWarsPicture />, <SkyWarsPicture />]}
+      images={[
+        <Image src={bedwarsProfile} alt="BedWars" />,
+        <Image src={duelsProfile} alt="Duels" />,
+        <Image src={skywarsProfile} alt="SkyWars" />,
+        <Image src={arcadeProfile} alt="Arcade" />,
+      ]}
       align="left"
     >
-      Beautiful visuals are provided by Statsify for each game's statistics on Hypixel for
-      any player. Simply input <Code>/bedwars</Code> into Discord to see your BedWars
+      Beautiful visuals are provided by Statsify for each game's stats on Hypixel for any
+      player. Simply input <Code>/bedwars</Code> into Discord to see your BedWars
       statistics or those of your friends. To see further games, type <Code>/</Code>{" "}
       followed by the name of the game. To quickly search for yourself, you may link your
       Minecraft account to your Discord with <Code>/verify</Code>
     </Feature>
     <Feature
       title="Leaderboards"
-      images={[<BedWarsPicture />, <SkyWarsPicture />]}
+      images={[
+        <Image src={woolwarsLeaderboard} alt="WoolWars Overall Wins Leaderboard" />,
+        <Image src={bedwarsLeaderboard} alt="BedWars Level Leaderboard" />,
+        <Image src={buildbattleLeaderboard} alt="Build Battle Score Leaderboard" />,
+        <Image src={blitzsgLeaderboard} alt="BlitzSG Overall Kills Leaderboard" />,
+      ]}
       align="right"
     >
       Using Statsify's robust leaderboard command, you can browse approximately 2,000
       leaderboards. The leaderboards may be seen using <Code>/leaderboard</Code> followed
-      by the game and the stat. For instance, to display the leaderboard for Duels Classic
-      Wins, for instance, write <Code>/leaderboard duels leaderboard: classic wins</Code>{" "}
-      After executing the command, it is possible to rapidly switch to another player or
-      position using the search buttons. Additionally, you may use the supplied buttons to
-      browse across the leaderboard to examine the surrounding pages for that leaderboard.
+      by the game and the stat. For instance, to display the leaderboard for WoolWars
+      Wins, for instance, write{" "}
+      <Code>/leaderboard woolwars leaderboard: overall wins</Code> After executing the
+      command, it is possible to rapidly switch to another player or position using the
+      search buttons. Additionally, you may use the supplied buttons to browse across the
+      leaderboard to examine the surrounding pages for that leaderboard.
     </Feature>
     <Feature
       title="Historical Stats"
-      images={[<BedWarsPicture />, <SkyWarsPicture />]}
+      images={[
+        <Image src={dailyTNTGamesProfile} alt="Daily TNT Games" />,
+        <Image src={dailyMurderMysteryProfile} alt="Daily Murder Mystery" />,
+      ]}
       align="left"
     >
-      Using historical stats, Statsify allows you to display your statistics as if you
-      began playing today. There is no need to worry about your past losses. To quickly
-      obtain your daily stats, type <Code>/daily</Code> followed by the game. For example,
-      enter <Code>/daily arcade</Code> to get your daily arcade statistics. The same holds
-      true for weekly, monthly, and additional games.
+      Using historical stats, Statsify allows you to display your stats as if you began
+      playing today. There is no need to worry about your past losses. To quickly obtain
+      your daily stats, type <Code>/daily</Code> followed by the game. For example, enter{" "}
+      <Code>/daily tntgames</Code> to get your daily TNT Games stats. The same holds true
+      for weekly, monthly, and additional games.
     </Feature>
     <Feature
       title="Guilds"
-      images={[<BedWarsPicture />, <SkyWarsPicture />]}
+      images={[
+        <Image src={guildOvearllProfile} alt="Guild Overall" />,
+        <Image src={guildOverallGexpProfile} alt="Guild Overall GEXP" />,
+        <Image src={guildTopProfile} alt="Guild Top" />,
+        <Image src={guildMemberProfile} alt="Guild Member" />,
+      ]}
       align="right"
     >
       Statsify makes managing your guild easier. Simply enter <Code>/guild top</Code> to
@@ -97,7 +125,12 @@ const Index = () => (
     </Feature>
     <Feature
       title="Miscellaneous"
-      images={[<BedWarsPicture />, <SkyWarsPicture />]}
+      images={[
+        <Image src={friendsProfile} alt="Friends" />,
+        <Image src={mutualsProfile} alt="Mutuals" />,
+        <Image src={statusProfile} alt="Status" />,
+        <Image src={recentGamesProfile} alt="Recent Games" />,
+      ]}
       align="left"
     >
       Statsify has a plethora of additional helpful hypixel utilities. For example, using
@@ -109,7 +142,7 @@ const Index = () => (
     </Feature>
     <Feature
       title="Minecraft"
-      images={[<BedWarsPicture />, <SkyWarsPicture />]}
+      images={[<Image src={skinEmbed} alt="Skin" />]}
       align="right"
     >
       Statsify gives options for seeing a player's overall Minecraft profile. With{" "}

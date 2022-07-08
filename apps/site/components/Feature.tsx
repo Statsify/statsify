@@ -56,10 +56,21 @@ const StyledFeatureImageContainer = styled.div`
 
   display: flex;
   justify-content: center;
+  align-items: center;
 
   > span img {
     border-radius: 3%;
-    width: 100%;
+
+    @media (max-width: 1280px) {
+      width: 90%;
+      min-height: none;
+      max-height: none;
+    }
+
+    @media (min-width: 1280px) {
+      min-height: 300px;
+      max-height: 450px;
+    }
   }
 `;
 
