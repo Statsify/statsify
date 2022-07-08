@@ -7,6 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
+import handlebars from "handlebars";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
@@ -79,9 +80,7 @@ async function bootstrap() {
 
   //Fastify template renderer for Redoc
   app.setViewEngine({
-    engine: {
-      handlebars: require("handlebars"),
-    },
+    engine: { handlebars },
     templates: join(__dirname, "..", "views"),
   });
 
