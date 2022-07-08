@@ -22,12 +22,20 @@ const StyledNavbar = styled.nav`
 
 const Branding = styled.div`
   filter: drop-shadow(0px 0px 15px rgba(0, 0, 0, 0.8));
+  position: relative;
+
+  width: 100%;
+  min-height: 100px;
+
+  @media (max-width: 640px) {
+    width: 90%;
+  }
 `;
 
 export const Navbar = () => (
   <StyledNavbar>
     <Branding>
-      <Image src={Logo} alt="logo" width="350vw" height="100vh" priority />
+      <Image src={Logo} alt="logo" priority layout="fill" objectFit="fill" />
     </Branding>
   </StyledNavbar>
 );

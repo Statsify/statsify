@@ -18,19 +18,20 @@ export interface Tip {
   disabled?: string[];
 
   /**
-   * Whether or not the user is eligible to receive this tip.
+   * Whether or not the user is uneligible to receive this tip.
    */
-  eligible?: (user: User | null) => boolean;
+  uneligible?: (user: User | null) => boolean;
 }
 
 export const tips: Tip[] = [
   {
     message: { content: (t) => t("tips.discord") },
-    eligible: (user) => Boolean(user?.serverMember),
+    uneligible: (user) => Boolean(user?.serverMember),
   },
   {
     message: { content: (t) => t("tips.verify") },
-    eligible: (user) => Boolean(user?.uuid),
+    uneligible: (user) => Boolean(user?.uuid),
+    disabled: ["verify"],
   },
   { message: { content: (t) => t("tips.github") } },
   { message: { content: (t) => t("tips.premium") } },

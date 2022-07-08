@@ -81,7 +81,7 @@ export class CommandListener extends AbstractCommandListener {
       username: `${username}#${discriminator}`,
       locale,
       uuid: user?.uuid ?? null,
-      tier: user?.tier ?? 0,
+      tier: user?.tier ?? UserTier.NONE,
       serverMember: user?.serverMember ?? false,
       theme: user?.theme ?? null,
     });
@@ -94,7 +94,10 @@ export class CommandListener extends AbstractCommandListener {
       this.cooldownPrecondition.bind(this, command, user, id),
     ];
 
+    this.apiService.incrementCommand(commandName);
+
     return this.executeCommand({
+      commandName,
       command,
       context,
       preconditions,
@@ -165,7 +168,10 @@ export class CommandListener extends AbstractCommandListener {
 
     if (Math.random() > TIP_CHANCE) return defaultResponse;
 
-    const useableTips = tips.filter((t) => !t.disabled?.includes(commandName));
+    const useableTips = tips.filter(
+      (t) => !t.disabled?.includes(commandName) && !t.uneligible?.(user)
+    );
+
     if (!useableTips.length) return defaultResponse;
 
     const tip = useableTips[Math.floor(Math.random() * useableTips.length)];

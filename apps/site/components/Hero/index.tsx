@@ -24,14 +24,14 @@ const StyledHero = styled.div`
   background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 
   width: 100%;
-  min-height: 80%;
+  min-height: 70vh;
 
   color: #ffffff;
   text-align: center;
   text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
 
   @media (max-width: 640px) {
-    min-height: 95%;
+    min-height: 95vh;
   }
 `;
 
@@ -53,8 +53,8 @@ const HeroDescription = styled.div`
   margin: auto;
   vertical-align: middle;
 
-  @media (max-width: 520px) {
-    min-height: 70px;
+  @media (max-width: 640px) {
+    min-height: 60px;
   }
 `;
 

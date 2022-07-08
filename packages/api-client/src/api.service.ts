@@ -10,6 +10,7 @@ import * as Sentry from "@sentry/node";
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
   DeletePlayerResponse,
+  GetCommandUsageResponse,
   GetFriendsResponse,
   GetGamecountsResponse,
   GetGuildResponse,
@@ -231,6 +232,18 @@ export class ApiService {
     return this.request<GetUserResponse>(`/user`, { tag }, "DELETE")
       .then((data) => data.user ?? null)
       .catch(() => null);
+  }
+
+  public getCommandUsage() {
+    return this.requestKey<GetCommandUsageResponse, "usage">(
+      `/commands`,
+      "usage",
+      {}
+    ).catch(() => null);
+  }
+
+  public incrementCommand(command: string) {
+    return this.request(`/commands`, { command }, "PATCH");
   }
 
   private async requestKey<T, K extends keyof T>(

@@ -6,15 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import styled from "styled-components";
+import { Field } from "../metadata";
 
-export const Divider = styled.div`
-  width: auto;
-  margin: 24px;
-  height: 1px;
-  background-color: rgba(255, 255, 255, 0.4);
+export class Commands {
+  @Field({ mongo: { unique: true, index: true } })
+  public name: string;
 
-  @media (max-width: 640px) {
-    width: 90%;
-  }
-`;
+  @Field({ type: () => Object })
+  public usage: Record<string, number>;
+}

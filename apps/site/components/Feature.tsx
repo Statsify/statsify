@@ -39,8 +39,10 @@ const StyledFeatureContainer = styled.div<AlignProps>`
   margin-top: 48px;
   margin-bottom: 48px;
 
-  @media (max-width: 640px) {
+  @media (max-width: 1280px) {
     flex-direction: column-reverse;
+    align-items: center;
+
     width: 90%;
   }
 `;
@@ -79,7 +81,8 @@ const StyledFeatureText = styled.div<AlignProps>`
     line-height: 160%;
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 1280px) {
+    margin-top: 20px;
     text-align: center;
     margin-left: 0px;
     margin-right: 0px;
@@ -113,6 +116,7 @@ export const Feature = ({ align, title, children, images }: FeatureProps) => (
             showThumbs={false}
             showStatus={false}
             showArrows={false}
+            showIndicators={false}
             autoFocus
             infiniteLoop
             swipeable

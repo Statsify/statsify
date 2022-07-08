@@ -24,7 +24,7 @@ export class AppController {
   public get() {
     return {
       data: {
-        docUrl: "http://localhost:3000/swagger/json",
+        docUrl: "http://localhost:3000/swagger-json",
         favicon: "/public/icon.svg",
         options: JSON.stringify({
           disableSearch: true,

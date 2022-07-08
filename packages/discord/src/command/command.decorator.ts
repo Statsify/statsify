@@ -14,7 +14,7 @@ export function Command(options: CommandOptions): ClassDecorator {
     const metadata: CommandMetadata = {
       ...Reflect.getMetadata("statsify:command", target),
       ...options,
-      name: options.name ?? target.name.toLowerCase().replace("command", ""),
+      name: options.name ?? target.name.toLowerCase().replace(/command$/, ""),
       methodName: "run",
     };
 

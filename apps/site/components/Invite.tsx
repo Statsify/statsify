@@ -26,6 +26,10 @@ const StyledInvite = styled.div`
 
   h1 {
     font-size: 3rem;
+
+    @media (max-width: 640px) {
+      font-size: 2.5rem;
+    }
   }
 
   p {

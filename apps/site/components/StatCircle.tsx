@@ -23,6 +23,13 @@ const StyledStatCircleContainer = styled.div`
   margin-right: 100px;
 
   width: 150px;
+
+  @media (max-width: 640px) {
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
 `;
 
 const StyledStatCircle = styled.div`

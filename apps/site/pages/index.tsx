@@ -23,9 +23,10 @@ const StatCircles = styled.div`
   background-color: #111111;
 
   width: 100%;
+  min-height: 30vh;
 
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 
   @media (max-width: 640px) {
     flex-direction: column;
@@ -33,11 +34,11 @@ const StatCircles = styled.div`
 `;
 
 const BedWarsPicture = () => (
-  <Image src={bedwarsPicture} alt="bedwars" layout="intrinsic" placeholder="blur" />
+  <Image src={bedwarsPicture} alt="bedwars" layout="intrinsic" />
 );
 
 const SkyWarsPicture = () => (
-  <Image src={skywarsPicture} alt="skywars" layout="intrinsic" placeholder="blur" />
+  <Image src={skywarsPicture} alt="skywars" layout="intrinsic" />
 );
 
 const Index = () => (
