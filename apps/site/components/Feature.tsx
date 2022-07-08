@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Image from "next/future/image";
 import styled from "styled-components";
 import { Carousel } from "react-responsive-carousel";
 import { ReactNode } from "react";
@@ -97,7 +96,7 @@ const StyledFeatureText = styled.div<AlignProps>`
 
 export interface FeatureProps extends AlignProps {
   title: string;
-  images: string[];
+  images: ReactNode[];
   children?: ReactNode;
 }
 
@@ -122,15 +121,13 @@ export const Feature = ({ align, title, children, images }: FeatureProps) => (
           >
             {images.map((image, index) => (
               <StyledFeatureImageContainer key={index}>
-                <Image src={image} />
+                {image}
               </StyledFeatureImageContainer>
             ))}
           </Carousel>
         </StyledFeatureCarouselContainer>
       ) : (
-        <StyledFeatureImageContainer>
-          <Image src={images[0]} />
-        </StyledFeatureImageContainer>
+        <StyledFeatureImageContainer>{image}</StyledFeatureImageContainer>
       )}
     </StyledFeatureContainer>
   </StyledFeature>

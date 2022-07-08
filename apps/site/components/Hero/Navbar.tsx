@@ -7,6 +7,7 @@
  */
 
 import Image from "next/image";
+import Logo from "../../public/logo.svg";
 import styled from "styled-components";
 
 const StyledNavbar = styled.nav`
@@ -26,7 +27,7 @@ const Branding = styled.div`
 export const Navbar = () => (
   <StyledNavbar>
     <Branding>
-      <Image src="/logo.svg" alt="logo" width="350vw" height="100vh" priority />
+      <Image src={Logo} alt="logo" width="350vw" height="100vh" priority />
     </Branding>
   </StyledNavbar>
 );

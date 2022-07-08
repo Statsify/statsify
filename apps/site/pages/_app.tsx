@@ -12,6 +12,11 @@ import { createGlobalStyle } from "styled-components";
 import type { AppProps } from "next/app";
 
 const GlobalStyle = createGlobalStyle`
+  @font-face {
+    font-family: "Lexend Deca";
+    src: url(/fonts/LexendDeca.ttf) format('ttf') tech('variations');
+  }
+
    * {
     margin: 0;
     padding: 0;
