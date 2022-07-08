@@ -32,7 +32,7 @@ export const Button = styled.button`
   margin-left: 10px;
   margin-right: 10px;
 
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 640px) {
     margin-top: 10px;
     margin-bottom: 10px;
   }

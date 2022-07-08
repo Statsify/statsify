@@ -19,7 +19,7 @@ const StatCircles = styled.div`
 
   margin-bottom: 40px;
 
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 640px) {
     flex-direction: column;
   }
 `;

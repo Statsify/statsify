@@ -14,7 +14,7 @@ export const Divider = styled.div`
   margin: 16px;
   background-color: rgba(255, 255, 255, 0.4);
 
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 640px) {
     width: 90%;
   }
 `;

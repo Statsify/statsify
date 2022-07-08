@@ -40,7 +40,7 @@ const StyledFeatureContainer = styled.div<AlignProps>`
   margin-top: 48px;
   margin-bottom: 48px;
 
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 640px) {
     flex-direction: column-reverse;
     width: 90%;
   }
@@ -80,7 +80,7 @@ const StyledFeatureText = styled.div<AlignProps>`
     line-height: 160%;
   }
 
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 640px) {
     text-align: center;
     margin-left: 0px;
     margin-right: 0px;

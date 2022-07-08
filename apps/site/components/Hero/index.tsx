@@ -50,7 +50,7 @@ const HeroButtons = styled.div`
   margin: 8px;
   margin-bottom: 32px;
 
-  @media only screen and (max-device-width: 480px) {
+  @media (max-width: 640px) {
     flex-direction: column;
   }
 `;
