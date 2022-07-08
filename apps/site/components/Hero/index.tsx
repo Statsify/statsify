@@ -32,7 +32,7 @@ const StyledHero = styled.div`
   text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
 
   @media (max-width: 640px) {
-    min-height: 80%;
+    min-height: 95%;
   }
 `;
 
