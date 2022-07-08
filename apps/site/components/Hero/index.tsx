@@ -8,7 +8,7 @@
 
 import Image from "next/image";
 import Typed from "react-typed";
-import heroImage from "../../public/hero.webp";
+import heroImage from "../../public/hero.png";
 import styled from "styled-components";
 import { Button } from "../Button";
 import { Divider } from "../Divider";
