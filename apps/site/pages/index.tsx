@@ -24,7 +24,8 @@ const StatCircles = styled.div`
 
   width: 100%;
 
-  padding: 40px;
+  padding-top: 40px;
+  padding-bottom: 40px;
 
   @media (max-width: 640px) {
     flex-direction: column;
