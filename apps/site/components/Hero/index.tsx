@@ -6,7 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import Image from "next/image";
 import Typed from "react-typed";
+import heroImage from "../../public/hero.webp";
 import styled from "styled-components";
 import { Button } from "../Button";
 import { Divider } from "../Divider";
@@ -18,8 +20,9 @@ const StyledHero = styled.div`
   align-items: center;
   justify-content: center;
 
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    url("/hero.webp");
+  position: relative;
+
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 
   width: 100%;
   min-height: 70%;
@@ -27,6 +30,11 @@ const StyledHero = styled.div`
   color: #ffffff;
   text-align: center;
   text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
+`;
+
+const HeroContent = styled.div`
+  position: absolute;
+  z-index: 1;
 `;
 
 const HeroHeader = styled.p`
@@ -58,29 +66,32 @@ const HeroButtons = styled.div`
 
 export const Hero = () => (
   <StyledHero>
-    <Navbar />
-    <HeroHeader>Hypixel Stats Visualized</HeroHeader>
-    <HeroDescription>
-      <Typed
-        strings={[
-          "View all your Hypixel stats on Discord",
-          "Check your stats in every game",
-          "View your leaderboard positions",
-          "See your improvements with daily stats",
-          "See your improvements with weekly stats",
-          "See your improvements with monthly stats",
-        ]}
-        typeSpeed={80}
-        backSpeed={40}
-        backDelay={500}
-        loop
-      />
-    </HeroDescription>
-    <Divider />
-    <HeroButtons>
-      <Button>Invite</Button>
-      <Button>Discord</Button>
-      <Button>Premium</Button>
-    </HeroButtons>
+    <HeroContent>
+      <Navbar />
+      <HeroHeader>Hypixel Stats Visualized</HeroHeader>
+      <HeroDescription>
+        <Typed
+          strings={[
+            "View all your Hypixel stats on Discord",
+            "Check your stats in every game",
+            "View your leaderboard positions",
+            "See your improvements with daily stats",
+            "See your improvements with weekly stats",
+            "See your improvements with monthly stats",
+          ]}
+          typeSpeed={80}
+          backSpeed={40}
+          backDelay={500}
+          loop
+        />
+      </HeroDescription>
+      <Divider />
+      <HeroButtons>
+        <Button>Invite</Button>
+        <Button>Discord</Button>
+        <Button>Premium</Button>
+      </HeroButtons>
+    </HeroContent>
+    <Image src={heroImage} layout="fill" objectFit="cover" quality={100} />
   </StyledHero>
 );
