@@ -17,4 +17,6 @@ module.exports = {
     styledComponents: true,
   },
   swcMinify: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
 };

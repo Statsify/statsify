@@ -9,9 +9,9 @@
 import styled from "styled-components";
 
 export const Divider = styled.div`
-  width: 60%;
+  width: auto;
+  margin: auto;
   height: 1px;
-  margin: 16px;
   background-color: rgba(255, 255, 255, 0.4);
 
   @media (max-width: 640px) {

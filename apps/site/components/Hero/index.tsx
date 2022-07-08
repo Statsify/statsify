@@ -19,13 +19,12 @@ const StyledHero = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   position: relative;
 
   background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
 
   width: 100%;
-  min-height: 70%;
+  min-height: 80%;
 
   color: #ffffff;
   text-align: center;
@@ -51,7 +50,12 @@ const HeroHeader = styled.p`
 const HeroDescription = styled.div`
   font-weight: 600;
   font-size: 1.5rem;
-  margin: 8px;
+  margin: auto;
+  vertical-align: middle;
+
+  @media (max-width: 520px) {
+    min-height: 70px;
+  }
 `;
 
 const HeroButtons = styled.div`
@@ -102,6 +106,7 @@ export const Hero = () => (
       layout="fill"
       objectFit="cover"
       placeholder="blur"
+      priority
     />
   </StyledHero>
 );

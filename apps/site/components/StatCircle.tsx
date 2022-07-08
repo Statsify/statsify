@@ -58,7 +58,7 @@ export interface StatCircleProps {
 export const StatCircle = ({ title, value }: StatCircleProps) => (
   <StyledStatCircleContainer>
     <StyledStatCircle />
-    <CountUp start={1} end={value} duration={2.75} separator="," />
+    <CountUp end={value} duration={2.75} separator="," />
     <StyledStatCircleTitle>{title}</StyledStatCircleTitle>
   </StyledStatCircleContainer>
 );
