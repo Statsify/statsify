@@ -9,6 +9,7 @@
 import styled from "styled-components";
 import { Carousel } from "react-responsive-carousel";
 import { ReactNode } from "react";
+import { useWindowSize } from "../hooks/useWindowSize";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 type Align = "left" | "right";
@@ -114,36 +115,41 @@ export interface FeatureProps extends AlignProps {
   children?: ReactNode;
 }
 
-export const Feature = ({ align, title, children, images }: FeatureProps) => (
-  <StyledFeature align={align}>
-    <StyledFeatureContainer align={align}>
-      <StyledFeatureText align={align}>
-        <h1>{title}</h1>
-        <p>{children}</p>
-      </StyledFeatureText>
-      {images.length > 1 ? (
-        <StyledFeatureCarouselContainer>
-          <Carousel
-            showThumbs={false}
-            showStatus={false}
-            showArrows={false}
-            showIndicators={false}
-            autoFocus
-            infiniteLoop
-            swipeable
-            emulateTouch
-            autoPlay
-          >
-            {images.map((image, index) => (
-              <StyledFeatureImageContainer key={index}>
-                {image}
-              </StyledFeatureImageContainer>
-            ))}
-          </Carousel>
-        </StyledFeatureCarouselContainer>
-      ) : (
-        <StyledFeatureImageContainer>{images[0]}</StyledFeatureImageContainer>
-      )}
-    </StyledFeatureContainer>
-  </StyledFeature>
-);
+export const Feature = ({ align, title, children, images }: FeatureProps) => {
+  const { width = 0 } = useWindowSize();
+
+  return (
+    <StyledFeature align={align}>
+      <StyledFeatureContainer align={align}>
+        <StyledFeatureText align={align}>
+          <h1>{title}</h1>
+          <p>{children}</p>
+        </StyledFeatureText>
+        {images.length > 1 ? (
+          <StyledFeatureCarouselContainer>
+            <Carousel
+              showThumbs={false}
+              showStatus={false}
+              showArrows={false}
+              showIndicators={false}
+              dynamicHeight={width <= 1280}
+              autoFocus
+              infiniteLoop
+              swipeable
+              emulateTouch
+              autoPlay
+            >
+              {images.map((image, index) => (
+                <StyledFeatureImageContainer key={index}>
+                  {image}
+                </StyledFeatureImageContainer>
+              ))}
+            </Carousel>
+          </StyledFeatureCarouselContainer>
+        ) : (
+          <StyledFeatureImageContainer>{images[0]}</StyledFeatureImageContainer>
+        )}
+      </StyledFeatureContainer>
+    </StyledFeature>
+  );
+};
