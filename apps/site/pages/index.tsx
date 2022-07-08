@@ -32,8 +32,13 @@ const StatCircles = styled.div`
   }
 `;
 
-const BedWarsPicture = () => <Image src={bedwarsPicture} alt="bedwars" />;
-const SkyWarsPicture = () => <Image src={skywarsPicture} alt="skywars" />;
+const BedWarsPicture = () => (
+  <Image src={bedwarsPicture} alt="bedwars" layout="intrinsic" placeholder="blur" />
+);
+
+const SkyWarsPicture = () => (
+  <Image src={skywarsPicture} alt="skywars" layout="intrinsic" placeholder="blur" />
+);
 
 const Index = () => (
   <>

@@ -17,9 +17,4 @@ module.exports = {
     styledComponents: true,
   },
   swcMinify: true,
-  experimental: {
-    images: {
-      allowFutureImage: true,
-    },
-  },
 };

@@ -30,6 +30,10 @@ const StyledHero = styled.div`
   color: #ffffff;
   text-align: center;
   text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
+
+  @media (max-width: 640px) {
+    min-height: 80%;
+  }
 `;
 
 const HeroContent = styled.div`
@@ -92,6 +96,12 @@ export const Hero = () => (
         <Button>Premium</Button>
       </HeroButtons>
     </HeroContent>
-    <Image src={heroImage} layout="fill" objectFit="cover" quality={100} />
+    <Image
+      src={heroImage}
+      alt="hero"
+      layout="fill"
+      objectFit="cover"
+      placeholder="blur"
+    />
   </StyledHero>
 );
