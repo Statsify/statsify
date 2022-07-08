@@ -21,8 +21,6 @@ const StyledHero = styled.div`
   justify-content: center;
   position: relative;
 
-  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
-
   width: 100%;
   min-height: 70vh;
 
@@ -32,6 +30,10 @@ const StyledHero = styled.div`
 
   @media (max-width: 640px) {
     min-height: 95vh;
+  }
+
+  > span img {
+    filter: blur(10px) brightness(80%);
   }
 `;
 
