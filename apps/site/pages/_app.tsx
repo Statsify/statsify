@@ -33,6 +33,10 @@ const GlobalStyle = createGlobalStyle`
     flex: 1;
    }
 
+   img {
+    user-select: none;
+   }
+
    .slider {
     position: relative;
    }

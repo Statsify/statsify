@@ -69,8 +69,10 @@ export const Hero = () => (
           "See your improvements with weekly stats",
           "See your improvements with monthly stats",
         ]}
-        typeSpeed={40}
-        backDelay={40}
+        typeSpeed={80}
+        backSpeed={40}
+        backDelay={500}
+        loop
       />
     </HeroDescription>
     <Divider />

@@ -7,6 +7,7 @@
  */
 
 import styled from "styled-components";
+import { Code } from "../components/Code";
 import { Feature } from "../components/Feature";
 import { StatCircle } from "../components/StatCircle";
 
@@ -15,6 +16,8 @@ const StatCircles = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+
+  margin-bottom: 40px;
 
   @media only screen and (max-device-width: 480px) {
     flex-direction: column;
@@ -27,24 +30,61 @@ const Index = () => (
       <StatCircle title="Servers" value={80_000} />
       <StatCircle title="Commands Ran" value={45_000_000} />
     </StatCircles>
+    <Feature title="Players" images={["/bedwars.png", "/skywars.png"]} align="right">
+      Beautiful visuals are provided by Statsify for each game's statistics on Hypixel for
+      any player. Simply input <Code>/bedwars</Code> into Discord to see your BedWars
+      statistics or those of your friends. To see further games, type <Code>/</Code>{" "}
+      followed by the name of the game. To quickly search for yourself, you may link your
+      Minecraft account to your Discord with <Code>/verify</Code>
+    </Feature>
+    <Feature title="Leaderboards" images={["/bedwars.png", "/skywars.png"]} align="left">
+      Using Statsify's robust leaderboard command, you can browse approximately 2,000
+      leaderboards. The leaderboards may be seen using <Code>/leaderboard</Code> followed
+      by the game and the stat. For instance, to display the leaderboard for Duels Classic
+      Wins, for instance, write <Code>/leaderboard duels leaderboard: classic wins</Code>{" "}
+      After executing the command, it is possible to rapidly switch to another player or
+      position using the search buttons. Additionally, you may use the supplied buttons to
+      browse across the leaderboard to examine the surrounding pages for that leaderboard.
+    </Feature>
     <Feature
-      title="TITLE"
-      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. "
+      title="Historical Stats"
       images={["/bedwars.png", "/skywars.png"]}
-      align="left"
-    />
-    <Feature
-      title="TITLE"
-      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. "
-      images={["/skywars.png"]}
       align="right"
-    />
+    >
+      Using historical stats, Statsify allows you to display your statistics as if you
+      began playing today. There is no need to worry about your past losses. To quickly
+      obtain your daily stats, type <Code>/daily</Code> followed by the game. For example,
+      enter <Code>/daily arcade</Code> to get your daily arcade statistics. The same holds
+      true for weekly, monthly, and additional games.
+    </Feature>
+    <Feature title="Guilds" images={["/bedwars.png", "/skywars.png"]} align="left">
+      Statsify makes managing your guild easier. Simply enter <Code>/guild top</Code> to
+      see the members of your guild with the most GEXP for the day, week, or month. Track
+      individual guild members and their GEXP with the <Code>/guild member</Code> command.
+      Use <Code>/guild leaderboard</Code> to see your guild's place on the leaderboards.
+      Statsify's unique features, such as monthly GEXP, make it simple to promote and
+      demote users and monitor their long-term success. Using <Code>/guild overall</Code>,
+      you can quickly compare your guild against others.
+    </Feature>
     <Feature
-      title="TITLE"
-      description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. "
-      images={["/bedwars.png"]}
-      align="left"
-    />
+      title="Miscellaneous"
+      images={["/bedwars.png", "/skywars.png"]}
+      align="right"
+    >
+      Statsify has a plethora of additional helpful hypixel utilities. For example, using
+      <Code>/friends</Code> to access any player's friend list or <Code>/mutuals</Code> to
+      see mutual friends between players Statsify also allows you to monitor player
+      activity using the <Code>/status</Code> and <Code>/recentgames</Code> commands.
+      Using <Code>/gamecounts</Code>, you can track Hypixel's game popularity without ever
+      opening Minecraft.
+    </Feature>
+    <Feature title="Minecraft" images={["/bedwars.png", "/skywars.png"]} align="left">
+      Statsify gives options for seeing a player's overall Minecraft profile. With{" "}
+      <Code>/skin</Code>, you can easily steal a player's skin. Run{" "}
+      <Code>/namehistory</Code> to see a player's prior names. Alternatively, use{" "}
+      <Code>/cape</Code> to see a player's capes. Using <Code>/text</Code> you can create
+      your own Minecraft text.
+    </Feature>
   </>
 );
 

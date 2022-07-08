@@ -19,6 +19,8 @@ export const Button = styled.button`
   text-align: center;
   color: #fff;
 
+  user-select: none;
+
   padding-left: 30px;
   padding-right: 30px;
   padding-top: 10px;

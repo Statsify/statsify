@@ -9,6 +9,7 @@
 import Image from "next/future/image";
 import styled from "styled-components";
 import { Carousel } from "react-responsive-carousel";
+import { ReactNode } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 type Align = "left" | "right";
@@ -45,6 +46,10 @@ const StyledFeatureContainer = styled.div<AlignProps>`
   }
 `;
 
+const StyledFeatureCarouselContainer = styled.div`
+  max-width: 600px;
+`;
+
 const StyledFeatureImageContainer = styled.div`
   margin: 1px;
 
@@ -66,11 +71,13 @@ const StyledFeatureText = styled.div<AlignProps>`
   > h1 {
     font-size: 3.3rem;
     font-weight: 800;
+    margin-bottom: 8px;
   }
 
   > p {
     font-size: 1.2rem;
     font-weight: normal;
+    line-height: 160%;
   }
 
   @media only screen and (max-device-width: 480px) {
@@ -90,34 +97,36 @@ const StyledFeatureText = styled.div<AlignProps>`
 
 export interface FeatureProps extends AlignProps {
   title: string;
-  description: string;
   images: string[];
+  children?: ReactNode;
 }
 
-export const Feature = ({ align, title, description, images }: FeatureProps) => (
+export const Feature = ({ align, title, children, images }: FeatureProps) => (
   <StyledFeature align={align}>
     <StyledFeatureContainer align={align}>
       <StyledFeatureText align={align}>
         <h1>{title}</h1>
-        <p>{description}</p>
+        <p>{children}</p>
       </StyledFeatureText>
       {images.length > 1 ? (
-        <Carousel
-          showThumbs={false}
-          showStatus={false}
-          showArrows={false}
-          autoFocus
-          infiniteLoop
-          swipeable
-          emulateTouch
-          autoPlay
-        >
-          {images.map((image, index) => (
-            <StyledFeatureImageContainer key={index}>
-              <Image src={image} />
-            </StyledFeatureImageContainer>
-          ))}
-        </Carousel>
+        <StyledFeatureCarouselContainer>
+          <Carousel
+            showThumbs={false}
+            showStatus={false}
+            showArrows={false}
+            autoFocus
+            infiniteLoop
+            swipeable
+            emulateTouch
+            autoPlay
+          >
+            {images.map((image, index) => (
+              <StyledFeatureImageContainer key={index}>
+                <Image src={image} />
+              </StyledFeatureImageContainer>
+            ))}
+          </Carousel>
+        </StyledFeatureCarouselContainer>
       ) : (
         <StyledFeatureImageContainer>
           <Image src={images[0]} />
