@@ -74,7 +74,18 @@ export const render: JSX.Render<ImageRenderProps> = (
       resizeWidth = Math.round(resizeHeight * newAspectRatio);
     }
 
-    crop = [0, 0, resizeWidth, resizeHeight];
+    let sx = 0;
+    let sy = 0;
+
+    if (resizeWidth < image.width) {
+      sx = Math.round((image.width - resizeWidth) / 2);
+    }
+
+    if (resizeHeight < image.height) {
+      sy = Math.round((image.height - resizeHeight) / 2);
+    }
+
+    crop = [sx, sy, resizeWidth, resizeHeight];
   }
 
   ctx.drawImage(

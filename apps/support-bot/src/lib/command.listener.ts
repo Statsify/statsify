@@ -41,6 +41,10 @@ export class CommandListener extends AbstractCommandListener {
 
   protected async onCommand(interaction: Interaction): Promise<InteractionResponse> {
     const parentData = interaction.getData();
+
+    if (interaction.getGuildId() !== config("supportBot.guild"))
+      return { type: InteractionResponseType.Pong };
+
     const parentCommand = this.commands.get(parentData.name)!;
 
     if (!parentCommand) return { type: InteractionResponseType.Pong };
