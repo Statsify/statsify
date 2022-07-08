@@ -17,8 +17,11 @@ const StatCircles = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  background-color: #111111;
 
-  margin-bottom: 40px;
+  width: 100%;
+
+  padding: 40px;
 
   @media (max-width: 640px) {
     flex-direction: column;
@@ -31,14 +34,14 @@ const Index = () => (
       <StatCircle title="Servers" value={80_000} />
       <StatCircle title="Commands Ran" value={45_000_000} />
     </StatCircles>
-    <Feature title="Players" images={["/bedwars.png", "/skywars.png"]} align="right">
+    <Feature title="Players" images={["/bedwars.png", "/skywars.png"]} align="left">
       Beautiful visuals are provided by Statsify for each game's statistics on Hypixel for
       any player. Simply input <Code>/bedwars</Code> into Discord to see your BedWars
       statistics or those of your friends. To see further games, type <Code>/</Code>{" "}
       followed by the name of the game. To quickly search for yourself, you may link your
       Minecraft account to your Discord with <Code>/verify</Code>
     </Feature>
-    <Feature title="Leaderboards" images={["/bedwars.png", "/skywars.png"]} align="left">
+    <Feature title="Leaderboards" images={["/bedwars.png", "/skywars.png"]} align="right">
       Using Statsify's robust leaderboard command, you can browse approximately 2,000
       leaderboards. The leaderboards may be seen using <Code>/leaderboard</Code> followed
       by the game and the stat. For instance, to display the leaderboard for Duels Classic
@@ -50,7 +53,7 @@ const Index = () => (
     <Feature
       title="Historical Stats"
       images={["/bedwars.png", "/skywars.png"]}
-      align="right"
+      align="left"
     >
       Using historical stats, Statsify allows you to display your statistics as if you
       began playing today. There is no need to worry about your past losses. To quickly
@@ -58,7 +61,7 @@ const Index = () => (
       enter <Code>/daily arcade</Code> to get your daily arcade statistics. The same holds
       true for weekly, monthly, and additional games.
     </Feature>
-    <Feature title="Guilds" images={["/bedwars.png", "/skywars.png"]} align="left">
+    <Feature title="Guilds" images={["/bedwars.png", "/skywars.png"]} align="right">
       Statsify makes managing your guild easier. Simply enter <Code>/guild top</Code> to
       see the members of your guild with the most GEXP for the day, week, or month. Track
       individual guild members and their GEXP with the <Code>/guild member</Code> command.
@@ -67,11 +70,7 @@ const Index = () => (
       demote users and monitor their long-term success. Using <Code>/guild overall</Code>,
       you can quickly compare your guild against others.
     </Feature>
-    <Feature
-      title="Miscellaneous"
-      images={["/bedwars.png", "/skywars.png"]}
-      align="right"
-    >
+    <Feature title="Miscellaneous" images={["/bedwars.png", "/skywars.png"]} align="left">
       Statsify has a plethora of additional helpful hypixel utilities. For example, using
       <Code>/friends</Code> to access any player's friend list or <Code>/mutuals</Code> to
       see mutual friends between players Statsify also allows you to monitor player
@@ -79,7 +78,7 @@ const Index = () => (
       Using <Code>/gamecounts</Code>, you can track Hypixel's game popularity without ever
       opening Minecraft.
     </Feature>
-    <Feature title="Minecraft" images={["/bedwars.png", "/skywars.png"]} align="left">
+    <Feature title="Minecraft" images={["/bedwars.png", "/skywars.png"]} align="right">
       Statsify gives options for seeing a player's overall Minecraft profile. With{" "}
       <Code>/skin</Code>, you can easily steal a player's skin. Run{" "}
       <Code>/namehistory</Code> to see a player's prior names. Alternatively, use{" "}

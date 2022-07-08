@@ -19,11 +19,24 @@ const StyledInvite = styled.div`
   text-align: center;
 
   h1,
+  h2,
   p {
-    margin-bottom: 16px;
+    margin-bottom: 32px;
   }
 
-  margin-bottom: 32px;
+  h1 {
+    font-size: 3rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+  }
+
+  button {
+    font-size: 1.5rem;
+  }
+
+  margin: 64px;
 `;
 
 export const Invite = () => (
