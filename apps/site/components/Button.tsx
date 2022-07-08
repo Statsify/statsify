@@ -6,7 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const ripple = keyframes`
+   from {
+      opacity: 1;
+      transform: scale(0);
+    }
+    to {
+      opacity: 0;
+      transform: scale(10);
+    }
+`;
 
 export const Button = styled.button`
   outline: none;
@@ -37,15 +48,41 @@ export const Button = styled.button`
     margin-bottom: 10px;
   }
 
-  transition: 0.2s;
+  position: relative;
+  overflow: hidden;
+
+  transition: all 0.2s;
 
   &:hover {
-    mix-blend-mode: lighten;
+    filter: brightness(110%);
+    cursor: pointer;
+  }
 
-    padding-left: 40px;
-    padding-right: 40px;
+  &:active {
+    transform: scale(0.92);
+  }
 
-    animation: pulse;
-    animation-duration: 1.05s;
+  &::after {
+    display: none;
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+    margin-left: -50px;
+
+    top: 50%;
+    left: 50%;
+
+    animation: ${ripple};
+    animation-duration: 0.6s;
+    opacity: 0;
+  }
+
+  &:focus:not(:active)::after {
+    display: block;
   }
 `;

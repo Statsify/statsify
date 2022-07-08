@@ -9,6 +9,7 @@
 import styled from "styled-components";
 import { Code } from "../components/Code";
 import { Feature } from "../components/Feature";
+import { Invite } from "../components/Invite";
 import { StatCircle } from "../components/StatCircle";
 
 const StatCircles = styled.div`
@@ -85,6 +86,7 @@ const Index = () => (
       <Code>/cape</Code> to see a player's capes. Using <Code>/text</Code> you can create
       your own Minecraft text.
     </Feature>
+    <Invite />
   </>
 );
 
