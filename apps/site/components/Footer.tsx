@@ -58,22 +58,22 @@ export const Footer = () => (
     <FooterSocials>
       <Link href="/">
         <FooterLink>
-          <Image src="/socials/discord.svg" width={32} height={32} />
+          <Image src="/socials/discord.svg" alt="Discord" width={32} height={32} />
         </FooterLink>
       </Link>
       <Link href="/">
         <FooterLink>
-          <Image src="/socials/github.png" width={32} height={32} />
+          <Image src="/socials/github.png" alt="GitHub" width={32} height={32} />
         </FooterLink>
       </Link>
       <Link href="/">
         <FooterLink>
-          <Image src="/socials/patreon.png" width={32} height={32} />
+          <Image src="/socials/patreon.png" alt="Patreon" width={32} height={32} />
         </FooterLink>
       </Link>
       <Link href="/">
         <FooterLink>
-          <Image src="/socials/twitter.svg" width={32} height={32} />
+          <Image src="/socials/twitter.svg" alt="Twitter" width={32} height={32} />
         </FooterLink>
       </Link>
     </FooterSocials>

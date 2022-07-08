@@ -27,6 +27,7 @@ const GlobalStyle = createGlobalStyle`
      height: 100%;
      background-color: #1d1d1d;
      font-family: "Lexend Deca";
+     scroll-behavior: smooth;
    }
 
    #__next  {

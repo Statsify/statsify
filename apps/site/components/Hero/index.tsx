@@ -22,6 +22,7 @@ const StyledHero = styled.div`
     url("/hero.webp");
 
   width: 100%;
+  min-height: 70%;
 
   color: #ffffff;
   text-align: center;
