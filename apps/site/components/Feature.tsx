@@ -127,7 +127,7 @@ export const Feature = ({ align, title, children, images }: FeatureProps) => (
           </Carousel>
         </StyledFeatureCarouselContainer>
       ) : (
-        <StyledFeatureImageContainer>{image}</StyledFeatureImageContainer>
+        <StyledFeatureImageContainer>{images[0]}</StyledFeatureImageContainer>
       )}
     </StyledFeatureContainer>
   </StyledFeature>
