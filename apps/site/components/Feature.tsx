@@ -55,7 +55,7 @@ const StyledFeatureImageContainer = styled.div`
   display: flex;
   justify-content: center;
 
-  > img {
+  > span img {
     border-radius: 3%;
     width: 100%;
   }
