@@ -20,6 +20,15 @@ const ripple = keyframes`
 `;
 
 export const Button = styled.button`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+
+  > p {
+    margin-left: 7px;
+  }
+
   outline: none;
   border-style: none;
   border-radius: 25px;

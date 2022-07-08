@@ -7,7 +7,7 @@
  */
 
 import Image from "next/image";
-import Logo from "../../public/logo.svg";
+import Logo from "../../public/banner.svg";
 import styled from "styled-components";
 
 const StyledNavbar = styled.nav`

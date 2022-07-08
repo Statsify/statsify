@@ -8,7 +8,10 @@
 
 import Image from "next/image";
 import Typed from "react-typed";
+import discordImage from "../../public/discord.svg";
 import heroImage from "../../public/hero.png";
+import inviteImage from "../../public/invite.svg";
+import premiumImage from "../../public/logo.svg";
 import styled from "styled-components";
 import { Button } from "../Button";
 import { Divider } from "../Divider";
@@ -40,6 +43,12 @@ const StyledHero = styled.div`
 const HeroContent = styled.div`
   position: absolute;
   z-index: 1;
+  background-color: rgba(0, 0, 0, 0.2);
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const HeroHeader = styled.p`
@@ -97,9 +106,18 @@ export const Hero = () => (
       </HeroDescription>
       <Divider />
       <HeroButtons>
-        <Button>Invite</Button>
-        <Button>Discord</Button>
-        <Button>Premium</Button>
+        <Button>
+          <Image src={inviteImage} width={16} height={16} />
+          <p>Invite</p>
+        </Button>
+        <Button>
+          <Image src={discordImage} width={16} height={16} />
+          <p>Discord</p>
+        </Button>
+        <Button>
+          <Image src={premiumImage} width={16} height={16} />
+          <p>Premium</p>
+        </Button>
       </HeroButtons>
     </HeroContent>
     <Image

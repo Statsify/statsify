@@ -8,6 +8,7 @@
 
 import CountUp from "react-countup";
 import styled from "styled-components";
+import { ReactNode } from "react";
 
 const StyledStatCircleContainer = styled.div`
   display: flex;
@@ -33,6 +34,10 @@ const StyledStatCircleContainer = styled.div`
 `;
 
 const StyledStatCircle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   background: linear-gradient(#2c7abf, #1668b1);
   border-radius: 35%;
   width: 125px;
@@ -41,10 +46,16 @@ const StyledStatCircle = styled.div`
   margin-top: 10px;
   margin-bottom: 10px;
 
+  color: #ffffff;
+
   transition: 0.2s;
 
   &:hover {
     border-radius: 50%;
+
+    background: linear-gradient(rgba(44, 122, 191, 0.7), rgba(22, 104, 177, 0.7));
+
+    transform: scale(0.92);
 
     animation: pulse;
     animation-duration: 1.05s;
@@ -60,11 +71,12 @@ const StyledStatCircleTitle = styled.p`
 export interface StatCircleProps {
   value: number;
   title: string;
+  image: ReactNode;
 }
 
-export const StatCircle = ({ title, value }: StatCircleProps) => (
+export const StatCircle = ({ title, value, image }: StatCircleProps) => (
   <StyledStatCircleContainer>
-    <StyledStatCircle />
+    <StyledStatCircle>{image}</StyledStatCircle>
     <CountUp end={value} duration={2.75} separator="," />
     <StyledStatCircleTitle>{title}</StyledStatCircleTitle>
   </StyledStatCircleContainer>

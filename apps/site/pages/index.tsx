@@ -12,6 +12,7 @@ import bedwarsLeaderboard from "../public/examples/bedwars-leaderboard.png";
 import bedwarsProfile from "../public/examples/bedwars.png";
 import blitzsgLeaderboard from "../public/examples/blitzsg-leaderboard.png";
 import buildbattleLeaderboard from "../public/examples/buildbattle-leaderboard.png";
+import commandsImage from "../public/commands.svg";
 import dailyMurderMysteryProfile from "../public/examples/daily-murdermystery.png";
 import dailyTNTGamesProfile from "../public/examples/daily-tntgames.png";
 import duelsProfile from "../public/examples/duels.png";
@@ -22,6 +23,7 @@ import guildOverallGexpProfile from "../public/examples/guild-overall-gexp.png";
 import guildTopProfile from "../public/examples/guild-top.png";
 import mutualsProfile from "../public/examples/mutuals.png";
 import recentGamesProfile from "../public/examples/recentgames.png";
+import serversImage from "../public/servers.svg";
 import skinEmbed from "../public/examples/skin.png";
 import skywarsProfile from "../public/examples/skywars.png";
 import statusProfile from "../public/examples/status.png";
@@ -53,8 +55,16 @@ const StatCircles = styled.div`
 const Index = () => (
   <>
     <StatCircles>
-      <StatCircle title="Servers" value={80_000} />
-      <StatCircle title="Commands Ran" value={45_000_000} />
+      <StatCircle
+        title="Servers"
+        value={80_000}
+        image={<Image src={serversImage} width={75} height={75} />}
+      />
+      <StatCircle
+        title="Commands Ran"
+        value={45_000_000}
+        image={<Image src={commandsImage} width={64} height={64} />}
+      />
     </StatCircles>
     <Feature
       title="Players"

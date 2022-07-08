@@ -8,8 +8,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import logo from "../public/logo.svg";
+import discord from "../public/socials/discord.svg";
+import github from "../public/socials/github.svg";
+import logo from "../public/banner.svg";
+import patreon from "../public/socials/patreon.svg";
 import styled from "styled-components";
+import twitter from "../public/socials/twitter.svg";
 
 const StyledFooter = styled.footer`
   width: 100%;
@@ -58,22 +62,22 @@ export const Footer = () => (
     <FooterSocials>
       <Link href="/">
         <FooterLink>
-          <Image src="/socials/discord.svg" alt="Discord" width={32} height={32} />
+          <Image src={discord} alt="Discord" width={32} height={32} />
         </FooterLink>
       </Link>
       <Link href="/">
         <FooterLink>
-          <Image src="/socials/github.png" alt="GitHub" width={32} height={32} />
+          <Image src={github} alt="GitHub" width={32} height={32} />
         </FooterLink>
       </Link>
       <Link href="/">
         <FooterLink>
-          <Image src="/socials/patreon.png" alt="Patreon" width={32} height={32} />
+          <Image src={patreon} alt="Patreon" width={32} height={32} />
         </FooterLink>
       </Link>
       <Link href="/">
         <FooterLink>
-          <Image src="/socials/twitter.svg" alt="Twitter" width={32} height={32} />
+          <Image src={twitter} alt="Twitter" width={32} height={32} />
         </FooterLink>
       </Link>
     </FooterSocials>

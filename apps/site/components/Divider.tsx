@@ -9,7 +9,7 @@
 import styled from "styled-components";
 
 export const Divider = styled.div`
-  width: auto;
+  width: 40%;
   margin: 24px;
   height: 1px;
   background-color: rgba(255, 255, 255, 0.4);
