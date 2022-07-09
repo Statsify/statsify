@@ -7,34 +7,56 @@
  */
 
 import {
-  APIGuildMember,
-  GatewayDispatchEvents,
-  GatewayGuildMemberUpdateDispatchData,
-} from "discord-api-types/v10";
-import {
   AbstractEventListener,
-  ApiService,
   ChannelService,
+  EmbedBuilder,
   MemberService,
   MessageService,
 } from "@statsify/discord";
-import { Logger } from "@statsify/logger";
+import {
+  GatewayDispatchEvents,
+  GatewayGuildMemberUpdateDispatchData,
+} from "discord-api-types/v10";
+import { Logger, STATUS_COLORS } from "@statsify/logger";
 import { Service } from "typedi";
-import { User } from "@statsify/schemas";
+import { User, UserTier } from "@statsify/schemas";
 import { UserService } from "#services";
 import { config } from "@statsify/util";
+
+const PREMIUM_TIERS = [
+  UserTier.EMERALD,
+  UserTier.GOLD,
+  UserTier.DIAMOND,
+  UserTier.IRON,
+] as const;
+
+const TIER_ROLES = {
+  [UserTier.IRON]: config("supportBot.ironRole"),
+  [UserTier.GOLD]: config("supportBot.goldRole"),
+  [UserTier.DIAMOND]: config("supportBot.diamondRole"),
+  [UserTier.EMERALD]: config("supportBot.emeraldRole"),
+};
+
+const PREMIUM_ROLE = config("supportBot.premiumRole");
+const PATREON_ROLE = config("supportBot.patreonRole");
+const NITRO_BOOSTER_ROLE = config("supportBot.nitroBoosterRole");
+
+const PREMIUM_INFO_CHANNEL = config("supportBot.premiumInfoChannel");
+const PREMIUM_LOG_CHANNEL = config("supportBot.premiumLogsChannel");
+const GUILD = config("supportBot.guild");
 
 @Service()
 export class GuildMemberUpdateEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberUpdate> {
   public event = GatewayDispatchEvents.GuildMemberUpdate as const;
 
-  private premium: string[];
-  private nitroBoosters: string[];
+  private tiers: Map<UserTier, Set<string>>;
+  private serverBoosters: Set<string>;
+  private patreons: Set<string>;
+
   private loadedPremium: boolean;
   private readonly logger = new Logger("GuildMemberUpdateEventListener");
 
   public constructor(
-    private readonly apiService: ApiService,
     private readonly userService: UserService,
     private readonly roleService: MemberService,
     private readonly channelService: ChannelService,
@@ -42,8 +64,12 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   ) {
     super();
 
-    this.premium = [];
-    this.nitroBoosters = [];
+    this.tiers = new Map();
+    PREMIUM_TIERS.forEach((tier) => this.tiers.set(tier, new Set()));
+
+    this.serverBoosters = new Set();
+    this.patreons = new Set();
+
     this.loadedPremium = false;
   }
 
@@ -51,58 +77,113 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     if (!this.loadedPremium) await this.loadPremium();
 
     const guildId = data.guild_id;
-    if (guildId !== config("supportBot.guild")) return;
+    if (guildId !== GUILD) return;
 
     const memberId = data.user.id;
-    const premiumRole = config("supportBot.premiumRole");
-    const nitroBoosterRole = config("supportBot.nitroBoosterRole");
 
-    const isMemberPremium = this.premium.includes(memberId);
-    const hasPremiumRole = data.roles.includes(premiumRole);
+    const currentTier = this.findTier(memberId);
+    const currentRoleTier = this.findRoleTier(data.roles);
 
-    //They had premium and the role was removed
-    if (isMemberPremium && !hasPremiumRole) {
-      return this.handlePremiumRemove(data as APIGuildMember);
-    }
+    const hasPatreonRole = data.roles.includes(PATREON_ROLE);
+    const hasServerBoosterRole = data.roles.includes(NITRO_BOOSTER_ROLE);
+
+    const isPatreon = this.patreons.has(memberId);
+    const isServerBooster = this.serverBoosters.has(memberId);
+
+    // They were a patreon but aren't anymore
+    if (isPatreon && !hasPatreonRole) return this.patreonRemove(memberId);
+
+    // They are a new patreon
+    if (!isPatreon && hasPatreonRole) return this.patreonAdd(memberId);
 
     //They don't have premium and the role was added
-    if (hasPremiumRole && !isMemberPremium) {
-      return this.handlePremiumAdd(data as APIGuildMember);
-    }
-
-    const isMemberNitroBooster = this.nitroBoosters.includes(memberId);
-    const hasNitroBoosterRole = data.roles.includes(nitroBoosterRole);
+    if (currentRoleTier && currentRoleTier > (currentTier ?? 0))
+      return this.handlePremiumAdd(memberId, currentRoleTier);
 
     //They were nitro boosting but stopped boosting
-    if (isMemberNitroBooster && !hasNitroBoosterRole) {
-      return this.handleNitroBoosterRemove(data as APIGuildMember);
-    }
+    if (isServerBooster && !hasServerBoosterRole)
+      return this.serverBoosterRemove(memberId);
 
     //Has the nitro boosting role but isn't registered as a booster
-    if (hasNitroBoosterRole && !isMemberNitroBooster) {
-      return this.handleNitroBoosterAdd(data as APIGuildMember);
-    }
+    if (hasServerBoosterRole && !isServerBooster) return this.serverBoosterAdd(memberId);
   }
 
   private async loadPremium() {
     this.loadedPremium = true;
 
-    const [premiumUsers, nitroUsers] = await Promise.all([
-      this.userService.findAllPremium(),
-      this.userService.findAllNitroBoosters(),
-    ]);
+    const users = await this.userService.findAllPremium();
 
-    this.premium.push(...premiumUsers);
-    this.nitroBoosters.push(...nitroUsers);
+    users.forEach((user) => {
+      this.tiers.get(user.tier)!.add(user.id);
+      if (user.patreon) this.patreons.add(user.id);
+      if (user.serverBooster) this.serverBoosters.add(user.id);
+    });
   }
 
-  private async handlePremiumRemove(member: APIGuildMember) {
-    const memberId = member.user!.id;
-    this.logger.verbose(`Removing premium from ${memberId}`);
+  private findTier(memberId: string) {
+    return PREMIUM_TIERS.find((tier) => this.tiers.get(tier)!.has(memberId));
+  }
 
-    this.premium = this.premium.filter((m) => m !== memberId);
+  private findRoleTier(roles: string[]) {
+    return PREMIUM_TIERS.find((tier) => roles.includes(TIER_ROLES[tier]));
+  }
 
-    await this.userService.removePremiumUser(memberId);
+  private async serverBoosterRemove(memberId: string) {
+    this.log(`REMOVING \`serverBooster\` from <@${memberId}>`);
+    this.serverBoosters.delete(memberId);
+
+    const user = await this.userService.removeServerBooster(memberId);
+
+    //Don't remove their premium if they are a patreon
+    if (user?.patreon && user.tier !== UserTier.IRON) {
+      await this.roleService.removeRole(GUILD, memberId, TIER_ROLES[UserTier.IRON]);
+      return;
+    }
+
+    await this.handlePremiumRemove(memberId, UserTier.IRON);
+  }
+
+  private async serverBoosterAdd(memberId: string) {
+    this.log(`ADDING \`serverBooster\` to <@${memberId}>`);
+    this.serverBoosters.add(memberId);
+
+    const user = await this.userService.addServerBooster(memberId);
+
+    //Don't mess with their premium if they are a patreon
+    if (!user?.patreon) return this.handlePremiumAdd(memberId, UserTier.IRON);
+  }
+
+  private async patreonRemove(memberId: string) {
+    this.log(`REMOVING \`patreon\` from <@${memberId}>`);
+    this.patreons.delete(memberId);
+
+    const user = await this.userService.removePatreon(memberId);
+
+    await this.handlePremiumRemove(memberId, user?.tier ?? UserTier.IRON);
+    if (user?.serverBooster) await this.handlePremiumAdd(memberId, UserTier.IRON);
+  }
+
+  private async patreonAdd(memberId: string) {
+    this.log(`ADDING \`patreon\` to <@${memberId}>`);
+    this.patreons.add(memberId);
+    await this.userService.addPatreon(memberId);
+  }
+
+  private async handlePremiumRemove(memberId: string, tier: UserTier) {
+    if (User.isStaff(await this.userService.getTier(memberId))) return;
+
+    this.log(`REMOVING \`${User.getTierName(tier)}\` from <@${memberId}>`);
+    this.tiers.get(tier)!.delete(memberId);
+
+    await this.userService.removePremium(memberId);
+
+    await this.roleService.removeRole(
+      GUILD,
+      memberId,
+      TIER_ROLES[tier as keyof typeof TIER_ROLES]
+    );
+
+    await this.roleService.removeRole(GUILD, memberId, PREMIUM_ROLE);
 
     //TODO(jacobk999): Send some sort of message telling the user their premium ran out?
     const { id } = await this.channelService.create(memberId);
@@ -112,53 +193,40 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
       .catch(() => null);
   }
 
-  private async handlePremiumAdd(member: APIGuildMember) {
-    const user = await this.apiService.getUser(member.user!.id);
+  private async handlePremiumAdd(memberId: string, tier: UserTier) {
+    if (User.isStaff(await this.userService.getTier(memberId))) return;
 
-    // The user already is premium or is staff, don't mass with their tier
-    if (User.isPremium(user)) return;
+    this.log(`ADDING \`${User.getTierName(tier)}\` to <@${memberId}>`);
+    this.tiers.get(tier)!.add(memberId);
 
-    const memberId = member.user!.id;
-    this.logger.verbose(`Adding premium to ${memberId}`);
-
-    this.premium.push(memberId);
-
-    await this.userService.addPremiumUser(memberId);
-
-    const premiumInfoChannel = config("supportBot.premiumInfoChannel");
-
-    await this.messageService
-      .send(premiumInfoChannel, { content: `<@${memberId}>` })
-      .then((m) => this.messageService.delete(premiumInfoChannel, m.id));
-  }
-
-  private async handleNitroBoosterRemove(member: APIGuildMember) {
-    const memberId = member.user!.id;
-    this.logger.verbose(`Removing nitro boost perks from ${memberId}`);
-
-    this.nitroBoosters = this.nitroBoosters.filter((m) => m !== memberId);
-
-    await this.userService.removeNitroBoosterUser(memberId);
-
-    await this.roleService.removeRole(
-      config("supportBot.guild"),
-      memberId,
-      config("supportBot.premiumRole")
-    );
-  }
-
-  private async handleNitroBoosterAdd(member: APIGuildMember) {
-    const memberId = member.user!.id;
-    this.logger.verbose(`Adding nitro boost perks from ${memberId}`);
-
-    this.nitroBoosters.push(memberId);
-
-    await this.userService.addNitroBoosterUser(memberId);
+    await this.userService.addPremium(memberId, tier);
 
     await this.roleService.addRole(
-      config("supportBot.guild"),
+      GUILD,
       memberId,
-      config("supportBot.premiumRole")
+      TIER_ROLES[tier as keyof typeof TIER_ROLES]
     );
+
+    await this.roleService.addRole(GUILD, memberId, PREMIUM_ROLE);
+
+    await this.messageService
+      .send(PREMIUM_INFO_CHANNEL, { content: `<@${memberId}>` })
+      .then((m) => this.messageService.delete(PREMIUM_INFO_CHANNEL, m.id));
+
+    const { id } = await this.channelService.create(memberId);
+
+    this.messageService
+      .send(id, { content: "You got statsify premium" })
+      .catch(() => null);
+  }
+
+  private log(message: string) {
+    this.logger.verbose(message);
+
+    const embed = new EmbedBuilder()
+      .color(message.includes("ADDING") ? STATUS_COLORS.success : STATUS_COLORS.error)
+      .description(message);
+
+    this.messageService.send(PREMIUM_LOG_CHANNEL, { embeds: [embed] });
   }
 }

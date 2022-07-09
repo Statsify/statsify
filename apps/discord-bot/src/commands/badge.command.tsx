@@ -30,7 +30,7 @@ export class BadgeCommand {
 
   @SubCommand({
     description: (t) => t("commands.badge.view"),
-    tier: UserTier.PREMIUM,
+    tier: UserTier.GOLD,
   })
   public view(context: CommandContext) {
     return this.run(context, "view");
@@ -38,7 +38,7 @@ export class BadgeCommand {
 
   @SubCommand({
     description: (t) => t("commands.badge.set"),
-    tier: UserTier.PREMIUM,
+    tier: UserTier.GOLD,
     args: [new FileArgument("badge", true)],
   })
   public set(context: CommandContext) {
@@ -47,7 +47,7 @@ export class BadgeCommand {
 
   @SubCommand({
     description: (t) => t("commands.badge.reset"),
-    tier: UserTier.PREMIUM,
+    tier: UserTier.GOLD,
   })
   public reset(context: CommandContext) {
     return this.run(context, "reset");

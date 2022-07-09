@@ -15,6 +15,7 @@ export interface FooterProps {
   border?: JSX.IntrinsicElements["box"]["border"];
 }
 
+// TODO(jacobk999): add footer text for all the tiers
 export const Footer = ({ logo, tier = UserTier.NONE, border }: FooterProps) => {
   const margin = 8;
 
@@ -25,11 +26,19 @@ export const Footer = ({ logo, tier = UserTier.NONE, border }: FooterProps) => {
       text = "§fstatsify.net";
       break;
     case UserTier.STAFF:
-    case UserTier.PREMIUM:
+    case UserTier.EMERALD:
+      text = "";
+      break;
+    case UserTier.DIAMOND:
+      text = "";
+      break;
+    case UserTier.GOLD:
       text =
         "§#ffdc73s§#ffd865t§#ffd557a§#ffd149t§#ffce3as§#ffc929i§#ffc517f§#ffc006y§#f9ba01.§#f0b202n§#e7ab03e§#dea304t";
       break;
-    default:
+    case UserTier.IRON:
+      text = "";
+      break;
     case UserTier.NONE:
       text =
         "§#d0efffs§#a3d9fct§#75c2f9a§#48acf6t§#289af0s§#2391e6i§#1f87dbf§#1a7ed1y§#1777c8.§#1572c0n§#136cb9e§#1167b1t";

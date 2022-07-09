@@ -21,6 +21,7 @@ export interface Config {
      */
     redisUrl: string;
   };
+
   hypixelApi: {
     /**
      * The Hypixel API Key used for making requests to the Hypixel API
@@ -32,6 +33,7 @@ export interface Config {
      */
     timeout: number;
   };
+
   api: {
     /**
      * What port to run the Statsify API on
@@ -47,6 +49,7 @@ export interface Config {
      */
     ignoreAuth?: boolean;
   };
+
   discordBot: {
     /**
      * What port to run the Discord Bot on, this is only required if you want to run the Discord Bot in Interaction Url mode
@@ -69,6 +72,7 @@ export interface Config {
      */
     testingGuild: string;
   };
+
   supportBot: {
     /**
      * The channel id where the message with buttons to create tickets is sent
@@ -106,6 +110,11 @@ export interface Config {
     premiumInfoChannel: string;
 
     /**
+     * The channel id for premium logs
+     */
+    premiumLogsChannel: string;
+
+    /**
      * The member role id
      */
     memberRole: string;
@@ -119,6 +128,31 @@ export interface Config {
      * The nitro booster role id
      */
     nitroBoosterRole: string;
+
+    /**
+     * The patreon role id
+     */
+    patreonRole: string;
+
+    /**
+     * The iron tier role id
+     */
+    ironRole: string;
+
+    /**
+     * The gold tier role id
+     */
+    goldRole: string;
+
+    /**
+     * The diamond tier role id
+     */
+    diamondRole: string;
+
+    /**
+     * The emerald tier role id
+     */
+    emeraldRole: string;
 
     /**
      * The guild id where the support bot is located
@@ -138,6 +172,7 @@ export interface Config {
      */
     applicationId: string;
   };
+
   apiClient: {
     /**
      * The api key used by the Discord Bot and Support Bot to connect to the Statsify API
@@ -149,6 +184,7 @@ export interface Config {
      */
     route: string;
   };
+
   verifyServer: {
     /**
      * What ip to listen on for the verify server
@@ -156,12 +192,14 @@ export interface Config {
      */
     hostIp: string;
   };
+
   rankEmojis?: {
     /**
      * The Discord Bot token used to create servers for the rank emojis
      */
     botToken?: string;
   };
+
   sentry?: {
     /**
      * The Sentry Dsn used by the Discord Bot
@@ -181,6 +219,7 @@ export interface Config {
      */
     supportBotDsn?: string;
   };
+
   /**
    * The current environment the bot is running in
    * @example dev

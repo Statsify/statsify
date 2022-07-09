@@ -16,59 +16,61 @@ export class UserService {
     @Inject(() => User) private readonly userModel: ReturnModelType<typeof User>
   ) {}
 
-  public async findAllPremium(): Promise<string[]> {
+  public async findAllPremium() {
     const users = await this.userModel
-      .find()
-      .where("tier")
-      .equals(UserTier.PREMIUM)
-      .select({ id: true })
+      .find({ tier: { $gte: UserTier.IRON, $lte: UserTier.EMERALD } })
+      .select({ id: true, tier: true, serverBooster: true, patreon: true })
       .lean()
       .exec();
 
-    return users.map((u) => u.id);
+    return users as {
+      id: string;
+      tier: UserTier;
+      serverBooster?: boolean;
+      patreon?: boolean;
+    }[];
   }
 
-  public async addPremiumUser(id: string) {
+  public async addPremium(id: string, tier: UserTier) {
+    await this.userModel.updateOne({ id }, { tier }, { upsert: true }).lean().exec();
+  }
+
+  public async removePremium(id: string) {
     await this.userModel
-      .updateOne({ id }, { tier: UserTier.PREMIUM }, { upsert: true })
+      .updateOne({ id }, { $unset: { tier: "" } }, { upsert: true })
       .lean()
       .exec();
   }
 
-  public async removePremiumUser(id: string) {
+  public async addPatreon(id: string) {
     await this.userModel
-      .updateOne(
-        { id, tier: UserTier.PREMIUM },
-        { $unset: { tier: "" } },
-        { upsert: true }
-      )
+      .updateOne({ id }, { $set: { patreon: true } }, { upsert: true })
       .lean()
       .exec();
   }
 
-  public async findAllNitroBoosters(): Promise<string[]> {
-    const users = await this.userModel
-      .find()
-      .where("nitroBooster")
-      .equals(true)
-      .select({ id: true })
-      .lean()
-      .exec();
-
-    return users.map((u) => u.id);
-  }
-
-  public async addNitroBoosterUser(id: string) {
-    await this.userModel
-      .updateOne({ id }, { nitroBooster: true }, { upsert: true })
+  public async removePatreon(id: string) {
+    return this.userModel
+      .findOneAndUpdate({ id }, { $unset: { patreon: "" } }, { upsert: true })
       .lean()
       .exec();
   }
 
-  public async removeNitroBoosterUser(id: string) {
-    await this.userModel
-      .updateOne({ id }, { $unset: { nitroBooster: "" } }, { upsert: true })
+  public addServerBooster(id: string) {
+    return this.userModel
+      .findOneAndUpdate({ id }, { serverBooster: true }, { upsert: true })
       .lean()
       .exec();
+  }
+
+  public removeServerBooster(id: string) {
+    return this.userModel
+      .findOneAndUpdate({ id }, { $unset: { serverBooster: "" } }, { upsert: true })
+      .lean()
+      .exec();
+  }
+
+  public getTier(id: string) {
+    return this.userModel.findOne({ id }).select({ tier: true }).lean().exec();
   }
 }

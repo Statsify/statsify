@@ -56,12 +56,7 @@ export class UserCommand {
 
     this.addField(embed, "Has Badge", user.hasBadge);
 
-    this.addField(
-      embed,
-      "tier",
-      user.tier,
-      (v) => `\`${prettify(User.getTierName(v))}\``
-    );
+    this.addField(embed, "tier", user.tier, (v) => `\`${User.getTierName(v)}\``);
 
     this.addField(embed, "Theme", prettify(user.theme ?? UserTheme.DEFAULT));
 

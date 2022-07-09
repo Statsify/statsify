@@ -114,8 +114,9 @@ export class CommandListener extends AbstractCommandListener {
 
     let reduction = 1;
 
-    if (user?.tier === UserTier.CORE) reduction = 0;
-    else if (user?.tier === UserTier.PREMIUM) reduction = 0.3;
+    if (User.isDiamond(user)) reduction = 0;
+    else if (User.isGold(user)) reduction = 0.25;
+    else if (User.isIron(user)) reduction = 0.5;
     else if (user?.serverMember) reduction = 0.8;
     else if (user?.uuid) reduction = 0.9;
 
@@ -164,7 +165,7 @@ export class CommandListener extends AbstractCommandListener {
       type: InteractionResponseType.DeferredChannelMessageWithSource,
     };
 
-    if (User.isPremium(user)) return defaultResponse;
+    if (User.isIron(user)) return defaultResponse;
 
     if (Math.random() > TIP_CHANCE) return defaultResponse;
 
