@@ -20,7 +20,7 @@
   margin-bottom: 48px;
 
   @media (max-width: 1280px) {
-    flex-direction: column-reverse;
+    flex-direction: column-reverse !important;
     align-items: center;
 
     width: 90%;
@@ -46,7 +46,7 @@
 
   @media (max-width: 1280px) {
     margin-top: 20px;
-    text-align: center;
+    text-align: center !important;
     margin-left: 0px;
     margin-right: 0px;
 
@@ -72,6 +72,7 @@
   align-items: center;
 
   min-height: 100%;
+
 
   > span img {
     border-radius: 3%;

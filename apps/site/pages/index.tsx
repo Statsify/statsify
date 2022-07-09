@@ -50,10 +50,10 @@ const Index = () => (
     <Feature
       title="Players"
       images={[
-        <Image src={bedwarsProfile} alt="BedWars" />,
-        <Image src={duelsProfile} alt="Duels" />,
-        <Image src={skywarsProfile} alt="SkyWars" />,
-        <Image src={arcadeProfile} alt="Arcade" />,
+        <Image placeholder="blur" src={bedwarsProfile} alt="BedWars" />,
+        <Image placeholder="blur" src={duelsProfile} alt="Duels" />,
+        <Image placeholder="blur" src={skywarsProfile} alt="SkyWars" />,
+        <Image placeholder="blur" src={arcadeProfile} alt="Arcade" />,
       ]}
       align="left"
     >
@@ -66,10 +66,26 @@ const Index = () => (
     <Feature
       title="Leaderboards"
       images={[
-        <Image src={woolwarsLeaderboard} alt="WoolWars Overall Wins Leaderboard" />,
-        <Image src={bedwarsLeaderboard} alt="BedWars Level Leaderboard" />,
-        <Image src={buildbattleLeaderboard} alt="Build Battle Score Leaderboard" />,
-        <Image src={blitzsgLeaderboard} alt="BlitzSG Overall Kills Leaderboard" />,
+        <Image
+          placeholder="blur"
+          src={woolwarsLeaderboard}
+          alt="WoolWars Overall Wins Leaderboard"
+        />,
+        <Image
+          placeholder="blur"
+          src={bedwarsLeaderboard}
+          alt="BedWars Level Leaderboard"
+        />,
+        <Image
+          placeholder="blur"
+          src={buildbattleLeaderboard}
+          alt="Build Battle Score Leaderboard"
+        />,
+        <Image
+          placeholder="blur"
+          src={blitzsgLeaderboard}
+          alt="BlitzSG Overall Kills Leaderboard"
+        />,
       ]}
       align="right"
     >
@@ -85,8 +101,12 @@ const Index = () => (
     <Feature
       title="Historical Stats"
       images={[
-        <Image src={dailyTNTGamesProfile} alt="Daily TNT Games" />,
-        <Image src={dailyMurderMysteryProfile} alt="Daily Murder Mystery" />,
+        <Image placeholder="blur" src={dailyTNTGamesProfile} alt="Daily TNT Games" />,
+        <Image
+          placeholder="blur"
+          src={dailyMurderMysteryProfile}
+          alt="Daily Murder Mystery"
+        />,
       ]}
       align="left"
     >
@@ -99,10 +119,14 @@ const Index = () => (
     <Feature
       title="Guilds"
       images={[
-        <Image src={guildOverallProfile} alt="Guild Overall" />,
-        <Image src={guildOverallGexpProfile} alt="Guild Overall GEXP" />,
-        <Image src={guildTopProfile} alt="Guild Top" />,
-        <Image src={guildMemberProfile} alt="Guild Member" />,
+        <Image placeholder="blur" src={guildOverallProfile} alt="Guild Overall" />,
+        <Image
+          placeholder="blur"
+          src={guildOverallGexpProfile}
+          alt="Guild Overall GEXP"
+        />,
+        <Image placeholder="blur" src={guildTopProfile} alt="Guild Top" />,
+        <Image placeholder="blur" src={guildMemberProfile} alt="Guild Member" />,
       ]}
       align="right"
     >
@@ -117,10 +141,10 @@ const Index = () => (
     <Feature
       title="Miscellaneous"
       images={[
-        <Image src={friendsProfile} alt="Friends" />,
-        <Image src={mutualsProfile} alt="Mutuals" />,
-        <Image src={statusProfile} alt="Status" />,
-        <Image src={recentGamesProfile} alt="Recent Games" />,
+        <Image placeholder="blur" src={friendsProfile} alt="Friends" />,
+        <Image placeholder="blur" src={mutualsProfile} alt="Mutuals" />,
+        <Image placeholder="blur" src={statusProfile} alt="Status" />,
+        <Image placeholder="blur" src={recentGamesProfile} alt="Recent Games" />,
       ]}
       align="left"
     >
@@ -133,7 +157,7 @@ const Index = () => (
     </Feature>
     <Feature
       title="Minecraft"
-      images={[<Image src={skinEmbed} alt="Skin" />]}
+      images={[<Image placeholder="blur" src={skinEmbed} alt="Skin" />]}
       align="right"
     >
       Statsify gives options for seeing a player's overall Minecraft profile. With{" "}
