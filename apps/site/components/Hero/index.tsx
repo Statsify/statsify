@@ -19,6 +19,7 @@ import { Navbar } from "./Navbar";
 
 export const Hero = () => (
   <div className={styles.hero}>
+    <div className={styles.heroContainer}></div>
     <div className={styles.heroContent}>
       <Navbar />
       <div className={styles.heroHeader}>Hypixel Stats Visualized</div>
