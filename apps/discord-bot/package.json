@@ -25,6 +25,7 @@
     "luxon": "^2.4.0",
     "mongoose": "^6.4.3",
     "reflect-metadata": "^0.1.13",
+    "skia-canvas": "^0.9.30",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab",
     "typedi": "^0.10.0"
   },

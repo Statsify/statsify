@@ -22,10 +22,10 @@
     "chokidar": "^3.5.3",
     "inquirer": "^9.0.0",
     "ioredis": "^5.1.0",
+    "skia-canvas": "^0.9.30",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab"
   },
   "devDependencies": {
-    "@types/inquirer": "^8.2.1",
-    "skia-canvas": "^0.9.30"
+    "@types/inquirer": "^8.2.1"
   }
 }
