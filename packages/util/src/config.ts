@@ -14,10 +14,12 @@ export interface Config {
   database: {
     /**
      * The MongoDB Uri used for the whole project
+     * @example mongodb://localhost:27017
      */
     mongoUri: string;
     /**
      * The Redis Url used for leaderboards and api keys
+     * @example redis://localhost:6379
      */
     redisUrl: string;
   };
@@ -68,7 +70,7 @@ export interface Config {
      */
     applicationId: string;
     /**
-     * The guild to post slash commands to in development mode
+     * The guild id to post slash commands to in development mode
      */
     testingGuild: string;
   };
