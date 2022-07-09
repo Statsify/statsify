@@ -15,7 +15,7 @@ import { getFontRenderer } from "./renderer";
 
 export const getTheme = (user: User | null): Theme | undefined => {
   if (!user) return undefined;
-  if (!User.isPremium(user.tier)) return undefined;
+  if (!User.isGold(user)) return undefined;
   if (!user.theme) return undefined;
 
   const {

@@ -8,10 +8,14 @@
 
 import { Field } from "../metadata";
 import { UserTheme } from "./theme";
+import { prettify } from "@statsify/util";
 
 export enum UserTier {
   NONE = 0,
-  PREMIUM = 404,
+  IRON = 101,
+  GOLD = 202,
+  DIAMOND = 303,
+  EMERALD = 404,
   STAFF = 666,
   CORE = 999,
 }
@@ -35,7 +39,10 @@ export class User {
   public serverMember?: boolean;
 
   @Field({ store: { required: false } })
-  public nitroBooster?: boolean;
+  public serverBooster?: boolean;
+
+  @Field({ store: { required: false } })
+  public patreon?: boolean;
 
   @Field({ type: () => Number, store: { required: false } })
   public tier?: UserTier;
@@ -46,19 +53,28 @@ export class User {
   @Field({ type: () => String, store: { required: false } })
   public theme?: UserTheme;
 
-  public static isPremium(user: User | null): boolean {
-    const tier = user?.tier ?? UserTier.NONE;
-    return tier >= UserTier.PREMIUM;
+  public static isIron(user: User | null): boolean {
+    return this.isTier(user, UserTier.IRON);
+  }
+
+  public static isGold(user: User | null): boolean {
+    return this.isTier(user, UserTier.GOLD);
+  }
+
+  public static isDiamond(user: User | null): boolean {
+    return this.isTier(user, UserTier.DIAMOND);
+  }
+
+  public static isEmerald(user: User | null): boolean {
+    return this.isTier(user, UserTier.EMERALD);
   }
 
   public static isStaff(user: User | null): boolean {
-    const tier = user?.tier ?? UserTier.STAFF;
-    return tier >= UserTier.STAFF;
+    return this.isTier(user, UserTier.STAFF);
   }
 
   public static isCore(user: User | null): boolean {
-    const tier = user?.tier ?? UserTier.CORE;
-    return tier >= UserTier.CORE;
+    return this.isTier(user, UserTier.CORE);
   }
 
   public static getTierName(user: User | null): string;
@@ -67,7 +83,12 @@ export class User {
     const tier =
       typeof userOrTier === "number" ? userOrTier : userOrTier?.tier ?? UserTier.NONE;
 
-    return tiers.find(([, value]) => value === tier)?.[0] ?? "NONE";
+    return prettify(tiers.find(([, value]) => value === tier)?.[0] ?? "NONE");
+  }
+
+  private static isTier(user: User | null, tier: UserTier): boolean {
+    const userTier = user?.tier ?? UserTier.NONE;
+    return userTier >= tier;
   }
 }
 

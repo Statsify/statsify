@@ -53,7 +53,7 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   outlineSize = 4,
   outline,
 }) => {
-  const outlineColor = outline === true ? color : outline ? outline : undefined;
+  const outlineColor = outline === true ? color : outline || undefined;
 
   return {
     dimension: {
