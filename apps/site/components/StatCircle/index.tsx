@@ -19,7 +19,7 @@ export interface StatCircleProps {
 export const StatCircle = ({ title, value, image }: StatCircleProps) => (
   <div className={styles.container}>
     <div className={styles.circle}>{image}</div>
-    <CountUp end={value} duration={3.75} separator="," />
+    <CountUp end={value} duration={3.2} separator="," />
     <p className={styles.title}>{title}</p>
   </div>
 );
