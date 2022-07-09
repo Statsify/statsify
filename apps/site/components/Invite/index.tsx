@@ -13,6 +13,6 @@ export const Invite = () => (
   <div className={styles.invite}>
     <h1>What are you waiting for?</h1>
     <p>Invite Statsify today to enhance your Hypixel experience!</p>
-    <Button>Invite Now</Button>
+    <Button link="/invite">Invite Now</Button>
   </div>
 );

@@ -40,15 +40,15 @@ export const Hero = () => (
       </div>
       <Divider />
       <div className={styles.heroButtons}>
-        <Button>
+        <Button link="/invite">
           <Image src={inviteImage} width={16} height={16} alt="Invite" />
           <p>Invite</p>
         </Button>
-        <Button>
+        <Button link="/discord">
           <Image src={discordImage} width={16} height={16} alt="Discord" />
           <p>Discord</p>
         </Button>
-        <Button>
+        <Button link="/premium">
           <Image src={premiumImage} width={16} height={16} alt="Premium" />
           <p>Premium</p>
         </Button>

@@ -19,38 +19,38 @@ export const Footer = () => (
   <footer className={styles.footer}>
     <Image src={logo} alt="logo" width="200vw" height="75vh" />
     <div className={styles.socials}>
-      <Link href="/">
+      <Link href="/discord">
         <div className={styles.link}>
           <Image src={discord} alt="Discord" width={32} height={32} />
         </div>
       </Link>
-      <Link href="/">
+      <Link href="/github">
         <div className={styles.link}>
           <Image src={github} alt="GitHub" width={32} height={32} />
         </div>
       </Link>
-      <Link href="/">
+      <Link href="/premium">
         <div className={styles.link}>
           <Image src={patreon} alt="Patreon" width={32} height={32} />
         </div>
       </Link>
-      <Link href="/">
+      <Link href="/twitter">
         <div className={styles.link}>
           <Image src={twitter} alt="Twitter" width={32} height={32} />
         </div>
       </Link>
     </div>
     <div className={styles.links}>
-      <Link href="/">
+      <Link href="/premium">
         <div className={styles.link}>Premium</div>
       </Link>
-      <Link href="/">
+      <Link href="/discord">
         <div className={styles.link}>Support</div>
       </Link>
-      <Link href="/">
+      <Link href="/terms">
         <div className={styles.link}>Terms of Service</div>
       </Link>
-      <Link href="/">
+      <Link href="/privacy">
         <div className={styles.link}>Privacy Policy</div>
       </Link>
     </div>
