@@ -180,7 +180,7 @@ export interface Config {
     key: string;
     /**
      * The route to use for the Statsify API
-     * @example http://localhost:3000/api
+     * @example http://localhost:3000
      */
     route: string;
   };

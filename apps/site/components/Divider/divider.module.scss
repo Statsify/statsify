@@ -1,0 +1,10 @@
+.divider {
+  width: 40%;
+  margin: 24px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.4);
+
+  @media (max-width: 640px) {
+    width: 90%;
+  }
+}

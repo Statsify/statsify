@@ -18,7 +18,7 @@
     "target": "es2022",
     "keepClassNames": true,
     "loose": false,
-    "externalHelpers": true,
+    "externalHelpers": false,
     "preserveAllComments": false
   },
   "module": {
