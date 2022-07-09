@@ -6,15 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import styled from "styled-components";
+import styles from "./divider.module.scss";
 
-export const Divider = styled.div`
-  width: 40%;
-  margin: 24px;
-  height: 1px;
-  background-color: rgba(255, 255, 255, 0.4);
-
-  @media (max-width: 640px) {
-    width: 90%;
-  }
-`;
+export const Divider = () => <div className={styles.divider} />;

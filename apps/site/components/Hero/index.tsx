@@ -12,83 +12,17 @@ import discordImage from "../../public/discord.svg";
 import heroImage from "../../public/hero.png";
 import inviteImage from "../../public/invite.svg";
 import premiumImage from "../../public/logo.svg";
-import styled from "styled-components";
+import styles from "./hero.module.scss";
 import { Button } from "../Button";
 import { Divider } from "../Divider";
 import { Navbar } from "./Navbar";
 
-const StyledHero = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-
-  width: 100%;
-  min-height: 70vh;
-
-  color: #ffffff;
-  text-align: center;
-  text-shadow: 2px 2px rgba(0, 0, 0, 0.4);
-
-  @media (max-width: 640px) {
-    min-height: 95vh;
-  }
-
-  > span img {
-    filter: blur(10px) brightness(80%);
-  }
-`;
-
-const HeroContent = styled.div`
-  position: absolute;
-  z-index: 1;
-  background-color: rgba(0, 0, 0, 0.2);
-  width: 100%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const HeroHeader = styled.p`
-  font-weight: 800;
-  font-size: 2.5rem;
-  text-align: center;
-  margin: 8px;
-`;
-
-const HeroDescription = styled.div`
-  font-weight: 600;
-  font-size: 1.5rem;
-  margin: auto;
-  vertical-align: middle;
-
-  @media (max-width: 640px) {
-    min-height: 60px;
-  }
-`;
-
-const HeroButtons = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-
-  margin: 8px;
-  margin-bottom: 32px;
-
-  @media (max-width: 640px) {
-    flex-direction: column;
-  }
-`;
-
 export const Hero = () => (
-  <StyledHero>
-    <HeroContent>
+  <div className={styles.hero}>
+    <div className={styles.heroContent}>
       <Navbar />
-      <HeroHeader>Hypixel Stats Visualized</HeroHeader>
-      <HeroDescription>
+      <div className={styles.heroHeader}>Hypixel Stats Visualized</div>
+      <div className={styles.heroDescription}>
         <Typed
           strings={[
             "View all your Hypixel stats on Discord",
@@ -103,23 +37,23 @@ export const Hero = () => (
           backDelay={500}
           loop
         />
-      </HeroDescription>
+      </div>
       <Divider />
-      <HeroButtons>
+      <div className={styles.heroButtons}>
         <Button>
-          <Image src={inviteImage} width={16} height={16} />
+          <Image src={inviteImage} width={16} height={16} alt="Invite" />
           <p>Invite</p>
         </Button>
         <Button>
-          <Image src={discordImage} width={16} height={16} />
+          <Image src={discordImage} width={16} height={16} alt="Discord" />
           <p>Discord</p>
         </Button>
         <Button>
-          <Image src={premiumImage} width={16} height={16} />
+          <Image src={premiumImage} width={16} height={16} alt="Premium" />
           <p>Premium</p>
         </Button>
-      </HeroButtons>
-    </HeroContent>
+      </div>
+    </div>
     <Image
       src={heroImage}
       alt="hero"
@@ -128,5 +62,5 @@ export const Hero = () => (
       placeholder="blur"
       priority
     />
-  </StyledHero>
+  </div>
 );

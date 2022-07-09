@@ -18,8 +18,8 @@ import dailyTNTGamesProfile from "../public/examples/daily-tntgames.png";
 import duelsProfile from "../public/examples/duels.png";
 import friendsProfile from "../public/examples/friends.png";
 import guildMemberProfile from "../public/examples/guild-member.png";
-import guildOvearllProfile from "../public/examples/guild-overall.png";
 import guildOverallGexpProfile from "../public/examples/guild-overall-gexp.png";
+import guildOverallProfile from "../public/examples/guild-overall.png";
 import guildTopProfile from "../public/examples/guild-top.png";
 import mutualsProfile from "../public/examples/mutuals.png";
 import recentGamesProfile from "../public/examples/recentgames.png";
@@ -27,45 +27,26 @@ import serversImage from "../public/servers.svg";
 import skinEmbed from "../public/examples/skin.png";
 import skywarsProfile from "../public/examples/skywars.png";
 import statusProfile from "../public/examples/status.png";
-import styled from "styled-components";
 import woolwarsLeaderboard from "../public/examples/woolwars-leaderboard.png";
 import { Code } from "../components/Code";
 import { Feature } from "../components/Feature";
 import { Invite } from "../components/Invite";
-import { StatCircle } from "../components/StatCircle";
-
-const StatCircles = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  background-color: #111111;
-
-  width: 100%;
-  min-height: 30vh;
-
-  padding-top: 20px;
-  padding-bottom: 20px;
-
-  @media (max-width: 640px) {
-    flex-direction: column;
-  }
-`;
+import { StatCircle, StatCircleContainer } from "../components/StatCircle";
 
 const Index = () => (
   <>
-    <StatCircles>
+    <StatCircleContainer>
       <StatCircle
         title="Servers"
         value={80_000}
-        image={<Image src={serversImage} width={75} height={75} />}
+        image={<Image src={serversImage} width={75} height={75} alt="Servers" />}
       />
       <StatCircle
         title="Commands Ran"
         value={45_000_000}
-        image={<Image src={commandsImage} width={64} height={64} />}
+        image={<Image src={commandsImage} width={64} height={64} alt="Commands Ran" />}
       />
-    </StatCircles>
+    </StatCircleContainer>
     <Feature
       title="Players"
       images={[
@@ -118,7 +99,7 @@ const Index = () => (
     <Feature
       title="Guilds"
       images={[
-        <Image src={guildOvearllProfile} alt="Guild Overall" />,
+        <Image src={guildOverallProfile} alt="Guild Overall" />,
         <Image src={guildOverallGexpProfile} alt="Guild Overall GEXP" />,
         <Image src={guildTopProfile} alt="Guild Top" />,
         <Image src={guildMemberProfile} alt="Guild Member" />,

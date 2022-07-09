@@ -8,54 +8,8 @@
 
 import Head from "next/head";
 import { Layout } from "../components/Layout";
-import { createGlobalStyle } from "styled-components";
+import "../globals.scss";
 import type { AppProps } from "next/app";
-
-const GlobalStyle = createGlobalStyle`
-  @font-face {
-    font-family: "Lexend Deca";
-    src: url(/fonts/LexendDeca.ttf) format("truetype");
-  }
-
-   * {
-    margin: 0;
-    padding: 0;
-   }
-
-   html, body, #__next {
-     width: 100%;
-     height: 100%;
-     background-color: #1d1d1d;
-     font-family: "Lexend Deca";
-     scroll-behavior: smooth;
-   }
-
-   #__next  {
-    display: flex;
-    flex-direction: column;
-   }
-
-   main {
-    flex: 1;
-   }
-
-   img {
-    user-select: none;
-   }
-
-   .slider {
-    position: relative;
-   }
-
-   .slider::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 100%;
-    width: 10000%;
-    height: 100%;
-  }
-`;
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -106,7 +60,6 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="topic" content="Minecraft" />
         <meta name="copyright" content="Statsify" />
       </Head>
-      <GlobalStyle />
       <Layout>
         <Component {...pageProps} />
       </Layout>

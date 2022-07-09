@@ -13,9 +13,6 @@ module.exports = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  compiler: {
-    styledComponents: true,
-  },
   swcMinify: true,
   poweredByHeader: false,
   reactStrictMode: true,

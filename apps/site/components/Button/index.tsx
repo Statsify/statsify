@@ -6,13 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import styled from "styled-components";
+import styles from "./button.module.scss";
 
-export const Container = styled.div`
-  width: 100%;
+export interface ButtonProps {
+  children: React.ReactNode;
+}
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
+export const Button = ({ children }: ButtonProps) => (
+  <button className={styles.button}>{children}</button>
+);
