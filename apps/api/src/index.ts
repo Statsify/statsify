@@ -56,8 +56,6 @@ async function bootstrap() {
     logger: new Logger(),
   });
 
-  app.setGlobalPrefix("/api");
-
   //Validation using `class-validator` and `class-transformer`
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 

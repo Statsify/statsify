@@ -91,6 +91,6 @@ export class GameCountsCommand {
   }
 
   private formatGameCount(name: string, count: string, emoji?: string) {
-    return `\`•\` ${emoji ? `${emoji} ` : ""}**${name}**: \`${count}\``;
+    return `\`•\` ${emoji ? `${emoji} ` : ""}**${name}**: \`${count || 0}\``;
   }
 }

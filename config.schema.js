@@ -48,7 +48,7 @@ module.exports = {
   },
   apiClient: {
     key: "",
-    route: "http://localhost:3000/api",
+    route: "http://localhost:3000",
   },
   verifyServer: {
     hostIp: "localhost",
