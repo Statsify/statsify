@@ -10,16 +10,17 @@ import * as Sentry from "@sentry/node";
 import Container from "typedi";
 import {
   AbstractCommandListener,
+  ApiService,
   CommandContext,
   CommandResolvable,
+  ErrorMessage,
   Interaction,
 } from "@statsify/discord";
-import { ApiService } from "#services";
-import { ErrorMessage } from "#lib/error.message";
 import { InteractionResponseType } from "discord-api-types/v10";
+import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
-import { WARNING_COLOR } from "#constants";
 import { config, formatTime } from "@statsify/util";
+import { tips } from "../tips";
 import type {
   InteractionResponse,
   InteractionServer,
@@ -80,7 +81,7 @@ export class CommandListener extends AbstractCommandListener {
       username: `${username}#${discriminator}`,
       locale,
       uuid: user?.uuid ?? null,
-      tier: user?.tier ?? 0,
+      tier: user?.tier ?? UserTier.NONE,
       serverMember: user?.serverMember ?? false,
       theme: user?.theme ?? null,
     });
@@ -88,14 +89,27 @@ export class CommandListener extends AbstractCommandListener {
     const context = new CommandContext(this, interaction, data);
     context.setUser(user);
 
-    return this.executeCommand(
+    const preconditions = [
+      this.tierPrecondition.bind(this, command, user),
+      this.cooldownPrecondition.bind(this, command, user, id),
+    ];
+
+    this.apiService.incrementCommand(commandName);
+
+    return this.executeCommand({
+      commandName,
       command,
       context,
-      this.isOnCooldown.bind(this, command, user, id)
-    );
+      preconditions,
+      response: this.getTipResponse(commandName, user, interaction),
+    });
   }
 
-  private isOnCooldown(command: CommandResolvable, user: User | null, userId: string) {
+  private cooldownPrecondition(
+    command: CommandResolvable,
+    user: User | null,
+    userId: string
+  ) {
     const cooldownForCommand = this.cooldowns.get(command.name);
 
     let reduction = 1;
@@ -135,8 +149,37 @@ export class CommandListener extends AbstractCommandListener {
           time: formatTime(cooldown - now),
           command: command.name,
         }),
-      { color: WARNING_COLOR }
+      { color: STATUS_COLORS.warn }
     );
+  }
+
+  private getTipResponse(
+    commandName: string,
+    user: User | null,
+    interaction: Interaction
+  ): InteractionResponse {
+    const TIP_CHANCE = 0.3;
+
+    const defaultResponse = {
+      type: InteractionResponseType.DeferredChannelMessageWithSource,
+    };
+
+    if (User.isPremium(user)) return defaultResponse;
+
+    if (Math.random() > TIP_CHANCE) return defaultResponse;
+
+    const useableTips = tips.filter(
+      (t) => !t.disabled?.includes(commandName) && !t.uneligible?.(user)
+    );
+
+    if (!useableTips.length) return defaultResponse;
+
+    const tip = useableTips[Math.floor(Math.random() * useableTips.length)];
+
+    return {
+      type: InteractionResponseType.ChannelMessageWithSource,
+      data: interaction.convertToApiData(tip.message),
+    };
   }
 
   public static create(

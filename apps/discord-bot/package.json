@@ -5,38 +5,34 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node --enable-source-maps .",
-    "build": "swc src  --config-file ../../.swcrc --out-dir dist",
+    "build": "swc src --out-dir dist",
     "test:types": "tsc --noEmit",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.3.0",
-    "@sentry/tracing": "^7.3.0",
+    "@sentry/node": "^7.5.1",
+    "@sentry/tracing": "^7.5.1",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/discord": "workspace:^",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@typegoose/typegoose": "^9.9.0",
+    "@typegoose/typegoose": "^9.10.1",
     "axios": "^0.27.2",
-    "discord-api-types": "^0.35.0",
+    "discord-api-types": "^0.36.1",
     "fuse.js": "^6.6.2",
-    "i18next": "^21.8.10",
-    "i18next-fs-backend": "^1.1.4",
     "luxon": "^2.4.0",
-    "mongoose": "^6.4.0",
+    "mongoose": "^6.4.3",
     "reflect-metadata": "^0.1.13",
     "skia-canvas": "^0.9.30",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@types/i18next-fs-backend": "^1.1.2",
-    "@types/luxon": "^2"
+    "@types/luxon": "^2.3.2"
   },
   "imports": {
-    "#arguments": "./dist/arguments/index.js",
     "#components": "./dist/components/index.js",
     "#services": "./dist/services/index.js",
     "#constants": "./dist/constants.js",

@@ -6,17 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService } from "#services";
 import {
+  ApiService,
   Command,
   CommandContext,
+  ErrorMessage,
   GuildArgument,
   IMessage,
   PaginateService,
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { ErrorMessage } from "#lib/error.message";
 import { GuildListProfile, GuildListProfileProps } from "./guild-list.profile";
 import { GuildMember } from "@statsify/schemas";
 import { GuildMemberProfile } from "./guild-member.profile";

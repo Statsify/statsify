@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService } from "#services";
 import {
+  ApiService,
   Command,
   CommandContext,
+  ErrorMessage,
   PaginateService,
   PlayerArgument,
 } from "@statsify/discord";
-import { ErrorMessage } from "#lib/error.message";
 import { Mutual, MutualsProfile } from "./mutuals.profile";
 import { arrayGroup } from "@statsify/util";
 import { getBackground, getLogo } from "@statsify/assets";

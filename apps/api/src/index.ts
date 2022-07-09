@@ -7,12 +7,13 @@
  */
 
 import * as Sentry from "@sentry/node";
+import handlebars from "handlebars";
 import { AppModule } from "./app.module";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
-import { SentryInterceptor } from "./sentry/sentry.interceptor";
+import { SentryInterceptor } from "./sentry";
 import { Integrations as TracingIntegrations } from "@sentry/tracing";
 import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
@@ -55,8 +56,6 @@ async function bootstrap() {
     logger: new Logger(),
   });
 
-  app.setGlobalPrefix("/api");
-
   //Validation using `class-validator` and `class-transformer`
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
@@ -79,9 +78,7 @@ async function bootstrap() {
 
   //Fastify template renderer for Redoc
   app.setViewEngine({
-    engine: {
-      handlebars: require("handlebars"),
-    },
+    engine: { handlebars },
     templates: join(__dirname, "..", "views"),
   });
 

@@ -4,6 +4,9 @@
 "discord-bot":
   - "### Which package is the feature request for\\?\\n\\n.*discord-bot"
 
+"support-bot":
+  - "### Which package is the feature request for\\?\\n\\n.*support-bot"
+
 "scripts":
   - "### Which package is the feature request for\\?\\n\\n.*scripts"
 

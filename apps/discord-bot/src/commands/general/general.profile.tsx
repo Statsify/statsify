@@ -38,7 +38,7 @@ const GeneralProfileHeaderBody = ({
     <div height="remaining" width="remaining" direction="row">
       <div width="remaining" height="100%" direction="column">
         <box width="100%" height="50%">
-          <text>§7Guild: §2{guild?.name ? guild.name : "N/A"}</text>
+          <text>§7Guild: §2{guild?.name ?? "N/A"}</text>
         </box>
         <box width="100%" height="50%">
           <text>§7Status: {online}</text>

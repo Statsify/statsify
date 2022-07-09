@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService } from "#services";
 import {
+  ApiService,
   Command,
   CommandContext,
   PaginateService,

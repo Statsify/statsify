@@ -179,6 +179,8 @@ export class PlayerService {
 
     if (!player) return null;
 
+    await this.playerModel.deleteOne({ uuid: player.uuid }).exec();
+
     //Remove all sorted sets the player is in
     await this.playerLeaderboardService.addLeaderboards(
       Player,

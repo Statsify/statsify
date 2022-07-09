@@ -1,0 +1,39 @@
+{
+  "name": "support-bot",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node --enable-source-maps .",
+    "build": "swc src --out-dir dist",
+    "test:types": "tsc --noEmit",
+    "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
+  },
+  "dependencies": {
+    "@sentry/node": "^7.5.1",
+    "@sentry/tracing": "^7.5.1",
+    "@statsify/api-client": "workspace:^",
+    "@statsify/discord": "workspace:^",
+    "@statsify/logger": "workspace:^",
+    "@statsify/rendering": "workspace:^",
+    "@statsify/schemas": "workspace:^",
+    "@statsify/util": "workspace:^",
+    "@typegoose/typegoose": "^9.10.1",
+    "axios": "^0.27.2",
+    "chart.js": "^3.8.0",
+    "chartjs-skia-canvas": "https://github.com/jacobk999/chartjs-skia-canvas.git#commit=b325851b349dba653489464b4524abbc6cf00879",
+    "discord-api-types": "^0.36.1",
+    "luxon": "^2.4.0",
+    "mongoose": "^6.4.3",
+    "reflect-metadata": "^0.1.13",
+    "skia-canvas": "^0.9.30",
+    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab",
+    "toad-scheduler": "^1.6.1",
+    "typedi": "^0.10.0"
+  },
+  "imports": {
+    "#services": "./dist/services/index.js",
+    "#constants": "./dist/constants.js",
+    "#lib/*": "./dist/lib/*.js"
+  }
+}

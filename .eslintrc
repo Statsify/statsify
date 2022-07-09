@@ -152,6 +152,7 @@
           "onlyIfContainsSeparator": false
         }
       }
-    ]
+    ],
+    "unicorn/prefer-top-level-await": ["off"]
   }
 }

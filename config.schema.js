@@ -14,7 +14,7 @@ module.exports = {
     mongoUri: "",
     redisUrl: "",
   },
-  hypixelAPI: {
+  hypixelApi: {
     key: "",
     timeout: 5000,
   },
@@ -30,9 +30,25 @@ module.exports = {
     applicationId: "",
     testingGuild: "",
   },
+  supportBot: {
+    createTicketChannel: "",
+    ticketLogsChannel: "",
+    ticketCategory: "",
+    welcomeChannel: "",
+    unverifiedChannel: "",
+    hypixelApiStatusChannel: "",
+    premiumInfoChannel: "",
+    memberRole: "",
+    premiumRole: "",
+    nitroBoosterRole: "",
+    guild: "",
+    publicKey: "",
+    token: "",
+    applicationId: "",
+  },
   apiClient: {
     key: "",
-    route: "http://localhost:3000/api",
+    route: "http://localhost:3000",
   },
   verifyServer: {
     hostIp: "localhost",
@@ -44,6 +60,7 @@ module.exports = {
     discordBotDsn: "",
     apiDsn: "",
     verifyServerDsn: "",
+    supportBotDsn: "",
   },
   environment: "dev",
 };

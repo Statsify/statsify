@@ -1,0 +1,539 @@
+{
+  "stats": {
+    "winstreak": "Winstreak",
+    "wins": "Wins",
+    "losses": "Losses",
+    "wlr": "WLR",
+    "finalKills": "Final Kills",
+    "finalDeaths": "Final Deaths",
+    "finalAssists": "Final Assists",
+    "fkdr": "FKDR",
+    "kills": "Kills",
+    "deaths": "Deaths",
+    "kdr": "KDR",
+    "bedsBroken": "Beds Broken",
+    "bedsLost": "Beds Lost",
+    "bblr": "BBLR",
+    "assists": "Assists",
+    "kit": "Current Kit",
+    "playtime": "Playtime",
+    "coins": "Coins",
+    "lootChests": "Loot Chests",
+    "iron": "Iron",
+    "gold": "Gold",
+    "diamonds": "Diamonds",
+    "emeralds": "Emeralds",
+    "tokens": "Tokens",
+    "souls": "Souls",
+    "heads": "Heads",
+    "shards": "Shards",
+    "opals": "Opals",
+    "networkLevel": "Network Level",
+    "karma": "Karma",
+    "achievementPoints": "Achievement Points",
+    "quests": "Quests",
+    "challenges": "Challenges",
+    "giftsSent": "Gifts Sent",
+    "ranksGifted": "Ranks Gifted",
+    "friends": "Friends",
+    "bestTime": "Best Time",
+    "tags": "Tags",
+    "hits": "Hits",
+    "blocksRan": "Blocks Ran",
+    "gamesPlayed": "Games Played",
+    "murdererWins": "Murderer Wins",
+    "detectiveWins": "Detective Wins",
+    "heroWins": "Hero Wins",
+    "score": "Score",
+    "superVotes": "Super Votes",
+    "votes": "Votes",
+    "maxPoints": "Max Points",
+    "correctGuesses": "Correct Guesses",
+    "pingRange": "Ping Range",
+    "blocksPlaced": "Blocks Placed",
+    "bestWinstreak": "Best Winstreak",
+    "class": "Class",
+    "warCry": "War Cry",
+    "witherDamage": "Wither Damage",
+    "witherKills": "Wither Kills",
+    "points": "Points",
+    "keys": "Keys",
+    "offensive": "Offensive",
+    "utility": "Utility",
+    "support": "Support",
+    "ultimate": "Ultimate",
+    "rune": "Rune",
+    "magicalChests": "Magical Chests",
+    "shotsFired": "Shots Fired",
+    "shotAccuracy": "Shot Accuracy",
+    "forcefieldTime": "Forcefield Time",
+    "hat": "Hat",
+    "killstreaks": "Killstreaks",
+    "adrenaline": "Adrenaline",
+    "endurance": "Endurance",
+    "fortune": "Fortune",
+    "godfather": "Godfather",
+    "headstart": "Headstart",
+    "superluck": "Superluck",
+    "transfusion": "Transfusion",
+    "coinsPickedUp": "Coins Collected",
+    "boxesPickedUp": "Boxes Collected",
+    "grandPrixTokens": "GP Tokens",
+    "lapsCompleted": "Laps",
+    "goldRate": "Gold Rate",
+    "trophyRate": "Trophy Rate",
+    "goldTrophies": "Gold Trophies",
+    "silverTrophies": "Silver Trophies",
+    "bronzeTrophies": "Bronze Trophies",
+    "totalTrophies": "Total Trophies",
+    "godlikes": "Godlikes",
+    "trigger": "Trigger",
+    "distanceTraveled": "Distance Traveled",
+    "highestKillstreak": "Highest Killstreak",
+    "winRate": "Win Rate",
+    "headshots": "Headshots",
+    "powerups": "Powerups",
+    "wool": "Wool",
+    "layers": "Layers",
+    "woolPlaced": "Wool Placed",
+    "woolBroken": "Wool Broken",
+    "title": "Title",
+    "mastery": "Mastery",
+    "headsEaten": "Heads Eaten",
+    "ultimatesCrafted": "Ultimates Crafted",
+    "extraUltimates": "Extra Ultimates",
+    "level": "Level",
+    "roundWins": "Round Wins",
+    "headshotKills": "Headshot Kills",
+    "bombsPlanted": "Bombs Planted",
+    "bombsDefused": "Bombs Defused",
+    "overallWins": "Overall Wins",
+    "soloWins": "Solo Wins",
+    "doublesWins": "Doubles Wins",
+    "bountyKills": "Bounty Kills",
+    "woolCaptures": "Wool Captures",
+    "blocksBroken": "Blocks Broken",
+    "powerupActivations": "Powerup Activations",
+    "tauntsUsed": "Taunts Used",
+    "poopCollected": "Poop Collected",
+    "goals": "Goals",
+    "kicks": "Kicks",
+    "powerKicks": "Power Kicks",
+    "empireKills": "Defender Kills",
+    "rebelKills": "Attacker Kills",
+    "hiderWins": "Hider Wins",
+    "seekerWins": "Seeker Wins",
+    "wallsFaced": "Walls Faced",
+    "highestScoreQualifications": "Qualifiers Personal Best",
+    "highestScoreFinals": "Finals Personal Best",
+    "bowAccuracy": "Bow Accuracy",
+    "eggsFound": "Eggs Found",
+    "giftsFound": "Gifts Found",
+    "candyFound": "Candy Found",
+    "delivered": "Delivered",
+    "maxWave": "Max Wave",
+    "doorsOpened": "Doors Opened",
+    "fastestWin": "Fastest Win",
+    "bestRound": "Best Round",
+    "starsEarned": "Stars Earned",
+    "damage": "Damage",
+    "healing": "Healing",
+    "prevent": "Prevent",
+    "total": "Total",
+    "levelsGained": "Levels Gained",
+    "expGained": "EXP Gained",
+    "exp": "EXP",
+    "mounts": "Mounts",
+    "guild": {
+      "guildMaster": "Guild Master",
+      "createdOn": "Created On",
+      "joinedAt": "Joined At",
+      "members": "Guild Members",
+      "rank": "Guild Rank",
+      "quests": "Guild Quests",
+      "level": "Guild Level",
+      "gexpToNextLevel": "GEXP To Next Level",
+      "gexp": "GEXP",
+      "scaledGexp": "Scaled GEXP",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "date": "Date",
+      "averageMemberGexp": "Avg. Member GEXP",
+      "questsCompleted": "Quests Completed"
+    },
+    "online": "Online",
+    "offline": "Offline",
+    "version": "Version",
+    "loginTime": "Login Time",
+    "game": "Game",
+    "mode": "Mode",
+    "map": "Map",
+    "status": "Status",
+    "logoutTime": "Logout Time",
+    "lastGame": "Last Game",
+    "hidden": "Hidden",
+    "lastActionTime": "Last Action Time",
+    "lastAction": "Last Action",
+    "firstLogin": "First Login",
+    "lastLogin": "Last Login",
+    "started": "Started",
+    "ended": "Ended",
+    "renown": "Renown",
+    "bounty": "Bounty",
+    "highestStreak": "Highest Streak"
+  },
+  "historical": {
+    "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
+    "new": "{{displayName}} has had their historical stats checked for the first time, their stats will be updated from now on at this time each day.",
+    "aboutResetting": "Click the reset button below to reset your historical stats everyday at this time. WARNING: This will delete all of your historical stats and cannot be undone.",
+    "aboutResettingPremium": "Click the reset button below and fill out the modal for when you want your historical stats to reset. WARNING: this will delete all of your historical stats and cannot be undone.",
+    "modal": {
+      "resetTime": "Choose a Reset Time",
+      "timezone": "Choose a Timezone",
+      "title": "Historical Reset Time"
+    },
+    "setResetTime": "Set reset time to <t:{{time}}:t>",
+    "resetButton": "Click to Reset"
+  },
+  "embeds": {
+    "uuid": {
+      "description": {
+        "username": "Username",
+        "uuid": "UUID",
+        "trimmedUUID": "Trimmed UUID",
+        "shortUUID": "Short UUID"
+      }
+    },
+    "skin": {
+      "description": {
+        "username": "Username"
+      },
+      "components": {
+        "apply": "Apply"
+      }
+    },
+    "namehistory": {
+      "title": "Name History",
+      "description": {
+        "originalName": "Original Name"
+      }
+    },
+    "colors": {
+      "title": "Minecraft Color Codes",
+      "description": {
+        "color": "Color",
+        "mainHex": "Main Hex",
+        "shadowHex": "Shadow Hex",
+        "obfuscated": "Obfuscated",
+        "bold": "Bold",
+        "strikethrough": "Strikethrough",
+        "underline": "Underline",
+        "italic": "Italic",
+        "reset": "Reset"
+      }
+    },
+    "available": {
+      "description": {
+        "uuid": "UUID",
+        "namemc": "NameMC",
+        "username": "Username",
+        "status": "Status",
+        "invalidCharacters": "Invalid Characters",
+        "tooLong": "Too Long"
+      },
+      "footer": {
+        "available": "Unless the name is temporarily or permanently blocked by Mojang."
+      }
+    },
+    "invite": {
+      "title": "Statsify Links",
+      "description": "Click the link below to invite the bot to your discord server."
+    },
+    "ping": {
+      "title": "Statsify Credits",
+      "pong": "Pong!",
+      "core": "Core",
+      "contributors": "Contributors"
+    },
+    "help": {
+      "title": "Statsify Help",
+      "games": {
+        "title": "Games",
+        "description": "Statsify supports majority of the games on Hypixel. To check your stats in a game run /[game]. For example you can run /bedwars to check your bedwars stats."
+      },
+      "leaderboards": {
+        "title": "Leaderboards",
+        "description": "Statsify offers 1000s of leaderboards through the /leaderboard command. Run /leaderboard then pick the gamemode, and pick a leaderboard to view. You can hit the search button to search for a certain player or position. You can also hit the up and down buttons to view more pages."
+      },
+      "historical": {
+        "title": "Historical",
+        "description": "Statsify lets you check your daily, weekly, and monthly stats through /daily, /weekly and /monthly."
+      },
+      "minecraft": {
+        "title": "Minecraft",
+        "description": "You can view general minecraft information such as skins, uuids, capes through /skin, /uuid, and /cape respectively. Statsify also has commands to generate minecraft text through /text. View minecraft colors through /colors and preview minecraft servers through /server."
+      },
+      "misc": {
+        "title": "Misc",
+        "description": "You can do something with statsify"
+      }
+    },
+    "gameCounts": {
+      "title": "Hypixel Gamecounts"
+    },
+    "gtbhelper": {
+      "title": "Possible GTB Solutions"
+    },
+    "forceUnverify": {
+      "title": "Force Unverified",
+      "description": "<@{{id}}> has been unverified from {{displayName}}"
+    },
+    "forceVerify": {
+      "title": "Force Verified",
+      "description": "<@{{id}}> has been verified to {{displayName}}"
+    },
+    "deletePlayer": {
+      "title": "Player Deleted",
+      "description": "{{displayName}} has been removed from the database and leaderboards"
+    },
+    "tags": {
+      "deleted": {
+        "title": "Successfully Deleted Tag",
+        "description": "`{{tag}}` has been deleted"
+      },
+      "rename": {
+        "title": "Successfully Renamed Tag",
+        "description": "`{{originalName}}` has been renamed to `{{newName}}`"
+      }
+    }
+  },
+  "commands": {
+    "arcade": "Arcade Games command",
+    "arenabrawl": "Arena Brawl command",
+    "bedwars": "Bedwars command",
+    "blitzsg": "BlitzSG command",
+    "buildbattle": "Build Battle command",
+    "copsandcrims": "Cops and Crims command",
+    "duels": "Duels command",
+    "general": "General command",
+    "megawalls": "Mega Walls command",
+    "murdermystery": "Murder Mystery command",
+    "paintball": "Paintball command",
+    "quake": "Quake command",
+    "skywars": "Skywars command",
+    "smashheroes": "Smash Heroes command",
+    "speeduhc": "SpeedUHC command",
+    "tntgames": "TNT Games command",
+    "turbokartracers": "Turbo Kart Racers command",
+    "uhc": "UHC command",
+    "vampirez": "VampireZ command",
+    "walls": "Walls command",
+    "warlords": "Warlords command",
+    "woolwars": "Wool Wars command",
+    "verify": "Verify command",
+    "unverify": "Unverify command",
+    "gameCounts": "Game counts command",
+    "status": "Status command",
+    "parkour": "Parkour command"
+  },
+  "arguments": {
+    "choice": "Choice",
+    "guild-query": "Guild query",
+    "mojang-player": "Mojang player",
+    "number": "Number",
+    "player-leaderboard": "Player leaderboard",
+    "player": "player",
+    "text": "text"
+  },
+  "cooldown": {
+    "title": "Active Cooldown",
+    "description": "Please wait `{{time}}` before reusing `{{command}}`."
+  },
+  "verification": {
+    "alreadyVerified": {
+      "title": "Hello World",
+      "description": "You have already verified your account."
+    },
+    "noCode": {
+      "title": "Hello World",
+      "description": "You have not entered a verification code."
+    },
+    "invalidCode": {
+      "title": "Hello World",
+      "description": "The verification code you entered is invalid."
+    },
+    "notVerified": {
+      "title": "Hello World",
+      "description": "You have not verified your account to unverify it."
+    },
+    "requiredVerification": {
+      "title": "Hello World",
+      "description": "You are required to be verified to use this command."
+    },
+    "successfulVerification": "You verified your account to {{displayName}}",
+    "successfulUnverification": "You are now unverified"
+  },
+  "errors": {
+    "unknown": {
+      "title": "An Unknown Error Occurred",
+      "description": "Something went wrong, please try again later"
+    },
+    "invalidPlayer": {
+      "title": "Invalid Player",
+      "description": "A player by the {{type}} of `{{tag}}` could not be found!"
+    },
+    "invalidSearch": {
+      "title": "Invalid Search",
+      "description": "We couldn't tell what you were looking for!\nPlease enter a username, uuid, or discord mention"
+    },
+    "missingFile": {
+      "title": "Missing File",
+      "description": "You did not provide a file and it is required LOL"
+    },
+    "missingSelfVerification": {
+      "title": "Missing Verification",
+      "description": "You are not verified"
+    },
+    "missingMentionVerification": {
+      "title": "Missing Verification",
+      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account"
+    },
+    "missingPlayerVerification": {
+      "title": "Missing Verification",
+      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account"
+    },
+    "invalidGuild": {
+      "title": "Invalid Guild",
+      "description": "A guild by the {{type}} of `{{tag}}` could not be found!"
+    },
+    "noRecentGames": {
+      "title": "Recent Games Not Found",
+      "description": "Recent games for {{displayName}} could not be found!"
+    },
+    "noStatus": {
+      "title": "Status Not Found",
+      "description": "A status for {{displayName}} could not be found!"
+    },
+    "noFriends": {
+      "title": "Friends Not Found",
+      "description": "{{displayName}} has no friends, :("
+    },
+    "noMutuals": {
+      "title": "No Mutuals",
+      "description": "{{displayNameOne}} and {{displayNameTwo}} have no mutual friends"
+    },
+    "noPitStats": {
+      "title": "Pit Stats Not Found",
+      "description": "{{displayName}} has never played The Pit!"
+    },
+    "unsupportedFileType": {
+      "title": "Unsupported File Type",
+      "description": "The file you provided is not a supported file type!!!!!!!"
+    },
+    "leaderboardNotFound": {
+      "title": "Invalid Leaderboard",
+      "description": "Search for a valid leaderboard"
+    },
+    "playerLeaderboardNotFound": {
+      "title": "Invalid Player or Position",
+      "description": "We can't find the player you are looking for!?"
+    },
+    "guildLeaderboardNotFound": {
+      "title": "Invalid GUILD or Position",
+      "description": "We can't find the player you are looking for!?"
+    },
+    "leaderboardEmpty": {
+      "title": "Leaderboard Empty",
+      "description": "There are no more players for this leaderboard"
+    },
+    "invalidServer": {
+      "title": "Invalid Server",
+      "description": "The server you are looking for either doesn't exist or is offline"
+    },
+    "noCape": {
+      "title": "Missing Cape",
+      "description": "There is no cape lmao"
+    },
+    "noGTBSolutions": {
+      "title": "No GTB Solutions",
+      "description": "We couldn't find any solutions for the provided hint"
+    },
+    "invalidResetTime": {
+      "title": "Invalid Reset Time",
+      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`"
+    },
+    "invalidResetTimezone": {
+      "title": "Invalid Reset Timezone",
+      "description": "`{{timezone}}` is not a valid timezone. Enter a timezone similar to `EST` or `PST`"
+    },
+    "premiumOnly": {
+      "title": "Missing Premium",
+      "description": "You are not a premium."
+    },
+    "staffOnly": {
+      "title": "Staff Only",
+      "description": "This command is only available to staff members"
+    },
+    "coreOnly": {
+      "title": "$t(errors.staffOnly.title)",
+      "description": "$t(errors.staffOnly.description)"
+    },
+    "ticketAlreadyExists": {
+      "title": "Ticket Already Exists",
+      "description": "You already have a ticket open here!"
+    },
+    "invalidTicketChannel": {
+      "title": "Invalid Ticket Channel",
+      "description": "You must be in a ticket channel to use this command"
+    },
+    "invalidTagName": {
+      "title": "Invalid Tag Name",
+      "description": "The tag name you provided is invalid. It is not possible to create a slash command with this tag name."
+    },
+    "tagNotFound": {
+      "title": "Tag Not Found",
+      "description": "The tag you provided was not found."
+    }
+  },
+  "leaderboard": {
+    "playerInput": {
+      "label": "Search by a Player",
+      "placeholder": "Enter a player's name, ex: j4cobi"
+    },
+    "positionInput": {
+      "label": "Search by a Position",
+      "placeholder": "Enter a position, ex: 5000"
+    },
+    "modal": {
+      "title": "Leaderboard Search"
+    }
+  },
+  "available": "Available",
+  "unavailable": "Unavailable",
+  "players": "Players",
+  "unknown": "Unknown",
+  "ago": "ago",
+  "now": "Now",
+  "config": {
+    "badge": {
+      "profile": "This is how your badge is displayed",
+      "set": "$t(emojis:check) Successfully updated your badge.",
+      "view": "$t(emojis:eye) Your current badge:",
+      "reset": "$t(emojis:reset) Successfully reset your badge."
+    }
+  },
+  "socials": {
+    "invite": "[Invite](https://discord.com/oauth2/authorize?client_id={{id}}&permissions=388168&scope=applications.commands%20bot&response_type=code&redirect_uri=https%3A%2F%2Fstatsify.net%2Fbot%2Fthanks)",
+    "discord": "[Discord](<https://discord.com/invite/5VgxMQY>)",
+    "premium": "[Premium](https://statsify.net/premium)",
+    "website": "[Website](https://statsify.net/)",
+    "forums": "[Forums](https://statsify.net/forums)",
+    "github": "[GitHub](https://github.com/Statsify/statsify)"
+  },
+  "tips": {
+    "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get 20% lower cooldowns $t(emojis:heart)",
+    "verify": "Run `/verify` to be able to run commands without inputting your username as well as  get 10% lower cooldowns"
+  },
+  "number": "{{value, number}}"
+}

@@ -13,8 +13,8 @@ import {
   MojangPlayerArgument,
   PaginateService,
 } from "@statsify/discord";
-import { INFO_COLOR } from "#constants";
 import { MojangApiService } from "#services";
+import { STATUS_COLORS } from "@statsify/logger";
 import { arrayGroup } from "@statsify/util";
 
 @Command({ description: "commands.namehistory", args: [MojangPlayerArgument] })
@@ -66,7 +66,7 @@ export class NameHistoryCommand {
               }`
             )
             .url(`https://namemc.com/profile/${player.uuid}`)
-            .color(INFO_COLOR)
+            .color(STATUS_COLORS.info)
             .thumbnail(thumbURL)
       )
     );

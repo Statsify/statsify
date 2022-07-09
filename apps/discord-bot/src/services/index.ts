@@ -7,6 +7,5 @@
  */
 
 export * from "./pit-panda.service";
-export * from "./api.service";
-export * from "./font.-loader.service";
+export * from "./font-loader.service";
 export * from "./mojang-api.service";

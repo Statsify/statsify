@@ -35,13 +35,8 @@ import {
   WARLORDS_MODES,
   WOOLWARS_MODES,
 } from "@statsify/schemas";
-import { ApiService } from "#services";
-import { ArcadeProfile } from "../arcade/arcade.profile";
-import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile";
-import { BedWarsProfile } from "../bedwars/bedwars.profile";
-import { BlitzSGProfile } from "../blitzsg/blitzsg.profile";
-import { BuildBattleProfile } from "../buildbattle/buildbattle.profile";
 import {
+  ApiService,
   Command,
   CommandContext,
   Page,
@@ -49,6 +44,11 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
+import { ArcadeProfile } from "../arcade/arcade.profile";
+import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile";
+import { BedWarsProfile } from "../bedwars/bedwars.profile";
+import { BlitzSGProfile } from "../blitzsg/blitzsg.profile";
+import { BuildBattleProfile } from "../buildbattle/buildbattle.profile";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile";
 import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile";

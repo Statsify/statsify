@@ -7,9 +7,8 @@
  */
 
 import axios, { AxiosInstance } from "axios";
-import { Command, CommandContext, IMessage } from "@statsify/discord";
+import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
 import { Container, Multiline } from "#components";
-import { ErrorMessage } from "#lib/error.message";
 import { ServerArgument } from "./server.argument";
 import { getBackground, getServerMappings } from "@statsify/assets";
 import { loadImage } from "skia-canvas";

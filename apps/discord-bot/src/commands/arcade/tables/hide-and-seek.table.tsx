@@ -20,8 +20,8 @@ export const HideAndSeekTable = ({ stats, t }: HideAndSeekTableProps) => {
 
   return (
     <Table.table>
-      <Table.ts title="§6Overall">
-        <Table.tr>
+      <Table.tr>
+        <Table.ts title="§6Overall">
           <Table.td title={t("stats.wins")} value={t(overall.wins)} color="§a" />
           <Table.td
             title={t("stats.hiderWins")}
@@ -33,10 +33,8 @@ export const HideAndSeekTable = ({ stats, t }: HideAndSeekTableProps) => {
             value={t(overall.seekerWins)}
             color="§b"
           />
-        </Table.tr>
-      </Table.ts>
-      <Table.ts title="§6Party Pooper">
-        <Table.tr>
+        </Table.ts>
+        <Table.ts title="§6Party Pooper">
           <Table.td title={t("stats.wins")} value={t(partyPooper.wins)} color="§a" />
           <Table.td
             title={t("stats.hiderWins")}
@@ -48,10 +46,8 @@ export const HideAndSeekTable = ({ stats, t }: HideAndSeekTableProps) => {
             value={t(partyPooper.seekerWins)}
             color="§b"
           />
-        </Table.tr>
-      </Table.ts>
-      <Table.ts title="§6Prop Hunt">
-        <Table.tr>
+        </Table.ts>
+        <Table.ts title="§6Prop Hunt">
           <Table.td title={t("stats.wins")} value={t(propHunt.wins)} color="§a" />
           <Table.td
             title={t("stats.hiderWins")}
@@ -63,8 +59,8 @@ export const HideAndSeekTable = ({ stats, t }: HideAndSeekTableProps) => {
             value={t(propHunt.seekerWins)}
             color="§b"
           />
-        </Table.tr>
-      </Table.ts>
+        </Table.ts>
+      </Table.tr>
     </Table.table>
   );
 };

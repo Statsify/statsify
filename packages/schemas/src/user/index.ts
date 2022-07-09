@@ -12,8 +12,11 @@ import { UserTheme } from "./theme";
 export enum UserTier {
   NONE = 0,
   PREMIUM = 404,
+  STAFF = 666,
   CORE = 999,
 }
+
+const tiers = Object.entries(UserTier);
 
 export class User {
   @Field({ mongo: { index: true, unique: true } })
@@ -31,6 +34,9 @@ export class User {
   @Field({ store: { required: false } })
   public serverMember?: boolean;
 
+  @Field({ store: { required: false } })
+  public nitroBooster?: boolean;
+
   @Field({ type: () => Number, store: { required: false } })
   public tier?: UserTier;
 
@@ -40,8 +46,28 @@ export class User {
   @Field({ type: () => String, store: { required: false } })
   public theme?: UserTheme;
 
-  public static isPremium(tier = UserTier.NONE): boolean {
+  public static isPremium(user: User | null): boolean {
+    const tier = user?.tier ?? UserTier.NONE;
     return tier >= UserTier.PREMIUM;
+  }
+
+  public static isStaff(user: User | null): boolean {
+    const tier = user?.tier ?? UserTier.STAFF;
+    return tier >= UserTier.STAFF;
+  }
+
+  public static isCore(user: User | null): boolean {
+    const tier = user?.tier ?? UserTier.CORE;
+    return tier >= UserTier.CORE;
+  }
+
+  public static getTierName(user: User | null): string;
+  public static getTierName(tier: UserTier): string;
+  public static getTierName(userOrTier: User | null | UserTier): string {
+    const tier =
+      typeof userOrTier === "number" ? userOrTier : userOrTier?.tier ?? UserTier.NONE;
+
+    return tiers.find(([, value]) => value === tier)?.[0] ?? "NONE";
   }
 }
 

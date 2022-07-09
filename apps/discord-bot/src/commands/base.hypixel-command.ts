@@ -7,8 +7,8 @@
  */
 
 import Container from "typedi";
-import { ApiService } from "#services";
 import {
+  ApiService,
   Command,
   CommandContext,
   LocalizeFunction,

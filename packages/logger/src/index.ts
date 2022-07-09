@@ -8,17 +8,20 @@
 
 import * as Sentry from "@sentry/node";
 import chalk from "chalk";
+import { DateTime } from "luxon";
+import { config } from "@statsify/util";
 import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/common";
-
 export const defaultLogLevels: LogLevel[] = ["log", "error", "warn", "debug", "verbose"];
 
-export const logColors: Record<LogLevel, string> = {
-  debug: "#C700E7",
-  warn: "#FAB627",
-  error: "#DA4E38",
-  verbose: "#6469F5",
-  log: "#36D494",
-};
+export const STATUS_COLORS = {
+  debug: 0xc700e7,
+  warn: 0xfab627,
+  error: 0xda4e38,
+  info: 0x6469f5,
+  success: 0x36d494,
+} as const;
+
+const isProduction = config("environment") === "prod";
 
 /**
  * A logger implementing the NestJS LoggerService interface. However can be used anywhere.
@@ -160,10 +163,23 @@ export class Logger implements LoggerService {
   }
 
   private getColorByLogLevel(logLevel: LogLevel) {
-    return logColors[logLevel];
+    switch (logLevel) {
+      case "debug":
+        return STATUS_COLORS.debug;
+      case "warn":
+        return STATUS_COLORS.warn;
+      case "error":
+        return STATUS_COLORS.error;
+      case "verbose":
+        return STATUS_COLORS.info;
+      case "log":
+        return STATUS_COLORS.success;
+    }
   }
 
   private getTimeStamp() {
+    if (isProduction) return DateTime.now().toFormat("h:mma");
+
     const now = Date.now();
 
     if (!Logger.lastTimeStampAt) {
@@ -190,9 +206,9 @@ export class Logger implements LoggerService {
       const output = typeof message === "object" ? JSON.stringify(message) : message;
       const timeStamp = this.getTimeStamp();
 
-      const computedMessage = `${chalk.bold`${icon}`} ${chalk.hex(color)(
+      const computedMessage = `${chalk.bold`${icon}`} ${chalk.hex(color.toString(16))(
         context
-      )} ${chalk.gray`${timeStamp}ms`} ${output}\n`;
+      )} ${chalk.gray`${timeStamp}${isProduction ? "" : "ms"}`} ${output}\n`;
 
       process[writeStreamType].write(computedMessage);
     });
