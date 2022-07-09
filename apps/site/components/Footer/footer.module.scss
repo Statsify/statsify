@@ -1,0 +1,40 @@
+.footer {
+  width: 100%;
+  background-color: #111111;
+  color: #ffffff;
+  font-family: "Lexend Deca";
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.socials, .links {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  margin-bottom: 10px;
+}
+
+.links {
+  margin-bottom: 32px;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+  }
+}
+
+.link {
+  margin-left: 8px;
+  margin-right: 8px;
+
+  margin-top: 4px;
+  margin-bottom: 4px;
+
+  text-align: center;
+
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}

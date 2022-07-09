@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: #111111;
+
+  width: 100%;
+  min-height: 30vh;
+
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+  }
+}
