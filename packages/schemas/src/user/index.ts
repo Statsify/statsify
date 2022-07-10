@@ -7,12 +7,8 @@
  */
 
 import { Field } from "../metadata";
+import { UserTheme } from "./theme";
 import { prettify } from "@statsify/util";
-
-export enum UserTheme {
-  DEFAULT = "default",
-  HD = "hd",
-}
 
 export enum UserTier {
   NONE = 0,
@@ -95,3 +91,5 @@ export class User {
     return userTier >= tier;
   }
 }
+
+export * from "./theme";

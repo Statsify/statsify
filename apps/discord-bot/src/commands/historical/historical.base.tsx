@@ -305,7 +305,7 @@ export class HistoricalBase {
           mode
         );
 
-        const canvas = render(profile, getTheme(user?.theme));
+        const canvas = render(profile, getTheme(user));
         const buffer = await canvas.toBuffer("png");
 
         return {

@@ -55,7 +55,7 @@ export class PitCommand {
         tier={user?.tier}
         badge={badge}
       />,
-      getTheme(user?.theme)
+      getTheme(user)
     );
 
     return this.paginateService.paginate(context, [

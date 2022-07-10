@@ -68,7 +68,7 @@ export class FriendsCommand {
             tier={user?.tier}
             displayName={displayName}
           />,
-          getTheme(user?.theme)
+          getTheme(user)
         );
       })
     );

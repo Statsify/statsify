@@ -7,7 +7,12 @@
  */
 
 /* eslint-disable @typescript-eslint/ban-types */
-import type { CanvasRenderingContext2D } from "skia-canvas";
+import type {
+  CanvasGradient,
+  CanvasPattern,
+  CanvasRenderingContext2D,
+  CanvasTexture,
+} from "skia-canvas";
 import type { FontRenderer } from "../font";
 import type { IntrinsicElement, IntrinsicRenders } from "./instrinsics";
 
@@ -15,10 +20,17 @@ export interface BaseThemeContext {
   renderer: FontRenderer;
 }
 
-export interface Theme<T extends BaseThemeContext> {
-  context: T;
-  elements: Partial<IntrinsicRenders<T>>;
+export interface ComputedThemeContext extends BaseThemeContext {
+  canvasWidth: number;
+  canvasHeight: number;
 }
+
+export interface Theme {
+  context: BaseThemeContext;
+  elements: Partial<IntrinsicRenders>;
+}
+
+export type Fill = string | CanvasGradient | CanvasPattern | CanvasTexture;
 
 export type StyleLocation = "left" | "center" | "right";
 export type StyleDirection = "row" | "column";
@@ -58,11 +70,12 @@ export interface Location {
   margin: CompleteSpacing;
 }
 
-export type Render<T = unknown, K extends BaseThemeContext = BaseThemeContext> = (
+export type Render<T = unknown> = (
   ctx: CanvasRenderingContext2D,
   props: T,
   location: Location,
-  theme: K
+  theme: ComputedThemeContext,
+  component?: string
 ) => void;
 
 export interface ElementNodeBiDirectional {
@@ -76,6 +89,7 @@ export interface ElementNodeBiDirectional {
 }
 
 export interface ElementNode {
+  component?: string;
   style: Style;
   children?: ElementNode[];
   props: any;

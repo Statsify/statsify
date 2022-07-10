@@ -94,7 +94,9 @@ export const LeaderboardProfile = ({
             )}
           </If>
           <box width="remaining" direction="column" {...highlight}>
-            <text align="left">{d.name}</text>
+            <text align="left" t:ignore>
+              {d.name}
+            </text>
           </box>
         </div>
         {d.fields.map((field) => {
@@ -113,7 +115,7 @@ export const LeaderboardProfile = ({
   return (
     <Container background={background}>
       <box width="100%">
-        <text>§^3^§l{name}</text>
+        <text t:ignore>§^3^§l{name}</text>
       </box>
       <List items={[<>{titles}</>, ...items]} />
       <Footer

@@ -17,7 +17,7 @@ export const HeaderBody = ({ description, title }: HeaderBodyProps) => {
   if (!description) {
     return (
       <box width="remaining" height="remaining">
-        <text>{title}</text>
+        <text t:ignore>{title}</text>
       </box>
     );
   }
@@ -30,10 +30,10 @@ export const HeaderBody = ({ description, title }: HeaderBodyProps) => {
         height="remaining"
         padding={{ bottom: 5, left: 10, right: 10, top: 5 }}
       >
-        <Multiline>{description}</Multiline>
+        <Multiline t:ignore>{description}</Multiline>
       </box>
       <box width="100%">
-        <text>{title}</text>
+        <text t:ignore>{title}</text>
       </box>
     </div>
   );

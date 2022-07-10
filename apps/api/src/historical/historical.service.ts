@@ -9,7 +9,11 @@
 import { AsyncTask, SimpleIntervalJob } from "toad-scheduler";
 import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
 import { Flatten, flatten } from "@statsify/util";
-import { HistoricalType, HypixelCache } from "@statsify/api-client";
+import {
+  HistoricalType,
+  HypixelCache,
+  PlayerNotFoundException,
+} from "@statsify/api-client";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, Logger } from "@nestjs/common";
 import { Player, RATIOS, RATIO_STATS, deserialize, serialize } from "@statsify/schemas";
@@ -112,7 +116,7 @@ export class HistoricalService {
 
   public async get(tag: string, type: HistoricalType): Promise<Player | null> {
     const [newPlayer, oldPlayer, isNew] = await this.getRaw(tag, type);
-    if (!newPlayer || !oldPlayer) return null;
+    if (!newPlayer || !oldPlayer) throw new PlayerNotFoundException();
 
     const merged = this.merge(oldPlayer, newPlayer);
 

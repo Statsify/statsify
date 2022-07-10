@@ -15,9 +15,12 @@ export type Choice = string | [display: string, value: string | number];
 export class ChoiceArgument extends AbstractArgument {
   public description: LocalizationString;
   public type = ApplicationCommandOptionType.String;
-  public required = false;
 
-  public constructor(public name: string, ...choices: Choice[]) {
+  public constructor(
+    public name: string,
+    public required: boolean,
+    ...choices: Choice[]
+  ) {
     super();
 
     this.description = (t) => t("arguments.choice");

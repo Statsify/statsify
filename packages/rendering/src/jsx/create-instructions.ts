@@ -9,7 +9,10 @@
 import { getTotalSize, toDecimal } from "./util";
 import type { ElementNode, Fraction, Instruction, Percent } from "./types";
 
-export const createInstructions = (node: ElementNode): Instruction => {
+export const createInstructions = (
+  node: ElementNode,
+  component = node.component
+): Instruction => {
   const hasDefinedWidth = typeof node.x.size === "number";
   const hasDefinedHeight = typeof node.y.size === "number";
 
@@ -27,6 +30,7 @@ export const createInstructions = (node: ElementNode): Instruction => {
 
   for (let i = 0; i < node.children.length; i++) {
     const child = node.children[i];
+    child.component = child.component ?? component;
 
     paddlessSideLength -= getTotalSize(child[side], { size: false });
   }
@@ -60,7 +64,7 @@ export const createInstructions = (node: ElementNode): Instruction => {
 
     remainingSide -= child[side].size as number;
 
-    node.children[i] = createInstructions(child);
+    node.children[i] = createInstructions(child, child.component ?? component);
   }
 
   if (!remaining.length) return node as Instruction;
@@ -70,7 +74,7 @@ export const createInstructions = (node: ElementNode): Instruction => {
   for (const element of remaining) {
     const child = node.children[element];
     child[side].size = remainingSideLength;
-    node.children[element] = createInstructions(child);
+    node.children[element] = createInstructions(child, child.component ?? component);
   }
 
   return node as Instruction;

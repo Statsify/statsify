@@ -24,7 +24,9 @@ import {
   LeaderboardType,
 } from "./leaderboard.profile";
 import { LeaderboardQuery, PostLeaderboardResponse } from "@statsify/api-client";
+import { User } from "@statsify/schemas";
 import { getLogo } from "@statsify/assets";
+import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
 
@@ -98,6 +100,7 @@ export class BaseLeaderboardCommand {
         const params = fn();
 
         const [message, page] = await this.getLeaderboardMessage(
+          user,
           cache,
           type,
           getLeaderboard,
@@ -191,6 +194,7 @@ export class BaseLeaderboardCommand {
     const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
 
     const [message, page] = await this.getLeaderboardMessage(
+      user,
       cache,
       type,
       getLeaderboard,
@@ -219,6 +223,7 @@ export class BaseLeaderboardCommand {
   }
 
   private async getLeaderboardMessage(
+    user: User | null,
     cache: Map<number, IMessage>,
     type: LeaderboardType,
     getLeaderboard: GetLeaderboard,
@@ -233,6 +238,7 @@ export class BaseLeaderboardCommand {
     }
 
     const [message, page] = await this.renderLeaderboardMessage(
+      user,
       type,
       getLeaderboard,
       field,
@@ -247,6 +253,7 @@ export class BaseLeaderboardCommand {
   }
 
   private async renderLeaderboardMessage(
+    user: User | null,
     type: LeaderboardType,
     getLeaderboard: GetLeaderboard,
     field: string,
@@ -295,7 +302,8 @@ export class BaseLeaderboardCommand {
         name={leaderboard.name}
         fields={leaderboard.fields}
         data={leaderboardData}
-      />
+      />,
+      getTheme(user)
     );
 
     const buffer = await canvas.toBuffer("png");

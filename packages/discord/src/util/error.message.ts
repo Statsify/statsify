@@ -15,12 +15,12 @@ import {
   Message,
 } from "../messages";
 import { STATUS_COLORS } from "@statsify/logger";
-import type { APIAttachment } from "discord-api-types/v10";
+import type { InteractionAttachment } from "../interaction";
 
 interface ErrorMessageOptions {
   color?: number;
   buttons?: ButtonBuilder[];
-  attachments?: APIAttachment[];
+  files?: InteractionAttachment[];
 }
 
 export class ErrorMessage extends Message {
@@ -33,11 +33,7 @@ export class ErrorMessage extends Message {
   public constructor(
     titleOrKey: LocalizationString,
     description?: LocalizationString,
-    {
-      attachments = [],
-      buttons = [],
-      color = STATUS_COLORS.error,
-    }: ErrorMessageOptions = {}
+    { files = [], buttons = [], color = STATUS_COLORS.error }: ErrorMessageOptions = {}
   ) {
     const embed = new EmbedBuilder().color(color);
 
@@ -52,7 +48,11 @@ export class ErrorMessage extends Message {
     const data: IMessage = { embeds: [embed] };
 
     if (buttons.length > 0) data.components = [new ActionRowBuilder(buttons)];
-    if (attachments.length > 0) data.attachments = attachments;
+
+    if (files.length > 0) {
+      data.files = files;
+      embed.image(`attachment://${data.files[0].name}`);
+    }
 
     super(data);
   }

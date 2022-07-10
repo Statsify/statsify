@@ -7,8 +7,8 @@
  */
 
 import Container from "typedi";
+import { Fill } from "../jsx";
 import { FontRenderer } from "../font";
-import { RGB } from "../colors";
 import { useChildren } from "../hooks";
 import type * as JSX from "../jsx";
 import type { TextNode } from "../font/tokens";
@@ -19,34 +19,35 @@ export interface TextProps {
   margin?: JSX.Spacing;
   children?: Text | Text[];
   align?: JSX.StyleLocation;
-  color?: RGB;
+  color?: Fill;
   bold?: boolean;
   italic?: boolean;
   underline?: boolean;
   size?: number;
-  shadow?: boolean;
+  "t:ignore"?: boolean;
 }
 
 export interface TextRenderProps {
   text: TextNode[][];
+  "t:ignore": boolean;
 }
 
 export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps["children"]> = ({
   margin = 6,
   children,
   align = "center",
-  color = [255, 255, 255],
+  color = "#FFFFFF",
   bold = false,
   italic = false,
   underline = false,
   size = 2,
-  shadow = true,
+  "t:ignore": ignore = false,
 }) => {
   const text = useChildren(children).join("");
 
   //Get a generic instance of font renderer just to lex and measure the text
   const renderer = Container.get(FontRenderer);
-  const nodes = renderer.lex(text, { color, bold, italic, underline, size, shadow });
+  const nodes = renderer.lex(text, { color, bold, italic, underline, size });
 
   const { width, height } = renderer.measureText(nodes);
 
@@ -57,7 +58,7 @@ export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps["childre
       height,
     },
     style: { location: "center", direction: "row", align },
-    props: { text: nodes },
+    props: { text: nodes, "t:ignore": ignore },
     children: [],
   };
 };

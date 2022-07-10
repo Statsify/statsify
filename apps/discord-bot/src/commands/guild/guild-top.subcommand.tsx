@@ -63,7 +63,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       t,
     };
 
-    const theme = getTheme(user?.theme);
+    const theme = getTheme(user);
 
     const up = new ButtonBuilder().emoji(t("emojis:up")).style(ButtonStyle.Success);
     const down = new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger);
@@ -187,7 +187,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     title: string,
     key: GuildTopKey,
     page: number,
-    theme?: Theme<any>
+    theme?: Theme
   ): Promise<IMessage> {
     const cacheKey = `${key}-${page}`;
 
@@ -212,7 +212,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     title: string,
     key: GuildTopKey,
     page: number,
-    theme?: Theme<any>
+    theme?: Theme
   ) {
     const members = props.guild.members
       .map(

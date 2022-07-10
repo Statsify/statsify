@@ -30,7 +30,10 @@ export const hexToRgb = (hex: string): RGB => {
 export const rgbToHex = (rgb: RGB | RGBA): string =>
   `#${rgb.map((o) => o.toString(16).toUpperCase().padStart(2, "0")).join("")}`;
 
-export const mcShadow = (rgb: RGB): RGB => rgb.map((o) => Math.floor(o * 0.25)) as RGB;
+export const rgbToString = (rgb: RGB | RGBA): string => `rgba(${rgb.join(", ")})`;
+
+export const mcShadow = (color: string): string =>
+  rgbToHex(hexToRgb(color).map((o) => Math.floor(o * 0.25)) as RGB);
 
 export const parseColor = (color: string): RGBA => {
   if (color.startsWith("#")) {

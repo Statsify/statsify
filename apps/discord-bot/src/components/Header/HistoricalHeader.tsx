@@ -69,7 +69,7 @@ export const HistoricalHeader = ({
             <text>§l{prettify(time.toLowerCase())}</text>
           </box>
           <box width="remaining">
-            <text>{title}</text>
+            <text t:ignore>{title}</text>
           </box>
         </div>
       </div>

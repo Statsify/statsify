@@ -7,7 +7,7 @@
  */
 
 import { Box, Div, Image, Text } from "../components";
-import type { BaseThemeContext, PropsWithChildren, RawFC, Render } from "./types";
+import type { PropsWithChildren, RawFC, Render } from "./types";
 
 export const intrinsicElements = {
   div: Div.component,
@@ -26,10 +26,9 @@ export type IntrinsicProps = {
 
 export type IntrinsicElement = keyof IntrinsicElements;
 
-export type IntrinsicRenders<C extends BaseThemeContext = BaseThemeContext> = {
+export type IntrinsicRenders = {
   [key in IntrinsicElement]: Render<
-    IntrinsicElements[key] extends RawFC<any, infer U, any> ? U : never,
-    C
+    IntrinsicElements[key] extends RawFC<any, infer U, any> ? U : never
   >;
 };
 

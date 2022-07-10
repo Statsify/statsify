@@ -48,9 +48,11 @@ export const RecentGamesProfile = ({
             {games.map(({ game, mode, map, startedAt, endedAt }) => (
               <box width="100%">
                 <div width="remaining" direction="column" margin={4}>
+                  <text align="left" margin={2} t:ignore>
+                    §l{FormattedGame[game.id]}
+                  </text>
                   <Multiline align="left" margin={2}>
                     {[
-                      `§l${FormattedGame[game.id]}`,
                       `§7${t("stats.mode")}: §f${mode ? mapGame(game.id, mode) : "N/A"}`,
                       `§7${t("stats.map")}: §f${map ?? "N/A"}`,
                       `§7${t("stats.started")}: §f${relativeTime(startedAt)}`,

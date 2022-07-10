@@ -8,7 +8,7 @@
 
 import { Command, EmbedBuilder } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
-import { hexToRgb, mcShadow, rgbToHex } from "@statsify/rendering";
+import { mcShadow } from "@statsify/rendering";
 import { minecraftColors } from "@statsify/util";
 
 @Command({ description: "commands.colors" })
@@ -24,7 +24,7 @@ export class ColorsCommand {
         minecraftColors.forEach((color) => {
           desc += `${t(`emojis:colors.${[color.code.slice(1)]}`)} \`${color.code}\` • \`${
             color.hex
-          }\` • \`${rgbToHex(mcShadow(hexToRgb(color.hex)))}\`\n`;
+          }\` • \`${mcShadow(color.hex)}\`\n`;
         });
 
         desc += "\n";

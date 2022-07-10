@@ -24,7 +24,12 @@ export const jsx = (type: IntrinsicElement | FC, props: Props): ElementNode | nu
   if (typeof type === "string" && type in intrinsicElements) {
     return elementToNode(type, intrinsicElements[type](props as any));
   } else if (typeof type === "function") {
-    return type(props);
+    const el = type(props);
+
+    if (type === Fragment) return el;
+
+    if (el) el.component = type.name;
+    return el;
   }
 
   throw new Error(`Unknown JSX element, with type ${type}`);

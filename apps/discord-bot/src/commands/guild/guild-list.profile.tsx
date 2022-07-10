@@ -95,9 +95,7 @@ export const GuildListProfile = ({
           </box>
           <>
             {rows.map((row) => (
-              <div width="100%" location="left">
-                {row}
-              </div>
+              <div width="100%">{row}</div>
             ))}
           </>
         </div>

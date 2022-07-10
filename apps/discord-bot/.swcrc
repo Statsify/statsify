@@ -2,7 +2,6 @@
   "jsc": {
     "parser": {
       "syntax": "typescript",
-      "tsx": true,
       "decorators": true,
       "dynamicImport": true
     },
@@ -11,7 +10,8 @@
       "decoratorMetadata": true,
       "react": {
         "runtime": "automatic",
-        "importSource": "@statsify/rendering"
+        "importSource": "@statsify/rendering",
+        "throwIfNamespace": false
       },
       "optimizer": {
         "simplify": true,

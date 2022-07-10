@@ -102,7 +102,7 @@ export class MutualsCommand {
               t={t}
               tier={user?.tier}
             />,
-            getTheme(user?.theme)
+            getTheme(user)
           )
       )
     );

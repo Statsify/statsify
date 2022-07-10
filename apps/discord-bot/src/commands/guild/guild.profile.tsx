@@ -115,7 +115,7 @@ export const GuildProfile = ({
   return (
     <Container background={background}>
       <box width="100%">
-        <text>§^4^{guild.nameFormatted}</text>
+        <text t:ignore>§^4^{guild.nameFormatted}</text>
       </box>
       {pageEl}
       <Footer logo={logo} tier={tier} />
@@ -154,7 +154,9 @@ const GuildOverallPage = ({
             <div location="center">
               <text {...text}>{`§b${t("stats.guild.guildMaster")}:`}</text>
               <img image={skin} margin={{ left: 8, right: 8 }} />
-              <text {...text}>{guildMaster.displayName}</text>
+              <text {...text} t:ignore>
+                {guildMaster.displayName}
+              </text>
             </div>
             <text {...text}>{`§3${t("stats.guild.createdOn")}: §7${createdAt}`}</text>
             <text {...text}>{`§9${t("stats.guild.members")}: §f${t(

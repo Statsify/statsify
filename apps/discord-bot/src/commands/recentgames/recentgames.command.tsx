@@ -75,7 +75,7 @@ export class RecentGamesCommand {
               prefixName={recentGames.prefixName}
               gameIcons={gameIconsRecord}
             />,
-            getTheme(user?.theme)
+            getTheme(user)
           )
       )
     );

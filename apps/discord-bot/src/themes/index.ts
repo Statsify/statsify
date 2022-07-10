@@ -6,18 +6,49 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Theme } from "@statsify/rendering";
-import { UserTheme } from "@statsify/schemas";
-import { hdTheme } from "./hd";
+import { Background } from "#components";
+import { Image, Theme } from "@statsify/rendering";
+import { User, UserBoxes, UserFont, UserPalette } from "@statsify/schemas";
+import { getBoxRenderer } from "./boxes";
+import { getColorPalette } from "./palette";
+import { getFontRenderer } from "./renderer";
 
-export const getTheme = (
-  theme: UserTheme = UserTheme.DEFAULT
-): Theme<any> | undefined => {
-  switch (theme) {
-    case UserTheme.HD:
-      return hdTheme;
-    case UserTheme.DEFAULT:
-    default:
-      return undefined;
-  }
+export const getTheme = (user: User | null): Theme | undefined => {
+  if (!user) return undefined;
+  if (!User.isGold(user)) return undefined;
+  if (!user.theme) return undefined;
+
+  const {
+    boxes = UserBoxes.DEFAULT,
+    font = UserFont.DEFAULT,
+    palette = UserPalette.DEFAULT,
+  } = user.theme;
+
+  const renderer = getFontRenderer(font);
+  const box = getBoxRenderer(boxes);
+  const colorPalette = getColorPalette(palette);
+
+  return {
+    context: { renderer },
+    elements: {
+      box(ctx, props, location, theme) {
+        if (colorPalette?.boxes) {
+          if (colorPalette.boxes.color) props.color = colorPalette.boxes.color;
+          if (colorPalette.boxes.shadowOpacity !== undefined)
+            props.shadowOpacity = colorPalette.boxes.shadowOpacity;
+        }
+
+        box(ctx, props, location, theme);
+      },
+      img(ctx, props, location, theme, component) {
+        Image.render(ctx, props, location, theme, component);
+
+        if (!colorPalette?.background || !component || component !== Background.name)
+          return;
+
+        ctx.fillStyle = colorPalette.background;
+        ctx.fillRect(location.x, location.y, location.width, location.height);
+      },
+    },
+  };
 };

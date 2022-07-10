@@ -15,8 +15,7 @@ import {
   UserArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
-import { User, UserTheme, UserTier } from "@statsify/schemas";
-import { prettify } from "@statsify/util";
+import { User, UserTier } from "@statsify/schemas";
 
 @Command({
   description: (t) => t("commands.user"),
@@ -58,7 +57,8 @@ export class UserCommand {
 
     this.addField(embed, "tier", user.tier, (v) => `\`${User.getTierName(v)}\``);
 
-    this.addField(embed, "Theme", prettify(user.theme ?? UserTheme.DEFAULT));
+    //TODO: Fix themes in user command
+    // this.addField(embed, "Theme", prettify(user.theme ?? UserTheme.DEFAULT));
 
     return { embeds: [embed] };
   }

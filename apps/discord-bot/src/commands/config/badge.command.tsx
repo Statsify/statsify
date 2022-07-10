@@ -18,7 +18,7 @@ import {
   SubCommand,
 } from "@statsify/discord";
 import { Canvas, Image } from "skia-canvas";
-import { Container, Footer, HeaderNametag, Skin } from "#components";
+import { DemoProfile } from "./demo.profile";
 import { User, UserTier } from "@statsify/schemas";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -62,11 +62,7 @@ export class BadgeCommand {
     const user = context.getUser();
     const t = context.t();
 
-    if (!user?.uuid)
-      throw new ErrorMessage(
-        (t) => t("verification.requiredVerification.title"),
-        (t) => t("verification.requiredVerification.description")
-      );
+    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
 
     switch (mode) {
       case "view": {
@@ -142,11 +138,7 @@ export class BadgeCommand {
   }
 
   private async getProfile(t: LocalizeFunction, user: User, badge?: Image | Canvas) {
-    if (!user?.uuid)
-      throw new ErrorMessage(
-        (t) => t("errors.unknown.title"),
-        (t) => t("errors.unknown.description")
-      );
+    if (!user?.uuid) throw new ErrorMessage("errors.unknown");
 
     const [player, skin, logo, background] = await Promise.all([
       this.apiService.getPlayer(user.uuid),
@@ -156,19 +148,15 @@ export class BadgeCommand {
     ]);
 
     const canvas = render(
-      <Container background={background}>
-        <div width="100%">
-          <Skin skin={skin} />
-          <div direction="column" width="remaining" height="100%">
-            <HeaderNametag name={player.displayName} badge={badge} size={3} />
-            <box width="100%">
-              <text>{t("config.badge.profile") as string}</text>
-            </box>
-            <Footer logo={logo} tier={user.tier}></Footer>
-          </div>
-        </div>
-      </Container>,
-      getTheme(user?.theme)
+      <DemoProfile
+        background={background}
+        logo={logo}
+        player={player}
+        skin={skin}
+        badge={badge}
+        message={t("config.badge.profile")}
+      />,
+      getTheme(user)
     );
 
     return canvas.toBuffer("png");
