@@ -13,7 +13,7 @@ export enum UserFont {
   HD = "hd",
 }
 
-export enum UserPallet {
+export enum UserPalette {
   DEFAULT = "default",
   LIGHT = "light",
   DARK = "dark",
@@ -26,12 +26,12 @@ export enum UserBoxes {
 }
 
 export class UserTheme {
-  @Field({ type: () => String })
+  @Field({ mongo: { required: false }, type: () => String })
   public font?: UserFont;
 
-  @Field({ type: () => String })
-  public pallet?: UserPallet;
+  @Field({ mongo: { required: false }, type: () => String })
+  public palette?: UserPalette;
 
-  @Field({ type: () => String })
+  @Field({ mongo: { required: false }, type: () => String })
   public boxes?: UserBoxes;
 }

@@ -72,10 +72,10 @@ export const render: Render<Box.BoxRenderProps> = (
 
   if (!shadowDistance) return;
 
-  // ctx.globalAlpha = shadowOpacity;
-  // ctx.fillStyle = color;
-  ctx.globalAlpha = 1;
-  ctx.fillStyle = "rgba(0, 0, 0, 1)";
+  //TODO(jacobk999): Fix shadow
+
+  ctx.globalAlpha = shadowOpacity;
+  ctx.fillStyle = color;
 
   ctx.beginPath();
   ctx.moveTo(x + width, y + shadowDistance);

@@ -10,7 +10,7 @@ import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ReturnModelType } from "@typegoose/typegoose";
 import { User, VerifyCode } from "@statsify/schemas";
-import { config } from "@statsify/util";
+import { config, flatten } from "@statsify/util";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFile, rm, writeFile } from "node:fs/promises";
 
@@ -29,7 +29,11 @@ export class UserService {
 
   public update(idOrUuid: string, user: Partial<User>): Promise<User | null> {
     const [tag, type] = this.parseTag(idOrUuid);
-    return this.userModel.findOneAndUpdate(user).where(type).equals(tag).lean().exec();
+
+    return this.userModel
+      .findOneAndUpdate({ [type]: tag }, { $set: flatten(user) })
+      .lean()
+      .exec();
   }
 
   public async getBadge(idOrUuid: string): Promise<Buffer> {

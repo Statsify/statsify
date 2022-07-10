@@ -467,9 +467,21 @@
       "title": "Invalid Reset Timezone",
       "description": "`{{timezone}}` is not a valid timezone. Enter a timezone similar to `EST` or `PST`"
     },
-    "premiumOnly": {
-      "title": "Missing Premium",
-      "description": "You are not a premium."
+    "ironOnly": {
+      "title": "Statsify Iron is required to run this command",
+      "description": "Check out all the features you can unlock at https://statsify.net/patreon"
+    },
+    "goldOnly": {
+      "title": "Statsify Gold is required to run this command",
+      "description": "Check out all the features you can unlock at https://statsify.net/patreon"
+    },
+    "diamondOnly": {
+      "title": "Statsify Diamond is required to run this command",
+      "description": "Check out all the features you can unlock at https://statsify.net/patreon"
+    },
+    "emeraldOnly": {
+      "title": "Statsify Emerald is required to run this command",
+      "description": "Check out all the features you can unlock at https://statsify.net/patreon"
     },
     "staffOnly": {
       "title": "Staff Only",
@@ -521,6 +533,11 @@
       "set": "$t(emojis:check) Successfully updated your badge.",
       "view": "$t(emojis:eye) Your current badge:",
       "reset": "$t(emojis:reset) Successfully reset your badge."
+    },
+    "theme": {
+      "profile": "This is how your theme is displayed",
+      "set": "$t(emojis:check) Successfully updated your theme.",
+      "view": "$t(emojis:eye) Your current theme:"
     }
   },
   "socials": {

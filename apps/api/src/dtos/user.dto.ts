@@ -9,11 +9,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsBoolean,
-  IsEnum,
   IsOptional,
   IsString,
   MaxLength,
   MinLength,
+  ValidateNested,
 } from "class-validator";
 import { UserTheme } from "@statsify/schemas";
 
@@ -31,6 +31,6 @@ export class UpdateUserDto {
   public serverMember?: boolean;
 
   @IsOptional()
-  @IsEnum(UserTheme)
+  @ValidateNested()
   public theme?: UserTheme;
 }
