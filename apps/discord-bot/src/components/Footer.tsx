@@ -23,27 +23,27 @@ export const Footer = ({ logo, tier = UserTier.NONE, border }: FooterProps) => {
   switch (tier) {
     case UserTier.CORE:
       text =
-        "§#ff7373s§#ff6565t§#ff5757a§#ff4949t§#ff3a3as§#ff2929i§#ff1717f§#ff0606y§#fa0001.§#f20002n§#ea0003e§#e20004t";
+        "§#f5c6cds§#eaa2abt§#de7d89a§#d35967t§#cb3d4cs§#c92f40i§#c82235f§#c61429y§#b80d21.§#a4091bn§#8f0415e§#7b000ft";
       break;
     case UserTier.STAFF:
       text =
-        "§#ff98d4s§#ff8ed0t§#ff84cba§#ff7ac7t§#ff6fc2s§#ff62bdi§#ff55b8f§#ff48b3y§#fc43b0.§#f940adn§#f53eabe§#f13ca9t";
+        "§#fec1e1s§#efb4e5t§#e0a7eaa§#d19aeet§#c48ff1s§#ba88f1i§#b181f1f§#a77af1y§#9c72e9.§#9069dcn§#8560d0e§#7957c3t";
       break;
     case UserTier.EMERALD:
       text =
-        "§#69f262s§#5cf354t§#4ff447a§#43f439t§#36f42cs§#29f11fi§#1def11f§#10ec04y§#0de600.§#0edf00n§#0fd800e§#10d100t";
+        "§#d4ffe7s§#a8fbc5t§#7df7a3a§#51f382t§#31ee68s§#28e760i§#1fdf59f§#16d851y§#10cb46.§#0abb3bn§#05ab2fe§#009b24t";
       break;
     case UserTier.DIAMOND:
       text =
-        "§#8fe3ffs§#84e0fft§#79ddffa§#6ddafft§#61d7ffs§#53d3ffi§#46d0fff§#38ccffy§#34c8fa.§#34c5f3n§#35c1ece§#36bde5t";
+        "§#cdfff4s§#bcfeeft§#aafceba§#99fbe6t§#86f9e1s§#70f4ddi§#59f0d8f§#43ebd4y§#36e1ca.§#2dd4ben§#23c7b3e§#1abaa7t";
       break;
     case UserTier.GOLD:
       text =
-        "§#ffdc73s§#ffd865t§#ffd557a§#ffd149t§#ffce3as§#ffc929i§#ffc517f§#ffc006y§#f9ba01.§#f0b202n§#e7ab03e§#dea304t";
+        "§#fffddas§#fefab3t§#fdf88da§#fdf566t§#fcf04as§#fbe546i§#fadb41f§#f9d03dy§#f5c533.§#f0b928n§#eaae1ce§#e5a211t";
       break;
     case UserTier.IRON:
       text =
-        "§#d0d0d0s§#cbcbcbt§#c7c7c7a§#c2c2c2t§#bdbdbds§#b7b7b7i§#b1b1b1f§#abababy§#a7a7a7.§#a5a5a5n§#a2a2a2e§#a0a0a0t";
+        "§#eaeaeas§#e3e3e3t§#dcdcdca§#d5d5d5t§#cececes§#c9c9c9i§#c5c5c5f§#c0c0c0y§#b7b7b7.§#acacacn§#a2a2a2e§#979797t";
       break;
     case UserTier.NONE:
       text =

@@ -110,9 +110,11 @@ export class PaginateService {
     const userId = context.getInteraction().getUserId();
     const cache = new Map<number, Message>();
 
+    const t = context.t();
+
     const controller = [
-      new ButtonBuilder().label("backward"),
-      new ButtonBuilder().label("forward"),
+      new ButtonBuilder().emoji(t("emojis:backward")),
+      new ButtonBuilder().emoji(t("emojis:forward")),
     ];
 
     const listener = context.getListener();
