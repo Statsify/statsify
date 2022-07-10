@@ -23,7 +23,7 @@
     "chart.js": "^3.8.0",
     "chartjs-skia-canvas": "https://github.com/jacobk999/chartjs-skia-canvas.git#commit=b325851b349dba653489464b4524abbc6cf00879",
     "discord-api-types": "^0.36.1",
-    "luxon": "^2.4.0",
+    "luxon": "^3.0.1",
     "mongoose": "^6.4.3",
     "reflect-metadata": "^0.1.13",
     "skia-canvas": "^0.9.30",
