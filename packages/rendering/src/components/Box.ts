@@ -128,7 +128,6 @@ export const render: JSX.Render<BoxRenderProps> = (
 
   if (!shadowDistance) return;
 
-  //TODO(jacobk999): Fix box shadows
   ctx.globalAlpha = shadowOpacity;
   ctx.fillStyle = color;
 

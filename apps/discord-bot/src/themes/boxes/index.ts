@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as HDBox from "./hd.box";
+import * as UHDBox from "./uhd.box";
 import { Box, Render } from "@statsify/rendering";
 import { UserBoxes } from "@statsify/schemas";
 
@@ -14,6 +16,8 @@ export function getBoxRenderer(boxes: UserBoxes): Render<Box.BoxRenderProps> {
     case UserBoxes.DEFAULT:
       return Box.render;
     case UserBoxes.HD:
-      return Box.render;
+      return HDBox.render;
+    case UserBoxes.UHD:
+      return UHDBox.render;
   }
 }

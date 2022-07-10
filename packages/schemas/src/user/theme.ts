@@ -15,16 +15,14 @@ export enum UserFont {
 
 export enum UserPallet {
   DEFAULT = "default",
-  PASTEL = "pastel",
-  RETRO = "retro",
-  SUNSET = "sunset",
-  MIDNIGHT = "midnight",
-  RAINBOW = "rainbow",
+  LIGHT = "light",
+  DARK = "dark",
 }
 
 export enum UserBoxes {
   DEFAULT = "default",
   HD = "hd",
+  UHD = "uhd",
 }
 
 export class UserTheme {

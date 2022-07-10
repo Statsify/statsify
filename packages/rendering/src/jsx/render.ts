@@ -14,7 +14,6 @@ import { IntrinsicRenders, intrinsicRenders } from "./instrinsics";
 import { createInstructions } from "./create-instructions";
 import { getPositionalDelta, getTotalSize } from "./util";
 import { noop } from "@statsify/util";
-import { writeFileSync } from "node:fs";
 import type { ComputedThemeContext, ElementNode, Instruction, Theme } from "./types";
 
 const _render = (
@@ -106,8 +105,6 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
   });
 
   const instructions = createInstructions(node);
-
-  writeFileSync("./instructions.json", JSON.stringify(instructions, null, 2));
 
   instructionsTransaction?.finish();
 
