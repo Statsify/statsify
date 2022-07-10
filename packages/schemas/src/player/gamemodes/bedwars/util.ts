@@ -34,7 +34,7 @@ export const getLevel = (exp = 0): number => {
     remainingExp -= expForNextLevel;
   }
 
-  return Math.floor(level + remainingExp / getExpReq(level + 1));
+  return level + remainingExp / getExpReq(level + 1);
 };
 
 export const getFormattedLevel = (star: number): string => {
