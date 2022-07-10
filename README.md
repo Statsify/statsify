@@ -22,12 +22,12 @@ A Hypixel and Minecraft focused Discord Bot
 
 ### 🚀 Running
 * The codebase is split into apps and packages
-* Set up a `.env` file in the root of the project following the `.env.schema` file
+* Set up a `config.js` file in the root of the project following the `config.schema.js` file (copy paste it over and fill it in)
 * Pull the git submodules (`git submodule update --init`)
 * Set up the assets by running `cd assets/public && yarn`
 * Use `yarn build` to build all packages and apps,
-* Use `yarn build:watch` to watch files and build them as you code
-* Use `yarn {appName} start` to run an app
+* Use `yarn build:watch` to watch files and build them while you code
+* Use `yarn {appName} start` to run an app, eg `yarn api start` to run the API
 
 ### 🤖 Other Important commands
 ```bash
@@ -39,25 +39,34 @@ $ yarn workspace {app or package name} add {dependency}
 
 # Linting
 $ yarn lint
+
+# Testing
+$ yarn test
+
+# Type Testing
+$ yarn test:types
 ```
 
 ## 💁 Contributing
 * Follow the guidelines in [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md)
+* If you are unsure of anything join our [`Discord`] and then message, `jacob#5432`
 
 ## 😕 Help
 * If you require support join our [`Discord`] and create a ticket in the `#create-ticket` channel
-
-
-## 📙 Features
-- Image Profiles
-- Leaderboards
-- Historical Stats
 
 ## 🔗 Links
 - [`Website`]
 - [`Bot Invite`]
 - [`Discord`]
 - [`Donate`]
+
+## Showcase
+![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars.png)
+![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars-leaderboard.png)
+![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/guild-overall.png)
+![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/status.png)
+![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/friends.png)
+
 
 <!-- LINKS -->
 [`website`]: https://statsify.net
