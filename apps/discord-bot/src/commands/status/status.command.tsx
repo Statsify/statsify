@@ -34,7 +34,7 @@ export class StatusCommand {
     const status = await this.apiService.getStatus(context.option("player"), user);
 
     const [logo, skin, badge, background] = await Promise.all([
-      getLogo(user?.tier),
+      getLogo(user),
       this.apiService.getPlayerSkin(status.uuid),
       this.apiService.getUserBadge(status.uuid),
       getBackground(...mapGameIdToBackground(status.game.id ?? "LIMBO")),
@@ -48,7 +48,7 @@ export class StatusCommand {
         badge={badge}
         background={background}
         t={t}
-        tier={user?.tier}
+        user={user}
       />,
       getTheme(user)
     );

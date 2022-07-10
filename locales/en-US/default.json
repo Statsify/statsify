@@ -483,6 +483,10 @@
       "title": "Statsify Emerald is required to run this command",
       "description": "Check out all the features you can unlock at https://statsify.net/patreon"
     },
+    "netheriteOnly": {
+      "title": "Statsify Netherite is required to run this command",
+      "description": "Check out all the features you can unlock at https://statsify.net/patreon"
+    },
     "staffOnly": {
       "title": "Staff Only",
       "description": "This command is only available to staff members"
@@ -506,6 +510,14 @@
     "tagNotFound": {
       "title": "Tag Not Found",
       "description": "The tag you provided was not found."
+    },
+    "footerTooLong": {
+      "title": "Message Too Long",
+      "description": "The message you provided is too long. It should be under 50 characters without color codes."
+    },
+    "higherTierRequiredForIcon": {
+      "title": "Higher Tier Required",
+      "description": "Read more at ..."
     }
   },
   "leaderboard": {
@@ -533,6 +545,11 @@
       "set": "$t(emojis:check) Successfully updated your badge.",
       "view": "$t(emojis:eye) Your current badge:",
       "reset": "$t(emojis:reset) Successfully reset your badge."
+    },
+    "footer": {
+      "profile": "This is how your footer is displayed",
+      "set": "$t(emojis:check) Successfully updated your footer.",
+      "reset": "$t(emojis:reset) Successfully reset your footer."
     },
     "theme": {
       "profile": "This is how your theme is displayed",

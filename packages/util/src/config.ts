@@ -157,6 +157,11 @@ export interface Config {
     emeraldRole: string;
 
     /**
+     * The netherite tier role id
+     */
+    netheriteRole: string;
+
+    /**
      * The guild id where the support bot is located
      */
     guild: string;

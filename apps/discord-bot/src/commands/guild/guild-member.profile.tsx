@@ -23,7 +23,7 @@ export const GuildMemberProfile = ({
   badge,
   logo,
   background,
-  tier,
+  user,
   t,
 }: GuildMemberProfileProps) => {
   const member = guild.members.find((m) => m.uuid === player.uuid)!;
@@ -65,7 +65,7 @@ export const GuildMemberProfile = ({
         </Table.tr>
       </Table.table>
       <GexpTable dates={guild.expHistoryDays} expHistory={member.expHistory} t={t} />
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

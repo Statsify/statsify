@@ -26,7 +26,7 @@ import {
   PutUserBadgeResponse,
 } from "./responses";
 import { GuildQuery, HistoricalType, HypixelCache, LeaderboardQuery } from "./enums";
-import { UserTheme } from "@statsify/schemas";
+import { UserFooter, UserTheme } from "@statsify/schemas";
 import { loadImage } from "@statsify/rendering";
 
 interface ExtraData {
@@ -39,6 +39,7 @@ interface ExtraData {
 interface UpdateUser {
   serverMember?: boolean;
   theme?: UserTheme;
+  footer?: UserFooter;
 }
 
 export class ApiService {

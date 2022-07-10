@@ -21,7 +21,7 @@ export const ParkourProfile = ({
   player,
   badge,
   logo,
-  tier,
+  user,
   background,
   gameIcons,
 }: ParkourProfileProps) => {
@@ -56,7 +56,7 @@ export const ParkourProfile = ({
           <Table.tr>{group}</Table.tr>
         ))}
       </Table.table>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

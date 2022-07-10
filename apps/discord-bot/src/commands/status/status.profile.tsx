@@ -105,7 +105,7 @@ export const StatusProfile = ({
   badge,
   background,
   logo,
-  tier,
+  user,
   t,
 }: StatusProfileProps) => {
   let table: JSX.Element;
@@ -128,7 +128,7 @@ export const StatusProfile = ({
         time="LIVE"
       />
       {table}
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

@@ -8,14 +8,14 @@
 
 import { Container, Footer, HeaderNametag, Skin } from "#components";
 import type { Canvas, Image } from "skia-canvas";
-import type { Player, UserTier } from "@statsify/schemas";
+import type { Player, User } from "@statsify/schemas";
 
 export interface DemoProfileProps {
   background: Image;
   logo: Image;
   skin: Image;
   player: Player;
-  tier?: UserTier;
+  user: User | null;
   badge?: Image | Canvas;
   message: string;
 }
@@ -25,7 +25,7 @@ export const DemoProfile = ({
   skin,
   player,
   badge,
-  tier,
+  user,
   logo,
   message,
 }: DemoProfileProps) => (
@@ -37,7 +37,7 @@ export const DemoProfile = ({
         <box width="100%">
           <text>{message}</text>
         </box>
-        <Footer logo={logo} tier={tier}></Footer>
+        <Footer logo={logo} user={user}></Footer>
       </div>
     </div>
   </Container>

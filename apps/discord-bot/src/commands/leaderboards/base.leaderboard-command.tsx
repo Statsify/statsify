@@ -68,13 +68,13 @@ export class BaseLeaderboardCommand {
     const t = context.t();
     const cache = new Map<number, IMessage>();
 
-    const logo = await getLogo(user?.tier);
+    const logo = await getLogo(user);
 
     const props: BaseLeaderboardProps = {
       t,
       background,
       logo,
-      tier: user?.tier,
+      user,
       type,
     };
 

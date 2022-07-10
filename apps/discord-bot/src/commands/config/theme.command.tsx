@@ -17,6 +17,7 @@ import {
   SubCommand,
 } from "@statsify/discord";
 import { DemoProfile } from "./demo.profile";
+import { FooterSubCommandGroup } from "./footer.sub-command-group";
 import {
   User,
   UserBoxes,
@@ -29,7 +30,7 @@ import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
-@Command({ description: (t) => t("commands.theme") })
+@Command({ description: (t) => t("commands.theme"), groups: [FooterSubCommandGroup] })
 export class ThemeCommand {
   public constructor(private readonly apiService: ApiService) {}
 
@@ -37,13 +38,15 @@ export class ThemeCommand {
     description: (t) => t("commands.theme-boxes"),
     tier: UserTier.GOLD,
     args: [
-      new ChoiceArgument(
-        "boxes",
-        true,
-        ["Default", UserBoxes.DEFAULT],
-        ["HD", UserBoxes.HD],
-        ["Ultra HD", UserBoxes.UHD]
-      ),
+      new ChoiceArgument({
+        name: "boxes",
+        required: true,
+        choices: [
+          ["Default", UserBoxes.DEFAULT],
+          ["HD", UserBoxes.HD],
+          ["Ultra HD", UserBoxes.UHD],
+        ],
+      }),
     ],
   })
   public boxes(context: CommandContext) {
@@ -55,12 +58,14 @@ export class ThemeCommand {
     description: (t) => t("commands.theme-font"),
     tier: UserTier.GOLD,
     args: [
-      new ChoiceArgument(
-        "font",
-        true,
-        ["Default", UserFont.DEFAULT],
-        ["HD", UserFont.HD]
-      ),
+      new ChoiceArgument({
+        name: "font",
+        required: true,
+        choices: [
+          ["Default", UserFont.DEFAULT],
+          ["HD", UserFont.HD],
+        ],
+      }),
     ],
   })
   public font(context: CommandContext) {
@@ -72,13 +77,15 @@ export class ThemeCommand {
     description: (t) => t("commands.theme-palette"),
     tier: UserTier.DIAMOND,
     args: [
-      new ChoiceArgument(
-        "palette",
-        true,
-        ["Default", UserPalette.DEFAULT],
-        ["Dark", UserPalette.DARK],
-        ["Light", UserPalette.LIGHT]
-      ),
+      new ChoiceArgument({
+        name: "palette",
+        required: true,
+        choices: [
+          ["Default", UserPalette.DEFAULT],
+          ["Dark", UserPalette.DARK],
+          ["Light", UserPalette.LIGHT],
+        ],
+      }),
     ],
   })
   public palette(context: CommandContext) {
@@ -129,7 +136,7 @@ export class ThemeCommand {
       this.apiService.getPlayer(user.uuid),
       this.apiService.getPlayerSkin(user.uuid),
       this.apiService.getUserBadge(user.uuid),
-      getLogo(user.tier),
+      getLogo(user),
       getBackground("hypixel", "overall"),
     ]);
 
@@ -140,7 +147,7 @@ export class ThemeCommand {
         player={player}
         skin={skin}
         badge={badge}
-        tier={user.tier}
+        user={user}
         message={t("config.theme.profile")}
       />,
       getTheme(user)

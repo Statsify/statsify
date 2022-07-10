@@ -37,7 +37,7 @@ export class FriendsCommand {
     } = await this.apiService.getFriends(context.option("player"), user);
 
     const [logo, background, skin, badge] = await Promise.all([
-      getLogo(user?.tier),
+      getLogo(user),
       getBackground("hypixel", "overall"),
       this.apiService.getPlayerSkin(uuid),
       this.apiService.getUserBadge(uuid),
@@ -65,7 +65,7 @@ export class FriendsCommand {
             badge={badge}
             background={background}
             t={t}
-            tier={user?.tier}
+            user={user}
             displayName={displayName}
           />,
           getTheme(user)

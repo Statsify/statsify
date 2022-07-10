@@ -26,12 +26,12 @@ export enum UserBoxes {
 }
 
 export class UserTheme {
-  @Field({ mongo: { required: false }, type: () => String })
+  @Field({ store: { required: false }, type: () => String })
   public font?: UserFont;
 
-  @Field({ mongo: { required: false }, type: () => String })
+  @Field({ store: { required: false }, type: () => String })
   public palette?: UserPalette;
 
-  @Field({ mongo: { required: false }, type: () => String })
+  @Field({ store: { required: false }, type: () => String })
   public boxes?: UserBoxes;
 }

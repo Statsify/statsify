@@ -16,7 +16,7 @@ export const BedWarsChallengesProfile = ({
   player,
   background,
   logo,
-  tier,
+  user,
   badge,
   t,
   time,
@@ -56,7 +56,7 @@ export const BedWarsChallengesProfile = ({
           </Table.tr>
         ))}
       </Table.table>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

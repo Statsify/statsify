@@ -47,6 +47,7 @@ module.exports = {
     goldRole: "",
     diamondRole: "",
     emeraldRole: "",
+    netheriteRole: "",
     guild: "",
     publicKey: "",
     token: "",

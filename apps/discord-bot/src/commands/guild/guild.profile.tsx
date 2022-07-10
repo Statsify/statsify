@@ -16,8 +16,7 @@ import {
   formatProgression,
 } from "#components";
 import { DateTime } from "luxon";
-import { ExpByGame } from "@statsify/schemas/src/guild/expbygame";
-import { FormattedGame, Guild, GuildMember, UserTier } from "@statsify/schemas";
+import { ExpByGame, FormattedGame, Guild, GuildMember, User } from "@statsify/schemas";
 import { GexpTable } from "./gexp.table";
 import { LocalizeFunction } from "@statsify/discord";
 import { StyleLocation } from "@statsify/rendering";
@@ -67,7 +66,7 @@ export interface GuildProfileProps {
   gameIcons: Record<string, Image>;
   background: Image;
   logo: Image;
-  tier?: UserTier;
+  user: User | null;
   t: LocalizeFunction;
   ranking: number;
   page: "overall" | "gexp" | "expPerGame" | "misc";
@@ -77,7 +76,7 @@ export const GuildProfile = ({
   guild,
   background,
   logo,
-  tier,
+  user,
   t,
   guildMaster,
   skin,
@@ -118,7 +117,7 @@ export const GuildProfile = ({
         <text t:ignore>§^4^{guild.nameFormatted}</text>
       </box>
       {pageEl}
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

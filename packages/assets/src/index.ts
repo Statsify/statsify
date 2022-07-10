@@ -7,7 +7,7 @@
  */
 
 import { Image } from "skia-canvas";
-import { UserTier } from "@statsify/schemas";
+import { User, UserLogo } from "@statsify/schemas";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { loadImage } from "@statsify/rendering";
@@ -80,35 +80,50 @@ export const getServerMappings = () =>
     addresses: string[];
   }[];
 
-export const getLogo = (tier?: UserTier, size?: number) =>
-  loadImage(getLogoPath(tier, size));
+export function getLogo(user: User | null, size?: number): Promise<Image>;
+export function getLogo(logo: UserLogo | null, size?: number): Promise<Image>;
+export function getLogo(
+  userOrLogo: User | UserLogo | null,
+  size?: number
+): Promise<Image> {
+  return loadImage(getLogoPath(userOrLogo as User, size));
+}
 
-export const getLogoPath = (tier: UserTier = UserTier.NONE, size = 26) => {
+export function getLogoPath(user: User | null, size?: number): string;
+export function getLogoPath(logo: UserLogo | null, size?: number): string;
+export function getLogoPath(userOrLogo: User | UserLogo | null, size = 26): string {
   let path: string;
+  const logo = typeof userOrLogo === "object" ? User.getLogo(userOrLogo) : userOrLogo;
 
-  switch (tier) {
-    case UserTier.CORE:
-      path = "core_";
+  switch (logo) {
+    case UserLogo.RUBY:
+      path = "ruby_";
       break;
-    case UserTier.STAFF:
-      path = "staff_";
+    case UserLogo.AMETHYST:
+      path = "amethyst_";
       break;
-    case UserTier.EMERALD:
+    case UserLogo.NETHERITE:
+      path = "netherite_";
+      break;
+    case UserLogo.SCULK:
+      path = "sculk_";
+      break;
+    case UserLogo.EMERALD:
       path = "emerald_";
       break;
-    case UserTier.DIAMOND:
+    case UserLogo.DIAMOND:
       path = "diamond_";
       break;
-    case UserTier.GOLD:
+    case UserLogo.GOLD:
       path = "gold_";
       break;
-    case UserTier.IRON:
+    case UserLogo.IRON:
       path = "iron_";
       break;
-    case UserTier.NONE:
+    case UserLogo.DEFAULT:
       path = "";
       break;
   }
 
   return getAssetPath(`logos/${path}logo_${size}.png`);
-};
+}

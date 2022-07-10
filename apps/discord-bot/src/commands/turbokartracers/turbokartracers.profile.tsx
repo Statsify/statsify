@@ -15,7 +15,7 @@ export const TurboKartRacersProfile = ({
   player,
   background,
   logo,
-  tier,
+  user,
   badge,
   t,
   time,
@@ -81,7 +81,7 @@ export const TurboKartRacersProfile = ({
           />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

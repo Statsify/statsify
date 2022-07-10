@@ -104,7 +104,7 @@ export const SkyWarsProfile = ({
   player,
   background,
   logo,
-  tier,
+  user,
   badge,
   mode,
   t,
@@ -163,7 +163,7 @@ export const SkyWarsProfile = ({
           exp={skywars.exp}
         />
       </Table.table>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

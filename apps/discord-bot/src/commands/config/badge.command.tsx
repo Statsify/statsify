@@ -143,7 +143,7 @@ export class BadgeCommand {
     const [player, skin, logo, background] = await Promise.all([
       this.apiService.getPlayer(user.uuid),
       this.apiService.getPlayerSkin(user.uuid),
-      getLogo(user.tier),
+      getLogo(user),
       getBackground("hypixel", "overall"),
     ]);
 
@@ -154,6 +154,7 @@ export class BadgeCommand {
         player={player}
         skin={skin}
         badge={badge}
+        user={user}
         message={t("config.badge.profile")}
       />,
       getTheme(user)

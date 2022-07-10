@@ -28,7 +28,7 @@ export const RecentGamesProfile = ({
   background,
   logo,
   gameIcons,
-  tier,
+  user,
   t,
 }: RecentGamesProfileProps) => {
   const groups = arrayGroup(recentGames, 3);
@@ -74,7 +74,7 @@ export const RecentGamesProfile = ({
           </Table.tr>
         ))}
       </Table.table>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

@@ -6,23 +6,40 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import {
+  APIApplicationCommandOptionChoice,
+  ApplicationCommandOptionType,
+} from "discord-api-types/v10";
 import { AbstractArgument } from "./abstract.argument";
-import { ApplicationCommandOptionType } from "discord-api-types/v10";
 import { LocalizationString } from "../messages";
 
 export type Choice = string | [display: string, value: string | number];
 
-export class ChoiceArgument extends AbstractArgument {
-  public description: LocalizationString;
-  public type = ApplicationCommandOptionType.String;
+export interface ChoiceArgumentOptions {
+  choices: Choice[];
+  name: string;
+  required?: boolean;
+  type?: ApplicationCommandOptionType;
+}
 
-  public constructor(
-    public name: string,
-    public required: boolean,
-    ...choices: Choice[]
-  ) {
+export class ChoiceArgument extends AbstractArgument {
+  public name: string;
+  public description: LocalizationString;
+  public type: ApplicationCommandOptionType;
+  public required: boolean;
+  public choices: APIApplicationCommandOptionChoice[];
+
+  public constructor({
+    name,
+    choices,
+    required = true,
+    type = ApplicationCommandOptionType.String,
+  }: ChoiceArgumentOptions) {
     super();
 
+    this.name = name;
+    this.required = required;
+    this.type = type || ApplicationCommandOptionType.String;
     this.description = (t) => t("arguments.choice");
 
     this.choices = choices.map((choice) => {

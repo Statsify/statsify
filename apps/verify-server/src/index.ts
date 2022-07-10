@@ -9,7 +9,7 @@
 import * as Sentry from "@sentry/node";
 import { Logger } from "@statsify/logger";
 import { Integrations as TracingIntegrations } from "@sentry/tracing";
-import { UserTier, VerifyCode } from "@statsify/schemas";
+import { UserLogo, VerifyCode } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { connect } from "mongoose";
 import { createServer } from "minecraft-protocol";
@@ -48,7 +48,7 @@ async function bootstrap() {
 
   const verifyCodesModel = getModelForClass(VerifyCode);
 
-  const serverLogo = readFileSync(getLogoPath(UserTier.NONE, 64), {
+  const serverLogo = readFileSync(getLogoPath(UserLogo.DEFAULT, 64), {
     encoding: "base64",
   });
 

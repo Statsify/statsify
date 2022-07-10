@@ -8,7 +8,7 @@
 
 import { Container, Footer, If, List } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
-import { UserTier } from "@statsify/schemas";
+import { User } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 import type { Image } from "skia-canvas";
 
@@ -48,7 +48,7 @@ export interface LeaderboardData {
 export interface LeaderboardProfileProps {
   background: Image;
   logo: Image;
-  tier?: UserTier;
+  user: User | null;
   fields: string[];
   name: string;
   data: LeaderboardData[];
@@ -59,7 +59,7 @@ export interface LeaderboardProfileProps {
 export const LeaderboardProfile = ({
   background,
   logo,
-  tier,
+  user,
   data,
   fields,
   name,
@@ -120,7 +120,7 @@ export const LeaderboardProfile = ({
       <List items={[<>{titles}</>, ...items]} />
       <Footer
         logo={logo}
-        tier={tier}
+        user={user}
         border={{ bottomLeft: 4, bottomRight: 4, topLeft: 0, topRight: 0 }}
       />
     </Container>

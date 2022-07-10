@@ -50,7 +50,7 @@ export class RecentGamesCommand {
     );
 
     const [logo, skin, badge, background, gameIcons] = await Promise.all([
-      getLogo(user?.tier),
+      getLogo(user),
       this.apiService.getPlayerSkin(recentGames.uuid),
       this.apiService.getUserBadge(recentGames.uuid),
       getBackground("hypixel", "overall"),
@@ -71,7 +71,7 @@ export class RecentGamesCommand {
               badge={badge}
               background={background}
               t={t}
-              tier={user?.tier}
+              user={user}
               prefixName={recentGames.prefixName}
               gameIcons={gameIconsRecord}
             />,

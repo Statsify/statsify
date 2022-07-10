@@ -8,7 +8,7 @@
 
 import { Command, EmbedBuilder, IMessage } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
-import { UserTier } from "@statsify/schemas";
+import { UserLogo } from "@statsify/schemas";
 import { getLogoPath } from "@statsify/assets";
 import { readFile } from "node:fs/promises";
 
@@ -25,7 +25,7 @@ export class PingCommand {
       .color(STATUS_COLORS.info)
       .thumbnail("attachment://logo.png");
 
-    const logo = await readFile(getLogoPath(UserTier.NONE, 64));
+    const logo = await readFile(getLogoPath(UserLogo.DEFAULT, 64));
 
     return {
       content: (t) => t("embeds.ping.pong"),

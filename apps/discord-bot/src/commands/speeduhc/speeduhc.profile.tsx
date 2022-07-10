@@ -20,7 +20,7 @@ export const SpeedUHCProfile = ({
   player,
   background,
   logo,
-  tier,
+  user,
   badge,
   mode,
   t,
@@ -66,7 +66,7 @@ export const SpeedUHCProfile = ({
           </If>
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };
