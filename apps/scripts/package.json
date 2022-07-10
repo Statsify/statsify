@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "api-key": "node src/api-key.js",
+    "lint": "TIMING=1 eslint './src/**/*.{ts,tsx,js,jsx}' --fix",
     "build-watch": "node src/build-watch.js",
     "purge": "node src/purge.js",
     "rank-emojis": "node src/rank-emojis.js",
-    "limit-redis": "node src/limit-redis.js",
-    "lint": "TIMING=1 eslint './src/**/*.{ts,tsx,js,jsx}' --fix"
+    "limit-redis": "node src/limit-redis.js"
   },
   "dependencies": {
     "@statsify/assets": "workspace:^",
