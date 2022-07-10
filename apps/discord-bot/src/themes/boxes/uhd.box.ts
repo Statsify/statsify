@@ -72,54 +72,44 @@ export const render: Render<Box.BoxRenderProps> = (
 
   if (!shadowDistance) return;
 
-  //TODO(jacobk999): Fix shadow
-
   ctx.globalAlpha = shadowOpacity;
   ctx.fillStyle = color;
 
   ctx.beginPath();
   ctx.moveTo(x + width, y + shadowDistance);
-  ctx.lineTo(x + width, y + height - border.bottomRight);
 
-  //Inner Bottom Right Curve
-  ctx.quadraticCurveTo(x + width, y + height, x + width - border.bottomRight, y + height);
-
-  ctx.lineTo(x + shadowDistance, y + height);
-
-  //Bottom Left Curve
+  // Shadow Top Right Corner
   ctx.quadraticCurveTo(
-    x + shadowDistance + border.bottomLeft,
-    y + height + border.bottomLeft + shadowDistance,
-    x + shadowDistance + border.bottomLeft,
-    y + height + shadowDistance
+    x + width,
+    y + shadowDistance,
+    x + width + shadowDistance,
+    y + border.topRight + shadowDistance
   );
 
   ctx.lineTo(
-    x + width - border.bottomRight - border.bottomRight,
+    x + width + shadowDistance,
+    y + height - border.bottomRight + shadowDistance
+  );
+
+  // Shadow Outer Bottom Right Corner
+  ctx.quadraticCurveTo(
+    x + width + shadowDistance,
+    y + height + shadowDistance,
+    x + width - border.bottomRight + shadowDistance,
     y + height + shadowDistance
   );
 
-  if (border.bottomRight) {
-    //Bottom Right Curve
-    ctx.quadraticCurveTo(
-      x + width + shadowDistance,
-      y + height + shadowDistance,
-      x + width + shadowDistance,
-      y + height + shadowDistance - border.bottomRight
-    );
-  } else {
-    ctx.lineTo(x + width + shadowDistance, y + height + shadowDistance);
-  }
+  ctx.lineTo(x + border.bottomLeft + shadowDistance, y + height + shadowDistance);
 
-  ctx.lineTo(x + width + shadowDistance, y + border.topRight + shadowDistance);
+  // Shadow Bottom Left Corner
+  ctx.quadraticCurveTo(x + shadowDistance, y + height, x + shadowDistance, y + height);
 
-  //Top Right Curve
-  ctx.quadraticCurveTo(
-    x + width - shadowDistance,
-    y + shadowDistance,
-    x + width,
-    y + border.topRight
-  );
+  ctx.lineTo(x + width - border.bottomRight, y + height);
+
+  // Shadow Inner Bottom Right Corner
+  ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - border.bottomRight);
+
+  ctx.lineTo(x + width, y + shadowDistance);
 
   ctx.closePath();
   ctx.fill();
