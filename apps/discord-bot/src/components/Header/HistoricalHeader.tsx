@@ -61,7 +61,7 @@ export const HistoricalHeader = ({
         {nameTag}
         <box width="100%">
           <text>
-            {start.toFormat("MM/dd/yy")} - {end.toFormat("MM/dd/yy")}
+            {start.toFormat("MM/dd/yy")} ➡ {end.toFormat("MM/dd/yy")}
           </text>
         </box>
         <div width="100%">

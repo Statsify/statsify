@@ -27,6 +27,7 @@ export const LEADERBOARD_RATIO_KEYS = LEADERBOARD_RATIOS.map(
 
 const EXTRA_RATIOS: Ratio[] = [
   ["kills", "shotFired", "shotAccuracy", "Shot Accuracy", 100],
+  ["postUpdateKills", "shotFired", "quakeShotAccuracy", "Shot Accuracy", 100],
   ["wins", "gamesPlayed", "winRate", "Win Rate", 100],
   ["gold", "gamesPlayed", "goldRate", "Gold Rate", 100],
   ["total", "gamesPlayed", "trophyRate", "Trophy Rate", 100],

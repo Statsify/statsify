@@ -8,7 +8,6 @@
 
 import { APIData } from "@statsify/util";
 import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from "./mode";
-import { Color, ColorCode } from "../../../color";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
 import { Progression } from "../../../progression";
@@ -78,9 +77,6 @@ export class BedWars {
   public levelFormatted: string;
 
   @Field()
-  public levelColor: Color;
-
-  @Field()
   public progression: Progression;
 
   @Field()
@@ -138,21 +134,16 @@ export class BedWars {
     this.coins = data.coins;
     this.exp = data.Experience || 0;
     this.level = getLevel(this.exp);
-    this.levelFormatted = getFormattedLevel(this.level);
-    this.nextLevelFormatted = getFormattedLevel(this.level + 1);
-
-    this.levelColor =
-      this.levelFormatted[1] === "7" && this.level > 1000
-        ? new Color(`§${this.levelFormatted[4]}` as ColorCode)
-        : new Color(`§${this.levelFormatted[1]}` as ColorCode);
+    this.levelFormatted = getFormattedLevel(Math.floor(this.level));
+    this.nextLevelFormatted = getFormattedLevel(Math.floor(this.level) + 1);
 
     let exp = this.exp;
 
-    for (let i = 0; i < this.level; i++) {
+    for (let i = 0; i < Math.floor(this.level); i++) {
       exp -= getExpReq(i);
     }
 
-    this.progression = new Progression(exp, getExpReq(this.level + 1));
+    this.progression = new Progression(exp, getExpReq(Math.floor(this.level) + 1));
 
     this.lootChests = add(
       data.bedwars_boxes,
