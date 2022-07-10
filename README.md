@@ -54,12 +54,19 @@ $ yarn test:types
 ## 😕 Help
 * If you require support join our [`Discord`] and create a ticket in the `#create-ticket` channel
 
-
 ## 🔗 Links
 - [`Website`]
 - [`Bot Invite`]
 - [`Discord`]
 - [`Donate`]
+
+## Showcase
+![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars.png)
+![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars-leaderboard.png)
+![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/guild-overall.png)
+![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/status.png)
+![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/friends.png)
+
 
 <!-- LINKS -->
 [`website`]: https://statsify.net
