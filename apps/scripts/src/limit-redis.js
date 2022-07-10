@@ -56,5 +56,3 @@ for (const constructor of CONSTRUCTORS) {
     `There are ${memberCount.toLocaleString()} members in the ${name} leaderboards`
   );
 }
-
-process.exit(0);
