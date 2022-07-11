@@ -47,50 +47,6 @@ function deleteFromWorkspaces(path, _workspaces = workspaces) {
   );
 }
 
-const purge = async () => {
-  const { method } = await inquirer.prompt([
-    {
-      type: "list",
-      name: "method",
-      message: "Purge Action?",
-      choices: ["node_modules", ".turbo", "dist", "coverage", ".swc", "ALL"],
-      default: "create",
-    },
-  ]);
-
-  if (!(await inquirerConfirmation())) return;
-
-  switch (method) {
-    case "node_modules": {
-      await nodeModules();
-      break;
-    }
-    case ".turbo": {
-      await turboRepo();
-      break;
-    }
-    case "dist": {
-      await dist();
-      break;
-    }
-    case "coverage": {
-      await coverage();
-      break;
-    }
-    case ".swc": {
-      await swc();
-      break;
-    }
-    case "ALL":
-      {
-        await all();
-        // No default
-      }
-      break;
-  }
-  process.exit(0);
-};
-
 const nodeModules = async () => {
   await deleteFromWorkspaces("node_modules", [ROOT, ...workspaces]);
 
@@ -119,6 +75,48 @@ const all = async () => {
   await nodeModules();
   await dist();
   await Promise.all([turboRepo(), coverage(), swc()]);
+};
+
+const purge = async () => {
+  if (process.argv.includes("--dist")) {
+    await deleteFromWorkspaces("dist");
+    return process.exit(0);
+  }
+
+  const { method } = await inquirer.prompt([
+    {
+      type: "list",
+      name: "method",
+      message: "Purge Action?",
+      choices: ["node_modules", ".turbo", "dist", "coverage", ".swc", "ALL"],
+      default: "create",
+    },
+  ]);
+
+  if (!(await inquirerConfirmation())) return;
+
+  switch (method) {
+    case "node_modules":
+      await nodeModules();
+      break;
+    case ".turbo":
+      await turboRepo();
+      break;
+    case "dist":
+      await dist();
+      break;
+    case "coverage":
+      await coverage();
+      break;
+    case ".swc":
+      await swc();
+      break;
+    case "ALL":
+      await all();
+      break;
+  }
+
+  process.exit(0);
 };
 
 purge();

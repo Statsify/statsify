@@ -1,0 +1,33 @@
+name: Deploy
+on:
+  push:
+    tags:
+    - "v*"
+
+permissions:
+  checks: write
+  contents: write
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: self-hosted
+    environment: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
+        with:
+          token: ${{ secrets.REPO_PAT }}
+          submodules: recursive
+
+      - name: Install dependencies
+        run: yarn --immutable
+
+      - name: Build Code
+        run: yarn scripts purge --dist && yarn build --force
+
+      - name: Prepare Assets
+        run: cd assets/private && yarn install && cd ../../
+
+      - name: Restart PM2
+        run: pm2 reload pm2.config.js
