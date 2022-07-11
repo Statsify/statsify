@@ -54,9 +54,9 @@ module.exports = {
     {
       name: "Statsify Leaderboard Limiting",
       args: `scripts limit-redis start ${with_color}`,
-      cron_restart: "*/30 * * * *",
       script,
       node_args,
+      cron_restart,
       exp_backoff_restart_delay,
       env,
     },

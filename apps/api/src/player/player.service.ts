@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Flatten, flatten } from "@statsify/util";
+import { APIData, Flatten, flatten } from "@statsify/util";
 import {
   Friends,
   LeaderboardScanner,
@@ -77,6 +77,15 @@ export class PlayerService {
     }
 
     return null;
+  }
+
+  public async update(data: APIData) {
+    const player = new Player(data);
+    //TODO: make sure it keeps things like resetMinute, guildId, and leaderboardBanned
+    player.expiresAt = Date.now() + 120_000;
+
+    const flatPlayer = flatten(player);
+    await this.saveOne(flatPlayer);
   }
 
   /**

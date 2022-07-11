@@ -7,6 +7,7 @@
  */
 
 import Redis from "ioredis";
+import { SimpleIntervalJob, Task } from "toad-scheduler";
 import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
@@ -18,41 +19,47 @@ const CONSTRUCTORS = [Player, Guild];
 const logger = new Logger("Redis Limiter");
 const redis = new Redis(process.env.REDIS_URL);
 
-for (const constructor of CONSTRUCTORS) {
-  const oldLeaderboardPipeline = redis.pipeline();
-  const limitLeaderboardPipeline = redis.pipeline();
+const limit = async () => {
+  for (const constructor of CONSTRUCTORS) {
+    const oldLeaderboardPipeline = redis.pipeline();
+    const limitLeaderboardPipeline = redis.pipeline();
 
-  const name = constructor.name.toLowerCase();
-  const fields = MetadataScanner.scan(constructor);
+    const name = constructor.name.toLowerCase();
+    const fields = MetadataScanner.scan(constructor);
 
-  fields.forEach(([key, value]) => {
-    const path = `${name}.${key}`;
-    if (!value.leaderboard.enabled) oldLeaderboardPipeline.del(path);
-  });
+    fields.forEach(([key, value]) => {
+      const path = `${name}.${key}`;
+      if (!value.leaderboard.enabled) oldLeaderboardPipeline.del(path);
+    });
 
-  await oldLeaderboardPipeline.exec();
+    await oldLeaderboardPipeline.exec();
 
-  const leaderboards = fields.filter(([, value]) => value.leaderboard.enabled);
+    const leaderboards = fields.filter(([, value]) => value.leaderboard.enabled);
 
-  let memberCount = 0;
+    let memberCount = 0;
 
-  leaderboards.forEach(([key, value]) => {
-    const path = `${name}.${key}`;
-    const { sort, limit } = value.leaderboard;
+    leaderboards.forEach(([key, value]) => {
+      const path = `${name}.${key}`;
+      const { sort, limit } = value.leaderboard;
 
-    memberCount += limit;
+      memberCount += limit;
 
-    if (sort === "DESC") {
-      limitLeaderboardPipeline.zremrangebyrank(path, 0, -limit);
-    } else {
-      limitLeaderboardPipeline.zremrangebyrank(path, limit, -1);
-    }
-  });
+      if (sort === "DESC") {
+        limitLeaderboardPipeline.zremrangebyrank(path, 0, -limit);
+      } else {
+        limitLeaderboardPipeline.zremrangebyrank(path, limit, -1);
+      }
+    });
 
-  await limitLeaderboardPipeline.exec();
+    await limitLeaderboardPipeline.exec();
 
-  logger.log(`Limited ${leaderboards.length} ${name} leaderboards`);
-  logger.log(
-    `There are ${memberCount.toLocaleString()} members in the ${name} leaderboards`
-  );
-}
+    logger.log(`Limited ${leaderboards.length} ${name} leaderboards`);
+    logger.log(
+      `There ${memberCount.toLocaleString()} possible members in the ${name} leaderboards`
+    );
+  }
+};
+
+const task = new Task("leaderboard limiting", limit);
+const job = new SimpleIntervalJob({ hours: 1, runImmediately: true }, task);
+job.start();

@@ -28,8 +28,6 @@
   "[scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "i18n-ally.localesPaths": [
-    "locales",
-    "packages/discord/src/messages"
-  ]
+  "i18n-ally.localesPaths": ["locales"],
+  "i18n-ally.sourceLanguage": "en-US"
 }

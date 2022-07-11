@@ -15,8 +15,8 @@ import {
 } from "@nestjs/swagger";
 import { Auth } from "../auth/auth.decorator";
 import { AuthRole } from "../auth";
-import { CachedPlayerDto } from "../dtos";
-import { Controller, Delete, Get, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Post, Query } from "@nestjs/common";
+import { CachedPlayerDto, UpdatePlayerDto } from "../dtos";
 import {
   DeletePlayerResponse,
   ErrorResponse,
@@ -51,6 +51,14 @@ export class PlayerController {
       success: !!player,
       player,
     };
+  }
+
+  @ApiOperation({ summary: "Update a Player" })
+  @Auth({ role: AuthRole.ADMIN })
+  @Post()
+  public async updatePlayer(@Body() player: UpdatePlayerDto) {
+    await this.playerService.update(player);
+    return {};
   }
 
   @ApiOperation({ summary: "Deletes a Player" })
