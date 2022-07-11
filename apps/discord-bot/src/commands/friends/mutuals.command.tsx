@@ -72,7 +72,7 @@ export class MutualsCommand {
     }
 
     const [logo, background, skinOne, skinTwo, badgeOne, badgeTwo] = await Promise.all([
-      getLogo(user?.tier),
+      getLogo(user),
       getBackground("hypixel", "overall"),
       this.apiService.getPlayerSkin(uuidOne),
       this.apiService.getPlayerSkin(uuidTwo),
@@ -100,7 +100,7 @@ export class MutualsCommand {
               background={background}
               logo={logo}
               t={t}
-              tier={user?.tier}
+              user={user}
             />,
             getTheme(user)
           )

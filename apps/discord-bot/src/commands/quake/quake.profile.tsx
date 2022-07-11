@@ -19,7 +19,7 @@ export const QuakeProfile = ({
   player,
   background,
   logo,
-  tier,
+  user,
   badge,
   mode,
   t,
@@ -74,7 +74,7 @@ export const QuakeProfile = ({
           <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

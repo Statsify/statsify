@@ -46,11 +46,7 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const guildMaster = guild.members.find((m) => GuildMember.isGuildMaster(m));
 
-    if (!guildMaster)
-      throw new ErrorMessage(
-        (t) => t("errors.unknown.title"),
-        (t) => t("errors.unknown.description")
-      );
+    if (!guildMaster) throw new ErrorMessage("errors.unknown");
 
     const gameIconPaths = await readdir(getAssetPath("games"));
 
@@ -63,7 +59,7 @@ export class GuildCommand extends GuildTopSubCommand {
       Promise.all(gameIconsRequest),
       this.apiService.getGuildRankings(["exp"], guild.id),
       this.apiService.getPlayerHead(guildMaster.uuid, 16),
-      getLogo(user?.tier),
+      getLogo(user),
       getBackground("hypixel", "overall"),
     ]);
 
@@ -78,7 +74,7 @@ export class GuildCommand extends GuildTopSubCommand {
       background,
       ranking,
       logo,
-      tier: user?.tier,
+      user,
       t,
       gameIcons: gameIconsRecord,
     };
@@ -113,7 +109,7 @@ export class GuildCommand extends GuildTopSubCommand {
     const guild = await this.getGuild(context);
 
     const [logo, background] = await Promise.all([
-      getLogo(user?.tier),
+      getLogo(user),
       getBackground("hypixel", "overall"),
     ]);
 
@@ -121,7 +117,7 @@ export class GuildCommand extends GuildTopSubCommand {
       guild,
       background,
       logo,
-      tier: user?.tier,
+      user,
       t,
     };
 
@@ -148,8 +144,8 @@ export class GuildCommand extends GuildTopSubCommand {
     const [skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
-      getLogo(user?.tier),
-      getBackground("bedwars", "overall"),
+      getLogo(user),
+      getBackground("hypixel", "overall"),
     ]);
 
     const canvas = render(
@@ -161,7 +157,7 @@ export class GuildCommand extends GuildTopSubCommand {
         background={background}
         t={t}
         badge={badge}
-        tier={user?.tier}
+        user={user}
       />,
       getTheme(user)
     );

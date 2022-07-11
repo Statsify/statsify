@@ -30,7 +30,7 @@ export const FriendsProfile = ({
   friendCount,
   badge,
   logo,
-  tier,
+  user,
   t,
 }: FriendsProfileProps) => (
   <Container background={background}>
@@ -57,6 +57,6 @@ export const FriendsProfile = ({
         </>
       ))}
     />
-    <Footer logo={logo} tier={tier} />
+    <Footer logo={logo} user={user} />
   </Container>
 );

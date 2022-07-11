@@ -41,7 +41,7 @@ export const MutualsProfile = ({
   badgeOne,
   badgeTwo,
   t,
-  tier,
+  user,
 }: MutualsProfileProps) => (
   <Container background={background}>
     <div width="100%">
@@ -77,6 +77,6 @@ export const MutualsProfile = ({
         </>
       ))}
     />
-    <Footer logo={logo} tier={tier} />
+    <Footer logo={logo} user={user} />
   </Container>
 );

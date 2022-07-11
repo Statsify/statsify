@@ -26,13 +26,15 @@ class GuildQueryArgument extends AbstractArgument {
 
 class GuildTypeArgument extends ChoiceArgument {
   public constructor() {
-    super(
-      "type",
-      false,
-      ["name", GuildQuery.NAME],
-      ["player", GuildQuery.PLAYER],
-      ["id", GuildQuery.ID]
-    );
+    super({
+      name: "type",
+      required: false,
+      choices: [
+        ["name", GuildQuery.NAME],
+        ["player", GuildQuery.PLAYER],
+        ["id", GuildQuery.ID],
+      ],
+    });
   }
 }
 

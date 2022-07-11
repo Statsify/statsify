@@ -22,7 +22,7 @@ import {
   InteractionResponseType,
   TextInputStyle,
 } from "discord-api-types/v10";
-import { DateTime } from "luxon";
+import { DateTime, IANAZone } from "luxon";
 import { User } from "@statsify/schemas";
 
 @Command({ description: (t) => t("commands.reset") })
@@ -89,7 +89,8 @@ export class ResetCommand {
         const data = interaction.getData();
 
         const timeInput = data.components[0].components[0].value;
-        const timeZoneInput = data.components[1].components[0].value ?? timeZone.name;
+        const timeZoneInput =
+          data.components[1].components[0].value || new IANAZone("America/New_York");
 
         let time = DateTime.fromFormat(timeInput, timeFormat, {
           zone: timeZoneInput,

@@ -18,7 +18,7 @@ export const HistoricalGeneralProfile = ({
   t,
   time,
   badge,
-  tier,
+  user,
 }: BaseProfileProps) => {
   const { general } = player.stats;
 
@@ -54,7 +54,7 @@ export const HistoricalGeneralProfile = ({
           <Table.td title={t("stats.karma")} value={t(general.karma)} color="§d" />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

@@ -42,14 +42,12 @@ export class UserService {
 
     if (!user) throw new NotFoundException(`user`);
 
-    const isGold = User.isGold(user);
-
     let badgePath: string | undefined = undefined;
 
-    if (user.hasBadge && isGold) {
+    if (user.hasBadge && User.isGold(user)) {
       badgePath = this.getBadgePath(user.id);
-    } else if (isGold) {
-      badgePath = getLogoPath(user.tier);
+    } else if (user.tier) {
+      badgePath = getLogoPath(user);
     } else if (user.uuid) {
       badgePath = getAssetPath(`logos/verified_logo_30.png`);
     }

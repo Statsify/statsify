@@ -203,6 +203,7 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
     case TURBO_KART_RACERS_MODES:
       return ["turbokartracers", "overall"];
     case SPEED_UHC_MODES:
+      return ["speeduhc", "overall"];
     case UHC_MODES:
       return ["uhc", "overall"];
     case VAMPIREZ_MODES:

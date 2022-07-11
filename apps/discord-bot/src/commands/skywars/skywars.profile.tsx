@@ -71,7 +71,7 @@ const SkyWarsLabsTable = ({ t, stats }: SkyWarsLabsTableProps) => {
           const color = colors[index];
 
           return (
-            <Table.ts title={`§6${prettify(mode)}`}>
+            <Table.ts title={`§6${prettify(mode).replace("Tnt Madness", "TNT Madness")}`}>
               <Table.td
                 title={t(`stats.overallWins`)}
                 value={t(stats[mode].overall.wins)}
@@ -104,7 +104,7 @@ export const SkyWarsProfile = ({
   player,
   background,
   logo,
-  tier,
+  user,
   badge,
   mode,
   t,
@@ -163,7 +163,7 @@ export const SkyWarsProfile = ({
           exp={skywars.exp}
         />
       </Table.table>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

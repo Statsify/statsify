@@ -41,7 +41,7 @@ export class PitCommand {
     const [skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
-      getLogo(user?.tier),
+      getLogo(user),
       getBackground(...mapBackground(PIT_MODES, "overall")),
     ]);
 
@@ -52,7 +52,7 @@ export class PitCommand {
         logo={logo}
         skin={skin}
         t={t}
-        tier={user?.tier}
+        user={user}
         badge={badge}
       />,
       getTheme(user)

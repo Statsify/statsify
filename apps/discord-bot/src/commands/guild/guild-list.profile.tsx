@@ -7,7 +7,7 @@
  */
 
 import { Container, Footer } from "#components";
-import { Guild, GuildRank, UserTier } from "@statsify/schemas";
+import { Guild, GuildRank, User } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import { useComponentWidth } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
@@ -17,14 +17,14 @@ export interface GuildListProfileProps {
   t: LocalizeFunction;
   background: Image;
   logo: Image;
-  tier?: UserTier;
+  user: User | null;
 }
 
 export const GuildListProfile = ({
   guild,
   background,
   logo,
-  tier,
+  user,
   t,
 }: GuildListProfileProps) => {
   // The width of each member row
@@ -106,7 +106,7 @@ export const GuildListProfile = ({
     <Container background={background}>
       {header}
       <>{ranks}</>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

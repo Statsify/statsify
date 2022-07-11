@@ -32,7 +32,7 @@ export const MiniWallsTable = ({ stats, t }: MiniWallsTableProps) => (
       <Table.td
         title={t("stats.witherKills")}
         value={t(stats.witherKills)}
-        color="§#2f5260"
+        color="§#417286"
       />
       <Table.td
         title={t("stats.witherDamage")}

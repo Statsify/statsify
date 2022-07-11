@@ -7,6 +7,7 @@
  */
 
 import { Field } from "../metadata";
+import { UserFooter, UserLogo } from "./footer";
 import { UserTheme } from "./theme";
 import { prettify } from "@statsify/util";
 
@@ -16,6 +17,7 @@ export enum UserTier {
   GOLD = 202,
   DIAMOND = 303,
   EMERALD = 404,
+  NETHERITE = 505,
   STAFF = 666,
   CORE = 999,
 }
@@ -53,6 +55,9 @@ export class User {
   @Field({ type: () => String, store: { required: false } })
   public theme?: UserTheme;
 
+  @Field({ store: { required: false } })
+  public footer?: UserFooter;
+
   public static isIron(user: User | null): boolean {
     return this.isTier(user, UserTier.IRON);
   }
@@ -69,12 +74,45 @@ export class User {
     return this.isTier(user, UserTier.EMERALD);
   }
 
+  public static isNetherite(user: User | null): boolean {
+    return this.isTier(user, UserTier.NETHERITE);
+  }
+
   public static isStaff(user: User | null): boolean {
     return this.isTier(user, UserTier.STAFF);
   }
 
   public static isCore(user: User | null): boolean {
     return this.isTier(user, UserTier.CORE);
+  }
+
+  public static getLogo(user: User | null) {
+    if (!user) return this.tierToLogo(UserTier.NONE);
+    if (user.footer?.icon && (user.tier ?? 0) >= user.footer.icon)
+      return user.footer.icon;
+    if (user.tier) return this.tierToLogo(user.tier);
+    return this.tierToLogo(UserTier.NONE);
+  }
+
+  public static tierToLogo(tier: UserTier): UserLogo {
+    switch (tier) {
+      case UserTier.NONE:
+        return UserLogo.DEFAULT;
+      case UserTier.IRON:
+        return UserLogo.IRON;
+      case UserTier.GOLD:
+        return UserLogo.GOLD;
+      case UserTier.DIAMOND:
+        return UserLogo.DIAMOND;
+      case UserTier.EMERALD:
+        return UserLogo.EMERALD;
+      case UserTier.NETHERITE:
+        return UserLogo.NETHERITE;
+      case UserTier.STAFF:
+        return UserLogo.AMETHYST;
+      case UserTier.CORE:
+        return UserLogo.RUBY;
+    }
   }
 
   public static getTierName(user: User | null): string;
@@ -93,3 +131,4 @@ export class User {
 }
 
 export * from "./theme";
+export * from "./footer";

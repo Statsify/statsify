@@ -20,7 +20,7 @@ export const MegaWallsProfile = ({
   player,
   background,
   logo,
-  tier,
+  user,
   badge,
   mode,
   t,
@@ -93,7 +93,7 @@ export const MegaWallsProfile = ({
           <Table.td title={t("stats.points")} value={t(stats.points)} color="§e" />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

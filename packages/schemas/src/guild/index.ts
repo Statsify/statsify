@@ -174,3 +174,4 @@ export class Guild {
 export * from "./achievements";
 export * from "./member";
 export * from "./rank";
+export * from "./expbygame";

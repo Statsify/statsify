@@ -11,6 +11,7 @@ import {
   Command,
   CommandContext,
   EmbedBuilder,
+  IMessage,
   MojangPlayerArgument,
 } from "@statsify/discord";
 import { Canvas } from "skia-canvas";
@@ -24,7 +25,7 @@ export class SkinCommand {
     private readonly mojangApiService: MojangApiService
   ) {}
 
-  public async run(context: CommandContext) {
+  public async run(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
 
     const player = await this.mojangApiService.getPlayer(
@@ -41,11 +42,11 @@ export class SkinCommand {
       .color(STATUS_COLORS.info)
       .image(`attachment://skin.png`);
 
+    const buffer = await canvas.toBuffer("png");
+
     return {
       embeds: [embed],
-      files: [
-        { data: await canvas.toBuffer("png"), name: "skin.png", type: "image/png" },
-      ],
+      files: [{ data: buffer, name: "skin.png", type: "image/png" }],
     };
   }
 }

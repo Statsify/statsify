@@ -109,7 +109,8 @@ export const prettify = (s: string): string => {
     .replace(/\w\S*/g, (t) => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
 };
 
-export const removeFormatting = (s: string): string => s.replace(/§./g, "");
+export const removeFormatting = (s: string): string =>
+  s.replace(/§#([A-Fa-f0-9]{6})|§./gm, "");
 
 export interface FormatTimeOptions {
   /**

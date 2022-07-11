@@ -43,7 +43,7 @@ export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps["childre
   size = 2,
   "t:ignore": ignore = false,
 }) => {
-  const text = useChildren(children).join("");
+  const text = (useChildren(children) ?? []).join("");
 
   //Get a generic instance of font renderer just to lex and measure the text
   const renderer = Container.get(FontRenderer);

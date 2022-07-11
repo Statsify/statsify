@@ -7,7 +7,7 @@
  */
 
 import { Container, Footer, List } from "#components";
-import { Guild, UserTier } from "@statsify/schemas";
+import { Guild, User } from "@statsify/schemas";
 import { Image } from "skia-canvas";
 import { LocalizeFunction } from "@statsify/discord";
 import { arrayGroup } from "@statsify/util";
@@ -25,7 +25,7 @@ export interface GuildTopProfileProps {
   t: LocalizeFunction;
   background: Image;
   logo: Image;
-  tier?: UserTier;
+  user: User | null;
 }
 
 export const GUILD_TOP_PAGE_SIZE = 30;
@@ -37,7 +37,7 @@ export const GuildTopProfile = ({
   page,
   t,
   background,
-  tier,
+  user,
   logo,
 }: GuildTopProfileProps) => {
   const groups = arrayGroup(members, Math.ceil(members.length / 2));
@@ -78,7 +78,7 @@ export const GuildTopProfile = ({
         <text>§l§2GEXP for {title}</text>
       </box>
       <div width="100%">{lists}</div>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

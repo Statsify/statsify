@@ -24,6 +24,7 @@ import { UserService } from "#services";
 import { config } from "@statsify/util";
 
 const PREMIUM_TIERS = [
+  UserTier.NETHERITE,
   UserTier.EMERALD,
   UserTier.GOLD,
   UserTier.DIAMOND,
@@ -35,6 +36,7 @@ const TIER_ROLES = {
   [UserTier.GOLD]: config("supportBot.goldRole"),
   [UserTier.DIAMOND]: config("supportBot.diamondRole"),
   [UserTier.EMERALD]: config("supportBot.emeraldRole"),
+  [UserTier.NETHERITE]: config("supportBot.netheriteRole"),
 };
 
 const PREMIUM_ROLE = config("supportBot.premiumRole");

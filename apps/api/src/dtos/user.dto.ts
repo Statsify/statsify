@@ -15,7 +15,7 @@ import {
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { UserTheme } from "@statsify/schemas";
+import { UserFooter, UserTheme } from "@statsify/schemas";
 
 export class UserDto {
   @ApiProperty({ description: "Discord ID or UUID" })
@@ -33,4 +33,8 @@ export class UpdateUserDto {
   @IsOptional()
   @ValidateNested()
   public theme?: UserTheme;
+
+  @IsOptional()
+  @ValidateNested()
+  public footer?: UserFooter;
 }

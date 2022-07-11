@@ -16,7 +16,7 @@ export const BedWarsChallengesProfile = ({
   player,
   background,
   logo,
-  tier,
+  user,
   badge,
   t,
   time,
@@ -48,7 +48,7 @@ export const BedWarsChallengesProfile = ({
             {row.map((challenge) => (
               // Hypixel doesn't localize the challenge names, so we dont't need to localize them
               <Table.td
-                title={prettify(challenge[0])}
+                title={prettify(challenge[0]).replace("Ultimate U H C", "Ultimate UHC")}
                 value={t(challenge[1])}
                 color={challenge[1] > 0 ? "§a" : "§c"}
               />
@@ -56,7 +56,7 @@ export const BedWarsChallengesProfile = ({
           </Table.tr>
         ))}
       </Table.table>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

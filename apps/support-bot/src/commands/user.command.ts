@@ -15,7 +15,8 @@ import {
   UserArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
-import { User, UserTier } from "@statsify/schemas";
+import { User, UserLogo, UserTier } from "@statsify/schemas";
+import { prettify } from "@statsify/util";
 
 @Command({
   description: (t) => t("commands.user"),
@@ -57,8 +58,19 @@ export class UserCommand {
 
     this.addField(embed, "tier", user.tier, (v) => `\`${User.getTierName(v)}\``);
 
-    //TODO: Fix themes in user command
-    // this.addField(embed, "Theme", prettify(user.theme ?? UserTheme.DEFAULT));
+    this.addField(embed, "Font", user.theme?.font, (v) => `\`${prettify(v)}\``);
+    this.addField(embed, "Boxes", user.theme?.boxes, (v) => `\`${prettify(v)}\``);
+    this.addField(embed, "Palette", user.theme?.palette, (v) => `\`${prettify(v)}\``);
+    this.addField(embed, "Footer Message", user.footer?.message);
+
+    const logos = Object.entries(UserLogo);
+
+    this.addField(
+      embed,
+      "Footer Icon",
+      user.footer?.icon,
+      (v) => `\`${prettify(logos.find(([, l]) => l === v)?.[0] ?? "DEFAULT")}\``
+    );
 
     return { embeds: [embed] };
   }

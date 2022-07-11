@@ -68,13 +68,13 @@ export class BaseLeaderboardCommand {
     const t = context.t();
     const cache = new Map<number, IMessage>();
 
-    const logo = await getLogo(user?.tier);
+    const logo = await getLogo(user);
 
     const props: BaseLeaderboardProps = {
       t,
       background,
       logo,
-      tier: user?.tier,
+      user,
       type,
     };
 
@@ -265,10 +265,7 @@ export class BaseLeaderboardCommand {
 
     if (!leaderboard) {
       const message = {
-        ...new ErrorMessage(
-          (t) => t(`errors.${type}LeaderboardNotFound.title`),
-          (t) => t(`errors.${type}LeaderboardNotFound.description`)
-        ),
+        ...new ErrorMessage(`errors.${type}LeaderboardNotFound`),
         ephemeral: true,
       };
 
@@ -277,10 +274,7 @@ export class BaseLeaderboardCommand {
 
     if (!leaderboard?.data.length) {
       const message = {
-        ...new ErrorMessage(
-          (t) => t("errors.leaderboardEmpty.title"),
-          (t) => t("errors.leaderboardEmpty.description")
-        ),
+        ...new ErrorMessage("errors.leaderboardEmpty"),
         ephemeral: true,
       };
 

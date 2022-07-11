@@ -13,7 +13,6 @@ import {
   IsInt,
   IsOptional,
   IsString,
-  Max,
   MaxLength,
   Min,
   MinLength,
@@ -37,8 +36,7 @@ export class GuildLeaderboardDto {
   @IsOptional()
   @IsInt()
   @Min(1)
-  @Max(500_000)
-  @ApiProperty({ minimum: 1, maximum: 500_000, type: () => Number, required: false })
+  @ApiProperty({ minimum: 1, type: () => Number, required: false })
   public position?: number;
 
   @IsOptional()

@@ -7,7 +7,7 @@
  */
 
 import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { IsEnum, IsInt, IsOptional, Max, Min } from "class-validator";
+import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
 import { LeaderboardScanner, Player } from "@statsify/schemas";
 import { PlayerDto } from "./player.dto";
 import { Transform } from "class-transformer";
@@ -29,7 +29,6 @@ export class PlayerLeaderboardDto extends PartialType(PlayerDto) {
   @IsOptional()
   @IsInt()
   @Min(1)
-  @Max(500_000)
-  @ApiProperty({ minimum: 1, maximum: 500_000, type: () => Number, required: false })
+  @ApiProperty({ minimum: 1, type: () => Number, required: false })
   public position?: number;
 }

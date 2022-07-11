@@ -29,7 +29,7 @@ export const PitProfile = ({
   skin,
   t,
   badge,
-  tier,
+  user,
   player,
 }: PitProfileProps) => {
   const sidebar: SidebarItem[] = [
@@ -68,7 +68,6 @@ export const PitProfile = ({
           <Table.td title={t("stats.kills")} value={t(player.kills)} color="§a" />
           <Table.td title={t("stats.deaths")} value={t(player.deaths)} color="§c" />
           <Table.td title={t("stats.kdr")} value={t(player.kdr)} color="§6" />
-          <Table.td title={t("stats.assists")} value={t(player.doc.assists)} color="§e" />
         </Table.tr>
         <Table.tr>
           <Table.td
@@ -81,9 +80,10 @@ export const PitProfile = ({
             value={formatTime(player.doc.playtime * 60_000)}
             color="§b"
           />
+          <Table.td title={t("stats.assists")} value={t(player.doc.assists)} color="§e" />
         </Table.tr>
       </Table.table>
-      <Footer logo={logo} tier={tier} />
+      <Footer logo={logo} user={user} />
     </Container>
   );
 };

@@ -10,7 +10,7 @@ import { Command } from "@statsify/discord";
 import { HistoricalBase } from "./historical.base";
 import { HistoricalType } from "@statsify/api-client";
 
-@Command({ description: (t) => t("commands.lastWeek") })
+@Command({ description: (t) => t("commands.last-week") })
 export class LastWeekCommand extends HistoricalBase {
   public constructor() {
     super(HistoricalType.LAST_WEEK);

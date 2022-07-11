@@ -51,7 +51,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     const guild = await this.getGuild(context);
 
     const [logo, background] = await Promise.all([
-      getLogo(user?.tier),
+      getLogo(user),
       getBackground("hypixel", "overall"),
     ]);
 
@@ -59,7 +59,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       guild,
       background,
       logo,
-      tier: user?.tier,
+      user,
       t,
     };
 

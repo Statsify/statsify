@@ -32,7 +32,7 @@ export const getColorPalette = (palette: UserPalette): Palette | undefined => {
       return {
         boxes: {
           color: "rgba(220, 220, 240, 0.65)",
-          shadowOpacity: 0.3,
+          shadowOpacity: 0.4,
         },
         background: "rgba(0, 0, 0, 0.32)",
       };

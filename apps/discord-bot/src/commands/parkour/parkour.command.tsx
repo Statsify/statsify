@@ -22,7 +22,7 @@ interface PreProfileData {
   gameIcons: Record<GameId, Image>;
 }
 
-@Command({ description: (t) => t("commands.paintball") })
+@Command({ description: (t) => t("commands.parkour") })
 export class ParkourCommand extends BaseHypixelCommand<ParkourModes, PreProfileData> {
   public constructor() {
     super(PARKOUR_MODES);

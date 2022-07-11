@@ -22,7 +22,7 @@ import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { noop } from "@statsify/util";
 import { render } from "@statsify/rendering";
-import type { GameMode, GameModes, Player, UserTier } from "@statsify/schemas";
+import type { GameMode, GameModes, Player, User } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
 
 export interface BaseProfileProps {
@@ -30,7 +30,7 @@ export interface BaseProfileProps {
   player: Player;
   background: Image;
   logo: Image;
-  tier?: UserTier;
+  user: User | null;
   badge?: Image;
   t: LocalizeFunction;
   time: "LIVE" | HistoricalType;
@@ -67,7 +67,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
     const [logo, skin, badge] = await Promise.all([
-      getLogo(user?.tier),
+      getLogo(user),
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
     ]);
@@ -89,7 +89,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
             background,
             logo,
             t,
-            tier: user?.tier,
+            user,
             badge,
             time: "LIVE",
           },
