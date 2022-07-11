@@ -31,6 +31,3 @@ jobs:
 
       - name: Restart PM2
         run: pm2 reload pm2.config.js
-
-      - name: Disable UFW
-        run: sudo ufw disable
