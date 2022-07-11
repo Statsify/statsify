@@ -27,7 +27,7 @@ jobs:
         run: yarn scripts purge --dist && yarn build --force
 
       - name: Prepare Assets
-        run: yarn assets/private install
+        run: cd assets/private && yarn install && cd ../../
 
       - name: Restart PM2
         run: pm2 reload pm2.config.js
