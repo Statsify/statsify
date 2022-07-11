@@ -30,7 +30,7 @@ jobs:
         run: cd assets/private && yarn install && cd ../../
 
       - name: Move Config
-        run: cp ~/home/config.js ./config.js
+        run: cp /home/config.js ./config.js
 
       - name: Restart PM2
         run: pm2 reload pm2.config.js
