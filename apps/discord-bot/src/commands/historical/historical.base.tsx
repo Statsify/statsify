@@ -86,28 +86,28 @@ export class HistoricalBase {
     this.paginateService = Container.get(PaginateService);
   }
 
-  @SubCommand({ description: (t) => t("commands.arcade"), args })
+  @SubCommand({ description: (t) => t("commands.historical-arcade"), args })
   public arcade(context: CommandContext) {
     return this.run(context, ARCADE_MODES, (base, mode) => (
       <ArcadeProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.arenabrawl"), args })
+  @SubCommand({ description: (t) => t("commands.historical-arenabrawl"), args })
   public arenabrawl(context: CommandContext) {
     return this.run(context, ARENA_BRAWL_MODES, (base, mode) => (
       <ArenaBrawlProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.bedwars"), args })
+  @SubCommand({ description: (t) => t("commands.historical-bedwars"), args })
   public bedwars(context: CommandContext) {
     return this.run(context, BEDWARS_MODES, (base, mode) => (
       <BedWarsProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.blitzsg"), args })
+  @SubCommand({ description: (t) => t("commands.historical-blitzsg"), args })
   public blitzsg(context: CommandContext) {
     return this.run(
       context,
@@ -129,118 +129,118 @@ export class HistoricalBase {
     );
   }
 
-  @SubCommand({ description: (t) => t("commands.buildbattle"), args })
+  @SubCommand({ description: (t) => t("commands.historical-buildbattle"), args })
   public buildbattle(context: CommandContext) {
     return this.run(context, BUILD_BATTLE_MODES, (base) => (
       <BuildBattleProfile {...base} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.copsandcrims"), args })
+  @SubCommand({ description: (t) => t("commands.historical-copsandcrims"), args })
   public copsandcrims(context: CommandContext) {
     return this.run(context, COPS_AND_CRIMS_MODES, (base, mode) => (
       <CopsAndCrimsProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.duels"), args })
+  @SubCommand({ description: (t) => t("commands.historical-duels"), args })
   public duels(context: CommandContext) {
     return this.run(context, DUELS_MODES, (base, mode) => (
       <DuelsProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.general"), args })
+  @SubCommand({ description: (t) => t("commands.historical-general"), args })
   public general(context: CommandContext) {
     return this.run(context, GENERAL_MODES, (base) => (
       <HistoricalGeneralProfile {...base} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.megawalls"), args })
+  @SubCommand({ description: (t) => t("commands.historical-megawalls"), args })
   public megawalls(context: CommandContext) {
     return this.run(context, MEGAWALLS_MODES, (base, mode) => (
       <MegaWallsProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.murdermystery"), args })
+  @SubCommand({ description: (t) => t("commands.historical-murdermystery"), args })
   public murdermystery(context: CommandContext) {
     return this.run(context, MURDER_MYSTERY_MODES, (base) => (
       <MurderMysteryProfile {...base} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.paintball"), args })
+  @SubCommand({ description: (t) => t("commands.historical-paintball"), args })
   public paintball(context: CommandContext) {
     return this.run(context, PAINTBALL_MODES, (base) => <PaintballProfile {...base} />);
   }
 
-  @SubCommand({ description: (t) => t("commands.quake"), args })
+  @SubCommand({ description: (t) => t("commands.historical-quake"), args })
   public quake(context: CommandContext) {
     return this.run(context, QUAKE_MODES, (base, mode) => (
       <QuakeProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.skywars"), args })
+  @SubCommand({ description: (t) => t("commands.historical-skywars"), args })
   public skywars(context: CommandContext) {
     return this.run(context, SKYWARS_MODES, (base, mode) => (
       <SkyWarsProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.smashheroes"), args })
+  @SubCommand({ description: (t) => t("commands.historical-smashheroes"), args })
   public smashheroes(context: CommandContext) {
     return this.run(context, SMASH_HEROES_MODES, (base, mode) => (
       <SmashHeroesProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.speeduhc"), args })
+  @SubCommand({ description: (t) => t("commands.historical-speeduhc"), args })
   public speeduhc(context: CommandContext) {
     return this.run(context, SPEED_UHC_MODES, (base, mode) => (
       <SpeedUHCProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.tntgames"), args })
+  @SubCommand({ description: (t) => t("commands.historical-tntgames"), args })
   public tntgames(context: CommandContext) {
     return this.run(context, TNT_GAMES_MODES, (base) => <TNTGamesProfile {...base} />);
   }
 
-  @SubCommand({ description: (t) => t("commands.turbokartracers"), args })
+  @SubCommand({ description: (t) => t("commands.historical-turbokartracers"), args })
   public turbokartracers(context: CommandContext) {
     return this.run(context, TURBO_KART_RACERS_MODES, (base) => (
       <TurboKartRacersProfile {...base} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.uhc"), args })
+  @SubCommand({ description: (t) => t("commands.historical-uhc"), args })
   public uhc(context: CommandContext) {
     return this.run(context, UHC_MODES, (base, mode) => (
       <UHCProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.vampirez"), args })
+  @SubCommand({ description: (t) => t("commands.historical-vampirez"), args })
   public vampirez(context: CommandContext) {
     return this.run(context, VAMPIREZ_MODES, (base) => <VampireZProfile {...base} />);
   }
 
-  @SubCommand({ description: (t) => t("commands.walls"), args })
+  @SubCommand({ description: (t) => t("commands.historical-walls"), args })
   public walls(context: CommandContext) {
     return this.run(context, WALLS_MODES, (base) => <WallsProfile {...base} />);
   }
 
-  @SubCommand({ description: (t) => t("commands.warlords"), args })
+  @SubCommand({ description: (t) => t("commands.historical-warlords"), args })
   public warlords(context: CommandContext) {
     return this.run(context, WARLORDS_MODES, (base, mode) => (
       <WarlordsProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.woolwars"), args })
+  @SubCommand({ description: (t) => t("commands.historical-woolwars"), args })
   public woolwars(context: CommandContext) {
     return this.run(context, WOOLWARS_MODES, (base, mode) => (
       <WoolWarsProfile {...base} mode={mode} />

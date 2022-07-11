@@ -29,7 +29,7 @@ export class BadgeCommand {
   public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({
-    description: (t) => t("commands.badge.view"),
+    description: (t) => t("commands.badge-view"),
     tier: UserTier.GOLD,
   })
   public view(context: CommandContext) {
@@ -37,7 +37,7 @@ export class BadgeCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.badge.set"),
+    description: (t) => t("commands.badge-set"),
     tier: UserTier.GOLD,
     args: [new FileArgument("badge", true)],
   })
@@ -46,7 +46,7 @@ export class BadgeCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.badge.reset"),
+    description: (t) => t("commands.badge-reset"),
     tier: UserTier.GOLD,
   })
   public reset(context: CommandContext) {
@@ -87,6 +87,7 @@ export class BadgeCommand {
 
         const canvas = new Canvas(32, 32);
         const ctx = canvas.getContext("2d");
+        ctx.imageSmoothingEnabled = false;
 
         if (!["image/png", "image/jpeg", "image/gif"].includes(file.content_type ?? ""))
           throw new ErrorMessage(

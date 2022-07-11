@@ -13,6 +13,7 @@ import {
   NumberArgument,
   TextArgument,
 } from "@statsify/discord";
+import { convertColorCodes } from "#lib/convert-color-codes";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
@@ -26,10 +27,7 @@ export class TextCommand {
     const content = context.option<string>("content").trim();
     const size = Math.min(context.option<number>("size", 2), 9);
 
-    const text = content
-      .replaceAll("\\&", "󰀀")
-      .replace(/&\S/g, (m) => m.replace("&", "§"))
-      .replaceAll("󰀀", "&");
+    const text = convertColorCodes(content);
 
     const canvas = render(<text size={size}>{text}</text>, getTheme(user));
     const buffer = await canvas.toBuffer("png");

@@ -219,7 +219,17 @@ export class ApiService extends StatsifyApiService {
   ) {
     return super.getPlayerLeaderboard(field, input, type).catch((err: AxiosError) => {
       if ((err.response?.data as PlayerNotFoundException).statusCode === 404) return null;
+      throw new ErrorMessage("errors.leaderboardNotFound");
+    });
+  }
 
+  public override getGuildLeaderboard(
+    field: string,
+    input: string | number,
+    type: LeaderboardQuery
+  ) {
+    return super.getGuildLeaderboard(field, input, type).catch((err: AxiosError) => {
+      if ((err.response?.data as GuildNotFoundException).statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
     });
   }

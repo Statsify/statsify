@@ -67,7 +67,7 @@ export class ServerCommand {
 
     const [serverLogo, background] = await Promise.all([
       loadImage(server.icon),
-      getBackground("bedwars", "overall"),
+      getBackground("minecraft", "overall"),
     ]);
 
     const canvas = render(
@@ -118,11 +118,7 @@ export class ServerCommand {
       .then((res) => res.data)
       .catch(() => null);
 
-    if (!server || !server.online)
-      throw new ErrorMessage(
-        (t) => t("errors.invalidServer.title"),
-        (t) => t("errors.invalidServer.description")
-      );
+    if (!server || !server.online) throw new ErrorMessage("errors.invalidServer");
 
     server.hostname = mappedServer?.addresses?.[0] ?? server.hostname;
     server.name = mappedServer?.name ?? server.hostname;

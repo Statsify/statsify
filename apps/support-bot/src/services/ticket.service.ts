@@ -122,7 +122,6 @@ export class TicketService {
           }`,
           deny: `${PermissionFlagsBits.MentionEveryone}`,
         },
-        //TODO(jacobk999): Add permission overwrites for staff roles
       ],
     });
 

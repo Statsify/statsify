@@ -6,57 +6,59 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+const node_args = ["--unhandled-rejections=warn"];
+const cron_restart = "0 20 * * *";
+const exp_backoff_restart_delay = 500;
+const script = "yarn";
+const env = { FORCE_COLOR: 3 };
+const with_color = "--color=16m";
+
 module.exports = {
   apps: [
     {
       name: "Statsify API",
-      script: "yarn",
-      args: "api start --color=16m",
-      exp_backoff_restart_delay: 500,
-      cron_restart: "0 20 * * *",
-      env: {
-        FORCE_COLOR: 3,
-      },
+      args: `api start ${with_color}`,
+      script,
+      node_args,
+      cron_restart,
+      exp_backoff_restart_delay,
+      env,
     },
     {
       name: "Statsify Discord Bot",
-      script: "yarn",
-      args: "discord-bot start --color=16m",
-      exp_backoff_restart_delay: 500,
-      cron_restart: "0 20 * * *",
-      env: {
-        FORCE_COLOR: 3,
-      },
+      args: `discord-bot start ${with_color}`,
+      script,
+      node_args,
+      cron_restart,
+      exp_backoff_restart_delay,
+      env,
     },
     {
       name: "Statsify Support Bot",
-      script: "yarn",
-      args: "support-bot start --color=16m",
-      exp_backoff_restart_delay: 500,
-      cron_restart: "0 20 * * *",
-      env: {
-        FORCE_COLOR: 3,
-      },
+      args: `support-bot start ${with_color}`,
+      script,
+      node_args,
+      cron_restart,
+      exp_backoff_restart_delay,
+      env,
     },
     {
       name: "Statsify Verify Server",
-      script: "yarn",
-      args: "verify-bot start --color=16m",
-      exp_backoff_restart_delay: 500,
-      cron_restart: "0 20 * * *",
-      env: {
-        FORCE_COLOR: 3,
-      },
+      args: `verify-bot start ${with_color}`,
+      script,
+      node_args,
+      cron_restart,
+      exp_backoff_restart_delay,
+      env,
     },
     {
       name: "Statsify Leaderboard Limiting",
-      script: "yarn",
-      args: "scripts limit-redis start --color=16m",
-      exp_backoff_restart_delay: 500,
+      args: `scripts limit-redis start ${with_color}`,
       cron_restart: "*/30 * * * *",
-      env: {
-        FORCE_COLOR: 3,
-      },
+      script,
+      node_args,
+      exp_backoff_restart_delay,
+      env,
     },
   ],
 };

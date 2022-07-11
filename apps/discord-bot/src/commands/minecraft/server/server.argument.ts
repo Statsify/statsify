@@ -14,6 +14,8 @@ import {
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import { getServerMappings } from "@statsify/assets";
 
+type Server = ReturnType<typeof getServerMappings>[number];
+
 export class ServerArgument extends AbstractArgument {
   public name = "server";
   public description: LocalizationString;
@@ -21,15 +23,16 @@ export class ServerArgument extends AbstractArgument {
   public required = true;
   public autocomplete = true;
 
-  private fuse: Fuse<ReturnType<typeof getServerMappings>[number]>;
+  private servers: Server[];
+  private fuse: Fuse<Server>;
 
   public constructor() {
     super();
     this.description = (t) => t("arguments.server");
 
-    const servers = getServerMappings();
+    this.servers = getServerMappings();
 
-    this.fuse = new Fuse(servers, {
+    this.fuse = new Fuse(this.servers, {
       keys: ["id", "name", "addresses"],
       includeScore: false,
       shouldSort: true,
@@ -43,6 +46,12 @@ export class ServerArgument extends AbstractArgument {
     context: CommandContext
   ): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
+
+    if (!currentValue) {
+      return this.servers
+        .map((result) => ({ name: result.name, value: result.addresses[0] }))
+        .slice(0, 25);
+    }
 
     return this.fuse
       .search(currentValue)

@@ -31,7 +31,7 @@ export const WallsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.WALLS}} §fStats`}
+        title={`§l${FormattedGame.WALLS} §fStats`}
         time={time}
       />
       <Table.table>

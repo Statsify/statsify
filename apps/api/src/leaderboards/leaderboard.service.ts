@@ -167,7 +167,7 @@ export abstract class LeaderboardService {
 
     const child = transaction?.startChild({
       op: "redis",
-      description: `get ${constructor.name} rankigns`,
+      description: `get ${constructor.name} rankings`,
     });
 
     const pipeline = this.redis.pipeline();

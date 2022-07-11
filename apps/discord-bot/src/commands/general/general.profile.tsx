@@ -23,7 +23,7 @@ const GeneralProfileHeaderBody = ({
   status,
   t,
 }: GeneralProfileHeaderBodyProps) => {
-  const online = status.online ? "§aOnline" : "§cOffline";
+  const online = status.online ? `§a${t("stats.online")}` : `§c${t("stats.offline")}`;
 
   const format = "LL/dd/yy',' hh:mm a";
   const firstLogin = DateTime.fromMillis(status.firstLogin).toFormat(format, {
@@ -38,10 +38,14 @@ const GeneralProfileHeaderBody = ({
     <div height="remaining" width="remaining" direction="row">
       <div width="remaining" height="100%" direction="column">
         <box width="100%" height="50%">
-          <text>§7Guild: §2{guild?.name ?? "N/A"}</text>
+          <text>
+            §7{t("stats.guild.guild")}: §2{guild?.name ?? "N/A"}
+          </text>
         </box>
         <box width="100%" height="50%">
-          <text>§7Status: {online}</text>
+          <text>
+            §7{t("stats.status")}: {online}
+          </text>
         </box>
       </div>
       <box height="100%" direction="column">
@@ -133,12 +137,12 @@ export const GeneralProfile = ({
                 color="§2"
               />
               <Table.td
-                title={t("stats.guild.daily")}
+                title={t("stats.guild.daily-gexp")}
                 value={t(member.daily)}
                 color="§2"
               />
               <Table.td
-                title={t("stats.guild.weekly")}
+                title={t("stats.guild.weekly-gexp")}
                 value={t(member.weekly)}
                 color="§2"
               />

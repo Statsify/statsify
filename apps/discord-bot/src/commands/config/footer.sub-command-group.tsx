@@ -19,6 +19,7 @@ import {
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
 import { DemoProfile } from "./demo.profile";
 import { User, UserFooter, UserLogo, UserTier } from "@statsify/schemas";
+import { convertColorCodes } from "#lib/convert-color-codes";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { removeFormatting } from "@statsify/util";
@@ -34,7 +35,11 @@ export class FooterSubCommandGroup {
     tier: UserTier.NETHERITE,
   })
   public message(context: CommandContext) {
-    const message = context.option<string>("message").replace(/^\^\d\^/g, "");
+    const message = convertColorCodes(context.option<string>("message")).replace(
+      /^\^\d\^/g,
+      ""
+    );
+
     const length = removeFormatting(message).length;
 
     if (length > 50) throw new ErrorMessage("errors.footerTooLong");

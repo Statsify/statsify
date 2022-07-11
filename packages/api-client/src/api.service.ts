@@ -114,9 +114,7 @@ export class ApiService {
       "/player/leaderboards/rankings",
       {},
       "POST",
-      {
-        body: { fields, uuid },
-      }
+      { body: { fields, uuid } }
     );
   }
 
@@ -131,7 +129,7 @@ export class ApiService {
     field: string,
     input: string | number,
     type: LeaderboardQuery
-  ) {
+  ): Promise<PostLeaderboardResponse | null> {
     return this.request<PostLeaderboardResponse>("/guild/leaderboards", {}, "POST", {
       body: {
         field,

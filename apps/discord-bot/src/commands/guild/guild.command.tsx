@@ -46,11 +46,7 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const guildMaster = guild.members.find((m) => GuildMember.isGuildMaster(m));
 
-    if (!guildMaster)
-      throw new ErrorMessage(
-        (t) => t("errors.unknown.title"),
-        (t) => t("errors.unknown.description")
-      );
+    if (!guildMaster) throw new ErrorMessage("errors.unknown");
 
     const gameIconPaths = await readdir(getAssetPath("games"));
 
@@ -149,7 +145,7 @@ export class GuildCommand extends GuildTopSubCommand {
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
       getLogo(user),
-      getBackground("bedwars", "overall"),
+      getBackground("hypixel", "overall"),
     ]);
 
     const canvas = render(

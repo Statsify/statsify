@@ -158,9 +158,13 @@
       "daily": "Daily",
       "weekly": "Weekly",
       "monthly": "Monthly",
+      "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
+      "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)",
+      "monthly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)",
       "date": "Date",
       "averageMemberGexp": "Avg. Member GEXP",
-      "questsCompleted": "Quests Completed"
+      "questsCompleted": "Quests Completed",
+      "guild": "Guild"
     },
     "online": "Online",
     "offline": "Offline",
@@ -208,9 +212,6 @@
     "skin": {
       "description": {
         "username": "Username"
-      },
-      "components": {
-        "apply": "Apply"
       }
     },
     "namehistory": {
@@ -312,6 +313,7 @@
     "arcade": "Arcade Games command",
     "arenabrawl": "Arena Brawl command",
     "bedwars": "Bedwars command",
+    "bedwars-challenges": "BedWars Challenges",
     "blitzsg": "BlitzSG command",
     "buildbattle": "Build Battle command",
     "copsandcrims": "Cops and Crims command",
@@ -335,16 +337,126 @@
     "unverify": "Unverify command",
     "gameCounts": "Game counts command",
     "status": "Status command",
-    "parkour": "Parkour command"
+    "parkour": "Parkour command",
+    "pit": "Pit Cmd",
+    "badge": "Badge Commands",
+    "badge-view": "View badge",
+    "badge-set": "Set badge",
+    "badge-reset": "Reset Badge",
+    "theme": "change ur themes",
+    "theme-boxes": "boxes 4 themes",
+    "theme-font": "change font 4 theme",
+    "theme-palette": "change palette 4 theme",
+    "theme-view": "view theme",
+    "theme-footer": "Footer",
+    "theme-footer-message": "Message 4 ur footer",
+    "theme-footer-icon": "logo to use 4 footer",
+    "friends": "Friends Command",
+    "mutuals": "Mutuals Command",
+    "gtbhelper": "GTB Helper",
+    "guild": "Guild Commands",
+    "guild-overall": "Overall Guild",
+    "guild-list": "Guild List",
+    "guild-member": "Guild Member",
+    "guild-top": "Guild Top",
+    "guild-leaderboard": "Guild Leaderboard",
+    "daily": "Daily Command",
+    "weekly": "Weekly Command",
+    "monthly": "Monthly Command",
+    "last-day": "Last Day Command",
+    "yesterday": "Last Day Command",
+    "last-week": "Last Week Command",
+    "last-month": "Last Month Command",
+    "historical-arcade": "Historical Arcade Command",
+    "historical-arenabrawl": "Historical Arena Brawl Command",
+    "historical-bedwars": "Historical Bedwars Command",
+    "historical-blitzsg": "Historical BlitzSG Command",
+    "historical-buildbattle": "Historical Build Battle Command",
+    "historical-copsandcrims": "Historical Cops and Crims Command",
+    "historical-duels": "Historical Duels Command",
+    "historical-general": "Historical General Command",
+    "historical-megawalls": "Historical Mega Walls Command",
+    "historical-murdermystery": "Historical Murder Mystery Command",
+    "historical-paintball": "Historical Paintball Command",
+    "historical-quake": "Quake",
+    "historical-skywars": "Skywars",
+    "historical-smashheroes": "Smash Heroes",
+    "historical-speeduhc": "Speed uhc",
+    "historical-tntgames": "TNT Games",
+    "historical-turbokartracers": "Historical TKR",
+    "historical-uhc": "UHC",
+    "historical-vampirez": "VAmpireZ",
+    "historical-walls": "Walls",
+    "historical-warlords": "Warlords",
+    "historical-woolwars": "Wool wars",
+    "help": "Help",
+    "invite": "Invite",
+    "links": "Links",
+    "ping": "Ping",
+    "leaderboard-arcade": "Historical Arcade Command",
+    "leaderboard-arenabrawl": "Historical Arena Brawl Command",
+    "leaderboard-bedwars": "Historical Bedwars Command",
+    "leaderboard-blitzsg": "Historical BlitzSG Command",
+    "leaderboard-buildbattle": "Historical Build Battle Command",
+    "leaderboard-copsandcrims": "Historical Cops and Crims Command",
+    "leaderboard-duels": "Historical Duels Command",
+    "leaderboard-general": "Historical General Command",
+    "leaderboard-megawalls": "Historical Mega Walls Command",
+    "leaderboard-murdermystery": "Historical Murder Mystery Command",
+    "leaderboard-paintball": "Historical Paintball Command",
+    "leaderboard-quake": "Quake",
+    "leaderboard-skywars": "Skywars",
+    "leaderboard-smashheroes": "Smash Heroes",
+    "leaderboard-speeduhc": "Speed uhc",
+    "leaderboard-tntgames": "TNT Games",
+    "leaderboard-turbokartracers": "Historical TKR",
+    "leaderboard-uhc": "UHC",
+    "leaderboard-vampirez": "VampireZ",
+    "leaderboard-walls": "Walls",
+    "leaderboard-warlords": "Warlords",
+    "leaderboard-woolwars": "Wool wars",
+    "server": "Minecraft Server Command",
+    "available": "Minecraft Available Command",
+    "cape": "Minecraft Capes",
+    "colors": "Minecraft Colors",
+    "namehistory": "Name history",
+    "skin": "Minecraft Skin",
+    "text": "Generate Minecraft Text",
+    "uuid": "Get UUID",
+    "recentgames": "Recent Games from Hypixel",
+    "socials": "Shows ur socials",
+    "game-counts": "Hypixel Gamecounts",
+    "reset": "reset ur historical stats",
+    "watchdog": "Watchdog command",
+    "close": "Close ticket",
+    "commands": "Top Commands",
+    "delete-player": "Delete Player",
+    "force-unverify": "Forcefully unverify a player",
+    "force-verify": "Forcefully verify a player",
+    "premium-menu": "Premium Menu",
+    "tags": "Support Tags",
+    "tags-create": "Create a tag",
+    "tags-delete": "Delete a tag",
+    "tags-rename": "Rename a tag",
+    "ticket-menu": "Ticket Menu",
+    "user": "View statsify user document"
   },
   "arguments": {
     "choice": "Choice",
+    "file": "File upload",
     "guild-query": "Guild query",
     "mojang-player": "Mojang player",
     "number": "Number",
     "player-leaderboard": "Player leaderboard",
+    "guild-leaderboard": "Guild Leaderboard",
     "player": "player",
-    "text": "text"
+    "text": "text",
+    "server": "Minecraft Server",
+    "user": "input discord user",
+    "gtbhelper": "Guess the build word",
+    "close": "Close",
+    "tags-name": "Tag name",
+    "tags-content": "Tag content"
   },
   "cooldown": {
     "title": "Active Cooldown",
@@ -352,23 +464,23 @@
   },
   "verification": {
     "alreadyVerified": {
-      "title": "Hello World",
+      "title": "You Already Verified",
       "description": "You have already verified your account."
     },
     "noCode": {
       "title": "Hello World",
-      "description": "You have not entered a verification code."
+      "description": "You have not entered a verification code. verification steps HERE"
     },
     "invalidCode": {
       "title": "Hello World",
-      "description": "The verification code you entered is invalid."
+      "description": "The verification code you entered is invalid. verification steps HERE"
     },
     "notVerified": {
       "title": "Hello World",
       "description": "You have not verified your account to unverify it."
     },
     "requiredVerification": {
-      "title": "Hello World",
+      "title": "u needa be verified",
       "description": "You are required to be verified to use this command."
     },
     "successfulVerification": "You verified your account to {{displayName}}",
@@ -431,10 +543,6 @@
       "title": "Unsupported File Type",
       "description": "The file you provided is not a supported file type!!!!!!!"
     },
-    "leaderboardNotFound": {
-      "title": "Invalid Leaderboard",
-      "description": "Search for a valid leaderboard"
-    },
     "playerLeaderboardNotFound": {
       "title": "Invalid Player or Position",
       "description": "We can't find the player you are looking for!?"
@@ -446,6 +554,10 @@
     "leaderboardEmpty": {
       "title": "Leaderboard Empty",
       "description": "There are no more players for this leaderboard"
+    },
+    "leaderboardNotFound": {
+      "title": "Leaderboard Not Found",
+      "description": "We can't find the leaderboard you are looking for!?"
     },
     "invalidServer": {
       "title": "Invalid Server",
@@ -528,6 +640,10 @@
     "positionInput": {
       "label": "Search by a Position",
       "placeholder": "Enter a position, ex: 5000"
+    },
+    "guildInput": {
+      "label": "Search by a Guild",
+      "placeholder": "Enter a guild's name, ex: Bluebloods"
     },
     "modal": {
       "title": "Leaderboard Search"

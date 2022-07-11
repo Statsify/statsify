@@ -20,7 +20,7 @@ import { mapGame } from "#constants";
 import { removeFormatting } from "@statsify/util";
 
 @Command({
-  description: (t) => t("commands.gameCounts"),
+  description: (t) => t("commands.game-counts"),
 })
 export class GameCountsCommand {
   public constructor(

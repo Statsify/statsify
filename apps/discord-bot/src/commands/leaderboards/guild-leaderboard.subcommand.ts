@@ -9,8 +9,10 @@
 import { ApiService, CommandContext, SubCommand } from "@statsify/discord";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command";
 import { GuildLeaderboardArgument } from "./guild-leaderboard.argument";
+import { Service } from "typedi";
 import { getBackground } from "@statsify/assets";
 
+@Service()
 export class GuildLeaderboardSubCommand extends BaseLeaderboardCommand {
   public constructor(protected readonly apiService: ApiService) {
     super();

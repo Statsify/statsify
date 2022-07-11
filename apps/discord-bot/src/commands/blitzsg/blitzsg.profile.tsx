@@ -133,13 +133,16 @@ export const BlitzSGProfile = ({
       const colors = ["§a", "§a", "§2", "§2", "§e", "§e", "§6", "§6", "§c", "§4"];
       const stats = blitzsg[mode.api];
 
-      let level = stats.prestige
-        ? `§6${"✫".repeat(stats.prestige)}`
-        : romanNumeral(stats.level);
+      if (stats.level) {
+        let level = stats.prestige
+          ? `§6${"✫".repeat(stats.prestige)}`
+          : romanNumeral(stats.level);
 
-      if (stats.level === 10) level = `§l${level}`;
-      sidebar.push([t("stats.level"), level, colors[stats.level - 1]]);
-      sidebar.push([t("stats.exp"), t(stats.exp), "§b"]);
+        if (stats.level === 10) level = `§l${level}`;
+        sidebar.push([t("stats.level"), level, colors[stats.level - 1]]);
+        sidebar.push([t("stats.exp"), t(stats.exp), "§b"]);
+      }
+
       table = <KitBlitzSGTable stats={stats} t={t} />;
       break;
     }

@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import Container from "typedi";
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
@@ -36,17 +37,22 @@ import {
 import { ApiService, Command, CommandContext, SubCommand } from "@statsify/discord";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
+import { GuildLeaderboardArgument } from "./guild-leaderboard.argument";
+import { GuildLeaderboardSubCommand } from "./guild-leaderboard.subcommand";
 import { PlayerLeaderboardArgument } from "./player-leaderboard.argument";
 import { getBackground } from "@statsify/assets";
 
-@Command({ name: "leaderboard", description: (t) => t("commands.player-leaderboard") })
+@Command({
+  name: "leaderboard",
+  description: (t) => t("commands.player-leaderboard"),
+})
 export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   public constructor(private readonly apiService: ApiService) {
     super();
   }
 
   @SubCommand({
-    description: (t) => t("commands.arcade"),
+    description: (t) => t("commands.leaderboard-arcade"),
     args: [new PlayerLeaderboardArgument("arcade")],
   })
   public arcade(context: CommandContext) {
@@ -54,7 +60,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.arenabrawl"),
+    description: (t) => t("commands.leaderboard-arenabrawl"),
     args: [new PlayerLeaderboardArgument("arenabrawl")],
   })
   public arenabrawl(context: CommandContext) {
@@ -62,7 +68,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.bedwars"),
+    description: (t) => t("commands.leaderboard-bedwars"),
     args: [new PlayerLeaderboardArgument("bedwars")],
   })
   public bedwars(context: CommandContext) {
@@ -70,7 +76,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.blitzsg"),
+    description: (t) => t("commands.leaderboard-blitzsg"),
     args: [new PlayerLeaderboardArgument("blitzsg")],
   })
   public blitzsg(context: CommandContext) {
@@ -78,7 +84,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.buildbattle"),
+    description: (t) => t("commands.leaderboard-buildbattle"),
     args: [new PlayerLeaderboardArgument("buildbattle")],
   })
   public buildbattle(context: CommandContext) {
@@ -86,7 +92,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.copsandcrims"),
+    description: (t) => t("commands.leaderboard-copsandcrims"),
     args: [new PlayerLeaderboardArgument("copsandcrims")],
   })
   public copsandcrims(context: CommandContext) {
@@ -94,7 +100,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.duels"),
+    description: (t) => t("commands.leaderboard-duels"),
     args: [new PlayerLeaderboardArgument("duels")],
   })
   public duels(context: CommandContext) {
@@ -102,7 +108,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.general"),
+    description: (t) => t("commands.leaderboard-general"),
     args: [new PlayerLeaderboardArgument("general")],
   })
   public general(context: CommandContext) {
@@ -110,7 +116,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.megawalls"),
+    description: (t) => t("commands.leaderboard-megawalls"),
     args: [new PlayerLeaderboardArgument("megawalls")],
   })
   public megawalls(context: CommandContext) {
@@ -118,7 +124,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.murdermystery"),
+    description: (t) => t("commands.leaderboard-murdermystery"),
     args: [new PlayerLeaderboardArgument("murdermystery")],
   })
   public murdermystery(context: CommandContext) {
@@ -126,7 +132,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.paintball"),
+    description: (t) => t("commands.leaderboard-paintball"),
     args: [new PlayerLeaderboardArgument("paintball")],
   })
   public paintball(context: CommandContext) {
@@ -134,7 +140,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.parkour"),
+    description: (t) => t("commands.leaderboard-parkour"),
     args: [new PlayerLeaderboardArgument("parkour")],
   })
   public parkour(context: CommandContext) {
@@ -142,7 +148,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.quake"),
+    description: (t) => t("commands.leaderboard-quake"),
     args: [new PlayerLeaderboardArgument("quake")],
   })
   public quake(context: CommandContext) {
@@ -150,7 +156,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.skywars"),
+    description: (t) => t("commands.leaderboard-skywars"),
     args: [new PlayerLeaderboardArgument("skywars")],
   })
   public skywars(context: CommandContext) {
@@ -158,7 +164,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.smashheroes"),
+    description: (t) => t("commands.leaderboard-smashheroes"),
     args: [new PlayerLeaderboardArgument("smashheroes")],
   })
   public smashheroes(context: CommandContext) {
@@ -166,7 +172,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.speeduhc"),
+    description: (t) => t("commands.leaderboard-speeduhc"),
     args: [new PlayerLeaderboardArgument("speeduhc")],
   })
   public speeduhc(context: CommandContext) {
@@ -174,7 +180,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.tntgames"),
+    description: (t) => t("commands.leaderboard-tntgames"),
     args: [new PlayerLeaderboardArgument("tntgames")],
   })
   public tntgames(context: CommandContext) {
@@ -182,7 +188,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.turbokartracers"),
+    description: (t) => t("commands.leaderboard-turbokartracers"),
     args: [new PlayerLeaderboardArgument("turbokartracers")],
   })
   public turbokartracers(context: CommandContext) {
@@ -190,7 +196,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.uhc"),
+    description: (t) => t("commands.leaderboard-uhc"),
     args: [new PlayerLeaderboardArgument("uhc")],
   })
   public uhc(context: CommandContext) {
@@ -198,7 +204,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.vampirez"),
+    description: (t) => t("commands.leaderboard-vampirez"),
     args: [new PlayerLeaderboardArgument("vampirez")],
   })
   public vampirez(context: CommandContext) {
@@ -206,7 +212,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.walls"),
+    description: (t) => t("commands.leaderboard-walls"),
     args: [new PlayerLeaderboardArgument("walls")],
   })
   public walls(context: CommandContext) {
@@ -214,7 +220,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.warlords"),
+    description: (t) => t("commands.leaderboard-warlords"),
     args: [new PlayerLeaderboardArgument("warlords")],
   })
   public warlords(context: CommandContext) {
@@ -222,11 +228,19 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.woolwars"),
+    description: (t) => t("commands.leaderboard-woolwars"),
     args: [new PlayerLeaderboardArgument("woolwars")],
   })
   public woolwars(context: CommandContext) {
     return this.run(context, "woolwars", WOOLWARS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.guild-leaderboard"),
+    args: [GuildLeaderboardArgument],
+  })
+  public async guild(context: CommandContext) {
+    return Container.get(GuildLeaderboardSubCommand).leaderboard(context);
   }
 
   private async run<T extends GamesWithBackgrounds>(
