@@ -43,7 +43,7 @@ async function bootstrap() {
   //Removes the `_id` fields created from sub classes of documents
   setGlobalOptions({ schemaOptions: { _id: false } });
 
-  const adapter = new FastifyAdapter();
+  const adapter = new FastifyAdapter({ bodyLimit: 5e6 });
 
   // This parses the content for when PNGs are sent to the API
   adapter
