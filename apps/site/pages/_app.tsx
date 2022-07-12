@@ -54,6 +54,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
         <meta property="og:image" content="/embed-banner.png" />
         <meta property="twitter:image:src" content="/embed-banner.png" />
+        <meta name="twitter:card" content="summary_large_image" />
 
         <meta httpEquiv="content-language" content="en" />
         <meta charSet="utf8" />
