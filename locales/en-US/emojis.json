@@ -3,7 +3,7 @@
   "down": "<:down:995761552546345040>",
   "search": {
     "player": "<:searchplayer:995761551913005166>",
-    "guild": "<:searchplayer:988897982357336095>",
+    "guild": "<:searchguild:996434315938381844>",
     "position": "<:searchposition:995761551048966154>"
   },
   "check": "<:check:995761550310772777>",
@@ -19,8 +19,11 @@
     "staff": "<:staff:995763539811762309>",
     "core": "<:core:995763533851664567>"
   },
-  "eye": "<:twoEYES:985616158269009970>",
-  "reset": "<:reset:985622018349207674>",
+  "config": {
+    "reset": "<:config_reset:996433544622645248>",
+    "success": "<:config_success:996433543611822194>",
+    "view": "<:config_view:996433545033687141>"
+  },
   "clock": "<a:clock:995761548595310622>",
   "heart": "<:turtleHeart:847940768625983558>",
   "forward": "<:forward:995761547492204684>",

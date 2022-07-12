@@ -91,9 +91,25 @@ export function getLogo(
 
 export function getLogoPath(user: User | null, size?: number): string;
 export function getLogoPath(logo: UserLogo | null, size?: number): string;
-export function getLogoPath(userOrLogo: User | UserLogo | null, size = 26): string {
-  let path: string;
-  const logo = typeof userOrLogo === "object" ? User.getLogo(userOrLogo) : userOrLogo;
+export function getLogoPath(path: string, size?: number): string;
+export function getLogoPath(
+  userOrLogoOrPath: User | UserLogo | string | null,
+  size = 26
+): string {
+  let path: string | undefined;
+  let logo: UserLogo | undefined;
+
+  switch (typeof userOrLogoOrPath) {
+    case "string":
+      path = `${userOrLogoOrPath}_`;
+      break;
+    case "object":
+      logo = User.getLogo(userOrLogoOrPath);
+      break;
+    case "number":
+      logo = userOrLogoOrPath;
+      break;
+  }
 
   switch (logo) {
     case UserLogo.RUBY:
@@ -124,6 +140,8 @@ export function getLogoPath(userOrLogo: User | UserLogo | null, size = 26): stri
       path = "";
       break;
   }
+
+  if (path === undefined) throw new Error("Invalid logo path");
 
   return getAssetPath(`logos/${path}logo_${size}.png`);
 }

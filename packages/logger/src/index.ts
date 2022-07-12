@@ -16,7 +16,7 @@ export const defaultLogLevels: LogLevel[] = ["log", "error", "warn", "debug", "v
 export const STATUS_COLORS = {
   debug: 0xc700e7,
   warn: 0xfab627,
-  error: 0xda4e38,
+  error: 0xcd1820,
   info: 0x6469f5,
   success: 0x36d494,
 } as const;

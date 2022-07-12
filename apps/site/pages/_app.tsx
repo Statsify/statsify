@@ -52,6 +52,10 @@ export default function App({ Component, pageProps }: AppProps) {
           href="/images/favicon-16x16.png"
         />
 
+        <meta property="og:image" content="/embed-banner.png" />
+        <meta property="twitter:image:src" content="/embed-banner.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+
         <meta httpEquiv="content-language" content="en" />
         <meta charSet="utf8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />

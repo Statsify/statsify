@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://statsify.net/cdn/logos/pixel.png" width="10%" alt="Statsify Logo">
+<img src="https://raw.githubusercontent.com/Statsify/public-assets/main/logos/logo_26.png" alt="Statsify" width="10%" style="image-rendering: pixelated">
 
 # Statsify
 A Hypixel and Minecraft focused Discord Bot
@@ -61,11 +61,15 @@ $ yarn test:types
 - [`Donate`]
 
 ## Showcase
-![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars.png)
-![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars-leaderboard.png)
-![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/guild-overall.png)
-![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/status.png)
-![Bedwars Command](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/friends.png)
+<div align="center">
+
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars-leaderboard.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/guild-overall.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/status.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/friends.png)
+
+</div>
 
 
 <!-- LINKS -->
