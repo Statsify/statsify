@@ -11,6 +11,8 @@ import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
 import { SmashHeroesKit, SmashHeroesMode } from "./mode";
 
+const formatLevel = (level: number) => `§b${level}§6✶`;
+
 export const SMASH_HEROES_MODES = new GameModes([
   { api: "overall" },
   { api: "solo", hypixel: "solo_normal" },
@@ -77,7 +79,7 @@ export class SmashHeroes {
   @Field({ leaderboard: { enabled: false } })
   public level: number;
 
-  @Field()
+  @Field({ store: { default: formatLevel(0) } })
   public levelFormatted: string;
 
   @Field({ store: { default: "none" } })
@@ -130,6 +132,7 @@ export class SmashHeroes {
 
   @Field()
   public greenHood: SmashHeroesKit;
+
   public constructor(data: APIData) {
     this.overall = new SmashHeroesMode(data, "");
     this.solo = new SmashHeroesMode(data, "normal");
@@ -157,7 +160,7 @@ export class SmashHeroes {
     this.level = data.smashLevel;
     this.kit =
       SmashHeroesClass[data.active_class as keyof typeof SmashHeroesClass] ?? "none";
-    this.levelFormatted = `§b${this.level ?? 0}§6✶`;
+    this.levelFormatted = formatLevel(this.level ?? 0);
   }
 }
 

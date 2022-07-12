@@ -51,13 +51,13 @@ module.exports = {
     //   exp_backoff_restart_delay,
     //   env,
     // },
-    // {
-    //   name: "leaderboard-limiting",
-    //   args: `scripts limit-redis start ${with_color}`,
-    //   script,
-    //   cron_restart,
-    //   exp_backoff_restart_delay,
-    //   env,
-    // },
+    {
+      name: "leaderboard-limiting",
+      args: `scripts limit-redis start ${with_color}`,
+      script,
+      cron_restart,
+      exp_backoff_restart_delay,
+      env,
+    },
   ],
 };

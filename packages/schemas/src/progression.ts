@@ -8,6 +8,7 @@
 
 import { Field } from "./metadata";
 import { ratio } from "@statsify/math";
+
 export class Progression {
   @Field({ leaderboard: { enabled: false } })
   public current: number;

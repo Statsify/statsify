@@ -35,7 +35,7 @@ export class QuakeMode {
   @Field({ leaderboard: { enabled: false } })
   public postUpdateKills: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false }, store: { default: 100 } })
   public winRate: number;
 
   @Field({ leaderboard: { enabled: false } })
@@ -56,7 +56,7 @@ export class QuakeMode {
 
   public static applyRatios(data: QuakeMode) {
     data.kdr = ratio(data.kills, data.deaths);
-    data.winRate = ratio(25, ratio(data.kills, data.wins), 100);
+    data.winRate = Math.min(ratio(25, ratio(data.kills, data.wins), 100), 100);
     data.quakeShotAccuracy = ratio(data.postUpdateKills, data.shotsFired, 100);
   }
 }
