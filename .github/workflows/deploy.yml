@@ -27,7 +27,7 @@ jobs:
         run: yarn scripts purge --dist && yarn build --force
 
       - name: Prepare Assets
-        run: cd assets/private && yarn install && cd ../../
+        run: cd assets/private && yarn install && yarn blur && cd ../../
 
       - name: Move Config
         run: cp /home/config.js ./config.js

@@ -33,7 +33,7 @@ async function bootstrap() {
         new TracingIntegrations.Mongo({ useMongoose: true }),
       ],
       normalizeDepth: 3,
-      tracesSampleRate: 1,
+      tracesSampleRate: config("sentry.tracesSampleRate"),
       environment: config("environment"),
     });
   }

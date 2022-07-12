@@ -68,6 +68,7 @@ module.exports = {
     apiDsn: "",
     verifyServerDsn: "",
     supportBotDsn: "",
+    tracesSampleRate: 1,
   },
   environment: "dev",
 };

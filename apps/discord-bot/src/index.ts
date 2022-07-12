@@ -25,7 +25,7 @@ async function bootstrap() {
       dsn: sentryDsn,
       integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
       normalizeDepth: 3,
-      tracesSampleRate: 1,
+      tracesSampleRate: config("sentry.tracesSampleRate"),
       environment: config("environment"),
     });
   }
