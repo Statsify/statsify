@@ -658,19 +658,19 @@
   "config": {
     "badge": {
       "profile": "This is how your badge is displayed",
-      "set": "$t(emojis:check) Successfully updated your badge.",
-      "view": "$t(emojis:eye) Your current badge:",
-      "reset": "$t(emojis:reset) Successfully reset your badge."
+      "set": "$t(emojis:config.success) Successfully updated your badge.",
+      "view": "$t(emojis:config.view) Your current badge:",
+      "reset": "$t(emojis:config.reset) Successfully reset your badge."
     },
     "footer": {
       "profile": "This is how your footer is displayed",
-      "set": "$t(emojis:check) Successfully updated your footer.",
-      "reset": "$t(emojis:reset) Successfully reset your footer."
+      "set": "$t(emojis:config.success) Successfully updated your footer.",
+      "reset": "$t(emojis:config.reset) Successfully reset your footer."
     },
     "theme": {
       "profile": "This is how your theme is displayed",
-      "set": "$t(emojis:check) Successfully updated your theme.",
-      "view": "$t(emojis:eye) Your current theme:"
+      "set": "$t(emojis:config.success) Successfully updated your theme.",
+      "view": "$t(emojis:config.view) Your current theme:"
     }
   },
   "socials": {

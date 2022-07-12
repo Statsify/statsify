@@ -15,6 +15,8 @@ import {
   Message,
 } from "../messages";
 import { STATUS_COLORS } from "@statsify/logger";
+import { getLogoPath } from "@statsify/assets";
+import { readFileSync } from "node:fs";
 import type { InteractionAttachment } from "../interaction";
 
 interface ErrorMessageOptions {
@@ -52,6 +54,10 @@ export class ErrorMessage extends Message {
     if (files.length > 0) {
       data.files = files;
       embed.image(`attachment://${data.files[0].name}`);
+    } else {
+      const errorIcon = readFileSync(getLogoPath("error", 52));
+      data.files = [{ name: "error.png", data: errorIcon }];
+      embed.thumbnail(`attachment://${data.files[0].name}`);
     }
 
     super(data);

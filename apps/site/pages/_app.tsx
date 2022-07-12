@@ -52,6 +52,8 @@ export default function App({ Component, pageProps }: AppProps) {
           href="/images/favicon-16x16.png"
         />
 
+        <meta property="og:image" content="/embed-banner.png" />
+
         <meta httpEquiv="content-language" content="en" />
         <meta charSet="utf8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
