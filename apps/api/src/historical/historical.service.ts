@@ -44,7 +44,6 @@ export class HistoricalService {
   }
 
   public async resetPlayers() {
-    this.logger.debug("Resetting players");
     const date = new Date();
     const minute = this.getMinute(date);
 
