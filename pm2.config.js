@@ -6,59 +6,60 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-const node_args = ["--unhandled-rejections=warn"];
 const cron_restart = "0 20 * * *";
 const exp_backoff_restart_delay = 500;
 const script = "yarn";
-const env = { FORCE_COLOR: 3 };
 const with_color = "--color=16m";
+
+let id = 1;
+
+const env = () => ({
+  FORCE_COLOR: 3,
+  NODE_OPTIONS: "--unhandled-rejections=warn",
+  pm_id: id++,
+});
 
 module.exports = {
   apps: [
     {
-      name: "Statsify API",
+      name: "api",
       args: `api start ${with_color}`,
       script,
-      node_args,
       cron_restart,
       exp_backoff_restart_delay,
-      env,
+      env: env(),
     },
     {
-      name: "Statsify Discord Bot",
+      name: "discord-bot",
       args: `discord-bot start ${with_color}`,
       script,
-      node_args,
       cron_restart,
       exp_backoff_restart_delay,
-      env,
+      env: env(),
     },
     {
-      name: "Statsify Support Bot",
+      name: "support-bot",
       args: `support-bot start ${with_color}`,
       script,
-      node_args,
       cron_restart,
       exp_backoff_restart_delay,
-      env,
+      env: env(),
     },
     {
-      name: "Statsify Verify Server",
+      name: "verify-server",
       args: `verify-bot start ${with_color}`,
       script,
-      node_args,
       cron_restart,
       exp_backoff_restart_delay,
-      env,
+      env: env(),
     },
     {
-      name: "Statsify Leaderboard Limiting",
+      name: "leaderboard-limiting",
       args: `scripts limit-redis start ${with_color}`,
       script,
-      node_args,
       cron_restart,
       exp_backoff_restart_delay,
-      env,
+      env: env(),
     },
   ],
 };

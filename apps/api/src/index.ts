@@ -22,6 +22,12 @@ import { mkdir } from "node:fs/promises";
 import { setGlobalOptions } from "@typegoose/typegoose";
 import { version } from "../../../package.json";
 
+const logger = new Logger("api");
+const handleError = logger.error.bind(logger);
+
+process.on("uncaughtException", handleError);
+process.on("unhandledRejection", handleError);
+
 async function bootstrap() {
   const sentryDsn = config("sentry.apiDsn", { required: false });
 

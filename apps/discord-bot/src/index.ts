@@ -12,10 +12,17 @@ import { CommandListener } from "#lib/command.listener";
 import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
 import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
+import { Logger } from "@statsify/logger";
 import { config } from "@statsify/util";
 import { join } from "node:path";
 import "@sentry/tracing";
 import "reflect-metadata";
+
+const logger = new Logger("discord-bot");
+const handleError = logger.error.bind(logger);
+
+process.on("uncaughtException", handleError);
+process.on("unhandledRejection", handleError);
 
 async function bootstrap() {
   const sentryDsn = config("sentry.discordBotDsn", { required: false });
