@@ -39,7 +39,7 @@ async function bootstrap() {
       dsn: sentryDsn,
       integrations: [new TracingIntegrations.Mongo({ useMongoose: true })],
       normalizeDepth: 3,
-      tracesSampleRate: 1,
+      tracesSampleRate: config("sentry.tracesSampleRate"),
       environment: config("environment"),
     });
   }

@@ -225,6 +225,11 @@ export interface Config {
      * The Sentry Dsn used by the Support Bot
      */
     supportBotDsn?: string;
+
+    /**
+     * The percentage of transactions to send to Sentry
+     */
+    tracesSampleRate?: number;
   };
 
   /**

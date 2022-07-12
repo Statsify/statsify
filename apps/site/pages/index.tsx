@@ -58,10 +58,10 @@ const Index = () => (
       align="left"
     >
       Beautiful visuals are provided by Statsify for each game's stats on Hypixel for any
-      player. Simply input <Code>/bedwars</Code> into Discord to see your BedWars
-      statistics or those of your friends. To see further games, type <Code>/</Code>{" "}
-      followed by the name of the game. To quickly search for yourself, you may link your
-      Minecraft account to your Discord with <Code>/verify</Code>
+      player. Simply input <Code>/bedwars</Code> into Discord to see your BedWars stats or
+      those of your friends. To see further games, type <Code>/</Code> followed by the
+      name of the game. To quickly search for yourself, you may link your Minecraft
+      account to your Discord with <Code>/verify</Code>
     </Feature>
     <Feature
       title="Leaderboards"

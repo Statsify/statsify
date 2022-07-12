@@ -4,6 +4,7 @@
     "signature": true
   },
   "baseBranch": "origin/main",
+  "globalDependencies": ["yarn.lock", "tsconfig.json", ".swcrc"],
   "pipeline": {
     "build": {
       "outputs": ["dist/**", ".next/**"],
