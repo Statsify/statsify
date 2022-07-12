@@ -23,12 +23,19 @@ import {
   TicketService,
 } from "#services";
 import { GatewayIntentBits } from "discord-api-types/v10";
+import { Logger } from "@statsify/logger";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { config } from "@statsify/util";
 import { join } from "node:path";
 import { setGlobalOptions } from "@typegoose/typegoose";
 import "@sentry/tracing";
 import "reflect-metadata";
+
+const logger = new Logger("support-bot");
+const handleError = logger.error.bind(logger);
+
+process.on("uncaughtException", handleError);
+process.on("unhandledRejection", handleError);
 
 async function bootstrap() {
   setGlobalOptions({ schemaOptions: { _id: false } });
