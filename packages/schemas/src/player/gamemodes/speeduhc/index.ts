@@ -13,6 +13,8 @@ import { SpeedUHCMastery } from "./mastery";
 import { SpeedUHCMode } from "./mode";
 import { getLevelIndex, titleScores } from "./util";
 
+const formatLevel = (level: number) => `§d[${level}❋]`;
+
 export const SPEED_UHC_MODES = new GameModes([
   { api: "overall" },
   { api: "solo", hypixel: "solo_normal" },
@@ -49,13 +51,13 @@ export class SpeedUHC {
   @Field({ store: { default: "none" } })
   public activeMastery: string;
 
-  @Field()
+  @Field({ store: { default: 1 } })
   public level: number;
 
-  @Field()
+  @Field({ store: { default: formatLevel(1) } })
   public levelFormatted: string;
 
-  @Field()
+  @Field({ store: { default: titleScores[0].title } })
   public title: string;
 
   @Field()
@@ -105,8 +107,9 @@ export class SpeedUHC {
     this.vampirism = new SpeedUHCMastery(data, "vampirism");
 
     const index = getLevelIndex(this.score);
+
     this.level = index + 1;
-    this.levelFormatted = `§d[${this.level}❋]`;
+    this.levelFormatted = formatLevel(this.level);
     this.title = titleScores[index].title;
   }
 }

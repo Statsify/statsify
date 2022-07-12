@@ -13,6 +13,8 @@ import { UHCMode } from "./mode";
 import { deepAdd } from "@statsify/math";
 import { getLevelIndex, titleScores } from "./util";
 
+const formatLevel = (level: number) => `§6[${level}✫]`;
+
 export const UHC_MODES = new GameModes([
   { api: "overall" },
   { api: "solo", hypixel: "SOLO" },
@@ -34,10 +36,10 @@ export class UHC {
   @Field()
   public coins: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public level: number;
 
-  @Field()
+  @Field({ store: { default: formatLevel(1) } })
   public levelFormatted: string;
 
   @Field()
@@ -46,7 +48,7 @@ export class UHC {
   @Field({ store: { default: "none" } })
   public kit: string;
 
-  @Field()
+  @Field({ store: { default: titleScores[0].title } })
   public title: string;
 
   public constructor(data: APIData) {
@@ -58,7 +60,7 @@ export class UHC {
     const index = getLevelIndex(this.score);
 
     this.level = index + 1;
-    this.levelFormatted = `§6[${this.level}✫]`;
+    this.levelFormatted = formatLevel(this.level);
     this.title = titleScores[index].title;
 
     this.solo = new UHCMode(data, "solo");

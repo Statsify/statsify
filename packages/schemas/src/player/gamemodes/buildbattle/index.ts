@@ -13,7 +13,6 @@ import {
   BuildBattleOverall,
   BuildBattlePro,
 } from "./mode";
-import { Color, ColorCode } from "../../../color";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
 import { getTitleIndex, titleScores } from "./util";
@@ -58,14 +57,11 @@ export class BuildBattle {
   @Field()
   public superVotes: number;
 
-  @Field()
+  @Field({ store: { default: titleScores[0].title } })
   public title: string;
 
-  @Field()
+  @Field({ store: { default: `${titleScores[0].color}${titleScores[0].title}` } })
   public titleFormatted: string;
-
-  @Field()
-  public titleColor: Color;
 
   @Field({ leaderboard: { enabled: false } })
   public latestWins: number;
@@ -88,7 +84,6 @@ export class BuildBattle {
     const { color, title } = titleScores[index];
 
     this.title = title;
-    this.titleColor = new Color(color as ColorCode);
     this.titleFormatted = `${color}${title}`;
   }
 }
