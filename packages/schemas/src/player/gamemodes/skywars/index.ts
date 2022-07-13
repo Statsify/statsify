@@ -7,19 +7,12 @@
  */
 
 import { APIData } from "@statsify/util";
-import { Color } from "../../../color";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
 import { Progression } from "../../../progression";
 import { SkyWarsLabs, SkyWarsMode } from "./mode";
 import { add } from "@statsify/math";
-import {
-  getFormattedLevel,
-  getLevel,
-  getLevelProgress,
-  getPresColor,
-  parseKit,
-} from "./util";
+import { getFormattedLevel, getLevel, getLevelProgress, parseKit } from "./util";
 
 export const SKYWARS_MODES = new GameModes([
   { api: "overall" },
@@ -93,9 +86,6 @@ export class SkyWars {
   public nextLevelFormatted: string;
 
   @Field()
-  public levelColor: Color;
-
-  @Field()
   public progression: Progression;
 
   @Field()
@@ -131,7 +121,6 @@ export class SkyWars {
     this.star = (data.levelFormatted || "⋆").replace(/\d|[a-f]|k|r|l|§/g, "");
     this.level = getLevel(this.exp);
     this.levelFormatted = getFormattedLevel(this.level, this.star);
-    this.levelColor = getPresColor(this.level);
 
     const { current, total } = getLevelProgress(this.exp);
     this.progression = new Progression(current, total);

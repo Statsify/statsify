@@ -7,7 +7,6 @@
  */
 
 import { APIData } from "@statsify/util";
-import { Color } from "../../../color";
 import { Field } from "../../../metadata";
 import { deepAdd, ratio } from "@statsify/math";
 import { getTitle } from "./util";
@@ -80,9 +79,6 @@ export class BridgeDuels {
   public title: string;
 
   @Field()
-  public titleColor: Color;
-
-  @Field()
   public titleFormatted: string;
 
   @Field()
@@ -133,10 +129,9 @@ export class BridgeDuels {
 
     BaseDuelsGameMode.applyRatios(this.overall);
 
-    const { formatted, color, raw } = getTitle(this.overall.wins, "Bridge");
+    const { formatted, raw } = getTitle(this.overall.wins, "Bridge");
 
     this.title = raw;
-    this.titleColor = color;
     this.titleFormatted = formatted;
   }
 }
@@ -146,9 +141,6 @@ export class MultiDuelsGameMode {
 
   @Field()
   public title: string;
-
-  @Field()
-  public titleColor: Color;
 
   @Field()
   public titleFormatted: string;
@@ -173,10 +165,9 @@ export class MultiDuelsGameMode {
 
     this.titlePrefix = title;
 
-    const { formatted, color, raw } = getTitle(this.overall.wins, this.titlePrefix);
+    const { formatted, raw } = getTitle(this.overall.wins, this.titlePrefix);
 
     this.title = raw;
-    this.titleColor = color;
     this.titleFormatted = formatted;
   }
 }
@@ -185,23 +176,19 @@ export class SingleDuelsGameMode extends BaseDuelsGameMode {
   @Field({ store: { store: false } })
   public titlePrefix: string;
 
-  @Field()
+  @Field({ store: { default: "None" } })
   public title: string;
 
-  @Field()
-  public titleColor: Color;
-
-  @Field()
+  @Field({ store: { default: "§7None§r" } })
   public titleFormatted: string;
 
   public constructor(data: APIData, title: string, mode: string) {
     super(data, mode);
     this.titlePrefix = title;
 
-    const { formatted, color, raw } = getTitle(this.wins, this.titlePrefix);
+    const { formatted, raw } = getTitle(this.wins, this.titlePrefix);
 
     this.title = raw;
-    this.titleColor = color;
     this.titleFormatted = formatted;
   }
 }
@@ -209,9 +196,6 @@ export class SingleDuelsGameMode extends BaseDuelsGameMode {
 export class UHCDuels {
   @Field()
   public title: string;
-
-  @Field()
-  public titleColor: Color;
 
   @Field()
   public titleFormatted: string;
@@ -244,10 +228,9 @@ export class UHCDuels {
 
     BaseDuelsGameMode.applyRatios(this.overall);
 
-    const { formatted, color, raw } = getTitle(this.overall.wins, "UHC");
+    const { formatted, raw } = getTitle(this.overall.wins, "UHC");
 
     this.title = raw;
-    this.titleColor = color;
     this.titleFormatted = formatted;
   }
 }

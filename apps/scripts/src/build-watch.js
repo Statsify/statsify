@@ -85,9 +85,7 @@ async function handleFile(path) {
   if (!configFile) return;
 
   try {
-    let { code, map } = await transformFile(path, {
-      swcrc: true,
-    });
+    let { code, map } = await transformFile(path, { configFile });
 
     const srcFileName = basename(path);
     const distFileName = srcFileName.replace(FILE_ENDING_REGEX, ".js");

@@ -11,24 +11,25 @@ import { Field } from "../../../metadata";
 import { add } from "@statsify/math";
 
 export class PaintballPerks {
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public adrenaline: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public endurance: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public fortune: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public godfather: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public headstart: number;
-  @Field({ leaderboard: { enabled: false } })
+
+  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public superluck: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public transfusion: number;
 
   public constructor(data: APIData) {

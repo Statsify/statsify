@@ -52,7 +52,7 @@ module.exports = {
     //   env,
     // },
     {
-      name: "lb-limiting",
+      name: "leaderboard-limiting",
       args: `scripts limit-redis start ${with_color}`,
       script,
       cron_restart,
