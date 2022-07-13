@@ -57,12 +57,12 @@ export const BedWarsProfile = ({
         title={`§l${FormattedGame.BEDWARS} §fStats §r(${mode.formatted})`}
         description={`${FormattedGame.BEDWARS} §7Level: ${
           bedwars.levelFormatted
-        }\n${formatProgression(
+        }\n${formatProgression({
           t,
-          bedwars.progression,
-          bedwars.levelFormatted,
-          bedwars.nextLevelFormatted
-        )}`}
+          progression: bedwars.progression,
+          currentLevel: bedwars.levelFormatted,
+          nextLevel: bedwars.nextLevelFormatted,
+        })}`}
         time={time}
       />
       <Table.table>

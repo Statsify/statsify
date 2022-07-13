@@ -45,6 +45,9 @@ export class MegaWalls {
   @Field()
   public coins: number;
 
+  @Field()
+  public mythicFavor: number;
+
   @Field({ store: { default: "none" } })
   public class: string;
 
@@ -125,6 +128,7 @@ export class MegaWalls {
 
   public constructor(data: APIData) {
     this.coins = data.coins;
+    this.mythicFavor = data.mythic_favor;
     this.class = data.chosen_class ?? "none";
 
     this.overall = new MegaWallsOverall(data);

@@ -41,12 +41,12 @@ export class HypixelResourcesController {
   }
 
   @Get(`/gamecounts`)
-  @ApiOperation({ summary: "Get Hypixel Gamecounts" })
+  @ApiOperation({ summary: "Get Hypixel Game Counts" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @ApiOkResponse({ type: GetGamecountsResponse })
   @Auth()
-  public async getGamecounts() {
-    const gamecounts = await this.hypixelService.getGamecounts();
+  public async getGameCounts() {
+    const gamecounts = await this.hypixelService.getGameCounts();
 
     return {
       success: !!gamecounts,

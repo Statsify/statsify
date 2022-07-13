@@ -66,7 +66,7 @@ $ yarn test:types
 ![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars.png)
 ![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars-leaderboard.png)
 ![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/guild-overall.png)
-![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/status.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/daily-tntgames.png)
 ![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/friends.png)
 
 </div>

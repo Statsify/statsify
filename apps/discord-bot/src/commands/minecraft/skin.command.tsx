@@ -38,7 +38,7 @@ export class SkinCommand {
     canvas.getContext("2d").drawImage(skin, 0, 0);
 
     const embed = new EmbedBuilder()
-      .field((t) => t("embeds.skin.description.username"), `\`${player.username}\``)
+      .field((t) => t("minecraft.username"), `\`${player.username}\``)
       .color(STATUS_COLORS.info)
       .image(`attachment://skin.png`);
 

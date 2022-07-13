@@ -10,7 +10,7 @@ import * as Sentry from "@sentry/node";
 import { APIData } from "@statsify/util";
 import {
   Friends,
-  Gamecounts,
+  GameCounts,
   Guild,
   Player,
   RecentGame,
@@ -40,9 +40,14 @@ export class HypixelService {
   public getPlayer(tag: string) {
     return lastValueFrom(
       this.request<APIData>("/player", { [tag.length > 16 ? "uuid" : "name"]: tag }).pipe(
-        map((data) => data.player),
-        map((player) => new Player(player)),
-        catchError(() => of(null))
+        map((data) => {
+          if (data.player) return new Player(data.player);
+          return null;
+        }),
+        catchError((err) => {
+          this.logger.error(err);
+          return of(null);
+        })
       )
     );
   }
@@ -50,9 +55,14 @@ export class HypixelService {
   public getGuild(tag: string, type: "name" | "id" | "player") {
     return lastValueFrom(
       this.request<APIData>("/guild", { [type]: tag }).pipe(
-        map((data) => data.guild),
-        map((guild) => new Guild(guild)),
-        catchError(() => of(null))
+        map((data) => {
+          if (data.guild) return new Guild(data.guild);
+          return null;
+        }),
+        catchError((err) => {
+          this.logger.error(err);
+          return of(null);
+        })
       )
     );
   }
@@ -60,9 +70,14 @@ export class HypixelService {
   public getRecentGames(uuid: string): Promise<RecentGame[]> {
     return lastValueFrom(
       this.request<APIData>(`/recentgames`, { uuid }).pipe(
-        map((data) => data.games),
-        map((games) => games.map((game: APIData) => new RecentGame(game))),
-        catchError(() => of([]))
+        map((data) => {
+          if (data.games) return data.games.map((game: APIData) => new RecentGame(game));
+          return [];
+        }),
+        catchError((err) => {
+          this.logger.error(err);
+          return of([]);
+        })
       )
     );
   }
@@ -70,9 +85,14 @@ export class HypixelService {
   public getStatus(uuid: string) {
     return lastValueFrom(
       this.request<APIData>(`/status`, { uuid }).pipe(
-        map((data) => data.session),
-        map((status) => new Status(status)),
-        catchError(() => of(null))
+        map((data) => {
+          if (data.session) return new Status(data.session);
+          return null;
+        }),
+        catchError((err) => {
+          this.logger.error(err);
+          return of(null);
+        })
       )
     );
   }
@@ -83,7 +103,10 @@ export class HypixelService {
         .get(`/friends/${uuid}`, { baseURL: "https://api.sk1er.club" })
         .pipe(
           map((data) => new Friends(data.data)),
-          catchError(() => of(null))
+          catchError((err) => {
+            this.logger.error(err);
+            return of(null);
+          })
         )
     );
   }
@@ -92,17 +115,25 @@ export class HypixelService {
     return lastValueFrom(
       this.request<APIData>("/watchdogstats").pipe(
         map((data) => new Watchdog(data)),
-        catchError(() => of(null))
+        catchError((err) => {
+          this.logger.error(err);
+          return of(null);
+        })
       )
     );
   }
 
-  public getGamecounts() {
+  public getGameCounts() {
     return lastValueFrom(
       this.request<APIData>("/gamecounts").pipe(
-        map((data) => data.games),
-        map((games) => new Gamecounts(games)),
-        catchError(() => of(null))
+        map((data) => {
+          if (data.games) return new GameCounts(data.games);
+          return null;
+        }),
+        catchError((err) => {
+          this.logger.error(err);
+          return of(null);
+        })
       )
     );
   }
@@ -112,7 +143,10 @@ export class HypixelService {
 
     const resource$ = this.request<APIData>(`/resources/${resource}`).pipe(
       map((data) => data),
-      catchError(() => of(null))
+      catchError((err) => {
+        this.logger.error(err);
+        return of(null);
+      })
     );
 
     const resourceData = await lastValueFrom(resource$);
@@ -137,8 +171,8 @@ export class HypixelService {
       }),
       map((res) => res.data),
       catchError((err) => {
-        this.logger.error(`Error requesting ${url}: ${err.message}`);
-        return throwError(() => new Error(err.message));
+        this.logger.error(err);
+        return throwError(() => err);
       })
     );
   }

@@ -22,7 +22,7 @@ export class AvailableCommand {
     const name = context.option<string>("player");
 
     const base = new EmbedBuilder().field(
-      (t) => `${t("embeds.available.description.username")} [${name.length}/16]`,
+      (t) => `${t("minecraft.username")} [${name.length}/16]`,
       `\`${name}\``
     );
 
@@ -31,12 +31,10 @@ export class AvailableCommand {
 
     if (isInvalidLength || invalidName) {
       base.color(0xb7_6b_a3).field(
-        (t) => t("embeds.available.description.status"),
+        (t) => t("stats.status"),
         (t) =>
           `\`${t(
-            `embeds.available.description.${
-              isInvalidLength ? "tooLong" : "invalidCharacters"
-            }`
+            `embeds.available.${isInvalidLength ? "tooLong" : "invalidCharacters"}`
           )}\``
       );
 
@@ -47,29 +45,23 @@ export class AvailableCommand {
 
     if (!nameInfo) {
       base
+        .field("NameMC", `[\`Here\`](https://namemc.com/profile/${name})`)
         .field(
-          (t) => t("embeds.available.description.namemc"),
-          `[\`Here\`](https://namemc.com/profile/${name})`
+          (t) => t("stats.status"),
+          (t) => `\`${t("minecraft.available")}*\``
         )
-        .field(
-          (t) => t("embeds.available.description.status"),
-          (t) => `\`${t("available")}*\``
-        )
-        .footer((t) => `*${t("embeds.available.footer.available")}`)
+        .footer((t) => `*${t("embeds.available.blocked")}`)
         .color(0x00_a2_8a);
     } else {
       base
+        .field((t) => t("minecraft.uuid"), `\`${nameInfo.uuid.replaceAll("-", "")}\``)
         .field(
-          (t) => t("embeds.available.description.uuid"),
-          `\`${nameInfo.uuid.replaceAll("-", "")}\``
-        )
-        .field(
-          (t) => t("embeds.available.description.namemc"),
+          "NameMC",
           `[\`Here\`](https://namemc.com/profile/${nameInfo.uuid.replaceAll("-", "")})`
         )
         .field(
-          (t) => t("embeds.available.description.status"),
-          (t) => `\`${t("unavailable")}\``
+          (t) => t("stats.status"),
+          (t) => `\`${t("minecraft.unavailable")}\``
         )
         .color(0xf7_c4_6c)
         .thumbnail(this.mojangApiService.faceIconUrl(nameInfo.uuid));

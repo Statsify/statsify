@@ -107,11 +107,6 @@ export interface Config {
     hypixelApiStatusChannel: string;
 
     /**
-     * The channel id for premium users to be notified about features they unlocked from getting premium
-     */
-    premiumInfoChannel: string;
-
-    /**
      * The channel id for premium logs
      */
     premiumLogsChannel: string;

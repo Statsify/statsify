@@ -57,9 +57,6 @@ export class Player {
   @Field()
   public status: PlayerStatus;
 
-  @Field()
-  public goldAchievements: boolean;
-
   @Field({
     leaderboard: { enabled: false },
     docs: { description: "The time the player's cache expires" },
@@ -68,7 +65,7 @@ export class Player {
 
   @Field({
     leaderboard: { enabled: false },
-    store: { required: false },
+    store: { required: false, serialize: false, deserialize: false },
     docs: { description: "The time the player's historical stats reset" },
   })
   public resetMinute?: number;
@@ -100,13 +97,8 @@ export class Player {
     );
 
     this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});
-
     this.stats = new PlayerStats(data);
-
     this.status = new PlayerStatus(data);
-
-    this.goldAchievements =
-      data?.vanityMeta?.packages?.includes("goldachievementmenu") ?? false;
 
     //These will all be filled in by a service
     this.expiresAt = 0;

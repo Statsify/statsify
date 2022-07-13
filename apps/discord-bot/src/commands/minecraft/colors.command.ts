@@ -17,9 +17,9 @@ export class ColorsCommand {
     const embed = new EmbedBuilder()
       .title((t) => t("embeds.colors.title"))
       .description((t) => {
-        let desc = `**${t("embeds.colors.description.color")} • ${t(
-          "embeds.colors.description.mainHex"
-        )} • ${t("embeds.colors.description.shadowHex")}**\n`;
+        let desc = `**${t("embeds.colors.color")} • ${t("embeds.colors.mainHex")} • ${t(
+          "embeds.colors.shadowHex"
+        )}**\n`;
 
         minecraftColors.forEach((color) => {
           desc += `${t(`emojis:colors.${[color.code.slice(1)]}`)} \`${color.code}\` • \`${
@@ -28,24 +28,14 @@ export class ColorsCommand {
         });
 
         desc += "\n";
-        desc += `${t("emojis:colors.k")} \`§k\` • ${t(
-          "embeds.colors.description.obfuscated"
-        )}\n`;
-        desc += `${t("emojis:colors.l")} \`§l\` • **${t(
-          "embeds.colors.description.bold"
-        )}**\n`;
+        desc += `${t("emojis:colors.k")} \`§k\` • ${t("embeds.colors.obfuscated")}\n`;
+        desc += `${t("emojis:colors.l")} \`§l\` • **${t("embeds.colors.bold")}**\n`;
         desc += `${t("emojis:colors.m")} \`§m\` • ~~${t(
-          "embeds.colors.description.strikethrough"
+          "embeds.colors.strikethrough"
         )}~~\n`;
-        desc += `${t("emojis:colors.n")} \`§n\` • _${t(
-          "embeds.colors.description.underline"
-        )}_\n`;
-        desc += `${t("emojis:colors.o")} \`§o\` • *${t(
-          "embeds.colors.description.italic"
-        )}*\n`;
-        desc += `${t("emojis:colors.r")} \`§r\` • ${t(
-          "embeds.colors.description.reset"
-        )}\n`;
+        desc += `${t("emojis:colors.n")} \`§n\` • _${t("embeds.colors.underline")}_\n`;
+        desc += `${t("emojis:colors.o")} \`§o\` • *${t("embeds.colors.italic")}*\n`;
+        desc += `${t("emojis:colors.r")} \`§r\` • ${t("embeds.colors.reset")}\n`;
 
         return desc;
       })

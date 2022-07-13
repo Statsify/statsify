@@ -28,7 +28,6 @@ export class InviteCommand {
           t("socials.premium"),
           t("socials.website"),
           t("socials.github"),
-          t("socials.forums"),
         ]
           .map((link) => `\`•\` ${link}`)
           .join("\n");

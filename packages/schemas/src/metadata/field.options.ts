@@ -11,7 +11,11 @@ import { Constructor } from "@statsify/util";
 import { LeaderboardEnabledMetadata, StoreMetadata } from "./metadata.interface";
 
 export type TypeOptions = () => Constructor | [Constructor];
-export type LeaderboardOptions = BasePropOptions | Partial<LeaderboardEnabledMetadata>;
+export type LeaderboardOptions = Omit<
+  BasePropOptions | Partial<LeaderboardEnabledMetadata>,
+  "default"
+>;
+
 export type StoreOptions = Partial<StoreMetadata>;
 
 export type DocOptions = Partial<{

@@ -17,6 +17,7 @@ import {
   GuildNotFoundException,
   GuildQuery,
   HistoricalType,
+  HypixelCache,
   LeaderboardQuery,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
@@ -40,18 +41,20 @@ export class ApiService extends StatsifyApiService {
    * @param user User to use if no tag is provided.
    * @returns a Player
    */
-  public override async getPlayer(tag: string, user: User | null = null) {
+  public async getPlayer(tag: string, user: User | null = null) {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super.getPlayer(input).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
-      const error = err.response.data as PlayerNotFoundException;
+    return super
+      .getCachedPlayer(input, User.isGold(user) ? HypixelCache.LIVE : HypixelCache.CACHE)
+      .catch((err) => {
+        if (!err.response || !err.response.data) throw this.unknownError();
+        const error = err.response.data as PlayerNotFoundException;
 
-      if (error.message === "player") throw this.missingPlayer(type, tag);
+        if (error.message === "player") throw this.missingPlayer(type, tag);
 
-      throw this.unknownError();
-    });
+        throw this.unknownError();
+      });
   }
 
   public override async getPlayerHistorical(
@@ -254,7 +257,7 @@ export class ApiService extends StatsifyApiService {
       emoji = t(`emojis:ranks.${rankColor}${unformattedRank}_${plusColor.id}`);
     } else {
       emoji = t(`emojis:ranks.${unformattedRank}`);
-      emoji += "";
+      emoji += " ";
     }
 
     return `${space ? " " : ""}${emoji}${removeFormatting(name)}`;

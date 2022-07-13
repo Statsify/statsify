@@ -132,11 +132,19 @@ export class GuildService {
         guild.expHistoryDays[index] = day;
         guild.scaledExpHistory[index] = scaled;
 
-        if (index < 7) guild.weekly += exp;
-        guild.monthly += exp;
-      });
+        if (index === 0) {
+          guild.daily = exp;
+          guild.scaledDaily = scaled;
+        }
 
-    guild.daily = guild.expHistory[0];
+        if (index < 7) {
+          guild.weekly += exp;
+          guild.scaledWeekly += scaled;
+        }
+
+        guild.monthly += exp;
+        guild.scaledMonthly += scaled;
+      });
 
     //Cache guilds responses for 10 minutes
     guild.expiresAt = Date.now() + 600_000;

@@ -41,6 +41,10 @@ export const Footer = ({ logo, user, border }: FooterProps) => {
         text =
           "§#29bac5s§#1ea9b2t§#13989fa§#08878dt§#02777bs§#04666di§#065660f§#084552y§#083b46.§#07323cn§#062a32e§#052228t";
         break;
+      case UserLogo.VENOM:
+        text =
+          "§#bb00dds§#b00fdet§#a51edfa§#9b2ce0t§#903be1s§#854ae2i§#7a59e2f§#6f68e3y§#6477e4.§#5a85e5n§#4f94e6e§#44a3e7t";
+        break;
       case UserLogo.EMERALD:
         text =
           "§#d4ffe7s§#a8fbc5t§#7df7a3a§#51f382t§#31ee68s§#28e760i§#1fdf59f§#16d851y§#10cb46.§#0abb3bn§#05ab2fe§#009b24t";

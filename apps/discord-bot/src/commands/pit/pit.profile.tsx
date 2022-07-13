@@ -49,38 +49,41 @@ export const PitProfile = ({
         title="§l§eThe §aPit §fStats"
         description={`${FormattedGame.PIT} §7Level: ${
           player.doc.formattedLevel
-        }\n${formatProgression(
+        }\n${formatProgression({
           t,
-          new Progression(
+          progression: new Progression(
             player.xpProgress.displayCurrent,
             player.xpProgress.displayGoal
           ),
-          player.doc.formattedLevel,
-          player.doc.formattedLevel,
-          true,
-          false
-        )}`}
+          currentLevel: player.doc.formattedLevel,
+          nextLevel: player.doc.formattedLevel,
+          showLevel: false,
+        })}`}
         sidebar={sidebar}
         badge={badge}
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(player.kills)} color="§a" />
-          <Table.td title={t("stats.deaths")} value={t(player.deaths)} color="§c" />
-          <Table.td title={t("stats.kdr")} value={t(player.kdr)} color="§6" />
+          <Table.td title={t("stats.kills")} value={t(player.kills ?? 0)} color="§a" />
+          <Table.td title={t("stats.deaths")} value={t(player.deaths ?? 0)} color="§c" />
+          <Table.td title={t("stats.kdr")} value={t(player.kdr ?? 0)} color="§6" />
         </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.highestStreak")}
-            value={t(player.doc.highestStreak)}
-            color="§c"
+            value={t(player.doc.highestStreak ?? 0)}
+            color="§d"
           />
           <Table.td
             title={t("stats.playtime")}
-            value={formatTime(player.doc.playtime * 60_000)}
+            value={formatTime((player.doc.playtime ?? 0) * 60_000)}
             color="§b"
           />
-          <Table.td title={t("stats.assists")} value={t(player.doc.assists)} color="§e" />
+          <Table.td
+            title={t("stats.assists")}
+            value={t(player.doc.assists ?? 0)}
+            color="§e"
+          />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />

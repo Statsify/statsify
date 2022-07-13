@@ -30,3 +30,4 @@ export * from "./walls";
 export * from "./warlords";
 export * from "./woolwars";
 export * from "./pit";
+export * from "./events";

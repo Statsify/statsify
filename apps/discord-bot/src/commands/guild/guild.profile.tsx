@@ -11,12 +11,19 @@ import {
   Footer,
   If,
   Multiline,
-  ProgressFunction,
   Table,
   formatProgression,
+  lineXpBar,
 } from "#components";
 import { DateTime } from "luxon";
-import { ExpByGame, FormattedGame, Guild, GuildMember, User } from "@statsify/schemas";
+import {
+  ExpByGame,
+  FormattedGame,
+  Guild,
+  GuildMember,
+  Progression,
+  User,
+} from "@statsify/schemas";
 import { GexpTable } from "./gexp.table";
 import { LocalizeFunction } from "@statsify/discord";
 import { StyleLocation } from "@statsify/rendering";
@@ -228,26 +235,16 @@ interface GuildGexpPageProps {
 
 const GuildGexpPage = ({ guild, t }: GuildGexpPageProps) => {
   const guildColor = guild.tagColor.code;
-  const progression: ProgressFunction = (percentage) => {
-    const max = 40;
-    const count = Math.ceil(max * percentage);
-
-    return `§8[${guild.tagColor.code}${"|".repeat(count)}§7${"|".repeat(
-      max - count
-    )}§8]§r`;
-  };
 
   const leveling = `§7${t("stats.guild.level")}: ${guildColor}${t(
     guild.level
-  )}\n${formatProgression(
+  )}\n${formatProgression({
     t,
-    guild.levelProgression,
-    `${guildColor}${t(Math.floor(guild.level))}`,
-    `${guildColor}${t(Math.floor(guild.level) + 1)}`,
-    true,
-    true,
-    progression
-  )}`;
+    progression: guild.levelProgression,
+    currentLevel: `${guildColor}${t(Math.floor(guild.level))}`,
+    nextLevel: `${guildColor}${t(Math.floor(guild.level) + 1)}`,
+    renderXp: lineXpBar(guildColor),
+  })}`;
 
   return (
     <>
@@ -259,16 +256,47 @@ const GuildGexpPage = ({ guild, t }: GuildGexpPageProps) => {
       <GuildBlock title="Guild Experience" width="100%">
         <Table.table>
           <Table.tr>
-            <Table.td title={t("stats.guild.daily")} value={t(guild.daily)} color="§2" />
+            <Table.td
+              title={t("stats.guild.daily")}
+              value={t(guild.daily)}
+              color="§2"
+              size="small"
+            />
             <Table.td
               title={t("stats.guild.weekly")}
               value={t(guild.weekly)}
               color="§2"
+              size="small"
             />
             <Table.td
               title={t("stats.guild.monthly")}
               value={t(guild.monthly)}
               color="§2"
+              size="small"
+            />
+          </Table.tr>
+        </Table.table>
+      </GuildBlock>
+      <GuildBlock title="Scaled Guild Experience" width="100%">
+        <Table.table>
+          <Table.tr>
+            <Table.td
+              title={t("stats.guild.daily")}
+              value={t(guild.scaledDaily)}
+              color="§2"
+              size="small"
+            />
+            <Table.td
+              title={t("stats.guild.weekly")}
+              value={t(guild.scaledWeekly)}
+              color="§2"
+              size="small"
+            />
+            <Table.td
+              title={t("stats.guild.monthly")}
+              value={t(guild.scaledMonthly)}
+              color="§2"
+              size="small"
             />
           </Table.tr>
         </Table.table>
@@ -347,7 +375,11 @@ interface GuildMiscPageProps {
   t: LocalizeFunction;
 }
 
+const formatGuildAchievement = (achievement: Progression, t: LocalizeFunction) =>
+  `${t(achievement.current)}§7/${t(achievement.max!)}`;
+
 const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
+  const { achievements } = guild;
   const ranksGroups = arrayGroup(guild.ranks, 3);
 
   return (
@@ -356,18 +388,25 @@ const GuildMiscPage = ({ guild, t }: GuildMiscPageProps) => {
         <Table.table>
           <Table.tr>
             <Table.td
-              title="Winners"
-              value={t(guild.achievements.dailyGuildWins)}
+              title={`Prestige ${achievements.prestigeTier}`}
+              value={formatGuildAchievement(achievements.prestigeProgression, t)}
               color="§e"
             />
             <Table.td
-              title="Experience Kings"
-              value={t(guild.achievements.dailyGexp)}
+              title={`Experience Kings ${achievements.experienceKingsTier}`}
+              value={formatGuildAchievement(achievements.experienceKingsProgression, t)}
+              color="§e"
+            />
+          </Table.tr>
+          <Table.tr>
+            <Table.td
+              title={`Winners ${achievements.winnersTier}`}
+              value={formatGuildAchievement(achievements.winnersProgression, t)}
               color="§e"
             />
             <Table.td
-              title="Online Players"
-              value={t(guild.achievements.maxOnlinePlayerCount)}
+              title={`Family ${achievements.familyTier}`}
+              value={formatGuildAchievement(achievements.familyProgression, t)}
               color="§e"
             />
           </Table.tr>

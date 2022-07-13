@@ -13,6 +13,7 @@ import { BlitzSG } from "./gamemodes/blitzsg";
 import { BuildBattle } from "./gamemodes/buildbattle";
 import { CopsAndCrims } from "./gamemodes/copsandcrims";
 import { Duels } from "./gamemodes/duels";
+import { Events } from "./gamemodes";
 import { Field } from "../metadata";
 import { FormattedGame } from "../game";
 import { General } from "./gamemodes/general";
@@ -64,6 +65,9 @@ export class PlayerStats {
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.DUELS} -` } })
   public duels: Duels;
+
+  @Field({ leaderboard: { fieldName: `${FormattedGame.EVENTS} -` } })
+  public events: Events;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.GENERAL} -` } })
   public general: General;
@@ -146,6 +150,7 @@ export class PlayerStats {
     this.buildbattle = new BuildBattle(data?.stats?.BuildBattle ?? {});
     this.copsandcrims = new CopsAndCrims(data?.stats?.MCGO ?? {});
     this.duels = new Duels(data?.stats?.Duels ?? {});
+    this.events = new Events(data.seasonal);
     this.general = new General(data);
     this.megawalls = new MegaWalls(data?.stats?.Walls3 ?? {});
     this.murdermystery = new MurderMystery(

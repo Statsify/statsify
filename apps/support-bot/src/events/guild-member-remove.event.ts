@@ -38,7 +38,7 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
       memberId,
       "user",
       config("supportBot.applicationId"),
-      "Member left"
+      "Member Left"
     );
   }
 }

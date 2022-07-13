@@ -94,6 +94,15 @@ export class Guild {
   @Field({ leaderboard: { limit, name: "Monthly GEXP", fieldName: "GEXP" } })
   public monthly: number;
 
+  @Field({ leaderboard: { limit, name: "Scaled Daily GEXP", fieldName: "GEXP" } })
+  public scaledDaily: number;
+
+  @Field({ leaderboard: { limit, name: "Scaled Weekly GEXP", fieldName: "GEXP" } })
+  public scaledWeekly: number;
+
+  @Field({ leaderboard: { limit, name: "Scaled Monthly GEXP", fieldName: "GEXP" } })
+  public scaledMonthly: number;
+
   @Field({ leaderboard: { limit } })
   public questParticipation: number;
 
@@ -119,14 +128,6 @@ export class Guild {
       this.tagFormatted ? ` ${this.tagFormatted}` : ""
     }`;
 
-    this.achievements = new GuildAchievements(data.achievements ?? {});
-
-    this.preferredGames = (data.preferredGames ?? [])
-      .map((g: GameCode) => GameIdMapping[g])
-      .filter(Boolean);
-
-    this.publiclyListed = data.publiclyListed;
-
     this.exp = data.exp;
 
     const { level, current, max } = getLevel(this.exp);
@@ -135,9 +136,21 @@ export class Guild {
     this.levelProgression = new Progression(current, max);
     this.expByGame = new ExpByGame(data.guildExpByGameType ?? {});
 
+    this.achievements = new GuildAchievements(data.achievements ?? {}, this.level);
+
+    this.preferredGames = (data.preferredGames ?? [])
+      .map((g: GameCode) => GameIdMapping[g])
+      .filter(Boolean);
+
+    this.publiclyListed = data.publiclyListed;
+
     this.daily = 0;
     this.weekly = 0;
     this.monthly = 0;
+
+    this.scaledDaily = 0;
+    this.scaledWeekly = 0;
+    this.scaledMonthly = 0;
 
     this.questParticipation = 0;
 

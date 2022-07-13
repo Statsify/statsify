@@ -47,10 +47,12 @@ export class LeaderboardScanner {
 
     if (!field) throw new Error(`${key} is not a field for ${constructor.name}`);
 
-    const [, { leaderboard }] = field;
+    const [, { store, leaderboard }] = field;
 
     if (!leaderboard.enabled && leaderboardMustBeEnabled)
       throw new Error(`${key} is not a leaderboard field for ${constructor.name}`);
+
+    leaderboard.default = store.default;
 
     return leaderboard;
   }

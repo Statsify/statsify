@@ -23,7 +23,7 @@ export class GamePlayers {
   }
 }
 
-export class Gamecounts {
+export class GameCounts {
   @Field()
   public ARCADE: GamePlayers;
 

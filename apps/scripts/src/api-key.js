@@ -6,15 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-// ! I (ugcodrr) am not liable for any damages or loss of data caused by this script.
-
 import Redis from "ioredis";
 import inquirer from "inquirer";
 import { createHash, randomUUID } from "node:crypto";
 import { inquirerConfirmation, inquirerLogger } from "./utils.js";
+
 const redis = new Redis(process.env.REDIS_URL);
 
-// TODO unify functions (one createKey)
+//TODO unify functions (one createKey)
 const createKey = async ({ name, key, role, limit }) => {
   const activeKeys = await getKeyNames();
 
@@ -27,12 +26,13 @@ const createKey = async ({ name, key, role, limit }) => {
   }
 
   const hash = createHash("sha256").update(key).digest("hex");
+
   await redis.hmset(
     `key:${hash}`,
     "name",
     name,
     "role",
-    roles.indexOf(role),
+    roles[role],
     "limit",
     limit,
     "requests",
@@ -76,11 +76,13 @@ const defaultKey = () =>
     .trim()
     .toLowerCase() + Math.floor(Math.random() * 1000);
 
-const roles = ["user", "admin"];
+const roles = {
+  member: 0,
+  admin: 999,
+};
 
 const keyManager = async () => {
   if (process.argv.includes("--nonInteractiveKeyCreation")) {
-    // TODO potentially just take input from .env later lol
     const keyStatus = await createKey({
       name: "testKey",
       key: "testKey",
@@ -101,6 +103,7 @@ const keyManager = async () => {
   const availableMethods = ["create"];
 
   if ((await getKeyNames()).length) availableMethods.push("delete", "edit", "list");
+
   const { method } = await inquirer.prompt([
     {
       type: "list",
@@ -112,23 +115,17 @@ const keyManager = async () => {
   ]);
 
   switch (method) {
-    case "create": {
+    case "create":
       await createNewKey();
       break;
-    }
-    case "delete": {
+    case "delete":
       await deleteKey();
       break;
-    }
-    case "list": {
+    case "list":
       await listKeys();
       break;
-    }
     case "edit":
-      {
-        await editKey();
-        // No default
-      }
+      await editKey();
       break;
   }
 
@@ -154,7 +151,7 @@ const createNewKey = async () => {
       type: "list",
       name: "role",
       message: "API Key Role?",
-      choices: roles,
+      choices: Object.keys(roles),
       default: "admin",
     },
     {
@@ -205,11 +202,15 @@ const deleteKey = async () => {
 const listKeys = async () => {
   const activeKeys = await getKeys();
 
+  const idToRole = Object.fromEntries(
+    Object.entries(roles).map(([key, value]) => [value, key])
+  );
+
   for (const key in activeKeys) {
     let currentKey = activeKeys[key];
     inquirerLogger(
       `${currentKey.name}`,
-      `with ${roles[currentKey.role]} role and weighted limit of ${
+      `with ${idToRole[currentKey.role]} role and weighted limit of ${
         currentKey.limit
       } and ${currentKey.requests} lifetime requests.`
     );

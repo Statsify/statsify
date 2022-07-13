@@ -284,7 +284,7 @@ export class HistoricalBase {
         let content = player.isNew
           ? `${t("historical.new", {
               displayName: this.apiService.emojiDisplayName(t, player.displayName),
-            })}\n\n`
+            })}\n`
           : undefined;
 
         if (isNotLastHistorical)

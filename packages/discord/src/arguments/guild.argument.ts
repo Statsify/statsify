@@ -35,6 +35,8 @@ class GuildTypeArgument extends ChoiceArgument {
         ["id", GuildQuery.ID],
       ],
     });
+
+    this.description = (t) => t("arguments.guild-type");
   }
 }
 

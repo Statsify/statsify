@@ -35,5 +35,5 @@ export const tips: Tip[] = [
   },
   { message: { content: (t) => t("tips.github") } },
   { message: { content: (t) => t("tips.premium") } },
-  { message: { content: (t) => t("tips.update") } },
+  { message: { content: (t) => t("tips.invite") } },
 ];
