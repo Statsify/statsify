@@ -544,9 +544,13 @@
       "title": "Invalid Guild",
       "description": "We couldn't find the `guild` you were looking for"
     },
+    "leaderboardInvalidPosition": {
+      "title": "Invalid Position",
+      "description": "The leaderboard position you entered is invalid. Enter a number greater than 1."
+    },
     "leaderboardEmpty": {
-      "title": "Leaderboard Empty",
-      "description": "There are no more players for this leaderboard"
+      "title": "No Leaderboard Data At This Point",
+      "description": "There are is no more leaderboard data at this position"
     },
     "leaderboardNotFound": {
       "title": "Leaderboard Not Found",

@@ -186,7 +186,19 @@ export class BaseLeaderboardCommand {
     listener.addHook(positionModal.getCustomId(), async (interaction) => {
       const data = interaction.getData();
       const positionInput = data.components[0].components[0].value;
-      changePage(() => ({ input: positionInput, type: LeaderboardQuery.POSITION }))(
+
+      const position = Number.parseInt(positionInput, 10);
+
+      if (Number.isNaN(position) || position < 1) {
+        const error = new ErrorMessage("errors.leaderboardInvalidPosition");
+
+        return interaction.sendFollowup({
+          ...error,
+          ephemeral: true,
+        });
+      }
+
+      changePage(() => ({ input: position, type: LeaderboardQuery.POSITION }))(
         interaction
       );
     });
