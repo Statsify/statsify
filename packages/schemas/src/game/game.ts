@@ -61,6 +61,7 @@ export enum FormattedGame {
   BUILD_BATTLE = "§dBuild Battle§f",
   COPS_AND_CRIMS = "§6Cops §fand §aCrims§f",
   DUELS = "§bDuels§f",
+  EVENTS = "§eEvents§f",
   GENERAL = "§fGeneral§f",
   HOUSING = "§9Housing§f",
   MEGAWALLS = "§7MegaWalls§f",

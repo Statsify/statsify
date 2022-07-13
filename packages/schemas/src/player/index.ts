@@ -10,7 +10,6 @@ import { APIData } from "@statsify/util";
 import { Color } from "../color";
 import { Field } from "../metadata";
 import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
-import { PlayerEvents } from "./events";
 import { PlayerSocials } from "./socials";
 import { PlayerStats } from "./stats";
 import { PlayerStatus } from "./status";
@@ -50,9 +49,6 @@ export class Player {
   public displayName: string;
 
   @Field()
-  public events: PlayerEvents;
-
-  @Field()
   public socials: PlayerSocials;
 
   @Field({ leaderboard: { fieldName: "" } })
@@ -69,7 +65,7 @@ export class Player {
 
   @Field({
     leaderboard: { enabled: false },
-    store: { required: false },
+    store: { required: false, serialize: false, deserialize: false },
     docs: { description: "The time the player's historical stats reset" },
   })
   public resetMinute?: number;
@@ -100,7 +96,6 @@ export class Player {
       this.plusColor.code
     );
 
-    this.events = new PlayerEvents(data.seasonal);
     this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});
     this.stats = new PlayerStats(data);
     this.status = new PlayerStatus(data);

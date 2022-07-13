@@ -60,12 +60,12 @@ export const WoolWarsProfile = ({
         title={`§l${FormattedGame.WOOLWARS} §fStats §r(${mode.formatted})`}
         description={`${FormattedGame.WOOLWARS} §7Level: ${
           woolwars.levelFormatted
-        }\n${formatProgression(
+        }\n${formatProgression({
           t,
-          woolwars.progression,
-          woolwars.levelFormatted,
-          woolwars.nextLevelFormatted
-        )}`}
+          progression: woolwars.progression,
+          currentLevel: woolwars.levelFormatted,
+          nextLevel: woolwars.nextLevelFormatted,
+        })}`}
         time={time}
       />
       <Table.table>

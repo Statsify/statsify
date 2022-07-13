@@ -90,7 +90,7 @@ export const GuildListProfile = ({
           <box width="100%">
             <text>
               {guild.tagColor.code}
-              {guildRankName} - {t(members.length)}
+              {guildRankName} §7- §8(§f{t(members.length)}§8)
             </text>
           </box>
           <>

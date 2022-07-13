@@ -143,12 +143,12 @@ export const SkyWarsProfile = ({
         title={`§l${FormattedGame.SKYWARS} §r(${mode.formatted})`}
         description={`${FormattedGame.SKYWARS} §7Level: ${
           skywars.levelFormatted
-        }\n${formatProgression(
+        }\n${formatProgression({
           t,
-          skywars.progression,
-          skywars.levelFormatted,
-          skywars.nextLevelFormatted
-        )}`}
+          progression: skywars.progression,
+          currentLevel: skywars.levelFormatted,
+          nextLevel: skywars.nextLevelFormatted,
+        })}`}
         time={time}
       />
       <Table.table>

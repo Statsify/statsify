@@ -49,17 +49,16 @@ export const PitProfile = ({
         title="§l§eThe §aPit §fStats"
         description={`${FormattedGame.PIT} §7Level: ${
           player.doc.formattedLevel
-        }\n${formatProgression(
+        }\n${formatProgression({
           t,
-          new Progression(
+          progression: new Progression(
             player.xpProgress.displayCurrent,
             player.xpProgress.displayGoal
           ),
-          player.doc.formattedLevel,
-          player.doc.formattedLevel,
-          true,
-          false
-        )}`}
+          currentLevel: player.doc.formattedLevel,
+          nextLevel: player.doc.formattedLevel,
+          showLevel: false,
+        })}`}
         sidebar={sidebar}
         badge={badge}
       />
@@ -73,7 +72,7 @@ export const PitProfile = ({
           <Table.td
             title={t("stats.highestStreak")}
             value={t(player.doc.highestStreak)}
-            color="§c"
+            color="§d"
           />
           <Table.td
             title={t("stats.playtime")}

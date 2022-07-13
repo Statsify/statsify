@@ -16,6 +16,11 @@ export interface GexpTableProps {
   t: LocalizeFunction;
 }
 
+const formatHypixelGuildDate = (date: string) => {
+  const [year, month, day] = date.split("-");
+  return `${month}/${day}/${year.replace("20", "")}`;
+};
+
 export const GexpTable = ({ dates, expHistory, scaledExpHistory, t }: GexpTableProps) => {
   const expBorder = scaledExpHistory
     ? { topLeft: 0, bottomLeft: 0, bottomRight: 0, topRight: 0 }
@@ -49,7 +54,7 @@ export const GexpTable = ({ dates, expHistory, scaledExpHistory, t }: GexpTableP
               width="100%"
               border={{ topLeft: 4, bottomLeft: 4, bottomRight: 0, topRight: 0 }}
             >
-              <text>§f{dates[i].replaceAll("-", "§7-§f")}</text>
+              <text>§f{formatHypixelGuildDate(dates[i])}</text>
             </box>
             <box width="100%" border={expBorder}>
               <text>§2{t(exp)}</text>

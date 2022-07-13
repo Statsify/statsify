@@ -6,8 +6,48 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  Header,
+  Multiline,
+  SidebarItem,
+  Table,
+  formatProgression,
+  lineXpBar,
+} from "#components";
 import type { BaseProfileProps } from "../base.hypixel-command";
+import type { Event } from "@statsify/schemas";
+import type { LocalizeFunction } from "@statsify/discord";
+
+interface EventTableProps {
+  title: string;
+  event: Event;
+  t: LocalizeFunction;
+  color: string;
+}
+
+const EventTable = ({ title, event, t, color }: EventTableProps) => {
+  const levelling = [
+    `${color}${t("stats.level")}`,
+    formatProgression({
+      t,
+      progression: event.levelProgression,
+      currentLevel: `${color}${t(Math.floor(event.level))}`,
+      nextLevel: `${color}${t(Math.floor(event.level) + 1)}`,
+      renderXp: lineXpBar(color),
+    }),
+  ].join("\n");
+
+  return (
+    <Table.ts title={title}>
+      <box width="100%" direction="column">
+        <Multiline margin={2}>{levelling}</Multiline>
+      </box>
+      <Table.td title={t("stats.exp")} value={t(event.exp)} color={color} />
+    </Table.ts>
+  );
+};
 
 export const EventsProfile = ({
   player,
@@ -18,7 +58,7 @@ export const EventsProfile = ({
   badge,
   t,
 }: BaseProfileProps) => {
-  const events = player.events;
+  const { events } = player.stats;
 
   const sidebar: SidebarItem[] = [[t("stats.silver"), t(events.silver), "§7"]];
 
@@ -30,19 +70,17 @@ export const EventsProfile = ({
         badge={badge}
         sidebar={sidebar}
         time="LIVE"
-        title="§l§eEvent §fStats"
+        title="§l§eEvent §fStats §r(2022)"
       />
       <Table.table>
-        <Table.ts title="§#ff5555S§#ff7b7bu§#ffa1a1m§#ffc6c6m§#ffecece§#ecffffr §#c6ffff2§#a1ffff0§#7bffff2§#55ffff2">
-          <Table.tr>
-            <Table.td
-              title={t("stats.level")}
-              value={t(events.summer.level)}
-              color="§b"
-            />
-            <Table.td title={t("stats.exp")} value={t(events.summer.exp)} color="§b" />
-          </Table.tr>
-        </Table.ts>
+        <Table.tr>
+          <EventTable
+            title="§#ff5555S§#ff9999u§#ffddddm§#ddffffm§#99ffffe§#55ffffr"
+            color="§6"
+            event={events.summer2022}
+            t={t}
+          />
+        </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>

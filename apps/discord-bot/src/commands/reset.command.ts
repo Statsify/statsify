@@ -88,9 +88,11 @@ export class ResetCommand {
       listener.addHook(resetMinuteModal.getCustomId(), async (interaction) => {
         const data = interaction.getData();
 
-        const timeInput = data.components[0].components[0].value;
+        const timeInput = data.components[0].components[0].value.toUpperCase();
+
         const timeZoneInput =
-          data.components[1].components[0].value || new IANAZone("America/New_York");
+          data.components[1].components[0].value?.toUpperCase() ||
+          new IANAZone("America/New_York");
 
         let time = DateTime.fromFormat(timeInput, timeFormat, {
           zone: timeZoneInput,

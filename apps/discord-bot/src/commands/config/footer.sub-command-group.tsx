@@ -59,6 +59,7 @@ export class FooterSubCommandGroup {
           ["Gold", UserLogo.GOLD],
           ["Diamond", UserLogo.DIAMOND],
           ["Emerald", UserLogo.EMERALD],
+          ["Venom", UserLogo.VENOM],
           ["Amethyst", UserLogo.AMETHYST],
           ["Sculk", UserLogo.SCULK],
           ["Netherite", UserLogo.NETHERITE],

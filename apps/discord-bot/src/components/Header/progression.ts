@@ -18,16 +18,33 @@ const xpBar: ProgressFunction = (percentage) => {
   return `§r§8[§b${"■".repeat(count)}§7${"■".repeat(max - count)}§8]`;
 };
 
-//TODO make this an object for easier configuration of what to show
-export const formatProgression = (
-  t: LocalizeFunction,
-  progression: Progression,
-  currentLevel: string,
-  nextLevel: string,
-  showProgress = true,
+export const lineXpBar =
+  (color: string): ProgressFunction =>
+  (percentage: number) => {
+    const max = 40;
+    const count = Math.ceil(max * percentage);
+    return `§8[${color}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]§r`;
+  };
+
+export interface FormatProgressionOptions {
+  t: LocalizeFunction;
+  progression: Progression;
+  currentLevel: string;
+  nextLevel: string;
+  showProgress?: boolean;
+  showLevel?: boolean;
+  renderXp?: ProgressFunction;
+}
+
+export const formatProgression = ({
+  t,
+  progression,
+  currentLevel,
+  nextLevel,
   showLevel = true,
-  progress: ProgressFunction = xpBar
-) => {
+  showProgress = true,
+  renderXp = xpBar,
+}: FormatProgressionOptions) => {
   if (progression.max) {
     let output = "§^2^";
 
@@ -37,10 +54,15 @@ export const formatProgression = (
     if (showProgress && showLevel) output += "\n";
 
     if (showLevel)
-      output += `${currentLevel} ${progress(progression.percent)} ${nextLevel}`;
+      output += `${currentLevel} ${renderXp(progression.percent)} ${nextLevel}`;
 
     return output;
   }
 
-  return `§^2^§b§lMAXED`;
+  let output = "§^2^";
+
+  if (showLevel) output += `§l${currentLevel} `;
+  output += "§r§8(§b§lMAXED§r§8)";
+
+  return output;
 };

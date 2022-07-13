@@ -124,6 +124,9 @@ export function getLogoPath(
     case UserLogo.SCULK:
       path = "sculk_";
       break;
+    case UserLogo.VENOM:
+      path = "venom_";
+      break;
     case UserLogo.EMERALD:
       path = "emerald_";
       break;

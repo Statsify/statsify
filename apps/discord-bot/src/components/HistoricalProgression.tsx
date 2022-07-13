@@ -45,7 +45,16 @@ export const HistoricalProgression = ({
       </Table.tr>
       <Table.tr>
         <box width="100%">
-          <text t:ignore>{formatProgression(t, progression, current, next, false)}</text>
+          <text t:ignore>
+            {formatProgression({
+              t,
+              progression,
+              currentLevel: current,
+              nextLevel: next,
+              showLevel: true,
+              showProgress: false,
+            })}
+          </text>
         </box>
       </Table.tr>
     </>

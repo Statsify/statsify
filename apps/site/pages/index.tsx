@@ -161,7 +161,7 @@ const Index = () => (
       align="right"
     >
       Statsify gives options for seeing a player's overall Minecraft profile. With{" "}
-      <Code>/skin</Code>, you can easily steal a player's skin. Run{" "}
+      <Code>/skin</Code>, you can easily view a player's skin. Run{" "}
       <Code>/namehistory</Code> to see a player's prior names. Alternatively, use{" "}
       <Code>/cape</Code> to see a player's capes. Using <Code>/text</Code> you can create
       your own Minecraft text.
