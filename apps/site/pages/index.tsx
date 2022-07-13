@@ -56,11 +56,11 @@ const Index = () => (
       ]}
       align="left"
     >
-      Beautiful visuals are provided by Statsify for each game's stats on Hypixel for any
-      player. Simply input <Code>/bedwars</Code> into Discord to see your BedWars stats or
-      those of your friends. To see further games, type <Code>/</Code> followed by the
-      name of the game. To quickly search for yourself, you may link your Minecraft
-      account to your Discord with <Code>/verify</Code>
+      Beautiful visuals are provided by Statsify for every game Hypixel. Simply input{" "}
+      <Code>/bedwars</Code> into Discord to see your BedWars stats or those of your
+      friends. To see further games, type <Code>/</Code> followed by the name of the game.
+      To quickly search for yourself, you may link your Minecraft account to your Discord
+      with <Code>/verify</Code>
     </Feature>
     <Feature
       title="Leaderboards"
@@ -94,8 +94,8 @@ const Index = () => (
       Wins, for instance, write{" "}
       <Code>/leaderboard woolwars leaderboard: overall wins</Code> After executing the
       command, it is possible to rapidly switch to another player or position using the
-      search buttons. Additionally, you may use the supplied buttons to browse across the
-      leaderboard to examine the surrounding pages for that leaderboard.
+      search buttons. You can also use the buttons provided to move around the leaderboard
+      and look at the other pages for that leaderboard.
     </Feature>
     <Feature
       title="Historical Stats"
@@ -110,10 +110,10 @@ const Index = () => (
       align="left"
     >
       Using historical stats, Statsify allows you to display your stats as if you began
-      playing today. There is no need to worry about your past losses. To quickly obtain
-      your daily stats, type <Code>/daily</Code> followed by the game. For example, enter{" "}
-      <Code>/daily tntgames</Code> to get your daily TNT Games stats. The same holds true
-      for weekly, monthly, and additional games.
+      playing today. There is no need to worry about your past losses, you can just focus
+      on the now. To quickly obtain your daily stats, type <Code>/daily</Code> followed by
+      the game of your choice. For example, enter <Code>/daily tntgames</Code> to get your
+      daily TNT Games stats. The same holds true for weekly, and monthly.
     </Feature>
     <Feature
       title="Guilds"
@@ -146,11 +146,11 @@ const Index = () => (
       ]}
       align="left"
     >
-      Statsify has a plethora of additional helpful hypixel utilities. For example, using
+      Statsify has a plethora of helpful hypixel utilities. For example, you can use{" "}
       <Code>/friends</Code> to access any player's friend list or <Code>/mutuals</Code> to
-      see mutual friends between players Statsify also allows you to monitor player
-      activity using the <Code>/status</Code> and <Code>/recentgames</Code> commands.
-      Using <Code>/gamecounts</Code>, you can track Hypixel's game popularity without ever
+      see mutual friends between players. Statsify also allows you to monitor player
+      activity using <Code>/status</Code> and <Code>/recentgames</Code>. Using{" "}
+      <Code>/gamecounts</Code>, you can track Hypixel's game popularity without ever
       opening Minecraft.
     </Feature>
     <Feature
@@ -158,11 +158,10 @@ const Index = () => (
       images={[<Image placeholder="blur" src={skinEmbed} alt="Skin" />]}
       align="right"
     >
-      Statsify gives options for seeing a player's overall Minecraft profile. With{" "}
-      <Code>/skin</Code>, you can easily view a player's skin. Run{" "}
-      <Code>/namehistory</Code> to see a player's prior names. Alternatively, use{" "}
-      <Code>/cape</Code> to see a player's capes. Using <Code>/text</Code> you can create
-      your own Minecraft text.
+      Statsify gives options for seeing a player's overall Minecraft profile. View a
+      player's skin with <Code>/skin</Code>, see a player's prior names using
+      <Code>/namehistory</Code>, see a player's cape with <Code>/cape</Code>. You can even
+      create your own Minecraft text with <Code>/text</Code>!
     </Feature>
     <Invite />
   </>

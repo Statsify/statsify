@@ -113,7 +113,9 @@ export abstract class LeaderboardService {
       LeaderboardScanner.getLeaderboardField(constructor, key, false)
     );
 
-    //TODO use default values for additionalFields and extraDisplay instead of 0
+    const extraDisplayMetadata = extraDisplay
+      ? LeaderboardScanner.getLeaderboardField(constructor, extraDisplay, false)
+      : undefined;
 
     const additionalStats = await this.getAdditionalStats(
       leaderboard.map(({ id }) => id),
@@ -123,15 +125,18 @@ export abstract class LeaderboardService {
     const data = leaderboard.map((doc, index) => {
       const stats = additionalStats[index];
 
-      if (extraDisplay) stats.name = `${stats[extraDisplay]}§r ${stats.name}`;
+      if (extraDisplay)
+        stats.name = `${stats[extraDisplay] ?? extraDisplayMetadata?.default}§r ${
+          stats.name
+        }`;
 
       const field = formatter ? formatter(doc.score) : doc.score;
 
       const additionalValues = additionalFields.map((key, index) => {
-        const value = stats[key] ?? additionalFieldMetadata[index ?? 0];
+        const value = stats[key] ?? additionalFieldMetadata[index].default;
 
         if (additionalFieldMetadata[index].formatter)
-          return additionalFieldMetadata[index].formatter?.(value ?? 0);
+          return additionalFieldMetadata[index].formatter?.(value);
 
         return value;
       });

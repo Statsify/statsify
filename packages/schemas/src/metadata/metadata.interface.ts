@@ -49,6 +49,8 @@ interface BaseLeaderboardMetadata {
    * @example BedWars Overall Wins
    */
   name: string;
+
+  default?: any;
 }
 
 export interface LeaderboardDisabledMetadata extends BaseLeaderboardMetadata {
