@@ -26,7 +26,6 @@ import recentGamesProfile from "../public/examples/recentgames.png";
 import serversImage from "../public/servers.svg";
 import skinEmbed from "../public/examples/skin.png";
 import skywarsProfile from "../public/examples/skywars.png";
-import statusProfile from "../public/examples/status.png";
 import woolwarsLeaderboard from "../public/examples/woolwars-leaderboard.png";
 import { Code } from "../components/Code";
 import { Feature } from "../components/Feature";
@@ -143,7 +142,6 @@ const Index = () => (
       images={[
         <Image placeholder="blur" src={friendsProfile} alt="Friends" />,
         <Image placeholder="blur" src={mutualsProfile} alt="Mutuals" />,
-        <Image placeholder="blur" src={statusProfile} alt="Status" />,
         <Image placeholder="blur" src={recentGamesProfile} alt="Recent Games" />,
       ]}
       align="left"

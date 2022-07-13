@@ -27,13 +27,13 @@ export const Hero = () => (
         <Typed
           strings={[
             "View all your Hypixel stats on Discord",
-            "Check your stats in every game",
+            "View your stats in every game",
             "View your leaderboard positions",
-            "See your improvements with daily stats",
-            "See your improvements with weekly stats",
-            "See your improvements with monthly stats",
+            "View your improvement with daily stats",
+            "View your improvement with weekly stats",
+            "View your improvement with monthly stats",
           ]}
-          typeSpeed={80}
+          typeSpeed={45}
           backSpeed={40}
           backDelay={500}
           loop
