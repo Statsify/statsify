@@ -10,6 +10,7 @@ import { APIData } from "@statsify/util";
 import { Color } from "../color";
 import { Field } from "../metadata";
 import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
+import { PlayerEvents } from "./events";
 import { PlayerSocials } from "./socials";
 import { PlayerStats } from "./stats";
 import { PlayerStatus } from "./status";
@@ -49,6 +50,9 @@ export class Player {
   public displayName: string;
 
   @Field()
+  public events: PlayerEvents;
+
+  @Field()
   public socials: PlayerSocials;
 
   @Field({ leaderboard: { fieldName: "" } })
@@ -56,9 +60,6 @@ export class Player {
 
   @Field()
   public status: PlayerStatus;
-
-  @Field()
-  public goldAchievements: boolean;
 
   @Field({
     leaderboard: { enabled: false },
@@ -99,14 +100,10 @@ export class Player {
       this.plusColor.code
     );
 
+    this.events = new PlayerEvents(data.seasonal);
     this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});
-
     this.stats = new PlayerStats(data);
-
     this.status = new PlayerStatus(data);
-
-    this.goldAchievements =
-      data?.vanityMeta?.packages?.includes("goldachievementmenu") ?? false;
 
     //These will all be filled in by a service
     this.expiresAt = 0;

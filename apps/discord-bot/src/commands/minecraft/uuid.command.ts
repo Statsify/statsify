@@ -30,12 +30,9 @@ export class UUIDCommand {
     const thumbURL = this.mojangApiService.faceIconUrl(player.uuid);
 
     const embed = new EmbedBuilder()
-      .field((t) => t("embeds.uuid.description.username"), `\`${player.username}\``)
-      .field((t) => t("embeds.uuid.description.uuid"), `\`${player.uuid}\``)
-      .field(
-        (t) => t("embeds.uuid.description.trimmedUUID"),
-        `\`${player.uuid.replaceAll("-", "")}\``
-      )
+      .field((t) => t("minecraft.username"), `\`${player.username}\``)
+      .field((t) => t("minecraft.uuid"), `\`${player.uuid}\``)
+      .field((t) => t("minecraft.trimmedUUID"), `\`${player.uuid.replaceAll("-", "")}\``)
       .color(STATUS_COLORS.info)
       .thumbnail(thumbURL);
 

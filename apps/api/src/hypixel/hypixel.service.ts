@@ -10,7 +10,7 @@ import * as Sentry from "@sentry/node";
 import { APIData } from "@statsify/util";
 import {
   Friends,
-  Gamecounts,
+  GameCounts,
   Guild,
   Player,
   RecentGame,
@@ -97,11 +97,11 @@ export class HypixelService {
     );
   }
 
-  public getGamecounts() {
+  public getGameCounts() {
     return lastValueFrom(
       this.request<APIData>("/gamecounts").pipe(
         map((data) => data.games),
-        map((games) => new Gamecounts(games)),
+        map((games) => new GameCounts(games)),
         catchError(() => of(null))
       )
     );

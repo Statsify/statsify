@@ -47,14 +47,14 @@ export class NameHistoryCommand {
         (history, index) => () =>
           new EmbedBuilder()
             .title((t) =>
-              t(`${name} ${t("embeds.namehistory.title")} [${nameHistory.length}]`)
+              t(`${name} ${t("minecraft.nameHistory")} [${nameHistory.length}]`)
             )
             .description((t) =>
               history
                 .map(({ username, changed_at }) => {
                   const time = changed_at
                     ? `<t:${Math.floor(new Date(changed_at).getTime() / 1000)}:R>`
-                    : `\`${t("embeds.namehistory.description.originalName")}\``;
+                    : `\`${t("minecraft.originalName")}\``;
 
                   return `\`•\` **${username}**: ${time}\n`;
                 })

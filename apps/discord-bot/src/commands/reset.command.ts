@@ -38,7 +38,7 @@ export class ResetCommand {
     const resetButton = new ButtonBuilder()
       .label((t) => t("historical.resetButton"))
       .style(ButtonStyle.Danger)
-      .emoji(t("emojis:config.reset"));
+      .emoji(t("emojis:reset"));
 
     const timeFormat = "h:mm a";
     const now = DateTime.now();

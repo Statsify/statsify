@@ -31,7 +31,8 @@ export const MegaWallsProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(megawalls.coins), "§6"],
-    [t("stats.class"), prettify(megawalls.class), "§e"],
+    [t("stats.mythic-favor"), t(megawalls.mythicFavor), "§e"],
+    [t("stats.class"), prettify(megawalls.class), "§9"],
   ];
 
   return (

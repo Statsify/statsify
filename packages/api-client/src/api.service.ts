@@ -55,16 +55,10 @@ export class ApiService {
     });
   }
 
-  public getPlayer(tag: string) {
+  public getCachedPlayer(tag: string, cache: HypixelCache) {
     return this.requestKey<GetPlayerResponse, "player">(`/player`, "player", {
       player: tag,
-    });
-  }
-
-  public getCachedPlayer(tag: string) {
-    return this.requestKey<GetPlayerResponse, "player">(`/player`, "player", {
-      player: tag,
-      cache: HypixelCache.CACHE_ONLY,
+      cache,
     });
   }
 

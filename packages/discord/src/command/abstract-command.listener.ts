@@ -165,9 +165,11 @@ export abstract class AbstractCommandListener {
     } catch (err) {
       if (err instanceof Message) {
         transaction?.finish();
+
+        setTimeout(() => context.reply(err as Message), 100);
+
         return {
-          type: InteractionResponseType.ChannelMessageWithSource,
-          data: context.getInteraction().convertToApiData(err),
+          type: InteractionResponseType.DeferredChannelMessageWithSource,
         };
       }
 

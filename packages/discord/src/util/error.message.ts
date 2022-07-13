@@ -56,7 +56,7 @@ export class ErrorMessage extends Message {
       embed.image(`attachment://${data.files[0].name}`);
     } else {
       const errorIcon = readFileSync(getLogoPath("error", 52));
-      data.files = [{ name: "error.png", data: errorIcon }];
+      data.files = [{ name: "error.png", data: errorIcon, type: "image/png" }];
       embed.thumbnail(`attachment://${data.files[0].name}`);
     }
 

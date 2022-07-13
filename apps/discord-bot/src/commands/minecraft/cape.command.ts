@@ -43,7 +43,11 @@ export class CapeCommand {
         generator: () => this.renderCape(c.image as Image),
       }));
 
-    if (!pages.length) return new ErrorMessage("errors.noCape");
+    if (!pages.length)
+      return new ErrorMessage(
+        (t) => t("errors.noCape.title"),
+        (t) => t("errors.noCape.description", { username: player.username })
+      );
 
     return this.paginateService.paginate(context, pages);
   }

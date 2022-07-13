@@ -24,8 +24,10 @@
     "success": "<:config_success:996433543611822194>",
     "view": "<:config_view:996433545033687141>"
   },
+  "reset": "<:reset:996479507240341504>",
   "clock": "<a:clock:995761548595310622>",
   "heart": "<:turtleHeart:847940768625983558>",
+  "sad": "<:turtleSad:847940768274317312>",
   "forward": "<:forward:995761547492204684>",
   "backward": "<:backward:995761554580578394>",
   "ranks": {
@@ -145,9 +147,9 @@
     "WALLS": "<:WALLS:995756103969276006>",
     "WARLORDS": "<:WARLORDS:995756105244356648>",
     "WOOLWARS": "<:WOOLWARS:995756106225819699>",
-    "IDLE": "",
-    "LIMBO": "",
-    "QUEUE": ""
+    "IDLE": "<:UNKNOWN:996630413441245204>",
+    "LIMBO": "<:UNKNOWN:996630413441245204>",
+    "QUEUE": "<:UNKNOWN:996630413441245204>"
   },
   "socials": {
     "instagram": "<:instagram:995761546615586877>",

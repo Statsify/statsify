@@ -127,9 +127,9 @@ export abstract class LeaderboardService {
 
       const additionalValues = additionalFields.map((key, index) => {
         if (additionalFieldMetadata[index].formatter)
-          return additionalFieldMetadata[index].formatter?.(stats[key]);
+          return additionalFieldMetadata[index].formatter?.(stats[key] ?? 0);
 
-        return stats[key];
+        return stats[key] ?? 0;
       });
 
       const fields = [];
