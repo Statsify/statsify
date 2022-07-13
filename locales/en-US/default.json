@@ -244,23 +244,19 @@
       "title": "Statsify Help",
       "games": {
         "title": "Games",
-        "description": "Statsify supports majority of the games on Hypixel. To check your stats in a game run /[game]. For example you can run /bedwars to check your bedwars stats."
+        "description": "Statsify supports majority of the games on Hypixel. To check your stats in a game run `/[game]`. For example you can run `/bedwars` to check your BedWars stats."
       },
       "leaderboards": {
         "title": "Leaderboards",
-        "description": "Statsify offers 1000s of leaderboards through the /leaderboard command. Run /leaderboard then pick the gamemode, and pick a leaderboard to view. You can hit the search button to search for a certain player or position. You can also hit the up and down buttons to view more pages."
+        "description": "Statsify offers thousands of leaderboards through the `/leaderboard` command. Run `/leaderboard` then pick the game mode, and pick a leaderboard to view. You can hit the search button to search for a certain player or position. You can also hit the up and down buttons to view more pages."
       },
       "historical": {
         "title": "Historical",
-        "description": "Statsify lets you check your daily, weekly, and monthly stats through /daily, /weekly and /monthly. If you missed a reset you can view them by running /lastday, /lastweek, and /lastmonth. "
+        "description": "Statsify lets you check your daily, weekly, and monthly stats through `/daily`, `/weekly` and `/monthly`. If you missed a reset you can view them by running `/yesterday`, `/lastweek`, and `/lastmonth`. "
       },
       "minecraft": {
         "title": "Minecraft",
-        "description": "You can view general minecraft information such as skins, uuids, capes through /skin, /uuid, and /cape respectively. Statsify also has commands to generate minecraft text through /text. View minecraft colors through /colors and preview minecraft servers through /server."
-      },
-      "misc": {
-        "title": "Misc",
-        "description": "You can do something with statsify"
+        "description": "You can view general minecraft information such as skins, uuids, capes through `/skin`, `/uuid`, and `/cape` respectively. Statsify also has commands to generate minecraft text through `/text`. View minecraft colors through `/colors` and preview minecraft servers through `/server`."
       }
     },
     "gameCounts": {
