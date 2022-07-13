@@ -35,17 +35,17 @@ module.exports = {
     },
     {
       source: "/premium",
-      destination: "https://www.patreon.com/join/statsify",
+      destination: "https://www.patreon.com/statsify",
       permanent: true,
     },
     {
       source: "/patreon",
-      destination: "https://www.patreon.com/join/statsify",
+      destination: "https://www.patreon.com/statsify",
       permanent: true,
     },
     {
       source: "/donate",
-      destination: "https://www.patreon.com/join/statsify",
+      destination: "https://www.patreon.com/statsify",
       permanent: true,
     },
     {

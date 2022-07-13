@@ -38,27 +38,27 @@ export class SocialsCommand {
       .thumbnail(this.mojangApiService.faceIconUrl(uuid))
       .color(STATUS_COLORS.info)
       .field(
-        (t) => `${t("emojis:socials.discord")} Discord`,
+        (t) => `${t("emojis:socials.embed.discord")} Discord`,
         this.formatSocial(socials.discord, false)
       )
       .field(
-        (t) => `${t("emojis:socials.forums")} Forums`,
+        (t) => `${t("emojis:socials.embed.forums")} Forums`,
         this.formatSocial(socials.forums)
       )
       .field(
-        (t) => `${t("emojis:socials.instagram")} Instagram`,
+        (t) => `${t("emojis:socials.embed.instagram")} Instagram`,
         this.formatSocial(socials.instagram)
       )
       .field(
-        (t) => `${t("emojis:socials.twitch")} Twitch`,
+        (t) => `${t("emojis:socials.embed.twitch")} Twitch`,
         this.formatSocial(socials.twitch)
       )
       .field(
-        (t) => `${t("emojis:socials.twitter")} Twitter`,
+        (t) => `${t("emojis:socials.embed.twitter")} Twitter`,
         this.formatSocial(socials.twitter)
       )
       .field(
-        (t) => `${t("emojis:socials.youtube")} YouTube`,
+        (t) => `${t("emojis:socials.embed.youtube")} YouTube`,
         this.formatSocial(socials.youtube)
       );
 

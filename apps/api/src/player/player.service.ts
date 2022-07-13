@@ -81,7 +81,7 @@ export class PlayerService {
 
   public async update(data: APIData) {
     const player = new Player(data);
-    //TODO: make sure it keeps things like resetMinute, guildId, and leaderboardBanned
+    //TODO: make sure it keeps things like guildId, and leaderboardBanned
     player.expiresAt = Date.now() + 120_000;
 
     const flatPlayer = flatten(player);

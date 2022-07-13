@@ -13,7 +13,7 @@ import { inquirerConfirmation, inquirerLogger } from "./utils.js";
 
 const redis = new Redis(process.env.REDIS_URL);
 
-// TODO unify functions (one createKey)
+//TODO unify functions (one createKey)
 const createKey = async ({ name, key, role, limit }) => {
   const activeKeys = await getKeyNames();
 

@@ -43,7 +43,6 @@ const PREMIUM_ROLE = config("supportBot.premiumRole");
 const PATREON_ROLE = config("supportBot.patreonRole");
 const NITRO_BOOSTER_ROLE = config("supportBot.nitroBoosterRole");
 
-const PREMIUM_INFO_CHANNEL = config("supportBot.premiumInfoChannel");
 const PREMIUM_LOG_CHANNEL = config("supportBot.premiumLogsChannel");
 const GUILD = config("supportBot.guild");
 
@@ -187,12 +186,19 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     await this.roleService.removeRole(GUILD, memberId, PREMIUM_ROLE);
 
-    //TODO(jacobk999): Send some sort of message telling the user their premium ran out?
     const { id } = await this.channelService.create(memberId);
 
-    this.messageService
-      .send(id, { content: "You lost your statsify premium" })
-      .catch(() => null);
+    const tierName = User.getTierName(tier);
+    const emoji = `emojis:logos.${tierName.toLowerCase()}`;
+
+    const embed = new EmbedBuilder()
+      .color(STATUS_COLORS.error)
+      .title((t) => `Your ${t(emoji)} Statsify ${tierName} Expired`)
+      .description(
+        `You no longer have access to Statsify ${tierName} benefits. If you want to resubscribe go to our [Patreon](https://statsify.net/premium). If you believe this was a mistake, please contact us.`
+      );
+
+    this.messageService.send(id, { embeds: [embed] }).catch(() => null);
   }
 
   private async handlePremiumAdd(memberId: string, tier: UserTier) {
@@ -211,15 +217,24 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     await this.roleService.addRole(GUILD, memberId, PREMIUM_ROLE);
 
-    await this.messageService
-      .send(PREMIUM_INFO_CHANNEL, { content: `<@${memberId}>` })
-      .then((m) => this.messageService.delete(PREMIUM_INFO_CHANNEL, m.id));
+    const tierName = User.getTierName(tier);
+    const emoji = `emojis:logos.${tierName.toLowerCase()}`;
+
+    const embed = new EmbedBuilder()
+      .color(STATUS_COLORS.success)
+      .title(
+        (t) => `Thank you for purchasing ${t(emoji)} Statsify ${User.getTierName(tier)}!`
+      )
+      .description(
+        (t) =>
+          `We are very excited to have you as a ${tierName} member. Enjoy your perks! ${t(
+            "emojis:heart"
+          )}`
+      );
 
     const { id } = await this.channelService.create(memberId);
 
-    this.messageService
-      .send(id, { content: "You got statsify premium" })
-      .catch(() => null);
+    this.messageService.send(id, { embeds: [embed] }).catch(() => null);
   }
 
   private log(message: string) {

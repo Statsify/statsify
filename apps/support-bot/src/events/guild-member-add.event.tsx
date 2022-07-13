@@ -15,17 +15,28 @@ import {
 import {
   AbstractEventListener,
   ApiService,
+  EmbedBuilder,
   GuildService,
   IMessage,
   MemberService,
   MessageService,
 } from "@statsify/discord";
+import { STATUS_COLORS } from "@statsify/logger";
 import { Service } from "typedi";
 import { WelcomeProfile } from "#lib/welcomer.profile";
 import { config } from "@statsify/util";
 import { getBackground } from "@statsify/assets";
 import { loadImage, render } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
+
+const JOIN_MESSAGES = [
+  "has mined into the server!",
+  "has ender pearled into the server!",
+  "has lagged back into the server!",
+  "has respawned in the server!",
+  "has connected to the server!",
+  "has joined the server!",
+];
 
 @Service()
 export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberAdd> {
@@ -78,9 +89,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
     const buffer = await canvas.toBuffer("png");
 
-    message.files = [
-      { name: `welcome-${username}.png`, data: buffer, type: "image/png" },
-    ];
+    message.files = [{ name: `welcome.png`, data: buffer, type: "image/png" }];
 
     await this.messageService.send(config("supportBot.welcomeChannel"), message);
   }
@@ -109,25 +118,32 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
     await this.apiService.updateUser(member.user!.id, { serverMember: true });
 
-    return {
-      content: `<@${member.user!.id}>, Welcome to the server`,
-    };
+    const embed = new EmbedBuilder()
+      .description(`<@${member.user!.id}> ${this.randomJoinMessage()}`)
+      .image("attachment://welcome.png")
+      .color(STATUS_COLORS.info);
+
+    return { embeds: [embed] };
   }
 
   private async sendUnverifiedMessage(member: APIGuildMember): Promise<IMessage> {
     const unverifiedChannel = config("supportBot.unverifiedChannel");
 
-    //TODO: write a better message explaining verification or maybe show the gif once its ready
     this.messageService.send(unverifiedChannel, {
       content: `<@${
         member.user!.id
-      }>, Run /verify to get access to the rest of the server`,
+      }>, run and complete \`/verify\` to get access to the rest of the discord server.`,
     });
 
-    return {
-      content: `<@${
-        member.user!.id
-      }>, Head over to <#${unverifiedChannel}> and follow the instructions in order to verify yourself.`,
-    };
+    const embed = new EmbedBuilder()
+      .description(`<@${member.user!.id}> ${this.randomJoinMessage()}`)
+      .image("attachment://welcome.png")
+      .color(STATUS_COLORS.info);
+
+    return { embeds: [embed] };
+  }
+
+  private randomJoinMessage() {
+    return JOIN_MESSAGES[Math.floor(Math.random() * JOIN_MESSAGES.length)];
   }
 }

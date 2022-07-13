@@ -429,7 +429,6 @@
     "delete-player": "Delete a player from Statsify",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "premium-menu": "Send the premium message to the channel",
     "ticket-menu": "Send the ticket message to the channel",
     "tags": "Manage support tags",
     "tags-create": "Create a support tag",
@@ -679,8 +678,8 @@
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
     "verify": "$t(emojis:check) Run `/verify` to run commands without inputting your username as well as receive **10% lower cooldowns**",
     "github": "$t(emojis:socials.github) Checkout out our $t(socials.github) to view the source code!",
-    "premium": "$t(emojis:logos.gold) [Statsify Premium](https://statsify.net/premium) offers additional features such as personalized profile badges. Find the full list of benefits [here](https://statsify.net/premium)!",
-    "invite": "$t(emojis:socials.discord) Click [here](https://statsify.net/invite) to invite Statsify to your servers"
+    "premium": "$t(emojis:logos.gold) [Statsify Premium](<https://statsify.net/premium>) offers additional features such as personalized profile badges. Find the full list of benefits [here](<https://statsify.net/premium>)!",
+    "invite": "$t(emojis:socials.discord) Click [here](<https://statsify.net/invite>) to invite Statsify to your servers"
   },
   "number": "{{value, number}}"
 }
