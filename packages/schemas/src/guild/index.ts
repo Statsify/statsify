@@ -136,7 +136,7 @@ export class Guild {
     this.levelProgression = new Progression(current, max);
     this.expByGame = new ExpByGame(data.guildExpByGameType ?? {});
 
-    this.achievements = new GuildAchievements(data.achievements ?? {}, this.level);
+    this.achievements = new GuildAchievements(this.level, data.achievements ?? {});
 
     this.preferredGames = (data.preferredGames ?? [])
       .map((g: GameCode) => GameIdMapping[g])

@@ -76,19 +76,19 @@ export class GuildAchievements {
   @Field({ store: { default: "I" } })
   public prestigeTier: string;
 
-  public constructor(data: APIData, level: number) {
-    const familyScore = data.ONLINE_PLAYERS;
-    const winnersScore = data.WINNERS;
-    const expierienceKingsScore = data.EXPERIENCE_KINGS;
+  public constructor(level: number, data: APIData = {}) {
+    const familyScore = data.ONLINE_PLAYERS ?? 0;
+    const winnersScore = data.WINNERS ?? 0;
+    const expierienceKingsScore = data.EXPERIENCE_KINGS ?? 0;
     const prestigeScore = level;
 
     const familyLevel = findScore(FAMILY_REQUIREMENTS, familyScore);
-    this.familyProgression = new Progression(familyScore, familyLevel.req);
-    this.familyTier = familyLevel.tier;
+    this.familyProgression = new Progression(familyScore, familyLevel?.req);
+    this.familyTier = familyLevel?.tier;
 
     const winnersLevel = findScore(WINNERS_REQUIREMENTS, winnersScore);
-    this.winnersProgression = new Progression(winnersScore, winnersLevel.req);
-    this.winnersTier = winnersLevel.tier;
+    this.winnersProgression = new Progression(winnersScore, winnersLevel?.req);
+    this.winnersTier = winnersLevel?.tier;
 
     const experienceKingsLevel = findScore(
       EXPERIENCE_KINGS_REQUIREMENTS,
@@ -97,13 +97,13 @@ export class GuildAchievements {
 
     this.experienceKingsProgression = new Progression(
       expierienceKingsScore,
-      experienceKingsLevel.req
+      experienceKingsLevel?.req
     );
 
-    this.experienceKingsTier = experienceKingsLevel.tier;
+    this.experienceKingsTier = experienceKingsLevel?.tier;
 
     const prestigeLevel = findScore(PRESTIGE_REQUIREMENTS, prestigeScore);
-    this.prestigeProgression = new Progression(prestigeScore, prestigeLevel.req);
-    this.prestigeTier = prestigeLevel.tier;
+    this.prestigeProgression = new Progression(prestigeScore, prestigeLevel?.req);
+    this.prestigeTier = prestigeLevel?.tier;
   }
 }
