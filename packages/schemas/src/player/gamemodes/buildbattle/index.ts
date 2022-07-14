@@ -68,8 +68,10 @@ export class BuildBattle {
 
   public constructor(data: APIData) {
     this.overall = new BuildBattleOverall(data);
+
     this.solo = new BuildBattleMultiplayerMode(data, "solo");
     this.teams = new BuildBattleMultiplayerMode(data, "teams");
+
     this.pro = new BuildBattlePro(data);
     this.guessTheBuild = new BuildBattleGuessTheBuild(data);
 

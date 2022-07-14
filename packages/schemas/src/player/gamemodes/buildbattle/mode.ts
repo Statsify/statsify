@@ -26,12 +26,8 @@ export class BuildBattleMultiplayerMode {
   @Field()
   public wins: number;
 
-  @Field()
-  public maxPoints: number;
-
   public constructor(data: APIData, mode: string) {
     this.wins = data[`wins_${mode}_normal`];
-    this.maxPoints = data[`${mode}_most_points`];
   }
 }
 
