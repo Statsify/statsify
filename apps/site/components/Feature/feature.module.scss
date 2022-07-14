@@ -33,13 +33,13 @@
   width: fit-content;
 
   > h1 {
-    font-size: 3.3rem;
+    font-size: 2.3rem;
     font-weight: 800;
     margin-bottom: 8px;
   }
 
   > p {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: normal;
     line-height: 160%;
   }
@@ -49,14 +49,6 @@
     text-align: center !important;
     margin-left: 0px;
     margin-right: 0px;
-
-    > h1 {
-      font-size: 2.5rem;
-    }
-
-    > p {
-      font-size: 1rem;
-    }
   }
 }
 

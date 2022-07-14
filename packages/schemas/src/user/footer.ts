@@ -15,6 +15,7 @@ export enum UserLogo {
   DIAMOND = 300,
   EMERALD = 400,
   VENOM = 401,
+  PINK = 402,
   AMETHYST = 420,
   SCULK = 421,
   NETHERITE = 422,

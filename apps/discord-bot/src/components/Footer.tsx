@@ -41,6 +41,10 @@ export const Footer = ({ logo, user, border }: FooterProps) => {
         text =
           "§#29bac5s§#1ea9b2t§#13989fa§#08878dt§#02777bs§#04666di§#065660f§#084552y§#083b46.§#07323cn§#062a32e§#052228t";
         break;
+      case UserLogo.PINK:
+        text =
+          "§#fec0d4s§#fbb9d5t§#f9b3d6a§#f6acd7t§#f4a5d5s§#f59bcci§#f692c2f§#f788b9y§#f189c2.§#e98fd4n§#e094e7e§#d89af9t";
+        break;
       case UserLogo.VENOM:
         text =
           "§#bb00dds§#b00fdet§#a51edfa§#9b2ce0t§#903be1s§#854ae2i§#7a59e2f§#6f68e3y§#6477e4.§#5a85e5n§#4f94e6e§#44a3e7t";

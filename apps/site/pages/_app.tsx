@@ -20,9 +20,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta property="site_name" content="Statsify" />
 
         <meta
-          property="description"
+          property="og:description"
           name="description"
-          content="Hypixel Stats Visualized"
+          content="Statsify is an easy to use multipurpose Discord bot for viewing your Hypixel stats.
+          Statsify can track statistics in several game modes on the Hypixel Network, such as
+          Bed Wars, Sky Wars, Duels, and many other minigames."
         />
 
         <meta name="summary" content="Hypixel Stats Visualized" />

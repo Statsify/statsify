@@ -68,8 +68,12 @@ export class HistoricalService {
     players.forEach(async ({ uuid }) => {
       const player = await this.playerService.get(uuid, HypixelCache.LIVE);
 
-      if (player) this.reset(player, type);
-      else this.logger.error(`Could not reset player with uuid ${uuid}`);
+      if (player) {
+        player.resetMinute = minute;
+        await this.reset(player, type);
+      } else {
+        this.logger.error(`Could not reset player with uuid ${uuid}`);
+      }
     });
   }
 
@@ -99,6 +103,9 @@ export class HistoricalService {
     const flatPlayer = flatten(player);
 
     const doc = serialize(Player, flatPlayer);
+
+    doc.resetMinute = player.resetMinute ?? this.getMinute();
+    flatPlayer.resetMinute = doc.resetMinute;
 
     const reset = async (
       model: PlayerModel,
