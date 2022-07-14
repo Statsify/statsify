@@ -7,11 +7,15 @@
  */
 
 import styles from "./stat-circle-container.module.scss";
+import { About } from "../About";
 
 export interface StatCircleContainerProps {
   children: React.ReactNode;
 }
 
 export const StatCircleContainer = ({ children }: StatCircleContainerProps) => (
-  <div className={styles.container}>{children}</div>
+  <div className={styles.container}>
+    <div className={styles.circleContainer}>{children}</div>
+    <About />
+  </div>
 );

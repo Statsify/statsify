@@ -45,7 +45,7 @@ export class VerifyCommand {
       throw new ErrorMessage(
         (t) => t("verification.noCode.title"),
         (t) => t("verification.noCode.description"),
-        { files: this.getVerifyGif() }
+        { image: this.getVerifyGif() }
       );
 
     user = await this.apiService.verifyUser(`${code}`, userId);
@@ -54,7 +54,7 @@ export class VerifyCommand {
       throw new ErrorMessage(
         (t) => t("verification.invalidCode.title"),
         (t) => t("verification.invalidCode.description"),
-        { files: this.getVerifyGif() }
+        { image: this.getVerifyGif() }
       );
 
     await this.memberService
@@ -74,8 +74,8 @@ export class VerifyCommand {
     };
   }
 
-  private getVerifyGif(): InteractionAttachment[] {
+  private getVerifyGif(): InteractionAttachment {
     const buffer = readFileSync(getAssetPath("verify.gif"));
-    return [{ name: "verify.gif", data: buffer }];
+    return { name: "verify.gif", data: buffer };
   }
 }

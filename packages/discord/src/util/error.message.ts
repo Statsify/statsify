@@ -22,7 +22,8 @@ import type { InteractionAttachment } from "../interaction";
 interface ErrorMessageOptions {
   color?: number;
   buttons?: ButtonBuilder[];
-  files?: InteractionAttachment[];
+  thumbnail?: InteractionAttachment;
+  image?: InteractionAttachment;
 }
 
 export class ErrorMessage extends Message {
@@ -35,7 +36,12 @@ export class ErrorMessage extends Message {
   public constructor(
     titleOrKey: LocalizationString,
     description?: LocalizationString,
-    { files = [], buttons = [], color = STATUS_COLORS.error }: ErrorMessageOptions = {}
+    {
+      image,
+      thumbnail,
+      buttons = [],
+      color = STATUS_COLORS.error,
+    }: ErrorMessageOptions = {}
   ) {
     const embed = new EmbedBuilder().color(color);
 
@@ -51,9 +57,12 @@ export class ErrorMessage extends Message {
 
     if (buttons.length > 0) data.components = [new ActionRowBuilder(buttons)];
 
-    if (files.length > 0) {
-      data.files = files;
+    if (image) {
+      data.files = [image];
       embed.image(`attachment://${data.files[0].name}`);
+    } else if (thumbnail) {
+      data.files = [thumbnail];
+      embed.thumbnail(`attachment://${data.files[0].name}`);
     } else {
       const errorIcon = readFileSync(getLogoPath("error", 52));
       data.files = [{ name: "error.png", data: errorIcon, type: "image/png" }];

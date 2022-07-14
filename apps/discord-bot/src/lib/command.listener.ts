@@ -20,6 +20,8 @@ import { InteractionResponseType } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
+import { getAssetPath } from "@statsify/assets";
+import { readFileSync } from "node:fs";
 import { tips } from "../tips";
 import type {
   InteractionResponse,
@@ -91,7 +93,7 @@ export class CommandListener extends AbstractCommandListener {
 
     const preconditions = [
       this.tierPrecondition.bind(this, command, user),
-      this.cooldownPrecondition.bind(this, command, user, id),
+      this.cooldownPrecondition.bind(this, parentCommand, user, id),
     ];
 
     this.apiService.incrementCommand(commandName);
@@ -143,6 +145,8 @@ export class CommandListener extends AbstractCommandListener {
       return;
     }
 
+    const clock = readFileSync(getAssetPath("cooldown.gif"));
+
     throw new ErrorMessage(
       (t) => t("cooldown.title"),
       (t) =>
@@ -150,7 +154,7 @@ export class CommandListener extends AbstractCommandListener {
           time: formatTime(cooldown - now),
           command: command.name,
         }),
-      { color: STATUS_COLORS.warn }
+      { color: STATUS_COLORS.warn, thumbnail: { name: "cooldown.gif", data: clock } }
     );
   }
 
