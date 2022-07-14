@@ -50,7 +50,7 @@ export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
 @Command({
   description: "",
   args: [PlayerArgument],
-  cooldown: 5,
+  cooldown: 10,
 })
 export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   protected readonly apiService: ApiService;

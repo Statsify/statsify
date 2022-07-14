@@ -15,7 +15,7 @@ import {
 import { MojangApiService } from "#services";
 import { STATUS_COLORS } from "@statsify/logger";
 
-@Command({ description: "commands.uuid", args: [new MojangPlayerArgument()] })
+@Command({ description: (t) => t("commands.uuid"), args: [new MojangPlayerArgument()] })
 export class UUIDCommand {
   public constructor(private readonly mojangApiService: MojangApiService) {}
 

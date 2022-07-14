@@ -19,7 +19,7 @@ module.exports = {
   apps: [
     {
       name: "api",
-      args: `api start ${with_color}`,
+      args: `api prod-start ${with_color}`,
       script,
       cron_restart,
       exp_backoff_restart_delay,
@@ -27,14 +27,14 @@ module.exports = {
       exec_mode: "cluster",
       instances: 4,
     },
-    // {
-    //   name: "discord-bot",
-    //   args: `discord-bot start ${with_color}`,
-    //   script,
-    //   cron_restart,
-    //   exp_backoff_restart_delay,
-    //   env,
-    // },
+    {
+      name: "discord-bot",
+      args: `discord-bot start ${with_color}`,
+      script,
+      cron_restart,
+      exp_backoff_restart_delay,
+      env,
+    },
     // {
     //   name: "support-bot",
     //   args: `support-bot start ${with_color}`,
@@ -43,14 +43,14 @@ module.exports = {
     //   exp_backoff_restart_delay,
     //   env,
     // },
-    // {
-    //   name: "verify-server",
-    //   args: `verify-server start ${with_color}`,
-    //   script,
-    //   cron_restart,
-    //   exp_backoff_restart_delay,
-    //   env,
-    // },
+    {
+      name: "verify-server",
+      args: `verify-server start ${with_color}`,
+      script,
+      cron_restart,
+      exp_backoff_restart_delay,
+      env,
+    },
     {
       name: "leaderboard-limiting",
       args: `scripts limit-redis start ${with_color}`,

@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node --enable-source-maps .",
+    "prod-start": "xvfb-run -s \"-ac -screen 0 600x800x24\" node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
     "test": "jest",

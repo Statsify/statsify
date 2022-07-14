@@ -233,7 +233,7 @@ const editKey = async () => {
     },
   ]);
 
-  if (!(await inquirerConfirmation(true))) return;
+  if (!(await inquirerConfirmation("Are you sure?"))) return;
 
   const activeKeys = await getKeys();
 

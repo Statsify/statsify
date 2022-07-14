@@ -43,7 +43,7 @@ export class CommandResolvable {
       description,
       args,
       methodName,
-      cooldown = 0,
+      cooldown = 10,
       tier = UserTier.NONE,
     }: CommandMetadata,
     target: any

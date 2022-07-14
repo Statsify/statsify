@@ -33,7 +33,6 @@ export const tips: Tip[] = [
     uneligible: (user) => Boolean(user?.uuid),
     disabled: ["verify"],
   },
-  { message: { content: (t) => t("tips.github") } },
   { message: { content: (t) => t("tips.premium") } },
   { message: { content: (t) => t("tips.invite") } },
 ];

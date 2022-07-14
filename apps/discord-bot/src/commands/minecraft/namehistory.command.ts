@@ -17,7 +17,7 @@ import { MojangApiService } from "#services";
 import { STATUS_COLORS } from "@statsify/logger";
 import { arrayGroup } from "@statsify/util";
 
-@Command({ description: "commands.namehistory", args: [MojangPlayerArgument] })
+@Command({ description: (t) => t("commands.namehistory"), args: [MojangPlayerArgument] })
 export class NameHistoryCommand {
   public constructor(
     private readonly mojangApiService: MojangApiService,

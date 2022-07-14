@@ -124,7 +124,7 @@ export const GeneralProfile = ({
           />
           <Table.td
             title={t("stats.ranksGifted")}
-            value={t(general.ranksGifts)}
+            value={t(general.ranksGifted)}
             color="§5"
           />
         </Table.tr>
