@@ -1628,6 +1628,7 @@ __metadata:
     "@sentry/node": ^7.5.1
     "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
+    "@statsify/util": "workspace:^"
     axios: ^0.27.2
   languageName: unknown
   linkType: soft
