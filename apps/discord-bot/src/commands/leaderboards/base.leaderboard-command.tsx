@@ -150,7 +150,7 @@ export class BaseLeaderboardCommand {
           new TextInputBuilder()
             .label((t) => t(`leaderboard.${type}Input.label`))
             .placeholder((t) => t(`leaderboard.${type}Input.placeholder`))
-            .minLength(3)
+            .minLength(1)
             .maxLength(type === "player" ? 16 : 36)
             .required(true)
         )
