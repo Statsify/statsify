@@ -130,7 +130,7 @@ export abstract class AbstractCommandListener {
     context,
     preconditions = [],
     response = { type: InteractionResponseType.DeferredChannelMessageWithSource },
-  }: ExecuteCommandOptions) {
+  }: ExecuteCommandOptions): InteractionResponse {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     try {
@@ -166,10 +166,22 @@ export abstract class AbstractCommandListener {
       if (err instanceof Message) {
         transaction?.finish();
 
-        setTimeout(() => context.reply(err as Message), 100);
+        const data = context.getInteraction().convertToApiData(err);
+
+        if ("payload_json" in data) {
+          return {
+            //@ts-ignore tiny-discord types are not fully updated yet
+            files: data.files,
+            payload_json: {
+              type: InteractionResponseType.ChannelMessageWithSource,
+              data: data.payload_json,
+            },
+          };
+        }
 
         return {
-          type: InteractionResponseType.DeferredChannelMessageWithSource,
+          type: InteractionResponseType.ChannelMessageWithSource,
+          data,
         };
       }
 
