@@ -6,10 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ApiProperty } from "@nestjs/swagger";
 import { NotFoundException } from "./base.404";
 
 export class GuildNotFoundException extends NotFoundException {
-  public constructor() {
-    super("guild");
+  @ApiProperty()
+  public displayName?: string;
+
+  public constructor(displayName?: string) {
+    super({ message: "guild", displayName });
   }
 }

@@ -504,6 +504,10 @@
       "title": "Invalid Guild",
       "description": "A guild by the {{type}} of `{{tag}}` could not be found!"
     },
+    "playerNotInGuild": {
+      "title": "Invalid Guild",
+      "description": "**{{displayName}}** is not in a guild!"
+    },
     "noRecentGames": {
       "title": "Recent Games Not Found",
       "description": "**{{displayName}}**'s recent games could not be found!"

@@ -41,7 +41,7 @@ export class GuildService {
     cache: HypixelCache
   ): Promise<Guild | null> {
     // eslint-disable-next-line prefer-const
-    let [cachedGuild, tag] = await this.getCachedGuild(inputtedTag, type);
+    let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
     if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
       return {
@@ -57,7 +57,7 @@ export class GuildService {
 
     if (!guild) {
       await this.handleGuildNotFound(cachedGuild, tag, type);
-      throw new GuildNotFoundException();
+      throw new GuildNotFoundException(displayName);
     }
 
     //The cached guild doesn't match the one we got from the API, just ignore the cached guild
@@ -165,18 +165,19 @@ export class GuildService {
   private async getCachedGuild(
     tag: string,
     type: GuildQuery
-  ): Promise<[guild: Guild | null, tag: string]> {
+  ): Promise<[guild: Guild | null, tag: string, displayName?: string]> {
     tag = tag.toLowerCase();
 
     if (type === GuildQuery.PLAYER) {
       const player = await this.playerService.get(tag, HypixelCache.CACHE_ONLY, {
         uuid: true,
+        displayName: true,
         guildId: true,
       });
 
       if (!player) throw new PlayerNotFoundException();
 
-      if (!player.guildId) return [null, player.uuid];
+      if (!player.guildId) return [null, player.uuid, player.displayName];
 
       const guild = (await this.guildModel
         .findOne()
@@ -185,7 +186,7 @@ export class GuildService {
         .lean()
         .exec()) as Guild;
 
-      return [guild, player.uuid];
+      return [guild, player.uuid, player.displayName];
     }
 
     const guild = (await this.guildModel

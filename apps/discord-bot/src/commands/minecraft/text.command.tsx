@@ -13,6 +13,7 @@ import {
   NumberArgument,
   TextArgument,
 } from "@statsify/discord";
+import { Multiline } from "#components";
 import { convertColorCodes } from "#lib/convert-color-codes";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
@@ -27,9 +28,15 @@ export class TextCommand {
     const content = context.option<string>("content").trim();
     const size = Math.min(context.option<number>("size", 2), 9);
 
-    const text = convertColorCodes(content);
+    const text = convertColorCodes(content).replaceAll("\\n", "\n");
 
-    const canvas = render(<text size={size}>{text}</text>, getTheme(user));
+    const canvas = render(
+      <div direction="column">
+        <Multiline size={size}>{text}</Multiline>
+      </div>,
+      getTheme(user)
+    );
+
     const buffer = await canvas.toBuffer("png");
 
     return {
