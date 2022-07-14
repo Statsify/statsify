@@ -7,7 +7,7 @@
  */
 
 import { BaseProfileProps } from "../base.hypixel-command";
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
 import { CopsAndCrimsModes, FormattedGame, GameMode } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 
@@ -104,11 +104,13 @@ export const CopsAndCrimsProfile = ({
         <Table.table>
           <Table.tr>
             <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-            <Table.td
-              title={t("stats.bestTime")}
-              value={formatTime(stats.fastestWin)}
-              color="§b"
-            />
+            <Historical.exclude time={time}>
+              <Table.td
+                title={t("stats.bestTime")}
+                value={formatTime(stats.fastestWin)}
+                color="§b"
+              />
+            </Historical.exclude>
           </Table.tr>
           <Table.tr>
             <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />

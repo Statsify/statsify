@@ -8,7 +8,7 @@
 
 import { ArenaBrawlModes, FormattedGame, GameMode } from "@statsify/schemas";
 import { BaseProfileProps } from "../base.hypixel-command";
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
 import { prettify } from "@statsify/util";
 
 export interface ArenaBrawlProfileProps extends BaseProfileProps {
@@ -57,36 +57,38 @@ export const ArenaBrawlProfile = ({
           <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
           <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
         </Table.tr>
-        <Table.ts title={`§6Skills`}>
-          <Table.tr>
-            <Table.td
-              title={t("stats.offensive")}
-              value={prettify(arenabrawl.offensive)}
-              color="§c"
-              size="small"
-            />
-            <Table.td
-              title={t("stats.utility")}
-              value={prettify(arenabrawl.utility)}
-              color="§e"
-              size="small"
-            />
-          </Table.tr>
-          <Table.tr>
-            <Table.td
-              title={t("stats.support")}
-              value={prettify(arenabrawl.support)}
-              color="§a"
-              size="small"
-            />
-            <Table.td
-              title={t("stats.ultimate")}
-              value={prettify(arenabrawl.ultimate)}
-              color="§6"
-              size="small"
-            />
-          </Table.tr>
-        </Table.ts>
+        <Historical.exclude time={time}>
+          <Table.ts title="§6Skills">
+            <Table.tr>
+              <Table.td
+                title={t("stats.offensive")}
+                value={prettify(arenabrawl.offensive)}
+                color="§c"
+                size="small"
+              />
+              <Table.td
+                title={t("stats.utility")}
+                value={prettify(arenabrawl.utility)}
+                color="§e"
+                size="small"
+              />
+            </Table.tr>
+            <Table.tr>
+              <Table.td
+                title={t("stats.support")}
+                value={prettify(arenabrawl.support)}
+                color="§a"
+                size="small"
+              />
+              <Table.td
+                title={t("stats.ultimate")}
+                value={prettify(arenabrawl.ultimate)}
+                color="§6"
+                size="small"
+              />
+            </Table.tr>
+          </Table.ts>
+        </Historical.exclude>
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>

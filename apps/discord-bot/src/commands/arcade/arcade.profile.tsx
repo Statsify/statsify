@@ -88,7 +88,7 @@ export const ArcadeProfile = ({
       table = <HideAndSeekTable stats={arcade[api]} t={t} />;
       break;
     case "holeInTheWall":
-      table = <HoleInTheWallTable stats={arcade[api]} t={t} />;
+      table = <HoleInTheWallTable stats={arcade[api]} t={t} time={time} />;
       break;
     case "hypixelSays":
       table = <HypixelSaysTable stats={arcade[api]} t={t} />;
@@ -109,7 +109,7 @@ export const ArcadeProfile = ({
       table = <ThrowOutTable stats={arcade[api]} t={t} />;
       break;
     case "zombies":
-      table = <ZombiesTable stats={arcade[api]} t={t} />;
+      table = <ZombiesTable stats={arcade[api]} t={t} time={time} />;
       break;
     default:
       table = <OverallArcadeTable stats={arcade} t={t} />;

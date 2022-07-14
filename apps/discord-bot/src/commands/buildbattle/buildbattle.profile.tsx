@@ -6,25 +6,23 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
 import { FormattedGame } from "@statsify/schemas";
+import type { BaseProfileProps, ProfileTime } from "../base.hypixel-command";
 
 interface BuildBattleModeTableProps {
   title: string;
   stats: [string, string][];
-  width?: JSX.Measurement;
+  time: ProfileTime;
 }
 
-const BuildBattleModeTable = ({
-  title,
-  stats,
-  width = "remaining",
-}: BuildBattleModeTableProps) => {
+const BuildBattleModeTable = ({ title, stats, time }: BuildBattleModeTableProps) => {
   const colors = ["§a", "§6"];
 
+  if (time !== "LIVE") stats.splice(1, 2);
+
   return (
-    <Table.table width={width}>
+    <Table.table width="remaining">
       <Table.ts title={`§e${title}`}>
         {stats.map(([title, value], index) => (
           <Table.tr>
@@ -68,20 +66,24 @@ export const BuildBattleProfile = ({
       />
       <div width="100%">
         <BuildBattleModeTable
+          time={time}
           title="Overall"
           stats={[[t("stats.wins"), t(buildbattle.overall.wins)]]}
         />
         <BuildBattleModeTable
+          time={time}
           title="Pro"
           stats={[[t("stats.wins"), t(buildbattle.pro.wins)]]}
         />
         <BuildBattleModeTable
+          time={time}
           title="1.14"
           stats={[[t("stats.wins"), t(buildbattle.latestWins)]]}
         />
       </div>
       <div width="100%">
         <BuildBattleModeTable
+          time={time}
           title="Solo"
           stats={[
             [t("stats.wins"), t(buildbattle.solo.wins)],
@@ -89,6 +91,7 @@ export const BuildBattleProfile = ({
           ]}
         />
         <BuildBattleModeTable
+          time={time}
           title="Teams"
           stats={[
             [t("stats.wins"), t(buildbattle.teams.wins)],
@@ -96,6 +99,7 @@ export const BuildBattleProfile = ({
           ]}
         />
         <BuildBattleModeTable
+          time={time}
           title="GTB"
           stats={[
             [t("stats.wins"), t(buildbattle.guessTheBuild.wins)],

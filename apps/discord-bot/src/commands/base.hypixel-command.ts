@@ -25,6 +25,8 @@ import { render } from "@statsify/rendering";
 import type { GameMode, GameModes, Player, User } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
 
+export type ProfileTime = "LIVE" | HistoricalType;
+
 export interface BaseProfileProps {
   skin: Image;
   player: Player;
@@ -33,7 +35,7 @@ export interface BaseProfileProps {
   user: User | null;
   badge?: Image;
   t: LocalizeFunction;
-  time: "LIVE" | HistoricalType;
+  time: ProfileTime;
 }
 
 export interface ProfileData<T extends GamesWithBackgrounds, K = never> {

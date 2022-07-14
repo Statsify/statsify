@@ -11,7 +11,7 @@ import { useChildren } from "@statsify/rendering";
 
 export interface IfProps<T> {
   condition: T | undefined | null | false;
-  children: JSX.Element | JSX.Children<(data: T) => JSX.Children>;
+  children: JSX.Children | JSX.Children<(data: T) => JSX.Children>;
 }
 
 export function If<T>({

@@ -11,7 +11,7 @@ import {
   Container,
   Footer,
   Header,
-  HistoricalProgression,
+  Historical,
   SidebarItem,
   Table,
   formatProgression,
@@ -153,7 +153,7 @@ export const SkyWarsProfile = ({
       />
       <Table.table>
         {table}
-        <HistoricalProgression
+        <Historical.progression
           time={time}
           progression={skywars.progression}
           current={skywars.levelFormatted}

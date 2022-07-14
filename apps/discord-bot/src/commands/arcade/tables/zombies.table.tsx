@@ -6,18 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Historical, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
-import { Table } from "#components";
 import { Zombies, ZombiesMap } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
+import type { ProfileTime } from "../../base.hypixel-command";
 
 interface ZombiesMapColumnProps {
   title: string;
   stats: ZombiesMap;
   t: LocalizeFunction;
+  time: ProfileTime;
 }
 
-const ZombiesMapColumn = ({ title, stats, t }: ZombiesMapColumnProps) => {
+const ZombiesMapColumn = ({ title, stats, t, time }: ZombiesMapColumnProps) => {
   const mapStat =
     stats.wins > 0
       ? [t("stats.fastestWin"), formatTime(stats.fastestWin)]
@@ -26,7 +28,9 @@ const ZombiesMapColumn = ({ title, stats, t }: ZombiesMapColumnProps) => {
   return (
     <Table.ts title={title}>
       <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" size="small" />
-      <Table.td title={mapStat[0]} value={mapStat[1]} color="§e" size="small" />
+      <Historical.exclude time={time}>
+        <Table.td title={mapStat[0]} value={mapStat[1]} color="§e" size="small" />
+      </Historical.exclude>
     </Table.ts>
   );
 };
@@ -34,9 +38,10 @@ const ZombiesMapColumn = ({ title, stats, t }: ZombiesMapColumnProps) => {
 export interface ZombiesTableProps {
   stats: Zombies;
   t: LocalizeFunction;
+  time: ProfileTime;
 }
 
-export const ZombiesTable = ({ stats, t }: ZombiesTableProps) => {
+export const ZombiesTable = ({ stats, t, time }: ZombiesTableProps) => {
   const { overall, deadEnd, badBlood, alienArcadium } = stats;
 
   return (
@@ -49,9 +54,14 @@ export const ZombiesTable = ({ stats, t }: ZombiesTableProps) => {
         </Table.tr>
       </Table.ts>
       <Table.tr>
-        <ZombiesMapColumn title="§#813781Dead End" stats={deadEnd} t={t} />
-        <ZombiesMapColumn title="§#8f1721Bad Blood" stats={badBlood} t={t} />
-        <ZombiesMapColumn title="§#75ae00Alien Arcadium" stats={alienArcadium} t={t} />
+        <ZombiesMapColumn title="§#813781Dead End" stats={deadEnd} t={t} time={time} />
+        <ZombiesMapColumn title="§#8f1721Bad Blood" stats={badBlood} t={t} time={time} />
+        <ZombiesMapColumn
+          title="§#75ae00Alien Arcadium"
+          stats={alienArcadium}
+          t={t}
+          time={time}
+        />
       </Table.tr>
     </Table.table>
   );
