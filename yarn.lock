@@ -1657,7 +1657,7 @@ __metadata:
     i18next: ^21.8.13
     i18next-fs-backend: ^1.1.4
     reflect-metadata: ^0.1.13
-    tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab"
+    tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb"
     typedi: ^0.10.0
   languageName: unknown
   linkType: soft
@@ -4119,7 +4119,7 @@ __metadata:
     mongoose: ^6.4.3
     reflect-metadata: ^0.1.13
     skia-canvas: ^0.9.30
-    tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab"
+    tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb"
     typedi: ^0.10.0
   languageName: unknown
   linkType: soft
@@ -8842,7 +8842,7 @@ __metadata:
     inquirer: ^9.0.0
     ioredis: ^5.1.0
     skia-canvas: ^0.9.30
-    tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab"
+    tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb"
     toad-scheduler: ^1.6.1
   languageName: unknown
   linkType: soft
@@ -9472,7 +9472,7 @@ __metadata:
     mongoose: ^6.4.3
     reflect-metadata: ^0.1.13
     skia-canvas: ^0.9.30
-    tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab"
+    tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb"
     toad-scheduler: ^1.6.1
     typedi: ^0.10.0
   languageName: unknown
@@ -9644,10 +9644,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tiny-discord@https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab":
+"tiny-discord@https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb":
   version: 0.0.1
-  resolution: "tiny-discord@https://github.com/timotejroiko/tiny-discord.git#commit=63c423b55ac40fe1842532f51b0879e9e55f66ab"
-  checksum: 5ea9325d5da6f11b1ff41a3447974089d5f174710bb79d1cc19c04655ab990022aaa0462858efa1b6a14f748e6452aa0dcf3f8179a1188903bc14a3697e7f714
+  resolution: "tiny-discord@https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb"
+  checksum: ccb14d113f89730341957e0213a470db76a4270ab000527d607604d232c93ecedba29a9f750deab8d36b96fef6786034c84bed4b82240da1e18246c5f63cdfb3
   languageName: node
   linkType: hard
 
