@@ -35,14 +35,14 @@ module.exports = {
       exp_backoff_restart_delay,
       env,
     },
-    // {
-    //   name: "support-bot",
-    //   args: `support-bot start ${with_color}`,
-    //   script,
-    //   cron_restart,
-    //   exp_backoff_restart_delay,
-    //   env,
-    // },
+    {
+      name: "support-bot",
+      args: `support-bot start ${with_color}`,
+      script,
+      cron_restart,
+      exp_backoff_restart_delay,
+      env,
+    },
     {
       name: "verify-server",
       args: `verify-server start ${with_color}`,
