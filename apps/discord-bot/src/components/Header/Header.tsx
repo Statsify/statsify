@@ -8,7 +8,7 @@
 
 import { HeaderBody } from "./HeaderBody";
 import { HeaderNametag } from "./HeaderNametag";
-import { HistoricalHeader } from "./HistoricalHeader";
+import { Historical } from "../Historical";
 import { HistoricalType } from "@statsify/api-client";
 import { Image } from "skia-canvas";
 import { Sidebar, SidebarItem } from "../Sidebar";
@@ -49,7 +49,7 @@ export const Header = (props: HeaderProps) => {
 
   if (props.time !== "LIVE")
     return (
-      <HistoricalHeader
+      <Historical.header
         nameTag={nameTag}
         skin={skin}
         title={props.title}

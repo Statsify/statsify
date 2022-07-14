@@ -44,14 +44,14 @@ export const getTitle = (wins: number, prefix: string) => {
     {
       req: 25_000,
       inc: 5000,
-      title: "World Elite",
+      title: "Celestial",
       color: new Color("AQUA"),
       semi: true,
     },
     {
       req: 50_000,
       inc: 10_000,
-      title: "World Master",
+      title: "Divine",
       color: new Color("LIGHT_PURPLE"),
       semi: true,
     },
@@ -59,8 +59,8 @@ export const getTitle = (wins: number, prefix: string) => {
       req: 100_000,
       inc: 10_000,
       max: 50,
-      title: "World's Best",
-      color: new Color("GOLD"),
+      title: "Ascended",
+      color: new Color("RED"),
       semi: true,
     },
   ].map((data) => ({

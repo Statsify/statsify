@@ -24,6 +24,17 @@ import { ratio, sub } from "@statsify/math";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 
+const LAST_HISTORICAL = [
+  HistoricalType.LAST_DAY,
+  HistoricalType.LAST_WEEK,
+  HistoricalType.LAST_MONTH,
+] as const;
+
+type LastHistoricalType = typeof LAST_HISTORICAL[number];
+type CurrentHistoricalType = Exclude<HistoricalType, LastHistoricalType>;
+
+type RawHistoricalResponse = [newPlayer: Player, oldPlayer: Player, isNew?: boolean];
+
 @Injectable()
 export class HistoricalService {
   private readonly logger = new Logger("HistoricalService");
@@ -44,16 +55,15 @@ export class HistoricalService {
   }
 
   public async resetPlayers() {
-    const date = new Date();
-    const minute = this.getMinute(date);
+    const minute = this.getMinute();
 
     const players = await this.dailyModel
       .find({ resetMinute: minute })
-      .select({ uuid: 1 })
+      .select({ uuid: true })
       .lean()
       .exec();
 
-    const type = this.getType(date);
+    const type = this.getType();
 
     players.forEach(async ({ uuid }) => {
       const player = await this.playerService.get(uuid, HypixelCache.LIVE);
@@ -65,17 +75,22 @@ export class HistoricalService {
 
   public async getAndReset(tag: string, type: HistoricalType, time?: number) {
     const player = await this.playerService.get(tag, HypixelCache.LIVE);
+    if (!player) throw new PlayerNotFoundException();
 
-    if (!player) return null;
-
-    player.resetMinute = time ?? this.getMinute(new Date());
-
+    player.resetMinute = time ?? this.getMinute();
     return this.reset(player, type);
   }
 
+  /**
+   *
+   * @param player The player data to reset
+   * @param resetType Whether to reset daily, weekly, or monthly
+   * @returns The flattened player data
+   */
   public async reset(player: Player, resetType: HistoricalType) {
     const isMonthly =
       resetType === HistoricalType.MONTHLY || resetType === HistoricalType.LAST_MONTH;
+
     const isWeekly =
       resetType === HistoricalType.WEEKLY ||
       resetType === HistoricalType.LAST_WEEK ||
@@ -106,7 +121,6 @@ export class HistoricalService {
     };
 
     await reset(this.dailyModel, this.lastDayModel, doc);
-
     if (isWeekly) await reset(this.weeklyModel, this.lastWeekModel, doc);
     if (isMonthly) await reset(this.monthlyModel, this.lastMonthModel, doc);
 
@@ -114,80 +128,104 @@ export class HistoricalService {
   }
 
   public async get(tag: string, type: HistoricalType): Promise<Player | null> {
-    const [newPlayer, oldPlayer, isNew] = await this.getRaw(tag, type);
-    if (!newPlayer || !oldPlayer) throw new PlayerNotFoundException();
+    const player = await this.playerService.get(tag, HypixelCache.CACHE_ONLY, {
+      uuid: true,
+    });
+
+    if (!player) throw new PlayerNotFoundException();
+
+    const [newPlayer, oldPlayer, isNew] = await this.getRaw(player.uuid, type);
 
     const merged = this.merge(oldPlayer, newPlayer);
-
     merged.resetMinute = oldPlayer.resetMinute;
     merged.isNew = isNew;
 
     return merged;
   }
 
-  private async getRaw(
-    tag: string,
-    type: HistoricalType
-  ): Promise<[newPlayer: Player | null, oldPlayer: Player | null, isNew?: boolean]> {
-    let newPlayer: Player;
+  private getRaw(uuid: string, type: HistoricalType): Promise<RawHistoricalResponse> {
+    return LAST_HISTORICAL.includes(type as unknown as LastHistoricalType)
+      ? this.getLastHistorical(uuid, type as unknown as LastHistoricalType)
+      : this.getCurrentHistorical(uuid, type as unknown as CurrentHistoricalType);
+  }
 
-    if (
-      [
-        HistoricalType.LAST_DAY,
-        HistoricalType.LAST_WEEK,
-        HistoricalType.LAST_MONTH,
-      ].includes(type)
-    ) {
-      const lastMap = {
-        [HistoricalType.LAST_DAY]: this.dailyModel,
-        [HistoricalType.LAST_WEEK]: this.weeklyModel,
-        [HistoricalType.LAST_MONTH]: this.monthlyModel,
-      };
+  private async getCurrentHistorical(
+    uuid: string,
+    type: CurrentHistoricalType
+  ): Promise<RawHistoricalResponse> {
+    const newPlayer = await this.playerService.get(uuid, HypixelCache.LIVE);
+    if (!newPlayer) throw new PlayerNotFoundException();
 
-      const player = await lastMap[type as keyof typeof lastMap]
-        .findOne({ uuid: tag })
-        .lean()
-        .exec();
-
-      if (!player) return [null, null];
-
-      newPlayer = deserialize(Player, flatten(player));
-    } else {
-      const player = await this.playerService.get(tag, HypixelCache.LIVE);
-      if (!player) return [null, null];
-
-      newPlayer = player;
-    }
-
-    const models = {
+    const CURRENT_MODELS = {
       [HistoricalType.DAILY]: this.dailyModel,
       [HistoricalType.WEEKLY]: this.weeklyModel,
       [HistoricalType.MONTHLY]: this.monthlyModel,
-      [HistoricalType.LAST_DAY]: this.lastDayModel,
-      [HistoricalType.LAST_WEEK]: this.lastWeekModel,
-      [HistoricalType.LAST_MONTH]: this.lastMonthModel,
     };
 
-    let oldPlayer = (await models[type]
-      .findOne({ uuid: newPlayer.uuid })
+    let oldPlayer = (await CURRENT_MODELS[type]
+      .findOne({ uuid })
       .lean()
       .exec()) as Player;
 
     let isNew = false;
 
     if (!oldPlayer) {
-      const date = new Date();
-      const minute = this.getMinute(date);
-
-      newPlayer.resetMinute = minute;
-
-      oldPlayer = await this.reset(newPlayer, HistoricalType.MONTHLY);
+      newPlayer.resetMinute = this.getMinute();
+      oldPlayer = await this.reset(newPlayer, type);
       isNew = true;
+    } else {
+      oldPlayer = deserialize(Player, flatten(oldPlayer));
     }
 
-    return [newPlayer, deserialize(Player, flatten(oldPlayer)), isNew];
+    return [newPlayer, oldPlayer, isNew];
   }
 
+  private async getLastHistorical(
+    uuid: string,
+    type: LastHistoricalType
+  ): Promise<RawHistoricalResponse> {
+    const CURRENT_MODELS = {
+      [HistoricalType.LAST_DAY]: this.dailyModel,
+      [HistoricalType.LAST_WEEK]: this.weeklyModel,
+      [HistoricalType.LAST_MONTH]: this.monthlyModel,
+    };
+
+    let newPlayer = (await CURRENT_MODELS[type]
+      .findOne({ uuid })
+      .lean()
+      .exec()) as Player;
+
+    let isNew = false;
+
+    if (!newPlayer) {
+      const livePlayer = await this.playerService.get(uuid, HypixelCache.LIVE);
+      if (!livePlayer) throw new PlayerNotFoundException();
+
+      livePlayer.resetMinute = this.getMinute();
+      newPlayer = await this.reset(livePlayer, HistoricalType.MONTHLY);
+      isNew = true;
+    } else {
+      newPlayer = deserialize(Player, flatten(newPlayer));
+    }
+
+    const LAST_MODELS = {
+      [HistoricalType.LAST_DAY]: this.lastDayModel,
+      [HistoricalType.LAST_WEEK]: this.lastWeekModel,
+      [HistoricalType.LAST_MONTH]: this.lastMonthModel,
+    };
+
+    const oldPlayer = (await LAST_MODELS[type].findOne({ uuid }).lean().exec()) as Player;
+    if (!oldPlayer) throw new PlayerNotFoundException();
+
+    return [newPlayer, deserialize(Player, oldPlayer), isNew];
+  }
+
+  /**
+   *
+   * @param oldOne The old stats
+   * @param newOne The new stats
+   * @returns the new stats - the old stats
+   */
   private merge<T>(oldOne: T, newOne: T): T {
     const merged = {} as T;
 
@@ -239,11 +277,22 @@ export class HistoricalService {
     return merged;
   }
 
-  private getMinute(date: Date) {
+  /**
+   *
+   * @returns The current minute of the day
+   */
+  private getMinute() {
+    const date = new Date();
     return date.getHours() * 60 + date.getMinutes();
   }
 
-  private getType(date: Date) {
+  /**
+   *
+   * @returns Whether the current time should daily, weekly, or monthly stats
+   */
+  private getType() {
+    const date = new Date();
+
     return date.getDate() === 1
       ? HistoricalType.MONTHLY
       : date.getDay() === 1

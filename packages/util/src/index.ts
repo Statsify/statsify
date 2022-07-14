@@ -180,10 +180,10 @@ export const formatTime = (
 
 export const relativeTime = (time: number) => `${formatTime(Date.now() - time)} ago`;
 
-export const abbreviationNumber = (num: number): string => {
+export const abbreviationNumber = (num: number): [num: number, suffix: string] => {
   const abbreviation = ["", "", "M", "B", "T"];
   const base = Math.floor(Math.log(num) / Math.log(1000));
-  return `${(num / Math.pow(1000, base)).toFixed(2)}${abbreviation[base]}`;
+  return [+(num / Math.pow(1000, base)).toFixed(2), abbreviation[base]];
 };
 
 export const ordinal = (n: number) => {

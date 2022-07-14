@@ -150,6 +150,8 @@ export class BaseLeaderboardCommand {
           new TextInputBuilder()
             .label((t) => t(`leaderboard.${type}Input.label`))
             .placeholder((t) => t(`leaderboard.${type}Input.placeholder`))
+            .minLength(1)
+            .maxLength(type === "player" ? 16 : 36)
             .required(true)
         )
       );
@@ -161,6 +163,8 @@ export class BaseLeaderboardCommand {
           new TextInputBuilder()
             .label((t) => t("leaderboard.positionInput.label"))
             .placeholder((t) => t("leaderboard.positionInput.placeholder"))
+            .minLength(1)
+            .maxLength(6)
             .required(true)
         )
       );

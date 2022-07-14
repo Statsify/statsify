@@ -44,7 +44,7 @@ export class General {
   public quests: number;
 
   @Field()
-  public ranksGifts: number;
+  public ranksGifted: number;
 
   public constructor(data: APIData = {}) {
     this.achievementPoints = data.achievementPoints;
@@ -60,5 +60,8 @@ export class General {
     this.networkLevel = GeneralUtil.getNetworkLevel(this.networkExp);
 
     this.quests = GeneralUtil.getQuests(data.quests);
+
+    this.giftsSent = data.giftingMeta?.bundlesGiven;
+    this.ranksGifted = data.giftingMeta?.ranksGiven;
   }
 }

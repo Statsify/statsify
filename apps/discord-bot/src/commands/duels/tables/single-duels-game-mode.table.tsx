@@ -6,25 +6,33 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Historical, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { SingleDuelsGameMode } from "@statsify/schemas";
-import { Table } from "#components";
+import type { ProfileTime } from "../../base.hypixel-command";
 
 interface SingleDuelsGameModeTableProps {
   stats: SingleDuelsGameMode;
   t: LocalizeFunction;
+  time: ProfileTime;
 }
 
-export const SingleDuelsGameModeTable = ({ stats, t }: SingleDuelsGameModeTableProps) => (
+export const SingleDuelsGameModeTable = ({
+  stats,
+  t,
+  time,
+}: SingleDuelsGameModeTableProps) => (
   <Table.table>
-    <Table.tr>
-      <Table.td title={t("stats.winstreak")} value={t(stats.winstreak)} color="§e" />
-      <Table.td
-        title={t("stats.bestWinstreak")}
-        value={t(stats.bestWinstreak)}
-        color="§e"
-      />
-    </Table.tr>
+    <Historical.exclude time={time}>
+      <Table.tr>
+        <Table.td title={t("stats.winstreak")} value={t(stats.winstreak)} color="§e" />
+        <Table.td
+          title={t("stats.bestWinstreak")}
+          value={t(stats.bestWinstreak)}
+          color="§e"
+        />
+      </Table.tr>
+    </Historical.exclude>
     <Table.tr>
       <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
       <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />

@@ -14,7 +14,10 @@ import {
 } from "@statsify/discord";
 import { MojangApiService } from "#services";
 
-@Command({ description: "commands.available", args: [new MojangPlayerArgument(true)] })
+@Command({
+  description: (t) => t("commands.available"),
+  args: [new MojangPlayerArgument(true)],
+})
 export class AvailableCommand {
   public constructor(private readonly mojangApiService: MojangApiService) {}
 

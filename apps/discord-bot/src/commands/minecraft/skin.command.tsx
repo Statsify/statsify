@@ -18,7 +18,7 @@ import { Canvas } from "skia-canvas";
 import { MojangApiService } from "#services";
 import { STATUS_COLORS } from "@statsify/logger";
 
-@Command({ description: "commands.skin", args: [MojangPlayerArgument] })
+@Command({ description: (t) => t("commands.skin"), args: [MojangPlayerArgument] })
 export class SkinCommand {
   public constructor(
     private readonly apiService: ApiService,

@@ -11,7 +11,7 @@ import {
   Container,
   Footer,
   Header,
-  HistoricalProgression,
+  Historical,
   If,
   SidebarItem,
   Table,
@@ -91,7 +91,7 @@ export const WoolWarsProfile = ({
           <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
           <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
         </Table.tr>
-        <HistoricalProgression
+        <Historical.progression
           time={time}
           progression={woolwars.progression}
           current={woolwars.levelFormatted}

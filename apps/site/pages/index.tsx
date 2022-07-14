@@ -56,7 +56,7 @@ const Index = () => (
       ]}
       align="left"
     >
-      Beautiful visuals are provided by Statsify for every game Hypixel. Simply input{" "}
+      Beautiful visuals are provided by Statsify for every game on Hypixel. Simply input{" "}
       <Code>/bedwars</Code> into Discord to see your BedWars stats or those of your
       friends. To see further games, type <Code>/</Code> followed by the name of the game.
       To quickly search for yourself, you may link your Minecraft account to your Discord
@@ -113,7 +113,7 @@ const Index = () => (
       playing today. There is no need to worry about your past losses, you can just focus
       on the now. To quickly obtain your daily stats, type <Code>/daily</Code> followed by
       the game of your choice. For example, enter <Code>/daily tntgames</Code> to get your
-      daily TNT Games stats. The same holds true for weekly, and monthly.
+      daily TNT Games stats. The same holds true for weekly and monthly.
     </Feature>
     <Feature
       title="Guilds"
@@ -135,7 +135,7 @@ const Index = () => (
       Use <Code>/guild leaderboard</Code> to see your guild's place on the leaderboards.
       Statsify's unique features, such as monthly GEXP, make it simple to promote and
       demote users and monitor their long-term success. Using <Code>/guild overall</Code>,
-      you can quickly compare your guild against others.
+      you can quickly compare your guild against others'.
     </Feature>
     <Feature
       title="Miscellaneous"
@@ -146,12 +146,12 @@ const Index = () => (
       ]}
       align="left"
     >
-      Statsify has a plethora of helpful hypixel utilities. For example, you can use{" "}
+      Statsify has a plethora of helpful Hypixel utilities. For example, you can use{" "}
       <Code>/friends</Code> to access any player's friend list or <Code>/mutuals</Code> to
       see mutual friends between players. Statsify also allows you to monitor player
       activity using <Code>/status</Code> and <Code>/recentgames</Code>. Using{" "}
       <Code>/gamecounts</Code>, you can track Hypixel's game popularity without ever
-      opening Minecraft.
+      opening minecraft.
     </Feature>
     <Feature
       title="Minecraft"

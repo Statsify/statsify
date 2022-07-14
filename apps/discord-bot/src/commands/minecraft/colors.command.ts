@@ -11,7 +11,7 @@ import { STATUS_COLORS } from "@statsify/logger";
 import { mcShadow } from "@statsify/rendering";
 import { minecraftColors } from "@statsify/util";
 
-@Command({ description: "commands.colors" })
+@Command({ description: (t) => t("commands.colors") })
 export class ColorsCommand {
   public async run() {
     const embed = new EmbedBuilder()

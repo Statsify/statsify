@@ -12,7 +12,7 @@ import {
   Container,
   Footer,
   Header,
-  HistoricalProgression,
+  Historical,
   SidebarItem,
   Table,
   formatProgression,
@@ -45,7 +45,8 @@ export const BedWarsProfile = ({
     [t("stats.emeralds"), t(stats.itemsCollected.emerald), "§2"],
   ];
 
-  if (stats.winstreak) sidebar.push([t("stats.winstreak"), t(stats.winstreak), "§a"]);
+  if (stats.winstreak && time === "LIVE")
+    sidebar.push([t("stats.winstreak"), t(stats.winstreak), "§a"]);
 
   return (
     <Container background={background}>
@@ -98,7 +99,7 @@ export const BedWarsProfile = ({
           <Table.td title={t("stats.bedsLost")} value={t(stats.bedsLost)} color="§c" />
           <Table.td title={t("stats.bblr")} value={t(stats.bblr)} color="§6" />
         </Table.tr>
-        <HistoricalProgression
+        <Historical.progression
           time={time}
           progression={bedwars.progression}
           current={bedwars.levelFormatted}

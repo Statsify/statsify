@@ -58,15 +58,16 @@ module.exports = {
       destination: "https://twitter.com/statsifybot",
       permanent: true,
     },
-    //TODO: add redirects for terms of service and privacy policy
     {
       source: "/terms",
-      destination: "/",
+      destination:
+        "https://j4cobi.notion.site/Statsify-Terms-of-Service-0482207df97f4f41909594241cd0b381",
       permanent: true,
     },
     {
       source: "/privacy",
-      destination: "/",
+      destination:
+        "https://j4cobi.notion.site/Statsify-Privacy-Policy-2e636dcacf1e4237b35d7d2ce2d53613",
       permanent: true,
     },
   ],

@@ -57,8 +57,6 @@ export class HistoricalController {
       resetMinute
     );
 
-    if (!player) return { success: false };
-
-    return { success: true, player };
+    return { success: !!player, player };
   }
 }

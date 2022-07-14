@@ -63,7 +63,7 @@ export class PitPandaService {
       .get(`/bot/profile/${input}`)
       .then((res) => res.data.data)
       .catch((e) => {
-        if (e.response.data.error === "Player has not played the Pit")
+        if (e?.response?.data?.error === "Player has not played the Pit")
           throw new ErrorMessage(
             (t) => t("errors.noPitStats.title"),
             (t) => t("errors.noPitStats.description", { displayName: input })

@@ -53,10 +53,10 @@ export const DuelsProfile = ({
     case "skywars":
     case "op":
     case "megawalls":
-      table = <MultiDuelsGameModeTable stats={duels[api]} t={t} />;
+      table = <MultiDuelsGameModeTable stats={duels[api]} t={t} time={time} />;
       break;
     default:
-      table = <SingleDuelsGameModeTable stats={duels[api]} t={t} />;
+      table = <SingleDuelsGameModeTable stats={duels[api]} t={t} time={time} />;
       break;
   }
 

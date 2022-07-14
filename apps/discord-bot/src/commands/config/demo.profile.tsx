@@ -30,7 +30,7 @@ export const DemoProfile = ({
   message,
 }: DemoProfileProps) => (
   <Container background={background}>
-    <div width="100%">
+    <div width="100%" height="100%">
       <Skin skin={skin} />
       <div direction="column" width="remaining" height="100%">
         <HeaderNametag name={player.prefixName} badge={badge} />

@@ -10,7 +10,7 @@ export * from "./Background";
 export * from "./Container";
 export * from "./Footer";
 export * from "./Header";
-export * from "./HistoricalProgression";
+export * from "./Historical";
 export * from "./If";
 export * from "./List";
 export * from "./Multiline";

@@ -27,6 +27,7 @@ import {
 } from "./responses";
 import { GuildQuery, HistoricalType, HypixelCache, LeaderboardQuery } from "./enums";
 import { UserFooter, UserTheme } from "@statsify/schemas";
+import { config } from "@statsify/util";
 import { loadImage } from "@statsify/rendering";
 
 interface ExtraData {
@@ -41,6 +42,8 @@ interface UpdateUser {
   theme?: UserTheme;
   footer?: UserFooter;
 }
+
+const isProduction = config("environment") === "prod";
 
 export class ApiService {
   private axios: AxiosInstance;
@@ -158,11 +161,19 @@ export class ApiService {
   }
 
   public async getPlayerHead(uuid: string, size?: number) {
-    return this.requestImage(`/skin/head`, { uuid, size });
+    return this.requestImage(
+      isProduction ? `https://api.statsify.net/skin/head` : "/skin/head",
+      {
+        uuid,
+        size,
+      }
+    );
   }
 
   public getPlayerSkin(uuid: string) {
-    return this.requestImage(`/skin`, { uuid });
+    return this.requestImage(isProduction ? `https://api.statsify.net/skin` : "/skin", {
+      uuid,
+    });
   }
 
   public getPlayerHistorical(tag: string, type: HistoricalType) {

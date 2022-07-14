@@ -53,7 +53,6 @@
     "blocksPlaced": "Blocks Placed",
     "bestWinstreak": "Best Winstreak",
     "class": "Class",
-    "warCry": "War Cry",
     "witherDamage": "Wither Damage",
     "witherKills": "Wither Kills",
     "points": "Points",
@@ -88,7 +87,6 @@
     "totalTrophies": "Total Trophies",
     "godlikes": "Godlikes",
     "trigger": "Trigger",
-    "distanceTraveled": "Distance Traveled",
     "highestKillstreak": "Highest Killstreak",
     "winRate": "Win Rate",
     "headshots": "Headshots",
@@ -126,13 +124,10 @@
     "wallsFaced": "Walls Faced",
     "highestScoreQualifications": "Qualifiers Personal Best",
     "highestScoreFinals": "Finals Personal Best",
-    "bowAccuracy": "Bow Accuracy",
     "eggsFound": "Eggs Found",
     "giftsFound": "Gifts Found",
     "candyFound": "Candy Found",
-    "delivered": "Delivered",
     "maxWave": "Max Wave",
-    "doorsOpened": "Doors Opened",
     "fastestWin": "Fastest Win",
     "bestRound": "Best Round",
     "starsEarned": "Stars Earned",
@@ -175,7 +170,6 @@
       "rank": "Guild Rank",
       "quests": "Guild Quests",
       "level": "Guild Level",
-      "gexpToNextLevel": "GEXP To Next Level",
       "gexp": "GEXP",
       "scaledGexp": "Scaled GEXP",
       "daily": "Daily",
@@ -186,14 +180,13 @@
       "monthly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)",
       "date": "Date",
       "averageMemberGexp": "Average Member GEXP",
-      "questsCompleted": "Quests Completed",
       "guild": "Guild"
     }
   },
   "historical": {
     "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
     "new": "**{{displayName}}**'s historical stats have been checked for the first time on Statsify. Their stats will now be updated at this time every day.",
-    "aboutResetting": "Click the reset button below to reset your historical stats everyday **at this time**.\n\n**WARNING**: This will delete all of your historical stats and **cannot be undone**. \nIf you want to be able to reset at a specific time checkout $t(socials.premium).",
+    "aboutResetting": "Click the reset button below to reset your historical stats every day **at this time**.\n\n**WARNING**: This will delete all of your historical stats and **cannot be undone**. \nIf you want to be able to reset at a specific time check out $t(socials.premium).",
     "aboutResettingPremium": "Click the reset button below to reset your historical stats. \n\n**WARNING:** This will delete all of your historical stats and **cannot be undone**.",
     "modal": {
       "resetTime": "Choose a Reset Time",
@@ -244,19 +237,19 @@
       "title": "Statsify Help",
       "games": {
         "title": "Games",
-        "description": "Statsify supports majority of the games on Hypixel. To check your stats in a game run `/[game]`. For example you can run `/bedwars` to check your BedWars stats."
+        "description": "Statsify supports the majority of games offered on Hypixel. To check your stats in a game run `/[game]`. For example you can run `/bedwars` to check your BedWars stats."
       },
       "leaderboards": {
         "title": "Leaderboards",
-        "description": "Statsify offers thousands of leaderboards through the `/leaderboard` command. Run `/leaderboard` then pick the game mode, and pick a leaderboard to view. You can hit the search button to search for a certain player or position. You can also hit the up and down buttons to view more pages."
+        "description": "Statsify offers thousands of leaderboards through the `/leaderboard` command. Run `/leaderboard`, then pick the gamemode, and pick a leaderboard to view. You can hit the search button to search for a specific player or position. You can also hit the up and down buttons to view more pages."
       },
       "historical": {
         "title": "Historical",
         "description": "Statsify lets you check your daily, weekly, and monthly stats through `/daily`, `/weekly` and `/monthly`. If you missed a reset you can view them by running `/yesterday`, `/lastweek`, and `/lastmonth`. "
       },
-      "minecraft": {
+      "Minecraft": {
         "title": "Minecraft",
-        "description": "You can view general minecraft information such as skins, uuids, capes through `/skin`, `/uuid`, and `/cape` respectively. Statsify also has commands to generate minecraft text through `/text`. View minecraft colors through `/colors` and preview minecraft servers through `/server`."
+        "description": "You can view general Minecraft information such as skins, UUIDs, capes through `/skin`, `/uuid`, and `/cape` respectively. Statsify also has commands to generate Minecraft text through `/text`. View Minecraft colors through `/colors` and preview Minecraft servers through `/server`."
       }
     },
     "gameCounts": {
@@ -267,11 +260,11 @@
     },
     "forceUnverify": {
       "title": "Force Unverified",
-      "description": "<@{{id}}> has been unverified from **{{displayName}}**."
+      "description": "<@{{id}}> has been unverified from **{{displayName}}**!"
     },
     "forceVerify": {
       "title": "Force Verified",
-      "description": "<@{{id}}> has been forcefully verified to **{{displayName}}**."
+      "description": "<@{{id}}> has been forcefully verified to **{{displayName}}**!"
     },
     "deletePlayer": {
       "title": "Player Deleted",
@@ -280,11 +273,11 @@
     "tags": {
       "deleted": {
         "title": "Successfully Deleted",
-        "description": "`{{tag}}` has been deleted"
+        "description": "`{{tag}}` has been deleted!"
       },
       "rename": {
         "title": "Successfully Renamed",
-        "description": "`The tag {{originalName}}` has been renamed to `{{newName}}`"
+        "description": "`The tag {{originalName}}` has been renamed to `{{newName}}`!"
       }
     }
   },
@@ -320,7 +313,9 @@
     "warlords": "$t(commands.hypixel-command, { \"name\": \"Warlords\" })",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
 
+    "player-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Player\" })",
     "leaderboard-arcade": "$t(commands.leaderboard-command, { \"name\": \"Arcade\" })",
+    "leaderboard-events": "$t(commands.leaderboard-command, { \"name\": \"Events\" })",
     "leaderboard-arenabrawl": "$t(commands.leaderboard-command, { \"name\": \"Arena Brawl\" })",
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
@@ -403,8 +398,9 @@
     "theme-palette": "Change the color palette of the profiles",
     "theme-view": "View your current profile theme",
     "theme-footer": "Customize your profile's footer",
-    "theme-footer-message": "Change your profile's footer message. You can use https://rgb.birdflop.com to create text gradients",
+    "theme-footer-message": "Change your profile's footer message. You can use https://rgb.birdflop.com to create text gradients.",
     "theme-footer-icon": "Change your profile's footer icon",
+    "theme-footer-reset": "Reset your profile's footer",
 
     "gtbhelper": "Generate a list of possible Guess The Build answers based on the given hint",
     "help": "A basic description of what Statsify does for you and your server",
@@ -470,19 +466,19 @@
     },
     "notVerified": {
       "title": "Not Verified",
-      "description": "You have to be verified before you are able to unverify"
+      "description": "You have to be verified before you are able to unverify!"
     },
     "requiredVerification": {
       "title": "Verification Required",
       "description": "To use this command you must be verified. Run `/verify` to verify your account."
     },
     "successfulVerification": "You are now verified to **{{displayName}}**",
-    "successfulUnverification": "Successfully unverified your account"
+    "successfulUnverification": "Successfully unverified your account!"
   },
   "errors": {
     "unknown": {
       "title": "An Unknown Error Occurred",
-      "description": "Something went wrong, please try again later."
+      "description": "Something went wrong, please try again later. If this persists, report this in our [Discord](<https://statsify.net/discord>)."
     },
     "invalidPlayer": {
       "title": "Invalid Player",
@@ -490,7 +486,7 @@
     },
     "invalidSearch": {
       "title": "Invalid Search",
-      "description": "We couldn't figure out what exactly you were looking for!\nEnter a username, uuid, or discord mention"
+      "description": "We couldn't figure out what exactly you were looking for!\nEnter a username, uuid, or discord mention."
     },
     "missingSelfVerification": {
       "title": "Missing Verification",
@@ -498,15 +494,19 @@
     },
     "missingMentionVerification": {
       "title": "Missing Verification",
-      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account"
+      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account."
     },
     "missingPlayerVerification": {
       "title": "Missing Verification",
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account"
+      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account."
     },
     "invalidGuild": {
       "title": "Invalid Guild",
       "description": "A guild by the {{type}} of `{{tag}}` could not be found!"
+    },
+    "playerNotInGuild": {
+      "title": "Invalid Guild",
+      "description": "**{{displayName}}** is not in a guild!"
     },
     "noRecentGames": {
       "title": "Recent Games Not Found",
@@ -518,27 +518,27 @@
     },
     "noFriends": {
       "title": "Friends Not Found",
-      "description": "**{{displayName}}** has no friends $t(emojis:ad)"
+      "description": "**{{displayName}}** has no friends $t(emojis:sad)! :("
     },
     "noMutuals": {
       "title": "No Mutuals",
-      "description": "**{{displayNameOne}}** and **{{displayNameTwo}}** have no mutual friends"
+      "description": "**{{displayNameOne}}** and **{{displayNameTwo}}** have no mutual friends!"
     },
     "noPitStats": {
       "title": "Pit Stats Not Found",
-      "description": "**{{displayName}}** has never played The Pit"
+      "description": "**{{displayName}}** has never played The Pit!"
     },
     "unsupportedFileType": {
       "title": "Unsupported File Type",
-      "description": "The file you uploaded is not a supported file type for this command"
+      "description": "The file you uploaded is not a supported file type for this command!"
     },
     "playerLeaderboardNotFound": {
       "title": "Invalid Player",
-      "description": "We couldn't find the `player` you were looking for"
+      "description": "We couldn't find the `player` you were looking for!"
     },
     "guildLeaderboardNotFound": {
       "title": "Invalid Guild",
-      "description": "We couldn't find the `guild` you were looking for"
+      "description": "We couldn't find the `guild` you were looking for!"
     },
     "leaderboardInvalidPosition": {
       "title": "Invalid Position",
@@ -546,7 +546,7 @@
     },
     "leaderboardEmpty": {
       "title": "No Leaderboard Data At This Point",
-      "description": "There are is no more leaderboard data at this position"
+      "description": "There is no more leaderboard data at this position!"
     },
     "leaderboardNotFound": {
       "title": "Leaderboard Not Found",
@@ -554,51 +554,51 @@
     },
     "invalidServer": {
       "title": "Invalid Minecraft Server",
-      "description": "The server you are looking for either doesn't exist or is offline"
+      "description": "The server you are looking for either doesn't exist or is offline!"
     },
     "noCape": {
       "title": "Missing Cape",
-      "description": "**{{username}}** doesn't have any capes"
+      "description": "**{{username}}** doesn't have any capes!"
     },
     "noGTBSolutions": {
       "title": "No Guess The Build Solutions",
-      "description": "We couldn't find any solutions for the provided hint"
+      "description": "We couldn't find any solutions for the provided hint!"
     },
     "invalidResetTime": {
       "title": "Invalid Reset Time",
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`"
+      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM.`"
     },
     "invalidResetTimezone": {
       "title": "Invalid Reset Timezone",
-      "description": "`{{timezone}}` is not a valid timezone. Enter a timezone similar to `EST` or `PST`"
+      "description": "`{{timezone}}` is not a valid timezone. Enter a timezone similar to `EST` or `PST`."
     },
     "premiumRequired": {
-      "title": "{{emoji}} Statsify {{tier}} is required to run this command",
-      "description": "Checkout all the available features [here](https://statsify.net/premium)"
+      "title": "$t({{emoji}}) Statsify {{tier}} is required to run this command",
+      "description": "Check out all the available features [here](https://statsify.net/premium)."
     },
     "ironOnly": {
-      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\", \"emoji\": $t(emojis:logos.iron) })",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\", \"emoji\": \"emojis:logos.iron\" })",
       "description": "$t(errors.premiumRequired.description)"
     },
     "goldOnly": {
-      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\", \"emoji\": $t(emojis:logos.gold) })",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\", \"emoji\": \"emojis:logos.gold\" })",
       "description": "$t(errors.premiumRequired.description)"
     },
     "diamondOnly": {
-      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Diamond\", \"emoji\": $t(emojis:logos.diamond) })",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Diamond\", \"emoji\": \"emojis:logos.diamond\" })",
       "description": "$t(errors.premiumRequired.description)"
     },
     "emeraldOnly": {
-      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\", \"emoji\": $t(emojis:logos.emerald) })",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\", \"emoji\": \"emojis:logos.emerald\" })",
       "description": "$t(errors.premiumRequired.description)"
     },
     "netheriteOnly": {
-      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\", \"emoji\": $t(emojis:logos.netherite) })",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\", \"emoji\": \"emojis:logos.netherite\" })",
       "description": "$t(errors.premiumRequired.description)"
     },
     "staffOnly": {
       "title": "Staff Only",
-      "description": "This command is only available to Statsify staff members"
+      "description": "This command is only available to Statsify staff members!"
     },
     "coreOnly": {
       "title": "$t(errors.staffOnly.title)",
@@ -606,11 +606,11 @@
     },
     "ticketAlreadyExists": {
       "title": "Ticket Already Exists",
-      "description": "You already have a ticket open here"
+      "description": "You already have a ticket open here!"
     },
     "invalidTicketChannel": {
       "title": "Invalid Ticket Channel",
-      "description": "You must be in a ticket channel to use this command"
+      "description": "You must be in a ticket channel to use this command!"
     },
     "invalidTagName": {
       "title": "Invalid Tag Name",
@@ -618,7 +618,7 @@
     },
     "tagNotFound": {
       "title": "Tag Not Found",
-      "description": "The tag you provided was not found."
+      "description": "The tag you provided was not found!"
     },
     "footerTooLong": {
       "title": "Message Too Long",
@@ -626,7 +626,7 @@
     },
     "higherTierRequiredForIcon": {
       "title": "Higher Tier Required",
-      "description": "You need to purchase a higher premium tier too unlock this icon"
+      "description": "You need to purchase a higher premium tier to unlock this icon!"
     }
   },
   "leaderboard": {
@@ -640,7 +640,7 @@
     },
     "guildInput": {
       "label": "Search by a Guild",
-      "placeholder": "Enter a guild's name, eg: Bluebloods"
+      "placeholder": "Enter a guild's name, eg: Quote"
     },
     "modal": {
       "title": "Leaderboard Search"
@@ -648,8 +648,6 @@
   },
   "players": "Players",
   "unknown": "Unknown",
-  "ago": "ago",
-  "now": "Now",
   "config": {
     "badge": {
       "profile": "This is how your badge will look on your profiles",
@@ -678,9 +676,8 @@
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
     "verify": "$t(emojis:check) Run `/verify` to run commands without inputting your username as well as receive **10% lower cooldowns**",
-    "github": "$t(emojis:socials.github) Checkout out our $t(socials.github) to view the source code!",
     "premium": "$t(emojis:logos.gold) [Statsify Premium](<https://statsify.net/premium>) offers additional features such as personalized profile badges. Find the full list of benefits [here](<https://statsify.net/premium>)!",
-    "invite": "$t(emojis:socials.discord) Click [here](<https://statsify.net/invite>) to invite Statsify to your servers!"
+    "invite": "$t(emojis:socials.discord) Click [here](<https://statsify.net/invite>) to invite Statsify to your own server!"
   },
   "number": "{{value, number}}"
 }

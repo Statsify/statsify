@@ -7,30 +7,35 @@
  */
 
 import { BaseDuelsGameMode, MultiDuelsGameMode } from "@statsify/schemas";
+import { Historical, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
-import { Table } from "#components";
 import { prettify } from "@statsify/util";
+import type { ProfileTime } from "../../base.hypixel-command";
 
 interface MultiDuelsGameModeModeTableProps {
   stats: BaseDuelsGameMode;
   title: string;
   t: LocalizeFunction;
+  time: ProfileTime;
 }
 
 const MultiDuelsGameModeModeTable = ({
   title,
   stats,
   t,
+  time,
 }: MultiDuelsGameModeModeTableProps) => (
   <Table.ts title={`§6${prettify(title)}`}>
-    <Table.tr>
-      <Table.td title={t("stats.winstreak")} value={t(stats.winstreak)} color="§e" />
-      <Table.td
-        title={t("stats.bestWinstreak")}
-        value={t(stats.bestWinstreak)}
-        color="§e"
-      />
-    </Table.tr>
+    <Historical.exclude time={time}>
+      <Table.tr>
+        <Table.td title={t("stats.winstreak")} value={t(stats.winstreak)} color="§e" />
+        <Table.td
+          title={t("stats.bestWinstreak")}
+          value={t(stats.bestWinstreak)}
+          color="§e"
+        />
+      </Table.tr>
+    </Historical.exclude>
     <Table.tr>
       <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
       <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
@@ -49,16 +54,26 @@ const MultiDuelsGameModeModeTable = ({
 interface MultiDuelsGameModeTableProps {
   stats: MultiDuelsGameMode;
   t: LocalizeFunction;
+  time: ProfileTime;
 }
 
-export const MultiDuelsGameModeTable = ({ stats, t }: MultiDuelsGameModeTableProps) => {
+export const MultiDuelsGameModeTable = ({
+  stats,
+  t,
+  time,
+}: MultiDuelsGameModeTableProps) => {
   const modes = ["overall", "solo", "doubles"] as const;
 
   return (
     <Table.table>
       <Table.tr>
         {modes.map((mode) => (
-          <MultiDuelsGameModeModeTable title={mode} stats={stats[mode]} t={t} />
+          <MultiDuelsGameModeModeTable
+            title={mode}
+            stats={stats[mode]}
+            t={t}
+            time={time}
+          />
         ))}
       </Table.tr>
     </Table.table>

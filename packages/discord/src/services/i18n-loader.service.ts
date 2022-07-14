@@ -47,14 +47,20 @@ export class I18nLoaderService {
   private format(value: any, format?: string | undefined, lng?: string): string {
     switch (format) {
       case "number": {
-        const digits = Number.isInteger(+value) ? 0 : 2;
+        const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
+        const digits = hasDecimals ? 2 : 0;
 
-        if ((value as number) >= 1_000_000) return abbreviationNumber(value);
-
-        return Intl.NumberFormat(lng, {
+        const formatOptions = {
           maximumFractionDigits: digits,
           minimumFractionDigits: digits,
-        }).format(value as number);
+        };
+
+        if ((value as number) >= 1_000_000) {
+          const [number, suffix] = abbreviationNumber(value);
+          return `${Intl.NumberFormat(lng, formatOptions).format(number)}${suffix}`;
+        }
+
+        return Intl.NumberFormat(lng, formatOptions).format(value as number);
       }
     }
 
