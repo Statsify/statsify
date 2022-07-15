@@ -36,7 +36,7 @@ export class TagsCommand {
   })
   public async create(context: CommandContext): Promise<IMessage> {
     const name = context.option<string>("name");
-    const content = context.option<string>("content");
+    const content = context.option<string>("content").replaceAll("\\n", "\n");
     const attachment = context.option<APIAttachment | null>("attachment");
 
     if (

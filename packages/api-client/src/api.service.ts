@@ -298,17 +298,8 @@ export class ApiService {
   }
 
   private async requestImage(url: string, params?: Record<string, unknown>) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "http.client",
-      description: `GET ${url}`,
-    });
-
     const uri = this.axios.getUri({ url, params: { key: this.apiKey, ...params } });
     const image = await loadImage(uri);
-
-    child?.finish();
 
     return image;
   }

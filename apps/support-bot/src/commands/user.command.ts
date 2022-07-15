@@ -56,7 +56,7 @@ export class UserCommand {
 
     this.addField(embed, "Has Badge", user.hasBadge);
 
-    this.addField(embed, "tier", user.tier, (v) => `\`${User.getTierName(v)}\``);
+    this.addField(embed, "Tier", user.tier, (v) => `\`${User.getTierName(v)}\``);
 
     this.addField(embed, "Font", user.theme?.font, (v) => `\`${prettify(v)}\``);
     this.addField(embed, "Boxes", user.theme?.boxes, (v) => `\`${prettify(v)}\``);

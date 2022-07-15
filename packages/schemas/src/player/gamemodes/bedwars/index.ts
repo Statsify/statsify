@@ -143,7 +143,7 @@ export class BedWars {
       exp -= getExpReq(i);
     }
 
-    this.progression = new Progression(exp, getExpReq(Math.floor(this.level) + 1));
+    this.progression = new Progression(exp, getExpReq(Math.floor(this.level)));
 
     this.lootChests = add(
       data.bedwars_boxes,
