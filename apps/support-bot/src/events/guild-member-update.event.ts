@@ -44,7 +44,7 @@ const PATREON_ROLE = config("supportBot.patreonRole");
 const NITRO_BOOSTER_ROLE = config("supportBot.nitroBoosterRole");
 
 const PREMIUM_LOG_CHANNEL = config("supportBot.premiumLogsChannel");
-const GUILD = config("supportBot.guild");
+const GUILD_ID = config("supportBot.guild");
 
 @Service()
 export class GuildMemberUpdateEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberUpdate> {
@@ -78,7 +78,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     if (!this.loadedPremium) await this.loadPremium();
 
     const guildId = data.guild_id;
-    if (guildId !== GUILD) return;
+    if (guildId !== GUILD_ID) return;
 
     const memberId = data.user.id;
 
@@ -137,7 +137,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     //Don't remove their premium if they are a patreon
     if (user?.patreon && user.tier !== UserTier.IRON) {
-      await this.roleService.removeRole(GUILD, memberId, TIER_ROLES[UserTier.IRON]);
+      await this.roleService.removeRole(GUILD_ID, memberId, TIER_ROLES[UserTier.IRON]);
       return;
     }
 
@@ -179,12 +179,12 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     await this.userService.removePremium(memberId);
 
     await this.roleService.removeRole(
-      GUILD,
+      GUILD_ID,
       memberId,
       TIER_ROLES[tier as keyof typeof TIER_ROLES]
     );
 
-    await this.roleService.removeRole(GUILD, memberId, PREMIUM_ROLE);
+    await this.roleService.removeRole(GUILD_ID, memberId, PREMIUM_ROLE);
 
     const { id } = await this.channelService.create(memberId);
 
@@ -210,12 +210,12 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     await this.userService.addPremium(memberId, tier);
 
     await this.roleService.addRole(
-      GUILD,
+      GUILD_ID,
       memberId,
       TIER_ROLES[tier as keyof typeof TIER_ROLES]
     );
 
-    await this.roleService.addRole(GUILD, memberId, PREMIUM_ROLE);
+    await this.roleService.addRole(GUILD_ID, memberId, PREMIUM_ROLE);
 
     const tierName = User.getTierName(tier);
     const emoji = `emojis:logos.${tierName.toLowerCase()}`;

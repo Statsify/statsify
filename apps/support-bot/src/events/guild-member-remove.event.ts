@@ -15,6 +15,8 @@ import { Service } from "typedi";
 import { TicketService } from "#services";
 import { config } from "@statsify/util";
 
+const GUILD_ID = config("supportBot.guild");
+
 @Service()
 export class GuildMemberRemoveEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberRemove> {
   public event = GatewayDispatchEvents.GuildMemberRemove as const;
@@ -28,8 +30,7 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
 
   public async onEvent(data: GatewayGuildMemberRemoveDispatchData): Promise<void> {
     const guildId = data.guild_id;
-    if (guildId !== config("supportBot.guild")) return;
-    return;
+    if (guildId !== GUILD_ID) return;
 
     const memberId = data.user.id;
 

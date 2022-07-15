@@ -17,10 +17,13 @@ import { Service } from "typedi";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
 import { config } from "@statsify/util";
 
+const GUILD_ID = config("supportBot.guild");
+const MEMBER_ROLE = config("supportBot.memberRole");
+
 @Service()
 export class MessageCreateEventListener extends AbstractEventListener<GatewayDispatchEvents.MessageCreate> {
   public event = GatewayDispatchEvents.MessageCreate as const;
-  private cache: string[];
+  private cache: Set<string>;
   private readonly job: SimpleIntervalJob;
   private readonly logger = new Logger("MessageCreateEventListener");
 
@@ -30,10 +33,10 @@ export class MessageCreateEventListener extends AbstractEventListener<GatewayDis
   ) {
     super();
 
-    this.cache = [];
+    this.cache = new Set();
 
     const task = new Task("resetNameUpdateCache", () => {
-      this.cache = [];
+      this.cache = new Set();
     });
 
     this.job = new SimpleIntervalJob({ minutes: 30 }, task);
@@ -41,20 +44,17 @@ export class MessageCreateEventListener extends AbstractEventListener<GatewayDis
   }
 
   public async onEvent(data: GatewayMessageCreateDispatchData): Promise<void> {
-    const guildId = config("supportBot.guild");
-    const memberRole = config("supportBot.memberRole");
-
-    if (data.author.bot || data.guild_id !== guildId) return;
-    if (!data.member?.roles.includes(memberRole)) return;
+    if (data.author.bot || data.guild_id !== GUILD_ID) return;
+    if (!data.member?.roles.includes(MEMBER_ROLE)) return;
 
     const userId = data.author.id;
 
-    if (this.cache.includes(userId)) return;
+    if (this.cache.has(userId)) return;
 
     const user = await this.apiService.getUser(userId);
 
-    if (!user || !user.uuid) {
-      await this.memberService.removeRole(guildId, userId, memberRole);
+    if (!user?.uuid) {
+      await this.memberService.removeRole(GUILD_ID, userId, MEMBER_ROLE);
       return;
     }
 
@@ -67,8 +67,8 @@ export class MessageCreateEventListener extends AbstractEventListener<GatewayDis
       return;
     }
 
-    await this.memberService.changeNickname(guildId, userId, player.username);
+    await this.memberService.changeNickname(GUILD_ID, userId, player.username);
 
-    this.cache.push(userId);
+    this.cache.add(userId);
   }
 }
