@@ -42,6 +42,8 @@ const limit = async () => {
       const path = `${name}.${key}`;
       const { sort, limit } = value.leaderboard;
 
+      if (limit === Number.POSITIVE_INFINITY) return;
+
       memberCount += limit;
 
       if (sort === "DESC") {

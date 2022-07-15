@@ -81,11 +81,27 @@ export class PlayerService {
 
   public async update(data: APIData) {
     const player = new Player(data);
-    //TODO: make sure it keeps things like guildId, and leaderboardBanned
+
+    const mongoPlayer = await this.findMongoDocument(player.uuid, {
+      guildId: true,
+      leaderboardBanned: true,
+    });
+
+    player.guildId = mongoPlayer?.guildId;
+    player.leaderboardBanned = mongoPlayer?.leaderboardBanned ?? false;
     player.expiresAt = Date.now() + 120_000;
 
     const flatPlayer = flatten(player);
-    await this.saveOne(flatPlayer);
+    return this.saveOne(flatPlayer);
+  }
+
+  public getPlayers(start: number, end: number) {
+    return this.playerLeaderboardService["getLeaderboardFromRedis"](
+      Player,
+      "stats.general.networkExp",
+      start,
+      end
+    );
   }
 
   /**
