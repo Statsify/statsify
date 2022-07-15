@@ -17,7 +17,6 @@ import {
 } from "@statsify/discord";
 import {
   FontLoaderService,
-  HypixelStatusService,
   MongoLoaderService,
   TagService,
   TicketService,
@@ -56,8 +55,8 @@ async function bootstrap() {
   Container.set(RestClient, rest);
 
   await Promise.all(
-    [I18nLoaderService, FontLoaderService, MongoLoaderService, HypixelStatusService].map(
-      (service) => Container.get(service).init()
+    [I18nLoaderService, FontLoaderService, MongoLoaderService].map((service) =>
+      Container.get(service).init()
     )
   );
 
