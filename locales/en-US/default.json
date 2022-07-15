@@ -247,7 +247,7 @@
         "title": "Historical",
         "description": "Statsify lets you check your daily, weekly, and monthly stats through `/daily`, `/weekly` and `/monthly`. If you missed a reset you can view them by running `/yesterday`, `/lastweek`, and `/lastmonth`. "
       },
-      "Minecraft": {
+      "minecraft": {
         "title": "Minecraft",
         "description": "You can view general Minecraft information such as skins, UUIDs, capes through `/skin`, `/uuid`, and `/cape` respectively. Statsify also has commands to generate Minecraft text through `/text`. View Minecraft colors through `/colors` and preview Minecraft servers through `/server`."
       }

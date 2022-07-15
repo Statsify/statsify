@@ -23,7 +23,7 @@ export class Friend {
     this.uuid = uuid;
 
     //Sk1er doesn't know how to use color codes
-    this.displayName = data.display.replace("§7+", "§8+");
+    this.displayName = data.display.replace("§7+", "§8+").replace("MVP+", "MVP§c+");
     this.createdAt = data.time;
   }
 }
