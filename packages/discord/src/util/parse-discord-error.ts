@@ -7,8 +7,11 @@
  */
 
 import { RestResponse } from "tiny-discord";
+import { noop } from "@statsify/util";
 
 export const parseDiscordResponse = <T>(response: RestResponse): T => {
+  if (response.headers["content-type"] !== "application/json") return noop();
+
   //@ts-ignore tiny-discord doesn't have a proper types yet
   if (response.status >= 200 && response.status < 300) return response.body.json as T;
 

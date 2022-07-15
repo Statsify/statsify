@@ -29,6 +29,7 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
   public async onEvent(data: GatewayGuildMemberRemoveDispatchData): Promise<void> {
     const guildId = data.guild_id;
     if (guildId !== config("supportBot.guild")) return;
+    return;
 
     const memberId = data.user.id;
 
