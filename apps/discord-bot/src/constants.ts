@@ -13,9 +13,11 @@ import {
   ArenaBrawlModes,
   BEDWARS_MODES,
   BLITZSG_MODES,
+  BRIDGE_MODES,
   BUILD_BATTLE_MODES,
   BedWarsModes,
   BlitzSGModes,
+  BridgeModes,
   BuildBattleModes,
   COPS_AND_CRIMS_MODES,
   CopsAndCrimsModes,
@@ -65,6 +67,7 @@ export type GamesWithBackgrounds =
   | ArcadeModes
   | ArenaBrawlModes
   | BedWarsModes
+  | BridgeModes
   | BlitzSGModes
   | BuildBattleModes
   | CopsAndCrimsModes
@@ -127,6 +130,8 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["buildbattle", "overall"];
     case COPS_AND_CRIMS_MODES:
       return ["copsandcrims", "overall"];
+    case BRIDGE_MODES:
+      return ["duels", "bridge"];
     case DUELS_MODES: {
       let map: string;
 
