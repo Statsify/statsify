@@ -50,13 +50,14 @@ export class BlitzSGKit {
     this.exp = data[`exp_${kit}`];
     this.prestige = data[`p${kit}`];
 
-    this.kills = data[`kills_${kit}`];
-    this.deaths = sub(this.gamesPlayed, this.wins);
-    this.kdr = ratio(this.kills, this.deaths);
-
     this.wins = add(data[`wins_${kit}`], data[`wins_teams_${kit}`]);
+    this.deaths = sub(this.gamesPlayed, this.wins);
+
     this.losses = this.deaths;
     this.wlr = ratio(this.wins, this.losses);
+
+    this.kills = data[`kills_${kit}`];
+    this.kdr = ratio(this.kills, this.deaths);
 
     this.playtime = (data[`time_played_${kit}`] ?? 0) * 1000;
 
