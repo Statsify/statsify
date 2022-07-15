@@ -31,6 +31,7 @@ export const BridgeProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("stats.pingRange"), `${t(duels.pingRange)}ms`, "§2"],
+    [t("stats.goals"), t(stats.goals), "§c"],
     [t("stats.blocksPlaced"), t(stats.blocksPlaced), "§9"],
   ];
 
