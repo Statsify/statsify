@@ -18,7 +18,7 @@ export class UserService {
 
   public async findAllPremium() {
     const users = await this.userModel
-      .find({ tier: { $gte: UserTier.IRON, $lte: UserTier.EMERALD } })
+      .find({ tier: { $gte: UserTier.IRON, $lte: UserTier.NETHERITE } })
       .select({ id: true, tier: true, serverBooster: true, patreon: true })
       .lean()
       .exec();
