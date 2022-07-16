@@ -41,6 +41,12 @@ export class BountyHunters {
   public kills: number;
 
   @Field()
+  public bowKills: number;
+
+  @Field()
+  public swordKills: number;
+
+  @Field()
   public deaths: number;
 
   @Field()
@@ -52,6 +58,8 @@ export class BountyHunters {
   public constructor(data: APIData) {
     this.wins = data.wins_oneinthequiver;
     this.kills = data.kills_oneinthequiver;
+    this.bowKills = data.bow_kills_oneinthequiver;
+    this.swordKills = data.sword_kills_oneinthequiver;
     this.deaths = data.deaths_oneinthequiver;
     this.kdr = ratio(this.kills, this.deaths);
     this.bountyKills = data.bounty_kills_oneinthequiver;
@@ -106,7 +114,6 @@ export class EnderSpleef {
   @Field({ leaderboard: { enabled: false } })
   public powerupActivations: number;
 
-  @Field({ leaderboard: { enabled: false } })
   public blocksBroken: number;
 
   public constructor(data: APIData) {
@@ -136,7 +143,7 @@ export class FarmHunt {
   @Field()
   public hunterKills: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public tauntsUsed: number;
 
   @Field()
@@ -232,10 +239,19 @@ export class HideAndSeek {
   @Field()
   public partyPooper: HideAndSeekMode;
 
-  public constructor(data: APIData) {
+  @Field()
+  public kills: number;
+
+  @Field()
+  public objectivesCompleted: number;
+
+  public constructor(data: APIData, ap: APIData) {
     this.propHunt = new HideAndSeekMode(data, "prop_hunt");
     this.partyPooper = new HideAndSeekMode(data, "party_pooper");
     this.overall = deepAdd(this.propHunt, this.partyPooper);
+
+    this.kills = ap.arcade_hide_and_seek_hider_kills;
+    this.objectivesCompleted = ap.arcade_hide_and_seek_master_hider;
   }
 }
 
@@ -270,10 +286,14 @@ export class HypixelSays {
   @Field()
   public wins: number;
 
+  @Field()
+  public maxScore: number;
+
   public constructor(data: APIData) {
     this.points = add(data.rounds_simon_says, data.rounds_santa_says);
     this.roundsWon = add(data.round_wins_simon_says, data.round_wins_santa_says);
     this.wins = add(data.wins_simon_says, data.wins_santa_says);
+    this.maxScore = Math.max(data.top_score_simon_says, data.top_score_santa_says);
   }
 }
 
@@ -324,10 +344,138 @@ export class PartyGames {
   @Field()
   public roundsWon: number;
 
+  @Field()
+  public animalSlaughterWins: number;
+
+  @Field()
+  public anvilSpleefWins: number;
+
+  @Field()
+  public bombardmentWins: number;
+
+  @Field()
+  public chickenRingsWins: number;
+
+  @Field()
+  public diveWins: number;
+
+  @Field()
+  public highGroundWins: number;
+
+  @Field()
+  public hoeHoeHoeWins: number;
+
+  @Field()
+  public jigsawRushWins: number;
+
+  @Field()
+  public jungleJumpWins: number;
+
+  @Field()
+  public labEscapeWins: number;
+
+  @Field()
+  public lawnMoowerWins: number;
+
+  @Field()
+  public minecartRacingWins: number;
+
+  @Field()
+  public rpg16Wins: number;
+
+  @Field()
+  public spiderMazeWins: number;
+
+  @Field()
+  public theFloorIsLavaWins: number;
+
+  @Field()
+  public avalancheWins: number;
+
+  @Field()
+  public volcanoWins: number;
+
+  @Field()
+  public pigFishingWins: number;
+
+  @Field()
+  public trampolinioWins: number;
+
+  @Field()
+  public pigJoustingWins: number;
+
+  @Field()
+  public workshopWins: number;
+
+  @Field()
+  public shootingRangeWins: number;
+
+  @Field()
+  public frozenFloorWins: number;
+
+  @Field()
+  public cannonPaintingWins: number;
+
+  @Field()
+  public fireLeapersWins: number;
+
+  @Field()
+  public superSheepWins: number;
+
   public constructor(data: APIData) {
     this.wins = add(data.wins_party, data.wins_party_2, data.wins_party_3);
     this.starsEarned = data.total_stars_party;
     this.roundsWon = data.round_wins_party;
+
+    this.animalSlaughterWins = data?.animal_slaughter_round_wins_party;
+
+    this.anvilSpleefWins = data?.anvil_spleef_round_wins_party;
+
+    this.bombardmentWins = data?.bombardment_round_wins_party;
+
+    this.chickenRingsWins = data?.chicken_rings_round_wins_party;
+
+    this.diveWins = data?.dive_round_wins_party;
+
+    this.highGroundWins = data?.high_ground_round_wins_party;
+
+    this.hoeHoeHoeWins = data?.hoe_hoe_hoe_round_wins_party;
+
+    this.jungleJumpWins = data?.jungle_jump_round_wins_party;
+
+    this.labEscapeWins = data?.lab_escape_round_wins_party;
+
+    this.lawnMoowerWins = data?.lawn_moower_round_wins_party;
+
+    this.minecartRacingWins = data?.minecart_racing_round_wins_party;
+
+    this.rpg16Wins = data?.rpg_16_round_wins_party;
+
+    this.spiderMazeWins = data?.spider_maze_round_wins_party;
+
+    this.theFloorIsLavaWins = data?.the_floor_is_lava_round_wins_party;
+
+    this.avalancheWins = data?.avalanche_round_wins_party;
+
+    this.volcanoWins = data?.volcano_round_wins_party;
+
+    this.pigFishingWins = data?.pig_fishing_round_wins_party;
+
+    this.pigJoustingWins = data?.pig_jousting_round_wins_party;
+
+    this.trampolinioWins = data?.trampolinio_round_wins_party;
+
+    this.workshopWins = data?.workshop_round_wins_party;
+
+    this.shootingRangeWins = data?.shooting_range_round_wins_party;
+
+    this.frozenFloorWins = data?.frozen_floor_round_wins_party;
+
+    this.cannonPaintingWins = data?.cannon_painting_round_wins_party;
+
+    this.fireLeapersWins = data?.fire_leapers_round_wins_party;
+
+    this.superSheepWins = data?.super_sheep_round_wins_party;
   }
 }
 

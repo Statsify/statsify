@@ -127,7 +127,7 @@ export class Arcade {
     this.farmHunt = new FarmHunt(data);
     this.football = new Football(data);
     this.galaxyWars = new GalaxyWars(data);
-    this.hideAndSeek = new HideAndSeek(data);
+    this.hideAndSeek = new HideAndSeek(data, ap);
     this.holeInTheWall = new HoleInTheWall(data);
     this.hypixelSays = new HypixelSays(data);
     this.miniWalls = new MiniWalls(data);

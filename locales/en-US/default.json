@@ -47,7 +47,7 @@
     "score": "Score",
     "superVotes": "Super Votes",
     "votes": "Votes",
-    "maxPoints": "Max Points",
+    "maxPoints": "Max Score",
     "correctGuesses": "Correct Guesses",
     "pingRange": "Ping Range",
     "blocksPlaced": "Blocks Placed",
@@ -162,6 +162,7 @@
     "silver": "Silver",
     "mythic-favor": "Mythic Favor",
     "event-level": "Event Level",
+    "objectives": "Objectives",
     "guild": {
       "guildMaster": "Guild Master",
       "createdOn": "Created On",
