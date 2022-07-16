@@ -224,7 +224,7 @@ export class HistoricalService {
     const oldPlayer = (await LAST_MODELS[type].findOne({ uuid }).lean().exec()) as Player;
     if (!oldPlayer) throw new PlayerNotFoundException();
 
-    return [newPlayer, deserialize(Player, oldPlayer), isNew];
+    return [newPlayer, deserialize(Player, flatten(oldPlayer)), isNew];
   }
 
   /**

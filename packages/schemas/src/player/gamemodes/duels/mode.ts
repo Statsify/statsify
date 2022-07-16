@@ -65,11 +65,16 @@ export class BaseDuelsGameMode {
 }
 
 export class BridgeDuelsMode extends BaseDuelsGameMode {
+  @Field()
+  public goals: number;
+
   public constructor(data: APIData, mode: string) {
     super(data, mode);
 
     this.kills = data[`${mode}_bridge_kills`];
     this.deaths = data[`${mode}_bridge_deaths`];
+    this.goals = data[`${mode}_goals`] || data[`${mode}_captures`];
+
     BaseDuelsGameMode.applyRatios(this);
   }
 }

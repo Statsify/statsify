@@ -36,12 +36,16 @@ export class SentryInterceptor implements NestInterceptor {
       headers: req.headers,
     });
 
-    const transaction = Sentry.startTransaction({
-      op: "request",
-      name: `${req.method} ${url.pathname}`,
-    });
+    let transaction: ReturnType<Sentry.Hub["startTransaction"]> | undefined;
 
-    Sentry.configureScope((scope) => scope.setSpan(transaction));
+    if (!url.pathname.includes("/skin")) {
+      transaction = Sentry.startTransaction({
+        op: "request",
+        name: `${req.method} ${url.pathname}`,
+      });
+
+      Sentry.configureScope((scope) => scope.setSpan(transaction));
+    }
 
     return next.handle().pipe(
       catchError((err) => {
@@ -49,17 +53,17 @@ export class SentryInterceptor implements NestInterceptor {
         const isInternalError = err instanceof InternalServerErrorException;
 
         if (isHttpException && !isInternalError) {
-          transaction.finish();
+          transaction?.finish();
           throw err;
         }
 
         Sentry.captureException(err);
-        transaction.setHttpStatus(500);
-        transaction.finish();
+        transaction?.setHttpStatus(500);
+        transaction?.finish();
 
         throw err;
       }),
-      tap(() => transaction.finish())
+      tap(() => transaction?.finish())
     );
   }
 }

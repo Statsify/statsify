@@ -123,7 +123,9 @@ export const ArcadeProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.ARCADE} §fStats §r(${mode.formatted})`}
+        title={`§l${FormattedGame.ARCADE} §f${
+          api === "overall" ? t("stats.wins") : "Stats"
+        } §r(${mode.formatted})`}
         time={time}
       />
       {table}

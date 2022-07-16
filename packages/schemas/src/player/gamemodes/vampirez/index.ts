@@ -35,6 +35,13 @@ export class VampireZ {
     this.human = new VampireZLife(data, "human");
     this.vampire = new VampireZLife(data, "vampire");
 
+    const vampireKills = this.vampire.kills;
+    this.vampire.kills = this.human.kills;
+    this.human.kills = vampireKills;
+
+    VampireZLife.applyRatios(this.vampire);
+    VampireZLife.applyRatios(this.human);
+
     this.overall = deepAdd(this.human, this.vampire);
     VampireZLife.applyRatios(this.overall);
   }

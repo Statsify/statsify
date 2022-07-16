@@ -12,6 +12,7 @@ import {
   ARENA_BRAWL_MODES,
   BEDWARS_MODES,
   BLITZSG_MODES,
+  BRIDGE_MODES,
   BUILD_BATTLE_MODES,
   BlitzSGKit,
   COPS_AND_CRIMS_MODES,
@@ -48,6 +49,7 @@ import { ArcadeProfile } from "../arcade/arcade.profile";
 import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile";
 import { BedWarsProfile } from "../bedwars/bedwars.profile";
 import { BlitzSGProfile } from "../blitzsg/blitzsg.profile";
+import { BridgeProfile } from "../duels/bridge.profile";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile";
 import { DateTime } from "luxon";
@@ -104,6 +106,13 @@ export class HistoricalBase {
   public bedwars(context: CommandContext) {
     return this.run(context, BEDWARS_MODES, (base, mode) => (
       <BedWarsProfile {...base} mode={mode} />
+    ));
+  }
+
+  @SubCommand({ description: (t) => t("commands.historical-bridge"), args })
+  public bridge(context: CommandContext) {
+    return this.run(context, BRIDGE_MODES, (base, mode) => (
+      <BridgeProfile {...base} mode={mode} />
     ));
   }
 

@@ -7,7 +7,6 @@
  */
 
 import {
-  APIGuild,
   APIGuildMember,
   GatewayDispatchEvents,
   GatewayGuildMemberAddDispatchData,
@@ -38,11 +37,14 @@ const JOIN_MESSAGES = [
   "has joined the server!",
 ];
 
+const GUILD_ID = config("supportBot.guild");
+const WELCOME_CHANNEL_ID = config("supportBot.welcomeChannel");
+const UNVERIFIED_CHANNEL_ID = config("supportBot.unverifiedChannel");
+const MEMBER_ROLE = config("supportBot.memberRole");
+
 @Service()
 export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberAdd> {
   public event = GatewayDispatchEvents.GuildMemberAdd as const;
-
-  private guild: APIGuild;
 
   public constructor(
     private readonly apiService: ApiService,
@@ -55,13 +57,9 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
   public async onEvent(data: GatewayGuildMemberAddDispatchData): Promise<void> {
     const guildId = data.guild_id;
-    if (guildId !== config("supportBot.guild")) return;
+    if (guildId !== GUILD_ID) return;
 
-    if (!this.guild) {
-      this.guild = await this.guildService.get(guildId);
-    } else {
-      this.guild.approximate_member_count!++;
-    }
+    const guild = await this.guildService.get(guildId);
 
     const memberId = data.user!.id;
 
@@ -73,14 +71,14 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
     const [avatar, background] = await Promise.all([
       this.getDiscordAvatar(data),
-      getBackground("bedwars", "overall"),
+      getBackground("minecraft", "overall"),
     ]);
 
     const username = data.user!.username;
 
     const canvas = render(
       <WelcomeProfile
-        memberCount={this.guild.approximate_member_count ?? 0}
+        memberCount={guild.approximate_member_count ?? 0}
         avatar={avatar}
         username={username}
         background={background}
@@ -91,7 +89,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
     message.files = [{ name: `welcome.png`, data: buffer, type: "image/png" }];
 
-    await this.messageService.send(config("supportBot.welcomeChannel"), message);
+    await this.messageService.send(WELCOME_CHANNEL_ID, message);
   }
 
   private getDiscordAvatar(member: APIGuildMember): Promise<Image> {
@@ -110,12 +108,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
   }
 
   private async sendVerifiedMessage(member: APIGuildMember): Promise<IMessage> {
-    await this.roleService.addRole(
-      config("supportBot.guild"),
-      member.user!.id,
-      config("supportBot.memberRole")
-    );
-
+    await this.roleService.addRole(GUILD_ID, member.user!.id, MEMBER_ROLE);
     await this.apiService.updateUser(member.user!.id, { serverMember: true });
 
     const embed = new EmbedBuilder()
@@ -127,9 +120,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
   }
 
   private async sendUnverifiedMessage(member: APIGuildMember): Promise<IMessage> {
-    const unverifiedChannel = config("supportBot.unverifiedChannel");
-
-    this.messageService.send(unverifiedChannel, {
+    this.messageService.send(UNVERIFIED_CHANNEL_ID, {
       content: `<@${
         member.user!.id
       }>, run and complete \`/verify\` to get access to the rest of the discord server.`,

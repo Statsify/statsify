@@ -50,6 +50,19 @@ export const DUELS_MODES = new GameModes([
 
 export type DuelsModes = IGameModes<typeof DUELS_MODES>;
 
+export const BRIDGE_MODES = new GameModes([
+  { api: "overall" },
+  { api: "solo" },
+  { api: "doubles" },
+  { api: "threes" },
+  { api: "fours" },
+  { api: "2v2v2v2" },
+  { api: "3v3v3v3" },
+  { api: "ctf", formatted: "CTF" },
+]);
+
+export type BridgeModes = IGameModes<typeof BRIDGE_MODES>;
+
 export class Duels {
   @Field({ store: { default: 300 }, leaderboard: { enabled: false } })
   public pingRange: number;

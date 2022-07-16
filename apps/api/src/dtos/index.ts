@@ -17,3 +17,4 @@ export * from "./verify-code.dto";
 export * from "./reset-player.dto";
 export * from "./command.dto";
 export * from "./update-player.dto";
+export * from "./player-group.dto";
