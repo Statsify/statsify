@@ -17,7 +17,7 @@ export class EasterSimulator {
   public eggsFound: number;
 
   public constructor(data: APIData) {
-    this.wins = data.wins_scuba_simulator;
+    this.wins = data.wins_easter_simulator;
     this.eggsFound = data.eggs_found_easter_simulator;
   }
 }
