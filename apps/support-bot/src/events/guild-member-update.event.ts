@@ -34,11 +34,11 @@ const PREMIUM_TIERS = [
 type PremiumTier = typeof PREMIUM_TIERS[number];
 
 const TIER_ROLES = {
-  [UserTier.IRON]: config("supportBot.ironRole"),
-  [UserTier.GOLD]: config("supportBot.goldRole"),
-  [UserTier.DIAMOND]: config("supportBot.diamondRole"),
-  [UserTier.EMERALD]: config("supportBot.emeraldRole"),
   [UserTier.NETHERITE]: config("supportBot.netheriteRole"),
+  [UserTier.EMERALD]: config("supportBot.emeraldRole"),
+  [UserTier.DIAMOND]: config("supportBot.diamondRole"),
+  [UserTier.GOLD]: config("supportBot.goldRole"),
+  [UserTier.IRON]: config("supportBot.ironRole"),
 };
 
 const PREMIUM_ROLE = config("supportBot.premiumRole");
@@ -107,6 +107,8 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     //They don't have premium and the role was added
     if (currentRoleTier && currentRoleTier > (currentTier ?? 0))
       return this.handlePremiumAdd(memberId, currentRoleTier);
+
+    if (hasPatreonRole) return;
 
     //They were nitro boosting but stopped boosting
     if (isServerBooster && !hasServerBoosterRole)
