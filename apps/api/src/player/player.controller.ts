@@ -16,7 +16,7 @@ import {
 import { Auth } from "../auth/auth.decorator";
 import { AuthRole } from "../auth";
 import { Body, Controller, Delete, Get, Post, Query } from "@nestjs/common";
-import { CachedPlayerDto, UpdatePlayerDto } from "../dtos";
+import { CachedPlayerDto, PlayerGroupDto, UpdatePlayerDto } from "../dtos";
 import {
   DeletePlayerResponse,
   ErrorResponse,
@@ -54,11 +54,17 @@ export class PlayerController {
   }
 
   @ApiOperation({ summary: "Update a Player" })
-  @Auth({ role: AuthRole.ADMIN })
+  @Auth({ role: AuthRole.WORKER, weight: 0 })
   @Post()
-  public async updatePlayer(@Body() player: UpdatePlayerDto) {
-    await this.playerService.update(player);
-    return {};
+  public updatePlayer(@Body() player: UpdatePlayerDto) {
+    return this.playerService.update(player);
+  }
+
+  @ApiOperation({ summary: "Update a Player" })
+  @Auth({ role: AuthRole.WORKER, weight: 10 })
+  @Get("/group")
+  public getPlayerGroup(@Query() { start, end }: PlayerGroupDto) {
+    return this.playerService.getPlayers(start, end);
   }
 
   @ApiOperation({ summary: "Deletes a Player" })

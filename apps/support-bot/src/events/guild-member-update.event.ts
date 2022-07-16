@@ -31,6 +31,8 @@ const PREMIUM_TIERS = [
   UserTier.IRON,
 ] as const;
 
+type PremiumTier = typeof PREMIUM_TIERS[number];
+
 const TIER_ROLES = {
   [UserTier.IRON]: config("supportBot.ironRole"),
   [UserTier.GOLD]: config("supportBot.goldRole"),
@@ -44,13 +46,13 @@ const PATREON_ROLE = config("supportBot.patreonRole");
 const NITRO_BOOSTER_ROLE = config("supportBot.nitroBoosterRole");
 
 const PREMIUM_LOG_CHANNEL = config("supportBot.premiumLogsChannel");
-const GUILD = config("supportBot.guild");
+const GUILD_ID = config("supportBot.guild");
 
 @Service()
 export class GuildMemberUpdateEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberUpdate> {
   public event = GatewayDispatchEvents.GuildMemberUpdate as const;
 
-  private tiers: Map<UserTier, Set<string>>;
+  private tiers: Record<PremiumTier, Set<string>>;
   private serverBoosters: Set<string>;
   private patreons: Set<string>;
 
@@ -65,8 +67,13 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   ) {
     super();
 
-    this.tiers = new Map();
-    PREMIUM_TIERS.forEach((tier) => this.tiers.set(tier, new Set()));
+    this.tiers = {
+      [UserTier.IRON]: new Set(),
+      [UserTier.GOLD]: new Set(),
+      [UserTier.DIAMOND]: new Set(),
+      [UserTier.EMERALD]: new Set(),
+      [UserTier.NETHERITE]: new Set(),
+    };
 
     this.serverBoosters = new Set();
     this.patreons = new Set();
@@ -78,7 +85,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     if (!this.loadedPremium) await this.loadPremium();
 
     const guildId = data.guild_id;
-    if (guildId !== GUILD) return;
+    if (guildId !== GUILD_ID) return;
 
     const memberId = data.user.id;
 
@@ -115,14 +122,14 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     const users = await this.userService.findAllPremium();
 
     users.forEach((user) => {
-      this.tiers.get(user.tier)!.add(user.id);
+      if (user.tier in this.tiers) this.tiers[user.tier as PremiumTier].add(user.id);
       if (user.patreon) this.patreons.add(user.id);
       if (user.serverBooster) this.serverBoosters.add(user.id);
     });
   }
 
   private findTier(memberId: string) {
-    return PREMIUM_TIERS.find((tier) => this.tiers.get(tier)!.has(memberId));
+    return PREMIUM_TIERS.find((tier) => this.tiers[tier]!.has(memberId));
   }
 
   private findRoleTier(roles: string[]) {
@@ -137,7 +144,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     //Don't remove their premium if they are a patreon
     if (user?.patreon && user.tier !== UserTier.IRON) {
-      await this.roleService.removeRole(GUILD, memberId, TIER_ROLES[UserTier.IRON]);
+      await this.roleService.removeRole(GUILD_ID, memberId, TIER_ROLES[UserTier.IRON]);
       return;
     }
 
@@ -160,7 +167,10 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     const user = await this.userService.removePatreon(memberId);
 
-    await this.handlePremiumRemove(memberId, user?.tier ?? UserTier.IRON);
+    await this.handlePremiumRemove(
+      memberId,
+      (user?.tier as PremiumTier) ?? UserTier.IRON
+    );
     if (user?.serverBooster) await this.handlePremiumAdd(memberId, UserTier.IRON);
   }
 
@@ -170,21 +180,15 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     await this.userService.addPatreon(memberId);
   }
 
-  private async handlePremiumRemove(memberId: string, tier: UserTier) {
+  private async handlePremiumRemove(memberId: string, tier: PremiumTier) {
     if (User.isStaff(await this.userService.getTier(memberId))) return;
 
     this.log(`REMOVING \`${User.getTierName(tier)}\` from <@${memberId}>`);
-    this.tiers.get(tier)!.delete(memberId);
+    this.tiers[tier].delete(memberId);
 
     await this.userService.removePremium(memberId);
-
-    await this.roleService.removeRole(
-      GUILD,
-      memberId,
-      TIER_ROLES[tier as keyof typeof TIER_ROLES]
-    );
-
-    await this.roleService.removeRole(GUILD, memberId, PREMIUM_ROLE);
+    await this.roleService.removeRole(GUILD_ID, memberId, TIER_ROLES[tier]);
+    await this.roleService.removeRole(GUILD_ID, memberId, PREMIUM_ROLE);
 
     const { id } = await this.channelService.create(memberId);
 
@@ -201,21 +205,21 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     this.messageService.send(id, { embeds: [embed] }).catch(() => null);
   }
 
-  private async handlePremiumAdd(memberId: string, tier: UserTier) {
+  private async handlePremiumAdd(memberId: string, tier: PremiumTier) {
     if (User.isStaff(await this.userService.getTier(memberId))) return;
 
     this.log(`ADDING \`${User.getTierName(tier)}\` to <@${memberId}>`);
-    this.tiers.get(tier)!.add(memberId);
+    this.tiers[tier].add(memberId);
 
     await this.userService.addPremium(memberId, tier);
 
     await this.roleService.addRole(
-      GUILD,
+      GUILD_ID,
       memberId,
       TIER_ROLES[tier as keyof typeof TIER_ROLES]
     );
 
-    await this.roleService.addRole(GUILD, memberId, PREMIUM_ROLE);
+    await this.roleService.addRole(GUILD_ID, memberId, PREMIUM_ROLE);
 
     const tierName = User.getTierName(tier);
     const emoji = `emojis:logos.${tierName.toLowerCase()}`;

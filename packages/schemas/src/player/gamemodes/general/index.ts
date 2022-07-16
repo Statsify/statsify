@@ -31,7 +31,7 @@ export class General {
     leaderboard: {
       fieldName: "Network Level",
       hidden: true,
-      limit: 500_000,
+      limit: Number.POSITIVE_INFINITY,
       additionalFields: ["stats.general.networkLevel"],
     },
   })

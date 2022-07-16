@@ -25,7 +25,7 @@ function findLastAction(data: APIData): { action: string; time: number } {
       lastQuestStart = quest.active.started;
     }
 
-    if (quest.completions && quest.completions.at(-1).time > lastQuestEnd) {
+    if (quest.completions?.length && quest.completions.at(-1)?.time > lastQuestEnd) {
       lastQuestEnd = quest.completions.at(-1).time;
     }
   }
