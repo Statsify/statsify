@@ -282,6 +282,7 @@ export class ApiService extends StatsifyApiService {
 
   public parseTag(tag: string): [input: string, type: PlayerTag] {
     if (!tag) return ["", "none"];
+    if (tag.includes(" ")) throw new ErrorMessage("errors.invalidSearch");
 
     const length = tag.length;
 
@@ -319,7 +320,7 @@ export class ApiService extends StatsifyApiService {
       const button = new ButtonBuilder()
         .label("NameMC")
         .style(ButtonStyle.Link)
-        .url(`https://namemc.com/search?q=${tag}`);
+        .url(encodeURI(`https://namemc.com/search?q=${tag}`));
 
       buttons.push(button);
     }
