@@ -55,6 +55,7 @@ export const MurderMysteryProfile = ({
         sidebar={sidebar}
         title={`§l${FormattedGame.MURDER_MYSTERY} §fStats`}
         time={time}
+        historicalSidebar
       />
       <Table.table>
         <Table.tr>

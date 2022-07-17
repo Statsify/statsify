@@ -19,6 +19,9 @@ export class TurboKartRacers {
   @Field()
   public coins: number;
 
+  @Field()
+  public tokens: number;
+
   @Field({ leaderboard: { enabled: false } })
   public grandPrixTokens: number;
 
@@ -52,8 +55,9 @@ export class TurboKartRacers {
   @Field({ leaderboard: { enabled: false } })
   public goldRate: number;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData, legacy: APIData) {
     this.coins = data.coins;
+    this.tokens = legacy.tokens;
     this.gamesPlayed = add(
       data.retro_plays,
       data.olympus_plays,

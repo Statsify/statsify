@@ -25,7 +25,8 @@ export const PaintballProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(paintball.coins), "§6"],
-    [t("stats.forcefieldTime"), formatTime(paintball.forcefieldTime), "§e"],
+    [t("stats.tokens"), t(paintball.tokens), "§e"],
+    [t("stats.forcefieldTime"), formatTime(paintball.forcefieldTime), "§9"],
     [t("stats.hat"), prettify(paintball.hat), "§7"],
     [t("stats.killstreaks"), t(paintball.killstreaks), "§b"],
   ];

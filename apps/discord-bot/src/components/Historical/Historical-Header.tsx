@@ -7,6 +7,7 @@
  */
 
 import { DateTime } from "luxon";
+import { ElementNode } from "@statsify/rendering";
 import { HistoricalType } from "@statsify/api-client";
 import { prettify } from "@statsify/util";
 
@@ -15,6 +16,7 @@ interface HistoricalHeaderProps {
   nameTag: JSX.Element;
   time: HistoricalType;
   title: string;
+  sidebar?: ElementNode;
 }
 
 export const HistoricalHeader = ({
@@ -22,6 +24,7 @@ export const HistoricalHeader = ({
   nameTag,
   title,
   time,
+  sidebar,
 }: HistoricalHeaderProps) => {
   const now = DateTime.now();
   let start: DateTime;
@@ -57,9 +60,9 @@ export const HistoricalHeader = ({
   return (
     <div width="100%">
       {skin}
-      <div width="remaining" direction="column">
+      <div width="remaining" height="remaining" direction="column">
         {nameTag}
-        <box width="100%">
+        <box width="100%" height="remaining">
           <text>
             {start.toFormat("MM/dd/yy")} ➡ {end.toFormat("MM/dd/yy")}
           </text>
@@ -73,6 +76,7 @@ export const HistoricalHeader = ({
           </box>
         </div>
       </div>
+      {sidebar ?? <></>}
     </div>
   );
 };

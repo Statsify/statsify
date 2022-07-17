@@ -58,7 +58,10 @@ export class ArenaBrawl {
   @Field()
   public keys: number;
 
-  public constructor(data: APIData) {
+  @Field()
+  public tokens: number;
+
+  public constructor(data: APIData, legacy: APIData) {
     this.solo = new ArenaBrawlMode(data, "1v1");
     this.doubles = new ArenaBrawlMode(data, "2v2");
     this.fours = new ArenaBrawlMode(data, "4v4");
@@ -74,6 +77,7 @@ export class ArenaBrawl {
     this.keys = data.keys;
     this.magicalChests = data.magical_chest;
     this.coins = data.coins;
+    this.tokens = legacy.arena_tokens;
   }
 }
 

@@ -50,7 +50,10 @@ export class Paintball {
   @Field()
   public perks: PaintballPerks;
 
-  public constructor(data: APIData) {
+  @Field()
+  public tokens: number;
+
+  public constructor(data: APIData, legacy: APIData) {
     this.coins = data.coins;
     this.forcefieldTime = (data.forcefieldTime ?? 0) * 1000;
     this.kills = data.kills;
@@ -62,6 +65,7 @@ export class Paintball {
     this.kdr = ratio(this.kills, this.deaths);
     this.shotAccuracy = ratio(this.kills, this.shotsFired, 100);
     this.perks = new PaintballPerks(data);
+    this.tokens = legacy.paintball_tokens;
   }
 }
 

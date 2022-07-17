@@ -40,7 +40,10 @@ export class Walls {
   @Field()
   public assists: number;
 
-  public constructor(data: APIData) {
+  @Field()
+  public tokens: number;
+
+  public constructor(data: APIData, legacy: APIData) {
     this.coins = data.coins;
     this.wins = data.wins;
     this.losses = data.losses;
@@ -49,5 +52,6 @@ export class Walls {
     this.deaths = data.deaths;
     this.kdr = ratio(this.kills, this.deaths);
     this.assists = data.assists;
+    this.tokens = legacy.walls_tokens;
   }
 }

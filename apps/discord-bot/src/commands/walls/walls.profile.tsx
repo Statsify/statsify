@@ -22,7 +22,10 @@ export const WallsProfile = ({
 }: BaseProfileProps) => {
   const { walls } = player.stats;
 
-  const sidebar: SidebarItem[] = [[t("stats.coins"), t(walls.coins), "§6"]];
+  const sidebar: SidebarItem[] = [
+    [t("stats.coins"), t(walls.coins), "§6"],
+    [t("stats.tokens"), t(walls.tokens), "§e"],
+  ];
 
   return (
     <Container background={background}>

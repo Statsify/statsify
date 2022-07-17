@@ -52,6 +52,9 @@ export class BuildBattle {
   public score: number;
 
   @Field()
+  public correctGuesses: number;
+
+  @Field()
   public votes: number;
 
   @Field()
@@ -63,7 +66,7 @@ export class BuildBattle {
   @Field({ store: { default: `${titleScores[0].color}${titleScores[0].title}` } })
   public titleFormatted: string;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { fieldName: "Wins", name: "1.14 Wins" } })
   public latestWins: number;
 
   public constructor(data: APIData) {
@@ -79,6 +82,7 @@ export class BuildBattle {
     this.coins = data.coins;
     this.score = data.score;
 
+    this.correctGuesses = data.correct_guesses;
     this.votes = data.total_votes;
     this.superVotes = data.super_votes;
 

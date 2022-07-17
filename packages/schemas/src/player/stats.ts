@@ -144,30 +144,40 @@ export class PlayerStats {
 
   public constructor(data: APIData = {}) {
     this.arcade = new Arcade(data?.stats?.Arcade ?? {}, data?.achievements ?? {});
-    this.arenabrawl = new ArenaBrawl(data?.stats?.Arena ?? {});
+    this.arenabrawl = new ArenaBrawl(data?.stats?.Arena ?? {}, data?.stats?.Legacy ?? {});
     this.bedwars = new BedWars(data?.stats?.Bedwars ?? {});
     this.blitzsg = new BlitzSG(data?.stats?.HungerGames ?? {});
     this.buildbattle = new BuildBattle(data?.stats?.BuildBattle ?? {});
     this.copsandcrims = new CopsAndCrims(data?.stats?.MCGO ?? {});
     this.duels = new Duels(data?.stats?.Duels ?? {});
-    this.events = new Events(data.seasonal);
-    this.general = new General(data);
+    this.events = new Events(data?.seasonal);
+    this.general = new General(data?.stats?.Legacy ?? {}, data);
     this.megawalls = new MegaWalls(data?.stats?.Walls3 ?? {});
     this.murdermystery = new MurderMystery(
       data?.stats?.MurderMystery ?? {},
       data?.achievements ?? {}
     );
-    this.paintball = new Paintball(data?.stats?.Paintball ?? {});
+    this.paintball = new Paintball(
+      data?.stats?.Paintball ?? {},
+      data?.stats?.Legacy ?? {}
+    );
     this.parkour = new Parkour(data?.parkourCompletions ?? {});
-    this.quake = new Quake(data?.stats?.Quake ?? {}, data?.achievements ?? {});
+    this.quake = new Quake(
+      data?.stats?.Quake ?? {},
+      data?.achievements ?? {},
+      data?.stats?.Legacy ?? {}
+    );
     this.skywars = new SkyWars(data?.stats?.SkyWars ?? {});
     this.smashheroes = new SmashHeroes(data?.stats?.SuperSmash ?? {});
     this.speeduhc = new SpeedUHC(data?.stats?.SpeedUHC ?? {});
     this.tntgames = new TNTGames(data?.stats?.TNTGames ?? {}, data?.achievements ?? {});
-    this.turbokartracers = new TurboKartRacers(data?.stats?.GingerBread ?? {});
+    this.turbokartracers = new TurboKartRacers(
+      data?.stats?.GingerBread ?? {},
+      data?.stats?.Legacy ?? {}
+    );
     this.uhc = new UHC(data?.stats?.UHC ?? {});
-    this.vampirez = new VampireZ(data?.stats?.VampireZ ?? {});
-    this.walls = new Walls(data?.stats?.Walls ?? {});
+    this.vampirez = new VampireZ(data?.stats?.VampireZ ?? {}, data?.stats?.Legacy ?? {});
+    this.walls = new Walls(data?.stats?.Walls ?? {}, data?.stats?.Legacy ?? {});
     this.warlords = new Warlords(data?.stats?.Battleground ?? {});
     this.woolwars = new WoolWars(data?.stats?.WoolGames ?? {});
   }

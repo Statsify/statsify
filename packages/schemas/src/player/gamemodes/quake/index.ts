@@ -52,10 +52,13 @@ export class Quake {
   @Field()
   public godlikes: number;
 
+  @Field()
+  public tokens: number;
+
   @Field({ leaderboard: { enabled: false }, store: { default: 1.3 } })
   public trigger: number;
 
-  public constructor(data: APIData, ap: APIData) {
+  public constructor(data: APIData, ap: APIData, legacy: APIData) {
     this.solo = new QuakeMode(data, "");
     this.teams = new QuakeMode(data, "teams");
 
@@ -66,7 +69,7 @@ export class Quake {
     this.coins = data.coins;
     this.highestKillstreak = data.highest_killstreak;
     this.godlikes = ap.quake_godlikes;
-
+    this.tokens = legacy.quakecraft_tokens;
     // NINE_POINT_ZERO becomes 9.0
     // ALWAYS in seconds
     this.trigger =

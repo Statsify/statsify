@@ -46,6 +46,7 @@ export const SpeedUHCProfile = ({
         title={`§l${FormattedGame.SPEED_UHC} §fStats §r(${mode.formatted})`}
         description={`${FormattedGame.SPEED_UHC} §7Level: ${speeduhc.levelFormatted}`}
         time={time}
+        historicalSidebar
       />
       <Table.table>
         <Table.tr>
