@@ -11,13 +11,13 @@ import { Container, Footer, Header, SidebarItem, Table } from "#components";
 import { FormattedGame, VampireZLife } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 
-interface VampireZRowProps {
+interface VampireZColumnProps {
   mode: string;
   stats: VampireZLife;
   t: LocalizeFunction;
 }
 
-const VampireZRow = ({ mode, stats, t }: VampireZRowProps) => (
+const VampireZColumn = ({ mode, stats, t }: VampireZColumnProps) => (
   <Table.ts title={mode}>
     <Table.td title={t(`stats.wins`)} value={t(stats.wins)} color="§e" />
     <Table.td title={t(`stats.kills`)} value={t(stats.kills)} color="§a" />
@@ -57,9 +57,9 @@ export const VampireZProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <VampireZRow mode="§6Overall" stats={vampirez.overall} t={t} />
-          <VampireZRow mode="§eHuman" stats={vampirez.human} t={t} />
-          <VampireZRow mode="§4Vampire" stats={vampirez.vampire} t={t} />
+          <VampireZColumn mode="§6Overall" stats={vampirez.overall} t={t} />
+          <VampireZColumn mode="§eHuman" stats={vampirez.human} t={t} />
+          <VampireZColumn mode="§4Vampire" stats={vampirez.vampire} t={t} />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />
