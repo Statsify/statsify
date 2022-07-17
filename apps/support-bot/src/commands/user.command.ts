@@ -54,6 +54,8 @@ export class UserCommand {
       (v) => `<t:${Math.round(v / 1000)}:R>`
     );
 
+    this.addField(embed, "Server Member", user.serverMember);
+
     this.addField(embed, "Has Badge", user.hasBadge);
 
     this.addField(embed, "Tier", user.tier, (v) => `\`${User.getTierName(v)}\``);
