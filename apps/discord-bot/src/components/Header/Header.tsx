@@ -8,7 +8,7 @@
 
 import { HeaderBody } from "./HeaderBody";
 import { HeaderNametag } from "./HeaderNametag";
-import { Historical } from "#components";
+import { Historical } from "../Historical";
 import { HistoricalType } from "@statsify/api-client";
 import { Image } from "skia-canvas";
 import { Sidebar, SidebarItem } from "../Sidebar";
