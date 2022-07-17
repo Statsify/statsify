@@ -181,7 +181,7 @@ export class TicketService {
    */
   public async close(
     channelIdOrOwnerId: string,
-    type: "channel" | "user",
+    type: "channel" | "owner",
     userId: string,
     reason = "N/A"
   ) {
