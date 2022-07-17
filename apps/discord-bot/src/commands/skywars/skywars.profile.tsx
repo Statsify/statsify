@@ -140,7 +140,7 @@ export const SkyWarsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.SKYWARS} §r(${mode.formatted})`}
+        title={`§l${FormattedGame.SKYWARS} Stats §r(${mode.formatted})`}
         description={`${FormattedGame.SKYWARS} §7Level: ${
           skywars.levelFormatted
         }\n${formatProgression({
