@@ -38,6 +38,7 @@ import {
   PaintballModes,
   ParkourModes,
   PitModes,
+  PlayerStats,
   QUAKE_MODES,
   QuakeModes,
   SKYWARS_MODES,
@@ -263,6 +264,32 @@ const GAME_ID_TO_MODES: Record<GameId, GameModes<any> | null> = {
   IDLE: noop(),
   SMP: noop(),
 };
+
+export const MODES_TO_API = new Map<GameModes<GamesWithBackgrounds>, keyof PlayerStats>([
+  [ARCADE_MODES, "arcade"],
+  [ARENA_BRAWL_MODES, "arenabrawl"],
+  [BEDWARS_MODES, "bedwars"],
+  [BLITZSG_MODES, "blitzsg"],
+  [BUILD_BATTLE_MODES, "buildbattle"],
+  [COPS_AND_CRIMS_MODES, "copsandcrims"],
+  [DUELS_MODES, "duels"],
+  [GENERAL_MODES, "general"],
+  [MEGAWALLS_MODES, "megawalls"],
+  [MURDER_MYSTERY_MODES, "murdermystery"],
+  [PAINTBALL_MODES, "paintball"],
+  [PARKOUR_MODES, "parkour"],
+  [QUAKE_MODES, "quake"],
+  [SKYWARS_MODES, "skywars"],
+  [SMASH_HEROES_MODES, "smashheroes"],
+  [SPEED_UHC_MODES, "speeduhc"],
+  [TNT_GAMES_MODES, "tntgames"],
+  [TURBO_KART_RACERS_MODES, "turbokartracers"],
+  [UHC_MODES, "uhc"],
+  [VAMPIREZ_MODES, "vampirez"],
+  [WALLS_MODES, "walls"],
+  [WARLORDS_MODES, "warlords"],
+  [WOOLWARS_MODES, "woolwars"],
+]);
 
 export const mapGameIdToBackground = (id: GameId) => {
   const modes = GAME_ID_TO_MODES[id] ?? GENERAL_MODES;

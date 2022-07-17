@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-type Ratio = [
+export type Ratio = [
   numerator: string,
   denominator: string,
   name: string,
@@ -14,7 +14,7 @@ type Ratio = [
   multiplier?: number
 ];
 
-const LEADERBOARD_RATIOS: Ratio[] = [
+export const LEADERBOARD_RATIOS: Ratio[] = [
   ["wins", "losses", "wlr", "WLR"],
   ["kills", "deaths", "kdr", "KDR"],
   ["finalKills", "finalDeaths", "fkdr", "FKDR"],
