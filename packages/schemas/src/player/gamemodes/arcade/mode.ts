@@ -293,7 +293,10 @@ export class HypixelSays {
     this.points = add(data.rounds_simon_says, data.rounds_santa_says);
     this.roundsWon = add(data.round_wins_simon_says, data.round_wins_santa_says);
     this.wins = add(data.wins_simon_says, data.wins_santa_says);
-    this.maxScore = Math.max(data.top_score_simon_says, data.top_score_santa_says);
+    this.maxScore = Math.max(
+      data.top_score_simon_says ?? 0,
+      data.top_score_santa_says ?? 0
+    );
   }
 }
 
