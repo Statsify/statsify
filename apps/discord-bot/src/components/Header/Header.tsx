@@ -22,6 +22,8 @@ interface BaseHeaderProps {
   name: string;
   time: "LIVE" | HistoricalType;
   title: string;
+
+  historicalSidebar?: boolean;
 }
 
 interface SidebarlessHeaderProps extends BaseHeaderProps {
@@ -47,18 +49,10 @@ export const Header = (props: HeaderProps) => {
     <HeaderNametag name={props.name} badge={props.badge} size={props.size} />
   );
 
-  if (props.time !== "LIVE")
-    return (
-      <Historical.header
-        nameTag={nameTag}
-        skin={skin}
-        title={props.title}
-        time={props.time}
-      />
-    );
-
   const sidebar =
-    "sidebar" in props && props.sidebar.length ? (
+    "sidebar" in props &&
+    props.sidebar.length &&
+    (props.time !== "LIVE" ? props.historicalSidebar : true) ? (
       <Sidebar items={props.sidebar} />
     ) : (
       <></>
@@ -72,6 +66,17 @@ export const Header = (props: HeaderProps) => {
   } else {
     body = <HeaderBody title={props.title} description={props.description} />;
   }
+
+  if (props.time !== "LIVE")
+    return (
+      <Historical.header
+        nameTag={nameTag}
+        skin={skin}
+        title={props.title}
+        time={props.time}
+        sidebar={sidebar}
+      />
+    );
 
   return (
     <div width="100%">

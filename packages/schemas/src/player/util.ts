@@ -96,7 +96,7 @@ export class PlayerUtil {
       case "MCP":
       case "MINISTER":
         return new Color("RED");
-      case "PIG++":
+      case "PIG+++":
         return new Color("LIGHT_PURPLE");
       case "MOD":
       case "GM":

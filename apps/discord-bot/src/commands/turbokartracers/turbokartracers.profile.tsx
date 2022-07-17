@@ -24,7 +24,7 @@ export const TurboKartRacersProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(turbokartracers.coins), "§6"],
-    [t("stats.coinsPickedUp"), t(turbokartracers.coinsPickedUp), "§e"],
+    [t("stats.tokens"), t(turbokartracers.tokens), "§e"],
     [t("stats.boxesPickedUp"), t(turbokartracers.boxesPickedUp), "§c"],
     [t("stats.grandPrixTokens"), t(turbokartracers.grandPrixTokens), "§b"],
     [t("stats.lapsCompleted"), t(turbokartracers.lapsCompleted), "§2"],

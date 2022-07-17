@@ -21,6 +21,15 @@ export class VampireZ {
   public coins: number;
 
   @Field()
+  public tokens: number;
+
+  @Field()
+  public mostVampireKills: number;
+
+  @Field()
+  public zombieKills: number;
+
+  @Field()
   public overall: VampireZLife;
 
   @Field()
@@ -29,8 +38,11 @@ export class VampireZ {
   @Field()
   public vampire: VampireZLife;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData, legacy: APIData) {
     this.coins = data.coins;
+    this.coins = legacy.vampirez_tokens;
+    this.mostVampireKills = data.most_vampire_kills_new;
+    this.zombieKills = data.zombie_kills;
 
     this.human = new VampireZLife(data, "human");
     this.vampire = new VampireZLife(data, "vampire");

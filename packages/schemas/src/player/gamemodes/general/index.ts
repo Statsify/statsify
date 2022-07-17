@@ -46,7 +46,10 @@ export class General {
   @Field()
   public ranksGifted: number;
 
-  public constructor(data: APIData = {}) {
+  @Field({ leaderboard: { fieldName: "Total Tokens" } })
+  public classicTokens: number;
+
+  public constructor(legacy: APIData, data: APIData = {}) {
     this.achievementPoints = data.achievementPoints;
 
     this.challenges = Math.max(
@@ -63,5 +66,7 @@ export class General {
 
     this.giftsSent = data.giftingMeta?.bundlesGiven;
     this.ranksGifted = data.giftingMeta?.ranksGiven;
+
+    this.classicTokens = legacy.total_tokens;
   }
 }

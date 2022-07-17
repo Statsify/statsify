@@ -30,7 +30,8 @@ export const QuakeProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(quake.coins), "§6"],
-    [t("stats.godlikes"), t(quake.godlikes), "§e"],
+    [t("stats.tokens"), t(quake.tokens), "§e"],
+    [t("stats.godlikes"), t(quake.godlikes), "§3"],
     [t("stats.trigger"), `${quake.trigger}s`, "§b"],
     [t("stats.highestKillstreak"), t(quake.highestKillstreak), "§4"],
   ];

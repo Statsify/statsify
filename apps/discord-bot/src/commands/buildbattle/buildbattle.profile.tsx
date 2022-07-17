@@ -42,6 +42,7 @@ export const BuildBattleProfile = ({
     [t("stats.score"), t(buildbattle.score), "§a"],
     [t("stats.votes"), t(buildbattle.votes), "§c"],
     [t("stats.superVotes"), t(buildbattle.superVotes), "§b"],
+    [t("stats.correctGuesses"), t(buildbattle.correctGuesses), "§9"],
   ];
 
   return (
@@ -51,6 +52,7 @@ export const BuildBattleProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
+        historicalSidebar
         title={`§l${FormattedGame.BUILD_BATTLE} §fStats`}
         description={`§dBuild Battle Title\n${buildbattle.titleFormatted}`}
         time={time}
