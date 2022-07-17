@@ -38,7 +38,7 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
 
     await this.ticketService.close(
       memberId,
-      "user",
+      "owner",
       config("supportBot.applicationId"),
       "Member Left"
     );
