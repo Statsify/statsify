@@ -10,7 +10,6 @@ import { APIData } from "@statsify/util";
 import { BowSpleef, PVPRun, TNTRun, TNTTag, Wizards } from "./mode";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
-import { add } from "@statsify/math";
 
 export const TNT_GAMES_MODES = new GameModes([
   { api: "overall" },
@@ -50,7 +49,7 @@ export class TNTGames {
 
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
-    this.wins = add(data.wins, data.wins_pvprun);
+    this.wins = data.wins;
     this.blocksRan = ap.tntgames_block_runner;
 
     this.tntRun = new TNTRun(data);
