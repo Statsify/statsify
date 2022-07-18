@@ -16,7 +16,6 @@ import { Logger } from "@statsify/logger";
 import { config } from "@statsify/util";
 import { join } from "node:path";
 import "@sentry/tracing";
-import "reflect-metadata";
 
 const logger = new Logger("discord-bot");
 const handleError = logger.error.bind(logger);

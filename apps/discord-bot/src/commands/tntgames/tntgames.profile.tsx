@@ -42,7 +42,7 @@ export const TNTGamesProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(tntgames.coins), "§6"],
-    [t("stats.wins"), t(tntgames.wins), "§e"],
+    [t("stats.overallWins"), t(tntgames.wins), "§e"],
     [t("stats.blocksRan"), t(tntgames.blocksRan), "§7"],
   ];
 
