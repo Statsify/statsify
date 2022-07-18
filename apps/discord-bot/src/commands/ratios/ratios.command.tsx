@@ -11,16 +11,13 @@ import {
   ARENA_BRAWL_MODES,
   BEDWARS_MODES,
   BLITZSG_MODES,
-  BRIDGE_MODES,
   BlitzSGKit,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
-  FieldMetadata,
   GameMode,
   GameModes,
   LEADERBOARD_RATIOS,
   MEGAWALLS_MODES,
-  METADATA_KEY,
   MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
   Player,
@@ -75,11 +72,6 @@ export class RatiosCommand {
   @SubCommand({ description: (t) => t("commands.ratios-bedwars"), args })
   public bedwars(context: CommandContext) {
     return this.run(context, BEDWARS_MODES);
-  }
-
-  @SubCommand({ description: (t) => t("commands.ratios-bridge"), args })
-  public bridge(context: CommandContext) {
-    return this.run(context, BRIDGE_MODES);
   }
 
   @SubCommand({ description: (t) => t("commands.ratios-blitzsg"), args })
@@ -203,6 +195,8 @@ export class RatiosCommand {
         const background = await getBackground(...mapBackground(modes, mode.api));
 
         const game = player.stats[key];
+        const stats = this.getModeStats(game, mode);
+
         const ratios = ratiosPerMode[index][1];
 
         const props: RatiosProfileProps = {
@@ -215,8 +209,8 @@ export class RatiosCommand {
           badge,
           mode,
           ratios: ratios.map((r) => [
-            game[r[0] as keyof typeof game],
-            game[r[1] as keyof typeof game],
+            stats[r[0] as keyof typeof stats],
+            stats[r[1] as keyof typeof stats],
             prettify(r[0]),
             r[3],
           ]),
@@ -235,31 +229,41 @@ export class RatiosCommand {
     return this.paginateService.paginate(context, pages);
   }
 
+  private getModeStats(game: PlayerStats[keyof PlayerStats], mode: GameMode<any>) {
+    const stats = game[mode.api as keyof typeof game];
+    return mode.api === "overall" ? stats || game : stats;
+  }
+
   private getRatiosPerMode<T extends GamesWithBackgrounds>(
     key: keyof PlayerStats,
     modes: GameModes<T>
   ) {
     console.log(key);
-    const gameClass = (
-      Reflect.getMetadata(METADATA_KEY, PlayerStats, key) as FieldMetadata
-    ).type.type;
-
-    console.log(gameClass);
+    const gameClass = Reflect.getMetadata("design:type", PlayerStats.prototype, key);
 
     const ratioModes: [mode: GameMode<T>, ratios: Ratio[]][] = [];
+    const gameModes = modes.getModes();
 
-    for (const mode of modes.getModes()) {
-      const modeClass = (
-        Reflect.getMetadata(METADATA_KEY, gameClass, mode.api) as FieldMetadata
-      ).type.type;
+    for (const mode of gameModes) {
+      if (!mode.api) continue;
+
+      const modeClass =
+        mode.api === "overall"
+          ? Reflect.getMetadata("design:type", gameClass.prototype, mode.api) || gameClass
+          : Reflect.getMetadata("design:type", gameClass.prototype, mode.api);
+
       const ratios = LEADERBOARD_RATIOS.filter(([numerator, denominator]) => {
-        const numeratorType = (
-          Reflect.getMetadata(METADATA_KEY, modeClass, numerator) as FieldMetadata
-        ).type.type;
+        const numeratorType = Reflect.getMetadata(
+          "design:type",
+          modeClass.prototype,
+          numerator
+        );
 
-        const denominatorType = (
-          Reflect.getMetadata(METADATA_KEY, modeClass, denominator) as FieldMetadata
-        ).type.type;
+        const denominatorType = Reflect.getMetadata(
+          "design:type",
+          modeClass.prototype,
+          denominator
+        );
 
         return numeratorType === Number && denominatorType === Number;
       });
