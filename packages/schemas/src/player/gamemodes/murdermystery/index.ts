@@ -7,13 +7,22 @@
  */
 
 import { APIData } from "@statsify/util";
+import {
+  AssassinsMurderMysteryMode,
+  BaseMurderMysteryMode,
+  ClassicMurderMysteryMode,
+  InfectionMurderMysteryMode,
+} from "./mode";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
-import { MurderMysteryMode } from "./mode";
 import { add } from "@statsify/math";
 
 export const MURDER_MYSTERY_MODES = new GameModes([
   { api: "overall" },
+  { api: "classic" },
+  { api: "doubleUp" },
+  { api: "assassins" },
+  { api: "infection" },
 
   { hypixel: "MURDER_DOUBLE_UP", formatted: "Double Up" },
   { hypixel: "MURDER_INFECTION", formatted: "Infection" },
@@ -40,19 +49,22 @@ export class MurderMystery {
   public heroWins: number;
 
   @Field()
-  public overall: MurderMysteryMode;
+  public goldGathered: number;
 
   @Field()
-  public classic: MurderMysteryMode;
+  public overall: BaseMurderMysteryMode;
 
   @Field()
-  public assassins: MurderMysteryMode;
+  public classic: ClassicMurderMysteryMode;
 
   @Field()
-  public doubleUp: MurderMysteryMode;
+  public assassins: AssassinsMurderMysteryMode;
 
   @Field()
-  public infection: MurderMysteryMode;
+  public doubleUp: ClassicMurderMysteryMode;
+
+  @Field()
+  public infection: InfectionMurderMysteryMode;
 
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
@@ -70,11 +82,13 @@ export class MurderMystery {
     this.detectiveWins = data.detective_wins;
     this.heroWins = ap.murdermystery_countermeasures;
 
-    this.overall = new MurderMysteryMode(data, "");
-    this.classic = new MurderMysteryMode(data, "MURDER_CLASSIC");
-    this.assassins = new MurderMysteryMode(data, "MURDER_ASSASSINS");
-    this.doubleUp = new MurderMysteryMode(data, "MURDER_DOUBLE_UP");
-    this.infection = new MurderMysteryMode(data, "MURDER_INFECTION");
+    this.overall = new BaseMurderMysteryMode(data, "");
+    this.classic = new ClassicMurderMysteryMode(data, "MURDER_CLASSIC");
+    this.assassins = new AssassinsMurderMysteryMode(data, "MURDER_ASSASSINS");
+    this.doubleUp = new ClassicMurderMysteryMode(data, "MURDER_DOUBLE_UP");
+    this.infection = new InfectionMurderMysteryMode(data, "MURDER_INFECTION");
+
+    this.goldGathered = add(this.classic.goldGathered, this.doubleUp.goldGathered);
   }
 }
 
