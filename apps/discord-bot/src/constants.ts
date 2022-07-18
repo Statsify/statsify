@@ -23,6 +23,7 @@ import {
   CopsAndCrimsModes,
   DUELS_MODES,
   DuelsModes,
+  FormattedGame,
   GENERAL_MODES,
   GameCodeMapping,
   GameId,
@@ -290,6 +291,34 @@ export const MODES_TO_API = new Map<GameModes<GamesWithBackgrounds>, keyof Playe
   [WARLORDS_MODES, "warlords"],
   [WOOLWARS_MODES, "woolwars"],
 ]);
+
+export const MODES_TO_FORMATTED = new Map<GameModes<GamesWithBackgrounds>, FormattedGame>(
+  [
+    [ARCADE_MODES, FormattedGame.ARCADE],
+    [ARENA_BRAWL_MODES, FormattedGame.ARENA_BRAWL],
+    [BEDWARS_MODES, FormattedGame.BEDWARS],
+    [BLITZSG_MODES, FormattedGame.BLITZSG],
+    [BUILD_BATTLE_MODES, FormattedGame.BUILD_BATTLE],
+    [COPS_AND_CRIMS_MODES, FormattedGame.COPS_AND_CRIMS],
+    [DUELS_MODES, FormattedGame.DUELS],
+    [GENERAL_MODES, FormattedGame.GENERAL],
+    [MEGAWALLS_MODES, FormattedGame.MEGAWALLS],
+    [MURDER_MYSTERY_MODES, FormattedGame.MURDER_MYSTERY],
+    [PAINTBALL_MODES, FormattedGame.PAINTBALL],
+    [PARKOUR_MODES, FormattedGame.PARKOUR],
+    [QUAKE_MODES, FormattedGame.QUAKE],
+    [SKYWARS_MODES, FormattedGame.SKYWARS],
+    [SMASH_HEROES_MODES, FormattedGame.SMASH_HEROES],
+    [SPEED_UHC_MODES, FormattedGame.SPEED_UHC],
+    [TNT_GAMES_MODES, FormattedGame.TNT_GAMES],
+    [TURBO_KART_RACERS_MODES, FormattedGame.TURBO_KART_RACERS],
+    [UHC_MODES, FormattedGame.UHC],
+    [VAMPIREZ_MODES, FormattedGame.VAMPIREZ],
+    [WALLS_MODES, FormattedGame.WALLS],
+    [WARLORDS_MODES, FormattedGame.WARLORDS],
+    [WOOLWARS_MODES, FormattedGame.WOOLWARS],
+  ]
+);
 
 export const mapGameIdToBackground = (id: GameId) => {
   const modes = GAME_ID_TO_MODES[id] ?? GENERAL_MODES;

@@ -27,7 +27,6 @@ import {
   SKYWARS_MODES,
   SMASH_HEROES_MODES,
   SPEED_UHC_MODES,
-  TNT_GAMES_MODES,
   UHC_MODES,
   VAMPIREZ_MODES,
   WALLS_MODES,
@@ -43,7 +42,12 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { GamesWithBackgrounds, MODES_TO_API, mapBackground } from "#constants";
+import {
+  GamesWithBackgrounds,
+  MODES_TO_API,
+  MODES_TO_FORMATTED,
+  mapBackground,
+} from "#constants";
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -136,11 +140,6 @@ export class RatiosCommand {
     return this.run(context, SPEED_UHC_MODES);
   }
 
-  @SubCommand({ description: (t) => t("commands.ratios-tntgames"), args })
-  public tntgames(context: CommandContext) {
-    return this.run(context, TNT_GAMES_MODES);
-  }
-
   @SubCommand({ description: (t) => t("commands.ratios-uhc"), args })
   public uhc(context: CommandContext) {
     return this.run(context, UHC_MODES);
@@ -208,6 +207,7 @@ export class RatiosCommand {
           user,
           badge,
           mode,
+          gameName: MODES_TO_FORMATTED.get(modes)!,
           ratios: ratios.map((r) => [
             stats[r[0] as keyof typeof stats],
             stats[r[1] as keyof typeof stats],
@@ -238,7 +238,6 @@ export class RatiosCommand {
     key: keyof PlayerStats,
     modes: GameModes<T>
   ) {
-    console.log(key);
     const gameClass = Reflect.getMetadata("design:type", PlayerStats.prototype, key);
 
     const ratioModes: [mode: GameMode<T>, ratios: Ratio[]][] = [];
@@ -252,6 +251,7 @@ export class RatiosCommand {
           ? Reflect.getMetadata("design:type", gameClass.prototype, mode.api) || gameClass
           : Reflect.getMetadata("design:type", gameClass.prototype, mode.api);
 
+      if (!modeClass) continue;
       const ratios = LEADERBOARD_RATIOS.filter(([numerator, denominator]) => {
         const numeratorType = Reflect.getMetadata(
           "design:type",

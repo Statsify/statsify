@@ -8,7 +8,7 @@
 
 import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, List, Table } from "#components";
-import { GameMode } from "@statsify/schemas";
+import { FormattedGame, GameMode } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import { ratio } from "@statsify/math";
 
@@ -94,6 +94,8 @@ export interface RatiosProfileProps extends Omit<BaseProfileProps, "time"> {
   mode: GameMode<any>;
 
   ratios: RatioWithStats[];
+
+  gameName: FormattedGame;
 }
 
 export const RatiosProfile = ({
@@ -106,6 +108,7 @@ export const RatiosProfile = ({
   mode,
   ratios,
   t,
+  gameName,
 }: RatiosProfileProps) => (
   <Container background={background}>
     <Header
@@ -113,7 +116,7 @@ export const RatiosProfile = ({
       time="LIVE"
       name={player.prefixName}
       skin={skin}
-      title={`§lBUILDWARS §fRatios §r(${mode.formatted})`}
+      title={`§l${gameName} §fRatios §r(${mode.formatted})`}
     />
     <Table.table>
       <Table.tr>
