@@ -8,23 +8,12 @@
 
 import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
-import { FormattedGame, MurderMysteryMode } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
+import { FormattedGame, GameMode, MurderMysteryModes } from "@statsify/schemas";
+import { formatTime } from "@statsify/util";
 
-interface MurderMysteryModeColumnProps {
-  title: string;
-  stats: MurderMysteryMode;
-  t: LocalizeFunction;
+export interface MurderMysteryProfileProps extends BaseProfileProps {
+  mode: GameMode<MurderMysteryModes>;
 }
-
-const MurderMysteryModeColumn = ({ title, stats, t }: MurderMysteryModeColumnProps) => (
-  <Table.ts title={`§6${title}`}>
-    <Table.td title={t("stats.gamesPlayed")} value={t(stats.gamesPlayed)} color="§e" />
-    <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-    <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§c" />
-    <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§b" />
-  </Table.ts>
-);
 
 export const MurderMysteryProfile = ({
   player,
@@ -33,18 +22,207 @@ export const MurderMysteryProfile = ({
   skin,
   t,
   badge,
+  mode,
   user,
   time,
-}: BaseProfileProps) => {
+}: MurderMysteryProfileProps) => {
   const { murdermystery } = player.stats;
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(murdermystery.coins), "§6"],
     [t("stats.lootChests"), t(murdermystery.lootChests), "§e"],
-    [t("stats.murdererWins"), t(murdermystery.murdererWins), "§c"],
-    [t("stats.detectiveWins"), t(murdermystery.detectiveWins), "§b"],
-    [t("stats.heroWins"), t(murdermystery.heroWins), "§a"],
+    [t("stats.goldPickedUp"), t(murdermystery[mode.api].goldPickedUp), "§6"],
+    [t("stats.gamesPlayed"), t(murdermystery[mode.api].gamesPlayed), "§b"],
   ];
+
+  let table: JSX.Element;
+
+  switch (mode.api) {
+    case "overall": {
+      const stats = murdermystery[mode.api];
+
+      table = (
+        <Table.table>
+          <Table.tr>
+            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+            <Table.td
+              title={t("stats.murdererWins")}
+              value={t(stats.murdererWins)}
+              color="§c"
+            />
+            <Table.td
+              title={t("stats.detectiveWins")}
+              value={t(stats.detectiveWins)}
+              color="§b"
+            />
+            <Table.td title={t("stats.heroWins")} value={t(stats.heroWins)} color="§e" />
+          </Table.tr>
+          <Table.tr>
+            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+            <Table.td
+              title={t("stats.killsAsMurderer")}
+              value={t(stats.killsAsMurderer)}
+              color="§4"
+            />
+          </Table.tr>
+          <Table.tr>
+            <Table.td
+              title={t("stats.thrownKnifeKills")}
+              value={t(stats.thrownKnifeKills)}
+              color="§a"
+            />
+            <Table.td
+              title={t("stats.trapKills")}
+              value={t(stats.trapKills)}
+              color="§c"
+            />
+            <Table.td title={t("stats.bowKills")} value={t(stats.bowKills)} color="§6" />
+            <Table.td title={t("stats.suicides")} value={t(stats.suicides)} color="§4" />
+          </Table.tr>
+        </Table.table>
+      );
+
+      break;
+    }
+    case "doubleUp":
+    case "classic": {
+      const stats = murdermystery[mode.api];
+
+      table = (
+        <Table.table>
+          <Table.tr>
+            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+            <Table.td
+              title={t("stats.murdererWins")}
+              value={t(stats.murdererWins)}
+              color="§c"
+            />
+            <Table.td
+              title={t("stats.detectiveWins")}
+              value={t(stats.detectiveWins)}
+              color="§b"
+            />
+            <Table.td title={t("stats.heroWins")} value={t(stats.heroWins)} color="§e" />
+          </Table.tr>
+          <Table.tr>
+            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+            <Table.td
+              title={t("stats.killsAsMurderer")}
+              value={t(stats.killsAsMurderer)}
+              color="§4"
+            />
+          </Table.tr>
+          <Table.tr>
+            <Table.td
+              title={t("stats.thrownKnifeKills")}
+              value={t(stats.thrownKnifeKills)}
+              color="§a"
+            />
+            <Table.td
+              title={t("stats.trapKills")}
+              value={t(stats.trapKills)}
+              color="§c"
+            />
+            <Table.td title={t("stats.bowKills")} value={t(stats.bowKills)} color="§6" />
+            <Table.td title={t("stats.suicides")} value={t(stats.suicides)} color="§4" />
+          </Table.tr>
+          <Table.tr>
+            <Table.td
+              title={t("stats.fastestMurdererWin")}
+              value={
+                stats.fastestMurdererWin ? formatTime(stats.fastestMurdererWin) : "N/A"
+              }
+              color="§c"
+            />
+            <Table.td
+              title={t("stats.fastestDetectiveWin")}
+              value={
+                stats.fastestDetectiveWin ? formatTime(stats.fastestDetectiveWin) : "N/A"
+              }
+              color="§b"
+            />
+          </Table.tr>
+        </Table.table>
+      );
+
+      break;
+    }
+    case "assassins": {
+      const stats = murdermystery[mode.api];
+
+      table = (
+        <Table.table>
+          <Table.tr>
+            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§e" />
+            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+          </Table.tr>
+          <Table.tr>
+            <Table.td
+              title={t("stats.thrownKnifeKills")}
+              value={t(stats.thrownKnifeKills)}
+              color="§a"
+            />
+            <Table.td
+              title={t("stats.trapKills")}
+              value={t(stats.trapKills)}
+              color="§c"
+            />
+            <Table.td title={t("stats.bowKills")} value={t(stats.bowKills)} color="§6" />
+          </Table.tr>
+        </Table.table>
+      );
+
+      break;
+    }
+    case "infection": {
+      const stats = murdermystery[mode.api];
+
+      table = (
+        <Table.table>
+          <Table.tr>
+            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+            <Table.td
+              title={t("stats.killsAsInfected")}
+              value={t(stats.killsAsInfected)}
+              color="§2"
+            />
+          </Table.tr>
+          <Table.tr>
+            <Table.td
+              title={t("stats.survivorWins")}
+              value={t(stats.survivorWins)}
+              color="§e"
+            />
+            <Table.td
+              title={t("stats.killsAsSurvivor")}
+              value={t(stats.killsAsSurvivor)}
+              color="§6"
+            />
+          </Table.tr>
+          <Table.tr>
+            <Table.td
+              title={t("stats.lastAliveGames")}
+              value={t(stats.lastAliveGames)}
+              color="§b"
+            />
+            <Table.td
+              title={t("stats.bestTime")}
+              value={formatTime(stats.longestSurvivalTime)}
+              color="§3"
+            />
+          </Table.tr>
+        </Table.table>
+      );
+
+      break;
+    }
+  }
 
   return (
     <Container background={background}>
@@ -53,31 +231,11 @@ export const MurderMysteryProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.MURDER_MYSTERY} §fStats`}
+        title={`§l${FormattedGame.MURDER_MYSTERY} §fStats §r(${mode.formatted})`}
         time={time}
         historicalSidebar
       />
-      <Table.table>
-        <Table.tr>
-          <MurderMysteryModeColumn title="Overall" stats={murdermystery.overall} t={t} />
-          <MurderMysteryModeColumn title="Classic" stats={murdermystery.classic} t={t} />
-          <MurderMysteryModeColumn
-            title="Double Up"
-            stats={murdermystery.doubleUp}
-            t={t}
-          />
-          <MurderMysteryModeColumn
-            title="Assassins"
-            stats={murdermystery.assassins}
-            t={t}
-          />
-          <MurderMysteryModeColumn
-            title="Infection"
-            stats={murdermystery.infection}
-            t={t}
-          />
-        </Table.tr>
-      </Table.table>
+      {table}
       <Footer logo={logo} user={user} />
     </Container>
   );
