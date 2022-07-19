@@ -56,7 +56,7 @@ export class NameHistoryCommand {
                     ? `<t:${Math.floor(new Date(changed_at).getTime() / 1000)}:R>`
                     : `\`${t("minecraft.originalName")}\``;
 
-                  return `\`•\` **${username}**: ${time}\n`;
+                  return `\`•\` **${username.replace(/_/g, "\\_")}**: ${time}\n`;
                 })
                 .join("")
             )
