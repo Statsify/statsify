@@ -118,7 +118,7 @@ export class InfectionMurderMysteryMode extends BaseMurderMysteryMode {
   @Field()
   public lastAliveGames: number;
 
-  @Field({ leaderboard: { sort: "ASC", formatter: formatTime } })
+  @Field({ leaderboard: { formatter: formatTime } })
   public longestSurvivalTime: number;
 
   public constructor(data: APIData, mode: string) {
