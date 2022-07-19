@@ -49,7 +49,7 @@ export const QuakeProfile = ({
       <Table.table>
         <Table.tr>
           <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-          <Table.td title={t("stats.winRate")} value={`${stats.winRate}%`} color="§c" />
+          <Table.td title={t("stats.kwr")} value={t(stats.kwr)} color="§c" />
           <Table.td
             title={t("stats.killstreaks")}
             value={t(stats.killstreaks)}
