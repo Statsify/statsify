@@ -35,33 +35,6 @@ export class BaseMurderMysteryMode {
   }
 }
 
-// export class MurderMysteryModeMinusInfection extends BaseMurderMysteryMode {
-//   @Field()
-//   public kills: number;
-
-//   @Field()
-//   public deaths: number;
-
-//   @Field()
-//   public kdr: number;
-
-//   @Field()
-//   public trapKills: number;
-//   @Field()
-//   public thrownKnifeKills: number;
-//   public constructor(data: APIData, mode: string) {
-//     super(data, mode);
-//     mode = mode ? `_${mode}` : mode;
-
-//     this.kills = data[`kills${mode}`];
-//     this.deaths = data[`deaths${mode}`];
-//     this.kdr = ratio(this.kills, this.deaths);
-
-//     this.trapKills = data[`trap_kills${mode}`];
-//     this.thrownKnifeKills = data[`thrown_knife_kills${mode}`];
-//   }
-// }
-
 export class StandardMurderMysteryMode extends BaseMurderMysteryMode {
   @Field()
   public kills: number;
@@ -91,6 +64,7 @@ export class StandardMurderMysteryMode extends BaseMurderMysteryMode {
 
   @Field()
   public suicides: number;
+
   public constructor(data: APIData, mode: string) {
     super(data, mode);
     mode = mode ? `_${mode}` : mode;
@@ -116,6 +90,7 @@ export class ClassicMurderMysteryMode extends StandardMurderMysteryMode {
 
   @Field({ leaderboard: { sort: "ASC", formatter: formatTime } })
   public fastestMurdererWin: number;
+
   public constructor(data: APIData, mode: string) {
     super(data, mode);
     mode = mode ? `_${mode}` : mode;
@@ -175,10 +150,13 @@ export class AssassinsMurderMysteryMode extends BaseMurderMysteryMode {
 
   @Field()
   public trapKills: number;
+
   @Field()
   public thrownKnifeKills: number;
+
   @Field()
   public knifeKills: number;
+
   public constructor(data: APIData, mode: string) {
     super(data, mode);
 
