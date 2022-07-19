@@ -46,7 +46,7 @@ export class General {
   @Field()
   public ranksGifted: number;
 
-  @Field({ leaderboard: { fieldName: "Tokens" } })
+  @Field({ leaderboard: { fieldName: "Tokens", name: "Classic Tokens" } })
   public classicTokens: number;
 
   public constructor(legacy: APIData, data: APIData = {}) {
