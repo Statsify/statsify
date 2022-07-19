@@ -11,7 +11,7 @@ import {
   AssassinsMurderMysteryMode,
   ClassicMurderMysteryMode,
   InfectionMurderMysteryMode,
-  MurderMysteryModeMinusAssassins,
+  StandardMurderMysteryMode,
 } from "./mode";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
@@ -40,7 +40,7 @@ export class MurderMystery {
   public lootChests: number;
 
   @Field()
-  public overall: MurderMysteryModeMinusAssassins;
+  public overall: StandardMurderMysteryMode;
 
   @Field()
   public classic: ClassicMurderMysteryMode;
@@ -66,7 +66,7 @@ export class MurderMystery {
       data.mm_golden_chests
     );
 
-    this.overall = new MurderMysteryModeMinusAssassins(data, "");
+    this.overall = new StandardMurderMysteryMode(data, "");
     this.classic = new ClassicMurderMysteryMode(data, "MURDER_CLASSIC");
     this.doubleUp = new ClassicMurderMysteryMode(data, "MURDER_DOUBLE_UP");
     this.assassins = new AssassinsMurderMysteryMode(data, "MURDER_ASSASSINS");
