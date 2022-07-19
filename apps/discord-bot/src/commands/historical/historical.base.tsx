@@ -175,8 +175,8 @@ export class HistoricalBase {
 
   @SubCommand({ description: (t) => t("commands.historical-murdermystery"), args })
   public murdermystery(context: CommandContext) {
-    return this.run(context, MURDER_MYSTERY_MODES, (base) => (
-      <MurderMysteryProfile {...base} />
+    return this.run(context, MURDER_MYSTERY_MODES, (base, mode) => (
+      <MurderMysteryProfile {...base} mode={mode} />
     ));
   }
 

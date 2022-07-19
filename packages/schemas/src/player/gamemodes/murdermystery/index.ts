@@ -9,9 +9,9 @@
 import { APIData } from "@statsify/util";
 import {
   AssassinsMurderMysteryMode,
-  BaseMurderMysteryMode,
   ClassicMurderMysteryMode,
   InfectionMurderMysteryMode,
+  MurderMysteryModeMinusAssassins,
 } from "./mode";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
@@ -40,19 +40,7 @@ export class MurderMystery {
   public lootChests: number;
 
   @Field()
-  public murdererWins: number;
-
-  @Field()
-  public detectiveWins: number;
-
-  @Field()
-  public heroWins: number;
-
-  @Field()
-  public goldGathered: number;
-
-  @Field()
-  public overall: BaseMurderMysteryMode;
+  public overall: MurderMysteryModeMinusAssassins;
 
   @Field()
   public classic: ClassicMurderMysteryMode;
@@ -78,17 +66,13 @@ export class MurderMystery {
       data.mm_golden_chests
     );
 
-    this.murdererWins = data.murderer_wins;
-    this.detectiveWins = data.detective_wins;
-    this.heroWins = ap.murdermystery_countermeasures;
-
-    this.overall = new BaseMurderMysteryMode(data, "");
+    this.overall = new MurderMysteryModeMinusAssassins(data, "");
     this.classic = new ClassicMurderMysteryMode(data, "MURDER_CLASSIC");
-    this.assassins = new AssassinsMurderMysteryMode(data, "MURDER_ASSASSINS");
     this.doubleUp = new ClassicMurderMysteryMode(data, "MURDER_DOUBLE_UP");
+    this.assassins = new AssassinsMurderMysteryMode(data, "MURDER_ASSASSINS");
     this.infection = new InfectionMurderMysteryMode(data, "MURDER_INFECTION");
 
-    this.goldGathered = add(this.classic.goldGathered, this.doubleUp.goldGathered);
+    this.overall.heroWins = ap.murdermystery_countermeasures;
   }
 }
 
