@@ -160,7 +160,7 @@ export class AssassinsMurderMysteryMode extends BaseMurderMysteryMode {
   public constructor(data: APIData, mode: string) {
     super(data, mode);
 
-    this.kills = data.trap_kills_MURDER_ASSASSINS;
+    this.kills = data.kills_MURDER_ASSASSINS;
     this.deaths = data.deaths_MURDER_ASSASSINS;
     this.kdr = ratio(this.kills, this.deaths);
 

@@ -114,6 +114,7 @@ export class EnderSpleef {
   @Field({ leaderboard: { enabled: false } })
   public powerupActivations: number;
 
+  @Field()
   public blocksBroken: number;
 
   public constructor(data: APIData) {

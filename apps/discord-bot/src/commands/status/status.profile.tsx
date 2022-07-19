@@ -34,7 +34,7 @@ const OnlineTable = ({ status, t }: StatusTableProps) => (
         <Table.td
           title={t("stats.game")}
           value={FormattedGame[status.game.id]}
-          color="§f"
+          color="§e"
           t:ignore
         />
         <If condition={status.mode}>
@@ -68,7 +68,7 @@ const OfflineTable = ({ status, t }: StatusTableProps) => (
       <Table.td
         title={t("stats.lastGame")}
         value={FormattedGame[status.actions.lastGame.id]}
-        color="§f"
+        color="§a"
         t:ignore
       />
     </Table.tr>

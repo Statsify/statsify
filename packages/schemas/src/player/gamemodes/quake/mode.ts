@@ -23,20 +23,20 @@ export class QuakeMode {
   @Field()
   public kdr: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public headshots: number;
 
   @Field()
   public killstreaks: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public shotsFired: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { fieldName: "2017+ Kills", name: "2017+ Kills" } })
   public postUpdateKills: number;
 
-  @Field({ leaderboard: { enabled: false }, store: { default: 100 } })
-  public winRate: number;
+  @Field({ leaderboard: { enabled: false } })
+  public kwr: number;
 
   @Field({ leaderboard: { enabled: false } })
   public quakeShotAccuracy: number;
@@ -56,7 +56,7 @@ export class QuakeMode {
 
   public static applyRatios(data: QuakeMode) {
     data.kdr = ratio(data.kills, data.deaths);
-    data.winRate = Math.min(ratio(25, ratio(data.kills, data.wins), 100), 100);
+    data.kwr = ratio(data.kills, data.wins);
     data.quakeShotAccuracy = ratio(data.postUpdateKills, data.shotsFired, 100);
   }
 }
