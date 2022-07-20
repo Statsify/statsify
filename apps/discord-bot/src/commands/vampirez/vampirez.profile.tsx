@@ -7,7 +7,14 @@
  */
 
 import { BaseProfileProps } from "../base.hypixel-command";
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  Header,
+  SidebarItem,
+  Table,
+  formatProgression,
+} from "#components";
 import { FormattedGame, VampireZLife } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 
@@ -53,6 +60,12 @@ export const VampireZProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.VAMPIREZ} §fStats`}
+        description={`${formatProgression({
+          t,
+          progression: vampirez.progression,
+          currentLevel: vampirez.currentPrefix,
+          nextLevel: vampirez.nextPrefix,
+        })}`}
         time={time}
       />
       <Table.table>

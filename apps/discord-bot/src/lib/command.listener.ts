@@ -30,6 +30,8 @@ import type {
   WebsocketShard,
 } from "tiny-discord";
 
+const isDevelopment = config("environment") === "dev";
+
 export class CommandListener extends AbstractCommandListener {
   private cooldowns: Map<string, Map<string, number>>;
   private readonly apiService: ApiService;
@@ -112,6 +114,8 @@ export class CommandListener extends AbstractCommandListener {
     user: User | null,
     userId: string
   ) {
+    if (isDevelopment) return true;
+
     const cooldownForCommand = this.cooldowns.get(command.name);
 
     let reduction = 1;

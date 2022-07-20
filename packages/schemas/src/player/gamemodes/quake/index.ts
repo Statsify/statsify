@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, getFormattedLevel, getPrefixRequirement } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import { Progression } from "../../../progression";
 import { QuakeMode } from "./mode";
 import { deepAdd } from "@statsify/math";
 
@@ -33,7 +34,32 @@ const indexes = [
   "nine",
 ];
 
+const prefixes = [
+  { color: "8", score: 0 },
+  { color: "7", score: 25_000 },
+  { color: "f", score: 50_000 },
+  { color: "2", score: 75_000 },
+  { color: "e", score: 100_000 },
+  { color: "a", score: 200_000 },
+  { color: "9", score: 300_000 },
+  { color: "3", score: 400_000 },
+  { color: "d", score: 500_000 },
+  { color: "5", score: 600_000 },
+  { color: "c", score: 750_000 },
+  { color: "6", score: 1_000_000 },
+  { color: "8", score: 2_000_000 },
+];
+
 export class Quake {
+  @Field()
+  public progression: Progression;
+
+  @Field()
+  public currentPrefix: string;
+
+  @Field()
+  public nextPrefix: string;
+
   @Field()
   public overall: QuakeMode;
 
@@ -64,12 +90,21 @@ export class Quake {
 
     this.overall = deepAdd(this.solo, this.teams);
 
+    this.currentPrefix = getFormattedLevel(prefixes, this.overall.kills);
+    this.nextPrefix = getFormattedLevel(prefixes, this.overall.kills, true);
+    this.progression = new Progression(
+      Math.abs(this.overall.kills - getPrefixRequirement(prefixes, this.overall.kills)),
+      getPrefixRequirement(prefixes, this.overall.kills, 1) -
+        getPrefixRequirement(prefixes, this.overall.kills)
+    );
+
     QuakeMode.applyRatios(this.overall);
 
     this.coins = data.coins;
     this.highestKillstreak = data.highest_killstreak;
     this.godlikes = ap.quake_godlikes;
     this.tokens = legacy.quakecraft_tokens;
+
     // NINE_POINT_ZERO becomes 9.0
     // ALWAYS in seconds
     this.trigger =

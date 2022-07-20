@@ -8,7 +8,15 @@
 
 import { ArenaBrawlModes, FormattedGame, GameMode } from "@statsify/schemas";
 import { BaseProfileProps } from "../base.hypixel-command";
-import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  Header,
+  Historical,
+  SidebarItem,
+  Table,
+  formatProgression,
+} from "#components";
 import { prettify } from "@statsify/util";
 
 export interface ArenaBrawlProfileProps extends BaseProfileProps {
@@ -45,6 +53,12 @@ export const ArenaBrawlProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.ARENA_BRAWL} §fStats §r(${mode.formatted})`}
+        description={`${formatProgression({
+          t,
+          progression: arenabrawl.progression,
+          currentLevel: arenabrawl.currentPrefix,
+          nextLevel: arenabrawl.nextPrefix,
+        })}`}
         time={time}
       />
       <Table.table>

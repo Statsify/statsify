@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, getFormattedLevel, getPrefixRequirement } from "@statsify/util";
 import { ArenaBrawlMode } from "./mode";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import { Progression } from "../../../progression";
 import { deepAdd } from "@statsify/math";
 
 export const ARENA_BRAWL_MODES = new GameModes([
@@ -19,9 +20,31 @@ export const ARENA_BRAWL_MODES = new GameModes([
   { api: "fours" },
 ]);
 
+const prefixes = [
+  { color: "8", score: 0 },
+  { color: "7", score: 500 },
+  { color: "a", score: 1000 },
+  { color: "2", score: 2000 },
+  { color: "d", score: 3000 },
+  { color: "5", score: 4000 },
+  { color: "c", score: 5000 },
+  { color: "4", score: 7500 },
+  { color: "6", score: 10_000 },
+  //TODO(@cody): Make this rainbow
+  { color: "1", score: 15_000 },
+];
 export type ArenaBrawlModes = IGameModes<typeof ARENA_BRAWL_MODES>;
 
 export class ArenaBrawl {
+  @Field()
+  public progression: Progression;
+
+  @Field()
+  public currentPrefix: string;
+
+  @Field()
+  public nextPrefix: string;
+
   @Field()
   public overall: ArenaBrawlMode;
 
@@ -66,6 +89,14 @@ export class ArenaBrawl {
     this.doubles = new ArenaBrawlMode(data, "2v2");
     this.fours = new ArenaBrawlMode(data, "4v4");
     this.overall = deepAdd(this.solo, this.doubles, this.fours);
+
+    this.currentPrefix = getFormattedLevel(prefixes, this.overall.wins);
+    this.nextPrefix = getFormattedLevel(prefixes, this.overall.wins, true);
+    this.progression = new Progression(
+      Math.abs(this.overall.wins - getPrefixRequirement(prefixes, this.overall.wins)),
+      getPrefixRequirement(prefixes, this.overall.wins, 1) -
+        getPrefixRequirement(prefixes, this.overall.wins)
+    );
 
     ArenaBrawlMode.applyRatios(this.overall);
 

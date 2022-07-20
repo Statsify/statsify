@@ -186,7 +186,11 @@ export const MurderMysteryProfile = ({
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+            <Table.td
+              title={t("stats.infectedWins")}
+              value={t(stats.infectedWins)}
+              color="§a"
+            />
             <Table.td
               title={t("stats.killsAsInfected")}
               value={t(stats.killsAsInfected)}

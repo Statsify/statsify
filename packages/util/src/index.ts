@@ -42,6 +42,60 @@ export const findScore = <T extends { req: number }>(data: T[], score = 0): T =>
 
 /**
  *
+ * @param prefixes An array of objects with a color code and req property
+ * @param score The value to compare against
+ * @param skip The number of prefixes to skip
+ * @returns The score needed to reach the requested prefix
+ */
+export const getPrefixRequirement = (
+  prefixes: { color: string; score: number }[],
+  score: number,
+  skip = 0
+): number => {
+  const prefixIndex = prefixes.findIndex((requirement) => requirement.score > score);
+
+  return prefixIndex === -1
+    ? prefixes.at(-1)!.score
+    : prefixes[Math.min(prefixIndex + skip - 1, prefixes.length - 1)].score;
+};
+
+/**
+ *
+ * @param prefixes An array of objects with a color code and req property
+ * @param score The value to compare against
+ * @param skip Whether to skip the next prefix
+ * @returns The formatted prefix
+ */
+export const getFormattedLevel = (
+  prefixes: { color: string; score: number }[],
+  score: number,
+  skip?: boolean
+): string => {
+  //TODO(@cody): Add support for rainbow colors
+  const prefixColors: { req: number; fn: (n: number) => string }[] = prefixes.map(
+    (prefix) => ({
+      req: prefix.score,
+      fn: (n) => {
+        const [number, suffix] = abbreviationNumber(n);
+
+        return `§${prefix.color}[${number}${suffix}]`;
+      },
+    })
+  );
+
+  const scores = findScore(prefixColors, score);
+
+  const prefixIndex = prefixes.findIndex((score) => score.score === scores.req);
+
+  const nextScore = prefixes[Math.min(prefixIndex + 1, prefixes.length - 1)].score;
+
+  return skip
+    ? findScore(prefixColors, nextScore).fn(nextScore)
+    : scores.fn(score > prefixes.at(-1)!.score ? score : prefixes[prefixIndex].score);
+};
+
+/**
+ *
  * @param value any sort of value
  * @returns Whether or not the value is an object, not null and is not an array
  */
@@ -181,8 +235,8 @@ export const formatTime = (
 export const relativeTime = (time: number) => `${formatTime(Date.now() - time)} ago`;
 
 export const abbreviationNumber = (num: number): [num: number, suffix: string] => {
-  const abbreviation = ["", "", "M", "B", "T"];
-  const base = Math.floor(Math.log(num) / Math.log(1000));
+  const abbreviation = ["", "K", "M", "B", "T"];
+  const base = Math.floor(num === 0 ? 0 : Math.log(num) / Math.log(1000));
   return [+(num / Math.pow(1000, base)).toFixed(2), abbreviation[base]];
 };
 

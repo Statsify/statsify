@@ -7,7 +7,14 @@
  */
 
 import { BaseProfileProps } from "../base.hypixel-command";
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  Header,
+  SidebarItem,
+  Table,
+  formatProgression,
+} from "#components";
 import { FormattedGame } from "@statsify/schemas";
 
 export const WallsProfile = ({
@@ -35,6 +42,12 @@ export const WallsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.WALLS} §fStats`}
+        description={`${formatProgression({
+          t,
+          progression: walls.progression,
+          currentLevel: walls.currentPrefix,
+          nextLevel: walls.nextPrefix,
+        })}`}
         time={time}
       />
       <Table.table>

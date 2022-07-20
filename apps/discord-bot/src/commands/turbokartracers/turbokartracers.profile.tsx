@@ -7,7 +7,14 @@
  */
 
 import { BaseProfileProps } from "../base.hypixel-command";
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  Header,
+  SidebarItem,
+  Table,
+  formatProgression,
+} from "#components";
 import { FormattedGame } from "@statsify/schemas";
 
 export const TurboKartRacersProfile = ({
@@ -38,6 +45,12 @@ export const TurboKartRacersProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.TURBO_KART_RACERS} §fStats`}
+        description={`${formatProgression({
+          t,
+          progression: turbokartracers.progression,
+          currentLevel: turbokartracers.currentPrefix,
+          nextLevel: turbokartracers.nextPrefix,
+        })}`}
         time={time}
       />
       <Table.table>

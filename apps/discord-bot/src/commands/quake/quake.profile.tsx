@@ -7,7 +7,14 @@
  */
 
 import { BaseProfileProps } from "../base.hypixel-command";
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  Header,
+  SidebarItem,
+  Table,
+  formatProgression,
+} from "#components";
 import { FormattedGame, GameMode, QuakeModes } from "@statsify/schemas";
 
 export interface QuakeProfileProps extends BaseProfileProps {
@@ -44,6 +51,12 @@ export const QuakeProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.QUAKE} §fStats §r(${mode.formatted})`}
+        description={`${formatProgression({
+          t,
+          progression: quake.progression,
+          currentLevel: quake.currentPrefix,
+          nextLevel: quake.nextPrefix,
+        })}`}
         time={time}
       />
       <Table.table>
