@@ -72,7 +72,7 @@ export class MurderMystery {
     this.assassins = new AssassinsMurderMysteryMode(data, "MURDER_ASSASSINS");
     this.infection = new InfectionMurderMysteryMode(data, "MURDER_INFECTION", ap);
 
-    ap.murdermystery_countermeasures;
+    this.overall.heroWins = ap.murdermystery_countermeasures;
   }
 }
 
