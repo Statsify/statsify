@@ -60,7 +60,7 @@ export const VampireZProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.VAMPIREZ} §fStats`}
-        description={`${formatProgression({
+        description={`§7Win ${formatProgression({
           t,
           progression: vampirez.progression,
           currentLevel: vampirez.currentPrefix,

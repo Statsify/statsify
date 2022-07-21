@@ -47,7 +47,7 @@ const prefixes = [
   { color: "5", score: 600_000 },
   { color: "c", score: 750_000 },
   { color: "6", score: 1_000_000 },
-  { color: "8", score: 2_000_000 },
+  { color: "0", score: 2_000_000 },
 ];
 
 export class Quake {
@@ -92,6 +92,7 @@ export class Quake {
 
     this.currentPrefix = getFormattedLevel(prefixes, this.overall.kills);
     this.nextPrefix = getFormattedLevel(prefixes, this.overall.kills, true);
+
     this.progression = new Progression(
       Math.abs(this.overall.kills - getPrefixRequirement(prefixes, this.overall.kills)),
       getPrefixRequirement(prefixes, this.overall.kills, 1) -

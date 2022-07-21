@@ -91,9 +91,11 @@ export class ArenaBrawl {
     this.overall = deepAdd(this.solo, this.doubles, this.fours);
 
     this.currentPrefix = getFormattedLevel(prefixes, this.overall.wins);
+    // this.naturalPrefix = getFormattedLevel(prefixes, this.overall.wins);
     this.nextPrefix = getFormattedLevel(prefixes, this.overall.wins, true);
+
     this.progression = new Progression(
-      Math.abs(this.overall.wins - getPrefixRequirement(prefixes, this.overall.wins)),
+      Math.abs(getPrefixRequirement(prefixes, this.overall.wins) - this.overall.wins),
       getPrefixRequirement(prefixes, this.overall.wins, 1) -
         getPrefixRequirement(prefixes, this.overall.wins)
     );

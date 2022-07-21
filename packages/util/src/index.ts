@@ -52,11 +52,13 @@ export const getPrefixRequirement = (
   score: number,
   skip = 0
 ): number => {
-  const prefixIndex = prefixes.findIndex((requirement) => requirement.score > score);
+  const prefixIndex = prefixes.findIndex(
+    (requirement) => requirement.score > (score || 0)
+  );
 
   return prefixIndex === -1
     ? prefixes.at(-1)!.score
-    : prefixes[Math.min(prefixIndex + skip - 1, prefixes.length - 1)].score;
+    : prefixes[Math.min(prefixIndex + skip - 1, prefixes.length - 1)].score || 0;
 };
 
 /**
@@ -64,12 +66,14 @@ export const getPrefixRequirement = (
  * @param prefixes An array of objects with a color code and req property
  * @param score The value to compare against
  * @param skip Whether to skip the next prefix
+ * @parm titleSuffix The suffix to append to the title, for example a star
  * @returns The formatted prefix
  */
 export const getFormattedLevel = (
   prefixes: { color: string; score: number }[],
   score: number,
-  skip?: boolean
+  skip?: boolean,
+  titleSuffix?: string
 ): string => {
   //TODO(@cody): Add support for rainbow colors
   const prefixColors: { req: number; fn: (n: number) => string }[] = prefixes.map(
@@ -78,7 +82,7 @@ export const getFormattedLevel = (
       fn: (n) => {
         const [number, suffix] = abbreviationNumber(n);
 
-        return `§${prefix.color}[${number}${suffix}]`;
+        return `§${prefix.color}[${number}${suffix}${titleSuffix ?? ""}]`;
       },
     })
   );

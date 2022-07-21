@@ -8,7 +8,15 @@
 
 import { BaseProfileProps } from "../base.hypixel-command";
 import { BridgeModes, FormattedGame, GameMode } from "@statsify/schemas";
-import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  Header,
+  Historical,
+  SidebarItem,
+  Table,
+  formatProgression,
+} from "#components";
 
 export interface BridgeProfileProps extends BaseProfileProps {
   mode: GameMode<BridgeModes>;
@@ -43,7 +51,13 @@ export const BridgeProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.BRIDGE} §fStats §r(${mode.formatted})`}
-        description={`§dBridge Title\n${bridge.titleFormatted}`}
+        description={`§7Title: ${bridge.titleFormatted}\n${formatProgression({
+          t,
+          progression: bridge.progression,
+          currentLevel: bridge.titleLevelFormatted,
+          nextLevel: bridge.nextTitleLevelFormatted,
+          showLevelWhenMaxed: false,
+        })}`}
         time={time}
       />
       <Table.table>

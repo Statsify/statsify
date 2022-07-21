@@ -6,10 +6,31 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, getPrefixRequirement, romanNumeral } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { Progression } from "../../../progression";
 import { deepAdd, ratio } from "@statsify/math";
-import { getTitle } from "./util";
+import { getTitle, titleScores } from "./util";
+
+const prefixes = titleScores().flatMap((title) => {
+  const calculatedTitles: { color: string; score: number }[] = [];
+
+  for (let i = 0; i < (title.max ?? 5); i++) {
+    calculatedTitles.push({ color: title.color.code, score: title.req + i * title.inc });
+  }
+
+  return calculatedTitles;
+});
+
+const overallPrefixes = titleScores(true).flatMap((title) => {
+  const calculatedTitles: { color: string; score: number }[] = [];
+
+  for (let i = 0; i < (title.max ?? 5); i++) {
+    calculatedTitles.push({ color: title.color.code, score: title.req + i * title.inc });
+  }
+
+  return calculatedTitles;
+});
 
 export class BaseDuelsGameMode {
   @Field({ leaderboard: { enabled: false } })
@@ -47,6 +68,7 @@ export class BaseDuelsGameMode {
     this.kills = data[`${prefix}kills`];
     this.deaths = data[`${prefix}deaths`];
     this.blocksPlaced = data[`${prefix}blocks_placed`];
+
     if (mode == "") {
       this.winstreak = data.current_winstreak;
       this.bestWinstreak = data.best_overall_winstreak;
@@ -110,6 +132,15 @@ export class BridgeDuels {
   @Field()
   public ctf: BridgeDuelsMode;
 
+  @Field()
+  public titleLevelFormatted: string;
+
+  @Field()
+  public nextTitleLevelFormatted: string;
+
+  @Field()
+  public progression: Progression;
+
   public constructor(data: APIData) {
     this.solo = new BridgeDuelsMode(data, "bridge_duel");
     this.doubles = new BridgeDuelsMode(data, "bridge_doubles");
@@ -134,10 +165,29 @@ export class BridgeDuels {
 
     BaseDuelsGameMode.applyRatios(this.overall);
 
-    const { formatted, raw } = getTitle(this.overall.wins, "Bridge");
+    const { formatted, raw, bold, semi, max, index, color, req, inc } = getTitle(
+      this.overall.wins,
+      "Bridge"
+    );
 
     this.title = raw;
     this.titleFormatted = formatted;
+
+    this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
+      index
+    )}]`;
+
+    const nextData = getTitle(req + index * inc, "Bridge");
+
+    this.nextTitleLevelFormatted = `${nextData.color.code}${
+      nextData.bold || nextData.semi ? "§l" : ""
+    }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
+
+    this.progression = new Progression(
+      Math.abs(getPrefixRequirement(prefixes, this.overall.wins) - this.overall.wins),
+      getPrefixRequirement(prefixes, this.overall.wins, 1) -
+        getPrefixRequirement(prefixes, this.overall.wins)
+    );
   }
 }
 export class MultiDuelsGameMode {
@@ -159,6 +209,15 @@ export class MultiDuelsGameMode {
   @Field()
   public doubles: BaseDuelsGameMode;
 
+  @Field()
+  public titleLevelFormatted: string;
+
+  @Field()
+  public nextTitleLevelFormatted: string;
+
+  @Field()
+  public progression: Progression;
+
   public constructor(data: APIData, title: string, short: string, long: string) {
     this.solo = new BaseDuelsGameMode(data, `${short}_duel`);
     this.doubles = new BaseDuelsGameMode(data, `${short}_doubles`);
@@ -170,10 +229,29 @@ export class MultiDuelsGameMode {
 
     this.titlePrefix = title;
 
-    const { formatted, raw } = getTitle(this.overall.wins, this.titlePrefix);
+    const { formatted, raw, bold, semi, max, index, color, req, inc } = getTitle(
+      this.overall.wins,
+      this.titlePrefix
+    );
 
     this.title = raw;
     this.titleFormatted = formatted;
+
+    this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
+      index
+    )}]`;
+
+    const nextData = getTitle(req + index * inc, this.titlePrefix);
+
+    this.nextTitleLevelFormatted = `${nextData.color.code}${
+      nextData.bold || nextData.semi ? "§l" : ""
+    }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
+
+    this.progression = new Progression(
+      Math.abs(getPrefixRequirement(prefixes, this.overall.wins) - this.overall.wins),
+      getPrefixRequirement(prefixes, this.overall.wins, 1) -
+        getPrefixRequirement(prefixes, this.overall.wins)
+    );
   }
 }
 
@@ -187,14 +265,54 @@ export class SingleDuelsGameMode extends BaseDuelsGameMode {
   @Field({ store: { default: "§7None§r" } })
   public titleFormatted: string;
 
+  @Field()
+  public titleLevelFormatted: string;
+
+  @Field()
+  public nextTitleLevelFormatted: string;
+
+  @Field()
+  public progression: Progression;
+
   public constructor(data: APIData, title: string, mode: string) {
     super(data, mode);
     this.titlePrefix = title;
 
-    const { formatted, raw } = getTitle(this.wins, this.titlePrefix);
+    const { formatted, raw, bold, semi, max, index, color, req, inc } = getTitle(
+      this.wins,
+      this.titlePrefix
+    );
 
     this.title = raw;
     this.titleFormatted = formatted;
+
+    this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
+      index
+    )}]`;
+
+    const nextData = getTitle(req + index * inc, this.titlePrefix);
+
+    this.nextTitleLevelFormatted = `${nextData.color.code}${
+      nextData.bold || nextData.semi ? "§l" : ""
+    }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
+
+    this.progression = new Progression(
+      Math.abs(
+        getPrefixRequirement(
+          this.titlePrefix === "" ? overallPrefixes : prefixes,
+          this.wins
+        ) - this.wins
+      ),
+      getPrefixRequirement(
+        this.titlePrefix === "" ? overallPrefixes : prefixes,
+        this.wins,
+        1
+      ) -
+        getPrefixRequirement(
+          this.titlePrefix === "" ? overallPrefixes : prefixes,
+          this.wins
+        )
+    );
   }
 }
 
@@ -220,6 +338,14 @@ export class UHCDuels {
   @Field()
   public deathmatch: BaseDuelsGameMode;
 
+  @Field()
+  public titleLevelFormatted: string;
+
+  @Field()
+  public nextTitleLevelFormatted: string;
+
+  @Field()
+  public progression: Progression;
   public constructor(data: APIData) {
     this.solo = new BaseDuelsGameMode(data, "uhc_duel");
     this.doubles = new BaseDuelsGameMode(data, "uhc_doubles");
@@ -233,9 +359,28 @@ export class UHCDuels {
 
     BaseDuelsGameMode.applyRatios(this.overall);
 
-    const { formatted, raw } = getTitle(this.overall.wins, "UHC");
+    const { formatted, raw, bold, semi, max, index, color, req, inc } = getTitle(
+      this.overall.wins,
+      "UHC"
+    );
 
     this.title = raw;
     this.titleFormatted = formatted;
+
+    this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
+      index
+    )}]`;
+
+    const nextData = getTitle(req + index * inc, "UHC");
+
+    this.nextTitleLevelFormatted = `${nextData.color.code}${
+      nextData.bold || nextData.semi ? "§l" : ""
+    }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
+
+    this.progression = new Progression(
+      Math.abs(getPrefixRequirement(prefixes, this.overall.wins) - this.overall.wins),
+      getPrefixRequirement(prefixes, this.overall.wins, 1) -
+        getPrefixRequirement(prefixes, this.overall.wins)
+    );
   }
 }

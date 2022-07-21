@@ -31,7 +31,8 @@ export const SmashHeroesProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(smashheroes.coins), "§6"],
-    [t("stats.class"), prettify(smashheroes.kit), "§b"],
+    [t("stats.level"), t(smashheroes.levelFormatted), "§b"],
+    [t("stats.class"), prettify(smashheroes.kit), "§d"],
   ];
 
   return (
@@ -42,7 +43,6 @@ export const SmashHeroesProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.SMASH_HEROES} §fStats §r(${mode.formatted})`}
-        description={`${FormattedGame.SMASH_HEROES} §7Level: ${smashheroes.levelFormatted}`}
         time={time}
       />
       <Table.table>

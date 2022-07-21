@@ -33,6 +33,8 @@ export interface FormatProgressionOptions {
   nextLevel: string;
   showProgress?: boolean;
   showLevel?: boolean;
+
+  showLevelWhenMaxed?: boolean;
   renderXp?: ProgressFunction;
 }
 
@@ -43,6 +45,7 @@ export const formatProgression = ({
   nextLevel,
   showLevel = true,
   showProgress = true,
+  showLevelWhenMaxed = true,
   renderXp = xpBar,
 }: FormatProgressionOptions) => {
   if (progression.max) {
@@ -61,8 +64,8 @@ export const formatProgression = ({
 
   let output = "§^2^";
 
-  if (showLevel) output += `§l${currentLevel} `;
-  output += "§r§8(§b§lMAXED§r§8)";
+  output += "§7Progress: ";
+  output += showLevelWhenMaxed ? `${currentLevel} §r§8(§b§lMAXED§r§8)` : "§r§b§lMAXED§r";
 
   return output;
 };

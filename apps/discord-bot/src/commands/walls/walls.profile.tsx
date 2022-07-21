@@ -42,7 +42,7 @@ export const WallsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.WALLS} §fStats`}
-        description={`${formatProgression({
+        description={`§7Win ${formatProgression({
           t,
           progression: walls.progression,
           currentLevel: walls.currentPrefix,

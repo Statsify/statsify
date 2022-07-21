@@ -7,7 +7,14 @@
  */
 
 import { BaseProfileProps } from "../base.hypixel-command";
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  Header,
+  SidebarItem,
+  Table,
+  formatProgression,
+} from "#components";
 import { FormattedGame, GameMode, UHCModes } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 
@@ -44,7 +51,12 @@ export const UHCProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.UHC} §fStats §r(${mode.formatted})`}
-        description={`${FormattedGame.UHC} §7Level: ${uhc.levelFormatted}`}
+        description={`§7Level: ${uhc.levelFormatted}\n${formatProgression({
+          t,
+          progression: uhc.progression,
+          currentLevel: uhc.levelFormatted,
+          nextLevel: uhc.nextLevelFormatted,
+        })}`}
         time={time}
         historicalSidebar
       />

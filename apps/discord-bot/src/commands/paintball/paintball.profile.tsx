@@ -47,7 +47,7 @@ export const PaintballProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.PAINTBALL} §fStats`}
-        description={`${formatProgression({
+        description={`§7Kill ${formatProgression({
           t,
           progression: paintball.progression,
           currentLevel: paintball.currentPrefix,
