@@ -6,19 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, getFormattedLevel, getPrefixRequirement } from "@statsify/util";
+import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
 import { Progression } from "../../../progression";
 import { VampireZLife } from "./life";
-import { deepAdd } from "@statsify/math";
+import { add } from "@statsify/math";
 
-export const VAMPIREZ_MODES = new GameModes([{ api: "overall" }]);
+export const VAMPIREZ_MODES = new GameModes([{ api: "human" }, { api: "vampire" }]);
 export type VampireZModes = IGameModes<typeof VAMPIREZ_MODES>;
 
-const prefixes = [
+export const humanPrefixes = [
   { color: "8", score: 0 },
-  { color: "7", score: 10 },
+  { color: "7", score: 20 },
   { color: "f", score: 50 },
   { color: "6", score: 100 },
   { color: "e", score: 150 },
@@ -28,14 +28,35 @@ const prefixes = [
   { color: "d", score: 500 },
   { color: "1", score: 750 },
   { color: "9§l", score: 1000 },
-  //TODO(@cody): Confirm this is correct
   { color: "b§l", score: 1500 },
   { color: "3§l", score: 2000 },
-  //TODO(@cody): Confirm this is correct
   { color: "b§l", score: 2500 },
   { color: "c§l", score: 3000 },
   { color: "4§l", score: 5000 },
-  { color: "8§l", score: 10_000 },
+  { color: "0§l", score: 7500 },
+  { color: "rainbow", score: 15_000 },
+];
+
+export const vampirePrefixes = [
+  { color: "8", score: 0 },
+  { color: "f", score: 50 },
+  { color: "e", score: 100 },
+  { color: "a", score: 250 },
+  { color: "d", score: 500 },
+  { color: "b", score: 750 },
+  { color: "c", score: 1000 },
+  { color: "6", score: 1500 },
+  { color: "3", score: 2000 },
+  { color: "a", score: 2500 },
+  { color: "2", score: 3000 },
+  { color: "f", score: 5000 },
+  { color: "9", score: 7500 },
+  { color: "1§l", score: 10_000 },
+  { color: "4", score: 20_000 },
+  { color: "4§l", score: 30_000 },
+  { color: "d§l", score: 40_000 },
+  { color: "0§l", score: 50_000 },
+  { color: "rainbow", score: 100_000 },
 ];
 
 export class VampireZ {
@@ -46,13 +67,13 @@ export class VampireZ {
   public tokens: number;
 
   @Field()
+  public overallWins: number;
+
+  @Field()
   public mostVampireKills: number;
 
   @Field()
   public zombieKills: number;
-
-  @Field()
-  public overall: VampireZLife;
 
   @Field()
   public human: VampireZLife;
@@ -71,7 +92,8 @@ export class VampireZ {
 
   public constructor(data: APIData, legacy: APIData) {
     this.coins = data.coins;
-    this.coins = legacy.vampirez_tokens;
+    this.tokens = legacy.vampirez_tokens;
+
     this.mostVampireKills = data.most_vampire_kills_new;
     this.zombieKills = data.zombie_kills;
 
@@ -85,17 +107,7 @@ export class VampireZ {
     VampireZLife.applyRatios(this.vampire);
     VampireZLife.applyRatios(this.human);
 
-    this.overall = deepAdd(this.human, this.vampire);
-
-    this.currentPrefix = getFormattedLevel(prefixes, this.overall.wins);
-    this.nextPrefix = getFormattedLevel(prefixes, this.overall.wins, true);
-    this.progression = new Progression(
-      Math.abs(this.overall.wins - getPrefixRequirement(prefixes, this.overall.wins)),
-      getPrefixRequirement(prefixes, this.overall.wins, 1) -
-        getPrefixRequirement(prefixes, this.overall.wins)
-    );
-
-    VampireZLife.applyRatios(this.overall);
+    this.overallWins = add(this.human.wins, this.vampire.wins);
   }
 }
 

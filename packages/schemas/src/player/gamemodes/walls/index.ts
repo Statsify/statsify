@@ -28,8 +28,7 @@ const prefixes = [
   { color: "d", score: 750 },
   { color: "4", score: 1000 },
   { color: "6", score: 2000 },
-  //TODO(@cody): Make this rainbow
-  { color: "1", score: 2500 },
+  { color: "rainbow", score: 2500 },
 ];
 
 export class Walls {

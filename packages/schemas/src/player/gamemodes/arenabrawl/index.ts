@@ -30,8 +30,7 @@ const prefixes = [
   { color: "c", score: 5000 },
   { color: "4", score: 7500 },
   { color: "6", score: 10_000 },
-  //TODO(@cody): Make this rainbow
-  { color: "1", score: 15_000 },
+  { color: "rainbow", score: 15_000 },
 ];
 export type ArenaBrawlModes = IGameModes<typeof ARENA_BRAWL_MODES>;
 

@@ -82,7 +82,13 @@ export const getFormattedLevel = (
       fn: (n) => {
         const [number, suffix] = abbreviationNumber(n);
 
-        return `§${prefix.color}[${number}${suffix}${titleSuffix ?? ""}]`;
+        if (prefix.color === "rainbow") {
+          return `${formatRainbow(
+            `[${Math.floor(number)}${suffix}${titleSuffix ?? ""}]`
+          )}`;
+        }
+
+        return `§${prefix.color}[${Math.floor(number)}${suffix}${titleSuffix ?? ""}]`;
       },
     })
   );
@@ -97,6 +103,11 @@ export const getFormattedLevel = (
     ? findScore(prefixColors, nextScore).fn(nextScore)
     : scores.fn(score > prefixes.at(-1)!.score ? score : prefixes[prefixIndex].score);
 };
+
+const rainbowColors = ["c", "6", "e", "a", "b", "9", "d"];
+
+export const formatRainbow = (text: string) =>
+  [...text].map((l, i) => `§${rainbowColors[i % rainbowColors.length]}${l}`).join("");
 
 /**
  *

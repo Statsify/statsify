@@ -234,7 +234,9 @@ export class HistoricalBase {
 
   @SubCommand({ description: (t) => t("commands.historical-vampirez"), args })
   public vampirez(context: CommandContext) {
-    return this.run(context, VAMPIREZ_MODES, (base) => <VampireZProfile {...base} />);
+    return this.run(context, VAMPIREZ_MODES, (base, mode) => (
+      <VampireZProfile {...base} mode={mode} />
+    ));
   }
 
   @SubCommand({ description: (t) => t("commands.historical-walls"), args })

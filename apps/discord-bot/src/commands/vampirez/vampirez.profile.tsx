@@ -15,23 +15,11 @@ import {
   Table,
   formatProgression,
 } from "#components";
-import { FormattedGame, VampireZLife } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
+import { FormattedGame, GameMode, VampireZModes } from "@statsify/schemas";
 
-interface VampireZColumnProps {
-  mode: string;
-  stats: VampireZLife;
-  t: LocalizeFunction;
+export interface VampireZProfileProps extends BaseProfileProps {
+  mode: GameMode<VampireZModes>;
 }
-
-const VampireZColumn = ({ mode, stats, t }: VampireZColumnProps) => (
-  <Table.ts title={mode}>
-    <Table.td title={t(`stats.wins`)} value={t(stats.wins)} color="§e" />
-    <Table.td title={t(`stats.kills`)} value={t(stats.kills)} color="§a" />
-    <Table.td title={t(`stats.deaths`)} value={t(stats.deaths)} color="§c" />
-    <Table.td title={t(`stats.kdr`)} value={t(stats.kdr)} color="§6" />
-  </Table.ts>
-);
 
 export const VampireZProfile = ({
   skin,
@@ -42,14 +30,17 @@ export const VampireZProfile = ({
   badge,
   t,
   time,
-}: BaseProfileProps) => {
+  mode,
+}: VampireZProfileProps) => {
   const { vampirez } = player.stats;
+  const { api } = mode;
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(vampirez.coins), "§6"],
     [t("stats.tokens"), t(vampirez.tokens), "§e"],
-    [t("stats.mostVampireKills"), t(vampirez.mostVampireKills), "§c"],
+    [t("stats.overallWins"), t(vampirez.overallWins), "§a"],
     [t("stats.zombieKills"), t(vampirez.zombieKills), "§2"],
+    [t("stats.mostVampireKills"), t(vampirez.mostVampireKills), "§c"],
   ];
 
   return (
@@ -59,20 +50,25 @@ export const VampireZProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.VAMPIREZ} §fStats`}
+        title={`§l${FormattedGame.VAMPIREZ} §fStats §r(${mode.formatted})`}
         description={`§7Win ${formatProgression({
           t,
-          progression: vampirez.progression,
-          currentLevel: vampirez.currentPrefix,
-          nextLevel: vampirez.nextPrefix,
+          progression: vampirez[api].progression,
+          currentLevel: vampirez[api].currentPrefix,
+          nextLevel: vampirez[api].nextPrefix,
         })}`}
         time={time}
       />
       <Table.table>
         <Table.tr>
-          <VampireZColumn mode="§6Overall" stats={vampirez.overall} t={t} />
-          <VampireZColumn mode="§eHuman" stats={vampirez.human} t={t} />
-          <VampireZColumn mode="§4Vampire" stats={vampirez.vampire} t={t} />
+          <Table.td title={t(`stats.wins`)} value={t(vampirez[api].wins)} color="§e" />
+          <Table.td title={t(`stats.kills`)} value={t(vampirez[api].kills)} color="§a" />
+          <Table.td
+            title={t(`stats.deaths`)}
+            value={t(vampirez[api].deaths)}
+            color="§c"
+          />
+          <Table.td title={t(`stats.kdr`)} value={t(vampirez[api].kdr)} color="§6" />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />
