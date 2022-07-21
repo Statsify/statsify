@@ -61,6 +61,14 @@ export const getPrefixRequirement = (
     : prefixes[Math.min(prefixIndex + skip - 1, prefixes.length - 1)].score || 0;
 };
 
+export interface FormatProgressionOptions {
+  prefixes: { color: string; score: number }[];
+  prefixScore: number;
+  skip?: boolean;
+  titleSuffix?: string;
+
+  trueScore?: boolean;
+}
 /**
  *
  * @param prefixes An array of objects with a color code and req property
@@ -69,31 +77,29 @@ export const getPrefixRequirement = (
  * @parm titleSuffix The suffix to append to the title, for example a star
  * @returns The formatted prefix
  */
-export const getFormattedLevel = (
-  prefixes: { color: string; score: number }[],
-  score: number,
-  skip?: boolean,
-  titleSuffix?: string
-): string => {
-  //TODO(@cody): Add support for rainbow colors
+export const getFormattedLevel = ({
+  prefixes,
+  prefixScore,
+  skip = false,
+  titleSuffix = "",
+  trueScore = false,
+}: FormatProgressionOptions) => {
   const prefixColors: { req: number; fn: (n: number) => string }[] = prefixes.map(
     (prefix) => ({
       req: prefix.score,
       fn: (n) => {
-        const [number, suffix] = abbreviationNumber(n);
+        const [number, suffix] = abbreviationNumber(trueScore ? prefixScore : n);
 
         if (prefix.color === "rainbow") {
-          return `${formatRainbow(
-            `[${Math.floor(number)}${suffix}${titleSuffix ?? ""}]`
-          )}`;
+          return `${formatRainbow(`[${Math.floor(number)}${suffix}${titleSuffix}]`)}`;
         }
 
-        return `§${prefix.color}[${Math.floor(number)}${suffix}${titleSuffix ?? ""}]`;
+        return `§${prefix.color}[${Math.floor(number)}${suffix}${titleSuffix}]`;
       },
     })
   );
 
-  const scores = findScore(prefixColors, score);
+  const scores = findScore(prefixColors, prefixScore);
 
   const prefixIndex = prefixes.findIndex((score) => score.score === scores.req);
 
@@ -101,7 +107,9 @@ export const getFormattedLevel = (
 
   return skip
     ? findScore(prefixColors, nextScore).fn(nextScore)
-    : scores.fn(score > prefixes.at(-1)!.score ? score : prefixes[prefixIndex].score);
+    : scores.fn(
+        prefixScore > prefixes.at(-1)!.score ? prefixScore : prefixes[prefixIndex].score
+      );
 };
 
 const rainbowColors = ["c", "6", "e", "a", "b", "9", "d"];

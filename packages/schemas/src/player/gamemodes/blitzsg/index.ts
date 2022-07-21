@@ -99,6 +99,11 @@ export class BlitzSG {
   @Field()
   public currentPrefix: string;
 
+  @Field({
+    store: { default: getFormattedLevel({ prefixes, prefixScore: prefixes[0].score }) },
+  })
+  public naturalPrefix: string;
+
   @Field()
   public nextPrefix: string;
 
@@ -242,8 +247,18 @@ export class BlitzSG {
 
     this.overall = new BlitzSGOverall(data);
 
-    this.currentPrefix = getFormattedLevel(prefixes, this.overall.kills);
-    this.nextPrefix = getFormattedLevel(prefixes, this.overall.kills, true);
+    const prefixScore = this.overall.kills;
+    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
+    this.naturalPrefix = getFormattedLevel({
+      prefixes,
+      prefixScore,
+      trueScore: true,
+    });
+    this.nextPrefix = getFormattedLevel({
+      prefixes,
+      prefixScore,
+      skip: true,
+    });
 
     this.progression = new Progression(
       Math.abs(this.overall.kills - getPrefixRequirement(prefixes, this.overall.kills)),

@@ -41,6 +41,11 @@ export class ArenaBrawl {
   @Field()
   public currentPrefix: string;
 
+  @Field({
+    store: { default: getFormattedLevel({ prefixes, prefixScore: prefixes[0].score }) },
+  })
+  public naturalPrefix: string;
+
   @Field()
   public nextPrefix: string;
 
@@ -89,9 +94,18 @@ export class ArenaBrawl {
     this.fours = new ArenaBrawlMode(data, "4v4");
     this.overall = deepAdd(this.solo, this.doubles, this.fours);
 
-    this.currentPrefix = getFormattedLevel(prefixes, this.overall.wins);
-    // this.naturalPrefix = getFormattedLevel(prefixes, this.overall.wins);
-    this.nextPrefix = getFormattedLevel(prefixes, this.overall.wins, true);
+    const prefixScore = this.overall.wins;
+    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
+    this.naturalPrefix = getFormattedLevel({
+      prefixes,
+      prefixScore,
+      trueScore: true,
+    });
+    this.nextPrefix = getFormattedLevel({
+      prefixes,
+      prefixScore,
+      skip: true,
+    });
 
     this.progression = new Progression(
       Math.abs(getPrefixRequirement(prefixes, this.overall.wins) - this.overall.wins),

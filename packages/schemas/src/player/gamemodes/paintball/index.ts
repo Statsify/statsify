@@ -75,6 +75,11 @@ export class Paintball {
   @Field()
   public currentPrefix: string;
 
+  @Field({
+    store: { default: getFormattedLevel({ prefixes, prefixScore: prefixes[0].score }) },
+  })
+  public naturalPrefix: string;
+
   @Field()
   public nextPrefix: string;
 
@@ -92,8 +97,19 @@ export class Paintball {
     this.perks = new PaintballPerks(data);
     this.tokens = legacy.paintball_tokens;
 
-    this.currentPrefix = getFormattedLevel(prefixes, this.kills);
-    this.nextPrefix = getFormattedLevel(prefixes, this.kills, true);
+    const prefixScore = this.kills;
+    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
+    this.naturalPrefix = getFormattedLevel({
+      prefixes,
+      prefixScore,
+      trueScore: true,
+    });
+    this.nextPrefix = getFormattedLevel({
+      prefixes,
+      prefixScore,
+      skip: true,
+    });
+
     this.progression = new Progression(
       Math.abs(this.kills - getPrefixRequirement(prefixes, this.kills)),
       getPrefixRequirement(prefixes, this.kills, 1) -

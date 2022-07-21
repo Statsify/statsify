@@ -38,7 +38,12 @@ export class PlayerStats {
   @Field({ leaderboard: { fieldName: `${FormattedGame.ARCADE} -` } })
   public arcade: Arcade;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.ARENA_BRAWL } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.ARENA_BRAWL,
+      extraDisplay: "stats.arenabrawl.naturalPrefix",
+    },
+  })
   public arenabrawl: ArenaBrawl;
 
   @Field({
@@ -49,7 +54,12 @@ export class PlayerStats {
   })
   public bedwars: BedWars;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.BLITZSG } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.BLITZSG,
+      extraDisplay: "stats.blitzsg.naturalPrefix",
+    },
+  })
   public blitzsg: BlitzSG;
 
   @Field({
@@ -78,13 +88,23 @@ export class PlayerStats {
   @Field({ leaderboard: { fieldName: FormattedGame.MURDER_MYSTERY } })
   public murdermystery: MurderMystery;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.PAINTBALL } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.PAINTBALL,
+      extraDisplay: "stats.paintball.naturalPrefix",
+    },
+  })
   public paintball: Paintball;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.PARKOUR} -` } })
   public parkour: Parkour;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.QUAKE } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.QUAKE,
+      extraDisplay: "stats.quake.naturalPrefix",
+    },
+  })
   public quake: Quake;
 
   @Field({
@@ -114,7 +134,12 @@ export class PlayerStats {
   @Field({ leaderboard: { fieldName: FormattedGame.TNT_GAMES } })
   public tntgames: TNTGames;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.TURBO_KART_RACERS } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.TURBO_KART_RACERS,
+      extraDisplay: "stats.turbokartracers.naturalPrefix",
+    },
+  })
   public turbokartracers: TurboKartRacers;
 
   @Field({
@@ -125,10 +150,19 @@ export class PlayerStats {
   })
   public uhc: UHC;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.VAMPIREZ } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.VAMPIREZ,
+    },
+  })
   public vampirez: VampireZ;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.WALLS } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.WALLS,
+      extraDisplay: "stats.walls.naturalPrefix",
+    },
+  })
   public walls: Walls;
 
   @Field({ leaderboard: { fieldName: FormattedGame.WARLORDS } })

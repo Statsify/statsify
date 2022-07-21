@@ -65,6 +65,11 @@ export class Walls {
   @Field()
   public currentPrefix: string;
 
+  @Field({
+    store: { default: getFormattedLevel({ prefixes, prefixScore: prefixes[0].score }) },
+  })
+  public naturalPrefix: string;
+
   @Field()
   public nextPrefix: string;
 
@@ -79,8 +84,19 @@ export class Walls {
     this.assists = data.assists;
     this.tokens = legacy.walls_tokens;
 
-    this.currentPrefix = getFormattedLevel(prefixes, this.wins);
-    this.nextPrefix = getFormattedLevel(prefixes, this.wins, true);
+    const prefixScore = this.wins;
+    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
+    this.naturalPrefix = getFormattedLevel({
+      prefixes,
+      prefixScore,
+      trueScore: true,
+    });
+    this.nextPrefix = getFormattedLevel({
+      prefixes,
+      prefixScore,
+      skip: true,
+    });
+
     this.progression = new Progression(
       Math.abs(this.wins - getPrefixRequirement(prefixes, this.wins)),
       getPrefixRequirement(prefixes, this.wins, 1) -

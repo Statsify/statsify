@@ -79,6 +79,11 @@ export class TurboKartRacers {
   @Field()
   public currentPrefix: string;
 
+  @Field({
+    store: { default: getFormattedLevel({ prefixes, prefixScore: prefixes[0].score }) },
+  })
+  public naturalPrefix: string;
+
   @Field()
   public nextPrefix: string;
 
@@ -103,8 +108,19 @@ export class TurboKartRacers {
     this.gold = data.gold_trophy;
     this.total = add(this.gold, this.silver, this.bronze);
 
-    this.currentPrefix = getFormattedLevel(prefixes, this.gold);
-    this.nextPrefix = getFormattedLevel(prefixes, this.gold, true);
+    const prefixScore = this.gold;
+    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
+    this.naturalPrefix = getFormattedLevel({
+      prefixes,
+      prefixScore,
+      trueScore: true,
+    });
+    this.nextPrefix = getFormattedLevel({
+      prefixes,
+      prefixScore,
+      skip: true,
+    });
+
     this.progression = new Progression(
       Math.abs(this.gold - getPrefixRequirement(prefixes, this.gold)),
       getPrefixRequirement(prefixes, this.gold, 1) -
