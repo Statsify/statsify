@@ -67,10 +67,10 @@ export class Duels {
   @Field({ store: { default: 300 }, leaderboard: { enabled: false } })
   public pingRange: number;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: "stats.duels.overall.titleFormatted" } })
   public coins: number;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: "stats.duels.overall.titleFormatted" } })
   public lootChests: number;
 
   @Field({ leaderboard: { extraDisplay: "stats.duels.overall.titleFormatted" } })

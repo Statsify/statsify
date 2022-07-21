@@ -16,7 +16,6 @@ export type Ratio = [
 
 export const LEADERBOARD_RATIOS: Ratio[] = [
   ["wins", "losses", "wlr", "WLR"],
-  ["kills", "wins", "kwr", "KWR"],
   ["kills", "deaths", "kdr", "KDR"],
   ["finalKills", "finalDeaths", "fkdr", "FKDR"],
   ["bedsBroken", "bedsLost", "bblr", "BBLR"],
@@ -27,6 +26,7 @@ export const LEADERBOARD_RATIO_KEYS = LEADERBOARD_RATIOS.map(
 );
 
 const EXTRA_RATIOS: Ratio[] = [
+  ["kills", "wins", "kwr", "KWR"],
   ["kills", "shotsFired", "shotAccuracy", "Shot Accuracy", 100],
   ["postUpdateKills", "shotsFired", "quakeShotAccuracy", "Shot Accuracy", 100],
   ["gold", "gamesPlayed", "goldRate", "Gold Rate", 100],

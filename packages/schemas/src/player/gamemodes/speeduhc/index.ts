@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, getPrefixRequirement } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import { Progression } from "../../../progression";
 import { SpeedUHCMastery } from "./mastery";
 import { SpeedUHCMode } from "./mode";
 import { getLevelIndex, titleScores } from "./util";
@@ -29,6 +30,11 @@ export const SPEED_UHC_MODES = new GameModes([
   { api: "fortune" },
   { api: "vampirism" },
 ]);
+
+const prefixes = titleScores.map((level) => ({
+  color: "6",
+  score: level.req,
+}));
 
 export type SpeedUHCModes = IGameModes<typeof SPEED_UHC_MODES>;
 
@@ -56,6 +62,12 @@ export class SpeedUHC {
 
   @Field({ store: { default: formatLevel(1) } })
   public levelFormatted: string;
+
+  @Field()
+  public nextLevelFormatted: string;
+
+  @Field()
+  public progression: Progression;
 
   @Field({ store: { default: titleScores[0].title } })
   public title: string;
@@ -110,6 +122,14 @@ export class SpeedUHC {
 
     this.level = index + 1;
     this.levelFormatted = formatLevel(this.level);
+    this.nextLevelFormatted = formatLevel(Math.floor(this.level) + 1);
+
+    this.progression = new Progression(
+      Math.abs(this.score - getPrefixRequirement(prefixes, this.score)),
+      getPrefixRequirement(prefixes, this.score, 1) -
+        getPrefixRequirement(prefixes, this.score)
+    );
+
     this.title = titleScores[index].title;
   }
 }

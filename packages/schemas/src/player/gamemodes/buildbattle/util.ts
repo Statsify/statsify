@@ -10,7 +10,7 @@ import { findScoreIndex } from "@statsify/util";
 
 export const titleScores = [
   { req: 0, color: "§f", title: "Rookie" },
-  { req: 100, color: "§7", title: "Untrained" },
+  { req: 100, color: "§8", title: "Untrained" },
   { req: 250, color: "§e", title: "Amateur" },
   { req: 500, color: "§a", title: "Apprentice" },
   { req: 1000, color: "§d", title: "Experienced" },

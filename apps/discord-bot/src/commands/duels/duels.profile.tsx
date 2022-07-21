@@ -13,7 +13,7 @@ import {
   SingleDuelsGameModeTable,
   UHCDuelsTable,
 } from "./tables";
-import { Container, Footer, Header, SidebarItem } from "#components";
+import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
 import { DuelsModes, FormattedGame, GameMode } from "@statsify/schemas";
 
 export interface DuelsProfileProps extends BaseProfileProps {
@@ -68,7 +68,13 @@ export const DuelsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.DUELS} §fStats §r(${mode.formatted})`}
-        description={`§d${mode.formatted} Title\n${duels[api].titleFormatted}`}
+        description={`§7Title: ${duels[api].titleFormatted}\n${formatProgression({
+          t,
+          progression: duels[api].progression,
+          currentLevel: duels[api].titleLevelFormatted,
+          nextLevel: duels[api].nextTitleLevelFormatted,
+          showLevelWhenMaxed: false,
+        })}`}
         time={time}
       />
       {table}

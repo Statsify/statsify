@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, getFormattedLevel, getPrefixRequirement } from "@statsify/util";
 import { BlitzSGKit } from "./kit";
 import { BlitzSGMode, BlitzSGOverall } from "./mode";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import { Progression } from "../../../progression";
 import { sub } from "@statsify/math";
 
 export const BLITZSG_MODES = new GameModes([
@@ -64,6 +65,19 @@ export const BLITZSG_MODES = new GameModes([
   { hypixel: "teams_normal", formatted: "Doubles" },
 ]);
 
+const prefixes = [
+  { color: "7", score: 0 },
+  { color: "e", score: 1000 },
+  { color: "a", score: 25_000 },
+  { color: "c", score: 50_000 },
+  { color: "b", score: 75_000 },
+  { color: "6", score: 100_000 },
+  { color: "d", score: 150_000 },
+  { color: "4", score: 200_000 },
+  { color: "9", score: 250_000 },
+  { color: "2", score: 300_000 },
+];
+
 export type BlitzSGModes = IGameModes<typeof BLITZSG_MODES>;
 
 export class BlitzSG {
@@ -78,6 +92,20 @@ export class BlitzSG {
 
   @Field()
   public solo: BlitzSGMode;
+
+  @Field()
+  public progression: Progression;
+
+  @Field()
+  public currentPrefix: string;
+
+  @Field({
+    store: { default: getFormattedLevel({ prefixes, prefixScore: prefixes[0].score }) },
+  })
+  public naturalPrefix: string;
+
+  @Field()
+  public nextPrefix: string;
 
   @Field()
   public doubles: BlitzSGMode;
@@ -218,6 +246,25 @@ export class BlitzSG {
     this.kit = data.defaultkit || "none";
 
     this.overall = new BlitzSGOverall(data);
+
+    const prefixScore = this.overall.kills;
+    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
+    this.naturalPrefix = getFormattedLevel({
+      prefixes,
+      prefixScore,
+      trueScore: true,
+    });
+    this.nextPrefix = getFormattedLevel({
+      prefixes,
+      prefixScore,
+      skip: true,
+    });
+
+    this.progression = new Progression(
+      Math.abs(this.overall.kills - getPrefixRequirement(prefixes, this.overall.kills)),
+      getPrefixRequirement(prefixes, this.overall.kills, 1) -
+        getPrefixRequirement(prefixes, this.overall.kills)
+    );
 
     this.solo = new BlitzSGMode(data, "");
     this.doubles = new BlitzSGMode(data, "teams_normal");

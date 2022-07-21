@@ -9,11 +9,8 @@
 import { Color } from "../../../color";
 import { findScore, removeFormatting, romanNumeral } from "@statsify/util";
 
-export const getTitle = (wins: number, prefix: string) => {
-  const isOverall = prefix === "";
-  prefix = prefix ? `${prefix} ` : prefix;
-
-  const titleScores = [
+export const titleScores = (isOverall = false) =>
+  [
     { req: 0, inc: 0, title: "None", color: new Color("GRAY") },
     { req: 50, inc: 10, title: "Rookie", color: new Color("DARK_GRAY") },
     { req: 100, inc: 30, title: "Iron", color: new Color("WHITE") },
@@ -69,6 +66,10 @@ export const getTitle = (wins: number, prefix: string) => {
     inc: data.inc * (isOverall ? 2 : 1),
   }));
 
+export const getTitle = (wins: number, prefix: string) => {
+  const isOverall = prefix === "";
+  prefix = prefix ? `${prefix} ` : prefix;
+
   const {
     req,
     inc,
@@ -77,7 +78,7 @@ export const getTitle = (wins: number, prefix: string) => {
     bold = false,
     semi = false,
     max,
-  } = findScore(titleScores, wins);
+  } = findScore(titleScores(isOverall), wins);
 
   const remaining = wins - req;
   let index = (inc ? Math.floor(remaining / inc) : inc) + 1;
@@ -91,6 +92,12 @@ export const getTitle = (wins: number, prefix: string) => {
   return {
     formatted,
     color,
+    bold,
+    semi,
     raw: removeFormatting(formatted),
+    max,
+    req,
+    inc,
+    index,
   };
 };

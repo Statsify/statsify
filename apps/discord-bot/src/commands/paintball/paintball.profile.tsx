@@ -7,7 +7,15 @@
  */
 
 import { BaseProfileProps } from "../base.hypixel-command";
-import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  Header,
+  Historical,
+  SidebarItem,
+  Table,
+  formatProgression,
+} from "#components";
 import { FormattedGame } from "@statsify/schemas";
 import { formatTime, prettify } from "@statsify/util";
 
@@ -39,6 +47,12 @@ export const PaintballProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.PAINTBALL} §fStats`}
+        description={`§7Kill ${formatProgression({
+          t,
+          progression: paintball.progression,
+          currentLevel: paintball.currentPrefix,
+          nextLevel: paintball.nextPrefix,
+        })}`}
         time={time}
       />
       <Table.table>

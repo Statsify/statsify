@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, getPrefixRequirement } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import { Progression } from "../../../progression";
 import { UHCMode } from "./mode";
 import { deepAdd } from "@statsify/math";
 import { getLevelIndex, titleScores } from "./util";
@@ -20,6 +21,11 @@ export const UHC_MODES = new GameModes([
   { api: "solo", hypixel: "SOLO" },
   { api: "teams", hypixel: "TEAMS" },
 ]);
+
+const prefixes = titleScores.map((level) => ({
+  color: "6",
+  score: level.req,
+}));
 
 export type UHCModes = IGameModes<typeof UHC_MODES>;
 
@@ -43,6 +49,12 @@ export class UHC {
   public levelFormatted: string;
 
   @Field()
+  public nextLevelFormatted: string;
+
+  @Field()
+  public progression: Progression;
+
+  @Field()
   public score: number;
 
   @Field({ store: { default: "none" } })
@@ -59,8 +71,15 @@ export class UHC {
 
     const index = getLevelIndex(this.score);
 
+    this.progression = new Progression(
+      Math.abs(this.score - getPrefixRequirement(prefixes, this.score)),
+      getPrefixRequirement(prefixes, this.score, 1) -
+        getPrefixRequirement(prefixes, this.score)
+    );
+
     this.level = index + 1;
     this.levelFormatted = formatLevel(this.level);
+    this.nextLevelFormatted = formatLevel(Math.floor(this.level) + 1);
     this.title = titleScores[index].title;
 
     this.solo = new UHCMode(data, "solo");

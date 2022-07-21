@@ -70,7 +70,7 @@ export class MurderMystery {
     this.classic = new ClassicMurderMysteryMode(data, "MURDER_CLASSIC");
     this.doubleUp = new ClassicMurderMysteryMode(data, "MURDER_DOUBLE_UP");
     this.assassins = new AssassinsMurderMysteryMode(data, "MURDER_ASSASSINS");
-    this.infection = new InfectionMurderMysteryMode(data, "MURDER_INFECTION");
+    this.infection = new InfectionMurderMysteryMode(data, "MURDER_INFECTION", ap);
 
     this.overall.heroWins = ap.murdermystery_countermeasures;
   }

@@ -6,7 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  Header,
+  SidebarItem,
+  Table,
+  formatProgression,
+} from "#components";
 import { FormattedGame } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import type { BaseProfileProps } from "../base.hypixel-command";
@@ -54,7 +61,13 @@ export const BuildBattleProfile = ({
         sidebar={sidebar}
         historicalSidebar
         title={`§l${FormattedGame.BUILD_BATTLE} §fStats`}
-        description={`§dBuild Battle Title\n${buildbattle.titleFormatted}`}
+        description={`§7Title: ${buildbattle.titleFormatted}\n${formatProgression({
+          t,
+          progression: buildbattle.progression,
+          currentLevel: buildbattle.titleFormatted,
+          nextLevel: buildbattle.nextTitleFormatted,
+          showLevelWhenMaxed: false,
+        })}`}
         time={time}
       />
       <Table.table>

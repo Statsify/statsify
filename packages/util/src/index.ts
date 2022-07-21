@@ -42,6 +42,83 @@ export const findScore = <T extends { req: number }>(data: T[], score = 0): T =>
 
 /**
  *
+ * @param prefixes An array of objects with a color code and req property
+ * @param score The value to compare against
+ * @param skip The number of prefixes to skip
+ * @returns The score needed to reach the requested prefix
+ */
+export const getPrefixRequirement = (
+  prefixes: { color: string; score: number }[],
+  score: number,
+  skip = 0
+): number => {
+  const prefixIndex = prefixes.findIndex(
+    (requirement) => requirement.score > (score || 0)
+  );
+
+  return prefixIndex === -1
+    ? prefixes.at(-1)!.score
+    : prefixes[Math.min(prefixIndex + skip - 1, prefixes.length - 1)].score || 0;
+};
+
+export interface FormatProgressionOptions {
+  prefixes: { color: string; score: number }[];
+  prefixScore: number;
+  skip?: boolean;
+  titleSuffix?: string;
+
+  trueScore?: boolean;
+}
+/**
+ *
+ * @param prefixes An array of objects with a color code and req property
+ * @param score The value to compare against
+ * @param skip Whether to skip the next prefix
+ * @parm titleSuffix The suffix to append to the title, for example a star
+ * @returns The formatted prefix
+ */
+export const getFormattedLevel = ({
+  prefixes,
+  prefixScore,
+  skip = false,
+  titleSuffix = "",
+  trueScore = false,
+}: FormatProgressionOptions) => {
+  const prefixColors: { req: number; fn: (n: number) => string }[] = prefixes.map(
+    (prefix) => ({
+      req: prefix.score,
+      fn: (n) => {
+        const [number, suffix] = abbreviationNumber(trueScore ? prefixScore : n);
+
+        if (prefix.color === "rainbow") {
+          return `${formatRainbow(`[${Math.floor(number)}${suffix}${titleSuffix}]`)}`;
+        }
+
+        return `§${prefix.color}[${Math.floor(number)}${suffix}${titleSuffix}]`;
+      },
+    })
+  );
+
+  const scores = findScore(prefixColors, prefixScore);
+
+  const prefixIndex = prefixes.findIndex((score) => score.score === scores.req);
+
+  const nextScore = prefixes[Math.min(prefixIndex + 1, prefixes.length - 1)].score;
+
+  return skip
+    ? findScore(prefixColors, nextScore).fn(nextScore)
+    : scores.fn(
+        prefixScore > prefixes.at(-1)!.score ? prefixScore : prefixes[prefixIndex].score
+      );
+};
+
+const rainbowColors = ["c", "6", "e", "a", "b", "9", "d"];
+
+export const formatRainbow = (text: string) =>
+  [...text].map((l, i) => `§${rainbowColors[i % rainbowColors.length]}${l}`).join("");
+
+/**
+ *
  * @param value any sort of value
  * @returns Whether or not the value is an object, not null and is not an array
  */
@@ -181,8 +258,8 @@ export const formatTime = (
 export const relativeTime = (time: number) => `${formatTime(Date.now() - time)} ago`;
 
 export const abbreviationNumber = (num: number): [num: number, suffix: string] => {
-  const abbreviation = ["", "", "M", "B", "T"];
-  const base = Math.floor(Math.log(num) / Math.log(1000));
+  const abbreviation = ["", "K", "M", "B", "T"];
+  const base = Math.floor(num === 0 ? 0 : Math.log(num) / Math.log(1000));
   return [+(num / Math.pow(1000, base)).toFixed(2), abbreviation[base]];
 };
 

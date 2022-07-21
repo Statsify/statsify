@@ -6,7 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command";
+import {
+  BaseHypixelCommand,
+  BaseProfileProps,
+  ProfileData,
+} from "../base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { VAMPIREZ_MODES, VampireZModes } from "@statsify/schemas";
 import { VampireZProfile } from "./vampirez.profile";
@@ -17,7 +21,10 @@ export class VampireZCommand extends BaseHypixelCommand<VampireZModes> {
     super(VAMPIREZ_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
-    return <VampireZProfile {...base} />;
+  public getProfile(
+    base: BaseProfileProps,
+    { mode }: ProfileData<VampireZModes, never>
+  ): JSX.Element {
+    return <VampireZProfile {...base} mode={mode} />;
   }
 }

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, getPrefixRequirement } from "@statsify/util";
 import {
   BuildBattleGuessTheBuild,
   BuildBattleMultiplayerMode,
@@ -15,6 +15,7 @@ import {
 } from "./mode";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import { Progression } from "../../../progression";
 import { getTitleIndex, titleScores } from "./util";
 
 export const BUILD_BATTLE_MODES = new GameModes([
@@ -26,6 +27,11 @@ export const BUILD_BATTLE_MODES = new GameModes([
   { hypixel: "BUILD_BATTLE_SOLO_NORMAL", formatted: "Solo" },
   { hypixel: "BUILD_BATTLE_SOLO_PRO", formatted: "Pro" },
 ]);
+
+const prefixes = titleScores.map((title) => ({
+  color: title.color,
+  score: title.req,
+}));
 
 export type BuildBattleModes = IGameModes<typeof BUILD_BATTLE_MODES>;
 
@@ -66,6 +72,12 @@ export class BuildBattle {
   @Field({ store: { default: `${titleScores[0].color}${titleScores[0].title}` } })
   public titleFormatted: string;
 
+  @Field()
+  public progression: Progression;
+
+  @Field()
+  public nextTitleFormatted: string;
+
   @Field({ leaderboard: { fieldName: "Wins", name: "1.14 Wins" } })
   public latestWins: number;
 
@@ -91,6 +103,15 @@ export class BuildBattle {
 
     this.title = title;
     this.titleFormatted = `${color}${title}`;
+    this.nextTitleFormatted = `${
+      titleScores[Math.min(titleScores.length - 1, index + 1)].color
+    }${titleScores[Math.min(titleScores.length - 1, index + 1)].title}`;
+
+    this.progression = new Progression(
+      Math.abs(getPrefixRequirement(prefixes, this.score) - this.score),
+      getPrefixRequirement(prefixes, this.score, 1) -
+        getPrefixRequirement(prefixes, this.score)
+    );
   }
 }
 

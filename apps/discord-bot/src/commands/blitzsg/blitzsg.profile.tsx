@@ -14,7 +14,14 @@ import {
   FormattedGame,
   GameMode,
 } from "@statsify/schemas";
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  Header,
+  SidebarItem,
+  Table,
+  formatProgression,
+} from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { formatTime, prettify, romanNumeral } from "@statsify/util";
 
@@ -156,6 +163,16 @@ export const BlitzSGProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.BLITZSG} §fStats §r(${mode.formatted})`}
+        description={
+          mode.api === "overall"
+            ? `§7Kill ${formatProgression({
+                t,
+                progression: blitzsg.progression,
+                currentLevel: blitzsg.currentPrefix,
+                nextLevel: blitzsg.nextPrefix,
+              })}`
+            : ""
+        }
         time={time}
       />
       {table}
