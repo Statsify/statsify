@@ -51,7 +51,7 @@ export class CommandsCommand {
             index,
             group,
             totalCommands,
-            context.option<string>("highlight").toLowerCase().replace(" ", "_")
+            context.option<string>("highlight")?.toLowerCase().replace(" ", "_")
           )
       )
     );
@@ -61,11 +61,14 @@ export class CommandsCommand {
     page: number,
     commands: [commandName: string, usage: number][],
     totalCommands: number,
-    highlight = "bedwars"
+    highlight: string
   ) {
     const embed = new EmbedBuilder()
       .title("Commands")
-      .footer((t) => `Total: ${t(totalCommands)} | Highlighting: ${highlight}`)
+      .footer(
+        (t) =>
+          `Total: ${t(totalCommands)}${highlight ? ` | Highlighting: ${highlight}` : ""}`
+      )
       .color(STATUS_COLORS.info)
       .description((t) =>
         commands
