@@ -52,7 +52,7 @@ export const SpeedUHCProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.SPEED_UHC} §fStats §r(${mode.formatted})`}
-        description={`§7Level: ${speeduhc.levelFormatted}\n${formatProgression({
+        description={`§7Level: ${speeduhc.levelFormatted}\n§7Score ${formatProgression({
           t,
           progression: speeduhc.progression,
           currentLevel: speeduhc.levelFormatted,

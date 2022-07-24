@@ -19,16 +19,16 @@ export type WallsModes = IGameModes<typeof WALLS_MODES>;
 const prefixes = [
   { color: "8", score: 0 },
   { color: "7", score: 25 },
-  { color: "f", score: 50 },
-  { color: "e", score: 100 },
-  { color: "a", score: 200 },
-  { color: "2", score: 300 },
-  { color: "9", score: 400 },
-  { color: "1", score: 500 },
-  { color: "d", score: 750 },
-  { color: "4", score: 1000 },
-  { color: "6", score: 2000 },
-  { color: "rainbow", score: 2500 },
+  { color: "6", score: 50 },
+  { color: "a", score: 100 },
+  { color: "2", score: 200 },
+  { color: "9", score: 300 },
+  { color: "1", score: 400 },
+  { color: "d", score: 500 },
+  { color: "4", score: 750 },
+  { color: "6", score: 1000 },
+  { color: "0", score: 2000 },
+  { color: "rainbow", score: 2001 },
 ];
 
 export class Walls {

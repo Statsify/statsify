@@ -110,7 +110,7 @@ export class FontRenderer {
     const lines = text.split("\n");
 
     return lines.map((line) => {
-      const defualtState: Omit<TextNode, "text"> = {
+      const defaultState: Omit<TextNode, "text"> = {
         bold: false,
         italic: false,
         underline: false,
@@ -120,7 +120,7 @@ export class FontRenderer {
         ...inputState,
       };
 
-      let state = defualtState;
+      let state = defaultState;
 
       line = line.startsWith("§") ? line : `§f${line}`;
 
@@ -140,7 +140,7 @@ export class FontRenderer {
             }
           }
 
-          const effect = token?.effect(part, matches as RegExpMatchArray, defualtState);
+          const effect = token?.effect(part, matches as RegExpMatchArray, defaultState);
           let text = effect?.text ?? part;
 
           if (matches) text = text.slice(matches[0].length);

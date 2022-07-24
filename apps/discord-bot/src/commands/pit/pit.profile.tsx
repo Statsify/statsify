@@ -14,7 +14,7 @@ import {
   Table,
   formatProgression,
 } from "#components";
-import { FormattedGame, Progression } from "@statsify/schemas";
+import { Progression } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
 import type { PitPandaPlayer } from "#services";
@@ -47,9 +47,7 @@ export const PitProfile = ({
         skin={skin}
         time="LIVE"
         title="§l§eThe §aPit §fStats"
-        description={`${FormattedGame.PIT} §7Level: ${
-          player.doc.formattedLevel
-        }\n${formatProgression({
+        description={`§7Level: ${player.doc.formattedLevel}\n§7XP ${formatProgression({
           t,
           progression: new Progression(
             player.xpProgress.displayCurrent,

@@ -68,7 +68,7 @@ export class PitPandaService {
             (t) => t("errors.noPitStats.title"),
             (t) => t("errors.noPitStats.description", { displayName: input })
           );
-        if (e.response.status === 400) throw this.apiService.missingPlayer(type, input);
+        if (e?.response?.status === 400) throw this.apiService.missingPlayer(type, input);
 
         throw this.apiService.unknownError();
       });

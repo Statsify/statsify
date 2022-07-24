@@ -13,6 +13,7 @@ import {
   EmbedBuilder,
   ErrorMessage,
   PaginateService,
+  TextArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
@@ -20,7 +21,11 @@ import { arrayGroup, prettify } from "@statsify/util";
 
 const COMMANDS_PER_PAGE = 25;
 
-@Command({ description: (t) => t("commands.commands"), tier: UserTier.CORE })
+@Command({
+  description: (t) => t("commands.commands"),
+  tier: UserTier.CORE,
+  args: [new TextArgument("highlight", "The string to highlight", false)],
+})
 export class CommandsCommand {
   public constructor(
     private readonly apiService: ApiService,
@@ -40,29 +45,41 @@ export class CommandsCommand {
 
     return this.paginateService.scrollingPagination(
       context,
-      groups.map((group, index) => () => this.createTopPage(index, group, totalCommands))
+      groups.map(
+        (group, index) => () =>
+          this.createTopPage(
+            index,
+            group,
+            totalCommands,
+            context.option<string>("highlight").toLowerCase().replace(" ", "_")
+          )
+      )
     );
   }
 
   private createTopPage(
     page: number,
     commands: [commandName: string, usage: number][],
-    totalCommands: number
+    totalCommands: number,
+    highlight = "bedwars"
   ) {
     const embed = new EmbedBuilder()
       .title("Commands")
-      .footer((t) => `Total: ${t(totalCommands)}`)
+      .footer((t) => `Total: ${t(totalCommands)} | Highlighting: ${highlight}`)
       .color(STATUS_COLORS.info)
       .description((t) =>
         commands
           .map(([command, usage], index) => {
             const position = page * COMMANDS_PER_PAGE + index + 1;
-            const commandName = prettify(command);
+            const commandName = `${command.includes(highlight) ? "**" : ""}${prettify(
+              command
+            )}${command.includes(highlight) ? "**" : ""}`;
             const percentage = Math.round((usage / totalCommands) * 100);
 
-            return `\`#${position}\`${commandName}: **${t(usage)}** \`(${t(
-              percentage
-            )}%)\``;
+            return `\`#${String(position).padStart(
+              String(page * COMMANDS_PER_PAGE + COMMANDS_PER_PAGE).length,
+              "0"
+            )}\` ${commandName}: **${t(usage)}** \`(${t(percentage)}%)\``;
           })
           .join("\n")
       );

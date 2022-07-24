@@ -23,7 +23,7 @@ export const humanPrefixes = [
   { color: "b§l", score: 2500 },
   { color: "c§l", score: 3000 },
   { color: "4§l", score: 5000 },
-  { color: "0§l", score: 7500 },
+  { color: "0§l", score: 10_000 },
   { color: "rainbow", score: 15_000 },
 ];
 

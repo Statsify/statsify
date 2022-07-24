@@ -40,8 +40,10 @@ export const VampireZProfile = ({
     [t("stats.tokens"), t(vampirez.tokens), "§e"],
     [t("stats.overallWins"), t(vampirez.overallWins), "§a"],
     [t("stats.zombieKills"), t(vampirez.zombieKills), "§2"],
-    [t("stats.mostVampireKills"), t(vampirez.mostVampireKills), "§c"],
   ];
+
+  if (time === "LIVE")
+    sidebar.push([t("stats.mostVampireKills"), t(vampirez.mostVampireKills), "§c"]);
 
   return (
     <Container background={background}>
@@ -51,13 +53,14 @@ export const VampireZProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.VAMPIREZ} §fStats §r(${mode.formatted})`}
-        description={`§7Win ${formatProgression({
+        description={`§7${api === "human" ? "Win" : "Kill"} ${formatProgression({
           t,
           progression: vampirez[api].progression,
           currentLevel: vampirez[api].currentPrefix,
           nextLevel: vampirez[api].nextPrefix,
         })}`}
         time={time}
+        historicalSidebar
       />
       <Table.table>
         <Table.tr>

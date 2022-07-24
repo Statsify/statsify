@@ -52,16 +52,15 @@ export class VampireZLife {
     const prefixes = mode === "human" ? humanPrefixes : vampirePrefixes;
     const stat = mode === "human" ? this.wins : this.kills;
 
-    const prefixScore = this.wins;
-    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
+    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore: stat });
     this.naturalPrefix = getFormattedLevel({
       prefixes,
-      prefixScore,
+      prefixScore: stat,
       trueScore: true,
     });
     this.nextPrefix = getFormattedLevel({
       prefixes,
-      prefixScore,
+      prefixScore: stat,
       skip: true,
     });
 

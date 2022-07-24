@@ -107,7 +107,7 @@ export class WoolWars {
     this.swordsman = new WoolWarsClass(data.wool_wars?.stats?.classes?.swordsman);
     this.engineer = new WoolWarsClass(data.wool_wars?.stats?.classes?.engineer);
     this.golem = new WoolWarsClass(data.wool_wars?.stats?.classes?.golem);
-    this.assault = new WoolWarsClass(data.wool_wars?.stats?.classes?.assult);
+    this.assault = new WoolWarsClass(data.wool_wars?.stats?.classes?.assault);
   }
 }
 

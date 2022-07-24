@@ -238,7 +238,7 @@ const GuildGexpPage = ({ guild, t }: GuildGexpPageProps) => {
 
   const leveling = `§7${t("stats.guild.level")}: ${guildColor}${t(
     guild.level
-  )}\n${formatProgression({
+  )}\n§7GEXP ${formatProgression({
     t,
     progression: guild.levelProgression,
     currentLevel: `${guildColor}${t(Math.floor(guild.level))}`,

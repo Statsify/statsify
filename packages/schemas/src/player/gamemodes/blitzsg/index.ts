@@ -71,11 +71,11 @@ const prefixes = [
   { color: "a", score: 25_000 },
   { color: "c", score: 50_000 },
   { color: "b", score: 75_000 },
-  { color: "6", score: 100_000 },
-  { color: "d", score: 150_000 },
-  { color: "4", score: 200_000 },
-  { color: "9", score: 250_000 },
-  { color: "2", score: 300_000 },
+  { color: "6§l", score: 100_000 },
+  { color: "5§l", score: 150_000 },
+  { color: "4§l", score: 200_000 },
+  { color: "9§l", score: 250_000 },
+  { color: "2§l", score: 300_000 },
 ];
 
 export type BlitzSGModes = IGameModes<typeof BLITZSG_MODES>;

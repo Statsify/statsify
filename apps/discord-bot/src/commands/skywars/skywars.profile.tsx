@@ -141,7 +141,7 @@ export const SkyWarsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.SKYWARS} Stats §r(${mode.formatted})`}
-        description={`§7Level: ${skywars.levelFormatted}\n${formatProgression({
+        description={`§7Level: ${skywars.levelFormatted}\n§EXP ${formatProgression({
           t,
           progression: skywars.progression,
           currentLevel: skywars.levelFormatted,
