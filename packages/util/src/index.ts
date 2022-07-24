@@ -90,11 +90,12 @@ export const getFormattedLevel = ({
       fn: (n) => {
         const [number, suffix] = abbreviationNumber(trueScore ? prefixScore : n);
 
-        if (prefix.color === "rainbow") {
-          return `${formatRainbow(`[${Math.floor(number)}${suffix}${titleSuffix}]`)}`;
-        }
+        // Don't round the number if it is representing a game prefix
+        const text = `${prefix.color === "rainbow" ? "" : `§${prefix.color}`}[${
+          trueScore ? Math.floor(number) : number
+        }${suffix}${titleSuffix}]`;
 
-        return `§${prefix.color}[${Math.floor(number)}${suffix}${titleSuffix}]`;
+        return prefix.color === "rainbow" ? formatRainbow(text) : text;
       },
     })
   );

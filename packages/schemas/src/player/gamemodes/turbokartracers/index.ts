@@ -23,14 +23,14 @@ const prefixes = [
   { color: "3", score: 50 },
   { color: "a", score: 100 },
   { color: "e", score: 200 },
-  { color: "b", score: 300 },
+  { color: "9", score: 300 },
   { color: "d", score: 400 },
   { color: "6", score: 500 },
   { color: "2", score: 750 },
-  { color: "9", score: 1000 },
+  { color: "1", score: 1000 },
   { color: "5", score: 2500 },
   { color: "4", score: 5000 },
-  { color: "8", score: 10_000 },
+  { color: "0", score: 10_000 },
 ];
 
 export class TurboKartRacers {

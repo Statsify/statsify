@@ -40,8 +40,8 @@ export const ArenaBrawlProfile = ({
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(arenabrawl.coins), "§6"],
     [t("stats.tokens"), t(arenabrawl.tokens), "§e"],
-    [t("stats.keys"), t(arenabrawl.keys), "§b"],
-    [t("stats.magicalChests"), t(arenabrawl.magicalChests), "§a"],
+    [t("stats.magicalKeys"), t(arenabrawl.keys), "§b"],
+    [t("stats.magicalChests"), t(arenabrawl.magicalChests), "§5"],
     [t("stats.rune"), prettify(arenabrawl.rune), "§9"],
   ];
 
@@ -53,7 +53,7 @@ export const ArenaBrawlProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.ARENA_BRAWL} §fStats §r(${mode.formatted})`}
-        description={`§7Kill ${formatProgression({
+        description={`§7Win ${formatProgression({
           t,
           progression: arenabrawl.progression,
           currentLevel: arenabrawl.currentPrefix,

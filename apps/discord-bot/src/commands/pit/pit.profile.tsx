@@ -46,10 +46,8 @@ export const PitProfile = ({
         name={player.doc.colouredName}
         skin={skin}
         time="LIVE"
-        title="§l§eThe §aPit §fStats"
-        description={`${FormattedGame.PIT} §7Level: ${
-          player.doc.formattedLevel
-        }\n${formatProgression({
+        title={`§l${FormattedGame.PIT} §fStats`}
+        description={`§7Level: ${player.doc.formattedLevel}\n§7EXP ${formatProgression({
           t,
           progression: new Progression(
             player.xpProgress.displayCurrent,
