@@ -10,7 +10,7 @@ import { Fill } from "@statsify/rendering";
 import { UserPalette } from "@statsify/schemas";
 
 export interface Palette {
-  background?: Fill;
+  background?: Fill | null;
   boxes?: {
     color?: Fill;
     shadowOpacity?: number;
@@ -35,6 +35,10 @@ export const getColorPalette = (palette: UserPalette): Palette | undefined => {
           shadowOpacity: 0.4,
         },
         background: "rgba(0, 0, 0, 0.32)",
+      };
+    case UserPalette.NO_BACKGROUNDS:
+      return {
+        background: null,
       };
   }
 };

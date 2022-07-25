@@ -17,6 +17,7 @@ export enum UserPalette {
   DEFAULT = "default",
   LIGHT = "light",
   DARK = "dark",
+  NO_BACKGROUNDS = "no-backgrounds",
 }
 
 export enum UserBoxes {
