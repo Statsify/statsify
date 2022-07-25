@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseDuelsGameMode, MultiDuelsGameMode } from "@statsify/schemas";
 import { Historical, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
+import { MultiPVPDuelsGameMode, PVPBaseDuelsGameMode } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 import type { ProfileTime } from "../../base.hypixel-command";
 
 interface MultiDuelsGameModeModeTableProps {
-  stats: BaseDuelsGameMode;
+  stats: PVPBaseDuelsGameMode;
   title: string;
   t: LocalizeFunction;
   time: ProfileTime;
@@ -52,7 +52,7 @@ const MultiDuelsGameModeModeTable = ({
 );
 
 interface MultiDuelsGameModeTableProps {
-  stats: MultiDuelsGameMode;
+  stats: MultiPVPDuelsGameMode;
   t: LocalizeFunction;
   time: ProfileTime;
 }

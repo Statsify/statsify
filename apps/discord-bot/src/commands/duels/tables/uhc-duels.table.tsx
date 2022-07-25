@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseDuelsGameMode, UHCDuels } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
+import { PVPBaseDuelsGameMode, UHCDuels } from "@statsify/schemas";
 import { Table } from "#components";
 import { prettify } from "@statsify/util";
 
 interface UHCDuelsModeColumnProps {
-  stats: BaseDuelsGameMode;
+  stats: PVPBaseDuelsGameMode;
   title: string;
   t: LocalizeFunction;
 }

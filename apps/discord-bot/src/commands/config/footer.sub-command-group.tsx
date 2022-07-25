@@ -36,7 +36,7 @@ export class FooterSubCommandGroup {
   })
   public message(context: CommandContext) {
     const message = convertColorCodes(context.option<string>("message")).replace(
-      /^\^\d\^/g,
+      /§\^\d\^/g,
       ""
     );
 

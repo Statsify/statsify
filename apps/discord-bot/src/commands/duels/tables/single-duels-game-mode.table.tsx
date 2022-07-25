@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Historical, Table } from "#components";
+import { Historical, If, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
-import { SingleDuelsGameMode } from "@statsify/schemas";
+import { SingleDuelsGameMode, SinglePVPDuelsGameMode } from "@statsify/schemas";
 import type { ProfileTime } from "../../base.hypixel-command";
 
 interface SingleDuelsGameModeTableProps {
-  stats: SingleDuelsGameMode;
+  stats: SinglePVPDuelsGameMode | SingleDuelsGameMode;
   t: LocalizeFunction;
   time: ProfileTime;
 }
@@ -38,10 +38,17 @@ export const SingleDuelsGameModeTable = ({
       <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
       <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
     </Table.tr>
-    <Table.tr>
-      <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
-      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
-    </Table.tr>
+    <If condition={"kills" in stats}>
+      {() => {
+        const s = stats as SinglePVPDuelsGameMode;
+        return (
+          <Table.tr>
+            <Table.td title={t("stats.kills")} value={t(s.kills)} color="§a" />
+            <Table.td title={t("stats.deaths")} value={t(s.deaths)} color="§c" />
+            <Table.td title={t("stats.kdr")} value={t(s.kdr)} color="§6" />
+          </Table.tr>
+        );
+      }}
+    </If>
   </Table.table>
 );
