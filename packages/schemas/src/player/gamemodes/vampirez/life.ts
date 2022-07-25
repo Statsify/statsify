@@ -13,6 +13,9 @@ import { humanPrefixes, vampirePrefixes } from "./prefixes";
 import { ratio } from "@statsify/math";
 
 export class VampireZLife {
+  @Field({ leaderboard: { enabled: false } })
+  public kills: number;
+
   @Field()
   public deaths: number;
 
@@ -65,12 +68,7 @@ export class VampireZLife {
     );
   }
 
-  public static applyRatios(data: VampireZKills) {
+  public static applyRatios(data: VampireZLife) {
     data.kdr = ratio(data.kills, data.deaths);
   }
-}
-
-export class VampireZKills extends VampireZLife {
-  @Field({ leaderboard: { enabled: false } })
-  public kills: number;
 }
