@@ -90,6 +90,8 @@ export class PVPBaseDuelsGameMode extends BaseDuelsGameMode {
     this.kills = data[`${prefix}kills`];
     this.deaths = data[`${prefix}deaths`];
     this.blocksPlaced = data[`${prefix}blocks_placed`];
+
+    PVPBaseDuelsGameMode.applyRatios(this);
   }
 
   public static applyRatios(data: PVPBaseDuelsGameMode) {
@@ -202,6 +204,7 @@ export class BridgeDuels {
     );
   }
 }
+
 export class MultiPVPDuelsGameMode {
   @Field({ store: { store: false } })
   public titlePrefix: string;
