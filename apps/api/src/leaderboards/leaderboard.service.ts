@@ -88,7 +88,7 @@ export abstract class LeaderboardService {
       case LeaderboardQuery.INPUT: {
         const ranking = await this.searchLeaderboardInput(input as string, field);
         highlight = ranking - 1;
-        top = ranking - (ranking % 10);
+        top = highlight - (highlight % 10);
         bottom = top + PAGE_SIZE;
         break;
       }
