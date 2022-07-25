@@ -41,10 +41,14 @@ export const getTheme = (user: User | null): Theme | undefined => {
         box(ctx, props, location, theme);
       },
       img(ctx, props, location, theme, component) {
+        if (component !== Background.name)
+          return Image.render(ctx, props, location, theme, component);
+
+        if (colorPalette?.background === null) return;
+
         Image.render(ctx, props, location, theme, component);
 
-        if (!colorPalette?.background || !component || component !== Background.name)
-          return;
+        if (!colorPalette?.background || !component) return;
 
         ctx.fillStyle = colorPalette.background;
         ctx.fillRect(location.x, location.y, location.width, location.height);

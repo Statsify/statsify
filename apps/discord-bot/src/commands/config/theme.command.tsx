@@ -84,6 +84,7 @@ export class ThemeCommand {
           ["Default", UserPalette.DEFAULT],
           ["Dark", UserPalette.DARK],
           ["Light", UserPalette.LIGHT],
+          ["No Backgrounds", UserPalette.NO_BACKGROUNDS],
         ],
       }),
     ],

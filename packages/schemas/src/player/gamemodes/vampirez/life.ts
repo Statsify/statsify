@@ -46,7 +46,7 @@ export class VampireZHuman {
 
   public constructor(data: APIData, mode: string) {
     this.wins = data[`${mode}_wins`];
-    this.kills = data[`${mode}_kills`];
+    this.kills = data[`${mode === "human" ? "vampire" : "human"}_kills`];
     this.deaths = data[`${mode}_deaths`];
 
     const prefixes = mode === "human" ? humanPrefixes : vampirePrefixes;
