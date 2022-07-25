@@ -14,17 +14,13 @@ import { ratio } from "@statsify/math";
 
 export class VampireZLife {
   @Field()
-  public wins: number;
-
-  @Field()
-  public kills: number;
-
-  @Field()
   public deaths: number;
 
   @Field()
   public kdr: number;
 
+  @Field()
+  public wins: number;
   @Field()
   public currentPrefix: string;
 
@@ -46,11 +42,10 @@ export class VampireZLife {
 
   public constructor(data: APIData, mode: string) {
     this.wins = data[`${mode}_wins`];
-    this.kills = data[`${mode}_kills`];
     this.deaths = data[`${mode}_deaths`];
 
     const prefixes = mode === "human" ? humanPrefixes : vampirePrefixes;
-    const stat = mode === "human" ? this.wins : this.kills;
+    const stat = mode === "human" ? this.wins : data[`human_kills`];
 
     this.currentPrefix = getFormattedLevel({ prefixes, prefixScore: stat });
     this.naturalPrefix = getFormattedLevel({
@@ -68,11 +63,14 @@ export class VampireZLife {
       Math.abs(stat - getPrefixRequirement(prefixes, stat)),
       getPrefixRequirement(prefixes, stat, 1) - getPrefixRequirement(prefixes, stat)
     );
-
-    VampireZLife.applyRatios(this);
   }
 
-  public static applyRatios(data: VampireZLife) {
+  public static applyRatios(data: VampireZKills) {
     data.kdr = ratio(data.kills, data.deaths);
   }
+}
+
+export class VampireZKills extends VampireZLife {
+  @Field({ leaderboard: { enabled: false } })
+  public kills: number;
 }

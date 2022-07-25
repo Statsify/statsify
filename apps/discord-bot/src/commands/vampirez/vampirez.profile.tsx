@@ -65,7 +65,11 @@ export const VampireZProfile = ({
       <Table.table>
         <Table.tr>
           <Table.td title={t(`stats.wins`)} value={t(vampirez[api].wins)} color="§e" />
-          <Table.td title={t(`stats.kills`)} value={t(vampirez[api].kills)} color="§a" />
+          <Table.td
+            title={`${api === "human" ? "Vampire" : "Human"}s ${t(`stats.killed`)}`}
+            value={t(vampirez[api].kills)}
+            color="§a"
+          />
           <Table.td
             title={t(`stats.deaths`)}
             value={t(vampirez[api].deaths)}

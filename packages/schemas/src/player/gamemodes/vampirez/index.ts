@@ -9,7 +9,7 @@
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
-import { VampireZLife } from "./life";
+import { VampireZKills, VampireZLife } from "./life";
 import { add } from "@statsify/math";
 
 export const VAMPIREZ_MODES = new GameModes([{ api: "human" }, { api: "vampire" }]);
@@ -32,14 +32,32 @@ export class VampireZ {
   public zombieKills: number;
 
   @Field({
+    leaderboard: {
+      extraDisplay: "stats.vampirez.vampire.naturalPrefix",
+      fieldName: "Humans Killed",
+      name: "Humans Killed",
+    },
+  })
+  public humanKills: number;
+
+  @Field({
     leaderboard: { extraDisplay: "stats.vampirez.human.naturalPrefix" },
   })
-  public human: VampireZLife;
+  public human: VampireZKills;
 
   @Field({
     leaderboard: { extraDisplay: "stats.vampirez.vampire.naturalPrefix" },
   })
-  public vampire: VampireZLife;
+  public vampireKills: number;
+
+  @Field({
+    leaderboard: {
+      extraDisplay: "stats.vampirez.human.naturalPrefix",
+      fieldName: "Humans Killed",
+      name: "Humans Killed",
+    },
+  })
+  public vampire: VampireZKills;
 
   public constructor(data: APIData, legacy: APIData) {
     this.coins = data.coins;
@@ -48,12 +66,14 @@ export class VampireZ {
     this.mostVampireKills = data.most_vampire_kills_new;
     this.zombieKills = data.zombie_kills;
 
-    this.human = new VampireZLife(data, "human");
-    this.vampire = new VampireZLife(data, "vampire");
+    this.human = new VampireZKills(data, "human");
+    this.vampire = new VampireZKills(data, "vampire");
 
-    const vampireKills = this.vampire.kills;
-    this.vampire.kills = this.human.kills;
-    this.human.kills = vampireKills;
+    this.vampireKills = data.vampire_kills;
+    this.humanKills = data.human_kills;
+
+    this.vampire.kills = this.humanKills;
+    this.human.kills = this.vampireKills;
 
     VampireZLife.applyRatios(this.vampire);
     VampireZLife.applyRatios(this.human);
