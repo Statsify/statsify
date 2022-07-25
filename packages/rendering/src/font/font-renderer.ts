@@ -388,6 +388,7 @@ export class FontRenderer {
     italic: boolean
   ) {
     ctx.fillStyle = color;
+    ctx.beginPath();
 
     for (let i = 0; i < imageData.data.length; i += 4) {
       if (imageData.data[i + 3] === 0) continue;
@@ -407,8 +408,17 @@ export class FontRenderer {
         offset *= scale * size;
       }
 
-      ctx.fillRect(x + offset + canvasX * size, y + canvasY * size, size, size);
+      const charX = x + offset + canvasX * size;
+      const charY = y + canvasY * size;
+
+      ctx.moveTo(charX, charY);
+      ctx.lineTo(charX + size, charY);
+      ctx.lineTo(charX + size, charY + size);
+      ctx.lineTo(charX, charY + size);
     }
+
+    ctx.closePath();
+    ctx.fill();
   }
 
   private fillLine(

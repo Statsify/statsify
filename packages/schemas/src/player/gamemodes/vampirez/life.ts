@@ -12,11 +12,8 @@ import { Progression } from "../../../progression";
 import { humanPrefixes, vampirePrefixes } from "./prefixes";
 import { ratio } from "@statsify/math";
 
-export class VampireZLife {
-  @Field()
-  public wins: number;
-
-  @Field()
+export class VampireZHuman {
+  @Field({ leaderboard: { fieldName: "Vampires Killed" } })
   public kills: number;
 
   @Field()
@@ -24,6 +21,9 @@ export class VampireZLife {
 
   @Field()
   public kdr: number;
+
+  @Field()
+  public wins: number;
 
   @Field()
   public currentPrefix: string;
@@ -50,14 +50,16 @@ export class VampireZLife {
     this.deaths = data[`${mode}_deaths`];
 
     const prefixes = mode === "human" ? humanPrefixes : vampirePrefixes;
-    const stat = mode === "human" ? this.wins : this.kills;
+    const stat = mode === "human" ? this.wins : data[`human_kills`];
 
     this.currentPrefix = getFormattedLevel({ prefixes, prefixScore: stat });
+
     this.naturalPrefix = getFormattedLevel({
       prefixes,
       prefixScore: stat,
       trueScore: true,
     });
+
     this.nextPrefix = getFormattedLevel({
       prefixes,
       prefixScore: stat,
@@ -69,10 +71,15 @@ export class VampireZLife {
       getPrefixRequirement(prefixes, stat, 1) - getPrefixRequirement(prefixes, stat)
     );
 
-    VampireZLife.applyRatios(this);
+    VampireZHuman.applyRatios(this);
   }
 
-  public static applyRatios(data: VampireZLife) {
+  public static applyRatios(data: VampireZHuman) {
     data.kdr = ratio(data.kills, data.deaths);
   }
+}
+
+export class VampireZVampire extends VampireZHuman {
+  @Field({ leaderboard: { fieldName: "Humans Killed" } })
+  public declare kills: number;
 }
