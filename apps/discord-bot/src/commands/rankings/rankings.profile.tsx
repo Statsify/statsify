@@ -17,16 +17,16 @@ const shouldColor = (stats: string[], field: string) =>
   stats.some((s) => field.includes(s));
 
 const formatStat = (stat: PostLeaderboardRankingsResponse, game?: string) => {
-  const field = stat.field;
+  const field = stat.field.toLowerCase();
   const name = game ? stat.name.replace(`${game} `, "") : stat.name;
 
   let color = "§7";
 
-  const green = [...LEADERBOARD_RATIOS.map((r) => r[0])];
-  const red = [...LEADERBOARD_RATIOS.map((r) => r[1])];
-  const gold = [...LEADERBOARD_RATIOS.map((r) => r[2]), "coins", "gold"];
-  const yellow = ["assists", "gamesPlayed", "lootChests"];
-  const aqua = ["exp", "diamond", "goals"];
+  const green = [...LEADERBOARD_RATIOS.map((r) => r[0].toLowerCase())];
+  const red = [...LEADERBOARD_RATIOS.map((r) => r[1].toLowerCase())];
+  const gold = [...LEADERBOARD_RATIOS.map((r) => r[2].toLowerCase()), "coins", "gold"];
+  const yellow = ["assists", "gamesplayed", "lootchests"];
+  const aqua = ["exp", "level", "diamond", "goals"];
   const darkGreen = ["emerald"];
   const pink = ["karma"];
 

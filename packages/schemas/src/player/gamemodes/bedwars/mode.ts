@@ -121,97 +121,97 @@ export class ChallengesBedWars {
   @Field({ leaderboard: { enabled: false } })
   public uniqueChallenges?: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public totalChallenges?: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public renegade: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public warmonger: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public selfish: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public minimumWage: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public assassin: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public regularShopper: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public invisibleShop: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public collector: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public woodworker: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public bridgingForDummies: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public toxicRain: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public defuser: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public miningFatigue: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public ultimateUHC: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public sleightOfHand: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public weightedItems: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public socialDistancing: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public swordless: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public marksman: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public patriot: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public stamina: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public oldMan: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public cappedResources: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public redLightGreenLight: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public slowReflexes: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public pacifist: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public masterAssassin: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public standingTall: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public protectThePresident: number;
 
-  @Field({ leaderboard: { limit: 1000 } })
+  @Field()
   public cantTouchThis: number;
 
   public constructor(data: APIData) {

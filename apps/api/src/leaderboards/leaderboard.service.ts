@@ -216,6 +216,8 @@ export abstract class LeaderboardService {
       const index = i / 2;
       const metadata = leaderboardFields[index];
 
+      if (Number(rank) > metadata.limit) continue;
+
       const numberValue = Number(value);
 
       const formattedValue = metadata.formatter

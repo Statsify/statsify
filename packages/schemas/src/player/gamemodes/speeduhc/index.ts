@@ -57,7 +57,7 @@ export class SpeedUHC {
   @Field({ store: { default: "none" } })
   public activeMastery: string;
 
-  @Field({ store: { default: 1 } })
+  @Field({ store: { default: 1 }, leaderboard: { enabled: false } })
   public level: number;
 
   @Field({ store: { default: formatLevel(1) } })

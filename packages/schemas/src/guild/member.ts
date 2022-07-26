@@ -22,7 +22,7 @@ export class GuildMember {
   @Field()
   public username?: string;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public joinTime: number;
 
   @Field({ leaderboard: { enabled: false } })

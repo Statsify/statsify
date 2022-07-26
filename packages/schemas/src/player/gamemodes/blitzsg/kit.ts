@@ -10,35 +10,37 @@ import { APIData, findScoreIndex, formatTime } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { add, ratio, sub } from "@statsify/math";
 
+const limit = 10_000;
+
 export class BlitzSGKit {
-  @Field({ leaderboard: { limit: 5000 } })
+  @Field({ leaderboard: { limit } })
   public gamesPlayed: number;
 
   @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public level: number;
 
-  @Field({ leaderboard: { limit: 10_000, fieldName: "EXP" } })
+  @Field({ leaderboard: { limit, fieldName: "EXP" } })
   public exp: number;
 
   @Field({ leaderboard: { enabled: false } })
   public prestige: number;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field({ leaderboard: { limit } })
   public kills: number;
 
-  @Field({ leaderboard: { limit: 5000 } })
+  @Field({ leaderboard: { limit } })
   public deaths: number;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field({ leaderboard: { limit } })
   public kdr: number;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field({ leaderboard: { limit } })
   public wins: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { limit } })
   public losses: number;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field({ leaderboard: { limit } })
   public wlr: number;
 
   @Field({ store: { required: false }, leaderboard: { formatter: formatTime } })
