@@ -48,7 +48,7 @@ export class Paintball {
   @Field()
   public killstreaks: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public shotsFired: number;
 
   @Field({ store: { default: "none" } })

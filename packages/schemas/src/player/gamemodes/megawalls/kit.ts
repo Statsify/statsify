@@ -10,41 +10,42 @@ import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { add, ratio } from "@statsify/math";
 
+const limit = 10_000;
+
 export class MegaWallsKit {
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field({ leaderboard: { limit } })
   public wins: number;
 
-  @Field({ leaderboard: { limit: 5000 } })
+  @Field({ leaderboard: { limit } })
   public losses: number;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field({ leaderboard: { limit } })
   public wlr: number;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field({ leaderboard: { limit } })
   public kills: number;
 
-  @Field({ leaderboard: { limit: 5000 } })
+  @Field({ leaderboard: { limit } })
   public deaths: number;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field({ leaderboard: { limit } })
   public kdr: number;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field({ leaderboard: { limit } })
   public finalKills: number;
 
   @Field({ leaderboard: { enabled: false } })
   public finalAssists: number;
 
-  @Field({ leaderboard: { limit: 5000 } })
+  @Field({ leaderboard: { limit } })
   public finalDeaths: number;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field({ leaderboard: { limit } })
   public fkdr: number;
 
   @Field({ leaderboard: { enabled: false } })
   public assists: number;
 
-  @Field({ leaderboard: { enabled: false } })
   public playtime: number;
 
   @Field({ leaderboard: { enabled: false } })
@@ -53,7 +54,6 @@ export class MegaWallsKit {
   @Field({ leaderboard: { enabled: false } })
   public witherKills: number;
 
-  @Field({ leaderboard: { enabled: false } })
   public points: number;
 
   public constructor(data: APIData, kit: string) {

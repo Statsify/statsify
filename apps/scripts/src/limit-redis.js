@@ -63,5 +63,5 @@ const limit = async () => {
 };
 
 const task = new Task("leaderboard limiting", limit);
-const job = new SimpleIntervalJob({ hours: 1, runImmediately: true }, task);
+const job = new SimpleIntervalJob({ minutes: 10, runImmediately: true }, task);
 job.start();
