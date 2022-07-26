@@ -93,7 +93,8 @@ export class TurboKartRacers {
 
   public constructor(data: APIData, legacy: APIData) {
     this.coins = data.coins;
-    this.tokens = legacy.tokens;
+    this.tokens = legacy.gingerbread_tokens;
+
     this.gamesPlayed = add(
       data.retro_plays,
       data.olympus_plays,
