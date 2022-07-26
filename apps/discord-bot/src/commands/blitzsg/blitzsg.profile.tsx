@@ -165,7 +165,7 @@ export const BlitzSGProfile = ({
         title={`§l${FormattedGame.BLITZSG} §fStats §r(${mode.formatted})`}
         description={
           mode.api === "overall"
-            ? `§7Kill ${formatProgression({
+            ? `§7Prefix: ${blitzsg.naturalPrefix}\n§7Kill ${formatProgression({
                 t,
                 progression: blitzsg.progression,
                 currentLevel: blitzsg.currentPrefix,

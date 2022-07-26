@@ -6,11 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, getFormattedLevel, getPrefixRequirement } from "@statsify/util";
+import { APIData } from "@statsify/util";
 import { BlitzSGKit } from "./kit";
 import { BlitzSGMode, BlitzSGOverall } from "./mode";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import {
+  GamePrefix,
+  createPrefixProgression,
+  defaultPrefix,
+  getFormattedPrefix,
+} from "../prefixes";
 import { Progression } from "../../../progression";
 import { sub } from "@statsify/math";
 
@@ -65,17 +71,17 @@ export const BLITZSG_MODES = new GameModes([
   { hypixel: "teams_normal", formatted: "Doubles" },
 ]);
 
-const prefixes = [
-  { color: "7", score: 0 },
-  { color: "e", score: 1000 },
-  { color: "a", score: 25_000 },
-  { color: "c", score: 50_000 },
-  { color: "b", score: 75_000 },
-  { color: "6§l", score: 100_000 },
-  { color: "5§l", score: 150_000 },
-  { color: "4§l", score: 200_000 },
-  { color: "9§l", score: 250_000 },
-  { color: "2§l", score: 300_000 },
+const prefixes: GamePrefix[] = [
+  { fmt: (n) => `§f[§7${n}§f]`, req: 0 },
+  { fmt: (n) => `§e[${n}]`, req: 1000 },
+  { fmt: (n) => `§a[${n}]`, req: 25_000 },
+  { fmt: (n) => `§c[${n}]`, req: 50_000 },
+  { fmt: (n) => `§b[${n}]`, req: 75_000 },
+  { fmt: (n) => `§6§l[${n}]`, req: 100_000 },
+  { fmt: (n) => `§5§l[${n}]`, req: 150_000 },
+  { fmt: (n) => `§4§l[${n}]`, req: 200_000 },
+  { fmt: (n) => `§9§l[${n}]`, req: 250_000 },
+  { fmt: (n) => `§2§l[${n}]`, req: 300_000 },
 ];
 
 export type BlitzSGModes = IGameModes<typeof BLITZSG_MODES>;
@@ -99,9 +105,7 @@ export class BlitzSG {
   @Field()
   public currentPrefix: string;
 
-  @Field({
-    store: { default: getFormattedLevel({ prefixes, prefixScore: prefixes[0].score }) },
-  })
+  @Field({ store: { default: defaultPrefix(prefixes) } })
   public naturalPrefix: string;
 
   @Field()
@@ -247,24 +251,23 @@ export class BlitzSG {
 
     this.overall = new BlitzSGOverall(data);
 
-    const prefixScore = this.overall.kills;
-    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
-    this.naturalPrefix = getFormattedLevel({
+    const score = this.overall.kills;
+
+    this.currentPrefix = getFormattedPrefix({ prefixes, score });
+
+    this.naturalPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore,
+      score,
       trueScore: true,
     });
-    this.nextPrefix = getFormattedLevel({
+
+    this.nextPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore,
+      score,
       skip: true,
     });
 
-    this.progression = new Progression(
-      Math.abs(this.overall.kills - getPrefixRequirement(prefixes, this.overall.kills)),
-      getPrefixRequirement(prefixes, this.overall.kills, 1) -
-        getPrefixRequirement(prefixes, this.overall.kills)
-    );
+    this.progression = createPrefixProgression(prefixes, score);
 
     this.solo = new BlitzSGMode(data, "");
     this.doubles = new BlitzSGMode(data, "teams_normal");

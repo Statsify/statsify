@@ -6,9 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, getFormattedLevel, getPrefixRequirement } from "@statsify/util";
+import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import {
+  GamePrefix,
+  createPrefixProgression,
+  defaultPrefix,
+  getFormattedPrefix,
+} from "../prefixes";
 import { PaintballPerks } from "./perks";
 import { Progression } from "../../../progression";
 import { ratio } from "@statsify/math";
@@ -17,19 +23,19 @@ export const PAINTBALL_MODES = new GameModes([{ api: "overall" }]);
 
 export type PaintballModes = IGameModes<typeof PAINTBALL_MODES>;
 
-const prefixes = [
-  { color: "8", score: 0 },
-  { color: "7", score: 1000 },
-  { color: "f", score: 2500 },
-  { color: "2", score: 5000 },
-  { color: "e", score: 10_000 },
-  { color: "a", score: 20_000 },
-  { color: "9", score: 50_000 },
-  { color: "3", score: 75_000 },
-  { color: "d", score: 100_000 },
-  { color: "5", score: 200_000 },
-  { color: "4", score: 500_000 },
-  { color: "6", score: 1_000_000 },
+const prefixes: GamePrefix[] = [
+  { fmt: (n) => `§8[${n}]`, req: 0 },
+  { fmt: (n) => `§7[${n}]`, req: 1000 },
+  { fmt: (n) => `§f[${n}]`, req: 2500 },
+  { fmt: (n) => `§2[${n}]`, req: 5000 },
+  { fmt: (n) => `§e[${n}]`, req: 10_000 },
+  { fmt: (n) => `§a[${n}]`, req: 20_000 },
+  { fmt: (n) => `§9[${n}]`, req: 50_000 },
+  { fmt: (n) => `§3[${n}]`, req: 75_000 },
+  { fmt: (n) => `§d[${n}]`, req: 100_000 },
+  { fmt: (n) => `§5[${n}]`, req: 200_000 },
+  { fmt: (n) => `§c[${n}]`, req: 500_000 },
+  { fmt: (n) => `§6[${n}]`, req: 1_000_000 },
 ];
 
 export class Paintball {
@@ -75,9 +81,7 @@ export class Paintball {
   @Field()
   public currentPrefix: string;
 
-  @Field({
-    store: { default: getFormattedLevel({ prefixes, prefixScore: prefixes[0].score }) },
-  })
+  @Field({ store: { default: defaultPrefix(prefixes) } })
   public naturalPrefix: string;
 
   @Field()
@@ -97,24 +101,23 @@ export class Paintball {
     this.perks = new PaintballPerks(data);
     this.tokens = legacy.paintball_tokens;
 
-    const prefixScore = this.kills;
-    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
-    this.naturalPrefix = getFormattedLevel({
+    const score = this.kills;
+
+    this.currentPrefix = getFormattedPrefix({ prefixes, score });
+
+    this.naturalPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore,
+      score,
       trueScore: true,
     });
-    this.nextPrefix = getFormattedLevel({
+
+    this.nextPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore,
+      score,
       skip: true,
     });
 
-    this.progression = new Progression(
-      Math.abs(this.kills - getPrefixRequirement(prefixes, this.kills)),
-      getPrefixRequirement(prefixes, this.kills, 1) -
-        getPrefixRequirement(prefixes, this.kills)
-    );
+    this.progression = createPrefixProgression(prefixes, score);
   }
 }
 

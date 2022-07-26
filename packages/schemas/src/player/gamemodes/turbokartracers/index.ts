@@ -6,9 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, getFormattedLevel, getPrefixRequirement } from "@statsify/util";
+import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import {
+  GamePrefix,
+  createPrefixProgression,
+  defaultPrefix,
+  getFormattedPrefix,
+} from "../prefixes";
 import { Progression } from "../../../progression";
 import { add, ratio } from "@statsify/math";
 
@@ -16,21 +22,21 @@ export const TURBO_KART_RACERS_MODES = new GameModes([{ api: "overall" }]);
 
 export type TurboKartRacersModes = IGameModes<typeof TURBO_KART_RACERS_MODES>;
 
-const prefixes = [
-  { color: "8", score: 0 },
-  { color: "7", score: 5 },
-  { color: "f", score: 25 },
-  { color: "3", score: 50 },
-  { color: "a", score: 100 },
-  { color: "e", score: 200 },
-  { color: "9", score: 300 },
-  { color: "d", score: 400 },
-  { color: "6", score: 500 },
-  { color: "2", score: 750 },
-  { color: "1", score: 1000 },
-  { color: "5", score: 2500 },
-  { color: "4", score: 5000 },
-  { color: "0", score: 10_000 },
+const prefixes: GamePrefix[] = [
+  { fmt: (n) => `§8[${n}✪]`, req: 0 },
+  { fmt: (n) => `§7[${n}✪]`, req: 5 },
+  { fmt: (n) => `§f[${n}✪]`, req: 25 },
+  { fmt: (n) => `§3[${n}✪]`, req: 50 },
+  { fmt: (n) => `§a[${n}✪]`, req: 100 },
+  { fmt: (n) => `§e[${n}✪]`, req: 200 },
+  { fmt: (n) => `§9[${n}✪]`, req: 300 },
+  { fmt: (n) => `§d[${n}✪]`, req: 400 },
+  { fmt: (n) => `§6[${n}✪]`, req: 500 },
+  { fmt: (n) => `§2[${n}✪]`, req: 750 },
+  { fmt: (n) => `§1[${n}✪]`, req: 1000 },
+  { fmt: (n) => `§5[${n}✪]`, req: 2500 },
+  { fmt: (n) => `§4[${n}✪]`, req: 5000 },
+  { fmt: (n) => `§0[${n}✪]`, req: 10_000 },
 ];
 
 export class TurboKartRacers {
@@ -79,9 +85,7 @@ export class TurboKartRacers {
   @Field()
   public currentPrefix: string;
 
-  @Field({
-    store: { default: getFormattedLevel({ prefixes, prefixScore: prefixes[0].score }) },
-  })
+  @Field({ store: { default: defaultPrefix(prefixes) } })
   public naturalPrefix: string;
 
   @Field()
@@ -108,24 +112,23 @@ export class TurboKartRacers {
     this.gold = data.gold_trophy;
     this.total = add(this.gold, this.silver, this.bronze);
 
-    const prefixScore = this.gold;
-    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
-    this.naturalPrefix = getFormattedLevel({
+    const score = this.gold;
+
+    this.currentPrefix = getFormattedPrefix({ prefixes, score });
+
+    this.naturalPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore,
+      score,
       trueScore: true,
     });
-    this.nextPrefix = getFormattedLevel({
+
+    this.nextPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore,
+      score,
       skip: true,
     });
 
-    this.progression = new Progression(
-      Math.abs(this.gold - getPrefixRequirement(prefixes, this.gold)),
-      getPrefixRequirement(prefixes, this.gold, 1) -
-        getPrefixRequirement(prefixes, this.gold)
-    );
+    this.progression = createPrefixProgression(prefixes, score);
 
     this.goldRate = ratio(this.gold, this.gamesPlayed, 100);
     this.trophyRate = ratio(this.total, this.gamesPlayed, 100);

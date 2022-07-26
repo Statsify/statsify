@@ -6,9 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, getFormattedLevel, getPrefixRequirement } from "@statsify/util";
+import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import {
+  GamePrefix,
+  createPrefixProgression,
+  defaultPrefix,
+  getFormattedPrefix,
+  rainbow,
+} from "../prefixes";
 import { Progression } from "../../../progression";
 import { ratio } from "@statsify/math";
 
@@ -16,19 +23,19 @@ export const WALLS_MODES = new GameModes([{ api: "overall" }]);
 
 export type WallsModes = IGameModes<typeof WALLS_MODES>;
 
-const prefixes = [
-  { color: "8", score: 0 },
-  { color: "7", score: 25 },
-  { color: "6", score: 50 },
-  { color: "a", score: 100 },
-  { color: "2", score: 200 },
-  { color: "9", score: 300 },
-  { color: "1", score: 400 },
-  { color: "d", score: 500 },
-  { color: "4", score: 750 },
-  { color: "6", score: 1000 },
-  { color: "0", score: 2000 },
-  { color: "rainbow", score: 2001 },
+const prefixes: GamePrefix[] = [
+  { fmt: (n) => `§8[${n}]`, req: 0 },
+  { fmt: (n) => `§7[${n}]`, req: 25 },
+  { fmt: (n) => `§6[${n}]`, req: 50 },
+  { fmt: (n) => `§a[${n}]`, req: 100 },
+  { fmt: (n) => `§2[${n}]`, req: 200 },
+  { fmt: (n) => `§9[${n}]`, req: 300 },
+  { fmt: (n) => `§1[${n}]`, req: 400 },
+  { fmt: (n) => `§d[${n}]`, req: 500 },
+  { fmt: (n) => `§4[${n}]`, req: 750 },
+  { fmt: (n) => `§6[${n}]`, req: 1000 },
+  { fmt: (n) => `§0§l[${n}]`, req: 2000 },
+  { fmt: (n) => rainbow(`[${n}]`), req: 2001 },
 ];
 
 export class Walls {
@@ -65,9 +72,7 @@ export class Walls {
   @Field()
   public currentPrefix: string;
 
-  @Field({
-    store: { default: getFormattedLevel({ prefixes, prefixScore: prefixes[0].score }) },
-  })
+  @Field({ store: { default: defaultPrefix(prefixes) } })
   public naturalPrefix: string;
 
   @Field()
@@ -84,23 +89,22 @@ export class Walls {
     this.assists = data.assists;
     this.tokens = legacy.walls_tokens;
 
-    const prefixScore = this.wins;
-    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
-    this.naturalPrefix = getFormattedLevel({
+    const score = this.wins;
+
+    this.currentPrefix = getFormattedPrefix({ prefixes, score });
+
+    this.naturalPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore,
+      score,
       trueScore: true,
     });
-    this.nextPrefix = getFormattedLevel({
+
+    this.nextPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore,
+      score,
       skip: true,
     });
 
-    this.progression = new Progression(
-      Math.abs(this.wins - getPrefixRequirement(prefixes, this.wins)),
-      getPrefixRequirement(prefixes, this.wins, 1) -
-        getPrefixRequirement(prefixes, this.wins)
-    );
+    this.progression = createPrefixProgression(prefixes, score);
   }
 }

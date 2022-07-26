@@ -34,7 +34,6 @@ export interface FormatProgressionOptions {
   showProgress?: boolean;
   showLevel?: boolean;
 
-  showLevelWhenMaxed?: boolean;
   renderXp?: ProgressFunction;
 }
 
@@ -45,27 +44,19 @@ export const formatProgression = ({
   nextLevel,
   showLevel = true,
   showProgress = true,
-  showLevelWhenMaxed = true,
   renderXp = xpBar,
 }: FormatProgressionOptions) => {
-  if (progression.max) {
-    let output = "§^2^";
-
-    if (showProgress)
-      output += `§7Progress: §b${t(progression.current)}§7/§a${t(progression.max)}`;
-
-    if (showProgress && showLevel) output += "\n";
-
-    if (showLevel)
-      output += `${currentLevel} ${renderXp(progression.percent)} ${nextLevel}`;
-
-    return output;
-  }
+  if (!progression.max) return "§^2^§7Progress: §r§b§lMAXED§r";
 
   let output = "§^2^";
 
-  output += "§7Progress: ";
-  output += showLevelWhenMaxed ? `${currentLevel} §r§8(§b§lMAXED§r§8)` : "§r§b§lMAXED§r";
+  if (showProgress)
+    output += `§7Progress: §b${t(progression.current)}§7/§a${t(progression.max)}`;
+
+  if (showProgress && showLevel) output += "\n";
+
+  if (showLevel)
+    output += `${currentLevel} ${renderXp(progression.percent)} ${nextLevel}`;
 
   return output;
 };

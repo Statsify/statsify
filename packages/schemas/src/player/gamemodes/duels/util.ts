@@ -9,7 +9,17 @@
 import { Color } from "../../../color";
 import { findScore, removeFormatting, romanNumeral } from "@statsify/util";
 
-export const titleScores = (isOverall = false) =>
+export interface Title {
+  req: number;
+  inc: number;
+  title: string;
+  color: Color;
+  bold?: boolean;
+  semi?: boolean;
+  max?: number;
+}
+
+export const titleScores = (isOverall = false): Title[] =>
   [
     { req: 0, inc: 0, title: "None", color: new Color("GRAY") },
     { req: 50, inc: 10, title: "Rookie", color: new Color("DARK_GRAY") },

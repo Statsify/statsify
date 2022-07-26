@@ -51,7 +51,7 @@ export const QuakeProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.QUAKE} §fStats §r(${mode.formatted})`}
-        description={`§7Kill ${formatProgression({
+        description={`§7Prefix: ${quake.naturalPrefix}\n§7Kill ${formatProgression({
           t,
           progression: quake.progression,
           currentLevel: quake.currentPrefix,
