@@ -7,30 +7,53 @@
  */
 
 import {
+  ARCADE_MODES,
+  ARENA_BRAWL_MODES,
+  BEDWARS_MODES,
+  BLITZSG_MODES,
+  BUILD_BATTLE_MODES,
+  COPS_AND_CRIMS_MODES,
+  DUELS_MODES,
+  GENERAL_MODES,
+  GameModes,
+  LeaderboardScanner,
+  MEGAWALLS_MODES,
+  MURDER_MYSTERY_MODES,
+  PAINTBALL_MODES,
+  PARKOUR_MODES,
+  Player,
+  PlayerStats,
+  QUAKE_MODES,
+  SKYWARS_MODES,
+  SMASH_HEROES_MODES,
+  SPEED_UHC_MODES,
+  TNT_GAMES_MODES,
+  TURBO_KART_RACERS_MODES,
+  UHC_MODES,
+  UserTier,
+  VAMPIREZ_MODES,
+  WALLS_MODES,
+  WARLORDS_MODES,
+  WOOLWARS_MODES,
+} from "@statsify/schemas";
+import {
   ApiService,
   ButtonBuilder,
   Choice,
-  ChoiceArgument,
   Command,
   CommandContext,
   ErrorMessage,
   PaginateService,
   PlayerArgument,
+  SubCommand,
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
-import {
-  GENERAL_MODES,
-  LeaderboardScanner,
-  Player,
-  PlayerStats,
-  UserTier,
-} from "@statsify/schemas";
+import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { RankingsProfile } from "./rankings.profile";
 import { arrayGroup } from "@statsify/util";
 import { games } from "./games";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
-import { mapBackground } from "#constants";
 import { render } from "@statsify/rendering";
 
 const fields = LeaderboardScanner.getLeaderboardFields(Player);
@@ -38,17 +61,11 @@ const fields = LeaderboardScanner.getLeaderboardFields(Player);
 const choices = games.map((g) => [g.name, g.key] as Choice);
 choices.unshift(["All", "all"]);
 
+const args = [PlayerArgument];
+
 @Command({
   description: (t) => t("commands.rankings"),
   tier: UserTier.IRON,
-  args: [
-    new ChoiceArgument({
-      name: "game",
-      choices,
-      required: true,
-    }),
-    PlayerArgument,
-  ],
 })
 export class RankingsCommand {
   public constructor(
@@ -56,16 +73,219 @@ export class RankingsCommand {
     private readonly paginateService: PaginateService
   ) {}
 
-  public async run(context: CommandContext) {
+  @SubCommand({
+    description: (t) => t("commands.rankings-all"),
+    args,
+  })
+  public all(context: CommandContext) {
+    return this.run(context, "all", GENERAL_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-arcade"),
+    args,
+  })
+  public arcade(context: CommandContext) {
+    return this.run(context, "arcade", ARCADE_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-arenabrawl"),
+    args,
+  })
+  public arenabrawl(context: CommandContext) {
+    return this.run(context, "arenabrawl", ARENA_BRAWL_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-bedwars"),
+    args,
+  })
+  public bedwars(context: CommandContext) {
+    return this.run(context, "bedwars", BEDWARS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-blitzsg"),
+    args,
+  })
+  public blitzsg(context: CommandContext) {
+    return this.run(context, "blitzsg", BLITZSG_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-buildbattle"),
+    args,
+  })
+  public buildbattle(context: CommandContext) {
+    return this.run(context, "buildbattle", BUILD_BATTLE_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-copsandcrims"),
+    args,
+  })
+  public copsandcrims(context: CommandContext) {
+    return this.run(context, "copsandcrims", COPS_AND_CRIMS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-duels"),
+    args,
+  })
+  public duels(context: CommandContext) {
+    return this.run(context, "duels", DUELS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-events"),
+    args,
+  })
+  public events(context: CommandContext) {
+    return this.run(context, "events", GENERAL_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-general"),
+    args,
+  })
+  public general(context: CommandContext) {
+    return this.run(context, "general", GENERAL_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-megawalls"),
+    args,
+  })
+  public megawalls(context: CommandContext) {
+    return this.run(context, "megawalls", MEGAWALLS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-murdermystery"),
+    args,
+  })
+  public murdermystery(context: CommandContext) {
+    return this.run(context, "murdermystery", MURDER_MYSTERY_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-paintball"),
+    args,
+  })
+  public paintball(context: CommandContext) {
+    return this.run(context, "paintball", PAINTBALL_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-parkour"),
+    args,
+  })
+  public parkour(context: CommandContext) {
+    return this.run(context, "parkour", PARKOUR_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-quake"),
+    args,
+  })
+  public quake(context: CommandContext) {
+    return this.run(context, "quake", QUAKE_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-skywars"),
+    args,
+  })
+  public skywars(context: CommandContext) {
+    return this.run(context, "skywars", SKYWARS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-smashheroes"),
+    args,
+  })
+  public smashheroes(context: CommandContext) {
+    return this.run(context, "smashheroes", SMASH_HEROES_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-speeduhc"),
+    args,
+  })
+  public speeduhc(context: CommandContext) {
+    return this.run(context, "speeduhc", SPEED_UHC_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-tntgames"),
+    args,
+  })
+  public tntgames(context: CommandContext) {
+    return this.run(context, "tntgames", TNT_GAMES_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-turbokartracers"),
+    args,
+  })
+  public turbokartracers(context: CommandContext) {
+    return this.run(context, "turbokartracers", TURBO_KART_RACERS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-uhc"),
+    args,
+  })
+  public uhc(context: CommandContext) {
+    return this.run(context, "uhc", UHC_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-vampirez"),
+    args,
+  })
+  public vampirez(context: CommandContext) {
+    return this.run(context, "vampirez", VAMPIREZ_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-walls"),
+    args,
+  })
+  public walls(context: CommandContext) {
+    return this.run(context, "walls", WALLS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-warlords"),
+    args,
+  })
+  public warlords(context: CommandContext) {
+    return this.run(context, "warlords", WARLORDS_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-woolwars"),
+    args,
+  })
+  public woolwars(context: CommandContext) {
+    return this.run(context, "woolwars", WOOLWARS_MODES);
+  }
+
+  private async run<T extends GamesWithBackgrounds>(
+    context: CommandContext,
+    game: keyof PlayerStats | "all",
+    modes: GameModes<T>
+  ) {
     const user = context.getUser();
     const t = context.t();
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
-    let game = context.option<keyof PlayerStats | "all" | null>("game");
-    if (game === "all") game = null;
+    const isGameNotAll = game !== "all";
 
-    const filteredFields = game
+    const filteredFields = isGameNotAll
       ? fields.filter((f) => f.startsWith(`stats.${game}`))
       : fields;
 
@@ -84,7 +304,7 @@ export class RankingsCommand {
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
       getLogo(user),
-      getBackground(...mapBackground(GENERAL_MODES, "overall")),
+      getBackground(...mapBackground(modes, modes.getApiModes()[0])),
     ]);
 
     const groups = arrayGroup(
@@ -92,7 +312,9 @@ export class RankingsCommand {
       10
     );
 
-    const formattedGame = game ? games.find((g) => g.key === game)?.formatted : undefined;
+    const formattedGame = isGameNotAll
+      ? games.find((g) => g.key === game)?.formatted
+      : undefined;
 
     return this.paginateService.scrollingPagination(
       context,

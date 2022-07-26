@@ -28,6 +28,7 @@ const formatStat = (stat: PostLeaderboardRankingsResponse, game?: string) => {
   const yellow = ["assists", "gamesPlayed", "lootChests"];
   const aqua = ["exp", "diamond", "goals"];
   const darkGreen = ["emerald"];
+  const pink = ["karma"];
 
   if (shouldColor(green, field)) color = "§a";
   else if (shouldColor(red, field)) color = "§c";
@@ -35,6 +36,7 @@ const formatStat = (stat: PostLeaderboardRankingsResponse, game?: string) => {
   else if (shouldColor(yellow, field)) color = "§e";
   else if (shouldColor(aqua, field)) color = "§b";
   else if (shouldColor(darkGreen, field)) color = "§2";
+  else if (shouldColor(pink, field)) color = "§d";
 
   return `§l${color}${name}`;
 };
