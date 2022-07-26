@@ -20,7 +20,7 @@ import { GameModes, IGameModes } from "../../../game";
 export const DUELS_MODES = new GameModes([
   { api: "overall" },
   { api: "arena", hypixel: "DUELS_DUEL_ARENA" },
-  { api: "blitzsg", hypixel: "DUELS_BLITZ_DUEL", formatted: "Blitz SG" },
+  { api: "blitzsg", hypixel: "DUELS_BLITZ_DUEL", formatted: "BlitzSG" },
   { api: "bow", hypixel: "DUELS_BOW_DUEL" },
   { api: "bowSpleef", hypixel: "DUELS_BOWSPLEEF_DUEL" },
   { api: "boxing", hypixel: "DUELS_BOXING_DUEL" },

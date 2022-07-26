@@ -53,7 +53,9 @@ export const VampireZProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.VAMPIREZ} §fStats §r(${mode.formatted})`}
-        description={`§7${api === "human" ? "Win" : "Kill"} ${formatProgression({
+        description={`§7Prefix: ${vampirez[api].naturalPrefix}\n§7${
+          api === "human" ? "Win" : "Kill"
+        } ${formatProgression({
           t,
           progression: vampirez[api].progression,
           currentLevel: vampirez[api].currentPrefix,

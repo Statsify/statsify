@@ -67,7 +67,6 @@ export const BuildBattleProfile = ({
             progression: buildbattle.progression,
             currentLevel: buildbattle.titleFormatted,
             nextLevel: buildbattle.nextTitleFormatted,
-            showLevelWhenMaxed: false,
           }
         )}`}
         time={time}

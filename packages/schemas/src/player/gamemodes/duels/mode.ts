@@ -6,31 +6,29 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, getPrefixRequirement, romanNumeral } from "@statsify/util";
+import { APIData, romanNumeral } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GamePrefix, createPrefixProgression } from "../prefixes";
 import { Progression } from "../../../progression";
+import { Title, getTitle, titleScores } from "./util";
 import { deepAdd, ratio } from "@statsify/math";
-import { getTitle, titleScores } from "./util";
 
-const prefixes = titleScores().flatMap((title) => {
-  const calculatedTitles: { color: string; score: number }[] = [];
+const getPrefixes = (titles: Title[]) =>
+  titles.flatMap((title) => {
+    const calculatedTitles: GamePrefix[] = [];
 
-  for (let i = 0; i < (title.max ?? 5); i++) {
-    calculatedTitles.push({ color: title.color.code, score: title.req + i * title.inc });
-  }
+    for (let i = 0; i < (title.max ?? 5); i++) {
+      calculatedTitles.push({
+        fmt: (n) => `${title.color.code}[${n}]`,
+        req: title.req + i * title.inc,
+      });
+    }
 
-  return calculatedTitles;
-});
+    return calculatedTitles;
+  });
 
-const overallPrefixes = titleScores(true).flatMap((title) => {
-  const calculatedTitles: { color: string; score: number }[] = [];
-
-  for (let i = 0; i < (title.max ?? 5); i++) {
-    calculatedTitles.push({ color: title.color.code, score: title.req + i * title.inc });
-  }
-
-  return calculatedTitles;
-});
+const prefixes = getPrefixes(titleScores());
+const overallPrefixes = getPrefixes(titleScores(true));
 
 export class BaseDuelsGameMode {
   @Field({ leaderboard: { enabled: false } })
@@ -117,10 +115,16 @@ export class BridgeDuelsMode extends PVPBaseDuelsGameMode {
 
 export class BridgeDuels {
   @Field()
-  public title: string;
+  public titleFormatted: string;
 
   @Field()
-  public titleFormatted: string;
+  public titleLevelFormatted: string;
+
+  @Field()
+  public nextTitleLevelFormatted: string;
+
+  @Field()
+  public progression: Progression;
 
   @Field()
   public overall: BridgeDuelsMode;
@@ -146,15 +150,6 @@ export class BridgeDuels {
   @Field({ leaderboard: { fieldName: "CTF" } })
   public ctf: BridgeDuelsMode;
 
-  @Field()
-  public titleLevelFormatted: string;
-
-  @Field()
-  public nextTitleLevelFormatted: string;
-
-  @Field()
-  public progression: Progression;
-
   public constructor(data: APIData) {
     this.solo = new BridgeDuelsMode(data, "bridge_duel");
     this.doubles = new BridgeDuelsMode(data, "bridge_doubles");
@@ -179,12 +174,11 @@ export class BridgeDuels {
 
     PVPBaseDuelsGameMode.applyRatios(this.overall);
 
-    const { formatted, raw, bold, semi, max, index, color, req, inc } = getTitle(
+    const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
       this.overall.wins,
       "Bridge"
     );
 
-    this.title = raw;
     this.titleFormatted = formatted;
 
     this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
@@ -197,11 +191,7 @@ export class BridgeDuels {
       nextData.bold || nextData.semi ? "§l" : ""
     }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
 
-    this.progression = new Progression(
-      Math.abs(getPrefixRequirement(prefixes, this.overall.wins) - this.overall.wins),
-      getPrefixRequirement(prefixes, this.overall.wins, 1) -
-        getPrefixRequirement(prefixes, this.overall.wins)
-    );
+    this.progression = createPrefixProgression(prefixes, this.overall.wins);
   }
 }
 
@@ -210,7 +200,13 @@ export class MultiPVPDuelsGameMode {
   public titlePrefix: string;
 
   @Field()
-  public title: string;
+  public titleLevelFormatted: string;
+
+  @Field()
+  public nextTitleLevelFormatted: string;
+
+  @Field()
+  public progression: Progression;
 
   @Field()
   public titleFormatted: string;
@@ -224,15 +220,6 @@ export class MultiPVPDuelsGameMode {
   @Field()
   public doubles: PVPBaseDuelsGameMode;
 
-  @Field()
-  public titleLevelFormatted: string;
-
-  @Field()
-  public nextTitleLevelFormatted: string;
-
-  @Field()
-  public progression: Progression;
-
   public constructor(data: APIData, title: string, short: string, long: string) {
     this.solo = new PVPBaseDuelsGameMode(data, `${short}_duel`);
     this.doubles = new PVPBaseDuelsGameMode(data, `${short}_doubles`);
@@ -245,12 +232,11 @@ export class MultiPVPDuelsGameMode {
 
     this.titlePrefix = title;
 
-    const { formatted, raw, bold, semi, max, index, color, req, inc } = getTitle(
+    const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
       this.overall.wins,
       this.titlePrefix
     );
 
-    this.title = raw;
     this.titleFormatted = formatted;
 
     this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
@@ -263,11 +249,7 @@ export class MultiPVPDuelsGameMode {
       nextData.bold || nextData.semi ? "§l" : ""
     }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
 
-    this.progression = new Progression(
-      Math.abs(getPrefixRequirement(prefixes, this.overall.wins) - this.overall.wins),
-      getPrefixRequirement(prefixes, this.overall.wins, 1) -
-        getPrefixRequirement(prefixes, this.overall.wins)
-    );
+    this.progression = createPrefixProgression(prefixes, this.overall.wins);
   }
 }
 
@@ -296,12 +278,7 @@ const assignTitles = (
   }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
 
   const titlePrefixes = data.titlePrefix === "" ? overallPrefixes : prefixes;
-  const prefixRequirement = getPrefixRequirement(titlePrefixes, data.wins);
-
-  data.progression = new Progression(
-    Math.abs(prefixRequirement - data.wins),
-    getPrefixRequirement(titlePrefixes, data.wins, 1) - prefixRequirement
-  );
+  data.progression = createPrefixProgression(titlePrefixes, data.wins);
 };
 
 export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
@@ -356,10 +333,16 @@ export class SingleDuelsGameMode extends BaseDuelsGameMode {
 
 export class UHCDuels {
   @Field()
-  public title: string;
+  public titleFormatted: string;
 
   @Field()
-  public titleFormatted: string;
+  public titleLevelFormatted: string;
+
+  @Field()
+  public nextTitleLevelFormatted: string;
+
+  @Field()
+  public progression: Progression;
 
   @Field()
   public overall: PVPBaseDuelsGameMode;
@@ -376,14 +359,6 @@ export class UHCDuels {
   @Field()
   public deathmatch: PVPBaseDuelsGameMode;
 
-  @Field()
-  public titleLevelFormatted: string;
-
-  @Field()
-  public nextTitleLevelFormatted: string;
-
-  @Field()
-  public progression: Progression;
   public constructor(data: APIData) {
     this.solo = new PVPBaseDuelsGameMode(data, "uhc_duel");
     this.doubles = new PVPBaseDuelsGameMode(data, "uhc_doubles");
@@ -397,12 +372,11 @@ export class UHCDuels {
 
     PVPBaseDuelsGameMode.applyRatios(this.overall);
 
-    const { formatted, raw, bold, semi, max, index, color, req, inc } = getTitle(
+    const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
       this.overall.wins,
       "UHC"
     );
 
-    this.title = raw;
     this.titleFormatted = formatted;
 
     this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
@@ -415,10 +389,6 @@ export class UHCDuels {
       nextData.bold || nextData.semi ? "§l" : ""
     }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
 
-    this.progression = new Progression(
-      Math.abs(getPrefixRequirement(prefixes, this.overall.wins) - this.overall.wins),
-      getPrefixRequirement(prefixes, this.overall.wins, 1) -
-        getPrefixRequirement(prefixes, this.overall.wins)
-    );
+    this.progression = createPrefixProgression(prefixes, this.overall.wins);
   }
 }

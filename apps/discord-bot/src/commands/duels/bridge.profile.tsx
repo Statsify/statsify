@@ -56,7 +56,6 @@ export const BridgeProfile = ({
           progression: bridge.progression,
           currentLevel: bridge.titleLevelFormatted,
           nextLevel: bridge.nextTitleLevelFormatted,
-          showLevelWhenMaxed: false,
         })}`}
         time={time}
       />

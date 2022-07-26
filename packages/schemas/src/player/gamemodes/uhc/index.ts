@@ -6,15 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, getPrefixRequirement } from "@statsify/util";
+import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import { GamePrefix, createPrefixProgression } from "../prefixes";
 import { Progression } from "../../../progression";
 import { UHCMode } from "./mode";
 import { deepAdd } from "@statsify/math";
 import { getLevelIndex, titleScores } from "./util";
 
-const formatLevel = (level: number) => `§6[${level}✫]`;
+const formatLevel = (level: number | string) => `§6[${level}✫]`;
 
 export const UHC_MODES = new GameModes([
   { api: "overall" },
@@ -22,9 +23,9 @@ export const UHC_MODES = new GameModes([
   { api: "teams", hypixel: "TEAMS" },
 ]);
 
-const prefixes = titleScores.map((level) => ({
-  color: "6",
-  score: level.req,
+const prefixes: GamePrefix[] = titleScores.map((level) => ({
+  fmt: formatLevel,
+  req: level.req,
 }));
 
 export type UHCModes = IGameModes<typeof UHC_MODES>;
@@ -71,11 +72,7 @@ export class UHC {
 
     const index = getLevelIndex(this.score);
 
-    this.progression = new Progression(
-      Math.abs(this.score - getPrefixRequirement(prefixes, this.score)),
-      getPrefixRequirement(prefixes, this.score, 1) -
-        getPrefixRequirement(prefixes, this.score)
-    );
+    this.progression = createPrefixProgression(prefixes, this.score);
 
     this.level = index + 1;
     this.levelFormatted = formatLevel(this.level);

@@ -73,7 +73,6 @@ export const DuelsProfile = ({
           progression: duels[api].progression,
           currentLevel: duels[api].titleLevelFormatted,
           nextLevel: duels[api].nextTitleLevelFormatted,
-          showLevelWhenMaxed: false,
         })}`}
         time={time}
       />

@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, getFormattedLevel, getPrefixRequirement } from "@statsify/util";
+import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { Progression } from "../../../progression";
+import { createPrefixProgression, defaultPrefix, getFormattedPrefix } from "../prefixes";
 import { humanPrefixes, vampirePrefixes } from "./prefixes";
 import { ratio } from "@statsify/math";
 
@@ -31,14 +32,7 @@ export class VampireZHuman {
   @Field()
   public nextPrefix: string;
 
-  @Field({
-    store: {
-      default: getFormattedLevel({
-        prefixes: humanPrefixes,
-        prefixScore: humanPrefixes[0].score,
-      }),
-    },
-  })
+  @Field({ store: { default: defaultPrefix(humanPrefixes) } })
   public naturalPrefix: string;
 
   @Field()
@@ -50,26 +44,23 @@ export class VampireZHuman {
     this.deaths = data[`${mode}_deaths`];
 
     const prefixes = mode === "human" ? humanPrefixes : vampirePrefixes;
-    const stat = mode === "human" ? this.wins : data[`human_kills`];
+    const score = mode === "human" ? this.wins : data[`human_kills`];
 
-    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore: stat });
+    this.currentPrefix = getFormattedPrefix({ prefixes, score });
 
-    this.naturalPrefix = getFormattedLevel({
+    this.naturalPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore: stat,
+      score,
       trueScore: true,
     });
 
-    this.nextPrefix = getFormattedLevel({
+    this.nextPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore: stat,
+      score,
       skip: true,
     });
 
-    this.progression = new Progression(
-      Math.abs(stat - getPrefixRequirement(prefixes, stat)),
-      getPrefixRequirement(prefixes, stat, 1) - getPrefixRequirement(prefixes, stat)
-    );
+    this.progression = createPrefixProgression(prefixes, score);
 
     VampireZHuman.applyRatios(this);
   }

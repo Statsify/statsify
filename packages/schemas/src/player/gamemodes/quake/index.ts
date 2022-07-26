@@ -6,9 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, getFormattedLevel, getPrefixRequirement } from "@statsify/util";
+import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import {
+  GamePrefix,
+  createPrefixProgression,
+  defaultPrefix,
+  getFormattedPrefix,
+} from "../prefixes";
 import { Progression } from "../../../progression";
 import { QuakeMode } from "./mode";
 import { deepAdd } from "@statsify/math";
@@ -34,20 +40,20 @@ const indexes = [
   "nine",
 ];
 
-const prefixes = [
-  { color: "8", score: 0 },
-  { color: "7", score: 25_000 },
-  { color: "f", score: 50_000 },
-  { color: "2", score: 75_000 },
-  { color: "e", score: 100_000 },
-  { color: "a", score: 200_000 },
-  { color: "9", score: 300_000 },
-  { color: "3", score: 400_000 },
-  { color: "d", score: 500_000 },
-  { color: "5", score: 600_000 },
-  { color: "c", score: 750_000 },
-  { color: "6", score: 1_000_000 },
-  { color: "0", score: 2_000_000 },
+const prefixes: GamePrefix[] = [
+  { fmt: (n) => `§8[${n}]`, req: 0 },
+  { fmt: (n) => `§7[${n}]`, req: 25_000 },
+  { fmt: (n) => `§f[${n}]`, req: 50_000 },
+  { fmt: (n) => `§2[${n}]`, req: 75_000 },
+  { fmt: (n) => `§e[${n}]`, req: 100_000 },
+  { fmt: (n) => `§a[${n}]`, req: 200_000 },
+  { fmt: (n) => `§9[${n}]`, req: 300_000 },
+  { fmt: (n) => `§3[${n}]`, req: 400_000 },
+  { fmt: (n) => `§d[${n}]`, req: 500_000 },
+  { fmt: (n) => `§5[${n}]`, req: 600_000 },
+  { fmt: (n) => `§c[${n}]`, req: 750_000 },
+  { fmt: (n) => `§6[${n}]`, req: 1_000_000 },
+  { fmt: (n) => `§0[${n}]`, req: 2_000_000 },
 ];
 
 export class Quake {
@@ -57,9 +63,7 @@ export class Quake {
   @Field()
   public currentPrefix: string;
 
-  @Field({
-    store: { default: getFormattedLevel({ prefixes, prefixScore: prefixes[0].score }) },
-  })
+  @Field({ store: { default: defaultPrefix(prefixes) } })
   public naturalPrefix: string;
 
   @Field()
@@ -95,24 +99,23 @@ export class Quake {
 
     this.overall = deepAdd(this.solo, this.teams);
 
-    const prefixScore = this.overall.kills;
-    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
-    this.naturalPrefix = getFormattedLevel({
+    const score = this.overall.kills;
+
+    this.currentPrefix = getFormattedPrefix({ prefixes, score });
+
+    this.naturalPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore,
+      score,
       trueScore: true,
     });
-    this.nextPrefix = getFormattedLevel({
+
+    this.nextPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore,
+      score,
       skip: true,
     });
 
-    this.progression = new Progression(
-      Math.abs(this.overall.kills - getPrefixRequirement(prefixes, this.overall.kills)),
-      getPrefixRequirement(prefixes, this.overall.kills, 1) -
-        getPrefixRequirement(prefixes, this.overall.kills)
-    );
+    this.progression = createPrefixProgression(prefixes, score);
 
     QuakeMode.applyRatios(this.overall);
 

@@ -29,7 +29,7 @@ interface EventTableProps {
 
 const EventTable = ({ title, event, t, color }: EventTableProps) => {
   const levelling = [
-    `${color}${t("stats.event-level")} ${color}${t(Math.floor(event.level))}`,
+    `§7${t("stats.event-level")}: ${color}${t(Math.floor(event.level))}`,
     formatProgression({
       t,
       progression: event.levelProgression,

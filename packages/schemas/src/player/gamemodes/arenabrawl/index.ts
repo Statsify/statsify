@@ -6,10 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, getFormattedLevel, getPrefixRequirement } from "@statsify/util";
+import { APIData } from "@statsify/util";
 import { ArenaBrawlMode } from "./mode";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import {
+  GamePrefix,
+  createPrefixProgression,
+  defaultPrefix,
+  getFormattedPrefix,
+  rainbow,
+} from "../prefixes";
 import { Progression } from "../../../progression";
 import { deepAdd } from "@statsify/math";
 
@@ -20,18 +27,19 @@ export const ARENA_BRAWL_MODES = new GameModes([
   { api: "fours" },
 ]);
 
-const prefixes = [
-  { color: "8", score: 0 },
-  { color: "7", score: 500 },
-  { color: "a", score: 1000 },
-  { color: "2", score: 2000 },
-  { color: "d", score: 3000 },
-  { color: "5", score: 4000 },
-  { color: "c", score: 5000 },
-  { color: "4", score: 7500 },
-  { color: "6", score: 10_000 },
-  { color: "rainbow", score: 15_000 },
+const prefixes: GamePrefix[] = [
+  { fmt: (n) => `§8[${n}]`, req: 0 },
+  { fmt: (n) => `§7[${n}]`, req: 500 },
+  { fmt: (n) => `§a[${n}]`, req: 1000 },
+  { fmt: (n) => `§2[${n}]`, req: 2000 },
+  { fmt: (n) => `§d[${n}]`, req: 3000 },
+  { fmt: (n) => `§5[${n}]`, req: 4000 },
+  { fmt: (n) => `§c[${n}]`, req: 5000 },
+  { fmt: (n) => `§4[${n}]`, req: 7500 },
+  { fmt: (n) => `§6[${n}]`, req: 10_000 },
+  { fmt: (n) => rainbow(`[${n}]`), req: 15_000 },
 ];
+
 export type ArenaBrawlModes = IGameModes<typeof ARENA_BRAWL_MODES>;
 
 export class ArenaBrawl {
@@ -41,9 +49,7 @@ export class ArenaBrawl {
   @Field()
   public currentPrefix: string;
 
-  @Field({
-    store: { default: getFormattedLevel({ prefixes, prefixScore: prefixes[0].score }) },
-  })
+  @Field({ store: { default: defaultPrefix(prefixes) } })
   public naturalPrefix: string;
 
   @Field()
@@ -94,24 +100,23 @@ export class ArenaBrawl {
     this.fours = new ArenaBrawlMode(data, "4v4");
     this.overall = deepAdd(this.solo, this.doubles, this.fours);
 
-    const prefixScore = this.overall.wins;
-    this.currentPrefix = getFormattedLevel({ prefixes, prefixScore });
-    this.naturalPrefix = getFormattedLevel({
+    const score = this.overall.wins;
+
+    this.currentPrefix = getFormattedPrefix({ prefixes, score });
+
+    this.naturalPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore,
+      score,
       trueScore: true,
     });
-    this.nextPrefix = getFormattedLevel({
+
+    this.nextPrefix = getFormattedPrefix({
       prefixes,
-      prefixScore,
+      score,
       skip: true,
     });
 
-    this.progression = new Progression(
-      Math.abs(getPrefixRequirement(prefixes, this.overall.wins) - this.overall.wins),
-      getPrefixRequirement(prefixes, this.overall.wins, 1) -
-        getPrefixRequirement(prefixes, this.overall.wins)
-    );
+    this.progression = createPrefixProgression(prefixes, score);
 
     ArenaBrawlMode.applyRatios(this.overall);
 

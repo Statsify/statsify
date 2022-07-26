@@ -53,7 +53,7 @@ export const ArenaBrawlProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.ARENA_BRAWL} §fStats §r(${mode.formatted})`}
-        description={`§7Win ${formatProgression({
+        description={`§7Prefix: ${arenabrawl.naturalPrefix}\n§7Win ${formatProgression({
           t,
           progression: arenabrawl.progression,
           currentLevel: arenabrawl.currentPrefix,
