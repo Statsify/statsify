@@ -34,5 +34,6 @@ export const tips: Tip[] = [
     disabled: ["verify"],
   },
   { message: { content: (t) => t("tips.premium") } },
+  { message: { content: (t) => t("tips.rankings") }, disabled: ["rankings"] },
   { message: { content: (t) => t("tips.invite") } },
 ];
