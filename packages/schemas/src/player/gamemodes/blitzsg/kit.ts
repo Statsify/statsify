@@ -37,7 +37,7 @@ export class BlitzSGKit {
   @Field({ leaderboard: { limit } })
   public wins: number;
 
-  @Field({ leaderboard: { limit } })
+  @Field({ leaderboard: { enabled: false } })
   public losses: number;
 
   @Field({ leaderboard: { limit } })
