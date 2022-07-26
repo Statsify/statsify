@@ -21,6 +21,7 @@ import {
   MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
   PARKOUR_MODES,
+  PIT_MODES,
   PlayerStats,
   QUAKE_MODES,
   SKYWARS_MODES,
@@ -153,6 +154,14 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   })
   public parkour(context: CommandContext) {
     return this.run(context, "parkour", PARKOUR_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.leaderboard-pit"),
+    args: [new PlayerLeaderboardArgument("pit")],
+  })
+  public pit(context: CommandContext) {
+    return this.run(context, "pit", PIT_MODES);
   }
 
   @SubCommand({

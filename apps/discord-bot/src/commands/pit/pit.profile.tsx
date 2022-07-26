@@ -14,14 +14,11 @@ import {
   Table,
   formatProgression,
 } from "#components";
-import { FormattedGame, Progression } from "@statsify/schemas";
+import { FormattedGame } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
-import type { PitPandaPlayer } from "#services";
 
-export interface PitProfileProps extends Omit<BaseProfileProps, "player" | "time"> {
-  player: PitPandaPlayer;
-}
+export type PitProfileProps = BaseProfileProps;
 
 export const PitProfile = ({
   background,
@@ -32,29 +29,28 @@ export const PitProfile = ({
   user,
   player,
 }: PitProfileProps) => {
+  const { pit } = player.stats;
+
   const sidebar: SidebarItem[] = [
-    [t("stats.gold"), `${t(player.gold)}g`, "§6"],
-    [t("stats.exp"), t(player.xp), "§b"],
+    [t("stats.gold"), `${t(pit.gold)}g`, "§6"],
+    [t("stats.exp"), t(pit.exp), "§b"],
   ];
 
-  if (player.doc.renown) sidebar.push([t("stats.renown"), `${player.doc.renown}`, "§b"]);
-  if (player.doc.bounty) sidebar.push([t("stats.bounty"), `${player.doc.bounty}`, "§6"]);
+  if (pit.renown) sidebar.push([t("stats.renown"), `${pit.renown}`, "§b"]);
+  if (pit.bounty) sidebar.push([t("stats.bounty"), `${pit.bounty}`, "§6"]);
 
   return (
     <Container background={background}>
       <Header
-        name={player.doc.colouredName}
+        name={player.prefixName}
         skin={skin}
         time="LIVE"
         title={`§l${FormattedGame.PIT} §fStats`}
-        description={`§7Level: ${player.doc.formattedLevel}\n§7EXP ${formatProgression({
+        description={`§7Level: ${pit.prefix}\n§7EXP ${formatProgression({
           t,
-          progression: new Progression(
-            player.xpProgress.displayCurrent,
-            player.xpProgress.displayGoal
-          ),
-          currentLevel: player.doc.formattedLevel,
-          nextLevel: player.doc.formattedLevel,
+          progression: pit.progression,
+          currentLevel: pit.prefix,
+          nextLevel: "",
           showLevel: false,
         })}`}
         sidebar={sidebar}
@@ -62,26 +58,22 @@ export const PitProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(player.kills ?? 0)} color="§a" />
-          <Table.td title={t("stats.deaths")} value={t(player.deaths ?? 0)} color="§c" />
-          <Table.td title={t("stats.kdr")} value={t(player.kdr ?? 0)} color="§6" />
+          <Table.td title={t("stats.kills")} value={t(pit.kills)} color="§a" />
+          <Table.td title={t("stats.deaths")} value={t(pit.deaths)} color="§c" />
+          <Table.td title={t("stats.kdr")} value={t(pit.kdr)} color="§6" />
         </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.highestStreak")}
-            value={t(player.doc.highestStreak ?? 0)}
+            value={t(pit.highestStreak)}
             color="§d"
           />
           <Table.td
             title={t("stats.playtime")}
-            value={formatTime((player.doc.playtime ?? 0) * 60_000)}
+            value={formatTime(pit.playtime)}
             color="§b"
           />
-          <Table.td
-            title={t("stats.assists")}
-            value={t(player.doc.assists ?? 0)}
-            color="§e"
-          />
+          <Table.td title={t("stats.assists")} value={t(pit.assists ?? 0)} color="§e" />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />

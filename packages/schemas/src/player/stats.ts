@@ -13,7 +13,7 @@ import { BlitzSG } from "./gamemodes/blitzsg";
 import { BuildBattle } from "./gamemodes/buildbattle";
 import { CopsAndCrims } from "./gamemodes/copsandcrims";
 import { Duels } from "./gamemodes/duels";
-import { Events } from "./gamemodes";
+import { Events, Pit } from "./gamemodes";
 import { Field } from "../metadata";
 import { FormattedGame } from "../game";
 import { General } from "./gamemodes/general";
@@ -98,6 +98,14 @@ export class PlayerStats {
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.PARKOUR} -` } })
   public parkour: Parkour;
+
+  @Field({
+    leaderboard: {
+      fieldName: `${FormattedGame.PIT}`,
+      extraDisplay: "stats.pit.levelFormatted",
+    },
+  })
+  public pit: Pit;
 
   @Field({
     leaderboard: {
@@ -196,6 +204,10 @@ export class PlayerStats {
       data?.stats?.Legacy ?? {}
     );
     this.parkour = new Parkour(data?.parkourCompletions ?? {});
+    this.pit = new Pit(
+      data?.stats?.Pit?.profile ?? {},
+      data?.stats?.Pit?.pit_stats_ptl ?? {}
+    );
     this.quake = new Quake(
       data?.stats?.Quake ?? {},
       data?.achievements ?? {},
