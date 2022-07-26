@@ -29,7 +29,7 @@ export class QuakeMode {
   @Field()
   public killstreaks: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public shotsFired: number;
 
   @Field({ leaderboard: { fieldName: "2017+ Kills", name: "2017+ Kills" } })
