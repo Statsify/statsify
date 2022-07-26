@@ -16,10 +16,12 @@ import {
 import { CommandContext } from "./command.context";
 import { CommandResolvable } from "./command.resolvable";
 import { ErrorMessage } from "../util/error.message";
-import { Interaction } from "../interaction";
+import { Interaction, InteractionAttachment } from "../interaction";
 import { Logger } from "@statsify/logger";
 import { Message } from "../messages";
 import { User, UserTier } from "@statsify/schemas";
+import { getAssetPath, getLogoPath } from "@statsify/assets";
+import { readFileSync } from "node:fs";
 import type {
   Interaction as DiscordInteraction,
   InteractionResponse,
@@ -196,10 +198,61 @@ export abstract class AbstractCommandListener {
   protected tierPrecondition(command: CommandResolvable, user: User | null) {
     if (!command.tier) return;
     if (!user) throw new ErrorMessage("errors.missingSelfVerification");
+
     if ((user.tier ?? UserTier.NONE) < command.tier) {
-      throw new ErrorMessage(
-        `errors.${User.getTierName(command.tier).toLowerCase()}Only`
+      const tierName = User.getTierName(command.tier).toLowerCase();
+      let color = 0xb5b5b5;
+
+      const thumbnail: InteractionAttachment = {
+        name: "logo.png",
+        data: readFileSync(getLogoPath(User.tierToLogo(command.tier), 52)),
+        type: "image/png",
+      };
+
+      switch (command.tier) {
+        case UserTier.IRON:
+          color = 0xb5b5b5;
+          break;
+        case UserTier.GOLD:
+          color = 0xe7aa13;
+          break;
+        case UserTier.DIAMOND:
+          color = 0x1abaa7;
+          break;
+        case UserTier.EMERALD:
+          color = 0x009b24;
+          break;
+        case UserTier.NETHERITE:
+          color = 0x565456;
+          break;
+        case UserTier.STAFF:
+          color = 0x7a58c3;
+          break;
+        case UserTier.CORE:
+          color = 0xd22140;
+          break;
+      }
+
+      const hasPreview = Boolean(command.preview);
+
+      const tierError = new ErrorMessage(
+        (t) => t(`errors.${tierName}Only.title`),
+        (t) => t(`errors.${tierName}Only.${hasPreview ? "preview" : "description"}`),
+        { color, thumbnail }
       );
+
+      if (hasPreview) {
+        const preview = {
+          name: "preview.png",
+          data: readFileSync(getAssetPath(`previews/${command.preview}`)),
+          type: "image/png",
+        };
+
+        tierError.files?.push(preview);
+        tierError.embeds?.[0]?.image(`attachment://${preview.name}`);
+      }
+
+      throw tierError;
     }
   }
 

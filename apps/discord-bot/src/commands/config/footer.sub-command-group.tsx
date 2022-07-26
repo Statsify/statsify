@@ -33,6 +33,7 @@ export class FooterSubCommandGroup {
     description: (t) => t("commands.theme-footer-message"),
     args: [new TextArgument("message")],
     tier: UserTier.NETHERITE,
+    preview: "footer.png",
   })
   public message(context: CommandContext) {
     const message = convertColorCodes(context.option<string>("message")).replace(
@@ -70,6 +71,7 @@ export class FooterSubCommandGroup {
       }),
     ],
     tier: UserTier.IRON,
+    preview: "footer.png",
   })
   public icon(context: CommandContext) {
     const user = context.getUser();

@@ -31,6 +31,7 @@ export class BadgeCommand {
   @SubCommand({
     description: (t) => t("commands.badge-view"),
     tier: UserTier.GOLD,
+    preview: "badge.png",
   })
   public view(context: CommandContext) {
     return this.run(context, "view");
@@ -39,6 +40,7 @@ export class BadgeCommand {
   @SubCommand({
     description: (t) => t("commands.badge-set"),
     tier: UserTier.GOLD,
+    preview: "badge.png",
     args: [new FileArgument("badge", true)],
   })
   public set(context: CommandContext) {
@@ -48,6 +50,7 @@ export class BadgeCommand {
   @SubCommand({
     description: (t) => t("commands.badge-reset"),
     tier: UserTier.GOLD,
+    preview: "badge.png",
   })
   public reset(context: CommandContext) {
     return this.run(context, "reset");

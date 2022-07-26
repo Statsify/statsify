@@ -22,6 +22,12 @@ export interface CommandOptions {
    * The minimum user tier required to use this command.
    */
   tier?: UserTier;
+
+  /**
+   * The path to a preview image for this command. The preview will show on error messages sent to the user because they do not have the required tier to run the command.
+   * @example badge.png
+   */
+  preview?: string;
 }
 
 export type SubCommandOptions = Omit<CommandOptions, "groups" | "cooldown">;
