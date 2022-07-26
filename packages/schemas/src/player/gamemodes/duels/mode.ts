@@ -143,7 +143,7 @@ export class BridgeDuels {
   @Field()
   public "3v3v3v3": BridgeDuelsMode;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: "CTF" } })
   public ctf: BridgeDuelsMode;
 
   @Field()

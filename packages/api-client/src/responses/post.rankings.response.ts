@@ -13,5 +13,11 @@ export class PostLeaderboardRankingsResponse {
   public field: string;
 
   @ApiProperty()
+  public name: string;
+
+  @ApiProperty()
+  public value: number | string;
+
+  @ApiProperty()
   public rank: number;
 }

@@ -98,12 +98,18 @@ export class PaginateService {
    *
    * @param context The context of the command
    * @param pages The array of pages to paginate against
+   * @param forwardButton The button to use for forward pagination
+   * @param backwardButton The button to use for back pagination
+   * @param invertButtons Whether to invert the buttons (backward becomes forward, forward becomes backward)
    * @param index  The starting page
    * @param timeout When to stop the pagination (ms), defaults to 300000
    */
   public async scrollingPagination(
     context: CommandContext,
     pages: PaginateInteractionContentGenerator[],
+    forwardButton?: ButtonBuilder,
+    backwardButton?: ButtonBuilder,
+    invertButtons = false,
     index = 0,
     timeout = 300_000
   ) {
@@ -113,9 +119,11 @@ export class PaginateService {
     const t = context.t();
 
     const controller = [
-      new ButtonBuilder().emoji(t("emojis:backward")),
-      new ButtonBuilder().emoji(t("emojis:forward")),
+      backwardButton ?? new ButtonBuilder().emoji(t("emojis:backward")),
+      forwardButton ?? new ButtonBuilder().emoji(t("emojis:forward")),
     ];
+
+    if (invertButtons) controller.reverse();
 
     const listener = context.getListener();
 

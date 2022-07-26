@@ -182,13 +182,20 @@ export abstract class LeaderboardService {
     const pipeline = this.redis.pipeline();
     const constructorName = constructor.name.toLowerCase();
 
-    fields.forEach((field) => {
-      const { sort } = LeaderboardScanner.getLeaderboardField(constructor, field);
+    const leaderboardFields: LeaderboardEnabledMetadata[] = [];
 
-      if (sort === "ASC") {
-        pipeline.zrank(`${constructorName}.${field}`, id);
+    fields.forEach((field) => {
+      const metadata = LeaderboardScanner.getLeaderboardField(constructor, field);
+      leaderboardFields.push(metadata);
+
+      const key = `${constructorName}.${field}`;
+
+      pipeline.zscore(key, id);
+
+      if (metadata.sort === "ASC") {
+        pipeline.zrank(key, id);
       } else {
-        pipeline.zrevrank(`${constructorName}.${field}`, id);
+        pipeline.zrevrank(key, id);
       }
     });
 
@@ -198,12 +205,32 @@ export abstract class LeaderboardService {
 
     if (!responses) throw new InternalServerErrorException();
 
-    return responses.map((response, index) => {
-      const field = fields[index];
-      const rank = Number(response[1] ?? -1) + 1;
+    const rankings = [];
 
-      return { field, rank };
-    });
+    for (let i = 0; i < responses.length; i += 2) {
+      const rank = responses[i + 1][1];
+      const value = responses[i][1];
+
+      if (rank === undefined || rank === null || !value) continue;
+
+      const index = i / 2;
+      const metadata = leaderboardFields[index];
+
+      const numberValue = Number(value);
+
+      const formattedValue = metadata.formatter
+        ? metadata.formatter(numberValue)
+        : numberValue;
+
+      rankings.push({
+        field: fields[index],
+        rank: Number(rank) + 1,
+        value: formattedValue,
+        name: metadata.name,
+      });
+    }
+
+    return rankings;
   }
 
   protected abstract searchLeaderboardInput(

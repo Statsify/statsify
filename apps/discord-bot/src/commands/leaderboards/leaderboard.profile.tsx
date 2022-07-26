@@ -9,31 +9,9 @@
 import { Container, Footer, If, List } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { User } from "@statsify/schemas";
+import { formatPosition } from "#lib/format-position";
 import { prettify } from "@statsify/util";
 import type { Image } from "skia-canvas";
-
-const formatPosition = (t: LocalizeFunction, position: number): string => {
-  let color = "§f";
-
-  switch (position) {
-    case 1: {
-      color = "§#ffd700";
-      break;
-    }
-    case 2: {
-      color = "§#c0c0c0";
-      break;
-    }
-    case 3:
-      {
-        color = "§#cd7f32";
-        // No default
-      }
-      break;
-  }
-
-  return `${color}#§l${t(position)}`;
-};
 
 export type LeaderboardType = "player" | "guild";
 
