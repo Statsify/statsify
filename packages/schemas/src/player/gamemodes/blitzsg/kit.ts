@@ -17,7 +17,7 @@ export class BlitzSGKit {
   @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public level: number;
 
-  @Field({ leaderboard: { limit: 10_000 } })
+  @Field({ leaderboard: { limit: 10_000, fieldName: "EXP" } })
   public exp: number;
 
   @Field({ leaderboard: { enabled: false } })

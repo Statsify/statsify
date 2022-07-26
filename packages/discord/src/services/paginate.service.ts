@@ -100,7 +100,7 @@ export class PaginateService {
    * @param pages The array of pages to paginate against
    * @param forwardButton The button to use for forward pagination
    * @param backwardButton The button to use for back pagination
-   * @param flipButtons Whether to flip the buttons (backward becomes forward, forward becomes backward)
+   * @param invertButtons Whether to invert the buttons (backward becomes forward, forward becomes backward)
    * @param index  The starting page
    * @param timeout When to stop the pagination (ms), defaults to 300000
    */
@@ -109,7 +109,7 @@ export class PaginateService {
     pages: PaginateInteractionContentGenerator[],
     forwardButton?: ButtonBuilder,
     backwardButton?: ButtonBuilder,
-    flipButtons = false,
+    invertButtons = false,
     index = 0,
     timeout = 300_000
   ) {
@@ -123,7 +123,7 @@ export class PaginateService {
       forwardButton ?? new ButtonBuilder().emoji(t("emojis:forward")),
     ];
 
-    if (flipButtons) controller.reverse();
+    if (invertButtons) controller.reverse();
 
     const listener = context.getListener();
 
