@@ -118,6 +118,7 @@
     "pit": "$t(commands.hypixel-command, { \"name\": \"Pit\" })",
     "player-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Player\" })",
     "quake": "$t(commands.hypixel-command, { \"name\": \"Quake\" })",
+    "rankings": "View your top leaderboard positions",
     "ratios": "View your Gamemode Ratio Milestones & Estimations",
     "ratios-arcade": "$t(commands.ratios-command, { \"name\": \"Arcade\" })",
     "ratios-arenabrawl": "$t(commands.ratios-command, { \"name\": \"Arena Brawl\" })",
@@ -427,6 +428,10 @@
     "unsupportedFileType": {
       "description": "The file you uploaded is not a supported file type for this command!",
       "title": "Unsupported File Type"
+    },
+    "noRankings": {
+      "title": "No Rankings",
+      "description": "**{{displayName}}** has no rankings!"
     }
   },
   "historical": {
