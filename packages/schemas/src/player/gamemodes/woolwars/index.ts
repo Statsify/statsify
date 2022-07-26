@@ -37,6 +37,7 @@ export class WoolWars {
     leaderboard: {
       fieldName: "Level",
       hidden: true,
+      formatter: (exp: number) => getFormattedLevel(Math.floor(getLevel(exp))),
       additionalFields: [
         "stats.woolwars.overall.wins",
         "stats.woolwars.overall.kills",
