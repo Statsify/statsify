@@ -6,21 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, romanNumeral } from "@statsify/util";
+import { APIData, formatTime } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
 import { Progression } from "../../../progression";
 import { add, ratio } from "@statsify/math";
-import {
-  getBounty,
-  getLevel,
-  getLevelColor,
-  getPres,
-  getPresColor,
-  getPresReq,
-} from "./util";
+import { getBounty, getLevel, getLevelFormatted, getPres, getPresReq } from "./util";
 
-export const PIT_MODES = new GameModes([{ hypixel: "PIT", formatted: "Pit" }]);
+export const PIT_MODES = new GameModes([
+  { api: "overall", hypixel: "PIT", formatted: "Pit" },
+]);
+
 export type PitModes = IGameModes<typeof PIT_MODES>;
 
 export class Pit {
@@ -28,22 +24,24 @@ export class Pit {
     leaderboard: {
       fieldName: "Level",
       hidden: true,
-      additionalFields: ["stats.pit.overall.playtime", "stats.pit.overall.goldEarned"],
+      additionalFields: ["stats.pit.kills", "stats.pit.playtime"],
+      formatter: (exp: number) => {
+        const prestige = getPres(exp);
+        const level = getLevel(prestige, exp);
+        return getLevelFormatted(level, prestige);
+      },
     },
   })
   public exp: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public prestige: number;
+  @Field()
+  public levelFormatted: string;
 
-  @Field({ leaderboard: { enabled: false } })
-  public level: number;
+  @Field()
+  public nextLevelFormatted: string;
 
   @Field()
   public progression: Progression;
-
-  @Field()
-  public levelFormatted: string;
 
   @Field()
   public gold: number;
@@ -90,7 +88,7 @@ export class Pit {
   @Field()
   public goldEarned: number;
 
-  @Field()
+  @Field({ leaderboard: { formatter: formatTime } })
   public playtime: number;
 
   @Field()
@@ -114,16 +112,12 @@ export class Pit {
     this.renown = profile.renown;
     this.bounty = getBounty(profile.bounties);
 
-    this.prestige = getPres(this.exp);
-    const presColor = getPresColor(this.prestige);
-    this.level = getLevel(this.prestige, this.exp);
-    const levelColor = getLevelColor(this.level);
+    const prestige = getPres(this.exp);
+    const level = getLevel(prestige, this.exp);
 
-    this.progression = new Progression(this.exp, getPresReq(this.prestige + 1));
+    this.progression = new Progression(this.exp, getPresReq(prestige + 1));
 
-    this.levelFormatted = `§${presColor}[${
-      this.prestige > 0 ? `§e${romanNumeral(this.prestige)}§${presColor}-` : ""
-    }§${levelColor}${this.level}§r§${presColor}]`;
+    this.levelFormatted = getLevelFormatted(level, prestige);
 
     this.contractsCompleted = data.contracts_completed;
 

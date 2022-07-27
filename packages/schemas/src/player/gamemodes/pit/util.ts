@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { romanNumeral } from "@statsify/util";
+
 const xpMap = [15, 30, 50, 75, 125, 300, 600, 800, 900, 1000, 1200, 1500];
 
 const prestiges = [
@@ -82,3 +84,12 @@ export const getPresColor = (pres: number) =>
 
 export const getBounty = (bounties: Bounty[]) =>
   bounties ? bounties.reduce((p, c) => p + c.amount, 0) : 0;
+
+export const getLevelFormatted = (level: number, prestige: number) => {
+  const presColor = getPresColor(prestige);
+  const levelColor = getLevelColor(level);
+
+  return `§${presColor}[${
+    prestige > 0 ? `§e${romanNumeral(prestige)}§${presColor}-` : ""
+  }§${levelColor}${level}§r§${presColor}]`;
+};

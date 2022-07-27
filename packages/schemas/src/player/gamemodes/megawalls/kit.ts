@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, formatTime } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { add, ratio } from "@statsify/math";
 
@@ -46,6 +46,7 @@ export class MegaWallsKit {
   @Field({ leaderboard: { enabled: false } })
   public assists: number;
 
+  @Field({ leaderboard: { limit, formatter: formatTime } })
   public playtime: number;
 
   @Field({ leaderboard: { enabled: false } })
@@ -54,6 +55,7 @@ export class MegaWallsKit {
   @Field({ leaderboard: { enabled: false } })
   public witherKills: number;
 
+  @Field({ leaderboard: { limit } })
   public points: number;
 
   public constructor(data: APIData, kit: string) {
@@ -115,10 +117,6 @@ export class MegaWallsOverall extends MegaWallsKit {
   @Field()
   public declare assists: number;
 
-  @Field()
+  @Field({ leaderboard: { formatter: formatTime } })
   public declare playtime: number;
-
-  public constructor(data: APIData) {
-    super(data, "");
-  }
 }

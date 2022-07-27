@@ -32,7 +32,7 @@ const EventTable = ({ title, event, t, color }: EventTableProps) => {
     `§7${t("stats.event-level")}: ${color}${t(Math.floor(event.level))}`,
     formatProgression({
       t,
-      progression: event.levelProgression,
+      progression: event.progression,
       currentLevel: `${color}${t(Math.floor(event.level))}`,
       nextLevel: `${color}${t(Math.floor(event.level) + 1)}`,
       renderXp: lineXpBar(color),
@@ -58,7 +58,7 @@ export const EventsProfile = ({
   badge,
   t,
 }: BaseProfileProps) => {
-  const { events } = player.stats;
+  const { events } = player.stats.general;
 
   const sidebar: SidebarItem[] = [[t("stats.silver"), t(events.silver), "§7"]];
 

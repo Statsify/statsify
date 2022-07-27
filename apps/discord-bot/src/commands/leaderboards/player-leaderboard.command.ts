@@ -109,14 +109,6 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.leaderboard-events"),
-    args: [new PlayerLeaderboardArgument("events")],
-  })
-  public events(context: CommandContext) {
-    return this.run(context, "events", GENERAL_MODES);
-  }
-
-  @SubCommand({
     description: (t) => t("commands.leaderboard-general"),
     args: [new PlayerLeaderboardArgument("general")],
   })

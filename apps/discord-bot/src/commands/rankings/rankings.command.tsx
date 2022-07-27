@@ -21,6 +21,7 @@ import {
   MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
   PARKOUR_MODES,
+  PIT_MODES,
   Player,
   PlayerStats,
   QUAKE_MODES,
@@ -146,15 +147,6 @@ export class RankingsCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.rankings-events"),
-    args,
-    tier: UserTier.IRON,
-  })
-  public events(context: CommandContext) {
-    return this.run(context, "events", GENERAL_MODES);
-  }
-
-  @SubCommand({
     description: (t) => t("commands.rankings-general"),
     args,
     tier: UserTier.IRON,
@@ -197,6 +189,15 @@ export class RankingsCommand {
   })
   public parkour(context: CommandContext) {
     return this.run(context, "parkour", PARKOUR_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.rankings-pit"),
+    args,
+    tier: UserTier.IRON,
+  })
+  public pit(context: CommandContext) {
+    return this.run(context, "pit", PIT_MODES);
   }
 
   @SubCommand({
