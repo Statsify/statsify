@@ -184,8 +184,11 @@ export class PlayerStats {
   public woolwars: WoolWars;
 
   public constructor(data: APIData = {}) {
-    this.arcade = new Arcade(data?.stats?.Arcade ?? {}, data?.achievements ?? {});
-    this.arenabrawl = new ArenaBrawl(data?.stats?.Arena ?? {}, data?.stats?.Legacy ?? {});
+    const achievements = data?.achievements ?? {};
+    const legacy = data?.stats?.Legacy ?? {};
+
+    this.arcade = new Arcade(data?.stats?.Arcade ?? {}, achievements);
+    this.arenabrawl = new ArenaBrawl(data?.stats?.Arena ?? {}, legacy);
     this.bedwars = new BedWars(data?.stats?.Bedwars ?? {});
     this.blitzsg = new BlitzSG(data?.stats?.HungerGames ?? {});
     this.buildbattle = new BuildBattle(data?.stats?.BuildBattle ?? {});
@@ -195,33 +198,23 @@ export class PlayerStats {
     this.megawalls = new MegaWalls(data?.stats?.Walls3 ?? {});
     this.murdermystery = new MurderMystery(
       data?.stats?.MurderMystery ?? {},
-      data?.achievements ?? {}
+      achievements
     );
-    this.paintball = new Paintball(
-      data?.stats?.Paintball ?? {},
-      data?.stats?.Legacy ?? {}
-    );
+    this.paintball = new Paintball(data?.stats?.Paintball ?? {}, legacy);
     this.parkour = new Parkour(data?.parkourCompletions ?? {});
     this.pit = new Pit(
       data?.stats?.Pit?.profile ?? {},
       data?.stats?.Pit?.pit_stats_ptl ?? {}
     );
-    this.quake = new Quake(
-      data?.stats?.Quake ?? {},
-      data?.achievements ?? {},
-      data?.stats?.Legacy ?? {}
-    );
+    this.quake = new Quake(data?.stats?.Quake ?? {}, achievements, legacy);
     this.skywars = new SkyWars(data?.stats?.SkyWars ?? {});
     this.smashheroes = new SmashHeroes(data?.stats?.SuperSmash ?? {});
     this.speeduhc = new SpeedUHC(data?.stats?.SpeedUHC ?? {});
-    this.tntgames = new TNTGames(data?.stats?.TNTGames ?? {}, data?.achievements ?? {});
-    this.turbokartracers = new TurboKartRacers(
-      data?.stats?.GingerBread ?? {},
-      data?.stats?.Legacy ?? {}
-    );
+    this.tntgames = new TNTGames(data?.stats?.TNTGames ?? {}, achievements);
+    this.turbokartracers = new TurboKartRacers(data?.stats?.GingerBread ?? {}, legacy);
     this.uhc = new UHC(data?.stats?.UHC ?? {});
-    this.vampirez = new VampireZ(data?.stats?.VampireZ ?? {}, data?.stats?.Legacy ?? {});
-    this.walls = new Walls(data?.stats?.Walls ?? {}, data?.stats?.Legacy ?? {});
+    this.vampirez = new VampireZ(data?.stats?.VampireZ ?? {}, legacy);
+    this.walls = new Walls(data?.stats?.Walls ?? {}, legacy);
     this.warlords = new Warlords(data?.stats?.Battleground ?? {});
     this.woolwars = new WoolWars(data?.stats?.WoolGames ?? {});
   }

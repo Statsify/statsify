@@ -7,6 +7,7 @@
  */
 
 import { APIData } from "@statsify/util";
+import { Challenges } from "./challenges";
 import { Color } from "../color";
 import { Field } from "../metadata";
 import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
@@ -54,6 +55,9 @@ export class Player {
   @Field({ leaderboard: { fieldName: "" } })
   public stats: PlayerStats;
 
+  @Field({ leaderboard: { fieldName: "" } })
+  public challenges: Challenges;
+
   @Field()
   public status: PlayerStatus;
 
@@ -98,6 +102,7 @@ export class Player {
 
     this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});
     this.stats = new PlayerStats(data);
+    this.challenges = new Challenges(data?.challenges?.all_time ?? {});
     this.status = new PlayerStatus(data);
 
     //These will all be filled in by a service
@@ -109,5 +114,6 @@ export class Player {
 
 export * from "./gamemodes";
 export * from "./socials";
+export * from "./challenges";
 export * from "./stats";
 export * from "./status";
