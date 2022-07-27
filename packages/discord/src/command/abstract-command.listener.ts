@@ -20,7 +20,7 @@ import { Interaction, InteractionAttachment } from "../interaction";
 import { Logger } from "@statsify/logger";
 import { Message } from "../messages";
 import { User, UserTier } from "@statsify/schemas";
-import { getAssetPath, getLogoPath } from "@statsify/assets";
+import { getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
 import type {
   Interaction as DiscordInteraction,
@@ -233,24 +233,29 @@ export abstract class AbstractCommandListener {
           break;
       }
 
-      const hasPreview = Boolean(command.preview);
+      // const hasPreview = Boolean(command.preview);
+
+      // const tierError = new ErrorMessage(
+      //   (t) => t(`errors.${tierName}Only.title`),
+      //   (t) => t(`errors.${tierName}Only.${hasPreview ? "preview" : "description"}`),
+      //   { color, thumbnail }
+      // );
 
       const tierError = new ErrorMessage(
         (t) => t(`errors.${tierName}Only.title`),
-        (t) => t(`errors.${tierName}Only.${hasPreview ? "preview" : "description"}`),
+        (t) => t(`errors.${tierName}Only.description`),
         { color, thumbnail }
       );
 
-      if (hasPreview) {
-        const preview = {
-          name: "preview.png",
-          data: readFileSync(getAssetPath(`previews/${command.preview}`)),
-          type: "image/png",
-        };
-
-        tierError.files?.push(preview);
-        tierError.embeds?.[0]?.image(`attachment://${preview.name}`);
-      }
+      // if (hasPreview) {
+      // const preview = {
+      //   name: "preview.png",
+      //   data: readFileSync(getAssetPath(`previews/${command.preview}`)),
+      //   type: "image/png",
+      // };
+      // tierError.files?.push(preview);
+      // tierError.embeds?.[0]?.image(`attachment://${preview.name}`);
+      // }
 
       throw tierError;
     }
@@ -271,7 +276,7 @@ export abstract class AbstractCommandListener {
     return this.onMessageComponent(interaction);
   }
 
-  protected onAutocomplete(interaction: Interaction): InteractionResponse {
+  protected async onAutocomplete(interaction: Interaction): Promise<InteractionResponse> {
     const defaultResponse = {
       type: InteractionResponseType.ApplicationCommandAutocompleteResult,
       data: { choices: [] },
@@ -292,7 +297,7 @@ export abstract class AbstractCommandListener {
     if (!autocompleteArg) return defaultResponse;
 
     const context = new CommandContext(this, interaction, data);
-    const response = autocompleteArg.autocompleteHandler?.(context);
+    const response = await autocompleteArg.autocompleteHandler?.(context);
 
     return {
       type: InteractionResponseType.ApplicationCommandAutocompleteResult,
