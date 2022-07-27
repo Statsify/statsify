@@ -18,7 +18,7 @@ import { PlayerSearchService } from "./player-search.service";
 export class PlayerSearchController {
   public constructor(private readonly playerSearchService: PlayerSearchService) {}
 
-  @ApiOperation({ summary: "Get a Fuzzy Searched List of Players Based" })
+  @ApiOperation({ summary: "Get a Fuzzy Searched List of Players" })
   @ApiOkResponse({ type: GetPlayerSearchResponse })
   @Auth({ weight: 0 })
   @Get()
