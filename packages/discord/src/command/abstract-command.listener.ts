@@ -233,29 +233,11 @@ export abstract class AbstractCommandListener {
           break;
       }
 
-      // const hasPreview = Boolean(command.preview);
-
-      // const tierError = new ErrorMessage(
-      //   (t) => t(`errors.${tierName}Only.title`),
-      //   (t) => t(`errors.${tierName}Only.${hasPreview ? "preview" : "description"}`),
-      //   { color, thumbnail }
-      // );
-
       const tierError = new ErrorMessage(
         (t) => t(`errors.${tierName}Only.title`),
         (t) => t(`errors.${tierName}Only.description`),
         { color, thumbnail }
       );
-
-      // if (hasPreview) {
-      // const preview = {
-      //   name: "preview.png",
-      //   data: readFileSync(getAssetPath(`previews/${command.preview}`)),
-      //   type: "image/png",
-      // };
-      // tierError.files?.push(preview);
-      // tierError.embeds?.[0]?.image(`attachment://${preview.name}`);
-      // }
 
       throw tierError;
     }
