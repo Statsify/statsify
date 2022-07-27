@@ -25,7 +25,10 @@ import { HypixelService } from "../hypixel";
 import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service";
+import { PlayerSearchService, RedisPlayer } from "./search/player-search.service";
 import type { ReturnModelType } from "@typegoose/typegoose";
+
+const LEADERBOARD_FIELDS = LeaderboardScanner.getLeaderboardFields(Player);
 
 @Injectable()
 export class PlayerService {
@@ -33,6 +36,7 @@ export class PlayerService {
     private readonly hypixelService: HypixelService,
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: PlayerLeaderboardService,
+    private readonly playerSearchService: PlayerSearchService,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
     @InjectModel(Friends) private readonly friendsModel: ReturnModelType<typeof Friends>
   ) {}
@@ -65,9 +69,12 @@ export class PlayerService {
       player.resetMinute = mongoPlayer?.resetMinute;
       player.guildId = mongoPlayer?.guildId;
 
+      if (mongoPlayer && mongoPlayer.username !== player.username)
+        await this.playerSearchService.delete(mongoPlayer.username);
+
       const flatPlayer = flatten(player);
 
-      await this.saveOne(flatPlayer);
+      await this.saveOne(flatPlayer, true);
 
       flatPlayer.isNew = !mongoPlayer;
 
@@ -83,16 +90,20 @@ export class PlayerService {
     const player = new Player(data);
 
     const mongoPlayer = await this.findMongoDocument(player.uuid, {
+      username: true,
       guildId: true,
       leaderboardBanned: true,
     });
+
+    if (mongoPlayer && mongoPlayer.username !== player.username)
+      await this.playerSearchService.delete(mongoPlayer.username);
 
     player.guildId = mongoPlayer?.guildId;
     player.leaderboardBanned = mongoPlayer?.leaderboardBanned ?? false;
     player.expiresAt = Date.now() + 120_000;
 
     const flatPlayer = flatten(player);
-    return this.saveOne(flatPlayer);
+    return this.saveOne(flatPlayer, false);
   }
 
   public getPlayers(start: number, end: number) {
@@ -204,16 +215,17 @@ export class PlayerService {
 
     if (!player) return null;
 
-    await this.playerModel.deleteOne({ uuid: player.uuid }).exec();
-
-    //Remove all sorted sets the player is in
-    await this.playerLeaderboardService.addLeaderboards(
-      Player,
-      player,
-      "uuid",
-      LeaderboardScanner.getLeaderboardFields(Player),
-      true
-    );
+    await Promise.all([
+      this.playerModel.deleteOne({ uuid: player.uuid }).exec(),
+      this.playerSearchService.delete(player.username),
+      this.playerLeaderboardService.addLeaderboards(
+        Player,
+        player,
+        "uuid",
+        LEADERBOARD_FIELDS,
+        true
+      ),
+    ]);
 
     return true;
   }
@@ -239,28 +251,28 @@ export class PlayerService {
     return flatten(mongoPlayer);
   }
 
-  private async saveOne(player: Flatten<Player>) {
+  private async saveOne(player: Flatten<Player>, registerAutocomplete: boolean) {
     //Serialize and flatten the player
     const serializedPlayer = serialize(Player, player);
 
     const saveMongo = this.playerModel.replaceOne(
       { uuid: player.uuid },
       serializedPlayer,
-      {
-        upsert: true,
-      }
+      { upsert: true }
     );
-
-    const fields = LeaderboardScanner.getLeaderboardFields(Player);
 
     const saveRedis = this.playerLeaderboardService.addLeaderboards(
       Player,
       player,
       "uuid",
-      fields,
+      LEADERBOARD_FIELDS,
       player.leaderboardBanned ?? false
     );
 
-    return Promise.all([saveMongo, saveRedis]);
+    const saveAutocomplete = registerAutocomplete
+      ? await this.playerSearchService.add(player as RedisPlayer)
+      : Promise.resolve();
+
+    return Promise.all([saveMongo, saveRedis, saveAutocomplete]);
   }
 }

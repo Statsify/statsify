@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/Statsify/public-assets/main/logos/logo_26.png" alt="Statsify" width="10%" style="image-rendering: pixelated">
+<img src="https://raw.githubusercontent.com/Statsify/public-assets/main/logos/logo_52.png" alt="Statsify" />
 
 # Statsify
 A Hypixel and Minecraft focused Discord Bot
@@ -12,7 +12,8 @@ A Hypixel and Minecraft focused Discord Bot
 -   [`Node.js`]: For running code (`v16`)
 -   [`Yarn`]: Installing packages and running scripts (`npm install -g yarn`)
 -   [`MongoDB`]: For Persistent data ([`Atlas`])
--   [`Redis`]: For Leaderboards, ([`Redis Cloud`])
+-   [`Redis`]: For Leaderboards ([`Redis Cloud`])
+-   [`RediSearch`]: For Autocomplete
 -   [`Hypixel API Key`]: For requesting Hypixel data, Run `/api new` on hypixel.net
 
 
@@ -82,5 +83,6 @@ $ yarn test:types
 [`mongodb`]: https://www.mongodb.com/
 [`hypixel api key`]: https://api.hypixel.net
 [`yarn`]: https://yarnpkg.com/
-[`atlas`]: https://www.mongodb.com/cloud/atlas/register`
+[`atlas`]: https://www.mongodb.com/cloud/atlas/register
 [`redis cloud`]: https://redis.com/try-free/
+[`redisearch`]: https://redis.io/docs/stack/search/quick_start/

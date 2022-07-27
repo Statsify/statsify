@@ -22,3 +22,4 @@ export * from "./post.leaderboard.response";
 export * from "./post.rankings.response";
 export * from "./put.user-badge.response";
 export * from "./get.command-usage.response";
+export * from "./get.player-search.response";
