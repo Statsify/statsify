@@ -420,6 +420,10 @@
       "description": "**{{displayName}}** has never played The Pit!",
       "title": "Pit Stats Not Found"
     },
+    "noRankings": {
+      "description": "**{{displayName}}** has no rankings!",
+      "title": "No Rankings"
+    },
     "noRecentGames": {
       "description": "**{{displayName}}**'s recent games could not be found!",
       "title": "Recent Games Not Found"
@@ -461,10 +465,6 @@
     "unsupportedFileType": {
       "description": "The file you uploaded is not a supported file type for this command!",
       "title": "Unsupported File Type"
-    },
-    "noRankings": {
-      "title": "No Rankings",
-      "description": "**{{displayName}}** has no rankings!"
     }
   },
   "historical": {
@@ -525,6 +525,7 @@
     "bestRound": "Best Round",
     "bestTime": "Best Time",
     "bestWinstreak": "Best Winstreak",
+    "bigShot": "Big Shot",
     "blocksBroken": "Blocks Broken",
     "blocksPlaced": "Blocks Placed",
     "blocksRan": "Blocks Ran",
@@ -679,6 +680,7 @@
     "silverTrophies": "Silver Trophies",
     "soloWins": "Solo Wins",
     "souls": "Souls",
+    "stampLevel": "Coin Conversions",
     "starsEarned": "Stars Earned",
     "started": "Started",
     "status": "Status",
@@ -694,9 +696,11 @@
     "tokens": "Tokens",
     "total": "Total",
     "totalTrophies": "Total Trophies",
+    "trail": "Trail",
     "transfusion": "Transfusion",
     "trapKills": "Trap Kills",
     "trigger": "Trigger",
+    "tripleShot": "Triple Shot",
     "trophyRate": "Trophy Rate",
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimates Crafted",
@@ -710,7 +714,6 @@
     "witherKills": "Wither Kills",
     "wlr": "WLR",
     "wool": "Wool",
-    "woolBroken": "Wool Broken",
     "woolCaptures": "Wool Captures",
     "woolPlaced": "Wool Placed",
     "zombieKills": "Zombie Kills"

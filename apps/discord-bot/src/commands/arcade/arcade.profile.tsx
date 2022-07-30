@@ -51,6 +51,7 @@ export const ArcadeProfile = ({
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(arcade.coins), "§6"],
     [t("stats.overallWins"), t(arcade.wins), "§b"],
+    [t("stats.stampLevel"), t(arcade.stampLevel), "§a"],
   ];
 
   const { api } = mode;

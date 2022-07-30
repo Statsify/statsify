@@ -62,6 +62,9 @@ export class Arcade {
   public wins: number;
 
   @Field()
+  public stampLevel: number;
+
+  @Field()
   public blockingDead: BlockingDead;
 
   @Field()
@@ -118,6 +121,8 @@ export class Arcade {
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
     this.wins = ap.arcade_arcade_winner;
+    this.stampLevel = data.stamp_level;
+
     this.blockingDead = new BlockingDead(data);
     this.bountyHunters = new BountyHunters(data);
     this.captureTheWool = new CaptureTheWool(ap);
