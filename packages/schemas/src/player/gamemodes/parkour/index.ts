@@ -94,7 +94,7 @@ export class Parkour {
     this.COPS_AND_CRIMS = getTime("CopsnCrims");
     this.DUELS = getTime("Duels");
     this.HOUSING = getTime("Housing");
-    this.MAIN_LOBBY = getTime("mainLobby2017");
+    this.MAIN_LOBBY = getTime("mainLobby2022");
     this.MEGAWALLS = getTime("MegaWalls");
     this.MURDER_MYSTERY = getTime("MurderMystery");
     this.PROTOTYPE = getTime("Prototype");
