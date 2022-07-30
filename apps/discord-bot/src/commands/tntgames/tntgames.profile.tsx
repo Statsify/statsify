@@ -63,7 +63,7 @@ export const TNTGamesProfile = ({
             stats={[
               [t("stats.wins"), t(tntgames.pvpRun.wins)],
               [t("stats.kills"), t(tntgames.pvpRun.kills)],
-              [t("stats.wlr"), t(tntgames.pvpRun.wlr)],
+              [t("stats.kdr"), t(tntgames.pvpRun.kdr)],
             ]}
           />
           <TNTGamesModeColumn

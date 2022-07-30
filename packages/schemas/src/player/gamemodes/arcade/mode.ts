@@ -111,17 +111,26 @@ export class EnderSpleef {
   @Field({ store: { default: "none" } })
   public trail: string;
 
-  @Field({ leaderboard: { enabled: false } })
-  public powerupActivations: number;
-
   @Field()
   public blocksBroken: number;
+
+  @Field()
+  public tripleShot: number;
+
+  @Field()
+  public bigShot: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public powerupActivations: number;
 
   public constructor(data: APIData) {
     this.wins = data.wins_ender;
     this.trail = data.enderspleef_trail || "none";
-    this.powerupActivations = data.powerup_activations_ender;
     this.blocksBroken = data.blocks_destroyed_ender;
+
+    this.powerupActivations = data.powerup_activations_ender;
+    this.bigShot = data.bigshot_powerup_activations_ender;
+    this.tripleShot = data.tripleshot_powerup_activations_ender;
   }
 }
 
