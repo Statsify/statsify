@@ -85,8 +85,8 @@ export enum FormattedGame {
   WARLORDS = "§cWar§elords§f",
   WOOLWARS = "§cWool§9Wars§f",
 
-  TOURNAMENT_LOBBY = "§4Tournament §6Lobby§f",
-  MAIN_LOBBY = "§3Main Lobby§f",
+  TOURNAMENT_LOBBY = "§4Tourn§6ament §fLobby",
+  MAIN_LOBBY = "§3Main §fLobby",
   CLASSIC = "§bCla§fs§csic§f",
   CRAZY_WALLS = "§fCrazy Walls§f",
   QUEUE = "§fQueue§f",
