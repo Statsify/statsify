@@ -47,7 +47,7 @@ export class PVPRun {
     this.wins = data.wins_pvprun;
     this.kills = data.kills_pvprun;
     this.deaths = data.deaths_pvprun;
-    this.kdr = ratio(this.wins, this.deaths);
+    this.kdr = ratio(this.kills, this.deaths);
   }
 }
 
