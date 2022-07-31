@@ -156,16 +156,6 @@ export class RankingsCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.rankings-events"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
-  })
-  public events(context: CommandContext) {
-    return this.run(context, "events", GENERAL_MODES);
-  }
-
-  @SubCommand({
     description: (t) => t("commands.rankings-general"),
     args,
     tier: UserTier.IRON,
