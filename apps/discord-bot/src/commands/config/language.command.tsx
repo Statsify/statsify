@@ -45,6 +45,8 @@ export class LanguageCommand {
       .color(STATUS_COLORS.success)
       .description((t) => t("config.language.description", { locale }));
 
+    context.getInteraction().setLocale(locale);
+
     return { embeds: [embed] };
   }
 }
