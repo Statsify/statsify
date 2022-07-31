@@ -97,15 +97,6 @@ export class Pit {
   public highestStreak: number;
 
   @Field()
-  public blocksPlaced: number;
-
-  @Field()
-  public blocksBroken: number;
-
-  @Field()
-  public anythingFished: number;
-
-  @Field()
   public joins: number;
 
   public constructor(profile: APIData, data: APIData) {
@@ -146,9 +137,6 @@ export class Pit {
     this.lifetimeGold = data.cash_earned;
     this.playtime = (data.playtime_minutes ?? 0) * 60 * 1000;
     this.highestStreak = data.max_streak;
-    this.blocksPlaced = data.blocks_placed;
-    this.blocksBroken = data.blocks_broken;
-    this.anythingFished = data.fished_anything;
     this.joins = data.joins;
   }
 }

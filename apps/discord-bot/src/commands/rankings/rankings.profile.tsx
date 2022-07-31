@@ -103,7 +103,7 @@ export const RankingsProfile = ({
         name={player.prefixName}
         skin={skin}
         time="LIVE"
-        title={`§l§bLeaderboard Postions §r(§l${formattedGame}§r)`}
+        title={`§l§bLeaderboard Positions §r(§l${formattedGame}§r)`}
         badge={badge}
       />
       <List items={[<>{titles}</>, ...items]} />
