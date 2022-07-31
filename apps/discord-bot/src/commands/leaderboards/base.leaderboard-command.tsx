@@ -97,6 +97,8 @@ export class BaseLeaderboardCommand {
 
     const changePage =
       (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
+        if (user?.locale) interaction.setLocale(user.locale);
+
         const params = fn();
 
         const [message, page] = await this.getLeaderboardMessage(
@@ -192,6 +194,8 @@ export class BaseLeaderboardCommand {
       const positionInput = data.components[0].components[0].value;
 
       const position = Number.parseInt(positionInput, 10);
+
+      if (user?.locale) interaction.setLocale(user.locale);
 
       if (Number.isNaN(position) || position < 1) {
         const error = new ErrorMessage("errors.leaderboardInvalidPosition");

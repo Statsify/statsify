@@ -46,6 +46,7 @@ export class PaginateService {
       return context.reply(await this.getMessage(context, [], 0, pages));
 
     const userId = context.getInteraction().getUserId();
+    const user = context.getUser();
 
     const cache = new Map<number, Message>();
     let index = 0;
@@ -56,6 +57,8 @@ export class PaginateService {
 
     controller.forEach((component, i) => {
       listener.addHook(component.getCustomId(), async (interaction) => {
+        if (user?.locale) interaction.setLocale(user.locale);
+
         let page = 0;
 
         if (interaction.isButtonInteraction()) page = i;
@@ -114,6 +117,7 @@ export class PaginateService {
     timeout = 300_000
   ) {
     const userId = context.getInteraction().getUserId();
+    const user = context.getUser();
     const cache = new Map<number, Message>();
 
     const t = context.t();
@@ -129,6 +133,8 @@ export class PaginateService {
 
     controller.forEach((component, i) => {
       listener.addHook(component.getCustomId(), async (interaction) => {
+        if (user?.locale) interaction.setLocale(user.locale);
+
         let page: number;
 
         if (i === 0) {

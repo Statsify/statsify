@@ -79,6 +79,7 @@
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "View your {{name}} stats",
     "invite": "Invite Statsify",
+    "language": "Change the language you see responses in",
     "last-day": "$t(commands.yesterday)",
     "last-month": "View your stats from last month's in various games",
     "last-week": "View your stats from last week's in various games",
@@ -221,6 +222,9 @@
       "profile": "This is how your theme will look on your profiles",
       "set": "$t(emojis:config.success) Successfully updated your theme.",
       "view": "$t(emojis:config.view) Your current theme:"
+    },
+    "language": {
+      "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
     }
   },
   "cooldown": {

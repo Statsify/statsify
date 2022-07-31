@@ -37,4 +37,8 @@ export class UpdateUserDto {
   @IsOptional()
   @ValidateNested()
   public footer?: UserFooter;
+
+  @IsString()
+  @IsOptional()
+  public locale?: string;
 }

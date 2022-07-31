@@ -58,6 +58,9 @@ export class User {
   @Field({ store: { required: false } })
   public footer?: UserFooter;
 
+  @Field({ store: { required: false } })
+  public locale?: string;
+
   public static isIron(user: User | null): boolean {
     return this.isTier(user, UserTier.IRON);
   }
