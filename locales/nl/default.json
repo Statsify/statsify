@@ -1,0 +1,167 @@
+{
+  "errors": {
+    "coreOnly": {
+      "description": "$t(errors.staffOnly.description)",
+      "title": "$t(errors.staffOnly.title)"
+    },
+    "diamondOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"Tier\": \"Diamond\" })"
+    },
+    "emeraldOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"Tier\": \"Emerald\" })"
+    },
+    "footerTooLong": {
+      "description": "Het bericht dat je hebt opgegeven is te lang. Het zou onder 50 karakters moeten zijn exclusief kleurcodes",
+      "title": "Bericht Te Lang"
+    },
+    "goldOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"Tier\": \"Gold\" })"
+    },
+    "guildLeaderboardNotFound": {
+      "description": "We konden de `guild` die je zocht niet vinden!",
+      "title": "Ongeldige Guild"
+    },
+    "higherTierRequiredForIcon": {
+      "description": "Je moet een hogere tier premium kopen om dit icoon te gebruiken!",
+      "title": "Hogere Tier Vereist"
+    },
+    "invalidGuild": {
+      "description": "Een guild met de {{type}} van `{{tag}}` kon niet gevonden worden!",
+      "title": "Ongeldige Guild"
+    },
+    "invalidPlayer": {
+      "description": "Een speler met de {{type}} van `{{tag}}` kon niet gevonden worden!",
+      "title": "Ongeldige Speler"
+    },
+    "invalidResetTime": {
+      "description": "`{{time}}` komt niet overeen met het formaat `u:mm a`. Voor een tijd formaat in dat lijkt op `12:00 PM` or `1:00 AM.`",
+      "title": "Ongeldige Resettijd"
+    },
+    "invalidResetTimezone": {
+      "description": "`{{timezone}}` is geen geldige tijdzone. Voer een tijdzone in die lijkt op `EST` or `PST`.",
+      "title": "Ongeldige Reset Tijdzone"
+    },
+    "invalidSearch": {
+      "description": "We konden niet precies vinden waar je naar zocht!\nVoer een gebruikersnaam, uuid of discord vermelding in.",
+      "title": "Ongeldige Zoekopdracht"
+    },
+    "invalidServer": {
+      "description": "De server waar je naar zocht bestaat niet of is offline!",
+      "title": "Ongeldige Minecraft Server"
+    },
+    "invalidTagName": {
+      "description": "De tag naam die je hebt opgegeven is ongeldig. Het is niet mogelijk om een slash commando te creëren met deze tag naam.",
+      "title": "Ongeldige Tag Naam"
+    },
+    "invalidTicketChannel": {
+      "description": "Je moet in een ticket kanaal zijn om dit commando te gebruiken!",
+      "title": "Ongeldig Ticket Kanaal"
+    },
+    "ironOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"Tier\": \"Iron\" })"
+    },
+    "leaderboardEmpty": {
+      "description": "Er zijn geen leaderboard-gegevens meer op deze positie!",
+      "title": "Geen Leaderboard Gegevens Op Deze Positie"
+    },
+    "leaderboardInvalidPosition": {
+      "description": "De leaderboard positie die je hebt opgegeven is ongeldig. Voer een getal in dat groter is dan 1.",
+      "title": "Ongeldige Positie"
+    },
+    "leaderboardNotFound": {
+      "description": "We kunnen niet de `leaderboard` vinden waar je naar zoekt!",
+      "title": "Leaderboard Niet Gevonden"
+    },
+    "missingMentionVerification": {
+      "description": "<@{{tag}}> is niet **geverifieerd**. Om ze te vermelden, moeten ze `/verify` uitvoeren om hun account te verifiëren.",
+      "title": "Verificatie Ontbreekt"
+    },
+    "missingPlayerVerification": {
+      "description": "{{displayName}} is niet **geverifieerd**. Ze moeten `/verify` om hun account te verifiëren.",
+      "title": "Verificatie Ontbreekt"
+    },
+    "missingSelfVerification": {
+      "description": "Om commandos te gebruiken zonder je gebruikersnaam op te geven moet je geverifiërd zijn. Om te verifiëren, voer je `/verify` uit en voltooi je het. Probeer het daarna opnieuw.",
+      "title": "Verificatie Ontbreekt"
+    },
+    "netheriteOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"Tier\": \"Netherite\" })"
+    },
+    "noCape": {
+      "description": "**{{username}}** heeft geen capes!",
+      "title": "Cape Ontbreekt"
+    },
+    "noFriends": {
+      "description": "**{{displayName}}** heeft geen vrienden $t(emojis:sad)! :(",
+      "title": "Vrienden Niet Gevonden"
+    },
+    "noGTBSolutions": {
+      "description": "We konden geen oplossing vinden voor de opgegeven hint!",
+      "title": "Geen Guess The Build Oplossingen"
+    },
+    "noMutuals": {
+      "description": "**{{displayNameOne}}** en **{{displayNameTwo}}** hebben geen gemeenschappelijke vrienden!",
+      "title": "Geen Gemeenschappelijke Vrienden"
+    },
+    "noPitStats": {
+      "description": "**{{displayName}}** heeft nog nooit The Pit gespeeld!",
+      "title": "Pit Statistieken Niet Gevonden"
+    },
+    "noRankings": {
+      "description": "**{{displayName}}** heeft geen rankings!",
+      "title": "Geen Rankings"
+    },
+    "noRecentGames": {
+      "description": "**{{displayName}}**'s recente games konden niet gevonden worden!",
+      "title": "Recente Games Niet Gevonden"
+    },
+    "noStatus": {
+      "description": "**{{displayName}}**'s Hypixel status kon niet gevonden worden!",
+      "title": "Status Niet Gevonden"
+    },
+    "playerLeaderboardNotFound": {
+      "description": "We konden de `speler` waar je naar zocht niet vinden!",
+      "title": "Invalid Player"
+    },
+    "playerNotInGuild": {
+      "description": "**{{displayName}}** is niet in een guild!",
+      "title": "Ongeldige Guild"
+    },
+    "premiumRequired": {
+      "description": "Bekijk alle beschikbare features [hier](https://statsify.net/premium).",
+      "preview": "Bekijk alle beschikbare features [hier](https://statsify.net/premium). Hieronder is een klein voorbeeld van wat het commando doet/veranderd",
+      "title": "Statsify {{tier}} is vereist om dit commando te gebruiken!"
+    },
+    "staffOnly": {
+      "description": "Dit commando is alleen toegankelijk voor Statsify personeel!",
+      "preview": "Hieronder is een klein voorbeeld van hoe het commando functioneert",
+      "title": "Alleen Personeel"
+    },
+    "tagNotFound": {
+      "description": "De tag die je hebt opgegeven was niet gevonden!",
+      "title": "Tag Niet Gevonden"
+    },
+    "ticketAlreadyExists": {
+      "description": "Je hebt hier al een ticket openstaan!",
+      "title": "Ticket Bestaat Al"
+    },
+    "unknown": {
+      "description": "Er is iets fout gegaan, probeer het later opnieuw. Als dit aanhoud, meld het in onze [Discord](<https://statsify.net/discord>).",
+      "title": "Een Onbekende Error Is Opgetreden"
+    },
+    "unsupportedFileType": {
+      "description": "Het bestandstype van het bestand wat je hebt geupload is geen ondersteund bestandstype voor dit commando!",
+      "title": "Niet Ondersteund Bestandtype"
+    }
+  }
+}
