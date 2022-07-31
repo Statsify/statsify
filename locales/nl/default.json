@@ -163,5 +163,10 @@
       "description": "Het bestandstype van het bestand wat je hebt geupload is geen ondersteund bestandstype voor dit commando!",
       "title": "Niet Ondersteund Bestandtype"
     }
+  },
+  "config": {
+    "language": {
+      "description": "$t(emojis:config.success) Je taal is succesvol geüpdated naar `{{locale}}`."
+    }
   }
 }
