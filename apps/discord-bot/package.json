@@ -30,7 +30,7 @@
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@types/luxon": "^2.3.2"
+    "@types/luxon": "^3.0.0"
   },
   "imports": {
     "#components": "./dist/components/index.js",

@@ -2201,10 +2201,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/luxon@npm:^2.3.2":
-  version: 2.3.2
-  resolution: "@types/luxon@npm:2.3.2"
-  checksum: b9fe79118681f4bb9f2e37696a7df992a82683ba4448e7ad1af8cc241443ffc64ef08fdeaad749de9e6259b42b0d4b6540d7e880bca39bb504e0f3863d503c98
+"@types/luxon@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "@types/luxon@npm:3.0.0"
+  checksum: 7738d3f4b91097a8139eca966ab53c6b40bb417b2cc2014c3bbd0aee033d6ff54af14c62046c2eb042434923b6bf796874f24b2af90e07ef422e6d841463d4b2
   languageName: node
   linkType: hard
 
@@ -4111,7 +4111,7 @@ __metadata:
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
     "@typegoose/typegoose": ^9.10.1
-    "@types/luxon": ^2.3.2
+    "@types/luxon": ^3.0.0
     axios: ^0.27.2
     discord-api-types: ^0.36.1
     fuse.js: ^6.6.2
