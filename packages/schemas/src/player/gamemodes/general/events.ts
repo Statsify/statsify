@@ -21,13 +21,13 @@ export class Event {
   public level: number;
 
   @Field()
-  public levelProgression: Progression;
+  public progression: Progression;
 
   public constructor(data: APIData = {}) {
     this.exp = data.levelling?.experience ?? 0;
     this.level = Math.min(MAX_LEVEL, Math.floor(this.exp / EXP_REQUIREMENT) + 1);
 
-    this.levelProgression = new Progression(
+    this.progression = new Progression(
       this.exp % EXP_REQUIREMENT,
       this.level >= MAX_LEVEL ? 0 : EXP_REQUIREMENT
     );

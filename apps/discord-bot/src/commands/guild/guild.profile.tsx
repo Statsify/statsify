@@ -240,7 +240,7 @@ const GuildGexpPage = ({ guild, t }: GuildGexpPageProps) => {
     guild.level
   )}\n§7GEXP ${formatProgression({
     t,
-    progression: guild.levelProgression,
+    progression: guild.progression,
     currentLevel: `${guildColor}${t(Math.floor(guild.level))}`,
     nextLevel: `${guildColor}${t(Math.floor(guild.level) + 1)}`,
     renderXp: lineXpBar(guildColor),

@@ -9,35 +9,32 @@
 import { APIData } from "@statsify/util";
 import { roundTo } from "@statsify/math";
 
-export class GeneralUtil {
-  public static getChallenges({ all_time: allTime = {} }: APIData = {}) {
-    let challenges = 0;
+export const getChallenges = ({ all_time: allTime = {} }: APIData = {}) => {
+  let challenges = 0;
 
-    Object.values(allTime).forEach((challenge) => {
-      challenges += challenge as number;
-    });
+  Object.values(allTime).forEach((challenge) => {
+    challenges += challenge as number;
+  });
 
-    return challenges;
-  }
-  public static getNetworkExp(networkLevel = 1) {
-    return (Math.pow((networkLevel + 2.5) * 50, 2) - 30_625) / 2;
-  }
+  return challenges;
+};
 
-  public static getNetworkLevel(networkExp = 0) {
-    return networkExp ? roundTo(Math.sqrt(networkExp * 2 + 30_625) / 50 - 2.5) : 1;
-  }
+export const getNetworkExp = (networkLevel = 1) =>
+  (Math.pow((networkLevel + 2.5) * 50, 2) - 30_625) / 2;
 
-  public static getQuests(questData: APIData = {}) {
-    let quests = 0;
+export const getNetworkLevel = (networkExp = 0) =>
+  networkExp ? roundTo(Math.sqrt(networkExp * 2 + 30_625) / 50 - 2.5) : 1;
 
-    Object.keys(questData).forEach((quest) => {
-      if (Object.prototype.hasOwnProperty.call(questData[quest], "completions")) {
-        questData[quest].completions.forEach(() => {
-          quests += 1;
-        });
-      }
-    });
+export const getQuests = (questData: APIData = {}) => {
+  let quests = 0;
 
-    return quests;
-  }
-}
+  Object.keys(questData).forEach((quest) => {
+    if (Object.prototype.hasOwnProperty.call(questData[quest], "completions")) {
+      questData[quest].completions.forEach(() => {
+        quests += 1;
+      });
+    }
+  });
+
+  return quests;
+};

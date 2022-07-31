@@ -47,7 +47,7 @@ export class Guild {
   public level: number;
 
   @Field()
-  public levelProgression: Progression;
+  public progression: Progression;
 
   @Field({ type: () => [GuildMember] })
   public members: GuildMember[];
@@ -133,7 +133,7 @@ export class Guild {
     const { level, current, max } = getLevel(this.exp);
 
     this.level = level;
-    this.levelProgression = new Progression(current, max);
+    this.progression = new Progression(current, max);
     this.expByGame = new ExpByGame(data.guildExpByGameType ?? {});
 
     this.achievements = new GuildAchievements(this.level, data.achievements ?? {});

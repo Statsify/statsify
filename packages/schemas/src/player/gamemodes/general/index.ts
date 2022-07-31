@@ -7,9 +7,10 @@
  */
 
 import { APIData } from "@statsify/util";
+import { Events } from "./events";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
-import { GeneralUtil } from "./util";
+import { getChallenges, getNetworkLevel, getQuests } from "./util";
 
 export const GENERAL_MODES = new GameModes([{ api: "overall" }]);
 export type GeneralModes = IGameModes<typeof GENERAL_MODES>;
@@ -32,6 +33,7 @@ export class General {
       fieldName: "Network Level",
       hidden: true,
       limit: Number.POSITIVE_INFINITY,
+      formatter: getNetworkLevel,
       additionalFields: ["stats.general.networkLevel"],
     },
   })
@@ -49,24 +51,29 @@ export class General {
   @Field({ leaderboard: { fieldName: "Tokens", name: "Classic Tokens" } })
   public classicTokens: number;
 
+  @Field()
+  public events: Events;
+
   public constructor(legacy: APIData, data: APIData = {}) {
     this.achievementPoints = data.achievementPoints;
 
     this.challenges = Math.max(
-      GeneralUtil.getChallenges(data.challenges),
+      getChallenges(data.challenges),
       data.achievements?.general_challenger ?? 0
     );
+
     this.karma = data.karma;
-
     this.networkExp = data.networkExp;
-
-    this.networkLevel = GeneralUtil.getNetworkLevel(this.networkExp);
-
-    this.quests = GeneralUtil.getQuests(data.quests);
+    this.networkLevel = getNetworkLevel(this.networkExp);
+    this.quests = getQuests(data.quests);
 
     this.giftsSent = data.giftingMeta?.bundlesGiven;
     this.ranksGifted = data.giftingMeta?.ranksGiven;
 
     this.classicTokens = legacy.total_tokens;
+
+    this.events = new Events(data.seasonal);
   }
 }
+
+export * from "./events";

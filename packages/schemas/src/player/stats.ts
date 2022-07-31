@@ -6,32 +6,34 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Arcade } from "./gamemodes/arcade";
-import { ArenaBrawl } from "./gamemodes/arenabrawl";
-import { BedWars } from "./gamemodes/bedwars";
-import { BlitzSG } from "./gamemodes/blitzsg";
-import { BuildBattle } from "./gamemodes/buildbattle";
-import { CopsAndCrims } from "./gamemodes/copsandcrims";
-import { Duels } from "./gamemodes/duels";
-import { Events } from "./gamemodes";
+import {
+  Arcade,
+  ArenaBrawl,
+  BedWars,
+  BlitzSG,
+  BuildBattle,
+  CopsAndCrims,
+  Duels,
+  General,
+  MegaWalls,
+  MurderMystery,
+  Paintball,
+  Parkour,
+  Pit,
+  Quake,
+  SkyWars,
+  SmashHeroes,
+  SpeedUHC,
+  TNTGames,
+  TurboKartRacers,
+  UHC,
+  VampireZ,
+  Walls,
+  Warlords,
+  WoolWars,
+} from "./gamemodes";
 import { Field } from "../metadata";
 import { FormattedGame } from "../game";
-import { General } from "./gamemodes/general";
-import { MegaWalls } from "./gamemodes/megawalls";
-import { MurderMystery } from "./gamemodes/murdermystery";
-import { Paintball } from "./gamemodes/paintball";
-import { Parkour } from "./gamemodes/parkour";
-import { Quake } from "./gamemodes/quake";
-import { SkyWars } from "./gamemodes/skywars";
-import { SmashHeroes } from "./gamemodes/smashheroes";
-import { SpeedUHC } from "./gamemodes/speeduhc";
-import { TNTGames } from "./gamemodes/tntgames";
-import { TurboKartRacers } from "./gamemodes/turbokartracers";
-import { UHC } from "./gamemodes/uhc";
-import { VampireZ } from "./gamemodes/vampirez";
-import { Walls } from "./gamemodes/walls";
-import { Warlords } from "./gamemodes/warlords";
-import { WoolWars } from "./gamemodes/woolwars";
 import type { APIData } from "@statsify/util";
 
 export class PlayerStats {
@@ -76,9 +78,6 @@ export class PlayerStats {
   @Field({ leaderboard: { fieldName: `${FormattedGame.DUELS} -` } })
   public duels: Duels;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.EVENTS} -` } })
-  public events: Events;
-
   @Field({ leaderboard: { fieldName: `${FormattedGame.GENERAL} -` } })
   public general: General;
 
@@ -98,6 +97,14 @@ export class PlayerStats {
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.PARKOUR} -` } })
   public parkour: Parkour;
+
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.PIT,
+      extraDisplay: "stats.pit.levelFormatted",
+    },
+  })
+  public pit: Pit;
 
   @Field({
     leaderboard: {
@@ -184,7 +191,6 @@ export class PlayerStats {
     this.buildbattle = new BuildBattle(data?.stats?.BuildBattle ?? {});
     this.copsandcrims = new CopsAndCrims(data?.stats?.MCGO ?? {});
     this.duels = new Duels(data?.stats?.Duels ?? {});
-    this.events = new Events(data?.seasonal);
     this.general = new General(data?.stats?.Legacy ?? {}, data);
     this.megawalls = new MegaWalls(data?.stats?.Walls3 ?? {});
     this.murdermystery = new MurderMystery(
@@ -196,6 +202,10 @@ export class PlayerStats {
       data?.stats?.Legacy ?? {}
     );
     this.parkour = new Parkour(data?.parkourCompletions ?? {});
+    this.pit = new Pit(
+      data?.stats?.Pit?.profile ?? {},
+      data?.stats?.Pit?.pit_stats_ptl ?? {}
+    );
     this.quake = new Quake(
       data?.stats?.Quake ?? {},
       data?.achievements ?? {},
