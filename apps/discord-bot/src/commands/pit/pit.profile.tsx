@@ -33,13 +33,10 @@ export const PitProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("stats.gold"), t(pit.gold), "§6"],
-    [t("stats.exp"), t(pit.exp), "§b"],
+    [t("stats.contracts"), t(pit.contractsCompleted), "§a"],
+    [t("stats.renown"), t(pit.renown), "§e"],
+    [t("stats.bounty"), t(pit.bounty), "§6"],
   ];
-
-  if (pit.totalMysticsEnchanted)
-    sidebar.push([t("stats.contracts"), t(pit.contractsCompleted), "§a"]);
-  if (pit.renown) sidebar.push([t("stats.renown"), t(pit.renown), "§e"]);
-  if (pit.bounty) sidebar.push([t("stats.bounty"), t(pit.bounty), "§6"]);
 
   return (
     <Container background={background}>
@@ -75,7 +72,7 @@ export const PitProfile = ({
             value={formatTime(pit.playtime)}
             color="§b"
           />
-          <Table.td title={t("stats.assists")} value={t(pit.assists ?? 0)} color="§e" />
+          <Table.td title={t("stats.assists")} value={t(pit.assists)} color="§e" />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />
