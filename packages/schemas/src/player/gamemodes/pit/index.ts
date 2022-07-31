@@ -47,6 +47,9 @@ export class Pit {
   public gold: number;
 
   @Field()
+  public lifetimeGold: number;
+
+  @Field()
   public renown: number;
 
   @Field()
@@ -65,28 +68,27 @@ export class Pit {
   public kdr: number;
 
   @Field()
-  public damageDealt: number;
-
-  @Field()
-  public damageTaken: number;
-
-  @Field()
   public assists: number;
 
-  @Field()
+  @Field({
+    leaderboard: { name: "Tier I Mystics Enchanted", fieldName: "Mystics Enchanted" },
+  })
   public tier1MysticsEnchanted: number;
 
-  @Field()
+  @Field({
+    leaderboard: { name: "Tier II Mystics Enchanted", fieldName: "Mystics Enchanted" },
+  })
   public tier2MysticsEnchanted: number;
 
-  @Field()
+  @Field({
+    leaderboard: { name: "Tier III Mystics Enchanted", fieldName: "Mystics Enchanted" },
+  })
   public tier3MysticsEnchanted: number;
 
-  @Field()
+  @Field({
+    leaderboard: { name: "Total Mystics Enchanted", fieldName: "Mystics Enchanted" },
+  })
   public totalMysticsEnchanted: number;
-
-  @Field()
-  public goldEarned: number;
 
   @Field({ leaderboard: { formatter: formatTime } })
   public playtime: number;
@@ -129,9 +131,6 @@ export class Pit {
     this.deaths = data.deaths;
     this.kdr = ratio(this.kills, this.deaths);
 
-    this.damageDealt = data.damage_dealt;
-    this.damageTaken = data.damage_received;
-
     this.assists = data.assists;
 
     this.tier1MysticsEnchanted = data.enchanted_tier1;
@@ -144,7 +143,7 @@ export class Pit {
       this.tier3MysticsEnchanted
     );
 
-    this.goldEarned = data.cash_earned;
+    this.lifetimeGold = data.cash_earned;
     this.playtime = (data.playtime_minutes ?? 0) * 60 * 1000;
     this.highestStreak = data.max_streak;
     this.blocksPlaced = data.blocks_placed;

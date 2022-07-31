@@ -7,7 +7,7 @@
  */
 
 import { BaseProfileProps } from "../base.hypixel-command";
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
 import { FormattedGame, GameMode, MurderMysteryModes } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 
@@ -130,22 +130,26 @@ export const MurderMysteryProfile = ({
             <Table.td title={t("stats.bowKills")} value={t(stats.bowKills)} color="§6" />
             <Table.td title={t("stats.suicides")} value={t(stats.suicides)} color="§4" />
           </Table.tr>
-          <Table.tr>
-            <Table.td
-              title={t("stats.fastestMurdererWin")}
-              value={
-                stats.fastestMurdererWin ? formatTime(stats.fastestMurdererWin) : "N/A"
-              }
-              color="§c"
-            />
-            <Table.td
-              title={t("stats.fastestDetectiveWin")}
-              value={
-                stats.fastestDetectiveWin ? formatTime(stats.fastestDetectiveWin) : "N/A"
-              }
-              color="§b"
-            />
-          </Table.tr>
+          <Historical.exclude time={time}>
+            <Table.tr>
+              <Table.td
+                title={t("stats.fastestMurdererWin")}
+                value={
+                  stats.fastestMurdererWin ? formatTime(stats.fastestMurdererWin) : "N/A"
+                }
+                color="§c"
+              />
+              <Table.td
+                title={t("stats.fastestDetectiveWin")}
+                value={
+                  stats.fastestDetectiveWin
+                    ? formatTime(stats.fastestDetectiveWin)
+                    : "N/A"
+                }
+                color="§b"
+              />
+            </Table.tr>
+          </Historical.exclude>
         </Table.table>
       );
 
@@ -209,18 +213,20 @@ export const MurderMysteryProfile = ({
               color="§6"
             />
           </Table.tr>
-          <Table.tr>
-            <Table.td
-              title={t("stats.lastAliveGames")}
-              value={t(stats.lastAliveGames)}
-              color="§b"
-            />
-            <Table.td
-              title={t("stats.bestTime")}
-              value={formatTime(stats.longestSurvivalTime)}
-              color="§3"
-            />
-          </Table.tr>
+          <Historical.exclude time={time}>
+            <Table.tr>
+              <Table.td
+                title={t("stats.lastAliveGames")}
+                value={t(stats.lastAliveGames)}
+                color="§b"
+              />
+              <Table.td
+                title={t("stats.bestTime")}
+                value={formatTime(stats.longestSurvivalTime)}
+                color="§3"
+              />
+            </Table.tr>
+          </Historical.exclude>
         </Table.table>
       );
 
