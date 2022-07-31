@@ -69,7 +69,7 @@ export enum FormattedGame {
   MURDER_MYSTERY = "§4Murder Mystery§f",
   PAINTBALL = "§bPaint§fball§f",
   PARKOUR = "§fParkour§f",
-  PIT = "§eThe §aPit",
+  PIT = "§eThe §aPit§f",
   PROTOTYPE = "§3Proto§ftype§f",
   QUAKE = "§5Quake§f",
   SKYBLOCK = "§bSky§fblock§f",
