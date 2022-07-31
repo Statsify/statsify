@@ -97,6 +97,8 @@ export class BaseLeaderboardCommand {
 
     const changePage =
       (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
+        if (user?.locale) interaction.setLocale(user.locale);
+
         const params = fn();
 
         const [message, page] = await this.getLeaderboardMessage(

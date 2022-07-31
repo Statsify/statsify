@@ -12,16 +12,17 @@ import { Service } from "typedi";
 import { abbreviationNumber } from "@statsify/util";
 import { readdir } from "node:fs/promises";
 
+const DEFAULT_LANGUAGE = "en-US";
+
 @Service()
 export class I18nLoaderService {
-  private DEFAULT_LANGUAGE = "en-US";
   private languages: string[] = [];
   private namespaces: string[] = [];
 
   public async init() {
     this.languages = await readdir("../../locales");
-    this.namespaces = (await readdir(`../../locales/${this.DEFAULT_LANGUAGE}/`)).map(
-      (p) => p.replace(".json", "")
+    this.namespaces = (await readdir(`../../locales/${DEFAULT_LANGUAGE}/`)).map((p) =>
+      p.replace(".json", "")
     );
 
     await i18next.use(Backend).init({
@@ -29,8 +30,8 @@ export class I18nLoaderService {
         loadPath: "../../locales/{{lng}}/{{ns}}.json",
       },
       debug: false,
-      fallbackLng: this.DEFAULT_LANGUAGE,
-      lng: this.DEFAULT_LANGUAGE,
+      fallbackLng: DEFAULT_LANGUAGE,
+      lng: DEFAULT_LANGUAGE,
       supportedLngs: this.languages,
       ns: this.namespaces,
       load: "all",

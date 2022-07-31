@@ -106,6 +106,8 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     const changePage =
       (fn: (interaction: Interaction) => Partial<GuildTopPageState>) =>
       async (interaction: Interaction) => {
+        if (user?.locale) interaction.setLocale(user.locale);
+
         const state = fn(interaction);
 
         const mode = modes[state.modeIndex ?? modeIndex];

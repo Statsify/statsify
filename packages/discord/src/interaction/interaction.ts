@@ -91,6 +91,10 @@ export class Interaction {
     return (this.data as any).locale ?? "en-US";
   }
 
+  public setLocale(locale: string) {
+    (this.data as any).locale = locale;
+  }
+
   public t() {
     return getLocalizeFunction(this.getLocale());
   }
