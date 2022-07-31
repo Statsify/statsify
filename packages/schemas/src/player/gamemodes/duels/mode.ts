@@ -196,8 +196,8 @@ export class BridgeDuels {
 }
 
 export class MultiPVPDuelsGameMode {
-  @Field({ store: { store: false } })
-  public titlePrefix: string;
+  @Field()
+  public titleFormatted: string;
 
   @Field()
   public titleLevelFormatted: string;
@@ -207,9 +207,6 @@ export class MultiPVPDuelsGameMode {
 
   @Field()
   public progression: Progression;
-
-  @Field()
-  public titleFormatted: string;
 
   @Field()
   public overall: PVPBaseDuelsGameMode;
@@ -230,11 +227,9 @@ export class MultiPVPDuelsGameMode {
     this.overall.bestWinstreak = data[`best_${long}_winstreak`];
     this.overall.winstreak = data[`current_${long}_winstreak`];
 
-    this.titlePrefix = title;
-
     const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
       this.overall.wins,
-      this.titlePrefix
+      title
     );
 
     this.titleFormatted = formatted;
@@ -243,7 +238,7 @@ export class MultiPVPDuelsGameMode {
       index
     )}]`;
 
-    const nextData = getTitle(req + index * inc, this.titlePrefix);
+    const nextData = getTitle(req + index * inc, title);
 
     this.nextTitleLevelFormatted = `${nextData.color.code}${
       nextData.bold || nextData.semi ? "§l" : ""
@@ -257,37 +252,28 @@ const assignTitles = (
   data: SinglePVPDuelsGameMode | SingleDuelsGameMode,
   title: string
 ) => {
-  data.titlePrefix = title;
-
-  const { formatted, raw, bold, semi, max, index, color, req, inc } = getTitle(
+  const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
     data.wins,
-    data.titlePrefix
+    title
   );
 
-  data.title = raw;
   data.titleFormatted = formatted;
 
   data.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
     index
   )}]`;
 
-  const nextData = getTitle(req + index * inc, data.titlePrefix);
+  const nextData = getTitle(req + index * inc, title);
 
   data.nextTitleLevelFormatted = `${nextData.color.code}${
     nextData.bold || nextData.semi ? "§l" : ""
   }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
 
-  const titlePrefixes = data.titlePrefix === "" ? overallPrefixes : prefixes;
+  const titlePrefixes = title === "" ? overallPrefixes : prefixes;
   data.progression = createPrefixProgression(titlePrefixes, data.wins);
 };
 
 export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
-  @Field({ store: { store: false } })
-  public titlePrefix: string;
-
-  @Field({ store: { default: "None" } })
-  public title: string;
-
   @Field({ store: { default: "§7None§r" } })
   public titleFormatted: string;
 
@@ -307,12 +293,6 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
 }
 
 export class SingleDuelsGameMode extends BaseDuelsGameMode {
-  @Field({ store: { store: false } })
-  public titlePrefix: string;
-
-  @Field({ store: { default: "None" } })
-  public title: string;
-
   @Field({ store: { default: "§7None§r" } })
   public titleFormatted: string;
 

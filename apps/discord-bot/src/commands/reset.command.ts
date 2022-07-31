@@ -86,6 +86,8 @@ export class ResetCommand {
       }));
 
       listener.addHook(resetMinuteModal.getCustomId(), async (interaction) => {
+        if (user.locale) interaction.setLocale(user.locale);
+
         const data = interaction.getData();
 
         const timeInput = data.components[0].components[0].value.toUpperCase();
@@ -135,7 +137,9 @@ export class ResetCommand {
     } else {
       listener.addHook(resetButton.getCustomId(), async () => {
         clearTimeout(removeComponentsTimeout);
+
         await this.apiService.resetPlayerHistorical(user.uuid!);
+
         context.reply({
           content: (t) =>
             t("historical.setResetTime", { time: Math.round(Date.now() / 1000) }),

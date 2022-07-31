@@ -195,6 +195,8 @@ export class BaseLeaderboardCommand {
 
       const position = Number.parseInt(positionInput, 10);
 
+      if (user?.locale) interaction.setLocale(user.locale);
+
       if (Number.isNaN(position) || position < 1) {
         const error = new ErrorMessage("errors.leaderboardInvalidPosition");
 
