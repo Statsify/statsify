@@ -33,6 +33,7 @@ export class CommandResolvable {
   public args: AbstractArgument[];
   public cooldown: number;
   public tier: UserTier;
+  public preview?: string;
 
   private target: any;
   private methodName: string;
@@ -45,6 +46,7 @@ export class CommandResolvable {
       methodName,
       cooldown = 10,
       tier = UserTier.NONE,
+      preview,
     }: CommandMetadata,
     target: any
   ) {
@@ -65,6 +67,7 @@ export class CommandResolvable {
     this.target = target;
     this.methodName = methodName;
     this.tier = tier;
+    this.preview = preview;
   }
 
   public execute(context: CommandContext) {

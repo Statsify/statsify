@@ -67,6 +67,7 @@ const args = [PlayerArgument];
 @Command({
   description: (t) => t("commands.rankings"),
   tier: UserTier.IRON,
+  preview: "rankings.png",
 })
 export class RankingsCommand {
   public constructor(
@@ -78,6 +79,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-all"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public all(context: CommandContext) {
     return this.run(context, "all", GENERAL_MODES);
@@ -87,6 +89,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-arcade"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public arcade(context: CommandContext) {
     return this.run(context, "arcade", ARCADE_MODES);
@@ -96,6 +99,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-arenabrawl"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public arenabrawl(context: CommandContext) {
     return this.run(context, "arenabrawl", ARENA_BRAWL_MODES);
@@ -105,6 +109,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-bedwars"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public bedwars(context: CommandContext) {
     return this.run(context, "bedwars", BEDWARS_MODES);
@@ -114,6 +119,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-blitzsg"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public blitzsg(context: CommandContext) {
     return this.run(context, "blitzsg", BLITZSG_MODES);
@@ -123,6 +129,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-buildbattle"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public buildbattle(context: CommandContext) {
     return this.run(context, "buildbattle", BUILD_BATTLE_MODES);
@@ -132,6 +139,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-copsandcrims"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public copsandcrims(context: CommandContext) {
     return this.run(context, "copsandcrims", COPS_AND_CRIMS_MODES);
@@ -141,15 +149,27 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-duels"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public duels(context: CommandContext) {
     return this.run(context, "duels", DUELS_MODES);
   }
 
   @SubCommand({
+    description: (t) => t("commands.rankings-events"),
+    args,
+    tier: UserTier.IRON,
+    preview: "rankings.png",
+  })
+  public events(context: CommandContext) {
+    return this.run(context, "events", GENERAL_MODES);
+  }
+
+  @SubCommand({
     description: (t) => t("commands.rankings-general"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public general(context: CommandContext) {
     return this.run(context, "general", GENERAL_MODES);
@@ -159,6 +179,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-megawalls"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public megawalls(context: CommandContext) {
     return this.run(context, "megawalls", MEGAWALLS_MODES);
@@ -168,6 +189,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-murdermystery"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public murdermystery(context: CommandContext) {
     return this.run(context, "murdermystery", MURDER_MYSTERY_MODES);
@@ -177,6 +199,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-paintball"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public paintball(context: CommandContext) {
     return this.run(context, "paintball", PAINTBALL_MODES);
@@ -186,6 +209,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-parkour"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public parkour(context: CommandContext) {
     return this.run(context, "parkour", PARKOUR_MODES);
@@ -204,6 +228,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-quake"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public quake(context: CommandContext) {
     return this.run(context, "quake", QUAKE_MODES);
@@ -213,6 +238,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-skywars"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public skywars(context: CommandContext) {
     return this.run(context, "skywars", SKYWARS_MODES);
@@ -222,6 +248,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-smashheroes"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public smashheroes(context: CommandContext) {
     return this.run(context, "smashheroes", SMASH_HEROES_MODES);
@@ -231,6 +258,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-speeduhc"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public speeduhc(context: CommandContext) {
     return this.run(context, "speeduhc", SPEED_UHC_MODES);
@@ -240,6 +268,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-tntgames"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public tntgames(context: CommandContext) {
     return this.run(context, "tntgames", TNT_GAMES_MODES);
@@ -249,6 +278,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-turbokartracers"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public turbokartracers(context: CommandContext) {
     return this.run(context, "turbokartracers", TURBO_KART_RACERS_MODES);
@@ -258,6 +288,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-uhc"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public uhc(context: CommandContext) {
     return this.run(context, "uhc", UHC_MODES);
@@ -267,6 +298,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-vampirez"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public vampirez(context: CommandContext) {
     return this.run(context, "vampirez", VAMPIREZ_MODES);
@@ -276,6 +308,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-walls"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public walls(context: CommandContext) {
     return this.run(context, "walls", WALLS_MODES);
@@ -285,6 +318,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-warlords"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public warlords(context: CommandContext) {
     return this.run(context, "warlords", WARLORDS_MODES);
@@ -294,6 +328,7 @@ export class RankingsCommand {
     description: (t) => t("commands.rankings-woolwars"),
     args,
     tier: UserTier.IRON,
+    preview: "rankings.png",
   })
   public woolwars(context: CommandContext) {
     return this.run(context, "woolwars", WOOLWARS_MODES);

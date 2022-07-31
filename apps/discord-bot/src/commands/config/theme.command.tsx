@@ -37,6 +37,7 @@ export class ThemeCommand {
   @SubCommand({
     description: (t) => t("commands.theme-boxes"),
     tier: UserTier.GOLD,
+    preview: "boxes.png",
     args: [
       new ChoiceArgument({
         name: "boxes",
@@ -57,6 +58,7 @@ export class ThemeCommand {
   @SubCommand({
     description: (t) => t("commands.theme-font"),
     tier: UserTier.GOLD,
+    preview: "font.png",
     args: [
       new ChoiceArgument({
         name: "font",
@@ -76,6 +78,7 @@ export class ThemeCommand {
   @SubCommand({
     description: (t) => t("commands.theme-palette"),
     tier: UserTier.DIAMOND,
+    preview: "palette.png",
     args: [
       new ChoiceArgument({
         name: "palette",

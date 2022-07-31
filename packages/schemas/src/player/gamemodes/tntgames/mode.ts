@@ -36,19 +36,18 @@ export class PVPRun {
   public wins: number;
 
   @Field()
-  public losses: number;
-
-  @Field()
-  public wlr: number;
-
-  @Field()
   public kills: number;
+  @Field()
+  public deaths: number;
+
+  @Field()
+  public kdr: number;
 
   public constructor(data: APIData) {
     this.wins = data.wins_pvprun;
     this.kills = data.kills_pvprun;
-    this.losses = data.deaths_pvprun;
-    this.wlr = ratio(this.wins, this.losses);
+    this.deaths = data.deaths_pvprun;
+    this.kdr = ratio(this.kills, this.deaths);
   }
 }
 

@@ -17,6 +17,7 @@ import {
   GetHistoricalResponse,
   GetKeyResponse,
   GetPlayerResponse,
+  GetPlayerSearchResponse,
   GetRecentGamesResponse,
   GetStatusResponse,
   GetUserResponse,
@@ -112,6 +113,14 @@ export class ApiService {
       {},
       "POST",
       { body: { fields, uuid } }
+    );
+  }
+
+  public getPlayerAutocomplete(query: string) {
+    return this.requestKey<GetPlayerSearchResponse, "players">(
+      `/player/search`,
+      "players",
+      { query }
     );
   }
 

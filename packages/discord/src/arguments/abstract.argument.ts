@@ -20,7 +20,9 @@ import type {
 import type { CommandContext } from "../command";
 
 export interface AbstractArgument {
-  autocompleteHandler?(context: CommandContext): APIApplicationCommandOptionChoice[];
+  autocompleteHandler?(
+    context: CommandContext
+  ): APIApplicationCommandOptionChoice[] | Promise<APIApplicationCommandOptionChoice[]>;
 }
 
 export abstract class AbstractArgument {

@@ -310,11 +310,13 @@
     },
     "diamondOnly": {
       "description": "$t(errors.premiumRequired.description)",
-      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Diamond\", \"emoji\": \"emojis:logos.diamond\" })"
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Diamond\" })"
     },
     "emeraldOnly": {
       "description": "$t(errors.premiumRequired.description)",
-      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\", \"emoji\": \"emojis:logos.emerald\" })"
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
     },
     "footerTooLong": {
       "description": "The message you provided is too long. It should be under 50 characters excluding color codes.",
@@ -322,7 +324,8 @@
     },
     "goldOnly": {
       "description": "$t(errors.premiumRequired.description)",
-      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\", \"emoji\": \"emojis:logos.gold\" })"
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
     },
     "guildLeaderboardNotFound": {
       "description": "We couldn't find the `guild` you were looking for!",
@@ -366,7 +369,8 @@
     },
     "ironOnly": {
       "description": "$t(errors.premiumRequired.description)",
-      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\", \"emoji\": \"emojis:logos.iron\" })"
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
       "description": "There is no more leaderboard data at this position!",
@@ -394,7 +398,8 @@
     },
     "netheriteOnly": {
       "description": "$t(errors.premiumRequired.description)",
-      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\", \"emoji\": \"emojis:logos.netherite\" })"
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
     },
     "noCape": {
       "description": "**{{username}}** doesn't have any capes!",
@@ -416,6 +421,10 @@
       "description": "**{{displayName}}** has never played The Pit!",
       "title": "Pit Stats Not Found"
     },
+    "noRankings": {
+      "description": "**{{displayName}}** has no rankings!",
+      "title": "No Rankings"
+    },
     "noRecentGames": {
       "description": "**{{displayName}}**'s recent games could not be found!",
       "title": "Recent Games Not Found"
@@ -434,10 +443,12 @@
     },
     "premiumRequired": {
       "description": "Check out all the available features [here](https://statsify.net/premium).",
-      "title": "$t({{emoji}}) Statsify {{tier}} is required to run this command"
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what command does/changes.",
+      "title": "Statsify {{tier}} is required to run this command"
     },
     "staffOnly": {
       "description": "This command is only available to Statsify staff members!",
+      "preview": "Below is a small preview of how the command functions",
       "title": "Staff Only"
     },
     "tagNotFound": {
@@ -455,10 +466,6 @@
     "unsupportedFileType": {
       "description": "The file you uploaded is not a supported file type for this command!",
       "title": "Unsupported File Type"
-    },
-    "noRankings": {
-      "title": "No Rankings",
-      "description": "**{{displayName}}** has no rankings!"
     }
   },
   "historical": {
@@ -519,6 +526,7 @@
     "bestRound": "Best Round",
     "bestTime": "Best Time",
     "bestWinstreak": "Best Winstreak",
+    "bigShot": "Big Shot",
     "blocksBroken": "Blocks Broken",
     "blocksPlaced": "Blocks Placed",
     "blocksRan": "Blocks Ran",
@@ -673,6 +681,7 @@
     "silverTrophies": "Silver Trophies",
     "soloWins": "Solo Wins",
     "souls": "Souls",
+    "stampLevel": "Coin Conversions",
     "starsEarned": "Stars Earned",
     "started": "Started",
     "status": "Status",
@@ -688,9 +697,11 @@
     "tokens": "Tokens",
     "total": "Total",
     "totalTrophies": "Total Trophies",
+    "trail": "Trail",
     "transfusion": "Transfusion",
     "trapKills": "Trap Kills",
     "trigger": "Trigger",
+    "tripleShot": "Triple Shot",
     "trophyRate": "Trophy Rate",
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimates Crafted",
@@ -704,7 +715,6 @@
     "witherKills": "Wither Kills",
     "wlr": "WLR",
     "wool": "Wool",
-    "woolBroken": "Wool Broken",
     "woolCaptures": "Wool Captures",
     "woolPlaced": "Wool Placed",
     "zombieKills": "Zombie Kills",
@@ -713,8 +723,9 @@
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
-    "invite": "$t(emojis:socials.discord) Click [here](<https://statsify.net/invite>) to invite Statsify to your own server!",
-    "premium": "$t(emojis:logos.gold) [Statsify Premium](<https://statsify.net/premium>) offers additional features such as personalized profile badges. Find the full list of benefits [here](<https://statsify.net/premium>)!",
+    "invite": "$t(emojis:socials.discord) Click **[here](<https://statsify.net/invite>)** to invite Statsify to your own server!",
+    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** offers additional features such as personalized profile badges. Find the full list of benefits **[here](<https://statsify.net/premium>)**!",
+    "rankings": "$t(emojis:logos.iron) View your top leaderboard positions with **[Statsify Premium](<https://statsify.net/premium>)** by using `/rankings`",
     "verify": "$t(emojis:check) Run `/verify` to run commands without inputting your username as well as receive **10% lower cooldowns**"
   },
   "unknown": "Unknown",

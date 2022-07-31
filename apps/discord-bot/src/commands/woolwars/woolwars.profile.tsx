@@ -46,7 +46,7 @@ export const WoolWarsProfile = ({
     [t("stats.wool"), t(woolwars.coins), "§6"],
     [t("stats.layers"), `${t(woolwars.layers)}§8/§a${t(100)}`, "§a"],
     [t("stats.woolPlaced"), t(stats.woolPlaced), "§e"],
-    [t("stats.woolBroken"), t(stats.blocksBroken), "§c"],
+    [t("stats.blocksBroken"), t(stats.blocksBroken), "§c"],
     [t("stats.powerups"), t(stats.powerups), "§b"],
   ];
 

@@ -43,6 +43,7 @@ export class SkyWars {
     leaderboard: {
       fieldName: "Level",
       hidden: true,
+      formatter: (exp: number) => getLevel(exp),
       additionalFields: [
         "stats.skywars.overall.wins",
         "stats.skywars.overall.kills",

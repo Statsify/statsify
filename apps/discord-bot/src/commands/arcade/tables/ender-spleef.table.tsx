@@ -9,6 +9,7 @@
 import { EnderSpleef } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
+import { prettify } from "@statsify/util";
 
 interface EnderSpleefTableProps {
   stats: EnderSpleef;
@@ -24,11 +25,18 @@ export const EnderSpleefTable = ({ stats, t }: EnderSpleefTableProps) => (
         value={t(stats.blocksBroken)}
         color="§c"
       />
-      <Table.td
-        title={t("stats.powerupActivations")}
-        value={t(stats.powerupActivations)}
-        color="§6"
-      />
+      <Table.td title={t("stats.trail")} value={prettify(stats.trail)} color="§6" />
     </Table.tr>
+    <Table.ts title={`§b${t("stats.powerupActivations")}`}>
+      <Table.tr>
+        <Table.td title={t("stats.bigShot")} value={t(stats.bigShot)} color="§a" />
+        <Table.td title={t("stats.tripleShot")} value={t(stats.tripleShot)} color="§c" />
+        <Table.td
+          title={t("stats.total")}
+          value={t(stats.powerupActivations)}
+          color="§6"
+        />
+      </Table.tr>
+    </Table.ts>
   </Table.table>
 );
