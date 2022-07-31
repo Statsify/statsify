@@ -107,7 +107,7 @@ export class Pit {
   public joins: number;
 
   public constructor(profile: APIData, data: APIData) {
-    this.exp = profile.xp;
+    this.exp = profile.xp ?? 0;
     this.gold = profile.cash;
     this.renown = profile.renown;
     this.bounty = getBounty(profile.bounties);
@@ -115,9 +115,13 @@ export class Pit {
     const prestige = getPres(this.exp);
     const level = getLevel(prestige, this.exp);
 
-    this.progression = new Progression(this.exp, getPresReq(prestige + 1));
+    this.progression = new Progression(
+      this.exp - getPresReq(prestige - 1),
+      getPresReq(prestige) - getPresReq(prestige - 1)
+    );
 
     this.levelFormatted = getLevelFormatted(level, prestige);
+    this.nextLevelFormatted = getLevelFormatted(1, prestige + 1);
 
     this.contractsCompleted = data.contracts_completed;
 

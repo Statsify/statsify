@@ -60,10 +60,10 @@ export const getPres = (xp: number) => {
     }
   }
 
-  return 0;
+  return presXpReq[1];
 };
 
-export const getPresReq = (pres: number) => presXpReq[pres];
+export const getPresReq = (pres: number) => (pres > -1 ? presXpReq[pres] : 0);
 
 export const getLevel = (pres: number, xp: number) => {
   let level = 120;

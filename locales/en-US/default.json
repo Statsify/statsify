@@ -707,7 +707,9 @@
     "woolBroken": "Wool Broken",
     "woolCaptures": "Wool Captures",
     "woolPlaced": "Wool Placed",
-    "zombieKills": "Zombie Kills"
+    "zombieKills": "Zombie Kills",
+    "mysticsEnchanted": "Mystics Enchanted",
+    "contracts": "Contracts"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",

@@ -32,12 +32,14 @@ export const PitProfile = ({
   const { pit } = player.stats;
 
   const sidebar: SidebarItem[] = [
-    [t("stats.gold"), `${t(pit.gold)}g`, "§6"],
+    [t("stats.gold"), t(pit.gold), "§6"],
     [t("stats.exp"), t(pit.exp), "§b"],
   ];
 
-  if (pit.renown) sidebar.push([t("stats.renown"), `${pit.renown}`, "§b"]);
-  if (pit.bounty) sidebar.push([t("stats.bounty"), `${pit.bounty}`, "§6"]);
+  if (pit.totalMysticsEnchanted)
+    sidebar.push([t("stats.contracts"), t(pit.contractsCompleted), "§a"]);
+  if (pit.renown) sidebar.push([t("stats.renown"), t(pit.renown), "§e"]);
+  if (pit.bounty) sidebar.push([t("stats.bounty"), t(pit.bounty), "§6"]);
 
   return (
     <Container background={background}>
@@ -50,8 +52,8 @@ export const PitProfile = ({
           t,
           progression: pit.progression,
           currentLevel: pit.levelFormatted,
-          nextLevel: "",
-          showLevel: false,
+          nextLevel: pit.nextLevelFormatted,
+          showLevel: true,
         })}`}
         sidebar={sidebar}
         badge={badge}
