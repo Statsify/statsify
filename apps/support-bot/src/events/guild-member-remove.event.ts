@@ -12,7 +12,7 @@ import {
   GatewayGuildMemberRemoveDispatchData,
 } from "discord-api-types/v10";
 import { Service } from "typedi";
-import { TicketService } from "#services";
+import { TicketService, UserService } from "#services";
 import { config } from "@statsify/util";
 
 const GUILD_ID = config("supportBot.guild");
@@ -23,7 +23,8 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
 
   public constructor(
     private readonly ticketService: TicketService,
-    private readonly apiService: ApiService
+    private readonly apiService: ApiService,
+    private readonly userService: UserService
   ) {
     super();
   }
@@ -34,13 +35,15 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
 
     const memberId = data.user.id;
 
-    await this.apiService.updateUser(memberId, { serverMember: false });
-
-    await this.ticketService.close(
-      memberId,
-      "owner",
-      config("supportBot.applicationId"),
-      "Member Left"
-    );
+    await Promise.all([
+      this.apiService.updateUser(memberId, { serverMember: false }),
+      this.userService.removeAllPremium(memberId),
+      this.ticketService.close(
+        memberId,
+        "owner",
+        config("supportBot.applicationId"),
+        "Member Left"
+      ),
+    ]);
   }
 }
