@@ -315,12 +315,12 @@
     "diamondOnly": {
       "description": "$t(errors.premiumRequired.description)",
       "preview": "$t(errors.premiumRequired.preview)",
-      "title": "$t(errors.premiumRequired.title, { \"Tier\": \"Diamond\" })"
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Diamond\" })"
     },
     "emeraldOnly": {
       "description": "$t(errors.premiumRequired.description)",
       "preview": "$t(errors.premiumRequired.preview)",
-      "title": "$t(errors.premiumRequired.title, { \"Tier\": \"Emerald\" })"
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
     },
     "footerTooLong": {
       "description": "Het bericht dat je hebt opgegeven is te lang. Het zou onder 50 karakters moeten zijn exclusief kleurcodes",
@@ -329,7 +329,7 @@
     "goldOnly": {
       "description": "$t(errors.premiumRequired.description)",
       "preview": "$t(errors.premiumRequired.preview)",
-      "title": "$t(errors.premiumRequired.title, { \"Tier\": \"Gold\" })"
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
     },
     "guildLeaderboardNotFound": {
       "description": "We konden de `guild` die je zocht niet vinden!",
@@ -374,7 +374,7 @@
     "ironOnly": {
       "description": "$t(errors.premiumRequired.description)",
       "preview": "$t(errors.premiumRequired.preview)",
-      "title": "$t(errors.premiumRequired.title, { \"Tier\": \"Iron\" })"
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
       "description": "Er zijn geen leaderboard-gegevens meer op deze positie!",
@@ -403,7 +403,7 @@
     "netheriteOnly": {
       "description": "$t(errors.premiumRequired.description)",
       "preview": "$t(errors.premiumRequired.preview)",
-      "title": "$t(errors.premiumRequired.title, { \"Tier\": \"Netherite\" })"
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
     },
     "noCape": {
       "description": "**{{username}}** heeft geen capes!",
