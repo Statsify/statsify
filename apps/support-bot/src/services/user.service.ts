@@ -42,6 +42,17 @@ export class UserService {
       .exec();
   }
 
+  public async removeAllPremium(id: string) {
+    await this.userModel
+      .updateOne(
+        { id },
+        { $unset: { tier: "", patreon: "", serverBooster: "" } },
+        { upsert: true }
+      )
+      .lean()
+      .exec();
+  }
+
   public async addPatreon(id: string) {
     await this.userModel
       .updateOne({ id }, { $set: { patreon: true } }, { upsert: true })

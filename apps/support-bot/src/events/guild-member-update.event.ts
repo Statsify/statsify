@@ -180,6 +180,9 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     this.log(`ADDING \`patreon\` to <@${memberId}>`);
     this.patreons.add(memberId);
     await this.userService.addPatreon(memberId);
+
+    // Force role update to ensure they have the correct tier
+    await this.roleService.addRole(GUILD_ID, memberId, PREMIUM_ROLE);
   }
 
   private async handlePremiumRemove(memberId: string, tier: PremiumTier) {
