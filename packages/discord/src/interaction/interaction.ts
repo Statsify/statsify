@@ -23,6 +23,8 @@ import type {
 } from "tiny-discord";
 
 export class Interaction {
+  private locale: string | null = null;
+
   public constructor(
     private readonly rest: RestClient,
     private readonly data: DiscordInteraction,
@@ -88,11 +90,11 @@ export class Interaction {
   }
 
   public getLocale() {
-    return (this.data as any).locale ?? "en-US";
+    return this.locale ?? (this.data as any).locale ?? "en-US";
   }
 
-  public setLocale(locale: string) {
-    (this.data as any).locale = locale;
+  public setLocale(locale: string | null) {
+    this.locale = locale;
   }
 
   public t() {

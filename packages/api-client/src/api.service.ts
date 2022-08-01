@@ -42,7 +42,7 @@ interface UpdateUser {
   serverMember?: boolean;
   theme?: UserTheme;
   footer?: UserFooter;
-  locale?: string;
+  locale?: string | null;
 }
 
 const isProduction = config("environment") === "prod";

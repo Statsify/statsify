@@ -1,7 +1,6 @@
 pull_request_title: 'chore(i18n): add crowdin translation'
 commit_message: 'chore(i18n): update translations for `%locale%` (%language%)'
 append_commit_message: false
-
 files:
   - source: /locales/en-US/default.json
     translation: /locales/%locale%/%original_file_name%
