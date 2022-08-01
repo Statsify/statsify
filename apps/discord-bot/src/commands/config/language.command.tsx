@@ -64,15 +64,19 @@ export class LanguageCommand {
     const user = context.getUser();
     if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
 
-    const locale = context.option<string>("language");
+    let locale = context.option<string | null>("language");
+    if (locale === "reset") locale = null;
 
     await this.apiService.updateUser(user.id, { locale });
 
+    const interaction = context.getInteraction();
+    interaction.setLocale(locale);
+
     const embed = new EmbedBuilder()
       .color(STATUS_COLORS.success)
-      .description((t) => t("config.language.description", { locale }));
-
-    context.getInteraction().setLocale(locale);
+      .description((t) =>
+        t("config.language.description", { locale: interaction.getLocale() })
+      );
 
     return { embeds: [embed] };
   }
