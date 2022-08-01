@@ -1,0 +1,172 @@
+{
+  "errors": {
+    "coreOnly": {
+      "description": "$t(errors.staffOnly.description)",
+      "title": "$t(errors.staffOnly.title)"
+    },
+    "diamondOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Diamond\" })"
+    },
+    "emeraldOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
+    },
+    "footerTooLong": {
+      "description": "Le message que vous avez entré est trop long. Il doit être moins que 50 caractères sans compter les codes de couleur..",
+      "title": "Message Trop Long"
+    },
+    "goldOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
+    },
+    "guildLeaderboardNotFound": {
+      "description": "Nous n'avons pas trouvé le guilde que vous cherchez!",
+      "title": "Guilde Invalide"
+    },
+    "higherTierRequiredForIcon": {
+      "description": "Vous devez acheter un niveau plus élevé pour débloquer cette icône!",
+      "title": "Niveau Plus Élevé Requis"
+    },
+    "invalidGuild": {
+      "description": "Un guilde par le {{type}} de `{{tag}}` n'a pas pu être trouvé!",
+      "title": "Guilde Invalide"
+    },
+    "invalidPlayer": {
+      "description": "Un joueur par le {{type}} de `{{tag}}` n'a pas pu être trouvé!",
+      "title": "Joueur Invalide"
+    },
+    "invalidResetTime": {
+      "description": "`{{time}}` ne correspond pas au format `h:mm a`. Entrez une heure dans le format similaire à `12:00 PM` ou `1:00 AM.`",
+      "title": "Heure Invalide"
+    },
+    "invalidResetTimezone": {
+      "description": "`{{timezone}}` n'est pas un fuseau horaire valide. Entrez un fuseau horaire similaire à `EST` ou `PST`.",
+      "title": "Fuseau Horaire Invalide"
+    },
+    "invalidSearch": {
+      "description": "Nous n'avons pas pu trouver ce que vous cherchez!\nEntrez un nom d'utilisateur, uuid, ou mention discord.",
+      "title": "Recherche Invalide"
+    },
+    "invalidServer": {
+      "description": "Le serveur que vous cherchez n'existe pas ou est hors ligne!",
+      "title": "Serveur Minecraft Invalide"
+    },
+    "invalidTagName": {
+      "description": "Le nom de tag que vous avez entré n'est pas valide. Il n'est pas possible de créer un commande slash avec ce nom de tag.", 
+      "title": "Nom de Tag Invalide"
+    },
+    "invalidTicketChannel": {
+      "description": "Vous devez être dans un salon de ticket pour utiliser cette commande!",
+      "title": "Salon de Ticket Invalide"
+    },
+    "ironOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
+    },
+    "leaderboardEmpty": {
+      "description": "Il n'y a plus de données de classement à cette position!",
+      "title": "Pas de données de classement à cette position"
+    },
+    "leaderboardInvalidPosition": {
+      "description": "La position de classement que vous avez entré n'est pas valide. Entrez un nombre plus grand que 1.",
+      "title": "Position Invalide"
+    },
+    "leaderboardNotFound": {
+      "description": "Nous ne trouvons pas le `classement` que vous cherchez!",
+      "title": "Classement Non Trouvé"
+    },
+    "missingMentionVerification": {
+      "description": "<@{{tag}}> n'est pas **vérifié**. Pour le mentionner, il doit exécuter `/verify` pour vérifier son compte.",
+      "title": "Vérification Manquante"
+    },
+    "missingPlayerVerification": {
+      "description": "{{displayName}} n'est pas **vérifié**. Il doit exécuter `/verify` pour vérifier son compte.",
+      "title": "Vérification Manquante"
+    },
+    "missingSelfVerification": {
+      "description": "Pour pouvoir d'exécuter des commandes sans votre nom d'utilisateur, vous devez être vérifié. Pour vérifier, exécutez et complétez `/verify` et essayez à nouveau.",
+      "title": "Vérification Manquante"
+    },
+    "netheriteOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
+    },
+    "noCape": {
+      "description": "**{{username}}** n'a pas de capes!",
+      "title": "Cape Manquante"
+    },
+    "noFriends": {
+      "description": "**{{displayName}}** n'a pas d'amis $t(emojis:sad)! :(",
+      "title": "Amis Non Trouvés"
+    },
+    "noGTBSolutions": {
+      "description": "Nous n'avons pas pu trouver des solutions pour l'indice fourni!",
+      "title": "Pas Des Solutions Pour Guess The Build"
+    },
+    "noMutuals": {
+      "description": "**{{displayNameOne}}** et **{{displayNameTwo}}** n'ont pas d'amis en commun!",
+      "title": "Pas d'Amis En Commun"
+    },
+    "noPitStats": {
+      "description": "**{{displayName}}** n'a jamais joué à The Pit!",
+      "title": "Statistiques De Pit Non Trouvées"
+    },
+    "noRankings": {
+      "description": "**{{displayName}}** n'a pas de classements!",
+      "title": "Pas De Classements"
+    },
+    "noRecentGames": {
+      "description": "Les parties récentes de **{{displayName}}** n'ont pas pu être trouvées!",
+      "title": "Parties Récentes Non Trouvées"
+    },
+    "noStatus": {
+      "description": "L'état Hypixel de **{{displayName}}** n'a pas pu être trouvé!",
+      "title": "État Non Trouvé"
+    },
+    "playerLeaderboardNotFound": {
+      "description": "Nous n'avons pas pu trouver le `joueur` que vous cherchez!",
+      "title": "Joueur Invalide"
+    },
+    "playerNotInGuild": {
+      "description": "**{{displayName}}** n'est pas dans une guilde!",
+      "title": "Guilde Invalide"
+    },
+    "premiumRequired": {
+      "description": "Regardez tous les fonctionnalités disponibles [ici](https://statsify.net/premium).",
+      "preview": "Regardez tous les fonctionnalités disponibles [ici](https://statsify.net/premium). Ci-dessous est un petit aperçu de ce que commande fait/change.",
+      "title": "Statsify {{tier}} est requis pour exécuter cette commande"
+    },
+    "staffOnly": {
+      "description": "Cette commande est disponible uniquement pour les membres du staff de Statsify!",
+      "preview": "Ci-dessous est un petit aperçu de ce que commande fait/change.",
+      "title": "Uniquement Pour Le Staff"
+    },
+    "tagNotFound": {
+      "description": "Le tag que vous avez fourni n'a pas été trouvé!",
+      "title": "Tag Non Trouvé"
+    },
+    "ticketAlreadyExists": {
+      "description": "Vous avez déjà un ticket ouvert ici!",
+      "title": "Ticket Déjà Existant"
+    },
+    "unknown": {
+      "description": "Quelque chose a mal tourné, veuillez réessayer plus tard. Si ce problème persistent reporter-le dans notre [Discord](<https://statsify.net/discord>).",
+      "title": "Une Erreur Inconnue Est Survenue"
+    },
+    "unsupportedFileType": {
+      "description": "Le fichier que vous avez chargé est pas un type de fichier pris en charge pour cette commande",
+      "title": "Type De Fichier Non Pris En Charge"
+    }
+  },
+  "config": {
+    "language": {
+      "description": "$t(emojis:config.success) Vous avez mis à jour votre langue aux `{{locale}}`."
+    }
+  }
+}
