@@ -154,7 +154,7 @@
         "title": "我的世界"
       },
       "Chineseauthor":{
-        "description":"汉化作者:`wateTina`\n 如果有问题找 `wateTina#1399` 或者`qq:750215287`",
+        "description":"翻译作者:`wateTina`\n 如果翻译有问题找 `wateTina#1399` 或者`qq:750215287`",
         "title":"翻译作者"
       },
       "title": "Statsify Help"
@@ -453,7 +453,7 @@
       "quests": "公会任务",
       "rank": "公会Rank",
       "scaledGexp": "按比例的GEXP",
-      "weekly": "每周",
+      "weekly": "每周"
     },
     "hat": "Hat",
     "heads": "Heads",
