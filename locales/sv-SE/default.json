@@ -224,7 +224,7 @@
       "view": "$t(emojis:config.view) Your current theme:"
     },
     "language": {
-      "description": "$t(emojis:config.success) Je taal is succesvol geüpdated naar `{{locale}}`."
+      "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
     }
   },
   "cooldown": {
@@ -323,8 +323,8 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
     },
     "footerTooLong": {
-      "description": "Het bericht dat je hebt opgegeven is te lang. Het zou onder 50 karakters moeten zijn exclusief kleurcodes",
-      "title": "Bericht Te Lang"
+      "description": "The message you provided is too long. It should be under 50 characters excluding color codes.",
+      "title": "Message Too Long"
     },
     "goldOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -332,44 +332,44 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
     },
     "guildLeaderboardNotFound": {
-      "description": "We konden de `guild` die je zocht niet vinden!",
-      "title": "Ongeldige Guild"
+      "description": "We couldn't find the `guild` you were looking for!",
+      "title": "Invalid Guild"
     },
     "higherTierRequiredForIcon": {
-      "description": "Je moet een hogere tier premium kopen om dit icoon te gebruiken!",
-      "title": "Hogere Tier Vereist"
+      "description": "You need to purchase a higher premium tier to unlock this icon!",
+      "title": "Higher Tier Required"
     },
     "invalidGuild": {
-      "description": "Een guild met de {{type}} van `{{tag}}` kon niet gevonden worden!",
-      "title": "Ongeldige Guild"
+      "description": "A guild by the {{type}} of `{{tag}}` could not be found!",
+      "title": "Invalid Guild"
     },
     "invalidPlayer": {
-      "description": "Een speler met de {{type}} van `{{tag}}` kon niet gevonden worden!",
-      "title": "Ongeldige Speler"
+      "description": "A player by the {{type}} of `{{tag}}` could not be found!",
+      "title": "Invalid Player"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` komt niet overeen met het formaat `u:mm a`. Voor een tijd formaat in dat lijkt op `12:00 PM` or `1:00 AM.`",
-      "title": "Ongeldige Resettijd"
+      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM.`",
+      "title": "Invalid Reset Time"
     },
     "invalidResetTimezone": {
-      "description": "`{{timezone}}` is geen geldige tijdzone. Voer een tijdzone in die lijkt op `EST` or `PST`.",
-      "title": "Ongeldige Reset Tijdzone"
+      "description": "`{{timezone}}` is not a valid timezone. Enter a timezone similar to `EST` or `PST`.",
+      "title": "Invalid Reset Timezone"
     },
     "invalidSearch": {
-      "description": "We konden niet precies vinden waar je naar zocht!\nVoer een gebruikersnaam, uuid of discord vermelding in.",
-      "title": "Ongeldige Zoekopdracht"
+      "description": "We couldn't figure out what exactly you were looking for!\nEnter a username, uuid, or discord mention.",
+      "title": "Invalid Search"
     },
     "invalidServer": {
-      "description": "De server waar je naar zocht bestaat niet of is offline!",
-      "title": "Ongeldige Minecraft Server"
+      "description": "The server you are looking for either doesn't exist or is offline!",
+      "title": "Invalid Minecraft Server"
     },
     "invalidTagName": {
-      "description": "De tag naam die je hebt opgegeven is ongeldig. Het is niet mogelijk om een slash commando te creëren met deze tag naam.",
-      "title": "Ongeldige Tag Naam"
+      "description": "The tag name you provided is invalid. It is not possible to create a slash command with this tag name.",
+      "title": "Invalid Tag Name"
     },
     "invalidTicketChannel": {
-      "description": "Je moet in een ticket kanaal zijn om dit commando te gebruiken!",
-      "title": "Ongeldig Ticket Kanaal"
+      "description": "You must be in a ticket channel to use this command!",
+      "title": "Invalid Ticket Channel"
     },
     "ironOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -377,28 +377,28 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "Er zijn geen leaderboard-gegevens meer op deze positie!",
-      "title": "Geen Leaderboard Gegevens Op Deze Positie"
+      "description": "There is no more leaderboard data at this position!",
+      "title": "No Leaderboard Data At This Point"
     },
     "leaderboardInvalidPosition": {
-      "description": "De leaderboard positie die je hebt opgegeven is ongeldig. Voer een getal in dat groter is dan 1.",
-      "title": "Ongeldige Positie"
+      "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
+      "title": "Invalid Position"
     },
     "leaderboardNotFound": {
-      "description": "We kunnen niet de `leaderboard` vinden waar je naar zoekt!",
-      "title": "Leaderboard Niet Gevonden"
+      "description": "We can't find the `leaderboard` you are looking for!",
+      "title": "Leaderboard Not Found"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}> is niet **geverifieerd**. Om ze te vermelden, moeten ze `/verify` uitvoeren om hun account te verifiëren.",
-      "title": "Verificatie Ontbreekt"
+      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account.",
+      "title": "Missing Verification"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is niet **geverifieerd**. Ze moeten `/verify` om hun account te verifiëren.",
-      "title": "Verificatie Ontbreekt"
+      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "title": "Missing Verification"
     },
     "missingSelfVerification": {
-      "description": "Om commandos te gebruiken zonder je gebruikersnaam op te geven moet je geverifiërd zijn. Om te verifiëren, voer je `/verify` uit en voltooi je het. Probeer het daarna opnieuw.",
-      "title": "Verificatie Ontbreekt"
+      "description": "To be able to run commands without supplying your username, you must be verified. To verify run and complete `/verify` and then try again.",
+      "title": "Missing Verification"
     },
     "netheriteOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -406,70 +406,70 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
     },
     "noCape": {
-      "description": "**{{username}}** heeft geen capes!",
-      "title": "Cape Ontbreekt"
+      "description": "**{{username}}** doesn't have any capes!",
+      "title": "Missing Cape"
     },
     "noFriends": {
-      "description": "**{{displayName}}** heeft geen vrienden $t(emojis:sad)! :(",
-      "title": "Vrienden Niet Gevonden"
+      "description": "**{{displayName}}** has no friends $t(emojis:sad)! :(",
+      "title": "Friends Not Found"
     },
     "noGTBSolutions": {
-      "description": "We konden geen oplossing vinden voor de opgegeven hint!",
-      "title": "Geen Guess The Build Oplossingen"
+      "description": "We couldn't find any solutions for the provided hint!",
+      "title": "No Guess The Build Solutions"
     },
     "noMutuals": {
-      "description": "**{{displayNameOne}}** en **{{displayNameTwo}}** hebben geen gemeenschappelijke vrienden!",
-      "title": "Geen Gemeenschappelijke Vrienden"
+      "description": "**{{displayNameOne}}** and **{{displayNameTwo}}** have no mutual friends!",
+      "title": "No Mutuals"
     },
     "noPitStats": {
-      "description": "**{{displayName}}** heeft nog nooit The Pit gespeeld!",
-      "title": "Pit Statistieken Niet Gevonden"
+      "description": "**{{displayName}}** has never played The Pit!",
+      "title": "Pit Stats Not Found"
     },
     "noRankings": {
-      "description": "**{{displayName}}** heeft geen rankings!",
-      "title": "Geen Rankings"
+      "description": "**{{displayName}}** has no rankings!",
+      "title": "No Rankings"
     },
     "noRecentGames": {
-      "description": "**{{displayName}}**'s recente games konden niet gevonden worden!",
-      "title": "Recente Games Niet Gevonden"
+      "description": "**{{displayName}}**'s recent games could not be found!",
+      "title": "Recent Games Not Found"
     },
     "noStatus": {
-      "description": "**{{displayName}}**'s Hypixel status kon niet gevonden worden!",
-      "title": "Status Niet Gevonden"
+      "description": "**{{displayName}}**'s Hypixel status could not be found!",
+      "title": "Status Not Found"
     },
     "playerLeaderboardNotFound": {
-      "description": "We konden de `speler` waar je naar zocht niet vinden!",
+      "description": "We couldn't find the `player` you were looking for!",
       "title": "Invalid Player"
     },
     "playerNotInGuild": {
-      "description": "**{{displayName}}** is niet in een guild!",
-      "title": "Ongeldige Guild"
+      "description": "**{{displayName}}** is not in a guild!",
+      "title": "Invalid Guild"
     },
     "premiumRequired": {
-      "description": "Bekijk alle beschikbare features [hier](https://statsify.net/premium).",
-      "preview": "Bekijk alle beschikbare features [hier](https://statsify.net/premium). Hieronder is een klein voorbeeld van wat het commando doet/veranderd",
-      "title": "Statsify {{tier}} is vereist om dit commando te gebruiken!"
+      "description": "Check out all the available features [here](https://statsify.net/premium).",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what command does/changes.",
+      "title": "Statsify {{tier}} is required to run this command"
     },
     "staffOnly": {
-      "description": "Dit commando is alleen toegankelijk voor Statsify personeel!",
-      "preview": "Hieronder is een klein voorbeeld van hoe het commando functioneert",
-      "title": "Alleen Personeel"
+      "description": "This command is only available to Statsify staff members!",
+      "preview": "Below is a small preview of how the command functions",
+      "title": "Staff Only"
     },
     "tagNotFound": {
-      "description": "De tag die je hebt opgegeven was niet gevonden!",
-      "title": "Tag Niet Gevonden"
+      "description": "The tag you provided was not found!",
+      "title": "Tag Not Found"
     },
     "ticketAlreadyExists": {
-      "description": "Je hebt hier al een ticket openstaan!",
-      "title": "Ticket Bestaat Al"
+      "description": "You already have a ticket open here!",
+      "title": "Ticket Already Exists"
     },
     "unknown": {
-      "description": "Er is iets fout gegaan, probeer het later opnieuw. Als dit aanhoud, meld het in onze [Discord](<https://statsify.net/discord>).",
-      "title": "Een Onbekende Error Is Opgetreden"
+      "description": "Something went wrong, please try again later. If this persists, report this in our [Discord](<https://statsify.net/discord>).",
+      "title": "An Unknown Error Occurred"
     },
     "unsupportedFileType": {
-      "description": "Het bestandstype van het bestand wat je hebt geupload is geen ondersteund bestandstype voor dit commando!",
-      "title": "Niet Ondersteund Bestandtype"
+      "description": "The file you uploaded is not a supported file type for this command!",
+      "title": "Unsupported File Type"
     }
   },
   "historical": {
