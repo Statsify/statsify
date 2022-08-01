@@ -1,0 +1,611 @@
+{
+  "arguments": {
+    "choice": "选择一个选项",
+    "file": "上传文件",
+    "gtbhelper": "目前的提示",
+    "guild-leaderboard": "$t(arguments.player-leaderboard)",
+    "guild-query": "一个公会名称或公会成员",
+    "guild-type": "要执行的行会搜索类型",
+    "mojang-player": "一个Minecraft的用户名或UUID",
+    "number": "一个数字",
+    "player": "$t(arguments.mojang-player)",
+    "player-leaderboard": "选择一个排行榜上的统计数据来查看",
+    "reason": "关闭支持票的原因",
+    "server": "一个Minecraft服务器名称或一个服务器IP",
+    "tags-content": "标签的内容",
+    "tags-name": "标签的名称",
+    "text": "信息",
+    "user": "选择一个Discord用户"
+  },
+  "commands": {
+    "available": "检查Minecraft用户名的可用性",
+    "badge": "为每个人的档案改变你的徽章",
+    "badge-reset": "重置你的个人资料徽章",
+    "badge-set": "上传一个新的个人资料徽章",
+    "badge-view": "查看您当前的资料徽章",
+    "cape": "查看某人的Minecraft和Optifine披风",
+    "close": "关闭当前支持票据",
+    "colors": "威廉斯的颜色代码列表",
+    "commands": "查看Statsify命令的使用情况",
+    "daily": "查看你在各种游戏中的每日统计数据",
+    "delete-player": "Delete a player from Statsify",
+    "force-unverify": "强行取消对一个球员的验证",
+    "force-verify": "强行验证一个球员",
+    "friends": "查看你的Hypixel好友列表",
+    "game-counts": "查看Hypixel当前游戏数量",
+    "gtbhelper": "根据给定的提示，生成一个可能的 猜建筑 答案列表",
+    "guild": "查看你的公会的统计资料",
+    "guild-list": "查看你的公会的成员名单",
+    "guild-member": "查看你的公会成员的统计资料",
+    "guild-overall": "查看你的公会的统计资料摘要",
+    "guild-top": "查看您的顶级GEXP贡献者",
+    "help": "关于Statsify为你和你的服务器做什么的基本描述",
+    "historical-command": "查看您的{{name}}历史统计信息",
+    "hypixel-command": "查看您的{{name}}统计信息",
+    "invite": "邀请Statsify",
+    "language": "更改您看到回复的语言",
+    "last-month": "查看您上个月在各种游戏中的统计数据",
+    "last-week": "查看您上周在各种游戏中的统计数据",
+    "leaderboard-command": "查看{{name}}统计的排行榜",
+    "links": "统计局的社交活动",
+    "monthly": "查看你在各种游戏中的每月统计资料",
+    "mutuals": "查看你与另一玩家的共同Hypixel好友",
+    "namehistory": "查看某人的Minecraft名字历史",
+    "ping": "查看Statsify的创建者和贡献者",
+    "rankings": "查看你在排行榜上的位置",
+    "ratios": "查看您的游戏模式比率里程碑和估计",
+    "recentgames": "查看某人的Hypixel 最近游戏",
+    "reset": "重置你的历史统计资料",
+    "server": "查看Minecraft服务器状态",
+    "skin": "查看某人的我的世界皮肤",
+    "socials": "查看某人的Hypixel链接的社交网站",
+    "status": "查看某人的Hypixel状态",
+    "tags": "管理支持标签",
+    "tags-create": "创建一个支持标签",
+    "tags-delete": "删除一个支持标签",
+    "tags-rename": "重命名一个支持标签",
+    "text": "生成Minecraft文本",
+    "theme": "更改每个个人资料的主题",
+    "theme-boxes": "更改配置文件框的外观",
+    "theme-font": "改变配置文件的字体",
+    "theme-footer": "自定义您的个人资料页脚",
+    "theme-footer-icon": "更改个人资料的页脚图标",
+    "theme-footer-message": "更改您的个人资料的页脚消息.  您可以使用 https://rgb.birdflop.com 创建文本渐变.",
+    "theme-footer-reset": "重置您的个人资料页脚",
+    "theme-palette": "改变配置文件的调色板",
+    "theme-view": "查看你当前的个人资料主题",
+    "ticket-menu": "将票据信息发送至通道",
+    "unverify": "解除你的 Discord 和 Minecraft 账户的链接",
+    "user": "查看某人的Statsify用户信息",
+    "uuid": "获取某人的Minecraft UUID",
+    "verify": "链接你的 Discord 和 Minecraft 账户",
+    "watchdog": "查看Hypixel看门狗禁止次数",
+    "weekly": "查看你在各种游戏中的每周统计数据",
+    "yesterday": "查看你昨天在各种游戏中的统计资料"
+  },
+  "config": {
+    "badge": {
+      "profile": "这就是你的徽章在你的资料上的样子",
+      "reset": "$t(emojis:config.reset) 成功地重置你的徽章.",
+      "set": "$t(emojis:config.success) 成功地更新了你的徽章.",
+      "view": "$t(emojis:config.view) 您目前的徽章:"
+    },
+    "footer": {
+      "profile": "这就是你的页脚在你的资料上的样子",
+      "reset": "$t(emojis:config.reset) 成功地重置你的页脚.",
+      "set": "$t(emojis:config.success) 成功地更新了你的页脚."
+    },
+    "theme": {
+      "profile": "这就是你的主题在你的资料上的样子",
+      "set": "$t(emojis:config.success) 成功地更新了你的主题.",
+      "view": "$t(emojis:config.view) 你当前的主题:"
+    },
+    "language": {
+      "description": "$t(emojis:config.success) 成功地将您的语言更新为 `{{locale}}` by:wateTina."
+    }
+  },
+  "cooldown": {
+    "description": "请等待`{{time}}`再使用`{{command}}`.\n\n了解如何减少冷却时间[这里](https://statsify.net/premium)",
+    "title": "主动冷却时间"
+  },
+  "embeds": {
+    "available": {
+      "blocked": "除非这个名字被Mojang暂时或永久地屏蔽了.",
+      "invalidCharacters": "无效字符",
+      "tooLong": "时间太长"
+    },
+    "colors": {
+      "color": "颜色",
+      "title": "我的世界的颜色代码"
+    },
+    "deletePlayer": {
+      "description": "**{{displayName}}** 已从数据库和排行榜中删除。.",
+      "title": "删除的玩家"
+    },
+    "forceUnverify": {
+      "description": "<@{{id}}> 已经从**{{displayName}}**中解开了验证!",
+      "title": "未验证"
+    },
+    "forceVerify": {
+      "description": "<@{{id}}>已被强行验证为**{{displayName}}**!",
+      "title": "已验证"
+    },
+    "gameCounts": {
+      "title": "Hypixel 游戏计数"
+    },
+    "gtbhelper": {
+      "title": "GTB可能的解决方案"
+    },
+    "help": {
+      "games": {
+        "description": "Statsify支持Hypixel上提供的大多数游戏。要检查你在游戏中的统计资料,请运行`/[game]`.例如:你可以运行`/bedwars`来检查你的BedWars统计.",
+        "title": "游戏"
+      },
+      "historical": {
+        "description": "Statsify让你通过`/daily`、`/weekly`和`/monthly`检查你的每日、每周和每月的统计资料.如果你错过了重置,你可以通过运行`/yesterday`、`/lastweek`和`/lastmonth`来查看它们.",
+        "title": "历史"
+      },
+      "leaderboards": {
+        "description": "Statsify通过`/leaderboard`命令提供成千上万的排行榜.运行`/leaderboard`,然后选择游戏模式,并选择一个排行榜来查看.你可以点击搜索按钮来搜索一个特定的玩家或位置.你还可以点击上下按钮来查看更多的页面.",
+        "title": "排行榜"
+      },
+      "minecraft": {
+        "description": "你可以通过`/skin`、`/uuid`和`/cape`分别查看Minecraft的一般信息,如皮肤、UUID、披风.Statsify也有通过`/text`生成Minecraft文本的命令.通过`/colors`查看Minecraft颜色，通过`/server`预览Minecraft服务器.",
+        "title": "我的世界"
+      },
+      "Chineseauthor":{
+        "description":"汉化作者:`wateTina`\n 如果有问题找 `wateTina#1399` 或者`qq:750215287`",
+        "title":"翻译作者"
+      },
+      "title": "Statsify Help"
+    },
+    "invite": {
+      "description": "点击下面的链接，邀请Statsify加入你的discord服务器。.",
+      "title": "Statsify链接"
+    },
+    "tags": {
+      "deleted": {
+        "description": "`{{tag}}`已被删除!",
+        "title": "成功删除了"
+      },
+      "rename": {
+        "description": "`标签{{originalName}}`已被重新命名为`{{newName}}`!",
+        "title": "成功重命名"
+      }
+    }
+  },
+  "errors": {
+    "coreOnly": {
+      "description": "$t(errors.staffOnly.description)",
+      "title": "$t(errors.staffOnly.title)"
+    },
+    "diamondOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Diamond\" })"
+    },
+    "emeraldOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
+    },
+    "footerTooLong": {
+      "description": "你提供的信息太长了.它应该在50个字符以下,不包括颜色代码.",
+      "title": "消息太长"
+    },
+    "goldOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
+    },
+    "guildLeaderboardNotFound": {
+      "description": "我们找不到你要找的`公会`!",
+      "title": "无效的公会"
+    },
+    "higherTierRequiredForIcon": {
+      "description": "你需要购买一个更高的高级级别来解锁这个图标!",
+      "title": "需要更高的级别"
+    },
+    "invalidGuild": {
+      "description": "无法找到一个由{{type}}的`{{tag}}`组成的公会!",
+      "title": "无效的公会"
+    },
+    "invalidPlayer": {
+      "description": "找不到一个{{type}}为`{{tag}}`的玩家!",
+      "title": "无效玩家"
+    },
+    "invalidResetTime": {
+      "description": "`{{time}}`不符合`h:mm a`的格式.请输入类似于`12:00 PM`或`1:00AM`格式的时间",
+      "title": "无效的复位时间"
+    },
+    "invalidResetTimezone": {
+      "description": "`{{timezone}}` 不是一个有效的时区. 请输入一个类似于`EST`或`PST`的时区.",
+      "title": "无效 重置时区"
+    },
+    "invalidSearch": {
+      "description": "我们不知道你到底在寻找什么！请输入username、uuid或discord mention.",
+      "title": "无效搜索"
+    },
+    "invalidServer": {
+      "description": "你要找的服务器要么不存在，要么离线了!",
+      "title": "无效的Minecraft服务器"
+    },
+    "invalidTagName": {
+      "description": "你提供的标签名称无效. 不可能用这个标签名创建一个斜线命令.",
+      "title": "无效标签名称"
+    },
+    "invalidTicketChannel": {
+      "description": "你必须在一个'ticket channel'中才能使用这个命令!",
+      "title": "无效 Ticket Channel"
+    },
+    "ironOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
+    },
+    "leaderboardEmpty": {
+      "description": "在这个位置没有更多的排行榜数据了!",
+      "title": "目前没有排行榜数据"
+    },
+    "leaderboardInvalidPosition": {
+      "description": "你输入的排行榜位置是无效的.输入一个大于1的数字.",
+      "title": "无效位置"
+    },
+    "leaderboardNotFound": {
+      "description": "我们找不到你要找的`排行榜`!",
+      "title": "未找到排行榜"
+    },
+    "missingMentionVerification": {
+      "description": "<@{{tag}}>未被**验证**. 要提到他们,他们必须运行`/verify`来验证他们的账户.",
+      "title": "没有验证"
+    },
+    "missingPlayerVerification": {
+      "description": "{{displayName}}没有**验证**. 他(她)必须运行`/verify`来验证他们的账户.",
+      "title": "没有验证"
+    },
+    "missingSelfVerification": {
+      "description": "为了能够在不提供用户名的情况下运行命令,你必须经过验证.要验证,请运行并完成`/verify`,然后再试一次.",
+      "title": "没有验证"
+    },
+    "netheriteOnly": {
+      "description": "$t(errors.premiumRequired.description)",
+      "preview": "$t(errors.premiumRequired.preview)",
+      "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
+    },
+    "noCape": {
+      "description": "**{{username}}**没有任何披风!",
+      "title": "没有披风"
+    },
+    "noFriends": {
+      "description": "**{{displayName}}**没有朋友$t(emojis:sad)! :(",
+      "title": "未找到的朋友"
+    },
+    "noGTBSolutions": {
+      "description": "我们无法找到所提供提示的任何解决方案!",
+      "title": "没有猜测的建造方案"
+    },
+    "noMutuals": {
+      "description": "**{{displayNameOne}}**和**{{displayNameTwo}}**没有共同的朋友!",
+      "title": "没有互助"
+    },
+    "noPitStats": {
+      "description": "**{{displayName}}**从未玩过The Pit!",
+      "title": "没有找到Pit Stats"
+    },
+    "noRankings": {
+      "description": "**{{displayName}}**没有排名!",
+      "title": "没有排名"
+    },
+    "noRecentGames": {
+      "description": "无法找到**{{displayName}}**的最近游戏!",
+      "title": "未找到最近的游戏"
+    },
+    "noStatus": {
+      "description": "无法找到**{{displayName}}**的Hypixel状态!",
+      "title": "未找到状态"
+    },
+    "playerLeaderboardNotFound": {
+      "description": "我们无法找到你要找的 `玩家`!",
+      "title": "无效玩家"
+    },
+    "playerNotInGuild": {
+      "description": "**{{displayName}}** 不在公会中!",
+      "title": "没有公会"
+    },
+    "premiumRequired": {
+      "description": "在 [这里](https://statsify.net/premium)查看所有可用的功能.",
+      "preview": "在 [这里](https://statsify.net/premium)查看所有可用的功能. 以下是命令所做/改变的一个小预览.",
+      "title": "运行此命令需要Statsify {{tier}}"
+    },
+    "staffOnly": {
+      "description": "此命令仅适用于Statsify工作人员!",
+      "preview": "下面是对该命令功能的一个小预览",
+      "title": "仅限工作人员"
+    },
+    "tagNotFound": {
+      "description": "没有找到你提供的标签!",
+      "title": "未找到标签"
+    },
+    "ticketAlreadyExists": {
+      "description": "你在这里已经有一张票了!",
+      "title": "已经存在的门票"
+    },
+    "unknown": {
+      "description": "出了点问题,请稍后再试.如果这种情况持续存在,请在我们的[Discord](<https://statsify.net/discord>)中报告此事.",
+      "title": "出现了一个未知的错误"
+    },
+    "unsupportedFileType": {
+      "description": "你上传的文件不是这个命令支持的文件类型!",
+      "title": "不支持的文件类型"
+    }
+  },
+  "historical": {
+    "aboutResetting": "点击下面的重置按钮,**这时**此时重置你的历史统计数据.\n\n**警告:**这将会删除你所有的历史数据,并且**不能被撤销**.\n如果你想在一个特定的时间重置,请查看$t(socials.premium).",
+    "aboutResettingPremium": "点击下面的重置按钮来重置你的历史数据.\n\n**警告：**这将删除你所有的历史统计资料,并且**不能被撤销**.",
+    "modal": {
+      "resetTime": "选择一个重置时间",
+      "timezone": "选择一个时区",
+      "title": "历史重置时间"
+    },
+    "new": "**{{displayName}}**的历史统计资料已在Statsify上首次被检查.他们的统计资料现在将在每天的这个时候更新.",
+    "reset": "$t(emojis:clock) **重置** <t:{{time}}:R>",
+    "resetButton": "点击重置",
+    "setResetTime": "将你的重置时间设置为<t:{{time}}:t>."
+  },
+  "leaderboard": {
+    "guildInput": {
+      "label": "按公会搜索",
+      "placeholder": "输入一个公会的名称,例如: Quote"
+    },
+    "modal": {
+      "title": "排行榜搜索"
+    },
+    "playerInput": {
+      "label": "按玩家搜索",
+      "placeholder": "输入一个玩家的名字,例如：j4cobi"
+    }
+  },
+  "minecraft": {
+    "available": "Available",
+    "nameHistory": "名称历史",
+    "originalName": "原始名称",
+    "trimmedUUID": "Trimmed UUID",
+    "unavailable": "无法获得",
+    "username": "帐号名称",
+    "uuid": "UUID"
+  },
+  "players": "玩家",
+  "stats": {
+    "achievementPoints": "成就积分",
+    "adrenaline": "Adrenaline",
+    "assists": "助攻",
+    "bblr": "BBLR",
+    "bedsBroken": "Beds Broken",
+    "bedsLost": "Beds Lost",
+    "bestRound": "Best Round",
+    "bestTime": "Best Time",
+    "bestWinstreak": "Best Winstreak",
+    "bigShot": "Big Shot",
+    "blocksBroken": "Blocks Broken",
+    "blocksPlaced": "Blocks Placed",
+    "blocksRan": "Blocks Ran",
+    "bombsDefused": "Bombs Defused",
+    "bombsPlanted": "Bombs Planted",
+    "bounty": "Bounty",
+    "bountyKills": "Bounty Kills",
+    "bowKills": "Bow Kills",
+    "boxesPickedUp": "Boxes Collected",
+    "bronzeTrophies": "Bronze Trophies",
+    "candyFound": "Candy Found",
+    "challenges": "Challenges",
+    "class": "Class",
+    "coins": "硬币",
+    "correctGuesses": "Correct Guesses",
+    "damage": "Damage",
+    "deaths": "Deaths",
+    "detectiveWins": "Detective Wins",
+    "diamonds": "钻石",
+    "doublesWins": "Doubles Wins",
+    "eggsFound": "Eggs Found",
+    "emeralds": "绿宝石收集",
+    "empireKills": "Defender Kills",
+    "ended": "Ended",
+    "endurance": "Endurance",
+    "event-level": "Event Level",
+    "exp": "EXP",
+    "expGained": "EXP Gained",
+    "extraUltimates": "Extra Ultimates",
+    "fastestDetectiveWin": "Fastest Detective Win",
+    "fastestMurdererWin": "Fastest Murderer Win",
+    "fastestWin": "Fastest Win",
+    "finalAssists": "Final Assists",
+    "finalDeaths": "终死",
+    "finalKills": "终杀",
+    "firstLogin": "First Login",
+    "fkdr": "FKDR",
+    "forcefieldTime": "Forcefield Time",
+    "fortune": "Fortune",
+    "friends": "Friends",
+    "game": "Game",
+    "gamesPlayed": "Games Played",
+    "giftsFound": "Gifts Found",
+    "giftsSent": "Gifts Sent",
+    "goals": "Goals",
+    "godfather": "Godfather",
+    "godlikes": "Godlikes",
+    "gold": "Gold",
+    "goldPickedUp": "Gold Picked Up",
+    "goldRate": "Gold Rate",
+    "goldTrophies": "Gold Trophies",
+    "grandPrixTokens": "GP Tokens",
+    "guild": {
+      "averageMemberGexp": "平均会员GEXP",
+      "createdOn": "创建时间",
+      "daily": "每日",
+      "date": "日期",
+      "gexp": "GEXP",
+      "guild": "公会",
+      "guildMaster": "公会会长",
+      "joinedAt": "加入时间",
+      "level": "公会级别",
+      "members": "公会成员",
+      "monthly": "每月",
+      "quests": "公会任务",
+      "rank": "公会Rank",
+      "scaledGexp": "按比例的GEXP",
+      "weekly": "每周",
+    },
+    "hat": "Hat",
+    "heads": "Heads",
+    "headsEaten": "Heads Eaten",
+    "headshotKills": "Headshot Kills",
+    "headshots": "Headshots",
+    "headstart": "Headstart",
+    "healing": "Healing",
+    "heroWins": "Hero Wins",
+    "hidden": "Hidden",
+    "hiderWins": "Hider Wins",
+    "highestKillstreak": "Highest Killstreak",
+    "highestScoreFinals": "Finals Personal Best",
+    "highestScoreQualifications": "Qualifiers Personal Best",
+    "highestStreak": "Highest Streak",
+    "hits": "Hits",
+    "infectedWins": "Infected Wins",
+    "iron": "铁锭",
+    "karma": "Karma",
+    "kdr": "KDR",
+    "kicks": "Kicks",
+    "killed": "Killed",
+    "kills": "击杀",
+    "killsAsInfected": "Kills as Infected",
+    "killsAsMurderer": "Kills As Murderer",
+    "killsAsSurvivor": "Kills as Survivor",
+    "killstreaks": "Killstreaks",
+    "kit": "Current Kit",
+    "kwr": "KWR",
+    "lapsCompleted": "Laps",
+    "lastAction": "Last Action",
+    "lastActionTime": "Last Action Time",
+    "lastAliveGames": "Times Last Alive",
+    "lastGame": "Last Game",
+    "lastLogin": "Last Login",
+    "layers": "Layers",
+    "level": "等级",
+    "levelsGained": "Levels Gained",
+    "loginTime": "Login Time",
+    "logoutTime": "Logout Time",
+    "lootChests": "Loot Chests",
+    "losses": "败场",
+    "magicalChests": "Magical Chests",
+    "magicalKeys": "Magical Keys",
+    "map": "Map",
+    "mastery": "Mastery",
+    "maxPoints": "Max Score",
+    "maxWave": "Max Wave",
+    "mode": "Mode",
+    "mostVampireKills": "Most Vampire Kills",
+    "mounts": "Mounts",
+    "murdererWins": "Murderer Wins",
+    "mythic-favor": "Mythic Favor",
+    "networkLevel": "Network Level",
+    "objectives": "Objectives",
+    "offensive": "Offensive",
+    "offline": "Offline",
+    "online": "Online",
+    "opals": "Opals",
+    "overallWins": "Overall Wins",
+    "pingRange": "Ping 偏好",
+    "playtime": "Playtime",
+    "points": "Points",
+    "poopCollected": "Poop Collected",
+    "powerKicks": "Power Kicks",
+    "powerupActivations": "Powerup Activations",
+    "powerups": "Powerups",
+    "prevent": "Prevent",
+    "quests": "Quests",
+    "ranksGifted": "Ranks Gifted",
+    "rebelKills": "Attacker Kills",
+    "renown": "Renown",
+    "roundWins": "Round Wins",
+    "rune": "Rune",
+    "score": "Score",
+    "seekerWins": "Seeker Wins",
+    "shards": "Shards",
+    "shotAccuracy": "Shot Accuracy",
+    "shotsFired": "Shots Fired",
+    "silver": "Silver",
+    "silverTrophies": "Silver Trophies",
+    "soloWins": "Solo Wins",
+    "souls": "Souls",
+    "stampLevel": "Coin Conversions",
+    "starsEarned": "Stars Earned",
+    "started": "Started",
+    "status": "状态",
+    "suicides": "Suicides",
+    "superVotes": "Super Votes",
+    "superluck": "Superluck",
+    "support": "Support",
+    "survivorWins": "Survivor Wins",
+    "tags": "Tags",
+    "tauntsUsed": "Taunts Used",
+    "thrownKnifeKills": "Thrown Knife Kills",
+    "title": "Title",
+    "tokens": "Tokens",
+    "total": "Total",
+    "totalTrophies": "Total Trophies",
+    "trail": "Trail",
+    "transfusion": "Transfusion",
+    "trapKills": "Trap Kills",
+    "trigger": "Trigger",
+    "tripleShot": "Triple Shot",
+    "trophyRate": "Trophy Rate",
+    "ultimate": "Ultimate",
+    "ultimatesCrafted": "Ultimates Crafted",
+    "utility": "Utility",
+    "version": "Version",
+    "votes": "Votes",
+    "wallsFaced": "Walls Faced",
+    "wins": "胜场",
+    "winstreak": "Winstreak",
+    "witherDamage": "Wither Damage",
+    "witherKills": "Wither Kills",
+    "wlr": "WLR",
+    "wool": "羊毛",
+    "woolCaptures": "Wool Captures",
+    "woolPlaced": "Wool Placed",
+    "zombieKills": "Zombie Kills",
+    "mysticsEnchanted": "Mystics Enchanted",
+    "contracts": "Contracts"
+  },
+  "tips": {
+    "discord": "$t(emojis:socials.discord) 加入我们的**$t(socials.discord)** 获得**20%的冷却时间** $t(emojis:heart)",
+    "invite": "$t(emojis:socials.discord) 点击**[这里](<https://statsify.net/invite>)**，邀请Statsify到你自己的服务器上!",
+    "premium": "$t(emojis:logos.gold) **[Statsify高级版](<https://statsify.net/premium>)** 提供额外的功能,如个性化的档案徽章. 在**[这里](<https://statsify.net/premium>)**找到完整的好处清单!",
+    "rankings": "$t(emojis:logos.iron) 使用 **[Statsify Premium](<https://statsify.net/premium>)** 查看您在排行榜上的位置，通过使用`/rankings`",
+    "verify": "$t(emojis:check) 运行`/verify`可以在不输入用户名的情况下运行命令,也可以获得**10%的冷却时间**."
+  },
+  "unknown": "Unknown",
+  "verification": {
+    "alreadyVerified": {
+      "description": "你已经被链接到一个Minecraft账户.运行 `/unverify` 来解除你的威廉卡夫账户的链接。.",
+      "title": "已经验证了"
+    },
+    "invalidCode": {
+      "title": "无效的验证码"
+    },
+    "noCode": {
+      "description": "**如何验证**\n`1.` 打开Minecraft并进入服务器列表\n`2.` 连接到`verify.statsify.net`并复制显示的代码\n`3.` 返回到discord并运行`/verify：XXXX`.",
+      "title": "缺少验证码"
+    },
+    "notVerified": {
+      "description": "你必须经过验证才能解除验证!",
+      "title": "未验证"
+    },
+    "requiredVerification": {
+      "description": "要使用这个命令，你必须经过验证。运行`/verify`来验证你的账户.",
+      "title": "需要验证"
+    },
+    "successfulUnverification": "成功地解除了您的账户验证!",
+    "successfulVerification": "您现在已被验证为 **{{displayName}}**"
+  }
+}
