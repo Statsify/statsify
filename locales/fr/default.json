@@ -333,19 +333,19 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
     },
     "guildLeaderboardNotFound": {
-      "description": "Nous n'avons pas trouvé le guilde que vous cherchez!",
+      "description": "Nous n'avons pas trouvé le guilde que vous cherchez !",
       "title": "Guilde Invalide"
     },
     "higherTierRequiredForIcon": {
-      "description": "Vous devez acheter un niveau plus élevé pour débloquer cette icône!",
+      "description": "Vous devez acheter un niveau plus élevé pour débloquer cette icône !",
       "title": "Niveau Plus Élevé Requis"
     },
     "invalidGuild": {
-      "description": "Un guilde par le {{type}} de `{{tag}}` n'a pas pu être trouvé!",
+      "description": "Un guilde par le {{type}} de `{{tag}}` n'a pas pu être trouvé !",
       "title": "Guilde Invalide"
     },
     "invalidPlayer": {
-      "description": "Un joueur par le {{type}} de `{{tag}}` n'a pas pu être trouvé!",
+      "description": "Un joueur par le {{type}} de `{{tag}}` n'a pas pu être trouvé !",
       "title": "Joueur Invalide"
     },
     "invalidResetTime": {
@@ -357,11 +357,11 @@
       "title": "Fuseau Horaire Invalide"
     },
     "invalidSearch": {
-      "description": "Nous n'avons pas pu trouver ce que vous cherchez!\nEntrez un nom d'utilisateur, uuid, ou mention discord.",
+      "description": "Nous n'avons pas pu trouver ce que vous cherchez !\nEntrez un nom d'utilisateur, uuid, ou mention discord.",
       "title": "Recherche Invalide"
     },
     "invalidServer": {
-      "description": "Le serveur que vous cherchez n'existe pas ou est hors ligne!",
+      "description": "Le serveur que vous cherchez n'existe pas ou est hors ligne !",
       "title": "Serveur Minecraft Invalide"
     },
     "invalidTagName": {
@@ -369,7 +369,7 @@
       "title": "Nom de Tag Invalide"
     },
     "invalidTicketChannel": {
-      "description": "Vous devez être dans un salon de ticket pour utiliser cette commande!",
+      "description": "Vous devez être dans un salon de ticket pour utiliser cette commande !",
       "title": "Salon de Ticket Invalide"
     },
     "ironOnly": {
@@ -378,7 +378,7 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "Il n'y a plus de données de classement à cette position!",
+      "description": "Il n'y a plus de données de classement à cette position !",
       "title": "Aucune donnée de classement à cette position"
     },
     "leaderboardInvalidPosition": {
@@ -386,7 +386,7 @@
       "title": "Position Invalide"
     },
     "leaderboardNotFound": {
-      "description": "Nous ne trouvons pas le `classement` que vous cherchez!",
+      "description": "Nous ne trouvons pas le `classement` que vous cherchez !",
       "title": "Classement Non Trouvé"
     },
     "missingMentionVerification": {
@@ -407,39 +407,39 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
     },
     "noCape": {
-      "description": "**{{username}}** n'a pas de capes!",
+      "description": "**{{username}}** n'a pas de capes !",
       "title": "Cape Manquante"
     },
     "noFriends": {
-      "description": "**{{displayName}}** n'a pas d'amis $t(emojis:sad)! :(",
+      "description": "**{{displayName}}** n'a pas d'amis $t(emojis:sad) ! :(",
       "title": "Amis Non Trouvés"
     },
     "noGTBSolutions": {
-      "description": "Nous n'avons pas pu trouver des solutions pour l'indice fourni!",
+      "description": "Nous n'avons pas pu trouver des solutions pour l'indice fourni !",
       "title": "Pas Des Solutions Pour Guess The Build"
     },
     "noMutuals": {
-      "description": "**{{displayNameOne}}** et **{{displayNameTwo}}** n'ont pas d'amis en commun!",
+      "description": "**{{displayNameOne}}** et **{{displayNameTwo}}** n'ont pas d'amis en commun !",
       "title": "Pas d'Amis En Commun"
     },
     "noRankings": {
-      "description": "**{{displayName}}** n'a pas de classements!",
+      "description": "**{{displayName}}** n'a pas de classements !",
       "title": "Pas De Classements"
     },
     "noRecentGames": {
-      "description": "Les parties récentes de **{{displayName}}** n'ont pas pu être trouvées!",
+      "description": "Les parties récentes de **{{displayName}}** n'ont pas pu être trouvées !",
       "title": "Parties Récentes Non Trouvées"
     },
     "noStatus": {
-      "description": "L'état Hypixel de **{{displayName}}** n'a pas pu être trouvé!",
+      "description": "L'état Hypixel de **{{displayName}}** n'a pas pu être trouvé !",
       "title": "État Non Trouvé"
     },
     "playerLeaderboardNotFound": {
-      "description": "Nous n'avons pas pu trouver le `joueur` que vous cherchez!",
+      "description": "Nous n'avons pas pu trouver le `joueur` que vous cherchez !",
       "title": "Joueur Invalide"
     },
     "playerNotInGuild": {
-      "description": "**{{displayName}}** n'est pas dans une guilde!",
+      "description": "**{{displayName}}** n'est pas dans une guilde !",
       "title": "Guilde Invalide"
     },
     "premiumRequired": {
@@ -448,16 +448,16 @@
       "title": "Statsify {{tier}} est requis pour exécuter cette commande"
     },
     "staffOnly": {
-      "description": "Cette commande est disponible uniquement pour les membres du staff de Statsify!",
+      "description": "Cette commande est disponible uniquement pour les membres du staff de Statsify !",
       "preview": "Ci-dessous est un petit aperçu de ce que commande fait/change.",
       "title": "Uniquement Pour Le Staff"
     },
     "tagNotFound": {
-      "description": "Le tag que vous avez fourni n'a pas été trouvé!",
+      "description": "Le tag que vous avez fourni n'a pas été trouvé !",
       "title": "Tag Non Trouvé"
     },
     "ticketAlreadyExists": {
-      "description": "Vous avez déjà un ticket ouvert ici!",
+      "description": "Vous avez déjà un ticket ouvert ici !",
       "title": "Ticket Déjà Existant"
     },
     "unknown": {
@@ -465,7 +465,7 @@
       "title": "Une Erreur Inconnue Est Survenue"
     },
     "unsupportedFileType": {
-      "description": "Le fichier que vous avez chargé est pas un type de fichier pris en charge pour cette commande",
+      "description": "Le fichier que vous avez chargé est pas un type de fichier pris en charge pour cette commande !",
       "title": "Type De Fichier Non Pris En Charge"
     }
   },
