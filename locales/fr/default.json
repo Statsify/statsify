@@ -258,7 +258,7 @@
       "title": "Non Vérifié Par Force"
     },
     "forceVerify": {
-      "description": "<@{{id}}> a été vérifié avec force à **{{displayName}} ** !",
+      "description": "<@{{id}}> a été vérifié avec force à **{{displayName}}** !",
       "title": "Forcer La Vérification"
     },
     "gameCounts": {

@@ -224,7 +224,7 @@
       "view": "$t(emojis:config.view) 你当前的主题:"
     },
     "language": {
-      "description": "$t(emojis:config.success) 成功地将您的语言更新为 `{{locale}}` by:wateTina."
+      "description": "$t(emojis:config.success) 成功地将您的语言更新为 `{{locale}}`"
     }
   },
   "cooldown": {
@@ -275,10 +275,6 @@
       "minecraft": {
         "description": "你可以通过`/skin`、`/uuid`和`/cape`分别查看Minecraft的一般信息,如皮肤、UUID、披风.Statsify也有通过`/text`生成Minecraft文本的命令.通过`/colors`查看Minecraft颜色，通过`/server`预览Minecraft服务器.",
         "title": "我的世界"
-      },
-      "Chineseauthor":{
-        "description":"翻译作者:`wateTina`\n 如果翻译有问题找 `wateTina#1399` 或者`qq:750215287`",
-        "title":"翻译作者"
       },
       "title": "Statsify Help"
     },
@@ -410,10 +406,6 @@
     "noMutuals": {
       "description": "**{{displayNameOne}}**和**{{displayNameTwo}}**没有共同的朋友!",
       "title": "没有互助"
-    },
-    "noPitStats": {
-      "description": "**{{displayName}}**从未玩过The Pit!",
-      "title": "没有找到Pit Stats"
     },
     "noRankings": {
       "description": "**{{displayName}}**没有排名!",

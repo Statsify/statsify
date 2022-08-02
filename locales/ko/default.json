@@ -421,10 +421,6 @@
       "description": "**{{displayNameOne}}** and **{{displayNameTwo}}** have no mutual friends!",
       "title": "No Mutuals"
     },
-    "noPitStats": {
-      "description": "**{{displayName}}** has never played The Pit!",
-      "title": "Pit Stats Not Found"
-    },
     "noRankings": {
       "description": "**{{displayName}}** has no rankings!",
       "title": "No Rankings"
