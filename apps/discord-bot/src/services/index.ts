@@ -6,6 +6,5 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./pit-panda.service";
 export * from "./font-loader.service";
 export * from "./mojang-api.service";

@@ -21,7 +21,7 @@ const apiClient = Container.get(ApiService);
 export class PlayerArgument extends AbstractArgument {
   public description: LocalizationString;
   public type = ApplicationCommandOptionType.String;
-  public autocomplete = false;
+  public autocomplete = true;
 
   public constructor(public name = "player", public required = false) {
     super();
