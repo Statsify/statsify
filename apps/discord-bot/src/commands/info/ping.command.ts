@@ -9,12 +9,24 @@
 import { Command, EmbedBuilder, IMessage } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserLogo } from "@statsify/schemas";
+import { arrayGroup } from "@statsify/util";
 import { getLogoPath } from "@statsify/assets";
 import { readFile } from "node:fs/promises";
 
 @Command({ description: (t) => t("commands.ping") })
 export class PingCommand {
   public async run(): Promise<IMessage> {
+    const translators = [
+      ":flag_nl: `The Almighty One#3365`",
+      ":flag_fr: `Pineapple#3046`",
+      ":flag_fr: `Skorlex#2962`",
+      ":flag_cn: `wateTina#1399`",
+      ":flag_cn: `! Tina<3.#4856`",
+      ":flag_tw: `Summer_Albert#6666`",
+      ":flag_se: `IoTen <orangerose>#4104`",
+      ":flag_se: :flag_fi: `IDA#9999`",
+    ];
+
     const embed = new EmbedBuilder()
       .title((t) => t("embeds.ping.title"))
       .field(
@@ -24,7 +36,9 @@ export class PingCommand {
       .field((t) => t("embeds.ping.contributors"), "`vnmm#6969`")
       .field(
         (t) => t("embeds.ping.translators"),
-        ":flag_nl: `The Almighty One#3365`, :flag_fr: `Pineapple#3046`, :flag_cn: `wateTina#1399`"
+        arrayGroup(translators, 3)
+          .map((a) => a.join(", "))
+          .join("\n")
       )
       .color(STATUS_COLORS.info)
       .thumbnail("attachment://logo.png");
