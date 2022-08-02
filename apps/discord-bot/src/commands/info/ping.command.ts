@@ -24,7 +24,7 @@ export class PingCommand {
       .field((t) => t("embeds.ping.contributors"), "`vnmm#6969`")
       .field(
         (t) => t("embeds.ping.translators"),
-        ":flag_nl: `The Almighty One#3365`, :flag_fr: `Pineapple#3046`, :flag_cn: `Rita.#4061`"
+        ":flag_nl: `The Almighty One#3365`, :flag_fr: `Pineapple#3046`, :flag_cn: `wateTina#1399`"
       )
       .color(STATUS_COLORS.info)
       .thumbnail("attachment://logo.png");
