@@ -421,10 +421,6 @@
       "description": "**{{displayNameOne}}** en **{{displayNameTwo}}** hebben geen gemeenschappelijke vrienden!",
       "title": "Geen Gemeenschappelijke Vrienden"
     },
-    "noPitStats": {
-      "description": "**{{displayName}}** heeft nog nooit The Pit gespeeld!",
-      "title": "Pit Statistieken Niet Gevonden"
-    },
     "noRankings": {
       "description": "**{{displayName}}** heeft geen rankings!",
       "title": "Geen Rankings"
