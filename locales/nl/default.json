@@ -186,7 +186,7 @@
     "theme-font": "Het lettertype van de profielen wijzigen",
     "theme-footer": "Pas de voettekst van je profiel aan",
     "theme-footer-icon": "Verander het voettekst icoon van je profiel",
-    "theme-footer-message": "Verander de voettekst van je profiel. Je kunt https://rgb.birdflop.com gebruiken om tekst kleurovergangen te maken.",
+    "theme-footer-message": "Verander de voettekst van je profiel. Gebruik https://rgb.birdflop.com om kleuroverhangen te maken.",
     "theme-footer-reset": "Reset de voettekst van je profiel",
     "theme-palette": "Het kleurenpalet van de profielen wijzigen",
     "theme-view": "Bekijk je huidige profielthema",
@@ -294,8 +294,7 @@
       "contributors": "Bijdragers",
       "core": "Core",
       "pong": "Pong!",
-      "title": "Statsify Credits",
-      "translators": "Vertalers"
+      "title": "Statsify Credits"
     },
     "tags": {
       "deleted": {
@@ -620,7 +619,7 @@
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Schoten",
-    "killed": "Gedood",
+    "killed": "Killed",
     "kills": "Kills",
     "killsAsInfected": "Kills als Geïnfecteerde",
     "killsAsMurderer": "Kills als Moordenaar",
