@@ -39,10 +39,10 @@
     "delete-player": "Verwijder een speler van Statsify",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
-    "force-unverify": "Onverifiër een speler met geweld",
-    "force-verify": "Verifiër een speler met geweld",
-    "friends": "Bekijk je Hypixel vrienden lijst",
-    "game-counts": "Bekijk het huidige aantal spelers in Hypixel games",
+    "force-unverify": "Onverifieer een speler met geweld",
+    "force-verify": "Verifieer een speler met geweld",
+    "friends": "Bekijk je Hypixel vriendenlijst",
+    "game-counts": "Bekijk het huidige aantal spelers in Hypixel spellen",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Genereer een lijst met mogelijke Guess The Build antwoorden gebaseerd op de gegeven hint",
     "guild": "Bekijk de statistieken van je guild",
@@ -108,9 +108,9 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolwars": "$t(commands.leaderboard-command, { \"name\": \"WoolWars\" })",
-    "links": "Statsify Contactgegevens",
+    "links": "Statsify Sociale Media",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
-    "monthly": "Bekijk je maandelijkse statistieken in verschillende games",
+    "monthly": "Bekijk je maandelijkse statistieken in verschillende spellen",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Bekijk je gemeenschappelijke vrienden met een andere speler",
     "namehistory": "Bekijk iemands Minecraft naam geschiedenis",
@@ -167,13 +167,13 @@
     "ratios-walls": "$t(commands.ratios-command, { \"name\": \"Walls\" })",
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
-    "recentgames": "Bekijk iemands recente Hypixel games",
+    "recentgames": "Bekijk iemands recente Hypixel spellen",
     "reset": "Reset je historische statistieken",
     "server": "Bekijk Minecraft server status",
     "skin": "Bekijk iemands Minecraft skin",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
-    "socials": "Bekijk iemands gelinkte Hypixel contactgegevens",
+    "socials": "Bekijk iemands gelinkte Hypixel sociale media",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
     "status": "Bekijk iemands Hypixel status",
     "tags": "Supporttags beheren",
@@ -186,7 +186,7 @@
     "theme-font": "Het lettertype van de profielen wijzigen",
     "theme-footer": "Pas de voettekst van je profiel aan",
     "theme-footer-icon": "Verander het voettekst icoon van je profiel",
-    "theme-footer-message": "Verander de voettekst van je profiel. Gebruik https://rgb.birdflop.com om kleuroverhangen te maken.",
+    "theme-footer-message": "Verander de voettekst van je profiel. Gebruik https://rgb.birdflop.com om kleurovergangen te maken.",
     "theme-footer-reset": "Reset de voettekst van je profiel",
     "theme-palette": "Het kleurenpalet van de profielen wijzigen",
     "theme-view": "Bekijk je huidige profielthema",
@@ -224,7 +224,7 @@
       "view": "$t(emojis:config.view) Je huidige thema:"
     },
     "language": {
-      "description": "$t(emojis:config.success) Je taal is succesvol geüpdated naar `{{locale}}`."
+      "description": "$t(emojis:config.success) Je taal is succesvol bijgewerkt naar `{{locale}}`."
     }
   },
   "cooldown": {
@@ -242,7 +242,7 @@
       "color": "Kleur",
       "italic": "Schuingedrukt",
       "mainHex": "Primaire Hex",
-      "obfuscated": "Verduisterd",
+      "obfuscated": "Gecodeerd",
       "reset": "Reset",
       "shadowHex": "Schaduw Hex",
       "strikethrough": "Doorgehaald",
@@ -254,37 +254,37 @@
       "title": "Speler Verwijderd"
     },
     "forceUnverify": {
-      "description": "<@{{id}}> is ontgeverifieerd van **{{displayName}}**!",
+      "description": "<@{{id}}> is ongeverifieerd van **{{displayName}}**!",
       "title": "Met geweld ongeverifiërd"
     },
     "forceVerify": {
       "description": "<@{{id}}> is met geweld geverifiërd naar **{{displayName}}**!",
-      "title": "Met geweld geverifiërd"
+      "title": "Met geweld geverifieerd"
     },
     "gameCounts": {
-      "title": "Hypixel Game Aantallen"
+      "title": "Hypixel Spellen Aantallen"
     },
     "gtbhelper": {
       "title": "Mogelijke GTB oplossingen"
     },
     "help": {
       "games": {
-        "description": "Statsify ondersteunt de meeste spellen die worden aangeboden op Hypixel. Om je statistieken in een game te ziem, voer je `/[game]` uit. Je kunt bijvoorbeeld `/bedwars` uitvoeren om je BedWars statistieken te bekijken.",
-        "title": "Games"
+        "description": "Statsify ondersteunt de meeste spellen die worden aangeboden op Hypixel. Om je statistieken in een spel te zien, voer je `/[game]` uit. Je kunt bijvoorbeeld `/bedwars` uitvoeren om je BedWars statistieken te bekijken.",
+        "title": "Spellen"
       },
       "historical": {
         "description": "Statsify laat je je dagelijkse, wekelijkse en maandelijkse statistieken zien door `/daily`, `/weekly` en `/monthly` uit te voeren. Als je een reset hebt gemist kan je eerdere statistieken zien met `/yesterday`, `/lastweek`, en `/lastmonth`. ",
         "title": "Historisch"
       },
       "leaderboards": {
-        "description": "Statsify biedt duizenden leaderboards via het `/leaderboard` commando. Voer `/leaderboard` uit en kies een gamemode en leaderboard om te bekijken. Je kunt op de zoekknop drukken om naar een specifieke speler of positie te zoeken. Klik op de knoppen omhoog en omlaag om meer pagina's te bekijken.",
+        "description": "Statsify biedt duizenden leaderboards via het `/leaderboard` commando. Voer `/leaderboard` uit en kies een spelmodus en leaderboard om te bekijken. Je kunt op de zoekknop drukken om naar een specifieke speler of positie te zoeken. Klik op de knoppen omhoog en omlaag om meer pagina's te bekijken.",
         "title": "Leaderboards"
       },
       "minecraft": {
         "description": "Je kunt algemene Minecraft informatie zoals skins, UUIDs, capes met `/skin`, `/uuid`, en `/cape` bekijken. Statsify heeft ook commando's om Minecraft tekst te genereren met `/text`. Bekijk Minecraft kleuren met `/colors` en voorbeeld Minecraft servers via `/server`.",
         "title": "Minecraft"
       },
-      "title": "Statsify Hulk"
+      "title": "Statsify Hulp"
     },
     "invite": {
       "description": "Klik op de link hieronder om Statsify uit te nodigen voor je discord server.",
@@ -324,7 +324,7 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
     },
     "footerTooLong": {
-      "description": "Het bericht dat je hebt opgegeven is te lang. Het zou onder 50 karakters moeten zijn exclusief kleurcodes",
+      "description": "Het bericht dat je hebt opgegeven is te lang. Het zou onder 50 karakters moeten zijn exclusief kleurcodes.",
       "title": "Bericht Te Lang"
     },
     "goldOnly": {
@@ -353,15 +353,15 @@
       "title": "Ongeldige Resettijd"
     },
     "invalidResetTimezone": {
-      "description": "`{{timezone}}` is geen geldige tijdzone. Voer een tijdzone in die lijkt op `EST` or `PST`.",
+      "description": "`{{timezone}}` is geen geldige tijdzone. Voer een tijdzone in die lijkt op `GMT` or `PST`.",
       "title": "Ongeldige Reset Tijdzone"
     },
     "invalidSearch": {
-      "description": "We konden niet precies vinden waar je naar zocht!\nVoer een gebruikersnaam, uuid of discord vermelding in.",
+      "description": "We konden niet precies vinden waar je naar zocht! Voer een gebruikersnaam, uuid of discord vermelding in.",
       "title": "Ongeldige Zoekopdracht"
     },
     "invalidServer": {
-      "description": "De server waar je naar zocht bestaat niet of is offline!",
+      "description": "De server waar je naar zocht, bestaat niet of is offline!",
       "title": "Ongeldige Minecraft Server"
     },
     "invalidTagName": {
@@ -378,7 +378,7 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "Er zijn geen leaderboard-gegevens meer op deze positie!",
+      "description": "Er zijn geen leaderboard gegevens meer op deze positie!",
       "title": "Geen Leaderboard Gegevens Op Deze Positie"
     },
     "leaderboardInvalidPosition": {
@@ -398,7 +398,7 @@
       "title": "Verificatie Ontbreekt"
     },
     "missingSelfVerification": {
-      "description": "Om commandos te gebruiken zonder je gebruikersnaam op te geven moet je geverifiërd zijn. Om te verifiëren, voer je `/verify` uit en voltooi je het. Probeer het daarna opnieuw.",
+      "description": "Om commando's te gebruiken zonder je gebruikersnaam op te geven moet je geverifieerd zijn. Om te verifiëren, voer je `/verify` uit en voltooi je het. Probeer het daarna opnieuw.",
       "title": "Verificatie Ontbreekt"
     },
     "netheriteOnly": {
@@ -518,14 +518,14 @@
     "website": "[Website](https://statsify.net/)"
   },
   "stats": {
-    "achievementPoints": "Achievement Punten",
+    "achievementPoints": "Prestatie Punten",
     "adrenaline": "Adrenaline",
     "assists": "Assists",
     "bblr": "BBLR",
     "bedsBroken": "Bedden gebroken",
     "bedsLost": "Bedden verloren",
     "bestRound": "Beste ronde",
-    "bestTime": "Beste Tijd",
+    "bestTime": "Snelste Tijd",
     "bestWinstreak": "Beste Winstreak",
     "bigShot": "Big Shot",
     "blocksBroken": "Blokken Gebroken",
@@ -551,7 +551,7 @@
     "eggsFound": "Eieren Gevonden",
     "emeralds": "Smaragden",
     "empireKills": "Verdedigers Gedood",
-    "ended": "Eindigde",
+    "ended": "Geindigd",
     "endurance": "Uithoudingsvermogen",
     "event-level": "Event Level",
     "exp": "EXP",
@@ -568,10 +568,10 @@
     "forcefieldTime": "Forcefield Tijd",
     "fortune": "Fortune",
     "friends": "Vrienden",
-    "game": "Game",
-    "gamesPlayed": "Games Gespeeld",
-    "giftsFound": "Gifts Gevonden",
-    "giftsSent": "Gifts Gestuurd",
+    "game": "Spel",
+    "gamesPlayed": "Spellen Gespeeld",
+    "giftsFound": "Cadeaus gevonden",
+    "giftsSent": "Cadeaus Gestuurd",
     "goals": "Goals",
     "godfather": "Godfather",
     "godlikes": "Godlikes",
@@ -588,7 +588,7 @@
       "date": "Datum",
       "gexp": "GEXP",
       "guild": "Guild",
-      "guildMaster": "Guild Master",
+      "guildMaster": "Guild Meester",
       "joinedAt": "Lid Geworden Op",
       "level": "Guild Level",
       "members": "Guild Leden",
@@ -601,8 +601,8 @@
       "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
     },
     "hat": "Hoed",
-    "heads": "Heads",
-    "headsEaten": "Heads Eaten",
+    "heads": "Hoofden",
+    "headsEaten": "Hoofden Gegeten",
     "headshotKills": "Headshot Kills",
     "headshots": "Headshots",
     "headstart": "Voorsprong",
@@ -632,7 +632,7 @@
     "lastAction": "Laatste actie",
     "lastActionTime": "Laatste Actie Tijd",
     "lastAliveGames": "Keren als Laatste Levend",
-    "lastGame": "Laatste Game",
+    "lastGame": "Laatste Spel",
     "lastLogin": "Laatste Login",
     "layers": "Lagen",
     "level": "Level",
@@ -716,7 +716,7 @@
     "witherKills": "Withers Gedood",
     "wlr": "WLR",
     "wool": "Wol",
-    "woolCaptures": "Wol Gevangen",
+    "woolCaptures": "Wol Gestolen",
     "woolPlaced": "Wol Geplaatst",
     "zombieKills": "Zombie Moorden",
     "mysticsEnchanted": "Mystics Betoverd",
