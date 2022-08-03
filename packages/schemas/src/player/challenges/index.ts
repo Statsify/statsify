@@ -83,7 +83,7 @@ export class Challenges {
   public COPS_AND_CRIMS: CopsAndCrimsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.MURDER_MYSTERY} Challenges` } })
-  public MEGA_WALLS: MegaWallsChallenges;
+  public MEGAWALLS: MegaWallsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.MURDER_MYSTERY} Challenges` } })
   public MURDER_MYSTERY: MurderMysteryChallenges;
@@ -98,7 +98,7 @@ export class Challenges {
   public SKYWARS: SkywarsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.SMASH_HEROES} Challenges` } })
-  public SMASH_HEROS: SmashChallenges;
+  public SMASH_HEROES: SmashChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.SPEED_UHC} Challenges` } })
   public SPEED_UHC: SpeedUHCChallenges;
