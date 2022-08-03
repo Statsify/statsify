@@ -56,8 +56,11 @@ export const BedWarsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.BEDWARS} §fStats §r(${mode.formatted})`}
-        description={`§7Level: ${bedwars.levelFormatted}\n§7EXP ${formatProgression({
+        description={`§7${t("stats.level")}: ${
+          bedwars.levelFormatted
+        }\n${formatProgression({
           t,
+          label: t("stats.progression.exp"),
           progression: bedwars.progression,
           currentLevel: bedwars.levelFormatted,
           nextLevel: bedwars.nextLevelFormatted,

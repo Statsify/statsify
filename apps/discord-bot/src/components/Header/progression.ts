@@ -26,19 +26,32 @@ export const lineXpBar =
     return `§8[${color}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]§r`;
   };
 
-export interface FormatProgressionOptions {
+interface BaseFormatProgressionOptions {
   t: LocalizeFunction;
   progression: Progression;
   currentLevel: string;
   nextLevel: string;
-  showProgress?: boolean;
   showLevel?: boolean;
-
   renderXp?: ProgressFunction;
 }
 
+interface LabeledFormatProgressionOptions extends BaseFormatProgressionOptions {
+  label: string;
+  showProgress?: true;
+}
+
+interface UnlabeledFormatProgressionOptions extends BaseFormatProgressionOptions {
+  label?: never;
+  showProgress: false;
+}
+
+export type FormatProgressionOptions =
+  | LabeledFormatProgressionOptions
+  | UnlabeledFormatProgressionOptions;
+
 export const formatProgression = ({
   t,
+  label,
   progression,
   currentLevel,
   nextLevel,
@@ -46,12 +59,16 @@ export const formatProgression = ({
   showProgress = true,
   renderXp = xpBar,
 }: FormatProgressionOptions) => {
-  if (!progression.max) return "§^2^§7Progress: §r§b§lMAXED§r";
-
   let output = "§^2^";
 
+  if (!progression.max) {
+    if (showProgress) output += `§7${label}`;
+    output += "§r§b§lMAXED§r";
+    return output;
+  }
+
   if (showProgress)
-    output += `§7Progress: §b${t(progression.current)}§7/§a${t(progression.max)}`;
+    output += `§7${label}: §b${t(progression.current)}§7/§a${t(progression.max)}`;
 
   if (showProgress && showLevel) output += "\n";
 

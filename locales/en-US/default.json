@@ -620,7 +620,8 @@
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Kicks",
-    "killed": "Killed",
+    "vampires-killed": "Vampires Killed",
+    "humans-killed": "Humans Killed",
     "kills": "Kills",
     "killsAsInfected": "Kills as Infected",
     "killsAsMurderer": "Kills As Murderer",
@@ -720,7 +721,16 @@
     "woolPlaced": "Wool Placed",
     "zombieKills": "Zombie Kills",
     "mysticsEnchanted": "Mystics Enchanted",
-    "contracts": "Contracts"
+    "contracts": "Contracts",
+    "prefix": "Prefix",
+    "progression": {
+      "exp": "EXP Progression",
+      "gexp": "GEXP Progression",
+      "win": "Win Progression",
+      "kill": "Kill Progression",
+      "score": "Score Progression",
+      "goldTrophy": "Gold Trophy Progression"
+    }
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",

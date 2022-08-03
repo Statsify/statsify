@@ -32,6 +32,7 @@ const EventTable = ({ title, event, t, color }: EventTableProps) => {
     `§7${t("stats.event-level")}: ${color}${t(Math.floor(event.level))}`,
     formatProgression({
       t,
+      label: t("stats.progression.exp"),
       progression: event.progression,
       currentLevel: `${color}${t(Math.floor(event.level))}`,
       nextLevel: `${color}${t(Math.floor(event.level) + 1)}`,

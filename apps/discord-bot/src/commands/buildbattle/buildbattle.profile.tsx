@@ -61,14 +61,15 @@ export const BuildBattleProfile = ({
         sidebar={sidebar}
         historicalSidebar
         title={`§l${FormattedGame.BUILD_BATTLE} §fStats`}
-        description={`§7Title: ${buildbattle.titleFormatted}\n§7Score ${formatProgression(
-          {
-            t,
-            progression: buildbattle.progression,
-            currentLevel: buildbattle.titleFormatted,
-            nextLevel: buildbattle.nextTitleFormatted,
-          }
-        )}`}
+        description={`§7${t("stats.title")}: ${
+          buildbattle.titleFormatted
+        }\n${formatProgression({
+          t,
+          label: t("stats.progression.score"),
+          progression: buildbattle.progression,
+          currentLevel: buildbattle.titleFormatted,
+          nextLevel: buildbattle.nextTitleFormatted,
+        })}`}
         time={time}
       />
       <Table.table>
