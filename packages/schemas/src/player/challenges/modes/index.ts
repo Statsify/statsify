@@ -17,7 +17,6 @@ export * from "./megawalls";
 export * from "./murdermystery";
 export * from "./paintball";
 export * from "./quake";
-export * from "./skyclash";
 export * from "./skywars";
 export * from "./smashheros";
 export * from "./tntgames";
