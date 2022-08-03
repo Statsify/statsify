@@ -21,7 +21,7 @@
     "arcade": "",
     "arenabrawl": "",
     "available": "Verifique a disponibilidade de um nome de usuário",
-    "badge": "Mude o seu emblema para todos os perfis",
+    "badge": "",
     "badge-reset": "Redefinir seu emblema de perfil",
     "badge-set": "Enviar um novo emblema de perfil",
     "badge-view": "Ver o seu atual selo de perfil",
@@ -33,7 +33,7 @@
     "cape": "Ver o Minecraft e as capas Optifine",
     "close": "",
     "colors": "Uma lista de códigos de cores",
-    "commands": "Ver uso de comandos de Statsify",
+    "commands": "",
     "copsandcrims": "",
     "daily": "Veja suas estatísticas diárias em vários jogos",
     "delete-player": "",
@@ -45,7 +45,7 @@
     "game-counts": "Ver contagem atual de partidas do Hypixel",
     "general": "",
     "gtbhelper": "Gerar uma lista de possíveis adivinhações com base na dica dada",
-    "guild": "Ver as estatísticas da sua guilda",
+    "guild": "",
     "guild-leaderboard": "",
     "guild-list": "Ver a lista de membros da sua guilda",
     "guild-member": "Ver as estatísticas dos membros da sua guilda",
@@ -147,7 +147,7 @@
     "rankings-walls": "",
     "rankings-warlords": "",
     "rankings-woolwars": "",
-    "ratios": "Veja seus Marcos da Taxa de Jogos e Estimações",
+    "ratios": "",
     "ratios-arcade": "",
     "ratios-arenabrawl": "",
     "ratios-bedwars": "",
@@ -181,10 +181,10 @@
     "tags-delete": "",
     "tags-rename": "",
     "text": "Gerar texto de Minecraft",
-    "theme": "Mude seu tema para cada perfil",
+    "theme": "",
     "theme-boxes": "Alterar a aparência das caixas de perfil",
     "theme-font": "Alterar a fonte dos perfis",
-    "theme-footer": "Personalize o rodapé do seu perfil",
+    "theme-footer": "",
     "theme-footer-icon": "Alterar o ícone do rodapé do seu perfil",
     "theme-footer-message": "Alterar a mensagem de rodapé do seu perfil.",
     "theme-footer-reset": "Redefinir o rodapé do seu perfil",
@@ -379,7 +379,7 @@
     },
     "leaderboardEmpty": {
       "description": "Não há mais dados de classificação nesta posição!",
-      "title": "No Leaderboard Data At This Point"
+      "title": "Sem dados de classificação nesta posição"
     },
     "leaderboardInvalidPosition": {
       "description": "A posição do placar que você inseriu é inválida. Insira um número maior que 1.",
@@ -394,8 +394,8 @@
       "title": "Verificação Inexistente"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} não é **verificada**. Eles devem executar `/verify` para verificar sua conta.",
-      "title": "Verificação Inexistente"
+      "description": "",
+      "title": ""
     },
     "missingSelfVerification": {
       "description": "Para conseguir executar comandos sem fornecer o seu nome de usuário, você precisa ser verificado. Para verificar-se, execute e complete `/verify` e tente novamente.",
@@ -444,7 +444,7 @@
     },
     "premiumRequired": {
       "description": "Confira todos os recursos disponíveis [here](https://statsify.net/premium).",
-      "preview": "Confira todos os recursos disponíveis [here](https://statsify.net/premium). Abaixo está uma pequena prévia do que cada comando faz/muda",
+      "preview": "Confira todos os recursos disponíveis [here](https://statsify.net/premium). Abaixo está uma pequena prévia do que cada comando faz/muda.",
       "title": "Statsify {{tier}} é necessário para executar este comando"
     },
     "staffOnly": {
@@ -620,7 +620,8 @@
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Chutes",
-    "killed": "Eliminados",
+    "vampires-killed": "Vampiros mortos",
+    "humans-killed": "Humanos mortos",
     "kills": "Abates",
     "killsAsInfected": "Eliminações como Infectado",
     "killsAsMurderer": "Eliminações como Assassino",
@@ -682,6 +683,7 @@
     "silverTrophies": "Troféus de Prata",
     "soloWins": "Vitórias Solo",
     "souls": "Almas",
+    "stampLevel": "Conversões de Moedas",
     "starsEarned": "Estrelas Conquistadas",
     "started": "Iniciou",
     "status": "Status",
@@ -719,7 +721,16 @@
     "woolPlaced": "Lã colocada",
     "zombieKills": "Zumbis Abatidos",
     "mysticsEnchanted": "Místicos Encantados",
-    "contracts": "Contratos"
+    "contracts": "Contratos",
+    "prefix": "Prefixo",
+    "progression": {
+      "exp": "Progresso de EXP",
+      "gexp": "Progresso de GEXP",
+      "win": "Progresso da Vitória",
+      "kill": "Progresso da Morte",
+      "score": "Progresso da Pontuação",
+      "goldTrophy": "Progresso do Troféu de Ouro"
+    }
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Entre no nosso $t(socials.discord) e receba **recargas 20% menores** $t(emojis:heart)",
