@@ -209,7 +209,7 @@
   "config": {
     "badge": {
       "profile": "Oto jak Twoja odznaka będzie wyglądała na Twoich profilach",
-      "reset": "$t(emojis:config.reset) pomyślnie zresetowano odznakę.",
+      "reset": "$t(emojis:config.reset) Pomyślnie zresetowano odznakę.",
       "set": "$t(emojis:config.success) Pomyślnie zaktualizowano odznakę.",
       "view": "$t(emojis:config.view) Twoja aktualna odznaka:"
     },
