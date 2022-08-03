@@ -8,12 +8,14 @@
 
 import { APIData } from "@statsify/util";
 import {
+  ArcadeChallenges,
   ArenaChallenges,
   BedwarsChallenges,
   BlitzChallenges,
   BuildBattleChallenges,
   CopsAndCrimsChallenges,
   DuelsChallenges,
+  MegaWallsChallenges,
   MurderMysteryChallenges,
   PaintballChallenges,
   QuakeChallenges,
@@ -32,104 +34,117 @@ import { FormattedGame, GameModes, IGameModes } from "../../game";
 import { SpeedUHCChallenges } from "./modes/speeduhc";
 
 export const CHALLENGE_MODES = new GameModes([
-  { api: "arcade" },
-  { api: "arena" },
-  { api: "bedwars" },
-  { api: "blitzsg" },
-  { api: "buildbattle" },
-  { api: "duels" },
-  { api: "copsAndCrims" },
-  { api: "murdermystery" },
-  { api: "paintball" },
-  { api: "quake" },
-  { api: "skyclash" },
-  { api: "skywars" },
-  { api: "smashheros" },
+  { api: "overall" },
+  { api: "ARCADE" },
+  { api: "ARENA_BRAWL" },
+  { api: "BEDWARS" },
+  { api: "BLITZSG" },
+  { api: "BUILD_BATTLE" },
+  { api: "DUELS" },
+  { api: "COPS_AND_CRIMS" },
+  { api: "MEGA_WALLS" },
+  { api: "MURDER_MYSTERY" },
+  { api: "PAINTBALL" },
+  { api: "QUAKE" },
+  { api: "SKYWARS" },
+  { api: "SMASH_HEROS" },
+  { api: "SPEED_UHC" },
+  { api: "TNT_GAMES" },
+  { api: "TURBO_KART_RACERS" },
+  { api: "UHC" },
+  { api: "VAMPIREZ" },
+  { api: "WALLS" },
+  { api: "WARLORDS" },
+  { api: "WOOLWARS" },
 ]);
 
 export type ChallengeModes = IGameModes<typeof CHALLENGE_MODES>;
 
 export class Challenges {
   @Field({ leaderboard: { fieldName: `${FormattedGame.ARCADE} Challenges` } })
-  public arcade: SmashChallenges;
+  public ARCADE: ArcadeChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.ARENA_BRAWL} Challenges` } })
-  public arena: ArenaChallenges;
+  public ARENA_BRAWL: ArenaChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.BEDWARS} Challenges` } })
-  public bedwars: BedwarsChallenges;
+  public BEDWARS: BedwarsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.BLITZSG} Challenges` } })
-  public blitzsg: BlitzChallenges;
+  public BLITZSG: BlitzChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.BUILD_BATTLE} Challenges` } })
-  public buildbattle: BuildBattleChallenges;
+  public BUILD_BATTLE: BuildBattleChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.DUELS} Challenges` } })
-  public duels: DuelsChallenges;
+  public DUELS: DuelsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.COPS_AND_CRIMS} Challenges` } })
-  public copsAndCrims: CopsAndCrimsChallenges;
+  public COPS_AND_CRIMS: CopsAndCrimsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.MURDER_MYSTERY} Challenges` } })
-  public murdermystery: MurderMysteryChallenges;
+  public MEGA_WALLS: MegaWallsChallenges;
+
+  @Field({ leaderboard: { fieldName: `${FormattedGame.MURDER_MYSTERY} Challenges` } })
+  public MURDER_MYSTERY: MurderMysteryChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.PAINTBALL} Challenges` } })
-  public paintball: PaintballChallenges;
+  public PAINTBALL: PaintballChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.QUAKE} Challenges` } })
-  public quake: QuakeChallenges;
+  public QUAKE: QuakeChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.SKYWARS} Challenges` } })
-  public skywars: SkywarsChallenges;
+  public SKYWARS: SkywarsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.SMASH_HEROES} Challenges` } })
-  public smashheros: SmashChallenges;
+  public SMASH_HEROS: SmashChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.SPEED_UHC} Challenges` } })
-  public speeduhc: SpeedUHCChallenges;
+  public SPEED_UHC: SpeedUHCChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.TNT_GAMES} Challenges` } })
-  public tntgames: TNTGamesChallenges;
+  public TNT_GAMES: TNTGamesChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.TURBO_KART_RACERS} Challenges` } })
-  public turbokartracers: TurboKartRacersChallenges;
+  public TURBO_KART_RACERS: TurboKartRacersChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.UHC} Challenges` } })
-  public uhc: UHCChallenges;
+  public UHC: UHCChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.VAMPIREZ} Challenges` } })
-  public vampirez: VampireZChallenges;
+  public VAMPIREZ: VampireZChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.WALLS} Challenges` } })
-  public walls: WallsChallenges;
+  public WALLS: WallsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.WARLORDS} Challenges` } })
-  public warlords: WarlordsChallenges;
+  public WARLORDS: WarlordsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.WOOLWARS} Challenges` } })
-  public woolwars: WoolWarsChallanges;
+  public WOOLWARS: WoolWarsChallanges;
 
   public constructor(challenges: APIData) {
-    this.arcade = new SmashChallenges(challenges);
-    this.arena = new ArenaChallenges(challenges);
-    this.bedwars = new BedwarsChallenges(challenges);
-    this.blitzsg = new BlitzChallenges(challenges);
-    this.buildbattle = new BuildBattleChallenges(challenges);
-    this.duels = new DuelsChallenges(challenges);
-    this.copsAndCrims = new CopsAndCrimsChallenges(challenges);
-    this.murdermystery = new MurderMysteryChallenges(challenges);
-    this.paintball = new PaintballChallenges(challenges);
-    this.quake = new QuakeChallenges(challenges);
-    this.skywars = new SkywarsChallenges(challenges);
-    this.smashheros = new SmashChallenges(challenges);
-    this.speeduhc = new SpeedUHCChallenges(challenges);
-    this.tntgames = new TNTGamesChallenges(challenges);
-    this.turbokartracers = new TurboKartRacersChallenges(challenges);
-    this.uhc = new UHCChallenges(challenges);
-    this.vampirez = new VampireZChallenges(challenges);
-    this.walls = new WallsChallenges(challenges);
-    this.warlords = new WarlordsChallenges(challenges);
-    this.woolwars = new WoolWarsChallanges(challenges);
+    this.ARCADE = new ArcadeChallenges(challenges);
+    this.ARENA_BRAWL = new ArenaChallenges(challenges);
+    this.BEDWARS = new BedwarsChallenges(challenges);
+    this.BLITZSG = new BlitzChallenges(challenges);
+    this.BUILD_BATTLE = new BuildBattleChallenges(challenges);
+    this.DUELS = new DuelsChallenges(challenges);
+    this.COPS_AND_CRIMS = new CopsAndCrimsChallenges(challenges);
+    this.MEGA_WALLS = new MegaWallsChallenges(challenges);
+    this.MURDER_MYSTERY = new MurderMysteryChallenges(challenges);
+    this.PAINTBALL = new PaintballChallenges(challenges);
+    this.QUAKE = new QuakeChallenges(challenges);
+    this.SKYWARS = new SkywarsChallenges(challenges);
+    this.SMASH_HEROS = new SmashChallenges(challenges);
+    this.SPEED_UHC = new SpeedUHCChallenges(challenges);
+    this.TNT_GAMES = new TNTGamesChallenges(challenges);
+    this.TURBO_KART_RACERS = new TurboKartRacersChallenges(challenges);
+    this.UHC = new UHCChallenges(challenges);
+    this.VAMPIREZ = new VampireZChallenges(challenges);
+    this.WALLS = new WallsChallenges(challenges);
+    this.WARLORDS = new WarlordsChallenges(challenges);
+    this.WOOLWARS = new WoolWarsChallanges(challenges);
   }
 }
