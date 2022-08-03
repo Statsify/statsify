@@ -9,7 +9,7 @@
     "mojang-player": "Un nom d'utilisateur ou un UUID sur Minecraft",
     "number": "Un nombre",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choissisez un leaderboard à afficher",
+    "player-leaderboard": "Choissisez un classement à afficher",
     "reason": "La raison de la fermeture du ticket de support",
     "server": "Un nom de serveur Minecraft ou une IP de serveur",
     "tags-content": "Le contenu du tag",
@@ -88,7 +88,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "Voir les leaderboards de {{name}}",
+    "leaderboard-command": "Voir les classements de {{name}}",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
     "leaderboard-general": "$t(commands.leaderboard-command, { \"name\": \"General\" })",
@@ -120,14 +120,14 @@
     "pit": "$t(commands.hypixel-command, { \"name\": \"Pit\" })",
     "player-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Player\" })",
     "quake": "$t(commands.hypixel-command, { \"name\": \"Quake\" })",
-    "rankings": "Voir le leaderboard de vos meilleurs positions",
+    "rankings": "Voir vos meilleures positions dans les classements",
     "rankings-all": "$t(commands.rankings)",
     "rankings-arcade": "$t(commands.rankings-command, { \"name\": \"Arcade\" })",
     "rankings-arenabrawl": "$t(commands.rankings-command, { \"name\": \"Arena Brawl\" })",
     "rankings-bedwars": "$t(commands.rankings-command, { \"name\": \"BedWars\" })",
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
-    "rankings-command": "Voir le leaderboard des meilleures positions de {{name}}",
+    "rankings-command": "Voir les meilleures positions dans les classements de {{name}}",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
     "rankings-general": "$t(commands.rankings-command, { \"name\": \"General\" })",
@@ -228,7 +228,7 @@
     }
   },
   "cooldown": {
-    "description": "Veuillez attendre `{{time}}` avant de réutiliser `{{command}}`.\n\nApprenez comment réduire les cooldowns [here](https://statsify.net/premium)",
+    "description": "Veuillez attendre `{{time}}` avant de réutiliser `{{command}}`.\n\nApprenez comment réduire les cooldowns [ici](https://statsify.net/premium)",
     "title": "Cooldown Actif"
   },
   "embeds": {
@@ -277,8 +277,8 @@
         "title": "Historique"
       },
       "leaderboards": {
-        "description": "Statsify offre des milliers de classements à travers la commande `/leaderboard`. Exécutez `/leaderboard`, puis choisissez le mode de jeu et choisissez un classement à voir. Vous pouvez cliquer sur le bouton de recherche pour rechercher un joueur ou une position spécifique. Vous pouvez également appuyer sur les boutons haut et bas pour afficher plus de pages.",
-        "title": "Leaderboards"
+        "description": "Statsify offre des milliers de classements à travers la commande `/leaderboard`. Exécutez `/leaderboard`, puis choisissez le mode de jeu et choisissez un classement à voir. Vous pouvez cliquer sur le bouton de recherche pour rechercher un joueur ou une position spécifique. Vous pouvez également appuyer sur les flèches haut et bas pour afficher plus de pages.",
+        "title": "Classements"
       },
       "minecraft": {
         "description": "Vous pouvez afficher les informations générales de Minecraft commes les skins, les UUIDs, les capes via `/skin`, `/uuid`, et `/cape` respectivement. Statsify a également des commandes pour générer du texte Minecraft avec `/text`. Affichez les couleurs de Minecraft via `/colors` et prévisualisez les serveurs Minecraft via `/server`.",
@@ -333,7 +333,7 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
     },
     "guildLeaderboardNotFound": {
-      "description": "Nous n'avons pas trouvé le guilde que vous cherchiez !",
+      "description": "Nous n'avons pas trouvé la guilde que vous cherchiez !",
       "title": "Guilde Invalide"
     },
     "higherTierRequiredForIcon": {
@@ -378,16 +378,16 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "Il n'y a plus de données de leaderboard à cette position !",
-      "title": "Aucune donnée de leaderboard à cette position"
+      "description": "Il n'y a plus de données pour le classement à cette position !",
+      "title": "Aucune donnée pour le classement à cette position"
     },
     "leaderboardInvalidPosition": {
-      "description": "La position de leaderboard que vous avez entré n'est pas valide. Entrez un nombre plus grand que 1.",
+      "description": "La position dans le classement que vous avez entré n'est pas valide. Entrez un nombre plus grand que 1.",
       "title": "Position Invalide"
     },
     "leaderboardNotFound": {
       "description": "Nous ne trouvons pas le `leaderboard` que vous cherchez !",
-      "title": "Leaderboard Non Trouvé"
+      "title": "Leaderboard Introuvable"
     },
     "missingMentionVerification": {
       "description": "<@{{tag}}> n'est pas **vérifié**. Pour le mentionner, il doit exécuter `/verify` pour vérifier son compte.",
@@ -488,7 +488,7 @@
       "placeholder": "Entrez le nom d'une guilde. Exemple : Les Gaulois"
     },
     "modal": {
-      "title": "Rechercher dans le leaderboard"
+      "title": "Rechercher dans le classement"
     },
     "playerInput": {
       "label": "Rechercher par un joueur",
@@ -583,7 +583,7 @@
     "guild": {
       "averageMemberGexp": "GEXP Moyenne des Membres",
       "createdOn": "Créé le",
-      "daily": "Quotidien",
+      "daily": "Quotidienne",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
       "date": "Date",
       "gexp": "GEXP",
@@ -620,7 +620,8 @@
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Frappes",
-    "killed": "Tué",
+    "vampires-killed": "Vampires tués",
+    "humans-killed": "Humains tués",
     "kills": "Eliminations",
     "killsAsInfected": "Eliminations en Infecté",
     "killsAsMurderer": "Eliminations en Meurtrier",
@@ -682,6 +683,7 @@
     "silverTrophies": "Trophées d'Argent",
     "soloWins": "Victoires en Solo",
     "souls": "Âmes",
+    "stampLevel": "Conversions de Pièces",
     "starsEarned": "Étoiles Gagnées",
     "started": "Commencé",
     "status": "Statut",
@@ -692,7 +694,7 @@
     "survivorWins": "Victoires en Survivant",
     "tags": "Tags",
     "tauntsUsed": "Taunts utilisées",
-    "thrownKnifeKills": "Eliminations au Couteau Lancé",
+    "thrownKnifeKills": "Eliminations en Lançant le Couteau",
     "title": "Titre",
     "tokens": "Jetons",
     "total": "Total",
@@ -719,7 +721,16 @@
     "woolPlaced": "Laine Placée",
     "zombieKills": "Zombies tués",
     "mysticsEnchanted": "Mystiques Enchantés",
-    "contracts": "Contrats"
+    "contracts": "Contrats",
+    "prefix": "Préfixe",
+    "progression": {
+      "exp": "Progression d'EXP",
+      "gexp": "Progression de GEXP",
+      "win": "Progression de Victoires",
+      "kill": "Progression d'Éliminations",
+      "score": "Progression du Score",
+      "goldTrophy": "Progression de Trophées d'Or"
+    }
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Rejoignez notre **$t(socials.discord)** et obtenez **20% de temps d'attente en moins** $t(emojis:heart)",
