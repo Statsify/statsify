@@ -9,6 +9,7 @@
 import Redis from "ioredis";
 import { InjectRedis } from "@nestjs-modules/ioredis";
 import { Injectable } from "@nestjs/common";
+import { Logger } from "@statsify/logger";
 
 /**
  * Things to consider:
@@ -22,7 +23,10 @@ export interface RedisPlayer {
 
 @Injectable()
 export class PlayerSearchService {
-  public constructor(@InjectRedis() private readonly redis: Redis) {}
+  private logger;
+  public constructor(@InjectRedis() private readonly redis: Redis) {
+    this.logger = new Logger("PlayerSearch");
+  }
 
   public get(query: string) {
     return this.redis.call(
@@ -38,13 +42,9 @@ export class PlayerSearchService {
   public async add(player: RedisPlayer) {
     if (player.username.length < 3 || player.username.length > 16) return;
 
-    return this.redis.call(
-      "FT.SUGADD",
-      "player:autocomplete",
-      player.username,
-      "1",
-      "INCR"
-    );
+    return this.redis
+      .call("FT.SUGADD", "player:autocomplete", player.username, "1", "INCR")
+      .catch((reason) => this.logger.error(reason));
   }
 
   public delete(name: string) {
