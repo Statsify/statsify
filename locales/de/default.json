@@ -9,11 +9,11 @@
     "mojang-player": "Ein Minecraft Benutzername oder UUID",
     "number": "Eine Nummer",
     "player": "",
-    "player-leaderboard": "Wähle eine Rangliste zum Anzeigen",
-    "reason": "Der Grund für das Schließen des Support-Tickets",
+    "player-leaderboard": "Wähle eine Bestenliste zum Anzeigen",
+    "reason": "",
     "server": "Ein Minecraft Servername oder eine Server IP",
-    "tags-content": "Der Inhalt des Tags",
-    "tags-name": "Der Name des Tags",
+    "tags-content": "",
+    "tags-name": "",
     "text": "Eine Nachricht",
     "user": "Wähle einen Discord Benutzer aus"
   },
@@ -21,36 +21,36 @@
     "arcade": "",
     "arenabrawl": "",
     "available": "Überprüfe die Verfügbarkeit eines Minecraft Benutzernamens",
-    "badge": "Ändere dein Abzeichen für jedes Profil",
+    "badge": "",
     "badge-reset": "Setze dein Profilabzeichen zurück",
     "badge-set": "Lade ein neues Profilabzeichen hoch",
-    "badge-view": "Dein Aktuelles Profilabzeichen anzeigen",
+    "badge-view": "Zeigt dein aktuelles Profilabzeichen an",
     "bedwars": "",
     "bedwars-challenges": "",
     "blitzsg": "",
     "bridge": "",
     "buildbattle": "",
-    "cape": "Zeige die Minecraft und Optifine capes von jemandem an",
-    "close": "Aktuelles Support-Ticket schließen",
-    "colors": "Liste der Minecraft Farbcodes",
-    "commands": "Statsify-Befehlsnutzung anzeigen",
+    "cape": "Zeigt die Minecraft und Optifine Capes von jemandem an",
+    "close": "",
+    "colors": "Eine Liste der Minecraft Farbcodes",
+    "commands": "",
     "copsandcrims": "",
-    "daily": "Tägliche Statistiken in verschiedenen Spielen ansehen",
-    "delete-player": "Spieler von Statsify löschen",
+    "daily": "Zeigt deine täglichen Statistiken in verschiedenen Spielen an",
+    "delete-player": "",
     "duels": "",
     "events": "",
     "force-unverify": "",
     "force-verify": "",
-    "friends": "Deine Hypixel Freundesliste anzeigen",
-    "game-counts": "Aktuelle Hypixel Spielanzahl anzeigen",
+    "friends": "Zeigt deine Hypixel Freundesliste an",
+    "game-counts": "Zeigt die aktuelle Hypixel Spielanzahl an",
     "general": "",
     "gtbhelper": "Generiere eine Liste möglicher Guess The Build Treffer basierend auf dem angegebenen Hinweis",
-    "guild": "Statistiken deiner guild anzeigen",
+    "guild": "",
     "guild-leaderboard": "",
-    "guild-list": "Mitgliederliste deiner Gilde anzeigen",
-    "guild-member": "Statistiken deiner Gildenmitglieder anzeigen",
-    "guild-overall": "Zusammenfassung deiner Gildenstatistiken anzeigen",
-    "guild-top": "Deine besten GEXP-Beiträger anzeigen",
+    "guild-list": "Zeigt die Mitgliederliste deiner Gilde an",
+    "guild-member": "Zeigt Statistiken deiner Gildenmitglieder an",
+    "guild-overall": "Zeigt eine Zusammenfassung deiner Gildenstatistiken an",
+    "guild-top": "Zeigt deine besten GEXP-Beiträger an",
     "help": "Eine grundlegende Beschreibung dessen, was Statsify für dich und deinen Server macht",
     "historical-arcade": "",
     "historical-arenabrawl": "",
@@ -88,7 +88,7 @@
     "leaderboard-bedwars": "",
     "leaderboard-blitzsg": "",
     "leaderboard-buildbattle": "",
-    "leaderboard-command": "Zeigt Ranglisten für {{name}} Statistiken an",
+    "leaderboard-command": "Zeigt Bestenlisten für {{name}} Statistiken an",
     "leaderboard-copsandcrims": "",
     "leaderboard-duels": "",
     "leaderboard-general": "",
@@ -120,14 +120,14 @@
     "pit": "",
     "player-leaderboard": "",
     "quake": "",
-    "rankings": "Zeigt deine besten Ranglisten Positionen an",
+    "rankings": "Zeigt deine besten Bestenlisten Positionen an",
     "rankings-all": "",
     "rankings-arcade": "",
     "rankings-arenabrawl": "",
     "rankings-bedwars": "",
     "rankings-blitzsg": "",
     "rankings-buildbattle": "",
-    "rankings-command": "Zeigt deine besten {{name}} Ranglisten Positionen an",
+    "rankings-command": "Zeigt deine besten {{name}} Bestenlisten Positionen an",
     "rankings-copsandcrims": "",
     "rankings-duels": "",
     "rankings-general": "",
@@ -147,7 +147,7 @@
     "rankings-walls": "",
     "rankings-warlords": "",
     "rankings-woolwars": "",
-    "ratios": "Zeigt deine Spielmodusanteil-Meilensteine & Schätzungen an",
+    "ratios": "",
     "ratios-arcade": "",
     "ratios-arenabrawl": "",
     "ratios-bedwars": "",
@@ -170,7 +170,7 @@
     "recentgames": "Zeigt die letzten Hypixel Spiele von jemandem an",
     "reset": "Setzt deine historischen Statistiken zurück",
     "server": "Zeigt den Minecraft Serverstatus an",
-    "skin": "Zeigt den Minecraft-Skin von jemandem an",
+    "skin": "Zeigt den Minecraft Skin von jemandem an",
     "skywars": "",
     "smashheroes": "",
     "socials": "Zeigt die verknüpften Hypixel Socials von jemandem an",
@@ -180,12 +180,12 @@
     "tags-create": "",
     "tags-delete": "",
     "tags-rename": "",
-    "text": "Generiert Minecraft-Text",
-    "theme": "Ändert dein Design für jedes Profil",
+    "text": "Generiert Minecraft Text",
+    "theme": "",
     "theme-boxes": "Ändert das Aussehen der Profilboxen",
     "theme-font": "Ändert die Schriftart der Profile",
-    "theme-footer": "Passt die Fußzeile deines Profils an",
-    "theme-footer-icon": "Ändert das Profil-Fußzeilensymbol",
+    "theme-footer": "",
+    "theme-footer-icon": "Ändert das Fußzeilensymbol deines Profils",
     "theme-footer-message": "Ändert die Fußzeilennachricht deines Profils. Benutze https://rgb.birdflop.com für Textverläufe.",
     "theme-footer-reset": "Setzt die Fußzeile deines Profils zurück",
     "theme-palette": "Ändert die Farbpalette der Profile",
@@ -194,7 +194,7 @@
     "tntgames": "",
     "turbokartracers": "",
     "uhc": "",
-    "unverify": "Entfernt deine Discord und Minecraft Konten",
+    "unverify": "Entknüpft deine Discord und Minecraft Konten",
     "user": "",
     "uuid": "Holt die Minecraft UUID von jemandem",
     "vampirez": "",
@@ -235,7 +235,7 @@
     "available": {
       "blocked": "Es sei denn, der Name ist vorübergehend oder dauerhaft von Mojang blockiert.",
       "invalidCharacters": "Ungültige Zeichen",
-      "tooLong": "Zu lang"
+      "tooLong": "Zu Lang"
     },
     "colors": {
       "bold": "Fett",
@@ -269,19 +269,19 @@
     },
     "help": {
       "games": {
-        "description": "Statsify unterstützt die Mehrzahl der auf Hypixel angebotenen Spiele. Um deine Statistiken in einem Spiel zu sehen, führe `/[game]`. Zum Beispiel kannst du `/bedwars` ausführen, um deine BedWars-Statistiken zu sehen.",
+        "description": "Statsify unterstützt die Mehrzahl der auf Hypixel angebotenen Spiele. Um deine Statistiken in einem Spiel zu sehen, führe `/[game]`. Zum Beispiel kannst du `/bedwars` ausführen, um deine BedWars Statistiken zu sehen.",
         "title": "Spiele"
       },
       "historical": {
-        "description": "Statsify lässt dich deine täglichen, wöchentlichen und monatlichen Statistiken durch `/daily`, `/weekly` und `/monatlich` ansehen. Wenn du einen Reset verpasst hast, kannst du sie ansehen indem du `/yesterday`, `/lastweek` und `/lastmonth` ausführst. ",
+        "description": "Statsify lässt dich deine täglichen, wöchentlichen und monatlichen Statistiken durch `/daily`, `/weekly` und `/monthly` ansehen. Wenn du einen Reset verpasst hast, kannst du sie ansehen indem du `/yesterday`, `/lastweek` und `/lastmonth` ausführst. ",
         "title": "Historisch"
       },
       "leaderboards": {
-        "description": "Statsify bietet Tausende von Ranglisten durch den `/leaderboard`-Befehl an. Führe `/leaderboard` aus, wähle dann den Spielmodus aus und wähle eine Rangliste. Du kannst den Suchknopf drücken um nach einem bestimmten Spielern oder einer bestimmten Position zu suchen. Du kannst auch die oberen und unteren Schaltflächen drücken, um weitere Seiten anzuzeigen.",
-        "title": "Ranglisten"
+        "description": "Statsify bietet Tausende von Bestenlisten durch den `/leaderboard`-Befehl an. Führe `/leaderboard` aus, wähle dann den Spielmodus aus und wähle eine Bestenliste. Du kannst den Suchknopf drücken um nach einem bestimmten Spieler oder einer bestimmten Position zu suchen. Du kannst auch die oberen und unteren Schaltflächen drücken, um weitere Seiten anzuzeigen.",
+        "title": "Bestenlisten"
       },
       "minecraft": {
-        "description": "Du kannst allgemeine Minecraft Informationen wie Skins, UUIDs, Capes durch `/skin`, `/uuid` und `/cape` ansehen. Statsify hat auch Befehle zum Generieren von Minecraft-Text durch `/text`. Schau dir die Minecraft Farben durch `/colors` an und schaue dir Minecraft Server durch `/server` an.",
+        "description": "Du kannst allgemeine Minecraft Informationen wie Skins, UUIDs, Capes durch `/skin`, `/uuid` und `/cape` ansehen. Statsify hat auch Befehle zum Generieren von Minecraft Text durch `/text`. Schau dir die Minecraft Farben durch `/colors` an und schaue dir Minecraft Server durch `/server` an.",
         "title": "Minecraft"
       },
       "title": "Statsify Hilfe"
@@ -325,7 +325,7 @@
     },
     "footerTooLong": {
       "description": "Die von dir angegebene Nachricht ist zu lang. Sie sollte nicht mehr als 50 Zeichen lang sein exklusive Farbcodes.",
-      "title": "Nachricht zu lang"
+      "title": "Nachricht Zu Lang"
     },
     "goldOnly": {
       "description": "",
@@ -378,19 +378,19 @@
       "title": ""
     },
     "leaderboardEmpty": {
-      "description": "Es gibt keine weiteren Bestenlisten-Daten an dieser Position!",
-      "title": "No Leaderboard Data At This Point"
+      "description": "Es gibt keine weiteren Bestenlistendaten an dieser Position!",
+      "title": "Keine Bestenlistendaten an dieser Position"
     },
     "leaderboardInvalidPosition": {
-      "description": "Die von dir eingegebene Ranglistenposition ist ungültig. Gebe eine Zahl größer als 1 ein.",
+      "description": "Die von dir eingegebene Bestenlistenposition ist ungültig. Gebe eine Zahl größer als 1 ein.",
       "title": "Ungültige Position"
     },
     "leaderboardNotFound": {
-      "description": "Wir können die `Rangliste` nach der du suchst nicht finden!",
-      "title": "Rangliste nicht gefunden"
+      "description": "Wir können die `Bestenliste` nach der du suchst nicht finden!",
+      "title": "Bestenliste nicht gefunden"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}> ist nicht **verifiziert**. Zum Erwähnen, musst du `/verify` ausführen, um deinen Account zu verifizieren.",
+      "description": "<@{{tag}}> ist nicht **verifiziert**. Um die Person zu erwähnen, muss sie `/verify` ausführen, um ihren Account zu verifizieren.",
       "title": "Fehlende Verifizierung"
     },
     "missingPlayerVerification": {
@@ -412,19 +412,19 @@
     },
     "noFriends": {
       "description": "**{{displayName}}** hat keine Freunde $t(emojis:sad)! :(",
-      "title": "Keine Freunde gefunden"
+      "title": "Keine Freunde Gefunden"
     },
     "noGTBSolutions": {
       "description": "Wir konnten keine Lösungen für den angegebenen Hinweis finden!",
-      "title": "Keine Guess The Build Treffer"
+      "title": "Keine Guess The Build Lösungen"
     },
     "noMutuals": {
       "description": "**{{displayNameOne}}** und **{{displayNameTwo}}** haben keine gemeinsamen Freunde!",
       "title": "Keine gemeinsamen Freunde"
     },
     "noRankings": {
-      "description": "**{{displayName}}** hat keine Ranglistenplatzierungen!",
-      "title": "Keine Ranglistenplatzierungen"
+      "description": "**{{displayName}}** hat keine Bestenlistenplatzierungen!",
+      "title": "Keine Bestenlistenplatzierungen"
     },
     "noRecentGames": {
       "description": "Die letzten Spiele von **{{displayName}}** konnten nicht gefunden werden!",
@@ -473,14 +473,14 @@
     "aboutResetting": "Klicke unten auf den Reset-Button, um deine historischen Statistiken jeden Tag **zu dieser Zeit** zurückzusetzen.\n\n**WARNUNG**: Dies wird alle deine historischen Statistiken löschen und **kann nicht rückgängig gemacht werden**. \nWenn du zu einem bestimmten Zeitpunkt zurücksetzen möchtest, siehe $t(socials.premium).",
     "aboutResettingPremium": "Klicke unten auf den Reset-Button, um deine historischen Statistiken zurückzusetzen. \n\n**WARNUNG:** dies wird alle deine historischen Statistiken löschen und **kann nicht rückgängig gemacht werden**.",
     "modal": {
-      "resetTime": "Wähle eine Reset-Zeit",
+      "resetTime": "Wähle eine Reset Zeit",
       "timezone": "Wähle eine Zeitzone",
-      "title": "Historische Reset-Zeit"
+      "title": "Historische Reset Zeit"
     },
     "new": "Die historischen Statistiken von **{{displayName}}** wurden zum ersten Mal auf Statsify angesehen. Die Statistiken werden jetzt jeden Tag um diese Zeit aktualisiert.",
     "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
     "resetButton": "Klicke zum Zurücksetzen",
-    "setResetTime": "Setze deine Reset-Zeit auf <t:{{time}}:t>."
+    "setResetTime": "Setze deine Reset Zeit auf <t:{{time}}:t>."
   },
   "leaderboard": {
     "guildInput": {
@@ -488,7 +488,7 @@
       "placeholder": "Gib den Namen einer Gilde ein, z. B.: Quote"
     },
     "modal": {
-      "title": "Ranglisten Suche"
+      "title": "Bestenlisten Suche"
     },
     "playerInput": {
       "label": "Suche durch einen Spieler",
@@ -505,7 +505,7 @@
     "originalName": "Ursprünglicher Name",
     "trimmedUUID": "Gekürzte UUID",
     "unavailable": "Nicht verfügbar",
-    "username": "Nutzername",
+    "username": "Benutzername",
     "uuid": "UUID"
   },
   "number": "",
@@ -529,15 +529,15 @@
     "bestWinstreak": "Bester Winstreak",
     "bigShot": "Großschuss",
     "blocksBroken": "Blöcke Zerstört",
-    "blocksPlaced": "Blöcke platziert",
+    "blocksPlaced": "Blöcke Platziert",
     "blocksRan": "Blöcke Gelaufen",
     "bombsDefused": "Bomben Entschärft",
     "bombsPlanted": "Bomben Platziert",
     "bounty": "Kopfgeld",
     "bountyKills": "Kopfgeld Kills",
     "bowKills": "Bogen Kills",
-    "boxesPickedUp": "Boxen gesammelt",
-    "bronzeTrophies": "Bronze Trophäen",
+    "boxesPickedUp": "Boxen Gesammelt",
+    "bronzeTrophies": "Bronzetrophäen",
     "candyFound": "Süßigkeiten Gefunden",
     "challenges": "Herausforderungen",
     "class": "Klasse",
@@ -612,15 +612,16 @@
     "hiderWins": "Verstecker Siege",
     "highestKillstreak": "Höchster Killstreak",
     "highestScoreFinals": "Persönlich bestes Endergebnis",
-    "highestScoreQualifications": "Qualifikationen Persönlich Bestes Endergebnis",
+    "highestScoreQualifications": "Persönlich Bestes Endergebnis in Qualifikationen",
     "highestStreak": "Höchster Streak",
     "hits": "Treffer",
-    "infectedWins": "Infizierte Siege",
+    "infectedWins": "Infizierter Siege",
     "iron": "Eisen",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Schüsse",
-    "killed": "Getötet",
+    "vampires-killed": "Vampire Getötet",
+    "humans-killed": "Menschen Getötet",
     "kills": "Kills",
     "killsAsInfected": "Kills als Infizierter",
     "killsAsMurderer": "Kills als Mörder",
@@ -658,7 +659,7 @@
     "offline": "Offline",
     "online": "Online",
     "opals": "Opale",
-    "overallWins": "Gesamte Siege",
+    "overallWins": "Siege Insgesamt",
     "pingRange": "Ping Bereich",
     "playtime": "Spielzeit",
     "points": "Punkte",
@@ -682,13 +683,14 @@
     "silverTrophies": "Silbertrophäen",
     "soloWins": "Solo Siege",
     "souls": "Seelen",
+    "stampLevel": "Münzumwandlungen",
     "starsEarned": "Erhaltene Sterne",
     "started": "Begonnen",
     "status": "Status",
     "suicides": "Suizide",
     "superVotes": "Super Stimmen",
-    "superluck": "Super-Glück",
-    "support": "Support",
+    "superluck": "Super Glück",
+    "support": "Unterstützung",
     "survivorWins": "Überlebender Siege",
     "tags": "Tags",
     "tauntsUsed": "Verbrauchte Verspottungen",
@@ -718,21 +720,30 @@
     "woolCaptures": "Wolle Erobert",
     "woolPlaced": "Wolle Platziert",
     "zombieKills": "Zombie Kills",
-    "mysticsEnchanted": "Mystics verzaubert",
-    "contracts": "Verträge"
+    "mysticsEnchanted": "Mystics Verzaubert",
+    "contracts": "Verträge",
+    "prefix": "Präfix",
+    "progression": {
+      "exp": "EXP Fortschritt",
+      "gexp": "GEXP Fortschritt",
+      "win": "Sieg Fortschritt",
+      "kill": "Kill Fortschritt",
+      "score": "Punkt Fortschritt",
+      "goldTrophy": "Goldtrophäen Fortschritt"
+    }
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Trete unserem **$t(socials.discord)** bei und erhalte **20% niedrigere Abklingzeit** $t(emojis:heart)",
     "invite": "$t(emojis:socials.discord) Klicke **[here](<https://statsify.net/invite>)** um Statsify zu deinem eigenen Server einzuladen!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** bietet zusätzliche Funktionen wie personalisierte Profilabzeichen. Finde die vollständige Liste der Vorteile **[here](<https://statsify.net/premium>)**!",
-    "rankings": "$t(emojis:logos.iron) Zeige deine Top Ranglisten Positionen mit **[Statsify Premium](<https://statsify.net/premium>)** bei Verwendung von `/rankings` an",
+    "rankings": "$t(emojis:logos.iron) Zeige deine Top Bestenlisten Positionen mit **[Statsify Premium](<https://statsify.net/premium>)** bei Verwendung von `/rankings` an",
     "verify": "$t(emojis:check) Führe `/verify` aus, um Befehle auszuführen ohne deinen Benutzernamen einzugeben und du erhältst **10% niedrigere Abklingzeit**"
   },
   "unknown": "Unbekannt",
   "verification": {
     "alreadyVerified": {
-      "description": "Du bist bereits mit einem Minecraft Konto verbunden. Führe `/unverify` aus, um die Verknüpfung deines Minecraft Kontos zu entfernen.",
-      "title": "Bereits verifiziert"
+      "description": "Du bist bereits mit einem Minecraft Konto verknüpft. Führe `/unverify` aus, um die Verknüpfung deines Minecraft Kontos zu entfernen.",
+      "title": "Bereits Verifiziert"
     },
     "invalidCode": {
       "description": "",
@@ -751,6 +762,6 @@
       "title": "Verifizierung erforderlich"
     },
     "successfulUnverification": "Dein Account wurde erfolgreich entverifiziert!",
-    "successfulVerification": "Du bist jetzt zu **{{displayName}} ** verifiziert"
+    "successfulVerification": "Du bist nun mit **{{displayName}}** verifiziert"
   }
 }
