@@ -30,7 +30,7 @@
     "blitzsg": "",
     "bridge": "",
     "buildbattle": "",
-    "cape": "Ver o Minecraft e as capas Optifine",
+    "cape": "Veja as capas do Optifine e do Minecraft de alguém",
     "close": "",
     "colors": "Uma lista de códigos de cores",
     "commands": "",
@@ -241,12 +241,12 @@
       "bold": "Negrito",
       "color": "Cor",
       "italic": "Itálico",
-      "mainHex": "Hex principal",
-      "obfuscated": "Ofuscado",
+      "mainHex": "Hex (Principal)",
+      "obfuscated": "Obfuscado",
       "reset": "Redefinir",
-      "shadowHex": "Hex das Sombras",
+      "shadowHex": "Hex (Sombra)",
       "strikethrough": "Riscado",
-      "title": "Códigos de cores Minecraft",
+      "title": "Códigos de cor do Minecraft",
       "underline": "Sublinhado"
     },
     "deletePlayer": {
@@ -262,10 +262,10 @@
       "title": ""
     },
     "gameCounts": {
-      "title": "Contagem de Jogos Hypixel"
+      "title": "Contador de jogadores no Hypixel"
     },
     "gtbhelper": {
-      "title": "Soluções de GTB possíveis"
+      "title": "Possíveis soluções do GTB"
     },
     "help": {
       "games": {
@@ -287,7 +287,7 @@
       "title": "Ajuda do Statsify"
     },
     "invite": {
-      "description": "Clique no link abaixo para convidar o Statsify para o seu servidor de Discord.",
+      "description": "Clique no link abaixo para convidar o Statsify ao seu servidor de Discord.",
       "title": "Links do Statsify"
     },
     "ping": {
