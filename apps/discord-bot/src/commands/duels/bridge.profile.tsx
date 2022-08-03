@@ -51,8 +51,11 @@ export const BridgeProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.BRIDGE} §fStats §r(${mode.formatted})`}
-        description={`§7Title: ${bridge.titleFormatted}\n§7Win ${formatProgression({
+        description={`§7${t("stats.title")}: ${
+          bridge.titleFormatted
+        }\n${formatProgression({
           t,
+          label: t("stats.progression.win"),
           progression: bridge.progression,
           currentLevel: bridge.titleLevelFormatted,
           nextLevel: bridge.nextTitleLevelFormatted,

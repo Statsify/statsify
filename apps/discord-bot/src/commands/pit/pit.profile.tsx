@@ -45,8 +45,9 @@ export const PitProfile = ({
         skin={skin}
         time="LIVE"
         title={`§l${FormattedGame.PIT} §fStats`}
-        description={`§7Level: ${pit.levelFormatted}\n§7EXP ${formatProgression({
+        description={`§7${t("stats.level")}: ${pit.levelFormatted}\n${formatProgression({
           t,
+          label: t("stats.progression.exp"),
           progression: pit.progression,
           currentLevel: pit.levelFormatted,
           nextLevel: pit.nextLevelFormatted,

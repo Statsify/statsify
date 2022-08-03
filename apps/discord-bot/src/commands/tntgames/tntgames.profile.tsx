@@ -102,7 +102,7 @@ export const TNTGamesProfile = ({
             title="Bow Spleef"
             stats={[
               [t("stats.wins"), t(tntgames.bowSpleef.wins)],
-              [t("stats.hits"), t(tntgames.bowSpleef.hits)],
+              [t("stats.shotsFired"), t(tntgames.bowSpleef.hits)],
               [t("stats.wlr"), t(tntgames.bowSpleef.wlr)],
             ]}
           />
