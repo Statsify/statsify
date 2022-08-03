@@ -269,7 +269,7 @@
     },
     "help": {
       "games": {
-        "description": "Statsify suporta a maioria dos jogos oferecidos no Hypixel. Para verificar suas estatísticas em um jogo rode `/[game]`. Por exemplo, você pode executar `/bedwars` para verificar suas estatísticas do BedWars.",
+        "description": "Statsify suporta a maioria dos jogos oferecidos no Hypixel. Para conferir suas estatísticas em um jogo use `/[game]`. Por exemplo, você pode executar `/bedwars` para conferir suas estatísticas do BedWars.",
         "title": "Jogos"
       },
       "historical": {
