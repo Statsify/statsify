@@ -42,12 +42,12 @@ export const CHALLENGE_MODES = new GameModes([
   { api: "BUILD_BATTLE" },
   { api: "DUELS" },
   { api: "COPS_AND_CRIMS" },
-  { api: "MEGA_WALLS" },
+  { api: "MEGAWALLS" },
   { api: "MURDER_MYSTERY" },
   { api: "PAINTBALL" },
   { api: "QUAKE" },
   { api: "SKYWARS" },
-  { api: "SMASH_HEROS" },
+  { api: "SMASH_HEROES" },
   { api: "SPEED_UHC" },
   { api: "TNT_GAMES" },
   { api: "TURBO_KART_RACERS" },
@@ -132,12 +132,12 @@ export class Challenges {
     this.BUILD_BATTLE = new BuildBattleChallenges(challenges);
     this.DUELS = new DuelsChallenges(challenges);
     this.COPS_AND_CRIMS = new CopsAndCrimsChallenges(challenges);
-    this.MEGA_WALLS = new MegaWallsChallenges(challenges);
+    this.MEGAWALLS = new MegaWallsChallenges(challenges);
     this.MURDER_MYSTERY = new MurderMysteryChallenges(challenges);
     this.PAINTBALL = new PaintballChallenges(challenges);
     this.QUAKE = new QuakeChallenges(challenges);
     this.SKYWARS = new SkywarsChallenges(challenges);
-    this.SMASH_HEROS = new SmashChallenges(challenges);
+    this.SMASH_HEROES = new SmashChallenges(challenges);
     this.SPEED_UHC = new SpeedUHCChallenges(challenges);
     this.TNT_GAMES = new TNTGamesChallenges(challenges);
     this.TURBO_KART_RACERS = new TurboKartRacersChallenges(challenges);
