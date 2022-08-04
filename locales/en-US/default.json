@@ -731,7 +731,8 @@
       "kill": "Kill Progression",
       "score": "Score Progression",
       "goldTrophy": "Gold Trophy Progression"
-    }
+    },
+    "game-total": "{{game}} Total"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
