@@ -81,7 +81,7 @@ const GameTable = ({ gameChallenges, constructor, t }: GameTableProps) => {
     GROUP_SIZE
   );
 
-  const colors = ["§b", "§a", "§2 ", "§e", "§6", "§c", "§4"];
+  const colors = ["§b", "§a", "§2", "§e", "§6", "§c", "§4"];
 
   return (
     <Table.table>
