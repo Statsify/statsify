@@ -19,7 +19,7 @@ import { Container, Footer, Header, SidebarItem, Table } from "#components";
 import { GameChallenges } from "@statsify/schemas/src/GameChallenges";
 import { Image } from "skia-canvas";
 import { LocalizeFunction } from "@statsify/discord";
-import { arrayGroup, prettify } from "@statsify/util";
+import { arrayGroup, prettify, removeFormatting } from "@statsify/util";
 
 export interface ChallengeProfileProps extends BaseProfileProps {
   mode: GameMode<ChallengeModes>;
@@ -137,7 +137,7 @@ export const ChallengesProfile = ({
 
   if (api !== "overall") {
     sidebar.push([
-      t("stats.game-total", { game: FormattedGame[api] }),
+      t("stats.game-total", { game: removeFormatting(FormattedGame[api]) }),
       t(challenges[api].total),
       "§a",
     ]);
