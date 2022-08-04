@@ -11,20 +11,45 @@ import {
   BaseProfileProps,
   ProfileData,
 } from "../base.hypixel-command";
-import { CHALLENGE_MODES, ChallengeModes } from "@statsify/schemas";
+import { CHALLENGE_MODES, ChallengeModes, GameId } from "@statsify/schemas";
 import { ChallengesProfile } from "./challenges.profile";
 import { Command } from "@statsify/discord";
+import { Image } from "skia-canvas";
+import { getAssetPath, getImage } from "@statsify/assets";
+import { readdir } from "node:fs/promises";
+
+interface PreProfileData {
+  gameIcons: Record<GameId, Image>;
+}
 
 @Command({ description: (t) => t("commands.challenges") })
-export class ChallengesCommand extends BaseHypixelCommand<ChallengeModes> {
+export class ChallengesCommand extends BaseHypixelCommand<
+  ChallengeModes,
+  PreProfileData
+> {
   public constructor() {
     super(CHALLENGE_MODES);
   }
 
+  public async getPreProfileData(): Promise<PreProfileData> {
+    const gameIconPaths = await readdir(getAssetPath("games"));
+
+    const gameIconsRequest = await Promise.all(
+      gameIconPaths.map(async (g) => [
+        g.replace(".png", ""),
+        await getImage(`games/${g}`),
+      ])
+    );
+
+    return {
+      gameIcons: Object.fromEntries(gameIconsRequest),
+    };
+  }
+
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<ChallengeModes>
+    { data, mode }: ProfileData<ChallengeModes, PreProfileData>
   ): JSX.Element {
-    return <ChallengesProfile {...base} mode={mode} />;
+    return <ChallengesProfile {...base} mode={mode} gameIcons={data.gameIcons} />;
   }
 }

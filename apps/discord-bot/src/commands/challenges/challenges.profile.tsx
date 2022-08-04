@@ -11,45 +11,47 @@ import {
   ChallengeModes,
   Challenges,
   FormattedGame,
+  GameId,
   GameMode,
   MetadataScanner,
 } from "@statsify/schemas";
-import { Container, Footer, Header, Table } from "#components";
+import { Container, Footer, Header, SidebarItem, Table } from "#components";
 import { GameChallenges } from "@statsify/schemas/src/GameChallenges";
+import { Image } from "skia-canvas";
 import { LocalizeFunction } from "@statsify/discord";
 import { arrayGroup, prettify } from "@statsify/util";
 
 export interface ChallengeProfileProps extends BaseProfileProps {
   mode: GameMode<ChallengeModes>;
+  gameIcons: Record<GameId, Image>;
 }
 
 interface NormalTableProps {
   challenges: Challenges;
   t: LocalizeFunction;
+  gameIcons: Record<GameId, Image>;
 }
 
-const NormalTable = ({ challenges, t }: NormalTableProps) => {
-  const rowSize = 4;
+const NormalTable = ({ challenges, t, gameIcons }: NormalTableProps) => {
+  const ROW_SIZE = 2;
 
-  const games = Object.entries(challenges).map(([game, challengeGame]) => [
-    FormattedGame[game as keyof typeof FormattedGame],
-    challengeGame.total,
-  ]);
+  const times = Object.entries(challenges)
+    .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
+    .map(([field, game]) => (
+      <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
+        <img image={gameIcons[field as keyof Challenges]} width={32} height={32} />
+        <text>§l{FormattedGame[field as keyof Challenges] ?? field}</text>
+        <div width="remaining" margin={{ left: 4, right: 4 }} />
+        <text>{t(game.total)}</text>
+      </box>
+    ));
 
-  games.sort((a, b) => b[1].total - a[1].total);
-
-  const rows = arrayGroup(games, rowSize);
-
-  const colors = ["§a", "§e", "§6", "§c"];
+  const groups = arrayGroup(times, ROW_SIZE);
 
   return (
     <Table.table>
-      {rows.map((row, index) => (
-        <Table.tr>
-          {row.map((game) => (
-            <Table.td title={game[0]} value={t(game[1].total)} color={colors[index]} />
-          ))}
-        </Table.tr>
+      {groups.map((group) => (
+        <Table.tr>{group}</Table.tr>
       ))}
     </Table.table>
   );
@@ -62,34 +64,31 @@ interface GameTableProps {
 }
 
 const GameTable = ({ gameChallenges, constructor, t }: GameTableProps) => {
-  const rowSize = 4;
-
   const metadata = MetadataScanner.scan(constructor);
+  const entries = Object.entries(gameChallenges);
 
-  const games: [string, number][] = Object.entries(gameChallenges).map(
-    ([challenge, completions]) => {
-      const field = metadata.find(([k]) => k === challenge);
-      const realname = field?.[1]?.leaderboard?.name ?? prettify(challenge);
-      return [prettify(realname), completions];
-    }
+  const GROUP_SIZE = entries.length < 5 ? 4 : (entries.length - 1) ** 0.5;
+
+  const groups = arrayGroup(
+    entries
+      .filter(([k]) => k !== "total")
+      .sort((a, b) => b[1] - a[1])
+      .map(([challenge, completions]) => {
+        const field = metadata.find(([k]) => k === challenge);
+        const realname = field?.[1]?.leaderboard?.name ?? prettify(challenge);
+        return [realname, t(completions)];
+      }),
+    GROUP_SIZE
   );
 
-  games.sort((a, b) => b[1] - a[1]);
-
-  const rows = [...arrayGroup(games, rowSize)];
-
-  const colors = ["§a", "§e", "§6", "§c"];
+  const colors = ["§b", "§a", "§2 ", "§e", "§6", "§c", "§4"];
 
   return (
     <Table.table>
-      {rows.map((row, index) => (
+      {groups.map((g, i) => (
         <Table.tr>
-          {row.map((challenge) => (
-            <Table.td
-              title={challenge[0]}
-              value={t(challenge[1])}
-              color={colors[index]}
-            />
+          {g.map((challenge) => (
+            <Table.td title={challenge[0]} value={challenge[1]} color={colors[i]} />
           ))}
         </Table.tr>
       ))}
@@ -107,6 +106,7 @@ export const ChallengesProfile = ({
   mode,
   t,
   time,
+  gameIcons,
 }: ChallengeProfileProps) => {
   const { challenges } = player;
 
@@ -115,13 +115,13 @@ export const ChallengesProfile = ({
 
   switch (api) {
     case "overall":
-      table = <NormalTable challenges={challenges} t={t} />;
+      table = <NormalTable challenges={challenges} t={t} gameIcons={gameIcons} />;
       break;
     default:
       table = (
         <GameTable
           gameChallenges={challenges[api]}
-          constructor={typeof challenges[api]}
+          constructor={challenges[api].constructor}
           t={t}
         />
       );
@@ -133,14 +133,26 @@ export const ChallengesProfile = ({
     0
   );
 
+  const sidebar: SidebarItem[] = [[t("stats.total"), t(total), "§b"]];
+
+  if (api !== "overall") {
+    sidebar.push([
+      t("stats.game-total", { game: FormattedGame[api] }),
+      t(challenges[api].total),
+      "§a",
+    ]);
+  }
+
   return (
     <Container background={background}>
       <Header
         skin={skin}
         name={player.prefixName}
         badge={badge}
-        title={`§lChallenges`}
-        description={`Total ${total}`}
+        title={`§l§aChallenges §r(§l${
+          FormattedGame[api as keyof Challenges] ?? prettify(api)
+        }§r)`}
+        sidebar={sidebar}
         time={time}
       />
       {table}
