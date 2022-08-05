@@ -31,6 +31,7 @@
     "bridge": "",
     "buildbattle": "",
     "cape": "查看玩家我的世界和Optifine的披风",
+    "challenges": "",
     "close": "",
     "colors": "我的世界颜色代码列表",
     "commands": "",
@@ -349,7 +350,7 @@
       "title": "无效的玩家"
     },
     "invalidResetTime": {
-      "description": "`{{time}}`不符合`h:mm a`的格式。请输入类似于`12:00 PM`或`1:00AM`格式的时间。",
+      "description": "`{{time}}`不符合`h:mm a`的格式。请输入类似于`12:00 PM`或`1:00 AM`格式的时间。",
       "title": "无效的重置时间"
     },
     "invalidResetTimezone": {
@@ -730,7 +731,8 @@
       "kill": "击杀进度",
       "score": "得分进度",
       "goldTrophy": "金奖杯进度"
-    }
+    },
+    "game-total": "{{game}}总数"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) 加入我们的**$t(socials.discord)**可以获得**减少20%的冷却时间** $t(emojis:heart)",
