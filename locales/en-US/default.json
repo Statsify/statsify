@@ -350,7 +350,7 @@
       "title": "Invalid Player"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM.`",
+      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
       "title": "Invalid Reset Time"
     },
     "invalidResetTimezone": {
@@ -725,12 +725,12 @@
     "contracts": "Contracts",
     "prefix": "Prefix",
     "progression": {
-      "exp": "EXP Progression",
-      "gexp": "GEXP Progression",
-      "win": "Win Progression",
-      "kill": "Kill Progression",
-      "score": "Score Progression",
-      "goldTrophy": "Gold Trophy Progression"
+      "exp": "EXP Progress",
+      "gexp": "GEXP Progress",
+      "win": "Win Progress",
+      "kill": "Kill Progress",
+      "score": "Score Progress",
+      "goldTrophy": "Gold Trophy Progress"
     },
     "game-total": "{{game}} Total"
   },
