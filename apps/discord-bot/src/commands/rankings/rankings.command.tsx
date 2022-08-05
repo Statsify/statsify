@@ -51,6 +51,7 @@ import {
 import { ButtonStyle } from "discord-api-types/v10";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { RankingsProfile } from "./rankings.profile";
+import { SubCommandOptions } from "@statsify/discord/src/command/command.interface";
 import { arrayGroup } from "@statsify/util";
 import { games } from "./games";
 import { getBackground, getLogo } from "@statsify/assets";
@@ -62,7 +63,11 @@ const fields = LeaderboardScanner.getLeaderboardFields(Player);
 const choices = games.map((g) => [g.name, g.key] as Choice);
 choices.unshift(["All", "all"]);
 
-const args = [PlayerArgument];
+const options: Partial<SubCommandOptions> = {
+  args: [PlayerArgument],
+  tier: UserTier.IRON,
+  preview: "rankings.png",
+};
 
 @Command({
   description: (t) => t("commands.rankings"),
@@ -76,249 +81,206 @@ export class RankingsCommand {
   ) {}
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-all"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public all(context: CommandContext) {
     return this.run(context, "all", GENERAL_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-arcade"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public arcade(context: CommandContext) {
     return this.run(context, "arcade", ARCADE_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-arenabrawl"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
+    group: "classic",
   })
   public arenabrawl(context: CommandContext) {
     return this.run(context, "arenabrawl", ARENA_BRAWL_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-bedwars"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public bedwars(context: CommandContext) {
     return this.run(context, "bedwars", BEDWARS_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-blitzsg"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public blitzsg(context: CommandContext) {
     return this.run(context, "blitzsg", BLITZSG_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-buildbattle"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public buildbattle(context: CommandContext) {
     return this.run(context, "buildbattle", BUILD_BATTLE_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-copsandcrims"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public copsandcrims(context: CommandContext) {
     return this.run(context, "copsandcrims", COPS_AND_CRIMS_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-duels"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public duels(context: CommandContext) {
     return this.run(context, "duels", DUELS_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-general"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public general(context: CommandContext) {
     return this.run(context, "general", GENERAL_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-megawalls"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public megawalls(context: CommandContext) {
     return this.run(context, "megawalls", MEGAWALLS_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-murdermystery"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public murdermystery(context: CommandContext) {
     return this.run(context, "murdermystery", MURDER_MYSTERY_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-paintball"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
+    group: "classic",
   })
   public paintball(context: CommandContext) {
     return this.run(context, "paintball", PAINTBALL_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-parkour"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public parkour(context: CommandContext) {
     return this.run(context, "parkour", PARKOUR_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-pit"),
-    args,
-    tier: UserTier.IRON,
   })
   public pit(context: CommandContext) {
     return this.run(context, "pit", PIT_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-quake"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
+    group: "classic",
   })
   public quake(context: CommandContext) {
     return this.run(context, "quake", QUAKE_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-skywars"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public skywars(context: CommandContext) {
     return this.run(context, "skywars", SKYWARS_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-smashheroes"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public smashheroes(context: CommandContext) {
     return this.run(context, "smashheroes", SMASH_HEROES_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-speeduhc"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public speeduhc(context: CommandContext) {
     return this.run(context, "speeduhc", SPEED_UHC_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-tntgames"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public tntgames(context: CommandContext) {
     return this.run(context, "tntgames", TNT_GAMES_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-turbokartracers"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
+    group: "classic",
   })
   public turbokartracers(context: CommandContext) {
     return this.run(context, "turbokartracers", TURBO_KART_RACERS_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-uhc"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public uhc(context: CommandContext) {
     return this.run(context, "uhc", UHC_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-vampirez"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
+    group: "classic",
   })
   public vampirez(context: CommandContext) {
     return this.run(context, "vampirez", VAMPIREZ_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-walls"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
+    group: "classic",
   })
   public walls(context: CommandContext) {
     return this.run(context, "walls", WALLS_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-warlords"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public warlords(context: CommandContext) {
     return this.run(context, "warlords", WARLORDS_MODES);
   }
 
   @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-woolwars"),
-    args,
-    tier: UserTier.IRON,
-    preview: "rankings.png",
   })
   public woolwars(context: CommandContext) {
     return this.run(context, "woolwars", WOOLWARS_MODES);

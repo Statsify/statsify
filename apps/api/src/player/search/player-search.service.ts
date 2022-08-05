@@ -11,11 +11,6 @@ import { InjectRedis } from "@nestjs-modules/ioredis";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 
-/**
- * Things to consider:
- * 3. We want to hoist premium users to the top of the list
- */
-
 export interface RedisPlayer {
   username: string;
   uuid: string;
@@ -23,31 +18,57 @@ export interface RedisPlayer {
 
 @Injectable()
 export class PlayerSearchService {
-  private logger;
-  public constructor(@InjectRedis() private readonly redis: Redis) {
-    this.logger = new Logger("PlayerSearch");
-  }
+  private logger = new Logger("PlayerSearchService");
 
-  public get(query: string) {
-    return this.redis.call(
-      "FT.SUGGET",
-      "player:autocomplete",
-      query,
-      "FUZZY",
-      "MAX",
-      "25"
-    );
+  public constructor(@InjectRedis() private readonly redis: Redis) {}
+
+  public get(query: string): Promise<string[]> {
+    try {
+      return this.redis.call(
+        "FT.SUGGET",
+        "player:autocomplete",
+        query,
+        "FUZZY",
+        "MAX",
+        "25"
+      ) as Promise<string[]>;
+    } catch (e) {
+      this.logger.error(e);
+      this.logger.error(
+        `This error was most likely caused because RediSearch is not installed.`
+      );
+
+      return Promise.resolve([]);
+    }
   }
 
   public async add(player: RedisPlayer) {
     if (player.username.length < 3 || player.username.length > 16) return;
 
-    return this.redis
-      .call("FT.SUGADD", "player:autocomplete", player.username, "1", "INCR")
-      .catch((reason) => this.logger.error(reason));
+    try {
+      await this.redis.call(
+        "FT.SUGADD",
+        "player:autocomplete",
+        player.username,
+        "1",
+        "INCR"
+      );
+    } catch (e) {
+      this.logger.error(e);
+      this.logger.error(
+        `This error was most likely caused because RediSearch is not installed.`
+      );
+    }
   }
 
   public delete(name: string) {
-    return this.redis.call("FT.SUGDEL", "player:autocomplete", name);
+    try {
+      return this.redis.call("FT.SUGDEL", "player:autocomplete", name);
+    } catch (e) {
+      this.logger.error(e);
+      this.logger.error(
+        `This error was most likely caused because RediSearch is not installed.`
+      );
+    }
   }
 }

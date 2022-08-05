@@ -148,3 +148,5 @@ export class Challenges {
     this.WOOLWARS = new WoolWarsChallanges(challenges);
   }
 }
+
+export * from "./game-challenges";

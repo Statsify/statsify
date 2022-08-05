@@ -6,20 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "commands/base.hypixel-command";
 import {
   ChallengeModes,
   Challenges,
   FormattedGame,
+  GameChallenges,
   GameId,
   GameMode,
   MetadataScanner,
 } from "@statsify/schemas";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
-import { GameChallenges } from "@statsify/schemas/src/GameChallenges";
-import { Image } from "skia-canvas";
-import { LocalizeFunction } from "@statsify/discord";
 import { arrayGroup, prettify, removeFormatting } from "@statsify/util";
+import type { BaseProfileProps } from "../base.hypixel-command";
+import type { Image } from "skia-canvas";
+import type { LocalizeFunction } from "@statsify/discord";
 
 export interface ChallengeProfileProps extends BaseProfileProps {
   mode: GameMode<ChallengeModes>;
