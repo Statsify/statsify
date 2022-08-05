@@ -11,20 +11,23 @@ import {
   BaseProfileProps,
   ProfileData,
 } from "../base.hypixel-command";
+import { CHALLENGE_MODES, ChallengeModes, GameId } from "@statsify/schemas";
+import { ChallengesProfile } from "./challenges.profile";
 import { Command } from "@statsify/discord";
-import { GameId, PARKOUR_MODES, ParkourModes } from "@statsify/schemas";
-import { ParkourProfile } from "./parkour.profile";
+import { Image } from "skia-canvas";
 import { getAllGameIcons } from "@statsify/assets";
-import type { Image } from "skia-canvas";
 
 interface PreProfileData {
   gameIcons: Record<GameId, Image>;
 }
 
-@Command({ description: (t) => t("commands.parkour") })
-export class ParkourCommand extends BaseHypixelCommand<ParkourModes, PreProfileData> {
+@Command({ description: (t) => t("commands.challenges") })
+export class ChallengesCommand extends BaseHypixelCommand<
+  ChallengeModes,
+  PreProfileData
+> {
   public constructor() {
-    super(PARKOUR_MODES);
+    super(CHALLENGE_MODES);
   }
 
   public async getPreProfileData(): Promise<PreProfileData> {
@@ -33,8 +36,8 @@ export class ParkourCommand extends BaseHypixelCommand<ParkourModes, PreProfileD
 
   public getProfile(
     base: BaseProfileProps,
-    { data }: ProfileData<ParkourModes, PreProfileData>
+    { data, mode }: ProfileData<ChallengeModes, PreProfileData>
   ): JSX.Element {
-    return <ParkourProfile {...base} gameIcons={data.gameIcons} />;
+    return <ChallengesProfile {...base} mode={mode} gameIcons={data.gameIcons} />;
   }
 }

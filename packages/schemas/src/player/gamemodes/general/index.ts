@@ -7,10 +7,11 @@
  */
 
 import { APIData } from "@statsify/util";
+import { Challenges } from "./challenges";
 import { Events } from "./events";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
-import { getChallenges, getNetworkLevel, getQuests } from "./util";
+import { getNetworkLevel, getQuests } from "./util";
 
 export const GENERAL_MODES = new GameModes([{ api: "overall" }]);
 export type GeneralModes = IGameModes<typeof GENERAL_MODES>;
@@ -18,9 +19,6 @@ export type GeneralModes = IGameModes<typeof GENERAL_MODES>;
 export class General {
   @Field()
   public achievementPoints: number;
-
-  @Field()
-  public challenges: number;
 
   @Field()
   public giftsSent: number;
@@ -54,13 +52,13 @@ export class General {
   @Field()
   public events: Events;
 
+  @Field({ leaderboard: { fieldName: "" } })
+  public challenges: Challenges;
+
   public constructor(legacy: APIData, data: APIData = {}) {
     this.achievementPoints = data.achievementPoints;
 
-    this.challenges = Math.max(
-      getChallenges(data.challenges),
-      data.achievements?.general_challenger ?? 0
-    );
+    this.challenges = new Challenges(data?.challenges?.all_time ?? {});
 
     this.karma = data.karma;
     this.networkExp = data.networkExp;

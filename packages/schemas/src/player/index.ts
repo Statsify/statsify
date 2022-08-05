@@ -109,5 +109,6 @@ export class Player {
 
 export * from "./gamemodes";
 export * from "./socials";
+export * from "./gamemodes/general/challenges";
 export * from "./stats";
 export * from "./status";

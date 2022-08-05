@@ -31,6 +31,7 @@
     "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "View someone's Minecraft and Optifine capes",
+    "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
     "close": "Close the current support ticket",
     "colors": "A list of Minecraft color codes",
     "commands": "View Statsify command usage",
@@ -730,7 +731,8 @@
       "kill": "Kill Progression",
       "score": "Score Progression",
       "goldTrophy": "Gold Trophy Progression"
-    }
+    },
+    "game-total": "{{game}} Total"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",

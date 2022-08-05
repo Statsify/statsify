@@ -54,54 +54,59 @@ describe("CommandBuilder", () => {
 
   it("should read groups", () => {
     @Command({ description: "test" })
-    class GroupCommand {}
-
-    @Command({ description: "test", groups: [GroupCommand] })
-    class TestCommand {}
-
-    expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
-      name: "test",
-      description: "test",
-      type: ApplicationCommandType.ChatInput,
-      description_localizations: {},
-      options: [
-        {
-          name: "group",
-          description: "test",
-          description_localizations: {},
-          type: ApplicationCommandOptionType.SubcommandGroup,
-          options: [],
-        },
-      ],
-    });
-  });
-
-  it("should read groups with subcommands", () => {
-    @Command({ description: "test" })
-    class GroupCommand {
-      @SubCommand({ description: "test" })
+    class TestCommand {
+      @SubCommand({ description: "test", group: "group" })
       public subcommand() {
+        //
+      }
+
+      @SubCommand({ description: "test", group: "group" })
+      public subcommand2() {
+        //
+      }
+
+      @SubCommand({ description: "test", group: "group2" })
+      public subcommand3() {
         //
       }
     }
 
-    @Command({ description: "test", groups: [GroupCommand] })
-    class TestCommand {}
-
     expect(CommandBuilder.scan(new TestCommand(), TestCommand).toJSON()).toEqual({
       name: "test",
       description: "test",
-      description_localizations: {},
       type: ApplicationCommandType.ChatInput,
+      description_localizations: {},
       options: [
         {
           name: "group",
-          description: "test",
+          description: "group",
           description_localizations: {},
           type: ApplicationCommandOptionType.SubcommandGroup,
           options: [
             {
               name: "subcommand",
+              description: "test",
+              description_localizations: {},
+              type: ApplicationCommandOptionType.Subcommand,
+              options: [],
+            },
+            {
+              name: "subcommand2",
+              description: "test",
+              description_localizations: {},
+              type: ApplicationCommandOptionType.Subcommand,
+              options: [],
+            },
+          ],
+        },
+        {
+          name: "group2",
+          description: "group",
+          description_localizations: {},
+          type: ApplicationCommandOptionType.SubcommandGroup,
+          options: [
+            {
+              name: "subcommand3",
               description: "test",
               description_localizations: {},
               type: ApplicationCommandOptionType.Subcommand,
