@@ -31,6 +31,7 @@
     "bridge": "",
     "buildbattle": "",
     "cape": "查看玩家當個創世神和Optifine的披風",
+    "challenges": "",
     "close": "",
     "colors": "列出當個創世神的顏色代碼",
     "commands": "",
@@ -730,7 +731,8 @@
       "kill": "擊殺數進度",
       "score": "分數進度",
       "goldTrophy": "金獎盃數進度"
-    }
+    },
+    "game-total": "{{game}}總計"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) 加入我們的**$t(socials.discord)**並獲得**降低20%的冷卻時間** $t(emojis:heart)",
