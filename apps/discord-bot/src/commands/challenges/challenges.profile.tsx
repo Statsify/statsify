@@ -16,7 +16,7 @@ import {
   MetadataScanner,
 } from "@statsify/schemas";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
-import { arrayGroup, prettify, removeFormatting } from "@statsify/util";
+import { arrayGroup, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
@@ -35,7 +35,9 @@ interface NormalTableProps {
 const NormalTable = ({ challenges, t, gameIcons }: NormalTableProps) => {
   const ROW_SIZE = 2;
 
-  const times = Object.entries(challenges)
+  const { total: _, ...challengesByGame } = challenges;
+
+  const times = Object.entries(challengesByGame)
     .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
     .map(([field, game]) => (
       <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
@@ -81,7 +83,7 @@ const GameTable = ({ gameChallenges, constructor, t }: GameTableProps) => {
     GROUP_SIZE
   );
 
-  const colors = ["§b", "§a", "§2", "§e", "§6", "§c", "§4"];
+  const colors = ["§a", "§e", "§6", "§c", "§4"];
 
   return (
     <Table.table>
@@ -110,7 +112,7 @@ export const ChallengesProfile = ({
 }: ChallengeProfileProps) => {
   const { challenges } = player.stats.general;
 
-  const { api } = mode;
+  const { api, formatted } = mode;
   let table: JSX.Element;
 
   switch (api) {
@@ -137,11 +139,16 @@ export const ChallengesProfile = ({
 
   if (api !== "overall") {
     sidebar.push([
-      t("stats.game-total", { game: removeFormatting(FormattedGame[api]) }),
+      t("stats.game-total", { game: formatted }),
       t(challenges[api].total),
       "§a",
     ]);
   }
+
+  const title =
+    api in FormattedGame
+      ? `§l${FormattedGame[api as keyof typeof FormattedGame]}`
+      : formatted;
 
   return (
     <Container background={background}>
@@ -149,9 +156,7 @@ export const ChallengesProfile = ({
         skin={skin}
         name={player.prefixName}
         badge={badge}
-        title={`§l§aChallenges §r(§l${
-          FormattedGame[api as keyof typeof FormattedGame] ?? prettify(api)
-        }§r)`}
+        title={`§l§aChallenges §r(${title}§r)`}
         sidebar={sidebar}
         time={time}
       />

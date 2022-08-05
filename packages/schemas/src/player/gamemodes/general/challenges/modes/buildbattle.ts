@@ -17,7 +17,7 @@ const challengeFieldData: FieldOptions = {
 
 export class BuildBattleChallenges implements GameChallenges {
   @Field(challengeFieldData)
-  public top3: number;
+  public topThree: number;
 
   @Field(challengeFieldData)
   public guesser: number;
@@ -26,9 +26,9 @@ export class BuildBattleChallenges implements GameChallenges {
   public total: number;
 
   public constructor(challenges: APIData) {
-    this.top3 = challenges.BUILD_BATTLE__top_3_challenge;
+    this.topThree = challenges.BUILD_BATTLE__top_3_challenge;
     this.guesser = challenges.BUILD_BATTLE__guesser_challenge;
 
-    this.total = add(this.top3, this.guesser);
+    this.total = add(this.topThree, this.guesser);
   }
 }

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, removeFormatting } from "@statsify/util";
 import {
   ArcadeChallenges,
   ArenaChallenges,
@@ -35,27 +35,30 @@ import { SpeedUHCChallenges } from "./modes/speeduhc";
 
 export const CHALLENGE_MODES = new GameModes([
   { api: "overall" },
-  { api: "ARCADE" },
-  { api: "ARENA_BRAWL" },
-  { api: "BEDWARS" },
-  { api: "BLITZSG" },
-  { api: "BUILD_BATTLE" },
-  { api: "DUELS" },
-  { api: "COPS_AND_CRIMS" },
-  { api: "MEGAWALLS" },
-  { api: "MURDER_MYSTERY" },
-  { api: "PAINTBALL" },
-  { api: "QUAKE" },
-  { api: "SKYWARS" },
-  { api: "SMASH_HEROES" },
-  { api: "SPEED_UHC" },
-  { api: "TNT_GAMES" },
-  { api: "TURBO_KART_RACERS" },
-  { api: "UHC" },
-  { api: "VAMPIREZ" },
-  { api: "WALLS" },
-  { api: "WARLORDS" },
-  { api: "WOOLWARS" },
+  { api: "ARCADE", formatted: removeFormatting(FormattedGame.ARCADE) },
+  { api: "ARENA_BRAWL", formatted: removeFormatting(FormattedGame.ARENA_BRAWL) },
+  { api: "BEDWARS", formatted: removeFormatting(FormattedGame.BEDWARS) },
+  { api: "BLITZSG", formatted: removeFormatting(FormattedGame.BLITZSG) },
+  { api: "BUILD_BATTLE", formatted: removeFormatting(FormattedGame.BUILD_BATTLE) },
+  { api: "DUELS", formatted: removeFormatting(FormattedGame.DUELS) },
+  { api: "COPS_AND_CRIMS", formatted: removeFormatting(FormattedGame.COPS_AND_CRIMS) },
+  { api: "MEGAWALLS", formatted: removeFormatting(FormattedGame.MEGAWALLS) },
+  { api: "MURDER_MYSTERY", formatted: removeFormatting(FormattedGame.MURDER_MYSTERY) },
+  { api: "PAINTBALL", formatted: removeFormatting(FormattedGame.PAINTBALL) },
+  { api: "QUAKE", formatted: removeFormatting(FormattedGame.QUAKE) },
+  { api: "SKYWARS", formatted: removeFormatting(FormattedGame.SKYWARS) },
+  { api: "SMASH_HEROES", formatted: removeFormatting(FormattedGame.SMASH_HEROES) },
+  { api: "SPEED_UHC", formatted: removeFormatting(FormattedGame.SPEED_UHC) },
+  { api: "TNT_GAMES", formatted: removeFormatting(FormattedGame.TNT_GAMES) },
+  {
+    api: "TURBO_KART_RACERS",
+    formatted: removeFormatting(FormattedGame.TURBO_KART_RACERS),
+  },
+  { api: "UHC", formatted: removeFormatting(FormattedGame.UHC) },
+  { api: "VAMPIREZ", formatted: removeFormatting(FormattedGame.VAMPIREZ) },
+  { api: "WALLS", formatted: removeFormatting(FormattedGame.WALLS) },
+  { api: "WARLORDS", formatted: removeFormatting(FormattedGame.WARLORDS) },
+  { api: "WOOLWARS", formatted: removeFormatting(FormattedGame.WOOLWARS) },
 ]);
 
 export type ChallengeModes = IGameModes<typeof CHALLENGE_MODES>;
