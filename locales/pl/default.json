@@ -31,11 +31,12 @@
     "bridge": "",
     "buildbattle": "",
     "cape": "Zobacz czyjeś Peleryny Minecraft oraz Optifine",
+    "challenges": "",
     "close": "",
     "colors": "Lista kodów kolorów Minecraft",
     "commands": "",
     "copsandcrims": "",
-    "daily": "Zobacz swoje dzienne statystyki w różnych grach",
+    "daily": "",
     "delete-player": "",
     "duels": "",
     "events": "",
@@ -81,8 +82,8 @@
     "invite": "Zaproś Statsify",
     "language": "Zmień język, w którym widzisz odpowiedzi",
     "last-day": "",
-    "last-month": "Zobacz swoje statystyki z zeszłego miesiąca w różnych grach",
-    "last-week": "Zobacz swoje statystyki z zeszłego tygodnia w różnych grach",
+    "last-month": "",
+    "last-week": "",
     "leaderboard-arcade": "",
     "leaderboard-arenabrawl": "",
     "leaderboard-bedwars": "",
@@ -110,7 +111,7 @@
     "leaderboard-woolwars": "",
     "links": "Media Społecznościowe Statsify",
     "megawalls": "",
-    "monthly": "Zobacz miesięczne statystyki w różnych grach",
+    "monthly": "",
     "murdermystery": "",
     "mutuals": "Zobacz swoich wspólnych znajomych na Hypixel",
     "namehistory": "Zobacz historię nazw użytkownika Minecraft",
@@ -202,9 +203,9 @@
     "walls": "",
     "warlords": "",
     "watchdog": "Zobacz liczbę banów Hypixel Watchdog",
-    "weekly": "Zobacz swoje tygodniowe statystyki w różnych grach",
+    "weekly": "",
     "woolwars": "",
-    "yesterday": "Zobacz swoje statystyki z wczoraj w różnych grach"
+    "yesterday": ""
   },
   "config": {
     "badge": {
@@ -349,7 +350,7 @@
       "title": "Niepoprawny gracz"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` nie pasuje do formatu `h:mm a`. Wprowadź czas w formacie podobnym do `12:00 PM` lub `1:00 AM.`",
+      "description": "`{{time}}` nie pasuje do formatu `h:mm a`. Wprowadź czas w formacie podobnym do `12:00 PM` lub `1:00 AM`.",
       "title": "Nieprawidłowy czas resetowania"
     },
     "invalidResetTimezone": {
@@ -730,7 +731,8 @@
       "kill": "Pasek postępu zabójstw",
       "score": "Pasek postępu punktów",
       "goldTrophy": "Pasek postępu złotego trofeum"
-    }
+    },
+    "game-total": "{{game}} Łącznie"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Dołącz do naszego **$t(socials.discord)** i otrzymaj **20% mniej czasu odnowienia** $t(emojis:heart)",
