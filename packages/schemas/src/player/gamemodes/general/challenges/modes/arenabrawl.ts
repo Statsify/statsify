@@ -6,19 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, removeFormatting } from "@statsify/util";
 import { Field, FieldOptions } from "../../../../../metadata";
+import { FormattedGame } from "../../../../../game";
 import { add } from "@statsify/math";
 import type { GameChallenges } from "../game-challenges";
 
 const challengeFieldData: FieldOptions = {
   leaderboard: {
     limit: 5000,
-    additionalFields: ["stats.general.challenges.arena.total"],
+    additionalFields: ["stats.general.challenges.ARENA_BRAWL.total"],
   },
 };
 
-export class ArenaChallenges implements GameChallenges {
+export class ArenaBrawlChallenges implements GameChallenges {
   @Field({ ...challengeFieldData, leaderboard: { name: "WHERE IS IT" } })
   public whereIsIt: number;
 
@@ -31,7 +32,12 @@ export class ArenaChallenges implements GameChallenges {
   @Field(challengeFieldData)
   public cooperation: number;
 
-  @Field()
+  @Field({
+    leaderboard: {
+      fieldName: `${removeFormatting(FormattedGame.ARENA_BRAWL)} Total`,
+      name: "Total",
+    },
+  })
   public total: number;
 
   public constructor(challenges: APIData) {

@@ -6,19 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, removeFormatting } from "@statsify/util";
 import { Field, FieldOptions } from "../../../../../metadata";
+import { FormattedGame } from "../../../../../game";
 import { add } from "@statsify/math";
 import type { GameChallenges } from "../game-challenges";
 
 const challengeFieldData: FieldOptions = {
   leaderboard: {
     limit: 5000,
-    additionalFields: ["stats.general.challenges.skywars.total"],
+    additionalFields: ["stats.general.challenges.SKYWARS.total"],
   },
 };
 
-export class SkywarsChallenges implements GameChallenges {
+export class SkyWarsChallenges implements GameChallenges {
   @Field(challengeFieldData)
   public feedingTheVoid: number;
 
@@ -31,7 +32,12 @@ export class SkywarsChallenges implements GameChallenges {
   @Field(challengeFieldData)
   public enderman: number;
 
-  @Field()
+  @Field({
+    leaderboard: {
+      fieldName: `${removeFormatting(FormattedGame.SKYWARS)} Total`,
+      name: "Total",
+    },
+  })
   public total: number;
 
   public constructor(challenges: APIData) {

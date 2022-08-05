@@ -7,10 +7,10 @@
  */
 
 export * from "./arcade";
-export * from "./arena";
+export * from "./arenabrawl";
 export * from "./bedwars";
 export * from "./buildbattle";
-export * from "./blitz";
+export * from "./blitzsg";
 export * from "./cops-and-crims";
 export * from "./duels";
 export * from "./megawalls";
@@ -18,7 +18,7 @@ export * from "./murdermystery";
 export * from "./paintball";
 export * from "./quake";
 export * from "./skywars";
-export * from "./smashheros";
+export * from "./smashheroes";
 export * from "./speeduhc";
 export * from "./tntgames";
 export * from "./turbokartracers";

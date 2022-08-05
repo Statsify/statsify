@@ -6,15 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, removeFormatting } from "@statsify/util";
 import { Field, FieldOptions } from "../../../../../metadata";
+import { FormattedGame } from "../../../../../game";
 import { add } from "@statsify/math";
 import type { GameChallenges } from "../game-challenges";
 
 const challengeFieldData: FieldOptions = {
   leaderboard: {
     limit: 5000,
-    additionalFields: ["stats.general.challenges.vampirez.total"],
+    additionalFields: ["stats.general.challenges.VAMPIREZ.total"],
   },
 };
 
@@ -31,7 +32,12 @@ export class VampireZChallenges implements GameChallenges {
   @Field(challengeFieldData)
   public lastStand: number;
 
-  @Field()
+  @Field({
+    leaderboard: {
+      fieldName: `${removeFormatting(FormattedGame.VAMPIREZ)} Total`,
+      name: "Total",
+    },
+  })
   public total: number;
 
   public constructor(challenges: APIData) {

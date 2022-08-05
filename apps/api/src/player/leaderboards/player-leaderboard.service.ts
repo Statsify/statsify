@@ -40,7 +40,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
 
     const ranking = await this.getLeaderboardRankings(Player, [field], input);
 
-    if (!ranking || !ranking[0].rank) throw new PlayerNotFoundException();
+    if (!ranking || !ranking[0] || !ranking[0].rank) throw new PlayerNotFoundException();
 
     return ranking[0].rank;
   }

@@ -6,15 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, removeFormatting } from "@statsify/util";
 import { Field, FieldOptions } from "../../../../../metadata";
+import { FormattedGame } from "../../../../../game";
 import { add } from "@statsify/math";
 import type { GameChallenges } from "../game-challenges";
 
 const challengeFieldData: FieldOptions = {
   leaderboard: {
     limit: 5000,
-    additionalFields: ["stats.general.challenges.warlords.total"],
+    additionalFields: ["stats.general.challenges.WARLORDS.total"],
   },
 };
 
@@ -31,7 +32,12 @@ export class WarlordsChallenges implements GameChallenges {
   @Field(challengeFieldData)
   public carry: number;
 
-  @Field()
+  @Field({
+    leaderboard: {
+      fieldName: `${removeFormatting(FormattedGame.WARLORDS)} Total`,
+      name: "Total",
+    },
+  })
   public total: number;
 
   public constructor(challenges: APIData) {

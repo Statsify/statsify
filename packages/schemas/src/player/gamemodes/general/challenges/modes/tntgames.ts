@@ -6,15 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, removeFormatting } from "@statsify/util";
 import { Field, FieldOptions } from "../../../../../metadata";
+import { FormattedGame } from "../../../../../game";
 import { add } from "@statsify/math";
 import type { GameChallenges } from "../game-challenges";
 
 const challengeFieldData: FieldOptions = {
   leaderboard: {
     limit: 5000,
-    additionalFields: ["stats.general.challenges.tntgames.total"],
+    additionalFields: ["stats.general.challenges.TNT_GAMES.total"],
   },
 };
 
@@ -34,7 +35,12 @@ export class TNTGamesChallenges implements GameChallenges {
   @Field({ ...challengeFieldData, leaderboard: { name: "TNT Wizards" } })
   public tntWizards: number;
 
-  @Field()
+  @Field({
+    leaderboard: {
+      fieldName: `${removeFormatting(FormattedGame.TNT_GAMES)} Total`,
+      name: "Total",
+    },
+  })
   public total: number;
 
   public constructor(challenges: APIData) {

@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, removeFormatting } from "@statsify/util";
 import { Field, FieldOptions } from "../../../../../metadata";
+import { FormattedGame } from "../../../../../game";
 import { add } from "@statsify/math";
 import type { GameChallenges } from "../game-challenges";
 
 const challengeFieldData: FieldOptions = {
-  leaderboard: { limit: 5000, additionalFields: ["stats.general.challenges.uhc.total"] },
+  leaderboard: { limit: 5000, additionalFields: ["stats.general.challenges.UHC.total"] },
 };
 
 export class UHCChallenges implements GameChallenges {
@@ -28,7 +29,12 @@ export class UHCChallenges implements GameChallenges {
   @Field(challengeFieldData)
   public threat: number;
 
-  @Field()
+  @Field({
+    leaderboard: {
+      fieldName: `${removeFormatting(FormattedGame.UHC)} Total`,
+      name: "Total",
+    },
+  })
   public total: number;
 
   public constructor(challenges: APIData) {

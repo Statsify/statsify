@@ -6,19 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, removeFormatting } from "@statsify/util";
 import { Field, FieldOptions } from "../../../../../metadata";
+import { FormattedGame } from "../../../../../game";
 import { add } from "@statsify/math";
 import type { GameChallenges } from "../game-challenges";
 
 const challengeFieldData: FieldOptions = {
   leaderboard: {
     limit: 5000,
-    additionalFields: ["stats.general.challenges.smashheros.total"],
+    additionalFields: ["stats.general.challenges.SMASH_HEROES.total"],
   },
 };
 
-export class SmashChallenges implements GameChallenges {
+export class SmashHeroesChallenges implements GameChallenges {
   @Field(challengeFieldData)
   public leaderboard: number;
 
@@ -31,7 +32,12 @@ export class SmashChallenges implements GameChallenges {
   @Field(challengeFieldData)
   public flawless: number;
 
-  @Field()
+  @Field({
+    leaderboard: {
+      fieldName: `${removeFormatting(FormattedGame.SMASH_HEROES)} Total`,
+      name: "Total",
+    },
+  })
   public total: number;
 
   public constructor(challenges: APIData) {

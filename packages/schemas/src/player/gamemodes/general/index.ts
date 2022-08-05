@@ -20,9 +20,6 @@ export class General {
   @Field()
   public achievementPoints: number;
 
-  @Field({ leaderboard: { fieldName: "" } })
-  public challenges: Challenges;
-
   @Field()
   public giftsSent: number;
 
@@ -54,6 +51,9 @@ export class General {
 
   @Field()
   public events: Events;
+
+  @Field({ leaderboard: { fieldName: "" } })
+  public challenges: Challenges;
 
   public constructor(legacy: APIData, data: APIData = {}) {
     this.achievementPoints = data.achievementPoints;

@@ -9,9 +9,9 @@
 import { APIData, removeFormatting } from "@statsify/util";
 import {
   ArcadeChallenges,
-  ArenaChallenges,
-  BedwarsChallenges,
-  BlitzChallenges,
+  ArenaBrawlChallenges,
+  BedWarsChallenges,
+  BlitzSGChallenges,
   BuildBattleChallenges,
   CopsAndCrimsChallenges,
   DuelsChallenges,
@@ -19,8 +19,8 @@ import {
   MurderMysteryChallenges,
   PaintballChallenges,
   QuakeChallenges,
-  SkywarsChallenges,
-  SmashChallenges,
+  SkyWarsChallenges,
+  SmashHeroesChallenges,
   SpeedUHCChallenges,
   TNTGamesChallenges,
   TurboKartRacersChallenges,
@@ -28,7 +28,7 @@ import {
   VampireZChallenges,
   WallsChallenges,
   WarlordsChallenges,
-  WoolWarsChallanges,
+  WoolWarsChallenges,
 } from "./modes";
 import { Field } from "../../../../metadata";
 import { FormattedGame, GameModes, IGameModes } from "../../../../game";
@@ -68,13 +68,13 @@ export class Challenges {
   public ARCADE: ArcadeChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.ARENA_BRAWL} Challenges` } })
-  public ARENA_BRAWL: ArenaChallenges;
+  public ARENA_BRAWL: ArenaBrawlChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.BEDWARS} Challenges` } })
-  public BEDWARS: BedwarsChallenges;
+  public BEDWARS: BedWarsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.BLITZSG} Challenges` } })
-  public BLITZSG: BlitzChallenges;
+  public BLITZSG: BlitzSGChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.BUILD_BATTLE} Challenges` } })
   public BUILD_BATTLE: BuildBattleChallenges;
@@ -98,10 +98,10 @@ export class Challenges {
   public QUAKE: QuakeChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.SKYWARS} Challenges` } })
-  public SKYWARS: SkywarsChallenges;
+  public SKYWARS: SkyWarsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.SMASH_HEROES} Challenges` } })
-  public SMASH_HEROES: SmashChallenges;
+  public SMASH_HEROES: SmashHeroesChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.SPEED_UHC} Challenges` } })
   public SPEED_UHC: SpeedUHCChallenges;
@@ -125,16 +125,16 @@ export class Challenges {
   public WARLORDS: WarlordsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.WOOLWARS} Challenges` } })
-  public WOOLWARS: WoolWarsChallanges;
+  public WOOLWARS: WoolWarsChallenges;
 
   @Field()
   public total: number;
 
   public constructor(challenges: APIData) {
     this.ARCADE = new ArcadeChallenges(challenges);
-    this.ARENA_BRAWL = new ArenaChallenges(challenges);
-    this.BEDWARS = new BedwarsChallenges(challenges);
-    this.BLITZSG = new BlitzChallenges(challenges);
+    this.ARENA_BRAWL = new ArenaBrawlChallenges(challenges);
+    this.BEDWARS = new BedWarsChallenges(challenges);
+    this.BLITZSG = new BlitzSGChallenges(challenges);
     this.BUILD_BATTLE = new BuildBattleChallenges(challenges);
     this.DUELS = new DuelsChallenges(challenges);
     this.COPS_AND_CRIMS = new CopsAndCrimsChallenges(challenges);
@@ -142,8 +142,8 @@ export class Challenges {
     this.MURDER_MYSTERY = new MurderMysteryChallenges(challenges);
     this.PAINTBALL = new PaintballChallenges(challenges);
     this.QUAKE = new QuakeChallenges(challenges);
-    this.SKYWARS = new SkywarsChallenges(challenges);
-    this.SMASH_HEROES = new SmashChallenges(challenges);
+    this.SKYWARS = new SkyWarsChallenges(challenges);
+    this.SMASH_HEROES = new SmashHeroesChallenges(challenges);
     this.SPEED_UHC = new SpeedUHCChallenges(challenges);
     this.TNT_GAMES = new TNTGamesChallenges(challenges);
     this.TURBO_KART_RACERS = new TurboKartRacersChallenges(challenges);
@@ -151,7 +151,7 @@ export class Challenges {
     this.VAMPIREZ = new VampireZChallenges(challenges);
     this.WALLS = new WallsChallenges(challenges);
     this.WARLORDS = new WarlordsChallenges(challenges);
-    this.WOOLWARS = new WoolWarsChallanges(challenges);
+    this.WOOLWARS = new WoolWarsChallenges(challenges);
 
     this.total = Object.entries(this).reduce(
       (p, c) => (c[1]?.total ? p + c[1].total : p),

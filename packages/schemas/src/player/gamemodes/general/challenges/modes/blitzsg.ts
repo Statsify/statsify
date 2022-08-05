@@ -6,19 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
+import { APIData, removeFormatting } from "@statsify/util";
 import { Field, FieldOptions } from "../../../../../metadata";
+import { FormattedGame } from "../../../../../game";
 import { add } from "@statsify/math";
 import type { GameChallenges } from "../game-challenges";
 
 const challengeFieldData: FieldOptions = {
   leaderboard: {
     limit: 5000,
-    additionalFields: ["stats.general.challenges.blitz.total"],
+    additionalFields: ["stats.general.challenges.BLITZSG.total"],
   },
 };
 
-export class BlitzChallenges implements GameChallenges {
+export class BlitzSGChallenges implements GameChallenges {
   @Field(challengeFieldData)
   public star: number;
 
@@ -31,7 +32,12 @@ export class BlitzChallenges implements GameChallenges {
   @Field(challengeFieldData)
   public resistance: number;
 
-  @Field()
+  @Field({
+    leaderboard: {
+      fieldName: `${removeFormatting(FormattedGame.BLITZSG)} Total`,
+      name: "Total",
+    },
+  })
   public total: number;
 
   public constructor(challenges: APIData) {
