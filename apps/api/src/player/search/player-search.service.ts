@@ -11,6 +11,9 @@ import { InjectRedis } from "@nestjs-modules/ioredis";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 
+const REDI_SEARCH_NOT_INSTALLED =
+  "This error was most likely caused because RediSearch is not installed.";
+
 export interface RedisPlayer {
   username: string;
   uuid: string;
@@ -34,9 +37,7 @@ export class PlayerSearchService {
       ) as Promise<string[]>;
     } catch (e) {
       this.logger.error(e);
-      this.logger.error(
-        `This error was most likely caused because RediSearch is not installed.`
-      );
+      this.logger.error(REDI_SEARCH_NOT_INSTALLED);
 
       return Promise.resolve([]);
     }
@@ -55,9 +56,7 @@ export class PlayerSearchService {
       );
     } catch (e) {
       this.logger.error(e);
-      this.logger.error(
-        `This error was most likely caused because RediSearch is not installed.`
-      );
+      this.logger.error(REDI_SEARCH_NOT_INSTALLED);
     }
   }
 
@@ -66,9 +65,7 @@ export class PlayerSearchService {
       return this.redis.call("FT.SUGDEL", "player:autocomplete", name);
     } catch (e) {
       this.logger.error(e);
-      this.logger.error(
-        `This error was most likely caused because RediSearch is not installed.`
-      );
+      this.logger.error(REDI_SEARCH_NOT_INSTALLED);
     }
   }
 }
