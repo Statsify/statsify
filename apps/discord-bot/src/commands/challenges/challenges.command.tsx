@@ -15,8 +15,7 @@ import { CHALLENGE_MODES, ChallengeModes, GameId } from "@statsify/schemas";
 import { ChallengesProfile } from "./challenges.profile";
 import { Command } from "@statsify/discord";
 import { Image } from "skia-canvas";
-import { getAssetPath, getImage } from "@statsify/assets";
-import { readdir } from "node:fs/promises";
+import { getAllGameIcons } from "@statsify/assets";
 
 interface PreProfileData {
   gameIcons: Record<GameId, Image>;
@@ -32,18 +31,7 @@ export class ChallengesCommand extends BaseHypixelCommand<
   }
 
   public async getPreProfileData(): Promise<PreProfileData> {
-    const gameIconPaths = await readdir(getAssetPath("games"));
-
-    const gameIconsRequest = await Promise.all(
-      gameIconPaths.map(async (g) => [
-        g.replace(".png", ""),
-        await getImage(`games/${g}`),
-      ])
-    );
-
-    return {
-      gameIcons: Object.fromEntries(gameIconsRequest),
-    };
+    return { gameIcons: await getAllGameIcons() };
   }
 
   public getProfile(
