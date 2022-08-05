@@ -12,7 +12,10 @@ import { add } from "@statsify/math";
 import type { GameChallenges } from "../game-challenges";
 
 const challengeFieldData: FieldOptions = {
-  leaderboard: { limit: 5000, additionalFields: ["challenges.tntgames.total"] },
+  leaderboard: {
+    limit: 5000,
+    additionalFields: ["stats.general.challenges.tntgames.total"],
+  },
 };
 
 export class TNTGamesChallenges implements GameChallenges {

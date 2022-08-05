@@ -12,7 +12,10 @@ import { add } from "@statsify/math";
 import type { GameChallenges } from "../game-challenges";
 
 const challengeFieldData: FieldOptions = {
-  leaderboard: { limit: 5000, additionalFields: ["challenges.warlords.total"] },
+  leaderboard: {
+    limit: 5000,
+    additionalFields: ["stats.general.challenges.warlords.total"],
+  },
 };
 
 export class WarlordsChallenges implements GameChallenges {

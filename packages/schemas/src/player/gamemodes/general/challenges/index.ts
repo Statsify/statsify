@@ -21,6 +21,7 @@ import {
   QuakeChallenges,
   SkywarsChallenges,
   SmashChallenges,
+  SpeedUHCChallenges,
   TNTGamesChallenges,
   TurboKartRacersChallenges,
   UHCChallenges,
@@ -31,7 +32,6 @@ import {
 } from "./modes";
 import { Field } from "../../../../metadata";
 import { FormattedGame, GameModes, IGameModes } from "../../../../game";
-import { SpeedUHCChallenges } from "./modes/speeduhc";
 
 export const CHALLENGE_MODES = new GameModes([
   { api: "overall" },

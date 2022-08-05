@@ -19,6 +19,7 @@ export * from "./paintball";
 export * from "./quake";
 export * from "./skywars";
 export * from "./smashheros";
+export * from "./speeduhc";
 export * from "./tntgames";
 export * from "./turbokartracers";
 export * from "./uhc";

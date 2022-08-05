@@ -11,7 +11,10 @@ import { Field, FieldOptions } from "../../../../../metadata";
 import { add } from "@statsify/math";
 import type { GameChallenges } from "../game-challenges";
 const challengeFieldData: FieldOptions = {
-  leaderboard: { limit: 5000, additionalFields: ["challenges.quake.total"] },
+  leaderboard: {
+    limit: 5000,
+    additionalFields: ["stats.general.challenges.quake.total"],
+  },
 };
 
 export class QuakeChallenges implements GameChallenges {
