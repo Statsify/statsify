@@ -14,7 +14,6 @@ import type { Constructor } from "@statsify/util";
 export interface CommandOptions {
   name?: string;
   description: LocalizationString;
-  groups?: Constructor<any>[];
   args?: (AbstractArgument | Constructor<AbstractArgument>)[];
   cooldown?: number;
 
@@ -30,11 +29,16 @@ export interface CommandOptions {
   preview?: string;
 }
 
-export type SubCommandOptions = Omit<CommandOptions, "groups" | "cooldown">;
+export interface SubCommandOptions extends Omit<CommandOptions, "cooldown"> {
+  group?: string;
+}
 
 export interface CommandMetadata extends Omit<CommandOptions, "name"> {
   name: string;
   methodName: string;
 }
 
-export type SubCommandMetadata = Record<string, Omit<CommandMetadata, "groups">>;
+export interface SubCommandMetadata extends Omit<SubCommandOptions, "name"> {
+  name: string;
+  methodName: string;
+}

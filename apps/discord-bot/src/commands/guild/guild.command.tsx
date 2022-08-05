@@ -23,9 +23,8 @@ import { GuildMemberProfile } from "./guild-member.profile";
 import { GuildProfile, GuildProfileProps } from "./guild.profile";
 import { GuildQuery } from "@statsify/api-client";
 import { GuildTopSubCommand } from "./guild-top.subcommand";
-import { getAssetPath, getBackground, getImage, getLogo } from "@statsify/assets";
+import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
-import { readdir } from "node:fs/promises";
 import { render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.guild") })
@@ -48,15 +47,8 @@ export class GuildCommand extends GuildTopSubCommand {
 
     if (!guildMaster) throw new ErrorMessage("errors.unknown");
 
-    const gameIconPaths = await readdir(getAssetPath("games"));
-
-    const gameIconsRequest = gameIconPaths.map(async (g) => [
-      g.replace(".png", ""),
-      await getImage(`games/${g}`),
-    ]);
-
     const [gameIcons, guildRanking, skin, logo, background] = await Promise.all([
-      Promise.all(gameIconsRequest),
+      getAllGameIcons(),
       this.apiService.getGuildRankings(["exp"], guild.id),
       this.apiService.getPlayerHead(guildMaster.uuid, 16),
       getLogo(user),
@@ -64,8 +56,6 @@ export class GuildCommand extends GuildTopSubCommand {
     ]);
 
     const ranking = guildRanking[0]?.rank ?? 0;
-
-    const gameIconsRecord = Object.fromEntries(gameIcons);
 
     const props: Omit<GuildProfileProps, "page"> = {
       guild,
@@ -76,7 +66,7 @@ export class GuildCommand extends GuildTopSubCommand {
       logo,
       user,
       t,
-      gameIcons: gameIconsRecord,
+      gameIcons,
     };
 
     return this.paginateService.paginate(context, [

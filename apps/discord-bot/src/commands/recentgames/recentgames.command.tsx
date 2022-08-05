@@ -15,9 +15,8 @@ import {
 } from "@statsify/discord";
 import { RecentGamesProfile } from "./recentgames.profile";
 import { arrayGroup } from "@statsify/util";
-import { getAssetPath, getBackground, getImage, getLogo } from "@statsify/assets";
+import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
-import { readdir } from "node:fs/promises";
 import { render } from "@statsify/rendering";
 
 @Command({
@@ -40,24 +39,13 @@ export class RecentGamesCommand {
       user
     );
 
-    const gameIconPaths = await readdir(getAssetPath("games"));
-
-    const gameIconsRequest = Promise.all(
-      gameIconPaths.map(async (g) => [
-        g.replace(".png", ""),
-        await getImage(`games/${g}`),
-      ])
-    );
-
     const [logo, skin, badge, background, gameIcons] = await Promise.all([
       getLogo(user),
       this.apiService.getPlayerSkin(recentGames.uuid),
       this.apiService.getUserBadge(recentGames.uuid),
       getBackground("hypixel", "overall"),
-      gameIconsRequest,
+      getAllGameIcons(),
     ]);
-
-    const gameIconsRecord = Object.fromEntries(gameIcons);
 
     return this.paginateService.scrollingPagination(
       context,
@@ -73,7 +61,7 @@ export class RecentGamesCommand {
               t={t}
               user={user}
               prefixName={recentGames.prefixName}
-              gameIcons={gameIconsRecord}
+              gameIcons={gameIcons}
             />,
             getTheme(user)
           )

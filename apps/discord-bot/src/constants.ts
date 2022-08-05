@@ -19,7 +19,9 @@ import {
   BlitzSGModes,
   BridgeModes,
   BuildBattleModes,
+  CHALLENGE_MODES,
   COPS_AND_CRIMS_MODES,
+  ChallengeModes,
   CopsAndCrimsModes,
   DUELS_MODES,
   DuelsModes,
@@ -75,6 +77,7 @@ export type GamesWithBackgrounds =
   | CopsAndCrimsModes
   | DuelsModes
   | GeneralModes
+  | ChallengeModes
   | MegaWallsModes
   | MurderMysteryModes
   | PaintballModes
@@ -175,6 +178,7 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
     }
     case PARKOUR_MODES:
       return ["parkour", "overall"];
+    case CHALLENGE_MODES:
     case GENERAL_MODES:
       return ["hypixel", "overall"];
     case MEGAWALLS_MODES:

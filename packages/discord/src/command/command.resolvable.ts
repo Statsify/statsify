@@ -44,9 +44,9 @@ export class CommandResolvable {
       description,
       args,
       methodName,
-      cooldown = 10,
       tier = UserTier.NONE,
       preview,
+      cooldown = 10,
     }: CommandMetadata,
     target: any
   ) {
@@ -76,20 +76,23 @@ export class CommandResolvable {
     return method.apply(this.target, [context]);
   }
 
-  public addSubCommand(subcommand: CommandResolvable) {
+  /**
+   *
+   * Add a subcommand or subcommand group to this command.
+   */
+  public addCommand(command: CommandResolvable) {
     this.options ??= [];
-
-    subcommand.type = ApplicationCommandOptionType.Subcommand;
-
-    this.options.push(subcommand);
+    this.options.push(command);
   }
 
-  public addSubCommandGroup(group: CommandResolvable) {
-    this.options ??= [];
+  public asSubCommandGroup() {
+    this.type = ApplicationCommandOptionType.SubcommandGroup;
+    return this;
+  }
 
-    group.type = ApplicationCommandOptionType.SubcommandGroup;
-
-    this.options.push(group);
+  public asSubCommand() {
+    this.type = ApplicationCommandOptionType.Subcommand;
+    return this;
   }
 
   public toJSON() {

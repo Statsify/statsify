@@ -53,10 +53,12 @@ export const VampireZProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.VAMPIREZ} §fStats §r(${mode.formatted})`}
-        description={`§7Prefix: ${vampirez[api].naturalPrefix}\n§7${
-          api === "human" ? "Win" : "Kill"
-        } ${formatProgression({
+        description={`§7${t("stats.prefix")}: ${
+          vampirez[api].naturalPrefix
+        }\n${formatProgression({
           t,
+          label:
+            api === "human" ? t("stats.progression.win") : t("stats.progression.kill"),
           progression: vampirez[api].progression,
           currentLevel: vampirez[api].currentPrefix,
           nextLevel: vampirez[api].nextPrefix,
@@ -68,7 +70,9 @@ export const VampireZProfile = ({
         <Table.tr>
           <Table.td title={t(`stats.wins`)} value={t(vampirez[api].wins)} color="§e" />
           <Table.td
-            title={`${api === "human" ? "Vampire" : "Human"}s ${t(`stats.killed`)}`}
+            title={
+              api === "human" ? t("stats.vampires-killed") : t("stats.humans-killed")
+            }
             value={t(vampirez[api].kills)}
             color="§a"
           />

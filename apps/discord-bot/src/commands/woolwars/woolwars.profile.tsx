@@ -58,8 +58,11 @@ export const WoolWarsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.WOOLWARS} §fStats §r(${mode.formatted})`}
-        description={`§7Level: ${woolwars.levelFormatted}\n§7EXP ${formatProgression({
+        description={`§7${t("stats.level")}: ${
+          woolwars.levelFormatted
+        }\n${formatProgression({
           t,
+          label: t("stats.progression.exp"),
           progression: woolwars.progression,
           currentLevel: woolwars.levelFormatted,
           nextLevel: woolwars.nextLevelFormatted,

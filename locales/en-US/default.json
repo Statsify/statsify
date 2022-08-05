@@ -350,7 +350,7 @@
       "title": "Invalid Player"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM.`",
+      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
       "title": "Invalid Reset Time"
     },
     "invalidResetTimezone": {

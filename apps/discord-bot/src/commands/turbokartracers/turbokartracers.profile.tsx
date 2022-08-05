@@ -45,10 +45,11 @@ export const TurboKartRacersProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.TURBO_KART_RACERS} §fStats`}
-        description={`§7Prefix: ${
+        description={`§7${t("stats.prefix")}: ${
           turbokartracers.naturalPrefix
-        }\n§7Gold Trophy ${formatProgression({
+        }\n${formatProgression({
           t,
+          label: t("stats.progression.goldTrophy"),
           progression: turbokartracers.progression,
           currentLevel: turbokartracers.currentPrefix,
           nextLevel: turbokartracers.nextPrefix,

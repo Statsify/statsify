@@ -68,8 +68,11 @@ export const DuelsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.DUELS} §fStats §r(${mode.formatted})`}
-        description={`§7Title: ${duels[api].titleFormatted}\n§7Win ${formatProgression({
+        description={`§7${t("stats.title")}: ${
+          duels[api].titleFormatted
+        }\n${formatProgression({
           t,
+          label: t("stats.progression.win"),
           progression: duels[api].progression,
           currentLevel: duels[api].titleLevelFormatted,
           nextLevel: duels[api].nextTitleLevelFormatted,

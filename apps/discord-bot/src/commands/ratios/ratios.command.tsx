@@ -68,7 +68,11 @@ export class RatiosCommand {
     return this.run(context, ARCADE_MODES);
   }
 
-  @SubCommand({ description: (t) => t("commands.ratios-arenabrawl"), args })
+  @SubCommand({
+    description: (t) => t("commands.ratios-arenabrawl"),
+    args,
+    group: "classic",
+  })
   public arenabrawl(context: CommandContext) {
     return this.run(context, ARENA_BRAWL_MODES);
   }
@@ -115,12 +119,16 @@ export class RatiosCommand {
     return this.run(context, MURDER_MYSTERY_MODES);
   }
 
-  @SubCommand({ description: (t) => t("commands.ratios-paintball"), args })
+  @SubCommand({
+    description: (t) => t("commands.ratios-paintball"),
+    args,
+    group: "classic",
+  })
   public paintball(context: CommandContext) {
     return this.run(context, PAINTBALL_MODES);
   }
 
-  @SubCommand({ description: (t) => t("commands.ratios-quake"), args })
+  @SubCommand({ description: (t) => t("commands.ratios-quake"), args, group: "classic" })
   public quake(context: CommandContext) {
     return this.run(context, QUAKE_MODES);
   }
@@ -145,12 +153,16 @@ export class RatiosCommand {
     return this.run(context, UHC_MODES);
   }
 
-  @SubCommand({ description: (t) => t("commands.ratios-vampirez"), args })
+  @SubCommand({
+    description: (t) => t("commands.ratios-vampirez"),
+    args,
+    group: "classic",
+  })
   public vampirez(context: CommandContext) {
     return this.run(context, VAMPIREZ_MODES);
   }
 
-  @SubCommand({ description: (t) => t("commands.ratios-walls"), args })
+  @SubCommand({ description: (t) => t("commands.ratios-walls"), args, group: "classic" })
   public walls(context: CommandContext) {
     return this.run(context, WALLS_MODES);
   }

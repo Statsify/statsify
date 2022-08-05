@@ -63,6 +63,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   @SubCommand({
     description: (t) => t("commands.leaderboard-arenabrawl"),
     args: [new PlayerLeaderboardArgument("arenabrawl")],
+    group: "classic",
   })
   public arenabrawl(context: CommandContext) {
     return this.run(context, "arenabrawl", ARENA_BRAWL_MODES);
@@ -135,6 +136,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   @SubCommand({
     description: (t) => t("commands.leaderboard-paintball"),
     args: [new PlayerLeaderboardArgument("paintball")],
+    group: "classic",
   })
   public paintball(context: CommandContext) {
     return this.run(context, "paintball", PAINTBALL_MODES);
@@ -159,6 +161,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   @SubCommand({
     description: (t) => t("commands.leaderboard-quake"),
     args: [new PlayerLeaderboardArgument("quake")],
+    group: "classic",
   })
   public quake(context: CommandContext) {
     return this.run(context, "quake", QUAKE_MODES);
@@ -199,6 +202,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   @SubCommand({
     description: (t) => t("commands.leaderboard-turbokartracers"),
     args: [new PlayerLeaderboardArgument("turbokartracers")],
+    group: "classic",
   })
   public turbokartracers(context: CommandContext) {
     return this.run(context, "turbokartracers", TURBO_KART_RACERS_MODES);
@@ -215,6 +219,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   @SubCommand({
     description: (t) => t("commands.leaderboard-vampirez"),
     args: [new PlayerLeaderboardArgument("vampirez")],
+    group: "classic",
   })
   public vampirez(context: CommandContext) {
     return this.run(context, "vampirez", VAMPIREZ_MODES);
@@ -223,6 +228,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   @SubCommand({
     description: (t) => t("commands.leaderboard-walls"),
     args: [new PlayerLeaderboardArgument("walls")],
+    group: "classic",
   })
   public walls(context: CommandContext) {
     return this.run(context, "walls", WALLS_MODES);

@@ -8,7 +8,6 @@
 
 import { CommandResolvable } from "./command.resolvable";
 import { Constructor } from "@statsify/util";
-import { Container } from "typedi";
 import type { CommandMetadata, SubCommandMetadata } from "./command.interface";
 
 export class CommandBuilder {
@@ -24,21 +23,38 @@ export class CommandBuilder {
 
     const commandResolvable = new CommandResolvable(commandMetadata, target);
 
-    (commandMetadata.groups ?? []).forEach((group) => {
-      const groupResolvable = CommandBuilder.scan(Container.get(group), group);
-      commandResolvable.addSubCommandGroup(groupResolvable);
-    });
-
     const subcommandMetadata = Reflect.getMetadata(
       "statsify:subcommand",
       target
-    ) as SubCommandMetadata;
+    ) as Record<string, SubCommandMetadata>;
 
     if (!subcommandMetadata) return commandResolvable;
 
+    const groups: Record<string, CommandResolvable> = {};
+
     for (const subcommand of Object.values(subcommandMetadata)) {
       const subcommandResolvable = new CommandResolvable(subcommand, target);
-      commandResolvable.addSubCommand(subcommandResolvable);
+
+      let addSubCommandTo: CommandResolvable = commandResolvable;
+
+      if (subcommand.group && subcommand.group in groups) {
+        addSubCommandTo = groups[subcommand.group];
+      } else if (subcommand.group) {
+        const options = {
+          name: subcommand.group,
+          methodName: "run",
+          description: "group",
+        };
+
+        addSubCommandTo = new CommandResolvable(options, target);
+        groups[options.name] = addSubCommandTo;
+      }
+
+      addSubCommandTo.addCommand(subcommandResolvable.asSubCommand());
+    }
+
+    for (const group of Object.values(groups)) {
+      commandResolvable.addCommand(group.asSubCommandGroup());
     }
 
     return commandResolvable;

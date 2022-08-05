@@ -46,6 +46,16 @@ export const getMinecraftTexturePath = (texturePath: string, pack = "default") =
   return join(getAssetPath(`minecraft-textures/${pack}/assets/minecraft/`), texturePath);
 };
 
+export const getAllGameIcons = async () => {
+  const gameIconPaths = readdirSync(getAssetPath("games"));
+
+  const gameIconsRequest = await Promise.all(
+    gameIconPaths.map(async (g) => [g.replace(".png", ""), await getImage(`games/${g}`)])
+  );
+
+  return Object.fromEntries(gameIconsRequest);
+};
+
 let backgrounds: string[] = [];
 
 function getBackgroundPaths() {

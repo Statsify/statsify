@@ -95,7 +95,11 @@ export class HistoricalBase {
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.historical-arenabrawl"), args })
+  @SubCommand({
+    description: (t) => t("commands.historical-arenabrawl"),
+    args,
+    group: "classic",
+  })
   public arenabrawl(context: CommandContext) {
     return this.run(context, ARENA_BRAWL_MODES, (base, mode) => (
       <ArenaBrawlProfile {...base} mode={mode} />
@@ -180,12 +184,20 @@ export class HistoricalBase {
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.historical-paintball"), args })
+  @SubCommand({
+    description: (t) => t("commands.historical-paintball"),
+    args,
+    group: "classic",
+  })
   public paintball(context: CommandContext) {
     return this.run(context, PAINTBALL_MODES, (base) => <PaintballProfile {...base} />);
   }
 
-  @SubCommand({ description: (t) => t("commands.historical-quake"), args })
+  @SubCommand({
+    description: (t) => t("commands.historical-quake"),
+    args,
+    group: "classic",
+  })
   public quake(context: CommandContext) {
     return this.run(context, QUAKE_MODES, (base, mode) => (
       <QuakeProfile {...base} mode={mode} />
@@ -218,7 +230,11 @@ export class HistoricalBase {
     return this.run(context, TNT_GAMES_MODES, (base) => <TNTGamesProfile {...base} />);
   }
 
-  @SubCommand({ description: (t) => t("commands.historical-turbokartracers"), args })
+  @SubCommand({
+    description: (t) => t("commands.historical-turbokartracers"),
+    args,
+    group: "classic",
+  })
   public turbokartracers(context: CommandContext) {
     return this.run(context, TURBO_KART_RACERS_MODES, (base) => (
       <TurboKartRacersProfile {...base} />
@@ -232,14 +248,22 @@ export class HistoricalBase {
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.historical-vampirez"), args })
+  @SubCommand({
+    description: (t) => t("commands.historical-vampirez"),
+    args,
+    group: "classic",
+  })
   public vampirez(context: CommandContext) {
     return this.run(context, VAMPIREZ_MODES, (base, mode) => (
       <VampireZProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.historical-walls"), args })
+  @SubCommand({
+    description: (t) => t("commands.historical-walls"),
+    args,
+    group: "classic",
+  })
   public walls(context: CommandContext) {
     return this.run(context, WALLS_MODES, (base) => <WallsProfile {...base} />);
   }

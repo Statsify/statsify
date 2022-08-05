@@ -9,3 +9,4 @@
 export * from "./field";
 export * from "./metadata-scanner";
 export * from "./serialize";
+export * from "./field.options";
