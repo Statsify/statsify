@@ -7,9 +7,9 @@
  */
 
 import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { FieldOptions } from "../../../metadata/field.options";
-import { GameChallenges } from "../../../GameChallenges";
+import { Field } from "../../../../../metadata";
+import { FieldOptions } from "../../../../../metadata/field.options";
+import { GameChallenges } from "../../../../../GameChallenges";
 import { add } from "@statsify/math";
 
 const challengeFieldData: FieldOptions = {

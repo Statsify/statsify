@@ -26,6 +26,7 @@ export * from "./skin";
 export * from "./status";
 export * from "./tags";
 export * from "./ticket";
+export * from "./GameChallenges";
 export * from "./user";
 export * from "./util/leaderboard-scanner";
 export * from "./verify-codes";

@@ -37,10 +37,11 @@ const NormalTable = ({ challenges, t, gameIcons }: NormalTableProps) => {
 
   const times = Object.entries(challenges)
     .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
+    .filter(([k]) => k !== "total")
     .map(([field, game]) => (
       <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
-        <img image={gameIcons[field as keyof Challenges]} width={32} height={32} />
-        <text>§l{FormattedGame[field as keyof Challenges] ?? field}</text>
+        <img image={gameIcons[field as keyof typeof gameIcons]} width={32} height={32} />
+        <text>§l{FormattedGame[field as keyof typeof FormattedGame] ?? field}</text>
         <div width="remaining" margin={{ left: 4, right: 4 }} />
         <text>{t(game.total)}</text>
       </box>
@@ -108,7 +109,7 @@ export const ChallengesProfile = ({
   time,
   gameIcons,
 }: ChallengeProfileProps) => {
-  const { challenges } = player;
+  const { challenges } = player.stats.general;
 
   const { api } = mode;
   let table: JSX.Element;
@@ -128,12 +129,7 @@ export const ChallengesProfile = ({
       break;
   }
 
-  const total = Object.entries(challenges).reduce(
-    (p, c) => (c[1]?.total ? p + c[1].total : p),
-    0
-  );
-
-  const sidebar: SidebarItem[] = [[t("stats.total"), t(total), "§b"]];
+  const sidebar: SidebarItem[] = [[t("stats.total"), t(challenges.total), "§b"]];
 
   if (api !== "overall") {
     sidebar.push([
@@ -150,7 +146,7 @@ export const ChallengesProfile = ({
         name={player.prefixName}
         badge={badge}
         title={`§l§aChallenges §r(§l${
-          FormattedGame[api as keyof Challenges] ?? prettify(api)
+          FormattedGame[api as keyof typeof FormattedGame] ?? prettify(api)
         }§r)`}
         sidebar={sidebar}
         time={time}
