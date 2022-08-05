@@ -7,10 +7,9 @@
  */
 
 import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { FieldOptions } from "../../../metadata/field.options";
-import { GameChallenges } from "../game-challenges";
+import { Field, FieldOptions } from "../../../../../metadata";
 import { add } from "@statsify/math";
+import type { GameChallenges } from "../game-challenges";
 
 const challengeFieldData: FieldOptions = {
   leaderboard: { limit: 5000, additionalFields: ["challenges.warlords.total"] },

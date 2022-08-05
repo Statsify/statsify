@@ -48,7 +48,7 @@ export const HistoricalGeneralProfile = ({
           <Table.td title={t("stats.quests")} value={t(general.quests)} color="§e" />
           <Table.td
             title={t("stats.challenges")}
-            value={t(general.challenges)}
+            value={t(general.challenges.total)}
             color="§a"
           />
           <Table.td title={t("stats.karma")} value={t(general.karma)} color="§d" />

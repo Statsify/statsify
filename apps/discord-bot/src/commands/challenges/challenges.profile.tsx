@@ -39,8 +39,8 @@ const NormalTable = ({ challenges, t, gameIcons }: NormalTableProps) => {
     .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
     .map(([field, game]) => (
       <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
-        <img image={gameIcons[field as keyof Challenges]} width={32} height={32} />
-        <text>§l{FormattedGame[field as keyof Challenges] ?? field}</text>
+        <img image={gameIcons[field as keyof typeof gameIcons]} width={32} height={32} />
+        <text>§l{FormattedGame[field as keyof typeof FormattedGame] ?? field}</text>
         <div width="remaining" margin={{ left: 4, right: 4 }} />
         <text>{t(game.total)}</text>
       </box>
@@ -75,8 +75,8 @@ const GameTable = ({ gameChallenges, constructor, t }: GameTableProps) => {
       .sort((a, b) => b[1] - a[1])
       .map(([challenge, completions]) => {
         const field = metadata.find(([k]) => k === challenge);
-        const realname = field?.[1]?.leaderboard?.name ?? prettify(challenge);
-        return [realname, t(completions)];
+        const realName = field?.[1]?.leaderboard?.name ?? prettify(challenge);
+        return [realName, t(completions)];
       }),
     GROUP_SIZE
   );
@@ -108,7 +108,7 @@ export const ChallengesProfile = ({
   time,
   gameIcons,
 }: ChallengeProfileProps) => {
-  const { challenges } = player;
+  const { challenges } = player.stats.general;
 
   const { api } = mode;
   let table: JSX.Element;
@@ -150,7 +150,7 @@ export const ChallengesProfile = ({
         name={player.prefixName}
         badge={badge}
         title={`§l§aChallenges §r(§l${
-          FormattedGame[api as keyof Challenges] ?? prettify(api)
+          FormattedGame[api as keyof typeof FormattedGame] ?? prettify(api)
         }§r)`}
         sidebar={sidebar}
         time={time}

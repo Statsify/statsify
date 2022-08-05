@@ -29,8 +29,8 @@ import {
   WarlordsChallenges,
   WoolWarsChallanges,
 } from "./modes";
-import { Field } from "../../metadata";
-import { FormattedGame, GameModes, IGameModes } from "../../game";
+import { Field } from "../../../../metadata";
+import { FormattedGame, GameModes, IGameModes } from "../../../../game";
 import { SpeedUHCChallenges } from "./modes/speeduhc";
 
 export const CHALLENGE_MODES = new GameModes([
@@ -124,6 +124,9 @@ export class Challenges {
   @Field({ leaderboard: { fieldName: `${FormattedGame.WOOLWARS} Challenges` } })
   public WOOLWARS: WoolWarsChallanges;
 
+  @Field()
+  public total: number;
+
   public constructor(challenges: APIData) {
     this.ARCADE = new ArcadeChallenges(challenges);
     this.ARENA_BRAWL = new ArenaChallenges(challenges);
@@ -146,6 +149,11 @@ export class Challenges {
     this.WALLS = new WallsChallenges(challenges);
     this.WARLORDS = new WarlordsChallenges(challenges);
     this.WOOLWARS = new WoolWarsChallanges(challenges);
+
+    this.total = Object.entries(this).reduce(
+      (p, c) => (c[1]?.total ? p + c[1].total : p),
+      0
+    );
   }
 }
 
