@@ -31,6 +31,7 @@
     "bridge": "",
     "buildbattle": "",
     "cape": "Veja as capas do Optifine e do Minecraft de alguém",
+    "challenges": "",
     "close": "",
     "colors": "Uma lista de códigos de cores",
     "commands": "",
@@ -349,7 +350,7 @@
       "title": "Jogador inválido"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` não corresponde ao formato `h:mm a`. Digite um tempo no formato similar a `12:00 PM` ou `1:00 AM.`",
+      "description": "`{{time}}` não corresponde ao formato `h:mm a`. Digite um tempo em um formato similar a `12:00 PM` ou `1:00 AM`.",
       "title": "Tempo de redefinição inválido"
     },
     "invalidResetTimezone": {
@@ -582,7 +583,7 @@
     "grandPrixTokens": "Tokens da GP",
     "guild": {
       "averageMemberGexp": "Média de GEXP dos membros",
-      "createdOn": "Criado Em",
+      "createdOn": "Criado em",
       "daily": "Diária",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
       "date": "Data",
@@ -726,11 +727,12 @@
     "progression": {
       "exp": "Progresso de EXP",
       "gexp": "Progresso de GEXP",
-      "win": "Progresso da Vitória",
-      "kill": "Progresso da Morte",
-      "score": "Progresso da Pontuação",
-      "goldTrophy": "Progresso do Troféu de Ouro"
-    }
+      "win": "Progresso de vitória",
+      "kill": "Progresso de abate",
+      "score": "Progresso de pontuação",
+      "goldTrophy": "Progresso de troféu de ouro"
+    },
+    "game-total": "{{game}} total"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Entre no nosso $t(socials.discord) e receba **recargas 20% menores** $t(emojis:heart)",
