@@ -1,0 +1,767 @@
+{
+  "arguments": {
+    "choice": "選擇一個選項",
+    "file": "上傳一份檔案",
+    "gtbhelper": "目前提示",
+    "guild-leaderboard": "",
+    "guild-query": "一個公會名稱或公會成員",
+    "guild-type": "要搜尋的公會類型",
+    "mojang-player": "一個當個創世神的使用者名稱或是UUID",
+    "number": "一個數字",
+    "player": "",
+    "player-leaderboard": "選擇一個要查看排行榜",
+    "reason": "",
+    "server": "一個當個創世神的伺服器名稱或是IP",
+    "tags-content": "",
+    "tags-name": "",
+    "text": "一條訊息",
+    "user": "選擇一位Discord使用者"
+  },
+  "commands": {
+    "arcade": "",
+    "arenabrawl": "",
+    "available": "查看一個當個創世神的使用者名稱是否可使用",
+    "badge": "",
+    "badge-reset": "重置您的個人資料徽章",
+    "badge-set": "上傳一個新的徽章到您的個人資料",
+    "badge-view": "查看您目前個人資料的徽章",
+    "bedwars": "",
+    "bedwars-challenges": "",
+    "blitzsg": "",
+    "bridge": "",
+    "buildbattle": "",
+    "cape": "查看玩家當個創世神和Optifine的披風",
+    "close": "",
+    "colors": "列出當個創世神的顏色代碼",
+    "commands": "",
+    "copsandcrims": "",
+    "daily": "",
+    "delete-player": "",
+    "duels": "",
+    "events": "",
+    "force-unverify": "",
+    "force-verify": "",
+    "friends": "查看您在Hypixel的好友名單",
+    "game-counts": "查看目前所有Hypixel遊戲的遊玩人數",
+    "general": "",
+    "gtbhelper": "根據提示，生成可能的 你蓋我猜 的答案名單",
+    "guild": "",
+    "guild-leaderboard": "",
+    "guild-list": "查看您的公會的成員名單",
+    "guild-member": "查看您的公會成員的統計數據",
+    "guild-overall": "查看您的公會統計數據的摘要",
+    "guild-top": "查看最高公會經驗貢獻者",
+    "help": "關於Statsify能為您和您的伺服器做什麼的摘要",
+    "historical-arcade": "",
+    "historical-arenabrawl": "",
+    "historical-bedwars": "",
+    "historical-blitzsg": "",
+    "historical-bridge": "",
+    "historical-buildbattle": "",
+    "historical-command": "查看{{name}}歷史的統計數據",
+    "historical-copsandcrims": "",
+    "historical-duels": "",
+    "historical-general": "",
+    "historical-megawalls": "",
+    "historical-murdermystery": "",
+    "historical-paintball": "",
+    "historical-pit": "",
+    "historical-quake": "",
+    "historical-skywars": "",
+    "historical-smashheroes": "",
+    "historical-speeduhc": "",
+    "historical-tntgames": "",
+    "historical-turbokartracers": "",
+    "historical-uhc": "",
+    "historical-vampirez": "",
+    "historical-walls": "",
+    "historical-warlords": "",
+    "historical-woolwars": "",
+    "hypixel-command": "查看您{{name}}的統計數據",
+    "invite": "邀請Statsify",
+    "language": "更改您看的語言",
+    "last-day": "",
+    "last-month": "",
+    "last-week": "",
+    "leaderboard-arcade": "",
+    "leaderboard-arenabrawl": "",
+    "leaderboard-bedwars": "",
+    "leaderboard-blitzsg": "",
+    "leaderboard-buildbattle": "",
+    "leaderboard-command": "查看{{name}}排行榜",
+    "leaderboard-copsandcrims": "",
+    "leaderboard-duels": "",
+    "leaderboard-general": "",
+    "leaderboard-megawalls": "",
+    "leaderboard-murdermystery": "",
+    "leaderboard-paintball": "",
+    "leaderboard-parkour": "",
+    "leaderboard-pit": "",
+    "leaderboard-quake": "",
+    "leaderboard-skywars": "",
+    "leaderboard-smashheroes": "",
+    "leaderboard-speeduhc": "",
+    "leaderboard-tntgames": "",
+    "leaderboard-turbokartracers": "",
+    "leaderboard-uhc": "",
+    "leaderboard-vampirez": "",
+    "leaderboard-walls": "",
+    "leaderboard-warlords": "",
+    "leaderboard-woolwars": "",
+    "links": "Statsify連結",
+    "megawalls": "",
+    "monthly": "",
+    "murdermystery": "",
+    "mutuals": "查看您跟另一位玩家共同的Hypixel好友",
+    "namehistory": "查看玩家當個創世神的名稱歷史",
+    "paintball": "",
+    "parkour": "",
+    "ping": "查看Statsify的創作者和貢獻者",
+    "pit": "",
+    "player-leaderboard": "",
+    "quake": "",
+    "rankings": "查看您在所有Hypixel排行榜的最高排名",
+    "rankings-all": "",
+    "rankings-arcade": "",
+    "rankings-arenabrawl": "",
+    "rankings-bedwars": "",
+    "rankings-blitzsg": "",
+    "rankings-buildbattle": "",
+    "rankings-command": "查看您在{{name}}的最高排行榜排名",
+    "rankings-copsandcrims": "",
+    "rankings-duels": "",
+    "rankings-general": "",
+    "rankings-megawalls": "",
+    "rankings-murdermystery": "",
+    "rankings-paintball": "",
+    "rankings-parkour": "",
+    "rankings-pit": "",
+    "rankings-quake": "",
+    "rankings-skywars": "",
+    "rankings-smashheroes": "",
+    "rankings-speeduhc": "",
+    "rankings-tntgames": "",
+    "rankings-turbokartracers": "",
+    "rankings-uhc": "",
+    "rankings-vampirez": "",
+    "rankings-walls": "",
+    "rankings-warlords": "",
+    "rankings-woolwars": "",
+    "ratios": "",
+    "ratios-arcade": "",
+    "ratios-arenabrawl": "",
+    "ratios-bedwars": "",
+    "ratios-blitzsg": "",
+    "ratios-command": "查看玩家在{{name}}的比率里程碑和估計值",
+    "ratios-copsandcrims": "",
+    "ratios-duels": "",
+    "ratios-megawalls": "",
+    "ratios-murdermystery": "",
+    "ratios-paintball": "",
+    "ratios-quake": "",
+    "ratios-skywars": "",
+    "ratios-smashheroes": "",
+    "ratios-speeduhc": "",
+    "ratios-uhc": "",
+    "ratios-vampirez": "",
+    "ratios-walls": "",
+    "ratios-warlords": "",
+    "ratios-woolwars": "",
+    "recentgames": "查看玩家最近在Hypixel遊玩過的遊戲",
+    "reset": "重置您的歷史統計數據",
+    "server": "查看當個創世神的伺服器狀態",
+    "skin": "查看玩家當個創世神的外觀",
+    "skywars": "",
+    "smashheroes": "",
+    "socials": "查看玩家連結到Hypixel的社群媒體",
+    "speeduhc": "",
+    "status": "查看玩家最近Hypixel的狀態",
+    "tags": "",
+    "tags-create": "",
+    "tags-delete": "",
+    "tags-rename": "",
+    "text": "生成當個創世神的字體文本",
+    "theme": "",
+    "theme-boxes": "更改個人資料的外框樣式",
+    "theme-font": "更改個人資料的字體",
+    "theme-footer": "",
+    "theme-footer-icon": "更改您的個人資料的頁腳圖標",
+    "theme-footer-message": "要更改您的個人資料的頁腳消息。您可以打開此網頁 https://rgb.birdflop.com 來創建文本漸變樣式。",
+    "theme-footer-reset": "重置您的個人資料的頁腳",
+    "theme-palette": "改變您的個人資料的色調",
+    "theme-view": "查看您目前的個人資料主題",
+    "ticket-menu": "",
+    "tntgames": "",
+    "turbokartracers": "",
+    "uhc": "",
+    "unverify": "取消您的Discord到當個創世神帳戶的連結",
+    "user": "",
+    "uuid": "獲取玩家當個創世神的UUID",
+    "vampirez": "",
+    "verify": "連結您的Discord到當個創世神帳戶",
+    "walls": "",
+    "warlords": "",
+    "watchdog": "查看Hypixel Watchdog查禁總計",
+    "weekly": "",
+    "woolwars": "",
+    "yesterday": ""
+  },
+  "config": {
+    "badge": {
+      "profile": "這是您徽章在您的個人資料中的樣式",
+      "reset": "$t(emojis:config.reset) 成功重置您的徽章。",
+      "set": "$t(emojis:config.success) 成功更新您的徽章。",
+      "view": "$t(emojis:config.view) 您目前的徽章是："
+    },
+    "footer": {
+      "profile": "這是您頁腳在您的個人資料中的樣式",
+      "reset": "$t(emojis:config.reset) 成功重置您的頁腳。",
+      "set": "$t(emojis:config.success) 成功更新您的頁腳。"
+    },
+    "theme": {
+      "profile": "這是您主題在您的個人資料中的樣式",
+      "set": "$t(emojis:config.success) 成功更新您的主題。",
+      "view": "$t(emojis:config.view) 您目前的主題是："
+    },
+    "language": {
+      "description": "$t(emojis:config.success) 成功將您的語言更新為`{{locale}}`。"
+    }
+  },
+  "cooldown": {
+    "description": "請等待`{{time}}`，再執行`{{command}}`。\n\n點擊[這裡](https://statsify.net/premium)來了解如何減少冷卻時間",
+    "title": "處於冷卻中"
+  },
+  "embeds": {
+    "available": {
+      "blocked": "除非該使用名被Mojang暫時或是永久封鎖。",
+      "invalidCharacters": "無效的字元",
+      "tooLong": "過長"
+    },
+    "colors": {
+      "bold": "粗體",
+      "color": "顏色",
+      "italic": "斜體",
+      "mainHex": "前景色 Hex",
+      "obfuscated": "隨機字元",
+      "reset": "重置文本樣式",
+      "shadowHex": "背景色 Hex",
+      "strikethrough": "刪除線",
+      "title": "Minecraft 顏色代碼",
+      "underline": "下劃線"
+    },
+    "deletePlayer": {
+      "description": "",
+      "title": ""
+    },
+    "forceUnverify": {
+      "description": "",
+      "title": ""
+    },
+    "forceVerify": {
+      "description": "",
+      "title": ""
+    },
+    "gameCounts": {
+      "title": "Hypixel各遊戲玩家總計"
+    },
+    "gtbhelper": {
+      "title": "可能是 你蓋我猜 的解決方案"
+    },
+    "help": {
+      "games": {
+        "description": "Statsify支持Hypixel大多數遊戲。 想要查看您在遊戲中的統計數據，可執行`/[遊戲名稱]`。例如，您可以執行`/bedwars`來查看您在床戰裡的統計數據。",
+        "title": "遊戲"
+      },
+      "historical": {
+        "description": "Statsify允許您通過執行`/daily`、 `/weekly`和`/monthly`來查看您的每日、每周和每月的統計數據。如果您錯過了一次重置時間，您可以通過執行`/yesterday`、`/lastweek`、`/lastmonth`來查看您以往的統計數據。 ",
+        "title": "以往的統計數據"
+      },
+      "leaderboards": {
+        "description": "Statsify的`/leaderboard`指令提供數千個排行榜。執行`/leaderboard`，然後選擇遊戲模式，然後選擇要查看的排行榜。您可以點擊搜索按鈕來查看特定的玩家或排行榜位置。您還可以通過使用上下按鍵來查看更多頁面。",
+        "title": "排行榜"
+      },
+      "minecraft": {
+        "description": "您可以分別通過執行`/skin`、`/uuid`和`/cape`指令來查看一般玩家當個創世神的資訊，例如外觀、UUID、披風。Statsify還具有執行`/text`生成當個創世神文本樣式的指令。通過執行`/colors`來查看當個創世神的顏色代碼，並通過`/server`來預覽當個創世神的伺服器。",
+        "title": "當個創世神"
+      },
+      "title": "Statsify 幫助"
+    },
+    "invite": {
+      "description": "點擊下面的邀請連結以邀請Statsify到您的Discord伺服器。",
+      "title": "Statsify邀請連結"
+    },
+    "ping": {
+      "contributors": "貢獻者",
+      "core": "核心開發職員",
+      "pong": "Pong!",
+      "title": "Statsify貢獻者",
+      "translators": "譯者"
+    },
+    "tags": {
+      "deleted": {
+        "description": "",
+        "title": ""
+      },
+      "rename": {
+        "description": "",
+        "title": ""
+      }
+    }
+  },
+  "errors": {
+    "coreOnly": {
+      "description": "",
+      "title": ""
+    },
+    "diamondOnly": {
+      "description": "",
+      "preview": "",
+      "title": ""
+    },
+    "emeraldOnly": {
+      "description": "",
+      "preview": "",
+      "title": ""
+    },
+    "footerTooLong": {
+      "description": "您提供的訊息過長。它應該在50個字元以下，除開顏色代碼。",
+      "title": "訊息過長"
+    },
+    "goldOnly": {
+      "description": "",
+      "preview": "",
+      "title": ""
+    },
+    "guildLeaderboardNotFound": {
+      "description": "我們無法找到您要搜尋的`公會`！",
+      "title": "無效的公會"
+    },
+    "higherTierRequiredForIcon": {
+      "description": "您需要購買高級等級才能解鎖此圖標！",
+      "title": "需要更高的等级"
+    },
+    "invalidGuild": {
+      "description": "無法尋找一個{{type}}為`{{tag}}`的公會！",
+      "title": "無效的公會"
+    },
+    "invalidPlayer": {
+      "description": "無法尋找一個{{type}}為`{{tag}}`的玩家！",
+      "title": "無效的玩家"
+    },
+    "invalidResetTime": {
+      "description": "`{{time}}`不匹配`h:mm a`的格式。請輸入`12:00 PM`或是`1:00 AM`類似格式的時間。",
+      "title": "無效的重置時間"
+    },
+    "invalidResetTimezone": {
+      "description": "`{{timezone}}`不是一個有效的時區。輸入`EST`或`PST`類似的時區。",
+      "title": "無效的重置時區"
+    },
+    "invalidSearch": {
+      "description": "我們不了解您在搜尋什麼資訊！\n請輸入一位使用名、UUID或是提及一位Discord用戶。",
+      "title": "無效的搜尋"
+    },
+    "invalidServer": {
+      "description": "您所搜尋的伺服器不存在或是離線！",
+      "title": "無效的當個創世神伺服器"
+    },
+    "invalidTagName": {
+      "description": "",
+      "title": ""
+    },
+    "invalidTicketChannel": {
+      "description": "",
+      "title": ""
+    },
+    "ironOnly": {
+      "description": "",
+      "preview": "",
+      "title": ""
+    },
+    "leaderboardEmpty": {
+      "description": "此排名沒有更多排行榜數據！",
+      "title": "此排名沒有排行榜數據"
+    },
+    "leaderboardInvalidPosition": {
+      "description": "您輸入的排行榜排位為無效。請輸入一個大於1的數字。",
+      "title": "無效的排名"
+    },
+    "leaderboardNotFound": {
+      "description": "我們無法找到您要搜尋的`排行榜`！",
+      "title": "未找到排行榜"
+    },
+    "missingMentionVerification": {
+      "description": "<@{{tag}}>未被**驗證**。要提及他們，他們必須首先執行`/verify`指令來驗證他們的賬戶。",
+      "title": "缺少驗證"
+    },
+    "missingPlayerVerification": {
+      "description": "",
+      "title": ""
+    },
+    "missingSelfVerification": {
+      "description": "為了在不提供使用名的情況下執行指令，您必須先經過驗證。請執行`/verify`並完成指令，然後再試一次。",
+      "title": "缺少驗證"
+    },
+    "netheriteOnly": {
+      "description": "",
+      "preview": "",
+      "title": ""
+    },
+    "noCape": {
+      "description": "**{{username}}**沒有任何披風！",
+      "title": "缺少披風"
+    },
+    "noFriends": {
+      "description": "**{{displayName}}**沒有好友$t(emojis:sad)！:(",
+      "title": "未找到好友"
+    },
+    "noGTBSolutions": {
+      "description": "我們搜尋不到任何關於此提示的解決方案！",
+      "title": "毫無 你蓋我猜 的解決方案"
+    },
+    "noMutuals": {
+      "description": "**{{displayNameOne}}**和**{{displayNameTwo}}**沒有共同好友！",
+      "title": "沒有共同好友"
+    },
+    "noRankings": {
+      "description": "**{{displayName}}**沒有排行！",
+      "title": "沒有排行"
+    },
+    "noRecentGames": {
+      "description": "無法找到**{{displayName}}**最近遊玩過的遊戲！",
+      "title": "無法找到最近遊玩過的遊戲"
+    },
+    "noStatus": {
+      "description": "無法搜尋**{{displayName}}**Hypixel的狀態！",
+      "title": "未找到狀態"
+    },
+    "playerLeaderboardNotFound": {
+      "description": "我們無法找到您要搜尋的`玩家`！",
+      "title": "無效的玩家"
+    },
+    "playerNotInGuild": {
+      "description": "**{{displayName}}**不在公會中！",
+      "title": "無效的公會"
+    },
+    "premiumRequired": {
+      "description": "點擊[這裡](https://statsify.net/premium)可以查看所有可用功能。",
+      "preview": "點擊[這裡](https://statsify.net/premium)可以查看所有可用功能。以下是一些指令的所做或更改的小預覽。",
+      "title": "執行此指令需要Statsify {{tier}}"
+    },
+    "staffOnly": {
+      "description": "此指令僅適用於Statsify的職員！",
+      "preview": "下面是一些指令功能的小預覽",
+      "title": "只供職員使用"
+    },
+    "tagNotFound": {
+      "description": "",
+      "title": ""
+    },
+    "ticketAlreadyExists": {
+      "description": "",
+      "title": ""
+    },
+    "unknown": {
+      "description": "發生錯誤，請稍後再試。如果這種情況持續存在，請在我們的[Discord](<https://statsify.net/discord>)裡報告。",
+      "title": "發生一個未知錯誤"
+    },
+    "unsupportedFileType": {
+      "description": "您上傳的文件不是此指令所支持的文件類型！",
+      "title": "不支持的文件類型"
+    }
+  },
+  "historical": {
+    "aboutResetting": "點擊下面的重置按鍵可以在每天**此時**重置您以往的統計數據。\n\n**警告**：這將刪除您所有以往的統計數據並且**無法撤消**。\n如果您希望能夠在特定時間重置，請查看 $t(socials.premium)。",
+    "aboutResettingPremium": "點擊下面的重置按鍵以重置您以往的統計數據。\n\n**警告：**這將刪除您所有以往的統計數據並且**無法撤消**。",
+    "modal": {
+      "resetTime": "選擇一個重置時間",
+      "timezone": "選擇一個時區",
+      "title": "以往的重置時間"
+    },
+    "new": "**{{displayName}}**首次在Statsify查看了以往的統計數據。他們的統計數據將會在每天的此時更新。",
+    "reset": "$t(emojis:clock) **重置**<t:{{time}}:R>",
+    "resetButton": "點擊重置",
+    "setResetTime": "將您的重置時間設置為<t:{{time}}:t>"
+  },
+  "leaderboard": {
+    "guildInput": {
+      "label": "以公會搜尋",
+      "placeholder": "輸入一個公會的名稱，例如：Quote"
+    },
+    "modal": {
+      "title": "排行榜搜尋"
+    },
+    "playerInput": {
+      "label": "以玩家搜尋",
+      "placeholder": "輸入一位玩家的使用名，例如：j4cobi"
+    },
+    "positionInput": {
+      "label": "以排行榜排名搜尋",
+      "placeholder": "輸入一個排行榜排名，例如：5000"
+    }
+  },
+  "minecraft": {
+    "available": "可使用",
+    "nameHistory": "使用名歷史",
+    "originalName": "原始使用名",
+    "trimmedUUID": "裁剪過的UUID",
+    "unavailable": "不可使用",
+    "username": "用戶名",
+    "uuid": "UUID"
+  },
+  "number": "",
+  "players": "玩家數",
+  "socials": {
+    "discord": "",
+    "github": "",
+    "invite": "",
+    "premium": "",
+    "website": ""
+  },
+  "stats": {
+    "achievementPoints": "成就點數",
+    "adrenaline": "腎上腺素",
+    "assists": "助攻數",
+    "bblr": "床數B/L比",
+    "bedsBroken": "破壞床數",
+    "bedsLost": "遭破床數",
+    "bestRound": "最佳回合",
+    "bestTime": "最佳時間",
+    "bestWinstreak": "最佳連勝紀錄",
+    "bigShot": "重擊",
+    "blocksBroken": "破壞方塊數",
+    "blocksPlaced": "放置方塊數",
+    "blocksRan": "路過方塊數",
+    "bombsDefused": "拆除炸彈數",
+    "bombsPlanted": "安置炸彈數",
+    "bounty": "賞金",
+    "bountyKills": "目標擊殺數",
+    "bowKills": "箭矢擊殺數",
+    "boxesPickedUp": "盒子收集數",
+    "bronzeTrophies": "青銅獎盃數",
+    "candyFound": "發現糖果數",
+    "challenges": "挑戰數",
+    "class": "職業",
+    "coins": "硬幣數",
+    "correctGuesses": "正確猜測數",
+    "damage": "擊傷值",
+    "deaths": "死亡數",
+    "detectiveWins": "偵探獲勝次數",
+    "diamonds": "鑽石收集數",
+    "doublesWins": "雙人模式獲勝次數",
+    "eggsFound": "發現的蛋數",
+    "emeralds": "綠寶石收集數",
+    "empireKills": "防守者擊殺數",
+    "ended": "結束於",
+    "endurance": "增益幅度技能值",
+    "event-level": "活動等級",
+    "exp": "經驗值",
+    "expGained": "獲得的經驗值",
+    "extraUltimates": "高級神裝",
+    "fastestDetectiveWin": "偵探最快獲勝記錄",
+    "fastestMurdererWin": "殺手最快獲勝記錄",
+    "fastestWin": "最快獲勝記錄",
+    "finalAssists": "最終助攻數",
+    "finalDeaths": "最終死亡數",
+    "finalKills": "最終擊殺數",
+    "firstLogin": "首次登入",
+    "fkdr": "最終 K/D 比",
+    "forcefieldTime": "反彈彩單時間",
+    "fortune": "額外硬幣技能值",
+    "friends": "好友",
+    "game": "遊戲",
+    "gamesPlayed": "遊玩過的遊戲",
+    "giftsFound": "發現禮物數",
+    "giftsSent": "送出禮物數",
+    "goals": "射門數",
+    "godfather": "額外生命技能值",
+    "godlikes": "無死通過次數",
+    "gold": "金錠收集數",
+    "goldPickedUp": "撿起金錠數",
+    "goldRate": "金錠率",
+    "goldTrophies": "金獎盃數",
+    "grandPrixTokens": "GP 代幣",
+    "guild": {
+      "averageMemberGexp": "平均成員的公會經驗值",
+      "createdOn": "創建於",
+      "daily": "每日",
+      "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
+      "date": "日期",
+      "gexp": "公會經驗值",
+      "guild": "公會",
+      "guildMaster": "公會會長",
+      "joinedAt": "加入於",
+      "level": "公會等級",
+      "members": "公會成員數",
+      "monthly": "每月",
+      "monthly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)",
+      "quests": "公會任務數",
+      "rank": "公會Rank",
+      "scaledGexp": "以比例值的公會經驗",
+      "weekly": "每週",
+      "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
+    },
+    "hat": "頭飾",
+    "heads": "頭顱數",
+    "headsEaten": "吃過的頭顱數",
+    "headshotKills": "爆頭擊殺數",
+    "headshots": "爆頭數",
+    "headstart": "復活額外硬幣技能值",
+    "healing": "回復值",
+    "heroWins": "英雄獲勝數",
+    "hidden": "隱藏",
+    "hiderWins": "躲藏者勝利數",
+    "highestKillstreak": "最高連續擊殺數",
+    "highestScoreFinals": "決賽個人最佳數",
+    "highestScoreQualifications": "預選賽個人最佳數",
+    "highestStreak": "最高連殺數",
+    "hits": "擊中數",
+    "infectedWins": "感染者獲勝數",
+    "iron": "鐵錠收集數",
+    "karma": "人品值",
+    "kdr": "K/D 比",
+    "kicks": "踢球數",
+    "vampires-killed": "吸血鬼擊殺數",
+    "humans-killed": "人類擊殺數",
+    "kills": "擊殺數",
+    "killsAsInfected": "作為感染者的擊殺數",
+    "killsAsMurderer": "作為殺手的擊殺數",
+    "killsAsSurvivor": "作為倖存者的擊殺數",
+    "killstreaks": "連續擊殺記錄",
+    "kit": "目前職業",
+    "kwr": "K/W比",
+    "lapsCompleted": "完成圈數",
+    "lastAction": "上次拍賣",
+    "lastActionTime": "上次拍賣時間",
+    "lastAliveGames": "存活時間數",
+    "lastGame": "上次遊玩的遊戲",
+    "lastLogin": "上次登入",
+    "layers": "層數",
+    "level": "等級",
+    "levelsGained": "獲得等級",
+    "loginTime": "線上時間",
+    "logoutTime": "離線時間",
+    "lootChests": "Loot Chest 数",
+    "losses": "敗場數",
+    "magicalChests": "神秘寶箱數",
+    "magicalKeys": "神秘鑰匙數",
+    "map": "地圖",
+    "mastery": "精通",
+    "maxPoints": "最佳分數",
+    "maxWave": "最佳紀錄",
+    "mode": "模式",
+    "mostVampireKills": "最佳吸血鬼擊殺數",
+    "mounts": "坐騎數",
+    "murdererWins": "殺手獲勝次數",
+    "mythic-favor": "神話之塵數",
+    "networkLevel": "伺服器等級",
+    "objectives": "目標數",
+    "offensive": "攻擊技能",
+    "offline": "離線",
+    "online": "線上",
+    "opals": "歐泊",
+    "overallWins": "總獲勝數",
+    "pingRange": "延遲偏好",
+    "playtime": "遊戲時間",
+    "points": "積分",
+    "poopCollected": "大便收集數",
+    "powerKicks": "能量擊殺數",
+    "powerupActivations": "增益加成次數",
+    "powerups": "增益效果數",
+    "prevent": "抵免傷害值",
+    "quests": "任務數",
+    "ranksGifted": "Ranks贈送數",
+    "rebelKills": "攻擊者擊殺數",
+    "renown": "聲望",
+    "roundWins": "回合獲勝數",
+    "rune": "神器",
+    "score": "分數",
+    "seekerWins": "捉藏者獲勝次數",
+    "shards": "歐泊碎片",
+    "shotAccuracy": "射擊精準度",
+    "shotsFired": "射擊次數",
+    "silver": "銀段",
+    "silverTrophies": "銀獎盃數",
+    "soloWins": "單人模式獲勝次數",
+    "souls": "戰魂數",
+    "stampLevel": "硬幣匯率",
+    "starsEarned": "獲得的星星數",
+    "started": "開始於",
+    "status": "狀態",
+    "suicides": "自殺數",
+    "superVotes": "超級投票數",
+    "superluck": "額外雪球技能值",
+    "support": "輔助技能",
+    "survivorWins": "倖存者獲勝數",
+    "tags": "甩掉TNT次數",
+    "tauntsUsed": "嘲諷使用數",
+    "thrownKnifeKills": "飛刀擊殺數",
+    "title": "頭銜",
+    "tokens": "代幣",
+    "total": "總計",
+    "totalTrophies": "總獎盃數",
+    "trail": "軌跡",
+    "transfusion": "轉換額外硬幣技能值",
+    "trapKills": "陷阱擊殺數",
+    "trigger": "射擊延遲",
+    "tripleShot": "三連射",
+    "trophyRate": "獲得獎盃率",
+    "ultimate": "頂級技能",
+    "ultimatesCrafted": "製作次數",
+    "utility": "實用技能",
+    "version": "版本",
+    "votes": "選票數",
+    "wallsFaced": "遊玩回合數",
+    "wins": "獲勝數",
+    "winstreak": "連線記錄",
+    "witherDamage": "凋零怪傷害量",
+    "witherKills": "凋零怪擊殺數",
+    "wlr": "W/L比",
+    "wool": "羊毛",
+    "woolCaptures": "羊毛捕獲數",
+    "woolPlaced": "羊毛放置數",
+    "zombieKills": "殭屍擊殺數",
+    "mysticsEnchanted": "神秘附魔數",
+    "contracts": "合約任務數",
+    "prefix": "頭銜",
+    "progression": {
+      "exp": "經驗值進度",
+      "gexp": "公會經驗值進度",
+      "win": "獲勝數進度",
+      "kill": "擊殺數進度",
+      "score": "分數進度",
+      "goldTrophy": "金獎盃數進度"
+    }
+  },
+  "tips": {
+    "discord": "$t(emojis:socials.discord) 加入我們的**$t(socials.discord)**並獲得**降低20%的冷卻時間** $t(emojis:heart)",
+    "invite": "$t(emojis:socials.discord) 點擊**[這裡](<https://statsify.net/invite>)**來邀請Statsify到您自己的伺服器！",
+    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)**提供額外的功能，例如客製化個人資料徽章。點擊**[這裡](<https://statsify.net/premium>)**來查找完整的福利清單！",
+    "rankings": "$t(emojis:logos.iron) 擁有**[Statsify Premium](<https://statsify.net/premium>)**並執行`/rankings`可以查看您在排行榜中的最高排行",
+    "verify": "$t(emojis:check) 執行`/verify`可以在不輸入使用名的情況下執行命令，並獲得**降低10%的冷卻時間**"
+  },
+  "unknown": "未知",
+  "verification": {
+    "alreadyVerified": {
+      "description": "您已經連結到一個當個創世神帳戶。執行`/unverify`以取消對您當個創世神的帳戶的連結！",
+      "title": "已經驗證了"
+    },
+    "invalidCode": {
+      "description": "",
+      "title": "無效的驗證碼"
+    },
+    "noCode": {
+      "description": "**如何驗證**\n`1.` 啟動當個創世神，並進入伺服器名單\n`2.` 連接`verify.statsify.net`並複制顯示的驗證碼\n`3.` 返回Discord並執行`/verify code:XXXX`",
+      "title": "缺少驗證碼"
+    },
+    "notVerified": {
+      "description": "您必須先進行驗證，然後才能取消驗證！",
+      "title": "未驗證"
+    },
+    "requiredVerification": {
+      "description": "要執行此指令，您必須先通過驗證。執行`/verify`來驗證您的賬戶。",
+      "title": "需要驗證"
+    },
+    "successfulUnverification": "成功取消驗證您的帳戶！",
+    "successfulVerification": "您目前已驗證為**{{displayName}}**"
+  }
+}
