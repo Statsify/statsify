@@ -4,14 +4,14 @@
     "file": "Envie um arquivo",
     "gtbhelper": "A dica atual",
     "guild-leaderboard": "",
-    "guild-query": "O nome de uma guilda ou um membro da guilda",
-    "guild-type": "A categoria de pesquisa da guilda para realizar",
+    "guild-query": "O nome de uma guild ou um membro da guild",
+    "guild-type": "A categoria de pesquisa da guild para realizar",
     "mojang-player": "Um nome de usuário ou UUID do Minecraft",
     "number": "Um número",
     "player": "",
     "player-leaderboard": "Escolha uma estatística de classificação para ver",
     "reason": "",
-    "server": "Um nome de servidor Minecraft ou um IP de servidor",
+    "server": "Um nome de servidor de Minecraft ou um IP de servidor",
     "tags-content": "",
     "tags-name": "",
     "text": "Uma mensagem",
@@ -23,8 +23,8 @@
     "available": "Verifique a disponibilidade de um nome de usuário",
     "badge": "",
     "badge-reset": "Redefinir seu emblema de perfil",
-    "badge-set": "Enviar um novo emblema de perfil",
-    "badge-view": "Ver o seu atual selo de perfil",
+    "badge-set": "Envie um novo emblema de perfil",
+    "badge-view": "Veja o seu emblema de perfil atual",
     "bedwars": "",
     "bedwars-challenges": "",
     "blitzsg": "",
@@ -43,14 +43,14 @@
     "force-unverify": "",
     "force-verify": "",
     "friends": "Ver a sua lista de amigos do Hypixel",
-    "game-counts": "Ver contagem atual de partidas do Hypixel",
+    "game-counts": "Veja a contagem atual de partidas no Hypixel",
     "general": "",
     "gtbhelper": "Gerar uma lista de possíveis adivinhações com base na dica dada",
     "guild": "",
     "guild-leaderboard": "",
-    "guild-list": "Ver a lista de membros da sua guilda",
-    "guild-member": "Ver as estatísticas dos membros da sua guilda",
-    "guild-overall": "Ver um resumo das estatísticas da sua guilda",
+    "guild-list": "Veja a lista de membros da sua guild",
+    "guild-member": "Veja as estatísticas dos membros da sua guild",
+    "guild-overall": "Veja um resumo das estatísticas da sua guild",
     "guild-top": "Ver os seus melhores colaboradores GEXP",
     "help": "Uma descrição básica do que Statsify faz para você e seu servidor",
     "historical-arcade": "",
@@ -334,8 +334,8 @@
       "title": ""
     },
     "guildLeaderboardNotFound": {
-      "description": "Não conseguimos encontrar a `guilda` que você estava procurando!",
-      "title": "Guilda Inválida"
+      "description": "Não conseguimos encontrar a `guild` que você estava procurando!",
+      "title": "Guild inválida"
     },
     "higherTierRequiredForIcon": {
       "description": "Você precisa comprar um nível mais alto para desbloquear este ícone!",
@@ -343,7 +343,7 @@
     },
     "invalidGuild": {
       "description": "Uma guild por {{type}} de{{tag}}` não pôde ser encontrada!",
-      "title": "Guilda Inválida"
+      "title": "Guild inválida"
     },
     "invalidPlayer": {
       "description": "Um jogador {{type}} de {{tag}}` não pôde ser encontrado!",
@@ -441,7 +441,7 @@
     },
     "playerNotInGuild": {
       "description": "**{{displayName}}** não está em uma guild!",
-      "title": "Guilda Inválida"
+      "title": "Guild inválida"
     },
     "premiumRequired": {
       "description": "Confira todos os recursos disponíveis [here](https://statsify.net/premium).",
@@ -485,8 +485,8 @@
   },
   "leaderboard": {
     "guildInput": {
-      "label": "Busca por uma Guilda",
-      "placeholder": "Digite o nome da guild, por exemplo: Quote"
+      "label": "Buscar por uma guild",
+      "placeholder": "Digite o nome de uma guild, por exemplo: Honra"
     },
     "modal": {
       "title": "Busca de classificação"
@@ -588,15 +588,15 @@
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
       "date": "Data",
       "gexp": "GEXP",
-      "guild": "Guilda",
-      "guildMaster": "Mestre da Guilda",
+      "guild": "Guild",
+      "guildMaster": "Mestre da guild",
       "joinedAt": "Entrou em",
-      "level": "Nível da Guilda",
-      "members": "Membros da Guilda",
+      "level": "Nível da guild",
+      "members": "Membros da guild",
       "monthly": "Mensal",
       "monthly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)",
-      "quests": "Missões da Guilda",
-      "rank": "Ranking da Guilda",
+      "quests": "Missões da guild",
+      "rank": "Pódio da guild",
       "scaledGexp": "GEXP em escala",
       "weekly": "Semanal",
       "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
