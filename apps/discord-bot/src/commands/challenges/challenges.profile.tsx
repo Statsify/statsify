@@ -130,12 +130,7 @@ export const ChallengesProfile = ({
       break;
   }
 
-  const total = Object.entries(challenges).reduce(
-    (p, c) => (c[1]?.total ? p + c[1].total : p),
-    0
-  );
-
-  const sidebar: SidebarItem[] = [[t("stats.total"), t(total), "§b"]];
+  const sidebar: SidebarItem[] = [[t("stats.total"), t(challenges.total), "§b"]];
 
   if (api !== "overall") {
     sidebar.push([
