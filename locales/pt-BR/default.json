@@ -35,7 +35,7 @@
     "colors": "Uma lista de códigos de cores",
     "commands": "",
     "copsandcrims": "",
-    "daily": "Veja suas estatísticas diárias em vários jogos",
+    "daily": "",
     "delete-player": "",
     "duels": "",
     "events": "",
@@ -81,8 +81,8 @@
     "invite": "Convidar Statsify",
     "language": "Alterar o idioma em que você vê as respostas",
     "last-day": "",
-    "last-month": "Veja suas estatísticas do mês passado em vários jogos",
-    "last-week": "Veja suas estatísticas do mês passado em vários jogos",
+    "last-month": "",
+    "last-week": "",
     "leaderboard-arcade": "",
     "leaderboard-arenabrawl": "",
     "leaderboard-bedwars": "",
@@ -110,7 +110,7 @@
     "leaderboard-woolwars": "",
     "links": "Redes Sociais de Statsify",
     "megawalls": "",
-    "monthly": "Veja suas estatísticas diárias em vários jogos",
+    "monthly": "",
     "murdermystery": "",
     "mutuals": "Ver seus amigos em comum com outro jogador",
     "namehistory": "Visualizar o histórico de nomes de alguém no Minecraft",
@@ -202,9 +202,9 @@
     "walls": "",
     "warlords": "",
     "watchdog": "Ver a contagem de banimento do Hypixel Watchdog",
-    "weekly": "Veja suas estatísticas semanais em vários jogos",
+    "weekly": "",
     "woolwars": "",
-    "yesterday": "Veja suas estatísticas de ontem em vários jogos"
+    "yesterday": ""
   },
   "config": {
     "badge": {
