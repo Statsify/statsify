@@ -31,6 +31,7 @@
     "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "View someone's Minecraft and Optifine capes",
+    "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
     "close": "Close the current support ticket",
     "colors": "A list of Minecraft color codes",
     "commands": "View Statsify command usage",
@@ -349,7 +350,7 @@
       "title": "Invalid Player"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
+      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM.`",
       "title": "Invalid Reset Time"
     },
     "invalidResetTimezone": {
@@ -730,7 +731,8 @@
       "kill": "Kill Progress",
       "score": "Score Progress",
       "goldTrophy": "Gold Trophy Progress"
-    }
+    },
+    "game-total": "{{game}} Total"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
