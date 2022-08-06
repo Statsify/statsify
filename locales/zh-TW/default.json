@@ -594,7 +594,7 @@
       "level": "公會等級",
       "members": "公會成員數",
       "monthly": "每月",
-      "monthly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)",
+      "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
       "quests": "公會任務數",
       "rank": "公會Rank",
       "scaledGexp": "以比例值的公會經驗",
