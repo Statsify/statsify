@@ -31,11 +31,12 @@
     "bridge": "",
     "buildbattle": "",
     "cape": "Nézd meg valaki Minecraft és Optifine köpenyjeit",
+    "challenges": "",
     "close": "",
     "colors": "Minecraft színkódok listája",
     "commands": "",
     "copsandcrims": "",
-    "daily": "Nézd meg a napi statisztikáid különböző játékokban",
+    "daily": "",
     "delete-player": "",
     "duels": "",
     "events": "",
@@ -45,7 +46,7 @@
     "game-counts": "Nézd meg a Hypixel játékosszámokat",
     "general": "",
     "gtbhelper": "Megmutatja milyen megoldások lehetnek a segítség alapján GTB-ben",
-    "guild": "Nézd meg a guilded statisztikáit",
+    "guild": "",
     "guild-leaderboard": "",
     "guild-list": "Nézd meg a guilded tagjait",
     "guild-member": "Nézd meg a guilded tagjainak statisztikáit",
@@ -81,8 +82,8 @@
     "invite": "Statsify Meghívása",
     "language": "Saját Nyelv Megváltoztatása",
     "last-day": "",
-    "last-month": "Nézd meg az előző havi statisztikáid különböző játékokban",
-    "last-week": "Nézd meg az előző heti statisztikáid különböző játékokban",
+    "last-month": "",
+    "last-week": "",
     "leaderboard-arcade": "",
     "leaderboard-arenabrawl": "",
     "leaderboard-bedwars": "",
@@ -110,7 +111,7 @@
     "leaderboard-woolwars": "",
     "links": "Statsify Linkek",
     "megawalls": "",
-    "monthly": "Nézd meg a havi statisztikáid különböző játékokban",
+    "monthly": "",
     "murdermystery": "",
     "mutuals": "Nézd meg egy játékossal való közös barátaid",
     "namehistory": "Nézd meg valakinek a Minecraft felhasználónév előzményeit",
@@ -202,9 +203,9 @@
     "walls": "",
     "warlords": "",
     "watchdog": "Nézd meg a Hypixel Watchdog kitiltások számát",
-    "weekly": "Nézd meg a heti statisztikáid különböző játékokban",
+    "weekly": "",
     "woolwars": "",
-    "yesterday": "Nézd meg a tegnapi statisztikáid különböző játékokban"
+    "yesterday": ""
   },
   "config": {
     "badge": {
@@ -349,7 +350,7 @@
       "title": "Ismeretlen Játékos"
     },
     "invalidResetTime": {
-      "description": "Az általad megadott idő formátuma nem megfelelő: `{{time}}`. Kérjük használd a következő formátumot: `h:mm a` pl:`12:00 PM` vagy `1:00 AM`",
+      "description": "Az általad megadott idő formátuma nem megfelelő: `{{time}}`. Kérjük használd a következő formátumot: `h:mm a` pl:`12:00 PM` vagy `1:00 AM`.",
       "title": "Érvénytelen Visszaállítási Idő"
     },
     "invalidResetTimezone": {
@@ -508,7 +509,7 @@
     "username": "Felhasználónév",
     "uuid": "UUID"
   },
-  "number": "{{value, number}}",
+  "number": "",
   "players": "Játékosok",
   "socials": {
     "discord": "",
@@ -730,7 +731,8 @@
       "kill": "Ölések",
       "score": "Pontszámok",
       "goldTrophy": "Arany Trófeák"
-    }
+    },
+    "game-total": "{{game}} Összesen"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Csatlakozz a **$t(socials.discord)** és szerezz **-20% várakozási időt** $t(emojis:heart)",
