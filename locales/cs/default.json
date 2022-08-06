@@ -594,7 +594,7 @@
       "level": "Guild Level",
       "members": "Guild Members",
       "monthly": "Monthly",
-      "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
+      "monthly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)",
       "quests": "Guild Quests",
       "rank": "Guild Rank",
       "scaledGexp": "Scaled GEXP",
