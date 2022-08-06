@@ -725,14 +725,14 @@
     "contracts": "Kontrakt",
     "prefix": "Prefix",
     "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "win": "Win Progress",
+      "exp": "EXP framsteg",
+      "gexp": "GEXP framsteg",
+      "win": "Vinst framsteg",
       "kill": "Kill Progress",
-      "score": "Score Progress",
-      "goldTrophy": "Gold Trophy Progress"
+      "score": "Poäng framsteg",
+      "goldTrophy": "Guld Trofé framsteg"
     },
-    "game-total": "{{game}} Total"
+    "game-total": "{{game}} Totalt"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Gå med i vår **$t(socials.discord)** och få **20% lägre cooldowns** $t(emojis:heart)",
