@@ -31,11 +31,21 @@ export class PlayerArgument extends AbstractArgument {
   public async autocompleteHandler(
     context: CommandContext
   ): Promise<APIApplicationCommandOptionChoice[]> {
-    const query = context.option<string>(this.name);
+    const query = context.option<string>(this.name).toLowerCase();
 
-    if (query.length > 16) return [];
+    const searched = { name: query, value: query };
+
+    if (query.length > 16) return [searched];
 
     const players = await apiClient.getPlayerAutocomplete(query);
-    return players.map((p) => ({ name: p, value: p }));
+
+    let results = players.map((p) => ({ name: p, value: p }));
+
+    if (query && (!players.length || !players.some((p) => p.toLowerCase() === query))) {
+      results = results.slice(0, 24);
+      results.push(searched);
+    }
+
+    return results;
   }
 }
