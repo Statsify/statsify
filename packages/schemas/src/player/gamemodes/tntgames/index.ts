@@ -32,10 +32,10 @@ export class TNTGames {
   @Field()
   public blocksRan: number;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: "TNT Run" } })
   public tntRun: TNTRun;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: "PVP Run" } })
   public pvpRun: PVPRun;
 
   @Field()
@@ -44,7 +44,7 @@ export class TNTGames {
   @Field()
   public wizards: Wizards;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: "TNT Tag" } })
   public tntTag: TNTTag;
 
   public constructor(data: APIData, ap: APIData) {

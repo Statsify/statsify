@@ -15,7 +15,7 @@ export const About = () => (
       Statsify is an easy to use multipurpose Discord bot for viewing your Hypixel stats.
       Statsify can track statistics in several game modes on the Hypixel Network, such as
       Bed Wars, Sky Wars, Duels, and many other minigames. It is the #1 stat bot for
-      tracking your progress and improvements while Minecraft.
+      tracking your progress and improvements while playing Minecraft.
     </p>
   </div>
 );

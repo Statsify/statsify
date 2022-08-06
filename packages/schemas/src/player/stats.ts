@@ -138,7 +138,7 @@ export class PlayerStats {
   })
   public speeduhc: SpeedUHC;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.TNT_GAMES } })
+  @Field({ leaderboard: { fieldName: `${FormattedGame.TNT_GAMES} -` } })
   public tntgames: TNTGames;
 
   @Field({
