@@ -34,6 +34,12 @@ export class Pit {
   })
   public exp: number;
 
+  /**
+   * Pit level including prestige (used for historical)
+   */
+  @Field({ leaderboard: { enabled: false } })
+  public trueLevel: number;
+
   @Field()
   public levelFormatted: string;
 
@@ -107,6 +113,8 @@ export class Pit {
 
     const prestige = getPres(this.exp);
     const level = getLevel(prestige, this.exp);
+
+    this.trueLevel = prestige * 120 + level;
 
     this.progression = new Progression(
       this.exp - getPresReq(prestige - 1),
