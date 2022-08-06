@@ -11,7 +11,7 @@
     "player": "$t(arguments.mojang-player)",
     "player-leaderboard": "Choissisez un leaderboard à afficher",
     "reason": "La raison de la fermeture du ticket de support",
-    "server": "Un nom de serveur Minecraft ou une IP de serveur",
+    "server": "Un nom ou une adresse IP de serveur Minecraft",
     "tags-content": "Le contenu du tag",
     "tags-name": "Le nom du tag",
     "text": "Un message",
@@ -30,7 +30,7 @@
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
-    "cape": "Voir les capes Minecraft et Optifine de quelqu'un",
+    "cape": "Voir les capes Minecraft et Optifine d'un joueur",
     "close": "Fermer le ticket de support actuel",
     "colors": "Une liste de codes couleur Minecraft",
     "commands": "Voir l'utilisation de la commande Statsify",
@@ -398,7 +398,7 @@
       "title": "Vérification Manquante"
     },
     "missingSelfVerification": {
-      "description": "Pour pouvoir d'exécuter des commandes sans votre nom d'utilisateur, vous devez être vérifié. Pour se faire vérifier, exécutez et complétez `/verify` et essayez à nouveau.",
+      "description": "Afin d'exécuter des commandes sans votre nom d'utilisateur, vous devez être vérifié. Pour se faire vérifier, exécutez et complétez `/verify` et essayez à nouveau.",
       "title": "Vérification Manquante"
     },
     "netheriteOnly": {
@@ -697,7 +697,7 @@
     "title": "Titre",
     "tokens": "Jetons",
     "total": "Total",
-    "totalTrophies": "Trophées Totaux",
+    "totalTrophies": "Trophés Totaux",
     "trail": "Traînée",
     "transfusion": "Transfusion",
     "trapKills": "Kills avec les Pièges",
@@ -723,11 +723,11 @@
     "contracts": "Contrats"
   },
   "tips": {
-    "discord": "$t(emojis:socials.discord) Rejoignez notre **$t(socials.discord)** et obtenez **20% de temps de recharge réduits** $t(emojis:heart)",
+    "discord": "$t(emojis:socials.discord) Rejoignez notre **$t(socials.discord)** et obtenez **un délai de réutilisation réduit de 20%** $t(emojis:heart)",
     "invite": "$t(emojis:socials.discord) Cliquez **[ici](<https://statsify.net/invite>)** pour inviter Statsify sur votre propre serveur !",
     "premium": "$t(emojis:logos.gold) **[Statsify Prime](<https://statsify.net/premium>)** offre des fonctionnalités supplémentaires comme des badges de profil personnalisés. Trouvez la liste complète des avantages **[ici](<https://statsify.net/premium> )** !",
-    "rankings": "$t(emojis:logos.iron) Voire vos meilleures positions de classement avec **[Statsify Prime](<https://statsify.net/premium>)** en utilisant `/rankings`",
-    "verify": "$t(emojis:check) Exécutez `/verify` pour exécuter des commandes sans entrer votre nom d'utilisateur et recevez **10% de temps de recharge réduits**"
+    "rankings": "$t(emojis:logos.iron) Découvrez vos meilleures positions dans le classement avec **[Statsify Prime](<https://statsify.net/premium>)** en utilisant `/rankings`",
+    "verify": "$t(emojis:check) Exécutez `/verify` pour exécuter des commandes sans entrer votre nom d'utilisateur et recevez **un délai de réutilisation réduit de 10%**"
   },
   "unknown": "Inconnu",
   "verification": {
