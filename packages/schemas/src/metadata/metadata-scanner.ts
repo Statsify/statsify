@@ -45,7 +45,9 @@ export class MetadataScanner {
 
     entries.forEach(([key, value]) => {
       const path = `${base ? `${base}.` : ""}${key}`;
-      const name = `${baseName ? `${baseName} ` : ""}${value.leaderboard.name}`;
+      const name = value.leaderboard.name
+        ? `${baseName ? `${baseName} ` : ""}${value.leaderboard.name}`
+        : baseName;
 
       for (const ratio of LEADERBOARD_RATIO_KEYS) {
         if (!ratio.includes(key)) continue;
