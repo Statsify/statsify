@@ -10,6 +10,7 @@ import {
   Container,
   Footer,
   Header,
+  Historical,
   SidebarItem,
   Table,
   formatProgression,
@@ -17,8 +18,6 @@ import {
 import { FormattedGame } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
-
-export type PitProfileProps = BaseProfileProps;
 
 export const PitProfile = ({
   background,
@@ -28,7 +27,8 @@ export const PitProfile = ({
   badge,
   user,
   player,
-}: PitProfileProps) => {
+  time,
+}: BaseProfileProps) => {
   const { pit } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -43,7 +43,7 @@ export const PitProfile = ({
       <Header
         name={player.prefixName}
         skin={skin}
-        time="LIVE"
+        time={time}
         title={`§l${FormattedGame.PIT} §fStats`}
         description={`§7${t("stats.level")}: ${pit.levelFormatted}\n${formatProgression({
           t,
@@ -63,11 +63,14 @@ export const PitProfile = ({
           <Table.td title={t("stats.kdr")} value={t(pit.kdr)} color="§6" />
         </Table.tr>
         <Table.tr>
-          <Table.td
-            title={t("stats.highestStreak")}
-            value={t(pit.highestStreak)}
-            color="§d"
-          />
+          <Historical.exclude time={time}>
+            <Table.td
+              title={t("stats.highestStreak")}
+              value={t(pit.highestStreak)}
+              color="§d"
+            />
+          </Historical.exclude>
+
           <Table.td
             title={t("stats.playtime")}
             value={formatTime(pit.playtime)}
@@ -76,6 +79,15 @@ export const PitProfile = ({
           <Table.td title={t("stats.assists")} value={t(pit.assists)} color="§e" />
         </Table.tr>
       </Table.table>
+      <Historical.progression
+        time={time}
+        progression={pit.progression}
+        current={pit.levelFormatted}
+        next={pit.nextLevelFormatted}
+        t={t}
+        level={pit.trueLevel}
+        exp={pit.exp}
+      />
       <Footer logo={logo} user={user} />
     </Container>
   );

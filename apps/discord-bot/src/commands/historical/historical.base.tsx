@@ -23,6 +23,7 @@ import {
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
+  PIT_MODES,
   Player,
   QUAKE_MODES,
   SKYWARS_MODES,
@@ -60,6 +61,7 @@ import { HistoricalType } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile";
 import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile";
 import { PaintballProfile } from "../paintball/paintball.profile";
+import { PitProfile } from "../pit/pit.profile";
 import { QuakeProfile } from "../quake/quake.profile";
 import { SkyWarsProfile } from "../skywars/skywars.profile";
 import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile";
@@ -191,6 +193,14 @@ export class HistoricalBase {
   })
   public paintball(context: CommandContext) {
     return this.run(context, PAINTBALL_MODES, (base) => <PaintballProfile {...base} />);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.historical-pit"),
+    args,
+  })
+  public pit(context: CommandContext) {
+    return this.run(context, PIT_MODES, (base) => <PitProfile {...base} />);
   }
 
   @SubCommand({
