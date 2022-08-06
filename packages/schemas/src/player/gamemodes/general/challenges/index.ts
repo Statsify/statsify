@@ -79,13 +79,13 @@ export class Challenges {
   @Field({ leaderboard: { fieldName: `${FormattedGame.BUILD_BATTLE} Challenges` } })
   public BUILD_BATTLE: BuildBattleChallenges;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.DUELS} Challenges` } })
-  public DUELS: DuelsChallenges;
-
   @Field({ leaderboard: { fieldName: `${FormattedGame.COPS_AND_CRIMS} Challenges` } })
   public COPS_AND_CRIMS: CopsAndCrimsChallenges;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.MURDER_MYSTERY} Challenges` } })
+  @Field({ leaderboard: { fieldName: `${FormattedGame.DUELS} Challenges` } })
+  public DUELS: DuelsChallenges;
+
+  @Field({ leaderboard: { fieldName: `${FormattedGame.MEGAWALLS} Challenges` } })
   public MEGAWALLS: MegaWallsChallenges;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.MURDER_MYSTERY} Challenges` } })
@@ -136,8 +136,8 @@ export class Challenges {
     this.BEDWARS = new BedWarsChallenges(challenges);
     this.BLITZSG = new BlitzSGChallenges(challenges);
     this.BUILD_BATTLE = new BuildBattleChallenges(challenges);
-    this.DUELS = new DuelsChallenges(challenges);
     this.COPS_AND_CRIMS = new CopsAndCrimsChallenges(challenges);
+    this.DUELS = new DuelsChallenges(challenges);
     this.MEGAWALLS = new MegaWallsChallenges(challenges);
     this.MURDER_MYSTERY = new MurderMysteryChallenges(challenges);
     this.PAINTBALL = new PaintballChallenges(challenges);
