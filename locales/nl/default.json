@@ -31,6 +31,7 @@
     "bridge": "",
     "buildbattle": "",
     "cape": "Bekijk iemands Minecraft en Optifine capes",
+    "challenges": "",
     "close": "",
     "colors": "Een lijst met Minecraft kleurcodes",
     "commands": "",
@@ -349,7 +350,7 @@
       "title": "Ongeldige Speler"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` komt niet overeen met het formaat `u:mm a`. Voor een tijd formaat in dat lijkt op `12:00 PM` or `1:00 AM.`",
+      "description": "`{{time}}` komt niet overeen met het formaat `u:mm a`. Voor een tijd formaat in dat lijkt op `12:00 PM` or `1:00 AM`.",
       "title": "Ongeldige Resettijd"
     },
     "invalidResetTimezone": {
@@ -730,7 +731,8 @@
       "kill": "Moord Voortgang",
       "score": "Score Voortgang",
       "goldTrophy": "Gouden Trofee Voortgang"
-    }
+    },
+    "game-total": "{{game}} Totaal"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Sluit je aan bij onze **$t(socials.discord)** en krijg **20% lagere cooldowns** $t(emojis:heart)",
