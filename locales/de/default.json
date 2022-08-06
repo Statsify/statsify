@@ -594,7 +594,7 @@
       "level": "Gildenlevel",
       "members": "Gildenmitglieder",
       "monthly": "Monatlich",
-      "monthly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)",
+      "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
       "quests": "Gildenaufgaben",
       "rank": "Gildenrang",
       "scaledGexp": "Skalierte GEXP",

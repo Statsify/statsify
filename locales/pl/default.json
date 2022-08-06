@@ -594,7 +594,7 @@
       "level": "Poziom Gildii",
       "members": "Członkowie Gildii",
       "monthly": "Miesięczne",
-      "monthly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)",
+      "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
       "quests": "Zadania Gildii",
       "rank": "Ranga Gildii",
       "scaledGexp": "Skalowany GEXP",

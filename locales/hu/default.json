@@ -594,7 +594,7 @@
       "level": "Guild Szint",
       "members": "Guild Tagok",
       "monthly": "Havi",
-      "monthly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)",
+      "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
       "quests": "Guild Küldetések",
       "rank": "Guild Rang",
       "scaledGexp": "Csökkentett GEXP",
