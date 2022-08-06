@@ -1,38 +1,39 @@
 {
   "arguments": {
-    "choice": "Choose an option",
-    "file": "Upload a file",
-    "gtbhelper": "The current hint",
+    "choice": "Elige una opción",
+    "file": "Sube un archivo",
+    "gtbhelper": "La pista actual",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
-    "guild-query": "A guild name or guild member",
-    "guild-type": "The type of guild search to perform",
-    "mojang-player": "A Minecraft username or UUID",
-    "number": "A number",
+    "guild-query": "Un nombre de gremio o un miembro",
+    "guild-type": "El tipo de búsqueda de gremio a realizar",
+    "mojang-player": "Nombre de usuario en Minecraft o UUID",
+    "number": "Un número",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard stat to view",
+    "player-leaderboard": "Elija una estadística de la tabla de clasificación para ver",
     "reason": "The reason for closing the support ticket",
-    "server": "A Minecraft server name or a server IP",
+    "server": "El nombre de un servidor de Minecraft o su IP",
     "tags-content": "The content of the tag",
     "tags-name": "The name of the tag",
-    "text": "A message",
-    "user": "Choose a Discord user"
+    "text": "Un mensaje",
+    "user": "Escoge un usuario de Discord"
   },
   "commands": {
     "arcade": "$t(commands.hypixel-command, { \"name\": \"Arcade\" })",
     "arenabrawl": "$t(commands.hypixel-command, { \"name\": \"Arena Brawl\" })",
-    "available": "Check the availability of a Minecraft username",
+    "available": "Comprueba la disponibilidad de un nombre de usuario de Minecraft",
     "badge": "Change your badge for every profile",
-    "badge-reset": "Reset your profile badge",
-    "badge-set": "Upload a new profile badge",
-    "badge-view": "View your current profile badge",
+    "badge-reset": "Restablece tu insignia de perfil",
+    "badge-set": "Sube una nueva insignia de perfil",
+    "badge-view": "Muestra tu insignia de perfil actual",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
     "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
-    "cape": "View someone's Minecraft and Optifine Capes",
+    "cape": "Muestra las capas de Minecraft y Optifine de alguien",
+    "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
     "close": "Close the current support ticket",
-    "colors": "A list of Minecraft color codes",
+    "colors": "Una lista de códigos de color de Minecraft",
     "commands": "View Statsify command usage",
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
@@ -41,24 +42,24 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "View your Hypixel friends list",
-    "game-counts": "View Hypixel current game counts",
+    "friends": "Muestra tu lista de amigos de Hypixel",
+    "game-counts": "Muestra los recuentos de juegos actuales en Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
-    "gtbhelper": "Generate a list of possible Guess The Build answers based on the given hint",
+    "gtbhelper": "Genera una lista de posibles respuestas de Guess The Build basadas en la pista dada",
     "guild": "View your guild's stats",
     "guild-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Guild\" })",
-    "guild-list": "View the member list of your guild",
-    "guild-member": "View your guild members' stats",
-    "guild-overall": "View a summary of your guild's stats",
-    "guild-top": "View your top GEXP contributors",
-    "help": "A basic description of what Statsify does for you and your server",
+    "guild-list": "Muestra la lista de miembros de tu gremio",
+    "guild-member": "Muestra las estadísticas de los miembros de tu gremio",
+    "guild-overall": "Muestra un resumen de las estadísticas de tu gremio",
+    "guild-top": "Muestra a los mejores contribuyentes de GEXP de tu gremio",
+    "help": "Una descripción básica de lo que Statsify hace para usted y su servidor",
     "historical-arcade": "$t(commands.historical-command, { \"name\": \"Arcade\" })",
     "historical-arenabrawl": "$t(commands.historical-command, { \"name\": \"Arena Brawl\" })",
     "historical-bedwars": "$t(commands.historical-command, { \"name\": \"BedWars\" })",
     "historical-blitzsg": "$t(commands.historical-command, { \"name\": \"BlitzSG\" })",
     "historical-bridge": "$t(commands.historical-command, { \"name\": \"Bridge\" })",
     "historical-buildbattle": "$t(commands.historical-command, { \"name\": \"Build Battle\" })",
-    "historical-command": "View your {{name}} historical stats",
+    "historical-command": "Muestra tu historial estadístico de {{name}}",
     "historical-copsandcrims": "$t(commands.historical-command, { \"name\": \"Cops and Crims\" })",
     "historical-duels": "$t(commands.historical-command, { \"name\": \"Duels\" })",
     "historical-general": "$t(commands.historical-command, { \"name\": \"General\" })",
@@ -294,7 +295,8 @@
       "contributors": "Contributors",
       "core": "Core",
       "pong": "Pong!",
-      "title": "Statsify Credits"
+      "title": "Statsify Credits",
+      "translators": "Translators"
     },
     "tags": {
       "deleted": {
@@ -348,7 +350,7 @@
       "title": "Invalid Player"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM.`",
+      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
       "title": "Invalid Reset Time"
     },
     "invalidResetTimezone": {
@@ -378,7 +380,7 @@
     },
     "leaderboardEmpty": {
       "description": "There is no more leaderboard data at this position!",
-      "title": "No Leaderboard Data At This Point"
+      "title": "No Leaderboard Data At This Position"
     },
     "leaderboardInvalidPosition": {
       "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
@@ -619,7 +621,8 @@
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Kicks",
-    "killed": "Killed",
+    "vampires-killed": "Vampires Killed",
+    "humans-killed": "Humans Killed",
     "kills": "Kills",
     "killsAsInfected": "Kills as Infected",
     "killsAsMurderer": "Kills As Murderer",
@@ -719,7 +722,17 @@
     "woolPlaced": "Wool Placed",
     "zombieKills": "Zombie Kills",
     "mysticsEnchanted": "Mystics Enchanted",
-    "contracts": "Contracts"
+    "contracts": "Contracts",
+    "prefix": "Prefix",
+    "progression": {
+      "exp": "EXP Progress",
+      "gexp": "GEXP Progress",
+      "win": "Win Progress",
+      "kill": "Kill Progress",
+      "score": "Score Progress",
+      "goldTrophy": "Gold Trophy Progress"
+    },
+    "game-total": "{{game}} Total"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",

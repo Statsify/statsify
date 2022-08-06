@@ -1,38 +1,39 @@
 {
   "arguments": {
-    "choice": "Choose an option",
-    "file": "Upload a file",
-    "gtbhelper": "The current hint",
+    "choice": "Διάλεξε μια επιλογή",
+    "file": "Ανέβασε ένα αρχείο",
+    "gtbhelper": "Το τρέχον στοιχείο",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
-    "guild-query": "A guild name or guild member",
-    "guild-type": "The type of guild search to perform",
-    "mojang-player": "A Minecraft username or UUID",
-    "number": "A number",
+    "guild-query": "Ένα Guild όνομα ή guild μέλος",
+    "guild-type": "Ο τύπος αναζήτησης guild για εκτέλεση",
+    "mojang-player": "Ένα όνομα χρήστη ή UUID του Minecraft",
+    "number": "Ένας αριθμός",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard stat to view",
+    "player-leaderboard": "Επίλεξε μία κατάταξη στατιστικών για προβολή",
     "reason": "The reason for closing the support ticket",
-    "server": "A Minecraft server name or a server IP",
+    "server": "Ένα όνομα ενός Minecraft διακομιστή ή μία IP δικομιστή",
     "tags-content": "The content of the tag",
     "tags-name": "The name of the tag",
-    "text": "A message",
-    "user": "Choose a Discord user"
+    "text": "Ένα μήνυμα",
+    "user": "Επίλεξε έναν Discord χρήστη"
   },
   "commands": {
     "arcade": "$t(commands.hypixel-command, { \"name\": \"Arcade\" })",
     "arenabrawl": "$t(commands.hypixel-command, { \"name\": \"Arena Brawl\" })",
-    "available": "Check the availability of a Minecraft username",
+    "available": "Έλεγξε τη διαθεσιμότητα ενός Minecraft ονόματος χρήστη",
     "badge": "Change your badge for every profile",
-    "badge-reset": "Reset your profile badge",
-    "badge-set": "Upload a new profile badge",
-    "badge-view": "View your current profile badge",
+    "badge-reset": "Επανέφερε το σήμα του προφίλ σου",
+    "badge-set": "Ανέβασε ένα νέο σήμα προφίλ",
+    "badge-view": "Δες το σήμα του τρέχον προφίλ σου",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
     "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
-    "cape": "View someone's Minecraft and Optifine Capes",
+    "cape": "Δες τις Minecraft και Optifine κάπες κάποιου",
+    "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
     "close": "Close the current support ticket",
-    "colors": "A list of Minecraft color codes",
+    "colors": "Μια λίστα Minecraft με κωδικούς χρώματος",
     "commands": "View Statsify command usage",
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
@@ -41,24 +42,24 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "View your Hypixel friends list",
-    "game-counts": "View Hypixel current game counts",
+    "friends": "Δες τη λίστα των Hypixel φίλων σου",
+    "game-counts": "Δες τις τρέχον μετρήσεις του Hypixel παιχνιδιού",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
-    "gtbhelper": "Generate a list of possible Guess The Build answers based on the given hint",
+    "gtbhelper": "Δημιούργησε μια λίστα με πιθανές Guess The Build απαντήσεις βασιζόμενες στο δοσμένο στοιχείο",
     "guild": "View your guild's stats",
     "guild-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Guild\" })",
-    "guild-list": "View the member list of your guild",
-    "guild-member": "View your guild members' stats",
-    "guild-overall": "View a summary of your guild's stats",
-    "guild-top": "View your top GEXP contributors",
-    "help": "A basic description of what Statsify does for you and your server",
+    "guild-list": "Δες τη λίστα μελών της guild σου",
+    "guild-member": "Δες τα στατιστικά μελών της guild σου",
+    "guild-overall": "Δες μια περίληψη στατιστικών της guild σου",
+    "guild-top": "Δες τους κορυφαίους GEXP συνεισφέροντες",
+    "help": "Μια βασική περιγραφή για το τι κάνει για εσένα και για τον διακομιστή σου το Statsify",
     "historical-arcade": "$t(commands.historical-command, { \"name\": \"Arcade\" })",
     "historical-arenabrawl": "$t(commands.historical-command, { \"name\": \"Arena Brawl\" })",
     "historical-bedwars": "$t(commands.historical-command, { \"name\": \"BedWars\" })",
     "historical-blitzsg": "$t(commands.historical-command, { \"name\": \"BlitzSG\" })",
     "historical-bridge": "$t(commands.historical-command, { \"name\": \"Bridge\" })",
     "historical-buildbattle": "$t(commands.historical-command, { \"name\": \"Build Battle\" })",
-    "historical-command": "View your {{name}} historical stats",
+    "historical-command": "Δες τα ιστορικά στατιστικά του {{name}}",
     "historical-copsandcrims": "$t(commands.historical-command, { \"name\": \"Cops and Crims\" })",
     "historical-duels": "$t(commands.historical-command, { \"name\": \"Duels\" })",
     "historical-general": "$t(commands.historical-command, { \"name\": \"General\" })",
@@ -77,9 +78,9 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
-    "hypixel-command": "View your {{name}} stats",
-    "invite": "Invite Statsify",
-    "language": "Change the language you see responses in",
+    "hypixel-command": "Δες τα στατιστικά του {{name}}",
+    "invite": "Προσκάλεσε το Statsify",
+    "language": "Άλλαξε τη γλώσσα στην οποία βλέπεις τις απαντήσεις",
     "last-day": "$t(commands.yesterday)",
     "last-month": "View your stats from last month's in various games",
     "last-week": "View your stats from last week's in various games",
@@ -88,7 +89,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View leaderboards for {{name}} stats",
+    "leaderboard-command": "Δες κατατάξεις για {{name}} στατιστικά",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
     "leaderboard-general": "$t(commands.leaderboard-command, { \"name\": \"General\" })",
@@ -112,22 +113,22 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "View your mutual Hypixel friends with another player",
-    "namehistory": "View someone's Minecraft name history",
+    "mutuals": "Δες τους κοινούς Hypixel φίλους σου με έναν άλλο παίκτη",
+    "namehistory": "Δες το ιστορικό ονομάτων κάποιου Minecraft χρήστη",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
-    "ping": "View Statsify's creators and contributors",
+    "ping": "Δες τους δημιουργούς και τους συνεισφέροντες του Statsify",
     "pit": "$t(commands.hypixel-command, { \"name\": \"Pit\" })",
     "player-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Player\" })",
     "quake": "$t(commands.hypixel-command, { \"name\": \"Quake\" })",
-    "rankings": "View your top leaderboard positions",
+    "rankings": "Δες τις κορυφαίες θέσεις σου στις κατατάξεις",
     "rankings-all": "$t(commands.rankings)",
     "rankings-arcade": "$t(commands.rankings-command, { \"name\": \"Arcade\" })",
     "rankings-arenabrawl": "$t(commands.rankings-command, { \"name\": \"Arena Brawl\" })",
     "rankings-bedwars": "$t(commands.rankings-command, { \"name\": \"BedWars\" })",
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
-    "rankings-command": "View your top {{name}} leaderboard positions",
+    "rankings-command": "Δες τις κορυφαίες θέσεις σου στην {{name}} κατάταξη",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
     "rankings-general": "$t(commands.rankings-command, { \"name\": \"General\" })",
@@ -152,7 +153,7 @@
     "ratios-arenabrawl": "$t(commands.ratios-command, { \"name\": \"Arena Brawl\" })",
     "ratios-bedwars": "$t(commands.ratios-command, { \"name\": \"BedWars\" })",
     "ratios-blitzsg": "$t(commands.ratios-command, { \"name\": \"BlitzSG\" })",
-    "ratios-command": "View your {{name}} milestones and estimations",
+    "ratios-command": "Δες τα {{name}} ορόσημα και τις εκτιμήσεις σου",
     "ratios-copsandcrims": "$t(commands.ratios-command, { \"name\": \"Cops and Crims\" })",
     "ratios-duels": "$t(commands.ratios-command, { \"name\": \"Duels\" })",
     "ratios-megawalls": "$t(commands.ratios-command, { \"name\": \"MegaWalls\" })",
@@ -167,87 +168,87 @@
     "ratios-walls": "$t(commands.ratios-command, { \"name\": \"Walls\" })",
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
-    "recentgames": "View someone's Hypixel recent games",
-    "reset": "Reset your historical stats",
-    "server": "View Minecraft server status",
-    "skin": "View someone's Minecraft skin",
+    "recentgames": "Δες τα πρόσφατα παιχνίδια κάποιου στον Hypixel",
+    "reset": "Επανάφερε τα ιστορικά σου στατιστικά",
+    "server": "Δες την κατάσταση του Minecraft διακομιστή",
+    "skin": "Δες την Minecraft εμφάνιση κάποιου",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
-    "socials": "View someone's Hypixel linked socials",
+    "socials": "Δες τα Hypixel συνδεδεμένα socials κάποιου",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
-    "status": "View someone's Hypixel status",
+    "status": "Δες την Hypixel κατάσταση κάποιου",
     "tags": "Manage support tags",
     "tags-create": "Create a support tag",
     "tags-delete": "Delete a support tag",
     "tags-rename": "Rename a support tag",
-    "text": "Generate Minecraft text",
+    "text": "Δημιούργησε Μinecraft κείμενο",
     "theme": "Change your theme for every profile",
-    "theme-boxes": "Change the appearance of the profile boxes",
-    "theme-font": "Change the font of the profiles",
+    "theme-boxes": "Άλλαξε την εμφάνιση των πλαισίων στο προφίλ",
+    "theme-font": "Άλλαξε τη γραμματοσειρά των προφίλ",
     "theme-footer": "Customize your profile's footer",
-    "theme-footer-icon": "Change your profile's footer icon",
-    "theme-footer-message": "Change your profile's footer message. You can use https://rgb.birdflop.com to create text gradients.",
-    "theme-footer-reset": "Reset your profile's footer",
-    "theme-palette": "Change the color palette of the profiles",
-    "theme-view": "View your current profile theme",
+    "theme-footer-icon": "Άλλαξε το εικονίδιο υποσέλιδου του προφίλ σου",
+    "theme-footer-message": "Άλλαξε το μήνυμα υποσέλιδου του προφίλ σου.",
+    "theme-footer-reset": "Επανάφερε το υποσέλιδο του προφίλ σoυ",
+    "theme-palette": "Άλλαξε τη χρωματική παλέτα των προφίλ",
+    "theme-view": "Δες το τρέχον θέμα του προφίλ σου",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
-    "unverify": "Unlink your Discord and Minecraft accounts",
+    "unverify": "Αποσύνδεσε τους Discord και Minecraft λογαριασμούς",
     "user": "View someone's Statsify user info",
-    "uuid": "Get someone's Minecraft UUID",
+    "uuid": "Απόκτησε το Minecraft UUID κάποιου",
     "vampirez": "$t(commands.hypixel-command, { \"name\": \"VampireZ\" })",
-    "verify": "Link your Discord and Minecraft accounts",
+    "verify": "Σύνδεσε τους Discord και Minecraft λογαριασμούς",
     "walls": "$t(commands.hypixel-command, { \"name\": \"Walls\" })",
     "warlords": "$t(commands.hypixel-command, { \"name\": \"Warlords\" })",
-    "watchdog": "View Hypixel Watchdog ban counts",
+    "watchdog": "Δες την καταμέτρηση αποκλεισμών του Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games"
   },
   "config": {
     "badge": {
-      "profile": "This is how your badge will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your badge.",
-      "set": "$t(emojis:config.success) Successfully updated your badge.",
-      "view": "$t(emojis:config.view) Your current badge:"
+      "profile": "Έτσι θα φαίνεται το σήμα σου στα προφίλ σου",
+      "reset": "$t(emojis:config.reset) Επιτυχής επαναφορά του σήματός σου.",
+      "set": "$t(emojis:config.success) Επιτυχής ενημέρωση του σήματός σου.",
+      "view": "$t(emojis:config.view) Το τρέχον σήμα σου:"
     },
     "footer": {
-      "profile": "This is how your footer will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your footer.",
-      "set": "$t(emojis:config.success) Successfully updated your footer."
+      "profile": "Έτσι θα φαίνεται το υποσέλιδο στα προφίλ σου",
+      "reset": "$t(emojis:config.reset) Επιτυχής επαναφορά του υποσέλιδού σου.",
+      "set": "$t(emojis:config.success) Επιτυχής ενημέρωση του υποσέλιδού σου."
     },
     "theme": {
-      "profile": "This is how your theme will look on your profiles",
-      "set": "$t(emojis:config.success) Successfully updated your theme.",
-      "view": "$t(emojis:config.view) Your current theme:"
+      "profile": "Έτσι θα φαίνεται το θέμα σου στα προφίλ σου",
+      "set": "$t(emojis:config.success) Επιτυχής ενημέρωση του θέματός σου.",
+      "view": "$t(emojis:config.view) Το τρέχον θέμα σου:"
     },
     "language": {
-      "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
+      "description": "$t(emojis:config.success) Επιτυχής ενημέρωση της γλώσσας σου σε `{{locale}}`."
     }
   },
   "cooldown": {
-    "description": "Please wait `{{time}}` before reusing `{{command}}`.\n\nLearn how to reduce cooldowns [here](https://statsify.net/premium)",
-    "title": "Active Cooldown"
+    "description": "Παρακαλώ περίμενε `{{time}}` πριν επαναχρησιμοποιήσεις `{{command}}`.\n\nΜάθε πως να μειώνεις τον χρόνο επαναφόρτισης [here](https://statsify.net/premium)",
+    "title": "Ενεργός Χρόνος Επαναφόρτισης"
   },
   "embeds": {
     "available": {
-      "blocked": "Unless the name is temporarily or permanently blocked by Mojang.",
-      "invalidCharacters": "Invalid Characters",
-      "tooLong": "Too Long"
+      "blocked": "Εκτός εάν το όνομα έχει αποκλειστεί προσωρινά ή μόνιμα από τη Mojang.",
+      "invalidCharacters": "Μη Έγκυροι Χαρακτήρες",
+      "tooLong": "Πολύ Μεγάλο"
     },
     "colors": {
-      "bold": "Bold",
-      "color": "Color",
-      "italic": "Italic",
-      "mainHex": "Main Hex",
-      "obfuscated": "Obfuscated",
-      "reset": "Reset",
-      "shadowHex": "Shadow Hex",
-      "strikethrough": "Strikethrough",
-      "title": "Minecraft Color Codes",
-      "underline": "Underline"
+      "bold": "Έντονη Γραφή",
+      "color": "Χρώμα",
+      "italic": "Πλάγια Γραφή",
+      "mainHex": "Βασικό Ηex",
+      "obfuscated": "Μπερδεμένα",
+      "reset": "Επαναφορά",
+      "shadowHex": "Hex Σκιάς",
+      "strikethrough": "Διακριτική Διαγραφή",
+      "title": "Minecraft Κωδικοί Χρωμάτων",
+      "underline": "Υπογράμμιση"
     },
     "deletePlayer": {
       "description": "**{{displayName}}** has been removed from the database and leaderboards.",
@@ -262,39 +263,40 @@
       "title": "Force Verified"
     },
     "gameCounts": {
-      "title": "Hypixel Game Counts"
+      "title": "Hypixel Καταμέτρηση Παιχνιδιού"
     },
     "gtbhelper": {
-      "title": "Possible GTB Solutions"
+      "title": "Πιθανές GTB Λύσεις"
     },
     "help": {
       "games": {
-        "description": "Statsify supports the majority of games offered on Hypixel. To check your stats in a game run `/[game]`. For example you can run `/bedwars` to check your BedWars stats.",
-        "title": "Games"
+        "description": "Το Statsify υποστηρίζει την πλειοψηφία των παιχνιδιών που προσφέρονται στον Hypixel. Για να ελέγξεις τα στατιστικά σου σε ένα παιχνίδι γράψε `/[game]`. Για παράδειγμα, μπορείς να γράψεις \"/bedwars\" για να ελέγξεις τα  BedWars στατιστικά σου.",
+        "title": "Παιχνίδια"
       },
       "historical": {
-        "description": "Statsify lets you check your daily, weekly, and monthly stats through `/daily`, `/weekly` and `/monthly`. If you missed a reset you can view them by running `/yesterday`, `/lastweek`, and `/lastmonth`. ",
-        "title": "Historical"
+        "description": "Το Statsify σoυ επιτρέπει να ελέγχεις τα ημερήσια, εβδομαδιαία και μηνιαία στατιστικά σου μέσω των `/daily`, `/weekly` και `/monthly`. Εαν χάσεις μία επαναφορά μπορείς να τη δεις γράφοντας `/yesterday`, `/lastweek`, και `/lastmonth`. ",
+        "title": "Ιστορικό"
       },
       "leaderboards": {
-        "description": "Statsify offers thousands of leaderboards through the `/leaderboard` command. Run `/leaderboard`, then pick the gamemode, and pick a leaderboard to view. You can hit the search button to search for a specific player or position. You can also hit the up and down buttons to view more pages.",
-        "title": "Leaderboards"
+        "description": "Το Statsify προσφέρει χιλιάδες κατατάξεις μέσω της `/leaderboard` εντολής. Γράψε `/leaderboard`, μετά επίλεξε το gamemode, και επίλεξε μία κατάταξη για προβολή. Μπορείς να πατήσεις το κουμπί αναζήτησης για έναν συγκεκριμένο παίκτη ή θέση. Μπορείς επίσης να πατήσεις τα πάνω και κάτω κουμπιά για να δεις περισσότερες σελίδες.",
+        "title": "Κατατάξεις"
       },
       "minecraft": {
-        "description": "You can view general Minecraft information such as skins, UUIDs, capes through `/skin`, `/uuid`, and `/cape` respectively. Statsify also has commands to generate Minecraft text through `/text`. View Minecraft colors through `/colors` and preview Minecraft servers through `/server`.",
+        "description": "Μπορείς να δεις γενικές Minecraft πληροφορίες όπως εμφανίσεις, UUID, κάπες μέσω `/skin`, `/uuid`, και `/cape` αντίστοιχα. Το Statsify έχει επίσης εντολές για τη δημιουργία Minecraft κειμένου μέσω του `/text`. Δες τα Minecraft χρώματα μέσω του `/colors` και τους Minecraft διακομιστές μέσω του `/server`.",
         "title": "Minecraft"
       },
-      "title": "Statsify Help"
+      "title": "Βοήθεια Statsify"
     },
     "invite": {
-      "description": "Click the link below to invite Statsify to your discord server.",
-      "title": "Statsify Links"
+      "description": "Κάνε κλικ τον παρακάτω σύνδεσμο για να προσκαλέσεις το Statsify στον discord server σου.",
+      "title": "Statsify Σύνδεσμοι"
     },
     "ping": {
-      "contributors": "Contributors",
-      "core": "Core",
+      "contributors": "Συνεισφέροντες",
+      "core": "Πυρήνας",
       "pong": "Pong!",
-      "title": "Statsify Credits"
+      "title": "Statsify Εύσημα",
+      "translators": "Μεταφραστές"
     },
     "tags": {
       "deleted": {
@@ -323,8 +325,8 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
     },
     "footerTooLong": {
-      "description": "The message you provided is too long. It should be under 50 characters excluding color codes.",
-      "title": "Message Too Long"
+      "description": "Το μήνυμα που έδωσες είναι πολύ μεγάλο. Θα πρέπει να είναι κάτω από 50 χαρακτήρες εξαιρώντας τους χρωματικούς κωδικούς.",
+      "title": "Πολύ Μεγάλο Μήνυμα"
     },
     "goldOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -332,36 +334,36 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
     },
     "guildLeaderboardNotFound": {
-      "description": "We couldn't find the `guild` you were looking for!",
-      "title": "Invalid Guild"
+      "description": "Δεν μπορέσαμε να βρούμε τη `guild` που έψαχνες!",
+      "title": "Μη Έγκυρη Guild"
     },
     "higherTierRequiredForIcon": {
-      "description": "You need to purchase a higher premium tier to unlock this icon!",
-      "title": "Higher Tier Required"
+      "description": "Πρέπει να αγοράσεις μία υψηλότερη premium βαθμίδα για να ξεκλειδώσεις αυτό το εικονίδιο!",
+      "title": "Απαιτείται Ανώτερη Βαθμίδα"
     },
     "invalidGuild": {
-      "description": "A guild by the {{type}} of `{{tag}}` could not be found!",
-      "title": "Invalid Guild"
+      "description": "Ένα guild με {{type}} από `{{tag}}` δεν βρέθηκε!",
+      "title": "Μη Έγκυρη Guild"
     },
     "invalidPlayer": {
-      "description": "A player by the {{type}} of `{{tag}}` could not be found!",
-      "title": "Invalid Player"
+      "description": "Ένας παίκτης με {{type}} `{{tag}}` δε βρέθηκε!",
+      "title": "Μη Έγκυρος Παίκτης"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM.`",
-      "title": "Invalid Reset Time"
+      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
+      "title": "Μη Έγκυρος Χρόνος Επαναφοράς"
     },
     "invalidResetTimezone": {
-      "description": "`{{timezone}}` is not a valid timezone. Enter a timezone similar to `EST` or `PST`.",
-      "title": "Invalid Reset Timezone"
+      "description": "`{{timezone}}`δεν είναι έγκυρη ζώνη ώρας. Εισήγε μία ζώνη ώρας παρόμοια με «EST» ή «PST».",
+      "title": "Μη Έγκυρη Επαναφορά Ζώνη Ώρας"
     },
     "invalidSearch": {
-      "description": "We couldn't figure out what exactly you were looking for!\nEnter a username, uuid, or discord mention.",
-      "title": "Invalid Search"
+      "description": "Δεν μπορέσαμε να καταλάβουμε τι ακριβώς έψαχνες!\nΕισήγε ένα όνομα χρήστη, uuid ή discord αναφορά.",
+      "title": "Μη Έγκυρη Αναζήτηση"
     },
     "invalidServer": {
-      "description": "The server you are looking for either doesn't exist or is offline!",
-      "title": "Invalid Minecraft Server"
+      "description": "Ο server που αναζητάς είτε δεν υπάρχει είτε είναι εκτός σύνδεσης!",
+      "title": "Μη Έγκυρος Minecraft Διακομιστής"
     },
     "invalidTagName": {
       "description": "The tag name you provided is invalid. It is not possible to create a slash command with this tag name.",
@@ -377,28 +379,28 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "There is no more leaderboard data at this position!",
-      "title": "No Leaderboard Data At This Point"
+      "description": "Δεν υπάρχουν άλλα δεδομένα κατατάξεων σε αυτή τη θέση!",
+      "title": "Κανένα Δεδομένο Κατάταξης Σε Αυτή Τη Θέση"
     },
     "leaderboardInvalidPosition": {
-      "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
-      "title": "Invalid Position"
+      "description": "Η θέση της κατάταξης που καταχώρησες δεν είναι έγκυρη. Εισήγε έναν αριθμό μεγαλύτερο από 1.",
+      "title": "Μη Έγκυρη Θέση"
     },
     "leaderboardNotFound": {
-      "description": "We can't find the `leaderboard` you are looking for!",
-      "title": "Leaderboard Not Found"
+      "description": "Δεν μπορούμε να βρούμε την `κατάταξη` που ψάχνεις!",
+      "title": "Η Κατάταξη Δε Βρέθηκε"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account.",
-      "title": "Missing Verification"
+      "description": "Ο <@{{tag}}> δεν είναι **επαληθευμένος**. Για να τον αναφέρεις, πρέπει να γράψεις `/verify` για να επαληθευθεί ο λογαριασμό τους.",
+      "title": "Λείπει Επαλήθευση"
     },
     "missingPlayerVerification": {
       "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
-      "description": "To be able to run commands without supplying your username, you must be verified. To verify run and complete `/verify` and then try again.",
-      "title": "Missing Verification"
+      "description": "Για να μπορείς να γράψεις εντολές χωρίς να παρέχεις το όνομα χρήστη σου, πρέπει να είσαι επαληθευμένος. Για επαλήθευση, γράψε και ολοκλήρωσε '/verify' και μετά δοκίμασε ξανά.",
+      "title": "Λείπει Επαλήθευση"
     },
     "netheriteOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -406,50 +408,50 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
     },
     "noCape": {
-      "description": "**{{username}}** doesn't have any capes!",
-      "title": "Missing Cape"
+      "description": "Ο **{{username}}** δεν έχει καμία κάπα!",
+      "title": "Λείπει Κάπα"
     },
     "noFriends": {
-      "description": "**{{displayName}}** has no friends $t(emojis:sad)! :(",
-      "title": "Friends Not Found"
+      "description": "Ο **{{displayName}}** δεν έχει φίλους $t(emojis:sad)! :(",
+      "title": "Δε Βρέθηκαν Φίλοι"
     },
     "noGTBSolutions": {
-      "description": "We couldn't find any solutions for the provided hint!",
-      "title": "No Guess The Build Solutions"
+      "description": "Δεν μπορέσαμε να βρούμε λύσεις για το παρεχόμενο στοιχείο!",
+      "title": "Καμία Guess The Build Λύση"
     },
     "noMutuals": {
-      "description": "**{{displayNameOne}}** and **{{displayNameTwo}}** have no mutual friends!",
-      "title": "No Mutuals"
+      "description": "Ο **{{displayNameOne}}** και ο **{{displayNameTwo}}** δεν έχουν κοινούς φίλους!",
+      "title": "Κανένας Κοινός"
     },
     "noRankings": {
-      "description": "**{{displayName}}** has no rankings!",
-      "title": "No Rankings"
+      "description": "Ο **{{displayName}}** δεν έχει κατατάξεις!",
+      "title": "Καμία Κατάταξη"
     },
     "noRecentGames": {
-      "description": "**{{displayName}}**'s recent games could not be found!",
-      "title": "Recent Games Not Found"
+      "description": "Τα πρόσφατα παιχνίδια του **{{displayName}}** δε βρέθηκαν!",
+      "title": "Πρόσφατα Παιχνίδια Δε Βρέθηκαν"
     },
     "noStatus": {
-      "description": "**{{displayName}}**'s Hypixel status could not be found!",
-      "title": "Status Not Found"
+      "description": "Η Hypixel κατάσταση του {{displayName}} δε βρέθηκε!",
+      "title": "Κατάσταση Δε Βρέθηκε"
     },
     "playerLeaderboardNotFound": {
-      "description": "We couldn't find the `player` you were looking for!",
-      "title": "Invalid Player"
+      "description": "Δεν μπορέσαμε να βρούμε τον 'παίκτη' που ψάχνεις!",
+      "title": "Μη Έγκυρος Παίκτης"
     },
     "playerNotInGuild": {
-      "description": "**{{displayName}}** is not in a guild!",
-      "title": "Invalid Guild"
+      "description": "Ο **{{displayName}}** δεν ανήκει σε μία guild!",
+      "title": "Μη Έγκυρη Guild"
     },
     "premiumRequired": {
-      "description": "Check out all the available features [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what command does/changes.",
-      "title": "Statsify {{tier}} is required to run this command"
+      "description": "Έλεγξε όλα τα διαθέσιμα χαρακτηριστικά [here](https://statsify.net/premium).",
+      "preview": "Έλεγξε όλα τα διαθέσιμα χαρακτηριστικά [here](https://statsify.net/premium). Παρακάτω είναι μια μικρή προεπισκόπηση τι κάνει/αλλάζει η εντολή.",
+      "title": "To Statsify {{tier}} απαιτείται για την εκτέλεση αυτής της εντολής"
     },
     "staffOnly": {
-      "description": "This command is only available to Statsify staff members!",
-      "preview": "Below is a small preview of how the command functions",
-      "title": "Staff Only"
+      "description": "Αυτή η εντολή είναι μόνο διαθέσιμη στα μέλη του προσωπικού του Statsify!",
+      "preview": "Παρακάτω είναι μια μικρή προεπισκόπηση του τρόπου λειτουργίας της εντολής",
+      "title": "Μόνο Προσωπικό"
     },
     "tagNotFound": {
       "description": "The tag you provided was not found!",
@@ -460,55 +462,55 @@
       "title": "Ticket Already Exists"
     },
     "unknown": {
-      "description": "Something went wrong, please try again later. If this persists, report this in our [Discord](<https://statsify.net/discord>).",
-      "title": "An Unknown Error Occurred"
+      "description": "Κάτι πήγε στραβά, δοκίμασε ξανά αργότερα. Εάν επιμένει, ανάφερέ το στο [Discord] (<https://statsify.net/discord>).",
+      "title": "Ένα Άγνωστο Σφάλμα Προέκυψε"
     },
     "unsupportedFileType": {
-      "description": "The file you uploaded is not a supported file type for this command!",
-      "title": "Unsupported File Type"
+      "description": "Το αρχείο που ανέβασες δεν είναι τύπος αρχείου που υποστηρίζεται για αυτή την εντολή!",
+      "title": "Μη Υποστηριζόμενος Τύπος Αρχείου"
     }
   },
   "historical": {
-    "aboutResetting": "Click the reset button below to reset your historical stats every day **at this time**.\n\n**WARNING**: This will delete all of your historical stats and **cannot be undone**. \nIf you want to be able to reset at a specific time check out $t(socials.premium).",
-    "aboutResettingPremium": "Click the reset button below to reset your historical stats. \n\n**WARNING:** This will delete all of your historical stats and **cannot be undone**.",
+    "aboutResetting": "Κάνε κλικ το κουμπί επαναφοράς παρακάτω για να επαναφέρεις τα ιστορικά στατιστικά σου κάθε μέρα **σε αυτή την ώρα**.\n\n**ΠΡΟΕΙΔΟΠΟΙΗΣΗ**: Έτσι θα διαγραφτούν όλα τα ιστορικά σου στατιστικά και **δεν μπορούν να αναιρεθούν**.\nΕάν θέλεις να μπορείς να επαναφέρεις σε μία συγκεκριμένη ώρα έλεγξε $t(socials.premium).",
+    "aboutResettingPremium": "Κάνε κλικ το κουμπί επαναφοράς παρακάτω για να επαναφέρεις τα ιστορικά σου στατιστικά. \n\n**ΠΡΟΕΙΔΟΠΟΙΗΣΗ:** Έτσι θα διαγραφτούν όλα τα ιστορικά σου στατιστικά και **δεν μπορούν να αναιρεθούν**.",
     "modal": {
-      "resetTime": "Choose a Reset Time",
-      "timezone": "Choose a Timezone",
-      "title": "Historical Reset Time"
+      "resetTime": "Επίλεξε μία Ώρα Επαναφοράς",
+      "timezone": "Επίλεξε μία Ζώνη Ώρας",
+      "title": "Ιστορική Επαναφορά Χρόνου"
     },
-    "new": "**{{displayName}}**'s historical stats have been checked for the first time on Statsify. Their stats will now be updated at this time every day.",
-    "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
-    "resetButton": "Click to Reset",
-    "setResetTime": "Set your reset time to <t:{{time}}:t>."
+    "new": "Τα ιστορικά στατιστικά του **{{displayName}}** έχουν ελεγχθεί για πρώτη φορά στο Statsify. Τα στατιστικά τους θα ενημερώνονται σε αυτή την ώρα κάθε μέρα.",
+    "reset": "$t(emojis:clock) **Επαναφέρεται** <t:{{time}}:R>",
+    "resetButton": "Κάνε κλικ για Επαναφορά",
+    "setResetTime": "Ρύθμισε την ώρα επαναφοράς σε <t:{{time}}:t>."
   },
   "leaderboard": {
     "guildInput": {
-      "label": "Search by a Guild",
-      "placeholder": "Enter a guild's name, eg: Quote"
+      "label": "Αναζήτησε με βάση μία Guild",
+      "placeholder": "Εισήγε το όνομα μίας guild, πχ: Quote"
     },
     "modal": {
-      "title": "Leaderboard Search"
+      "title": "Αναζήτηση Κατάταξης"
     },
     "playerInput": {
-      "label": "Search by a Player",
-      "placeholder": "Enter a player's name, eg: j4cobi"
+      "label": "Αναζήτησε με βάση έναν Παίκτη",
+      "placeholder": "Εισήγε το όνομα ενός παίκτη, πχ: j4cobi"
     },
     "positionInput": {
-      "label": "Search by a Position",
-      "placeholder": "Enter a position, eg: 5000"
+      "label": "Αναζήτησε με βάση μίας Θέσης",
+      "placeholder": "Εισήγε μια θέση, πχ: 5000"
     }
   },
   "minecraft": {
-    "available": "Available",
-    "nameHistory": "Name History",
-    "originalName": "Original Name",
-    "trimmedUUID": "Trimmed UUID",
-    "unavailable": "Unavailable",
-    "username": "Username",
+    "available": "Διαθέσιμο",
+    "nameHistory": "Ιστορικό Ονομάτων",
+    "originalName": "Αρχικό Όνομα",
+    "trimmedUUID": "Κομμένο UUID",
+    "unavailable": "Μη Διαθέσιμο",
+    "username": "Όνομα Χρήστη",
     "uuid": "UUID"
   },
   "number": "{{value, number}}",
-  "players": "Players",
+  "players": "Παίκτες",
   "socials": {
     "discord": "[Discord](<https://discord.com/invite/5VgxMQY>)",
     "github": "[GitHub](<https://github.com/Statsify/statsify>)",
@@ -517,218 +519,229 @@
     "website": "[Website](https://statsify.net/)"
   },
   "stats": {
-    "achievementPoints": "Achievement Points",
-    "adrenaline": "Adrenaline",
-    "assists": "Assists",
+    "achievementPoints": "Πόντοι Επιτευγμάτων",
+    "adrenaline": "Αδρεναλίνη",
+    "assists": "Βοήθειες",
     "bblr": "BBLR",
-    "bedsBroken": "Beds Broken",
-    "bedsLost": "Beds Lost",
-    "bestRound": "Best Round",
-    "bestTime": "Best Time",
-    "bestWinstreak": "Best Winstreak",
-    "bigShot": "Big Shot",
-    "blocksBroken": "Blocks Broken",
-    "blocksPlaced": "Blocks Placed",
-    "blocksRan": "Blocks Ran",
-    "bombsDefused": "Bombs Defused",
-    "bombsPlanted": "Bombs Planted",
+    "bedsBroken": "Σπασμένα Κρεβάτια",
+    "bedsLost": "Χαμένα Κρεβάτια",
+    "bestRound": "Καλύτερος Γύρος",
+    "bestTime": "Καλύτερη Ώρα",
+    "bestWinstreak": "Καλύτερο Σερί Νικών",
+    "bigShot": "Μεγάλη Βολή",
+    "blocksBroken": "Σπασμένα Blocks",
+    "blocksPlaced": "Τοποθετημένα Blocks",
+    "blocksRan": "Blocks που Διανύθηκαν",
+    "bombsDefused": "Αφοπλισμένες Βόμβες",
+    "bombsPlanted": "Τοποθετημένες Βόμβες",
     "bounty": "Bounty",
-    "bountyKills": "Bounty Kills",
-    "bowKills": "Bow Kills",
+    "bountyKills": "Bounty Σκοτωμοί",
+    "bowKills": "Σκοτωμοί με Τόξο",
     "boxesPickedUp": "Boxes Collected",
-    "bronzeTrophies": "Bronze Trophies",
-    "candyFound": "Candy Found",
-    "challenges": "Challenges",
-    "class": "Class",
-    "coins": "Coins",
-    "correctGuesses": "Correct Guesses",
-    "damage": "Damage",
-    "deaths": "Deaths",
-    "detectiveWins": "Detective Wins",
-    "diamonds": "Diamonds",
-    "doublesWins": "Doubles Wins",
-    "eggsFound": "Eggs Found",
-    "emeralds": "Emeralds",
-    "empireKills": "Defender Kills",
+    "bronzeTrophies": "Χάλκινα Τρόπαια",
+    "candyFound": "Καραμέλες που Βρέθηκαν",
+    "challenges": "Προκλήσεις",
+    "class": "Κατηγορία",
+    "coins": "Νομίσματα",
+    "correctGuesses": "Σωστές Μαντεψιές",
+    "damage": "Ζημιά",
+    "deaths": "Θάνατοι",
+    "detectiveWins": "Νίκες ως Ντετέκτιβ",
+    "diamonds": "Διαμάντια",
+    "doublesWins": "Doubles Νίκες",
+    "eggsFound": "Αυγά που Βρέθηκαν",
+    "emeralds": "Σμαράγδια",
+    "empireKills": "Σκοτωμοί ως Υπερασπιστής",
     "ended": "Ended",
-    "endurance": "Endurance",
+    "endurance": "Αντοχή",
     "event-level": "Event Level",
     "exp": "EXP",
     "expGained": "EXP Gained",
     "extraUltimates": "Extra Ultimates",
-    "fastestDetectiveWin": "Fastest Detective Win",
-    "fastestMurdererWin": "Fastest Murderer Win",
-    "fastestWin": "Fastest Win",
-    "finalAssists": "Final Assists",
-    "finalDeaths": "Final Deaths",
-    "finalKills": "Final Kills",
-    "firstLogin": "First Login",
+    "fastestDetectiveWin": "Γρηγορότερη Νίκη ως Ντετέκτιβ",
+    "fastestMurdererWin": "Γρηγορότερη Νίκη ως Δολοφόνος",
+    "fastestWin": "Γρηγορότερη Νίκη",
+    "finalAssists": "Τελικές Βοήθειες",
+    "finalDeaths": "Τελικοί Θάνατοι",
+    "finalKills": "Τελικοί Σκοτωμοί",
+    "firstLogin": "Πρώτη Σύνδεση",
     "fkdr": "FKDR",
     "forcefieldTime": "Forcefield Time",
-    "fortune": "Fortune",
-    "friends": "Friends",
-    "game": "Game",
-    "gamesPlayed": "Games Played",
-    "giftsFound": "Gifts Found",
-    "giftsSent": "Gifts Sent",
-    "goals": "Goals",
+    "fortune": "Τύχη",
+    "friends": "Φίλοι",
+    "game": "Παιχνίδι",
+    "gamesPlayed": "Παιχνίδια Που Παίχτηκαν",
+    "giftsFound": "Δώρα Που Βρέθηκαν",
+    "giftsSent": "Απεσταλμένα Gifts",
+    "goals": "Γκολ",
     "godfather": "Godfather",
-    "godlikes": "Godlikes",
-    "gold": "Gold",
-    "goldPickedUp": "Gold Picked Up",
-    "goldRate": "Gold Rate",
-    "goldTrophies": "Gold Trophies",
-    "grandPrixTokens": "GP Tokens",
+    "godlikes": "Θεϊκά",
+    "gold": "Χρυσός",
+    "goldPickedUp": "Μαζεμένος Χρυσός",
+    "goldRate": "Ρυθμός Χρυσού",
+    "goldTrophies": "Χρυσά Τρόπαια",
+    "grandPrixTokens": "GP Ανταμοιβές",
     "guild": {
       "averageMemberGexp": "Average Member GEXP",
-      "createdOn": "Created On",
-      "daily": "Daily",
+      "createdOn": "Δημιουργήθηκε Στις",
+      "daily": "Καθημερινά",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
-      "date": "Date",
+      "date": "Ημερομηνία",
       "gexp": "GEXP",
       "guild": "Guild",
-      "guildMaster": "Guild Master",
-      "joinedAt": "Joined At",
-      "level": "Guild Level",
-      "members": "Guild Members",
-      "monthly": "Monthly",
+      "guildMaster": "Guild Αρχηγός",
+      "joinedAt": "Έγινε Μέλος Στις",
+      "level": "Guild Επίπεδο",
+      "members": "Guild Μέλη",
+      "monthly": "Μηνιαία",
       "monthly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)",
-      "quests": "Guild Quests",
+      "quests": "Guild Αποστολές",
       "rank": "Guild Rank",
       "scaledGexp": "Scaled GEXP",
-      "weekly": "Weekly",
+      "weekly": "Εβδομαδιαία",
       "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
     },
-    "hat": "Hat",
-    "heads": "Heads",
-    "headsEaten": "Heads Eaten",
+    "hat": "Καπέλο",
+    "heads": "Κεφάλια",
+    "headsEaten": "Φαγωμένα Κεφάλια",
     "headshotKills": "Headshot Kills",
-    "headshots": "Headshots",
-    "headstart": "Headstart",
-    "healing": "Healing",
-    "heroWins": "Hero Wins",
+    "headshots": "Βολές Στο Κεφάλι",
+    "headstart": "Προβάδισμα",
+    "healing": "Θεραπεία",
+    "heroWins": "Νίκες ως Ήρωας",
     "hidden": "Hidden",
-    "hiderWins": "Hider Wins",
-    "highestKillstreak": "Highest Killstreak",
-    "highestScoreFinals": "Finals Personal Best",
-    "highestScoreQualifications": "Qualifiers Personal Best",
-    "highestStreak": "Highest Streak",
-    "hits": "Hits",
-    "infectedWins": "Infected Wins",
-    "iron": "Iron",
-    "karma": "Karma",
+    "hiderWins": "Νίκες ως Κρυμμένος",
+    "highestKillstreak": "Υψηλότερο Σερί Σκοτωμών",
+    "highestScoreFinals": "Προσωπικό Καλύτερο στον Τελικό",
+    "highestScoreQualifications": "Προσωπικό Καλύτερο στα Προκριματικά",
+    "highestStreak": "Υψηλότερο Σερί",
+    "hits": "Χτυπήματα",
+    "infectedWins": "Νίκες ως Μολυσμένος",
+    "iron": "Σίδηρος",
+    "karma": "Κάρμα",
     "kdr": "KDR",
-    "kicks": "Kicks",
-    "killed": "Killed",
-    "kills": "Kills",
-    "killsAsInfected": "Kills as Infected",
-    "killsAsMurderer": "Kills As Murderer",
-    "killsAsSurvivor": "Kills as Survivor",
-    "killstreaks": "Killstreaks",
-    "kit": "Current Kit",
+    "kicks": "Κλωτσιές",
+    "vampires-killed": "Σκοτωμένα Βαμπίρ",
+    "humans-killed": "Σκοτωμένοι Άνθρωποι",
+    "kills": "Σκοτωμοί",
+    "killsAsInfected": "Σκοτωμοί ως Μολυσμένος",
+    "killsAsMurderer": "Σκοτωμοί ως Δολοφόνος",
+    "killsAsSurvivor": "Σκοτωμοί ως Επιζών",
+    "killstreaks": "Σερί Σκοτωμών",
+    "kit": "Τρέχον Κιτ",
     "kwr": "KWR",
-    "lapsCompleted": "Laps",
-    "lastAction": "Last Action",
-    "lastActionTime": "Last Action Time",
-    "lastAliveGames": "Times Last Alive",
-    "lastGame": "Last Game",
-    "lastLogin": "Last Login",
-    "layers": "Layers",
-    "level": "Level",
-    "levelsGained": "Levels Gained",
-    "loginTime": "Login Time",
-    "logoutTime": "Logout Time",
+    "lapsCompleted": "Γύροι",
+    "lastAction": "Τελευταία Κίνηση",
+    "lastActionTime": "Ώρα Τελευταίας Κίνησης",
+    "lastAliveGames": "Τελευταίος Ζωντανός",
+    "lastGame": "Τελευταίο Παιχνίδι",
+    "lastLogin": "Τελευταία Σύνδεση",
+    "layers": "Στρώματα",
+    "level": "Επίπεδο",
+    "levelsGained": "Αποκτημένα Επίπεδα",
+    "loginTime": "Ώρα Σύνδεσης",
+    "logoutTime": "Ώρα Αποσύνδεσης",
     "lootChests": "Loot Chests",
-    "losses": "Losses",
-    "magicalChests": "Magical Chests",
-    "magicalKeys": "Magical Keys",
-    "map": "Map",
-    "mastery": "Mastery",
-    "maxPoints": "Max Score",
-    "maxWave": "Max Wave",
+    "losses": "Ήττες",
+    "magicalChests": "Μαγικά Σεντούκια",
+    "magicalKeys": "Μαγικά Κλειδιά",
+    "map": "Χάρτης",
+    "mastery": "Επιδεξιότητα",
+    "maxPoints": "Μέγιστη Βαθμολογία",
+    "maxWave": "Μέγιστο Κύμα",
     "mode": "Mode",
-    "mostVampireKills": "Most Vampire Kills",
+    "mostVampireKills": "Περισσότεροι Σκοτωμοί Βρικολάκων",
     "mounts": "Mounts",
-    "murdererWins": "Murderer Wins",
+    "murdererWins": "Νίκες ως Δολοφόνος",
     "mythic-favor": "Mythic Favor",
     "networkLevel": "Network Level",
-    "objectives": "Objectives",
-    "offensive": "Offensive",
-    "offline": "Offline",
-    "online": "Online",
+    "objectives": "Στόχοι",
+    "offensive": "Επιθετική",
+    "offline": "Αποσυνδεδεμένος",
+    "online": "Συνδεδεμένος",
     "opals": "Opals",
-    "overallWins": "Overall Wins",
-    "pingRange": "Ping Range",
-    "playtime": "Playtime",
-    "points": "Points",
-    "poopCollected": "Poop Collected",
-    "powerKicks": "Power Kicks",
-    "powerupActivations": "Powerup Activations",
-    "powerups": "Powerups",
+    "overallWins": "Συνολικές Νίκες",
+    "pingRange": "Εμβέλεια του Ping",
+    "playtime": "Ώρα Παιχνιδιού",
+    "points": "Πόντοι",
+    "poopCollected": "Συλλεγμένα Κακάκια",
+    "powerKicks": "Δυνατές Κλωτσιές",
+    "powerupActivations": "Ενεργοποιήσεις Ενισχύσεων",
+    "powerups": "Ενισχύσεις",
     "prevent": "Prevent",
-    "quests": "Quests",
-    "ranksGifted": "Ranks Gifted",
-    "rebelKills": "Attacker Kills",
-    "renown": "Renown",
-    "roundWins": "Round Wins",
-    "rune": "Rune",
-    "score": "Score",
-    "seekerWins": "Seeker Wins",
-    "shards": "Shards",
-    "shotAccuracy": "Shot Accuracy",
-    "shotsFired": "Shots Fired",
-    "silver": "Silver",
-    "silverTrophies": "Silver Trophies",
-    "soloWins": "Solo Wins",
-    "souls": "Souls",
-    "stampLevel": "Coin Conversions",
-    "starsEarned": "Stars Earned",
-    "started": "Started",
-    "status": "Status",
-    "suicides": "Suicides",
-    "superVotes": "Super Votes",
-    "superluck": "Superluck",
-    "support": "Support",
-    "survivorWins": "Survivor Wins",
-    "tags": "Tags",
-    "tauntsUsed": "Taunts Used",
-    "thrownKnifeKills": "Thrown Knife Kills",
-    "title": "Title",
-    "tokens": "Tokens",
+    "quests": "Αποστολές",
+    "ranksGifted": "Δωρισμένα Ranks",
+    "rebelKills": "Σκοτωμοί ως Επιτιθέμενος",
+    "renown": "Φήμη",
+    "roundWins": "Νίκες Γύρου",
+    "rune": "Ρούνος",
+    "score": "Βαθμολογία",
+    "seekerWins": "Νίκες ως Κυνηγός",
+    "shards": "Θραύσματα",
+    "shotAccuracy": "Ακρίβεια Πυροβολισμού",
+    "shotsFired": "Πυροβολισμοί",
+    "silver": "Ασήμι",
+    "silverTrophies": "Ασημένια Τρόπαια",
+    "soloWins": "Solo Νίκες",
+    "souls": "Ψυχές",
+    "stampLevel": "Μετατροπές Νομισμάτων",
+    "starsEarned": "Αποκτημένα Αστέρια",
+    "started": "Ξεκίνησε",
+    "status": "Κατάσταση",
+    "suicides": "Αυτοκτονίες",
+    "superVotes": "Σούπερ Ψήφοι",
+    "superluck": "Σούπερ Τύχη",
+    "support": "Υποστήριξη",
+    "survivorWins": "Νίκες ως Επιζών",
+    "tags": "Ετικέτες",
+    "tauntsUsed": "Χρησιμοποιημένοι Χλευασμοί",
+    "thrownKnifeKills": "Σκοτωμοί Με Πεταγμένο Μαχαίρι",
+    "title": "Τίτλος",
+    "tokens": "Μάρκες",
     "total": "Total",
-    "totalTrophies": "Total Trophies",
-    "trail": "Trail",
-    "transfusion": "Transfusion",
-    "trapKills": "Trap Kills",
-    "trigger": "Trigger",
-    "tripleShot": "Triple Shot",
-    "trophyRate": "Trophy Rate",
-    "ultimate": "Ultimate",
+    "totalTrophies": "Συνολικά Τρόπαια",
+    "trail": "Μονοπάτι",
+    "transfusion": "Μετάγγιση",
+    "trapKills": "Σκοτωμοί Με Παγίδα",
+    "trigger": "Σκανδάλη",
+    "tripleShot": "Τριπλή Βολή",
+    "trophyRate": "Ποσοστό Τροπαίου",
+    "ultimate": "Υπέρτατη",
     "ultimatesCrafted": "Ultimates Crafted",
-    "utility": "Utility",
-    "version": "Version",
-    "votes": "Votes",
+    "utility": "Χρησιμότητα",
+    "version": "Έκδοση",
+    "votes": "Ψήφοι",
     "wallsFaced": "Walls Faced",
-    "wins": "Wins",
-    "winstreak": "Winstreak",
-    "witherDamage": "Wither Damage",
-    "witherKills": "Wither Kills",
+    "wins": "Νίκες",
+    "winstreak": "Σερί Νικών",
+    "witherDamage": "Wither Ζημιά",
+    "witherKills": "Wither Σκοτωμοί",
     "wlr": "WLR",
-    "wool": "Wool",
-    "woolCaptures": "Wool Captures",
-    "woolPlaced": "Wool Placed",
-    "zombieKills": "Zombie Kills",
+    "wool": "Μαλλί",
+    "woolCaptures": "Αιχμαλωτισμένα Μαλλιά",
+    "woolPlaced": "Τοποθετημένα Wool",
+    "zombieKills": "Zombie Σκοτωμοί",
     "mysticsEnchanted": "Mystics Enchanted",
-    "contracts": "Contracts"
+    "contracts": "Συμβόλαια",
+    "prefix": "Πρόθεμα",
+    "progression": {
+      "exp": "EXP Progress",
+      "gexp": "GEXP Progress",
+      "win": "Win Progress",
+      "kill": "Kill Progress",
+      "score": "Score Progress",
+      "goldTrophy": "Gold Trophy Progress"
+    },
+    "game-total": "{{game}} Total"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
-    "invite": "$t(emojis:socials.discord) Click **[here](<https://statsify.net/invite>)** to invite Statsify to your own server!",
+    "invite": "$t(emojis:socials.discord) Κάνε κλικ **[here](<https://statsify.net/invite>)** για να προσκαλέσεις το Statsify στον δικό σου server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** offers additional features such as personalized profile badges. Find the full list of benefits **[here](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) View your top leaderboard positions with **[Statsify Premium](<https://statsify.net/premium>)** by using `/rankings`",
     "verify": "$t(emojis:check) Run `/verify` to run commands without inputting your username as well as receive **10% lower cooldowns**"
   },
-  "unknown": "Unknown",
+  "unknown": "Άγνωστο",
   "verification": {
     "alreadyVerified": {
       "description": "You are already linked to a Minecraft account. Run `/unverify` to unlink your Minecraft account.",

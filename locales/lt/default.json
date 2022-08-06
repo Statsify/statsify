@@ -30,7 +30,8 @@
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
-    "cape": "View someone's Minecraft and Optifine Capes",
+    "cape": "View someone's Minecraft and Optifine capes",
+    "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
     "close": "Close the current support ticket",
     "colors": "A list of Minecraft color codes",
     "commands": "View Statsify command usage",
@@ -294,7 +295,8 @@
       "contributors": "Contributors",
       "core": "Core",
       "pong": "Pong!",
-      "title": "Statsify Credits"
+      "title": "Statsify Credits",
+      "translators": "Translators"
     },
     "tags": {
       "deleted": {
@@ -348,7 +350,7 @@
       "title": "Invalid Player"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM.`",
+      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
       "title": "Invalid Reset Time"
     },
     "invalidResetTimezone": {
@@ -378,7 +380,7 @@
     },
     "leaderboardEmpty": {
       "description": "There is no more leaderboard data at this position!",
-      "title": "No Leaderboard Data At This Point"
+      "title": "No Leaderboard Data At This Position"
     },
     "leaderboardInvalidPosition": {
       "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
@@ -619,7 +621,8 @@
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Kicks",
-    "killed": "Killed",
+    "vampires-killed": "Vampires Killed",
+    "humans-killed": "Humans Killed",
     "kills": "Kills",
     "killsAsInfected": "Kills as Infected",
     "killsAsMurderer": "Kills As Murderer",
@@ -719,7 +722,17 @@
     "woolPlaced": "Wool Placed",
     "zombieKills": "Zombie Kills",
     "mysticsEnchanted": "Mystics Enchanted",
-    "contracts": "Contracts"
+    "contracts": "Contracts",
+    "prefix": "Prefix",
+    "progression": {
+      "exp": "EXP Progress",
+      "gexp": "GEXP Progress",
+      "win": "Win Progress",
+      "kill": "Kill Progress",
+      "score": "Score Progress",
+      "goldTrophy": "Gold Trophy Progress"
+    },
+    "game-total": "{{game}} Total"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",

@@ -9,11 +9,11 @@
     "mojang-player": "Un nom d'utilisateur ou un UUID sur Minecraft",
     "number": "Un nombre",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choissisez un leaderboard à afficher",
-    "reason": "La raison de la fermeture du ticket de support",
+    "player-leaderboard": "Choissisez un classement à afficher",
+    "reason": "The reason for closing the support ticket",
     "server": "Un nom de serveur Minecraft ou une IP de serveur",
-    "tags-content": "Le contenu du tag",
-    "tags-name": "Le nom du tag",
+    "tags-content": "The content of the tag",
+    "tags-name": "The name of the tag",
     "text": "Un message",
     "user": "Choisissez un utilisateur Discord"
   },
@@ -21,7 +21,7 @@
     "arcade": "$t(commands.hypixel-command, { \"name\": \"Arcade\" })",
     "arenabrawl": "$t(commands.hypixel-command, { \"name\": \"Arena Brawl\" })",
     "available": "Regarder la disponibilité d'un nom d'utilisateur Minecraft",
-    "badge": "Changer votre badge pour chaque profil",
+    "badge": "Change your badge for every profile",
     "badge-reset": "Réinitialiser votre badge de profil",
     "badge-set": "Uploader un nouveau badge de profil",
     "badge-view": "Voir votre badge de profil actuel",
@@ -31,26 +31,27 @@
     "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Voir les capes Minecraft et Optifine de quelqu'un",
-    "close": "Fermer le ticket de support actuel",
-    "colors": "Une liste de codes couleur Minecraft",
-    "commands": "Voir l'utilisation de la commande Statsify",
+    "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
+    "close": "Close the current support ticket",
+    "colors": "La liste des codes couleurs de Minecraft",
+    "commands": "View Statsify command usage",
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
-    "daily": "Voir vos statistiques quotidiennes dans les différents jeux",
-    "delete-player": "Supprimer un joueur de Statsify",
+    "daily": "View your daily stats in various games",
+    "delete-player": "Delete a player from Statsify",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
-    "force-unverify": "Forcer l'annulation de la vérification d'un joueur par la force",
-    "force-verify": "Forcer la vérification d'un joueur",
+    "force-unverify": "Forcefully unverify a player",
+    "force-verify": "Forcefully verify a player",
     "friends": "Voir votre liste d'amis Hypixel",
     "game-counts": "Voir le nombre actuel de joueurs dans chaque jeu d'Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Générer une liste des réponses possibles en Guess The Build basées sur l'indice donné",
-    "guild": "Voir les statistiques de votre guilde",
+    "guild": "View your guild's stats",
     "guild-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Guild\" })",
     "guild-list": "Voir la liste des membres de votre guilde",
     "guild-member": "Voir les statistiques des membres de votre guilde",
     "guild-overall": "Voir un sommaire des statistiques de votre guilde",
-    "guild-top": "Voir vos meilleurs contributeurs de GEXP",
+    "guild-top": "Voir vos meilleurs contributeurs en GEXP",
     "help": "Une description basique de ce que Statsify fait pour vous et votre serveur",
     "historical-arcade": "$t(commands.historical-command, { \"name\": \"Arcade\" })",
     "historical-arenabrawl": "$t(commands.historical-command, { \"name\": \"Arena Brawl\" })",
@@ -88,7 +89,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "Voir les leaderboards de {{name}}",
+    "leaderboard-command": "Voir les classements de {{name}}",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
     "leaderboard-general": "$t(commands.leaderboard-command, { \"name\": \"General\" })",
@@ -108,26 +109,26 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolwars": "$t(commands.leaderboard-command, { \"name\": \"WoolWars\" })",
-    "links": "Coordonnées de Statsify",
+    "links": "Réseaux de Statsify",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "Voir vos statistiques mensuelles dans les différents jeux",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Voir vos amis mutuels sur Hypixel avec un autre joueur",
-    "namehistory": "Voir l'historique des noms de Minecraft de quelqu'un",
+    "namehistory": "Voir l'historique des pseudos Minecraft de quelqu'un",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Voir les créateurs et contributeurs de Statsify",
     "pit": "$t(commands.hypixel-command, { \"name\": \"Pit\" })",
     "player-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Player\" })",
     "quake": "$t(commands.hypixel-command, { \"name\": \"Quake\" })",
-    "rankings": "Voir le leaderboard de vos meilleurs positions",
+    "rankings": "Voir vos meilleures positions dans les classements",
     "rankings-all": "$t(commands.rankings)",
     "rankings-arcade": "$t(commands.rankings-command, { \"name\": \"Arcade\" })",
     "rankings-arenabrawl": "$t(commands.rankings-command, { \"name\": \"Arena Brawl\" })",
     "rankings-bedwars": "$t(commands.rankings-command, { \"name\": \"BedWars\" })",
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
-    "rankings-command": "Voir le leaderboard des meilleures positions de {{name}}",
+    "rankings-command": "Voir les meilleures positions dans les classements de {{name}}",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
     "rankings-general": "$t(commands.rankings-command, { \"name\": \"General\" })",
@@ -147,7 +148,7 @@
     "rankings-walls": "$t(commands.rankings-command, { \"name\": \"Walls\" })",
     "rankings-warlords": "$t(commands.rankings-command, { \"name\": \"Warlords\" })",
     "rankings-woolwars": "$t(commands.rankings-command, { \"name\": \"WoolWars\" })",
-    "ratios": "Voir vos Ratios de Milestones & Estimations du mode de jeu",
+    "ratios": "Voir vos Ratios, Milestones & Estimations du mode de jeu",
     "ratios-arcade": "$t(commands.ratios-command, { \"name\": \"Arcade\" })",
     "ratios-arenabrawl": "$t(commands.ratios-command, { \"name\": \"Arena Brawl\" })",
     "ratios-bedwars": "$t(commands.ratios-command, { \"name\": \"BedWars\" })",
@@ -168,14 +169,14 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "Voir les jeux récents de quelqu'un sur Hypixel",
-    "reset": "Réinnisialiser vos statistiques historiques",
-    "server": "Voir l'état du serveur Minecraft",
+    "reset": "Réinnisialiser vos historiques de statistiques",
+    "server": "Voir le statut d'un serveur Minecraft",
     "skin": "Voir le skin Minecraft de quelqu'un",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
-    "socials": "Voir les réseaux sociaux liés à Hypixel",
+    "socials": "Voir les réseaux sociaux liés à Hypixel de quelqu'un",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
-    "status": "Voir statut de Hypixel de quelqu'un",
+    "status": "Voir le statut Hypixel de quelqu'un",
     "tags": "Gérer les tags de support",
     "tags-create": "Créer un tag de support",
     "tags-delete": "Supprimer un tag de support",
@@ -194,7 +195,7 @@
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
-    "unverify": "Délier vos comptes Discord et Minecraft",
+    "unverify": "Dissocier vos comptes Discord et Minecraft",
     "user": "Voir les informations d'un utilisateur Statsify",
     "uuid": "Obtenir l'UUID Minecraft de quelqu'un",
     "vampirez": "$t(commands.hypixel-command, { \"name\": \"VampireZ\" })",
@@ -209,31 +210,31 @@
   "config": {
     "badge": {
       "profile": "Voici à quoi ressemblera votre badge sur vos profils",
-      "reset": "$t(emojis:config.reset) Vous avez reréglé votre badge.",
+      "reset": "$t(emojis:config.reset) Vous avez bien réinitialisé votre badge.",
       "set": "$t(emojis:config.success) Vous avez mis à jour votre badge.",
       "view": "$t(emojis:config.view) Votre badge actuel :"
     },
     "footer": {
       "profile": "Voici à quoi ressemblera votre pied de page sur vos profils",
-      "reset": "$t(emojis:config.reset) Vous avez reréglé votre pied de page.",
+      "reset": "$t(emojis:config.reset) Vous avez bien réinitialisé votre pied de page.",
       "set": "$t(emojis:config.success) Vous avez mis à jour votre pied de page."
     },
     "theme": {
       "profile": "Voici à quoi ressemblera votre thème sur vos profils",
-      "set": "$t(emojis:config.success) Vous avez mis à jour votre thème.",
+      "set": "$t(emojis:config.success) Vous avez bien mis à jour votre thème.",
       "view": "$t(emojis:config.view) Votre thème actuel :"
     },
     "language": {
-      "description": "$t(emojis:config.success) Vous avez mis à jour votre langue au `{{locale}}`."
+      "description": "$t(emojis:config.success) Vous avez bien mis à jour votre langue au `{{locale}}`."
     }
   },
   "cooldown": {
-    "description": "Veuillez attendre `{{time}}` avant de réutiliser `{{command}}`.\n\nApprenez comment réduire les temps de chargement [ici](https://statsify.net/premium)",
-    "title": "Temps de Recharge Actif"
+    "description": "Veuillez attendre `{{time}}` avant de réutiliser `{{command}}`.\n\nApprenez comment réduire les cooldowns [ici](https://statsify.net/premium)",
+    "title": "Cooldown Actif"
   },
   "embeds": {
     "available": {
-      "blocked": "Sauf si le nom est temporairement ou définitivement bloqué par Mojang.",
+      "blocked": "Sauf si le pseudo est temporairement ou définitivement bloqué par Mojang.",
       "invalidCharacters": "Caractères Invalides",
       "tooLong": "Trop Long"
     },
@@ -242,11 +243,11 @@
       "color": "Couleur",
       "italic": "Italique",
       "mainHex": "Hex Principal",
-      "obfuscated": "Obfusqué",
+      "obfuscated": "Offusqué",
       "reset": "Réinnisialiser",
       "shadowHex": "Hex de l'Ombre",
       "strikethrough": "Barré",
-      "title": "Codes de Couleur Minecraft",
+      "title": "Codes Couleur de Minecraft",
       "underline": "Souligné"
     },
     "deletePlayer": {
@@ -265,7 +266,7 @@
       "title": "Nombre de joueurs par jeu sur Hypixel"
     },
     "gtbhelper": {
-      "title": "Les Solutions Possibles En GTB"
+      "title": "Les Solutions Possibles en GTB"
     },
     "help": {
       "games": {
@@ -277,8 +278,8 @@
         "title": "Historique"
       },
       "leaderboards": {
-        "description": "Statsify offre des milliers de classements à travers la commande `/leaderboard`. Exécutez `/leaderboard`, puis choisissez le mode de jeu et choisissez un classement à voir. Vous pouvez cliquer sur le bouton de recherche pour rechercher un joueur ou une position spécifique. Vous pouvez également appuyer sur les boutons haut et bas pour afficher plus de pages.",
-        "title": "Leaderboards"
+        "description": "Statsify offre des milliers de classements à travers la commande `/leaderboard`. Exécutez `/leaderboard`, puis choisissez le mode de jeu et choisissez un classement à voir. Vous pouvez cliquer sur le bouton de recherche pour rechercher un joueur ou une position spécifique. Vous pouvez également appuyer sur les flèches haut et bas pour afficher plus de pages.",
+        "title": "Classements"
       },
       "minecraft": {
         "description": "Vous pouvez afficher les informations générales de Minecraft commes les skins, les UUIDs, les capes via `/skin`, `/uuid`, et `/cape` respectivement. Statsify a également des commandes pour générer du texte Minecraft avec `/text`. Affichez les couleurs de Minecraft via `/colors` et prévisualisez les serveurs Minecraft via `/server`.",
@@ -324,7 +325,7 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
     },
     "footerTooLong": {
-      "description": "Le message que vous avez entré est trop long. Il doit être en dessous 50 caractères sans compter les codes de couleur.",
+      "description": "Le message que vous avez entré est trop long. Il doit être en dessous 50 caractères sans compter les codes couleurs.",
       "title": "Message Trop Long"
     },
     "goldOnly": {
@@ -333,7 +334,7 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
     },
     "guildLeaderboardNotFound": {
-      "description": "Nous n'avons pas trouvé le guilde que vous cherchez !",
+      "description": "Nous n'avons pas trouvé la guilde que vous cherchiez !",
       "title": "Guilde Invalide"
     },
     "higherTierRequiredForIcon": {
@@ -341,7 +342,7 @@
       "title": "Niveau Plus Élevé Requis"
     },
     "invalidGuild": {
-      "description": "Un guilde par le {{type}} de `{{tag}}` n'a pas pu être trouvé !",
+      "description": "Une guilde par le {{type}} de `{{tag}}` n'a pas pu être trouvé !",
       "title": "Guilde Invalide"
     },
     "invalidPlayer": {
@@ -349,7 +350,7 @@
       "title": "Joueur Invalide"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` ne correspond pas au format `h:mm a`. Entrez une heure dans le format similaire à `12:00 PM` ou `1:00 AM.`",
+      "description": "`{{time}}` ne correspond pas au format `h:mm a`. Entrez une heure dans le format similaire à `12:00 PM` ou `1:00 AM`.",
       "title": "Heure de réinitialisation invalide"
     },
     "invalidResetTimezone": {
@@ -357,7 +358,7 @@
       "title": "Fuseau Horaire Invalide"
     },
     "invalidSearch": {
-      "description": "Nous n'avons pas pu trouver ce que vous cherchez !\nEntrez un nom d'utilisateur, uuid, ou mention discord.",
+      "description": "Nous n'avons pas pu trouver ce que vous cherchiez !\nEntrez un nom d'utilisateur, uuid, ou mention discord.",
       "title": "Recherche Invalide"
     },
     "invalidServer": {
@@ -378,16 +379,16 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "Il n'y a plus de données de leaderboard à cette position !",
-      "title": "Aucune donnée de leaderboard à cette position"
+      "description": "Il n'y a plus de données pour le classement à cette position !",
+      "title": "Aucune donnée pour le classement à cette position"
     },
     "leaderboardInvalidPosition": {
-      "description": "La position de leaderboard que vous avez entré n'est pas valide. Entrez un nombre plus grand que 1.",
+      "description": "La position dans le classement que vous avez entré n'est pas valide. Entrez un nombre plus grand que 1.",
       "title": "Position Invalide"
     },
     "leaderboardNotFound": {
       "description": "Nous ne trouvons pas le `leaderboard` que vous cherchez !",
-      "title": "Leaderboard Non Trouvé"
+      "title": "Leaderboard Introuvable"
     },
     "missingMentionVerification": {
       "description": "<@{{tag}}> n'est pas **vérifié**. Pour le mentionner, il doit exécuter `/verify` pour vérifier son compte.",
@@ -412,30 +413,30 @@
     },
     "noFriends": {
       "description": "**{{displayName}}** n'a pas d'amis $t(emojis:sad) ! :(",
-      "title": "Amis Non Trouvés"
+      "title": "Amis Introuvable"
     },
     "noGTBSolutions": {
       "description": "Nous n'avons pas pu trouver des solutions pour l'indice fourni !",
-      "title": "Pas Des Solutions Pour Guess The Build"
+      "title": "Pas de Solutions pour le Guess The Build"
     },
     "noMutuals": {
-      "description": "**{{displayNameOne}}** et **{{displayNameTwo}}** n'ont pas d'amis en commun !",
-      "title": "Pas d'Amis En Commun"
+      "description": "**{{displayNameOne}}** et **{{displayNameTwo}}** n'ont pas d'ami en commun !",
+      "title": "Pas d'Ami en Commun"
     },
     "noRankings": {
       "description": "**{{displayName}}** n'a pas de classements !",
-      "title": "Pas De Classements"
+      "title": "Pas de Classement"
     },
     "noRecentGames": {
       "description": "Les parties récentes de **{{displayName}}** n'ont pas pu être trouvées !",
-      "title": "Parties Récentes Non Trouvées"
+      "title": "Parties Récentes Introuvables"
     },
     "noStatus": {
       "description": "Le statut Hypixel de **{{displayName}}** n'a pas pu être trouvé !",
       "title": "Statut Non Trouvé"
     },
     "playerLeaderboardNotFound": {
-      "description": "Nous n'avons pas pu trouver le `joueur` que vous cherchez !",
+      "description": "Nous n'avons pas pu trouver le `joueur` que vous cherchiez !",
       "title": "Joueur Invalide"
     },
     "playerNotInGuild": {
@@ -444,13 +445,13 @@
     },
     "premiumRequired": {
       "description": "Regardez tous les fonctionnalités disponibles [ici](https://statsify.net/premium).",
-      "preview": "Regardez tous les fonctionnalités disponibles [ici](https://statsify.net/premium). Ci-dessous est un petit aperçu de ce que commande fait/change.",
+      "preview": "Regardez toutes les fonctionnalités disponibles [ici](https://statsify.net/premium). Ci-dessous, un petit aperçu de ce que chaque commande fait/change.",
       "title": "Statsify {{tier}} est requis pour exécuter cette commande"
     },
     "staffOnly": {
-      "description": "Cette commande est disponible uniquement pour les membres du staff de Statsify !",
-      "preview": "Ci-dessous est un petit aperçu de ce que commande fait/change.",
-      "title": "Uniquement Pour Le Staff"
+      "description": "Cette commande est uniquement disponible pour les membres du staff de Statsify !",
+      "preview": "Ci-dessous, un petit aperçu de ce que la commande fait/change",
+      "title": "Uniquement pour le Staff"
     },
     "tagNotFound": {
       "description": "Le tag que vous avez fourni n'a pas été trouvé !",
@@ -461,12 +462,12 @@
       "title": "Ticket Déjà Existant"
     },
     "unknown": {
-      "description": "Quelque chose a mal tourné, veuillez réessayer plus tard. Si ce problème persistent reportez-le dans notre [Discord](<https://statsify.net/discord>).",
-      "title": "Une Erreur Inconnue Est Survenue"
+      "description": "Quelque chose a mal tourné, veuillez réessayer plus tard. Si ce problème persiste reportez-le dans notre [Discord](<https://statsify.net/discord>).",
+      "title": "Une Erreur Inconnue est Survenue"
     },
     "unsupportedFileType": {
       "description": "Le fichier que vous avez chargé n'est pas un type de fichier pris en charge pour cette commande !",
-      "title": "Type De Fichier Non Pris En Charge"
+      "title": "Type de Fichier non Pris en Charge"
     }
   },
   "historical": {
@@ -488,7 +489,7 @@
       "placeholder": "Entrez le nom d'une guilde. Exemple : Les Gaulois"
     },
     "modal": {
-      "title": "Rechercher dans le leaderboard"
+      "title": "Rechercher dans le classement"
     },
     "playerInput": {
       "label": "Rechercher par un joueur",
@@ -501,9 +502,9 @@
   },
   "minecraft": {
     "available": "Disponible",
-    "nameHistory": "Historique des noms",
-    "originalName": "Nom original",
-    "trimmedUUID": "UUID coupé",
+    "nameHistory": "Historique des Pseudos",
+    "originalName": "Pseudo Original",
+    "trimmedUUID": "UUID Coupé",
     "unavailable": "Indisponible",
     "username": "Pseudo",
     "uuid": "UUID"
@@ -518,7 +519,7 @@
     "website": "[Site Web](https://statsify.net/)"
   },
   "stats": {
-    "achievementPoints": "Succès",
+    "achievementPoints": "Points de Succès",
     "adrenaline": "Adrénaline",
     "assists": "Assistances",
     "bblr": "BBLR",
@@ -530,12 +531,12 @@
     "bigShot": "Tir Large",
     "blocksBroken": "Bloques Cassés",
     "blocksPlaced": "Bloques Placés",
-    "blocksRan": "Blocs Courir",
+    "blocksRan": "Blocs Parcourus",
     "bombsDefused": "Bombes Désamorcées",
     "bombsPlanted": "Bombes Plantées",
-    "bounty": "Prime",
-    "bountyKills": "Kills en Prime",
-    "bowKills": "Kills à l'Arc",
+    "bounty": "Bounty",
+    "bountyKills": "Eliminations de Bounty",
+    "bowKills": "Eliminations à l'Arc",
     "boxesPickedUp": "Boîtes Collectées",
     "bronzeTrophies": "Trophées de Bronze",
     "candyFound": "Bonbons Trouvés",
@@ -550,19 +551,19 @@
     "doublesWins": "Victoires en Doubles",
     "eggsFound": "Oeufs Trouvés",
     "emeralds": "Émeraudes",
-    "empireKills": "Kills en Défenseur",
+    "empireKills": "Eliminations en Défense",
     "ended": "Terminé",
     "endurance": "Endurance",
     "event-level": "Niveau d''Événement",
     "exp": "EXP",
     "expGained": "EXP Obtenues",
     "extraUltimates": "Ultimates Supplémentaires",
-    "fastestDetectiveWin": "Victoire La Plus Rapide en Détective",
-    "fastestMurdererWin": "Victoire La Plus Rapide en Meurtrier",
-    "fastestWin": "Victoire La Plus Rapide",
-    "finalAssists": "Assistances en Finale",
-    "finalDeaths": "Morts en Finale",
-    "finalKills": "Kills en Finale",
+    "fastestDetectiveWin": "Victoire la Plus Rapide en Détective",
+    "fastestMurdererWin": "Victoire la Plus Rapide en Meurtrier",
+    "fastestWin": "Victoire la Plus Rapide",
+    "finalAssists": "Assistances Finales",
+    "finalDeaths": "Morts Finales",
+    "finalKills": "Éliminations Finales",
     "firstLogin": "Première Connexion",
     "fkdr": "FKDR",
     "forcefieldTime": "Temps de Forcefield",
@@ -574,7 +575,7 @@
     "giftsSent": "Cadeaux Envoyés",
     "goals": "Buts",
     "godfather": "Soutien",
-    "godlikes": "Godlikes",
+    "godlikes": "Divins",
     "gold": "Or",
     "goldPickedUp": "Or collecté",
     "goldRate": "Taux de Trophées d'Or",
@@ -583,7 +584,7 @@
     "guild": {
       "averageMemberGexp": "GEXP Moyenne des Membres",
       "createdOn": "Créé le",
-      "daily": "Quotidien",
+      "daily": "Quotidienne",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
       "date": "Date",
       "gexp": "GEXP",
@@ -602,36 +603,37 @@
     },
     "hat": "Chapeau",
     "heads": "Têtes",
-    "headsEaten": "Têtes Mangées",
-    "headshotKills": "Tirs Dans La Tête Mortels",
+    "headsEaten": "Têtes Consommées",
+    "headshotKills": "Tirs Mortels dans la Tête",
     "headshots": "Tirs Dans La Tête",
     "headstart": "Avance",
     "healing": "Guérison",
     "heroWins": "Victoires en Héro",
     "hidden": "Caché",
     "hiderWins": "Victoires en tant que Cacheur",
-    "highestKillstreak": "Killstreak La Plus Élevée",
+    "highestKillstreak": "Killstreak le Plus Élevée",
     "highestScoreFinals": "Meilleurs Score en Finale",
-    "highestScoreQualifications": "Meilleurs Temps en Épreuve de Qualification",
-    "highestStreak": "Série La Plus Élevée",
+    "highestScoreQualifications": "Meilleurs Score en Épreuve de Qualification",
+    "highestStreak": "Série la Plus Élevée",
     "hits": "Coups",
     "infectedWins": "Victoires en Infecté",
     "iron": "Fer",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Frappes",
-    "killed": "Tué",
-    "kills": "Kills",
-    "killsAsInfected": "Kill en tant qu'Infecté",
-    "killsAsMurderer": "Kills en Meurtrier",
-    "killsAsSurvivor": "Kills en Survivant",
+    "vampires-killed": "Vampires tués",
+    "humans-killed": "Humains tués",
+    "kills": "Eliminations",
+    "killsAsInfected": "Eliminations en Infecté",
+    "killsAsMurderer": "Eliminations en Meurtrier",
+    "killsAsSurvivor": "Eliminations en Survivant",
     "killstreaks": "Killstreaks",
     "kit": "Kit Actuel",
     "kwr": "KWR",
     "lapsCompleted": "Tours",
     "lastAction": "Dernière Action",
-    "lastActionTime": "Temps de la Dernière Action",
-    "lastAliveGames": "Temps en Vie Dernier",
+    "lastActionTime": "Temps depuis la Dernière Action",
+    "lastAliveGames": "Nombre de Fois en Dernier Survivant",
     "lastGame": "Dernière Partie",
     "lastLogin": "Dernière Connexion",
     "layers": "Couches",
@@ -639,7 +641,7 @@
     "levelsGained": "Niveaux Gagnés",
     "loginTime": "Heure de Connexion",
     "logoutTime": "Heure de Déconnexion",
-    "lootChests": "Coffres de Butin",
+    "lootChests": "Loot Chests",
     "losses": "Défaites",
     "magicalChests": "Coffres Magiques",
     "magicalKeys": "Clés Magiques",
@@ -648,7 +650,7 @@
     "maxPoints": "Score Maximum",
     "maxWave": "Vague Maximale",
     "mode": "Mode",
-    "mostVampireKills": "Le Plus de Victimes de Vampire",
+    "mostVampireKills": "Le Plus d'Eliminations de Vampire",
     "mounts": "Montures",
     "murdererWins": "Victoires en Meurtrier",
     "mythic-favor": "Faveur Mythique",
@@ -659,7 +661,7 @@
     "online": "En ligne",
     "opals": "Opales",
     "overallWins": "Victoires Globales",
-    "pingRange": "Gamme du Ping",
+    "pingRange": "Echelle de Ping",
     "playtime": "Temps de Jeu",
     "points": "Points",
     "poopCollected": "Crottes Collectées",
@@ -669,15 +671,15 @@
     "prevent": "Prévenir",
     "quests": "Quêtes",
     "ranksGifted": "Grades Offerts",
-    "rebelKills": "Kills en Attaquant",
+    "rebelKills": "Eliminations en Attaquant",
     "renown": "Renommée",
     "roundWins": "Manches gagnées",
     "rune": "Rune",
-    "score": "Résultat",
+    "score": "Score",
     "seekerWins": "Victoires en Chercheur",
-    "shards": "Fragments",
+    "shards": "Eclats",
     "shotAccuracy": "Précision du Tir",
-    "shotsFired": "Tirs Tirés",
+    "shotsFired": "Coups Tirés",
     "silver": "Argent",
     "silverTrophies": "Trophées d'Argent",
     "soloWins": "Victoires en Solo",
@@ -693,14 +695,14 @@
     "survivorWins": "Victoires en Survivant",
     "tags": "Tags",
     "tauntsUsed": "Taunts utilisées",
-    "thrownKnifeKills": "Kills au Couteau Lancé",
+    "thrownKnifeKills": "Eliminations en Lançant le Couteau",
     "title": "Titre",
     "tokens": "Jetons",
     "total": "Total",
     "totalTrophies": "Trophées Totaux",
     "trail": "Traînée",
     "transfusion": "Transfusion",
-    "trapKills": "Kills avec les Pièges",
+    "trapKills": "Eliminations avec des Pièges",
     "trigger": "Déclencheur",
     "tripleShot": "Triple Tir",
     "trophyRate": "Taux de Trophée",
@@ -709,24 +711,34 @@
     "utility": "Utilitaire",
     "version": "Version",
     "votes": "Votes",
-    "wallsFaced": "Murs Confrontés",
+    "wallsFaced": "Murs Rencontrés",
     "wins": "Victoires",
     "winstreak": "Winstreak",
     "witherDamage": "Dégâts au Wither",
     "witherKills": "Withers tués",
     "wlr": "WLR",
     "wool": "Laine",
-    "woolCaptures": "Captures de Laine",
+    "woolCaptures": "Laines Capturées",
     "woolPlaced": "Laine Placée",
     "zombieKills": "Zombies tués",
     "mysticsEnchanted": "Mystiques Enchantés",
-    "contracts": "Contrats"
+    "contracts": "Contrats",
+    "prefix": "Préfixe",
+    "progression": {
+      "exp": "Progression d'EXP",
+      "gexp": "Progression de GEXP",
+      "win": "Progression de Victoires",
+      "kill": "Progression d'Éliminations",
+      "score": "Progression du Score",
+      "goldTrophy": "Progression de Trophées d'Or"
+    },
+    "game-total": "{{game}} Total"
   },
   "tips": {
-    "discord": "$t(emojis:socials.discord) Rejoignez notre **$t(socials.discord)** et obtenez **20% de temps de recharge réduits** $t(emojis:heart)",
+    "discord": "$t(emojis:socials.discord) Rejoignez notre **$t(socials.discord)** et obtenez **20% de temps d'attente en moins** $t(emojis:heart)",
     "invite": "$t(emojis:socials.discord) Cliquez **[ici](<https://statsify.net/invite>)** pour inviter Statsify sur votre propre serveur !",
     "premium": "$t(emojis:logos.gold) **[Statsify Prime](<https://statsify.net/premium>)** offre des fonctionnalités supplémentaires comme des badges de profil personnalisés. Trouvez la liste complète des avantages **[ici](<https://statsify.net/premium> )** !",
-    "rankings": "$t(emojis:logos.iron) Voire vos meilleures positions de classement avec **[Statsify Prime](<https://statsify.net/premium>)** en utilisant `/rankings`",
+    "rankings": "$t(emojis:logos.iron) Voire vos meilleures positions dans les leaderboards avec **[Statsify Prime](<https://statsify.net/premium>)** en utilisant `/rankings`",
     "verify": "$t(emojis:check) Exécutez `/verify` pour exécuter des commandes sans entrer votre nom d'utilisateur et recevez **10% de temps de recharge réduits**"
   },
   "unknown": "Inconnu",
@@ -752,6 +764,6 @@
       "title": "Vérification Requise"
     },
     "successfulUnverification": "Votre compte a été dissocié avec succès !",
-    "successfulVerification": "Vous êtes maintenant vérifié à **{{displayName}}**"
+    "successfulVerification": "Vous êtes maintenant vérifié tel que **{{displayName}}**"
   }
 }
