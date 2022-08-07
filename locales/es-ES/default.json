@@ -184,71 +184,71 @@
     "text": "Generar texto de Minecraft",
     "theme": "Change your theme for every profile",
     "theme-boxes": "Cambiar la apariencia de las cajas de perfil",
-    "theme-font": "Change the font of the profiles",
+    "theme-font": "Cambiar la fuente de los perfiles",
     "theme-footer": "Customize your profile's footer",
-    "theme-footer-icon": "Change your profile's footer icon",
-    "theme-footer-message": "Change your profile's footer message. You can use https://rgb.birdflop.com to create text gradients.",
-    "theme-footer-reset": "Reset your profile's footer",
-    "theme-palette": "Change the color palette of the profiles",
-    "theme-view": "View your current profile theme",
+    "theme-footer-icon": "Cambiar el icono de pie de página de tu perfil",
+    "theme-footer-message": "Cambia el mensaje de pie de página de tu perfil. Puedes usar https://rgb.birdflop.com.",
+    "theme-footer-reset": "Restablece el pie de página de tu perfil",
+    "theme-palette": "Cambia la paleta de colores de los perfiles",
+    "theme-view": "Ve el tema actual de tu perfil",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
-    "unverify": "Unlink your Discord and Minecraft accounts",
+    "unverify": "Desvincula tu cuenta de Discord y Minecraft",
     "user": "View someone's Statsify user info",
-    "uuid": "Get someone's Minecraft UUID",
+    "uuid": "Consigue el UUID de alguien",
     "vampirez": "$t(commands.hypixel-command, { \"name\": \"VampireZ\" })",
-    "verify": "Link your Discord and Minecraft accounts",
+    "verify": "Vincula tu cuenta de Discord y Minecraft",
     "walls": "$t(commands.hypixel-command, { \"name\": \"Walls\" })",
     "warlords": "$t(commands.hypixel-command, { \"name\": \"Warlords\" })",
-    "watchdog": "View Hypixel Watchdog ban counts",
+    "watchdog": "Ve el recuento de baneos de Watchdog en Hypixel",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games"
   },
   "config": {
     "badge": {
-      "profile": "This is how your badge will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your badge.",
-      "set": "$t(emojis:config.success) Successfully updated your badge.",
-      "view": "$t(emojis:config.view) Your current badge:"
+      "profile": "Así es como se verá tu insignia en tus perfiles",
+      "reset": "$t(emojis:config.reset) Tu Insignia fue restablecida con éxito.",
+      "set": "$t(emojis:config.success) Tu Insignia fue actualizada correctamente.",
+      "view": "$t(emojis:config.view) Tu insignia actual:"
     },
     "footer": {
-      "profile": "This is how your footer will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your footer.",
-      "set": "$t(emojis:config.success) Successfully updated your footer."
+      "profile": "Así es como se vera tu pie de página en tu perfil",
+      "reset": "$t(emojis:config.reset) Tu pie de pagina se restableció correctamente.",
+      "set": "$t(emojis:config.success) tu pie de página se actualizo correctamente."
     },
     "theme": {
-      "profile": "This is how your theme will look on your profiles",
-      "set": "$t(emojis:config.success) Successfully updated your theme.",
-      "view": "$t(emojis:config.view) Your current theme:"
+      "profile": "Así es como se verá tu tema en tu perfil",
+      "set": "$t(emojis:config.success) Tu tema se Actualizó correctamente.",
+      "view": "$t(emojis:config.view) Tu tema actual:"
     },
     "language": {
-      "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
+      "description": "$t(emojis:config.success) Se actualizó correctamente su idioma a `{{locale}}`."
     }
   },
   "cooldown": {
-    "description": "Please wait `{{time}}` before reusing `{{command}}`.\n\nLearn how to reduce cooldowns [here](https://statsify.net/premium)",
-    "title": "Active Cooldown"
+    "description": "Por favor, espera `{{time}}` antes de reutilizar `{{command}}`.\n\nAprende cómo reducir los tiempos de espera [aqui](https://statsify.net/premium)",
+    "title": "Tiempo de espera activo"
   },
   "embeds": {
     "available": {
-      "blocked": "Unless the name is temporarily or permanently blocked by Mojang.",
-      "invalidCharacters": "Invalid Characters",
-      "tooLong": "Too Long"
+      "blocked": "A menos que el nombre esté temporal o permanentemente bloqueado por Mojang.",
+      "invalidCharacters": "Caracteres inválidos",
+      "tooLong": "Demasiado largo"
     },
     "colors": {
-      "bold": "Bold",
+      "bold": "Negrita",
       "color": "Color",
-      "italic": "Italic",
-      "mainHex": "Main Hex",
-      "obfuscated": "Obfuscated",
-      "reset": "Reset",
-      "shadowHex": "Shadow Hex",
-      "strikethrough": "Strikethrough",
-      "title": "Minecraft Color Codes",
-      "underline": "Underline"
+      "italic": "Cursiva",
+      "mainHex": "Hex Principal",
+      "obfuscated": "Obfuscado",
+      "reset": "Restablecer",
+      "shadowHex": "Hex de sombra",
+      "strikethrough": "Tachado",
+      "title": "Codigos de colores de Minecraft",
+      "underline": "Subrayado"
     },
     "deletePlayer": {
       "description": "**{{displayName}}** has been removed from the database and leaderboards.",
@@ -263,40 +263,40 @@
       "title": "Force Verified"
     },
     "gameCounts": {
-      "title": "Hypixel Game Counts"
+      "title": "Conteos de Hypixel"
     },
     "gtbhelper": {
-      "title": "Possible GTB Solutions"
+      "title": "Posibles soluciones GTB"
     },
     "help": {
       "games": {
-        "description": "Statsify supports the majority of games offered on Hypixel. To check your stats in a game run `/[game]`. For example you can run `/bedwars` to check your BedWars stats.",
-        "title": "Games"
+        "description": "Statsify es compatible con la mayoría de los juegos que ofrece Hypixel. Para ver tus estadísticas en un juego pon `/[game]`. Por ejemplo puedes poner `/bedwars` para ver tus estadísticas de BedWars.",
+        "title": "Juegos"
       },
       "historical": {
-        "description": "Statsify lets you check your daily, weekly, and monthly stats through `/daily`, `/weekly` and `/monthly`. If you missed a reset you can view them by running `/yesterday`, `/lastweek`, and `/lastmonth`. ",
-        "title": "Historical"
+        "description": "Statsify te permite revisar tus estadísticas diarias, semanales y mensuales a través de `/daily`, `/weekly` y `/monthly`. Si te perdiste un reinicio, puedes verlos ejecutando `/yesterday`, `/lastweek`, y `/lastmonth`. ",
+        "title": "Historial"
       },
       "leaderboards": {
-        "description": "Statsify offers thousands of leaderboards through the `/leaderboard` command. Run `/leaderboard`, then pick the gamemode, and pick a leaderboard to view. You can hit the search button to search for a specific player or position. You can also hit the up and down buttons to view more pages.",
-        "title": "Leaderboards"
+        "description": "Statsify ofrece miles de tablas de clasificación a través del comando `/leaderboard`. Ejecuta `/leaderboard`, luego elige el modo de juego y elige una tabla de clasificación para ver. Puede pulsar el botón de búsqueda para buscar un jugador o una posición específica. También puedes pulsar los botones arriba y abajo para ver más páginas.",
+        "title": "Tablas de clasificación"
       },
       "minecraft": {
-        "description": "You can view general Minecraft information such as skins, UUIDs, capes through `/skin`, `/uuid`, and `/cape` respectively. Statsify also has commands to generate Minecraft text through `/text`. View Minecraft colors through `/colors` and preview Minecraft servers through `/server`.",
+        "description": "Puedes ver información general de Minecraft como skins, UUIDs, capas a través de `/skin`, `/uuid`, y `/cape` respectivamente. Statsify también tiene comandos para generar texto de Minecraft a través de `/text`. Ver colores de Minecraft a través de `/colors` y previsualizar servidores de Minecraft a través de `/server`.",
         "title": "Minecraft"
       },
-      "title": "Statsify Help"
+      "title": "Ayuda Statsify"
     },
     "invite": {
-      "description": "Click the link below to invite Statsify to your discord server.",
-      "title": "Statsify Links"
+      "description": "Haga clic al link para invitar a Statsify a tu servidor de discord.",
+      "title": "Enlaces de Statsify"
     },
     "ping": {
-      "contributors": "Contributors",
-      "core": "Core",
+      "contributors": "Colaboradores",
+      "core": "Statsify Team",
       "pong": "Pong!",
-      "title": "Statsify Credits",
-      "translators": "Translators"
+      "title": "Creditos de Statsify",
+      "translators": "Traductores"
     },
     "tags": {
       "deleted": {
@@ -325,8 +325,8 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
     },
     "footerTooLong": {
-      "description": "The message you provided is too long. It should be under 50 characters excluding color codes.",
-      "title": "Message Too Long"
+      "description": "El mensaje que proporcionaste es demasiado largo. Debe tener menos de 50 caracteres excluyendo códigos de color.",
+      "title": "El mensaje es demasiado largo"
     },
     "goldOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -334,12 +334,12 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
     },
     "guildLeaderboardNotFound": {
-      "description": "We couldn't find the `guild` you were looking for!",
-      "title": "Invalid Guild"
+      "description": "No pudimos encontrar el `gremio` que estabas buscando!",
+      "title": "Gremio inválido"
     },
     "higherTierRequiredForIcon": {
-      "description": "You need to purchase a higher premium tier to unlock this icon!",
-      "title": "Higher Tier Required"
+      "description": "Necesitas comprar un nivel premium más alto para desbloquear este icono!",
+      "title": "Se requiere un nivel superior"
     },
     "invalidGuild": {
       "description": "A guild by the {{type}} of `{{tag}}` could not be found!",
