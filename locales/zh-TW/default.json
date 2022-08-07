@@ -247,7 +247,7 @@
       "reset": "重置文本樣式",
       "shadowHex": "背景色 Hex",
       "strikethrough": "刪除線",
-      "title": "Minecraft 顏色代碼",
+      "title": "當個創世神的顏色代碼",
       "underline": "下劃線"
     },
     "deletePlayer": {
@@ -585,7 +585,7 @@
       "averageMemberGexp": "平均成員的公會經驗值",
       "createdOn": "創建於",
       "daily": "每日",
-      "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
+      "daily-gexp": "$t(stats.guild.daily)$t(stats.guild.gexp)",
       "date": "日期",
       "gexp": "公會經驗值",
       "guild": "公會",
@@ -594,12 +594,12 @@
       "level": "公會等級",
       "members": "公會成員數",
       "monthly": "每月",
-      "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
+      "monthly-gexp": "$t(stats.guild.monthly)$t(stats.guild.gexp)",
       "quests": "公會任務數",
       "rank": "公會Rank",
       "scaledGexp": "以比例值的公會經驗",
       "weekly": "每週",
-      "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
+      "weekly-gexp": "$t(stats.guild.weekly)$t(stats.guild.gexp)"
     },
     "hat": "頭飾",
     "heads": "頭顱數",
@@ -713,7 +713,7 @@
     "votes": "選票數",
     "wallsFaced": "遊玩回合數",
     "wins": "獲勝數",
-    "winstreak": "連線記錄",
+    "winstreak": "連勝記錄",
     "witherDamage": "凋零怪傷害量",
     "witherKills": "凋零怪擊殺數",
     "wlr": "W/L比",
