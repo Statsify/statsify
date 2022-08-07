@@ -1,6 +1,39 @@
+project_id: '530060'
+api_token_env: 'CROWDIN_TOKEN'
+
 pull_request_title: 'chore(i18n): update crowdin translation'
 commit_message: 'chore(i18n): update translations for `%language%`'
 append_commit_message: false
+
 files:
-  - source: /locales/en-US/default.json
+    source: /locales/en-US/default.json
     translation: /locales/%locale%/%original_file_name%
+    languages_mapping:
+      locale:
+        zh-CN: zh-CN
+        zh-TW: zh-TW
+        hr-HR: hr
+        cs-CZ: cs
+        da-DK: da
+        nl-NL: nl
+        fi-FI: fi
+        fr-FR: fr
+        de-DE: de
+        el-GR: el
+        hi-IN: hi
+        hu-HU: hu
+        it-IT: it
+        ja-JP: ja
+        ko-KR: ko
+        lt-LT: lt
+        no-NO: no
+        pl-PL: pl
+        pt-BR: pt-BR
+        ro-RO: ro
+        ru-RU: ru
+        es-ES: es-ES
+        sv-SE: sv-SE
+        th-TH: th
+        tr-TR: tr
+        uk-UA: uk
+        vi-VN: vi
