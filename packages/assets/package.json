@@ -12,6 +12,6 @@
     "@statsify/logger": "workspace:^",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
-    "skia-canvas": "^0.9.30"
+    "skia-canvas": "^1.0.0"
   }
 }
