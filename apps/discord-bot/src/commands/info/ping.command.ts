@@ -50,7 +50,7 @@ export class PingCommand {
           `__**${t("embeds.ping.contributors")}**__`,
           "`vnmm#6969`",
           "",
-          "__**Translators**__",
+          `__**${t("embeds.ping.translators")}**__`,
           TRANSLATORS,
         ].join("\n")
       )
