@@ -342,28 +342,28 @@
       "title": "Se requiere un nivel superior"
     },
     "invalidGuild": {
-      "description": "A guild by the {{type}} of `{{tag}}` could not be found!",
-      "title": "Invalid Guild"
+      "description": "Un gremio por el {{type}} de `{{tag}}` no pudo ser encontrado!",
+      "title": "Gremio inválido"
     },
     "invalidPlayer": {
-      "description": "A player by the {{type}} of `{{tag}}` could not be found!",
-      "title": "Invalid Player"
+      "description": "Un jugador por el {{type}} de `{{tag}}` no pudo ser encontrado!",
+      "title": "Jugador inválido"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
-      "title": "Invalid Reset Time"
+      "description": "El tiempo `{{time}}` no coincide con el formato `h:mm a`. Introduzca una hora en el formato similar a `12:00 PM` o `1:00 AM`.",
+      "title": "Tiempo de reinicio no válido"
     },
     "invalidResetTimezone": {
-      "description": "`{{timezone}}` is not a valid timezone. Enter a timezone similar to `EST` or `PST`.",
-      "title": "Invalid Reset Timezone"
+      "description": "`{{timezone}}` no es una zona horaria válida. Introduzca una zona horaria similar a `EST` o `PST`.",
+      "title": "Reinicio de zona horaria no valido"
     },
     "invalidSearch": {
-      "description": "We couldn't figure out what exactly you were looking for!\nEnter a username, uuid, or discord mention.",
-      "title": "Invalid Search"
+      "description": "¡No pudimos averiguar exactamente lo que estabas buscando!\nIntroduce un usuario, uuid o mención de discord.",
+      "title": "Búsqueda inválida"
     },
     "invalidServer": {
-      "description": "The server you are looking for either doesn't exist or is offline!",
-      "title": "Invalid Minecraft Server"
+      "description": "¡El servidor que buscas no existe o está desconectado!",
+      "title": "Servidor de Minecraft no válido"
     },
     "invalidTagName": {
       "description": "The tag name you provided is invalid. It is not possible to create a slash command with this tag name.",
@@ -379,28 +379,28 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "There is no more leaderboard data at this position!",
-      "title": "No Leaderboard Data At This Position"
+      "description": "¡No hay más datos de clasificación en esta posición!",
+      "title": "No hay datos de clasificación en esta posición"
     },
     "leaderboardInvalidPosition": {
-      "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
-      "title": "Invalid Position"
+      "description": "La posición de clasificación introducida no es válida. Introduzca un número mayor que 1.",
+      "title": "Posición invalida"
     },
     "leaderboardNotFound": {
-      "description": "We can't find the `leaderboard` you are looking for!",
-      "title": "Leaderboard Not Found"
+      "description": "¡No pudimos encontrar la `tabla de clasificación` que estás buscando!",
+      "title": "Tabla de clasificación no encontrada"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account.",
-      "title": "Missing Verification"
+      "description": "<@{{tag}}> no está **verificado**. Para mencionarlo, debe ejecutar `/verify` y verificar su cuenta.",
+      "title": "Falta de verificación"
     },
     "missingPlayerVerification": {
       "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
-      "description": "To be able to run commands without supplying your username, you must be verified. To verify run and complete `/verify` and then try again.",
-      "title": "Missing Verification"
+      "description": "Para poder ejecutar comandos sin proporcionar tu nombre de usuario, debes estar verificado. Para verificar ejecuta y completa `/verify` e inténtalo de nuevo.",
+      "title": "Falta la verificación"
     },
     "netheriteOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -408,40 +408,40 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
     },
     "noCape": {
-      "description": "**{{username}}** doesn't have any capes!",
-      "title": "Missing Cape"
+      "description": "¡**{{username}}** no tiene ninguna capa!",
+      "title": "Capa faltante"
     },
     "noFriends": {
-      "description": "**{{displayName}}** has no friends $t(emojis:sad)! :(",
-      "title": "Friends Not Found"
+      "description": "**{{displayName}}** no tiene amigos $t(emojis:sad)! :(",
+      "title": "Amigos no encontrados"
     },
     "noGTBSolutions": {
-      "description": "We couldn't find any solutions for the provided hint!",
-      "title": "No Guess The Build Solutions"
+      "description": "No pudimos encontrar ninguna solución para la pista proporcionada!",
+      "title": "No hay soluciones de Guess The Build"
     },
     "noMutuals": {
-      "description": "**{{displayNameOne}}** and **{{displayNameTwo}}** have no mutual friends!",
-      "title": "No Mutuals"
+      "description": "**{{displayNameOne}}** y **{{displayNameTwo}}** no tiene amigos mutuos!",
+      "title": "No hay Mutuos"
     },
     "noRankings": {
-      "description": "**{{displayName}}** has no rankings!",
-      "title": "No Rankings"
+      "description": "**{{displayName}}** no tiene clasificaciones!",
+      "title": "Sin Clasificación"
     },
     "noRecentGames": {
-      "description": "**{{displayName}}**'s recent games could not be found!",
-      "title": "Recent Games Not Found"
+      "description": "No se han encontrado juegos recientes de **{{displayName}}**!",
+      "title": "Juegos recientes no encontrados"
     },
     "noStatus": {
-      "description": "**{{displayName}}**'s Hypixel status could not be found!",
-      "title": "Status Not Found"
+      "description": "El estatus de **{{displayName}}** en Hypixel no pudo ser encontrado!",
+      "title": "Estatus no encontrado"
     },
     "playerLeaderboardNotFound": {
-      "description": "We couldn't find the `player` you were looking for!",
-      "title": "Invalid Player"
+      "description": "No pudimos encontrar el `jugador` que estabas buscando!",
+      "title": "Jugador inválido"
     },
     "playerNotInGuild": {
-      "description": "**{{displayName}}** is not in a guild!",
-      "title": "Invalid Guild"
+      "description": "**{{displayName}}** no está en un gremio!",
+      "title": "Gremio inválido "
     },
     "premiumRequired": {
       "description": "Echa un vistazo a todas las características disponibles [aqui](https://statsify.net/premium).",
@@ -474,43 +474,43 @@
     "aboutResetting": "Haz clic en el botón de reinicio de abajo para restablecer tu historial de estadisticas cada dia *a esta hora**.\n\n**ADVERTENCIA**: Esto eliminará todo tu historial estadistico y **no se puede deshacer**. \nSi quieres poder reiniciar a una hora específica, revisa $t(socials.premium).",
     "aboutResettingPremium": "Haz clic en el botón de reinicio de abajo para restablecer tu historial de estadisticas.\n**ADVERTENCIA**: Esto eliminará todo tu historial estadistico y **no se puede deshacer**.",
     "modal": {
-      "resetTime": "Choose a Reset Time",
-      "timezone": "Choose a Timezone",
-      "title": "Historical Reset Time"
+      "resetTime": "Elige un tiempo de reinicio",
+      "timezone": "Elije una zona horaria",
+      "title": "Tiempo de reinicio del Historial"
     },
-    "new": "**{{displayName}}**'s historical stats have been checked for the first time on Statsify. Their stats will now be updated at this time every day.",
-    "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
-    "resetButton": "Click to Reset",
-    "setResetTime": "Set your reset time to <t:{{time}}:t>."
+    "new": "El historial de estadísticas de **{{displayName}}** han sido revisadas por primera vez en Statsify. Ahora sus estadísticas serán actualizadas cada día.",
+    "reset": "$t(emojis:clock) **Se reinicia en** <t:{{time}}:R>",
+    "resetButton": "Clic para Reiniciar",
+    "setResetTime": "Establece tu hora de reinicio a <t:{{time}}:t>."
   },
   "leaderboard": {
     "guildInput": {
-      "label": "Search by a Guild",
-      "placeholder": "Enter a guild's name, eg: Quote"
+      "label": "Buscar por un gremio",
+      "placeholder": "Ingresa el nombre de un gremio, ej: Quote"
     },
     "modal": {
-      "title": "Leaderboard Search"
+      "title": "Búsqueda de Clasificación"
     },
     "playerInput": {
-      "label": "Search by a Player",
-      "placeholder": "Enter a player's name, eg: j4cobi"
+      "label": "Buscar por un jugador",
+      "placeholder": "Introduce el nombre de un jugador, ej: j4cobi"
     },
     "positionInput": {
-      "label": "Search by a Position",
-      "placeholder": "Enter a position, eg: 5000"
+      "label": "Buscar por una posición",
+      "placeholder": "Introduce una posición, ej: 5000"
     }
   },
   "minecraft": {
-    "available": "Available",
-    "nameHistory": "Name History",
-    "originalName": "Original Name",
-    "trimmedUUID": "Trimmed UUID",
-    "unavailable": "Unavailable",
-    "username": "Username",
+    "available": "Disponible",
+    "nameHistory": "Historial de nombres",
+    "originalName": "Nombre Original",
+    "trimmedUUID": "UUID recortada",
+    "unavailable": "No disponible",
+    "username": "Nombre de usuario",
     "uuid": "UUID"
   },
   "number": "{{value, number}}",
-  "players": "Players",
+  "players": "Jugadores",
   "socials": {
     "discord": "[Discord](<https://discord.com/invite/5VgxMQY>)",
     "github": "[GitHub](<https://github.com/Statsify/statsify>)",
@@ -519,22 +519,22 @@
     "website": "[Website](https://statsify.net/)"
   },
   "stats": {
-    "achievementPoints": "Achievement Points",
-    "adrenaline": "Adrenaline",
-    "assists": "Assists",
+    "achievementPoints": "Puntos de logros",
+    "adrenaline": "Adrenalina",
+    "assists": "Asistencias",
     "bblr": "BBLR",
-    "bedsBroken": "Beds Broken",
-    "bedsLost": "Beds Lost",
-    "bestRound": "Best Round",
-    "bestTime": "Best Time",
-    "bestWinstreak": "Best Winstreak",
-    "bigShot": "Big Shot",
-    "blocksBroken": "Blocks Broken",
-    "blocksPlaced": "Blocks Placed",
-    "blocksRan": "Blocks Ran",
-    "bombsDefused": "Bombs Defused",
-    "bombsPlanted": "Bombs Planted",
-    "bounty": "Bounty",
+    "bedsBroken": "Camas Destruidas",
+    "bedsLost": "Camas Perdidas",
+    "bestRound": "Mejor Ronda",
+    "bestTime": "Mejor tiempo",
+    "bestWinstreak": "Mejor Racha",
+    "bigShot": "Gran tiro",
+    "blocksBroken": "Bloques Destruidos",
+    "blocksPlaced": "Bloques colocados",
+    "blocksRan": "Bloques Caminados",
+    "bombsDefused": "Bombas desactivadas",
+    "bombsPlanted": "Bombas Plantadas",
+    "bounty": "Recompensa",
     "bountyKills": "Asesinatos con Recompensa",
     "bowKills": "Asesinatos con Arco",
     "boxesPickedUp": "Cajas recolectadas",
