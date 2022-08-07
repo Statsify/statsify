@@ -285,7 +285,7 @@
         "description": "您可以分別通過執行`/skin`、`/uuid`和`/cape`指令來查看一般玩家當個創世神的資訊，例如外觀、UUID、披風。Statsify還具有執行`/text`生成當個創世神文本樣式的指令。通過執行`/colors`來查看當個創世神的顏色代碼，並通過`/server`來預覽當個創世神的伺服器。",
         "title": "當個創世神"
       },
-      "title": "Statsify 幫助"
+      "title": "Statsify幫助"
     },
     "invite": {
       "description": "點擊下面的邀請連結以邀請Statsify到您的Discord伺服器。",
