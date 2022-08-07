@@ -4,10 +4,6 @@ on:
     branches:
     - main
 
-permissions:
-  checks: write
-  contents: write
-
 jobs:
   sync-crowdin:
     name: Sync Crowdin
@@ -23,7 +19,6 @@ jobs:
         upload_sources: true
         upload_translations: true
         download_translations: true
-        localization_branch_name: l10n_main
         create_pull_request: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

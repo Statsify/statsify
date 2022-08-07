@@ -1,5 +1,4 @@
 project_id: '530060'
-api_token_env: 'CROWDIN_TOKEN'
 
 pull_request_title: 'chore(i18n): update crowdin translation'
 commit_message: 'chore(i18n): update translations for `%language%`'
