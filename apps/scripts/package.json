@@ -27,6 +27,6 @@
     "toad-scheduler": "^1.6.1"
   },
   "devDependencies": {
-    "@types/inquirer": "^8.2.1"
+    "@types/inquirer": "^9.0.0"
   }
 }

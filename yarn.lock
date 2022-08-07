@@ -2149,13 +2149,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/inquirer@npm:^8.2.1":
-  version: 8.2.1
-  resolution: "@types/inquirer@npm:8.2.1"
+"@types/inquirer@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "@types/inquirer@npm:9.0.0"
   dependencies:
     "@types/through": "*"
     rxjs: ^7.2.0
-  checksum: 5362d0b1cbec3887c9d5a671a0b19c58cf54066456c8967dd7ee799dfcc242cc8cd8959440c0f2fe7768becaf721b45fd30c222e6b9bcca378f45c68af43bab5
+  checksum: 1b21bb242f6938c750be71c0dca6278cc5d217e509f0bcbf4145dbc7fbbfb7e5d759117c33707b1a683e369757f8354a33d73400bde3d9b33eb2a7544aeef800
   languageName: node
   linkType: hard
 
@@ -8836,7 +8836,7 @@ __metadata:
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
     "@swc/core": ^1.2.205
-    "@types/inquirer": ^8.2.1
+    "@types/inquirer": ^9.0.0
     chalk: ^5.0.1
     chokidar: ^3.5.3
     inquirer: ^9.0.0
