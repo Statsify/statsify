@@ -62,7 +62,7 @@ export const formatProgression = ({
   let output = "§^2^";
 
   if (!progression.max) {
-    if (showProgress) output += `§7${label}`;
+    if (showProgress) output += `§7${label}: `;
     output += "§r§b§lMAXED§r";
     return output;
   }
