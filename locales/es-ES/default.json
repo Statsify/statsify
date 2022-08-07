@@ -472,7 +472,7 @@
   },
   "historical": {
     "aboutResetting": "Haz clic en el botón de reinicio de abajo para restablecer tu historial de estadisticas cada dia *a esta hora**.\n\n**ADVERTENCIA**: Esto eliminará todo tu historial estadistico y **no se puede deshacer**. \nSi quieres poder reiniciar a una hora específica, revisa $t(socials.premium).",
-    "aboutResettingPremium": "Click the reset button below to reset your historical stats. \n\n**WARNING:** This will delete all of your historical stats and **cannot be undone**.",
+    "aboutResettingPremium": "Haz clic en el botón de reinicio de abajo para restablecer tu historial de estadisticas.\n**ADVERTENCIA**: Esto eliminará todo tu historial estadistico y **no se puede deshacer**.",
     "modal": {
       "resetTime": "Choose a Reset Time",
       "timezone": "Choose a Timezone",
