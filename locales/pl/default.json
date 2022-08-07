@@ -584,7 +584,7 @@
     "guild": {
       "averageMemberGexp": "Średni GEXP na gracza",
       "createdOn": "Utworzono",
-      "daily": "Dzienne",
+      "daily": "Dzienny",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
       "date": "Data",
       "gexp": "GEXP",
@@ -593,12 +593,12 @@
       "joinedAt": "Dołączono",
       "level": "Poziom Gildii",
       "members": "Członkowie Gildii",
-      "monthly": "Miesięczne",
+      "monthly": "Miesięczny",
       "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
       "quests": "Zadania Gildii",
       "rank": "Ranga Gildii",
       "scaledGexp": "Skalowany GEXP",
-      "weekly": "Tygodniowe",
+      "weekly": "Tygodniowy",
       "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
     },
     "hat": "Czapka",
