@@ -13,12 +13,8 @@ export class BuildBattleGuessTheBuild {
   @Field()
   public wins: number;
 
-  @Field()
-  public correctGuesses: number;
-
   public constructor(data: APIData) {
     this.wins = data.wins_guess_the_build;
-    this.correctGuesses = data.correct_guesses;
   }
 }
 
