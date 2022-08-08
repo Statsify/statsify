@@ -193,6 +193,7 @@
     "theme-view": "Δες το τρέχον θέμα του προφίλ σου",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Αποσύνδεσε τους Discord και Minecraft λογαριασμούς",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Επιτυχής επαναφορά του υποσέλιδού σου.",
       "set": "$t(emojis:config.success) Επιτυχής ενημέρωση του υποσέλιδού σου."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Επιτυχής ενημέρωση της γλώσσας σου σε `{{locale}}`."
+    },
     "theme": {
       "profile": "Έτσι θα φαίνεται το θέμα σου στα προφίλ σου",
       "set": "$t(emojis:config.success) Επιτυχής ενημέρωση του θέματός σου.",
       "view": "$t(emojis:config.view) Το τρέχον θέμα σου:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Επιτυχής ενημέρωση της γλώσσας σου σε `{{locale}}`."
     }
   },
   "cooldown": {
@@ -543,6 +544,7 @@
     "challenges": "Προκλήσεις",
     "class": "Κατηγορία",
     "coins": "Νομίσματα",
+    "contracts": "Συμβόλαια",
     "correctGuesses": "Σωστές Μαντεψιές",
     "damage": "Ζημιά",
     "deaths": "Θάνατοι",
@@ -570,6 +572,7 @@
     "fortune": "Τύχη",
     "friends": "Φίλοι",
     "game": "Παιχνίδι",
+    "game-total": "{{game}} Total",
     "gamesPlayed": "Παιχνίδια Που Παίχτηκαν",
     "giftsFound": "Δώρα Που Βρέθηκαν",
     "giftsSent": "Απεσταλμένα Gifts",
@@ -616,13 +619,12 @@
     "highestScoreQualifications": "Προσωπικό Καλύτερο στα Προκριματικά",
     "highestStreak": "Υψηλότερο Σερί",
     "hits": "Χτυπήματα",
+    "humans-killed": "Σκοτωμένοι Άνθρωποι",
     "infectedWins": "Νίκες ως Μολυσμένος",
     "iron": "Σίδηρος",
     "karma": "Κάρμα",
     "kdr": "KDR",
     "kicks": "Κλωτσιές",
-    "vampires-killed": "Σκοτωμένα Βαμπίρ",
-    "humans-killed": "Σκοτωμένοι Άνθρωποι",
     "kills": "Σκοτωμοί",
     "killsAsInfected": "Σκοτωμοί ως Μολυσμένος",
     "killsAsMurderer": "Σκοτωμοί ως Δολοφόνος",
@@ -653,6 +655,7 @@
     "mostVampireKills": "Περισσότεροι Σκοτωμοί Βρικολάκων",
     "mounts": "Mounts",
     "murdererWins": "Νίκες ως Δολοφόνος",
+    "mysticsEnchanted": "Mystics Enchanted",
     "mythic-favor": "Mythic Favor",
     "networkLevel": "Network Level",
     "objectives": "Στόχοι",
@@ -668,7 +671,16 @@
     "powerKicks": "Δυνατές Κλωτσιές",
     "powerupActivations": "Ενεργοποιήσεις Ενισχύσεων",
     "powerups": "Ενισχύσεις",
+    "prefix": "Πρόθεμα",
     "prevent": "Prevent",
+    "progression": {
+      "exp": "EXP Progress",
+      "gexp": "GEXP Progress",
+      "goldTrophy": "Gold Trophy Progress",
+      "kill": "Kill Progress",
+      "score": "Score Progress",
+      "win": "Win Progress"
+    },
     "quests": "Αποστολές",
     "ranksGifted": "Δωρισμένα Ranks",
     "rebelKills": "Σκοτωμοί ως Επιτιθέμενος",
@@ -709,6 +721,7 @@
     "ultimate": "Υπέρτατη",
     "ultimatesCrafted": "Ultimates Crafted",
     "utility": "Χρησιμότητα",
+    "vampires-killed": "Σκοτωμένα Βαμπίρ",
     "version": "Έκδοση",
     "votes": "Ψήφοι",
     "wallsFaced": "Walls Faced",
@@ -720,19 +733,7 @@
     "wool": "Μαλλί",
     "woolCaptures": "Αιχμαλωτισμένα Μαλλιά",
     "woolPlaced": "Τοποθετημένα Wool",
-    "zombieKills": "Zombie Σκοτωμοί",
-    "mysticsEnchanted": "Mystics Enchanted",
-    "contracts": "Συμβόλαια",
-    "prefix": "Πρόθεμα",
-    "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "win": "Win Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "goldTrophy": "Gold Trophy Progress"
-    },
-    "game-total": "{{game}} Total"
+    "zombieKills": "Zombie Σκοτωμοί"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
