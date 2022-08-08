@@ -193,6 +193,7 @@
     "theme-view": "Tarkastele nykyistä profiiliteemaa",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Poista Discord- ja Minecraft-tilisi linkitys",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Alatunniste onnistuneesti nollattu.",
       "set": "$t(emojis:config.success) Alatunniste onnistuneesti päivitetty."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Kieli päivitettiin onnistuneesti kieleksi `{{locale}}`."
+    },
     "theme": {
       "profile": "Tältä teemasi näyttää profiileissasi",
       "set": "$t(emojis:config.success) Teema onnistuneesti päivitetty.",
       "view": "$t(emojis:config.view) Nykyinen teema:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Kieli päivitettiin onnistuneesti kieleksi `{{locale}}`."
     }
   },
   "cooldown": {
@@ -543,6 +544,7 @@
     "challenges": "Haasteet",
     "class": "Luokka",
     "coins": "Kolikot",
+    "contracts": "Sopimukset",
     "correctGuesses": "Oikeita arvauksia",
     "damage": "Vahinkoa",
     "deaths": "Kuolemia",
@@ -570,6 +572,7 @@
     "fortune": "Onni",
     "friends": "Kaverit",
     "game": "Peli",
+    "game-total": "{{game}} Total",
     "gamesPlayed": "Peliä pelattu",
     "giftsFound": "Lahjaa löydetty",
     "giftsSent": "Lahjaa lähetetty",
@@ -616,13 +619,12 @@
     "highestScoreQualifications": "Karsinnat - henkilökohtainen ennätys",
     "highestStreak": "Pisin putki",
     "hits": "Osumia",
+    "humans-killed": "Ihmistä tapettu",
     "infectedWins": "Voittoja infektoituneena",
     "iron": "Rautaa",
     "karma": "Karmaa",
     "kdr": "KDR",
     "kicks": "Potkuja",
-    "vampires-killed": "Vampyyria tapettu",
-    "humans-killed": "Ihmistä tapettu",
     "kills": "Tappoja",
     "killsAsInfected": "Tappoja infektoituneena",
     "killsAsMurderer": "Tappoja murhaajana",
@@ -653,6 +655,7 @@
     "mostVampireKills": "Eniten vampyyritappoja",
     "mounts": "Ratsut",
     "murdererWins": "Voittoja murhaajana",
+    "mysticsEnchanted": "Mystisiä esineitä lumottu",
     "mythic-favor": "Myyttinen suosio",
     "networkLevel": "Network-taso",
     "objectives": "Tavoitteet",
@@ -668,7 +671,16 @@
     "powerKicks": "Voimapotkuja",
     "powerupActivations": "Vahvistuksia aktivoitu",
     "powerups": "Vahvistuksia",
+    "prefix": "Etuliite",
     "prevent": "Esto",
+    "progression": {
+      "exp": "EXP Progress",
+      "gexp": "GEXP Progress",
+      "goldTrophy": "Gold Trophy Progress",
+      "kill": "Kill Progress",
+      "score": "Score Progress",
+      "win": "Win Progress"
+    },
     "quests": "Tehtäviä tehty",
     "ranksGifted": "Rankkia lahjoitettu",
     "rebelKills": "Hyökkääjätapot",
@@ -709,6 +721,7 @@
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimaatteja työstetty",
     "utility": "Hyöty",
+    "vampires-killed": "Vampyyria tapettu",
     "version": "Versio",
     "votes": "Äänestyksiä",
     "wallsFaced": "Seinää kohdattu",
@@ -720,19 +733,7 @@
     "wool": "Villaa",
     "woolCaptures": "Villaa kaapattu",
     "woolPlaced": "Villaa asetettu",
-    "zombieKills": "Zombitapot",
-    "mysticsEnchanted": "Mystisiä esineitä lumottu",
-    "contracts": "Sopimukset",
-    "prefix": "Etuliite",
-    "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "win": "Win Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "goldTrophy": "Gold Trophy Progress"
-    },
-    "game-total": "{{game}} Total"
+    "zombieKills": "Zombitapot"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Liity **$t(socials.discord)** ja saat **20% lyhyemmät odotusajat** $t(emojis:heart)",
