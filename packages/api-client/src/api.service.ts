@@ -262,10 +262,7 @@ export class ApiService {
       `/historical/times`,
       "times",
       {}
-    ).catch(() => {
-      console.log("error");
-      return null;
-    });
+    ).catch(() => null);
   }
 
   public incrementCommand(command: string) {
