@@ -43,6 +43,7 @@ import {
   PitModes,
   PlayerStats,
   QUAKE_MODES,
+  QUEST_MODES,
   QuakeModes,
   SKYWARS_MODES,
   SMASH_HEROES_MODES,
@@ -178,6 +179,7 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
     }
     case PARKOUR_MODES:
       return ["parkour", "overall"];
+    case QUEST_MODES:
     case CHALLENGE_MODES:
     case GENERAL_MODES:
       return ["hypixel", "overall"];

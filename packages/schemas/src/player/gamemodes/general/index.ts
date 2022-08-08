@@ -11,7 +11,7 @@ import { Challenges } from "./challenges";
 import { Events } from "./events";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
-import { getNetworkLevel, getQuests } from "./util";
+import { getNetworkLevel } from "./util";
 
 export const GENERAL_MODES = new GameModes([{ api: "overall" }]);
 export type GeneralModes = IGameModes<typeof GENERAL_MODES>;
@@ -50,9 +50,6 @@ export class General {
   public tournamentTributes: number;
 
   @Field()
-  public quests: number;
-
-  @Field()
   public ranksGifted: number;
 
   @Field({ leaderboard: { fieldName: "Tokens", name: "Classic Tokens" } })
@@ -73,13 +70,6 @@ export class General {
     this.networkExp = data.networkExp;
     this.networkLevel = getNetworkLevel(this.networkExp);
 
-    this.currentRewardStreak = data.rewardScore;
-    this.highestRewardStreak = data.rewardHighScore;
-
-    this.tournamentTributes = data.tourney?.total_tributes;
-
-    this.quests = getQuests(data.quests);
-
     this.giftsSent = data.giftingMeta?.bundlesGiven;
     this.ranksGifted = data.giftingMeta?.ranksGiven;
 
@@ -90,3 +80,5 @@ export class General {
 }
 
 export * from "./events";
+export * from "./challenges";
+export * from "./quests";
