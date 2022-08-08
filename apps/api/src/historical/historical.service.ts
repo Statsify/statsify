@@ -251,7 +251,7 @@ export class HistoricalService {
    * @param newOne The new stats
    * @returns the new stats - the old stats
    */
-  private merge<T>(oldOne: T & object, newOne: T & object): T {
+  private merge<T>(oldOne: T, newOne: T): T {
     const merged = {} as T;
 
     const keys = Object.keys({ ...oldOne, ...newOne });
