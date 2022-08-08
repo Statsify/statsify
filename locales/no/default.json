@@ -193,6 +193,7 @@
     "theme-view": "Se ditt nåværende profiltema",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Fjern tilkoblingen mellom Discord- og Minecraft-brukeren din",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Bunnteksten din er nullstilt.",
       "set": "$t(emojis:config.success) Bunnteksten din er oppdatert."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Språket ditt er oppdatert til `{{locale}}`."
+    },
     "theme": {
       "profile": "Dette er slik temaet vil se ut på dine profiler",
       "set": "$t(emojis:config.success) Temaet ditt er oppdatert.",
       "view": "$t(emojis:config.view) Ditt nåværende tema:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Språket ditt er oppdatert til `{{locale}}`."
     }
   },
   "cooldown": {
@@ -543,6 +544,7 @@
     "challenges": "Utfordringer",
     "class": "Klasse",
     "coins": "Mynter",
+    "contracts": "Kontrakter",
     "correctGuesses": "Riktige gjetninger",
     "damage": "Skade",
     "deaths": "Dødsfall",
@@ -570,6 +572,7 @@
     "fortune": "Lykke",
     "friends": "Venner",
     "game": "Spill",
+    "game-total": "{{game}} Totalt",
     "gamesPlayed": "Spill spilt",
     "giftsFound": "Gaver funnet",
     "giftsSent": "Gaver sendt",
@@ -616,13 +619,12 @@
     "highestScoreQualifications": "Personlig beste i kvalifinseringer",
     "highestStreak": "Høyeste seiersrekke",
     "hits": "Treff",
+    "humans-killed": "Mennesker drept",
     "infectedWins": "Seiere som infisert",
     "iron": "Jern",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Spark",
-    "vampires-killed": "Vampyrer drept",
-    "humans-killed": "Mennesker drept",
     "kills": "Drap",
     "killsAsInfected": "Drap som infisert",
     "killsAsMurderer": "Drap som morder",
@@ -653,6 +655,7 @@
     "mostVampireKills": "Flest vampyrdrap",
     "mounts": "Ridbare skapninger",
     "murdererWins": "Seiere som morder",
+    "mysticsEnchanted": "Mystics fortryllet",
     "mythic-favor": "Mystisk tjeneste",
     "networkLevel": "Nettverkslevel",
     "objectives": "Mål",
@@ -668,7 +671,16 @@
     "powerKicks": "Harde spark",
     "powerupActivations": "Powerup-aktiveringer",
     "powerups": "Powerups",
+    "prefix": "Prefiks",
     "prevent": "Forhindre",
+    "progression": {
+      "exp": "EXP-fremgang",
+      "gexp": "GEXP-fremgang",
+      "goldTrophy": "Gulltroféfremgang",
+      "kill": "Drapsfremgang",
+      "score": "Poengsumfremgang",
+      "win": "Seiersfremgang"
+    },
     "quests": "Oppdrag",
     "ranksGifted": "Ranks gitt bort",
     "rebelKills": "Angriper-drap",
@@ -709,6 +721,7 @@
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimater laget",
     "utility": "Nytte",
+    "vampires-killed": "Vampyrer drept",
     "version": "Versjon",
     "votes": "Stemmer",
     "wallsFaced": "Vegger møtt",
@@ -720,19 +733,7 @@
     "wool": "Ull",
     "woolCaptures": "Ull fanget",
     "woolPlaced": "Ull plassert",
-    "zombieKills": "Zombiedrap",
-    "mysticsEnchanted": "Mystics fortryllet",
-    "contracts": "Kontrakter",
-    "prefix": "Prefiks",
-    "progression": {
-      "exp": "EXP-fremgang",
-      "gexp": "GEXP-fremgang",
-      "win": "Seiersfremgang",
-      "kill": "Drapsfremgang",
-      "score": "Poengsumfremgang",
-      "goldTrophy": "Gulltroféfremgang"
-    },
-    "game-total": "{{game}} Totalt"
+    "zombieKills": "Zombiedrap"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Bli med i vår **$t(socials.discord)** og få **20% kortere cooldowns** $t(emojis:heart)",
