@@ -193,6 +193,7 @@
     "theme-view": "Voir votre thème de profil actuel",
     "ticket-menu": "Envoyer le message du ticket au channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Dissocier vos comptes Discord et Minecraft",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Vous avez bien réinitialisé votre pied de page.",
       "set": "$t(emojis:config.success) Vous avez mis à jour votre pied de page."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Vous avez bien mis à jour votre langue au `{{locale}}`."
+    },
     "theme": {
       "profile": "Voici à quoi ressemblera votre thème sur vos profils",
       "set": "$t(emojis:config.success) Vous avez bien mis à jour votre thème.",
       "view": "$t(emojis:config.view) Votre thème actuel :"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Vous avez bien mis à jour votre langue au `{{locale}}`."
     }
   },
   "cooldown": {
@@ -543,6 +544,7 @@
     "challenges": "Challenges",
     "class": "Classe",
     "coins": "Pièces",
+    "contracts": "Contrats",
     "correctGuesses": "Réponses Correctes",
     "damage": "Dégâts",
     "deaths": "Morts",
@@ -570,6 +572,7 @@
     "fortune": "Fortune",
     "friends": "Amis",
     "game": "Partie",
+    "game-total": "{{game}} Total",
     "gamesPlayed": "Parties Jouées",
     "giftsFound": "Cadeaux Trouvés",
     "giftsSent": "Cadeaux Envoyés",
@@ -616,13 +619,12 @@
     "highestScoreQualifications": "Meilleurs Score en Épreuve de Qualification",
     "highestStreak": "Série la Plus Élevée",
     "hits": "Coups",
+    "humans-killed": "Humains tués",
     "infectedWins": "Victoires en Infecté",
     "iron": "Fer",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Frappes",
-    "vampires-killed": "Vampires tués",
-    "humans-killed": "Humains tués",
     "kills": "Eliminations",
     "killsAsInfected": "Eliminations en Infecté",
     "killsAsMurderer": "Eliminations en Meurtrier",
@@ -653,6 +655,7 @@
     "mostVampireKills": "Le Plus d'Eliminations de Vampire",
     "mounts": "Montures",
     "murdererWins": "Victoires en Meurtrier",
+    "mysticsEnchanted": "Mystiques Enchantés",
     "mythic-favor": "Faveur Mythique",
     "networkLevel": "Niveau",
     "objectives": "Objectifs",
@@ -668,7 +671,16 @@
     "powerKicks": "Frappes Puissantes",
     "powerupActivations": "Activations de Powerups",
     "powerups": "Powerups",
+    "prefix": "Préfixe",
     "prevent": "Prévenir",
+    "progression": {
+      "exp": "Progression d'EXP",
+      "gexp": "Progression de GEXP",
+      "goldTrophy": "Progression de Trophées d'Or",
+      "kill": "Progression d'Éliminations",
+      "score": "Progression du Score",
+      "win": "Progression de Victoires"
+    },
     "quests": "Quêtes",
     "ranksGifted": "Grades Offerts",
     "rebelKills": "Eliminations en Attaquant",
@@ -709,6 +721,7 @@
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimates Fabriqués",
     "utility": "Utilitaire",
+    "vampires-killed": "Vampires tués",
     "version": "Version",
     "votes": "Votes",
     "wallsFaced": "Murs Rencontrés",
@@ -720,19 +733,7 @@
     "wool": "Laine",
     "woolCaptures": "Laines Capturées",
     "woolPlaced": "Laine Placée",
-    "zombieKills": "Zombies tués",
-    "mysticsEnchanted": "Mystiques Enchantés",
-    "contracts": "Contrats",
-    "prefix": "Préfixe",
-    "progression": {
-      "exp": "Progression d'EXP",
-      "gexp": "Progression de GEXP",
-      "win": "Progression de Victoires",
-      "kill": "Progression d'Éliminations",
-      "score": "Progression du Score",
-      "goldTrophy": "Progression de Trophées d'Or"
-    },
-    "game-total": "{{game}} Total"
+    "zombieKills": "Zombies tués"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Rejoignez notre **$t(socials.discord)** et obtenez **20% de temps d'attente en moins** $t(emojis:heart)",
