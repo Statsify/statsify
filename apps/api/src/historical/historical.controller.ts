@@ -61,7 +61,7 @@ export class HistoricalController {
   }
 
   @Get("/times")
-  @ApiOperation({ summary: "Get Historical Times" })
+  @ApiOperation({ summary: "Get Reset Historical Times" })
   @Auth({ role: AuthRole.ADMIN })
   public async getCommandUsage() {
     const times = await this.historicalService.getResetTimes();
