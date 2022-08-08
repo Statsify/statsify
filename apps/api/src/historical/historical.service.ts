@@ -157,7 +157,7 @@ export class HistoricalService {
       .lean()
       .exec()) as { resetMinute: number }[];
 
-    if (!minutes) return { times: [] };
+    if (!minutes) return {};
     const resetMinutes = minutes.filter((metadata) => !!metadata.resetMinute);
 
     const arrayOfTimes = resetMinutes.map((metadata) => metadata.resetMinute);
