@@ -193,6 +193,7 @@
     "theme-view": "Exibe o tema do seu perfil atual",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Desvincula suas contas do Discord e Minecraft",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Seu rodapé foi redefinido com êxito.",
       "set": "$t(emojis:config.success) Seu rodapé foi atualizado com êxito."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Atualizado com sucesso o seu idioma para `{{locale}}`."
+    },
     "theme": {
       "profile": "É assim que seu tema ficará nos seus perfis",
       "set": "$t(emojis:config.success) Seu tema foi atualizado com êxito.",
       "view": "$t(emojis:config.view) Seu tema atual:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Atualizado com sucesso o seu idioma para `{{locale}}`."
     }
   },
   "cooldown": {
@@ -543,6 +544,7 @@
     "challenges": "Desafios",
     "class": "Classe",
     "coins": "Coins",
+    "contracts": "Contratos",
     "correctGuesses": "Adivinhações Corretas",
     "damage": "Danos",
     "deaths": "Mortes",
@@ -570,6 +572,7 @@
     "fortune": "Sorte",
     "friends": "Amigos",
     "game": "Jogo",
+    "game-total": "Total de {{game}}",
     "gamesPlayed": "Partidas Jogadas",
     "giftsFound": "Presentes encontrados",
     "giftsSent": "Presentes enviados",
@@ -616,13 +619,12 @@
     "highestScoreQualifications": "Melhor Pessoal das Qualificações",
     "highestStreak": "Maior Sequência",
     "hits": "Danos",
+    "humans-killed": "Humanos mortos",
     "infectedWins": "Vitórias Infectadas",
     "iron": "Ferro",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Chutes",
-    "vampires-killed": "Vampiros mortos",
-    "humans-killed": "Humanos mortos",
     "kills": "Abates",
     "killsAsInfected": "Eliminações como Infectado",
     "killsAsMurderer": "Eliminações como Assassino",
@@ -653,6 +655,7 @@
     "mostVampireKills": "Mais vampiros abatidos",
     "mounts": "Montanhas",
     "murdererWins": "Vitórias como assasino",
+    "mysticsEnchanted": "Místicos encantados",
     "mythic-favor": "Favor místico",
     "networkLevel": "Hypixel Level",
     "objectives": "Objetivos",
@@ -668,7 +671,16 @@
     "powerKicks": "Chutes poderosos",
     "powerupActivations": "Poderes ativados",
     "powerups": "Poderes",
+    "prefix": "Prefixo",
     "prevent": "Prevenido",
+    "progression": {
+      "exp": "Progresso de EXP",
+      "gexp": "Progresso de GEXP",
+      "goldTrophy": "Progresso de troféus de ouro",
+      "kill": "Progresso de abates",
+      "score": "Progresso de pontuação",
+      "win": "Progresso de vitórias"
+    },
     "quests": "Missões",
     "ranksGifted": "Ranks presenteados",
     "rebelKills": "Atacantes abatidos",
@@ -709,6 +721,7 @@
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimates fabricados",
     "utility": "Utilidade",
+    "vampires-killed": "Vampiros mortos",
     "version": "Versão",
     "votes": "Votos",
     "wallsFaced": "Paredes concertadas",
@@ -720,19 +733,7 @@
     "wool": "Lã",
     "woolCaptures": "Lãs capturadas",
     "woolPlaced": "Lãs colocadas",
-    "zombieKills": "Zumbis abatidos",
-    "mysticsEnchanted": "Místicos encantados",
-    "contracts": "Contratos",
-    "prefix": "Prefixo",
-    "progression": {
-      "exp": "Progresso de EXP",
-      "gexp": "Progresso de GEXP",
-      "win": "Progresso de vitórias",
-      "kill": "Progresso de abates",
-      "score": "Progresso de pontuação",
-      "goldTrophy": "Progresso de troféus de ouro"
-    },
-    "game-total": "Total de {{game}}"
+    "zombieKills": "Zumbis abatidos"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Entre no nosso $t(socials.discord) e receba **menos 20% de tempo de espera** $t(emojis:heart)",
