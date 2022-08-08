@@ -193,6 +193,7 @@
     "theme-view": "Visualizza il tema attuale del tuo profilo",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Scollega il tuo account Discord da quello di Minecraft",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Il tuo piè di pagina è stato ripristinato con successo.",
       "set": "$t(emojis:config.success) Il tuo piè di pagina è stato aggiornato con successo."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Hai modificato con successo la tua lingua in `{{locale}}`."
+    },
     "theme": {
       "profile": "Questo è come il tuo tema apparirà sui tuoi profili",
       "set": "$t(emojis:config.success) Tema aggiornato con successo.",
       "view": "$t(emojis:config.view) Il tuo tema attuale:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Hai modificato con successo la tua lingua in `{{locale}}`."
     }
   },
   "cooldown": {
@@ -543,6 +544,7 @@
     "challenges": "Sfide",
     "class": "Classe",
     "coins": "Monete",
+    "contracts": "Contratti",
     "correctGuesses": "Ipotesi Corrette",
     "damage": "Danni",
     "deaths": "Morti",
@@ -570,6 +572,7 @@
     "fortune": "Fortuna",
     "friends": "Amici",
     "game": "Partita",
+    "game-total": "{{game}} Totale",
     "gamesPlayed": "Partite Giocate",
     "giftsFound": "Regali trovati",
     "giftsSent": "Regali Inviati",
@@ -616,13 +619,12 @@
     "highestScoreQualifications": "Record personale qualificazioni",
     "highestStreak": "Serie più alta",
     "hits": "Colpi",
+    "humans-killed": "Uccisioni da Umano",
     "infectedWins": "Vittorie da Infetto",
     "iron": "Ferro",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Tiri",
-    "vampires-killed": "Uccisioni da Vampiro",
-    "humans-killed": "Uccisioni da Umano",
     "kills": "Uccisioni",
     "killsAsInfected": "Uccisioni come Infetto",
     "killsAsMurderer": "Uccisioni da Assassino",
@@ -653,6 +655,7 @@
     "mostVampireKills": "Più uccisioni in Vampire",
     "mounts": "Monti",
     "murdererWins": "Vittorie da Assassino",
+    "mysticsEnchanted": "Mistica Incantata",
     "mythic-favor": "Favore Mitico",
     "networkLevel": "Livello Network",
     "objectives": "Obiettivi",
@@ -668,7 +671,16 @@
     "powerKicks": "Tiri Potenti",
     "powerupActivations": "Attivazioni Powerup",
     "powerups": "Powerup",
+    "prefix": "Prefisso",
     "prevent": "Prevenire",
+    "progression": {
+      "exp": "Progresso EXP",
+      "gexp": "Progresso GEXP",
+      "goldTrophy": "Progresso Trofeo Oro",
+      "kill": "Progresso Uccisione",
+      "score": "Progresso Punteggio",
+      "win": "Progresso Vittoria"
+    },
     "quests": "Missioni",
     "ranksGifted": "Rank Regalati",
     "rebelKills": "Uccisioni da Attaccante",
@@ -709,6 +721,7 @@
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimate Fabbricati",
     "utility": "Utilità",
+    "vampires-killed": "Uccisioni da Vampiro",
     "version": "Versione",
     "votes": "Voti",
     "wallsFaced": "Muri Affrontati",
@@ -720,19 +733,7 @@
     "wool": "Lana",
     "woolCaptures": "Lana Catturata",
     "woolPlaced": "Lana Piazzata",
-    "zombieKills": "Uccisioni Zombie",
-    "mysticsEnchanted": "Mistica Incantata",
-    "contracts": "Contratti",
-    "prefix": "Prefisso",
-    "progression": {
-      "exp": "Progresso EXP",
-      "gexp": "Progresso GEXP",
-      "win": "Progresso Vittoria",
-      "kill": "Progresso Uccisione",
-      "score": "Progresso Punteggio",
-      "goldTrophy": "Progresso Trofeo Oro"
-    },
-    "game-total": "{{game}} Totale"
+    "zombieKills": "Uccisioni Zombie"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Unisciti al nostro **$t(socials.discord)** e ottieni **cooldown 20% più brevi** $t(emojis:heart)",
