@@ -193,6 +193,7 @@
     "theme-view": "Bekijk je huidige profielthema",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Ontkoppel je Discord en Minecraft accounts",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Succesvol je voettekst gereset.",
       "set": "$t(emojis:config.success) Je voettekst succesvol bijgewerkt."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Je taal is succesvol bijgewerkt naar `{{locale}}`."
+    },
     "theme": {
       "profile": "Dit is hoe je thema eruit zal zien op je profielen",
       "set": "$t(emojis:config.success) Succesvol je thema bijgewerkt.",
       "view": "$t(emojis:config.view) Je huidige thema:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Je taal is succesvol bijgewerkt naar `{{locale}}`."
     }
   },
   "cooldown": {
@@ -543,6 +544,7 @@
     "challenges": "Uitdagingen",
     "class": "Klasse",
     "coins": "Munten",
+    "contracts": "Contracten",
     "correctGuesses": "Correcte Gissingen",
     "damage": "Schade",
     "deaths": "Doden",
@@ -570,6 +572,7 @@
     "fortune": "Geluk",
     "friends": "Vrienden",
     "game": "Spel",
+    "game-total": "{{game}} Totaal",
     "gamesPlayed": "Spellen Gespeeld",
     "giftsFound": "Cadeaus gevonden",
     "giftsSent": "Cadeaus Gestuurd",
@@ -616,13 +619,12 @@
     "highestScoreQualifications": "Persoonlijke Beste Kwalificaties",
     "highestStreak": "Hoogste Reeks",
     "hits": "Treffers",
+    "humans-killed": "Mensen gedood",
     "infectedWins": "Geïnfecteerde Overwinningen",
     "iron": "Ijzer",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Schoten",
-    "vampires-killed": "Vampieren Gedood",
-    "humans-killed": "Mensen gedood",
     "kills": "Moorden",
     "killsAsInfected": "Moorden als Geïnfecteerde",
     "killsAsMurderer": "Moorden als Moordenaar",
@@ -653,6 +655,7 @@
     "mostVampireKills": "Meeste Vampieren Gedood",
     "mounts": "Bereden",
     "murdererWins": "Gewonnen als Moordenaar",
+    "mysticsEnchanted": "Mystica Betoverd",
     "mythic-favor": "Mythische Gunst",
     "networkLevel": "Netwerk Level",
     "objectives": "Doelstellingen",
@@ -668,7 +671,16 @@
     "powerKicks": "Krachtschoten",
     "powerupActivations": "Power-up Activaties",
     "powerups": "Power-ups",
+    "prefix": "Voorvoegsel",
     "prevent": "Voorkomen",
+    "progression": {
+      "exp": "EXP Vooruitgang",
+      "gexp": "GEXP Vooruitgang",
+      "goldTrophy": "Gouden Trofee Voortgang",
+      "kill": "Moord Voortgang",
+      "score": "Score Voortgang",
+      "win": "Win Voortgang"
+    },
     "quests": "Opdrachten",
     "ranksGifted": "Rangen Geschonken",
     "rebelKills": "Aanvaller Moorden",
@@ -709,6 +721,7 @@
     "ultimate": "Ultieme",
     "ultimatesCrafted": "Ultiemen Gemaakt",
     "utility": "Utiliteit",
+    "vampires-killed": "Vampieren Gedood",
     "version": "Versie",
     "votes": "Stemmen",
     "wallsFaced": "Muren Geconfronteerd",
@@ -720,19 +733,7 @@
     "wool": "Wol",
     "woolCaptures": "Wol Gestolen",
     "woolPlaced": "Wol Geplaatst",
-    "zombieKills": "Zombie Moorden",
-    "mysticsEnchanted": "Mystica Betoverd",
-    "contracts": "Contracten",
-    "prefix": "Voorvoegsel",
-    "progression": {
-      "exp": "EXP Vooruitgang",
-      "gexp": "GEXP Vooruitgang",
-      "win": "Win Voortgang",
-      "kill": "Moord Voortgang",
-      "score": "Score Voortgang",
-      "goldTrophy": "Gouden Trofee Voortgang"
-    },
-    "game-total": "{{game}} Totaal"
+    "zombieKills": "Zombie Moorden"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Sluit je aan bij onze **$t(socials.discord)** en krijg **20% lagere cooldowns** $t(emojis:heart)",
