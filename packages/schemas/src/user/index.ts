@@ -58,7 +58,7 @@ export class User {
   @Field({ store: { required: false } })
   public footer?: UserFooter;
 
-  @Field({ store: { required: false } })
+  @Field({ store: { required: false }, type: () => String })
   public locale?: string | null;
 
   public static isIron(user: User | null): boolean {

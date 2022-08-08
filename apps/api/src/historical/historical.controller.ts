@@ -59,4 +59,16 @@ export class HistoricalController {
 
     return { success: !!player, player };
   }
+
+  @Get("/times")
+  @ApiOperation({ summary: "Get Historical Times" })
+  @Auth({ role: AuthRole.ADMIN })
+  public async getCommandUsage() {
+    const times = await this.historicalService.getResetTimes();
+
+    return {
+      success: true,
+      times,
+    };
+  }
 }

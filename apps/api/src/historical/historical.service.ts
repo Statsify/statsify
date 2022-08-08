@@ -150,6 +150,24 @@ export class HistoricalService {
     return merged;
   }
 
+  public async getResetTimes() {
+    const minutes = (await this.dailyModel
+      .find()
+      .select({ resetMinute: 1 })
+      .lean()
+      .exec()) as { resetMinute: number }[];
+
+    if (!minutes) return { times: [] };
+    const resetMinutes = minutes.filter((metadata) => !!metadata.resetMinute);
+
+    const arrayOfTimes = resetMinutes.map((metadata) => metadata.resetMinute);
+
+    return arrayOfTimes.reduce(
+      (acc, current) => (acc[current] ? ++acc[current] : (acc[current] = 1), acc),
+      {} as Record<string, number>
+    );
+  }
+
   private getRaw(uuid: string, type: HistoricalType): Promise<RawHistoricalResponse> {
     return LAST_HISTORICAL.includes(type as unknown as LastHistoricalType)
       ? this.getLastHistorical(uuid, type as unknown as LastHistoricalType)
@@ -233,7 +251,7 @@ export class HistoricalService {
    * @param newOne The new stats
    * @returns the new stats - the old stats
    */
-  private merge<T>(oldOne: T, newOne: T): T {
+  private merge<T>(oldOne: T & object, newOne: T & object): T {
     const merged = {} as T;
 
     const keys = Object.keys({ ...oldOne, ...newOne });
