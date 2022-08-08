@@ -193,6 +193,7 @@
     "theme-view": "查看您当前个人资料的主题",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "解除您的Discord和我的世界账户的绑定",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) 成功地重置了您的页脚。",
       "set": "$t(emojis:config.success) 成功地更新了您的页脚。"
     },
+    "language": {
+      "description": "$t(emojis:config.success) 成功地将您的语言更新为`{{locale}}`。"
+    },
     "theme": {
       "profile": "这就是您的主题在您的我的资料上的样子",
       "set": "$t(emojis:config.success) 成功地更新了您的主题。",
       "view": "$t(emojis:config.view) 您目前的主题："
-    },
-    "language": {
-      "description": "$t(emojis:config.success) 成功地将您的语言更新为`{{locale}}`。"
     }
   },
   "cooldown": {
@@ -543,6 +544,7 @@
     "challenges": "挑战",
     "class": "职业",
     "coins": "硬币",
+    "contracts": "契约任务",
     "correctGuesses": "正确猜测",
     "damage": "伤害",
     "deaths": "死亡数",
@@ -570,6 +572,7 @@
     "fortune": "额外硬币技能数",
     "friends": "好友",
     "game": "游戏",
+    "game-total": "{{game}}总数",
     "gamesPlayed": "游戏次数",
     "giftsFound": "找到礼物",
     "giftsSent": "送礼数",
@@ -616,13 +619,12 @@
     "highestScoreQualifications": "预选赛个人最佳数",
     "highestStreak": "最高连杀数",
     "hits": "命中数",
+    "humans-killed": "人类击杀数",
     "infectedWins": "感染者胜利次数",
     "iron": "铁锭收集",
     "karma": "人品值",
     "kdr": "KDR",
     "kicks": "踢出数",
-    "vampires-killed": "吸血鬼击杀数",
-    "humans-killed": "人类击杀数",
     "kills": "击杀数",
     "killsAsInfected": "作为感染者击杀数",
     "killsAsMurderer": "作为杀手击杀数",
@@ -653,6 +655,7 @@
     "mostVampireKills": "吸血鬼最多击杀数",
     "mounts": "坐骑",
     "murdererWins": "杀手胜场数",
+    "mysticsEnchanted": "神秘附魔",
     "mythic-favor": "神话之尘",
     "networkLevel": "服务器等级",
     "objectives": "目标",
@@ -668,7 +671,16 @@
     "powerKicks": "能量击杀数",
     "powerupActivations": "加成次数",
     "powerups": "增益效果",
+    "prefix": "前缀",
     "prevent": "避免伤害值",
+    "progression": {
+      "exp": "经验进度",
+      "gexp": "公会经验进度",
+      "goldTrophy": "金奖杯进度",
+      "kill": "击杀进度",
+      "score": "得分进度",
+      "win": "胜利场数进度"
+    },
     "quests": "任务",
     "ranksGifted": "Rank赠送",
     "rebelKills": "攻击者击杀数",
@@ -709,6 +721,7 @@
     "ultimate": "高级技能",
     "ultimatesCrafted": "合成配方次数",
     "utility": "实用技能",
+    "vampires-killed": "吸血鬼击杀数",
     "version": "版本",
     "votes": "所得票数",
     "wallsFaced": "游玩回合数",
@@ -720,19 +733,7 @@
     "wool": "羊毛",
     "woolCaptures": "获取的羊毛",
     "woolPlaced": "放置羊毛数",
-    "zombieKills": "僵尸击杀数",
-    "mysticsEnchanted": "神秘附魔",
-    "contracts": "契约任务",
-    "prefix": "前缀",
-    "progression": {
-      "exp": "经验进度",
-      "gexp": "公会经验进度",
-      "win": "胜利场数进度",
-      "kill": "击杀进度",
-      "score": "得分进度",
-      "goldTrophy": "金奖杯进度"
-    },
-    "game-total": "{{game}}总数"
+    "zombieKills": "僵尸击杀数"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) 加入我们的**$t(socials.discord)**可以获得**减少20%的冷却时间** $t(emojis:heart)",
