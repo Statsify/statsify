@@ -150,6 +150,24 @@ export class HistoricalService {
     return merged;
   }
 
+  public async getResetTimes() {
+    const minutes = (await this.dailyModel
+      .find()
+      .select({ resetMinute: 1 })
+      .lean()
+      .exec()) as { resetMinute: number }[];
+
+    if (!minutes) return {};
+    const resetMinutes = minutes.filter((metadata) => !!metadata.resetMinute);
+
+    const arrayOfTimes = resetMinutes.map((metadata) => metadata.resetMinute);
+
+    return arrayOfTimes.reduce(
+      (acc, current) => (acc[current] ? ++acc[current] : (acc[current] = 1), acc),
+      {} as Record<string, number>
+    );
+  }
+
   private getRaw(uuid: string, type: HistoricalType): Promise<RawHistoricalResponse> {
     return LAST_HISTORICAL.includes(type as unknown as LastHistoricalType)
       ? this.getLastHistorical(uuid, type as unknown as LastHistoricalType)

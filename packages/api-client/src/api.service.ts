@@ -26,6 +26,7 @@ import {
   PostLeaderboardResponse,
   PutUserBadgeResponse,
 } from "./responses";
+import { GetHistoricalTimesResponse } from "./responses/get.historical-times.response";
 import { GuildQuery, HistoricalType, HypixelCache, LeaderboardQuery } from "./enums";
 import { UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
@@ -252,6 +253,14 @@ export class ApiService {
     return this.requestKey<GetCommandUsageResponse, "usage">(
       `/commands`,
       "usage",
+      {}
+    ).catch(() => null);
+  }
+
+  public getHistoricalTimes() {
+    return this.requestKey<GetHistoricalTimesResponse, "times">(
+      `/historical/times`,
+      "times",
       {}
     ).catch(() => null);
   }
