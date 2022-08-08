@@ -193,6 +193,7 @@
     "theme-view": "Zeigt dein aktuelles Profildesign an",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Entknüpft deine Discord und Minecraft Konten",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Deine Fußzeile wurde erfolgreich zurückgesetzt.",
       "set": "$t(emojis:config.success) Deine Fußzeile wurde erfolgreich aktualisiert."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Deine Sprache wurde erfolgreich auf `{{locale}}` geändert."
+    },
     "theme": {
       "profile": "So wird dein Design auf deinen Profilen aussehen",
       "set": "$t(emojis:config.success) Dein Design wurde erfolgreich aktualisiert.",
       "view": "$t(emojis:config.view) Dein aktuelles Design:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Deine Sprache wurde erfolgreich auf `{{locale}}` geändert."
     }
   },
   "cooldown": {
@@ -543,6 +544,7 @@
     "challenges": "Herausforderungen",
     "class": "Klasse",
     "coins": "Münzen",
+    "contracts": "Verträge",
     "correctGuesses": "Richtige Vermutungen",
     "damage": "Schaden",
     "deaths": "Tode",
@@ -570,6 +572,7 @@
     "fortune": "Glück",
     "friends": "Freunde",
     "game": "Spiel",
+    "game-total": "{{game}} Total",
     "gamesPlayed": "Spiele Gespielt",
     "giftsFound": "Geschenke Gefunden",
     "giftsSent": "Geschenke Gesendet",
@@ -616,13 +619,12 @@
     "highestScoreQualifications": "Persönlich Bestes Endergebnis in Qualifikationen",
     "highestStreak": "Höchster Streak",
     "hits": "Treffer",
+    "humans-killed": "Menschen Getötet",
     "infectedWins": "Infizierter Siege",
     "iron": "Eisen",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Schüsse",
-    "vampires-killed": "Vampire Getötet",
-    "humans-killed": "Menschen Getötet",
     "kills": "Kills",
     "killsAsInfected": "Kills als Infizierter",
     "killsAsMurderer": "Kills als Mörder",
@@ -653,6 +655,7 @@
     "mostVampireKills": "Meiste Vampir Kills",
     "mounts": "Reittiere",
     "murdererWins": "Mörder Siege",
+    "mysticsEnchanted": "Mystics Verzaubert",
     "mythic-favor": "Mystische Gunst",
     "networkLevel": "Netzwerk Level",
     "objectives": "Ziele",
@@ -668,7 +671,16 @@
     "powerKicks": "Kraft Kicks",
     "powerupActivations": "Powerup Aktivierungen",
     "powerups": "Powerups",
+    "prefix": "Präfix",
     "prevent": "Verhindern",
+    "progression": {
+      "exp": "EXP Progress",
+      "gexp": "GEXP Progress",
+      "goldTrophy": "Gold Trophy Progress",
+      "kill": "Kill Progress",
+      "score": "Score Progress",
+      "win": "Win Progress"
+    },
     "quests": "Aufgaben",
     "ranksGifted": "Ränge Geschenkt",
     "rebelKills": "Angreifer Kills",
@@ -709,6 +721,7 @@
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimates Hergestellt",
     "utility": "Hilfsmittel",
+    "vampires-killed": "Vampire Getötet",
     "version": "Version",
     "votes": "Stimmen",
     "wallsFaced": "Wände Konfrontiert",
@@ -720,19 +733,7 @@
     "wool": "Wolle",
     "woolCaptures": "Wolle Erobert",
     "woolPlaced": "Wolle Platziert",
-    "zombieKills": "Zombie Kills",
-    "mysticsEnchanted": "Mystics Verzaubert",
-    "contracts": "Verträge",
-    "prefix": "Präfix",
-    "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "win": "Win Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "goldTrophy": "Gold Trophy Progress"
-    },
-    "game-total": "{{game}} Total"
+    "zombieKills": "Zombie Kills"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Trete unserem **$t(socials.discord)** bei und erhalte **20% niedrigere Abklingzeit** $t(emojis:heart)",
