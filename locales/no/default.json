@@ -296,7 +296,7 @@
       "contributors": "Bidragsytere",
       "core": "Team",
       "pong": "Pong!",
-      "title": "Statisfys bidragsytere",
+      "title": "Statsifys bidragsytere",
       "translators": "Oversettere"
     },
     "tags": {
@@ -739,7 +739,7 @@
     "discord": "$t(emojis:socials.discord) Bli med i vår **$t(socials.discord)** og få **20% kortere cooldowns** $t(emojis:heart)",
     "invite": "$t(emojis:socials.discord) Klikk **[here](<https://statsify.net/invite>)** for å invitere Statsify til din egen server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** tilbyr flere funksjoner, slik som personlig tilpassede profilmerker. Finn hele listen over fordeler **[here](<https://statsify.net/premium>)**!",
-    "rankings": "$t(emojis:logos.iron) Se dine topplisteposisjoner med **[Statsify Premium] (<https://statsify.net/premium>)** ved å bruke `/rankings`",
+    "rankings": "$t(emojis:logos.iron) Se dine topplisteposisjoner med **[Statsify Premium](<https://statsify.net/premium>)** ved å bruke `/rankings`",
     "verify": "$t(emojis:check) Utfør `/verify for å utføre kommandoer uten å skrive inn brukernavn, i tillegg til å motta **10 % kortere cooldowns**"
   },
   "unknown": "Ukjent",
