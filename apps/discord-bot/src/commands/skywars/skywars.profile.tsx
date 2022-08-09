@@ -117,9 +117,9 @@ export const SkyWarsProfile = ({
     [t("stats.lootChests"), t(skywars.lootChests), "§e"],
     [t("stats.tokens"), t(skywars.tokens), "§2"],
     [t("stats.souls"), t(skywars.souls), "§b"],
-    [t("stats.heads"), t(skywars.heads), "§d"],
-    [t("stats.shards"), t(skywars.shards), "§3"],
     [t("stats.opals"), t(skywars.opals), "§9"],
+    [t("stats.heads"), t(skywars.heads), "§5"],
+    [t("stats.potionsBrewed"), t(skywars.potionsBrewed), "§d"],
   ];
 
   let table: JSX.Element;

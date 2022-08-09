@@ -185,37 +185,32 @@ export class PlayerStats {
 
   public constructor(data: APIData = {}) {
     const achievements = data?.achievements ?? {};
-    const legacy = data?.stats?.Legacy ?? {};
+    const stats = data?.stats ?? {};
+    const legacy = stats.Legacy ?? {};
 
-    this.arcade = new Arcade(data?.stats?.Arcade ?? {}, achievements);
-    this.arenabrawl = new ArenaBrawl(data?.stats?.Arena ?? {}, legacy);
-    this.bedwars = new BedWars(data?.stats?.Bedwars ?? {});
-    this.blitzsg = new BlitzSG(data?.stats?.HungerGames ?? {});
-    this.buildbattle = new BuildBattle(data?.stats?.BuildBattle ?? {});
-    this.copsandcrims = new CopsAndCrims(data?.stats?.MCGO ?? {});
-    this.duels = new Duels(data?.stats?.Duels ?? {});
-    this.general = new General(data?.stats?.Legacy ?? {}, data);
-    this.megawalls = new MegaWalls(data?.stats?.Walls3 ?? {});
-    this.murdermystery = new MurderMystery(
-      data?.stats?.MurderMystery ?? {},
-      achievements
-    );
-    this.paintball = new Paintball(data?.stats?.Paintball ?? {}, legacy);
+    this.arcade = new Arcade(stats.Arcade ?? {}, achievements);
+    this.arenabrawl = new ArenaBrawl(stats.Arena ?? {}, legacy);
+    this.bedwars = new BedWars(stats.Bedwars ?? {});
+    this.blitzsg = new BlitzSG(stats.HungerGames ?? {});
+    this.buildbattle = new BuildBattle(stats.BuildBattle ?? {});
+    this.copsandcrims = new CopsAndCrims(stats.MCGO ?? {});
+    this.duels = new Duels(stats.Duels ?? {});
+    this.general = new General(data, legacy);
+    this.megawalls = new MegaWalls(stats.Walls3 ?? {});
+    this.murdermystery = new MurderMystery(stats.MurderMystery ?? {}, achievements);
+    this.paintball = new Paintball(stats.Paintball ?? {}, legacy);
     this.parkour = new Parkour(data?.parkourCompletions ?? {});
-    this.pit = new Pit(
-      data?.stats?.Pit?.profile ?? {},
-      data?.stats?.Pit?.pit_stats_ptl ?? {}
-    );
-    this.quake = new Quake(data?.stats?.Quake ?? {}, achievements, legacy);
-    this.skywars = new SkyWars(data?.stats?.SkyWars ?? {});
-    this.smashheroes = new SmashHeroes(data?.stats?.SuperSmash ?? {});
-    this.speeduhc = new SpeedUHC(data?.stats?.SpeedUHC ?? {});
-    this.tntgames = new TNTGames(data?.stats?.TNTGames ?? {}, achievements);
-    this.turbokartracers = new TurboKartRacers(data?.stats?.GingerBread ?? {}, legacy);
-    this.uhc = new UHC(data?.stats?.UHC ?? {});
-    this.vampirez = new VampireZ(data?.stats?.VampireZ ?? {}, legacy);
-    this.walls = new Walls(data?.stats?.Walls ?? {}, legacy);
-    this.warlords = new Warlords(data?.stats?.Battleground ?? {});
-    this.woolwars = new WoolWars(data?.stats?.WoolGames ?? {});
+    this.pit = new Pit(stats.Pit?.profile ?? {}, stats.Pit?.pit_stats_ptl ?? {});
+    this.quake = new Quake(stats.Quake ?? {}, achievements, legacy);
+    this.skywars = new SkyWars(stats.SkyWars ?? {}, achievements);
+    this.smashheroes = new SmashHeroes(stats.SuperSmash ?? {});
+    this.speeduhc = new SpeedUHC(stats.SpeedUHC ?? {});
+    this.tntgames = new TNTGames(stats.TNTGames ?? {}, achievements);
+    this.turbokartracers = new TurboKartRacers(stats.GingerBread ?? {}, legacy);
+    this.uhc = new UHC(stats.UHC ?? {});
+    this.vampirez = new VampireZ(stats.VampireZ ?? {}, legacy);
+    this.walls = new Walls(stats.Walls ?? {}, legacy);
+    this.warlords = new Warlords(stats.Battleground ?? {});
+    this.woolwars = new WoolWars(stats.WoolGames ?? {});
   }
 }
