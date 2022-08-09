@@ -351,7 +351,7 @@
       "title": "Ungültiger Spieler"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
+      "description": "`{{time}}` stimmt nicht mit dem Format `h:mm a` überein. Gebe eine Zeit im Format ähnlich wie `12:00 PM` oder `1:00 AM` ein.",
       "title": "Ungültige Reset Zeit"
     },
     "invalidResetTimezone": {
@@ -572,7 +572,7 @@
     "fortune": "Glück",
     "friends": "Freunde",
     "game": "Spiel",
-    "game-total": "{{game}} Total",
+    "game-total": "{{game}} Gesamt",
     "gamesPlayed": "Spiele Gespielt",
     "giftsFound": "Geschenke Gefunden",
     "giftsSent": "Geschenke Gesendet",
@@ -674,12 +674,12 @@
     "prefix": "Präfix",
     "prevent": "Verhindern",
     "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "goldTrophy": "Gold Trophy Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "win": "Win Progress"
+      "exp": "EXP Fortschritt",
+      "gexp": "GEXP Fortschritt",
+      "goldTrophy": "Goldtrophäen Fortschritt",
+      "kill": "Kill Fortschritt",
+      "score": "Punkt Fortschritt",
+      "win": "Sieg Fortschritt"
     },
     "quests": "Aufgaben",
     "ranksGifted": "Ränge Geschenkt",
