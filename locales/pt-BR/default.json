@@ -230,7 +230,7 @@
     }
   },
   "cooldown": {
-    "description": "Por favor, espere `{{time}}` antes de reusar `{{command}}`.\n\nAprenda a reduzir o tempo de espera [here](https://statsify.net/premium)",
+    "description": "Espere `{{time}}` antes de usar `{{command}}` novamente.\n\nSaiba mais sobre como reduzir o tempo de espera [aqui](https://statsify.net/premium)",
     "title": "Tempo de espera ativo"
   },
   "embeds": {
@@ -380,7 +380,7 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "Não há mais dados de classificação nesta posição!",
+      "description": "Não há mais dados de pódios nesta posição!",
       "title": "Sem dados de classificação nesta posição"
     },
     "leaderboardInvalidPosition": {
@@ -409,7 +409,7 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
     },
     "noCape": {
-      "description": "{{username}} não tem nenhuma capa!",
+      "description": "**{{username}}** não tem nenhuma capa!",
       "title": "Capa ausente"
     },
     "noFriends": {
@@ -445,7 +445,7 @@
       "title": "Guild inválida"
     },
     "premiumRequired": {
-      "description": "Confira todos os recursos disponíveis [here](https://statsify.net/premium).",
+      "description": "Confira todos os recursos disponíveis [aqui](https://statsify.net/premium).",
       "preview": "Confira todos os recursos disponíveis [aqui](https://statsify.net/premium). Abaixo está uma pequena prévia do que cada comando faz/muda.",
       "title": "Statsify {{tier}} é necessário para executar este comando"
     },
@@ -479,7 +479,7 @@
       "timezone": "Escolha um fuso horário",
       "title": "Tempo de reinicialização histórica"
     },
-    "new": "** As estatísticas históricas de {{displayName}} de ** foram verificadas pela primeira vez na Statsify. Suas estatísticas agora serão atualizadas diariamente.",
+    "new": "As estatísticas históricas de **{{displayName}}** de foram verificadas pela primeira vez na Statsify. Suas estatísticas agora serão atualizadas diariamente.",
     "reset": "$t(emojis:clock) **Reinicializa** <t:{{time}}:R>",
     "resetButton": "Clique para redefinir",
     "setResetTime": "Define o seu tempo de redefinição para <t:{{time}}:t>."
