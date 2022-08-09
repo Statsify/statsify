@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@fastify/static": "^6.4.0",
+    "@fastify/view": "^7.1.0",
     "@m8a/nestjs-typegoose": "^8.0.4",
     "@nestjs-modules/ioredis": "^1.0.1",
     "@nestjs/axios": "^0.1.0",
@@ -34,7 +35,6 @@
     "handlebars": "^4.7.7",
     "ioredis": "5.1.0",
     "mongoose": "^6.4.3",
-    "point-of-view": "^6.3.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.5",
     "toad-scheduler": "^1.6.1"

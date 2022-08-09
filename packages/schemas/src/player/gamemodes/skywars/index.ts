@@ -10,7 +10,7 @@ import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
 import { Progression } from "../../../progression";
-import { SkyWarsLabs, SkyWarsMode } from "./mode";
+import { SkyWarsMode } from "./mode";
 import { add } from "@statsify/math";
 import { getFormattedLevel, getLevel, getLevelProgress, parseKit } from "./util";
 
@@ -18,7 +18,6 @@ export const SKYWARS_MODES = new GameModes([
   { api: "overall" },
   { api: "solo" },
   { api: "doubles" },
-  { api: "labs" },
 
   { hypixel: "solo_insane_lucky", formatted: "Lucky Solo" },
   { hypixel: "teams_insane_lucky", formatted: "Lucky Doubles" },
@@ -98,9 +97,6 @@ export class SkyWars {
   @Field()
   public doubles: SkyWarsMode;
 
-  @Field()
-  public labs: SkyWarsLabs;
-
   public constructor(data: APIData, ap: APIData) {
     this.exp = data.skywars_experience ?? 0;
     this.coins = data.coins;
@@ -155,8 +151,6 @@ export class SkyWars {
       add(soloInsaneWins, doublesInsaneWins),
       add(soloNormalWins, doublesNormalWins)
     );
-
-    this.labs = new SkyWarsLabs(data);
   }
 }
 
