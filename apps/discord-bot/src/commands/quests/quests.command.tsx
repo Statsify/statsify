@@ -28,7 +28,7 @@ interface PreProfileData {
   gameIcons: Record<GameId, Image>;
 }
 
-@Command({ description: (t) => t("commands.challenges") })
+@Command({ description: (t) => t("commands.quests") })
 export class QuestsCommand {
   protected readonly apiService: ApiService;
   protected readonly paginateService: PaginateService;
