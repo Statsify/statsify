@@ -122,11 +122,18 @@ export const getPresColor = (star: number): Color => {
   return colors[index == -1 ? 0 : index].color;
 };
 
-export const parseKit = (kit = "default"): string =>
-  kit
-    .slice(
-      Math.max(0, kit.lastIndexOf("solo_") !== -1 ? kit.lastIndexOf("solo_") + 5 : 0)
-    )
-    .slice(
-      Math.max(0, kit.lastIndexOf("team_") !== -1 ? kit.lastIndexOf("team_") + 5 : 0)
-    );
+const MYTHICAL_KIT = "kit_mythical_";
+const TEAMS = "team_";
+const SOLO = "solo_";
+
+const removeAllBeforePrefix = (str: string, prefix: string) => {
+  const lastIndex = str.lastIndexOf(prefix);
+  if (lastIndex === -1) return str;
+  return str.slice(Math.max(0, lastIndex + prefix.length));
+};
+
+export const parseKit = (kit = "default") => {
+  const parsedSolo = removeAllBeforePrefix(kit, SOLO);
+  const parsedTeam = removeAllBeforePrefix(parsedSolo, TEAMS);
+  return parsedTeam.replace(MYTHICAL_KIT, "").replaceAll("-", "_");
+};

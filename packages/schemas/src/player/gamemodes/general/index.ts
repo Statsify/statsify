@@ -55,7 +55,7 @@ export class General {
   @Field({ leaderboard: { fieldName: "" } })
   public challenges: Challenges;
 
-  public constructor(legacy: APIData, data: APIData = {}) {
+  public constructor(data: APIData, legacy: APIData) {
     this.achievementPoints = data.achievementPoints;
 
     this.challenges = new Challenges(data?.challenges?.all_time ?? {});

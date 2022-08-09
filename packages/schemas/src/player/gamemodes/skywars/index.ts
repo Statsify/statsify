@@ -60,9 +60,6 @@ export class SkyWars {
   public souls: number;
 
   @Field()
-  public shards: number;
-
-  @Field()
   public opals: number;
 
   @Field()
@@ -70,6 +67,9 @@ export class SkyWars {
 
   @Field()
   public tokens: number;
+
+  @Field()
+  public potionsBrewed: number;
 
   @Field()
   public lootChests: number;
@@ -101,14 +101,14 @@ export class SkyWars {
   @Field()
   public labs: SkyWarsLabs;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData, ap: APIData) {
     this.exp = data.skywars_experience ?? 0;
     this.coins = data.coins;
     this.souls = data.souls;
-    this.shards = data.shard;
     this.opals = data.opals;
     this.heads = data.heads;
     this.tokens = data.cosmetic_tokens;
+    this.potionsBrewed = ap.skywars_tonic_taker;
 
     this.lootChests = add(
       data.skywars_chests,
