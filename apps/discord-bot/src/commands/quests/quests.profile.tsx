@@ -6,7 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, GameList, Header, SidebarItem, Table } from "#components";
+import {
+  Container,
+  Footer,
+  GameList,
+  Header,
+  List,
+  SidebarItem,
+  Table,
+} from "#components";
+import { ElementNode } from "@statsify/rendering";
 import {
   FormattedGame,
   GameId,
@@ -17,7 +26,7 @@ import {
   QuestsInstance,
 } from "@statsify/schemas";
 import { HistoricalType } from "@statsify/api-client";
-import { arrayGroup, prettify } from "@statsify/util";
+import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
@@ -25,8 +34,31 @@ import type { LocalizeFunction } from "@statsify/discord";
 export interface QuestProfileProps extends BaseProfileProps {
   mode: GameMode<QuestModes>;
   gameIcons: Record<GameId, Image>;
+  logos: [Image, Image];
   questTimePeriod: "overall" | "daily" | "weekly";
 }
+
+interface HistoricalQuestTableProps {
+  quests: [string, JSX.Element][];
+}
+
+const QuestsList = ({ quests }: HistoricalQuestTableProps) => (
+  <List
+    items={quests.map(([name, value]) => (
+      <>
+        <box
+          width="remaining"
+          border={{ topLeft: 4, bottomLeft: 4, bottomRight: 0, topRight: 0 }}
+        >
+          <text>{name}</text>
+        </box>
+        <box border={{ topLeft: 0, bottomLeft: 0, bottomRight: 4, topRight: 4 }}>
+          {value}
+        </box>
+      </>
+    ))}
+  />
+);
 
 interface NormalTableProps {
   quests: QuestsInstance;
@@ -46,37 +78,37 @@ interface GameTableProps {
   gameQuests: GameQuests;
   constructor: any;
   t: LocalizeFunction;
+  questTimePeriod: "overall" | "daily" | "weekly";
+  logos: [Image, Image];
 }
 
-const GameTable = ({ gameQuests, constructor, t }: GameTableProps) => {
+const GameTable = ({
+  gameQuests,
+  constructor,
+  t,
+  questTimePeriod,
+  logos,
+}: GameTableProps) => {
   const metadata = MetadataScanner.scan(constructor);
-  const entries = Object.entries(gameQuests);
-
-  const GROUP_SIZE = entries.length < 5 ? 4 : (entries.length - 1) ** 0.5;
-
-  const groups = arrayGroup(
-    entries
-      .filter(([k, v]) => k !== "total" && v !== null)
-      .sort((a, b) => b[1] - a[1])
-      .map(([quest, completions]) => {
-        const field = metadata.find(([k]) => k === quest);
-        const realName = field?.[1]?.leaderboard?.name ?? prettify(quest);
-        return [realName, t(completions)];
-      }),
-    GROUP_SIZE
-  );
-
-  const colors = ["§a", "§e", "§6", "§c", "§4"];
+  const entries: [string, ElementNode][] = Object.entries(gameQuests)
+    .filter(([k, v]) => k !== "total" && v !== null)
+    .sort((a, b) => b[1] - a[1])
+    .map(([quest, completions]) => {
+      const field = metadata.find(([k]) => k === quest);
+      const realName = field?.[1]?.leaderboard?.name ?? prettify(quest);
+      return [
+        `${completions > 0 ? "§a" : "§c"}§l${realName}`,
+        questTimePeriod === "overall" ? (
+          <text>{t(completions)}</text>
+        ) : (
+          <img height={32} image={logos[completions]} />
+        ),
+      ];
+    });
 
   return (
     <Table.table>
-      {groups.map((g, i) => (
-        <Table.tr>
-          {g.map((quest) => (
-            <Table.td title={quest[0]} value={quest[1]} color={colors[i]} />
-          ))}
-        </Table.tr>
-      ))}
+      <QuestsList quests={entries} />
     </Table.table>
   );
 };
@@ -92,6 +124,7 @@ export const QuestsProfile = ({
   t,
   gameIcons,
   questTimePeriod,
+  logos,
 }: QuestProfileProps) => {
   const { quests } = player.stats.general;
 
@@ -109,6 +142,8 @@ export const QuestsProfile = ({
         <GameTable
           gameQuests={quests[questTimePeriod][api]}
           constructor={quests[questTimePeriod][api].constructor}
+          questTimePeriod={questTimePeriod}
+          logos={logos}
           t={t}
         />
       );

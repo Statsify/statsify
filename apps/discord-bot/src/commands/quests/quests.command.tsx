@@ -20,7 +20,7 @@ import Container from "typedi";
 import { GameId, GameModes, QUEST_MODES, QuestModes } from "@statsify/schemas";
 import { Image } from "skia-canvas";
 import { QuestProfileProps, QuestsProfile } from "./quests.profile";
-import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
+import { getAllGameIcons, getBackground, getImage, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
@@ -76,11 +76,13 @@ export class QuestsCommand {
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
-    const [logo, skin, badge, data] = await Promise.all([
+    const [logo, skin, badge, gameIcons, verifiedLogo, crossLogo] = await Promise.all([
       getLogo(user),
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
-      this.getPreProfileData(),
+      getAllGameIcons(),
+      getImage("logos/verified_logo_30.png"),
+      getImage("logos/cross_logo_30.png"),
     ]);
 
     const allModes = this.modes.getModes();
@@ -100,8 +102,9 @@ export class QuestsCommand {
           badge,
           time: "LIVE",
           mode,
-          gameIcons: data.gameIcons,
+          gameIcons,
           questTimePeriod: time,
+          logos: [crossLogo, verifiedLogo],
         });
 
         return render(profile, getTheme(user));
