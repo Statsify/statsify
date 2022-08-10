@@ -44,13 +44,13 @@ export const QUEST_MODES = new GameModes([
 export type QuestModes = IGameModes<typeof QUEST_MODES>;
 
 export class Quests {
-  @Field()
+  @Field({ leaderboard: { name: "Total Quests", fieldName: "Quests" } })
   public total: number;
 
-  @Field()
+  @Field({ leaderboard: { name: "Total Quests Weekly", fieldName: "Quests" } })
   public weeklyTotal: number;
 
-  @Field()
+  @Field({ leaderboard: { name: "Total Quests Daily", fieldName: "Quests" } })
   public dailyTotal: number;
 
   @Field()
