@@ -121,10 +121,11 @@ export class InfectionMurderMysteryMode extends BaseMurderMysteryMode {
   @Field({ leaderboard: { formatter: formatTime } })
   public longestSurvivalTime: number;
 
-  public constructor(data: APIData, mode: string, ap: APIData) {
+  public constructor(data: APIData, mode: string) {
     super(data, mode);
 
-    this.survivorWins = ap.murdermystery_survival_skills;
+    this.survivorWins = data.survivor_wins_MURDER_INFECTION;
+
     this.killsAsSurvivor = data.kills_as_survivor_MURDER_INFECTION;
 
     this.infectedWins = sub(this.wins, this.survivorWins);
