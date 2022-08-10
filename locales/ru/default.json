@@ -689,7 +689,6 @@
     "rune": "Рун",
     "score": "Счет",
     "seekerWins": "Побед за искателя",
-    "shards": "Осколков",
     "shotAccuracy": "Точность выстрелов",
     "shotsFired": "Выстрелов",
     "silver": "Серебра",
@@ -733,7 +732,8 @@
     "wool": "Шерсти",
     "woolCaptures": "Шерсти захвачено",
     "woolPlaced": "Шерсти размещено",
-    "zombieKills": "Зомби убито"
+    "zombieKills": "Зомби убито",
+    "potionsBrewed": "Potions Brewed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Присоединяйтесь к нам**$t(socials.discord)**, и получайте **перезарядку на 20% ниже** $t(emojis:heart)",
