@@ -689,7 +689,6 @@
     "rune": "Runa",
     "score": "Wynik",
     "seekerWins": "Wygrane jako Szukający",
-    "shards": "Odłamki",
     "shotAccuracy": "Dokładność Strzałów",
     "shotsFired": "Wystrzelone strzały",
     "silver": "Srebro",
@@ -733,7 +732,8 @@
     "wool": "Wełna",
     "woolCaptures": "Przechwycenia wełny",
     "woolPlaced": "Wełna postawiona",
-    "zombieKills": "Zabójstwa Zombie"
+    "zombieKills": "Zabójstwa Zombie",
+    "potionsBrewed": "Mikstury wytworzone"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Dołącz do naszego **$t(socials.discord)** i otrzymaj **20% mniej czasu odnowienia** $t(emojis:heart)",
