@@ -61,16 +61,12 @@ export class TopResetCommand {
 
     const embed = new EmbedBuilder()
       .title("Historical Reset Times")
-      .footer(
-        (t) =>
-          `Total Times: ${t(times.length)}/1440 | Historical Players: ${t(totalPlayers)}`
-      )
+      .footer((t) => `Historical Players: ${t(totalPlayers)}`)
       .color(STATUS_COLORS.info)
       .description((t) =>
         times
           .map(([minute, count], index) => {
             const position = page * TIMES_PER_PAGE + index + 1;
-            const percentage = Math.round((count / totalPlayers) * 100);
 
             const resetTime = now
               .minus({ hours: now.hour, minutes: now.minute })
@@ -79,9 +75,7 @@ export class TopResetCommand {
             return `\`#${String(position).padStart(
               String(page * TIMES_PER_PAGE + TIMES_PER_PAGE).length,
               "0"
-            )}\` <t:${Math.round(resetTime.toMillis() / 1000)}:t>: **${t(count)}** \`(${t(
-              percentage
-            )}%)\``;
+            )}\` <t:${Math.round(resetTime.toMillis() / 1000)}:t>: **${t(count)}**`;
           })
           .join("\n")
       );
