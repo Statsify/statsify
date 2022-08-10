@@ -80,6 +80,14 @@ export class MetadataScanner {
           if (!metadata.leaderboard.extraDisplay)
             metadata.leaderboard.extraDisplay = value.leaderboard.extraDisplay;
 
+          if (
+            metadata.leaderboard.enabled &&
+            value.leaderboard.enabled &&
+            value.leaderboard.resetEvery &&
+            !metadata.leaderboard.resetEvery
+          )
+            metadata.leaderboard.resetEvery = value.leaderboard.resetEvery;
+
           return [keyPath, metadata] as MetadataEntry;
         }
       );
