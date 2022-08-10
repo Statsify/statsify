@@ -36,7 +36,7 @@ import { FormattedGame } from "../../../../game";
 import { QuestTime } from "./util";
 
 const getFieldData = (game: string): FieldOptions => ({
-  leaderboard: { fieldName: `${game} Quests`, extraDisplay: ["this.total"] },
+  leaderboard: { fieldName: `${game} Quests`, additionalFields: ["this.total"] },
 });
 
 export class QuestsInstance {

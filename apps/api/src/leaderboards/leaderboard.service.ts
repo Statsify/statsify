@@ -109,12 +109,12 @@ export abstract class LeaderboardService {
       sort
     );
 
-    const additionalFieldMetadata = additionalFields.map((key) =>
+    const additionalFieldMetadata = additionalFields.map((k) =>
       LeaderboardScanner.getLeaderboardField(
         constructor,
-        key.startsWith("this.")
-          ? key.replace(/this/, field.split(".").slice(0, -1).join("."))
-          : key,
+        k.startsWith("this.")
+          ? k.replace(/this/, field.split(".").slice(0, -1).join("."))
+          : k,
         false
       )
     );
@@ -125,7 +125,10 @@ export abstract class LeaderboardService {
 
     const additionalStats = await this.getAdditionalStats(
       leaderboard.map(({ id }) => id),
-      [...additionalFields, ...(extraDisplay ? [extraDisplay] : [])]
+      [
+        ...additionalFields.filter((k) => k !== field),
+        ...(extraDisplay ? [extraDisplay] : []),
+      ]
     );
 
     const data = leaderboard.map((doc, index) => {
