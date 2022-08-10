@@ -220,7 +220,7 @@ export class ApiService extends StatsifyApiService {
           (t) => t("errors.invalidGuild.title"),
           (t) =>
             t("errors.invalidGuild.description", {
-              type: type?.toLowerCase(),
+              context: type?.toLowerCase(),
               tag: input,
             })
         );
@@ -327,7 +327,7 @@ export class ApiService extends StatsifyApiService {
 
     return new ErrorMessage(
       (t) => t("errors.invalidPlayer.title"),
-      (t) => t("errors.invalidPlayer.description", { type, tag }),
+      (t) => t("errors.invalidPlayer.description", { context: type, tag }),
       { buttons }
     );
   }
