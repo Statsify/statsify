@@ -11,6 +11,7 @@ import {
   ApiService,
   Command,
   CommandContext,
+  LocalizationString,
   LocalizeFunction,
   Page,
   PaginateService,
@@ -43,10 +44,13 @@ export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
   data: K;
 }
 
+export type ModeEmoji = LocalizationString | false | undefined;
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   getPreProfileData?(player: Player): K | Promise<K>;
   filterModes?(player: Player, modes: GameMode<T>[]): GameMode<T>[];
+  getModeEmojis?(modes: GameMode<T>[]): ModeEmoji[];
 }
 
 @Command({
@@ -78,9 +82,11 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
 
     const allModes = this.modes.getModes();
     const filteredModes = this.filterModes?.(player, allModes) ?? allModes;
+    const emojis = this.getModeEmojis?.(filteredModes) ?? [];
 
-    const pages: Page[] = filteredModes.map((mode) => ({
+    const pages: Page[] = filteredModes.map((mode, index) => ({
       label: mode.formatted,
+      emoji: emojis[index],
       generator: async (t) => {
         const background = await getBackground(...mapBackground(this.modes, mode.api));
 

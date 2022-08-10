@@ -40,7 +40,7 @@ export const ParkourProfile = ({
         title={`§l${FormattedGame.PARKOUR} §fTimes`}
         time="LIVE"
       />
-      <GameList entries={times} gameIcons={gameIcons} rowSize={2} />
+      <GameList entries={times} gameIcons={gameIcons} />
       <Footer logo={logo} user={user} />
     </Container>
   );

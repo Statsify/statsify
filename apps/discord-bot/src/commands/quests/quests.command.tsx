@@ -20,6 +20,7 @@ import { GameModes, QUEST_MODES, QuestModes } from "@statsify/schemas";
 import { QuestProfileProps, QuestsProfile } from "./quests.profile";
 import { getAllGameIcons, getBackground, getImage, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
+import { mapBackground } from "#constants";
 import { render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.quests") })
@@ -66,20 +67,21 @@ export class QuestsCommand {
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
-    const [logo, skin, badge, gameIcons, background, verifiedLogo, crossLogo] =
-      await Promise.all([
-        getLogo(user),
-        this.apiService.getPlayerSkin(player.uuid),
-        this.apiService.getUserBadge(player.uuid),
-        getAllGameIcons(),
-        getBackground("hypixel", "overall"),
-        getImage("logos/verified_logo_30.png"),
-        getImage("logos/cross_logo_30.png"),
-      ]);
+    const [logo, skin, badge, gameIcons, verifiedLogo, crossLogo] = await Promise.all([
+      getLogo(user),
+      this.apiService.getPlayerSkin(player.uuid),
+      this.apiService.getUserBadge(player.uuid),
+      getAllGameIcons(),
+      getImage("logos/verified_logo_30.png"),
+      getImage("logos/cross_logo_30.png"),
+    ]);
 
     const pages: Page[] = this.modes.getModes().map((mode) => ({
       label: mode.formatted,
+      emoji: mode.api !== "overall" && ((t) => t(`emojis:games.${mode.api}`)),
       generator: async (t) => {
+        const background = await getBackground(...mapBackground(this.modes, mode.api));
+
         const profile = this.getProfile({
           player,
           skin,

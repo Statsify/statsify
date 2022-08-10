@@ -15,7 +15,6 @@ import {
   SidebarItem,
   Table,
 } from "#components";
-import { ElementNode } from "@statsify/rendering";
 import {
   FieldMetadata,
   FormattedGame,
@@ -29,6 +28,7 @@ import {
 import { HistoricalType } from "@statsify/api-client";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
+import type { ElementNode } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
 
@@ -37,7 +37,7 @@ type QuestTimePeriod = "overall" | "daily" | "weekly";
 export interface QuestProfileProps extends BaseProfileProps {
   mode: GameMode<QuestModes>;
   gameIcons: Record<GameId, Image>;
-  logos: [Image, Image];
+  logos: [check: Image, cross: Image];
   questTimePeriod: QuestTimePeriod;
 }
 
@@ -52,7 +52,7 @@ const NormalTable = ({ quests, t, gameIcons }: NormalTableProps) => {
     .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
     .map(([k, v]) => [k as GameId, t(v.total)]);
 
-  return <GameList entries={entries} gameIcons={gameIcons} rowSize={2} />;
+  return <GameList entries={entries} gameIcons={gameIcons} />;
 };
 
 interface GameTableProps {
@@ -95,10 +95,16 @@ const GameTable = ({
       <List
         items={entries.map(([name, value]) => (
           <>
-            <box width="remaining">
-              <text>{name}</text>
+            <box
+              width="remaining"
+              border={{ bottomLeft: 4, bottomRight: 0, topLeft: 4, topRight: 0 }}
+              direction="column"
+            >
+              <text align="left">{name}</text>
             </box>
-            <box>{value}</box>
+            <box border={{ bottomLeft: 0, bottomRight: 4, topLeft: 0, topRight: 4 }}>
+              {value}
+            </box>
           </>
         ))}
       />

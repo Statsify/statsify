@@ -45,6 +45,7 @@ import {
   QUAKE_MODES,
   QUEST_MODES,
   QuakeModes,
+  QuestModes,
   SKYWARS_MODES,
   SMASH_HEROES_MODES,
   SPEED_UHC_MODES,
@@ -67,6 +68,9 @@ import {
   WoolWarsModes,
 } from "@statsify/schemas";
 import { noop, prettify } from "@statsify/util";
+
+const getDefaultApiMode = <T extends string>(modes: GameModes<T>) =>
+  modes.getApiModes()[0];
 
 export type GamesWithBackgrounds =
   | ArcadeModes
@@ -94,7 +98,9 @@ export type GamesWithBackgrounds =
   | VampireZModes
   | WallsModes
   | WarlordsModes
-  | WoolWarsModes;
+  | WoolWarsModes
+  | QuestModes
+  | ChallengeModes;
 
 export const mapBackground = <T extends GamesWithBackgrounds>(
   modes: GameModes<T>,
@@ -181,6 +187,65 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["parkour", "overall"];
     case QUEST_MODES:
     case CHALLENGE_MODES:
+      switch (mode) {
+        case "overall":
+          return mapBackground(GENERAL_MODES, getDefaultApiMode(GENERAL_MODES));
+        case "ARCADE":
+          return mapBackground(ARCADE_MODES, getDefaultApiMode(ARCADE_MODES));
+        case "ARENA_BRAWL":
+          return mapBackground(ARENA_BRAWL_MODES, getDefaultApiMode(ARENA_BRAWL_MODES));
+        case "BEDWARS":
+          return mapBackground(BEDWARS_MODES, getDefaultApiMode(BEDWARS_MODES));
+        case "BLITZSG":
+          return mapBackground(BLITZSG_MODES, getDefaultApiMode(BLITZSG_MODES));
+        case "BUILD_BATTLE":
+          return mapBackground(BUILD_BATTLE_MODES, getDefaultApiMode(BUILD_BATTLE_MODES));
+        case "DUELS":
+          return mapBackground(DUELS_MODES, getDefaultApiMode(DUELS_MODES));
+        case "COPS_AND_CRIMS":
+          return mapBackground(
+            COPS_AND_CRIMS_MODES,
+            getDefaultApiMode(COPS_AND_CRIMS_MODES)
+          );
+        case "MEGAWALLS":
+          return mapBackground(MEGAWALLS_MODES, getDefaultApiMode(MEGAWALLS_MODES));
+        case "MURDER_MYSTERY":
+          return mapBackground(
+            MURDER_MYSTERY_MODES,
+            getDefaultApiMode(MURDER_MYSTERY_MODES)
+          );
+        case "PAINTBALL":
+          return mapBackground(PAINTBALL_MODES, getDefaultApiMode(PAINTBALL_MODES));
+        case "PIT":
+          return mapBackground(PIT_MODES, getDefaultApiMode(PIT_MODES));
+        case "QUAKE":
+          return mapBackground(QUAKE_MODES, getDefaultApiMode(QUAKE_MODES));
+        case "SKYWARS":
+          return mapBackground(SKYWARS_MODES, getDefaultApiMode(SKYWARS_MODES));
+        case "SMASH_HEROES":
+          return mapBackground(SMASH_HEROES_MODES, getDefaultApiMode(SMASH_HEROES_MODES));
+        case "SPEED_UHC":
+          return mapBackground(SPEED_UHC_MODES, getDefaultApiMode(SPEED_UHC_MODES));
+        case "TNT_GAMES":
+          return mapBackground(TNT_GAMES_MODES, getDefaultApiMode(TNT_GAMES_MODES));
+        case "TURBO_KART_RACERS":
+          return mapBackground(
+            TURBO_KART_RACERS_MODES,
+            getDefaultApiMode(TURBO_KART_RACERS_MODES)
+          );
+        case "UHC":
+          return mapBackground(UHC_MODES, getDefaultApiMode(UHC_MODES));
+        case "VAMPIREZ":
+          return mapBackground(VAMPIREZ_MODES, getDefaultApiMode(VAMPIREZ_MODES));
+        case "WALLS":
+          return mapBackground(WALLS_MODES, getDefaultApiMode(WALLS_MODES));
+        case "WARLORDS":
+          return mapBackground(WARLORDS_MODES, getDefaultApiMode(WARLORDS_MODES));
+        case "WOOLWARS":
+          return mapBackground(WOOLWARS_MODES, getDefaultApiMode(WOOLWARS_MODES));
+      }
+
+      throw new Error(`Missing background for mode: ${mode}`);
     case GENERAL_MODES:
       return ["hypixel", "overall"];
     case MEGAWALLS_MODES:

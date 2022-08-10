@@ -7,19 +7,19 @@
  */
 
 import {
-  APIMessageComponentEmoji,
   APISelectMenuComponent,
   APISelectMenuOption,
   ComponentType,
 } from "discord-api-types/v10";
 import { LocalizationString, LocalizeFunction, translateField } from "../localize";
+import { parseEmoji } from "./parse-emoji";
 import { randomUUID } from "node:crypto";
 
 export class SelectMenuOptionBuilder {
   #label: LocalizationString;
   #value: string;
   #description: LocalizationString;
-  #emoji?: APIMessageComponentEmoji;
+  #emoji?: LocalizationString;
   #defaultValue: boolean;
 
   public label(label: LocalizationString): this {
@@ -37,12 +37,8 @@ export class SelectMenuOptionBuilder {
     return this;
   }
 
-  public emoji(emoji: string): this {
-    const animated = emoji.startsWith("<a:");
-    const name = emoji.replace(/<:|<a:|>/g, "");
-    const id = name.split(":")[1];
-
-    this.#emoji = { name: name.replace(id, ""), animated, id };
+  public emoji(emoji: LocalizationString): this {
+    this.#emoji = emoji;
     return this;
   }
 
@@ -56,7 +52,7 @@ export class SelectMenuOptionBuilder {
       label: translateField(locale, this.#label),
       value: this.#value,
       description: translateField(locale, this.#description),
-      emoji: this.#emoji,
+      emoji: this.#emoji ? parseEmoji(this.#emoji, locale) : undefined,
       default: this.#defaultValue,
     };
   }

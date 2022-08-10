@@ -14,10 +14,10 @@ import { arrayGroup } from "@statsify/util";
 export interface GameListProps {
   gameIcons: Record<GameId, Image>;
   entries: [GameId, any][];
-  rowSize: number;
+  rowSize?: number;
 }
 
-export const GameList = ({ gameIcons, entries, rowSize }: GameListProps) => {
+export const GameList = ({ gameIcons, entries, rowSize = 2 }: GameListProps) => {
   const values = entries.map(([field, value]) => (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
       <img image={gameIcons[field as keyof typeof gameIcons]} width={32} height={32} />

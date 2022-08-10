@@ -28,6 +28,7 @@ type PaginateInteractionContentGenerator = (
 
 export interface Page {
   label: LocalizationString;
+  emoji?: LocalizationString | false;
   generator: PaginateInteractionContentGenerator;
 }
 
@@ -182,22 +183,28 @@ export class PaginateService {
       const controller = new SelectMenuBuilder();
 
       pages.forEach((page, i) => {
-        controller.option(
-          new SelectMenuOptionBuilder()
-            .label(page.label)
-            .value(`${i}`)
-            .default(i === index)
-        );
+        const option = new SelectMenuOptionBuilder()
+          .label(page.label)
+          .value(`${i}`)
+          .default(i === index);
+
+        if (page.emoji) option.emoji(page.emoji);
+
+        controller.option(option);
       });
 
       return [controller];
     }
 
-    return pages.map(({ label }, i) =>
-      new ButtonBuilder()
-        .label(label)
-        .style(i === index ? ButtonStyle.Primary : ButtonStyle.Secondary)
-    );
+    return pages.map((page, i) => {
+      const button = new ButtonBuilder()
+        .label(page.label)
+        .style(i === index ? ButtonStyle.Primary : ButtonStyle.Secondary);
+
+      if (page.emoji) button.emoji(page.emoji);
+
+      return button;
+    });
   }
 
   private async getMessage(

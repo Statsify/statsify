@@ -345,13 +345,7 @@ const GuildGexpPerGamePage = ({ guild, t, gameIcons }: GuildGexpPerGamePageProps
     .sort((a, b) => b[1] - a[1])
     .map(([field, exp]) => [field as GameId, t(exp)]);
 
-  return (
-    <GameList
-      entries={games}
-      gameIcons={gameIcons}
-      rowSize={Math.round(games.length / 2)}
-    />
-  );
+  return <GameList entries={games} gameIcons={gameIcons} />;
 };
 
 interface GuildMiscPageProps {
