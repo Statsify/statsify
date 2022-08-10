@@ -689,7 +689,6 @@
     "rune": "Runa",
     "score": "Punteggio",
     "seekerWins": "Vittorie da Ricercatore",
-    "shards": "Frammenti",
     "shotAccuracy": "Precisione Colpi",
     "shotsFired": "Colpi Sparati",
     "silver": "Argento",
@@ -733,7 +732,8 @@
     "wool": "Lana",
     "woolCaptures": "Lana Catturata",
     "woolPlaced": "Lana Piazzata",
-    "zombieKills": "Uccisioni Zombie"
+    "zombieKills": "Uccisioni Zombie",
+    "potionsBrewed": "Potions Brewed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Unisciti al nostro **$t(socials.discord)** e ottieni **cooldown 20% più brevi** $t(emojis:heart)",
