@@ -8,19 +8,10 @@
 
 import { APIData, removeFormatting } from "@statsify/util";
 import { Field } from "../../../../../metadata";
-import { FieldOptions } from "../../../../../metadata/field.options";
 import { FormattedGame } from "../../../../../game";
 import { GameQuests } from "../game-quests";
-import { QuestTime, getAmountDuring } from "../util";
+import { QuestTime, getAmountDuring, questFieldData } from "../util";
 import { add } from "@statsify/math";
-
-const questFieldData: FieldOptions = {
-  leaderboard: {
-    limit: 5000,
-    additionalFields: ["stats.general.quests.ARENA_BRAWL.total"],
-  },
-  store: { default: null },
-};
 
 export class ArenaQuests implements GameQuests {
   @Field({ ...questFieldData, leaderboard: { name: "Play Arena (Daily)" } })

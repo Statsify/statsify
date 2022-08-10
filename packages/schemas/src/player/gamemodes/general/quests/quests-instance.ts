@@ -31,77 +31,79 @@ import {
   WarlordsQuests,
   WoolWarsQuests,
 } from "./modes";
-import { Field } from "../../../../metadata";
+import { Field, FieldOptions } from "../../../../metadata";
 import { FormattedGame } from "../../../../game";
 import { QuestTime } from "./util";
 
+const getFieldData = (game: string): FieldOptions => ({
+  leaderboard: { fieldName: `${game} Quests`, extraDisplay: ["this.total"] },
+});
+
 export class QuestsInstance {
-  @Field({ leaderboard: { fieldName: `${FormattedGame.ARCADE} Quests` } })
+  @Field(getFieldData(FormattedGame.ARCADE))
   public ARCADE: ArcadeQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.ARENA_BRAWL} Quests` } })
+  @Field(getFieldData(FormattedGame.ARENA_BRAWL))
   public ARENA_BRAWL: ArenaQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.BEDWARS} Quests` } })
+  @Field(getFieldData(FormattedGame.BEDWARS))
   public BEDWARS: BedwarsQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.BLITZSG} Quests` } })
+  @Field(getFieldData(FormattedGame.BLITZSG))
   public BLITZSG: BlitzQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.BUILD_BATTLE} Quests` } })
+  @Field(getFieldData(FormattedGame.BUILD_BATTLE))
   public BUILD_BATTLE: BuildBattleQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.DUELS} Quests` } })
+  @Field(getFieldData(FormattedGame.DUELS))
   public DUELS: DuelsQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.COPS_AND_CRIMS} Quests` } })
+  @Field(getFieldData(FormattedGame.COPS_AND_CRIMS))
   public COPS_AND_CRIMS: CopsAndCrimsQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.MURDER_MYSTERY} Quests` } })
+  @Field(getFieldData(FormattedGame.MEGAWALLS))
   public MEGAWALLS: MegaWallsQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.MURDER_MYSTERY} Quests` } })
+  @Field(getFieldData(FormattedGame.MURDER_MYSTERY))
   public MURDER_MYSTERY: MurderMysteryQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.PAINTBALL} Quests` } })
+  @Field(getFieldData(FormattedGame.PAINTBALL))
   public PAINTBALL: PaintballQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.PIT} Quests` } })
+  @Field(getFieldData(FormattedGame.PIT))
   public PIT: PitQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.QUAKE} Quests` } })
+  @Field(getFieldData(FormattedGame.QUAKE))
   public QUAKE: QuakeQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.SKYWARS} Quests` } })
+  @Field(getFieldData(FormattedGame.SKYWARS))
   public SKYWARS: SkywarsQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.SMASH_HEROES} Quests` } })
+  @Field(getFieldData(FormattedGame.SMASH_HEROES))
   public SMASH_HEROES: SmashQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.SPEED_UHC} Quests` } })
+  @Field(getFieldData(FormattedGame.SPEED_UHC))
   public SPEED_UHC: SpeedUHCQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.TNT_GAMES} Quests` } })
+  @Field(getFieldData(FormattedGame.TNT_GAMES))
   public TNT_GAMES: TNTGamesQuests;
 
-  @Field({
-    leaderboard: { fieldName: `${FormattedGame.TURBO_KART_RACERS} Quests` },
-  })
+  @Field(getFieldData(FormattedGame.TURBO_KART_RACERS))
   public TURBO_KART_RACERS: TurboKartRacersQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.UHC} Quests` } })
+  @Field(getFieldData(FormattedGame.UHC))
   public UHC: UHCQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.VAMPIREZ} Quests` } })
+  @Field(getFieldData(FormattedGame.VAMPIREZ))
   public VAMPIREZ: VampireZQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.WALLS} Quests` } })
+  @Field(getFieldData(FormattedGame.WALLS))
   public WALLS: WallsQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.WARLORDS} Quests` } })
+  @Field(getFieldData(FormattedGame.WARLORDS))
   public WARLORDS: WarlordsQuests;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.WOOLWARS} Quests` } })
+  @Field(getFieldData(FormattedGame.WOOLWARS))
   public WOOLWARS: WoolWarsQuests;
 
   public constructor(quests: APIData, time?: QuestTime) {

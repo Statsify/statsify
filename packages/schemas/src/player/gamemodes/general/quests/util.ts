@@ -7,12 +7,20 @@
  */
 
 import { DateTime } from "luxon";
+import { FieldOptions } from "../../../../metadata";
 
 export type Quest = {
   completions?: { time: number }[];
 };
 
 export type QuestTime = "day" | "week" | undefined;
+
+export const questFieldData: FieldOptions = {
+  leaderboard: {
+    limit: 5000,
+  },
+  store: { required: false },
+};
 
 export const getAmountDuring = (quest: Quest | undefined, time: QuestTime) => {
   if (!quest?.completions) return 0;
