@@ -18,7 +18,7 @@ import {
 } from "@statsify/discord";
 import { GameModes, QUEST_MODES, QuestModes } from "@statsify/schemas";
 import { QuestProfileProps, QuestsProfile } from "./quests.profile";
-import { getAllGameIcons, getBackground, getImage, getLogo } from "@statsify/assets";
+import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { mapBackground } from "#constants";
 import { render } from "@statsify/rendering";
@@ -72,8 +72,8 @@ export class QuestsCommand {
       this.apiService.getPlayerSkin(player.uuid),
       this.apiService.getUserBadge(player.uuid),
       getAllGameIcons(),
-      getImage("logos/verified_logo_30.png"),
-      getImage("logos/cross_logo_30.png"),
+      getLogo("verified", 28),
+      getLogo("cross", 28),
     ]);
 
     const pages: Page[] = this.modes.getModes().map((mode) => ({

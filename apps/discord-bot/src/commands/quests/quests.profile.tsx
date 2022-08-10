@@ -85,7 +85,7 @@ const GameTable = ({
         questTimePeriod === "overall" ? (
           <text>{t(completions)}</text>
         ) : (
-          <img height={32} image={logos[completions]} />
+          <img margin={2} image={logos[completions]} />
         ),
       ];
     });
