@@ -56,10 +56,10 @@ export class Quests {
   @Field()
   public overall: QuestsInstance;
 
-  @Field()
+  @Field({ leaderboard: { resetEvery: "friday" } })
   public weekly: QuestsInstance;
 
-  @Field()
+  @Field({ leaderboard: { resetEvery: "day" } })
   public daily: QuestsInstance;
 
   public constructor(quests: APIData) {
