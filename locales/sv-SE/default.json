@@ -689,7 +689,6 @@
     "rune": "Rune",
     "score": "Poäng",
     "seekerWins": "Sökar Vinster",
-    "shards": "Skärvor",
     "shotAccuracy": "Skott Noggrannhet",
     "shotsFired": "Skott avfyrade",
     "silver": "Silver",
@@ -733,7 +732,8 @@
     "wool": "Ull",
     "woolCaptures": "Ull fångster",
     "woolPlaced": "Ull placerad",
-    "zombieKills": "Zombie Kills"
+    "zombieKills": "Zombie Kills",
+    "potionsBrewed": "Potions Brewed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Gå med i vår **$t(socials.discord)** och få **20% lägre cooldowns** $t(emojis:heart)",
