@@ -51,6 +51,19 @@ interface BaseLeaderboardMetadata {
   name: string;
 
   default?: any;
+
+  /**
+   * When to reset the leaderboard, leaderboards will reset at the desired time at midnight.
+   */
+  resetEvery?:
+    | "day"
+    | "monday"
+    | "tuesday"
+    | "wednesday"
+    | "thursday"
+    | "friday"
+    | "saturday"
+    | "sunday";
 }
 
 export interface LeaderboardDisabledMetadata extends BaseLeaderboardMetadata {
@@ -81,19 +94,6 @@ export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
    * How many members to show in the leaderboard.
    */
   limit: number;
-
-  /**
-   * When to reset the leaderboard, leaderboards will reset at the desired time at midnight.
-   */
-  resetEvery?:
-    | "day"
-    | "monday"
-    | "tuesday"
-    | "wednesday"
-    | "thursday"
-    | "friday"
-    | "saturday"
-    | "sunday";
 }
 
 export type LeaderboardMetadata =

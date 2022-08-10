@@ -300,19 +300,7 @@ export abstract class LeaderboardService {
     if (!leaderboard.resetEvery)
       throw new Error("To get a leaderboard expiry time, `resetEvery` must be specified");
 
-    if (leaderboard.resetEvery === "day") {
-      const now = DateTime.now();
-
-      return now
-        .minus({
-          hours: now.hour,
-          minutes: now.minute,
-          seconds: now.second,
-          milliseconds: now.millisecond,
-        })
-        .plus({ days: 1 })
-        .toMillis();
-    }
+    if (leaderboard.resetEvery === "day") return DateTime.now().endOf("day").toMillis();
 
     const now = new Date();
     const dayIndex = DAYS_IN_WEEK[leaderboard.resetEvery];
@@ -321,6 +309,6 @@ export abstract class LeaderboardService {
     now.setDate(now.getDate() + ((dayIndex - now.getDay() + 7) % 7) + 1);
     now.setHours(0, 0, 0, 0);
 
-    return now.getMilliseconds();
+    return now.getTime();
   }
 }

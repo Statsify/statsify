@@ -47,10 +47,22 @@ export class Quests {
   @Field({ leaderboard: { name: "Total Quests", fieldName: "Quests" } })
   public total: number;
 
-  @Field({ leaderboard: { name: "Total Quests Weekly", fieldName: "Quests" } })
+  @Field({
+    leaderboard: {
+      name: "Total Quests Weekly",
+      fieldName: "Quests",
+      resetEvery: "friday",
+    },
+  })
   public weeklyTotal: number;
 
-  @Field({ leaderboard: { name: "Total Quests Daily", fieldName: "Quests" } })
+  @Field({
+    leaderboard: {
+      name: "Total Quests Daily",
+      fieldName: "Quests",
+      resetEvery: "day",
+    },
+  })
   public dailyTotal: number;
 
   @Field()
