@@ -689,7 +689,6 @@
     "rune": "Rune",
     "score": "Score",
     "seekerWins": "Seeker Wins",
-    "shards": "Shards",
     "shotAccuracy": "Shot Accuracy",
     "shotsFired": "Shots Fired",
     "silver": "Silver",
@@ -733,7 +732,8 @@
     "wool": "Wool",
     "woolCaptures": "Wool Captures",
     "woolPlaced": "Wool Placed",
-    "zombieKills": "Zombie Kills"
+    "zombieKills": "Zombie Kills",
+    "potionsBrewed": "Potions Brewed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
