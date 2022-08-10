@@ -689,7 +689,6 @@
     "rune": "Rune",
     "score": "Punktzahl",
     "seekerWins": "Sucher Siege",
-    "shards": "Scherben",
     "shotAccuracy": "Schussgenauigkeit",
     "shotsFired": "Schüsse Abgefeuert",
     "silver": "Silber",
@@ -733,7 +732,8 @@
     "wool": "Wolle",
     "woolCaptures": "Wolle Erobert",
     "woolPlaced": "Wolle Platziert",
-    "zombieKills": "Zombie Kills"
+    "zombieKills": "Zombie Kills",
+    "potionsBrewed": "Potions Brewed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Trete unserem **$t(socials.discord)** bei und erhalte **20% niedrigere Abklingzeit** $t(emojis:heart)",
