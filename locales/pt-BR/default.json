@@ -689,7 +689,6 @@
     "rune": "Runa",
     "score": "Pontuação",
     "seekerWins": "Vitórias como procurador",
-    "shards": "Lascas",
     "shotAccuracy": "Precisão de tiros",
     "shotsFired": "Tiros disparados",
     "silver": "Pratas",
@@ -733,7 +732,8 @@
     "wool": "Lã",
     "woolCaptures": "Lãs capturadas",
     "woolPlaced": "Lãs colocadas",
-    "zombieKills": "Zumbis abatidos"
+    "zombieKills": "Zumbis abatidos",
+    "potionsBrewed": "Poções preparadas"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Entre no nosso $t(socials.discord) e receba **menos 20% de tempo de espera** $t(emojis:heart)",
