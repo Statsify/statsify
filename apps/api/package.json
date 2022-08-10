@@ -34,12 +34,14 @@
     "class-validator": "^0.13.2",
     "handlebars": "^4.7.7",
     "ioredis": "5.1.0",
+    "luxon": "^3.0.1",
     "mongoose": "^6.4.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.5",
     "toad-scheduler": "^1.6.1"
   },
   "devDependencies": {
-    "@nestjs/testing": "^9.0.1"
+    "@nestjs/testing": "^9.0.1",
+    "@types/luxon": "^3.0.0"
   }
 }

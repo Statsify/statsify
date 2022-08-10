@@ -2814,10 +2814,12 @@ __metadata:
     "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@typegoose/typegoose": ^9.10.1
+    "@types/luxon": ^3.0.0
     class-transformer: 0.5.1
     class-validator: ^0.13.2
     handlebars: ^4.7.7
     ioredis: 5.1.0
+    luxon: ^3.0.1
     mongoose: ^6.4.3
     reflect-metadata: ^0.1.13
     rxjs: ^7.5.5

@@ -22,8 +22,8 @@ export class LeaderboardScanner {
     return fields;
   }
 
-  public static getLeaderboardFields<T>(constructor: Constructor<T>): string[] {
-    return this.getLeaderboardMetadata(constructor).map(([key]) => key);
+  public static getLeaderboardFields<T>(constructor: Constructor<T>) {
+    return this.getLeaderboardMetadata(constructor);
   }
 
   public static getLeaderboardField<T>(

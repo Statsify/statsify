@@ -11,7 +11,7 @@ import { IsEnum } from "class-validator";
 import { LeaderboardScanner, Player } from "@statsify/schemas";
 import { UuidDto } from "./uuid.dto";
 
-const fields = LeaderboardScanner.getLeaderboardFields(Player);
+const fields = LeaderboardScanner.getLeaderboardFields(Player).map(([key]) => key);
 
 export class PlayerRankingsDto extends UuidDto {
   @ApiProperty({ enum: fields, type: [String] })

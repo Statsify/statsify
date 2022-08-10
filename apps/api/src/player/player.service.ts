@@ -7,13 +7,7 @@
  */
 
 import { APIData, Flatten, flatten } from "@statsify/util";
-import {
-  Friends,
-  LeaderboardScanner,
-  Player,
-  deserialize,
-  serialize,
-} from "@statsify/schemas";
+import { Friends, Player, deserialize, serialize } from "@statsify/schemas";
 import {
   FriendsNotFoundException,
   HypixelCache,
@@ -27,8 +21,6 @@ import { InjectModel } from "@m8a/nestjs-typegoose";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service";
 import { PlayerSearchService, RedisPlayer } from "./search/player-search.service";
 import type { ReturnModelType } from "@typegoose/typegoose";
-
-const LEADERBOARD_FIELDS = LeaderboardScanner.getLeaderboardFields(Player);
 
 @Injectable()
 export class PlayerService {
@@ -218,13 +210,7 @@ export class PlayerService {
     await Promise.all([
       this.playerModel.deleteOne({ uuid: player.uuid }).exec(),
       this.playerSearchService.delete(player.username),
-      this.playerLeaderboardService.addLeaderboards(
-        Player,
-        player,
-        "uuid",
-        LEADERBOARD_FIELDS,
-        true
-      ),
+      this.playerLeaderboardService.addLeaderboards(Player, player, "uuid", true),
     ]);
 
     return true;
@@ -265,7 +251,6 @@ export class PlayerService {
       Player,
       player,
       "uuid",
-      LEADERBOARD_FIELDS,
       player.leaderboardBanned ?? false
     );
 
