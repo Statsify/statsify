@@ -43,11 +43,7 @@ export class SkyWars {
       fieldName: "Level",
       hidden: true,
       formatter: (exp: number) => getLevel(exp),
-      additionalFields: [
-        "stats.skywars.overall.wins",
-        "stats.skywars.overall.kills",
-        "stats.skywars.overall.kdr",
-      ],
+      additionalFields: ["this.overall.wins", "this.overall.kills", "this.overall.kdr"],
     },
   })
   public exp: number;

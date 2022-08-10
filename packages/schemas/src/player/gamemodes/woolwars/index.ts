@@ -38,11 +38,7 @@ export class WoolWars {
       fieldName: "Level",
       hidden: true,
       formatter: (exp: number) => getFormattedLevel(Math.floor(getLevel(exp))),
-      additionalFields: [
-        "stats.woolwars.overall.wins",
-        "stats.woolwars.overall.kills",
-        "stats.woolwars.overall.kdr",
-      ],
+      additionalFields: ["this.overall.wins", "this.overall.kills", "this.overall.kdr"],
     },
   })
   public exp: number;

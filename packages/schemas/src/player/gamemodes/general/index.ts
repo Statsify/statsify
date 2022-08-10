@@ -32,7 +32,7 @@ export class General {
       hidden: true,
       limit: Number.POSITIVE_INFINITY,
       formatter: getNetworkLevel,
-      additionalFields: ["stats.general.networkLevel"],
+      additionalFields: ["this.networkLevel"],
     },
   })
   public networkExp: number;

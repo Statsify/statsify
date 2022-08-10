@@ -7,20 +7,17 @@
  */
 
 import { APIData, removeFormatting } from "@statsify/util";
-import { Field, FieldOptions } from "../../../../../metadata";
+import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
 import { add } from "@statsify/math";
+import { challengeFieldData } from "../util";
 import type { GameChallenges } from "../game-challenges";
 
-const challengeFieldData: FieldOptions = {
-  leaderboard: {
-    limit: 5000,
-    additionalFields: ["stats.general.challenges.ARENA_BRAWL.total"],
-  },
-};
-
 export class ArenaBrawlChallenges implements GameChallenges {
-  @Field({ ...challengeFieldData, leaderboard: { name: "WHERE IS IT" } })
+  @Field({
+    ...challengeFieldData,
+    leaderboard: { ...challengeFieldData.leaderboard, name: "WHERE IS IT" },
+  })
   public whereIsIt: number;
 
   @Field(challengeFieldData)

@@ -24,7 +24,7 @@ export class Pit {
     leaderboard: {
       fieldName: "Level",
       hidden: true,
-      additionalFields: ["stats.pit.kills", "stats.pit.playtime"],
+      additionalFields: ["this.kills", "this.playtime"],
       formatter: (exp: number) => {
         const prestige = getPres(exp);
         const level = getLevel(prestige, exp);

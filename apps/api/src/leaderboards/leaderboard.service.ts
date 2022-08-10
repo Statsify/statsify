@@ -110,13 +110,7 @@ export abstract class LeaderboardService {
     );
 
     const additionalFieldMetadata = additionalFields.map((k) =>
-      LeaderboardScanner.getLeaderboardField(
-        constructor,
-        k.startsWith("this.")
-          ? k.replace(/this/, field.split(".").slice(0, -1).join("."))
-          : k,
-        false
-      )
+      LeaderboardScanner.getLeaderboardField(constructor, k, false)
     );
 
     const extraDisplayMetadata = extraDisplay

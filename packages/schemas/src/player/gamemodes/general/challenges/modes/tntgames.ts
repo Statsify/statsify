@@ -7,32 +7,38 @@
  */
 
 import { APIData, removeFormatting } from "@statsify/util";
-import { Field, FieldOptions } from "../../../../../metadata";
+import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
 import { add } from "@statsify/math";
+import { challengeFieldData } from "../util";
 import type { GameChallenges } from "../game-challenges";
 
-const challengeFieldData: FieldOptions = {
-  leaderboard: {
-    limit: 5000,
-    additionalFields: ["stats.general.challenges.TNT_GAMES.total"],
-  },
-};
-
 export class TNTGamesChallenges implements GameChallenges {
-  @Field({ ...challengeFieldData, leaderboard: { name: "TNT Run" } })
+  @Field({
+    ...challengeFieldData,
+    leaderboard: { ...challengeFieldData.leaderboard, name: "TNT Run" },
+  })
   public tntRun: number;
 
-  @Field({ ...challengeFieldData, leaderboard: { name: "PVP Run" } })
+  @Field({
+    ...challengeFieldData,
+    leaderboard: { ...challengeFieldData.leaderboard, name: "PVP Run" },
+  })
   public pvpRun: number;
 
   @Field(challengeFieldData)
   public bowSpleef: number;
 
-  @Field({ ...challengeFieldData, leaderboard: { name: "TNT Tag" } })
+  @Field({
+    ...challengeFieldData,
+    leaderboard: { ...challengeFieldData.leaderboard, name: "TNT Tag" },
+  })
   public tntTag: number;
 
-  @Field({ ...challengeFieldData, leaderboard: { name: "TNT Wizards" } })
+  @Field({
+    ...challengeFieldData,
+    leaderboard: { ...challengeFieldData.leaderboard, name: "TNT Wizards" },
+  })
   public tntWizards: number;
 
   @Field({

@@ -7,14 +7,11 @@
  */
 
 import { APIData, removeFormatting } from "@statsify/util";
-import { Field, FieldOptions } from "../../../../../metadata";
+import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
 import { add } from "@statsify/math";
+import { challengeFieldData } from "../util";
 import type { GameChallenges } from "../game-challenges";
-
-const challengeFieldData: FieldOptions = {
-  leaderboard: { limit: 5000, additionalFields: ["stats.general.challenges.UHC.total"] },
-};
 
 export class UHCChallenges implements GameChallenges {
   @Field(challengeFieldData)

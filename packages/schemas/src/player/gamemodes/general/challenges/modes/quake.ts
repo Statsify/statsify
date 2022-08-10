@@ -7,17 +7,11 @@
  */
 
 import { APIData, removeFormatting } from "@statsify/util";
-import { Field, FieldOptions } from "../../../../../metadata";
+import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
 import { add } from "@statsify/math";
+import { challengeFieldData } from "../util";
 import type { GameChallenges } from "../game-challenges";
-
-const challengeFieldData: FieldOptions = {
-  leaderboard: {
-    limit: 5000,
-    additionalFields: ["stats.general.challenges.QUAKE.total"],
-  },
-};
 
 export class QuakeChallenges implements GameChallenges {
   @Field(challengeFieldData)
@@ -26,7 +20,10 @@ export class QuakeChallenges implements GameChallenges {
   @Field(challengeFieldData)
   public killingStreak: number;
 
-  @Field({ ...challengeFieldData, leaderboard: { name: "Don't Blink" } })
+  @Field({
+    ...challengeFieldData,
+    leaderboard: { ...challengeFieldData.leaderboard, name: "Don't Blink" },
+  })
   public dontBlink: number;
 
   @Field(challengeFieldData)
