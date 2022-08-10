@@ -4,7 +4,7 @@
     "file": "Ανέβασε ένα αρχείο",
     "gtbhelper": "Το τρέχον στοιχείο",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
-    "guild-query": "Ένα Guild όνομα ή guild μέλος",
+    "guild-query": "Ένα Guild όνομα ή Guild μέλος",
     "guild-type": "Ο τύπος αναζήτησης guild για εκτέλεση",
     "mojang-player": "Ένα όνομα χρήστη ή UUID του Minecraft",
     "number": "Ένας αριθμός",
@@ -538,7 +538,7 @@
     "bounty": "Bounty",
     "bountyKills": "Bounty Σκοτωμοί",
     "bowKills": "Σκοτωμοί με Τόξο",
-    "boxesPickedUp": "Boxes Collected",
+    "boxesPickedUp": "Κιβώτια Που Συλλέχθηκαν",
     "bronzeTrophies": "Χάλκινα Τρόπαια",
     "candyFound": "Καραμέλες που Βρέθηκαν",
     "challenges": "Προκλήσεις",
@@ -554,12 +554,12 @@
     "eggsFound": "Αυγά που Βρέθηκαν",
     "emeralds": "Σμαράγδια",
     "empireKills": "Σκοτωμοί ως Υπερασπιστής",
-    "ended": "Ended",
+    "ended": "Τελείωσε",
     "endurance": "Αντοχή",
     "event-level": "Event Level",
     "exp": "EXP",
-    "expGained": "EXP Gained",
-    "extraUltimates": "Extra Ultimates",
+    "expGained": "Κερδισμένο ΕΧP",
+    "extraUltimates": "Επιπλέον Ultimates",
     "fastestDetectiveWin": "Γρηγορότερη Νίκη ως Ντετέκτιβ",
     "fastestMurdererWin": "Γρηγορότερη Νίκη ως Δολοφόνος",
     "fastestWin": "Γρηγορότερη Νίκη",
@@ -568,7 +568,7 @@
     "finalKills": "Τελικοί Σκοτωμοί",
     "firstLogin": "Πρώτη Σύνδεση",
     "fkdr": "FKDR",
-    "forcefieldTime": "Forcefield Time",
+    "forcefieldTime": "Χρόνος Δυναμικού πεδίου",
     "fortune": "Τύχη",
     "friends": "Φίλοι",
     "game": "Παιχνίδι",
@@ -577,7 +577,7 @@
     "giftsFound": "Δώρα Που Βρέθηκαν",
     "giftsSent": "Απεσταλμένα Gifts",
     "goals": "Γκολ",
-    "godfather": "Godfather",
+    "godfather": "Noνός",
     "godlikes": "Θεϊκά",
     "gold": "Χρυσός",
     "goldPickedUp": "Μαζεμένος Χρυσός",
@@ -585,7 +585,7 @@
     "goldTrophies": "Χρυσά Τρόπαια",
     "grandPrixTokens": "GP Ανταμοιβές",
     "guild": {
-      "averageMemberGexp": "Average Member GEXP",
+      "averageMemberGexp": "Μέσο Μέλος GEXP",
       "createdOn": "Δημιουργήθηκε Στις",
       "daily": "Καθημερινά",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
@@ -600,7 +600,7 @@
       "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
       "quests": "Guild Αποστολές",
       "rank": "Guild Rank",
-      "scaledGexp": "Scaled GEXP",
+      "scaledGexp": "Κλίμακα GEXP",
       "weekly": "Εβδομαδιαία",
       "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
     },
@@ -612,7 +612,7 @@
     "headstart": "Προβάδισμα",
     "healing": "Θεραπεία",
     "heroWins": "Νίκες ως Ήρωας",
-    "hidden": "Hidden",
+    "hidden": "Κρυμμένο",
     "hiderWins": "Νίκες ως Κρυμμένος",
     "highestKillstreak": "Υψηλότερο Σερί Σκοτωμών",
     "highestScoreFinals": "Προσωπικό Καλύτερο στον Τελικό",
@@ -653,7 +653,7 @@
     "maxWave": "Μέγιστο Κύμα",
     "mode": "Mode",
     "mostVampireKills": "Περισσότεροι Σκοτωμοί Βρικολάκων",
-    "mounts": "Mounts",
+    "mounts": "Βάσεις",
     "murdererWins": "Νίκες ως Δολοφόνος",
     "mysticsEnchanted": "Mystics Enchanted",
     "mythic-favor": "Mythic Favor",
@@ -672,7 +672,7 @@
     "powerupActivations": "Ενεργοποιήσεις Ενισχύσεων",
     "powerups": "Ενισχύσεις",
     "prefix": "Πρόθεμα",
-    "prevent": "Prevent",
+    "prevent": "Αποτροπή",
     "progression": {
       "exp": "EXP Πρόοδος",
       "gexp": "GEXP Πρόοδος",
@@ -689,7 +689,6 @@
     "rune": "Ρούνος",
     "score": "Βαθμολογία",
     "seekerWins": "Νίκες ως Κυνηγός",
-    "shards": "Θραύσματα",
     "shotAccuracy": "Ακρίβεια Πυροβολισμού",
     "shotsFired": "Πυροβολισμοί",
     "silver": "Ασήμι",
@@ -719,12 +718,12 @@
     "tripleShot": "Τριπλή Βολή",
     "trophyRate": "Ποσοστό Τροπαίου",
     "ultimate": "Υπέρτατη",
-    "ultimatesCrafted": "Ultimates Crafted",
+    "ultimatesCrafted": "Ultimates Κατασκευασμένα",
     "utility": "Χρησιμότητα",
     "vampires-killed": "Σκοτωμένα Βαμπίρ",
     "version": "Έκδοση",
     "votes": "Ψήφοι",
-    "wallsFaced": "Walls Faced",
+    "wallsFaced": "Walls που αντιμετωπίθηκαν",
     "wins": "Νίκες",
     "winstreak": "Σερί Νικών",
     "witherDamage": "Wither Ζημιά",
@@ -733,19 +732,20 @@
     "wool": "Μαλλί",
     "woolCaptures": "Αιχμαλωτισμένα Μαλλιά",
     "woolPlaced": "Τοποθετημένα Wool",
-    "zombieKills": "Zombie Σκοτωμοί"
+    "zombieKills": "Zombie Σκοτωμοί",
+    "potionsBrewed": "Καλλιεργημένα Φίλτρα"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Μπες στο **$t(socials.discord)** και κέρδισε **20% χαμηλότερο χρόνο επαναφόρτισης** $t(emojis:heart)",
     "invite": "$t(emojis:socials.discord) Κάνε κλικ **[here](<https://statsify.net/invite>)** για να προσκαλέσεις το Statsify στον δικό σου server!",
-    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** offers additional features such as personalized profile badges. Find the full list of benefits **[here](<https://statsify.net/premium>)**!",
-    "rankings": "$t(emojis:logos.iron) View your top leaderboard positions with **[Statsify Premium](<https://statsify.net/premium>)** by using `/rankings`",
-    "verify": "$t(emojis:check) Run `/verify` to run commands without inputting your username as well as receive **10% lower cooldowns**"
+    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** προσφέρει πρόσθετες λειτουργίες, όπως εξατομικευμένα σήματα προφίλ. Βρες την πλήρη λίστα με τα οφέλη **[here](<https://statsify.net/premium>)**!",
+    "rankings": "$t(emojis:logos.iron) Δες τις κορυφαίες θέσεις σου στο leaderboard με **[Statsify Premium](<https://statsify.net/premium>)** χρησιμοποιώντας το `/rankings`",
+    "verify": "$t(emojis:check) Εκτέλεσε το `/verify` για να εκτελέσεις εντολές χωρίς να εισάγεις το όνομα χρήστη σου καθώς και να λάβεις **10% χαμηλότερα cooldowns**"
   },
   "unknown": "Άγνωστο",
   "verification": {
     "alreadyVerified": {
-      "description": "You are already linked to a Minecraft account. Run `/unverify` to unlink your Minecraft account.",
+      "description": "Είσαι ήδη συνδεδεμένος με έναν λογαριασμό Minecraft. Εκτέλεσε το `/unverify` για να αποσυνδέσεις τον λογαριασμό σου στο Minecraft.",
       "title": "Ήδη Επαληθευμένος"
     },
     "invalidCode": {
@@ -753,15 +753,15 @@
       "title": "Μη Έγκυρος Κωδικός Επαλήθευσης"
     },
     "noCode": {
-      "description": "**How to verify**\n`1.` Open Minecraft and go to the server list\n`2.` Connect to `verify.statsify.net` and copy the code displayed\n`3.` Head back to discord and run `/verify code:XXXX`",
+      "description": "**Τρόπος επαλήθευσης**\n`1.` Άνοιξε το Minecraft και πήγαινε στη server λίστα\n`2.` Συνδέσου στο `verify.statsify.net` και αντίγραψε τον κωδικό που εμφανίζεται\n`3.` Γύρνα στο discord και εκτέλεσε το '/verify code:XXXX'",
       "title": "Λείπει Κωδικός Επαλήθευσης"
     },
     "notVerified": {
-      "description": "You have to be verified before you are able to unverify!",
+      "description": "Πρέπει να επαληθευτείς για να μπορείς να καταργήσεις την επαλήθευση!",
       "title": "Μη Επαληθευμένος"
     },
     "requiredVerification": {
-      "description": "To use this command you must be verified. Run `/verify` to verify your account.",
+      "description": "Για να χρησιμοποιήσεις αυτήν την εντολή, πρέπει να είσαι επαληθευμένος. Εκτέλεσε `/verify` για να επαληθεύσεις τον λογαριασμό σου.",
       "title": "Απαιτείται Επαλήθευση"
     },
     "successfulUnverification": "Ο λογαριασμός σου ξε-επαληθεύτηκε επιτυχώς!",
