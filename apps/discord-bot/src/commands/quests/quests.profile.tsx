@@ -17,6 +17,7 @@ import {
 } from "#components";
 import { ElementNode } from "@statsify/rendering";
 import {
+  FieldMetadata,
   FormattedGame,
   GameId,
   GameMode,
@@ -31,34 +32,14 @@ import type { BaseProfileProps } from "../base.hypixel-command";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
 
+type QuestTimePeriod = "overall" | "daily" | "weekly";
+
 export interface QuestProfileProps extends BaseProfileProps {
   mode: GameMode<QuestModes>;
   gameIcons: Record<GameId, Image>;
   logos: [Image, Image];
-  questTimePeriod: "overall" | "daily" | "weekly";
+  questTimePeriod: QuestTimePeriod;
 }
-
-interface HistoricalQuestTableProps {
-  quests: [string, JSX.Element][];
-}
-
-const QuestsList = ({ quests }: HistoricalQuestTableProps) => (
-  <List
-    items={quests.map(([name, value]) => (
-      <>
-        <box
-          width="remaining"
-          border={{ topLeft: 4, bottomLeft: 4, bottomRight: 0, topRight: 0 }}
-        >
-          <text>{name}</text>
-        </box>
-        <box border={{ topLeft: 0, bottomLeft: 0, bottomRight: 4, topRight: 4 }}>
-          {value}
-        </box>
-      </>
-    ))}
-  />
-);
 
 interface NormalTableProps {
   quests: QuestsInstance;
@@ -78,7 +59,7 @@ interface GameTableProps {
   gameQuests: GameQuests;
   constructor: any;
   t: LocalizeFunction;
-  questTimePeriod: "overall" | "daily" | "weekly";
+  questTimePeriod: QuestTimePeriod;
   logos: [Image, Image];
 }
 
@@ -89,13 +70,16 @@ const GameTable = ({
   questTimePeriod,
   logos,
 }: GameTableProps) => {
-  const metadata = MetadataScanner.scan(constructor);
+  const metadata: Record<string, FieldMetadata> = Object.fromEntries(
+    MetadataScanner.scan(constructor)
+  );
+
   const entries: [string, ElementNode][] = Object.entries(gameQuests)
     .filter(([k, v]) => k !== "total" && v !== null)
     .sort((a, b) => b[1] - a[1])
     .map(([quest, completions]) => {
-      const field = metadata.find(([k]) => k === quest);
-      const realName = field?.[1]?.leaderboard?.name ?? prettify(quest);
+      const realName = metadata[quest]?.leaderboard?.name ?? prettify(quest);
+
       return [
         `${completions > 0 ? "§a" : "§c"}§l${realName}`,
         questTimePeriod === "overall" ? (
@@ -108,7 +92,16 @@ const GameTable = ({
 
   return (
     <Table.table>
-      <QuestsList quests={entries} />
+      <List
+        items={entries.map(([name, value]) => (
+          <>
+            <box width="remaining">
+              <text>{name}</text>
+            </box>
+            <box>{value}</box>
+          </>
+        ))}
+      />
     </Table.table>
   );
 };

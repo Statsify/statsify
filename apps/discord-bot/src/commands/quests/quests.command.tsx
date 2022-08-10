@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import Container from "typedi";
 import {
   ApiService,
   Command,
@@ -15,18 +16,11 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-
-import Container from "typedi";
-import { GameId, GameModes, QUEST_MODES, QuestModes } from "@statsify/schemas";
-import { Image } from "skia-canvas";
+import { GameModes, QUEST_MODES, QuestModes } from "@statsify/schemas";
 import { QuestProfileProps, QuestsProfile } from "./quests.profile";
 import { getAllGameIcons, getBackground, getImage, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
-
-interface PreProfileData {
-  gameIcons: Record<GameId, Image>;
-}
 
 @Command({ description: (t) => t("commands.quests") })
 export class QuestsCommand {
@@ -63,10 +57,6 @@ export class QuestsCommand {
     return this.run(context, "weekly");
   }
 
-  private async getPreProfileData(): Promise<PreProfileData> {
-    return { gameIcons: await getAllGameIcons() };
-  }
-
   private getProfile(props: QuestProfileProps): JSX.Element {
     return <QuestsProfile {...props} />;
   }
@@ -76,22 +66,20 @@ export class QuestsCommand {
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
 
-    const [logo, skin, badge, gameIcons, verifiedLogo, crossLogo] = await Promise.all([
-      getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid),
-      this.apiService.getUserBadge(player.uuid),
-      getAllGameIcons(),
-      getImage("logos/verified_logo_30.png"),
-      getImage("logos/cross_logo_30.png"),
-    ]);
+    const [logo, skin, badge, gameIcons, background, verifiedLogo, crossLogo] =
+      await Promise.all([
+        getLogo(user),
+        this.apiService.getPlayerSkin(player.uuid),
+        this.apiService.getUserBadge(player.uuid),
+        getAllGameIcons(),
+        getBackground("hypixel", "overall"),
+        getImage("logos/verified_logo_30.png"),
+        getImage("logos/cross_logo_30.png"),
+      ]);
 
-    const allModes = this.modes.getModes();
-
-    const pages: Page[] = allModes.map((mode) => ({
+    const pages: Page[] = this.modes.getModes().map((mode) => ({
       label: mode.formatted,
       generator: async (t) => {
-        const background = await getBackground("hypixel", "overall");
-
         const profile = this.getProfile({
           player,
           skin,
