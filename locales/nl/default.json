@@ -689,7 +689,6 @@
     "rune": "Rune",
     "score": "Score",
     "seekerWins": "Zoeker Overwinningen",
-    "shards": "Scherven",
     "shotAccuracy": "Schot Nauwkeurigheid",
     "shotsFired": "Schoten Afgevuurd",
     "silver": "Zilver",
@@ -733,7 +732,8 @@
     "wool": "Wol",
     "woolCaptures": "Wol Gestolen",
     "woolPlaced": "Wol Geplaatst",
-    "zombieKills": "Zombie Moorden"
+    "zombieKills": "Zombie Moorden",
+    "potionsBrewed": "Potions Brewed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Sluit je aan bij onze **$t(socials.discord)** en krijg **20% lagere cooldowns** $t(emojis:heart)",
