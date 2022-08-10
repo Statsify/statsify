@@ -689,7 +689,6 @@
     "rune": "Rune",
     "score": "Score",
     "seekerWins": "Victoires en Chercheur",
-    "shards": "Eclats",
     "shotAccuracy": "Précision du Tir",
     "shotsFired": "Coups Tirés",
     "silver": "Argent",
@@ -733,7 +732,8 @@
     "wool": "Laine",
     "woolCaptures": "Laines Capturées",
     "woolPlaced": "Laine Placée",
-    "zombieKills": "Zombies tués"
+    "zombieKills": "Zombies tués",
+    "potionsBrewed": "Potions Brewed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Rejoignez notre **$t(socials.discord)** et obtenez **20% de temps d'attente en moins** $t(emojis:heart)",
