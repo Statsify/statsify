@@ -41,6 +41,15 @@ export class General {
   public networkLevel: number;
 
   @Field()
+  public currentRewardStreak: number;
+
+  @Field()
+  public highestRewardStreak: number;
+
+  @Field()
+  public tournamentTokens: number;
+
+  @Field()
   public quests: number;
 
   @Field()
@@ -63,6 +72,12 @@ export class General {
     this.karma = data.karma;
     this.networkExp = data.networkExp;
     this.networkLevel = getNetworkLevel(this.networkExp);
+
+    this.currentRewardStreak = data.rewardScore;
+    this.highestRewardStreak = data.rewardHighScore;
+
+    this.tournamentTokens = data.tournamentTokens;
+
     this.quests = getQuests(data.quests);
 
     this.giftsSent = data.giftingMeta?.bundlesGiven;
