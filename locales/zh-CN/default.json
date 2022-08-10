@@ -549,7 +549,7 @@
     "damage": "伤害",
     "deaths": "死亡数",
     "detectiveWins": "侦探胜利次数",
-    "diamonds": "钻石",
+    "diamonds": "钻石收集",
     "doublesWins": "双人模式胜利次数",
     "eggsFound": "找到蛋的次数",
     "emeralds": "绿宝石收集",
@@ -689,7 +689,6 @@
     "rune": "神器",
     "score": "积分",
     "seekerWins": "寻找者胜利次数",
-    "shards": "欧泊碎片",
     "shotAccuracy": "射击精准度",
     "shotsFired": "射击次数",
     "silver": "银段",
@@ -733,7 +732,8 @@
     "wool": "羊毛",
     "woolCaptures": "获取的羊毛",
     "woolPlaced": "放置羊毛数",
-    "zombieKills": "僵尸击杀数"
+    "zombieKills": "僵尸击杀数",
+    "potionsBrewed": "酿造药水"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) 加入我们的**$t(socials.discord)**可以获得**减少20%的冷却时间** $t(emojis:heart)",
