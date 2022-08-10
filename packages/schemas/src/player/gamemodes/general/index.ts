@@ -47,7 +47,7 @@ export class General {
   public highestRewardStreak: number;
 
   @Field()
-  public tournamentTokens: number;
+  public tournamentTributes: number;
 
   @Field()
   public quests: number;
@@ -76,7 +76,7 @@ export class General {
     this.currentRewardStreak = data.rewardScore;
     this.highestRewardStreak = data.rewardHighScore;
 
-    this.tournamentTokens = data.tournamentTokens;
+    this.tournamentTributes = data.tourney?.total_tributes;
 
     this.quests = getQuests(data.quests);
 
