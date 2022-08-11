@@ -343,11 +343,15 @@
       "title": "Nível mais alto necessário"
     },
     "invalidGuild": {
-      "description": "Uma guild por {{type}} de{{tag}}` não pôde ser encontrada!",
+      "description_id": "Uma guild com o id de `{{tag}}` não pôde ser encontrada!",
+      "description_name": "Uma guild pelo nome de `{{tag}}` não pôde ser encontrada!",
+      "description_player": "Uma guild com o jogador `{{tag}}` não pôde ser encontrada!",
       "title": "Guild inválida"
     },
     "invalidPlayer": {
-      "description": "Um jogador {{type}} de {{tag}}` não pôde ser encontrado!",
+      "description_username": "Uma jogador pelo nome de usuário de `{{tag}}` não pôde ser encontrado!",
+      "description_uuid": "Um jogador com o UUID de `{{tag}}` não pôde ser encontrado!",
+      "description_discordId": "Um jogador com o id de discord de `{{tag}}` não pôde ser encontrado!",
       "title": "Jogador inválido"
     },
     "invalidResetTime": {
