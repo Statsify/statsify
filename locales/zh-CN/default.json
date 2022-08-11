@@ -343,11 +343,15 @@
       "title": "需要更高的等级"
     },
     "invalidGuild": {
-      "description": "无法找到一个由{{type}}的`{{tag}}`组成的公会！",
+      "description_id": "无法找到一个ID名为`{{tag}}`的公会！",
+      "description_name": "无法找到名为`{{tag}}`的公会！",
+      "description_player": "无法找到玩家`{{tag}}`的公会！",
       "title": "无效的公会"
     },
     "invalidPlayer": {
-      "description": "找不到一个{{type}}为`{{tag}}`的玩家!",
+      "description_username": "无法找到一位名为`{{tag}}`的玩家！",
+      "description_uuid": "无法找到UUID为`{{tag}}`的玩家！",
+      "description_discordId": "无法找到一个Discord用户为`{{tag}}`的玩家！",
       "title": "无效的玩家"
     },
     "invalidResetTime": {
