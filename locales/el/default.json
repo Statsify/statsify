@@ -4,7 +4,7 @@
     "file": "Ανέβασε ένα αρχείο",
     "gtbhelper": "Το τρέχον στοιχείο",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
-    "guild-query": "Ένα Guild όνομα ή Guild μέλος",
+    "guild-query": "Ένα guild όνομα ή guild μέλος",
     "guild-type": "Ο τύπος αναζήτησης guild για εκτέλεση",
     "mojang-player": "Ένα όνομα χρήστη ή UUID του Minecraft",
     "number": "Ένας αριθμός",
@@ -45,10 +45,10 @@
     "friends": "Δες τη λίστα των Hypixel φίλων σου",
     "game-counts": "Δες τις τρέχον μετρήσεις του Hypixel παιχνιδιού",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
-    "gtbhelper": "Δημιούργησε μια λίστα με πιθανές Guess The Build απαντήσεις βασιζόμενες στο δοσμένο στοιχείο",
+    "gtbhelper": "Δημιούργησε μια λίστα με πιθανές απαντήσεις Guess The Build με βάση τη δεδομένη υπόδειξη",
     "guild": "View your guild's stats",
     "guild-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Guild\" })",
-    "guild-list": "Δες τη λίστα μελών της guild σου",
+    "guild-list": "Δες τη λίστα μελών τoυ Guild σου",
     "guild-member": "Δες τα στατιστικά μελών της guild σου",
     "guild-overall": "Δες μια περίληψη στατιστικών της guild σου",
     "guild-top": "Δες τους κορυφαίους GEXP συνεισφέροντες",
@@ -286,7 +286,7 @@
         "description": "Μπορείς να δεις γενικές Minecraft πληροφορίες όπως εμφανίσεις, UUID, κάπες μέσω `/skin`, `/uuid`, και `/cape` αντίστοιχα. Το Statsify έχει επίσης εντολές για τη δημιουργία Minecraft κειμένου μέσω του `/text`. Δες τα Minecraft χρώματα μέσω του `/colors` και τους Minecraft διακομιστές μέσω του `/server`.",
         "title": "Minecraft"
       },
-      "title": "Βοήθεια Statsify"
+      "title": "Statsify Βοήθεια"
     },
     "invite": {
       "description": "Κάνε κλικ τον παρακάτω σύνδεσμο για να προσκαλέσεις το Statsify στον discord server σου.",
@@ -343,11 +343,15 @@
       "title": "Απαιτείται Ανώτερη Βαθμίδα"
     },
     "invalidGuild": {
-      "description": "Ένα guild με {{type}} από `{{tag}}` δεν βρέθηκε!",
+      "description_id": "A guild with the id of `{{tag}}` could not be found!",
+      "description_name": "A guild by the name of `{{tag}}` could not be found!",
+      "description_player": "A guild with the player `{{tag}}` could not be found!",
       "title": "Μη Έγκυρη Guild"
     },
     "invalidPlayer": {
-      "description": "Ένας παίκτης με {{type}} `{{tag}}` δε βρέθηκε!",
+      "description_username": "A player by the username of `{{tag}}` could not be found!",
+      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
+      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Μη Έγκυρος Παίκτης"
     },
     "invalidResetTime": {
@@ -538,7 +542,7 @@
     "bounty": "Bounty",
     "bountyKills": "Bounty Σκοτωμοί",
     "bowKills": "Σκοτωμοί με Τόξο",
-    "boxesPickedUp": "Κιβώτια Που Συλλέχθηκαν",
+    "boxesPickedUp": "Κουτιά Που Συλλέχθηκαν",
     "bronzeTrophies": "Χάλκινα Τρόπαια",
     "candyFound": "Καραμέλες που Βρέθηκαν",
     "challenges": "Προκλήσεις",
@@ -558,7 +562,7 @@
     "endurance": "Αντοχή",
     "event-level": "Event Level",
     "exp": "EXP",
-    "expGained": "Κερδισμένο ΕΧP",
+    "expGained": "Αποκτημένο ΕΧP",
     "extraUltimates": "Επιπλέον Ultimates",
     "fastestDetectiveWin": "Γρηγορότερη Νίκη ως Ντετέκτιβ",
     "fastestMurdererWin": "Γρηγορότερη Νίκη ως Δολοφόνος",
@@ -612,7 +616,7 @@
     "headstart": "Προβάδισμα",
     "healing": "Θεραπεία",
     "heroWins": "Νίκες ως Ήρωας",
-    "hidden": "Κρυμμένο",
+    "hidden": "Κρυμμένη",
     "hiderWins": "Νίκες ως Κρυμμένος",
     "highestKillstreak": "Υψηλότερο Σερί Σκοτωμών",
     "highestScoreFinals": "Προσωπικό Καλύτερο στον Τελικό",
@@ -733,7 +737,7 @@
     "woolCaptures": "Αιχμαλωτισμένα Μαλλιά",
     "woolPlaced": "Τοποθετημένα Wool",
     "zombieKills": "Zombie Σκοτωμοί",
-    "potionsBrewed": "Καλλιεργημένα Φίλτρα"
+    "potionsBrewed": "Παρασκευασμένα Φίλτρα"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Μπες στο **$t(socials.discord)** και κέρδισε **20% χαμηλότερο χρόνο επαναφόρτισης** $t(emojis:heart)",
