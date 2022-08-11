@@ -343,11 +343,15 @@
       "title": "Требуется более высокий уровень"
     },
     "invalidGuild": {
-      "description": "Не удалось найти гильдию по {{type}} из {{tag}}!",
+      "description_id": "A guild with the id of `{{tag}}` could not be found!",
+      "description_name": "A guild by the name of `{{tag}}` could not be found!",
+      "description_player": "A guild with the player `{{tag}}` could not be found!",
       "title": "Неверная гильдия"
     },
     "invalidPlayer": {
-      "description": "Не удалось найти игрока по {{type}} из {{tag}}!",
+      "description_username": "A player by the username of `{{tag}}` could not be found!",
+      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
+      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Неверный игрок"
     },
     "invalidResetTime": {
