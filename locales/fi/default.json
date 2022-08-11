@@ -343,11 +343,15 @@
       "title": "Vaatii korkeamman tason"
     },
     "invalidGuild": {
-      "description": "Guildia {{type}} `{{tag}}` ei löytynyt!",
+      "description_id": "A guild with the id of `{{tag}}` could not be found!",
+      "description_name": "A guild by the name of `{{tag}}` could not be found!",
+      "description_player": "A guild with the player `{{tag}}` could not be found!",
       "title": "Virheellinen guild"
     },
     "invalidPlayer": {
-      "description": "Pelaajaa {{type}} `{{tag}}` ei löytynyt!",
+      "description_username": "A player by the username of `{{tag}}` could not be found!",
+      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
+      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Virheellinen pelaaja"
     },
     "invalidResetTime": {
