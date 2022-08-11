@@ -343,11 +343,15 @@
       "title": "Se requiere un nivel superior"
     },
     "invalidGuild": {
-      "description": "Un gremio por el {{type}} de `{{tag}}` no pudo ser encontrado!",
+      "description_id": "¡No se pudo encontrar el gremio con la id de `{{tag}}`!",
+      "description_name": "Un gremio con el nombre de `{{tag}}` no se pudo encontrar!",
+      "description_player": "Un gremio con el jugador `{{tag}}` no se pudo encontrar!",
       "title": "Gremio inválido"
     },
     "invalidPlayer": {
-      "description": "Un jugador por el {{type}} de `{{tag}}` no pudo ser encontrado!",
+      "description_username": "Un jugador con el nombre de usuario de `{{tag}}` no se pudo encontrar!",
+      "description_uuid": "Un jugador con la UUID de `{{tag}}` no se pudo encontrar!",
+      "description_discordId": "Un jugador con el id de discord de `{{tag}}` no se pudo encontrar!",
       "title": "Jugador inválido"
     },
     "invalidResetTime": {
@@ -733,7 +737,7 @@
     "woolCaptures": "Capturas de Lana",
     "woolPlaced": "Lana colocada",
     "zombieKills": "Asesinatos de Zombie",
-    "potionsBrewed": "Potions Brewed"
+    "potionsBrewed": "Pociones elaboradas"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Únete a nuestro **$t(socials.discord)** y consigue **20% menos de tiempo de espera** $t(emojis:heart)",
