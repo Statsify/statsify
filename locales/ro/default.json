@@ -1,39 +1,39 @@
 {
   "arguments": {
-    "choice": "Choose an option",
-    "file": "Upload a file",
-    "gtbhelper": "The current hint",
+    "choice": "Alege o opțiune",
+    "file": "Încărcați un fișier",
+    "gtbhelper": "Sugestie actuală",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
-    "guild-query": "A guild name or guild member",
-    "guild-type": "The type of guild search to perform",
-    "mojang-player": "A Minecraft username or UUID",
-    "number": "A number",
+    "guild-query": "Numele Guild-ului sau membru al guild-ului",
+    "guild-type": "Tipul de căutare de guild de efectuat",
+    "mojang-player": "Numele jucătorului de Minecraft sau UUID",
+    "number": "Un număr",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard stat to view",
+    "player-leaderboard": "Alege un stat din clasament pentru a vizualiza",
     "reason": "The reason for closing the support ticket",
-    "server": "A Minecraft server name or a server IP",
+    "server": "Un nume de server de Minecraft sau un IP de server",
     "tags-content": "The content of the tag",
     "tags-name": "The name of the tag",
-    "text": "A message",
-    "user": "Choose a Discord user"
+    "text": "Un mesaj",
+    "user": "Alege un nume de utilizator de Discord"
   },
   "commands": {
     "arcade": "$t(commands.hypixel-command, { \"name\": \"Arcade\" })",
     "arenabrawl": "$t(commands.hypixel-command, { \"name\": \"Arena Brawl\" })",
-    "available": "Check the availability of a Minecraft username",
+    "available": "Verifică disponibilitatea unui nume de utilizator de Minecraft",
     "badge": "Change your badge for every profile",
-    "badge-reset": "Reset your profile badge",
-    "badge-set": "Upload a new profile badge",
-    "badge-view": "View your current profile badge",
+    "badge-reset": "Resetează-ți insigna profilului",
+    "badge-set": "Încărcați o insignă nouă pentru profil",
+    "badge-view": "Vizualizați insigna profilului tău curent",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
     "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
-    "cape": "View someone's Minecraft and Optifine capes",
+    "cape": "Vezi pelerinele Minecraft și Optifine ale unei persoane",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
     "close": "Close the current support ticket",
-    "colors": "A list of Minecraft color codes",
+    "colors": "O listă de coduri de culori din Minecraft",
     "commands": "View Statsify command usage",
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
@@ -42,24 +42,24 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "View your Hypixel friends list",
-    "game-counts": "View Hypixel current game counts",
+    "friends": "Vezi lista ta de prieteni pe Hypixel",
+    "game-counts": "Vizualizați numărul actual al jocurilor pe Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
-    "gtbhelper": "Generate a list of possible Guess The Build answers based on the given hint",
+    "gtbhelper": "Generează o listă cu posibile Guess The Build pe baza indiciului dat",
     "guild": "View your guild's stats",
     "guild-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Guild\" })",
-    "guild-list": "View the member list of your guild",
-    "guild-member": "View your guild members' stats",
-    "guild-overall": "View a summary of your guild's stats",
-    "guild-top": "View your top GEXP contributors",
-    "help": "A basic description of what Statsify does for you and your server",
+    "guild-list": "Vezi lista de membri ai guild-ului tău",
+    "guild-member": "Vezi statisticile membrilor guild-ului tău",
+    "guild-overall": "Vezi un rezumat al statisticilor guild-ului tău",
+    "guild-top": "Vezi contribuitorii GEXP de top ai tăi",
+    "help": "O descriere de bază a ceea ce Statsify face pentru tine şi serverul tău",
     "historical-arcade": "$t(commands.historical-command, { \"name\": \"Arcade\" })",
     "historical-arenabrawl": "$t(commands.historical-command, { \"name\": \"Arena Brawl\" })",
     "historical-bedwars": "$t(commands.historical-command, { \"name\": \"BedWars\" })",
     "historical-blitzsg": "$t(commands.historical-command, { \"name\": \"BlitzSG\" })",
     "historical-bridge": "$t(commands.historical-command, { \"name\": \"Bridge\" })",
     "historical-buildbattle": "$t(commands.historical-command, { \"name\": \"Build Battle\" })",
-    "historical-command": "View your {{name}} historical stats",
+    "historical-command": "Vezi statisticile tale istorice pe {{name}}",
     "historical-copsandcrims": "$t(commands.historical-command, { \"name\": \"Cops and Crims\" })",
     "historical-duels": "$t(commands.historical-command, { \"name\": \"Duels\" })",
     "historical-general": "$t(commands.historical-command, { \"name\": \"General\" })",
@@ -78,9 +78,9 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
-    "hypixel-command": "View your {{name}} stats",
-    "invite": "Invite Statsify",
-    "language": "Change the language you see responses in",
+    "hypixel-command": "Vezi statisticile tale {{name}}",
+    "invite": "Invită Statsify",
+    "language": "Schimbă limba în care vezi răspunsurile",
     "last-day": "$t(commands.yesterday)",
     "last-month": "View your stats from last month's in various games",
     "last-week": "View your stats from last week's in various games",
@@ -89,7 +89,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View leaderboards for {{name}} stats",
+    "leaderboard-command": "Vezi clasamentele pentru {{name}} pe statistice",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
     "leaderboard-general": "$t(commands.leaderboard-command, { \"name\": \"General\" })",
@@ -109,26 +109,26 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolwars": "$t(commands.leaderboard-command, { \"name\": \"WoolWars\" })",
-    "links": "Statsify Socials",
+    "links": "Social-urile Statsify-ului",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "View your mutual Hypixel friends with another player",
-    "namehistory": "View someone's Minecraft name history",
+    "mutuals": "Vezi prietenii tăi mutuali Hypixel cu un alt jucător",
+    "namehistory": "Vezi istoricul numelui de Minecraft al unei persoane",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
-    "ping": "View Statsify's creators and contributors",
+    "ping": "Vezi creatorii și contribuitorii Statsify-ului",
     "pit": "$t(commands.hypixel-command, { \"name\": \"Pit\" })",
     "player-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Player\" })",
     "quake": "$t(commands.hypixel-command, { \"name\": \"Quake\" })",
-    "rankings": "View your top leaderboard positions",
+    "rankings": "Vezi pozițiile dumneavoastră de top ale clasamentului",
     "rankings-all": "$t(commands.rankings)",
     "rankings-arcade": "$t(commands.rankings-command, { \"name\": \"Arcade\" })",
     "rankings-arenabrawl": "$t(commands.rankings-command, { \"name\": \"Arena Brawl\" })",
     "rankings-bedwars": "$t(commands.rankings-command, { \"name\": \"BedWars\" })",
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
-    "rankings-command": "View your top {{name}} leaderboard positions",
+    "rankings-command": "Vezi pozițiile tale din clasamentul {{name}}",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
     "rankings-general": "$t(commands.rankings-command, { \"name\": \"General\" })",
@@ -153,7 +153,7 @@
     "ratios-arenabrawl": "$t(commands.ratios-command, { \"name\": \"Arena Brawl\" })",
     "ratios-bedwars": "$t(commands.ratios-command, { \"name\": \"BedWars\" })",
     "ratios-blitzsg": "$t(commands.ratios-command, { \"name\": \"BlitzSG\" })",
-    "ratios-command": "View your {{name}} milestones and estimations",
+    "ratios-command": "Vizualizați repelele și estimările dumneavoastră {{name}}",
     "ratios-copsandcrims": "$t(commands.ratios-command, { \"name\": \"Cops and Crims\" })",
     "ratios-duels": "$t(commands.ratios-command, { \"name\": \"Duels\" })",
     "ratios-megawalls": "$t(commands.ratios-command, { \"name\": \"MegaWalls\" })",
@@ -168,88 +168,88 @@
     "ratios-walls": "$t(commands.ratios-command, { \"name\": \"Walls\" })",
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
-    "recentgames": "View someone's Hypixel recent games",
-    "reset": "Reset your historical stats",
-    "server": "View Minecraft server status",
-    "skin": "View someone's Minecraft skin",
+    "recentgames": "Vezi jocurile recente pe Hypixel unei persoane",
+    "reset": "Resetează-ți statisticile istorice",
+    "server": "Vezi starea serverului de Minecraft",
+    "skin": "Vezi skin-ul unei persoane pe Minecraft",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
-    "socials": "View someone's Hypixel linked socials",
+    "socials": "Vezi socialele conectate pe Hypixel ale unei persoane",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
-    "status": "View someone's Hypixel status",
+    "status": "Vezi starea pe Hypixel a unei persoane",
     "tags": "Manage support tags",
     "tags-create": "Create a support tag",
     "tags-delete": "Delete a support tag",
     "tags-rename": "Rename a support tag",
-    "text": "Generate Minecraft text",
+    "text": "Generează text Minecraft",
     "theme": "Change your theme for every profile",
-    "theme-boxes": "Change the appearance of the profile boxes",
-    "theme-font": "Change the font of the profiles",
+    "theme-boxes": "Schimbă aspectul casetelor de profil",
+    "theme-font": "Schimbă fontul profilelor",
     "theme-footer": "Customize your profile's footer",
-    "theme-footer-icon": "Change your profile's footer icon",
-    "theme-footer-message": "Change your profile's footer message. You can use https://rgb.birdflop.com to create text gradients.",
-    "theme-footer-reset": "Reset your profile's footer",
-    "theme-palette": "Change the color palette of the profiles",
-    "theme-view": "View your current profile theme",
+    "theme-footer-icon": "Schimbă footer-ul profilului",
+    "theme-footer-message": "Schimbă mesajul footer al profilului tău.",
+    "theme-footer-reset": "Resetează footer-ul profilului tău",
+    "theme-palette": "Schimbă paleta de culori a profilelor",
+    "theme-view": "Vezi tema profilului tău curent",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
     "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
-    "unverify": "Unlink your Discord and Minecraft accounts",
+    "unverify": "Deconectează conturile tale Discord și Minecraft",
     "user": "View someone's Statsify user info",
-    "uuid": "Get someone's Minecraft UUID",
+    "uuid": "Ia Minecraft UUID-ul al unei persoane",
     "vampirez": "$t(commands.hypixel-command, { \"name\": \"VampireZ\" })",
-    "verify": "Link your Discord and Minecraft accounts",
+    "verify": "Conectează conturile tale Discord și Minecraft",
     "walls": "$t(commands.hypixel-command, { \"name\": \"Walls\" })",
     "warlords": "$t(commands.hypixel-command, { \"name\": \"Warlords\" })",
-    "watchdog": "View Hypixel Watchdog ban counts",
+    "watchdog": "Vezi numărul de ban-uri de la Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games"
   },
   "config": {
     "badge": {
-      "profile": "This is how your badge will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your badge.",
-      "set": "$t(emojis:config.success) Successfully updated your badge.",
-      "view": "$t(emojis:config.view) Your current badge:"
+      "profile": "Așa va arăta insigna ta pe profilurile tale",
+      "reset": "$t(emojis:config.reset) Resetat cu succes insigna ta.",
+      "set": "$t(emojis:config.success) S-a actualizat cu succes insigna.",
+      "view": "$t(emojis:config.view) Insigna curentă:"
     },
     "footer": {
-      "profile": "This is how your footer will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your footer.",
-      "set": "$t(emojis:config.success) Successfully updated your footer."
+      "profile": "Așa va arăta footer-ul tău pe profilurile tale",
+      "reset": "$t(emojis:config.reset) Footer-ul a fost resetat cu succes.",
+      "set": "$t(emojis:config.success) Actualizarea footer-ului a fost reușită."
     },
     "language": {
-      "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
+      "description": "$t(emojis:config.success) Ați actualizat cu succes limba la `{{locale}}`."
     },
     "theme": {
-      "profile": "This is how your theme will look on your profiles",
-      "set": "$t(emojis:config.success) Successfully updated your theme.",
-      "view": "$t(emojis:config.view) Your current theme:"
+      "profile": "Așa va arăta tema ta pe profilurile tale",
+      "set": "$t(emojis:config.success)A fost Actualizat cu succes tema.",
+      "view": "$t(emojis:config.view) Tema curentă:"
     }
   },
   "cooldown": {
-    "description": "Please wait `{{time}}` before reusing `{{command}}`.\n\nLearn how to reduce cooldowns [here](https://statsify.net/premium)",
-    "title": "Active Cooldown"
+    "description": "Aşteptaţi `{{time}}` înainte de a reutiliza `{{command}}`.\n\nAflaţi cum să reduceţi cooldown-ul [here](https://statsify.net/premium)",
+    "title": "Cooldown activ"
   },
   "embeds": {
     "available": {
-      "blocked": "Unless the name is temporarily or permanently blocked by Mojang.",
-      "invalidCharacters": "Invalid Characters",
-      "tooLong": "Too Long"
+      "blocked": "Dacă numele nu este blocat temporar sau permanent de Mojang.",
+      "invalidCharacters": "Caractere invalide",
+      "tooLong": "Prea lung"
     },
     "colors": {
       "bold": "Bold",
-      "color": "Color",
+      "color": "Culoare",
       "italic": "Italic",
-      "mainHex": "Main Hex",
-      "obfuscated": "Obfuscated",
-      "reset": "Reset",
-      "shadowHex": "Shadow Hex",
-      "strikethrough": "Strikethrough",
-      "title": "Minecraft Color Codes",
-      "underline": "Underline"
+      "mainHex": "Hex principal",
+      "obfuscated": "Obfuscat",
+      "reset": "Resetează",
+      "shadowHex": "Umbră Hex",
+      "strikethrough": "Tăiați",
+      "title": "Coduri de culoare Minecraft",
+      "underline": "Subliniere"
     },
     "deletePlayer": {
       "description": "**{{displayName}}** has been removed from the database and leaderboards.",
@@ -264,40 +264,40 @@
       "title": "Force Verified"
     },
     "gameCounts": {
-      "title": "Hypixel Game Counts"
+      "title": "Numărul de jocuri Hypixel"
     },
     "gtbhelper": {
-      "title": "Possible GTB Solutions"
+      "title": "Soluții GTB posibile"
     },
     "help": {
       "games": {
-        "description": "Statsify supports the majority of games offered on Hypixel. To check your stats in a game run `/[game]`. For example you can run `/bedwars` to check your BedWars stats.",
-        "title": "Games"
+        "description": "Statsify suportă majoritatea jocurilor oferite pe Hypixel. Pentru a verifica statisticile într-un joc rulează `/[game]`. De exemplu, puteţi rula `/bedwars` pentru a verifica statisticile BedWars.",
+        "title": "Jocuri"
       },
       "historical": {
-        "description": "Statsify lets you check your daily, weekly, and monthly stats through `/daily`, `/weekly` and `/monthly`. If you missed a reset you can view them by running `/yesterday`, `/lastweek`, and `/lastmonth`. ",
-        "title": "Historical"
+        "description": "Statsify vă permite să vă verificaţi statisticile zilnice, săptămânale şi lunare prin `/daily`, `/weekly` şi `/monthly`. Dacă ai omis o resetare, le poți vedea rulând `/yesterday`, `/lastweek`, și `/lastmonth`. ",
+        "title": "Istoricul"
       },
       "leaderboards": {
-        "description": "Statsify offers thousands of leaderboards through the `/leaderboard` command. Run `/leaderboard`, then pick the gamemode, and pick a leaderboard to view. You can hit the search button to search for a specific player or position. You can also hit the up and down buttons to view more pages.",
-        "title": "Leaderboards"
+        "description": "Statsify oferă mii de clasamente prin comanda `/leaderboard`. Rulează `/leaderboard`, apoi alege gamemode-ul şi alege un clasament pentru a vedea. Puteți apăsa butonul de căutare pentru a căuta un anumit jucător sau o anumită poziție. Poţi apăsa şi butoanele sus şi jos pentru a vedea mai multe pagini.",
+        "title": "Clasamente"
       },
       "minecraft": {
-        "description": "You can view general Minecraft information such as skins, UUIDs, capes through `/skin`, `/uuid`, and `/cape` respectively. Statsify also has commands to generate Minecraft text through `/text`. View Minecraft colors through `/colors` and preview Minecraft servers through `/server`.",
+        "description": "Puteţi vizualiza informaţiile generale Minecraft cum ar fi skin-uri, UUID, capes prin `/skin`, `/uuid`, şi respectiv `/cape`. Statsify are de asemenea comenzi pentru a genera text Minecraft prin `/text`. Vezi culorile Minecraft prin `/colors` şi previzualizează serverele Minecraft prin `/server`.",
         "title": "Minecraft"
       },
-      "title": "Statsify Help"
+      "title": "Ajutor Statsify"
     },
     "invite": {
-      "description": "Click the link below to invite Statsify to your discord server.",
-      "title": "Statsify Links"
+      "description": "Faceți clic pe link-ul de mai jos pentru a invita Statsify la serverul dumneavoastră de discord.",
+      "title": "Linkuri Statsify"
     },
     "ping": {
-      "contributors": "Contributors",
-      "core": "Core",
+      "contributors": "Contribuitori",
+      "core": "Nucleu",
       "pong": "Pong!",
-      "title": "Statsify Credits",
-      "translators": "Translators"
+      "title": "Credite Statsify",
+      "translators": "Traducători"
     },
     "tags": {
       "deleted": {
@@ -326,8 +326,8 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
     },
     "footerTooLong": {
-      "description": "The message you provided is too long. It should be under 50 characters excluding color codes.",
-      "title": "Message Too Long"
+      "description": "Mesajul furnizat este prea lung. Ar trebui să fie sub 50 de caractere, cu excepția codurilor de culoare.",
+      "title": "Mesaj Prea Lung"
     },
     "goldOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -335,36 +335,40 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
     },
     "guildLeaderboardNotFound": {
-      "description": "We couldn't find the `guild` you were looking for!",
-      "title": "Invalid Guild"
+      "description": "Nu am putut găsi `Guild-ul` căutat de tine!",
+      "title": "Guild Invalid"
     },
     "higherTierRequiredForIcon": {
-      "description": "You need to purchase a higher premium tier to unlock this icon!",
-      "title": "Higher Tier Required"
+      "description": "Trebuie să cumpărați un nivel premium mai mare pentru a debloca această pictogramă!",
+      "title": "Nivel Mai Mare Necesar"
     },
     "invalidGuild": {
-      "description": "A guild by the {{type}} of `{{tag}}` could not be found!",
-      "title": "Invalid Guild"
+      "description_id": "Un guild cu id-ul `{{tag}}` nu a putut fi găsită!",
+      "description_name": "Un Guild cu numele de `{{tag}}` nu a putut fi găsit!",
+      "description_player": "Nu a putut fi găsit un Guild cu jucătorul `{{tag}}!",
+      "title": "Guild Invalid"
     },
     "invalidPlayer": {
-      "description": "A player by the {{type}} of `{{tag}}` could not be found!",
-      "title": "Invalid Player"
+      "description_username": "Un jucător de numele `{{tag}}` nu a fost găsit!",
+      "description_uuid": "Un jucător cu UUID-ul `{{tag}}` nu a putut fi găsit!",
+      "description_discordId": "Un jucător cu discord id-ul `{{tag}}` nu a putut fi găsit!",
+      "title": "Jucător Invalid"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
-      "title": "Invalid Reset Time"
+      "description": "`{{time}}` nu se potrivește cu formatul `h:mm a`. Introdu un timp în format similar cu `12:00 PM` sau `1:00 AM`.",
+      "title": "Timp Resetare Invalid"
     },
     "invalidResetTimezone": {
-      "description": "`{{timezone}}` is not a valid timezone. Enter a timezone similar to `EST` or `PST`.",
-      "title": "Invalid Reset Timezone"
+      "description": "`{{timezone}}` nu este un fus orar valid. Introdu un fus orar similar cu `EST` sau `PST`.",
+      "title": "Resetare fus orar invalid"
     },
     "invalidSearch": {
-      "description": "We couldn't figure out what exactly you were looking for!\nEnter a username, uuid, or discord mention.",
-      "title": "Invalid Search"
+      "description": "Nu ne-am putut da seama ce anume căutați!\nIntroduceți un nume de utilizator, uuid sau o mențiune discord.",
+      "title": "Căutare invalidă"
     },
     "invalidServer": {
-      "description": "The server you are looking for either doesn't exist or is offline!",
-      "title": "Invalid Minecraft Server"
+      "description": "Serverul pe care îl cauți fie nu există, fie este offline!",
+      "title": "Server de Minecraft invalid"
     },
     "invalidTagName": {
       "description": "The tag name you provided is invalid. It is not possible to create a slash command with this tag name.",
@@ -380,28 +384,28 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "There is no more leaderboard data at this position!",
-      "title": "No Leaderboard Data At This Position"
+      "description": "Nu mai sunt date în clasament la această poziție!",
+      "title": "Nu există date în Clasament la această poziție"
     },
     "leaderboardInvalidPosition": {
-      "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
-      "title": "Invalid Position"
+      "description": "Poziția clasamentului introdusă nu este validă. Introduceți un număr mai mare de 1.",
+      "title": "Poziție invalidă"
     },
     "leaderboardNotFound": {
-      "description": "We can't find the `leaderboard` you are looking for!",
-      "title": "Leaderboard Not Found"
+      "description": "Nu putem găsi `clasamentul` pe care îl cauți!",
+      "title": "Clasamentul nu a fost găsit"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account.",
-      "title": "Missing Verification"
+      "description": "<@{{tag}}> nu este **verificat**. Pentru a le menționa, trebuie să execute `/verify` pentru a-și verifica contul.",
+      "title": "Lipsește Verificarea"
     },
     "missingPlayerVerification": {
       "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
-      "description": "To be able to run commands without supplying your username, you must be verified. To verify run and complete `/verify` and then try again.",
-      "title": "Missing Verification"
+      "description": "Pentru a putea rula comenzi fără a vă furniza numele de utilizator, trebuie să verificați. Pentru a verifica dacă executați și completați `/verify` și apoi încercați din nou.",
+      "title": "Lipsește Verificarea"
     },
     "netheriteOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -409,50 +413,50 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
     },
     "noCape": {
-      "description": "**{{username}}** doesn't have any capes!",
-      "title": "Missing Cape"
+      "description": "**{{username}}** nu are nici o pelerină!",
+      "title": "Lipsește Pelerina"
     },
     "noFriends": {
-      "description": "**{{displayName}}** has no friends $t(emojis:sad)! :(",
-      "title": "Friends Not Found"
+      "description": "**{{displayName}}** nu are prieteni $t(emojis:sad)! :(",
+      "title": "Prieteni n-au fost găsiți"
     },
     "noGTBSolutions": {
-      "description": "We couldn't find any solutions for the provided hint!",
-      "title": "No Guess The Build Solutions"
+      "description": "Nu am putut găsi nicio soluție pentru indiciul furnizat!",
+      "title": "Nu a fost găsită niciun indiciu pentru pentru Guess The Build"
     },
     "noMutuals": {
-      "description": "**{{displayNameOne}}** and **{{displayNameTwo}}** have no mutual friends!",
-      "title": "No Mutuals"
+      "description": "**{{displayNameOne}}** şi **{{displayNameTwo}}** nu au nici un prieten reciproc!",
+      "title": "Fără Mutuale"
     },
     "noRankings": {
-      "description": "**{{displayName}}** has no rankings!",
-      "title": "No Rankings"
+      "description": "**{{displayName}}** nu are clasamente!",
+      "title": "Niciun clasament"
     },
     "noRecentGames": {
-      "description": "**{{displayName}}**'s recent games could not be found!",
-      "title": "Recent Games Not Found"
+      "description": "** Jocurile recente ale lui {{displayName}}** nu au fost găsite!",
+      "title": "Jocurile recente nu au fost găsite"
     },
     "noStatus": {
-      "description": "**{{displayName}}**'s Hypixel status could not be found!",
-      "title": "Status Not Found"
+      "description": "** Statusul Hypixel al lui {{displayName}} nu a putut fi găsit!",
+      "title": "Statusul nu a fost găsit"
     },
     "playerLeaderboardNotFound": {
-      "description": "We couldn't find the `player` you were looking for!",
-      "title": "Invalid Player"
+      "description": "Nu am putut găsi `jucătorul` căutat de tine!",
+      "title": "Jucător invalid"
     },
     "playerNotInGuild": {
-      "description": "**{{displayName}}** is not in a guild!",
-      "title": "Invalid Guild"
+      "description": "**{{displayName}}** nu este într-un Guild!",
+      "title": "Guild invalid"
     },
     "premiumRequired": {
-      "description": "Check out all the available features [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what command does/changes.",
-      "title": "Statsify {{tier}} is required to run this command"
+      "description": "Vezi toate caracteristicile disponibile [here](https://statsify.net/premium).",
+      "preview": "Verificați toate caracteristicile disponibile [here](https://statsify.net/premium). Mai jos este o mică previzualizare a ce face/schimbă comenzile.",
+      "title": "Statsify {{tier}} este necesar pentru a rula această comandă"
     },
     "staffOnly": {
-      "description": "This command is only available to Statsify staff members!",
-      "preview": "Below is a small preview of how the command functions",
-      "title": "Staff Only"
+      "description": "Această comandă este disponibilă doar pentru membrii Staff-ului Statsify!",
+      "preview": "Mai jos este o mică previzualizare a felului în care comenzile funcţionează",
+      "title": "Numai Staff"
     },
     "tagNotFound": {
       "description": "The tag you provided was not found!",
@@ -463,55 +467,55 @@
       "title": "Ticket Already Exists"
     },
     "unknown": {
-      "description": "Something went wrong, please try again later. If this persists, report this in our [Discord](<https://statsify.net/discord>).",
-      "title": "An Unknown Error Occurred"
+      "description": "Ceva nu a mers bine, te rugăm să încerci din nou mai târziu. Dacă acest lucru persistă, raportează acest lucru în [Discord](<https://statsify.net/discord>).",
+      "title": "A apărut o eroare necunoscută"
     },
     "unsupportedFileType": {
-      "description": "The file you uploaded is not a supported file type for this command!",
-      "title": "Unsupported File Type"
+      "description": "Fișierul pe care l-ați încărcat nu este un tip de fișier acceptat pentru această comandă!",
+      "title": "Tip de fișier nesuportat"
     }
   },
   "historical": {
-    "aboutResetting": "Click the reset button below to reset your historical stats every day **at this time**.\n\n**WARNING**: This will delete all of your historical stats and **cannot be undone**. \nIf you want to be able to reset at a specific time check out $t(socials.premium).",
-    "aboutResettingPremium": "Click the reset button below to reset your historical stats. \n\n**WARNING:** This will delete all of your historical stats and **cannot be undone**.",
+    "aboutResetting": "Faceţi clic pe butonul de resetare de mai jos pentru a reseta statisticile istorice în fiecare zi **în acest moment**.\n\n**ATENTIE**: Aceasta va sterge toate statisticile istorice si **nu poate fi anulat**. \nDacă doriţi să puteţi reseta la un anumit moment verificaţi $t(socials.premium).",
+    "aboutResettingPremium": "Faceţi clic pe butonul de resetare de mai jos pentru a reseta statisticile istorice. \n\n**ATENŢIE:** Acest lucru va şterge toate statisticile istorice şi **nu poate fi anulat**.",
     "modal": {
-      "resetTime": "Choose a Reset Time",
-      "timezone": "Choose a Timezone",
-      "title": "Historical Reset Time"
+      "resetTime": "Alege ora de resetare",
+      "timezone": "Alege un Fus Orar",
+      "title": "Timp de resetare istorică"
     },
-    "new": "**{{displayName}}**'s historical stats have been checked for the first time on Statsify. Their stats will now be updated at this time every day.",
-    "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
-    "resetButton": "Click to Reset",
-    "setResetTime": "Set your reset time to <t:{{time}}:t>."
+    "new": "** Statisticile istorice ale lui {{displayName}}** au fost verificate pentru prima dată în Statsify. Statisticile lor vor fi actualizate acum la această oră în fiecare zi.",
+    "reset": "$t(emojis:clock) **Resetare** <t:{{time}}:R>",
+    "resetButton": "Clic pentru resetare",
+    "setResetTime": "Setează timpul de resetare la <t:{{time}}:t>."
   },
   "leaderboard": {
     "guildInput": {
-      "label": "Search by a Guild",
-      "placeholder": "Enter a guild's name, eg: Quote"
+      "label": "Caută după un Guild",
+      "placeholder": "Introduceți numele unui Guild, de exemplu: Quote"
     },
     "modal": {
-      "title": "Leaderboard Search"
+      "title": "Căutare Clasament"
     },
     "playerInput": {
-      "label": "Search by a Player",
-      "placeholder": "Enter a player's name, eg: j4cobi"
+      "label": "Caută după un jucător",
+      "placeholder": "Introduceți numele unui jucător, de exemplu: j4cobi"
     },
     "positionInput": {
-      "label": "Search by a Position",
-      "placeholder": "Enter a position, eg: 5000"
+      "label": "Caută după o poziție",
+      "placeholder": "Introduceți o poziție, de exemplu: 5000"
     }
   },
   "minecraft": {
-    "available": "Available",
-    "nameHistory": "Name History",
-    "originalName": "Original Name",
-    "trimmedUUID": "Trimmed UUID",
-    "unavailable": "Unavailable",
-    "username": "Username",
+    "available": "Disponibil",
+    "nameHistory": "Istoric Nume",
+    "originalName": "Numele Original",
+    "trimmedUUID": "UUID tridimensional",
+    "unavailable": "Indisponibil",
+    "username": "Nume",
     "uuid": "UUID"
   },
   "number": "{{value, number}}",
-  "players": "Players",
+  "players": "Jucători",
   "socials": {
     "discord": "[Discord](<https://discord.com/invite/5VgxMQY>)",
     "github": "[GitHub](<https://github.com/Statsify/statsify>)",
@@ -520,251 +524,251 @@
     "website": "[Website](https://statsify.net/)"
   },
   "stats": {
-    "achievementPoints": "Achievement Points",
-    "adrenaline": "Adrenaline",
-    "assists": "Assists",
+    "achievementPoints": "Puncte de Realizare",
+    "adrenaline": "Adrenalină",
+    "assists": "Asistență",
     "bblr": "BBLR",
-    "bedsBroken": "Beds Broken",
-    "bedsLost": "Beds Lost",
-    "bestRound": "Best Round",
-    "bestTime": "Best Time",
-    "bestWinstreak": "Best Winstreak",
-    "bigShot": "Big Shot",
-    "blocksBroken": "Blocks Broken",
-    "blocksPlaced": "Blocks Placed",
-    "blocksRan": "Blocks Ran",
-    "bombsDefused": "Bombs Defused",
-    "bombsPlanted": "Bombs Planted",
-    "bounty": "Bounty",
-    "bountyKills": "Bounty Kills",
-    "bowKills": "Bow Kills",
-    "boxesPickedUp": "Boxes Collected",
-    "bronzeTrophies": "Bronze Trophies",
-    "candyFound": "Candy Found",
-    "challenges": "Challenges",
-    "class": "Class",
-    "coins": "Coins",
-    "contracts": "Contracts",
-    "correctGuesses": "Correct Guesses",
-    "damage": "Damage",
-    "deaths": "Deaths",
-    "detectiveWins": "Detective Wins",
-    "diamonds": "Diamonds",
-    "doublesWins": "Doubles Wins",
-    "eggsFound": "Eggs Found",
-    "emeralds": "Emeralds",
-    "empireKills": "Defender Kills",
-    "ended": "Ended",
-    "endurance": "Endurance",
-    "event-level": "Event Level",
+    "bedsBroken": "Paturi distruse",
+    "bedsLost": "Paturi pierdute",
+    "bestRound": "Cea mai bună rundă",
+    "bestTime": "Cel mai bun timp",
+    "bestWinstreak": "Cel mai bun Winstreak",
+    "bigShot": "Big Shot-uri",
+    "blocksBroken": "Blocuri sparte",
+    "blocksPlaced": "Blocuri Puse",
+    "blocksRan": "Ran Blocuri",
+    "bombsDefused": "Bombe Dezamorsate",
+    "bombsPlanted": "Bombe Plantate",
+    "bounty": "Recompensă",
+    "bountyKills": "Omorături De Recompensă",
+    "bowKills": "Ucideri cu arc",
+    "boxesPickedUp": "Cutii Colectate",
+    "bronzeTrophies": "Trofeuri de bronz",
+    "candyFound": "Bomboane Găsite",
+    "challenges": "Provocări",
+    "class": "Clasa",
+    "coins": "Monede",
+    "contracts": "Contracte",
+    "correctGuesses": "Ghiciri corecte",
+    "damage": "Daune",
+    "deaths": "Decese",
+    "detectiveWins": "Câștiguri ca Detectiv",
+    "diamonds": "Diamante",
+    "doublesWins": "Câștiguri în modul Duble",
+    "eggsFound": "Ouă găsite",
+    "emeralds": "Emeralde",
+    "empireKills": "Ucideri ca Apărător",
+    "ended": "Terminat",
+    "endurance": "Rezistență",
+    "event-level": "Nivel Eveniment",
     "exp": "EXP",
-    "expGained": "EXP Gained",
-    "extraUltimates": "Extra Ultimates",
-    "fastestDetectiveWin": "Fastest Detective Win",
-    "fastestMurdererWin": "Fastest Murderer Win",
-    "fastestWin": "Fastest Win",
-    "finalAssists": "Final Assists",
-    "finalDeaths": "Final Deaths",
-    "finalKills": "Final Kills",
-    "firstLogin": "First Login",
+    "expGained": "EXP obținut",
+    "extraUltimates": "Ultimate extra",
+    "fastestDetectiveWin": "Câștig cel mai rapid ca Detectiv",
+    "fastestMurdererWin": "Cel mai rapid win ca Murderer",
+    "fastestWin": "Cel mai rapid câștig",
+    "finalAssists": "Ucideri Finale Asistate",
+    "finalDeaths": "Decese Finale",
+    "finalKills": "Ucideri Finale",
+    "firstLogin": "Prima Conectare",
     "fkdr": "FKDR",
-    "forcefieldTime": "Forcefield Time",
-    "fortune": "Fortune",
-    "friends": "Friends",
-    "game": "Game",
-    "game-total": "{{game}} Total",
-    "gamesPlayed": "Games Played",
-    "giftsFound": "Gifts Found",
-    "giftsSent": "Gifts Sent",
-    "goals": "Goals",
+    "forcefieldTime": "Timpul câmpului de forță",
+    "fortune": "Bogăție",
+    "friends": "Prieteni",
+    "game": "Joc",
+    "game-total": "Total {{game}}",
+    "gamesPlayed": "Jocuri jucate",
+    "giftsFound": "Cadouri găsite",
+    "giftsSent": "Cadouri trimise",
+    "goals": "Goluri",
     "godfather": "Godfather",
-    "godlikes": "Godlikes",
-    "gold": "Gold",
-    "goldPickedUp": "Gold Picked Up",
-    "goldRate": "Gold Rate",
-    "goldTrophies": "Gold Trophies",
-    "grandPrixTokens": "GP Tokens",
+    "godlikes": "Godlike-uri",
+    "gold": "Aur",
+    "goldPickedUp": "Aur cules",
+    "goldRate": "Rata de aur",
+    "goldTrophies": "Trofeuri de aur",
+    "grandPrixTokens": "Tokene GP",
     "guild": {
-      "averageMemberGexp": "Average Member GEXP",
-      "createdOn": "Created On",
-      "daily": "Daily",
+      "averageMemberGexp": "Media GEXP Membru",
+      "createdOn": "Creat pe",
+      "daily": "Zilnic",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
-      "date": "Date",
+      "date": "Dată",
       "gexp": "GEXP",
       "guild": "Guild",
-      "guildMaster": "Guild Master",
-      "joinedAt": "Joined At",
-      "level": "Guild Level",
-      "members": "Guild Members",
-      "monthly": "Monthly",
+      "guildMaster": "Maestru al Guild-ului",
+      "joinedAt": "S-a alăturat pe",
+      "level": "Nivel Guild",
+      "members": "Membrii Guild-ului",
+      "monthly": "Lunar",
       "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
-      "quests": "Guild Quests",
-      "rank": "Guild Rank",
-      "scaledGexp": "Scaled GEXP",
-      "weekly": "Weekly",
+      "quests": "Misiunile Guild-ului",
+      "rank": "Clasament Guild",
+      "scaledGexp": "GEXP dimensionat",
+      "weekly": "Săptămânal",
       "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
     },
-    "hat": "Hat",
-    "heads": "Heads",
-    "headsEaten": "Heads Eaten",
-    "headshotKills": "Headshot Kills",
-    "headshots": "Headshots",
-    "headstart": "Headstart",
-    "healing": "Healing",
-    "heroWins": "Hero Wins",
-    "hidden": "Hidden",
-    "hiderWins": "Hider Wins",
-    "highestKillstreak": "Highest Killstreak",
-    "highestScoreFinals": "Finals Personal Best",
-    "highestScoreQualifications": "Qualifiers Personal Best",
-    "highestStreak": "Highest Streak",
-    "hits": "Hits",
-    "humans-killed": "Humans Killed",
-    "infectedWins": "Infected Wins",
-    "iron": "Iron",
+    "hat": "Pălărie",
+    "heads": "Capete",
+    "headsEaten": "Capete Mâncate",
+    "headshotKills": "Ucideri în cap",
+    "headshots": "Șuturi în Cap",
+    "headstart": "Avans",
+    "healing": "Vindecare",
+    "heroWins": "Eroul Câștigă",
+    "hidden": "Ascuns",
+    "hiderWins": "Ascunzătorul Câștigă",
+    "highestKillstreak": "Cel mai mare Killstreak",
+    "highestScoreFinals": "Finale Record personal",
+    "highestScoreQualifications": "Calificări Record personal",
+    "highestStreak": "Cel mai mare Streak",
+    "hits": "Lovituri",
+    "humans-killed": "Oamenii omorâți",
+    "infectedWins": "Victorii infectate",
+    "iron": "Fier",
     "karma": "Karma",
     "kdr": "KDR",
-    "kicks": "Kicks",
-    "kills": "Kills",
-    "killsAsInfected": "Kills as Infected",
-    "killsAsMurderer": "Kills As Murderer",
-    "killsAsSurvivor": "Kills as Survivor",
-    "killstreaks": "Killstreaks",
-    "kit": "Current Kit",
+    "kicks": "Lovituri",
+    "kills": "Omoruri",
+    "killsAsInfected": "Ucideri ca infectat",
+    "killsAsMurderer": "Omoruri ca Murderer",
+    "killsAsSurvivor": "Omoruri ca supravietuitor",
+    "killstreaks": "Killstreak-uri",
+    "kit": "Kit Curent",
     "kwr": "KWR",
-    "lapsCompleted": "Laps",
-    "lastAction": "Last Action",
-    "lastActionTime": "Last Action Time",
-    "lastAliveGames": "Times Last Alive",
-    "lastGame": "Last Game",
-    "lastLogin": "Last Login",
-    "layers": "Layers",
-    "level": "Level",
-    "levelsGained": "Levels Gained",
-    "loginTime": "Login Time",
-    "logoutTime": "Logout Time",
-    "lootChests": "Loot Chests",
-    "losses": "Losses",
-    "magicalChests": "Magical Chests",
-    "magicalKeys": "Magical Keys",
-    "map": "Map",
-    "mastery": "Mastery",
-    "maxPoints": "Max Score",
-    "maxWave": "Max Wave",
-    "mode": "Mode",
-    "mostVampireKills": "Most Vampire Kills",
-    "mounts": "Mounts",
-    "murdererWins": "Murderer Wins",
-    "mysticsEnchanted": "Mystics Enchanted",
-    "mythic-favor": "Mythic Favor",
-    "networkLevel": "Network Level",
-    "objectives": "Objectives",
-    "offensive": "Offensive",
+    "lapsCompleted": "Tururi",
+    "lastAction": "Ultima Acțiune",
+    "lastActionTime": "Ultimul timp de acțiune",
+    "lastAliveGames": "Ultimele Timpuri în viață",
+    "lastGame": "Ultimul joc",
+    "lastLogin": "Ultima conectare",
+    "layers": "Straturi",
+    "level": "Nivel",
+    "levelsGained": "Nivele Obținute",
+    "loginTime": "Timp conectat",
+    "logoutTime": "Timp de deconectare",
+    "lootChests": "Loot Cufere",
+    "losses": "Pierderi",
+    "magicalChests": "Cufere magice",
+    "magicalKeys": "Chei Magice",
+    "map": "Hartă",
+    "mastery": "Măestrie",
+    "maxPoints": "Scor Maxim",
+    "maxWave": "Val Maxim",
+    "mode": "Mod",
+    "mostVampireKills": "Cele mai multe ucideri de vampiri",
+    "mounts": "Monturi",
+    "murdererWins": "Victorii din Murderer",
+    "mysticsEnchanted": "Mistice Enchantate",
+    "mythic-favor": "Favor mitic",
+    "networkLevel": "Nivel rețea",
+    "objectives": "Obiective",
+    "offensive": "Ofensive",
     "offline": "Offline",
     "online": "Online",
-    "opals": "Opals",
-    "overallWins": "Overall Wins",
-    "pingRange": "Ping Range",
-    "playtime": "Playtime",
-    "points": "Points",
-    "poopCollected": "Poop Collected",
-    "powerKicks": "Power Kicks",
-    "powerupActivations": "Powerup Activations",
-    "powerups": "Powerups",
+    "opals": "Opale",
+    "overallWins": "Câștiguri globale",
+    "pingRange": "Interval Ping",
+    "playtime": "Timpul de joacă",
+    "points": "Puncte",
+    "poopCollected": "Căcat Colectat",
+    "powerKicks": "Lovituri cu putere",
+    "powerupActivations": "Activări Powerup",
+    "powerups": "Power-upuri",
     "prefix": "Prefix",
-    "prevent": "Prevent",
+    "prevent": "Prevenire",
     "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "goldTrophy": "Gold Trophy Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "win": "Win Progress"
+      "exp": "Progres EXP",
+      "gexp": "Progres GEXP",
+      "goldTrophy": "Progresul Trofeului de aur",
+      "kill": "Progres de ucis",
+      "score": "Progresul scorului",
+      "win": "Progres de castigare"
     },
-    "quests": "Quests",
-    "ranksGifted": "Ranks Gifted",
-    "rebelKills": "Attacker Kills",
+    "quests": "Quest-uri",
+    "ranksGifted": "Ranguri cadou",
+    "rebelKills": "Uciderile ca Atacator",
     "renown": "Renown",
-    "roundWins": "Round Wins",
-    "rune": "Rune",
-    "score": "Score",
-    "seekerWins": "Seeker Wins",
-    "shotAccuracy": "Shot Accuracy",
-    "shotsFired": "Shots Fired",
-    "silver": "Silver",
-    "silverTrophies": "Silver Trophies",
-    "soloWins": "Solo Wins",
-    "souls": "Souls",
-    "stampLevel": "Coin Conversions",
-    "starsEarned": "Stars Earned",
-    "started": "Started",
-    "status": "Status",
-    "suicides": "Suicides",
-    "superVotes": "Super Votes",
-    "superluck": "Superluck",
-    "support": "Support",
-    "survivorWins": "Survivor Wins",
-    "tags": "Tags",
-    "tauntsUsed": "Taunts Used",
-    "thrownKnifeKills": "Thrown Knife Kills",
-    "title": "Title",
-    "tokens": "Tokens",
+    "roundWins": "Victorii Runde",
+    "rune": "Rună",
+    "score": "Scor",
+    "seekerWins": "Câștiguri ca Căutător",
+    "shotAccuracy": "Precizia șuturilor",
+    "shotsFired": "Şuturi trase",
+    "silver": "Argint",
+    "silverTrophies": "Trofeuri de argint",
+    "soloWins": "Câştiguri Singur",
+    "souls": "Suflete",
+    "stampLevel": "Conversii din monede",
+    "starsEarned": "Stele câștigate",
+    "started": "Început",
+    "status": "Stare",
+    "suicides": "Sinucideri",
+    "superVotes": "Super voturi",
+    "superluck": "Super-noroc",
+    "support": "Asistență",
+    "survivorWins": "Câștiguri ca Supraviețuitor",
+    "tags": "Tag-uri",
+    "tauntsUsed": "Taunturi utilizate",
+    "thrownKnifeKills": "Ucideri cu Cuțite Aruncate",
+    "title": "Titlu",
+    "tokens": "Token-uri",
     "total": "Total",
-    "totalTrophies": "Total Trophies",
-    "trail": "Trail",
-    "transfusion": "Transfusion",
-    "trapKills": "Trap Kills",
-    "trigger": "Trigger",
-    "tripleShot": "Triple Shot",
-    "trophyRate": "Trophy Rate",
+    "totalTrophies": "Total trofee",
+    "trail": "Urme",
+    "transfusion": "Transfuzie",
+    "trapKills": "Omorâri cu Capcane",
+    "trigger": "Declanșare",
+    "tripleShot": "Triplu de focuri",
+    "trophyRate": "Rata Trofeului",
     "ultimate": "Ultimate",
-    "ultimatesCrafted": "Ultimates Crafted",
-    "utility": "Utility",
-    "vampires-killed": "Vampires Killed",
-    "version": "Version",
-    "votes": "Votes",
-    "wallsFaced": "Walls Faced",
-    "wins": "Wins",
+    "ultimatesCrafted": "Ultimate craftate",
+    "utility": "Utilități",
+    "vampires-killed": "Vampiri omorâți",
+    "version": "Versiune",
+    "votes": "Voturi",
+    "wallsFaced": "Pereți fațați",
+    "wins": "Câștiguri",
     "winstreak": "Winstreak",
-    "witherDamage": "Wither Damage",
-    "witherKills": "Wither Kills",
+    "witherDamage": "Damage Wither",
+    "witherKills": "Omorături Wither",
     "wlr": "WLR",
-    "wool": "Wool",
-    "woolCaptures": "Wool Captures",
-    "woolPlaced": "Wool Placed",
-    "zombieKills": "Zombie Kills",
-    "potionsBrewed": "Potions Brewed"
+    "wool": "Lână",
+    "woolCaptures": "Capturi Lână",
+    "woolPlaced": "Lână plasată",
+    "zombieKills": "Omorături Zombi",
+    "potionsBrewed": "Poţiuni preparate"
   },
   "tips": {
-    "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
-    "invite": "$t(emojis:socials.discord) Click **[here](<https://statsify.net/invite>)** to invite Statsify to your own server!",
-    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** offers additional features such as personalized profile badges. Find the full list of benefits **[here](<https://statsify.net/premium>)**!",
-    "rankings": "$t(emojis:logos.iron) View your top leaderboard positions with **[Statsify Premium](<https://statsify.net/premium>)** by using `/rankings`",
-    "verify": "$t(emojis:check) Run `/verify` to run commands without inputting your username as well as receive **10% lower cooldowns**"
+    "discord": "$t(emojis:socials.discord) Alătură-te serverului de discord **$t(socials.discord)** și obține **20% mai mic cooldown** $t(emojis:heart)",
+    "invite": "$t(emojis:socials.discord) Click **[here](<https://statsify.net/invite>)** pentru a invita Statsify la propriul tău server!",
+    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** oferă caracteristici suplimentare precum insigne de profil personalizate. Găsiți lista completă de beneficii [here](<https://statsify.net/premium>)!",
+    "rankings": "$t(emojis:logos.iron) Vizualizați pozițiile tale de top în clasament cu **[Statsify Premium](<https://statsify.net/premium>)** folosind `/rankings`",
+    "verify": "$t(emojis:check) Rulează `/verify` pentru a rula comenzi fără a vă pune numele de utilizator și de a primi **10% cooldown mai mic**"
   },
-  "unknown": "Unknown",
+  "unknown": "Necunoscut",
   "verification": {
     "alreadyVerified": {
-      "description": "You are already linked to a Minecraft account. Run `/unverify` to unlink your Minecraft account.",
-      "title": "Already Verified"
+      "description": "Sunteți deja conectat la un cont de Minecraft. Executați `/unverify` pentru a vă deconecta contul Minecraft.",
+      "title": "Deja verificat"
     },
     "invalidCode": {
       "description": "$t(verification.noCode.description)",
-      "title": "Invalid Verification Code"
+      "title": "Cod de verificare invalid"
     },
     "noCode": {
-      "description": "**How to verify**\n`1.` Open Minecraft and go to the server list\n`2.` Connect to `verify.statsify.net` and copy the code displayed\n`3.` Head back to discord and run `/verify code:XXXX`",
-      "title": "Missing Verification Code"
+      "description": "** Cum să te verifici**\n`1.` Deschide Minecraft și dute la lista de servere\n`2.` Conectează-te la `verify.statsify.net` și copiază codul arătat\n`3.` Dute înapoi pe discord si executează `/verify code:XXXX`",
+      "title": "Lipsește codul de verificare"
     },
     "notVerified": {
-      "description": "You have to be verified before you are able to unverify!",
-      "title": "Not Verified"
+      "description": "Trebuie să fiți verificat înainte de a putea să vă neverificați!",
+      "title": "Neverificat"
     },
     "requiredVerification": {
-      "description": "To use this command you must be verified. Run `/verify` to verify your account.",
-      "title": "Verification Required"
+      "description": "Pentru a folosi această comandă trebuie să fiți verificat. Executați `/verify` pentru a vă verifica.",
+      "title": "Verificare necesară"
     },
-    "successfulUnverification": "Successfully unverified your account!",
-    "successfulVerification": "You are now verified to **{{displayName}}**"
+    "successfulUnverification": "Contul tău a fost neverificat cu succes!",
+    "successfulVerification": "Acum ești verificat la **{{displayName}}**"
   }
 }
