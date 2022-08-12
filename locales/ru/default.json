@@ -343,15 +343,15 @@
       "title": "Требуется более высокий уровень"
     },
     "invalidGuild": {
-      "description_id": "A guild with the id of `{{tag}}` could not be found!",
-      "description_name": "A guild by the name of `{{tag}}` could not be found!",
-      "description_player": "A guild with the player `{{tag}}` could not be found!",
+      "description_id": "Гильдия с id `{{tag}}` не может быть найдена!",
+      "description_name": "Гильдия под названием `{{tag}}` не может быть найдена!",
+      "description_player": "Гильдия с игроком по имени `{{tag}}` не может быть найдена!",
       "title": "Неверная гильдия"
     },
     "invalidPlayer": {
-      "description_username": "A player by the username of `{{tag}}` could not be found!",
-      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
-      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
+      "description_username": "Игрок по имени `{{tag}}` не может быть найден!",
+      "description_uuid": "Игрок с UUID `{{tag}}` не может быть найден!",
+      "description_discordId": "Игрок с Discord id `{{tag}}` не может быть найден!",
       "title": "Неверный игрок"
     },
     "invalidResetTime": {
@@ -737,7 +737,7 @@
     "woolCaptures": "Шерсти захвачено",
     "woolPlaced": "Шерсти размещено",
     "zombieKills": "Зомби убито",
-    "potionsBrewed": "Potions Brewed"
+    "potionsBrewed": "Зелий сварено"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Присоединяйтесь к нам**$t(socials.discord)**, и получайте **перезарядку на 20% ниже** $t(emojis:heart)",
