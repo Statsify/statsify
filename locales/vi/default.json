@@ -30,7 +30,7 @@
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
-    "cape": "View someone's Minecraft and Optifine capes",
+    "cape": "Xem thông tin một ai đó trong Minecraft và Optifine Capes",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
     "close": "Close the current support ticket",
     "colors": "Một danh sách mã màu của Minecraft",
@@ -184,72 +184,72 @@
     "text": "Tạo chữ cái Minecraft",
     "theme": "Change your theme for every profile",
     "theme-boxes": "Thay đổi giao diện của các hồ sơ",
-    "theme-font": "Change the font of the profiles",
+    "theme-font": "Thay đổi kiểu chữ của hồ sơ",
     "theme-footer": "Customize your profile's footer",
-    "theme-footer-icon": "Change your profile's footer icon",
-    "theme-footer-message": "Change your profile's footer message. You can use https://rgb.birdflop.com to create text gradients.",
-    "theme-footer-reset": "Reset your profile's footer",
-    "theme-palette": "Change the color palette of the profiles",
-    "theme-view": "View your current profile theme",
+    "theme-footer-icon": "Thay đổi icon bàn chân của hồ sơ của bạn",
+    "theme-footer-message": "Thay đổi tin nhắn bàn chân của hồ sơ bạn.Bạn có thể sài https://rgb.birdflop.com để tạo ra chữ dốc.",
+    "theme-footer-reset": "Làm lại hồ sơ bàn chân của bạn",
+    "theme-palette": "Thay đổi bảng màu của hồ sơ của bạn",
+    "theme-view": "Xem ảnh bìa hiện tại của hồ sơ của bạn",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
     "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
-    "unverify": "Unlink your Discord and Minecraft accounts",
+    "unverify": "Hủy liên kết tài khoản Discord và Minecraft của bạn",
     "user": "View someone's Statsify user info",
-    "uuid": "Get someone's Minecraft UUID",
+    "uuid": "Lấy Minecraft UUID của một ai đó",
     "vampirez": "$t(commands.hypixel-command, { \"name\": \"VampireZ\" })",
-    "verify": "Link your Discord and Minecraft accounts",
+    "verify": "Liên kết tài khoản Discord và Minecraft của bạn",
     "walls": "$t(commands.hypixel-command, { \"name\": \"Walls\" })",
     "warlords": "$t(commands.hypixel-command, { \"name\": \"Warlords\" })",
-    "watchdog": "View Hypixel Watchdog ban counts",
+    "watchdog": "Xem số lượng mà Hypixel Watchdog đã ban",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games"
   },
   "config": {
     "badge": {
-      "profile": "This is how your badge will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your badge.",
-      "set": "$t(emojis:config.success) Successfully updated your badge.",
-      "view": "$t(emojis:config.view) Your current badge:"
+      "profile": "Đây sẽ là danh hiệu mà bạn thấy trong hồ sơ của bạn",
+      "reset": "$t(emojis:config.reset) Đã đặt lại danh hiệu của bạn thành công.",
+      "set": "$t(emojis:config.success) Đã cập nhật danh hiệu của bạn thành công.",
+      "view": "$t(emojis:config.view) Danh hiệu hiện tại của bạn:"
     },
     "footer": {
-      "profile": "This is how your footer will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your footer.",
-      "set": "$t(emojis:config.success) Successfully updated your footer."
+      "profile": "Đây sẽ là những bàn chân mà bạn sẽ nhìn thấy trên hồ sơ của bạn",
+      "reset": "$t(emojis:config.reset) Đã đặt lại bàn chân của bạn thành công.",
+      "set": "$t(emojis:config.success) Đã thành công cập nhật bàn chân của bạn."
     },
     "language": {
-      "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
+      "description": "$t(emojis:config.success) Đã thành công cập nhật ngôn ngữ của bạn thành {{locale}}."
     },
     "theme": {
-      "profile": "This is how your theme will look on your profiles",
-      "set": "$t(emojis:config.success) Successfully updated your theme.",
-      "view": "$t(emojis:config.view) Your current theme:"
+      "profile": "Đây sẽ là những ảnh bìa mà bạn thấy trên hồ sơ của bạn",
+      "set": "$t(emojis:config.success) Đã thay đổi thành công ảnh bìa của bạn.",
+      "view": "$t(emojis:config.view) Ảnh bìa hiện tại của bạn:"
     }
   },
   "cooldown": {
-    "description": "Please wait `{{time}}` before reusing `{{command}}`.\n\nLearn how to reduce cooldowns [here](https://statsify.net/premium)",
-    "title": "Active Cooldown"
+    "description": "Hãy chờ {{time}} trước khi sài lại {{command}}\nMuốn tìm hiểu cách để chờ nhanh hơn [here](https://statsify.net/premium)",
+    "title": "Thời gian chờ hoạt động"
   },
   "embeds": {
     "available": {
-      "blocked": "Unless the name is temporarily or permanently blocked by Mojang.",
-      "invalidCharacters": "Invalid Characters",
-      "tooLong": "Too Long"
+      "blocked": "Trừ khi tên đó đã bị chặn tạm thời hoặc vĩnh viễn bởi Mojang.",
+      "invalidCharacters": "Nhân vật sai",
+      "tooLong": "Quá dài"
     },
     "colors": {
-      "bold": "Bold",
-      "color": "Color",
-      "italic": "Italic",
-      "mainHex": "Main Hex",
-      "obfuscated": "Obfuscated",
-      "reset": "Reset",
-      "shadowHex": "Shadow Hex",
-      "strikethrough": "Strikethrough",
-      "title": "Minecraft Color Codes",
-      "underline": "Underline"
+      "bold": "Chữ đậm",
+      "color": "Màu",
+      "italic": "Chữ nghiêng",
+      "mainHex": "Mã màu chính",
+      "obfuscated": "Xáo trộn",
+      "reset": "Đặt lại",
+      "shadowHex": "Mã màu Shadow",
+      "strikethrough": "Gạch ngang",
+      "title": "Mã màu minecraft",
+      "underline": "Gạch chân"
     },
     "deletePlayer": {
       "description": "**{{displayName}}** has been removed from the database and leaderboards.",
@@ -264,36 +264,36 @@
       "title": "Force Verified"
     },
     "gameCounts": {
-      "title": "Hypixel Game Counts"
+      "title": "Số trò chơi Hypixel"
     },
     "gtbhelper": {
-      "title": "Possible GTB Solutions"
+      "title": "Có thể có giải pháp cho GTB"
     },
     "help": {
       "games": {
-        "description": "Statsify supports the majority of games offered on Hypixel. To check your stats in a game run `/[game]`. For example you can run `/bedwars` to check your BedWars stats.",
-        "title": "Games"
+        "description": "Statsify hỗ trợ hầu hết các trò chơi có trên Hypixel. Để kiểm tra thông tin của bạn trong một trò chơi, sài lệnh `/[game]`. Ví dụ bạn có thể sài `/bedwars` để kiểm tra thông tin về trò chơi BedWars của bạn.",
+        "title": "Những trò chơi"
       },
       "historical": {
-        "description": "Statsify lets you check your daily, weekly, and monthly stats through `/daily`, `/weekly` and `/monthly`. If you missed a reset you can view them by running `/yesterday`, `/lastweek`, and `/lastmonth`. ",
-        "title": "Historical"
+        "description": "Statsify giúp bạn kiểm tra thông tin hằng ngày, hằng tuần, và hằng tháng qua câu lệnh `/daily`, `/weekly` và `/monthly`. Nếu như bạn lỡ quên bạn có thể xem lại bằng cách sài `/yesterday`, `/lastweek`, và `/lastmonth`. ",
+        "title": "Lịch sử"
       },
       "leaderboards": {
-        "description": "Statsify offers thousands of leaderboards through the `/leaderboard` command. Run `/leaderboard`, then pick the gamemode, and pick a leaderboard to view. You can hit the search button to search for a specific player or position. You can also hit the up and down buttons to view more pages.",
-        "title": "Leaderboards"
+        "description": "Statsify đưa ra hằng nghìn bảng xếp hạng qua câu lệnh `/leaderboard`. Sài `/leaderboard`, sau đó chọn chế độ trò chơi, và chọn một bảng xếp hạng để xem. Bạn có thể ấn vô nút tìm kiếm để tìm một người chơi hoặc vị trí nhất định. Bạn cũng có thể ấn nút lên hoặc xuống để xem thêm trang khác.",
+        "title": "Những bảng xếp hạng"
       },
       "minecraft": {
-        "description": "You can view general Minecraft information such as skins, UUIDs, capes through `/skin`, `/uuid`, and `/cape` respectively. Statsify also has commands to generate Minecraft text through `/text`. View Minecraft colors through `/colors` and preview Minecraft servers through `/server`.",
+        "description": "Bạn có thể xem các thông tin cơ bản của Minecraft như là skins, UUIDs, capes thông qua lệnh tương ứng `/skin`,`/uuid`, và `/cape`. Statsify cũng có câu lệnh để tạo ra các kiểu chữ của minecraft bằng lệnh `/text`. Xem màu của Minecraft qua lệnh `/colors` và xem trước các máy chủ Minecraft qua lệnh `/server`.",
         "title": "Minecraft"
       },
-      "title": "Statsify Help"
+      "title": "Giúp đỡ từ Statsify"
     },
     "invite": {
-      "description": "Click the link below to invite Statsify to your discord server.",
-      "title": "Statsify Links"
+      "description": "Ấn vào đường dẫn bên dưới để mời Statsify tới máy chủ discord của bạn.",
+      "title": "Đường dẫn Statsify"
     },
     "ping": {
-      "contributors": "Contributors",
+      "contributors": "Những người đóng góp",
       "core": "Core",
       "pong": "Pong!",
       "title": "Những người làm Statsify",
@@ -384,28 +384,28 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "There is no more leaderboard data at this position!",
-      "title": "No Leaderboard Data At This Position"
+      "description": "Không có một dữ liệu về bảng xếp hạng trong vị trí này!",
+      "title": "Không có dữ liệu bảng danh sách nào ở thời điểm này"
     },
     "leaderboardInvalidPosition": {
-      "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
-      "title": "Invalid Position"
+      "description": "Vị trị trong bảng xếp hạng mà bạn nhập không hợp lệ. Hãy nhập một số lớn hơn 1.",
+      "title": "Vị trí không hợp lệ"
     },
     "leaderboardNotFound": {
-      "description": "We can't find the `leaderboard` you are looking for!",
-      "title": "Leaderboard Not Found"
+      "description": "Chúng tôi không thể tìm thấy `leaderboard` mà bạn đang tìm kiếm!",
+      "title": "Bảng xếp hạng không tìm thấy"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account.",
-      "title": "Missing Verification"
+      "description": "<@{{tag}}> chưa được **verified**. Để đề cập họ, họ phải chạy `/verify` để xác minh tài khoản của họ.",
+      "title": "Người này thiếu xác minh"
     },
     "missingPlayerVerification": {
       "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
-      "description": "To be able to run commands without supplying your username, you must be verified. To verify run and complete `/verify` and then try again.",
-      "title": "Missing Verification"
+      "description": "Để chạy một câu lệnh mà không cần đưa tên tài khoản của bạn, bạn phải xác minh. Để xác minh, chạy và hoàn thành câu lệnh `/verify` và sau đó thử lại.",
+      "title": "Thiếu xác minh"
     },
     "netheriteOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -413,50 +413,50 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
     },
     "noCape": {
-      "description": "**{{username}}** doesn't have any capes!",
-      "title": "Missing Cape"
+      "description": "**{{username}}** không có một cái cape nào!",
+      "title": "Thiếu Cape"
     },
     "noFriends": {
-      "description": "**{{displayName}}** has no friends $t(emojis:sad)! :(",
-      "title": "Friends Not Found"
+      "description": "**{{displayName}}** không có một người bạn nào $t(emojis:sad)! :(",
+      "title": "Người bạn không được tìm thấy"
     },
     "noGTBSolutions": {
-      "description": "We couldn't find any solutions for the provided hint!",
-      "title": "No Guess The Build Solutions"
+      "description": "Chúng tôi không thể tìm ra bất cứ giải pháp nào cho các gợi ý được đưa ra!",
+      "title": "Không có giải pháp cho Guess The Build"
     },
     "noMutuals": {
-      "description": "**{{displayNameOne}}** and **{{displayNameTwo}}** have no mutual friends!",
-      "title": "No Mutuals"
+      "description": "**{{displayNameOne}}** và **{{displayNameTwo}}** không có bạn chung nào!",
+      "title": "Không có chung"
     },
     "noRankings": {
-      "description": "**{{displayName}}** has no rankings!",
-      "title": "No Rankings"
+      "description": "**{{displayName}}** không có cấp bậc nào!",
+      "title": "Không cấp bậc"
     },
     "noRecentGames": {
-      "description": "**{{displayName}}**'s recent games could not be found!",
-      "title": "Recent Games Not Found"
+      "description": "Game hiện tại của **{{displayName}}** không được tìm thấy!",
+      "title": "Game hiện tại không được tìm thấy"
     },
     "noStatus": {
-      "description": "**{{displayName}}**'s Hypixel status could not be found!",
-      "title": "Status Not Found"
+      "description": "Trạng thái Hypixel của **{{displayName}}** không được tìm thấy!",
+      "title": "Trạng thái không tìm thấy"
     },
     "playerLeaderboardNotFound": {
-      "description": "We couldn't find the `player` you were looking for!",
-      "title": "Invalid Player"
+      "description": "Chúng tôi không thể tìm thấy `player` mà bạn đang tìm kiếm!",
+      "title": "Người chơi không hợp lệ"
     },
     "playerNotInGuild": {
-      "description": "**{{displayName}}** is not in a guild!",
-      "title": "Invalid Guild"
+      "description": "**{{displayName}}** không ở trong đoàn!",
+      "title": "Đoàn không hợp lệ"
     },
     "premiumRequired": {
-      "description": "Check out all the available features [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what command does/changes.",
-      "title": "Statsify {{tier}} is required to run this command"
+      "description": "Hãy xem tất cả các tính năng đang có ở [here](https://statsify.net/premium).",
+      "preview": "Hãy xem tất cả các tính năng đang có ở [here](https://statsify.net/premium). Ở dưới là một số phần xem trước cách hoạt động của các câu lệnh.",
+      "title": "Cần có Statsify {{tier}} để chạy câu lệnh này"
     },
     "staffOnly": {
-      "description": "This command is only available to Statsify staff members!",
-      "preview": "Below is a small preview of how the command functions",
-      "title": "Staff Only"
+      "description": "Câu lệnh này chỉ dành cho những nhân viên của Statsify!",
+      "preview": "Ở dưới là một số nhỏ phần xem trước về các chức năng của câu lệnh",
+      "title": "Chỉ dành cho nhân viên"
     },
     "tagNotFound": {
       "description": "The tag you provided was not found!",
@@ -467,55 +467,55 @@
       "title": "Ticket Already Exists"
     },
     "unknown": {
-      "description": "Something went wrong, please try again later. If this persists, report this in our [Discord](<https://statsify.net/discord>).",
-      "title": "An Unknown Error Occurred"
+      "description": "Có gì đó không đúng, hãy thử lại lần sau.Nếu vẫn tái diễn, hãy báo cáo nó ở trong [Discord](<https://statsify.net/discord>) của chúng tôi.",
+      "title": "Có một lỗi đã xảy ra không thể xác định"
     },
     "unsupportedFileType": {
-      "description": "The file you uploaded is not a supported file type for this command!",
-      "title": "Unsupported File Type"
+      "description": "Tệp mà bạn vừa đăng không ở trong những kiểu tệp được hỗ trợ cho câu lệnh này!",
+      "title": "Kiểu tệp không được hỗ trợ"
     }
   },
   "historical": {
-    "aboutResetting": "Click the reset button below to reset your historical stats every day **at this time**.\n\n**WARNING**: This will delete all of your historical stats and **cannot be undone**. \nIf you want to be able to reset at a specific time check out $t(socials.premium).",
-    "aboutResettingPremium": "Click the reset button below to reset your historical stats. \n\n**WARNING:** This will delete all of your historical stats and **cannot be undone**.",
+    "aboutResetting": "Ấn vào nút reset ở dưới sẽ cài lại những lịch sử thông tin của bạ hằng ngày **at this time**.\n**WARNING**:Cái này sẽ xóa tất cả lịch sử thông tin và **cannot be undone**. Nếu bạn muốn cài lại ở một thời gian nhất định thì kiểm tra $t(socials.premium).",
+    "aboutResettingPremium": "Ấn vào nút reset ở dưới để cài lại thông tin lịch sử của bạn\n**WARNING:** Nó sẽ xóa tất cả thông tin lịch sử của bạn và **cannot be undone**.",
     "modal": {
-      "resetTime": "Choose a Reset Time",
-      "timezone": "Choose a Timezone",
-      "title": "Historical Reset Time"
+      "resetTime": "Chọn một thời gian để cài lại",
+      "timezone": "Chọn một múi giờ",
+      "title": "Thời gian cài lại lịch sử"
     },
-    "new": "**{{displayName}}**'s historical stats have been checked for the first time on Statsify. Their stats will now be updated at this time every day.",
+    "new": "Thông tin lịch sử của **{{displayName}}** đã được kiểm tra ở lần đầu tiên trên Statsify. Thông tin của họ sẽ được cập nhật từ bây giờ hằng ngày.",
     "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
-    "resetButton": "Click to Reset",
-    "setResetTime": "Set your reset time to <t:{{time}}:t>."
+    "resetButton": "Ấn đề cài lại",
+    "setResetTime": "Cài lại thời gian của bạn thành <t:{{time}}:t>."
   },
   "leaderboard": {
     "guildInput": {
-      "label": "Search by a Guild",
-      "placeholder": "Enter a guild's name, eg: Quote"
+      "label": "Tìm kiếm bằng một đoàn",
+      "placeholder": "Điền một tên đoàn, ví dụ: Quote"
     },
     "modal": {
-      "title": "Leaderboard Search"
+      "title": "Tìm kiếm bảng xếp hạng"
     },
     "playerInput": {
-      "label": "Search by a Player",
-      "placeholder": "Enter a player's name, eg: j4cobi"
+      "label": "Tìm kiếm bằng một người chơi",
+      "placeholder": "Điền tên một người chơi, ví dụ: j4cobi"
     },
     "positionInput": {
-      "label": "Search by a Position",
-      "placeholder": "Enter a position, eg: 5000"
+      "label": "Tìm kiếm bằng một vị trí",
+      "placeholder": "Điền một ví trị, ví dụ: 5000"
     }
   },
   "minecraft": {
-    "available": "Available",
-    "nameHistory": "Name History",
-    "originalName": "Original Name",
+    "available": "Hợp lệ",
+    "nameHistory": "Lịch sử tên",
+    "originalName": "Tên gốc",
     "trimmedUUID": "Trimmed UUID",
-    "unavailable": "Unavailable",
-    "username": "Username",
+    "unavailable": "Không hợp lệ",
+    "username": "Tên người chơi",
     "uuid": "UUID"
   },
   "number": "{{value, number}}",
-  "players": "Players",
+  "players": "Người chơi",
   "socials": {
     "discord": "[Discord](<https://discord.com/invite/5VgxMQY>)",
     "github": "[GitHub](<https://github.com/Statsify/statsify>)",
@@ -524,251 +524,251 @@
     "website": "[Website](https://statsify.net/)"
   },
   "stats": {
-    "achievementPoints": "Achievement Points",
+    "achievementPoints": "Điểm thành tích",
     "adrenaline": "Adrenaline",
-    "assists": "Assists",
+    "assists": "Hỗ trợ",
     "bblr": "BBLR",
-    "bedsBroken": "Beds Broken",
-    "bedsLost": "Beds Lost",
-    "bestRound": "Best Round",
-    "bestTime": "Best Time",
-    "bestWinstreak": "Best Winstreak",
-    "bigShot": "Big Shot",
-    "blocksBroken": "Blocks Broken",
-    "blocksPlaced": "Blocks Placed",
-    "blocksRan": "Blocks Ran",
-    "bombsDefused": "Bombs Defused",
-    "bombsPlanted": "Bombs Planted",
-    "bounty": "Bounty",
-    "bountyKills": "Bounty Kills",
-    "bowKills": "Bow Kills",
-    "boxesPickedUp": "Boxes Collected",
-    "bronzeTrophies": "Bronze Trophies",
-    "candyFound": "Candy Found",
-    "challenges": "Challenges",
-    "class": "Class",
-    "coins": "Coins",
-    "contracts": "Contracts",
-    "correctGuesses": "Correct Guesses",
-    "damage": "Damage",
-    "deaths": "Deaths",
-    "detectiveWins": "Detective Wins",
-    "diamonds": "Diamonds",
-    "doublesWins": "Doubles Wins",
-    "eggsFound": "Eggs Found",
-    "emeralds": "Emeralds",
-    "empireKills": "Defender Kills",
-    "ended": "Ended",
-    "endurance": "Endurance",
-    "event-level": "Event Level",
-    "exp": "EXP",
-    "expGained": "EXP Gained",
-    "extraUltimates": "Extra Ultimates",
-    "fastestDetectiveWin": "Fastest Detective Win",
-    "fastestMurdererWin": "Fastest Murderer Win",
-    "fastestWin": "Fastest Win",
-    "finalAssists": "Final Assists",
-    "finalDeaths": "Final Deaths",
-    "finalKills": "Final Kills",
-    "firstLogin": "First Login",
+    "bedsBroken": "Số giường đã đập",
+    "bedsLost": "Số giường đã mất",
+    "bestRound": "Vòng hay nhất",
+    "bestTime": "Thời gian hay nhất",
+    "bestWinstreak": "Chuối thắng hay nhất",
+    "bigShot": "Cú bắn lớn",
+    "blocksBroken": "Các khối đã bị phá vỡ",
+    "blocksPlaced": "Các khối đã được đặt",
+    "blocksRan": "Các khối đã chạy",
+    "bombsDefused": "Các bom đã được gỡ bỏ",
+    "bombsPlanted": "Các bom đã được đặt",
+    "bounty": "Tiền thưởng",
+    "bountyKills": "Số tiền thưởng khi giết chết",
+    "bowKills": "Số lần giết chết bởi cung",
+    "boxesPickedUp": "Số hộp đã thu thập được",
+    "bronzeTrophies": "Số cúp đồng",
+    "candyFound": "Số kẹo được tìm thấy",
+    "challenges": "Những thử thách",
+    "class": "Cấp",
+    "coins": "Đồng xu",
+    "contracts": "Số contract",
+    "correctGuesses": "Số lần đoán đúng",
+    "damage": "Sức mạnh",
+    "deaths": "Số lần chết",
+    "detectiveWins": "Số lần phe thám tử thắng",
+    "diamonds": "Số kim cương",
+    "doublesWins": "Số lần chơi Đôi thắng",
+    "eggsFound": "Số trứng tìm thấy",
+    "emeralds": "Số ngọc lục bảo",
+    "empireKills": "Số người đã được giết khi làm Defender",
+    "ended": "Đã kết thúc",
+    "endurance": "Sức chịu đựng",
+    "event-level": "Số cấp ở sự kiện",
+    "exp": "Kinh nghiệm",
+    "expGained": "Số kinh nghiệm đã được",
+    "extraUltimates": "Số Ultimates bổ sung",
+    "fastestDetectiveWin": "Trò chơi thắng bằng thám tử nhanh nhất",
+    "fastestMurdererWin": "Trò chơi thắng bằng kẻ giết người nhanh nhất",
+    "fastestWin": "Chiến thắng nhanh nhất",
+    "finalAssists": "Số lần hỗ trợ cuối",
+    "finalDeaths": "Số lần chết cuối",
+    "finalKills": "Số lần giết cuối",
+    "firstLogin": "Lần đăng nhập đầu tiên",
     "fkdr": "FKDR",
-    "forcefieldTime": "Forcefield Time",
-    "fortune": "Fortune",
-    "friends": "Friends",
-    "game": "Game",
-    "game-total": "{{game}} Total",
-    "gamesPlayed": "Games Played",
-    "giftsFound": "Gifts Found",
-    "giftsSent": "Gifts Sent",
-    "goals": "Goals",
-    "godfather": "Godfather",
-    "godlikes": "Godlikes",
-    "gold": "Gold",
-    "goldPickedUp": "Gold Picked Up",
-    "goldRate": "Gold Rate",
-    "goldTrophies": "Gold Trophies",
-    "grandPrixTokens": "GP Tokens",
+    "forcefieldTime": "Thời gian trường lực",
+    "fortune": "Gia tài",
+    "friends": "Số bạn",
+    "game": "Trò chơi",
+    "game-total": "Tổng số {{game}}",
+    "gamesPlayed": "Số trò chơi đã chơi",
+    "giftsFound": "Số quà đã tìm thấy",
+    "giftsSent": "Số quà đã gửi",
+    "goals": "Số goal",
+    "godfather": "Số lần thành Godfather",
+    "godlikes": "Số lần thành Godlikes",
+    "gold": "Vàng",
+    "goldPickedUp": "Số vàng nhặt được",
+    "goldRate": "Tỉ lệ vàng",
+    "goldTrophies": "Số cúp vàng",
+    "grandPrixTokens": "Số GP Token",
     "guild": {
-      "averageMemberGexp": "Average Member GEXP",
-      "createdOn": "Created On",
-      "daily": "Daily",
+      "averageMemberGexp": "Trung bình GEXP của các thành viên",
+      "createdOn": "Tạo ra lúc",
+      "daily": "Hằng ngày",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
-      "date": "Date",
+      "date": "Ngày",
       "gexp": "GEXP",
-      "guild": "Guild",
-      "guildMaster": "Guild Master",
-      "joinedAt": "Joined At",
-      "level": "Guild Level",
-      "members": "Guild Members",
-      "monthly": "Monthly",
+      "guild": "Đoàn",
+      "guildMaster": "Chủ đoàn",
+      "joinedAt": "Vào lúc",
+      "level": "Cấp đoàn",
+      "members": "Thành viên đoàn",
+      "monthly": "Hằng tháng",
       "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
-      "quests": "Guild Quests",
-      "rank": "Guild Rank",
-      "scaledGexp": "Scaled GEXP",
-      "weekly": "Weekly",
+      "quests": "Nhiệm vụ Đoàn",
+      "rank": "Cấp bậc Đoàn",
+      "scaledGexp": "Tỷ lệ GEXP",
+      "weekly": "Hằng tuần",
       "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
     },
-    "hat": "Hat",
-    "heads": "Heads",
-    "headsEaten": "Heads Eaten",
-    "headshotKills": "Headshot Kills",
-    "headshots": "Headshots",
-    "headstart": "Headstart",
-    "healing": "Healing",
-    "heroWins": "Hero Wins",
-    "hidden": "Hidden",
-    "hiderWins": "Hider Wins",
-    "highestKillstreak": "Highest Killstreak",
-    "highestScoreFinals": "Finals Personal Best",
-    "highestScoreQualifications": "Qualifiers Personal Best",
-    "highestStreak": "Highest Streak",
-    "hits": "Hits",
-    "humans-killed": "Humans Killed",
-    "infectedWins": "Infected Wins",
-    "iron": "Iron",
+    "hat": "Mũ",
+    "heads": "Đầu",
+    "headsEaten": "Số đầu đã ăn",
+    "headshotKills": "Số lần giết vào đầu",
+    "headshots": "Bắn vào đầu",
+    "headstart": "Khởi đầu",
+    "healing": "Hồi máu",
+    "heroWins": "Anh hùng thắng",
+    "hidden": "Ẩn",
+    "hiderWins": "Người trốn thắng",
+    "highestKillstreak": "Số lần giết liên tiếp cao nhất",
+    "highestScoreFinals": "Kết quả cuối cùng của cá nhân cao nhất",
+    "highestScoreQualifications": "Vòng loại của cá nhân cao nhất",
+    "highestStreak": "Số lần liên tiếp cao nhất",
+    "hits": "Đánh",
+    "humans-killed": "Số người đã bị giết",
+    "infectedWins": "Người nhiễm thắng",
+    "iron": "Sắt",
     "karma": "Karma",
     "kdr": "KDR",
-    "kicks": "Kicks",
-    "kills": "Kills",
-    "killsAsInfected": "Kills as Infected",
-    "killsAsMurderer": "Kills As Murderer",
-    "killsAsSurvivor": "Kills as Survivor",
-    "killstreaks": "Killstreaks",
-    "kit": "Current Kit",
+    "kicks": "Đá",
+    "kills": "Số lần giết",
+    "killsAsInfected": "Số lần giết bằng người nhiễm",
+    "killsAsMurderer": "Số lần giết chết khi làm kẻ giết người",
+    "killsAsSurvivor": "Số lần giết chết khi làm người sống sót",
+    "killstreaks": "Số chuỗi giết người",
+    "kit": "Bộ dụng cụ hiện tại",
     "kwr": "KWR",
-    "lapsCompleted": "Laps",
-    "lastAction": "Last Action",
-    "lastActionTime": "Last Action Time",
-    "lastAliveGames": "Times Last Alive",
-    "lastGame": "Last Game",
-    "lastLogin": "Last Login",
-    "layers": "Layers",
-    "level": "Level",
-    "levelsGained": "Levels Gained",
-    "loginTime": "Login Time",
-    "logoutTime": "Logout Time",
-    "lootChests": "Loot Chests",
-    "losses": "Losses",
-    "magicalChests": "Magical Chests",
-    "magicalKeys": "Magical Keys",
-    "map": "Map",
-    "mastery": "Mastery",
-    "maxPoints": "Max Score",
-    "maxWave": "Max Wave",
-    "mode": "Mode",
-    "mostVampireKills": "Most Vampire Kills",
-    "mounts": "Mounts",
-    "murdererWins": "Murderer Wins",
-    "mysticsEnchanted": "Mystics Enchanted",
-    "mythic-favor": "Mythic Favor",
-    "networkLevel": "Network Level",
-    "objectives": "Objectives",
-    "offensive": "Offensive",
-    "offline": "Offline",
-    "online": "Online",
+    "lapsCompleted": "Số vòng",
+    "lastAction": "Lần cuối cùng hoạt động",
+    "lastActionTime": "Thời gian lần cuối cùng hoạt động",
+    "lastAliveGames": "Thời gian sống cuối cùng",
+    "lastGame": "Lần chơi cuối",
+    "lastLogin": "Lần đăng nhập cuối",
+    "layers": "Số lớp",
+    "level": "Cấp",
+    "levelsGained": "Số cấp nhận được",
+    "loginTime": "Thời gian đăng nhập",
+    "logoutTime": "Thời gian đăng xuất",
+    "lootChests": "Số rương loot",
+    "losses": "Số lần thua",
+    "magicalChests": "Số rương phép thuật",
+    "magicalKeys": "Số chìa khóa phép thuật",
+    "map": "Bản đồ",
+    "mastery": "Huyền bí",
+    "maxPoints": "Số điểm cao nhất",
+    "maxWave": "Số màn cao nhất",
+    "mode": "Chế độ",
+    "mostVampireKills": "Số lần giết bằng ma cà rồng nhiều nhất",
+    "mounts": "Số lần cưỡi",
+    "murdererWins": "Kẻ giết người thắng",
+    "mysticsEnchanted": "Số đồ Mystic đã phù phép",
+    "mythic-favor": "Số lần ủng hộ Mythic",
+    "networkLevel": "Cấp mạng",
+    "objectives": "Nhiệm vụ",
+    "offensive": "Công kích",
+    "offline": "Ngoại tuyến",
+    "online": "Trực tuyến",
     "opals": "Opals",
-    "overallWins": "Overall Wins",
-    "pingRange": "Ping Range",
-    "playtime": "Playtime",
-    "points": "Points",
-    "poopCollected": "Poop Collected",
-    "powerKicks": "Power Kicks",
-    "powerupActivations": "Powerup Activations",
-    "powerups": "Powerups",
-    "prefix": "Prefix",
-    "prevent": "Prevent",
+    "overallWins": "Tổng số lần thắng",
+    "pingRange": "Số ping",
+    "playtime": "Thời gian chơi",
+    "points": "Điểm",
+    "poopCollected": "Số cứt đã thu thập được",
+    "powerKicks": "Đá sức mạnh",
+    "powerupActivations": "Kích hoạt tăng sức mạnh",
+    "powerups": "Tăng sức mạnh",
+    "prefix": "Chức",
+    "prevent": "Ngăn cản",
     "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "goldTrophy": "Gold Trophy Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "win": "Win Progress"
+      "exp": "Tiến triển kinh nghiệm",
+      "gexp": "Tiến triển GEXP",
+      "goldTrophy": "Tiến triển cúp vàng",
+      "kill": "Tiến triển giết",
+      "score": "Tiến triển điểm",
+      "win": "Tiến triển thắng"
     },
-    "quests": "Quests",
-    "ranksGifted": "Ranks Gifted",
-    "rebelKills": "Attacker Kills",
-    "renown": "Renown",
-    "roundWins": "Round Wins",
+    "quests": "Nhiệm vụ",
+    "ranksGifted": "Số cấp bậc đã cho",
+    "rebelKills": "Số lần giết bằng kẻ tấn công",
+    "renown": "Nổi tiếng",
+    "roundWins": "Số vòng thắng",
     "rune": "Rune",
     "score": "Score",
-    "seekerWins": "Seeker Wins",
-    "shotAccuracy": "Shot Accuracy",
-    "shotsFired": "Shots Fired",
-    "silver": "Silver",
-    "silverTrophies": "Silver Trophies",
-    "soloWins": "Solo Wins",
-    "souls": "Souls",
-    "stampLevel": "Coin Conversions",
-    "starsEarned": "Stars Earned",
-    "started": "Started",
-    "status": "Status",
-    "suicides": "Suicides",
-    "superVotes": "Super Votes",
-    "superluck": "Superluck",
-    "support": "Support",
-    "survivorWins": "Survivor Wins",
-    "tags": "Tags",
-    "tauntsUsed": "Taunts Used",
-    "thrownKnifeKills": "Thrown Knife Kills",
-    "title": "Title",
-    "tokens": "Tokens",
-    "total": "Total",
-    "totalTrophies": "Total Trophies",
-    "trail": "Trail",
-    "transfusion": "Transfusion",
-    "trapKills": "Trap Kills",
-    "trigger": "Trigger",
-    "tripleShot": "Triple Shot",
-    "trophyRate": "Trophy Rate",
-    "ultimate": "Ultimate",
-    "ultimatesCrafted": "Ultimates Crafted",
-    "utility": "Utility",
-    "vampires-killed": "Vampires Killed",
-    "version": "Version",
-    "votes": "Votes",
-    "wallsFaced": "Walls Faced",
-    "wins": "Wins",
-    "winstreak": "Winstreak",
-    "witherDamage": "Wither Damage",
-    "witherKills": "Wither Kills",
+    "seekerWins": "Số lần thắng bằng người tìm",
+    "shotAccuracy": "Tỉ lệ bắn",
+    "shotsFired": "Số lần đã bắn",
+    "silver": "Bạc",
+    "silverTrophies": "Số cúp bạc",
+    "soloWins": "Thắng đơn",
+    "souls": "Linh hồn",
+    "stampLevel": "Số xu chuyển đổi",
+    "starsEarned": "Số sao nhận được",
+    "started": "Bắt đầu",
+    "status": "Trạng thái",
+    "suicides": "Tự tử",
+    "superVotes": "Số siêu bầu chọn",
+    "superluck": "Siêu may mắn",
+    "support": "Hỗ trợ",
+    "survivorWins": "Người sống sót thắng",
+    "tags": "Chạm",
+    "tauntsUsed": "Số sự chế nhạo đã sử dụng",
+    "thrownKnifeKills": "Số lần giết bằng vứt dao",
+    "title": "Tiêu đề",
+    "tokens": "Số token",
+    "total": "Tổng",
+    "totalTrophies": "Tổng cúp",
+    "trail": "Dấu",
+    "transfusion": "Số lần truyền",
+    "trapKills": "Số lần giết bằng bẫy",
+    "trigger": "Kích hoạt",
+    "tripleShot": "Bắn ba lần",
+    "trophyRate": "Tỉ lệ cúp",
+    "ultimate": "Tối thượng",
+    "ultimatesCrafted": "Số đồ tối thượng đã chế tạo",
+    "utility": "Hữu ích",
+    "vampires-killed": "Số ma cà rồng đã bị giết",
+    "version": "Phiên bản",
+    "votes": "Số bình chọn",
+    "wallsFaced": "Số tường đã qua",
+    "wins": "Số thắng",
+    "winstreak": "Thắng liên tiếp",
+    "witherDamage": "Sức mạnh lên Wither",
+    "witherKills": "Số lần giết Wither",
     "wlr": "WLR",
-    "wool": "Wool",
-    "woolCaptures": "Wool Captures",
-    "woolPlaced": "Wool Placed",
-    "zombieKills": "Zombie Kills",
-    "potionsBrewed": "Potions Brewed"
+    "wool": "Len",
+    "woolCaptures": "Số lông đã thu hoạch",
+    "woolPlaced": "Lông đã đặt",
+    "zombieKills": "Số lần giết Thây Ma",
+    "potionsBrewed": "Số thuốc đã làm"
   },
   "tips": {
-    "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
-    "invite": "$t(emojis:socials.discord) Click **[here](<https://statsify.net/invite>)** to invite Statsify to your own server!",
-    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** offers additional features such as personalized profile badges. Find the full list of benefits **[here](<https://statsify.net/premium>)**!",
-    "rankings": "$t(emojis:logos.iron) View your top leaderboard positions with **[Statsify Premium](<https://statsify.net/premium>)** by using `/rankings`",
-    "verify": "$t(emojis:check) Run `/verify` to run commands without inputting your username as well as receive **10% lower cooldowns**"
+    "discord": "$t(emojis:socials.discord) Vô **$t(socials.discord)** của chúng tôi và lấy **20% lower cooldowns** $t(emojis:heart)",
+    "invite": "$t(emojis:socials.discord) Ấn **[here](<https://statsify.net/invite>)** để mời Statsify vào server của bạn!",
+    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** đưa cho bạn những tính năng hấp dẫn như có thể tùy chỉnh danh hiệu hồ sơ.Xem danh sách của tất cả lợi ích **[here](<https://statsify.net/premium>)**!",
+    "rankings": "$t(emojis:logos.iron) Xem vị trí bảng xếp hạng của bạn với **[Statsify Premium] (<https://statsify.net/premium>)** bằng cách sài `/rankings`",
+    "verify": "$t(emojis:check) Chạy `/verify` để chạy câu lệnh không cần nhập tên tài khoản của bạn và cũng như nhận được **10% lower cooldowns**"
   },
-  "unknown": "Unknown",
+  "unknown": "Không xác định",
   "verification": {
     "alreadyVerified": {
-      "description": "You are already linked to a Minecraft account. Run `/unverify` to unlink your Minecraft account.",
-      "title": "Already Verified"
+      "description": "Bạn đã liên kết với một tải khoản Minecraft. Chạy `/unverify` để hủy liên kết với tài khoản Minecraft của bạn.",
+      "title": "Đã liên kết sẵn"
     },
     "invalidCode": {
       "description": "$t(verification.noCode.description)",
-      "title": "Invalid Verification Code"
+      "title": "Sai mã xác minh"
     },
     "noCode": {
-      "description": "**How to verify**\n`1.` Open Minecraft and go to the server list\n`2.` Connect to `verify.statsify.net` and copy the code displayed\n`3.` Head back to discord and run `/verify code:XXXX`",
-      "title": "Missing Verification Code"
+      "description": "**How to verify**\n`1.` Mở Minecraft và vô danh sách máy chủ\n`2.` Kết nối tới `verify.statsify.net` và sao chép mã có ở trong\n`3.` Quay lại tới discord và chạy `/verify code:XXXX`",
+      "title": "Thiếu mã xác minh"
     },
     "notVerified": {
-      "description": "You have to be verified before you are able to unverify!",
-      "title": "Not Verified"
+      "description": "Bạn đã xác minh từ trước bạn có thể hủy xác minh!",
+      "title": "Chưa được xác minh"
     },
     "requiredVerification": {
-      "description": "To use this command you must be verified. Run `/verify` to verify your account.",
-      "title": "Verification Required"
+      "description": "Để sài câu lệnh này bạn cần phải xác minh. Chạy `/verify` để xác minh tài khoản của bạn.",
+      "title": "Yêu cầu xác minh"
     },
-    "successfulUnverification": "Successfully unverified your account!",
-    "successfulVerification": "You are now verified to **{{displayName}}**"
+    "successfulUnverification": "Đã thành công hủy xác minh tài khoản của bạn!",
+    "successfulVerification": "Giờ bạn đã được xác minh cho **{{displayName}}**"
   }
 }
