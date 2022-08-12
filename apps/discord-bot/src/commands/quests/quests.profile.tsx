@@ -177,11 +177,11 @@ export const QuestsProfile = ({
     const dt = DateTime.now().setZone("America/New_York").startOf("week");
 
     startTime =
-      dt.plus({ days: 3 }).toMillis() < Date.now()
-        ? dt.plus({ days: 3 })
-        : dt.minus({ days: 4 });
+      dt.plus({ days: 4 }).toMillis() < Date.now()
+        ? dt.plus({ days: 4 })
+        : dt.minus({ days: 3 });
 
-    endTime = startTime.plus({ days: 7 });
+    endTime = startTime.plus({ days: 6 });
   }
 
   return (

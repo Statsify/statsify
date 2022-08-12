@@ -30,9 +30,9 @@ export const getAmountDuring = (quest: Quest | undefined, time: QuestTime) => {
 
     if (time === "week") {
       t =
-        t.plus({ days: 3 }).toMillis() < Date.now()
-          ? t.plus({ days: 3 })
-          : t.minus({ days: 4 });
+        t.plus({ days: 4 }).toMillis() < Date.now()
+          ? t.plus({ days: 4 })
+          : t.minus({ days: 3 });
     }
 
     return quest.completions.filter((ms) => ms.time >= t.toMillis()).length;
