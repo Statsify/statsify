@@ -343,15 +343,15 @@
       "title": "Wymagany wyższy poziom"
     },
     "invalidGuild": {
-      "description_id": "A guild with the id of `{{tag}}` could not be found!",
-      "description_name": "A guild by the name of `{{tag}}` could not be found!",
-      "description_player": "A guild with the player `{{tag}}` could not be found!",
+      "description_id": "Nie można odnaleźć gildii o id `{{tag}}`!",
+      "description_name": "Nie można odnaleźć gildii o nazwie `{{tag}}`!",
+      "description_player": "Gildia z graczem `{{tag}}` nie została odnaleziona!",
       "title": "Nieprawidłowa Gildia"
     },
     "invalidPlayer": {
-      "description_username": "A player by the username of `{{tag}}` could not be found!",
-      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
-      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
+      "description_username": "Nie znaleziono gracza o nazwie `{{tag}}`!",
+      "description_uuid": "Nie można znaleźć gracza z UUID `{{tag}}`!",
+      "description_discordId": "Nie można odnaleźć gracza o id discorda `{{tag}}`!",
       "title": "Niepoprawny gracz"
     },
     "invalidResetTime": {
