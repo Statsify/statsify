@@ -15,6 +15,8 @@ interface HistoricalHeaderProps {
   skin: JSX.Element;
   nameTag: JSX.Element;
   time: HistoricalType;
+  startTime?: DateTime;
+  endTime?: DateTime;
   title: string;
   sidebar?: ElementNode;
 }
@@ -25,6 +27,8 @@ export const HistoricalHeader = ({
   title,
   time,
   sidebar,
+  startTime,
+  endTime,
 }: HistoricalHeaderProps) => {
   const now = DateTime.now();
   let start: DateTime;
@@ -56,6 +60,9 @@ export const HistoricalHeader = ({
       end = now.minus({ days: now.day });
       break;
   }
+
+  if (startTime) start = startTime;
+  if (endTime) end = endTime;
 
   return (
     <div width="100%">

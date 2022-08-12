@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { DateTime } from "luxon";
 import { HeaderBody } from "./HeaderBody";
 import { HeaderNametag } from "./HeaderNametag";
 import { Historical } from "../Historical";
@@ -21,6 +22,8 @@ interface BaseHeaderProps {
   size?: number;
   name: string;
   time: "LIVE" | HistoricalType;
+  startTime?: DateTime;
+  endTime?: DateTime;
   title: string;
 
   historicalSidebar?: boolean;
@@ -74,6 +77,8 @@ export const Header = (props: HeaderProps) => {
         skin={skin}
         title={props.title}
         time={props.time}
+        startTime={props.startTime}
+        endTime={props.endTime}
         sidebar={sidebar}
       />
     );

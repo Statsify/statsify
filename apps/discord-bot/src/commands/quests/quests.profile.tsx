@@ -15,6 +15,7 @@ import {
   SidebarItem,
   Table,
 } from "#components";
+import { DateTime } from "luxon";
 import {
   FieldMetadata,
   FormattedGame,
@@ -164,6 +165,25 @@ export const QuestsProfile = ({
       ? `§l${FormattedGame[api as keyof typeof FormattedGame]}`
       : formatted;
 
+  const time =
+    questTimePeriod === "overall"
+      ? "LIVE"
+      : (questTimePeriod.toUpperCase() as HistoricalType);
+
+  let startTime;
+  let endTime;
+
+  if (questTimePeriod === "weekly") {
+    const dt = DateTime.now().setZone("America/New_York").startOf("week");
+
+    startTime =
+      dt.plus({ days: 3 }).toMillis() < Date.now()
+        ? dt.plus({ days: 3 })
+        : dt.minus({ days: 4 });
+
+    endTime = startTime.plus({ days: 7 });
+  }
+
   return (
     <Container background={background}>
       <Header
@@ -172,11 +192,9 @@ export const QuestsProfile = ({
         badge={badge}
         title={`§l§eQuests §r(${title}§r)`}
         sidebar={sidebar}
-        time={
-          questTimePeriod == "overall"
-            ? "LIVE"
-            : (questTimePeriod.toUpperCase() as HistoricalType)
-        }
+        time={time}
+        startTime={startTime}
+        endTime={endTime}
       />
       {table}
       <Footer logo={logo} user={user} />
