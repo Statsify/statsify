@@ -343,15 +343,15 @@
       "title": "Höhere Stufe Benötigt"
     },
     "invalidGuild": {
-      "description_id": "A guild with the id of `{{tag}}` could not be found!",
-      "description_name": "A guild by the name of `{{tag}}` could not be found!",
-      "description_player": "A guild with the player `{{tag}}` could not be found!",
+      "description_id": "Eine Gilde mit der ID `{{tag}}` konnte nicht gefunden werden!",
+      "description_name": "Eine Gilde mit dem Namen `{{tag}}` konnte nicht gefunden werden!",
+      "description_player": "Eine Gilde mit dem Spieler `{{tag}}` konnte nicht gefunden werden!",
       "title": "Ungültige Gilde"
     },
     "invalidPlayer": {
-      "description_username": "A player by the username of `{{tag}}` could not be found!",
-      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
-      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
+      "description_username": "Ein Spieler mit dem Benutzernamen `{{tag}}` konnte nicht gefunden werden!",
+      "description_uuid": "Ein Spieler mit der UUID `{{tag}}` konnte nicht gefunden werden!",
+      "description_discordId": "Ein Spieler mit der Discord ID `{{tag}}` konnte nicht gefunden werden!",
       "title": "Ungültiger Spieler"
     },
     "invalidResetTime": {
