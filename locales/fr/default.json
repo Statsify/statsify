@@ -343,15 +343,15 @@
       "title": "Niveau Plus Élevé Requis"
     },
     "invalidGuild": {
-      "description_id": "A guild with the id of `{{tag}}` could not be found!",
-      "description_name": "A guild by the name of `{{tag}}` could not be found!",
-      "description_player": "A guild with the player `{{tag}}` could not be found!",
+      "description_id": "Une guilde avec l'id `{{tag}}` n'a pas pu être trouvée !",
+      "description_name": "Une guilde avec le nom `{{tag}}` n'a pas pu être trouvée !",
+      "description_player": "Une guilde avec le joueur `{{tag}}` n'a pas pu être trouvée !",
       "title": "Guilde Invalide"
     },
     "invalidPlayer": {
-      "description_username": "A player by the username of `{{tag}}` could not be found!",
-      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
-      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
+      "description_username": "Un joueur avec le pseudo `{{tag}}` n'a pu être trouvé !",
+      "description_uuid": "Un joueur avec l'UUID `{{tag}}` n'a pas pu être trouvé !",
+      "description_discordId": "Un joueur avec l'id discord de `{{tag}}` n'a pas pu être trouvé !",
       "title": "Joueur Invalide"
     },
     "invalidResetTime": {
@@ -601,7 +601,7 @@
       "level": "Niveau de Guilde",
       "members": "Membres de la Guilde",
       "monthly": "Mensuel",
-      "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
+      "monthly-gexp": "$t(stats.guild.gexp) $t(stats.guild.monthly)",
       "quests": "Quêtes de Guilde",
       "rank": "Grade de Guilde",
       "scaledGexp": "GEXP mise à l'échelle",
@@ -737,7 +737,7 @@
     "woolCaptures": "Laines Capturées",
     "woolPlaced": "Laine Placée",
     "zombieKills": "Zombies tués",
-    "potionsBrewed": "Potions Brewed"
+    "potionsBrewed": "Potions Distillées"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Rejoignez notre **$t(socials.discord)** et obtenez **20% de temps d'attente en moins** $t(emojis:heart)",
