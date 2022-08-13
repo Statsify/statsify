@@ -107,9 +107,7 @@ export class FontRenderer {
   }
 
   public lex(text: string, inputState: Partial<TextNode> = {}): TextNode[][] {
-    const lines = text.split("\n");
-
-    return lines.map((line) => {
+    return text.split("\n").map((line) => {
       const defaultState: Omit<TextNode, "text"> = {
         bold: false,
         italic: false,
@@ -124,36 +122,44 @@ export class FontRenderer {
 
       line = line.startsWith("§") ? line : `§f${line}`;
 
-      return line
-        .split("§")
-        .filter(Boolean)
-        .map((part) => {
-          let token: Token | null = null;
-          let matches: RegExpMatchArray | null = null;
+      const parts = line.split("§");
+      const nodes: TextNode[] = [];
 
-          for (const matcher of tokens) {
-            matches = part.match(matcher.regex);
+      for (const part of parts) {
+        if (!part.length) continue;
 
-            if (matches) {
-              token = matcher;
-              break;
-            }
+        let token: Token | null = null;
+        let matches: RegExpMatchArray | null = null;
+
+        for (const matcher of tokens) {
+          matches = part.match(matcher.regex);
+
+          if (matches) {
+            token = matcher;
+            break;
           }
+        }
 
-          const effect = token?.effect(part, matches as RegExpMatchArray, defaultState);
-          let text = effect?.text ?? part;
+        if (!matches) continue;
 
-          if (matches) text = text.slice(matches[0].length);
+        const effect = token?.effect(part, matches as RegExpMatchArray, defaultState);
+        let text = effect?.text ?? part;
 
-          state = { ...state, ...effect };
+        if (matches) text = text.slice(matches[0].length);
 
-          const node: TextNode = {
-            ...state,
-            text,
-          };
+        state = { ...state, ...effect };
 
-          return node;
-        });
+        if (!text.length) continue;
+
+        const node: TextNode = {
+          ...state,
+          text,
+        };
+
+        nodes.push(node);
+      }
+
+      return nodes;
     });
   }
 

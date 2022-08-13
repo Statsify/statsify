@@ -26,6 +26,8 @@ export const render: Render<Box.BoxRenderProps> = (
   width = Math.round(width) + 2;
   height = Math.round(height) + 2;
 
+  border = { ...border };
+
   border.bottomLeft /= 2;
   border.bottomRight /= 2;
   border.topLeft /= 2;
