@@ -14,7 +14,10 @@ import { QuestTime, getAmountDuring, questFieldData } from "../util";
 import { add } from "@statsify/math";
 
 export class ArenaQuests implements GameQuests {
-  @Field({ ...questFieldData, leaderboard: { name: "Play Arena (Daily)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Play Arena (Daily)" },
+  })
   public dailyPlayArena: number;
 
   @Field(questFieldData)
@@ -23,7 +26,10 @@ export class ArenaQuests implements GameQuests {
   @Field(questFieldData)
   public wins: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "Play Arena (Weekly)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Play Arena (Weekly)" },
+  })
   public weeklyPlayArena: number;
 
   @Field({

@@ -26,7 +26,10 @@ export class WarlordsQuests implements GameQuests {
   @Field(questFieldData)
   public victorious: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "Carry, Secured!" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Carry, Secured!" },
+  })
   public carrySecured: number;
 
   @Field(questFieldData)

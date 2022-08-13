@@ -17,37 +17,67 @@ export class TNTGamesQuests implements GameQuests {
   @Field(questFieldData)
   public winner: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "TNT Run (Daily)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "TNT Run (Daily)" },
+  })
   public tntRunDaily: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "PVP Run (Daily)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "PVP Run (Daily)" },
+  })
   public pvpRunDaily: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "Bow Spleef (Daily)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Bow Spleef (Daily)" },
+  })
   public bowSpleefDaily: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "TNT Tag (Daily)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "TNT Tag (Daily)" },
+  })
   public tntTagDaily: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "TNT Wizards (Daily)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "TNT Wizards (Daily)" },
+  })
   public tntWizardsDaily: number;
 
   @Field(questFieldData)
   public explosiveFanatic: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "TNT Run (Weekly)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "TNT Run (Weekly)" },
+  })
   public tntRunWeekly: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "PVP Run (Weekly)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "PVP Run (Weekly)" },
+  })
   public pvpRunWeekly: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "Bow Spleef (Weekly)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Bow Spleef (Weekly)" },
+  })
   public bowSpleefWeekly: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "TNT Tag (Weekly)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "TNT Tag (Weekly)" },
+  })
   public tntTagWeekly: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "TNT Wizards (Weekly)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "TNT Wizards (Weekly)" },
+  })
   public tntWizardsWeekly: number;
 
   @Field({

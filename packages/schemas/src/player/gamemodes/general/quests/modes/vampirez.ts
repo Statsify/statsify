@@ -14,7 +14,10 @@ import { QuestTime, getAmountDuring, questFieldData } from "../util";
 import { add } from "@statsify/math";
 
 export class VampireZQuests implements GameQuests {
-  @Field({ ...questFieldData, leaderboard: { name: "VampireZ" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "VampireZ" },
+  })
   public vampirez: number;
 
   @Field(questFieldData)

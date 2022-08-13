@@ -17,13 +17,22 @@ export class BedwarsQuests implements GameQuests {
   @Field(questFieldData)
   public firstWinOfTheDay: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "One More Game!" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "One More Game!" },
+  })
   public oneMoreGame: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "Bed Removal Co." } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Bed Removal Co." },
+  })
   public bedRemovalCo: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "Sleep Tight." } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Sleep Tight." },
+  })
   public sleepTight: number;
 
   @Field(questFieldData)

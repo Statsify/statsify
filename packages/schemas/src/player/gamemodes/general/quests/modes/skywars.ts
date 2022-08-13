@@ -32,7 +32,10 @@ export class SkywarsQuests implements GameQuests {
   @Field(questFieldData)
   public corruptedWin: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "Tokens!" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Tokens!" },
+  })
   public tokens: number;
 
   @Field(questFieldData)

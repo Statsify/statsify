@@ -23,7 +23,10 @@ export class QuakeQuests implements GameQuests {
   @Field(questFieldData)
   public winner: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "Bazinga!" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Bazinga!" },
+  })
   public bazinga: number;
 
   @Field({

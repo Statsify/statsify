@@ -14,19 +14,34 @@ import { QuestTime, getAmountDuring, questFieldData } from "../util";
 import { add } from "@statsify/math";
 
 export class CopsAndCrimsQuests implements GameQuests {
-  @Field({ ...questFieldData, leaderboard: { name: "Win a game! (Defusal)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Win a game! (Defusal)" },
+  })
   public winAGame: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "Kill 15 players! (Defusal)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Kill 15 players! (Defusal)" },
+  })
   public kill15Players: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "Get 300 points! (Deathmatch)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Get 300 points! (Deathmatch)" },
+  })
   public get300Points: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "Win a game! (Deathmatch)" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Win a game! (Deathmatch)" },
+  })
   public winADeathmatch: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "100 kills and 1,500 points" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "100 kills and 1,500 points" },
+  })
   public killsAndPoints: number;
 
   @Field({

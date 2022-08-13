@@ -14,16 +14,28 @@ import { QuestTime, getAmountDuring, questFieldData } from "../util";
 import { add } from "@statsify/math";
 
 export class UHCQuests implements GameQuests {
-  @Field({ ...questFieldData, leaderboard: { name: "Team UHC Champions" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Team UHC Champions" },
+  })
   public teamUHCChampions: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "Solo UHC Champions" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "Solo UHC Champions" },
+  })
   public soloUHCChampions: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "UHC Deathmatch" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "UHC Deathmatch" },
+  })
   public uhcDeathmatch: number;
 
-  @Field({ ...questFieldData, leaderboard: { name: "UHC Champions" } })
+  @Field({
+    ...questFieldData,
+    leaderboard: { ...questFieldData.leaderboard, name: "UHC Champions" },
+  })
   public uhcChampions: number;
 
   @Field({
