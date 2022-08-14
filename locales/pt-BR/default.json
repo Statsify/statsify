@@ -212,20 +212,20 @@
     "badge": {
       "profile": "É assim que o seu selo ficará nos seus perfis",
       "reset": "$t(emojis:config.reset) Seu emblema foi redefinido com sucesso.",
-      "set": "$t(emojis:config.success) Atualizado com sucesso seu emblema.",
+      "set": "$t(emojis:config.success) Seu emblema foi atualizado com sucesso.",
       "view": "$t(emojis:config.view) Seu emblema atual:"
     },
     "footer": {
       "profile": "É assim que seu rodapé ficará nos seus perfis",
-      "reset": "$t(emojis:config.reset) Seu rodapé foi redefinido com êxito.",
-      "set": "$t(emojis:config.success) Seu rodapé foi atualizado com êxito."
+      "reset": "$t(emojis:config.reset) Seu rodapé foi redefinido com sucesso.",
+      "set": "$t(emojis:config.success) Seu rodapé foi atualizado com sucesso."
     },
     "language": {
-      "description": "$t(emojis:config.success) Atualizado com sucesso o seu idioma para `{{locale}}`."
+      "description": "$t(emojis:config.success) Seu idioma foi atualizado com sucesso para `{{locale}}`."
     },
     "theme": {
       "profile": "É assim que seu tema ficará nos seus perfis",
-      "set": "$t(emojis:config.success) Seu tema foi atualizado com êxito.",
+      "set": "$t(emojis:config.success) Seu tema foi atualizado com sucesso.",
       "view": "$t(emojis:config.view) Seu tema atual:"
     }
   },
