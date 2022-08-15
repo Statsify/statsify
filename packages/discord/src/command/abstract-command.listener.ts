@@ -31,7 +31,6 @@ import type {
 } from "tiny-discord";
 
 const COMMAND_INTERACTION_RESPONSE = {};
-
 type CommandInteractionResponse = typeof COMMAND_INTERACTION_RESPONSE;
 
 export type InteractionHook = (
