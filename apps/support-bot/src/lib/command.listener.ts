@@ -13,8 +13,7 @@ import {
   Interaction,
 } from "@statsify/discord";
 import { ApiService } from "@statsify/api-client";
-import { InteractionResponse, RestClient, WebsocketShard } from "tiny-discord";
-import { InteractionResponseType } from "discord-api-types/v10";
+import { RestClient, WebsocketShard } from "tiny-discord";
 import { config } from "@statsify/util";
 
 export class CommandListener extends AbstractCommandListener {
@@ -39,15 +38,13 @@ export class CommandListener extends AbstractCommandListener {
     this.commands.delete(name);
   }
 
-  protected async onCommand(interaction: Interaction): Promise<InteractionResponse> {
+  protected async onCommand(interaction: Interaction): Promise<void> {
     const parentData = interaction.getData();
 
-    if (interaction.getGuildId() !== config("supportBot.guild"))
-      return { type: InteractionResponseType.Pong };
+    if (interaction.getGuildId() !== config("supportBot.guild")) return;
 
     const parentCommand = this.commands.get(parentData.name)!;
-
-    if (!parentCommand) return { type: InteractionResponseType.Pong };
+    if (!parentCommand) return;
 
     const id = interaction.getUserId();
 

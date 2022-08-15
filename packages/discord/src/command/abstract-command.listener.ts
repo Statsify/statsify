@@ -16,11 +16,11 @@ import {
 import { CommandContext } from "./command.context";
 import { CommandResolvable } from "./command.resolvable";
 import { ErrorMessage } from "../util/error.message";
+import { IMessage, Message } from "../messages";
 import { Interaction, InteractionAttachment } from "../interaction";
 import { Logger } from "@statsify/logger";
-import { Message } from "../messages";
 import { User, UserTier } from "@statsify/schemas";
-import { getLogoPath } from "@statsify/assets";
+import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
 import type {
   Interaction as DiscordInteraction,
@@ -29,6 +29,9 @@ import type {
   RestClient,
   WebsocketShard,
 } from "tiny-discord";
+
+const COMMAND_INTERACTION_RESPONSE = {};
+type CommandInteractionResponse = typeof COMMAND_INTERACTION_RESPONSE;
 
 export type InteractionHook = (
   interaction: Interaction
@@ -41,7 +44,7 @@ export interface ExecuteCommandOptions {
   command: CommandResolvable;
   context: CommandContext;
   preconditions?: CommandPrecondition[];
-  response?: InteractionResponse;
+  message?: IMessage | Message;
 }
 
 export abstract class AbstractCommandListener {
@@ -126,73 +129,37 @@ export abstract class AbstractCommandListener {
     return [command, data, name];
   }
 
-  protected executeCommand({
+  protected async executeCommand({
     commandName,
     command,
     context,
     preconditions = [],
-    response = { type: InteractionResponseType.DeferredChannelMessageWithSource },
-  }: ExecuteCommandOptions): InteractionResponse {
+    message,
+  }: ExecuteCommandOptions) {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     try {
       preconditions.forEach((precondition) => precondition());
 
-      const response = command.execute(context);
+      const response = await command.execute(context);
 
-      if (response instanceof Promise)
-        response
-          .then((res) => {
-            if (typeof res !== "object") return;
-            transaction?.finish();
-            context.reply(res);
-          })
-          .catch((err) => {
-            if (err instanceof Message) {
-              transaction?.finish();
-              return context.reply(err);
-            }
+      if (typeof response !== "object") return;
+      transaction?.finish();
 
-            this.logger.error(`An error occurred when running "${commandName}"`);
-            this.logger.error(err);
-            transaction?.finish();
-          });
-      else if (typeof response === "object") {
-        transaction?.finish();
-        return {
-          type: InteractionResponseType.ChannelMessageWithSource,
-          data: context.getInteraction().convertToApiData(response),
-        };
-      }
+      context.reply({
+        ...message,
+        ...response,
+      });
     } catch (err) {
       if (err instanceof Message) {
         transaction?.finish();
-
-        const data = context.getInteraction().convertToApiData(err);
-
-        if ("payload_json" in data) {
-          return {
-            //@ts-ignore tiny-discord types are not fully updated yet
-            files: data.files,
-            payload_json: {
-              type: InteractionResponseType.ChannelMessageWithSource,
-              data: data.payload_json,
-            },
-          };
-        }
-
-        return {
-          type: InteractionResponseType.ChannelMessageWithSource,
-          data,
-        };
+        return context.reply(err);
       }
 
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
       transaction?.finish();
     }
-
-    return response;
   }
 
   protected tierPrecondition(command: CommandResolvable, user: User | null) {
@@ -233,11 +200,24 @@ export abstract class AbstractCommandListener {
           break;
       }
 
+      const hasPreview = Boolean(command.preview);
+
       const tierError = new ErrorMessage(
         (t) => t(`errors.${tierName}Only.title`),
-        (t) => t(`errors.${tierName}Only.description`),
+        (t) => t(`errors.${tierName}Only.${hasPreview ? "preview" : "description"}`),
         { color, thumbnail }
       );
+
+      if (hasPreview) {
+        const preview = {
+          name: "preview.png",
+          data: readFileSync(getAssetPath(`previews/${command.preview}`)),
+          type: "image/png",
+        };
+
+        tierError.files?.push(preview);
+        tierError.embeds?.[0]?.image(`attachment://${preview.name}`);
+      }
 
       throw tierError;
     }
@@ -287,10 +267,19 @@ export abstract class AbstractCommandListener {
     };
   }
 
-  private onInteraction(
+  private async onInteraction(
     interaction: Interaction
-  ): InteractionResponse | Promise<InteractionResponse> {
-    if (interaction.isCommandInteraction()) return this.onCommand(interaction);
+  ): Promise<InteractionResponse | CommandInteractionResponse> {
+    if (interaction.isCommandInteraction()) {
+      await interaction.reply({
+        type: InteractionResponseType.DeferredChannelMessageWithSource,
+      });
+
+      this.onCommand(interaction);
+
+      return COMMAND_INTERACTION_RESPONSE;
+    }
+
     if (interaction.isAutocompleteInteraction()) return this.onAutocomplete(interaction);
     if (interaction.isMessageComponentInteraction())
       return this.onMessageComponent(interaction);
@@ -304,9 +293,9 @@ export abstract class AbstractCommandListener {
       this.logger.error(err);
     });
 
+    //@ts-ignore Discord supports sending a blank object as a response
     client.on("interaction", (_interaction) => {
       const interaction = new Interaction(this.rest, _interaction, this.applicationId);
-
       return this.onInteraction(interaction);
     });
   }
@@ -327,9 +316,12 @@ export abstract class AbstractCommandListener {
         this.applicationId
       );
 
-      interaction.reply(await this.onInteraction(interaction));
+      const response = await this.onInteraction(interaction);
+      if (response === COMMAND_INTERACTION_RESPONSE) return;
+
+      interaction.reply(response as InteractionResponse);
     });
   }
 
-  protected abstract onCommand(interaction: Interaction): Promise<InteractionResponse>;
+  protected abstract onCommand(interaction: Interaction): Promise<void> | void;
 }

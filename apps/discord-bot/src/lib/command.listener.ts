@@ -14,21 +14,16 @@ import {
   CommandContext,
   CommandResolvable,
   ErrorMessage,
+  IMessage,
   Interaction,
 } from "@statsify/discord";
-import { InteractionResponseType } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { getAssetPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
 import { tips } from "../tips";
-import type {
-  InteractionResponse,
-  InteractionServer,
-  RestClient,
-  WebsocketShard,
-} from "tiny-discord";
+import type { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 
 const isDevelopment = config("environment") === "dev";
 
@@ -54,11 +49,11 @@ export class CommandListener extends AbstractCommandListener {
     this.cooldowns = new Map();
   }
 
-  protected async onCommand(interaction: Interaction): Promise<InteractionResponse> {
+  protected async onCommand(interaction: Interaction): Promise<void> {
     const parentData = interaction.getData();
     const parentCommand = this.commands.get(parentData.name)!;
 
-    if (!parentCommand) return { type: InteractionResponseType.Pong };
+    if (!parentCommand) return;
 
     const { id, username, discriminator } = interaction.getUser();
     const locale = interaction.getLocale();
@@ -105,7 +100,7 @@ export class CommandListener extends AbstractCommandListener {
       command,
       context,
       preconditions,
-      response: this.getTipResponse(commandName, user, interaction),
+      message: this.getTipResponse(commandName, user),
     });
   }
 
@@ -162,33 +157,19 @@ export class CommandListener extends AbstractCommandListener {
     );
   }
 
-  private getTipResponse(
-    commandName: string,
-    user: User | null,
-    interaction: Interaction
-  ): InteractionResponse {
+  private getTipResponse(commandName: string, user: User | null): IMessage | undefined {
     const TIP_CHANCE = 0.2;
 
-    const defaultResponse = {
-      type: InteractionResponseType.DeferredChannelMessageWithSource,
-    };
-
-    if (User.isIron(user)) return defaultResponse;
-
-    if (Math.random() > TIP_CHANCE) return defaultResponse;
+    if (User.isIron(user) || Math.random() > TIP_CHANCE) return undefined;
 
     const useableTips = tips.filter(
       (t) => !t.disabled?.includes(commandName) && !t.uneligible?.(user)
     );
 
-    if (!useableTips.length) return defaultResponse;
+    if (!useableTips.length) return undefined;
 
     const tip = useableTips[Math.floor(Math.random() * useableTips.length)];
-
-    return {
-      type: InteractionResponseType.ChannelMessageWithSource,
-      data: interaction.convertToApiData(tip.message),
-    };
+    return tip.message;
   }
 
   public static create(
