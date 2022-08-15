@@ -9,8 +9,7 @@
 import { APIData, removeFormatting } from "@statsify/util";
 import { Field } from "../../../../metadata";
 import { FormattedGame, GameModes, IGameModes } from "../../../../game";
-import { GameQuests } from "./game-quests";
-import { QuestsInstance } from "./quests-instance";
+import { OverallQuests } from "./quests-instance";
 
 export const QUEST_MODES = new GameModes([
   { api: "overall" },
@@ -24,24 +23,26 @@ export const QUEST_MODES = new GameModes([
   { api: "MEGAWALLS", formatted: removeFormatting(FormattedGame.MEGAWALLS) },
   { api: "MURDER_MYSTERY", formatted: removeFormatting(FormattedGame.MURDER_MYSTERY) },
   { api: "PAINTBALL", formatted: removeFormatting(FormattedGame.PAINTBALL) },
-  { api: "PIT", formatted: removeFormatting(FormattedGame.PIT) },
-  { api: "QUAKE", formatted: removeFormatting(FormattedGame.QUAKE) },
-  { api: "SKYWARS", formatted: removeFormatting(FormattedGame.SKYWARS) },
-  { api: "SMASH_HEROES", formatted: removeFormatting(FormattedGame.SMASH_HEROES) },
-  { api: "SPEED_UHC", formatted: removeFormatting(FormattedGame.SPEED_UHC) },
-  { api: "TNT_GAMES", formatted: removeFormatting(FormattedGame.TNT_GAMES) },
-  {
-    api: "TURBO_KART_RACERS",
-    formatted: removeFormatting(FormattedGame.TURBO_KART_RACERS),
-  },
-  { api: "UHC", formatted: removeFormatting(FormattedGame.UHC) },
-  { api: "VAMPIREZ", formatted: removeFormatting(FormattedGame.VAMPIREZ) },
-  { api: "WALLS", formatted: removeFormatting(FormattedGame.WALLS) },
-  { api: "WARLORDS", formatted: removeFormatting(FormattedGame.WARLORDS) },
-  { api: "WOOLWARS", formatted: removeFormatting(FormattedGame.WOOLWARS) },
+  // { api: "PIT", formatted: removeFormatting(FormattedGame.PIT) },
+  // { api: "QUAKE", formatted: removeFormatting(FormattedGame.QUAKE) },
+  // { api: "SKYWARS", formatted: removeFormatting(FormattedGame.SKYWARS) },
+  // { api: "SMASH_HEROES", formatted: removeFormatting(FormattedGame.SMASH_HEROES) },
+  // { api: "SPEED_UHC", formatted: removeFormatting(FormattedGame.SPEED_UHC) },
+  // { api: "TNT_GAMES", formatted: removeFormatting(FormattedGame.TNT_GAMES) },
+  // {
+  //   api: "TURBO_KART_RACERS",
+  //   formatted: removeFormatting(FormattedGame.TURBO_KART_RACERS),
+  // },
+  // { api: "UHC", formatted: removeFormatting(FormattedGame.UHC) },
+  // { api: "VAMPIREZ", formatted: removeFormatting(FormattedGame.VAMPIREZ) },
+  // { api: "WALLS", formatted: removeFormatting(FormattedGame.WALLS) },
+  // { api: "WARLORDS", formatted: removeFormatting(FormattedGame.WARLORDS) },
+  // { api: "WOOLWARS", formatted: removeFormatting(FormattedGame.WOOLWARS) },
 ]);
 
 export type QuestModes = IGameModes<typeof QUEST_MODES>;
+
+type QuestInstance = Record<keyof typeof FormattedGame, Record<string, number>>;
 
 export class Quests {
   @Field({ leaderboard: { name: "Total Quests", fieldName: "Quests" } })
@@ -65,36 +66,35 @@ export class Quests {
   })
   public dailyTotal: number;
 
-  @Field()
-  public overall: QuestsInstance;
+  @Field({ type: () => OverallQuests })
+  public overall: QuestInstance;
 
-  @Field({ leaderboard: { resetEvery: "friday" } })
-  public weekly: QuestsInstance;
+  // @Field({ leaderboard: { resetEvery: "friday" } })
+  // public weekly: QuestsInstance;
 
-  @Field({ leaderboard: { resetEvery: "day" } })
-  public daily: QuestsInstance;
+  // @Field({ leaderboard: { resetEvery: "day" } })
+  // public daily: QuestsInstance;
 
   public constructor(quests: APIData) {
-    this.overall = new QuestsInstance(quests);
-    this.weekly = new QuestsInstance(quests, "week");
-    this.daily = new QuestsInstance(quests, "day");
+    this.overall = new OverallQuests(quests) as QuestInstance;
+    // this.weekly = new QuestsInstance(quests, "week");
+    // this.daily = new QuestsInstance(quests, "day");
 
-    this.total = Object.values(quests).reduce(
-      (p: number, c: APIData) => p + (c?.completions?.length ?? 0),
-      0
-    );
+    // this.total = Object.values(quests).reduce(
+    //   (p: number, c: APIData) => p + (c?.completions?.length ?? 0),
+    //   0
+    // );
 
-    this.dailyTotal = Object.entries(this.daily).reduce(
-      (p, [, c]: [string, GameQuests]) => p + c.total,
-      0
-    );
+    // this.dailyTotal = Object.entries(this.daily).reduce(
+    //   (p, [, c]: [string, GameQuests]) => p + c.total,
+    //   0
+    // );
 
-    this.weeklyTotal = Object.entries(this.weekly).reduce(
-      (p, [, c]: [string, GameQuests]) => p + c.total,
-      0
-    );
+    // this.weeklyTotal = Object.entries(this.weekly).reduce(
+    //   (p, [, c]: [string, GameQuests]) => p + c.total,
+    //   0
+    // );
   }
 }
 
-export * from "./game-quests";
 export * from "./quests-instance";

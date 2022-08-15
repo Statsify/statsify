@@ -6,64 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, removeFormatting } from "@statsify/util";
-import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
-import { GameQuests } from "../game-quests";
-import { QuestTime, getAmountDuring, questFieldData } from "../util";
-import { add } from "@statsify/math";
+import { createGameModeQuests } from "../util";
 
-export class BedwarsQuests implements GameQuests {
-  @Field(questFieldData)
-  public firstWinOfTheDay: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "One More Game!" },
-  })
-  public oneMoreGame: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "Bed Removal Co." },
-  })
-  public bedRemovalCo: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "Sleep Tight." },
-  })
-  public sleepTight: number;
-
-  @Field(questFieldData)
-  public challenger: number;
-
-  @Field({
-    leaderboard: {
-      name: "Total",
-      fieldName: `${removeFormatting(FormattedGame.BEDWARS)} Total`,
-    },
-  })
-  public total: number;
-
-  public constructor(quests: APIData, time: QuestTime) {
-    if (time == undefined || time === "day") {
-      this.firstWinOfTheDay = getAmountDuring(quests.bedwars_daily_win, time);
-      this.oneMoreGame = getAmountDuring(quests.bedwars_daily_one_more, time);
-    }
-
-    if (time == undefined || time === "week") {
-      this.bedRemovalCo = getAmountDuring(quests.bedwars_weekly_bed_elims, time);
-      this.sleepTight = getAmountDuring(quests.bedwars_weekly_dream_win, time);
-      this.challenger = getAmountDuring(quests.bedwars_weekly_challenges, time);
-    }
-
-    this.total = add(
-      this.firstWinOfTheDay,
-      this.oneMoreGame,
-      this.bedRemovalCo,
-      this.sleepTight,
-      this.challenger
-    );
-  }
-}
+export const BedWarsQuests = createGameModeQuests({
+  game: FormattedGame.BEDWARS,
+  fieldPrefix: "bedwars",
+  daily: [
+    { field: "daily_win", propertyKey: "firstWinOfTheDay" },
+    { field: "daily_one_more", propertyKey: "oneMoreGame", name: "One More Game!" },
+  ],
+  weekly: [
+    { field: "weekly_bed_elims", propertyKey: "bedRemovalCo", name: "Bed Removal Co." },
+    { field: "weekly_dream_win", propertyKey: "sleepTight", name: "Sleep Tight." },
+    { field: "weekly_challenges", propertyKey: "challenger" },
+  ],
+});

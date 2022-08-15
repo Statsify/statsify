@@ -6,41 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, removeFormatting } from "@statsify/util";
-import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
-import { GameQuests } from "../game-quests";
-import { QuestTime, getAmountDuring, questFieldData } from "../util";
-import { add } from "@statsify/math";
+import { createGameModeQuests } from "../util";
 
-export class BuildBattleQuests implements GameQuests {
-  @Field(questFieldData)
-  public player: number;
-
-  @Field(questFieldData)
-  public winner: number;
-
-  @Field(questFieldData)
-  public masterArchitect: number;
-
-  @Field({
-    leaderboard: {
-      name: "Total",
-      fieldName: `${removeFormatting(FormattedGame.BUILD_BATTLE)} Total`,
-    },
-  })
-  public total: number;
-
-  public constructor(quests: APIData, time: QuestTime) {
-    if (time == undefined || time === "day") {
-      this.player = getAmountDuring(quests.build_battle_player, time);
-      this.winner = getAmountDuring(quests.build_battle_winner, time);
-    }
-
-    if (time == undefined || time === "week") {
-      this.masterArchitect = getAmountDuring(quests.build_battle_weekly, time);
-    }
-
-    this.total = add(this.player ?? 0, this.winner ?? 0, this.masterArchitect ?? 0);
-  }
-}
+export const BuildBattleQuests = createGameModeQuests({
+  game: FormattedGame.BUILD_BATTLE,
+  fieldPrefix: "build_battle",
+  daily: [{ field: "player" }, { field: "winner" }],
+  weekly: [{ field: "weekly", propertyKey: "masterArchitect" }],
+});

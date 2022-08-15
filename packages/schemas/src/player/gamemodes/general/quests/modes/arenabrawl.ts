@@ -6,51 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, removeFormatting } from "@statsify/util";
-import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
-import { GameQuests } from "../game-quests";
-import { QuestTime, getAmountDuring, questFieldData } from "../util";
-import { add } from "@statsify/math";
+import { createGameModeQuests } from "../util";
 
-export class ArenaQuests implements GameQuests {
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "Play Arena (Daily)" },
-  })
-  public dailyPlayArena: number;
-
-  @Field(questFieldData)
-  public kills: number;
-
-  @Field(questFieldData)
-  public wins: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "Play Arena (Weekly)" },
-  })
-  public weeklyPlayArena: number;
-
-  @Field({
-    leaderboard: {
-      name: "Total",
-      fieldName: `${removeFormatting(FormattedGame.ARENA_BRAWL)} Total`,
-    },
-  })
-  public total: number;
-
-  public constructor(quests: APIData, time: QuestTime) {
-    if (time == undefined || time === "day") {
-      this.dailyPlayArena = getAmountDuring(quests.arena_daily_play, time);
-      this.kills = getAmountDuring(quests.arena_daily_kills, time);
-      this.wins = getAmountDuring(quests.arena_daily_wins, time);
-    }
-
-    if (time == undefined || time === "week") {
-      this.weeklyPlayArena = getAmountDuring(quests.arena_weekly_play, time);
-    }
-
-    this.total = add(this.dailyPlayArena, this.kills, this.wins, this.weeklyPlayArena);
-  }
-}
+export const ArenaBrawlQuests = createGameModeQuests({
+  game: FormattedGame.ARENA_BRAWL,
+  fieldPrefix: "arena",
+  daily: [
+    { field: "daily_kills", propertyKey: "kills" },
+    { field: "daily_wins", propertyKey: "wins" },
+    //TODO: add Play Arena
+  ],
+  weekly: [],
+});
