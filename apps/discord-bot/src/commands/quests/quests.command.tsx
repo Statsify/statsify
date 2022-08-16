@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from "typedi";
 import {
   ApiService,
   Command,
@@ -25,18 +24,16 @@ import { render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.quests") })
 export class QuestsCommand {
-  protected readonly apiService: ApiService;
-  protected readonly paginateService: PaginateService;
-  protected readonly modes: GameModes<QuestModes> = QUEST_MODES;
+  private readonly modes: GameModes<QuestModes> = QUEST_MODES;
 
-  public constructor() {
-    this.apiService = Container.get(ApiService);
-    this.paginateService = Container.get(PaginateService);
-  }
+  public constructor(
+    private readonly apiService: ApiService,
+    private readonly paginateService: PaginateService
+  ) {}
 
   @SubCommand({
     description: (t) => t("commands.quests-overall"),
-    args: [new PlayerArgument()],
+    args: [PlayerArgument],
   })
   public async overall(context: CommandContext) {
     return this.run(context, QuestTime.Overall);
@@ -44,7 +41,7 @@ export class QuestsCommand {
 
   @SubCommand({
     description: (t) => t("commands.quests-weekly"),
-    args: [new PlayerArgument()],
+    args: [PlayerArgument],
   })
   public async weekly(context: CommandContext) {
     return this.run(context, QuestTime.Weekly);
@@ -52,7 +49,7 @@ export class QuestsCommand {
 
   @SubCommand({
     description: (t) => t("commands.quests-daily"),
-    args: [new PlayerArgument()],
+    args: [PlayerArgument],
   })
   public async daily(context: CommandContext) {
     return this.run(context, QuestTime.Daily);
