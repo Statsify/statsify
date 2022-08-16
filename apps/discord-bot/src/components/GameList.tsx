@@ -10,16 +10,19 @@ import { FormattedGame, GameId } from "@statsify/schemas";
 import { Image } from "skia-canvas";
 import { Table } from "./Table";
 import { arrayGroup } from "@statsify/util";
+import type { DeferredGradient, Fill } from "@statsify/rendering";
+
+export type GameEntry = [GameId, string] | [GameId, string, Fill | DeferredGradient];
 
 export interface GameListProps {
   gameIcons: Record<GameId, Image>;
-  entries: [GameId, any][];
+  entries: GameEntry[];
   rowSize?: number;
 }
 
 export const GameList = ({ gameIcons, entries, rowSize = 2 }: GameListProps) => {
-  const values = entries.map(([field, value]) => (
-    <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
+  const values = entries.map(([field, value, fill]) => (
+    <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }} color={fill}>
       <img image={gameIcons[field as keyof typeof gameIcons]} width={32} height={32} />
       <text>§l{FormattedGame[field as keyof typeof FormattedGame] ?? field}</text>
       <div width="remaining" margin={{ left: 4, right: 4 }} />

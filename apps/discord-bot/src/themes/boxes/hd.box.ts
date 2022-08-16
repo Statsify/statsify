@@ -13,7 +13,7 @@ export const render: Render<Box.BoxRenderProps> = (
   { color, border, shadowDistance, shadowOpacity, outline, outlineSize },
   { x, y, width, height, padding }
 ) => {
-  ctx.fillStyle = color;
+  Box.resolveFill(color, ctx, x, y, width, height);
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -84,7 +84,7 @@ export const render: Render<Box.BoxRenderProps> = (
   shadowDistance /= 2;
 
   ctx.globalAlpha = shadowOpacity - 0.3;
-  ctx.fillStyle = color;
+  Box.resolveFill(color, ctx, x, y, width, height);
 
   ctx.fillRect(
     x + width,

@@ -21,12 +21,21 @@ import {
   QuestTime,
   WeeklyQuests,
 } from "@statsify/schemas";
-import { Container, Footer, GameList, Header, List, SidebarItem } from "#components";
+import {
+  Container,
+  Footer,
+  GameEntry,
+  GameList,
+  Header,
+  List,
+  SidebarItem,
+} from "#components";
 import { DateTime } from "luxon";
+import { DeferredGradient, ElementNode, useGradient } from "@statsify/rendering";
 import { HistoricalType } from "@statsify/api-client";
+import { ratio } from "@statsify/math";
 import type { BaseProfileProps } from "../base.hypixel-command";
 import type { Constructor } from "@statsify/util";
-import type { ElementNode } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
 
@@ -58,12 +67,57 @@ interface NormalTableProps {
   quests: GenericQuestInstance;
   t: LocalizeFunction;
   gameIcons: Record<GameId, Image>;
+  time: QuestTime;
 }
 
-const NormalTable = ({ quests, t, gameIcons }: NormalTableProps) => {
-  const entries: [GameId, any][] = Object.entries(quests)
-    .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
-    .map(([k, v]) => [k as GameId, t(v.total)]);
+const GRADIENT_OFFSET = 0.81;
+const BOX_COLOR = "rgba(0, 0, 0, 0.5)";
+
+const NormalTable = ({ quests, t, gameIcons, time }: NormalTableProps) => {
+  const questEntries = Object.entries(quests);
+
+  if (time === QuestTime.Overall) {
+    const entries: GameEntry[] = questEntries
+      .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
+      .map(([k, v]) => [k as GameId, t(v.total)]);
+
+    return <GameList entries={entries} gameIcons={gameIcons} />;
+  }
+
+  const entries: GameEntry[] = questEntries
+    .map(([k, v]) => [k, v, Object.keys(v).length - 1] as const)
+    .sort((a, b) => ratio(b[1]?.total ?? 0, b[2]) - ratio(a[1]?.total ?? 0, a[2]))
+    .map(([k, v, total]) => {
+      const completed = v.total;
+
+      let textColor: string;
+      let boxColor: DeferredGradient;
+
+      if (completed === total) {
+        textColor = "§a";
+        boxColor = useGradient(
+          "horizontal",
+          [GRADIENT_OFFSET, BOX_COLOR],
+          [1, "hsl(120, 100%, 37%, 0.5)"]
+        );
+      } else if (completed >= 1) {
+        textColor = "§6";
+        boxColor = useGradient(
+          "horizontal",
+          [GRADIENT_OFFSET, BOX_COLOR],
+          [1, "hsla(40, 100%, 20%, 0.5)"]
+        );
+      } else {
+        textColor = "§c";
+        boxColor = useGradient(
+          "horizontal",
+          [GRADIENT_OFFSET, BOX_COLOR],
+          [1, "hsla(0, 100%, 37%, 0.5)"]
+        );
+      }
+
+      return [k as GameId, `${textColor}${t(completed)}/${t(total)}`, boxColor];
+    });
 
   return <GameList entries={entries} gameIcons={gameIcons} />;
 };
@@ -151,7 +205,9 @@ export const QuestsProfile = ({
 
   switch (api) {
     case "overall":
-      table = <NormalTable quests={quests[period]} t={t} gameIcons={gameIcons} />;
+      table = (
+        <NormalTable quests={quests[period]} time={time} t={t} gameIcons={gameIcons} />
+      );
       break;
     default:
       table = (

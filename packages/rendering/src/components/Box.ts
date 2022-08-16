@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Fill } from "../jsx";
 import type * as JSX from "../jsx";
+import type { CanvasRenderingContext2D } from "skia-canvas";
+import type { DeferredGradient } from "../hooks";
 
 export interface BoxBorderRadius {
   topLeft: number;
@@ -20,8 +21,8 @@ export interface BoxRenderProps {
   border: BoxBorderRadius;
   shadowDistance: number;
   shadowOpacity: number;
-  color: Fill;
-  outline?: Fill;
+  color: JSX.Fill | DeferredGradient;
+  outline?: JSX.Fill;
   outlineSize: number;
 }
 
@@ -33,9 +34,21 @@ export interface BoxProps extends Omit<Partial<BoxRenderProps>, "color" | "outli
   location?: JSX.StyleLocation;
   direction?: JSX.StyleDirection;
   align?: JSX.StyleLocation;
-  color?: Fill;
-  outline?: Fill | boolean;
+  color?: JSX.Fill | DeferredGradient;
+  outline?: JSX.Fill | boolean;
 }
+
+export const resolveFill = (
+  fill: JSX.Fill | DeferredGradient,
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) => {
+  if (typeof fill === "string" || typeof fill === "object") return (ctx.fillStyle = fill);
+  ctx.fillStyle = fill(ctx, x, y, width, height);
+};
 
 export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   children,
@@ -80,7 +93,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   { color, border, shadowDistance, shadowOpacity, outline, outlineSize },
   { x, y, width, height, padding }
 ) => {
-  ctx.fillStyle = color;
+  resolveFill(color, ctx, x, y, width, height);
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -129,7 +142,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   if (!shadowDistance) return;
 
   ctx.globalAlpha = shadowOpacity;
-  ctx.fillStyle = color;
+  resolveFill(color, ctx, x, y, width, height);
 
   ctx.beginPath();
   ctx.moveTo(x + width, y + shadowDistance + border.topRight);
