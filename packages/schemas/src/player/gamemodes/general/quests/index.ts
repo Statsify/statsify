@@ -7,9 +7,33 @@
  */
 
 import { APIData, removeFormatting } from "@statsify/util";
+import {
+  ArcadeQuests,
+  ArenaBrawlQuests,
+  BedWarsQuests,
+  BlitzSGQuests,
+  BuildBattleQuests,
+  CopsAndCrimsQuests,
+  DuelsQuests,
+  MegaWallsQuests,
+  MurderMysteryQuests,
+  PaintballQuests,
+  PitQuests,
+  QuakeQuests,
+  SkyWarsQuests,
+  SmashHeroesQuests,
+  SpeedUHCQuests,
+  TNTGamesQuests,
+  TurboKartRacersQuests,
+  UHCQuests,
+  VampireZQuests,
+  WallsQuests,
+  WarlordsQuests,
+  WoolWarsQuests,
+} from "./modes";
 import { Field } from "../../../../metadata";
 import { FormattedGame, GameModes, IGameModes } from "../../../../game";
-import { OverallQuests } from "./quests-instance";
+import { GameWithQuestsEntry, QuestTime, createQuestsInstance } from "./util";
 
 export const QUEST_MODES = new GameModes([
   { api: "overall" },
@@ -23,26 +47,58 @@ export const QUEST_MODES = new GameModes([
   { api: "MEGAWALLS", formatted: removeFormatting(FormattedGame.MEGAWALLS) },
   { api: "MURDER_MYSTERY", formatted: removeFormatting(FormattedGame.MURDER_MYSTERY) },
   { api: "PAINTBALL", formatted: removeFormatting(FormattedGame.PAINTBALL) },
-  // { api: "PIT", formatted: removeFormatting(FormattedGame.PIT) },
-  // { api: "QUAKE", formatted: removeFormatting(FormattedGame.QUAKE) },
-  // { api: "SKYWARS", formatted: removeFormatting(FormattedGame.SKYWARS) },
-  // { api: "SMASH_HEROES", formatted: removeFormatting(FormattedGame.SMASH_HEROES) },
-  // { api: "SPEED_UHC", formatted: removeFormatting(FormattedGame.SPEED_UHC) },
-  // { api: "TNT_GAMES", formatted: removeFormatting(FormattedGame.TNT_GAMES) },
-  // {
-  //   api: "TURBO_KART_RACERS",
-  //   formatted: removeFormatting(FormattedGame.TURBO_KART_RACERS),
-  // },
-  // { api: "UHC", formatted: removeFormatting(FormattedGame.UHC) },
-  // { api: "VAMPIREZ", formatted: removeFormatting(FormattedGame.VAMPIREZ) },
-  // { api: "WALLS", formatted: removeFormatting(FormattedGame.WALLS) },
-  // { api: "WARLORDS", formatted: removeFormatting(FormattedGame.WARLORDS) },
-  // { api: "WOOLWARS", formatted: removeFormatting(FormattedGame.WOOLWARS) },
+  { api: "PIT", formatted: removeFormatting(FormattedGame.PIT) },
+  { api: "QUAKE", formatted: removeFormatting(FormattedGame.QUAKE) },
+  { api: "SKYWARS", formatted: removeFormatting(FormattedGame.SKYWARS) },
+  { api: "SMASH_HEROES", formatted: removeFormatting(FormattedGame.SMASH_HEROES) },
+  { api: "SPEED_UHC", formatted: removeFormatting(FormattedGame.SPEED_UHC) },
+  { api: "TNT_GAMES", formatted: removeFormatting(FormattedGame.TNT_GAMES) },
+  {
+    api: "TURBO_KART_RACERS",
+    formatted: removeFormatting(FormattedGame.TURBO_KART_RACERS),
+  },
+  { api: "UHC", formatted: removeFormatting(FormattedGame.UHC) },
+  { api: "VAMPIREZ", formatted: removeFormatting(FormattedGame.VAMPIREZ) },
+  { api: "WALLS", formatted: removeFormatting(FormattedGame.WALLS) },
+  { api: "WARLORDS", formatted: removeFormatting(FormattedGame.WARLORDS) },
+  { api: "WOOLWARS", formatted: removeFormatting(FormattedGame.WOOLWARS) },
 ]);
 
 export type QuestModes = IGameModes<typeof QUEST_MODES>;
 
-type QuestInstance = Record<keyof typeof FormattedGame, Record<string, number>>;
+type QuestInstance = Record<
+  keyof typeof FormattedGame,
+  Record<string, number> & { total: number }
+>;
+
+const modes: GameWithQuestsEntry[] = [
+  ["ARCADE", ArcadeQuests],
+  ["ARENA_BRAWL", ArenaBrawlQuests],
+  ["BEDWARS", BedWarsQuests],
+  ["BLITZSG", BlitzSGQuests],
+  ["BUILD_BATTLE", BuildBattleQuests],
+  ["DUELS", DuelsQuests],
+  ["COPS_AND_CRIMS", CopsAndCrimsQuests],
+  ["MEGAWALLS", MegaWallsQuests],
+  ["MURDER_MYSTERY", MurderMysteryQuests],
+  ["PAINTBALL", PaintballQuests],
+  ["PIT", PitQuests],
+  ["QUAKE", QuakeQuests],
+  ["SKYWARS", SkyWarsQuests],
+  ["SMASH_HEROES", SmashHeroesQuests],
+  ["SPEED_UHC", SpeedUHCQuests],
+  ["TNT_GAMES", TNTGamesQuests],
+  ["TURBO_KART_RACERS", TurboKartRacersQuests],
+  ["UHC", UHCQuests],
+  ["VAMPIREZ", VampireZQuests],
+  ["WALLS", WallsQuests],
+  ["WARLORDS", WarlordsQuests],
+  ["WOOLWARS", WoolWarsQuests],
+];
+
+const DailyQuests = createQuestsInstance(QuestTime.Daily, modes);
+const WeeklyQuests = createQuestsInstance(QuestTime.Weekly, modes);
+const OverallQuests = createQuestsInstance(QuestTime.Overall, modes);
 
 export class Quests {
   @Field({ leaderboard: { name: "Total Quests", fieldName: "Quests" } })
@@ -69,32 +125,23 @@ export class Quests {
   @Field({ type: () => OverallQuests })
   public overall: QuestInstance;
 
-  // @Field({ leaderboard: { resetEvery: "friday" } })
-  // public weekly: QuestsInstance;
+  @Field({ type: () => WeeklyQuests, leaderboard: { resetEvery: "friday" } })
+  public weekly: QuestInstance;
 
-  // @Field({ leaderboard: { resetEvery: "day" } })
-  // public daily: QuestsInstance;
+  @Field({ type: () => DailyQuests, leaderboard: { resetEvery: "day" } })
+  public daily: QuestInstance;
 
   public constructor(quests: APIData) {
     this.overall = new OverallQuests(quests) as QuestInstance;
-    // this.weekly = new QuestsInstance(quests, "week");
-    // this.daily = new QuestsInstance(quests, "day");
+    this.weekly = new WeeklyQuests(quests) as QuestInstance;
+    this.daily = new DailyQuests(quests) as QuestInstance;
 
-    // this.total = Object.values(quests).reduce(
-    //   (p: number, c: APIData) => p + (c?.completions?.length ?? 0),
-    //   0
-    // );
+    this.total = Quests.getTotal(this.overall);
+    this.weeklyTotal = Quests.getTotal(this.weekly);
+    this.dailyTotal = Quests.getTotal(this.daily);
+  }
 
-    // this.dailyTotal = Object.entries(this.daily).reduce(
-    //   (p, [, c]: [string, GameQuests]) => p + c.total,
-    //   0
-    // );
-
-    // this.weeklyTotal = Object.entries(this.weekly).reduce(
-    //   (p, [, c]: [string, GameQuests]) => p + c.total,
-    //   0
-    // );
+  private static getTotal(quests: QuestInstance): number {
+    return Object.values(quests).reduce((total, game) => total + game.total, 0);
   }
 }
-
-export * from "./quests-instance";

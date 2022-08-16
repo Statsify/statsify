@@ -6,62 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, removeFormatting } from "@statsify/util";
-import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
-import { GameQuests } from "../game-quests";
-import { QuestTime, getAmountDuring, questFieldData } from "../util";
-import { add } from "@statsify/math";
+import { createGameModeQuests } from "../util";
 
-export class UHCQuests implements GameQuests {
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "Team UHC Champions" },
-  })
-  public teamUHCChampions: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "Solo UHC Champions" },
-  })
-  public soloUHCChampions: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "UHC Deathmatch" },
-  })
-  public uhcDeathmatch: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "UHC Champions" },
-  })
-  public uhcChampions: number;
-
-  @Field({
-    leaderboard: {
-      name: "Total",
-      fieldName: `${removeFormatting(FormattedGame.UHC)} Total`,
-    },
-  })
-  public total: number;
-
-  public constructor(quests: APIData, time: QuestTime) {
-    if (time == undefined || time === "day") {
-      this.teamUHCChampions = getAmountDuring(quests.uhc_team, time);
-      this.soloUHCChampions = getAmountDuring(quests.uhc_solo, time);
-      this.uhcDeathmatch = getAmountDuring(quests.uhc_dm, time);
-    }
-
-    if (time == undefined || time === "week") {
-      this.uhcChampions = getAmountDuring(quests.uhc_weekly, time);
-    }
-
-    this.total = add(
-      this.teamUHCChampions ?? 0,
-      this.soloUHCChampions ?? 0,
-      this.uhcDeathmatch ?? 0,
-      this.uhcChampions ?? 0
-    );
-  }
-}
+export const UHCQuests = createGameModeQuests({
+  game: FormattedGame.UHC,
+  fieldPrefix: "uhc",
+  daily: [
+    { field: "team", propertyKey: "teamUHCChampions", fieldName: "Team UHC Champions" },
+    { field: "solo", propertyKey: "soloUHCChampions", fieldName: "Solo UHC Champions" },
+    { field: "dm", propertyKey: "uhcDeathmatch", fieldName: "UHC Deathmatch" },
+  ],
+  weekly: [{ field: "weekly", propertyKey: "uhcChampions", fieldName: "UHC Champions" }],
+});

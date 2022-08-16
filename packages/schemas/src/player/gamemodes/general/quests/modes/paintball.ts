@@ -11,7 +11,6 @@ import { createGameModeQuests } from "../util";
 
 export const PaintballQuests = createGameModeQuests({
   game: FormattedGame.PAINTBALL,
-  fieldPrefix: "paintball",
-  daily: [{ field: "paintballer" }, { field: "killer" }],
-  weekly: [{ field: "expert" }],
+  daily: [{ field: "paintballer" }, { field: "paintball_killer" }],
+  weekly: [{ field: "paintball_expert" }],
 });

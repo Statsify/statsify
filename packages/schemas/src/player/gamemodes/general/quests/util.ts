@@ -8,12 +8,12 @@
 
 import { APIData, Constructor, removeFormatting } from "@statsify/util";
 import { DateTime } from "luxon";
-import { Field, FieldOptions } from "../../../../metadata";
+import { Field } from "../../../../metadata";
 import { FormattedGame } from "../../../../game";
 
-export type Quest = {
+interface Quest {
   completions?: { time: number }[];
-};
+}
 
 export enum QuestTime {
   Daily,
@@ -21,22 +21,17 @@ export enum QuestTime {
   Overall,
 }
 
-export const questFieldData: FieldOptions = { leaderboard: { limit: 5000 } };
-
-export const questTotalFieldData = (game: FormattedGame) => ({
-  leaderboard: { name: "Total", fieldName: `${removeFormatting(game)} Total` },
-});
-
-interface QuestOption {
+export interface QuestOption {
   field: string;
   propertyKey?: string;
   fieldName?: string;
   name?: string;
+  leaderboard?: false;
 }
 
 export interface CreateQuestsOptions {
   game: FormattedGame;
-  fieldPrefix: string;
+  fieldPrefix?: string;
 
   /**
    * A list of daily quests
@@ -53,12 +48,14 @@ const processQuests = (
   instance: Record<string, number>,
   quests: APIData,
   time: QuestTime,
-  fieldPrefix: string,
-  options: QuestOption[]
+  options: QuestOption[],
+  fieldPrefix?: string
 ) => {
   options.forEach((quest) => {
     const k = quest.propertyKey ?? quest.field;
-    instance[k] = getAmountDuring(time, quests[`${fieldPrefix}_${quests[quest.field]}`]);
+    const field = fieldPrefix ? `${fieldPrefix}_${quest.field}` : quest.field;
+
+    instance[k] = getQuestCountDuring(time, quests[field]);
     instance.total += instance[k] ?? 0;
   });
 };
@@ -71,6 +68,7 @@ const assignQuestMetadata = (constructor: Constructor<any>, options: QuestOption
         limit: 5000,
         name: quest.name,
         fieldName: quest.fieldName,
+        enabled: quest.leaderboard,
       },
     });
 
@@ -78,7 +76,11 @@ const assignQuestMetadata = (constructor: Constructor<any>, options: QuestOption
   });
 };
 
-type QuestGame = [
+const questTotalFieldData = (game: FormattedGame) => ({
+  leaderboard: { name: "Total", fieldName: `${removeFormatting(game)} Total` },
+});
+
+type GameWithQuests = [
   daily: Constructor<any>,
   weekly: Constructor<any>,
   overall: Constructor<any>
@@ -89,7 +91,7 @@ export function createGameModeQuests({
   fieldPrefix,
   daily,
   weekly,
-}: CreateQuestsOptions): QuestGame {
+}: CreateQuestsOptions): GameWithQuests {
   class Daily {
     [key: string]: number;
 
@@ -98,7 +100,7 @@ export function createGameModeQuests({
 
     public constructor(quests: APIData) {
       this.total = 0;
-      processQuests(this, quests, QuestTime.Daily, fieldPrefix, daily);
+      processQuests(this, quests, QuestTime.Daily, daily, fieldPrefix);
     }
   }
 
@@ -112,7 +114,7 @@ export function createGameModeQuests({
 
     public constructor(quests: APIData) {
       this.total = 0;
-      processQuests(this, quests, QuestTime.Weekly, fieldPrefix, weekly);
+      processQuests(this, quests, QuestTime.Weekly, weekly, fieldPrefix);
     }
   }
 
@@ -127,8 +129,8 @@ export function createGameModeQuests({
     public constructor(quests: APIData) {
       this.total = 0;
 
-      processQuests(this, quests, QuestTime.Daily, fieldPrefix, daily);
-      processQuests(this, quests, QuestTime.Weekly, fieldPrefix, weekly);
+      processQuests(this, quests, QuestTime.Overall, daily, fieldPrefix);
+      processQuests(this, quests, QuestTime.Overall, weekly, fieldPrefix);
     }
   }
 
@@ -138,9 +140,9 @@ export function createGameModeQuests({
   return [Daily, Weekly, Overall];
 }
 
-export type QuestMode = [keyof typeof FormattedGame, QuestGame];
+export type GameWithQuestsEntry = [keyof typeof FormattedGame, GameWithQuests];
 
-export function createQuestsInstance(time: QuestTime, modes: QuestMode[]) {
+export function createQuestsInstance(time: QuestTime, modes: GameWithQuestsEntry[]) {
   class QuestInstance {
     [key: string]: Record<string, number>;
 
@@ -151,26 +153,24 @@ export function createQuestsInstance(time: QuestTime, modes: QuestMode[]) {
     }
   }
 
-  console.log(modes);
-
-  modes.forEach(([game, quests]) => {
-    const QuestGameModeClass = quests[time];
+  modes.forEach(([gameName, quests]) => {
+    const GameModeClass = quests[time];
 
     const decorator = Field({
-      type: () => QuestGameModeClass,
+      type: () => GameModeClass,
       leaderboard: {
-        fieldName: `${FormattedGame[game]} Quests`,
+        fieldName: `${FormattedGame[gameName]} Quests -`,
         additionalFields: ["this.total"],
       },
     });
 
-    decorator(QuestInstance.prototype, game);
+    decorator(QuestInstance.prototype, gameName);
   });
 
   return QuestInstance;
 }
 
-export const getAmountDuring = (time: QuestTime, quest: Quest | undefined) => {
+export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) => {
   if (!quest?.completions) return 0;
   if (time === QuestTime.Overall) return quest.completions.length;
 

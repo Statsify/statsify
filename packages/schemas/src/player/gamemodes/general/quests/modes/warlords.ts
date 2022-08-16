@@ -6,68 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, removeFormatting } from "@statsify/util";
-import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
-import { GameQuests } from "../game-quests";
-import { QuestTime, getAmountDuring, questFieldData } from "../util";
-import { add } from "@statsify/math";
+import { createGameModeQuests } from "../util";
 
-export class WarlordsQuests implements GameQuests {
-  @Field(questFieldData)
-  public captureTheFlag: number;
-
-  @Field(questFieldData)
-  public teamDeathmatch: number;
-
-  @Field(questFieldData)
-  public domination: number;
-
-  @Field(questFieldData)
-  public victorious: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "Carry, Secured!" },
-  })
-  public carrySecured: number;
-
-  @Field(questFieldData)
-  public dedication: number;
-
-  @Field(questFieldData)
-  public allStar: number;
-
-  @Field({
-    leaderboard: {
-      name: "Total",
-      fieldName: `${removeFormatting(FormattedGame.WARLORDS)} Total`,
-    },
-  })
-  public total: number;
-
-  public constructor(quests: APIData, time: QuestTime) {
-    if (time == undefined || time === "day") {
-      this.captureTheFlag = getAmountDuring(quests.warlords_ctf, time);
-      this.teamDeathmatch = getAmountDuring(quests.warlords_tdm, time);
-      this.domination = getAmountDuring(quests.warlords_domination, time);
-      this.victorious = getAmountDuring(quests.warlords_victorious, time);
-      this.carrySecured = getAmountDuring(quests.warlords_objectives, time);
-    }
-
-    if (time == undefined || time === "week") {
-      this.dedication = getAmountDuring(quests.warlords_dedication, time);
-      this.allStar = getAmountDuring(quests.warlords_all_star, time);
-    }
-
-    this.total = add(
-      this.captureTheFlag ?? 0,
-      this.teamDeathmatch ?? 0,
-      this.domination ?? 0,
-      this.victorious ?? 0,
-      this.carrySecured ?? 0,
-      this.dedication ?? 0,
-      this.allStar ?? 0
-    );
-  }
-}
+export const WarlordsQuests = createGameModeQuests({
+  game: FormattedGame.WARLORDS,
+  fieldPrefix: "warlords",
+  daily: [
+    { field: "ctf", propertyKey: "captureTheFlag" },
+    { field: "tdm", propertyKey: "teamDeathmatch" },
+    { field: "domination", propertyKey: "domination" },
+    { field: "victorious", propertyKey: "victorious" },
+    { field: "objectives", propertyKey: "carrySecured", name: "Carry, Secured!" },
+  ],
+  weekly: [
+    { field: "dedication", propertyKey: "dedication" },
+    { field: "all_star", propertyKey: "allStar" },
+  ],
+});

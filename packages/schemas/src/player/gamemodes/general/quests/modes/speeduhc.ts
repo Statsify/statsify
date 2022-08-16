@@ -6,48 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, removeFormatting } from "@statsify/util";
-import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
-import { GameQuests } from "../game-quests";
-import { QuestTime, getAmountDuring, questFieldData } from "../util";
-import { add } from "@statsify/math";
+import { createGameModeQuests } from "../util";
 
-export class SpeedUHCQuests implements GameQuests {
-  @Field(questFieldData)
-  public soloSpeedBrawler: number;
-
-  @Field({ leaderboard: { enabled: false } }) // Quest no longer available
-  public teamSpeedBrawler: number;
-
-  @Field(questFieldData)
-  public madness: number;
-
-  @Field({
-    leaderboard: {
-      name: "Total",
-      fieldName: `${removeFormatting(FormattedGame.SPEED_UHC)} Total`,
-    },
-  })
-  public total: number;
-
-  public constructor(quests: APIData, time: QuestTime) {
-    if (time == undefined) {
-      this.teamSpeedBrawler = getAmountDuring(quests.team_brawler, time);
-    }
-
-    if (time == undefined || time === "day") {
-      this.soloSpeedBrawler = getAmountDuring(quests.solo_brawler, time);
-    }
-
-    if (time == undefined || time === "week") {
-      this.madness = getAmountDuring(quests.uhc_madness, time);
-    }
-
-    this.total = add(
-      this.soloSpeedBrawler ?? 0,
-      this.teamSpeedBrawler ?? 0,
-      this.madness ?? 0
-    );
-  }
-}
+export const SpeedUHCQuests = createGameModeQuests({
+  game: FormattedGame.SPEED_UHC,
+  daily: [
+    { field: "solo_brawler", propertyKey: "soloSpeedBrawler" },
+    //TODO(jacobk999): find out what type of quest this is
+    { field: "team_brawler", propertyKey: "teamSpeedBrawler", leaderboard: false },
+  ],
+  weekly: [{ field: "uhc_madness", propertyKey: "madness" }],
+});

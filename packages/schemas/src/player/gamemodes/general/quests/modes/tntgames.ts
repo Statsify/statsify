@@ -6,120 +6,27 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, removeFormatting } from "@statsify/util";
-import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
-import { GameQuests } from "../game-quests";
-import { QuestTime, getAmountDuring, questFieldData } from "../util";
-import { add } from "@statsify/math";
+import { createGameModeQuests } from "../util";
 
-export class TNTGamesQuests implements GameQuests {
-  @Field(questFieldData)
-  public winner: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "TNT Run (Daily)" },
-  })
-  public tntRunDaily: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "PVP Run (Daily)" },
-  })
-  public pvpRunDaily: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "Bow Spleef (Daily)" },
-  })
-  public bowSpleefDaily: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "TNT Tag (Daily)" },
-  })
-  public tntTagDaily: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "TNT Wizards (Daily)" },
-  })
-  public tntWizardsDaily: number;
-
-  @Field(questFieldData)
-  public explosiveFanatic: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "TNT Run (Weekly)" },
-  })
-  public tntRunWeekly: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "PVP Run (Weekly)" },
-  })
-  public pvpRunWeekly: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "Bow Spleef (Weekly)" },
-  })
-  public bowSpleefWeekly: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "TNT Tag (Weekly)" },
-  })
-  public tntTagWeekly: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "TNT Wizards (Weekly)" },
-  })
-  public tntWizardsWeekly: number;
-
-  @Field({
-    leaderboard: {
-      name: "Total",
-      fieldName: `${removeFormatting(FormattedGame.TNT_GAMES)} Total`,
-    },
-  })
-  public total: number;
-
-  public constructor(quests: APIData, time: QuestTime) {
-    if (time == undefined || time === "day") {
-      this.winner = getAmountDuring(quests.tnt_daily_win, time);
-      this.tntRunDaily = getAmountDuring(quests.tnt_tntrun_daily, time);
-      this.pvpRunDaily = getAmountDuring(quests.tnt_pvprun_daily, time);
-      this.bowSpleefDaily = getAmountDuring(quests.tnt_bowspleef_daily, time);
-      this.tntTagDaily = getAmountDuring(quests.tnt_tnttag_daily, time);
-      this.tntWizardsDaily = getAmountDuring(quests.tnt_wizards_daily, time);
-    }
-
-    if (time == undefined || time === "week") {
-      this.explosiveFanatic = getAmountDuring(quests.tnt_weekly_play, time);
-      this.tntRunWeekly = getAmountDuring(quests.tnt_tntrun_weekly, time);
-      this.pvpRunWeekly = getAmountDuring(quests.tnt_pvprun_weekly, time);
-      this.bowSpleefWeekly = getAmountDuring(quests.tnt_bowspleef_weekly, time);
-      this.tntTagWeekly = getAmountDuring(quests.tnt_tnttag_weekly, time);
-      this.tntWizardsWeekly = getAmountDuring(quests.tnt_wizards_weekly, time);
-    }
-
-    this.total = add(
-      this.winner,
-      this.tntRunDaily,
-      this.pvpRunDaily,
-      this.bowSpleefDaily,
-      this.tntTagDaily,
-      this.tntWizardsDaily,
-      this.explosiveFanatic,
-      this.tntRunWeekly,
-      this.pvpRunWeekly,
-      this.bowSpleefWeekly,
-      this.tntTagWeekly,
-      this.tntWizardsWeekly
-    );
-  }
-}
+export const TNTGamesQuests = createGameModeQuests({
+  game: FormattedGame.TNT_GAMES,
+  fieldPrefix: "tnt",
+  //TODO: daily and weekly collide
+  daily: [
+    { field: "daily_win", propertyKey: "winner" },
+    { field: "tntrun_daily", propertyKey: "tntRunDaily" },
+    { field: "pvprun_daily", propertyKey: "pvpRunDaily" },
+    { field: "bowspleef_daily", propertyKey: "bowSpleefDaily" },
+    { field: "tnttag_daily", propertyKey: "tntTagDaily" },
+    { field: "wizards_daily", propertyKey: "tntWizardsDaily" },
+  ],
+  weekly: [
+    { field: "weekly_play", propertyKey: "explosiveFanatic" },
+    { field: "tntrun_weekly", propertyKey: "tntRunWeekly" },
+    { field: "pvprun_weekly", propertyKey: "pvpRunWeekly" },
+    { field: "bowspleef_weekly", propertyKey: "bowSpleefWeekly" },
+    { field: "tnttag_weekly", propertyKey: "tntTagWeekly" },
+    { field: "wizards_weekly", propertyKey: "tntWizardsWeekly" },
+  ],
+});

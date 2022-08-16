@@ -6,53 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, removeFormatting } from "@statsify/util";
-import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
-import { GameQuests } from "../game-quests";
-import { QuestTime, getAmountDuring, questFieldData } from "../util";
-import { add } from "@statsify/math";
+import { createGameModeQuests } from "../util";
 
-export class QuakeQuests implements GameQuests {
-  @Field(questFieldData)
-  public player: number;
-
-  @Field(questFieldData)
-  public sniper: number;
-
-  @Field(questFieldData)
-  public winner: number;
-
-  @Field({
-    ...questFieldData,
-    leaderboard: { ...questFieldData.leaderboard, name: "Bazinga!" },
-  })
-  public bazinga: number;
-
-  @Field({
-    leaderboard: {
-      name: "Total",
-      fieldName: `${removeFormatting(FormattedGame.QUAKE)} Total`,
-    },
-  })
-  public total: number;
-
-  public constructor(quests: APIData, time: QuestTime) {
-    if (time == undefined || time === "day") {
-      this.player = getAmountDuring(quests.quake_daily_play, time);
-      this.sniper = getAmountDuring(quests.quake_daily_kill, time);
-      this.winner = getAmountDuring(quests.quake_daily_win, time);
-    }
-
-    if (time == undefined || time === "week") {
-      this.bazinga = getAmountDuring(quests.quake_weekly_play, time);
-    }
-
-    this.total = add(
-      this.player ?? 0,
-      this.sniper ?? 0,
-      this.winner ?? 0,
-      this.bazinga ?? 0
-    );
-  }
-}
+export const QuakeQuests = createGameModeQuests({
+  game: FormattedGame.QUAKE,
+  fieldPrefix: "quake",
+  daily: [
+    { field: "daily_play", propertyKey: "player" },
+    { field: "daily_kill", propertyKey: "sniper" },
+    { field: "daily_win", propertyKey: "winner" },
+  ],
+  weekly: [{ field: "weekly_play", propertyKey: "bazinga", name: "Bazinga!" }],
+});

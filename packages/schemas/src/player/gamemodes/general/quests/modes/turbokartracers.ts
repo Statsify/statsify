@@ -6,50 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, removeFormatting } from "@statsify/util";
-import { Field } from "../../../../../metadata";
 import { FormattedGame } from "../../../../../game";
-import { GameQuests } from "../game-quests";
-import { QuestTime, getAmountDuring, questFieldData } from "../util";
-import { add } from "@statsify/math";
+import { createGameModeQuests } from "../util";
 
-export class TurboKartRacersQuests implements GameQuests {
-  @Field(questFieldData)
-  public blingBling: number;
-
-  @Field(questFieldData)
-  public internationalChampionship: number;
-
-  @Field(questFieldData)
-  public racer: number;
-
-  @Field(questFieldData)
-  public turboKartRacers: number;
-
-  @Field({
-    leaderboard: {
-      name: "Total",
-      fieldName: `${removeFormatting(FormattedGame.TURBO_KART_RACERS)} Total`,
-    },
-  })
-  public total: number;
-
-  public constructor(quests: APIData, time: QuestTime) {
-    if (time == undefined || time === "day") {
-      this.blingBling = getAmountDuring(quests.gingerbread_bling_bling, time);
-      this.internationalChampionship = getAmountDuring(quests.gingerbread_maps, time);
-      this.racer = getAmountDuring(quests.gingerbread_racer, time);
-    }
-
-    if (time == undefined || time === "week") {
-      this.turboKartRacers = getAmountDuring(quests.gingerbread_mastery, time);
-    }
-
-    this.total = add(
-      this.blingBling ?? 0,
-      this.internationalChampionship ?? 0,
-      this.racer ?? 0,
-      this.turboKartRacers ?? 0
-    );
-  }
-}
+export const TurboKartRacersQuests = createGameModeQuests({
+  game: FormattedGame.TURBO_KART_RACERS,
+  fieldPrefix: "gingerbread",
+  daily: [
+    { field: "bling_bling", propertyKey: "blingBling" },
+    { field: "maps", propertyKey: "internationalChampionship" },
+    { field: "racer", propertyKey: "racer" },
+  ],
+  weekly: [{ field: "mastery", propertyKey: "turboKartRacers" }],
+});
