@@ -91,9 +91,9 @@ const questModes = {
   WOOLWARS: WoolWarsQuests,
 } as const;
 
-const DailyQuests = createQuestsInstance(QuestTime.Daily, questModes);
-const WeeklyQuests = createQuestsInstance(QuestTime.Weekly, questModes);
-const OverallQuests = createQuestsInstance(QuestTime.Overall, questModes);
+export const DailyQuests = createQuestsInstance(QuestTime.Daily, questModes);
+export const WeeklyQuests = createQuestsInstance(QuestTime.Weekly, questModes);
+export const OverallQuests = createQuestsInstance(QuestTime.Overall, questModes);
 
 export interface GameQuests {
   total: number;
@@ -128,10 +128,10 @@ export class Quests {
   @Field({ type: () => OverallQuests })
   public overall: UnwrapConstructor<typeof OverallQuests>;
 
-  @Field({ type: () => WeeklyQuests, leaderboard: { resetEvery: "friday" } })
+  @Field({ type: () => WeeklyQuests })
   public weekly: UnwrapConstructor<typeof WeeklyQuests>;
 
-  @Field({ type: () => DailyQuests, leaderboard: { resetEvery: "day" } })
+  @Field({ type: () => DailyQuests })
   public daily: UnwrapConstructor<typeof DailyQuests>;
 
   public constructor(quests: APIData) {
@@ -153,3 +153,5 @@ export class Quests {
     return Object.values(quests).reduce((total, game) => total + game.total, 0);
   }
 }
+
+export { QuestTime } from "./util";

@@ -16,7 +16,7 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { GameModes, QUEST_MODES, QuestModes } from "@statsify/schemas";
+import { GameModes, QUEST_MODES, QuestModes, QuestTime } from "@statsify/schemas";
 import { QuestProfileProps, QuestsProfile } from "./quests.profile";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -39,15 +39,7 @@ export class QuestsCommand {
     args: [new PlayerArgument()],
   })
   public async overall(context: CommandContext) {
-    return this.run(context, "overall");
-  }
-
-  @SubCommand({
-    description: (t) => t("commands.quests-daily"),
-    args: [new PlayerArgument()],
-  })
-  public async daily(context: CommandContext) {
-    return this.run(context, "daily");
+    return this.run(context, QuestTime.Overall);
   }
 
   @SubCommand({
@@ -55,14 +47,22 @@ export class QuestsCommand {
     args: [new PlayerArgument()],
   })
   public async weekly(context: CommandContext) {
-    return this.run(context, "weekly");
+    return this.run(context, QuestTime.Weekly);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.quests-daily"),
+    args: [new PlayerArgument()],
+  })
+  public async daily(context: CommandContext) {
+    return this.run(context, QuestTime.Daily);
   }
 
   private getProfile(props: QuestProfileProps): JSX.Element {
     return <QuestsProfile {...props} />;
   }
 
-  private async run(context: CommandContext, time: "overall" | "daily" | "weekly") {
+  private async run(context: CommandContext, time: QuestTime) {
     const user = context.getUser();
 
     const player = await this.apiService.getPlayer(context.option("player"), user);
@@ -90,10 +90,9 @@ export class QuestsCommand {
           t,
           user,
           badge,
-          time: "LIVE",
+          time,
           mode,
           gameIcons,
-          questTimePeriod: time,
           logos: [crossLogo, verifiedLogo],
         });
 

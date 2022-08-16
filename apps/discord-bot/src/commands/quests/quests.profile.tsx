@@ -7,37 +7,51 @@
  */
 
 import {
-  Container,
-  Footer,
-  GameList,
-  Header,
-  List,
-  SidebarItem,
-  Table,
-} from "#components";
-import { DateTime } from "luxon";
-import {
+  ClassMetadata,
+  DailyQuests,
   FormattedGame,
   GameId,
   GameMode,
   GameQuests,
   GenericQuestInstance,
+  METADATA_KEY,
+  MetadataScanner,
+  OverallQuests,
   QuestModes,
+  QuestTime,
+  WeeklyQuests,
 } from "@statsify/schemas";
+import { Container, Footer, GameList, Header, List, SidebarItem } from "#components";
+import { DateTime } from "luxon";
 import { HistoricalType } from "@statsify/api-client";
-import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
+import type { Constructor } from "@statsify/util";
 import type { ElementNode } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
 
-type QuestTimePeriod = "overall" | "daily" | "weekly";
+function getQuestMetadata<T>(constructor: Constructor<T>) {
+  const entries = Object.entries(
+    Reflect.getMetadata(METADATA_KEY, constructor.prototype) as ClassMetadata
+  );
 
-export interface QuestProfileProps extends BaseProfileProps {
+  const metadata = entries.map(([key, data]) => [
+    key,
+    Object.fromEntries(MetadataScanner.scan(data.type.type)),
+  ]);
+
+  return Object.fromEntries(metadata);
+}
+
+const questMetadata = [DailyQuests, WeeklyQuests, OverallQuests].map((constructor) =>
+  getQuestMetadata(constructor as Constructor<GenericQuestInstance>)
+);
+
+export interface QuestProfileProps extends Omit<BaseProfileProps, "time"> {
   mode: GameMode<QuestModes>;
   gameIcons: Record<GameId, Image>;
   logos: [check: Image, cross: Image];
-  questTimePeriod: QuestTimePeriod;
+  time: QuestTime;
 }
 
 interface NormalTableProps {
@@ -55,24 +69,23 @@ const NormalTable = ({ quests, t, gameIcons }: NormalTableProps) => {
 };
 
 interface GameTableProps {
-  gameQuests: GameQuests;
+  quests: GameQuests;
   t: LocalizeFunction;
-  questTimePeriod: QuestTimePeriod;
+  time: QuestTime;
+  game: keyof typeof FormattedGame;
   logos: [Image, Image];
 }
 
-//TODO: Properly get the metadata for the quest
-
-const GameTable = ({ gameQuests, t, questTimePeriod, logos }: GameTableProps) => {
-  const entries: [string, ElementNode][] = Object.entries(gameQuests)
+const GameTable = ({ quests, t, game, time, logos }: GameTableProps) => {
+  const entries: [string, ElementNode][] = Object.entries(quests)
     .filter(([k, v]) => k !== "total" && v !== null)
     .sort((a, b) => b[1] - a[1])
     .map(([quest, completions]) => {
-      const realName = prettify(quest);
+      const name = questMetadata[time][game][quest].leaderboard.name;
 
       return [
-        `${completions > 0 ? "§a" : "§c"}§l${realName}`,
-        questTimePeriod === "overall" ? (
+        `${completions > 0 ? "§a" : "§c"}§l${name}`,
+        time === QuestTime.Overall ? (
           <text>{t(completions)}</text>
         ) : (
           <img margin={2} image={logos[completions]} />
@@ -81,24 +94,22 @@ const GameTable = ({ gameQuests, t, questTimePeriod, logos }: GameTableProps) =>
     });
 
   return (
-    <Table.table>
-      <List
-        items={entries.map(([name, value]) => (
-          <>
-            <box
-              width="remaining"
-              border={{ bottomLeft: 4, bottomRight: 0, topLeft: 4, topRight: 0 }}
-              direction="column"
-            >
-              <text align="left">{name}</text>
-            </box>
-            <box border={{ bottomLeft: 0, bottomRight: 4, topLeft: 0, topRight: 4 }}>
-              {value}
-            </box>
-          </>
-        ))}
-      />
-    </Table.table>
+    <List
+      items={entries.map(([name, value]) => (
+        <>
+          <box
+            width="remaining"
+            border={{ bottomLeft: 4, bottomRight: 0, topLeft: 4, topRight: 0 }}
+            direction="column"
+          >
+            <text align="left">{name}</text>
+          </box>
+          <box border={{ bottomLeft: 0, bottomRight: 4, topLeft: 0, topRight: 4 }}>
+            {value}
+          </box>
+        </>
+      ))}
+    />
   );
 };
 
@@ -112,25 +123,42 @@ export const QuestsProfile = ({
   mode,
   t,
   gameIcons,
-  questTimePeriod,
+  time,
   logos,
 }: QuestProfileProps) => {
   const { quests } = player.stats.general;
+
+  let period: "overall" | "weekly" | "daily";
+  let historicalTime: "LIVE" | HistoricalType;
+
+  switch (time) {
+    case QuestTime.Overall:
+      period = "overall";
+      historicalTime = "LIVE";
+      break;
+    case QuestTime.Weekly:
+      period = "weekly";
+      historicalTime = HistoricalType.WEEKLY;
+      break;
+    case QuestTime.Daily:
+      period = "daily";
+      historicalTime = HistoricalType.DAILY;
+      break;
+  }
 
   const { api, formatted } = mode;
   let table: JSX.Element;
 
   switch (api) {
     case "overall":
-      table = (
-        <NormalTable quests={quests[questTimePeriod]} t={t} gameIcons={gameIcons} />
-      );
+      table = <NormalTable quests={quests[period]} t={t} gameIcons={gameIcons} />;
       break;
     default:
       table = (
         <GameTable
-          gameQuests={quests[questTimePeriod][api]}
-          questTimePeriod={questTimePeriod}
+          quests={quests[period][api]}
+          game={api}
+          time={time}
           logos={logos}
           t={t}
         />
@@ -143,7 +171,7 @@ export const QuestsProfile = ({
   if (api !== "overall") {
     sidebar.push([
       t("stats.game-total", { game: formatted }),
-      t(quests[questTimePeriod][api].total),
+      t(quests[period][api].total),
       "§a",
     ]);
   }
@@ -153,15 +181,10 @@ export const QuestsProfile = ({
       ? `§l${FormattedGame[api as keyof typeof FormattedGame]}`
       : formatted;
 
-  const time =
-    questTimePeriod === "overall"
-      ? "LIVE"
-      : (questTimePeriod.toUpperCase() as HistoricalType);
+  let startTime: DateTime | undefined = undefined;
+  let endTime: DateTime | undefined = undefined;
 
-  let startTime;
-  let endTime;
-
-  if (questTimePeriod === "weekly") {
+  if (time === QuestTime.Weekly) {
     const dt = DateTime.now().setZone("America/New_York").startOf("week");
 
     startTime =
@@ -180,7 +203,7 @@ export const QuestsProfile = ({
         badge={badge}
         title={`§l§eQuests §r(${title}§r)`}
         sidebar={sidebar}
-        time={time}
+        time={historicalTime}
         startTime={startTime}
         endTime={endTime}
       />
