@@ -62,6 +62,7 @@ async function bootstrap() {
     maxPlayers: 2,
     motd: "§9§lStatsify Verification",
     version: false,
+    enforceSecureProfile: false,
     errorHandler: (_, error) => {
       logger.error(error);
     },
