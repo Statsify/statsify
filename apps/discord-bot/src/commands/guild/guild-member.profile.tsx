@@ -40,6 +40,15 @@ export const GuildMemberProfile = ({
     `§7${t("stats.guild.quests")}: §b${t(member.questParticipation)}`,
   ].join("\n");
 
+  const positions = guild.expHistory.map(
+    (_, i) =>
+      guild.members
+        .map((v) => [v.uuid, v.expHistory[i]])
+        .sort((a, b) => Number(b[1]) - Number(a[1]))
+        .map(([u]) => u)
+        .indexOf(member.uuid) + 1
+  );
+
   return (
     <Container background={background}>
       <Header
@@ -64,7 +73,12 @@ export const GuildMemberProfile = ({
           />
         </Table.tr>
       </Table.table>
-      <GexpTable dates={guild.expHistoryDays} expHistory={member.expHistory} t={t} />
+      <GexpTable
+        dates={guild.expHistoryDays}
+        expHistory={member.expHistory}
+        positions={positions}
+        t={t}
+      />
       <Footer logo={logo} user={user} />
     </Container>
   );

@@ -13,6 +13,7 @@ export interface GexpTableProps {
   dates: string[];
   expHistory: number[];
   scaledExpHistory?: number[];
+  positions?: number[];
   t: LocalizeFunction;
 }
 
@@ -21,10 +22,17 @@ const formatHypixelGuildDate = (date: string) => {
   return `${month}/${day}/${year.replace("20", "")}`;
 };
 
-export const GexpTable = ({ dates, expHistory, scaledExpHistory, t }: GexpTableProps) => {
-  const expBorder = scaledExpHistory
-    ? { topLeft: 0, bottomLeft: 0, bottomRight: 0, topRight: 0 }
-    : { topLeft: 0, bottomLeft: 0, bottomRight: 4, topRight: 4 };
+export const GexpTable = ({
+  dates,
+  expHistory,
+  scaledExpHistory,
+  positions,
+  t,
+}: GexpTableProps) => {
+  const expBorder =
+    scaledExpHistory || positions
+      ? { topLeft: 0, bottomLeft: 0, bottomRight: 0, topRight: 0 }
+      : { topLeft: 0, bottomLeft: 0, bottomRight: 4, topRight: 4 };
 
   return (
     <Table.table>
@@ -44,6 +52,14 @@ export const GexpTable = ({ dates, expHistory, scaledExpHistory, t }: GexpTableP
             border={{ topLeft: 0, bottomLeft: 0, bottomRight: 4, topRight: 4 }}
           >
             <text>§2§l{t("stats.guild.scaledGexp")}</text>
+          </box>
+        </If>
+        <If condition={positions}>
+          <box
+            width="100%"
+            border={{ topLeft: 0, bottomLeft: 0, bottomRight: 4, topRight: 4 }}
+          >
+            <text>§7§l{t("stats.positions")}</text>
           </box>
         </If>
       </Table.tr>
@@ -66,6 +82,16 @@ export const GexpTable = ({ dates, expHistory, scaledExpHistory, t }: GexpTableP
                   border={{ topLeft: 0, bottomLeft: 0, bottomRight: 4, topRight: 4 }}
                 >
                   <text>§2{t(scaledExpHistory[i])}</text>
+                </box>
+              )}
+            </If>
+            <If condition={positions}>
+              {(positions) => (
+                <box
+                  width="100%"
+                  border={{ topLeft: 0, bottomLeft: 0, bottomRight: 4, topRight: 4 }}
+                >
+                  <text>§7#{t(positions[i])}</text>
                 </box>
               )}
             </If>
