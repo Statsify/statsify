@@ -12,7 +12,11 @@ import { createGameModeQuests } from "../util";
 export const DuelsQuests = createGameModeQuests({
   game: FormattedGame.DUELS,
   fieldPrefix: "duels",
-  daily: [{ field: "player" }, { field: "kills" }, { field: "winner" }],
+  daily: [
+    { field: "player", propertyKey: "player" },
+    { field: "kills", propertyKey: "kills" },
+    { field: "winner", propertyKey: "winner" },
+  ],
   weekly: [
     { field: "weekly_kills", propertyKey: "weeklyKills" },
     { field: "weekly_wins", propertyKey: "weeklyWins" },

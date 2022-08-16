@@ -16,7 +16,7 @@ export const BlitzSGQuests = createGameModeQuests({
     { field: "game_of_the_day", propertyKey: "gameOfTheDay" },
     { field: "win", propertyKey: "winNormal" },
     { field: "loot_chest_daily", propertyKey: "chestLooter" },
-    { field: "kills" },
+    { field: "kills", propertyKey: "kills" },
   ],
   weekly: [
     { field: "weekly_master", propertyKey: "master" },

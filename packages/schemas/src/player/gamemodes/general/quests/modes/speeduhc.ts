@@ -14,7 +14,7 @@ export const SpeedUHCQuests = createGameModeQuests({
   daily: [
     { field: "solo_brawler", propertyKey: "soloSpeedBrawler" },
     //TODO(jacobk999): find out what type of quest this is
-    { field: "team_brawler", propertyKey: "teamSpeedBrawler", leaderboard: false },
+    // { field: "team_brawler", propertyKey: "teamSpeedBrawler", leaderboard: false },
   ],
   weekly: [{ field: "uhc_madness", propertyKey: "madness" }],
 });

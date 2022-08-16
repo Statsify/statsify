@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, removeFormatting } from "@statsify/util";
+import { APIData, UnwrapConstructor, removeFormatting } from "@statsify/util";
 import {
   ArcadeQuests,
   ArenaBrawlQuests,
@@ -33,7 +33,7 @@ import {
 } from "./modes";
 import { Field } from "../../../../metadata";
 import { FormattedGame, GameModes, IGameModes } from "../../../../game";
-import { GameWithQuestsEntry, QuestTime, createQuestsInstance } from "./util";
+import { QuestTime, createQuestsInstance } from "./util";
 
 export const QUEST_MODES = new GameModes([
   { api: "overall" },
@@ -66,39 +66,34 @@ export const QUEST_MODES = new GameModes([
 
 export type QuestModes = IGameModes<typeof QUEST_MODES>;
 
-type QuestInstance = Record<
-  keyof typeof FormattedGame,
-  Record<string, number> & { total: number }
->;
+const questModes = {
+  ARCADE: ArcadeQuests,
+  ARENA_BRAWL: ArenaBrawlQuests,
+  BEDWARS: BedWarsQuests,
+  BLITZSG: BlitzSGQuests,
+  BUILD_BATTLE: BuildBattleQuests,
+  DUELS: DuelsQuests,
+  COPS_AND_CRIMS: CopsAndCrimsQuests,
+  MEGAWALLS: MegaWallsQuests,
+  MURDER_MYSTERY: MurderMysteryQuests,
+  PAINTBALL: PaintballQuests,
+  PIT: PitQuests,
+  QUAKE: QuakeQuests,
+  SKYWARS: SkyWarsQuests,
+  SMASH_HEROES: SmashHeroesQuests,
+  SPEED_UHC: SpeedUHCQuests,
+  TNT_GAMES: TNTGamesQuests,
+  TURBO_KART_RACERS: TurboKartRacersQuests,
+  UHC: UHCQuests,
+  VAMPIREZ: VampireZQuests,
+  WALLS: WallsQuests,
+  WARLORDS: WarlordsQuests,
+  WOOLWARS: WoolWarsQuests,
+} as const;
 
-const modes: GameWithQuestsEntry[] = [
-  ["ARCADE", ArcadeQuests],
-  ["ARENA_BRAWL", ArenaBrawlQuests],
-  ["BEDWARS", BedWarsQuests],
-  ["BLITZSG", BlitzSGQuests],
-  ["BUILD_BATTLE", BuildBattleQuests],
-  ["DUELS", DuelsQuests],
-  ["COPS_AND_CRIMS", CopsAndCrimsQuests],
-  ["MEGAWALLS", MegaWallsQuests],
-  ["MURDER_MYSTERY", MurderMysteryQuests],
-  ["PAINTBALL", PaintballQuests],
-  ["PIT", PitQuests],
-  ["QUAKE", QuakeQuests],
-  ["SKYWARS", SkyWarsQuests],
-  ["SMASH_HEROES", SmashHeroesQuests],
-  ["SPEED_UHC", SpeedUHCQuests],
-  ["TNT_GAMES", TNTGamesQuests],
-  ["TURBO_KART_RACERS", TurboKartRacersQuests],
-  ["UHC", UHCQuests],
-  ["VAMPIREZ", VampireZQuests],
-  ["WALLS", WallsQuests],
-  ["WARLORDS", WarlordsQuests],
-  ["WOOLWARS", WoolWarsQuests],
-];
-
-const DailyQuests = createQuestsInstance(QuestTime.Daily, modes);
-const WeeklyQuests = createQuestsInstance(QuestTime.Weekly, modes);
-const OverallQuests = createQuestsInstance(QuestTime.Overall, modes);
+const DailyQuests = createQuestsInstance(QuestTime.Daily, questModes);
+const WeeklyQuests = createQuestsInstance(QuestTime.Weekly, questModes);
+const OverallQuests = createQuestsInstance(QuestTime.Overall, questModes);
 
 export class Quests {
   @Field({ leaderboard: { name: "Total Quests", fieldName: "Quests" } })
@@ -123,25 +118,27 @@ export class Quests {
   public dailyTotal: number;
 
   @Field({ type: () => OverallQuests })
-  public overall: QuestInstance;
+  public overall: UnwrapConstructor<typeof OverallQuests>;
 
   @Field({ type: () => WeeklyQuests, leaderboard: { resetEvery: "friday" } })
-  public weekly: QuestInstance;
+  public weekly: UnwrapConstructor<typeof WeeklyQuests>;
 
   @Field({ type: () => DailyQuests, leaderboard: { resetEvery: "day" } })
-  public daily: QuestInstance;
+  public daily: UnwrapConstructor<typeof DailyQuests>;
 
   public constructor(quests: APIData) {
-    this.overall = new OverallQuests(quests) as QuestInstance;
-    this.weekly = new WeeklyQuests(quests) as QuestInstance;
-    this.daily = new DailyQuests(quests) as QuestInstance;
+    this.overall = new OverallQuests(quests);
+    this.weekly = new WeeklyQuests(quests);
+    this.daily = new DailyQuests(quests);
 
     this.total = Quests.getTotal(this.overall);
     this.weeklyTotal = Quests.getTotal(this.weekly);
     this.dailyTotal = Quests.getTotal(this.daily);
   }
 
-  private static getTotal(quests: QuestInstance): number {
+  private static getTotal<
+    T extends { [K in keyof typeof FormattedGame]?: { total: number } }
+  >(quests: T): number {
     return Object.values(quests).reduce((total, game) => total + game.total, 0);
   }
 }

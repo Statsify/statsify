@@ -6,7 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, Constructor, removeFormatting } from "@statsify/util";
+import {
+  APIData,
+  Constructor,
+  UnwrapConstructor,
+  removeFormatting,
+} from "@statsify/util";
 import { DateTime } from "luxon";
 import { Field } from "../../../../metadata";
 import { FormattedGame } from "../../../../game";
@@ -21,34 +26,37 @@ export enum QuestTime {
   Overall,
 }
 
-export interface QuestOption {
+export interface QuestOption<TField extends string> {
   field: string;
-  propertyKey?: string;
+  propertyKey: TField;
   fieldName?: string;
   name?: string;
   leaderboard?: false;
 }
 
-export interface CreateQuestsOptions {
+export interface CreateQuestsOptions<
+  DailyFields extends string,
+  WeeklyFields extends string
+> {
   game: FormattedGame;
   fieldPrefix?: string;
 
   /**
    * A list of daily quests
    */
-  daily: QuestOption[];
+  daily: QuestOption<DailyFields>[];
 
   /**
    * A list of weekly quests
    */
-  weekly: QuestOption[];
+  weekly: QuestOption<WeeklyFields>[];
 }
 
 const processQuests = (
   instance: Record<string, number>,
   quests: APIData,
   time: QuestTime,
-  options: QuestOption[],
+  options: QuestOption<string>[],
   fieldPrefix?: string
 ) => {
   options.forEach((quest) => {
@@ -60,7 +68,10 @@ const processQuests = (
   });
 };
 
-const assignQuestMetadata = (constructor: Constructor<any>, options: QuestOption[]) => {
+const assignQuestMetadata = (
+  constructor: Constructor<any>,
+  options: QuestOption<string>[]
+) => {
   options.forEach((quest) => {
     const decorator = Field({
       type: () => Number,
@@ -80,18 +91,28 @@ const questTotalFieldData = (game: FormattedGame) => ({
   leaderboard: { name: "Total", fieldName: `${removeFormatting(game)} Total` },
 });
 
-type GameWithQuests = [
-  daily: Constructor<any>,
-  weekly: Constructor<any>,
-  overall: Constructor<any>
+type GameWithQuestMode<Fields extends string> = {
+  [K in Fields]: number;
+} & { total: number };
+
+type GameWithQuests<DailyFields extends string, WeeklyFields extends string> = [
+  daily: Constructor<GameWithQuestMode<DailyFields>>,
+  weekly: Constructor<GameWithQuestMode<WeeklyFields>>,
+  overall: Constructor<GameWithQuestMode<DailyFields | WeeklyFields>>
 ];
 
-export function createGameModeQuests({
+export function createGameModeQuests<
+  DailyFields extends string,
+  WeeklyFields extends string
+>({
   game,
   fieldPrefix,
   daily,
   weekly,
-}: CreateQuestsOptions): GameWithQuests {
+}: CreateQuestsOptions<DailyFields, WeeklyFields>): GameWithQuests<
+  DailyFields,
+  WeeklyFields
+> {
   class Daily {
     [key: string]: number;
 
@@ -137,12 +158,31 @@ export function createGameModeQuests({
   assignQuestMetadata(Overall, daily);
   assignQuestMetadata(Overall, weekly);
 
-  return [Daily, Weekly, Overall];
+  return [Daily, Weekly, Overall] as GameWithQuests<DailyFields, WeeklyFields>;
 }
 
-export type GameWithQuestsEntry = [keyof typeof FormattedGame, GameWithQuests];
+type BaseGamesWithQuestsRecord = {
+  [K in keyof typeof FormattedGame]?: GameWithQuests<string, string>;
+};
 
-export function createQuestsInstance(time: QuestTime, modes: GameWithQuestsEntry[]) {
+type IQuestInstance<
+  Time extends QuestTime,
+  GamesWithQuests extends BaseGamesWithQuestsRecord
+> = Constructor<{
+  [K in keyof GamesWithQuests]: GamesWithQuests[K] extends GameWithQuests<string, string>
+    ? UnwrapConstructor<GamesWithQuests[K][Time]>
+    : never;
+}>;
+
+export function createQuestsInstance<
+  Time extends QuestTime,
+  GamesWithQuests extends BaseGamesWithQuestsRecord
+>(time: Time, record: GamesWithQuests): IQuestInstance<Time, GamesWithQuests> {
+  const modes = Object.entries(record) as [
+    keyof typeof FormattedGame,
+    GameWithQuests<string, string>
+  ][];
+
   class QuestInstance {
     [key: string]: Record<string, number>;
 
@@ -167,7 +207,7 @@ export function createQuestsInstance(time: QuestTime, modes: GameWithQuestsEntry
     decorator(QuestInstance.prototype, gameName);
   });
 
-  return QuestInstance;
+  return QuestInstance as unknown as IQuestInstance<Time, GamesWithQuests>;
 }
 
 export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) => {
