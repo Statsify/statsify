@@ -32,6 +32,10 @@ export interface QuestOption<TField extends string> {
   fieldName?: string;
   name?: string;
   leaderboard?: false;
+  overall?: {
+    fieldName?: string;
+    name?: string;
+  };
 }
 
 export interface CreateQuestsOptions<
@@ -70,15 +74,19 @@ const processQuests = (
 
 const assignQuestMetadata = (
   constructor: Constructor<any>,
+  time: QuestTime,
   options: QuestOption<string>[]
 ) => {
   options.forEach((quest) => {
+    const hasOverall = quest.overall !== undefined;
+    const canDisplayOverall = hasOverall && time === QuestTime.Overall;
+
     const decorator = Field({
       type: () => Number,
       leaderboard: {
         limit: 5000,
-        name: quest.name,
-        fieldName: quest.fieldName,
+        name: canDisplayOverall ? quest.overall?.name : quest.name,
+        fieldName: canDisplayOverall ? quest.overall?.fieldName : quest.fieldName,
         enabled: quest.leaderboard,
       },
     });
@@ -125,7 +133,7 @@ export function createGameModeQuests<
     }
   }
 
-  assignQuestMetadata(Daily, daily);
+  assignQuestMetadata(Daily, QuestTime.Daily, daily);
 
   class Weekly {
     [key: string]: number;
@@ -139,7 +147,7 @@ export function createGameModeQuests<
     }
   }
 
-  assignQuestMetadata(Weekly, weekly);
+  assignQuestMetadata(Weekly, QuestTime.Weekly, weekly);
 
   class Overall {
     [key: string]: number;
@@ -155,8 +163,8 @@ export function createGameModeQuests<
     }
   }
 
-  assignQuestMetadata(Overall, daily);
-  assignQuestMetadata(Overall, weekly);
+  assignQuestMetadata(Overall, QuestTime.Overall, daily);
+  assignQuestMetadata(Overall, QuestTime.Overall, weekly);
 
   return [Daily, Weekly, Overall] as GameWithQuests<DailyFields, WeeklyFields>;
 }

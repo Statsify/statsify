@@ -28,8 +28,11 @@ export const CopsAndCrimsQuests = createGameModeQuests({
     },
   ],
   weekly: [
-    //TODO(vnmm): add winADeathmatch
-    // { propertyKey: "winADeathmatch" }
+    {
+      field: "win_daily_deathmatch",
+      propertyKey: "winADeathmatch",
+      name: "Win a game! (Deathmatch)",
+    },
     {
       field: "kill_weekly",
       propertyKey: "killsAndPoints",

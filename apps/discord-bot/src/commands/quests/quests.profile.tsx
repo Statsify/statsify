@@ -17,13 +17,11 @@ import {
 } from "#components";
 import { DateTime } from "luxon";
 import {
-  FieldMetadata,
   FormattedGame,
   GameId,
   GameMode,
   GameQuests,
   GenericQuestInstance,
-  MetadataScanner,
   QuestModes,
 } from "@statsify/schemas";
 import { HistoricalType } from "@statsify/api-client";
@@ -58,28 +56,19 @@ const NormalTable = ({ quests, t, gameIcons }: NormalTableProps) => {
 
 interface GameTableProps {
   gameQuests: GameQuests;
-  constructor: any;
   t: LocalizeFunction;
   questTimePeriod: QuestTimePeriod;
   logos: [Image, Image];
 }
 
-const GameTable = ({
-  gameQuests,
-  constructor,
-  t,
-  questTimePeriod,
-  logos,
-}: GameTableProps) => {
-  const metadata: Record<string, FieldMetadata> = Object.fromEntries(
-    MetadataScanner.scan(constructor)
-  );
+//TODO: Properly get the metadata for the quest
 
+const GameTable = ({ gameQuests, t, questTimePeriod, logos }: GameTableProps) => {
   const entries: [string, ElementNode][] = Object.entries(gameQuests)
     .filter(([k, v]) => k !== "total" && v !== null)
     .sort((a, b) => b[1] - a[1])
     .map(([quest, completions]) => {
-      const realName = metadata[quest]?.leaderboard?.name ?? prettify(quest);
+      const realName = prettify(quest);
 
       return [
         `${completions > 0 ? "§a" : "§c"}§l${realName}`,
@@ -141,7 +130,6 @@ export const QuestsProfile = ({
       table = (
         <GameTable
           gameQuests={quests[questTimePeriod][api]}
-          constructor={quests[questTimePeriod][api].constructor}
           questTimePeriod={questTimePeriod}
           logos={logos}
           t={t}

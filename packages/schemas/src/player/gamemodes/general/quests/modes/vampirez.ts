@@ -20,8 +20,7 @@ export const VampireZQuests = createGameModeQuests({
   ],
   weekly: [
     { field: "weekly_win", propertyKey: "vampireWinner" },
-    //TODO(vnmm): there is no way this is right
-    { field: "blitz_loot_chest_weekly", propertyKey: "vampireSlayer" },
+    { field: "vampirez_weekly_kill", propertyKey: "vampireSlayer" },
     { field: "weekly_human_kill", propertyKey: "humanSlayer" },
   ],
 });
