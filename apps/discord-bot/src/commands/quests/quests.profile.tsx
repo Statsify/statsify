@@ -22,9 +22,9 @@ import {
   GameId,
   GameMode,
   GameQuests,
+  GenericQuestInstance,
   MetadataScanner,
   QuestModes,
-  QuestsInstance,
 } from "@statsify/schemas";
 import { HistoricalType } from "@statsify/api-client";
 import { prettify } from "@statsify/util";
@@ -43,7 +43,7 @@ export interface QuestProfileProps extends BaseProfileProps {
 }
 
 interface NormalTableProps {
-  quests: QuestsInstance;
+  quests: GenericQuestInstance;
   t: LocalizeFunction;
   gameIcons: Record<GameId, Image>;
 }

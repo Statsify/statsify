@@ -95,6 +95,14 @@ const DailyQuests = createQuestsInstance(QuestTime.Daily, questModes);
 const WeeklyQuests = createQuestsInstance(QuestTime.Weekly, questModes);
 const OverallQuests = createQuestsInstance(QuestTime.Overall, questModes);
 
+export interface GameQuests {
+  total: number;
+}
+
+export type GenericQuestInstance = {
+  [K in keyof typeof FormattedGame]?: GameQuests;
+};
+
 export class Quests {
   @Field({ leaderboard: { name: "Total Quests", fieldName: "Quests" } })
   public total: number;
@@ -136,9 +144,7 @@ export class Quests {
     this.dailyTotal = Quests.getTotal(this.daily);
   }
 
-  private static getTotal<
-    T extends { [K in keyof typeof FormattedGame]?: { total: number } }
-  >(quests: T): number {
+  private static getTotal<T extends GenericQuestInstance>(quests: T): number {
     return Object.values(quests).reduce((total, game) => total + game.total, 0);
   }
 }
