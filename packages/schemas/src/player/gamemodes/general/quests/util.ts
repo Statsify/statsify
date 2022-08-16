@@ -87,7 +87,7 @@ const assignQuestMetadata = (
         limit: 5000,
         name: canDisplayOverall ? quest.overall?.name : quest.name,
         fieldName: canDisplayOverall ? quest.overall?.fieldName : quest.fieldName,
-        enabled: quest.leaderboard,
+        enabled: time === QuestTime.Overall && quest.leaderboard,
       },
     });
 

@@ -15,7 +15,19 @@ export const ArenaBrawlQuests = createGameModeQuests({
   daily: [
     { field: "daily_kills", propertyKey: "kills" },
     { field: "daily_wins", propertyKey: "wins" },
-    //TODO: add Play Arena
+    {
+      field: "daily_play",
+      propertyKey: "playArenaDaily",
+      fieldName: "Play Arena",
+      overall: { fieldName: "Play Arena (Daily)" },
+    },
   ],
-  weekly: [],
+  weekly: [
+    {
+      field: "weekly_play",
+      propertyKey: "playArenaWeekly",
+      fieldName: "Play Arena",
+      overall: { fieldName: "Play Arena (Weekly)" },
+    },
+  ],
 });
