@@ -9,7 +9,6 @@
 import Container from "typedi";
 import { Fill } from "../jsx";
 import { FontRenderer } from "../font";
-import { useChildren } from "../hooks";
 import type * as JSX from "../jsx";
 import type { TextNode } from "../font/tokens";
 
@@ -28,7 +27,7 @@ export interface TextProps {
 }
 
 export interface TextRenderProps {
-  text: TextNode[][];
+  text: TextNode[];
   "t:ignore": boolean;
 }
 
@@ -43,7 +42,21 @@ export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps["childre
   size = 2,
   "t:ignore": ignore = false,
 }) => {
-  const text = (useChildren(children) ?? []).join("");
+  let text: string;
+
+  switch (typeof children) {
+    case "string":
+      text = children;
+      break;
+    case "number":
+      text = children.toString();
+      break;
+    case "object":
+      text = children.join(" ");
+      break;
+    default:
+      throw new Error(`Invalid text type: ${typeof children}`);
+  }
 
   //Get a generic instance of font renderer just to lex and measure the text
   const renderer = Container.get(FontRenderer);

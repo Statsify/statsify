@@ -8,16 +8,8 @@
 
 import { Text, useChildren } from "@statsify/rendering";
 
-export interface MultilineProps {
-  children: JSX.IntrinsicElements["text"]["children"];
-  align?: JSX.IntrinsicElements["text"]["align"];
-  margin?: number;
-  "t:ignore"?: boolean;
-}
-
 export const Multiline = (props: Text.TextProps) => {
   const children = useChildren(props.children);
-  delete props.children;
 
   if (props.margin === undefined) props.margin = 1;
 
