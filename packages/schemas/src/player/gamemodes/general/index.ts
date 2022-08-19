@@ -7,7 +7,6 @@
  */
 
 import { APIData } from "@statsify/util";
-import { Challenges } from "./challenges";
 import { Events } from "./events";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
@@ -58,17 +57,17 @@ export class General {
   @Field()
   public events: Events;
 
-  @Field({ leaderboard: { fieldName: "" } })
-  public challenges: Challenges;
-
   public constructor(data: APIData, legacy: APIData) {
     this.achievementPoints = data.achievementPoints;
-
-    this.challenges = new Challenges(data?.challenges?.all_time ?? {});
 
     this.karma = data.karma;
     this.networkExp = data.networkExp;
     this.networkLevel = getNetworkLevel(this.networkExp);
+
+    this.currentRewardStreak = data.rewardScore;
+    this.highestRewardStreak = data.rewardHighScore;
+
+    this.tournamentTributes = data.tourney?.total_tributes;
 
     this.giftsSent = data.giftingMeta?.bundlesGiven;
     this.ranksGifted = data.giftingMeta?.ranksGiven;
@@ -80,5 +79,3 @@ export class General {
 }
 
 export * from "./events";
-export * from "./challenges";
-export * from "./quests";

@@ -12,6 +12,7 @@ import {
   BEDWARS_MODES,
   BLITZSG_MODES,
   BUILD_BATTLE_MODES,
+  CHALLENGE_MODES,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   GENERAL_MODES,
@@ -25,6 +26,7 @@ import {
   Player,
   PlayerStats,
   QUAKE_MODES,
+  QUEST_MODES,
   SKYWARS_MODES,
   SMASH_HEROES_MODES,
   SPEED_UHC_MODES,
@@ -131,6 +133,14 @@ export class RankingsCommand {
 
   @SubCommand({
     ...options,
+    description: (t) => t("commands.rankings-challenges"),
+  })
+  public challenges(context: CommandContext) {
+    return this.run(context, "challenges", CHALLENGE_MODES);
+  }
+
+  @SubCommand({
+    ...options,
     description: (t) => t("commands.rankings-copsandcrims"),
   })
   public copsandcrims(context: CommandContext) {
@@ -201,6 +211,14 @@ export class RankingsCommand {
   })
   public quake(context: CommandContext) {
     return this.run(context, "quake", QUAKE_MODES);
+  }
+
+  @SubCommand({
+    ...options,
+    description: (t) => t("commands.rankings-quests"),
+  })
+  public quests(context: CommandContext) {
+    return this.run(context, "quests", QUEST_MODES);
   }
 
   @SubCommand({

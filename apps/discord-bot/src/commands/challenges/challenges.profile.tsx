@@ -93,7 +93,7 @@ export const ChallengesProfile = ({
   time,
   gameIcons,
 }: ChallengeProfileProps) => {
-  const { challenges } = player.stats.general;
+  const { challenges } = player.stats;
 
   const { api, formatted } = mode;
   let table: JSX.Element;

@@ -20,7 +20,7 @@ export const HistoricalGeneralProfile = ({
   badge,
   user,
 }: BaseProfileProps) => {
-  const { general } = player.stats;
+  const { general, quests, challenges } = player.stats;
 
   return (
     <Container background={background}>
@@ -45,14 +45,10 @@ export const HistoricalGeneralProfile = ({
           />
         </Table.tr>
         <Table.tr>
-          <Table.td
-            title={t("stats.quests")}
-            value={t(general.quests.total)}
-            color="§e"
-          />
+          <Table.td title={t("stats.quests")} value={t(quests.total)} color="§e" />
           <Table.td
             title={t("stats.challenges")}
-            value={t(general.challenges.total)}
+            value={t(challenges.total)}
             color="§a"
           />
           <Table.td title={t("stats.karma")} value={t(general.karma)} color="§d" />

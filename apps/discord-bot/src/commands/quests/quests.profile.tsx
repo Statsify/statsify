@@ -21,17 +21,9 @@ import {
   QuestTime,
   WeeklyQuests,
 } from "@statsify/schemas";
-import {
-  Container,
-  Footer,
-  GameEntry,
-  GameList,
-  Header,
-  List,
-  SidebarItem,
-} from "#components";
+import { Container, Footer, GameEntry, GameList, Header, SidebarItem } from "#components";
 import { DateTime } from "luxon";
-import { DeferredGradient, ElementNode, useGradient } from "@statsify/rendering";
+import { DeferredGradient, useGradient } from "@statsify/rendering";
 import { HistoricalType } from "@statsify/api-client";
 import { ratio } from "@statsify/math";
 import type { BaseProfileProps } from "../base.hypixel-command";
@@ -70,7 +62,7 @@ interface NormalTableProps {
   time: QuestTime;
 }
 
-const GRADIENT_OFFSET = 0.81;
+const GRADIENT_OFFSET = 0.75;
 const BOX_COLOR = "rgba(0, 0, 0, 0.5)";
 
 const NormalTable = ({ quests, t, gameIcons, time }: NormalTableProps) => {
@@ -105,7 +97,7 @@ const NormalTable = ({ quests, t, gameIcons, time }: NormalTableProps) => {
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsla(40, 100%, 20%, 0.5)"]
+          [1, "hsla(40, 100%, 37%, 0.5)"]
         );
       } else {
         textColor = "§c";
@@ -131,39 +123,33 @@ interface GameTableProps {
 }
 
 const GameTable = ({ quests, t, game, time, logos }: GameTableProps) => {
-  const entries: [string, ElementNode][] = Object.entries(quests)
+  const isOverall = time === QuestTime.Overall;
+
+  const entries = Object.entries(quests)
     .filter(([k, v]) => k !== "total" && v !== null)
     .sort((a, b) => b[1] - a[1])
     .map(([quest, completions]) => {
       const name = questMetadata[time][game][quest].leaderboard.name;
 
-      return [
-        `${completions > 0 ? "§a" : "§c"}§l${name}`,
-        time === QuestTime.Overall ? (
-          <text>{t(completions)}</text>
-        ) : (
-          <img margin={2} image={logos[completions]} />
-        ),
-      ];
+      return (
+        <box width="100%">
+          <text align="left">
+            {completions > 0 ? "§a" : "§c"}§l{name}
+          </text>
+          <div width="remaining" />
+          {isOverall ? (
+            <text>{t(completions)}</text>
+          ) : (
+            <img margin={2} image={logos[completions]} />
+          )}
+        </box>
+      );
     });
 
   return (
-    <List
-      items={entries.map(([name, value]) => (
-        <>
-          <box
-            width="remaining"
-            border={{ bottomLeft: 4, bottomRight: 0, topLeft: 4, topRight: 0 }}
-            direction="column"
-          >
-            <text align="left">{name}</text>
-          </box>
-          <box border={{ bottomLeft: 0, bottomRight: 4, topLeft: 0, topRight: 4 }}>
-            {value}
-          </box>
-        </>
-      ))}
-    />
+    <div width="100%" direction="column">
+      {entries}
+    </div>
   );
 };
 
@@ -180,7 +166,7 @@ export const QuestsProfile = ({
   time,
   logos,
 }: QuestProfileProps) => {
-  const { quests } = player.stats.general;
+  const { quests } = player.stats;
 
   let period: "overall" | "weekly" | "daily";
   let historicalTime: "LIVE" | HistoricalType;
