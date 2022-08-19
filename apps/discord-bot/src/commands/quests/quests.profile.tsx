@@ -62,7 +62,7 @@ interface NormalTableProps {
   time: QuestTime;
 }
 
-const GRADIENT_OFFSET = 0.75;
+const GRADIENT_OFFSET = 0.66;
 const BOX_COLOR = "rgba(0, 0, 0, 0.5)";
 
 const NormalTable = ({ quests, t, gameIcons, time }: NormalTableProps) => {
