@@ -193,6 +193,7 @@
     "theme-view": "Zeigt dein aktuelles Profildesign an",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Entknüpft deine Discord und Minecraft Konten",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Deine Fußzeile wurde erfolgreich zurückgesetzt.",
       "set": "$t(emojis:config.success) Deine Fußzeile wurde erfolgreich aktualisiert."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Deine Sprache wurde erfolgreich auf `{{locale}}` geändert."
+    },
     "theme": {
       "profile": "So wird dein Design auf deinen Profilen aussehen",
       "set": "$t(emojis:config.success) Dein Design wurde erfolgreich aktualisiert.",
       "view": "$t(emojis:config.view) Dein aktuelles Design:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Deine Sprache wurde erfolgreich auf `{{locale}}` geändert."
     }
   },
   "cooldown": {
@@ -342,15 +343,19 @@
       "title": "Höhere Stufe Benötigt"
     },
     "invalidGuild": {
-      "description": "Eine Gilde von dem {{type}} von `{{tag}}` konnte nicht gefunden werden!",
+      "description_id": "Eine Gilde mit der ID `{{tag}}` konnte nicht gefunden werden!",
+      "description_name": "Eine Gilde mit dem Namen `{{tag}}` konnte nicht gefunden werden!",
+      "description_player": "Eine Gilde mit dem Spieler `{{tag}}` konnte nicht gefunden werden!",
       "title": "Ungültige Gilde"
     },
     "invalidPlayer": {
-      "description": "Ein Spieler von dem {{type}} von `{{tag}}` konnte nicht gefunden werden!",
+      "description_username": "Ein Spieler mit dem Benutzernamen `{{tag}}` konnte nicht gefunden werden!",
+      "description_uuid": "Ein Spieler mit der UUID `{{tag}}` konnte nicht gefunden werden!",
+      "description_discordId": "Ein Spieler mit der Discord ID `{{tag}}` konnte nicht gefunden werden!",
       "title": "Ungültiger Spieler"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
+      "description": "`{{time}}` stimmt nicht mit dem Format `h:mm a` überein. Gebe eine Zeit im Format ähnlich wie `12:00 PM` oder `1:00 AM` ein.",
       "title": "Ungültige Reset Zeit"
     },
     "invalidResetTimezone": {
@@ -543,6 +548,7 @@
     "challenges": "Herausforderungen",
     "class": "Klasse",
     "coins": "Münzen",
+    "contracts": "Verträge",
     "correctGuesses": "Richtige Vermutungen",
     "damage": "Schaden",
     "deaths": "Tode",
@@ -570,6 +576,7 @@
     "fortune": "Glück",
     "friends": "Freunde",
     "game": "Spiel",
+    "game-total": "{{game}} Gesamt",
     "gamesPlayed": "Spiele Gespielt",
     "giftsFound": "Geschenke Gefunden",
     "giftsSent": "Geschenke Gesendet",
@@ -616,13 +623,12 @@
     "highestScoreQualifications": "Persönlich Bestes Endergebnis in Qualifikationen",
     "highestStreak": "Höchster Streak",
     "hits": "Treffer",
+    "humans-killed": "Menschen Getötet",
     "infectedWins": "Infizierter Siege",
     "iron": "Eisen",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Schüsse",
-    "vampires-killed": "Vampire Getötet",
-    "humans-killed": "Menschen Getötet",
     "kills": "Kills",
     "killsAsInfected": "Kills als Infizierter",
     "killsAsMurderer": "Kills als Mörder",
@@ -653,6 +659,7 @@
     "mostVampireKills": "Meiste Vampir Kills",
     "mounts": "Reittiere",
     "murdererWins": "Mörder Siege",
+    "mysticsEnchanted": "Mystics Verzaubert",
     "mythic-favor": "Mystische Gunst",
     "networkLevel": "Netzwerk Level",
     "objectives": "Ziele",
@@ -668,7 +675,16 @@
     "powerKicks": "Kraft Kicks",
     "powerupActivations": "Powerup Aktivierungen",
     "powerups": "Powerups",
+    "prefix": "Präfix",
     "prevent": "Verhindern",
+    "progression": {
+      "exp": "EXP Fortschritt",
+      "gexp": "GEXP Fortschritt",
+      "goldTrophy": "Goldtrophäen Fortschritt",
+      "kill": "Kill Fortschritt",
+      "score": "Punkt Fortschritt",
+      "win": "Sieg Fortschritt"
+    },
     "quests": "Aufgaben",
     "ranksGifted": "Ränge Geschenkt",
     "rebelKills": "Angreifer Kills",
@@ -677,7 +693,6 @@
     "rune": "Rune",
     "score": "Punktzahl",
     "seekerWins": "Sucher Siege",
-    "shards": "Scherben",
     "shotAccuracy": "Schussgenauigkeit",
     "shotsFired": "Schüsse Abgefeuert",
     "silver": "Silber",
@@ -709,6 +724,7 @@
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimates Hergestellt",
     "utility": "Hilfsmittel",
+    "vampires-killed": "Vampire Getötet",
     "version": "Version",
     "votes": "Stimmen",
     "wallsFaced": "Wände Konfrontiert",
@@ -721,18 +737,7 @@
     "woolCaptures": "Wolle Erobert",
     "woolPlaced": "Wolle Platziert",
     "zombieKills": "Zombie Kills",
-    "mysticsEnchanted": "Mystics Verzaubert",
-    "contracts": "Verträge",
-    "prefix": "Präfix",
-    "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "win": "Win Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "goldTrophy": "Gold Trophy Progress"
-    },
-    "game-total": "{{game}} Total"
+    "potionsBrewed": "Tränke gebraut"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Trete unserem **$t(socials.discord)** bei und erhalte **20% niedrigere Abklingzeit** $t(emojis:heart)",

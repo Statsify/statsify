@@ -193,6 +193,7 @@
     "theme-view": "Zobacz bieżący motyw profilu",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Odłącz swoje konto Discorda z kontem Minecraft",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Pomyślnie zresetowano stopkę.",
       "set": "$t(emojis:config.success) Pomyślnie zaktualizowano stopkę."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Pomyślnie zaktualizowano Twój język na `{{locale}}`."
+    },
     "theme": {
       "profile": "Oto jak będzie wyglądał Twój motyw na Twoim profilu",
       "set": "$t(emojis:config.success) Pomyślnie zaktualizowano Twój motyw.",
       "view": "$t(emojis:config.view) Twój bieżący motyw:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Pomyślnie zaktualizowano Twój język na `{{locale}}`."
     }
   },
   "cooldown": {
@@ -342,11 +343,15 @@
       "title": "Wymagany wyższy poziom"
     },
     "invalidGuild": {
-      "description": "Gildia {{type}} z `{{tag}}` nie została znaleziona!",
+      "description_id": "Nie można odnaleźć gildii o id `{{tag}}`!",
+      "description_name": "Nie można odnaleźć gildii o nazwie `{{tag}}`!",
+      "description_player": "Gildia z graczem `{{tag}}` nie została odnaleziona!",
       "title": "Nieprawidłowa Gildia"
     },
     "invalidPlayer": {
-      "description": "Nie znaleziono gracza o {{type}} `{{tag}}`!",
+      "description_username": "Nie znaleziono gracza o nazwie `{{tag}}`!",
+      "description_uuid": "Nie można znaleźć gracza z UUID `{{tag}}`!",
+      "description_discordId": "Nie można odnaleźć gracza o id discorda `{{tag}}`!",
       "title": "Niepoprawny gracz"
     },
     "invalidResetTime": {
@@ -523,7 +528,7 @@
     "adrenaline": "Adrenalina",
     "assists": "Asysty",
     "bblr": "BBLR",
-    "bedsBroken": "Łóżka zniszczone",
+    "bedsBroken": "Zniszczone Łóżka",
     "bedsLost": "Utracone Łóżka",
     "bestRound": "Najlepsza runda",
     "bestTime": "Najlepszy czas",
@@ -543,6 +548,7 @@
     "challenges": "Wyzwania",
     "class": "Klasa",
     "coins": "Monety",
+    "contracts": "Kontrakty",
     "correctGuesses": "Prawidłowe odgadnięcia",
     "damage": "Obrażenia",
     "deaths": "Śmierci",
@@ -570,6 +576,7 @@
     "fortune": "Fortuna",
     "friends": "Znajomi",
     "game": "Gra",
+    "game-total": "{{game}} Łącznie",
     "gamesPlayed": "Zagrane gry",
     "giftsFound": "Znalezione prezenty",
     "giftsSent": "Wysłane prezenty",
@@ -584,7 +591,7 @@
     "guild": {
       "averageMemberGexp": "Średni GEXP na gracza",
       "createdOn": "Utworzono",
-      "daily": "Dzienne",
+      "daily": "Dzienny",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
       "date": "Data",
       "gexp": "GEXP",
@@ -593,12 +600,12 @@
       "joinedAt": "Dołączono",
       "level": "Poziom Gildii",
       "members": "Członkowie Gildii",
-      "monthly": "Miesięczne",
+      "monthly": "Miesięczny",
       "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
       "quests": "Zadania Gildii",
       "rank": "Ranga Gildii",
       "scaledGexp": "Skalowany GEXP",
-      "weekly": "Tygodniowe",
+      "weekly": "Tygodniowy",
       "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
     },
     "hat": "Czapka",
@@ -616,13 +623,12 @@
     "highestScoreQualifications": "Najlepszy osobisty wynik kwalifikacyjny",
     "highestStreak": "Najwyższa seria",
     "hits": "Trafienia",
+    "humans-killed": "Ludzie zabici",
     "infectedWins": "Wygrane jako Zarażony",
     "iron": "Żelazo",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Kopnięcia",
-    "vampires-killed": "Wampiry zabite",
-    "humans-killed": "Ludzie zabici",
     "kills": "Zabójstwa",
     "killsAsInfected": "Zabójstwa jako Zainfekowany",
     "killsAsMurderer": "Zabójstwa jako Morderca",
@@ -653,6 +659,7 @@
     "mostVampireKills": "Najwięcej zabójstw jako Wampir",
     "mounts": "Osiodłane smoki",
     "murdererWins": "Wygrane jako Morderca",
+    "mysticsEnchanted": "Zaczarowani mistycy",
     "mythic-favor": "Mityczna życzliwość",
     "networkLevel": "Poziom",
     "objectives": "Cele",
@@ -668,7 +675,16 @@
     "powerKicks": "Mocne Kopnięcia",
     "powerupActivations": "Aktywacje ulepszeń",
     "powerups": "Ulepszenia",
+    "prefix": "Prefiks",
     "prevent": "Zapobieganie",
+    "progression": {
+      "exp": "Pasek postępu EXP",
+      "gexp": "Pasek postępu GEXP",
+      "goldTrophy": "Pasek postępu złotego trofeum",
+      "kill": "Pasek postępu zabójstw",
+      "score": "Pasek postępu punktów",
+      "win": "Pasek postępu wygranych"
+    },
     "quests": "Zadania",
     "ranksGifted": "Podarowane Rangi",
     "rebelKills": "Zabójstwa jako Atakujący",
@@ -677,7 +693,6 @@
     "rune": "Runa",
     "score": "Wynik",
     "seekerWins": "Wygrane jako Szukający",
-    "shards": "Odłamki",
     "shotAccuracy": "Dokładność Strzałów",
     "shotsFired": "Wystrzelone strzały",
     "silver": "Srebro",
@@ -709,6 +724,7 @@
     "ultimate": "Ostateczny atak",
     "ultimatesCrafted": "Najlepsze produkty wykonane",
     "utility": "Narzędzie",
+    "vampires-killed": "Wampiry zabite",
     "version": "Wersja",
     "votes": "Głosy",
     "wallsFaced": "Napotkane Ściany",
@@ -721,18 +737,7 @@
     "woolCaptures": "Przechwycenia wełny",
     "woolPlaced": "Wełna postawiona",
     "zombieKills": "Zabójstwa Zombie",
-    "mysticsEnchanted": "Zaczarowani mistycy",
-    "contracts": "Kontrakty",
-    "prefix": "Prefiks",
-    "progression": {
-      "exp": "Pasek postępu EXP",
-      "gexp": "Pasek postępu GEXP",
-      "win": "Pasek postępu wygranych",
-      "kill": "Pasek postępu zabójstw",
-      "score": "Pasek postępu punktów",
-      "goldTrophy": "Pasek postępu złotego trofeum"
-    },
-    "game-total": "{{game}} Łącznie"
+    "potionsBrewed": "Mikstury wytworzone"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Dołącz do naszego **$t(socials.discord)** i otrzymaj **20% mniej czasu odnowienia** $t(emojis:heart)",

@@ -1,39 +1,39 @@
 {
   "arguments": {
-    "choice": "Choose an option",
-    "file": "Upload a file",
-    "gtbhelper": "The current hint",
+    "choice": "เลือกตัวเลือก",
+    "file": "อัปโหลดไฟล์",
+    "gtbhelper": "คำใบ้ปัจจุบัน",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
-    "guild-query": "A guild name or guild member",
-    "guild-type": "The type of guild search to perform",
-    "mojang-player": "A Minecraft username or UUID",
-    "number": "A number",
+    "guild-query": "ชื่อกิลด์หรือสมาชิกกิลด์",
+    "guild-type": "ประเภทของการค้นหากิลด์ที่จะดำเนินการ",
+    "mojang-player": "ชื่อผู้ใช้ Minecraft หรือ UUID",
+    "number": "หมายเลข",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard stat to view",
+    "player-leaderboard": "เลือกสถิติกระดานผู้นำเพื่อดู",
     "reason": "The reason for closing the support ticket",
-    "server": "A Minecraft server name or a server IP",
+    "server": "ชื่อเซิร์ฟเวอร์ Minecraft หรือ IP ของเซิร์ฟเวอร์",
     "tags-content": "The content of the tag",
     "tags-name": "The name of the tag",
-    "text": "A message",
-    "user": "Choose a Discord user"
+    "text": "ข้อความ",
+    "user": "เลือกผู้ใช้ Discord"
   },
   "commands": {
     "arcade": "$t(commands.hypixel-command, { \"name\": \"Arcade\" })",
     "arenabrawl": "$t(commands.hypixel-command, { \"name\": \"Arena Brawl\" })",
-    "available": "Check the availability of a Minecraft username",
+    "available": "ตรวจสอบความพร้อมใช้งานของชื่อผู้ใช้ Minecraft",
     "badge": "Change your badge for every profile",
-    "badge-reset": "Reset your profile badge",
-    "badge-set": "Upload a new profile badge",
-    "badge-view": "View your current profile badge",
+    "badge-reset": "รีเซ็ตตราโปรไฟล์ของคุณ",
+    "badge-set": "อัปโหลดป้ายโปรไฟล์ใหม่",
+    "badge-view": "ดูตราสัญลักษณ์โปรไฟล์ปัจจุบันของคุณ",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
     "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
-    "cape": "View someone's Minecraft and Optifine capes",
+    "cape": "ดู Minecraft และเสื้อคลุม Optifine ของใครบางคน",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
     "close": "Close the current support ticket",
-    "colors": "A list of Minecraft color codes",
+    "colors": "รายการรหัสสี Minecraft",
     "commands": "View Statsify command usage",
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
@@ -42,24 +42,24 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "View your Hypixel friends list",
-    "game-counts": "View Hypixel current game counts",
+    "friends": "ดูรายชื่อเพื่อน Hypixel ของคุณ",
+    "game-counts": "ดูจำนวนเกมปัจจุบันของ Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
-    "gtbhelper": "Generate a list of possible Guess The Build answers based on the given hint",
+    "gtbhelper": "สร้างรายการคำตอบ Guess The Build ที่เป็นไปได้ตามคำใบ้ที่กำหนด",
     "guild": "View your guild's stats",
     "guild-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Guild\" })",
-    "guild-list": "View the member list of your guild",
-    "guild-member": "View your guild members' stats",
-    "guild-overall": "View a summary of your guild's stats",
-    "guild-top": "View your top GEXP contributors",
-    "help": "A basic description of what Statsify does for you and your server",
+    "guild-list": "ดูรายชื่อสมาชิกกิลด์ของคุณ",
+    "guild-member": "ดูสถิติสมาชิกกิลด์ของคุณ",
+    "guild-overall": "ดูสรุปสถิติกิลด์ของคุณ",
+    "guild-top": "ดูผู้ร่วมสมทบ GEXP อันดับต้น ๆ ของคุณ",
+    "help": "คำอธิบายเบื้องต้นเกี่ยวกับสิ่งที่ Statsify ทำเพื่อคุณและเซิร์ฟเวอร์ของคุณ",
     "historical-arcade": "$t(commands.historical-command, { \"name\": \"Arcade\" })",
     "historical-arenabrawl": "$t(commands.historical-command, { \"name\": \"Arena Brawl\" })",
     "historical-bedwars": "$t(commands.historical-command, { \"name\": \"BedWars\" })",
     "historical-blitzsg": "$t(commands.historical-command, { \"name\": \"BlitzSG\" })",
     "historical-bridge": "$t(commands.historical-command, { \"name\": \"Bridge\" })",
     "historical-buildbattle": "$t(commands.historical-command, { \"name\": \"Build Battle\" })",
-    "historical-command": "View your {{name}} historical stats",
+    "historical-command": "ดูสถิติย้อนหลัง {{name}} ของคุณ",
     "historical-copsandcrims": "$t(commands.historical-command, { \"name\": \"Cops and Crims\" })",
     "historical-duels": "$t(commands.historical-command, { \"name\": \"Duels\" })",
     "historical-general": "$t(commands.historical-command, { \"name\": \"General\" })",
@@ -78,9 +78,9 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
-    "hypixel-command": "View your {{name}} stats",
-    "invite": "Invite Statsify",
-    "language": "Change the language you see responses in",
+    "hypixel-command": "ดูสถิติ {{name}} ของคุณ",
+    "invite": "เชิญ Statsify",
+    "language": "เปลี่ยนภาษาที่คุณเห็นคำตอบใน",
     "last-day": "$t(commands.yesterday)",
     "last-month": "View your stats from last month's in various games",
     "last-week": "View your stats from last week's in various games",
@@ -89,7 +89,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View leaderboards for {{name}} stats",
+    "leaderboard-command": "ดูลีดเดอร์บอร์ดสำหรับสถิติ {{name}}",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
     "leaderboard-general": "$t(commands.leaderboard-command, { \"name\": \"General\" })",
@@ -109,26 +109,26 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolwars": "$t(commands.leaderboard-command, { \"name\": \"WoolWars\" })",
-    "links": "Statsify Socials",
+    "links": "Statsify โซเชียล",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "View your mutual Hypixel friends with another player",
-    "namehistory": "View someone's Minecraft name history",
+    "mutuals": "ดูเพื่อน Hypixel ร่วมกันของคุณกับผู้เล่นอื่น",
+    "namehistory": "ดูประวัติชื่อ Minecraft ของใครบางคน",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
-    "ping": "View Statsify's creators and contributors",
+    "ping": "ดูผู้สร้างและผู้มีส่วนร่วมของ Statsify",
     "pit": "$t(commands.hypixel-command, { \"name\": \"Pit\" })",
     "player-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Player\" })",
     "quake": "$t(commands.hypixel-command, { \"name\": \"Quake\" })",
-    "rankings": "View your top leaderboard positions",
+    "rankings": "ดูตำแหน่งกระดานผู้นำด้านบนของคุณ",
     "rankings-all": "$t(commands.rankings)",
     "rankings-arcade": "$t(commands.rankings-command, { \"name\": \"Arcade\" })",
     "rankings-arenabrawl": "$t(commands.rankings-command, { \"name\": \"Arena Brawl\" })",
     "rankings-bedwars": "$t(commands.rankings-command, { \"name\": \"BedWars\" })",
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
-    "rankings-command": "View your top {{name}} leaderboard positions",
+    "rankings-command": "ดูตำแหน่งลีดเดอร์บอร์ด {{name}} อันดับแรกของคุณ",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
     "rankings-general": "$t(commands.rankings-command, { \"name\": \"General\" })",
@@ -153,7 +153,7 @@
     "ratios-arenabrawl": "$t(commands.ratios-command, { \"name\": \"Arena Brawl\" })",
     "ratios-bedwars": "$t(commands.ratios-command, { \"name\": \"BedWars\" })",
     "ratios-blitzsg": "$t(commands.ratios-command, { \"name\": \"BlitzSG\" })",
-    "ratios-command": "View your {{name}} milestones and estimations",
+    "ratios-command": "ดูเหตุการณ์สำคัญและการประมาณค่า {{name}} ของคุณ",
     "ratios-copsandcrims": "$t(commands.ratios-command, { \"name\": \"Cops and Crims\" })",
     "ratios-duels": "$t(commands.ratios-command, { \"name\": \"Duels\" })",
     "ratios-megawalls": "$t(commands.ratios-command, { \"name\": \"MegaWalls\" })",
@@ -168,87 +168,88 @@
     "ratios-walls": "$t(commands.ratios-command, { \"name\": \"Walls\" })",
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
-    "recentgames": "View someone's Hypixel recent games",
-    "reset": "Reset your historical stats",
-    "server": "View Minecraft server status",
-    "skin": "View someone's Minecraft skin",
+    "recentgames": "ดูเกมล่าสุดของ Hypixel ของใครบางคน",
+    "reset": "รีเซ็ตสถิติในอดีตของคุณ",
+    "server": "ดูสถานะเซิร์ฟเวอร์ Minecraft",
+    "skin": "ดูสกิน Minecraft ของใครบางคน",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
-    "socials": "View someone's Hypixel linked socials",
+    "socials": "ดู Hypixel ที่เชื่อมโยงโซเชียลของใครบางคน",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
-    "status": "View someone's Hypixel status",
+    "status": "ดูสถานะ Hypixel ของใครบางคน",
     "tags": "Manage support tags",
     "tags-create": "Create a support tag",
     "tags-delete": "Delete a support tag",
     "tags-rename": "Rename a support tag",
-    "text": "Generate Minecraft text",
+    "text": "สร้างข้อความ Minecraft",
     "theme": "Change your theme for every profile",
-    "theme-boxes": "Change the appearance of the profile boxes",
-    "theme-font": "Change the font of the profiles",
+    "theme-boxes": "เปลี่ยนรูปลักษณ์ของกล่องโปรไฟล์",
+    "theme-font": "เปลี่ยนแบบอักษรของโปรไฟล์",
     "theme-footer": "Customize your profile's footer",
-    "theme-footer-icon": "Change your profile's footer icon",
-    "theme-footer-message": "Change your profile's footer message. You can use https://rgb.birdflop.com to create text gradients.",
-    "theme-footer-reset": "Reset your profile's footer",
-    "theme-palette": "Change the color palette of the profiles",
-    "theme-view": "View your current profile theme",
+    "theme-footer-icon": "เปลี่ยนไอคอนส่วนท้ายของโปรไฟล์ของคุณ",
+    "theme-footer-message": "เปลี่ยนข้อความส่วนท้ายของโปรไฟล์ของคุณ.ใช้ https://rgb.birdflop.com เพื่อสร้างการไล่ระดับสีข้อความ.",
+    "theme-footer-reset": "รีเซ็ตส่วนท้ายของโปรไฟล์ของคุณ",
+    "theme-palette": "เปลี่ยนจานสีของโปรไฟล์",
+    "theme-view": "ดูธีมโปรไฟล์ปัจจุบันของคุณ",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
-    "unverify": "Unlink your Discord and Minecraft accounts",
+    "unverify": "ยกเลิกการเชื่อมโยงบัญชี Discord และ Minecraft ของคุณ",
     "user": "View someone's Statsify user info",
-    "uuid": "Get someone's Minecraft UUID",
+    "uuid": "รับ Minecraft UUID ของใครบางคน",
     "vampirez": "$t(commands.hypixel-command, { \"name\": \"VampireZ\" })",
-    "verify": "Link your Discord and Minecraft accounts",
+    "verify": "เชื่อมโยงบัญชี Discord และ Minecraft ของคุณ",
     "walls": "$t(commands.hypixel-command, { \"name\": \"Walls\" })",
     "warlords": "$t(commands.hypixel-command, { \"name\": \"Warlords\" })",
-    "watchdog": "View Hypixel Watchdog ban counts",
+    "watchdog": "ดูจำนวนการแบน Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games"
   },
   "config": {
     "badge": {
-      "profile": "This is how your badge will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your badge.",
-      "set": "$t(emojis:config.success) Successfully updated your badge.",
-      "view": "$t(emojis:config.view) Your current badge:"
+      "profile": "นี่คือลักษณะที่ตราของคุณจะปรากฏบนโปรไฟล์ของคุณ",
+      "reset": "$t(emojis:config.reset) รีเซ็ตป้ายของคุณสำเร็จ.",
+      "set": "$t(emojis:config.success) อัปเดตป้ายของคุณเรียบร้อยแล้ว.",
+      "view": "$t(emojis:config.view) ป้ายสถานะปัจจุบันของคุณ:"
     },
     "footer": {
-      "profile": "This is how your footer will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your footer.",
-      "set": "$t(emojis:config.success) Successfully updated your footer."
-    },
-    "theme": {
-      "profile": "This is how your theme will look on your profiles",
-      "set": "$t(emojis:config.success) Successfully updated your theme.",
-      "view": "$t(emojis:config.view) Your current theme:"
+      "profile": "นี่คือลักษณะที่ส่วนท้ายของคุณจะดูในโปรไฟล์ของคุณ",
+      "reset": "$t(emojis:config.reset) รีเซ็ตส่วนท้ายของคุณสำเร็จ.",
+      "set": "$t(emojis:config.success) อัปเดตส่วนท้ายของคุณสำเร็จ."
     },
     "language": {
-      "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
+      "description": "$t(emojis:config.success) อัปเดตภาษาของคุณเป็น `{{locale}}` เรียบร้อยแล้ว."
+    },
+    "theme": {
+      "profile": "นี่คือลักษณะที่ธีมของคุณจะปรากฏบนโปรไฟล์ของคุณ",
+      "set": "$t(emojis:config.success) อัปเดตธีมของคุณสำเร็จ.",
+      "view": "$t(emojis:config.view) ธีมปัจจุบันของคุณ:"
     }
   },
   "cooldown": {
-    "description": "Please wait `{{time}}` before reusing `{{command}}`.\n\nLearn how to reduce cooldowns [here](https://statsify.net/premium)",
-    "title": "Active Cooldown"
+    "description": "โปรดรอ `{{time}}` ก่อนใช้ `{{command}}` อีกครั้ง.\n\nเรียนรู้วิธีลดคูลดาวน์ [here](https://statsify.net/premium)",
+    "title": "คูลดาวน์ที่ใช้งาน"
   },
   "embeds": {
     "available": {
-      "blocked": "Unless the name is temporarily or permanently blocked by Mojang.",
-      "invalidCharacters": "Invalid Characters",
-      "tooLong": "Too Long"
+      "blocked": "เว้นแต่ชื่อจะถูกบล็อกชั่วคราวหรือถาวรโดย Mojang.",
+      "invalidCharacters": "ตัวอักษรที่ไม่ถูกต้อง",
+      "tooLong": "นานเกินไป"
     },
     "colors": {
-      "bold": "Bold",
-      "color": "Color",
-      "italic": "Italic",
-      "mainHex": "Main Hex",
-      "obfuscated": "Obfuscated",
-      "reset": "Reset",
-      "shadowHex": "Shadow Hex",
-      "strikethrough": "Strikethrough",
-      "title": "Minecraft Color Codes",
-      "underline": "Underline"
+      "bold": "ตัวหนา",
+      "color": "สี",
+      "italic": "ตัวเอียง",
+      "mainHex": "เลขฐานสิบหกหลัก",
+      "obfuscated": "งงงวย",
+      "reset": "รีเซ็ต",
+      "shadowHex": "ฐานสิบหกเงา",
+      "strikethrough": "ขีดฆ่า",
+      "title": "รหัสสี Minecraft",
+      "underline": "ขีดเส้นใต้"
     },
     "deletePlayer": {
       "description": "**{{displayName}}** has been removed from the database and leaderboards.",
@@ -263,40 +264,40 @@
       "title": "Force Verified"
     },
     "gameCounts": {
-      "title": "Hypixel Game Counts"
+      "title": "เกม Hypixel นับ"
     },
     "gtbhelper": {
-      "title": "Possible GTB Solutions"
+      "title": "โซลูชัน GTB ที่เป็นไปได้"
     },
     "help": {
       "games": {
-        "description": "Statsify supports the majority of games offered on Hypixel. To check your stats in a game run `/[game]`. For example you can run `/bedwars` to check your BedWars stats.",
-        "title": "Games"
+        "description": "Statsify รองรับเกมส่วนใหญ่ที่นำเสนอบน Hypixel. เพื่อตรวจสอบสถิติของคุณในเกมให้รัน `/[game]`. ตัวอย่างเช่น คุณสามารถเรียกใช้ `/bedwars` เพื่อตรวจสอบสถิติ BedWars ของคุณ.",
+        "title": "เกม"
       },
       "historical": {
-        "description": "Statsify lets you check your daily, weekly, and monthly stats through `/daily`, `/weekly` and `/monthly`. If you missed a reset you can view them by running `/yesterday`, `/lastweek`, and `/lastmonth`. ",
-        "title": "Historical"
+        "description": "Statsify ให้คุณตรวจสอบสถิติรายวัน รายสัปดาห์ และรายเดือนของคุณผ่าน `/daily`, `/weekly` และ `/monthly`. หากคุณพลาดการรีเซ็ต คุณสามารถดูได้โดยเรียกใช้ `/yesterday `/lastweek ' และ `/lastmonth`. ",
+        "title": "ประวัติศาสตร์"
       },
       "leaderboards": {
-        "description": "Statsify offers thousands of leaderboards through the `/leaderboard` command. Run `/leaderboard`, then pick the gamemode, and pick a leaderboard to view. You can hit the search button to search for a specific player or position. You can also hit the up and down buttons to view more pages.",
-        "title": "Leaderboards"
+        "description": "Statsify นำเสนอกระดานผู้นำนับพันผ่านคำสั่ง `/leaderboard`. เรียกใช้ `/leaderboard` จากนั้นเลือกโหมดเกม และเลือกกระดานผู้นำเพื่อดู. คุณสามารถกดปุ่มค้นหาเพื่อค้นหาผู้เล่นหรือตำแหน่งที่ต้องการ. คุณยังสามารถกดปุ่มขึ้นและลงเพื่อดูหน้าเพิ่มเติม.",
+        "title": "กระดานผู้นำ"
       },
       "minecraft": {
-        "description": "You can view general Minecraft information such as skins, UUIDs, capes through `/skin`, `/uuid`, and `/cape` respectively. Statsify also has commands to generate Minecraft text through `/text`. View Minecraft colors through `/colors` and preview Minecraft servers through `/server`.",
+        "description": "คุณสามารถดูข้อมูล Minecraft ทั่วไป เช่น skin, UUID, Capes ผ่าน `/skin`, `/uuid` และ `/cape` ตามลำดับ. Statsify ยังมีคำสั่งให้สร้างข้อความ Minecraft ผ่าน `/ text`. ดูสี Minecraft ผ่าน `/colors` และดูตัวอย่างเซิร์ฟเวอร์ Minecraft ผ่าน `/server`.",
         "title": "Minecraft"
       },
-      "title": "Statsify Help"
+      "title": "ความช่วยเหลือ Statsify"
     },
     "invite": {
-      "description": "Click the link below to invite Statsify to your discord server.",
-      "title": "Statsify Links"
+      "description": "คลิกลิงก์ด้านล่างเพื่อเชิญ Statsify เข้าสู่เซิร์ฟเวอร์ Discord ของคุณ.",
+      "title": "Statsify ลิงค์"
     },
     "ping": {
-      "contributors": "Contributors",
-      "core": "Core",
-      "pong": "Pong!",
-      "title": "Statsify Credits",
-      "translators": "Translators"
+      "contributors": "ผู้ร่วมสมทบ",
+      "core": "แกน",
+      "pong": "โป่ง!",
+      "title": "เครดิต Statsify",
+      "translators": "นักแปล"
     },
     "tags": {
       "deleted": {
@@ -325,8 +326,8 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
     },
     "footerTooLong": {
-      "description": "The message you provided is too long. It should be under 50 characters excluding color codes.",
-      "title": "Message Too Long"
+      "description": "ข้อความที่คุณให้ยาวเกินไป. ควรมีความยาวไม่เกิน 50 อักขระ ไม่รวมรหัสสี.",
+      "title": "ข้อความยาวเกินไป"
     },
     "goldOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -334,36 +335,40 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
     },
     "guildLeaderboardNotFound": {
-      "description": "We couldn't find the `guild` you were looking for!",
-      "title": "Invalid Guild"
+      "description": "เราไม่พบ `guild` ที่คุณต้องการ!",
+      "title": "กิลด์ไม่ถูกต้อง"
     },
     "higherTierRequiredForIcon": {
-      "description": "You need to purchase a higher premium tier to unlock this icon!",
-      "title": "Higher Tier Required"
+      "description": "คุณต้องซื้อระดับพรีเมียมที่สูงขึ้นเพื่อปลดล็อกไอคอนนี้!",
+      "title": "ต้องการระดับที่สูงขึ้น"
     },
     "invalidGuild": {
-      "description": "A guild by the {{type}} of `{{tag}}` could not be found!",
-      "title": "Invalid Guild"
+      "description_id": "ไม่พบกิลด์ที่มีรหัส `{{tag}}`!",
+      "description_name": "ไม่พบกิลด์ชื่อ `{{tag}}`!",
+      "description_player": "ไม่พบกิลด์ที่มีผู้เล่น `{{tag}}`!",
+      "title": "กิลด์ไม่ถูกต้อง"
     },
     "invalidPlayer": {
-      "description": "A player by the {{type}} of `{{tag}}` could not be found!",
-      "title": "Invalid Player"
+      "description_username": "ไม่พบผู้เล่นโดยใช้ชื่อผู้ใช้ของ `{{tag}}`!",
+      "description_uuid": "ไม่พบผู้เล่นที่มี UUID เป็น `{{tag}}`!",
+      "description_discordId": "ไม่พบผู้เล่นที่มี discord id ของ `{{tag}}`!",
+      "title": "ผู้เล่นไม่ถูกต้อง"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
-      "title": "Invalid Reset Time"
+      "description": "`{{time}}` ไม่ตรงกับรูปแบบ `h:mm a`. ป้อนเวลาในรูปแบบที่คล้ายกับ `12:00 PM` หรือ `01:00 AM`.",
+      "title": "เวลารีเซ็ตไม่ถูกต้อง"
     },
     "invalidResetTimezone": {
-      "description": "`{{timezone}}` is not a valid timezone. Enter a timezone similar to `EST` or `PST`.",
-      "title": "Invalid Reset Timezone"
+      "description": "`{{timezone}}` ไม่ใช่เขตเวลาที่ถูกต้อง. ป้อนเขตเวลาที่คล้ายกับ `EST` หรือ `PST`.",
+      "title": "รีเซ็ตเขตเวลาไม่ถูกต้อง"
     },
     "invalidSearch": {
-      "description": "We couldn't figure out what exactly you were looking for!\nEnter a username, uuid, or discord mention.",
-      "title": "Invalid Search"
+      "description": "เราไม่สามารถทราบได้ว่าคุณต้องการอะไรกันแน่!\nป้อนชื่อผู้ใช้ uuid หรือการกล่าวถึง discord.",
+      "title": "การค้นหาไม่ถูกต้อง"
     },
     "invalidServer": {
-      "description": "The server you are looking for either doesn't exist or is offline!",
-      "title": "Invalid Minecraft Server"
+      "description": "เซิร์ฟเวอร์ที่คุณกำลังมองหาไม่มีอยู่หรือออฟไลน์อยู่!",
+      "title": "เซิร์ฟเวอร์ Minecraft ไม่ถูกต้อง"
     },
     "invalidTagName": {
       "description": "The tag name you provided is invalid. It is not possible to create a slash command with this tag name.",
@@ -379,28 +384,28 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "There is no more leaderboard data at this position!",
-      "title": "No Leaderboard Data At This Position"
+      "description": "ไม่มีข้อมูลลีดเดอร์บอร์ดในตำแหน่งนี้อีกต่อไป!",
+      "title": "ไม่มีข้อมูลกระดานผู้นำ ณ จุดนี้"
     },
     "leaderboardInvalidPosition": {
-      "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
-      "title": "Invalid Position"
+      "description": "ตำแหน่งกระดานผู้นำที่คุณป้อนไม่ถูกต้อง. ป้อนตัวเลขที่มากกว่า 1.",
+      "title": "ตำแหน่งไม่ถูกต้อง"
     },
     "leaderboardNotFound": {
-      "description": "We can't find the `leaderboard` you are looking for!",
-      "title": "Leaderboard Not Found"
+      "description": "เราไม่พบ `leaderboard` ที่คุณต้องการ!",
+      "title": "ไม่พบลีดเดอร์บอร์ด"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account.",
-      "title": "Missing Verification"
+      "description": "<@{{tag}}> ไม่ได้ **verified**. หากต้องการพูดถึงพวกเขาพวกเขาต้องเรียกใช้ `/verify` เพื่อยืนยันบัญชีของตน.",
+      "title": "ไม่มีการยืนยัน"
     },
     "missingPlayerVerification": {
       "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
-      "description": "To be able to run commands without supplying your username, you must be verified. To verify run and complete `/verify` and then try again.",
-      "title": "Missing Verification"
+      "description": "เพื่อให้สามารถรันคำสั่งโดยไม่ต้องระบุชื่อผู้ใช้ของคุณ คุณต้องได้รับการยืนยัน. เพื่อตรวจสอบการรันและดำเนินการ `/verify` ให้เสร็จสิ้น จากนั้นลองอีกครั้ง.",
+      "title": "ไม่มีการยืนยัน"
     },
     "netheriteOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -408,50 +413,50 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
     },
     "noCape": {
-      "description": "**{{username}}** doesn't have any capes!",
-      "title": "Missing Cape"
+      "description": "**{{username}}** ไม่มีผ้าคลุม!",
+      "title": "แหลมหายไป"
     },
     "noFriends": {
-      "description": "**{{displayName}}** has no friends $t(emojis:sad)! :(",
-      "title": "Friends Not Found"
+      "description": "**{{displayName}}** ไม่มีเพื่อน $t(emojis:sad)! :(",
+      "title": "ไม่พบเพื่อน"
     },
     "noGTBSolutions": {
-      "description": "We couldn't find any solutions for the provided hint!",
-      "title": "No Guess The Build Solutions"
+      "description": "เราไม่พบวิธีแก้ปัญหาสำหรับคำแนะนำที่ให้มา!",
+      "title": "ไม่มี Guess The Build โซลูชั่น"
     },
     "noMutuals": {
-      "description": "**{{displayNameOne}}** and **{{displayNameTwo}}** have no mutual friends!",
-      "title": "No Mutuals"
+      "description": "**{{displayNameOne}}** และ **{{displayNameTwo}}** ไม่มีเพื่อนร่วมกัน!",
+      "title": "ไม่มีสหพันธ์"
     },
     "noRankings": {
-      "description": "**{{displayName}}** has no rankings!",
-      "title": "No Rankings"
+      "description": "**{{displayName}}** ไม่มีการจัดอันดับ!",
+      "title": "ไม่มีอันดับ"
     },
     "noRecentGames": {
-      "description": "**{{displayName}}**'s recent games could not be found!",
-      "title": "Recent Games Not Found"
+      "description": "**{{displayName}}** ไม่พบเกมล่าสุดของ!",
+      "title": "ไม่พบเกมล่าสุด"
     },
     "noStatus": {
-      "description": "**{{displayName}}**'s Hypixel status could not be found!",
-      "title": "Status Not Found"
+      "description": "**{{displayName}}** ไม่พบสถานะ Hypixel!",
+      "title": "ไม่พบสถานะ"
     },
     "playerLeaderboardNotFound": {
-      "description": "We couldn't find the `player` you were looking for!",
-      "title": "Invalid Player"
+      "description": "เราไม่พบ `player` ที่คุณต้องการ!",
+      "title": "ผู้เล่นไม่ถูกต้อง"
     },
     "playerNotInGuild": {
-      "description": "**{{displayName}}** is not in a guild!",
-      "title": "Invalid Guild"
+      "description": "**{{displayName}}** ไม่ได้อยู่ในกิลด์!",
+      "title": "กิลด์ไม่ถูกต้อง"
     },
     "premiumRequired": {
-      "description": "Check out all the available features [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what command does/changes.",
-      "title": "Statsify {{tier}} is required to run this command"
+      "description": "ตรวจสอบคุณสมบัติที่มีทั้งหมด [here](https://statsify.net/premium).",
+      "preview": "ตรวจสอบคุณสมบัติที่มีทั้งหมด [here](https://statsify.net/premium). ด้านล่างนี้คือตัวอย่างเล็กๆ น้อยๆ ของสิ่งที่คำสั่งทำ/เปลี่ยนแปลง.",
+      "title": "จำเป็นต้องมี Statsify {{tier}} เพื่อเรียกใช้คำสั่งนี้"
     },
     "staffOnly": {
-      "description": "This command is only available to Statsify staff members!",
-      "preview": "Below is a small preview of how the command functions",
-      "title": "Staff Only"
+      "description": "คำสั่งนี้มีให้เฉพาะพนักงาน Statsify เท่านั้น!",
+      "preview": "ด้านล่างนี้คือตัวอย่างเล็กๆ น้อยๆ เกี่ยวกับวิธีการทำงานของคำสั่ง",
+      "title": "เฉพาะพนักงานเท่านั้น"
     },
     "tagNotFound": {
       "description": "The tag you provided was not found!",
@@ -462,55 +467,55 @@
       "title": "Ticket Already Exists"
     },
     "unknown": {
-      "description": "Something went wrong, please try again later. If this persists, report this in our [Discord](<https://statsify.net/discord>).",
-      "title": "An Unknown Error Occurred"
+      "description": "เกิดข้อผิดพลาด โปรดลองอีกครั้งในภายหลัง. หากยังคงเป็นเช่นนี้ โปรดรายงานใน [Discord](<https://statsify.net/discord>) ของเรา.",
+      "title": "เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ"
     },
     "unsupportedFileType": {
-      "description": "The file you uploaded is not a supported file type for this command!",
-      "title": "Unsupported File Type"
+      "description": "ไฟล์ที่คุณอัปโหลดไม่ใช่ประเภทไฟล์ที่รองรับสำหรับคำสั่งนี้!",
+      "title": "ประเภทไฟล์ที่ไม่รองรับ"
     }
   },
   "historical": {
-    "aboutResetting": "Click the reset button below to reset your historical stats every day **at this time**.\n\n**WARNING**: This will delete all of your historical stats and **cannot be undone**. \nIf you want to be able to reset at a specific time check out $t(socials.premium).",
-    "aboutResettingPremium": "Click the reset button below to reset your historical stats. \n\n**WARNING:** This will delete all of your historical stats and **cannot be undone**.",
+    "aboutResetting": "คลิกปุ่มรีเซ็ตด้านล่างเพื่อรีเซ็ตสถิติในอดีตของคุณทุกวัน **ณ เวลานี้**.\n\n**คำเตือน**: การดำเนินการนี้จะลบสถิติในอดีตทั้งหมดของคุณและ **ไม่สามารถยกเลิกได้**.\nหากคุณต้องการรีเซ็ตตามเวลาที่กำหนด ให้ไปที่ $t(socials.premium).",
+    "aboutResettingPremium": "คลิกปุ่มรีเซ็ตด้านล่างเพื่อรีเซ็ตสถิติในอดีตของคุณ.\n\n**คำเตือน:** การดำเนินการนี้จะลบสถิติในอดีตทั้งหมดของคุณและ **ไม่สามารถยกเลิกได้**.",
     "modal": {
-      "resetTime": "Choose a Reset Time",
-      "timezone": "Choose a Timezone",
-      "title": "Historical Reset Time"
+      "resetTime": "เลือกเวลารีเซ็ต",
+      "timezone": "เลือกเขตเวลา",
+      "title": "เวลารีเซ็ตย้อนหลัง"
     },
-    "new": "**{{displayName}}**'s historical stats have been checked for the first time on Statsify. Their stats will now be updated at this time every day.",
-    "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
-    "resetButton": "Click to Reset",
-    "setResetTime": "Set your reset time to <t:{{time}}:t>."
+    "new": "**{{displayName}}** มีการตรวจสอบสถิติที่ผ่านมาใน Statsify เป็นครั้งแรก. สถิติของพวกเขาจะได้รับการอัปเดตในเวลานี้ทุกวัน.",
+    "reset": "$t(emojis:clock) **รีเซ็ต** <t:{{time}}:R>",
+    "resetButton": "คลิกเพื่อรีเซ็ต",
+    "setResetTime": "ตั้งเวลารีเซ็ตเป็น <t:{{time}}:t>."
   },
   "leaderboard": {
     "guildInput": {
-      "label": "Search by a Guild",
-      "placeholder": "Enter a guild's name, eg: Quote"
+      "label": "ค้นหาโดยกิลด์",
+      "placeholder": "ป้อนชื่อกิลด์ เช่น Rebel"
     },
     "modal": {
-      "title": "Leaderboard Search"
+      "title": "ค้นหาลีดเดอร์บอร์ด"
     },
     "playerInput": {
-      "label": "Search by a Player",
-      "placeholder": "Enter a player's name, eg: j4cobi"
+      "label": "ค้นหาโดยผู้เล่น",
+      "placeholder": "ป้อนชื่อผู้เล่น เช่น cutezack"
     },
     "positionInput": {
-      "label": "Search by a Position",
-      "placeholder": "Enter a position, eg: 5000"
+      "label": "ค้นหาตามตำแหน่ง",
+      "placeholder": "ป้อนตำแหน่ง เช่น 5000"
     }
   },
   "minecraft": {
-    "available": "Available",
-    "nameHistory": "Name History",
-    "originalName": "Original Name",
-    "trimmedUUID": "Trimmed UUID",
-    "unavailable": "Unavailable",
-    "username": "Username",
+    "available": "มีอยู่",
+    "nameHistory": "ประวัติชื่อ",
+    "originalName": "ชื่อจริง",
+    "trimmedUUID": "UUID ที่ตัดแต่งแล้ว",
+    "unavailable": "ไม่พร้อมใช้งาน",
+    "username": "ชื่อผู้ใช้",
     "uuid": "UUID"
   },
   "number": "{{value, number}}",
-  "players": "Players",
+  "players": "ผู้เล่น",
   "socials": {
     "discord": "[Discord](<https://discord.com/invite/5VgxMQY>)",
     "github": "[GitHub](<https://github.com/Statsify/statsify>)",
@@ -519,251 +524,251 @@
     "website": "[Website](https://statsify.net/)"
   },
   "stats": {
-    "achievementPoints": "Achievement Points",
-    "adrenaline": "Adrenaline",
-    "assists": "Assists",
+    "achievementPoints": "คะแนนความสำเร็จ",
+    "adrenaline": "อะดรีนาลีน",
+    "assists": "อะดรีนาลีน",
     "bblr": "BBLR",
-    "bedsBroken": "Beds Broken",
-    "bedsLost": "Beds Lost",
-    "bestRound": "Best Round",
-    "bestTime": "Best Time",
-    "bestWinstreak": "Best Winstreak",
-    "bigShot": "Big Shot",
-    "blocksBroken": "Blocks Broken",
-    "blocksPlaced": "Blocks Placed",
-    "blocksRan": "Blocks Ran",
-    "bombsDefused": "Bombs Defused",
-    "bombsPlanted": "Bombs Planted",
-    "bounty": "Bounty",
-    "bountyKills": "Bounty Kills",
-    "bowKills": "Bow Kills",
-    "boxesPickedUp": "Boxes Collected",
-    "bronzeTrophies": "Bronze Trophies",
-    "candyFound": "Candy Found",
-    "challenges": "Challenges",
-    "class": "Class",
-    "coins": "Coins",
-    "correctGuesses": "Correct Guesses",
-    "damage": "Damage",
-    "deaths": "Deaths",
-    "detectiveWins": "Detective Wins",
-    "diamonds": "Diamonds",
-    "doublesWins": "Doubles Wins",
-    "eggsFound": "Eggs Found",
-    "emeralds": "Emeralds",
-    "empireKills": "Defender Kills",
-    "ended": "Ended",
-    "endurance": "Endurance",
-    "event-level": "Event Level",
+    "bedsBroken": "เตียงหัก",
+    "bedsLost": "เตียงหาย",
+    "bestRound": "รอบที่ดีที่สุด",
+    "bestTime": "เวลาที่ดีที่สุด",
+    "bestWinstreak": "สุดยอดวินสตรีค",
+    "bigShot": "บิ๊กช็อต",
+    "blocksBroken": "บล็อกแตก",
+    "blocksPlaced": "บล็อกวาง",
+    "blocksRan": "บล็อกรัน",
+    "bombsDefused": "ระเบิดคลี่คลาย",
+    "bombsPlanted": "วางระเบิด",
+    "bounty": "เงินรางวัล",
+    "bountyKills": "ค่าหัวฆ่า",
+    "bowKills": "โบว์ฆ่า",
+    "boxesPickedUp": "กล่องสะสม",
+    "bronzeTrophies": "ถ้วยรางวัลทองแดง",
+    "candyFound": "พบขนม",
+    "challenges": "ความท้าทาย",
+    "class": "ระดับ",
+    "coins": "เหรียญ",
+    "contracts": "สัญญา",
+    "correctGuesses": "ทายถูก",
+    "damage": "ความเสียหาย",
+    "deaths": "ผู้เสียชีวิต",
+    "detectiveWins": "นักสืบชนะ",
+    "diamonds": "เพชร",
+    "doublesWins": "ชนะคู่",
+    "eggsFound": "พบไข่",
+    "emeralds": "มรกต",
+    "empireKills": "ผู้พิทักษ์สังหาร",
+    "ended": "สิ้นสุดแล้ว",
+    "endurance": "ความอดทน",
+    "event-level": "ระดับเหตุการณ์",
     "exp": "EXP",
-    "expGained": "EXP Gained",
-    "extraUltimates": "Extra Ultimates",
-    "fastestDetectiveWin": "Fastest Detective Win",
-    "fastestMurdererWin": "Fastest Murderer Win",
-    "fastestWin": "Fastest Win",
-    "finalAssists": "Final Assists",
-    "finalDeaths": "Final Deaths",
-    "finalKills": "Final Kills",
-    "firstLogin": "First Login",
+    "expGained": "ได้รับ EXP",
+    "extraUltimates": "อัลติเมทพิเศษ",
+    "fastestDetectiveWin": "วินนักสืบที่เร็วที่สุด",
+    "fastestMurdererWin": "ฆาตกรที่เร็วที่สุดชนะ",
+    "fastestWin": "ชนะเร็วที่สุด",
+    "finalAssists": "การช่วยเหลือครั้งสุดท้าย",
+    "finalDeaths": "ความตายครั้งสุดท้าย",
+    "finalKills": "สังหารสุดท้าย",
+    "firstLogin": "เข้าสู่ระบบครั้งแรก",
     "fkdr": "FKDR",
-    "forcefieldTime": "Forcefield Time",
-    "fortune": "Fortune",
-    "friends": "Friends",
-    "game": "Game",
-    "gamesPlayed": "Games Played",
-    "giftsFound": "Gifts Found",
-    "giftsSent": "Gifts Sent",
-    "goals": "Goals",
-    "godfather": "Godfather",
-    "godlikes": "Godlikes",
-    "gold": "Gold",
-    "goldPickedUp": "Gold Picked Up",
-    "goldRate": "Gold Rate",
-    "goldTrophies": "Gold Trophies",
-    "grandPrixTokens": "GP Tokens",
+    "forcefieldTime": "เวลาฟอร์ซฟิลด์",
+    "fortune": "โชค",
+    "friends": "เพื่อน",
+    "game": "เกม",
+    "game-total": "{{game}} รวม",
+    "gamesPlayed": "เกมส์ที่เล่น",
+    "giftsFound": "พบของขวัญ",
+    "giftsSent": "ส่งของขวัญแล้ว",
+    "goals": "เป้าหมาย",
+    "godfather": "เจ้าพ่อ",
+    "godlikes": "เทพบุตร",
+    "gold": "ทอง",
+    "goldPickedUp": "รับทอง",
+    "goldRate": "อัตราทอง",
+    "goldTrophies": "ถ้วยรางวัลทองคำ",
+    "grandPrixTokens": "โทเค็น GP",
     "guild": {
-      "averageMemberGexp": "Average Member GEXP",
-      "createdOn": "Created On",
-      "daily": "Daily",
+      "averageMemberGexp": "สมาชิกเฉลี่ย GEXP",
+      "createdOn": "สร้างบน",
+      "daily": "รายวัน",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
-      "date": "Date",
+      "date": "วันที่",
       "gexp": "GEXP",
-      "guild": "Guild",
-      "guildMaster": "Guild Master",
-      "joinedAt": "Joined At",
-      "level": "Guild Level",
-      "members": "Guild Members",
-      "monthly": "Monthly",
+      "guild": "กิลด์",
+      "guildMaster": "หัวหน้ากิลด์",
+      "joinedAt": "เข้าร่วมที่",
+      "level": "ระดับกิลด์",
+      "members": "สมาชิกกิลด์",
+      "monthly": "รายเดือน",
       "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
-      "quests": "Guild Quests",
-      "rank": "Guild Rank",
-      "scaledGexp": "Scaled GEXP",
-      "weekly": "Weekly",
+      "quests": "เควสกิลด์",
+      "rank": "อันดับกิลด์",
+      "scaledGexp": "สเกล GEXP",
+      "weekly": "รายสัปดาห์",
       "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
     },
-    "hat": "Hat",
-    "heads": "Heads",
-    "headsEaten": "Heads Eaten",
-    "headshotKills": "Headshot Kills",
-    "headshots": "Headshots",
-    "headstart": "Headstart",
-    "healing": "Healing",
-    "heroWins": "Hero Wins",
-    "hidden": "Hidden",
-    "hiderWins": "Hider Wins",
-    "highestKillstreak": "Highest Killstreak",
-    "highestScoreFinals": "Finals Personal Best",
-    "highestScoreQualifications": "Qualifiers Personal Best",
-    "highestStreak": "Highest Streak",
-    "hits": "Hits",
-    "infectedWins": "Infected Wins",
-    "iron": "Iron",
-    "karma": "Karma",
+    "hat": "หมวก",
+    "heads": "หัว",
+    "headsEaten": "หัวกิน",
+    "headshotKills": "ยิงหัวตาย",
+    "headshots": "ยิงหัว",
+    "headstart": "เริ่มต้น",
+    "healing": "การรักษา",
+    "heroWins": "ฮีโร่ชนะ",
+    "hidden": "ที่ซ่อนอยู่",
+    "hiderWins": "ไฮเดอร์ชนะ",
+    "highestKillstreak": "คิลสตรีคสูงสุด",
+    "highestScoreFinals": "รอบชิงชนะเลิศส่วนบุคคลที่ดีที่สุด",
+    "highestScoreQualifications": "รอบคัดเลือก ส่วนบุคคล ดีที่สุด",
+    "highestStreak": "สตรีคสูงสุด",
+    "hits": "ฮิต",
+    "humans-killed": "มนุษย์ถูกฆ่า",
+    "infectedWins": "ผู้ชนะที่ติดเชื้อ",
+    "iron": "เหล็ก",
+    "karma": "กรรม",
     "kdr": "KDR",
-    "kicks": "Kicks",
-    "vampires-killed": "Vampires Killed",
-    "humans-killed": "Humans Killed",
-    "kills": "Kills",
-    "killsAsInfected": "Kills as Infected",
-    "killsAsMurderer": "Kills As Murderer",
-    "killsAsSurvivor": "Kills as Survivor",
-    "killstreaks": "Killstreaks",
-    "kit": "Current Kit",
+    "kicks": "เตะ",
+    "kills": "ฆ่า",
+    "killsAsInfected": "ฆ่าเมื่อติดเชื้อ",
+    "killsAsMurderer": "ฆ่าอย่างฆาตกร",
+    "killsAsSurvivor": "ฆ่าในฐานะผู้รอดชีวิต",
+    "killstreaks": "คิลสตรีค",
+    "kit": "ชุดปัจจุบัน",
     "kwr": "KWR",
-    "lapsCompleted": "Laps",
-    "lastAction": "Last Action",
-    "lastActionTime": "Last Action Time",
-    "lastAliveGames": "Times Last Alive",
-    "lastGame": "Last Game",
-    "lastLogin": "Last Login",
-    "layers": "Layers",
-    "level": "Level",
-    "levelsGained": "Levels Gained",
-    "loginTime": "Login Time",
-    "logoutTime": "Logout Time",
-    "lootChests": "Loot Chests",
-    "losses": "Losses",
-    "magicalChests": "Magical Chests",
-    "magicalKeys": "Magical Keys",
-    "map": "Map",
-    "mastery": "Mastery",
-    "maxPoints": "Max Score",
-    "maxWave": "Max Wave",
-    "mode": "Mode",
-    "mostVampireKills": "Most Vampire Kills",
-    "mounts": "Mounts",
-    "murdererWins": "Murderer Wins",
-    "mythic-favor": "Mythic Favor",
-    "networkLevel": "Network Level",
-    "objectives": "Objectives",
-    "offensive": "Offensive",
-    "offline": "Offline",
-    "online": "Online",
-    "opals": "Opals",
-    "overallWins": "Overall Wins",
-    "pingRange": "Ping Range",
-    "playtime": "Playtime",
-    "points": "Points",
-    "poopCollected": "Poop Collected",
-    "powerKicks": "Power Kicks",
-    "powerupActivations": "Powerup Activations",
-    "powerups": "Powerups",
-    "prevent": "Prevent",
-    "quests": "Quests",
-    "ranksGifted": "Ranks Gifted",
-    "rebelKills": "Attacker Kills",
-    "renown": "Renown",
-    "roundWins": "Round Wins",
-    "rune": "Rune",
-    "score": "Score",
-    "seekerWins": "Seeker Wins",
-    "shards": "Shards",
-    "shotAccuracy": "Shot Accuracy",
-    "shotsFired": "Shots Fired",
-    "silver": "Silver",
-    "silverTrophies": "Silver Trophies",
-    "soloWins": "Solo Wins",
-    "souls": "Souls",
-    "stampLevel": "Coin Conversions",
-    "starsEarned": "Stars Earned",
-    "started": "Started",
-    "status": "Status",
-    "suicides": "Suicides",
-    "superVotes": "Super Votes",
-    "superluck": "Superluck",
-    "support": "Support",
-    "survivorWins": "Survivor Wins",
-    "tags": "Tags",
-    "tauntsUsed": "Taunts Used",
-    "thrownKnifeKills": "Thrown Knife Kills",
-    "title": "Title",
-    "tokens": "Tokens",
-    "total": "Total",
-    "totalTrophies": "Total Trophies",
-    "trail": "Trail",
-    "transfusion": "Transfusion",
-    "trapKills": "Trap Kills",
-    "trigger": "Trigger",
-    "tripleShot": "Triple Shot",
-    "trophyRate": "Trophy Rate",
-    "ultimate": "Ultimate",
-    "ultimatesCrafted": "Ultimates Crafted",
-    "utility": "Utility",
-    "version": "Version",
-    "votes": "Votes",
-    "wallsFaced": "Walls Faced",
-    "wins": "Wins",
-    "winstreak": "Winstreak",
-    "witherDamage": "Wither Damage",
-    "witherKills": "Wither Kills",
-    "wlr": "WLR",
-    "wool": "Wool",
-    "woolCaptures": "Wool Captures",
-    "woolPlaced": "Wool Placed",
-    "zombieKills": "Zombie Kills",
-    "mysticsEnchanted": "Mystics Enchanted",
-    "contracts": "Contracts",
-    "prefix": "Prefix",
+    "lapsCompleted": "รอบ",
+    "lastAction": "การกระทำครั้งสุดท้าย",
+    "lastActionTime": "เวลาดำเนินการล่าสุด",
+    "lastAliveGames": "ครั้งสุดท้ายที่มีชีวิตอยู่",
+    "lastGame": "เกมสุดท้าย",
+    "lastLogin": "เข้าสู่ระบบครั้งล่าสุด",
+    "layers": "เลเยอร์",
+    "level": "ระดับ",
+    "levelsGained": "ระดับที่ได้รับ",
+    "loginTime": "เวลาเข้าสู่ระบบ",
+    "logoutTime": "เวลาออกจากระบบ",
+    "lootChests": "หีบสมบัติ",
+    "losses": "ขาดทุน",
+    "magicalChests": "หีบวิเศษ",
+    "magicalKeys": "กุญแจวิเศษ",
+    "map": "แผนที่",
+    "mastery": "เชี่ยวชาญ",
+    "maxPoints": "คะแนนสูงสุด",
+    "maxWave": "แม็กซ์เวฟ",
+    "mode": "โหมด",
+    "mostVampireKills": "ฆ่าแวมไพร์มากที่สุด",
+    "mounts": "เมาท์",
+    "murdererWins": "ฆาตกรชนะ",
+    "mysticsEnchanted": "มิสติกหลงเสน่ห์",
+    "mythic-favor": "ความโปรดปรานในตำนาน",
+    "networkLevel": "ระดับเครือข่าย",
+    "objectives": "วัตถุประสงค์",
+    "offensive": "ก้าวร้าว",
+    "offline": "ออฟไลน์",
+    "online": "ออนไลน์",
+    "opals": "โอปอล",
+    "overallWins": "ชัยชนะโดยรวม",
+    "pingRange": "ช่วงปิง",
+    "playtime": "เวลาเล่น",
+    "points": "คะแนน",
+    "poopCollected": "เก็บอึ",
+    "powerKicks": "พาวเวอร์คิกส์",
+    "powerupActivations": "การเปิดใช้งานการเพิ่มพลัง",
+    "powerups": "เพิ่มพลัง",
+    "prefix": "คำนำหน้า",
+    "prevent": "ป้องกัน",
     "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "win": "Win Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "goldTrophy": "Gold Trophy Progress"
+      "exp": "ความคืบหน้าของ EXP",
+      "gexp": "ความคืบหน้า GEXP",
+      "goldTrophy": "ความก้าวหน้าของถ้วยรางวัลทองคำ",
+      "kill": "ฆ่าคืบหน้า",
+      "score": "ความคืบหน้าของคะแนน",
+      "win": "ชนะความคืบหน้า"
     },
-    "game-total": "{{game}} Total"
+    "quests": "เควส",
+    "ranksGifted": "อันดับพรสวรรค์",
+    "rebelKills": "ผู้โจมตีสังหาร",
+    "renown": "ชื่อเสียง",
+    "roundWins": "รอบชนะ",
+    "rune": "รูน",
+    "score": "คะแนน",
+    "seekerWins": "ผู้แสวงหาชัยชนะ",
+    "shotAccuracy": "ความถูกต้องยิง",
+    "shotsFired": "นัดยิง",
+    "silver": "เงิน",
+    "silverTrophies": "ถ้วยรางวัลเงิน",
+    "soloWins": "โซโลชนะ",
+    "souls": "วิญญาณ",
+    "stampLevel": "การแปลงเหรียญ",
+    "starsEarned": "รับดาว",
+    "started": "เริ่ม",
+    "status": "สถานะ",
+    "suicides": "การฆ่าตัวตาย",
+    "superVotes": "โหวตสุดยอด",
+    "superluck": "ซุปเปอร์ลัค",
+    "support": "สนับสนุน",
+    "survivorWins": "ผู้รอดชีวิตชนะ",
+    "tags": "แท็ก",
+    "tauntsUsed": "ใช้เหน็บ",
+    "thrownKnifeKills": "มีดขว้างสังหาร",
+    "title": "ชื่อ",
+    "tokens": "โทเค็น",
+    "total": "ทั้งหมด",
+    "totalTrophies": "ถ้วยรางวัลทั้งหมด",
+    "trail": "เส้นทาง",
+    "transfusion": "การถ่ายเลือด",
+    "trapKills": "กับดักฆ่า",
+    "trigger": "สิ่งกระตุ้น",
+    "tripleShot": "ทริปเปิ้ลช็อต",
+    "trophyRate": "อัตรารางวัล",
+    "ultimate": "สุดยอด",
+    "ultimatesCrafted": "สุดยอดฝีมือ",
+    "utility": "คุณประโยชน์",
+    "vampires-killed": "แวมไพร์ถูกฆ่า",
+    "version": "เวอร์ชั่น",
+    "votes": "โหวต",
+    "wallsFaced": "กำแพงเผชิญ",
+    "wins": "ชนะ",
+    "winstreak": "วินสตรีค",
+    "witherDamage": "เหี่ยวเฉาเสียหาย",
+    "witherKills": "เหี่ยวเฉาฆ่า",
+    "wlr": "WLR",
+    "wool": "ขนสัตว์",
+    "woolCaptures": "ผ้าขนสัตว์จับ",
+    "woolPlaced": "ผ้าขนสัตว์วาง",
+    "zombieKills": "ซอมบี้ฆ่า",
+    "potionsBrewed": "ปรุงยา"
   },
   "tips": {
-    "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
-    "invite": "$t(emojis:socials.discord) Click **[here](<https://statsify.net/invite>)** to invite Statsify to your own server!",
-    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** offers additional features such as personalized profile badges. Find the full list of benefits **[here](<https://statsify.net/premium>)**!",
-    "rankings": "$t(emojis:logos.iron) View your top leaderboard positions with **[Statsify Premium](<https://statsify.net/premium>)** by using `/rankings`",
-    "verify": "$t(emojis:check) Run `/verify` to run commands without inputting your username as well as receive **10% lower cooldowns**"
+    "discord": "$t(emojis:socials.discord) เข้าร่วมกับเรา **$t(socials.discord)** และรับ **20% คูลดาวน์ที่ต่ำกว่า**$t(emojis:heart)",
+    "invite": "$t(emojis:socials.discord) คลิก **[here](<https://statsify.net/invite>)** เพื่อเชิญ Statsify เข้าสู่เซิร์ฟเวอร์ของคุณเอง!",
+    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** มีคุณสมบัติเพิ่มเติม เช่น ป้ายโปรไฟล์ส่วนบุคคล. พบสิทธิประโยชน์ทั้งหมด **[here](<https://statsify.net/premium>)**!",
+    "rankings": "$t(emojis:logos.iron) ดูตำแหน่งกระดานผู้นำอันดับสูงสุดของคุณด้วย **[Statsify Premium] \n (<https://statsify.net/premium>)** โดยใช้ `/rankings`",
+    "verify": "$t(emojis:check) รัน `/verify` เพื่อรันคำสั่งโดยไม่ต้องป้อนชื่อผู้ใช้ของคุณ และรับ **10% คูลดาวน์ที่ต่ำกว่า**"
   },
-  "unknown": "Unknown",
+  "unknown": "ไม่รู้จัก",
   "verification": {
     "alreadyVerified": {
-      "description": "You are already linked to a Minecraft account. Run `/unverify` to unlink your Minecraft account.",
-      "title": "Already Verified"
+      "description": "คุณเชื่อมโยงกับบัญชี Minecraft แล้ว. เรียกใช้ `/unverify` เพื่อยกเลิกการเชื่อมโยงบัญชี Minecraft ของคุณ.",
+      "title": "ยืนยันแล้ว"
     },
     "invalidCode": {
       "description": "$t(verification.noCode.description)",
-      "title": "Invalid Verification Code"
+      "title": "รหัสยืนยันไม่ถูกต้อง"
     },
     "noCode": {
-      "description": "**How to verify**\n`1.` Open Minecraft and go to the server list\n`2.` Connect to `verify.statsify.net` and copy the code displayed\n`3.` Head back to discord and run `/verify code:XXXX`",
-      "title": "Missing Verification Code"
+      "description": "**วิธีการตรวจสอบ**`\n`1.` เปิด Minecraft และไปที่รายการเซิร์ฟเวอร์\n`2.` เชื่อมต่อกับ `verify.statsify.net` และคัดลอกรหัสที่แสดง\n`3.` กลับไปที่ discord และเรียกใช้ `/verify code:XXXX`",
+      "title": "ไม่มีรหัสยืนยัน"
     },
     "notVerified": {
-      "description": "You have to be verified before you are able to unverify!",
-      "title": "Not Verified"
+      "description": "คุณต้องได้รับการยืนยันก่อนที่จะไม่สามารถยืนยันได้!",
+      "title": "ไม่ได้รับการยืนยัน"
     },
     "requiredVerification": {
-      "description": "To use this command you must be verified. Run `/verify` to verify your account.",
-      "title": "Verification Required"
+      "description": "หากต้องการใช้คำสั่งนี้ คุณต้องได้รับการยืนยัน. เรียกใช้ `/verify` เพื่อยืนยันบัญชีของคุณ.",
+      "title": "จำเป็นต้องมีการตรวจสอบ"
     },
-    "successfulUnverification": "Successfully unverified your account!",
-    "successfulVerification": "You are now verified to **{{displayName}}**"
+    "successfulUnverification": "ยกเลิกการยืนยันบัญชีของคุณสำเร็จแล้ว!",
+    "successfulVerification": "ตอนนี้คุณได้รับการยืนยันถึง **{{displayName}}**"
   }
 }

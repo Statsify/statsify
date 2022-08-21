@@ -193,6 +193,7 @@
     "theme-view": "Visa ditt nuvarande profiltema",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Koppla från dina Discord och Minecraft konton",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Återställde din footer.",
       "set": "$t(emojis:config.success) Uppdaterade din footer."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Uppdaterade ditt språk till `{{locale}}`."
+    },
     "theme": {
       "profile": "Detta är hur ditt tema kommer att se ut på dina profiler",
       "set": "$t(emojis:config.success) Uppdaterade ditt tema.",
       "view": "$t(emojis:config.view) Ditt nuvarande tema:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Uppdaterade ditt språk till `{{locale}}`."
     }
   },
   "cooldown": {
@@ -342,11 +343,15 @@
       "title": "Högre Nivå Krävs"
     },
     "invalidGuild": {
-      "description": "En guild av {{type}} av `{{tag}}` kunde inte hittas!",
+      "description_id": "A guild with the id of `{{tag}}` could not be found!",
+      "description_name": "A guild by the name of `{{tag}}` could not be found!",
+      "description_player": "A guild with the player `{{tag}}` could not be found!",
       "title": "Ogiltig Guild"
     },
     "invalidPlayer": {
-      "description": "En spelare av {{type}} av `{{tag}}` kunde inte hittas!",
+      "description_username": "A player by the username of `{{tag}}` could not be found!",
+      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
+      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Ogiltig spelare"
     },
     "invalidResetTime": {
@@ -543,6 +548,7 @@
     "challenges": "Utmaningar",
     "class": "Klass",
     "coins": "Mynt",
+    "contracts": "Kontrakt",
     "correctGuesses": "Rätta gissningar",
     "damage": "Skada",
     "deaths": "Dödsfall",
@@ -570,6 +576,7 @@
     "fortune": "Fortune",
     "friends": "Vänner",
     "game": "Spel",
+    "game-total": "{{game}} Totalt",
     "gamesPlayed": "Spel spelade",
     "giftsFound": "Gåvor hittade",
     "giftsSent": "Gåvor skickade",
@@ -616,13 +623,12 @@
     "highestScoreQualifications": "Kvalificering Personligt bästa",
     "highestStreak": "Högsta Streak",
     "hits": "Träffar",
+    "humans-killed": "Människor dödade",
     "infectedWins": "Infekterade vinster",
     "iron": "Järn",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Sparkar",
-    "vampires-killed": "Vampyrer Dödade",
-    "humans-killed": "Människor dödade",
     "kills": "Kills",
     "killsAsInfected": "Kills som en infekterad",
     "killsAsMurderer": "Kills Som En Mördare",
@@ -653,6 +659,7 @@
     "mostVampireKills": "Mest Vampyr Kills",
     "mounts": "Mounts",
     "murdererWins": "Mördar Vinster",
+    "mysticsEnchanted": "Mystics Förtrollade",
     "mythic-favor": "Mytisk Favor",
     "networkLevel": "Nätverksnivå",
     "objectives": "Mål",
@@ -668,7 +675,16 @@
     "powerKicks": "Ström Sparkar",
     "powerupActivations": "Powerup aktiveringar",
     "powerups": "Powerups",
+    "prefix": "Prefix",
     "prevent": "Förhindra",
+    "progression": {
+      "exp": "EXP framsteg",
+      "gexp": "GEXP framsteg",
+      "goldTrophy": "Guld Trofé framsteg",
+      "kill": "Kill Progress",
+      "score": "Poäng framsteg",
+      "win": "Vinst framsteg"
+    },
     "quests": "Uppdrag",
     "ranksGifted": "Ranker Giftade",
     "rebelKills": "Attackerar Kills",
@@ -677,7 +693,6 @@
     "rune": "Rune",
     "score": "Poäng",
     "seekerWins": "Sökar Vinster",
-    "shards": "Skärvor",
     "shotAccuracy": "Skott Noggrannhet",
     "shotsFired": "Skott avfyrade",
     "silver": "Silver",
@@ -709,6 +724,7 @@
     "ultimate": "Ultimat",
     "ultimatesCrafted": "Ultimates Tillverkade",
     "utility": "Verktyg",
+    "vampires-killed": "Vampyrer Dödade",
     "version": "Version",
     "votes": "Röster",
     "wallsFaced": "Väggar konfronterade",
@@ -721,18 +737,7 @@
     "woolCaptures": "Ull fångster",
     "woolPlaced": "Ull placerad",
     "zombieKills": "Zombie Kills",
-    "mysticsEnchanted": "Mystics Förtrollade",
-    "contracts": "Kontrakt",
-    "prefix": "Prefix",
-    "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "win": "Win Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "goldTrophy": "Gold Trophy Progress"
-    },
-    "game-total": "{{game}} Total"
+    "potionsBrewed": "Potions Brewed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Gå med i vår **$t(socials.discord)** och få **20% lägre cooldowns** $t(emojis:heart)",

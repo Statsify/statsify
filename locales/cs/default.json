@@ -9,7 +9,7 @@
     "mojang-player": "A Minecraft username or UUID",
     "number": "Číslo",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard stat to view",
+    "player-leaderboard": "Vyber statistiku k zobrazení",
     "reason": "The reason for closing the support ticket",
     "server": "Název Minecraft serveru nebo jeho IP",
     "tags-content": "The content of the tag",
@@ -33,7 +33,7 @@
     "cape": "Zobrazit něčí Minecraft a Optifine pláště",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
     "close": "Close the current support ticket",
-    "colors": "A list of Minecraft color codes",
+    "colors": "Seznam barevných kódů v Minecraftu",
     "commands": "View Statsify command usage",
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
@@ -43,23 +43,23 @@
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
     "friends": "Zobrazit seznam přátel na Hypixelu",
-    "game-counts": "View Hypixel current game counts",
+    "game-counts": "Zobrazit aktuální počet Hypixel hráčů ve hrách",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Vygenerovat seznam možných odpovědí v Guess The Build sestavených na základě dané nápovědy",
     "guild": "View your guild's stats",
     "guild-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Guild\" })",
-    "guild-list": "View the member list of your guild",
+    "guild-list": "Zobrazit seznam členů guild",
     "guild-member": "Zobrazit statistiky guild člena",
     "guild-overall": "Zobrazit přehled guild statistik",
-    "guild-top": "View your top GEXP contributors",
-    "help": "A basic description of what Statsify does for you and your server",
+    "guild-top": "Zobrazit GEXP nejproduktivnějších členů",
+    "help": "Základní popis toho co pro tebe a tvůj server dělá Statsify",
     "historical-arcade": "$t(commands.historical-command, { \"name\": \"Arcade\" })",
     "historical-arenabrawl": "$t(commands.historical-command, { \"name\": \"Arena Brawl\" })",
     "historical-bedwars": "$t(commands.historical-command, { \"name\": \"BedWars\" })",
     "historical-blitzsg": "$t(commands.historical-command, { \"name\": \"BlitzSG\" })",
     "historical-bridge": "$t(commands.historical-command, { \"name\": \"Bridge\" })",
     "historical-buildbattle": "$t(commands.historical-command, { \"name\": \"Build Battle\" })",
-    "historical-command": "View your {{name}} historical stats",
+    "historical-command": "Zobrazit {{name}} statistiky za určitou dobu",
     "historical-copsandcrims": "$t(commands.historical-command, { \"name\": \"Cops and Crims\" })",
     "historical-duels": "$t(commands.historical-command, { \"name\": \"Duels\" })",
     "historical-general": "$t(commands.historical-command, { \"name\": \"General\" })",
@@ -109,26 +109,26 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolwars": "$t(commands.leaderboard-command, { \"name\": \"WoolWars\" })",
-    "links": "Statsify Socials",
+    "links": "Sociální média Statsify",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "View your mutual Hypixel friends with another player",
-    "namehistory": "View someone's Minecraft name history",
+    "mutuals": "Zobrazit Hypixel přátele společné s jiným hráčem",
+    "namehistory": "Zobrazit něčí historii Minecraft jmen",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
-    "ping": "View Statsify's creators and contributors",
+    "ping": "Zobrazit Statsify tvůrce a přispěvatele",
     "pit": "$t(commands.hypixel-command, { \"name\": \"Pit\" })",
     "player-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Player\" })",
     "quake": "$t(commands.hypixel-command, { \"name\": \"Quake\" })",
-    "rankings": "View your top leaderboard positions",
+    "rankings": "Zobrazit nejlepší pozice v žebříčku",
     "rankings-all": "$t(commands.rankings)",
     "rankings-arcade": "$t(commands.rankings-command, { \"name\": \"Arcade\" })",
     "rankings-arenabrawl": "$t(commands.rankings-command, { \"name\": \"Arena Brawl\" })",
     "rankings-bedwars": "$t(commands.rankings-command, { \"name\": \"BedWars\" })",
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
-    "rankings-command": "View your top {{name}} leaderboard positions",
+    "rankings-command": "Zobrazit nejlepší {{name}} pozice v žebříčku",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
     "rankings-general": "$t(commands.rankings-command, { \"name\": \"General\" })",
@@ -153,7 +153,7 @@
     "ratios-arenabrawl": "$t(commands.ratios-command, { \"name\": \"Arena Brawl\" })",
     "ratios-bedwars": "$t(commands.ratios-command, { \"name\": \"BedWars\" })",
     "ratios-blitzsg": "$t(commands.ratios-command, { \"name\": \"BlitzSG\" })",
-    "ratios-command": "View your {{name}} milestones and estimations",
+    "ratios-command": "Zobrazit {{name}} milníky a odhady",
     "ratios-copsandcrims": "$t(commands.ratios-command, { \"name\": \"Cops and Crims\" })",
     "ratios-duels": "$t(commands.ratios-command, { \"name\": \"Duels\" })",
     "ratios-megawalls": "$t(commands.ratios-command, { \"name\": \"MegaWalls\" })",
@@ -168,41 +168,42 @@
     "ratios-walls": "$t(commands.ratios-command, { \"name\": \"Walls\" })",
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
-    "recentgames": "View someone's Hypixel recent games",
-    "reset": "Reset your historical stats",
-    "server": "View Minecraft server status",
-    "skin": "View someone's Minecraft skin",
+    "recentgames": "Zobrazit něčí poslední hry na Hypixelu",
+    "reset": "Vyresetovat statistiky za určitou dobu",
+    "server": "Zobrazit stav Minecraft serveru",
+    "skin": "Zobrazit něčí Minecraft skin",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
-    "socials": "View someone's Hypixel linked socials",
+    "socials": "Zobrazit něčí Hypixel propojené sociální sítě",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
-    "status": "View someone's Hypixel status",
+    "status": "Zobrazit něčí Hypixel stav",
     "tags": "Manage support tags",
     "tags-create": "Create a support tag",
     "tags-delete": "Delete a support tag",
     "tags-rename": "Rename a support tag",
-    "text": "Generate Minecraft text",
+    "text": "Vygenerovat Minecraft text",
     "theme": "Change your theme for every profile",
-    "theme-boxes": "Change the appearance of the profile boxes",
-    "theme-font": "Change the font of the profiles",
+    "theme-boxes": "Změnit vzhled profilových polí",
+    "theme-font": "Změnit písmo profilů",
     "theme-footer": "Customize your profile's footer",
-    "theme-footer-icon": "Change your profile's footer icon",
-    "theme-footer-message": "Change your profile's footer message. You can use https://rgb.birdflop.com to create text gradients.",
-    "theme-footer-reset": "Reset your profile's footer",
-    "theme-palette": "Change the color palette of the profiles",
-    "theme-view": "View your current profile theme",
+    "theme-footer-icon": "Změnit svojí profilovou ikonu zápatí",
+    "theme-footer-message": "Změnit svojí profilovou zprávu zápatí. Můžeš použít například https://rgb.birdflop.com.",
+    "theme-footer-reset": "Resetovat svoje zápatí profilu",
+    "theme-palette": "Změnit paletu barev profilů",
+    "theme-view": "Zobrazit svůj aktuální motiv profilu",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
-    "unverify": "Unlink your Discord and Minecraft accounts",
+    "unverify": "Zrušit propojení svého Discord a Minecraft účtu",
     "user": "View someone's Statsify user info",
-    "uuid": "Get someone's Minecraft UUID",
+    "uuid": "Získat něčí Minecraft UUID",
     "vampirez": "$t(commands.hypixel-command, { \"name\": \"VampireZ\" })",
-    "verify": "Link your Discord and Minecraft accounts",
+    "verify": "Propojit svůj Discord a Minecraft účet",
     "walls": "$t(commands.hypixel-command, { \"name\": \"Walls\" })",
     "warlords": "$t(commands.hypixel-command, { \"name\": \"Warlords\" })",
-    "watchdog": "View Hypixel Watchdog ban counts",
+    "watchdog": "Zobrazit počet Hypixel Watchdog banů",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games"
@@ -215,40 +216,40 @@
       "view": "$t(emojis:config.view) Tvůj aktuální odznak:"
     },
     "footer": {
-      "profile": "This is how your footer will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your footer.",
-      "set": "$t(emojis:config.success) Successfully updated your footer."
-    },
-    "theme": {
-      "profile": "This is how your theme will look on your profiles",
-      "set": "$t(emojis:config.success) Successfully updated your theme.",
-      "view": "$t(emojis:config.view) Your current theme:"
+      "profile": "Takhle bude vypadat tvoje zápatí na tvých profilech",
+      "reset": "$t(emojis:config.reset) Zápatí bylo úspěšně vyresetováno.",
+      "set": "$t(emojis:config.success) Zápatí bylo úspěšně aktualizováno."
     },
     "language": {
-      "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
+      "description": "$t(emojis:config.success) Jazyk byl úspěšně změněn na `{{locale}}`."
+    },
+    "theme": {
+      "profile": "Takhle bude vypadat tvůj motiv na tvých profilech",
+      "set": "$t(emojis:config.success) Motiv byl úspěšně aktualizován.",
+      "view": "$t(emojis:config.view) Tvůj aktuální motiv:"
     }
   },
   "cooldown": {
-    "description": "Please wait `{{time}}` before reusing `{{command}}`.\n\nLearn how to reduce cooldowns [here](https://statsify.net/premium)",
-    "title": "Active Cooldown"
+    "description": "Počkej prosím `{{time}}`, než znovu použiješ `{{command}}`.\n\nPřečti si o snížení časového limitu [zde](https://statsify.net/premium)",
+    "title": "Aktivní časový limit"
   },
   "embeds": {
     "available": {
-      "blocked": "Unless the name is temporarily or permanently blocked by Mojang.",
-      "invalidCharacters": "Invalid Characters",
-      "tooLong": "Too Long"
+      "blocked": "Pokud jméno není dočasně nebo trvale zablokováno Mojangem.",
+      "invalidCharacters": "Neplatné znaky",
+      "tooLong": "Příliš dlouhé"
     },
     "colors": {
-      "bold": "Bold",
-      "color": "Color",
-      "italic": "Italic",
-      "mainHex": "Main Hex",
-      "obfuscated": "Obfuscated",
+      "bold": "Tučné",
+      "color": "Barva",
+      "italic": "Kurzíva",
+      "mainHex": "Hlavní hex",
+      "obfuscated": "Zmatené",
       "reset": "Reset",
-      "shadowHex": "Shadow Hex",
-      "strikethrough": "Strikethrough",
-      "title": "Minecraft Color Codes",
-      "underline": "Underline"
+      "shadowHex": "Hex stínu",
+      "strikethrough": "Přeškrtnuté",
+      "title": "Barevné kódy v Minecraftu",
+      "underline": "Podtrhnuté"
     },
     "deletePlayer": {
       "description": "**{{displayName}}** has been removed from the database and leaderboards.",
@@ -263,40 +264,40 @@
       "title": "Force Verified"
     },
     "gameCounts": {
-      "title": "Hypixel Game Counts"
+      "title": "Počet Hypixel hráčů ve hrách"
     },
     "gtbhelper": {
-      "title": "Possible GTB Solutions"
+      "title": "Možné GTB řešení"
     },
     "help": {
       "games": {
-        "description": "Statsify supports the majority of games offered on Hypixel. To check your stats in a game run `/[game]`. For example you can run `/bedwars` to check your BedWars stats.",
-        "title": "Games"
+        "description": "Statsify podporuje většinu her na Hypixelu. Pro zjistění tvých statistik použij `/[game]`. Použij například `/bedwars` pro zjistění BedWars statistik.",
+        "title": "Hry"
       },
       "historical": {
-        "description": "Statsify lets you check your daily, weekly, and monthly stats through `/daily`, `/weekly` and `/monthly`. If you missed a reset you can view them by running `/yesterday`, `/lastweek`, and `/lastmonth`. ",
-        "title": "Historical"
+        "description": "Statsify umožňuje kontrolovat statistiky za poslední den, týden a měsíc pomocí `/daily`, `/weekly` a `/monthly`. Pokud jsi nestihl použít příkaz před resetováním, použij `/yesterday`, `/lastweek`, a `/lastmonth`. ",
+        "title": "Statistiky za určitou dobu"
       },
       "leaderboards": {
-        "description": "Statsify offers thousands of leaderboards through the `/leaderboard` command. Run `/leaderboard`, then pick the gamemode, and pick a leaderboard to view. You can hit the search button to search for a specific player or position. You can also hit the up and down buttons to view more pages.",
-        "title": "Leaderboards"
+        "description": "Statsify nabízí tisíce žebříčků skrz `/leaderboard` příkaz. Napiš `/leaderboard`, vyber si hru a statistiku k zobrazení. Poté pomocí tlačítka můžeš vyhledat daného hráče a pozici. Pomocí tlačítek se také můžeš pohybovat žebříčkem nahoru a dolů.",
+        "title": "Žebříčky"
       },
       "minecraft": {
-        "description": "You can view general Minecraft information such as skins, UUIDs, capes through `/skin`, `/uuid`, and `/cape` respectively. Statsify also has commands to generate Minecraft text through `/text`. View Minecraft colors through `/colors` and preview Minecraft servers through `/server`.",
+        "description": "Můžeš zobrazit základní Minecraft informace jako například skiny, UUID a pláště skrz `/skin`, `/uuid` a `/cape`. Statsify má také příkaz `/text`, který slouží k vygenerování Minecraft textu. Zobraz si Minecraft barvy skrz `/colors` a Minecraft servery příkazem `/server`.",
         "title": "Minecraft"
       },
-      "title": "Statsify Help"
+      "title": "Statsify nápověda"
     },
     "invite": {
-      "description": "Click the link below to invite Statsify to your discord server.",
-      "title": "Statsify Links"
+      "description": "Klikni na odkaz dole pro pozvání Statsify na tvůj Discord server.",
+      "title": "Statsify odkazy"
     },
     "ping": {
-      "contributors": "Contributors",
-      "core": "Core",
+      "contributors": "Přispěvatelé",
+      "core": "Základ",
       "pong": "Pong!",
-      "title": "Statsify Credits",
-      "translators": "Translators"
+      "title": "Statsify zásluha",
+      "translators": "Překladatelé"
     },
     "tags": {
       "deleted": {
@@ -325,8 +326,8 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
     },
     "footerTooLong": {
-      "description": "The message you provided is too long. It should be under 50 characters excluding color codes.",
-      "title": "Message Too Long"
+      "description": "Napsaná zpráva je příliž dlouhá. Musí mít, mimo barevné kódy, méně než 50 znaků.",
+      "title": "Zpráva je příliš dlouhá"
     },
     "goldOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -334,19 +335,23 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
     },
     "guildLeaderboardNotFound": {
-      "description": "We couldn't find the `guild` you were looking for!",
-      "title": "Invalid Guild"
+      "description": "Nemohli jsme nalézt `guild`, kterou jsi hledal!",
+      "title": "Neplatná guild"
     },
     "higherTierRequiredForIcon": {
       "description": "You need to purchase a higher premium tier to unlock this icon!",
       "title": "Higher Tier Required"
     },
     "invalidGuild": {
-      "description": "A guild by the {{type}} of `{{tag}}` could not be found!",
+      "description_id": "Guild s ID `{{tag}}` nebyla nalezena!",
+      "description_name": "Guild se jménem `{{tag}}` nebyla nalezena!",
+      "description_player": "Guild s hráčem `{{tag}}` nebyla nalezena!",
       "title": "Invalid Guild"
     },
     "invalidPlayer": {
-      "description": "A player by the {{type}} of `{{tag}}` could not be found!",
+      "description_username": "Hráč pod přezdívkou `{{tag}}` nebyl nalezen!",
+      "description_uuid": "Hráč pod UUID `{{tag}}` nebyl nalezen!",
+      "description_discordId": "Hráč s Discord ID `{{tag}}` nebyl nalazen!",
       "title": "Invalid Player"
     },
     "invalidResetTime": {
@@ -543,6 +548,7 @@
     "challenges": "Challenges",
     "class": "Class",
     "coins": "Coins",
+    "contracts": "Contracts",
     "correctGuesses": "Correct Guesses",
     "damage": "Damage",
     "deaths": "Deaths",
@@ -570,6 +576,7 @@
     "fortune": "Fortune",
     "friends": "Friends",
     "game": "Game",
+    "game-total": "{{game}} Total",
     "gamesPlayed": "Games Played",
     "giftsFound": "Gifts Found",
     "giftsSent": "Gifts Sent",
@@ -616,13 +623,12 @@
     "highestScoreQualifications": "Qualifiers Personal Best",
     "highestStreak": "Highest Streak",
     "hits": "Hits",
+    "humans-killed": "Humans Killed",
     "infectedWins": "Infected Wins",
     "iron": "Iron",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Kicks",
-    "vampires-killed": "Vampires Killed",
-    "humans-killed": "Humans Killed",
     "kills": "Kills",
     "killsAsInfected": "Kills as Infected",
     "killsAsMurderer": "Kills As Murderer",
@@ -653,6 +659,7 @@
     "mostVampireKills": "Most Vampire Kills",
     "mounts": "Mounts",
     "murdererWins": "Murderer Wins",
+    "mysticsEnchanted": "Mystics Enchanted",
     "mythic-favor": "Mythic Favor",
     "networkLevel": "Network Level",
     "objectives": "Objectives",
@@ -668,7 +675,16 @@
     "powerKicks": "Power Kicks",
     "powerupActivations": "Powerup Activations",
     "powerups": "Powerups",
+    "prefix": "Prefix",
     "prevent": "Prevent",
+    "progression": {
+      "exp": "EXP Progress",
+      "gexp": "GEXP Progress",
+      "goldTrophy": "Gold Trophy Progress",
+      "kill": "Kill Progress",
+      "score": "Score Progress",
+      "win": "Win Progress"
+    },
     "quests": "Quests",
     "ranksGifted": "Ranks Gifted",
     "rebelKills": "Attacker Kills",
@@ -677,7 +693,6 @@
     "rune": "Rune",
     "score": "Score",
     "seekerWins": "Seeker Wins",
-    "shards": "Shards",
     "shotAccuracy": "Shot Accuracy",
     "shotsFired": "Shots Fired",
     "silver": "Silver",
@@ -709,6 +724,7 @@
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimates Crafted",
     "utility": "Utility",
+    "vampires-killed": "Vampires Killed",
     "version": "Version",
     "votes": "Votes",
     "wallsFaced": "Walls Faced",
@@ -721,18 +737,7 @@
     "woolCaptures": "Wool Captures",
     "woolPlaced": "Wool Placed",
     "zombieKills": "Zombie Kills",
-    "mysticsEnchanted": "Mystics Enchanted",
-    "contracts": "Contracts",
-    "prefix": "Prefix",
-    "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "win": "Win Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "goldTrophy": "Gold Trophy Progress"
-    },
-    "game-total": "{{game}} Total"
+    "potionsBrewed": "Potions Brewed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",

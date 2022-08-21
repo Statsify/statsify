@@ -193,6 +193,7 @@
     "theme-view": "Tarkastele nykyistä profiiliteemaa",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Poista Discord- ja Minecraft-tilisi linkitys",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Alatunniste onnistuneesti nollattu.",
       "set": "$t(emojis:config.success) Alatunniste onnistuneesti päivitetty."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Kieli päivitettiin onnistuneesti kieleksi `{{locale}}`."
+    },
     "theme": {
       "profile": "Tältä teemasi näyttää profiileissasi",
       "set": "$t(emojis:config.success) Teema onnistuneesti päivitetty.",
       "view": "$t(emojis:config.view) Nykyinen teema:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Kieli päivitettiin onnistuneesti kieleksi `{{locale}}`."
     }
   },
   "cooldown": {
@@ -342,11 +343,15 @@
       "title": "Vaatii korkeamman tason"
     },
     "invalidGuild": {
-      "description": "Guildia {{type}} `{{tag}}` ei löytynyt!",
+      "description_id": "A guild with the id of `{{tag}}` could not be found!",
+      "description_name": "A guild by the name of `{{tag}}` could not be found!",
+      "description_player": "A guild with the player `{{tag}}` could not be found!",
       "title": "Virheellinen guild"
     },
     "invalidPlayer": {
-      "description": "Pelaajaa {{type}} `{{tag}}` ei löytynyt!",
+      "description_username": "A player by the username of `{{tag}}` could not be found!",
+      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
+      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Virheellinen pelaaja"
     },
     "invalidResetTime": {
@@ -543,6 +548,7 @@
     "challenges": "Haasteet",
     "class": "Luokka",
     "coins": "Kolikot",
+    "contracts": "Sopimukset",
     "correctGuesses": "Oikeita arvauksia",
     "damage": "Vahinkoa",
     "deaths": "Kuolemia",
@@ -570,6 +576,7 @@
     "fortune": "Onni",
     "friends": "Kaverit",
     "game": "Peli",
+    "game-total": "{{game}} Total",
     "gamesPlayed": "Peliä pelattu",
     "giftsFound": "Lahjaa löydetty",
     "giftsSent": "Lahjaa lähetetty",
@@ -616,13 +623,12 @@
     "highestScoreQualifications": "Karsinnat - henkilökohtainen ennätys",
     "highestStreak": "Pisin putki",
     "hits": "Osumia",
+    "humans-killed": "Ihmistä tapettu",
     "infectedWins": "Voittoja infektoituneena",
     "iron": "Rautaa",
     "karma": "Karmaa",
     "kdr": "KDR",
     "kicks": "Potkuja",
-    "vampires-killed": "Vampyyria tapettu",
-    "humans-killed": "Ihmistä tapettu",
     "kills": "Tappoja",
     "killsAsInfected": "Tappoja infektoituneena",
     "killsAsMurderer": "Tappoja murhaajana",
@@ -653,6 +659,7 @@
     "mostVampireKills": "Eniten vampyyritappoja",
     "mounts": "Ratsut",
     "murdererWins": "Voittoja murhaajana",
+    "mysticsEnchanted": "Mystisiä esineitä lumottu",
     "mythic-favor": "Myyttinen suosio",
     "networkLevel": "Network-taso",
     "objectives": "Tavoitteet",
@@ -668,7 +675,16 @@
     "powerKicks": "Voimapotkuja",
     "powerupActivations": "Vahvistuksia aktivoitu",
     "powerups": "Vahvistuksia",
+    "prefix": "Etuliite",
     "prevent": "Esto",
+    "progression": {
+      "exp": "EXP Progress",
+      "gexp": "GEXP Progress",
+      "goldTrophy": "Gold Trophy Progress",
+      "kill": "Kill Progress",
+      "score": "Score Progress",
+      "win": "Win Progress"
+    },
     "quests": "Tehtäviä tehty",
     "ranksGifted": "Rankkia lahjoitettu",
     "rebelKills": "Hyökkääjätapot",
@@ -677,7 +693,6 @@
     "rune": "Riimu",
     "score": "Pisteet",
     "seekerWins": "Voitot etsijänä",
-    "shards": "Sirut",
     "shotAccuracy": "Osumatarkkuus",
     "shotsFired": "Laukauksia ammuttu",
     "silver": "Silveriä",
@@ -709,6 +724,7 @@
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimaatteja työstetty",
     "utility": "Hyöty",
+    "vampires-killed": "Vampyyria tapettu",
     "version": "Versio",
     "votes": "Äänestyksiä",
     "wallsFaced": "Seinää kohdattu",
@@ -721,18 +737,7 @@
     "woolCaptures": "Villaa kaapattu",
     "woolPlaced": "Villaa asetettu",
     "zombieKills": "Zombitapot",
-    "mysticsEnchanted": "Mystisiä esineitä lumottu",
-    "contracts": "Sopimukset",
-    "prefix": "Etuliite",
-    "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "win": "Win Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "goldTrophy": "Gold Trophy Progress"
-    },
-    "game-total": "{{game}} Total"
+    "potionsBrewed": "Potions Brewed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Liity **$t(socials.discord)** ja saat **20% lyhyemmät odotusajat** $t(emojis:heart)",

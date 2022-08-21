@@ -193,6 +193,7 @@
     "theme-view": "Se ditt nåværende profiltema",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Fjern tilkoblingen mellom Discord- og Minecraft-brukeren din",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Bunnteksten din er nullstilt.",
       "set": "$t(emojis:config.success) Bunnteksten din er oppdatert."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Språket ditt er oppdatert til `{{locale}}`."
+    },
     "theme": {
       "profile": "Dette er slik temaet vil se ut på dine profiler",
       "set": "$t(emojis:config.success) Temaet ditt er oppdatert.",
       "view": "$t(emojis:config.view) Ditt nåværende tema:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Språket ditt er oppdatert til `{{locale}}`."
     }
   },
   "cooldown": {
@@ -295,7 +296,7 @@
       "contributors": "Bidragsytere",
       "core": "Team",
       "pong": "Pong!",
-      "title": "Statisfys bidragsytere",
+      "title": "Statsifys bidragsytere",
       "translators": "Oversettere"
     },
     "tags": {
@@ -342,11 +343,15 @@
       "title": "Høyere nivå kreves"
     },
     "invalidGuild": {
-      "description": "En guild av {{type}} av `{{tag}}` kunne ikke bli funnet!",
+      "description_id": "A guild with the id of `{{tag}}` could not be found!",
+      "description_name": "A guild by the name of `{{tag}}` could not be found!",
+      "description_player": "A guild with the player `{{tag}}` could not be found!",
       "title": "Ugyldig guild"
     },
     "invalidPlayer": {
-      "description": "En spiller av {{type}} av `{{tag}}` kunne ikke bli funnet!",
+      "description_username": "A player by the username of `{{tag}}` could not be found!",
+      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
+      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Ugyldig spiller"
     },
     "invalidResetTime": {
@@ -543,6 +548,7 @@
     "challenges": "Utfordringer",
     "class": "Klasse",
     "coins": "Mynter",
+    "contracts": "Kontrakter",
     "correctGuesses": "Riktige gjetninger",
     "damage": "Skade",
     "deaths": "Dødsfall",
@@ -570,6 +576,7 @@
     "fortune": "Lykke",
     "friends": "Venner",
     "game": "Spill",
+    "game-total": "{{game}} Totalt",
     "gamesPlayed": "Spill spilt",
     "giftsFound": "Gaver funnet",
     "giftsSent": "Gaver sendt",
@@ -616,13 +623,12 @@
     "highestScoreQualifications": "Personlig beste i kvalifinseringer",
     "highestStreak": "Høyeste seiersrekke",
     "hits": "Treff",
+    "humans-killed": "Mennesker drept",
     "infectedWins": "Seiere som infisert",
     "iron": "Jern",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Spark",
-    "vampires-killed": "Vampyrer drept",
-    "humans-killed": "Mennesker drept",
     "kills": "Drap",
     "killsAsInfected": "Drap som infisert",
     "killsAsMurderer": "Drap som morder",
@@ -653,6 +659,7 @@
     "mostVampireKills": "Flest vampyrdrap",
     "mounts": "Ridbare skapninger",
     "murdererWins": "Seiere som morder",
+    "mysticsEnchanted": "Mystics fortryllet",
     "mythic-favor": "Mystisk tjeneste",
     "networkLevel": "Nettverkslevel",
     "objectives": "Mål",
@@ -668,7 +675,16 @@
     "powerKicks": "Harde spark",
     "powerupActivations": "Powerup-aktiveringer",
     "powerups": "Powerups",
+    "prefix": "Prefiks",
     "prevent": "Forhindre",
+    "progression": {
+      "exp": "EXP-fremgang",
+      "gexp": "GEXP-fremgang",
+      "goldTrophy": "Gulltroféfremgang",
+      "kill": "Drapsfremgang",
+      "score": "Poengsumfremgang",
+      "win": "Seiersfremgang"
+    },
     "quests": "Oppdrag",
     "ranksGifted": "Ranks gitt bort",
     "rebelKills": "Angriper-drap",
@@ -677,7 +693,6 @@
     "rune": "Rune",
     "score": "Poeng",
     "seekerWins": "Seiere som leter",
-    "shards": "Skår",
     "shotAccuracy": "Treffsikkerhet",
     "shotsFired": "Skudd avfyrt",
     "silver": "Sølv",
@@ -709,6 +724,7 @@
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimater laget",
     "utility": "Nytte",
+    "vampires-killed": "Vampyrer drept",
     "version": "Versjon",
     "votes": "Stemmer",
     "wallsFaced": "Vegger møtt",
@@ -721,24 +737,13 @@
     "woolCaptures": "Ull fanget",
     "woolPlaced": "Ull plassert",
     "zombieKills": "Zombiedrap",
-    "mysticsEnchanted": "Mystics fortryllet",
-    "contracts": "Kontrakter",
-    "prefix": "Prefiks",
-    "progression": {
-      "exp": "EXP-fremgang",
-      "gexp": "GEXP-fremgang",
-      "win": "Seiersfremgang",
-      "kill": "Drapsfremgang",
-      "score": "Poengsumfremgang",
-      "goldTrophy": "Gulltroféfremgang"
-    },
-    "game-total": "{{game}} Totalt"
+    "potionsBrewed": "Potions Brewed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Bli med i vår **$t(socials.discord)** og få **20% kortere cooldowns** $t(emojis:heart)",
     "invite": "$t(emojis:socials.discord) Klikk **[here](<https://statsify.net/invite>)** for å invitere Statsify til din egen server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** tilbyr flere funksjoner, slik som personlig tilpassede profilmerker. Finn hele listen over fordeler **[here](<https://statsify.net/premium>)**!",
-    "rankings": "$t(emojis:logos.iron) Se dine topplisteposisjoner med **[Statsify Premium] (<https://statsify.net/premium>)** ved å bruke `/rankings`",
+    "rankings": "$t(emojis:logos.iron) Se dine topplisteposisjoner med **[Statsify Premium](<https://statsify.net/premium>)** ved å bruke `/rankings`",
     "verify": "$t(emojis:check) Utfør `/verify for å utføre kommandoer uten å skrive inn brukernavn, i tillegg til å motta **10 % kortere cooldowns**"
   },
   "unknown": "Ukjent",

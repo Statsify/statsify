@@ -4,7 +4,7 @@
     "file": "Ανέβασε ένα αρχείο",
     "gtbhelper": "Το τρέχον στοιχείο",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
-    "guild-query": "Ένα Guild όνομα ή guild μέλος",
+    "guild-query": "Ένα guild όνομα ή guild μέλος",
     "guild-type": "Ο τύπος αναζήτησης guild για εκτέλεση",
     "mojang-player": "Ένα όνομα χρήστη ή UUID του Minecraft",
     "number": "Ένας αριθμός",
@@ -45,10 +45,10 @@
     "friends": "Δες τη λίστα των Hypixel φίλων σου",
     "game-counts": "Δες τις τρέχον μετρήσεις του Hypixel παιχνιδιού",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
-    "gtbhelper": "Δημιούργησε μια λίστα με πιθανές Guess The Build απαντήσεις βασιζόμενες στο δοσμένο στοιχείο",
+    "gtbhelper": "Δημιούργησε μια λίστα με πιθανές απαντήσεις Guess The Build με βάση τη δεδομένη υπόδειξη",
     "guild": "View your guild's stats",
     "guild-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Guild\" })",
-    "guild-list": "Δες τη λίστα μελών της guild σου",
+    "guild-list": "Δες τη λίστα μελών τoυ Guild σου",
     "guild-member": "Δες τα στατιστικά μελών της guild σου",
     "guild-overall": "Δες μια περίληψη στατιστικών της guild σου",
     "guild-top": "Δες τους κορυφαίους GEXP συνεισφέροντες",
@@ -193,6 +193,7 @@
     "theme-view": "Δες το τρέχον θέμα του προφίλ σου",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Αποσύνδεσε τους Discord και Minecraft λογαριασμούς",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Επιτυχής επαναφορά του υποσέλιδού σου.",
       "set": "$t(emojis:config.success) Επιτυχής ενημέρωση του υποσέλιδού σου."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Επιτυχής ενημέρωση της γλώσσας σου σε `{{locale}}`."
+    },
     "theme": {
       "profile": "Έτσι θα φαίνεται το θέμα σου στα προφίλ σου",
       "set": "$t(emojis:config.success) Επιτυχής ενημέρωση του θέματός σου.",
       "view": "$t(emojis:config.view) Το τρέχον θέμα σου:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Επιτυχής ενημέρωση της γλώσσας σου σε `{{locale}}`."
     }
   },
   "cooldown": {
@@ -285,7 +286,7 @@
         "description": "Μπορείς να δεις γενικές Minecraft πληροφορίες όπως εμφανίσεις, UUID, κάπες μέσω `/skin`, `/uuid`, και `/cape` αντίστοιχα. Το Statsify έχει επίσης εντολές για τη δημιουργία Minecraft κειμένου μέσω του `/text`. Δες τα Minecraft χρώματα μέσω του `/colors` και τους Minecraft διακομιστές μέσω του `/server`.",
         "title": "Minecraft"
       },
-      "title": "Βοήθεια Statsify"
+      "title": "Statsify Βοήθεια"
     },
     "invite": {
       "description": "Κάνε κλικ τον παρακάτω σύνδεσμο για να προσκαλέσεις το Statsify στον discord server σου.",
@@ -342,15 +343,19 @@
       "title": "Απαιτείται Ανώτερη Βαθμίδα"
     },
     "invalidGuild": {
-      "description": "Ένα guild με {{type}} από `{{tag}}` δεν βρέθηκε!",
+      "description_id": "A guild with the id of `{{tag}}` could not be found!",
+      "description_name": "A guild by the name of `{{tag}}` could not be found!",
+      "description_player": "A guild with the player `{{tag}}` could not be found!",
       "title": "Μη Έγκυρη Guild"
     },
     "invalidPlayer": {
-      "description": "Ένας παίκτης με {{type}} `{{tag}}` δε βρέθηκε!",
+      "description_username": "A player by the username of `{{tag}}` could not be found!",
+      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
+      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Μη Έγκυρος Παίκτης"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
+      "description": "`{{time}}` δεν ταιριάζει με τη μορφή `h:mm a`. Εισήγε μία ώρα σε παρόμοια μορφή με `12:00 ΜΜ` ή `1:00 ΠΜ`.",
       "title": "Μη Έγκυρος Χρόνος Επαναφοράς"
     },
     "invalidResetTimezone": {
@@ -537,12 +542,13 @@
     "bounty": "Bounty",
     "bountyKills": "Bounty Σκοτωμοί",
     "bowKills": "Σκοτωμοί με Τόξο",
-    "boxesPickedUp": "Boxes Collected",
+    "boxesPickedUp": "Κουτιά Που Συλλέχθηκαν",
     "bronzeTrophies": "Χάλκινα Τρόπαια",
     "candyFound": "Καραμέλες που Βρέθηκαν",
     "challenges": "Προκλήσεις",
     "class": "Κατηγορία",
     "coins": "Νομίσματα",
+    "contracts": "Συμβόλαια",
     "correctGuesses": "Σωστές Μαντεψιές",
     "damage": "Ζημιά",
     "deaths": "Θάνατοι",
@@ -552,12 +558,12 @@
     "eggsFound": "Αυγά που Βρέθηκαν",
     "emeralds": "Σμαράγδια",
     "empireKills": "Σκοτωμοί ως Υπερασπιστής",
-    "ended": "Ended",
+    "ended": "Τελείωσε",
     "endurance": "Αντοχή",
     "event-level": "Event Level",
     "exp": "EXP",
-    "expGained": "EXP Gained",
-    "extraUltimates": "Extra Ultimates",
+    "expGained": "Αποκτημένο ΕΧP",
+    "extraUltimates": "Επιπλέον Ultimates",
     "fastestDetectiveWin": "Γρηγορότερη Νίκη ως Ντετέκτιβ",
     "fastestMurdererWin": "Γρηγορότερη Νίκη ως Δολοφόνος",
     "fastestWin": "Γρηγορότερη Νίκη",
@@ -566,23 +572,24 @@
     "finalKills": "Τελικοί Σκοτωμοί",
     "firstLogin": "Πρώτη Σύνδεση",
     "fkdr": "FKDR",
-    "forcefieldTime": "Forcefield Time",
+    "forcefieldTime": "Χρόνος Δυναμικού πεδίου",
     "fortune": "Τύχη",
     "friends": "Φίλοι",
     "game": "Παιχνίδι",
+    "game-total": "{{game}} Σύνολο",
     "gamesPlayed": "Παιχνίδια Που Παίχτηκαν",
     "giftsFound": "Δώρα Που Βρέθηκαν",
     "giftsSent": "Απεσταλμένα Gifts",
     "goals": "Γκολ",
-    "godfather": "Godfather",
+    "godfather": "Noνός",
     "godlikes": "Θεϊκά",
     "gold": "Χρυσός",
     "goldPickedUp": "Μαζεμένος Χρυσός",
-    "goldRate": "Ρυθμός Χρυσού",
+    "goldRate": "Ποσοστό Χρυσού",
     "goldTrophies": "Χρυσά Τρόπαια",
     "grandPrixTokens": "GP Ανταμοιβές",
     "guild": {
-      "averageMemberGexp": "Average Member GEXP",
+      "averageMemberGexp": "Μέσο Μέλος GEXP",
       "createdOn": "Δημιουργήθηκε Στις",
       "daily": "Καθημερινά",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
@@ -597,32 +604,31 @@
       "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
       "quests": "Guild Αποστολές",
       "rank": "Guild Rank",
-      "scaledGexp": "Scaled GEXP",
+      "scaledGexp": "Κλίμακα GEXP",
       "weekly": "Εβδομαδιαία",
       "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
     },
     "hat": "Καπέλο",
     "heads": "Κεφάλια",
     "headsEaten": "Φαγωμένα Κεφάλια",
-    "headshotKills": "Headshot Kills",
+    "headshotKills": "Σκοτωμοί Με Βολές Στο Κεφάλι",
     "headshots": "Βολές Στο Κεφάλι",
     "headstart": "Προβάδισμα",
     "healing": "Θεραπεία",
     "heroWins": "Νίκες ως Ήρωας",
-    "hidden": "Hidden",
+    "hidden": "Κρυμμένη",
     "hiderWins": "Νίκες ως Κρυμμένος",
     "highestKillstreak": "Υψηλότερο Σερί Σκοτωμών",
     "highestScoreFinals": "Προσωπικό Καλύτερο στον Τελικό",
     "highestScoreQualifications": "Προσωπικό Καλύτερο στα Προκριματικά",
     "highestStreak": "Υψηλότερο Σερί",
     "hits": "Χτυπήματα",
+    "humans-killed": "Σκοτωμένοι Άνθρωποι",
     "infectedWins": "Νίκες ως Μολυσμένος",
     "iron": "Σίδηρος",
     "karma": "Κάρμα",
     "kdr": "KDR",
     "kicks": "Κλωτσιές",
-    "vampires-killed": "Σκοτωμένα Βαμπίρ",
-    "humans-killed": "Σκοτωμένοι Άνθρωποι",
     "kills": "Σκοτωμοί",
     "killsAsInfected": "Σκοτωμοί ως Μολυσμένος",
     "killsAsMurderer": "Σκοτωμοί ως Δολοφόνος",
@@ -651,8 +657,9 @@
     "maxWave": "Μέγιστο Κύμα",
     "mode": "Mode",
     "mostVampireKills": "Περισσότεροι Σκοτωμοί Βρικολάκων",
-    "mounts": "Mounts",
+    "mounts": "Βάσεις",
     "murdererWins": "Νίκες ως Δολοφόνος",
+    "mysticsEnchanted": "Mystics Enchanted",
     "mythic-favor": "Mythic Favor",
     "networkLevel": "Network Level",
     "objectives": "Στόχοι",
@@ -668,7 +675,16 @@
     "powerKicks": "Δυνατές Κλωτσιές",
     "powerupActivations": "Ενεργοποιήσεις Ενισχύσεων",
     "powerups": "Ενισχύσεις",
-    "prevent": "Prevent",
+    "prefix": "Πρόθεμα",
+    "prevent": "Αποτροπή",
+    "progression": {
+      "exp": "EXP Πρόοδος",
+      "gexp": "GEXP Πρόοδος",
+      "goldTrophy": "Πρόοδος Χρυσού Τροπαίου",
+      "kill": "Πρόοδος Σκοτωμών",
+      "score": "Πρόοδος Βαθμολογίας",
+      "win": "Πρόοδος Νικών"
+    },
     "quests": "Αποστολές",
     "ranksGifted": "Δωρισμένα Ranks",
     "rebelKills": "Σκοτωμοί ως Επιτιθέμενος",
@@ -677,7 +693,6 @@
     "rune": "Ρούνος",
     "score": "Βαθμολογία",
     "seekerWins": "Νίκες ως Κυνηγός",
-    "shards": "Θραύσματα",
     "shotAccuracy": "Ακρίβεια Πυροβολισμού",
     "shotsFired": "Πυροβολισμοί",
     "silver": "Ασήμι",
@@ -698,7 +713,7 @@
     "thrownKnifeKills": "Σκοτωμοί Με Πεταγμένο Μαχαίρι",
     "title": "Τίτλος",
     "tokens": "Μάρκες",
-    "total": "Total",
+    "total": "Σύνολο",
     "totalTrophies": "Συνολικά Τρόπαια",
     "trail": "Μονοπάτι",
     "transfusion": "Μετάγγιση",
@@ -707,11 +722,12 @@
     "tripleShot": "Τριπλή Βολή",
     "trophyRate": "Ποσοστό Τροπαίου",
     "ultimate": "Υπέρτατη",
-    "ultimatesCrafted": "Ultimates Crafted",
+    "ultimatesCrafted": "Ultimates Κατασκευασμένα",
     "utility": "Χρησιμότητα",
+    "vampires-killed": "Σκοτωμένα Βαμπίρ",
     "version": "Έκδοση",
     "votes": "Ψήφοι",
-    "wallsFaced": "Walls Faced",
+    "wallsFaced": "Walls που αντιμετωπίθηκαν",
     "wins": "Νίκες",
     "winstreak": "Σερί Νικών",
     "witherDamage": "Wither Ζημιά",
@@ -721,49 +737,38 @@
     "woolCaptures": "Αιχμαλωτισμένα Μαλλιά",
     "woolPlaced": "Τοποθετημένα Wool",
     "zombieKills": "Zombie Σκοτωμοί",
-    "mysticsEnchanted": "Mystics Enchanted",
-    "contracts": "Συμβόλαια",
-    "prefix": "Πρόθεμα",
-    "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "win": "Win Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "goldTrophy": "Gold Trophy Progress"
-    },
-    "game-total": "{{game}} Total"
+    "potionsBrewed": "Παρασκευασμένα Φίλτρα"
   },
   "tips": {
-    "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
+    "discord": "$t(emojis:socials.discord) Μπες στο **$t(socials.discord)** και κέρδισε **20% χαμηλότερο χρόνο επαναφόρτισης** $t(emojis:heart)",
     "invite": "$t(emojis:socials.discord) Κάνε κλικ **[here](<https://statsify.net/invite>)** για να προσκαλέσεις το Statsify στον δικό σου server!",
-    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** offers additional features such as personalized profile badges. Find the full list of benefits **[here](<https://statsify.net/premium>)**!",
-    "rankings": "$t(emojis:logos.iron) View your top leaderboard positions with **[Statsify Premium](<https://statsify.net/premium>)** by using `/rankings`",
-    "verify": "$t(emojis:check) Run `/verify` to run commands without inputting your username as well as receive **10% lower cooldowns**"
+    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** προσφέρει πρόσθετες λειτουργίες, όπως εξατομικευμένα σήματα προφίλ. Βρες την πλήρη λίστα με τα οφέλη **[here](<https://statsify.net/premium>)**!",
+    "rankings": "$t(emojis:logos.iron) Δες τις κορυφαίες θέσεις σου στο leaderboard με **[Statsify Premium](<https://statsify.net/premium>)** χρησιμοποιώντας το `/rankings`",
+    "verify": "$t(emojis:check) Εκτέλεσε το `/verify` για να εκτελέσεις εντολές χωρίς να εισάγεις το όνομα χρήστη σου καθώς και να λάβεις **10% χαμηλότερα cooldowns**"
   },
   "unknown": "Άγνωστο",
   "verification": {
     "alreadyVerified": {
-      "description": "You are already linked to a Minecraft account. Run `/unverify` to unlink your Minecraft account.",
-      "title": "Already Verified"
+      "description": "Είσαι ήδη συνδεδεμένος με έναν λογαριασμό Minecraft. Εκτέλεσε το `/unverify` για να αποσυνδέσεις τον λογαριασμό σου στο Minecraft.",
+      "title": "Ήδη Επαληθευμένος"
     },
     "invalidCode": {
       "description": "$t(verification.noCode.description)",
-      "title": "Invalid Verification Code"
+      "title": "Μη Έγκυρος Κωδικός Επαλήθευσης"
     },
     "noCode": {
-      "description": "**How to verify**\n`1.` Open Minecraft and go to the server list\n`2.` Connect to `verify.statsify.net` and copy the code displayed\n`3.` Head back to discord and run `/verify code:XXXX`",
-      "title": "Missing Verification Code"
+      "description": "**Τρόπος επαλήθευσης**\n`1.` Άνοιξε το Minecraft και πήγαινε στη server λίστα\n`2.` Συνδέσου στο `verify.statsify.net` και αντίγραψε τον κωδικό που εμφανίζεται\n`3.` Γύρνα στο discord και εκτέλεσε το '/verify code:XXXX'",
+      "title": "Λείπει Κωδικός Επαλήθευσης"
     },
     "notVerified": {
-      "description": "You have to be verified before you are able to unverify!",
-      "title": "Not Verified"
+      "description": "Πρέπει να επαληθευτείς για να μπορείς να καταργήσεις την επαλήθευση!",
+      "title": "Μη Επαληθευμένος"
     },
     "requiredVerification": {
-      "description": "To use this command you must be verified. Run `/verify` to verify your account.",
-      "title": "Verification Required"
+      "description": "Για να χρησιμοποιήσεις αυτήν την εντολή, πρέπει να είσαι επαληθευμένος. Εκτέλεσε `/verify` για να επαληθεύσεις τον λογαριασμό σου.",
+      "title": "Απαιτείται Επαλήθευση"
     },
-    "successfulUnverification": "Successfully unverified your account!",
-    "successfulVerification": "You are now verified to **{{displayName}}**"
+    "successfulUnverification": "Ο λογαριασμός σου ξε-επαληθεύτηκε επιτυχώς!",
+    "successfulVerification": "Είσαι πλέον επαληθευμένος στο **{{displayName}}**"
   }
 }

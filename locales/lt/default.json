@@ -193,6 +193,7 @@
     "theme-view": "View your current profile theme",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
+    "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Unlink your Discord and Minecraft accounts",
@@ -219,13 +220,13 @@
       "reset": "$t(emojis:config.reset) Successfully reset your footer.",
       "set": "$t(emojis:config.success) Successfully updated your footer."
     },
+    "language": {
+      "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
+    },
     "theme": {
       "profile": "This is how your theme will look on your profiles",
       "set": "$t(emojis:config.success) Successfully updated your theme.",
       "view": "$t(emojis:config.view) Your current theme:"
-    },
-    "language": {
-      "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
     }
   },
   "cooldown": {
@@ -342,11 +343,15 @@
       "title": "Higher Tier Required"
     },
     "invalidGuild": {
-      "description": "A guild by the {{type}} of `{{tag}}` could not be found!",
+      "description_id": "A guild with the id of `{{tag}}` could not be found!",
+      "description_name": "A guild by the name of `{{tag}}` could not be found!",
+      "description_player": "A guild with the player `{{tag}}` could not be found!",
       "title": "Invalid Guild"
     },
     "invalidPlayer": {
-      "description": "A player by the {{type}} of `{{tag}}` could not be found!",
+      "description_username": "A player by the username of `{{tag}}` could not be found!",
+      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
+      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Invalid Player"
     },
     "invalidResetTime": {
@@ -543,6 +548,7 @@
     "challenges": "Challenges",
     "class": "Class",
     "coins": "Coins",
+    "contracts": "Contracts",
     "correctGuesses": "Correct Guesses",
     "damage": "Damage",
     "deaths": "Deaths",
@@ -570,6 +576,7 @@
     "fortune": "Fortune",
     "friends": "Friends",
     "game": "Game",
+    "game-total": "{{game}} Total",
     "gamesPlayed": "Games Played",
     "giftsFound": "Gifts Found",
     "giftsSent": "Gifts Sent",
@@ -616,13 +623,12 @@
     "highestScoreQualifications": "Qualifiers Personal Best",
     "highestStreak": "Highest Streak",
     "hits": "Hits",
+    "humans-killed": "Humans Killed",
     "infectedWins": "Infected Wins",
     "iron": "Iron",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Kicks",
-    "vampires-killed": "Vampires Killed",
-    "humans-killed": "Humans Killed",
     "kills": "Kills",
     "killsAsInfected": "Kills as Infected",
     "killsAsMurderer": "Kills As Murderer",
@@ -653,6 +659,7 @@
     "mostVampireKills": "Most Vampire Kills",
     "mounts": "Mounts",
     "murdererWins": "Murderer Wins",
+    "mysticsEnchanted": "Mystics Enchanted",
     "mythic-favor": "Mythic Favor",
     "networkLevel": "Network Level",
     "objectives": "Objectives",
@@ -668,7 +675,16 @@
     "powerKicks": "Power Kicks",
     "powerupActivations": "Powerup Activations",
     "powerups": "Powerups",
+    "prefix": "Prefix",
     "prevent": "Prevent",
+    "progression": {
+      "exp": "EXP Progress",
+      "gexp": "GEXP Progress",
+      "goldTrophy": "Gold Trophy Progress",
+      "kill": "Kill Progress",
+      "score": "Score Progress",
+      "win": "Win Progress"
+    },
     "quests": "Quests",
     "ranksGifted": "Ranks Gifted",
     "rebelKills": "Attacker Kills",
@@ -677,7 +693,6 @@
     "rune": "Rune",
     "score": "Score",
     "seekerWins": "Seeker Wins",
-    "shards": "Shards",
     "shotAccuracy": "Shot Accuracy",
     "shotsFired": "Shots Fired",
     "silver": "Silver",
@@ -709,6 +724,7 @@
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimates Crafted",
     "utility": "Utility",
+    "vampires-killed": "Vampires Killed",
     "version": "Version",
     "votes": "Votes",
     "wallsFaced": "Walls Faced",
@@ -721,18 +737,7 @@
     "woolCaptures": "Wool Captures",
     "woolPlaced": "Wool Placed",
     "zombieKills": "Zombie Kills",
-    "mysticsEnchanted": "Mystics Enchanted",
-    "contracts": "Contracts",
-    "prefix": "Prefix",
-    "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "win": "Win Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "goldTrophy": "Gold Trophy Progress"
-    },
-    "game-total": "{{game}} Total"
+    "potionsBrewed": "Potions Brewed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
