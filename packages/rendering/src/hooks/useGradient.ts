@@ -16,7 +16,7 @@ export type DeferredGradient = (
   height: number
 ) => CanvasGradient;
 
-export type GradientType = "horizontal" | "vertical";
+export type GradientDirection = "horizontal" | "vertical";
 /**
  * @example ```ts
  *  [0.5, "rgba(0, 0, 0, 0.5)"]
@@ -25,7 +25,7 @@ export type GradientType = "horizontal" | "vertical";
 export type GradientColor = [offset: number, color: string];
 
 export function useGradient(
-  type: GradientType,
+  type: GradientDirection,
   ...colors: GradientColor[]
 ): DeferredGradient {
   return (ctx, x, y, width, height) => {

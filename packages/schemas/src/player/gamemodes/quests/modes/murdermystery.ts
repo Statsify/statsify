@@ -13,10 +13,10 @@ export const MurderMysteryQuests = createGameModeQuests({
   game: FormattedGame.MURDER_MYSTERY,
   fieldPrefix: "mm",
   daily: [
-    { field: "win", propertyKey: "daily_winner" },
-    { field: "power_play", propertyKey: "daily_powerPlay" },
-    { field: "target_kill", propertyKey: "daily_hitman" },
-    { field: "infector", propertyKey: "daily_infector" },
+    { field: "daily_win", propertyKey: "winner" },
+    { field: "daily_power_play", propertyKey: "powerPlay" },
+    { field: "daily_target_kill", propertyKey: "hitman" },
+    { field: "daily_infector", propertyKey: "infector" },
   ],
   weekly: [
     { field: "weekly_murderer_kills", propertyKey: "professional" },

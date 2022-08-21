@@ -74,7 +74,8 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.globalCompositeOperation = "source-over";
 
   if (outline) {
-    ctx.strokeStyle = outline;
+    ctx.strokeStyle =
+      outline === true ? Box.resolveFill(color, ctx, x, y, width, height) : outline;
     ctx.lineWidth = outlineSize;
     ctx.stroke();
   }

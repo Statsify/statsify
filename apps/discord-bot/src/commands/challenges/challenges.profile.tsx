@@ -39,7 +39,7 @@ const NormalTable = ({ challenges, t, gameIcons }: NormalTableProps) => {
     .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
     .map(([k, v]) => [k as GameId, t(v.total)]);
 
-  return <GameList entries={entries} gameIcons={gameIcons} rowSize={2} />;
+  return <GameList entries={entries} gameIcons={gameIcons} />;
 };
 
 interface GameTableProps {

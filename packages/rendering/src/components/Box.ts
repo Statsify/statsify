@@ -46,8 +46,8 @@ export const resolveFill = (
   width: number,
   height: number
 ) => {
-  if (typeof fill === "string" || typeof fill === "object") return (ctx.fillStyle = fill);
-  ctx.fillStyle = fill(ctx, x, y, width, height);
+  if (typeof fill === "string" || typeof fill === "object") return fill;
+  return fill(ctx, x, y, width, height);
 };
 
 export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
@@ -65,28 +65,24 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   shadowOpacity,
   outlineSize = 4,
   outline,
-}) => {
-  const outlineColor = outline === true ? color : outline || undefined;
-
-  return {
-    dimension: {
-      padding,
-      margin,
-      width,
-      height,
-    },
-    style: { location, direction, align },
-    props: {
-      border,
-      color,
-      shadowDistance,
-      shadowOpacity,
-      outlineSize,
-      outline: outlineColor,
-    },
-    children,
-  };
-};
+}) => ({
+  dimension: {
+    padding,
+    margin,
+    width,
+    height,
+  },
+  style: { location, direction, align },
+  props: {
+    border,
+    color,
+    shadowDistance,
+    shadowOpacity,
+    outlineSize,
+    outline,
+  },
+  children,
+});
 
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
@@ -100,7 +96,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   },
   { x, y, width, height, padding }
 ) => {
-  resolveFill(color, ctx, x, y, width, height);
+  ctx.fillStyle = resolveFill(color, ctx, x, y, width, height);
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -141,7 +137,8 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.globalCompositeOperation = "source-over";
 
   if (outline) {
-    ctx.strokeStyle = outline;
+    ctx.strokeStyle =
+      outline === true ? resolveFill(color, ctx, x, y, width, height) : outline;
     ctx.lineWidth = outlineSize;
     ctx.stroke();
   }
