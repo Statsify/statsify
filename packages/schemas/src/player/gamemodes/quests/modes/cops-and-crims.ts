@@ -18,7 +18,7 @@ export const CopsAndCrimsQuests = createGameModeQuests({
       field: "kill_daily_normal",
       propertyKey: "kill15Players",
       name: "Kill 15 Players! (Defusal)",
-      fieldName: "Kill 16 Players",
+      fieldName: "Kill 15 Players",
     },
     {
       field: "win_daily_deathmatch",
