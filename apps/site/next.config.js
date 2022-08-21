@@ -70,5 +70,10 @@ module.exports = {
         "https://j4cobi.notion.site/Statsify-Privacy-Policy-2e636dcacf1e4237b35d7d2ce2d53613",
       permanent: true,
     },
+    {
+      source: "/translate",
+      destination: "https://crowdin.com/project/statsify",
+      permanent: true,
+    },
   ],
 };
