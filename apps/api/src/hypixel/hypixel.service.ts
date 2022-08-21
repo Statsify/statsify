@@ -144,7 +144,7 @@ export class HypixelService {
     const resource$ = this.request<APIData>(`/resources/${resource}`).pipe(
       map((data) => data),
       catchError((err) => {
-        this.logger.error(err);
+        this.logger.error(err.message);
         return of(null);
       })
     );
@@ -170,10 +170,14 @@ export class HypixelService {
         child?.finish();
       }),
       map((res) => res.data),
-      catchError((err) => {
-        this.logger.error(err);
-        return throwError(() => err);
-      })
+      catchError((err) =>
+        throwError(
+          () =>
+            new Error(`Fetching ${url} failed with reason: ${err.message}`, {
+              cause: err,
+            })
+        )
+      )
     );
   }
 }
