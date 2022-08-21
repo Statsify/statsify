@@ -10,7 +10,14 @@ import { Box, Render } from "@statsify/rendering";
 
 export const render: Render<Box.BoxRenderProps> = (
   ctx,
-  { color, border, shadowDistance, shadowOpacity, outline, outlineSize },
+  {
+    color = "rgba(0, 0, 0, 0.5)",
+    border,
+    shadowDistance,
+    shadowOpacity = 0.84,
+    outline,
+    outlineSize,
+  },
   { x, y, width, height, padding }
 ) => {
   Box.resolveFill(color, ctx, x, y, width, height);

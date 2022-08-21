@@ -19,12 +19,15 @@ import {
   OverallQuests,
   QuestModes,
   QuestTime,
+  User,
+  UserPalette,
   WeeklyQuests,
 } from "@statsify/schemas";
 import { Container, Footer, GameEntry, GameList, Header, SidebarItem } from "#components";
 import { DateTime } from "luxon";
 import { DeferredGradient, useGradient } from "@statsify/rendering";
 import { HistoricalType } from "@statsify/api-client";
+import { Palette, getColorPalette } from "../../themes/palette";
 import { ratio } from "@statsify/math";
 import type { BaseProfileProps } from "../base.hypixel-command";
 import type { Constructor } from "@statsify/util";
@@ -60,12 +63,12 @@ interface NormalTableProps {
   t: LocalizeFunction;
   gameIcons: Record<GameId, Image>;
   time: QuestTime;
+  colorPalette?: Palette;
 }
 
 const GRADIENT_OFFSET = 0.66;
-const BOX_COLOR = "rgba(0, 0, 0, 0.5)";
 
-const NormalTable = ({ quests, t, gameIcons, time }: NormalTableProps) => {
+const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTableProps) => {
   const questEntries = Object.entries(quests);
 
   if (time === QuestTime.Overall) {
@@ -75,6 +78,8 @@ const NormalTable = ({ quests, t, gameIcons, time }: NormalTableProps) => {
 
     return <GameList entries={entries} gameIcons={gameIcons} />;
   }
+
+  const BOX_COLOR = (colorPalette?.boxes?.color as string) ?? "rgba(0, 0, 0, 0.5)";
 
   const entries: GameEntry[] = questEntries
     .map(([k, v]) => [k, v, Object.keys(v).length - 1] as const)
@@ -90,25 +95,29 @@ const NormalTable = ({ quests, t, gameIcons, time }: NormalTableProps) => {
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsl(120, 100%, 37%, 0.5)"]
+          [1, "hsl(120, 100%, 30%, 0.5)"]
         );
       } else if (completed >= 1) {
         textColor = "§6";
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsla(40, 100%, 37%, 0.5)"]
+          [1, "hsla(40, 100%, 30%, 0.5)"]
         );
       } else {
         textColor = "§c";
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsla(0, 100%, 37%, 0.5)"]
+          [1, "hsla(0, 100%, 30%, 0.5)"]
         );
       }
 
-      return [k as GameId, `${textColor}${t(completed)}/${t(total)}`, boxColor];
+      return [
+        k as GameId,
+        `${textColor}${t(completed)}/${t(total)}`,
+        { color: boxColor },
+      ];
     });
 
   return <GameList entries={entries} gameIcons={gameIcons} />;
@@ -189,10 +198,20 @@ export const QuestsProfile = ({
   const { api, formatted } = mode;
   let table: JSX.Element;
 
+  const colorPalette = User.isDiamond(user)
+    ? getColorPalette(user?.theme?.palette ?? UserPalette.DEFAULT)
+    : undefined;
+
   switch (api) {
     case "overall":
       table = (
-        <NormalTable quests={quests[period]} time={time} t={t} gameIcons={gameIcons} />
+        <NormalTable
+          quests={quests[period]}
+          time={time}
+          t={t}
+          gameIcons={gameIcons}
+          colorPalette={colorPalette}
+        />
       );
       break;
     default:

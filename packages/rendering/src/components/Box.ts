@@ -20,8 +20,8 @@ export interface BoxBorderRadius {
 export interface BoxRenderProps {
   border: BoxBorderRadius;
   shadowDistance: number;
-  shadowOpacity: number;
-  color: JSX.Fill | DeferredGradient;
+  shadowOpacity?: number;
+  color?: JSX.Fill | DeferredGradient;
   outline?: JSX.Fill;
   outlineSize: number;
 }
@@ -60,9 +60,9 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   direction = "row",
   align = "left",
   border = { topLeft: 4, topRight: 4, bottomLeft: 4, bottomRight: 4 },
-  color = "rgba(0, 0, 0, 0.5)",
+  color,
   shadowDistance = 4,
-  shadowOpacity = 0.84,
+  shadowOpacity,
   outlineSize = 4,
   outline,
 }) => {
@@ -90,7 +90,14 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
 
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
-  { color, border, shadowDistance, shadowOpacity, outline, outlineSize },
+  {
+    color = "rgba(0, 0, 0, 0.5)",
+    border,
+    shadowDistance,
+    shadowOpacity = 0.84,
+    outline,
+    outlineSize,
+  },
   { x, y, width, height, padding }
 ) => {
   resolveFill(color, ctx, x, y, width, height);
