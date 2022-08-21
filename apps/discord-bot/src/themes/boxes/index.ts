@@ -19,5 +19,18 @@ export function getBoxRenderer(boxes: UserBoxes): Render<Box.BoxRenderProps> {
       return HDBox.render;
     case UserBoxes.UHD:
       return UHDBox.render;
+    case UserBoxes.FLAT:
+      return (ctx, props, location, theme, component) =>
+        Box.render(
+          ctx,
+          {
+            ...props,
+            shadowOpacity: 0,
+            border: { topLeft: 0, topRight: 0, bottomLeft: 0, bottomRight: 0 },
+          },
+          location,
+          theme,
+          component
+        );
   }
 }

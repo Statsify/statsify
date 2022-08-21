@@ -36,6 +36,7 @@ export enum UserBoxes {
   DEFAULT = "default",
   HD = "hd",
   UHD = "uhd",
+  FLAT = "flat",
 }
 
 export class UserTheme {
