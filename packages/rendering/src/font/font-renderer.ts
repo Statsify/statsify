@@ -47,120 +47,108 @@ export class FontRenderer {
     }
   }
 
-  public measureText(nodes: TextNode[][]): { width: number; height: number } {
+  public measureText(nodes: TextNode[]): { width: number; height: number } {
     let width = 0;
     let height = 0;
 
-    for (const row of nodes) {
-      let largestSize = row[0].size;
-      let rowWidth = 0;
+    let largestSize = nodes[0].size;
+    let rowWidth = 0;
 
-      for (const { text, bold, size } of row) {
-        if (size > largestSize) largestSize = size;
+    for (const { text, bold, size } of nodes) {
+      if (size > largestSize) largestSize = size;
 
-        for (const char of text) {
-          rowWidth += this.measureCharacter(char, size, bold);
-        }
+      for (const char of text) {
+        rowWidth += this.measureCharacter(char, size, bold);
       }
-
-      if (rowWidth > width) width = rowWidth;
-      height += largestSize * 10;
     }
+
+    if (rowWidth > width) width = rowWidth;
+    height += largestSize * 10;
 
     return { width, height };
   }
 
   public fillText(
     ctx: CanvasRenderingContext2D,
-    nodes: TextNode[][],
+    nodes: TextNode[],
     x: number,
     y: number
   ) {
-    const tempX = x;
+    const largestSize = Math.max(...nodes.map((node) => node.size));
 
-    for (const row of nodes) {
-      x = tempX;
+    for (const { text, color, bold, italic, underline, strikethrough, size } of nodes) {
+      const adjustY = y + size + (largestSize - size) * 5;
 
-      const largestSize = Math.max(...row.map((node) => node.size));
-
-      for (const { text, color, bold, italic, underline, strikethrough, size } of row) {
-        const adjustY = y + size + (largestSize - size) * 5;
-
-        for (const char of text) {
-          x += this.fillCharacter(
-            ctx,
-            char,
-            Math.round(x),
-            Math.round(adjustY),
-            size,
-            bold,
-            italic,
-            underline,
-            strikethrough,
-            color
-          );
-        }
+      for (const char of text) {
+        x += this.fillCharacter(
+          ctx,
+          char,
+          Math.round(x),
+          Math.round(adjustY),
+          size,
+          bold,
+          italic,
+          underline,
+          strikethrough,
+          color
+        );
       }
-
-      y += largestSize * 10;
     }
   }
 
-  public lex(text: string, inputState: Partial<TextNode> = {}): TextNode[][] {
-    return text.split("\n").map((line) => {
-      const defaultState: Omit<TextNode, "text"> = {
-        bold: false,
-        italic: false,
-        underline: false,
-        strikethrough: false,
-        color: "#FFFFFF",
-        size: 2,
-        ...inputState,
-      };
+  public lex(text: string, inputState: Partial<TextNode> = {}): TextNode[] {
+    const defaultState: Omit<TextNode, "text"> = {
+      bold: false,
+      italic: false,
+      underline: false,
+      strikethrough: false,
+      color: "#FFFFFF",
+      size: 2,
+      ...inputState,
+    };
 
-      let state = defaultState;
+    if (!text) return [{ ...defaultState, text: "" }];
 
-      line = line.startsWith("§") ? line : `§f${line}`;
+    let state = defaultState;
+    const parts = (text.startsWith("§") ? text : `§f${text}`).split("§");
 
-      const parts = line.split("§");
-      const nodes: TextNode[] = [];
+    const nodes: TextNode[] = [];
 
-      for (const part of parts) {
-        if (!part.length) continue;
+    for (const part of parts) {
+      if (!part.length) continue;
 
-        let token: Token | null = null;
-        let matches: RegExpMatchArray | null = null;
+      let token: Token | null = null;
+      let matches: RegExpMatchArray | null = null;
 
-        for (const matcher of tokens) {
-          matches = part.match(matcher.regex);
+      for (const matcher of tokens) {
+        matches = part.match(matcher.regex);
 
-          if (matches) {
-            token = matcher;
-            break;
-          }
+        if (matches) {
+          token = matcher;
+          break;
         }
-
-        if (!matches) continue;
-
-        const effect = token?.effect(part, matches as RegExpMatchArray, defaultState);
-        let text = effect?.text ?? part;
-
-        if (matches) text = text.slice(matches[0].length);
-
-        state = { ...state, ...effect };
-
-        if (!text.length) continue;
-
-        const node: TextNode = {
-          ...state,
-          text,
-        };
-
-        nodes.push(node);
       }
 
-      return nodes;
-    });
+      if (!matches) continue;
+
+      const effect = token?.effect(part, matches as RegExpMatchArray, defaultState);
+      let text = effect?.text ?? part;
+
+      if (matches) text = text.slice(matches[0].length);
+
+      state = { ...state, ...effect };
+
+      if (!text.length) continue;
+
+      const node: TextNode = {
+        ...state,
+        text,
+      };
+
+      nodes.push(node);
+    }
+
+    return nodes;
   }
 
   private getUnicode(char: string) {

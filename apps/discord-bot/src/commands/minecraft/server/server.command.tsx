@@ -8,44 +8,15 @@
 
 import axios, { AxiosInstance } from "axios";
 import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
-import { Container, Multiline } from "#components";
+import { Server } from "./server.interface";
 import { ServerArgument } from "./server.argument";
+import { ServerProfile } from "./server.profile";
 import { getBackground, getServerMappings } from "@statsify/assets";
+import { getTheme } from "#themes";
 import { loadImage } from "skia-canvas";
 import { render } from "@statsify/rendering";
 
 const servers = getServerMappings();
-
-interface Server {
-  ip: string;
-  port: number;
-  debug: {
-    ping: boolean;
-    query: boolean;
-    srv: boolean;
-    querymismatch: boolean;
-    cnameinsrv: boolean;
-    animatedmotd: boolean;
-    cachetime: number;
-    apiversion: number;
-  };
-  motd: {
-    raw: string[];
-    clean: string[];
-    html: string[];
-  };
-  players: {
-    online: number;
-    max: number;
-  };
-  version?: string;
-  online: boolean;
-  protocol: number;
-  hostname: string;
-  name: string;
-  icon: string;
-  ping: number;
-}
 
 @Command({
   description: (t) => t("commands.server"),
@@ -62,6 +33,7 @@ export class ServerCommand {
 
   public async run(context: CommandContext): Promise<IMessage> {
     const t = context.t();
+    const user = context.getUser();
 
     const server = await this.getServer(context.option<string>("server"));
 
@@ -71,32 +43,13 @@ export class ServerCommand {
     ]);
 
     const canvas = render(
-      <Container background={background}>
-        <box direction="column" width="100%">
-          <text>
-            §l{server.name}§r - §b{server.hostname}
-          </text>
-        </box>
-        <div width="100%">
-          <box>
-            <img margin={8} image={serverLogo} />
-          </box>
-          <box
-            width="remaining"
-            height="100%"
-            padding={{ left: 8, right: 4, top: 4, bottom: 4 }}
-          >
-            <div height="100%" direction="column">
-              <Multiline margin={2}>
-                {server.motd.raw.map((m) => m.replace(/\s{2,}/g, "")).join("\n")}
-              </Multiline>
-            </div>
-          </box>
-        </div>
-        <box width="100%" direction="column">
-          <text>{`§a${t(server.players.online)}§8/§7${t(server.players.max)}`}</text>
-        </box>
-      </Container>
+      <ServerProfile
+        background={background}
+        server={server}
+        serverLogo={serverLogo}
+        t={t}
+      />,
+      getTheme(user)
     );
 
     const buffer = await canvas.toBuffer("png");

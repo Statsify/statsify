@@ -46,12 +46,21 @@ export const createPrefixProgression = (prefixes: Prefixes, score: number) => {
 export interface FormatPrefixOptions {
   prefixes: Prefixes;
   score: number;
+
   /**
    * Whether to skip the prefix and use the next prefix
+   * @default false
    */
   skip?: boolean;
+
+  /**
+   * @default true
+   */
+  abbreviation?: boolean;
+
   /**
    * Whether or not to floor the score
+   * @default false
    */
   trueScore?: boolean;
 }
@@ -61,6 +70,7 @@ export const getFormattedPrefix = ({
   score,
   skip = false,
   trueScore = false,
+  abbreviation = true,
 }: FormatPrefixOptions) => {
   score = score ?? 0;
 
@@ -72,13 +82,17 @@ export const getFormattedPrefix = ({
 
   if ("title" in prefix) return prefix.fmt(prefix.title);
 
+  if (!abbreviation) return prefix.fmt(`${trueScore ? Math.floor(score) : score}`);
+
   const [number, suffix] = abbreviationNumber(trueScore ? score : prefix.req);
   const formattedScore = trueScore ? Math.floor(number) : number;
   return prefix.fmt(`${formattedScore}${suffix}`);
 };
 
-export const defaultPrefix = (prefixes: Prefixes) =>
-  getFormattedPrefix({ prefixes, score: prefixes[0].req });
+export const defaultPrefix = (
+  prefixes: Prefixes,
+  options?: Omit<FormatPrefixOptions, "prefixes" | "score">
+) => getFormattedPrefix({ prefixes, score: prefixes[0].req, ...options });
 
 const RAINBOW_COLORS = ["c", "6", "e", "a", "b", "d", "9"];
 

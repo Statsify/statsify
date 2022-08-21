@@ -72,7 +72,7 @@ export class Walls {
   @Field()
   public currentPrefix: string;
 
-  @Field({ store: { default: defaultPrefix(prefixes) } })
+  @Field({ store: { default: defaultPrefix(prefixes, { abbreviation: false }) } })
   public naturalPrefix: string;
 
   @Field()
@@ -91,18 +91,20 @@ export class Walls {
 
     const score = this.wins;
 
-    this.currentPrefix = getFormattedPrefix({ prefixes, score });
+    this.currentPrefix = getFormattedPrefix({ prefixes, score, abbreviation: false });
 
     this.naturalPrefix = getFormattedPrefix({
       prefixes,
       score,
       trueScore: true,
+      abbreviation: false,
     });
 
     this.nextPrefix = getFormattedPrefix({
       prefixes,
       score,
       skip: true,
+      abbreviation: false,
     });
 
     this.progression = createPrefixProgression(prefixes, score);
