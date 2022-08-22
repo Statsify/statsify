@@ -61,16 +61,18 @@ export class TurboKartRacers {
   @Field()
   public gamesPlayed: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.total"] } })
   public gold: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.total"] } })
   public silver: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.total"] } })
   public bronze: number;
 
-  @Field()
+  @Field({
+    leaderboard: { additionalFields: ["this.gold", "this.silver", "this.bronze"] },
+  })
   public total: number;
 
   @Field({ leaderboard: { enabled: false } })

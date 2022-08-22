@@ -11,7 +11,7 @@ import { Field } from "../../../metadata";
 import { ratio } from "@statsify/math";
 
 export class Defusal {
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.roundWins"] } })
   public wins: number;
 
   @Field()

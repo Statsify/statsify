@@ -51,10 +51,10 @@ export class SkyWars {
   @Field()
   public coins: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.opals"] } })
   public souls: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.souls"] } })
   public opals: number;
 
   @Field()

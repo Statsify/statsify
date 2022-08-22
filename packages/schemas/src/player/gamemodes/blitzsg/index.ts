@@ -215,6 +215,7 @@ export class BlitzSG {
 
   @Field({ store: { required: false } })
   public shark: BlitzSGKit;
+
   @Field({ store: { required: false } })
   public slimeyslime: BlitzSGKit;
 
