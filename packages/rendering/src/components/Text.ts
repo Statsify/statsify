@@ -52,7 +52,7 @@ export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps["childre
       text = children.toString();
       break;
     case "object":
-      text = children.join(" ");
+      text = children.join("");
       break;
     default:
       throw new Error(`Invalid text type: ${typeof children}`);

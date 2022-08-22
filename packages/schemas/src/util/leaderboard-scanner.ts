@@ -69,9 +69,21 @@ export class LeaderboardScanner {
     return leaderboard;
   }
 
-  private static parseAdditionalFields(field: string, additonalKey: string) {
-    return additonalKey.startsWith("this.")
-      ? additonalKey.replace("this", field.split(".").slice(0, -1).join("."))
-      : additonalKey;
+  private static parseAdditionalFields(field: string, additionalKey: string) {
+    if (!additionalKey.startsWith("this.")) return additionalKey;
+
+    const fieldParts = field.split(".");
+
+    const additionalFieldParts = additionalKey.split(".").slice(1);
+    const ending = additionalFieldParts.pop();
+
+    if (!additionalFieldParts.length)
+      return [...fieldParts.slice(0, -1), ending].join(".");
+
+    const splitIndex = fieldParts.findIndex((part) =>
+      additionalFieldParts.includes(part)
+    );
+
+    return [...fieldParts.slice(0, splitIndex + 1), ending].join(".");
   }
 }

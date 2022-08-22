@@ -18,6 +18,8 @@ export interface HeaderNametagProps {
 export const HeaderNametag = ({ name, badge, size = 4 }: HeaderNametagProps) => (
   <box width="100%">
     <If condition={badge}>{(badge) => <img margin={{ right: 8 }} image={badge} />}</If>
-    <text t:ignore>{`§^${size}^${name}`}</text>
+    <text t:ignore>
+      §^{size}^{name}
+    </text>
   </box>
 );
