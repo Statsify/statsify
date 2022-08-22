@@ -22,5 +22,8 @@ export const getStoreMetadata = (
   store: (leaderboardMetadata.enabled || storeOptions?.store) ?? true,
   serialize: storeOptions?.serialize ?? true,
   deserialize: storeOptions?.deserialize ?? true,
-  default: storeOptions?.default ?? getDefaultValue(typeMetadata.type),
+  default:
+    storeOptions?.default !== undefined
+      ? storeOptions.default
+      : getDefaultValue(typeMetadata.type),
 });

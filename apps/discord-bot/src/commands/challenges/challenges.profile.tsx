@@ -15,7 +15,7 @@ import {
   GameMode,
   MetadataScanner,
 } from "@statsify/schemas";
-import { Container, Footer, Header, SidebarItem, Table } from "#components";
+import { Container, Footer, GameList, Header, SidebarItem, Table } from "#components";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
 import type { Image } from "skia-canvas";
@@ -33,30 +33,13 @@ interface NormalTableProps {
 }
 
 const NormalTable = ({ challenges, t, gameIcons }: NormalTableProps) => {
-  const ROW_SIZE = 2;
-
   const { total: _, ...challengesByGame } = challenges;
 
-  const times = Object.entries(challengesByGame)
+  const entries: [GameId, any][] = Object.entries(challengesByGame)
     .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
-    .map(([field, game]) => (
-      <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
-        <img image={gameIcons[field as keyof typeof gameIcons]} width={32} height={32} />
-        <text>§l{FormattedGame[field as keyof typeof FormattedGame] ?? field}</text>
-        <div width="remaining" margin={{ left: 4, right: 4 }} />
-        <text>{t(game.total)}</text>
-      </box>
-    ));
+    .map(([k, v]) => [k as GameId, t(v.total)]);
 
-  const groups = arrayGroup(times, ROW_SIZE);
-
-  return (
-    <Table.table>
-      {groups.map((group) => (
-        <Table.tr>{group}</Table.tr>
-      ))}
-    </Table.table>
-  );
+  return <GameList entries={entries} gameIcons={gameIcons} />;
 };
 
 interface GameTableProps {
@@ -110,7 +93,7 @@ export const ChallengesProfile = ({
   time,
   gameIcons,
 }: ChallengeProfileProps) => {
-  const { challenges } = player.stats.general;
+  const { challenges } = player.stats;
 
   const { api, formatted } = mode;
   let table: JSX.Element;

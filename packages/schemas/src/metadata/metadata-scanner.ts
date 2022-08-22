@@ -71,14 +71,14 @@ export class MetadataScanner {
       //Carry the metadata down to the children
       const subMetadataEntries = this.getMetadataEntries(value.type.type, path, name).map(
         ([keyPath, metadata]) => {
-          if (
-            !metadata.leaderboard.additionalFields ||
-            !metadata.leaderboard.additionalFields.length
-          )
+          if (!metadata.leaderboard.additionalFields?.length)
             metadata.leaderboard.additionalFields = value.leaderboard.additionalFields;
 
           if (!metadata.leaderboard.extraDisplay)
             metadata.leaderboard.extraDisplay = value.leaderboard.extraDisplay;
+
+          if (value.leaderboard.resetEvery && !metadata.leaderboard.resetEvery)
+            metadata.leaderboard.resetEvery = value.leaderboard.resetEvery;
 
           return [keyPath, metadata] as MetadataEntry;
         }

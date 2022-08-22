@@ -12,7 +12,7 @@ import { LeaderboardScanner, Player } from "@statsify/schemas";
 import { PlayerDto } from "./player.dto";
 import { Transform } from "class-transformer";
 
-const fields = LeaderboardScanner.getLeaderboardFields(Player);
+const fields = LeaderboardScanner.getLeaderboardFields(Player).map(([key]) => key);
 
 export class PlayerLeaderboardDto extends PartialType(PlayerDto) {
   @IsEnum(fields)

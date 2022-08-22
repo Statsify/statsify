@@ -63,9 +63,9 @@ export class BedWars {
       hidden: true,
       formatter: (exp: number) => getFormattedLevel(Math.floor(getLevel(exp))),
       additionalFields: [
-        "stats.bedwars.overall.wins",
-        "stats.bedwars.overall.finalKills",
-        "stats.bedwars.overall.fkdr",
+        "this.overall.wins",
+        "this.overall.finalKills",
+        "this.overall.fkdr",
       ],
     },
   })

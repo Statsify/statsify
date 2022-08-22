@@ -24,7 +24,7 @@ export class Pit {
     leaderboard: {
       fieldName: "Level",
       hidden: true,
-      additionalFields: ["stats.pit.kills", "stats.pit.playtime"],
+      additionalFields: ["this.kills", "this.playtime"],
       formatter: (exp: number) => {
         const prestige = getPres(exp);
         const level = getLevel(prestige, exp);
@@ -49,10 +49,10 @@ export class Pit {
   @Field()
   public progression: Progression;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: "this.lifetimeGold" } })
   public gold: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: "this.gold" } })
   public lifetimeGold: number;
 
   @Field()

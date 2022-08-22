@@ -15,6 +15,7 @@ export type RemoveMethods<T> = Pick<
 >;
 
 export type Constructor<T = any> = new (...args: any[]) => T;
+export type UnwrapConstructor<T> = T extends Constructor<infer U> ? U : never;
 
 export const noop = <T>() => null as unknown as T;
 

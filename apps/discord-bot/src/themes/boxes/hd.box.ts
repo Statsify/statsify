@@ -10,10 +10,17 @@ import { Box, Render } from "@statsify/rendering";
 
 export const render: Render<Box.BoxRenderProps> = (
   ctx,
-  { color, border, shadowDistance, shadowOpacity, outline, outlineSize },
+  {
+    color = "rgba(0, 0, 0, 0.5)",
+    border,
+    shadowDistance,
+    shadowOpacity = 0.84,
+    outline,
+    outlineSize,
+  },
   { x, y, width, height, padding }
 ) => {
-  ctx.fillStyle = color;
+  Box.resolveFill(color, ctx, x, y, width, height);
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -75,7 +82,8 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.globalCompositeOperation = "source-over";
 
   if (outline) {
-    ctx.strokeStyle = outline;
+    ctx.strokeStyle =
+      outline === true ? Box.resolveFill(color, ctx, x, y, width, height) : outline;
     ctx.lineWidth = outlineSize;
     ctx.stroke();
   }
@@ -84,7 +92,7 @@ export const render: Render<Box.BoxRenderProps> = (
   shadowDistance /= 2;
 
   ctx.globalAlpha = shadowOpacity - 0.3;
-  ctx.fillStyle = color;
+  Box.resolveFill(color, ctx, x, y, width, height);
 
   ctx.fillRect(
     x + width,

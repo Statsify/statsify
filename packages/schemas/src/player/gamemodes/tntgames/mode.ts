@@ -37,6 +37,7 @@ export class PVPRun {
 
   @Field()
   public kills: number;
+
   @Field()
   public deaths: number;
 

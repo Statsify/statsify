@@ -8,16 +8,16 @@
 
 import {
   APIButtonComponentBase,
-  APIMessageComponentEmoji,
   ButtonStyle,
   ComponentType,
 } from "discord-api-types/v10";
 import { LocalizationString, LocalizeFunction, translateField } from "../localize";
+import { parseEmoji } from "./parse-emoji";
 import { randomUUID } from "node:crypto";
 
 export class ButtonBuilder {
   #label: LocalizationString;
-  #emoji: APIMessageComponentEmoji;
+  #emoji?: LocalizationString;
   #style: ButtonStyle;
   #custom_id?: string;
   #disabled: boolean;
@@ -33,12 +33,8 @@ export class ButtonBuilder {
     return this;
   }
 
-  public emoji(emoji: string): this {
-    const animated = emoji.startsWith("<a:");
-    const name = emoji.replace(/<:|<a:|>/g, "");
-    const id = name.split(":")[1];
-
-    this.#emoji = { name: name.replace(id, ""), animated, id };
+  public emoji(emoji: LocalizationString): this {
+    this.#emoji = emoji;
     return this;
   }
 
@@ -75,7 +71,7 @@ export class ButtonBuilder {
     return {
       label: translateField(locale, this.#label),
       style: this.#style,
-      emoji: this.#emoji,
+      emoji: this.#emoji ? parseEmoji(this.#emoji, locale) : undefined,
       custom_id: this.#custom_id,
       disabled: this.#disabled,
       type: ComponentType.Button,

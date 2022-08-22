@@ -9,6 +9,7 @@
 import {
   Container,
   Footer,
+  GameList,
   If,
   Multiline,
   Table,
@@ -16,14 +17,7 @@ import {
   lineXpBar,
 } from "#components";
 import { DateTime } from "luxon";
-import {
-  ExpByGame,
-  FormattedGame,
-  Guild,
-  GuildMember,
-  Progression,
-  User,
-} from "@statsify/schemas";
+import { GameId, Guild, GuildMember, Progression, User } from "@statsify/schemas";
 import { GexpTable } from "./gexp.table";
 import { LocalizeFunction } from "@statsify/discord";
 import { StyleLocation } from "@statsify/rendering";
@@ -346,29 +340,12 @@ interface GuildGexpPerGamePageProps {
 
 const GuildGexpPerGamePage = ({ guild, t, gameIcons }: GuildGexpPerGamePageProps) => {
   const expPerGame = Object.entries(guild.expByGame);
-  const games = expPerGame.filter(([, exp]) => exp > 0).sort((a, b) => b[1] - a[1]);
+  const games: [GameId, any][] = expPerGame
+    .filter(([, exp]) => exp > 0)
+    .sort((a, b) => b[1] - a[1])
+    .map(([field, exp]) => [field as GameId, t(exp)]);
 
-  const groups = arrayGroup(
-    games.map(([game, exp]) => (
-      <box padding={{ left: 8, right: 8, top: 4, bottom: 4 }} width="100%">
-        <img image={gameIcons[game]} width={32} height={32} />
-        <text>§l{FormattedGame[game as keyof ExpByGame]}</text>
-        <div width="remaining" margin={{ left: 4, right: 4 }} />
-        <text>{t(exp)}</text>
-      </box>
-    )),
-    Math.round(games.length / 2)
-  );
-
-  return (
-    <div width="100%">
-      {groups.map((item) => (
-        <div width={`1/${groups.length}`} direction="column">
-          {item}
-        </div>
-      ))}
-    </div>
-  );
+  return <GameList entries={games} gameIcons={gameIcons} />;
 };
 
 interface GuildMiscPageProps {

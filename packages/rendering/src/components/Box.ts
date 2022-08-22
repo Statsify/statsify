@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Fill } from "../jsx";
 import type * as JSX from "../jsx";
+import type { CanvasRenderingContext2D } from "skia-canvas";
+import type { DeferredGradient } from "../hooks";
 
 export interface BoxBorderRadius {
   topLeft: number;
@@ -19,9 +20,9 @@ export interface BoxBorderRadius {
 export interface BoxRenderProps {
   border: BoxBorderRadius;
   shadowDistance: number;
-  shadowOpacity: number;
-  color: Fill;
-  outline?: Fill;
+  shadowOpacity?: number;
+  color?: JSX.Fill | DeferredGradient;
+  outline?: JSX.Fill;
   outlineSize: number;
 }
 
@@ -33,9 +34,21 @@ export interface BoxProps extends Omit<Partial<BoxRenderProps>, "color" | "outli
   location?: JSX.StyleLocation;
   direction?: JSX.StyleDirection;
   align?: JSX.StyleLocation;
-  color?: Fill;
-  outline?: Fill | boolean;
+  color?: JSX.Fill | DeferredGradient;
+  outline?: JSX.Fill | boolean;
 }
+
+export const resolveFill = (
+  fill: JSX.Fill | DeferredGradient,
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number
+) => {
+  if (typeof fill === "string" || typeof fill === "object") return fill;
+  return fill(ctx, x, y, width, height);
+};
 
 export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   children,
@@ -47,40 +60,43 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   direction = "row",
   align = "left",
   border = { topLeft: 4, topRight: 4, bottomLeft: 4, bottomRight: 4 },
-  color = "rgba(0, 0, 0, 0.5)",
+  color,
   shadowDistance = 4,
-  shadowOpacity = 0.84,
+  shadowOpacity,
   outlineSize = 4,
   outline,
-}) => {
-  const outlineColor = outline === true ? color : outline || undefined;
-
-  return {
-    dimension: {
-      padding,
-      margin,
-      width,
-      height,
-    },
-    style: { location, direction, align },
-    props: {
-      border,
-      color,
-      shadowDistance,
-      shadowOpacity,
-      outlineSize,
-      outline: outlineColor,
-    },
-    children,
-  };
-};
+}) => ({
+  dimension: {
+    padding,
+    margin,
+    width,
+    height,
+  },
+  style: { location, direction, align },
+  props: {
+    border,
+    color,
+    shadowDistance,
+    shadowOpacity,
+    outlineSize,
+    outline,
+  },
+  children,
+});
 
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
-  { color, border, shadowDistance, shadowOpacity, outline, outlineSize },
+  {
+    color = "rgba(0, 0, 0, 0.5)",
+    border,
+    shadowDistance,
+    shadowOpacity = 0.84,
+    outline,
+    outlineSize,
+  },
   { x, y, width, height, padding }
 ) => {
-  ctx.fillStyle = color;
+  ctx.fillStyle = resolveFill(color, ctx, x, y, width, height);
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -121,7 +137,8 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.globalCompositeOperation = "source-over";
 
   if (outline) {
-    ctx.strokeStyle = outline;
+    ctx.strokeStyle =
+      outline === true ? resolveFill(color, ctx, x, y, width, height) : outline;
     ctx.lineWidth = outlineSize;
     ctx.stroke();
   }
@@ -129,7 +146,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   if (!shadowDistance) return;
 
   ctx.globalAlpha = shadowOpacity;
-  ctx.fillStyle = color;
+  resolveFill(color, ctx, x, y, width, height);
 
   ctx.beginPath();
   ctx.moveTo(x + width, y + shadowDistance + border.topRight);

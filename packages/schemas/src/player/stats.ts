@@ -12,6 +12,7 @@ import {
   BedWars,
   BlitzSG,
   BuildBattle,
+  Challenges,
   CopsAndCrims,
   Duels,
   General,
@@ -21,6 +22,7 @@ import {
   Parkour,
   Pit,
   Quake,
+  Quests,
   SkyWars,
   SmashHeroes,
   SpeedUHC,
@@ -72,6 +74,9 @@ export class PlayerStats {
   })
   public buildbattle: BuildBattle;
 
+  @Field({ leaderboard: { name: "", fieldName: "§aChallenges§r" } })
+  public challenges: Challenges;
+
   @Field({ leaderboard: { fieldName: FormattedGame.COPS_AND_CRIMS } })
   public copsandcrims: CopsAndCrims;
 
@@ -113,6 +118,9 @@ export class PlayerStats {
     },
   })
   public quake: Quake;
+
+  @Field({ leaderboard: { name: "", fieldName: "§eQuests§r" } })
+  public quests: Quests;
 
   @Field({
     leaderboard: {
@@ -193,15 +201,17 @@ export class PlayerStats {
     this.bedwars = new BedWars(stats.Bedwars ?? {});
     this.blitzsg = new BlitzSG(stats.HungerGames ?? {});
     this.buildbattle = new BuildBattle(stats.BuildBattle ?? {});
+    this.challenges = new Challenges(data?.challenges?.all_time ?? {}, achievements);
     this.copsandcrims = new CopsAndCrims(stats.MCGO ?? {});
     this.duels = new Duels(stats.Duels ?? {});
     this.general = new General(data, legacy);
     this.megawalls = new MegaWalls(stats.Walls3 ?? {});
     this.murdermystery = new MurderMystery(stats.MurderMystery ?? {}, achievements);
     this.paintball = new Paintball(stats.Paintball ?? {}, legacy);
-    this.parkour = new Parkour(data?.parkourCompletions ?? {});
+    this.parkour = new Parkour(data.parkourCompletions ?? {});
     this.pit = new Pit(stats.Pit?.profile ?? {}, stats.Pit?.pit_stats_ptl ?? {});
     this.quake = new Quake(stats.Quake ?? {}, achievements, legacy);
+    this.quests = new Quests(data.quests ?? {});
     this.skywars = new SkyWars(stats.SkyWars ?? {}, achievements);
     this.smashheroes = new SmashHeroes(stats.SuperSmash ?? {});
     this.speeduhc = new SpeedUHC(stats.SpeedUHC ?? {});

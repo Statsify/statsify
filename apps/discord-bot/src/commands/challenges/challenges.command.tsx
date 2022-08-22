@@ -9,9 +9,10 @@
 import {
   BaseHypixelCommand,
   BaseProfileProps,
+  ModeEmoji,
   ProfileData,
 } from "../base.hypixel-command";
-import { CHALLENGE_MODES, ChallengeModes, GameId } from "@statsify/schemas";
+import { CHALLENGE_MODES, ChallengeModes, GameId, GameMode } from "@statsify/schemas";
 import { ChallengesProfile } from "./challenges.profile";
 import { Command } from "@statsify/discord";
 import { Image } from "skia-canvas";
@@ -32,6 +33,10 @@ export class ChallengesCommand extends BaseHypixelCommand<
 
   public async getPreProfileData(): Promise<PreProfileData> {
     return { gameIcons: await getAllGameIcons() };
+  }
+
+  public getModeEmojis(modes: GameMode<ChallengeModes>[]): ModeEmoji[] {
+    return modes.map((m) => m.api !== "overall" && ((t) => t(`emojis:games.${m.api}`)));
   }
 
   public getProfile(

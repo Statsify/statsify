@@ -10,7 +10,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Guild, LeaderboardScanner } from "@statsify/schemas";
 import { IsEnum, IsString, MaxLength, MinLength } from "class-validator";
 
-const fields = LeaderboardScanner.getLeaderboardFields(Guild);
+const fields = LeaderboardScanner.getLeaderboardFields(Guild).map(([key]) => key);
 
 export class GuildRankingDto {
   @ApiProperty({ enum: fields, type: [String] })

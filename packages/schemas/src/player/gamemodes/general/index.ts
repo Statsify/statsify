@@ -7,11 +7,10 @@
  */
 
 import { APIData } from "@statsify/util";
-import { Challenges } from "./challenges";
 import { Events } from "./events";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
-import { getNetworkLevel, getQuests } from "./util";
+import { getNetworkLevel } from "./util";
 
 export const GENERAL_MODES = new GameModes([{ api: "overall" }]);
 export type GeneralModes = IGameModes<typeof GENERAL_MODES>;
@@ -32,7 +31,7 @@ export class General {
       hidden: true,
       limit: Number.POSITIVE_INFINITY,
       formatter: getNetworkLevel,
-      additionalFields: ["stats.general.networkLevel"],
+      additionalFields: ["this.networkLevel"],
     },
   })
   public networkExp: number;
@@ -40,17 +39,14 @@ export class General {
   @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public networkLevel: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.highestRewardStreak"] } })
   public currentRewardStreak: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.currentRewardStreak"] } })
   public highestRewardStreak: number;
 
   @Field()
   public tournamentTributes: number;
-
-  @Field()
-  public quests: number;
 
   @Field()
   public ranksGifted: number;
@@ -61,24 +57,17 @@ export class General {
   @Field()
   public events: Events;
 
-  @Field({ leaderboard: { fieldName: "" } })
-  public challenges: Challenges;
-
   public constructor(data: APIData, legacy: APIData) {
     this.achievementPoints = data.achievementPoints;
 
-    this.challenges = new Challenges(data?.challenges?.all_time ?? {});
-
     this.karma = data.karma;
-    this.networkExp = data.networkExp;
+    this.networkExp = data.networkExp || 1;
     this.networkLevel = getNetworkLevel(this.networkExp);
 
     this.currentRewardStreak = data.rewardScore;
     this.highestRewardStreak = data.rewardHighScore;
 
     this.tournamentTributes = data.tourney?.total_tributes;
-
-    this.quests = getQuests(data.quests);
 
     this.giftsSent = data.giftingMeta?.bundlesGiven;
     this.ranksGifted = data.giftingMeta?.ranksGiven;
