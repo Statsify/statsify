@@ -277,12 +277,12 @@ export class HoleInTheWall {
   public wallsFaced: number;
 
   @Field({
-    leaderboard: { name: "Highest Score Qualifications", fieldName: "Qualifiers PB" },
+    leaderboard: { name: "Highest Score - Qualifications", fieldName: "Qualifiers PB" },
   })
   public highestScoreQualifications: number;
 
   @Field({
-    leaderboard: { name: "Highest Score Finals", fieldName: "Finals PB" },
+    leaderboard: { name: "Highest Score - Finals", fieldName: "Finals PB" },
   })
   public highestScoreFinals: number;
 

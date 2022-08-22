@@ -71,7 +71,7 @@ export class TurboKartRacers {
   public bronze: number;
 
   @Field({
-    leaderboard: { additionalFields: ["this.bronze", "this.silver", "this.gold"] },
+    leaderboard: { additionalFields: ["this.gold", "this.silver", "this.bronze"] },
   })
   public total: number;
 
