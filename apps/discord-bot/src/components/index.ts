@@ -18,3 +18,4 @@ export * from "./ProgressBar";
 export * from "./Sidebar";
 export * from "./Skin";
 export * from "./Table";
+export * from "./GameList";

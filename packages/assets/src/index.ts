@@ -92,11 +92,12 @@ export const getServerMappings = () =>
 
 export function getLogo(user: User | null, size?: number): Promise<Image>;
 export function getLogo(logo: UserLogo | null, size?: number): Promise<Image>;
+export function getLogo(path: string, size?: number): Promise<Image>;
 export function getLogo(
-  userOrLogo: User | UserLogo | null,
+  userOrLogoOrPath: User | UserLogo | string | null,
   size?: number
 ): Promise<Image> {
-  return loadImage(getLogoPath(userOrLogo as User, size));
+  return loadImage(getLogoPath(userOrLogoOrPath as User, size));
 }
 
 export function getLogoPath(user: User | null, size?: number): string;

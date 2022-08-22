@@ -22,8 +22,8 @@ export class LeaderboardScanner {
     return fields;
   }
 
-  public static getLeaderboardFields<T>(constructor: Constructor<T>): string[] {
-    return this.getLeaderboardMetadata(constructor).map(([key]) => key);
+  public static getLeaderboardFields<T>(constructor: Constructor<T>) {
+    return this.getLeaderboardMetadata(constructor);
   }
 
   public static getLeaderboardField<T>(
@@ -54,6 +54,24 @@ export class LeaderboardScanner {
 
     leaderboard.default = store.default;
 
+    if (leaderboard.additionalFields?.length) {
+      leaderboard.additionalFields = leaderboard.additionalFields.map(
+        this.parseAdditionalFields.bind(this, key)
+      );
+    }
+
+    if (leaderboard.extraDisplay)
+      leaderboard.extraDisplay = this.parseAdditionalFields(
+        key,
+        leaderboard.extraDisplay
+      );
+
     return leaderboard;
+  }
+
+  private static parseAdditionalFields(field: string, additonalKey: string) {
+    return additonalKey.startsWith("this.")
+      ? additonalKey.replace("this", field.split(".").slice(0, -1).join("."))
+      : additonalKey;
   }
 }

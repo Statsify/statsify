@@ -77,7 +77,7 @@ export const GeneralProfile = ({
   friends = 0,
   time,
 }: GeneralProfileProps) => {
-  const { general } = player.stats;
+  const { general, challenges, quests } = player.stats;
   const { status } = player;
   const member = guild?.members.find((m) => m.uuid === player.uuid);
 
@@ -107,10 +107,10 @@ export const GeneralProfile = ({
           />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("stats.quests")} value={t(general.quests)} color="§a" />
+          <Table.td title={t("stats.quests")} value={t(quests.total)} color="§a" />
           <Table.td
             title={t("stats.challenges")}
-            value={t(general.challenges.total)}
+            value={t(challenges.total)}
             color="§a"
           />
         </Table.tr>

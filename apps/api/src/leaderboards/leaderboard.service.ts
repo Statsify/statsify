@@ -8,10 +8,21 @@
 
 import * as Sentry from "@sentry/node";
 import { Constructor, Flatten } from "@statsify/util";
+import { DateTime } from "luxon";
 import { InjectRedis, Redis } from "@nestjs-modules/ioredis";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schemas";
 import { LeaderboardQuery } from "@statsify/api-client";
+
+const DAYS_IN_WEEK = {
+  monday: 0,
+  tuesday: 1,
+  wednesday: 2,
+  thursday: 3,
+  friday: 4,
+  saturday: 5,
+  sunday: 6,
+};
 
 export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
@@ -23,9 +34,9 @@ export abstract class LeaderboardService {
     constructor: Constructor<T>,
     instance: Flatten<T>,
     idField: keyof T,
-    fields: string[] = LeaderboardScanner.getLeaderboardFields(constructor),
     remove = false
   ) {
+    const fields = LeaderboardScanner.getLeaderboardFields(constructor);
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     const child = transaction?.startChild({
@@ -39,15 +50,17 @@ export abstract class LeaderboardService {
     const id = instance[idField] as unknown as string;
 
     fields
-      .filter((field) => remove || typeof instance[field] === "number")
-      .forEach((field) => {
+      .filter(([field]) => remove || typeof instance[field] === "number")
+      .forEach(([field, metadata]) => {
         const value = instance[field] as unknown as number;
+        const key = `${name}.${String(field)}`;
 
-        if (remove || value === 0 || Number.isNaN(value)) {
-          pipeline.zrem(`${name}.${String(field)}`, id);
-        } else {
-          pipeline.zadd(`${name}.${String(field)}`, value, id);
-        }
+        if (remove || value === 0 || Number.isNaN(value)) return pipeline.zrem(key, id);
+
+        pipeline.zadd(key, value, id);
+
+        if (metadata.leaderboard.enabled && metadata.leaderboard.resetEvery)
+          pipeline.expireat(key, this.getLeaderboardExpiryTime(metadata.leaderboard));
       });
 
     await pipeline.exec();
@@ -109,8 +122,8 @@ export abstract class LeaderboardService {
       sort
     );
 
-    const additionalFieldMetadata = additionalFields.map((key) =>
-      LeaderboardScanner.getLeaderboardField(constructor, key, false)
+    const additionalFieldMetadata = additionalFields.map((k) =>
+      LeaderboardScanner.getLeaderboardField(constructor, k, false)
     );
 
     const extraDisplayMetadata = extraDisplay
@@ -119,7 +132,10 @@ export abstract class LeaderboardService {
 
     const additionalStats = await this.getAdditionalStats(
       leaderboard.map(({ id }) => id),
-      [...additionalFields, ...(extraDisplay ? [extraDisplay] : [])]
+      [
+        ...additionalFields.filter((k) => k !== field),
+        ...(extraDisplay ? [extraDisplay] : []),
+      ]
     );
 
     const data = leaderboard.map((doc, index) => {
@@ -278,5 +294,21 @@ export abstract class LeaderboardService {
     }
 
     return response;
+  }
+
+  private getLeaderboardExpiryTime(leaderboard: LeaderboardEnabledMetadata): number {
+    if (!leaderboard.resetEvery)
+      throw new Error("To get a leaderboard expiry time, `resetEvery` must be specified");
+
+    if (leaderboard.resetEvery === "day") return DateTime.now().endOf("day").toMillis();
+
+    const now = new Date();
+    const dayIndex = DAYS_IN_WEEK[leaderboard.resetEvery];
+
+    //Reset at 12:00 AM on the next day
+    now.setDate(now.getDate() + ((dayIndex - now.getDay() + 7) % 7) + 1);
+    now.setHours(0, 0, 0, 0);
+
+    return now.getTime();
   }
 }

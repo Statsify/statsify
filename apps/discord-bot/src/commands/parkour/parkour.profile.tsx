@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, Table } from "#components";
-import { FormattedGame, GameId, Parkour } from "@statsify/schemas";
-import { arrayGroup, formatTime } from "@statsify/util";
+import { Container, Footer, GameList, Header } from "#components";
+import { FormattedGame, GameId } from "@statsify/schemas";
+import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
 import type { Image } from "skia-canvas";
 
@@ -27,20 +27,9 @@ export const ParkourProfile = ({
 }: ParkourProfileProps) => {
   const { parkour } = player.stats;
 
-  const ROW_SIZE = 2;
-
-  const times = Object.entries(parkour)
+  const times: [GameId, any][] = Object.entries(parkour)
     .sort((a, b) => (a[1] || Number.MAX_VALUE) - (b[1] || Number.MAX_VALUE))
-    .map(([field, time]) => (
-      <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
-        <img image={gameIcons[field as keyof Parkour]} width={32} height={32} />
-        <text>§l{FormattedGame[field as keyof Parkour]}</text>
-        <div width="remaining" margin={{ left: 4, right: 4 }} />
-        <text>{time ? formatTime(time) : "N/A"}</text>
-      </box>
-    ));
-
-  const groups = arrayGroup(times, ROW_SIZE);
+    .map(([field, time]) => [field as GameId, time ? formatTime(time) : "N/A"]);
 
   return (
     <Container background={background}>
@@ -51,11 +40,7 @@ export const ParkourProfile = ({
         title={`§l${FormattedGame.PARKOUR} §fTimes`}
         time="LIVE"
       />
-      <Table.table>
-        {groups.map((group) => (
-          <Table.tr>{group}</Table.tr>
-        ))}
-      </Table.table>
+      <GameList entries={times} gameIcons={gameIcons} />
       <Footer logo={logo} user={user} />
     </Container>
   );

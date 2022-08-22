@@ -13,6 +13,7 @@ import {
   BEDWARS_MODES,
   BLITZSG_MODES,
   BUILD_BATTLE_MODES,
+  CHALLENGE_MODES,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   GENERAL_MODES,
@@ -24,6 +25,7 @@ import {
   PIT_MODES,
   PlayerStats,
   QUAKE_MODES,
+  QUEST_MODES,
   SKYWARS_MODES,
   SMASH_HEROES_MODES,
   SPEED_UHC_MODES,
@@ -91,6 +93,14 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   })
   public buildbattle(context: CommandContext) {
     return this.run(context, "buildbattle", BUILD_BATTLE_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.leaderboard-challenges"),
+    args: [new PlayerLeaderboardArgument("challenges")],
+  })
+  public challenges(context: CommandContext) {
+    return this.run(context, "challenges", CHALLENGE_MODES);
   }
 
   @SubCommand({
@@ -165,6 +175,14 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   })
   public quake(context: CommandContext) {
     return this.run(context, "quake", QUAKE_MODES);
+  }
+
+  @SubCommand({
+    description: (t) => t("commands.leaderboard-quests"),
+    args: [new PlayerLeaderboardArgument("quests")],
+  })
+  public quests(context: CommandContext) {
+    return this.run(context, "quests", QUEST_MODES);
   }
 
   @SubCommand({

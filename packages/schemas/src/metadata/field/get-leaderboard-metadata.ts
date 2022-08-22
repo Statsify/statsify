@@ -57,6 +57,7 @@ export const getLeaderboardMetadata = (
       additionalFields: leaderboardOptions?.additionalFields || [],
       extraDisplay: leaderboardOptions?.extraDisplay,
       formatter: leaderboardOptions?.formatter,
+      resetEvery: leaderboardOptions?.resetEvery,
       fieldName,
       name,
     };
@@ -73,5 +74,6 @@ export const getLeaderboardMetadata = (
     extraDisplay: leaderboardOptions?.extraDisplay,
     formatter: leaderboardOptions?.formatter,
     limit: leaderboardOptions?.limit ?? getDefaultLeaderboardLimit(propertyKey),
+    resetEvery: leaderboardOptions?.resetEvery,
   };
 };

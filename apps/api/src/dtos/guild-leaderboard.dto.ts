@@ -19,7 +19,7 @@ import {
 } from "class-validator";
 import { Transform } from "class-transformer";
 
-const fields = LeaderboardScanner.getLeaderboardFields(Guild);
+const fields = LeaderboardScanner.getLeaderboardFields(Guild).map(([key]) => key);
 
 export class GuildLeaderboardDto {
   @IsEnum(fields)

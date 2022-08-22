@@ -11,7 +11,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { ReturnModelType } from "@typegoose/typegoose";
 import { User, VerifyCode } from "@statsify/schemas";
 import { config, flatten } from "@statsify/util";
-import { getAssetPath, getLogoPath } from "@statsify/assets";
+import { getLogoPath } from "@statsify/assets";
 import { readFile, rm, writeFile } from "node:fs/promises";
 
 @Injectable()
@@ -49,7 +49,7 @@ export class UserService {
     } else if (user.tier) {
       badgePath = getLogoPath(user);
     } else if (user.uuid) {
-      badgePath = getAssetPath(`logos/verified_logo_30.png`);
+      badgePath = getLogoPath("verified", 28);
     }
 
     if (!badgePath) throw new NotFoundException(`badge`);
