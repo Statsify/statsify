@@ -61,7 +61,7 @@ export class General {
     this.achievementPoints = data.achievementPoints;
 
     this.karma = data.karma;
-    this.networkExp = data.networkExp;
+    this.networkExp = data.networkExp || 1;
     this.networkLevel = getNetworkLevel(this.networkExp);
 
     this.currentRewardStreak = data.rewardScore;
