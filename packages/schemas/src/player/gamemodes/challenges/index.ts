@@ -132,7 +132,7 @@ export class Challenges {
   @Field({ leaderboard: { name: "Total Challenges", fieldName: "Challenges -" } })
   public total: number;
 
-  public constructor(challenges: APIData) {
+  public constructor(challenges: APIData, ap: APIData) {
     this.ARCADE = new ArcadeChallenges(challenges);
     this.ARENA_BRAWL = new ArenaBrawlChallenges(challenges);
     this.BEDWARS = new BedWarsChallenges(challenges);
@@ -155,9 +155,9 @@ export class Challenges {
     this.WARLORDS = new WarlordsChallenges(challenges);
     this.WOOLWARS = new WoolWarsChallenges(challenges);
 
-    this.total = Object.entries(this).reduce(
-      (p, c) => (c[1]?.total ? p + c[1].total : p),
-      0
+    this.total = Math.max(
+      Object.values(challenges ?? {}).reduce((p, c) => p + c, 0),
+      ap.general_challenger ?? 0
     );
   }
 }

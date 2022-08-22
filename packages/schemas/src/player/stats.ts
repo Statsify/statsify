@@ -201,7 +201,7 @@ export class PlayerStats {
     this.bedwars = new BedWars(stats.Bedwars ?? {});
     this.blitzsg = new BlitzSG(stats.HungerGames ?? {});
     this.buildbattle = new BuildBattle(stats.BuildBattle ?? {});
-    this.challenges = new Challenges(data?.challenges?.all_time ?? {});
+    this.challenges = new Challenges(data?.challenges?.all_time ?? {}, achievements);
     this.copsandcrims = new CopsAndCrims(stats.MCGO ?? {});
     this.duels = new Duels(stats.Duels ?? {});
     this.general = new General(data, legacy);
