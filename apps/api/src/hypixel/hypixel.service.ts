@@ -144,7 +144,7 @@ export class HypixelService {
     const resource$ = this.request<APIData>(`/resources/${resource}`).pipe(
       map((data) => data),
       catchError((err) => {
-        this.logger.error(err.message);
+        this.logger.error(err);
         return of(null);
       })
     );
