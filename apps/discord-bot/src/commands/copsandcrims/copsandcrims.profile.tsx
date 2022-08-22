@@ -7,15 +7,7 @@
  */
 
 import { BaseProfileProps } from "../base.hypixel-command";
-import {
-  Container,
-  Footer,
-  Header,
-  Historical,
-  SidebarItem,
-  Table,
-  formatProgression,
-} from "#components";
+import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
 import { CopsAndCrimsModes, FormattedGame, GameMode } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 
@@ -139,15 +131,7 @@ export const CopsAndCrimsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.COPS_AND_CRIMS} §fStats §r(${mode.formatted})`}
-        description={`§7${t("stats.prefix")}: ${
-          copsandcrims.naturalPrefix
-        }\n${formatProgression({
-          t,
-          label: t("stats.progression.score"),
-          progression: copsandcrims.progression,
-          currentLevel: copsandcrims.currentPrefix,
-          nextLevel: copsandcrims.nextPrefix,
-        })}`}
+        description={`§7${t("stats.prefix")}: ${copsandcrims.naturalPrefix}`}
         time={time}
       />
       {table}
