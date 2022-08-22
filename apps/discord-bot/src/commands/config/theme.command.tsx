@@ -88,12 +88,7 @@ export class ThemeCommand {
       new ChoiceArgument({
         name: "palette",
         required: true,
-        choices: [
-          ["Default", UserPalette.DEFAULT],
-          ["Dark", UserPalette.DARK],
-          ["Light", UserPalette.LIGHT],
-          ["No Backgrounds", UserPalette.NO_BACKGROUNDS],
-        ],
+        choices: Object.entries(UserPalette).map(([k, v]) => [k, v]),
       }),
     ],
   })

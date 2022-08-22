@@ -36,6 +36,97 @@ export const getColorPalette = (palette: UserPalette): Palette | undefined => {
         },
         background: "rgba(0, 0, 0, 0.32)",
       };
+    case UserPalette.DARKBLUE:
+      return {
+        boxes: {
+          color: "rgba(0, 0, 170, 0.5)",
+          shadowOpacity: 0.6,
+        },
+      };
+    case UserPalette.DARKGREEN:
+      return {
+        boxes: {
+          color: "rgba(0, 170, 0, 0.5)",
+          shadowOpacity: 0.6,
+        },
+      };
+    case UserPalette.DARKAQUA:
+      return {
+        boxes: {
+          color: "rgba(0, 170, 170, 0.5)",
+          shadowOpacity: 0.6,
+        },
+      };
+    case UserPalette.DARKRED:
+      return {
+        boxes: {
+          color: "rgba(170, 0, 0, 0.5)",
+          shadowOpacity: 0.6,
+        },
+      };
+    case UserPalette.DARKPURPLE:
+      return {
+        boxes: {
+          color: "rgba(170, 0, 170, 0.5)",
+          shadowOpacity: 0.6,
+        },
+      };
+    case UserPalette.GOLD:
+      return {
+        boxes: {
+          color: "rgba(255, 170, 0, 0.4)",
+          shadowOpacity: 0.6,
+        },
+        background: "rgba(0, 0, 0, 0.32)",
+      };
+    case UserPalette.BLUE:
+      return {
+        boxes: {
+          color: "rgba(85, 85, 255, 0.4)",
+          shadowOpacity: 0.6,
+        },
+        background: "rgba(0, 0, 0, 0.32)",
+      };
+    case UserPalette.GREEN:
+      return {
+        boxes: {
+          color: "rgba(85, 255, 85, 0.4)",
+          shadowOpacity: 0.6,
+        },
+        background: "rgba(0, 0, 0, 0.32)",
+      };
+    case UserPalette.AQUA:
+      return {
+        boxes: {
+          color: "rgba(85, 255, 255, 0.4)",
+          shadowOpacity: 0.6,
+        },
+        background: "rgba(0, 0, 0, 0.32)",
+      };
+    case UserPalette.RED:
+      return {
+        boxes: {
+          color: "rgba(255, 85, 85, 0.4)",
+          shadowOpacity: 0.6,
+        },
+        background: "rgba(0, 0, 0, 0.32)",
+      };
+    case UserPalette.LIGHTPURPLE:
+      return {
+        boxes: {
+          color: "rgba(255, 85, 255, 0.4)",
+          shadowOpacity: 0.6,
+        },
+        background: "rgba(0, 0, 0, 0.32)",
+      };
+    case UserPalette.YELLOW:
+      return {
+        boxes: {
+          color: "rgba(255, 255, 85, 0.4)",
+          shadowOpacity: 0.6,
+        },
+        background: "rgba(0, 0, 0, 0.32)",
+      };
     case UserPalette.NO_BACKGROUNDS:
       return {
         background: null,

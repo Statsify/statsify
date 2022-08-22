@@ -17,6 +17,18 @@ export enum UserPalette {
   DEFAULT = "default",
   LIGHT = "light",
   DARK = "dark",
+  DARKBLUE = "dark-blue",
+  DARKGREEN = "dark-green",
+  DARKAQUA = "dark-aqua",
+  DARKRED = "dark-red",
+  DARKPURPLE = "dark-purple",
+  GOLD = "gold",
+  BLUE = "blue",
+  GREEN = "green",
+  AQUA = "aqua",
+  RED = "red",
+  LIGHTPURPLE = "light-purple",
+  YELLOW = "yellow",
   NO_BACKGROUNDS = "no-backgrounds",
 }
 
