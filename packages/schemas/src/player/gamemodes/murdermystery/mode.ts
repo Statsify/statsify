@@ -47,6 +47,7 @@ export class StandardMurderMysteryMode extends BaseMurderMysteryMode {
 
   @Field()
   public trapKills: number;
+
   @Field()
   public thrownKnifeKills: number;
 

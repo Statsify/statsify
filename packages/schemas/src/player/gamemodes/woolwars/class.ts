@@ -26,10 +26,10 @@ export class WoolWarsClass {
   @Field()
   public powerups: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.woolPlaced"] } })
   public blocksBroken: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.blocksBroken"] } })
   public woolPlaced: number;
 
   public constructor(data: APIData = {}) {

@@ -73,48 +73,48 @@ export class Duels {
   @Field({ store: { default: 300 }, leaderboard: { enabled: false } })
   public pingRange: number;
 
-  @Field({ leaderboard: { extraDisplay: "stats.duels.overall.titleFormatted" } })
+  @Field({ leaderboard: { extraDisplay: "this.overall.titleFormatted" } })
   public coins: number;
 
-  @Field({ leaderboard: { extraDisplay: "stats.duels.overall.titleFormatted" } })
+  @Field({ leaderboard: { extraDisplay: "this.overall.titleFormatted" } })
   public lootChests: number;
 
-  @Field({ leaderboard: { extraDisplay: "stats.duels.overall.titleFormatted" } })
+  @Field({ leaderboard: { extraDisplay: "this.overall.titleFormatted" } })
   public overall: SinglePVPDuelsGameMode;
 
-  @Field({ leaderboard: { extraDisplay: "stats.duels.arena.titleFormatted" } })
+  @Field({ leaderboard: { extraDisplay: "this.arena.titleFormatted" } })
   public arena: SingleDuelsGameMode;
 
   @Field({
     leaderboard: {
       fieldName: "BlitzSG",
-      extraDisplay: "stats.duels.blitzsg.titleFormatted",
+      extraDisplay: "this.blitzsg.titleFormatted",
     },
   })
   public blitzsg: SinglePVPDuelsGameMode;
 
-  @Field({ leaderboard: { extraDisplay: "stats.duels.bow.titleFormatted" } })
+  @Field({ leaderboard: { extraDisplay: "this.bow.titleFormatted" } })
   public bow: SinglePVPDuelsGameMode;
 
-  @Field({ leaderboard: { extraDisplay: "stats.duels.bowSpleef.titleFormatted" } })
+  @Field({ leaderboard: { extraDisplay: "this.bowSpleef.titleFormatted" } })
   public bowSpleef: SingleDuelsGameMode;
 
-  @Field({ leaderboard: { extraDisplay: "stats.duels.boxing.titleFormatted" } })
+  @Field({ leaderboard: { extraDisplay: "this.boxing.titleFormatted" } })
   public boxing: SinglePVPDuelsGameMode;
 
-  @Field({ leaderboard: { extraDisplay: "stats.duels.bridge.titleFormatted" } })
+  @Field({ leaderboard: { extraDisplay: "this.bridge.titleFormatted" } })
   public bridge: BridgeDuels;
 
-  @Field({ leaderboard: { extraDisplay: "stats.duels.classic.titleFormatted" } })
+  @Field({ leaderboard: { extraDisplay: "this.classic.titleFormatted" } })
   public classic: SinglePVPDuelsGameMode;
 
-  @Field({ leaderboard: { extraDisplay: "stats.duels.combo.titleFormatted" } })
+  @Field({ leaderboard: { extraDisplay: "this.combo.titleFormatted" } })
   public combo: SinglePVPDuelsGameMode;
 
   @Field({
     leaderboard: {
       fieldName: "MegaWalls",
-      extraDisplay: "stats.duels.megawalls.titleFormatted",
+      extraDisplay: "this.megawalls.titleFormatted",
     },
   })
   public megawalls: MultiPVPDuelsGameMode;
@@ -122,32 +122,32 @@ export class Duels {
   @Field({
     leaderboard: {
       fieldName: "NoDebuff",
-      extraDisplay: "stats.duels.nodebuff.titleFormatted",
+      extraDisplay: "this.nodebuff.titleFormatted",
     },
   })
   public nodebuff: SinglePVPDuelsGameMode;
 
   @Field({
-    leaderboard: { fieldName: "OP", extraDisplay: "stats.duels.op.titleFormatted" },
+    leaderboard: { fieldName: "OP", extraDisplay: "this.op.titleFormatted" },
   })
   public op: MultiPVPDuelsGameMode;
 
-  @Field({ leaderboard: { extraDisplay: "stats.duels.parkour.titleFormatted" } })
+  @Field({ leaderboard: { extraDisplay: "this.parkour.titleFormatted" } })
   public parkour: SingleDuelsGameMode;
 
   @Field({
     leaderboard: {
       fieldName: "SkyWars",
-      extraDisplay: "stats.duels.skywars.titleFormatted",
+      extraDisplay: "this.skywars.titleFormatted",
     },
   })
   public skywars: MultiPVPDuelsGameMode;
 
-  @Field({ leaderboard: { extraDisplay: "stats.duels.sumo.titleFormatted" } })
+  @Field({ leaderboard: { extraDisplay: "this.sumo.titleFormatted" } })
   public sumo: SinglePVPDuelsGameMode;
 
   @Field({
-    leaderboard: { fieldName: "UHC", extraDisplay: "stats.duels.uhc.titleFormatted" },
+    leaderboard: { fieldName: "UHC", extraDisplay: "this.uhc.titleFormatted" },
   })
   public uhc: UHCDuels;
 

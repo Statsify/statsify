@@ -222,13 +222,13 @@ export class GalaxyWars {
 }
 
 export class HideAndSeekMode {
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.seekerWins", "this.hiderWins"] } })
   public wins: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.wins"] } })
   public seekerWins: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.wins"] } })
   public hiderWins: number;
 
   public constructor(data: APIData, mode: string) {
@@ -266,16 +266,24 @@ export class HideAndSeek {
 }
 
 export class HoleInTheWall {
-  @Field()
+  @Field({
+    leaderboard: {
+      additionalFields: ["this.highestScoreQualifications", "this.highestScoreFinals"],
+    },
+  })
   public wins: number;
 
   @Field()
   public wallsFaced: number;
 
-  @Field()
+  @Field({
+    leaderboard: { name: "Highest Score Qualifications", fieldName: "Qualifiers PB" },
+  })
   public highestScoreQualifications: number;
 
-  @Field()
+  @Field({
+    leaderboard: { name: "Highest Score Finals", fieldName: "Finals PB" },
+  })
   public highestScoreFinals: number;
 
   public constructor(data: APIData) {
@@ -293,7 +301,7 @@ export class HypixelSays {
   @Field()
   public roundsWon: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.roundsWon", "this.points"] } })
   public wins: number;
 
   @Field()
@@ -348,13 +356,13 @@ export class MiniWalls {
 }
 
 export class PartyGames {
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.roundsWon", "this.starsEarned"] } })
   public wins: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.roundsWon", "this.wins"] } })
   public starsEarned: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.starsEarned", "this.wins"] } })
   public roundsWon: number;
 
   @Field()
@@ -553,10 +561,12 @@ export class ThrowOut {
 }
 
 export class ZombiesMap {
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.fastestWin"] } })
   public wins: number;
 
-  @Field({ leaderboard: { sort: "ASC", formatter: formatTime } })
+  @Field({
+    leaderboard: { sort: "ASC", formatter: formatTime, additionalFields: ["this.wins"] },
+  })
   public fastestWin: number;
 
   @Field({ leaderboard: { enabled: false } })

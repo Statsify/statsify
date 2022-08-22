@@ -39,10 +39,10 @@ export class General {
   @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public networkLevel: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.highestRewardStreak"] } })
   public currentRewardStreak: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.currentRewardStreak"] } })
   public highestRewardStreak: number;
 
   @Field()
