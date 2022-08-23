@@ -40,14 +40,13 @@ export const GuildMemberProfile = ({
     `§7${t("stats.guild.quests")}: §b${t(member.questParticipation)}`,
   ].join("\n");
 
-  const positions = guild.expHistory.map(
-    (_, i) =>
-      guild.members
-        .map((v) => [v.uuid, v.expHistory[i]])
-        .sort((a, b) => Number(b[1]) - Number(a[1]))
-        .map(([u]) => u)
-        .indexOf(member.uuid) + 1
-  );
+  const positions = guild.expHistory.slice(0, 7).map((_, i) => {
+    const position = guild.members
+      .sort((a, b) => Number(b.expHistory[i]) - Number(a.expHistory[i]))
+      .findIndex((m) => m.uuid === member.uuid);
+
+    return `§7#§f${t(position + 1)}§8/§7${guild.members.length}`;
+  });
 
   return (
     <Container background={background}>
