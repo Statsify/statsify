@@ -32,6 +32,7 @@ import { STATUS_COLORS } from "@statsify/logger";
         ["Deutsch (German)", "de"],
         ["Magyar (Hungarian)", "hu"],
         ["Português do Brasil (Portuguese, Brazilian)", "pt-BR"],
+        ["Türkçe (Turkish)", "tr"],
         ["Tiếng Việt (Vietnamese)", "vi"],
         ["Français (French)", "fr"],
         ["Ελληνικά (Greek)", "el"],
