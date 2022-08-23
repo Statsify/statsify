@@ -49,21 +49,17 @@ export class FontRenderer {
 
   public measureText(nodes: TextNode[]): { width: number; height: number } {
     let width = 0;
-    let height = 0;
-
     let largestSize = nodes[0].size;
-    let rowWidth = 0;
 
     for (const { text, bold, size } of nodes) {
       if (size > largestSize) largestSize = size;
 
       for (const char of text) {
-        rowWidth += this.measureCharacter(char, size, bold);
+        width += this.measureCharacter(char, size, bold);
       }
     }
 
-    if (rowWidth > width) width = rowWidth;
-    height += largestSize * 10;
+    const height = largestSize * 10;
 
     return { width, height };
   }

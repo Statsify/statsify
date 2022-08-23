@@ -9,10 +9,18 @@
 import { Progression } from "../../progression";
 import { abbreviationNumber, findScoreIndex } from "@statsify/util";
 
-export type GamePrefix = { fmt: (n: string) => string; req: number };
-export type GameTitle = { fmt: (n: string) => string; req: number; title: string };
+export type GamePrefix<T extends unknown[] = []> = {
+  fmt: (n: string, ...args: T) => string;
+  req: number;
+};
 
-type Prefixes = GamePrefix[] | GameTitle[];
+export type GameTitle<T extends unknown[] = []> = {
+  fmt: (n: string, ...args: T) => string;
+  req: number;
+  title: string;
+};
+
+type Prefixes<T extends unknown[] = []> = GamePrefix<T>[] | GameTitle<T>[];
 
 /**
  *
@@ -21,8 +29,8 @@ type Prefixes = GamePrefix[] | GameTitle[];
  * @param skip The number of prefixes to skip
  * @returns The score needed to reach the requested prefix
  */
-export const getPrefixRequirement = (
-  prefixes: Prefixes,
+const getPrefixRequirement = <T extends unknown[] = []>(
+  prefixes: Prefixes<T>,
   score: number,
   skip = 0
 ): number => {
@@ -33,7 +41,10 @@ export const getPrefixRequirement = (
     : prefixes[Math.min(prefixIndex + skip - 1, prefixes.length - 1)].req || 0;
 };
 
-export const createPrefixProgression = (prefixes: Prefixes, score: number) => {
+export const createPrefixProgression = <T extends unknown[] = []>(
+  prefixes: Prefixes<T>,
+  score: number
+) => {
   const currentRequirement = getPrefixRequirement(prefixes, score);
   const nextRequirement = getPrefixRequirement(prefixes, score, 1);
 
@@ -43,8 +54,8 @@ export const createPrefixProgression = (prefixes: Prefixes, score: number) => {
   );
 };
 
-export interface FormatPrefixOptions {
-  prefixes: Prefixes;
+export interface FormatPrefixOptions<T extends unknown[] = []> {
+  prefixes: Prefixes<T>;
   score: number;
 
   /**
@@ -63,15 +74,21 @@ export interface FormatPrefixOptions {
    * @default false
    */
   trueScore?: boolean;
+
+  /**
+   * Extra arguments to pass to the prefix format function
+   */
+  prefixParams?: T;
 }
 
-export const getFormattedPrefix = ({
+export const getFormattedPrefix = <T extends unknown[] = []>({
   prefixes,
   score,
   skip = false,
   trueScore = false,
   abbreviation = true,
-}: FormatPrefixOptions) => {
+  prefixParams = [] as unknown as T,
+}: FormatPrefixOptions<T>) => {
   score = score ?? 0;
 
   let prefixIndex = findScoreIndex(prefixes, score);
@@ -80,18 +97,19 @@ export const getFormattedPrefix = ({
 
   const prefix = prefixes[prefixIndex];
 
-  if ("title" in prefix) return prefix.fmt(prefix.title);
+  if ("title" in prefix) return prefix.fmt(prefix.title, ...prefixParams);
 
-  if (!abbreviation) return prefix.fmt(`${trueScore ? Math.floor(score) : score}`);
+  if (!abbreviation)
+    return prefix.fmt(`${trueScore ? Math.floor(score) : score}`, ...prefixParams);
 
   const [number, suffix] = abbreviationNumber(trueScore ? score : prefix.req);
   const formattedScore = trueScore ? Math.floor(number) : number;
-  return prefix.fmt(`${formattedScore}${suffix}`);
+  return prefix.fmt(`${formattedScore}${suffix}`, ...prefixParams);
 };
 
-export const defaultPrefix = (
-  prefixes: Prefixes,
-  options?: Omit<FormatPrefixOptions, "prefixes" | "score">
+export const defaultPrefix = <T extends unknown[] = []>(
+  prefixes: Prefixes<T>,
+  options?: Omit<FormatPrefixOptions<T>, "prefixes" | "score">
 ) => getFormattedPrefix({ prefixes, score: prefixes[0].req, ...options });
 
 const RAINBOW_COLORS = ["c", "6", "e", "a", "b", "d", "9"];
