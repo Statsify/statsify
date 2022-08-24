@@ -49,9 +49,12 @@ export class HistoricalService {
     @InjectModel(LastWeek) private readonly lastWeekModel: PlayerModel,
     @InjectModel(LastMonth) private readonly lastMonthModel: PlayerModel
   ) {
-    const task = new AsyncTask("historicalReset", this.resetPlayers.bind(this));
-    this.job = new SimpleIntervalJob({ minutes: 1 }, task);
-    this.job.start();
+    //Check if the cluster is the master cluster
+    if (process.env.NODE_UNIQUE_ID === undefined) {
+      const task = new AsyncTask("historicalReset", this.resetPlayers.bind(this));
+      this.job = new SimpleIntervalJob({ minutes: 1 }, task);
+      this.job.start();
+    }
   }
 
   public async resetPlayers() {
