@@ -32,7 +32,7 @@
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Visualizza il Mantello di Minecraft e di Optifine di un utente",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
-    "quests-command": "View your {{name}} questing stats",
+    "quests-command": "Visualizza le statistiche di ricerca di {{name}}",
     "quests": "$t(commands.hypixel-command, { \"name\": \"Questing\" })",
     "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
     "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
@@ -352,15 +352,15 @@
       "title": "Livello più alto richiesto"
     },
     "invalidGuild": {
-      "description_id": "A guild with the id of `{{tag}}` could not be found!",
-      "description_name": "A guild by the name of `{{tag}}` could not be found!",
-      "description_player": "A guild with the player `{{tag}}` could not be found!",
+      "description_id": "Una gilda con l'id di `{{tag}}` non può esser trovata!",
+      "description_name": "Una gilda con il nome di `{{tag}}` non può esser trovata!",
+      "description_player": "Una gilda con il nome del giocatore `{{tag}}` no può esser trovato!",
       "title": "Gilda non valida"
     },
     "invalidPlayer": {
-      "description_username": "A player by the username of `{{tag}}` could not be found!",
-      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
-      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
+      "description_username": "Un giocatore dal nome utente di `{{tag}}` non può esser trovato!",
+      "description_uuid": "Un giocatore con l'UUID di `{{tag}}` no può esser trovato!",
+      "description_discordId": "Un giocatore con l'id discord `{{tag}}` non può esser trovato!",
       "title": "Giocatore non valido"
     },
     "invalidResetTime": {
@@ -610,7 +610,7 @@
       "level": "Livello Gilda",
       "members": "Membri della Gilda",
       "monthly": "Mensile",
-      "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
+      "monthly-gexp": "$t(stats.guild.monthly)$t(stats.guild.gexp)",
       "quests": "Missioni Gilda",
       "rank": "Rank della Gilda",
       "scaledGexp": "GEXP Scalata",
@@ -746,7 +746,7 @@
     "woolCaptures": "Lana Catturata",
     "woolPlaced": "Lana Piazzata",
     "zombieKills": "Uccisioni Zombie",
-    "potionsBrewed": "Potions Brewed"
+    "potionsBrewed": "Pozioni preparate"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Unisciti al nostro **$t(socials.discord)** e ottieni **cooldown 20% più brevi** $t(emojis:heart)",
