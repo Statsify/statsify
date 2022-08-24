@@ -27,6 +27,7 @@ export const tips: Tip[] = [
   {
     message: { content: (t) => t("tips.discord") },
     uneligible: (user) => Boolean(user?.serverMember),
+    disabled: ["help", "invite", "links"],
   },
   {
     message: { content: (t) => t("tips.verify") },
@@ -34,6 +35,12 @@ export const tips: Tip[] = [
     disabled: ["verify"],
   },
   { message: { content: (t) => t("tips.premium") } },
-  { message: { content: (t) => t("tips.rankings") }, disabled: ["rankings"] },
-  { message: { content: (t) => t("tips.invite") } },
+  {
+    message: { content: (t) => t("tips.rankings") },
+    disabled: ["rankings", "positions"],
+  },
+  {
+    message: { content: (t) => t("tips.invite") },
+    disabled: ["help", "invite", "links"],
+  },
 ];

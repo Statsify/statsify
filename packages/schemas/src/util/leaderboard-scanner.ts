@@ -73,17 +73,22 @@ export class LeaderboardScanner {
     if (!additionalKey.startsWith("this.")) return additionalKey;
 
     const fieldParts = field.split(".");
+    fieldParts.pop();
 
     const additionalFieldParts = additionalKey.split(".").slice(1);
     const ending = additionalFieldParts.pop();
 
-    if (!additionalFieldParts.length)
-      return [...fieldParts.slice(0, -1), ending].join(".");
+    if (!additionalFieldParts.length) return [...fieldParts, ending].join(".");
 
     const splitIndex = fieldParts.findIndex((part) =>
       additionalFieldParts.includes(part)
     );
 
-    return [...fieldParts.slice(0, splitIndex + 1), ending].join(".");
+    if (splitIndex === -1)
+      return [...fieldParts, ...additionalFieldParts, ending].join(".");
+
+    return [...fieldParts.slice(0, splitIndex), ...additionalFieldParts, ending].join(
+      "."
+    );
   }
 }
