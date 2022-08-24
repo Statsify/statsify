@@ -48,6 +48,15 @@
       "cwd": "${workspaceFolder}",
       "runtimeArgs": ["verify-server", "start"],
       "outputCapture": "std"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Prod API",
+      "runtimeExecutable": "yarn",
+      "cwd": "${workspaceFolder}",
+      "runtimeArgs": ["api", "prod-start"],
+      "outputCapture": "std"
     }
   ]
 }
