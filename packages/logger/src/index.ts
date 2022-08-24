@@ -10,6 +10,10 @@ import * as Sentry from "@sentry/node";
 import chalk from "chalk";
 import { DateTime } from "luxon";
 import { config } from "@statsify/util";
+import { existsSync } from "node:fs";
+import { inspect } from "node:util";
+import { join as joinPath } from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
 import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/common";
 export const defaultLogLevels: LogLevel[] = ["log", "error", "warn", "debug", "verbose"];
 
@@ -23,12 +27,17 @@ export const STATUS_COLORS = {
 
 const isProduction = config("environment") === "prod";
 
+process.on("warning", (warning) => {
+  new Logger("Warning").warn(warning);
+});
+
 /**
  * A logger implementing the NestJS LoggerService interface. However can be used anywhere.
  * Outputs: {icon} {context} {time} {message}
  * @implements {LoggerService}
  */
 export class Logger implements LoggerService {
+  private logDir: string;
   private originalContext?: string;
   private static lastTimeStampAt?: number;
 
@@ -40,6 +49,12 @@ export class Logger implements LoggerService {
       this.options.logLevels = defaultLogLevels;
     }
 
+    this.logDir = config("logger.logDir", { default: "logs" }) as string;
+
+    if (!existsSync(this.logDir)) {
+      mkdir(this.logDir);
+    }
+
     if (context) {
       this.originalContext = context;
     }
@@ -48,10 +63,6 @@ export class Logger implements LoggerService {
   public log(message: any, context?: string): void;
   public log(message: any, ...optionalParams: [...any, string?]): void;
   public log(message: any, ...optionalParams: any[]) {
-    if (!this.isLevelEnabled("log")) {
-      return;
-    }
-
     const { messages, context } = this.getContextAndMessages([
       message,
       ...optionalParams,
@@ -63,10 +74,6 @@ export class Logger implements LoggerService {
   public error(message: any, context?: string): void;
   public error(message: any, ...optionalParams: [...any, string?]): void;
   public error(message: any, ...optionalParams: any[]) {
-    if (!this.isLevelEnabled("error")) {
-      return;
-    }
-
     if (message instanceof Error) {
       const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
       transaction?.setStatus("internal_error");
@@ -86,10 +93,6 @@ export class Logger implements LoggerService {
   public warn(message: any, context?: string): void;
   public warn(message: any, ...optionalParams: [...any, string?]): void;
   public warn(message: any, ...optionalParams: any[]) {
-    if (!this.isLevelEnabled("warn")) {
-      return;
-    }
-
     const { messages, context } = this.getContextAndMessages([
       message,
       ...optionalParams,
@@ -101,10 +104,6 @@ export class Logger implements LoggerService {
   public debug(message: any, context?: string): void;
   public debug(message: any, ...optionalParams: [...any, string?]): void;
   public debug(message: any, ...optionalParams: any[]) {
-    if (!this.isLevelEnabled("debug")) {
-      return;
-    }
-
     const { messages, context } = this.getContextAndMessages([
       message,
       ...optionalParams,
@@ -116,10 +115,6 @@ export class Logger implements LoggerService {
   public verbose(message: any, context?: string): void;
   public verbose(message: any, ...optionalParams: [...any, string?]): void;
   public verbose(message: any, ...optionalParams: any[]): void {
-    if (!this.isLevelEnabled("verbose")) {
-      return;
-    }
-
     const { messages, context } = this.getContextAndMessages([
       message,
       ...optionalParams,
@@ -200,11 +195,21 @@ export class Logger implements LoggerService {
     writeStreamType: "stdout" | "stderr" = "stdout",
     icon = "📈"
   ) {
+    if (!this.isLevelEnabled(logLevel)) {
+      return;
+    }
     const color = this.getColorByLogLevel(logLevel);
 
     messages.forEach((message) => {
-      const output = typeof message === "object" ? JSON.stringify(message) : message;
+      const output =
+        typeof message === "object" ? inspect(message, { depth: 3 }) : message;
       const timeStamp = this.getTimeStamp();
+
+      writeFile(
+        joinPath(this.logDir, `${context}-${writeStreamType}.log`),
+        `${timeStamp}${isProduction ? "" : "ms"} - ${output}\n`,
+        { flag: "a" }
+      );
 
       const computedMessage = `${chalk.bold`${icon}`} ${chalk.hex(color.toString(16))(
         context

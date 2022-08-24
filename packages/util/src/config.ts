@@ -227,6 +227,13 @@ export interface Config {
     tracesSampleRate?: number;
   };
 
+  logger?: {
+    /**
+     * Output directory of logs
+     */
+    logDir?: string;
+  };
+
   /**
    * The current environment the bot is running in
    * @example dev

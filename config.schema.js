@@ -69,5 +69,8 @@ module.exports = {
     supportBotDsn: "",
     tracesSampleRate: 1,
   },
+  logger: {
+    logDir: "./",
+  },
   environment: "dev",
 };

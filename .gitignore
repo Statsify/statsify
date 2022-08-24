@@ -17,5 +17,6 @@ package-lock.json
 .next
 .
 coverage
+logs
 apps/discord-bot/commands.json
 apps/support-bot/commands.json
