@@ -24,8 +24,6 @@ module.exports = {
       cron_restart,
       exp_backoff_restart_delay,
       env,
-      exec_mode: "cluster",
-      instances: 4,
     },
     {
       name: "discord-bot",
