@@ -9,9 +9,9 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@nestjs/common": "^9.0.1",
-    "@nestjs/swagger": "^6.0.1",
-    "@sentry/node": "^7.5.1",
+    "@nestjs/common": "^9.0.11",
+    "@nestjs/swagger": "^6.0.5",
+    "@sentry/node": "^7.11.1",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",

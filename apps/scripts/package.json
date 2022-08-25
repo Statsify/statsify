@@ -20,13 +20,13 @@
     "@swc/core": "^1.2.205",
     "chalk": "^5.0.1",
     "chokidar": "^3.5.3",
-    "inquirer": "^9.0.0",
-    "ioredis": "^5.1.0",
+    "inquirer": "^9.1.0",
+    "ioredis": "^5.2.3",
     "skia-canvas": "^0.9.30",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb",
     "toad-scheduler": "^1.6.1"
   },
   "devDependencies": {
-    "@types/inquirer": "^9.0.0"
+    "@types/inquirer": "^9.0.1"
   }
 }

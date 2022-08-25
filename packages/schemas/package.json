@@ -11,10 +11,10 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@nestjs/swagger": "^6.0.1",
+    "@nestjs/swagger": "^6.0.5",
     "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@typegoose/typegoose": "^9.10.1"
+    "@typegoose/typegoose": "^9.11.2"
   }
 }
