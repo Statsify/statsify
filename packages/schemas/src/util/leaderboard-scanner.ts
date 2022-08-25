@@ -54,7 +54,7 @@ export class LeaderboardScanner {
 
     leaderboard.default = store.default;
 
-    if (leaderboard.additionalFields?.length) {
+    if (Array.isArray(leaderboard.additionalFields)) {
       leaderboard.additionalFields = leaderboard.additionalFields.map(
         this.parseAdditionalFields.bind(this, key)
       );
