@@ -239,7 +239,7 @@
     }
   },
   "cooldown": {
-    "description": "Please wait `{{time}}` before reusing `{{command}}`.\n\nLearn how to reduce cooldowns [here](https://statsify.net/premium)",
+    "description": "`{{command}}`を再使用する前に`{{time}}`をお待ちください。\n\nクールダウンを減らす方法を[ここ](https://statsify.net/premium)から獲得できます",
     "title": "Active Cooldown"
   },
   "embeds": {
@@ -405,7 +405,7 @@
       "title": "Leaderboard Not Found"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account.",
+      "description": "<@{{tag}}> は **認証済み**ではありません。アカウントを確認するには、<@{{tag}}>が `/verify` を実行する必要があります。",
       "title": "Missing Verification"
     },
     "missingPlayerVerification": {
@@ -458,8 +458,8 @@
       "title": "Invalid Guild"
     },
     "premiumRequired": {
-      "description": "Check out all the available features [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what command does/changes.",
+      "description": "利用可能なすべての機能を[ここ](https://statsify.net/premium)から確認しましょう",
+      "preview": "利用可能なすべての機能を[ここ](https://statsify.net/premium)から確認してください。以下に、どのような変更があるかの小さいプレビューがあります。",
       "title": "Statsify {{tier}} is required to run this command"
     },
     "staffOnly": {
@@ -476,7 +476,7 @@
       "title": "Ticket Already Exists"
     },
     "unknown": {
-      "description": "Something went wrong, please try again later. If this persists, report this in our [Discord](<https://statsify.net/discord>).",
+      "description": "問題が発生しました。後でもう一度お試しください。問題が解決しない場合は、 [我々のDiscordサーバー](<https://statsify.net/discord>) に参加して報告してください。",
       "title": "An Unknown Error Occurred"
     },
     "unsupportedFileType": {
@@ -750,8 +750,8 @@
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
-    "invite": "$t(emojis:socials.discord) Click **[here](<https://statsify.net/invite>)** to invite Statsify to your own server!",
-    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** offers additional features such as personalized profile badges. Find the full list of benefits **[here](<https://statsify.net/premium>)**!",
+    "invite": "$t(emojis:socials.discord) **[ここ](<https://statsify.net/invite>)**をクリックして、Statisifyをあなたのサーバーに招待しよう！",
+    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** にはプロフィールのカスタムバッチなどの追加機能があります。 **[ここ](<https://statsify.net/premium>)**から全ての特典を確認できます！",
     "rankings": "$t(emojis:logos.iron) View your top leaderboard positions with **[Statsify Premium](<https://statsify.net/premium>)** by using `/rankings`",
     "verify": "$t(emojis:check) Run `/verify` to run commands without inputting your username as well as receive **10% lower cooldowns**"
   },
