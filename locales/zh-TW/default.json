@@ -9,7 +9,7 @@
     "mojang-player": "一個當個創世神的使用者名稱或是UUID",
     "number": "一個數字",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "選擇一個要查看排行榜",
+    "player-leaderboard": "Choose a leaderboard",
     "reason": "The reason for closing the support ticket",
     "server": "一個當個創世神的伺服器名稱或是IP",
     "tags-content": "The content of the tag",

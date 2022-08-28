@@ -9,7 +9,7 @@
     "mojang-player": "Minecraft kullanıcı adı veya UUID'si",
     "number": "Bir sayı",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Görüntülenecek leaderboard istatistiği seçin",
+    "player-leaderboard": "Choose a leaderboard",
     "reason": "The reason for closing the support ticket",
     "server": "Bir Minecraft sunucu adı veya IP'si",
     "tags-content": "The content of the tag",

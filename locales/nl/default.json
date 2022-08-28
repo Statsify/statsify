@@ -9,7 +9,7 @@
     "mojang-player": "Een Minecraft gebruikersnaam of UUID",
     "number": "Een getal",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Kies een leaderboard statistiek om te bekijken",
+    "player-leaderboard": "Choose a leaderboard",
     "reason": "The reason for closing the support ticket",
     "server": "Een Minecraft servernaam of het IP van een server",
     "tags-content": "The content of the tag",
