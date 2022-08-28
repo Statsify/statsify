@@ -9,7 +9,7 @@
     "mojang-player": "Ett Minecraft användarnamn eller UUID",
     "number": "Ett siffra",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Välj en rankningslista att visa",
+    "player-leaderboard": "Choose a leaderboard",
     "reason": "The reason for closing the support ticket",
     "server": "Ett Minecraft servernamn eller en server IP",
     "tags-content": "The content of the tag",
