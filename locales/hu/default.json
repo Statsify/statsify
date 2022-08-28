@@ -9,7 +9,7 @@
     "mojang-player": "Egy Minecraft felhasználónév vagy UUID",
     "number": "Egy szám",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Válassz egy toplista kategóriát",
+    "player-leaderboard": "Choose a leaderboard",
     "reason": "The reason for closing the support ticket",
     "server": "Egy Minecraft szerver név vagy egy szerver IP",
     "tags-content": "The content of the tag",
