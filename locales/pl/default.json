@@ -32,7 +32,7 @@
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Zobacz czyjeś Peleryny Minecraft oraz Optifine",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
-    "quests-command": "View your {{name}} questing stats",
+    "quests-command": "Zobacz statystyki zadań {{name}}",
     "quests": "$t(commands.hypixel-command, { \"name\": \"Questing\" })",
     "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
     "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
@@ -94,7 +94,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "Zobacz tablice wyników dla statystyk z {{name}}",
+    "leaderboard-command": "View {{name}} leaderboards",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -507,7 +507,7 @@
     },
     "playerInput": {
       "label": "Szukaj poprzez gracza",
-      "placeholder": "Wprowadź nazwę gracza, np. j4cobi"
+      "placeholder": "Wprowadź nazwę gracza, np. DownSyndromeKid"
     },
     "positionInput": {
       "label": "Szukaj według pozycji",

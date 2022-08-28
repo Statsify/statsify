@@ -59,8 +59,10 @@ export abstract class LeaderboardService {
 
         pipeline.zadd(key, value, id);
 
-        if (metadata.leaderboard.enabled && metadata.leaderboard.resetEvery)
-          pipeline.expireat(key, this.getLeaderboardExpiryTime(metadata.leaderboard));
+        if (metadata.leaderboard.enabled && metadata.leaderboard.resetEvery) {
+          const time = this.getLeaderboardExpiryTime(metadata.leaderboard);
+          pipeline.expireat(key, time);
+        }
       });
 
     await pipeline.exec();
@@ -300,7 +302,8 @@ export abstract class LeaderboardService {
     if (!leaderboard.resetEvery)
       throw new Error("To get a leaderboard expiry time, `resetEvery` must be specified");
 
-    if (leaderboard.resetEvery === "day") return DateTime.now().endOf("day").toMillis();
+    if (leaderboard.resetEvery === "day")
+      return Math.ceil(DateTime.now().endOf("day").toSeconds());
 
     const now = new Date();
     const dayIndex = DAYS_IN_WEEK[leaderboard.resetEvery];
@@ -309,6 +312,6 @@ export abstract class LeaderboardService {
     now.setDate(now.getDate() + ((dayIndex - now.getDay() + 7) % 7) + 1);
     now.setHours(0, 0, 0, 0);
 
-    return now.getTime();
+    return Math.ceil(now.getTime() / 1000);
   }
 }

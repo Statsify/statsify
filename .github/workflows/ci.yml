@@ -31,7 +31,7 @@ jobs:
 
       - name: Turbo cache
         id: turbo-cache
-        uses: actions/cache@a7c34adf76222e77931dedbf4a45b2e4648ced19 # tag=v3
+        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77 # tag=v3
         with:
           path: .turbo
           key: turbo-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
@@ -40,7 +40,7 @@ jobs:
 
       - name: Cache node_modules
         id: yarn-cache
-        uses: actions/cache@a7c34adf76222e77931dedbf4a45b2e4648ced19 # tag=v3
+        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77 # tag=v3
         with:
           path: '**/node_modules'
           key: yarn-deps-${{ hashFiles('**/yarn.lock') }}
@@ -55,7 +55,7 @@ jobs:
         run: yarn lint
 
       - name: Commit Lint
-        uses: EndBug/add-and-commit@998652d28d7702d095d40f52ae42982a80ae8c7d # tag=v9
+        uses: EndBug/add-and-commit@d4d066316a2a85974a05efb42be78f897793c6d9 # tag=v9
         with:
           default_author: github_actions
           message: 'style(lint): lint project'
