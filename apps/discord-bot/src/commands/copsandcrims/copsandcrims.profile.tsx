@@ -28,10 +28,7 @@ export const CopsAndCrimsProfile = ({
 }: CopsAndCrimsProfileProps) => {
   const { copsandcrims } = player.stats;
 
-  const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(copsandcrims.coins), "§6"],
-    [t("stats.overallWins"), t(copsandcrims.wins), "§a"],
-  ];
+  const sidebar: SidebarItem[] = [[t("stats.coins"), t(copsandcrims.coins), "§6"]];
 
   let table: JSX.Element;
 
@@ -77,6 +74,7 @@ export const CopsAndCrimsProfile = ({
 
       break;
     }
+    case "overall":
     case "deathmatch": {
       const stats = copsandcrims[mode.api];
 
@@ -133,6 +131,7 @@ export const CopsAndCrimsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.COPS_AND_CRIMS} §fStats §r(${mode.formatted})`}
+        description={`§7${t("stats.prefix")}: ${copsandcrims.naturalPrefix}`}
         time={time}
       />
       {table}

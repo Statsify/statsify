@@ -45,7 +45,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.ARENA_BRAWL,
-      extraDisplay: "stats.arenabrawl.naturalPrefix",
+      extraDisplay: "this.arenabrawl.naturalPrefix",
     },
   })
   public arenabrawl: ArenaBrawl;
@@ -53,7 +53,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.BEDWARS,
-      extraDisplay: "stats.bedwars.levelFormatted",
+      extraDisplay: "this.bedwars.levelFormatted",
     },
   })
   public bedwars: BedWars;
@@ -61,7 +61,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.BLITZSG,
-      extraDisplay: "stats.blitzsg.naturalPrefix",
+      extraDisplay: "this.blitzsg.naturalPrefix",
     },
   })
   public blitzsg: BlitzSG;
@@ -69,7 +69,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.BUILD_BATTLE,
-      extraDisplay: "stats.buildbattle.titleFormatted",
+      extraDisplay: "this.buildbattle.titleFormatted",
     },
   })
   public buildbattle: BuildBattle;
@@ -77,7 +77,12 @@ export class PlayerStats {
   @Field({ leaderboard: { name: "", fieldName: "§aChallenges§r" } })
   public challenges: Challenges;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.COPS_AND_CRIMS } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.COPS_AND_CRIMS,
+      extraDisplay: "this.copsandcrims.naturalPrefix",
+    },
+  })
   public copsandcrims: CopsAndCrims;
 
   @Field({ leaderboard: { fieldName: `${FormattedGame.DUELS} -` } })
@@ -95,7 +100,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.PAINTBALL,
-      extraDisplay: "stats.paintball.naturalPrefix",
+      extraDisplay: "this.paintball.naturalPrefix",
     },
   })
   public paintball: Paintball;
@@ -106,7 +111,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.PIT,
-      extraDisplay: "stats.pit.levelFormatted",
+      extraDisplay: "this.pit.levelFormatted",
     },
   })
   public pit: Pit;
@@ -114,7 +119,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.QUAKE,
-      extraDisplay: "stats.quake.naturalPrefix",
+      extraDisplay: "this.quake.naturalPrefix",
     },
   })
   public quake: Quake;
@@ -125,7 +130,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.SKYWARS,
-      extraDisplay: "stats.skywars.levelFormatted",
+      extraDisplay: "this.skywars.levelFormatted",
     },
   })
   public skywars: SkyWars;
@@ -133,7 +138,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.SMASH_HEROES,
-      extraDisplay: "stats.smashheroes.levelFormatted",
+      extraDisplay: "this.smashheroes.levelFormatted",
     },
   })
   public smashheroes: SmashHeroes;
@@ -141,7 +146,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.SPEED_UHC,
-      extraDisplay: "stats.speeduhc.levelFormatted",
+      extraDisplay: "this.speeduhc.levelFormatted",
     },
   })
   public speeduhc: SpeedUHC;
@@ -152,7 +157,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.TURBO_KART_RACERS,
-      extraDisplay: "stats.turbokartracers.naturalPrefix",
+      extraDisplay: "this.turbokartracers.naturalPrefix",
     },
   })
   public turbokartracers: TurboKartRacers;
@@ -160,7 +165,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.UHC,
-      extraDisplay: "stats.uhc.levelFormatted",
+      extraDisplay: "this.uhc.levelFormatted",
     },
   })
   public uhc: UHC;
@@ -175,7 +180,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.WALLS,
-      extraDisplay: "stats.walls.naturalPrefix",
+      extraDisplay: "this.walls.naturalPrefix",
     },
   })
   public walls: Walls;
@@ -186,7 +191,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.WOOLWARS,
-      extraDisplay: "stats.woolwars.levelFormatted",
+      extraDisplay: "this.woolwars.levelFormatted",
     },
   })
   public woolwars: WoolWars;

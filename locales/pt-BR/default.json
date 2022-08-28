@@ -1,6 +1,6 @@
 {
   "arguments": {
-    "choice": "Selecione uma opção",
+    "choice": "Escolha uma opção",
     "file": "Envie um arquivo",
     "gtbhelper": "A dica atual",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
@@ -32,6 +32,11 @@
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Exibe capas do Optifine e do Minecraft de alguém",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
+    "quests-command": "Exibe suas estatísticas de missões de {{name}}",
+    "quests": "$t(commands.hypixel-command, { \"name\": \"Questing\" })",
+    "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
+    "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
+    "quests-weekly": "$t(commands.quests-command, { \"name\": \"Weekly\" })",
     "close": "Close the current support ticket",
     "colors": "Uma lista de códigos de cores do Minecraft",
     "commands": "View Statsify command usage",
@@ -90,6 +95,7 @@
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
     "leaderboard-command": "Exibe pódios para as estatísticas de {{name}}",
+    "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
     "leaderboard-general": "$t(commands.leaderboard-command, { \"name\": \"General\" })",
@@ -99,6 +105,7 @@
     "leaderboard-parkour": "$t(commands.leaderboard-command, { \"name\": \"Parkour\" })",
     "leaderboard-pit": "$t(commands.leaderboard-command, { \"name\": \"Pit\" })",
     "leaderboard-quake": "$t(commands.leaderboard-command, { \"name\": \"Quake\" })",
+    "leaderboard-quests": "$t(commands.leaderboard-command, { \"name\": \"Quests\" })",
     "leaderboard-skywars": "$t(commands.leaderboard-command, { \"name\": \"SkyWars\" })",
     "leaderboard-smashheroes": "$t(commands.leaderboard-command, { \"name\": \"Smash Heroes\" })",
     "leaderboard-speeduhc": "$t(commands.leaderboard-command, { \"name\": \"Speed UHC\" })",
@@ -129,6 +136,7 @@
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
     "rankings-command": "Exibe suas melhores posições nos pódios de {{name}}",
+    "rankings-challenges": "$t(commands.rankings-command, { \"name\": \"Challenges\" })",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
     "rankings-general": "$t(commands.rankings-command, { \"name\": \"General\" })",
@@ -138,6 +146,7 @@
     "rankings-parkour": "$t(commands.rankings-command, { \"name\": \"Parkour\" })",
     "rankings-pit": "$t(commands.rankings-command, { \"name\": \"Pit\" })",
     "rankings-quake": "$t(commands.rankings-command, { \"name\": \"Quake\" })",
+    "rankings-quests": "$t(commands.rankings-command, { \"name\": \"Quests\" })",
     "rankings-skywars": "$t(commands.rankings-command, { \"name\": \"SkyWars\" })",
     "rankings-smashheroes": "$t(commands.rankings-command, { \"name\": \"Smash Heroes\" })",
     "rankings-speeduhc": "$t(commands.rankings-command, { \"name\": \"Speed UHC\" })",
@@ -210,7 +219,7 @@
   },
   "config": {
     "badge": {
-      "profile": "É assim que o seu selo ficará nos seus perfis",
+      "profile": "É assim que seu emblema de perfil ficará",
       "reset": "$t(emojis:config.reset) Seu emblema foi redefinido com sucesso.",
       "set": "$t(emojis:config.success) Seu emblema foi atualizado com sucesso.",
       "view": "$t(emojis:config.view) Seu emblema atual:"
@@ -742,7 +751,7 @@
   "tips": {
     "discord": "$t(emojis:socials.discord) Entre no nosso $t(socials.discord) e receba **menos 20% de tempo de espera** $t(emojis:heart)",
     "invite": "$t(emojis:socials.discord) Clique **[aqui](<https://statsify.net/invite>)** para convidar o Statsify para seu próprio servidor!",
-    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** oferece recursos adicionais como emblemas personalizados. Encontre a lista completa de benefícios **[aqui](<https://statsify.net/premium>)**!",
+    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** oferece recursos adicionais como emblemas de perfis personalizados. Encontre a lista completa de benefícios **[aqui](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Veja suas posições nos pódios com **[Statsify Premium](<https://statsify.net/premium>)** usando `/rankings`",
     "verify": "$t(emojis:check) Execute `/verify` para executar comandos sem precisar inserir seu nome de usuário e receba **menos 10% de tempo de espera**"
   },

@@ -16,7 +16,7 @@ const TRANSLATORS = (
   [
     [":flag_cn:", "中文", ["LOSTED#8754", "! Tina<3.#4856", "wateTina#1399"]],
     [":flag_tw:", "繁體中文", ["LOSTED#8754", "Summer_Albert#6666", "wateTina#1399"]],
-    // [":flag_cz:", "Čeština", ["DavidCzPdy#7401", "Farmans#2226"]],
+    [":flag_cz:", "Čeština", ["DavidCzPdy#7401", "Farmans#2226"]],
     [":flag_nl:", "Nederlands", ["The Almighty One#3365", "Twen#8000"]],
     [":flag_fi:", "Suomi", ["Diyn#0420", "IDA#9999"]],
     [":flag_fr:", "Français", ["o3w#0095", "Pineapple#3046", "Skorlex#2962"]],
@@ -25,12 +25,15 @@ const TRANSLATORS = (
     [":flag_hu:", "Magyar", ["mustangk#1911", "royys#6623"]],
     [":flag_it:", "Italiano", ["ItsMassiGaming#4041", "Lorylol#5838"]],
     [":flag_no:", "Norsk", ["SiljeC#7027", "maiu#0010"]],
-    [":flag_pl:", "Polski", ["Down#3386"]],
+    [":flag_pl:", "Polski", ["Down#1111"]],
     [":flag_br:", "Português do Brasil", ["dainel#0413", "kane#3078", "eyz#0616"]],
-    // [":flag_ro:", "Română", ["prebowed#3392"]],
-    // [":flag_ru:", "Pусский", ["! Proofreader#3204", "unies#0001"]],
-    // [":flag_es:", "Español", ["cubic#0028", "Wxlter#7907"]],
+    [":flag_ro:", "Română", ["prebowed#3392"]],
+    [":flag_ru:", "Pусский", ["! Proofreader#3204", "unies#0001"]],
+    [":flag_es:", "Español", ["cubic#0028", "Wxlter#7907"]],
     [":flag_se:", "Svenska", ["loTen <orangerose>#4104", "IDA#9999"]],
+    [":flag_tr:", "Türkçe", ["Melongan#8305"]],
+    [":flag_th:", "ไทย", ["Zack#0420"]],
+    [":flag_vn:", "Tiếng Việt", ["ytui8#1818"]],
   ] as [flag: string, language: string, translators: string[]][]
 )
   .sort(([, a], [, b]) => a.localeCompare(b))

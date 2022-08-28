@@ -54,7 +54,7 @@ export class LeaderboardScanner {
 
     leaderboard.default = store.default;
 
-    if (leaderboard.additionalFields?.length) {
+    if (Array.isArray(leaderboard.additionalFields)) {
       leaderboard.additionalFields = leaderboard.additionalFields.map(
         this.parseAdditionalFields.bind(this, key)
       );
@@ -69,9 +69,26 @@ export class LeaderboardScanner {
     return leaderboard;
   }
 
-  private static parseAdditionalFields(field: string, additonalKey: string) {
-    return additonalKey.startsWith("this.")
-      ? additonalKey.replace("this", field.split(".").slice(0, -1).join("."))
-      : additonalKey;
+  private static parseAdditionalFields(field: string, additionalKey: string) {
+    if (!additionalKey.startsWith("this.")) return additionalKey;
+
+    const fieldParts = field.split(".");
+    fieldParts.pop();
+
+    const additionalFieldParts = additionalKey.split(".").slice(1);
+    const ending = additionalFieldParts.pop();
+
+    if (!additionalFieldParts.length) return [...fieldParts, ending].join(".");
+
+    const splitIndex = fieldParts.findIndex((part) =>
+      additionalFieldParts.includes(part)
+    );
+
+    if (splitIndex === -1)
+      return [...fieldParts, ...additionalFieldParts, ending].join(".");
+
+    return [...fieldParts.slice(0, splitIndex), ...additionalFieldParts, ending].join(
+      "."
+    );
   }
 }

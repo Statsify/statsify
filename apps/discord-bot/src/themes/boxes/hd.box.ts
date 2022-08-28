@@ -20,7 +20,8 @@ export const render: Render<Box.BoxRenderProps> = (
   },
   { x, y, width, height, padding }
 ) => {
-  Box.resolveFill(color, ctx, x, y, width, height);
+  const fill = Box.resolveFill(color, ctx, x, y, width, height);
+  ctx.fillStyle = fill;
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -92,7 +93,7 @@ export const render: Render<Box.BoxRenderProps> = (
   shadowDistance /= 2;
 
   ctx.globalAlpha = shadowOpacity - 0.3;
-  Box.resolveFill(color, ctx, x, y, width, height);
+  ctx.fillStyle = fill;
 
   ctx.fillRect(
     x + width,

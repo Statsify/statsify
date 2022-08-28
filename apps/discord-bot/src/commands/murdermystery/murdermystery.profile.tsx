@@ -190,22 +190,18 @@ export const MurderMysteryProfile = ({
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td
-              title={t("stats.infectedWins")}
-              value={t(stats.infectedWins)}
-              color="§a"
-            />
-            <Table.td
-              title={t("stats.killsAsInfected")}
-              value={t(stats.killsAsInfected)}
-              color="§2"
-            />
-          </Table.tr>
-          <Table.tr>
+            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
             <Table.td
               title={t("stats.survivorWins")}
               value={t(stats.survivorWins)}
               color="§e"
+            />
+          </Table.tr>
+          <Table.tr>
+            <Table.td
+              title={t("stats.killsAsInfected")}
+              value={t(stats.killsAsInfected)}
+              color="§2"
             />
             <Table.td
               title={t("stats.killsAsSurvivor")}
@@ -219,11 +215,6 @@ export const MurderMysteryProfile = ({
                 title={t("stats.lastAliveGames")}
                 value={t(stats.lastAliveGames)}
                 color="§b"
-              />
-              <Table.td
-                title={t("stats.bestTime")}
-                value={formatTime(stats.longestSurvivalTime)}
-                color="§3"
               />
             </Table.tr>
           </Historical.exclude>

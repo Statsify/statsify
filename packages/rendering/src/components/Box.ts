@@ -96,7 +96,8 @@ export const render: JSX.Render<BoxRenderProps> = (
   },
   { x, y, width, height, padding }
 ) => {
-  ctx.fillStyle = resolveFill(color, ctx, x, y, width, height);
+  const fill = resolveFill(color, ctx, x, y, width, height);
+  ctx.fillStyle = fill;
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -146,7 +147,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   if (!shadowDistance) return;
 
   ctx.globalAlpha = shadowOpacity;
-  resolveFill(color, ctx, x, y, width, height);
+  ctx.fillStyle = fill;
 
   ctx.beginPath();
   ctx.moveTo(x + width, y + shadowDistance + border.topRight);
