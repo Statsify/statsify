@@ -9,7 +9,7 @@
     "mojang-player": "Minecraft-käyttäjätunnus tai UUID",
     "number": "Numero",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Valitse näytettävä tulostaulukon tilasto",
+    "player-leaderboard": "Choose a leaderboard",
     "reason": "The reason for closing the support ticket",
     "server": "Minecraft-palvelimen nimi tai palvelimen IP-osoite",
     "tags-content": "The content of the tag",
