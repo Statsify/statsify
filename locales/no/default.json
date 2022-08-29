@@ -352,15 +352,15 @@
       "title": "Høyere nivå kreves"
     },
     "invalidGuild": {
-      "description_id": "A guild with the id of `{{tag}}` could not be found!",
-      "description_name": "A guild by the name of `{{tag}}` could not be found!",
-      "description_player": "A guild with the player `{{tag}}` could not be found!",
+      "description_id": "En guild med id `{{tag}}` kunne ikke bli funnet!",
+      "description_name": "En guild med navnet `{{tag}}` kunne ikke bli funnet!",
+      "description_player": "En guild med spilleren `{{tag}}` kunne ikke bli funnet!",
       "title": "Ugyldig guild"
     },
     "invalidPlayer": {
-      "description_username": "A player by the username of `{{tag}}` could not be found!",
-      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
-      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
+      "description_username": "En spiller med brukernavnet `{{tag}}` kunne ikke bli funnet!",
+      "description_uuid": "En spiller med UUID `{{tag}}` kunne ikke bli funnet!",
+      "description_discordId": "En spiller med discord-id `{{tag}}` kunne ikke bli funnet!",
       "title": "Ugyldig spiller"
     },
     "invalidResetTime": {
@@ -746,7 +746,7 @@
     "woolCaptures": "Ull fanget",
     "woolPlaced": "Ull plassert",
     "zombieKills": "Zombiedrap",
-    "potionsBrewed": "Potions Brewed"
+    "potionsBrewed": "Eliksir brygget"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Bli med i vår **$t(socials.discord)** og få **20% kortere cooldowns** $t(emojis:heart)",
