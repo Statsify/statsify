@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { Progression } from "../../../progression";
-import { SkyWarsMode } from "./mode";
+import { Field } from "#metadata";
+import { GameModes, IGameModes } from "#game";
+import { Progression } from "#progression";
+import { SkyWarsMode } from "./mode.js";
 import { add } from "@statsify/math";
-import { getFormattedLevel, getLevel, getLevelProgress, parseKit } from "./util";
+import { getFormattedLevel, getLevel, getLevelProgress, parseKit } from "./util.js";
+import type { APIData } from "@statsify/util";
 
 export const SKYWARS_MODES = new GameModes([
   { api: "overall" },
@@ -150,4 +150,4 @@ export class SkyWars {
   }
 }
 
-export * from "./mode";
+export * from "./mode.js";

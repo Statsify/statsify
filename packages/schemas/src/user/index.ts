@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field } from "../metadata";
-import { UserFooter, UserLogo } from "./footer";
-import { UserTheme } from "./theme";
+import { Field } from "#metadata";
+import { UserFooter, UserLogo } from "./footer.js";
+import { UserTheme } from "./theme.js";
 import { prettify } from "@statsify/util";
 
 export enum UserTier {
@@ -133,5 +133,5 @@ export class User {
   }
 }
 
-export * from "./theme";
-export * from "./footer";
+export * from "./theme.js";
+export * from "./footer.js";

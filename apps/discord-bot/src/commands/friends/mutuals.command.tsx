@@ -14,7 +14,7 @@ import {
   PaginateService,
   PlayerArgument,
 } from "@statsify/discord";
-import { Mutual, MutualsProfile } from "./mutuals.profile";
+import { Mutual, MutualsProfile } from "./mutuals.profile.js";
 import { arrayGroup } from "@statsify/util";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";

@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type * as JSX from "../jsx";
+import type * as JSX from "../jsx/index.js";
 import type { CanvasRenderingContext2D } from "skia-canvas";
-import type { DeferredGradient } from "../hooks";
+import type { DeferredGradient } from "../hooks/index.js";
 
 export interface BoxBorderRadius {
   topLeft: number;

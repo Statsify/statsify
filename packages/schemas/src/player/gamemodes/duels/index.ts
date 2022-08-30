@@ -6,16 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
 import {
   BridgeDuels,
   MultiPVPDuelsGameMode,
   SingleDuelsGameMode,
   SinglePVPDuelsGameMode,
   UHCDuels,
-} from "./mode";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+} from "./mode.js";
+import { Field } from "#metadata";
+import { GameModes, IGameModes } from "#game";
+import type { APIData } from "@statsify/util";
 
 export const DUELS_MODES = new GameModes([
   { api: "overall" },
@@ -178,4 +178,4 @@ export class Duels {
   }
 }
 
-export * from "./mode";
+export * from "./mode.js";

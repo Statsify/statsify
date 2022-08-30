@@ -14,7 +14,7 @@ import {
 } from "discord-api-types/v10";
 import { RestClient } from "tiny-discord";
 import { Service } from "typedi";
-import { parseDiscordResponse } from "../util/parse-discord-error";
+import { parseDiscordResponse } from "../util/parse-discord-error.js";
 
 @Service()
 export class ChannelService {

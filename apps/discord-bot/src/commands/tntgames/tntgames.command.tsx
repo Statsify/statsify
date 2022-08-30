@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command.js";
 import { Command } from "@statsify/discord";
 import { TNTGamesModes, TNT_GAMES_MODES } from "@statsify/schemas";
-import { TNTGamesProfile } from "./tntgames.profile";
+import { TNTGamesProfile } from "./tntgames.profile.js";
 
 @Command({ description: (t) => t("commands.tntgames") })
 export class TNTGamesCommand extends BaseHypixelCommand<TNTGamesModes> {

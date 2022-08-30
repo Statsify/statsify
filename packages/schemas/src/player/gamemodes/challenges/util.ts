@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { FieldOptions } from "../../../metadata";
+import type { FieldOptions } from "#metadata";
 
 export const challengeFieldData: FieldOptions = {
   leaderboard: {

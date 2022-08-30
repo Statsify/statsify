@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import axios, { AxiosInstance } from "axios";
 import { ApiService } from "@statsify/discord";
+import { AxiosInstance, default as axios } from "axios";
 import { Service } from "typedi";
 import { User } from "@statsify/schemas";
 import { randomUUID } from "node:crypto";

@@ -8,9 +8,9 @@
 
 import { Container, Footer, Header, Table } from "#components";
 import { DateTime } from "luxon";
-import { GexpTable } from "./gexp.table";
+import { GexpTable } from "./gexp.table.js";
 import { Guild } from "@statsify/schemas";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "../base.hypixel-command.js";
 
 export interface GuildMemberProfileProps extends Omit<BaseProfileProps, "time"> {
   guild: Guild;

@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from "typedi";
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
@@ -38,11 +37,12 @@ import {
   WOOLWARS_MODES,
 } from "@statsify/schemas";
 import { ApiService, Command, CommandContext, SubCommand } from "@statsify/discord";
-import { BaseLeaderboardCommand } from "./base.leaderboard-command";
+import { BaseLeaderboardCommand } from "./base.leaderboard-command.js";
+import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
-import { GuildLeaderboardArgument } from "./guild-leaderboard.argument";
-import { GuildLeaderboardSubCommand } from "./guild-leaderboard.subcommand";
-import { PlayerLeaderboardArgument } from "./player-leaderboard.argument";
+import { GuildLeaderboardArgument } from "./guild-leaderboard.argument.js";
+import { GuildLeaderboardSubCommand } from "./guild-leaderboard.subcommand.js";
+import { PlayerLeaderboardArgument } from "./player-leaderboard.argument.js";
 import { getBackground } from "@statsify/assets";
 
 @Command({

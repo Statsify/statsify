@@ -7,7 +7,6 @@
  */
 
 import { DateTime } from "luxon";
-import { ElementNode } from "@statsify/rendering";
 import { HistoricalType } from "@statsify/api-client";
 import { prettify } from "@statsify/util";
 
@@ -18,7 +17,7 @@ interface HistoricalHeaderProps {
   startTime?: DateTime;
   endTime?: DateTime;
   title: string;
-  sidebar?: ElementNode;
+  sidebar?: JSX.Element;
 }
 
 export const HistoricalHeader = ({

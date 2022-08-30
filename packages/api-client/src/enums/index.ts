@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./guild-query.enum";
-export * from "./historical-type.enum";
-export * from "./hypixel-cache.enum";
-export * from "./leaderboard-query.enum";
+export * from "./guild-query.enum.js";
+export * from "./historical-type.enum.js";
+export * from "./hypixel-cache.enum.js";
+export * from "./leaderboard-query.enum.js";

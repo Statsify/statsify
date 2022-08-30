@@ -7,12 +7,12 @@
  */
 
 import { ARENA_BRAWL_MODES, ArenaBrawlModes } from "@statsify/schemas";
-import { ArenaBrawlProfile } from "./arenabrawl.profile";
+import { ArenaBrawlProfile } from "./arenabrawl.profile.js";
 import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
+} from "../base.hypixel-command.js";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.arenabrawl") })

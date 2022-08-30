@@ -1,4 +1,14 @@
 {
   "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "#metadata": ["./src/metadata/index.js"],
+      "#game": ["./src/game/index.js"],
+      "#color": ["./src/color.js"],
+      "#progression": ["./src/progression.js"],
+      "#prefixes": ["./src/player/gamemodes/prefixes.js"]
+    }
+  },
   "include": ["src", "tests"]
 }

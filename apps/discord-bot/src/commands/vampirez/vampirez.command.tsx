@@ -10,10 +10,10 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
+} from "../base.hypixel-command.js";
 import { Command } from "@statsify/discord";
 import { VAMPIREZ_MODES, VampireZModes } from "@statsify/schemas";
-import { VampireZProfile } from "./vampirez.profile";
+import { VampireZProfile } from "./vampirez.profile.js";
 
 @Command({ description: (t) => t("commands.vampirez") })
 export class VampireZCommand extends BaseHypixelCommand<VampireZModes> {

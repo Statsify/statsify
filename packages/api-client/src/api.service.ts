@@ -8,13 +8,16 @@
 
 import * as Sentry from "@sentry/node";
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
-import {
+import { config } from "@statsify/util";
+import { loadImage } from "@statsify/rendering";
+import type {
   DeletePlayerResponse,
   GetCommandUsageResponse,
   GetFriendsResponse,
   GetGamecountsResponse,
   GetGuildResponse,
   GetHistoricalResponse,
+  GetHistoricalTimesResponse,
   GetKeyResponse,
   GetPlayerResponse,
   GetPlayerSearchResponse,
@@ -25,12 +28,14 @@ import {
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
   PutUserBadgeResponse,
-} from "./responses";
-import { GetHistoricalTimesResponse } from "./responses/get.historical-times.response";
-import { GuildQuery, HistoricalType, HypixelCache, LeaderboardQuery } from "./enums";
-import { UserFooter, UserTheme } from "@statsify/schemas";
-import { config } from "@statsify/util";
-import { loadImage } from "@statsify/rendering";
+} from "./responses/index.js";
+import type {
+  GuildQuery,
+  HistoricalType,
+  HypixelCache,
+  LeaderboardQuery,
+} from "./enums/index.js";
+import type { UserFooter, UserTheme } from "@statsify/schemas";
 
 interface ExtraData {
   headers?: AxiosRequestHeaders;

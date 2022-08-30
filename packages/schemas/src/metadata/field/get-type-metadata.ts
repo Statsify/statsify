@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { TypeMetadata } from "../metadata.interface";
-import { TypeOptions } from "../field.options";
-import { primitiveConstructors } from "../constants";
+import { PRIMITIVE_CONSTRUCTORS } from "../constants.js";
+import type { TypeMetadata } from "../metadata.interface.js";
+import type { TypeOptions } from "../field.options.js";
 
 export const getTypeMetadata = (
   typeOptions: TypeOptions | undefined,
@@ -23,13 +23,13 @@ export const getTypeMetadata = (
       return {
         type: type[0],
         array: true,
-        primitive: primitiveConstructors.includes(type[0]),
+        primitive: PRIMITIVE_CONSTRUCTORS.includes(type[0]),
       };
 
     return {
       type,
       array: false,
-      primitive: primitiveConstructors.includes(type),
+      primitive: PRIMITIVE_CONSTRUCTORS.includes(type),
     };
   }
 
@@ -38,6 +38,6 @@ export const getTypeMetadata = (
   return {
     type,
     array: false,
-    primitive: primitiveConstructors.includes(type),
+    primitive: PRIMITIVE_CONSTRUCTORS.includes(type),
   };
 };

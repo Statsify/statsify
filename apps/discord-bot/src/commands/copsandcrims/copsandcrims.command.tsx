@@ -10,10 +10,10 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
+} from "../base.hypixel-command.js";
 import { COPS_AND_CRIMS_MODES, CopsAndCrimsModes } from "@statsify/schemas";
 import { Command } from "@statsify/discord";
-import { CopsAndCrimsProfile } from "./copsandcrims.profile";
+import { CopsAndCrimsProfile } from "./copsandcrims.profile.js";
 
 @Command({ description: (t) => t("commands.copsandcrims") })
 export class CopsAndCrimsCommand extends BaseHypixelCommand<CopsAndCrimsModes> {

@@ -11,9 +11,9 @@ import {
   BaseProfileProps,
   ModeEmoji,
   ProfileData,
-} from "../base.hypixel-command";
+} from "../base.hypixel-command.js";
 import { CHALLENGE_MODES, ChallengeModes, GameId, GameMode } from "@statsify/schemas";
-import { ChallengesProfile } from "./challenges.profile";
+import { ChallengesProfile } from "./challenges.profile.js";
 import { Command } from "@statsify/discord";
 import { Image } from "skia-canvas";
 import { getAllGameIcons } from "@statsify/assets";

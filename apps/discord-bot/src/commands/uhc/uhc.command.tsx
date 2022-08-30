@@ -10,10 +10,10 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
+} from "../base.hypixel-command.js";
 import { Command } from "@statsify/discord";
 import { UHCModes, UHC_MODES } from "@statsify/schemas";
-import { UHCProfile } from "./uhc.profile";
+import { UHCProfile } from "./uhc.profile.js";
 
 @Command({ description: (t) => t("commands.uhc") })
 export class UHCCommand extends BaseHypixelCommand<UHCModes> {

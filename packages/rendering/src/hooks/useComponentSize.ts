@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ElementNode, getTotalSize } from "../jsx";
+import { type ElementNode, getTotalSize } from "../jsx/index.js";
 
 interface UseComponentSizeOptions {
   includeMargin?: boolean;

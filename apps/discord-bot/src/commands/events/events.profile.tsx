@@ -16,7 +16,7 @@ import {
   formatProgression,
   lineXpBar,
 } from "#components";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "../base.hypixel-command.js";
 import type { Event } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
 

@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CommandResolvable } from "./command.resolvable";
+import { CommandResolvable } from "./command.resolvable.js";
 import { Constructor } from "@statsify/util";
-import type { CommandMetadata, SubCommandMetadata } from "./command.interface";
+import type { CommandMetadata, SubCommandMetadata } from "./command.interface.js";
 
 export class CommandBuilder {
   public static scan<T>(target: T, constructor: Constructor<T>) {

@@ -6,17 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { Field } from "#metadata";
+import { GameModes, IGameModes } from "#game";
 import {
   GamePrefix,
   createPrefixProgression,
   defaultPrefix,
   getFormattedPrefix,
-} from "../prefixes";
-import { Progression } from "../../../progression";
+} from "#prefixes";
+import { Progression } from "#progression";
 import { add, ratio } from "@statsify/math";
+import type { APIData } from "@statsify/util";
 
 export const TURBO_KART_RACERS_MODES = new GameModes([{ api: "overall" }]);
 

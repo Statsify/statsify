@@ -7,11 +7,11 @@
  */
 
 import { HistoricalType } from "@statsify/api-client";
-import { If } from "../If";
+import { If } from "../If.js";
 import { LocalizeFunction } from "@statsify/discord";
-import { Progression } from "@statsify/schemas";
-import { Table } from "../Table";
-import { formatProgression } from "../Header/progression";
+import { Table } from "../Table/index.js";
+import { formatProgression } from "../Header/progression.js";
+import type { Progression } from "@statsify/schemas";
 
 export interface HistoricalProgressionProps {
   progression: Progression;

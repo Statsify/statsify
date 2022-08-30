@@ -6,7 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./base.message";
-export * from "./components";
-export * from "./embed";
-export type { LocalizationString, LocalizeFunction } from "./localize";
+export * from "./base.message.js";
+export * from "./components/index.js";
+export * from "./embed.js";
+export type { LocalizationString, LocalizeFunction } from "./localize.js";
+export {
+  getLocalizeFunction,
+  translateField,
+  translateObject,
+  translateToAllLanguages,
+} from "./localize.js";

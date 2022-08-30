@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import axios, { AxiosInstance } from "axios";
+import { AxiosInstance, default as axios } from "axios";
 import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
-import { Server } from "./server.interface";
-import { ServerArgument } from "./server.argument";
-import { ServerProfile } from "./server.profile";
+import { ServerArgument } from "./server.argument.js";
+import { ServerProfile } from "./server.profile.js";
 import { getBackground, getServerMappings } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { loadImage } from "skia-canvas";
 import { render } from "@statsify/rendering";
+import type { Server } from "./server.interface.js";
 
 const servers = getServerMappings();
 

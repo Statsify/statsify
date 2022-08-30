@@ -17,7 +17,7 @@ import {
 } from "#components";
 import { FormattedGame } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "../base.hypixel-command.js";
 
 export const PitProfile = ({
   background,

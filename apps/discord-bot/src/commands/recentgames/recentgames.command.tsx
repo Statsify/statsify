@@ -13,7 +13,7 @@ import {
   PaginateService,
   PlayerArgument,
 } from "@statsify/discord";
-import { RecentGamesProfile } from "./recentgames.profile";
+import { RecentGamesProfile } from "./recentgames.profile.js";
 import { arrayGroup } from "@statsify/util";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";

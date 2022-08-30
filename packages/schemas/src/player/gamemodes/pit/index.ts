@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, formatTime } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { Progression } from "../../../progression";
+import { type APIData, formatTime } from "@statsify/util";
+import { Field } from "#metadata";
+import { GameModes, IGameModes } from "#game";
+import { Progression } from "#progression";
 import { add, ratio } from "@statsify/math";
-import { getBounty, getLevel, getLevelFormatted, getPres, getPresReq } from "./util";
+import { getBounty, getLevel, getLevelFormatted, getPres, getPresReq } from "./util.js";
 
 export const PIT_MODES = new GameModes([
   { api: "overall", hypixel: "PIT", formatted: "Pit" },

@@ -7,12 +7,12 @@
  */
 
 import { ARCADE_MODES, ArcadeModes } from "@statsify/schemas";
-import { ArcadeProfile } from "./arcade.profile";
+import { ArcadeProfile } from "./arcade.profile.js";
 import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
+} from "../base.hypixel-command.js";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.arcade") })

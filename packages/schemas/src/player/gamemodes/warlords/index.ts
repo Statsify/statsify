@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { WarlordsClass } from "./class";
+import { Field } from "#metadata";
+import { GameModes, IGameModes } from "#game";
+import { WarlordsClass } from "./class.js";
 import { add, ratio, sub } from "@statsify/math";
+import type { APIData } from "@statsify/util";
 
 export const WARLORDS_MODES = new GameModes([
   { api: "overall" },
@@ -109,4 +109,4 @@ export class Warlords {
   }
 }
 
-export * from "./class";
+export * from "./class.js";

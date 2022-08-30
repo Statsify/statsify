@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { Progression } from "../../../progression";
-import { createPrefixProgression, defaultPrefix, getFormattedPrefix } from "../prefixes";
-import { humanPrefixes, vampirePrefixes } from "./prefixes";
+import { Field } from "#metadata";
+import { Progression } from "#progression";
+import { createPrefixProgression, defaultPrefix, getFormattedPrefix } from "#prefixes";
+import { humanPrefixes, vampirePrefixes } from "./prefixes.js";
 import { ratio } from "@statsify/math";
+import type { APIData } from "@statsify/util";
 
 export class VampireZHuman {
   @Field({ leaderboard: { fieldName: "Vampires Killed" } })

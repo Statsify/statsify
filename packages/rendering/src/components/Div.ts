@@ -7,7 +7,7 @@
  */
 
 import { noop } from "@statsify/util";
-import type * as JSX from "../jsx";
+import type * as JSX from "../jsx/index.js";
 
 export interface DivProps {
   width?: JSX.Measurement;

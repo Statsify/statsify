@@ -9,7 +9,7 @@
 import { Container, Footer, HeaderNametag, List, Skin } from "#components";
 import { Friend } from "@statsify/schemas";
 import { relativeTime } from "@statsify/util";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "../base.hypixel-command.js";
 import type { Image } from "skia-canvas";
 
 export type Mutual = Omit<Friend, "createdAt"> & {

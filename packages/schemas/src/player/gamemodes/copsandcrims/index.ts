@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { CopsAndCrimsOverall, Deathmatch, Defusal, GunGame } from "./mode";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { GamePrefix, defaultPrefix, getFormattedPrefix } from "../prefixes";
+import { CopsAndCrimsOverall, Deathmatch, Defusal, GunGame } from "./mode.js";
+import { Field } from "#metadata";
+import { GameModes, IGameModes } from "#game";
+import { GamePrefix, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { add } from "@statsify/math";
+import type { APIData } from "@statsify/util";
 
 export const COPS_AND_CRIMS_MODES = new GameModes([
   { api: "overall" },
@@ -114,4 +114,4 @@ export class CopsAndCrims {
   }
 }
 
-export * from "./mode";
+export * from "./mode.js";

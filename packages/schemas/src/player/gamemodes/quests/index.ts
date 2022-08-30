@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, UnwrapConstructor, removeFormatting } from "@statsify/util";
+import { type APIData, type UnwrapConstructor, removeFormatting } from "@statsify/util";
 import {
   ArcadeQuests,
   ArenaBrawlQuests,
@@ -30,10 +30,10 @@ import {
   WallsQuests,
   WarlordsQuests,
   WoolWarsQuests,
-} from "./modes";
-import { Field } from "../../../metadata";
-import { FormattedGame, GameModes, IGameModes } from "../../../game";
-import { QuestTime, createQuestsInstance } from "./util";
+} from "./modes/index.js";
+import { Field } from "#metadata";
+import { FormattedGame, GameModes, IGameModes } from "#game";
+import { QuestTime, createQuestsInstance } from "./util.js";
 
 export const QUEST_MODES = new GameModes([
   { api: "overall" },
@@ -154,4 +154,4 @@ export class Quests {
   }
 }
 
-export { QuestTime } from "./util";
+export { QuestTime } from "./util.js";

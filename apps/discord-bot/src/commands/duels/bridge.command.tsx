@@ -11,8 +11,8 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
-import { BridgeProfile } from "./bridge.profile";
+} from "../base.hypixel-command.js";
+import { BridgeProfile } from "./bridge.profile.js";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.bridge") })

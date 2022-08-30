@@ -13,11 +13,11 @@ import {
   GatewayDispatchEvents,
   InteractionResponseType,
 } from "discord-api-types/v10";
-import { CommandContext } from "./command.context";
-import { CommandResolvable } from "./command.resolvable";
-import { ErrorMessage } from "../util/error.message";
-import { IMessage, Message } from "../messages";
-import { Interaction, InteractionAttachment } from "../interaction";
+import { CommandContext } from "./command.context.js";
+import { CommandResolvable } from "./command.resolvable.js";
+import { ErrorMessage } from "../util/error.message.js";
+import { IMessage, Message } from "../messages/index.js";
+import { Interaction, InteractionAttachment } from "../interaction/index.js";
 import { Logger } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";

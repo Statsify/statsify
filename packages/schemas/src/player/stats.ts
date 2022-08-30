@@ -33,9 +33,9 @@ import {
   Walls,
   Warlords,
   WoolWars,
-} from "./gamemodes";
-import { Field } from "../metadata";
-import { FormattedGame } from "../game";
+} from "./gamemodes/index.js";
+import { Field } from "#metadata";
+import { FormattedGame } from "#game";
 import type { APIData } from "@statsify/util";
 
 export class PlayerStats {

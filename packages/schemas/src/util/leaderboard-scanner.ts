@@ -10,8 +10,8 @@ import { Constructor } from "@statsify/util";
 import {
   LeaderboardEnabledMetadata,
   LeaderboardMetadata,
-} from "../metadata/metadata.interface";
-import { MetadataScanner } from "../metadata";
+  MetadataScanner,
+} from "#metadata";
 
 export class LeaderboardScanner {
   public static getLeaderboardMetadata<T>(constructor: Constructor<T>) {

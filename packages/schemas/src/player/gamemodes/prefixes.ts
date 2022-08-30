@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Progression } from "../../progression";
+import { Progression } from "#progression";
 import { abbreviationNumber, findScoreIndex } from "@statsify/util";
 
 export type GamePrefix<T extends unknown[] = []> = {

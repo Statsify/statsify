@@ -13,8 +13,8 @@ import {
   removeFormatting,
 } from "@statsify/util";
 import { DateTime } from "luxon";
-import { Field } from "../../../metadata";
-import { FormattedGame } from "../../../game";
+import { Field } from "#metadata";
+import { FormattedGame } from "#game";
 
 interface Quest {
   completions?: { time: number }[];

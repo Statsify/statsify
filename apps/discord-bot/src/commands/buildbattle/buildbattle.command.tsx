@@ -7,8 +7,8 @@
  */
 
 import { BUILD_BATTLE_MODES, BuildBattleModes } from "@statsify/schemas";
-import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command";
-import { BuildBattleProfile } from "./buildbattle.profile";
+import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command.js";
+import { BuildBattleProfile } from "./buildbattle.profile.js";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.buildbattle") })

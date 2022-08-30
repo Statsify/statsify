@@ -6,5 +6,5 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./flatten";
-export * from "./unflatten";
+export * from "./flatten.js";
+export * from "./unflatten.js";

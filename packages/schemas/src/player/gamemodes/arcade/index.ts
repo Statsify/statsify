@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
 import {
   BlockingDead,
   BountyHunters,
@@ -26,9 +25,10 @@ import {
   Seasonal,
   ThrowOut,
   Zombies,
-} from "./mode";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+} from "./mode.js";
+import { Field } from "#metadata";
+import { GameModes, IGameModes } from "#game";
+import type { APIData } from "@statsify/util";
 
 export const ARCADE_MODES = new GameModes([
   { api: "overall" },
@@ -139,5 +139,5 @@ export class Arcade {
   }
 }
 
-export * from "./mode";
-export * from "./seasonal-mode";
+export * from "./mode.js";
+export * from "./seasonal-mode.js";

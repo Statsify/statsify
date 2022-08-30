@@ -13,11 +13,11 @@ import {
   IMessage,
   LocalizationString,
   Message,
-} from "../messages";
+} from "../messages/index.js";
 import { STATUS_COLORS } from "@statsify/logger";
 import { getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
-import type { InteractionAttachment } from "../interaction";
+import type { InteractionAttachment } from "../interaction/index.js";
 
 interface ErrorMessageOptions {
   color?: number;

@@ -6,27 +6,23 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export { METADATA_KEY } from "./metadata/constants";
-export * from "./color";
-export * from "./commands";
-export * from "./friends";
-export * from "./game";
-export * from "./gamecounts";
-export * from "./guild";
-export * from "./key";
-export * from "./metadata/deserialize";
-export * from "./metadata/metadata-scanner";
-export * from "./metadata/metadata.interface";
-export * from "./metadata/serialize";
-export * from "./player";
-export * from "./progression";
-export * from "./ratios";
-export * from "./recentgames";
-export * from "./skin";
-export * from "./status";
-export * from "./tags";
-export * from "./ticket";
-export * from "./user";
-export * from "./util/leaderboard-scanner";
-export * from "./verify-codes";
-export * from "./watchdog";
+export * from "#metadata";
+export * from "#color";
+export * from "./commands/index.js";
+export * from "./friends/index.js";
+export * from "#game";
+export * from "./gamecounts/index.js";
+export * from "./guild/index.js";
+export * from "./key/index.js";
+export * from "./player/index.js";
+export * from "#progression";
+export * from "./ratios.js";
+export * from "./recentgames/index.js";
+export * from "./skin/index.js";
+export * from "./status/index.js";
+export * from "./tags/index.js";
+export * from "./ticket/index.js";
+export * from "./user/index.js";
+export * from "./util/leaderboard-scanner.js";
+export * from "./verify-codes/index.js";
+export * from "./watchdog/index.js";

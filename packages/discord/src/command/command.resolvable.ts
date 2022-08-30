@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractArgument } from "../arguments";
+import { AbstractArgument } from "../arguments/index.js";
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
@@ -16,9 +16,9 @@ import {
   getLocalizeFunction,
   translateField,
   translateToAllLanguages,
-} from "../messages/localize";
-import type { CommandContext } from "./command.context";
-import type { CommandMetadata } from "./command.interface";
+} from "../messages/index.js";
+import type { CommandContext } from "./command.context.js";
+import type { CommandMetadata } from "./command.interface.js";
 
 export class CommandResolvable {
   public type:

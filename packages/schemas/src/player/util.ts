@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Color, ColorCode, ColorId } from "../color";
+import { Color, ColorCode, ColorId } from "#color";
 import type { APIData } from "@statsify/util";
 
-export const rankMap: Record<string, (color: string) => string> = {
+export const RANK_MAP: Record<string, (color: string) => string> = {
   "MVP+": (plusColor) => `§b[MVP${plusColor}+§b]`,
   "MVP++": (plusColor) => `§6[MVP${plusColor}++§6]`,
   "bMVP++": (plusColor) => `§b[MVP${plusColor}++§b]`,
@@ -26,114 +26,109 @@ export const rankMap: Record<string, (color: string) => string> = {
   DEFAULT: () => `§7`,
 };
 
-/**
- * A set of utility functions for getting things like `rank`, `displayName` and `plusColor`
- */
-export class PlayerUtil {
-  public static getRank(data: APIData) {
-    let rank = "DEFAULT";
+export function getRank(data: APIData) {
+  let rank = "DEFAULT";
 
-    if (data.monthlyPackageRank || data.packageRank || data.newPackageRank) {
-      if (data.monthlyPackageRank === "SUPERSTAR") {
-        rank = data.monthlyPackageRank;
+  if (data.monthlyPackageRank || data.packageRank || data.newPackageRank) {
+    if (data.monthlyPackageRank === "SUPERSTAR") {
+      rank = data.monthlyPackageRank;
 
-        if (data.monthlyRankColor && data.monthlyRankColor !== "GOLD") {
-          rank = `bMVP++`;
-        }
-      } else {
-        rank =
-          data.packageRank && data.newPackageRank
-            ? data.newPackageRank
-            : data.packageRank || data.newPackageRank;
+      if (data.monthlyRankColor && data.monthlyRankColor !== "GOLD") {
+        rank = `bMVP++`;
       }
+    } else {
+      rank =
+        data.packageRank && data.newPackageRank
+          ? data.newPackageRank
+          : data.packageRank || data.newPackageRank;
     }
-
-    if (data.rank && data.rank !== "NORMAL") {
-      rank = data.rank;
-    }
-
-    if (data.prefix) {
-      rank = data.prefix.replace(/§.|\[|]/g, "");
-    }
-
-    rank = this.replaceRank(rank);
-
-    return rank.length === 0 ? "DEFAULT" : rank;
   }
 
-  public static getPlusColor(rank: string, plusColor?: ColorId): Color {
-    const rankColorMap: Record<string, Color> = {
-      "MVP+": new Color("RED"),
-      "MVP++": new Color("RED"),
-      "bMVP++": new Color("RED"),
-      MVP: new Color("AQUA"),
-      VIP: new Color("GREEN"),
-      "VIP+": new Color("GOLD"),
-      "PIG+++": new Color("AQUA"),
-    };
+  if (data.rank && data.rank !== "NORMAL") {
+    rank = data.rank;
+  }
 
-    if (plusColor === undefined || rank === "PIG+++" || rank === "VIP") {
-      const rankColor: Color = rankColorMap[rank];
+  if (data.prefix) {
+    rank = data.prefix.replace(/§.|\[|]/g, "");
+  }
 
-      if (!rankColor) return new Color("GRAY");
+  rank = replaceRank(rank);
 
-      return rankColor;
-    }
+  return rank.length === 0 ? "DEFAULT" : rank;
+}
 
-    const rankColor = new Color(plusColor);
+export function getPlusColor(rank: string, plusColor?: ColorId): Color {
+  const rankColorMap: Record<string, Color> = {
+    "MVP+": new Color("RED"),
+    "MVP++": new Color("RED"),
+    "bMVP++": new Color("RED"),
+    MVP: new Color("AQUA"),
+    VIP: new Color("GREEN"),
+    "VIP+": new Color("GOLD"),
+    "PIG+++": new Color("AQUA"),
+  };
+
+  if (plusColor === undefined || rank === "PIG+++" || rank === "VIP") {
+    const rankColor: Color = rankColorMap[rank];
 
     if (!rankColor) return new Color("GRAY");
 
     return rankColor;
   }
 
-  public static getRankColor(rank: string): Color {
-    switch (rank) {
-      case "YOUTUBE":
-      case "ADMIN":
-      case "OWNER":
-      case "SLOTH":
-      case "MCP":
-      case "MINISTER":
-        return new Color("RED");
-      case "PIG+++":
-        return new Color("LIGHT_PURPLE");
-      case "MOD":
-      case "GM":
-        return new Color("DARK_GREEN");
-      case "HELPER":
-        return new Color("BLUE");
-      case "BUILD TEAM":
-        return new Color("DARK_AQUA");
-      case "MVP++":
-      case "APPLE":
-      case "MOJANG":
-        return new Color("GOLD");
-      case "MVP":
-      case "MVP+":
-      case "bMVP++":
-        return new Color("AQUA");
-      case "VIP":
-      case "VIP+":
-        return new Color("GREEN");
-      default:
-        return new Color("GRAY");
-    }
-  }
+  const rankColor = new Color(plusColor);
 
-  public static getDisplayName(username: string, rank: string, plusColor: ColorCode) {
-    const colorRank = rankMap[rank](plusColor);
-    return `${colorRank}${colorRank === "§7" ? "" : " "}${username}`;
-  }
+  if (!rankColor) return new Color("GRAY");
 
-  private static replaceRank(rank: string) {
-    return rank
-      .replace("SUPERSTAR", "MVP++")
-      .replace("VIP_PLUS", "VIP+")
-      .replace("MVP_PLUS", "MVP+")
-      .replace("MODERATOR", "MOD")
-      .replace("GAME_MASTER", "GM")
-      .replace("YOUTUBER", "YOUTUBE")
-      .replace("NONE", "");
+  return rankColor;
+}
+
+export function getRankColor(rank: string): Color {
+  switch (rank) {
+    case "YOUTUBE":
+    case "ADMIN":
+    case "OWNER":
+    case "SLOTH":
+    case "MCP":
+    case "MINISTER":
+      return new Color("RED");
+    case "PIG+++":
+      return new Color("LIGHT_PURPLE");
+    case "MOD":
+    case "GM":
+      return new Color("DARK_GREEN");
+    case "HELPER":
+      return new Color("BLUE");
+    case "BUILD TEAM":
+      return new Color("DARK_AQUA");
+    case "MVP++":
+    case "APPLE":
+    case "MOJANG":
+      return new Color("GOLD");
+    case "MVP":
+    case "MVP+":
+    case "bMVP++":
+      return new Color("AQUA");
+    case "VIP":
+    case "VIP+":
+      return new Color("GREEN");
+    default:
+      return new Color("GRAY");
   }
+}
+
+export function getDisplayName(username: string, rank: string, plusColor: ColorCode) {
+  const colorRank = RANK_MAP[rank](plusColor);
+  return `${colorRank}${colorRank === "§7" ? "" : " "}${username}`;
+}
+
+export function replaceRank(rank: string) {
+  return rank
+    .replace("SUPERSTAR", "MVP++")
+    .replace("VIP_PLUS", "VIP+")
+    .replace("MVP_PLUS", "MVP+")
+    .replace("MODERATOR", "MOD")
+    .replace("GAME_MASTER", "GM")
+    .replace("YOUTUBER", "YOUTUBE")
+    .replace("NONE", "");
 }

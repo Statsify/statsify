@@ -7,8 +7,8 @@
  */
 
 import { Constructor, Flatten } from "@statsify/util";
-import { FieldMetadata } from "./metadata.interface";
-import { MetadataScanner } from "./metadata-scanner";
+import { MetadataScanner } from "./metadata-scanner.js";
+import type { FieldMetadata } from "./metadata.interface.js";
 
 export const serialize = <T>(
   constructor: Constructor<T>,

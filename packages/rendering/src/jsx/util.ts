@@ -12,7 +12,7 @@ import type {
   Instruction,
   InstructionBiDirectional,
   Percent,
-} from "./types";
+} from "./types.js";
 
 export const toDecimal = (measurement: Percent | Fraction): number => {
   if (measurement.endsWith("%"))

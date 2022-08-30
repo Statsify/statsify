@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./i18n-loader.service";
-export * from "./paginate.service";
-export * from "./api.service";
-export * from "./message.service";
-export * from "./channel.service";
-export * from "./member.service";
-export * from "./guild.service";
+export * from "./i18n-loader.service.js";
+export * from "./paginate.service.js";
+export * from "./api.service.js";
+export * from "./message.service.js";
+export * from "./channel.service.js";
+export * from "./member.service.js";
+export * from "./guild.service.js";

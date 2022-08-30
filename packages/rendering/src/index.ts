@@ -8,13 +8,13 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-namespace */
-export * from "./colors";
-export * from "./font";
-export * from "./hooks";
-export * from "./jsx";
-export * from "./components";
+export * from "./colors/index.js";
+export * from "./font/index.js";
+export * from "./hooks/index.js";
+export * from "./jsx/index.js";
+export * from "./components/index.js";
 
-import type * as JSXInternal from "./jsx";
+import type * as JSXInternal from "./jsx/index.js";
 
 declare global {
   namespace JSX {

@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BasePropOptions } from "@typegoose/typegoose/lib/types";
-import { Constructor } from "@statsify/util";
-import { LeaderboardEnabledMetadata, StoreMetadata } from "./metadata.interface";
+import type { BasePropOptions } from "@typegoose/typegoose/lib/types";
+import type { Constructor } from "@statsify/util";
+import type { LeaderboardEnabledMetadata, StoreMetadata } from "./metadata.interface.js";
 
 export type TypeOptions = () => Constructor | [Constructor];
 export type LeaderboardOptions = Omit<

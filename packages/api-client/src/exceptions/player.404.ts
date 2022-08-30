@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { NotFoundException } from "./base.404";
+import { NotFoundException } from "./base.404.js";
 
 export class PlayerNotFoundException extends NotFoundException {
   public constructor() {

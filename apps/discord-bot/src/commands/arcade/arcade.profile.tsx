@@ -28,7 +28,7 @@ import {
   SeasonalTable,
   ThrowOutTable,
   ZombiesTable,
-} from "./tables";
+} from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem } from "#components";
 
 export interface ArcadeProfileProps extends BaseProfileProps {

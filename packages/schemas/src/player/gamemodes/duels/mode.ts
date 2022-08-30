@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, romanNumeral } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GamePrefix, createPrefixProgression } from "../prefixes";
-import { Progression } from "../../../progression";
-import { Title, getTitle, titleScores } from "./util";
+import { type APIData, romanNumeral } from "@statsify/util";
+import { Field } from "#metadata";
+import { GamePrefix, createPrefixProgression } from "#prefixes";
+import { Progression } from "#progression";
+import { Title, getTitle, titleScores } from "./util.js";
 import { deepAdd, ratio } from "@statsify/math";
 
 const getPrefixes = (titles: Title[]) =>

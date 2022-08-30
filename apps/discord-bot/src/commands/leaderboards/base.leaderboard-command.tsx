@@ -22,7 +22,7 @@ import {
   LeaderboardProfile,
   LeaderboardProfileProps,
   LeaderboardType,
-} from "./leaderboard.profile";
+} from "./leaderboard.profile.js";
 import { LeaderboardQuery, PostLeaderboardResponse } from "@statsify/api-client";
 import { User } from "@statsify/schemas";
 import { getLogo } from "@statsify/assets";

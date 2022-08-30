@@ -10,10 +10,10 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
+} from "../base.hypixel-command.js";
 import { Command } from "@statsify/discord";
 import { SMASH_HEROES_MODES, SmashHeroesModes } from "@statsify/schemas";
-import { SmashHeroesProfile } from "./smashheroes.profile";
+import { SmashHeroesProfile } from "./smashheroes.profile.js";
 
 @Command({ description: (t) => t("commands.smashheroes") })
 export class SmashHeroesCommand extends BaseHypixelCommand<SmashHeroesModes> {

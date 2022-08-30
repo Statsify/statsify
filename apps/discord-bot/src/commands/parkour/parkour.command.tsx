@@ -10,10 +10,10 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
+} from "../base.hypixel-command.js";
 import { Command } from "@statsify/discord";
 import { GameId, PARKOUR_MODES, ParkourModes } from "@statsify/schemas";
-import { ParkourProfile } from "./parkour.profile";
+import { ParkourProfile } from "./parkour.profile.js";
 import { getAllGameIcons } from "@statsify/assets";
 import type { Image } from "skia-canvas";
 

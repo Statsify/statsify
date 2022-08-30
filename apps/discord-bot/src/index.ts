@@ -7,15 +7,18 @@
  */
 
 import * as Sentry from "@sentry/node";
-import Container from "typedi";
 import { CommandListener } from "#lib/command.listener";
 import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
+import { Container } from "typedi";
 import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 import { Logger } from "@statsify/logger";
 import { config } from "@statsify/util";
+import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import "@sentry/tracing";
+
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 const logger = new Logger("discord-bot");
 const handleError = logger.error.bind(logger);

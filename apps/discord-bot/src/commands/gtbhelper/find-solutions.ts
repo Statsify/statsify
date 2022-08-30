@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import words from "../../../words.json";
+import words from "../../../words.json" assert { type: "json" };
 
 export const findSolutions = (hint: string, limit?: number) => {
   hint = hint.toLowerCase().replaceAll("_", "?");

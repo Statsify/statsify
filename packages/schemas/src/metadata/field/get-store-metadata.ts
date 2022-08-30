@@ -6,9 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Constructor } from "@statsify/util";
-import { LeaderboardMetadata, StoreMetadata, TypeMetadata } from "../metadata.interface";
-import { StoreOptions } from "../field.options";
+import type { Constructor } from "@statsify/util";
+import type {
+  LeaderboardMetadata,
+  StoreMetadata,
+  TypeMetadata,
+} from "../metadata.interface.js";
+import type { StoreOptions } from "../field.options.js";
 
 const getDefaultValue = (type: Constructor) =>
   type === String ? "" : type === Number ? 0 : type === Boolean ? false : undefined;

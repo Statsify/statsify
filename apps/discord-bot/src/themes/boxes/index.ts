@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as HDBox from "./hd.box";
-import * as UHDBox from "./uhd.box";
-import { Box, Render } from "@statsify/rendering";
+import * as HDBox from "./hd.box.js";
+import * as UHDBox from "./uhd.box.js";
+import { Box, type Render } from "@statsify/rendering";
 import { UserBoxes } from "@statsify/schemas";
 
 export function getBoxRenderer(boxes: UserBoxes): Render<Box.BoxRenderProps> {

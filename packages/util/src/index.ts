@@ -229,6 +229,6 @@ export const wordGroup = (
   return wordGroup(input.slice(Math.max(0, nextIndex)), wordCount, list);
 };
 
-export * from "./flat";
-export * from "./minecraft-colors";
-export * from "./config";
+export * from "./flat/mod.js";
+export * from "./minecraft-colors.js";
+export * from "./config.js";

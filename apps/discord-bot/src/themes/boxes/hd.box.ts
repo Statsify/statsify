@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box, Render } from "@statsify/rendering";
+import { Box, type Render } from "@statsify/rendering";
 
 export const render: Render<Box.BoxRenderProps> = (
   ctx,

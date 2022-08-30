@@ -6,9 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Constructor } from "@statsify/util";
-
-export type Getter<T> = (target: T) => any;
+import type { Constructor } from "@statsify/util";
 
 export interface FieldMetadata {
   type: TypeMetadata;

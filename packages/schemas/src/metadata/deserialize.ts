@@ -7,8 +7,8 @@
  */
 
 import { Constructor, Flatten, unflatten } from "@statsify/util";
-import { FieldMetadata } from "./metadata.interface";
-import { MetadataScanner } from "./metadata-scanner";
+import { FieldMetadata } from "./metadata.interface.js";
+import { MetadataScanner } from "./metadata-scanner.js";
 import { roundTo } from "@statsify/math";
 
 export const deserialize = <T>(constructor: Constructor<T>, instance: Flatten<T>): T => {

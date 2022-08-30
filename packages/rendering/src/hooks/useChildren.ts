@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ElementNode } from "../jsx";
+import type { ElementNode } from "../jsx/index.js";
 
 type Child<T> = [T] extends [ElementNode | ElementNode[]]
   ? ElementNode[]

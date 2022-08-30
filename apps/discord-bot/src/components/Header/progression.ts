@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LocalizeFunction } from "@statsify/discord";
+import type { LocalizeFunction } from "@statsify/discord";
 import type { Progression } from "@statsify/schemas";
 
 export type ProgressFunction = (pecentage: number) => string;

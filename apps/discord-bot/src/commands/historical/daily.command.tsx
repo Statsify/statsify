@@ -7,7 +7,7 @@
  */
 
 import { Command } from "@statsify/discord";
-import { HistoricalBase } from "./historical.base";
+import { HistoricalBase } from "./historical.base.js";
 import { HistoricalType } from "@statsify/api-client";
 
 @Command({ description: (t) => t("commands.daily") })

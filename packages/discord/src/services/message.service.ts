@@ -7,11 +7,10 @@
  */
 
 import { APIMessage } from "discord-api-types/v10";
-import { IMessage, Message } from "../messages";
+import { IMessage, Message, getLocalizeFunction } from "../messages/index.js";
 import { RestClient } from "tiny-discord";
 import { Service } from "typedi";
-import { getLocalizeFunction } from "../messages/localize";
-import { parseDiscordResponse } from "../util/parse-discord-error";
+import { parseDiscordResponse } from "../util/parse-discord-error.js";
 
 @Service()
 export class MessageService {

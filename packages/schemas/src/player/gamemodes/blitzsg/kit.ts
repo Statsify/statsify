@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, findScoreIndex, formatTime } from "@statsify/util";
-import { Field } from "../../../metadata";
+import { type APIData, findScoreIndex, formatTime } from "@statsify/util";
+import { Field } from "#metadata";
 import { add, ratio, sub } from "@statsify/math";
 
 const limit = 10_000;

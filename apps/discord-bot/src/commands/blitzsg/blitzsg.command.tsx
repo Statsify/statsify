@@ -17,8 +17,8 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
-import { BlitzSGProfile } from "./blitzsg.profile";
+} from "../base.hypixel-command.js";
+import { BlitzSGProfile } from "./blitzsg.profile.js";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.blitzsg") })

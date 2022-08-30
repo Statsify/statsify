@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Color } from "../../../color";
+import { Color } from "#color";
+
 export const getLevel = (xp: number): number => {
   const totalXp = [0, 2, 7, 15, 25, 50, 100, 200, 350, 600, 1000, 1500];
   if (xp >= 15_000) return Math.floor((xp - 15_000) / 10_000 + 12);

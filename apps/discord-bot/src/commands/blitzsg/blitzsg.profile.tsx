@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "../base.hypixel-command";
+import { BaseProfileProps } from "../base.hypixel-command.js";
 import {
   BlitzSG,
   BlitzSGKit,

@@ -6,9 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ElementNode, FC, IntrinsicElement, PropsWithChildren } from "../jsx";
-import { elementToNode } from "./convert";
-import { intrinsicElements } from "../jsx/instrinsics";
+import { elementToNode } from "./convert.js";
+import { intrinsicElements } from "../jsx/instrinsics.js";
+import type {
+  ElementNode,
+  FC,
+  IntrinsicElement,
+  PropsWithChildren,
+} from "../jsx/index.js";
 
 export const Fragment: FC = ({ children }) => children as unknown as null;
 

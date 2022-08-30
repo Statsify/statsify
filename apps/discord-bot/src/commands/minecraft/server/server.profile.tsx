@@ -7,9 +7,9 @@
  */
 
 import { Container, Multiline } from "#components";
-import type { Image } from "skia-canvas/lib";
+import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
-import type { Server } from "./server.interface";
+import type { Server } from "./server.interface.js";
 
 interface ServerLogoProps {
   serverLogo: Image;

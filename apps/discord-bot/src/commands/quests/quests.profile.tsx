@@ -27,9 +27,9 @@ import { Container, Footer, GameEntry, GameList, Header, SidebarItem } from "#co
 import { DateTime } from "luxon";
 import { DeferredGradient, useGradient } from "@statsify/rendering";
 import { HistoricalType } from "@statsify/api-client";
-import { Palette, getColorPalette } from "../../themes/palette";
+import { Palette, getColorPalette } from "../../themes/palette.js";
 import { ratio } from "@statsify/math";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "../base.hypixel-command.js";
 import type { Constructor } from "@statsify/util";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";

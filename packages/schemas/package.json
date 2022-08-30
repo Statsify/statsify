@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "main": "dist/index.js",
   "types": "src/index.ts",
+  "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
@@ -16,5 +17,12 @@
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
     "@typegoose/typegoose": "^9.10.1"
+  },
+  "imports": {
+    "#metadata": "./dist/metadata/index.js",
+    "#game": "./dist/game/index.js",
+    "#color": "./dist/color.js",
+    "#progression": "./dist/progression.js",
+    "#prefixes": "./dist/player/gamemodes/prefixes.js"
   }
 }

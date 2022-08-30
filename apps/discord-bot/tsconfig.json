@@ -4,11 +4,11 @@
     "jsx": "preserve",
     "baseUrl": "./src",
     "paths": {
-      "#components": ["./components"],
-      "#services": ["./services"],
-      "#constants": ["./constants"],
-      "#themes": ["./themes"],
-      "#lib/*": ["./lib/*"],
+      "#components": ["./components/index.js"],
+      "#services": ["./services/index.js"],
+      "#constants": ["./constants.js"],
+      "#themes": ["./themes/index.js"],
+      "#lib/*": ["./lib/*.js"]
     }
   },
   "include": ["src"]

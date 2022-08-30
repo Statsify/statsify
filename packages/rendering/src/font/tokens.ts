@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Fill } from "../jsx";
 import { minecraftColors } from "@statsify/util";
+import type { Fill } from "../jsx/index.js";
 
 export interface TextNode {
   text: string;

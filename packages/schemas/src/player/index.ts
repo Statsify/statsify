@@ -6,16 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Color } from "../color";
-import { Field } from "../metadata";
-import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
-import { PlayerSocials } from "./socials";
-import { PlayerStats } from "./stats";
-import { PlayerStatus } from "./status";
-import { PlayerUtil } from "./util";
+import typegoose from "@typegoose/typegoose";
+import { Color } from "#color";
+import { Field } from "#metadata";
+import { PlayerSocials } from "./socials.js";
+import { PlayerStats } from "./stats.js";
+import { PlayerStatus } from "./status.js";
+import { getDisplayName, getPlusColor, getRank, getRankColor } from "./util.js";
+import type { APIData } from "@statsify/util";
 
-@ModelOptions({ options: { allowMixed: Severity.ALLOW } })
+@typegoose.ModelOptions({ options: { allowMixed: typegoose.Severity.ALLOW } })
 export class Player {
   @Field({ mongo: { unique: true, index: true }, store: { required: true } })
   public uuid: string;
@@ -87,14 +87,10 @@ export class Player {
     this.username = data.displayname;
     this.usernameToLower = this.username?.toLowerCase();
 
-    this.rank = PlayerUtil.getRank(data);
-    this.plusColor = PlayerUtil.getPlusColor(this.rank, data?.rankPlusColor);
-    this.prefixName = `${PlayerUtil.getRankColor(this.rank).toString()}${this.username}`;
-    this.displayName = PlayerUtil.getDisplayName(
-      this.username,
-      this.rank,
-      this.plusColor.code
-    );
+    this.rank = getRank(data);
+    this.plusColor = getPlusColor(this.rank, data?.rankPlusColor);
+    this.prefixName = `${getRankColor(this.rank).toString()}${this.username}`;
+    this.displayName = getDisplayName(this.username, this.rank, this.plusColor.code);
 
     this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});
     this.stats = new PlayerStats(data);
@@ -107,7 +103,7 @@ export class Player {
   }
 }
 
-export * from "./gamemodes";
-export * from "./socials";
-export * from "./stats";
-export * from "./status";
+export * from "./gamemodes/index.js";
+export * from "./socials.js";
+export * from "./stats.js";
+export * from "./status.js";

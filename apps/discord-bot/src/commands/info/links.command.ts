@@ -7,7 +7,7 @@
  */
 
 import { Command } from "@statsify/discord";
-import { InviteCommand } from "./invite.command";
+import { InviteCommand } from "./invite.command.js";
 
 @Command({ description: (t) => t("commands.links") })
 export class LinksCommand extends InviteCommand {}

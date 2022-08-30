@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from "typedi";
+import { Container } from "typedi";
 import { FontRenderer } from "@statsify/rendering";
 import { UserFont } from "@statsify/schemas";
 

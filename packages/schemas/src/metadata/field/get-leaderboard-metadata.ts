@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LeaderboardMetadata, TypeMetadata } from "../metadata.interface";
-import { LeaderboardOptions } from "../field.options";
-import { RATIOS, RATIO_STATS } from "../../ratios";
+import { RATIOS, RATIO_STATS } from "../../ratios.js";
 import { prettify } from "@statsify/util";
+import type { LeaderboardMetadata, TypeMetadata } from "../metadata.interface.js";
+import type { LeaderboardOptions } from "../field.options.js";
 
 const getLeaderboardName = (field: string) => {
   const ratioIndex = RATIOS.indexOf(field);

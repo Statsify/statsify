@@ -7,10 +7,10 @@
  */
 
 import { AxiosError } from "axios";
-import { ButtonBuilder, LocalizeFunction } from "../messages";
+import { ButtonBuilder, LocalizeFunction } from "../messages/index.js";
 import { ButtonStyle } from "discord-api-types/v10";
 import { Color, User } from "@statsify/schemas";
-import { ErrorMessage } from "../util/error.message";
+import { ErrorMessage } from "../util/error.message.js";
 import {
   FriendsNotFoundException,
   GUILD_ID_REGEX,

@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command.js";
 import { Command } from "@statsify/discord";
 import { ElementNode } from "@statsify/rendering";
-import { EventsProfile } from "./events.profile";
+import { EventsProfile } from "./events.profile.js";
 import { GENERAL_MODES, GeneralModes } from "@statsify/schemas";
 
 @Command({ description: (t) => t("commands.events") })

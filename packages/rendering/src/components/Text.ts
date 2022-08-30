@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from "typedi";
-import { Fill } from "../jsx";
-import { FontRenderer } from "../font";
-import type * as JSX from "../jsx";
-import type { TextNode } from "../font/tokens";
+import { Container } from "typedi";
+import { FontRenderer } from "../font/index.js";
+import type * as JSX from "../jsx/index.js";
+import type { Fill } from "../jsx/index.js";
+import type { TextNode } from "../font/tokens.js";
 
 type Text = string | number;
 

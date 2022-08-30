@@ -49,13 +49,13 @@ import {
   PaginateService,
   PlayerArgument,
   SubCommand,
+  SubCommandOptions,
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
-import { RankingsProfile } from "./rankings.profile";
-import { SubCommandOptions } from "@statsify/discord/src/command/command.interface";
+import { RankingsProfile } from "./rankings.profile.js";
 import { arrayGroup } from "@statsify/util";
-import { games } from "./games";
+import { games } from "./games.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";

@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { GamePrefix, createPrefixProgression } from "../prefixes";
-import { Progression } from "../../../progression";
-import { SpeedUHCMastery } from "./mastery";
-import { SpeedUHCMode } from "./mode";
-import { getLevelIndex, titleScores } from "./util";
+import { Field } from "#metadata";
+import { GameModes, IGameModes } from "#game";
+import { GamePrefix, createPrefixProgression } from "#prefixes";
+import { Progression } from "#progression";
+import { SpeedUHCMastery } from "./mastery.js";
+import { SpeedUHCMode } from "./mode.js";
+import { getLevelIndex, titleScores } from "./util.js";
+import type { APIData } from "@statsify/util";
 
 const formatLevel = (level: number | string) => `§d[${level}❋]`;
 
@@ -131,5 +131,5 @@ export class SpeedUHC {
   }
 }
 
-export * from "./mastery";
-export * from "./mode";
+export * from "./mastery.js";
+export * from "./mode.js";

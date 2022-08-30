@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Color } from "../../../color";
+import { Color } from "#color";
 import { findScore, removeFormatting, romanNumeral } from "@statsify/util";
 
 export interface Title {

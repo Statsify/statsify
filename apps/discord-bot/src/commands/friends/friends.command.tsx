@@ -13,7 +13,7 @@ import {
   PaginateService,
   PlayerArgument,
 } from "@statsify/discord";
-import { FriendsProfile } from "./friends.profile";
+import { FriendsProfile } from "./friends.profile.js";
 import { arrayGroup } from "@statsify/util";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";

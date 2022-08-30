@@ -10,8 +10,8 @@ import { Container, Footer, Header, If, List } from "#components";
 import { LEADERBOARD_RATIOS } from "@statsify/schemas";
 import { PostLeaderboardRankingsResponse } from "@statsify/api-client";
 import { formatPosition } from "#lib/format-position";
-import { games, removeGameDash } from "./games";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import { games, removeGameDash } from "./games.js";
+import type { BaseProfileProps } from "../base.hypixel-command.js";
 
 const shouldColor = (stats: string[], field: string) =>
   stats.some((s) => field.includes(s));

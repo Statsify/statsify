@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { Progression } from "../../../progression";
+import { Field } from "#metadata";
+import { Progression } from "#progression";
+import type { APIData } from "@statsify/util";
 
 const EXP_REQUIREMENT = 25_000;
 const MAX_LEVEL = 100;

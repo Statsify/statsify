@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { GamePrefix, rainbow } from "../prefixes";
+import { GamePrefix, rainbow } from "#prefixes";
 
 export const humanPrefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },

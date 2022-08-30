@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Fill } from "@statsify/rendering";
 import { UserPalette } from "@statsify/schemas";
+import type { Fill } from "@statsify/rendering";
 
 export interface Palette {
   background?: Fill | null;

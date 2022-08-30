@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./abstract-command.listener";
-export * from "./command.builder";
-export * from "./command.decorator";
-export * from "./command.loader";
-export * from "./command.poster";
-export * from "./command.resolvable";
-export * from "./subcommand.decorator";
-export * from "./command.context";
+export * from "./abstract-command.listener.js";
+export * from "./command.builder.js";
+export * from "./command.decorator.js";
+export * from "./command.loader.js";
+export * from "./command.poster.js";
+export * from "./command.resolvable.js";
+export * from "./subcommand.decorator.js";
+export * from "./command.context.js";
+export type { CommandOptions, SubCommandOptions } from "./command.interface.js";

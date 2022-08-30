@@ -6,16 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
 import {
   AssassinsMurderMysteryMode,
   ClassicMurderMysteryMode,
   InfectionMurderMysteryMode,
   StandardMurderMysteryMode,
-} from "./mode";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+} from "./mode.js";
+import { Field } from "#metadata";
+import { GameModes, IGameModes } from "#game";
 import { add } from "@statsify/math";
+import type { APIData } from "@statsify/util";
 
 export const MURDER_MYSTERY_MODES = new GameModes([
   { api: "overall" },
@@ -76,4 +76,4 @@ export class MurderMystery {
   }
 }
 
-export * from "./mode";
+export * from "./mode.js";

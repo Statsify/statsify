@@ -7,13 +7,13 @@
  */
 
 import { DateTime } from "luxon";
-import { HeaderBody } from "./HeaderBody";
-import { HeaderNametag } from "./HeaderNametag";
-import { Historical } from "../Historical";
+import { HeaderBody } from "./HeaderBody.js";
+import { HeaderNametag } from "./HeaderNametag.js";
+import { Historical } from "../Historical/index.js";
 import { HistoricalType } from "@statsify/api-client";
 import { Image } from "skia-canvas";
-import { Sidebar, SidebarItem } from "../Sidebar";
-import { Skin } from "../Skin";
+import { Sidebar, SidebarItem } from "../Sidebar.js";
+import { Skin } from "../Skin.js";
 import { useChildren } from "@statsify/rendering";
 
 interface BaseHeaderProps {

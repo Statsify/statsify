@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { APIData } from "..";
-import type { Flatten } from "./flatten";
+import type { APIData } from "../index.js";
+import type { Flatten } from "./flatten.js";
 
 /**
  *

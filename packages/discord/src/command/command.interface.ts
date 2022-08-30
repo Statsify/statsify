@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LocalizationString } from "../messages";
+import { LocalizationString } from "../messages/index.js";
 import { UserTier } from "@statsify/schemas";
-import type { AbstractArgument } from "../arguments";
+import type { AbstractArgument } from "../arguments/index.js";
 import type { Constructor } from "@statsify/util";
 
 export interface CommandOptions {

@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractEventListener } from "./abstract-event.listener";
 import { Container } from "typedi";
 import { GatewayDispatchEvents } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
 import { WebsocketShard } from "tiny-discord";
 import { readdir } from "node:fs/promises";
 import { statSync } from "node:fs";
+import type { AbstractEventListener } from "./abstract-event.listener.js";
 
 export class EventLoader {
   private static readonly logger = new Logger("EventLoader");

@@ -17,7 +17,11 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { Canvas } from "skia-canvas";
-import { Message, SelectMenuBuilder, SelectMenuOptionBuilder } from "../messages";
+import {
+  Message,
+  SelectMenuBuilder,
+  SelectMenuOptionBuilder,
+} from "../messages/index.js";
 import { Service } from "typedi";
 
 type PaginateInteractionContent = IMessage | Message | EmbedBuilder | Canvas;

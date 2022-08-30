@@ -8,7 +8,7 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { Friends } from "@statsify/schemas";
-import { SuccessResponse } from "./success.response";
+import { SuccessResponse } from "./success.response.js";
 
 export class GetFriendsResponse extends SuccessResponse {
   @ApiProperty()

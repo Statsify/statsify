@@ -10,12 +10,11 @@ import {
   APIApplicationCommandInteractionDataBasicOption,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractCommandListener } from "./abstract-command.listener";
-import { IMessage, Message } from "../messages";
-import { LocalizeFunction } from "../messages/localize";
+import { AbstractCommandListener } from "./abstract-command.listener.js";
+import { IMessage, LocalizeFunction, Message } from "../messages/index.js";
 import { User } from "@statsify/schemas";
 import { noop } from "@statsify/util";
-import type { Interaction } from "../interaction";
+import type { Interaction } from "../interaction/index.js";
 
 export class CommandContext {
   private user: User | null;

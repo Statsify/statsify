@@ -10,10 +10,10 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
+} from "../base.hypixel-command.js";
 import { Command } from "@statsify/discord";
 import { WOOLWARS_MODES, WoolWarsModes } from "@statsify/schemas";
-import { WoolWarsProfile } from "./woolwars.profile";
+import { WoolWarsProfile } from "./woolwars.profile.js";
 
 @Command({ description: (t) => t("commands.woolwars") })
 export class WoolWarsCommand extends BaseHypixelCommand<WoolWarsModes> {

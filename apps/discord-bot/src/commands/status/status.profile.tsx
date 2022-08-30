@@ -11,7 +11,7 @@ import { FormattedGame, Status } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import { mapGame } from "#constants";
 import { prettify, relativeTime } from "@statsify/util";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "../base.hypixel-command.js";
 
 interface StatusTableProps {
   status: Status;

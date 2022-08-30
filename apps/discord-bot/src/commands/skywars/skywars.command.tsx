@@ -10,10 +10,10 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
+} from "../base.hypixel-command.js";
 import { Command } from "@statsify/discord";
 import { SKYWARS_MODES, SkyWarsModes } from "@statsify/schemas";
-import { SkyWarsProfile } from "./skywars.profile";
+import { SkyWarsProfile } from "./skywars.profile.js";
 
 @Command({ description: (t) => t("commands.skywars") })
 export class SkyWarsCommand extends BaseHypixelCommand<SkyWarsModes> {

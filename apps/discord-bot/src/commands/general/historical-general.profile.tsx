@@ -8,7 +8,7 @@
 
 import { Container, Footer, Header, Table } from "#components";
 import { FormattedGame } from "@statsify/schemas";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "../base.hypixel-command.js";
 
 export const HistoricalGeneralProfile = ({
   background,

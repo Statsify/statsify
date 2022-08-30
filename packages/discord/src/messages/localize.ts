@@ -6,14 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
-import i18next, {
+import {
   StringMap,
   TFunction,
   TFunctionKeys,
   TFunctionResult,
   TOptions,
+  default as i18next,
 } from "i18next";
 
 interface ILocalizeFunction {

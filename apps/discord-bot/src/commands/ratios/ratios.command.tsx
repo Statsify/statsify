@@ -48,7 +48,7 @@ import {
   MODES_TO_FORMATTED,
   mapBackground,
 } from "#constants";
-import { RatiosProfile, RatiosProfileProps } from "./ratios.profile";
+import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { prettify } from "@statsify/util";

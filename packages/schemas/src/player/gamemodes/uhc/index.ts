@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { GamePrefix, createPrefixProgression } from "../prefixes";
-import { Progression } from "../../../progression";
-import { UHCMode } from "./mode";
+import { Field } from "#metadata";
+import { GameModes, IGameModes } from "#game";
+import { GamePrefix, createPrefixProgression } from "#prefixes";
+import { Progression } from "#progression";
+import { UHCMode } from "./mode.js";
 import { deepAdd } from "@statsify/math";
-import { getLevelIndex, titleScores } from "./util";
+import { getLevelIndex, titleScores } from "./util.js";
+import type { APIData } from "@statsify/util";
 
 const formatLevel = (level: number | string) => `§6[${level}✫]`;
 
@@ -96,4 +96,4 @@ export class UHC {
   }
 }
 
-export * from "./mode";
+export * from "./mode.js";

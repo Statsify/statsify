@@ -6,9 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DeepFlatten } from "./flat";
 import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { join } from "node:path";
+import type { DeepFlatten } from "./flat/mod.js";
+
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 export interface Config {
   database: {
@@ -238,15 +241,12 @@ type FlatConfig = DeepFlatten<Config>;
 
 let cfg: Config;
 
-const loadConfig = () => {
-  if (existsSync(join(__dirname, "../../../config.json"))) {
-    return require(join(__dirname, "../../../config.json"));
-  } else if (existsSync(join(__dirname, "../../../config.js"))) {
-    return require(join(__dirname, "../../../config.js"));
-  } else {
-    throw new Error("No config file detected!");
-  }
-};
+if (existsSync(join(__dirname, "../../../config.js"))) {
+  cfg = ((await import(join(__dirname, "../../../config.js"))) as { default: Config })
+    .default;
+} else {
+  throw new Error("No config file detected!");
+}
 
 export interface ConfigOptions<T extends keyof FlatConfig> {
   required?: boolean;
@@ -259,8 +259,6 @@ export const config = <T extends keyof FlatConfig>(
 ): FlatConfig[T] => {
   // Don't load the config while testing
   if (process.env.JEST_WORKER_ID) return defaultValue as FlatConfig[T];
-
-  if (cfg === undefined) cfg = loadConfig();
 
   const value =
     (key as string).split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;

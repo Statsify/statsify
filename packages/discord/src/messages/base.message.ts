@@ -7,10 +7,10 @@
  */
 
 import { APIAllowedMentions, APIAttachment } from "discord-api-types/v10";
-import { ActionRowBuilder } from "./components";
-import { EmbedBuilder } from "./embed";
-import { InteractionAttachment, InteractionContent } from "../interaction";
-import { LocalizationString, LocalizeFunction, translateField } from "./localize";
+import { ActionRowBuilder } from "./components/index.js";
+import { InteractionAttachment, InteractionContent } from "../interaction/index.js";
+import { LocalizationString, LocalizeFunction, translateField } from "./localize.js";
+import type { EmbedBuilder } from "./embed.js";
 import type { RemoveMethods } from "@statsify/util";
 
 export type IMessage = RemoveMethods<Message>;

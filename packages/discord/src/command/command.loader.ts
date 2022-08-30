@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CommandBuilder } from "./command.builder";
+import { CommandBuilder } from "./command.builder.js";
 import { Container } from "typedi";
 import { Logger } from "@statsify/logger";
 import { readdir } from "node:fs/promises";
 import { statSync } from "node:fs";
-import type { CommandResolvable } from "./command.resolvable";
+import type { CommandResolvable } from "./command.resolvable.js";
 
 export class CommandLoader {
   private static readonly logger = new Logger("CommandLoader");
