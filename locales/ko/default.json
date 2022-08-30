@@ -9,7 +9,7 @@
     "mojang-player": "Minecraft 프로필 이름 또는 UUID",
     "number": "숫자",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "리더보드를 선택하세요",
+    "player-leaderboard": "순위표를 선택하세요",
     "reason": "The reason for closing the support ticket",
     "server": "Minecraft 서버 이름 또는 서버 IP 주소",
     "tags-content": "The content of the tag",
@@ -94,7 +94,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "{{name}}의 리더보드를 봐요",
+    "leaderboard-command": "{{name}}의 순위표를 봐요",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -128,14 +128,14 @@
     "pit": "$t(commands.hypixel-command, { \"name\": \"Pit\" })",
     "player-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Player\" })",
     "quake": "$t(commands.hypixel-command, { \"name\": \"Quake\" })",
-    "rankings": "나의 리더보드 순위를 확인해요",
+    "rankings": "나의 순위표 순위를 확인해요",
     "rankings-all": "$t(commands.rankings)",
     "rankings-arcade": "$t(commands.rankings-command, { \"name\": \"Arcade\" })",
     "rankings-arenabrawl": "$t(commands.rankings-command, { \"name\": \"Arena Brawl\" })",
     "rankings-bedwars": "$t(commands.rankings-command, { \"name\": \"BedWars\" })",
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
-    "rankings-command": "{{name}}의 나의 리더보드 순위를 확인해요",
+    "rankings-command": "{{name}}의 나의 순위표 순위를 확인해요",
     "rankings-challenges": "$t(commands.rankings-command, { \"name\": \"Challenges\" })",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
@@ -288,8 +288,8 @@
         "title": "기간 전적"
       },
       "leaderboards": {
-        "description": "Statsify는 `/leaderboard` 명령어로 수많은 리더보드를 제공해요. `/leaderboard` 명령어를 실행한 후, 게임모드와 볼 리더보드를 선택하세요. 검색 버튼을 눌러 특정 플레이어나 순위를 확인하세요. 위나 아래 버튼을 클릭해 더 많은 페이지를 볼 수도 있어요.",
-        "title": "리더보드"
+        "description": "Statsify는 `/leaderboard` 명령어로 수많은 순위표를 제공해요. `/leaderboard` 명령어를 실행한 후, 게임모드와 볼 순위표를 선택하세요. 검색 버튼을 눌러 특정 플레이어나 순위를 확인하세요. 위나 아래 버튼을 클릭해 더 많은 페이지를 볼 수도 있어요.",
+        "title": "순위표"
       },
       "minecraft": {
         "description": "일반 Minecraft 정보인 스킨, UUID, 망토를 각각 `/skin`, `/uuid`, `/cape` 명령어를 통해 볼 수 있어요. Statsify는 또 Minecraft 문자를 생성할 수 있는 `/text` 명령어와 Minecraft 색상 목록을 볼 수 있는 `/colors` 명령어, Minecraft 서버를 미리 볼 수 있는 `/server` 명령어가 있어요.",
@@ -393,16 +393,16 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "이 순위에 속한 리더보드 데이터가 더 없어요!",
-      "title": "이 순위에 속한 리더보드 데이터 없음"
+      "description": "이 순위에 속한 순위표 데이터가 더 없어요!",
+      "title": "이 순위에 속한 순위표 데이터 없음"
     },
     "leaderboardInvalidPosition": {
-      "description": "입력한 리더보드 순위가 잘못됐어요. 1보다 큰 숫자를 입력하세요.",
+      "description": "입력한 순위표 순위가 잘못됐어요. 1보다 큰 숫자를 입력하세요.",
       "title": "잘못된 순위"
     },
     "leaderboardNotFound": {
-      "description": "찾으시는 `리더보드`를 제가 찾지 못했어요!",
-      "title": "리더보드를 찾지 못함"
+      "description": "찾으시는 `순위표`를 제가 찾지 못했어요!",
+      "title": "순위표를 찾지 못함"
     },
     "missingMentionVerification": {
       "description": "<@{{tag}}>님은 **인증되지 않았어요**. 멘션 하려면, 그분이 `/verify` 명령어로 계정을 인증해야 해요.",
@@ -503,7 +503,7 @@
       "placeholder": "길드의 이름을 입력하세요. 예시: Quote"
     },
     "modal": {
-      "title": "리더보드 검색"
+      "title": "순위표 검색"
     },
     "playerInput": {
       "label": "플레이어로 검색",
@@ -752,7 +752,7 @@
     "discord": "$t(emojis:socials.discord) **$t(socials.discord)**에 참여해 **대기 시간 20% 감소**를 받아보세요 $t(emojis:heart)",
     "invite": "$t(emojis:socials.discord) **[여기](<https://statsify.net/invite>)를 클릭해 Statsify를 내 서버에 초대하세요!",
     "premium": "$t(emojis:logos.gold) **[Statsify 프리미엄](<https://statsify.net/premium>)**은 개인적인 프로필 배지와 같은 추가 기능을 제공해요. [여기서](<https://statsify.net/premium>) 모든 혜택을 찾아보세요!",
-    "rankings": "$t(emojis:logos.iron) **[Statsify 프리미엄](<https://statsify.net/premium>)**으로 `/rankings` 명령어를 사용해 나의 리더보드 순위를 확인하세요",
+    "rankings": "$t(emojis:logos.iron) **[Statsify 프리미엄](<https://statsify.net/premium>)**으로 `/rankings` 명령어를 사용해 나의 순위표 순위를 확인하세요",
     "verify": "$t(emojis:check) `/verify` 명령어로 프로필 이름 없이 명령어를 실행하고 **대기 시간 10% 감소**를 받아보세요"
   },
   "unknown": "알 수 없음",
