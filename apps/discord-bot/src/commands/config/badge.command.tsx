@@ -159,7 +159,7 @@ export class BadgeCommand {
         skin={skin}
         badge={badge}
         user={user}
-        message={t("config.badge.profile.js")}
+        message={t("config.badge.profile")}
       />,
       getTheme(user)
     );
