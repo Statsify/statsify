@@ -559,8 +559,8 @@ export class PixelParty {
     this.overall = deepAdd(this.normal, this.hyper);
     PixelPartyMode.applyRatios(this.overall);
 
-    this.roundsCompleted = data.pixel_party.rounds_completed;
-    this.powerupsCollected = data.pixel_party.power_ups_collected;
+    this.roundsCompleted = data.pixel_party?.rounds_completed;
+    this.powerupsCollected = data.pixel_party?.power_ups_collected;
   }
 }
 
