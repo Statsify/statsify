@@ -65,6 +65,9 @@ export class ArcadeChallenges implements GameChallenges {
   @Field(challengeFieldData)
   public hideAndSeek: number;
 
+  @Field(challengeFieldData)
+  public pixelParty: number;
+
   @Field({
     leaderboard: {
       fieldName: `${removeFormatting(FormattedGame.ARCADE)} Total`,
@@ -91,6 +94,7 @@ export class ArcadeChallenges implements GameChallenges {
     this.captureTheWool = challenges.ARCADE__capture_the_wool_challenge;
     this.zombies = challenges.ARCADE__zombies_challenge;
     this.hideAndSeek = challenges.ARCADE__hide_and_seek_challenge;
+    this.pixelParty = challenges.ARCADE__pixel_party_challenge;
 
     this.total = add(
       this.farmHunt,
@@ -109,7 +113,8 @@ export class ArcadeChallenges implements GameChallenges {
       this.miniWalls,
       this.captureTheWool,
       this.zombies,
-      this.hideAndSeek
+      this.hideAndSeek,
+      this.pixelParty
     );
   }
 }

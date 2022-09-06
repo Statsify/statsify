@@ -133,7 +133,7 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["bedwars", map];
     }
     case ARCADE_MODES:
-      return ["arcade", mode === "seasonal" ? "overall" : mode];
+      return ["arcade", mode === "seasonal" || mode === "pixelParty" ? "overall" : mode];
     case ARENA_BRAWL_MODES:
       return ["arenabrawl", "overall"];
     case BLITZSG_MODES:
