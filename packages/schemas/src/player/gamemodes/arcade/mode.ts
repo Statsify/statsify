@@ -14,7 +14,7 @@ import {
   ScubaSimulator,
 } from "./seasonal-mode";
 import { Field } from "../../../metadata";
-import { add, deepAdd, ratio } from "@statsify/math";
+import { add, deepAdd, ratio, sub } from "@statsify/math";
 
 export class BlockingDead {
   @Field()
@@ -508,6 +508,62 @@ export class PixelPainters {
     this.wins = data.wins_draw_their_thing;
   }
 }
+
+export class PixelPartyMode {
+  @Field()
+  public wins: number;
+
+  @Field()
+  public gamesPlayed: number;
+
+  @Field()
+  public losses: number;
+
+  @Field()
+  public wlr: number;
+
+  public constructor(data: APIData, mode?: string) {
+    mode = mode ? `_${mode}` : "";
+
+    this.wins = data.pixel_party?.[`wins${mode}`];
+    this.gamesPlayed = data.pixel_party?.[`games_played${mode}`];
+    this.losses = sub(this.gamesPlayed, this.wins);
+    PixelPartyMode.applyRatios(this);
+  }
+
+  public static applyRatios(mode: PixelPartyMode) {
+    mode.wlr = ratio(mode.wins, mode.losses);
+  }
+}
+
+export class PixelParty {
+  @Field()
+  public overall: PixelPartyMode;
+
+  @Field()
+  public normal: PixelPartyMode;
+
+  @Field()
+  public hyper: PixelPartyMode;
+
+  @Field()
+  public roundsCompleted: number;
+
+  @Field()
+  public powerupsCollected: number;
+
+  public constructor(data: APIData) {
+    this.normal = new PixelPartyMode(data);
+    this.hyper = new PixelPartyMode(data, "hyper");
+
+    this.overall = deepAdd(this.normal, this.hyper);
+    PixelPartyMode.applyRatios(this.overall);
+
+    this.roundsCompleted = data.pixel_party?.rounds_completed;
+    this.powerupsCollected = data.pixel_party?.power_ups_collected;
+  }
+}
+
 export class Seasonal {
   @Field()
   public totalWins: number;

@@ -30,6 +30,7 @@ import {
   ZombiesTable,
 } from "./tables";
 import { Container, Footer, Header, SidebarItem } from "#components";
+import { PixelPartyTable } from "./tables/pixel-party.table";
 
 export interface ArcadeProfileProps extends BaseProfileProps {
   mode: GameMode<ArcadeModes>;
@@ -101,6 +102,9 @@ export const ArcadeProfile = ({
       break;
     case "pixelPainters":
       table = <PixelPaintersTable stats={arcade[api]} t={t} />;
+      break;
+    case "pixelParty":
+      table = <PixelPartyTable stats={arcade[api]} t={t} />;
       break;
     case "seasonal":
       table = <SeasonalTable stats={arcade[api]} t={t} />;
