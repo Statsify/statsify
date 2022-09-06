@@ -9,7 +9,7 @@
     "mojang-player": "Minecraft kullanıcı adı veya UUID'si",
     "number": "Bir sayı",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard",
+    "player-leaderboard": "Bir leaderboard seçin",
     "reason": "The reason for closing the support ticket",
     "server": "Bir Minecraft sunucu adı veya IP'si",
     "tags-content": "The content of the tag",
@@ -94,7 +94,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-command": "{{name}} leaderboardlarını görüntüleyin",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -493,7 +493,7 @@
       "title": "Geçmiş Sıfırlama Saati"
     },
     "new": "{{displayName}} adlı oyuncunun geçmiş istatistiklerine Statsify'da ilk kez bakılıyor. İstatistikleri her gün bu saatte güncellenecek.",
-    "reset": "$t(emojis:clock) <t:{{time}}:R> Saatinde **Sıfırlanır**",
+    "reset": "$t(emojis:clock) <t:{{time}}:R> **Saatinde Sıfırlanır**",
     "resetButton": "Sıfırlamak için tıklayın",
     "setResetTime": "Sıfırlama saatiniz <t:{{time}}:t> saatine ayarlandı."
   },
@@ -684,7 +684,7 @@
     "powerKicks": "Güçlü Vuruşlar",
     "powerupActivations": "Powerup Etkinleştirmeleri",
     "powerups": "Poweruplar",
-    "prefix": "Ön Ek",
+    "prefix": "Prefix",
     "prevent": "Önleme",
     "progression": {
       "exp": "EXP İlerlemesi",
