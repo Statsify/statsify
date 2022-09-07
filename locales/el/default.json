@@ -459,7 +459,7 @@
     },
     "premiumRequired": {
       "description": "Έλεγξε όλα τα διαθέσιμα χαρακτηριστικά [here](https://statsify.net/premium).",
-      "preview": "Έλεγξε όλα τα διαθέσιμα χαρακτηριστικά [here](https://statsify.net/premium). Παρακάτω είναι μια μικρή προεπισκόπηση τι κάνει/αλλάζει η εντολή.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "To Statsify {{tier}} απαιτείται για την εκτέλεση αυτής της εντολής"
     },
     "staffOnly": {
@@ -682,8 +682,8 @@
     "points": "Πόντοι",
     "poopCollected": "Συλλεγμένα Κακάκια",
     "powerKicks": "Δυνατές Κλωτσιές",
-    "powerupActivations": "Ενεργοποιήσεις Ενισχύσεων",
-    "powerups": "Ενισχύσεις",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Πρόθεμα",
     "prevent": "Αποτροπή",
     "progression": {
@@ -746,7 +746,9 @@
     "woolCaptures": "Αιχμαλωτισμένα Μαλλιά",
     "woolPlaced": "Τοποθετημένα Wool",
     "zombieKills": "Zombie Σκοτωμοί",
-    "potionsBrewed": "Παρασκευασμένα Φίλτρα"
+    "potionsBrewed": "Παρασκευασμένα Φίλτρα",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Μπες στο **$t(socials.discord)** και κέρδισε **20% χαμηλότερο χρόνο επαναφόρτισης** $t(emojis:heart)",
