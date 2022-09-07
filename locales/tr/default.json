@@ -459,7 +459,7 @@
     },
     "premiumRequired": {
       "description": "Tüm özelliklere [buradan] bakabilirsiniz.",
-      "preview": "Tüm özelliklere [buradan] bakabilirsiniz. Aşağıda hangi komutların ne yaptığı/değiştiğinin küçük bir ön izlenimi bulunmakta.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Bu komutu kullanabilmek için Statsify {{tier}} gerekli"
     },
     "staffOnly": {
@@ -682,8 +682,8 @@
     "points": "Puanlar",
     "poopCollected": "Toplanan Gübre",
     "powerKicks": "Güçlü Vuruşlar",
-    "powerupActivations": "Powerup Etkinleştirmeleri",
-    "powerups": "Poweruplar",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Prefix",
     "prevent": "Önleme",
     "progression": {
@@ -746,7 +746,9 @@
     "woolCaptures": "Yakalanan Yünler",
     "woolPlaced": "Koyulan Yün",
     "zombieKills": "Zombi Öldürmeleri",
-    "potionsBrewed": "Üretilen İksirler"
+    "potionsBrewed": "Üretilen İksirler",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) $t(socials.discord) katılın ve **%20 daha az cooldown** kazanın $t(emojis:heart)",
