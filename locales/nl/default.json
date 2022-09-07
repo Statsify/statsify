@@ -459,7 +459,7 @@
     },
     "premiumRequired": {
       "description": "Bekijk alle beschikbare features [hier](https://statsify.net/premium).",
-      "preview": "Bekijk alle beschikbare features [hier](https://statsify.net/premium). Hieronder is een klein voorbeeld van wat het commando doet/veranderd",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Statsify {{tier}} is vereist om dit commando te gebruiken"
     },
     "staffOnly": {
@@ -682,8 +682,8 @@
     "points": "Punten",
     "poopCollected": "Poep Verzameld",
     "powerKicks": "Krachtschoten",
-    "powerupActivations": "Power-up Activaties",
-    "powerups": "Power-ups",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Voorvoegsel",
     "prevent": "Voorkomen",
     "progression": {
@@ -746,7 +746,9 @@
     "woolCaptures": "Wol Gestolen",
     "woolPlaced": "Wol Geplaatst",
     "zombieKills": "Zombie Moorden",
-    "potionsBrewed": "Potions Brewed"
+    "potionsBrewed": "Potions Brewed",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Sluit je aan bij onze **$t(socials.discord)** en krijg **20% lagere cooldowns** $t(emojis:heart)",
