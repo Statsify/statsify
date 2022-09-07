@@ -656,7 +656,7 @@
     "levelsGained": "獲得等級",
     "loginTime": "線上時間",
     "logoutTime": "離線時間",
-    "lootChests": "Loot Chest 数",
+    "lootChests": "Loot Chest 數",
     "losses": "敗場數",
     "magicalChests": "神秘寶箱數",
     "magicalKeys": "神秘鑰匙數",
@@ -682,8 +682,8 @@
     "points": "積分",
     "poopCollected": "大便收集數",
     "powerKicks": "能量擊殺數",
-    "powerupActivations": "增益加成次數",
-    "powerups": "增益效果數",
+    "powerupActivations": "增益激活次數",
+    "powerups": "增益次數",
     "prefix": "頭銜",
     "prevent": "抵免傷害值",
     "progression": {
@@ -746,7 +746,9 @@
     "woolCaptures": "羊毛捕獲數",
     "woolPlaced": "羊毛放置數",
     "zombieKills": "殭屍擊殺數",
-    "potionsBrewed": "藥水釀造數"
+    "potionsBrewed": "藥水釀造數",
+    "powerupsCollected": "增益收集次數",
+    "roundsCompleted": "回合完成數"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) 加入我們的**$t(socials.discord)**並獲得**降低20%的冷卻時間** $t(emojis:heart)",
