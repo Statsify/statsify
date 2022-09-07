@@ -459,7 +459,7 @@
     },
     "premiumRequired": {
       "description": "Check out all the available features [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what command does/changes.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Statsify {{tier}} is required to run this command"
     },
     "staffOnly": {
@@ -682,8 +682,8 @@
     "points": "Points",
     "poopCollected": "Poop Collected",
     "powerKicks": "Power Kicks",
-    "powerupActivations": "Powerup Activations",
-    "powerups": "Powerups",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Prefix",
     "prevent": "Prevent",
     "progression": {
@@ -746,7 +746,9 @@
     "woolCaptures": "Wool Captures",
     "woolPlaced": "Wool Placed",
     "zombieKills": "Zombie Kills",
-    "potionsBrewed": "Potions Brewed"
+    "potionsBrewed": "Potions Brewed",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
