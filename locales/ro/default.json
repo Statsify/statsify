@@ -459,7 +459,7 @@
     },
     "premiumRequired": {
       "description": "Vezi toate caracteristicile disponibile [here](https://statsify.net/premium).",
-      "preview": "Verificați toate caracteristicile disponibile [here](https://statsify.net/premium). Mai jos este o mică previzualizare a ce face/schimbă comenzile.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Statsify {{tier}} este necesar pentru a rula această comandă"
     },
     "staffOnly": {
@@ -682,8 +682,8 @@
     "points": "Puncte",
     "poopCollected": "Căcat Colectat",
     "powerKicks": "Lovituri cu putere",
-    "powerupActivations": "Activări Powerup",
-    "powerups": "Power-upuri",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Prefix",
     "prevent": "Prevenire",
     "progression": {
@@ -746,7 +746,9 @@
     "woolCaptures": "Capturi Lână",
     "woolPlaced": "Lână plasată",
     "zombieKills": "Omorături Zombi",
-    "potionsBrewed": "Poţiuni preparate"
+    "potionsBrewed": "Poţiuni preparate",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Alătură-te serverului de discord **$t(socials.discord)** și obține **20% mai mic cooldown** $t(emojis:heart)",
