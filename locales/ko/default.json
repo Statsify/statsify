@@ -459,7 +459,7 @@
     },
     "premiumRequired": {
       "description": "사용 가능한 기능을 [여기](https://statsify.net/premium)서 확인하세요.",
-      "preview": "사용 가능한 기능을 [여기](https://statsify.net/premium)서 확인하세요.\n아래는 이 명령어가 무엇을 하거나/변경하는지에 관한 간략한 미리 보기예요.",
+      "preview": "사용 가능한 기능을 [여기](https://statsify.net/premium)서 확인하세요.\n다음은 이 명령어가 무엇을 하거나/변경하는지에 관한 간략한 미리 보기예요.",
       "title": "이 명령어를 실행하려면 Statsify {{tier}}이(가) 필요함"
     },
     "staffOnly": {
@@ -746,7 +746,9 @@
     "woolCaptures": "점령한 양털",
     "woolPlaced": "설치한 양털",
     "zombieKills": "좀비 킬",
-    "potionsBrewed": "양조한 포션"
+    "potionsBrewed": "양조한 포션",
+    "powerupsCollected": "수집한 파워업",
+    "roundsCompleted": "완료한 라운드"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) **$t(socials.discord)**에 참여해 **대기 시간 20% 감소**를 받아보세요 $t(emojis:heart)",
