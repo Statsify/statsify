@@ -459,7 +459,7 @@
     },
     "premiumRequired": {
       "description": "Sjekk ut alle de tilgjengelige funksjonene [here](https://statsify.net/premium).",
-      "preview": "Sjekk ut alle de tilgjengelige funksjonene [here](https://statsify.net/premium). Nedenfor finner du en liten forhåndsvisning for hva kommandoen gjør/endrer.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Statsify {{tier}} kreves for å utføre denne kommandoen"
     },
     "staffOnly": {
@@ -682,8 +682,8 @@
     "points": "Poeng",
     "poopCollected": "Bæsj oppsamlet",
     "powerKicks": "Harde spark",
-    "powerupActivations": "Powerup-aktiveringer",
-    "powerups": "Powerups",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Prefiks",
     "prevent": "Forhindre",
     "progression": {
@@ -746,7 +746,9 @@
     "woolCaptures": "Ull fanget",
     "woolPlaced": "Ull plassert",
     "zombieKills": "Zombiedrap",
-    "potionsBrewed": "Eliksir brygget"
+    "potionsBrewed": "Eliksir brygget",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Bli med i vår **$t(socials.discord)** og få **20% kortere cooldowns** $t(emojis:heart)",
