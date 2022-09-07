@@ -14,7 +14,7 @@ import {
   ScubaSimulator,
 } from "./seasonal-mode";
 import { Field } from "../../../metadata";
-import { add, deepAdd, ratio, sub } from "@statsify/math";
+import { add, deepAdd, deepSub, ratio, sub } from "@statsify/math";
 
 export class BlockingDead {
   @Field()
@@ -553,11 +553,11 @@ export class PixelParty {
   public powerupsCollected: number;
 
   public constructor(data: APIData) {
-    this.normal = new PixelPartyMode(data);
+    this.overall = new PixelPartyMode(data);
     this.hyper = new PixelPartyMode(data, "hyper");
 
-    this.overall = deepAdd(this.normal, this.hyper);
-    PixelPartyMode.applyRatios(this.overall);
+    this.normal = deepSub(this.overall, this.hyper);
+    PixelPartyMode.applyRatios(this.normal);
 
     this.roundsCompleted = data.pixel_party?.rounds_completed;
     this.powerupsCollected = data.pixel_party?.power_ups_collected;
