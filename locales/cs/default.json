@@ -459,7 +459,7 @@
     },
     "premiumRequired": {
       "description": "Podívej se na všechny dostupné funkce [zde](https://statsify.net/premium).",
-      "preview": "Podívej se na všechny dostupné funkce [zde](https://statsify.net/premium). Níže je malý náhled toho, co příkaz dělá/mění.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Pro spuštění tohoto příkazu je vyžadován Statsify {{tier}}"
     },
     "staffOnly": {
@@ -682,8 +682,8 @@
     "points": "Body",
     "poopCollected": "Sebrané bobky",
     "powerKicks": "Úderné kopy",
-    "powerupActivations": "Aktivace vylepšení",
-    "powerups": "Vylepšení",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Prefix",
     "prevent": "Zabránění",
     "progression": {
@@ -746,7 +746,9 @@
     "woolCaptures": "Získané vlny",
     "woolPlaced": "Položené vlny",
     "zombieKills": "Zabití zombií",
-    "potionsBrewed": "Uvařené lektvary"
+    "potionsBrewed": "Uvařené lektvary",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Připoj se na náš **$t(socials.discord)** a získej **20% nižší časový limit* $t(emojis:heart)",
