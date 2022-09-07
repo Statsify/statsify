@@ -459,7 +459,7 @@
     },
     "premiumRequired": {
       "description": "Controlla tutte le novità disponibiliti [qui](https://statsify.net/premium).",
-      "preview": "Dai un'occhiata a tutte le funzionalità disponibili [qui](https://statsify.net/premium). Sotto c'è una piccola anteprima di ciò che il comando fa/cambia.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Il livello {{tier}} di Statsify è necessario per eseguire questo comando"
     },
     "staffOnly": {
@@ -682,8 +682,8 @@
     "points": "Punti",
     "poopCollected": "Escremento Collezionato",
     "powerKicks": "Tiri Potenti",
-    "powerupActivations": "Attivazioni Powerup",
-    "powerups": "Powerup",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Prefisso",
     "prevent": "Prevenire",
     "progression": {
@@ -746,7 +746,9 @@
     "woolCaptures": "Lana Catturata",
     "woolPlaced": "Lana Piazzata",
     "zombieKills": "Uccisioni Zombie",
-    "potionsBrewed": "Pozioni preparate"
+    "potionsBrewed": "Pozioni preparate",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Unisciti al nostro **$t(socials.discord)** e ottieni **cooldown 20% più brevi** $t(emojis:heart)",
