@@ -28,7 +28,7 @@ const presXpReq = [
   11_787_293_080,
 ];
 
-const prestigecolors = ["7", "9", "e", "6", "c", "5", "d", "f", "b", "1", "2", "3"];
+const prestigecolors = ["7", "9", "e", "6", "c", "5", "d", "f", "b", "1", "0", "3"];
 
 const levelColors = [
   "7",
