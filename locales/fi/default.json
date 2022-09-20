@@ -364,7 +364,7 @@
       "title": "Virheellinen pelaaja"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
+      "description": "`{{time}}` ei vastaa muotoa `h:mm a`. Kirjoita aika muodossa `12:00 PM` tai `1:00 AM`.",
       "title": "Virheellinen nollausaika"
     },
     "invalidResetTimezone": {
@@ -585,7 +585,7 @@
     "fortune": "Onni",
     "friends": "Kaverit",
     "game": "Peli",
-    "game-total": "{{game}} Total",
+    "game-total": "Yhteensä pelissä {{game}}",
     "gamesPlayed": "Peliä pelattu",
     "giftsFound": "Lahjaa löydetty",
     "giftsSent": "Lahjaa lähetetty",
@@ -687,12 +687,12 @@
     "prefix": "Etuliite",
     "prevent": "Esto",
     "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "goldTrophy": "Gold Trophy Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "win": "Win Progress"
+      "exp": "Edistyminen: EXP",
+      "gexp": "Edistyminen: GEXP",
+      "goldTrophy": "Edistyminen: Kultapokaalit",
+      "kill": "Edistyminen: Tapot",
+      "score": "Edistyminen: Pisteet",
+      "win": "Edistyminen: Voitot"
     },
     "quests": "Tehtäviä tehty",
     "ranksGifted": "Rankkia lahjoitettu",
