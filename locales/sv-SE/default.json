@@ -9,7 +9,7 @@
     "mojang-player": "Ett Minecraft användarnamn eller UUID",
     "number": "Ett siffra",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard",
+    "player-leaderboard": "Välj en rankningslista",
     "reason": "The reason for closing the support ticket",
     "server": "Ett Minecraft servernamn eller en server IP",
     "tags-content": "The content of the tag",
@@ -32,7 +32,7 @@
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Visa någons Minecraft och Optifine mantlar",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
-    "quests-command": "View your {{name}} questing stats",
+    "quests-command": "Visa din {{name}} questing statistik",
     "quests": "$t(commands.hypixel-command, { \"name\": \"Questing\" })",
     "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
     "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
@@ -94,7 +94,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-command": "Visa {{name}} rankningslistor",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -352,9 +352,9 @@
       "title": "Högre Nivå Krävs"
     },
     "invalidGuild": {
-      "description_id": "A guild with the id of `{{tag}}` could not be found!",
-      "description_name": "A guild by the name of `{{tag}}` could not be found!",
-      "description_player": "A guild with the player `{{tag}}` could not be found!",
+      "description_id": "Ett guild med id av `{{tag}}` kunde inte hittas!",
+      "description_name": "Ett guild med namnet `{{tag}}` kunde inte hittas!",
+      "description_player": "Det gick inte att hitta ett guild med spelaren `{{tag}}!",
       "title": "Ogiltig Guild"
     },
     "invalidPlayer": {
