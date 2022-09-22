@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "ดูเพื่อน Hypixel ร่วมกันของคุณกับผู้เล่นอื่น",
-    "namehistory": "ดูประวัติชื่อ Minecraft ของใครบางคน",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "ดูผู้สร้างและผู้มีส่วนร่วมของ Statsify",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "มีอยู่",
-    "nameHistory": "ประวัติชื่อ",
-    "originalName": "ชื่อจริง",
     "trimmedUUID": "UUID ที่ตัดแต่งแล้ว",
     "unavailable": "ไม่พร้อมใช้งาน",
     "username": "ชื่อผู้ใช้",
