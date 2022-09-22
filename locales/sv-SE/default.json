@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Visa dina gemensamma Hypixel vänner med en annan spelare",
-    "namehistory": "Visa någons Minecraft namn historia",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Visa Statsify's skapare och bidragsgivare",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Tillgänglig",
-    "nameHistory": "Namnhistorik",
-    "originalName": "Ursprungligt Namn",
     "trimmedUUID": "Trimmad UUID",
     "unavailable": "Inte tillgänglig",
     "username": "Användarnamn",
