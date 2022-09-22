@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Xem những người bạn chung với người khác ở Hypixel của bạn",
-    "namehistory": "Xem lịch sử đặt tên của một ai đó trong Minecraft",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Xem những người sáng tác và những người đóng góp cho Statsify",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Hợp lệ",
-    "nameHistory": "Lịch sử tên",
-    "originalName": "Tên gốc",
     "trimmedUUID": "Trimmed UUID",
     "unavailable": "Không hợp lệ",
     "username": "Tên người chơi",
