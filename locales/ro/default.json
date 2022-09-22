@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Vezi prietenii tăi mutuali Hypixel cu un alt jucător",
-    "namehistory": "Vezi istoricul numelui de Minecraft al unei persoane",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Vezi creatorii și contribuitorii Statsify-ului",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Disponibil",
-    "nameHistory": "Istoric Nume",
-    "originalName": "Numele Original",
     "trimmedUUID": "UUID tridimensional",
     "unavailable": "Indisponibil",
     "username": "Nume",
