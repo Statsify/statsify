@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Δες τους κοινούς Hypixel φίλους σου με έναν άλλο παίκτη",
-    "namehistory": "Δες το ιστορικό ονομάτων κάποιου Minecraft χρήστη",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Δες τους δημιουργούς και τους συνεισφέροντες του Statsify",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Διαθέσιμο",
-    "nameHistory": "Ιστορικό Ονομάτων",
-    "originalName": "Αρχικό Όνομα",
     "trimmedUUID": "Κομμένο UUID",
     "unavailable": "Μη Διαθέσιμο",
     "username": "Όνομα Χρήστη",
