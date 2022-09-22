@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "나와 다른 분이 같이 아는 친구를 봐요",
-    "namehistory": "다른 분의 Minecraft 프로필 이름 기록을 봐요",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Statsify의 개발자와 기여자를 봐요",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "사용 가능",
-    "nameHistory": "프로필 이름 기록",
-    "originalName": "최초 이름",
     "trimmedUUID": "다듬은 UUID",
     "unavailable": "사용 불가",
     "username": "프로필 이름",
