@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "查看您跟另一位玩家共同的Hypixel好友",
-    "namehistory": "查看玩家當個創世神的名稱歷史",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "查看Statsify的創作者和貢獻者",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "可使用",
-    "nameHistory": "使用名歷史",
-    "originalName": "原始使用名",
     "trimmedUUID": "裁剪過的UUID",
     "unavailable": "不可使用",
     "username": "用戶名",
