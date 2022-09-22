@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Tarkastele yhteisiä Hypixel-kavereitasi toisen pelaajan kanssa",
-    "namehistory": "Tarkastele jonkun Minecraft-nimihistoriaa",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Näytä Statsifyn kehittäjät ja osallistujat",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Saatavilla",
-    "nameHistory": "Nimihistoria",
-    "originalName": "Alkuperäinen nimi",
     "trimmedUUID": "Leikattu UUID",
     "unavailable": "Ei saatavilla",
     "username": "Käyttäjänimi",
