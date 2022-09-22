@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Zobrazit Hypixel přátele společné s jiným hráčem",
-    "namehistory": "Zobrazit něčí historii Minecraft jmen",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Zobrazit Statsify tvůrce a přispěvatele",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Dostupný",
-    "nameHistory": "Historie jmén",
-    "originalName": "Původní jméno",
     "trimmedUUID": "Oříznuté UUID",
     "unavailable": "Nedostupný",
     "username": "Jméno",
