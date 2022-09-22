@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Nézd meg egy játékossal való közös barátaid",
-    "namehistory": "Nézd meg valakinek a Minecraft felhasználónév előzményeit",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Nézd meg a Statsify készítőit és támogatóit",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Elérhető",
-    "nameHistory": "Név Előzmény",
-    "originalName": "Eredeti Név",
     "trimmedUUID": "Rövidített UUID",
     "unavailable": "Nem elérhető",
     "username": "Felhasználónév",
