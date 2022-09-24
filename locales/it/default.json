@@ -9,7 +9,7 @@
     "mojang-player": "Un nome utente di Minecraft o UUID",
     "number": "Numero",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard",
+    "player-leaderboard": "Scegli una classifica",
     "reason": "The reason for closing the support ticket",
     "server": "Un nome di un server Minecraft o un IP di un server",
     "tags-content": "The content of the tag",
@@ -94,7 +94,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-command": "Visualizza le classifiche per {{name}}",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -458,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Controlla tutte le novità disponibiliti [qui](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
+      "preview": "Controlla tutte le funzionalità disponibili [qui](https://statsify.net/premium). Sotto c'è una piccola anteprima di cosa il comando fa/cambia.",
       "title": "Il livello {{tier}} di Statsify è necessario per eseguire questo comando"
     },
     "staffOnly": {
@@ -679,8 +679,8 @@
     "points": "Punti",
     "poopCollected": "Escremento Collezionato",
     "powerKicks": "Tiri Potenti",
-    "powerupActivations": "Power-Up Activations",
-    "powerups": "Power-Ups",
+    "powerupActivations": "Attivazioni Power-Up",
+    "powerups": "Power-Up",
     "prefix": "Prefisso",
     "prevent": "Prevenire",
     "progression": {
@@ -744,8 +744,8 @@
     "woolPlaced": "Lana Piazzata",
     "zombieKills": "Uccisioni Zombie",
     "potionsBrewed": "Pozioni preparate",
-    "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed"
+    "powerupsCollected": "Power-Up Collezionati",
+    "roundsCompleted": "Round Completati"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Unisciti al nostro **$t(socials.discord)** e ottieni **cooldown 20% più brevi** $t(emojis:heart)",
