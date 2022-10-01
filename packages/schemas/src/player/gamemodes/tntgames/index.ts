@@ -9,19 +9,15 @@
 import { APIData } from "@statsify/util";
 import { BowSpleef, PVPRun, TNTRun, TNTTag, Wizards } from "./mode";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 
-export const TNT_GAMES_MODES = new GameModes([
-  { api: "overall" },
-  { hypixel: "PVPRUN", formatted: "PVP Run" },
-  { hypixel: "TNTAG", formatted: "TNT Tag" },
-  { hypixel: "TNTRUN", formatted: "TNT Run" },
-  { hypixel: "BOWSPLEEF", formatted: "Bow Spleef" },
-  { hypixel: "CAPTURE", formatted: "Wizards" },
-]);
-
-export type TNTGamesModes = IGameModes<typeof TNT_GAMES_MODES>;
-
+@GameType("overall")
 export class TNTGames {
   @Field()
   public coins: number;
@@ -32,18 +28,23 @@ export class TNTGames {
   @Field()
   public blocksRan: number;
 
+  @Mode("TNTRUN", "TNT Run")
   @Field({ leaderboard: { fieldName: "TNT Run" } })
   public tntRun: TNTRun;
 
+  @Mode("PVPRUN", "PVP Run")
   @Field({ leaderboard: { fieldName: "PVP Run" } })
   public pvpRun: PVPRun;
 
+  @Mode("BOWSPLEEF", "Bow Spleef")
   @Field()
   public bowSpleef: BowSpleef;
 
+  @Mode("CAPTURE", "Wizards")
   @Field()
   public wizards: Wizards;
 
+  @Mode("TNTAG", "TNT Tag")
   @Field({ leaderboard: { fieldName: "TNT Tag" } })
   public tntTag: TNTTag;
 
@@ -59,5 +60,8 @@ export class TNTGames {
     this.tntTag = new TNTTag(data, ap);
   }
 }
+
+export type TNTGamesModes = StatsifyApiModes<TNTGames, "overall">;
+export const TNT_GAMES_MODES = new GameModes<TNTGamesModes>(GetMetadataModes(TNTGames));
 
 export * from "./mode";

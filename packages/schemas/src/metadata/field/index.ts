@@ -8,8 +8,8 @@
 
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { ClassMetadata } from "../metadata.interface";
+import { FIELD_METADATA_KEY } from "../constants";
 import { FieldOptions } from "../field.options";
-import { METADATA_KEY } from "../constants";
 import { getLeaderboardMetadata } from "./get-leaderboard-metadata";
 import { getStoreMetadata } from "./get-store-metadata";
 import { getTypeMetadata } from "./get-type-metadata";
@@ -23,7 +23,8 @@ export function Field({
   mongo: mongoOptions,
 }: FieldOptions = {}): PropertyDecorator {
   return (target, propertyKey) => {
-    const metadata = (Reflect.getMetadata(METADATA_KEY, target) ?? {}) as ClassMetadata;
+    const metadata = (Reflect.getMetadata(FIELD_METADATA_KEY, target) ??
+      {}) as ClassMetadata;
 
     const type = getTypeMetadata(typeOptions, target, propertyKey);
     const leaderboard = getLeaderboardMetadata(
@@ -34,7 +35,7 @@ export function Field({
     const store = getStoreMetadata(type, leaderboard, storeOptions);
 
     Reflect.defineMetadata(
-      METADATA_KEY,
+      FIELD_METADATA_KEY,
       {
         ...metadata,
         [propertyKey as string]: {

@@ -8,35 +8,19 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
 import { SkyWarsMode } from "./mode";
 import { add } from "@statsify/math";
 import { getFormattedLevel, getLevel, getLevelProgress, parseKit } from "./util";
 
-export const SKYWARS_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo" },
-  { api: "doubles" },
-
-  { hypixel: "solo_insane_lucky", formatted: "Lucky Solo" },
-  { hypixel: "teams_insane_lucky", formatted: "Lucky Doubles" },
-  { hypixel: "solo_insane_slime", formatted: "Slime Solo" },
-  { hypixel: "teams_insane_slime", formatted: "Slime Doubles" },
-  { hypixel: "solo_insane_rush", formatted: "Rush Solo" },
-  { hypixel: "teams_insane_rush", formatted: "Rush Doubles" },
-  { hypixel: "solo_normal", formatted: "Solo Normal" },
-  { hypixel: "solo_insane", formatted: "Solo Insane" },
-  { hypixel: "teams_normal", formatted: "Doubles Normal" },
-  { hypixel: "teams_insane", formatted: "Doubles Insane" },
-  { hypixel: "solo_insane_tnt_madness", formatted: "TNT Madness Solo" },
-  { hypixel: "teams_insane_tnt_madness", formatted: "TNT Madness Doubles" },
-  { hypixel: "mega_normal", formatted: "Mega" },
-  { hypixel: "mega_doubles", formatted: "Mega Doubles" },
-]);
-
-export type SkyWarsModes = IGameModes<typeof SKYWARS_MODES>;
-
+@GameType()
 export class SkyWars {
   @Field({
     leaderboard: {
@@ -84,12 +68,15 @@ export class SkyWars {
   @Field()
   public progression: Progression;
 
+  @Mode()
   @Field()
   public overall: SkyWarsMode;
 
+  @Mode()
   @Field()
   public solo: SkyWarsMode;
 
+  @Mode()
   @Field()
   public doubles: SkyWarsMode;
 
@@ -149,5 +136,25 @@ export class SkyWars {
     );
   }
 }
+
+export type SkyWarsModes = StatsifyApiModes<SkyWars>;
+export const SKYWARS_MODES = new GameModes<SkyWarsModes>([
+  ...GetMetadataModes(SkyWars),
+
+  { hypixel: "solo_insane_lucky", formatted: "Lucky Solo" },
+  { hypixel: "teams_insane_lucky", formatted: "Lucky Doubles" },
+  { hypixel: "solo_insane_slime", formatted: "Slime Solo" },
+  { hypixel: "teams_insane_slime", formatted: "Slime Doubles" },
+  { hypixel: "solo_insane_rush", formatted: "Rush Solo" },
+  { hypixel: "teams_insane_rush", formatted: "Rush Doubles" },
+  { hypixel: "solo_normal", formatted: "Solo Normal" },
+  { hypixel: "solo_insane", formatted: "Solo Insane" },
+  { hypixel: "teams_normal", formatted: "Doubles Normal" },
+  { hypixel: "teams_insane", formatted: "Doubles Insane" },
+  { hypixel: "solo_insane_tnt_madness", formatted: "TNT Madness Solo" },
+  { hypixel: "teams_insane_tnt_madness", formatted: "TNT Madness Doubles" },
+  { hypixel: "mega_normal", formatted: "Mega" },
+  { hypixel: "mega_doubles", formatted: "Mega Doubles" },
+]);
 
 export * from "./mode";

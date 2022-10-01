@@ -8,24 +8,18 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
 import { WoolWarsClass, WoolWarsOverall } from "./class";
 import { getExpReq, getFormattedLevel, getLevel } from "./util";
 
-export const WOOLWARS_MODES = new GameModes([
-  { api: "overall" },
-  { api: "tank" },
-  { api: "archer" },
-  { api: "builder" },
-  { api: "swordsman" },
-  { api: "engineer" },
-  { api: "golem" },
-  { api: "assault" },
-]);
-
-export type WoolWarsModes = IGameModes<typeof WOOLWARS_MODES>;
-
+@GameType()
 export class WoolWars {
   @Field()
   public coins: number;
@@ -55,27 +49,35 @@ export class WoolWars {
   @Field()
   public nextLevelFormatted: string;
 
+  @Mode()
   @Field()
   public overall: WoolWarsOverall;
 
+  @Mode()
   @Field()
   public tank: WoolWarsClass;
 
+  @Mode()
   @Field()
   public archer: WoolWarsClass;
 
+  @Mode()
   @Field()
   public builder: WoolWarsClass;
 
+  @Mode()
   @Field()
   public swordsman: WoolWarsClass;
 
+  @Mode()
   @Field()
   public engineer: WoolWarsClass;
 
+  @Mode()
   @Field()
   public golem: WoolWarsClass;
 
+  @Mode()
   @Field()
   public assault: WoolWarsClass;
 
@@ -107,5 +109,8 @@ export class WoolWars {
     this.assault = new WoolWarsClass(data.wool_wars?.stats?.classes?.assault);
   }
 }
+
+export type WoolWarsModes = StatsifyApiModes<WoolWars>;
+export const WOOLWARS_MODES = new GameModes<WoolWarsModes>(GetMetadataModes(WoolWars));
 
 export * from "./class";

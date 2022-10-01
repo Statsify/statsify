@@ -14,24 +14,16 @@ import {
   StandardMurderMysteryMode,
 } from "./mode";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { add } from "@statsify/math";
 
-export const MURDER_MYSTERY_MODES = new GameModes([
-  { api: "overall" },
-  { api: "classic" },
-  { api: "doubleUp" },
-  { api: "assassins" },
-  { api: "infection" },
-
-  { hypixel: "MURDER_DOUBLE_UP", formatted: "Double Up" },
-  { hypixel: "MURDER_INFECTION", formatted: "Infection" },
-  { hypixel: "MURDER_ASSASSINS", formatted: "Assassins" },
-  { hypixel: "MURDER_CLASSIC", formatted: "Classic" },
-]);
-
-export type MurderMysteryModes = IGameModes<typeof MURDER_MYSTERY_MODES>;
-
+@GameType()
 export class MurderMystery {
   @Field()
   public coins: number;
@@ -39,18 +31,23 @@ export class MurderMystery {
   @Field()
   public lootChests: number;
 
+  @Mode()
   @Field()
   public overall: StandardMurderMysteryMode;
 
+  @Mode("MURDER_CLASSIC", "Classic")
   @Field()
   public classic: ClassicMurderMysteryMode;
 
+  @Mode("MURDER_ASSASSINS", "Assassins")
   @Field()
   public assassins: AssassinsMurderMysteryMode;
 
+  @Mode("MURDER_DOUBLE_UP", "Double Up")
   @Field()
   public doubleUp: ClassicMurderMysteryMode;
 
+  @Mode("MURDER_INFECTION", "Infection")
   @Field()
   public infection: InfectionMurderMysteryMode;
 
@@ -75,5 +72,10 @@ export class MurderMystery {
     this.overall.heroWins = ap.murdermystery_countermeasures;
   }
 }
+
+export type MurderMysteryModes = StatsifyApiModes<MurderMystery>;
+export const MURDER_MYSTERY_MODES = new GameModes<MurderMysteryModes>(
+  GetMetadataModes(MurderMystery)
+);
 
 export * from "./mode";

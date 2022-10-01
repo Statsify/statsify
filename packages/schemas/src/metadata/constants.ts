@@ -8,7 +8,7 @@
 
 import { Constructor } from "@statsify/util";
 
-export const METADATA_KEY = "statsify";
+export const FIELD_METADATA_KEY = "statsify:field";
 
 export const primitiveConstructors = [
   String,

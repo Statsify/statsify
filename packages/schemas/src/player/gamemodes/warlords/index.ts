@@ -9,6 +9,7 @@
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
+import { GameType, Mode } from "../../../metadata/GameType";
 import { WarlordsClass } from "./class";
 import { add, ratio, sub } from "@statsify/math";
 
@@ -23,16 +24,21 @@ export const WARLORDS_MODES = new GameModes([
 
 export type WarlordsModes = IGameModes<typeof WARLORDS_MODES>;
 
+@GameType()
 export class Warlords {
+  @Mode()
   @Field()
   public mage: WarlordsClass;
 
+  @Mode()
   @Field()
   public warrior: WarlordsClass;
 
+  @Mode()
   @Field()
   public paladin: WarlordsClass;
 
+  @Mode()
   @Field()
   public shaman: WarlordsClass;
 

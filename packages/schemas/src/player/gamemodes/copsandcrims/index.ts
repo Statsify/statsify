@@ -9,19 +9,15 @@
 import { APIData } from "@statsify/util";
 import { CopsAndCrimsOverall, Deathmatch, Defusal, GunGame } from "./mode";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
 import { GamePrefix, defaultPrefix, getFormattedPrefix } from "../prefixes";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { add } from "@statsify/math";
-
-export const COPS_AND_CRIMS_MODES = new GameModes([
-  { api: "overall" },
-  { api: "defusal", hypixel: "normal" },
-  { api: "deathmatch", hypixel: "deathmatch" },
-  { api: "gunGame", hypixel: "gungame" },
-  { hypixel: "normal_party", formatted: "Challenge" },
-]);
-
-export type CopsAndCrimsModes = IGameModes<typeof COPS_AND_CRIMS_MODES>;
 
 type PrefixParams = [kills: number, prefix: string];
 
@@ -67,6 +63,7 @@ const PREFIX_MAP: Record<string, string> = {
   carbine: "ᨦᨧ",
 };
 
+@GameType()
 export class CopsAndCrims {
   @Field()
   public coins: number;
@@ -76,15 +73,19 @@ export class CopsAndCrims {
   })
   public naturalPrefix: string;
 
+  @Mode()
   @Field()
   public overall: CopsAndCrimsOverall;
 
+  @Mode("normal")
   @Field()
   public defusal: Defusal;
 
+  @Mode("deathmatch")
   @Field()
   public deathmatch: Deathmatch;
 
+  @Mode("gungame")
   @Field()
   public gunGame: GunGame;
 
@@ -113,5 +114,11 @@ export class CopsAndCrims {
     });
   }
 }
+
+export type CopsAndCrimsModes = StatsifyApiModes<CopsAndCrims>;
+export const COPS_AND_CRIMS_MODES = new GameModes<CopsAndCrimsModes>([
+  ...GetMetadataModes(CopsAndCrims),
+  { hypixel: "normal_party", formatted: "Challenge" },
+]);
 
 export * from "./mode";

@@ -9,12 +9,11 @@
 import { APIData } from "@statsify/util";
 import { Events } from "./events";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
+import { GameType, GetMetadataModes, StatsifyApiModes } from "../../../metadata/GameType";
 import { getNetworkLevel } from "./util";
 
-export const GENERAL_MODES = new GameModes([{ api: "overall" }]);
-export type GeneralModes = IGameModes<typeof GENERAL_MODES>;
-
+@GameType("overall")
 export class General {
   @Field()
   public achievementPoints: number;
@@ -77,5 +76,9 @@ export class General {
     this.events = new Events(data.seasonal);
   }
 }
+
+type ExcludeKeys = "events";
+export type GeneralModes = StatsifyApiModes<Omit<General, ExcludeKeys>, "overall">;
+export const GENERAL_MODES = new GameModes<GeneralModes>(GetMetadataModes(General));
 
 export * from "./events";

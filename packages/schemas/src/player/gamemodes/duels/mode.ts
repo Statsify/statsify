@@ -8,7 +8,14 @@
 
 import { APIData, romanNumeral } from "@statsify/util";
 import { Field } from "../../../metadata";
+import { GameModes } from "../../../game";
 import { GamePrefix, createPrefixProgression } from "../prefixes";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
 import { Title, getTitle, titleScores } from "./util";
 import { deepAdd, ratio } from "@statsify/math";
@@ -113,6 +120,7 @@ export class BridgeDuelsMode extends PVPBaseDuelsGameMode {
   }
 }
 
+@GameType()
 export class BridgeDuels {
   @Field()
   public titleFormatted: string;
@@ -126,27 +134,35 @@ export class BridgeDuels {
   @Field()
   public progression: Progression;
 
+  @Mode()
   @Field()
   public overall: BridgeDuelsMode;
 
+  @Mode()
   @Field()
   public solo: BridgeDuelsMode;
 
+  @Mode()
   @Field()
   public doubles: BridgeDuelsMode;
 
+  @Mode()
   @Field()
   public threes: BridgeDuelsMode;
 
+  @Mode()
   @Field()
   public fours: BridgeDuelsMode;
 
+  @Mode()
   @Field()
   public "2v2v2v2": BridgeDuelsMode;
 
+  @Mode()
   @Field()
   public "3v3v3v3": BridgeDuelsMode;
 
+  @Mode("", "CTF")
   @Field({ leaderboard: { fieldName: "CTF" } })
   public ctf: BridgeDuelsMode;
 
@@ -194,6 +210,9 @@ export class BridgeDuels {
     this.progression = createPrefixProgression(prefixes, this.overall.wins);
   }
 }
+
+export type BridgeModes = StatsifyApiModes<BridgeDuels>;
+export const BRIDGE_MODES = new GameModes<BridgeModes>(GetMetadataModes(BridgeDuels));
 
 export class MultiPVPDuelsGameMode {
   @Field()

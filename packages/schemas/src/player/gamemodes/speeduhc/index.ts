@@ -8,8 +8,9 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
 import { GamePrefix, createPrefixProgression } from "../prefixes";
+import { GameType, Mode, StatsifyApiModes } from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
 import { SpeedUHCMastery } from "./mastery";
 import { SpeedUHCMode } from "./mode";
@@ -17,35 +18,22 @@ import { getLevelIndex, titleScores } from "./util";
 
 const formatLevel = (level: number | string) => `§d[${level}❋]`;
 
-export const SPEED_UHC_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo", hypixel: "solo_normal" },
-  { api: "teams", hypixel: "team_normal" },
-  { api: "wildSpecialist" },
-  { api: "guardian" },
-  { api: "sniper" },
-  { api: "berserk" },
-  { api: "masterBaker" },
-  { api: "invigorate" },
-  { api: "huntsman" },
-  { api: "fortune" },
-  { api: "vampirism" },
-]);
-
 const prefixes: GamePrefix[] = titleScores.map((level) => ({
   fmt: formatLevel,
   req: level.req,
 }));
 
-export type SpeedUHCModes = IGameModes<typeof SPEED_UHC_MODES>;
-
+@GameType()
 export class SpeedUHC {
+  @Mode()
   @Field()
   public overall: SpeedUHCMode;
 
+  @Mode("solo_normal")
   @Field()
   public solo: SpeedUHCMode;
 
+  @Mode("team_normal")
   @Field()
   public teams: SpeedUHCMode;
 
@@ -73,30 +61,39 @@ export class SpeedUHC {
   @Field({ store: { default: titleScores[0].title } })
   public title: string;
 
+  @Mode()
   @Field()
   public wildSpecialist: SpeedUHCMastery;
 
+  @Mode()
   @Field()
   public guardian: SpeedUHCMastery;
 
+  @Mode()
   @Field()
   public sniper: SpeedUHCMastery;
 
+  @Mode()
   @Field()
   public berserk: SpeedUHCMastery;
 
+  @Mode()
   @Field()
   public masterBaker: SpeedUHCMastery;
 
+  @Mode()
   @Field()
   public invigorate: SpeedUHCMastery;
 
+  @Mode()
   @Field()
   public huntsman: SpeedUHCMastery;
 
+  @Mode()
   @Field()
   public fortune: SpeedUHCMastery;
 
+  @Mode()
   @Field()
   public vampirism: SpeedUHCMastery;
 
@@ -130,6 +127,22 @@ export class SpeedUHC {
     this.title = titleScores[index].title;
   }
 }
+
+export type SpeedUHCModes = StatsifyApiModes<SpeedUHC>;
+export const SPEED_UHC_MODES = new GameModes<SpeedUHCModes>([
+  { api: "overall" },
+  { api: "solo", hypixel: "solo_normal" },
+  { api: "teams", hypixel: "team_normal" },
+  { api: "wildSpecialist" },
+  { api: "guardian" },
+  { api: "sniper" },
+  { api: "berserk" },
+  { api: "masterBaker" },
+  { api: "invigorate" },
+  { api: "huntsman" },
+  { api: "fortune" },
+  { api: "vampirism" },
+]);
 
 export * from "./mastery";
 export * from "./mode";

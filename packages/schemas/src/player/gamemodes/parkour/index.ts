@@ -8,14 +8,12 @@
 
 import { APIData, formatTime } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { FormattedGame, GameModes, IGameModes } from "../../../game";
-
-export const PARKOUR_MODES = new GameModes([{ api: "overall" }]);
-
-export type ParkourModes = IGameModes<typeof PARKOUR_MODES>;
+import { FormattedGame, GameModes } from "../../../game";
+import { GameType, GetMetadataModes, StatsifyApiModes } from "../../../metadata/GameType";
 
 const fieldOptions = { sort: "ASC", formatter: formatTime, fieldName: "Time" };
 
+@GameType("overall")
 export class Parkour {
   @Field({ leaderboard: { ...fieldOptions, name: `${FormattedGame.ARCADE} Lobby` } })
   public ARCADE: number;
@@ -107,3 +105,6 @@ export class Parkour {
     this.WOOLWARS = getTime("WoolGames");
   }
 }
+
+export type ParkourModes = StatsifyApiModes<Parkour, "overall">;
+export const PARKOUR_MODES = new GameModes<ParkourModes>(GetMetadataModes(Parkour));

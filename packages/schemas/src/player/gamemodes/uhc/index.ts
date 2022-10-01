@@ -8,8 +8,14 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
 import { GamePrefix, createPrefixProgression } from "../prefixes";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
 import { UHCMode } from "./mode";
 import { deepAdd } from "@statsify/math";
@@ -17,26 +23,22 @@ import { getLevelIndex, titleScores } from "./util";
 
 const formatLevel = (level: number | string) => `§6[${level}✫]`;
 
-export const UHC_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo", hypixel: "SOLO" },
-  { api: "teams", hypixel: "TEAMS" },
-]);
-
 const prefixes: GamePrefix[] = titleScores.map((level) => ({
   fmt: formatLevel,
   req: level.req,
 }));
 
-export type UHCModes = IGameModes<typeof UHC_MODES>;
-
+@GameType()
 export class UHC {
+  @Mode()
   @Field()
   public overall: UHCMode;
 
+  @Mode("SOLO")
   @Field()
   public solo: UHCMode;
 
+  @Mode("TEAMS")
   @Field()
   public teams: UHCMode;
 
@@ -95,5 +97,8 @@ export class UHC {
     UHCMode.applyRatios(this.overall);
   }
 }
+
+export type UHCModes = StatsifyApiModes<UHC>;
+export const UHC_MODES = new GameModes<UHCModes>(GetMetadataModes(UHC));
 
 export * from "./mode";

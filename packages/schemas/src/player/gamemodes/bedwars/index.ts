@@ -9,47 +9,18 @@
 import { APIData } from "@statsify/util";
 import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from "./mode";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
 import { add, deepSub } from "@statsify/math";
 import { getExpReq, getFormattedLevel, getLevel } from "./util";
 
-export const BEDWARS_MODES = new GameModes([
-  { api: "overall" },
-  { api: "core" },
-  { api: "solo", hypixel: "BEDWARS_EIGHT_ONE" },
-  { api: "doubles", hypixel: "BEDWARS_EIGHT_TWO" },
-  { api: "threes", hypixel: "BEDWARS_FOUR_THREE" },
-  { api: "fours", hypixel: "BEDWARS_FOUR_FOUR" },
-  { api: "4v4", hypixel: "BEDWARS_TWO_FOUR" },
-  { api: "armed" },
-  { api: "castle", hypixel: "BEDWARS_CASTLE" },
-  { api: "lucky" },
-  { api: "rush" },
-  { api: "swap" },
-  { api: "ultimate" },
-  { api: "underworld" },
-  { api: "voidless" },
-
-  { hypixel: "BEDWARS_EIGHT_TWO_ARMED", formatted: "Armed Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_ARMED", formatted: "Armed Fours" },
-  { hypixel: "BEDWARS_EIGHT_TWO_LUCKY", formatted: "Lucky Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_LUCKY", formatted: "Lucky Fours" },
-  { hypixel: "BEDWARS_EIGHT_TWO_RUSH", formatted: "Rush Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_RUSH", formatted: "Rush Fours" },
-  { hypixel: "BEDWARS_EIGHT_TWO_SWAP", formatted: "Swap Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_SWAP", formatted: "Swap Fours" },
-  { hypixel: "BEDWARS_EIGHT_TWO_ULTIMATE", formatted: "Ultimate Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_ULTIMATE", formatted: "Ultimate Fours" },
-  { hypixel: "BEDWARS_EIGHT_TWO_UNDERWORLD", formatted: "Underworld Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_UNDERWORLD", formatted: "Underworld Fours" },
-  { hypixel: "BEDWARS_EIGHT_TWO_VOIDLESS", formatted: "Voidless Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_VOIDLESS", formatted: "Voidless Fours" },
-  { hypixel: "BEDWARS_PRACTICE", formatted: "Practice" },
-]);
-
-export type BedWarsModes = IGameModes<typeof BEDWARS_MODES>;
-
+@GameType()
 export class BedWars {
   @Field()
   public coins: number;
@@ -83,48 +54,63 @@ export class BedWars {
   @Field()
   public nextLevelFormatted: string;
 
+  @Mode()
   @Field()
   public overall: BedWarsMode;
 
-  @Field()
-  public solo: BedWarsMode;
-
-  @Field()
-  public doubles: BedWarsMode;
-
-  @Field()
-  public threes: BedWarsMode;
-
-  @Field()
-  public fours: BedWarsMode;
-
+  @Mode()
   @Field()
   public core: BedWarsMode;
 
+  @Mode("BEDWARS_EIGHT_ONE")
+  @Field()
+  public solo: BedWarsMode;
+
+  @Mode("BEDWARS_EIGHT_TWO")
+  @Field()
+  public doubles: BedWarsMode;
+
+  @Mode("BEDWARS_FOUR_THREE")
+  @Field()
+  public threes: BedWarsMode;
+
+  @Mode("BEDWARS_FOUR_FOUR")
+  @Field()
+  public fours: BedWarsMode;
+
+  @Mode("BEDWARS_TWO_FOUR")
   @Field()
   public "4v4": BedWarsMode;
 
+  @Mode()
   @Field()
   public armed: BedWarsMode;
 
+  @Mode("BEDWARS_CASTLE")
   @Field()
   public castle: BedWarsMode;
 
+  @Mode()
   @Field()
   public lucky: BedWarsMode;
 
+  @Mode()
   @Field()
   public rush: BedWarsMode;
 
+  @Mode()
   @Field()
   public swap: BedWarsMode;
 
+  @Mode()
   @Field()
   public ultimate: BedWarsMode;
 
+  @Mode()
   @Field()
   public underworld: BedWarsMode;
 
+  @Mode()
   @Field()
   public voidless: BedWarsMode;
 
@@ -180,5 +166,25 @@ export class BedWars {
     this.challenges = new ChallengesBedWars(data);
   }
 }
+
+export type BedWarsModes = StatsifyApiModes<BedWars>;
+export const BEDWARS_MODES = new GameModes<BedWarsModes>([
+  ...GetMetadataModes(BedWars),
+  { hypixel: "BEDWARS_EIGHT_TWO_ARMED", formatted: "Armed Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_ARMED", formatted: "Armed Fours" },
+  { hypixel: "BEDWARS_EIGHT_TWO_LUCKY", formatted: "Lucky Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_LUCKY", formatted: "Lucky Fours" },
+  { hypixel: "BEDWARS_EIGHT_TWO_RUSH", formatted: "Rush Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_RUSH", formatted: "Rush Fours" },
+  { hypixel: "BEDWARS_EIGHT_TWO_SWAP", formatted: "Swap Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_SWAP", formatted: "Swap Fours" },
+  { hypixel: "BEDWARS_EIGHT_TWO_ULTIMATE", formatted: "Ultimate Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_ULTIMATE", formatted: "Ultimate Fours" },
+  { hypixel: "BEDWARS_EIGHT_TWO_UNDERWORLD", formatted: "Underworld Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_UNDERWORLD", formatted: "Underworld Fours" },
+  { hypixel: "BEDWARS_EIGHT_TWO_VOIDLESS", formatted: "Voidless Doubles" },
+  { hypixel: "BEDWARS_FOUR_FOUR_VOIDLESS", formatted: "Voidless Fours" },
+  { hypixel: "BEDWARS_PRACTICE", formatted: "Practice" },
+]);
 
 export * from "./mode";

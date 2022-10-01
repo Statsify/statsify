@@ -8,13 +8,17 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { VampireZHuman, VampireZVampire } from "./life";
 import { add } from "@statsify/math";
 
-export const VAMPIREZ_MODES = new GameModes([{ api: "human" }, { api: "vampire" }]);
-export type VampireZModes = IGameModes<typeof VAMPIREZ_MODES>;
-
+@GameType()
 export class VampireZ {
   @Field()
   public coins: number;
@@ -31,6 +35,7 @@ export class VampireZ {
   @Field()
   public zombieKills: number;
 
+  @Mode()
   @Field({
     leaderboard: {
       extraDisplay: "stats.vampirez.human.naturalPrefix",
@@ -39,6 +44,7 @@ export class VampireZ {
   })
   public human: VampireZHuman;
 
+  @Mode()
   @Field({
     leaderboard: {
       extraDisplay: "stats.vampirez.vampire.naturalPrefix",
@@ -60,5 +66,8 @@ export class VampireZ {
     this.overallWins = add(this.human.wins, this.vampire.wins);
   }
 }
+
+export type VampireZModes = StatsifyApiModes<VampireZ>;
+export const VAMPIREZ_MODES = new GameModes<VampireZModes>(GetMetadataModes(VampireZ));
 
 export * from "./life";

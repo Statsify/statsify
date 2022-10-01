@@ -8,38 +8,16 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { SmashHeroesKit, SmashHeroesMode } from "./mode";
 
 const formatLevel = (level: number) => `§b${level}§6✶`;
-
-export const SMASH_HEROES_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo", hypixel: "solo_normal" },
-  { api: "doubles", hypixel: "2v2_normal" },
-  { api: "teams", hypixel: "teams_normal" },
-  { api: "botman" },
-  { api: "bulk" },
-  { api: "cakeMonster" },
-  { api: "cryomancer" },
-  { api: "generalCluck" },
-  { api: "greenHood" },
-  { api: "karakot" },
-  { api: "marauder" },
-  { api: "pug" },
-  { api: "sanic" },
-  { api: "sergeantShield" },
-  { api: "shoop" },
-  { api: "skullfire" },
-  { api: "spoderman" },
-  { api: "tinman" },
-  { api: "voidCrawler" },
-
-  { hypixel: "1v1_normal", formatted: "1v1" },
-  { hypixel: "friends_normal", formatted: "Friends" },
-]);
-
-export type SmashHeroesModes = IGameModes<typeof SMASH_HEROES_MODES>;
 
 enum SmashHeroesClass {
   BOTMUN = "Botmon",
@@ -60,16 +38,21 @@ enum SmashHeroesClass {
   TINMAN = "Tinman",
 }
 
+@GameType()
 export class SmashHeroes {
+  @Mode()
   @Field()
   public overall: SmashHeroesMode;
 
+  @Mode("solo_normal")
   @Field()
   public solo: SmashHeroesMode;
 
+  @Mode("2v2_normal")
   @Field()
   public doubles: SmashHeroesMode;
 
+  @Mode("teams_normal")
   @Field()
   public teams: SmashHeroesMode;
 
@@ -85,51 +68,67 @@ export class SmashHeroes {
   @Field({ store: { default: "none" } })
   public kit: string;
 
+  @Mode()
   @Field()
   public cakeMonster: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public generalCluck: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public tinman: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public spoderman: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public skullfire: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public karakot: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public bulk: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public botman: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public sanic: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public marauder: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public voidCrawler: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public pug: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public sergeantShield: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public cryomancer: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public shoop: SmashHeroesKit;
 
+  @Mode()
   @Field()
   public greenHood: SmashHeroesKit;
 
@@ -163,5 +162,13 @@ export class SmashHeroes {
     this.levelFormatted = formatLevel(this.level ?? 0);
   }
 }
+
+export type SmashHeroesModes = StatsifyApiModes<SmashHeroes>;
+export const SMASH_HEROES_MODES = new GameModes<SmashHeroesModes>([
+  ...GetMetadataModes(SmashHeroes),
+
+  { hypixel: "1v1_normal", formatted: "1v1" },
+  { hypixel: "friends_normal", formatted: "Friends" },
+]);
 
 export * from "./mode";

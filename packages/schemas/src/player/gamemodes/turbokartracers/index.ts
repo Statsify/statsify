@@ -8,19 +8,16 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
 import {
   GamePrefix,
   createPrefixProgression,
   defaultPrefix,
   getFormattedPrefix,
 } from "../prefixes";
+import { GameType, GetMetadataModes, StatsifyApiModes } from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
 import { add, ratio } from "@statsify/math";
-
-export const TURBO_KART_RACERS_MODES = new GameModes([{ api: "overall" }]);
-
-export type TurboKartRacersModes = IGameModes<typeof TURBO_KART_RACERS_MODES>;
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}✪]`, req: 0 },
@@ -39,6 +36,7 @@ const prefixes: GamePrefix[] = [
   { fmt: (n) => `§0[${n}✪]`, req: 10_000 },
 ];
 
+@GameType("overall")
 export class TurboKartRacers {
   @Field()
   public coins: number;
@@ -137,3 +135,8 @@ export class TurboKartRacers {
     this.trophyRate = ratio(this.total, this.gamesPlayed, 100);
   }
 }
+
+export type TurboKartRacersModes = StatsifyApiModes<TurboKartRacers, "overall">;
+export const TURBO_KART_RACERS_MODES = new GameModes<TurboKartRacersModes>(
+  GetMetadataModes(TurboKartRacers)
+);

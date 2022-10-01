@@ -7,6 +7,7 @@
  */
 
 export * from "./field";
+export * from "./GameType";
 export * from "./metadata-scanner";
 export * from "./serialize";
 export * from "./field.options";
