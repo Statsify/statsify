@@ -441,7 +441,7 @@
       "title": "순위 없음"
     },
     "noRecentGames": {
-      "description": "**{{displayName}}**님의 최근 플레이한 게임을 찾지 못했어요!",
+      "description": "**{{displayName}}**님이 최근 플레이한 게임을 찾지 못했어요!",
       "title": "최근 플레이한 게임을 찾지 못함"
     },
     "noStatus": {
@@ -749,7 +749,7 @@
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) **$t(socials.discord)**에 참여해 **대기 시간 20% 감소**를 받아보세요 $t(emojis:heart)",
-    "invite": "$t(emojis:socials.discord) **[여기](<https://statsify.net/invite>)를 클릭해 Statsify를 내 서버에 초대하세요!",
+    "invite": "$t(emojis:socials.discord) **[여기](<https://statsify.net/invite>)**를 클릭해 Statsify를 내 서버에 초대하세요!",
     "premium": "$t(emojis:logos.gold) **[Statsify 프리미엄](<https://statsify.net/premium>)**은 개인적인 프로필 배지와 같은 추가 기능을 제공해요. [여기서](<https://statsify.net/premium>) 모든 혜택을 찾아보세요!",
     "rankings": "$t(emojis:logos.iron) **[Statsify 프리미엄](<https://statsify.net/premium>)**으로 `/rankings` 명령어를 사용해 나의 순위표 순위를 확인하세요",
     "verify": "$t(emojis:check) `/verify` 명령어로 프로필 이름 없이 명령어를 실행하고 **대기 시간 10% 감소**를 받아보세요"
