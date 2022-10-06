@@ -7,7 +7,7 @@
  */
 
 import Axios, { AxiosError, AxiosInstance } from "axios";
-import { HypixelPlayer } from "./types";
+import { HypixelPlayerResponse } from "./types";
 import { setTimeout } from "node:timers/promises";
 
 export class HypixelKeyRejectedError extends Error {
@@ -44,8 +44,8 @@ export class HypixelAPI {
     this.config = config;
   }
 
-  public player(uuid: string): Promise<HypixelPlayer | undefined> {
-    return this.get<HypixelPlayer>("player", { uuid });
+  public player(uuid: string): Promise<HypixelPlayerResponse | undefined> {
+    return this.get<HypixelPlayerResponse>("player", { uuid });
   }
 
   public friends(uuid: string) {

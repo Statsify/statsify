@@ -6,40 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { APIData } from "./APIData";
 import { BaseHypixelResponse } from "./base-hypixel-response";
+import { HypixelAchievementMode, HypixelGameMode, HypixelLobby } from "./games";
 import { HypixelNormalRanks } from "./ranks";
 
+export type ChallengesTime = `day_${string}` | "all__time";
+export type AchievementName = `${HypixelAchievementMode}_${string}`;
+
 declare class HypixelPlayerStats {
-  public SkyWars?: { [key: string]: any };
-  public HungerGames?: { [key: string]: any };
-  public Walls?: { [key: string]: any };
-  public BattleGround?: { [key: string]: any };
-  public UHC?: { [key: string]: any };
-  public Walls3?: { [key: string]: any };
-  public Arcade?: { [key: string]: any };
-  public Quake?: { [key: string]: any };
-  public SpeedUHC?: { [key: string]: any };
-  public TNTGames?: { [key: string]: any };
-  public Arena?: { [key: string]: any };
-  public Paintball?: { [key: string]: any };
-  public MCGO?: { [key: string]: any };
-  public VampireZ?: { [key: string]: any };
-  public GingerBread?: { [key: string]: any };
-  public SuperSmash?: { [key: string]: any };
-  public TrueCombat?: { [key: string]: any };
-  public SkyClash?: { [key: string]: any };
-  public Bedwars?: { [key: string]: any };
-  public Duels?: { [key: string]: any };
-  public MurderMystery?: { [key: string]: any };
-  public BuildBattle?: { [key: string]: any };
-  public Legacy?: { [key: string]: any };
-  public Pit?: { [key: string]: any };
-  public Housing?: { [key: string]: any };
-  public WoolGames?: { [key: string]: any };
+  [key: HypixelGameMode]: APIData;
 }
 
 export declare class HypixelPlayerChallenges {
-  [key: string]: number;
+  [key: `${Uppercase<HypixelGameMode>}_${string}`]: number;
 }
 
 export declare class HypixelPlayerQuest {
@@ -50,7 +30,7 @@ export declare class HypixelPlayerQuest {
   };
 }
 
-export declare class HypixelPlayer extends BaseHypixelResponse {
+export declare class HypixelPlayer {
   [key: string]: any;
 
   /**
@@ -78,21 +58,11 @@ export declare class HypixelPlayer extends BaseHypixelResponse {
    */
   public displayname?: string;
 
-  /**
-   * Known previous names of the player
-   */
-  public knownAliases?: string[];
-
-  /**
-   * Known previous names of the player all lowercased
-   */
-  public knownAliasesLower?: string[];
-
-  public achievementsOneTime?: string[];
+  public achievementsOneTime?: AchievementName[];
   public networkExp?: number;
   public karma?: number;
   public stats?: HypixelPlayerStats;
-  public achievements?: Record<string, number>;
+  public achievements?: Record<AchievementName, number>;
   public newPackageRank?: HypixelNormalRanks;
   public totalRewards?: number;
   public totalDailyRewards?: number;
@@ -101,15 +71,19 @@ export declare class HypixelPlayer extends BaseHypixelResponse {
   public rewardHighScore?: number;
   public achievementPoints?: number;
   public challenges?: {
-    [key: string]: Record<string, HypixelPlayerChallenges>;
-    all_time?: Record<string, HypixelPlayerChallenges>;
+    [key: ChallengesTime]: HypixelPlayerChallenges;
+    all_time?: HypixelPlayerChallenges;
   };
   public quests?: Record<string, HypixelPlayerQuest>;
-  public parkourCheckpointBests?: { [key: string]: number[] };
+  public parkourCheckpointBests?: { [key: HypixelLobby]: number[] };
   public parkourCompletions?: {
-    [key: string]: { timeStart?: number; timeTook?: number }[];
+    [key: HypixelLobby]: { timeStart?: number; timeTook?: number }[];
   };
   public rankPlusColor?: string;
   public monthlyPackageRank?: "NONE" | "SUPERSTAR";
   public monthlyRankColor?: "GOLD" | "AQUA";
+}
+
+export declare class HypixelPlayerResponse extends BaseHypixelResponse {
+  public player: HypixelPlayer;
 }
