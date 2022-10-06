@@ -9,7 +9,6 @@
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { Progression } from "../../../progression";
-import { add } from "@statsify/math";
 
 const EXP_REQUIREMENT = 25_000;
 const MAX_LEVEL = 100;
@@ -45,14 +44,9 @@ export class Events {
   @Field()
   public silver: number;
 
-  @Field()
-  public totalExp: number;
-
   public constructor(data: APIData = {}) {
     this.summer2022 = new Event(data.summer?.["2022"]);
     this.halloween2022 = new Event(data.halloween?.["2022"]);
-
-    this.totalExp = add(this.summer2022.exp, this.halloween2022.exp);
 
     this.silver = data.silver;
   }

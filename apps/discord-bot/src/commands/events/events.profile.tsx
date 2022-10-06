@@ -61,10 +61,7 @@ export const EventsProfile = ({
 }: BaseProfileProps) => {
   const { events } = player.stats.general;
 
-  const sidebar: SidebarItem[] = [
-    [t("stats.silver"), t(events.silver), "§7"],
-    [t("stats.totalExp"), t(events.totalExp), "§b"],
-  ];
+  const sidebar: SidebarItem[] = [[t("stats.silver"), t(events.silver), "§7"]];
 
   return (
     <Container background={background}>
@@ -74,7 +71,7 @@ export const EventsProfile = ({
         badge={badge}
         sidebar={sidebar}
         time="LIVE"
-        title="§l§eEvent §fStats §r(2022)"
+        title="§l§5Event §fStats §r(2022)"
       />
       <Table.table>
         <Table.tr>
