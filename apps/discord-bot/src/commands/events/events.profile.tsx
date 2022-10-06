@@ -42,7 +42,7 @@ const EventTable = ({ title, event, t, color }: EventTableProps) => {
 
   return (
     <Table.ts title={title}>
-      <box width="100%" direction="column">
+      <box width="remaining" align="center" direction="column" height="50%">
         <Multiline margin={2}>{levelling}</Multiline>
       </box>
       <Table.td title={t("stats.exp")} value={t(event.exp)} color={color} />
@@ -75,12 +75,8 @@ export const EventsProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <EventTable
-            title="§#ff5555S§#ff9999u§#ffddddm§#ddffffm§#99ffffe§#55ffffr"
-            color="§6"
-            event={events.summer2022}
-            t={t}
-          />
+          <EventTable title="§eSummer" color="§e" event={events.summer2022} t={t} />
+          <EventTable title="§5Halloween" color="§5" event={events.halloween2022} t={t} />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />
