@@ -61,7 +61,10 @@ export const EventsProfile = ({
 }: BaseProfileProps) => {
   const { events } = player.stats.general;
 
-  const sidebar: SidebarItem[] = [[t("stats.silver"), t(events.silver), "§7"]];
+  const sidebar: SidebarItem[] = [
+    [t("stats.silver"), t(events.silver), "§7"],
+    [t("stats.totalExp"), t(events.totalExp), "§b"],
+  ];
 
   return (
     <Container background={background}>
