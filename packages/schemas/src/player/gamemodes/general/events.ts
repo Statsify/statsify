@@ -38,11 +38,16 @@ export class Events {
   @Field({ leaderboard: { name: "Summer 2022" } })
   public summer2022: Event;
 
+  @Field({ leaderboard: { name: "Halloween 2022" } })
+  public halloween2022: Event;
+
   @Field()
   public silver: number;
 
   public constructor(data: APIData = {}) {
     this.summer2022 = new Event(data.summer?.["2022"]);
+    this.halloween2022 = new Event(data.halloween?.["2022"]);
+
     this.silver = data.silver;
   }
 }
