@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "View your mutual Hypixel friends with another player",
-    "namehistory": "View someone's Minecraft name history",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "View Statsify's creators and contributors",
@@ -459,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "利用可能なすべての機能を[ここ](https://statsify.net/premium)から確認しましょう",
-      "preview": "利用可能なすべての機能を[ここ](https://statsify.net/premium)から確認してください。以下に、どのような変更があるかの小さいプレビューがあります。",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Statsify {{tier}} is required to run this command"
     },
     "staffOnly": {
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Available",
-    "nameHistory": "Name History",
-    "originalName": "Original Name",
     "trimmedUUID": "Trimmed UUID",
     "unavailable": "Unavailable",
     "username": "Username",
@@ -682,8 +679,8 @@
     "points": "Points",
     "poopCollected": "Poop Collected",
     "powerKicks": "Power Kicks",
-    "powerupActivations": "Powerup Activations",
-    "powerups": "Powerups",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Prefix",
     "prevent": "Prevent",
     "progression": {
@@ -746,7 +743,9 @@
     "woolCaptures": "Wool Captures",
     "woolPlaced": "Wool Placed",
     "zombieKills": "Zombie Kills",
-    "potionsBrewed": "Potions Brewed"
+    "potionsBrewed": "Potions Brewed",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",

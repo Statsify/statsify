@@ -121,7 +121,6 @@
     "monthly": "Voir vos statistiques mensuelles dans les différents jeux",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Voir vos amis mutuels sur Hypixel avec un autre joueur",
-    "namehistory": "Voir l'historique des pseudos Minecraft de quelqu'un",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Voir les créateurs et contributeurs de Statsify",
@@ -459,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Regardez tous les fonctionnalités disponibles [ici](https://statsify.net/premium).",
-      "preview": "Regardez toutes les fonctionnalités disponibles [ici](https://statsify.net/premium). Ci-dessous, un petit aperçu de ce que chaque commande fait/change.",
+      "preview": "Découvrez toutes les fonctionnalités disponibles [here](https://statsify.net/premium). Vous trouverez ci-dessous un petit aperçu de ce que la commande fait/change.",
       "title": "Statsify {{tier}} est requis pour exécuter cette commande"
     },
     "staffOnly": {
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Disponible",
-    "nameHistory": "Historique des Pseudos",
-    "originalName": "Pseudo Original",
     "trimmedUUID": "UUID Coupé",
     "unavailable": "Indisponible",
     "username": "Pseudo",
@@ -682,8 +679,8 @@
     "points": "Points",
     "poopCollected": "Crottes Collectées",
     "powerKicks": "Frappes Puissantes",
-    "powerupActivations": "Activations de Powerups",
-    "powerups": "Powerups",
+    "powerupActivations": "Activations des Power-Ups",
+    "powerups": "Power-Ups",
     "prefix": "Préfixe",
     "prevent": "Prévenir",
     "progression": {
@@ -746,7 +743,9 @@
     "woolCaptures": "Laines Capturées",
     "woolPlaced": "Laine Placée",
     "zombieKills": "Zombies tués",
-    "potionsBrewed": "Potions Distillées"
+    "potionsBrewed": "Potions Distillées",
+    "powerupsCollected": "Power-Ups collectés",
+    "roundsCompleted": "Tours Terminés"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Rejoignez notre **$t(socials.discord)** et obtenez **20% de temps d'attente en moins** $t(emojis:heart)",

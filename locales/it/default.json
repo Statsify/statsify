@@ -9,7 +9,7 @@
     "mojang-player": "Un nome utente di Minecraft o UUID",
     "number": "Numero",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard",
+    "player-leaderboard": "Scegli una classifica",
     "reason": "The reason for closing the support ticket",
     "server": "Un nome di un server Minecraft o un IP di un server",
     "tags-content": "The content of the tag",
@@ -94,7 +94,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-command": "Visualizza le classifiche per {{name}}",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Visualizza i tuoi amici di Hypixel che hai in comune con un altro giocatore",
-    "namehistory": "Visualizza lo storico dei nomi di Minecraft di un utente",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Visualizza i creatori e i contributori di Statsify",
@@ -459,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Controlla tutte le novità disponibiliti [qui](https://statsify.net/premium).",
-      "preview": "Dai un'occhiata a tutte le funzionalità disponibili [qui](https://statsify.net/premium). Sotto c'è una piccola anteprima di ciò che il comando fa/cambia.",
+      "preview": "Controlla tutte le funzionalità disponibili [qui](https://statsify.net/premium). Sotto c'è una piccola anteprima di cosa il comando fa/cambia.",
       "title": "Il livello {{tier}} di Statsify è necessario per eseguire questo comando"
     },
     "staffOnly": {
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Disponibile",
-    "nameHistory": "Cronologia Dei Nomi",
-    "originalName": "Nome Originale",
     "trimmedUUID": "UUID Rifilato",
     "unavailable": "Non Disponibile",
     "username": "Nome Utente",
@@ -682,8 +679,8 @@
     "points": "Punti",
     "poopCollected": "Escremento Collezionato",
     "powerKicks": "Tiri Potenti",
-    "powerupActivations": "Attivazioni Powerup",
-    "powerups": "Powerup",
+    "powerupActivations": "Attivazioni Power-Up",
+    "powerups": "Power-Up",
     "prefix": "Prefisso",
     "prevent": "Prevenire",
     "progression": {
@@ -746,7 +743,9 @@
     "woolCaptures": "Lana Catturata",
     "woolPlaced": "Lana Piazzata",
     "zombieKills": "Uccisioni Zombie",
-    "potionsBrewed": "Pozioni preparate"
+    "potionsBrewed": "Pozioni preparate",
+    "powerupsCollected": "Power-Up Collezionati",
+    "roundsCompleted": "Round Completati"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Unisciti al nostro **$t(socials.discord)** e ottieni **cooldown 20% più brevi** $t(emojis:heart)",

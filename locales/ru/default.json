@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Посмотреть общих друзей с другим игроком на Hypixel",
-    "namehistory": "Просмотреть историю чьих-либо имен в Minecraft",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Просмотреть создателей и вкладчиков Statsify",
@@ -459,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Посмотрите все доступные функции [here](https://statsify.net/premium).",
-      "preview": "Ознакомьтесь со всеми доступными возможностями [here](https://statsify.net/premium). Ниже приведен небольшой предварительный просмотр того, что какая команда делает/изменяет.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Для выполнения этой команды требуется Statsify {{tier}}"
     },
     "staffOnly": {
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Доступен",
-    "nameHistory": "История имен",
-    "originalName": "Оригинальное имя",
     "trimmedUUID": "Сокращённый UUID",
     "unavailable": "Недоступен",
     "username": "Имя пользователя",
@@ -682,8 +679,8 @@
     "points": "Очков",
     "poopCollected": "Собрано навоза",
     "powerKicks": "Силовых пинков",
-    "powerupActivations": "Активаций усилений",
-    "powerups": "Усилений",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Префикс",
     "prevent": "Предотвратить",
     "progression": {
@@ -746,7 +743,9 @@
     "woolCaptures": "Шерсти захвачено",
     "woolPlaced": "Шерсти размещено",
     "zombieKills": "Зомби убито",
-    "potionsBrewed": "Зелий сварено"
+    "potionsBrewed": "Зелий сварено",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Присоединяйтесь к нам**$t(socials.discord)**, и получайте **перезарядку на 20% ниже** $t(emojis:heart)",

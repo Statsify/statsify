@@ -9,7 +9,7 @@
     "mojang-player": "Ein Minecraft Benutzername oder UUID",
     "number": "Eine Nummer",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard",
+    "player-leaderboard": "Wähle eine Bestenliste",
     "reason": "The reason for closing the support ticket",
     "server": "Ein Minecraft Servername oder eine Server IP",
     "tags-content": "The content of the tag",
@@ -94,7 +94,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-command": "Zeigt {{name}} Bestenlisten an",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Zeigt deine gemeinsamen Hypixel Freunde mit einem anderen Spieler an",
-    "namehistory": "Zeigt den Minecraft Namensverlauf von jemandem an",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Zeigt Ersteller und Mitwirkende von Statsify an",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Verfügbar",
-    "nameHistory": "Namensverlauf",
-    "originalName": "Ursprünglicher Name",
     "trimmedUUID": "Gekürzte UUID",
     "unavailable": "Nicht verfügbar",
     "username": "Benutzername",
@@ -682,8 +679,8 @@
     "points": "Punkte",
     "poopCollected": "Mist Gesammelt",
     "powerKicks": "Kraft Kicks",
-    "powerupActivations": "Powerup Aktivierungen",
-    "powerups": "Powerups",
+    "powerupActivations": "Power-Up Aktivierungen",
+    "powerups": "Power-Ups",
     "prefix": "Präfix",
     "prevent": "Verhindern",
     "progression": {
@@ -746,7 +743,9 @@
     "woolCaptures": "Wolle Erobert",
     "woolPlaced": "Wolle Platziert",
     "zombieKills": "Zombie Kills",
-    "potionsBrewed": "Tränke gebraut"
+    "potionsBrewed": "Tränke gebraut",
+    "powerupsCollected": "Power-Ups gesammelt",
+    "roundsCompleted": "Runden abgeschlossen"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Trete unserem **$t(socials.discord)** bei und erhalte **20% niedrigere Abklingzeit** $t(emojis:heart)",

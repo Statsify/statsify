@@ -6,7 +6,7 @@
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "길드 이름 또는 길드 구성원",
     "guild-type": "검색하고자 하는 길드 유형",
-    "mojang-player": "Minecraft 프로필 이름 또는 UUID",
+    "mojang-player": "Minecraft 사용자 이름 또는 UUID",
     "number": "숫자",
     "player": "$t(arguments.mojang-player)",
     "player-leaderboard": "순위표를 선택하세요",
@@ -20,7 +20,7 @@
   "commands": {
     "arcade": "$t(commands.hypixel-command, { \"name\": \"Arcade\" })",
     "arenabrawl": "$t(commands.hypixel-command, { \"name\": \"Arena Brawl\" })",
-    "available": "Minecraft 프로필 이름 사용 가능 여부를 확인해요",
+    "available": "Minecraft 사용자 이름 사용 가능 여부를 확인해요",
     "badge": "Change your badge for every profile",
     "badge-reset": "내 프로필 배지를 초기화해요",
     "badge-set": "새 프로필 배지를 업로드해요",
@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "나와 다른 분이 같이 아는 친구를 봐요",
-    "namehistory": "다른 분의 Minecraft 프로필 이름 기록을 봐요",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Statsify의 개발자와 기여자를 봐요",
@@ -244,7 +243,7 @@
   },
   "embeds": {
     "available": {
-      "blocked": "Mojang이 이 프로필 이름을 임시적 또는 영구적으로 차단하지 않은 경우",
+      "blocked": "Mojang이 이 사용자 이름을 임시적 또는 영구적으로 차단하지 않은 경우",
       "invalidCharacters": "잘못된 문자",
       "tooLong": "너무 긺"
     },
@@ -358,7 +357,7 @@
       "title": "잘못된 길드"
     },
     "invalidPlayer": {
-      "description_username": "프로필 이름이 `{{tag}}`인 플레이어를 찾지 못했어요!",
+      "description_username": "사용자 이름이 `{{tag}}`인 플레이어를 찾지 못했어요!",
       "description_uuid": "UUID가 `{{tag}}`인 플레이어를 찾지 못했어요!",
       "description_discordId": "Discord ID가 `{{tag}}`인 플레이어를 찾지 못했어요!",
       "title": "잘못된 플레이어"
@@ -372,7 +371,7 @@
       "title": "잘못된 초기화 시간대"
     },
     "invalidSearch": {
-      "description": "찾으시는 걸 정확히 알아내지 못했어요.\n프로필 이름이나 UUID이나 Discord 멘션을 입력하세요.",
+      "description": "찾으시는 걸 정확히 알아내지 못했어요.\n사용자 이름이나 UUID이나 Discord 멘션을 입력하세요.",
       "title": "잘못된 검색"
     },
     "invalidServer": {
@@ -413,7 +412,7 @@
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
-      "description": "내 프로필 이름을 적지 않고 명령어를 실행하려면, 인증하셔야 해요. `/verify` 명령어를 사용해 인증 후 다시 시도하세요.",
+      "description": "내 사용자 이름을 적지 않고 명령어를 실행하려면, 인증하셔야 해요. `/verify` 명령어를 사용해 인증 후 다시 시도하세요.",
       "title": "인증 필요"
     },
     "netheriteOnly": {
@@ -442,7 +441,7 @@
       "title": "순위 없음"
     },
     "noRecentGames": {
-      "description": "**{{displayName}}**님의 최근 플레이한 게임을 찾지 못했어요!",
+      "description": "**{{displayName}}**님이 최근 플레이한 게임을 찾지 못했어요!",
       "title": "최근 플레이한 게임을 찾지 못함"
     },
     "noStatus": {
@@ -459,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "사용 가능한 기능을 [여기](https://statsify.net/premium)서 확인하세요.",
-      "preview": "사용 가능한 기능을 [여기](https://statsify.net/premium)서 확인하세요.\n아래는 이 명령어가 무엇을 하거나/변경하는지에 관한 간략한 미리 보기예요.",
+      "preview": "사용 가능한 기능을 [여기](https://statsify.net/premium)서 확인하세요.\n다음은 이 명령어가 무엇을 하거나/변경하는지에 관한 간략한 미리 보기예요.",
       "title": "이 명령어를 실행하려면 Statsify {{tier}}이(가) 필요함"
     },
     "staffOnly": {
@@ -516,11 +515,9 @@
   },
   "minecraft": {
     "available": "사용 가능",
-    "nameHistory": "프로필 이름 기록",
-    "originalName": "최초 이름",
     "trimmedUUID": "다듬은 UUID",
     "unavailable": "사용 불가",
-    "username": "프로필 이름",
+    "username": "사용자 이름",
     "uuid": "UUID"
   },
   "number": "{{value, number}}",
@@ -746,14 +743,16 @@
     "woolCaptures": "점령한 양털",
     "woolPlaced": "설치한 양털",
     "zombieKills": "좀비 킬",
-    "potionsBrewed": "양조한 포션"
+    "potionsBrewed": "양조한 포션",
+    "powerupsCollected": "수집한 파워업",
+    "roundsCompleted": "완료한 라운드"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) **$t(socials.discord)**에 참여해 **대기 시간 20% 감소**를 받아보세요 $t(emojis:heart)",
-    "invite": "$t(emojis:socials.discord) **[여기](<https://statsify.net/invite>)를 클릭해 Statsify를 내 서버에 초대하세요!",
+    "invite": "$t(emojis:socials.discord) **[여기](<https://statsify.net/invite>)**를 클릭해 Statsify를 내 서버에 초대하세요!",
     "premium": "$t(emojis:logos.gold) **[Statsify 프리미엄](<https://statsify.net/premium>)**은 개인적인 프로필 배지와 같은 추가 기능을 제공해요. [여기서](<https://statsify.net/premium>) 모든 혜택을 찾아보세요!",
     "rankings": "$t(emojis:logos.iron) **[Statsify 프리미엄](<https://statsify.net/premium>)**으로 `/rankings` 명령어를 사용해 나의 순위표 순위를 확인하세요",
-    "verify": "$t(emojis:check) `/verify` 명령어로 프로필 이름 없이 명령어를 실행하고 **대기 시간 10% 감소**를 받아보세요"
+    "verify": "$t(emojis:check) `/verify` 명령어로 사용자 이름 없이 명령어를 실행하고 **대기 시간 10% 감소**를 받아보세요"
   },
   "unknown": "알 수 없음",
   "verification": {

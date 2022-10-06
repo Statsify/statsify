@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "ดูเพื่อน Hypixel ร่วมกันของคุณกับผู้เล่นอื่น",
-    "namehistory": "ดูประวัติชื่อ Minecraft ของใครบางคน",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "ดูผู้สร้างและผู้มีส่วนร่วมของ Statsify",
@@ -459,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "ตรวจสอบคุณสมบัติที่มีทั้งหมด [here](https://statsify.net/premium).",
-      "preview": "ตรวจสอบคุณสมบัติที่มีทั้งหมด [here](https://statsify.net/premium). ด้านล่างนี้คือตัวอย่างเล็กๆ น้อยๆ ของสิ่งที่คำสั่งทำ/เปลี่ยนแปลง.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "จำเป็นต้องมี Statsify {{tier}} เพื่อเรียกใช้คำสั่งนี้"
     },
     "staffOnly": {
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "มีอยู่",
-    "nameHistory": "ประวัติชื่อ",
-    "originalName": "ชื่อจริง",
     "trimmedUUID": "UUID ที่ตัดแต่งแล้ว",
     "unavailable": "ไม่พร้อมใช้งาน",
     "username": "ชื่อผู้ใช้",
@@ -682,8 +679,8 @@
     "points": "คะแนน",
     "poopCollected": "เก็บอึ",
     "powerKicks": "พาวเวอร์คิกส์",
-    "powerupActivations": "การเปิดใช้งานการเพิ่มพลัง",
-    "powerups": "เพิ่มพลัง",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "คำนำหน้า",
     "prevent": "ป้องกัน",
     "progression": {
@@ -746,7 +743,9 @@
     "woolCaptures": "ผ้าขนสัตว์จับ",
     "woolPlaced": "ผ้าขนสัตว์วาง",
     "zombieKills": "ซอมบี้ฆ่า",
-    "potionsBrewed": "ปรุงยา"
+    "potionsBrewed": "ปรุงยา",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) เข้าร่วมกับเรา **$t(socials.discord)** และรับ **20% คูลดาวน์ที่ต่ำกว่า**$t(emojis:heart)",

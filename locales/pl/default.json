@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Zobacz swoich wspólnych znajomych na Hypixel",
-    "namehistory": "Zobacz historię nazw użytkownika Minecraft",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Zobacz twórców i współtwórców Statsify",
@@ -459,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Sprawdź wszystkie dostępne funkcje [tutaj](https://statsify.net/premium).",
-      "preview": "Sprawdź wszystkie dostępne funkcje [tutaj](https://statsify.net/premium). Poniżej znajduje się mały podgląd komendy.",
+      "preview": "Sprawdź wszystkie dostępne funkcje [tutaj](https://statsify.net/premium). Poniżej znajduje się mały podgląd funkcjonalności komendy.",
       "title": "Statsify {{tier}} jest wymagane do uruchomienia tej komendy"
     },
     "staffOnly": {
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Dostępny",
-    "nameHistory": "Historia nazw",
-    "originalName": "Oryginalna nazwa",
     "trimmedUUID": "Skrócone UUID",
     "unavailable": "Niedostępny",
     "username": "Nazwa użytkownika",
@@ -746,7 +743,9 @@
     "woolCaptures": "Przechwycenia wełny",
     "woolPlaced": "Wełna postawiona",
     "zombieKills": "Zabójstwa Zombie",
-    "potionsBrewed": "Mikstury wytworzone"
+    "potionsBrewed": "Mikstury wytworzone",
+    "powerupsCollected": "Zebrane ulepszenia",
+    "roundsCompleted": "Ukończone rundy"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Dołącz do naszego **$t(socials.discord)** i otrzymaj **20% mniej czasu odnowienia** $t(emojis:heart)",

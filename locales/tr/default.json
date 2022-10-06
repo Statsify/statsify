@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Başka bir oyuncuyla ortak Hypixel arkadaşlarınızı görüntüleyin",
-    "namehistory": "Birinin Minecraft isim geçmişini görüntüleyin",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Statsify'ın kurucularını ve yardımcılarını görüntüleyin",
@@ -459,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Tüm özelliklere [buradan] bakabilirsiniz.",
-      "preview": "Tüm özelliklere [buradan] bakabilirsiniz. Aşağıda hangi komutların ne yaptığı/değiştiğinin küçük bir ön izlenimi bulunmakta.",
+      "preview": "Tüm özelliklere [buradan] bakabilirsiniz. Aşağıda hangi komutların ne yaptığı/değiştirdiğinin küçük bir ön izlenimi bulunmakta.",
       "title": "Bu komutu kullanabilmek için Statsify {{tier}} gerekli"
     },
     "staffOnly": {
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Mevcut",
-    "nameHistory": "İsim Geçmişi",
-    "originalName": "Orijinal İsim",
     "trimmedUUID": "Kısaltılmış UUID",
     "unavailable": "Meşgul",
     "username": "Kullanıcı Adı",
@@ -682,8 +679,8 @@
     "points": "Puanlar",
     "poopCollected": "Toplanan Gübre",
     "powerKicks": "Güçlü Vuruşlar",
-    "powerupActivations": "Powerup Etkinleştirmeleri",
-    "powerups": "Poweruplar",
+    "powerupActivations": "Power-Up Etkinleştirmeleri",
+    "powerups": "Power-Uplar",
     "prefix": "Prefix",
     "prevent": "Önleme",
     "progression": {
@@ -746,7 +743,9 @@
     "woolCaptures": "Yakalanan Yünler",
     "woolPlaced": "Koyulan Yün",
     "zombieKills": "Zombi Öldürmeleri",
-    "potionsBrewed": "Üretilen İksirler"
+    "potionsBrewed": "Üretilen İksirler",
+    "powerupsCollected": "Toplanan Power-Up",
+    "roundsCompleted": "Bitirilen Rauntlar"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) $t(socials.discord) katılın ve **%20 daha az cooldown** kazanın $t(emojis:heart)",

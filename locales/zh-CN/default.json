@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "查看你与另一玩家的共同Hypixel好友",
-    "namehistory": "查看玩家的我的世界的名字历史",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "查看Statsify的创建者和贡献者",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "可用",
-    "nameHistory": "名字历史",
-    "originalName": "最初名称",
     "trimmedUUID": "修饰过的UUID",
     "unavailable": "无法获得",
     "username": "帐号名称",
@@ -682,8 +679,8 @@
     "points": "得分",
     "poopCollected": "便便收集数",
     "powerKicks": "能量击杀数",
-    "powerupActivations": "加成次数",
-    "powerups": "增益效果",
+    "powerupActivations": "加成激活次数",
+    "powerups": "加成次数",
     "prefix": "前缀",
     "prevent": "避免伤害值",
     "progression": {
@@ -746,7 +743,9 @@
     "woolCaptures": "获取的羊毛",
     "woolPlaced": "放置羊毛数",
     "zombieKills": "僵尸击杀数",
-    "potionsBrewed": "酿造药水"
+    "potionsBrewed": "酿造药水",
+    "powerupsCollected": "加成收集次数",
+    "roundsCompleted": "回合完成数"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) 加入我们的**$t(socials.discord)**可以获得**减少20%的冷却时间** $t(emojis:heart)",

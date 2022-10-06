@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Xem những người bạn chung với người khác ở Hypixel của bạn",
-    "namehistory": "Xem lịch sử đặt tên của một ai đó trong Minecraft",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Xem những người sáng tác và những người đóng góp cho Statsify",
@@ -459,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Hãy xem tất cả các tính năng đang có ở [here](https://statsify.net/premium).",
-      "preview": "Hãy xem tất cả các tính năng đang có ở [here](https://statsify.net/premium). Ở dưới là một số phần xem trước cách hoạt động của các câu lệnh.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Cần có Statsify {{tier}} để chạy câu lệnh này"
     },
     "staffOnly": {
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Hợp lệ",
-    "nameHistory": "Lịch sử tên",
-    "originalName": "Tên gốc",
     "trimmedUUID": "Trimmed UUID",
     "unavailable": "Không hợp lệ",
     "username": "Tên người chơi",
@@ -682,8 +679,8 @@
     "points": "Điểm",
     "poopCollected": "Số cứt đã thu thập được",
     "powerKicks": "Đá sức mạnh",
-    "powerupActivations": "Kích hoạt tăng sức mạnh",
-    "powerups": "Tăng sức mạnh",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Chức",
     "prevent": "Ngăn cản",
     "progression": {
@@ -746,7 +743,9 @@
     "woolCaptures": "Số lông đã thu hoạch",
     "woolPlaced": "Lông đã đặt",
     "zombieKills": "Số lần giết Thây Ma",
-    "potionsBrewed": "Số thuốc đã làm"
+    "potionsBrewed": "Số thuốc đã làm",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Vô **$t(socials.discord)** của chúng tôi và lấy **20% lower cooldowns** $t(emojis:heart)",

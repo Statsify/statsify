@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Tarkastele yhteisiä Hypixel-kavereitasi toisen pelaajan kanssa",
-    "namehistory": "Tarkastele jonkun Minecraft-nimihistoriaa",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Näytä Statsifyn kehittäjät ja osallistujat",
@@ -364,7 +363,7 @@
       "title": "Virheellinen pelaaja"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
+      "description": "`{{time}}` ei vastaa muotoa `h:mm a`. Kirjoita aika muodossa `12:00 PM` tai `1:00 AM`.",
       "title": "Virheellinen nollausaika"
     },
     "invalidResetTimezone": {
@@ -459,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Tutustu kaikkiin saatavilla oleviin ominaisuuksiin [täällä](https://statsify.net/premium).",
-      "preview": "Tutustu kaikkiin saatavilla oleviin ominaisuuksiin [täällä](https://statsify.net/premium). Alla on pieni esikatselu siitä mitä komentoo tekee/muuttaa.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Statsify {{tier}} vaaditaan tämän komennon suorittamiseen"
     },
     "staffOnly": {
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Saatavilla",
-    "nameHistory": "Nimihistoria",
-    "originalName": "Alkuperäinen nimi",
     "trimmedUUID": "Leikattu UUID",
     "unavailable": "Ei saatavilla",
     "username": "Käyttäjänimi",
@@ -585,7 +582,7 @@
     "fortune": "Onni",
     "friends": "Kaverit",
     "game": "Peli",
-    "game-total": "{{game}} Total",
+    "game-total": "Yhteensä pelissä {{game}}",
     "gamesPlayed": "Peliä pelattu",
     "giftsFound": "Lahjaa löydetty",
     "giftsSent": "Lahjaa lähetetty",
@@ -682,17 +679,17 @@
     "points": "Pisteet",
     "poopCollected": "Kakkaa kerätty",
     "powerKicks": "Voimapotkuja",
-    "powerupActivations": "Vahvistuksia aktivoitu",
-    "powerups": "Vahvistuksia",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Etuliite",
     "prevent": "Esto",
     "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "goldTrophy": "Gold Trophy Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "win": "Win Progress"
+      "exp": "Edistyminen: EXP",
+      "gexp": "Edistyminen: GEXP",
+      "goldTrophy": "Edistyminen: Kultapokaalit",
+      "kill": "Edistyminen: Tapot",
+      "score": "Edistyminen: Pisteet",
+      "win": "Edistyminen: Voitot"
     },
     "quests": "Tehtäviä tehty",
     "ranksGifted": "Rankkia lahjoitettu",
@@ -746,7 +743,9 @@
     "woolCaptures": "Villaa kaapattu",
     "woolPlaced": "Villaa asetettu",
     "zombieKills": "Zombitapot",
-    "potionsBrewed": "Potions Brewed"
+    "potionsBrewed": "Potions Brewed",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Liity **$t(socials.discord)** ja saat **20% lyhyemmät odotusajat** $t(emojis:heart)",

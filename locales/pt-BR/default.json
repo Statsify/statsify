@@ -6,10 +6,10 @@
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "O nome de uma guild ou um membro da guild",
     "guild-type": "A categoria de pesquisa da guild para realizar",
-    "mojang-player": "Um nome de usuário ou UUID do Minecraft",
+    "mojang-player": "Um nome de usuário ou UUID",
     "number": "Um número",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard",
+    "player-leaderboard": "Escolha um pódio",
     "reason": "The reason for closing the support ticket",
     "server": "Um nome de servidor de Minecraft ou um IP de servidor",
     "tags-content": "The content of the tag",
@@ -94,7 +94,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-command": "Ver pódio de {{name}}",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Exibes seus amigos em comum com outro jogador",
-    "namehistory": "Exibe histórico de nomes de alguém no Minecraft",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Exibe criadores e colaboradores do Statsify",
@@ -225,7 +224,7 @@
       "view": "$t(emojis:config.view) Seu emblema atual:"
     },
     "footer": {
-      "profile": "É assim que seu rodapé ficará nos seus perfis",
+      "profile": "Seu rodapé ficará assim nos seus perfis",
       "reset": "$t(emojis:config.reset) Seu rodapé foi redefinido com sucesso.",
       "set": "$t(emojis:config.success) Seu rodapé foi atualizado com sucesso."
     },
@@ -233,7 +232,7 @@
       "description": "$t(emojis:config.success) Seu idioma foi atualizado com sucesso para `{{locale}}`."
     },
     "theme": {
-      "profile": "É assim que seu tema ficará nos seus perfis",
+      "profile": "Seu tema ficará assim nos seus perfis",
       "set": "$t(emojis:config.success) Seu tema foi atualizado com sucesso.",
       "view": "$t(emojis:config.view) Seu tema atual:"
     }
@@ -244,7 +243,7 @@
   },
   "embeds": {
     "available": {
-      "blocked": "A não ser que o nome esteja temporário ou permanentemente bloqueado pela Mojang.",
+      "blocked": "A não ser que o nome esteja temporariamente ou permanentemente bloqueado pela Mojang.",
       "invalidCharacters": "Caracteres inválidos",
       "tooLong": "Muito longo"
     },
@@ -289,7 +288,7 @@
       },
       "leaderboards": {
         "description": "Statsify oferece milhares de pódios através do comando `/leaderboard`. Execute `/leaderboard`, selecione um modo de jogo e escolha um pódio para ver. Você pode clicar no botão de pesquisa para procurar um jogador ou uma posição específica. Você também pode apertar os botões de cima e baixo para ver mais páginas.",
-        "title": "Classificação"
+        "title": "Pódios"
       },
       "minecraft": {
         "description": "Você pode ver informações gerais do Minecraft como skins, UUIDs, capas através dos comandos `/skin`, `/uuid`, e `/cape`, respectivamente. Statsify também tem comandos para gerar textos com a fonte do Minecraft através do comando `/text`. Veja as cores do texto através de `/colors` e pré-visualize servidores de Minecraft através do comando `/server`.",
@@ -302,7 +301,7 @@
       "title": "Links do Statsify"
     },
     "ping": {
-      "contributors": "Colaboradores",
+      "contributors": "Contribuidores",
       "core": "Principais",
       "pong": "Pong!",
       "title": "Créditos do Statsify",
@@ -348,8 +347,8 @@
       "title": "Guild inválida"
     },
     "higherTierRequiredForIcon": {
-      "description": "Você precisa comprar um nível mais alto para desbloquear este ícone!",
-      "title": "Nível mais alto necessário"
+      "description": "Você precisa ter um plano premium mais alto para desbloquear este ícone!",
+      "title": "Plano mais alto necessário"
     },
     "invalidGuild": {
       "description_id": "Uma guild com o id de `{{tag}}` não pôde ser encontrada!",
@@ -368,11 +367,11 @@
       "title": "Tempo de redefinição inválido"
     },
     "invalidResetTimezone": {
-      "description": "`{{timezone}}` não é um fuso horário válido. Entre um fuso horário similar ao `EST` ou `PST`.",
+      "description": "`{{timezone}}` não é um fuso horário válido. Use um fuso horário similar ao `EST` ou `PST`.",
       "title": "Fuso horário de redefinição inválido"
     },
     "invalidSearch": {
-      "description": "Não conseguimos entender exatamente o que você estava procurando! Insira um nome de usuário, uuid, ou menção do discord.",
+      "description": "Não conseguimos entender exatamente o que você estava procurando! Insira um nome de usuário, UUID, ou Discord.",
       "title": "Pesquisa inválida"
     },
     "invalidServer": {
@@ -394,19 +393,19 @@
     },
     "leaderboardEmpty": {
       "description": "Não há mais dados de pódios nesta posição!",
-      "title": "Sem dados de classificação nesta posição"
+      "title": "Sem dados de pódio nesta posição"
     },
     "leaderboardInvalidPosition": {
-      "description": "A posição do placar que você inseriu é inválida. Insira um número maior que 1.",
-      "title": "Posição Inválida"
+      "description": "A posição do pódio que você inseriu é inválida. Insira um número maior que 1.",
+      "title": "Posição inválida"
     },
     "leaderboardNotFound": {
-      "description": "Não conseguimos encontrar o `placar` que você está procurando!",
-      "title": "Classificação não encontrada"
+      "description": "Não conseguimos encontrar o `pódio` que você está procurando!",
+      "title": "Pódio não encontrado"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}> não é **verificada**. Para mencioná-los, eles devem executar `/verify` para verificar sua conta.",
-      "title": "Verificação Inexistente"
+      "description": "<@{{tag}}> não é **verificado**. Para mencioná-lo, ele deve executar `/verify` para verificar a conta deles.",
+      "title": "Não verificado"
     },
     "missingPlayerVerification": {
       "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
@@ -414,7 +413,7 @@
     },
     "missingSelfVerification": {
       "description": "Para conseguir executar comandos sem fornecer o seu nome de usuário, você precisa ser verificado. Para verificar-se, execute e complete `/verify` e tente novamente.",
-      "title": "Verificação Inexistente"
+      "title": "Não verificado"
     },
     "netheriteOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -459,13 +458,13 @@
     },
     "premiumRequired": {
       "description": "Confira todos os recursos disponíveis [aqui](https://statsify.net/premium).",
-      "preview": "Confira todos os recursos disponíveis [aqui](https://statsify.net/premium). Abaixo está uma pequena prévia do que cada comando faz/muda.",
+      "preview": "Confira todos os recursos disponíveis [aqui](https://statsify.net/premium). Abaixo está uma breve prévia do que cada comando faz/muda.",
       "title": "Statsify {{tier}} é necessário para executar este comando"
     },
     "staffOnly": {
       "description": "Esse comando só está disponível para membros da equipe do Statsify!",
       "preview": "Abaixo está uma pequena prévia da função do comando",
-      "title": "Apenas Administração"
+      "title": "Apenas staffers"
     },
     "tagNotFound": {
       "description": "The tag you provided was not found!",
@@ -476,8 +475,8 @@
       "title": "Ticket Already Exists"
     },
     "unknown": {
-      "description": "Algo deu errado, por favor, tente novamente mais tarde. Se isto persistir, reporte isso em nosso [Discord] (<https://statsify.net/discord>).",
-      "title": "Um Erro Desconhecido Ocorreu"
+      "description": "Algo deu errado, tente novamente mais tarde. Se persistir, reporte isto em nosso [Discord] (<https://statsify.net/discord>).",
+      "title": "Ocorreu um erro desconhecido"
     },
     "unsupportedFileType": {
       "description": "O arquivo que você enviou não é um tipo de arquivo compatível com este comando!",
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Disponível",
-    "nameHistory": "Histórico de nomes",
-    "originalName": "Nome Original",
     "trimmedUUID": "UUID aparado",
     "unavailable": "Indisponível",
     "username": "Usuário",
@@ -577,7 +574,7 @@
     "fastestMurdererWin": "Vitória de Assassino Mais Rápida",
     "fastestWin": "Vitória mais rápida",
     "finalAssists": "Assistências Finais",
-    "finalDeaths": "Mortes Finais",
+    "finalDeaths": "Mortes finais",
     "finalKills": "Abates Finais",
     "firstLogin": "Primeiro login",
     "fkdr": "FKDR",
@@ -746,7 +743,9 @@
     "woolCaptures": "Lãs capturadas",
     "woolPlaced": "Lãs colocadas",
     "zombieKills": "Zumbis abatidos",
-    "potionsBrewed": "Poções preparadas"
+    "potionsBrewed": "Poções preparadas",
+    "powerupsCollected": "Poderes coletados",
+    "roundsCompleted": "Rodadas concluídas"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Entre no nosso $t(socials.discord) e receba **menos 20% de tempo de espera** $t(emojis:heart)",

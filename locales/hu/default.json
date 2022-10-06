@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Nézd meg egy játékossal való közös barátaid",
-    "namehistory": "Nézd meg valakinek a Minecraft felhasználónév előzményeit",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Nézd meg a Statsify készítőit és támogatóit",
@@ -459,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Nézd meg az összes prémium funkciót [itt](https://statsify.net/premium).",
-      "preview": "Nézd meg az összes funkciót [itt](https://statsify.net/premium). Alább látható egy demonstráció a parancs működéséről.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Statsify {{tier}} szükséges a parancs futtatásához"
     },
     "staffOnly": {
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Elérhető",
-    "nameHistory": "Név Előzmény",
-    "originalName": "Eredeti Név",
     "trimmedUUID": "Rövidített UUID",
     "unavailable": "Nem elérhető",
     "username": "Felhasználónév",
@@ -682,8 +679,8 @@
     "points": "Pontok",
     "poopCollected": "Begyűjtött Ürülékek",
     "powerKicks": "Erős Lövések",
-    "powerupActivations": "Elhasznált Képességek",
-    "powerups": "Powerupok",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Előtag",
     "prevent": "Meggátolt Sebzés",
     "progression": {
@@ -746,7 +743,9 @@
     "woolCaptures": "Ellopott Gyapjúk",
     "woolPlaced": "Letett Gyapjúk",
     "zombieKills": "Zombi Ölések",
-    "potionsBrewed": "Főzött Bájitalok"
+    "potionsBrewed": "Főzött Bájitalok",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Csatlakozz a **$t(socials.discord)** és szerezz **-20% várakozási időt** $t(emojis:heart)",

@@ -121,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Vezi prietenii tăi mutuali Hypixel cu un alt jucător",
-    "namehistory": "Vezi istoricul numelui de Minecraft al unei persoane",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Vezi creatorii și contribuitorii Statsify-ului",
@@ -459,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Vezi toate caracteristicile disponibile [here](https://statsify.net/premium).",
-      "preview": "Verificați toate caracteristicile disponibile [here](https://statsify.net/premium). Mai jos este o mică previzualizare a ce face/schimbă comenzile.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Statsify {{tier}} este necesar pentru a rula această comandă"
     },
     "staffOnly": {
@@ -516,8 +515,6 @@
   },
   "minecraft": {
     "available": "Disponibil",
-    "nameHistory": "Istoric Nume",
-    "originalName": "Numele Original",
     "trimmedUUID": "UUID tridimensional",
     "unavailable": "Indisponibil",
     "username": "Nume",
@@ -682,8 +679,8 @@
     "points": "Puncte",
     "poopCollected": "Căcat Colectat",
     "powerKicks": "Lovituri cu putere",
-    "powerupActivations": "Activări Powerup",
-    "powerups": "Power-upuri",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Prefix",
     "prevent": "Prevenire",
     "progression": {
@@ -746,7 +743,9 @@
     "woolCaptures": "Capturi Lână",
     "woolPlaced": "Lână plasată",
     "zombieKills": "Omorături Zombi",
-    "potionsBrewed": "Poţiuni preparate"
+    "potionsBrewed": "Poţiuni preparate",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Alătură-te serverului de discord **$t(socials.discord)** și obține **20% mai mic cooldown** $t(emojis:heart)",
