@@ -745,7 +745,8 @@
     "zombieKills": "좀비 킬",
     "potionsBrewed": "양조한 포션",
     "powerupsCollected": "수집한 파워업",
-    "roundsCompleted": "완료한 라운드"
+    "roundsCompleted": "완료한 라운드",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) **$t(socials.discord)**에 참여해 **대기 시간 20% 감소**를 받아보세요 $t(emojis:heart)",
