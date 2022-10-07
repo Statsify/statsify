@@ -745,7 +745,8 @@
     "zombieKills": "Zabójstwa Zombie",
     "potionsBrewed": "Mikstury wytworzone",
     "powerupsCollected": "Zebrane ulepszenia",
-    "roundsCompleted": "Ukończone rundy"
+    "roundsCompleted": "Ukończone rundy",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Dołącz do naszego **$t(socials.discord)** i otrzymaj **20% mniej czasu odnowienia** $t(emojis:heart)",
