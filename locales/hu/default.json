@@ -745,7 +745,8 @@
     "zombieKills": "Zombi Ölések",
     "potionsBrewed": "Főzött Bájitalok",
     "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed"
+    "roundsCompleted": "Rounds Completed",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Csatlakozz a **$t(socials.discord)** és szerezz **-20% várakozási időt** $t(emojis:heart)",
