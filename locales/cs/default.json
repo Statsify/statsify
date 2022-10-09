@@ -746,7 +746,7 @@
     "potionsBrewed": "Uvařené lektvary",
     "powerupsCollected": "Sebraná vylepšení",
     "roundsCompleted": "Dokončena kola",
-    "totalExp": "Total EXP"
+    "totalExp": "Celkem EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Připoj se na náš **$t(socials.discord)** a získej **20% nižší časový limit* $t(emojis:heart)",
