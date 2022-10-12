@@ -746,7 +746,7 @@
     "potionsBrewed": "Mikstury wytworzone",
     "powerupsCollected": "Zebrane ulepszenia",
     "roundsCompleted": "Ukończone rundy",
-    "totalExp": "Total EXP"
+    "totalExp": "Razem punktów doświadczenia"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Dołącz do naszego **$t(socials.discord)** i otrzymaj **20% mniej czasu odnowienia** $t(emojis:heart)",
