@@ -16,11 +16,9 @@ import {
 } from "@statsify/api-client";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, Logger } from "@nestjs/common";
-import { Player, RATIOS, RATIO_STATS, deserialize, serialize } from "@statsify/schemas";
+import { Player, deserialize, merge, serialize } from "@statsify/schemas";
 import { PlayerService } from "../player";
 import { ReturnModelType } from "@typegoose/typegoose";
-import { isObject } from "class-validator";
-import { ratio, sub } from "@statsify/math";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 
@@ -82,6 +80,7 @@ export class HistoricalService {
     if (!player) throw new PlayerNotFoundException();
 
     player.resetMinute = time ?? this.getMinute();
+
     return this.reset(player, type);
   }
 
@@ -131,6 +130,8 @@ export class HistoricalService {
     if (isWeekly) await reset(this.weeklyModel, this.lastWeekModel, doc);
     if (isMonthly) await reset(this.monthlyModel, this.lastMonthModel, doc);
 
+    this.playerService.saveOne(player, false);
+
     return deserialize(Player, flatPlayer);
   }
 
@@ -143,7 +144,8 @@ export class HistoricalService {
 
     const [newPlayer, oldPlayer, isNew] = await this.getRaw(player.uuid, type);
 
-    const merged = this.merge(oldPlayer, newPlayer);
+    const merged = merge(oldPlayer, newPlayer);
+
     merged.resetMinute = oldPlayer.resetMinute;
     merged.isNew = isNew;
 
@@ -247,74 +249,12 @@ export class HistoricalService {
 
   /**
    *
-   * @param oldOne The old stats
-   * @param newOne The new stats
-   * @returns the new stats - the old stats
-   */
-  private merge<T>(oldOne: T, newOne: T): T {
-    const merged = {} as T;
-
-    const keys = Object.keys({ ...oldOne, ...newOne });
-
-    for (const _key of keys) {
-      const key = _key as keyof T;
-      const newOneType = typeof newOne[key];
-
-      if (typeof oldOne[key] === "number" || newOneType === "number") {
-        const ratioIndex = RATIOS.indexOf(_key);
-
-        if (ratioIndex !== -1) {
-          const numerator = sub(
-            newOne[RATIO_STATS[ratioIndex][0] as unknown as keyof T] as unknown as number,
-            oldOne[RATIO_STATS[ratioIndex][0] as unknown as keyof T] as unknown as number
-          );
-
-          const denominator = sub(
-            newOne[RATIO_STATS[ratioIndex][1] as unknown as keyof T] as unknown as number,
-            oldOne[RATIO_STATS[ratioIndex][1] as unknown as keyof T] as unknown as number
-          );
-
-          merged[key] = ratio(
-            numerator,
-            denominator,
-            RATIO_STATS[ratioIndex][4] ?? 1
-          ) as unknown as T[keyof T];
-        } else {
-          merged[key] = sub(
-            newOne[key] as unknown as number,
-            oldOne[key] as unknown as number
-          ) as unknown as T[keyof T];
-        }
-      } else if (newOneType === "string") {
-        merged[key] = newOne[key];
-      } else if (isObject(newOne[key])) {
-        if (key === "progression") {
-          merged[key] = newOne[key];
-        } else {
-          merged[key] = this.merge(
-            oldOne[key] ?? {},
-            newOne[key] ?? {}
-          ) as unknown as T[keyof T];
-        }
-      }
-    }
-
-    return merged;
-  }
-
-  /**
-   *
    * @returns The current minute of the day
    */
   private getMinute() {
     const date = new Date();
     return date.getHours() * 60 + date.getMinutes();
   }
-
-  /**
-   *
-   * @returns Whether the current time should daily, weekly, or monthly stats
-   */
   private getType() {
     const date = new Date();
 

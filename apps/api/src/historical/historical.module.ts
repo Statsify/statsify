@@ -8,17 +8,28 @@
 
 import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
 import { HistoricalController } from "./historical.controller";
+import { HistoricalLeaderboardService } from "./leaderboards/historical-leaderboard.service";
+import { HistoricalLeaderboardsController } from "./leaderboards/historical-leaderboard.controller";
 import { HistoricalService } from "./historical.service";
 import { Module } from "@nestjs/common";
+import { Player } from "@statsify/schemas";
 import { PlayerModule } from "../player";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
   imports: [
     PlayerModule,
-    TypegooseModule.forFeature([Daily, Weekly, Monthly, LastDay, LastWeek, LastMonth]),
+    TypegooseModule.forFeature([
+      Daily,
+      Weekly,
+      Monthly,
+      LastDay,
+      LastWeek,
+      LastMonth,
+      Player,
+    ]),
   ],
-  controllers: [HistoricalController],
-  providers: [HistoricalService],
+  controllers: [HistoricalController, HistoricalLeaderboardsController],
+  providers: [HistoricalService, HistoricalLeaderboardService],
 })
 export class HistoricalModule {}

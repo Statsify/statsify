@@ -118,6 +118,21 @@ export class ApiService {
     );
   }
 
+  public getHistoricalLeaderboard(
+    time: HistoricalType,
+    field: string,
+    input: string | number,
+    type: LeaderboardQuery
+  ): Promise<PostLeaderboardResponse | null> {
+    return this.request<PostLeaderboardResponse>("/historical/leaderboards", {}, "POST", {
+      body: {
+        time,
+        field,
+        [type === LeaderboardQuery.INPUT ? "player" : type]: input,
+      },
+    });
+  }
+
   public getPlayerAutocomplete(query: string) {
     return this.requestKey<GetPlayerSearchResponse, "players">(
       `/player/search`,

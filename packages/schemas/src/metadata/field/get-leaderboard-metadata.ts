@@ -65,6 +65,7 @@ export const getLeaderboardMetadata = (
 
   return {
     enabled: true,
+    historicalEnabled: leaderboardOptions?.historicalEnabled ?? true,
     sort: leaderboardOptions?.sort || "DESC",
     fieldName,
     name,

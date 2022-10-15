@@ -60,7 +60,7 @@ export class PlayerController {
     return this.playerService.update(player);
   }
 
-  @ApiOperation({ summary: "Update a Player" })
+  @ApiOperation({ summary: "Get a group of players" })
   @Auth({ role: AuthRole.WORKER, weight: 10 })
   @Get("/group")
   public getPlayerGroup(@Query() { start, end }: PlayerGroupDto) {

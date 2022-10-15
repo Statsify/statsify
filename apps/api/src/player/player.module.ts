@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Daily, Monthly, Weekly } from "../historical/models";
 import { Friends, Player } from "@statsify/schemas";
 import { HypixelModule } from "../hypixel";
 import { Module } from "@nestjs/common";
@@ -18,7 +19,10 @@ import { PlayerService } from "./player.service";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
-  imports: [HypixelModule, TypegooseModule.forFeature([Player, Friends])],
+  imports: [
+    HypixelModule,
+    TypegooseModule.forFeature([Player, Friends, Daily, Weekly, Monthly]),
+  ],
   controllers: [PlayerController, PlayerLeaderboardsController, PlayerSearchController],
   providers: [PlayerService, PlayerLeaderboardService, PlayerSearchService],
   exports: [PlayerService],

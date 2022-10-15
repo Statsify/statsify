@@ -28,7 +28,7 @@ export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
 @Injectable()
 export abstract class LeaderboardService {
-  public constructor(@InjectRedis() private readonly redis: Redis) {}
+  public constructor(@InjectRedis() protected readonly redis: Redis) {}
 
   public async addLeaderboards<T>(
     constructor: Constructor<T>,
@@ -63,6 +63,42 @@ export abstract class LeaderboardService {
           const time = this.getLeaderboardExpiryTime(metadata.leaderboard);
           pipeline.expireat(key, time);
         }
+      });
+
+    await pipeline.exec();
+
+    child?.finish();
+  }
+
+  public async addHistoricalLeaderboards<T>(
+    time: HistoricalType,
+    constructor: Constructor<T>,
+    instance: Flatten<T>,
+    idField: keyof T,
+    remove = false
+  ) {
+    const fields = LeaderboardScanner.getLeaderboardFields(constructor);
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+
+    const child = transaction?.startChild({
+      op: "redis",
+      description: `add ${time} ${constructor.name} leaderboards`,
+    });
+
+    const pipeline = this.redis.pipeline();
+    const name = constructor.name.toLowerCase();
+
+    const id = instance[idField] as unknown as string;
+
+    fields
+      .filter(([field]) => remove || typeof instance[field] === "number")
+      .forEach(([field]) => {
+        const value = instance[field] as unknown as number;
+        const key = `${time}:${name}.${String(field)}`;
+
+        if (remove || value === 0 || Number.isNaN(value)) return pipeline.zrem(key, id);
+
+        pipeline.zadd(key, value, id);
       });
 
     await pipeline.exec();
