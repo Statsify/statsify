@@ -214,6 +214,27 @@ export class PlayerService {
       this.playerModel.deleteOne({ uuid: player.uuid }).exec(),
       this.playerSearchService.delete(player.username),
       this.playerLeaderboardService.addLeaderboards(Player, player, "uuid", true),
+      this.playerLeaderboardService.addHistoricalLeaderboards(
+        HistoricalType.DAILY,
+        Player,
+        player,
+        "uuid",
+        true
+      ),
+      this.playerLeaderboardService.addHistoricalLeaderboards(
+        HistoricalType.WEEKLY,
+        Player,
+        player,
+        "uuid",
+        true
+      ),
+      this.playerLeaderboardService.addHistoricalLeaderboards(
+        HistoricalType.MONTHLY,
+        Player,
+        player,
+        "uuid",
+        true
+      ),
     ]);
   }
 
