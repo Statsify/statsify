@@ -13,7 +13,9 @@ import { LeaderboardScanner, Player } from "@statsify/schemas";
 import { PlayerDto } from "./player.dto";
 import { Transform } from "class-transformer";
 
-const fields = LeaderboardScanner.getLeaderboardFields(Player).map(([key]) => key);
+const fields = LeaderboardScanner.getLeaderboardFields(Player)
+  .filter(([, { leaderboard }]) => leaderboard.historical)
+  .map(([key]) => key);
 
 export class HistoricalLeaderboardDto extends PartialType(PlayerDto) {
   @IsEnum(HistoricalTimes)

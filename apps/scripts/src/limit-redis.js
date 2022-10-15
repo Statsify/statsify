@@ -28,13 +28,19 @@ const runLimit = async (constructors, prefixes) => {
 
     fields.forEach(([key, value]) => {
       const path = prefixes ? `${prefixes[i]}:${name}.${key}` : `${name}.${key}`;
-      if (!value.leaderboard.enabled || !value.leaderboard.historical)
-        oldLeaderboardPipeline.del(path);
+      if (
+        !value.leaderboard.enabled ||
+        (prefixes ? !value.leaderboard.historical : false)
+      )
+        console.log(path);
+      oldLeaderboardPipeline.del(path);
     });
 
     await oldLeaderboardPipeline.exec();
 
-    const leaderboards = fields.filter(([, value]) => value.leaderboard.historical);
+    const leaderboards = prefixes
+      ? fields.filter(([, value]) => value.leaderboard.historical)
+      : fields.filter(([, value]) => value.leaderboard.enabled);
 
     let memberCount = 0;
 
@@ -44,7 +50,7 @@ const runLimit = async (constructors, prefixes) => {
       let { limit } = value.leaderboard;
       if (limit === Number.POSITIVE_INFINITY) return;
 
-      limit /= 10; // Reduce historical leaderboard max size
+      prefixes ? (limit /= 10) : limit; // Reduce historical leaderboard max size
 
       memberCount += limit;
 
@@ -59,7 +65,9 @@ const runLimit = async (constructors, prefixes) => {
 
     logger.log(`Limited ${leaderboards.length} ${name} leaderboards`);
     logger.log(
-      `There ${memberCount.toLocaleString()} possible members in the ${name} leaderboards`
+      `There are ${memberCount.toLocaleString()} possible members in the ${
+        prefixes ? prefixes[i].toLowerCase() : "lifetime"
+      } ${name} leaderboards`
     );
   });
 };
