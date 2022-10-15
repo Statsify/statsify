@@ -10,16 +10,19 @@ import { Constructor } from "@statsify/util";
 
 export type Getter<T> = (target: T) => any;
 
-interface NonHistoricalMetadata {
-  resetEvery: any;
-  extraDisplay: any;
-}
+type NonHistoricalMetadata = "resetEvery" | "extraDisplay";
 
-export type HistoricalMetadata = Omit<LeaderboardMetadata, keyof NonHistoricalMetadata>;
+export type HistoricalDisabledMetadata = Omit<
+  LeaderboardDisabledMetadata,
+  NonHistoricalMetadata
+>;
+
 export type HistoricalEnabledMetadata = Omit<
   LeaderboardEnabledMetadata,
-  keyof NonHistoricalMetadata
+  NonHistoricalMetadata
 >;
+
+export type HistoricalMetadata = HistoricalEnabledMetadata | HistoricalDisabledMetadata;
 
 export interface FieldMetadata {
   type: TypeMetadata;

@@ -28,10 +28,7 @@ const runLimit = async (constructors, prefixes) => {
 
     fields.forEach(([key, value]) => {
       const path = prefixes ? `${prefixes[i]}:${name}.${key}` : `${name}.${key}`;
-      if (
-        !value.leaderboard.enabled ||
-        (prefixes ? !value.historical.enabled : false)
-      )
+      if (!value.leaderboard.enabled || (prefixes ? !value.historical.enabled : false))
         oldLeaderboardPipeline.del(path);
     });
 
