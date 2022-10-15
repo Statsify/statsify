@@ -177,8 +177,8 @@ export class HistoricalService {
 
   private getRaw(uuid: string, type: HistoricalType): Promise<RawHistoricalResponse> {
     return LAST_HISTORICAL.includes(type as LastHistoricalType)
-      ? this.getLastHistorical(uuid, type as unknown as LastHistoricalType)
-      : this.getCurrentHistorical(uuid, type as unknown as CurrentHistoricalType);
+      ? this.getLastHistorical(uuid, type as LastHistoricalType)
+      : this.getCurrentHistorical(uuid, type as CurrentHistoricalType);
   }
 
   private async getCurrentHistorical(

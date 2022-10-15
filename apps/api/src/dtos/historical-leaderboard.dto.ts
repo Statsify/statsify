@@ -7,7 +7,7 @@
  */
 
 import { ApiProperty, PartialType } from "@nestjs/swagger";
-import { HistoricalType } from "@statsify/api-client";
+import { HistoricalTimes } from "@statsify/api-client";
 import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
 import { LeaderboardScanner, Player } from "@statsify/schemas";
 import { PlayerDto } from "./player.dto";
@@ -16,8 +16,8 @@ import { Transform } from "class-transformer";
 const fields = LeaderboardScanner.getLeaderboardFields(Player).map(([key]) => key);
 
 export class HistoricalLeaderboardDto extends PartialType(PlayerDto) {
-  @IsEnum(HistoricalType)
-  @ApiProperty({ enum: HistoricalType })
+  @IsEnum(HistoricalTimes)
+  @ApiProperty({ enum: HistoricalTimes })
   public time: string;
 
   @IsEnum(fields)

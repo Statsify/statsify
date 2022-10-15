@@ -26,7 +26,7 @@ import {
 import { Container, Footer, GameEntry, GameList, Header, SidebarItem } from "#components";
 import { DateTime } from "luxon";
 import { DeferredGradient, useGradient } from "@statsify/rendering";
-import { HistoricalType } from "@statsify/api-client";
+import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
 import { Palette, getColorPalette } from "../../themes/palette";
 import { ratio } from "@statsify/math";
 import type { BaseProfileProps } from "../base.hypixel-command";
@@ -187,11 +187,11 @@ export const QuestsProfile = ({
       break;
     case QuestTime.Weekly:
       period = "weekly";
-      historicalTime = HistoricalType.WEEKLY;
+      historicalTime = HistoricalTimes.WEEKLY;
       break;
     case QuestTime.Daily:
       period = "daily";
-      historicalTime = HistoricalType.DAILY;
+      historicalTime = HistoricalTimes.DAILY;
       break;
   }
 

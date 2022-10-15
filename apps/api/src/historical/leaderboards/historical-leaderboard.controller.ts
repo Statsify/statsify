@@ -15,8 +15,8 @@ import {
 import { Auth } from "../../auth";
 import { Body, Controller, Post } from "@nestjs/common";
 import {
+  CurrentHistoricalType,
   ErrorResponse,
-  HistoricalType,
   LeaderboardQuery,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
@@ -54,7 +54,7 @@ export class HistoricalLeaderboardsController {
     }
 
     return this.historicalLeaderboardService.getHistoricalLeaderboard(
-      time as HistoricalType,
+      time as CurrentHistoricalType,
       Player,
       field,
       input,

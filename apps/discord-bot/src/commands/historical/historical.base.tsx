@@ -57,7 +57,7 @@ import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile";
-import { HistoricalType } from "@statsify/api-client";
+import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile";
 import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile";
 import { PaintballProfile } from "../paintball/paintball.profile";
@@ -316,9 +316,9 @@ export class HistoricalBase {
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
 
     const isNotLastHistorical = [
-      HistoricalType.DAILY,
-      HistoricalType.WEEKLY,
-      HistoricalType.MONTHLY,
+      HistoricalTimes.DAILY as HistoricalType,
+      HistoricalTimes.WEEKLY as HistoricalType,
+      HistoricalTimes.MONTHLY as HistoricalType,
     ].includes(this.time);
 
     const pages: Page[] = displayedModes.map((mode) => ({
@@ -376,15 +376,15 @@ export class HistoricalBase {
     const isSunday = now.weekday === 7;
     const isStartOfMonth = now.day === 1;
 
-    if (this.time === HistoricalType.DAILY && hasResetToday) {
+    if (this.time === HistoricalTimes.DAILY && hasResetToday) {
       resetTime = resetTime.plus({ days: 1 });
     } else if (
-      this.time === HistoricalType.WEEKLY &&
+      this.time === HistoricalTimes.WEEKLY &&
       ((isSunday && hasResetToday) || !isSunday)
     ) {
       resetTime = resetTime.plus({ week: 1 }).minus({ days: isSunday ? 0 : now.weekday });
     } else if (
-      this.time === HistoricalType.MONTHLY &&
+      this.time === HistoricalTimes.MONTHLY &&
       ((isStartOfMonth && hasResetToday) || !isStartOfMonth)
     ) {
       resetTime = resetTime.minus({ days: now.day - 1 }).plus({ months: 1 });
