@@ -105,7 +105,7 @@ export class PlayerStats {
   })
   public paintball: Paintball;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.PARKOUR} -` } })
+  @Field({ leaderboard: { fieldName: `${FormattedGame.PARKOUR} -`, historical: false } })
   public parkour: Parkour;
 
   @Field({
@@ -124,7 +124,13 @@ export class PlayerStats {
   })
   public quake: Quake;
 
-  @Field({ leaderboard: { historical: false, name: "", fieldName: "§eQuests§r" } })
+  @Field({
+    leaderboard: {
+      historical: false,
+      name: "",
+      fieldName: "§eQuests§r",
+    },
+  })
   public quests: Quests;
 
   @Field({

@@ -33,10 +33,10 @@ export const MURDER_MYSTERY_MODES = new GameModes([
 export type MurderMysteryModes = IGameModes<typeof MURDER_MYSTERY_MODES>;
 
 export class MurderMystery {
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public coins: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public lootChests: number;
 
   @Field()

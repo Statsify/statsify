@@ -46,7 +46,7 @@ export class MegaWallsKit {
   @Field({ leaderboard: { enabled: false } })
   public assists: number;
 
-  @Field({ leaderboard: { limit, formatter: formatTime } })
+  @Field({ leaderboard: { limit, formatter: formatTime, historical: false } })
   public playtime: number;
 
   @Field({ leaderboard: { enabled: false } })

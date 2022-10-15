@@ -48,25 +48,25 @@ export class SkyWars {
   })
   public exp: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public coins: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.opals"] } })
+  @Field({ leaderboard: { additionalFields: ["this.opals"], historical: false } })
   public souls: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.souls"] } })
+  @Field({ leaderboard: { additionalFields: ["this.souls"], historical: false } })
   public opals: number;
 
   @Field()
   public heads: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public tokens: number;
 
   @Field()
   public potionsBrewed: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public lootChests: number;
 
   @Field({ store: { default: "⋆" } })

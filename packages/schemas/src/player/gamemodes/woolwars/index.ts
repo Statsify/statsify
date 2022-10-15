@@ -27,7 +27,7 @@ export const WOOLWARS_MODES = new GameModes([
 export type WoolWarsModes = IGameModes<typeof WOOLWARS_MODES>;
 
 export class WoolWars {
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public coins: number;
 
   @Field({ leaderboard: { enabled: false } })

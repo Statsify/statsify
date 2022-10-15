@@ -79,7 +79,7 @@ export class CaptureTheWool {
 }
 
 export class CreeperAttack {
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public maxWave: number;
 
   public constructor(data: APIData) {
@@ -277,12 +277,20 @@ export class HoleInTheWall {
   public wallsFaced: number;
 
   @Field({
-    leaderboard: { name: "Highest Score - Qualifications", fieldName: "Qualifiers PB" },
+    leaderboard: {
+      name: "Highest Score - Qualifications",
+      fieldName: "Qualifiers PB",
+      historical: false,
+    },
   })
   public highestScoreQualifications: number;
 
   @Field({
-    leaderboard: { name: "Highest Score - Finals", fieldName: "Finals PB" },
+    leaderboard: {
+      name: "Highest Score - Finals",
+      fieldName: "Finals PB",
+      historical: false,
+    },
   })
   public highestScoreFinals: number;
 
@@ -304,7 +312,7 @@ export class HypixelSays {
   @Field({ leaderboard: { additionalFields: ["this.roundsWon", "this.points"] } })
   public wins: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public maxScore: number;
 
   public constructor(data: APIData) {
@@ -621,7 +629,12 @@ export class ZombiesMap {
   public wins: number;
 
   @Field({
-    leaderboard: { sort: "ASC", formatter: formatTime, additionalFields: ["this.wins"] },
+    leaderboard: {
+      sort: "ASC",
+      formatter: formatTime,
+      additionalFields: ["this.wins"],
+      historical: false,
+    },
   })
   public fastestWin: number;
 

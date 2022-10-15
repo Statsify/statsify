@@ -23,7 +23,7 @@ export const TNT_GAMES_MODES = new GameModes([
 export type TNTGamesModes = IGameModes<typeof TNT_GAMES_MODES>;
 
 export class TNTGames {
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public coins: number;
 
   @Field()

@@ -49,16 +49,16 @@ export class Pit {
   @Field()
   public progression: Progression;
 
-  @Field({ leaderboard: { additionalFields: "this.lifetimeGold" } })
+  @Field({ leaderboard: { additionalFields: "this.lifetimeGold", historical: false } })
   public gold: number;
 
   @Field({ leaderboard: { additionalFields: "this.gold" } })
   public lifetimeGold: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public renown: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public bounty: number;
 
   @Field()
@@ -96,10 +96,10 @@ export class Pit {
   })
   public totalMysticsEnchanted: number;
 
-  @Field({ leaderboard: { formatter: formatTime } })
+  @Field({ leaderboard: { formatter: formatTime, historical: false } })
   public playtime: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public highestStreak: number;
 
   @Field()

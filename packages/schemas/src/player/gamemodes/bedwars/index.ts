@@ -51,10 +51,10 @@ export const BEDWARS_MODES = new GameModes([
 export type BedWarsModes = IGameModes<typeof BEDWARS_MODES>;
 
 export class BedWars {
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public coins: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public lootChests: number;
 
   @Field({

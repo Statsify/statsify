@@ -39,7 +39,7 @@ const prefixes: GamePrefix[] = [
 ];
 
 export class Paintball {
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public coins: number;
 
   @Field({ leaderboard: { enabled: false } })
@@ -72,7 +72,7 @@ export class Paintball {
   @Field()
   public perks: PaintballPerks;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public tokens: number;
 
   @Field()

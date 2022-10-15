@@ -39,7 +39,6 @@ import {
 } from "@statsify/schemas";
 import {
   ApiService,
-  Choice,
   ChoiceArgument,
   Command,
   CommandContext,
@@ -52,21 +51,26 @@ import { GuildLeaderboardSubCommand } from "./guild-leaderboard.subcommand";
 import { HistoricalType } from "@statsify/api-client";
 import { PlayerLeaderboardArgument } from "./player-leaderboard.argument";
 import { getBackground } from "@statsify/assets";
-import { prettify } from "@statsify/util";
+
+//TODO add support for the shorthand names (L, D, W, M)
 
 const HISTORICAL_ARGUMENT = new ChoiceArgument({
   name: "time",
   choices: [
-    ["Lifetime", "Lifetime"],
-    ...Object.entries(HistoricalType)
-      .filter(([time]) => !time.startsWith("LAST"))
-      .map(([name, type]) => [prettify(name), type] as Choice),
+    ["Lifetime", "L"],
+    ["Daily", "D"],
+    ["Weekly", "W"],
+    ["Monthly", "M"],
+    // ...Object.entries(HistoricalType)
+    //   .filter(([time]) => !time.startsWith("LAST"))
+    //   .map(([name, type]) => [prettify(name), type] as Choice),
   ],
 });
 
 @Command({
   name: "leaderboard",
-  description: (t) => t("commands.player-leaderboard"),
+  // Description isn't shown so use "G" to save space on the 4000 character limit.
+  description: "G",
 })
 export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   public constructor(private readonly apiService: ApiService) {

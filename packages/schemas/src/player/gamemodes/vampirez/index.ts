@@ -16,16 +16,16 @@ export const VAMPIREZ_MODES = new GameModes([{ api: "human" }, { api: "vampire" 
 export type VampireZModes = IGameModes<typeof VAMPIREZ_MODES>;
 
 export class VampireZ {
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public coins: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public tokens: number;
 
   @Field()
   public overallWins: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public mostVampireKills: number;
 
   @Field()

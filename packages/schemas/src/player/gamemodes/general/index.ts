@@ -39,19 +39,25 @@ export class General {
   @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
   public networkLevel: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.highestRewardStreak"] } })
+  @Field({
+    leaderboard: { additionalFields: ["this.highestRewardStreak"], historical: false },
+  })
   public currentRewardStreak: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.currentRewardStreak"] } })
+  @Field({
+    leaderboard: { additionalFields: ["this.currentRewardStreak"], historical: false },
+  })
   public highestRewardStreak: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public tournamentTributes: number;
 
   @Field()
   public ranksGifted: number;
 
-  @Field({ leaderboard: { fieldName: "Tokens", name: "Classic Tokens" } })
+  @Field({
+    leaderboard: { fieldName: "Tokens", name: "Classic Tokens", historical: false },
+  })
   public classicTokens: number;
 
   @Field()

@@ -78,16 +78,16 @@ export class Quake {
   @Field()
   public teams: QuakeMode;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public coins: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public highestKillstreak: number;
 
   @Field()
   public godlikes: number;
 
-  @Field()
+  @Field({ leaderboard: { historical: false } })
   public tokens: number;
 
   @Field({ leaderboard: { enabled: false }, store: { default: 1.3 } })
