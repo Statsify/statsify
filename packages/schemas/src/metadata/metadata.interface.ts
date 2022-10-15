@@ -53,6 +53,11 @@ interface BaseLeaderboardMetadata {
   default?: any;
 
   /**
+   * Whether historical leaderboards are available for this field
+   */
+  historical?: boolean;
+
+  /**
    * When to reset the leaderboard, leaderboards will reset at the desired time at midnight.
    */
   resetEvery?:

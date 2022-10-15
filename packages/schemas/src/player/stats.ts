@@ -124,7 +124,7 @@ export class PlayerStats {
   })
   public quake: Quake;
 
-  @Field({ leaderboard: { name: "", fieldName: "§eQuests§r" } })
+  @Field({ leaderboard: { historical: false, name: "", fieldName: "§eQuests§r" } })
   public quests: Quests;
 
   @Field({

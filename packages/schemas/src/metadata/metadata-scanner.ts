@@ -80,6 +80,12 @@ export class MetadataScanner {
           if (value.leaderboard.resetEvery && !metadata.leaderboard.resetEvery)
             metadata.leaderboard.resetEvery = value.leaderboard.resetEvery;
 
+          if (
+            value.leaderboard.historical === false &&
+            metadata.leaderboard.historical === undefined
+          )
+            metadata.leaderboard.historical = value.leaderboard.historical;
+
           return [keyPath, metadata] as MetadataEntry;
         }
       );

@@ -78,7 +78,7 @@ export abstract class LeaderboardService {
     remove = false
   ) {
     const fields = LeaderboardScanner.getLeaderboardFields(constructor).filter(
-      (v) => (v[1].leaderboard as LeaderboardEnabledMetadata).historical
+      (v) => (v[1].leaderboard as LeaderboardEnabledMetadata).historical !== false
     );
 
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
