@@ -34,12 +34,13 @@ const limitHistorical = async () => {
 
     fields.forEach(([key, value]) => {
       const path = `${time}:${name}.${key}`;
-      if (!value.leaderboard.enabled) oldLeaderboardPipeline.del(path);
+      if (!value.leaderboard.enabled || !value.leaderboard.historical)
+        oldLeaderboardPipeline.del(path);
     });
 
     await oldLeaderboardPipeline.exec();
 
-    const leaderboards = fields.filter(([, value]) => value.leaderboard.enabled);
+    const leaderboards = fields.filter(([, value]) => value.leaderboard.historical);
 
     let memberCount = 0;
 
