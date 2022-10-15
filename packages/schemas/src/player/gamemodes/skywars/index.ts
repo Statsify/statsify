@@ -44,37 +44,50 @@ export class SkyWars {
       hidden: true,
       formatter: (exp: number) => getLevel(exp),
       additionalFields: ["this.overall.wins", "this.overall.kills", "this.overall.kdr"],
-      historicalFields: ["this.level"],
-      historicalFieldName: "EXP Gained",
+    },
+    historical: {
+      hidden: false,
+      fieldName: "EXP Gained",
+      formatter: Number,
+      additionalFields: ["this.level"],
     },
   })
   public exp: number;
 
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public coins: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.opals"], historical: false } })
+  @Field({
+    leaderboard: { additionalFields: ["this.opals"] },
+    historical: { enabled: false },
+  })
   public souls: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.souls"], historical: false } })
+  @Field({
+    leaderboard: { additionalFields: ["this.souls"] },
+    historical: { enabled: false },
+  })
   public opals: number;
 
   @Field()
   public heads: number;
 
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public tokens: number;
 
   @Field()
   public potionsBrewed: number;
 
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public lootChests: number;
 
   @Field({ store: { default: "⋆" } })
   public star: string;
 
-  @Field({ leaderboard: { enabled: false, historicalFieldName: "Levels Gained" } })
+  @Field({
+    leaderboard: { enabled: false },
+    historical: { enabled: true, fieldName: "Levels Gained" },
+  })
   public level: number;
 
   @Field()

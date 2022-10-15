@@ -8,3 +8,4 @@
 
 export * from "./leaderboard-scanner";
 export * from "./merge";
+export * from "./historical-scanner";

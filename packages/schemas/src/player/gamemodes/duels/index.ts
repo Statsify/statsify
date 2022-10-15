@@ -74,12 +74,14 @@ export class Duels {
   public pingRange: number;
 
   @Field({
-    leaderboard: { extraDisplay: "this.overall.titleFormatted", historical: false },
+    leaderboard: { extraDisplay: "this.overall.titleFormatted" },
+    historical: { enabled: false },
   })
   public coins: number;
 
   @Field({
-    leaderboard: { extraDisplay: "this.overall.titleFormatted", historical: false },
+    leaderboard: { extraDisplay: "this.overall.titleFormatted" },
+    historical: { enabled: false },
   })
   public lootChests: number;
 

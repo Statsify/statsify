@@ -40,10 +40,10 @@ const prefixes: GamePrefix[] = [
 ];
 
 export class TurboKartRacers {
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public coins: number;
 
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public tokens: number;
 
   @Field({ leaderboard: { enabled: false } })

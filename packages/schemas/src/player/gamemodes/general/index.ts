@@ -32,35 +32,42 @@ export class General {
       limit: Number.POSITIVE_INFINITY,
       formatter: getNetworkLevel,
       additionalFields: ["this.networkLevel"],
-      historicalFieldName: "EXP Gained",
+    },
+    historical: {
+      hidden: false,
+      fieldName: "EXP Gained",
     },
   })
   public networkExp: number;
 
   @Field({
-    leaderboard: { enabled: false, historicalFieldName: "Levels Gained" },
+    leaderboard: { enabled: false },
+    historical: { enabled: true, fieldName: "Levels Gained" },
     store: { default: 1 },
   })
   public networkLevel: number;
 
   @Field({
-    leaderboard: { additionalFields: ["this.highestRewardStreak"], historical: false },
+    leaderboard: { additionalFields: ["this.highestRewardStreak"] },
+    historical: { enabled: false },
   })
   public currentRewardStreak: number;
 
   @Field({
-    leaderboard: { additionalFields: ["this.currentRewardStreak"], historical: false },
+    leaderboard: { additionalFields: ["this.currentRewardStreak"] },
+    historical: { enabled: false },
   })
   public highestRewardStreak: number;
 
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public tournamentTributes: number;
 
   @Field()
   public ranksGifted: number;
 
   @Field({
-    leaderboard: { fieldName: "Tokens", name: "Classic Tokens", historical: false },
+    leaderboard: { fieldName: "Tokens", name: "Classic Tokens" },
+    historical: { enabled: false },
   })
   public classicTokens: number;
 

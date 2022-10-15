@@ -40,7 +40,7 @@ export class Events {
   @Field({ leaderboard: { name: "Halloween 2022" } })
   public halloween2022: Event;
 
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public silver: number;
 
   public constructor(data: APIData = {}) {

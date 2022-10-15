@@ -42,10 +42,10 @@ export const MEGAWALLS_MODES = new GameModes([
 export type MegaWallsModes = IGameModes<typeof MEGAWALLS_MODES>;
 
 export class MegaWalls {
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public coins: number;
 
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public mythicFavor: number;
 
   @Field({ store: { default: "none" } })

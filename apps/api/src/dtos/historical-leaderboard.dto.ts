@@ -14,7 +14,7 @@ import { PlayerDto } from "./player.dto";
 import { Transform } from "class-transformer";
 
 const fields = LeaderboardScanner.getLeaderboardFields(Player)
-  .filter(([, { leaderboard }]) => leaderboard.historical)
+  .filter(([, { historical }]) => historical.enabled)
   .map(([key]) => key);
 
 export class HistoricalLeaderboardDto extends PartialType(PlayerDto) {

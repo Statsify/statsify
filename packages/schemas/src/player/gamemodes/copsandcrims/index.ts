@@ -68,7 +68,7 @@ const PREFIX_MAP: Record<string, string> = {
 };
 
 export class CopsAndCrims {
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public coins: number;
 
   @Field({

@@ -8,11 +8,20 @@
 
 import { BasePropOptions } from "@typegoose/typegoose/lib/types";
 import { Constructor } from "@statsify/util";
-import { LeaderboardEnabledMetadata, StoreMetadata } from "./metadata.interface";
+import {
+  HistoricalEnabledMetadata,
+  LeaderboardEnabledMetadata,
+  StoreMetadata,
+} from "./metadata.interface";
 
 export type TypeOptions = () => Constructor | [Constructor];
 export type LeaderboardOptions = Omit<
   BasePropOptions | Partial<LeaderboardEnabledMetadata>,
+  "default"
+>;
+
+export type HistoricalOptions = Omit<
+  BasePropOptions | Partial<HistoricalEnabledMetadata>,
   "default"
 >;
 
@@ -32,6 +41,7 @@ export type DocOptions = Partial<{
 export interface FieldOptions {
   type?: TypeOptions;
   leaderboard?: LeaderboardOptions;
+  historical?: HistoricalOptions;
   store?: StoreOptions;
   docs?: DocOptions;
   mongo?: Partial<BasePropOptions>;

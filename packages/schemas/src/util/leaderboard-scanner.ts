@@ -12,6 +12,7 @@ import {
   LeaderboardMetadata,
 } from "../metadata/metadata.interface";
 import { MetadataScanner } from "../metadata";
+import { parseAdditionalFields } from "./parse-fields";
 
 export class LeaderboardScanner {
   public static getLeaderboardMetadata<T>(constructor: Constructor<T>) {
@@ -56,45 +57,13 @@ export class LeaderboardScanner {
 
     if (Array.isArray(leaderboard.additionalFields)) {
       leaderboard.additionalFields = leaderboard.additionalFields.map(
-        this.parseAdditionalFields.bind(this, key)
-      );
-    }
-
-    if (Array.isArray(leaderboard.historicalFields)) {
-      leaderboard.historicalFields = leaderboard.historicalFields.map(
-        this.parseAdditionalFields.bind(this, key)
+        parseAdditionalFields.bind(this, key)
       );
     }
 
     if (leaderboard.extraDisplay)
-      leaderboard.extraDisplay = this.parseAdditionalFields(
-        key,
-        leaderboard.extraDisplay
-      );
+      leaderboard.extraDisplay = parseAdditionalFields(key, leaderboard.extraDisplay);
 
     return leaderboard;
-  }
-
-  private static parseAdditionalFields(field: string, additionalKey: string) {
-    if (!additionalKey.startsWith("this.")) return additionalKey;
-
-    const fieldParts = field.split(".");
-    fieldParts.pop();
-
-    const additionalFieldParts = additionalKey.split(".").slice(1);
-    const ending = additionalFieldParts.pop();
-
-    if (!additionalFieldParts.length) return [...fieldParts, ending].join(".");
-
-    const splitIndex = fieldParts.findIndex((part) =>
-      additionalFieldParts.includes(part)
-    );
-
-    if (splitIndex === -1)
-      return [...fieldParts, ...additionalFieldParts, ending].join(".");
-
-    return [...fieldParts.slice(0, splitIndex), ...additionalFieldParts, ending].join(
-      "."
-    );
   }
 }

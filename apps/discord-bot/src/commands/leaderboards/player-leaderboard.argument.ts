@@ -14,6 +14,7 @@ import {
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import {
   ClassMetadata,
+  HistoricalScanner,
   LeaderboardScanner,
   METADATA_KEY,
   PlayerStats,
@@ -54,11 +55,11 @@ const fields = entries.reduce((acc, [prefix, value]) => {
 }, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);
 
 const historicalFields = entries.reduce((acc, [prefix, value]) => {
-  const list = LeaderboardScanner.getLeaderboardMetadata(value.type.type)
-    .filter(([, { leaderboard }]) => leaderboard.historical)
-    .map(([key, { leaderboard }]) => ({
+  const list = HistoricalScanner.getHistoricalMetadata(value.type.type)
+    .filter(([, { historical }]) => historical.enabled)
+    .map(([key, { historical }]) => ({
       value: key,
-      name: removeFormatting(leaderboard.name),
+      name: removeFormatting(historical.name),
     }));
 
   const fuse: Fuse<any> = new Fuse(list, fuseOptions);

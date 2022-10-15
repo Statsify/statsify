@@ -57,7 +57,7 @@ export const ARCADE_MODES = new GameModes([
 export type ArcadeModes = IGameModes<typeof ARCADE_MODES>;
 
 export class Arcade {
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public coins: number;
 
   @Field()

@@ -17,17 +17,17 @@ import {
   PlayerNotFoundException,
 } from "@statsify/api-client";
 import { Daily, Monthly, Weekly } from "../models";
+import {
+  HistoricalScanner,
+  LeaderboardScanner,
+  Player,
+  createHistoricalPlayer,
+} from "@statsify/schemas";
 import { HistoricalService } from "../historical.service";
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "@nestjs-modules/ioredis";
 import { LeaderboardAdditionalStats, LeaderboardService } from "../../leaderboards";
-import {
-  LeaderboardEnabledMetadata,
-  LeaderboardScanner,
-  Player,
-  createHistoricalPlayer,
-} from "@statsify/schemas";
 import { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
@@ -55,19 +55,16 @@ export class HistoricalLeaderboardService extends LeaderboardService {
   ) {
     const PAGE_SIZE = 10;
 
+    const { extraDisplay } = LeaderboardScanner.getLeaderboardField(constructor, field);
+
     const {
       fieldName,
-      historicalFieldName,
-      historicalFields = [],
-      extraDisplay,
-      formatter,
-      sort,
       name,
+      additionalFields = [],
       hidden,
-    } = LeaderboardScanner.getLeaderboardField(
-      constructor,
-      field
-    ) as LeaderboardEnabledMetadata;
+      sort,
+      formatter,
+    } = HistoricalScanner.getHistoricalField(constructor, field);
 
     let top: number;
     let bottom: number;
@@ -98,7 +95,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
       }
     }
 
-    const leaderboard = await this.getHistoricalLeaderboardFromRedis(
+    const redisLb = await this.getHistoricalLeaderboardFromRedis(
       time,
       constructor,
       field,
@@ -107,25 +104,25 @@ export class HistoricalLeaderboardService extends LeaderboardService {
       sort
     );
 
-    const additionalFieldMetadata = historicalFields.map((k) =>
-      LeaderboardScanner.getLeaderboardField(constructor, k, false)
+    const additionalFieldMetadata = additionalFields.map((k) =>
+      HistoricalScanner.getHistoricalField(constructor, k, false)
     );
 
     const extraDisplayMetadata = extraDisplay
-      ? LeaderboardScanner.getLeaderboardField(constructor, extraDisplay, false)
+      ? HistoricalScanner.getHistoricalField(constructor, extraDisplay, false)
       : undefined;
 
     const additionalStats = await this.getAdditionalHistoricalStats(
       time,
-      leaderboard.map(({ id }) => id),
+      redisLb.map(({ id }) => id),
       [
         field, // Keep field so merge works correctly with ratios
-        ...historicalFields.filter((k) => k !== field),
+        ...additionalFields.filter((k) => k !== field),
         ...(extraDisplay ? [extraDisplay] : []),
       ]
     );
 
-    const data = leaderboard.map((doc, index) => {
+    const data = redisLb.map((doc, index) => {
       const stats = additionalStats[index];
 
       if (extraDisplay)
@@ -135,7 +132,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
 
       const field = formatter ? formatter(doc.score) : doc.score;
 
-      const additionalValues = historicalFields.map((key, index) => {
+      const additionalValues = additionalFields.map((key, index) => {
         const value = stats[key] ?? additionalFieldMetadata[index].default;
 
         if (additionalFieldMetadata[index].formatter)
@@ -145,8 +142,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
       });
 
       const fields = [];
-      if (!hidden || (hidden && historicalFieldName !== fieldName))
-        fields.push(hidden ? doc.score : field);
+      if (!hidden) fields.push(field);
 
       fields.push(...additionalValues);
 
@@ -160,12 +156,9 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     });
 
     const fields = [];
-    if (!hidden || (hidden && historicalFieldName !== fieldName))
-      fields.push(historicalFieldName);
+    if (!hidden) fields.push(fieldName);
 
-    fields.push(
-      ...additionalFieldMetadata.map(({ historicalFieldName }) => historicalFieldName)
-    );
+    fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
 
     return {
       name,
@@ -182,8 +175,8 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     idField: keyof T,
     remove = false
   ) {
-    const fields = LeaderboardScanner.getLeaderboardFields(constructor).filter(
-      (v) => (v[1].leaderboard as LeaderboardEnabledMetadata).historical !== false
+    const fields = HistoricalScanner.getHistoricalFields(constructor).filter(
+      (v) => v[1].historical.enabled !== false
     );
 
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();

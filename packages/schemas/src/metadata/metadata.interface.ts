@@ -10,9 +10,21 @@ import { Constructor } from "@statsify/util";
 
 export type Getter<T> = (target: T) => any;
 
+interface NonHistoricalMetadata {
+  resetEvery: any;
+  extraDisplay: any;
+}
+
+export type HistoricalMetadata = Omit<LeaderboardMetadata, keyof NonHistoricalMetadata>;
+export type HistoricalEnabledMetadata = Omit<
+  LeaderboardEnabledMetadata,
+  keyof NonHistoricalMetadata
+>;
+
 export interface FieldMetadata {
   type: TypeMetadata;
   leaderboard: LeaderboardMetadata;
+  historical: HistoricalMetadata;
   store: StoreMetadata;
 }
 
@@ -27,11 +39,6 @@ interface BaseLeaderboardMetadata {
    * An array of properties that will be shown in the leaderboard.
    */
   additionalFields?: string[];
-
-  /**
-   * An array of properties that will be shown in the leaderboard when historical.
-   */
-  historicalFields?: string[];
 
   /**
    * A property that will be added onto each leaderboard member's display
@@ -50,23 +57,12 @@ interface BaseLeaderboardMetadata {
   fieldName?: string;
 
   /**
-   * The pretty print name of the leaderboard in historical.
-   * @example Levels
-   */
-  historicalFieldName?: string;
-
-  /**
    * The complete leaderboard name
    * @example BedWars Overall Wins
    */
   name: string;
 
   default?: any;
-
-  /**
-   * Whether historical leaderboards are available for this field
-   */
-  historical?: boolean;
 
   /**
    * When to reset the leaderboard, leaderboards will reset at the desired time at midnight.
@@ -90,11 +86,6 @@ export type LeaderboardSort = "ASC" | "DESC";
 
 export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
   enabled: true;
-
-  /**
-   * Whether or not to show the stat in the leaderboard page
-   */
-  historical?: boolean;
 
   /**
    * Whether or not to show the stat in the leaderboard page

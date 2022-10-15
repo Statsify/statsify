@@ -51,10 +51,10 @@ export const BEDWARS_MODES = new GameModes([
 export type BedWarsModes = IGameModes<typeof BEDWARS_MODES>;
 
 export class BedWars {
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public coins: number;
 
-  @Field({ leaderboard: { historical: false } })
+  @Field({ historical: { enabled: false } })
   public lootChests: number;
 
   @Field({
@@ -67,13 +67,20 @@ export class BedWars {
         "this.overall.finalKills",
         "this.overall.fkdr",
       ],
-      historicalFields: ["this.level"],
-      historicalFieldName: "EXP Gained",
+    },
+    historical: {
+      hidden: false,
+      fieldName: "EXP Gained",
+      additionalFields: ["this.level"],
+      formatter: Number,
     },
   })
   public exp: number;
 
-  @Field({ leaderboard: { enabled: false, historicalFieldName: "Levels Gained" } })
+  @Field({
+    leaderboard: { enabled: false },
+    historical: { enabled: true, fieldName: "Levels Gained" },
+  })
   public level: number;
 
   @Field()
