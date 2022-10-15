@@ -245,16 +245,18 @@ export class PlayerService {
 
     let week;
     let month;
-    let dailyPlayer;
     let weeklyPlayer;
     let monthlyPlayer;
 
-    const day = await this.dailyModel.findOne({ uuid: player.uuid }).lean().exec();
-    if (day) {
+    const dailyPlayer = await this.dailyModel
+      .findOne({ uuid: player.uuid })
+      .lean()
+      .exec();
+    if (dailyPlayer) {
       week = this.weeklyModel.findOne({ uuid: player.uuid }).lean().exec();
       month = this.monthlyModel.findOne({ uuid: player.uuid }).lean().exec();
 
-      [dailyPlayer, weeklyPlayer, monthlyPlayer] = await Promise.all([day, week, month]);
+      [weeklyPlayer, monthlyPlayer] = await Promise.all([week, month]);
     }
 
     const promises = [];
