@@ -32,8 +32,7 @@ const runLimit = async (constructors, prefixes) => {
         !value.leaderboard.enabled ||
         (prefixes ? !value.leaderboard.historical : false)
       )
-        console.log(path);
-      oldLeaderboardPipeline.del(path);
+        oldLeaderboardPipeline.del(path);
     });
 
     await oldLeaderboardPipeline.exec();
