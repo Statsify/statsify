@@ -22,13 +22,11 @@ const stringMetadata = (name: string): FieldMetadata => {
     leaderboard: {
       enabled: false,
       additionalFields: [],
-      historicalFields: [],
       extraDisplay: undefined,
       formatter: undefined,
       resetEvery: undefined,
       name: name.split(".").map(prettify).join(" "),
       fieldName,
-      historicalFieldName: fieldName,
     },
     type: { type: String, array: false, primitive: true },
     store: {
@@ -37,6 +35,15 @@ const stringMetadata = (name: string): FieldMetadata => {
       deserialize: true,
       store: true,
       default: "",
+    },
+    historical: {
+      enabled: false,
+      additionalFields: [],
+      extraDisplay: undefined,
+      formatter: undefined,
+      resetEvery: undefined,
+      name: name.split(".").map(prettify).join(" "),
+      fieldName,
     },
   };
 };
@@ -67,13 +74,10 @@ describe("metadata", () => {
             enabled: true,
             name: prettify("fieldA"),
             fieldName: prettify("fieldA"),
-            historicalFieldName: prettify("fieldA"),
             additionalFields: [],
-            historicalFields: [],
             aliases: [],
             sort: "DESC",
             limit: 10_000,
-            historical: true,
           },
           type: { type: Number, array: false, primitive: true },
           store: {
@@ -82,6 +86,15 @@ describe("metadata", () => {
             deserialize: true,
             store: true,
             default: 0,
+          },
+          historical: {
+            enabled: true,
+            name: prettify("fieldA"),
+            fieldName: prettify("fieldA"),
+            additionalFields: [],
+            aliases: [],
+            sort: "DESC",
+            limit: 10_000,
           },
         },
       ],
@@ -101,10 +114,8 @@ describe("metadata", () => {
           leaderboard: {
             enabled: false,
             additionalFields: [],
-            historicalFields: [],
             name: prettify("fieldA"),
             fieldName: prettify("fieldA"),
-            historicalFieldName: prettify("fieldA"),
           },
           type: { type: Number, array: false, primitive: true },
           store: {
@@ -113,6 +124,15 @@ describe("metadata", () => {
             deserialize: true,
             store: true,
             default: 0,
+          },
+          historical: {
+            additionalFields: [],
+            enabled: false,
+            extraDisplay: undefined,
+            fieldName: prettify("fieldA"),
+            formatter: undefined,
+            resetEvery: undefined,
+            name: prettify("fieldA"),
           },
         },
       ],
@@ -202,14 +222,11 @@ describe("metadata", () => {
       formatter: undefined,
       hidden: undefined,
       additionalFields: ["fieldA"],
-      historicalFields: [],
       extraDisplay: "fieldA",
       aliases: [],
       sort: "DESC",
       limit: 10_000,
       resetEvery: undefined,
-      historical: true,
-      historicalFieldName: prettify("fieldB"),
     });
   });
 });
