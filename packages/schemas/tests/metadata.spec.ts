@@ -22,8 +22,13 @@ const stringMetadata = (name: string): FieldMetadata => {
     leaderboard: {
       enabled: false,
       additionalFields: [],
+      historicalFields: [],
+      extraDisplay: undefined,
+      formatter: undefined,
+      resetEvery: undefined,
       name: name.split(".").map(prettify).join(" "),
       fieldName,
+      historicalFieldName: fieldName,
     },
     type: { type: String, array: false, primitive: true },
     store: {
@@ -194,12 +199,17 @@ describe("metadata", () => {
       enabled: true,
       name: "Field A Field B",
       fieldName: prettify("fieldB"),
+      formatter: undefined,
+      hidden: undefined,
       additionalFields: ["fieldA"],
+      historicalFields: [],
       extraDisplay: "fieldA",
       aliases: [],
       sort: "DESC",
       limit: 10_000,
+      resetEvery: undefined,
       historical: true,
+      historicalFieldName: prettify("fieldB"),
     });
   });
 });
