@@ -70,9 +70,6 @@ export class Player {
   })
   public resetMinute?: number;
 
-  @Field({ store: { required: false } })
-  public leaderboardBanned?: boolean;
-
   @Field({ store: { required: false, store: false } })
   public cached?: boolean;
 
@@ -103,7 +100,6 @@ export class Player {
     //These will all be filled in by a service
     this.expiresAt = 0;
     this.resetMinute = 0;
-    this.leaderboardBanned = false;
   }
 }
 

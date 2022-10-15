@@ -69,7 +69,6 @@ export class PlayerService {
 
     if (player) {
       player.expiresAt = Date.now() + 120_000;
-      player.leaderboardBanned = mongoPlayer?.leaderboardBanned ?? false;
       player.resetMinute = mongoPlayer?.resetMinute;
       player.guildId = mongoPlayer?.guildId;
 
@@ -94,14 +93,12 @@ export class PlayerService {
     const mongoPlayer = await this.findMongoDocument(player.uuid, {
       username: true,
       guildId: true,
-      leaderboardBanned: true,
     });
 
     if (mongoPlayer && mongoPlayer.username !== player.username)
       await this.playerSearchService.delete(mongoPlayer.username);
 
     player.guildId = mongoPlayer?.guildId;
-    player.leaderboardBanned = mongoPlayer?.leaderboardBanned ?? false;
     player.expiresAt = Date.now() + 120_000;
 
     return this.saveOne(player, false);
@@ -276,12 +273,7 @@ export class PlayerService {
     );
 
     promises.push(
-      this.playerLeaderboardService.addLeaderboards(
-        Player,
-        flatPlayer,
-        "uuid",
-        player.leaderboardBanned ?? false
-      )
+      this.playerLeaderboardService.addLeaderboards(Player, flatPlayer, "uuid", false)
     );
 
     if (dailyPlayer) {
@@ -291,7 +283,7 @@ export class PlayerService {
           Player,
           flatten(createHistoricalPlayer(dailyPlayer as Player, player)),
           "uuid",
-          player.leaderboardBanned ?? false
+          false
         )
       );
     }
@@ -303,7 +295,7 @@ export class PlayerService {
           Player,
           flatten(createHistoricalPlayer(weeklyPlayer as Player, player)),
           "uuid",
-          player.leaderboardBanned ?? false
+          false
         )
       );
     }
@@ -315,7 +307,7 @@ export class PlayerService {
           Player,
           flatten(createHistoricalPlayer(monthlyPlayer as Player, player)),
           "uuid",
-          player.leaderboardBanned ?? false
+          false
         )
       );
     }
