@@ -56,6 +56,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     const PAGE_SIZE = 10;
 
     const {
+      fieldName,
       historicalFieldName,
       historicalFields = [],
       extraDisplay,
@@ -144,8 +145,9 @@ export class HistoricalLeaderboardService extends LeaderboardService {
       });
 
       const fields = [];
-      // This will need to be changed if hidden is not always something like EXP -- If hidden then use the raw non formatted value for the leaderboards
-      fields.push(hidden ? doc.score : field);
+      if (!hidden || (hidden && historicalFieldName !== fieldName))
+        fields.push(hidden ? doc.score : field);
+
       fields.push(...additionalValues);
 
       return {
@@ -158,8 +160,9 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     });
 
     const fields = [];
-    // This will need to be changed if hidden is not always something like EXP
-    fields.push(historicalFieldName);
+    if (!hidden || (hidden && historicalFieldName !== fieldName))
+      fields.push(historicalFieldName);
+
     fields.push(
       ...additionalFieldMetadata.map(({ historicalFieldName }) => historicalFieldName)
     );

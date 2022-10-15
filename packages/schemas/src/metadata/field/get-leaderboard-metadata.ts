@@ -58,9 +58,7 @@ export const getLeaderboardMetadata = (
       enabled: false,
       additionalFields: leaderboardOptions?.additionalFields || [],
       historicalFields:
-        leaderboardOptions?.historicalFields ||
-        leaderboardOptions?.additionalFields ||
-        [],
+        leaderboardOptions?.historicalFields ?? leaderboardOptions?.additionalFields,
       extraDisplay: leaderboardOptions?.extraDisplay,
       formatter: leaderboardOptions?.formatter,
       resetEvery: leaderboardOptions?.resetEvery,

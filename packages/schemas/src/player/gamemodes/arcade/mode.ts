@@ -66,10 +66,10 @@ export class BountyHunters {
   }
 }
 export class CaptureTheWool {
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.captures"] } })
   public kills: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.kills"] } })
   public captures: number;
 
   public constructor(ap: APIData) {
@@ -269,6 +269,7 @@ export class HoleInTheWall {
   @Field({
     leaderboard: {
       additionalFields: ["this.highestScoreQualifications", "this.highestScoreFinals"],
+      historicalFields: [],
     },
   })
   public wins: number;
@@ -625,7 +626,7 @@ export class ThrowOut {
 }
 
 export class ZombiesMap {
-  @Field({ leaderboard: { additionalFields: ["this.fastestWin"] } })
+  @Field({ leaderboard: { additionalFields: ["this.fastestWin"], historicalFields: [] } })
   public wins: number;
 
   @Field({
