@@ -220,17 +220,21 @@ export class PlayerService {
   public async saveOne(player: Player, registerAutocomplete: boolean) {
     //Serialize and flatten the player
     const flatPlayer = flatten(player);
-    const serializedPlayer = serialize(Player, flatPlayer);
+    const serializedPlayer = serialize<Player>(Player, flatPlayer);
 
-    const day = this.dailyModel.findOne({ uuid: player.uuid }).lean().exec();
-    const week = this.weeklyModel.findOne({ uuid: player.uuid }).lean().exec();
-    const month = this.monthlyModel.findOne({ uuid: player.uuid }).lean().exec();
+    let week;
+    let month;
+    let dailyPlayer;
+    let weeklyPlayer;
+    let monthlyPlayer;
 
-    const [dailyPlayer, weeklyPlayer, monthlyPlayer] = await Promise.all([
-      day,
-      week,
-      month,
-    ]);
+    const day = await this.dailyModel.findOne({ uuid: player.uuid }).lean().exec();
+    if (day) {
+      week = this.weeklyModel.findOne({ uuid: player.uuid }).lean().exec();
+      month = this.monthlyModel.findOne({ uuid: player.uuid }).lean().exec();
+
+      [dailyPlayer, weeklyPlayer, monthlyPlayer] = await Promise.all([day, week, month]);
+    }
 
     const promises = [];
 
