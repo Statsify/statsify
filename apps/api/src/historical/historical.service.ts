@@ -7,29 +7,34 @@
  */
 
 import { AsyncTask, SimpleIntervalJob } from "toad-scheduler";
-import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
-import { Flatten, flatten } from "@statsify/util";
 import {
+  CurrentHistoricalType,
+  HistoricalTimes,
   HistoricalType,
   HypixelCache,
+  LastHistoricalType,
   PlayerNotFoundException,
 } from "@statsify/api-client";
+import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
+import { Flatten, flatten } from "@statsify/util";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, Logger } from "@nestjs/common";
-import { Player, deserialize, merge, serialize } from "@statsify/schemas";
+import {
+  Player,
+  createHistoricalPlayer,
+  deserialize,
+  serialize,
+} from "@statsify/schemas";
 import { PlayerService } from "../player";
 import { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 
 const LAST_HISTORICAL = [
-  HistoricalType.LAST_DAY,
-  HistoricalType.LAST_WEEK,
-  HistoricalType.LAST_MONTH,
+  LastHistoricalType.LAST_DAY,
+  LastHistoricalType.LAST_WEEK,
+  LastHistoricalType.LAST_MONTH,
 ] as const;
-
-type LastHistoricalType = typeof LAST_HISTORICAL[number];
-type CurrentHistoricalType = Exclude<HistoricalType, LastHistoricalType>;
 
 type RawHistoricalResponse = [newPlayer: Player, oldPlayer: Player, isNew?: boolean];
 
@@ -92,11 +97,11 @@ export class HistoricalService {
    */
   public async reset(player: Player, resetType: HistoricalType) {
     const isMonthly =
-      resetType === HistoricalType.MONTHLY || resetType === HistoricalType.LAST_MONTH;
+      resetType === HistoricalTimes.MONTHLY || resetType === HistoricalTimes.LAST_MONTH;
 
     const isWeekly =
-      resetType === HistoricalType.WEEKLY ||
-      resetType === HistoricalType.LAST_WEEK ||
+      resetType === HistoricalTimes.WEEKLY ||
+      resetType === HistoricalTimes.LAST_WEEK ||
       isMonthly;
 
     const flatPlayer = flatten(player);
@@ -144,7 +149,7 @@ export class HistoricalService {
 
     const [newPlayer, oldPlayer, isNew] = await this.getRaw(player.uuid, type);
 
-    const merged = merge(oldPlayer, newPlayer);
+    const merged = createHistoricalPlayer(oldPlayer, newPlayer);
 
     merged.resetMinute = oldPlayer.resetMinute;
     merged.isNew = isNew;
@@ -171,7 +176,7 @@ export class HistoricalService {
   }
 
   private getRaw(uuid: string, type: HistoricalType): Promise<RawHistoricalResponse> {
-    return LAST_HISTORICAL.includes(type as unknown as LastHistoricalType)
+    return LAST_HISTORICAL.includes(type as LastHistoricalType)
       ? this.getLastHistorical(uuid, type as unknown as LastHistoricalType)
       : this.getCurrentHistorical(uuid, type as unknown as CurrentHistoricalType);
   }
@@ -184,9 +189,9 @@ export class HistoricalService {
     if (!newPlayer) throw new PlayerNotFoundException();
 
     const CURRENT_MODELS = {
-      [HistoricalType.DAILY]: this.dailyModel,
-      [HistoricalType.WEEKLY]: this.weeklyModel,
-      [HistoricalType.MONTHLY]: this.monthlyModel,
+      [HistoricalTimes.DAILY]: this.dailyModel,
+      [HistoricalTimes.WEEKLY]: this.weeklyModel,
+      [HistoricalTimes.MONTHLY]: this.monthlyModel,
     };
 
     let oldPlayer = (await CURRENT_MODELS[type]
@@ -212,9 +217,9 @@ export class HistoricalService {
     type: LastHistoricalType
   ): Promise<RawHistoricalResponse> {
     const CURRENT_MODELS = {
-      [HistoricalType.LAST_DAY]: this.dailyModel,
-      [HistoricalType.LAST_WEEK]: this.weeklyModel,
-      [HistoricalType.LAST_MONTH]: this.monthlyModel,
+      [HistoricalTimes.LAST_DAY]: this.dailyModel,
+      [HistoricalTimes.LAST_WEEK]: this.weeklyModel,
+      [HistoricalTimes.LAST_MONTH]: this.monthlyModel,
     };
 
     let newPlayer = (await CURRENT_MODELS[type]
@@ -229,16 +234,16 @@ export class HistoricalService {
       if (!livePlayer) throw new PlayerNotFoundException();
 
       livePlayer.resetMinute = this.getMinute();
-      newPlayer = await this.reset(livePlayer, HistoricalType.MONTHLY);
+      newPlayer = await this.reset(livePlayer, HistoricalTimes.MONTHLY);
       isNew = true;
     } else {
       newPlayer = deserialize(Player, flatten(newPlayer));
     }
 
     const LAST_MODELS = {
-      [HistoricalType.LAST_DAY]: this.lastDayModel,
-      [HistoricalType.LAST_WEEK]: this.lastWeekModel,
-      [HistoricalType.LAST_MONTH]: this.lastMonthModel,
+      [HistoricalTimes.LAST_DAY]: this.lastDayModel,
+      [HistoricalTimes.LAST_WEEK]: this.lastWeekModel,
+      [HistoricalTimes.LAST_MONTH]: this.lastMonthModel,
     };
 
     const oldPlayer = (await LAST_MODELS[type].findOne({ uuid }).lean().exec()) as Player;
@@ -259,9 +264,9 @@ export class HistoricalService {
     const date = new Date();
 
     return date.getDate() === 1
-      ? HistoricalType.MONTHLY
+      ? HistoricalTimes.MONTHLY
       : date.getDay() === 1
-      ? HistoricalType.WEEKLY
-      : HistoricalType.DAILY;
+      ? HistoricalTimes.WEEKLY
+      : HistoricalTimes.DAILY;
   }
 }

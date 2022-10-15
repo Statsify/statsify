@@ -66,8 +66,7 @@ const HISTORICAL_ARGUMENT = new ChoiceArgument({
 
 @Command({
   name: "leaderboard",
-  // Description isn't shown so use "G" to save space on the 4000 character limit.
-  description: "G",
+  description: (t) => t("commands.player-leaderboard"),
 })
 export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   public constructor(private readonly apiService: ApiService) {

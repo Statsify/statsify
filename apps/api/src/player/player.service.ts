@@ -8,15 +8,22 @@
 
 import { APIData, Flatten, flatten } from "@statsify/util";
 import { Daily, Monthly, Weekly } from "../historical/models";
-import { Friends, Player, deserialize, merge, serialize } from "@statsify/schemas";
+import {
+  Friends,
+  Player,
+  createHistoricalPlayer,
+  deserialize,
+  serialize,
+} from "@statsify/schemas";
 import {
   FriendsNotFoundException,
-  HistoricalType,
+  HistoricalTimes,
   HypixelCache,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from "@statsify/api-client";
+import { HistoricalLeaderboardService } from "../historical/leaderboards/historical-leaderboard.service";
 import { HypixelService } from "../hypixel";
 import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
@@ -30,6 +37,8 @@ export class PlayerService {
     private readonly hypixelService: HypixelService,
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: PlayerLeaderboardService,
+    @Inject(forwardRef(() => HistoricalLeaderboardService))
+    private readonly historicalLeaderboardService: HistoricalLeaderboardService,
     private readonly playerSearchService: PlayerSearchService,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
     @InjectModel(Friends) private readonly friendsModel: ReturnModelType<typeof Friends>,
@@ -69,8 +78,7 @@ export class PlayerService {
       if (mongoPlayer && mongoPlayer.username !== player.username)
         await this.playerSearchService.delete(mongoPlayer.username);
 
-      const flatPlayer = flatten(player);
-      await this.saveOne(player, true);
+      const flatPlayer = await this.saveOne(player, true);
 
       flatPlayer.isNew = !mongoPlayer;
 
@@ -214,22 +222,22 @@ export class PlayerService {
       this.playerModel.deleteOne({ uuid: player.uuid }).exec(),
       this.playerSearchService.delete(player.username),
       this.playerLeaderboardService.addLeaderboards(Player, player, "uuid", true),
-      this.playerLeaderboardService.addHistoricalLeaderboards(
-        HistoricalType.DAILY,
+      this.historicalLeaderboardService.addHistoricalLeaderboards(
+        HistoricalTimes.DAILY,
         Player,
         player,
         "uuid",
         true
       ),
-      this.playerLeaderboardService.addHistoricalLeaderboards(
-        HistoricalType.WEEKLY,
+      this.historicalLeaderboardService.addHistoricalLeaderboards(
+        HistoricalTimes.WEEKLY,
         Player,
         player,
         "uuid",
         true
       ),
-      this.playerLeaderboardService.addHistoricalLeaderboards(
-        HistoricalType.MONTHLY,
+      this.historicalLeaderboardService.addHistoricalLeaderboards(
+        HistoricalTimes.MONTHLY,
         Player,
         player,
         "uuid",
@@ -278,10 +286,10 @@ export class PlayerService {
 
     if (dailyPlayer) {
       promises.push(
-        this.playerLeaderboardService.addHistoricalLeaderboards(
-          HistoricalType.DAILY,
+        this.historicalLeaderboardService.addHistoricalLeaderboards(
+          HistoricalTimes.DAILY,
           Player,
-          flatten(merge(dailyPlayer as Player, player)),
+          flatten(createHistoricalPlayer(dailyPlayer as Player, player)),
           "uuid",
           player.leaderboardBanned ?? false
         )
@@ -290,10 +298,10 @@ export class PlayerService {
 
     if (weeklyPlayer) {
       promises.push(
-        this.playerLeaderboardService.addHistoricalLeaderboards(
-          HistoricalType.WEEKLY,
+        this.historicalLeaderboardService.addHistoricalLeaderboards(
+          HistoricalTimes.WEEKLY,
           Player,
-          flatten(merge(weeklyPlayer as Player, player)),
+          flatten(createHistoricalPlayer(weeklyPlayer as Player, player)),
           "uuid",
           player.leaderboardBanned ?? false
         )
@@ -302,10 +310,10 @@ export class PlayerService {
 
     if (monthlyPlayer) {
       promises.push(
-        this.playerLeaderboardService.addHistoricalLeaderboards(
-          HistoricalType.MONTHLY,
+        this.historicalLeaderboardService.addHistoricalLeaderboards(
+          HistoricalTimes.MONTHLY,
           Player,
-          flatten(merge(monthlyPlayer as Player, player)),
+          flatten(createHistoricalPlayer(monthlyPlayer as Player, player)),
           "uuid",
           player.leaderboardBanned ?? false
         )
@@ -315,7 +323,8 @@ export class PlayerService {
     if (registerAutocomplete)
       promises.push(this.playerSearchService.add(flatPlayer as RedisPlayer));
 
-    return Promise.all(promises);
+    await Promise.all(promises);
+    return flatPlayer;
   }
 
   private async findMongoDocument(

@@ -6,11 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export enum HistoricalType {
+export enum CurrentHistoricalType {
   DAILY = "DAILY",
   WEEKLY = "WEEKLY",
   MONTHLY = "MONTHLY",
+}
+
+export enum LastHistoricalType {
   LAST_DAY = "LAST_DAY",
   LAST_WEEK = "LAST_WEEK",
   LAST_MONTH = "LAST_MONTH",
 }
+
+export const HistoricalTimes = { ...LastHistoricalType, ...CurrentHistoricalType };
+export type HistoricalType = LastHistoricalType | CurrentHistoricalType;

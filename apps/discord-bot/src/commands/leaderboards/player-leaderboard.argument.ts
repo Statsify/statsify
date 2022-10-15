@@ -18,7 +18,7 @@ import {
   METADATA_KEY,
   PlayerStats,
 } from "@statsify/schemas";
-import { HistoricalType } from "@statsify/api-client";
+import { CurrentHistoricalType } from "@statsify/api-client";
 import { removeFormatting } from "@statsify/util";
 
 const entries = Object.entries(
@@ -26,12 +26,21 @@ const entries = Object.entries(
 );
 
 export const SHORT_TO_LONG_HISTORICAL_TYPE: {
-  [key: string]: HistoricalType | undefined;
+  [key: string]: CurrentHistoricalType | undefined;
 } = {
   L: undefined,
-  D: HistoricalType.DAILY,
-  W: HistoricalType.WEEKLY,
-  M: HistoricalType.MONTHLY,
+  D: CurrentHistoricalType.DAILY,
+  W: CurrentHistoricalType.WEEKLY,
+  M: CurrentHistoricalType.MONTHLY,
+};
+
+const fuseOptions = {
+  keys: ["name", "key"],
+  includeScore: false,
+  shouldSort: true,
+  isCaseSensitive: false,
+  threshold: 0.3,
+  ignoreLocation: true,
 };
 
 const fields = entries.reduce((acc, [prefix, value]) => {
@@ -39,14 +48,7 @@ const fields = entries.reduce((acc, [prefix, value]) => {
     ([key, { leaderboard }]) => ({ value: key, name: removeFormatting(leaderboard.name) })
   );
 
-  const fuse = new Fuse(list, {
-    keys: ["name", "key"],
-    includeScore: false,
-    shouldSort: true,
-    isCaseSensitive: false,
-    threshold: 0.3,
-    ignoreLocation: true,
-  });
+  const fuse = new Fuse(list, fuseOptions);
 
   return { ...acc, [prefix]: [fuse, list] };
 }, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);
@@ -59,14 +61,7 @@ const historicalFields = entries.reduce((acc, [prefix, value]) => {
       name: removeFormatting(leaderboard.name),
     }));
 
-  const fuse = new Fuse(list, {
-    keys: ["name", "key"],
-    includeScore: false,
-    shouldSort: true,
-    isCaseSensitive: false,
-    threshold: 0.3,
-    ignoreLocation: true,
-  });
+  const fuse: Fuse<any> = new Fuse(list, fuseOptions);
 
   return { ...acc, [prefix]: [fuse, list] };
 }, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);
@@ -86,10 +81,11 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
   public autocompleteHandler(
     context: CommandContext
   ): APIApplicationCommandOptionChoice[] {
-    const currentTime =
-      SHORT_TO_LONG_HISTORICAL_TYPE[
-        context.option<keyof typeof SHORT_TO_LONG_HISTORICAL_TYPE>("time")
-      ];
+    const time = context.option<keyof typeof SHORT_TO_LONG_HISTORICAL_TYPE | undefined>(
+      "time"
+    );
+
+    const currentTime = SHORT_TO_LONG_HISTORICAL_TYPE[time ?? "L"];
 
     const currentValue = context.option<string>(this.name, "").toLowerCase();
 

@@ -19,7 +19,7 @@ import {
 import { ButtonStyle, InteractionResponseType } from "discord-api-types/v10";
 import { CommandListener } from "#lib/command.listener";
 import {
-  HistoricalType,
+  CurrentHistoricalType,
   LeaderboardQuery,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
@@ -56,7 +56,7 @@ export interface CreateLeaderboardOptions {
   getLeaderboard: GetLeaderboard;
   field: string;
   getLeaderboardDataIcon?: GetLeaderboardDataIcon;
-  time?: HistoricalType | undefined;
+  time?: CurrentHistoricalType | undefined;
 }
 
 export class BaseLeaderboardCommand {
@@ -258,7 +258,7 @@ export class BaseLeaderboardCommand {
     params: LeaderboardParams,
     props: BaseLeaderboardProps,
     getLeaderboardDataIcon?: GetLeaderboardDataIcon,
-    time?: HistoricalType | undefined
+    time?: CurrentHistoricalType | undefined
   ): Promise<[message: IMessage, page: number | null]> {
     if (params.type === LeaderboardQuery.PAGE && cache.has(params.input as number)) {
       const page = params.input as number;
@@ -289,7 +289,7 @@ export class BaseLeaderboardCommand {
     params: LeaderboardParams,
     props: BaseLeaderboardProps,
     getLeaderboardDataIcon?: GetLeaderboardDataIcon,
-    time?: HistoricalType | undefined
+    time?: CurrentHistoricalType | undefined
   ): Promise<[message: IMessage, page: number | null]> {
     const leaderboard = await getLeaderboard(field, params.input, params.type);
 

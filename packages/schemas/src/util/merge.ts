@@ -10,7 +10,7 @@ import { RATIOS, RATIO_STATS } from "../ratios";
 import { isObject } from "class-validator";
 import { ratio, sub } from "@statsify/math";
 
-export function merge<T>(oldOne: T, newOne: T): T {
+export function createHistoricalPlayer<T>(oldOne: T, newOne: T): T {
   const merged = {} as T;
 
   const keys = Object.keys({ ...oldOne, ...(newOne as any) });
@@ -50,7 +50,7 @@ export function merge<T>(oldOne: T, newOne: T): T {
       if (key === "progression") {
         merged[key] = newOne[key];
       } else {
-        merged[key] = merge(
+        merged[key] = createHistoricalPlayer(
           oldOne[key] ?? {},
           newOne[key] ?? {}
         ) as unknown as T[keyof T];

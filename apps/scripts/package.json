@@ -13,6 +13,7 @@
     "command-chars": "node --no-warnings src/command-chars.js"
   },
   "dependencies": {
+    "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/rendering": "workspace:^",

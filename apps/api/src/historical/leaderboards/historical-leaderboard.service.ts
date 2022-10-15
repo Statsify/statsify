@@ -8,14 +8,16 @@
 
 import * as Sentry from "@sentry/node";
 import Redis from "ioredis";
-import { Constructor, flatten } from "@statsify/util";
-import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "../models";
-import { HistoricalService } from "../historical.service";
+import { Constructor, Flatten, flatten } from "@statsify/util";
 import {
+  CurrentHistoricalType,
+  HistoricalTimes,
   HistoricalType,
   LeaderboardQuery,
   PlayerNotFoundException,
 } from "@statsify/api-client";
+import { Daily, Monthly, Weekly } from "../models";
+import { HistoricalService } from "../historical.service";
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "@nestjs-modules/ioredis";
@@ -24,7 +26,7 @@ import {
   LeaderboardEnabledMetadata,
   LeaderboardScanner,
   Player,
-  merge,
+  createHistoricalPlayer,
 } from "@statsify/schemas";
 import { ReturnModelType } from "@typegoose/typegoose";
 
@@ -36,9 +38,6 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     @InjectModel(Daily) private readonly dailyModel: PlayerModel,
     @InjectModel(Weekly) private readonly weeklyModel: PlayerModel,
     @InjectModel(Monthly) private readonly monthlyModel: PlayerModel,
-    @InjectModel(LastDay) private readonly lastDayModel: PlayerModel,
-    @InjectModel(LastWeek) private readonly lastWeekModel: PlayerModel,
-    @InjectModel(LastMonth) private readonly lastMonthModel: PlayerModel,
     @InjectModel(Player) private readonly playerModel: PlayerModel,
     @Inject(forwardRef(() => HistoricalService))
     private readonly historicalService: HistoricalService,
@@ -48,7 +47,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
   }
 
   public async getHistoricalLeaderboard<T>(
-    time: HistoricalType,
+    time: CurrentHistoricalType,
     constructor: Constructor<T>,
     field: string,
     input: number | string,
@@ -170,12 +169,51 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     };
   }
 
+  public async addHistoricalLeaderboards<T>(
+    time: HistoricalType,
+    constructor: Constructor<T>,
+    instance: Flatten<T>,
+    idField: keyof T,
+    remove = false
+  ) {
+    const fields = LeaderboardScanner.getLeaderboardFields(constructor).filter(
+      (v) => (v[1].leaderboard as LeaderboardEnabledMetadata).historical !== false
+    );
+
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+
+    const child = transaction?.startChild({
+      op: "redis",
+      description: `add ${time} ${constructor.name} leaderboards`,
+    });
+
+    const pipeline = this.redis.pipeline();
+    const name = constructor.name.toLowerCase();
+
+    const id = instance[idField] as unknown as string;
+
+    fields
+      .filter(([field]) => remove || typeof instance[field] === "number")
+      .forEach(([field]) => {
+        const value = instance[field] as unknown as number;
+        const key = `${time}:${name}.${String(field)}`;
+
+        if (remove || value === 0 || Number.isNaN(value)) return pipeline.zrem(key, id);
+
+        pipeline.zadd(key, value, id);
+      });
+
+    await pipeline.exec();
+
+    child?.finish();
+  }
+
   protected async getAdditionalStats(): Promise<LeaderboardAdditionalStats[]> {
     throw new Error("Misuse of getAdditonalStats in historical");
   }
 
   protected async getAdditionalHistoricalStats(
-    time: HistoricalType,
+    time: CurrentHistoricalType,
     ids: string[],
     fields: string[]
   ): Promise<LeaderboardAdditionalStats[]> {
@@ -189,27 +227,15 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     let model: PlayerModel;
 
     switch (time) {
-      case HistoricalType.DAILY:
+      case HistoricalTimes.DAILY:
         model = this.dailyModel;
         break;
 
-      case HistoricalType.LAST_DAY:
-        model = this.lastDayModel;
-        break;
-
-      case HistoricalType.LAST_MONTH:
-        model = this.lastMonthModel;
-        break;
-
-      case HistoricalType.LAST_WEEK:
-        model = this.lastWeekModel;
-        break;
-
-      case HistoricalType.MONTHLY:
+      case HistoricalTimes.MONTHLY:
         model = this.monthlyModel;
         break;
 
-      case HistoricalType.WEEKLY:
+      case HistoricalTimes.WEEKLY:
         model = this.weeklyModel;
         break;
     }
@@ -232,7 +258,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
           .lean()
           .exec();
 
-        const merged = merge(oldPlayer, newPlayer);
+        const merged = createHistoricalPlayer(oldPlayer, newPlayer);
 
         const additionalStats = flatten(merged) as LeaderboardAdditionalStats;
         additionalStats.name = additionalStats.displayName;
@@ -247,7 +273,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
   }
 
   private async searchHistoricalLeaderboardInput(
-    time: HistoricalType,
+    time: CurrentHistoricalType,
     input: string,
     field: string
   ): Promise<number> {

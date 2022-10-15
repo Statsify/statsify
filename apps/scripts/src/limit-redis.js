@@ -12,20 +12,14 @@ import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const { Logger } = require("@statsify/logger");
+const { CurrentHistoricalType } = require("@statsify/api-client");
 const { MetadataScanner, Player, Guild } = require("@statsify/schemas");
-
-const CONSTRUCTORS = [Player, Guild];
-const HISTORICAL_CONSTRUCTORS = [
-  ["DAILY", Player],
-  ["WEEKLY", Player],
-  ["MONTHLY", Player],
-];
 
 const logger = new Logger("Redis Limiter");
 const redis = new Redis(process.env.REDIS_URL);
 
-const limitHistorical = async () => {
-  for (const [time, constructor] of HISTORICAL_CONSTRUCTORS) {
+const runLimit = async (constructors, prefixes) => {
+  constructors.forEach(async (constructor, i) => {
     const oldLeaderboardPipeline = redis.pipeline();
     const limitLeaderboardPipeline = redis.pipeline();
 
@@ -33,7 +27,7 @@ const limitHistorical = async () => {
     const fields = MetadataScanner.scan(constructor);
 
     fields.forEach(([key, value]) => {
-      const path = `${time}:${name}.${key}`;
+      const path = prefixes ? `${prefixes[i]}:${name}.${key}` : `${name}.${key}`;
       if (!value.leaderboard.enabled || !value.leaderboard.historical)
         oldLeaderboardPipeline.del(path);
     });
@@ -63,57 +57,26 @@ const limitHistorical = async () => {
 
     await limitLeaderboardPipeline.exec();
 
-    logger.log(`Limited ${leaderboards.length} ${time}:${name} leaderboards`);
-    logger.log(
-      `There ${memberCount.toLocaleString()} possible members in the ${time}:${name} historical leaderboards`
-    );
-  }
-};
-
-const limitNormal = async () => {
-  for (const constructor of CONSTRUCTORS) {
-    const oldLeaderboardPipeline = redis.pipeline();
-    const limitLeaderboardPipeline = redis.pipeline();
-
-    const name = constructor.name.toLowerCase();
-    const fields = MetadataScanner.scan(constructor);
-
-    fields.forEach(([key, value]) => {
-      const path = `${name}.${key}`;
-      if (!value.leaderboard.enabled) oldLeaderboardPipeline.del(path);
-    });
-
-    await oldLeaderboardPipeline.exec();
-
-    const leaderboards = fields.filter(([, value]) => value.leaderboard.enabled);
-
-    let memberCount = 0;
-
-    leaderboards.forEach(([key, value]) => {
-      const path = `${name}.${key}`;
-      const { sort, limit } = value.leaderboard;
-
-      if (limit === Number.POSITIVE_INFINITY) return;
-
-      memberCount += limit;
-
-      if (sort === "DESC") {
-        limitLeaderboardPipeline.zremrangebyrank(path, 0, -limit);
-      } else {
-        limitLeaderboardPipeline.zremrangebyrank(path, limit, -1);
-      }
-    });
-
-    await limitLeaderboardPipeline.exec();
-
     logger.log(`Limited ${leaderboards.length} ${name} leaderboards`);
     logger.log(
       `There ${memberCount.toLocaleString()} possible members in the ${name} leaderboards`
     );
-  }
+  });
 };
 
-const limit = Promise.all.bind(Promise, [await limitNormal(), await limitHistorical()]);
+const limit = async () => {
+  await Promise.all([
+    runLimit([Player, Guild]),
+    runLimit(
+      [Player, Player, Player],
+      [
+        CurrentHistoricalType.DAILY,
+        CurrentHistoricalType.WEEKLY,
+        CurrentHistoricalType.MONTHLY,
+      ]
+    ),
+  ]);
+};
 
 const task = new Task("leaderboard limiting", limit);
 const job = new SimpleIntervalJob({ minutes: 10, runImmediately: true }, task);

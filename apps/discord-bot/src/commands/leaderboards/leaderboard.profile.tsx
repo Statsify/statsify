@@ -7,7 +7,7 @@
  */
 
 import { Container, Footer, If, List } from "#components";
-import { HistoricalType } from "@statsify/api-client";
+import { CurrentHistoricalType } from "@statsify/api-client";
 import { LocalizeFunction } from "@statsify/discord";
 import { User } from "@statsify/schemas";
 import { formatPosition } from "#lib/format-position";
@@ -33,7 +33,7 @@ export interface LeaderboardProfileProps {
   data: LeaderboardData[];
   t: LocalizeFunction;
   type: LeaderboardType;
-  time?: HistoricalType | undefined;
+  time?: CurrentHistoricalType | undefined;
 }
 
 export const LeaderboardProfile = ({
