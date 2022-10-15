@@ -9,7 +9,8 @@
     "build-watch": "node src/build-watch.js",
     "purge": "node src/purge.js",
     "rank-emojis": "node src/rank-emojis.js",
-    "limit-redis": "node src/limit-redis.js"
+    "limit-redis": "node src/limit-redis.js",
+    "command-chars": "node --no-warnings src/command-chars.js"
   },
   "dependencies": {
     "@statsify/assets": "workspace:^",
