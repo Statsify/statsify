@@ -17,8 +17,8 @@ import {
 } from "@statsify/api-client";
 import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
 import { Flatten, flatten } from "@statsify/util";
+import { Inject, Injectable, Logger, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Injectable, Logger } from "@nestjs/common";
 import {
   Player,
   createHistoricalPlayer,
@@ -44,6 +44,7 @@ export class HistoricalService {
   private readonly job: SimpleIntervalJob;
 
   public constructor(
+    @Inject(forwardRef(() => PlayerService))
     private readonly playerService: PlayerService,
     @InjectModel(Daily) private readonly dailyModel: PlayerModel,
     @InjectModel(Weekly) private readonly weeklyModel: PlayerModel,
