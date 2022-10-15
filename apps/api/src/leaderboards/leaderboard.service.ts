@@ -9,10 +9,10 @@
 import * as Sentry from "@sentry/node";
 import { Constructor, Flatten } from "@statsify/util";
 import { DateTime } from "luxon";
+import { HistoricalType, LeaderboardQuery } from "@statsify/api-client";
 import { InjectRedis, Redis } from "@nestjs-modules/ioredis";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schemas";
-import { LeaderboardQuery } from "@statsify/api-client";
 
 const DAYS_IN_WEEK = {
   monday: 0,

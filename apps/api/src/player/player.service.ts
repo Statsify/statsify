@@ -245,7 +245,6 @@ export class PlayerService {
         Player,
         flatPlayer,
         "uuid",
-        LEADERBOARD_FIELDS,
         player.leaderboardBanned ?? false
       )
     );

@@ -119,7 +119,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
       time,
       leaderboard.map(({ id }) => id),
       [
-        field,
+        field, // Keep field so merge works correctly with ratios
         ...additionalFields.filter((k) => k !== field),
         ...(extraDisplay ? [extraDisplay] : []),
       ]
