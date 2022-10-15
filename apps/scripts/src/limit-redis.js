@@ -30,7 +30,7 @@ const runLimit = async (constructors, prefixes) => {
       const path = prefixes ? `${prefixes[i]}:${name}.${key}` : `${name}.${key}`;
       if (
         !value.leaderboard.enabled ||
-        (prefixes ? !value.leaderboard.historical : false)
+        (prefixes ? !value.historical.enabled : false)
       )
         oldLeaderboardPipeline.del(path);
     });
@@ -38,7 +38,7 @@ const runLimit = async (constructors, prefixes) => {
     await oldLeaderboardPipeline.exec();
 
     const leaderboards = prefixes
-      ? fields.filter(([, value]) => value.leaderboard.historical)
+      ? fields.filter(([, value]) => value.historical.enabled)
       : fields.filter(([, value]) => value.leaderboard.enabled);
 
     let memberCount = 0;
