@@ -268,9 +268,11 @@ export class PlayerService {
     const promises = [];
 
     promises.push(
-      this.playerModel.replaceOne({ uuid: player.uuid }, serializedPlayer, {
-        upsert: true,
-      })
+      this.playerModel
+        .replaceOne({ uuid: player.uuid }, serializedPlayer, {
+          upsert: true,
+        })
+        .exec()
     );
 
     promises.push(
