@@ -78,7 +78,7 @@ export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
   /**
    * Whether or not to show the stat in the leaderboard page
    */
-  historicalEnabled?: boolean;
+  historical?: boolean;
 
   /**
    * Whether or not to show the stat in the leaderboard page
