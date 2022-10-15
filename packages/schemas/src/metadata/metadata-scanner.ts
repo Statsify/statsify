@@ -62,6 +62,9 @@ export class MetadataScanner {
         break;
       }
 
+      if (!value.leaderboard.historicalFields?.length)
+        value.leaderboard.historicalFields = value.leaderboard.additionalFields;
+
       if (value.type.primitive || value.type.array)
         return metadataEntries.push([
           path,

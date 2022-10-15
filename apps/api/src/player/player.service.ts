@@ -25,8 +25,8 @@ import {
 } from "@statsify/api-client";
 import { HistoricalLeaderboardService } from "../historical/leaderboards/historical-leaderboard.service";
 import { HypixelService } from "../hypixel";
+import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Injectable, NotFoundException } from "@nestjs/common";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service";
 import { PlayerSearchService, RedisPlayer } from "./search/player-search.service";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -35,7 +35,9 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 export class PlayerService {
   public constructor(
     private readonly hypixelService: HypixelService,
+    @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: PlayerLeaderboardService,
+    @Inject(forwardRef(() => HistoricalLeaderboardService))
     private readonly historicalLeaderboardService: HistoricalLeaderboardService,
     private readonly playerSearchService: PlayerSearchService,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,

@@ -32,11 +32,15 @@ export class General {
       limit: Number.POSITIVE_INFINITY,
       formatter: getNetworkLevel,
       additionalFields: ["this.networkLevel"],
+      historicalFieldName: "EXP Gained",
     },
   })
   public networkExp: number;
 
-  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+  @Field({
+    leaderboard: { enabled: false, historicalFieldName: "Levels Gained" },
+    store: { default: 1 },
+  })
   public networkLevel: number;
 
   @Field({

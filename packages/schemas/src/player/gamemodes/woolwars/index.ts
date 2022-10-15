@@ -39,11 +39,13 @@ export class WoolWars {
       hidden: true,
       formatter: (exp: number) => getFormattedLevel(Math.floor(getLevel(exp))),
       additionalFields: ["this.overall.wins", "this.overall.kills", "this.overall.kdr"],
+      historicalFields: ["this.level"],
+      historicalFieldName: "EXP Gained",
     },
   })
   public exp: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false, historicalFieldName: "Levels Gained" } })
   public level: number;
 
   @Field()

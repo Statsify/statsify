@@ -44,6 +44,8 @@ export class SkyWars {
       hidden: true,
       formatter: (exp: number) => getLevel(exp),
       additionalFields: ["this.overall.wins", "this.overall.kills", "this.overall.kdr"],
+      historicalFields: ["this.level"],
+      historicalFieldName: "EXP Gained",
     },
   })
   public exp: number;
@@ -72,7 +74,7 @@ export class SkyWars {
   @Field({ store: { default: "⋆" } })
   public star: string;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false, historicalFieldName: "Levels Gained" } })
   public level: number;
 
   @Field()

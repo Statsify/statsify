@@ -14,6 +14,7 @@ import { prettify } from "@statsify/util";
 const getLeaderboardName = (field: string) => {
   const ratioIndex = RATIOS.indexOf(field);
   if (ratioIndex > -1) return RATIO_STATS[ratioIndex][3];
+  if (field === "exp") return "EXP";
   return prettify(field);
 };
 
@@ -49,15 +50,17 @@ export const getLeaderboardMetadata = (
   leaderboardOptions?: LeaderboardOptions
 ): LeaderboardMetadata => {
   const fieldName = leaderboardOptions?.fieldName ?? getLeaderboardName(propertyKey);
-  const historicalFieldName =
-    leaderboardOptions?.historicalFieldName ?? getLeaderboardName(propertyKey);
+  const historicalFieldName = leaderboardOptions?.historicalFieldName ?? fieldName;
   const name = leaderboardOptions?.name ?? fieldName;
 
   if (typeMetadata.type !== Number || leaderboardOptions?.enabled === false) {
     return {
       enabled: false,
       additionalFields: leaderboardOptions?.additionalFields || [],
-      historicalFields: leaderboardOptions?.historicalFields || [],
+      historicalFields:
+        leaderboardOptions?.historicalFields ||
+        leaderboardOptions?.additionalFields ||
+        [],
       extraDisplay: leaderboardOptions?.extraDisplay,
       formatter: leaderboardOptions?.formatter,
       resetEvery: leaderboardOptions?.resetEvery,
@@ -77,7 +80,8 @@ export const getLeaderboardMetadata = (
     hidden: leaderboardOptions?.hidden,
     aliases: leaderboardOptions?.aliases || [],
     additionalFields: leaderboardOptions?.additionalFields || [],
-    historicalFields: leaderboardOptions?.historicalFields || [],
+    historicalFields:
+      leaderboardOptions?.historicalFields || leaderboardOptions?.additionalFields || [],
     extraDisplay: leaderboardOptions?.extraDisplay,
     formatter: leaderboardOptions?.formatter,
     limit: leaderboardOptions?.limit ?? getDefaultLeaderboardLimit(propertyKey),

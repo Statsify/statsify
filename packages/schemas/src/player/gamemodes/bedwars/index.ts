@@ -67,11 +67,13 @@ export class BedWars {
         "this.overall.finalKills",
         "this.overall.fkdr",
       ],
+      historicalFields: ["this.level"],
+      historicalFieldName: "EXP Gained",
     },
   })
   public exp: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false, historicalFieldName: "Levels Gained" } })
   public level: number;
 
   @Field()

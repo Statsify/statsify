@@ -18,9 +18,9 @@ import {
 } from "@statsify/api-client";
 import { Daily, Monthly, Weekly } from "../models";
 import { HistoricalService } from "../historical.service";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "@nestjs-modules/ioredis";
-import { Injectable } from "@nestjs/common";
 import { LeaderboardAdditionalStats, LeaderboardService } from "../../leaderboards";
 import {
   LeaderboardEnabledMetadata,
@@ -39,6 +39,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     @InjectModel(Weekly) private readonly weeklyModel: PlayerModel,
     @InjectModel(Monthly) private readonly monthlyModel: PlayerModel,
     @InjectModel(Player) private readonly playerModel: PlayerModel,
+    @Inject(forwardRef(() => HistoricalService))
     private readonly historicalService: HistoricalService,
     @InjectRedis() redis: Redis
   ) {
@@ -143,7 +144,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
       });
 
       const fields = [];
-
+      // This will need to be changed if hidden is not always something like EXP -- If hidden then use the raw non formatted value for the leaderboards
       fields.push(hidden ? doc.score : field);
       fields.push(...additionalValues);
 
@@ -157,8 +158,11 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     });
 
     const fields = [];
+    // This will need to be changed if hidden is not always something like EXP
     fields.push(historicalFieldName);
-    fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
+    fields.push(
+      ...additionalFieldMetadata.map(({ historicalFieldName }) => historicalFieldName)
+    );
 
     return {
       name,

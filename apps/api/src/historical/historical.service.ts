@@ -6,6 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
 import { AsyncTask, SimpleIntervalJob } from "toad-scheduler";
 import {
   CurrentHistoricalType,
@@ -17,6 +25,7 @@ import {
 } from "@statsify/api-client";
 import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
 import { Flatten, flatten } from "@statsify/util";
+import { HistoricalLeaderboardService } from "./leaderboards/historical-leaderboard.service";
 import { Inject, Injectable, Logger, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import {
@@ -25,7 +34,7 @@ import {
   deserialize,
   serialize,
 } from "@statsify/schemas";
-import { PlayerService } from "../player";
+import { PlayerService } from "../player/player.service";
 import { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
@@ -46,6 +55,8 @@ export class HistoricalService {
   public constructor(
     @Inject(forwardRef(() => PlayerService))
     private readonly playerService: PlayerService,
+    @Inject(forwardRef(() => HistoricalLeaderboardService))
+    private readonly historicalLeaderboardService: HistoricalLeaderboardService,
     @InjectModel(Daily) private readonly dailyModel: PlayerModel,
     @InjectModel(Weekly) private readonly weeklyModel: PlayerModel,
     @InjectModel(Monthly) private readonly monthlyModel: PlayerModel,
@@ -115,7 +126,8 @@ export class HistoricalService {
     const reset = async (
       model: PlayerModel,
       lastModel: PlayerModel,
-      doc: Flatten<Player>
+      doc: Flatten<Player>,
+      time: HistoricalType
     ) => {
       //findOneAndReplace doesn't unflatten the document so findOne and replaceOne need to be used separately
       const last = await model.findOne({ uuid: doc.uuid }).lean().exec();
@@ -129,14 +141,21 @@ export class HistoricalService {
           .replaceOne({ uuid: doc.uuid }, (last ?? doc) as Player, { upsert: true })
           .lean()
           .exec(),
+        this.historicalLeaderboardService.addHistoricalLeaderboards(
+          time,
+          Player,
+          player,
+          "uuid",
+          true
+        ),
       ]);
     };
 
-    await reset(this.dailyModel, this.lastDayModel, doc);
-    if (isWeekly) await reset(this.weeklyModel, this.lastWeekModel, doc);
-    if (isMonthly) await reset(this.monthlyModel, this.lastMonthModel, doc);
-
-    this.playerService.saveOne(player, false);
+    await reset(this.dailyModel, this.lastDayModel, doc, HistoricalTimes.DAILY);
+    if (isWeekly)
+      await reset(this.weeklyModel, this.lastWeekModel, doc, HistoricalTimes.WEEKLY);
+    if (isMonthly)
+      await reset(this.monthlyModel, this.lastMonthModel, doc, HistoricalTimes.MONTHLY);
 
     return deserialize(Player, flatPlayer);
   }
