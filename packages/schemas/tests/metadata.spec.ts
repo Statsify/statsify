@@ -66,6 +66,7 @@ describe("metadata", () => {
             aliases: [],
             sort: "DESC",
             limit: 10_000,
+            historical: true,
           },
           type: { type: Number, array: false, primitive: true },
           store: {
@@ -194,6 +195,7 @@ describe("metadata", () => {
       aliases: [],
       sort: "DESC",
       limit: 10_000,
+      historical: true,
     });
   });
 });

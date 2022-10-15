@@ -48,11 +48,11 @@ import { BaseLeaderboardCommand } from "./base.leaderboard-command";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { GuildLeaderboardArgument } from "./guild-leaderboard.argument";
 import { GuildLeaderboardSubCommand } from "./guild-leaderboard.subcommand";
-import { HistoricalType } from "@statsify/api-client";
-import { PlayerLeaderboardArgument } from "./player-leaderboard.argument";
+import {
+  PlayerLeaderboardArgument,
+  SHORT_TO_LONG_HISTORICAL_TYPE,
+} from "./player-leaderboard.argument";
 import { getBackground } from "@statsify/assets";
-
-//TODO add support for the shorthand names (L, D, W, M)
 
 const HISTORICAL_ARGUMENT = new ChoiceArgument({
   name: "time",
@@ -61,9 +61,6 @@ const HISTORICAL_ARGUMENT = new ChoiceArgument({
     ["Daily", "D"],
     ["Weekly", "W"],
     ["Monthly", "M"],
-    // ...Object.entries(HistoricalType)
-    //   .filter(([time]) => !time.startsWith("LAST"))
-    //   .map(([name, type]) => [prettify(name), type] as Choice),
   ],
 });
 
@@ -305,7 +302,10 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
     modes: GameModes<T>
   ) {
     const leaderboard = context.option<string>("leaderboard");
-    const time = context.option<HistoricalType | "Lifetime" | undefined>("time");
+    const time =
+      SHORT_TO_LONG_HISTORICAL_TYPE[
+        context.option<keyof typeof SHORT_TO_LONG_HISTORICAL_TYPE>("time")
+      ];
 
     const field = `stats.${prefix}.${leaderboard.replaceAll(" ", ".")}`;
 
@@ -313,10 +313,9 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
       ...mapBackground(modes, modes.getModes()[0].api)
     );
 
-    const getLeaderboard =
-      time && time !== "Lifetime"
-        ? this.apiService.getHistoricalLeaderboard.bind(this.apiService, time)
-        : this.apiService.getPlayerLeaderboard.bind(this.apiService);
+    const getLeaderboard = time
+      ? this.apiService.getHistoricalLeaderboard.bind(this.apiService, time)
+      : this.apiService.getPlayerLeaderboard.bind(this.apiService);
 
     return this.createLeaderboard({
       context,
@@ -325,6 +324,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
       getLeaderboard,
       type: "player",
       getLeaderboardDataIcon: (id) => this.apiService.getPlayerHead(id, 24),
+      time,
     });
   }
 }
