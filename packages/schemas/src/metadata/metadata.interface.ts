@@ -29,6 +29,11 @@ interface BaseLeaderboardMetadata {
   additionalFields?: string[];
 
   /**
+   * An array of properties that will be shown in the leaderboard when historical.
+   */
+  historicalFields?: string[];
+
+  /**
    * A property that will be added onto each leaderboard member's display
    */
   extraDisplay?: string;
@@ -43,6 +48,12 @@ interface BaseLeaderboardMetadata {
    * @example Wins
    */
   fieldName?: string;
+
+  /**
+   * The pretty print name of the leaderboard in historical.
+   * @example Levels
+   */
+  historicalFieldName?: string;
 
   /**
    * The complete leaderboard name

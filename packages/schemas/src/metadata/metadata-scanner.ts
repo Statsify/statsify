@@ -83,8 +83,12 @@ export class MetadataScanner {
           if (
             value.leaderboard.historical === false &&
             metadata.leaderboard.historical === undefined
-          )
+          ) {
+            if (!metadata.leaderboard.historicalFields?.length)
+              metadata.leaderboard.historicalFields = value.leaderboard.historicalFields;
+
             metadata.leaderboard.historical = value.leaderboard.historical;
+          }
 
           return [keyPath, metadata] as MetadataEntry;
         }

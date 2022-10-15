@@ -55,8 +55,8 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     const PAGE_SIZE = 10;
 
     const {
-      fieldName,
-      additionalFields = [],
+      historicalFieldName,
+      historicalFields = [],
       extraDisplay,
       formatter,
       sort,
@@ -105,7 +105,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
       sort
     );
 
-    const additionalFieldMetadata = additionalFields.map((k) =>
+    const additionalFieldMetadata = historicalFields.map((k) =>
       LeaderboardScanner.getLeaderboardField(constructor, k, false)
     );
 
@@ -118,7 +118,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
       leaderboard.map(({ id }) => id),
       [
         field, // Keep field so merge works correctly with ratios
-        ...additionalFields.filter((k) => k !== field),
+        ...historicalFields.filter((k) => k !== field),
         ...(extraDisplay ? [extraDisplay] : []),
       ]
     );
@@ -133,7 +133,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
 
       const field = formatter ? formatter(doc.score) : doc.score;
 
-      const additionalValues = additionalFields.map((key, index) => {
+      const additionalValues = historicalFields.map((key, index) => {
         const value = stats[key] ?? additionalFieldMetadata[index].default;
 
         if (additionalFieldMetadata[index].formatter)
@@ -144,7 +144,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
 
       const fields = [];
 
-      if (!hidden) fields.push(field);
+      fields.push(hidden ? doc.score : field);
       fields.push(...additionalValues);
 
       return {
@@ -157,7 +157,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     });
 
     const fields = [];
-    if (!hidden) fields.push(fieldName);
+    fields.push(historicalFieldName);
     fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
 
     return {

@@ -58,7 +58,7 @@ const historicalFields = entries.reduce((acc, [prefix, value]) => {
     .filter(([, { leaderboard }]) => leaderboard.historical)
     .map(([key, { leaderboard }]) => ({
       value: key,
-      name: removeFormatting(leaderboard.name),
+      name: removeFormatting(leaderboard.historicalFieldName ?? leaderboard.name),
     }));
 
   const fuse: Fuse<any> = new Fuse(list, fuseOptions);

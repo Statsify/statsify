@@ -49,16 +49,20 @@ export const getLeaderboardMetadata = (
   leaderboardOptions?: LeaderboardOptions
 ): LeaderboardMetadata => {
   const fieldName = leaderboardOptions?.fieldName ?? getLeaderboardName(propertyKey);
+  const historicalFieldName =
+    leaderboardOptions?.historicalFieldName ?? getLeaderboardName(propertyKey);
   const name = leaderboardOptions?.name ?? fieldName;
 
   if (typeMetadata.type !== Number || leaderboardOptions?.enabled === false) {
     return {
       enabled: false,
       additionalFields: leaderboardOptions?.additionalFields || [],
+      historicalFields: leaderboardOptions?.historicalFields || [],
       extraDisplay: leaderboardOptions?.extraDisplay,
       formatter: leaderboardOptions?.formatter,
       resetEvery: leaderboardOptions?.resetEvery,
       fieldName,
+      historicalFieldName,
       name,
     };
   }
@@ -68,10 +72,12 @@ export const getLeaderboardMetadata = (
     historical: leaderboardOptions?.historical ?? true,
     sort: leaderboardOptions?.sort || "DESC",
     fieldName,
+    historicalFieldName,
     name,
     hidden: leaderboardOptions?.hidden,
     aliases: leaderboardOptions?.aliases || [],
     additionalFields: leaderboardOptions?.additionalFields || [],
+    historicalFields: leaderboardOptions?.historicalFields || [],
     extraDisplay: leaderboardOptions?.extraDisplay,
     formatter: leaderboardOptions?.formatter,
     limit: leaderboardOptions?.limit ?? getDefaultLeaderboardLimit(propertyKey),

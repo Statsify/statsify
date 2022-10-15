@@ -25,6 +25,7 @@ export class Pit {
       fieldName: "Level",
       hidden: true,
       additionalFields: ["this.kills", "this.playtime"],
+      historicalFields: ["this.trueLevel"],
       formatter: (exp: number) => {
         const prestige = getPres(exp);
         const level = getLevel(prestige, exp);
@@ -37,7 +38,7 @@ export class Pit {
   /**
    * Pit level including prestige (used for historical)
    */
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false, fieldName: "Levels" } })
   public trueLevel: number;
 
   @Field()

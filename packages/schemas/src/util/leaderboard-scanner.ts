@@ -60,6 +60,12 @@ export class LeaderboardScanner {
       );
     }
 
+    if (Array.isArray(leaderboard.historicalFields)) {
+      leaderboard.historicalFields = leaderboard.historicalFields.map(
+        this.parseAdditionalFields.bind(this, key)
+      );
+    }
+
     if (leaderboard.extraDisplay)
       leaderboard.extraDisplay = this.parseAdditionalFields(
         key,

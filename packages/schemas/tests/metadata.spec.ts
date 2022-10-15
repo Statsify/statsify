@@ -62,7 +62,9 @@ describe("metadata", () => {
             enabled: true,
             name: prettify("fieldA"),
             fieldName: prettify("fieldA"),
+            historicalFieldName: prettify("fieldA"),
             additionalFields: [],
+            historicalFields: [],
             aliases: [],
             sort: "DESC",
             limit: 10_000,
@@ -94,8 +96,10 @@ describe("metadata", () => {
           leaderboard: {
             enabled: false,
             additionalFields: [],
+            historicalFields: [],
             name: prettify("fieldA"),
             fieldName: prettify("fieldA"),
+            historicalFieldName: prettify("fieldA"),
           },
           type: { type: Number, array: false, primitive: true },
           store: {
