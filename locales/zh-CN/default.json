@@ -745,7 +745,8 @@
     "zombieKills": "僵尸击杀数",
     "potionsBrewed": "酿造药水",
     "powerupsCollected": "加成收集次数",
-    "roundsCompleted": "回合完成数"
+    "roundsCompleted": "回合完成数",
+    "totalExp": "总计经验"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) 加入我们的**$t(socials.discord)**可以获得**减少20%的冷却时间** $t(emojis:heart)",

@@ -745,7 +745,8 @@
     "zombieKills": "Zumbis abatidos",
     "potionsBrewed": "Poções preparadas",
     "powerupsCollected": "Poderes coletados",
-    "roundsCompleted": "Rodadas concluídas"
+    "roundsCompleted": "Rodadas concluídas",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Entre no nosso $t(socials.discord) e receba **menos 20% de tempo de espera** $t(emojis:heart)",
