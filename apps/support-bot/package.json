@@ -28,7 +28,7 @@
     "reflect-metadata": "^0.1.13",
     "skia-canvas": "^0.9.30",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb",
-    "toad-scheduler": "^1.6.1",
+    "toad-scheduler": "^2.0.0",
     "typedi": "^0.10.0"
   },
   "imports": {
