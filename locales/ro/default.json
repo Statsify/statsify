@@ -745,7 +745,8 @@
     "zombieKills": "Omorături Zombi",
     "potionsBrewed": "Poţiuni preparate",
     "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed"
+    "roundsCompleted": "Rounds Completed",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Alătură-te serverului de discord **$t(socials.discord)** și obține **20% mai mic cooldown** $t(emojis:heart)",

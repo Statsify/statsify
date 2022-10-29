@@ -745,7 +745,8 @@
     "zombieKills": "Asesinatos de Zombie",
     "potionsBrewed": "Pociones elaboradas",
     "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed"
+    "roundsCompleted": "Rounds Completed",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Únete a nuestro **$t(socials.discord)** y consigue **20% menos de tiempo de espera** $t(emojis:heart)",

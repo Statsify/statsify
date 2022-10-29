@@ -2874,7 +2874,7 @@ __metadata:
     mongoose: ^6.4.3
     reflect-metadata: ^0.1.13
     rxjs: ^7.5.5
-    toad-scheduler: ^1.6.1
+    toad-scheduler: ^2.0.0
   languageName: unknown
   linkType: soft
 
@@ -9027,7 +9027,7 @@ __metadata:
     ioredis: ^5.1.0
     skia-canvas: ^0.9.30
     tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb"
-    toad-scheduler: ^1.6.1
+    toad-scheduler: ^2.0.0
   languageName: unknown
   linkType: soft
 
@@ -9622,7 +9622,7 @@ __metadata:
     reflect-metadata: ^0.1.13
     skia-canvas: ^0.9.30
     tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb"
-    toad-scheduler: ^1.6.1
+    toad-scheduler: ^2.0.0
     typedi: ^0.10.0
   languageName: unknown
   linkType: soft
@@ -9832,10 +9832,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"toad-scheduler@npm:^1.6.1":
-  version: 1.6.1
-  resolution: "toad-scheduler@npm:1.6.1"
-  checksum: 0f3b16c851d67901360a76bf5c341c6b8f992de85a9b37d9fa498126134c4dc5c83d3b797070f8bcfc6e775e3d9f3ea1d32638de05521c9507701f085008a514
+"toad-scheduler@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "toad-scheduler@npm:2.0.0"
+  checksum: a517031c6d5ad5db0780fce28c7f3e7e6b5a60e4d0557e4aae4daacdceaa216c19e1aebfa9cd64f444aff1d066f59e7b23ba7b9c2188ad0ca8a64edd2d9d5138
   languageName: node
   linkType: hard
 

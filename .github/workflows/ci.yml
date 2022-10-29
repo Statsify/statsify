@@ -20,10 +20,10 @@ jobs:
         TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3
 
       - name: Install node.js v16
-        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # tag=v3
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3
         with:
           node-version: 16
           cache: 'yarn'
@@ -31,7 +31,7 @@ jobs:
 
       - name: Turbo cache
         id: turbo-cache
-        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77 # tag=v3
+        uses: actions/cache@1c73980b09e7aea7201f325a7aa3ad00beddcdda # tag=v3
         with:
           path: .turbo
           key: turbo-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
@@ -40,7 +40,7 @@ jobs:
 
       - name: Cache node_modules
         id: yarn-cache
-        uses: actions/cache@fd5de65bc895cf536527842281bea11763fefd77 # tag=v3
+        uses: actions/cache@1c73980b09e7aea7201f325a7aa3ad00beddcdda # tag=v3
         with:
           path: '**/node_modules'
           key: yarn-deps-${{ hashFiles('**/yarn.lock') }}
@@ -55,7 +55,7 @@ jobs:
         run: yarn lint
 
       - name: Commit Lint
-        uses: EndBug/add-and-commit@d4d066316a2a85974a05efb42be78f897793c6d9 # tag=v9
+        uses: EndBug/add-and-commit@61a88be553afe4206585b31aa72387c64295d08b # tag=v9
         with:
           default_author: github_actions
           message: 'style(lint): lint project'

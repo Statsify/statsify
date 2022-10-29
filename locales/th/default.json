@@ -745,7 +745,8 @@
     "zombieKills": "ซอมบี้ฆ่า",
     "potionsBrewed": "ปรุงยา",
     "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed"
+    "roundsCompleted": "Rounds Completed",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) เข้าร่วมกับเรา **$t(socials.discord)** และรับ **20% คูลดาวน์ที่ต่ำกว่า**$t(emojis:heart)",

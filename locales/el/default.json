@@ -745,7 +745,8 @@
     "zombieKills": "Zombie Σκοτωμοί",
     "potionsBrewed": "Παρασκευασμένα Φίλτρα",
     "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed"
+    "roundsCompleted": "Rounds Completed",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Μπες στο **$t(socials.discord)** και κέρδισε **20% χαμηλότερο χρόνο επαναφόρτισης** $t(emojis:heart)",
