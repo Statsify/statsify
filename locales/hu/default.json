@@ -458,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Nézd meg az összes prémium funkciót [itt](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
+      "preview": "Nézd meg az összes funkciót [itt](https://statsify.net/premium). Alább látható egy demonstráció a parancs működéséről.",
       "title": "Statsify {{tier}} szükséges a parancs futtatásához"
     },
     "staffOnly": {
@@ -679,7 +679,7 @@
     "points": "Pontok",
     "poopCollected": "Begyűjtött Ürülékek",
     "powerKicks": "Erős Lövések",
-    "powerupActivations": "Power-Up Activations",
+    "powerupActivations": "Elhasznált Power-Upok",
     "powerups": "Power-Ups",
     "prefix": "Előtag",
     "prevent": "Meggátolt Sebzés",
@@ -745,7 +745,7 @@
     "zombieKills": "Zombi Ölések",
     "potionsBrewed": "Főzött Bájitalok",
     "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed",
+    "roundsCompleted": "Túlélt Körök",
     "totalExp": "Total EXP"
   },
   "tips": {
