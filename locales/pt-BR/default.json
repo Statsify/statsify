@@ -746,7 +746,7 @@
     "potionsBrewed": "Poções preparadas",
     "powerupsCollected": "Poderes coletados",
     "roundsCompleted": "Rodadas concluídas",
-    "totalExp": "Total EXP"
+    "totalExp": "EXP total"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Entre no nosso $t(socials.discord) e receba **menos 20% de tempo de espera** $t(emojis:heart)",
