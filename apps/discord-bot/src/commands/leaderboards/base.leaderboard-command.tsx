@@ -115,7 +115,8 @@ export class BaseLeaderboardCommand {
           field,
           params,
           props,
-          getLeaderboardDataIcon
+          getLeaderboardDataIcon,
+          time
         );
 
         if (interaction.getUserId() === userId && !message.ephemeral) {
