@@ -6,18 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, formatTime } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { Progression } from "../../../progression";
-import { add, ratio } from "@statsify/math";
-import { getBounty, getLevel, getLevelFormatted, getPres, getPresReq } from "./util";
 
 export const PIT_MODES = new GameModes([
   { api: "overall", hypixel: "PIT", formatted: "Pit" },
 ]);
 
 export type PitModes = IGameModes<typeof PIT_MODES>;
+import { GameModes, IGameModes } from "../../../game";
+import { HypixelPitProfile, HypixelPitStatsPTL } from "@statsify/hypixel-api-client";
+import { Progression } from "../../../progression";
+import { add, ratio } from "@statsify/math";
+import { formatTime } from "@statsify/util";
+import { getBounty, getLevel, getLevelFormatted, getPres, getPresReq } from "./util";
 
 export class Pit {
   @Field({
@@ -105,7 +106,7 @@ export class Pit {
   @Field()
   public joins: number;
 
-  public constructor(profile: APIData, data: APIData) {
+  public constructor(profile: HypixelPitProfile, data: HypixelPitStatsPTL) {
     this.exp = profile.xp ?? 0;
     this.gold = profile.cash;
     this.renown = profile.renown;

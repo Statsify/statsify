@@ -181,3 +181,5 @@ export class HypixelAPI {
     }
   }
 }
+
+export * from "./types";

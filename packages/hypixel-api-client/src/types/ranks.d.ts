@@ -19,6 +19,7 @@ export enum HypixelSpecialRanks {
   "YOUTUBER",
   "ADMIN",
   "GAME_MASTER",
+  "OWNER",
 }
 
 export type HypixelRanks = HypixelNormalRanks | HypixelSpecialRanks;

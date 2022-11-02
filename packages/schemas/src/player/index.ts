@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
 import { Color } from "../color";
 import { Field } from "../metadata";
+import { HypixelPlayer } from "@statsify/hypixel-api-client";
 import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
 import { PlayerSocials } from "./socials";
 import { PlayerStats } from "./stats";
@@ -82,7 +82,7 @@ export class Player {
   @Field({ store: { required: false } })
   public guildId?: string;
 
-  public constructor(data: APIData = {}) {
+  public constructor(data: HypixelPlayer) {
     this.uuid = data.uuid;
     this.username = data.displayname;
     this.usernameToLower = this.username?.toLowerCase();

@@ -6,17 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "./APIData";
 import { BaseHypixelResponse } from "./base-hypixel-response";
 import { HypixelAchievementMode, HypixelGameMode, HypixelLobby } from "./games";
 import { HypixelNormalRanks } from "./ranks";
+import { HypixelPlayerStats } from "./player-stats";
 
 export type ChallengesTime = `day_${string}` | "all__time";
 export type AchievementName = `${HypixelAchievementMode}_${string}`;
-
-declare class HypixelPlayerStats {
-  [key: HypixelGameMode]: APIData;
-}
 
 export declare class HypixelPlayerChallenges {
   [key: `${Uppercase<HypixelGameMode>}_${string}`]: number;
@@ -30,7 +26,20 @@ export declare class HypixelPlayerQuest {
   };
 }
 
-export declare class HypixelPlayer {
+export declare class HypixelPlayer_Settings {
+  public fishCollectorShowCaught?: boolean;
+}
+
+export declare class HypixelPlayerSeasonal {
+  [key: "halloween" | "summer"]: { "2022"?: { levelling?: { experience: number } } };
+  public silver: number;
+}
+
+export type HypixelPlayerAchievementRewardsNew = {
+  [key: `for_points_${number}00`]: number;
+};
+
+export declare class HypixelPlayer<PName = string> {
   [key: string]: any;
 
   /**
@@ -38,10 +47,12 @@ export declare class HypixelPlayer {
    */
   public _id?: string;
 
+  public _settings?: HypixelPlayer_Settings;
+
   /**
    * The players UUID
    */
-  public uuid?: string;
+  public uuid: string;
 
   /**
    * The timestamp of the players first login to hypixel
@@ -51,17 +62,29 @@ export declare class HypixelPlayer {
   /**
    * The name of the player all lowercase
    */
-  public playername?: string;
+  public playername?: Lowercase<PName>;
 
   /**
    * The name of the player
    */
-  public displayname?: string;
+  public displayname: PName;
 
   public achievementsOneTime?: AchievementName[];
+  public achievementRewardsNew?: HypixelPlayerAchievementRewardsNew;
   public networkExp?: number;
   public karma?: number;
   public stats?: HypixelPlayerStats;
+  public socialMedia?: {
+    links: {
+      DISCORD?: string;
+      HYPIXEL?: string;
+      INSTAGRAM?: string;
+      MIXER?: string;
+      TWITCH?: string;
+      TWITTER?: string;
+      YOUTUBE?: string;
+    };
+  };
   public achievements?: Record<AchievementName, number>;
   public newPackageRank?: HypixelNormalRanks;
   public totalRewards?: number;
@@ -70,6 +93,9 @@ export declare class HypixelPlayer {
   public rewardScore?: number;
   public rewardHighScore?: number;
   public achievementPoints?: number;
+  public battlePassGlowStatus?: boolean;
+  public firstLogin?: number;
+  public seasonal?: HypixelPlayerSeasonal;
   public challenges?: {
     [key: ChallengesTime]: HypixelPlayerChallenges;
     all_time?: HypixelPlayerChallenges;

@@ -36,7 +36,12 @@ import {
 } from "./gamemodes";
 import { Field } from "../metadata";
 import { FormattedGame } from "../game";
-import type { APIData } from "@statsify/util";
+import {
+  HypixelPitProfile,
+  HypixelPitStatsPTL,
+  HypixelPlayer,
+  HypixelPlayerStats,
+} from "@statsify/hypixel-api-client";
 
 export class PlayerStats {
   @Field({ leaderboard: { fieldName: `${FormattedGame.ARCADE} -` } })
@@ -196,10 +201,10 @@ export class PlayerStats {
   })
   public woolwars: WoolWars;
 
-  public constructor(data: APIData = {}) {
+  public constructor(data: HypixelPlayer) {
     const achievements = data?.achievements ?? {};
-    const stats = data?.stats ?? {};
-    const legacy = stats.Legacy ?? {};
+    const stats = data?.stats ?? ({} as HypixelPlayerStats);
+    const legacy = stats?.Legacy ?? {};
 
     this.arcade = new Arcade(stats.Arcade ?? {}, achievements);
     this.arenabrawl = new ArenaBrawl(stats.Arena ?? {}, legacy);
@@ -214,7 +219,10 @@ export class PlayerStats {
     this.murdermystery = new MurderMystery(stats.MurderMystery ?? {}, achievements);
     this.paintball = new Paintball(stats.Paintball ?? {}, legacy);
     this.parkour = new Parkour(data.parkourCompletions ?? {});
-    this.pit = new Pit(stats.Pit?.profile ?? {}, stats.Pit?.pit_stats_ptl ?? {});
+    this.pit = new Pit(
+      stats.Pit?.profile ?? ({} as HypixelPitProfile),
+      stats.Pit?.pit_stats_ptl ?? ({} as HypixelPitStatsPTL)
+    );
     this.quake = new Quake(stats.Quake ?? {}, achievements, legacy);
     this.quests = new Quests(data.quests ?? {});
     this.skywars = new SkyWars(stats.SkyWars ?? {}, achievements);

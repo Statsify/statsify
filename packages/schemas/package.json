@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@nestjs/swagger": "^6.0.1",
+    "@statsify/hypixel-api-client": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",

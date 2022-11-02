@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { HypixelPitBounty } from "@statsify/hypixel-api-client";
 import { romanNumeral } from "@statsify/util";
 
 const xpMap = [15, 30, 50, 75, 125, 300, 600, 800, 900, 1000, 1200, 1500];
@@ -46,13 +47,6 @@ const levelColors = [
   "l§b",
 ];
 
-export type Bounty = {
-  amount: number;
-  remainingTicks: number;
-  issuer: string;
-  timestamp: number;
-};
-
 export const getPres = (xp: number) => {
   for (let i = 0; i < 50; i++) {
     if (xp <= presXpReq[i]) {
@@ -82,7 +76,7 @@ export const getLevelColor = (level: number) =>
 export const getPresColor = (pres: number) =>
   pres == 0 ? prestigecolors[0] : prestigecolors[Math.floor((pres + 5) / 5)];
 
-export const getBounty = (bounties: Bounty[]) =>
+export const getBounty = (bounties: HypixelPitBounty[]) =>
   bounties ? bounties.reduce((p, c) => p + c.amount, 0) : 0;
 
 export const getLevelFormatted = (level: number, prestige: number) => {
