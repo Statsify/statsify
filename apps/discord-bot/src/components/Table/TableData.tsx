@@ -35,7 +35,9 @@ export const TableData = ({
         width="100%"
         padding={{ left: 5, right: 5 }}
       >
-        <text margin={{ top: 6, bottom: 2 }}>{`${color}${title}`}</text>
+        <text
+          margin={{ top: 6, bottom: 2, left: 1, right: 1 }}
+        >{`${color}${title}`}</text>
         <text margin={{ top: 0, bottom: 6 }} t:ignore={ignore}>{`${color}${value}`}</text>
       </box>
     );
