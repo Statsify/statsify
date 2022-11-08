@@ -7,6 +7,7 @@
  */
 
 import { Color } from "../../../color";
+
 export const getLevel = (xp: number): number => {
   const totalXp = [0, 2, 7, 15, 25, 50, 100, 200, 350, 600, 1000, 1500];
   if (xp >= 15_000) return Math.floor((xp - 15_000) / 10_000 + 12);
@@ -71,9 +72,9 @@ export const getFormattedLevel = (level: number, star: string) => {
         const nums = [...n.toString()];
         if (m.length > 1) {
           const stars = [...m.toString()];
-          return `§c[§6${nums[0]}§e${nums[1]}§b${stars[0]}§a${stars[1]}§d${stars[2]}§5]`;
+          return `§c[§6${nums[0]}§e${nums[1]}§a${stars[0]}§b${stars[1]}§d${stars[2]}§5]`;
         } else {
-          return `§c[§6${nums[0]}§e${nums[1]}§b${m}§a]`;
+          return `§c[§6${nums[0]}§e${nums[1]}§a${m}§b]`;
         }
       },
     },
