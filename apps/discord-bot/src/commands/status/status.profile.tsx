@@ -50,6 +50,18 @@ const OnlineTable = ({ status, t }: StatusTableProps) => (
           {(map) => <Table.td title={t("stats.map")} value={map} color="§e" />}
         </If>
       </Table.tr>
+      <Table.tr>
+        <Table.td
+          title={t("stats.lastAction")}
+          value={prettify(status.actions.lastAction)}
+          color="§a"
+        />
+        <Table.td
+          title={t("stats.lastActionTime")}
+          value={relativeTime(status.actions.lastActionTime)}
+          color="§a"
+        />
+      </Table.tr>
     </Table.table>
   </Table.table>
 );
@@ -82,13 +94,13 @@ const HiddenTable = ({ status, t }: StatusTableProps) => (
     </Table.tr>
     <Table.tr>
       <Table.td
-        title={t("stats.lastActionTime")}
-        value={relativeTime(status.actions.lastActionTime)}
+        title={t("stats.lastAction")}
+        value={prettify(status.actions.lastAction)}
         color="§a"
       />
       <Table.td
-        title={t("stats.lastAction")}
-        value={prettify(status.actions.lastAction)}
+        title={t("stats.lastActionTime")}
+        value={relativeTime(status.actions.lastActionTime)}
         color="§a"
       />
     </Table.tr>
