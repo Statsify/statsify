@@ -112,7 +112,7 @@ export class CapeCommand {
       }
     }
 
-    const ratio = Math.min(canvas.width / width, canvas.height / height);
+    const ratio = Math.round(Math.min(canvas.width / width, canvas.height / height));
 
     ctx.drawImage(
       cape,
