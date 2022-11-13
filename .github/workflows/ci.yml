@@ -31,7 +31,7 @@ jobs:
 
       - name: Turbo cache
         id: turbo-cache
-        uses: actions/cache@1c73980b09e7aea7201f325a7aa3ad00beddcdda # tag=v3
+        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # v3
         with:
           path: .turbo
           key: turbo-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
@@ -40,7 +40,7 @@ jobs:
 
       - name: Cache node_modules
         id: yarn-cache
-        uses: actions/cache@1c73980b09e7aea7201f325a7aa3ad00beddcdda # tag=v3
+        uses: actions/cache@9b0c1fce7a93df8e3bb8926b0d6e9d89e92f20a7 # v3
         with:
           path: '**/node_modules'
           key: yarn-deps-${{ hashFiles('**/yarn.lock') }}
