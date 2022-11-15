@@ -19,12 +19,18 @@ import {
 import { Daily, Monthly, Weekly } from "../models";
 import {
   HistoricalScanner,
+  LeaderboardEnabledMetadata,
   LeaderboardScanner,
   Player,
   createHistoricalPlayer,
 } from "@statsify/schemas";
 import { HistoricalService } from "../historical.service";
-import { Inject, Injectable, forwardRef } from "@nestjs/common";
+import {
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  forwardRef,
+} from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "@nestjs-modules/ioredis";
 import { LeaderboardAdditionalStats, LeaderboardService } from "../../leaderboards";
@@ -283,11 +289,85 @@ export class HistoricalLeaderboardService extends LeaderboardService {
       input = player.uuid;
     }
 
-    const ranking = await this.getLeaderboardRankings(Player, [field], input);
+    const ranking = await this.getHistoricalLeaderboardRankings(
+      Player,
+      time,
+      [field],
+      input
+    );
 
     if (!ranking || !ranking[0] || !ranking[0].rank) throw new PlayerNotFoundException();
 
     return ranking[0].rank;
+  }
+
+  private async getHistoricalLeaderboardRankings<T>(
+    constructor: Constructor<T>,
+    time: CurrentHistoricalType,
+    fields: string[],
+    id: string
+  ) {
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+
+    const child = transaction?.startChild({
+      op: "redis",
+      description: `get ${time} ${constructor.name} rankings`,
+    });
+
+    const pipeline = this.redis.pipeline();
+    const constructorName = constructor.name.toLowerCase();
+
+    const leaderboardFields: LeaderboardEnabledMetadata[] = [];
+
+    fields.forEach((field) => {
+      const metadata = HistoricalScanner.getHistoricalField(constructor, field);
+      leaderboardFields.push(metadata);
+
+      const key = `${time}:${constructorName}.${field}`;
+
+      pipeline.zscore(key, id);
+
+      if (metadata.sort === "ASC") {
+        pipeline.zrank(key, id);
+      } else {
+        pipeline.zrevrank(key, id);
+      }
+    });
+
+    const responses = await pipeline.exec();
+
+    child?.finish();
+
+    if (!responses) throw new InternalServerErrorException();
+
+    const rankings = [];
+
+    for (let i = 0; i < responses.length; i += 2) {
+      const rank = responses[i + 1][1];
+      const value = responses[i][1];
+
+      if (rank === undefined || rank === null || !value) continue;
+
+      const index = i / 2;
+      const metadata = leaderboardFields[index];
+
+      if (Number(rank) > metadata.limit) continue;
+
+      const numberValue = Number(value);
+
+      const formattedValue = metadata.formatter
+        ? metadata.formatter(numberValue)
+        : numberValue;
+
+      rankings.push({
+        field: fields[index],
+        rank: Number(rank) + 1,
+        value: formattedValue,
+        name: metadata.name,
+      });
+    }
+
+    return rankings;
   }
 
   private async getHistoricalLeaderboardFromRedis<T>(
