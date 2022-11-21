@@ -36,7 +36,7 @@ export class General {
     historical: {
       hidden: false,
       fieldName: "EXP Gained",
-      formatter: Number
+      formatter: Number,
     },
   })
   public networkExp: number;
