@@ -25,7 +25,7 @@ export type WallsModes = IGameModes<typeof WALLS_MODES>;
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },
-  { fmt: (n) => `§7[${n}]`, req: 25 },
+  { fmt: (n) => `§7[${n}]`, req: 20 },
   { fmt: (n) => `§6[${n}]`, req: 50 },
   { fmt: (n) => `§a[${n}]`, req: 100 },
   { fmt: (n) => `§2[${n}]`, req: 200 },

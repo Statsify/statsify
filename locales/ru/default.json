@@ -745,7 +745,8 @@
     "zombieKills": "Зомби убито",
     "potionsBrewed": "Зелий сварено",
     "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed"
+    "roundsCompleted": "Rounds Completed",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Присоединяйтесь к нам**$t(socials.discord)**, и получайте **перезарядку на 20% ниже** $t(emojis:heart)",

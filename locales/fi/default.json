@@ -745,7 +745,8 @@
     "zombieKills": "Zombitapot",
     "potionsBrewed": "Potions Brewed",
     "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed"
+    "roundsCompleted": "Rounds Completed",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Liity **$t(socials.discord)** ja saat **20% lyhyemmät odotusajat** $t(emojis:heart)",

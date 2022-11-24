@@ -745,7 +745,8 @@
     "zombieKills": "Zombie Kills",
     "potionsBrewed": "Tränke gebraut",
     "powerupsCollected": "Power-Ups gesammelt",
-    "roundsCompleted": "Runden abgeschlossen"
+    "roundsCompleted": "Runden abgeschlossen",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Trete unserem **$t(socials.discord)** bei und erhalte **20% niedrigere Abklingzeit** $t(emojis:heart)",

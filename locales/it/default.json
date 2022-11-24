@@ -745,7 +745,8 @@
     "zombieKills": "Uccisioni Zombie",
     "potionsBrewed": "Pozioni preparate",
     "powerupsCollected": "Power-Up Collezionati",
-    "roundsCompleted": "Round Completati"
+    "roundsCompleted": "Round Completati",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Unisciti al nostro **$t(socials.discord)** e ottieni **cooldown 20% più brevi** $t(emojis:heart)",
