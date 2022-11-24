@@ -35,7 +35,7 @@ export const SHORT_TO_LONG_HISTORICAL_TYPE: {
   M: CurrentHistoricalType.MONTHLY,
 };
 
-const fuseOptions = {
+const FUSE_OPTIONS = {
   keys: ["name", "key"],
   includeScore: false,
   shouldSort: true,
@@ -49,7 +49,7 @@ const fields = entries.reduce((acc, [prefix, value]) => {
     ([key, { leaderboard }]) => ({ value: key, name: removeFormatting(leaderboard.name) })
   );
 
-  const fuse = new Fuse(list, fuseOptions);
+  const fuse = new Fuse(list, FUSE_OPTIONS);
 
   return { ...acc, [prefix]: [fuse, list] };
 }, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);
@@ -62,7 +62,7 @@ const historicalFields = entries.reduce((acc, [prefix, value]) => {
       name: removeFormatting(historical.name),
     }));
 
-  const fuse: Fuse<any> = new Fuse(list, fuseOptions);
+  const fuse: Fuse<any> = new Fuse(list, FUSE_OPTIONS);
 
   return { ...acc, [prefix]: [fuse, list] };
 }, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);

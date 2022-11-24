@@ -26,19 +26,18 @@ const findOptionsLength = (options = []) =>
     .reduce((a, b) => a + b, 0);
 
 const findTotalCommandChars = (command) => {
-  const chars = [];
-
   const topCommandOptions = command.flatMap((option) => option.options);
   const subCommandOptions = topCommandOptions.flatMap((option) => option.options ?? []);
   const subsubCommandOptions = subCommandOptions.flatMap(
     (option) => option.options ?? []
   );
 
-  chars.push(findOptionsLength(command));
-  chars.push(findOptionsLength(topCommandOptions));
-  chars.push(findOptionsLength(subCommandOptions));
-  chars.push(findOptionsLength(subsubCommandOptions));
-  return chars.reduce((a, b) => a + b, 0);
+  return (
+    findOptionsLength(command) +
+    findOptionsLength(topCommandOptions) +
+    findOptionsLength(subCommandOptions) +
+    findOptionsLength(subsubCommandOptions)
+  );
 };
 
 for (const command of Object.values(commands.commands)) {

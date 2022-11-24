@@ -6,14 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/**
- * Copyright (c) Statsify
- *
- * This source code is licensed under the GNU GPL v3 license found in the
- * LICENSE file in the root directory of this source tree.
- * https://github.com/Statsify/statsify/blob/main/LICENSE
- */
-
 import { AsyncTask, SimpleIntervalJob } from "toad-scheduler";
 import {
   CurrentHistoricalType,
@@ -151,11 +143,21 @@ export class HistoricalService {
       ]);
     };
 
-    await reset(this.dailyModel, this.lastDayModel, doc, HistoricalTimes.DAILY);
+    const resets = [
+      reset(this.dailyModel, this.lastDayModel, doc, HistoricalTimes.DAILY),
+    ];
+
     if (isWeekly)
-      await reset(this.weeklyModel, this.lastWeekModel, doc, HistoricalTimes.WEEKLY);
+      resets.push(
+        reset(this.weeklyModel, this.lastWeekModel, doc, HistoricalTimes.WEEKLY)
+      );
+
     if (isMonthly)
-      await reset(this.monthlyModel, this.lastMonthModel, doc, HistoricalTimes.MONTHLY);
+      resets.push(
+        reset(this.monthlyModel, this.lastMonthModel, doc, HistoricalTimes.MONTHLY)
+      );
+
+    await Promise.all(resets);
 
     return deserialize(Player, flatPlayer);
   }

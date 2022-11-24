@@ -7,5 +7,5 @@
  */
 
 export * from "./leaderboard-scanner";
-export * from "./merge";
+export * from "./create-historical-player";
 export * from "./historical-scanner";
