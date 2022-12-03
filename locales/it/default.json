@@ -746,7 +746,7 @@
     "potionsBrewed": "Pozioni preparate",
     "powerupsCollected": "Power-Up Collezionati",
     "roundsCompleted": "Round Completati",
-    "totalExp": "Total EXP"
+    "totalExp": "EXP Totale"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Unisciti al nostro **$t(socials.discord)** e ottieni **cooldown 20% più brevi** $t(emojis:heart)",
