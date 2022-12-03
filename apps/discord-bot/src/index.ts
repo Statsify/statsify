@@ -37,9 +37,6 @@ async function bootstrap() {
     });
   }
 
-  const winterTheme = new WinterThemeService();
-  Container.set(WinterThemeService, winterTheme);
-
   await Promise.all(
     [I18nLoaderService, FontLoaderService, WinterThemeService].map((service) =>
       Container.get(service).init()
