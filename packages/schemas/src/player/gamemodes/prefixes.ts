@@ -100,7 +100,7 @@ export const getFormattedPrefix = <T extends unknown[] = []>({
   if ("title" in prefix) return prefix.fmt(prefix.title, ...prefixParams);
 
   if (!abbreviation)
-    return prefix.fmt(`${trueScore ? Math.floor(score) : score}`, ...prefixParams);
+    return prefix.fmt(`${trueScore ? Math.floor(score) : prefix.req}`, ...prefixParams);
 
   const [number, suffix] = abbreviationNumber(trueScore ? score : prefix.req);
   const formattedScore = trueScore ? Math.floor(number) : number;

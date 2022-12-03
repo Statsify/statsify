@@ -50,6 +50,7 @@ export const getFormattedLevel = (star: number): string => {
     { req: 100, format: ["§f[", "✫]"] },
     { req: 200, format: ["§c[", "✫]"] },
     { req: 300, format: ["§6[", "✫]"] },
+    { req: 400, format: ["§e[", "✫]"] },
   ];
 
   return applyFormat(findScore(prestigeColors, star), star);

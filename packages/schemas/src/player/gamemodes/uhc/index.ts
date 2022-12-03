@@ -85,11 +85,11 @@ export class UHC {
     this.overall = deepAdd(
       this.solo,
       this.teams,
-      new UHCMode(data, "no diamonds"),
-      new UHCMode(data, "vanilla doubles"),
+      new UHCMode(data, "no_diamonds"),
+      new UHCMode(data, "vanilla_doubles"),
       new UHCMode(data, "brawl"),
-      new UHCMode(data, "solo brawl"),
-      new UHCMode(data, "duo brawl")
+      new UHCMode(data, "solo_brawl"),
+      new UHCMode(data, "duo_brawl")
     );
 
     UHCMode.applyRatios(this.overall);
