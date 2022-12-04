@@ -9,7 +9,7 @@
 import { APIData } from "@statsify/util";
 import { ArenaBrawlMode } from "./mode";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
 import {
   GamePrefix,
   createPrefixProgression,
@@ -17,15 +17,14 @@ import {
   getFormattedPrefix,
   rainbow,
 } from "../prefixes";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
 import { deepAdd } from "@statsify/math";
-
-export const ARENA_BRAWL_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo" },
-  { api: "doubles" },
-  { api: "fours" },
-]);
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },
@@ -40,8 +39,7 @@ const prefixes: GamePrefix[] = [
   { fmt: (n) => rainbow(`[${n}]`), req: 15_000 },
 ];
 
-export type ArenaBrawlModes = IGameModes<typeof ARENA_BRAWL_MODES>;
-
+@GameType()
 export class ArenaBrawl {
   @Field()
   public progression: Progression;
@@ -55,15 +53,19 @@ export class ArenaBrawl {
   @Field()
   public nextPrefix: string;
 
+  @Mode()
   @Field()
   public overall: ArenaBrawlMode;
 
+  @Mode()
   @Field()
   public solo: ArenaBrawlMode;
 
+  @Mode()
   @Field()
   public doubles: ArenaBrawlMode;
 
+  @Mode()
   @Field()
   public fours: ArenaBrawlMode;
 
@@ -131,5 +133,10 @@ export class ArenaBrawl {
     this.tokens = legacy.arena_tokens;
   }
 }
+
+export type ArenaBrawlModes = StatsifyApiModes<ArenaBrawl>;
+export const ARENA_BRAWL_MODES = new GameModes<ArenaBrawlModes>(
+  GetMetadataModes(ArenaBrawl)
+);
 
 export * from "./mode";

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export { METADATA_KEY } from "./metadata/constants";
+export { FIELD_METADATA_KEY as METADATA_KEY } from "./metadata/constants";
 export * from "./color";
 export * from "./commands";
 export * from "./friends";

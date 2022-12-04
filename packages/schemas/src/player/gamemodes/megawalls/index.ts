@@ -8,39 +8,16 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { MegaWallsKit, MegaWallsOverall } from "./kit";
 
-export const MEGAWALLS_MODES = new GameModes([
-  { api: "overall" },
-  { api: "arcanist" },
-  { api: "assassin" },
-  { api: "automaton" },
-  { api: "blaze" },
-  { api: "cow" },
-  { api: "creeper" },
-  { api: "dreadlord" },
-  { api: "enderman" },
-  { api: "golem" },
-  { api: "herobrine" },
-  { api: "hunter" },
-  { api: "moleman" },
-  { api: "phoenix" },
-  { api: "pigman" },
-  { api: "pirate" },
-  { api: "renegade" },
-  { api: "shaman" },
-  { api: "shark" },
-  { api: "skeleton" },
-  { api: "snowman" },
-  { api: "spider" },
-  { api: "squid" },
-  { api: "werewolf" },
-  { api: "zombie" },
-]);
-
-export type MegaWallsModes = IGameModes<typeof MEGAWALLS_MODES>;
-
+@GameType()
 export class MegaWalls {
   @Field()
   public coins: number;
@@ -51,78 +28,103 @@ export class MegaWalls {
   @Field({ store: { default: "none" } })
   public class: string;
 
+  @Mode()
   @Field()
   public overall: MegaWallsOverall;
 
+  @Mode()
   @Field({ store: { required: false } })
   public arcanist: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public assassin: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public automaton: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public blaze: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public cow: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public creeper: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public dreadlord: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public enderman: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public golem: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public herobrine: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public hunter: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public moleman: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public phoenix: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public pigman: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public pirate: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public renegade: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public shaman: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public shark: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public skeleton: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public snowman: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public spider: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public squid: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public werewolf: MegaWallsKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public zombie: MegaWallsKit;
 
@@ -158,5 +160,8 @@ export class MegaWalls {
     this.zombie = new MegaWallsKit(data, "zombie");
   }
 }
+
+export type MegaWallsModes = StatsifyApiModes<MegaWalls>;
+export const MEGAWALLS_MODES = new GameModes<MegaWallsModes>(GetMetadataModes(MegaWalls));
 
 export * from "./kit";

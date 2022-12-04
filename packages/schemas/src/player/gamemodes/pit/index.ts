@@ -8,17 +8,13 @@
 
 import { APIData, formatTime } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
+import { GameType, GetMetadataModes, StatsifyApiModes } from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
 import { add, ratio } from "@statsify/math";
 import { getBounty, getLevel, getLevelFormatted, getPres, getPresReq } from "./util";
 
-export const PIT_MODES = new GameModes([
-  { api: "overall", hypixel: "PIT", formatted: "Pit" },
-]);
-
-export type PitModes = IGameModes<typeof PIT_MODES>;
-
+@GameType("overall", "PIT", "Pit")
 export class Pit {
   @Field({
     leaderboard: {
@@ -148,3 +144,6 @@ export class Pit {
     this.joins = data.joins;
   }
 }
+
+export type PitModes = StatsifyApiModes<Pit, "overall">;
+export const PIT_MODES = new GameModes<PitModes>(GetMetadataModes(Pit));

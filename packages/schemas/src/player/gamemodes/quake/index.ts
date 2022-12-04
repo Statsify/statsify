@@ -8,24 +8,22 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
 import {
   GamePrefix,
   createPrefixProgression,
   defaultPrefix,
   getFormattedPrefix,
 } from "../prefixes";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
 import { QuakeMode } from "./mode";
 import { deepAdd } from "@statsify/math";
-
-export const QUAKE_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo", hypixel: "solo" },
-  { api: "teams", hypixel: "teams" },
-]);
-
-export type QuakeModes = IGameModes<typeof QUAKE_MODES>;
 
 const indexes = [
   "zero",
@@ -56,6 +54,7 @@ const prefixes: GamePrefix[] = [
   { fmt: (n) => `§0[${n}]`, req: 2_000_000 },
 ];
 
+@GameType()
 export class Quake {
   @Field()
   public progression: Progression;
@@ -69,12 +68,15 @@ export class Quake {
   @Field()
   public nextPrefix: string;
 
+  @Mode()
   @Field()
   public overall: QuakeMode;
 
+  @Mode("solo", "solo")
   @Field()
   public solo: QuakeMode;
 
+  @Mode("teams", "teams")
   @Field()
   public teams: QuakeMode;
 
@@ -137,5 +139,8 @@ export class Quake {
         .join("") || 1.3;
   }
 }
+
+export type QuakeModes = StatsifyApiModes<Quake>;
+export const QUAKE_MODES = new GameModes<QuakeModes>(GetMetadataModes(Quake));
 
 export * from "./mode";

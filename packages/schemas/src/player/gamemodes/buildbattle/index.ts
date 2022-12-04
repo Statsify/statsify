@@ -14,24 +14,20 @@ import {
   BuildBattlePro,
 } from "./mode";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
 import {
   GameTitle,
   createPrefixProgression,
   defaultPrefix,
   getFormattedPrefix,
 } from "../prefixes";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
-
-export const BUILD_BATTLE_MODES = new GameModes([
-  { api: "overall" },
-
-  { hypixel: "BUILD_BATTLE_SOLO_NORMAL_LATEST", formatted: "1.14" },
-  { hypixel: "BUILD_BATTLE_GUESS_THE_BUILD", formatted: "GTB" },
-  { hypixel: "BUILD_BATTLE_TEAMS_NORMAL", formatted: "Teams" },
-  { hypixel: "BUILD_BATTLE_SOLO_NORMAL", formatted: "Solo" },
-  { hypixel: "BUILD_BATTLE_SOLO_PRO", formatted: "Pro" },
-]);
 
 const titles: GameTitle[] = [
   { req: 0, fmt: (n) => `§f${n}`, title: "Rookie" },
@@ -48,9 +44,9 @@ const titles: GameTitle[] = [
   { req: 20_000, fmt: (n) => `§4${n}`, title: "Master" },
 ];
 
-export type BuildBattleModes = IGameModes<typeof BUILD_BATTLE_MODES>;
-
+@GameType()
 export class BuildBattle {
+  @Mode()
   @Field()
   public overall: BuildBattleOverall;
 
@@ -121,5 +117,16 @@ export class BuildBattle {
     this.progression = createPrefixProgression(titles, this.score);
   }
 }
+
+export type BuildBattleModes = StatsifyApiModes<BuildBattle>;
+export const BUILD_BATTLE_MODES = new GameModes<BuildBattleModes>([
+  ...GetMetadataModes(BuildBattle),
+
+  { hypixel: "BUILD_BATTLE_SOLO_NORMAL_LATEST", formatted: "1.14" },
+  { hypixel: "BUILD_BATTLE_GUESS_THE_BUILD", formatted: "GTB" },
+  { hypixel: "BUILD_BATTLE_TEAMS_NORMAL", formatted: "Teams" },
+  { hypixel: "BUILD_BATTLE_SOLO_NORMAL", formatted: "Solo" },
+  { hypixel: "BUILD_BATTLE_SOLO_PRO", formatted: "Pro" },
+]);
 
 export * from "./mode";

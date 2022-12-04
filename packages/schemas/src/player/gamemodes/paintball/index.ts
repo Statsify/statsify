@@ -8,20 +8,17 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
 import {
   GamePrefix,
   createPrefixProgression,
   defaultPrefix,
   getFormattedPrefix,
 } from "../prefixes";
+import { GameType, GetMetadataModes, StatsifyApiModes } from "../../../metadata/GameType";
 import { PaintballPerks } from "./perks";
 import { Progression } from "../../../progression";
 import { ratio } from "@statsify/math";
-
-export const PAINTBALL_MODES = new GameModes([{ api: "overall" }]);
-
-export type PaintballModes = IGameModes<typeof PAINTBALL_MODES>;
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },
@@ -38,6 +35,7 @@ const prefixes: GamePrefix[] = [
   { fmt: (n) => `§6[${n}]`, req: 1_000_000 },
 ];
 
+@GameType("overall")
 export class Paintball {
   @Field()
   public coins: number;
@@ -120,5 +118,9 @@ export class Paintball {
     this.progression = createPrefixProgression(prefixes, score);
   }
 }
+
+type ExcludeKeys = "perks";
+export type PaintballModes = StatsifyApiModes<Omit<Paintball, ExcludeKeys>, "overall">;
+export const PAINTBALL_MODES = new GameModes<PaintballModes>(GetMetadataModes(Paintball));
 
 export * from "./perks";

@@ -31,101 +31,99 @@ import {
   WoolWarsChallenges,
 } from "./modes";
 import { Field } from "../../../metadata";
-import { FormattedGame, GameModes, IGameModes } from "../../../game";
+import { FormattedGame, GameModes } from "../../../game";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 
-export const CHALLENGE_MODES = new GameModes([
-  { api: "overall" },
-  { api: "ARCADE", formatted: removeFormatting(FormattedGame.ARCADE) },
-  { api: "ARENA_BRAWL", formatted: removeFormatting(FormattedGame.ARENA_BRAWL) },
-  { api: "BEDWARS", formatted: removeFormatting(FormattedGame.BEDWARS) },
-  { api: "BLITZSG", formatted: removeFormatting(FormattedGame.BLITZSG) },
-  { api: "BUILD_BATTLE", formatted: removeFormatting(FormattedGame.BUILD_BATTLE) },
-  { api: "DUELS", formatted: removeFormatting(FormattedGame.DUELS) },
-  { api: "COPS_AND_CRIMS", formatted: removeFormatting(FormattedGame.COPS_AND_CRIMS) },
-  { api: "MEGAWALLS", formatted: removeFormatting(FormattedGame.MEGAWALLS) },
-  { api: "MURDER_MYSTERY", formatted: removeFormatting(FormattedGame.MURDER_MYSTERY) },
-  { api: "PAINTBALL", formatted: removeFormatting(FormattedGame.PAINTBALL) },
-  { api: "QUAKE", formatted: removeFormatting(FormattedGame.QUAKE) },
-  { api: "SKYWARS", formatted: removeFormatting(FormattedGame.SKYWARS) },
-  { api: "SMASH_HEROES", formatted: removeFormatting(FormattedGame.SMASH_HEROES) },
-  { api: "SPEED_UHC", formatted: removeFormatting(FormattedGame.SPEED_UHC) },
-  { api: "TNT_GAMES", formatted: removeFormatting(FormattedGame.TNT_GAMES) },
-  {
-    api: "TURBO_KART_RACERS",
-    formatted: removeFormatting(FormattedGame.TURBO_KART_RACERS),
-  },
-  { api: "UHC", formatted: removeFormatting(FormattedGame.UHC) },
-  { api: "VAMPIREZ", formatted: removeFormatting(FormattedGame.VAMPIREZ) },
-  { api: "WALLS", formatted: removeFormatting(FormattedGame.WALLS) },
-  { api: "WARLORDS", formatted: removeFormatting(FormattedGame.WARLORDS) },
-  { api: "WOOLWARS", formatted: removeFormatting(FormattedGame.WOOLWARS) },
-]);
-
-export type ChallengeModes = IGameModes<typeof CHALLENGE_MODES>;
-
+@GameType("overall")
 export class Challenges {
+  @Mode("", removeFormatting(FormattedGame.ARCADE))
   @Field({ leaderboard: { fieldName: `${FormattedGame.ARCADE} Challenges -` } })
   public ARCADE: ArcadeChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.ARENA_BRAWL))
   @Field({ leaderboard: { fieldName: `${FormattedGame.ARENA_BRAWL} Challenges -` } })
   public ARENA_BRAWL: ArenaBrawlChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.BEDWARS))
   @Field({ leaderboard: { fieldName: `${FormattedGame.BEDWARS} Challenges -` } })
   public BEDWARS: BedWarsChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.BLITZSG))
   @Field({ leaderboard: { fieldName: `${FormattedGame.BLITZSG} Challenges -` } })
   public BLITZSG: BlitzSGChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.BUILD_BATTLE))
   @Field({ leaderboard: { fieldName: `${FormattedGame.BUILD_BATTLE} Challenges -` } })
   public BUILD_BATTLE: BuildBattleChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.COPS_AND_CRIMS))
   @Field({ leaderboard: { fieldName: `${FormattedGame.COPS_AND_CRIMS} Challenges -` } })
   public COPS_AND_CRIMS: CopsAndCrimsChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.DUELS))
   @Field({ leaderboard: { fieldName: `${FormattedGame.DUELS} Challenges -` } })
   public DUELS: DuelsChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.MEGAWALLS))
   @Field({ leaderboard: { fieldName: `${FormattedGame.MEGAWALLS} Challenges -` } })
   public MEGAWALLS: MegaWallsChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.MURDER_MYSTERY))
   @Field({ leaderboard: { fieldName: `${FormattedGame.MURDER_MYSTERY} Challenges -` } })
   public MURDER_MYSTERY: MurderMysteryChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.PAINTBALL))
   @Field({ leaderboard: { fieldName: `${FormattedGame.PAINTBALL} Challenges -` } })
   public PAINTBALL: PaintballChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.QUAKE))
   @Field({ leaderboard: { fieldName: `${FormattedGame.QUAKE} Challenges -` } })
   public QUAKE: QuakeChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.SKYWARS))
   @Field({ leaderboard: { fieldName: `${FormattedGame.SKYWARS} Challenges -` } })
   public SKYWARS: SkyWarsChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.SMASH_HEROES))
   @Field({ leaderboard: { fieldName: `${FormattedGame.SMASH_HEROES} Challenges -` } })
   public SMASH_HEROES: SmashHeroesChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.SPEED_UHC))
   @Field({ leaderboard: { fieldName: `${FormattedGame.SPEED_UHC} Challenges -` } })
   public SPEED_UHC: SpeedUHCChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.TNT_GAMES))
   @Field({ leaderboard: { fieldName: `${FormattedGame.TNT_GAMES} Challenges -` } })
   public TNT_GAMES: TNTGamesChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.TURBO_KART_RACERS))
   @Field({
     leaderboard: { fieldName: `${FormattedGame.TURBO_KART_RACERS} Challenges -` },
   })
   public TURBO_KART_RACERS: TurboKartRacersChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.UHC))
   @Field({ leaderboard: { fieldName: `${FormattedGame.UHC} Challenges -` } })
   public UHC: UHCChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.VAMPIREZ))
   @Field({ leaderboard: { fieldName: `${FormattedGame.VAMPIREZ} Challenges -` } })
   public VAMPIREZ: VampireZChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.WALLS))
   @Field({ leaderboard: { fieldName: `${FormattedGame.WALLS} Challenges -` } })
   public WALLS: WallsChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.WARLORDS))
   @Field({ leaderboard: { fieldName: `${FormattedGame.WARLORDS} Challenges -` } })
   public WARLORDS: WarlordsChallenges;
 
+  @Mode("", removeFormatting(FormattedGame.WOOLWARS))
   @Field({ leaderboard: { fieldName: `${FormattedGame.WOOLWARS} Challenges -` } })
   public WOOLWARS: WoolWarsChallenges;
 
@@ -161,5 +159,10 @@ export class Challenges {
     );
   }
 }
+
+export type ChallengeModes = StatsifyApiModes<Challenges, "overall">;
+export const CHALLENGE_MODES = new GameModes<ChallengeModes>(
+  GetMetadataModes(Challenges)
+);
 
 export * from "./game-challenges";

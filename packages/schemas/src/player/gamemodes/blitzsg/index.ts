@@ -10,66 +10,21 @@ import { APIData } from "@statsify/util";
 import { BlitzSGKit } from "./kit";
 import { BlitzSGMode, BlitzSGOverall } from "./mode";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
 import {
   GamePrefix,
   createPrefixProgression,
   defaultPrefix,
   getFormattedPrefix,
 } from "../prefixes";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
 import { sub } from "@statsify/math";
-
-export const BLITZSG_MODES = new GameModes([
-  { api: "overall" },
-  { api: "arachnologist" },
-  { api: "archer" },
-  { api: "armorer" },
-  { api: "astronaut" },
-  { api: "baker" },
-  { api: "blaze" },
-  { api: "creepertamer" },
-  { api: "diver" },
-  { api: "donkeytamer" },
-  { api: "farmer" },
-  { api: "fisherman" },
-  { api: "florist" },
-  { api: "golem" },
-  { api: "guardian" },
-  { api: "horsetamer" },
-  { api: "hunter" },
-  { api: "hypetrain" },
-  { api: "jockey" },
-  { api: "knight" },
-  { api: "meatmaster" },
-  { api: "milkman" },
-  { api: "necromancer" },
-  { api: "paladin" },
-  { api: "phoenix" },
-  { api: "pigman" },
-  { api: "rambo" },
-  { api: "random" },
-  { api: "ranger" },
-  { api: "reaper" },
-  { api: "reddragon" },
-  { api: "rogue" },
-  { api: "scout" },
-  { api: "shadowknight" },
-  { api: "shark" },
-  { api: "slimeyslime" },
-  { api: "snowman" },
-  { api: "speleologist" },
-  { api: "tim" },
-  { api: "toxicologist" },
-  { api: "troll" },
-  { api: "viking" },
-  { api: "warlock" },
-  { api: "warrior" },
-  { api: "wolftamer" },
-
-  { hypixel: "solo_normal", formatted: "Solo" },
-  { hypixel: "teams_normal", formatted: "Doubles" },
-]);
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§f[§7${n}§f]`, req: 0 },
@@ -84,8 +39,7 @@ const prefixes: GamePrefix[] = [
   { fmt: (n) => `§2§l[${n}]`, req: 300_000 },
 ];
 
-export type BlitzSGModes = IGameModes<typeof BLITZSG_MODES>;
-
+@GameType()
 export class BlitzSG {
   @Field()
   public coins: number;
@@ -93,6 +47,7 @@ export class BlitzSG {
   @Field({ store: { default: "none" } })
   public kit: string;
 
+  @Mode()
   @Field()
   public overall: BlitzSGOverall;
 
@@ -114,135 +69,179 @@ export class BlitzSG {
   @Field()
   public doubles: BlitzSGMode;
 
+  @Mode()
   @Field({ store: { required: false } })
   public arachnologist: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public archer: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public armorer: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public astronaut: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public baker: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public blaze: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public creepertamer: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public diver: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public donkeytamer: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public farmer: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public fisherman: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public florist: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public golem: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public guardian: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public horsetamer: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public hunter: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public hypetrain: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public jockey: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public knight: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public meatmaster: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public milkman: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public necromancer: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public paladin: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public phoenix: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public pigman: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public rambo: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public random: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public ranger: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public reaper: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public reddragon: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public rogue: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public scout: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public shadowknight: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public shark: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public slimeyslime: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public snowman: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public speleologist: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public tim: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public toxicologist: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public troll: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public viking: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public warlock: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public warrior: BlitzSGKit;
 
+  @Mode()
   @Field({ store: { required: false } })
   public wolftamer: BlitzSGKit;
 
@@ -321,6 +320,14 @@ export class BlitzSG {
     this["wolftamer"] = new BlitzSGKit(data, "wolftamer");
   }
 }
+
+type ExcludeKeys = "solo" | "doubles";
+export type BlitzSGModes = StatsifyApiModes<Omit<BlitzSG, ExcludeKeys>>;
+export const BLITZSG_MODES = new GameModes<BlitzSGModes>([
+  ...GetMetadataModes(BlitzSG),
+  { hypixel: "solo_normal", formatted: "Solo" },
+  { hypixel: "teams_normal", formatted: "Doubles" },
+]);
 
 export * from "./kit";
 export * from "./mode";

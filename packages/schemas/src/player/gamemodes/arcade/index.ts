@@ -29,33 +29,15 @@ import {
   Zombies,
 } from "./mode";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
+import {
+  GameType,
+  GetMetadataModes,
+  Mode,
+  StatsifyApiModes,
+} from "../../../metadata/GameType";
 
-export const ARCADE_MODES = new GameModes([
-  { api: "overall" },
-  { api: "blockingDead", hypixel: "DAYONE" },
-  { api: "bountyHunters", hypixel: "ONEINTHEQUIVER" },
-  { api: "captureTheWool", hypixel: "PVP_CTW" },
-  { api: "creeperAttack", hypixel: "DEFENDER" },
-  { api: "dragonWars", hypixel: "DRAGONWARS2" },
-  { api: "enderSpleef", hypixel: "ENDER" },
-  { api: "farmHunt", hypixel: "FARM_HUNT" },
-  { api: "football", hypixel: "SOCCER" },
-  { api: "galaxyWars", hypixel: "STARWARS" },
-  { api: "hideAndSeek" },
-  { api: "holeInTheWall", hypixel: "HOLE_IN_THE_WALL" },
-  { api: "hypixelSays", hypixel: "SIMON_SAYS" },
-  { api: "miniWalls", hypixel: "MINI_WALLS" },
-  { api: "partyGames", hypixel: "PARTY" },
-  { api: "pixelPainters", hypixel: "DRAW_THEIR_THING" },
-  { api: "pixelParty", hypixel: "PIXEL_PARTY" },
-  { api: "seasonal" },
-  { api: "throwOut", hypixel: "THROW_OUT" },
-  { api: "zombies" },
-]);
-
-export type ArcadeModes = IGameModes<typeof ARCADE_MODES>;
-
+@GameType("overall")
 export class Arcade {
   @Field()
   public coins: number;
@@ -63,60 +45,79 @@ export class Arcade {
   @Field()
   public wins: number;
 
+  @Mode("DAYONE")
   @Field()
   public blockingDead: BlockingDead;
 
+  @Mode("ONEINTHEQUIVER")
   @Field()
   public bountyHunters: BountyHunters;
 
+  @Mode("PVP_CTW")
   @Field()
   public captureTheWool: CaptureTheWool;
 
+  @Mode("DEFENDER")
   @Field()
   public creeperAttack: CreeperAttack;
 
+  @Mode("DRAGONWARS2")
   @Field()
   public dragonWars: DragonWars;
 
+  @Mode("ENDER")
   @Field()
   public enderSpleef: EnderSpleef;
 
+  @Mode("FARM_HUNT")
   @Field()
   public farmHunt: FarmHunt;
 
+  @Mode("SOCCER")
   @Field()
   public football: Football;
 
+  @Mode("STARWARS")
   @Field()
   public galaxyWars: GalaxyWars;
 
+  @Mode()
   @Field()
   public hideAndSeek: HideAndSeek;
 
+  @Mode("HOLE_IN_THE_WALL")
   @Field()
   public holeInTheWall: HoleInTheWall;
 
+  @Mode("SIMON_SAYS")
   @Field()
   public hypixelSays: HypixelSays;
 
+  @Mode("MINI_WALLS")
   @Field()
   public miniWalls: MiniWalls;
 
+  @Mode("PARTY")
   @Field()
   public partyGames: PartyGames;
 
+  @Mode("DRAW_THEIR_THING")
   @Field()
   public pixelPainters: PixelPainters;
 
+  @Mode("PIXEL_PARTY")
   @Field()
   public pixelParty: PixelParty;
 
+  @Mode()
   @Field()
   public seasonal: Seasonal;
 
+  @Mode("THROW_OUT")
   @Field()
   public throwOut: ThrowOut;
 
+  @Mode()
   @Field()
   public zombies: Zombies;
 
@@ -144,6 +145,9 @@ export class Arcade {
     this.zombies = new Zombies(data);
   }
 }
+
+export type ArcadeModes = StatsifyApiModes<Arcade, "overall">;
+export const ARCADE_MODES = new GameModes<ArcadeModes>(GetMetadataModes(Arcade));
 
 export * from "./mode";
 export * from "./seasonal-mode";

@@ -8,8 +8,8 @@
 
 import { ClassMetadata, FieldMetadata } from "./metadata.interface";
 import { Constructor } from "@statsify/util";
+import { FIELD_METADATA_KEY } from "./constants";
 import { LEADERBOARD_RATIO_KEYS } from "../ratios";
-import { METADATA_KEY } from "./constants";
 
 export type MetadataEntry = [string, FieldMetadata];
 
@@ -32,7 +32,7 @@ export class MetadataScanner {
     baseName = ""
   ): MetadataEntry[] {
     const classMetadata = Reflect.getMetadata(
-      METADATA_KEY,
+      FIELD_METADATA_KEY,
       constructor.prototype
     ) as ClassMetadata;
 

@@ -8,13 +8,13 @@
 
 import { prettify } from "@statsify/util";
 
-interface StatsifyGameMode<T extends string> {
+export interface StatsifyGameMode<T> {
   hypixel?: string;
   api: T;
   formatted?: string;
 }
 
-interface HypixelGameMode {
+export interface HypixelGameMode {
   hypixel: string;
   formatted: string;
 }
@@ -37,7 +37,7 @@ export class GameModes<K extends string> {
 
     this.hypixelModes = Object.fromEntries(
       modes
-        .filter((m) => "hypixel" in m)
+        .filter((m) => m.hypixel)
         .map((m) => [m.hypixel, m.formatted ?? prettify((m as GameMode<any>).api)])
     );
   }

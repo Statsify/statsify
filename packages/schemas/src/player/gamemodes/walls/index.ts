@@ -8,7 +8,7 @@
 
 import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { GameModes } from "../../../game";
 import {
   GamePrefix,
   createPrefixProgression,
@@ -16,12 +16,9 @@ import {
   getFormattedPrefix,
   rainbow,
 } from "../prefixes";
+import { GameType, GetMetadataModes, StatsifyApiModes } from "../../../metadata/GameType";
 import { Progression } from "../../../progression";
 import { ratio } from "@statsify/math";
-
-export const WALLS_MODES = new GameModes([{ api: "overall" }]);
-
-export type WallsModes = IGameModes<typeof WALLS_MODES>;
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },
@@ -38,6 +35,7 @@ const prefixes: GamePrefix[] = [
   { fmt: (n) => rainbow(`[${n}]`), req: 2001 },
 ];
 
+@GameType("overall")
 export class Walls {
   @Field()
   public coins: number;
@@ -110,3 +108,6 @@ export class Walls {
     this.progression = createPrefixProgression(prefixes, score);
   }
 }
+
+export type WallsModes = StatsifyApiModes<Walls>;
+export const WALLS_MODES = new GameModes<WallsModes>(GetMetadataModes(Walls));
