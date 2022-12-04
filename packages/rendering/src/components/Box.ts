@@ -51,8 +51,28 @@ export const resolveFill = (
   return fill(ctx, x, y, width, height);
 };
 
-export const DEFAULT_COLOR = "rgba(87, 137, 186, 0.5)";
+export const DEFAULT_COLOR = "rgba(117, 146, 197, 0.5)";
 export const SHADOW_OPACITY = 0.84;
+
+function increaseSpacing(
+  spacing: JSX.Spacing,
+  side: keyof JSX.CompleteSpacing,
+  amount: number
+) {
+  if (typeof spacing === "number")
+    return {
+      top: spacing,
+      right: spacing,
+      bottom: spacing,
+      left: spacing,
+      [side]: spacing + amount,
+    };
+
+  return {
+    ...spacing,
+    [side]: (spacing?.[side] ?? 0) + amount,
+  };
+}
 
 export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   children,
@@ -71,8 +91,8 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   outline,
 }) => ({
   dimension: {
-    padding,
-    margin,
+    padding: increaseSpacing(padding, "top", 2),
+    margin: increaseSpacing(margin, "top", 4),
     width,
     height,
   },
@@ -171,6 +191,11 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.lineTo(x + border.topLeft, y + border.topLeft);
   ctx.closePath();
   ctx.fill();
+
+  if (fill !== DEFAULT_COLOR) {
+    ctx.fillStyle = fill;
+    ctx.fill();
+  }
 
   ctx.globalCompositeOperation = "overlay";
 

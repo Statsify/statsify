@@ -8,7 +8,7 @@
 
 import { Service } from "typedi";
 import { getImage } from "@statsify/assets";
-import type { CanvasPattern, CanvasRenderingContext2D, Image } from "skia-canvas/lib";
+import type { CanvasPattern, CanvasRenderingContext2D, Image } from "skia-canvas";
 
 const WINTER_ASSETS = ["box-snow-center", "box-snow-left", "box-snow-right", "ice"];
 type WinterAsset = typeof WINTER_ASSETS[number];
@@ -16,7 +16,7 @@ type WinterAsset = typeof WINTER_ASSETS[number];
 @Service()
 export class WinterThemeService {
   private assets: Map<string, Image> = new Map();
-  private ice: CanvasPattern | null = null;
+  private ice?: CanvasPattern;
 
   public async init() {
     await Promise.all(
