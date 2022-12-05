@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Box, DeferredGradient, useGradient } from "@statsify/rendering";
 import {
   ClassMetadata,
   DailyQuests,
@@ -25,7 +26,6 @@ import {
 } from "@statsify/schemas";
 import { Container, Footer, GameEntry, GameList, Header, SidebarItem } from "#components";
 import { DateTime } from "luxon";
-import { DeferredGradient, useGradient } from "@statsify/rendering";
 import { HistoricalType } from "@statsify/api-client";
 import { Palette, getColorPalette } from "../../themes/palette";
 import { ratio } from "@statsify/math";
@@ -79,7 +79,7 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
     return <GameList entries={entries} gameIcons={gameIcons} />;
   }
 
-  const BOX_COLOR = (colorPalette?.boxes?.color as string) ?? "rgba(0, 0, 0, 0.5)";
+  const BOX_COLOR = (colorPalette?.boxes?.color as string) ?? Box.DEFAULT_COLOR;
 
   const entries: GameEntry[] = questEntries
     .map(([k, v]) => [k, v, Object.keys(v).length - 1] as const)
@@ -95,21 +95,21 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsl(120, 100%, 30%, 0.5)"]
+          [1, "hsl(145, 45%, 44%, 0.5)"]
         );
       } else if (completed >= 1) {
         textColor = "§6";
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsla(40, 100%, 30%, 0.5)"]
+          [1, "hsla(42, 17%, 48%, 0.5)"]
         );
       } else {
         textColor = "§c";
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsla(0, 100%, 30%, 0.5)"]
+          [1, "hsla(337, 31%, 43%, 0.5)"]
         );
       }
 
