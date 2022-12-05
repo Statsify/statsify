@@ -9,7 +9,7 @@
 import type * as JSX from "../jsx";
 import type { CanvasRenderingContext2D } from "skia-canvas";
 import type { DeferredGradient } from "../hooks";
-import type { WinterThemeService } from "../winter-theme-service";
+import type { WinterThemeService } from "../winter-theme.service";
 
 export interface BoxBorderRadius {
   topLeft: number;

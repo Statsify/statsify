@@ -13,7 +13,7 @@ export * from "./font";
 export * from "./hooks";
 export * from "./jsx";
 export * from "./components";
-export { WinterThemeService } from "./winter-theme-service";
+export { WinterThemeService } from "./winter-theme.service";
 
 import type * as JSXInternal from "./jsx";
 

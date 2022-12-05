@@ -15,7 +15,7 @@ import type {
 } from "skia-canvas";
 import type { FontRenderer } from "../font";
 import type { IntrinsicElement, IntrinsicRenders } from "./instrinsics";
-import type { WinterThemeService } from "../winter-theme-service";
+import type { WinterThemeService } from "../winter-theme.service";
 
 export interface BaseThemeContext {
   renderer: FontRenderer;
