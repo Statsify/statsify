@@ -81,14 +81,9 @@ export const getLevelColor = (level: number) =>
   LEVEL_COLORS[Math.floor(level / 10)] ?? "7";
 
 export const getPrestigeColor = (prestige: number) => {
-  switch (prestige) {
-    case 0:
-      return PRESTIGE_COLORS[0];
-    case 48:
-      return PRESTIGE_COLORS[12];
-    default:
-      return PRESTIGE_COLORS[Math.floor((prestige + 5) / 5)];
-  }
+  if (prestige <= 0) return PRESTIGE_COLORS[0];
+  if (prestige >= 48) return PRESTIGE_COLORS[12];
+  return PRESTIGE_COLORS[Math.floor((prestige + 5) / 5)];
 };
 
 export const getBounty = (bounties: Bounty[]) =>
