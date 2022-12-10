@@ -43,7 +43,7 @@ export class General {
 
   @Field({
     leaderboard: { enabled: false },
-    historical: { enabled: true, fieldName: "Levels Gained" },
+    historical: { enabled: false, fieldName: "Levels Gained" },
     store: { default: 1 },
   })
   public networkLevel: number;

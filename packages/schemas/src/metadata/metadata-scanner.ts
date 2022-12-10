@@ -67,7 +67,10 @@ export class MetadataScanner {
       }
 
       // Apply metadata to historical
-      if (!value.historical.additionalFields)
+      if (
+        !value.historical.additionalFields ||
+        value.historical.additionalFields.length === 0
+      )
         value.historical.additionalFields = value.leaderboard.additionalFields;
 
       if (value.type.primitive || value.type.array)

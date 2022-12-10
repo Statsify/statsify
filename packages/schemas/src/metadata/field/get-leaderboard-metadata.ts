@@ -58,7 +58,8 @@ export const getLeaderboardMetadata = (
   const name = leaderboardOptions?.name ?? fieldName;
 
   const historicalFieldName = historicalOptions?.fieldName ?? fieldName;
-  const historicalName = historicalOptions?.name ?? historicalFieldName;
+  const historicalName =
+    historicalOptions?.name ?? leaderboardOptions?.name ?? historicalFieldName;
 
   let leaderboard: LeaderboardMetadata;
   let historical: LeaderboardMetadata;

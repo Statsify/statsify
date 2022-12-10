@@ -86,7 +86,7 @@ export class SkyWars {
 
   @Field({
     leaderboard: { enabled: false },
-    historical: { enabled: true, fieldName: "Levels Gained" },
+    historical: { enabled: false, fieldName: "Levels Gained" },
   })
   public level: number;
 
