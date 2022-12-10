@@ -11,7 +11,13 @@ import { Field } from "../../../metadata";
 import { GameModes, IGameModes } from "../../../game";
 import { Progression } from "../../../progression";
 import { add, ratio } from "@statsify/math";
-import { getBounty, getLevel, getLevelFormatted, getPres, getPresReq } from "./util";
+import {
+  getBounty,
+  getLevel,
+  getLevelFormatted,
+  getPrestige,
+  getPrestigeReq,
+} from "./util";
 
 export const PIT_MODES = new GameModes([
   { api: "overall", hypixel: "PIT", formatted: "Pit" },
@@ -26,7 +32,7 @@ export class Pit {
       hidden: true,
       additionalFields: ["this.kills", "this.playtime"],
       formatter: (exp: number) => {
-        const prestige = getPres(exp);
+        const prestige = getPrestige(exp);
         const level = getLevel(prestige, exp);
         return getLevelFormatted(level, prestige);
       },
@@ -111,14 +117,16 @@ export class Pit {
     this.renown = profile.renown;
     this.bounty = getBounty(profile.bounties);
 
-    const prestige = getPres(this.exp);
+    const prestige = getPrestige(this.exp);
     const level = getLevel(prestige, this.exp);
 
     this.trueLevel = prestige * 120 + level;
 
+    const lastPrestigeReq = getPrestigeReq(prestige - 1);
+
     this.progression = new Progression(
-      this.exp - getPresReq(prestige - 1),
-      getPresReq(prestige) - getPresReq(prestige - 1)
+      this.exp - lastPrestigeReq,
+      getPrestigeReq(prestige) - lastPrestigeReq
     );
 
     this.levelFormatted = getLevelFormatted(level, prestige);
