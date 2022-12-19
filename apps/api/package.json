@@ -17,7 +17,7 @@
     "@fastify/view": "^7.1.0",
     "@m8a/nestjs-typegoose": "^8.0.4",
     "@nestjs-modules/ioredis": "^1.0.1",
-    "@nestjs/axios": "^0.1.0",
+    "@nestjs/axios": "^1.0.1",
     "@nestjs/common": "^9.0.1",
     "@nestjs/core": "^9.0.1",
     "@nestjs/platform-fastify": "^9.0.1",
