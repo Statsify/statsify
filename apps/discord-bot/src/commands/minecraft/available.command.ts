@@ -46,16 +46,7 @@ export class AvailableCommand {
 
     const nameInfo = await this.mojangApiService.checkName(name.trim());
 
-    if (!nameInfo) {
-      base
-        .field("NameMC", `[\`Here\`](https://namemc.com/profile/${name})`)
-        .field(
-          (t) => t("stats.status"),
-          (t) => `\`${t("minecraft.available")}*\``
-        )
-        .footer((t) => `*${t("embeds.available.blocked")}`)
-        .color(0x00_a2_8a);
-    } else {
+    if (nameInfo) {
       base
         .field((t) => t("minecraft.uuid"), `\`${nameInfo.uuid.replaceAll("-", "")}\``)
         .field(
@@ -68,6 +59,15 @@ export class AvailableCommand {
         )
         .color(0xf7_c4_6c)
         .thumbnail(this.mojangApiService.faceIconUrl(nameInfo.uuid));
+    } else {
+      base
+        .field("NameMC", `[\`Here\`](https://namemc.com/profile/${name})`)
+        .field(
+          (t) => t("stats.status"),
+          (t) => `\`${t("minecraft.available")}*\``
+        )
+        .footer((t) => `*${t("embeds.available.blocked")}`)
+        .color(0x00_a2_8a);
     }
 
     return { embeds: [base] };

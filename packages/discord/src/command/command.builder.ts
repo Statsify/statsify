@@ -11,7 +11,7 @@ import { Constructor } from "@statsify/util";
 import type { CommandMetadata, SubCommandMetadata } from "./command.interface";
 
 export class CommandBuilder {
-  public static scan<T>(target: T, constructor: Constructor<T>) {
+  public static scan<T extends {}>(target: T, constructor: Constructor<T>) {
     const commandMetadata = Reflect.getMetadata(
       "statsify:command",
       constructor

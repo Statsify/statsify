@@ -58,66 +58,86 @@ export const ArcadeProfile = ({
   let table: JSX.Element;
 
   switch (api) {
-    case "blockingDead":
+    case "blockingDead": {
       table = <BlockingDeadTable stats={arcade[api]} t={t} />;
       break;
-    case "bountyHunters":
+    }
+    case "bountyHunters": {
       table = <BountyHuntersTable stats={arcade[api]} t={t} />;
       break;
-    case "captureTheWool":
+    }
+    case "captureTheWool": {
       table = <CaptureTheWoolTable stats={arcade[api]} t={t} />;
       break;
-    case "creeperAttack":
+    }
+    case "creeperAttack": {
       table = <CreeperAttackTable stats={arcade[api]} t={t} />;
       break;
-    case "dragonWars":
+    }
+    case "dragonWars": {
       table = <DragonWarsTable stats={arcade[api]} t={t} />;
       break;
-    case "enderSpleef":
+    }
+    case "enderSpleef": {
       table = <EnderSpleefTable stats={arcade[api]} t={t} />;
       break;
-    case "farmHunt":
+    }
+    case "farmHunt": {
       table = <FarmHuntTable stats={arcade[api]} t={t} />;
       break;
-    case "football":
+    }
+    case "football": {
       table = <FootballTable stats={arcade[api]} t={t} />;
       break;
-    case "galaxyWars":
+    }
+    case "galaxyWars": {
       table = <GalaxyWarsTable stats={arcade[api]} t={t} />;
       break;
-    case "hideAndSeek":
+    }
+    case "hideAndSeek": {
       table = <HideAndSeekTable stats={arcade[api]} t={t} />;
       break;
-    case "holeInTheWall":
+    }
+    case "holeInTheWall": {
       table = <HoleInTheWallTable stats={arcade[api]} t={t} time={time} />;
       break;
-    case "hypixelSays":
+    }
+    case "hypixelSays": {
       table = <HypixelSaysTable stats={arcade[api]} t={t} />;
       break;
-    case "miniWalls":
+    }
+    case "miniWalls": {
       table = <MiniWallsTable stats={arcade[api]} t={t} />;
       break;
-    case "partyGames":
+    }
+    case "partyGames": {
       table = <PartyGamesTable stats={arcade[api]} t={t} />;
       break;
-    case "pixelPainters":
+    }
+    case "pixelPainters": {
       table = <PixelPaintersTable stats={arcade[api]} t={t} />;
       break;
-    case "pixelParty":
+    }
+    case "pixelParty": {
       table = <PixelPartyTable stats={arcade[api]} t={t} />;
       break;
-    case "seasonal":
+    }
+    case "seasonal": {
       table = <SeasonalTable stats={arcade[api]} t={t} />;
       break;
-    case "throwOut":
+    }
+    case "throwOut": {
       table = <ThrowOutTable stats={arcade[api]} t={t} />;
       break;
-    case "zombies":
+    }
+    case "zombies": {
       table = <ZombiesTable stats={arcade[api]} t={t} time={time} />;
       break;
-    default:
+    }
+    default: {
       table = <OverallArcadeTable stats={arcade} t={t} />;
       break;
+    }
   }
 
   return (

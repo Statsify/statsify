@@ -62,12 +62,14 @@ const _render = (
 
   const applyDelta = (delta: number) => {
     switch (instruction.style.direction) {
-      case "row":
+      case "row": {
         x += delta;
         break;
-      case "column":
+      }
+      case "column": {
         y += delta;
         break;
+      }
     }
   };
 
