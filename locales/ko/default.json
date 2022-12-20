@@ -506,7 +506,7 @@
     },
     "playerInput": {
       "label": "플레이어로 검색",
-      "placeholder": "플레이어의 이름을 입력하세요. 예시: j4cobi"
+      "placeholder": "플레이어의 이름을 입력하세요. 예시: Mecrea"
     },
     "positionInput": {
       "label": "순위로 검색",
@@ -567,6 +567,7 @@
     "ended": "종료",
     "endurance": "Endurance",
     "event-level": "이벤트 레벨",
+    "event-exp": "이벤트 경험치",
     "exp": "경험치",
     "expGained": "획득한 경험치",
     "extraUltimates": "추가 궁극기",
@@ -777,7 +778,7 @@
       "description": "이 명령어를 사용하려면 인증해야 해요. `/verify` 명령어로 내 계정을 인증하세요.",
       "title": "인증 필요"
     },
-    "successfulUnverification": "내 계정의 인증을 해제했어요!",
+    "successfulUnverification": "계정과의 인증을 해제했어요!",
     "successfulVerification": "**{{displayName}}**으(로) 인증됐어요"
   }
 }
