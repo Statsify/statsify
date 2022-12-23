@@ -232,6 +232,8 @@ export class BaseLeaderboardCommand {
       time
     );
 
+    if (message.ephemeral) return message;
+
     setTimeout(() => {
       listener.removeHook(up.getCustomId());
       listener.removeHook(down.getCustomId());

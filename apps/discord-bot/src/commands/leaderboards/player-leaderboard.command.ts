@@ -301,10 +301,8 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
     modes: GameModes<T>
   ) {
     const leaderboard = context.option<string>("leaderboard");
-    const time =
-      SHORT_TO_LONG_HISTORICAL_TYPE[
-        context.option<keyof typeof SHORT_TO_LONG_HISTORICAL_TYPE>("time")
-      ];
+    const shortTime = context.option<keyof typeof SHORT_TO_LONG_HISTORICAL_TYPE>("time");
+    const time = SHORT_TO_LONG_HISTORICAL_TYPE[shortTime];
 
     const field = `stats.${prefix}.${leaderboard.replaceAll(" ", ".")}`;
 
