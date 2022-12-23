@@ -194,12 +194,12 @@ export class HistoricalService {
 
     let isNew = false;
 
-    if (!oldPlayer) {
+    if (oldPlayer) {
+      oldPlayer = deserialize(Player, flatten(oldPlayer));
+    } else {
       newPlayer.resetMinute = this.getMinute();
       oldPlayer = await this.reset(newPlayer, type);
       isNew = true;
-    } else {
-      oldPlayer = deserialize(Player, flatten(oldPlayer));
     }
 
     return [newPlayer, oldPlayer, isNew];
@@ -222,15 +222,15 @@ export class HistoricalService {
 
     let isNew = false;
 
-    if (!newPlayer) {
+    if (newPlayer) {
+      newPlayer = deserialize(Player, flatten(newPlayer));
+    } else {
       const livePlayer = await this.playerService.get(uuid, HypixelCache.LIVE);
       if (!livePlayer) throw new PlayerNotFoundException();
 
       livePlayer.resetMinute = this.getMinute();
       newPlayer = await this.reset(livePlayer, HistoricalType.MONTHLY);
       isNew = true;
-    } else {
-      newPlayer = deserialize(Player, flatten(newPlayer));
     }
 
     const LAST_MODELS = {
@@ -251,7 +251,7 @@ export class HistoricalService {
    * @param newOne The new stats
    * @returns the new stats - the old stats
    */
-  private merge<T>(oldOne: T, newOne: T): T {
+  private merge<T extends {}>(oldOne: T, newOne: T): T {
     const merged = {} as T;
 
     const keys = Object.keys({ ...oldOne, ...newOne });
@@ -263,7 +263,12 @@ export class HistoricalService {
       if (typeof oldOne[key] === "number" || newOneType === "number") {
         const ratioIndex = RATIOS.indexOf(_key);
 
-        if (ratioIndex !== -1) {
+        if (ratioIndex === -1) {
+          merged[key] = sub(
+            newOne[key] as unknown as number,
+            oldOne[key] as unknown as number
+          ) as unknown as T[keyof T];
+        } else {
           const numerator = sub(
             newOne[RATIO_STATS[ratioIndex][0] as unknown as keyof T] as unknown as number,
             oldOne[RATIO_STATS[ratioIndex][0] as unknown as keyof T] as unknown as number
@@ -279,23 +284,14 @@ export class HistoricalService {
             denominator,
             RATIO_STATS[ratioIndex][4] ?? 1
           ) as unknown as T[keyof T];
-        } else {
-          merged[key] = sub(
-            newOne[key] as unknown as number,
-            oldOne[key] as unknown as number
-          ) as unknown as T[keyof T];
         }
       } else if (newOneType === "string") {
         merged[key] = newOne[key];
       } else if (isObject(newOne[key])) {
-        if (key === "progression") {
-          merged[key] = newOne[key];
-        } else {
-          merged[key] = this.merge(
-            oldOne[key] ?? {},
-            newOne[key] ?? {}
-          ) as unknown as T[keyof T];
-        }
+        merged[key] =
+          key === "progression"
+            ? newOne[key]
+            : (this.merge(oldOne[key] ?? {}, newOne[key] ?? {}) as unknown as T[keyof T]);
       }
     }
 

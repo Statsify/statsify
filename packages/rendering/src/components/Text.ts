@@ -45,17 +45,21 @@ export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps["childre
   let text: string;
 
   switch (typeof children) {
-    case "string":
+    case "string": {
       text = children;
       break;
-    case "number":
+    }
+    case "number": {
       text = children.toString();
       break;
-    case "object":
+    }
+    case "object": {
       text = children.join("");
       break;
-    default:
+    }
+    default: {
       throw new Error(`Invalid text type: ${typeof children}`);
+    }
   }
 
   //Get a generic instance of font renderer just to lex and measure the text

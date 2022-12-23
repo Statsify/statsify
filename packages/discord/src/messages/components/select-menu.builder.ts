@@ -78,8 +78,7 @@ export class SelectMenuBuilder {
   }
 
   public disable(disabled?: boolean): this {
-    if (disabled === undefined) this.#disabled = true;
-    else this.#disabled = disabled;
+    this.#disabled = disabled === undefined ? true : disabled;
 
     return this;
   }

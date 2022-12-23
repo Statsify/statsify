@@ -71,7 +71,7 @@ export const translateField = <T extends string>(
   locale: LocalizeFunction,
   str?: LocalizationString
 ): T => {
-  if (typeof str === "undefined") return str as unknown as T;
+  if (str === undefined) return str as unknown as T;
   if (typeof str === "string") return str as T;
   if (typeof str === "number") return locale("number", { value: str }) as T;
 
@@ -82,7 +82,7 @@ export const translateObject = <T extends Record<string, LocalizationString | an
   locale: LocalizeFunction,
   obj?: T
 ): { [key in keyof T]: T[key] extends LocalizationString ? string : T[key] } => {
-  if (typeof obj === "undefined") return obj as unknown as { [key in keyof T]: T[key] };
+  if (obj === undefined) return obj as unknown as { [key in keyof T]: T[key] };
 
   for (const key in obj) {
     obj[key] = shouldTranslate(obj[key]) ? translateField(locale, obj[key]) : obj[key];

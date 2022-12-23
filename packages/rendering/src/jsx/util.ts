@@ -64,15 +64,17 @@ const getChildrenSize = (
   let min = 0;
 
   switch (bidirectional.direction) {
-    case "row":
+    case "row": {
       min = instruction.children!.reduce(
         (acc, child) => acc + getTotalSize(child[side]),
         0
       );
       break;
-    case "column":
+    }
+    case "column": {
       min = Math.max(...instruction.children!.map((child) => getTotalSize(child[side])));
       break;
+    }
   }
 
   return getTotalSize({ ...bidirectional, size: min }, { margin, padding, size });
@@ -80,8 +82,9 @@ const getChildrenSize = (
 
 export const getPositionalDelta = (instruction: Instruction, side: "x" | "y"): number => {
   switch (instruction.style.location) {
-    case "left":
+    case "left": {
       return instruction[side].padding1;
+    }
     case "center": {
       const childrenSize = getChildrenSize(instruction, side, {
         margin: false,
@@ -90,7 +93,8 @@ export const getPositionalDelta = (instruction: Instruction, side: "x" | "y"): n
 
       return (instruction[side].size - childrenSize) / 2;
     }
-    case "right":
+    case "right": {
       throw new Error("right location is not implemented");
+    }
   }
 };

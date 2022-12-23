@@ -181,18 +181,21 @@ export const QuestsProfile = ({
   let historicalTime: "LIVE" | HistoricalType;
 
   switch (time) {
-    case QuestTime.Overall:
+    case QuestTime.Overall: {
       period = "overall";
       historicalTime = "LIVE";
       break;
-    case QuestTime.Weekly:
+    }
+    case QuestTime.Weekly: {
       period = "weekly";
       historicalTime = HistoricalType.WEEKLY;
       break;
-    case QuestTime.Daily:
+    }
+    case QuestTime.Daily: {
       period = "daily";
       historicalTime = HistoricalType.DAILY;
       break;
+    }
   }
 
   const { api, formatted } = mode;
@@ -203,7 +206,7 @@ export const QuestsProfile = ({
     : undefined;
 
   switch (api) {
-    case "overall":
+    case "overall": {
       table = (
         <NormalTable
           quests={quests[period]}
@@ -214,7 +217,8 @@ export const QuestsProfile = ({
         />
       );
       break;
-    default:
+    }
+    default: {
       table = (
         <GameTable
           quests={quests[period][api]}
@@ -225,6 +229,7 @@ export const QuestsProfile = ({
         />
       );
       break;
+    }
   }
 
   const sidebar: SidebarItem[] = [[t("stats.total"), t(quests.total), "§b"]];
