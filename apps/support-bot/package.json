@@ -20,8 +20,6 @@
     "@statsify/util": "workspace:^",
     "@typegoose/typegoose": "^9.13.2",
     "axios": "^0.27.2",
-    "chart.js": "^3.9.1",
-    "chartjs-skia-canvas": "https://github.com/jacobk999/chartjs-skia-canvas.git#commit=b325851b349dba653489464b4524abbc6cf00879",
     "discord-api-types": "^0.36.3",
     "luxon": "^3.1.1",
     "mongoose": "^6.8.1",
