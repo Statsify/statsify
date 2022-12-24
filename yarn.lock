@@ -2636,7 +2636,7 @@ __metadata:
     "@types/i18next-fs-backend": ^1.1.2
     discord-api-types: ^0.36.3
     i18next: ^21.10.0
-    i18next-fs-backend: ^1.2.0
+    i18next-fs-backend: ^2.1.1
     reflect-metadata: ^0.1.13
     tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb"
     typedi: ^0.10.0
@@ -6484,10 +6484,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next-fs-backend@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "i18next-fs-backend@npm:1.2.0"
-  checksum: da74d20f2b007f8e34eaf442fa91ad12aaff3b9891e066c6addd6d111b37e370c62370dfbc656730ab2f8afd988f2e7ea1c48301ebb19ccb716fb5965600eddf
+"i18next-fs-backend@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "i18next-fs-backend@npm:2.1.1"
+  checksum: fe606df2639b3ea49501b5bc947553e4bfbce67290c91ab22a8b9ecee4d11b8ae78179980720998881f117f0321d3ba0f739fb93a0ab95613cd79b85ffb014f5
   languageName: node
   linkType: hard
 
