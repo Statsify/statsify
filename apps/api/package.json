@@ -29,7 +29,7 @@
     "@statsify/logger": "workspace:^",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
-    "@typegoose/typegoose": "^9.13.2",
+    "@typegoose/typegoose": "^10.0.0",
     "class-transformer": "0.5.1",
     "class-validator": "^0.13.2",
     "handlebars": "^4.7.7",
