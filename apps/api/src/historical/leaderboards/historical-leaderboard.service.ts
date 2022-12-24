@@ -124,8 +124,8 @@ export class HistoricalLeaderboardService extends LeaderboardService {
       [
         field, // Keep field so merge works correctly with ratios
         ...additionalFields.filter((k) => k !== field),
-        ...(extraDisplay ? [extraDisplay] : []),
-      ]
+      ],
+      extraDisplay
     );
 
     const data = redisLb.map((doc, index) => {
@@ -214,20 +214,19 @@ export class HistoricalLeaderboardService extends LeaderboardService {
   }
 
   protected async getAdditionalStats(): Promise<LeaderboardAdditionalStats[]> {
-    throw new Error("Misuse of getAdditonalStats in historical");
+    throw new Error("Misuse of getAdditionalStats in historical");
   }
 
   protected async getAdditionalHistoricalStats(
     time: CurrentHistoricalType,
     ids: string[],
-    fields: string[]
+    fields: string[],
+    extraDisplay?: string
   ): Promise<LeaderboardAdditionalStats[]> {
     const selector = fields.reduce((acc, key) => {
       acc[key] = true;
       return acc;
     }, {} as Record<string, boolean>);
-
-    selector.displayName = true;
 
     let model: PlayerModel;
 
@@ -254,6 +253,11 @@ export class HistoricalLeaderboardService extends LeaderboardService {
           .select(selector)
           .lean()
           .exec();
+
+        // Add it after so the data isn't fetched twice
+        selector.displayName = true;
+        selector.resetMinute = true;
+        if (extraDisplay) selector[extraDisplay] = true;
 
         const newPlayer = await this.playerModel
           .findOne()
