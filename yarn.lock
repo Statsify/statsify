@@ -2067,16 +2067,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/axios@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "@nestjs/axios@npm:0.1.1"
+"@nestjs/axios@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@nestjs/axios@npm:1.0.1"
   dependencies:
     axios: 1.2.1
   peerDependencies:
     "@nestjs/common": ^7.0.0 || ^8.0.0 || ^9.0.0
     reflect-metadata: ^0.1.12
     rxjs: ^6.0.0 || ^7.0.0
-  checksum: 144a0592ace2846c7d1940f9a76fe4da0008175001ea57c72837e7c7811f76bf0828dbcf89a41ef32a2bc8d9bc571f6ca521c509d720be7c66bd92d4961960a8
+  checksum: c24c8c607e33401f4fb39c363760b028d7eeca5056a40cf5e7af0b83d93bcd43ec336383574d07c83a16d914ec4d60bb4a36223ac665e934ba0cd70a334d438d
   languageName: node
   linkType: hard
 
@@ -3711,7 +3711,7 @@ __metadata:
     "@fastify/view": ^7.3.0
     "@m8a/nestjs-typegoose": ^8.1.0
     "@nestjs-modules/ioredis": ^1.0.1
-    "@nestjs/axios": ^0.1.1
+    "@nestjs/axios": ^1.0.1
     "@nestjs/common": ^9.2.1
     "@nestjs/core": ^9.2.1
     "@nestjs/platform-fastify": ^9.2.1
