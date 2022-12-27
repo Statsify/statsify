@@ -66,9 +66,23 @@ export class Player {
   @Field({
     leaderboard: { enabled: false },
     store: { required: false, serialize: false, deserialize: false },
-    docs: { description: "The time the player's historical stats reset" },
+    docs: { description: "The minute the player's historical stats reset" },
   })
   public resetMinute?: number;
+
+  @Field({
+    leaderboard: { enabled: false },
+    store: { required: false, serialize: false, deserialize: false },
+    docs: { description: "The time the player's historical stats reset" },
+  })
+  public nextReset?: number;
+
+  @Field({
+    leaderboard: { enabled: false },
+    store: { required: false, serialize: false, deserialize: false },
+    docs: { description: "The time the player's historical stats last reset" },
+  })
+  public lastReset?: number;
 
   @Field({ store: { required: false, store: false } })
   public cached?: boolean;
@@ -100,6 +114,8 @@ export class Player {
     //These will all be filled in by a service
     this.expiresAt = 0;
     this.resetMinute = 0;
+    this.nextReset = 0;
+    this.lastReset = 0;
   }
 }
 

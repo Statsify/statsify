@@ -72,6 +72,8 @@ export class PlayerService {
     if (player) {
       player.expiresAt = Date.now() + 120_000;
       player.resetMinute = mongoPlayer?.resetMinute;
+      player.lastReset = mongoPlayer?.lastReset;
+      player.nextReset = mongoPlayer?.nextReset;
       player.guildId = mongoPlayer?.guildId;
 
       if (mongoPlayer && mongoPlayer.username !== player.username)

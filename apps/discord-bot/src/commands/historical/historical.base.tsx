@@ -332,9 +332,15 @@ export class HistoricalBase {
             })}\n`
           : undefined;
 
+        //TODO Modify this to use the player.nextReset key
         if (isNotLastHistorical)
           content =
             (content ?? "") + t("historical.reset", { time: this.getResetTime(player) });
+
+        //TODO Remove this when the implementation is completed
+        content += `\nLast Reset: ${player.lastReset}\nNext Reset:${
+          player.nextReset
+        } (${this.getResetTime(player)})`;
 
         const profile = getProfile(
           {
@@ -364,6 +370,7 @@ export class HistoricalBase {
     return this.paginateService.paginate(context, pages);
   }
 
+  //TODO Remove this when the implementation is completed
   private getResetTime(player: Player) {
     const now = DateTime.now();
 

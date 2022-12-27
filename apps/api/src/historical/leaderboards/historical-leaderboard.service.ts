@@ -8,7 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import Redis from "ioredis";
-import { Constructor, Flatten, flatten } from "@statsify/util";
+import { Constructor, Flatten, flatten, relativeTime } from "@statsify/util";
 import {
   CurrentHistoricalType,
   HistoricalTimes,
@@ -162,9 +162,16 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     });
 
     const fields = [];
+
+    // Attach the last reset to the fields array
+    data.map((p, i) =>
+      p.fields.push(relativeTime(additionalStats[i].lastReset * 1000) as string)
+    );
+
     if (!hidden) fields.push(fieldName);
 
     fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
+    fields.push("Reset");
 
     return {
       name,
@@ -246,6 +253,8 @@ export class HistoricalLeaderboardService extends LeaderboardService {
 
     return await Promise.all(
       ids.map(async (id) => {
+        selector.lastReset = true;
+
         const oldPlayer = await model
           .findOne()
           .where("uuid")
@@ -254,9 +263,10 @@ export class HistoricalLeaderboardService extends LeaderboardService {
           .lean()
           .exec();
 
-        // Add it after so the data isn't fetched twice
+        // Select it after so the data isn't fetched twice
         selector.displayName = true;
-        selector.resetMinute = true;
+        delete selector.lastReset;
+
         if (extraDisplay) selector[extraDisplay] = true;
 
         const newPlayer = await this.playerModel
@@ -266,6 +276,8 @@ export class HistoricalLeaderboardService extends LeaderboardService {
           .select(selector)
           .lean()
           .exec();
+
+        newPlayer!.lastReset = (oldPlayer!.lastReset || 0) * 2;
 
         const merged = createHistoricalPlayer(oldPlayer, newPlayer);
 

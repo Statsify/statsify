@@ -44,7 +44,7 @@ export const HistoricalHeader = ({
       end = now;
       break;
     case HistoricalTimes.MONTHLY:
-      start = now.minus({ months: 1, days: now.day - 1 });
+      start = now.minus({ days: now.day - 1 });
       end = now;
       break;
     case HistoricalTimes.LAST_DAY:

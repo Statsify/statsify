@@ -16,6 +16,7 @@ import {
   PlayerNotFoundException,
 } from "@statsify/api-client";
 import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
+import { DateTime } from "luxon";
 import { Flatten, flatten } from "@statsify/util";
 import { HistoricalLeaderboardService } from "./leaderboards/historical-leaderboard.service";
 import { Inject, Injectable, Logger, forwardRef } from "@nestjs/common";
@@ -125,6 +126,9 @@ export class HistoricalService {
       const last = await model.findOne({ uuid: doc.uuid }).lean().exec();
 
       delete doc._id;
+      doc.lastReset = Math.round(DateTime.now().toMillis() / 1000);
+      doc.nextReset = this.getNextResetTime(doc.resetMinute, time);
+
       if (last) delete last._id;
 
       await Promise.all([
@@ -174,6 +178,8 @@ export class HistoricalService {
     const merged = createHistoricalPlayer(oldPlayer, newPlayer);
 
     merged.resetMinute = oldPlayer.resetMinute;
+    merged.lastReset = oldPlayer.lastReset;
+    merged.nextReset = oldPlayer.nextReset;
     merged.isNew = isNew;
 
     return merged;
@@ -290,5 +296,40 @@ export class HistoricalService {
       : date.getDay() === 1
       ? HistoricalTimes.WEEKLY
       : HistoricalTimes.DAILY;
+  }
+
+  private getNextResetTime(resetMinute: number, time: HistoricalType) {
+    const now = DateTime.now();
+
+    const hasResetToday = resetMinute! <= now.hour * 60 + now.minute;
+
+    let resetTime = now
+      .minus({ hours: now.hour, minutes: now.minute })
+      .plus({ minutes: resetMinute! });
+
+    const isSunday = now.weekday === 7;
+    const isStartOfMonth = now.day === 1;
+
+    if (time === HistoricalTimes.DAILY && hasResetToday) {
+      resetTime = resetTime.plus({ days: 1 });
+    } else if (
+      time === HistoricalTimes.WEEKLY &&
+      ((isSunday && hasResetToday) || !isSunday)
+    ) {
+      resetTime = resetTime.plus({ week: 1 }).minus({ days: isSunday ? 0 : now.weekday });
+    } else if (
+      time === HistoricalTimes.MONTHLY &&
+      ((isStartOfMonth && hasResetToday) || !isStartOfMonth)
+    ) {
+      resetTime = resetTime.minus({ days: now.day - 1 }).plus({ months: 1 });
+    }
+
+    return Math.round(resetTime.toMillis() / 1000);
+  }
+
+  private getLastResetTime(resetMinute: number, time: HistoricalType) {
+    const now = DateTime.now().toMillis();
+
+    return Math.round((now - (this.getNextResetTime(resetMinute, time) - now)) / 1000);
   }
 }
