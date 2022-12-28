@@ -11,7 +11,8 @@
     "limit-redis": "node src/limit-redis.js",
     "purge": "node src/purge.js",
     "rank-emojis": "node src/rank-emojis.js",
-    "timestamp": "node --no-warnings src/timestamp.js"
+    "timestamp": "node --no-warnings src/timestamp.js",
+    "reset": "node --no-warnings src/reset.js"
   },
   "dependencies": {
     "@statsify/api-client": "workspace:^",
