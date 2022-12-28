@@ -567,9 +567,9 @@
     "ended": "Konec",
     "endurance": "Endurance",
     "event-level": "Event level",
-    "event-exp": "Event EXP",
-    "exp": "EXP",
-    "expGained": "Získané EXP",
+    "event-exp": "Event XP",
+    "exp": "XP",
+    "expGained": "Získané XP",
     "extraUltimates": "Vyrobené dodatečné ult. předměty",
     "fastestDetectiveWin": "Nejrychlejší výhra za detektiva",
     "fastestMurdererWin": "Nejrychlejší výhra za vraha",
@@ -685,7 +685,7 @@
     "prefix": "Prefix",
     "prevent": "Zabránění",
     "progression": {
-      "exp": "Progres EXP",
+      "exp": "Progres XP",
       "gexp": "Progres GEXP",
       "goldTrophy": "Progres zlatých trofejí",
       "kill": "Progres zabití",
@@ -747,7 +747,7 @@
     "potionsBrewed": "Uvařené lektvary",
     "powerupsCollected": "Sebraná vylepšení",
     "roundsCompleted": "Dokončena kola",
-    "totalExp": "Celkem EXP"
+    "totalExp": "Celkem XP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Připoj se na náš **$t(socials.discord)** a získej **20% nižší časový limit* $t(emojis:heart)",
