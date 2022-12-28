@@ -23,11 +23,14 @@ const getNextResetTime = (resetMinute, time) => {
   const isSunday = now.weekday === 7;
   const isStartOfMonth = now.day === 1;
 
-  if (time === "d" && hasResetToday) {
+  if (time === "daily" && hasResetToday) {
     resetTime = resetTime.plus({ days: 1 });
-  } else if (time === "w" && ((isSunday && hasResetToday) || !isSunday)) {
+  } else if (time === "weekly" && ((isSunday && hasResetToday) || !isSunday)) {
     resetTime = resetTime.plus({ week: 1 }).minus({ days: isSunday ? 0 : now.weekday });
-  } else if (time === "m" && ((isStartOfMonth && hasResetToday) || !isStartOfMonth)) {
+  } else if (
+    time === "monthly" &&
+    ((isStartOfMonth && hasResetToday) || !isStartOfMonth)
+  ) {
     resetTime = resetTime.minus({ days: now.day - 1 }).plus({ months: 1 });
   }
 
