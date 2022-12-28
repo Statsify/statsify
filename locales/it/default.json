@@ -567,6 +567,7 @@
     "ended": "Finito",
     "endurance": "Durata",
     "event-level": "Livello Evento",
+    "event-exp": "Event EXP",
     "exp": "EXP",
     "expGained": "EXP Guadagnata",
     "extraUltimates": "Extra Ultimate",
@@ -746,7 +747,7 @@
     "potionsBrewed": "Pozioni preparate",
     "powerupsCollected": "Power-Up Collezionati",
     "roundsCompleted": "Round Completati",
-    "totalExp": "Total EXP"
+    "totalExp": "EXP Totale"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Unisciti al nostro **$t(socials.discord)** e ottieni **cooldown 20% più brevi** $t(emojis:heart)",

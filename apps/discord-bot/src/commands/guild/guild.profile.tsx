@@ -88,17 +88,20 @@ export const GuildProfile = ({
   let pageEl: JSX.Element;
 
   switch (page) {
-    case "gexp":
+    case "gexp": {
       pageEl = <GuildGexpPage guild={guild} t={t} />;
       break;
-    case "expPerGame":
+    }
+    case "expPerGame": {
       pageEl = <GuildGexpPerGamePage guild={guild} t={t} gameIcons={gameIcons} />;
       break;
-    case "misc":
+    }
+    case "misc": {
       pageEl = <GuildMiscPage guild={guild} t={t} />;
       break;
+    }
     default:
-    case "overall":
+    case "overall": {
       pageEl = (
         <GuildOverallPage
           guild={guild}
@@ -110,6 +113,7 @@ export const GuildProfile = ({
         />
       );
       break;
+    }
   }
 
   return (

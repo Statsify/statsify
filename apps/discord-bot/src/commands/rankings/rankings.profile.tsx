@@ -22,8 +22,8 @@ const formatStat = (stat: PostLeaderboardRankingsResponse, game?: string) => {
 
   let color = "§7";
 
-  const green = [...LEADERBOARD_RATIOS.map((r) => r[0].toLowerCase())];
-  const red = [...LEADERBOARD_RATIOS.map((r) => r[1].toLowerCase())];
+  const green = LEADERBOARD_RATIOS.map((r) => r[0].toLowerCase());
+  const red = LEADERBOARD_RATIOS.map((r) => r[1].toLowerCase());
   const gold = [...LEADERBOARD_RATIOS.map((r) => r[2].toLowerCase()), "coins", "gold"];
   const yellow = ["assists", "gamesplayed", "lootchests"];
   const aqua = ["exp", "level", "diamond", "goals"];

@@ -213,11 +213,11 @@ for (let i = 0; i < serverCount; i++) {
 
     const emote = `<:${emojiResolved.name}:${emojiResolved.id}>`;
 
-    if (!isColorChanger) {
-      json[emoji.rank][emoji.index] = emote;
-    } else {
+    if (isColorChanger) {
       json[emoji.rank][emoji.category] = json[emoji.rank][emoji.category] || {};
       json[emoji.rank][emoji.category][emoji.index] = emote;
+    } else {
+      json[emoji.rank][emoji.index] = emote;
     }
   }
 }

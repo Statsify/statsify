@@ -99,10 +99,11 @@ export const ChallengesProfile = ({
   let table: JSX.Element;
 
   switch (api) {
-    case "overall":
+    case "overall": {
       table = <NormalTable challenges={challenges} t={t} gameIcons={gameIcons} />;
       break;
-    default:
+    }
+    default: {
       table = (
         <GameTable
           gameChallenges={challenges[api]}
@@ -111,6 +112,7 @@ export const ChallengesProfile = ({
         />
       );
       break;
+    }
   }
 
   const sidebar: SidebarItem[] = [[t("stats.total"), t(challenges.total), "§b"]];

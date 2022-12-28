@@ -18,7 +18,7 @@ export const SMASH_HEROES_MODES = new GameModes([
   { api: "solo", hypixel: "solo_normal" },
   { api: "doubles", hypixel: "2v2_normal" },
   { api: "teams", hypixel: "teams_normal" },
-  { api: "botman" },
+  { api: "botmon" },
   { api: "bulk" },
   { api: "cakeMonster" },
   { api: "cryomancer" },
@@ -31,7 +31,7 @@ export const SMASH_HEROES_MODES = new GameModes([
   { api: "sergeantShield" },
   { api: "shoop" },
   { api: "skullfire" },
-  { api: "spoderman" },
+  { api: "spooderman" },
   { api: "tinman" },
   { api: "voidCrawler" },
 
@@ -55,7 +55,7 @@ enum SmashHeroesClass {
   SERGEANT_SHIELD = "Sgt. Shield",
   SHOOP_DA_WHOOP = "Shoop",
   SKULLFIRE = "Skullfire",
-  SPODERMAN = "Spoderman",
+  SPODERMAN = "Spooderman",
   THE_BULK = "Bulk",
   TINMAN = "Tinman",
 }
@@ -95,7 +95,7 @@ export class SmashHeroes {
   public tinman: SmashHeroesKit;
 
   @Field()
-  public spoderman: SmashHeroesKit;
+  public spooderman: SmashHeroesKit;
 
   @Field()
   public skullfire: SmashHeroesKit;
@@ -107,7 +107,7 @@ export class SmashHeroes {
   public bulk: SmashHeroesKit;
 
   @Field()
-  public botman: SmashHeroesKit;
+  public botmon: SmashHeroesKit;
 
   @Field()
   public sanic: SmashHeroesKit;
@@ -139,7 +139,7 @@ export class SmashHeroes {
     this.doubles = new SmashHeroesMode(data, "2v2");
     this.teams = new SmashHeroesMode(data, "teams");
 
-    this.botman = new SmashHeroesKit("BOTMUN", data.class_stats);
+    this.botmon = new SmashHeroesKit("BOTMUN", data.class_stats);
     this.bulk = new SmashHeroesKit("THE_BULK", data.class_stats);
     this.cakeMonster = new SmashHeroesKit("CAKE_MONSTER", data.class_stats);
     this.cryomancer = new SmashHeroesKit("FROSTY", data.class_stats);
@@ -152,7 +152,7 @@ export class SmashHeroes {
     this.sergeantShield = new SmashHeroesKit("SERGEANT_SHIELD", data.class_stats);
     this.shoop = new SmashHeroesKit("SHOOP_DA_WHOOP", data.class_stats);
     this.skullfire = new SmashHeroesKit("SKULLFIRE", data.class_stats);
-    this.spoderman = new SmashHeroesKit("SPODERMAN", data.class_stats);
+    this.spooderman = new SmashHeroesKit("SPODERMAN", data.class_stats);
     this.tinman = new SmashHeroesKit("TINMAN", data.class_stats);
     this.voidCrawler = new SmashHeroesKit("DUSK_CRAWLER", data.class_stats);
 

@@ -30,24 +30,33 @@ const moduleMocker = new ModuleMocker(global);
 
 export const useMocker: MockFactory = (token) => {
   switch (token) {
-    case AuthService:
+    case AuthService: {
       return authService;
-    case GuildLeaderboardService:
+    }
+    case GuildLeaderboardService: {
       return guildLeaderboardService;
-    case GuildService:
+    }
+    case GuildService: {
       return guildService;
-    case HistoricalService:
+    }
+    case HistoricalService: {
       return historicalService;
-    case HypixelService:
+    }
+    case HypixelService: {
       return hypixelService;
-    case LeaderboardService:
+    }
+    case LeaderboardService: {
       return leaderboardService;
-    case MongoLeaderboardService:
+    }
+    case MongoLeaderboardService: {
       return mongoLeaderboardService;
-    case PlayerService:
+    }
+    case PlayerService: {
       return playerService;
-    case SkinService:
+    }
+    case SkinService: {
       return skinService;
+    }
   }
 
   if (typeof token === "function") {

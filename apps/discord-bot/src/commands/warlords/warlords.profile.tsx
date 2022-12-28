@@ -37,7 +37,7 @@ export const WarlordsProfile = ({
   let table: JSX.Element;
 
   switch (mode.api) {
-    case "overall":
+    case "overall": {
       table = (
         <Table.table>
           <Table.tr>
@@ -59,9 +59,11 @@ export const WarlordsProfile = ({
         </Table.table>
       );
       break;
-    case "classes":
+    }
+    case "classes": {
       table = <WarlordsClassTable warlords={warlords} t={t} />;
       break;
+    }
   }
 
   return (

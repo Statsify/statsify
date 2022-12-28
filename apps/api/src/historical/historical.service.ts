@@ -229,12 +229,12 @@ export class HistoricalService {
 
     let isNew = false;
 
-    if (!oldPlayer) {
+    if (oldPlayer) {
+      oldPlayer = deserialize(Player, flatten(oldPlayer));
+    } else {
       newPlayer.resetMinute = this.getMinute();
       oldPlayer = await this.reset(newPlayer, type);
       isNew = true;
-    } else {
-      oldPlayer = deserialize(Player, flatten(oldPlayer));
     }
 
     return [newPlayer, oldPlayer, isNew];
@@ -257,15 +257,15 @@ export class HistoricalService {
 
     let isNew = false;
 
-    if (!newPlayer) {
+    if (newPlayer) {
+      newPlayer = deserialize(Player, flatten(newPlayer));
+    } else {
       const livePlayer = await this.playerService.get(uuid, HypixelCache.LIVE);
       if (!livePlayer) throw new PlayerNotFoundException();
 
       livePlayer.resetMinute = this.getMinute();
       newPlayer = await this.reset(livePlayer, HistoricalTimes.MONTHLY);
       isNew = true;
-    } else {
-      newPlayer = deserialize(Player, flatten(newPlayer));
     }
 
     const LAST_MODELS = {

@@ -567,6 +567,7 @@
     "ended": "Avsluttet",
     "endurance": "Utholdenhet",
     "event-level": "Eventnivå",
+    "event-exp": "Event EXP",
     "exp": "EXP",
     "expGained": "EXP tjent",
     "extraUltimates": "Ekstra ultimater",
@@ -745,7 +746,7 @@
     "zombieKills": "Zombiedrap",
     "potionsBrewed": "Eliksir brygget",
     "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed",
+    "roundsCompleted": "Runder fullført",
     "totalExp": "Total EXP"
   },
   "tips": {

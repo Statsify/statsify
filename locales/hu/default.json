@@ -567,6 +567,7 @@
     "ended": "Véget ért",
     "endurance": "Kitartás",
     "event-level": "Event Szint",
+    "event-exp": "Event EXP",
     "exp": "EXP",
     "expGained": "Szerzett EXP",
     "extraUltimates": "Extra Ultimatek",
@@ -680,7 +681,7 @@
     "poopCollected": "Begyűjtött Ürülékek",
     "powerKicks": "Erős Lövések",
     "powerupActivations": "Elhasznált Power-Upok",
-    "powerups": "Power-Ups",
+    "powerups": "Power-Upok",
     "prefix": "Előtag",
     "prevent": "Meggátolt Sebzés",
     "progression": {
@@ -744,9 +745,9 @@
     "woolPlaced": "Letett Gyapjúk",
     "zombieKills": "Zombi Ölések",
     "potionsBrewed": "Főzött Bájitalok",
-    "powerupsCollected": "Power-Ups Collected",
+    "powerupsCollected": "Begyűjtött Power-Upok",
     "roundsCompleted": "Túlélt Körök",
-    "totalExp": "Total EXP"
+    "totalExp": "Összes XP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Csatlakozz a **$t(socials.discord)** és szerezz **-20% várakozási időt** $t(emojis:heart)",

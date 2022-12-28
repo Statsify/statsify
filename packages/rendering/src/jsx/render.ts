@@ -11,6 +11,7 @@ import Container from "typedi";
 import { Canvas, type CanvasRenderingContext2D } from "skia-canvas";
 import { FontRenderer } from "../font";
 import { IntrinsicRenders, intrinsicRenders } from "./instrinsics";
+import { WinterThemeService } from "../winter-theme.service";
 import { createInstructions } from "./create-instructions";
 import { getPositionalDelta, getTotalSize } from "./util";
 import { noop } from "@statsify/util";
@@ -61,12 +62,14 @@ const _render = (
 
   const applyDelta = (delta: number) => {
     switch (instruction.style.direction) {
-      case "row":
+      case "row": {
         x += delta;
         break;
-      case "column":
+      }
+      case "column": {
         y += delta;
         break;
+      }
     }
   };
 
@@ -125,6 +128,7 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
     ...theme?.context,
     canvasWidth: width,
     canvasHeight: height,
+    winterTheme: Container.get(WinterThemeService),
   };
 
   if (!context.renderer) context.renderer = Container.get(FontRenderer);

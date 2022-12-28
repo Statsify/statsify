@@ -50,11 +50,9 @@ const deep = <T>(fn: (...args: number[]) => unknown, ...args: T[]): T => {
   const obj: Record<string, unknown> = {};
 
   for (const key in args[0]) {
-    if (isObject(args[0][key])) {
-      obj[key] = deep(fn, ...args.map((a) => a[key]));
-    } else {
-      obj[key] = fn(...args.map((a) => a[key] as unknown as number));
-    }
+    obj[key] = isObject(args[0][key])
+      ? deep(fn, ...args.map((a) => a[key]))
+      : fn(...args.map((a) => a[key] as unknown as number));
   }
 
   return obj as T;
