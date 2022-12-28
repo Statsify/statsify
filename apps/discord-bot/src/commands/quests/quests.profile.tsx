@@ -26,7 +26,6 @@ import {
 } from "@statsify/schemas";
 import { Container, Footer, GameEntry, GameList, Header, SidebarItem } from "#components";
 import { DateTime } from "luxon";
-import { DeferredGradient, useGradient } from "@statsify/rendering";
 import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
 import { Palette, getColorPalette } from "../../themes/palette";
 import { ratio } from "@statsify/math";
