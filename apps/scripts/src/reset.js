@@ -20,3 +20,4 @@ await weekly.updateMany({}, { $unset: { lastReset: 1, nextReset: 1 } });
 await monthly.updateMany({}, { $unset: { lastReset: 1, nextReset: 1 } });
 
 console.log("Done!");
+process.exit(0);
