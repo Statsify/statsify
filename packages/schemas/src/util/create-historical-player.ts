@@ -22,7 +22,12 @@ export function createHistoricalPlayer<T>(oldOne: T, newOne: T): T {
     if (typeof oldOne[key] === "number" || newOneType === "number") {
       const ratioIndex = RATIOS.indexOf(_key);
 
-      if (ratioIndex !== -1) {
+      if (ratioIndex === -1) {
+        merged[key] = sub(
+          newOne[key] as unknown as number,
+          oldOne[key] as unknown as number
+        ) as unknown as T[keyof T];
+      } else {
         const numerator = sub(
           newOne[RATIO_STATS[ratioIndex][0] as unknown as keyof T] as unknown as number,
           oldOne[RATIO_STATS[ratioIndex][0] as unknown as keyof T] as unknown as number
@@ -38,23 +43,17 @@ export function createHistoricalPlayer<T>(oldOne: T, newOne: T): T {
           denominator,
           RATIO_STATS[ratioIndex][4] ?? 1
         ) as unknown as T[keyof T];
-      } else {
-        merged[key] = sub(
-          newOne[key] as unknown as number,
-          oldOne[key] as unknown as number
-        ) as unknown as T[keyof T];
       }
     } else if (newOneType === "string") {
       merged[key] = newOne[key];
     } else if (isObject(newOne[key])) {
-      if (key === "progression") {
-        merged[key] = newOne[key];
-      } else {
-        merged[key] = createHistoricalPlayer(
-          oldOne[key] ?? {},
-          newOne[key] ?? {}
-        ) as unknown as T[keyof T];
-      }
+      merged[key] =
+        key === "progression"
+          ? newOne[key]
+          : (createHistoricalPlayer(
+              oldOne[key] ?? {},
+              newOne[key] ?? {}
+            ) as unknown as T[keyof T]);
     }
   }
 

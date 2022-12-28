@@ -4,13 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "api-key": "node src/api-key.js",
     "lint": "TIMING=1 eslint './src/**/*.{ts,tsx,js,jsx}' --fix",
+    "api-key": "node src/api-key.js",
     "build-watch": "node src/build-watch.js",
+    "command-chars": "node --no-warnings src/command-chars.js",
+    "limit-redis": "node src/limit-redis.js",
     "purge": "node src/purge.js",
     "rank-emojis": "node src/rank-emojis.js",
-    "limit-redis": "node src/limit-redis.js",
-    "command-chars": "node --no-warnings src/command-chars.js"
+    "timestamp": "node --no-warnings src/timestamp.js"
   },
   "dependencies": {
     "@statsify/api-client": "workspace:^",

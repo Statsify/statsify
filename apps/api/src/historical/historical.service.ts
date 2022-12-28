@@ -326,10 +326,4 @@ export class HistoricalService {
 
     return Math.round(resetTime.toMillis() / 1000);
   }
-
-  private getLastResetTime(resetMinute: number, time: HistoricalType) {
-    const now = DateTime.now().toMillis();
-
-    return Math.round((now - (this.getNextResetTime(resetMinute, time) - now)) / 1000);
-  }
 }
