@@ -53,7 +53,6 @@ import { BlitzSGProfile } from "../blitzsg/blitzsg.profile";
 import { BridgeProfile } from "../duels/bridge.profile";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile";
-import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile";
@@ -332,15 +331,8 @@ export class HistoricalBase {
             })}\n`
           : undefined;
 
-        //TODO Modify this to use the player.nextReset key
         if (isNotLastHistorical)
-          content =
-            (content ?? "") + t("historical.reset", { time: this.getResetTime(player) });
-
-        //TODO Remove this when the implementation is completed
-        content += `\nLast Reset: ${player.lastReset}\nNext Reset:${
-          player.nextReset
-        } (${this.getResetTime(player)})`;
+          content = (content ?? "") + t("historical.reset", { time: player.nextReset });
 
         const profile = getProfile(
           {
@@ -368,35 +360,5 @@ export class HistoricalBase {
     }));
 
     return this.paginateService.paginate(context, pages);
-  }
-
-  //TODO Remove this when the implementation is completed
-  private getResetTime(player: Player) {
-    const now = DateTime.now();
-
-    const hasResetToday = player.resetMinute! <= now.hour * 60 + now.minute;
-
-    let resetTime = now
-      .minus({ hours: now.hour, minutes: now.minute })
-      .plus({ minutes: player.resetMinute! });
-
-    const isSunday = now.weekday === 7;
-    const isStartOfMonth = now.day === 1;
-
-    if (this.time === HistoricalTimes.DAILY && hasResetToday) {
-      resetTime = resetTime.plus({ days: 1 });
-    } else if (
-      this.time === HistoricalTimes.WEEKLY &&
-      ((isSunday && hasResetToday) || !isSunday)
-    ) {
-      resetTime = resetTime.plus({ week: 1 }).minus({ days: isSunday ? 0 : now.weekday });
-    } else if (
-      this.time === HistoricalTimes.MONTHLY &&
-      ((isStartOfMonth && hasResetToday) || !isStartOfMonth)
-    ) {
-      resetTime = resetTime.minus({ days: now.day - 1 }).plus({ months: 1 });
-    }
-
-    return Math.round(resetTime.toMillis() / 1000);
   }
 }
