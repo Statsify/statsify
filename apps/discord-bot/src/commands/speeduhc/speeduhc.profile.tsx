@@ -77,7 +77,7 @@ export const SpeedUHCProfile = ({
           <If condition={Boolean("assists" in stats)}>
             <Table.td
               title={t("stats.assists")}
-              value={t((stats as SpeedUHCMode).assists)}
+              value={t((stats as SpeedUHCMode).assists ?? 0)}
               color="§e"
             />
           </If>

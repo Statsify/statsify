@@ -131,12 +131,12 @@ export const BlitzSGProfile = ({
   let table: JSX.Element;
 
   switch (mode.api) {
-    case "overall": {
+    case "overall":
       table = <OverallBlitzSGTable blitzsg={blitzsg} t={t} />;
 
       sidebar.push([t("stats.kit"), prettify(blitzsg.kit), "§e"]);
       break;
-    }
+
     default: {
       const colors = ["§a", "§a", "§2", "§2", "§e", "§e", "§6", "§6", "§c", "§4"];
       const stats = blitzsg[mode.api];

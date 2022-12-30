@@ -35,36 +35,35 @@ export const HistoricalHeader = ({
   let end: DateTime;
 
   switch (time) {
-    case HistoricalType.DAILY: {
+    case HistoricalType.DAILY:
       start = now.minus({ days: 1 });
       end = now;
       break;
-    }
-    case HistoricalType.WEEKLY: {
+
+    case HistoricalType.WEEKLY:
       start = now.minus({ days: now.weekday });
       end = now;
       break;
-    }
-    case HistoricalType.MONTHLY: {
+
+    case HistoricalType.MONTHLY:
       start = now.minus({ months: 1, days: now.day - 1 });
       end = now;
       break;
-    }
-    case HistoricalType.LAST_DAY: {
+
+    case HistoricalType.LAST_DAY:
       start = now.minus({ days: 2 });
       end = now.minus({ days: 1 });
       break;
-    }
-    case HistoricalType.LAST_WEEK: {
+
+    case HistoricalType.LAST_WEEK:
       start = now.minus({ week: 1, days: now.weekday });
       end = now.minus({ days: now.weekday });
       break;
-    }
-    case HistoricalType.LAST_MONTH: {
+
+    case HistoricalType.LAST_MONTH:
       start = now.minus({ months: 1, days: now.day - 1 });
       end = now.minus({ days: now.day });
       break;
-    }
   }
 
   if (startTime) start = startTime;
