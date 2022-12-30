@@ -116,22 +116,21 @@ const keyManager = async () => {
   ]);
 
   switch (method) {
-    case "create": {
+    case "create":
       await createNewKey();
       break;
-    }
-    case "delete": {
+
+    case "delete":
       await deleteKey();
       break;
-    }
-    case "list": {
+
+    case "list":
       await listKeys();
       break;
-    }
-    case "edit": {
+
+    case "edit":
       await editKey();
       break;
-    }
   }
 
   process.exit(0);

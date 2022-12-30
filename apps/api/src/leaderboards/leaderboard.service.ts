@@ -96,11 +96,11 @@ export abstract class LeaderboardService {
     let highlight: number | undefined = undefined;
 
     switch (type) {
-      case LeaderboardQuery.PAGE: {
+      case LeaderboardQuery.PAGE:
         top = (input as number) * PAGE_SIZE;
         bottom = top + PAGE_SIZE;
         break;
-      }
+
       case LeaderboardQuery.INPUT: {
         const ranking = await this.searchLeaderboardInput(input as string, field);
         highlight = ranking - 1;
