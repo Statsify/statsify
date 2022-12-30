@@ -93,12 +93,24 @@ export class HistoricalService {
   }
 
   public async checkSweepPlayers() {
-    await this.getAndSweep(this.dailyModel, this.lastDayModel, HistoricalTimes.DAILY);
-    await this.getAndSweep(this.weeklyModel, this.lastWeekModel, HistoricalTimes.WEEKLY);
+    const dPlayers = await this.getAndSweep(
+      this.dailyModel,
+      this.lastDayModel,
+      HistoricalTimes.DAILY
+    );
+
+    const wPlayers = await this.getAndSweep(
+      this.weeklyModel,
+      this.lastWeekModel,
+      HistoricalTimes.WEEKLY,
+      dPlayers
+    );
+
     await this.getAndSweep(
       this.monthlyModel,
       this.lastMonthModel,
-      HistoricalTimes.MONTHLY
+      HistoricalTimes.MONTHLY,
+      wPlayers
     );
   }
 
@@ -106,17 +118,22 @@ export class HistoricalService {
   public async getAndSweep(
     model: PlayerModel,
     lastModel: PlayerModel,
-    type: HistoricalType
+    type: HistoricalType,
+    playerMap?: Map<String, Player | null>
   ) {
     const sweepPlayers = await model
-      .find({ nextReset: { $lt: Math.round(DateTime.now().toMillis() / 1000) } })
+      .find({ nextReset: { $lte: Math.round(DateTime.now().toMillis() / 1000) } })
       .select({ uuid: true, resetMinute: true })
       .limit(config("environment") === "dev" ? 20 : 100)
       .lean()
       .exec();
 
+    if (!playerMap) playerMap = new Map<String, Player>();
     sweepPlayers.forEach(async ({ uuid, resetMinute }) => {
-      const player = await this.playerService.get(uuid, HypixelCache.LIVE);
+      const player =
+        playerMap?.get(uuid) ?? (await this.playerService.get(uuid, HypixelCache.LIVE));
+
+      playerMap?.set(uuid, player);
 
       if (player) {
         const flatPlayer = flatten(player);
@@ -130,6 +147,8 @@ export class HistoricalService {
         this.logger.error(`Could not sweep player with uuid ${uuid}`);
       }
     });
+
+    return playerMap;
   }
 
   public async getAndReset(tag: string, type: HistoricalType, time?: number) {
