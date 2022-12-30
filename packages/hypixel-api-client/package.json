@@ -9,7 +9,6 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@statsify/util": "workspace:^",
-    "axios": "^0.27.2"
+    "@statsify/util": "workspace:^"
   }
 }

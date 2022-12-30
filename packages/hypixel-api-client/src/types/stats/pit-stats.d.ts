@@ -8,12 +8,12 @@
 
 import { BasicStats, IntRange, NBTData } from "../helpers";
 
-export enum HypixelPitGenesisFactions {
+export enum PitGenesisFactions {
   angel = "angel",
   demon = "demon",
 }
 
-export interface HypixelPitContract {
+export interface PitContract {
   /**
    * either EASY or HARD, representing a Novice or Big Time contract respectively.
    */
@@ -52,7 +52,7 @@ export interface HypixelPitContract {
   key: string;
 }
 
-export interface HypixelPitBounty {
+export interface PitBounty {
   /**
    * The gold amount of the bounty bump
    */
@@ -69,7 +69,7 @@ export interface HypixelPitBounty {
   timestamp: number;
 }
 
-interface HypixelPitShopsThrottle {
+interface PitShopsThrottle {
   [key: `${"buyer_" | ""}${"Hay" | "Bread" | "Fish"}`]: {
     /**
      * The latest date the player sold items to that NPC.
@@ -83,7 +83,7 @@ interface HypixelPitShopsThrottle {
   };
 }
 
-export interface HypixelPitStatsPTL {
+export interface PitStatsPTL {
   assists: number;
   cash_earned: number;
   damage_dealt: number;
@@ -179,7 +179,7 @@ export interface HypixelPitStatsPTL {
   gold_from_selling_fish: number;
 }
 
-export interface HypixelPitOutgoingOffer {
+export interface PitOutgoingOffer {
   /**
    * Unix timestamp of when the command was sent.
    */
@@ -216,32 +216,32 @@ export interface HypixelPitOutgoingOffer {
   target: string;
 }
 
-export interface HypixelPitKingsQuest {
+export interface PitKingsQuest {
   kills: number;
   renown: number;
   last_completed: number;
   last_accepted: number;
 }
 
-export interface HypixelPitUnlocks {
+export interface PitUnlocks {
   tier: number;
   acquireDate: number;
   key: string;
 }
 
-export interface HypixelPitPrestiges {
+export interface PitPrestiges {
   index: IntRange<1, 50>;
   xp_on_prestige: number;
   timestamp: number;
 }
 
-export interface HypixelPitRenownUnlocks {
+export interface PitRenownUnlocks {
   tier: number;
   acquireDate: number;
   key: string;
 }
 
-export enum HypixelPitChatOptions {
+export enum PitChatOptions {
   "kill_feed",
   "prestige_announcements",
   "minor_events",
@@ -251,7 +251,7 @@ export enum HypixelPitChatOptions {
   "misc",
 }
 
-export type IHypixelPitProfile = {
+export interface PitProfile {
   //
   // All index types are here for use with iteration,
   // these are also all added as records to the actual type
@@ -262,7 +262,7 @@ export type IHypixelPitProfile = {
    * Each unlock contains a "tier" (set to 0 if the upgrade has no tier), Unix timestamp, and a key.
    * The player's first prestige is stored as unlocks, not unlocks_0.
    */
-  [unlocksIndex: `unlocks${"" | `_${number}`}`]: HypixelPitUnlocks;
+  [unlocksIndex: `unlocks${"" | `_${number}`}`]: PitUnlocks;
 
   /**
    * The player's selected perks.
@@ -277,7 +277,7 @@ export type IHypixelPitProfile = {
   /**
    * The player's /pitchat settings.
    */
-  [chatOption: `chat_option_${keyof typeof HypixelPitChatOptions}`]: boolean;
+  [chatOption: `chat_option_${keyof typeof PitChatOptions}`]: boolean;
 
   /**
    * Unix timestamps of when the player last claimed various faction items and perks.
@@ -285,13 +285,13 @@ export type IHypixelPitProfile = {
   [
     genesisClaims: `genesis_weekly_perks_${
       | `perma_${"xp" | "gold"}`
-      | `claim_item_${HypixelPitGenesisFactions}`}`
+      | `claim_item_${PitGenesisFactions}`}`
   ]: number;
 
   /**
    * The number of times the player has claimed the Tier VII reward of the respective faction.
    */
-  [genesisPerma: `genesis_perma_${HypixelPitGenesisFactions}`]: number;
+  [genesisPerma: `genesis_perma_${PitGenesisFactions}`]: number;
 
   /**
    * The player's selected killstreaks.
@@ -306,7 +306,7 @@ export type IHypixelPitProfile = {
   /**
    * The current outgoing offers the player has,created with /offer. The objects, each corresponding to one use of the /offer command, contain several keys.
    */
-  outgoing_offers: HypixelPitOutgoingOffer[];
+  outgoing_offers: PitOutgoingOffer[];
 
   /**
    * The Unix timestamp of the player's most recent save of their API stats. Updates to the current
@@ -318,7 +318,7 @@ export type IHypixelPitProfile = {
   /**
    * Stats for the most recent King's Quest the player started.
    */
-  king_quest: HypixelPitKingsQuest;
+  king_quest: PitKingsQuest;
 
   /**
    * Unix timestamp of when the player last received participation XP.
@@ -364,7 +364,7 @@ export type IHypixelPitProfile = {
   /**
    * The player's currently in-progress contract.
    */
-  contract: HypixelPitContract;
+  contract: PitContract;
 
   /**
    * Unix timestamp of the player's last completed contract.
@@ -382,7 +382,7 @@ export type IHypixelPitProfile = {
   /**
    * The player's most recently-chosen faction on the Genesis map.
    */
-  genesis_allegiance: Uppercase<HypixelPitGenesisFactions>;
+  genesis_allegiance: Uppercase<PitGenesisFactions>;
 
   /**
    * The player's inventory contents. Stored as a byte array.
@@ -418,7 +418,7 @@ export type IHypixelPitProfile = {
   /**
    * Array of prestiges.
    */
-  prestiges: HypixelPitPrestiges[];
+  prestiges: PitPrestiges[];
 
   /**
    * Byte array of the player's Spire stash inventory, containing the player's items that will be given
@@ -442,7 +442,7 @@ export type IHypixelPitProfile = {
   /**
    * Contains several objects, each corresponding to a renown unlock.
    */
-  renown_unlocks: HypixelPitRenownUnlocks[];
+  renown_unlocks: PitRenownUnlocks[];
 
   /**
    * Unix timestamp of the last time the player disconnected while in combat.
@@ -479,12 +479,12 @@ export type IHypixelPitProfile = {
     number
   ];
 
-  ended_contracts: HypixelPitContract[];
+  ended_contracts: PitContract[];
 
   /**
    * List of bounty bumps
    */
-  bounties: HypixelPitBounty[];
+  bounties: PitBounty[];
 
   /**
    * Whether the player chooses to receive Night Quests.
@@ -511,7 +511,7 @@ export type IHypixelPitProfile = {
    */
   disable_spawn_items: boolean;
 
-  shops_throttle: HypixelPitShopsThrottle;
+  shops_throttle: PitShopsThrottle;
 
   /**
    * Array of items that the player has Autobuy enabled on.
@@ -522,9 +522,7 @@ export type IHypixelPitProfile = {
    * List of the three contracts the player can select.
    * Returns null if the player has no contracts to select
    */
-  contract_choices:
-    | [HypixelPitContract?, HypixelPitContract?, HypixelPitContract?]
-    | null;
+  contract_choices: [PitContract?, PitContract?, PitContract?] | null;
 
   /**
    * The player has in their Mystic Well.
@@ -629,20 +627,20 @@ export type IHypixelPitProfile = {
    * Used by admins to test the contracts feature.
    */
   contract_offers: any;
-};
+}
 
-export type HypixelPitProfile = IHypixelPitProfile &
-  Record<`unlocks${"" | `_${IntRange<1, 51>}`}`, HypixelPitUnlocks> &
+export type HypixelPitProfile = PitProfile &
+  Record<`unlocks${"" | `_${IntRange<1, 51>}`}`, PitUnlocks> &
   Record<`selected_perk_${IntRange<0, 4>}`, string> &
   Record<`cash_during_prestige_${IntRange<0, 50>}`, number> &
-  Record<`chat_option_${keyof typeof HypixelPitChatOptions}`, boolean> &
+  Record<`chat_option_${keyof typeof PitChatOptions}`, boolean> &
   Record<
     `genesis_weekly_perks_${
       | `perma_${"xp" | "gold"}`
-      | `claim_item_${keyof typeof HypixelPitGenesisFactions}`}`,
+      | `claim_item_${keyof typeof PitGenesisFactions}`}`,
     number
   > &
-  Record<`genesis_perma_${keyof typeof HypixelPitGenesisFactions}`, number> &
+  Record<`genesis_perma_${keyof typeof PitGenesisFactions}`, number> &
   Record<`selected_killstreak_${IntRange<1, 5>}`, string> &
   Record<`${"gold" | "xp"}_stack_streak_${IntRange<0, 51>}`, number> &
   Record<`selected_killstreak_${IntRange<1, 5>}`, string>;
@@ -651,8 +649,6 @@ export interface HypixelPitStats extends BasicStats {
   packages?: ["supporter"];
   restored_inv_backup_1?: number;
   stats_move_1: number;
-  pit_stats_ptl?: HypixelPitStatsPTL & unknown;
+  pit_stats_ptl?: PitStatsPTL & unknown;
   profile?: HypixelPitProfile;
 }
-
-(({} as HypixelPitProfile).selected_perk_1);

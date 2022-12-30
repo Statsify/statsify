@@ -1736,7 +1736,6 @@ __metadata:
   resolution: "@statsify/hypixel-api-client@workspace:packages/hypixel-api-client"
   dependencies:
     "@statsify/util": "workspace:^"
-    axios: ^0.27.2
   languageName: unknown
   linkType: soft
 

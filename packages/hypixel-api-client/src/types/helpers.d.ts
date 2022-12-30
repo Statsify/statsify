@@ -26,13 +26,13 @@ export type IntRange<FROM extends number, TO extends number> = Exclude<
   Enumerate<FROM>
 >;
 
-interface BasicStats {
+export interface BasicStats {
   [key: string]: any;
   coins?: number;
   lastTourneyAd?: number;
 }
 
-interface NBTData {
+export interface NBTData {
   type: number;
   data: ArrayBuffer;
 }

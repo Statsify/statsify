@@ -7,12 +7,10 @@
  */
 
 import type { APIData, BasicStats } from "./helpers";
+import type { HypixelGameMode } from "./games";
 import type { HypixelPitStats } from "./stats";
 
-interface IHypixelStats {
-  [key: HypixelGameMode]: BasicStats;
+export type HypixelPlayerStats = {
+  [key: HypixelGameMode]: BasicStats | APIData;
   Pit: HypixelPitStats;
-}
-
-export type HypixelPlayerStats = Record<HypixelGameMode, APIData | BasicStats> &
-  IHypixelStats;
+};

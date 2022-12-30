@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export enum HypixelNormalRanks {
+export enum HypixelNormalRank {
   "NONE",
   "NORMAL",
   "VIP",
@@ -22,4 +22,4 @@ export enum HypixelSpecialRanks {
   "OWNER",
 }
 
-export type HypixelRanks = HypixelNormalRanks | HypixelSpecialRanks;
+export type HypixelRanks = HypixelNormalRank | HypixelSpecialRanks;

@@ -6,42 +6,100 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Axios, { AxiosError, AxiosInstance } from "axios";
 import { HypixelPlayerResponse } from "./types";
 import { setTimeout } from "node:timers/promises";
 
-export class HypixelKeyRejectedError extends Error {
-  public constructor(message: string) {
-    super(message);
-    this.name = "EHYAPIKEY";
-  }
-}
-
 export class HypixelAPIError extends Error {
+  public static BadRequest = new HypixelAPIError("Bad Request");
+  public static InvalidAPIKey = new HypixelAPIError("Invalid API Key");
+  public static NotFound = new HypixelAPIError("Not Found");
+  public static InvalidData = new HypixelAPIError("Invalid Data");
+  public static RatelimitExceeded = new HypixelAPIError("Ratelimit Exceeded");
+  public static InternalServerError = new HypixelAPIError("Internal Server Error");
+  public static DataUnavailable = new HypixelAPIError("Data Unavailable");
+  public static UnknownError = new HypixelAPIError("Unknown Error");
+  public static RequestTimeout = new HypixelAPIError("Request Timeout");
+
   public constructor(message: string) {
     super(message);
-    this.name = "EHYAPI";
+    this.name = HypixelAPIError.name;
+  }
+
+  public static fromCode(code: number) {
+    switch (code) {
+      case 400: {
+        return HypixelAPIError.BadRequest;
+      }
+      case 403: {
+        return HypixelAPIError.InvalidAPIKey;
+      }
+      case 404: {
+        return HypixelAPIError.NotFound;
+      }
+      case 422: {
+        return HypixelAPIError.InvalidData;
+      }
+      case 429: {
+        return HypixelAPIError.RatelimitExceeded;
+      }
+      case 500: {
+        return HypixelAPIError.InternalServerError;
+      }
+      case 503: {
+        return HypixelAPIError.DataUnavailable;
+      }
+      default: {
+        return HypixelAPIError.UnknownError;
+      }
+    }
   }
 }
 
-export type HypixelAPIConfig = {
+export interface HypixelAPIConfig {
   key: string;
   autoSleep: boolean;
-};
+  timeout?: number;
+}
+
+/**
+ * ID - Guild ID
+ * Player - Player UUID
+ * Name - Guild name
+ */
+export type GuildQuery = { id: string } | { player: string } | { name: string };
+
+/**
+ * UUID - Auction UUID
+ * Player - Player UUID
+ * Profile - Profile UUID
+ */
+export type SkyblockAuctionQuery =
+  | { uuid: string }
+  | { player: string }
+  | { profile: string };
+
+export type Resource =
+  | "games"
+  | "achievements"
+  | "challenges"
+  | "quests"
+  | "guilds/achievements"
+  | "vanity/pets"
+  | "vanity/companions"
+  | "skyblock/collections"
+  | "skyblock/skills"
+  | "skyblock/items"
+  | "skyblock/election"
+  | "skyblock/bingo";
 
 export class HypixelAPI {
   public limit: number;
   public remaining: number;
+  public retryAfter?: number;
 
-  private axios: AxiosInstance;
-  private config: HypixelAPIConfig;
-
-  public constructor(config: HypixelAPIConfig) {
-    this.axios = Axios.create({
-      baseURL: "https://api.hypixel.net/",
-      headers: { "API-KEY": config.key },
-    });
-    this.config = config;
+  public constructor(private config: HypixelAPIConfig) {
+    this.limit = 120;
+    this.remaining = this.limit;
   }
 
   public player(uuid: string): Promise<HypixelPlayerResponse | undefined> {
@@ -60,7 +118,7 @@ export class HypixelAPI {
     return this.get("status", { uuid });
   }
 
-  public guild(params: { id?: string; player?: string; name?: string }) {
+  public guild(params: GuildQuery) {
     return this.get("guild", params);
   }
 
@@ -68,7 +126,7 @@ export class HypixelAPI {
     return this.get("boosters");
   }
 
-  public counts() {
+  public gamecounts() {
     return this.get("counts");
   }
 
@@ -76,7 +134,7 @@ export class HypixelAPI {
     return this.get("leaderboards");
   }
 
-  public punishmentstats() {
+  public watchdog() {
     return this.get("punishmentstats");
   }
 
@@ -84,7 +142,7 @@ export class HypixelAPI {
     return this.get("skyblock/news");
   }
 
-  public skyblockAuction(params: { uuid?: string; player?: string; profile?: string }) {
+  public skyblockAuction(params: SkyblockAuctionQuery) {
     return this.get("skyblock/auction", params);
   }
 
@@ -116,68 +174,65 @@ export class HypixelAPI {
     return this.get("skyblock/firesales");
   }
 
-  public async getResource(
-    resource:
-      | "games"
-      | "achievements"
-      | "challenges"
-      | "quests"
-      | "guilds/achievements"
-      | "vanity/pets"
-      | "vanity/companions"
-      | "skyblock/collections"
-      | "skyblock/skills"
-      | "skyblock/items"
-      | "skyblock/election"
-      | "skyblock/bingo"
-  ) {
-    const response = await Axios.get(resource, {
-      baseURL: "https://api.hypixel.net/resources/",
-    });
-    return response.data;
+  public async resource(resource: Resource) {
+    return this.get(`resources/${resource}`);
   }
 
+  /**
+   *
+   * @param endpoint The endpoint to fetch from https://api.hypixel.net/
+   * @param params The query parameters to send
+   * @returns The API response
+   * @throws HypixelAPIError
+   */
   private async get<T>(
     endpoint: string,
-    params?: Record<string, string | undefined>
+    params: Record<string, string> = {}
   ): Promise<T | undefined> {
+    const controller = new AbortController();
+
+    const url = new URL(
+      `https://api.hypixel.net${endpoint}?${new URLSearchParams(params)}`
+    );
+
     try {
-      const response = await this.axios.get(endpoint, { params });
-
-      this.limit = Number(response.headers["rateLimit-limit"]);
-      this.remaining = Number(response.headers["rateLimit-remaining"]);
-
-      return response.data;
-    } catch (error: any) {
-      switch (error.code) {
-        case 429: {
-          if (this.config.autoSleep) {
-            await setTimeout(
-              Number((error as AxiosError)?.response?.headers?.["retry-after"] ?? 60) *
-                1000
-            );
-            return await this.get(endpoint, params);
-          } else {
-            throw error;
-          }
-        }
-
-        case 403: {
-          throw new HypixelKeyRejectedError(
-            `Hypixel API key "${this.config.key}" was rejected!`
-          );
-        }
-
-        case 500: {
-          throw new HypixelAPIError(
-            "The Hypixel API has encountered an error with our request!"
-          );
-        }
-
-        default: {
-          throw error;
-        }
+      if (this.config.timeout) {
+        setTimeout(this.config.timeout, controller.abort.bind(controller));
       }
+
+      const response = await fetch(url, {
+        headers: { "API-KEY": this.config.key },
+        method: "GET",
+        signal: controller.signal,
+      });
+
+      const headers = response.headers;
+      const currentLimit = headers.get("rateLimit-limit");
+      const currentRemaining = headers.get("rateLimit-remaining");
+      const currentRetryAfter = headers.get("retry-after");
+
+      this.limit = currentLimit ? +currentLimit : this.limit;
+      this.remaining = currentRemaining ? +currentRemaining : this.remaining - 1;
+
+      if (currentRetryAfter) this.retryAfter = +currentRetryAfter * 1000;
+      if (!response.ok) throw HypixelAPIError.fromCode(response.status);
+
+      this.retryAfter = undefined;
+
+      const data = await response.json();
+      return data;
+    } catch (error: any) {
+      if (error === HypixelAPIError.RatelimitExceeded && this.config.autoSleep) {
+        const sleep = this.retryAfter ?? 60_000;
+        await setTimeout(sleep);
+        return this.get(endpoint, params);
+      }
+
+      this.retryAfter = undefined;
+
+      if (error.name === "AbortError") throw HypixelAPIError.RequestTimeout;
+
+      throw error;
     }
   }
 }

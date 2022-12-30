@@ -6,6 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export declare class BaseHypixelResponse {
-  public success: boolean;
+export interface BaseHypixelResponse {
+  success: boolean;
 }

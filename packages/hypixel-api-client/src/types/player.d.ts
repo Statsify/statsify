@@ -8,108 +8,114 @@
 
 import { BaseHypixelResponse } from "./base-hypixel-response";
 import { HypixelAchievementMode, HypixelGameMode, HypixelLobby } from "./games";
-import { HypixelNormalRanks } from "./ranks";
+import { HypixelNormalRank } from "./ranks";
 import { HypixelPlayerStats } from "./player-stats";
 
 export type ChallengesTime = `day_${string}` | "all__time";
 export type AchievementName = `${HypixelAchievementMode}_${string}`;
 
-export declare class HypixelPlayerChallenges {
+export interface PeriodicChallenges {
   [key: `${Uppercase<HypixelGameMode>}_${string}`]: number;
 }
 
-export declare class HypixelPlayerQuest {
-  public completions?: { time: number }[];
-  public active?: {
+export type Challenges = {
+  [key: ChallengesTime]: PeriodicChallenges;
+  all_time?: PeriodicChallenges;
+};
+
+export interface Quest {
+  completions?: { time: number }[];
+  active?: {
     started?: number;
     objectives?: { [key: string]: number };
   };
 }
 
-export declare class HypixelPlayer_Settings {
-  public fishCollectorShowCaught?: boolean;
+export interface PlayerSettings {
+  fishCollectorShowCaught?: boolean;
 }
 
-export declare class HypixelPlayerSeasonal {
+export interface SeasonalStats {
   [key: "halloween" | "summer"]: { "2022"?: { levelling?: { experience: number } } };
-  public silver: number;
+  silver: number;
 }
 
-export type HypixelPlayerAchievementRewardsNew = {
+export type AchievementRewardsNew = {
   [key: `for_points_${number}00`]: number;
 };
 
-export declare class HypixelPlayer<PName = string> {
+export interface SocialMedia {
+  links: {
+    DISCORD?: string;
+    HYPIXEL?: string;
+    INSTAGRAM?: string;
+    MIXER?: string;
+    TWITCH?: string;
+    TWITTER?: string;
+    YOUTUBE?: string;
+  };
+}
+
+export type ParkourCompletions = {
+  [key: HypixelLobby]: { timeStart?: number; timeTook?: number }[];
+};
+
+export interface HypixelPlayer<PName = string> {
   [key: string]: any;
 
   /**
    * The mongo ID of the player in hypixel
    */
-  public _id?: string;
+  _id?: string;
 
-  public _settings?: HypixelPlayer_Settings;
+  _settings?: PlayerSettings;
 
   /**
    * The players UUID
    */
-  public uuid: string;
+  uuid: string;
 
   /**
    * The timestamp of the players first login to hypixel
    */
-  public firstLogin?: number;
+  firstLogin?: number;
 
   /**
    * The name of the player all lowercase
    */
-  public playername?: Lowercase<PName>;
+  playername?: Lowercase<PName>;
 
   /**
    * The name of the player
    */
-  public displayname: PName;
+  displayname: PName;
 
-  public achievementsOneTime?: AchievementName[];
-  public achievementRewardsNew?: HypixelPlayerAchievementRewardsNew;
-  public networkExp?: number;
-  public karma?: number;
-  public stats?: HypixelPlayerStats;
-  public socialMedia?: {
-    links: {
-      DISCORD?: string;
-      HYPIXEL?: string;
-      INSTAGRAM?: string;
-      MIXER?: string;
-      TWITCH?: string;
-      TWITTER?: string;
-      YOUTUBE?: string;
-    };
-  };
-  public achievements?: Record<AchievementName, number>;
-  public newPackageRank?: HypixelNormalRanks;
-  public totalRewards?: number;
-  public totalDailyRewards?: number;
-  public rewardStreak?: number;
-  public rewardScore?: number;
-  public rewardHighScore?: number;
-  public achievementPoints?: number;
-  public battlePassGlowStatus?: boolean;
-  public firstLogin?: number;
-  public seasonal?: HypixelPlayerSeasonal;
-  public challenges?: {
-    [key: ChallengesTime]: HypixelPlayerChallenges;
-    all_time?: HypixelPlayerChallenges;
-  };
-  public quests?: Record<string, HypixelPlayerQuest>;
-  public parkourCheckpointBests?: { [key: HypixelLobby]: number[] };
-  public parkourCompletions?: {
-    [key: HypixelLobby]: { timeStart?: number; timeTook?: number }[];
-  };
-  public rankPlusColor?: string;
-  public monthlyPackageRank?: "NONE" | "SUPERSTAR";
-  public monthlyRankColor?: "GOLD" | "AQUA";
+  achievementsOneTime?: AchievementName[];
+  achievementRewardsNew?: AchievementRewardsNew;
+  networkExp?: number;
+  karma?: number;
+  stats?: HypixelPlayerStats;
+  socialMedia?: SocialMedia;
+  achievements?: Record<AchievementName, number>;
+  newPackageRank?: HypixelNormalRank;
+  totalRewards?: number;
+  totalDailyRewards?: number;
+  rewardStreak?: number;
+  rewardScore?: number;
+  rewardHighScore?: number;
+  achievementPoints?: number;
+  battlePassGlowStatus?: boolean;
+  firstLogin?: number;
+  seasonal?: SeasonalStats;
+  challenges?: Challenges;
+  quests?: Record<string, Quest>;
+  parkourCheckpointBests?: { [key: HypixelLobby]: number[] };
+  parkourCompletions?: ParkourCompletions;
+  rankPlusColor?: string;
+  monthlyPackageRank?: "NONE" | "SUPERSTAR";
+  monthlyRankColor?: "GOLD" | "AQUA";
 }
 
-export declare class HypixelPlayerResponse extends BaseHypixelResponse {
-  public player: HypixelPlayer;
+export interface HypixelPlayerResponse extends BaseHypixelResponse {
+  player: HypixelPlayer;
 }
