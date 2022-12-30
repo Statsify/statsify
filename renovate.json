@@ -13,7 +13,7 @@
         "commitMessagePrefix": "chore(deps):"
       },
       {
-        "matchPackagePatterns": ["chalk"],
+        "matchPackagePatterns": ["chalk", "@swc/cli", "@swc/core", "@swc/jest"],
         "enabled": false
       },
       {

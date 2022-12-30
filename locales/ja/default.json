@@ -9,7 +9,7 @@
     "mojang-player": "A Minecraft username or UUID",
     "number": "A number",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard stat to view",
+    "player-leaderboard": "Choose a leaderboard",
     "reason": "The reason for closing the support ticket",
     "server": "A Minecraft server name or a server IP",
     "tags-content": "The content of the tag",
@@ -32,6 +32,11 @@
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "View someone's Minecraft and Optifine capes",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
+    "quests-command": "View your {{name}} questing stats",
+    "quests": "$t(commands.hypixel-command, { \"name\": \"Questing\" })",
+    "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
+    "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
+    "quests-weekly": "$t(commands.quests-command, { \"name\": \"Weekly\" })",
     "close": "Close the current support ticket",
     "colors": "A list of Minecraft color codes",
     "commands": "View Statsify command usage",
@@ -89,7 +94,8 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View leaderboards for {{name}} stats",
+    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
     "leaderboard-general": "$t(commands.leaderboard-command, { \"name\": \"General\" })",
@@ -99,6 +105,7 @@
     "leaderboard-parkour": "$t(commands.leaderboard-command, { \"name\": \"Parkour\" })",
     "leaderboard-pit": "$t(commands.leaderboard-command, { \"name\": \"Pit\" })",
     "leaderboard-quake": "$t(commands.leaderboard-command, { \"name\": \"Quake\" })",
+    "leaderboard-quests": "$t(commands.leaderboard-command, { \"name\": \"Quests\" })",
     "leaderboard-skywars": "$t(commands.leaderboard-command, { \"name\": \"SkyWars\" })",
     "leaderboard-smashheroes": "$t(commands.leaderboard-command, { \"name\": \"Smash Heroes\" })",
     "leaderboard-speeduhc": "$t(commands.leaderboard-command, { \"name\": \"Speed UHC\" })",
@@ -114,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "View your mutual Hypixel friends with another player",
-    "namehistory": "View someone's Minecraft name history",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "View Statsify's creators and contributors",
@@ -129,6 +135,7 @@
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
     "rankings-command": "View your top {{name}} leaderboard positions",
+    "rankings-challenges": "$t(commands.rankings-command, { \"name\": \"Challenges\" })",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
     "rankings-general": "$t(commands.rankings-command, { \"name\": \"General\" })",
@@ -138,6 +145,7 @@
     "rankings-parkour": "$t(commands.rankings-command, { \"name\": \"Parkour\" })",
     "rankings-pit": "$t(commands.rankings-command, { \"name\": \"Pit\" })",
     "rankings-quake": "$t(commands.rankings-command, { \"name\": \"Quake\" })",
+    "rankings-quests": "$t(commands.rankings-command, { \"name\": \"Quests\" })",
     "rankings-skywars": "$t(commands.rankings-command, { \"name\": \"SkyWars\" })",
     "rankings-smashheroes": "$t(commands.rankings-command, { \"name\": \"Smash Heroes\" })",
     "rankings-speeduhc": "$t(commands.rankings-command, { \"name\": \"Speed UHC\" })",
@@ -230,7 +238,7 @@
     }
   },
   "cooldown": {
-    "description": "Please wait `{{time}}` before reusing `{{command}}`.\n\nLearn how to reduce cooldowns [here](https://statsify.net/premium)",
+    "description": "`{{command}}`を再使用する前に`{{time}}`をお待ちください。\n\nクールダウンを減らす方法を[ここ](https://statsify.net/premium)から獲得できます",
     "title": "Active Cooldown"
   },
   "embeds": {
@@ -396,7 +404,7 @@
       "title": "Leaderboard Not Found"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account.",
+      "description": "<@{{tag}}> は **認証済み**ではありません。アカウントを確認するには、<@{{tag}}>が `/verify` を実行する必要があります。",
       "title": "Missing Verification"
     },
     "missingPlayerVerification": {
@@ -449,8 +457,8 @@
       "title": "Invalid Guild"
     },
     "premiumRequired": {
-      "description": "Check out all the available features [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what command does/changes.",
+      "description": "利用可能なすべての機能を[ここ](https://statsify.net/premium)から確認しましょう",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Statsify {{tier}} is required to run this command"
     },
     "staffOnly": {
@@ -467,7 +475,7 @@
       "title": "Ticket Already Exists"
     },
     "unknown": {
-      "description": "Something went wrong, please try again later. If this persists, report this in our [Discord](<https://statsify.net/discord>).",
+      "description": "問題が発生しました。後でもう一度お試しください。問題が解決しない場合は、 [我々のDiscordサーバー](<https://statsify.net/discord>) に参加して報告してください。",
       "title": "An Unknown Error Occurred"
     },
     "unsupportedFileType": {
@@ -507,8 +515,6 @@
   },
   "minecraft": {
     "available": "Available",
-    "nameHistory": "Name History",
-    "originalName": "Original Name",
     "trimmedUUID": "Trimmed UUID",
     "unavailable": "Unavailable",
     "username": "Username",
@@ -561,6 +567,7 @@
     "ended": "Ended",
     "endurance": "Endurance",
     "event-level": "Event Level",
+    "event-exp": "Event EXP",
     "exp": "EXP",
     "expGained": "EXP Gained",
     "extraUltimates": "Extra Ultimates",
@@ -673,8 +680,8 @@
     "points": "Points",
     "poopCollected": "Poop Collected",
     "powerKicks": "Power Kicks",
-    "powerupActivations": "Powerup Activations",
-    "powerups": "Powerups",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Prefix",
     "prevent": "Prevent",
     "progression": {
@@ -737,12 +744,15 @@
     "woolCaptures": "Wool Captures",
     "woolPlaced": "Wool Placed",
     "zombieKills": "Zombie Kills",
-    "potionsBrewed": "Potions Brewed"
+    "potionsBrewed": "Potions Brewed",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Rounds Completed",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
-    "invite": "$t(emojis:socials.discord) Click **[here](<https://statsify.net/invite>)** to invite Statsify to your own server!",
-    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** offers additional features such as personalized profile badges. Find the full list of benefits **[here](<https://statsify.net/premium>)**!",
+    "invite": "$t(emojis:socials.discord) **[ここ](<https://statsify.net/invite>)**をクリックして、Statisifyをあなたのサーバーに招待しよう！",
+    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** にはプロフィールのカスタムバッチなどの追加機能があります。 **[ここ](<https://statsify.net/premium>)**から全ての特典を確認できます！",
     "rankings": "$t(emojis:logos.iron) View your top leaderboard positions with **[Statsify Premium](<https://statsify.net/premium>)** by using `/rankings`",
     "verify": "$t(emojis:check) Run `/verify` to run commands without inputting your username as well as receive **10% lower cooldowns**"
   },

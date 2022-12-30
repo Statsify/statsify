@@ -129,7 +129,7 @@ export class Challenges {
   @Field({ leaderboard: { fieldName: `${FormattedGame.WOOLWARS} Challenges -` } })
   public WOOLWARS: WoolWarsChallenges;
 
-  @Field({ leaderboard: { name: "Total Challenges", fieldName: "Challenges -" } })
+  @Field({ leaderboard: { name: "Total Challenges", fieldName: "Challenges" } })
   public total: number;
 
   public constructor(challenges: APIData, ap: APIData) {

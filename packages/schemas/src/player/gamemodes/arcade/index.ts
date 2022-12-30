@@ -23,6 +23,7 @@ import {
   MiniWalls,
   PartyGames,
   PixelPainters,
+  PixelParty,
   Seasonal,
   ThrowOut,
   Zombies,
@@ -47,6 +48,7 @@ export const ARCADE_MODES = new GameModes([
   { api: "miniWalls", hypixel: "MINI_WALLS" },
   { api: "partyGames", hypixel: "PARTY" },
   { api: "pixelPainters", hypixel: "DRAW_THEIR_THING" },
+  { api: "pixelParty", hypixel: "PIXEL_PARTY" },
   { api: "seasonal" },
   { api: "throwOut", hypixel: "THROW_OUT" },
   { api: "zombies" },
@@ -107,6 +109,9 @@ export class Arcade {
   public pixelPainters: PixelPainters;
 
   @Field()
+  public pixelParty: PixelParty;
+
+  @Field()
   public seasonal: Seasonal;
 
   @Field()
@@ -133,6 +138,7 @@ export class Arcade {
     this.miniWalls = new MiniWalls(data);
     this.partyGames = new PartyGames(data);
     this.pixelPainters = new PixelPainters(data);
+    this.pixelParty = new PixelParty(data);
     this.seasonal = new Seasonal(data);
     this.throwOut = new ThrowOut(data);
     this.zombies = new Zombies(data);

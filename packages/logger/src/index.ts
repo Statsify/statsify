@@ -164,16 +164,21 @@ export class Logger implements LoggerService {
 
   private getColorByLogLevel(logLevel: LogLevel) {
     switch (logLevel) {
-      case "debug":
+      case "debug": {
         return STATUS_COLORS.debug;
-      case "warn":
+      }
+      case "warn": {
         return STATUS_COLORS.warn;
-      case "error":
+      }
+      case "error": {
         return STATUS_COLORS.error;
-      case "verbose":
+      }
+      case "verbose": {
         return STATUS_COLORS.info;
-      case "log":
+      }
+      case "log": {
         return STATUS_COLORS.success;
+      }
     }
   }
 

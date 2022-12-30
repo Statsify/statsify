@@ -1,39 +1,44 @@
 {
   "arguments": {
-    "choice": "Choose an option",
-    "file": "Upload a file",
-    "gtbhelper": "The current hint",
+    "choice": "Оберіть варіант",
+    "file": "Завантажте файл",
+    "gtbhelper": "Поточна підказка",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
-    "guild-query": "A guild name or guild member",
-    "guild-type": "The type of guild search to perform",
-    "mojang-player": "A Minecraft username or UUID",
-    "number": "A number",
+    "guild-query": "Назва гільдії або учасник гільдії",
+    "guild-type": "Тип пошуку гільдії для виконання",
+    "mojang-player": "Ім'я користувача Minecraft або UUID",
+    "number": "Число",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard stat to view",
+    "player-leaderboard": "Виберіть таблицю лідерів",
     "reason": "The reason for closing the support ticket",
-    "server": "A Minecraft server name or a server IP",
+    "server": "Ім'я сервера Minecraft або IP сервера",
     "tags-content": "The content of the tag",
     "tags-name": "The name of the tag",
-    "text": "A message",
-    "user": "Choose a Discord user"
+    "text": "Повідомлення",
+    "user": "Оберіть користувача Discord"
   },
   "commands": {
     "arcade": "$t(commands.hypixel-command, { \"name\": \"Arcade\" })",
     "arenabrawl": "$t(commands.hypixel-command, { \"name\": \"Arena Brawl\" })",
-    "available": "Check the availability of a Minecraft username",
+    "available": "Перевірте доступність імені користувача Minecraft",
     "badge": "Change your badge for every profile",
-    "badge-reset": "Reset your profile badge",
-    "badge-set": "Upload a new profile badge",
-    "badge-view": "View your current profile badge",
+    "badge-reset": "Скинути значок профілю",
+    "badge-set": "Завантажити новий значок профілю",
+    "badge-view": "Переглянути поточний значок профілю",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
     "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
     "bridge": "$t(commands.hypixel-command, { \"name\": \"Bridge\" })",
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
-    "cape": "View someone's Minecraft and Optifine capes",
+    "cape": "Переглянути чиїсь Minecraft та Optifine плащі",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
+    "quests-command": "Переглянути свою статистику завдань {{name}}",
+    "quests": "$t(commands.hypixel-command, { \"name\": \"Questing\" })",
+    "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
+    "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
+    "quests-weekly": "$t(commands.quests-command, { \"name\": \"Weekly\" })",
     "close": "Close the current support ticket",
-    "colors": "A list of Minecraft color codes",
+    "colors": "Список кодів кольорів Minecraft",
     "commands": "View Statsify command usage",
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
@@ -42,24 +47,24 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "View your Hypixel friends list",
-    "game-counts": "View Hypixel current game counts",
+    "friends": "Переглянути ваш список друзів на Hypixel",
+    "game-counts": "Переглянути поточні кількості гравців у іграх Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
-    "gtbhelper": "Generate a list of possible Guess The Build answers based on the given hint",
+    "gtbhelper": "Згенерувати список можливих відповідей у Guess The Build на основі даної підказки",
     "guild": "View your guild's stats",
     "guild-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Guild\" })",
-    "guild-list": "View the member list of your guild",
-    "guild-member": "View your guild members' stats",
-    "guild-overall": "View a summary of your guild's stats",
-    "guild-top": "View your top GEXP contributors",
-    "help": "A basic description of what Statsify does for you and your server",
+    "guild-list": "Переглянути список учасників вашої гільдії",
+    "guild-member": "Переглянути статистику учасників вашої гільдії",
+    "guild-overall": "Перегляньте зведення статистики вашої гільдії",
+    "guild-top": "Перегляньте ваших найкращих вкладників GEXP",
+    "help": "Основний опис того, що Statsify робить для вас і вашого сервера",
     "historical-arcade": "$t(commands.historical-command, { \"name\": \"Arcade\" })",
     "historical-arenabrawl": "$t(commands.historical-command, { \"name\": \"Arena Brawl\" })",
     "historical-bedwars": "$t(commands.historical-command, { \"name\": \"BedWars\" })",
     "historical-blitzsg": "$t(commands.historical-command, { \"name\": \"BlitzSG\" })",
     "historical-bridge": "$t(commands.historical-command, { \"name\": \"Bridge\" })",
     "historical-buildbattle": "$t(commands.historical-command, { \"name\": \"Build Battle\" })",
-    "historical-command": "View your {{name}} historical stats",
+    "historical-command": "Переглянути вашу історичну статистику {{name}}",
     "historical-copsandcrims": "$t(commands.historical-command, { \"name\": \"Cops and Crims\" })",
     "historical-duels": "$t(commands.historical-command, { \"name\": \"Duels\" })",
     "historical-general": "$t(commands.historical-command, { \"name\": \"General\" })",
@@ -78,9 +83,9 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
-    "hypixel-command": "View your {{name}} stats",
-    "invite": "Invite Statsify",
-    "language": "Change the language you see responses in",
+    "hypixel-command": "Переглянути вашу статистику {{name}}",
+    "invite": "Запросити Statsify",
+    "language": "Змінити мову, якою ви бачите відповіді",
     "last-day": "$t(commands.yesterday)",
     "last-month": "View your stats from last month's in various games",
     "last-week": "View your stats from last week's in various games",
@@ -89,7 +94,8 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View leaderboards for {{name}} stats",
+    "leaderboard-command": "Переглянути таблиці лідерів {{name}}",
+    "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
     "leaderboard-general": "$t(commands.leaderboard-command, { \"name\": \"General\" })",
@@ -99,6 +105,7 @@
     "leaderboard-parkour": "$t(commands.leaderboard-command, { \"name\": \"Parkour\" })",
     "leaderboard-pit": "$t(commands.leaderboard-command, { \"name\": \"Pit\" })",
     "leaderboard-quake": "$t(commands.leaderboard-command, { \"name\": \"Quake\" })",
+    "leaderboard-quests": "$t(commands.leaderboard-command, { \"name\": \"Quests\" })",
     "leaderboard-skywars": "$t(commands.leaderboard-command, { \"name\": \"SkyWars\" })",
     "leaderboard-smashheroes": "$t(commands.leaderboard-command, { \"name\": \"Smash Heroes\" })",
     "leaderboard-speeduhc": "$t(commands.leaderboard-command, { \"name\": \"Speed UHC\" })",
@@ -109,26 +116,26 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolwars": "$t(commands.leaderboard-command, { \"name\": \"WoolWars\" })",
-    "links": "Statsify Socials",
+    "links": "Соціальні мережі Statsify",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "View your mutual Hypixel friends with another player",
-    "namehistory": "View someone's Minecraft name history",
+    "mutuals": "Переглянути своїх спільних друзів з іншим гравцем на Hypixel",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
-    "ping": "View Statsify's creators and contributors",
+    "ping": "Переглянути творців та учасників Statsify",
     "pit": "$t(commands.hypixel-command, { \"name\": \"Pit\" })",
     "player-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Player\" })",
     "quake": "$t(commands.hypixel-command, { \"name\": \"Quake\" })",
-    "rankings": "View your top leaderboard positions",
+    "rankings": "Переглянути свої найкращі позиції в таблицях лідерів",
     "rankings-all": "$t(commands.rankings)",
     "rankings-arcade": "$t(commands.rankings-command, { \"name\": \"Arcade\" })",
     "rankings-arenabrawl": "$t(commands.rankings-command, { \"name\": \"Arena Brawl\" })",
     "rankings-bedwars": "$t(commands.rankings-command, { \"name\": \"BedWars\" })",
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
-    "rankings-command": "View your top {{name}} leaderboard positions",
+    "rankings-command": "Переглянути свої найкращі позиції в таблицях лідерів {{name}}",
+    "rankings-challenges": "$t(commands.rankings-command, { \"name\": \"Challenges\" })",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
     "rankings-general": "$t(commands.rankings-command, { \"name\": \"General\" })",
@@ -138,6 +145,7 @@
     "rankings-parkour": "$t(commands.rankings-command, { \"name\": \"Parkour\" })",
     "rankings-pit": "$t(commands.rankings-command, { \"name\": \"Pit\" })",
     "rankings-quake": "$t(commands.rankings-command, { \"name\": \"Quake\" })",
+    "rankings-quests": "$t(commands.rankings-command, { \"name\": \"Quests\" })",
     "rankings-skywars": "$t(commands.rankings-command, { \"name\": \"SkyWars\" })",
     "rankings-smashheroes": "$t(commands.rankings-command, { \"name\": \"Smash Heroes\" })",
     "rankings-speeduhc": "$t(commands.rankings-command, { \"name\": \"Speed UHC\" })",
@@ -153,7 +161,7 @@
     "ratios-arenabrawl": "$t(commands.ratios-command, { \"name\": \"Arena Brawl\" })",
     "ratios-bedwars": "$t(commands.ratios-command, { \"name\": \"BedWars\" })",
     "ratios-blitzsg": "$t(commands.ratios-command, { \"name\": \"BlitzSG\" })",
-    "ratios-command": "View your {{name}} milestones and estimations",
+    "ratios-command": "Переглянути свої етапи та розрахунки {{name}}",
     "ratios-copsandcrims": "$t(commands.ratios-command, { \"name\": \"Cops and Crims\" })",
     "ratios-duels": "$t(commands.ratios-command, { \"name\": \"Duels\" })",
     "ratios-megawalls": "$t(commands.ratios-command, { \"name\": \"MegaWalls\" })",
@@ -168,88 +176,88 @@
     "ratios-walls": "$t(commands.ratios-command, { \"name\": \"Walls\" })",
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
-    "recentgames": "View someone's Hypixel recent games",
-    "reset": "Reset your historical stats",
-    "server": "View Minecraft server status",
-    "skin": "View someone's Minecraft skin",
+    "recentgames": "Переглянути чиїсь нещодавні ігри Hypixel",
+    "reset": "Скинути вашу історичну статистику",
+    "server": "Переглянути статус сервера Minecraft",
+    "skin": "Переглянути чийсь скін Minecraft",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
-    "socials": "View someone's Hypixel linked socials",
+    "socials": "Переглянути чиїсь прив'язані соціальні мережі Hypixel",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
-    "status": "View someone's Hypixel status",
+    "status": "Переглянути чийсь статус Hypixel",
     "tags": "Manage support tags",
     "tags-create": "Create a support tag",
     "tags-delete": "Delete a support tag",
     "tags-rename": "Rename a support tag",
-    "text": "Generate Minecraft text",
+    "text": "Згенерувати текст Minecraft",
     "theme": "Change your theme for every profile",
-    "theme-boxes": "Change the appearance of the profile boxes",
-    "theme-font": "Change the font of the profiles",
+    "theme-boxes": "Змінити зовнішній вигляд поля профілю",
+    "theme-font": "Змінити шрифт профілю",
     "theme-footer": "Customize your profile's footer",
-    "theme-footer-icon": "Change your profile's footer icon",
-    "theme-footer-message": "Change your profile's footer message. You can use https://rgb.birdflop.com to create text gradients.",
-    "theme-footer-reset": "Reset your profile's footer",
-    "theme-palette": "Change the color palette of the profiles",
-    "theme-view": "View your current profile theme",
+    "theme-footer-icon": "Змінити значок нижнього колонтитулу вашого профілю",
+    "theme-footer-message": "Змініть нижній колонтитул свого профілю. https://rgb.birdflop.com, щоб створити градієнт.",
+    "theme-footer-reset": "Скинути нижній колонтитул вашого профілю",
+    "theme-palette": "Змінити палітру кольорів профілів",
+    "theme-view": "Переглянути поточну тему профілю",
     "ticket-menu": "Send the ticket message to the channel",
     "tntgames": "$t(commands.hypixel-command, { \"name\": \"TNT Games\" })",
     "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
-    "unverify": "Unlink your Discord and Minecraft accounts",
+    "unverify": "Відв'язати свої облікові записи Discord та Minecraft",
     "user": "View someone's Statsify user info",
-    "uuid": "Get someone's Minecraft UUID",
+    "uuid": "Отримати чийсь Minecraft UUID",
     "vampirez": "$t(commands.hypixel-command, { \"name\": \"VampireZ\" })",
-    "verify": "Link your Discord and Minecraft accounts",
+    "verify": "Прив'язати свої облікові записи Discord та Minecraft",
     "walls": "$t(commands.hypixel-command, { \"name\": \"Walls\" })",
     "warlords": "$t(commands.hypixel-command, { \"name\": \"Warlords\" })",
-    "watchdog": "View Hypixel Watchdog ban counts",
+    "watchdog": "Переглянути кількість банів Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games"
   },
   "config": {
     "badge": {
-      "profile": "This is how your badge will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your badge.",
-      "set": "$t(emojis:config.success) Successfully updated your badge.",
-      "view": "$t(emojis:config.view) Your current badge:"
+      "profile": "Ось як виглядатиме ваш значок на ваших профілях",
+      "reset": "$t(emojis:config.reset) Успішно скинуто ваш значок.",
+      "set": "$t(emojis:config.success) Успішно оновлено ваш значок.",
+      "view": "$t(emojis:config.view) Ваш поточний значок:"
     },
     "footer": {
-      "profile": "This is how your footer will look on your profiles",
-      "reset": "$t(emojis:config.reset) Successfully reset your footer.",
-      "set": "$t(emojis:config.success) Successfully updated your footer."
+      "profile": "Ось як виглядатиме нижній колонтитул на ваших профілях",
+      "reset": "$t(emojis:config.reset) Успішно скинуто нижній колонтитул.",
+      "set": "$t(emojis:config.success) Успішно оновлено нижній колонтитул."
     },
     "language": {
-      "description": "$t(emojis:config.success) Successfully updated your language to `{{locale}}`."
+      "description": "$t(emojis:config.success) Успішно оновлено вашу мову до '{{locale}}'."
     },
     "theme": {
-      "profile": "This is how your theme will look on your profiles",
-      "set": "$t(emojis:config.success) Successfully updated your theme.",
-      "view": "$t(emojis:config.view) Your current theme:"
+      "profile": "Ось як виглядатиме тема на ваших профілях",
+      "set": "$t(emojis:config.success) Успішно оновлено вашу тему.",
+      "view": "$t(emojis:config.view) Ваша поточна тема:"
     }
   },
   "cooldown": {
-    "description": "Please wait `{{time}}` before reusing `{{command}}`.\n\nLearn how to reduce cooldowns [here](https://statsify.net/premium)",
-    "title": "Active Cooldown"
+    "description": "Зачекайте, будь ласка, `{{time}}`, перш ніж знову використовувати `{{command}}`.\n\nДізнайтеся, як скоротити час [here](https://statsify.net/premium)",
+    "title": "Активне перезаряджання"
   },
   "embeds": {
     "available": {
-      "blocked": "Unless the name is temporarily or permanently blocked by Mojang.",
-      "invalidCharacters": "Invalid Characters",
-      "tooLong": "Too Long"
+      "blocked": "За виключенням того, що ім'я тимчасово або назавжди заблоковано Mojang.",
+      "invalidCharacters": "Неприпустимі символи",
+      "tooLong": "Занадто довге"
     },
     "colors": {
-      "bold": "Bold",
-      "color": "Color",
-      "italic": "Italic",
-      "mainHex": "Main Hex",
-      "obfuscated": "Obfuscated",
-      "reset": "Reset",
-      "shadowHex": "Shadow Hex",
-      "strikethrough": "Strikethrough",
-      "title": "Minecraft Color Codes",
-      "underline": "Underline"
+      "bold": "Жирний",
+      "color": "Колір",
+      "italic": "Курсив",
+      "mainHex": "Колір тексту",
+      "obfuscated": "Заплутаний",
+      "reset": "Скинуте",
+      "shadowHex": "Колір тіні",
+      "strikethrough": "Закреслений",
+      "title": "Коди кольорів Minecraft",
+      "underline": "Підкреслений"
     },
     "deletePlayer": {
       "description": "**{{displayName}}** has been removed from the database and leaderboards.",
@@ -264,40 +272,40 @@
       "title": "Force Verified"
     },
     "gameCounts": {
-      "title": "Hypixel Game Counts"
+      "title": "Кількість гравців у іграх Hypixel"
     },
     "gtbhelper": {
-      "title": "Possible GTB Solutions"
+      "title": "Можливі рішення GTB"
     },
     "help": {
       "games": {
-        "description": "Statsify supports the majority of games offered on Hypixel. To check your stats in a game run `/[game]`. For example you can run `/bedwars` to check your BedWars stats.",
-        "title": "Games"
+        "description": "Statsify підтримує більшість ігор, що пропонуються на Hypixel. Щоб перевірити статистику у грі, виконайте команду '/[game]'. Наприклад, ви можете запустити '/bedwars', щоб перевірити статистику BedWars.",
+        "title": "Ігри"
       },
       "historical": {
-        "description": "Statsify lets you check your daily, weekly, and monthly stats through `/daily`, `/weekly` and `/monthly`. If you missed a reset you can view them by running `/yesterday`, `/lastweek`, and `/lastmonth`. ",
-        "title": "Historical"
+        "description": "Statsify дозволяє перевіряти статистику щодня, щотижня та щомісяця через '/daily', '/weekly' та '/monthly'. Якщо ви пропустили скидання, ви можете переглянути його, запустивши '/yesterday', '/lastweek', та '/lastmonth'. ",
+        "title": "Історія"
       },
       "leaderboards": {
-        "description": "Statsify offers thousands of leaderboards through the `/leaderboard` command. Run `/leaderboard`, then pick the gamemode, and pick a leaderboard to view. You can hit the search button to search for a specific player or position. You can also hit the up and down buttons to view more pages.",
-        "title": "Leaderboards"
+        "description": "Statsify пропонує тисячі таблиць лідерів через команду '/leaderboard'. Використайте '/leaderboard', потім виберіть ігровий режим та виберіть таблицю лідерів. Ви можете натиснути кнопку пошуку для пошуку певного гравця або позиції. Ви також можете натиснути кнопки вгору та вниз, щоб переглянути більше сторінок.",
+        "title": "Таблиці лідерів"
       },
       "minecraft": {
-        "description": "You can view general Minecraft information such as skins, UUIDs, capes through `/skin`, `/uuid`, and `/cape` respectively. Statsify also has commands to generate Minecraft text through `/text`. View Minecraft colors through `/colors` and preview Minecraft servers through `/server`.",
+        "description": "Ви можете переглядати загальну інформацію Minecraft, таку як скіни, UUID та плащі через '/skin', '/uuid' та '/cape' відповідно. Statsify також має команди для створення тексту Minecraft через '/text'. Перегляд кольорів Minecraft через '/colors' та попередній перегляд серверів Minecraft через '/server'.",
         "title": "Minecraft"
       },
-      "title": "Statsify Help"
+      "title": "Statsify Допомога"
     },
     "invite": {
-      "description": "Click the link below to invite Statsify to your discord server.",
-      "title": "Statsify Links"
+      "description": "Натисніть посилання нижче, щоб запросити Statsify в свій discord сервер.",
+      "title": "Statsify посилання"
     },
     "ping": {
-      "contributors": "Contributors",
-      "core": "Core",
+      "contributors": "Учасники",
+      "core": "Головні",
       "pong": "Pong!",
-      "title": "Statsify Credits",
-      "translators": "Translators"
+      "title": "Автори Statsify",
+      "translators": "Перекладачі"
     },
     "tags": {
       "deleted": {
@@ -326,8 +334,8 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Emerald\" })"
     },
     "footerTooLong": {
-      "description": "The message you provided is too long. It should be under 50 characters excluding color codes.",
-      "title": "Message Too Long"
+      "description": "Повідомлення, яке ви надали, надто довге. Воно має бути не більше 50 символів, за винятком колірних кодів.",
+      "title": "Повідомлення надто довге"
     },
     "goldOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -335,40 +343,40 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Gold\" })"
     },
     "guildLeaderboardNotFound": {
-      "description": "We couldn't find the `guild` you were looking for!",
-      "title": "Invalid Guild"
+      "description": "Ми не змогли знайти гільдію, яку ви шукали!",
+      "title": "Недійсна гільдія"
     },
     "higherTierRequiredForIcon": {
-      "description": "You need to purchase a higher premium tier to unlock this icon!",
-      "title": "Higher Tier Required"
+      "description": "Вам потрібно придбати більш високий преміум рівень щоб розблокувати цей значок!",
+      "title": "Вимагається більш високий рівень"
     },
     "invalidGuild": {
-      "description_id": "A guild with the id of `{{tag}}` could not be found!",
-      "description_name": "A guild by the name of `{{tag}}` could not be found!",
-      "description_player": "A guild with the player `{{tag}}` could not be found!",
-      "title": "Invalid Guild"
+      "description_id": "Гільдія з id '{{tag}}' не може бути знайдена!",
+      "description_name": "Гільдія під назвою `{{tag}}` не може бути знайдена!",
+      "description_player": "Гільдія з гравцем на ім'я `{{tag}}` не може бути знайдена!",
+      "title": "Недійсна гільдія"
     },
     "invalidPlayer": {
-      "description_username": "A player by the username of `{{tag}}` could not be found!",
-      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
-      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
-      "title": "Invalid Player"
+      "description_username": "Гравець на ім'я `{{tag}}` не може бути знайдений!",
+      "description_uuid": "Гравець з UUID `{{tag}}` не може бути знайдений!",
+      "description_discordId": "Гравець з Discord id `{{tag}}` не може бути знайдений!",
+      "title": "Недійсний Гравець"
     },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
-      "title": "Invalid Reset Time"
+      "description": "{{time}} Не відповідає формату 'h:mm a'. Введіть час у форматі, подібному до '12:00 PM' або '1:00 AM'.",
+      "title": "Неприпустимий час скидання"
     },
     "invalidResetTimezone": {
-      "description": "`{{timezone}}` is not a valid timezone. Enter a timezone similar to `EST` or `PST`.",
-      "title": "Invalid Reset Timezone"
+      "description": "{{timezone}}` не є дійсним часовим поясом. Введіть часовий пояс, аналогічний `EST` або `PST`.",
+      "title": "Недійсний часовий пояс скидання"
     },
     "invalidSearch": {
-      "description": "We couldn't figure out what exactly you were looking for!\nEnter a username, uuid, or discord mention.",
-      "title": "Invalid Search"
+      "description": "Ми не змогли з'ясувати, що саме ви шукали!\nВведіть ім'я користувача, uuid або discord.",
+      "title": "Невірний пошук"
     },
     "invalidServer": {
-      "description": "The server you are looking for either doesn't exist or is offline!",
-      "title": "Invalid Minecraft Server"
+      "description": "Сервера, який ви шукаєте, або немає або оффлайн!",
+      "title": "Неправильний сервер Minecraft"
     },
     "invalidTagName": {
       "description": "The tag name you provided is invalid. It is not possible to create a slash command with this tag name.",
@@ -384,28 +392,28 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Iron\" })"
     },
     "leaderboardEmpty": {
-      "description": "There is no more leaderboard data at this position!",
-      "title": "No Leaderboard Data At This Position"
+      "description": "На цій позиції більше немає даних таблиці лідерів!",
+      "title": "Немає даних таблиці лідерів на цій позиції"
     },
     "leaderboardInvalidPosition": {
-      "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
-      "title": "Invalid Position"
+      "description": "Введена вами позиція лідерів неправильна. Введіть число більше 1.",
+      "title": "Неприпустима позиція"
     },
     "leaderboardNotFound": {
-      "description": "We can't find the `leaderboard` you are looking for!",
-      "title": "Leaderboard Not Found"
+      "description": "Ми не можемо знайти 'таблицю лідерів', яку ви шукаєте!",
+      "title": "Таблиця лідерів не знайдена"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}> is not **verified**. To mention them, they must run `/verify` to verify their account.",
-      "title": "Missing Verification"
+      "description": "<@{{tag}}> не є **верифікованим**. Щоб згадати їх, вони повинні виконати команду `/verify` для підтвердження облікового запису.",
+      "title": "Відсутня верифікація"
     },
     "missingPlayerVerification": {
       "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
-      "description": "To be able to run commands without supplying your username, you must be verified. To verify run and complete `/verify` and then try again.",
-      "title": "Missing Verification"
+      "description": "Щоб мати змогу виконувати команди без імені користувача, ви маєте бути верифіковані. Для перевірки виконайте команду `/verify` і спробуйте ще раз.",
+      "title": "Відсутня верифікація"
     },
     "netheriteOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -413,50 +421,50 @@
       "title": "$t(errors.premiumRequired.title, { \"tier\": \"Netherite\" })"
     },
     "noCape": {
-      "description": "**{{username}}** doesn't have any capes!",
-      "title": "Missing Cape"
+      "description": "**{{username}}** не має плащів!",
+      "title": "Відсутній плащ"
     },
     "noFriends": {
-      "description": "**{{displayName}}** has no friends $t(emojis:sad)! :(",
-      "title": "Friends Not Found"
+      "description": "**{{displayName}}** не має друзів $t(emojis:sad)! :(",
+      "title": "Друзів не знайдено"
     },
     "noGTBSolutions": {
-      "description": "We couldn't find any solutions for the provided hint!",
-      "title": "No Guess The Build Solutions"
+      "description": "Ми не змогли знайти рішення для наданої підказки!",
+      "title": "Немає рішень Guess The Build"
     },
     "noMutuals": {
-      "description": "**{{displayNameOne}}** and **{{displayNameTwo}}** have no mutual friends!",
-      "title": "No Mutuals"
+      "description": "**{{displayNameOne}}** і **{{displayNameTwo}}** не мають спільних друзів!",
+      "title": "Немає спільних"
     },
     "noRankings": {
-      "description": "**{{displayName}}** has no rankings!",
-      "title": "No Rankings"
+      "description": "**{{displayName}}** не має рейтингу!",
+      "title": "Немає рейтингів"
     },
     "noRecentGames": {
-      "description": "**{{displayName}}**'s recent games could not be found!",
-      "title": "Recent Games Not Found"
+      "description": "Останні гри **{{displayName}}** не знайдені!",
+      "title": "Останні ігри не знайдені"
     },
     "noStatus": {
-      "description": "**{{displayName}}**'s Hypixel status could not be found!",
-      "title": "Status Not Found"
+      "description": "Останній Hypixel статус гравця **{{displayName}}** не знайдено!",
+      "title": "Статус не знайдено"
     },
     "playerLeaderboardNotFound": {
-      "description": "We couldn't find the `player` you were looking for!",
-      "title": "Invalid Player"
+      "description": "Ми не змогли знайти `гравця`, якого ви шукали!",
+      "title": "Недійсний Гравець"
     },
     "playerNotInGuild": {
-      "description": "**{{displayName}}** is not in a guild!",
-      "title": "Invalid Guild"
+      "description": "**{{displayName}}** не є в гільдії!",
+      "title": "Недійсна гільдія"
     },
     "premiumRequired": {
-      "description": "Check out all the available features [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what command does/changes.",
-      "title": "Statsify {{tier}} is required to run this command"
+      "description": "Перегляньте всі доступні функції [here](https://statsify.net/premium).",
+      "preview": "Ознайомтеся з усіма доступними функціями [here](https://statsify.net/premium). Нижче наведено невеликий огляд того, що робить/змінює команда.",
+      "title": "Для виконання цієї команди потрібен Statsify {{tier}}"
     },
     "staffOnly": {
-      "description": "This command is only available to Statsify staff members!",
-      "preview": "Below is a small preview of how the command functions",
-      "title": "Staff Only"
+      "description": "Ця команда доступна тільки для персоналу Statsify!",
+      "preview": "Нижче наведено невеликий попередній перегляд того, як працює команда",
+      "title": "Тільки для персоналу"
     },
     "tagNotFound": {
       "description": "The tag you provided was not found!",
@@ -467,55 +475,53 @@
       "title": "Ticket Already Exists"
     },
     "unknown": {
-      "description": "Something went wrong, please try again later. If this persists, report this in our [Discord](<https://statsify.net/discord>).",
-      "title": "An Unknown Error Occurred"
+      "description": "Щось пішло не так, повторіть спробу пізніше. Якщо це повториться, повідомте про це у наш [Discord](<https://statsify.net/discord>).",
+      "title": "Виникла невідома помилка"
     },
     "unsupportedFileType": {
-      "description": "The file you uploaded is not a supported file type for this command!",
-      "title": "Unsupported File Type"
+      "description": "Завантажений файл не є підтримуваним типом файлу для цієї команди!",
+      "title": "Непідтримуваний тип файлу"
     }
   },
   "historical": {
-    "aboutResetting": "Click the reset button below to reset your historical stats every day **at this time**.\n\n**WARNING**: This will delete all of your historical stats and **cannot be undone**. \nIf you want to be able to reset at a specific time check out $t(socials.premium).",
-    "aboutResettingPremium": "Click the reset button below to reset your historical stats. \n\n**WARNING:** This will delete all of your historical stats and **cannot be undone**.",
+    "aboutResetting": "Натисніть на кнопку «скинути», щоб скинути статистику за кожен день **в даний момент**.\n\n**УВАГА**: Це видаляє всю статистику і **не може бути скасовано**.\nЯкщо ви хочете, щоб ви могли скинути у певний час, перевірте $t(socials.premium).",
+    "aboutResettingPremium": "Натисніть кнопку скидання, щоб скинути історичну статистику.\n\n**ПОПЕРЕДЖЕННЯ:** Це видаляє всю статистику і **не може бути скасовано**.",
     "modal": {
-      "resetTime": "Choose a Reset Time",
-      "timezone": "Choose a Timezone",
-      "title": "Historical Reset Time"
+      "resetTime": "Виберіть час скидання",
+      "timezone": "Виберіть часовий пояс",
+      "title": "Час історичного скидання"
     },
-    "new": "**{{displayName}}**'s historical stats have been checked for the first time on Statsify. Their stats will now be updated at this time every day.",
-    "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
-    "resetButton": "Click to Reset",
-    "setResetTime": "Set your reset time to <t:{{time}}:t>."
+    "new": "**{{displayName}}** історичну статистику було вперше перевірено на Statsify. Тепер їхня статистика оновлюватиметься щодня в цей час.",
+    "reset": "$t(emojis:clock) **Скидання** <t:{{time}}:R>",
+    "resetButton": "Натисніть, щоб скинути",
+    "setResetTime": "Установіть час скидання на <t:{{time}}:t>."
   },
   "leaderboard": {
     "guildInput": {
-      "label": "Search by a Guild",
-      "placeholder": "Enter a guild's name, eg: Quote"
+      "label": "Пошук за гільдією",
+      "placeholder": "Введіть ім'я гільдії, наприклад: The Blood Lust"
     },
     "modal": {
-      "title": "Leaderboard Search"
+      "title": "Пошук лідерів"
     },
     "playerInput": {
-      "label": "Search by a Player",
-      "placeholder": "Enter a player's name, eg: j4cobi"
+      "label": "Пошук за гравцем",
+      "placeholder": "Введіть ім'я гравця, наприклад: j4cobi"
     },
     "positionInput": {
-      "label": "Search by a Position",
-      "placeholder": "Enter a position, eg: 5000"
+      "label": "Пошук за позицією",
+      "placeholder": "Введіть позицію, наприклад: 5000"
     }
   },
   "minecraft": {
-    "available": "Available",
-    "nameHistory": "Name History",
-    "originalName": "Original Name",
-    "trimmedUUID": "Trimmed UUID",
-    "unavailable": "Unavailable",
-    "username": "Username",
+    "available": "Доступний",
+    "trimmedUUID": "Скорочений UUID",
+    "unavailable": "Недоступний",
+    "username": "Ім'я користувача",
     "uuid": "UUID"
   },
   "number": "{{value, number}}",
-  "players": "Players",
+  "players": "Гравці",
   "socials": {
     "discord": "[Discord](<https://discord.com/invite/5VgxMQY>)",
     "github": "[GitHub](<https://github.com/Statsify/statsify>)",
@@ -524,251 +530,255 @@
     "website": "[Website](https://statsify.net/)"
   },
   "stats": {
-    "achievementPoints": "Achievement Points",
-    "adrenaline": "Adrenaline",
-    "assists": "Assists",
+    "achievementPoints": "Очки досягнень",
+    "adrenaline": "Адреналін",
+    "assists": "Сприянь",
     "bblr": "BBLR",
-    "bedsBroken": "Beds Broken",
-    "bedsLost": "Beds Lost",
-    "bestRound": "Best Round",
-    "bestTime": "Best Time",
-    "bestWinstreak": "Best Winstreak",
-    "bigShot": "Big Shot",
-    "blocksBroken": "Blocks Broken",
-    "blocksPlaced": "Blocks Placed",
-    "blocksRan": "Blocks Ran",
-    "bombsDefused": "Bombs Defused",
-    "bombsPlanted": "Bombs Planted",
-    "bounty": "Bounty",
-    "bountyKills": "Bounty Kills",
-    "bowKills": "Bow Kills",
-    "boxesPickedUp": "Boxes Collected",
-    "bronzeTrophies": "Bronze Trophies",
-    "candyFound": "Candy Found",
-    "challenges": "Challenges",
-    "class": "Class",
-    "coins": "Coins",
-    "contracts": "Contracts",
-    "correctGuesses": "Correct Guesses",
-    "damage": "Damage",
-    "deaths": "Deaths",
-    "detectiveWins": "Detective Wins",
-    "diamonds": "Diamonds",
-    "doublesWins": "Doubles Wins",
-    "eggsFound": "Eggs Found",
-    "emeralds": "Emeralds",
-    "empireKills": "Defender Kills",
-    "ended": "Ended",
-    "endurance": "Endurance",
-    "event-level": "Event Level",
+    "bedsBroken": "Ліжок зламано",
+    "bedsLost": "Ліжок втрачено",
+    "bestRound": "Найкращий раунд",
+    "bestTime": "Найкращий час",
+    "bestWinstreak": "Найкраща серія перемог",
+    "bigShot": "Великих пострілів",
+    "blocksBroken": "Блоків зламано",
+    "blocksPlaced": "Блоків розміщено",
+    "blocksRan": "Блоків пройдено",
+    "bombsDefused": "Бомб знешкоджено",
+    "bombsPlanted": "Бомб закладено",
+    "bounty": "Нагорода",
+    "bountyKills": "Вбивств із нагородою",
+    "bowKills": "Вбивств з лука",
+    "boxesPickedUp": "Ящиків зібрано",
+    "bronzeTrophies": "Бронзових Трофеїв",
+    "candyFound": "Цукерок Знайдено",
+    "challenges": "Випробувань",
+    "class": "Клас",
+    "coins": "Монет",
+    "contracts": "Контрактів",
+    "correctGuesses": "Привильних припущень",
+    "damage": "Шкода",
+    "deaths": "Смертей",
+    "detectiveWins": "Перемог за детектива",
+    "diamonds": "Діамантів",
+    "doublesWins": "Перемог у Doubles",
+    "eggsFound": "Яєць знайдено",
+    "emeralds": "Смарагдів",
+    "empireKills": "Вбивств за захисника",
+    "ended": "Закінчено",
+    "endurance": "Витривалість",
+    "event-level": "Рівень події",
+    "event-exp": "Event EXP",
     "exp": "EXP",
-    "expGained": "EXP Gained",
-    "extraUltimates": "Extra Ultimates",
-    "fastestDetectiveWin": "Fastest Detective Win",
-    "fastestMurdererWin": "Fastest Murderer Win",
-    "fastestWin": "Fastest Win",
-    "finalAssists": "Final Assists",
-    "finalDeaths": "Final Deaths",
-    "finalKills": "Final Kills",
-    "firstLogin": "First Login",
+    "expGained": "EXP Отримано",
+    "extraUltimates": "Додаткові ультимативні крафти",
+    "fastestDetectiveWin": "Найшвидша перемога за детектива",
+    "fastestMurdererWin": "Найшвидша перемога за вбивцю",
+    "fastestWin": "Найшвидша перемога",
+    "finalAssists": "Фінальних сприянь",
+    "finalDeaths": "Фінальних смертей",
+    "finalKills": "Фінальних вбивств",
+    "firstLogin": "Перший логін",
     "fkdr": "FKDR",
-    "forcefieldTime": "Forcefield Time",
-    "fortune": "Fortune",
-    "friends": "Friends",
-    "game": "Game",
-    "game-total": "{{game}} Total",
-    "gamesPlayed": "Games Played",
-    "giftsFound": "Gifts Found",
-    "giftsSent": "Gifts Sent",
-    "goals": "Goals",
-    "godfather": "Godfather",
-    "godlikes": "Godlikes",
-    "gold": "Gold",
-    "goldPickedUp": "Gold Picked Up",
-    "goldRate": "Gold Rate",
-    "goldTrophies": "Gold Trophies",
-    "grandPrixTokens": "GP Tokens",
+    "forcefieldTime": "Часу в Силовому полі",
+    "fortune": "Фортуна",
+    "friends": "Друзів",
+    "game": "Гра",
+    "game-total": "{{game}} Всього",
+    "gamesPlayed": "Ігор Зіграно",
+    "giftsFound": "Подарунків знайдено",
+    "giftsSent": "Надісланих подарунків",
+    "goals": "Голи",
+    "godfather": "Хрещений батько",
+    "godlikes": "Богоподібні",
+    "gold": "Золото",
+    "goldPickedUp": "Зібрано золота",
+    "goldRate": "Шанс золотого трофею",
+    "goldTrophies": "Золотих Трофеїв",
+    "grandPrixTokens": "Токени GP",
     "guild": {
-      "averageMemberGexp": "Average Member GEXP",
-      "createdOn": "Created On",
-      "daily": "Daily",
+      "averageMemberGexp": "Середній GEXP учасника",
+      "createdOn": "Створено",
+      "daily": "За день",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
-      "date": "Date",
+      "date": "Дата",
       "gexp": "GEXP",
-      "guild": "Guild",
-      "guildMaster": "Guild Master",
-      "joinedAt": "Joined At",
-      "level": "Guild Level",
-      "members": "Guild Members",
-      "monthly": "Monthly",
+      "guild": "Гільдія",
+      "guildMaster": "Голова гільдії",
+      "joinedAt": "Приєднався",
+      "level": "Рівень гільдії",
+      "members": "Члени гільдії",
+      "monthly": "За місяць",
       "monthly-gexp": "$t(stats.guild.monthly) $t(stats.guild.gexp)",
-      "quests": "Guild Quests",
-      "rank": "Guild Rank",
-      "scaledGexp": "Scaled GEXP",
-      "weekly": "Weekly",
+      "quests": "Квести гільдії",
+      "rank": "Ранг гільдії",
+      "scaledGexp": "Масштабований GEXP",
+      "weekly": "За тиждень",
       "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
     },
-    "hat": "Hat",
-    "heads": "Heads",
-    "headsEaten": "Heads Eaten",
-    "headshotKills": "Headshot Kills",
-    "headshots": "Headshots",
-    "headstart": "Headstart",
-    "healing": "Healing",
-    "heroWins": "Hero Wins",
-    "hidden": "Hidden",
-    "hiderWins": "Hider Wins",
-    "highestKillstreak": "Highest Killstreak",
-    "highestScoreFinals": "Finals Personal Best",
-    "highestScoreQualifications": "Qualifiers Personal Best",
-    "highestStreak": "Highest Streak",
-    "hits": "Hits",
-    "humans-killed": "Humans Killed",
-    "infectedWins": "Infected Wins",
-    "iron": "Iron",
-    "karma": "Karma",
+    "hat": "Капелюх",
+    "heads": "Голови",
+    "headsEaten": "Голів з'їдено",
+    "headshotKills": "Вбивств у голову",
+    "headshots": "Пострілів у голову",
+    "headstart": "Перевага",
+    "healing": "Зцілено",
+    "heroWins": "Перемог за героя",
+    "hidden": "Прихований",
+    "hiderWins": "Перемог за ховаючих",
+    "highestKillstreak": "Найвища серія вбивств",
+    "highestScoreFinals": "Особистий рекорд у фіналі",
+    "highestScoreQualifications": "Особистий рекорд в кваліфікації",
+    "highestStreak": "Найвища серія",
+    "hits": "Попадань",
+    "humans-killed": "Убитих людей",
+    "infectedWins": "Перемог за інфікованих",
+    "iron": "Залізо",
+    "karma": "Карма",
     "kdr": "KDR",
-    "kicks": "Kicks",
-    "kills": "Kills",
-    "killsAsInfected": "Kills as Infected",
-    "killsAsMurderer": "Kills As Murderer",
-    "killsAsSurvivor": "Kills as Survivor",
-    "killstreaks": "Killstreaks",
-    "kit": "Current Kit",
+    "kicks": "Поштовхів",
+    "kills": "Вбивств",
+    "killsAsInfected": "Вбивств за інфікованого",
+    "killsAsMurderer": "Вбивств за вбивцю",
+    "killsAsSurvivor": "Вбивств за невинного",
+    "killstreaks": "Серій вбивств",
+    "kit": "Поточний набір",
     "kwr": "KWR",
-    "lapsCompleted": "Laps",
-    "lastAction": "Last Action",
-    "lastActionTime": "Last Action Time",
-    "lastAliveGames": "Times Last Alive",
-    "lastGame": "Last Game",
-    "lastLogin": "Last Login",
-    "layers": "Layers",
-    "level": "Level",
-    "levelsGained": "Levels Gained",
-    "loginTime": "Login Time",
-    "logoutTime": "Logout Time",
+    "lapsCompleted": "Кругів",
+    "lastAction": "Остання дія",
+    "lastActionTime": "Час останньої дії",
+    "lastAliveGames": "Разів за останнього у живих",
+    "lastGame": "Остання гра",
+    "lastLogin": "Останній вхід",
+    "layers": "Слоїв",
+    "level": "Рівень",
+    "levelsGained": "Рівнів отримано",
+    "loginTime": "Час входу",
+    "logoutTime": "Час виходу",
     "lootChests": "Loot Chests",
-    "losses": "Losses",
-    "magicalChests": "Magical Chests",
-    "magicalKeys": "Magical Keys",
-    "map": "Map",
-    "mastery": "Mastery",
-    "maxPoints": "Max Score",
-    "maxWave": "Max Wave",
-    "mode": "Mode",
-    "mostVampireKills": "Most Vampire Kills",
-    "mounts": "Mounts",
-    "murdererWins": "Murderer Wins",
-    "mysticsEnchanted": "Mystics Enchanted",
-    "mythic-favor": "Mythic Favor",
-    "networkLevel": "Network Level",
-    "objectives": "Objectives",
-    "offensive": "Offensive",
-    "offline": "Offline",
-    "online": "Online",
-    "opals": "Opals",
-    "overallWins": "Overall Wins",
-    "pingRange": "Ping Range",
-    "playtime": "Playtime",
-    "points": "Points",
-    "poopCollected": "Poop Collected",
-    "powerKicks": "Power Kicks",
-    "powerupActivations": "Powerup Activations",
-    "powerups": "Powerups",
-    "prefix": "Prefix",
-    "prevent": "Prevent",
+    "losses": "Програшів",
+    "magicalChests": "Чарівних Скринь",
+    "magicalKeys": "Чарівних Ключів",
+    "map": "Мапа",
+    "mastery": "Майстерність",
+    "maxPoints": "Максимальний бал",
+    "maxWave": "Максимальна Хвиля",
+    "mode": "Режим",
+    "mostVampireKills": "Найбільше вбивств за вампіра",
+    "mounts": "Залізань",
+    "murdererWins": "Перемог за вбивцю",
+    "mysticsEnchanted": "Містиків зачаровано",
+    "mythic-favor": "Міфічна милість",
+    "networkLevel": "Рівень Hypixel",
+    "objectives": "Цілі",
+    "offensive": "Атака",
+    "offline": "Офлайн",
+    "online": "Онлайн",
+    "opals": "Опалів",
+    "overallWins": "Загальних перемог",
+    "pingRange": "Діапазон пінгу",
+    "playtime": "Ігрового часу",
+    "points": "Очок ",
+    "poopCollected": "Зібрано гною",
+    "powerKicks": "Силових стусанів",
+    "powerupActivations": "Активацій посилень",
+    "powerups": "Покращень",
+    "prefix": "Префікс",
+    "prevent": "Запобігти",
     "progression": {
-      "exp": "EXP Progress",
-      "gexp": "GEXP Progress",
-      "goldTrophy": "Gold Trophy Progress",
-      "kill": "Kill Progress",
-      "score": "Score Progress",
-      "win": "Win Progress"
+      "exp": "Прогрес EXP",
+      "gexp": "Прогрес GEXP",
+      "goldTrophy": "Прогрес золотих трофеїв",
+      "kill": "Прогрес вбивств",
+      "score": "Оцінка прогресу",
+      "win": "Прогрес перемог"
     },
-    "quests": "Quests",
-    "ranksGifted": "Ranks Gifted",
-    "rebelKills": "Attacker Kills",
-    "renown": "Renown",
-    "roundWins": "Round Wins",
-    "rune": "Rune",
-    "score": "Score",
-    "seekerWins": "Seeker Wins",
-    "shotAccuracy": "Shot Accuracy",
-    "shotsFired": "Shots Fired",
-    "silver": "Silver",
-    "silverTrophies": "Silver Trophies",
-    "soloWins": "Solo Wins",
-    "souls": "Souls",
-    "stampLevel": "Coin Conversions",
-    "starsEarned": "Stars Earned",
-    "started": "Started",
-    "status": "Status",
-    "suicides": "Suicides",
-    "superVotes": "Super Votes",
+    "quests": "Квести",
+    "ranksGifted": "Рангів подаровано",
+    "rebelKills": "Вбивств за атакуючого",
+    "renown": "Слави",
+    "roundWins": "Перемог у раундах",
+    "rune": "Руна",
+    "score": "Рахунок",
+    "seekerWins": "Перемог за шукача",
+    "shotAccuracy": "Точність пострілу",
+    "shotsFired": "Постріли",
+    "silver": "Срібло",
+    "silverTrophies": "Срібних трофеїв",
+    "soloWins": "Перемог в соло ",
+    "souls": "Душі",
+    "stampLevel": "Конвертація монет",
+    "starsEarned": "Зірок зароблено",
+    "started": "Розпочав",
+    "status": "Статус",
+    "suicides": "Самогубств",
+    "superVotes": "Супер голосів",
     "superluck": "Superluck",
-    "support": "Support",
-    "survivorWins": "Survivor Wins",
-    "tags": "Tags",
-    "tauntsUsed": "Taunts Used",
-    "thrownKnifeKills": "Thrown Knife Kills",
-    "title": "Title",
-    "tokens": "Tokens",
-    "total": "Total",
-    "totalTrophies": "Total Trophies",
-    "trail": "Trail",
+    "support": "Підтримка",
+    "survivorWins": "Перемог за вцілилих",
+    "tags": "Теги",
+    "tauntsUsed": "Використано глузувань",
+    "thrownKnifeKills": "Вбивств із кинутим ножем",
+    "title": "Титул",
+    "tokens": "Токенів",
+    "total": "Всього",
+    "totalTrophies": "Всього Трофеїв",
+    "trail": "Слід",
     "transfusion": "Transfusion",
-    "trapKills": "Trap Kills",
-    "trigger": "Trigger",
-    "tripleShot": "Triple Shot",
-    "trophyRate": "Trophy Rate",
-    "ultimate": "Ultimate",
-    "ultimatesCrafted": "Ultimates Crafted",
-    "utility": "Utility",
-    "vampires-killed": "Vampires Killed",
-    "version": "Version",
-    "votes": "Votes",
-    "wallsFaced": "Walls Faced",
-    "wins": "Wins",
-    "winstreak": "Winstreak",
-    "witherDamage": "Wither Damage",
-    "witherKills": "Wither Kills",
+    "trapKills": "Вбивств пасткою",
+    "trigger": "Тригер",
+    "tripleShot": "Потрійних пострілів",
+    "trophyRate": "Шанс трофеїв",
+    "ultimate": "Здатність",
+    "ultimatesCrafted": "Ультимативних створено",
+    "utility": "Утиліта",
+    "vampires-killed": "Вбито вампірів",
+    "version": "Версія ",
+    "votes": "Голосів",
+    "wallsFaced": "Облицьовані стіни",
+    "wins": "Перемог",
+    "winstreak": "Серія перемог ",
+    "witherDamage": "Пошкодження від візера",
+    "witherKills": "Вбивст візера",
     "wlr": "WLR",
-    "wool": "Wool",
-    "woolCaptures": "Wool Captures",
-    "woolPlaced": "Wool Placed",
-    "zombieKills": "Zombie Kills",
-    "potionsBrewed": "Potions Brewed"
+    "wool": "Вовна",
+    "woolCaptures": "Вовни захоплено",
+    "woolPlaced": "Вовни розміщено",
+    "zombieKills": "Зомбі вбито",
+    "potionsBrewed": "Зіллів зварено",
+    "powerupsCollected": "Зібрано бонусів",
+    "roundsCompleted": "Раунди завершено",
+    "totalExp": "Усього досвіду"
   },
   "tips": {
-    "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
-    "invite": "$t(emojis:socials.discord) Click **[here](<https://statsify.net/invite>)** to invite Statsify to your own server!",
-    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** offers additional features such as personalized profile badges. Find the full list of benefits **[here](<https://statsify.net/premium>)**!",
-    "rankings": "$t(emojis:logos.iron) View your top leaderboard positions with **[Statsify Premium](<https://statsify.net/premium>)** by using `/rankings`",
-    "verify": "$t(emojis:check) Run `/verify` to run commands without inputting your username as well as receive **10% lower cooldowns**"
+    "discord": "$t(emojis:socials.discord) Приєднуйся до нас**$t(socials.discord)**, та отримуйте **перезаряджання на 20% нижче** $t(emojis:heart)",
+    "invite": "$t(emojis:socials.discord) Натисніть **[here] (<https://statsify.net/invite>)**, щоб запросити Statsify на свій сервер!",
+    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** пропонує додаткові можливості, такі як персоналізовані піктограми профілю. Знайдіть повний перелік переваг **[here](<https://statsify.net/premium>)**!",
+    "rankings": "$t(emojis:logos.iron) Перегляньте свої найвищі позиції в таблиці лідерів за допомогою**[Statsify Premium](<https://statsify.net/premium>)**, використовуючи `/rankings`",
+    "verify": "$t(emojis:check) Запустіть `/verify` для виконання команд без вставки імені користувача та отримайте **перезаряджання на 10% нижче**"
   },
-  "unknown": "Unknown",
+  "unknown": "Невідомо",
   "verification": {
     "alreadyVerified": {
-      "description": "You are already linked to a Minecraft account. Run `/unverify` to unlink your Minecraft account.",
-      "title": "Already Verified"
+      "description": "Ви вже прив'язали свій обліковий запис Minecraft. Запустіть `/unverify`, щоб відв'язати ваш обліковий запис Minecraft.",
+      "title": "Вже перевірено"
     },
     "invalidCode": {
       "description": "$t(verification.noCode.description)",
-      "title": "Invalid Verification Code"
+      "title": "Невірний код прив'язки"
     },
     "noCode": {
-      "description": "**How to verify**\n`1.` Open Minecraft and go to the server list\n`2.` Connect to `verify.statsify.net` and copy the code displayed\n`3.` Head back to discord and run `/verify code:XXXX`",
-      "title": "Missing Verification Code"
+      "description": "**Як прив'язати**\n`1.` Відкрийте Minecraft та перейдіть до списку серверів\n`2.` Підключіться до `verify.stasify.net`, і скопіюйте код, що відображається\n`3.` Поверніться до discord і запустіть `/verify code:XXXX`",
+      "title": "Відсутній код прив'язки"
     },
     "notVerified": {
-      "description": "You have to be verified before you are able to unverify!",
-      "title": "Not Verified"
+      "description": "Ви повинні пройти верифікацію, перш ніж ви зможете скасувати верифікацію!",
+      "title": "Не верифікований"
     },
     "requiredVerification": {
-      "description": "To use this command you must be verified. Run `/verify` to verify your account.",
-      "title": "Verification Required"
+      "description": "Щоб використовувати цю команду, ви маєте бути веріфіковані. Запустіть `/verify` для підтвердження облікового запису.",
+      "title": "Потрібна верифікація"
     },
-    "successfulUnverification": "Successfully unverified your account!",
-    "successfulVerification": "You are now verified to **{{displayName}}**"
+    "successfulUnverification": "Успішно скасована верифікація вашого облікового запису!",
+    "successfulVerification": "Тепер ви прив'язані до **{{displayName}}**"
   }
 }

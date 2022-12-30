@@ -19,16 +19,18 @@ export interface Palette {
 
 export const getColorPalette = (palette: UserPalette): Palette | undefined => {
   switch (palette) {
-    case UserPalette.DEFAULT:
+    case UserPalette.DEFAULT: {
       return undefined;
-    case UserPalette.DARK:
+    }
+    case UserPalette.DARK: {
       return {
         boxes: {
           color: "rgba(0, 0, 0, 0.75)",
           shadowOpacity: 0.6,
         },
       };
-    case UserPalette.LIGHT:
+    }
+    case UserPalette.LIGHT: {
       return {
         boxes: {
           color: "rgba(220, 220, 240, 0.65)",
@@ -36,9 +38,11 @@ export const getColorPalette = (palette: UserPalette): Palette | undefined => {
         },
         background: "rgba(0, 0, 0, 0.32)",
       };
-    case UserPalette.NO_BACKGROUNDS:
+    }
+    case UserPalette.NO_BACKGROUNDS: {
       return {
         background: null,
       };
+    }
   }
 };

@@ -37,7 +37,7 @@ export const GameIdMapping = {
   WALLS: "WALLS",
   BATTLEGROUND: "WARLORDS",
   WOOL_GAMES: "WOOLWARS",
-  TOURNAMENT_LOBBY: "TOURNAMENT_LOBBY",
+  TOURNAMENT: "TOURNAMENT_LOBBY",
   MAIN_LOBBY: "MAIN_LOBBY",
   MAIN: "MAIN_LOBBY",
   LEGACY: "CLASSIC",
@@ -85,7 +85,7 @@ export enum FormattedGame {
   WARLORDS = "§cWar§elords§f",
   WOOLWARS = "§cWool§9Wars§f",
 
-  TOURNAMENT_LOBBY = "§4Tourn§6ament §fLobby",
+  TOURNAMENT_LOBBY = "§4Tournament §6Lobby",
   MAIN_LOBBY = "§3Main §fLobby",
   CLASSIC = "§bCla§fs§csic§f",
   CRAZY_WALLS = "§fCrazy Walls§f",

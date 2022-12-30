@@ -12,15 +12,18 @@ export const formatPosition = (t: LocalizeFunction, position: number): string =>
   let color = "§f";
 
   switch (position) {
-    case 1:
+    case 1: {
       color = "§#ffd700";
       break;
-    case 2:
+    }
+    case 2: {
       color = "§#c0c0c0";
       break;
-    case 3:
+    }
+    case 3: {
       color = "§#cd7f32";
       break;
+    }
   }
 
   return `${color}#§l${t(position)}`;

@@ -8,7 +8,7 @@
 
 import { APIData, formatTime } from "@statsify/util";
 import { Field } from "../../../metadata";
-import { ratio, sub } from "@statsify/math";
+import { ratio } from "@statsify/math";
 
 export class BaseMurderMysteryMode {
   @Field()
@@ -111,16 +111,10 @@ export class InfectionMurderMysteryMode extends BaseMurderMysteryMode {
   public killsAsSurvivor: number;
 
   @Field()
-  public infectedWins: number;
-
-  @Field()
   public killsAsInfected: number;
 
   @Field()
   public lastAliveGames: number;
-
-  @Field({ leaderboard: { formatter: formatTime } })
-  public longestSurvivalTime: number;
 
   public constructor(data: APIData, mode: string) {
     super(data, mode);
@@ -129,11 +123,8 @@ export class InfectionMurderMysteryMode extends BaseMurderMysteryMode {
 
     this.killsAsSurvivor = data.kills_as_survivor_MURDER_INFECTION;
 
-    this.infectedWins = sub(this.wins, this.survivorWins);
     this.killsAsInfected = data.kills_as_infected_MURDER_INFECTION;
     this.lastAliveGames = data.last_one_alive_MURDER_INFECTION;
-    this.longestSurvivalTime =
-      (data.longest_time_as_survivor_seconds_MURDER_INFECTION ?? 0) * 1000;
   }
 }
 

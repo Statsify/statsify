@@ -9,7 +9,7 @@
     "mojang-player": "Et Minecraft-brukernavn eller UUID",
     "number": "Et tall",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Velg en toppstatistikk du vil se",
+    "player-leaderboard": "Choose a leaderboard",
     "reason": "The reason for closing the support ticket",
     "server": "Et Minecraft-servernavn eller server-IP",
     "tags-content": "The content of the tag",
@@ -32,6 +32,11 @@
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Se en spillers Minecraft- og Optifine-kapper",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
+    "quests-command": "View your {{name}} questing stats",
+    "quests": "$t(commands.hypixel-command, { \"name\": \"Questing\" })",
+    "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
+    "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
+    "quests-weekly": "$t(commands.quests-command, { \"name\": \"Weekly\" })",
     "close": "Close the current support ticket",
     "colors": "En liste over Minecraft-fargekoder",
     "commands": "View Statsify command usage",
@@ -89,7 +94,8 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "Vis topplister for {{name}}-statistikk",
+    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
     "leaderboard-general": "$t(commands.leaderboard-command, { \"name\": \"General\" })",
@@ -99,6 +105,7 @@
     "leaderboard-parkour": "$t(commands.leaderboard-command, { \"name\": \"Parkour\" })",
     "leaderboard-pit": "$t(commands.leaderboard-command, { \"name\": \"Pit\" })",
     "leaderboard-quake": "$t(commands.leaderboard-command, { \"name\": \"Quake\" })",
+    "leaderboard-quests": "$t(commands.leaderboard-command, { \"name\": \"Quests\" })",
     "leaderboard-skywars": "$t(commands.leaderboard-command, { \"name\": \"SkyWars\" })",
     "leaderboard-smashheroes": "$t(commands.leaderboard-command, { \"name\": \"Smash Heroes\" })",
     "leaderboard-speeduhc": "$t(commands.leaderboard-command, { \"name\": \"Speed UHC\" })",
@@ -114,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Se dine felles Hypixel-venner med en annen spiller",
-    "namehistory": "Se en spillers Minecraft-navnehistorikk",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Se Statsifys skapere og bidragsytere",
@@ -129,6 +135,7 @@
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
     "rankings-command": "Se dine toppliste-posisjoner for {{name}}",
+    "rankings-challenges": "$t(commands.rankings-command, { \"name\": \"Challenges\" })",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
     "rankings-general": "$t(commands.rankings-command, { \"name\": \"General\" })",
@@ -138,6 +145,7 @@
     "rankings-parkour": "$t(commands.rankings-command, { \"name\": \"Parkour\" })",
     "rankings-pit": "$t(commands.rankings-command, { \"name\": \"Pit\" })",
     "rankings-quake": "$t(commands.rankings-command, { \"name\": \"Quake\" })",
+    "rankings-quests": "$t(commands.rankings-command, { \"name\": \"Quests\" })",
     "rankings-skywars": "$t(commands.rankings-command, { \"name\": \"SkyWars\" })",
     "rankings-smashheroes": "$t(commands.rankings-command, { \"name\": \"Smash Heroes\" })",
     "rankings-speeduhc": "$t(commands.rankings-command, { \"name\": \"Speed UHC\" })",
@@ -343,15 +351,15 @@
       "title": "Høyere nivå kreves"
     },
     "invalidGuild": {
-      "description_id": "A guild with the id of `{{tag}}` could not be found!",
-      "description_name": "A guild by the name of `{{tag}}` could not be found!",
-      "description_player": "A guild with the player `{{tag}}` could not be found!",
+      "description_id": "En guild med id `{{tag}}` kunne ikke bli funnet!",
+      "description_name": "En guild med navnet `{{tag}}` kunne ikke bli funnet!",
+      "description_player": "En guild med spilleren `{{tag}}` kunne ikke bli funnet!",
       "title": "Ugyldig guild"
     },
     "invalidPlayer": {
-      "description_username": "A player by the username of `{{tag}}` could not be found!",
-      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
-      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
+      "description_username": "En spiller med brukernavnet `{{tag}}` kunne ikke bli funnet!",
+      "description_uuid": "En spiller med UUID `{{tag}}` kunne ikke bli funnet!",
+      "description_discordId": "En spiller med discord-id `{{tag}}` kunne ikke bli funnet!",
       "title": "Ugyldig spiller"
     },
     "invalidResetTime": {
@@ -450,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Sjekk ut alle de tilgjengelige funksjonene [here](https://statsify.net/premium).",
-      "preview": "Sjekk ut alle de tilgjengelige funksjonene [here](https://statsify.net/premium). Nedenfor finner du en liten forhåndsvisning for hva kommandoen gjør/endrer.",
+      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
       "title": "Statsify {{tier}} kreves for å utføre denne kommandoen"
     },
     "staffOnly": {
@@ -507,8 +515,6 @@
   },
   "minecraft": {
     "available": "Tilgjengelig",
-    "nameHistory": "Navnehistorikk",
-    "originalName": "Opprinnelig navn",
     "trimmedUUID": "Trimmet UUID",
     "unavailable": "Utilgjengelig",
     "username": "Brukernavn",
@@ -561,6 +567,7 @@
     "ended": "Avsluttet",
     "endurance": "Utholdenhet",
     "event-level": "Eventnivå",
+    "event-exp": "Event EXP",
     "exp": "EXP",
     "expGained": "EXP tjent",
     "extraUltimates": "Ekstra ultimater",
@@ -673,8 +680,8 @@
     "points": "Poeng",
     "poopCollected": "Bæsj oppsamlet",
     "powerKicks": "Harde spark",
-    "powerupActivations": "Powerup-aktiveringer",
-    "powerups": "Powerups",
+    "powerupActivations": "Power-Up Activations",
+    "powerups": "Power-Ups",
     "prefix": "Prefiks",
     "prevent": "Forhindre",
     "progression": {
@@ -737,7 +744,10 @@
     "woolCaptures": "Ull fanget",
     "woolPlaced": "Ull plassert",
     "zombieKills": "Zombiedrap",
-    "potionsBrewed": "Potions Brewed"
+    "potionsBrewed": "Eliksir brygget",
+    "powerupsCollected": "Power-Ups Collected",
+    "roundsCompleted": "Runder fullført",
+    "totalExp": "Total EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Bli med i vår **$t(socials.discord)** og få **20% kortere cooldowns** $t(emojis:heart)",

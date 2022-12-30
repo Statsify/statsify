@@ -8,16 +8,16 @@
 
 import { romanNumeral } from "@statsify/util";
 
-const xpMap = [15, 30, 50, 75, 125, 300, 600, 800, 900, 1000, 1200, 1500];
+const XP_MAP = [15, 30, 50, 75, 125, 300, 600, 800, 900, 1000, 1200, 1500];
 
-const prestiges = [
+const PRESTIGES = [
   100, 110, 120, 130, 140, 150, 175, 200, 250, 300, 400, 500, 600, 700, 800, 900, 1000,
   1200, 1400, 1600, 1800, 2000, 2400, 2800, 3200, 3600, 4000, 4500, 5000, 7500, 10_000,
   10_100, 10_100, 10_100, 10_100, 10_100, 20_000, 30_000, 40_000, 50_000, 75_000, 100_000,
   125_000, 150_000, 175_000, 200_000, 300_000, 500_000, 1_000_000, 5_000_000, 10_000_000,
 ];
 
-const presXpReq = [
+const PRESTIGE_XP_REQUIREMENTS = [
   65_950, 138_510, 217_680, 303_430, 395_760, 494_700, 610_140, 742_040, 906_930,
   1_104_780, 1_368_580, 1_698_330, 2_094_030, 2_555_680, 3_083_280, 3_676_830, 4_336_330,
   5_127_730, 6_051_030, 7_106_230, 8_293_330, 9_612_330, 11_195_130, 13_041_730,
@@ -28,9 +28,9 @@ const presXpReq = [
   11_787_293_080,
 ];
 
-const prestigecolors = ["7", "9", "e", "6", "c", "5", "d", "f", "b", "1", "2", "3"];
+const PRESTIGE_COLORS = ["7", "9", "e", "6", "c", "5", "d", "f", "b", "1", "0", "3", "4"];
 
-const levelColors = [
+const LEVEL_COLORS = [
   "7",
   "9",
   "3",
@@ -53,40 +53,44 @@ export type Bounty = {
   timestamp: number;
 };
 
-export const getPres = (xp: number) => {
+export const getPrestige = (xp: number) => {
   for (let i = 0; i < 50; i++) {
-    if (xp <= presXpReq[i]) {
+    if (xp <= PRESTIGE_XP_REQUIREMENTS[i]) {
       return i;
     }
   }
 
-  return presXpReq[1];
+  return PRESTIGE_XP_REQUIREMENTS[1];
 };
 
-export const getPresReq = (pres: number) => (pres > -1 ? presXpReq[pres] : 0);
+export const getPrestigeReq = (prestige: number) =>
+  prestige > -1 ? PRESTIGE_XP_REQUIREMENTS[prestige] : 0;
 
 export const getLevel = (pres: number, xp: number) => {
   let level = 120;
 
-  for (let xpRemaining = presXpReq[pres]; xpRemaining > xp; ) {
+  for (let xpRemaining = PRESTIGE_XP_REQUIREMENTS[pres]; xpRemaining > xp; ) {
     level -= 1;
-    xpRemaining -= Math.ceil((xpMap[Math.floor(level / 10)] * prestiges[pres]) / 100);
+    xpRemaining -= Math.ceil((XP_MAP[Math.floor(level / 10)] * PRESTIGES[pres]) / 100);
   }
 
   return level ?? 0;
 };
 
 export const getLevelColor = (level: number) =>
-  levelColors[Math.floor(level / 10)] ?? "7";
+  LEVEL_COLORS[Math.floor(level / 10)] ?? "7";
 
-export const getPresColor = (pres: number) =>
-  pres == 0 ? prestigecolors[0] : prestigecolors[Math.floor((pres + 5) / 5)];
+export const getPrestigeColor = (prestige: number) => {
+  if (prestige <= 0) return PRESTIGE_COLORS[0];
+  if (prestige >= 48) return PRESTIGE_COLORS[12];
+  return PRESTIGE_COLORS[Math.floor((prestige + 5) / 5)];
+};
 
 export const getBounty = (bounties: Bounty[]) =>
   bounties ? bounties.reduce((p, c) => p + c.amount, 0) : 0;
 
 export const getLevelFormatted = (level: number, prestige: number) => {
-  const presColor = getPresColor(prestige);
+  const presColor = getPrestigeColor(prestige);
   const levelColor = getLevelColor(level);
 
   return `§${presColor}[${

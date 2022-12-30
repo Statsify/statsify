@@ -23,7 +23,7 @@ export const getStoreMetadata = (
   serialize: storeOptions?.serialize ?? true,
   deserialize: storeOptions?.deserialize ?? true,
   default:
-    storeOptions?.default !== undefined
-      ? storeOptions.default
-      : getDefaultValue(typeMetadata.type),
+    storeOptions?.default === undefined
+      ? getDefaultValue(typeMetadata.type)
+      : storeOptions.default,
 });

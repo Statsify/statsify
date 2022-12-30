@@ -10,7 +10,6 @@ import { APIData } from "@statsify/util";
 import { Field } from "../../../metadata";
 import { Progression } from "../../../progression";
 
-const EXP_REQUIREMENT = 25_000;
 const MAX_LEVEL = 100;
 
 export class Event {
@@ -23,13 +22,13 @@ export class Event {
   @Field()
   public progression: Progression;
 
-  public constructor(data: APIData = {}) {
+  public constructor(expRequirement: number, data: APIData = {}) {
     this.exp = data.levelling?.experience ?? 0;
-    this.level = Math.min(MAX_LEVEL, Math.floor(this.exp / EXP_REQUIREMENT) + 1);
+    this.level = Math.min(MAX_LEVEL, Math.floor(this.exp / expRequirement) + 1);
 
     this.progression = new Progression(
-      this.exp % EXP_REQUIREMENT,
-      this.level >= MAX_LEVEL ? 0 : EXP_REQUIREMENT
+      this.exp % expRequirement,
+      this.level >= MAX_LEVEL ? 0 : expRequirement
     );
   }
 }
@@ -38,11 +37,20 @@ export class Events {
   @Field({ leaderboard: { name: "Summer 2022" } })
   public summer2022: Event;
 
+  @Field({ leaderboard: { name: "Halloween 2022" } })
+  public halloween2022: Event;
+
+  @Field({ leaderboard: { name: "Christmas 2022" } })
+  public christmas2022: Event;
+
   @Field()
   public silver: number;
 
   public constructor(data: APIData = {}) {
-    this.summer2022 = new Event(data.summer?.["2022"]);
+    this.summer2022 = new Event(25_000, data.summer?.["2022"]);
+    this.halloween2022 = new Event(10_000, data.halloween?.["2022"]);
+    this.christmas2022 = new Event(10_000, data.christmas?.["2022"]);
+
     this.silver = data.silver;
   }
 }

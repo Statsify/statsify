@@ -99,22 +99,30 @@ export class User {
 
   public static tierToLogo(tier: UserTier): UserLogo {
     switch (tier) {
-      case UserTier.NONE:
+      case UserTier.NONE: {
         return UserLogo.DEFAULT;
-      case UserTier.IRON:
+      }
+      case UserTier.IRON: {
         return UserLogo.IRON;
-      case UserTier.GOLD:
+      }
+      case UserTier.GOLD: {
         return UserLogo.GOLD;
-      case UserTier.DIAMOND:
+      }
+      case UserTier.DIAMOND: {
         return UserLogo.DIAMOND;
-      case UserTier.EMERALD:
+      }
+      case UserTier.EMERALD: {
         return UserLogo.EMERALD;
-      case UserTier.NETHERITE:
+      }
+      case UserTier.NETHERITE: {
         return UserLogo.NETHERITE;
-      case UserTier.STAFF:
+      }
+      case UserTier.STAFF: {
         return UserLogo.AMETHYST;
-      case UserTier.CORE:
+      }
+      case UserTier.CORE: {
         return UserLogo.RUBY;
+      }
     }
   }
 

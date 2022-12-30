@@ -17,7 +17,7 @@ interface OverallArcadeTableProps {
 }
 
 export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
-  const rowSize = 4;
+  const rowSize = 5;
 
   const games: [string, number][] = [
     ["Blocking Dead", stats.blockingDead.wins],
@@ -33,6 +33,7 @@ export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
     ["Mini Walls", stats.miniWalls.wins],
     ["Party Games", stats.partyGames.wins],
     ["Pixel Painters", stats.pixelPainters.wins],
+    ["Pixel Party", stats.pixelParty.overall.wins],
     ["Seasonal", stats.seasonal.totalWins],
     ["Throw Out", stats.throwOut.wins],
     ["Zombies", stats.zombies.overall.wins],
@@ -42,7 +43,7 @@ export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
 
   const rows = arrayGroup(games, rowSize);
 
-  const colors = ["§a", "§e", "§6", "§c"];
+  const colors = ["§a", "§e", "§6", "§c", "§4"];
 
   return (
     <Table.table>

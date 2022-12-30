@@ -1,15 +1,15 @@
 {
   "arguments": {
-    "choice": "Selecione uma opção",
+    "choice": "Escolha uma opção",
     "file": "Envie um arquivo",
     "gtbhelper": "A dica atual",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
     "guild-query": "O nome de uma guild ou um membro da guild",
     "guild-type": "A categoria de pesquisa da guild para realizar",
-    "mojang-player": "Um nome de usuário ou UUID do Minecraft",
+    "mojang-player": "Um nome de usuário ou UUID",
     "number": "Um número",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Escolha uma estatística de classificação para ver",
+    "player-leaderboard": "Escolha um pódio",
     "reason": "The reason for closing the support ticket",
     "server": "Um nome de servidor de Minecraft ou um IP de servidor",
     "tags-content": "The content of the tag",
@@ -32,6 +32,11 @@
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Exibe capas do Optifine e do Minecraft de alguém",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
+    "quests-command": "Exibe suas estatísticas de missões de {{name}}",
+    "quests": "$t(commands.hypixel-command, { \"name\": \"Questing\" })",
+    "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
+    "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
+    "quests-weekly": "$t(commands.quests-command, { \"name\": \"Weekly\" })",
     "close": "Close the current support ticket",
     "colors": "Uma lista de códigos de cores do Minecraft",
     "commands": "View Statsify command usage",
@@ -89,7 +94,8 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "Exibe pódios para as estatísticas de {{name}}",
+    "leaderboard-command": "Ver pódio de {{name}}",
+    "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
     "leaderboard-general": "$t(commands.leaderboard-command, { \"name\": \"General\" })",
@@ -99,6 +105,7 @@
     "leaderboard-parkour": "$t(commands.leaderboard-command, { \"name\": \"Parkour\" })",
     "leaderboard-pit": "$t(commands.leaderboard-command, { \"name\": \"Pit\" })",
     "leaderboard-quake": "$t(commands.leaderboard-command, { \"name\": \"Quake\" })",
+    "leaderboard-quests": "$t(commands.leaderboard-command, { \"name\": \"Quests\" })",
     "leaderboard-skywars": "$t(commands.leaderboard-command, { \"name\": \"SkyWars\" })",
     "leaderboard-smashheroes": "$t(commands.leaderboard-command, { \"name\": \"Smash Heroes\" })",
     "leaderboard-speeduhc": "$t(commands.leaderboard-command, { \"name\": \"Speed UHC\" })",
@@ -114,7 +121,6 @@
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
     "mutuals": "Exibes seus amigos em comum com outro jogador",
-    "namehistory": "Exibe histórico de nomes de alguém no Minecraft",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Exibe criadores e colaboradores do Statsify",
@@ -129,6 +135,7 @@
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
     "rankings-command": "Exibe suas melhores posições nos pódios de {{name}}",
+    "rankings-challenges": "$t(commands.rankings-command, { \"name\": \"Challenges\" })",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
     "rankings-general": "$t(commands.rankings-command, { \"name\": \"General\" })",
@@ -138,6 +145,7 @@
     "rankings-parkour": "$t(commands.rankings-command, { \"name\": \"Parkour\" })",
     "rankings-pit": "$t(commands.rankings-command, { \"name\": \"Pit\" })",
     "rankings-quake": "$t(commands.rankings-command, { \"name\": \"Quake\" })",
+    "rankings-quests": "$t(commands.rankings-command, { \"name\": \"Quests\" })",
     "rankings-skywars": "$t(commands.rankings-command, { \"name\": \"SkyWars\" })",
     "rankings-smashheroes": "$t(commands.rankings-command, { \"name\": \"Smash Heroes\" })",
     "rankings-speeduhc": "$t(commands.rankings-command, { \"name\": \"Speed UHC\" })",
@@ -210,22 +218,22 @@
   },
   "config": {
     "badge": {
-      "profile": "É assim que o seu selo ficará nos seus perfis",
+      "profile": "É assim que seu emblema de perfil ficará",
       "reset": "$t(emojis:config.reset) Seu emblema foi redefinido com sucesso.",
-      "set": "$t(emojis:config.success) Seu emblema foi atualizado com sucesso.",
+      "set": "$t(emojis:config.success) Seu emblema foi alterado com sucesso.",
       "view": "$t(emojis:config.view) Seu emblema atual:"
     },
     "footer": {
-      "profile": "É assim que seu rodapé ficará nos seus perfis",
+      "profile": "Seu rodapé ficará assim nos seus perfis",
       "reset": "$t(emojis:config.reset) Seu rodapé foi redefinido com sucesso.",
-      "set": "$t(emojis:config.success) Seu rodapé foi atualizado com sucesso."
+      "set": "$t(emojis:config.success) Seu rodapé foi alterado com sucesso."
     },
     "language": {
-      "description": "$t(emojis:config.success) Seu idioma foi atualizado com sucesso para `{{locale}}`."
+      "description": "$t(emojis:config.success) Seu idioma foi alterado com sucesso para `{{locale}}`."
     },
     "theme": {
-      "profile": "É assim que seu tema ficará nos seus perfis",
-      "set": "$t(emojis:config.success) Seu tema foi atualizado com sucesso.",
+      "profile": "Seu tema ficará assim nos seus perfis",
+      "set": "$t(emojis:config.success) Seu tema foi alterado com sucesso.",
       "view": "$t(emojis:config.view) Seu tema atual:"
     }
   },
@@ -235,7 +243,7 @@
   },
   "embeds": {
     "available": {
-      "blocked": "A não ser que o nome esteja temporário ou permanentemente bloqueado pela Mojang.",
+      "blocked": "A não ser que o nome esteja temporariamente ou permanentemente bloqueado pela Mojang.",
       "invalidCharacters": "Caracteres inválidos",
       "tooLong": "Muito longo"
     },
@@ -280,7 +288,7 @@
       },
       "leaderboards": {
         "description": "Statsify oferece milhares de pódios através do comando `/leaderboard`. Execute `/leaderboard`, selecione um modo de jogo e escolha um pódio para ver. Você pode clicar no botão de pesquisa para procurar um jogador ou uma posição específica. Você também pode apertar os botões de cima e baixo para ver mais páginas.",
-        "title": "Classificação"
+        "title": "Pódios"
       },
       "minecraft": {
         "description": "Você pode ver informações gerais do Minecraft como skins, UUIDs, capas através dos comandos `/skin`, `/uuid`, e `/cape`, respectivamente. Statsify também tem comandos para gerar textos com a fonte do Minecraft através do comando `/text`. Veja as cores do texto através de `/colors` e pré-visualize servidores de Minecraft através do comando `/server`.",
@@ -293,7 +301,7 @@
       "title": "Links do Statsify"
     },
     "ping": {
-      "contributors": "Colaboradores",
+      "contributors": "Contribuidores",
       "core": "Principais",
       "pong": "Pong!",
       "title": "Créditos do Statsify",
@@ -339,8 +347,8 @@
       "title": "Guild inválida"
     },
     "higherTierRequiredForIcon": {
-      "description": "Você precisa comprar um nível mais alto para desbloquear este ícone!",
-      "title": "Nível mais alto necessário"
+      "description": "Você precisa ter um plano premium mais alto para desbloquear este ícone!",
+      "title": "Plano mais alto necessário"
     },
     "invalidGuild": {
       "description_id": "Uma guild com o id de `{{tag}}` não pôde ser encontrada!",
@@ -359,11 +367,11 @@
       "title": "Tempo de redefinição inválido"
     },
     "invalidResetTimezone": {
-      "description": "`{{timezone}}` não é um fuso horário válido. Entre um fuso horário similar ao `EST` ou `PST`.",
+      "description": "`{{timezone}}` não é um fuso horário válido. Use um fuso horário similar ao `EST` ou `PST`.",
       "title": "Fuso horário de redefinição inválido"
     },
     "invalidSearch": {
-      "description": "Não conseguimos entender exatamente o que você estava procurando! Insira um nome de usuário, uuid, ou menção do discord.",
+      "description": "Não conseguimos entender exatamente o que você estava procurando! Insira um nome de usuário, UUID, ou Discord.",
       "title": "Pesquisa inválida"
     },
     "invalidServer": {
@@ -385,19 +393,19 @@
     },
     "leaderboardEmpty": {
       "description": "Não há mais dados de pódios nesta posição!",
-      "title": "Sem dados de classificação nesta posição"
+      "title": "Sem dados de pódio nesta posição"
     },
     "leaderboardInvalidPosition": {
-      "description": "A posição do placar que você inseriu é inválida. Insira um número maior que 1.",
-      "title": "Posição Inválida"
+      "description": "A posição do pódio que você inseriu é inválida. Insira um número maior que 1.",
+      "title": "Posição inválida"
     },
     "leaderboardNotFound": {
-      "description": "Não conseguimos encontrar o `placar` que você está procurando!",
-      "title": "Classificação não encontrada"
+      "description": "Não conseguimos encontrar o `pódio` que você está procurando!",
+      "title": "Pódio não encontrado"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}> não é **verificada**. Para mencioná-los, eles devem executar `/verify` para verificar sua conta.",
-      "title": "Verificação Inexistente"
+      "description": "<@{{tag}}> não é **verificado**. Para mencioná-lo, ele deve executar `/verify` para verificar a conta deles.",
+      "title": "Não verificado"
     },
     "missingPlayerVerification": {
       "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
@@ -405,7 +413,7 @@
     },
     "missingSelfVerification": {
       "description": "Para conseguir executar comandos sem fornecer o seu nome de usuário, você precisa ser verificado. Para verificar-se, execute e complete `/verify` e tente novamente.",
-      "title": "Verificação Inexistente"
+      "title": "Não verificado"
     },
     "netheriteOnly": {
       "description": "$t(errors.premiumRequired.description)",
@@ -450,13 +458,13 @@
     },
     "premiumRequired": {
       "description": "Confira todos os recursos disponíveis [aqui](https://statsify.net/premium).",
-      "preview": "Confira todos os recursos disponíveis [aqui](https://statsify.net/premium). Abaixo está uma pequena prévia do que cada comando faz/muda.",
+      "preview": "Confira todos os recursos disponíveis [aqui](https://statsify.net/premium). Abaixo está uma breve prévia do que cada comando faz/muda.",
       "title": "Statsify {{tier}} é necessário para executar este comando"
     },
     "staffOnly": {
       "description": "Esse comando só está disponível para membros da equipe do Statsify!",
       "preview": "Abaixo está uma pequena prévia da função do comando",
-      "title": "Apenas Administração"
+      "title": "Apenas staffers"
     },
     "tagNotFound": {
       "description": "The tag you provided was not found!",
@@ -467,8 +475,8 @@
       "title": "Ticket Already Exists"
     },
     "unknown": {
-      "description": "Algo deu errado, por favor, tente novamente mais tarde. Se isto persistir, reporte isso em nosso [Discord] (<https://statsify.net/discord>).",
-      "title": "Um Erro Desconhecido Ocorreu"
+      "description": "Algo deu errado, tente novamente mais tarde. Se persistir, reporte isto em nosso [Discord] (<https://statsify.net/discord>).",
+      "title": "Ocorreu um erro desconhecido"
     },
     "unsupportedFileType": {
       "description": "O arquivo que você enviou não é um tipo de arquivo compatível com este comando!",
@@ -507,8 +515,6 @@
   },
   "minecraft": {
     "available": "Disponível",
-    "nameHistory": "Histórico de nomes",
-    "originalName": "Nome Original",
     "trimmedUUID": "UUID aparado",
     "unavailable": "Indisponível",
     "username": "Usuário",
@@ -524,15 +530,15 @@
     "website": "[Website](https://statsify.net/)"
   },
   "stats": {
-    "achievementPoints": "Pontos de Conquista",
+    "achievementPoints": "Pontos de conquista",
     "adrenaline": "Adrenalina",
     "assists": "Assistências",
     "bblr": "BBLR",
     "bedsBroken": "Camas destruídas",
-    "bedsLost": "Camas Perdidas",
-    "bestRound": "Melhor Rodada",
+    "bedsLost": "Camas perdidas",
+    "bestRound": "Melhor rodada",
     "bestTime": "Melhor Tempo",
-    "bestWinstreak": "Melhor Sequência de vitórias",
+    "bestWinstreak": "Melhor sequência de vitórias",
     "bigShot": "Grandes disparos",
     "blocksBroken": "Blocos quebrados",
     "blocksPlaced": "Blocos colocados",
@@ -540,7 +546,7 @@
     "bombsDefused": "Bombas desarmadas",
     "bombsPlanted": "Bombas plantadas",
     "bounty": "Recompensa",
-    "bountyKills": "Abates do Prêmio",
+    "bountyKills": "Alvos abatidos",
     "bowKills": "Abates no Arco",
     "boxesPickedUp": "Caixas coletadas",
     "bronzeTrophies": "Troféus de Bronze",
@@ -549,7 +555,7 @@
     "class": "Classe",
     "coins": "Coins",
     "contracts": "Contratos",
-    "correctGuesses": "Adivinhações Corretas",
+    "correctGuesses": "Adivinhações corretas",
     "damage": "Danos",
     "deaths": "Mortes",
     "detectiveWins": "Vitórias como Detetive",
@@ -557,37 +563,38 @@
     "doublesWins": "Vitórias em Doubles",
     "eggsFound": "Ovos encontrados",
     "emeralds": "Esmeraldas",
-    "empireKills": "Abates como Defensor",
+    "empireKills": "Defensores abatidos",
     "ended": "Finalizado",
     "endurance": "Resistência",
     "event-level": "Nível de Evento",
+    "event-exp": "Event EXP",
     "exp": "EXP",
     "expGained": "EXP adquirido",
-    "extraUltimates": "Ultimates Extras",
+    "extraUltimates": "Ultimates extras",
     "fastestDetectiveWin": "Vitória de Detetive Mais Rápida",
     "fastestMurdererWin": "Vitória de Assassino Mais Rápida",
     "fastestWin": "Vitória mais rápida",
     "finalAssists": "Assistências Finais",
-    "finalDeaths": "Mortes Finais",
-    "finalKills": "Abates Finais",
+    "finalDeaths": "Mortes finais",
+    "finalKills": "Abates finais",
     "firstLogin": "Primeiro login",
     "fkdr": "FKDR",
     "forcefieldTime": "Tempo em Campo de Força",
     "fortune": "Sorte",
     "friends": "Amigos",
     "game": "Jogo",
-    "game-total": "Total de {{game}}",
-    "gamesPlayed": "Partidas Jogadas",
+    "game-total": "Total no {{game}}",
+    "gamesPlayed": "Partidas jogadas",
     "giftsFound": "Presentes encontrados",
     "giftsSent": "Presentes enviados",
     "goals": "Gols",
     "godfather": "Godfather",
     "godlikes": "Divinos",
-    "gold": "Ouro",
+    "gold": "Ouros",
     "goldPickedUp": "Ouro coletado",
     "goldRate": "Taxa de Troféus Dourados",
     "goldTrophies": "Troféus de Ouro",
-    "grandPrixTokens": "Tokens da GP",
+    "grandPrixTokens": "GP Tokens",
     "guild": {
       "averageMemberGexp": "Média de GEXP dos membros",
       "createdOn": "Criado em",
@@ -612,20 +619,20 @@
     "heads": "Cabeças",
     "headsEaten": "Cabeças comidas",
     "headshotKills": "Abates com Headshot",
-    "headshots": "Capturas na cabeça",
+    "headshots": "Tiros na cabeça",
     "headstart": "Cabeçalho",
     "healing": "Curar",
     "heroWins": "Vitórias como Herói",
     "hidden": "Escondido",
-    "hiderWins": "Vitórias como Escondedor",
+    "hiderWins": "Vitórias como escondedor",
     "highestKillstreak": "Maior sequência de kills",
-    "highestScoreFinals": "Melhores pessoais finais",
-    "highestScoreQualifications": "Melhor Pessoal das Qualificações",
+    "highestScoreFinals": "Finals Personal Best",
+    "highestScoreQualifications": "Qualifiers Personal Best",
     "highestStreak": "Maior Sequência",
     "hits": "Danos",
     "humans-killed": "Humanos mortos",
     "infectedWins": "Vitórias Infectadas",
-    "iron": "Ferro",
+    "iron": "Ferros",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Chutes",
@@ -634,7 +641,7 @@
     "killsAsMurderer": "Eliminações como Assassino",
     "killsAsSurvivor": "Eliminações como Sobrevivente",
     "killstreaks": "Sequência de Abates",
-    "kit": "Kit Atual",
+    "kit": "Kit atual",
     "kwr": "KWR",
     "lapsCompleted": "Voltas",
     "lastAction": "Última ação",
@@ -647,23 +654,23 @@
     "levelsGained": "Níveis Adquiridos",
     "loginTime": "Tempo de Login",
     "logoutTime": "Tempo de Logout",
-    "lootChests": "Baús de Saque",
+    "lootChests": "Loot Chests",
     "losses": "Derrotas",
     "magicalChests": "Baús mágicos",
     "magicalKeys": "Chaves mágicas",
     "map": "Mapa",
     "mastery": "Maestria",
     "maxPoints": "Pontuação máxima",
-    "maxWave": "Rodada máximas",
+    "maxWave": "Rodada máxima",
     "mode": "Modo",
     "mostVampireKills": "Mais vampiros abatidos",
-    "mounts": "Montanhas",
+    "mounts": "Montarias",
     "murdererWins": "Vitórias como assasino",
     "mysticsEnchanted": "Místicos encantados",
     "mythic-favor": "Favor místico",
     "networkLevel": "Hypixel Level",
     "objectives": "Objetivos",
-    "offensive": "Ofensivo",
+    "offensive": "Offensive",
     "offline": "Offline",
     "online": "Online",
     "opals": "Opalas",
@@ -719,17 +726,17 @@
     "transfusion": "Transfusão",
     "trapKills": "Abates com armadilhas",
     "trigger": "Gatilho",
-    "tripleShot": "Tiro triplo",
+    "tripleShot": "Tiros triplos",
     "trophyRate": "Taxa de troféus",
     "ultimate": "Ultimate",
     "ultimatesCrafted": "Ultimates fabricados",
-    "utility": "Utilidade",
+    "utility": "Utility",
     "vampires-killed": "Vampiros mortos",
     "version": "Versão",
     "votes": "Votos",
     "wallsFaced": "Paredes concertadas",
     "wins": "Vitórias",
-    "winstreak": "Sequência de Vitórias",
+    "winstreak": "Sequência de vitórias",
     "witherDamage": "Dano aos Withers",
     "witherKills": "Withers abatidos",
     "wlr": "WLR",
@@ -737,12 +744,15 @@
     "woolCaptures": "Lãs capturadas",
     "woolPlaced": "Lãs colocadas",
     "zombieKills": "Zumbis abatidos",
-    "potionsBrewed": "Poções preparadas"
+    "potionsBrewed": "Poções preparadas",
+    "powerupsCollected": "Poderes coletados",
+    "roundsCompleted": "Rodadas concluídas",
+    "totalExp": "EXP total"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Entre no nosso $t(socials.discord) e receba **menos 20% de tempo de espera** $t(emojis:heart)",
     "invite": "$t(emojis:socials.discord) Clique **[aqui](<https://statsify.net/invite>)** para convidar o Statsify para seu próprio servidor!",
-    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** oferece recursos adicionais como emblemas personalizados. Encontre a lista completa de benefícios **[aqui](<https://statsify.net/premium>)**!",
+    "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** oferece recursos adicionais como emblemas de perfis personalizados. Encontre a lista completa de benefícios **[aqui](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Veja suas posições nos pódios com **[Statsify Premium](<https://statsify.net/premium>)** usando `/rankings`",
     "verify": "$t(emojis:check) Execute `/verify` para executar comandos sem precisar inserir seu nome de usuário e receba **menos 10% de tempo de espera**"
   },

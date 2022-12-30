@@ -19,8 +19,9 @@ const getLeaderboardName = (field: string) => {
 
 const getDefaultLeaderboardLimit = (propertyKey: string) => {
   switch (propertyKey) {
-    case "exp":
+    case "exp": {
       return 500_000;
+    }
     case "wins":
     case "wlr":
     case "kills":
@@ -28,18 +29,21 @@ const getDefaultLeaderboardLimit = (propertyKey: string) => {
     case "finalKills":
     case "fkdr":
     case "bedsBroken":
-    case "bblr":
+    case "bblr": {
       return 100_000;
+    }
     case "losses":
     case "deaths":
     case "finalDeaths":
     case "bedsLost":
     case "assists":
     case "coins":
-    case "lootChests":
+    case "lootChests": {
       return 50_000;
-    default:
+    }
+    default: {
       return 10_000;
+    }
   }
 };
 
