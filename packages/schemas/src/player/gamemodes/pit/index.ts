@@ -55,10 +55,10 @@ export class Pit {
   @Field()
   public progression: Progression;
 
-  @Field({ leaderboard: { additionalFields: "this.lifetimeGold" } })
+  @Field({ leaderboard: { additionalFields: ["this.lifetimeGold"] } })
   public gold: number;
 
-  @Field({ leaderboard: { additionalFields: "this.gold" } })
+  @Field({ leaderboard: { additionalFields: ["this.gold"] } })
   public lifetimeGold: number;
 
   @Field()
