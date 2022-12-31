@@ -177,34 +177,33 @@ export abstract class AbstractCommandListener {
       };
 
       switch (command.tier) {
-        case UserTier.IRON: {
+        case UserTier.IRON:
           color = 0xb5b5b5;
           break;
-        }
-        case UserTier.GOLD: {
+
+        case UserTier.GOLD:
           color = 0xe7aa13;
           break;
-        }
-        case UserTier.DIAMOND: {
+
+        case UserTier.DIAMOND:
           color = 0x1abaa7;
           break;
-        }
-        case UserTier.EMERALD: {
+
+        case UserTier.EMERALD:
           color = 0x009b24;
           break;
-        }
-        case UserTier.NETHERITE: {
+
+        case UserTier.NETHERITE:
           color = 0x565456;
           break;
-        }
-        case UserTier.STAFF: {
+
+        case UserTier.STAFF:
           color = 0x7a58c3;
           break;
-        }
-        case UserTier.CORE: {
+
+        case UserTier.CORE:
           color = 0xd22140;
           break;
-        }
       }
 
       const hasPreview = Boolean(command.preview);

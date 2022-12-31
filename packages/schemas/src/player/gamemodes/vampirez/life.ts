@@ -52,6 +52,7 @@ export class VampireZHuman {
       prefixes,
       score,
       trueScore: true,
+      abbreviation: false,
     });
 
     this.nextPrefix = getFormattedPrefix({
