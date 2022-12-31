@@ -32,6 +32,8 @@ import {
   TNT_GAMES_MODES,
   TURBO_KART_RACERS_MODES,
   UHC_MODES,
+  User,
+  UserTier,
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
@@ -42,6 +44,8 @@ import {
   ChoiceArgument,
   Command,
   CommandContext,
+  EmbedBuilder,
+  InteractionAttachment,
   SubCommand,
 } from "@statsify/discord";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command";
@@ -52,7 +56,10 @@ import {
   PlayerLeaderboardArgument,
   SHORT_TO_LONG_HISTORICAL_TYPE,
 } from "./player-leaderboard.argument";
-import { getBackground } from "@statsify/assets";
+import { STATUS_COLORS } from "@statsify/logger";
+import { getAssetPath, getBackground, getLogoPath } from "@statsify/assets";
+import { prettify } from "@statsify/util";
+import { readFileSync } from "node:fs";
 
 const HISTORICAL_ARGUMENT = new ChoiceArgument({
   name: "time",
@@ -302,6 +309,43 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   ) {
     const leaderboard = context.option<string>("leaderboard");
     const shortTime = context.option<keyof typeof SHORT_TO_LONG_HISTORICAL_TYPE>("time");
+
+    //TODO: Remove this when the feature is fully released (inc. previews/historical-leaderboard.png).
+    if (shortTime != "L" && (context.getUser()?.tier ?? UserTier.NONE) <= UserTier.IRON) {
+      const embed = new EmbedBuilder()
+        .title(
+          `Statsify Iron is required to use ${SHORT_TO_LONG_HISTORICAL_TYPE[
+            shortTime
+          ]?.toLowerCase()} leaderboards`
+        )
+        //TODO: Figure out how much bolding to have
+        .description(
+          `**${prettify(
+            SHORT_TO_LONG_HISTORICAL_TYPE[shortTime] as string
+          )} leaderboards are currently in beta and require Statsify Iron to be used in their current state.\n\nFor a full list of Statsify Iron's features check them [here](https://statsify.net/donate). Below is a small preview of what the leaderboards look like.`
+        )
+        .color(STATUS_COLORS.error);
+
+      const preview = {
+        name: "preview.png",
+        data: readFileSync(getAssetPath(`previews/historical-leaderboard.png`)),
+        type: "image/png",
+      };
+
+      const thumbnail: InteractionAttachment = {
+        name: "logo.png",
+        data: readFileSync(getLogoPath(User.tierToLogo(UserTier.IRON), 52)),
+        type: "image/png",
+      };
+
+      embed.image(`attachment://${preview.name}`);
+      embed.thumbnail(`attachment://${thumbnail.name}`);
+      return {
+        embeds: [embed],
+        files: [preview, thumbnail],
+      };
+    }
+
     const time = SHORT_TO_LONG_HISTORICAL_TYPE[shortTime];
 
     const field = `stats.${prefix}.${leaderboard.replaceAll(" ", ".")}`;
