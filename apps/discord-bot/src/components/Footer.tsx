@@ -88,7 +88,7 @@ export const Footer = ({ logo, user, border }: FooterProps) => {
         margin={{ left: margin, top: margin / 2, bottom: margin / 2, right: margin }}
         image={logo}
       />
-      <text t:ignore>{text}</text>
+      <text>{text}</text>
     </box>
   );
 };

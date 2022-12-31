@@ -77,11 +77,11 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     let highlight: number | undefined = undefined;
 
     switch (type) {
-      case LeaderboardQuery.PAGE: {
+      case LeaderboardQuery.PAGE:
         top = (input as number) * PAGE_SIZE;
         bottom = top + PAGE_SIZE;
         break;
-      }
+
       case LeaderboardQuery.INPUT: {
         const ranking = await this.searchHistoricalLeaderboardInput(
           time,
@@ -239,20 +239,17 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     let model: PlayerModel;
 
     switch (time) {
-      case HistoricalTimes.DAILY: {
+      case HistoricalTimes.DAILY:
         model = this.dailyModel;
         break;
-      }
 
-      case HistoricalTimes.MONTHLY: {
+      case HistoricalTimes.MONTHLY:
         model = this.monthlyModel;
         break;
-      }
 
-      case HistoricalTimes.WEEKLY: {
+      case HistoricalTimes.WEEKLY:
         model = this.weeklyModel;
         break;
-      }
     }
 
     return await Promise.all(

@@ -23,12 +23,10 @@ export interface TextProps {
   italic?: boolean;
   underline?: boolean;
   size?: number;
-  "t:ignore"?: boolean;
 }
 
 export interface TextRenderProps {
   text: TextNode[];
-  "t:ignore": boolean;
 }
 
 export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps["children"]> = ({
@@ -40,7 +38,6 @@ export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps["childre
   italic = false,
   underline = false,
   size = 2,
-  "t:ignore": ignore = false,
 }) => {
   let text: string;
 
@@ -74,7 +71,7 @@ export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps["childre
       height,
     },
     style: { location: "center", direction: "row", align },
-    props: { text: nodes, "t:ignore": ignore },
+    props: { text: nodes },
     children: [],
   };
 };
