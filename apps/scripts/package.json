@@ -28,7 +28,7 @@
     "ioredis": "^5.2.4",
     "skia-canvas": "^0.9.30",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb",
-    "toad-scheduler": "^2.1.0"
+    "toad-scheduler": "^2.1.1"
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.3"
