@@ -37,13 +37,22 @@ export class Pit {
         return getLevelFormatted(level, prestige);
       },
     },
+    historical: {
+      hidden: false,
+      fieldName: "EXP Gained",
+      additionalFields: ["this.trueLevel"],
+      formatter: Number,
+    },
   })
   public exp: number;
 
   /**
    * Pit level including prestige (used for historical)
    */
-  @Field({ leaderboard: { enabled: false } })
+  @Field({
+    leaderboard: { enabled: false },
+    historical: { enabled: false, fieldName: "Levels Gained" },
+  })
   public trueLevel: number;
 
   @Field()
@@ -55,16 +64,22 @@ export class Pit {
   @Field()
   public progression: Progression;
 
-  @Field({ leaderboard: { additionalFields: ["this.lifetimeGold"] } })
+  @Field({
+    leaderboard: { additionalFields: ["this.goldEarned"] },
+    historical: { enabled: false },
+  })
   public gold: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.gold"] } })
-  public lifetimeGold: number;
+  @Field({
+    leaderboard: { additionalFields: ["this.gold"] },
+    historical: { additionalFields: [] },
+  })
+  public goldEarned: number;
 
-  @Field()
+  @Field({ historical: { enabled: false } })
   public renown: number;
 
-  @Field()
+  @Field({ historical: { enabled: false } })
   public bounty: number;
 
   @Field()
@@ -102,10 +117,10 @@ export class Pit {
   })
   public totalMysticsEnchanted: number;
 
-  @Field({ leaderboard: { formatter: formatTime } })
+  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
   public playtime: number;
 
-  @Field()
+  @Field({ historical: { enabled: false } })
   public highestStreak: number;
 
   @Field()
@@ -150,7 +165,7 @@ export class Pit {
       this.tier3MysticsEnchanted
     );
 
-    this.lifetimeGold = data.cash_earned;
+    this.goldEarned = data.cash_earned;
     this.playtime = (data.playtime_minutes ?? 0) * 60 * 1000;
     this.highestStreak = data.max_streak;
     this.joins = data.joins;

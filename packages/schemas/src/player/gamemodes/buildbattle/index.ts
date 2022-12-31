@@ -66,7 +66,7 @@ export class BuildBattle {
   @Field()
   public guessTheBuild: BuildBattleGuessTheBuild;
 
-  @Field()
+  @Field({ historical: { enabled: false } })
   public coins: number;
 
   @Field()
@@ -78,7 +78,7 @@ export class BuildBattle {
   @Field()
   public votes: number;
 
-  @Field()
+  @Field({ historical: { enabled: false } })
   public superVotes: number;
 
   @Field({ store: { default: defaultPrefix(titles) } })

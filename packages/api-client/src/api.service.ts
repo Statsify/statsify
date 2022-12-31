@@ -9,6 +9,13 @@
 import * as Sentry from "@sentry/node";
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
+  CurrentHistoricalType,
+  GuildQuery,
+  HistoricalType,
+  HypixelCache,
+  LeaderboardQuery,
+} from "./types";
+import {
   DeletePlayerResponse,
   GetCommandUsageResponse,
   GetFriendsResponse,
@@ -27,7 +34,6 @@ import {
   PutUserBadgeResponse,
 } from "./responses";
 import { GetHistoricalTimesResponse } from "./responses/get.historical-times.response";
-import { GuildQuery, HistoricalType, HypixelCache, LeaderboardQuery } from "./enums";
 import { UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { loadImage } from "@statsify/rendering";
@@ -116,6 +122,21 @@ export class ApiService {
       "POST",
       { body: { fields, uuid } }
     );
+  }
+
+  public getHistoricalLeaderboard(
+    time: CurrentHistoricalType,
+    field: string,
+    input: string | number,
+    type: LeaderboardQuery
+  ): Promise<PostLeaderboardResponse | null> {
+    return this.request<PostLeaderboardResponse>("/historical/leaderboards", {}, "POST", {
+      body: {
+        time,
+        field,
+        [type === LeaderboardQuery.INPUT ? "player" : type]: input,
+      },
+    });
   }
 
   public getPlayerAutocomplete(query: string) {

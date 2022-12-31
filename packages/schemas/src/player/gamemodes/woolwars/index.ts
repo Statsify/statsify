@@ -27,7 +27,7 @@ export const WOOLWARS_MODES = new GameModes([
 export type WoolWarsModes = IGameModes<typeof WOOLWARS_MODES>;
 
 export class WoolWars {
-  @Field()
+  @Field({ historical: { enabled: false } })
   public coins: number;
 
   @Field({ leaderboard: { enabled: false } })
@@ -40,10 +40,16 @@ export class WoolWars {
       formatter: (exp: number) => getFormattedLevel(Math.floor(getLevel(exp))),
       additionalFields: ["this.overall.wins", "this.overall.kills", "this.overall.kdr"],
     },
+    historical: {
+      hidden: false,
+      fieldName: "EXP Gained",
+      formatter: Number,
+      additionalFields: ["this.level"],
+    },
   })
   public exp: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { enabled: false }, historical: { fieldName: "Levels Gained" } })
   public level: number;
 
   @Field()

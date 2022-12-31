@@ -43,7 +43,11 @@ export class BlitzSGKit {
   @Field({ leaderboard: { limit } })
   public wlr: number;
 
-  @Field({ store: { required: false }, leaderboard: { formatter: formatTime } })
+  @Field({
+    store: { required: false },
+    leaderboard: { formatter: formatTime },
+    historical: { enabled: false },
+  })
   public playtime: number;
 
   public constructor(data: APIData, kit: string) {

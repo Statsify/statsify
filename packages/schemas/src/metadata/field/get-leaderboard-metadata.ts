@@ -6,14 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LeaderboardMetadata, TypeMetadata } from "../metadata.interface";
-import { LeaderboardOptions } from "../field.options";
+import {
+  HistoricalMetadata,
+  LeaderboardMetadata,
+  TypeMetadata,
+} from "../metadata.interface";
+import { HistoricalOptions, LeaderboardOptions } from "../field.options";
 import { RATIOS, RATIO_STATS } from "../../ratios";
 import { prettify } from "@statsify/util";
 
 const getLeaderboardName = (field: string) => {
   const ratioIndex = RATIOS.indexOf(field);
   if (ratioIndex > -1) return RATIO_STATS[ratioIndex][3];
+  if (field === "exp") return "EXP";
   return prettify(field);
 };
 
@@ -49,13 +54,20 @@ const getDefaultLeaderboardLimit = (propertyKey: string) => {
 export const getLeaderboardMetadata = (
   typeMetadata: TypeMetadata,
   propertyKey: string,
-  leaderboardOptions?: LeaderboardOptions
-): LeaderboardMetadata => {
+  leaderboardOptions?: LeaderboardOptions,
+  historicalOptions?: HistoricalOptions
+): { leaderboard: LeaderboardMetadata; historical: HistoricalMetadata } => {
   const fieldName = leaderboardOptions?.fieldName ?? getLeaderboardName(propertyKey);
   const name = leaderboardOptions?.name ?? fieldName;
 
-  if (typeMetadata.type !== Number || leaderboardOptions?.enabled === false) {
-    return {
+  const historicalFieldName = historicalOptions?.fieldName ?? fieldName;
+  const historicalName =
+    historicalOptions?.name ?? leaderboardOptions?.name ?? historicalFieldName;
+
+  let leaderboard: LeaderboardMetadata;
+  let historical: LeaderboardMetadata;
+  if (typeMetadata.type !== Number) {
+    leaderboard = {
       enabled: false,
       additionalFields: leaderboardOptions?.additionalFields || [],
       extraDisplay: leaderboardOptions?.extraDisplay,
@@ -64,19 +76,47 @@ export const getLeaderboardMetadata = (
       fieldName,
       name,
     };
+
+    historical = { ...leaderboard, fieldName: historicalFieldName, name: historicalName };
+  } else if (leaderboardOptions?.enabled === false) {
+    leaderboard = {
+      enabled: false,
+      additionalFields: leaderboardOptions?.additionalFields || [],
+      extraDisplay: leaderboardOptions?.extraDisplay,
+      formatter: leaderboardOptions?.formatter,
+      resetEvery: leaderboardOptions?.resetEvery,
+      fieldName,
+      name,
+    };
+
+    historical = {
+      ...leaderboard,
+      ...historicalOptions,
+      fieldName: historicalFieldName,
+      name: historicalName,
+    };
+  } else {
+    leaderboard = {
+      enabled: true,
+      sort: leaderboardOptions?.sort || "DESC",
+      fieldName,
+      name,
+      hidden: leaderboardOptions?.hidden,
+      aliases: leaderboardOptions?.aliases || [],
+      additionalFields: leaderboardOptions?.additionalFields || [],
+      extraDisplay: leaderboardOptions?.extraDisplay,
+      formatter: leaderboardOptions?.formatter,
+      limit: leaderboardOptions?.limit ?? getDefaultLeaderboardLimit(propertyKey),
+      resetEvery: leaderboardOptions?.resetEvery,
+    };
+
+    historical = {
+      ...leaderboard,
+      ...historicalOptions,
+      fieldName: historicalFieldName,
+      name: historicalName,
+    };
   }
 
-  return {
-    enabled: true,
-    sort: leaderboardOptions?.sort || "DESC",
-    fieldName,
-    name,
-    hidden: leaderboardOptions?.hidden,
-    aliases: leaderboardOptions?.aliases || [],
-    additionalFields: leaderboardOptions?.additionalFields || [],
-    extraDisplay: leaderboardOptions?.extraDisplay,
-    formatter: leaderboardOptions?.formatter,
-    limit: leaderboardOptions?.limit ?? getDefaultLeaderboardLimit(propertyKey),
-    resetEvery: leaderboardOptions?.resetEvery,
-  };
+  return { leaderboard, historical };
 };

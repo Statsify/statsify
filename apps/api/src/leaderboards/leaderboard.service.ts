@@ -28,7 +28,7 @@ export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
 @Injectable()
 export abstract class LeaderboardService {
-  public constructor(@InjectRedis() private readonly redis: Redis) {}
+  public constructor(@InjectRedis() protected readonly redis: Redis) {}
 
   public async addLeaderboards<T>(
     constructor: Constructor<T>,

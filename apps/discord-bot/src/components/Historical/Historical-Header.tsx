@@ -8,7 +8,7 @@
 
 import { DateTime } from "luxon";
 import { ElementNode } from "@statsify/rendering";
-import { HistoricalType } from "@statsify/api-client";
+import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
 import { prettify } from "@statsify/util";
 
 interface HistoricalHeaderProps {
@@ -35,32 +35,27 @@ export const HistoricalHeader = ({
   let end: DateTime;
 
   switch (time) {
-    case HistoricalType.DAILY:
+    case HistoricalTimes.DAILY:
       start = now.minus({ days: 1 });
       end = now;
       break;
-
-    case HistoricalType.WEEKLY:
+    case HistoricalTimes.WEEKLY:
       start = now.minus({ days: now.weekday });
       end = now;
       break;
-
-    case HistoricalType.MONTHLY:
-      start = now.minus({ months: 1, days: now.day - 1 });
+    case HistoricalTimes.MONTHLY:
+      start = now.minus({ days: now.day - 1 });
       end = now;
       break;
-
-    case HistoricalType.LAST_DAY:
+    case HistoricalTimes.LAST_DAY:
       start = now.minus({ days: 2 });
       end = now.minus({ days: 1 });
       break;
-
-    case HistoricalType.LAST_WEEK:
+    case HistoricalTimes.LAST_WEEK:
       start = now.minus({ week: 1, days: now.weekday });
       end = now.minus({ days: now.weekday });
       break;
-
-    case HistoricalType.LAST_MONTH:
+    case HistoricalTimes.LAST_MONTH:
       start = now.minus({ months: 1, days: now.day - 1 });
       end = now.minus({ days: now.day });
       break;

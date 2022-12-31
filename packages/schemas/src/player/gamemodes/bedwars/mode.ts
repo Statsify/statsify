@@ -32,7 +32,7 @@ export class BedWarsModeItemsCollected {
 }
 
 export class BedWarsMode {
-  @Field()
+  @Field({ historical: { enabled: false } })
   public winstreak: number;
 
   @Field()

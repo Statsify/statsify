@@ -7,41 +7,49 @@
  */
 
 import { AsyncTask, SimpleIntervalJob } from "toad-scheduler";
-import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
-import { Flatten, flatten } from "@statsify/util";
 import {
+  CurrentHistoricalType,
+  HistoricalTimes,
   HistoricalType,
   HypixelCache,
+  LastHistoricalType,
   PlayerNotFoundException,
 } from "@statsify/api-client";
+import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
+import { DateTime } from "luxon";
+import { Flatten, config, flatten } from "@statsify/util";
+import { HistoricalLeaderboardService } from "./leaderboards/historical-leaderboard.service";
+import { Inject, Injectable, Logger, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Injectable, Logger } from "@nestjs/common";
-import { Player, RATIOS, RATIO_STATS, deserialize, serialize } from "@statsify/schemas";
-import { PlayerService } from "../player";
+import {
+  Player,
+  createHistoricalPlayer,
+  deserialize,
+  serialize,
+} from "@statsify/schemas";
+import { PlayerService } from "../player/player.service";
 import { ReturnModelType } from "@typegoose/typegoose";
-import { isObject } from "class-validator";
-import { ratio, sub } from "@statsify/math";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 
 const LAST_HISTORICAL = [
-  HistoricalType.LAST_DAY,
-  HistoricalType.LAST_WEEK,
-  HistoricalType.LAST_MONTH,
+  LastHistoricalType.LAST_DAY,
+  LastHistoricalType.LAST_WEEK,
+  LastHistoricalType.LAST_MONTH,
 ] as const;
-
-type LastHistoricalType = typeof LAST_HISTORICAL[number];
-type CurrentHistoricalType = Exclude<HistoricalType, LastHistoricalType>;
 
 type RawHistoricalResponse = [newPlayer: Player, oldPlayer: Player, isNew?: boolean];
 
 @Injectable()
 export class HistoricalService {
   private readonly logger = new Logger("HistoricalService");
-  private readonly job: SimpleIntervalJob;
-
+  private readonly resetJob: SimpleIntervalJob;
+  private readonly sweepJob: SimpleIntervalJob;
   public constructor(
+    @Inject(forwardRef(() => PlayerService))
     private readonly playerService: PlayerService,
+    @Inject(forwardRef(() => HistoricalLeaderboardService))
+    private readonly historicalLeaderboardService: HistoricalLeaderboardService,
     @InjectModel(Daily) private readonly dailyModel: PlayerModel,
     @InjectModel(Weekly) private readonly weeklyModel: PlayerModel,
     @InjectModel(Monthly) private readonly monthlyModel: PlayerModel,
@@ -49,9 +57,16 @@ export class HistoricalService {
     @InjectModel(LastWeek) private readonly lastWeekModel: PlayerModel,
     @InjectModel(LastMonth) private readonly lastMonthModel: PlayerModel
   ) {
-    const task = new AsyncTask("historicalReset", this.resetPlayers.bind(this));
-    this.job = new SimpleIntervalJob({ minutes: 1 }, task);
-    this.job.start();
+    const resetTask = new AsyncTask("historicalReset", this.resetPlayers.bind(this));
+    const sweepTask = new AsyncTask("historicalSweep", this.checkSweepPlayers.bind(this));
+
+    this.resetJob = new SimpleIntervalJob({ minutes: 1 }, resetTask);
+    this.resetJob.start();
+
+    this.sweepJob = new SimpleIntervalJob({ minutes: 1 }, sweepTask, {
+      preventOverrun: true,
+    });
+    this.sweepJob.start();
   }
 
   public async resetPlayers() {
@@ -70,11 +85,70 @@ export class HistoricalService {
 
       if (player) {
         player.resetMinute = minute;
-        await this.reset(player, type);
+        await this.resetPlayer(player, type);
       } else {
         this.logger.error(`Could not reset player with uuid ${uuid}`);
       }
     });
+  }
+
+  public async checkSweepPlayers() {
+    const dPlayers = await this.getAndSweep(
+      this.dailyModel,
+      this.lastDayModel,
+      HistoricalTimes.DAILY
+    );
+
+    const wPlayers = await this.getAndSweep(
+      this.weeklyModel,
+      this.lastWeekModel,
+      HistoricalTimes.WEEKLY,
+      dPlayers
+    );
+
+    await this.getAndSweep(
+      this.monthlyModel,
+      this.lastMonthModel,
+      HistoricalTimes.MONTHLY,
+      wPlayers
+    );
+  }
+
+  // Checks for players who were skipped in the reset process
+  public async getAndSweep(
+    model: PlayerModel,
+    lastModel: PlayerModel,
+    type: HistoricalType,
+    playerMap?: Map<String, Player | null>
+  ) {
+    const sweepPlayers = await model
+      .find({ nextReset: { $lte: Math.round(DateTime.now().toMillis() / 1000) } })
+      .select({ uuid: true, resetMinute: true })
+      .limit(config("environment") === "dev" ? 20 : 100)
+      .lean()
+      .exec();
+
+    if (!playerMap) playerMap = new Map<String, Player>();
+    sweepPlayers.forEach(async ({ uuid, resetMinute }) => {
+      const player =
+        playerMap?.get(uuid) ?? (await this.playerService.get(uuid, HypixelCache.LIVE));
+
+      playerMap?.set(uuid, player);
+
+      if (player) {
+        const flatPlayer = flatten(player);
+
+        const doc = serialize(Player, flatPlayer);
+
+        doc.resetMinute = resetMinute ?? this.getMinute();
+
+        await this.reset(model, lastModel, doc, type, player);
+      } else {
+        this.logger.error(`Could not sweep player with uuid ${uuid}`);
+      }
+    });
+
+    return playerMap;
   }
 
   public async getAndReset(tag: string, type: HistoricalType, time?: number) {
@@ -82,7 +156,8 @@ export class HistoricalService {
     if (!player) throw new PlayerNotFoundException();
 
     player.resetMinute = time ?? this.getMinute();
-    return this.reset(player, type);
+
+    return this.resetPlayer(player, type);
   }
 
   /**
@@ -91,13 +166,13 @@ export class HistoricalService {
    * @param resetType Whether to reset daily, weekly, or monthly
    * @returns The flattened player data
    */
-  public async reset(player: Player, resetType: HistoricalType) {
+  public async resetPlayer(player: Player, resetType: HistoricalType) {
     const isMonthly =
-      resetType === HistoricalType.MONTHLY || resetType === HistoricalType.LAST_MONTH;
+      resetType === HistoricalTimes.MONTHLY || resetType === HistoricalTimes.LAST_MONTH;
 
     const isWeekly =
-      resetType === HistoricalType.WEEKLY ||
-      resetType === HistoricalType.LAST_WEEK ||
+      resetType === HistoricalTimes.WEEKLY ||
+      resetType === HistoricalTimes.LAST_WEEK ||
       isMonthly;
 
     const flatPlayer = flatten(player);
@@ -107,31 +182,67 @@ export class HistoricalService {
     doc.resetMinute = player.resetMinute ?? this.getMinute();
     flatPlayer.resetMinute = doc.resetMinute;
 
-    const reset = async (
-      model: PlayerModel,
-      lastModel: PlayerModel,
-      doc: Flatten<Player>
-    ) => {
-      //findOneAndReplace doesn't unflatten the document so findOne and replaceOne need to be used separately
-      const last = await model.findOne({ uuid: doc.uuid }).lean().exec();
+    const resets = [
+      this.reset(this.dailyModel, this.lastDayModel, doc, HistoricalTimes.DAILY, player),
+    ];
 
-      delete doc._id;
-      if (last) delete last._id;
+    if (isWeekly)
+      resets.push(
+        this.reset(
+          this.weeklyModel,
+          this.lastWeekModel,
+          doc,
+          HistoricalTimes.WEEKLY,
+          player
+        )
+      );
 
-      await Promise.all([
-        model.replaceOne({ uuid: doc.uuid }, doc, { upsert: true }).lean().exec(),
-        lastModel
-          .replaceOne({ uuid: doc.uuid }, (last ?? doc) as Player, { upsert: true })
-          .lean()
-          .exec(),
-      ]);
-    };
+    if (isMonthly)
+      resets.push(
+        this.reset(
+          this.monthlyModel,
+          this.lastMonthModel,
+          doc,
+          HistoricalTimes.MONTHLY,
+          player
+        )
+      );
 
-    await reset(this.dailyModel, this.lastDayModel, doc);
-    if (isWeekly) await reset(this.weeklyModel, this.lastWeekModel, doc);
-    if (isMonthly) await reset(this.monthlyModel, this.lastMonthModel, doc);
+    await Promise.all(resets);
 
     return deserialize(Player, flatPlayer);
+  }
+
+  public async reset(
+    model: PlayerModel,
+    lastModel: PlayerModel,
+    doc: Flatten<Player>,
+    time: HistoricalType,
+    player: Player
+  ) {
+    //findOneAndReplace doesn't unflatten the document so findOne and replaceOne need to be used separately
+    const last = await model.findOne({ uuid: doc.uuid }).lean().exec();
+
+    delete doc._id;
+    doc.lastReset = Math.round(DateTime.now().toMillis() / 1000);
+    doc.nextReset = this.getNextResetTime(doc.resetMinute, time);
+
+    if (last) delete last._id;
+
+    await Promise.all([
+      model.replaceOne({ uuid: doc.uuid }, doc, { upsert: true }).lean().exec(),
+      lastModel
+        .replaceOne({ uuid: doc.uuid }, (last ?? doc) as Player, { upsert: true })
+        .lean()
+        .exec(),
+      this.historicalLeaderboardService.addHistoricalLeaderboards(
+        time,
+        Player,
+        player,
+        "uuid",
+        true
+      ),
+    ]);
   }
 
   public async get(tag: string, type: HistoricalType): Promise<Player | null> {
@@ -143,8 +254,11 @@ export class HistoricalService {
 
     const [newPlayer, oldPlayer, isNew] = await this.getRaw(player.uuid, type);
 
-    const merged = this.merge(oldPlayer, newPlayer);
+    const merged = createHistoricalPlayer(oldPlayer, newPlayer);
+
     merged.resetMinute = oldPlayer.resetMinute;
+    merged.lastReset = oldPlayer.lastReset;
+    merged.nextReset = oldPlayer.nextReset;
     merged.isNew = isNew;
 
     return merged;
@@ -169,9 +283,9 @@ export class HistoricalService {
   }
 
   private getRaw(uuid: string, type: HistoricalType): Promise<RawHistoricalResponse> {
-    return LAST_HISTORICAL.includes(type as unknown as LastHistoricalType)
-      ? this.getLastHistorical(uuid, type as unknown as LastHistoricalType)
-      : this.getCurrentHistorical(uuid, type as unknown as CurrentHistoricalType);
+    return LAST_HISTORICAL.includes(type as LastHistoricalType)
+      ? this.getLastHistorical(uuid, type as LastHistoricalType)
+      : this.getCurrentHistorical(uuid, type as CurrentHistoricalType);
   }
 
   private async getCurrentHistorical(
@@ -182,9 +296,9 @@ export class HistoricalService {
     if (!newPlayer) throw new PlayerNotFoundException();
 
     const CURRENT_MODELS = {
-      [HistoricalType.DAILY]: this.dailyModel,
-      [HistoricalType.WEEKLY]: this.weeklyModel,
-      [HistoricalType.MONTHLY]: this.monthlyModel,
+      [HistoricalTimes.DAILY]: this.dailyModel,
+      [HistoricalTimes.WEEKLY]: this.weeklyModel,
+      [HistoricalTimes.MONTHLY]: this.monthlyModel,
     };
 
     let oldPlayer = (await CURRENT_MODELS[type]
@@ -198,7 +312,7 @@ export class HistoricalService {
       oldPlayer = deserialize(Player, flatten(oldPlayer));
     } else {
       newPlayer.resetMinute = this.getMinute();
-      oldPlayer = await this.reset(newPlayer, type);
+      oldPlayer = await this.resetPlayer(newPlayer, type);
       isNew = true;
     }
 
@@ -210,9 +324,9 @@ export class HistoricalService {
     type: LastHistoricalType
   ): Promise<RawHistoricalResponse> {
     const CURRENT_MODELS = {
-      [HistoricalType.LAST_DAY]: this.dailyModel,
-      [HistoricalType.LAST_WEEK]: this.weeklyModel,
-      [HistoricalType.LAST_MONTH]: this.monthlyModel,
+      [HistoricalTimes.LAST_DAY]: this.dailyModel,
+      [HistoricalTimes.LAST_WEEK]: this.weeklyModel,
+      [HistoricalTimes.LAST_MONTH]: this.monthlyModel,
     };
 
     let newPlayer = (await CURRENT_MODELS[type]
@@ -229,14 +343,14 @@ export class HistoricalService {
       if (!livePlayer) throw new PlayerNotFoundException();
 
       livePlayer.resetMinute = this.getMinute();
-      newPlayer = await this.reset(livePlayer, HistoricalType.MONTHLY);
+      newPlayer = await this.resetPlayer(livePlayer, HistoricalTimes.MONTHLY);
       isNew = true;
     }
 
     const LAST_MODELS = {
-      [HistoricalType.LAST_DAY]: this.lastDayModel,
-      [HistoricalType.LAST_WEEK]: this.lastWeekModel,
-      [HistoricalType.LAST_MONTH]: this.lastMonthModel,
+      [HistoricalTimes.LAST_DAY]: this.lastDayModel,
+      [HistoricalTimes.LAST_WEEK]: this.lastWeekModel,
+      [HistoricalTimes.LAST_MONTH]: this.lastMonthModel,
     };
 
     const oldPlayer = (await LAST_MODELS[type].findOne({ uuid }).lean().exec()) as Player;
@@ -247,77 +361,48 @@ export class HistoricalService {
 
   /**
    *
-   * @param oldOne The old stats
-   * @param newOne The new stats
-   * @returns the new stats - the old stats
-   */
-  private merge<T extends {}>(oldOne: T, newOne: T): T {
-    const merged = {} as T;
-
-    const keys = Object.keys({ ...oldOne, ...newOne });
-
-    for (const _key of keys) {
-      const key = _key as keyof T;
-      const newOneType = typeof newOne[key];
-
-      if (typeof oldOne[key] === "number" || newOneType === "number") {
-        const ratioIndex = RATIOS.indexOf(_key);
-
-        if (ratioIndex === -1) {
-          merged[key] = sub(
-            newOne[key] as unknown as number,
-            oldOne[key] as unknown as number
-          ) as unknown as T[keyof T];
-        } else {
-          const numerator = sub(
-            newOne[RATIO_STATS[ratioIndex][0] as unknown as keyof T] as unknown as number,
-            oldOne[RATIO_STATS[ratioIndex][0] as unknown as keyof T] as unknown as number
-          );
-
-          const denominator = sub(
-            newOne[RATIO_STATS[ratioIndex][1] as unknown as keyof T] as unknown as number,
-            oldOne[RATIO_STATS[ratioIndex][1] as unknown as keyof T] as unknown as number
-          );
-
-          merged[key] = ratio(
-            numerator,
-            denominator,
-            RATIO_STATS[ratioIndex][4] ?? 1
-          ) as unknown as T[keyof T];
-        }
-      } else if (newOneType === "string") {
-        merged[key] = newOne[key];
-      } else if (isObject(newOne[key])) {
-        merged[key] =
-          key === "progression"
-            ? newOne[key]
-            : (this.merge(oldOne[key] ?? {}, newOne[key] ?? {}) as unknown as T[keyof T]);
-      }
-    }
-
-    return merged;
-  }
-
-  /**
-   *
    * @returns The current minute of the day
    */
   private getMinute() {
     const date = new Date();
     return date.getHours() * 60 + date.getMinutes();
   }
-
-  /**
-   *
-   * @returns Whether the current time should daily, weekly, or monthly stats
-   */
   private getType() {
     const date = new Date();
 
     return date.getDate() === 1
-      ? HistoricalType.MONTHLY
+      ? HistoricalTimes.MONTHLY
       : date.getDay() === 1
-      ? HistoricalType.WEEKLY
-      : HistoricalType.DAILY;
+      ? HistoricalTimes.WEEKLY
+      : HistoricalTimes.DAILY;
+  }
+
+  private getNextResetTime(resetMinute: number, time: HistoricalType) {
+    const now = DateTime.now();
+
+    const hasResetToday = resetMinute! <= now.hour * 60 + now.minute;
+
+    let resetTime = now
+      .minus({ hours: now.hour, minutes: now.minute })
+      .plus({ minutes: resetMinute! });
+
+    const isSunday = now.weekday === 7;
+    const isStartOfMonth = now.day === 1;
+
+    if (time === HistoricalTimes.DAILY && hasResetToday) {
+      resetTime = resetTime.plus({ days: 1 });
+    } else if (
+      time === HistoricalTimes.WEEKLY &&
+      ((isSunday && hasResetToday) || !isSunday)
+    ) {
+      resetTime = resetTime.plus({ week: 1 }).minus({ days: isSunday ? 0 : now.weekday });
+    } else if (
+      time === HistoricalTimes.MONTHLY &&
+      ((isStartOfMonth && hasResetToday) || !isStartOfMonth)
+    ) {
+      resetTime = resetTime.minus({ days: now.day - 1 }).plus({ months: 1 });
+    }
+
+    return Math.round(resetTime.toMillis() / 1000);
   }
 }

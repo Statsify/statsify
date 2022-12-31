@@ -35,7 +35,7 @@ export class SkyWarsMode {
   @Field()
   public assists: number;
 
-  @Field({ leaderboard: { formatter: formatTime } })
+  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
   public playtime: number;
 
   //Kit gets applied in the main class

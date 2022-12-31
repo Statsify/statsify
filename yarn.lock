@@ -9997,6 +9997,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "scripts@workspace:apps/scripts"
   dependencies:
+    "@statsify/api-client": "workspace:^"
     "@statsify/assets": "workspace:^"
     "@statsify/logger": "workspace:^"
     "@statsify/rendering": "workspace:^"
