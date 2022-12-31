@@ -75,9 +75,7 @@ export const LeaderboardProfile = ({
             )}
           </If>
           <box width="remaining" direction="column" {...highlight}>
-            <text align="left" t:ignore>
-              {d.name}
-            </text>
+            <text align="left">{d.name}</text>
           </box>
         </div>
         {d.fields.map((field) => {
@@ -99,12 +97,12 @@ export const LeaderboardProfile = ({
         <If condition={time}>
           {(time) => (
             <box>
-              <text t:ignore>§^3^§l{prettify(time)}</text>
+              <text>§^3^§l{prettify(time)}</text>
             </box>
           )}
         </If>
         <box width="remaining">
-          <text t:ignore>§^3^§l{name}</text>
+          <text>§^3^§l{name}</text>
         </box>
       </div>
       <List items={[<>{titles}</>, ...items]} />

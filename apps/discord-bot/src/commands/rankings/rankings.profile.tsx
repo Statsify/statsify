@@ -81,9 +81,7 @@ export const RankingsProfile = ({
           </box>
         </If>
         <box width="remaining" direction="column">
-          <text align="left" t:ignore>
-            {formatStat(d, originGame?.formatted ?? game)}
-          </text>
+          <text align="left">{formatStat(d, originGame?.formatted ?? game)}</text>
         </box>
         <box width="100%">
           <text>{formatPosition(t, d.rank)}</text>
