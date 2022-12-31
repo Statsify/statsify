@@ -22,6 +22,9 @@ const stringMetadata = (name: string): FieldMetadata => {
     leaderboard: {
       enabled: false,
       additionalFields: [],
+      extraDisplay: undefined,
+      formatter: undefined,
+      resetEvery: undefined,
       name: name.split(".").map(prettify).join(" "),
       fieldName,
     },
@@ -32,6 +35,13 @@ const stringMetadata = (name: string): FieldMetadata => {
       deserialize: true,
       store: true,
       default: "",
+    },
+    historical: {
+      enabled: false,
+      additionalFields: [],
+      formatter: undefined,
+      name: name.split(".").map(prettify).join(" "),
+      fieldName,
     },
   };
 };
@@ -75,6 +85,15 @@ describe("metadata", () => {
             store: true,
             default: 0,
           },
+          historical: {
+            enabled: true,
+            name: prettify("fieldA"),
+            aliases: [],
+            limit: 10_000,
+            sort: "DESC",
+            fieldName: prettify("fieldA"),
+            additionalFields: [],
+          },
         },
       ],
     ]);
@@ -103,6 +122,13 @@ describe("metadata", () => {
             deserialize: true,
             store: true,
             default: 0,
+          },
+          historical: {
+            additionalFields: [],
+            enabled: false,
+            fieldName: prettify("fieldA"),
+            formatter: undefined,
+            name: prettify("fieldA"),
           },
         },
       ],
@@ -189,11 +215,14 @@ describe("metadata", () => {
       enabled: true,
       name: "Field A Field B",
       fieldName: prettify("fieldB"),
+      formatter: undefined,
+      hidden: undefined,
       additionalFields: ["fieldA"],
       extraDisplay: "fieldA",
       aliases: [],
       sort: "DESC",
       limit: 10_000,
+      resetEvery: undefined,
     });
   });
 });

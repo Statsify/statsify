@@ -12,15 +12,14 @@ import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const { Logger } = require("@statsify/logger");
+const { CurrentHistoricalType } = require("@statsify/api-client");
 const { MetadataScanner, Player, Guild } = require("@statsify/schemas");
-
-const CONSTRUCTORS = [Player, Guild];
 
 const logger = new Logger("Redis Limiter");
 const redis = new Redis(process.env.REDIS_URL);
 
-const limit = async () => {
-  for (const constructor of CONSTRUCTORS) {
+const runLimit = async (constructors, prefixes) => {
+  constructors.forEach(async (constructor, i) => {
     const oldLeaderboardPipeline = redis.pipeline();
     const limitLeaderboardPipeline = redis.pipeline();
 
@@ -28,21 +27,26 @@ const limit = async () => {
     const fields = MetadataScanner.scan(constructor);
 
     fields.forEach(([key, value]) => {
-      const path = `${name}.${key}`;
-      if (!value.leaderboard.enabled) oldLeaderboardPipeline.del(path);
+      const path = prefixes ? `${prefixes[i]}:${name}.${key}` : `${name}.${key}`;
+      if (!value.leaderboard.enabled || (prefixes ? !value.historical.enabled : false))
+        oldLeaderboardPipeline.del(path);
     });
 
     await oldLeaderboardPipeline.exec();
 
-    const leaderboards = fields.filter(([, value]) => value.leaderboard.enabled);
+    const leaderboards = prefixes
+      ? fields.filter(([, value]) => value.historical.enabled)
+      : fields.filter(([, value]) => value.leaderboard.enabled);
 
     let memberCount = 0;
 
     leaderboards.forEach(([key, value]) => {
       const path = `${name}.${key}`;
-      const { sort, limit } = value.leaderboard;
-
+      const { sort } = value.leaderboard;
+      let { limit } = value.leaderboard;
       if (limit === Number.POSITIVE_INFINITY) return;
+
+      prefixes ? (limit /= 10) : limit; // Reduce historical leaderboard max size
 
       memberCount += limit;
 
@@ -57,9 +61,25 @@ const limit = async () => {
 
     logger.log(`Limited ${leaderboards.length} ${name} leaderboards`);
     logger.log(
-      `There ${memberCount.toLocaleString()} possible members in the ${name} leaderboards`
+      `There are ${memberCount.toLocaleString()} possible members in the ${
+        prefixes ? prefixes[i].toLowerCase() : "lifetime"
+      } ${name} leaderboards`
     );
-  }
+  });
+};
+
+const limit = async () => {
+  await Promise.all([
+    runLimit([Player, Guild]),
+    runLimit(
+      [Player, Player, Player],
+      [
+        CurrentHistoricalType.DAILY,
+        CurrentHistoricalType.WEEKLY,
+        CurrentHistoricalType.MONTHLY,
+      ]
+    ),
+  ]);
 };
 
 const task = new Task("leaderboard limiting", limit);

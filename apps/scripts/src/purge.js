@@ -96,30 +96,29 @@ const purge = async () => {
   if (!(await inquirerConfirmation())) return;
 
   switch (method) {
-    case "node_modules": {
+    case "node_modules":
       await nodeModules();
       break;
-    }
-    case ".turbo": {
+
+    case ".turbo":
       await turboRepo();
       break;
-    }
-    case "dist": {
+
+    case "dist":
       await dist();
       break;
-    }
-    case "coverage": {
+
+    case "coverage":
       await coverage();
       break;
-    }
-    case ".swc": {
+
+    case ".swc":
       await swc();
       break;
-    }
-    case "ALL": {
+
+    case "ALL":
       await all();
       break;
-    }
   }
 
   process.exit(0);

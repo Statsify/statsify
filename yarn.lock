@@ -2636,7 +2636,7 @@ __metadata:
     "@types/i18next-fs-backend": ^1.1.2
     discord-api-types: ^0.36.3
     i18next: ^21.10.0
-    i18next-fs-backend: ^1.2.0
+    i18next-fs-backend: ^2.1.1
     reflect-metadata: ^0.1.13
     tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb"
     typedi: ^0.10.0
@@ -2681,7 +2681,7 @@ __metadata:
     "@statsify/logger": "workspace:^"
     "@statsify/math": "workspace:^"
     "@statsify/util": "workspace:^"
-    "@typegoose/typegoose": ^9.13.2
+    "@typegoose/typegoose": ^10.0.0
   languageName: unknown
   linkType: soft
 
@@ -3027,9 +3027,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typegoose/typegoose@npm:^9.13.2":
-  version: 9.13.2
-  resolution: "@typegoose/typegoose@npm:9.13.2"
+"@typegoose/typegoose@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "@typegoose/typegoose@npm:10.0.0"
   dependencies:
     lodash: ^4.17.20
     loglevel: ^1.8.1
@@ -3037,8 +3037,8 @@ __metadata:
     semver: ^7.3.8
     tslib: ^2.4.1
   peerDependencies:
-    mongoose: ~6.7.2
-  checksum: ffb2acaef2bad9a4f9bb28196cef1b31a75b22121bbd278428e5a6e68660cdc1c14b3a18212ba64db922cf4561c011991e73690a20c0b47230b306d76f6352fb
+    mongoose: ~6.8.0
+  checksum: 317aadd56d022ab78baccc101579fa48fa275c65a0ebf01fba81742fa0cf4148a35d4548fb2367d0c9b6db042f9a3720bb311cfd771dda70707141b051d7dba8
   languageName: node
   linkType: hard
 
@@ -3188,10 +3188,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^17.0.45":
-  version: 17.0.45
-  resolution: "@types/node@npm:17.0.45"
-  checksum: aa04366b9103b7d6cfd6b2ef64182e0eaa7d4462c3f817618486ea0422984c51fc69fd0d436eae6c9e696ddfdbec9ccaa27a917f7c2e8c75c5d57827fe3d95e8
+"@types/node@npm:^18.11.18":
+  version: 18.11.18
+  resolution: "@types/node@npm:18.11.18"
+  checksum: 03f17f9480f8d775c8a72da5ea7e9383db5f6d85aa5fefde90dd953a1449bd5e4ffde376f139da4f3744b4c83942166d2a7603969a6f8ea826edfb16e6e3b49d
   languageName: node
   linkType: hard
 
@@ -3724,7 +3724,7 @@ __metadata:
     "@statsify/logger": "workspace:^"
     "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
-    "@typegoose/typegoose": ^9.13.2
+    "@typegoose/typegoose": ^10.0.0
     "@types/luxon": ^3.1.0
     class-transformer: 0.5.1
     class-validator: ^0.13.2
@@ -5071,7 +5071,7 @@ __metadata:
     "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
-    "@typegoose/typegoose": ^9.13.2
+    "@typegoose/typegoose": ^10.0.0
     "@types/luxon": ^3.1.0
     axios: ^0.27.2
     discord-api-types: ^0.36.3
@@ -6484,10 +6484,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next-fs-backend@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "i18next-fs-backend@npm:1.2.0"
-  checksum: da74d20f2b007f8e34eaf442fa91ad12aaff3b9891e066c6addd6d111b37e370c62370dfbc656730ab2f8afd988f2e7ea1c48301ebb19ccb716fb5965600eddf
+"i18next-fs-backend@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "i18next-fs-backend@npm:2.1.1"
+  checksum: fe606df2639b3ea49501b5bc947553e4bfbce67290c91ab22a8b9ecee4d11b8ae78179980720998881f117f0321d3ba0f739fb93a0ab95613cd79b85ffb014f5
   languageName: node
   linkType: hard
 
@@ -9997,6 +9997,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "scripts@workspace:apps/scripts"
   dependencies:
+    "@statsify/api-client": "workspace:^"
     "@statsify/assets": "workspace:^"
     "@statsify/logger": "workspace:^"
     "@statsify/rendering": "workspace:^"
@@ -10205,7 +10206,7 @@ __metadata:
   resolution: "site@workspace:apps/site"
   dependencies:
     "@next/eslint-plugin-next": ^12.3.4
-    "@types/node": ^17.0.45
+    "@types/node": ^18.11.18
     "@types/react": ^18.0.26
     "@types/react-dom": ^18.0.9
     "@types/sharp": ^0.31.0
@@ -10439,7 +10440,7 @@ __metadata:
     "@swc/core": 1.2.205
     "@swc/jest": ^0.2.24
     "@types/jest": ^29.2.4
-    "@types/node": ^17.0.45
+    "@types/node": ^18.11.18
     "@typescript-eslint/eslint-plugin": ^5.47.0
     "@typescript-eslint/parser": ^5.47.0
     chokidar: ^3.5.3
@@ -10613,7 +10614,7 @@ __metadata:
     "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
-    "@typegoose/typegoose": ^9.13.2
+    "@typegoose/typegoose": ^10.0.0
     axios: ^0.27.2
     discord-api-types: ^0.36.3
     luxon: ^3.1.1
@@ -11283,7 +11284,7 @@ __metadata:
     "@statsify/logger": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
-    "@typegoose/typegoose": ^9.13.2
+    "@typegoose/typegoose": ^10.0.0
     minecraft-protocol: ^1.36.2
     mongoose: ^6.8.1
   languageName: unknown

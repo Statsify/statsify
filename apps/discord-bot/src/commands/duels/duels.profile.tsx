@@ -44,24 +44,23 @@ export const DuelsProfile = ({
   const { api } = mode;
 
   switch (api) {
-    case "bridge": {
+    case "bridge":
       table = <BridgeDuelsTable stats={duels[api]} t={t} />;
       break;
-    }
-    case "uhc": {
+
+    case "uhc":
       table = <UHCDuelsTable stats={duels[api]} t={t} time={time} />;
       break;
-    }
+
     case "skywars":
     case "op":
-    case "megawalls": {
+    case "megawalls":
       table = <MultiDuelsGameModeTable stats={duels[api]} t={t} time={time} />;
       break;
-    }
-    default: {
+
+    default:
       table = <SingleDuelsGameModeTable stats={duels[api]} t={t} time={time} />;
       break;
-    }
   }
 
   return (

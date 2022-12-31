@@ -85,13 +85,13 @@ export class ArenaBrawl {
   @Field({ store: { default: "none" } })
   public rune: string;
 
-  @Field()
+  @Field({ historical: { enabled: false } })
   public coins: number;
 
-  @Field()
+  @Field({ historical: { enabled: false } })
   public keys: number;
 
-  @Field()
+  @Field({ historical: { enabled: false } })
   public tokens: number;
 
   public constructor(data: APIData, legacy: APIData) {

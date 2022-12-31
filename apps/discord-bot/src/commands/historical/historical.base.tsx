@@ -53,11 +53,10 @@ import { BlitzSGProfile } from "../blitzsg/blitzsg.profile";
 import { BridgeProfile } from "../duels/bridge.profile";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile";
-import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile";
-import { HistoricalType } from "@statsify/api-client";
+import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile";
 import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile";
 import { PaintballProfile } from "../paintball/paintball.profile";
@@ -316,9 +315,9 @@ export class HistoricalBase {
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
 
     const isNotLastHistorical = [
-      HistoricalType.DAILY,
-      HistoricalType.WEEKLY,
-      HistoricalType.MONTHLY,
+      HistoricalTimes.DAILY as HistoricalType,
+      HistoricalTimes.WEEKLY as HistoricalType,
+      HistoricalTimes.MONTHLY as HistoricalType,
     ].includes(this.time);
 
     const pages: Page[] = displayedModes.map((mode) => ({
@@ -333,8 +332,7 @@ export class HistoricalBase {
           : undefined;
 
         if (isNotLastHistorical)
-          content =
-            (content ?? "") + t("historical.reset", { time: this.getResetTime(player) });
+          content = (content ?? "") + t("historical.reset", { time: player.nextReset });
 
         const profile = getProfile(
           {
@@ -362,34 +360,5 @@ export class HistoricalBase {
     }));
 
     return this.paginateService.paginate(context, pages);
-  }
-
-  private getResetTime(player: Player) {
-    const now = DateTime.now();
-
-    const hasResetToday = player.resetMinute! <= now.hour * 60 + now.minute;
-
-    let resetTime = now
-      .minus({ hours: now.hour, minutes: now.minute })
-      .plus({ minutes: player.resetMinute! });
-
-    const isSunday = now.weekday === 7;
-    const isStartOfMonth = now.day === 1;
-
-    if (this.time === HistoricalType.DAILY && hasResetToday) {
-      resetTime = resetTime.plus({ days: 1 });
-    } else if (
-      this.time === HistoricalType.WEEKLY &&
-      ((isSunday && hasResetToday) || !isSunday)
-    ) {
-      resetTime = resetTime.plus({ week: 1 }).minus({ days: isSunday ? 0 : now.weekday });
-    } else if (
-      this.time === HistoricalType.MONTHLY &&
-      ((isStartOfMonth && hasResetToday) || !isStartOfMonth)
-    ) {
-      resetTime = resetTime.minus({ days: now.day - 1 }).plus({ months: 1 });
-    }
-
-    return Math.round(resetTime.toMillis() / 1000);
   }
 }

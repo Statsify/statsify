@@ -17,6 +17,7 @@ import { config } from "@statsify/util";
       baseURL: `https://api.hypixel.net/`,
       headers: {
         "API-Key": config("hypixelApi.key"),
+        "accept-encoding": "*",
       },
       timeout: config("hypixelApi.timeout", { default: 5000 }),
     }),

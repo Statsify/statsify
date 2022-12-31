@@ -33,25 +33,43 @@ export class General {
       formatter: getNetworkLevel,
       additionalFields: ["this.networkLevel"],
     },
+    historical: {
+      hidden: false,
+      fieldName: "EXP Gained",
+      formatter: Number,
+    },
   })
   public networkExp: number;
 
-  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+  @Field({
+    leaderboard: { enabled: false },
+    historical: { enabled: false, fieldName: "Levels Gained" },
+    store: { default: 1 },
+  })
   public networkLevel: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.highestRewardStreak"] } })
+  @Field({
+    leaderboard: { additionalFields: ["this.highestRewardStreak"] },
+    historical: { enabled: false },
+  })
   public currentRewardStreak: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.currentRewardStreak"] } })
+  @Field({
+    leaderboard: { additionalFields: ["this.currentRewardStreak"] },
+    historical: { enabled: false },
+  })
   public highestRewardStreak: number;
 
-  @Field()
+  @Field({ historical: { enabled: false } })
   public tournamentTributes: number;
 
   @Field()
   public ranksGifted: number;
 
-  @Field({ leaderboard: { fieldName: "Tokens", name: "Classic Tokens" } })
+  @Field({
+    leaderboard: { fieldName: "Tokens", name: "Classic Tokens" },
+    historical: { enabled: false },
+  })
   public classicTokens: number;
 
   @Field()

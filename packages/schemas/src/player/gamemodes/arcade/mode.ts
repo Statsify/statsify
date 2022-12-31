@@ -66,10 +66,10 @@ export class BountyHunters {
   }
 }
 export class CaptureTheWool {
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.captures"] } })
   public kills: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.kills"] } })
   public captures: number;
 
   public constructor(ap: APIData) {
@@ -79,7 +79,7 @@ export class CaptureTheWool {
 }
 
 export class CreeperAttack {
-  @Field()
+  @Field({ historical: { enabled: false } })
   public maxWave: number;
 
   public constructor(data: APIData) {
@@ -270,6 +270,9 @@ export class HoleInTheWall {
     leaderboard: {
       additionalFields: ["this.highestScoreQualifications", "this.highestScoreFinals"],
     },
+    historical: {
+      additionalFields: [],
+    },
   })
   public wins: number;
 
@@ -277,12 +280,20 @@ export class HoleInTheWall {
   public wallsFaced: number;
 
   @Field({
-    leaderboard: { name: "Highest Score - Qualifications", fieldName: "Qualifiers PB" },
+    leaderboard: {
+      name: "Highest Score - Qualifications",
+      fieldName: "Qualifiers PB",
+    },
+    historical: { enabled: false },
   })
   public highestScoreQualifications: number;
 
   @Field({
-    leaderboard: { name: "Highest Score - Finals", fieldName: "Finals PB" },
+    leaderboard: {
+      name: "Highest Score - Finals",
+      fieldName: "Finals PB",
+    },
+    historical: { enabled: false },
   })
   public highestScoreFinals: number;
 
@@ -304,7 +315,7 @@ export class HypixelSays {
   @Field({ leaderboard: { additionalFields: ["this.roundsWon", "this.points"] } })
   public wins: number;
 
-  @Field()
+  @Field({ historical: { enabled: false } })
   public maxScore: number;
 
   public constructor(data: APIData) {
@@ -617,11 +628,19 @@ export class ThrowOut {
 }
 
 export class ZombiesMap {
-  @Field({ leaderboard: { additionalFields: ["this.fastestWin"] } })
+  @Field({
+    leaderboard: { additionalFields: ["this.fastestWin"] },
+    historical: { enabled: false },
+  })
   public wins: number;
 
   @Field({
-    leaderboard: { sort: "ASC", formatter: formatTime, additionalFields: ["this.wins"] },
+    leaderboard: {
+      sort: "ASC",
+      formatter: formatTime,
+      additionalFields: ["this.wins"],
+    },
+    historical: { enabled: false },
   })
   public fastestWin: number;
 

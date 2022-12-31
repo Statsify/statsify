@@ -32,18 +32,44 @@ import {
   TNT_GAMES_MODES,
   TURBO_KART_RACERS_MODES,
   UHC_MODES,
+  User,
+  UserTier,
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
   WOOLWARS_MODES,
 } from "@statsify/schemas";
-import { ApiService, Command, CommandContext, SubCommand } from "@statsify/discord";
+import {
+  ApiService,
+  ChoiceArgument,
+  Command,
+  CommandContext,
+  EmbedBuilder,
+  InteractionAttachment,
+  SubCommand,
+} from "@statsify/discord";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { GuildLeaderboardArgument } from "./guild-leaderboard.argument";
 import { GuildLeaderboardSubCommand } from "./guild-leaderboard.subcommand";
-import { PlayerLeaderboardArgument } from "./player-leaderboard.argument";
-import { getBackground } from "@statsify/assets";
+import {
+  PlayerLeaderboardArgument,
+  SHORT_TO_LONG_HISTORICAL_TYPE,
+} from "./player-leaderboard.argument";
+import { STATUS_COLORS } from "@statsify/logger";
+import { getAssetPath, getBackground, getLogoPath } from "@statsify/assets";
+import { prettify } from "@statsify/util";
+import { readFileSync } from "node:fs";
+
+const HISTORICAL_ARGUMENT = new ChoiceArgument({
+  name: "time",
+  choices: [
+    ["Lifetime", "L"],
+    ["Daily", "D"],
+    ["Weekly", "W"],
+    ["Monthly", "M"],
+  ],
+});
 
 @Command({
   name: "leaderboard",
@@ -56,7 +82,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-arcade"),
-    args: [new PlayerLeaderboardArgument("arcade")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("arcade")],
   })
   public arcade(context: CommandContext) {
     return this.run(context, "arcade", ARCADE_MODES);
@@ -64,7 +90,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-arenabrawl"),
-    args: [new PlayerLeaderboardArgument("arenabrawl")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("arenabrawl")],
     group: "classic",
   })
   public arenabrawl(context: CommandContext) {
@@ -73,7 +99,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-bedwars"),
-    args: [new PlayerLeaderboardArgument("bedwars")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("bedwars")],
   })
   public bedwars(context: CommandContext) {
     return this.run(context, "bedwars", BEDWARS_MODES);
@@ -81,7 +107,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-blitzsg"),
-    args: [new PlayerLeaderboardArgument("blitzsg")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("blitzsg")],
   })
   public blitzsg(context: CommandContext) {
     return this.run(context, "blitzsg", BLITZSG_MODES);
@@ -89,7 +115,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-buildbattle"),
-    args: [new PlayerLeaderboardArgument("buildbattle")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("buildbattle")],
   })
   public buildbattle(context: CommandContext) {
     return this.run(context, "buildbattle", BUILD_BATTLE_MODES);
@@ -97,7 +123,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-challenges"),
-    args: [new PlayerLeaderboardArgument("challenges")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("challenges")],
   })
   public challenges(context: CommandContext) {
     return this.run(context, "challenges", CHALLENGE_MODES);
@@ -105,7 +131,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-copsandcrims"),
-    args: [new PlayerLeaderboardArgument("copsandcrims")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("copsandcrims")],
   })
   public copsandcrims(context: CommandContext) {
     return this.run(context, "copsandcrims", COPS_AND_CRIMS_MODES);
@@ -113,7 +139,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-duels"),
-    args: [new PlayerLeaderboardArgument("duels")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("duels")],
   })
   public duels(context: CommandContext) {
     return this.run(context, "duels", DUELS_MODES);
@@ -121,7 +147,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-general"),
-    args: [new PlayerLeaderboardArgument("general")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("general")],
   })
   public general(context: CommandContext) {
     return this.run(context, "general", GENERAL_MODES);
@@ -129,7 +155,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-megawalls"),
-    args: [new PlayerLeaderboardArgument("megawalls")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("megawalls")],
   })
   public megawalls(context: CommandContext) {
     return this.run(context, "megawalls", MEGAWALLS_MODES);
@@ -137,7 +163,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-murdermystery"),
-    args: [new PlayerLeaderboardArgument("murdermystery")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("murdermystery")],
   })
   public murdermystery(context: CommandContext) {
     return this.run(context, "murdermystery", MURDER_MYSTERY_MODES);
@@ -145,7 +171,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-paintball"),
-    args: [new PlayerLeaderboardArgument("paintball")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("paintball")],
     group: "classic",
   })
   public paintball(context: CommandContext) {
@@ -162,7 +188,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-pit"),
-    args: [new PlayerLeaderboardArgument("pit")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("pit")],
   })
   public pit(context: CommandContext) {
     return this.run(context, "pit", PIT_MODES);
@@ -170,7 +196,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-quake"),
-    args: [new PlayerLeaderboardArgument("quake")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("quake")],
     group: "classic",
   })
   public quake(context: CommandContext) {
@@ -187,7 +213,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-skywars"),
-    args: [new PlayerLeaderboardArgument("skywars")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("skywars")],
   })
   public skywars(context: CommandContext) {
     return this.run(context, "skywars", SKYWARS_MODES);
@@ -195,7 +221,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-smashheroes"),
-    args: [new PlayerLeaderboardArgument("smashheroes")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("smashheroes")],
   })
   public smashheroes(context: CommandContext) {
     return this.run(context, "smashheroes", SMASH_HEROES_MODES);
@@ -203,7 +229,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-speeduhc"),
-    args: [new PlayerLeaderboardArgument("speeduhc")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("speeduhc")],
   })
   public speeduhc(context: CommandContext) {
     return this.run(context, "speeduhc", SPEED_UHC_MODES);
@@ -211,7 +237,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-tntgames"),
-    args: [new PlayerLeaderboardArgument("tntgames")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("tntgames")],
   })
   public tntgames(context: CommandContext) {
     return this.run(context, "tntgames", TNT_GAMES_MODES);
@@ -219,7 +245,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-turbokartracers"),
-    args: [new PlayerLeaderboardArgument("turbokartracers")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("turbokartracers")],
     group: "classic",
   })
   public turbokartracers(context: CommandContext) {
@@ -228,7 +254,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-uhc"),
-    args: [new PlayerLeaderboardArgument("uhc")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("uhc")],
   })
   public uhc(context: CommandContext) {
     return this.run(context, "uhc", UHC_MODES);
@@ -236,7 +262,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-vampirez"),
-    args: [new PlayerLeaderboardArgument("vampirez")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("vampirez")],
     group: "classic",
   })
   public vampirez(context: CommandContext) {
@@ -245,7 +271,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-walls"),
-    args: [new PlayerLeaderboardArgument("walls")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("walls")],
     group: "classic",
   })
   public walls(context: CommandContext) {
@@ -254,7 +280,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-warlords"),
-    args: [new PlayerLeaderboardArgument("warlords")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("warlords")],
   })
   public warlords(context: CommandContext) {
     return this.run(context, "warlords", WARLORDS_MODES);
@@ -262,7 +288,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-woolwars"),
-    args: [new PlayerLeaderboardArgument("woolwars")],
+    args: [HISTORICAL_ARGUMENT, new PlayerLeaderboardArgument("woolwars")],
   })
   public woolwars(context: CommandContext) {
     return this.run(context, "woolwars", WOOLWARS_MODES);
@@ -282,6 +308,45 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
     modes: GameModes<T>
   ) {
     const leaderboard = context.option<string>("leaderboard");
+    const shortTime = context.option<keyof typeof SHORT_TO_LONG_HISTORICAL_TYPE>("time");
+
+    //TODO: Remove this when the feature is fully released (inc. previews/historical-leaderboard.png).
+    if (shortTime != "L" && (context.getUser()?.tier ?? UserTier.NONE) <= UserTier.IRON) {
+      const embed = new EmbedBuilder()
+        .title(
+          `Statsify Iron is required to use ${SHORT_TO_LONG_HISTORICAL_TYPE[
+            shortTime
+          ]?.toLowerCase()} leaderboards`
+        )
+        //TODO: Figure out how much bolding to have
+        .description(
+          `**${prettify(
+            SHORT_TO_LONG_HISTORICAL_TYPE[shortTime] as string
+          )} leaderboards are currently in beta and require Statsify Iron to be used in their current state.\n\nFor a full list of Statsify Iron's features check them [here](https://statsify.net/donate). Below is a small preview of what the leaderboards look like.`
+        )
+        .color(STATUS_COLORS.error);
+
+      const preview = {
+        name: "preview.png",
+        data: readFileSync(getAssetPath(`previews/historical-leaderboard.png`)),
+        type: "image/png",
+      };
+
+      const thumbnail: InteractionAttachment = {
+        name: "logo.png",
+        data: readFileSync(getLogoPath(User.tierToLogo(UserTier.IRON), 52)),
+        type: "image/png",
+      };
+
+      embed.image(`attachment://${preview.name}`);
+      embed.thumbnail(`attachment://${thumbnail.name}`);
+      return {
+        embeds: [embed],
+        files: [preview, thumbnail],
+      };
+    }
+
+    const time = SHORT_TO_LONG_HISTORICAL_TYPE[shortTime];
 
     const field = `stats.${prefix}.${leaderboard.replaceAll(" ", ".")}`;
 
@@ -289,13 +354,18 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
       ...mapBackground(modes, modes.getModes()[0].api)
     );
 
+    const getLeaderboard = time
+      ? this.apiService.getHistoricalLeaderboard.bind(this.apiService, time)
+      : this.apiService.getPlayerLeaderboard.bind(this.apiService);
+
     return this.createLeaderboard({
       context,
       background,
       field,
-      getLeaderboard: this.apiService.getPlayerLeaderboard.bind(this.apiService),
+      getLeaderboard,
       type: "player",
       getLeaderboardDataIcon: (id) => this.apiService.getPlayerHead(id, 24),
+      time,
     });
   }
 }

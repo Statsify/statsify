@@ -31,8 +31,7 @@
   "i18n-ally.localesPaths": ["locales"],
   "i18n-ally.sourceLanguage": "en-US",
   "i18n-ally.displayLanguage": "en-US",
-  "i18n-ally.ignoredLocales": [
-    "en"
-  ],
+  "i18n-ally.ignoredLocales": ["en"],
   "i18n-ally.keystyle": "nested",
+  "todo-tree.tree.scanMode": "workspace only"
 }

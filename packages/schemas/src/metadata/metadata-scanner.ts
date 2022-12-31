@@ -49,6 +49,10 @@ export class MetadataScanner {
         ? `${baseName ? `${baseName} ` : ""}${value.leaderboard.name}`
         : baseName;
 
+      const historicalName = value.historical.name
+        ? `${baseName ? `${baseName} ` : ""}${value.historical.name}`
+        : baseName;
+
       for (const ratio of LEADERBOARD_RATIO_KEYS) {
         if (!ratio.includes(key)) continue;
 
@@ -62,10 +66,21 @@ export class MetadataScanner {
         break;
       }
 
+      // Apply metadata to historical
+      if (
+        !value.historical.additionalFields ||
+        value.historical.additionalFields.length === 0
+      )
+        value.historical.additionalFields = value.leaderboard.additionalFields;
+
       if (value.type.primitive || value.type.array)
         return metadataEntries.push([
           path,
-          { ...value, leaderboard: { ...value.leaderboard, name } },
+          {
+            ...value,
+            leaderboard: { ...value.leaderboard, name },
+            historical: { ...value.historical, name: historicalName },
+          },
         ]);
 
       //Carry the metadata down to the children
@@ -79,6 +94,9 @@ export class MetadataScanner {
 
           if (value.leaderboard.resetEvery && !metadata.leaderboard.resetEvery)
             metadata.leaderboard.resetEvery = value.leaderboard.resetEvery;
+
+          if (!metadata.historical.additionalFields?.length)
+            metadata.historical.additionalFields = value.historical.additionalFields;
 
           return [keyPath, metadata] as MetadataEntry;
         }

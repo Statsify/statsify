@@ -61,11 +61,9 @@ export class PlayerSearchService {
   }
 
   public delete(name: string) {
-    try {
-      return this.redis.call("FT.SUGDEL", "player:autocomplete", name);
-    } catch (e) {
+    return this.redis.call("FT.SUGDEL", "player:autocomplete", name).catch((e) => {
       this.logger.error(e);
       this.logger.error(REDI_SEARCH_NOT_INSTALLED);
-    }
+    });
   }
 }

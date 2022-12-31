@@ -7,14 +7,23 @@
  */
 
 import { APIData, Flatten, flatten } from "@statsify/util";
-import { Friends, Player, deserialize, serialize } from "@statsify/schemas";
+import { Daily, Monthly, Weekly } from "../historical/models";
+import {
+  Friends,
+  Player,
+  createHistoricalPlayer,
+  deserialize,
+  serialize,
+} from "@statsify/schemas";
 import {
   FriendsNotFoundException,
+  HistoricalTimes,
   HypixelCache,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from "@statsify/api-client";
+import { HistoricalLeaderboardService } from "../historical/leaderboards/historical-leaderboard.service";
 import { HypixelService } from "../hypixel";
 import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
@@ -28,9 +37,14 @@ export class PlayerService {
     private readonly hypixelService: HypixelService,
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: PlayerLeaderboardService,
+    @Inject(forwardRef(() => HistoricalLeaderboardService))
+    private readonly historicalLeaderboardService: HistoricalLeaderboardService,
     private readonly playerSearchService: PlayerSearchService,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
-    @InjectModel(Friends) private readonly friendsModel: ReturnModelType<typeof Friends>
+    @InjectModel(Friends) private readonly friendsModel: ReturnModelType<typeof Friends>,
+    @InjectModel(Daily) private readonly dailyModel: ReturnModelType<typeof Player>,
+    @InjectModel(Weekly) private readonly weeklyModel: ReturnModelType<typeof Player>,
+    @InjectModel(Monthly) private readonly monthlyModel: ReturnModelType<typeof Player>
   ) {}
 
   /**
@@ -57,16 +71,15 @@ export class PlayerService {
 
     if (player) {
       player.expiresAt = Date.now() + 120_000;
-      player.leaderboardBanned = mongoPlayer?.leaderboardBanned ?? false;
       player.resetMinute = mongoPlayer?.resetMinute;
+      player.lastReset = mongoPlayer?.lastReset;
+      player.nextReset = mongoPlayer?.nextReset;
       player.guildId = mongoPlayer?.guildId;
 
       if (mongoPlayer && mongoPlayer.username !== player.username)
         await this.playerSearchService.delete(mongoPlayer.username);
 
-      const flatPlayer = flatten(player);
-
-      await this.saveOne(flatPlayer, true);
+      const flatPlayer = await this.saveOne(player, true);
 
       flatPlayer.isNew = !mongoPlayer;
 
@@ -84,18 +97,15 @@ export class PlayerService {
     const mongoPlayer = await this.findMongoDocument(player.uuid, {
       username: true,
       guildId: true,
-      leaderboardBanned: true,
     });
 
     if (mongoPlayer && mongoPlayer.username !== player.username)
       await this.playerSearchService.delete(mongoPlayer.username);
 
     player.guildId = mongoPlayer?.guildId;
-    player.leaderboardBanned = mongoPlayer?.leaderboardBanned ?? false;
     player.expiresAt = Date.now() + 120_000;
 
-    const flatPlayer = flatten(player);
-    return this.saveOne(flatPlayer, false);
+    return this.saveOne(player, false);
   }
 
   public getPlayers(start: number, end: number) {
@@ -211,9 +221,106 @@ export class PlayerService {
       this.playerModel.deleteOne({ uuid: player.uuid }).exec(),
       this.playerSearchService.delete(player.username),
       this.playerLeaderboardService.addLeaderboards(Player, player, "uuid", true),
+      this.historicalLeaderboardService.addHistoricalLeaderboards(
+        HistoricalTimes.DAILY,
+        Player,
+        player,
+        "uuid",
+        true
+      ),
+      this.historicalLeaderboardService.addHistoricalLeaderboards(
+        HistoricalTimes.WEEKLY,
+        Player,
+        player,
+        "uuid",
+        true
+      ),
+      this.historicalLeaderboardService.addHistoricalLeaderboards(
+        HistoricalTimes.MONTHLY,
+        Player,
+        player,
+        "uuid",
+        true
+      ),
     ]);
+  }
 
-    return true;
+  public async saveOne(player: Player, registerAutocomplete: boolean) {
+    //Serialize and flatten the player
+    const flatPlayer = flatten(player);
+    const serializedPlayer = serialize<Player>(Player, flatPlayer);
+
+    let week;
+    let month;
+    let weeklyPlayer;
+    let monthlyPlayer;
+
+    const dailyPlayer = await this.dailyModel
+      .findOne({ uuid: player.uuid })
+      .lean()
+      .exec();
+    if (dailyPlayer) {
+      week = this.weeklyModel.findOne({ uuid: player.uuid }).lean().exec();
+      month = this.monthlyModel.findOne({ uuid: player.uuid }).lean().exec();
+
+      [weeklyPlayer, monthlyPlayer] = await Promise.all([week, month]);
+    }
+
+    const promises = [];
+
+    promises.push(
+      this.playerModel
+        .replaceOne({ uuid: player.uuid }, serializedPlayer, {
+          upsert: true,
+        })
+        .exec()
+    );
+
+    promises.push(
+      this.playerLeaderboardService.addLeaderboards(Player, flatPlayer, "uuid", false)
+    );
+
+    if (dailyPlayer) {
+      promises.push(
+        this.historicalLeaderboardService.addHistoricalLeaderboards(
+          HistoricalTimes.DAILY,
+          Player,
+          flatten(createHistoricalPlayer(dailyPlayer as Player, player)),
+          "uuid",
+          false
+        )
+      );
+    }
+
+    if (weeklyPlayer) {
+      promises.push(
+        this.historicalLeaderboardService.addHistoricalLeaderboards(
+          HistoricalTimes.WEEKLY,
+          Player,
+          flatten(createHistoricalPlayer(weeklyPlayer as Player, player)),
+          "uuid",
+          false
+        )
+      );
+    }
+
+    if (monthlyPlayer) {
+      promises.push(
+        this.historicalLeaderboardService.addHistoricalLeaderboards(
+          HistoricalTimes.MONTHLY,
+          Player,
+          flatten(createHistoricalPlayer(monthlyPlayer as Player, player)),
+          "uuid",
+          false
+        )
+      );
+    }
+
+    if (registerAutocomplete)
+      promises.push(this.playerSearchService.add(flatPlayer as RedisPlayer));
+
+    await Promise.all(promises);
+    return flatPlayer;
   }
 
   private async findMongoDocument(
@@ -235,29 +342,5 @@ export class PlayerService {
     mongoPlayer.cached = true;
 
     return flatten(mongoPlayer);
-  }
-
-  private async saveOne(player: Flatten<Player>, registerAutocomplete: boolean) {
-    //Serialize and flatten the player
-    const serializedPlayer = serialize(Player, player);
-
-    const saveMongo = this.playerModel.replaceOne(
-      { uuid: player.uuid },
-      serializedPlayer,
-      { upsert: true }
-    );
-
-    const saveRedis = this.playerLeaderboardService.addLeaderboards(
-      Player,
-      player,
-      "uuid",
-      player.leaderboardBanned ?? false
-    );
-
-    const saveAutocomplete = registerAutocomplete
-      ? await this.playerSearchService.add(player as RedisPlayer)
-      : Promise.resolve();
-
-    return Promise.all([saveMongo, saveRedis, saveAutocomplete]);
   }
 }

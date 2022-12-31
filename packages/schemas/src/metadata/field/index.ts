@@ -18,6 +18,7 @@ import { prop } from "@typegoose/typegoose";
 export function Field({
   type: typeOptions,
   leaderboard: leaderboardOptions,
+  historical: historicalOptions,
   store: storeOptions,
   docs: docsOptions,
   mongo: mongoOptions,
@@ -26,11 +27,14 @@ export function Field({
     const metadata = (Reflect.getMetadata(METADATA_KEY, target) ?? {}) as ClassMetadata;
 
     const type = getTypeMetadata(typeOptions, target, propertyKey);
-    const leaderboard = getLeaderboardMetadata(
+
+    const { leaderboard, historical } = getLeaderboardMetadata(
       type,
       propertyKey as string,
-      leaderboardOptions
+      leaderboardOptions,
+      historicalOptions
     );
+
     const store = getStoreMetadata(type, leaderboard, storeOptions);
 
     Reflect.defineMetadata(
@@ -40,6 +44,7 @@ export function Field({
         [propertyKey as string]: {
           type,
           leaderboard,
+          historical,
           store,
         },
       },
