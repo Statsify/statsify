@@ -2681,7 +2681,7 @@ __metadata:
     "@statsify/logger": "workspace:^"
     "@statsify/math": "workspace:^"
     "@statsify/util": "workspace:^"
-    "@typegoose/typegoose": ^9.13.2
+    "@typegoose/typegoose": ^10.0.0
   languageName: unknown
   linkType: soft
 
@@ -3027,9 +3027,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typegoose/typegoose@npm:^9.13.2":
-  version: 9.13.2
-  resolution: "@typegoose/typegoose@npm:9.13.2"
+"@typegoose/typegoose@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "@typegoose/typegoose@npm:10.0.0"
   dependencies:
     lodash: ^4.17.20
     loglevel: ^1.8.1
@@ -3037,8 +3037,8 @@ __metadata:
     semver: ^7.3.8
     tslib: ^2.4.1
   peerDependencies:
-    mongoose: ~6.7.2
-  checksum: ffb2acaef2bad9a4f9bb28196cef1b31a75b22121bbd278428e5a6e68660cdc1c14b3a18212ba64db922cf4561c011991e73690a20c0b47230b306d76f6352fb
+    mongoose: ~6.8.0
+  checksum: 317aadd56d022ab78baccc101579fa48fa275c65a0ebf01fba81742fa0cf4148a35d4548fb2367d0c9b6db042f9a3720bb311cfd771dda70707141b051d7dba8
   languageName: node
   linkType: hard
 
@@ -3724,7 +3724,7 @@ __metadata:
     "@statsify/logger": "workspace:^"
     "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
-    "@typegoose/typegoose": ^9.13.2
+    "@typegoose/typegoose": ^10.0.0
     "@types/luxon": ^3.1.0
     class-transformer: 0.5.1
     class-validator: ^0.13.2
@@ -5071,7 +5071,7 @@ __metadata:
     "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
-    "@typegoose/typegoose": ^9.13.2
+    "@typegoose/typegoose": ^10.0.0
     "@types/luxon": ^3.1.0
     axios: ^0.27.2
     discord-api-types: ^0.36.3
@@ -10614,7 +10614,7 @@ __metadata:
     "@statsify/rendering": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
-    "@typegoose/typegoose": ^9.13.2
+    "@typegoose/typegoose": ^10.0.0
     axios: ^0.27.2
     discord-api-types: ^0.36.3
     luxon: ^3.1.1
@@ -11284,7 +11284,7 @@ __metadata:
     "@statsify/logger": "workspace:^"
     "@statsify/schemas": "workspace:^"
     "@statsify/util": "workspace:^"
-    "@typegoose/typegoose": ^9.13.2
+    "@typegoose/typegoose": ^10.0.0
     minecraft-protocol: ^1.36.2
     mongoose: ^6.8.1
   languageName: unknown
