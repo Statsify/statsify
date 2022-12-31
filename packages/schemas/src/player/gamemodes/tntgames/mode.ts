@@ -62,7 +62,7 @@ export class TNTRun {
   @Field()
   public wlr: number;
 
-  @Field({ leaderboard: { formatter: formatTime } })
+  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
   public record: number;
 
   public constructor(data: APIData) {

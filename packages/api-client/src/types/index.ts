@@ -7,6 +7,6 @@
  */
 
 export * from "./guild-query.enum";
-export * from "./historical-type.enum";
+export * from "./historical-types";
 export * from "./hypixel-cache.enum";
 export * from "./leaderboard-query.enum";

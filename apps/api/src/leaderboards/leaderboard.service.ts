@@ -28,7 +28,7 @@ export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
 @Injectable()
 export abstract class LeaderboardService {
-  public constructor(@InjectRedis() private readonly redis: Redis) {}
+  public constructor(@InjectRedis() protected readonly redis: Redis) {}
 
   public async addLeaderboards<T>(
     constructor: Constructor<T>,
@@ -96,11 +96,11 @@ export abstract class LeaderboardService {
     let highlight: number | undefined = undefined;
 
     switch (type) {
-      case LeaderboardQuery.PAGE: {
+      case LeaderboardQuery.PAGE:
         top = (input as number) * PAGE_SIZE;
         bottom = top + PAGE_SIZE;
         break;
-      }
+
       case LeaderboardQuery.INPUT: {
         const ranking = await this.searchLeaderboardInput(input as string, field);
         highlight = ranking - 1;

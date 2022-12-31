@@ -26,7 +26,7 @@ import {
 } from "@statsify/schemas";
 import { Container, Footer, GameEntry, GameList, Header, SidebarItem } from "#components";
 import { DateTime } from "luxon";
-import { HistoricalType } from "@statsify/api-client";
+import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
 import { Palette, getColorPalette } from "../../themes/palette";
 import { ratio } from "@statsify/math";
 import type { BaseProfileProps } from "../base.hypixel-command";
@@ -181,21 +181,20 @@ export const QuestsProfile = ({
   let historicalTime: "LIVE" | HistoricalType;
 
   switch (time) {
-    case QuestTime.Overall: {
+    case QuestTime.Overall:
       period = "overall";
       historicalTime = "LIVE";
       break;
-    }
-    case QuestTime.Weekly: {
+
+    case QuestTime.Weekly:
       period = "weekly";
-      historicalTime = HistoricalType.WEEKLY;
+      historicalTime = HistoricalTimes.WEEKLY;
       break;
-    }
-    case QuestTime.Daily: {
+
+    case QuestTime.Daily:
       period = "daily";
-      historicalTime = HistoricalType.DAILY;
+      historicalTime = HistoricalTimes.DAILY;
       break;
-    }
   }
 
   const { api, formatted } = mode;
@@ -206,7 +205,7 @@ export const QuestsProfile = ({
     : undefined;
 
   switch (api) {
-    case "overall": {
+    case "overall":
       table = (
         <NormalTable
           quests={quests[period]}
@@ -217,8 +216,8 @@ export const QuestsProfile = ({
         />
       );
       break;
-    }
-    default: {
+
+    default:
       table = (
         <GameTable
           quests={quests[period][api]}
@@ -229,7 +228,6 @@ export const QuestsProfile = ({
         />
       );
       break;
-    }
   }
 
   const sidebar: SidebarItem[] = [[t("stats.total"), t(quests.total), "§b"]];

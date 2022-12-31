@@ -27,6 +27,6 @@ export * from "./status";
 export * from "./tags";
 export * from "./ticket";
 export * from "./user";
-export * from "./util/leaderboard-scanner";
+export * from "./util";
 export * from "./verify-codes";
 export * from "./watchdog";

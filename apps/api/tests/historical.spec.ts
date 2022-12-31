@@ -8,7 +8,7 @@
 
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { HistoricalController } from "../src/historical";
-import { HistoricalType } from "@statsify/api-client";
+import { HistoricalTimes } from "@statsify/api-client";
 import { Test } from "@nestjs/testing";
 import { ValidationPipe } from "@nestjs/common";
 import { testKey, testUsername } from "./test.constants";
@@ -44,10 +44,10 @@ describe("Historical", () => {
     expect(result.statusCode).toEqual(400);
   });
 
-  it(`/GET historical?player=username&type=${HistoricalType.DAILY}`, async () => {
+  it(`/GET historical?player=username&type=${HistoricalTimes.DAILY}`, async () => {
     const result = await app.inject({
       method: "GET",
-      url: `/historical?player=${testUsername}&type=${HistoricalType.DAILY}`,
+      url: `/historical?player=${testUsername}&type=${HistoricalTimes.DAILY}`,
       headers: {
         "x-api-key": testKey,
       },

@@ -14,12 +14,12 @@ import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify
 import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry";
+import { Severity, setGlobalOptions } from "@typegoose/typegoose";
 import { Integrations as TracingIntegrations } from "@sentry/tracing";
 import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
 import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
-import { setGlobalOptions } from "@typegoose/typegoose";
 import { version } from "../../../package.json";
 
 const logger = new Logger("api");
@@ -47,7 +47,10 @@ async function bootstrap() {
   await mkdir(join(config("api.mediaRoot"), "badges"), { recursive: true });
 
   //Removes the `_id` fields created from sub classes of documents
-  setGlobalOptions({ schemaOptions: { _id: false } });
+  setGlobalOptions({
+    options: { allowMixed: Severity.ALLOW },
+    schemaOptions: { _id: false },
+  });
 
   const adapter = new FastifyAdapter({ bodyLimit: 5e6 });
 

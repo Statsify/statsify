@@ -10,8 +10,8 @@ import { AxiosError } from "axios";
 import { ButtonBuilder, LocalizeFunction } from "../messages";
 import { ButtonStyle } from "discord-api-types/v10";
 import { Color, User } from "@statsify/schemas";
-import { ErrorMessage } from "../util/error.message";
 import {
+  CurrentHistoricalType,
   FriendsNotFoundException,
   GUILD_ID_REGEX,
   GuildNotFoundException,
@@ -24,6 +24,7 @@ import {
   ApiService as StatsifyApiService,
   StatusNotFoundException,
 } from "@statsify/api-client";
+import { ErrorMessage } from "../util/error.message";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
 
@@ -241,6 +242,21 @@ export class ApiService extends StatsifyApiService {
       if ((err.response?.data as PlayerNotFoundException).statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
     });
+  }
+
+  public override getHistoricalLeaderboard(
+    time: CurrentHistoricalType,
+    field: string,
+    input: string | number,
+    type: LeaderboardQuery
+  ) {
+    return super
+      .getHistoricalLeaderboard(time, field, input, type)
+      .catch((err: AxiosError) => {
+        if ((err.response?.data as PlayerNotFoundException).statusCode === 404)
+          return null;
+        throw new ErrorMessage("errors.leaderboardNotFound");
+      });
   }
 
   public override getGuildLeaderboard(

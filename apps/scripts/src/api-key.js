@@ -8,10 +8,11 @@
 
 import Redis from "ioredis";
 import inquirer from "inquirer";
+import { config } from "@statsify/util";
 import { createHash, randomUUID } from "node:crypto";
 import { inquirerConfirmation, inquirerLogger } from "./utils.js";
 
-const redis = new Redis(process.env.REDIS_URL);
+const redis = new Redis(config("database.redisUrl"));
 
 //TODO unify functions (one createKey)
 const createKey = async ({ name, key, role, limit }) => {
@@ -116,22 +117,21 @@ const keyManager = async () => {
   ]);
 
   switch (method) {
-    case "create": {
+    case "create":
       await createNewKey();
       break;
-    }
-    case "delete": {
+
+    case "delete":
       await deleteKey();
       break;
-    }
-    case "list": {
+
+    case "list":
       await listKeys();
       break;
-    }
-    case "edit": {
+
+    case "edit":
       await editKey();
       break;
-    }
   }
 
   process.exit(0);

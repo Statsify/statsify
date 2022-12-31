@@ -87,7 +87,7 @@ const prefixes: GamePrefix[] = [
 export type BlitzSGModes = IGameModes<typeof BLITZSG_MODES>;
 
 export class BlitzSG {
-  @Field()
+  @Field({ historical: { enabled: false } })
   public coins: number;
 
   @Field({ store: { default: "none" } })

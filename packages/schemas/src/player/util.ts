@@ -94,39 +94,38 @@ export class PlayerUtil {
       case "OWNER":
       case "SLOTH":
       case "MCP":
-      case "MINISTER": {
+      case "MINISTER":
         return new Color("RED");
-      }
-      case "PIG+++": {
+
+      case "PIG+++":
         return new Color("LIGHT_PURPLE");
-      }
+
       case "MOD":
-      case "GM": {
+      case "GM":
         return new Color("DARK_GREEN");
-      }
-      case "HELPER": {
+
+      case "HELPER":
         return new Color("BLUE");
-      }
-      case "BUILD TEAM": {
+
+      case "BUILD TEAM":
         return new Color("DARK_AQUA");
-      }
+
       case "MVP++":
       case "APPLE":
-      case "MOJANG": {
+      case "MOJANG":
         return new Color("GOLD");
-      }
+
       case "MVP":
       case "MVP+":
-      case "bMVP++": {
+      case "bMVP++":
         return new Color("AQUA");
-      }
+
       case "VIP":
-      case "VIP+": {
+      case "VIP+":
         return new Color("GREEN");
-      }
-      default: {
+
+      default:
         return new Color("GRAY");
-      }
     }
   }
 

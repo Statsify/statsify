@@ -18,7 +18,7 @@ import {
   ErrorResponse,
   GetHistoricalResponse,
   GetPlayerResponse,
-  HistoricalType,
+  HistoricalTimes,
 } from "@statsify/api-client";
 import { HistoricalDto } from "../dtos/historical.dto";
 import { HistoricalService } from "./historical.service";
@@ -53,7 +53,7 @@ export class HistoricalController {
   ) {
     const player = await this.historicalService.getAndReset(
       tag,
-      HistoricalType.MONTHLY,
+      HistoricalTimes.MONTHLY,
       resetMinute
     );
 
