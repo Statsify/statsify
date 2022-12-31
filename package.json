@@ -13,14 +13,14 @@
     "@swc/cli": "^0.1.57",
     "@swc/core": "1.2.205",
     "@swc/jest": "^0.2.24",
-    "@types/jest": "^29.2.4",
+    "@types/jest": "^29.2.5",
     "@types/node": "^18.11.18",
-    "@typescript-eslint/eslint-plugin": "^5.47.0",
-    "@typescript-eslint/parser": "^5.47.0",
+    "@typescript-eslint/eslint-plugin": "^5.47.1",
+    "@typescript-eslint/parser": "^5.47.1",
     "chokidar": "^3.5.3",
     "commitizen": "^4.2.6",
     "cz-conventional-changelog": "^3.3.0",
-    "eslint": "^8.30.0",
+    "eslint": "^8.31.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-license-header": "^0.6.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -65,5 +65,5 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "packageManager": "yarn@3.2.1"
+  "packageManager": "yarn@3.3.1"
 }

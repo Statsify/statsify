@@ -10,14 +10,14 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.27.0",
-    "@sentry/tracing": "^7.27.0",
+    "@sentry/node": "^7.28.1",
+    "@sentry/tracing": "^7.28.1",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@typegoose/typegoose": "^10.0.0",
     "minecraft-protocol": "^1.36.2",
-    "mongoose": "^6.8.1"
+    "mongoose": "^6.8.2"
   }
 }
