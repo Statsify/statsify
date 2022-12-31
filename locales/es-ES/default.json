@@ -458,7 +458,7 @@
     },
     "premiumRequired": {
       "description": "Echa un vistazo a todas las características disponibles [aqui](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
+      "preview": "Echa un vistazo a todas las características disponibles [aqui](https://statsify.net/premium). A continuación se muestra una pequeña vista previa a los comandos/cambios.",
       "title": "Se requiere el tier {{tier}} para ejecutar este comando"
     },
     "staffOnly": {
@@ -567,7 +567,7 @@
     "ended": "Terminado",
     "endurance": "Aguante",
     "event-level": "Nivel de evento",
-    "event-exp": "Event EXP",
+    "event-exp": "EXP de Evento",
     "exp": "EXP",
     "expGained": "EXP Ganada",
     "extraUltimates": "Ultimates Extra",
@@ -680,7 +680,7 @@
     "points": "Puntos",
     "poopCollected": "Poop Recolectada",
     "powerKicks": "Patadas de Poder",
-    "powerupActivations": "Power-Up Activations",
+    "powerupActivations": "Activaciones de Power-Up",
     "powerups": "Power-Ups",
     "prefix": "Prefijo",
     "prevent": "Evitar",
@@ -745,9 +745,9 @@
     "woolPlaced": "Lana colocada",
     "zombieKills": "Asesinatos de Zombie",
     "potionsBrewed": "Pociones elaboradas",
-    "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed",
-    "totalExp": "Total EXP"
+    "powerupsCollected": "Power-Ups Recolectados",
+    "roundsCompleted": "Rondas Completadas",
+    "totalExp": "EXP Total"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Únete a nuestro **$t(socials.discord)** y consigue **20% menos de tiempo de espera** $t(emojis:heart)",
