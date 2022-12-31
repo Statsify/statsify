@@ -79,19 +79,33 @@ const _render = (
   instruction.children.forEach((child) => {
     const size = getTotalSize(child[side]);
 
-    if (child.style.align === "center") {
-      const oppSide = side === "x" ? "y" : "x";
-      const oppSize = getTotalSize(child[oppSide]);
+    switch (child.style.align) {
+      case "center": {
+        const oppSide = side === "x" ? "y" : "x";
+        const oppSize = getTotalSize(child[oppSide]);
 
-      const centerDelta = (instruction[oppSide].size - oppSize) / 2;
+        const centerDelta = (instruction[oppSide].size - oppSize) / 2;
 
-      oppSide === "x" ? (x += centerDelta) : (y += centerDelta);
-      _render(ctx, context, intrinsicElements, child, x, y);
-      oppSide === "x" ? (x -= centerDelta) : (y -= centerDelta);
-    } else if (child.style.align === "left") {
-      _render(ctx, context, intrinsicElements, child, x, y);
-    } else {
-      throw new Error("Right align is unimplemented");
+        oppSide === "x" ? (x += centerDelta) : (y += centerDelta);
+        _render(ctx, context, intrinsicElements, child, x, y);
+        oppSide === "x" ? (x -= centerDelta) : (y -= centerDelta);
+        break;
+      }
+      case "left":
+        _render(ctx, context, intrinsicElements, child, x, y);
+        break;
+      case "right": {
+        const oppSide = side === "x" ? "y" : "x";
+        const delta =
+          instruction[oppSide].size -
+          (child[oppSide].size + child[oppSide].margin2 + child[oppSide].padding2);
+
+        oppSide === "x" ? (x += delta) : (y += delta);
+        _render(ctx, context, intrinsicElements, child, x, y);
+        oppSide === "x" ? (x -= delta) : (y -= delta);
+
+        break;
+      }
     }
 
     applyDelta(size);
