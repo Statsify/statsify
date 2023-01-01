@@ -60,6 +60,7 @@ export const HistoricalHeader = ({
       end = now.minus({ days: now.day });
       break;
   }
+
   if (startTime) start = startTime;
   if (endTime) end = endTime;
 
