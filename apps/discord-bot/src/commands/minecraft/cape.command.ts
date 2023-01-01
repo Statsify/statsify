@@ -79,37 +79,36 @@ export class CapeCommand {
     let start: number;
 
     switch (cape.width) {
-      case 92: {
+      case 92:
         height = 32;
         width = 20;
         start = 2;
         break;
-      }
-      case 184: {
+
+      case 184:
         height = 64;
         width = 40;
         start = 4;
         break;
-      }
-      case 1024: {
+
+      case 1024:
         height = 256;
         width = 160;
         start = 16;
         break;
-      }
-      case 2048: {
+
+      case 2048:
         height = 512;
         width = 318;
         start = 12;
         break;
-      }
+
       default:
-      case 46: {
+      case 46:
         height = 16;
         width = 10;
         start = 1;
         break;
-      }
     }
 
     const ratio = Math.round(Math.min(canvas.width / width, canvas.height / height));
