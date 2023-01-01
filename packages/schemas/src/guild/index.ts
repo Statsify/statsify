@@ -17,7 +17,7 @@ import { GuildRank } from "./rank";
 import { Progression } from "../progression";
 import { getLevel } from "./util";
 
-const limit = 50_000;
+const limit = 100_000;
 
 export class Guild {
   @Field({ mongo: { index: true, unique: true }, store: { required: true } })
