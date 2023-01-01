@@ -10,7 +10,7 @@ import { APIData } from "@statsify/util";
 import { Field } from "../metadata";
 import { FormattedGame, GameCodeMapping } from "../game";
 
-const limit = 50_000;
+const limit = 100_000;
 const fieldName = "GEXP";
 
 /**

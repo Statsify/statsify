@@ -75,7 +75,7 @@ describe("metadata", () => {
             additionalFields: [],
             aliases: [],
             sort: "DESC",
-            limit: 10_000,
+            limit: 50_000,
           },
           type: { type: Number, array: false, primitive: true },
           store: {
@@ -89,7 +89,7 @@ describe("metadata", () => {
             enabled: true,
             name: prettify("fieldA"),
             aliases: [],
-            limit: 10_000,
+            limit: 50_000,
             sort: "DESC",
             fieldName: prettify("fieldA"),
             additionalFields: [],
@@ -221,7 +221,7 @@ describe("metadata", () => {
       extraDisplay: "fieldA",
       aliases: [],
       sort: "DESC",
-      limit: 10_000,
+      limit: 50_000,
       resetEvery: undefined,
     });
   });
