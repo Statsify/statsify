@@ -84,7 +84,7 @@ const assignQuestMetadata = (
     const decorator = Field({
       type: () => Number,
       leaderboard: {
-        limit: 100_000,
+        limit: 10_000,
         name: canDisplayOverall ? quest.overall?.name : quest.name,
         fieldName: canDisplayOverall ? quest.overall?.fieldName : quest.fieldName,
         enabled: time === QuestTime.Overall && quest.leaderboard,

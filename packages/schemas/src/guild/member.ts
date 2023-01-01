@@ -28,7 +28,7 @@ export class GuildMember {
   @Field({ leaderboard: { enabled: false } })
   public questParticipation: number;
 
-  @Field({ type: () => [Number] })
+  @Field({ type: () => [Number], leaderboard: { enabled: false } })
   public expHistory: number[];
 
   @Field({ type: () => [String] })
