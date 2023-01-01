@@ -10,7 +10,7 @@ import type { FieldOptions } from "../../../metadata";
 
 export const challengeFieldData: FieldOptions = {
   leaderboard: {
-    limit: 100_000,
+    limit: 10_000,
     additionalFields: ["this.total"],
   },
 };
