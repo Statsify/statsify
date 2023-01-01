@@ -22,26 +22,26 @@
     "@nestjs/core": "^9.2.1",
     "@nestjs/platform-fastify": "^9.2.1",
     "@nestjs/swagger": "^6.1.4",
-    "@sentry/node": "^7.27.0",
-    "@sentry/tracing": "^7.27.0",
+    "@sentry/node": "^7.28.1",
+    "@sentry/tracing": "^7.28.1",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
-    "@typegoose/typegoose": "^9.13.2",
+    "@typegoose/typegoose": "^10.0.0",
     "class-transformer": "0.5.1",
-    "class-validator": "^0.13.2",
+    "class-validator": "^0.14.0",
     "handlebars": "^4.7.7",
     "ioredis": "5.2.4",
-    "luxon": "^3.1.1",
-    "mongoose": "^6.8.1",
+    "luxon": "^3.2.0",
+    "mongoose": "^6.8.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
-    "toad-scheduler": "^2.1.0"
+    "toad-scheduler": "^2.1.1"
   },
   "devDependencies": {
     "@nestjs/testing": "^9.2.1",
-    "@types/luxon": "^3.1.0"
+    "@types/luxon": "^3.2.0"
   }
 }

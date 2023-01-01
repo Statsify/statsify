@@ -11,13 +11,13 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.27.0",
+    "@sentry/node": "^7.28.1",
     "@statsify/assets": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "discord-api-types": "^0.36.3",
+    "discord-api-types": "^0.37.25",
     "i18next": "^21.10.0",
-    "i18next-fs-backend": "^1.2.0",
+    "i18next-fs-backend": "^2.1.1",
     "reflect-metadata": "^0.1.13",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb",
     "typedi": "^0.10.0"

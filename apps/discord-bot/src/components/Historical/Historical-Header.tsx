@@ -39,33 +39,27 @@ export const HistoricalHeader = ({
       start = now.minus({ days: 1 });
       end = now;
       break;
-
     case HistoricalTimes.WEEKLY:
       start = now.minus({ days: now.weekday });
       end = now;
       break;
-
     case HistoricalTimes.MONTHLY:
       start = now.minus({ days: now.day - 1 });
       end = now;
       break;
-
     case HistoricalTimes.LAST_DAY:
       start = now.minus({ days: 2 });
       end = now.minus({ days: 1 });
       break;
-
     case HistoricalTimes.LAST_WEEK:
       start = now.minus({ week: 1, days: now.weekday });
       end = now.minus({ days: now.weekday });
       break;
-
     case HistoricalTimes.LAST_MONTH:
       start = now.minus({ months: 1, days: now.day - 2 });
       end = now.minus({ days: now.day });
       break;
   }
-
   if (startTime) start = startTime;
   if (endTime) end = endTime;
 
@@ -84,7 +78,7 @@ export const HistoricalHeader = ({
             <text>§l{prettify(time.toLowerCase())}</text>
           </box>
           <box width="remaining">
-            <text t:ignore>{title}</text>
+            <text>{title}</text>
           </box>
         </div>
       </div>
