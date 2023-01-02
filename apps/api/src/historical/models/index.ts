@@ -12,3 +12,4 @@ export * from "./last-month.model";
 export * from "./last-week.model";
 export * from "./monthly.model";
 export * from "./weekly.model";
+export * from "./session.model";

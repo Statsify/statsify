@@ -15,6 +15,7 @@ import {
   ErrorMessage,
   IMessage,
   ModalBuilder,
+  SubCommand,
   TextInputBuilder,
 } from "@statsify/discord";
 import {
@@ -23,13 +24,36 @@ import {
   TextInputStyle,
 } from "discord-api-types/v10";
 import { DateTime, IANAZone } from "luxon";
-import { User } from "@statsify/schemas";
+import { HistoricalTimes } from "@statsify/api-client";
+import { User, UserTier } from "@statsify/schemas";
 
 @Command({ description: (t) => t("commands.reset") })
 export class ResetCommand {
   public constructor(private readonly apiService: ApiService) {}
 
-  public run(context: CommandContext): IMessage {
+  @SubCommand({ description: (t) => t("commands.reset-session") })
+  public async session(context: CommandContext): Promise<IMessage> {
+    const user = context.getUser();
+    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
+
+    if ((user?.tier ?? UserTier.NONE) > UserTier.IRON) {
+      throw new ErrorMessage("errors.goldOnly");
+    }
+
+    await this.apiService.resetPlayerHistorical(
+      user.uuid!,
+      undefined,
+      HistoricalTimes.SESSION
+    );
+
+    return {
+      content: (t) => t(`historical.resetSession`),
+      ephemeral: true,
+    };
+  }
+
+  @SubCommand({ description: (t) => t("commands.reset-time") })
+  public time(context: CommandContext): IMessage {
     const t = context.t();
     const user = context.getUser();
 

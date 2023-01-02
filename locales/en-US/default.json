@@ -214,7 +214,10 @@
     "watchdog": "View Hypixel Watchdog ban counts",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "session": "View your session stats in various games",
+    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-session": "Reset your current session"
   },
   "config": {
     "badge": {
@@ -494,7 +497,8 @@
     "new": "**{{displayName}}**'s historical stats have been checked for the first time on Statsify. Their stats will now be updated at this time every day.",
     "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
     "resetButton": "Click to Reset",
-    "setResetTime": "Set your reset time to <t:{{time}}:t>."
+    "setResetTime": "Set your reset time to <t:{{time}}:t>.",
+    "resetSession": "Your session has been reset!"
   },
   "leaderboard": {
     "guildInput": {

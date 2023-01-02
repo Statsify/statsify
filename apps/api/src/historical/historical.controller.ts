@@ -49,13 +49,9 @@ export class HistoricalController {
   @Delete()
   @Auth({ role: AuthRole.MEMBER })
   public async deleteHistoricalStats(
-    @Query() { player: tag, resetMinute }: ResetPlayerDto
+    @Query() { player: tag, resetMinute, type = HistoricalTimes.MONTHLY }: ResetPlayerDto
   ) {
-    const player = await this.historicalService.getAndReset(
-      tag,
-      HistoricalTimes.MONTHLY,
-      resetMinute
-    );
+    const player = await this.historicalService.getAndReset(tag, type, resetMinute);
 
     return { success: !!player, player };
   }

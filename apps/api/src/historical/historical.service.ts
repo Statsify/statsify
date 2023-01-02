@@ -15,7 +15,7 @@ import {
   LastHistoricalType,
   PlayerNotFoundException,
 } from "@statsify/api-client";
-import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
+import { Daily, LastDay, LastMonth, LastWeek, Monthly, Session, Weekly } from "./models";
 import { DateTime } from "luxon";
 import { Flatten, config, flatten } from "@statsify/util";
 import { HistoricalLeaderboardService } from "./leaderboards/historical-leaderboard.service";
@@ -55,7 +55,8 @@ export class HistoricalService {
     @InjectModel(Monthly) private readonly monthlyModel: PlayerModel,
     @InjectModel(LastDay) private readonly lastDayModel: PlayerModel,
     @InjectModel(LastWeek) private readonly lastWeekModel: PlayerModel,
-    @InjectModel(LastMonth) private readonly lastMonthModel: PlayerModel
+    @InjectModel(LastMonth) private readonly lastMonthModel: PlayerModel,
+    @InjectModel(Session) private readonly sessionModel: PlayerModel
   ) {
     const resetTask = new AsyncTask("historicalReset", this.resetPlayers.bind(this));
     const sweepTask = new AsyncTask("historicalSweep", this.checkSweepPlayers.bind(this));
@@ -155,7 +156,9 @@ export class HistoricalService {
     const player = await this.playerService.get(tag, HypixelCache.LIVE);
     if (!player) throw new PlayerNotFoundException();
 
-    player.resetMinute = time ?? this.getMinute();
+    if (type !== HistoricalTimes.SESSION) {
+      player.resetMinute = time ?? this.getMinute();
+    }
 
     return this.resetPlayer(player, type);
   }
@@ -175,6 +178,8 @@ export class HistoricalService {
       resetType === HistoricalTimes.LAST_WEEK ||
       isMonthly;
 
+    const isDaily = resetType !== HistoricalTimes.SESSION;
+
     const flatPlayer = flatten(player);
 
     const doc = serialize(Player, flatPlayer);
@@ -182,9 +187,13 @@ export class HistoricalService {
     doc.resetMinute = player.resetMinute ?? this.getMinute();
     flatPlayer.resetMinute = doc.resetMinute;
 
-    const resets = [
-      this.reset(this.dailyModel, this.lastDayModel, doc, HistoricalTimes.DAILY),
-    ];
+    const resets = [];
+
+    if (isDaily) {
+      this.reset(this.dailyModel, this.lastDayModel, doc, HistoricalTimes.DAILY);
+    } else {
+      this.reset(this.sessionModel, null, doc, HistoricalTimes.SESSION);
+    }
 
     if (isWeekly)
       resets.push(
@@ -203,7 +212,7 @@ export class HistoricalService {
 
   public async reset(
     model: PlayerModel,
-    lastModel: PlayerModel,
+    lastModel: PlayerModel | null,
     doc: Flatten<Player>,
     time: HistoricalType
   ) {
@@ -216,13 +225,21 @@ export class HistoricalService {
 
     if (last) delete last._id;
 
-    await Promise.all([
+    const mongoChanges = [
       model.replaceOne({ uuid: doc.uuid }, doc, { upsert: true }).lean().exec(),
-      lastModel
-        .replaceOne({ uuid: doc.uuid }, (last ?? doc) as Player, { upsert: true })
-        .lean()
-        .exec(),
+    ];
 
+    if (lastModel) {
+      mongoChanges.push(
+        lastModel
+          .replaceOne({ uuid: doc.uuid }, (last ?? doc) as Player, { upsert: true })
+          .lean()
+          .exec()
+      );
+    }
+
+    await Promise.all([
+      ...mongoChanges,
       this.historicalLeaderboardService.addHistoricalLeaderboards(
         time,
         Player,
@@ -287,6 +304,7 @@ export class HistoricalService {
       [HistoricalTimes.DAILY]: this.dailyModel,
       [HistoricalTimes.WEEKLY]: this.weeklyModel,
       [HistoricalTimes.MONTHLY]: this.monthlyModel,
+      [HistoricalTimes.SESSION]: this.sessionModel,
     };
 
     let oldPlayer = (await CURRENT_MODELS[type]
