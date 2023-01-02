@@ -745,6 +745,7 @@
     "woolPlaced": "羊毛放置數",
     "zombieKills": "殭屍擊殺數",
     "potionsBrewed": "藥水釀造數",
+    "positions": "排名",
     "powerupsCollected": "增益收集次數",
     "roundsCompleted": "回合完成數",
     "totalExp": "總計經驗值"
