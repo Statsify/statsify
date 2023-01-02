@@ -313,9 +313,9 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
     const shortTime = context.option<keyof typeof SHORT_TO_LONG_HISTORICAL_TYPE>("time");
 
     //TODO: Remove this when the feature is fully released (inc. previews/historical-leaderboard.png).
-    if (shortTime != "L" && (context.getUser()?.tier ?? UserTier.NONE) <= UserTier.IRON) {
+    if (shortTime != "L" && (context.getUser()?.tier ?? UserTier.NONE) < UserTier.IRON) {
       const userId = context.getUser()?.id;
-      //haha L
+
       logger.verbose(`User ${userId} tried to use ${prefix} ${shortTime} leaderboards`);
 
       const embed = new EmbedBuilder()
@@ -324,7 +324,6 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
             shortTime
           ]?.toLowerCase()} leaderboards`
         )
-        //TODO: Figure out how much bolding to have
         .description(
           `**${prettify(
             SHORT_TO_LONG_HISTORICAL_TYPE[shortTime] as string
@@ -346,6 +345,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
       embed.image(`attachment://${preview.name}`);
       embed.thumbnail(`attachment://${thumbnail.name}`);
+
       return {
         embeds: [embed],
         files: [preview, thumbnail],
