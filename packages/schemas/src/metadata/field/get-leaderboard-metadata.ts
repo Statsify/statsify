@@ -66,7 +66,8 @@ export const getLeaderboardMetadata = (
 
   let leaderboard: LeaderboardMetadata;
   let historical: LeaderboardMetadata;
-  if (typeMetadata.type !== Number) {
+
+  if (typeMetadata.type !== Number || typeMetadata.array) {
     leaderboard = {
       enabled: false,
       additionalFields: leaderboardOptions?.additionalFields || [],
