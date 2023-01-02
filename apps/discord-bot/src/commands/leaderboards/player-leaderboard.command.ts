@@ -52,11 +52,11 @@ import { BaseLeaderboardCommand } from "./base.leaderboard-command";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { GuildLeaderboardArgument } from "./guild-leaderboard.argument";
 import { GuildLeaderboardSubCommand } from "./guild-leaderboard.subcommand";
+import { Logger, STATUS_COLORS } from "@statsify/logger";
 import {
   PlayerLeaderboardArgument,
   SHORT_TO_LONG_HISTORICAL_TYPE,
 } from "./player-leaderboard.argument";
-import { STATUS_COLORS } from "@statsify/logger";
 import { getAssetPath, getBackground, getLogoPath } from "@statsify/assets";
 import { prettify } from "@statsify/util";
 import { readFileSync } from "node:fs";
@@ -70,6 +70,8 @@ const HISTORICAL_ARGUMENT = new ChoiceArgument({
     ["Monthly", "M"],
   ],
 });
+
+const logger = new Logger("LeaderboardCommand");
 
 @Command({
   name: "leaderboard",
@@ -312,6 +314,10 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
     //TODO: Remove this when the feature is fully released (inc. previews/historical-leaderboard.png).
     if (shortTime != "L" && (context.getUser()?.tier ?? UserTier.NONE) <= UserTier.IRON) {
+      const userId = context.getUser()?.id;
+      //haha L
+      logger.verbose(`User ${userId} tried to use ${prefix} ${shortTime} leaderboards`);
+
       const embed = new EmbedBuilder()
         .title(
           `Statsify Iron is required to use ${SHORT_TO_LONG_HISTORICAL_TYPE[
@@ -322,7 +328,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
         .description(
           `**${prettify(
             SHORT_TO_LONG_HISTORICAL_TYPE[shortTime] as string
-          )} leaderboards are currently in beta and require Statsify Iron to be used in their current state.\n\nFor a full list of Statsify Iron's features check them [here](https://statsify.net/donate). Below is a small preview of what the leaderboards look like.`
+          )} leaderboards are currently in beta and require Statsify Iron** to be used in their current state.\n\nFor a full list of Statsify Iron's features check them [here](https://statsify.net/donate). Below is a small preview of what the leaderboards look like.`
         )
         .color(STATUS_COLORS.error);
 
