@@ -27,18 +27,14 @@ import { DateTime, IANAZone } from "luxon";
 import { HistoricalTimes } from "@statsify/api-client";
 import { User, UserTier } from "@statsify/schemas";
 
-@Command({ description: (t) => t("commands.reset") })
+@Command({ description: "" })
 export class ResetCommand {
   public constructor(private readonly apiService: ApiService) {}
 
-  @SubCommand({ description: (t) => t("commands.reset-session") })
+  @SubCommand({ description: (t) => t("commands.reset-session"), tier: UserTier.GOLD })
   public async session(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
     if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
-
-    if ((user?.tier ?? UserTier.NONE) > UserTier.IRON) {
-      throw new ErrorMessage("errors.goldOnly");
-    }
 
     await this.apiService.resetPlayerHistorical(
       user.uuid!,
