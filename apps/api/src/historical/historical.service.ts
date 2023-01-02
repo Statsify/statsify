@@ -142,7 +142,7 @@ export class HistoricalService {
 
         doc.resetMinute = resetMinute ?? this.getMinute();
 
-        await this.reset(model, lastModel, doc, type, player);
+        await this.reset(model, lastModel, doc, type);
       } else {
         this.logger.error(`Could not sweep player with uuid ${uuid}`);
       }
@@ -183,29 +183,17 @@ export class HistoricalService {
     flatPlayer.resetMinute = doc.resetMinute;
 
     const resets = [
-      this.reset(this.dailyModel, this.lastDayModel, doc, HistoricalTimes.DAILY, player),
+      this.reset(this.dailyModel, this.lastDayModel, doc, HistoricalTimes.DAILY),
     ];
 
     if (isWeekly)
       resets.push(
-        this.reset(
-          this.weeklyModel,
-          this.lastWeekModel,
-          doc,
-          HistoricalTimes.WEEKLY,
-          player
-        )
+        this.reset(this.weeklyModel, this.lastWeekModel, doc, HistoricalTimes.WEEKLY)
       );
 
     if (isMonthly)
       resets.push(
-        this.reset(
-          this.monthlyModel,
-          this.lastMonthModel,
-          doc,
-          HistoricalTimes.MONTHLY,
-          player
-        )
+        this.reset(this.monthlyModel, this.lastMonthModel, doc, HistoricalTimes.MONTHLY)
       );
 
     await Promise.all(resets);
@@ -217,8 +205,7 @@ export class HistoricalService {
     model: PlayerModel,
     lastModel: PlayerModel,
     doc: Flatten<Player>,
-    time: HistoricalType,
-    player: Player
+    time: HistoricalType
   ) {
     //findOneAndReplace doesn't unflatten the document so findOne and replaceOne need to be used separately
     const last = await model.findOne({ uuid: doc.uuid }).lean().exec();
@@ -235,10 +222,11 @@ export class HistoricalService {
         .replaceOne({ uuid: doc.uuid }, (last ?? doc) as Player, { upsert: true })
         .lean()
         .exec(),
+
       this.historicalLeaderboardService.addHistoricalLeaderboards(
         time,
         Player,
-        player,
+        doc,
         "uuid",
         true
       ),
