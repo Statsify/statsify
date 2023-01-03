@@ -311,23 +311,20 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   ) {
     const leaderboard = context.option<string>("leaderboard");
     const shortTime = context.option<keyof typeof SHORT_TO_LONG_HISTORICAL_TYPE>("time");
+    const user = context.getUser();
 
     //TODO: Remove this when the feature is fully released (inc. previews/historical-leaderboard.png).
-    if (shortTime != "L" && (context.getUser()?.tier ?? UserTier.NONE) <= UserTier.IRON) {
-      const userId = context.getUser()?.id;
-      //haha L
-      logger.verbose(`User ${userId} tried to use ${prefix} ${shortTime} leaderboards`);
+    if (shortTime !== "L" && !User.isIron(user)) {
+      const userId = user?.id;
+      const time = SHORT_TO_LONG_HISTORICAL_TYPE[shortTime] as string;
+
+      logger.verbose(`User ${userId} tried to use ${prefix} ${time} leaderboards`);
 
       const embed = new EmbedBuilder()
-        .title(
-          `Statsify Iron is required to use ${SHORT_TO_LONG_HISTORICAL_TYPE[
-            shortTime
-          ]?.toLowerCase()} leaderboards`
-        )
-        //TODO: Figure out how much bolding to have
+        .title(`Statsify Iron is required to use ${time.toLowerCase()} leaderboards`)
         .description(
           `**${prettify(
-            SHORT_TO_LONG_HISTORICAL_TYPE[shortTime] as string
+            time
           )} leaderboards are currently in beta and require Statsify Iron** to be used in their current state.\n\nFor a full list of Statsify Iron's features check them [here](https://statsify.net/donate). Below is a small preview of what the leaderboards look like.`
         )
         .color(STATUS_COLORS.error);
@@ -346,6 +343,8 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
       embed.image(`attachment://${preview.name}`);
       embed.thumbnail(`attachment://${thumbnail.name}`);
+      embed.color(0xb5b5b5);
+
       return {
         embeds: [embed],
         files: [preview, thumbnail],
