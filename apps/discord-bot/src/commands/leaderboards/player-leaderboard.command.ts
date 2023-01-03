@@ -314,7 +314,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
     const user = context.getUser();
 
     //TODO: Remove this when the feature is fully released (inc. previews/historical-leaderboard.png).
-    if (shortTime !== "L" && User.isIron(user)) {
+    if (shortTime !== "L" && !User.isIron(user)) {
       const userId = user?.id;
       const time = SHORT_TO_LONG_HISTORICAL_TYPE[shortTime] as string;
 
