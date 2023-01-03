@@ -54,7 +54,7 @@ export type Bounty = {
 };
 
 export const getPrestige = (xp: number) => {
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i <= 50; i++) {
     if (xp <= PRESTIGE_XP_REQUIREMENTS[i]) {
       return i;
     }
