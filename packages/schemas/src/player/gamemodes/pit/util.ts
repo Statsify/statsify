@@ -28,7 +28,22 @@ const PRESTIGE_XP_REQUIREMENTS = [
   11_787_293_080,
 ];
 
-const PRESTIGE_COLORS = ["7", "9", "e", "6", "c", "5", "d", "f", "b", "1", "0", "3", "4"];
+const PRESTIGE_COLORS = [
+  "7",
+  "9",
+  "e",
+  "6",
+  "c",
+  "5",
+  "d",
+  "f",
+  "b",
+  "1",
+  "0",
+  "3",
+  "4",
+  "8",
+];
 
 const LEVEL_COLORS = [
   "7",
@@ -54,7 +69,7 @@ export type Bounty = {
 };
 
 export const getPrestige = (xp: number) => {
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i <= 50; i++) {
     if (xp <= PRESTIGE_XP_REQUIREMENTS[i]) {
       return i;
     }
@@ -82,6 +97,7 @@ export const getLevelColor = (level: number) =>
 
 export const getPrestigeColor = (prestige: number) => {
   if (prestige <= 0) return PRESTIGE_COLORS[0];
+  if (prestige >= 50) return PRESTIGE_COLORS[13];
   if (prestige >= 48) return PRESTIGE_COLORS[12];
   return PRESTIGE_COLORS[Math.floor((prestige + 5) / 5)];
 };
