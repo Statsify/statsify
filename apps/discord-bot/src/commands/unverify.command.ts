@@ -18,6 +18,9 @@ import {
 import { STATUS_COLORS } from "@statsify/logger";
 import { config } from "@statsify/util";
 
+const SUPPORT_BOT_GUILD_ID = config("supportBot.guild");
+const SUPPORT_BOT_MEMBER_ROLE_ID = config("supportBot.memberRole");
+
 @Command({ description: (t) => t("commands.unverify"), cooldown: 5 })
 export class UnverifyCommand {
   public constructor(
@@ -34,7 +37,7 @@ export class UnverifyCommand {
     await this.apiService.unverifyUser(userId);
 
     await this.memberService
-      .removeRole(config("supportBot.guild"), userId, config("supportBot.memberRole"))
+      .removeRole(SUPPORT_BOT_GUILD_ID, userId, SUPPORT_BOT_MEMBER_ROLE_ID)
       .then(() => this.apiService.updateUser(userId, { serverMember: false }))
       .catch(() => null);
 
@@ -47,3 +50,6 @@ export class UnverifyCommand {
     };
   }
 }
+
+@Command({ description: (t) => t("commands.unverify"), cooldown: 5 })
+export class UnlinkCommand extends UnverifyCommand {}

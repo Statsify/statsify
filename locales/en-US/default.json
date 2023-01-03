@@ -760,26 +760,31 @@
   "unknown": "Unknown",
   "verification": {
     "alreadyVerified": {
-      "description": "You are already linked to a Minecraft account. Run `/unverify` to unlink your Minecraft account.",
-      "title": "Already Verified"
+      "description": "You are already linked to a Minecraft account. Run `/unlink` to unlink your current Minecraft account.",
+      "title": "Already Linked"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
+      "description": "$t(verification.instructions.description)",
       "title": "Invalid Verification Code"
     },
-    "noCode": {
-      "description": "**How to verify**\n`1.` Open Minecraft and go to the server list\n`2.` Connect to `verify.statsify.net` and copy the code displayed\n`3.` Head back to discord and run `/verify code:XXXX`",
-      "title": "Missing Verification Code"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "description": "**How to Verify your Account**\n`1.` Open Minecraft and go to the server list\n`2.` Connect to `verify.statsify.net` and copy the code displayed\n`3.` Head back to discord and click the button below and type in your code",
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Click Here to Enter Code"
     },
     "notVerified": {
-      "description": "You have to be verified before you are able to unverify!",
-      "title": "Not Verified"
+      "description": "Your Minecraft account has to be linked before you are able to unlink!",
+      "title": "Not Linked"
     },
     "requiredVerification": {
-      "description": "To use this command you must be verified. Run `/verify` to verify your account.",
-      "title": "Verification Required"
+      "description": "To use this command your Minecraft account must be linked. Run `/link` to link your account.",
+      "title": "Minecraft Account Link Required"
     },
-    "successfulUnverification": "Successfully unverified your account!",
-    "successfulVerification": "You are now verified to **{{displayName}}**"
+    "successfulUnverification": "Successfully unlinked your account!",
+    "successfulVerification": "You are now linked to **{{displayName}}**"
   }
 }

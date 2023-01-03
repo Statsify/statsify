@@ -50,17 +50,17 @@ export class VerifyCommand {
     const verifyGif = this.getVerifyGif();
 
     const embed = new EmbedBuilder()
-      .title((t) => t("how to verify"))
-      .description((t) => t("verification.noCode.description"))
-      .color(STATUS_COLORS.info)
-      .image(`attachment://${verifyGif.name}`);
+      .title((t) => t("verification.instructions.title"))
+      .description((t) => t("verification.instructions.description"))
+      .color(STATUS_COLORS.info);
+    // .image(`attachment://${verifyGif.name}`);
 
     const modal = new ModalBuilder()
-      .title((t) => t("Enter your Verification Code"))
+      .title((t) => t("verification.instructions.modal.title"))
       .component(
         new ActionRowBuilder().component(
           new TextInputBuilder()
-            .label((t) => t(`Verification Code`))
+            .label((t) => t("verification.instructions.modal.input"))
             .placeholder(() => "XXXX")
             .minLength(4)
             .maxLength(4)
@@ -70,7 +70,7 @@ export class VerifyCommand {
       );
 
     const button = new ButtonBuilder()
-      .label((t) => t("Click here to verify"))
+      .label((t) => t("verification.instructions.button"))
       .style(ButtonStyle.Primary)
       .emoji((t) => t("emojis:check"));
 
@@ -95,10 +95,7 @@ export class VerifyCommand {
       const code = Number.parseInt(input);
 
       if (Number.isNaN(code)) {
-        const error = new ErrorMessage(
-          (t) => t("Invalid Verification Code"),
-          (t) => t("Please enter a valid verification code")
-        );
+        const error = this.invalidCodeError();
 
         return interaction.sendFollowup({
           ...error,
@@ -111,11 +108,7 @@ export class VerifyCommand {
       const user = await this.apiService.verifyUser(`${code}`, userId);
 
       if (!user) {
-        const error = new ErrorMessage(
-          (t) => t("verification.invalidCode.title"),
-          (t) => t("verification.invalidCode.description"),
-          { image: this.getVerifyGif() }
-        );
+        const error = this.invalidCodeError();
 
         return interaction.sendFollowup({
           ...error,
@@ -147,7 +140,7 @@ export class VerifyCommand {
     return {
       embeds: [embed],
       components: [row],
-      files: [verifyGif],
+      // files: [verifyGif],
     };
   }
 
@@ -155,4 +148,15 @@ export class VerifyCommand {
     const buffer = readFileSync(getAssetPath("verify.gif"));
     return { name: "verify.gif", data: buffer };
   }
+
+  private invalidCodeError() {
+    return new ErrorMessage(
+      (t) => t("verification.invalidCode.title"),
+      (t) => t("verification.invalidCode.description"),
+      { image: this.getVerifyGif() }
+    );
+  }
 }
+
+@Command({ description: (t) => t("commands.verify"), cooldown: 5 })
+export class LinkCommand extends VerifyCommand {}
