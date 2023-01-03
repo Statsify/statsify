@@ -76,13 +76,13 @@ export class Guild {
   @Field({ leaderboard: { fieldName: "GEXP -" } })
   public expByGame: ExpByGame;
 
-  @Field({ type: () => [Number] })
+  @Field({ type: () => [Number], leaderboard: { enabled: false } })
   public expHistory: number[];
 
   @Field({ type: () => [String] })
   public expHistoryDays: string[];
 
-  @Field({ type: () => [Number] })
+  @Field({ type: () => [Number], leaderboard: { enabled: false } })
   public scaledExpHistory: number[];
 
   @Field({ leaderboard: { limit, name: "Daily GEXP", fieldName: "GEXP" } })

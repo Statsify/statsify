@@ -141,11 +141,14 @@ export class Pit {
 
     this.progression = new Progression(
       this.exp - lastPrestigeReq,
-      getPrestigeReq(prestige) - lastPrestigeReq
+      Math.min(getPrestigeReq(prestige) - lastPrestigeReq, 11_787_293_080)
     );
 
     this.levelFormatted = getLevelFormatted(level, prestige);
-    this.nextLevelFormatted = getLevelFormatted(1, prestige + 1);
+    this.nextLevelFormatted =
+      prestige === 50
+        ? getLevelFormatted(120, prestige)
+        : getLevelFormatted(1, prestige + 1);
 
     this.contractsCompleted = data.contracts_completed;
 
