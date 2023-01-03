@@ -10,7 +10,7 @@ import { DateTime } from "luxon";
 import { HeaderBody } from "./HeaderBody";
 import { HeaderNametag } from "./HeaderNametag";
 import { Historical } from "../Historical";
-import { HistoricalType } from "@statsify/api-client";
+import { HistoricalTimeData } from "../Historical/Historical-Header";
 import { Image } from "skia-canvas";
 import { Sidebar, SidebarItem } from "../Sidebar";
 import { Skin } from "../Skin";
@@ -21,7 +21,7 @@ interface BaseHeaderProps {
   badge?: Image;
   size?: number;
   name: string;
-  time: "LIVE" | HistoricalType;
+  time: "LIVE" | HistoricalTimeData;
   startTime?: DateTime;
   endTime?: DateTime;
   title: string;
@@ -77,8 +77,6 @@ export const Header = (props: HeaderProps) => {
         skin={skin}
         title={props.title}
         time={props.time}
-        startTime={props.startTime}
-        endTime={props.endTime}
         sidebar={sidebar}
       />
     );

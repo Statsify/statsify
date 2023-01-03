@@ -53,10 +53,15 @@ import { BlitzSGProfile } from "../blitzsg/blitzsg.profile";
 import { BridgeProfile } from "../duels/bridge.profile";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile";
+import {
+  CurrentHistoricalType,
+  HistoricalTimes,
+  HistoricalType,
+} from "@statsify/api-client";
+import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile";
-import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile";
 import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile";
 import { PaintballProfile } from "../paintball/paintball.profile";
@@ -291,7 +296,7 @@ export class HistoricalBase {
     ));
   }
 
-  private async run<T extends GamesWithBackgrounds>(
+  protected async run<T extends GamesWithBackgrounds>(
     context: CommandContext,
     modes: GameModes<T>,
     getProfile: (base: BaseProfileProps, mode: GameMode<T>) => JSX.Element,
@@ -314,7 +319,7 @@ export class HistoricalBase {
     const allModes = modes.getModes();
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
 
-    const isNotLastHistorical = [
+    const showNextReset = [
       HistoricalTimes.DAILY as HistoricalType,
       HistoricalTimes.WEEKLY as HistoricalType,
       HistoricalTimes.MONTHLY as HistoricalType,
@@ -325,13 +330,17 @@ export class HistoricalBase {
       generator: async (t) => {
         const background = await getBackground(...mapBackground(modes, mode.api));
 
+        const displayName = this.apiService.emojiDisplayName(t, player.displayName);
+
         let content = player.isNew
-          ? `${t("historical.new", {
-              displayName: this.apiService.emojiDisplayName(t, player.displayName),
-            })}\n`
+          ? `${
+              this.time === CurrentHistoricalType.SESSION
+                ? t("historical.new-session", { displayName })
+                : t("historical.new", { displayName })
+            }`
           : undefined;
 
-        if (isNotLastHistorical)
+        if (showNextReset)
           content = (content ?? "") + t("historical.reset", { time: player.nextReset });
 
         const profile = getProfile(
@@ -343,7 +352,18 @@ export class HistoricalBase {
             t,
             user,
             badge,
-            time: this.time,
+            time: {
+              timeType: this.time,
+              startTime: player.lastReset
+                ? DateTime.fromSeconds(player.lastReset)
+                : undefined,
+              endTime: player.nextReset
+                ? DateTime.fromSeconds(player.nextReset)
+                : undefined,
+              sessionReset: player.sessionReset
+                ? DateTime.fromSeconds(player.sessionReset)
+                : DateTime.now(),
+            },
           },
           mode
         );

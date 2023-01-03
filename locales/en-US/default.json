@@ -498,7 +498,8 @@
     "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
     "resetButton": "Click to Reset",
     "setResetTime": "Set your reset time to <t:{{time}}:t>.",
-    "resetSession": "Your session has been reset!"
+    "resetSession": "Your session has been reset!",
+    "new-session": "A session does not exist for **{{displayName}}**. A new session has been started right now."
   },
   "leaderboard": {
     "guildInput": {

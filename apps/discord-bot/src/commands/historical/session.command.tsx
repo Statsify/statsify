@@ -9,8 +9,9 @@
 import { Command } from "@statsify/discord";
 import { HistoricalBase } from "./historical.base";
 import { HistoricalTimes } from "@statsify/api-client";
+import { UserTier } from "@statsify/schemas";
 
-@Command({ description: (t) => t("commands.session") })
+@Command({ description: (t) => t("commands.session"), tier: UserTier.GOLD, args: [] })
 export class SessionCommand extends HistoricalBase {
   public constructor() {
     super(HistoricalTimes.SESSION);

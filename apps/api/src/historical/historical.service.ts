@@ -223,6 +223,9 @@ export class HistoricalService {
     doc.lastReset = Math.round(DateTime.now().toMillis() / 1000);
     doc.nextReset = this.getNextResetTime(doc.resetMinute, time);
 
+    if (time === HistoricalTimes.SESSION)
+      doc.sessionReset = Math.round(DateTime.now().toMillis() / 1000);
+
     if (last) delete last._id;
 
     const mongoChanges = [
@@ -264,6 +267,7 @@ export class HistoricalService {
     merged.resetMinute = oldPlayer.resetMinute;
     merged.lastReset = oldPlayer.lastReset;
     merged.nextReset = oldPlayer.nextReset;
+    merged.sessionReset = oldPlayer.sessionReset;
     merged.isNew = isNew;
 
     return merged;
