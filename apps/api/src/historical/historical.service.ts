@@ -19,7 +19,13 @@ import { Daily, LastDay, LastMonth, LastWeek, Monthly, Session, Weekly } from ".
 import { DateTime } from "luxon";
 import { Flatten, config, flatten } from "@statsify/util";
 import { HistoricalLeaderboardService } from "./leaderboards/historical-leaderboard.service";
-import { Inject, Injectable, Logger, forwardRef } from "@nestjs/common";
+import {
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+  forwardRef,
+} from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import {
   Player,
@@ -253,14 +259,18 @@ export class HistoricalService {
     ]);
   }
 
-  public async get(tag: string, type: HistoricalType): Promise<Player | null> {
+  public async get(
+    tag: string,
+    type: HistoricalType,
+    create?: boolean
+  ): Promise<Player | null> {
     const player = await this.playerService.get(tag, HypixelCache.CACHE_ONLY, {
       uuid: true,
     });
 
     if (!player) throw new PlayerNotFoundException();
 
-    const [newPlayer, oldPlayer, isNew] = await this.getRaw(player.uuid, type);
+    const [newPlayer, oldPlayer, isNew] = await this.getRaw(player.uuid, type, create);
 
     const merged = createHistoricalPlayer(oldPlayer, newPlayer);
 
@@ -291,19 +301,21 @@ export class HistoricalService {
     );
   }
 
-  private getRaw(uuid: string, type: HistoricalType): Promise<RawHistoricalResponse> {
+  private getRaw(
+    uuid: string,
+    type: HistoricalType,
+    create?: boolean
+  ): Promise<RawHistoricalResponse> {
     return LAST_HISTORICAL.includes(type as LastHistoricalType)
-      ? this.getLastHistorical(uuid, type as LastHistoricalType)
+      ? this.getLastHistorical(uuid, type as LastHistoricalType, create)
       : this.getCurrentHistorical(uuid, type as CurrentHistoricalType);
   }
 
   private async getCurrentHistorical(
     uuid: string,
-    type: CurrentHistoricalType
+    type: CurrentHistoricalType,
+    create = true
   ): Promise<RawHistoricalResponse> {
-    const newPlayer = await this.playerService.get(uuid, HypixelCache.LIVE);
-    if (!newPlayer) throw new PlayerNotFoundException();
-
     const CURRENT_MODELS = {
       [HistoricalTimes.DAILY]: this.dailyModel,
       [HistoricalTimes.WEEKLY]: this.weeklyModel,
@@ -318,6 +330,11 @@ export class HistoricalService {
 
     let isNew = false;
 
+    if (!oldPlayer && !create) throw new NotFoundException("historicalPlayer");
+
+    const newPlayer = await this.playerService.get(uuid, HypixelCache.LIVE);
+    if (!newPlayer) throw new PlayerNotFoundException();
+
     if (oldPlayer) {
       oldPlayer = deserialize(Player, flatten(oldPlayer));
     } else {
@@ -331,7 +348,8 @@ export class HistoricalService {
 
   private async getLastHistorical(
     uuid: string,
-    type: LastHistoricalType
+    type: LastHistoricalType,
+    create = true
   ): Promise<RawHistoricalResponse> {
     const CURRENT_MODELS = {
       [HistoricalTimes.LAST_DAY]: this.dailyModel,
@@ -348,13 +366,15 @@ export class HistoricalService {
 
     if (newPlayer) {
       newPlayer = deserialize(Player, flatten(newPlayer));
-    } else {
+    } else if (create) {
       const livePlayer = await this.playerService.get(uuid, HypixelCache.LIVE);
       if (!livePlayer) throw new PlayerNotFoundException();
 
       livePlayer.resetMinute = this.getMinute();
       newPlayer = await this.resetPlayer(livePlayer, HistoricalTimes.MONTHLY);
       isNew = true;
+    } else {
+      throw new NotFoundException("historicalPlayer");
     }
 
     const LAST_MODELS = {

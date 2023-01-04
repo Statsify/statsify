@@ -34,8 +34,8 @@ export class HistoricalController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Get()
   @Auth({ weight: 2 })
-  public async getHistoricalStats(@Query() { player: tag, type }: HistoricalDto) {
-    const player = await this.historicalService.get(tag, type);
+  public async getHistoricalStats(@Query() { player: tag, type, create }: HistoricalDto) {
+    const player = await this.historicalService.get(tag, type, create);
 
     return {
       success: !!player,

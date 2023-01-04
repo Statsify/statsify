@@ -208,10 +208,11 @@ export class ApiService {
     });
   }
 
-  public getPlayerHistorical(tag: string, type: HistoricalType) {
+  public getPlayerHistorical(tag: string, type: HistoricalType, create = true) {
     return this.requestKey<GetHistoricalResponse, "player">(`/historical`, "player", {
       player: tag,
       type,
+      create,
     });
   }
 

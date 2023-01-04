@@ -365,6 +365,10 @@
       "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Invalid Player"
     },
+    "invalidSession": {
+      "description_username": "The specified player does not currently have a session.",
+      "title": "No session found"
+    },
     "invalidResetTime": {
       "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
       "title": "Invalid Reset Time"
@@ -499,7 +503,7 @@
     "resetButton": "Click to Reset",
     "setResetTime": "Set your reset time to <t:{{time}}:t>.",
     "resetSession": "Your session has been reset!",
-    "new-session": "A session does not exist for **{{displayName}}**."
+    "new-session": "A session does not exist for this player."
   },
   "leaderboard": {
     "guildInput": {

@@ -16,6 +16,7 @@ import {
   GUILD_ID_REGEX,
   GuildNotFoundException,
   GuildQuery,
+  HistoricalTimes,
   HistoricalType,
   HypixelCache,
   LeaderboardQuery,
@@ -61,17 +62,26 @@ export class ApiService extends StatsifyApiService {
   public override async getPlayerHistorical(
     tag: string,
     historicalType: HistoricalType,
+    create?: boolean,
     user: User | null = null
   ) {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super.getPlayerHistorical(input, historicalType).catch((err) => {
+    return super.getPlayerHistorical(input, historicalType, create).catch((err) => {
       if (!err.response || !err.response.data) throw this.unknownError();
       const error = err.response.data as PlayerNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
 
+      if (
+        error.message === "historicalPlayer" &&
+        historicalType === HistoricalTimes.SESSION
+      ) {
+        throw new ErrorMessage("errors.invalidSession");
+      }
+
+      console.log(error);
       throw this.unknownError();
     });
   }

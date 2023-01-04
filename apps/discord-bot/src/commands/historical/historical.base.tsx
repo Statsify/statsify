@@ -53,15 +53,11 @@ import { BlitzSGProfile } from "../blitzsg/blitzsg.profile";
 import { BridgeProfile } from "../duels/bridge.profile";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile";
-import {
-  CurrentHistoricalType,
-  HistoricalTimes,
-  HistoricalType,
-} from "@statsify/api-client";
 import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile";
+import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile";
 import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile";
 import { PaintballProfile } from "../paintball/paintball.profile";
@@ -307,6 +303,7 @@ export class HistoricalBase {
     const player = await this.apiService.getPlayerHistorical(
       context.option("player"),
       this.time,
+      this.time !== HistoricalTimes.SESSION,
       user
     );
 
@@ -335,12 +332,6 @@ export class HistoricalBase {
         let content = player.isNew
           ? `${t("historical.new", { displayName })}`
           : undefined;
-
-        if (player.isNew && this.time === CurrentHistoricalType.SESSION) {
-          return {
-            content: t("historical.new-session", { displayName }),
-          };
-        }
 
         if (showNextReset)
           content = (content ?? "") + t("historical.reset", { time: player.nextReset });
