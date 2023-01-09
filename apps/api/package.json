@@ -22,8 +22,8 @@
     "@nestjs/core": "^9.2.1",
     "@nestjs/platform-fastify": "^9.2.1",
     "@nestjs/swagger": "^6.1.4",
-    "@sentry/node": "^7.28.1",
-    "@sentry/tracing": "^7.28.1",
+    "@sentry/node": "^7.29.0",
+    "@sentry/tracing": "^7.29.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
@@ -34,11 +34,11 @@
     "class-validator": "^0.14.0",
     "handlebars": "^4.7.7",
     "ioredis": "5.2.4",
-    "luxon": "^3.2.0",
-    "mongoose": "^6.8.2",
+    "luxon": "^3.2.1",
+    "mongoose": "^6.8.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
-    "toad-scheduler": "^2.1.1"
+    "toad-scheduler": "^2.2.0"
   },
   "devDependencies": {
     "@nestjs/testing": "^9.2.1",
