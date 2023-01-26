@@ -95,21 +95,21 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsl(145, 45%, 44%, 0.5)"]
+          [1, "hsla(120, 100%, 30%, 0.5)"]
         );
       } else if (completed >= 1) {
         textColor = "§6";
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsla(42, 17%, 48%, 0.5)"]
+          [1, "hsla(40, 100%, 30%, 0.5)"]
         );
       } else {
         textColor = "§c";
         boxColor = useGradient(
           "horizontal",
           [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsla(337, 31%, 43%, 0.5)"]
+          [1, "hsla(0, 100%, 30%, 0.5)"]
         );
       }
 

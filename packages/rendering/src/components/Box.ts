@@ -9,7 +9,6 @@
 import type * as JSX from "../jsx";
 import type { CanvasRenderingContext2D } from "skia-canvas";
 import type { DeferredGradient } from "../hooks";
-import type { WinterThemeService } from "../winter-theme.service";
 
 export interface BoxBorderRadius {
   topLeft: number;
@@ -54,26 +53,6 @@ export const resolveFill = (
 export const DEFAULT_COLOR = "rgba(117, 146, 197, 0.5)";
 export const SHADOW_OPACITY = 0.84;
 
-function increaseSpacing(
-  spacing: JSX.Spacing,
-  side: keyof JSX.CompleteSpacing,
-  amount: number
-) {
-  if (typeof spacing === "number")
-    return {
-      top: spacing,
-      right: spacing,
-      bottom: spacing,
-      left: spacing,
-      [side]: spacing + amount,
-    };
-
-  return {
-    ...spacing,
-    [side]: (spacing?.[side] ?? 0) + amount,
-  };
-}
-
 export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   children,
   width,
@@ -91,8 +70,8 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   outline,
 }) => ({
   dimension: {
-    padding: increaseSpacing(padding, "top", 2),
-    margin: increaseSpacing(margin, "top", 4),
+    padding,
+    margin,
     width,
     height,
   },
@@ -108,47 +87,6 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   children,
 });
 
-const SNOW_OFFSET = 6;
-
-export const renderSnow = (
-  ctx: CanvasRenderingContext2D,
-  winterTheme: WinterThemeService,
-  x: number,
-  y: number,
-  width: number
-) => {
-  const centerSnow = winterTheme.getAsset("box-snow-center");
-  const leftSnow = winterTheme.getAsset("box-snow-left");
-  const rightSnow = winterTheme.getAsset("box-snow-right");
-
-  const snowWidth = width - leftSnow.width - rightSnow.width;
-
-  let drawnSnow = 0;
-  let snowLeft = snowWidth - drawnSnow;
-
-  while (drawnSnow < snowWidth) {
-    const drawn = snowLeft < centerSnow.width ? snowLeft : centerSnow.width;
-
-    ctx.drawImage(
-      centerSnow,
-      0,
-      0,
-      drawn,
-      centerSnow.height,
-      x + drawnSnow + leftSnow.width,
-      y - SNOW_OFFSET,
-      drawn,
-      centerSnow.height
-    );
-
-    drawnSnow += drawn;
-    snowLeft -= drawn;
-  }
-
-  ctx.drawImage(leftSnow, x, y - SNOW_OFFSET + 4);
-  ctx.drawImage(rightSnow, x + leftSnow.width + snowWidth, y - SNOW_OFFSET + 4);
-};
-
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
   {
@@ -159,11 +97,10 @@ export const render: JSX.Render<BoxRenderProps> = (
     outline,
     outlineSize,
   },
-  { x, y, width, height, padding },
-  { winterTheme }
+  { x, y, width, height, padding }
 ) => {
   const fill = resolveFill(color, ctx, x, y, width, height);
-  ctx.fillStyle = winterTheme.getIce(ctx);
+  ctx.fillStyle = fill;
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -191,11 +128,6 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.lineTo(x + border.topLeft, y + border.topLeft);
   ctx.closePath();
   ctx.fill();
-
-  if (fill !== DEFAULT_COLOR) {
-    ctx.fillStyle = fill;
-    ctx.fill();
-  }
 
   ctx.globalCompositeOperation = "overlay";
 
@@ -254,6 +186,4 @@ export const render: JSX.Render<BoxRenderProps> = (
     );
 
   ctx.globalAlpha = 1;
-
-  renderSnow(ctx, winterTheme, x, y, width);
 };
