@@ -50,7 +50,7 @@ export const resolveFill = (
   return fill(ctx, x, y, width, height);
 };
 
-export const DEFAULT_COLOR = "rgba(117, 146, 197, 0.5)";
+export const DEFAULT_COLOR = "rgba(0, 0, 0, 0.5)";
 export const SHADOW_OPACITY = 0.84;
 
 export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
