@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Tarkastele Hypixel-kaverilistaasi",
     "game-counts": "Näytä Hypixelin nykyiset pelimäärät",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Luo luettelo mahdollisista Guess The Build -vastauksista perustuen annettuun vihjeeseen",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Tarkastele yhteisiä Hypixel-kavereitasi toisen pelaajan kanssa",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Näytä Statsifyn kehittäjät ja osallistujat",
@@ -424,17 +422,9 @@
       "description": "**{{username}}** ei omista yhtäkään viittaa!",
       "title": "Puuttuva viitta"
     },
-    "noFriends": {
-      "description": "Pelaajalla **{{displayName}}** ei ole kavereita $t(emojis:sad)! :(",
-      "title": "Kavereita ei löytynyt"
-    },
     "noGTBSolutions": {
       "description": "Emme löytäneet ratkaisuja annetulla vihjeellä!",
       "title": "Ei Guess The Build -ratkaisuja"
-    },
-    "noMutuals": {
-      "description": "Pelaajilla **{{displayNameOne}}** ja **{{displayNameTwo}}** ei ole yhteisiä kavereita!",
-      "title": "Ei yhteisiä kavereita"
     },
     "noRankings": {
       "description": "Pelaajalla **{{displayName}}** ei ole sijoituksia!",
@@ -581,7 +571,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Voimakentän aika",
     "fortune": "Onni",
-    "friends": "Kaverit",
     "game": "Peli",
     "game-total": "Yhteensä pelissä {{game}}",
     "gamesPlayed": "Peliä pelattu",

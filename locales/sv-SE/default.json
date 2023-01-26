@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Visa din Hypixel vänlista",
     "game-counts": "Visa Hypixels aktuella spelnummer",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Generera en lista över möjliga Guess The Build svar baserat på den givna ledtråden",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Visa dina gemensamma Hypixel vänner med en annan spelare",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Visa Statsify's skapare och bidragsgivare",
@@ -424,17 +422,9 @@
       "description": "**{{username}}** har inga mantlar!",
       "title": "Mantel saknas"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** har inga vänner $t(emojis:sad)! :(",
-      "title": "Vänner kunde inte hittas"
-    },
     "noGTBSolutions": {
       "description": "Vi kunde inte hitta några lösningar för den angivna ledtråden!",
       "title": "Inga Guess The Build Lösningar"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** och **{{displayNameTwo}}** har inga gemensamma vänner!",
-      "title": "Inga gemensamma vänner"
     },
     "noRankings": {
       "description": "**{{displayName}}** har inga rankningar!",
@@ -581,7 +571,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Forcefield Tid",
     "fortune": "Fortune",
-    "friends": "Vänner",
     "game": "Spel",
     "game-total": "{{game}} Totalt",
     "gamesPlayed": "Spel spelade",

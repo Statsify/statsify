@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Zeigt deine Hypixel Freundesliste an",
     "game-counts": "Zeigt die aktuelle Hypixel Spielanzahl an",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Generiere eine Liste möglicher Guess The Build Treffer basierend auf dem angegebenen Hinweis",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Zeigt deine gemeinsamen Hypixel Freunde mit einem anderen Spieler an",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Zeigt Ersteller und Mitwirkende von Statsify an",
@@ -424,17 +422,9 @@
       "description": "**{{username}}** hat keine Capes!",
       "title": "Fehlendes Cape"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** hat keine Freunde $t(emojis:sad)! :(",
-      "title": "Keine Freunde Gefunden"
-    },
     "noGTBSolutions": {
       "description": "Wir konnten keine Lösungen für den angegebenen Hinweis finden!",
       "title": "Keine Guess The Build Lösungen"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** und **{{displayNameTwo}}** haben keine gemeinsamen Freunde!",
-      "title": "Keine gemeinsamen Freunde"
     },
     "noRankings": {
       "description": "**{{displayName}}** hat keine Bestenlistenplatzierungen!",
@@ -581,7 +571,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Kraftfeld Zeit",
     "fortune": "Glück",
-    "friends": "Freunde",
     "game": "Spiel",
     "game-total": "{{game}} Gesamt",
     "gamesPlayed": "Spiele Gespielt",

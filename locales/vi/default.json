@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Xem danh sách bạn bè ở Hypixel của bạn",
     "game-counts": "Xem số trò chơi hiện tại ở Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Tạo ra một danh sách về khả năng đưa ra câu trả lời từ những gợi ý đã đưa trong Guess The Build",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Xem những người bạn chung với người khác ở Hypixel của bạn",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Xem những người sáng tác và những người đóng góp cho Statsify",
@@ -424,17 +422,9 @@
       "description": "**{{username}}** không có một cái cape nào!",
       "title": "Thiếu Cape"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** không có một người bạn nào $t(emojis:sad)! :(",
-      "title": "Người bạn không được tìm thấy"
-    },
     "noGTBSolutions": {
       "description": "Chúng tôi không thể tìm ra bất cứ giải pháp nào cho các gợi ý được đưa ra!",
       "title": "Không có giải pháp cho Guess The Build"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** và **{{displayNameTwo}}** không có bạn chung nào!",
-      "title": "Không có chung"
     },
     "noRankings": {
       "description": "**{{displayName}}** không có cấp bậc nào!",
@@ -581,7 +571,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Thời gian trường lực",
     "fortune": "Gia tài",
-    "friends": "Số bạn",
     "game": "Trò chơi",
     "game-total": "Tổng số {{game}}",
     "gamesPlayed": "Số trò chơi đã chơi",

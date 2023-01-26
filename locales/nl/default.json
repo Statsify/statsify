@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Bekijk je Hypixel vriendenlijst",
     "game-counts": "Bekijk het huidige aantal spelers in Hypixel spellen",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Genereer een lijst met mogelijke Guess The Build antwoorden gebaseerd op de gegeven hint",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Bekijk je gemeenschappelijke vrienden met een andere speler",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Bekijk Statsify's makers en bijdragers",
@@ -424,17 +422,9 @@
       "description": "**{{username}}** heeft geen capes!",
       "title": "Cape Ontbreekt"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** heeft geen vrienden $t(emojis:sad)! :(",
-      "title": "Vrienden Niet Gevonden"
-    },
     "noGTBSolutions": {
       "description": "We konden geen oplossing vinden voor de opgegeven hint!",
       "title": "Geen Guess The Build Oplossingen"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** en **{{displayNameTwo}}** hebben geen gemeenschappelijke vrienden!",
-      "title": "Geen Gemeenschappelijke Vrienden"
     },
     "noRankings": {
       "description": "**{{displayName}}** heeft geen rangposities!",
@@ -581,7 +571,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Krachtveld Tijd",
     "fortune": "Geluk",
-    "friends": "Vrienden",
     "game": "Spel",
     "game-total": "{{game}} Totaal",
     "gamesPlayed": "Spellen Gespeeld",

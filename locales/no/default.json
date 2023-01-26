@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Se din Hypixel-venneliste",
     "game-counts": "Se Hypixels nåværende spilltall",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Genererer en liste med mulige Guess The Build-svar basert på det gitte hintet",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Se dine felles Hypixel-venner med en annen spiller",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Se Statsifys skapere og bidragsytere",
@@ -424,17 +422,9 @@
       "description": "**{{username}}** har ingen kapper!",
       "title": "Mangler kappe"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** har ingen venner $t(emojis:sad)! :(",
-      "title": "Venner ikke funnet"
-    },
     "noGTBSolutions": {
       "description": "Vi kunne ikke finne noen løsninger for det gitte hintet!",
       "title": "Ingen Guess The Build-løsninger"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** og **{{displayNameTwo}}** har ingen venner til felles!",
-      "title": "Ingen venner til felles"
     },
     "noRankings": {
       "description": "**{{displayName}}** har ingen rangeringer!",
@@ -581,7 +571,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Kraftfelttid",
     "fortune": "Lykke",
-    "friends": "Venner",
     "game": "Spill",
     "game-total": "{{game}} Totalt",
     "gamesPlayed": "Spill spilt",

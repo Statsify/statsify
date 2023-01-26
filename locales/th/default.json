@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "ดูรายชื่อเพื่อน Hypixel ของคุณ",
     "game-counts": "ดูจำนวนเกมปัจจุบันของ Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "สร้างรายการคำตอบ Guess The Build ที่เป็นไปได้ตามคำใบ้ที่กำหนด",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "ดูเพื่อน Hypixel ร่วมกันของคุณกับผู้เล่นอื่น",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "ดูผู้สร้างและผู้มีส่วนร่วมของ Statsify",
@@ -424,17 +422,9 @@
       "description": "**{{username}}** ไม่มีผ้าคลุม!",
       "title": "แหลมหายไป"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** ไม่มีเพื่อน $t(emojis:sad)! :(",
-      "title": "ไม่พบเพื่อน"
-    },
     "noGTBSolutions": {
       "description": "เราไม่พบวิธีแก้ปัญหาสำหรับคำแนะนำที่ให้มา!",
       "title": "ไม่มี Guess The Build โซลูชั่น"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** และ **{{displayNameTwo}}** ไม่มีเพื่อนร่วมกัน!",
-      "title": "ไม่มีสหพันธ์"
     },
     "noRankings": {
       "description": "**{{displayName}}** ไม่มีการจัดอันดับ!",
@@ -581,7 +571,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "เวลาฟอร์ซฟิลด์",
     "fortune": "โชค",
-    "friends": "เพื่อน",
     "game": "เกม",
     "game-total": "{{game}} รวม",
     "gamesPlayed": "เกมส์ที่เล่น",

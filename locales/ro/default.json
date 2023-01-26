@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Vezi lista ta de prieteni pe Hypixel",
     "game-counts": "Vizualizați numărul actual al jocurilor pe Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Generează o listă cu posibile Guess The Build pe baza indiciului dat",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Vezi prietenii tăi mutuali Hypixel cu un alt jucător",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Vezi creatorii și contribuitorii Statsify-ului",
@@ -424,17 +422,9 @@
       "description": "**{{username}}** nu are nici o pelerină!",
       "title": "Lipsește Pelerina"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** nu are prieteni $t(emojis:sad)! :(",
-      "title": "Prieteni n-au fost găsiți"
-    },
     "noGTBSolutions": {
       "description": "Nu am putut găsi nicio soluție pentru indiciul furnizat!",
       "title": "Nu a fost găsită niciun indiciu pentru pentru Guess The Build"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** şi **{{displayNameTwo}}** nu au nici un prieten reciproc!",
-      "title": "Fără Mutuale"
     },
     "noRankings": {
       "description": "**{{displayName}}** nu are clasamente!",
@@ -581,7 +571,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Timpul câmpului de forță",
     "fortune": "Bogăție",
-    "friends": "Prieteni",
     "game": "Joc",
     "game-total": "Total {{game}}",
     "gamesPlayed": "Jocuri jucate",

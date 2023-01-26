@@ -12,7 +12,6 @@ import { ButtonStyle } from "discord-api-types/v10";
 import { Color, User } from "@statsify/schemas";
 import {
   CurrentHistoricalType,
-  FriendsNotFoundException,
   GUILD_ID_REGEX,
   GuildNotFoundException,
   GuildQuery,
@@ -135,38 +134,6 @@ export class ApiService extends StatsifyApiService {
           (t) => t("errors.noStatus.title"),
           (t) =>
             t("errors.noStatus.description", {
-              displayName: this.emojiDisplayName(t, displayName),
-            })
-        );
-      }
-
-      throw this.unknownError();
-    });
-  }
-
-  /**
-   *
-   * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
-   * @param user User to use if no tag is provided.
-   * @returns The friends of the player at the page.
-   */
-  public override async getFriends(tag: string, user: User | null = null) {
-    const [formattedTag, type] = this.parseTag(tag);
-    const input = await this.resolveTag(formattedTag, type, user);
-
-    return super.getFriends(input).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
-      const error = err.response.data as PlayerNotFoundException;
-
-      if (error.message === "player") throw this.missingPlayer(type, tag);
-
-      if (error.message === "friends") {
-        const displayName = (error as FriendsNotFoundException).displayName;
-
-        throw new ErrorMessage(
-          (t) => t("errors.noFriends.title"),
-          (t) =>
-            t("errors.noFriends.description", {
               displayName: this.emojiDisplayName(t, displayName),
             })
         );

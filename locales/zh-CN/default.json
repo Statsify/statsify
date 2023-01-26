@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "查看你的Hypixel好友列表",
     "game-counts": "查看Hypixel所有游戏人数",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "根据给定的提示，生成一个可能的 建筑猜猜乐 的答案列表",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "查看你与另一玩家的共同Hypixel好友",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "查看Statsify的创建者和贡献者",
@@ -424,17 +422,9 @@
       "description": "**{{username}}**没有任何披风！",
       "title": "没有披风"
     },
-    "noFriends": {
-      "description": "**{{displayName}}**没有任何好友$t(emojis:sad)！:(",
-      "title": "未找到任何好友"
-    },
     "noGTBSolutions": {
       "description": "我们无法找到任何所关于提示的解决方案！",
       "title": "查不到任何 建筑猜猜乐 的解决方案"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}**和**{{displayNameTwo}}**没有共同的好友！",
-      "title": "没有共同好友"
     },
     "noRankings": {
       "description": "**{{displayName}}**没有排名！",
@@ -581,7 +571,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "反射彩弹时间",
     "fortune": "额外硬币技能数",
-    "friends": "好友",
     "game": "游戏",
     "game-total": "{{game}}总数",
     "gamesPlayed": "游戏次数",

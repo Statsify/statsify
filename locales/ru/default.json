@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Просмотр списка друзей Hypixel",
     "game-counts": "Просмотреть текущее количество игроков в играх Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Сгенерировать список возможных ответов Guess The Build на основе заданной подсказки",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Посмотреть общих друзей с другим игроком на Hypixel",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Просмотреть создателей и вкладчиков Statsify",
@@ -424,17 +422,9 @@
       "description": "**{{username}}** не имеет плащей!",
       "title": "Отсутствует плащ"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** не имеет друзей $t(emojis:sad)! :(",
-      "title": "Друзья не найдены"
-    },
     "noGTBSolutions": {
       "description": "Мы не смогли найти решение для предоставленной подсказки!",
       "title": "Нет решений Guess The Build"
-    },
-    "noMutuals": {
-      "description": "*{{displayNameOne}}** и **{{displayNameTwo}}** не имеют общих друзей!",
-      "title": "Нет общих"
     },
     "noRankings": {
       "description": "**{{displayName}}** не имеет рейтинга!",
@@ -581,7 +571,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Времени в Силовом поле",
     "fortune": "Endurance",
-    "friends": "Друзей",
     "game": "Игра",
     "game-total": "{{game}} Всего",
     "gamesPlayed": "Игр сыграно",
