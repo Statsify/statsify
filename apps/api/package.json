@@ -13,8 +13,8 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@fastify/static": "^6.6.0",
-    "@fastify/view": "^7.3.0",
+    "@fastify/static": "^6.7.0",
+    "@fastify/view": "^7.4.1",
     "@m8a/nestjs-typegoose": "^8.1.0",
     "@nestjs-modules/ioredis": "^1.0.1",
     "@nestjs/axios": "^0.1.1",
@@ -22,8 +22,8 @@
     "@nestjs/core": "^9.2.1",
     "@nestjs/platform-fastify": "^9.2.1",
     "@nestjs/swagger": "^6.1.4",
-    "@sentry/node": "^7.29.0",
-    "@sentry/tracing": "^7.29.0",
+    "@sentry/node": "^7.33.0",
+    "@sentry/tracing": "^7.33.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
@@ -33,9 +33,9 @@
     "class-transformer": "0.5.1",
     "class-validator": "^0.14.0",
     "handlebars": "^4.7.7",
-    "ioredis": "5.2.4",
+    "ioredis": "5.3.0",
     "luxon": "^3.2.1",
-    "mongoose": "^6.8.3",
+    "mongoose": "^6.9.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0",
     "toad-scheduler": "^2.2.0"
