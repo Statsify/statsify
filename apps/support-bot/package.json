@@ -10,15 +10,15 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.33.0",
-    "@sentry/tracing": "^7.33.0",
+    "@sentry/node": "^7.34.0",
+    "@sentry/tracing": "^7.34.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/discord": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@typegoose/typegoose": "^10.0.0",
+    "@typegoose/typegoose": "^10.1.0",
     "axios": "^0.27.2",
     "discord-api-types": "^0.37.30",
     "luxon": "^3.2.1",
