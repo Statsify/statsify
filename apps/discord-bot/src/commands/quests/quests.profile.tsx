@@ -26,7 +26,8 @@ import {
 } from "@statsify/schemas";
 import { Container, Footer, GameEntry, GameList, Header, SidebarItem } from "#components";
 import { DateTime } from "luxon";
-import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
+import { HistoricalTimeData } from "components/Historical/Historical-Header";
+import { HistoricalTimes } from "@statsify/api-client";
 import { Palette, getColorPalette } from "../../themes/palette";
 import { ratio } from "@statsify/math";
 import type { BaseProfileProps } from "../base.hypixel-command";
@@ -178,7 +179,7 @@ export const QuestsProfile = ({
   const { quests } = player.stats;
 
   let period: "overall" | "weekly" | "daily";
-  let historicalTime: "LIVE" | HistoricalType;
+  let historicalTime: "LIVE" | HistoricalTimeData;
 
   switch (time) {
     case QuestTime.Overall:
@@ -188,12 +189,12 @@ export const QuestsProfile = ({
 
     case QuestTime.Weekly:
       period = "weekly";
-      historicalTime = HistoricalTimes.WEEKLY;
+      historicalTime = { timeType: HistoricalTimes.WEEKLY };
       break;
 
     case QuestTime.Daily:
       period = "daily";
-      historicalTime = HistoricalTimes.DAILY;
+      historicalTime = { timeType: HistoricalTimes.DAILY };
       break;
   }
 
@@ -245,18 +246,17 @@ export const QuestsProfile = ({
       ? `§l${FormattedGame[api as keyof typeof FormattedGame]}`
       : formatted;
 
-  let startTime: DateTime | undefined = undefined;
-  let endTime: DateTime | undefined = undefined;
-
   if (time === QuestTime.Weekly) {
     const dt = DateTime.now().setZone("America/New_York").startOf("week");
 
-    startTime =
+    (historicalTime as HistoricalTimeData).startTime =
       dt.plus({ days: 4 }).toMillis() < Date.now()
         ? dt.plus({ days: 4 })
         : dt.minus({ days: 3 });
 
-    endTime = startTime.plus({ days: 6 });
+    (historicalTime as HistoricalTimeData).endTime = (
+      historicalTime as HistoricalTimeData
+    ).startTime!.plus({ days: 6 });
   }
 
   return (
@@ -268,8 +268,6 @@ export const QuestsProfile = ({
         title={`§l§eQuests §r(${title}§r)`}
         sidebar={sidebar}
         time={historicalTime}
-        startTime={startTime}
-        endTime={endTime}
       />
       {table}
       <Footer logo={logo} user={user} />

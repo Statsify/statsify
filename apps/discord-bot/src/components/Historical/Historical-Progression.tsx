@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HistoricalType } from "@statsify/api-client";
+import { HistoricalTimeData } from "./Historical-Header";
 import { If } from "../If";
 import { LocalizeFunction } from "@statsify/discord";
 import { Progression } from "@statsify/schemas";
@@ -20,7 +20,7 @@ export interface HistoricalProgressionProps {
   exp: number;
   current: string;
   next: string;
-  time: "LIVE" | HistoricalType;
+  time: "LIVE" | HistoricalTimeData;
 }
 
 export const HistoricalProgression = ({

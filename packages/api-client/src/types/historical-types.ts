@@ -7,6 +7,7 @@
  */
 
 export enum CurrentHistoricalType {
+  SESSION = "SESSION",
   DAILY = "DAILY",
   WEEKLY = "WEEKLY",
   MONTHLY = "MONTHLY",

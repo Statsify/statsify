@@ -15,11 +15,17 @@ import {
   LastHistoricalType,
   PlayerNotFoundException,
 } from "@statsify/api-client";
-import { Daily, LastDay, LastMonth, LastWeek, Monthly, Weekly } from "./models";
+import { Daily, LastDay, LastMonth, LastWeek, Monthly, Session, Weekly } from "./models";
 import { DateTime } from "luxon";
 import { Flatten, config, flatten } from "@statsify/util";
 import { HistoricalLeaderboardService } from "./leaderboards/historical-leaderboard.service";
-import { Inject, Injectable, Logger, forwardRef } from "@nestjs/common";
+import {
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException,
+  forwardRef,
+} from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import {
   Player,
@@ -55,7 +61,8 @@ export class HistoricalService {
     @InjectModel(Monthly) private readonly monthlyModel: PlayerModel,
     @InjectModel(LastDay) private readonly lastDayModel: PlayerModel,
     @InjectModel(LastWeek) private readonly lastWeekModel: PlayerModel,
-    @InjectModel(LastMonth) private readonly lastMonthModel: PlayerModel
+    @InjectModel(LastMonth) private readonly lastMonthModel: PlayerModel,
+    @InjectModel(Session) private readonly sessionModel: PlayerModel
   ) {
     const resetTask = new AsyncTask("historicalReset", this.resetPlayers.bind(this));
     const sweepTask = new AsyncTask("historicalSweep", this.checkSweepPlayers.bind(this));
@@ -155,7 +162,9 @@ export class HistoricalService {
     const player = await this.playerService.get(tag, HypixelCache.LIVE);
     if (!player) throw new PlayerNotFoundException();
 
-    player.resetMinute = time ?? this.getMinute();
+    if (type !== HistoricalTimes.SESSION) {
+      player.resetMinute = time ?? this.getMinute();
+    }
 
     return this.resetPlayer(player, type);
   }
@@ -175,6 +184,8 @@ export class HistoricalService {
       resetType === HistoricalTimes.LAST_WEEK ||
       isMonthly;
 
+    const isDaily = resetType !== HistoricalTimes.SESSION;
+
     const flatPlayer = flatten(player);
 
     const doc = serialize(Player, flatPlayer);
@@ -182,9 +193,13 @@ export class HistoricalService {
     doc.resetMinute = player.resetMinute ?? this.getMinute();
     flatPlayer.resetMinute = doc.resetMinute;
 
-    const resets = [
-      this.reset(this.dailyModel, this.lastDayModel, doc, HistoricalTimes.DAILY),
-    ];
+    const resets = [];
+
+    if (isDaily) {
+      this.reset(this.dailyModel, this.lastDayModel, doc, HistoricalTimes.DAILY);
+    } else {
+      this.reset(this.sessionModel, null, doc, HistoricalTimes.SESSION);
+    }
 
     if (isWeekly)
       resets.push(
@@ -203,7 +218,7 @@ export class HistoricalService {
 
   public async reset(
     model: PlayerModel,
-    lastModel: PlayerModel,
+    lastModel: PlayerModel | null,
     doc: Flatten<Player>,
     time: HistoricalType
   ) {
@@ -214,15 +229,26 @@ export class HistoricalService {
     doc.lastReset = Math.round(DateTime.now().toMillis() / 1000);
     doc.nextReset = this.getNextResetTime(doc.resetMinute, time);
 
+    if (time === HistoricalTimes.SESSION)
+      doc.sessionReset = Math.round(DateTime.now().toMillis() / 1000);
+
     if (last) delete last._id;
 
-    await Promise.all([
+    const mongoChanges = [
       model.replaceOne({ uuid: doc.uuid }, doc, { upsert: true }).lean().exec(),
-      lastModel
-        .replaceOne({ uuid: doc.uuid }, (last ?? doc) as Player, { upsert: true })
-        .lean()
-        .exec(),
+    ];
 
+    if (lastModel) {
+      mongoChanges.push(
+        lastModel
+          .replaceOne({ uuid: doc.uuid }, (last ?? doc) as Player, { upsert: true })
+          .lean()
+          .exec()
+      );
+    }
+
+    await Promise.all([
+      ...mongoChanges,
       this.historicalLeaderboardService.addHistoricalLeaderboards(
         time,
         Player,
@@ -233,20 +259,25 @@ export class HistoricalService {
     ]);
   }
 
-  public async get(tag: string, type: HistoricalType): Promise<Player | null> {
+  public async get(
+    tag: string,
+    type: HistoricalType,
+    create?: boolean
+  ): Promise<Player | null> {
     const player = await this.playerService.get(tag, HypixelCache.CACHE_ONLY, {
       uuid: true,
     });
 
     if (!player) throw new PlayerNotFoundException();
 
-    const [newPlayer, oldPlayer, isNew] = await this.getRaw(player.uuid, type);
+    const [newPlayer, oldPlayer, isNew] = await this.getRaw(player.uuid, type, create);
 
     const merged = createHistoricalPlayer(oldPlayer, newPlayer);
 
     merged.resetMinute = oldPlayer.resetMinute;
     merged.lastReset = oldPlayer.lastReset;
     merged.nextReset = oldPlayer.nextReset;
+    merged.sessionReset = oldPlayer.sessionReset;
     merged.isNew = isNew;
 
     return merged;
@@ -270,23 +301,26 @@ export class HistoricalService {
     );
   }
 
-  private getRaw(uuid: string, type: HistoricalType): Promise<RawHistoricalResponse> {
+  private getRaw(
+    uuid: string,
+    type: HistoricalType,
+    create?: boolean
+  ): Promise<RawHistoricalResponse> {
     return LAST_HISTORICAL.includes(type as LastHistoricalType)
-      ? this.getLastHistorical(uuid, type as LastHistoricalType)
+      ? this.getLastHistorical(uuid, type as LastHistoricalType, create)
       : this.getCurrentHistorical(uuid, type as CurrentHistoricalType);
   }
 
   private async getCurrentHistorical(
     uuid: string,
-    type: CurrentHistoricalType
+    type: CurrentHistoricalType,
+    create = true
   ): Promise<RawHistoricalResponse> {
-    const newPlayer = await this.playerService.get(uuid, HypixelCache.LIVE);
-    if (!newPlayer) throw new PlayerNotFoundException();
-
     const CURRENT_MODELS = {
       [HistoricalTimes.DAILY]: this.dailyModel,
       [HistoricalTimes.WEEKLY]: this.weeklyModel,
       [HistoricalTimes.MONTHLY]: this.monthlyModel,
+      [HistoricalTimes.SESSION]: this.sessionModel,
     };
 
     let oldPlayer = (await CURRENT_MODELS[type]
@@ -295,6 +329,11 @@ export class HistoricalService {
       .exec()) as Player;
 
     let isNew = false;
+
+    if (!oldPlayer && !create) throw new NotFoundException("historicalPlayer");
+
+    const newPlayer = await this.playerService.get(uuid, HypixelCache.LIVE);
+    if (!newPlayer) throw new PlayerNotFoundException();
 
     if (oldPlayer) {
       oldPlayer = deserialize(Player, flatten(oldPlayer));
@@ -309,7 +348,8 @@ export class HistoricalService {
 
   private async getLastHistorical(
     uuid: string,
-    type: LastHistoricalType
+    type: LastHistoricalType,
+    create = true
   ): Promise<RawHistoricalResponse> {
     const CURRENT_MODELS = {
       [HistoricalTimes.LAST_DAY]: this.dailyModel,
@@ -326,13 +366,15 @@ export class HistoricalService {
 
     if (newPlayer) {
       newPlayer = deserialize(Player, flatten(newPlayer));
-    } else {
+    } else if (create) {
       const livePlayer = await this.playerService.get(uuid, HypixelCache.LIVE);
       if (!livePlayer) throw new PlayerNotFoundException();
 
       livePlayer.resetMinute = this.getMinute();
       newPlayer = await this.resetPlayer(livePlayer, HistoricalTimes.MONTHLY);
       isNew = true;
+    } else {
+      throw new NotFoundException("historicalPlayer");
     }
 
     const LAST_MODELS = {

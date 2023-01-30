@@ -208,17 +208,22 @@ export class ApiService {
     });
   }
 
-  public getPlayerHistorical(tag: string, type: HistoricalType) {
+  public getPlayerHistorical(tag: string, type: HistoricalType, create = true) {
     return this.requestKey<GetHistoricalResponse, "player">(`/historical`, "player", {
       player: tag,
       type,
+      create,
     });
   }
 
-  public resetPlayerHistorical(tag: string, resetMinute?: number) {
+  public resetPlayerHistorical(
+    tag: string,
+    resetMinute?: number,
+    type?: CurrentHistoricalType
+  ) {
     return this.request<GetPlayerResponse>(
       `/historical`,
-      { player: tag, resetMinute },
+      { player: tag, resetMinute, type },
       "DELETE"
     );
   }

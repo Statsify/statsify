@@ -18,7 +18,7 @@ import {
   PlayerArgument,
 } from "@statsify/discord";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
-import { HistoricalType } from "@statsify/api-client";
+import { HistoricalTimeData } from "../components/Historical/Historical-Header";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { noop } from "@statsify/util";
@@ -26,7 +26,7 @@ import { render } from "@statsify/rendering";
 import type { GameMode, GameModes, Player, User } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
 
-export type ProfileTime = "LIVE" | HistoricalType;
+export type ProfileTime = "LIVE" | HistoricalTimeData;
 
 export interface BaseProfileProps {
   skin: Image;
