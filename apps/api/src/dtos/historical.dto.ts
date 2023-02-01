@@ -8,7 +8,7 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
-import { IsEnum } from "class-validator";
+import { IsEnum, IsOptional } from "class-validator";
 import { PlayerDto } from "./player.dto";
 
 export class HistoricalDto extends PlayerDto {
@@ -20,4 +20,7 @@ export class HistoricalDto extends PlayerDto {
   })
   @IsEnum(HistoricalTimes)
   public type: HistoricalType;
+
+  @IsOptional()
+  public create?: boolean;
 }

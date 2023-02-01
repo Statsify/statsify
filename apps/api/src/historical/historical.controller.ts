@@ -34,8 +34,8 @@ export class HistoricalController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Get()
   @Auth({ weight: 2 })
-  public async getHistoricalStats(@Query() { player: tag, type }: HistoricalDto) {
-    const player = await this.historicalService.get(tag, type);
+  public async getHistoricalStats(@Query() { player: tag, type, create }: HistoricalDto) {
+    const player = await this.historicalService.get(tag, type, create);
 
     return {
       success: !!player,
@@ -49,13 +49,9 @@ export class HistoricalController {
   @Delete()
   @Auth({ role: AuthRole.MEMBER })
   public async deleteHistoricalStats(
-    @Query() { player: tag, resetMinute }: ResetPlayerDto
+    @Query() { player: tag, resetMinute, type = HistoricalTimes.MONTHLY }: ResetPlayerDto
   ) {
-    const player = await this.historicalService.getAndReset(
-      tag,
-      HistoricalTimes.MONTHLY,
-      resetMinute
-    );
+    const player = await this.historicalService.getAndReset(tag, type, resetMinute);
 
     return { success: !!player, player };
   }

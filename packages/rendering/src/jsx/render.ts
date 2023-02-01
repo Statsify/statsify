@@ -11,7 +11,6 @@ import Container from "typedi";
 import { Canvas, type CanvasRenderingContext2D } from "skia-canvas";
 import { FontRenderer } from "../font";
 import { IntrinsicRenders, intrinsicRenders } from "./instrinsics";
-import { WinterThemeService } from "../winter-theme.service";
 import { createInstructions } from "./create-instructions";
 import { getPositionalDelta, getTotalSize } from "./util";
 import { noop } from "@statsify/util";
@@ -141,7 +140,6 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
     ...theme?.context,
     canvasWidth: width,
     canvasHeight: height,
-    winterTheme: Container.get(WinterThemeService),
   };
 
   if (!context.renderer) context.renderer = Container.get(FontRenderer);

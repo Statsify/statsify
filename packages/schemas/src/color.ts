@@ -9,14 +9,14 @@
 import { Field } from "./metadata";
 import { minecraftColors as colors } from "@statsify/util";
 
-export type ColorCode = typeof colors[number]["code"];
+export type ColorCode = (typeof colors)[number]["code"];
 
-export type ColorHex = typeof colors[number]["hex"];
+export type ColorHex = (typeof colors)[number]["hex"];
 
 /**
  * The name of the color in all caps
  */
-export type ColorId = typeof colors[number]["id"];
+export type ColorId = (typeof colors)[number]["id"];
 
 export class Color {
   @Field({
