@@ -15,6 +15,6 @@
     "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@typegoose/typegoose": "^10.1.0"
+    "@typegoose/typegoose": "^10.1.1"
   }
 }
