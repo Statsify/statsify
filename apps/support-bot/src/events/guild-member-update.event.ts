@@ -31,7 +31,7 @@ const PREMIUM_TIERS = [
   UserTier.IRON,
 ] as const;
 
-type PremiumTier = typeof PREMIUM_TIERS[number];
+type PremiumTier = (typeof PREMIUM_TIERS)[number];
 
 const TIER_ROLES = {
   [UserTier.NETHERITE]: config("supportBot.netheriteRole"),

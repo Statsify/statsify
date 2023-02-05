@@ -101,7 +101,7 @@ export enum FormattedGame {
  */
 export type GameCode = keyof typeof GameIdMapping;
 
-export type GameId = typeof GameIdMapping[keyof typeof GameIdMapping];
+export type GameId = (typeof GameIdMapping)[keyof typeof GameIdMapping];
 
 export class Game {
   @Field({

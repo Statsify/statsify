@@ -13,7 +13,6 @@ import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/disco
 import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 import { Logger } from "@statsify/logger";
-import { WinterThemeService } from "@statsify/rendering";
 import { config } from "@statsify/util";
 import { join } from "node:path";
 import "@sentry/tracing";
@@ -38,9 +37,7 @@ async function bootstrap() {
   }
 
   await Promise.all(
-    [I18nLoaderService, FontLoaderService, WinterThemeService].map((service) =>
-      Container.get(service).init()
-    )
+    [I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init())
   );
 
   const rest = new RestClient({ token: config("discordBot.token") });
