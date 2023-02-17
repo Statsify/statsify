@@ -10,8 +10,8 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.36.0",
-    "@sentry/tracing": "^7.36.0",
+    "@sentry/node": "^7.37.2",
+    "@sentry/tracing": "^7.37.2",
     "@statsify/api-client": "workspace:^",
     "@statsify/discord": "workspace:^",
     "@statsify/logger": "workspace:^",
@@ -20,9 +20,9 @@
     "@statsify/util": "workspace:^",
     "@typegoose/typegoose": "^10.1.1",
     "axios": "^0.27.2",
-    "discord-api-types": "^0.37.31",
+    "discord-api-types": "^0.37.34",
     "luxon": "^3.2.1",
-    "mongoose": "^6.9.0",
+    "mongoose": "^6.9.2",
     "reflect-metadata": "^0.1.13",
     "skia-canvas": "^0.9.30",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb",
