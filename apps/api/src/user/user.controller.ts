@@ -30,6 +30,7 @@ import {
   PutUserBadgeResponse,
 } from "@statsify/api-client";
 import { UpdateUserDto, UserDto, VerifyCodeDto } from "../dtos";
+import { User } from "@statsify/schemas";
 import { UserService } from "./user.service";
 
 @Controller("/user")
@@ -57,7 +58,7 @@ export class UserController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
   public async updateUser(@Query() { tag }: UserDto, @Body() body: UpdateUserDto) {
-    const user = await this.userService.update(tag, body);
+    const user = await this.userService.update(tag, body as Partial<User>);
 
     return {
       success: !!user,

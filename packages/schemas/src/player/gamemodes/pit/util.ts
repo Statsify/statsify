@@ -83,7 +83,11 @@ export const getPrestigeReq = (prestige: number) =>
 
 export const getLevel = (pres: number, xp: number) => {
   let level = 120;
-  if (4_042_276_727 <= xp && xp <= 5_192_293_080 || 7_339_776_727 <= xp && xp <= 11_787_293_080) return 120;
+  if (
+    (4_042_276_727 <= xp && xp <= 5_192_293_080) ||
+    (7_339_776_727 <= xp && xp <= 11_787_293_080)
+  )
+    return 120;
 
   for (let xpRemaining = PRESTIGE_XP_REQUIREMENTS[pres]; xpRemaining > xp; ) {
     level -= 1;
