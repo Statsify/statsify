@@ -214,7 +214,10 @@
     "watchdog": "Visualizza il conteggio dei ban del \"Watchdog\" di Hypixel",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "session": "View your session stats in various games",
+    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-session": "Reset your current session"
   },
   "config": {
     "badge": {
@@ -362,6 +365,10 @@
       "description_discordId": "Un giocatore con l'id discord `{{tag}}` non può esser trovato!",
       "title": "Giocatore non valido"
     },
+    "invalidSession": {
+      "description_username": "The specified player does not currently have a session.",
+      "title": "No session found"
+    },
     "invalidResetTime": {
       "description": "`{{time}}` non corrisponde al formato `h:mm a`. Inserisci un'ora nel formato simile a `12:00 PM` o `1:00 AM`.",
       "title": "Tempo di ripristino non valido"
@@ -494,7 +501,9 @@
     "new": "Le statistiche storiche di **{{displayName}}** sono state verificate per la prima volta su Statsify. Le loro statistiche ora saranno aggiornate ogni giorno.",
     "reset": "$t(emojis:clock) **Ripristina** <t:{{time}}:R>",
     "resetButton": "Clicca per ripristinare",
-    "setResetTime": "Imposta il tuo tempo di ripristino a <t:{{time}}:t>."
+    "setResetTime": "Imposta il tuo tempo di ripristino a <t:{{time}}:t>.",
+    "resetSession": "Your session has been reset!",
+    "new-session": "A session does not exist for this player."
   },
   "leaderboard": {
     "guildInput": {
@@ -567,7 +576,7 @@
     "ended": "Finito",
     "endurance": "Durata",
     "event-level": "Livello Evento",
-    "event-exp": "Event EXP",
+    "event-exp": "EXP eventi",
     "exp": "EXP",
     "expGained": "EXP Guadagnata",
     "extraUltimates": "Extra Ultimate",
@@ -745,7 +754,7 @@
     "woolPlaced": "Lana Piazzata",
     "zombieKills": "Uccisioni Zombie",
     "potionsBrewed": "Pozioni preparate",
-    "positions": "Positions",
+    "positions": "Posizioni",
     "powerupsCollected": "Power-Up Collezionati",
     "roundsCompleted": "Round Completati",
     "totalExp": "EXP Totale"
