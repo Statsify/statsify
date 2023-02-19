@@ -214,7 +214,10 @@
     "watchdog": "ดูจำนวนการแบน Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "session": "View your session stats in various games",
+    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-session": "Reset your current session"
   },
   "config": {
     "badge": {
@@ -362,6 +365,10 @@
       "description_discordId": "ไม่พบผู้เล่นที่มี discord id ของ `{{tag}}`!",
       "title": "ผู้เล่นไม่ถูกต้อง"
     },
+    "invalidSession": {
+      "description_username": "The specified player does not currently have a session.",
+      "title": "No session found"
+    },
     "invalidResetTime": {
       "description": "`{{time}}` ไม่ตรงกับรูปแบบ `h:mm a`. ป้อนเวลาในรูปแบบที่คล้ายกับ `12:00 PM` หรือ `01:00 AM`.",
       "title": "เวลารีเซ็ตไม่ถูกต้อง"
@@ -494,7 +501,9 @@
     "new": "**{{displayName}}** มีการตรวจสอบสถิติที่ผ่านมาใน Statsify เป็นครั้งแรก. สถิติของพวกเขาจะได้รับการอัปเดตในเวลานี้ทุกวัน.",
     "reset": "$t(emojis:clock) **รีเซ็ต** <t:{{time}}:R>",
     "resetButton": "คลิกเพื่อรีเซ็ต",
-    "setResetTime": "ตั้งเวลารีเซ็ตเป็น <t:{{time}}:t>."
+    "setResetTime": "ตั้งเวลารีเซ็ตเป็น <t:{{time}}:t>.",
+    "resetSession": "Your session has been reset!",
+    "new-session": "A session does not exist for this player."
   },
   "leaderboard": {
     "guildInput": {

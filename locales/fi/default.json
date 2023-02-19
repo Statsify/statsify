@@ -214,7 +214,10 @@
     "watchdog": "Tarkastele Watchdogin antamien porttikieltojen määrää",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "session": "View your session stats in various games",
+    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-session": "Reset your current session"
   },
   "config": {
     "badge": {
@@ -362,6 +365,10 @@
       "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Virheellinen pelaaja"
     },
+    "invalidSession": {
+      "description_username": "The specified player does not currently have a session.",
+      "title": "No session found"
+    },
     "invalidResetTime": {
       "description": "`{{time}}` ei vastaa muotoa `h:mm a`. Kirjoita aika muodossa `12:00 PM` tai `1:00 AM`.",
       "title": "Virheellinen nollausaika"
@@ -494,7 +501,9 @@
     "new": "Pelaajan **{{displayName}}** historialliset tilastot on tarkistettu ensimmäistä kertaa Statsifylla. Heidän tilastonsa päivitetään nyt tähän aikaan joka päivä.",
     "reset": "$t(emojis:clock) **Nollaantuu** <t:{{time}}:R>",
     "resetButton": "Klikkaa nollataksesi",
-    "setResetTime": "Aseta nollausajaksi <t:{{time}}:t>."
+    "setResetTime": "Aseta nollausajaksi <t:{{time}}:t>.",
+    "resetSession": "Your session has been reset!",
+    "new-session": "A session does not exist for this player."
   },
   "leaderboard": {
     "guildInput": {

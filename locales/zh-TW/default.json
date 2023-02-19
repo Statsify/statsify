@@ -214,7 +214,10 @@
     "watchdog": "查看Hypixel Watchdog查禁總計",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "session": "View your session stats in various games",
+    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-session": "Reset your current session"
   },
   "config": {
     "badge": {
@@ -362,6 +365,10 @@
       "description_discordId": "無法搜尋一位Discord使用者為`{{tag}}`的玩家！",
       "title": "無效的玩家"
     },
+    "invalidSession": {
+      "description_username": "The specified player does not currently have a session.",
+      "title": "No session found"
+    },
     "invalidResetTime": {
       "description": "`{{time}}`不匹配`h:mm a`的格式。請輸入`12:00 PM`或是`1:00 AM`類似格式的時間。",
       "title": "無效的重置時間"
@@ -494,7 +501,9 @@
     "new": "**{{displayName}}**首次在Statsify查看了以往的統計數據。他們的統計數據將會在每天的此時更新。",
     "reset": "$t(emojis:clock) **重置**<t:{{time}}:R>",
     "resetButton": "點擊重置",
-    "setResetTime": "將您的重置時間設置為<t:{{time}}:t>"
+    "setResetTime": "將您的重置時間設置為<t:{{time}}:t>",
+    "resetSession": "Your session has been reset!",
+    "new-session": "A session does not exist for this player."
   },
   "leaderboard": {
     "guildInput": {

@@ -214,7 +214,10 @@
     "watchdog": "Δες την καταμέτρηση αποκλεισμών του Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "session": "View your session stats in various games",
+    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-session": "Reset your current session"
   },
   "config": {
     "badge": {
@@ -362,6 +365,10 @@
       "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Μη Έγκυρος Παίκτης"
     },
+    "invalidSession": {
+      "description_username": "The specified player does not currently have a session.",
+      "title": "No session found"
+    },
     "invalidResetTime": {
       "description": "`{{time}}` δεν ταιριάζει με τη μορφή `h:mm a`. Εισήγε μία ώρα σε παρόμοια μορφή με `12:00 ΜΜ` ή `1:00 ΠΜ`.",
       "title": "Μη Έγκυρος Χρόνος Επαναφοράς"
@@ -494,7 +501,9 @@
     "new": "Τα ιστορικά στατιστικά του **{{displayName}}** έχουν ελεγχθεί για πρώτη φορά στο Statsify. Τα στατιστικά τους θα ενημερώνονται σε αυτή την ώρα κάθε μέρα.",
     "reset": "$t(emojis:clock) **Επαναφέρεται** <t:{{time}}:R>",
     "resetButton": "Κάνε κλικ για Επαναφορά",
-    "setResetTime": "Ρύθμισε την ώρα επαναφοράς σε <t:{{time}}:t>."
+    "setResetTime": "Ρύθμισε την ώρα επαναφοράς σε <t:{{time}}:t>.",
+    "resetSession": "Your session has been reset!",
+    "new-session": "A session does not exist for this player."
   },
   "leaderboard": {
     "guildInput": {

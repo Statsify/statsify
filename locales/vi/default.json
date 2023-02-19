@@ -9,7 +9,7 @@
     "mojang-player": "Một tên Minecraft hoặc UUID",
     "number": "Một con số",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard",
+    "player-leaderboard": "Chọn một bảng xếp hạng",
     "reason": "The reason for closing the support ticket",
     "server": "Một tên máy chủ Minecraft hoặc một IP máy chủ",
     "tags-content": "The content of the tag",
@@ -94,7 +94,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-command": "Xem bảng xếp hạng {{name}}",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -214,7 +214,10 @@
     "watchdog": "Xem số lượng mà Hypixel Watchdog đã ban",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "session": "View your session stats in various games",
+    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-session": "Reset your current session"
   },
   "config": {
     "badge": {
@@ -362,6 +365,10 @@
       "description_discordId": "Một người chơi với mã discord của `{{tag}}` không thể tìm thấy!",
       "title": "Người chơi không hợp lệ"
     },
+    "invalidSession": {
+      "description_username": "The specified player does not currently have a session.",
+      "title": "No session found"
+    },
     "invalidResetTime": {
       "description": "`{{time}}` không giống với format `h:mm a`. Hãy nhập thời gian tương đồng với format như `12:00 PM` hoặc 1:00 AM`.",
       "title": "Đặt lại thời gian sai"
@@ -458,7 +465,7 @@
     },
     "premiumRequired": {
       "description": "Hãy xem tất cả các tính năng đang có ở [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
+      "preview": "Kiểm tra tất cả tính năng có sẵn ở [here](https://statsify.net/premium). Dưới đây là một bản xem trước nhỏ về các câu lệnh có tính năng gì.",
       "title": "Cần có Statsify {{tier}} để chạy câu lệnh này"
     },
     "staffOnly": {
@@ -494,7 +501,9 @@
     "new": "Thông tin lịch sử của **{{displayName}}** đã được kiểm tra ở lần đầu tiên trên Statsify. Thông tin của họ sẽ được cập nhật từ bây giờ hằng ngày.",
     "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
     "resetButton": "Ấn đề cài lại",
-    "setResetTime": "Cài lại thời gian của bạn thành <t:{{time}}:t>."
+    "setResetTime": "Cài lại thời gian của bạn thành <t:{{time}}:t>.",
+    "resetSession": "Your session has been reset!",
+    "new-session": "A session does not exist for this player."
   },
   "leaderboard": {
     "guildInput": {
@@ -567,7 +576,7 @@
     "ended": "Đã kết thúc",
     "endurance": "Sức chịu đựng",
     "event-level": "Số cấp ở sự kiện",
-    "event-exp": "Event EXP",
+    "event-exp": "EXP Sự kiện",
     "exp": "Kinh nghiệm",
     "expGained": "Số kinh nghiệm đã được",
     "extraUltimates": "Số Ultimates bổ sung",
@@ -680,7 +689,7 @@
     "points": "Điểm",
     "poopCollected": "Số cứt đã thu thập được",
     "powerKicks": "Đá sức mạnh",
-    "powerupActivations": "Power-Up Activations",
+    "powerupActivations": "Kích hoạt Power-Up",
     "powerups": "Power-Ups",
     "prefix": "Chức",
     "prevent": "Ngăn cản",
@@ -745,10 +754,10 @@
     "woolPlaced": "Lông đã đặt",
     "zombieKills": "Số lần giết Thây Ma",
     "potionsBrewed": "Số thuốc đã làm",
-    "positions": "Positions",
-    "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed",
-    "totalExp": "Total EXP"
+    "positions": "Vị trí",
+    "powerupsCollected": "Power-Ups đã thu được",
+    "roundsCompleted": "Số vòng hoàn thành",
+    "totalExp": "Tổng EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Vô **$t(socials.discord)** của chúng tôi và lấy **20% lower cooldowns** $t(emojis:heart)",

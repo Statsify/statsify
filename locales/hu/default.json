@@ -214,7 +214,10 @@
     "watchdog": "Nézd meg a Hypixel Watchdog kitiltások számát",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "session": "View your session stats in various games",
+    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-session": "Reset your current session"
   },
   "config": {
     "badge": {
@@ -362,6 +365,10 @@
       "description_discordId": "Nem található játékos `{{tag}}` discord idvel!",
       "title": "Ismeretlen Játékos"
     },
+    "invalidSession": {
+      "description_username": "The specified player does not currently have a session.",
+      "title": "No session found"
+    },
     "invalidResetTime": {
       "description": "Az általad megadott idő formátuma nem megfelelő: `{{time}}`. Kérjük használd a következő formátumot: `h:mm a` pl:`12:00 PM` vagy `1:00 AM`.",
       "title": "Érvénytelen Visszaállítási Idő"
@@ -494,7 +501,9 @@
     "new": "**{{displayName}}** történelmi statisztikái most lettek előszőr megtekintve a Statsify-on. Mostantól minden nap ebben az időpontban fognak frissülni a történelmi statisztikái.",
     "reset": "$t(emojis:clock) **Visszaállítás** <t:{{time}}:R>",
     "resetButton": "Kattints a Visszaállításhoz",
-    "setResetTime": "Visszaállíási idő beállítva erre: <t:{{time}}:t>."
+    "setResetTime": "Visszaállíási idő beállítva erre: <t:{{time}}:t>.",
+    "resetSession": "Your session has been reset!",
+    "new-session": "A session does not exist for this player."
   },
   "leaderboard": {
     "guildInput": {
