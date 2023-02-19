@@ -214,7 +214,10 @@
     "watchdog": "Se antall utestengt av Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "session": "View your session stats in various games",
+    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-session": "Reset your current session"
   },
   "config": {
     "badge": {
@@ -362,6 +365,10 @@
       "description_discordId": "En spiller med discord-id `{{tag}}` kunne ikke bli funnet!",
       "title": "Ugyldig spiller"
     },
+    "invalidSession": {
+      "description_username": "The specified player does not currently have a session.",
+      "title": "No session found"
+    },
     "invalidResetTime": {
       "description": "`{{time}}` samsvarer ikke med formatet `t:mm a`. Skriv inn et tidspunkt som ligner formatet `12:00 PM` eller `1:00 AM`.",
       "title": "Ugyldig tid for nullstilling"
@@ -494,7 +501,9 @@
     "new": "**{{displayName}}** sin tidligere statistikk har blitt sjekket for første gang på Statsify. Deres statistikk vil nå oppdateres på dette tidspunktet hver dag.",
     "reset": "$t(emojis:clock) **Nullstilles** <t:{{time}}:R>",
     "resetButton": "Klikk for å nullstille",
-    "setResetTime": "Angi nullstillingstid til <t:{{time}}:t>."
+    "setResetTime": "Angi nullstillingstid til <t:{{time}}:t>.",
+    "resetSession": "Your session has been reset!",
+    "new-session": "A session does not exist for this player."
   },
   "leaderboard": {
     "guildInput": {
