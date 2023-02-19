@@ -329,9 +329,14 @@ export class HistoricalBase {
 
         const displayName = this.apiService.emojiDisplayName(t, player.displayName);
 
-        let content = player.isNew
-          ? `${t("historical.new", { displayName })}`
-          : undefined;
+        let content: string | undefined = undefined;
+
+        if (player.isNew) {
+          content =
+            this.time === HistoricalTimes.SESSION
+              ? t("historical.newSession", { displayName })
+              : t("historical.new", { displayName });
+        }
 
         if (showNextReset)
           content = (content ?? "") + t("historical.reset", { time: player.nextReset });
