@@ -214,7 +214,10 @@
     "watchdog": "Zobacz liczbę banów Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "session": "View your session stats in various games",
+    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-session": "Reset your current session"
   },
   "config": {
     "badge": {
@@ -362,6 +365,10 @@
       "description_discordId": "Nie można odnaleźć gracza o id discorda `{{tag}}`!",
       "title": "Niepoprawny gracz"
     },
+    "invalidSession": {
+      "description_username": "The specified player does not currently have a session.",
+      "title": "No session found"
+    },
     "invalidResetTime": {
       "description": "`{{time}}` nie pasuje do formatu `h:mm a`. Wprowadź czas w formacie podobnym do `12:00 PM` lub `1:00 AM`.",
       "title": "Nieprawidłowy czas resetowania"
@@ -494,7 +501,9 @@
     "new": "Statystyki historyczne **{{displayName}}** zostały sprawdzone po raz pierwszy w Statsify. Od teraz statystyki będą się aktualizować każdego dnia o tej porze.",
     "reset": "$t(emojis:clock) **Reset** <t:{{time}}:R>",
     "resetButton": "Kliknij, aby zresetować",
-    "setResetTime": "Ustawiono czas resetowania na <t:{{time}}:t>."
+    "setResetTime": "Ustawiono czas resetowania na <t:{{time}}:t>.",
+    "resetSession": "Your session has been reset!",
+    "new-session": "A session does not exist for this player."
   },
   "leaderboard": {
     "guildInput": {
