@@ -214,7 +214,10 @@
     "watchdog": "Hypixel Watchdog yasaklama sayılarını görüntüleyin",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "session": "View your session stats in various games",
+    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-session": "Reset your current session"
   },
   "config": {
     "badge": {
@@ -362,6 +365,10 @@
       "description_discordId": "`{{tag}}` discord id'sine sahip bir oyuncu bulunamadı!",
       "title": "Geçersiz Oyuncu"
     },
+    "invalidSession": {
+      "description_username": "The specified player does not currently have a session.",
+      "title": "No session found"
+    },
     "invalidResetTime": {
       "description": "`{{time}}`, `h:mm a` formatına uymamaktadır. `12:00 PM` veya `1:00 AM`'ye benzer bir saat girin.",
       "title": "Geçersiz Sıfırlama Saati"
@@ -494,7 +501,9 @@
     "new": "{{displayName}} adlı oyuncunun geçmiş istatistiklerine Statsify'da ilk kez bakılıyor. İstatistikleri her gün bu saatte güncellenecek.",
     "reset": "$t(emojis:clock) <t:{{time}}:R> **Saatinde Sıfırlanır**",
     "resetButton": "Sıfırlamak için tıklayın",
-    "setResetTime": "Sıfırlama saatiniz <t:{{time}}:t> saatine ayarlandı."
+    "setResetTime": "Sıfırlama saatiniz <t:{{time}}:t> saatine ayarlandı.",
+    "resetSession": "Your session has been reset!",
+    "new-session": "A session does not exist for this player."
   },
   "leaderboard": {
     "guildInput": {
