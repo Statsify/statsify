@@ -214,7 +214,10 @@
     "watchdog": "Переглянути кількість банів Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "session": "View your session stats in various games",
+    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-session": "Reset your current session"
   },
   "config": {
     "badge": {
@@ -362,6 +365,10 @@
       "description_discordId": "Гравець з Discord id `{{tag}}` не може бути знайдений!",
       "title": "Недійсний Гравець"
     },
+    "invalidSession": {
+      "description_username": "The specified player does not currently have a session.",
+      "title": "No session found"
+    },
     "invalidResetTime": {
       "description": "{{time}} Не відповідає формату 'h:mm a'. Введіть час у форматі, подібному до '12:00 PM' або '1:00 AM'.",
       "title": "Неприпустимий час скидання"
@@ -494,7 +501,9 @@
     "new": "**{{displayName}}** історичну статистику було вперше перевірено на Statsify. Тепер їхня статистика оновлюватиметься щодня в цей час.",
     "reset": "$t(emojis:clock) **Скидання** <t:{{time}}:R>",
     "resetButton": "Натисніть, щоб скинути",
-    "setResetTime": "Установіть час скидання на <t:{{time}}:t>."
+    "setResetTime": "Установіть час скидання на <t:{{time}}:t>.",
+    "resetSession": "Your session has been reset!",
+    "new-session": "A session does not exist for this player."
   },
   "leaderboard": {
     "guildInput": {
