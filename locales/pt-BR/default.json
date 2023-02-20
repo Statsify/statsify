@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Exibe sua lista de amigos no Hypixel",
     "game-counts": "Exibe a contagem atual de partidas no Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Gera uma lista de possíveis construções com base na dica dada",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Exibes seus amigos em comum com outro jogador",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Exibe criadores e colaboradores do Statsify",
@@ -431,17 +429,9 @@
       "description": "**{{username}}** não tem nenhuma capa!",
       "title": "Capa ausente"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** não tem amigos $t(emojis:sad)! :(",
-      "title": "Amigos não encontrados"
-    },
     "noGTBSolutions": {
       "description": "Não conseguimos encontrar nenhuma solução para a dica fornecida!",
       "title": "Nenhuma solução para Guess The Build"
-    },
-    "noMutuals": {
-      "description": "{{displayNameOne}} e {{displayNameTwo}} não têm amigos em comum!",
-      "title": "Sem Mutuais"
     },
     "noRankings": {
       "description": "**{{displayName}}** não tem nenhum ranking!",
@@ -590,7 +580,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Tempo em Campo de Força",
     "fortune": "Sorte",
-    "friends": "Amigos",
     "game": "Jogo",
     "game-total": "Total no {{game}}",
     "gamesPlayed": "Partidas jogadas",

@@ -8,25 +8,23 @@
 
 import { APIData, Flatten, flatten } from "@statsify/util";
 import { Daily, Monthly, Weekly } from "../historical/models";
+import { HistoricalLeaderboardService } from "../historical/leaderboards/historical-leaderboard.service";
 import {
-  Friends,
-  Player,
-  createHistoricalPlayer,
-  deserialize,
-  serialize,
-} from "@statsify/schemas";
-import {
-  FriendsNotFoundException,
   HistoricalTimes,
   HypixelCache,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from "@statsify/api-client";
-import { HistoricalLeaderboardService } from "../historical/leaderboards/historical-leaderboard.service";
 import { HypixelService } from "../hypixel";
 import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
+import {
+  Player,
+  createHistoricalPlayer,
+  deserialize,
+  serialize,
+} from "@statsify/schemas";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service";
 import { PlayerSearchService, RedisPlayer } from "./search/player-search.service";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -41,7 +39,6 @@ export class PlayerService {
     private readonly historicalLeaderboardService: HistoricalLeaderboardService,
     private readonly playerSearchService: PlayerSearchService,
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
-    @InjectModel(Friends) private readonly friendsModel: ReturnModelType<typeof Friends>,
     @InjectModel(Daily) private readonly dailyModel: ReturnModelType<typeof Player>,
     @InjectModel(Weekly) private readonly weeklyModel: ReturnModelType<typeof Player>,
     @InjectModel(Monthly) private readonly monthlyModel: ReturnModelType<typeof Player>
@@ -115,53 +112,6 @@ export class PlayerService {
       start,
       end
     );
-  }
-
-  /**
-   *
-   * @param tag UUID or username
-   * @param cacheLevel What type of data to return (cached/live)
-   * @returns null or an object containing an array of friends
-   */
-  public async getFriends(tag: string, cacheLevel: HypixelCache) {
-    const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
-      displayName: true,
-      uuid: true,
-    });
-
-    if (!player) throw new PlayerNotFoundException();
-
-    const cachedFriends = await this.friendsModel
-      .findOne()
-      .where("uuid")
-      .equals(player.uuid)
-      .lean()
-      .exec();
-
-    if (cachedFriends) {
-      cachedFriends.cached = true;
-
-      if (this.hypixelService.shouldCache(cachedFriends.expiresAt, cacheLevel))
-        return cachedFriends;
-    }
-
-    const friends = await this.hypixelService.getFriends(player.uuid);
-
-    if (!friends || !friends.friends.length) {
-      if (cachedFriends) return cachedFriends;
-      throw new FriendsNotFoundException(player);
-    }
-
-    friends.displayName = player.displayName;
-    friends.uuid = player.uuid;
-    friends.expiresAt = Date.now() + 3_600_000;
-
-    await this.friendsModel
-      .replaceOne({ uuid: player.uuid }, friends, { upsert: true })
-      .lean()
-      .exec();
-
-    return friends;
   }
 
   public async getStatus(tag: string) {
