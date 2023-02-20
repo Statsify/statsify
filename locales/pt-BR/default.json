@@ -215,9 +215,9 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "session": "View your session stats in various games",
-    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
-    "reset-session": "Reset your current session"
+    "session": "Veja as estatísticas das suas sessões em vários jogos",
+    "reset-time": "Redefina a hora que suas estatísticas diárias/semanais/mensais serão automaticamente redefinidas",
+    "reset-session": "Reinicie sua sessão atual"
   },
   "config": {
     "badge": {
@@ -366,8 +366,8 @@
       "title": "Jogador inválido"
     },
     "invalidSession": {
-      "description_username": "The specified player does not currently have a session.",
-      "title": "No session found"
+      "description_username": "O jogador especificado não tem uma sessão no momento.",
+      "title": "Nenhuma sessão encontrada"
     },
     "invalidResetTime": {
       "description": "`{{time}}` não corresponde ao formato `h:mm a`. Digite um tempo em um formato similar a `12:00 PM` ou `1:00 AM`.",
@@ -502,8 +502,8 @@
     "reset": "$t(emojis:clock) **Reinicializa** <t:{{time}}:R>",
     "resetButton": "Clique para redefinir",
     "setResetTime": "Define o seu tempo de redefinição para <t:{{time}}:t>.",
-    "resetSession": "Your session has been reset!",
-    "new-session": "A session does not exist for this player."
+    "resetSession": "Sua sessão foi reiniciada!",
+    "new-session": "Não existe uma sessão para este jogador."
   },
   "leaderboard": {
     "guildInput": {
