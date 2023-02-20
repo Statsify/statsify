@@ -195,7 +195,7 @@
     "theme-font": "프로필의 글꼴을 변경해요",
     "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "프로필 하단 아이콘을 변경해요",
-    "theme-footer-message": "프로필 하단 메시지를 변경해요 (https://rgb.birdflop.com에서 그라데이션 문자를 작성하세요)",
+    "theme-footer-message": "프로필 하단 메시지를 변경해요(https://rgb.birdflop.com에서 그라데이션 문자를 작성하세요)",
     "theme-footer-reset": "프로필 하단을 초기화해요",
     "theme-palette": "프로필의 색상 팔레트를 변경해요",
     "theme-view": "내 프로필 테마를 봐요",
@@ -216,7 +216,7 @@
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
     "session": "View your session stats in various games",
-    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
+    "reset-time": "일간/주간/월간 통계가 자동으로 갱신되는 시간을 초기화해요",
     "reset-session": "Reset your current session"
   },
   "config": {
