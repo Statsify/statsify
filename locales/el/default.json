@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Δες τη λίστα των Hypixel φίλων σου",
     "game-counts": "Δες τις τρέχον μετρήσεις του Hypixel παιχνιδιού",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Δημιούργησε μια λίστα με πιθανές απαντήσεις Guess The Build με βάση τη δεδομένη υπόδειξη",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Δες τους κοινούς Hypixel φίλους σου με έναν άλλο παίκτη",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Δες τους δημιουργούς και τους συνεισφέροντες του Statsify",
@@ -431,17 +429,9 @@
       "description": "Ο **{{username}}** δεν έχει καμία κάπα!",
       "title": "Λείπει Κάπα"
     },
-    "noFriends": {
-      "description": "Ο **{{displayName}}** δεν έχει φίλους $t(emojis:sad)! :(",
-      "title": "Δε Βρέθηκαν Φίλοι"
-    },
     "noGTBSolutions": {
       "description": "Δεν μπορέσαμε να βρούμε λύσεις για το παρεχόμενο στοιχείο!",
       "title": "Καμία Guess The Build Λύση"
-    },
-    "noMutuals": {
-      "description": "Ο **{{displayNameOne}}** και ο **{{displayNameTwo}}** δεν έχουν κοινούς φίλους!",
-      "title": "Κανένας Κοινός"
     },
     "noRankings": {
       "description": "Ο **{{displayName}}** δεν έχει κατατάξεις!",
@@ -590,7 +580,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Χρόνος Δυναμικού πεδίου",
     "fortune": "Τύχη",
-    "friends": "Φίλοι",
     "game": "Παιχνίδι",
     "game-total": "{{game}} Σύνολο",
     "gamesPlayed": "Παιχνίδια Που Παίχτηκαν",

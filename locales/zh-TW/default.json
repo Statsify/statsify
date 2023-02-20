@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "查看您在Hypixel的好友名單",
     "game-counts": "查看目前所有Hypixel遊戲的遊玩人數",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "根據提示，生成可能的 你蓋我猜 的答案名單",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "查看您跟另一位玩家共同的Hypixel好友",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "查看Statsify的創作者和貢獻者",
@@ -431,17 +429,9 @@
       "description": "**{{username}}**沒有任何披風！",
       "title": "缺少披風"
     },
-    "noFriends": {
-      "description": "**{{displayName}}**沒有好友$t(emojis:sad)！:(",
-      "title": "未找到好友"
-    },
     "noGTBSolutions": {
       "description": "我們搜尋不到任何關於此提示的解決方案！",
       "title": "毫無 你蓋我猜 的解決方案"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}**和**{{displayNameTwo}}**沒有共同好友！",
-      "title": "沒有共同好友"
     },
     "noRankings": {
       "description": "**{{displayName}}**沒有排行！",
@@ -590,7 +580,6 @@
     "fkdr": "最終 K/D 比",
     "forcefieldTime": "反彈彩單時間",
     "fortune": "額外硬幣技能值",
-    "friends": "好友數",
     "game": "遊戲",
     "game-total": "{{game}}總計",
     "gamesPlayed": "遊玩過的遊戲",

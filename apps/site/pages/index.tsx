@@ -16,12 +16,10 @@ import commandsImage from "../public/commands.svg";
 import dailyMurderMysteryProfile from "../public/examples/daily-murdermystery.png";
 import dailyTNTGamesProfile from "../public/examples/daily-tntgames.png";
 import duelsProfile from "../public/examples/duels.png";
-import friendsProfile from "../public/examples/friends.png";
 import guildMemberProfile from "../public/examples/guild-member.png";
 import guildOverallGexpProfile from "../public/examples/guild-overall-gexp.png";
 import guildOverallProfile from "../public/examples/guild-overall.png";
 import guildTopProfile from "../public/examples/guild-top.png";
-import mutualsProfile from "../public/examples/mutuals.png";
 import recentGamesProfile from "../public/examples/recentgames.png";
 import serversImage from "../public/servers.svg";
 import skinEmbed from "../public/examples/skin.png";
@@ -139,11 +137,7 @@ const Index = () => (
     </Feature>
     <Feature
       title="Miscellaneous"
-      images={[
-        <Image placeholder="blur" src={friendsProfile} alt="Friends" />,
-        <Image placeholder="blur" src={mutualsProfile} alt="Mutuals" />,
-        <Image placeholder="blur" src={recentGamesProfile} alt="Recent Games" />,
-      ]}
+      images={[<Image placeholder="blur" src={recentGamesProfile} alt="Recent Games" />]}
       align="left"
     >
       Statsify has a plethora of helpful Hypixel utilities. For example, you can use{" "}

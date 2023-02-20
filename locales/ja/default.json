@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "View your Hypixel friends list",
     "game-counts": "View Hypixel current game counts",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Generate a list of possible Guess The Build answers based on the given hint",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "View your mutual Hypixel friends with another player",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "View Statsify's creators and contributors",
@@ -431,17 +429,9 @@
       "description": "**{{username}}** doesn't have any capes!",
       "title": "Missing Cape"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** has no friends $t(emojis:sad)! :(",
-      "title": "Friends Not Found"
-    },
     "noGTBSolutions": {
       "description": "We couldn't find any solutions for the provided hint!",
       "title": "No Guess The Build Solutions"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** and **{{displayNameTwo}}** have no mutual friends!",
-      "title": "No Mutuals"
     },
     "noRankings": {
       "description": "**{{displayName}}** has no rankings!",
@@ -590,7 +580,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Forcefield Time",
     "fortune": "Fortune",
-    "friends": "Friends",
     "game": "Game",
     "game-total": "{{game}} Total",
     "gamesPlayed": "Games Played",
