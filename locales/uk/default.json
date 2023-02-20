@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Переглянути ваш список друзів на Hypixel",
     "game-counts": "Переглянути поточні кількості гравців у іграх Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Згенерувати список можливих відповідей у Guess The Build на основі даної підказки",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Переглянути своїх спільних друзів з іншим гравцем на Hypixel",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Переглянути творців та учасників Statsify",
@@ -431,17 +429,9 @@
       "description": "**{{username}}** не має плащів!",
       "title": "Відсутній плащ"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** не має друзів $t(emojis:sad)! :(",
-      "title": "Друзів не знайдено"
-    },
     "noGTBSolutions": {
       "description": "Ми не змогли знайти рішення для наданої підказки!",
       "title": "Немає рішень Guess The Build"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** і **{{displayNameTwo}}** не мають спільних друзів!",
-      "title": "Немає спільних"
     },
     "noRankings": {
       "description": "**{{displayName}}** не має рейтингу!",
@@ -590,7 +580,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Часу в Силовому полі",
     "fortune": "Фортуна",
-    "friends": "Друзів",
     "game": "Гра",
     "game-total": "{{game}} Всього",
     "gamesPlayed": "Ігор Зіграно",

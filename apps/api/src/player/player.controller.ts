@@ -20,7 +20,6 @@ import { CachedPlayerDto, PlayerGroupDto, UpdatePlayerDto } from "../dtos";
 import {
   DeletePlayerResponse,
   ErrorResponse,
-  GetFriendsResponse,
   GetPlayerResponse,
   GetRecentGamesResponse,
   GetStatusResponse,
@@ -109,21 +108,6 @@ export class PlayerController {
     return {
       success: !!status,
       status,
-    };
-  }
-
-  @ApiOperation({ summary: "Get the Friends of a Player" })
-  @ApiOkResponse({ type: GetFriendsResponse })
-  @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiNotFoundResponse({ type: PlayerNotFoundException })
-  @Auth({ weight: 10 })
-  @Get("/friends")
-  public async getFriends(@Query() { player: tag, cache }: CachedPlayerDto) {
-    const friends = await this.playerService.getFriends(tag, cache);
-
-    return {
-      success: !!friends,
-      data: friends,
     };
   }
 }

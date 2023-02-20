@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Visualizza l'elenco dei tuoi amici di Hypixel",
     "game-counts": "Visualizza quante partite di una modalità di Hypixel hai giocato",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Genera un elenco di possibili risposte di \"Guess The Build\" basate sull'indizio dato",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Visualizza i tuoi amici di Hypixel che hai in comune con un altro giocatore",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Visualizza i creatori e i contributori di Statsify",
@@ -431,17 +429,9 @@
       "description": "{{username}} non ha mantelli!",
       "title": "Mantello mancante"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** non ha amici $t(emojis:sad)! :(",
-      "title": "Nessun amico trovato"
-    },
     "noGTBSolutions": {
       "description": "Non abbiamo trovato nessuna soluzione con l'indizio procurato!",
       "title": "Nessuna soluzione per \"Guess The Build\""
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** e **{{displayNameTwo}}** non hanno amici in comune!",
-      "title": "Nessuno in Comune"
     },
     "noRankings": {
       "description": "**{{displayName}}** Non ha rank!",
@@ -590,7 +580,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Tempo Del Forcefield",
     "fortune": "Fortuna",
-    "friends": "Amici",
     "game": "Partita",
     "game-total": "{{game}} Totale",
     "gamesPlayed": "Partite Giocate",

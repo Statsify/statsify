@@ -7,10 +7,10 @@
  */
 
 import { Daily, Monthly, Weekly } from "../historical/models";
-import { Friends, Player } from "@statsify/schemas";
 import { HistoricalModule } from "../historical";
 import { HypixelModule } from "../hypixel";
 import { Module, forwardRef } from "@nestjs/common";
+import { Player } from "@statsify/schemas";
 import { PlayerController } from "./player.controller";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service";
 import { PlayerLeaderboardsController } from "./leaderboards/player-leaderboard.controller";
@@ -22,7 +22,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 @Module({
   imports: [
     HypixelModule,
-    TypegooseModule.forFeature([Player, Friends, Daily, Weekly, Monthly]),
+    TypegooseModule.forFeature([Player, Daily, Weekly, Monthly]),
     forwardRef(() => HistoricalModule),
   ],
   controllers: [PlayerController, PlayerLeaderboardsController, PlayerSearchController],

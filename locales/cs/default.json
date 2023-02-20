@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Zobrazit seznam přátel na Hypixelu",
     "game-counts": "Zobrazit aktuální počet Hypixel hráčů ve hrách",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Vygenerovat seznam možných odpovědí v Guess The Build sestavených na základě dané nápovědy",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Zobrazit Hypixel přátele společné s jiným hráčem",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Zobrazit Statsify tvůrce a přispěvatele",
@@ -431,17 +429,9 @@
       "description": "Hráč **{{username}}** nemá žádné pláště!",
       "title": "Chybějící plášť"
     },
-    "noFriends": {
-      "description": "Hráč **{{displayName}}** nemá žádné přátele $t(emojis:sad)! :(",
-      "title": "Přátelé nebyli nalezeni"
-    },
     "noGTBSolutions": {
       "description": "Nemohli jsme nalézt žádná řešení pro poskytnutou nápovědu!",
       "title": "Žádná Guess The Build řešení"
-    },
-    "noMutuals": {
-      "description": "Hráči **{{displayNameOne}}** a **{{displayNameTwo}}** nemají žádné společné přátele!",
-      "title": "Žádní společní přátelé"
     },
     "noRankings": {
       "description": "Hráč **{{displayName}}** nemá žádné pořadí!",
@@ -590,7 +580,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Čas strávený v Forcefield",
     "fortune": "Fortune",
-    "friends": "Přátelé",
     "game": "Hra",
     "game-total": "Celkem v {{game}}",
     "gamesPlayed": "Odehrané hry",

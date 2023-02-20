@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Nézd meg a Hypixel barátlistád",
     "game-counts": "Nézd meg a Hypixel játékosszámokat",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Megmutatja milyen megoldások lehetnek a segítség alapján GTB-ben",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Nézd meg egy játékossal való közös barátaid",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Nézd meg a Statsify készítőit és támogatóit",
@@ -431,17 +429,9 @@
       "description": "**{{username}}** nem rendelkezik egy köpennyel sem!",
       "title": "Hiányzó Köpeny"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** nem rendelkezik barátokkal $t(emojis:sad)! :(",
-      "title": "Nem Találhatóak Barátok"
-    },
     "noGTBSolutions": {
       "description": "Nem találtunk megoldást a megadott segítséggel!",
       "title": "Nem Található GTB Megoldás"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** és **{{displayNameTwo}}** nem rendelkezik közös baráttal!",
-      "title": "Nem Található Közös Barát"
     },
     "noRankings": {
       "description": "**{{displayName}}** nem rendelkezik kiemelkedő pozícióval!",
@@ -590,7 +580,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Forcefield Idő",
     "fortune": "Szerencse",
-    "friends": "Barátok",
     "game": "Játék",
     "game-total": "{{game}} Összesen",
     "gamesPlayed": "Lejátszott Játékok",
