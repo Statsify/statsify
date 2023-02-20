@@ -12,6 +12,7 @@ import {
   ButtonBuilder,
   Command,
   CommandContext,
+  EmbedBuilder,
   ErrorMessage,
   IMessage,
   ModalBuilder,
@@ -25,9 +26,10 @@ import {
 } from "discord-api-types/v10";
 import { DateTime, IANAZone } from "luxon";
 import { HistoricalTimes } from "@statsify/api-client";
+import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 
-@Command({ description: "" })
+@Command({ description: "Reset" })
 export class ResetCommand {
   public constructor(private readonly apiService: ApiService) {}
 
@@ -42,8 +44,12 @@ export class ResetCommand {
       HistoricalTimes.SESSION
     );
 
+    const embed = new EmbedBuilder()
+      .color(STATUS_COLORS.success)
+      .description((t) => t("historical.setSessionReset"));
+
     return {
-      content: (t) => t(`historical.resetSession`),
+      embeds: [embed],
       ephemeral: true,
     };
   }
@@ -147,9 +153,15 @@ export class ResetCommand {
 
         clearTimeout(removeComponentsTimeout);
 
+        const embed = new EmbedBuilder()
+          .color(STATUS_COLORS.success)
+          .description((t) =>
+            t("historical.setResetTime", { time: Math.round(time.toMillis() / 1000) })
+          );
+
         await context.reply({
-          content: (t) =>
-            t("historical.setResetTime", { time: Math.round(time.toMillis() / 1000) }),
+          content: "",
+          embeds: [embed],
           components: [],
           ephemeral: true,
         });
@@ -170,7 +182,9 @@ export class ResetCommand {
 
     return {
       content: (t) =>
-        t(`historical.${isPremium ? "aboutResettingPremium" : "aboutResetting"}`),
+        isPremium
+          ? t("historical.aboutResettingPremium")
+          : t("historical.aboutResetting"),
       components: [new ActionRowBuilder().component(resetButton)],
       ephemeral: true,
     };

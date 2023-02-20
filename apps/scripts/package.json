@@ -8,7 +8,7 @@
     "api-key": "node src/api-key.js",
     "build-watch": "node src/build-watch.js",
     "delete-sessions": "node src/delete-sessions.js",
-    "command-chars": "node --no-warnings src/command-chars.js",
+    "validate-commands": "node --no-warnings src/validate-commands.js",
     "limit-redis": "node src/limit-redis.js",
     "purge": "node src/purge.js",
     "rank-emojis": "node src/rank-emojis.js",
@@ -29,7 +29,8 @@
     "ioredis": "^5.3.1",
     "skia-canvas": "^0.9.30",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb",
-    "toad-scheduler": "^2.2.0"
+    "toad-scheduler": "^2.2.0",
+    "zod": "^3.20.6"
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.3"
