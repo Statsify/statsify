@@ -8,7 +8,6 @@
 
 export * from "./delete.player.response";
 export * from "./error.response";
-export * from "./get.friends.response";
 export * from "./get.gamecounts.response";
 export * from "./get.guild.response";
 export * from "./get.historical.response";

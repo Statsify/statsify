@@ -9,7 +9,6 @@
 import * as Sentry from "@sentry/node";
 import { APIData } from "@statsify/util";
 import {
-  Friends,
   GameCounts,
   Guild,
   Player,
@@ -94,20 +93,6 @@ export class HypixelService {
           return of(null);
         })
       )
-    );
-  }
-
-  public getFriends(uuid: string) {
-    return lastValueFrom(
-      this.httpService
-        .get(`/friends/${uuid}`, { baseURL: "https://api.sk1er.club" })
-        .pipe(
-          map((data) => new Friends(data.data)),
-          catchError((err) => {
-            this.logger.error(err);
-            return of(null);
-          })
-        )
     );
   }
 

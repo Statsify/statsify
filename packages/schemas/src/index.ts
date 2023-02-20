@@ -9,7 +9,6 @@
 export { METADATA_KEY } from "./metadata/constants";
 export * from "./color";
 export * from "./commands";
-export * from "./friends";
 export * from "./game";
 export * from "./gamecounts";
 export * from "./guild";

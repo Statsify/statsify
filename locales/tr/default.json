@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Hypixel arkadaş listenizi görüntüleyin",
     "game-counts": "Hypixel mevcut oyuncu sayılarını görüntüleyin",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Verilen ipucuna göre mümkün olan Guess The Build cevaplarının listesini oluşturun",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Başka bir oyuncuyla ortak Hypixel arkadaşlarınızı görüntüleyin",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Statsify'ın kurucularını ve yardımcılarını görüntüleyin",
@@ -431,17 +429,9 @@
       "description": "**{{username}}** adlı oyuncunun herhangi bir pelerini yok!",
       "title": "Eksik Pelerin"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** adlı oyuncunun herhangi bir arkadaşı yok $t(emojis:sad)! :(",
-      "title": "Arkadaş Bulunamadı"
-    },
     "noGTBSolutions": {
       "description": "Verilen ipucuna uygun herhangi bir çözüm bulamadık!",
       "title": "Guess The Build Çözümü Yok"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** ve **{{displayNameTwo}}** adlı oyuncuların herhangi bir ortak arkadaşı yok!",
-      "title": "Ortak Arkadaş Bulunamadı"
     },
     "noRankings": {
       "description": "**{{displayName}}** adlı oyuncunun hiçbir sıralamada yeri yok!",
@@ -590,7 +580,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Forcefield Süresi",
     "fortune": "Fortune",
-    "friends": "Arkadaşlar",
     "game": "Oyun",
     "game-total": "{{game}} Toplam",
     "gamesPlayed": "Oynanan Oyunlar",

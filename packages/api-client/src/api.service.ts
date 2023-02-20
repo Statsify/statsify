@@ -18,7 +18,6 @@ import {
 import {
   DeletePlayerResponse,
   GetCommandUsageResponse,
-  GetFriendsResponse,
   GetGamecountsResponse,
   GetGuildResponse,
   GetHistoricalResponse,
@@ -92,12 +91,6 @@ export class ApiService {
 
   public getStatus(tag: string) {
     return this.requestKey<GetStatusResponse, "status">(`/player/status`, "status", {
-      player: tag,
-    });
-  }
-
-  public getFriends(tag: string) {
-    return this.requestKey<GetFriendsResponse, "data">(`/player/friends`, "data", {
       player: tag,
     });
   }

@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Hypixel 친구 목록을 봐요",
     "game-counts": "현재 Hypixel의 게임 수와 접속자 수를 봐요",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "주어진 힌트로 가능한 Guess The Build의 정답 목록을 생성해요",
@@ -120,7 +119,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "나와 다른 분이 같이 아는 친구를 봐요",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Statsify의 개발자와 기여자를 봐요",
@@ -431,17 +429,9 @@
       "description": "**{{username}}**님은 어떠한 망토도 소유하고 있지 않아요!",
       "title": "망토 없음"
     },
-    "noFriends": {
-      "description": "**{{displayName}}**님은 친구가 없어요 $t(emojis:sad)! :(",
-      "title": "친구 없음"
-    },
     "noGTBSolutions": {
       "description": "주어진 힌트로 어떠한 정답도 찾지 못했어요!",
       "title": "Guess The Build 정답 없음"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}**님과 **{{displayNameTwo}}**님은 같이 아는 친구가 없어요!",
-      "title": "같이 아는 친구 없음"
     },
     "noRankings": {
       "description": "**{{displayName}}**님은 어떠한 순위에도 올라가지 못했어요!",
@@ -590,7 +580,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Forcefield 시간",
     "fortune": "Fortune",
-    "friends": "친구 수",
     "game": "게임",
     "game-total": "{{game}}의 총합",
     "gamesPlayed": "플레이한 게임",

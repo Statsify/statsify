@@ -18,7 +18,6 @@ import { GuildQuery } from "@statsify/api-client";
 
 interface PreProfileData {
   guild?: Guild;
-  friends?: number;
 }
 
 @Command({ description: (t) => t("commands.general") })
@@ -32,14 +31,8 @@ export class GeneralCommand extends BaseHypixelCommand<GeneralModes, PreProfileD
       .getGuild(player.uuid, GuildQuery.PLAYER)
       .catch(() => undefined);
 
-    const friends = await this.apiService
-      .getFriends(player.uuid)
-      .then((data) => data.friends.length ?? 0)
-      .catch(() => 0);
-
     return {
       guild,
-      friends,
     };
   }
 
@@ -47,6 +40,6 @@ export class GeneralCommand extends BaseHypixelCommand<GeneralModes, PreProfileD
     base: BaseProfileProps,
     { data }: ProfileData<GeneralModes, PreProfileData>
   ): JSX.Element {
-    return <GeneralProfile {...base} friends={data.friends} guild={data.guild} />;
+    return <GeneralProfile {...base} guild={data.guild} />;
   }
 }
