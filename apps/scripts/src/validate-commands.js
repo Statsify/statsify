@@ -23,7 +23,7 @@ const choicesSchema = z.object({
   // this is intentional since choice names can go up to 100 characters
   name: description,
   name_localizations: description_localizations,
-  value: z.union([name, z.number()]),
+  value: z.union([z.string().max(32), z.number()]),
 });
 
 const optionSchema = z.object({
@@ -58,6 +58,10 @@ Object.entries(commands.commands).forEach(([commandName, command]) => {
   } catch (e) {
     console.error(e);
     console.log(command);
+    e.errors.forEach((e) => {
+      console.error(e.message);
+      console.error(`${command.name}.${e.path.join(".")}`);
+    });
     console.error(`Command "${commandName}" is invalid.`);
     process.exit(1);
   }

@@ -79,7 +79,7 @@ import type { BaseProfileProps } from "../base.hypixel-command";
 const tier = UserTier.STAFF;
 const preview = "session.png";
 
-@Command({ description: "" })
+@Command({ description: "session stats" })
 export class SessionCommand {
   public constructor(
     private readonly apiService: ApiService,
