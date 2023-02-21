@@ -325,8 +325,6 @@ export class SessionCommand {
             badge,
             time: {
               timeType: HistoricalTimes.SESSION,
-              startTime: undefined,
-              endTime: undefined,
               sessionReset: player.sessionReset
                 ? DateTime.fromSeconds(player.sessionReset)
                 : DateTime.now(),
