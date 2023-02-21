@@ -82,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "View your {{name}} session stats",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "{{name}}의 전적을 봐요",
     "invite": "Statsify 초대 방법을 확인해요",
     "language": "봇이 사용하는 언어를 변경해요",
@@ -175,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "다른 분이 Hypixel에서 최근 플레이한 게임을 봐요",
-    "reset": "내 기간 전적을 초기화해요",
     "server": "Minecraft 서버 상태를 봐요",
     "skin": "다른 분의 Minecraft 스킨을 봐요",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -193,7 +217,7 @@
     "theme-font": "프로필의 글꼴을 변경해요",
     "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "프로필 하단 아이콘을 변경해요",
-    "theme-footer-message": "프로필 하단 메시지를 변경해요 (https://rgb.birdflop.com에서 그라데이션 문자를 작성하세요)",
+    "theme-footer-message": "프로필 하단 메시지를 변경해요(https://rgb.birdflop.com에서 그라데이션 문자를 작성하세요)",
     "theme-footer-reset": "프로필 하단을 초기화해요",
     "theme-palette": "프로필의 색상 팔레트를 변경해요",
     "theme-view": "내 프로필 테마를 봐요",
@@ -213,9 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "session": "View your session stats in various games",
-    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
-    "reset-session": "Reset your current session"
+    "reset-historical": "Reset your historical stats",
+    "reset-session": "Reset your session stats"
   },
   "config": {
     "badge": {
@@ -363,10 +386,6 @@
       "description_discordId": "Discord ID가 `{{tag}}`인 플레이어를 찾지 못했어요!",
       "title": "잘못된 플레이어"
     },
-    "invalidSession": {
-      "description_username": "The specified player does not currently have a session.",
-      "title": "No session found"
-    },
     "invalidResetTime": {
       "description": "`{{time}}`이(가) `h:mm a` 형식과 일치하지 않아요. `12:00 PM` 또는 `1:00 AM`과 유사한 형태로 시간을 입력하세요.",
       "title": "잘못된 초기화 시간"
@@ -492,8 +511,8 @@
     "reset": "$t(emojis:clock) <t:{{time}}:R> **초기화**",
     "resetButton": "클릭해서 초기화",
     "setResetTime": "초기화 시간을 <t:{{time}}:t>로 설정했어요.",
-    "resetSession": "Your session has been reset!",
-    "new-session": "A session does not exist for this player."
+    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
+    "setSessionReset": "Successfully reset your session stats."
   },
   "leaderboard": {
     "guildInput": {
@@ -694,6 +713,7 @@
     "ranksGifted": "선물한 등급",
     "rebelKills": "공격자 킬",
     "renown": "명성",
+    "rewardStreak": "Reward Streak",
     "roundWins": "승리한 라운드",
     "rune": "룬",
     "score": "점수",

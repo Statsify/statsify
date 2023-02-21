@@ -82,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "View your {{name}} session stats",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "Xem thông tin {{name}} của bạn",
     "invite": "Mời Statsify",
     "language": "Thay đổi ngôn ngữ mà bạn nhìn thấy",
@@ -175,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "Xem những trò chơi gần đây của ai đó trong Hypixel",
-    "reset": "Cài lại thông tin lịch sử của bạn",
     "server": "Xem trạng thái của máy chủ minecraft",
     "skin": "Xem nhân vật Minecraft của một ai đó",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -213,9 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "session": "View your session stats in various games",
-    "reset-time": "Reset the time your daily/weekly/monthly stats automatically reset",
-    "reset-session": "Reset your current session"
+    "reset-historical": "Reset your historical stats",
+    "reset-session": "Reset your session stats"
   },
   "config": {
     "badge": {
@@ -363,10 +386,6 @@
       "description_discordId": "Một người chơi với mã discord của `{{tag}}` không thể tìm thấy!",
       "title": "Người chơi không hợp lệ"
     },
-    "invalidSession": {
-      "description_username": "The specified player does not currently have a session.",
-      "title": "No session found"
-    },
     "invalidResetTime": {
       "description": "`{{time}}` không giống với format `h:mm a`. Hãy nhập thời gian tương đồng với format như `12:00 PM` hoặc 1:00 AM`.",
       "title": "Đặt lại thời gian sai"
@@ -492,8 +511,8 @@
     "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
     "resetButton": "Ấn đề cài lại",
     "setResetTime": "Cài lại thời gian của bạn thành <t:{{time}}:t>.",
-    "resetSession": "Your session has been reset!",
-    "new-session": "A session does not exist for this player."
+    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
+    "setSessionReset": "Successfully reset your session stats."
   },
   "leaderboard": {
     "guildInput": {
@@ -694,6 +713,7 @@
     "ranksGifted": "Số cấp bậc đã cho",
     "rebelKills": "Số lần giết bằng kẻ tấn công",
     "renown": "Nổi tiếng",
+    "rewardStreak": "Reward Streak",
     "roundWins": "Số vòng thắng",
     "rune": "Rune",
     "score": "Score",
