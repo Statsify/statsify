@@ -28,6 +28,8 @@ export interface HistoricalTimeData {
   sessionReset?: DateTime;
 }
 
+const DATE_FORMAT = "MM/dd/yyyy";
+
 export const HistoricalHeader = ({
   skin,
   nameTag,
@@ -78,9 +80,9 @@ export const HistoricalHeader = ({
           <text>
             {timeType === HistoricalTimes.SESSION
               ? `Started ${sessionReset?.toFormat(
-                  "MM/dd/yy"
+                  DATE_FORMAT
                 )} (${sessionReset?.toRelative()})`
-              : `${start!.toFormat("MM/dd/yy")} ➡ ${end!.toFormat("MM/dd/yy")}`}
+              : `${start!.toFormat(DATE_FORMAT)} ➡ ${end!.toFormat(DATE_FORMAT)}`}
           </text>
         </box>
         <div width="100%">

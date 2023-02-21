@@ -339,6 +339,8 @@ export class HistoricalService {
       oldPlayer = deserialize(Player, flatten(oldPlayer));
     } else {
       newPlayer.resetMinute = this.getMinute();
+      newPlayer.nextReset = this.getNextResetTime(newPlayer.resetMinute, type);
+      newPlayer.lastReset = Math.round(Date.now() / 1000);
       oldPlayer = await this.resetPlayer(newPlayer, type);
       isNew = true;
     }

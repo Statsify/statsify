@@ -33,7 +33,7 @@ import { User, UserTier } from "@statsify/schemas";
 export class ResetCommand {
   public constructor(private readonly apiService: ApiService) {}
 
-  @SubCommand({ description: (t) => t("commands.reset-session"), tier: UserTier.GOLD })
+  @SubCommand({ description: (t) => t("commands.reset-session"), tier: UserTier.STAFF })
   public async session(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
     if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
@@ -54,8 +54,8 @@ export class ResetCommand {
     };
   }
 
-  @SubCommand({ description: (t) => t("commands.reset-time") })
-  public time(context: CommandContext): IMessage {
+  @SubCommand({ description: (t) => t("commands.reset-historical") })
+  public historical(context: CommandContext): IMessage {
     const t = context.t();
     const user = context.getUser();
 

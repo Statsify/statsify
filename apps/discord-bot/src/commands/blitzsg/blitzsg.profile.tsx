@@ -13,6 +13,7 @@ import {
   BlitzSGModes,
   FormattedGame,
   GameMode,
+  Player,
 } from "@statsify/schemas";
 import {
   Container,
@@ -186,3 +187,20 @@ export const BlitzSGProfile = ({
     </Container>
   );
 };
+
+export function filterBlitzKits(
+  player: Player,
+  modes: GameMode<BlitzSGModes>[]
+): GameMode<BlitzSGModes>[] {
+  const { blitzsg } = player.stats;
+  const [overall, ...kits] = modes;
+
+  const filteredKits = kits
+    .slice(1, -1)
+    .sort(
+      (a, b) => (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp
+    )
+    .slice(0, 24);
+
+  return [overall, ...filteredKits];
+}
