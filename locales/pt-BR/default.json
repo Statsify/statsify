@@ -82,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "View your {{name}} session stats",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "Exibe as estatísticas de {{name}}",
     "invite": "Convida o Statsify",
     "language": "Altera o idioma em que você vê as respostas",
@@ -175,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "Exibe partidas recentes de alguém no Hypixel",
-    "reset": "Redefine suas estatísticas históricas",
     "server": "Exibe o status de um servidor de Minecraft",
     "skin": "Exibe a skin de alguém no Minecraft",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -213,9 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "session": "Veja as estatísticas das suas sessões em vários jogos",
-    "reset-time": "Redefina a hora que suas estatísticas diárias/semanais/mensais serão automaticamente redefinidas",
-    "reset-session": "Reinicie sua sessão atual"
+    "reset-historical": "Reset your historical stats",
+    "reset-session": "Reset your session stats"
   },
   "config": {
     "badge": {
@@ -363,10 +386,6 @@
       "description_discordId": "Um jogador com o id de discord de `{{tag}}` não pôde ser encontrado!",
       "title": "Jogador inválido"
     },
-    "invalidSession": {
-      "description_username": "O jogador especificado não tem uma sessão no momento.",
-      "title": "Nenhuma sessão encontrada"
-    },
     "invalidResetTime": {
       "description": "`{{time}}` não corresponde ao formato `h:mm a`. Digite um tempo em um formato similar a `12:00 PM` ou `1:00 AM`.",
       "title": "Tempo de redefinição inválido"
@@ -492,8 +511,8 @@
     "reset": "$t(emojis:clock) **Reinicializa** <t:{{time}}:R>",
     "resetButton": "Clique para redefinir",
     "setResetTime": "Define o seu tempo de redefinição para <t:{{time}}:t>.",
-    "resetSession": "Sua sessão foi reiniciada!",
-    "new-session": "Não existe uma sessão para este jogador."
+    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
+    "setSessionReset": "Successfully reset your session stats."
   },
   "leaderboard": {
     "guildInput": {
@@ -694,6 +713,7 @@
     "ranksGifted": "Ranks presenteados",
     "rebelKills": "Atacantes abatidos",
     "renown": "Renome",
+    "rewardStreak": "Reward Streak",
     "roundWins": "Rodadas ganhas",
     "rune": "Runa",
     "score": "Pontuação",
