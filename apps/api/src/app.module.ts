@@ -27,6 +27,8 @@ import { config } from "@statsify/util";
         uri: config("database.mongoUri"),
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        maxPoolSize: 200,
+        minPoolSize: 20,
       }),
     }),
     RedisModule.forRoot({

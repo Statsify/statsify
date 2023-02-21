@@ -9,11 +9,11 @@ A Hypixel and Minecraft focused Discord Bot
 
 ## 💻 Developing
 ### ⚒️ Requirements
--   [`Node.js`]: For running code (`v16`)
+-   [`Node.js`]: For running code (`v18`)
 -   [`Yarn`]: Installing packages and running scripts (`npm install -g yarn`)
 -   [`MongoDB`]: For Persistent data ([`Atlas`])
 -   [`Redis`]: For Leaderboards ([`Redis Cloud`])
--   [`RediSearch`]: For Autocomplete
+-   [`RediSearch`]: For Autocomplete *optional*
 -   [`Hypixel API Key`]: For requesting Hypixel data, Run `/api new` on hypixel.net
 
 

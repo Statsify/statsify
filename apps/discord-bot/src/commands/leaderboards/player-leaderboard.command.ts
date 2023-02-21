@@ -310,7 +310,8 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
     modes: GameModes<T>
   ) {
     const leaderboard = context.option<string>("leaderboard");
-    const shortTime = context.option<keyof typeof SHORT_TO_LONG_HISTORICAL_TYPE>("time");
+    const shortTime =
+      context.option<keyof typeof SHORT_TO_LONG_HISTORICAL_TYPE>("time") ?? "L";
     const user = context.getUser();
 
     //TODO: Remove this when the feature is fully released (inc. previews/historical-leaderboard.png).
