@@ -74,7 +74,6 @@ import { WoolWarsProfile } from "../woolwars/woolwars.profile";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
-import {} from "../blitzsg/blitzsg.command";
 import type { BaseProfileProps } from "../base.hypixel-command";
 
 const tier = UserTier.STAFF;
