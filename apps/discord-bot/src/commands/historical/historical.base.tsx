@@ -14,7 +14,6 @@ import {
   BLITZSG_MODES,
   BRIDGE_MODES,
   BUILD_BATTLE_MODES,
-  BlitzSGKit,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   GENERAL_MODES,
@@ -49,7 +48,7 @@ import {
 import { ArcadeProfile } from "../arcade/arcade.profile";
 import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile";
 import { BedWarsProfile } from "../bedwars/bedwars.profile";
-import { BlitzSGProfile } from "../blitzsg/blitzsg.profile";
+import { BlitzSGProfile, filterBlitzKits } from "../blitzsg/blitzsg.profile";
 import { BridgeProfile } from "../duels/bridge.profile";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile";
@@ -57,7 +56,7 @@ import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile";
-import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
+import { HistoricalType } from "@statsify/api-client";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile";
 import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile";
 import { PaintballProfile } from "../paintball/paintball.profile";
@@ -128,19 +127,7 @@ export class HistoricalBase {
       context,
       BLITZSG_MODES,
       (base, mode) => <BlitzSGProfile {...base} mode={mode} />,
-      (player, modes) => {
-        const { blitzsg } = player.stats;
-        const [overall, ...kits] = modes;
-
-        const filteredKits = kits
-          .sort(
-            (a, b) =>
-              (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp
-          )
-          .slice(0, 24);
-
-        return [overall, ...filteredKits];
-      }
+      filterBlitzKits
     );
   }
 
@@ -303,7 +290,7 @@ export class HistoricalBase {
     const player = await this.apiService.getPlayerHistorical(
       context.option("player"),
       this.time,
-      this.time !== HistoricalTimes.SESSION,
+      true,
       user
     );
 
@@ -316,12 +303,6 @@ export class HistoricalBase {
     const allModes = modes.getModes();
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
 
-    const showNextReset = [
-      HistoricalTimes.DAILY as HistoricalType,
-      HistoricalTimes.WEEKLY as HistoricalType,
-      HistoricalTimes.MONTHLY as HistoricalType,
-    ].includes(this.time);
-
     const pages: Page[] = displayedModes.map((mode) => ({
       label: mode.formatted,
       generator: async (t) => {
@@ -329,17 +310,10 @@ export class HistoricalBase {
 
         const displayName = this.apiService.emojiDisplayName(t, player.displayName);
 
-        let content: string | undefined = undefined;
-
-        if (player.isNew) {
-          content =
-            this.time === HistoricalTimes.SESSION
-              ? t("historical.newSession", { displayName })
-              : t("historical.new", { displayName });
-        }
-
-        if (showNextReset)
-          content = (content ?? "") + t("historical.reset", { time: player.nextReset });
+        let content = player.isNew ? t("historical.new", { displayName }) : undefined;
+        content = `${content ? `${content}\n` : ""}${t("historical.reset", {
+          time: player.nextReset,
+        })}`;
 
         const profile = getProfile(
           {
@@ -358,9 +332,6 @@ export class HistoricalBase {
               endTime: player.nextReset
                 ? DateTime.fromSeconds(player.nextReset)
                 : undefined,
-              sessionReset: player.sessionReset
-                ? DateTime.fromSeconds(player.sessionReset)
-                : DateTime.now(),
             },
           },
           mode
