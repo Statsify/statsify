@@ -1,6 +1,6 @@
 {
   "arguments": {
-    "choice": "Choisissez une option",
+    "choice": "Choisir une option",
     "file": "Uploader un fichier",
     "gtbhelper": "L'indice actuel",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
@@ -9,13 +9,13 @@
     "mojang-player": "Un nom d'utilisateur ou un UUID sur Minecraft",
     "number": "Un nombre",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choisissez un classement",
+    "player-leaderboard": "Choisir un classement",
     "reason": "The reason for closing the support ticket",
     "server": "Un nom de serveur Minecraft ou une IP de serveur",
     "tags-content": "The content of the tag",
     "tags-name": "The name of the tag",
     "text": "Un message",
-    "user": "Choisissez un utilisateur Discord"
+    "user": "Choisir un utilisateur Discord"
   },
   "commands": {
     "arcade": "$t(commands.hypixel-command, { \"name\": \"Arcade\" })",
@@ -88,7 +88,7 @@
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "Voir les stats de la session de {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
@@ -237,8 +237,8 @@
     "weekly": "Voir vos statistiques hebdomadaires dans différents jeux",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "Voir vos statistiques d'hier dans différents jeux",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "Réinnisialiser vos historiques de stats",
+    "reset-session": "Réinnisialiser vos stats de session"
   },
   "config": {
     "badge": {
@@ -503,16 +503,16 @@
     "aboutResetting": "Cliquez sur reset ci-dessous pour réinitialiser vos statistiques historiques tous les jours **en ce moment**.\n\n**ATTENTION** : Ceci supprimera toutes vos statistiques historiques et **ne pourra pas être annulé**. \nSi vous voulez être en mesure de réinitialiser à un moment spécifique, regarde $t(socials.premium).",
     "aboutResettingPremium": "Cliquez sur le bouton reset ci-dessous pour réinitialiser vos statistiques historiques. \n\n**ATTENTION:** Cela supprimera toutes vos statistiques historiques et **ne peut pas être annulé**.",
     "modal": {
-      "resetTime": "Choisissez une heure de réinitialisation",
-      "timezone": "Choisissez un fuseau horaire",
+      "resetTime": "Choisir une heure de réinitialisation",
+      "timezone": "Choisir un fuseau horaire",
       "title": "Heure de réinitialisation historique"
     },
     "new": "** Les statistiques historiques de {{displayName}}** ont été vérifiées pour la première fois sur Statsify. Ses statistiques seront maintenant mises à jour chaque jour à cette heure.",
     "reset": "$t(emojis:clock) **Réinitialise à** <t:{{time}}:R>",
     "resetButton": "Cliquez pour réinitialiser",
     "setResetTime": "Définissez votre temps de réinitialisation à <t:{{time}}:t>.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "newSession": "Les stats de session de **{{displayName}}** ont été vérifiées pour la première fois sur Statsify.",
+    "setSessionReset": "Vous avez bien réinitialisé vos stats de session."
   },
   "leaderboard": {
     "guildInput": {
@@ -585,7 +585,7 @@
     "ended": "Terminé",
     "endurance": "Endurance",
     "event-level": "Niveau d''Événement",
-    "event-exp": "Event EXP",
+    "event-exp": "EXP d'Evénement",
     "exp": "EXP",
     "expGained": "EXP Obtenues",
     "extraUltimates": "Ultimates Supplémentaires",
@@ -713,7 +713,7 @@
     "ranksGifted": "Grades Offerts",
     "rebelKills": "Eliminations en Attaquant",
     "renown": "Renommée",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "Série de Récompenses",
     "roundWins": "Manches gagnées",
     "rune": "Rune",
     "score": "Score",
