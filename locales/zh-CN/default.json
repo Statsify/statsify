@@ -237,7 +237,7 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
+    "reset-historical": "重置您的历史统计数据",
     "reset-session": "Reset your session stats"
   },
   "config": {
@@ -713,7 +713,7 @@
     "ranksGifted": "Rank赠送",
     "rebelKills": "攻击者击杀数",
     "renown": "声望",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "连续奖励领取数",
     "roundWins": "回合胜利数",
     "rune": "神器",
     "score": "积分",
