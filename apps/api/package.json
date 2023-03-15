@@ -15,7 +15,7 @@
   "dependencies": {
     "@fastify/static": "^6.9.0",
     "@fastify/view": "^7.4.1",
-    "@m8a/nestjs-typegoose": "^8.1.0",
+    "@m8a/nestjs-typegoose": "^10.1.3",
     "@nestjs-modules/ioredis": "^1.0.1",
     "@nestjs/axios": "^0.1.1",
     "@nestjs/common": "^9.3.9",
