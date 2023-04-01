@@ -14,6 +14,7 @@ import { HistoricalTimeData } from "../Historical/Historical-Header";
 import { Image } from "skia-canvas";
 import { Sidebar, SidebarItem } from "../Sidebar";
 import { Skin } from "../Skin";
+import { fisherYates } from "@statsify/util";
 import { useChildren } from "@statsify/rendering";
 
 interface BaseHeaderProps {
@@ -81,14 +82,11 @@ export const Header = (props: HeaderProps) => {
       />
     );
 
-  return (
-    <div width="100%">
-      {skin}
-      <div direction="column" width="remaining" height="100%">
-        {nameTag}
-        {body}
-      </div>
-      {sidebar}
+  const nameArea = (
+    <div direction="column" width="remaining" height="100%">
+      {fisherYates([nameTag, body])}
     </div>
   );
+
+  return <div width="100%">{fisherYates([nameArea, skin, sidebar])}</div>;
 };

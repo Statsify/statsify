@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { fisherYates } from "@statsify/util";
 import { useChildren } from "@statsify/rendering";
 
 export interface TableRow {
@@ -28,9 +29,7 @@ export const TableRow = ({ children: _children }: TableRow) => {
 
   return (
     <div width="100%" direction="row">
-      {children.map((child) => (
-        <div width={`1/${length}`}>{child}</div>
-      ))}
+      {fisherYates(children.map((child) => <div width={`1/${length}`}>{child}</div>))}
     </div>
   );
 };
