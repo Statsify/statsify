@@ -15,7 +15,7 @@ import { LeaderboardAdditionalStats, LeaderboardService } from "../../leaderboar
 import { Player } from "@statsify/schemas";
 import { PlayerService } from "../player.service";
 import { ReturnModelType } from "@typegoose/typegoose";
-import { flatten } from "@statsify/util";
+import { aprilFoolify, flatten } from "@statsify/util";
 
 @Injectable()
 export class PlayerLeaderboardService extends LeaderboardService {
@@ -55,6 +55,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
     }, {} as Record<string, boolean>);
 
     selector.displayName = true;
+    selector.username = true;
 
     return await Promise.all(
       ids.map(async (id) => {
@@ -67,6 +68,8 @@ export class PlayerLeaderboardService extends LeaderboardService {
           .exec();
 
         const additionalStats = flatten(player) as LeaderboardAdditionalStats;
+        aprilFoolify(additionalStats);
+
         additionalStats.name = additionalStats.displayName;
 
         return additionalStats;

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, Flatten, flatten } from "@statsify/util";
+import { APIData, Flatten, aprilFoolify, flatten } from "@statsify/util";
 import { Daily, Monthly, Weekly } from "../historical/models";
 import { HistoricalLeaderboardService } from "../historical/leaderboards/historical-leaderboard.service";
 import {
@@ -61,6 +61,7 @@ export class PlayerService {
       mongoPlayer &&
       this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)
     ) {
+      aprilFoolify(mongoPlayer);
       return deserialize(Player, mongoPlayer);
     }
 
@@ -80,8 +81,10 @@ export class PlayerService {
 
       flatPlayer.isNew = !mongoPlayer;
 
+      aprilFoolify(flatPlayer);
       return deserialize(Player, flatPlayer);
     } else if (mongoPlayer) {
+      aprilFoolify(mongoPlayer);
       return deserialize(Player, mongoPlayer);
     }
 
@@ -128,6 +131,8 @@ export class PlayerService {
 
     if (!status) throw new StatusNotFoundException(player);
 
+    aprilFoolify(status);
+
     status.displayName = player.displayName;
     status.prefixName = player.prefixName;
     status.uuid = player.uuid;
@@ -148,6 +153,8 @@ export class PlayerService {
     const games = await this.hypixelService.getRecentGames(player.uuid);
 
     if (!games || !games.length) throw new RecentGamesNotFoundException(player);
+
+    aprilFoolify(player!);
 
     return {
       uuid: player.uuid,

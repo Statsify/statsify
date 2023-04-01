@@ -21,7 +21,7 @@ import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { PlayerService } from "../player";
 import { ReturnModelType } from "@typegoose/typegoose";
-import { flatten } from "@statsify/util";
+import { aprilFoolify, flatten } from "@statsify/util";
 
 @Injectable()
 export class GuildService {
@@ -44,6 +44,10 @@ export class GuildService {
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
     if (cachedGuild && this.hypixelService.shouldCache(cachedGuild.expiresAt, cache)) {
+      cachedGuild.members.map((member) => {
+        aprilFoolify(member, false);
+      });
+
       return {
         ...deserialize(Guild, flatten(cachedGuild)),
         cached: true,
