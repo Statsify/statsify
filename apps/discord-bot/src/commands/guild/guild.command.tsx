@@ -45,10 +45,7 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const guildMaster = guild.members.find((m) => GuildMember.isGuildMaster(m));
 
-    if (!guildMaster) {
-      console.log("yo");
-      throw new ErrorMessage("errors.unknown");
-    }
+    if (!guildMaster) throw new ErrorMessage("errors.unknown");
 
     const [gameIcons, guildRanking, skin, logo, background] = await Promise.all([
       getAllGameIcons(),

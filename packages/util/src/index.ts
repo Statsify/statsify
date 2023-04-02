@@ -232,4 +232,3 @@ export const wordGroup = (
 export * from "./flat";
 export * from "./minecraft-colors";
 export * from "./config";
-export * from "./april-fools";

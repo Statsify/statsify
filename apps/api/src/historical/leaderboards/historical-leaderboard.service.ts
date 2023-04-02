@@ -8,13 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import Redis from "ioredis";
-import {
-  Constructor,
-  Flatten,
-  aprilFoolify,
-  flatten,
-  relativeTime,
-} from "@statsify/util";
+import { Constructor, Flatten, flatten, relativeTime } from "@statsify/util";
 import {
   CurrentHistoricalType,
   HistoricalTimes,
@@ -272,7 +266,6 @@ export class HistoricalLeaderboardService extends LeaderboardService {
 
         // Select it after so the data isn't fetched twice
         selector.displayName = true;
-        selector.username = true;
         delete selector.lastReset;
 
         if (extraDisplay) selector[extraDisplay] = true;
@@ -290,11 +283,8 @@ export class HistoricalLeaderboardService extends LeaderboardService {
         const merged = createHistoricalPlayer(oldPlayer, newPlayer);
 
         const additionalStats = flatten(merged) as LeaderboardAdditionalStats;
-        aprilFoolify(additionalStats);
-
         additionalStats.name = additionalStats.displayName;
 
-        aprilFoolify(newPlayer!);
         return additionalStats;
       })
     );
