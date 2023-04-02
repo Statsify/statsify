@@ -6,8 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { fisherYates } from "@statsify/util";
-
 export interface ListProps {
   items: JSX.Element[];
   width?: JSX.Measurement;
@@ -30,16 +28,14 @@ export const List = ({ width = "100%", items }: ListProps) => {
 
   return (
     <div width={width}>
-      {fisherYates(
-        columns.map((c, index) => (
-          <div
-            direction="column"
-            width={remainingColumns.includes(index) ? "remaining" : undefined}
-          >
-            {c}
-          </div>
-        ))
-      )}
+      {columns.map((c, index) => (
+        <div
+          direction="column"
+          width={remainingColumns.includes(index) ? "remaining" : undefined}
+        >
+          {c}
+        </div>
+      ))}
     </div>
   );
 };

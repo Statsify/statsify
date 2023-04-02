@@ -38,10 +38,6 @@ export class SkinService {
     ctx.drawImage(skin, 8, 8, 8, 8, 0, 0, size, size);
     ctx.drawImage(skin, 40, 8, 8, 8, 0, 0, size, size);
 
-    ctx.translate(size / 2, size / 2);
-    ctx.rotate((Math.floor(Math.random() * 4) * 90 * Math.PI) / 180);
-    ctx.drawImage(canvas, -canvas.width / 2, -canvas.width / 2);
-
     return canvas.toBuffer("png");
   }
 
