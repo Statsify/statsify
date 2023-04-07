@@ -79,7 +79,96 @@ export const getFormattedLevel = (level: number, star: string) => {
       },
     },
     {
+      req: 55,
+      fn: (n: number, m: string) => `§7[§f${n}${m}§7]`,
+    },
+    {
+      req: 60,
+      fn: (n: number, m: string) => `§4[§c${n}${m}§4]`,
+    },
+    {
+      req: 65,
+      fn: (n: number, m: string) => `§c[§f${n}${m}§c]`,
+    },
+
+    {
+      req: 70,
+      fn: (n: number, m: string) => `§e[§6${n}${m}§e]`,
+    },
+
+    {
+      req: 75,
+      fn: (n: number, m: string) => `§f[§9${n}${m}§f]`,
+    },
+
+    {
+      req: 80,
+      fn: (n: number, m: string) => `§f[§b${n}${m}§f]`,
+    },
+
+    {
+      req: 85,
+      fn: (n: number, m: string) => `§f[§3${n}${m}§f]`,
+    },
+
+    {
+      req: 90,
+      fn: (n: number, m: string) => `§a[§3${n}${m}§a]`,
+    },
+
+    {
+      req: 95,
+      fn: (n: number, m: string) => `§c[§e${n}${m}§c]`,
+    },
+
+    {
       req: 100,
+      fn: (n: number, m: string) => `§9[§1${n}${m}§9]`,
+    },
+
+    {
+      req: 105,
+      fn: (n: number, m: string) => `§6[§c${n}${m}§6]`,
+    },
+
+    {
+      req: 110,
+      fn: (n: number, m: string) => `§1[§b${n}${m}§1]`,
+    },
+
+    {
+      req: 115,
+      fn: (n: number, m: string) => `§8[§7${n}${m}§8]`,
+    },
+    {
+      req: 120,
+      fn: (n: number, m: string) => `§d[§5${n}${m}§d]`,
+    },
+
+    {
+      req: 125,
+      fn: (n: number, m: string) => `§f[§e${n}${m}§f]`,
+    },
+
+    {
+      req: 130,
+      fn: (n: number, m: string) => `§c[§e${n}${m}§c]`,
+    },
+    {
+      req: 135,
+      fn: (n: number, m: string) => `§6[§c${n}${m}§6]`,
+    },
+    {
+      req: 140,
+      fn: (n: number, m: string) => `§a[§c${n}${m}§a]`,
+    },
+
+    {
+      req: 145,
+      fn: (n: number, m: string) => `§a[§b${n}${m}§a]`,
+    },
+    {
+      req: 150,
       fn: (n: number, m: string) => {
         const nums = [...n.toString()];
         if (m.length > 1) {
