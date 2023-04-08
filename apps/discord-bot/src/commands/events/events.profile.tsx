@@ -71,14 +71,26 @@ export const EventsProfile = ({
         badge={badge}
         sidebar={sidebar}
         time="LIVE"
-        title="§l§bEvent §fStats §r(2022)"
+        title="§l§bEvent §fStats"
       />
       <Table.table>
         <Table.tr>
-          <EventTable title="§eSummer" color="§e" event={events.summer2022} t={t} />
-          <EventTable title="§5Halloween" color="§5" event={events.halloween2022} t={t} />
-          <EventTable title="§cChristmas" color="§c" event={events.christmas2022} t={t} />
-          <EventTable title="§bEaster" color="§b" event={events.easter2023} t={t} />
+          <EventTable title="§eSummer 2022" color="§e" event={events.summer2022} t={t} />
+          <EventTable
+            title="§5Halloween 2022"
+            color="§5"
+            event={events.halloween2022}
+            t={t}
+          />
+        </Table.tr>
+        <Table.tr>
+          <EventTable
+            title="§cChristmas 2022"
+            color="§c"
+            event={events.christmas2022}
+            t={t}
+          />
+          <EventTable title="§bEaster 2023" color="§b" event={events.easter2023} t={t} />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />
