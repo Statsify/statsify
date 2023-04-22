@@ -88,7 +88,7 @@
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "Перегляньте статистику ваших сеансів {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
@@ -237,8 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "Скинути вашу історичну статистику",
+    "reset-session": "Скинути статистику сеансу"
   },
   "config": {
     "badge": {
@@ -511,8 +511,8 @@
     "reset": "$t(emojis:clock) **Скидання** <t:{{time}}:R>",
     "resetButton": "Натисніть, щоб скинути",
     "setResetTime": "Установіть час скидання на <t:{{time}}:t>.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "newSession": "**{{displayName}}** Статистика сесії була вперше перевірена за допомогою Statsify.",
+    "setSessionReset": "Успішно скинуто статистику сеансу."
   },
   "leaderboard": {
     "guildInput": {
@@ -585,7 +585,7 @@
     "ended": "Закінчено",
     "endurance": "Витривалість",
     "event-level": "Рівень події",
-    "event-exp": "Event EXP",
+    "event-exp": "Досвід події",
     "exp": "EXP",
     "expGained": "EXP Отримано",
     "extraUltimates": "Додаткові ультимативні крафти",
@@ -713,7 +713,7 @@
     "ranksGifted": "Рангів подаровано",
     "rebelKills": "Вбивств за атакуючого",
     "renown": "Слави",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "Серія винагород",
     "roundWins": "Перемог у раундах",
     "rune": "Руна",
     "score": "Рахунок",
@@ -763,7 +763,7 @@
     "woolPlaced": "Вовни розміщено",
     "zombieKills": "Зомбі вбито",
     "potionsBrewed": "Зіллів зварено",
-    "positions": "Positions",
+    "positions": "Позиції",
     "powerupsCollected": "Зібрано бонусів",
     "roundsCompleted": "Раунди завершено",
     "totalExp": "Усього досвіду"
