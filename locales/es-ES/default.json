@@ -511,8 +511,8 @@
     "reset": "$t(emojis:clock) **Se reinicia en** <t:{{time}}:R>",
     "resetButton": "Clic para Reiniciar",
     "setResetTime": "Establece tu hora de reinicio a <t:{{time}}:t>.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "newSession": "La sesión de estadísticas de **{{displayName}}** han sido revisadas por primera vez en Statsify.",
+    "setSessionReset": "Reinicio exitoso de tu sesión de estadísticas."
   },
   "leaderboard": {
     "guildInput": {
@@ -713,7 +713,7 @@
     "ranksGifted": "Rangos Regalados",
     "rebelKills": "Asesinatos como Atacante",
     "renown": "Renown",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "Racha de Recompensa",
     "roundWins": "Rondas Ganadas",
     "rune": "Runa",
     "score": "Puntaje",
