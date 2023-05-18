@@ -276,7 +276,7 @@
       "color": "Couleur",
       "italic": "Italique",
       "mainHex": "Hex Principal",
-      "obfuscated": "Obfuscated",
+      "obfuscated": "Offusqué",
       "reset": "Réinnisialiser",
       "shadowHex": "Hex de l'Ombre",
       "strikethrough": "Barré",
@@ -454,7 +454,7 @@
     },
     "noRankings": {
       "description": "**{{displayName}}** n'a pas de classements !",
-      "title": "Pas de Classement"
+      "title": "Pas de Classements"
     },
     "noRecentGames": {
       "description": "Les parties récentes de **{{displayName}}** n'ont pas pu être trouvées !",
