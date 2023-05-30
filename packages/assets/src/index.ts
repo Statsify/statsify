@@ -94,13 +94,13 @@ export interface ServerMappingsServer {
 }
 
 let serversCache: ServerMappingsServer[] = [];
-let serversCacheTime: number | null = null;
+let serversCacheTime = 0;
 
 const SERVER_MAPPINGS_CDN_URL = "https://servermappings.lunarclientcdn.com/servers.json";
 
 export const getServerMappings = async () => {
   // If the cache has been generated within the past 30 minutes, return the cache
-  if (serversCacheTime && serversCacheTime + 1_800_000 > Date.now()) return serversCache;
+  if (serversCacheTime + 1_800_000 > Date.now()) return serversCache;
 
   let servers = await axios
     .get<ServerMappingsServer[]>(SERVER_MAPPINGS_CDN_URL)

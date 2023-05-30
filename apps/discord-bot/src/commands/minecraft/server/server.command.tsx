@@ -70,13 +70,13 @@ export class ServerCommand {
     );
 
     const server = await this.axios
-      .get<Server>(mappedServer?.addresses?.[0] ?? tag)
+      .get<Server>(mappedServer?.primaryAddress ?? tag)
       .then((res) => res.data)
       .catch(() => null);
 
     if (!server || !server.online) throw new ErrorMessage("errors.invalidServer");
 
-    server.hostname = mappedServer?.addresses?.[0] ?? server.hostname;
+    server.hostname = mappedServer?.primaryAddress ?? server.hostname;
     server.name = mappedServer?.name ?? server.hostname;
 
     return server;
