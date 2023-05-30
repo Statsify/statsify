@@ -47,7 +47,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn --immutable --inline-builds
+        run: yarn --immutable --silent
 
       - name: Lint
         run: yarn lint
