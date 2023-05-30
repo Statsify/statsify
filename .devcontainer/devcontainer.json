@@ -11,50 +11,42 @@
       "VARIANT": "16"
     }
   },
-
-  // Set *default* container specific settings.json values on container create.
-  "settings": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": ["source.organizeImports", "source.fixAll.eslint"],
-    "typescript.tsdk": "node_modules/typescript/lib",
-    "[handlebars]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[css]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[json]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "explorer.experimental.fileNesting.patterns": {
-      "package.json": "package-lock.json, .npmrc, yarn.lock, .yarnrc, pnpm-lock.yaml, tsconfig.*.json, tsconfig.json, jest.config.js, turbo.json, README.md, LICENSE, cliff.toml, .prettierrc, .eslintrc, .yarnrc.yml, .swcrc, .gitignore, .eslintignore, .env, .env.schema, renovate.json, .gitmodules"
-    },
-    "[jsonc]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "customizations": {
+    "vscode": {
+      // Set *default* container specific settings.json values on container create.
+      "settings": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": [
+          "source.organizeImports",
+          "source.fixAll.eslint"
+        ],
+        "search.followSymlinks": true
+      },
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "vivaxy.vscode-conventional-commits",
+        "mikestead.dotenv",
+        "ms-azuretools.vscode-docker"
+      ]
     }
   },
-  // Add the IDs of extensions you want installed when the container is created.
-  "extensions": [
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
-    "christian-kohler.path-intellisense",
-    "vivaxy.vscode-conventional-commits",
-    "mikestead.dotenv",
-    "ms-azuretools.vscode-docker",
-    "eg2.vscode-npm-script",
-    "christian-kohler.npm-intellisense"
+  "runArgs": [
+    "--privileged"
   ],
-
-  "runArgs": ["--privileged"],
-
-  // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "/workspaces/statsify/.devcontainer/install.sh",
-
-  "postStartCommand": "sudo /etc/init.d/redis-server start && yarn scripts apikey --nonInteractiveKeyCreation",
-
-  // Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  "containerEnv": {
+    "USE_POLLING": "true"
+  },
+  "mounts": [
+    "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+  ],
+  // Remote userr
   "remoteUser": "node",
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "/workspaces/statsify/.devcontainer/create.sh",
+  "postStartCommand": "sudo /etc/init.d/redis-server start && yarn scripts api-key --nonInteractiveKeyCreation",
   "features": {
     "git": "latest",
     "github-cli": "latest"

@@ -10,13 +10,11 @@ import axios, { AxiosInstance } from "axios";
 import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
 import { Server } from "./server.interface";
 import { ServerArgument } from "./server.argument";
+import { ServerMappingsServer, getBackground, getServerMappings } from "@statsify/assets";
 import { ServerProfile } from "./server.profile";
-import { getBackground, getServerMappings } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { loadImage } from "skia-canvas";
 import { render } from "@statsify/rendering";
-
-const servers = getServerMappings();
 
 @Command({
   description: (t) => t("commands.server"),
@@ -24,10 +22,15 @@ const servers = getServerMappings();
 })
 export class ServerCommand {
   private readonly axios: AxiosInstance;
+  private mappings: ServerMappingsServer[];
 
   public constructor() {
     this.axios = axios.create({
       baseURL: "https://api.mcsrvstat.us/2/",
+    });
+
+    getServerMappings().then((mappings) => {
+      this.mappings = mappings;
     });
   }
 
@@ -60,7 +63,7 @@ export class ServerCommand {
   private async getServer(tag: string) {
     tag = tag.toLowerCase();
 
-    const mappedServer = servers.find(
+    const mappedServer = this.mappings.find(
       (s) =>
         s.name.toLowerCase() === tag ||
         s.addresses.find((address) => tag.endsWith(address))
