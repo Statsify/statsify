@@ -238,8 +238,8 @@ importers:
         specifier: ^0.9.30
         version: 0.9.30
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git
-        version: github.com/timotejroiko/tiny-discord/830daecdf3ceaacb7b415df88add649e85656930
+        specifier: https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb
+        version: github.com/timotejroiko/tiny-discord/62cf5c895ce9287b4517356970fd6771957e43cb
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -290,8 +290,8 @@ importers:
         specifier: ^0.9.30
         version: 0.9.30
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git
-        version: github.com/timotejroiko/tiny-discord/830daecdf3ceaacb7b415df88add649e85656930
+        specifier: https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb
+        version: github.com/timotejroiko/tiny-discord/62cf5c895ce9287b4517356970fd6771957e43cb
       toad-scheduler:
         specifier: ^2.2.0
         version: 2.2.0
@@ -400,8 +400,8 @@ importers:
         specifier: ^0.9.30
         version: 0.9.30
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git
-        version: github.com/timotejroiko/tiny-discord/830daecdf3ceaacb7b415df88add649e85656930
+        specifier: https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb
+        version: github.com/timotejroiko/tiny-discord/62cf5c895ce9287b4517356970fd6771957e43cb
       toad-scheduler:
         specifier: ^2.2.0
         version: 2.2.0
@@ -9690,12 +9690,6 @@ packages:
 
   github.com/timotejroiko/tiny-discord/62cf5c895ce9287b4517356970fd6771957e43cb:
     resolution: {tarball: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/62cf5c895ce9287b4517356970fd6771957e43cb}
-    name: tiny-discord
-    version: 0.0.1
-    dev: false
-
-  github.com/timotejroiko/tiny-discord/830daecdf3ceaacb7b415df88add649e85656930:
-    resolution: {tarball: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/830daecdf3ceaacb7b415df88add649e85656930}
     name: tiny-discord
     version: 0.0.1
     dev: false
