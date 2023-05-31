@@ -13,8 +13,7 @@
     "@typescript-eslint",
     "license-header",
     "sort-imports-es6-autofix",
-    "unused-imports",
-    "workspaces"
+    "unused-imports"
   ],
   "extends": [
     "eslint:recommended",
