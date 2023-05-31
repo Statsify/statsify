@@ -8,7 +8,7 @@
       "type": "node",
       "request": "launch",
       "name": "API",
-      "runtimeExecutable": "yarn",
+      "runtimeExecutable": "pnpm",
       "cwd": "${workspaceFolder}",
       "runtimeArgs": ["api", "start"],
       "outputCapture": "std"
@@ -17,7 +17,7 @@
       "type": "node",
       "request": "launch",
       "name": "Site",
-      "runtimeExecutable": "yarn",
+      "runtimeExecutable": "pnpm",
       "cwd": "${workspaceFolder}",
       "runtimeArgs": ["site", "dev"],
       "outputCapture": "std"
@@ -26,7 +26,7 @@
       "type": "node",
       "request": "launch",
       "name": "Discord Bot",
-      "runtimeExecutable": "yarn",
+      "runtimeExecutable": "pnpm",
       "cwd": "${workspaceFolder}",
       "runtimeArgs": ["discord-bot", "start"],
       "outputCapture": "std"
@@ -35,7 +35,7 @@
       "type": "node",
       "request": "launch",
       "name": "Support Bot",
-      "runtimeExecutable": "yarn",
+      "runtimeExecutable": "pnpm",
       "cwd": "${workspaceFolder}",
       "runtimeArgs": ["discord-bot", "start"],
       "outputCapture": "std"
@@ -44,7 +44,7 @@
       "type": "node",
       "request": "launch",
       "name": "Verify Server",
-      "runtimeExecutable": "yarn",
+      "runtimeExecutable": "pnpm",
       "cwd": "${workspaceFolder}",
       "runtimeArgs": ["verify-server", "start"],
       "outputCapture": "std"

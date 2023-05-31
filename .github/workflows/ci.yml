@@ -36,27 +36,18 @@ jobs:
           restore-keys: |
             turbo-${{ github.job }}-${{ github.ref_name }}-
 
-      - name: Cache node_modules
-        id: yarn-cache
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: yarn-deps-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            yarn-deps-
-
+      # TODO: Implement cache
       - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn --immutable --silent
+        run: pnpm install
 
       - name: Lint
-        run: yarn lint
+        run: pnpm lint
 
       - name: Typecheck
-        run: yarn test:types
+        run: pnpm test:types
 
       - name: Build
-        run: yarn build
+        run: pnpm build
 
       - name: Test
-        run: yarn test:coverage
+        run: pnpm test:coverage

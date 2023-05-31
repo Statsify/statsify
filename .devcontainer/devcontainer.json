@@ -1,54 +1,33 @@
-// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
-// https://github.com/microsoft/vscode-dev-containers/tree/v0.231.5/containers/typescript-node
 {
   "name": "Statsify",
   "build": {
-    "dockerfile": "Dockerfile",
-    // Update 'VARIANT' to pick a Node version: 16, 14, 12.
-    // Append -bullseye or -buster to pin to an OS version.
-    // Use -bullseye variants on local on arm64/Apple Silicon.
-    "args": {
-      "VARIANT": "16"
-    }
+    "dockerfile": "Dockerfile"
   },
   "customizations": {
-    "vscode": {
-      // Set *default* container specific settings.json values on container create.
-      "settings": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": [
-          "source.organizeImports",
-          "source.fixAll.eslint"
-        ],
-        "search.followSymlinks": true
-      },
-      // Add the IDs of extensions you want installed when the container is created.
-      "extensions": [
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "vivaxy.vscode-conventional-commits",
-        "mikestead.dotenv",
-        "ms-azuretools.vscode-docker"
-      ]
-    }
+    "extensions": [
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "vivaxy.vscode-conventional-commits",
+      "mikestead.dotenv",
+      "ms-azuretools.vscode-docker",
+      "lokalise.i18n-ally"
+    ]
   },
+  // mount local .pnpm-store to /home/node/.pnpm-store
+  "mounts": [
+    "source=${localWorkspaceFolder}/.pnpm-store,target=/home/node/.pnpm-store,type=bind,consistency=cached"
+  ],
   "runArgs": [
     "--privileged"
   ],
   "containerEnv": {
     "USE_POLLING": "true"
   },
-  "mounts": [
-    "source=${localWorkspaceFolderBasename}-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
-  ],
-  // Remote userr
   "remoteUser": "node",
-  // Use 'postCreateCommand' to run commands after the container is created.
-  "postCreateCommand": "/workspaces/statsify/.devcontainer/create.sh",
-  "postStartCommand": "sudo /etc/init.d/redis-server start && yarn scripts api-key --nonInteractiveKeyCreation",
+  "postCreateCommand": "pnpm install",
+  "postStartCommand": "sudo /etc/init.d/redis-server start && git config core.autocrlf true && pnpm scripts api-key --nonInteractiveKeyCreation",
   "features": {
-    "git": "latest",
-    "github-cli": "latest"
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   }
 }
