@@ -11,8 +11,15 @@ import { Canvas } from "skia-canvas";
 import { Service } from "typedi";
 
 import { ActionRowBuilder, ButtonBuilder } from "../messages/components";
-import { EmbedBuilder, Message, SelectMenuBuilder, SelectMenuOptionBuilder,  } from "../messages";
-import type { IMessage, LocalizationString, LocalizeFunction } from "../messages";
+import {
+  EmbedBuilder,
+  type IMessage,
+  type LocalizationString,
+  type LocalizeFunction,
+  Message,
+  SelectMenuBuilder,
+  SelectMenuOptionBuilder,
+} from "../messages";
 import type { CommandContext } from "../command";
 
 type PaginateInteractionContent = IMessage | Message | EmbedBuilder | Canvas;
