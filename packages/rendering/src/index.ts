@@ -27,5 +27,9 @@ declare global {
     type Children<T = Element> = JSXInternal.Children<T>;
 
     type Measurement = JSXInternal.Measurement;
+
+    interface ElementChildrenAttribute {
+      children: {};
+    }
   }
 }
