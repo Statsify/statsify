@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import dynamic from "next/dynamic";
+import CountUp from "react-countup";
 import styles from "./stat-circle.module.scss";
 import { ReactNode } from "react";
 
@@ -15,8 +15,6 @@ export interface StatCircleProps {
   title: string;
   image: ReactNode;
 }
-
-const CountUp = dynamic(() => import('react-countup'));
 
 export const StatCircle = ({ title, value, image }: StatCircleProps) => (
   <div className={styles.container}>

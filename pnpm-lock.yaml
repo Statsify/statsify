@@ -312,8 +312,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0
       react-countup:
-        specifier: ^6.4.1
-        version: 6.4.1(@babel/core@7.22.1)(react@18.2.0)
+        specifier: ^6.4.2
+        version: 6.4.2(@babel/core@7.22.1)(react@18.2.0)
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
@@ -4490,8 +4490,8 @@ packages:
       path-type: 4.0.0
     dev: true
 
-  /countup.js@2.6.2:
-    resolution: {integrity: sha512-PRvoilkebwr1MKaRAllyJl2cD7mgunGZWXLaSFL+YqHXlJpjLX7SHTWonRfIx2xg1Xf7SPbo92bOOonSIomRYQ==}
+  /countup.js@2.6.0:
+    resolution: {integrity: sha512-GeORCrCcaFUHP3RNf0/dWK+XQX+fsdtrMO31mNvsbKXNNG+DMTcgZ4dWpIG9BnOS8t5+iJbaRXgaaG9oLs0N4g==}
     dev: false
 
   /create-require@1.1.1:
@@ -8108,13 +8108,13 @@ packages:
       strip-json-comments: 2.0.1
     dev: false
 
-  /react-countup@6.4.1(@babel/core@7.22.1)(react@18.2.0):
-    resolution: {integrity: sha512-FxQ7qaNnnbA+Px9RebOZY4Tbawa1bhgpVPlUqRemZb90mh3f3OqyHVgr1SZqnJgaRxR3uEYqgkszgkDgFVCeEw==}
+  /react-countup@6.4.2(@babel/core@7.22.1)(react@18.2.0):
+    resolution: {integrity: sha512-wdDrNb2lPFGbLb+i0FTgswPbWziubS6KZRII8NRpXmUCoZsi15PFbIHgBz60Dyxd4KPuRvwsK5aawIU4OPP3jA==}
     peerDependencies:
       react: '>= 16.3.0'
     dependencies:
       '@rollup/plugin-babel': 6.0.3(@babel/core@7.22.1)
-      countup.js: 2.6.2
+      countup.js: 2.6.0
       react: 18.2.0
     transitivePeerDependencies:
       - '@babel/core'
