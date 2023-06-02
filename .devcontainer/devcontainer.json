@@ -13,10 +13,6 @@
       "lokalise.i18n-ally"
     ]
   },
-  // mount local .pnpm-store to /home/node/.pnpm-store
-  "mounts": [
-    "source=${localWorkspaceFolder}/.pnpm-store,target=/home/node/.pnpm-store,type=bind,consistency=cached"
-  ],
   "runArgs": [
     "--privileged"
   ],
