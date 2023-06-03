@@ -3,6 +3,27 @@
   "description": "",
   "version": "0.0.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Statsify/statsify.git"
+  },
+  "scripts": {
+    "build": "turbo run build --filter=!site --parallel --cache-dir='.turbo'",
+    "build:watch": "pnpm build --force && pnpm --filter scripts build-watch",
+    "test:types": "turbo run test:types --cache-dir='.turbo'",
+    "test": "turbo run test --parallel --cache-dir='.turbo'",
+    "test:coverage": "turbo run test:coverage --parallel --cache-dir='.turbo'",
+    "lint": "turbo run lint --parallel --cache-dir='.turbo'",
+    "pre-commit": "pnpm lint && pnpm test:types && pnpm test && git add .",
+    "commit": "pnpm pre-commit && git cz",
+    "api": "pnpm --filter api",
+    "discord-bot": "pnpm --filter discord-bot",
+    "support-bot": "pnpm --filter support-bot",
+    "site": "pnpm --filter site",
+    "scripts": "pnpm --filter scripts",
+    "verify-server": "pnpm --filter verify-server"
+  },
+  "packageManager": "pnpm@8.6.0",
   "devDependencies": {
     "@commitlint/cli": "^17.4.3",
     "@commitlint/config-conventional": "^17.4.3",
@@ -29,26 +50,6 @@
     "prettier": "^2.8.4",
     "turbo": "^1.7.4",
     "typescript": "^4.9.5"
-  },
-  "scripts": {
-    "build": "turbo run build --filter=!site --parallel --cache-dir='.turbo'",
-    "build:watch": "pnpm build --force && pnpm --filter scripts build-watch",
-    "test:types": "turbo run test:types --cache-dir='.turbo'",
-    "test": "turbo run test --parallel --cache-dir='.turbo'",
-    "test:coverage": "turbo run test:coverage --parallel --cache-dir='.turbo'",
-    "lint": "turbo run lint --parallel --cache-dir='.turbo'",
-    "pre-commit": "pnpm lint && pnpm test:types && pnpm test && git add .",
-    "commit": "pnpm pre-commit && git cz",
-    "api": "pnpm --filter api",
-    "discord-bot": "pnpm --filter discord-bot",
-    "support-bot": "pnpm --filter support-bot",
-    "site": "pnpm --filter site",
-    "scripts": "pnpm --filter scripts",
-    "verify-server": "pnpm --filter verify-server"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Statsify/statsify.git"
   },
   "commitlint": {
     "extends": [

@@ -20,7 +20,7 @@
     "USE_POLLING": "true"
   },
   "remoteUser": "node",
-  "postCreateCommand": "pnpm install",
+  "postCreateCommand": "git submodule update --init && pnpm install && pnpm run build",
   "postStartCommand": "sudo /etc/init.d/redis-server start && git config core.autocrlf true && pnpm scripts api-key --nonInteractiveKeyCreation",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
