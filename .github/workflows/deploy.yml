@@ -21,7 +21,7 @@ jobs:
           submodules: recursive
 
       - name: Install dependencies
-        run: pnpm
+        run: pnpm install
 
       - name: Build Code
         run: pnpm scripts purge --dist && pnpm build --force
