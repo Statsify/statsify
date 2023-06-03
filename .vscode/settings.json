@@ -6,6 +6,12 @@
     "source.fixAll.eslint"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
+  "files.exclude": {
+    "**/dist/**": true,
+    "**/node_modules/**": true,
+    "**/.turbo/**": true,
+    "**/.pnpm-store/**": true
+  },
   "[handlebars]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -14,15 +20,6 @@
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "files.exclude": {
-    // "**/dist/**": true,
-    // "**/node_modules/**": true,
-    // "**/.turbo/**": true,
-    // "**/.pnpm-store/**": true
-  },
-  "explorer.experimental.fileNesting.patterns": {
-    "package.json": "package-lock.json, .npmrc, yarn.lock, pnpm-lock.yaml, tsconfig.*.json, tsconfig.json, jest.config.js, turbo.json, README.md, LICENSE, cliff.toml, .prettierrc, .eslintrc, .swcrc, .gitignore, .eslintignore, .env, .env.schema, renovate.json, .gitmodules"
   },
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
@@ -35,6 +32,9 @@
   },
   "[scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "explorer.fileNesting.patterns": {
+    "package.json": "package-lock.json, .npmrc, yarn.lock, pnpm-lock.yaml, tsconfig.*.json, tsconfig.json, jest.config.js, turbo.json, README.md, LICENSE, cliff.toml, .prettierrc, .eslintrc, .swcrc, .gitignore, .eslintignore, .env, .env.schema, renovate.json, .gitmodules"
   },
   "i18n-ally.localesPaths": [
     "locales"

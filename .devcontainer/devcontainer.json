@@ -4,14 +4,17 @@
     "dockerfile": "Dockerfile"
   },
   "customizations": {
-    "extensions": [
-      "dbaeumer.vscode-eslint",
-      "esbenp.prettier-vscode",
-      "vivaxy.vscode-conventional-commits",
-      "mikestead.dotenv",
-      "ms-azuretools.vscode-docker",
-      "lokalise.i18n-ally"
-    ]
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "vivaxy.vscode-conventional-commits",
+        "mikestead.dotenv",
+        "ms-azuretools.vscode-docker",
+        "lokalise.i18n-ally",
+        "gruntfuggly.todo-tree"
+      ]
+    }
   },
   "runArgs": [
     "--privileged"
