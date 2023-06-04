@@ -2188,16 +2188,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/axios@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "@nestjs/axios@npm:0.1.1"
-  dependencies:
-    axios: 1.2.1
+"@nestjs/axios@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@nestjs/axios@npm:2.0.0"
   peerDependencies:
     "@nestjs/common": ^7.0.0 || ^8.0.0 || ^9.0.0
+    axios: ^1.3.1
     reflect-metadata: ^0.1.12
     rxjs: ^6.0.0 || ^7.0.0
-  checksum: 144a0592ace2846c7d1940f9a76fe4da0008175001ea57c72837e7c7811f76bf0828dbcf89a41ef32a2bc8d9bc571f6ca521c509d720be7c66bd92d4961960a8
+  checksum: bfadc38c3eed5aa78a39fa62b3026a99ea019a759f1da299c3efb667b07b1129b9c2eaa74a4a5bd2793983c94e9a77ce6cc3802e2399a8861dad8c14d9705be1
   languageName: node
   linkType: hard
 
@@ -3857,7 +3856,7 @@ __metadata:
     "@fastify/view": ^7.4.1
     "@m8a/nestjs-typegoose": ^8.1.0
     "@nestjs-modules/ioredis": ^1.0.1
-    "@nestjs/axios": ^0.1.1
+    "@nestjs/axios": ^2.0.0
     "@nestjs/common": ^9.3.9
     "@nestjs/core": ^9.3.9
     "@nestjs/platform-fastify": ^9.3.9
@@ -4033,17 +4032,6 @@ __metadata:
     debug: ^4.0.0
     fastq: ^1.6.1
   checksum: bbd06eeb1f9ef428dbc32a32e06c350a7b320f60348698fd234145a4100f3688ce5d0999b966eb6ca70f9511d0c35fed5ef4651d276715e7e3e94a2d465cb56d
-  languageName: node
-  linkType: hard
-
-"axios@npm:1.2.1":
-  version: 1.2.1
-  resolution: "axios@npm:1.2.1"
-  dependencies:
-    follow-redirects: ^1.15.0
-    form-data: ^4.0.0
-    proxy-from-env: ^1.1.0
-  checksum: c4dc4e119064c9aed09a3de309bedb797a139a6fb372223aafe3e0c10a7d4a14e4d3e9c9d309467fadb9d2b490b891ee3df96ef5b55716bb971910466ff9f0c5
   languageName: node
   linkType: hard
 
@@ -6101,7 +6089,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.9, follow-redirects@npm:^1.15.0":
+"follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.9":
   version: 1.15.2
   resolution: "follow-redirects@npm:1.15.2"
   peerDependenciesMeta:
@@ -9623,7 +9611,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"proxy-from-env@npm:^1.0.0, proxy-from-env@npm:^1.1.0":
+"proxy-from-env@npm:^1.0.0":
   version: 1.1.0
   resolution: "proxy-from-env@npm:1.1.0"
   checksum: ed7fcc2ba0a33404958e34d95d18638249a68c430e30fcb6c478497d72739ba64ce9810a24f53a7d921d0c065e5b78e3822759800698167256b04659366ca4d4
