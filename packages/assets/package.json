@@ -9,9 +9,10 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@statsify/logger": "workspace:^",
-    "@statsify/rendering": "workspace:^",
-    "@statsify/schemas": "workspace:^",
+    "@statsify/logger": "*",
+    "@statsify/rendering": "*",
+    "@statsify/schemas": "*",
+    "axios": "^0.27.2",
     "skia-canvas": "^0.9.30"
   }
 }

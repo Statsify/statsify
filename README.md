@@ -10,7 +10,7 @@ A Hypixel and Minecraft focused Discord Bot
 ## 💻 Developing
 ### ⚒️ Requirements
 -   [`Node.js`]: For running code (`v18`)
--   [`Yarn`]: Installing packages and running scripts (`npm install -g yarn`)
+-   [`pnpm`]: Installing packages and running scripts (`npm install -g pnpm`)
 -   [`MongoDB`]: For Persistent data ([`Atlas`])
 -   [`Redis`]: For Leaderboards ([`Redis Cloud`])
 -   [`RediSearch`]: For Autocomplete *optional*
@@ -25,27 +25,27 @@ A Hypixel and Minecraft focused Discord Bot
 * The codebase is split into apps and packages
 * Set up a `config.js` file in the root of the project following the `config.schema.js` file (copy paste it over and fill it in)
 * Pull the git submodules (`git submodule update --init`)
-* Set up the assets by running `cd assets/public && yarn`
-* Use `yarn build` to build all packages and apps,
-* Use `yarn build:watch` to watch files and build them while you code
-* Use `yarn {appName} start` to run an app, eg `yarn api start` to run the API
+* Set up the assets by running `cd assets/public && pnpm`
+* Use `pnpm build` to build all packages and apps,
+* Use `pnpm build:watch` to watch files and build them while you code
+* Use `pnpm {appName} start` to run an app, eg `pnpm api start` to run the API
 
 ### 🤖 Other Important commands
 ```bash
 # Change things in a package/app
-$ yarn workspace {app or package name} {command}
+$ pnpm workspace {app or package name} {command}
 
 # Example: Adding a dependency
-$ yarn workspace {app or package name} add {dependency}
+$ pnpm workspace {app or package name} add {dependency}
 
 # Linting
-$ yarn lint
+$ pnpm lint
 
 # Testing
-$ yarn test
+$ pnpm test
 
 # Type Testing
-$ yarn test:types
+$ pnpm test:types
 ```
 
 ## 💁 Contributing
@@ -82,7 +82,7 @@ $ yarn test:types
 [`redis`]: https://redis.io
 [`mongodb`]: https://www.mongodb.com/
 [`hypixel api key`]: https://api.hypixel.net
-[`yarn`]: https://yarnpkg.com/
+[`pnpm`]: https://pnpm.io/
 [`atlas`]: https://www.mongodb.com/cloud/atlas/register
 [`redis cloud`]: https://redis.com/try-free/
 [`redisearch`]: https://redis.io/docs/stack/search/quick_start/

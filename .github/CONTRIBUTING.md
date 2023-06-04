@@ -6,7 +6,7 @@
 ## Guidelines
 
 ### General Concepts
-* Code should follow our ESLint rules as closely as possible (`yarn lint`)
+* Code should follow our ESLint rules as closely as possible (`pnpm lint`)
 * Code should attempt to be TypeScript type safe
 * Code should attempt to be consistent, fast, scalable, and efficient
 
@@ -19,7 +19,7 @@
 ### Apps
 * Apps should be runnable
 * Apps should be in the apps folder and should simply be called by the app name
-* Apps should have a yarn workspace script in the root `package.json`
+* Apps should have a pnpm workspace script in the root `package.json`
 * Apps can use import paths to simplify imports in the project
 
 ## Running

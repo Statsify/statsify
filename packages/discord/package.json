@@ -12,15 +12,19 @@
   },
   "dependencies": {
     "@sentry/node": "^7.37.2",
-    "@statsify/assets": "workspace:^",
-    "@statsify/schemas": "workspace:^",
-    "@statsify/util": "workspace:^",
+    "skia-canvas": "^0.9.30",
+    "@statsify/assets": "*",
+    "@statsify/schemas": "*",
+    "@statsify/util": "*",
+    "@statsify/api-client": "*",
+    "@statsify/logger": "*",
     "discord-api-types": "^0.37.34",
     "i18next": "^21.10.0",
     "i18next-fs-backend": "^2.1.1",
     "reflect-metadata": "^0.1.13",
-    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb",
-    "typedi": "^0.10.0"
+    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb",
+    "typedi": "^0.10.0",
+    "axios": "^0.27.2"
   },
   "devDependencies": {
     "@types/i18next-fs-backend": "^1.1.2"

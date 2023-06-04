@@ -2,11 +2,28 @@
   "name": "statsify",
   "description": "",
   "version": "0.0.0",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Statsify/statsify.git"
+  },
+  "scripts": {
+    "build": "turbo run build --filter=!site --parallel --cache-dir='.turbo'",
+    "build:watch": "pnpm build --force && pnpm --filter scripts build-watch",
+    "test:types": "turbo run test:types --cache-dir='.turbo'",
+    "test": "turbo run test --parallel --cache-dir='.turbo'",
+    "test:coverage": "turbo run test:coverage --parallel --cache-dir='.turbo'",
+    "lint": "turbo run lint --parallel --cache-dir='.turbo'",
+    "pre-commit": "pnpm lint && pnpm test:types && pnpm test && git add .",
+    "commit": "pnpm pre-commit && git cz",
+    "api": "pnpm --filter api",
+    "discord-bot": "pnpm --filter discord-bot",
+    "support-bot": "pnpm --filter support-bot",
+    "site": "pnpm --filter site",
+    "scripts": "pnpm --filter scripts",
+    "verify-server": "pnpm --filter verify-server"
+  },
+  "packageManager": "pnpm@8.6.0",
   "devDependencies": {
     "@commitlint/cli": "^17.4.3",
     "@commitlint/config-conventional": "^17.4.3",
@@ -34,27 +51,6 @@
     "turbo": "^1.7.4",
     "typescript": "^4.9.5"
   },
-  "scripts": {
-    "build": "turbo run build --filter=!site --parallel --cache-dir='.turbo'",
-    "build:watch": "yarn build --force && yarn scripts build-watch",
-    "test:types": "turbo run test:types --cache-dir='.turbo'",
-    "test": "turbo run test --parallel --cache-dir='.turbo'",
-    "test:coverage": "turbo run test:coverage --parallel --cache-dir='.turbo'",
-    "lint": "turbo run lint --parallel --cache-dir='.turbo'",
-    "postinstall": "yarn assets/public install",
-    "pre-commit": "yarn lint && yarn test:types && yarn test && git add .",
-    "commit": "yarn pre-commit && git cz",
-    "api": "yarn workspace api",
-    "discord-bot": "yarn workspace discord-bot",
-    "support-bot": "yarn workspace support-bot",
-    "site": "yarn workspace site",
-    "scripts": "yarn workspace scripts",
-    "verify-server": "yarn workspace verify-server"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Statsify/statsify.git"
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -64,6 +60,5 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "packageManager": "yarn@3.4.1"
+  }
 }

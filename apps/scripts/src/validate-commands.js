@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import commands from "../../discord-bot/commands.json" assert { type: "json" };
+import commands from "discord-bot/commands.json" assert { type: "json" };
 import z from "zod";
 
 function toEnum(...args) {
