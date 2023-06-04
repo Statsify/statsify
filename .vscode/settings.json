@@ -33,9 +33,6 @@
   "[scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "explorer.fileNesting.patterns": {
-    "package.json": "package-lock.json, .npmrc, yarn.lock, pnpm-lock.yaml, tsconfig.*.json, tsconfig.json, jest.config.js, turbo.json, README.md, LICENSE, cliff.toml, .prettierrc, .eslintrc, .swcrc, .gitignore, .eslintignore, .env, .env.schema, renovate.json, .gitmodules"
-  },
   "i18n-ally.localesPaths": [
     "locales"
   ],
