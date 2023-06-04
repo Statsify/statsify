@@ -60,11 +60,14 @@ await Promise.all(
   )
 );
 
+let isReady = false;
+
 /**
  *
  * @param {string} path
  */
 function shouldProcess(path) {
+  if (!isReady) return false;
   if (!FILE_ENDINGS.some((ending) => path.endsWith(ending))) return false;
   return true;
 }
@@ -124,14 +127,11 @@ async function deleteFile(path) {
 
 const watcher = watch(
   workspaces.map((workspace) => join(workspace, "/src/**/*")),
-  {
-    ignored: [/node_modules/],
-    ignoreInitial: true,
-    usePolling: process.env.USE_POLLING == "true",
-  }
+  { ignored: [/node_modules/] }
 );
 
 watcher.on("ready", () => {
+  isReady = true;
   logger.setContext("build-watch");
   logger.log("Ready");
 });

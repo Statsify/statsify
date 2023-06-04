@@ -52,7 +52,7 @@ const nodeModules = async () => {
 
   if (!(await inquirerConfirmation("Recreate node_modules"))) return;
 
-  await exec("pnpm");
+  await exec("yarn");
 
   inquirerLogger("Recreater", "node_modules installed");
 };
@@ -62,7 +62,7 @@ const dist = async () => {
 
   if (!(await inquirerConfirmation("Recreate dist"))) return;
 
-  await exec("pnpm build");
+  await exec("yarn build");
 
   inquirerLogger("Recreater", "monorepo freshly built");
 };

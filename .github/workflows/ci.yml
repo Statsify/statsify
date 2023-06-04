@@ -20,36 +20,42 @@ jobs:
         TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2.2.4
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
 
       - name: Install node.js v16
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3
         with:
           node-version: 16
 
       - name: Turbo cache
         id: turbo-cache
-        uses: actions/cache@v3
+        uses: actions/cache@6998d139ddd3e68c71e9e398d8e40b71a2f39812 # v3
         with:
           path: .turbo
           key: turbo-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
           restore-keys: |
             turbo-${{ github.job }}-${{ github.ref_name }}-
 
-      - name: Install dependencies
-        run: pnpm install
+      - name: Cache node_modules
+        id: yarn-cache
+        uses: actions/cache@6998d139ddd3e68c71e9e398d8e40b71a2f39812 # v3
+        with:
+          path: '**/node_modules'
+          key: yarn-deps-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            yarn-deps-
 
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn --immutable
       - name: Lint
-        run: pnpm lint
+        run: yarn lint
 
       - name: Typecheck
-        run: pnpm test:types
+        run: yarn test:types
 
       - name: Build
-        run: pnpm build
+        run: yarn build
 
       - name: Test
-        run: pnpm test:coverage
+        run: yarn test:coverage

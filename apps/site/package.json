@@ -11,7 +11,7 @@
   "dependencies": {
     "next": "^12.3.4",
     "react": "^18.2.0",
-    "react-countup": "^6.4.2",
+    "react-countup": "^6.4.1",
     "react-dom": "^18.2.0",
     "react-responsive-carousel": "^3.2.23",
     "react-typed": "^1.2.0",
@@ -25,10 +25,5 @@
     "@types/sharp": "^0.31.1",
     "sass": "^1.58.2",
     "typescript": "^4.9.5"
-  },
-  "pnpm": {
-    "overrides": {
-      "countup.js": "2.6.0"
-    }
   }
 }

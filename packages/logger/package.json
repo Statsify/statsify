@@ -11,13 +11,10 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@statsify/util": "*",
     "@sentry/node": "^7.37.2",
-    "chalk": "4.1.2",
-    "luxon": "^3.2.1"
+    "chalk": "4.1.2"
   },
   "devDependencies": {
-    "@nestjs/common": "^9.3.9",
-    "@types/luxon": "^3.2.0"
+    "@nestjs/common": "^9.3.9"
   }
 }

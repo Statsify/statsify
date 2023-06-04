@@ -8,7 +8,7 @@
 
 const cron_restart = "0 20 * * *";
 const exp_backoff_restart_delay = 500;
-const script = "pnpm --filter ";
+const script = "yarn";
 const with_color = "--color=16m";
 const env = {
   FORCE_COLOR: 3,

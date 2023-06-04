@@ -12,14 +12,9 @@
   },
   "dependencies": {
     "@nestjs/swagger": "^6.2.1",
-    "@statsify/logger": "*",
-    "@statsify/math": "*",
-    "@statsify/util": "*",
-    "@typegoose/typegoose": "^10.1.1",
-    "class-validator": "^0.14.0",
-    "luxon": "^3.2.1"
-  },
-  "devDependencies": {
-    "@types/luxon": "^3.2.0"
+    "@statsify/logger": "workspace:^",
+    "@statsify/math": "workspace:^",
+    "@statsify/util": "workspace:^",
+    "@typegoose/typegoose": "^10.1.1"
   }
 }

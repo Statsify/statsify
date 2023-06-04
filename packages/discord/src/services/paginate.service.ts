@@ -6,21 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ButtonStyle } from "discord-api-types/v10";
-import { Canvas } from "skia-canvas";
-import { Service } from "typedi";
-
-import { ActionRowBuilder, ButtonBuilder } from "../messages/components";
 import {
+  ActionRowBuilder,
+  ButtonBuilder,
+  type CommandContext,
   EmbedBuilder,
   type IMessage,
   type LocalizationString,
   type LocalizeFunction,
-  Message,
-  SelectMenuBuilder,
-  SelectMenuOptionBuilder,
-} from "../messages";
-import type { CommandContext } from "../command";
+} from "@statsify/discord";
+import { ButtonStyle } from "discord-api-types/v10";
+import { Canvas } from "skia-canvas";
+import { Message, SelectMenuBuilder, SelectMenuOptionBuilder } from "../messages";
+import { Service } from "typedi";
 
 type PaginateInteractionContent = IMessage | Message | EmbedBuilder | Canvas;
 

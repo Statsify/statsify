@@ -15,19 +15,19 @@ jobs:
     environment: production
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3
         with:
           token: ${{ secrets.REPO_PAT }}
           submodules: recursive
 
       - name: Install dependencies
-        run: pnpm install
+        run: yarn --immutable
 
       - name: Build Code
-        run: pnpm scripts purge --dist && pnpm build --force
+        run: yarn scripts purge --dist && yarn build --force
 
       - name: Prepare Assets
-        run: cd assets/private && pnpm install && pnpm blur && cd ../../
+        run: cd assets/private && yarn install && yarn blur && cd ../../
 
       - name: Move Config
         run: cp /home/config.js ./config.js

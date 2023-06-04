@@ -11,6 +11,6 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@statsify/util": "*"
+    "@statsify/util": "workspace:^"
   }
 }

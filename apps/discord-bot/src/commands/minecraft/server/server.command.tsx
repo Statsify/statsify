@@ -10,11 +10,13 @@ import axios, { AxiosInstance } from "axios";
 import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
 import { Server } from "./server.interface";
 import { ServerArgument } from "./server.argument";
-import { ServerMappingsServer, getBackground, getServerMappings } from "@statsify/assets";
 import { ServerProfile } from "./server.profile";
+import { getBackground, getServerMappings } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { loadImage } from "skia-canvas";
 import { render } from "@statsify/rendering";
+
+const servers = getServerMappings();
 
 @Command({
   description: (t) => t("commands.server"),
@@ -22,15 +24,10 @@ import { render } from "@statsify/rendering";
 })
 export class ServerCommand {
   private readonly axios: AxiosInstance;
-  private mappings: ServerMappingsServer[];
 
   public constructor() {
     this.axios = axios.create({
       baseURL: "https://api.mcsrvstat.us/2/",
-    });
-
-    getServerMappings().then((mappings) => {
-      this.mappings = mappings;
     });
   }
 
@@ -63,20 +60,20 @@ export class ServerCommand {
   private async getServer(tag: string) {
     tag = tag.toLowerCase();
 
-    const mappedServer = this.mappings.find(
+    const mappedServer = servers.find(
       (s) =>
         s.name.toLowerCase() === tag ||
         s.addresses.find((address) => tag.endsWith(address))
     );
 
     const server = await this.axios
-      .get<Server>(mappedServer?.primaryAddress ?? tag)
+      .get<Server>(mappedServer?.addresses?.[0] ?? tag)
       .then((res) => res.data)
       .catch(() => null);
 
     if (!server || !server.online) throw new ErrorMessage("errors.invalidServer");
 
-    server.hostname = mappedServer?.primaryAddress ?? server.hostname;
+    server.hostname = mappedServer?.addresses?.[0] ?? server.hostname;
     server.name = mappedServer?.name ?? server.hostname;
 
     return server;

@@ -12,7 +12,9 @@ import {
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
-import { ServerMappingsServer, getServerMappings } from "@statsify/assets";
+import { getServerMappings } from "@statsify/assets";
+
+type Server = ReturnType<typeof getServerMappings>[number];
 
 export class ServerArgument extends AbstractArgument {
   public name = "server";
@@ -21,23 +23,22 @@ export class ServerArgument extends AbstractArgument {
   public required = true;
   public autocomplete = true;
 
-  private servers: ServerMappingsServer[];
-  private fuse: Fuse<ServerMappingsServer>;
+  private servers: Server[];
+  private fuse: Fuse<Server>;
 
   public constructor() {
     super();
     this.description = (t) => t("arguments.server");
 
-    getServerMappings().then((servers) => {
-      this.servers = servers;
-      this.fuse = new Fuse(this.servers, {
-        keys: ["id", "name", "addresses", "primaryAddress"],
-        includeScore: false,
-        shouldSort: true,
-        isCaseSensitive: false,
-        threshold: 0.3,
-        ignoreLocation: true,
-      });
+    this.servers = getServerMappings();
+
+    this.fuse = new Fuse(this.servers, {
+      keys: ["id", "name", "addresses"],
+      includeScore: false,
+      shouldSort: true,
+      isCaseSensitive: false,
+      threshold: 0.3,
+      ignoreLocation: true,
     });
   }
 
@@ -48,13 +49,13 @@ export class ServerArgument extends AbstractArgument {
 
     if (!currentValue) {
       return this.servers
-        .map((result) => ({ name: result.name, value: result.primaryAddress }))
+        .map((result) => ({ name: result.name, value: result.addresses[0] }))
         .slice(0, 25);
     }
 
     return this.fuse
       .search(currentValue)
-      .map((result) => ({ name: result.item.name, value: result.item.primaryAddress }))
+      .map((result) => ({ name: result.item.name, value: result.item.addresses[0] }))
       .slice(0, 25);
   }
 }

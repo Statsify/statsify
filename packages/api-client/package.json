@@ -12,9 +12,9 @@
     "@nestjs/common": "^9.3.9",
     "@nestjs/swagger": "^6.2.1",
     "@sentry/node": "^7.37.2",
-    "@statsify/rendering": "*",
-    "@statsify/schemas": "*",
-    "@statsify/util": "*",
+    "@statsify/rendering": "workspace:^",
+    "@statsify/schemas": "workspace:^",
+    "@statsify/util": "workspace:^",
     "axios": "^0.27.2"
   }
 }

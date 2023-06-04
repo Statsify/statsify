@@ -3,7 +3,7 @@
   "tasks": [
     {
       "type": "shell",
-      "command": "pnpm",
+      "command": "yarn",
       "args": [
         "build"
       ],
@@ -22,7 +22,7 @@
     },
     {
       "type": "shell",
-      "command": "pnpm",
+      "command": "yarn",
       "args": [
         "build:watch"
       ],
@@ -41,7 +41,7 @@
     },
     {
       "type": "shell",
-      "command": "pnpm",
+      "command": "yarn",
       "args": [
         "test"
       ],
@@ -54,7 +54,7 @@
     },
     {
       "type": "shell",
-      "command": "pnpm",
+      "command": "yarn",
       "args": [
         "test:types"
       ],
@@ -65,7 +65,7 @@
     },
     {
       "type": "shell",
-      "command": "pnpm",
+      "command": "yarn",
       "args": [
         "test:coverage"
       ],
