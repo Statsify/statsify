@@ -1272,6 +1272,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.20.6":
+  version: 7.22.3
+  resolution: "@babel/runtime@npm:7.22.3"
+  dependencies:
+    regenerator-runtime: ^0.13.11
+  checksum: 8fc50785ca4cba749fed90bffca7e6fd52d4709755654e95b8d2a945fc034b56fb8c2e8a0183fea7c4abb86bf5fa77678c0ea35163b6920649833d180c34c234
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.18.10, @babel/template@npm:^7.20.7, @babel/template@npm:^7.3.3":
   version: 7.20.7
   resolution: "@babel/template@npm:7.20.7"
@@ -2762,7 +2771,7 @@ __metadata:
     "@statsify/util": "workspace:^"
     "@types/i18next-fs-backend": ^1.1.2
     discord-api-types: ^0.37.34
-    i18next: ^21.10.0
+    i18next: ^22.5.1
     i18next-fs-backend: ^2.1.1
     reflect-metadata: ^0.1.13
     tiny-discord: "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb"
@@ -6645,12 +6654,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"i18next@npm:^21.0.1, i18next@npm:^21.10.0":
+"i18next@npm:^21.0.1":
   version: 21.10.0
   resolution: "i18next@npm:21.10.0"
   dependencies:
     "@babel/runtime": ^7.17.2
   checksum: f997985e2d4d15a62a0936a82ff6420b97f3f971e776fe685bdd50b4de0cb4dc2198bc75efe6b152844794ebd5040d8060d6d152506a687affad534834836d81
+  languageName: node
+  linkType: hard
+
+"i18next@npm:^22.5.1":
+  version: 22.5.1
+  resolution: "i18next@npm:22.5.1"
+  dependencies:
+    "@babel/runtime": ^7.20.6
+  checksum: 175f8ab7fac2abcee147b00cc2d8e7d4fa9b05cdc227f02cac841fc2fd9545ed4a6d88774f594f8ad12dc944e4d34cc8e88aa00c8b9947baef9e859d93abd305
   languageName: node
   linkType: hard
 

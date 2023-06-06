@@ -16,7 +16,7 @@
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "discord-api-types": "^0.37.34",
-    "i18next": "^21.10.0",
+    "i18next": "^22.5.1",
     "i18next-fs-backend": "^2.1.1",
     "reflect-metadata": "^0.1.13",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb",
