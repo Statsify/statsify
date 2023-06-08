@@ -88,7 +88,7 @@
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "Ve las estadísticas de tu sesión de {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
@@ -237,8 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "Restablece tu historial de estadísticas",
+    "reset-session": "Restablece tus estadísticas de la sesión"
   },
   "config": {
     "badge": {
