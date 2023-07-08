@@ -25,10 +25,13 @@ import { GatewayIntentBits } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { config } from "@statsify/util";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { setGlobalOptions } from "@typegoose/typegoose";
 import "@sentry/tracing";
 import "reflect-metadata";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const logger = new Logger("support-bot");
 const handleError = logger.error.bind(logger);

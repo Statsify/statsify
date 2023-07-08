@@ -7,8 +7,8 @@
  */
 
 import { Inject, Service } from "typedi";
-import { ReturnModelType } from "@typegoose/typegoose";
 import { User, UserTier } from "@statsify/schemas";
+import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Service()
 export class UserService {

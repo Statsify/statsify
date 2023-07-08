@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container, { Service } from "typedi";
+import { Container, Service } from "typedi";
 import { FontRenderer } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
 
