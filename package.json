@@ -60,5 +60,11 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "pnpm": {
+    "overrides": {
+      "countup.js": "2.6.0",
+      "gl": "^6.0.2"
+    }
   }
 }
