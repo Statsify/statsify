@@ -17,7 +17,7 @@
     "luxon": "^3.2.1"
   },
   "devDependencies": {
-    "@nestjs/common": "^9.3.9",
+    "@nestjs/common": "^10.0.5",
     "@types/luxon": "^3.2.0"
   }
 }
