@@ -18,6 +18,6 @@
     "@statsify/util": "*",
     "@typegoose/typegoose": "^10.1.1",
     "minecraft-protocol": "^1.40.3",
-    "mongoose": "^6.9.2"
+    "mongoose": "^7.3.2"
   }
 }
