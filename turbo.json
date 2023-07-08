@@ -3,8 +3,7 @@
   "remoteCache": {
     "signature": true
   },
-  "baseBranch": "origin/main",
-  "globalDependencies": ["yarn.lock", "tsconfig.json", ".swcrc"],
+  "globalDependencies": ["pnpm.lock", "tsconfig.json", ".swcrc"],
   "pipeline": {
     "build": {
       "outputs": ["dist/**", ".next/**"],
