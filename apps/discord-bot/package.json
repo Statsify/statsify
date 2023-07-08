@@ -21,7 +21,7 @@
     "@statsify/schemas": "*",
     "@statsify/util": "*",
     "@typegoose/typegoose": "^10.1.1",
-    "axios": "^0.27.2",
+    "axios": "^1.4.0",
     "discord-api-types": "^0.37.34",
     "fuse.js": "^6.6.2",
     "luxon": "^3.2.1",

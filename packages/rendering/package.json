@@ -21,7 +21,7 @@
   "dependencies": {
     "@sentry/node": "^7.37.2",
     "@statsify/util": "*",
-    "axios": "^0.27.2",
+    "axios": "^1.4.0",
     "skia-canvas": "^0.9.30",
     "typedi": "^0.10.0"
   }

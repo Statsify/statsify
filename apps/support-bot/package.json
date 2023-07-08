@@ -20,7 +20,7 @@
     "@statsify/util": "*",
     "@statsify/assets": "*",
     "@typegoose/typegoose": "^10.1.1",
-    "axios": "^0.27.2",
+    "axios": "^1.4.0",
     "discord-api-types": "^0.37.34",
     "luxon": "^3.2.1",
     "mongoose": "^6.9.2",

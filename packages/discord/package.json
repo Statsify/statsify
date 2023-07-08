@@ -24,7 +24,7 @@
     "reflect-metadata": "^0.1.13",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb",
     "typedi": "^0.10.0",
-    "axios": "^0.27.2"
+    "axios": "^1.4.0"
   },
   "devDependencies": {
     "@types/i18next-fs-backend": "^1.1.2"
