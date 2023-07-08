@@ -88,7 +88,7 @@
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "Zobacz swoje statystyki sesji {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
@@ -237,8 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "Zresetuj swoje historyczne statystyki",
+    "reset-session": "Zresetuj swoje statystyki sesji"
   },
   "config": {
     "badge": {
@@ -511,8 +511,8 @@
     "reset": "$t(emojis:clock) **Reset** <t:{{time}}:R>",
     "resetButton": "Kliknij, aby zresetować",
     "setResetTime": "Ustawiono czas resetowania na <t:{{time}}:t>.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "newSession": "Statystyki sesji **{{displayName}}** po raz pierwszy zostały sprawdzone w Statsify.",
+    "setSessionReset": "Pomyślnie zresetowano twoje statystyki sesji."
   },
   "leaderboard": {
     "guildInput": {
@@ -585,7 +585,7 @@
     "ended": "Zakończono",
     "endurance": "Wytrwałość",
     "event-level": "Poziom Wydarzenia",
-    "event-exp": "Event EXP",
+    "event-exp": "Punkty doświadczenia wydarzenia",
     "exp": "Poziom Doświadczenia",
     "expGained": "Uzyskany Poziom Doświadczenia",
     "extraUltimates": "Wykonane dodatkowe produkty najwyższej jakości",
@@ -713,7 +713,7 @@
     "ranksGifted": "Podarowane Rangi",
     "rebelKills": "Zabójstwa jako Atakujący",
     "renown": "Reputacja",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "Seria nagród",
     "roundWins": "Wygrane Rundy",
     "rune": "Runa",
     "score": "Wynik",
@@ -763,7 +763,7 @@
     "woolPlaced": "Wełna postawiona",
     "zombieKills": "Zabójstwa Zombie",
     "potionsBrewed": "Mikstury wytworzone",
-    "positions": "Positions",
+    "positions": "Pozycje",
     "powerupsCollected": "Zebrane ulepszenia",
     "roundsCompleted": "Ukończone rundy",
     "totalExp": "Razem punktów doświadczenia"

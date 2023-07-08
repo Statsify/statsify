@@ -88,7 +88,7 @@
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "Visualizza la sessione di statistiche di {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
@@ -237,8 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "Ripristina le tue statistiche storiche",
+    "reset-session": "Ripristina la tua sessione di statistiche"
   },
   "config": {
     "badge": {
@@ -511,8 +511,8 @@
     "reset": "$t(emojis:clock) **Ripristina** <t:{{time}}:R>",
     "resetButton": "Clicca per ripristinare",
     "setResetTime": "Imposta il tuo tempo di ripristino a <t:{{time}}:t>.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "newSession": "La sessione di statistiche di **{{displayName}}** è stato controllata per la prima volta su Statsify.",
+    "setSessionReset": "La tua sessione di statistiche è stata ripristinata con successo."
   },
   "leaderboard": {
     "guildInput": {
@@ -713,7 +713,7 @@
     "ranksGifted": "Rank Regalati",
     "rebelKills": "Uccisioni da Attaccante",
     "renown": "Fama",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "Serie di Ricompense",
     "roundWins": "Vittorie Round",
     "rune": "Runa",
     "score": "Punteggio",

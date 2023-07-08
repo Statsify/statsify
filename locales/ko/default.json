@@ -88,7 +88,7 @@
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "{{name}}의 세션 전적을 봐요",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
@@ -237,15 +237,15 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "기간 전적을 초기화해요",
+    "reset-session": "세션 전적을 초기화해요"
   },
   "config": {
     "badge": {
       "profile": "내 프로필에 배지가 이렇게 보일 거예요",
       "reset": "$t(emojis:config.reset) 배지를 초기화했어요.",
       "set": "$t(emojis:config.success) 배지를 갱신했어요.",
-      "view": "$t(emojis:config.view) 나의 현재 배지:"
+      "view": "$t(emojis:config.view) 현재 배지:"
     },
     "footer": {
       "profile": "내 프로필 하단은 이렇게 보일 거예요",
@@ -511,8 +511,8 @@
     "reset": "$t(emojis:clock) <t:{{time}}:R> **초기화**",
     "resetButton": "클릭해서 초기화",
     "setResetTime": "초기화 시간을 <t:{{time}}:t>로 설정했어요.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "newSession": "Statsify에서 **{{displayName}}**님의 세션 전적을 처음으로 확인했어요.",
+    "setSessionReset": "세션 전적을 초기화했어요."
   },
   "leaderboard": {
     "guildInput": {
@@ -713,7 +713,7 @@
     "ranksGifted": "선물한 등급",
     "rebelKills": "공격자 킬",
     "renown": "명성",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "연속 보상 횟수",
     "roundWins": "승리한 라운드",
     "rune": "룬",
     "score": "점수",
