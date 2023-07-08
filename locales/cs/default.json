@@ -88,7 +88,7 @@
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "Zobrazit {{name}} statistiky za období",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
@@ -237,8 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "Vyresetovat statistiky za určitou dobu",
+    "reset-session": "Vyresetovat statistiky za období"
   },
   "config": {
     "badge": {
@@ -511,8 +511,8 @@
     "reset": "$t(emojis:clock) **Vyresetuje se** <t:{{time}}:R>",
     "resetButton": "Klikni pro vyresetování",
     "setResetTime": "Čas vyresetování byl nastaven na <t:{{time}}:t>.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "newSession": "Statistiky hráče **{{displayName}}** byly ve Statsify zkontrolovány poprvé.",
+    "setSessionReset": "Tvoje statistiky za období byly úspěšně zrušeny."
   },
   "leaderboard": {
     "guildInput": {
@@ -713,7 +713,7 @@
     "ranksGifted": "Darované ranks",
     "rebelKills": "Zabití za útočníka",
     "renown": "Proslulost",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "Série odměn",
     "roundWins": "Vyhraná kola",
     "rune": "Runa",
     "score": "Skóre",
@@ -763,7 +763,7 @@
     "woolPlaced": "Položené vlny",
     "zombieKills": "Zabití zombií",
     "potionsBrewed": "Uvařené lektvary",
-    "positions": "Positions",
+    "positions": "Pozice",
     "powerupsCollected": "Sebraná vylepšení",
     "roundsCompleted": "Dokončena kola",
     "totalExp": "Celkem XP"
@@ -797,7 +797,7 @@
       "description": "Pro použití tohoto příkazu musíš být ověřen. Pro ověření svého účtu spusť příkaz `/verify`.",
       "title": "Vyžadováno ověření"
     },
-    "successfulUnverification": "Úspěšně bylo zrušeno ověření tvého účtu!",
+    "successfulUnverification": "Ověření účtu bylo úspěšně zrušeno!",
     "successfulVerification": "Nyní jsi ověřen na jméno **{{displayName}}**"
   }
 }

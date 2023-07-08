@@ -88,7 +88,7 @@
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "{{name}} oturum istatistiklerinizi görüntüleyin",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
@@ -237,8 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "Geçmiş istatistiklerinizi sıfırlayın",
+    "reset-session": "Oturum istatistiklerinizi sıfırlayın"
   },
   "config": {
     "badge": {
@@ -511,8 +511,8 @@
     "reset": "$t(emojis:clock) <t:{{time}}:R> **Saatinde Sıfırlanır**",
     "resetButton": "Sıfırlamak için tıklayın",
     "setResetTime": "Sıfırlama saatiniz <t:{{time}}:t> saatine ayarlandı.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "newSession": "**{{displayName}}**'in oturum istatistikleri Statsify'da ilk defa görüntülendi.",
+    "setSessionReset": "Oturum istatistikleriniz başarıyla sıfırlandı."
   },
   "leaderboard": {
     "guildInput": {
@@ -713,7 +713,7 @@
     "ranksGifted": "Hediye Edilen Rütbeler",
     "rebelKills": "Attacker Öldürmeleri",
     "renown": "Renown",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "Ödül Serisi",
     "roundWins": "Raunt Kazanmaları",
     "rune": "Rune",
     "score": "Skor",
