@@ -16,18 +16,32 @@ import {
   formatProgression,
   lineXpBar,
 } from "#components";
+import { arrayGroup, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "../base.hypixel-command";
-import type { Event } from "@statsify/schemas";
+import type { Event, EventPeriods, EventTypes } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
 
 interface EventTableProps {
-  title: string;
+  type: EventTypes;
   event: Event;
   t: LocalizeFunction;
-  color: string;
 }
 
-const EventTable = ({ title, event, t, color }: EventTableProps) => {
+const EVENT_COLORS: Record<EventPeriods, string> = {
+  summer: "§e",
+  halloween: "§5",
+  christmas: "§c",
+  easter: "§b",
+};
+
+const EventTable = ({ type, event, t }: EventTableProps) => {
+  const yearIndex = type.indexOf("20");
+  const year = type.slice(yearIndex, yearIndex + 4);
+  const period = type.slice(0, yearIndex);
+
+  const title = `${prettify(period)} ${year}`;
+  const color = EVENT_COLORS[period as EventPeriods];
+
   const levelling = [
     `§7${t("stats.event-level")}: ${color}${t(Math.floor(event.level))}`,
     formatProgression({
@@ -41,7 +55,7 @@ const EventTable = ({ title, event, t, color }: EventTableProps) => {
   ].join("\n");
 
   return (
-    <Table.ts title={title}>
+    <Table.ts title={`${color}${title}`}>
       <box width="remaining" align="center" direction="column" height="50%">
         <Multiline margin={2}>{levelling}</Multiline>
       </box>
@@ -49,6 +63,10 @@ const EventTable = ({ title, event, t, color }: EventTableProps) => {
     </Table.ts>
   );
 };
+
+interface EventsProfileProps extends Omit<BaseProfileProps, "time"> {
+  eventNames: EventTypes[];
+}
 
 export const EventsProfile = ({
   player,
@@ -58,7 +76,8 @@ export const EventsProfile = ({
   user,
   badge,
   t,
-}: BaseProfileProps) => {
+  eventNames,
+}: EventsProfileProps) => {
   const { events } = player.stats.general;
 
   const sidebar: SidebarItem[] = [[t("stats.silver"), t(events.silver), "§7"]];
@@ -71,14 +90,16 @@ export const EventsProfile = ({
         badge={badge}
         sidebar={sidebar}
         time="LIVE"
-        title="§l§cEvent §fStats §r(2022)"
+        title="§l§bEvent §fStats"
       />
       <Table.table>
-        <Table.tr>
-          <EventTable title="§eSummer" color="§e" event={events.summer2022} t={t} />
-          <EventTable title="§5Halloween" color="§5" event={events.halloween2022} t={t} />
-          <EventTable title="§cChristmas" color="§c" event={events.christmas2022} t={t} />
-        </Table.tr>
+        {arrayGroup(eventNames, 2).map((eventTypes) => (
+          <Table.tr>
+            {eventTypes.map((type) => (
+              <EventTable type={type} event={events[type]} t={t} />
+            ))}
+          </Table.tr>
+        ))}
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>

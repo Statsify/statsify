@@ -44,10 +44,10 @@ export const getLevel = (exp = 0): number => {
 */
 
 const PRESTIGE_COLORS: { req: number; format: (level: number) => string }[] = [
-  { req: 0, format: (l) => `§7[${l}❤️]` },
+  { req: 0, format: (l) => `§7[${l}❤]` },
   { req: 100, format: (l) => `§f[${l}✙]` },
   { req: 200, format: (l) => `§c[${l}✫]` },
-  { req: 300, format: (l) => `§6[${l}✈︎]` },
+  { req: 300, format: (l) => `§6[${l}✈]` },
   { req: 400, format: (l) => `§e[${l}✠]` },
   { req: 500, format: (l) => `§a[${l}♕]` },
   { req: 600, format: (l) => `§3[${l}⚡]` },

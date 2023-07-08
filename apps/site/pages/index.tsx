@@ -35,12 +35,12 @@ const Index = () => (
     <StatCircleContainer>
       <StatCircle
         title="Servers"
-        value={80_000}
+        value={90_000}
         image={<Image src={serversImage} width={75} height={75} alt="Servers" />}
       />
       <StatCircle
         title="Commands Ran"
-        value={45_000_000}
+        value={50_000_000}
         image={<Image src={commandsImage} width={64} height={64} alt="Commands Ran" />}
       />
     </StatCircleContainer>

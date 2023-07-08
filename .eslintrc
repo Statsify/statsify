@@ -45,8 +45,12 @@
         "ts-nocheck": true
       }
     ],
-    "@typescript-eslint/default-param-last": ["error"],
-    "@typescript-eslint/explicit-member-accessibility": ["error"],
+    "@typescript-eslint/default-param-last": [
+      "error"
+    ],
+    "@typescript-eslint/explicit-member-accessibility": [
+      "error"
+    ],
     "@typescript-eslint/member-ordering": [
       "error",
       {
@@ -75,10 +79,18 @@
         ]
       }
     ],
-    "@typescript-eslint/ban-types": ["off"],
-    "@typescript-eslint/no-explicit-any": ["off"],
-    "@typescript-eslint/no-non-null-assertion": ["off"],
-    "@typescript-eslint/no-unused-vars": ["off"],
+    "@typescript-eslint/ban-types": [
+      "off"
+    ],
+    "@typescript-eslint/no-explicit-any": [
+      "off"
+    ],
+    "@typescript-eslint/no-non-null-assertion": [
+      "off"
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "off"
+    ],
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
       "error",
@@ -89,27 +101,62 @@
         "argsIgnorePattern": "^_"
       }
     ],
-    "arrow-body-style": ["error", "as-needed"],
-    "no-constant-binary-expression": ["error"],
-    "no-constructor-return": ["error"],
-    "no-duplicate-imports": ["error"],
-    "no-extra-semi": ["error"],
-    "no-floating-decimal": ["error"],
-    "no-lonely-if": ["error"],
-    "object-shorthand": ["error", "always"],
-    "one-var": ["error", "never"],
-    "prefer-template": ["error"],
+    "arrow-body-style": [
+      "error",
+      "as-needed"
+    ],
+    "no-constant-binary-expression": [
+      "error"
+    ],
+    "no-constructor-return": [
+      "error"
+    ],
+    "no-duplicate-imports": [
+      "error"
+    ],
+    "no-extra-semi": [
+      "error"
+    ],
+    "no-floating-decimal": [
+      "error"
+    ],
+    "no-lonely-if": [
+      "error"
+    ],
+    "object-shorthand": [
+      "error",
+      "always"
+    ],
+    "one-var": [
+      "error",
+      "never"
+    ],
+    "prefer-template": [
+      "error"
+    ],
     "sort-imports-es6-autofix/sort-imports-es6": [
       "error",
       {
         "ignoreCase": false,
         "ignoreMemberSort": false,
-        "memberSyntaxSortOrder": ["all", "single", "multiple", "none"]
+        "memberSyntaxSortOrder": [
+          "all",
+          "single",
+          "multiple",
+          "none"
+        ]
       }
     ],
-    "unicorn/no-unsafe-regex": ["warn"],
-    "unicorn/prefer-at": ["error"],
-    "unicorn/relative-url-style": ["error", "always"],
+    "unicorn/no-unsafe-regex": [
+      "warn"
+    ],
+    "unicorn/prefer-at": [
+      "error"
+    ],
+    "unicorn/relative-url-style": [
+      "error",
+      "always"
+    ],
     "unicorn/import-style": [
       "error",
       {
@@ -121,28 +168,72 @@
         }
       }
     ],
-    "unicorn/prefer-string-replace-all": ["off"],
-    "unicorn/filename-case": ["off"],
-    "unicorn/no-static-only-class": ["off"],
-    "unicorn/no-process-exit": ["off"],
-    "unicorn/no-object-as-default": ["off"],
-    "unicorn/no-null": ["off"],
-    "unicorn/no-array-reduce": ["off"],
-    "unicorn/prevent-abbreviations": ["off"],
-    "unicorn/no-array-callback-reference": ["off"],
-    "unicorn/explicit-length-check": ["off"],
-    "unicorn/escape-case": ["off"],
-    "unicorn/no-useless-undefined": ["off"],
-    "unicorn/catch-error-name": ["off"],
-    "unicorn/no-nested-ternary": ["off"],
-    "unicorn/no-array-for-each": ["off"],
-    "unicorn/no-await-expression-member": ["off"],
-    "unicorn/no-array-push-push": ["off"],
-    "unicorn/number-literal-case": ["off"],
-    "unicorn/consistent-destructuring": ["off"],
-    "unicorn/no-useless-switch-case": ["off"],
-    "unicorn/better-regex": ["off"],
-    "unicorn/prefer-module": ["off"],
+    "unicorn/prefer-string-replace-all": [
+      "off"
+    ],
+    "unicorn/filename-case": [
+      "off"
+    ],
+    "unicorn/no-static-only-class": [
+      "off"
+    ],
+    "unicorn/no-process-exit": [
+      "off"
+    ],
+    "unicorn/no-object-as-default": [
+      "off"
+    ],
+    "unicorn/no-null": [
+      "off"
+    ],
+    "unicorn/no-array-reduce": [
+      "off"
+    ],
+    "unicorn/prevent-abbreviations": [
+      "off"
+    ],
+    "unicorn/no-array-callback-reference": [
+      "off"
+    ],
+    "unicorn/explicit-length-check": [
+      "off"
+    ],
+    "unicorn/escape-case": [
+      "off"
+    ],
+    "unicorn/no-useless-undefined": [
+      "off"
+    ],
+    "unicorn/catch-error-name": [
+      "off"
+    ],
+    "unicorn/no-nested-ternary": [
+      "off"
+    ],
+    "unicorn/no-array-for-each": [
+      "off"
+    ],
+    "unicorn/no-await-expression-member": [
+      "off"
+    ],
+    "unicorn/no-array-push-push": [
+      "off"
+    ],
+    "unicorn/number-literal-case": [
+      "off"
+    ],
+    "unicorn/consistent-destructuring": [
+      "off"
+    ],
+    "unicorn/no-useless-switch-case": [
+      "off"
+    ],
+    "unicorn/better-regex": [
+      "off"
+    ],
+    "unicorn/prefer-module": [
+      "off"
+    ],
     "unicorn/numeric-separators-style": [
       "error",
       {
@@ -154,7 +245,12 @@
         }
       }
     ],
-    "unicorn/prefer-top-level-await": ["off"],
-    "unicorn/switch-case-braces": ["error", "avoid"]
+    "unicorn/prefer-top-level-await": [
+      "off"
+    ],
+    "unicorn/switch-case-braces": [
+      "error",
+      "avoid"
+    ]
   }
 }
