@@ -2,12 +2,14 @@
   "name": "@statsify/rendering",
   "version": "0.0.0",
   "types": "./src/index.ts",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./src/index.ts",
       "default": "./dist/index.js"
     },
     "./jsx-runtime": {
+      "types": "./src/jsx-runtime/index.ts",
       "default": "./dist/jsx-runtime/index.js"
     }
   },
@@ -21,8 +23,30 @@
   "dependencies": {
     "@sentry/node": "^7.37.2",
     "@statsify/util": "*",
-    "axios": "^0.27.2",
+    "axios": "1.4.0",
     "skia-canvas": "^0.9.30",
     "typedi": "^0.10.0"
+  },
+  "imports": {
+    "#colors": {
+      "types": "./src/colors/index.ts",
+      "default": "./dist/colors/index.js"
+    },
+    "#components": {
+      "types": "./src/components/index.ts",
+      "default": "./dist/components/index.js"
+    },
+    "#font": {
+      "types": "./src/font/index.ts",
+      "default": "./dist/font/index.js"
+    },
+    "#hooks": {
+      "types": "./src/hooks/index.ts",
+      "default": "./dist/hooks/index.js"
+    },
+    "#jsx": {
+      "types": "./src/jsx/index.ts",
+      "default": "./dist/jsx/index.js"
+    }
   }
 }

@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from "typedi";
+import { Container } from "typedi";
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import { AbstractArgument } from "./abstract.argument";
 import { ApiService } from "../services";
-import { CommandContext } from "../command";
-import { LocalizationString } from "../messages";
+import { CommandContext } from "#command";
+import { LocalizationString } from "#messages";
 
 const apiClient = Container.get(ApiService);
 

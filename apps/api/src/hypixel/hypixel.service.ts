@@ -7,7 +7,6 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { APIData } from "@statsify/util";
 import {
   GameCounts,
   Guild,
@@ -21,6 +20,7 @@ import { HypixelCache } from "@statsify/api-client";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
+import type { APIData } from "@statsify/util";
 
 @Injectable()
 export class HypixelService {

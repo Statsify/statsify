@@ -1,7 +1,27 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": "./",
+    "paths": {
+      "#colors": [
+        "./src/colors/index.js",
+      ],
+      "#components": [
+        "./src/components/index.js",
+      ],
+      "#font": [
+        "./src/font/index.js",
+      ],
+      "#hooks": [
+        "./src/hooks/index.js",
+      ],
+      "#jsx": [
+        "./src/jsx/index.js"
+      ],
+    }
   },
-  "include": ["src", "tests"]
+  "include": [
+    "src",
+  ]
 }

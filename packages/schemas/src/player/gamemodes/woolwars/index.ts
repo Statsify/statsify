@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { Progression } from "../../../progression";
-import { WoolWarsClass, WoolWarsOverall } from "./class";
-import { getExpReq, getFormattedLevel, getLevel } from "./util";
+import { Field } from "#metadata";
+import { GameModes, type IGameModes } from "#game";
+import { Progression } from "#progression";
+import { WoolWarsClass, WoolWarsOverall } from "./class.js";
+import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
+import type { APIData } from "@statsify/util";
 
 export const WOOLWARS_MODES = new GameModes([
   { api: "overall" },
@@ -114,4 +114,4 @@ export class WoolWars {
   }
 }
 
-export * from "./class";
+export * from "./class.js";

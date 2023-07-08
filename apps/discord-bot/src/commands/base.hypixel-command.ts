@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from "typedi";
 import {
   ApiService,
   Command,
@@ -17,6 +16,7 @@ import {
   PaginateService,
   PlayerArgument,
 } from "@statsify/discord";
+import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { HistoricalTimeData } from "../components/Historical/Historical-Header";
 import { getBackground, getLogo } from "@statsify/assets";

@@ -1,8 +1,9 @@
 {
   "name": "@statsify/schemas",
   "version": "0.0.0",
-  "main": "dist/index.js",
   "types": "src/index.ts",
+  "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
@@ -21,5 +22,35 @@
   },
   "devDependencies": {
     "@types/luxon": "^3.2.0"
+  },
+  "imports": {
+    "#metadata": {
+      "types": "./src/metadata/index.ts",
+      "default": "./dist/metadata/index.js"
+    },
+    "#game": {
+      "types": "./src/game/index.ts",
+      "default": "./dist/game/index.js"
+    },
+    "#color": {
+      "types": "./src/color.ts",
+      "default": "./dist/color.js"
+    },
+    "#progression": {
+      "types": "./src/progression.ts",
+      "default": "./dist/progression.js"
+    },
+    "#player": {
+      "types": "./src/player/index.ts",
+      "default": "./dist/player/index.js"
+    },
+    "#ratios": {
+      "types": "./src/ratios.ts",
+      "default": "./dist/ratios.js"
+    },
+    "#prefixes": {
+      "types": "./src/player/gamemodes/prefixes.ts",
+      "default": "./dist/player/gamemodes/prefixes.js"
+    }
   }
 }

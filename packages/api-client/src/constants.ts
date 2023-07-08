@@ -6,6 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+export enum GuildQuery {
+  ID = "ID",
+  NAME = "NAME",
+  PLAYER = "PLAYER",
+}
+
 export enum CurrentHistoricalType {
   SESSION = "SESSION",
   DAILY = "DAILY",
@@ -21,3 +27,15 @@ export enum LastHistoricalType {
 
 export const HistoricalTimes = { ...LastHistoricalType, ...CurrentHistoricalType };
 export type HistoricalType = LastHistoricalType | CurrentHistoricalType;
+
+export enum HypixelCache {
+  CACHE = "CACHE",
+  CACHE_ONLY = "CACHE_ONLY",
+  LIVE = "LIVE",
+}
+
+export enum LeaderboardQuery {
+  PAGE = "page",
+  INPUT = "input",
+  POSITION = "position",
+}

@@ -19,10 +19,13 @@
     "keepClassNames": true,
     "loose": false,
     "externalHelpers": false,
-    "preserveAllComments": false
+    "preserveAllComments": false,
+    "experimental": {
+      "keepImportAssertions": true
+    }
   },
   "module": {
-    "type": "commonjs",
+    "type": "es6",
     "strict": true,
     "strictMode": true,
     "lazy": false,

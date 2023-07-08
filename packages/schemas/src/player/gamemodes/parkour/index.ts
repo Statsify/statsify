@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, formatTime } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { FormattedGame, GameModes, IGameModes } from "../../../game";
+import { type APIData, formatTime } from "@statsify/util";
+import { Field } from "#metadata";
+import { FormattedGame, GameModes, type IGameModes } from "#game";
 
 export const PARKOUR_MODES = new GameModes([{ api: "overall" }]);
 

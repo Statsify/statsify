@@ -1,4 +1,33 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src", "tests"]
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "#arguments": [
+        "./src/arguments/index.js",
+      ],
+      "#command": [
+        "./src/command/index.js",
+      ],
+      "#event": [
+        "./src/event/index.js",
+      ],
+      "#interaction": [
+        "./src/interaction/index.js",
+      ],
+      "#messages": [
+        "./src/messages/index.js",
+      ],
+      "#services": [
+        "./src/services/index.js",
+      ],
+      "#util/*": [
+        "./src/util/*.js"
+      ],
+    }
+  },
+  "include": [
+    "src",
+    "tests"
+  ]
 }

@@ -11,7 +11,14 @@ import chalk from "chalk";
 import { DateTime } from "luxon";
 import { config } from "@statsify/util";
 import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/common";
-export const defaultLogLevels: LogLevel[] = ["log", "error", "warn", "debug", "verbose"];
+
+export const DEFAULT_LOG_LEVELS: LogLevel[] = [
+  "log",
+  "error",
+  "warn",
+  "debug",
+  "verbose",
+];
 
 export const STATUS_COLORS = {
   debug: 0xc700e7,
@@ -37,7 +44,7 @@ export class Logger implements LoggerService {
     protected options: ConsoleLoggerOptions = {}
   ) {
     if (!this.options.logLevels) {
-      this.options.logLevels = defaultLogLevels;
+      this.options.logLevels = DEFAULT_LOG_LEVELS;
     }
 
     if (context) {

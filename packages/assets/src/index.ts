@@ -7,11 +7,11 @@
  */
 
 import axios from "axios";
-import { Image } from "skia-canvas";
 import { User, UserLogo } from "@statsify/schemas";
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { loadImage } from "@statsify/rendering";
+import type { Image } from "skia-canvas";
 
 const PATH = "../../assets";
 const PRIVATE_PATH = join(PATH, "private");

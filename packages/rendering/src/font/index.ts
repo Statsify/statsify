@@ -6,4 +6,5 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./font-renderer";
+export * from "./font-renderer.js";
+export * from "./tokens.js";

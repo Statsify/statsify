@@ -6,19 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./delete.player.response";
-export * from "./error.response";
-export * from "./get.gamecounts.response";
-export * from "./get.guild.response";
-export * from "./get.historical.response";
-export * from "./get.key.response";
-export * from "./get.player.response";
-export * from "./get.recentgames.response";
-export * from "./get.status.response";
-export * from "./get.user.response";
-export * from "./get.watchdog.response";
-export * from "./post.leaderboard.response";
-export * from "./post.rankings.response";
-export * from "./put.user-badge.response";
-export * from "./get.command-usage.response";
-export * from "./get.player-search.response";
+export * from "./delete.player.response.js";
+export * from "./error.response.js";
+export * from "./get.gamecounts.response.js";
+export * from "./get.guild.response.js";
+export * from "./get.historical.response.js";
+export * from "./get.key.response.js";
+export * from "./get.player.response.js";
+export * from "./get.recentgames.response.js";
+export * from "./get.status.response.js";
+export * from "./get.user.response.js";
+export * from "./get.watchdog.response.js";
+export * from "./post.leaderboard.response.js";
+export * from "./post.rankings.response.js";
+export * from "./put.user-badge.response.js";
+export * from "./get.command-usage.response.js";
+export * from "./get.player-search.response.js";

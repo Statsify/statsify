@@ -6,11 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from "typedi";
-import { Fill } from "../jsx";
-import { FontRenderer } from "../font";
-import type * as JSX from "../jsx";
-import type { TextNode } from "../font/tokens";
+import { Container } from "typedi";
+import { FontRenderer, type TextNode } from "#font";
+import type * as JSX from "#jsx";
 
 type Text = string | number;
 
@@ -18,7 +16,7 @@ export interface TextProps {
   margin?: JSX.Spacing;
   children?: Text | Text[];
   align?: JSX.StyleLocation;
-  color?: Fill;
+  color?: JSX.Fill;
   bold?: boolean;
   italic?: boolean;
   underline?: boolean;

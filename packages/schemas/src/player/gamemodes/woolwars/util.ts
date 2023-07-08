@@ -7,7 +7,7 @@
  */
 
 import { findScore } from "@statsify/util";
-import { rainbow } from "../prefixes";
+import { rainbow } from "#prefixes";
 
 export const getExpReq = (level: number) => {
   const progress = level % 100;

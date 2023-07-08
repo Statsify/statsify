@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * as Box from "./Box";
-export * as Div from "./Div";
-export * as Image from "./Image";
-export * as Text from "./Text";
+export * as Box from "./Box.js";
+export * as Div from "./Div.js";
+export * as Image from "./Image.js";
+export * as Text from "./Text.js";

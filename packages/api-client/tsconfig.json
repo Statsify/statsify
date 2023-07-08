@@ -1,4 +1,17 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src"]
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "#exceptions/*": [
+        "./src/exceptions/*.js",
+      ],
+      "#responses/*": [
+        "./src/responses/*.js"
+      ],
+    }
+  },
+  "include": [
+    "src"
+  ]
 }

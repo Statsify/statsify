@@ -7,13 +7,13 @@
  */
 
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
-import { ClassMetadata } from "../metadata.interface";
-import { FieldOptions } from "../field.options";
-import { METADATA_KEY } from "../constants";
-import { getLeaderboardMetadata } from "./get-leaderboard-metadata";
-import { getStoreMetadata } from "./get-store-metadata";
-import { getTypeMetadata } from "./get-type-metadata";
+import { METADATA_KEY } from "../constants.js";
+import { getLeaderboardMetadata } from "./get-leaderboard-metadata.js";
+import { getStoreMetadata } from "./get-store-metadata.js";
+import { getTypeMetadata } from "./get-type-metadata.js";
 import { prop } from "@typegoose/typegoose";
+import type { ClassMetadata } from "../metadata.interface.js";
+import type { FieldOptions } from "../field.options.js";
 
 export function Field({
   type: typeOptions,

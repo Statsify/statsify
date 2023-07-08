@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./loadImage";
-export * from "./useChildren";
-export * from "./useComponentSize";
-export * from "./useGradient";
+export * from "./loadImage.js";
+export * from "./useChildren.js";
+export * from "./useComponentSize.js";
+export * from "./useGradient.js";

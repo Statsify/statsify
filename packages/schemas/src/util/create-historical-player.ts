@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { RATIOS, RATIO_STATS } from "../ratios";
+import { RATIOS, RATIO_STATS } from "#ratios";
 import { isObject } from "class-validator";
 import { ratio, sub } from "@statsify/math";
 

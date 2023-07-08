@@ -7,7 +7,7 @@
  */
 
 import { AxiosError } from "axios";
-import { ButtonBuilder, LocalizeFunction } from "../messages";
+import { ButtonBuilder, LocalizeFunction } from "#messages";
 import { ButtonStyle } from "discord-api-types/v10";
 import { Color, User } from "@statsify/schemas";
 import {
@@ -24,7 +24,7 @@ import {
   ApiService as StatsifyApiService,
   StatusNotFoundException,
 } from "@statsify/api-client";
-import { ErrorMessage } from "../util/error.message";
+import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
 

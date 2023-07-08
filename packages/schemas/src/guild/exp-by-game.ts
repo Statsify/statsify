@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../metadata";
-import { FormattedGame, GameCodeMapping } from "../game";
+import { Field } from "#metadata";
+import { FormattedGame, GameCodeMapping } from "#game";
+import type { APIData } from "@statsify/util";
 
 const limit = 100_000;
 const fieldName = "GEXP";

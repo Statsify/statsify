@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field } from "../metadata";
+import { Field } from "#metadata";
 
 export class Commands {
   @Field({ mongo: { unique: true, index: true } })

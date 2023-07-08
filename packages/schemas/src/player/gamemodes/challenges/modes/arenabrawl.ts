@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, removeFormatting } from "@statsify/util";
-import { Field } from "../../../../metadata";
-import { FormattedGame } from "../../../../game";
+import { type APIData, removeFormatting } from "@statsify/util";
+import { Field } from "#metadata";
+import { FormattedGame } from "#game";
 import { add } from "@statsify/math";
-import { challengeFieldData } from "../util";
-import type { GameChallenges } from "../game-challenges";
+import { challengeFieldData } from "../util.js";
+import type { GameChallenges } from "../game-challenges.js";
 
 export class ArenaBrawlChallenges implements GameChallenges {
   @Field({

@@ -7,7 +7,6 @@
  */
 
 import * as Sentry from "@sentry/node";
-import Container from "typedi";
 import { CommandListener } from "#lib/command.listener";
 import {
   CommandLoader,
@@ -15,6 +14,7 @@ import {
   EventLoader,
   I18nLoaderService,
 } from "@statsify/discord";
+import { Container } from "typedi";
 import {
   FontLoaderService,
   MongoLoaderService,

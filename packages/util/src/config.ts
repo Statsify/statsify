@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DeepFlatten } from "./flat";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
+import type { DeepFlatten } from "./flatten.js";
 
 export interface Config {
   database: {

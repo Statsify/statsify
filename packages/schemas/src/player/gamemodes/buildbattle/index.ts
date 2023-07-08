@@ -6,22 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
 import {
   BuildBattleGuessTheBuild,
   BuildBattleMultiplayerMode,
   BuildBattleOverall,
   BuildBattlePro,
-} from "./mode";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+} from "./mode.js";
+import { Field } from "#metadata";
+import { GameModes, type IGameModes } from "#game";
 import {
   GameTitle,
   createPrefixProgression,
   defaultPrefix,
   getFormattedPrefix,
-} from "../prefixes";
-import { Progression } from "../../../progression";
+} from "#prefixes";
+import { Progression } from "#progression";
+import type { APIData } from "@statsify/util";
 
 export const BUILD_BATTLE_MODES = new GameModes([
   { api: "overall" },
@@ -122,4 +122,4 @@ export class BuildBattle {
   }
 }
 
-export * from "./mode";
+export * from "./mode.js";

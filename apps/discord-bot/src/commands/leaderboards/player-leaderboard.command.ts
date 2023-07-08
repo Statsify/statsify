@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from "typedi";
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
@@ -49,6 +48,7 @@ import {
   SubCommand,
 } from "@statsify/discord";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command";
+import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { GuildLeaderboardArgument } from "./guild-leaderboard.argument";
 import { GuildLeaderboardSubCommand } from "./guild-leaderboard.subcommand";

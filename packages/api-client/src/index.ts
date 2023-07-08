@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./api.service";
-export * from "./types";
-export * from "./exceptions";
-export * from "./responses";
+export * from "./api.service.js";
+export * from "./constants.js";
+export * from "./exceptions/index.js";
+export * from "./responses/index.js";
 
 export const GUILD_ID_REGEX = /^(?=[\da-f]{24}$)(\d+[a-f]|[a-f]+\d)/i;

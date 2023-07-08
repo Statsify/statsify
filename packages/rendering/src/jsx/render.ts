@@ -7,14 +7,14 @@
  */
 
 import * as Sentry from "@sentry/node";
-import Container from "typedi";
+import { Container } from "typedi";
 import { Canvas, type CanvasRenderingContext2D } from "skia-canvas";
-import { FontRenderer } from "../font";
-import { IntrinsicRenders, intrinsicRenders } from "./instrinsics";
-import { createInstructions } from "./create-instructions";
-import { getPositionalDelta, getTotalSize } from "./util";
+import { FontRenderer } from "#font";
+import { IntrinsicRenders, intrinsicRenders } from "./instrinsics.js";
+import { createInstructions } from "./create-instructions.js";
+import { getPositionalDelta, getTotalSize } from "./util.js";
 import { noop } from "@statsify/util";
-import type { ComputedThemeContext, ElementNode, Instruction, Theme } from "./types";
+import type { ComputedThemeContext, ElementNode, Instruction, Theme } from "./types.js";
 
 const _render = (
   ctx: CanvasRenderingContext2D,

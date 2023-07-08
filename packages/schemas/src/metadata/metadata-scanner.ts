@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ClassMetadata, FieldMetadata } from "./metadata.interface";
-import { Constructor } from "@statsify/util";
-import { LEADERBOARD_RATIO_KEYS } from "../ratios";
-import { METADATA_KEY } from "./constants";
+import { LEADERBOARD_RATIO_KEYS } from "#ratios";
+import { METADATA_KEY } from "./constants.js";
+import type { ClassMetadata, FieldMetadata } from "./metadata.interface.js";
+import type { Constructor } from "@statsify/util";
 
 export type MetadataEntry = [string, FieldMetadata];
 

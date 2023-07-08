@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Color, ColorCode, ColorId } from "../color";
+import { Color, type ColorCode, type ColorId } from "#color";
 import type { APIData } from "@statsify/util";
 
 export const rankMap: Record<string, (color: string) => string> = {

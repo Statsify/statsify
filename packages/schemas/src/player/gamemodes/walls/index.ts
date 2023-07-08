@@ -6,18 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { Field } from "#metadata";
+import { GameModes, type IGameModes } from "#game";
 import {
   GamePrefix,
   createPrefixProgression,
   defaultPrefix,
   getFormattedPrefix,
   rainbow,
-} from "../prefixes";
-import { Progression } from "../../../progression";
+} from "#prefixes";
+import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
+import type { APIData } from "@statsify/util";
 
 export const WALLS_MODES = new GameModes([{ api: "overall" }]);
 

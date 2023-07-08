@@ -11,7 +11,7 @@ import {
   LocalizeFunction,
   translateField,
   translateObject,
-} from "./localize";
+} from "./localize.js";
 import type {
   APIEmbed,
   APIEmbedAuthor,

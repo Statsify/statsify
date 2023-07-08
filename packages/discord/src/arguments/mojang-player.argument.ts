@@ -8,7 +8,7 @@
 
 import { AbstractArgument } from "./abstract.argument";
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
-import { LocalizationString } from "../messages";
+import { LocalizationString } from "#messages";
 
 export class MojangPlayerArgument extends AbstractArgument {
   public name = "player";

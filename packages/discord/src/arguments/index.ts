@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./abstract.argument";
-export * from "./choice.argument";
-export * from "./file.argument";
-export * from "./guild.argument";
-export * from "./mojang-player.argument";
-export * from "./number.argument";
-export * from "./player.argument";
-export * from "./text.argument";
-export * from "./user.argument";
+export * from "./abstract.argument.js";
+export * from "./choice.argument.js";
+export * from "./file.argument.js";
+export * from "./guild.argument.js";
+export * from "./mojang-player.argument.js";
+export * from "./number.argument.js";
+export * from "./player.argument.js";
+export * from "./text.argument.js";
+export * from "./user.argument.js";

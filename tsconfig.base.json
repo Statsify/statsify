@@ -3,9 +3,11 @@
     "allowJs": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "importsNotUsedAsValues": "preserve",
-    "moduleResolution": "Node",
-    "module": "CommonJS",
+    "verbatimModuleSyntax": false,
+    "moduleResolution": "Bundler",
+    "module": "ES2022",
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
@@ -14,5 +16,7 @@
     "target": "ES2022",
     "strict": true
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

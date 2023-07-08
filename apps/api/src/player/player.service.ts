@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, Flatten, flatten } from "@statsify/util";
+import { type APIData, Flatten, flatten } from "@statsify/util";
 import { Daily, Monthly, Weekly } from "../historical/models";
 import { HistoricalLeaderboardService } from "../historical/leaderboards/historical-leaderboard.service";
 import {

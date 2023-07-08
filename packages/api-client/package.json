@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "main": "dist/index.js",
   "types": "src/index.ts",
+  "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
@@ -16,5 +17,15 @@
     "@statsify/schemas": "*",
     "@statsify/util": "*",
     "axios": "^0.27.2"
+  },
+  "imports": {
+    "#exceptions/*": {
+      "types": "./src/exceptions/*.ts",
+      "default": "./dist/exceptions/*.js"
+    },
+    "#responses/*": {
+      "types": "./src/responses/*.ts",
+      "default": "./dist/responses/*.js"
+    }
   }
 }

@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from "./mode";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { Progression } from "../../../progression";
+import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from "./mode.js";
+import { Field } from "#metadata";
+import { GameModes, type IGameModes } from "#game";
+import { Progression } from "#progression";
 import { add, deepSub } from "@statsify/math";
-import { getExpReq, getFormattedLevel, getLevel } from "./util";
+import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
+import type { APIData } from "@statsify/util";
 
 export const BEDWARS_MODES = new GameModes([
   { api: "overall" },
@@ -190,4 +190,4 @@ export class BedWars {
   }
 }
 
-export * from "./mode";
+export * from "./mode.js";

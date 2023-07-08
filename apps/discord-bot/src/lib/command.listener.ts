@@ -7,7 +7,6 @@
  */
 
 import * as Sentry from "@sentry/node";
-import Container from "typedi";
 import {
   AbstractCommandListener,
   ApiService,
@@ -17,6 +16,7 @@ import {
   IMessage,
   Interaction,
 } from "@statsify/discord";
+import { Container } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
