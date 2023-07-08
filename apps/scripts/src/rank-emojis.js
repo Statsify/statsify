@@ -7,17 +7,13 @@
  */
 
 import { Canvas } from "skia-canvas";
+import { FontRenderer } from "@statsify/rendering";
+import { Logger } from "@statsify/logger";
 import { RestClient } from "tiny-discord";
-import { createRequire } from "node:module";
+import { getMinecraftTexturePath } from "@statsify/assets";
+import { minecraftColors } from "@statsify/util";
+import { rankMap } from "@statsify/schemas";
 import { writeFileSync } from "node:fs";
-
-const require = createRequire(import.meta.url);
-
-const { getMinecraftTexturePath } = require("@statsify/assets");
-const { FontRenderer } = require("@statsify/rendering");
-const { rankMap } = require("@statsify/schemas");
-const { minecraftColors } = require("@statsify/util");
-const { Logger } = require("@statsify/logger");
 
 const COLOR_CHANGERS = ["MVP+", "MVP++", "bMVP++"];
 const SIZE = 20;

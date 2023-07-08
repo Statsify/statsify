@@ -7,18 +7,12 @@
  */
 
 import { FILE_ENDINGS, FILE_ENDING_REGEX, ROOT, fetchWorkspaces } from "./utils.js";
-import { basename, dirname, join } from "node:path";
-import { createRequire } from "node:module";
+import { Logger } from "@statsify/logger";
+import { basename, join } from "node:path";
 import { existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { transformFile } from "@swc/core";
 import { watch } from "chokidar";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-const require = createRequire(import.meta.url);
-const { Logger } = require("@statsify/logger");
 
 const IGNORED_WORKSPACES = ["site", "scripts"];
 

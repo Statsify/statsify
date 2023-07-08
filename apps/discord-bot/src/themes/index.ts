@@ -9,9 +9,9 @@
 import { Background } from "#components";
 import { Image, Theme } from "@statsify/rendering";
 import { User, UserBoxes, UserFont, UserPalette } from "@statsify/schemas";
-import { getBoxRenderer } from "./boxes";
-import { getColorPalette } from "./palette";
-import { getFontRenderer } from "./renderer";
+import { getBoxRenderer } from "./boxes/index.js";
+import { getColorPalette } from "./palette.js";
+import { getFontRenderer } from "./renderer.js";
 
 export const getTheme = (user: User | null): Theme | undefined => {
   if (!user) return undefined;

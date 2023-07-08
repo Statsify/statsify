@@ -18,7 +18,7 @@ import {
   TextArgument,
 } from "@statsify/discord";
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
-import { DemoProfile } from "./demo.profile";
+import { DemoProfile } from "./demo.profile.js";
 import {
   User,
   UserBoxes,
@@ -238,7 +238,7 @@ export class ThemeCommand {
         badge={badge}
         user={user}
         message={
-          mode === "theme" ? t("config.theme.profile") : t("config.footer.profile")
+          mode === "theme" ? t("config.theme.profile.js") : t("config.footer.profile.js")
         }
       />,
       getTheme(user)

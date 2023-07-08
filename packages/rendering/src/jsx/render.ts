@@ -7,8 +7,8 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { Container } from "typedi";
 import { Canvas, type CanvasRenderingContext2D } from "skia-canvas";
+import { Container } from "typedi";
 import { FontRenderer } from "#font";
 import { IntrinsicRenders, intrinsicRenders } from "./instrinsics.js";
 import { createInstructions } from "./create-instructions.js";

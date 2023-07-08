@@ -24,13 +24,20 @@ import {
   UserPalette,
   WeeklyQuests,
 } from "@statsify/schemas";
-import { Container, Footer, GameEntry, GameList, Header, SidebarItem } from "#components";
+import {
+  Container,
+  Footer,
+  GameEntry,
+  GameList,
+  Header,
+  type HistoricalTimeData,
+  SidebarItem,
+} from "#components";
 import { DateTime } from "luxon";
-import { HistoricalTimeData } from "components/Historical/Historical-Header";
 import { HistoricalTimes } from "@statsify/api-client";
-import { Palette, getColorPalette } from "../../themes/palette";
+import { Palette, getColorPalette } from "../../themes/palette.js";
 import { ratio } from "@statsify/math";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { Constructor } from "@statsify/util";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";

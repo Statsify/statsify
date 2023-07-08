@@ -22,7 +22,7 @@ import {
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { Service } from "typedi";
-import { WelcomeProfile } from "#lib/welcomer.profile";
+import { WelcomeProfile } from "#lib";
 import { config } from "@statsify/util";
 import { getBackground } from "@statsify/assets";
 import { loadImage, render } from "@statsify/rendering";

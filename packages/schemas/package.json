@@ -12,16 +12,16 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@nestjs/swagger": "^6.2.1",
+    "@nestjs/swagger": "^7.1.1",
     "@statsify/logger": "*",
     "@statsify/math": "*",
     "@statsify/util": "*",
-    "@typegoose/typegoose": "^10.1.1",
+    "@typegoose/typegoose": "^11.3.0",
     "class-validator": "^0.14.0",
-    "luxon": "^3.2.1"
+    "luxon": "^3.3.0"
   },
   "devDependencies": {
-    "@types/luxon": "^3.2.0"
+    "@types/luxon": "^3.3.0"
   },
   "imports": {
     "#metadata": {

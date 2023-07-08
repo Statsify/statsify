@@ -6,8 +6,5 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from "@statsify/discord";
-import { GeneralCommand } from "./general.command.js";
-
-@Command({ description: (t) => t("commands.general") })
-export class HypixelCommand extends GeneralCommand {}
+export * from "./command.listener.js";
+export * from "./welcomer.profile.js";

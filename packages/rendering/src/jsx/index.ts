@@ -8,9 +8,9 @@
 
 export * from "./create-instructions.js";
 export {
-  IntrinsicElement,
-  IntrinsicProps,
-  IntrinsicRenders,
+  type IntrinsicElement,
+  type IntrinsicProps,
+  type IntrinsicRenders,
   intrinsicElements,
 } from "./instrinsics.js";
 export * from "./render.js";

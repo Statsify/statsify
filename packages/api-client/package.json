@@ -10,13 +10,13 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@nestjs/common": "^9.3.9",
-    "@nestjs/swagger": "^6.2.1",
-    "@sentry/node": "^7.37.2",
+    "@nestjs/common": "^10.0.5",
+    "@nestjs/swagger": "^7.1.1",
+    "@sentry/node": "^7.57.0",
     "@statsify/rendering": "*",
     "@statsify/schemas": "*",
     "@statsify/util": "*",
-    "axios": "^0.27.2"
+    "axios": "^1.4.0"
   },
   "imports": {
     "#exceptions/*": {

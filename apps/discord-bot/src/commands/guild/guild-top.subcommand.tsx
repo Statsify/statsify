@@ -26,8 +26,8 @@ import {
   GuildTopMember,
   GuildTopProfile,
   GuildTopProfileProps,
-} from "./guild-top.profile";
-import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.subcommand";
+} from "./guild-top.profile.js";
+import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.subcommand.js";
 import { GuildQuery } from "@statsify/api-client";
 import { Theme, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";

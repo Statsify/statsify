@@ -7,7 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import Axios, {  AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
+import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
   CurrentHistoricalType,
   GuildQuery,
@@ -242,7 +242,7 @@ export class ApiService {
   public updateUserBadge(tag: string, badge: Buffer) {
     return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, "PUT", {
       body: badge,
-      headers: { "Content-Type": "image/png" },
+      headers: { "Content-Type": "image/png" } as AxiosRequestHeaders,
     });
   }
 

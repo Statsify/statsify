@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "../base.hypixel-command";
+import { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
 import { FormattedGame, GameMode, SmashHeroesModes } from "@statsify/schemas";
 import { prettify } from "@statsify/util";

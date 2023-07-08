@@ -12,7 +12,7 @@ export * from "./colors/index.js";
 export * from "./font/index.js";
 export * from "./hooks/index.js";
 export * from "./jsx/index.js";
-export * from "./components/index.js";
+export * from "./intrinsics/index.js";
 
 import type * as JSXInternal from "./jsx/index.js";
 

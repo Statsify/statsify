@@ -27,7 +27,7 @@ import {
   LeaderboardProfile,
   LeaderboardProfileProps,
   LeaderboardType,
-} from "./leaderboard.profile";
+} from "./leaderboard.profile.js";
 import { User } from "@statsify/schemas";
 import { getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";

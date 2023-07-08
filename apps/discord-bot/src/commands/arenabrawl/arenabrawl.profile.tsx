@@ -7,7 +7,7 @@
  */
 
 import { ArenaBrawlModes, FormattedGame, GameMode } from "@statsify/schemas";
-import { BaseProfileProps } from "../base.hypixel-command";
+import { BaseProfileProps } from "#commands/base.hypixel-command";
 import {
   Container,
   Footer,

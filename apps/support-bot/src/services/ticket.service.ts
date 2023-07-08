@@ -27,7 +27,7 @@ import {
   ModalBuilder,
   TextInputBuilder,
 } from "@statsify/discord";
-import { CommandListener } from "#lib/command.listener";
+import { CommandListener } from "#lib";
 import { Inject, Service } from "typedi";
 import { ReturnModelType } from "@typegoose/typegoose";
 import { STATUS_COLORS } from "@statsify/logger";

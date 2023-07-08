@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import _positions from "../../positions.json";
-import _sizes from "../../sizes.json";
+import _positions from "../../positions.json" assert { type: "json" };
+import _sizes from "../../sizes.json" assert { type: "json" };
 import { Canvas, type CanvasRenderingContext2D, type ImageData } from "skia-canvas";
 import { type TextNode, type Token, tokens } from "./tokens.js";
 import { join } from "node:path";

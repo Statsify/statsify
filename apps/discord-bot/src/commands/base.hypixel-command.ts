@@ -18,7 +18,7 @@ import {
 } from "@statsify/discord";
 import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
-import { HistoricalTimeData } from "../components/Historical/Historical-Header";
+import { HistoricalTimeData } from "#components";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { noop } from "@statsify/util";

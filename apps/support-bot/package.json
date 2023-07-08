@@ -11,32 +11,41 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.37.2",
-    "@sentry/tracing": "^7.37.2",
+    "@sentry/node": "^7.57.0",
+    "@sentry/tracing": "^7.57.0",
     "@statsify/api-client": "*",
+    "@statsify/assets": "*",
     "@statsify/discord": "*",
     "@statsify/logger": "*",
     "@statsify/rendering": "*",
     "@statsify/schemas": "*",
     "@statsify/util": "*",
-    "@statsify/assets": "*",
-    "@typegoose/typegoose": "^10.1.1",
+    "@typegoose/typegoose": "^11.3.0",
     "axios": "1.4.0",
-    "discord-api-types": "^0.37.34",
-    "luxon": "^3.2.1",
-    "mongoose": "^6.9.2",
+    "discord-api-types": "^0.37.47",
+    "luxon": "^3.3.0",
+    "mongoose": "^7.3.2",
     "reflect-metadata": "^0.1.13",
     "skia-canvas": "^0.9.30",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb",
-    "toad-scheduler": "^2.2.0",
+    "toad-scheduler": "^3.0.0",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@types/luxon": "^3.2.0"
+    "@types/luxon": "^3.3.0"
   },
   "imports": {
-    "#services": "./dist/services/index.js",
-    "#constants": "./dist/constants.js",
-    "#lib/*": "./dist/lib/*.js"
+    "#services": {
+      "types": "./src/services/index.ts",
+      "default": "./dist/services/index.js"
+    },
+    "#constants": {
+      "types": "./src/constants.ts",
+      "default": "./dist/constants.js"
+    },
+    "#lib": {
+      "types": "./src/lib/index.ts",
+      "default": "./dist/lib/index.js"
+    }
   }
 }

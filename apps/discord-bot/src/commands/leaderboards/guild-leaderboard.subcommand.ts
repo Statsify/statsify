@@ -7,8 +7,8 @@
  */
 
 import { ApiService, CommandContext, SubCommand } from "@statsify/discord";
-import { BaseLeaderboardCommand } from "./base.leaderboard-command";
-import { GuildLeaderboardArgument } from "./guild-leaderboard.argument";
+import { BaseLeaderboardCommand } from "./base.leaderboard-command.js";
+import { GuildLeaderboardArgument } from "./guild-leaderboard.argument.js";
 import { Service } from "typedi";
 import { getBackground } from "@statsify/assets";
 

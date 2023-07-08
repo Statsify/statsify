@@ -22,7 +22,7 @@ import { User, UserTier } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { getAssetPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
-import { tips } from "../tips";
+import { tips } from "../tips.js";
 import type { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 
 const isDevelopment = config("environment") === "dev";

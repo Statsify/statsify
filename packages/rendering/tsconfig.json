@@ -8,7 +8,7 @@
         "./src/colors/index.js",
       ],
       "#components": [
-        "./src/components/index.js",
+        "src/intrinsics/index.js",
       ],
       "#font": [
         "./src/font/index.js",

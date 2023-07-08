@@ -7,7 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { CommandListener } from "#lib/command.listener";
+import { CommandListener } from "#lib";
 import {
   CommandLoader,
   CommandPoster,
@@ -36,57 +36,53 @@ const handleError = logger.error.bind(logger);
 process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
 
-async function bootstrap() {
-  setGlobalOptions({ schemaOptions: { _id: false } });
+setGlobalOptions({ schemaOptions: { _id: false } });
 
-  const sentryDsn = config("sentry.supportBotDsn", { required: false });
+const sentryDsn = config("sentry.supportBotDsn", { required: false });
 
-  if (sentryDsn) {
-    Sentry.init({
-      dsn: sentryDsn,
-      integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
-      normalizeDepth: 3,
-      tracesSampleRate: config("sentry.tracesSampleRate"),
-      environment: config("environment"),
-    });
-  }
-
-  const rest = new RestClient({ token: config("supportBot.token") });
-  Container.set(RestClient, rest);
-
-  await Promise.all(
-    [I18nLoaderService, FontLoaderService, MongoLoaderService].map((service) =>
-      Container.get(service).init()
-    )
-  );
-
-  const commands = await CommandLoader.load(join(__dirname, "./commands"));
-
-  const tags = await Container.get(TagService).fetch();
-  tags.forEach((tag) => commands.set(tag.name, tag));
-
-  const poster = Container.get(CommandPoster);
-
-  await poster.post(
-    commands,
-    config("supportBot.applicationId"),
-    config("supportBot.guild")
-  );
-
-  const websocket = new WebsocketShard({
-    token: config("supportBot.token"),
-    intents:
-      GatewayIntentBits.Guilds |
-      GatewayIntentBits.GuildMessages |
-      GatewayIntentBits.GuildMembers |
-      GatewayIntentBits.MessageContent,
+if (sentryDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
+    integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
+    normalizeDepth: 3,
+    tracesSampleRate: config("sentry.tracesSampleRate"),
+    environment: config("environment"),
   });
-
-  await EventLoader.load(websocket, join(__dirname, "./events"));
-  const listener = CommandListener.create(websocket, rest, commands);
-  Container.get(TicketService).init();
-
-  await listener.listen();
 }
 
-bootstrap();
+const rest = new RestClient({ token: config("supportBot.token") });
+Container.set(RestClient, rest);
+
+await Promise.all(
+  [I18nLoaderService, FontLoaderService, MongoLoaderService].map((service) =>
+    Container.get(service).init()
+  )
+);
+
+const commands = await CommandLoader.load(join(__dirname, "./commands"));
+
+const tags = await Container.get(TagService).fetch();
+tags.forEach((tag) => commands.set(tag.name, tag));
+
+const poster = Container.get(CommandPoster);
+
+await poster.post(
+  commands,
+  config("supportBot.applicationId"),
+  config("supportBot.guild")
+);
+
+const websocket = new WebsocketShard({
+  token: config("supportBot.token"),
+  intents:
+    GatewayIntentBits.Guilds |
+    GatewayIntentBits.GuildMessages |
+    GatewayIntentBits.GuildMembers |
+    GatewayIntentBits.MessageContent,
+});
+
+await EventLoader.load(websocket, join(__dirname, "./events"));
+const listener = CommandListener.create(websocket, rest, commands);
+Container.get(TicketService).init();
+
+await listener.listen();

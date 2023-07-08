@@ -14,3 +14,4 @@ export * from "./command.poster.js";
 export * from "./command.resolvable.js";
 export * from "./subcommand.decorator.js";
 export * from "./command.context.js";
+export * from "./command.interface.js";

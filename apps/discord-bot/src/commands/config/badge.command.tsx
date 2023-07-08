@@ -18,7 +18,7 @@ import {
   SubCommand,
 } from "@statsify/discord";
 import { Canvas, Image } from "skia-canvas";
-import { DemoProfile } from "./demo.profile";
+import { DemoProfile } from "./demo.profile.js";
 import { User, UserTier } from "@statsify/schemas";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -159,7 +159,7 @@ export class BadgeCommand {
         skin={skin}
         badge={badge}
         user={user}
-        message={t("config.badge.profile")}
+        message={t("config.badge.profile.js")}
       />,
       getTheme(user)
     );

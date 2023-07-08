@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "../base.hypixel-command";
+import { BaseProfileProps } from "#commands/base.hypixel-command";
 import {
   BridgeDuelsTable,
   MultiDuelsGameModeTable,
   SingleDuelsGameModeTable,
   UHCDuelsTable,
-} from "./tables";
+} from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
 import { DuelsModes, FormattedGame, GameMode } from "@statsify/schemas";
 

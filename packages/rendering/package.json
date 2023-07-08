@@ -21,7 +21,7 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.37.2",
+    "@sentry/node": "^7.57.0",
     "@statsify/util": "*",
     "axios": "1.4.0",
     "skia-canvas": "^0.9.30",
@@ -32,9 +32,9 @@
       "types": "./src/colors/index.ts",
       "default": "./dist/colors/index.js"
     },
-    "#components": {
-      "types": "./src/components/index.ts",
-      "default": "./dist/components/index.js"
+    "#intrinsics": {
+      "types": "./src/intrinsics/index.ts",
+      "default": "./dist/intrinsics/index.js"
     },
     "#font": {
       "types": "./src/font/index.ts",

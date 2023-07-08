@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Table as TableComponent } from "./Table";
-import { TableData } from "./TableData";
-import { TableRow } from "./TableRow";
-import { TableSeparator } from "./TableSeparator";
+import { Table as TableComponent } from "./Table.js";
+import { TableData } from "./TableData.js";
+import { TableRow } from "./TableRow.js";
+import { TableSeparator } from "./TableSeparator.js";
 
 export const Table = {
   table: TableComponent,

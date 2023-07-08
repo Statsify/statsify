@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as HDBox from "./hd.box";
-import * as UHDBox from "./uhd.box";
+import * as HDBox from "./hd.box.js";
+import * as UHDBox from "./uhd.box.js";
 import { Box, Render } from "@statsify/rendering";
 import { UserBoxes } from "@statsify/schemas";
 

@@ -13,7 +13,7 @@ import {
   IMessage,
   PlayerArgument,
 } from "@statsify/discord";
-import { StatusProfile } from "./status.profile";
+import { StatusProfile } from "./status.profile.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { mapGameIdToBackground } from "#constants";

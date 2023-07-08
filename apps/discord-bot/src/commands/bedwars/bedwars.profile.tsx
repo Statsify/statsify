@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "../base.hypixel-command";
+import { BaseProfileProps } from "#commands/base.hypixel-command";
 import { BedWarsModes, FormattedGame, GameMode } from "@statsify/schemas";
 import {
   Container,

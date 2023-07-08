@@ -25,12 +25,12 @@ import {
   OverallArcadeTable,
   PartyGamesTable,
   PixelPaintersTable,
+  PixelPartyTable,
   SeasonalTable,
   ThrowOutTable,
   ZombiesTable,
-} from "./tables";
+} from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem } from "#components";
-import { PixelPartyTable } from "./tables/pixel-party.table";
 
 export interface ArcadeProfileProps extends BaseProfileProps {
   mode: GameMode<ArcadeModes>;

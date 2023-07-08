@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "../base.hypixel-command";
+import { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
 import { FormattedGame, GameMode, WarlordsModes } from "@statsify/schemas";
-import { WarlordsClassTable } from "./tables";
+import { WarlordsClassTable } from "./tables/index.js";
 import { prettify } from "@statsify/util";
 
 export interface WarlordsProfileProps extends BaseProfileProps {
