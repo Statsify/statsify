@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
 import { FormattedGame, GameMode, MegaWallsModes } from "@statsify/schemas";
 import { formatTime, prettify } from "@statsify/util";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface MegaWallsProfileProps extends BaseProfileProps {
   mode: GameMode<MegaWallsModes>;

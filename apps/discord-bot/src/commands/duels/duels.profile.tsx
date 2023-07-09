@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "#commands/base.hypixel-command";
 import {
   BridgeDuelsTable,
   MultiDuelsGameModeTable,
@@ -15,6 +14,7 @@ import {
 } from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
 import { DuelsModes, FormattedGame, GameMode } from "@statsify/schemas";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface DuelsProfileProps extends BaseProfileProps {
   mode: GameMode<DuelsModes>;

@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "#commands/base.hypixel-command";
 import {
   BlitzSG,
   BlitzSGKit,
@@ -25,6 +24,7 @@ import {
 } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { formatTime, prettify, romanNumeral } from "@statsify/util";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 interface OverallBlitzSGTableProps {
   blitzsg: BlitzSG;

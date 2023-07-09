@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
 import { CopsAndCrimsModes, FormattedGame, GameMode } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface CopsAndCrimsProfileProps extends BaseProfileProps {
   mode: GameMode<CopsAndCrimsModes>;

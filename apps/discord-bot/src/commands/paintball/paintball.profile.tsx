@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "#commands/base.hypixel-command";
 import {
   Container,
   Footer,
@@ -18,6 +17,7 @@ import {
 } from "#components";
 import { FormattedGame } from "@statsify/schemas";
 import { formatTime, prettify } from "@statsify/util";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export const PaintballProfile = ({
   skin,

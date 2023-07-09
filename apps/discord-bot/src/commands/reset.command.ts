@@ -89,7 +89,7 @@ export class ResetCommand {
             .label((t) => t("historical.modal.timezone"))
             .minLength(1)
             .maxLength(6)
-            .placeholder(timeZone.offsetName(0, { format: "short" }))
+            .placeholder(timeZone.offsetName(0, { format: "short" })!)
             .required(false)
             .style(TextInputStyle.Short)
         )

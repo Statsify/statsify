@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "#commands/base.hypixel-command";
 import {
   Container,
   Footer,
@@ -16,6 +15,7 @@ import {
   formatProgression,
 } from "#components";
 import { FormattedGame } from "@statsify/schemas";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export const WallsProfile = ({
   skin,

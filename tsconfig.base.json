@@ -13,6 +13,7 @@
     "resolveJsonModule": true,
     "downlevelIteration": true,
     "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true,
     "target": "ES2022",
     "strict": true
   },

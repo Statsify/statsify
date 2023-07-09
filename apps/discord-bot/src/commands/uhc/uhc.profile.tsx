@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "#commands/base.hypixel-command";
 import {
   Container,
   Footer,
@@ -17,6 +16,7 @@ import {
 } from "#components";
 import { FormattedGame, GameMode, UHCModes } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface UHCProfileProps extends BaseProfileProps {
   mode: GameMode<UHCModes>;
