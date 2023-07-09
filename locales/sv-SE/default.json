@@ -7,7 +7,7 @@
     "guild-query": "Ett guild namn eller en guild medlem",
     "guild-type": "Typen av guild sökning att utföra",
     "mojang-player": "Ett Minecraft användarnamn eller UUID",
-    "number": "Ett siffra",
+    "number": "A number",
     "player": "$t(arguments.mojang-player)",
     "player-leaderboard": "Välj en rankningslista",
     "reason": "The reason for closing the support ticket",
