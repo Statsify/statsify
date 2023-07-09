@@ -6,4 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./sentry.interceptor.js";
+import { Inject } from "@nestjs/common";
+import { getRedisConnectionToken } from "./redis.utils.js";
+
+export const InjectRedis = (connection?: string) =>
+  Inject(getRedisConnectionToken(connection));

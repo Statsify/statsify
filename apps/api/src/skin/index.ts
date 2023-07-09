@@ -6,6 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./skin.controller";
-export * from "./skin.module";
-export * from "./skin.service";
+export * from "./skin.controller.js";
+export * from "./skin.module.js";
+export * from "./skin.service.js";

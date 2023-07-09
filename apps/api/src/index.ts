@@ -8,19 +8,22 @@
 
 import * as Sentry from "@sentry/node";
 import handlebars from "handlebars";
-import { AppModule } from "./app.module";
+import packageJson from "../package.json" assert { type: "json" };
+import { AppModule } from "./app.module.js";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
-import { SentryInterceptor } from "./sentry";
+import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
 import { Integrations as TracingIntegrations } from "@sentry/tracing";
 import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { mkdir } from "node:fs/promises";
-import { version } from "../../../package.json";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const logger = new Logger("api");
 const handleError = logger.error.bind(logger);
@@ -73,7 +76,7 @@ app.useGlobalInterceptors(new SentryInterceptor());
 //Swagger/Redoc docs
 const redoc = new DocumentBuilder()
   .setTitle("Statsify API")
-  .setVersion(version)
+  .setVersion(packageJson.version)
   .setDescription(
     "# Introduction\nThis is the official Statsify API documentation. [Website](https://statsify.net/) - [GitHub](https://github.com/Statsify/statsify)\n# Authentication\n\n<!-- ReDoc-Inject: <security-definitions> -->"
   )

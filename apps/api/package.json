@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "start": "node --enable-source-maps .",
     "prod-start": "xvfb-run -s \"-ac -screen 0 600x800x24\" node --enable-source-maps .",
@@ -16,7 +17,6 @@
     "@fastify/static": "^6.10.2",
     "@fastify/view": "^8.0.0",
     "@m8a/nestjs-typegoose": "^11.0.1",
-    "@nestjs-modules/ioredis": "^1.0.1",
     "@nestjs/axios": "^3.0.0",
     "@nestjs/common": "^10.0.5",
     "@nestjs/core": "^10.0.5",
@@ -46,5 +46,59 @@
   "devDependencies": {
     "@nestjs/testing": "^10.0.5",
     "@types/luxon": "^3.3.0"
+  },
+  "imports": {
+    "#auth": {
+      "types": "./src/auth/index.ts",
+      "default": "./dist/auth/index.js"
+    },
+    "#commands": {
+      "types": "./src/commands/index.ts",
+      "default": "./dist/commands/index.js"
+    },
+    "#dtos": {
+      "types": "./src/dtos/index.ts",
+      "default": "./dist/dtos/index.js"
+    },
+    "#guild": {
+      "types": "./src/guild/index.ts",
+      "default": "./dist/guild/index.js"
+    },
+    "#player": {
+      "types": "./src/player/index.ts",
+      "default": "./dist/player/index.js"
+    },
+    "#historical": {
+      "types": "./src/historical/index.ts",
+      "default": "./dist/historical/index.js"
+    },
+    "#hypixel": {
+      "types": "./src/hypixel/index.ts",
+      "default": "./dist/hypixel/index.js"
+    },
+    "#hypixel-resources": {
+      "types": "./src/hypixel-resources/index.ts",
+      "default": "./dist/hypixel-resources/index.js"
+    },
+    "#leaderboards": {
+      "types": "./src/leaderboards/index.ts",
+      "default": "./dist/leaderboards/index.js"
+    },
+    "#sentry": {
+      "types": "./src/sentry/index.ts",
+      "default": "./dist/sentry/index.js"
+    },
+    "#skin": {
+      "types": "./src/skin/index.ts",
+      "default": "./dist/skin/index.js"
+    },
+    "#user": {
+      "types": "./src/user/index.ts",
+      "default": "./dist/user/index.js"
+    },
+    "#redis": {
+      "types": "./src/redis/index.ts",
+      "default": "./dist/redis/index.js"
+    }
   }
 }

@@ -12,14 +12,14 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { Auth } from "../auth";
+import { Auth } from "#auth";
 import { Controller, Get } from "@nestjs/common";
 import {
   ErrorResponse,
   GetGamecountsResponse,
   GetWatchdogResponse,
 } from "@statsify/api-client";
-import { HypixelService } from "../hypixel";
+import { HypixelService } from "#hypixel";
 
 @Controller(`/hypixelresources`)
 @ApiTags("Hypixel Resources")

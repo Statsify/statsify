@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AuthRole } from "./auth.role";
-import { AuthService } from "./auth.service";
+import { AuthRole } from "./auth.role.js";
+import { AuthService } from "./auth.service.js";
 import {
   CanActivate,
   ExecutionContext,

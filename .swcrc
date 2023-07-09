@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/swcrc",
   "jsc": {
     "parser": {
       "syntax": "typescript",
@@ -9,7 +10,6 @@
       "legacyDecorator": true,
       "decoratorMetadata": true,
       "optimizer": {
-        "simplify": true,
         "jsonify": {
           "minCost": 2048
         }

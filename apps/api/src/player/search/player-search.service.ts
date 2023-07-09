@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Redis from "ioredis";
-import { InjectRedis } from "@nestjs-modules/ioredis";
+import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
+import { Redis } from "ioredis";
 
 const REDI_SEARCH_NOT_INSTALLED =
   "This error was most likely caused because RediSearch is not installed.";

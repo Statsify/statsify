@@ -6,4 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./sentry.interceptor.js";
+export * from "./redis.module.js";
+export * from "./redis.decorators.js";
+export * from "./redis.interfaces.js";
+export * from "./redis.utils.js";

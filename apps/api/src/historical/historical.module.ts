@@ -6,14 +6,22 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Daily, LastDay, LastMonth, LastWeek, Monthly, Session, Weekly } from "./models";
-import { HistoricalController } from "./historical.controller";
-import { HistoricalLeaderboardService } from "./leaderboards/historical-leaderboard.service";
-import { HistoricalLeaderboardsController } from "./leaderboards/historical-leaderboard.controller";
-import { HistoricalService } from "./historical.service";
+import {
+  Daily,
+  LastDay,
+  LastMonth,
+  LastWeek,
+  Monthly,
+  Session,
+  Weekly,
+} from "./models/index.js";
+import { HistoricalController } from "./historical.controller.js";
+import { HistoricalLeaderboardService } from "./leaderboards/historical-leaderboard.service.js";
+import { HistoricalLeaderboardsController } from "./leaderboards/historical-leaderboard.controller.js";
+import { HistoricalService } from "./historical.service.js";
 import { Module, forwardRef } from "@nestjs/common";
 import { Player } from "@statsify/schemas";
-import { PlayerModule } from "../player";
+import { PlayerModule } from "#player";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({

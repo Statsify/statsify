@@ -6,4 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./sentry.interceptor.js";
+import type { RedisOptions } from "ioredis";
+
+export interface RedisModuleOptions {
+  config: RedisOptions & { url?: string };
+}

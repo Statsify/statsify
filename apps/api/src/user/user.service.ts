@@ -8,11 +8,11 @@
 
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { ReturnModelType } from "@typegoose/typegoose";
 import { User, VerifyCode } from "@statsify/schemas";
 import { config, flatten } from "@statsify/util";
 import { getLogoPath } from "@statsify/assets";
 import { readFile, rm, writeFile } from "node:fs/promises";
+import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class UserService {

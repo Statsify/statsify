@@ -12,7 +12,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { Auth, AuthRole } from "../auth";
+import { Auth, AuthRole } from "#auth";
 import {
   BadRequestException,
   Body,
@@ -29,9 +29,9 @@ import {
   GetUserResponse,
   PutUserBadgeResponse,
 } from "@statsify/api-client";
-import { UpdateUserDto, UserDto, VerifyCodeDto } from "../dtos";
+import { UpdateUserDto, UserDto, VerifyCodeDto } from "#dtos";
 import { User } from "@statsify/schemas";
-import { UserService } from "./user.service";
+import { UserService } from "./user.service.js";
 
 @Controller("/user")
 @ApiTags("User")
