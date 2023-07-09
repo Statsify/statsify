@@ -7,9 +7,10 @@
  */
 
 import { Guild } from "@statsify/schemas";
-import { GuildService } from "../../src/guild";
-import { MockClass } from "./mock.type";
+import { GuildService } from "../../src/guild/index.js";
+import { MockClass } from "./mock.type.js";
+import { vi } from "vitest";
 
 export const guildService: MockClass<GuildService> = {
-  get: jest.fn().mockResolvedValue(new Guild()),
+  get: vi.fn().mockResolvedValue(new Guild()),
 };

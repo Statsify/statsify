@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { MockClass } from "./mock.type";
+import { MockClass } from "./mock.type.js";
 import { Player, RecentGames, Status } from "@statsify/schemas";
 import { PlayerService } from "../../src/player";
 
 export const playerService: MockClass<PlayerService> = {
-  get: jest.fn().mockResolvedValue(new Player()),
-  getStatus: jest.fn().mockResolvedValue(new Status({})),
-  getRecentGames: jest.fn().mockResolvedValue(new RecentGames()),
-  delete: jest.fn().mockResolvedValue(true),
+  get: vi.fn().mockResolvedValue(new Player()),
+  getStatus: vi.fn().mockResolvedValue(new Status({})),
+  getRecentGames: vi.fn().mockResolvedValue(new RecentGames()),
+  delete: vi.fn().mockResolvedValue(true),
 };

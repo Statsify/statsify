@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field } from "../src/metadata";
-import { deserialize } from "../src/metadata/deserialize";
+import { Field } from "../src/metadata/index.js";
+import { deserialize } from "../src/metadata/deserialize.js";
 import { flatten } from "@statsify/util";
 
 describe("deserialize", () => {

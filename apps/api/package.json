@@ -9,8 +9,6 @@
     "prod-start": "xvfb-run -s \"-ac -screen 0 600x800x24\" node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
@@ -30,6 +28,7 @@
     "@statsify/rendering": "*",
     "@statsify/schemas": "*",
     "@statsify/util": "*",
+    "@swc/helpers": "^0.5.1",
     "@typegoose/typegoose": "^11.3.0",
     "class-transformer": "0.5.1",
     "class-validator": "^0.14.0",

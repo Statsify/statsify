@@ -16,13 +16,12 @@
   "scripts": {
     "build": "swc src --out-dir dist",
     "test:types": "tsc --noEmit",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
     "@sentry/node": "^7.57.0",
     "@statsify/util": "*",
+    "@swc/helpers": "^0.5.1",
     "axios": "1.4.0",
     "skia-canvas": "^0.9.30",
     "typedi": "^0.10.0"

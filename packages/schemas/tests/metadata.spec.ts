@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field, MetadataEntry, MetadataScanner } from "../src/metadata";
-import {
+import { Field, type MetadataEntry, MetadataScanner } from "../src/metadata/index.js";
+import { prettify } from "@statsify/util";
+import type {
   FieldMetadata,
   LeaderboardEnabledMetadata,
-} from "../src/metadata/metadata.interface";
-import { prettify } from "@statsify/util";
+} from "../src/metadata/metadata.interface.js";
 
 const stringMetadata = (name: string): FieldMetadata => {
   const fieldName = prettify(

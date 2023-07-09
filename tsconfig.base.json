@@ -15,7 +15,10 @@
     "strictPropertyInitialization": false,
     "allowSyntheticDefaultImports": true,
     "target": "ES2022",
-    "strict": true
+    "strict": true,
+    "types": [
+      "vitest/importMeta"
+    ]
   },
   "exclude": [
     "node_modules"

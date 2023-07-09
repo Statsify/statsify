@@ -17,6 +17,7 @@
     "@statsify/logger": "*",
     "@statsify/schemas": "*",
     "@statsify/util": "*",
+    "@swc/helpers": "^0.5.1",
     "@typegoose/typegoose": "^11.3.0",
     "minecraft-protocol": "^1.43.1",
     "mongoose": "^7.3.2"

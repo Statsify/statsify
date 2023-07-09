@@ -6,12 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/**
- * @type {import('@jest/types').Config.InitialOptions}
- */
-module.exports = {
-  testMatch: ["<rootDir>/tests/**/*.spec.ts"],
-  transform: {
-    "^.+\\.(t|j)sx?$": "@swc/jest",
-  },
-};
+import { config } from "../../vitest.shared.js";
+
+export default await config();

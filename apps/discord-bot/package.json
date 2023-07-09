@@ -21,6 +21,7 @@
     "@statsify/rendering": "*",
     "@statsify/schemas": "*",
     "@statsify/util": "*",
+    "@swc/helpers": "^0.5.1",
     "@typegoose/typegoose": "^11.3.0",
     "axios": "1.4.0",
     "discord-api-types": "^0.37.47",

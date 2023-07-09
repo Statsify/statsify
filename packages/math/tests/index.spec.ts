@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { add, deepAdd, deepSub, ratio, sub } from "../src";
+import { add, deepAdd, deepSub, ratio, sub } from "../src/index.js";
 
 describe("basic math", () => {
   it("should add numbers together", () => {

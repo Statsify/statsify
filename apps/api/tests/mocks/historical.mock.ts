@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HistoricalService } from "../../src/historical";
-import { MockClass } from "./mock.type";
+import { HistoricalService } from "../../src/historical/index.js";
+import { MockClass } from "./mock.type.js";
 import { Player } from "@statsify/schemas";
+import { vi } from "vitest";
 
 export const historicalService: MockClass<HistoricalService> = {
-  resetPlayers: jest.fn(),
-  getAndReset: jest.fn().mockResolvedValue(new Player()),
-  reset: jest.fn().mockResolvedValue(new Player()),
-  get: jest.fn().mockResolvedValue(new Player()),
+  resetPlayers: vi.fn(),
+  getAndReset: vi.fn().mockResolvedValue(new Player()),
+  reset: vi.fn().mockResolvedValue(new Player()),
+  get: vi.fn().mockResolvedValue(new Player()),
 };

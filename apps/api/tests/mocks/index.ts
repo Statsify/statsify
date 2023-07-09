@@ -6,25 +6,29 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AuthService } from "../../src/auth/auth.service";
-import { GuildLeaderboardService } from "../../src/guild/leaderboards/guild-leaderboard.service";
-import { GuildService } from "../../src/guild";
-import { HistoricalService } from "../../src/historical";
-import { HypixelService } from "../../src/hypixel";
-import { LeaderboardService, MongoLeaderboardService } from "../../src/leaderboards";
+import { AuthService } from "";
+import { GuildLeaderboardService } from "../../src/guild/leaderboards/guild-leaderboard.service.js";
+import { GuildService } from "../../src/guild/index.js";
+import { HistoricalService } from "../../src/historical/index.js";
+import { HypixelService } from "../../src/hypixel/index.js";
+import { LeaderboardService } from "../../src/leaderboards/index.js";
 import { MockFactory } from "@nestjs/testing";
-import { MockFunctionMetadata, ModuleMocker } from "jest-mock";
-import { PlayerService } from "../../src/player";
-import { SkinService } from "../../src/skin";
-import { authService } from "./auth.mock";
-import { guildLeaderboardService } from "./guild-leaderboard.mock";
-import { guildService } from "./guild.mock";
-import { historicalService } from "./historical.mock";
-import { hypixelService } from "./hypixel.mock";
-import { leaderboardService } from "./leaderboard.mock";
-import { mongoLeaderboardService } from "./mongo-leaderboard.mock";
-import { playerService } from "./player.mock";
-import { skinService } from "./skin.mock";
+import { PlayerService } from "../../src/player/index.js";
+import { SkinService } from "../../src/skin/index.js";
+import { authService } from "./auth.mock.js";
+import { guildLeaderboardService } from "./guild-leaderboard.mock.js";
+import { guildService } from "./guild.mock.js";
+import { historicalService } from "./historical.mock.js";
+import { hypixelService } from "./hypixel.mock.js";
+import { leaderboardService } from "./leaderboard.mock.js";
+import { mongoLeaderboardService } from "./mongo-leaderboard.mock.js";
+import { playerService } from "./player.mock.js";
+import { skinService } from "./skin.mock.js";
+import { vi } from "vitest";
+
+vi.mock("../../src/auth/auth.service.js", () => ({
+  AuthService: authService,
+}));
 
 const moduleMocker = new ModuleMocker(global);
 

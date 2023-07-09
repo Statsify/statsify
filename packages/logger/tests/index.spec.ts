@@ -7,15 +7,17 @@
  */
 
 import chalk from "chalk";
-import { Logger, defaultLogLevels } from "../src";
-defaultLogLevels.forEach((logLevel) => {
+import { DEFAULT_LOG_LEVELS, Logger } from "../src/index.js";
+import { vi } from "vitest";
+
+DEFAULT_LOG_LEVELS.forEach((logLevel) => {
   describe(`logging of ${logLevel}`, () => {
     it(`should ${logLevel}`, () => {
       const logger = new Logger(logLevel);
 
       Logger["lastTimeStampAt"] = 0;
 
-      const mock = jest.fn();
+      const mock = vi.fn();
 
       process.stdout.write = mock;
       process.stderr.write = mock;
@@ -23,9 +25,9 @@ defaultLogLevels.forEach((logLevel) => {
       logger[logLevel]("message");
 
       expect(mock).toHaveBeenCalledWith(
-        `${chalk.bold`${logLevel === "error" ? "📉" : "📈"}`} ${chalk.hex(
+        `${chalk.bold(`${logLevel === "error" ? "📉" : "📈"}`)} ${chalk.hex(
           logger["getColorByLogLevel"](logLevel).toString(16)
-        )(logLevel)} ${chalk.gray`0ms`} message\n`
+        )(logLevel)} ${chalk.gray(`0ms`)} message\n`
       );
     });
   });
@@ -35,12 +37,12 @@ describe(`logging levels`, () => {
   it("should ignore all log levels", () => {
     const logger = new Logger("default", { logLevels: [] });
 
-    const mock = jest.fn();
+    const mock = vi.fn();
 
     process.stdout.write = mock;
     process.stderr.write = mock;
 
-    defaultLogLevels.forEach((logLevel) => {
+    DEFAULT_LOG_LEVELS.forEach((logLevel) => {
       logger[logLevel]("message");
     });
 

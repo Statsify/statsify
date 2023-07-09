@@ -7,11 +7,11 @@
  */
 
 import { LeaderboardService } from "../../src/leaderboards";
-import { MockClass } from "./mock.type";
+import { MockClass } from "./mock.type.js";
 
 export const leaderboardService: MockClass<LeaderboardService> = {
-  addLeaderboards: jest.fn().mockResolvedValue([]),
-  getLeaderboard: jest.fn().mockResolvedValue([]),
-  getLeaderboardRanking: jest.fn().mockResolvedValue(1),
-  getLeaderboardDocument: jest.fn().mockResolvedValue({}),
+  addLeaderboards: vi.fn().mockResolvedValue([]),
+  getLeaderboard: vi.fn().mockResolvedValue([]),
+  getLeaderboardRanking: vi.fn().mockResolvedValue(1),
+  getLeaderboardDocument: vi.fn().mockResolvedValue({}),
 };

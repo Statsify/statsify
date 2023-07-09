@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field, serialize } from "../src/metadata";
+import { Field, serialize } from "../src/metadata/index.js";
 import { flatten } from "@statsify/util";
 
 describe("serialize", () => {

@@ -6,11 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { MockClass } from "./mock.type.js";
-import { SkinService } from "../../src/skin";
+import { config } from "../../vitest.shared.js";
 
-export const skinService: MockClass<SkinService> = {
-  getHead: vi.fn(),
-  getRender: vi.fn(),
-  getSkin: vi.fn(),
-};
+export default await config();

@@ -10,6 +10,12 @@
       "legacyDecorator": true,
       "decoratorMetadata": true,
       "optimizer": {
+        "simplify": true,
+        "globals": {
+          "vars": {
+            "import.meta.vitest": "false"
+          }
+        },
         "jsonify": {
           "minCost": 2048
         }
@@ -18,7 +24,7 @@
     "target": "es2022",
     "keepClassNames": true,
     "loose": false,
-    "externalHelpers": false,
+    "externalHelpers": true,
     "preserveAllComments": false,
     "experimental": {
       "keepImportAssertions": true

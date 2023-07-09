@@ -7,8 +7,6 @@
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
@@ -18,6 +16,7 @@
     "@statsify/logger": "*",
     "@statsify/schemas": "*",
     "@statsify/util": "*",
+    "@swc/helpers": "^0.5.1",
     "axios": "^1.4.0",
     "discord-api-types": "^0.37.47",
     "i18next": "^21.10.0",

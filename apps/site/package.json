@@ -9,6 +9,7 @@
     "test:types": "tsc --noEmit"
   },
   "dependencies": {
+    "@swc/helpers": "^0.5.1",
     "next": "^12.3.4",
     "react": "^18.2.0",
     "react-countup": "^6.4.2",

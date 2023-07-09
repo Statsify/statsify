@@ -7,7 +7,7 @@
  */
 
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { createInstructions } from "../src";
+import { createInstructions } from "../src/index.js";
 
 describe("createInstructions with no relative sizes", () => {
   test("a box with defined sizes", () => {

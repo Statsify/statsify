@@ -7,12 +7,12 @@
  */
 
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { GuildController } from "../src/guild";
+import { GuildController } from "../src/guild/index.js";
 import { GuildQuery } from "@statsify/api-client";
 import { Test } from "@nestjs/testing";
 import { ValidationPipe } from "@nestjs/common";
-import { testKey, testUsername } from "./test.constants";
-import { useMocker } from "./mocks";
+import { testKey, testUsername } from "./test.constants.js";
+import { useMocker } from "./mocks/index.js";
 
 describe("Guild", () => {
   let app: NestFastifyApplication;

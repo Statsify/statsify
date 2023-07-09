@@ -7,11 +7,11 @@
  */
 
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { PlayerController } from "../src/player";
+import { PlayerController } from "../src/player/index.js";
 import { Test } from "@nestjs/testing";
 import { ValidationPipe } from "@nestjs/common";
-import { testKey, testUsername, testUuid } from "./test.constants";
-import { useMocker } from "./mocks";
+import { testKey, testUsername, testUuid } from "./test.constants.js";
+import { useMocker } from "./mocks/index.js";
 
 describe("Player", () => {
   let app: NestFastifyApplication;

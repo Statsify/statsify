@@ -7,11 +7,11 @@
  */
 
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { HypixelResourcesController } from "../src/hypixel-resources";
+import { HypixelResourcesController } from "../src/hypixel-resources/index.js";
 import { Test } from "@nestjs/testing";
 import { ValidationPipe } from "@nestjs/common";
-import { testKey } from "./test.constants";
-import { useMocker } from "./mocks";
+import { testKey } from "./test.constants.js";
+import { useMocker } from "./mocks/index.js";
 
 describe("HypixelResources", () => {
   let app: NestFastifyApplication;

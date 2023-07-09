@@ -7,8 +7,6 @@
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
@@ -16,6 +14,7 @@
     "@statsify/logger": "*",
     "@statsify/math": "*",
     "@statsify/util": "*",
+    "@swc/helpers": "^0.5.1",
     "@typegoose/typegoose": "^11.3.0",
     "class-validator": "^0.14.0",
     "luxon": "^3.3.0"

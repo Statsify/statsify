@@ -7,16 +7,17 @@
  */
 
 import { GameCounts, Guild, Player, Status, Watchdog } from "@statsify/schemas";
-import { HypixelService } from "../../src/hypixel";
-import { MockClass } from "./mock.type";
+import { HypixelService } from "../../src/hypixel/index.js";
+import { MockClass } from "./mock.type.js";
+import { vi } from "vitest";
 
 export const hypixelService: MockClass<HypixelService> = {
   shouldCache: HypixelService.prototype.shouldCache,
-  getPlayer: jest.fn().mockResolvedValue(new Player()),
-  getGuild: jest.fn().mockResolvedValue(new Guild()),
-  getRecentGames: jest.fn().mockResolvedValue([]),
-  getStatus: jest.fn().mockResolvedValue(new Status({})),
-  getWatchdog: jest.fn().mockResolvedValue(new Watchdog({})),
-  getGameCounts: jest.fn().mockResolvedValue(new GameCounts()),
-  getResources: jest.fn().mockResolvedValue({}),
+  getPlayer: vi.fn().mockResolvedValue(new Player()),
+  getGuild: vi.fn().mockResolvedValue(new Guild()),
+  getRecentGames: vi.fn().mockResolvedValue([]),
+  getStatus: vi.fn().mockResolvedValue(new Status({})),
+  getWatchdog: vi.fn().mockResolvedValue(new Watchdog({})),
+  getGameCounts: vi.fn().mockResolvedValue(new GameCounts()),
+  getResources: vi.fn().mockResolvedValue({}),
 };
