@@ -8,6 +8,11 @@ overrides:
   countup.js: 2.6.0
   gl: ^6.0.2
 
+patchedDependencies:
+  '@m8a/nestjs-typegoose@11.0.1':
+    hash: g6qwqjtm7icfiqmlwlfdsof23y
+    path: patches/@m8a__nestjs-typegoose@11.0.1.patch
+
 importers:
 
   .:
@@ -98,7 +103,7 @@ importers:
         version: 8.0.0
       '@m8a/nestjs-typegoose':
         specifier: ^11.0.1
-        version: 11.0.1(@nestjs/common@10.0.5)(@nestjs/core@10.0.5)(@typegoose/typegoose@11.3.0)(mongoose@7.3.2)
+        version: 11.0.1(patch_hash=g6qwqjtm7icfiqmlwlfdsof23y)(@nestjs/common@10.0.5)(@nestjs/core@10.0.5)(@typegoose/typegoose@11.3.0)(mongoose@7.3.2)
       '@nestjs/axios':
         specifier: ^3.0.0
         version: 3.0.0(@nestjs/common@10.0.5)(axios@1.4.0)(reflect-metadata@0.1.13)(rxjs@7.8.1)
@@ -1604,7 +1609,7 @@ packages:
     engines: {node: '>=8'}
     dev: false
 
-  /@m8a/nestjs-typegoose@11.0.1(@nestjs/common@10.0.5)(@nestjs/core@10.0.5)(@typegoose/typegoose@11.3.0)(mongoose@7.3.2):
+  /@m8a/nestjs-typegoose@11.0.1(patch_hash=g6qwqjtm7icfiqmlwlfdsof23y)(@nestjs/common@10.0.5)(@nestjs/core@10.0.5)(@typegoose/typegoose@11.3.0)(mongoose@7.3.2):
     resolution: {integrity: sha512-7Q77Si06WNE5yjy8MVsQzdAlmHbtGa3KM0gDGik0K5d+TQKoXIicUFKa7rI1ZSsLV5Prq3FmbNv0r3jvazRLYQ==}
     engines: {node: '>=16'}
     peerDependencies:
@@ -1619,6 +1624,7 @@ packages:
       is-class: 0.0.9
       mongoose: 7.3.2
     dev: false
+    patched: true
 
   /@mapbox/node-pre-gyp@1.0.10:
     resolution: {integrity: sha512-4ySo4CjzStuprMwk35H5pPbkymjv1SF3jGLj6rAHp/xT/RF7TL7bd9CTm1xDY49K2qF7jmR/g7k+SkLETP6opA==}

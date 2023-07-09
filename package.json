@@ -66,6 +66,9 @@
     "overrides": {
       "countup.js": "2.6.0",
       "gl": "^6.0.2"
+    },
+    "patchedDependencies": {
+      "@m8a/nestjs-typegoose@11.0.1": "patches/@m8a__nestjs-typegoose@11.0.1.patch"
     }
   }
 }

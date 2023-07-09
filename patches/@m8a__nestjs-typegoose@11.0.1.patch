@@ -1,0 +1,13 @@
+diff --git a/dist/typegoose-class.interface.d.ts b/dist/typegoose-class.interface.d.ts
+index f572b902c5753a63495cc1dc3e369f0eb2bd7c49..619fe8e784e7f5280f8b63c703862d9a0698f82e 100755
+--- a/dist/typegoose-class.interface.d.ts
++++ b/dist/typegoose-class.interface.d.ts
+@@ -1,7 +1,7 @@
+ /// <reference types="mongoose/types/schemaoptions" />
+ import { SchemaOptions } from "mongoose";
+ export interface TypegooseClass {
+-    new (...args: unknown[]): any;
++    new (...args: any[]): any;
+ }
+ export interface TypegooseClassWrapper {
+     typegooseClass: TypegooseClass;
