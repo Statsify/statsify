@@ -23,10 +23,11 @@ export async function config(path?: string) {
     optimizeDeps: {
       disabled: true,
     },
+    envPrefix: "VITEST",
     test: {
       environment: "node",
       includeSource: ["./src/**/*.ts", "./src/**/*.tsx"],
-      globals: true,
+      globals: false,
       passWithNoTests: true,
     },
     plugins: [swc.vite(swcrc)],

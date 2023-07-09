@@ -12,13 +12,7 @@ import { DateTime } from "luxon";
 import { config } from "@statsify/util";
 import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/common";
 
-export const DEFAULT_LOG_LEVELS: LogLevel[] = [
-  "log",
-  "error",
-  "warn",
-  "debug",
-  "verbose",
-];
+const DEFAULT_LOG_LEVELS: LogLevel[] = ["log", "error", "warn", "debug", "verbose"];
 
 export const STATUS_COLORS = {
   debug: 0xc700e7,
@@ -224,4 +218,44 @@ export class Logger implements LoggerService {
       process[writeStreamType].write(computedMessage);
     });
   }
+}
+
+if (import.meta.vitest) {
+  const { test, it, expect, vi } = import.meta.vitest;
+
+  DEFAULT_LOG_LEVELS.forEach((logLevel) => {
+    test(`logging of ${logLevel}`, () => {
+      it(`should ${logLevel}`, () => {
+        const logger = new Logger(logLevel);
+
+        Logger["lastTimeStampAt"] = 0;
+
+        const mock = vi.fn();
+
+        process.stdout.write = mock;
+        process.stderr.write = mock;
+
+        logger[logLevel]("message");
+
+        expect(mock).toHaveBeenCalledOnce();
+      });
+    });
+  });
+
+  test(`logging levels`, () => {
+    it("should ignore all log levels", () => {
+      const logger = new Logger("default", { logLevels: [] });
+
+      const mock = vi.fn();
+
+      process.stdout.write = mock;
+      process.stderr.write = mock;
+
+      DEFAULT_LOG_LEVELS.forEach((logLevel) => {
+        logger[logLevel]("message");
+      });
+
+      expect(mock).not.toHaveBeenCalled();
+    });
+  });
 }

@@ -42,5 +42,6 @@
     "en"
   ],
   "i18n-ally.keystyle": "nested",
-  "todo-tree.tree.scanMode": "workspace only"
+  "todo-tree.tree.scanMode": "workspace only",
+  "testing.automaticallyOpenPeekView": "never"
 }
