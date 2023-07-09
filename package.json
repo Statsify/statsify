@@ -15,7 +15,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "lint": "turbo run lint --parallel --cache-dir='.turbo'",
-    "pre-commit": "pnpm lint && pnpm test:types && pnpm test && git add .",
+    "pre-commit": "pnpm lint && pnpm test:types && pnpm test:coverage && git add .",
     "commit": "pnpm pre-commit && git cz",
     "api": "pnpm --filter api",
     "discord-bot": "pnpm --filter discord-bot",
