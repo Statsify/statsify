@@ -54,9 +54,12 @@ export const swc = createUnplugin(({ minify, ...options }: SwcOptions = {}) => {
 
       const result = await transform(code, {
         filename: id,
-        sourceMaps: true,
         ...options,
       });
+
+      if (id.endsWith("player.service.ts")) {
+        console.log(result.code);
+      }
 
       return {
         code: result.code,

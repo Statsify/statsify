@@ -28,6 +28,8 @@ import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.serv
 import { PlayerSearchService, RedisPlayer } from "./search/player-search.service.js";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
+type PlayerModel = ReturnModelType<typeof Player>;
+
 @Injectable()
 export class PlayerService {
   public constructor(
@@ -37,10 +39,10 @@ export class PlayerService {
     @Inject(forwardRef(() => HistoricalLeaderboardService))
     private readonly historicalLeaderboardService: Circular<HistoricalLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
-    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
-    @InjectModel(Daily) private readonly dailyModel: ReturnModelType<typeof Player>,
-    @InjectModel(Weekly) private readonly weeklyModel: ReturnModelType<typeof Player>,
-    @InjectModel(Monthly) private readonly monthlyModel: ReturnModelType<typeof Player>
+    @InjectModel(Player) private readonly playerModel: PlayerModel,
+    @InjectModel(Daily) private readonly dailyModel: PlayerModel,
+    @InjectModel(Weekly) private readonly weeklyModel: PlayerModel,
+    @InjectModel(Monthly) private readonly monthlyModel: PlayerModel
   ) {}
 
   /**
