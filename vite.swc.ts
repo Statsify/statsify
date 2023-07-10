@@ -6,6 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+/**
+ * Adapted from: https://github.com/egoist/unplugin-swc
+ * because the module does not work with ESM
+ */
+
 import { Options as SwcOptions, transform } from "@swc/core";
 import { createFilter } from "@rollup/pluginutils";
 import { createUnplugin } from "unplugin";
