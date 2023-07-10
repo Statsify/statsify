@@ -14,7 +14,7 @@ import {
   PlayerArgument,
 } from "@statsify/discord";
 import { EVENT_TYPES, GENERAL_MODES } from "@statsify/schemas";
-import { EventsProfile } from "./events.profile";
+import { EventsProfile } from "./events.profile.js";
 import { arrayGroup } from "@statsify/util";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";

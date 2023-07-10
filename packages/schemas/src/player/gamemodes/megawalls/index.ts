@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { MegaWallsKit, MegaWallsOverall } from "./kit";
+import { Field } from "#metadata";
+import { GameModes, type IGameModes } from "#game";
+import { MegaWallsKit, MegaWallsOverall } from "./kit.js";
+import type { APIData } from "@statsify/util";
 
 export const MEGAWALLS_MODES = new GameModes([
   { api: "overall" },
@@ -159,4 +159,4 @@ export class MegaWalls {
   }
 }
 
-export * from "./kit";
+export * from "./kit.js";

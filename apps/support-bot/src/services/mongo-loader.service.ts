@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container, { Service } from "typedi";
+import { Container, Service } from "typedi";
 import { Tag, Ticket, User } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { createConnection } from "mongoose";

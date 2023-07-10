@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from "typedi";
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
@@ -48,15 +47,16 @@ import {
   InteractionAttachment,
   SubCommand,
 } from "@statsify/discord";
-import { BaseLeaderboardCommand } from "./base.leaderboard-command";
+import { BaseLeaderboardCommand } from "./base.leaderboard-command.js";
+import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
-import { GuildLeaderboardArgument } from "./guild-leaderboard.argument";
-import { GuildLeaderboardSubCommand } from "./guild-leaderboard.subcommand";
+import { GuildLeaderboardArgument } from "./guild-leaderboard.argument.js";
+import { GuildLeaderboardSubCommand } from "./guild-leaderboard.subcommand.js";
 import { Logger, STATUS_COLORS } from "@statsify/logger";
 import {
   PlayerLeaderboardArgument,
   SHORT_TO_LONG_HISTORICAL_TYPE,
-} from "./player-leaderboard.argument";
+} from "./player-leaderboard.argument.js";
 import { getAssetPath, getBackground, getLogoPath } from "@statsify/assets";
 import { prettify } from "@statsify/util";
 import { readFileSync } from "node:fs";
@@ -332,7 +332,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
       const preview = {
         name: "preview.png",
-        data: readFileSync(getAssetPath(`previews/historical-leaderboard.png`)),
+        data: readFileSync(getAssetPath("previews/historical-leaderboard.png")),
         type: "image/png",
       };
 

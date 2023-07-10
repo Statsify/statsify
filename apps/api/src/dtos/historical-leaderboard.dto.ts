@@ -10,7 +10,7 @@ import { ApiProperty, PartialType } from "@nestjs/swagger";
 import { HistoricalTimes } from "@statsify/api-client";
 import { IsEnum, IsInt, IsOptional, Min } from "class-validator";
 import { LeaderboardScanner, Player } from "@statsify/schemas";
-import { PlayerDto } from "./player.dto";
+import { PlayerDto } from "./player.dto.js";
 import { Transform } from "class-transformer";
 
 const fields = LeaderboardScanner.getLeaderboardFields(Player)

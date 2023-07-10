@@ -8,20 +8,20 @@
 
 /* eslint-disable require-atomic-updates */
 import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
-import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service";
+import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
 import {
   GuildNotFoundException,
   GuildQuery,
   HypixelCache,
   PlayerNotFoundException,
 } from "@statsify/api-client";
-import { HypixelService } from "../hypixel";
+import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
-import { PlayerService } from "../player";
-import { ReturnModelType } from "@typegoose/typegoose";
+import { PlayerService } from "#player";
 import { flatten } from "@statsify/util";
+import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class GuildService {

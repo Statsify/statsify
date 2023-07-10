@@ -6,4 +6,4 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./sentry.interceptor";
+export * from "./sentry.interceptor.js";

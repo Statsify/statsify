@@ -7,10 +7,10 @@
  */
 
 import { Command, CommandContext, EmbedBuilder, ErrorMessage } from "@statsify/discord";
-import { GTBHelperArgument } from "./gtbhelper.argument";
+import { GTBHelperArgument } from "./gtbhelper.argument.js";
 import { STATUS_COLORS } from "@statsify/logger";
 import { arrayGroup } from "@statsify/util";
-import { findSolutions } from "./find-solutions";
+import { findSolutions } from "./find-solutions.js";
 
 @Command({ description: (t) => t("commands.gtbhelper"), args: [GTBHelperArgument] })
 export class GTBHelperCommand {

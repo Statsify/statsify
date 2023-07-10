@@ -7,7 +7,7 @@
  */
 
 import { Command } from "@statsify/discord";
-import { RankingsCommand } from "./rankings.command";
+import { RankingsCommand } from "./rankings.command.js";
 
 @Command({ description: (t) => t("commands.rankings") })
 export class PositionsCommand extends RankingsCommand {}

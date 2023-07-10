@@ -33,4 +33,4 @@ jobs:
         run: cp /home/config.js ./config.js
 
       - name: Restart PM2
-        run: npx pm2 restart pm2.config.js
+        run: npx pm2 restart pm2.config.cjs

@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../metadata";
-import { WatchdogMode } from "./mode";
+import { Field } from "#metadata";
+import { WatchdogMode } from "./mode.js";
 import { deepAdd } from "@statsify/math";
+import type { APIData } from "@statsify/util";
 
 export class Watchdog {
   @Field()

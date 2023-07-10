@@ -8,13 +8,13 @@
 
 import axios, { AxiosInstance } from "axios";
 import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
-import { Server } from "./server.interface";
-import { ServerArgument } from "./server.argument";
+import { ServerArgument } from "./server.argument.js";
 import { ServerMappingsServer, getBackground, getServerMappings } from "@statsify/assets";
-import { ServerProfile } from "./server.profile";
+import { ServerProfile } from "./server.profile.js";
 import { getTheme } from "#themes";
 import { loadImage } from "skia-canvas";
 import { render } from "@statsify/rendering";
+import type { Server } from "./server.interface.js";
 
 @Command({
   description: (t) => t("commands.server"),

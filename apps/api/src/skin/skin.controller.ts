@@ -7,12 +7,11 @@
  */
 
 import { ApiBadRequestResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Auth } from "../auth";
+import { Auth } from "#auth";
 import { Controller, Get, Query, StreamableFile } from "@nestjs/common";
 import { ErrorResponse } from "@statsify/api-client";
-import { HeadDto } from "../dtos";
-import { SkinService } from "./skin.service";
-import { UuidDto } from "../dtos/uuid.dto";
+import { HeadDto, UuidDto } from "#dtos";
+import { SkinService } from "./skin.service.js";
 
 @Controller("/skin")
 @ApiTags("Skins")

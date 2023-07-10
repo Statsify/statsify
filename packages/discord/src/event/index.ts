@@ -6,5 +6,5 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./abstract-event.listener";
-export * from "./event.loader";
+export * from "./abstract-event.listener.js";
+export * from "./event.loader.js";

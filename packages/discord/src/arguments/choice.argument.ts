@@ -10,8 +10,8 @@ import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractArgument } from "./abstract.argument";
-import { LocalizationString } from "../messages";
+import { AbstractArgument } from "./abstract.argument.js";
+import { LocalizationString } from "#messages";
 
 export type Choice = string | [display: string, value: string | number];
 

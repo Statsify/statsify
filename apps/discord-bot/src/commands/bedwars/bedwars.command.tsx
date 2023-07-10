@@ -11,8 +11,8 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
-import { BedWarsProfile } from "./bedwars.profile";
+} from "#commands/base.hypixel-command";
+import { BedWarsProfile } from "./bedwars.profile.js";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.bedwars") })

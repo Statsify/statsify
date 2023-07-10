@@ -9,7 +9,7 @@
 import { Historical, If, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { SingleDuelsGameMode, SinglePVPDuelsGameMode } from "@statsify/schemas";
-import type { ProfileTime } from "../../base.hypixel-command";
+import type { ProfileTime } from "#commands/base.hypixel-command";
 
 interface SingleDuelsGameModeTableProps {
   stats: SinglePVPDuelsGameMode | SingleDuelsGameMode;

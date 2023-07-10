@@ -7,8 +7,13 @@
  */
 
 import * as Sentry from "@sentry/node";
-import Redis from "ioredis";
-import { Constructor, Flatten, flatten, relativeTime } from "@statsify/util";
+import {
+  type Circular,
+  type Constructor,
+  type Flatten,
+  flatten,
+  relativeTime,
+} from "@statsify/util";
 import {
   CurrentHistoricalType,
   HistoricalTimes,
@@ -16,7 +21,7 @@ import {
   LeaderboardQuery,
   PlayerNotFoundException,
 } from "@statsify/api-client";
-import { Daily, Monthly, Weekly } from "../models";
+import { Daily, Monthly, Weekly } from "../models/index.js";
 import {
   HistoricalScanner,
   LeaderboardEnabledMetadata,
@@ -24,7 +29,7 @@ import {
   Player,
   createHistoricalPlayer,
 } from "@statsify/schemas";
-import { HistoricalService } from "../historical.service";
+import { HistoricalService } from "../historical.service.js";
 import {
   Inject,
   Injectable,
@@ -32,9 +37,10 @@ import {
   forwardRef,
 } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { InjectRedis } from "@nestjs-modules/ioredis";
-import { LeaderboardAdditionalStats, LeaderboardService } from "../../leaderboards";
-import { ReturnModelType } from "@typegoose/typegoose";
+import { InjectRedis } from "#redis";
+import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
+import { Redis } from "ioredis";
+import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 
@@ -46,7 +52,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
     @InjectModel(Monthly) private readonly monthlyModel: PlayerModel,
     @InjectModel(Player) private readonly playerModel: PlayerModel,
     @Inject(forwardRef(() => HistoricalService))
-    private readonly historicalService: HistoricalService,
+    private readonly historicalService: Circular<HistoricalService>,
     @InjectRedis() redis: Redis
   ) {
     super(redis);
@@ -171,8 +177,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
 
     if (!hidden) fields.push(fieldName);
 
-    fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
-    fields.push("Reset");
+    fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName), "Reset");
 
     return {
       name,

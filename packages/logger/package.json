@@ -3,21 +3,21 @@
   "version": "0.0.0",
   "main": "dist/index.js",
   "types": "src/index.ts",
+  "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
+    "@sentry/node": "^7.57.0",
     "@statsify/util": "*",
-    "@sentry/node": "^7.37.2",
-    "chalk": "4.1.2",
-    "luxon": "^3.2.1"
+    "@swc/helpers": "^0.5.1",
+    "chalk": "5.3.0",
+    "luxon": "^3.3.0"
   },
   "devDependencies": {
-    "@nestjs/common": "^9.3.9",
-    "@types/luxon": "^3.2.0"
+    "@nestjs/common": "^10.0.5",
+    "@types/luxon": "^3.3.0"
   }
 }

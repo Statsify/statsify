@@ -10,9 +10,9 @@ import { APIApplicationCommand } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
 import { RestClient } from "tiny-discord";
 import { Service } from "typedi";
-import { parseDiscordResponse } from "../util/parse-discord-error";
+import { parseDiscordResponse } from "#util/parse-discord-error";
 import { readFile, writeFile } from "node:fs/promises";
-import type { CommandResolvable } from "./command.resolvable";
+import type { CommandResolvable } from "./command.resolvable.js";
 
 @Service()
 export class CommandPoster {
@@ -69,7 +69,7 @@ export class CommandPoster {
       this.logger.log(`Successfully posted ${commandsToPost.length} commands`);
       return cmds;
     } catch (err) {
-      this.logger.error(`Failed to post commands`);
+      this.logger.error("Failed to post commands");
       this.logger.error(err);
       return null;
     }

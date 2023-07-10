@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field } from "./metadata";
+import { Field } from "#metadata";
 import { ratio } from "@statsify/math";
 
 export class Progression {

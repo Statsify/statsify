@@ -7,11 +7,11 @@
  */
 
 import axios from "axios";
-import { Image } from "skia-canvas";
 import { User, UserLogo } from "@statsify/schemas";
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { loadImage } from "@statsify/rendering";
+import type { Image } from "skia-canvas";
 
 const PATH = "../../assets";
 const PRIVATE_PATH = join(PATH, "private");
@@ -28,7 +28,8 @@ const checkAsset = (file: string) =>
  * @returns the asset if available, otherwise null
  */
 export const importAsset = async <T>(file: string): Promise<T | null> => {
-  if (checkAsset(file.endsWith(".js") ? file : `${file}.js`) === "public") return null;
+  file = file.endsWith(".js") ? file : `${file}.js`;
+  if (checkAsset(file) === "public") return null;
   return import(join("../", PRIVATE_PATH, file));
 };
 

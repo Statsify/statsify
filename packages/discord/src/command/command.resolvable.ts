@@ -6,19 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractArgument } from "../arguments";
+import { AbstractArgument } from "#arguments";
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
 } from "discord-api-types/v10";
 import { UserTier } from "@statsify/schemas";
-import {
-  getLocalizeFunction,
-  translateField,
-  translateToAllLanguages,
-} from "../messages/localize";
-import type { CommandContext } from "./command.context";
-import type { CommandMetadata } from "./command.interface";
+import { getLocalizeFunction, translateField, translateToAllLanguages } from "#messages";
+import type { CommandContext } from "./command.context.js";
+import type { CommandMetadata } from "./command.interface.js";
 
 export class CommandResolvable {
   public type:

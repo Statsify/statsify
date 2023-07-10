@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./ticket.service";
-export * from "./mongo-loader.service";
-export * from "./tag.service";
-export * from "./user.service";
-export * from "./font-loader.service";
+export * from "./ticket.service.js";
+export * from "./mongo-loader.service.js";
+export * from "./tag.service.js";
+export * from "./user.service.js";
+export * from "./font-loader.service.js";

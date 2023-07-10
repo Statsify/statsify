@@ -7,7 +7,7 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { CacheDto } from "./cache.dto";
+import { CacheDto } from "./cache.dto.js";
 import { GuildQuery } from "@statsify/api-client";
 import { IsEnum, IsString, MaxLength, MinLength } from "class-validator";
 

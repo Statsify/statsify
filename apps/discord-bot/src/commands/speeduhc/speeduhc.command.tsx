@@ -10,10 +10,10 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
+} from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { SPEED_UHC_MODES, SpeedUHCModes } from "@statsify/schemas";
-import { SpeedUHCProfile } from "./speeduhc.profile";
+import { SpeedUHCProfile } from "./speeduhc.profile.js";
 
 @Command({ description: (t) => t("commands.speeduhc") })
 export class SpeedUHCCommand extends BaseHypixelCommand<SpeedUHCModes> {

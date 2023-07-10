@@ -15,6 +15,11 @@
       },
       "optimizer": {
         "simplify": true,
+        "globals": {
+          "vars": {
+            "import.meta.vitest": "false"
+          }
+        },
         "jsonify": {
           "minCost": 2048
         }
@@ -23,11 +28,14 @@
     "target": "es2022",
     "keepClassNames": true,
     "loose": false,
-    "externalHelpers": false,
-    "preserveAllComments": false
+    "externalHelpers": true,
+    "preserveAllComments": false,
+    "experimental": {
+      "keepImportAssertions": true
+    }
   },
   "module": {
-    "type": "commonjs",
+    "type": "es6",
     "strict": true,
     "strictMode": true,
     "lazy": false,

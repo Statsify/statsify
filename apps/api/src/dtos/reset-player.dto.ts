@@ -8,7 +8,7 @@
 
 import { CurrentHistoricalType } from "@statsify/api-client";
 import { IsEnum, IsInt, IsOptional, Max, Min } from "class-validator";
-import { PlayerDto } from "./player.dto";
+import { PlayerDto } from "./player.dto.js";
 import { Transform } from "class-transformer";
 
 export class ResetPlayerDto extends PlayerDto {

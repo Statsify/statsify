@@ -7,7 +7,7 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { NotFoundException } from "./base.404";
+import { NotFoundException } from "./base.404.js";
 import { Player } from "@statsify/schemas";
 
 export class RecentGamesNotFoundException extends NotFoundException {

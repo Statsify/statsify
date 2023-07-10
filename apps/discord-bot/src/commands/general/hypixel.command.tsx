@@ -7,7 +7,7 @@
  */
 
 import { Command } from "@statsify/discord";
-import { GeneralCommand } from "./general.command";
+import { GeneralCommand } from "./general.command.js";
 
 @Command({ description: (t) => t("commands.general") })
 export class HypixelCommand extends GeneralCommand {}

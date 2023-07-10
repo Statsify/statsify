@@ -7,14 +7,14 @@
  */
 
 import * as Sentry from "@sentry/node";
-import Container from "typedi";
 import { Canvas, type CanvasRenderingContext2D } from "skia-canvas";
-import { FontRenderer } from "../font";
-import { IntrinsicRenders, intrinsicRenders } from "./instrinsics";
-import { createInstructions } from "./create-instructions";
-import { getPositionalDelta, getTotalSize } from "./util";
+import { Container } from "typedi";
+import { FontRenderer } from "#font";
+import { IntrinsicRenders, intrinsicRenders } from "./instrinsics.js";
+import { createInstructions } from "./create-instructions.js";
+import { getPositionalDelta, getTotalSize } from "./util.js";
 import { noop } from "@statsify/util";
-import type { ComputedThemeContext, ElementNode, Instruction, Theme } from "./types";
+import type { ComputedThemeContext, ElementNode, Instruction, Theme } from "./types.js";
 
 const _render = (
   ctx: CanvasRenderingContext2D,
@@ -116,7 +116,7 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
 
   const instructionsTransaction = transaction?.startChild({
     op: "jsx.createInstructions",
-    description: `Create instructions`,
+    description: "Create instructions",
   });
 
   const instructions = createInstructions(node);
@@ -128,7 +128,7 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
 
   const renderTransaction = transaction?.startChild({
     op: "jsx.render",
-    description: `Render JSX`,
+    description: "Render JSX",
   });
 
   const canvas = new Canvas(width, height);

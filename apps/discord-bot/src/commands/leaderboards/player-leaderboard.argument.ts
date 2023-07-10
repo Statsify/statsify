@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Fuse from "fuse.js";
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
@@ -20,6 +19,7 @@ import {
   PlayerStats,
 } from "@statsify/schemas";
 import { CurrentHistoricalType } from "@statsify/api-client";
+import { Fuse } from "fuse.js";
 import { removeFormatting } from "@statsify/util";
 
 const entries = Object.entries(

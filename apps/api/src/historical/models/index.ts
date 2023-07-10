@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./daily.model";
-export * from "./last-day.model";
-export * from "./last-month.model";
-export * from "./last-week.model";
-export * from "./monthly.model";
-export * from "./weekly.model";
-export * from "./session.model";
+export * from "./daily.model.js";
+export * from "./last-day.model.js";
+export * from "./last-month.model.js";
+export * from "./last-week.model.js";
+export * from "./session.model.js";
+export * from "./monthly.model.js";
+export * from "./weekly.model.js";

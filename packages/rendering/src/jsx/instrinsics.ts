@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box, Div, Image, Text } from "../components";
-import type { PropsWithChildren, RawFC, Render } from "./types";
+import { Box, Div, Image, Text } from "#intrinsics";
+import type { PropsWithChildren, RawFC, Render } from "./types.js";
 
 export const intrinsicElements = {
   div: Div.component,

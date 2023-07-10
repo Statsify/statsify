@@ -7,14 +7,14 @@
  */
 
 import { HttpModule } from "@nestjs/axios";
-import { HypixelService } from "./hypixel.service";
+import { HypixelService } from "./hypixel.service.js";
 import { Module } from "@nestjs/common";
 import { config } from "@statsify/util";
 
 @Module({
   imports: [
     HttpModule.register({
-      baseURL: `https://api.hypixel.net/`,
+      baseURL: "https://api.hypixel.net/",
       headers: {
         "API-Key": config("hypixelApi.key"),
         "accept-encoding": "*",

@@ -22,7 +22,7 @@ import {
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { Service } from "typedi";
-import { WelcomeProfile } from "#lib/welcomer.profile";
+import { WelcomeProfile } from "#lib";
 import { config } from "@statsify/util";
 import { getBackground } from "@statsify/assets";
 import { loadImage, render } from "@statsify/rendering";
@@ -87,7 +87,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
     const buffer = await canvas.toBuffer("png");
 
-    message.files = [{ name: `welcome.png`, data: buffer, type: "image/png" }];
+    message.files = [{ name: "welcome.png", data: buffer, type: "image/png" }];
 
     await this.messageService.send(WELCOME_CHANNEL_ID, message);
   }

@@ -12,9 +12,8 @@ import {
   ComponentType,
   InteractionType,
 } from "discord-api-types/v10";
-import { IMessage, Message } from "../messages";
-import { getLocalizeFunction } from "../messages/localize";
-import { parseDiscordResponse } from "../util/parse-discord-error";
+import { IMessage, Message, getLocalizeFunction } from "#messages";
+import { parseDiscordResponse } from "#util/parse-discord-error";
 import type {
   Interaction as DiscordInteraction,
   InteractionResponse,

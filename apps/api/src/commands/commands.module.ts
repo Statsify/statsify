@@ -7,8 +7,8 @@
  */
 
 import { Commands } from "@statsify/schemas";
-import { CommandsController } from "./commands.controller";
-import { CommandsService } from "./commands.service";
+import { CommandsController } from "./commands.controller.js";
+import { CommandsService } from "./commands.service.js";
 import { Module } from "@nestjs/common";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 

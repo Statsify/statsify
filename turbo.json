@@ -3,7 +3,7 @@
   "remoteCache": {
     "signature": true
   },
-  "globalDependencies": ["pnpm.lock", "tsconfig.json", ".swcrc"],
+  "globalDependencies": ["pnpm.lock", "tsconfig.json", ".swcrc", ".eslintrc"],
   "pipeline": {
     "build": {
       "outputs": ["dist/**", ".next/**"],

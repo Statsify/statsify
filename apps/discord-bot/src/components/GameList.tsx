@@ -8,7 +8,7 @@
 
 import { FormattedGame, GameId } from "@statsify/schemas";
 import { Image } from "skia-canvas";
-import { Table } from "./Table";
+import { Table } from "./Table/index.js";
 import { arrayGroup } from "@statsify/util";
 import type { Box } from "@statsify/rendering";
 

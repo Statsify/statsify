@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./action-row.builder";
-export * from "./button.builder";
-export * from "./modal.builder";
-export * from "./select-menu.builder";
-export * from "./text-input.builder";
+export * from "./action-row.builder.js";
+export * from "./button.builder.js";
+export * from "./modal.builder.js";
+export * from "./select-menu.builder.js";
+export * from "./text-input.builder.js";

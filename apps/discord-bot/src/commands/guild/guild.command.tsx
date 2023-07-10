@@ -17,12 +17,12 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { GuildListProfile, GuildListProfileProps } from "./guild-list.profile";
+import { GuildListProfile, GuildListProfileProps } from "./guild-list.profile.js";
 import { GuildMember } from "@statsify/schemas";
-import { GuildMemberProfile } from "./guild-member.profile";
-import { GuildProfile, GuildProfileProps } from "./guild.profile";
+import { GuildMemberProfile } from "./guild-member.profile.js";
+import { GuildProfile, GuildProfileProps } from "./guild.profile.js";
 import { GuildQuery } from "@statsify/api-client";
-import { GuildTopSubCommand } from "./guild-top.subcommand";
+import { GuildTopSubCommand } from "./guild-top.subcommand.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";

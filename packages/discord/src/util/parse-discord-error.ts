@@ -38,13 +38,14 @@ export const parseDiscordError = (error: any = {}, errorKey = ""): string => {
   let message = "";
 
   for (const [key, value] of entries) {
-    const nextKey = key.startsWith("_")
-      ? errorKey
-      : errorKey
-      ? Number.isNaN(Number(key))
-        ? `${errorKey}.${key}`
-        : `${errorKey}[${key}]`
-      : key;
+    let nextKey = key;
+
+    if (key.startsWith("_")) {
+      nextKey = errorKey;
+    } else if (errorKey) {
+      nextKey = Number.isNaN(+key) ? `${errorKey}.${key}` : `${errorKey}[${key}]`;
+    }
+
 
     if (typeof value === "string") message += value;
     else if ("_errors" in value)

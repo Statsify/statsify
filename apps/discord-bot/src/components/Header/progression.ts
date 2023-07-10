@@ -20,11 +20,11 @@ const xpBar: ProgressFunction = (percentage) => {
 
 export const lineXpBar =
   (color: string): ProgressFunction =>
-  (percentage: number) => {
-    const max = 40;
-    const count = Math.ceil(max * percentage);
-    return `§8[${color}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]§r`;
-  };
+    (percentage: number) => {
+      const max = 40;
+      const count = Math.ceil(max * percentage);
+      return `§8[${color}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]§r`;
+    };
 
 interface BaseFormatProgressionOptions {
   t: LocalizeFunction;
