@@ -20,13 +20,13 @@
     "axios": "^1.4.0"
   },
   "imports": {
-    "#exceptions/*": {
-      "types": "./src/exceptions/*.ts",
-      "default": "./dist/exceptions/*.js"
+    "#exceptions": {
+      "types": "./src/exceptions/index.ts",
+      "default": "./dist/exceptions/index.js"
     },
-    "#responses/*": {
-      "types": "./src/responses/*.ts",
-      "default": "./dist/responses/*.js"
+    "#responses": {
+      "types": "./src/responses/index.ts",
+      "default": "./dist/responses/index.js"
     }
   }
 }

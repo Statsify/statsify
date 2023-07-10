@@ -28,7 +28,8 @@ const checkAsset = (file: string) =>
  * @returns the asset if available, otherwise null
  */
 export const importAsset = async <T>(file: string): Promise<T | null> => {
-  if (checkAsset(file.endsWith(".js") ? file : `${file}.js`) === "public") return null;
+  file = file.endsWith(".js") ? file : `${file}.js`;
+  if (checkAsset(file) === "public") return null;
   return import(join("../", PRIVATE_PATH, file));
 };
 

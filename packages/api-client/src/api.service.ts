@@ -15,22 +15,24 @@ import {
   HypixelCache,
   LeaderboardQuery,
 } from "./constants.js";
-import { DeletePlayerResponse } from "#responses/delete.player.response";
-import { GetCommandUsageResponse } from "#responses/get.command-usage.response";
-import { GetGamecountsResponse } from "#responses/get.gamecounts.response";
-import { GetGuildResponse } from "#responses/get.guild.response";
-import { GetHistoricalResponse } from "#responses/get.historical.response";
-import { GetHistoricalTimesResponse } from "#responses/get.historical-times.response";
-import { GetKeyResponse } from "#responses/get.key.response";
-import { GetPlayerResponse } from "#responses/get.player.response";
-import { GetPlayerSearchResponse } from "#responses/get.player-search.response";
-import { GetRecentGamesResponse } from "#responses/get.recentgames.response";
-import { GetStatusResponse } from "#responses/get.status.response";
-import { GetUserResponse } from "#responses/get.user.response";
-import { GetWatchdogResponse } from "#responses/get.watchdog.response";
-import { PostLeaderboardRankingsResponse } from "#responses/post.rankings.response";
-import { PostLeaderboardResponse } from "#responses/post.leaderboard.response";
-import { PutUserBadgeResponse } from "#responses/put.user-badge.response";
+import {
+  DeletePlayerResponse,
+  GetCommandUsageResponse,
+  GetGamecountsResponse,
+  GetGuildResponse,
+  GetHistoricalResponse,
+  GetHistoricalTimesResponse,
+  GetKeyResponse,
+  GetPlayerResponse,
+  GetPlayerSearchResponse,
+  GetRecentGamesResponse,
+  GetStatusResponse,
+  GetUserResponse,
+  GetWatchdogResponse,
+  PostLeaderboardRankingsResponse,
+  PostLeaderboardResponse,
+  PutUserBadgeResponse,
+} from "#responses";
 import { UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { loadImage } from "@statsify/rendering";
