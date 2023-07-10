@@ -13,11 +13,11 @@ import {
   GatewayDispatchEvents,
   InteractionResponseType,
 } from "discord-api-types/v10";
-import { CommandContext } from "./command.context";
-import { CommandResolvable } from "./command.resolvable";
-import { ErrorMessage } from "../util/error.message";
-import { IMessage, Message } from "../messages";
-import { Interaction, InteractionAttachment } from "../interaction";
+import { CommandContext } from "./command.context.js";
+import { CommandResolvable } from "./command.resolvable.js";
+import { ErrorMessage } from "#util/error.message";
+import { IMessage, Message } from "#messages";
+import { Interaction, InteractionAttachment } from "#interaction";
 import { Logger } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
@@ -94,7 +94,7 @@ export abstract class AbstractCommandListener {
       return (this.client as InteractionServer).listen(this.port as number);
     }
 
-    this.logger.log(`Connecting to gateway with WebsocketShard`);
+    this.logger.log("Connecting to gateway with WebsocketShard");
     return (this.client as WebsocketShard).connect();
   }
 

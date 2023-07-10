@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field } from "../metadata";
+import { Field } from "#metadata";
 
 export class VerifyCode {
   @Field({ mongo: { unique: true } })

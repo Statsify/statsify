@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Constructor } from "@statsify/util";
 import {
-  LeaderboardEnabledMetadata,
-  LeaderboardMetadata,
-} from "../metadata/metadata.interface";
-import { MetadataScanner } from "../metadata";
-import { parseAdditionalFields } from "./parse-fields";
+  type LeaderboardEnabledMetadata,
+  type LeaderboardMetadata,
+  MetadataScanner,
+} from "#metadata";
+import { parseAdditionalFields } from "./parse-fields.js";
+import type { Constructor } from "@statsify/util";
 
 export class LeaderboardScanner {
   public static getLeaderboardMetadata<T>(constructor: Constructor<T>) {

@@ -17,7 +17,7 @@ import {
   lineXpBar,
 } from "#components";
 import { arrayGroup, prettify } from "@statsify/util";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { Event, EventPeriods, EventTypes } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
 

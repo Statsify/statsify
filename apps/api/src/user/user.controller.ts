@@ -12,7 +12,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { Auth, AuthRole } from "../auth";
+import { Auth, AuthRole } from "#auth";
 import {
   BadRequestException,
   Body,
@@ -29,9 +29,9 @@ import {
   GetUserResponse,
   PutUserBadgeResponse,
 } from "@statsify/api-client";
-import { UpdateUserDto, UserDto, VerifyCodeDto } from "../dtos";
+import { UpdateUserDto, UserDto, VerifyCodeDto } from "#dtos";
 import { User } from "@statsify/schemas";
-import { UserService } from "./user.service";
+import { UserService } from "./user.service.js";
 
 @Controller("/user")
 @ApiTags("User")
@@ -66,7 +66,7 @@ export class UserController {
     };
   }
 
-  @Get(`/badge`)
+  @Get("/badge")
   @ApiOperation({ summary: "Get a User Badge" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ role: AuthRole.ADMIN })
@@ -76,7 +76,7 @@ export class UserController {
     return new StreamableFile(badge, { type: "image/png" });
   }
 
-  @Put(`/badge`)
+  @Put("/badge")
   @ApiOkResponse({ type: PutUserBadgeResponse })
   @ApiOperation({ summary: "Set a User Badge" })
   @ApiBadRequestResponse({ type: ErrorResponse })
@@ -86,7 +86,7 @@ export class UserController {
     return { success: true };
   }
 
-  @Delete(`/badge`)
+  @Delete("/badge")
   @ApiOkResponse({ type: PutUserBadgeResponse })
   @ApiOperation({ summary: "Reset a User Badge" })
   @ApiBadRequestResponse({ type: ErrorResponse })

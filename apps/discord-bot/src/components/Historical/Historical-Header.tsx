@@ -80,8 +80,8 @@ export const HistoricalHeader = ({
           <text>
             {timeType === HistoricalTimes.SESSION
               ? `Started ${sessionReset?.toFormat(
-                  DATE_FORMAT
-                )} (${sessionReset?.toRelative()})`
+                DATE_FORMAT
+              )} (${sessionReset?.toRelative()})`
               : `${start!.toFormat(DATE_FORMAT)} ➡ ${end!.toFormat(DATE_FORMAT)}`}
           </text>
         </box>

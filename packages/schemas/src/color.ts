@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field } from "./metadata";
+import { Field } from "#metadata";
 import { minecraftColors as colors } from "@statsify/util";
 
 export type ColorCode = (typeof colors)[number]["code"];

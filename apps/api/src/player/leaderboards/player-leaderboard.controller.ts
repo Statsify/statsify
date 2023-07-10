@@ -12,7 +12,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { Auth } from "../../auth";
+import { Auth } from "#auth";
 import { Body, Controller, Post } from "@nestjs/common";
 import {
   ErrorResponse,
@@ -21,9 +21,8 @@ import {
   PostLeaderboardResponse,
 } from "@statsify/api-client";
 import { Player } from "@statsify/schemas";
-import { PlayerLeaderboardDto } from "../../dtos/player-leaderboard.dto";
-import { PlayerLeaderboardService } from "./player-leaderboard.service";
-import { PlayerRankingsDto } from "../../dtos/player-rankings.dto";
+import { PlayerLeaderboardDto, PlayerRankingsDto } from "#dtos";
+import { PlayerLeaderboardService } from "./player-leaderboard.service.js";
 
 @Controller("/player/leaderboards")
 @ApiTags("Player Leaderboards")

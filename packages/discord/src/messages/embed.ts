@@ -11,7 +11,7 @@ import {
   LocalizeFunction,
   translateField,
   translateObject,
-} from "./localize";
+} from "./localize.js";
 import type {
   APIEmbed,
   APIEmbedAuthor,
@@ -140,4 +140,49 @@ export class EmbedBuilder {
       image: this.#image,
     };
   }
+}
+
+if (import.meta.vitest) {
+  const { test, it, expect } = import.meta.vitest;
+  const { getLocalizeFunction } = await import("./localize.js");
+
+  test("EmbedBuilder", () => {
+    it("should create an embed", () => {
+      const embed = new EmbedBuilder()
+        .title("title")
+        .description("description")
+        .footer("footerText", "footerIconUrl")
+        .field("fieldName", "fieldValue")
+        .fields(["fieldName2", "fieldValue2", true])
+        .color(0x00_00_00)
+        .image("image")
+        .author("authorName", "authorIcon", "authorUrl")
+        .thumbnail("thumbnail")
+        .url("url")
+        .build(getLocalizeFunction("en-US"));
+
+      expect(embed).toEqual<APIEmbed>({
+        title: "title",
+        description: "description",
+        footer: { text: "footerText", icon_url: "footerIconUrl" },
+        fields: [
+          { name: "fieldName", value: "fieldValue", inline: false },
+          { name: "fieldName2", value: "fieldValue2", inline: true },
+        ],
+        color: 0x00_00_00,
+        image: {
+          url: "image",
+        },
+        author: {
+          name: "authorName",
+          icon_url: "authorIcon",
+          url: "authorUrl",
+        },
+        thumbnail: {
+          url: "thumbnail",
+        },
+        url: "url",
+      });
+    });
+  });
 }

@@ -16,7 +16,7 @@ import {
   SubCommand,
 } from "@statsify/discord";
 import { GameModes, QUEST_MODES, QuestModes, QuestTime } from "@statsify/schemas";
-import { QuestProfileProps, QuestsProfile } from "./quests.profile";
+import { QuestProfileProps, QuestsProfile } from "./quests.profile.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { mapBackground } from "#constants";

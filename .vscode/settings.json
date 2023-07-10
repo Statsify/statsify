@@ -8,7 +8,7 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "files.exclude": {
     "**/dist/**": true,
-    "**/node_modules/**": true,
+    // "**/node_modules/**": true,
     "**/.turbo/**": true,
     "**/.pnpm-store/**": true
   },
@@ -42,5 +42,6 @@
     "en"
   ],
   "i18n-ally.keystyle": "nested",
-  "todo-tree.tree.scanMode": "workspace only"
+  "todo-tree.tree.scanMode": "workspace only",
+  "testing.automaticallyOpenPeekView": "never"
 }

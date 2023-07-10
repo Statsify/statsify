@@ -10,10 +10,10 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
+} from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { GENERAL_MODES, GeneralModes, Guild, Player } from "@statsify/schemas";
-import { GeneralProfile } from "./general.profile";
+import { GeneralProfile } from "./general.profile.js";
 import { GuildQuery } from "@statsify/api-client";
 
 interface PreProfileData {

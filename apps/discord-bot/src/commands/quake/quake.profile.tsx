@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "../base.hypixel-command";
 import {
   Container,
   Footer,
@@ -16,6 +15,7 @@ import {
   formatProgression,
 } from "#components";
 import { FormattedGame, GameMode, QuakeModes } from "@statsify/schemas";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface QuakeProfileProps extends BaseProfileProps {
   mode: GameMode<QuakeModes>;

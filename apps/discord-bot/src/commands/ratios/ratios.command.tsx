@@ -48,7 +48,7 @@ import {
   MODES_TO_FORMATTED,
   mapBackground,
 } from "#constants";
-import { RatiosProfile, RatiosProfileProps } from "./ratios.profile";
+import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { prettify } from "@statsify/util";
@@ -232,7 +232,7 @@ export class RatiosCommand {
         const buffer = await canvas.toBuffer("png");
 
         return {
-          files: [{ name: `ratios.png`, data: buffer, type: "image/png" }],
+          files: [{ name: "ratios.png", data: buffer, type: "image/png" }],
           attachments: [],
         };
       },

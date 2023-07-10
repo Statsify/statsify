@@ -1,13 +1,18 @@
 {
-  "root": true,
-  "parser": "@typescript-eslint/parser",
-  "parserOptions": {
-    "ecmaVersion": "latest"
-  },
   "env": {
     "commonjs": true,
     "es2022": true,
     "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:unicorn/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest"
   },
   "plugins": [
     "@typescript-eslint",
@@ -15,13 +20,7 @@
     "sort-imports-es6-autofix",
     "unused-imports"
   ],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-    "plugin:unicorn/recommended"
-  ],
+  "root": true,
   "rules": {
     "license-header/header": [
       "error",
@@ -105,6 +104,94 @@
       "error",
       "as-needed"
     ],
+    "sort-imports-es6-autofix/sort-imports-es6": [
+      "error",
+      {
+        "ignoreCase": false,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": [
+          "all",
+          "single",
+          "multiple",
+          "none"
+        ]
+      }
+    ],
+    "unicorn/prefer-at": [
+      "error"
+    ],
+    "unicorn/import-style": [
+      "error",
+      {
+        "styles": {
+          "node:path": {
+            "named": true,
+            "default": false
+          }
+        }
+      }
+    ],
+    "unicorn/no-static-only-class": [
+      "off"
+    ],
+    "unicorn/no-null": [
+      "off"
+    ],
+    "unicorn/no-array-reduce": [
+      "off"
+    ],
+    "unicorn/prevent-abbreviations": [
+      "off"
+    ],
+    "unicorn/no-array-callback-reference": [
+      "off"
+    ],
+    "unicorn/escape-case": [
+      "off"
+    ],
+    "unicorn/no-useless-undefined": [
+      "off"
+    ],
+    "unicorn/no-array-for-each": [
+      "off"
+    ],
+    "unicorn/no-useless-switch-case": [
+      "off"
+    ],
+    "unicorn/switch-case-braces": [
+      "error",
+      "avoid"
+    ],
+    "comma-dangle": [
+      "error",
+      {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "never"
+      }
+    ],
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "tabWidth": 2,
+        "ignoreComments": true,
+        "ignoreTrailingComments": true,
+        "ignoreUrls": true,
+        "ignoreStrings": true,
+        "ignoreTemplateLiterals": true,
+        "ignoreRegExpLiterals": true
+      }
+    ],
     "no-constant-binary-expression": [
       "error"
     ],
@@ -134,104 +221,46 @@
     "prefer-template": [
       "error"
     ],
-    "sort-imports-es6-autofix/sort-imports-es6": [
+    "quote-props": [
       "error",
-      {
-        "ignoreCase": false,
-        "ignoreMemberSort": false,
-        "memberSyntaxSortOrder": [
-          "all",
-          "single",
-          "multiple",
-          "none"
-        ]
-      }
+      "consistent-as-needed"
     ],
-    "unicorn/no-unsafe-regex": [
-      "warn"
+    "quotes": [
+      "error",
+      "double"
     ],
-    "unicorn/prefer-at": [
-      "error"
-    ],
-    "unicorn/relative-url-style": [
+    "semi": [
       "error",
       "always"
     ],
-    "unicorn/import-style": [
-      "error",
-      {
-        "styles": {
-          "node:path": {
-            "named": true,
-            "default": false
-          }
-        }
-      }
-    ],
-    "unicorn/prefer-string-replace-all": [
-      "off"
-    ],
-    "unicorn/filename-case": [
-      "off"
-    ],
-    "unicorn/no-static-only-class": [
-      "off"
-    ],
-    "unicorn/no-process-exit": [
-      "off"
-    ],
-    "unicorn/no-object-as-default": [
-      "off"
-    ],
-    "unicorn/no-null": [
-      "off"
-    ],
-    "unicorn/no-array-reduce": [
-      "off"
-    ],
-    "unicorn/prevent-abbreviations": [
-      "off"
-    ],
-    "unicorn/no-array-callback-reference": [
-      "off"
-    ],
-    "unicorn/explicit-length-check": [
-      "off"
-    ],
-    "unicorn/escape-case": [
-      "off"
-    ],
-    "unicorn/no-useless-undefined": [
+    "unicorn/better-regex": [
       "off"
     ],
     "unicorn/catch-error-name": [
       "off"
     ],
-    "unicorn/no-nested-ternary": [
+    "unicorn/consistent-destructuring": [
       "off"
     ],
-    "unicorn/no-array-for-each": [
+    "unicorn/explicit-length-check": [
+      "off"
+    ],
+    "unicorn/filename-case": [
       "off"
     ],
     "unicorn/no-await-expression-member": [
       "off"
     ],
-    "unicorn/no-array-push-push": [
+    "unicorn/no-object-as-default": [
       "off"
+    ],
+    "unicorn/no-process-exit": [
+      "off"
+    ],
+    "unicorn/no-unsafe-regex": [
+      "warn"
     ],
     "unicorn/number-literal-case": [
-      "off"
-    ],
-    "unicorn/consistent-destructuring": [
-      "off"
-    ],
-    "unicorn/no-useless-switch-case": [
-      "off"
-    ],
-    "unicorn/better-regex": [
-      "off"
-    ],
-    "unicorn/prefer-module": [
       "off"
     ],
     "unicorn/numeric-separators-style": [
@@ -245,12 +274,12 @@
         }
       }
     ],
-    "unicorn/prefer-top-level-await": [
+    "unicorn/prefer-string-replace-all": [
       "off"
     ],
-    "unicorn/switch-case-braces": [
+    "unicorn/relative-url-style": [
       "error",
-      "avoid"
+      "always"
     ]
   }
 }

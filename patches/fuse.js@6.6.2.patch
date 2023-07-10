@@ -1,0 +1,1664 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+deleted file mode 100644
+index 4e21b03a1fee58f6f3ab7ef3777d91fec9d80e0e..0000000000000000000000000000000000000000
+diff --git a/dist/fuse.common.js b/dist/fuse.common.js
+index 2d4293c305937523d65cbfb298d68d8b3bbaf508..4c13a19e2e894835e614472d3416e6f40d6314f9 100644
+--- a/dist/fuse.common.js
++++ b/dist/fuse.common.js
+@@ -125,7 +125,7 @@ function _isNativeReflectConstruct() {
+   if (typeof Proxy === "function") return true;
+ 
+   try {
+-    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
++    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () { }));
+     return true;
+   } catch (e) {
+     return false;
+@@ -155,7 +155,7 @@ function _createSuper(Derived) {
+ 
+   return function _createSuperInternal() {
+     var Super = _getPrototypeOf(Derived),
+-        result;
++      result;
+ 
+     if (hasNativeReflectConstruct) {
+       var NewTarget = _getPrototypeOf(this).constructor;
+@@ -487,10 +487,10 @@ function norm() {
+ var FuseIndex = /*#__PURE__*/function () {
+   function FuseIndex() {
+     var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+-        _ref$getFn = _ref.getFn,
+-        getFn = _ref$getFn === void 0 ? Config.getFn : _ref$getFn,
+-        _ref$fieldNormWeight = _ref.fieldNormWeight,
+-        fieldNormWeight = _ref$fieldNormWeight === void 0 ? Config.fieldNormWeight : _ref$fieldNormWeight;
++      _ref$getFn = _ref.getFn,
++      getFn = _ref$getFn === void 0 ? Config.getFn : _ref$getFn,
++      _ref$fieldNormWeight = _ref.fieldNormWeight,
++      fieldNormWeight = _ref$fieldNormWeight === void 0 ? Config.fieldNormWeight : _ref$fieldNormWeight;
+ 
+     _classCallCheck(this, FuseIndex);
+ 
+@@ -621,8 +621,8 @@ var FuseIndex = /*#__PURE__*/function () {
+ 
+             while (stack.length) {
+               var _stack$pop = stack.pop(),
+-                  nestedArrIndex = _stack$pop.nestedArrIndex,
+-                  _value = _stack$pop.value;
++                nestedArrIndex = _stack$pop.nestedArrIndex,
++                _value = _stack$pop.value;
+ 
+               if (!isDefined(_value)) {
+                 continue;
+@@ -642,7 +642,7 @@ var FuseIndex = /*#__PURE__*/function () {
+                     value: item
+                   });
+                 });
+-              } else ;
++              } else;
+             }
+ 
+             record.$[keyIndex] = subRecords;
+@@ -671,10 +671,10 @@ var FuseIndex = /*#__PURE__*/function () {
+ }();
+ function createIndex(keys, docs) {
+   var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+-      _ref2$getFn = _ref2.getFn,
+-      getFn = _ref2$getFn === void 0 ? Config.getFn : _ref2$getFn,
+-      _ref2$fieldNormWeight = _ref2.fieldNormWeight,
+-      fieldNormWeight = _ref2$fieldNormWeight === void 0 ? Config.fieldNormWeight : _ref2$fieldNormWeight;
++    _ref2$getFn = _ref2.getFn,
++    getFn = _ref2$getFn === void 0 ? Config.getFn : _ref2$getFn,
++    _ref2$fieldNormWeight = _ref2.fieldNormWeight,
++    fieldNormWeight = _ref2$fieldNormWeight === void 0 ? Config.fieldNormWeight : _ref2$fieldNormWeight;
+ 
+   var myIndex = new FuseIndex({
+     getFn: getFn,
+@@ -687,13 +687,13 @@ function createIndex(keys, docs) {
+ }
+ function parseIndex(data) {
+   var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+-      _ref3$getFn = _ref3.getFn,
+-      getFn = _ref3$getFn === void 0 ? Config.getFn : _ref3$getFn,
+-      _ref3$fieldNormWeight = _ref3.fieldNormWeight,
+-      fieldNormWeight = _ref3$fieldNormWeight === void 0 ? Config.fieldNormWeight : _ref3$fieldNormWeight;
++    _ref3$getFn = _ref3.getFn,
++    getFn = _ref3$getFn === void 0 ? Config.getFn : _ref3$getFn,
++    _ref3$fieldNormWeight = _ref3.fieldNormWeight,
++    fieldNormWeight = _ref3$fieldNormWeight === void 0 ? Config.fieldNormWeight : _ref3$fieldNormWeight;
+ 
+   var keys = data.keys,
+-      records = data.records;
++    records = data.records;
+   var myIndex = new FuseIndex({
+     getFn: getFn,
+     fieldNormWeight: fieldNormWeight
+@@ -705,16 +705,16 @@ function parseIndex(data) {
+ 
+ function computeScore$1(pattern) {
+   var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+-      _ref$errors = _ref.errors,
+-      errors = _ref$errors === void 0 ? 0 : _ref$errors,
+-      _ref$currentLocation = _ref.currentLocation,
+-      currentLocation = _ref$currentLocation === void 0 ? 0 : _ref$currentLocation,
+-      _ref$expectedLocation = _ref.expectedLocation,
+-      expectedLocation = _ref$expectedLocation === void 0 ? 0 : _ref$expectedLocation,
+-      _ref$distance = _ref.distance,
+-      distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
+-      _ref$ignoreLocation = _ref.ignoreLocation,
+-      ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
++    _ref$errors = _ref.errors,
++    errors = _ref$errors === void 0 ? 0 : _ref$errors,
++    _ref$currentLocation = _ref.currentLocation,
++    currentLocation = _ref$currentLocation === void 0 ? 0 : _ref$currentLocation,
++    _ref$expectedLocation = _ref.expectedLocation,
++    expectedLocation = _ref$expectedLocation === void 0 ? 0 : _ref$expectedLocation,
++    _ref$distance = _ref.distance,
++    distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
++    _ref$ignoreLocation = _ref.ignoreLocation,
++    ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
+ 
+   var accuracy = errors / pattern.length;
+ 
+@@ -769,20 +769,20 @@ var MAX_BITS = 32;
+ 
+ function search(text, pattern, patternAlphabet) {
+   var _ref = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
+-      _ref$location = _ref.location,
+-      location = _ref$location === void 0 ? Config.location : _ref$location,
+-      _ref$distance = _ref.distance,
+-      distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
+-      _ref$threshold = _ref.threshold,
+-      threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
+-      _ref$findAllMatches = _ref.findAllMatches,
+-      findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
+-      _ref$minMatchCharLeng = _ref.minMatchCharLength,
+-      minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
+-      _ref$includeMatches = _ref.includeMatches,
+-      includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
+-      _ref$ignoreLocation = _ref.ignoreLocation,
+-      ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
++    _ref$location = _ref.location,
++    location = _ref$location === void 0 ? Config.location : _ref$location,
++    _ref$distance = _ref.distance,
++    distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
++    _ref$threshold = _ref.threshold,
++    threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
++    _ref$findAllMatches = _ref.findAllMatches,
++    findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
++    _ref$minMatchCharLeng = _ref.minMatchCharLength,
++    minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
++    _ref$includeMatches = _ref.includeMatches,
++    includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
++    _ref$ignoreLocation = _ref.ignoreLocation,
++    ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
+ 
+   if (pattern.length > MAX_BITS) {
+     throw new Error(PATTERN_LENGTH_TOO_LARGE(MAX_BITS));
+@@ -957,22 +957,22 @@ var BitapSearch = /*#__PURE__*/function () {
+     var _this = this;
+ 
+     var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+-        _ref$location = _ref.location,
+-        location = _ref$location === void 0 ? Config.location : _ref$location,
+-        _ref$threshold = _ref.threshold,
+-        threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
+-        _ref$distance = _ref.distance,
+-        distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
+-        _ref$includeMatches = _ref.includeMatches,
+-        includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
+-        _ref$findAllMatches = _ref.findAllMatches,
+-        findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
+-        _ref$minMatchCharLeng = _ref.minMatchCharLength,
+-        minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
+-        _ref$isCaseSensitive = _ref.isCaseSensitive,
+-        isCaseSensitive = _ref$isCaseSensitive === void 0 ? Config.isCaseSensitive : _ref$isCaseSensitive,
+-        _ref$ignoreLocation = _ref.ignoreLocation,
+-        ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
++      _ref$location = _ref.location,
++      location = _ref$location === void 0 ? Config.location : _ref$location,
++      _ref$threshold = _ref.threshold,
++      threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
++      _ref$distance = _ref.distance,
++      distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
++      _ref$includeMatches = _ref.includeMatches,
++      includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
++      _ref$findAllMatches = _ref.findAllMatches,
++      findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
++      _ref$minMatchCharLeng = _ref.minMatchCharLength,
++      minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
++      _ref$isCaseSensitive = _ref.isCaseSensitive,
++      isCaseSensitive = _ref$isCaseSensitive === void 0 ? Config.isCaseSensitive : _ref$isCaseSensitive,
++      _ref$ignoreLocation = _ref.ignoreLocation,
++      ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
+ 
+     _classCallCheck(this, BitapSearch);
+ 
+@@ -1026,8 +1026,8 @@ var BitapSearch = /*#__PURE__*/function () {
+     key: "searchIn",
+     value: function searchIn(text) {
+       var _this$options = this.options,
+-          isCaseSensitive = _this$options.isCaseSensitive,
+-          includeMatches = _this$options.includeMatches;
++        isCaseSensitive = _this$options.isCaseSensitive,
++        includeMatches = _this$options.includeMatches;
+ 
+       if (!isCaseSensitive) {
+         text = text.toLowerCase();
+@@ -1049,19 +1049,19 @@ var BitapSearch = /*#__PURE__*/function () {
+ 
+ 
+       var _this$options2 = this.options,
+-          location = _this$options2.location,
+-          distance = _this$options2.distance,
+-          threshold = _this$options2.threshold,
+-          findAllMatches = _this$options2.findAllMatches,
+-          minMatchCharLength = _this$options2.minMatchCharLength,
+-          ignoreLocation = _this$options2.ignoreLocation;
++        location = _this$options2.location,
++        distance = _this$options2.distance,
++        threshold = _this$options2.threshold,
++        findAllMatches = _this$options2.findAllMatches,
++        minMatchCharLength = _this$options2.minMatchCharLength,
++        ignoreLocation = _this$options2.ignoreLocation;
+       var allIndices = [];
+       var totalScore = 0;
+       var hasMatches = false;
+       this.chunks.forEach(function (_ref2) {
+         var pattern = _ref2.pattern,
+-            alphabet = _ref2.alphabet,
+-            startIndex = _ref2.startIndex;
++          alphabet = _ref2.alphabet,
++          startIndex = _ref2.startIndex;
+ 
+         var _search = search(text, pattern, alphabet, {
+           location: location + startIndex,
+@@ -1072,9 +1072,9 @@ var BitapSearch = /*#__PURE__*/function () {
+           includeMatches: includeMatches,
+           ignoreLocation: ignoreLocation
+         }),
+-            isMatch = _search.isMatch,
+-            score = _search.score,
+-            indices = _search.indices;
++          isMatch = _search.isMatch,
++          score = _search.score,
++          indices = _search.indices;
+ 
+         if (isMatch) {
+           hasMatches = true;
+@@ -1113,7 +1113,7 @@ var BaseMatch = /*#__PURE__*/function () {
+     key: "search",
+     value: function
+       /*text*/
+-    search() {}
++      search() { }
+   }], [{
+     key: "isMultiMatch",
+     value: function isMultiMatch(pattern) {
+@@ -1390,22 +1390,22 @@ var FuzzyMatch = /*#__PURE__*/function (_BaseMatch) {
+     var _this;
+ 
+     var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+-        _ref$location = _ref.location,
+-        location = _ref$location === void 0 ? Config.location : _ref$location,
+-        _ref$threshold = _ref.threshold,
+-        threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
+-        _ref$distance = _ref.distance,
+-        distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
+-        _ref$includeMatches = _ref.includeMatches,
+-        includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
+-        _ref$findAllMatches = _ref.findAllMatches,
+-        findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
+-        _ref$minMatchCharLeng = _ref.minMatchCharLength,
+-        minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
+-        _ref$isCaseSensitive = _ref.isCaseSensitive,
+-        isCaseSensitive = _ref$isCaseSensitive === void 0 ? Config.isCaseSensitive : _ref$isCaseSensitive,
+-        _ref$ignoreLocation = _ref.ignoreLocation,
+-        ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
++      _ref$location = _ref.location,
++      location = _ref$location === void 0 ? Config.location : _ref$location,
++      _ref$threshold = _ref.threshold,
++      threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
++      _ref$distance = _ref.distance,
++      distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
++      _ref$includeMatches = _ref.includeMatches,
++      includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
++      _ref$findAllMatches = _ref.findAllMatches,
++      findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
++      _ref$minMatchCharLeng = _ref.minMatchCharLength,
++      minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
++      _ref$isCaseSensitive = _ref.isCaseSensitive,
++      isCaseSensitive = _ref$isCaseSensitive === void 0 ? Config.isCaseSensitive : _ref$isCaseSensitive,
++      _ref$ignoreLocation = _ref.ignoreLocation,
++      ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
+ 
+     _classCallCheck(this, FuzzyMatch);
+ 
+@@ -1589,22 +1589,22 @@ var MultiMatchSet = new Set([FuzzyMatch.type, IncludeMatch.type]);
+ var ExtendedSearch = /*#__PURE__*/function () {
+   function ExtendedSearch(pattern) {
+     var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+-        _ref$isCaseSensitive = _ref.isCaseSensitive,
+-        isCaseSensitive = _ref$isCaseSensitive === void 0 ? Config.isCaseSensitive : _ref$isCaseSensitive,
+-        _ref$includeMatches = _ref.includeMatches,
+-        includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
+-        _ref$minMatchCharLeng = _ref.minMatchCharLength,
+-        minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
+-        _ref$ignoreLocation = _ref.ignoreLocation,
+-        ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation,
+-        _ref$findAllMatches = _ref.findAllMatches,
+-        findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
+-        _ref$location = _ref.location,
+-        location = _ref$location === void 0 ? Config.location : _ref$location,
+-        _ref$threshold = _ref.threshold,
+-        threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
+-        _ref$distance = _ref.distance,
+-        distance = _ref$distance === void 0 ? Config.distance : _ref$distance;
++      _ref$isCaseSensitive = _ref.isCaseSensitive,
++      isCaseSensitive = _ref$isCaseSensitive === void 0 ? Config.isCaseSensitive : _ref$isCaseSensitive,
++      _ref$includeMatches = _ref.includeMatches,
++      includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
++      _ref$minMatchCharLeng = _ref.minMatchCharLength,
++      minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
++      _ref$ignoreLocation = _ref.ignoreLocation,
++      ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation,
++      _ref$findAllMatches = _ref.findAllMatches,
++      findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
++      _ref$location = _ref.location,
++      location = _ref$location === void 0 ? Config.location : _ref$location,
++      _ref$threshold = _ref.threshold,
++      threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
++      _ref$distance = _ref.distance,
++      distance = _ref$distance === void 0 ? Config.distance : _ref$distance;
+ 
+     _classCallCheck(this, ExtendedSearch);
+ 
+@@ -1636,8 +1636,8 @@ var ExtendedSearch = /*#__PURE__*/function () {
+       }
+ 
+       var _this$options = this.options,
+-          includeMatches = _this$options.includeMatches,
+-          isCaseSensitive = _this$options.isCaseSensitive;
++        includeMatches = _this$options.includeMatches,
++        isCaseSensitive = _this$options.isCaseSensitive;
+       text = isCaseSensitive ? text : text.toLowerCase();
+       var numMatches = 0;
+       var allIndices = [];
+@@ -1653,9 +1653,9 @@ var ExtendedSearch = /*#__PURE__*/function () {
+           var searcher = searchers[j];
+ 
+           var _searcher$search = searcher.search(text),
+-              isMatch = _searcher$search.isMatch,
+-              indices = _searcher$search.indices,
+-              score = _searcher$search.score;
++            isMatch = _searcher$search.isMatch,
++            indices = _searcher$search.indices,
++            score = _searcher$search.score;
+ 
+           if (isMatch) {
+             numMatches += 1;
+@@ -1756,8 +1756,8 @@ var convertToExplicit = function convertToExplicit(query) {
+ 
+ function parse(query, options) {
+   var _ref3 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+-      _ref3$auto = _ref3.auto,
+-      auto = _ref3$auto === void 0 ? true : _ref3$auto;
++    _ref3$auto = _ref3.auto,
++    auto = _ref3$auto === void 0 ? true : _ref3$auto;
+ 
+   var next = function next(query) {
+     var keys = Object.keys(query);
+@@ -1812,13 +1812,13 @@ function parse(query, options) {
+ 
+ function computeScore(results, _ref) {
+   var _ref$ignoreFieldNorm = _ref.ignoreFieldNorm,
+-      ignoreFieldNorm = _ref$ignoreFieldNorm === void 0 ? Config.ignoreFieldNorm : _ref$ignoreFieldNorm;
++    ignoreFieldNorm = _ref$ignoreFieldNorm === void 0 ? Config.ignoreFieldNorm : _ref$ignoreFieldNorm;
+   results.forEach(function (result) {
+     var totalScore = 1;
+     result.matches.forEach(function (_ref2) {
+       var key = _ref2.key,
+-          norm = _ref2.norm,
+-          score = _ref2.score;
++        norm = _ref2.norm,
++        score = _ref2.score;
+       var weight = key ? key.weight : null;
+       totalScore *= Math.pow(score === 0 && weight ? Number.EPSILON : score, (weight || 1) * (ignoreFieldNorm ? 1 : norm));
+     });
+@@ -1840,7 +1840,7 @@ function transformMatches(result, data) {
+     }
+ 
+     var indices = match.indices,
+-        value = match.value;
++      value = match.value;
+     var obj = {
+       indices: indices,
+       value: value
+@@ -1864,10 +1864,10 @@ function transformScore(result, data) {
+ 
+ function format(results, docs) {
+   var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+-      _ref$includeMatches = _ref.includeMatches,
+-      includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
+-      _ref$includeScore = _ref.includeScore,
+-      includeScore = _ref$includeScore === void 0 ? Config.includeScore : _ref$includeScore;
++    _ref$includeMatches = _ref.includeMatches,
++    includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
++    _ref$includeScore = _ref.includeScore,
++    includeScore = _ref$includeScore === void 0 ? Config.includeScore : _ref$includeScore;
+ 
+   var transformers = [];
+   if (includeMatches) transformers.push(transformMatches);
+@@ -1936,7 +1936,7 @@ var Fuse$1 = /*#__PURE__*/function () {
+     value: function remove() {
+       var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function
+         /* doc, idx */
+-      () {
++        () {
+         return false;
+       };
+       var results = [];
+@@ -1970,15 +1970,15 @@ var Fuse$1 = /*#__PURE__*/function () {
+     key: "search",
+     value: function search(query) {
+       var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+-          _ref$limit = _ref.limit,
+-          limit = _ref$limit === void 0 ? -1 : _ref$limit;
++        _ref$limit = _ref.limit,
++        limit = _ref$limit === void 0 ? -1 : _ref$limit;
+ 
+       var _this$options = this.options,
+-          includeMatches = _this$options.includeMatches,
+-          includeScore = _this$options.includeScore,
+-          shouldSort = _this$options.shouldSort,
+-          sortFn = _this$options.sortFn,
+-          ignoreFieldNorm = _this$options.ignoreFieldNorm;
++        includeMatches = _this$options.includeMatches,
++        includeScore = _this$options.includeScore,
++        shouldSort = _this$options.shouldSort,
++        sortFn = _this$options.sortFn,
++        ignoreFieldNorm = _this$options.ignoreFieldNorm;
+       var results = isString(query) ? isString(this._docs[0]) ? this._searchStringList(query) : this._searchObjectList(query) : this._searchLogical(query);
+       computeScore(results, {
+         ignoreFieldNorm: ignoreFieldNorm
+@@ -2006,17 +2006,17 @@ var Fuse$1 = /*#__PURE__*/function () {
+ 
+       records.forEach(function (_ref2) {
+         var text = _ref2.v,
+-            idx = _ref2.i,
+-            norm = _ref2.n;
++          idx = _ref2.i,
++          norm = _ref2.n;
+ 
+         if (!isDefined(text)) {
+           return;
+         }
+ 
+         var _searcher$searchIn = searcher.searchIn(text),
+-            isMatch = _searcher$searchIn.isMatch,
+-            score = _searcher$searchIn.score,
+-            indices = _searcher$searchIn.indices;
++          isMatch = _searcher$searchIn.isMatch,
++          score = _searcher$searchIn.score,
++          indices = _searcher$searchIn.indices;
+ 
+         if (isMatch) {
+           results.push({
+@@ -2043,7 +2043,7 @@ var Fuse$1 = /*#__PURE__*/function () {
+       var evaluate = function evaluate(node, item, idx) {
+         if (!node.children) {
+           var keyId = node.keyId,
+-              searcher = node.searcher;
++            searcher = node.searcher;
+ 
+           var matches = _this._findMatches({
+             key: _this._keyStore.get(keyId),
+@@ -2083,7 +2083,7 @@ var Fuse$1 = /*#__PURE__*/function () {
+       var results = [];
+       records.forEach(function (_ref3) {
+         var item = _ref3.$,
+-            idx = _ref3.i;
++          idx = _ref3.i;
+ 
+         if (isDefined(item)) {
+           var expResults = evaluate(expression, item, idx);
+@@ -2118,13 +2118,13 @@ var Fuse$1 = /*#__PURE__*/function () {
+ 
+       var searcher = createSearcher(query, this.options);
+       var _this$_myIndex = this._myIndex,
+-          keys = _this$_myIndex.keys,
+-          records = _this$_myIndex.records;
++        keys = _this$_myIndex.keys,
++        records = _this$_myIndex.records;
+       var results = []; // List is Array<Object>
+ 
+       records.forEach(function (_ref5) {
+         var item = _ref5.$,
+-            idx = _ref5.i;
++          idx = _ref5.i;
+ 
+         if (!isDefined(item)) {
+           return;
+@@ -2154,8 +2154,8 @@ var Fuse$1 = /*#__PURE__*/function () {
+     key: "_findMatches",
+     value: function _findMatches(_ref6) {
+       var key = _ref6.key,
+-          value = _ref6.value,
+-          searcher = _ref6.searcher;
++        value = _ref6.value,
++        searcher = _ref6.searcher;
+ 
+       if (!isDefined(value)) {
+         return [];
+@@ -2166,17 +2166,17 @@ var Fuse$1 = /*#__PURE__*/function () {
+       if (isArray(value)) {
+         value.forEach(function (_ref7) {
+           var text = _ref7.v,
+-              idx = _ref7.i,
+-              norm = _ref7.n;
++            idx = _ref7.i,
++            norm = _ref7.n;
+ 
+           if (!isDefined(text)) {
+             return;
+           }
+ 
+           var _searcher$searchIn2 = searcher.searchIn(text),
+-              isMatch = _searcher$searchIn2.isMatch,
+-              score = _searcher$searchIn2.score,
+-              indices = _searcher$searchIn2.indices;
++            isMatch = _searcher$searchIn2.isMatch,
++            score = _searcher$searchIn2.score,
++            indices = _searcher$searchIn2.indices;
+ 
+           if (isMatch) {
+             matches.push({
+@@ -2191,12 +2191,12 @@ var Fuse$1 = /*#__PURE__*/function () {
+         });
+       } else {
+         var text = value.v,
+-            norm = value.n;
++          norm = value.n;
+ 
+         var _searcher$searchIn3 = searcher.searchIn(text),
+-            isMatch = _searcher$searchIn3.isMatch,
+-            score = _searcher$searchIn3.score,
+-            indices = _searcher$searchIn3.indices;
++          isMatch = _searcher$searchIn3.isMatch,
++          score = _searcher$searchIn3.score,
++          indices = _searcher$searchIn3.indices;
+ 
+         if (isMatch) {
+           matches.push({
+@@ -2231,4 +2231,4 @@ Fuse$1.config = Config;
+ 
+ var Fuse = Fuse$1;
+ 
+-module.exports = Fuse;
++module.exports = { Fuse };
+diff --git a/dist/fuse.d.ts b/dist/fuse.d.ts
+index f702238ee49a16ec487128cfda803d26d8992723..4bbfba8cb9ef3e961618c7bbc0f7ba8ae62d740b 100644
+--- a/dist/fuse.d.ts
++++ b/dist/fuse.d.ts
+@@ -1,14 +1,14 @@
+-// Type definitions for Fuse.js v6.6.2
++// Type definitions for js v6.6.2
+ // TypeScript v4.5.4
+ 
+ export default Fuse
+ export as namespace Fuse
+ 
+-declare class Fuse<T> {
++export declare class Fuse<T> {
+   constructor(
+     list: ReadonlyArray<T>,
+-    options?: Fuse.IFuseOptions<T>,
+-    index?: Fuse.FuseIndex<T>
++    options?: IFuseOptions<T>,
++    index?: FuseIndex<T>
+   )
+   /**
+    * Search function for the Fuse instance.
+@@ -16,24 +16,24 @@ declare class Fuse<T> {
+    * ```typescript
+    * const list: MyType[] = [myType1, myType2, etc...]
+ 
+-   * const options: Fuse.IFuseOptions<MyType> = {
++   * const options: IFuseOptions<MyType> = {
+    *  keys: ['key1', 'key2']
+    * }
+    *
+    * const myFuse = new Fuse(list, options)
+-   * let result = myFuse.search('pattern')
++   * let result = mysearch('pattern')
+    * ```
+    *
+    * @param pattern The pattern to search
+-   * @param options `Fuse.FuseSearchOptions`
++   * @param options `FuseSearchOptions`
+    * @returns An array of search results
+    */
+   search<R = T>(
+-    pattern: string | Fuse.Expression,
+-    options?: Fuse.FuseSearchOptions
+-  ): Fuse.FuseResult<R>[]
++    pattern: string | Expression,
++    options?: FuseSearchOptions
++  ): FuseResult<R>[]
+ 
+-  setCollection(docs: ReadonlyArray<T>, index?: Fuse.FuseIndex<T>): void
++  setCollection(docs: ReadonlyArray<T>, index?: FuseIndex<T>): void
+ 
+   /**
+    * Adds a doc to the end the list.
+@@ -55,7 +55,7 @@ declare class Fuse<T> {
+   /**
+    * Returns the generated Fuse index
+    */
+-  getIndex(): Fuse.FuseIndex<T>
++  getIndex(): FuseIndex<T>
+ 
+   /**
+    * Return the current version.
+@@ -72,12 +72,12 @@ declare class Fuse<T> {
+    * ```typescript
+    * const list: MyType[] = [myType1, myType2, etc...]
+    *
+-   * const index = Fuse.createIndex<MyType>(
++   * const index = createIndex<MyType>(
+    *  keys: ['key1', 'key2']
+    *  list: list
+    * )
+    *
+-   * const options: Fuse.IFuseOptions<MyType> = {
++   * const options: IFuseOptions<MyType> = {
+    *  keys: ['key1', 'key2']
+    * }
+    *
+@@ -89,225 +89,223 @@ declare class Fuse<T> {
+    * @returns An indexed list
+    */
+   static createIndex<U>(
+-    keys: Array<Fuse.FuseOptionKey<U>>,
++    keys: Array<FuseOptionKey<U>>,
+     list: ReadonlyArray<U>,
+-    options?: Fuse.FuseIndexOptions<U>
+-  ): Fuse.FuseIndex<U>
++    options?: FuseIndexOptions<U>
++  ): FuseIndex<U>
+ 
+   static parseIndex<U>(
+     index: any,
+-    options?: Fuse.FuseIndexOptions<U>
+-  ): Fuse.FuseIndex<U>
++    options?: FuseIndexOptions<U>
++  ): FuseIndex<U>
+ }
+ 
+-declare namespace Fuse {
+-  export class FuseIndex<T> {
+-    constructor(options?: FuseIndexOptions<T>)
+-    setSources(docs: ReadonlyArray<T>): void
+-    setKeys(keys: ReadonlyArray<string>): void
+-    setIndexRecords(records: FuseIndexRecords): void
+-    create(): void
+-    add(doc: T): void
+-    toJSON(): {
+-      keys: ReadonlyArray<string>
+-      records: FuseIndexRecords
+-    }
++export class FuseIndex<T> {
++  constructor(options?: FuseIndexOptions<T>)
++  setSources(docs: ReadonlyArray<T>): void
++  setKeys(keys: ReadonlyArray<string>): void
++  setIndexRecords(records: FuseIndexRecords): void
++  create(): void
++  add(doc: T): void
++  toJSON(): {
++    keys: ReadonlyArray<string>
++    records: FuseIndexRecords
+   }
++}
+ 
+-  type FuseGetFunction<T> = (
+-    obj: T,
+-    path: string | string[]
+-  ) => ReadonlyArray<string> | string
++type FuseGetFunction<T> = (
++  obj: T,
++  path: string | string[]
++) => ReadonlyArray<string> | string
+ 
+-  export type FuseIndexOptions<T> = {
+-    getFn: FuseGetFunction<T>
+-  }
++export type FuseIndexOptions<T> = {
++  getFn: FuseGetFunction<T>
++}
+ 
+-  // {
+-  //   title: { '$': "Old Man's War" },
+-  //   'author.firstName': { '$': 'Codenar' }
+-  // }
+-  //
+-  // OR
+-  //
+-  // {
+-  //   tags: [
+-  //     { $: 'nonfiction', idx: 0 },
+-  //     { $: 'web development', idx: 1 },
+-  //   ]
+-  // }
+-  export type FuseSortFunctionItem = {
+-    [key: string]: { $: string } | { $: string; idx: number }[]
+-  }
++// {
++//   title: { '$': "Old Man's War" },
++//   'author.firstName': { '$': 'Codenar' }
++// }
++//
++// OR
++//
++// {
++//   tags: [
++//     { $: 'nonfiction', idx: 0 },
++//     { $: 'web development', idx: 1 },
++//   ]
++// }
++export type FuseSortFunctionItem = {
++  [key: string]: { $: string } | { $: string; idx: number }[]
++}
+ 
+-  // {
+-  //   score: 0.001,
+-  //   key: 'author.firstName',
+-  //   value: 'Codenar',
+-  //   indices: [ [ 0, 3 ] ]
+-  // }
+-  export type FuseSortFunctionMatch = {
+-    score: number
+-    key: string
+-    value: string
+-    indices: ReadonlyArray<number>[]
+-  }
++// {
++//   score: 0.001,
++//   key: 'author.firstName',
++//   value: 'Codenar',
++//   indices: [ [ 0, 3 ] ]
++// }
++export type FuseSortFunctionMatch = {
++  score: number
++  key: string
++  value: string
++  indices: ReadonlyArray<number>[]
++}
+ 
+-  // {
+-  //   score: 0,
+-  //   key: 'tags',
+-  //   value: 'nonfiction',
+-  //   idx: 1,
+-  //   indices: [ [ 0, 9 ] ]
+-  // }
+-  export type FuseSortFunctionMatchList = FuseSortFunctionMatch & {
+-    idx: number
+-  }
++// {
++//   score: 0,
++//   key: 'tags',
++//   value: 'nonfiction',
++//   idx: 1,
++//   indices: [ [ 0, 9 ] ]
++// }
++export type FuseSortFunctionMatchList = FuseSortFunctionMatch & {
++  idx: number
++}
+ 
+-  export type FuseSortFunctionArg = {
+-    idx: number
+-    item: FuseSortFunctionItem
+-    score: number
+-    matches?: (FuseSortFunctionMatch | FuseSortFunctionMatchList)[]
+-  }
++export type FuseSortFunctionArg = {
++  idx: number
++  item: FuseSortFunctionItem
++  score: number
++  matches?: (FuseSortFunctionMatch | FuseSortFunctionMatchList)[]
++}
+ 
+-  export type FuseSortFunction = (
+-    a: FuseSortFunctionArg,
+-    b: FuseSortFunctionArg
+-  ) => number
+-
+-  // title: {
+-  //   '$': "Old Man's War",
+-  //   'n': 0.5773502691896258
+-  // }
+-  type RecordEntryObject = {
+-    v: string // The text value
+-    n: number // The field-length norm
+-  }
++export type FuseSortFunction = (
++  a: FuseSortFunctionArg,
++  b: FuseSortFunctionArg
++) => number
++
++// title: {
++//   '$': "Old Man's War",
++//   'n': 0.5773502691896258
++// }
++type RecordEntryObject = {
++  v: string // The text value
++  n: number // The field-length norm
++}
+ 
+-  // 'author.tags.name': [{
+-  //   'v': 'pizza lover',
+-  //   'i': 2,
+-  //   'n: 0.7071067811865475
+-  // }
+-  type RecordEntryArrayItem = ReadonlyArray<RecordEntryObject & { i: number }>
+-
+-  // TODO: this makes it difficult to infer the type. Need to think more about this
+-  type RecordEntry = { [key: string]: RecordEntryObject | RecordEntryArrayItem }
+-
+-  // {
+-  //   i: 0,
+-  //   '$': {
+-  //     '0': { v: "Old Man's War", n: 0.5773502691896258 },
+-  //     '1': { v: 'Codenar', n: 1 },
+-  //     '2': [
+-  //       { v: 'pizza lover', i: 2, n: 0.7071067811865475 },
+-  //       { v: 'helo wold', i: 1, n: 0.7071067811865475 },
+-  //       { v: 'hello world', i: 0, n: 0.7071067811865475 }
+-  //     ]
+-  //   }
+-  // }
+-  type FuseIndexObjectRecord = {
+-    i: number // The index of the record in the source list
+-    $: RecordEntry
+-  }
++// 'author.tags.name': [{
++//   'v': 'pizza lover',
++//   'i': 2,
++//   'n: 0.7071067811865475
++// }
++type RecordEntryArrayItem = ReadonlyArray<RecordEntryObject & { i: number }>
++
++// TODO: this makes it difficult to infer the type. Need to think more about this
++type RecordEntry = { [key: string]: RecordEntryObject | RecordEntryArrayItem }
++
++// {
++//   i: 0,
++//   '$': {
++//     '0': { v: "Old Man's War", n: 0.5773502691896258 },
++//     '1': { v: 'Codenar', n: 1 },
++//     '2': [
++//       { v: 'pizza lover', i: 2, n: 0.7071067811865475 },
++//       { v: 'helo wold', i: 1, n: 0.7071067811865475 },
++//       { v: 'hello world', i: 0, n: 0.7071067811865475 }
++//     ]
++//   }
++// }
++type FuseIndexObjectRecord = {
++  i: number // The index of the record in the source list
++  $: RecordEntry
++}
+ 
+-  // {
+-  //   keys: null,
+-  //   list: [
+-  //     { v: 'one', i: 0, n: 1 },
+-  //     { v: 'two', i: 1, n: 1 },
+-  //     { v: 'three', i: 2, n: 1 }
+-  //   ]
+-  // }
+-  type FuseIndexStringRecord = {
+-    i: number // The index of the record in the source list
+-    v: string // The text value
+-    n: number // The field-length norm
+-  }
++// {
++//   keys: null,
++//   list: [
++//     { v: 'one', i: 0, n: 1 },
++//     { v: 'two', i: 1, n: 1 },
++//     { v: 'three', i: 2, n: 1 }
++//   ]
++// }
++type FuseIndexStringRecord = {
++  i: number // The index of the record in the source list
++  v: string // The text value
++  n: number // The field-length norm
++}
+ 
+-  type FuseIndexRecords =
+-    | ReadonlyArray<FuseIndexObjectRecord>
+-    | ReadonlyArray<FuseIndexStringRecord>
+-
+-  // {
+-  //   name: 'title',
+-  //   weight: 0.7
+-  // }
+-  export type FuseOptionKeyObject<T> = {
+-    name: string | string[]
+-    weight?: number
+-    getFn?: (obj: T) => ReadonlyArray<string> | string
+-  }
++type FuseIndexRecords =
++  | ReadonlyArray<FuseIndexObjectRecord>
++  | ReadonlyArray<FuseIndexStringRecord>
++
++// {
++//   name: 'title',
++//   weight: 0.7
++// }
++export type FuseOptionKeyObject<T> = {
++  name: string | string[]
++  weight?: number
++  getFn?: (obj: T) => ReadonlyArray<string> | string
++}
+ 
+-  export type FuseOptionKey<T> = FuseOptionKeyObject<T> | string | string[]
+-
+-  export interface IFuseOptions<T> {
+-    /** Indicates whether comparisons should be case sensitive. */
+-    isCaseSensitive?: boolean
+-    /** Determines how close the match must be to the fuzzy location (specified by `location`). An exact letter match which is `distance` characters away from the fuzzy location would score as a complete mismatch. A `distance` of `0` requires the match be at the exact `location` specified. A distance of `1000` would require a perfect match to be within `800` characters of the `location` to be found using a `threshold` of `0.8`. */
+-    distance?: number
+-    /** When true, the matching function will continue to the end of a search pattern even if a perfect match has already been located in the string. */
+-    findAllMatches?: boolean
+-    /** The function to use to retrieve an object's value at the provided path. The default will also search nested paths. */
+-    getFn?: FuseGetFunction<T>
+-    /** When `true`, search will ignore `location` and `distance`, so it won't matter where in the string the pattern appears. */
+-    ignoreLocation?: boolean
+-    /** When `true`, the calculation for the relevance score (used for sorting) will ignore the `field-length norm`. */
+-    ignoreFieldNorm?: boolean
+-    /** Determines how much the `field-length norm` affects scoring. A value of `0` is equivalent to ignoring the field-length norm. A value of `0.5` will greatly reduce the effect of field-length norm, while a value of `2.0` will greatly increase it. */
+-    fieldNormWeight?: number
+-    /** Whether the matches should be included in the result set. When `true`, each record in the result set will include the indices of the matched characters. These can consequently be used for highlighting purposes. */
+-    includeMatches?: boolean
+-    /** Whether the score should be included in the result set. A score of `0`indicates a perfect match, while a score of `1` indicates a complete mismatch. */
+-    includeScore?: boolean
+-    /** List of keys that will be searched. This supports nested paths, weighted search, searching in arrays of `strings` and `objects`. */
+-    keys?: Array<FuseOptionKey<T>>
+-    /** Determines approximately where in the text is the pattern expected to be found. */
+-    location?: number
+-    /** Only the matches whose length exceeds this value will be returned. (For instance, if you want to ignore single character matches in the result, set it to `2`). */
+-    minMatchCharLength?: number
+-    /** Whether to sort the result list, by score. */
+-    shouldSort?: boolean
+-    /** The function to use to sort all the results. The default will sort by ascending relevance score, ascending index. */
+-    sortFn?: FuseSortFunction
+-    /** At what point does the match algorithm give up. A threshold of `0.0` requires a perfect match (of both letters and location), a threshold of `1.0` would match anything. */
+-    threshold?: number
+-    /** When `true`, it enables the use of unix-like search commands. See [example](/examples.html#extended-search). */
+-    useExtendedSearch?: boolean
+-  }
++export type FuseOptionKey<T> = FuseOptionKeyObject<T> | string | string[]
++
++export interface IFuseOptions<T> {
++  /** Indicates whether comparisons should be case sensitive. */
++  isCaseSensitive?: boolean
++  /** Determines how close the match must be to the fuzzy location (specified by `location`). An exact letter match which is `distance` characters away from the fuzzy location would score as a complete mismatch. A `distance` of `0` requires the match be at the exact `location` specified. A distance of `1000` would require a perfect match to be within `800` characters of the `location` to be found using a `threshold` of `0.8`. */
++  distance?: number
++  /** When true, the matching function will continue to the end of a search pattern even if a perfect match has already been located in the string. */
++  findAllMatches?: boolean
++  /** The function to use to retrieve an object's value at the provided path. The default will also search nested paths. */
++  getFn?: FuseGetFunction<T>
++  /** When `true`, search will ignore `location` and `distance`, so it won't matter where in the string the pattern appears. */
++  ignoreLocation?: boolean
++  /** When `true`, the calculation for the relevance score (used for sorting) will ignore the `field-length norm`. */
++  ignoreFieldNorm?: boolean
++  /** Determines how much the `field-length norm` affects scoring. A value of `0` is equivalent to ignoring the field-length norm. A value of `0.5` will greatly reduce the effect of field-length norm, while a value of `2.0` will greatly increase it. */
++  fieldNormWeight?: number
++  /** Whether the matches should be included in the result set. When `true`, each record in the result set will include the indices of the matched characters. These can consequently be used for highlighting purposes. */
++  includeMatches?: boolean
++  /** Whether the score should be included in the result set. A score of `0`indicates a perfect match, while a score of `1` indicates a complete mismatch. */
++  includeScore?: boolean
++  /** List of keys that will be searched. This supports nested paths, weighted search, searching in arrays of `strings` and `objects`. */
++  keys?: Array<FuseOptionKey<T>>
++  /** Determines approximately where in the text is the pattern expected to be found. */
++  location?: number
++  /** Only the matches whose length exceeds this value will be returned. (For instance, if you want to ignore single character matches in the result, set it to `2`). */
++  minMatchCharLength?: number
++  /** Whether to sort the result list, by score. */
++  shouldSort?: boolean
++  /** The function to use to sort all the results. The default will sort by ascending relevance score, ascending index. */
++  sortFn?: FuseSortFunction
++  /** At what point does the match algorithm give up. A threshold of `0.0` requires a perfect match (of both letters and location), a threshold of `1.0` would match anything. */
++  threshold?: number
++  /** When `true`, it enables the use of unix-like search commands. See [example](/examples.html#extended-search). */
++  useExtendedSearch?: boolean
++}
+ 
+-  // Denotes the start/end indices of a match
+-  //                 start    end
+-  //                   ↓       ↓
+-  type RangeTuple = [number, number]
++// Denotes the start/end indices of a match
++//                 start    end
++//                   ↓       ↓
++type RangeTuple = [number, number]
+ 
+-  export type FuseResultMatch = {
+-    indices: ReadonlyArray<RangeTuple>
+-    key?: string
+-    refIndex?: number
+-    value?: string
+-  }
++export type FuseResultMatch = {
++  indices: ReadonlyArray<RangeTuple>
++  key?: string
++  refIndex?: number
++  value?: string
++}
+ 
+-  export type FuseSearchOptions = {
+-    limit: number
+-  }
++export type FuseSearchOptions = {
++  limit: number
++}
+ 
+-  export type FuseResult<T> = {
+-    item: T
+-    refIndex: number
+-    score?: number
+-    matches?: ReadonlyArray<FuseResultMatch>
+-  }
++export type FuseResult<T> = {
++  item: T
++  refIndex: number
++  score?: number
++  matches?: ReadonlyArray<FuseResultMatch>
++}
+ 
+-  export type Expression =
+-    | { [key: string]: string }
+-    | {
+-        $path: ReadonlyArray<string>
+-        $val: string
+-      }
+-    | { $and?: Expression[] }
+-    | { $or?: Expression[] }
++export type Expression =
++  | { [key: string]: string }
++  | {
++    $path: ReadonlyArray<string>
++    $val: string
++  }
++  | { $and?: Expression[] }
++  | { $or?: Expression[] }
+ 
+-  export const config: Required<IFuseOptions<any>>
+-}
++export const config: Required<IFuseOptions<any>>
+diff --git a/dist/fuse.esm.js b/dist/fuse.esm.js
+index 55b68c87ea9b543fb7cf94858b5f48010175aa89..00dfd30f8c5f3f2a9a6e1c4c377487acb8916cec 100644
+--- a/dist/fuse.esm.js
++++ b/dist/fuse.esm.js
+@@ -430,7 +430,7 @@ class FuseIndex {
+                 value: item
+               });
+             });
+-          } else ;
++          } else;
+         }
+         record.$[keyIndex] = subRecords;
+       } else if (isString(value) && !isBlank(value)) {
+@@ -871,7 +871,7 @@ class BaseMatch {
+   static isSingleMatch(pattern) {
+     return getMatch(pattern, this.singleRegex)
+   }
+-  search(/*text*/) {}
++  search(/*text*/) { }
+ }
+ 
+ function getMatch(pattern, exp) {
+@@ -1503,7 +1503,7 @@ function format(
+   })
+ }
+ 
+-class Fuse {
++export class Fuse {
+   constructor(docs, options = {}, index) {
+     this.options = { ...Config, ...options };
+ 
+@@ -1777,4 +1777,3 @@ Fuse.config = Config;
+   register(ExtendedSearch);
+ }
+ 
+-export { Fuse as default };
+diff --git a/dist/fuse.js b/dist/fuse.js
+index 42e7d3b7f01dfd79fffb9108b663cd20c9098119..ce14ceb97a490c4b660d5562e5218e9c0249f70d 100644
+--- a/dist/fuse.js
++++ b/dist/fuse.js
+@@ -9,9 +9,10 @@
+ 
+ (function (global, factory) {
+   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+-  typeof define === 'function' && define.amd ? define(factory) :
+-  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Fuse = factory());
+-})(this, (function () { 'use strict';
++    typeof define === 'function' && define.amd ? define(factory) :
++      (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Fuse = factory());
++})(this, (function () {
++  'use strict';
+ 
+   function ownKeys(object, enumerableOnly) {
+     var keys = Object.keys(object);
+@@ -129,7 +130,7 @@
+     if (typeof Proxy === "function") return true;
+ 
+     try {
+-      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
++      Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () { }));
+       return true;
+     } catch (e) {
+       return false;
+@@ -159,7 +160,7 @@
+ 
+     return function _createSuperInternal() {
+       var Super = _getPrototypeOf(Derived),
+-          result;
++        result;
+ 
+       if (hasNativeReflectConstruct) {
+         var NewTarget = _getPrototypeOf(this).constructor;
+@@ -491,10 +492,10 @@
+   var FuseIndex = /*#__PURE__*/function () {
+     function FuseIndex() {
+       var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+-          _ref$getFn = _ref.getFn,
+-          getFn = _ref$getFn === void 0 ? Config.getFn : _ref$getFn,
+-          _ref$fieldNormWeight = _ref.fieldNormWeight,
+-          fieldNormWeight = _ref$fieldNormWeight === void 0 ? Config.fieldNormWeight : _ref$fieldNormWeight;
++        _ref$getFn = _ref.getFn,
++        getFn = _ref$getFn === void 0 ? Config.getFn : _ref$getFn,
++        _ref$fieldNormWeight = _ref.fieldNormWeight,
++        fieldNormWeight = _ref$fieldNormWeight === void 0 ? Config.fieldNormWeight : _ref$fieldNormWeight;
+ 
+       _classCallCheck(this, FuseIndex);
+ 
+@@ -625,8 +626,8 @@
+ 
+               while (stack.length) {
+                 var _stack$pop = stack.pop(),
+-                    nestedArrIndex = _stack$pop.nestedArrIndex,
+-                    _value = _stack$pop.value;
++                  nestedArrIndex = _stack$pop.nestedArrIndex,
++                  _value = _stack$pop.value;
+ 
+                 if (!isDefined(_value)) {
+                   continue;
+@@ -646,7 +647,7 @@
+                       value: item
+                     });
+                   });
+-                } else ;
++                } else;
+               }
+ 
+               record.$[keyIndex] = subRecords;
+@@ -675,10 +676,10 @@
+   }();
+   function createIndex(keys, docs) {
+     var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+-        _ref2$getFn = _ref2.getFn,
+-        getFn = _ref2$getFn === void 0 ? Config.getFn : _ref2$getFn,
+-        _ref2$fieldNormWeight = _ref2.fieldNormWeight,
+-        fieldNormWeight = _ref2$fieldNormWeight === void 0 ? Config.fieldNormWeight : _ref2$fieldNormWeight;
++      _ref2$getFn = _ref2.getFn,
++      getFn = _ref2$getFn === void 0 ? Config.getFn : _ref2$getFn,
++      _ref2$fieldNormWeight = _ref2.fieldNormWeight,
++      fieldNormWeight = _ref2$fieldNormWeight === void 0 ? Config.fieldNormWeight : _ref2$fieldNormWeight;
+ 
+     var myIndex = new FuseIndex({
+       getFn: getFn,
+@@ -691,13 +692,13 @@
+   }
+   function parseIndex(data) {
+     var _ref3 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+-        _ref3$getFn = _ref3.getFn,
+-        getFn = _ref3$getFn === void 0 ? Config.getFn : _ref3$getFn,
+-        _ref3$fieldNormWeight = _ref3.fieldNormWeight,
+-        fieldNormWeight = _ref3$fieldNormWeight === void 0 ? Config.fieldNormWeight : _ref3$fieldNormWeight;
++      _ref3$getFn = _ref3.getFn,
++      getFn = _ref3$getFn === void 0 ? Config.getFn : _ref3$getFn,
++      _ref3$fieldNormWeight = _ref3.fieldNormWeight,
++      fieldNormWeight = _ref3$fieldNormWeight === void 0 ? Config.fieldNormWeight : _ref3$fieldNormWeight;
+ 
+     var keys = data.keys,
+-        records = data.records;
++      records = data.records;
+     var myIndex = new FuseIndex({
+       getFn: getFn,
+       fieldNormWeight: fieldNormWeight
+@@ -709,16 +710,16 @@
+ 
+   function computeScore$1(pattern) {
+     var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+-        _ref$errors = _ref.errors,
+-        errors = _ref$errors === void 0 ? 0 : _ref$errors,
+-        _ref$currentLocation = _ref.currentLocation,
+-        currentLocation = _ref$currentLocation === void 0 ? 0 : _ref$currentLocation,
+-        _ref$expectedLocation = _ref.expectedLocation,
+-        expectedLocation = _ref$expectedLocation === void 0 ? 0 : _ref$expectedLocation,
+-        _ref$distance = _ref.distance,
+-        distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
+-        _ref$ignoreLocation = _ref.ignoreLocation,
+-        ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
++      _ref$errors = _ref.errors,
++      errors = _ref$errors === void 0 ? 0 : _ref$errors,
++      _ref$currentLocation = _ref.currentLocation,
++      currentLocation = _ref$currentLocation === void 0 ? 0 : _ref$currentLocation,
++      _ref$expectedLocation = _ref.expectedLocation,
++      expectedLocation = _ref$expectedLocation === void 0 ? 0 : _ref$expectedLocation,
++      _ref$distance = _ref.distance,
++      distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
++      _ref$ignoreLocation = _ref.ignoreLocation,
++      ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
+ 
+     var accuracy = errors / pattern.length;
+ 
+@@ -773,20 +774,20 @@
+ 
+   function search(text, pattern, patternAlphabet) {
+     var _ref = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {},
+-        _ref$location = _ref.location,
+-        location = _ref$location === void 0 ? Config.location : _ref$location,
+-        _ref$distance = _ref.distance,
+-        distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
+-        _ref$threshold = _ref.threshold,
+-        threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
+-        _ref$findAllMatches = _ref.findAllMatches,
+-        findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
+-        _ref$minMatchCharLeng = _ref.minMatchCharLength,
+-        minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
+-        _ref$includeMatches = _ref.includeMatches,
+-        includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
+-        _ref$ignoreLocation = _ref.ignoreLocation,
+-        ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
++      _ref$location = _ref.location,
++      location = _ref$location === void 0 ? Config.location : _ref$location,
++      _ref$distance = _ref.distance,
++      distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
++      _ref$threshold = _ref.threshold,
++      threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
++      _ref$findAllMatches = _ref.findAllMatches,
++      findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
++      _ref$minMatchCharLeng = _ref.minMatchCharLength,
++      minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
++      _ref$includeMatches = _ref.includeMatches,
++      includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
++      _ref$ignoreLocation = _ref.ignoreLocation,
++      ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
+ 
+     if (pattern.length > MAX_BITS) {
+       throw new Error(PATTERN_LENGTH_TOO_LARGE(MAX_BITS));
+@@ -961,22 +962,22 @@
+       var _this = this;
+ 
+       var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+-          _ref$location = _ref.location,
+-          location = _ref$location === void 0 ? Config.location : _ref$location,
+-          _ref$threshold = _ref.threshold,
+-          threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
+-          _ref$distance = _ref.distance,
+-          distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
+-          _ref$includeMatches = _ref.includeMatches,
+-          includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
+-          _ref$findAllMatches = _ref.findAllMatches,
+-          findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
+-          _ref$minMatchCharLeng = _ref.minMatchCharLength,
+-          minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
+-          _ref$isCaseSensitive = _ref.isCaseSensitive,
+-          isCaseSensitive = _ref$isCaseSensitive === void 0 ? Config.isCaseSensitive : _ref$isCaseSensitive,
+-          _ref$ignoreLocation = _ref.ignoreLocation,
+-          ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
++        _ref$location = _ref.location,
++        location = _ref$location === void 0 ? Config.location : _ref$location,
++        _ref$threshold = _ref.threshold,
++        threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
++        _ref$distance = _ref.distance,
++        distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
++        _ref$includeMatches = _ref.includeMatches,
++        includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
++        _ref$findAllMatches = _ref.findAllMatches,
++        findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
++        _ref$minMatchCharLeng = _ref.minMatchCharLength,
++        minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
++        _ref$isCaseSensitive = _ref.isCaseSensitive,
++        isCaseSensitive = _ref$isCaseSensitive === void 0 ? Config.isCaseSensitive : _ref$isCaseSensitive,
++        _ref$ignoreLocation = _ref.ignoreLocation,
++        ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
+ 
+       _classCallCheck(this, BitapSearch);
+ 
+@@ -1030,8 +1031,8 @@
+       key: "searchIn",
+       value: function searchIn(text) {
+         var _this$options = this.options,
+-            isCaseSensitive = _this$options.isCaseSensitive,
+-            includeMatches = _this$options.includeMatches;
++          isCaseSensitive = _this$options.isCaseSensitive,
++          includeMatches = _this$options.includeMatches;
+ 
+         if (!isCaseSensitive) {
+           text = text.toLowerCase();
+@@ -1053,19 +1054,19 @@
+ 
+ 
+         var _this$options2 = this.options,
+-            location = _this$options2.location,
+-            distance = _this$options2.distance,
+-            threshold = _this$options2.threshold,
+-            findAllMatches = _this$options2.findAllMatches,
+-            minMatchCharLength = _this$options2.minMatchCharLength,
+-            ignoreLocation = _this$options2.ignoreLocation;
++          location = _this$options2.location,
++          distance = _this$options2.distance,
++          threshold = _this$options2.threshold,
++          findAllMatches = _this$options2.findAllMatches,
++          minMatchCharLength = _this$options2.minMatchCharLength,
++          ignoreLocation = _this$options2.ignoreLocation;
+         var allIndices = [];
+         var totalScore = 0;
+         var hasMatches = false;
+         this.chunks.forEach(function (_ref2) {
+           var pattern = _ref2.pattern,
+-              alphabet = _ref2.alphabet,
+-              startIndex = _ref2.startIndex;
++            alphabet = _ref2.alphabet,
++            startIndex = _ref2.startIndex;
+ 
+           var _search = search(text, pattern, alphabet, {
+             location: location + startIndex,
+@@ -1076,9 +1077,9 @@
+             includeMatches: includeMatches,
+             ignoreLocation: ignoreLocation
+           }),
+-              isMatch = _search.isMatch,
+-              score = _search.score,
+-              indices = _search.indices;
++            isMatch = _search.isMatch,
++            score = _search.score,
++            indices = _search.indices;
+ 
+           if (isMatch) {
+             hasMatches = true;
+@@ -1117,7 +1118,7 @@
+       key: "search",
+       value: function
+         /*text*/
+-      search() {}
++        search() { }
+     }], [{
+       key: "isMultiMatch",
+       value: function isMultiMatch(pattern) {
+@@ -1394,22 +1395,22 @@
+       var _this;
+ 
+       var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+-          _ref$location = _ref.location,
+-          location = _ref$location === void 0 ? Config.location : _ref$location,
+-          _ref$threshold = _ref.threshold,
+-          threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
+-          _ref$distance = _ref.distance,
+-          distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
+-          _ref$includeMatches = _ref.includeMatches,
+-          includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
+-          _ref$findAllMatches = _ref.findAllMatches,
+-          findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
+-          _ref$minMatchCharLeng = _ref.minMatchCharLength,
+-          minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
+-          _ref$isCaseSensitive = _ref.isCaseSensitive,
+-          isCaseSensitive = _ref$isCaseSensitive === void 0 ? Config.isCaseSensitive : _ref$isCaseSensitive,
+-          _ref$ignoreLocation = _ref.ignoreLocation,
+-          ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
++        _ref$location = _ref.location,
++        location = _ref$location === void 0 ? Config.location : _ref$location,
++        _ref$threshold = _ref.threshold,
++        threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
++        _ref$distance = _ref.distance,
++        distance = _ref$distance === void 0 ? Config.distance : _ref$distance,
++        _ref$includeMatches = _ref.includeMatches,
++        includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
++        _ref$findAllMatches = _ref.findAllMatches,
++        findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
++        _ref$minMatchCharLeng = _ref.minMatchCharLength,
++        minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
++        _ref$isCaseSensitive = _ref.isCaseSensitive,
++        isCaseSensitive = _ref$isCaseSensitive === void 0 ? Config.isCaseSensitive : _ref$isCaseSensitive,
++        _ref$ignoreLocation = _ref.ignoreLocation,
++        ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation;
+ 
+       _classCallCheck(this, FuzzyMatch);
+ 
+@@ -1593,22 +1594,22 @@
+   var ExtendedSearch = /*#__PURE__*/function () {
+     function ExtendedSearch(pattern) {
+       var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+-          _ref$isCaseSensitive = _ref.isCaseSensitive,
+-          isCaseSensitive = _ref$isCaseSensitive === void 0 ? Config.isCaseSensitive : _ref$isCaseSensitive,
+-          _ref$includeMatches = _ref.includeMatches,
+-          includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
+-          _ref$minMatchCharLeng = _ref.minMatchCharLength,
+-          minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
+-          _ref$ignoreLocation = _ref.ignoreLocation,
+-          ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation,
+-          _ref$findAllMatches = _ref.findAllMatches,
+-          findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
+-          _ref$location = _ref.location,
+-          location = _ref$location === void 0 ? Config.location : _ref$location,
+-          _ref$threshold = _ref.threshold,
+-          threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
+-          _ref$distance = _ref.distance,
+-          distance = _ref$distance === void 0 ? Config.distance : _ref$distance;
++        _ref$isCaseSensitive = _ref.isCaseSensitive,
++        isCaseSensitive = _ref$isCaseSensitive === void 0 ? Config.isCaseSensitive : _ref$isCaseSensitive,
++        _ref$includeMatches = _ref.includeMatches,
++        includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
++        _ref$minMatchCharLeng = _ref.minMatchCharLength,
++        minMatchCharLength = _ref$minMatchCharLeng === void 0 ? Config.minMatchCharLength : _ref$minMatchCharLeng,
++        _ref$ignoreLocation = _ref.ignoreLocation,
++        ignoreLocation = _ref$ignoreLocation === void 0 ? Config.ignoreLocation : _ref$ignoreLocation,
++        _ref$findAllMatches = _ref.findAllMatches,
++        findAllMatches = _ref$findAllMatches === void 0 ? Config.findAllMatches : _ref$findAllMatches,
++        _ref$location = _ref.location,
++        location = _ref$location === void 0 ? Config.location : _ref$location,
++        _ref$threshold = _ref.threshold,
++        threshold = _ref$threshold === void 0 ? Config.threshold : _ref$threshold,
++        _ref$distance = _ref.distance,
++        distance = _ref$distance === void 0 ? Config.distance : _ref$distance;
+ 
+       _classCallCheck(this, ExtendedSearch);
+ 
+@@ -1640,8 +1641,8 @@
+         }
+ 
+         var _this$options = this.options,
+-            includeMatches = _this$options.includeMatches,
+-            isCaseSensitive = _this$options.isCaseSensitive;
++          includeMatches = _this$options.includeMatches,
++          isCaseSensitive = _this$options.isCaseSensitive;
+         text = isCaseSensitive ? text : text.toLowerCase();
+         var numMatches = 0;
+         var allIndices = [];
+@@ -1657,9 +1658,9 @@
+             var searcher = searchers[j];
+ 
+             var _searcher$search = searcher.search(text),
+-                isMatch = _searcher$search.isMatch,
+-                indices = _searcher$search.indices,
+-                score = _searcher$search.score;
++              isMatch = _searcher$search.isMatch,
++              indices = _searcher$search.indices,
++              score = _searcher$search.score;
+ 
+             if (isMatch) {
+               numMatches += 1;
+@@ -1760,8 +1761,8 @@
+ 
+   function parse(query, options) {
+     var _ref3 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+-        _ref3$auto = _ref3.auto,
+-        auto = _ref3$auto === void 0 ? true : _ref3$auto;
++      _ref3$auto = _ref3.auto,
++      auto = _ref3$auto === void 0 ? true : _ref3$auto;
+ 
+     var next = function next(query) {
+       var keys = Object.keys(query);
+@@ -1816,13 +1817,13 @@
+ 
+   function computeScore(results, _ref) {
+     var _ref$ignoreFieldNorm = _ref.ignoreFieldNorm,
+-        ignoreFieldNorm = _ref$ignoreFieldNorm === void 0 ? Config.ignoreFieldNorm : _ref$ignoreFieldNorm;
++      ignoreFieldNorm = _ref$ignoreFieldNorm === void 0 ? Config.ignoreFieldNorm : _ref$ignoreFieldNorm;
+     results.forEach(function (result) {
+       var totalScore = 1;
+       result.matches.forEach(function (_ref2) {
+         var key = _ref2.key,
+-            norm = _ref2.norm,
+-            score = _ref2.score;
++          norm = _ref2.norm,
++          score = _ref2.score;
+         var weight = key ? key.weight : null;
+         totalScore *= Math.pow(score === 0 && weight ? Number.EPSILON : score, (weight || 1) * (ignoreFieldNorm ? 1 : norm));
+       });
+@@ -1844,7 +1845,7 @@
+       }
+ 
+       var indices = match.indices,
+-          value = match.value;
++        value = match.value;
+       var obj = {
+         indices: indices,
+         value: value
+@@ -1868,10 +1869,10 @@
+ 
+   function format(results, docs) {
+     var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+-        _ref$includeMatches = _ref.includeMatches,
+-        includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
+-        _ref$includeScore = _ref.includeScore,
+-        includeScore = _ref$includeScore === void 0 ? Config.includeScore : _ref$includeScore;
++      _ref$includeMatches = _ref.includeMatches,
++      includeMatches = _ref$includeMatches === void 0 ? Config.includeMatches : _ref$includeMatches,
++      _ref$includeScore = _ref.includeScore,
++      includeScore = _ref$includeScore === void 0 ? Config.includeScore : _ref$includeScore;
+ 
+     var transformers = [];
+     if (includeMatches) transformers.push(transformMatches);
+@@ -1940,7 +1941,7 @@
+       value: function remove() {
+         var predicate = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function
+           /* doc, idx */
+-        () {
++          () {
+           return false;
+         };
+         var results = [];
+@@ -1974,15 +1975,15 @@
+       key: "search",
+       value: function search(query) {
+         var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+-            _ref$limit = _ref.limit,
+-            limit = _ref$limit === void 0 ? -1 : _ref$limit;
++          _ref$limit = _ref.limit,
++          limit = _ref$limit === void 0 ? -1 : _ref$limit;
+ 
+         var _this$options = this.options,
+-            includeMatches = _this$options.includeMatches,
+-            includeScore = _this$options.includeScore,
+-            shouldSort = _this$options.shouldSort,
+-            sortFn = _this$options.sortFn,
+-            ignoreFieldNorm = _this$options.ignoreFieldNorm;
++          includeMatches = _this$options.includeMatches,
++          includeScore = _this$options.includeScore,
++          shouldSort = _this$options.shouldSort,
++          sortFn = _this$options.sortFn,
++          ignoreFieldNorm = _this$options.ignoreFieldNorm;
+         var results = isString(query) ? isString(this._docs[0]) ? this._searchStringList(query) : this._searchObjectList(query) : this._searchLogical(query);
+         computeScore(results, {
+           ignoreFieldNorm: ignoreFieldNorm
+@@ -2010,17 +2011,17 @@
+ 
+         records.forEach(function (_ref2) {
+           var text = _ref2.v,
+-              idx = _ref2.i,
+-              norm = _ref2.n;
++            idx = _ref2.i,
++            norm = _ref2.n;
+ 
+           if (!isDefined(text)) {
+             return;
+           }
+ 
+           var _searcher$searchIn = searcher.searchIn(text),
+-              isMatch = _searcher$searchIn.isMatch,
+-              score = _searcher$searchIn.score,
+-              indices = _searcher$searchIn.indices;
++            isMatch = _searcher$searchIn.isMatch,
++            score = _searcher$searchIn.score,
++            indices = _searcher$searchIn.indices;
+ 
+           if (isMatch) {
+             results.push({
+@@ -2047,7 +2048,7 @@
+         var evaluate = function evaluate(node, item, idx) {
+           if (!node.children) {
+             var keyId = node.keyId,
+-                searcher = node.searcher;
++              searcher = node.searcher;
+ 
+             var matches = _this._findMatches({
+               key: _this._keyStore.get(keyId),
+@@ -2087,7 +2088,7 @@
+         var results = [];
+         records.forEach(function (_ref3) {
+           var item = _ref3.$,
+-              idx = _ref3.i;
++            idx = _ref3.i;
+ 
+           if (isDefined(item)) {
+             var expResults = evaluate(expression, item, idx);
+@@ -2122,13 +2123,13 @@
+ 
+         var searcher = createSearcher(query, this.options);
+         var _this$_myIndex = this._myIndex,
+-            keys = _this$_myIndex.keys,
+-            records = _this$_myIndex.records;
++          keys = _this$_myIndex.keys,
++          records = _this$_myIndex.records;
+         var results = []; // List is Array<Object>
+ 
+         records.forEach(function (_ref5) {
+           var item = _ref5.$,
+-              idx = _ref5.i;
++            idx = _ref5.i;
+ 
+           if (!isDefined(item)) {
+             return;
+@@ -2158,8 +2159,8 @@
+       key: "_findMatches",
+       value: function _findMatches(_ref6) {
+         var key = _ref6.key,
+-            value = _ref6.value,
+-            searcher = _ref6.searcher;
++          value = _ref6.value,
++          searcher = _ref6.searcher;
+ 
+         if (!isDefined(value)) {
+           return [];
+@@ -2170,17 +2171,17 @@
+         if (isArray(value)) {
+           value.forEach(function (_ref7) {
+             var text = _ref7.v,
+-                idx = _ref7.i,
+-                norm = _ref7.n;
++              idx = _ref7.i,
++              norm = _ref7.n;
+ 
+             if (!isDefined(text)) {
+               return;
+             }
+ 
+             var _searcher$searchIn2 = searcher.searchIn(text),
+-                isMatch = _searcher$searchIn2.isMatch,
+-                score = _searcher$searchIn2.score,
+-                indices = _searcher$searchIn2.indices;
++              isMatch = _searcher$searchIn2.isMatch,
++              score = _searcher$searchIn2.score,
++              indices = _searcher$searchIn2.indices;
+ 
+             if (isMatch) {
+               matches.push({
+@@ -2195,12 +2196,12 @@
+           });
+         } else {
+           var text = value.v,
+-              norm = value.n;
++            norm = value.n;
+ 
+           var _searcher$searchIn3 = searcher.searchIn(text),
+-              isMatch = _searcher$searchIn3.isMatch,
+-              score = _searcher$searchIn3.score,
+-              indices = _searcher$searchIn3.indices;
++            isMatch = _searcher$searchIn3.isMatch,
++            score = _searcher$searchIn3.score,
++            indices = _searcher$searchIn3.indices;
+ 
+           if (isMatch) {
+             matches.push({
+@@ -2235,6 +2236,5 @@
+ 
+   var Fuse = Fuse$1;
+ 
+-  return Fuse;
+-
++  return { Fuse };
+ }));

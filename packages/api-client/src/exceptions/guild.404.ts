@@ -7,7 +7,7 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { NotFoundException } from "./base.404";
+import { NotFoundException } from "./base.404.js";
 
 export class GuildNotFoundException extends NotFoundException {
   @ApiProperty()

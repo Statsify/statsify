@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { getTotalSize, toDecimal } from "./util";
-import type { ElementNode, Fraction, Instruction, Percent } from "./types";
+import { getTotalSize, toDecimal } from "./util.js";
+import type { ElementNode, Fraction, Instruction, Percent } from "./types.js";
 
 export const createInstructions = (
   node: ElementNode,

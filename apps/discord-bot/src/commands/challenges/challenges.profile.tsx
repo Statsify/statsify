@@ -17,7 +17,7 @@ import {
 } from "@statsify/schemas";
 import { Container, Footer, GameList, Header, SidebarItem, Table } from "#components";
 import { arrayGroup, prettify } from "@statsify/util";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
 

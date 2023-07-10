@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { SmashHeroesKit, SmashHeroesMode } from "./mode";
+import { Field } from "#metadata";
+import { GameModes, type IGameModes } from "#game";
+import { SmashHeroesKit, SmashHeroesMode } from "./mode.js";
+import type { APIData } from "@statsify/util";
 
 const formatLevel = (level: number) => `§b${level}§6✶`;
 
@@ -164,4 +164,4 @@ export class SmashHeroes {
   }
 }
 
-export * from "./mode";
+export * from "./mode.js";

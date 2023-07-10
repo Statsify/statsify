@@ -7,9 +7,9 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
+import { HistoricalTimes, type HistoricalType } from "@statsify/api-client";
 import { IsEnum, IsOptional } from "class-validator";
-import { PlayerDto } from "./player.dto";
+import { PlayerDto } from "./player.dto.js";
 
 export class HistoricalDto extends PlayerDto {
   @ApiProperty({

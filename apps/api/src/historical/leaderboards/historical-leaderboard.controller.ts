@@ -12,7 +12,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { Auth } from "../../auth";
+import { Auth } from "#auth";
 import { Body, Controller, Post } from "@nestjs/common";
 import {
   CurrentHistoricalType,
@@ -20,8 +20,8 @@ import {
   LeaderboardQuery,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
-import { HistoricalLeaderboardDto } from "../../dtos";
-import { HistoricalLeaderboardService } from "./historical-leaderboard.service";
+import { HistoricalLeaderboardDto } from "#dtos";
+import { HistoricalLeaderboardService } from "./historical-leaderboard.service.js";
 import { Player } from "@statsify/schemas";
 
 @Controller("/historical/leaderboards")

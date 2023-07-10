@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "main": "dist/index.js",
   "types": "src/index.ts",
+  "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
@@ -12,7 +13,8 @@
     "@statsify/logger": "*",
     "@statsify/rendering": "*",
     "@statsify/schemas": "*",
-    "axios": "^0.27.2",
+    "@swc/helpers": "^0.5.1",
+    "axios": "1.4.0",
     "skia-canvas": "^0.9.30"
   }
 }

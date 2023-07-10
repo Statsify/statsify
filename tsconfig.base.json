@@ -3,16 +3,24 @@
     "allowJs": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
-    "importsNotUsedAsValues": "preserve",
-    "moduleResolution": "Node",
-    "module": "CommonJS",
+    "verbatimModuleSyntax": false,
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "downlevelIteration": true,
     "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true,
     "target": "ES2022",
-    "strict": true
+    "strict": true,
+    "types": [
+      "vitest/importMeta"
+    ]
   },
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

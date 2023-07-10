@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { SuccessResponse } from "./success.response";
+import { SuccessResponse } from "./success.response.js";
 
 export class GetCommandUsageResponse extends SuccessResponse {
   public usage: Record<string, number>;

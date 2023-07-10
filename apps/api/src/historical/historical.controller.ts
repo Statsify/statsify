@@ -12,7 +12,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { Auth, AuthRole } from "../auth";
+import { Auth, AuthRole } from "#auth";
 import { Controller, Delete, Get, Query } from "@nestjs/common";
 import {
   ErrorResponse,
@@ -20,9 +20,8 @@ import {
   GetPlayerResponse,
   HistoricalTimes,
 } from "@statsify/api-client";
-import { HistoricalDto } from "../dtos/historical.dto";
-import { HistoricalService } from "./historical.service";
-import { ResetPlayerDto } from "../dtos";
+import { HistoricalDto, ResetPlayerDto } from "#dtos";
+import { HistoricalService } from "./historical.service.js";
 
 @Controller("/historical")
 @ApiTags("Historical")

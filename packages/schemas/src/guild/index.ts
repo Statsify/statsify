@@ -6,16 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Color } from "../color";
-import { ExpByGame } from "./expbygame";
-import { Field } from "../metadata";
-import { GameCode, GameIdMapping } from "../game";
-import { GuildAchievements } from "./achievements";
-import { GuildMember } from "./member";
-import { GuildRank } from "./rank";
-import { Progression } from "../progression";
-import { getLevel } from "./util";
+import { Color } from "#color";
+import { ExpByGame } from "./exp-by-game.js";
+import { Field } from "#metadata";
+import { GameCode, GameIdMapping } from "#game";
+import { GuildAchievements } from "./achievements.js";
+import { GuildMember } from "./member.js";
+import { GuildRank } from "./rank.js";
+import { Progression } from "#progression";
+import { getLevel } from "./util.js";
+import type { APIData } from "@statsify/util";
 
 const limit = 100_000;
 
@@ -184,7 +184,7 @@ export class Guild {
   }
 }
 
-export * from "./achievements";
-export * from "./member";
-export * from "./rank";
-export * from "./expbygame";
+export * from "./achievements.js";
+export * from "./member.js";
+export * from "./rank.js";
+export * from "./exp-by-game.js";

@@ -6,5 +6,5 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./hypixel-resources.controller";
-export * from "./hypixel-resources.module";
+export * from "./hypixel-resources.controller.js";
+export * from "./hypixel-resources.module.js";

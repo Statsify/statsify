@@ -95,8 +95,8 @@ const keyManager = async () => {
     if (!keyStatus) process.exit(0);
 
     inquirerLogger(
-      `New Key!`,
-      `testKey with ID of testKey and role of admin with weighted limit of 999 was just created non interactively.`
+      "New Key!",
+      "testKey with ID of testKey and role of admin with weighted limit of 999 was just created non interactively."
     );
 
     process.exit(0);
@@ -171,7 +171,7 @@ const createNewKey = async () => {
 
   if (keyCreated)
     inquirerLogger(
-      `New Key!`,
+      "New Key!",
       `${key} with ID of ${name} and role of ${role} with weighted limit of ${limit}.`
     );
 };

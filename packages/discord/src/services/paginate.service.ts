@@ -10,8 +10,9 @@ import { ButtonStyle } from "discord-api-types/v10";
 import { Canvas } from "skia-canvas";
 import { Service } from "typedi";
 
-import { ActionRowBuilder, ButtonBuilder } from "../messages/components";
 import {
+  ActionRowBuilder,
+  ButtonBuilder,
   EmbedBuilder,
   type IMessage,
   type LocalizationString,
@@ -19,8 +20,8 @@ import {
   Message,
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
-} from "../messages";
-import type { CommandContext } from "../command";
+} from "#messages";
+import type { CommandContext } from "#command";
 
 type PaginateInteractionContent = IMessage | Message | EmbedBuilder | Canvas;
 

@@ -7,13 +7,12 @@
  */
 
 import { DateTime } from "luxon";
-import { HeaderBody } from "./HeaderBody";
-import { HeaderNametag } from "./HeaderNametag";
-import { Historical } from "../Historical";
-import { HistoricalTimeData } from "../Historical/Historical-Header";
+import { HeaderBody } from "./HeaderBody.js";
+import { HeaderNametag } from "./HeaderNametag.js";
+import { Historical, type HistoricalTimeData } from "../Historical/index.js";
 import { Image } from "skia-canvas";
-import { Sidebar, SidebarItem } from "../Sidebar";
-import { Skin } from "../Skin";
+import { Sidebar, SidebarItem } from "../Sidebar.js";
+import { Skin } from "../Skin.js";
 import { useChildren } from "@statsify/rendering";
 
 interface BaseHeaderProps {
@@ -56,10 +55,10 @@ export const Header = (props: HeaderProps) => {
     "sidebar" in props &&
     props.sidebar.length &&
     (props.time === "LIVE" ? true : props.historicalSidebar) ? (
-      <Sidebar items={props.sidebar} />
-    ) : (
-      <></>
-    );
+        <Sidebar items={props.sidebar} />
+      ) : (
+        <></>
+      );
 
   let body: JSX.Element;
 

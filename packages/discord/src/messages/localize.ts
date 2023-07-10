@@ -94,12 +94,11 @@ export const translateObject = <T extends Record<string, LocalizationString | an
 export const translateToAllLanguages = (
   key: LocalizationString
 ): Record<string, string> => {
-  if (!Array.isArray(i18next.options.preload)) return {};
+  const { options } = i18next as unknown as i18next.i18n;
+
+  if (!Array.isArray(options.preload)) return {};
 
   return Object.fromEntries(
-    i18next.options.preload.map((lang) => [
-      lang,
-      translateField(getLocalizeFunction(lang), key),
-    ])
+    options.preload.map((lang) => [lang, translateField(getLocalizeFunction(lang), key)])
   );
 };

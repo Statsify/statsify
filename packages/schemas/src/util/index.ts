@@ -6,6 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./leaderboard-scanner";
-export * from "./create-historical-player";
-export * from "./historical-scanner";
+export * from "./leaderboard-scanner.js";
+export * from "./create-historical-player.js";
+export * from "./historical-scanner.js";

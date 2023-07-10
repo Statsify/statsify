@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../metadata";
-import { Game } from "../game";
+import { Field } from "#metadata";
+import { Game } from "#game";
+import type { APIData } from "@statsify/util";
 
 export class RecentGame {
   @Field({ store: { store: false } })
