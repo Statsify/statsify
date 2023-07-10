@@ -80,7 +80,6 @@ export class ApiService extends StatsifyApiService {
         throw new ErrorMessage("errors.invalidSession");
       }
 
-      console.log(error);
       throw this.unknownError();
     });
   }
