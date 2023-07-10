@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Fuse from "fuse.js";
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
+import { Fuse } from "fuse.js";
 import { ServerMappingsServer, getServerMappings } from "@statsify/assets";
 
 export class ServerArgument extends AbstractArgument {

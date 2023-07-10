@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AuthRole } from "./auth.role";
+import { AuthRole } from "./auth.role.js";
 import {
   ForbiddenException,
   HttpException,
@@ -15,8 +15,9 @@ import {
   Logger,
   UnauthorizedException,
 } from "@nestjs/common";
-import { InjectRedis, Redis } from "@nestjs-modules/ioredis";
+import { InjectRedis } from "#redis";
 import { Key } from "@statsify/schemas";
+import { Redis } from "ioredis";
 import { createHash, randomUUID } from "node:crypto";
 
 @Injectable()

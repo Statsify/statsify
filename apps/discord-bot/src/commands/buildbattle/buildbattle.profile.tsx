@@ -16,7 +16,7 @@ import {
 } from "#components";
 import { FormattedGame } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 interface BuildBattleModeTableProps {
   title: string;

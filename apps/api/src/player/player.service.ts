@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, Flatten, flatten } from "@statsify/util";
-import { Daily, Monthly, Weekly } from "../historical/models";
-import { HistoricalLeaderboardService } from "../historical/leaderboards/historical-leaderboard.service";
+import { type APIData, type Circular, type Flatten, flatten } from "@statsify/util";
+import { Daily, HistoricalLeaderboardService, Monthly, Weekly } from "#historical";
 import {
   HistoricalTimes,
   HypixelCache,
@@ -16,7 +15,7 @@ import {
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from "@statsify/api-client";
-import { HypixelService } from "../hypixel";
+import { HypixelService } from "#hypixel";
 import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import {
@@ -25,23 +24,25 @@ import {
   deserialize,
   serialize,
 } from "@statsify/schemas";
-import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service";
-import { PlayerSearchService, RedisPlayer } from "./search/player-search.service";
+import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
+import { PlayerSearchService, RedisPlayer } from "./search/player-search.service.js";
 import type { ReturnModelType } from "@typegoose/typegoose";
+
+type PlayerModel = ReturnModelType<typeof Player>;
 
 @Injectable()
 export class PlayerService {
   public constructor(
     private readonly hypixelService: HypixelService,
     @Inject(forwardRef(() => PlayerLeaderboardService))
-    private readonly playerLeaderboardService: PlayerLeaderboardService,
+    private readonly playerLeaderboardService: Circular<PlayerLeaderboardService>,
     @Inject(forwardRef(() => HistoricalLeaderboardService))
-    private readonly historicalLeaderboardService: HistoricalLeaderboardService,
+    private readonly historicalLeaderboardService: Circular<HistoricalLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
-    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
-    @InjectModel(Daily) private readonly dailyModel: ReturnModelType<typeof Player>,
-    @InjectModel(Weekly) private readonly weeklyModel: ReturnModelType<typeof Player>,
-    @InjectModel(Monthly) private readonly monthlyModel: ReturnModelType<typeof Player>
+    @InjectModel(Player) private readonly playerModel: PlayerModel,
+    @InjectModel(Daily) private readonly dailyModel: PlayerModel,
+    @InjectModel(Weekly) private readonly weeklyModel: PlayerModel,
+    @InjectModel(Monthly) private readonly monthlyModel: PlayerModel
   ) {}
 
   /**
@@ -220,13 +221,8 @@ export class PlayerService {
 
     promises.push(
       this.playerModel
-        .replaceOne({ uuid: player.uuid }, serializedPlayer, {
-          upsert: true,
-        })
-        .exec()
-    );
-
-    promises.push(
+        .replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true })
+        .exec(),
       this.playerLeaderboardService.addLeaderboards(Player, flatPlayer, "uuid", false)
     );
 

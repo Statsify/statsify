@@ -7,6 +7,7 @@
  */
 
 import { AsyncTask, SimpleIntervalJob } from "toad-scheduler";
+import { type Circular, type Flatten, config, flatten } from "@statsify/util";
 import {
   CurrentHistoricalType,
   HistoricalTimes,
@@ -15,10 +16,17 @@ import {
   LastHistoricalType,
   PlayerNotFoundException,
 } from "@statsify/api-client";
-import { Daily, LastDay, LastMonth, LastWeek, Monthly, Session, Weekly } from "./models";
+import {
+  Daily,
+  LastDay,
+  LastMonth,
+  LastWeek,
+  Monthly,
+  Session,
+  Weekly,
+} from "./models/index.js";
 import { DateTime } from "luxon";
-import { Flatten, config, flatten } from "@statsify/util";
-import { HistoricalLeaderboardService } from "./leaderboards/historical-leaderboard.service";
+import { HistoricalLeaderboardService } from "./leaderboards/historical-leaderboard.service.js";
 import {
   Inject,
   Injectable,
@@ -33,8 +41,8 @@ import {
   deserialize,
   serialize,
 } from "@statsify/schemas";
-import { PlayerService } from "../player/player.service";
-import { ReturnModelType } from "@typegoose/typegoose";
+import { PlayerService } from "#player";
+import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 
@@ -53,9 +61,9 @@ export class HistoricalService {
   private readonly sweepJob: SimpleIntervalJob;
   public constructor(
     @Inject(forwardRef(() => PlayerService))
-    private readonly playerService: PlayerService,
+    private readonly playerService: Circular<PlayerService>,
     @Inject(forwardRef(() => HistoricalLeaderboardService))
-    private readonly historicalLeaderboardService: HistoricalLeaderboardService,
+    private readonly historicalLeaderboardService: Circular<HistoricalLeaderboardService>,
     @InjectModel(Daily) private readonly dailyModel: PlayerModel,
     @InjectModel(Weekly) private readonly weeklyModel: PlayerModel,
     @InjectModel(Monthly) private readonly monthlyModel: PlayerModel,
@@ -232,6 +240,7 @@ export class HistoricalService {
     if (time === HistoricalTimes.SESSION)
       doc.sessionReset = Math.round(DateTime.now().toMillis() / 1000);
 
+    //@ts-ignore - _id is not in the Player type so it needs to be deleted
     if (last) delete last._id;
 
     const mongoChanges = [
@@ -404,9 +413,9 @@ export class HistoricalService {
 
     return date.getDate() === 1
       ? HistoricalTimes.MONTHLY
-      : date.getDay() === 1
-      ? HistoricalTimes.WEEKLY
-      : HistoricalTimes.DAILY;
+      : (date.getDay() === 1
+        ? HistoricalTimes.WEEKLY
+        : HistoricalTimes.DAILY);
   }
 
   private getNextResetTime(resetMinute: number, time: HistoricalType) {

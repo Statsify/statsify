@@ -8,7 +8,7 @@
 
 import { RestClient } from "tiny-discord";
 import { Service } from "typedi";
-import { parseDiscordResponse } from "../util/parse-discord-error";
+import { parseDiscordResponse } from "#util/parse-discord-error";
 
 @Service()
 export class MemberService {

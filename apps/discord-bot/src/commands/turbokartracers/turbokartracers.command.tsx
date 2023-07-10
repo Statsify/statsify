@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { TURBO_KART_RACERS_MODES, TurboKartRacersModes } from "@statsify/schemas";
-import { TurboKartRacersProfile } from "./turbokartracers.profile";
+import { TurboKartRacersProfile } from "./turbokartracers.profile.js";
 
 @Command({ description: (t) => t("commands.turbokartracers") })
 export class TurboKartRacersCommand extends BaseHypixelCommand<TurboKartRacersModes> {

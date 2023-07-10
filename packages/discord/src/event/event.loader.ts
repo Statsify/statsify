@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractEventListener } from "./abstract-event.listener";
+import { AbstractEventListener } from "./abstract-event.listener.js";
 import { Container } from "typedi";
 import { GatewayDispatchEvents } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";

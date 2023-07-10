@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from "typedi";
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
@@ -45,37 +44,38 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { ArcadeProfile } from "../arcade/arcade.profile";
-import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile";
-import { BedWarsProfile } from "../bedwars/bedwars.profile";
-import { BlitzSGProfile, filterBlitzKits } from "../blitzsg/blitzsg.profile";
-import { BridgeProfile } from "../duels/bridge.profile";
-import { BuildBattleProfile } from "../buildbattle/buildbattle.profile";
-import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile";
+import { ArcadeProfile } from "../arcade/arcade.profile.js";
+import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile.js";
+import { BedWarsProfile } from "../bedwars/bedwars.profile.js";
+import { BlitzSGProfile, filterBlitzKits } from "../blitzsg/blitzsg.profile.js";
+import { BridgeProfile } from "../duels/bridge.profile.js";
+import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
+import { Container } from "typedi";
+import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
 import { DateTime } from "luxon";
-import { DuelsProfile } from "../duels/duels.profile";
+import { DuelsProfile } from "../duels/duels.profile.js";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
-import { HistoricalGeneralProfile } from "../general/historical-general.profile";
-import { HistoricalType } from "@statsify/api-client";
-import { MegaWallsProfile } from "../megawalls/megawalls.profile";
-import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile";
-import { PaintballProfile } from "../paintball/paintball.profile";
-import { PitProfile } from "../pit/pit.profile";
-import { QuakeProfile } from "../quake/quake.profile";
-import { SkyWarsProfile } from "../skywars/skywars.profile";
-import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile";
-import { SpeedUHCProfile } from "../speeduhc/speeduhc.profile";
-import { TNTGamesProfile } from "../tntgames/tntgames.profile";
-import { TurboKartRacersProfile } from "../turbokartracers/turbokartracers.profile";
-import { UHCProfile } from "../uhc/uhc.profile";
-import { VampireZProfile } from "../vampirez/vampirez.profile";
-import { WallsProfile } from "../walls/walls.profile";
-import { WarlordsProfile } from "../warlords/warlords.profile";
-import { WoolWarsProfile } from "../woolwars/woolwars.profile";
+import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
+import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
+import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile.js";
+import { PaintballProfile } from "../paintball/paintball.profile.js";
+import { PitProfile } from "../pit/pit.profile.js";
+import { QuakeProfile } from "../quake/quake.profile.js";
+import { SkyWarsProfile } from "../skywars/skywars.profile.js";
+import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
+import { SpeedUHCProfile } from "../speeduhc/speeduhc.profile.js";
+import { TNTGamesProfile } from "../tntgames/tntgames.profile.js";
+import { TurboKartRacersProfile } from "../turbokartracers/turbokartracers.profile.js";
+import { UHCProfile } from "../uhc/uhc.profile.js";
+import { VampireZProfile } from "../vampirez/vampirez.profile.js";
+import { WallsProfile } from "../walls/walls.profile.js";
+import { WarlordsProfile } from "../warlords/warlords.profile.js";
+import { WoolWarsProfile } from "../woolwars/woolwars.profile.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { HistoricalType } from "@statsify/api-client";
 
 const args = [PlayerArgument];
 

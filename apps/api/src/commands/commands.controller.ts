@@ -7,9 +7,9 @@
  */
 
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Auth, AuthRole } from "../auth";
-import { CommandDto } from "../dtos";
-import { CommandsService } from "./commands.service";
+import { Auth, AuthRole } from "#auth";
+import { CommandDto } from "#dtos";
+import { CommandsService } from "./commands.service.js";
 import { Controller, Get, Patch, Query } from "@nestjs/common";
 
 @Controller("/commands")

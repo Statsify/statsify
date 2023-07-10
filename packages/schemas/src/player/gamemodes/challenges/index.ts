@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, removeFormatting } from "@statsify/util";
+import { type APIData, removeFormatting } from "@statsify/util";
 import {
   ArcadeChallenges,
   ArenaBrawlChallenges,
@@ -29,9 +29,9 @@ import {
   WallsChallenges,
   WarlordsChallenges,
   WoolWarsChallenges,
-} from "./modes";
-import { Field } from "../../../metadata";
-import { FormattedGame, GameModes, IGameModes } from "../../../game";
+} from "./modes/index.js";
+import { Field } from "#metadata";
+import { FormattedGame, GameModes, IGameModes } from "#game";
 
 export const CHALLENGE_MODES = new GameModes([
   { api: "overall" },
@@ -162,4 +162,4 @@ export class Challenges {
   }
 }
 
-export * from "./game-challenges";
+export * from "./game-challenges.js";

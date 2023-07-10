@@ -10,7 +10,7 @@ import { Historical, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { Zombies, ZombiesMap } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
-import type { ProfileTime } from "../../base.hypixel-command";
+import type { ProfileTime } from "#commands/base.hypixel-command";
 
 interface ZombiesMapColumnProps {
   title: string;

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { If } from "../If";
+import { If } from "../If.js";
 import type { Canvas, Image } from "skia-canvas";
 
 export interface HeaderNametagProps {

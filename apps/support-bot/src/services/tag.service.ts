@@ -8,6 +8,7 @@
 
 import {
   CommandContext,
+  CommandMetadata,
   CommandPoster,
   CommandResolvable,
   EmbedBuilder,
@@ -15,13 +16,12 @@ import {
   IMessage,
   UserArgument,
 } from "@statsify/discord";
-import { CommandListener } from "#lib/command.listener";
-import { CommandMetadata } from "@statsify/discord/src/command/command.interface";
+import { CommandListener } from "#lib";
 import { Inject, Service } from "typedi";
-import { ReturnModelType } from "@typegoose/typegoose";
 import { STATUS_COLORS } from "@statsify/logger";
 import { Tag } from "@statsify/schemas";
 import { config } from "@statsify/util";
+import type { ReturnModelType } from "@typegoose/typegoose";
 
 const TAG_NAME_REGEX = /^[\w-]{1,32}$/;
 

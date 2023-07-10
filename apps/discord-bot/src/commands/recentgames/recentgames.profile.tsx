@@ -10,7 +10,7 @@ import { Container, Footer, Header, If, Multiline, Table } from "#components";
 import { FormattedGame, GameId, RecentGame } from "@statsify/schemas";
 import { arrayGroup, relativeTime } from "@statsify/util";
 import { mapGame } from "#constants";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { Image } from "skia-canvas";
 
 export interface RecentGamesProfileProps

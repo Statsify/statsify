@@ -7,8 +7,8 @@
  */
 
 import { ApiSecurity } from "@nestjs/swagger";
-import { AuthGuard } from "./auth.guard";
-import { AuthRole } from "./auth.role";
+import { AuthGuard } from "./auth.guard.js";
+import { AuthRole } from "./auth.role.js";
 import { SetMetadata, UseGuards, applyDecorators } from "@nestjs/common";
 
 export interface AuthDecoratorOptions {

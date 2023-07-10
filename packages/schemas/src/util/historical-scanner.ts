@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Constructor } from "@statsify/util";
 import {
-  HistoricalEnabledMetadata,
-  HistoricalMetadata,
-} from "../metadata/metadata.interface";
-import { MetadataEntry, MetadataScanner } from "../metadata";
-import { parseAdditionalFields } from "./parse-fields";
+  type HistoricalEnabledMetadata,
+  type HistoricalMetadata,
+  type MetadataEntry,
+  MetadataScanner,
+} from "#metadata";
+import { parseAdditionalFields } from "./parse-fields.js";
+import type { Constructor } from "@statsify/util";
 
 export class HistoricalScanner {
   public static getHistoricalMetadata<T>(constructor: Constructor<T>) {

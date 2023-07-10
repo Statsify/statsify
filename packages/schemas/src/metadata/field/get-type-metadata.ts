@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { TypeMetadata } from "../metadata.interface";
-import { TypeOptions } from "../field.options";
-import { primitiveConstructors } from "../constants";
+import { primitiveConstructors } from "../constants.js";
+import type { TypeMetadata } from "../metadata.interface.js";
+import type { TypeOptions } from "../field.options.js";
 
 export const getTypeMetadata = (
   typeOptions: TypeOptions | undefined,

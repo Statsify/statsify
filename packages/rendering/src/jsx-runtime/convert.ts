@@ -7,16 +7,16 @@
  */
 
 import {
-  CompleteSpacing,
-  ElementNode,
-  Fraction,
-  IntrinsicElement,
-  Percent,
-  RawElement,
-  Spacing,
+  type CompleteSpacing,
+  type ElementNode,
+  type Fraction,
+  type IntrinsicElement,
+  type Percent,
+  type RawElement,
+  type Spacing,
   getTotalSize,
   toDecimal,
-} from "../jsx";
+} from "#jsx";
 
 const spacingToCompleteSpacing = (spacing?: Spacing): CompleteSpacing => {
   if (typeof spacing === "number") {

@@ -1,8 +1,0 @@
-{
-  "singleQuote": false,
-  "printWidth": 90,
-  "tabWidth": 2,
-  "quoteProps": "as-needed",
-  "endOfLine": "auto",
-  "semi": true
-}

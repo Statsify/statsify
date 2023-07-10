@@ -11,7 +11,7 @@ import {
   ComponentType,
   TextInputStyle,
 } from "discord-api-types/v10";
-import { LocalizationString, LocalizeFunction, translateField } from "../localize";
+import { LocalizationString, LocalizeFunction, translateField } from "../localize.js";
 import { randomUUID } from "node:crypto";
 
 export class TextInputBuilder {

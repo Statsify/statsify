@@ -7,7 +7,7 @@
  */
 
 import { Service } from "typedi";
-import type { CommandMetadata, CommandOptions } from "./command.interface";
+import type { CommandMetadata, CommandOptions } from "./command.interface.js";
 
 export function Command(options: CommandOptions): ClassDecorator {
   return (target) => {

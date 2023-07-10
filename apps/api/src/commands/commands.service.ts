@@ -9,7 +9,7 @@
 import { Commands } from "@statsify/schemas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";
-import { ReturnModelType } from "@typegoose/typegoose";
+import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class CommandsService {

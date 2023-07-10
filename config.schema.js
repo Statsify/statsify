@@ -9,7 +9,7 @@
 /**
  * @type {import("@statsify/util").Config}
  */
-module.exports = {
+export default {
   database: {
     mongoUri: "",
     redisUrl: "",

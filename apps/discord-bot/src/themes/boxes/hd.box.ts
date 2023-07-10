@@ -74,8 +74,8 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.globalCompositeOperation = "overlay";
 
   const overlay = ctx.createLinearGradient(x, y, x, y + height);
-  overlay.addColorStop(0, `rgba(255, 255, 255, 0.15)`);
-  overlay.addColorStop(1, `rgba(0, 0, 0, 0.15)`);
+  overlay.addColorStop(0, "rgba(255, 255, 255, 0.15)");
+  overlay.addColorStop(1, "rgba(0, 0, 0, 0.15)");
   ctx.fillStyle = overlay;
 
   ctx.fill();

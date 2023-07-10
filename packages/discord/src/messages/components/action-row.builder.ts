@@ -7,10 +7,10 @@
  */
 
 import { APIActionRowComponent, ComponentType } from "discord-api-types/v10";
-import { LocalizeFunction } from "../localize";
-import type { ButtonBuilder } from "./button.builder";
-import type { SelectMenuBuilder } from "./select-menu.builder";
-import type { TextInputBuilder } from "./text-input.builder";
+import { LocalizeFunction } from "../localize.js";
+import type { ButtonBuilder } from "./button.builder.js";
+import type { SelectMenuBuilder } from "./select-menu.builder.js";
+import type { TextInputBuilder } from "./text-input.builder.js";
 
 export type ActionRowComponent = ButtonBuilder | SelectMenuBuilder | TextInputBuilder;
 

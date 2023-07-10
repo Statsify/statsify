@@ -7,8 +7,8 @@
  */
 
 import { BEDWARS_MODES, BedWarsModes, GameMode, Player } from "@statsify/schemas";
-import { BaseHypixelCommand, BaseProfileProps } from "../base.hypixel-command";
-import { BedWarsChallengesProfile } from "./bedwars-challenges.profile";
+import { BaseHypixelCommand, BaseProfileProps } from "#commands/base.hypixel-command";
+import { BedWarsChallengesProfile } from "./bedwars-challenges.profile.js";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.bedwars-challenges") })

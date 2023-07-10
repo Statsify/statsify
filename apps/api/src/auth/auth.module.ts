@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AuthController } from "./auth.controller";
-import { AuthGuard } from "./auth.guard";
-import { AuthService } from "./auth.service";
+import { AuthController } from "./auth.controller.js";
+import { AuthGuard } from "./auth.guard.js";
+import { AuthService } from "./auth.service.js";
 import { Global, Module } from "@nestjs/common";
 
 @Global()

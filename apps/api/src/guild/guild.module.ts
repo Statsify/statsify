@@ -7,13 +7,13 @@
  */
 
 import { Guild, Player } from "@statsify/schemas";
-import { GuildController } from "./guild.controller";
-import { GuildLeaderboardController } from "./leaderboards/guild-leaderboard.controller";
-import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service";
-import { GuildService } from "./guild.service";
-import { HypixelModule } from "../hypixel";
+import { GuildController } from "./guild.controller.js";
+import { GuildLeaderboardController } from "./leaderboards/guild-leaderboard.controller.js";
+import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
+import { GuildService } from "./guild.service.js";
+import { HypixelModule } from "#hypixel";
 import { Module } from "@nestjs/common";
-import { PlayerModule } from "../player";
+import { PlayerModule } from "#player";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({

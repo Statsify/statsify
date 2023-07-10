@@ -13,7 +13,7 @@ const mongo = await connect(config("database.mongoUri"));
 
 const session = mongo.connection.db.collection("session");
 
-session.deleteMany().then(() => {
-  console.log("Done!");
-  process.exit(0);
-});
+await session.deleteMany();
+
+console.log("Done!");
+process.exit(0);

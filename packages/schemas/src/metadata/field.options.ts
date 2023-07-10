@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BasePropOptions } from "@typegoose/typegoose/lib/types";
-import { Constructor } from "@statsify/util";
-import {
+import type { BasePropOptions } from "@typegoose/typegoose/lib/types.js";
+import type { Constructor } from "@statsify/util";
+import type {
   HistoricalEnabledMetadata,
   LeaderboardEnabledMetadata,
   StoreMetadata,
-} from "./metadata.interface";
+} from "./metadata.interface.js";
 
 export type TypeOptions = () => Constructor | [Constructor];
 export type LeaderboardOptions = Omit<

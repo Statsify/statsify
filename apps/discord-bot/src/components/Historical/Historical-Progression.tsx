@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HistoricalTimeData } from "./Historical-Header";
-import { If } from "../If";
+import { HistoricalTimeData } from "./Historical-Header.js";
+import { If } from "../If.js";
 import { LocalizeFunction } from "@statsify/discord";
 import { Progression } from "@statsify/schemas";
-import { Table } from "../Table";
-import { formatProgression } from "../Header/progression";
+import { Table } from "../Table/index.js";
+import { formatProgression } from "../Header/progression.js";
 
 export interface HistoricalProgressionProps {
   progression: Progression;

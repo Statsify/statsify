@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Events } from "./events";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { getNetworkLevel } from "./util";
+import { Events } from "./events.js";
+import { Field } from "#metadata";
+import { GameModes, type IGameModes } from "#game";
+import { getNetworkLevel } from "./util.js";
+import type { APIData } from "@statsify/util";
 
 export const GENERAL_MODES = new GameModes([{ api: "overall" }]);
 export type GeneralModes = IGameModes<typeof GENERAL_MODES>;
@@ -96,4 +96,4 @@ export class General {
   }
 }
 
-export * from "./events";
+export * from "./events.js";

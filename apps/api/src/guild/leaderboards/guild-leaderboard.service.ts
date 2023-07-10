@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Redis from "ioredis";
 import { GUILD_ID_REGEX, GuildNotFoundException } from "@statsify/api-client";
 import { Guild } from "@statsify/schemas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { InjectRedis } from "@nestjs-modules/ioredis";
+import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";
-import { LeaderboardAdditionalStats, LeaderboardService } from "../../leaderboards";
-import { ReturnModelType } from "@typegoose/typegoose";
+import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
+import { Redis } from "ioredis";
 import { flatten } from "@statsify/util";
+import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class GuildLeaderboardService extends LeaderboardService {

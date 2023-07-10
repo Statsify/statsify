@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { RATIOS, RATIO_STATS } from "../ratios";
+import { RATIOS, RATIO_STATS } from "#ratios";
 import { isObject } from "class-validator";
 import { ratio, sub } from "@statsify/math";
 
@@ -47,13 +47,12 @@ export function createHistoricalPlayer<T>(oldOne: T, newOne: T): T {
     } else if (newOneType === "string") {
       merged[key] = newOne[key];
     } else if (isObject(newOne[key])) {
-      merged[key] =
-        key === "progression"
-          ? newOne[key]
-          : (createHistoricalPlayer(
-              oldOne[key] ?? {},
-              newOne[key] ?? {}
-            ) as unknown as T[keyof T]);
+      if (key === "progression") {
+        merged[key] = newOne[key];
+        continue;
+      }
+
+      merged[key] = createHistoricalPlayer(oldOne[key] ?? {}, newOne[key] ?? {}) as unknown as T[keyof T];
     }
   }
 

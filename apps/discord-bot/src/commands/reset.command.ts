@@ -89,7 +89,7 @@ export class ResetCommand {
             .label((t) => t("historical.modal.timezone"))
             .minLength(1)
             .maxLength(6)
-            .placeholder(timeZone.offsetName(0, { format: "short" }))
+            .placeholder(timeZone.offsetName(0, { format: "short" })!)
             .required(false)
             .style(TextInputStyle.Short)
         )
@@ -129,16 +129,16 @@ export class ResetCommand {
         if (time.invalidExplanation) {
           const error = time.invalidExplanation.startsWith("the zone")
             ? new ErrorMessage(
-                (t) => t("errors.invalidResetTimezone.title"),
-                (t) =>
-                  t("errors.invalidResetTimezone.description", {
-                    timezone: timeZoneInput,
-                  })
-              )
+              (t) => t("errors.invalidResetTimezone.title"),
+              (t) =>
+                t("errors.invalidResetTimezone.description", {
+                  timezone: timeZoneInput,
+                })
+            )
             : new ErrorMessage(
-                (t) => t("errors.invalidResetTime.title"),
-                (t) => t("errors.invalidResetTime.description", { time: timeInput })
-              );
+              (t) => t("errors.invalidResetTime.title"),
+              (t) => t("errors.invalidResetTime.description", { time: timeInput })
+            );
 
           return interaction.sendFollowup({
             ...error,

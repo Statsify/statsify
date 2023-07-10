@@ -40,7 +40,7 @@ export class SkinCommand {
     const embed = new EmbedBuilder()
       .field((t) => t("minecraft.username"), `\`${player.username}\``)
       .color(STATUS_COLORS.info)
-      .image(`attachment://skin.png`);
+      .image("attachment://skin.png");
 
     const buffer = await canvas.toBuffer("png");
 

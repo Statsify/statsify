@@ -6,16 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./Background";
-export * from "./Container";
-export * from "./Footer";
-export * from "./Header";
-export * from "./Historical";
-export * from "./If";
-export * from "./List";
-export * from "./Multiline";
-export * from "./ProgressBar";
-export * from "./Sidebar";
-export * from "./Skin";
-export * from "./Table";
-export * from "./GameList";
+export * from "./Background.js";
+export * from "./Container.js";
+export * from "./Footer.js";
+export * from "./Header/index.js";
+export * from "./Historical/index.js";
+export * from "./If.js";
+export * from "./List.js";
+export * from "./Multiline.js";
+export * from "./ProgressBar.js";
+export * from "./Sidebar.js";
+export * from "./Skin.js";
+export * from "./Table/index.js";
+export * from "./GameList.js";

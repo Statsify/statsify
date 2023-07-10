@@ -8,11 +8,11 @@
 
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { ReturnModelType } from "@typegoose/typegoose";
 import { User, VerifyCode } from "@statsify/schemas";
 import { config, flatten } from "@statsify/util";
 import { getLogoPath } from "@statsify/assets";
 import { readFile, rm, writeFile } from "node:fs/promises";
+import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class UserService {
@@ -40,7 +40,7 @@ export class UserService {
     const [tag, type] = this.parseTag(idOrUuid);
     const user = await this.userModel.findOne().where(type).equals(tag).lean().exec();
 
-    if (!user) throw new NotFoundException(`user`);
+    if (!user) throw new NotFoundException("user");
 
     let badgePath: string | undefined = undefined;
 
@@ -52,7 +52,7 @@ export class UserService {
       badgePath = getLogoPath("verified", 28);
     }
 
-    if (!badgePath) throw new NotFoundException(`badge`);
+    if (!badgePath) throw new NotFoundException("badge");
 
     return readFile(badgePath);
   }
@@ -61,7 +61,7 @@ export class UserService {
     const [tag, type] = this.parseTag(idOrUuid);
     const user = await this.userModel.findOne().where(type).equals(tag).lean().exec();
 
-    if (!user) throw new NotFoundException(`user`);
+    if (!user) throw new NotFoundException("user");
 
     await this.userModel
       .updateOne({ hasBadge: true })
@@ -83,7 +83,7 @@ export class UserService {
       .lean()
       .exec();
 
-    if (!user) throw new NotFoundException(`user`);
+    if (!user) throw new NotFoundException("user");
 
     await rm(this.getBadgePath(user.id));
   }

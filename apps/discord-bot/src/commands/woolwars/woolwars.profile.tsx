@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "../base.hypixel-command";
 import {
   Container,
   Footer,
@@ -23,6 +22,7 @@ import {
   WoolWarsModes,
   WoolWarsOverall,
 } from "@statsify/schemas";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface WoolWarsProfileProps extends BaseProfileProps {
   mode: GameMode<WoolWarsModes>;

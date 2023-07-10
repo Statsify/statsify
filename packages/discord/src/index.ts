@@ -8,10 +8,10 @@
 
 import "reflect-metadata";
 
-export * from "./arguments";
-export * from "./command";
-export * from "./interaction";
-export * from "./messages";
-export * from "./services";
-export * from "./util/error.message";
-export * from "./event";
+export * from "./arguments/index.js";
+export * from "./command/index.js";
+export * from "./interaction/index.js";
+export * from "./messages/index.js";
+export * from "./services/index.js";
+export * from "./util/error.message.js";
+export * from "./event/index.js";

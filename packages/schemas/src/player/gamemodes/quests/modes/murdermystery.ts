@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { FormattedGame } from "../../../../game";
-import { createGameModeQuests } from "../util";
+import { FormattedGame } from "#game";
+import { createGameModeQuests } from "../util.js";
 
 export const MurderMysteryQuests = createGameModeQuests({
   game: FormattedGame.MURDER_MYSTERY,

@@ -13,7 +13,7 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { Auth } from "../auth";
+import { Auth } from "#auth";
 import { Controller, Get, Query } from "@nestjs/common";
 import {
   ErrorResponse,
@@ -21,8 +21,8 @@ import {
   GuildNotFoundException,
   PlayerNotFoundException,
 } from "@statsify/api-client";
-import { GuildDto } from "../dtos";
-import { GuildService } from "./guild.service";
+import { GuildDto } from "#dtos";
+import { GuildService } from "./guild.service.js";
 
 @Controller("/guild")
 @ApiTags("Guild")

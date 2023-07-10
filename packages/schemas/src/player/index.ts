@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Color } from "../color";
-import { Field } from "../metadata";
+import { Color } from "#color";
+import { Field } from "#metadata";
 import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
-import { PlayerSocials } from "./socials";
-import { PlayerStats } from "./stats";
-import { PlayerStatus } from "./status";
-import { PlayerUtil } from "./util";
+import { PlayerSocials } from "./socials.js";
+import { PlayerStats } from "./stats.js";
+import { PlayerStatus } from "./status.js";
+import { PlayerUtil } from "./util.js";
+import type { APIData } from "@statsify/util";
 
 @ModelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class Player {
@@ -126,7 +126,7 @@ export class Player {
   }
 }
 
-export * from "./gamemodes";
-export * from "./socials";
-export * from "./stats";
-export * from "./status";
+export * from "./gamemodes/index.js";
+export * from "./socials.js";
+export * from "./stats.js";
+export * from "./status.js";
