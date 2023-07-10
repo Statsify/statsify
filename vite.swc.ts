@@ -57,10 +57,6 @@ export const swc = createUnplugin(({ minify, ...options }: SwcOptions = {}) => {
         ...options,
       });
 
-      if (id.endsWith("player.service.ts")) {
-        console.log(result.code);
-      }
-
       return {
         code: result.code,
         map: result.map && JSON.parse(result.map),
