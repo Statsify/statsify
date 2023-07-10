@@ -68,7 +68,7 @@ export const VampireZProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t(`stats.wins`)} value={t(vampirez[api].wins)} color="§e" />
+          <Table.td title={t("stats.wins")} value={t(vampirez[api].wins)} color="§e" />
           <Table.td
             title={
               api === "human" ? t("stats.vampires-killed") : t("stats.humans-killed")
@@ -77,11 +77,11 @@ export const VampireZProfile = ({
             color="§a"
           />
           <Table.td
-            title={t(`stats.deaths`)}
+            title={t("stats.deaths")}
             value={t(vampirez[api].deaths)}
             color="§c"
           />
-          <Table.td title={t(`stats.kdr`)} value={t(vampirez[api].kdr)} color="§6" />
+          <Table.td title={t("stats.kdr")} value={t(vampirez[api].kdr)} color="§6" />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />

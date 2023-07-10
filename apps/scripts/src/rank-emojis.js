@@ -178,7 +178,7 @@ const client = new RestClient({ token });
 
 for (let i = 0; i < serverCount; i++) {
   const guild = await client
-    .post(`/guilds`, { name: `Statsify Ranks ${i + 1}` })
+    .post("/guilds", { name: `Statsify Ranks ${i + 1}` })
     .then((res) => res.body);
 
   const channel = guild.system_channel_id;

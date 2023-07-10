@@ -177,8 +177,7 @@ export class HistoricalLeaderboardService extends LeaderboardService {
 
     if (!hidden) fields.push(fieldName);
 
-    fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
-    fields.push("Reset");
+    fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName), "Reset");
 
     return {
       name,

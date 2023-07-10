@@ -14,8 +14,18 @@ import type {
 } from "../metadata.interface.js";
 import type { StoreOptions } from "../field.options.js";
 
-const getDefaultValue = (type: Constructor) =>
-  type === String ? "" : type === Number ? 0 : type === Boolean ? false : undefined;
+const getDefaultValue = (type: Constructor) => {
+  switch (type) {
+    case String:
+      return "";
+    case Number:
+      return 0;
+    case Boolean:
+      return false;
+    default:
+      return undefined;
+  }
+};
 
 export const getStoreMetadata = (
   typeMetadata: TypeMetadata,
@@ -26,8 +36,5 @@ export const getStoreMetadata = (
   store: (leaderboardMetadata.enabled || storeOptions?.store) ?? true,
   serialize: storeOptions?.serialize ?? true,
   deserialize: storeOptions?.deserialize ?? true,
-  default:
-    storeOptions?.default === undefined
-      ? getDefaultValue(typeMetadata.type)
-      : storeOptions.default,
+  default: storeOptions?.default ?? getDefaultValue(typeMetadata.type),
 });

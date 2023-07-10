@@ -13,17 +13,17 @@ export const rankMap: Record<string, (color: string) => string> = {
   "MVP+": (plusColor) => `§b[MVP${plusColor}+§b]`,
   "MVP++": (plusColor) => `§6[MVP${plusColor}++§6]`,
   "bMVP++": (plusColor) => `§b[MVP${plusColor}++§b]`,
-  MVP: () => "§b[MVP]",
-  "VIP+": () => `§a[VIP§6+§a]`,
-  VIP: () => `§a[VIP]`,
-  YOUTUBE: () => `§c[§fYOUTUBE§c]`,
-  "PIG+++": () => `§d[PIG§b+++§d]`,
-  GM: () => "§2[GM]",
-  ADMIN: () => `§c[ADMIN]`,
-  OWNER: () => `§c[OWNER]`,
-  MOJANG: () => `§6[MOJANG]`,
-  EVENTS: () => `§6[EVENTS]`,
-  DEFAULT: () => `§7`,
+  "MVP": () => "§b[MVP]",
+  "VIP+": () => "§a[VIP§6+§a]",
+  "VIP": () => "§a[VIP]",
+  "YOUTUBE": () => "§c[§fYOUTUBE§c]",
+  "PIG+++": () => "§d[PIG§b+++§d]",
+  "GM": () => "§2[GM]",
+  "ADMIN": () => "§c[ADMIN]",
+  "OWNER": () => "§c[OWNER]",
+  "MOJANG": () => "§6[MOJANG]",
+  "EVENTS": () => "§6[EVENTS]",
+  "DEFAULT": () => "§7",
 };
 
 /**
@@ -38,7 +38,7 @@ export class PlayerUtil {
         rank = data.monthlyPackageRank;
 
         if (data.monthlyRankColor && data.monthlyRankColor !== "GOLD") {
-          rank = `bMVP++`;
+          rank = "bMVP++";
         }
       } else {
         rank =
@@ -66,8 +66,8 @@ export class PlayerUtil {
       "MVP+": new Color("RED"),
       "MVP++": new Color("RED"),
       "bMVP++": new Color("RED"),
-      MVP: new Color("AQUA"),
-      VIP: new Color("GREEN"),
+      "MVP": new Color("AQUA"),
+      "VIP": new Color("GREEN"),
       "VIP+": new Color("GOLD"),
       "PIG+++": new Color("AQUA"),
     };

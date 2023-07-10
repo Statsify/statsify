@@ -338,7 +338,7 @@ export class SessionCommand {
 
         return {
           content,
-          files: [{ name: `session.png`, data: buffer, type: "image/png" }],
+          files: [{ name: "session.png", data: buffer, type: "image/png" }],
           attachments: [],
         };
       },

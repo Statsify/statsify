@@ -316,11 +316,11 @@ export class BaseLeaderboardCommand {
 
     const leaderboardData = getLeaderboardDataIcon
       ? await Promise.all(
-          leaderboard.data.map(async (d) => ({
-            ...d,
-            icon: await getLeaderboardDataIcon(d.id),
-          }))
-        )
+        leaderboard.data.map(async (d) => ({
+          ...d,
+          icon: await getLeaderboardDataIcon(d.id),
+        }))
+      )
       : leaderboard.data;
 
     const canvas = render(

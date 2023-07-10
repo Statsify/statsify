@@ -38,7 +38,7 @@ export class ChannelService {
       return parseDiscordResponse(response);
     }
 
-    const response = await this.rest.post(`/users/@me/channels`, {
+    const response = await this.rest.post("/users/@me/channels", {
       recipient_id: guildIdOrUserId,
     });
 

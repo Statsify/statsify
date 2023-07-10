@@ -152,8 +152,11 @@ export const BlitzSGProfile = ({
         }
 
         if (stats.level === 10) level = `§l${level}`;
-        sidebar.push([t("stats.level"), level, color]);
-        sidebar.push([t("stats.exp"), t(stats.exp), "§b"]);
+
+        sidebar.push(
+          [t("stats.level"), level, color],
+          [t("stats.exp"), t(stats.exp), "§b"]
+        );
       }
 
       table = <KitBlitzSGTable stats={stats} t={t} />;
@@ -172,12 +175,12 @@ export const BlitzSGProfile = ({
         description={
           mode.api === "overall"
             ? `§7${t("stats.prefix")}: ${blitzsg.naturalPrefix}\n${formatProgression({
-                t,
-                label: t("stats.progression.kill"),
-                progression: blitzsg.progression,
-                currentLevel: blitzsg.currentPrefix,
-                nextLevel: blitzsg.nextPrefix,
-              })}`
+              t,
+              label: t("stats.progression.kill"),
+              progression: blitzsg.progression,
+              currentLevel: blitzsg.currentPrefix,
+              nextLevel: blitzsg.nextPrefix,
+            })}`
             : ""
         }
         time={time}

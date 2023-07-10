@@ -242,7 +242,7 @@ if (import.meta.vitest) {
     });
   });
 
-  test(`logging levels`, () => {
+  test("logging levels", () => {
     it("should ignore all log levels", () => {
       const logger = new Logger("default", { logLevels: [] });
 

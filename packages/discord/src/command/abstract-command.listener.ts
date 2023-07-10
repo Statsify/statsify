@@ -94,7 +94,7 @@ export abstract class AbstractCommandListener {
       return (this.client as InteractionServer).listen(this.port as number);
     }
 
-    this.logger.log(`Connecting to gateway with WebsocketShard`);
+    this.logger.log("Connecting to gateway with WebsocketShard");
     return (this.client as WebsocketShard).connect();
   }
 

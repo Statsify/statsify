@@ -232,7 +232,7 @@ export class RatiosCommand {
         const buffer = await canvas.toBuffer("png");
 
         return {
-          files: [{ name: `ratios.png`, data: buffer, type: "image/png" }],
+          files: [{ name: "ratios.png", data: buffer, type: "image/png" }],
           attachments: [],
         };
       },

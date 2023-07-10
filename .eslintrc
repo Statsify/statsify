@@ -8,7 +8,6 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
     "plugin:unicorn/recommended"
   ],
   "parser": "@typescript-eslint/parser",
@@ -153,13 +152,7 @@
     "unicorn/no-useless-undefined": [
       "off"
     ],
-    "unicorn/no-nested-ternary": [
-      "off"
-    ],
     "unicorn/no-array-for-each": [
-      "off"
-    ],
-    "unicorn/no-array-push-push": [
       "off"
     ],
     "unicorn/no-useless-switch-case": [
@@ -174,23 +167,22 @@
       {
         "arrays": "always-multiline",
         "objects": "always-multiline",
-        "imports": "never",
-        "exports": "never",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
         "functions": "never"
       }
     ],
-    "import-newlines/enforce": [
-      "error",
-      100
-    ],
     "indent": [
       "error",
-      2
+      2,
+      {
+        "SwitchCase": 1
+      }
     ],
     "max-len": [
       "error",
       {
-        "code": 100,
+        "code": 120,
         "tabWidth": 2,
         "ignoreComments": true,
         "ignoreTrailingComments": true,

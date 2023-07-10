@@ -332,7 +332,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
       const preview = {
         name: "preview.png",
-        data: readFileSync(getAssetPath(`previews/historical-leaderboard.png`)),
+        data: readFileSync(getAssetPath("previews/historical-leaderboard.png")),
         type: "image/png",
       };
 

@@ -413,9 +413,9 @@ export class HistoricalService {
 
     return date.getDate() === 1
       ? HistoricalTimes.MONTHLY
-      : date.getDay() === 1
-      ? HistoricalTimes.WEEKLY
-      : HistoricalTimes.DAILY;
+      : (date.getDay() === 1
+        ? HistoricalTimes.WEEKLY
+        : HistoricalTimes.DAILY);
   }
 
   private getNextResetTime(resetMinute: number, time: HistoricalType) {

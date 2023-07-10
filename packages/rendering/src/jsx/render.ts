@@ -116,7 +116,7 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
 
   const instructionsTransaction = transaction?.startChild({
     op: "jsx.createInstructions",
-    description: `Create instructions`,
+    description: "Create instructions",
   });
 
   const instructions = createInstructions(node);
@@ -128,7 +128,7 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
 
   const renderTransaction = transaction?.startChild({
     op: "jsx.render",
-    description: `Render JSX`,
+    description: "Render JSX",
   });
 
   const canvas = new Canvas(width, height);

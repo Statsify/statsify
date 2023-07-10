@@ -69,7 +69,7 @@ export class CommandPoster {
       this.logger.log(`Successfully posted ${commandsToPost.length} commands`);
       return cmds;
     } catch (err) {
-      this.logger.error(`Failed to post commands`);
+      this.logger.error("Failed to post commands");
       this.logger.error(err);
       return null;
     }

@@ -87,7 +87,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
     const buffer = await canvas.toBuffer("png");
 
-    message.files = [{ name: `welcome.png`, data: buffer, type: "image/png" }];
+    message.files = [{ name: "welcome.png", data: buffer, type: "image/png" }];
 
     await this.messageService.send(WELCOME_CHANNEL_ID, message);
   }

@@ -14,7 +14,7 @@ import { config } from "@statsify/util";
 @Module({
   imports: [
     HttpModule.register({
-      baseURL: `https://api.hypixel.net/`,
+      baseURL: "https://api.hypixel.net/",
       headers: {
         "API-Key": config("hypixelApi.key"),
         "accept-encoding": "*",

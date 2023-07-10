@@ -291,7 +291,7 @@ if (import.meta.vitest) {
       ]);
     });
 
-    it(`should read and write with inherited metadata`, () => {
+    it("should read and write with inherited metadata", () => {
       class ParentClazz {
         @Field()
         public fieldA: string;
@@ -308,7 +308,7 @@ if (import.meta.vitest) {
       ]);
     });
 
-    it(`should carry down metadata`, () => {
+    it("should carry down metadata", () => {
       class ChildClazz {
         @Field()
         public fieldB: number;

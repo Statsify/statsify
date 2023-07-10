@@ -142,10 +142,10 @@ export class SkyWars {
       data.activeKit_TEAMS_random ? "random" : data.activeKit_TEAMS
     );
 
-    const soloInsaneWins = data[`wins_solo_insane`];
-    const soloNormalWins = data[`wins_solo_normal`];
-    const doublesInsaneWins = data[`wins_team_insane`];
-    const doublesNormalWins = data[`wins_team_normal`];
+    const soloInsaneWins = data["wins_solo_insane"];
+    const soloNormalWins = data["wins_solo_normal"];
+    const doublesInsaneWins = data["wins_team_insane"];
+    const doublesNormalWins = data["wins_team_normal"];
 
     const chooseKit = (insane = 0, normal = 0) =>
       insane > normal ? insaneKit : normalKit;

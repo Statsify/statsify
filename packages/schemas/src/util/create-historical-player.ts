@@ -47,13 +47,12 @@ export function createHistoricalPlayer<T>(oldOne: T, newOne: T): T {
     } else if (newOneType === "string") {
       merged[key] = newOne[key];
     } else if (isObject(newOne[key])) {
-      merged[key] =
-        key === "progression"
-          ? newOne[key]
-          : (createHistoricalPlayer(
-              oldOne[key] ?? {},
-              newOne[key] ?? {}
-            ) as unknown as T[keyof T]);
+      if (key === "progression") {
+        merged[key] = newOne[key];
+        continue;
+      }
+
+      merged[key] = createHistoricalPlayer(oldOne[key] ?? {}, newOne[key] ?? {}) as unknown as T[keyof T];
     }
   }
 

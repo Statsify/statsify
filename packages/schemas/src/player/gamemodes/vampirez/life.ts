@@ -44,7 +44,7 @@ export class VampireZHuman {
     this.deaths = data[`${mode}_deaths`];
 
     const prefixes = mode === "human" ? humanPrefixes : vampirePrefixes;
-    const score = mode === "human" ? this.wins : data[`human_kills`];
+    const score = mode === "human" ? this.wins : data["human_kills"];
 
     this.currentPrefix = getFormattedPrefix({ prefixes, score });
 

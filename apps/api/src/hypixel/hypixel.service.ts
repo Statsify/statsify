@@ -68,7 +68,7 @@ export class HypixelService {
 
   public getRecentGames(uuid: string): Promise<RecentGame[]> {
     return lastValueFrom(
-      this.request<APIData>(`/recentgames`, { uuid }).pipe(
+      this.request<APIData>("/recentgames", { uuid }).pipe(
         map((data) => {
           if (data.games) return data.games.map((game: APIData) => new RecentGame(game));
           return [];
@@ -83,7 +83,7 @@ export class HypixelService {
 
   public getStatus(uuid: string) {
     return lastValueFrom(
-      this.request<APIData>(`/status`, { uuid }).pipe(
+      this.request<APIData>("/status", { uuid }).pipe(
         map((data) => {
           if (data.session) return new Status(data.session);
           return null;

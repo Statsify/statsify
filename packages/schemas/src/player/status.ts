@@ -30,8 +30,7 @@ function findLastAction(data: APIData): { action: string; time: number } {
     }
   }
 
-  actions.push({ action: "QUEST_START", time: lastQuestStart });
-  actions.push({ action: "QUEST_COMPLETED", time: lastQuestEnd });
+  actions.push({ action: "QUEST_START", time: lastQuestStart }, { action: "QUEST_COMPLETED", time: lastQuestEnd });
 
   const allPets = data?.petStats ?? {};
 
@@ -54,11 +53,7 @@ function findLastAction(data: APIData): { action: string; time: number } {
   // It really is not necessary to display which pet action was last done
   // Therefore just putting pet is explanation enough to the players last
   // known whereabouts.
-  actions.push({ action: "PET", time: lastPetTime });
-
-  // Since this stat is stored seperately and is timed, it is okay to have
-  // as another action since it can show if they are doing this then leaving
-  actions.push({
+  actions.push({ action: "PET", time: lastPetTime }, {
     action: "PET_JOURNEY",
     time: data?.petJourneyTimestamp ?? 0,
   });
@@ -100,48 +95,46 @@ function findLastAction(data: APIData): { action: string; time: number } {
 
     // Pit profile saves are any stat changing, this makes other actions redundant
     // but they do show a little bit more info as to what the player is doing.
-    actions.push({ action: "PIT_PROFILE_SAVE", time: pitProfile.last_save ?? 0 });
-
-    // These other actions are just here for verbosity
-    actions.push({
-      action: "PIT_MIDFIGHT_DISCONNECT",
-      time: pitProfile.last_midfight_disconnect ?? 0,
-    });
-
-    actions.push({
-      action: "PIT_CONTRACT",
-      time: pitProfile.last_contract ?? 0,
-    });
-
-    actions.push({
-      action: "PIT_TRADE",
-      time: Math.max(...(pitProfile.trade_timestamps ?? [0])),
-    });
+    actions.push(
+      {
+        action: "PIT_PROFILE_SAVE",
+        time: pitProfile.last_save ?? 0,
+      },
+      {
+        action: "PIT_MIDFIGHT_DISCONNECT",
+        time: pitProfile.last_midfight_disconnect ?? 0,
+      },
+      {
+        action: "PIT_CONTRACT",
+        time: pitProfile.last_contract ?? 0,
+      },
+      {
+        action: "PIT_TRADE",
+        time: Math.max(...(pitProfile.trade_timestamps ?? [0])),
+      }
+    );
   }
 
   // A large number of players do claim these each day, this means
   // it will yield accurate results to within a day on most people
-  actions.push({
-    action: "CLAIM_DAILY_EXP",
-    time: data?.eugene?.dailyTwoKExp ?? 0,
-  });
-
-  actions.push({
-    action: "CLAIM_REWARD",
-    time: data?.lastClaimedReward ?? 0,
-  });
-
-  // Login and logout times are added in case the data is displayed
-  // and the player has not hidden their status but is offline.
-  actions.push({
-    action: "LOGIN",
-    time: data?.lastLogin ?? 0,
-  });
-
-  actions.push({
-    action: "LOGOUT",
-    time: data?.lastLogout ?? 0,
-  });
+  actions.push(
+    {
+      action: "CLAIM_DAILY_EXP",
+      time: data?.eugene?.dailyTwoKExp ?? 0,
+    },
+    {
+      action: "CLAIM_REWARD",
+      time: data?.lastClaimedReward ?? 0,
+    },
+    {
+      action: "LOGIN",
+      time: data?.lastLogin ?? 0,
+    },
+    {
+      action: "LOGOUT",
+      time: data?.lastLogout ?? 0,
+    }
+  );
 
   // This is good for tracking ap hunters who are playing games with very
   // little in the way of time stats in the game they are playing.
@@ -161,9 +154,8 @@ function findLastAction(data: APIData): { action: string; time: number } {
 
   if (data.stats) {
     const games = Object.values(data.stats);
-
-    const touneyAds = games.map((g: any) => g.lastTourneyAd).filter((v) => !!v);
-    actions.push({ action: "TOURNAMENT_ADVERTISEMENT", time: Math.max(...touneyAds) });
+    const tourneyAds = games.map((g: any) => g.lastTourneyAd).filter((v) => !!v);
+    actions.push({ action: "TOURNAMENT_ADVERTISEMENT", time: Math.max(...tourneyAds) });
   }
 
   // First login is used as a baseline due to it being literally the oldest timestamp

@@ -194,7 +194,7 @@ export class FontRenderer {
 
     const scale = this.getTextureScale(image);
 
-    const characterSize = sizes[isAscii ? "ascii" : `unicode`][unicode.toUpperCase()];
+    const characterSize = sizes[isAscii ? "ascii" : "unicode"][unicode.toUpperCase()];
 
     const startOffset = characterSize?.start ?? 0;
     const width = characterSize?.width ?? 0;

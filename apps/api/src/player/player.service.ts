@@ -221,13 +221,8 @@ export class PlayerService {
 
     promises.push(
       this.playerModel
-        .replaceOne({ uuid: player.uuid }, serializedPlayer, {
-          upsert: true,
-        })
-        .exec()
-    );
-
-    promises.push(
+        .replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true })
+        .exec(),
       this.playerLeaderboardService.addLeaderboards(Player, flatPlayer, "uuid", false)
     );
 
