@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import axios from "axios";
 import { User, UserLogo } from "@statsify/schemas";
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -84,40 +83,6 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
 
   return getImage(`out/backgrounds/${pathOrGame}.png`);
 }
-
-export interface ServerMappingsServer {
-  id: string;
-  name: string;
-  addresses: string[];
-  primaryAddress: string;
-  inactive: boolean;
-  enriched: boolean;
-}
-
-let serversCache: ServerMappingsServer[] = [];
-let serversCacheTime = 0;
-
-const SERVER_MAPPINGS_CDN_URL = "https://servermappings.lunarclientcdn.com/servers.json";
-
-export const getServerMappings = async () => {
-  // If the cache has been generated within the past 30 minutes, return the cache
-  if (serversCacheTime + 1_800_000 > Date.now()) return serversCache;
-
-  let servers = await axios
-    .get<ServerMappingsServer[]>(SERVER_MAPPINGS_CDN_URL)
-    .then((res) => res.data)
-    .catch(() => []);
-
-  servers = servers.filter((s) => !s.inactive && s.enriched);
-
-  // If the servers response is not empty, update the cache
-  if (servers.length) {
-    serversCacheTime = Date.now();
-    serversCache = servers;
-  }
-
-  return servers;
-};
 
 export function getLogo(user: User | null, size?: number): Promise<Image>;
 export function getLogo(logo: UserLogo | null, size?: number): Promise<Image>;

@@ -8,13 +8,12 @@
 
 import axios, { AxiosInstance } from "axios";
 import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
+import { type Server, type ServerMappingsServer, getServerBackground, getServerMappings } from "./server.util.js";
 import { ServerArgument } from "./server.argument.js";
-import { ServerMappingsServer, getBackground, getServerMappings } from "@statsify/assets";
 import { ServerProfile } from "./server.profile.js";
 import { getTheme } from "#themes";
 import { loadImage } from "skia-canvas";
 import { render } from "@statsify/rendering";
-import type { Server } from "./server.interface.js";
 
 @Command({
   description: (t) => t("commands.server"),
@@ -42,7 +41,7 @@ export class ServerCommand {
 
     const [serverLogo, background] = await Promise.all([
       loadImage(server.icon),
-      getBackground("minecraft", "overall"),
+      getServerBackground(server.mapping),
     ]);
 
     const canvas = render(
@@ -78,6 +77,7 @@ export class ServerCommand {
 
     server.hostname = mappedServer?.primaryAddress ?? server.hostname;
     server.name = mappedServer?.name ?? server.hostname;
+    server.mapping = mappedServer;
 
     return server;
   }
