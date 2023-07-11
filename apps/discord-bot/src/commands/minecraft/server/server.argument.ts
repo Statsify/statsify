@@ -12,7 +12,7 @@ import {
 } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import { Fuse } from "fuse.js";
-import { ServerMappingsServer, getServerMappings } from "@statsify/assets";
+import { type ServerMappingsServer, getServerMappings } from "./server.util.js";
 
 export class ServerArgument extends AbstractArgument {
   public name = "server";
