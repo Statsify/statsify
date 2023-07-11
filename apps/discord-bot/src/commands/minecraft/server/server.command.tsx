@@ -8,7 +8,7 @@
 
 import axios, { AxiosInstance } from "axios";
 import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
-import { type Server,type ServerMappingsServer, getServerBackground, getServerMappings } from "./server.util.js";
+import { type Server, type ServerMappingsServer, getServerBackground, getServerMappings } from "./server.util.js";
 import { ServerArgument } from "./server.argument.js";
 import { ServerProfile } from "./server.profile.js";
 import { getTheme } from "#themes";
