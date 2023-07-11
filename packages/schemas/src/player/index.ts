@@ -130,3 +130,4 @@ export * from "./gamemodes/index.js";
 export * from "./socials.js";
 export * from "./stats.js";
 export * from "./status.js";
+export { rankMap } from "./util.js";

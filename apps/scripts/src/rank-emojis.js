@@ -10,8 +10,8 @@ import { Canvas } from "skia-canvas";
 import { FontRenderer } from "@statsify/rendering";
 import { Logger } from "@statsify/logger";
 import { RestClient } from "tiny-discord";
+import { config, minecraftColors } from "@statsify/util";
 import { getMinecraftTexturePath } from "@statsify/assets";
-import { minecraftColors } from "@statsify/util";
 import { rankMap } from "@statsify/schemas";
 import { writeFileSync } from "node:fs";
 
@@ -51,7 +51,7 @@ export const ALPHABET = [
 
 const logger = new Logger("rank-emojis");
 
-const token = process.env.RANK_EMOJI_DISCORD_BOT_TOKEN;
+const token = config("rankEmojis.botToken");
 
 if (!token) {
   logger.error(
