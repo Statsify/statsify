@@ -15,7 +15,7 @@
     "tags-content": "The content of the tag",
     "tags-name": "The name of the tag",
     "text": "Un mesaj",
-    "user": "Alege un nume de utilizator de Discord"
+    "user": "Alege un utilizator de Discord"
   },
   "commands": {
     "arcade": "$t(commands.hypixel-command, { \"name\": \"Arcade\" })",
@@ -24,7 +24,7 @@
     "badge": "Change your badge for every profile",
     "badge-reset": "Resetează-ți insigna profilului",
     "badge-set": "Încărcați o insignă nouă pentru profil",
-    "badge-view": "Vizualizați insigna profilului tău curent",
+    "badge-view": "Vezi insigna profilului tău curentă",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
     "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
@@ -47,7 +47,7 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "game-counts": "Vizualizați numărul actual al jocurilor pe Hypixel",
+    "game-counts": "Vizualizați numărul de jucători pe jocurile de pe Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Generează o listă cu posibile Guess The Build pe baza indiciului dat",
     "guild": "View your guild's stats",
@@ -88,7 +88,7 @@
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "Vezi statisticile de misiuni pentru {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
@@ -237,8 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "Resetează-ți statisticile istorice",
+    "reset-session": "Resetează-ți statisticile sesiunii"
   },
   "config": {
     "badge": {
@@ -511,8 +511,8 @@
     "reset": "$t(emojis:clock) **Resetare** <t:{{time}}:R>",
     "resetButton": "Clic pentru resetare",
     "setResetTime": "Setează timpul de resetare la <t:{{time}}:t>.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "newSession": "Statisticile sesiunii pentru **{{displayName}}** au fost verificate pentru prima dată pe Statsify.",
+    "setSessionReset": "Statisticile sesiunii tale au fost resetate cu succes."
   },
   "leaderboard": {
     "guildInput": {
@@ -713,7 +713,7 @@
     "ranksGifted": "Ranguri cadou",
     "rebelKills": "Uciderile ca Atacator",
     "renown": "Renown",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "Streak de Recompense",
     "roundWins": "Victorii Runde",
     "rune": "Rună",
     "score": "Scor",
