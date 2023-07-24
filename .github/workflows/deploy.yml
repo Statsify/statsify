@@ -21,13 +21,13 @@ jobs:
           submodules: recursive
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --force
 
       - name: Build Code
         run: pnpm scripts purge --dist && pnpm build --force
 
       - name: Prepare Assets
-        run: cd assets/private && pnpm install && pnpm blur && cd ../../
+        run: cd assets/private && pnpm blur && cd ../../
 
       - name: Move Config
         run: cp /home/config.js ./config.js
