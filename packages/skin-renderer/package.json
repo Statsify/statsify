@@ -1,0 +1,30 @@
+{
+  "name": "@statsify/skin-renderer",
+  "version": "0.0.0",
+  "main": "./index.cjs",
+  "types": "./index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "napi build --platform --release && mv index.js index.cjs",
+    "build:debug": "napi build --platform && mv index.js index.cjs",
+    "lint": "cargo fmt && cargo clippy --fix --allow-dirty"
+  },
+  "napi": {
+    "name": "skin-renderer",
+    "triples": {
+      "defaults": true,
+      "additional": [
+        "x86_64-unknown-linux-musl",
+        "aarch64-unknown-linux-gnu",
+        "i686-pc-windows-msvc",
+        "armv7-unknown-linux-gnueabihf",
+        "aarch64-apple-darwin",
+        "aarch64-linux-android",
+        "x86_64-unknown-freebsd",
+        "aarch64-unknown-linux-musl",
+        "aarch64-pc-windows-msvc",
+        "armv7-linux-androideabi"
+      ]
+    }
+  }
+}

@@ -21,3 +21,6 @@ coverage
 apps/discord-bot/commands.json
 apps/support-bot/commands.json
 .pnpm-store/
+target
+Cargo.lock
+**/*.node
