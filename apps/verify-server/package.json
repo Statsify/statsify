@@ -11,15 +11,15 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.60.0",
-    "@sentry/tracing": "^7.60.0",
+    "@sentry/node": "^7.61.0",
+    "@sentry/tracing": "^7.61.0",
     "@statsify/assets": "*",
     "@statsify/logger": "*",
     "@statsify/schemas": "*",
     "@statsify/util": "*",
     "@swc/helpers": "^0.5.1",
-    "@typegoose/typegoose": "^11.4.0",
+    "@typegoose/typegoose": "^11.4.1",
     "minecraft-protocol": "^1.43.2",
-    "mongoose": "^7.4.1"
+    "mongoose": "^7.4.2"
   }
 }
