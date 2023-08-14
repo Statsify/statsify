@@ -306,9 +306,9 @@
         "description": "Statsify tukee suurinta osaa Hypixelin peleistä. Voit tarkistaa tilastosi pelissä komennolla `/[game]`. Voit esimerkiksi suorittaa `/bedwars` tarkistaaksesi BedWars tilastosi.",
         "title": "Pelit"
       },
-      "historical": {
-        "description": "Statsifyn avulla voit tarkistaa päivittäiset, viikottaiset ja kuukausittaiset tilastot komennoilla `/daily`, `/weekly` ja `/monthly`. Jos missasit nollauksen, voit katsella niitä suorittamalla `/yesterday`, `/lastweek`, ja `/lastmonth`. ",
-        "title": "Historiallinen"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify tarjoaa tuhansia tulostaulukoita `/leaderboard` komennon kautta. Tee `/leaderboard`, sitten valitse pelitila, ja valitse tulostaulukko, jota haluat katsella. Käytä hakupainiketta etsiäksesi tiettyä pelaajaa tai sijoitusta. Voit myös painaa ylös ja alas painikkeita nähdäksesi lisää sivuja.",
@@ -386,6 +386,10 @@
       "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Virheellinen pelaaja"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session`."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` ei vastaa muotoa `h:mm a`. Kirjoita aika muodossa `12:00 PM` tai `1:00 AM`.",
       "title": "Virheellinen nollausaika"
@@ -432,7 +436,7 @@
       "title": "Puuttuva vahvistus"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -512,7 +516,11 @@
     "resetButton": "Klikkaa nollataksesi",
     "setResetTime": "Aseta nollausajaksi <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Klikkaa **[tästä](<https://statsify.net/invite>)** kutsuaksesi Statsifyn omalle palvelimellesi!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** tarjoaa lisäominaisuuksia, kuten henkilökohtaiset profiilimerkit. Löydät täyden luettelon eduista **[täältä](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Tarkastele parhaita sijoituksiasi tulostaulukoilla **[Statsify Premium](<https://statsify.net/premium>)** käyttämällä `/rankings` -komentoa",
-    "verify": "$t(emojis:check) Tee `/verify` suorittaaksesi komentoja antamatta käyttäjänimeäsi sekä saadaksesi **10% lyhyemmät odotussajat**"
+    "verify": "$t(emojis:check) Tee `/verify` suorittaaksesi komentoja antamatta käyttäjänimeäsi sekä saadaksesi **10% lyhyemmät odotussajat**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Tuntematon",
   "verification": {
