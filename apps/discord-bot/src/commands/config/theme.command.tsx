@@ -238,7 +238,7 @@ export class ThemeCommand {
         badge={badge}
         user={user}
         message={
-          mode === "theme" ? t("config.theme.profile.js") : t("config.footer.profile.js")
+          mode === "theme" ? t("config.theme.profile") : t("config.footer.profile")
         }
       />,
       getTheme(user)
