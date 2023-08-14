@@ -306,9 +306,9 @@
         "description": "Statsify supporta la maggior parte delle modalità offerte su Hypixel. Per verificare le tue statistiche in una modalità, esegui `/[game]`. Ad esempio puoi eseguire `/bedwars` per controllare le tue statistiche di BedWars.",
         "title": "Modalità"
       },
-      "historical": {
-        "description": "Statsify ti permette di verificare le tue statistiche giornaliere, settimanali, e mensili attraverso `/daily`, `/weekly` e `/monthly`. Se hai mancato un ripristino puoi visualizzarli eseguendo `/yesterday`, `/lastweek`, e `/lastmonth`. ",
-        "title": "Storico"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify offre migliaia di leaderboard attraverso il comando `/leaderboard`. Esegui `/leaderboard`, poi scegli la modalità di gioco, e scegli la classifica da vedere. Puoi cliccare il bottone ricerca per cercare specifici giocatori o posizioni. Puoi anche cliccare i bottoni \"sopra\" e \"sotto\" per vedere altre pagine.",
@@ -386,6 +386,10 @@
       "description_discordId": "Un giocatore con l'id discord `{{tag}}` non può esser trovato!",
       "title": "Giocatore non valido"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session`."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` non corrisponde al formato `h:mm a`. Inserisci un'ora nel formato simile a `12:00 PM` o `1:00 AM`.",
       "title": "Tempo di ripristino non valido"
@@ -432,7 +436,7 @@
       "title": "Verifica mancante"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -512,7 +516,11 @@
     "resetButton": "Clicca per ripristinare",
     "setResetTime": "Imposta il tuo tempo di ripristino a <t:{{time}}:t>.",
     "newSession": "La sessione di statistiche di **{{displayName}}** è stato controllata per la prima volta su Statsify.",
-    "setSessionReset": "La tua sessione di statistiche è stata ripristinata con successo."
+    "setSessionReset": "La tua sessione di statistiche è stata ripristinata con successo.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Clicca **[qui](<https://statsify.net/invite>)** per invitare Statsify nel tuo server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** offre funzionalità aggiuntive ad esempio emblemi profilo personalizzati. Trova l'elenco completo dei vantaggi **[qui](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Visualizza le tue migliori posizioni sulla classifica con **[Statsify Premium] (<https://statsify.net/premium>)** usando `/rankings`",
-    "verify": "$t(emojis:check) Esegui `/verify` per eseguire comandi senza inserire il tuo nome utente oltre che a ricevere **cooldown 10% più brevi**"
+    "verify": "$t(emojis:check) Esegui `/verify` per eseguire comandi senza inserire il tuo nome utente oltre che a ricevere **cooldown 10% più brevi**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Sconosciuto",
   "verification": {
