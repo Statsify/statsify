@@ -31,7 +31,6 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 
-
 @Injectable()
 export class SessionService {
 
@@ -73,7 +72,6 @@ export class SessionService {
     });
 
     if (!player) throw new PlayerNotFoundException();
-
 
     let oldPlayer = await this.sessionModel
       .findOne({ uuid: player.uuid })

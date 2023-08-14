@@ -297,7 +297,6 @@ export class HistoricalBase {
       .description(t => t("historical.disabledWarning.description"))
       .image(`attachment://${preview.name}`);
 
-
     return { embeds: [embed], files: [preview] };
   }
 }

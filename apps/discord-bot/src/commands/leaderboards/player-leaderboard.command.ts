@@ -52,7 +52,6 @@ import {
 } from "./player-leaderboard.argument.js";
 import { getBackground } from "@statsify/assets";
 
-
 @Command({
   name: "leaderboard",
   description: (t) => t("commands.player-leaderboard"),
