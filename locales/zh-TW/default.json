@@ -306,9 +306,9 @@
         "description": "Statsify支持Hypixel大多數遊戲。 想要查看您在遊戲中的統計數據，可執行`/[遊戲名稱]`。例如，您可以執行`/bedwars`來查看您在床戰裡的統計數據。",
         "title": "遊戲"
       },
-      "historical": {
-        "description": "Statsify允許您通過執行`/daily`、 `/weekly`和`/monthly`來查看您的每日、每周和每月的統計數據。如果您錯過了一次重置時間，您可以通過執行`/yesterday`、`/lastweek`、`/lastmonth`來查看您以往的統計數據。 ",
-        "title": "以往的統計數據"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify的`/leaderboard`指令提供數千個排行榜。執行`/leaderboard`，然後選擇遊戲模式，然後選擇要查看的排行榜。您可以點擊搜索按鈕來查看特定的玩家或排行榜位置。您還可以通過使用上下按鍵來查看更多頁面。",
@@ -386,6 +386,10 @@
       "description_discordId": "無法搜尋一位Discord使用者為`{{tag}}`的玩家！",
       "title": "無效的玩家"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session`."
+    },
     "invalidResetTime": {
       "description": "`{{time}}`不匹配`h:mm a`的格式。請輸入`12:00 PM`或是`1:00 AM`類似格式的時間。",
       "title": "無效的重置時間"
@@ -432,7 +436,7 @@
       "title": "缺少驗證"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -512,7 +516,11 @@
     "resetButton": "點擊重置",
     "setResetTime": "將您的重置時間設置為<t:{{time}}:t>",
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) 點擊**[這裡](<https://statsify.net/invite>)**來邀請Statsify到您自己的伺服器！",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)**提供額外的功能，例如客製化個人資料徽章。點擊**[這裡](<https://statsify.net/premium>)**來查找完整的福利清單！",
     "rankings": "$t(emojis:logos.iron) 擁有**[Statsify Premium](<https://statsify.net/premium>)**並執行`/rankings`可以查看您在排行榜中的最高排行",
-    "verify": "$t(emojis:check) 執行`/verify`可以在不輸入使用名的情況下執行命令，並獲得**降低10%的冷卻時間**"
+    "verify": "$t(emojis:check) 執行`/verify`可以在不輸入使用名的情況下執行命令，並獲得**降低10%的冷卻時間**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "未知",
   "verification": {
