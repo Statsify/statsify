@@ -306,9 +306,9 @@
         "description": "Statsify støtter flertallet av spillene som tilbys på Hypixel. For å sjekke din statistikk for et spill, utfør `/[game]`. For eksempel kan du utføre `/bedwars` for å sjekke din statistikk for BedWars.",
         "title": "Spill"
       },
-      "historical": {
-        "description": "Statsify lar deg sjekke din daglige, ukentlige og månedlige statistikk gjennom `/daily`, `/weekly` og `/monthly`. Hvis du gikk glipp av en nullstilling kan du se dem ved å utføre `/yesterday`, `/lastweek`, og `/lastmonth`. ",
-        "title": "Tidligere"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify tilbyr tusenvis av topplister gjennom `/leaderboard`-kommandoen. Utfør `/leaderboard`, velg spilltype, og velg topplisten du ønsker å se. Du kan trykke på søkeknappen for å søke etter en spesifikk spiller eller posisjon. Du kan se flere sider ved å trykke opp- og ned-knappene.",
@@ -386,6 +386,10 @@
       "description_discordId": "En spiller med discord-id `{{tag}}` kunne ikke bli funnet!",
       "title": "Ugyldig spiller"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session`."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` samsvarer ikke med formatet `t:mm a`. Skriv inn et tidspunkt som ligner formatet `12:00 PM` eller `1:00 AM`.",
       "title": "Ugyldig tid for nullstilling"
@@ -432,7 +436,7 @@
       "title": "Manglende verifisering"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -512,7 +516,11 @@
     "resetButton": "Klikk for å nullstille",
     "setResetTime": "Angi nullstillingstid til <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Klikk **[here](<https://statsify.net/invite>)** for å invitere Statsify til din egen server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** tilbyr flere funksjoner, slik som personlig tilpassede profilmerker. Finn hele listen over fordeler **[here](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Se dine topplisteposisjoner med **[Statsify Premium](<https://statsify.net/premium>)** ved å bruke `/rankings`",
-    "verify": "$t(emojis:check) Utfør `/verify for å utføre kommandoer uten å skrive inn brukernavn, i tillegg til å motta **10 % kortere cooldowns**"
+    "verify": "$t(emojis:check) Utfør `/verify for å utføre kommandoer uten å skrive inn brukernavn, i tillegg til å motta **10 % kortere cooldowns**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Ukjent",
   "verification": {

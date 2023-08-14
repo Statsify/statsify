@@ -306,9 +306,9 @@
         "description": "Statsify hỗ trợ hầu hết các trò chơi có trên Hypixel. Để kiểm tra thông tin của bạn trong một trò chơi, sài lệnh `/[game]`. Ví dụ bạn có thể sài `/bedwars` để kiểm tra thông tin về trò chơi BedWars của bạn.",
         "title": "Những trò chơi"
       },
-      "historical": {
-        "description": "Statsify giúp bạn kiểm tra thông tin hằng ngày, hằng tuần, và hằng tháng qua câu lệnh `/daily`, `/weekly` và `/monthly`. Nếu như bạn lỡ quên bạn có thể xem lại bằng cách sài `/yesterday`, `/lastweek`, và `/lastmonth`. ",
-        "title": "Lịch sử"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify đưa ra hằng nghìn bảng xếp hạng qua câu lệnh `/leaderboard`. Sài `/leaderboard`, sau đó chọn chế độ trò chơi, và chọn một bảng xếp hạng để xem. Bạn có thể ấn vô nút tìm kiếm để tìm một người chơi hoặc vị trí nhất định. Bạn cũng có thể ấn nút lên hoặc xuống để xem thêm trang khác.",
@@ -386,6 +386,10 @@
       "description_discordId": "Một người chơi với mã discord của `{{tag}}` không thể tìm thấy!",
       "title": "Người chơi không hợp lệ"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session`."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` không giống với format `h:mm a`. Hãy nhập thời gian tương đồng với format như `12:00 PM` hoặc 1:00 AM`.",
       "title": "Đặt lại thời gian sai"
@@ -432,7 +436,7 @@
       "title": "Người này thiếu xác minh"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -512,7 +516,11 @@
     "resetButton": "Ấn đề cài lại",
     "setResetTime": "Cài lại thời gian của bạn thành <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Ấn **[here](<https://statsify.net/invite>)** để mời Statsify vào server của bạn!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** đưa cho bạn những tính năng hấp dẫn như có thể tùy chỉnh danh hiệu hồ sơ.Xem danh sách của tất cả lợi ích **[here](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Xem vị trí bảng xếp hạng của bạn với **[Statsify Premium] (<https://statsify.net/premium>)** bằng cách sài `/rankings`",
-    "verify": "$t(emojis:check) Chạy `/verify` để chạy câu lệnh không cần nhập tên tài khoản của bạn và cũng như nhận được **10% lower cooldowns**"
+    "verify": "$t(emojis:check) Chạy `/verify` để chạy câu lệnh không cần nhập tên tài khoản của bạn và cũng như nhận được **10% lower cooldowns**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Không xác định",
   "verification": {

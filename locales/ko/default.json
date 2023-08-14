@@ -306,9 +306,9 @@
         "description": "Statsify는 Hypixel에 있는 대다수 게임을 지원해요. 게임 내 전적을 보려면 `/[게임 이름]`처럼 입력하세요. 예를 들어 BedWars 전적을 보려면 `/bedwars`라고 입력하세요.",
         "title": "게임"
       },
-      "historical": {
-        "description": "Statsify는 일간, 주간, 월간 전적을 `/daily`, `/weekly`, `/monthly` 명령어로 확인할 수 있게 해주어요. 전적이 이미 초기화되었다면 `/yesterday`, `/lastweek`, `/lastmonth` 명령어를 사용해볼 수도 있어요. ",
-        "title": "기간 전적"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify는 `/leaderboard` 명령어로 수많은 순위표를 제공해요. `/leaderboard` 명령어를 실행한 후, 게임모드와 볼 순위표를 선택하세요. 검색 버튼을 눌러 특정 플레이어나 순위를 확인하세요. 위나 아래 버튼을 클릭해 더 많은 페이지를 볼 수도 있어요.",
@@ -386,6 +386,10 @@
       "description_discordId": "Discord ID가 `{{tag}}`인 플레이어를 찾지 못했어요!",
       "title": "잘못된 플레이어"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session`."
+    },
     "invalidResetTime": {
       "description": "`{{time}}`이(가) `h:mm a` 형식과 일치하지 않아요. `12:00 PM` 또는 `1:00 AM`과 유사한 형태로 시간을 입력하세요.",
       "title": "잘못된 초기화 시간"
@@ -432,7 +436,7 @@
       "title": "인증 필요"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -512,7 +516,11 @@
     "resetButton": "클릭해서 초기화",
     "setResetTime": "초기화 시간을 <t:{{time}}:t>로 설정했어요.",
     "newSession": "Statsify에서 **{{displayName}}**님의 세션 전적을 처음으로 확인했어요.",
-    "setSessionReset": "세션 전적을 초기화했어요."
+    "setSessionReset": "세션 전적을 초기화했어요.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) **[여기](<https://statsify.net/invite>)**를 클릭해 Statsify를 서버에 초대하세요!",
     "premium": "$t(emojis:logos.gold) **[Statsify 프리미엄](<https://statsify.net/premium>)**은 개인적인 프로필 배지와 같은 추가 기능을 제공해요. [여기서](<https://statsify.net/premium>) 모든 혜택을 찾아보세요!",
     "rankings": "$t(emojis:logos.iron) **[Statsify 프리미엄](<https://statsify.net/premium>)**으로 `/rankings` 명령어를 사용해 순위표 순위를 확인하세요",
-    "verify": "$t(emojis:check) `/verify` 명령어로 사용자 이름 없이 명령어를 실행하고 **대기 시간 10% 감소**를 받아보세요"
+    "verify": "$t(emojis:check) `/verify` 명령어로 사용자 이름 없이 명령어를 실행하고 **대기 시간 10% 감소**를 받아보세요",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "알 수 없음",
   "verification": {
