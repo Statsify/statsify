@@ -388,7 +388,7 @@
     },
     "invalidSession": {
       "title": "Invalid Session",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session`."
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
     },
     "invalidResetTime": {
       "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
