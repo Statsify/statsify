@@ -6,8 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { modelOptions as ModelOptions } from "@typegoose/typegoose";
-import { Player } from "@statsify/schemas";
-
-@ModelOptions({ schemaOptions: { collection: "lastWeek" } })
-export class LastWeek extends Player {}
+export * from "./session.controller.js";
+export * from "./session.module.js";
+export * from "./session.service.js";

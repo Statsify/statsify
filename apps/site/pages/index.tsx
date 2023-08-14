@@ -13,8 +13,6 @@ import bedwarsProfile from "../public/examples/bedwars.png";
 import blitzsgLeaderboard from "../public/examples/blitzsg-leaderboard.png";
 import buildbattleLeaderboard from "../public/examples/buildbattle-leaderboard.png";
 import commandsImage from "../public/commands.svg";
-import dailyMurderMysteryProfile from "../public/examples/daily-murdermystery.png";
-import dailyTNTGamesProfile from "../public/examples/daily-tntgames.png";
 import duelsProfile from "../public/examples/duels.png";
 import guildMemberProfile from "../public/examples/guild-member.png";
 import guildOverallGexpProfile from "../public/examples/guild-overall-gexp.png";
@@ -22,6 +20,8 @@ import guildOverallProfile from "../public/examples/guild-overall.png";
 import guildTopProfile from "../public/examples/guild-top.png";
 import recentGamesProfile from "../public/examples/recentgames.png";
 import serversImage from "../public/servers.svg";
+import sessionMurderMysteryProfile from "../public/examples/session-murdermystery.png";
+import sessionTNTGamesProfile from "../public/examples/session-tntgames.png";
 import skinEmbed from "../public/examples/skin.png";
 import skywarsProfile from "../public/examples/skywars.png";
 import woolwarsLeaderboard from "../public/examples/woolwars-leaderboard.png";
@@ -96,22 +96,23 @@ const Index = () => (
       and look at the other pages for that leaderboard.
     </Feature>
     <Feature
-      title="Historical Stats"
+      title="Session Stats"
       images={[
-        <Image placeholder="blur" src={dailyTNTGamesProfile} alt="Daily TNT Games" />,
+        <Image placeholder="blur" src={sessionTNTGamesProfile} alt="Session TNT Games" />,
         <Image
           placeholder="blur"
-          src={dailyMurderMysteryProfile}
-          alt="Daily Murder Mystery"
+          src={sessionMurderMysteryProfile}
+          alt="Session Murder Mystery"
         />,
       ]}
       align="left"
     >
-      Using historical stats, Statsify allows you to display your stats as if you began
+      Using session stats, Statsify allows you to display your stats as if you began
       playing today. There is no need to worry about your past losses, you can just focus
-      on the now. To quickly obtain your daily stats, type <Code>/daily</Code> followed by
-      the game of your choice. For example, enter <Code>/daily tntgames</Code> to get your
-      daily TNT Games stats. The same holds true for weekly and monthly.
+      on the now. To quickly obtain your session stats, type <Code>/session</Code> followed by
+      the game of your choice. For example, enter <Code>/session tntgames</Code> to get your
+      session TNT Games stats. Session stats are tracked independently of your overall stats
+      so you can reset them via <Code>/reset session</Code>.
     </Feature>
     <Feature
       title="Guilds"

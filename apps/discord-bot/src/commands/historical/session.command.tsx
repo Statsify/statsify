@@ -30,7 +30,6 @@ import {
   TNT_GAMES_MODES,
   TURBO_KART_RACERS_MODES,
   UHC_MODES,
-  UserTier,
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
@@ -42,6 +41,7 @@ import {
   CommandContext,
   Page,
   PaginateService,
+  PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
 import { ArcadeProfile } from "../arcade/arcade.profile.js";
@@ -76,9 +76,6 @@ import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
-const tier = UserTier.STAFF;
-const preview = "session.png";
-
 @Command({ description: "session stats" })
 export class SessionCommand {
   public constructor(
@@ -86,7 +83,7 @@ export class SessionCommand {
     private readonly paginateService: PaginateService
   ) {}
 
-  @SubCommand({ description: (t) => t("commands.session-arcade"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-arcade"), args: [PlayerArgument]  })
   public arcade(context: CommandContext) {
     return this.run(context, ARCADE_MODES, (base, mode) => (
       <ArcadeProfile {...base} mode={mode} />
@@ -95,9 +92,8 @@ export class SessionCommand {
 
   @SubCommand({
     description: (t) => t("commands.session-arenabrawl"),
-    tier,
-    preview,
     group: "classic",
+    args: [PlayerArgument],
   })
   public arenabrawl(context: CommandContext) {
     return this.run(context, ARENA_BRAWL_MODES, (base, mode) => (
@@ -105,21 +101,21 @@ export class SessionCommand {
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-bedwars"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-bedwars"), args: [PlayerArgument]  })
   public bedwars(context: CommandContext) {
     return this.run(context, BEDWARS_MODES, (base, mode) => (
       <BedWarsProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-bridge"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-bridge"), args: [PlayerArgument]  })
   public bridge(context: CommandContext) {
     return this.run(context, BRIDGE_MODES, (base, mode) => (
       <BridgeProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-blitzsg"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-blitzsg"), args: [PlayerArgument] })
   public blitzsg(context: CommandContext) {
     return this.run(
       context,
@@ -129,42 +125,42 @@ export class SessionCommand {
     );
   }
 
-  @SubCommand({ description: (t) => t("commands.session-buildbattle"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-buildbattle"), args: [PlayerArgument]  })
   public buildbattle(context: CommandContext) {
     return this.run(context, BUILD_BATTLE_MODES, (base) => (
       <BuildBattleProfile {...base} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-copsandcrims"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-copsandcrims"), args: [PlayerArgument]  })
   public copsandcrims(context: CommandContext) {
     return this.run(context, COPS_AND_CRIMS_MODES, (base, mode) => (
       <CopsAndCrimsProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-duels"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-duels"), args: [PlayerArgument] })
   public duels(context: CommandContext) {
     return this.run(context, DUELS_MODES, (base, mode) => (
       <DuelsProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-general"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-general"), args: [PlayerArgument] })
   public general(context: CommandContext) {
     return this.run(context, GENERAL_MODES, (base) => (
       <HistoricalGeneralProfile {...base} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-megawalls"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-megawalls"), args: [PlayerArgument]  })
   public megawalls(context: CommandContext) {
     return this.run(context, MEGAWALLS_MODES, (base, mode) => (
       <MegaWallsProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-murdermystery"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-murdermystery"), args: [PlayerArgument]  })
   public murdermystery(context: CommandContext) {
     return this.run(context, MURDER_MYSTERY_MODES, (base, mode) => (
       <MurderMysteryProfile {...base} mode={mode} />
@@ -173,24 +169,22 @@ export class SessionCommand {
 
   @SubCommand({
     description: (t) => t("commands.session-paintball"),
-    tier,
-    preview,
     group: "classic",
+    args: [PlayerArgument],
   })
   public paintball(context: CommandContext) {
     return this.run(context, PAINTBALL_MODES, (base) => <PaintballProfile {...base} />);
   }
 
-  @SubCommand({ description: (t) => t("commands.session-pit"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-pit"), args: [PlayerArgument]  })
   public pit(context: CommandContext) {
     return this.run(context, PIT_MODES, (base) => <PitProfile {...base} />);
   }
 
   @SubCommand({
     description: (t) => t("commands.session-quake"),
-    tier,
-    preview,
     group: "classic",
+    args: [PlayerArgument],
   })
   public quake(context: CommandContext) {
     return this.run(context, QUAKE_MODES, (base, mode) => (
@@ -198,37 +192,36 @@ export class SessionCommand {
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-skywars"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-skywars"), args: [PlayerArgument]  })
   public skywars(context: CommandContext) {
     return this.run(context, SKYWARS_MODES, (base, mode) => (
       <SkyWarsProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-smashheroes"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-smashheroes"), args: [PlayerArgument]  })
   public smashheroes(context: CommandContext) {
     return this.run(context, SMASH_HEROES_MODES, (base, mode) => (
       <SmashHeroesProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-speeduhc"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-speeduhc"), args: [PlayerArgument]  })
   public speeduhc(context: CommandContext) {
     return this.run(context, SPEED_UHC_MODES, (base, mode) => (
       <SpeedUHCProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-tntgames"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-tntgames"), args: [PlayerArgument]  })
   public tntgames(context: CommandContext) {
     return this.run(context, TNT_GAMES_MODES, (base) => <TNTGamesProfile {...base} />);
   }
 
   @SubCommand({
     description: (t) => t("commands.session-turbokartracers"),
-    tier,
-    preview,
     group: "classic",
+    args: [PlayerArgument],
   })
   public turbokartracers(context: CommandContext) {
     return this.run(context, TURBO_KART_RACERS_MODES, (base) => (
@@ -236,7 +229,7 @@ export class SessionCommand {
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-uhc"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-uhc"), args: [PlayerArgument] })
   public uhc(context: CommandContext) {
     return this.run(context, UHC_MODES, (base, mode) => (
       <UHCProfile {...base} mode={mode} />
@@ -245,9 +238,8 @@ export class SessionCommand {
 
   @SubCommand({
     description: (t) => t("commands.session-vampirez"),
-    tier,
-    preview,
     group: "classic",
+    args: [PlayerArgument],
   })
   public vampirez(context: CommandContext) {
     return this.run(context, VAMPIREZ_MODES, (base, mode) => (
@@ -257,22 +249,21 @@ export class SessionCommand {
 
   @SubCommand({
     description: (t) => t("commands.session-walls"),
-    tier,
-    preview,
     group: "classic",
+    args: [PlayerArgument],
   })
   public walls(context: CommandContext) {
     return this.run(context, WALLS_MODES, (base) => <WallsProfile {...base} />);
   }
 
-  @SubCommand({ description: (t) => t("commands.session-warlords"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-warlords"), args: [PlayerArgument]  })
   public warlords(context: CommandContext) {
     return this.run(context, WARLORDS_MODES, (base, mode) => (
       <WarlordsProfile {...base} mode={mode} />
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-woolwars"), tier, preview })
+  @SubCommand({ description: (t) => t("commands.session-woolwars"), args: [PlayerArgument] })
   public woolwars(context: CommandContext) {
     return this.run(context, WOOLWARS_MODES, (base, mode) => (
       <WoolWarsProfile {...base} mode={mode} />
@@ -287,9 +278,8 @@ export class SessionCommand {
   ) {
     const user = context.getUser();
 
-    const player = await this.apiService.getPlayerHistorical(
+    const player = await this.apiService.getPlayerSession(
       context.option("player"),
-      HistoricalTimes.SESSION,
       false,
       user
     );
@@ -310,9 +300,13 @@ export class SessionCommand {
 
         const displayName = this.apiService.emojiDisplayName(t, player.displayName);
 
-        const content = player.isNew
-          ? t("historical.newSession", { displayName })
-          : undefined;
+        let content: string | undefined = undefined;
+
+        if (player.isNew) {
+          content = t("historical.newSession", { displayName });
+        } else if (Math.random() < 0.1) {
+          content = t("tips.resetSession");
+        }
 
         const profile = getProfile(
           {

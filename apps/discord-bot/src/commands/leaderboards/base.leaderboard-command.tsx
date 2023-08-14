@@ -19,15 +19,14 @@ import {
 import { ButtonStyle, InteractionResponseType } from "discord-api-types/v10";
 import { CommandListener } from "#lib/command.listener";
 import {
-  CurrentHistoricalType,
-  LeaderboardQuery,
-  PostLeaderboardResponse,
-} from "@statsify/api-client";
-import {
   LeaderboardProfile,
   LeaderboardProfileProps,
   LeaderboardType,
 } from "./leaderboard.profile.js";
+import {
+  LeaderboardQuery,
+  PostLeaderboardResponse,
+} from "@statsify/api-client";
 import { User } from "@statsify/schemas";
 import { getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -56,7 +55,6 @@ export interface CreateLeaderboardOptions {
   getLeaderboard: GetLeaderboard;
   field: string;
   getLeaderboardDataIcon?: GetLeaderboardDataIcon;
-  time?: CurrentHistoricalType | undefined;
 }
 
 export class BaseLeaderboardCommand {
@@ -67,7 +65,6 @@ export class BaseLeaderboardCommand {
     getLeaderboard,
     type,
     getLeaderboardDataIcon,
-    time,
   }: CreateLeaderboardOptions) {
     const userId = context.getInteraction().getUserId();
     const user = context.getUser();
@@ -115,8 +112,7 @@ export class BaseLeaderboardCommand {
           field,
           params,
           props,
-          getLeaderboardDataIcon,
-          time
+          getLeaderboardDataIcon
         );
 
         if (interaction.getUserId() === userId && !message.ephemeral) {
@@ -228,8 +224,7 @@ export class BaseLeaderboardCommand {
       field,
       { input: currentPage, type: LeaderboardQuery.PAGE },
       props,
-      getLeaderboardDataIcon,
-      time
+      getLeaderboardDataIcon
     );
 
     if (message.ephemeral) return message;
@@ -260,8 +255,7 @@ export class BaseLeaderboardCommand {
     field: string,
     params: LeaderboardParams,
     props: BaseLeaderboardProps,
-    getLeaderboardDataIcon?: GetLeaderboardDataIcon,
-    time?: CurrentHistoricalType | undefined
+    getLeaderboardDataIcon?: GetLeaderboardDataIcon
   ): Promise<[message: IMessage, page: number | null]> {
     if (params.type === LeaderboardQuery.PAGE && cache.has(params.input as number)) {
       const page = params.input as number;
@@ -275,8 +269,7 @@ export class BaseLeaderboardCommand {
       field,
       params,
       props,
-      getLeaderboardDataIcon,
-      time
+      getLeaderboardDataIcon
     );
 
     if (params.type === LeaderboardQuery.PAGE && page) cache.set(page, message);
@@ -291,8 +284,7 @@ export class BaseLeaderboardCommand {
     field: string,
     params: LeaderboardParams,
     props: BaseLeaderboardProps,
-    getLeaderboardDataIcon?: GetLeaderboardDataIcon,
-    time?: CurrentHistoricalType | undefined
+    getLeaderboardDataIcon?: GetLeaderboardDataIcon
   ): Promise<[message: IMessage, page: number | null]> {
     const leaderboard = await getLeaderboard(field, params.input, params.type);
 
@@ -329,7 +321,6 @@ export class BaseLeaderboardCommand {
         name={leaderboard.name}
         fields={leaderboard.fields}
         data={leaderboardData}
-        time={time}
       />,
       getTheme(user)
     );

@@ -10,21 +10,19 @@ import { AxiosError } from "axios";
 import { ButtonBuilder, LocalizeFunction } from "#messages";
 import { ButtonStyle } from "discord-api-types/v10";
 import { Color, User } from "@statsify/schemas";
+import { ErrorMessage } from "#util/error.message";
 import {
-  CurrentHistoricalType,
   GUILD_ID_REGEX,
   GuildNotFoundException,
   GuildQuery,
-  HistoricalTimes,
-  HistoricalType,
   HypixelCache,
   LeaderboardQuery,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
+  SessionNotFoundException,
   ApiService as StatsifyApiService,
   StatusNotFoundException,
 } from "@statsify/api-client";
-import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
 
@@ -58,26 +56,27 @@ export class ApiService extends StatsifyApiService {
       });
   }
 
-  public override async getPlayerHistorical(
+  public override async getPlayerSession(
     tag: string,
-    historicalType: HistoricalType,
-    create?: boolean,
+    upsert: boolean,
     user: User | null = null
   ) {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super.getPlayerHistorical(input, historicalType, create).catch((err) => {
+    return super.getPlayerSession(input, upsert).catch((err) => {
       if (!err.response || !err.response.data) throw this.unknownError();
-      const error = err.response.data as PlayerNotFoundException;
+      const error = err.response.data as PlayerNotFoundException | SessionNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
 
-      if (
-        error.message === "historicalPlayer" &&
-        historicalType === HistoricalTimes.SESSION
-      ) {
-        throw new ErrorMessage("errors.invalidSession");
+      if (error.message === "session") {
+        const { displayName } = error as SessionNotFoundException;
+
+        throw new ErrorMessage(
+          (t) => t("errors.invalidSession.title"),
+          (t) => t("errors.invalidSession.description", { displayName: this.emojiDisplayName(t, displayName) })
+        );
       }
 
       throw this.unknownError();
@@ -218,21 +217,6 @@ export class ApiService extends StatsifyApiService {
       if ((err.response?.data as PlayerNotFoundException).statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
     });
-  }
-
-  public override getHistoricalLeaderboard(
-    time: CurrentHistoricalType,
-    field: string,
-    input: string | number,
-    type: LeaderboardQuery
-  ) {
-    return super
-      .getHistoricalLeaderboard(time, field, input, type)
-      .catch((err: AxiosError) => {
-        if ((err.response?.data as PlayerNotFoundException).statusCode === 404)
-          return null;
-        throw new ErrorMessage("errors.leaderboardNotFound");
-      });
   }
 
   public override getGuildLeaderboard(
