@@ -38,7 +38,6 @@ export const ratio = (n1 = 0, n2 = 0, multiply = 1) => {
   }
 };
 
-
 export const add = (...args: number[]): number =>
   args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
 

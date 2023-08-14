@@ -181,7 +181,6 @@ for (let i = 0; i < serverCount; i++) {
     .post("/guilds", { name: `Statsify Ranks ${i + 1}` })
     .then((res) => res.body.json);
 
-
   const channel = guild.system_channel_id;
 
   const invite = await client

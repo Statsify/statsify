@@ -10,7 +10,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Player } from "@statsify/schemas";
 import { SuccessResponse } from "./success.response.js";
 
-export class GetHistoricalResponse extends SuccessResponse {
+export class GetSessionResponse extends SuccessResponse {
   @ApiProperty()
   public player: Player;
 }

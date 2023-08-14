@@ -46,7 +46,6 @@ export const parseDiscordError = (error: any = {}, errorKey = ""): string => {
       nextKey = Number.isNaN(+key) ? `${errorKey}.${key}` : `${errorKey}[${key}]`;
     }
 
-
     if (typeof value === "string") message += value;
     else if ("_errors" in value)
       for (const error of value._errors) message += parseDiscordError(error, nextKey);

@@ -29,9 +29,7 @@ export const Hero = () => (
             "View all your Hypixel stats on Discord",
             "View your stats in every game",
             "View your leaderboard positions",
-            "View your improvement with daily stats",
-            "View your improvement with weekly stats",
-            "View your improvement with monthly stats",
+            "View your improvement with session stats",
           ]}
           typeSpeed={45}
           backSpeed={40}

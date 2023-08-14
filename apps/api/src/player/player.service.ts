@@ -7,9 +7,7 @@
  */
 
 import { type APIData, type Circular, type Flatten, flatten } from "@statsify/util";
-import { Daily, HistoricalLeaderboardService, Monthly, Weekly } from "#historical";
 import {
-  HistoricalTimes,
   HypixelCache,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
@@ -20,7 +18,6 @@ import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/commo
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import {
   Player,
-  createHistoricalPlayer,
   deserialize,
   serialize,
 } from "@statsify/schemas";
@@ -36,13 +33,8 @@ export class PlayerService {
     private readonly hypixelService: HypixelService,
     @Inject(forwardRef(() => PlayerLeaderboardService))
     private readonly playerLeaderboardService: Circular<PlayerLeaderboardService>,
-    @Inject(forwardRef(() => HistoricalLeaderboardService))
-    private readonly historicalLeaderboardService: Circular<HistoricalLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
-    @InjectModel(Player) private readonly playerModel: PlayerModel,
-    @InjectModel(Daily) private readonly dailyModel: PlayerModel,
-    @InjectModel(Weekly) private readonly weeklyModel: PlayerModel,
-    @InjectModel(Monthly) private readonly monthlyModel: PlayerModel
+    @InjectModel(Player) private readonly playerModel: PlayerModel
   ) {}
 
   /**
@@ -69,9 +61,7 @@ export class PlayerService {
 
     if (player) {
       player.expiresAt = Date.now() + 120_000;
-      player.resetMinute = mongoPlayer?.resetMinute;
-      player.lastReset = mongoPlayer?.lastReset;
-      player.nextReset = mongoPlayer?.nextReset;
+      player.sessionReset = mongoPlayer?.sessionReset;
       player.guildId = mongoPlayer?.guildId;
 
       if (mongoPlayer && mongoPlayer.username !== player.username)
@@ -172,27 +162,6 @@ export class PlayerService {
       this.playerModel.deleteOne({ uuid: player.uuid }).exec(),
       this.playerSearchService.delete(player.username),
       this.playerLeaderboardService.addLeaderboards(Player, player, "uuid", true),
-      this.historicalLeaderboardService.addHistoricalLeaderboards(
-        HistoricalTimes.DAILY,
-        Player,
-        player,
-        "uuid",
-        true
-      ),
-      this.historicalLeaderboardService.addHistoricalLeaderboards(
-        HistoricalTimes.WEEKLY,
-        Player,
-        player,
-        "uuid",
-        true
-      ),
-      this.historicalLeaderboardService.addHistoricalLeaderboards(
-        HistoricalTimes.MONTHLY,
-        Player,
-        player,
-        "uuid",
-        true
-      ),
     ]);
   }
 
@@ -201,66 +170,12 @@ export class PlayerService {
     const flatPlayer = flatten(player);
     const serializedPlayer = serialize<Player>(Player, flatPlayer);
 
-    let week;
-    let month;
-    let weeklyPlayer;
-    let monthlyPlayer;
-
-    const dailyPlayer = await this.dailyModel
-      .findOne({ uuid: player.uuid })
-      .lean()
-      .exec();
-    if (dailyPlayer) {
-      week = this.weeklyModel.findOne({ uuid: player.uuid }).lean().exec();
-      month = this.monthlyModel.findOne({ uuid: player.uuid }).lean().exec();
-
-      [weeklyPlayer, monthlyPlayer] = await Promise.all([week, month]);
-    }
-
-    const promises = [];
-
-    promises.push(
+    const promises = [
       this.playerModel
         .replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true })
         .exec(),
-      this.playerLeaderboardService.addLeaderboards(Player, flatPlayer, "uuid", false)
-    );
-
-    if (dailyPlayer) {
-      promises.push(
-        this.historicalLeaderboardService.addHistoricalLeaderboards(
-          HistoricalTimes.DAILY,
-          Player,
-          flatten(createHistoricalPlayer(dailyPlayer as Player, player)),
-          "uuid",
-          false
-        )
-      );
-    }
-
-    if (weeklyPlayer) {
-      promises.push(
-        this.historicalLeaderboardService.addHistoricalLeaderboards(
-          HistoricalTimes.WEEKLY,
-          Player,
-          flatten(createHistoricalPlayer(weeklyPlayer as Player, player)),
-          "uuid",
-          false
-        )
-      );
-    }
-
-    if (monthlyPlayer) {
-      promises.push(
-        this.historicalLeaderboardService.addHistoricalLeaderboards(
-          HistoricalTimes.MONTHLY,
-          Player,
-          flatten(createHistoricalPlayer(monthlyPlayer as Player, player)),
-          "uuid",
-          false
-        )
-      );
-    }
+      this.playerLeaderboardService.addLeaderboards(Player, flatPlayer, "uuid", false),
+    ];
 
     if (registerAutocomplete)
       promises.push(this.playerSearchService.add(flatPlayer as RedisPlayer));

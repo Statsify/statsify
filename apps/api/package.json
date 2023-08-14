@@ -67,9 +67,9 @@
       "types": "./src/player/index.ts",
       "default": "./dist/player/index.js"
     },
-    "#historical": {
-      "types": "./src/historical/index.ts",
-      "default": "./dist/historical/index.js"
+    "#session": {
+      "types": "./src/session/index.ts",
+      "default": "./dist/session/index.js"
     },
     "#hypixel": {
       "types": "./src/hypixel/index.ts",

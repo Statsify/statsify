@@ -9,23 +9,15 @@
 import * as Sentry from "@sentry/node";
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
-  CurrentHistoricalType,
-  GuildQuery,
-  HistoricalType,
-  HypixelCache,
-  LeaderboardQuery,
-} from "./constants.js";
-import {
   DeletePlayerResponse,
   GetCommandUsageResponse,
   GetGamecountsResponse,
   GetGuildResponse,
-  GetHistoricalResponse,
-  GetHistoricalTimesResponse,
   GetKeyResponse,
   GetPlayerResponse,
   GetPlayerSearchResponse,
   GetRecentGamesResponse,
+  GetSessionResponse,
   GetStatusResponse,
   GetUserResponse,
   GetWatchdogResponse,
@@ -33,6 +25,11 @@ import {
   PostLeaderboardResponse,
   PutUserBadgeResponse,
 } from "#responses";
+import {
+  GuildQuery,
+  HypixelCache,
+  LeaderboardQuery,
+} from "./constants.js";
 import { UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { loadImage } from "@statsify/rendering";
@@ -117,21 +114,6 @@ export class ApiService {
     );
   }
 
-  public getHistoricalLeaderboard(
-    time: CurrentHistoricalType,
-    field: string,
-    input: string | number,
-    type: LeaderboardQuery
-  ): Promise<PostLeaderboardResponse | null> {
-    return this.request<PostLeaderboardResponse>("/historical/leaderboards", {}, "POST", {
-      body: {
-        time,
-        field,
-        [type === LeaderboardQuery.INPUT ? "player" : type]: input,
-      },
-    });
-  }
-
   public getPlayerAutocomplete(query: string) {
     return this.requestKey<GetPlayerSearchResponse, "players">(
       "/player/search",
@@ -201,22 +183,19 @@ export class ApiService {
     });
   }
 
-  public getPlayerHistorical(tag: string, type: HistoricalType, create = true) {
-    return this.requestKey<GetHistoricalResponse, "player">("/historical", "player", {
+  public getPlayerSession(tag: string, upsert: boolean) {
+    return this.requestKey<GetSessionResponse, "player">("/session", "player", {
       player: tag,
-      type,
-      create,
+      upsert,
     });
   }
 
-  public resetPlayerHistorical(
-    tag: string,
-    resetMinute?: number,
-    type?: CurrentHistoricalType
+  public resetPlayerSession(
+    tag: string
   ) {
     return this.request<GetPlayerResponse>(
-      "/historical",
-      { player: tag, resetMinute, type },
+      "/session",
+      { player: tag },
       "DELETE"
     );
   }
@@ -272,14 +251,6 @@ export class ApiService {
     return this.requestKey<GetCommandUsageResponse, "usage">(
       "/commands",
       "usage",
-      {}
-    ).catch(() => null);
-  }
-
-  public getHistoricalTimes() {
-    return this.requestKey<GetHistoricalTimesResponse, "times">(
-      "/historical/times",
-      "times",
       {}
     ).catch(() => null);
   }

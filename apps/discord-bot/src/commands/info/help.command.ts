@@ -32,8 +32,8 @@ export class HelpCommand {
         (t) => t("embeds.help.leaderboards.description")
       )
       .field(
-        (t) => t("embeds.help.historical.title"),
-        (t) => t("embeds.help.historical.description")
+        (t) => t("embeds.help.session.title"),
+        (t) => t("embeds.help.session.description")
       )
       .field(
         (t) => t("embeds.help.minecraft.title"),
