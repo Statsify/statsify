@@ -64,7 +64,7 @@ export class SessionService {
 
   public async get(
     tag: string,
-    upsert: boolean
+    userUuid?: string
   ): Promise<Player | null> {
     const player = await this.playerService.get(tag, HypixelCache.CACHE_ONLY, {
       uuid: true,
@@ -80,7 +80,7 @@ export class SessionService {
 
     let isNew = false;
 
-    if (!oldPlayer && !upsert) throw new SessionNotFoundException(player.uuid, player.displayName);
+    if (!oldPlayer && userUuid !== player.uuid) throw new SessionNotFoundException(player.uuid, player.displayName);
 
     const newPlayer = await this.playerService.get(player.uuid, HypixelCache.LIVE);
 

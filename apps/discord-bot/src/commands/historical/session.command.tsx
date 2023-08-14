@@ -280,7 +280,7 @@ export class SessionCommand {
 
     const player = await this.apiService.getPlayerSession(
       context.option("player"),
-      false,
+      user?.uuid,
       user
     );
 

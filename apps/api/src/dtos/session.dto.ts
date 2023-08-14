@@ -6,13 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { IsBoolean } from "class-validator";
+import { IsOptional, IsString } from "class-validator";
 import { PlayerDto } from "./player.dto.js";
-import { Transform } from "class-transformer";
 
 export class SessionDto extends PlayerDto {
 
-  @Transform((params) => params.value === "true")
-  @IsBoolean()
-  public upsert: boolean;
+  @IsOptional()
+  @IsString()
+  public userUuid?: string;
 }

@@ -58,13 +58,13 @@ export class ApiService extends StatsifyApiService {
 
   public override async getPlayerSession(
     tag: string,
-    upsert: boolean,
+    userUuid?: string,
     user: User | null = null
   ) {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super.getPlayerSession(input, upsert).catch((err) => {
+    return super.getPlayerSession(input, userUuid).catch((err) => {
       if (!err.response || !err.response.data) throw this.unknownError();
       const error = err.response.data as PlayerNotFoundException | SessionNotFoundException;
 

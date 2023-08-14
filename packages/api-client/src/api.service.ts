@@ -183,10 +183,10 @@ export class ApiService {
     });
   }
 
-  public getPlayerSession(tag: string, upsert: boolean) {
+  public getPlayerSession(tag: string, userUuid?: string) {
     return this.requestKey<GetSessionResponse, "player">("/session", "player", {
       player: tag,
-      upsert,
+      userUuid,
     });
   }
 

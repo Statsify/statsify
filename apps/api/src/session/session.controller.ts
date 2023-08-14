@@ -32,8 +32,8 @@ export class SessionController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Get()
   @Auth({ weight: 2 })
-  public async getSession(@Query() { player: tag, upsert }: SessionDto) {
-    const player = await this.sessionService.get(tag, upsert);
+  public async getSession(@Query() { player: tag, userUuid }: SessionDto) {
+    const player = await this.sessionService.get(tag, userUuid);
 
     return {
       success: !!player,
