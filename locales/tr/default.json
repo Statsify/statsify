@@ -306,9 +306,9 @@
         "description": "Statsify Hypixel'daki çoğu oyunu destekler. Bir oyundaki istatistiklerinizi görmek için `/[oyun]` yazın. Örneğin BedWars istatistiklerinizi görmek için `/bedwars` yazabilirsiniz.",
         "title": "Oyunlar"
       },
-      "historical": {
-        "description": "Statsify ile günlük, haftalık ve aylık istatistiklerinize `/daily`, `/weekly` ve `/monthly` komutları ile bakabilirsiniz. Eğer bir sıfırlama kaçırdıysanız `/yesterday`, `/lastweek` ve `/lastmonth` ile bir önceki gün, hafta ve aya bakabilirsiniz. ",
-        "title": "Geçmiş"
+      "session": {
+        "description": "Statsify `/session` ile istatistiklerinizi bugün oynamaya başlamış gibi görüntülemenizi sağlar. `/reset session` ile oturum istatistiklerinizi sıfırlayıp yeni bir oturum başlatabilirsiniz.",
+        "title": "Oturumlar"
       },
       "leaderboards": {
         "description": "Statsify `/leaderboard` komutu ile binlerce leaderboard sunar. `/leaderboard` yazın, sonra oyun modunu seçin, ve görüntülenecek leaderboard seçin. Belirli bir oyuncuyu veya pozisyonu aramak için arama butonuna tıklayabilirsiniz. Ayrıca yukarı ve aşağı butonlarına tıklayarak daha fazla sayfa görüntüleyebilirsiniz.",
@@ -386,6 +386,10 @@
       "description_discordId": "`{{tag}}` discord id'sine sahip bir oyuncu bulunamadı!",
       "title": "Geçersiz Oyuncu"
     },
+    "invalidSession": {
+      "title": "Geçersiz Oturum",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "`{{time}}`, `h:mm a` formatına uymamaktadır. `12:00 PM` veya `1:00 AM`'ye benzer bir saat girin.",
       "title": "Geçersiz Sıfırlama Saati"
@@ -432,7 +436,7 @@
       "title": "Eksik Doğrulama"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** oyuncusu **doğrulanmamış**. `/verify` komutu ile hesabını doğrulaması gerekir.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -512,7 +516,11 @@
     "resetButton": "Sıfırlamak için tıklayın",
     "setResetTime": "Sıfırlama saatiniz <t:{{time}}:t> saatine ayarlandı.",
     "newSession": "**{{displayName}}**'in oturum istatistikleri Statsify'da ilk defa görüntülendi.",
-    "setSessionReset": "Oturum istatistikleriniz başarıyla sıfırlandı."
+    "setSessionReset": "Oturum istatistikleriniz başarıyla sıfırlandı.",
+    "disabledWarning": {
+      "title": "Geçmiş Komutlar Artık Mevcut Değil",
+      "description": "Hypixel'ın yeni [API Şartları](https://developer.hypixel.net/policies/) artık \"oyuncu verilerinin devamlı yoklanması\"na izin vermiyor, bu yüzden Statsify artık günlük oyuncu istatistiklerini takip edemiyor.\n\nBunun yerine `/session` ile yeni bir oturum başlatmayı deneyebilirsiniz. Bir oturum başlattığınızda bot, komutu ilk çalıştırdığınız andan bir sonraki çalıştırmanıza kadar istatistiklerinizi takip edecektir. Oturum istatistiklerinizi sıfırlamak için `/reset session` komutunu kullanabilirsiniz."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Statsify'ı kendi sunucunuza davet etmek için **[buraya](<https://statsify.net/invite>)** tıklayın!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** kişiselleştirilmiş profil rozetleri gibi ilave özellikler sunar. Tüm yararların listesini **[burada](<https://statsify.net/premium>)** bulabilirsiniz!",
     "rankings": "$t(emojis:logos.iron) En yüksek leaderboard pozisyonlarınızı **[Statsify Premium](<https://statsify.net/premium>)** ile `/rankings` kullanarak görüntüleyin",
-    "verify": "$t(emojis:check) Komutları kullanıcı adınızı yazmadan kullanmak ve **%10 daha az cooldown** almak için `/verify` yazın"
+    "verify": "$t(emojis:check) Komutları kullanıcı adınızı yazmadan kullanmak ve **%10 daha az cooldown** almak için `/verify` yazın",
+    "resetSession": "$t(emojis:reset) Oturum istatistiklerinizi `/reset session` komutu ile **sıfırlayabilirsiniz**.",
+    "sessions": "$t(emojis:reset) Oturumlarla ve `/session` ile istatistik ilerlemenizi takip edin."
   },
   "unknown": "Bilinmeyen",
   "verification": {
