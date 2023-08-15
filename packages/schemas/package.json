@@ -10,14 +10,14 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@nestjs/swagger": "^7.1.6",
+    "@nestjs/swagger": "^7.1.8",
     "@statsify/logger": "*",
     "@statsify/math": "*",
     "@statsify/util": "*",
     "@swc/helpers": "^0.5.1",
     "@typegoose/typegoose": "^11.4.1",
     "class-validator": "^0.14.0",
-    "luxon": "^3.3.0"
+    "luxon": "^3.4.0"
   },
   "devDependencies": {
     "@types/luxon": "^3.3.1"
