@@ -306,9 +306,9 @@
         "description": "Statsify поддерживает большинство игр, предлагаемых на Hypixel. Чтобы проверить статистику в игре, выполните команду `/[game]`. Например, вы можете запустить `/bedwars`, чтобы проверить статистику BedWars.",
         "title": "Игры"
       },
-      "historical": {
-        "description": "Statsify позволяет проверять статистику ежедневно, еженедельно и ежемесячно через `/daily`, `/weekly` и `/monthly`. Если вы пропустили сброс, вы можете просмотреть его, запустив `/yesterday`, `/lastweek`, и `/lastmonth`. ",
-        "title": "История"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify предлагает тысячи таблиц лидеров через команду `/leaderboard`. Запустите `/leaderboard`, затем выберите игровой режим и выберите таблицу лидеров. Вы можете нажать на кнопку поиска для поиска определенного игрока или позиции. Вы также можете нажать на кнопки вверх и вниз, чтобы просмотреть больше страниц.",
@@ -386,6 +386,10 @@
       "description_discordId": "Игрок с Discord id `{{tag}}` не может быть найден!",
       "title": "Неверный игрок"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "{{time}} Не соответствует формату `h:mm a`. Введите время в формате, подобном `12:00 PM` или `1:00 AM`.",
       "title": "Неверное время сброса"
@@ -432,7 +436,7 @@
       "title": "Отсутствующая верификация"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -512,7 +516,11 @@
     "resetButton": "Нажмите, чтобы сбросить",
     "setResetTime": "Установите свое время сброса на <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Нажмите **[here] (<https://statsify.net/invite>)**, чтобы пригласить Statsify на свой сервер!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** предлагает дополнительные возможности, такие как персонализированные значки профиля. Найдите полный список преимуществ **[here](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Просматривайте вашу лучшую таблицу лидеров с **[Statsify Premium](<https://statsify.net/premium>)**, используя `/rankings`",
-    "verify": "$t(emojis:check) Запустите `/verify` для выполнения команд без вставки имени пользователя и получите **перезарядку на 10% ниже**"
+    "verify": "$t(emojis:check) Запустите `/verify` для выполнения команд без вставки имени пользователя и получите **перезарядку на 10% ниже**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Неизвестно",
   "verification": {
