@@ -306,9 +306,9 @@
         "description": "Το Statsify υποστηρίζει την πλειοψηφία των παιχνιδιών που προσφέρονται στον Hypixel. Για να ελέγξεις τα στατιστικά σου σε ένα παιχνίδι γράψε `/[game]`. Για παράδειγμα, μπορείς να γράψεις \"/bedwars\" για να ελέγξεις τα  BedWars στατιστικά σου.",
         "title": "Παιχνίδια"
       },
-      "historical": {
-        "description": "Το Statsify σoυ επιτρέπει να ελέγχεις τα ημερήσια, εβδομαδιαία και μηνιαία στατιστικά σου μέσω των `/daily`, `/weekly` και `/monthly`. Εαν χάσεις μία επαναφορά μπορείς να τη δεις γράφοντας `/yesterday`, `/lastweek`, και `/lastmonth`. ",
-        "title": "Ιστορικό"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Το Statsify προσφέρει χιλιάδες κατατάξεις μέσω της `/leaderboard` εντολής. Γράψε `/leaderboard`, μετά επίλεξε το gamemode, και επίλεξε μία κατάταξη για προβολή. Μπορείς να πατήσεις το κουμπί αναζήτησης για έναν συγκεκριμένο παίκτη ή θέση. Μπορείς επίσης να πατήσεις τα πάνω και κάτω κουμπιά για να δεις περισσότερες σελίδες.",
@@ -386,6 +386,10 @@
       "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Μη Έγκυρος Παίκτης"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` δεν ταιριάζει με τη μορφή `h:mm a`. Εισήγε μία ώρα σε παρόμοια μορφή με `12:00 ΜΜ` ή `1:00 ΠΜ`.",
       "title": "Μη Έγκυρος Χρόνος Επαναφοράς"
@@ -432,7 +436,7 @@
       "title": "Λείπει Επαλήθευση"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -512,7 +516,11 @@
     "resetButton": "Κάνε κλικ για Επαναφορά",
     "setResetTime": "Ρύθμισε την ώρα επαναφοράς σε <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Κάνε κλικ **[here](<https://statsify.net/invite>)** για να προσκαλέσεις το Statsify στον δικό σου server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** προσφέρει πρόσθετες λειτουργίες, όπως εξατομικευμένα σήματα προφίλ. Βρες την πλήρη λίστα με τα οφέλη **[here](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Δες τις κορυφαίες θέσεις σου στο leaderboard με **[Statsify Premium](<https://statsify.net/premium>)** χρησιμοποιώντας το `/rankings`",
-    "verify": "$t(emojis:check) Εκτέλεσε το `/verify` για να εκτελέσεις εντολές χωρίς να εισάγεις το όνομα χρήστη σου καθώς και να λάβεις **10% χαμηλότερα cooldowns**"
+    "verify": "$t(emojis:check) Εκτέλεσε το `/verify` για να εκτελέσεις εντολές χωρίς να εισάγεις το όνομα χρήστη σου καθώς και να λάβεις **10% χαμηλότερα cooldowns**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Άγνωστο",
   "verification": {
