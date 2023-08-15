@@ -306,9 +306,9 @@
         "description": "Statsify podporuje většinu her na Hypixelu. Pro zjistění tvých statistik použij `/[game]`. Použij například `/bedwars` pro zjistění BedWars statistik.",
         "title": "Hry"
       },
-      "historical": {
-        "description": "Statsify umožňuje kontrolovat statistiky za poslední den, týden a měsíc pomocí `/daily`, `/weekly` a `/monthly`. Pokud jsi nestihl použít příkaz před resetováním, použij `/yesterday`, `/lastweek`, a `/lastmonth`. ",
-        "title": "Statistiky za určitou dobu"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify nabízí tisíce žebříčků skrz `/leaderboard` příkaz. Napiš `/leaderboard`, vyber si hru a statistiku k zobrazení. Poté pomocí tlačítka můžeš vyhledat daného hráče a pozici. Pomocí tlačítek se také můžeš pohybovat žebříčkem nahoru a dolů.",
@@ -386,6 +386,10 @@
       "description_discordId": "Hráč s Discord ID `{{tag}}` nebyl nalazen!",
       "title": "Neplatný hráč"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` neodpovídá formátu `h:mm a`. Zadej čas ve formátu podobnému k `12:00 PM` nebo `1:00 AM`.",
       "title": "Neplatný čas vyresetování"
@@ -432,7 +436,7 @@
       "title": "Chybějící ověření"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -512,7 +516,11 @@
     "resetButton": "Klikni pro vyresetování",
     "setResetTime": "Čas vyresetování byl nastaven na <t:{{time}}:t>.",
     "newSession": "Statistiky hráče **{{displayName}}** byly ve Statsify zkontrolovány poprvé.",
-    "setSessionReset": "Tvoje statistiky za období byly úspěšně zrušeny."
+    "setSessionReset": "Tvoje statistiky za období byly úspěšně zrušeny.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Klikni **[zde](<https://statsify.net/invite>)** pro pozvání Statsify na svůj server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** nabízí dodatečné funkce jako například personalizované odznaky na profilu. Celý seznam výhod najdeš **[zde](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Zobraz si svoje přední pozice v žebříčku s **[Statsify Premium](<https://statsify.net/premium>)** použitím příkazu `/rankings`",
-    "verify": "$t(emojis:check) Napiš `/verify` pro spouštění příkazů bez zadávání svého jména a také získej **10% nižší časový limit**"
+    "verify": "$t(emojis:check) Napiš `/verify` pro spouštění příkazů bez zadávání svého jména a také získej **10% nižší časový limit**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Neznámý",
   "verification": {
