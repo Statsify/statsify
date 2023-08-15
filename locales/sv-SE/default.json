@@ -7,7 +7,7 @@
     "guild-query": "Ett guild namn eller en guild medlem",
     "guild-type": "Typen av guild sökning att utföra",
     "mojang-player": "Ett Minecraft användarnamn eller UUID",
-    "number": "A number",
+    "number": "En siffra",
     "player": "$t(arguments.mojang-player)",
     "player-leaderboard": "Välj en rankningslista",
     "reason": "The reason for closing the support ticket",
@@ -88,7 +88,7 @@
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "Visa din {{name}} sessions statistik",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
@@ -237,8 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "Återställ din historiska statistik",
+    "reset-session": "Återställ din sessions statistik"
   },
   "config": {
     "badge": {
@@ -306,9 +306,9 @@
         "description": "Statsify stöder de flesta spel som erbjuds på Hypixel. För att kolla din statistik i ett spel kör `/[game]`. Till exempel kan du köra `/bedwars` för att kolla dina BedWars statistik.",
         "title": "Spel"
       },
-      "historical": {
-        "description": "Statsify kan du kontrollera din dagliga, veckovisa och måntliga statistik genom `/daily`, `/weekly` och `/monthly`. Om du missade en återställning kan du se dem genom att köra `/yesterday`, `/last week` och `/last month`. ",
-        "title": "Historisk"
+      "session": {
+        "description": "Statsify låter dig se din statistik som om du började spela idag via `/session`. Med `/reset session` kan du återställa din sessions statistik samt påbörja en ny session.",
+        "title": "Sessioner"
       },
       "leaderboards": {
         "description": "Statsify erbjuder tusentals rankningslistor genom kommandot `/leaderboard`. Kör `/leaderboard`, välj sedan spelläge och välj en rankningslista att visa. Du kan trycka på sökknappen för att söka efter en viss spelare eller position. Du kan också trycka upp och ner knapparna för att se fler sidor.",
@@ -381,13 +381,17 @@
       "title": "Ogiltig Guild"
     },
     "invalidPlayer": {
-      "description_username": "A player by the username of `{{tag}}` could not be found!",
-      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
-      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
+      "description_username": "En spelare med användarnamnet `{{tag}}` kunde inte hittas!",
+      "description_uuid": "En spelare med UUID av `{{tag}}` kunde inte hittas!",
+      "description_discordId": "Det gick inte att hitta en spelare med discord-id för `{{tag}}!",
       "title": "Ogiltig spelare"
     },
+    "invalidSession": {
+      "title": "Ogiltig Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
+      "description": "`{{time}}` matchar inte formatet `h:mm a`. Ange en tid i formatet som liknar `12:00 PM` eller `1:00 AM`.",
       "title": "Ogiltig återställningstid"
     },
     "invalidResetTimezone": {
@@ -432,7 +436,7 @@
       "title": "Verifiering saknas"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** är inte **verifierad**. De måste köra `/verify` för att verifiera sitt konto.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -474,7 +478,7 @@
     },
     "premiumRequired": {
       "description": "Kolla in alla tillgängliga funktioner [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
+      "preview": "Kolla in alla tillgängliga funktioner [here](https://statsify.net/premium). Nedan följer en liten förhandsvisning av vad kommandot gör/ändrar.",
       "title": "Statsify {{tier}} krävs för att köra detta kommando"
     },
     "staffOnly": {
@@ -511,8 +515,12 @@
     "reset": "$t(emojis:clock) **Återställs** <t:{{time}}:R>",
     "resetButton": "Klicka för att återställa",
     "setResetTime": "Ställ in din återställningstid till <t:{{time}}:t>.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "newSession": "**{{displayName}}**s sessions statistik har blivit checkad för första gången på Statsify.",
+    "setSessionReset": "Lyckades med återställningen av din sessions statistik.",
+    "disabledWarning": {
+      "title": "Historiska Kommandon är Inte Längre Tillgängliga",
+      "description": "Hypixels nya [API Terms](https://developer.hypixel.net/policies/) tillåter inte längre \"kontinuerlig erhållning av spelardata\", vilket betyder att Statsify inte längre kan hålla reda på en spelares dagliga statistik.\n\nIstället kan du försöka starta en session med `/session`. När du startar en session, kommer botten hålla reda på din statistik från det ögonblick du först körde kommandot tills nästa gång du kör det. För att återställa din sessions statistik kan du köra `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -585,7 +593,7 @@
     "ended": "Avslutad",
     "endurance": "Uthållighet",
     "event-level": "Event nivå",
-    "event-exp": "Event EXP",
+    "event-exp": "Evenemang EXP",
     "exp": "EXP",
     "expGained": "EXP vunnet",
     "extraUltimates": "Extra ultimater",
@@ -697,7 +705,7 @@
     "points": "Poäng",
     "poopCollected": "Bajs samlad",
     "powerKicks": "Ström Sparkar",
-    "powerupActivations": "Power-Up Activations",
+    "powerupActivations": "Power-Up Aktiveringar",
     "powerups": "Power-Ups",
     "prefix": "Prefix",
     "prevent": "Förhindra",
@@ -705,7 +713,7 @@
       "exp": "EXP framsteg",
       "gexp": "GEXP framsteg",
       "goldTrophy": "Guld Trofé framsteg",
-      "kill": "Kill Progress",
+      "kill": "Kill framsteg",
       "score": "Poäng framsteg",
       "win": "Vinst framsteg"
     },
@@ -713,7 +721,7 @@
     "ranksGifted": "Ranker Giftade",
     "rebelKills": "Attackerar Kills",
     "renown": "Renown",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "Belöningsstreak",
     "roundWins": "Rund vinster",
     "rune": "Rune",
     "score": "Poäng",
@@ -762,10 +770,10 @@
     "woolCaptures": "Ull fångster",
     "woolPlaced": "Ull placerad",
     "zombieKills": "Zombie Kills",
-    "potionsBrewed": "Potions Brewed",
-    "positions": "Positions",
-    "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed",
+    "potionsBrewed": "Brygder Bryggda",
+    "positions": "Positioner",
+    "powerupsCollected": "Power-Ups Samlade",
+    "roundsCompleted": "Rundor Slutförda",
     "totalExp": "Total EXP"
   },
   "tips": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Klicka på **[here](<https://statsify.net/invite>)** för att bjuda in Statsify till din egen server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** erbjuder ytterligare funktioner så som personliga profilmärken. Hitta hela listan över förmåner **[här](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Se dina topprankningspositioner med **[Statsify Premium](<https://statsify.net/premium>)** genom att använda `/rankings`",
-    "verify": "$t(emojis:check) Kör `/verify` för att köra kommandon utan att mata in ditt användarnamn samt få **10% lägre cooldowns**"
+    "verify": "$t(emojis:check) Kör `/verify` för att köra kommandon utan att mata in ditt användarnamn samt få **10% lägre cooldowns**",
+    "resetSession": "$t(emojis:reset) Du kan **återställa** din sessions statistik med `/reset session`.",
+    "sessions": "$t(emojis:reset) Håll reda på din statistikprogression med Sessioner och `/session`."
   },
   "unknown": "Okänd",
   "verification": {
