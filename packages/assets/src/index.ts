@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Image } from "skia-canvas";
 import { User, UserLogo } from "@statsify/schemas";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { loadImage } from "@statsify/rendering";
+import type { Image } from "skia-canvas";
 
 const PATH = "../../assets";
 const PRIVATE_PATH = join(PATH, "private");
@@ -27,7 +27,8 @@ const checkAsset = (file: string) =>
  * @returns the asset if available, otherwise null
  */
 export const importAsset = async <T>(file: string): Promise<T | null> => {
-  if (checkAsset(file.endsWith(".js") ? file : `${file}.js`) === "public") return null;
+  file = file.endsWith(".js") ? file : `${file}.js`;
+  if (checkAsset(file) === "public") return null;
   return import(join("../", PRIVATE_PATH, file));
 };
 
@@ -82,13 +83,6 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
 
   return getImage(`out/backgrounds/${pathOrGame}.png`);
 }
-
-export const getServerMappings = () =>
-  JSON.parse(readFileSync("../../assets/server-mappings/servers.json", "utf8")) as {
-    id: string;
-    name: string;
-    addresses: string[];
-  }[];
 
 export function getLogo(user: User | null, size?: number): Promise<Image>;
 export function getLogo(logo: UserLogo | null, size?: number): Promise<Image>;

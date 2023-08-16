@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Hypixel arkadaş listenizi görüntüleyin",
     "game-counts": "Hypixel mevcut oyuncu sayılarını görüntüleyin",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Verilen ipucuna göre mümkün olan Guess The Build cevaplarının listesini oluşturun",
@@ -83,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "{{name}} oturum istatistiklerinizi görüntüleyin",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "{{name}} istatistiklerinizi görüntüleyin",
     "invite": "Statsify'ı davet edin",
     "language": "Yanıtları gördüğünüz dili değiştirin",
@@ -120,7 +144,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Başka bir oyuncuyla ortak Hypixel arkadaşlarınızı görüntüleyin",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Statsify'ın kurucularını ve yardımcılarını görüntüleyin",
@@ -177,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "Birinin Hypixel son oyunlarını görüntüleyin",
-    "reset": "Geçmiş istatistiklerinizi sıfırlayın",
     "server": "Minecraft sunucu statüsünü görüntüleyin",
     "skin": "Birinin Minecraft dış görünüşünü görüntüleyin",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -214,7 +236,9 @@
     "watchdog": "Hypixel Watchdog yasaklama sayılarını görüntüleyin",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "reset-historical": "Geçmiş istatistiklerinizi sıfırlayın",
+    "reset-session": "Oturum istatistiklerinizi sıfırlayın"
   },
   "config": {
     "badge": {
@@ -282,9 +306,9 @@
         "description": "Statsify Hypixel'daki çoğu oyunu destekler. Bir oyundaki istatistiklerinizi görmek için `/[oyun]` yazın. Örneğin BedWars istatistiklerinizi görmek için `/bedwars` yazabilirsiniz.",
         "title": "Oyunlar"
       },
-      "historical": {
-        "description": "Statsify ile günlük, haftalık ve aylık istatistiklerinize `/daily`, `/weekly` ve `/monthly` komutları ile bakabilirsiniz. Eğer bir sıfırlama kaçırdıysanız `/yesterday`, `/lastweek` ve `/lastmonth` ile bir önceki gün, hafta ve aya bakabilirsiniz. ",
-        "title": "Geçmiş"
+      "session": {
+        "description": "Statsify `/session` ile istatistiklerinizi bugün oynamaya başlamış gibi görüntülemenizi sağlar. `/reset session` ile oturum istatistiklerinizi sıfırlayıp yeni bir oturum başlatabilirsiniz.",
+        "title": "Oturumlar"
       },
       "leaderboards": {
         "description": "Statsify `/leaderboard` komutu ile binlerce leaderboard sunar. `/leaderboard` yazın, sonra oyun modunu seçin, ve görüntülenecek leaderboard seçin. Belirli bir oyuncuyu veya pozisyonu aramak için arama butonuna tıklayabilirsiniz. Ayrıca yukarı ve aşağı butonlarına tıklayarak daha fazla sayfa görüntüleyebilirsiniz.",
@@ -362,6 +386,10 @@
       "description_discordId": "`{{tag}}` discord id'sine sahip bir oyuncu bulunamadı!",
       "title": "Geçersiz Oyuncu"
     },
+    "invalidSession": {
+      "title": "Geçersiz Oturum",
+      "description": "**{{displayName}}** oyuncusunun aktif bir oturumu yok. Doğrulanmışken`/session` komutu ile bir oturum açabilirler."
+    },
     "invalidResetTime": {
       "description": "`{{time}}`, `h:mm a` formatına uymamaktadır. `12:00 PM` veya `1:00 AM`'ye benzer bir saat girin.",
       "title": "Geçersiz Sıfırlama Saati"
@@ -408,7 +436,7 @@
       "title": "Eksik Doğrulama"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** oyuncusu **doğrulanmamış**. `/verify` komutu ile hesabını doğrulaması gerekir.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -424,17 +452,9 @@
       "description": "**{{username}}** adlı oyuncunun herhangi bir pelerini yok!",
       "title": "Eksik Pelerin"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** adlı oyuncunun herhangi bir arkadaşı yok $t(emojis:sad)! :(",
-      "title": "Arkadaş Bulunamadı"
-    },
     "noGTBSolutions": {
       "description": "Verilen ipucuna uygun herhangi bir çözüm bulamadık!",
       "title": "Guess The Build Çözümü Yok"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** ve **{{displayNameTwo}}** adlı oyuncuların herhangi bir ortak arkadaşı yok!",
-      "title": "Ortak Arkadaş Bulunamadı"
     },
     "noRankings": {
       "description": "**{{displayName}}** adlı oyuncunun hiçbir sıralamada yeri yok!",
@@ -494,7 +514,13 @@
     "new": "{{displayName}} adlı oyuncunun geçmiş istatistiklerine Statsify'da ilk kez bakılıyor. İstatistikleri her gün bu saatte güncellenecek.",
     "reset": "$t(emojis:clock) <t:{{time}}:R> **Saatinde Sıfırlanır**",
     "resetButton": "Sıfırlamak için tıklayın",
-    "setResetTime": "Sıfırlama saatiniz <t:{{time}}:t> saatine ayarlandı."
+    "setResetTime": "Sıfırlama saatiniz <t:{{time}}:t> saatine ayarlandı.",
+    "newSession": "**{{displayName}}**'in oturum istatistikleri Statsify'da ilk defa görüntülendi.",
+    "setSessionReset": "Oturum istatistikleriniz başarıyla sıfırlandı.",
+    "disabledWarning": {
+      "title": "Geçmiş Komutlar Artık Mevcut Değil",
+      "description": "Hypixel'ın yeni [API Şartları](https://developer.hypixel.net/policies/) artık \"oyuncu verilerinin devamlı yoklanması\"na izin vermiyor, bu yüzden Statsify artık günlük oyuncu istatistiklerini takip edemiyor.\n\nBunun yerine `/session` ile yeni bir oturum başlatmayı deneyebilirsiniz. Bir oturum başlattığınızda bot, komutu ilk çalıştırdığınız andan bir sonraki çalıştırmanıza kadar istatistiklerinizi takip edecektir. Oturum istatistiklerinizi sıfırlamak için `/reset session` komutunu kullanabilirsiniz."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -581,7 +607,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Forcefield Süresi",
     "fortune": "Fortune",
-    "friends": "Arkadaşlar",
     "game": "Oyun",
     "game-total": "{{game}} Toplam",
     "gamesPlayed": "Oynanan Oyunlar",
@@ -696,6 +721,7 @@
     "ranksGifted": "Hediye Edilen Rütbeler",
     "rebelKills": "Attacker Öldürmeleri",
     "renown": "Renown",
+    "rewardStreak": "Ödül Serisi",
     "roundWins": "Raunt Kazanmaları",
     "rune": "Rune",
     "score": "Skor",
@@ -755,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Statsify'ı kendi sunucunuza davet etmek için **[buraya](<https://statsify.net/invite>)** tıklayın!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** kişiselleştirilmiş profil rozetleri gibi ilave özellikler sunar. Tüm yararların listesini **[burada](<https://statsify.net/premium>)** bulabilirsiniz!",
     "rankings": "$t(emojis:logos.iron) En yüksek leaderboard pozisyonlarınızı **[Statsify Premium](<https://statsify.net/premium>)** ile `/rankings` kullanarak görüntüleyin",
-    "verify": "$t(emojis:check) Komutları kullanıcı adınızı yazmadan kullanmak ve **%10 daha az cooldown** almak için `/verify` yazın"
+    "verify": "$t(emojis:check) Komutları kullanıcı adınızı yazmadan kullanmak ve **%10 daha az cooldown** almak için `/verify` yazın",
+    "resetSession": "$t(emojis:reset) Oturum istatistiklerinizi `/reset session` komutu ile **sıfırlayabilirsiniz**.",
+    "sessions": "$t(emojis:reset) Oturumlarla ve `/session` ile istatistik ilerlemenizi takip edin."
   },
   "unknown": "Bilinmeyen",
   "verification": {

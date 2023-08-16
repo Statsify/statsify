@@ -3,15 +3,18 @@
   "version": "0.0.0",
   "main": "dist/index.js",
   "types": "src/index.ts",
+  "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@statsify/logger": "workspace:^",
-    "@statsify/rendering": "workspace:^",
-    "@statsify/schemas": "workspace:^",
+    "@statsify/logger": "*",
+    "@statsify/rendering": "*",
+    "@statsify/schemas": "*",
+    "@swc/helpers": "^0.5.1",
+    "axios": "1.4.0",
     "skia-canvas": "^0.9.30"
   }
 }

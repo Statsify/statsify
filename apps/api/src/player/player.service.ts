@@ -6,45 +6,35 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, Flatten, flatten } from "@statsify/util";
-import { Daily, Monthly, Weekly } from "../historical/models";
+import { type APIData, type Circular, type Flatten, flatten } from "@statsify/util";
 import {
-  Friends,
-  Player,
-  createHistoricalPlayer,
-  deserialize,
-  serialize,
-} from "@statsify/schemas";
-import {
-  FriendsNotFoundException,
-  HistoricalTimes,
   HypixelCache,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from "@statsify/api-client";
-import { HistoricalLeaderboardService } from "../historical/leaderboards/historical-leaderboard.service";
-import { HypixelService } from "../hypixel";
+import { HypixelService } from "#hypixel";
 import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service";
-import { PlayerSearchService, RedisPlayer } from "./search/player-search.service";
+import {
+  Player,
+  deserialize,
+  serialize,
+} from "@statsify/schemas";
+import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
+import { PlayerSearchService, RedisPlayer } from "./search/player-search.service.js";
 import type { ReturnModelType } from "@typegoose/typegoose";
+
+type PlayerModel = ReturnModelType<typeof Player>;
 
 @Injectable()
 export class PlayerService {
   public constructor(
     private readonly hypixelService: HypixelService,
     @Inject(forwardRef(() => PlayerLeaderboardService))
-    private readonly playerLeaderboardService: PlayerLeaderboardService,
-    @Inject(forwardRef(() => HistoricalLeaderboardService))
-    private readonly historicalLeaderboardService: HistoricalLeaderboardService,
+    private readonly playerLeaderboardService: Circular<PlayerLeaderboardService>,
     private readonly playerSearchService: PlayerSearchService,
-    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
-    @InjectModel(Friends) private readonly friendsModel: ReturnModelType<typeof Friends>,
-    @InjectModel(Daily) private readonly dailyModel: ReturnModelType<typeof Player>,
-    @InjectModel(Weekly) private readonly weeklyModel: ReturnModelType<typeof Player>,
-    @InjectModel(Monthly) private readonly monthlyModel: ReturnModelType<typeof Player>
+    @InjectModel(Player) private readonly playerModel: PlayerModel
   ) {}
 
   /**
@@ -71,9 +61,7 @@ export class PlayerService {
 
     if (player) {
       player.expiresAt = Date.now() + 120_000;
-      player.resetMinute = mongoPlayer?.resetMinute;
-      player.lastReset = mongoPlayer?.lastReset;
-      player.nextReset = mongoPlayer?.nextReset;
+      player.sessionReset = mongoPlayer?.sessionReset;
       player.guildId = mongoPlayer?.guildId;
 
       if (mongoPlayer && mongoPlayer.username !== player.username)
@@ -115,53 +103,6 @@ export class PlayerService {
       start,
       end
     );
-  }
-
-  /**
-   *
-   * @param tag UUID or username
-   * @param cacheLevel What type of data to return (cached/live)
-   * @returns null or an object containing an array of friends
-   */
-  public async getFriends(tag: string, cacheLevel: HypixelCache) {
-    const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
-      displayName: true,
-      uuid: true,
-    });
-
-    if (!player) throw new PlayerNotFoundException();
-
-    const cachedFriends = await this.friendsModel
-      .findOne()
-      .where("uuid")
-      .equals(player.uuid)
-      .lean()
-      .exec();
-
-    if (cachedFriends) {
-      cachedFriends.cached = true;
-
-      if (this.hypixelService.shouldCache(cachedFriends.expiresAt, cacheLevel))
-        return cachedFriends;
-    }
-
-    const friends = await this.hypixelService.getFriends(player.uuid);
-
-    if (!friends || !friends.friends.length) {
-      if (cachedFriends) return cachedFriends;
-      throw new FriendsNotFoundException(player);
-    }
-
-    friends.displayName = player.displayName;
-    friends.uuid = player.uuid;
-    friends.expiresAt = Date.now() + 3_600_000;
-
-    await this.friendsModel
-      .replaceOne({ uuid: player.uuid }, friends, { upsert: true })
-      .lean()
-      .exec();
-
-    return friends;
   }
 
   public async getStatus(tag: string) {
@@ -221,27 +162,6 @@ export class PlayerService {
       this.playerModel.deleteOne({ uuid: player.uuid }).exec(),
       this.playerSearchService.delete(player.username),
       this.playerLeaderboardService.addLeaderboards(Player, player, "uuid", true),
-      this.historicalLeaderboardService.addHistoricalLeaderboards(
-        HistoricalTimes.DAILY,
-        Player,
-        player,
-        "uuid",
-        true
-      ),
-      this.historicalLeaderboardService.addHistoricalLeaderboards(
-        HistoricalTimes.WEEKLY,
-        Player,
-        player,
-        "uuid",
-        true
-      ),
-      this.historicalLeaderboardService.addHistoricalLeaderboards(
-        HistoricalTimes.MONTHLY,
-        Player,
-        player,
-        "uuid",
-        true
-      ),
     ]);
   }
 
@@ -250,71 +170,12 @@ export class PlayerService {
     const flatPlayer = flatten(player);
     const serializedPlayer = serialize<Player>(Player, flatPlayer);
 
-    let week;
-    let month;
-    let weeklyPlayer;
-    let monthlyPlayer;
-
-    const dailyPlayer = await this.dailyModel
-      .findOne({ uuid: player.uuid })
-      .lean()
-      .exec();
-    if (dailyPlayer) {
-      week = this.weeklyModel.findOne({ uuid: player.uuid }).lean().exec();
-      month = this.monthlyModel.findOne({ uuid: player.uuid }).lean().exec();
-
-      [weeklyPlayer, monthlyPlayer] = await Promise.all([week, month]);
-    }
-
-    const promises = [];
-
-    promises.push(
+    const promises = [
       this.playerModel
-        .replaceOne({ uuid: player.uuid }, serializedPlayer, {
-          upsert: true,
-        })
-        .exec()
-    );
-
-    promises.push(
-      this.playerLeaderboardService.addLeaderboards(Player, flatPlayer, "uuid", false)
-    );
-
-    if (dailyPlayer) {
-      promises.push(
-        this.historicalLeaderboardService.addHistoricalLeaderboards(
-          HistoricalTimes.DAILY,
-          Player,
-          flatten(createHistoricalPlayer(dailyPlayer as Player, player)),
-          "uuid",
-          false
-        )
-      );
-    }
-
-    if (weeklyPlayer) {
-      promises.push(
-        this.historicalLeaderboardService.addHistoricalLeaderboards(
-          HistoricalTimes.WEEKLY,
-          Player,
-          flatten(createHistoricalPlayer(weeklyPlayer as Player, player)),
-          "uuid",
-          false
-        )
-      );
-    }
-
-    if (monthlyPlayer) {
-      promises.push(
-        this.historicalLeaderboardService.addHistoricalLeaderboards(
-          HistoricalTimes.MONTHLY,
-          Player,
-          flatten(createHistoricalPlayer(monthlyPlayer as Player, player)),
-          "uuid",
-          false
-        )
-      );
-    }
+        .replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true })
+        .exec(),
+      this.playerLeaderboardService.addLeaderboards(Player, flatPlayer, "uuid", false),
+    ];
 
     if (registerAutocomplete)
       promises.push(this.playerSearchService.add(flatPlayer as RedisPlayer));

@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src --out-dir dist",
@@ -10,33 +11,55 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.28.1",
-    "@sentry/tracing": "^7.28.1",
-    "@statsify/api-client": "workspace:^",
-    "@statsify/assets": "workspace:^",
-    "@statsify/discord": "workspace:^",
-    "@statsify/rendering": "workspace:^",
-    "@statsify/schemas": "workspace:^",
-    "@statsify/util": "workspace:^",
-    "@typegoose/typegoose": "^10.0.0",
-    "axios": "^0.27.2",
-    "discord-api-types": "^0.37.25",
+    "@sentry/node": "^7.61.0",
+    "@sentry/tracing": "^7.61.0",
+    "@statsify/api-client": "*",
+    "@statsify/assets": "*",
+    "@statsify/discord": "*",
+    "@statsify/logger": "*",
+    "@statsify/math": "*",
+    "@statsify/rendering": "*",
+    "@statsify/schemas": "*",
+    "@statsify/util": "*",
+    "@swc/helpers": "^0.5.1",
+    "@typegoose/typegoose": "^11.4.1",
+    "axios": "1.4.0",
+    "discord-api-types": "^0.37.51",
     "fuse.js": "^6.6.2",
-    "luxon": "^3.2.0",
-    "mongoose": "^6.8.2",
+    "luxon": "^3.3.0",
+    "mongoose": "^7.4.2",
     "reflect-metadata": "^0.1.13",
     "skia-canvas": "^0.9.30",
-    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb",
+    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@types/luxon": "^3.2.0"
+    "@types/luxon": "^3.3.1"
   },
   "imports": {
-    "#components": "./dist/components/index.js",
-    "#services": "./dist/services/index.js",
-    "#constants": "./dist/constants.js",
-    "#themes": "./dist/themes/index.js",
-    "#lib/*": "./dist/lib/*.js"
+    "#components": {
+      "types": "./src/components/index.ts",
+      "default": "./dist/components/index.js"
+    },
+    "#commands/*": {
+      "types": "./src/commands/*.ts",
+      "default": "./dist/commands/*.js"
+    },
+    "#services": {
+      "types": "./src/services/index.ts",
+      "default": "./dist/services/index.js"
+    },
+    "#constants": {
+      "types": "./src/constants.ts",
+      "default": "./dist/constants.js"
+    },
+    "#themes": {
+      "types": "./src/themes/index.ts",
+      "default": "./dist/themes/index.js"
+    },
+    "#lib/*": {
+      "types": "./src/lib/*.ts",
+      "default": "./dist/lib/*.js"
+    }
   }
 }

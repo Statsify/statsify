@@ -7,9 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { APIData } from "@statsify/util";
 import {
-  Friends,
   GameCounts,
   Guild,
   Player,
@@ -22,6 +20,7 @@ import { HypixelCache } from "@statsify/api-client";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
+import type { APIData } from "@statsify/util";
 
 @Injectable()
 export class HypixelService {
@@ -69,7 +68,7 @@ export class HypixelService {
 
   public getRecentGames(uuid: string): Promise<RecentGame[]> {
     return lastValueFrom(
-      this.request<APIData>(`/recentgames`, { uuid }).pipe(
+      this.request<APIData>("/recentgames", { uuid }).pipe(
         map((data) => {
           if (data.games) return data.games.map((game: APIData) => new RecentGame(game));
           return [];
@@ -84,7 +83,7 @@ export class HypixelService {
 
   public getStatus(uuid: string) {
     return lastValueFrom(
-      this.request<APIData>(`/status`, { uuid }).pipe(
+      this.request<APIData>("/status", { uuid }).pipe(
         map((data) => {
           if (data.session) return new Status(data.session);
           return null;
@@ -94,20 +93,6 @@ export class HypixelService {
           return of(null);
         })
       )
-    );
-  }
-
-  public getFriends(uuid: string) {
-    return lastValueFrom(
-      this.httpService
-        .get(`/friends/${uuid}`, { baseURL: "https://api.sk1er.club" })
-        .pipe(
-          map((data) => new Friends(data.data)),
-          catchError((err) => {
-            this.logger.error(err);
-            return of(null);
-          })
-        )
     );
   }
 

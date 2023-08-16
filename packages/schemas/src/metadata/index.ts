@@ -6,7 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./field";
-export * from "./metadata-scanner";
-export * from "./serialize";
-export * from "./field.options";
+export * from "./field/index.js";
+export * from "./metadata-scanner.js";
+export * from "./serialize.js";
+export * from "./deserialize.js";
+export * from "./field.options.js";
+export * from "./metadata.interface.js";

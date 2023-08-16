@@ -9,13 +9,13 @@
     "mojang-player": "Numele jucătorului de Minecraft sau UUID",
     "number": "Un număr",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard",
+    "player-leaderboard": "Alege un clasament",
     "reason": "The reason for closing the support ticket",
     "server": "Un nume de server de Minecraft sau un IP de server",
     "tags-content": "The content of the tag",
     "tags-name": "The name of the tag",
     "text": "Un mesaj",
-    "user": "Alege un nume de utilizator de Discord"
+    "user": "Alege un utilizator de Discord"
   },
   "commands": {
     "arcade": "$t(commands.hypixel-command, { \"name\": \"Arcade\" })",
@@ -24,7 +24,7 @@
     "badge": "Change your badge for every profile",
     "badge-reset": "Resetează-ți insigna profilului",
     "badge-set": "Încărcați o insignă nouă pentru profil",
-    "badge-view": "Vizualizați insigna profilului tău curent",
+    "badge-view": "Vezi insigna profilului tău curentă",
     "bedwars": "$t(commands.hypixel-command, { \"name\": \"BedWars\" })",
     "bedwars-challenges": "$t(commands.hypixel-command, { \"name\": \"BedWars Challenges\" })",
     "blitzsg": "$t(commands.hypixel-command, { \"name\": \"BlitzSG\" })",
@@ -32,7 +32,7 @@
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Vezi pelerinele Minecraft și Optifine ale unei persoane",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
-    "quests-command": "View your {{name}} questing stats",
+    "quests-command": "Vezi statisticile tale de misiuni pentru {{name}}",
     "quests": "$t(commands.hypixel-command, { \"name\": \"Questing\" })",
     "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
     "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
@@ -47,8 +47,7 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Vezi lista ta de prieteni pe Hypixel",
-    "game-counts": "Vizualizați numărul actual al jocurilor pe Hypixel",
+    "game-counts": "Vizualizați numărul de jucători pe jocurile de pe Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Generează o listă cu posibile Guess The Build pe baza indiciului dat",
     "guild": "View your guild's stats",
@@ -83,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "Vezi statisticile de misiuni pentru {{name}}",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "Vezi statisticile tale {{name}}",
     "invite": "Invită Statsify",
     "language": "Schimbă limba în care vezi răspunsurile",
@@ -94,7 +118,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-command": "Vezi clasamentele la {{name}}",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -120,7 +144,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Vezi prietenii tăi mutuali Hypixel cu un alt jucător",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Vezi creatorii și contribuitorii Statsify-ului",
@@ -177,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "Vezi jocurile recente pe Hypixel unei persoane",
-    "reset": "Resetează-ți statisticile istorice",
     "server": "Vezi starea serverului de Minecraft",
     "skin": "Vezi skin-ul unei persoane pe Minecraft",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -214,7 +236,9 @@
     "watchdog": "Vezi numărul de ban-uri de la Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "reset-historical": "Resetează-ți statisticile istorice",
+    "reset-session": "Resetează-ți statisticile sesiunii"
   },
   "config": {
     "badge": {
@@ -282,9 +306,9 @@
         "description": "Statsify suportă majoritatea jocurilor oferite pe Hypixel. Pentru a verifica statisticile într-un joc rulează `/[game]`. De exemplu, puteţi rula `/bedwars` pentru a verifica statisticile BedWars.",
         "title": "Jocuri"
       },
-      "historical": {
-        "description": "Statsify vă permite să vă verificaţi statisticile zilnice, săptămânale şi lunare prin `/daily`, `/weekly` şi `/monthly`. Dacă ai omis o resetare, le poți vedea rulând `/yesterday`, `/lastweek`, și `/lastmonth`. ",
-        "title": "Istoricul"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify oferă mii de clasamente prin comanda `/leaderboard`. Rulează `/leaderboard`, apoi alege gamemode-ul şi alege un clasament pentru a vedea. Puteți apăsa butonul de căutare pentru a căuta un anumit jucător sau o anumită poziție. Poţi apăsa şi butoanele sus şi jos pentru a vedea mai multe pagini.",
@@ -362,6 +386,10 @@
       "description_discordId": "Un jucător cu discord id-ul `{{tag}}` nu a putut fi găsit!",
       "title": "Jucător Invalid"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` nu se potrivește cu formatul `h:mm a`. Introdu un timp în format similar cu `12:00 PM` sau `1:00 AM`.",
       "title": "Timp Resetare Invalid"
@@ -408,7 +436,7 @@
       "title": "Lipsește Verificarea"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -424,17 +452,9 @@
       "description": "**{{username}}** nu are nici o pelerină!",
       "title": "Lipsește Pelerina"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** nu are prieteni $t(emojis:sad)! :(",
-      "title": "Prieteni n-au fost găsiți"
-    },
     "noGTBSolutions": {
       "description": "Nu am putut găsi nicio soluție pentru indiciul furnizat!",
       "title": "Nu a fost găsită niciun indiciu pentru pentru Guess The Build"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** şi **{{displayNameTwo}}** nu au nici un prieten reciproc!",
-      "title": "Fără Mutuale"
     },
     "noRankings": {
       "description": "**{{displayName}}** nu are clasamente!",
@@ -458,7 +478,7 @@
     },
     "premiumRequired": {
       "description": "Vezi toate caracteristicile disponibile [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
+      "preview": "Verificați toate caracteristicile disponibile [here](https://statsify.net/premium). Mai jos este o mică previzualizare a ce face/schimbă comenzile.",
       "title": "Statsify {{tier}} este necesar pentru a rula această comandă"
     },
     "staffOnly": {
@@ -494,7 +514,13 @@
     "new": "** Statisticile istorice ale lui {{displayName}}** au fost verificate pentru prima dată în Statsify. Statisticile lor vor fi actualizate acum la această oră în fiecare zi.",
     "reset": "$t(emojis:clock) **Resetare** <t:{{time}}:R>",
     "resetButton": "Clic pentru resetare",
-    "setResetTime": "Setează timpul de resetare la <t:{{time}}:t>."
+    "setResetTime": "Setează timpul de resetare la <t:{{time}}:t>.",
+    "newSession": "Statisticile sesiunii pentru **{{displayName}}** au fost verificate pentru prima dată pe Statsify.",
+    "setSessionReset": "Statisticile sesiunii tale au fost resetate cu succes.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -567,7 +593,7 @@
     "ended": "Terminat",
     "endurance": "Rezistență",
     "event-level": "Nivel Eveniment",
-    "event-exp": "Event EXP",
+    "event-exp": "EXP eveniment",
     "exp": "EXP",
     "expGained": "EXP obținut",
     "extraUltimates": "Ultimate extra",
@@ -581,7 +607,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Timpul câmpului de forță",
     "fortune": "Bogăție",
-    "friends": "Prieteni",
     "game": "Joc",
     "game-total": "Total {{game}}",
     "gamesPlayed": "Jocuri jucate",
@@ -680,8 +705,8 @@
     "points": "Puncte",
     "poopCollected": "Căcat Colectat",
     "powerKicks": "Lovituri cu putere",
-    "powerupActivations": "Power-Up Activations",
-    "powerups": "Power-Ups",
+    "powerupActivations": "Activări Powerup",
+    "powerups": "Power-Up-uri",
     "prefix": "Prefix",
     "prevent": "Prevenire",
     "progression": {
@@ -696,6 +721,7 @@
     "ranksGifted": "Ranguri cadou",
     "rebelKills": "Uciderile ca Atacator",
     "renown": "Renown",
+    "rewardStreak": "Streak de Recompense",
     "roundWins": "Victorii Runde",
     "rune": "Rună",
     "score": "Scor",
@@ -745,17 +771,19 @@
     "woolPlaced": "Lână plasată",
     "zombieKills": "Omorături Zombi",
     "potionsBrewed": "Poţiuni preparate",
-    "positions": "Positions",
-    "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed",
-    "totalExp": "Total EXP"
+    "positions": "Poziții",
+    "powerupsCollected": "Power-Up-uri Colectate",
+    "roundsCompleted": "Runde finalizate",
+    "totalExp": "EXP total"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Alătură-te serverului de discord **$t(socials.discord)** și obține **20% mai mic cooldown** $t(emojis:heart)",
     "invite": "$t(emojis:socials.discord) Click **[here](<https://statsify.net/invite>)** pentru a invita Statsify la propriul tău server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** oferă caracteristici suplimentare precum insigne de profil personalizate. Găsiți lista completă de beneficii [here](<https://statsify.net/premium>)!",
     "rankings": "$t(emojis:logos.iron) Vizualizați pozițiile tale de top în clasament cu **[Statsify Premium](<https://statsify.net/premium>)** folosind `/rankings`",
-    "verify": "$t(emojis:check) Rulează `/verify` pentru a rula comenzi fără a vă pune numele de utilizator și de a primi **10% cooldown mai mic**"
+    "verify": "$t(emojis:check) Rulează `/verify` pentru a rula comenzi fără a vă pune numele de utilizator și de a primi **10% cooldown mai mic**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Necunoscut",
   "verification": {

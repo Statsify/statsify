@@ -18,11 +18,10 @@ export const render: Render<Box.BoxRenderProps> = (
     outline,
     outlineSize,
   },
-  { x, y, width, height, padding },
-  { winterTheme }
+  { x, y, width, height, padding }
 ) => {
   const fill = Box.resolveFill(color, ctx, x, y, width, height);
-  ctx.fillStyle = winterTheme.getIce(ctx);
+  ctx.fillStyle = fill;
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -72,16 +71,11 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.closePath();
   ctx.fill();
 
-  if (fill !== Box.DEFAULT_COLOR) {
-    ctx.fillStyle = fill;
-    ctx.fill();
-  }
-
   ctx.globalCompositeOperation = "overlay";
 
   const overlay = ctx.createLinearGradient(x, y, x, y + height);
-  overlay.addColorStop(0, `rgba(255, 255, 255, 0.15)`);
-  overlay.addColorStop(1, `rgba(0, 0, 0, 0.15)`);
+  overlay.addColorStop(0, "rgba(255, 255, 255, 0.15)");
+  overlay.addColorStop(1, "rgba(0, 0, 0, 0.15)");
   ctx.fillStyle = overlay;
 
   ctx.fill();
@@ -146,6 +140,4 @@ export const render: Render<Box.BoxRenderProps> = (
   }
 
   ctx.globalAlpha = 1;
-
-  Box.renderSnow(ctx, winterTheme, x, y, width);
 };

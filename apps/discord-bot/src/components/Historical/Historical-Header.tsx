@@ -14,27 +14,34 @@ import { prettify } from "@statsify/util";
 interface HistoricalHeaderProps {
   skin: JSX.Element;
   nameTag: JSX.Element;
-  time: HistoricalType;
+  time: HistoricalTimeData;
   startTime?: DateTime;
   endTime?: DateTime;
   title: string;
   sidebar?: ElementNode;
 }
 
+export interface HistoricalTimeData {
+  timeType: HistoricalType;
+  startTime?: DateTime;
+  endTime?: DateTime;
+  sessionReset?: DateTime;
+}
+
+const DATE_FORMAT = "MM/dd/yyyy";
+
 export const HistoricalHeader = ({
   skin,
   nameTag,
   title,
-  time,
   sidebar,
-  startTime,
-  endTime,
+  time: { timeType, startTime, endTime, sessionReset },
 }: HistoricalHeaderProps) => {
   const now = DateTime.now();
-  let start: DateTime;
-  let end: DateTime;
+  let start: DateTime = now;
+  let end: DateTime = now;
 
-  switch (time) {
+  switch (timeType) {
     case HistoricalTimes.DAILY:
       start = now.minus({ days: 1 });
       end = now;
@@ -71,12 +78,16 @@ export const HistoricalHeader = ({
         {nameTag}
         <box width="100%" height="remaining">
           <text>
-            {start.toFormat("MM/dd/yy")} ➡ {end.toFormat("MM/dd/yy")}
+            {timeType === HistoricalTimes.SESSION
+              ? `Started ${sessionReset?.toFormat(
+                DATE_FORMAT
+              )} (${sessionReset?.toRelative()})`
+              : `${start!.toFormat(DATE_FORMAT)} ➡ ${end!.toFormat(DATE_FORMAT)}`}
           </text>
         </box>
         <div width="100%">
           <box padding={{ left: 12, right: 12 }}>
-            <text>§l{prettify(time.toLowerCase())}</text>
+            <text>§l{prettify(timeType.toLowerCase())}</text>
           </box>
           <box width="remaining">
             <text>{title}</text>

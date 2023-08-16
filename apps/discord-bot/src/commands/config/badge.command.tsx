@@ -18,7 +18,7 @@ import {
   SubCommand,
 } from "@statsify/discord";
 import { Canvas, Image } from "skia-canvas";
-import { DemoProfile } from "./demo.profile";
+import { DemoProfile } from "./demo.profile.js";
 import { User, UserTier } from "@statsify/schemas";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";

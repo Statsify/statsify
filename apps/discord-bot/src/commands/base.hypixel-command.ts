@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from "typedi";
 import {
   ApiService,
   Command,
@@ -17,8 +16,9 @@ import {
   PaginateService,
   PlayerArgument,
 } from "@statsify/discord";
+import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
-import { HistoricalType } from "@statsify/api-client";
+import { HistoricalTimeData } from "#components";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { noop } from "@statsify/util";
@@ -26,7 +26,7 @@ import { render } from "@statsify/rendering";
 import type { GameMode, GameModes, Player, User } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
 
-export type ProfileTime = "LIVE" | HistoricalType;
+export type ProfileTime = "LIVE" | HistoricalTimeData;
 
 export interface BaseProfileProps {
   skin: Image;

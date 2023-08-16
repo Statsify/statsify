@@ -3,13 +3,8 @@
   "compilerOptions": {
     "jsx": "preserve",
     "baseUrl": "./src",
-    "paths": {
-      "#components": ["./components"],
-      "#services": ["./services"],
-      "#constants": ["./constants"],
-      "#themes": ["./themes"],
-      "#lib/*": ["./lib/*"],
-    }
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

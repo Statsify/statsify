@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "查看您在Hypixel的好友名單",
     "game-counts": "查看目前所有Hypixel遊戲的遊玩人數",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "根據提示，生成可能的 你蓋我猜 的答案名單",
@@ -83,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "View your {{name}} session stats",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "查看您{{name}}的統計數據",
     "invite": "邀請Statsify",
     "language": "更改您看的語言",
@@ -120,7 +144,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "查看您跟另一位玩家共同的Hypixel好友",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "查看Statsify的創作者和貢獻者",
@@ -177,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "查看玩家最近在Hypixel遊玩過的遊戲",
-    "reset": "重置您的歷史統計數據",
     "server": "查看當個創世神的伺服器狀態",
     "skin": "查看玩家當個創世神的外觀",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -214,7 +236,9 @@
     "watchdog": "查看Hypixel Watchdog查禁總計",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "reset-historical": "重置您的歷史統計數據",
+    "reset-session": "Reset your session stats"
   },
   "config": {
     "badge": {
@@ -282,9 +306,9 @@
         "description": "Statsify支持Hypixel大多數遊戲。 想要查看您在遊戲中的統計數據，可執行`/[遊戲名稱]`。例如，您可以執行`/bedwars`來查看您在床戰裡的統計數據。",
         "title": "遊戲"
       },
-      "historical": {
-        "description": "Statsify允許您通過執行`/daily`、 `/weekly`和`/monthly`來查看您的每日、每周和每月的統計數據。如果您錯過了一次重置時間，您可以通過執行`/yesterday`、`/lastweek`、`/lastmonth`來查看您以往的統計數據。 ",
-        "title": "以往的統計數據"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify的`/leaderboard`指令提供數千個排行榜。執行`/leaderboard`，然後選擇遊戲模式，然後選擇要查看的排行榜。您可以點擊搜索按鈕來查看特定的玩家或排行榜位置。您還可以通過使用上下按鍵來查看更多頁面。",
@@ -362,6 +386,10 @@
       "description_discordId": "無法搜尋一位Discord使用者為`{{tag}}`的玩家！",
       "title": "無效的玩家"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "`{{time}}`不匹配`h:mm a`的格式。請輸入`12:00 PM`或是`1:00 AM`類似格式的時間。",
       "title": "無效的重置時間"
@@ -408,7 +436,7 @@
       "title": "缺少驗證"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -424,17 +452,9 @@
       "description": "**{{username}}**沒有任何披風！",
       "title": "缺少披風"
     },
-    "noFriends": {
-      "description": "**{{displayName}}**沒有好友$t(emojis:sad)！:(",
-      "title": "未找到好友"
-    },
     "noGTBSolutions": {
       "description": "我們搜尋不到任何關於此提示的解決方案！",
       "title": "毫無 你蓋我猜 的解決方案"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}**和**{{displayNameTwo}}**沒有共同好友！",
-      "title": "沒有共同好友"
     },
     "noRankings": {
       "description": "**{{displayName}}**沒有排行！",
@@ -494,7 +514,13 @@
     "new": "**{{displayName}}**首次在Statsify查看了以往的統計數據。他們的統計數據將會在每天的此時更新。",
     "reset": "$t(emojis:clock) **重置**<t:{{time}}:R>",
     "resetButton": "點擊重置",
-    "setResetTime": "將您的重置時間設置為<t:{{time}}:t>"
+    "setResetTime": "將您的重置時間設置為<t:{{time}}:t>",
+    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -581,7 +607,6 @@
     "fkdr": "最終 K/D 比",
     "forcefieldTime": "反彈彩單時間",
     "fortune": "額外硬幣技能值",
-    "friends": "好友數",
     "game": "遊戲",
     "game-total": "{{game}}總計",
     "gamesPlayed": "遊玩過的遊戲",
@@ -696,6 +721,7 @@
     "ranksGifted": "Ranks贈送數",
     "rebelKills": "攻擊者擊殺數",
     "renown": "聲望",
+    "rewardStreak": "連續每日獎勵數",
     "roundWins": "回合獲勝數",
     "rune": "神器",
     "score": "分數",
@@ -755,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) 點擊**[這裡](<https://statsify.net/invite>)**來邀請Statsify到您自己的伺服器！",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)**提供額外的功能，例如客製化個人資料徽章。點擊**[這裡](<https://statsify.net/premium>)**來查找完整的福利清單！",
     "rankings": "$t(emojis:logos.iron) 擁有**[Statsify Premium](<https://statsify.net/premium>)**並執行`/rankings`可以查看您在排行榜中的最高排行",
-    "verify": "$t(emojis:check) 執行`/verify`可以在不輸入使用名的情況下執行命令，並獲得**降低10%的冷卻時間**"
+    "verify": "$t(emojis:check) 執行`/verify`可以在不輸入使用名的情況下執行命令，並獲得**降低10%的冷卻時間**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "未知",
   "verification": {

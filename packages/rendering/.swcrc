@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/swcrc",
   "jsc": {
     "parser": {
       "syntax": "typescript",
@@ -10,11 +11,16 @@
       "decoratorMetadata": true,
       "react": {
         "runtime": "automatic",
-        "importSource": "@statsify/rendering",
+        "importSource": "../src",
         "throwIfNamespace": false
       },
       "optimizer": {
         "simplify": true,
+        "globals": {
+          "vars": {
+            "import.meta.vitest": "false"
+          }
+        },
         "jsonify": {
           "minCost": 2048
         }
@@ -23,11 +29,14 @@
     "target": "es2022",
     "keepClassNames": true,
     "loose": false,
-    "externalHelpers": false,
-    "preserveAllComments": false
+    "externalHelpers": true,
+    "preserveAllComments": false,
+    "experimental": {
+      "keepImportAssertions": true
+    }
   },
   "module": {
-    "type": "commonjs",
+    "type": "es6",
     "strict": true,
     "strictMode": true,
     "lazy": false,

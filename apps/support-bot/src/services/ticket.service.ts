@@ -27,12 +27,12 @@ import {
   ModalBuilder,
   TextInputBuilder,
 } from "@statsify/discord";
-import { CommandListener } from "#lib/command.listener";
+import { CommandListener } from "#lib";
 import { Inject, Service } from "typedi";
-import { ReturnModelType } from "@typegoose/typegoose";
 import { STATUS_COLORS } from "@statsify/logger";
 import { Ticket } from "@statsify/schemas";
 import { config } from "@statsify/util";
+import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Service()
 export class TicketService {

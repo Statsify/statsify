@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Constructor } from "@statsify/util";
+import type { Constructor } from "@statsify/util";
 
 export const METADATA_KEY = "statsify";
 

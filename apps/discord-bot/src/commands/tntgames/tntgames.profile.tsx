@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
 import { FormattedGame } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 interface TNTGamesModeColumnProps {
   title: string;
@@ -71,15 +71,15 @@ export const TNTGamesProfile = ({
             stats={
               time === "LIVE"
                 ? [
-                    [t("stats.wins"), t(tntgames.tntRun.wins)],
-                    [t("stats.wlr"), t(tntgames.tntRun.wlr)],
-                    [t("stats.bestTime"), formatTime(tntgames.tntRun.record)],
-                  ]
+                  [t("stats.wins"), t(tntgames.tntRun.wins)],
+                  [t("stats.wlr"), t(tntgames.tntRun.wlr)],
+                  [t("stats.bestTime"), formatTime(tntgames.tntRun.record)],
+                ]
                 : [
-                    [t("stats.wins"), t(tntgames.tntRun.wins)],
-                    [t("stats.losses"), t(tntgames.tntRun.losses)],
-                    [t("stats.wlr"), t(tntgames.tntRun.wlr)],
-                  ]
+                  [t("stats.wins"), t(tntgames.tntRun.wins)],
+                  [t("stats.losses"), t(tntgames.tntRun.losses)],
+                  [t("stats.wlr"), t(tntgames.tntRun.wlr)],
+                ]
             }
           />
           <TNTGamesModeColumn

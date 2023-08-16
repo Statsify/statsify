@@ -8,14 +8,13 @@
 
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-namespace */
-export * from "./colors";
-export * from "./font";
-export * from "./hooks";
-export * from "./jsx";
-export * from "./components";
-export { WinterThemeService } from "./winter-theme.service";
+export * from "./colors/index.js";
+export * from "./font/index.js";
+export * from "./hooks/index.js";
+export * from "./jsx/index.js";
+export * from "./intrinsics/index.js";
 
-import type * as JSXInternal from "./jsx";
+import type * as JSXInternal from "./jsx/index.js";
 
 declare global {
   namespace JSX {
@@ -28,5 +27,9 @@ declare global {
     type Children<T = Element> = JSXInternal.Children<T>;
 
     type Measurement = JSXInternal.Measurement;
+
+    interface ElementChildrenAttribute {
+      children: {};
+    }
   }
 }

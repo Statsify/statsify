@@ -2,12 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "jsx": "preserve",
-    "baseUrl": "./src",
-    "paths": {
-      "#services": ["./services"],
-      "#constants": ["./constants"],
-      "#lib/*": ["./lib/*"],
-    }
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

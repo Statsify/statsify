@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
+import { Field } from "#metadata";
 import { ratio } from "@statsify/math";
+import type { APIData } from "@statsify/util";
 
 export class QuakeMode {
   @Field()

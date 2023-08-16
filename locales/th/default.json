@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "ดูรายชื่อเพื่อน Hypixel ของคุณ",
     "game-counts": "ดูจำนวนเกมปัจจุบันของ Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "สร้างรายการคำตอบ Guess The Build ที่เป็นไปได้ตามคำใบ้ที่กำหนด",
@@ -83,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "View your {{name}} session stats",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "ดูสถิติ {{name}} ของคุณ",
     "invite": "เชิญ Statsify",
     "language": "เปลี่ยนภาษาที่คุณเห็นคำตอบใน",
@@ -120,7 +144,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "ดูเพื่อน Hypixel ร่วมกันของคุณกับผู้เล่นอื่น",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "ดูผู้สร้างและผู้มีส่วนร่วมของ Statsify",
@@ -177,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "ดูเกมล่าสุดของ Hypixel ของใครบางคน",
-    "reset": "รีเซ็ตสถิติในอดีตของคุณ",
     "server": "ดูสถานะเซิร์ฟเวอร์ Minecraft",
     "skin": "ดูสกิน Minecraft ของใครบางคน",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -214,7 +236,9 @@
     "watchdog": "ดูจำนวนการแบน Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "reset-historical": "Reset your historical stats",
+    "reset-session": "Reset your session stats"
   },
   "config": {
     "badge": {
@@ -282,9 +306,9 @@
         "description": "Statsify รองรับเกมส่วนใหญ่ที่นำเสนอบน Hypixel. เพื่อตรวจสอบสถิติของคุณในเกมให้รัน `/[game]`. ตัวอย่างเช่น คุณสามารถเรียกใช้ `/bedwars` เพื่อตรวจสอบสถิติ BedWars ของคุณ.",
         "title": "เกม"
       },
-      "historical": {
-        "description": "Statsify ให้คุณตรวจสอบสถิติรายวัน รายสัปดาห์ และรายเดือนของคุณผ่าน `/daily`, `/weekly` และ `/monthly`. หากคุณพลาดการรีเซ็ต คุณสามารถดูได้โดยเรียกใช้ `/yesterday `/lastweek ' และ `/lastmonth`. ",
-        "title": "ประวัติศาสตร์"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify นำเสนอกระดานผู้นำนับพันผ่านคำสั่ง `/leaderboard`. เรียกใช้ `/leaderboard` จากนั้นเลือกโหมดเกม และเลือกกระดานผู้นำเพื่อดู. คุณสามารถกดปุ่มค้นหาเพื่อค้นหาผู้เล่นหรือตำแหน่งที่ต้องการ. คุณยังสามารถกดปุ่มขึ้นและลงเพื่อดูหน้าเพิ่มเติม.",
@@ -362,6 +386,10 @@
       "description_discordId": "ไม่พบผู้เล่นที่มี discord id ของ `{{tag}}`!",
       "title": "ผู้เล่นไม่ถูกต้อง"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` ไม่ตรงกับรูปแบบ `h:mm a`. ป้อนเวลาในรูปแบบที่คล้ายกับ `12:00 PM` หรือ `01:00 AM`.",
       "title": "เวลารีเซ็ตไม่ถูกต้อง"
@@ -408,7 +436,7 @@
       "title": "ไม่มีการยืนยัน"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -424,17 +452,9 @@
       "description": "**{{username}}** ไม่มีผ้าคลุม!",
       "title": "แหลมหายไป"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** ไม่มีเพื่อน $t(emojis:sad)! :(",
-      "title": "ไม่พบเพื่อน"
-    },
     "noGTBSolutions": {
       "description": "เราไม่พบวิธีแก้ปัญหาสำหรับคำแนะนำที่ให้มา!",
       "title": "ไม่มี Guess The Build โซลูชั่น"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** และ **{{displayNameTwo}}** ไม่มีเพื่อนร่วมกัน!",
-      "title": "ไม่มีสหพันธ์"
     },
     "noRankings": {
       "description": "**{{displayName}}** ไม่มีการจัดอันดับ!",
@@ -494,7 +514,13 @@
     "new": "**{{displayName}}** มีการตรวจสอบสถิติที่ผ่านมาใน Statsify เป็นครั้งแรก. สถิติของพวกเขาจะได้รับการอัปเดตในเวลานี้ทุกวัน.",
     "reset": "$t(emojis:clock) **รีเซ็ต** <t:{{time}}:R>",
     "resetButton": "คลิกเพื่อรีเซ็ต",
-    "setResetTime": "ตั้งเวลารีเซ็ตเป็น <t:{{time}}:t>."
+    "setResetTime": "ตั้งเวลารีเซ็ตเป็น <t:{{time}}:t>.",
+    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -581,7 +607,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "เวลาฟอร์ซฟิลด์",
     "fortune": "โชค",
-    "friends": "เพื่อน",
     "game": "เกม",
     "game-total": "{{game}} รวม",
     "gamesPlayed": "เกมส์ที่เล่น",
@@ -696,6 +721,7 @@
     "ranksGifted": "อันดับพรสวรรค์",
     "rebelKills": "ผู้โจมตีสังหาร",
     "renown": "ชื่อเสียง",
+    "rewardStreak": "Reward Streak",
     "roundWins": "รอบชนะ",
     "rune": "รูน",
     "score": "คะแนน",
@@ -755,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) คลิก **[here](<https://statsify.net/invite>)** เพื่อเชิญ Statsify เข้าสู่เซิร์ฟเวอร์ของคุณเอง!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** มีคุณสมบัติเพิ่มเติม เช่น ป้ายโปรไฟล์ส่วนบุคคล. พบสิทธิประโยชน์ทั้งหมด **[here](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) ดูตำแหน่งกระดานผู้นำอันดับสูงสุดของคุณด้วย **[Statsify Premium] \n (<https://statsify.net/premium>)** โดยใช้ `/rankings`",
-    "verify": "$t(emojis:check) รัน `/verify` เพื่อรันคำสั่งโดยไม่ต้องป้อนชื่อผู้ใช้ของคุณ และรับ **10% คูลดาวน์ที่ต่ำกว่า**"
+    "verify": "$t(emojis:check) รัน `/verify` เพื่อรันคำสั่งโดยไม่ต้องป้อนชื่อผู้ใช้ของคุณ และรับ **10% คูลดาวน์ที่ต่ำกว่า**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "ไม่รู้จัก",
   "verification": {

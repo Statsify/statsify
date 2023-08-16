@@ -2,8 +2,16 @@
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+  "editor.codeActionsOnSave": [
+    "source.fixAll.eslint"
+  ],
   "typescript.tsdk": "node_modules/typescript/lib",
+  "files.exclude": {
+    "**/dist/**": true,
+    // "**/node_modules/**": true,
+    "**/.turbo/**": true,
+    "**/.pnpm-store/**": true
+  },
   "[handlebars]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -11,13 +19,10 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "explorer.experimental.fileNesting.patterns": {
-    "package.json": "package-lock.json, .npmrc, yarn.lock, .yarnrc, pnpm-lock.yaml, tsconfig.*.json, tsconfig.json, jest.config.js, turbo.json, README.md, LICENSE, cliff.toml, .prettierrc, .eslintrc, .yarnrc.yml, .swcrc, .gitignore, .eslintignore, .env, .env.schema, renovate.json, .gitmodules"
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
@@ -28,10 +33,15 @@
   "[scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "i18n-ally.localesPaths": ["locales"],
+  "i18n-ally.localesPaths": [
+    "locales"
+  ],
   "i18n-ally.sourceLanguage": "en-US",
   "i18n-ally.displayLanguage": "en-US",
-  "i18n-ally.ignoredLocales": ["en"],
+  "i18n-ally.ignoredLocales": [
+    "en"
+  ],
   "i18n-ally.keystyle": "nested",
-  "todo-tree.tree.scanMode": "workspace only"
+  "todo-tree.tree.scanMode": "workspace only",
+  "testing.automaticallyOpenPeekView": "never"
 }

@@ -7,7 +7,6 @@
  */
 
 import { Container, Footer, If, List } from "#components";
-import { CurrentHistoricalType } from "@statsify/api-client";
 import { LocalizeFunction } from "@statsify/discord";
 import { User } from "@statsify/schemas";
 import { formatPosition } from "#lib/format-position";
@@ -33,7 +32,6 @@ export interface LeaderboardProfileProps {
   data: LeaderboardData[];
   t: LocalizeFunction;
   type: LeaderboardType;
-  time?: CurrentHistoricalType | undefined;
 }
 
 export const LeaderboardProfile = ({
@@ -45,7 +43,6 @@ export const LeaderboardProfile = ({
   name,
   t,
   type,
-  time,
 }: LeaderboardProfileProps) => {
   const titles = ["Pos", prettify(type), ...fields].map((field, index) => (
     <box
@@ -93,18 +90,9 @@ export const LeaderboardProfile = ({
 
   return (
     <Container background={background}>
-      <div width="100%">
-        <If condition={time}>
-          {(time) => (
-            <box>
-              <text>§^3^§l{prettify(time)}</text>
-            </box>
-          )}
-        </If>
-        <box width="remaining">
-          <text>§^3^§l{name}</text>
-        </box>
-      </div>
+      <box width="100%">
+        <text>§^3^§l{name}</text>
+      </box>
       <List items={[<>{titles}</>, ...items]} />
       <Footer
         logo={logo}

@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Zobrazit seznam přátel na Hypixelu",
     "game-counts": "Zobrazit aktuální počet Hypixel hráčů ve hrách",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Vygenerovat seznam možných odpovědí v Guess The Build sestavených na základě dané nápovědy",
@@ -83,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "Zobrazit {{name}} statistiky za období",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "Zobrazit {{name}} statistiky",
     "invite": "Pozvat Statsify",
     "language": "Změnit jazyk, ve kterém vidíš odpovědi",
@@ -120,7 +144,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Zobrazit Hypixel přátele společné s jiným hráčem",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Zobrazit Statsify tvůrce a přispěvatele",
@@ -177,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "Zobrazit něčí poslední hry na Hypixelu",
-    "reset": "Vyresetovat statistiky za určitou dobu",
     "server": "Zobrazit stav Minecraft serveru",
     "skin": "Zobrazit něčí Minecraft skin",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -214,7 +236,9 @@
     "watchdog": "Zobrazit počet Hypixel Watchdog banů",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "reset-historical": "Vyresetovat statistiky za určitou dobu",
+    "reset-session": "Vyresetovat statistiky za období"
   },
   "config": {
     "badge": {
@@ -282,9 +306,9 @@
         "description": "Statsify podporuje většinu her na Hypixelu. Pro zjistění tvých statistik použij `/[game]`. Použij například `/bedwars` pro zjistění BedWars statistik.",
         "title": "Hry"
       },
-      "historical": {
-        "description": "Statsify umožňuje kontrolovat statistiky za poslední den, týden a měsíc pomocí `/daily`, `/weekly` a `/monthly`. Pokud jsi nestihl použít příkaz před resetováním, použij `/yesterday`, `/lastweek`, a `/lastmonth`. ",
-        "title": "Statistiky za určitou dobu"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify nabízí tisíce žebříčků skrz `/leaderboard` příkaz. Napiš `/leaderboard`, vyber si hru a statistiku k zobrazení. Poté pomocí tlačítka můžeš vyhledat daného hráče a pozici. Pomocí tlačítek se také můžeš pohybovat žebříčkem nahoru a dolů.",
@@ -362,6 +386,10 @@
       "description_discordId": "Hráč s Discord ID `{{tag}}` nebyl nalazen!",
       "title": "Neplatný hráč"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` neodpovídá formátu `h:mm a`. Zadej čas ve formátu podobnému k `12:00 PM` nebo `1:00 AM`.",
       "title": "Neplatný čas vyresetování"
@@ -408,7 +436,7 @@
       "title": "Chybějící ověření"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -424,17 +452,9 @@
       "description": "Hráč **{{username}}** nemá žádné pláště!",
       "title": "Chybějící plášť"
     },
-    "noFriends": {
-      "description": "Hráč **{{displayName}}** nemá žádné přátele $t(emojis:sad)! :(",
-      "title": "Přátelé nebyli nalezeni"
-    },
     "noGTBSolutions": {
       "description": "Nemohli jsme nalézt žádná řešení pro poskytnutou nápovědu!",
       "title": "Žádná Guess The Build řešení"
-    },
-    "noMutuals": {
-      "description": "Hráči **{{displayNameOne}}** a **{{displayNameTwo}}** nemají žádné společné přátele!",
-      "title": "Žádní společní přátelé"
     },
     "noRankings": {
       "description": "Hráč **{{displayName}}** nemá žádné pořadí!",
@@ -494,7 +514,13 @@
     "new": "Statistiky za určitou dobu hráče **{{displayName}}** byly poprvé zkontrolovány na Statsify. Statistiky hráče se nyní budou každý den tento čas aktualizovat.",
     "reset": "$t(emojis:clock) **Vyresetuje se** <t:{{time}}:R>",
     "resetButton": "Klikni pro vyresetování",
-    "setResetTime": "Čas vyresetování byl nastaven na <t:{{time}}:t>."
+    "setResetTime": "Čas vyresetování byl nastaven na <t:{{time}}:t>.",
+    "newSession": "Statistiky hráče **{{displayName}}** byly ve Statsify zkontrolovány poprvé.",
+    "setSessionReset": "Tvoje statistiky za období byly úspěšně zrušeny.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -581,7 +607,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Čas strávený v Forcefield",
     "fortune": "Fortune",
-    "friends": "Přátelé",
     "game": "Hra",
     "game-total": "Celkem v {{game}}",
     "gamesPlayed": "Odehrané hry",
@@ -696,6 +721,7 @@
     "ranksGifted": "Darované ranks",
     "rebelKills": "Zabití za útočníka",
     "renown": "Proslulost",
+    "rewardStreak": "Série odměn",
     "roundWins": "Vyhraná kola",
     "rune": "Runa",
     "score": "Skóre",
@@ -745,7 +771,7 @@
     "woolPlaced": "Položené vlny",
     "zombieKills": "Zabití zombií",
     "potionsBrewed": "Uvařené lektvary",
-    "positions": "Positions",
+    "positions": "Pozice",
     "powerupsCollected": "Sebraná vylepšení",
     "roundsCompleted": "Dokončena kola",
     "totalExp": "Celkem XP"
@@ -755,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Klikni **[zde](<https://statsify.net/invite>)** pro pozvání Statsify na svůj server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** nabízí dodatečné funkce jako například personalizované odznaky na profilu. Celý seznam výhod najdeš **[zde](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Zobraz si svoje přední pozice v žebříčku s **[Statsify Premium](<https://statsify.net/premium>)** použitím příkazu `/rankings`",
-    "verify": "$t(emojis:check) Napiš `/verify` pro spouštění příkazů bez zadávání svého jména a také získej **10% nižší časový limit**"
+    "verify": "$t(emojis:check) Napiš `/verify` pro spouštění příkazů bez zadávání svého jména a také získej **10% nižší časový limit**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Neznámý",
   "verification": {
@@ -779,7 +807,7 @@
       "description": "Pro použití tohoto příkazu musíš být ověřen. Pro ověření svého účtu spusť příkaz `/verify`.",
       "title": "Vyžadováno ověření"
     },
-    "successfulUnverification": "Úspěšně bylo zrušeno ověření tvého účtu!",
+    "successfulUnverification": "Ověření účtu bylo úspěšně zrušeno!",
     "successfulVerification": "Nyní jsi ověřen na jméno **{{displayName}}**"
   }
 }

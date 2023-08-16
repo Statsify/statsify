@@ -7,8 +7,8 @@
  */
 
 import { APIModalInteractionResponseCallbackData } from "discord-api-types/v10";
-import { ActionRowBuilder } from "./action-row.builder";
-import { LocalizationString, LocalizeFunction, translateField } from "../localize";
+import { ActionRowBuilder } from "./action-row.builder.js";
+import { LocalizationString, LocalizeFunction, translateField } from "../localize.js";
 import { randomUUID } from "node:crypto";
 
 export class ModalBuilder {

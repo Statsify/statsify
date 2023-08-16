@@ -1,28 +1,62 @@
 {
   "name": "@statsify/discord",
   "version": "0.0.0",
-  "main": "dist/index.js",
   "types": "src/index.ts",
+  "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.28.1",
-    "@statsify/assets": "workspace:^",
-    "@statsify/schemas": "workspace:^",
-    "@statsify/util": "workspace:^",
-    "discord-api-types": "^0.37.25",
+    "@sentry/node": "^7.61.0",
+    "@statsify/api-client": "*",
+    "@statsify/assets": "*",
+    "@statsify/logger": "*",
+    "@statsify/schemas": "*",
+    "@statsify/util": "*",
+    "@swc/helpers": "^0.5.1",
+    "axios": "^1.4.0",
+    "discord-api-types": "^0.37.51",
     "i18next": "^21.10.0",
-    "i18next-fs-backend": "^2.1.1",
+    "i18next-fs-backend": "^2.1.5",
     "reflect-metadata": "^0.1.13",
-    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#commit=62cf5c895ce9287b4517356970fd6771957e43cb",
+    "skia-canvas": "^0.9.30",
+    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
     "@types/i18next-fs-backend": "^1.1.2"
+  },
+  "imports": {
+    "#arguments": {
+      "types": "./src/arguments/index.ts",
+      "default": "./dist/arguments/index.js"
+    },
+    "#command": {
+      "types": "./src/command/index.ts",
+      "default": "./dist/command/index.js"
+    },
+    "#event": {
+      "types": "./src/event/index.ts",
+      "default": "./dist/event/index.js"
+    },
+    "#interaction": {
+      "types": "./src/interaction/index.ts",
+      "default": "./dist/interaction/index.js"
+    },
+    "#messages": {
+      "types": "./src/messages/index.ts",
+      "default": "./dist/messages/index.js"
+    },
+    "#services": {
+      "types": "./src/services/index.ts",
+      "default": "./dist/services/index.js"
+    },
+    "#util/*": {
+      "types": "./src/util/*.ts",
+      "default": "./dist/util/*.js"
+    }
   }
 }

@@ -6,9 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DeepFlatten } from "./flat";
+import { dirname, join } from "node:path";
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { fileURLToPath } from "node:url";
+import type { DeepFlatten } from "./flatten.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export interface Config {
   database: {
@@ -236,17 +239,53 @@ export interface Config {
 
 type FlatConfig = DeepFlatten<Config>;
 
-let cfg: Config;
+async function loadConfig(): Promise<{ default: Config }> {
+  if (process.env.VITEST) {
+    return {
+      default: {
+        database: { mongoUri: "", redisUrl: "" },
+        hypixelApi: { key: "", timeout: 5000 },
+        api: { port: 3000, mediaRoot: "" },
+        discordBot: { publicKey: "", token: "", applicationId: "", testingGuild: "" },
+        supportBot: {
+          createTicketChannel: "",
+          ticketLogsChannel: "",
+          ticketCategory: "",
+          welcomeChannel: "",
+          unverifiedChannel: "",
+          hypixelApiStatusChannel: "",
+          premiumLogsChannel: "",
+          memberRole: "",
+          nitroBoosterRole: "",
+          premiumRole: "",
+          patreonRole: "",
+          netheriteRole: "",
+          emeraldRole: "",
+          diamondRole: "",
+          goldRole: "",
+          ironRole: "",
+          guild: "",
+          publicKey: "",
+          token: "",
+          applicationId: "",
+        },
+        apiClient: { key: "", route: "" },
+        verifyServer: { hostIp: "" },
+        environment: "dev",
+      },
+    };
+  }
 
-const loadConfig = () => {
   if (existsSync(join(__dirname, "../../../config.json"))) {
-    return require(join(__dirname, "../../../config.json"));
+    return import(join(__dirname, "../../../config.json"));
   } else if (existsSync(join(__dirname, "../../../config.js"))) {
-    return require(join(__dirname, "../../../config.js"));
+    return import(join(__dirname, "../../../config.js"));
   } else {
     throw new Error("No config file detected!");
   }
-};
+}
+
+const cfg: Config = await loadConfig().then((c) => c.default);
 
 export interface ConfigOptions<T extends keyof FlatConfig> {
   required?: boolean;
@@ -258,9 +297,7 @@ export const config = <T extends keyof FlatConfig>(
   { required = true, default: defaultValue }: ConfigOptions<T> = {}
 ): FlatConfig[T] => {
   // Don't load the config while testing
-  if (process.env.JEST_WORKER_ID) return defaultValue as FlatConfig[T];
-
-  if (cfg === undefined) cfg = loadConfig();
+  if (process.env.VITEST) return defaultValue as FlatConfig[T];
 
   const value =
     (key as string).split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;

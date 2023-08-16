@@ -6,18 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AppController } from "./app.controller";
-import { AuthModule } from "./auth";
-import { CommandsModule } from "./commands";
-import { GuildModule } from "./guild";
-import { HistoricalModule } from "./historical";
-import { HypixelResourcesModule } from "./hypixel-resources";
+import { AppController } from "./app.controller.js";
+import { AuthModule } from "#auth";
+import { CommandsModule } from "#commands";
+import { GuildModule } from "#guild";
+import { HypixelResourcesModule } from "#hypixel-resources";
 import { Module } from "@nestjs/common";
-import { PlayerModule } from "./player";
-import { RedisModule } from "@nestjs-modules/ioredis";
-import { SkinModule } from "./skin";
+import { PlayerModule } from "#player";
+import { RedisModule } from "#redis";
+import { SessionModule } from "#session";
+import { SkinModule } from "#skin";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
-import { UserModule } from "./user";
+import { UserModule } from "#user";
 import { config } from "@statsify/util";
 
 @Module({
@@ -27,6 +27,8 @@ import { config } from "@statsify/util";
         uri: config("database.mongoUri"),
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        maxPoolSize: 200,
+        minPoolSize: 20,
       }),
     }),
     RedisModule.forRoot({
@@ -38,7 +40,7 @@ import { config } from "@statsify/util";
     GuildModule,
     HypixelResourcesModule,
     SkinModule,
-    HistoricalModule,
+    SessionModule,
     AuthModule,
     UserModule,
     CommandsModule,

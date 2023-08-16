@@ -6,18 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { Field } from "#metadata";
+import { GameModes, type IGameModes } from "#game";
 import {
   GamePrefix,
   createPrefixProgression,
   defaultPrefix,
   getFormattedPrefix,
   rainbow,
-} from "../prefixes";
-import { Progression } from "../../../progression";
+} from "#prefixes";
+import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
+import type { APIData } from "@statsify/util";
 
 export const WALLS_MODES = new GameModes([{ api: "overall" }]);
 
@@ -26,7 +26,7 @@ export type WallsModes = IGameModes<typeof WALLS_MODES>;
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },
   { fmt: (n) => `§7[${n}]`, req: 20 },
-  { fmt: (n) => `§6[${n}]`, req: 50 },
+  { fmt: (n) => `§e[${n}]`, req: 50 },
   { fmt: (n) => `§a[${n}]`, req: 100 },
   { fmt: (n) => `§2[${n}]`, req: 200 },
   { fmt: (n) => `§9[${n}]`, req: 300 },

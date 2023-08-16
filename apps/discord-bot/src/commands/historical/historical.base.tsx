@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Container from "typedi";
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
@@ -14,7 +13,6 @@ import {
   BLITZSG_MODES,
   BRIDGE_MODES,
   BUILD_BATTLE_MODES,
-  BlitzSGKit,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   GENERAL_MODES,
@@ -41,41 +39,43 @@ import {
   ApiService,
   Command,
   CommandContext,
-  Page,
+  EmbedBuilder,
+  IMessage,
   PaginateService,
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { ArcadeProfile } from "../arcade/arcade.profile";
-import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile";
-import { BedWarsProfile } from "../bedwars/bedwars.profile";
-import { BlitzSGProfile } from "../blitzsg/blitzsg.profile";
-import { BridgeProfile } from "../duels/bridge.profile";
-import { BuildBattleProfile } from "../buildbattle/buildbattle.profile";
-import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile";
-import { DuelsProfile } from "../duels/duels.profile";
-import { GamesWithBackgrounds, mapBackground } from "#constants";
-import { HistoricalGeneralProfile } from "../general/historical-general.profile";
-import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
-import { MegaWallsProfile } from "../megawalls/megawalls.profile";
-import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile";
-import { PaintballProfile } from "../paintball/paintball.profile";
-import { PitProfile } from "../pit/pit.profile";
-import { QuakeProfile } from "../quake/quake.profile";
-import { SkyWarsProfile } from "../skywars/skywars.profile";
-import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile";
-import { SpeedUHCProfile } from "../speeduhc/speeduhc.profile";
-import { TNTGamesProfile } from "../tntgames/tntgames.profile";
-import { TurboKartRacersProfile } from "../turbokartracers/turbokartracers.profile";
-import { UHCProfile } from "../uhc/uhc.profile";
-import { VampireZProfile } from "../vampirez/vampirez.profile";
-import { WallsProfile } from "../walls/walls.profile";
-import { WarlordsProfile } from "../warlords/warlords.profile";
-import { WoolWarsProfile } from "../woolwars/woolwars.profile";
-import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
-import { render } from "@statsify/rendering";
-import type { BaseProfileProps } from "../base.hypixel-command";
+import { ArcadeProfile } from "../arcade/arcade.profile.js";
+import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile.js";
+import { BedWarsProfile } from "../bedwars/bedwars.profile.js";
+import { BlitzSGProfile, filterBlitzKits } from "../blitzsg/blitzsg.profile.js";
+import { BridgeProfile } from "../duels/bridge.profile.js";
+import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
+import { Container } from "typedi";
+import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
+import { DuelsProfile } from "../duels/duels.profile.js";
+import { GamesWithBackgrounds } from "#constants";
+import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
+import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
+import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile.js";
+import { PaintballProfile } from "../paintball/paintball.profile.js";
+import { PitProfile } from "../pit/pit.profile.js";
+import { QuakeProfile } from "../quake/quake.profile.js";
+import { STATUS_COLORS } from "@statsify/logger";
+import { SkyWarsProfile } from "../skywars/skywars.profile.js";
+import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
+import { SpeedUHCProfile } from "../speeduhc/speeduhc.profile.js";
+import { TNTGamesProfile } from "../tntgames/tntgames.profile.js";
+import { TurboKartRacersProfile } from "../turbokartracers/turbokartracers.profile.js";
+import { UHCProfile } from "../uhc/uhc.profile.js";
+import { VampireZProfile } from "../vampirez/vampirez.profile.js";
+import { WallsProfile } from "../walls/walls.profile.js";
+import { WarlordsProfile } from "../warlords/warlords.profile.js";
+import { WoolWarsProfile } from "../woolwars/woolwars.profile.js";
+import { getAssetPath } from "@statsify/assets";
+import { readFileSync } from "node:fs";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { HistoricalType } from "@statsify/api-client";
 
 const args = [PlayerArgument];
 
@@ -127,19 +127,7 @@ export class HistoricalBase {
       context,
       BLITZSG_MODES,
       (base, mode) => <BlitzSGProfile {...base} mode={mode} />,
-      (player, modes) => {
-        const { blitzsg } = player.stats;
-        const [overall, ...kits] = modes;
-
-        const filteredKits = kits
-          .sort(
-            (a, b) =>
-              (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp
-          )
-          .slice(0, 24);
-
-        return [overall, ...filteredKits];
-      }
+      filterBlitzKits
     );
   }
 
@@ -291,74 +279,24 @@ export class HistoricalBase {
     ));
   }
 
-  private async run<T extends GamesWithBackgrounds>(
-    context: CommandContext,
-    modes: GameModes<T>,
-    getProfile: (base: BaseProfileProps, mode: GameMode<T>) => JSX.Element,
-    filterModes?: (player: Player, modes: GameMode<T>[]) => GameMode<T>[]
-  ) {
-    const user = context.getUser();
+  protected run<T extends GamesWithBackgrounds>(
+    _context: CommandContext,
+    _modes: GameModes<T>,
+    _getProfile: (base: BaseProfileProps, mode: GameMode<T>) => JSX.Element,
+    _filterModes?: (player: Player, modes: GameMode<T>[]) => GameMode<T>[]
+  ): IMessage {
+    const preview = {
+      name: "preview.png",
+      data: readFileSync(getAssetPath("previews/session.png")),
+      type: "image/png",
+    };
 
-    const player = await this.apiService.getPlayerHistorical(
-      context.option("player"),
-      this.time,
-      user
-    );
+    const embed = new EmbedBuilder()
+      .color(STATUS_COLORS.info)
+      .title(t => t("historical.disabledWarning.title"))
+      .description(t => t("historical.disabledWarning.description"))
+      .image(`attachment://${preview.name}`);
 
-    const [logo, skin, badge] = await Promise.all([
-      getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid),
-      this.apiService.getUserBadge(player.uuid),
-    ]);
-
-    const allModes = modes.getModes();
-    const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
-
-    const isNotLastHistorical = [
-      HistoricalTimes.DAILY as HistoricalType,
-      HistoricalTimes.WEEKLY as HistoricalType,
-      HistoricalTimes.MONTHLY as HistoricalType,
-    ].includes(this.time);
-
-    const pages: Page[] = displayedModes.map((mode) => ({
-      label: mode.formatted,
-      generator: async (t) => {
-        const background = await getBackground(...mapBackground(modes, mode.api));
-
-        let content = player.isNew
-          ? `${t("historical.new", {
-              displayName: this.apiService.emojiDisplayName(t, player.displayName),
-            })}\n`
-          : undefined;
-
-        if (isNotLastHistorical)
-          content = (content ?? "") + t("historical.reset", { time: player.nextReset });
-
-        const profile = getProfile(
-          {
-            player,
-            skin,
-            background,
-            logo,
-            t,
-            user,
-            badge,
-            time: this.time,
-          },
-          mode
-        );
-
-        const canvas = render(profile, getTheme(user));
-        const buffer = await canvas.toBuffer("png");
-
-        return {
-          content,
-          files: [{ name: `${this.time}.png`, data: buffer, type: "image/png" }],
-          attachments: [],
-        };
-      },
-    }));
-
-    return this.paginateService.paginate(context, pages);
+    return { embeds: [embed], files: [preview] };
   }
 }

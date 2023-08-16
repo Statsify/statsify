@@ -8,15 +8,12 @@
 
 import axios, { AxiosInstance } from "axios";
 import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
-import { Server } from "./server.interface";
-import { ServerArgument } from "./server.argument";
-import { ServerProfile } from "./server.profile";
-import { getBackground, getServerMappings } from "@statsify/assets";
+import { type Server, type ServerMappingsServer, getServerBackground, getServerMappings } from "./server.util.js";
+import { ServerArgument } from "./server.argument.js";
+import { ServerProfile } from "./server.profile.js";
 import { getTheme } from "#themes";
 import { loadImage } from "skia-canvas";
 import { render } from "@statsify/rendering";
-
-const servers = getServerMappings();
 
 @Command({
   description: (t) => t("commands.server"),
@@ -24,10 +21,15 @@ const servers = getServerMappings();
 })
 export class ServerCommand {
   private readonly axios: AxiosInstance;
+  private mappings: ServerMappingsServer[];
 
   public constructor() {
     this.axios = axios.create({
       baseURL: "https://api.mcsrvstat.us/2/",
+    });
+
+    getServerMappings().then((mappings) => {
+      this.mappings = mappings;
     });
   }
 
@@ -39,7 +41,7 @@ export class ServerCommand {
 
     const [serverLogo, background] = await Promise.all([
       loadImage(server.icon),
-      getBackground("minecraft", "overall"),
+      getServerBackground(server.mapping),
     ]);
 
     const canvas = render(
@@ -60,21 +62,22 @@ export class ServerCommand {
   private async getServer(tag: string) {
     tag = tag.toLowerCase();
 
-    const mappedServer = servers.find(
+    const mappedServer = this.mappings.find(
       (s) =>
         s.name.toLowerCase() === tag ||
         s.addresses.find((address) => tag.endsWith(address))
     );
 
     const server = await this.axios
-      .get<Server>(mappedServer?.addresses?.[0] ?? tag)
+      .get<Server>(mappedServer?.primaryAddress ?? tag)
       .then((res) => res.data)
       .catch(() => null);
 
     if (!server || !server.online) throw new ErrorMessage("errors.invalidServer");
 
-    server.hostname = mappedServer?.addresses?.[0] ?? server.hostname;
+    server.hostname = mappedServer?.primaryAddress ?? server.hostname;
     server.name = mappedServer?.name ?? server.hostname;
+    server.mapping = mappedServer;
 
     return server;
   }

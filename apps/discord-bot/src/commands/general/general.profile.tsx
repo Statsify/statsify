@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseProfileProps } from "../base.hypixel-command";
 import { Container, Footer, Header, If, Table } from "#components";
 import { DateTime } from "luxon";
 import { FormattedGame, Guild, PlayerStatus } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 interface GeneralProfileHeaderBodyProps {
   guild?: Guild;
@@ -62,7 +62,6 @@ const GeneralProfileHeaderBody = ({
 
 export interface GeneralProfileProps extends BaseProfileProps {
   guild?: Guild;
-  friends?: number;
 }
 
 export const GeneralProfile = ({
@@ -74,7 +73,6 @@ export const GeneralProfile = ({
   badge,
   user,
   guild,
-  friends = 0,
   time,
 }: GeneralProfileProps) => {
   const { general, challenges, quests } = player.stats;
@@ -116,7 +114,11 @@ export const GeneralProfile = ({
         </Table.tr>
         <Table.tr>
           <Table.td title={t("stats.karma")} value={t(general.karma)} color="§d" />
-          <Table.td title={t("stats.friends")} value={t(friends)} color="§d" />
+          <Table.td
+            title={t("stats.rewardStreak")}
+            value={t(general.currentRewardStreak)}
+            color="§d"
+          />
           <Table.td
             title={t("stats.giftsSent")}
             value={t(general.giftsSent)}

@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Переглянути ваш список друзів на Hypixel",
     "game-counts": "Переглянути поточні кількості гравців у іграх Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Згенерувати список можливих відповідей у Guess The Build на основі даної підказки",
@@ -83,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "Перегляньте статистику ваших сеансів {{name}}",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "Переглянути вашу статистику {{name}}",
     "invite": "Запросити Statsify",
     "language": "Змінити мову, якою ви бачите відповіді",
@@ -120,7 +144,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Переглянути своїх спільних друзів з іншим гравцем на Hypixel",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Переглянути творців та учасників Statsify",
@@ -177,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "Переглянути чиїсь нещодавні ігри Hypixel",
-    "reset": "Скинути вашу історичну статистику",
     "server": "Переглянути статус сервера Minecraft",
     "skin": "Переглянути чийсь скін Minecraft",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -214,7 +236,9 @@
     "watchdog": "Переглянути кількість банів Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "reset-historical": "Скинути вашу історичну статистику",
+    "reset-session": "Скинути статистику сеансу"
   },
   "config": {
     "badge": {
@@ -282,9 +306,9 @@
         "description": "Statsify підтримує більшість ігор, що пропонуються на Hypixel. Щоб перевірити статистику у грі, виконайте команду '/[game]'. Наприклад, ви можете запустити '/bedwars', щоб перевірити статистику BedWars.",
         "title": "Ігри"
       },
-      "historical": {
-        "description": "Statsify дозволяє перевіряти статистику щодня, щотижня та щомісяця через '/daily', '/weekly' та '/monthly'. Якщо ви пропустили скидання, ви можете переглянути його, запустивши '/yesterday', '/lastweek', та '/lastmonth'. ",
-        "title": "Історія"
+      "session": {
+        "description": "Statsify дозволяє вам дивитися Вашу статистику так, ніби ви почали грати сьогодні через `/session`. За допомогою `/reset session` ви можете скинути Вашу статистику сесії та почати нову сесію.",
+        "title": "Сесії"
       },
       "leaderboards": {
         "description": "Statsify пропонує тисячі таблиць лідерів через команду '/leaderboard'. Використайте '/leaderboard', потім виберіть ігровий режим та виберіть таблицю лідерів. Ви можете натиснути кнопку пошуку для пошуку певного гравця або позиції. Ви також можете натиснути кнопки вгору та вниз, щоб переглянути більше сторінок.",
@@ -362,6 +386,10 @@
       "description_discordId": "Гравець з Discord id `{{tag}}` не може бути знайдений!",
       "title": "Недійсний Гравець"
     },
+    "invalidSession": {
+      "title": "Недійсна сесія",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "{{time}} Не відповідає формату 'h:mm a'. Введіть час у форматі, подібному до '12:00 PM' або '1:00 AM'.",
       "title": "Неприпустимий час скидання"
@@ -408,7 +436,7 @@
       "title": "Відсутня верифікація"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** не є **підтвердженим**. Він повинний використати `/verify`, щоб підтвердити свій обліковий запис.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -424,17 +452,9 @@
       "description": "**{{username}}** не має плащів!",
       "title": "Відсутній плащ"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** не має друзів $t(emojis:sad)! :(",
-      "title": "Друзів не знайдено"
-    },
     "noGTBSolutions": {
       "description": "Ми не змогли знайти рішення для наданої підказки!",
       "title": "Немає рішень Guess The Build"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** і **{{displayNameTwo}}** не мають спільних друзів!",
-      "title": "Немає спільних"
     },
     "noRankings": {
       "description": "**{{displayName}}** не має рейтингу!",
@@ -494,7 +514,13 @@
     "new": "**{{displayName}}** історичну статистику було вперше перевірено на Statsify. Тепер їхня статистика оновлюватиметься щодня в цей час.",
     "reset": "$t(emojis:clock) **Скидання** <t:{{time}}:R>",
     "resetButton": "Натисніть, щоб скинути",
-    "setResetTime": "Установіть час скидання на <t:{{time}}:t>."
+    "setResetTime": "Установіть час скидання на <t:{{time}}:t>.",
+    "newSession": "**{{displayName}}** Статистика сесії була вперше перевірена за допомогою Statsify.",
+    "setSessionReset": "Успішно скинуто статистику сеансу.",
+    "disabledWarning": {
+      "title": "Історичні команди більше не доступні",
+      "description": "Нові [Умови API] Hypixel(https://developer.hypixel.net/policies/) більше не дозволяють \"постійне отримання даних гравця\", що означає, що Statsify більше не зможе відстежувати статистику гравців щодня.\n\nНатомість ви можете спробувати запустити сесію використовуючи `/session`. Коли ви починаєте сесію, бот буде автоматично відстежувати вашу статистику від моменту коли ви використовуєте команду до моменту коли ви використаєте цю команду ще раз. Щоб скинути вашу сесію ви можете використати `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -567,7 +593,7 @@
     "ended": "Закінчено",
     "endurance": "Витривалість",
     "event-level": "Рівень події",
-    "event-exp": "Event EXP",
+    "event-exp": "Досвід події",
     "exp": "EXP",
     "expGained": "EXP Отримано",
     "extraUltimates": "Додаткові ультимативні крафти",
@@ -581,7 +607,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Часу в Силовому полі",
     "fortune": "Фортуна",
-    "friends": "Друзів",
     "game": "Гра",
     "game-total": "{{game}} Всього",
     "gamesPlayed": "Ігор Зіграно",
@@ -696,6 +721,7 @@
     "ranksGifted": "Рангів подаровано",
     "rebelKills": "Вбивств за атакуючого",
     "renown": "Слави",
+    "rewardStreak": "Серія винагород",
     "roundWins": "Перемог у раундах",
     "rune": "Руна",
     "score": "Рахунок",
@@ -745,7 +771,7 @@
     "woolPlaced": "Вовни розміщено",
     "zombieKills": "Зомбі вбито",
     "potionsBrewed": "Зіллів зварено",
-    "positions": "Positions",
+    "positions": "Позиції",
     "powerupsCollected": "Зібрано бонусів",
     "roundsCompleted": "Раунди завершено",
     "totalExp": "Усього досвіду"
@@ -755,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Натисніть **[here] (<https://statsify.net/invite>)**, щоб запросити Statsify на свій сервер!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** пропонує додаткові можливості, такі як персоналізовані піктограми профілю. Знайдіть повний перелік переваг **[here](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Перегляньте свої найвищі позиції в таблиці лідерів за допомогою**[Statsify Premium](<https://statsify.net/premium>)**, використовуючи `/rankings`",
-    "verify": "$t(emojis:check) Запустіть `/verify` для виконання команд без вставки імені користувача та отримайте **перезаряджання на 10% нижче**"
+    "verify": "$t(emojis:check) Запустіть `/verify` для виконання команд без вставки імені користувача та отримайте **перезаряджання на 10% нижче**",
+    "resetSession": "$t(emojis:reset) Ви можете **скинути** вашу сесію за допомогою команди `/reset session`.",
+    "sessions": "$t(emojis:reset) Відстежуйте свою статистику за допомогою сесій та `/session`."
   },
   "unknown": "Невідомо",
   "verification": {
@@ -768,7 +796,7 @@
       "title": "Невірний код прив'язки"
     },
     "noCode": {
-      "description": "**Як прив'язати**\n`1.` Відкрийте Minecraft та перейдіть до списку серверів\n`2.` Підключіться до `verify.stasify.net`, і скопіюйте код, що відображається\n`3.` Поверніться до discord і запустіть `/verify code:XXXX`",
+      "description": "**Як прив'язати**\n`1.` Відкрийте Minecraft та перейдіть до списку серверів\n`2.` Підключіться до `verify.statsify.net`, і скопіюйте код, що відображається\n`3.` Поверніться до discord і запустіть `/verify code:XXXX`",
       "title": "Відсутній код прив'язки"
     },
     "notVerified": {

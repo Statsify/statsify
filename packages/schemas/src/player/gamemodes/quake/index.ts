@@ -6,18 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { Field } from "#metadata";
+import { GameModes, type IGameModes } from "#game";
 import {
   GamePrefix,
   createPrefixProgression,
   defaultPrefix,
   getFormattedPrefix,
-} from "../prefixes";
-import { Progression } from "../../../progression";
-import { QuakeMode } from "./mode";
+} from "#prefixes";
+import { Progression } from "#progression";
+import { QuakeMode } from "./mode.js";
 import { deepAdd } from "@statsify/math";
+import type { APIData } from "@statsify/util";
 
 export const QUAKE_MODES = new GameModes([
   { api: "overall" },
@@ -138,4 +138,4 @@ export class Quake {
   }
 }
 
-export * from "./mode";
+export * from "./mode.js";

@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Color } from "../color";
-import { Field } from "../metadata";
+import { Color } from "#color";
+import { Field } from "#metadata";
 import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
-import { PlayerSocials } from "./socials";
-import { PlayerStats } from "./stats";
-import { PlayerStatus } from "./status";
-import { PlayerUtil } from "./util";
+import { PlayerSocials } from "./socials.js";
+import { PlayerStats } from "./stats.js";
+import { PlayerStatus } from "./status.js";
+import { PlayerUtil } from "./util.js";
+import type { APIData } from "@statsify/util";
 
 @ModelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class Player {
@@ -66,23 +66,9 @@ export class Player {
   @Field({
     leaderboard: { enabled: false },
     store: { required: false, serialize: false, deserialize: false },
-    docs: { description: "The minute the player's historical stats reset" },
+    docs: { description: "The time the player's session stats last reset" },
   })
-  public resetMinute?: number;
-
-  @Field({
-    leaderboard: { enabled: false },
-    store: { required: false, serialize: false, deserialize: false },
-    docs: { description: "The time the player's historical stats reset" },
-  })
-  public nextReset?: number;
-
-  @Field({
-    leaderboard: { enabled: false },
-    store: { required: false, serialize: false, deserialize: false },
-    docs: { description: "The time the player's historical stats last reset" },
-  })
-  public lastReset?: number;
+  public sessionReset?: number;
 
   @Field({ store: { required: false, store: false } })
   public cached?: boolean;
@@ -113,13 +99,11 @@ export class Player {
 
     //These will all be filled in by a service
     this.expiresAt = 0;
-    this.resetMinute = 0;
-    this.nextReset = 0;
-    this.lastReset = 0;
   }
 }
 
-export * from "./gamemodes";
-export * from "./socials";
-export * from "./stats";
-export * from "./status";
+export * from "./gamemodes/index.js";
+export * from "./socials.js";
+export * from "./stats.js";
+export * from "./status.js";
+export { rankMap } from "./util.js";

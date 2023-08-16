@@ -18,7 +18,7 @@ import {
   TextArgument,
 } from "@statsify/discord";
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
-import { DemoProfile } from "./demo.profile";
+import { DemoProfile } from "./demo.profile.js";
 import {
   User,
   UserBoxes,

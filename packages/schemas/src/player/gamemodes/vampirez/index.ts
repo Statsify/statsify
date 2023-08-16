@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
-import { VampireZHuman, VampireZVampire } from "./life";
+import { Field } from "#metadata";
+import { GameModes, type IGameModes } from "#game";
+import { VampireZHuman, VampireZVampire } from "./life.js";
 import { add } from "@statsify/math";
+import type { APIData } from "@statsify/util";
 
 export const VAMPIREZ_MODES = new GameModes([{ api: "human" }, { api: "vampire" }]);
 export type VampireZModes = IGameModes<typeof VAMPIREZ_MODES>;
@@ -61,4 +61,4 @@ export class VampireZ {
   }
 }
 
-export * from "./life";
+export * from "./life.js";

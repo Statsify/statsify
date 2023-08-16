@@ -6,5 +6,5 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./font-loader.service";
-export * from "./mojang-api.service";
+export * from "./font-loader.service.js";
+export * from "./mojang-api.service.js";

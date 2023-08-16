@@ -9,31 +9,27 @@
 import * as Sentry from "@sentry/node";
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
-  CurrentHistoricalType,
-  GuildQuery,
-  HistoricalType,
-  HypixelCache,
-  LeaderboardQuery,
-} from "./types";
-import {
   DeletePlayerResponse,
   GetCommandUsageResponse,
-  GetFriendsResponse,
   GetGamecountsResponse,
   GetGuildResponse,
-  GetHistoricalResponse,
   GetKeyResponse,
   GetPlayerResponse,
   GetPlayerSearchResponse,
   GetRecentGamesResponse,
+  GetSessionResponse,
   GetStatusResponse,
   GetUserResponse,
   GetWatchdogResponse,
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
   PutUserBadgeResponse,
-} from "./responses";
-import { GetHistoricalTimesResponse } from "./responses/get.historical-times.response";
+} from "#responses";
+import {
+  GuildQuery,
+  HypixelCache,
+  LeaderboardQuery,
+} from "./constants.js";
 import { UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { loadImage } from "@statsify/rendering";
@@ -68,21 +64,21 @@ export class ApiService {
   }
 
   public getCachedPlayer(tag: string, cache: HypixelCache) {
-    return this.requestKey<GetPlayerResponse, "player">(`/player`, "player", {
+    return this.requestKey<GetPlayerResponse, "player">("/player", "player", {
       player: tag,
       cache,
     });
   }
 
   public deletePlayer(tag: string) {
-    return this.request<DeletePlayerResponse>(`/player`, { player: tag }, "DELETE")
+    return this.request<DeletePlayerResponse>("/player", { player: tag }, "DELETE")
       .then(() => true)
       .catch(() => false);
   }
 
   public getRecentGames(tag: string) {
     return this.requestKey<GetRecentGamesResponse, "recentGames">(
-      `/player/recentgames`,
+      "/player/recentgames",
       "recentGames",
       {
         player: tag,
@@ -91,13 +87,7 @@ export class ApiService {
   }
 
   public getStatus(tag: string) {
-    return this.requestKey<GetStatusResponse, "status">(`/player/status`, "status", {
-      player: tag,
-    });
-  }
-
-  public getFriends(tag: string) {
-    return this.requestKey<GetFriendsResponse, "data">(`/player/friends`, "data", {
+    return this.requestKey<GetStatusResponse, "status">("/player/status", "status", {
       player: tag,
     });
   }
@@ -124,31 +114,16 @@ export class ApiService {
     );
   }
 
-  public getHistoricalLeaderboard(
-    time: CurrentHistoricalType,
-    field: string,
-    input: string | number,
-    type: LeaderboardQuery
-  ): Promise<PostLeaderboardResponse | null> {
-    return this.request<PostLeaderboardResponse>("/historical/leaderboards", {}, "POST", {
-      body: {
-        time,
-        field,
-        [type === LeaderboardQuery.INPUT ? "player" : type]: input,
-      },
-    });
-  }
-
   public getPlayerAutocomplete(query: string) {
     return this.requestKey<GetPlayerSearchResponse, "players">(
-      `/player/search`,
+      "/player/search",
       "players",
       { query }
     );
   }
 
   public getGuild(tag: string, type: GuildQuery) {
-    return this.requestKey<GetGuildResponse, "guild">(`/guild`, "guild", {
+    return this.requestKey<GetGuildResponse, "guild">("/guild", "guild", {
       guild: tag,
       type,
     });
@@ -180,21 +155,21 @@ export class ApiService {
 
   public async getWatchdog() {
     return this.requestKey<GetWatchdogResponse, "watchdog">(
-      `/hypixelresources/watchdog`,
+      "/hypixelresources/watchdog",
       "watchdog"
     );
   }
 
   public async getGamecounts() {
     return this.requestKey<GetGamecountsResponse, "gamecounts">(
-      `/hypixelresources/gamecounts`,
+      "/hypixelresources/gamecounts",
       "gamecounts"
     );
   }
 
   public async getPlayerHead(uuid: string, size?: number) {
     return this.requestImage(
-      isProduction ? `https://api.statsify.net/skin/head` : "/skin/head",
+      isProduction ? "https://api.statsify.net/skin/head" : "/skin/head",
       {
         uuid,
         size,
@@ -203,60 +178,62 @@ export class ApiService {
   }
 
   public getPlayerSkin(uuid: string) {
-    return this.requestImage(isProduction ? `https://api.statsify.net/skin` : "/skin", {
+    return this.requestImage(isProduction ? "https://api.statsify.net/skin" : "/skin", {
       uuid,
     });
   }
 
-  public getPlayerHistorical(tag: string, type: HistoricalType) {
-    return this.requestKey<GetHistoricalResponse, "player">(`/historical`, "player", {
+  public getPlayerSession(tag: string, userUuid?: string) {
+    return this.requestKey<GetSessionResponse, "player">("/session", "player", {
       player: tag,
-      type,
+      userUuid,
     });
   }
 
-  public resetPlayerHistorical(tag: string, resetMinute?: number) {
+  public resetPlayerSession(
+    tag: string
+  ) {
     return this.request<GetPlayerResponse>(
-      `/historical`,
-      { player: tag, resetMinute },
+      "/session",
+      { player: tag },
       "DELETE"
     );
   }
 
   public getKey() {
-    return this.requestKey<GetKeyResponse, "key">(`/auth/key`, "key");
+    return this.requestKey<GetKeyResponse, "key">("/auth/key", "key");
   }
 
   public getUser(tag: string) {
-    return this.request<GetUserResponse>(`/user`, { tag })
+    return this.request<GetUserResponse>("/user", { tag })
       .then((data) => data.user ?? null)
       .catch(() => null);
   }
 
   public updateUser(tag: string, update: UpdateUser) {
-    return this.request<GetUserResponse>(`/user`, { tag }, "PATCH", { body: update })
+    return this.request<GetUserResponse>("/user", { tag }, "PATCH", { body: update })
       .then((data) => data.user ?? null)
       .catch(() => null);
   }
 
   public getUserBadge(tag: string) {
-    return this.requestImage(`/user/badge`, { tag }).catch(() => undefined);
+    return this.requestImage("/user/badge", { tag }).catch(() => undefined);
   }
 
   public updateUserBadge(tag: string, badge: Buffer) {
-    return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, "PUT", {
+    return this.request<PutUserBadgeResponse>("user/badge", { tag }, "PUT", {
       body: badge,
-      headers: { "Content-Type": "image/png" },
+      headers: { "Content-Type": "image/png" } as AxiosRequestHeaders,
     });
   }
 
   public deleteUserBadge(tag: string) {
-    return this.request<PutUserBadgeResponse>(`user/badge`, { tag }, "DELETE");
+    return this.request<PutUserBadgeResponse>("user/badge", { tag }, "DELETE");
   }
 
   public verifyUser(codeOrUuid: string, id: string) {
     return this.request<GetUserResponse>(
-      `/user`,
+      "/user",
       { [codeOrUuid.length >= 32 ? "uuid" : "code"]: codeOrUuid, id },
       "PUT"
     )
@@ -265,29 +242,21 @@ export class ApiService {
   }
 
   public unverifyUser(tag: string) {
-    return this.request<GetUserResponse>(`/user`, { tag }, "DELETE")
+    return this.request<GetUserResponse>("/user", { tag }, "DELETE")
       .then((data) => data.user ?? null)
       .catch(() => null);
   }
 
   public getCommandUsage() {
     return this.requestKey<GetCommandUsageResponse, "usage">(
-      `/commands`,
+      "/commands",
       "usage",
       {}
     ).catch(() => null);
   }
 
-  public getHistoricalTimes() {
-    return this.requestKey<GetHistoricalTimesResponse, "times">(
-      `/historical/times`,
-      "times",
-      {}
-    ).catch(() => null);
-  }
-
   public incrementCommand(command: string) {
-    return this.request(`/commands`, { command }, "PATCH");
+    return this.request("/commands", { command }, "PATCH");
   }
 
   private async requestKey<T, K extends keyof T>(

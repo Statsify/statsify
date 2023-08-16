@@ -13,14 +13,12 @@ import {
   ApiOperation,
   ApiTags,
 } from "@nestjs/swagger";
-import { Auth } from "../auth/auth.decorator";
-import { AuthRole } from "../auth";
+import { Auth, AuthRole } from "#auth";
 import { Body, Controller, Delete, Get, Post, Query } from "@nestjs/common";
-import { CachedPlayerDto, PlayerGroupDto, UpdatePlayerDto } from "../dtos";
+import { CachedPlayerDto, PlayerDto, PlayerGroupDto, UpdatePlayerDto } from "#dtos";
 import {
   DeletePlayerResponse,
   ErrorResponse,
-  GetFriendsResponse,
   GetPlayerResponse,
   GetRecentGamesResponse,
   GetStatusResponse,
@@ -28,8 +26,8 @@ import {
   RecentGamesNotFoundException,
   StatusNotFoundException,
 } from "@statsify/api-client";
-import { PlayerDto } from "../dtos/player.dto";
-import { PlayerService } from "./player.service";
+
+import { PlayerService } from "./player.service.js";
 
 @Controller("/player")
 @ApiTags("Player")
@@ -109,21 +107,6 @@ export class PlayerController {
     return {
       success: !!status,
       status,
-    };
-  }
-
-  @ApiOperation({ summary: "Get the Friends of a Player" })
-  @ApiOkResponse({ type: GetFriendsResponse })
-  @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiNotFoundResponse({ type: PlayerNotFoundException })
-  @Auth({ weight: 10 })
-  @Get("/friends")
-  public async getFriends(@Query() { player: tag, cache }: CachedPlayerDto) {
-    const friends = await this.playerService.getFriends(tag, cache);
-
-    return {
-      success: !!friends,
-      data: friends,
     };
   }
 }

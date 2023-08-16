@@ -9,13 +9,14 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
   IsBoolean,
+  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
   MinLength,
   ValidateNested,
 } from "class-validator";
-import { UserFooter, UserTheme } from "@statsify/schemas";
+import { Transform } from "class-transformer";
 
 export class UserDto {
   @ApiProperty({ description: "Discord ID or UUID" })
@@ -25,6 +26,30 @@ export class UserDto {
   public tag: string;
 }
 
+class UserTheme {
+  @IsOptional()
+  @IsString()
+  public font?: string;
+
+  @IsOptional()
+  @IsString()
+  public palette?: string;
+
+  @IsOptional()
+  @IsString()
+  public boxes?: string;
+}
+
+class UserFooter {
+  @IsOptional()
+  @IsString()
+  public message?: string;
+
+  @IsOptional()
+  @IsNumber()
+  public icon?: number;
+}
+
 export class UpdateUserDto {
   @IsBoolean()
   @IsOptional()
@@ -32,10 +57,20 @@ export class UpdateUserDto {
 
   @IsOptional()
   @ValidateNested()
+  @Transform((params) => {
+    const theme = new UserTheme();
+    Object.assign(theme, params.value);
+    return theme;
+  })
   public theme?: UserTheme;
 
   @IsOptional()
   @ValidateNested()
+  @Transform((params) => {
+    const footer = new UserFooter();
+    Object.assign(footer, params.value);
+    return footer;
+  })
   public footer?: UserFooter;
 
   @IsString()

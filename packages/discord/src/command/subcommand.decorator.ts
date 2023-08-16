@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { SubCommandMetadata, SubCommandOptions } from "./command.interface";
+import type { SubCommandMetadata, SubCommandOptions } from "./command.interface.js";
 
 export function SubCommand(options: SubCommandOptions): MethodDecorator {
   return (target, propertyKey) => {

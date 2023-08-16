@@ -9,7 +9,7 @@
     "mojang-player": "Một tên Minecraft hoặc UUID",
     "number": "Một con số",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard",
+    "player-leaderboard": "Chọn một bảng xếp hạng",
     "reason": "The reason for closing the support ticket",
     "server": "Một tên máy chủ Minecraft hoặc một IP máy chủ",
     "tags-content": "The content of the tag",
@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Xem danh sách bạn bè ở Hypixel của bạn",
     "game-counts": "Xem số trò chơi hiện tại ở Hypixel",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Tạo ra một danh sách về khả năng đưa ra câu trả lời từ những gợi ý đã đưa trong Guess The Build",
@@ -83,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "View your {{name}} session stats",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "Xem thông tin {{name}} của bạn",
     "invite": "Mời Statsify",
     "language": "Thay đổi ngôn ngữ mà bạn nhìn thấy",
@@ -94,7 +118,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-command": "Xem bảng xếp hạng {{name}}",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -120,7 +144,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Xem những người bạn chung với người khác ở Hypixel của bạn",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Xem những người sáng tác và những người đóng góp cho Statsify",
@@ -177,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "Xem những trò chơi gần đây của ai đó trong Hypixel",
-    "reset": "Cài lại thông tin lịch sử của bạn",
     "server": "Xem trạng thái của máy chủ minecraft",
     "skin": "Xem nhân vật Minecraft của một ai đó",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -214,7 +236,9 @@
     "watchdog": "Xem số lượng mà Hypixel Watchdog đã ban",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "reset-historical": "Reset your historical stats",
+    "reset-session": "Reset your session stats"
   },
   "config": {
     "badge": {
@@ -282,9 +306,9 @@
         "description": "Statsify hỗ trợ hầu hết các trò chơi có trên Hypixel. Để kiểm tra thông tin của bạn trong một trò chơi, sài lệnh `/[game]`. Ví dụ bạn có thể sài `/bedwars` để kiểm tra thông tin về trò chơi BedWars của bạn.",
         "title": "Những trò chơi"
       },
-      "historical": {
-        "description": "Statsify giúp bạn kiểm tra thông tin hằng ngày, hằng tuần, và hằng tháng qua câu lệnh `/daily`, `/weekly` và `/monthly`. Nếu như bạn lỡ quên bạn có thể xem lại bằng cách sài `/yesterday`, `/lastweek`, và `/lastmonth`. ",
-        "title": "Lịch sử"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify đưa ra hằng nghìn bảng xếp hạng qua câu lệnh `/leaderboard`. Sài `/leaderboard`, sau đó chọn chế độ trò chơi, và chọn một bảng xếp hạng để xem. Bạn có thể ấn vô nút tìm kiếm để tìm một người chơi hoặc vị trí nhất định. Bạn cũng có thể ấn nút lên hoặc xuống để xem thêm trang khác.",
@@ -362,6 +386,10 @@
       "description_discordId": "Một người chơi với mã discord của `{{tag}}` không thể tìm thấy!",
       "title": "Người chơi không hợp lệ"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` không giống với format `h:mm a`. Hãy nhập thời gian tương đồng với format như `12:00 PM` hoặc 1:00 AM`.",
       "title": "Đặt lại thời gian sai"
@@ -408,7 +436,7 @@
       "title": "Người này thiếu xác minh"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -424,17 +452,9 @@
       "description": "**{{username}}** không có một cái cape nào!",
       "title": "Thiếu Cape"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** không có một người bạn nào $t(emojis:sad)! :(",
-      "title": "Người bạn không được tìm thấy"
-    },
     "noGTBSolutions": {
       "description": "Chúng tôi không thể tìm ra bất cứ giải pháp nào cho các gợi ý được đưa ra!",
       "title": "Không có giải pháp cho Guess The Build"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** và **{{displayNameTwo}}** không có bạn chung nào!",
-      "title": "Không có chung"
     },
     "noRankings": {
       "description": "**{{displayName}}** không có cấp bậc nào!",
@@ -458,7 +478,7 @@
     },
     "premiumRequired": {
       "description": "Hãy xem tất cả các tính năng đang có ở [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
+      "preview": "Kiểm tra tất cả tính năng có sẵn ở [here](https://statsify.net/premium). Dưới đây là một bản xem trước nhỏ về các câu lệnh có tính năng gì.",
       "title": "Cần có Statsify {{tier}} để chạy câu lệnh này"
     },
     "staffOnly": {
@@ -494,7 +514,13 @@
     "new": "Thông tin lịch sử của **{{displayName}}** đã được kiểm tra ở lần đầu tiên trên Statsify. Thông tin của họ sẽ được cập nhật từ bây giờ hằng ngày.",
     "reset": "$t(emojis:clock) **Resets** <t:{{time}}:R>",
     "resetButton": "Ấn đề cài lại",
-    "setResetTime": "Cài lại thời gian của bạn thành <t:{{time}}:t>."
+    "setResetTime": "Cài lại thời gian của bạn thành <t:{{time}}:t>.",
+    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -567,7 +593,7 @@
     "ended": "Đã kết thúc",
     "endurance": "Sức chịu đựng",
     "event-level": "Số cấp ở sự kiện",
-    "event-exp": "Event EXP",
+    "event-exp": "EXP Sự kiện",
     "exp": "Kinh nghiệm",
     "expGained": "Số kinh nghiệm đã được",
     "extraUltimates": "Số Ultimates bổ sung",
@@ -581,7 +607,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Thời gian trường lực",
     "fortune": "Gia tài",
-    "friends": "Số bạn",
     "game": "Trò chơi",
     "game-total": "Tổng số {{game}}",
     "gamesPlayed": "Số trò chơi đã chơi",
@@ -680,7 +705,7 @@
     "points": "Điểm",
     "poopCollected": "Số cứt đã thu thập được",
     "powerKicks": "Đá sức mạnh",
-    "powerupActivations": "Power-Up Activations",
+    "powerupActivations": "Kích hoạt Power-Up",
     "powerups": "Power-Ups",
     "prefix": "Chức",
     "prevent": "Ngăn cản",
@@ -696,6 +721,7 @@
     "ranksGifted": "Số cấp bậc đã cho",
     "rebelKills": "Số lần giết bằng kẻ tấn công",
     "renown": "Nổi tiếng",
+    "rewardStreak": "Reward Streak",
     "roundWins": "Số vòng thắng",
     "rune": "Rune",
     "score": "Score",
@@ -745,17 +771,19 @@
     "woolPlaced": "Lông đã đặt",
     "zombieKills": "Số lần giết Thây Ma",
     "potionsBrewed": "Số thuốc đã làm",
-    "positions": "Positions",
-    "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed",
-    "totalExp": "Total EXP"
+    "positions": "Vị trí",
+    "powerupsCollected": "Power-Ups đã thu được",
+    "roundsCompleted": "Số vòng hoàn thành",
+    "totalExp": "Tổng EXP"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Vô **$t(socials.discord)** của chúng tôi và lấy **20% lower cooldowns** $t(emojis:heart)",
     "invite": "$t(emojis:socials.discord) Ấn **[here](<https://statsify.net/invite>)** để mời Statsify vào server của bạn!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** đưa cho bạn những tính năng hấp dẫn như có thể tùy chỉnh danh hiệu hồ sơ.Xem danh sách của tất cả lợi ích **[here](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Xem vị trí bảng xếp hạng của bạn với **[Statsify Premium] (<https://statsify.net/premium>)** bằng cách sài `/rankings`",
-    "verify": "$t(emojis:check) Chạy `/verify` để chạy câu lệnh không cần nhập tên tài khoản của bạn và cũng như nhận được **10% lower cooldowns**"
+    "verify": "$t(emojis:check) Chạy `/verify` để chạy câu lệnh không cần nhập tên tài khoản của bạn và cũng như nhận được **10% lower cooldowns**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Không xác định",
   "verification": {

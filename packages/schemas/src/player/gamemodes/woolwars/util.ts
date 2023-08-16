@@ -7,6 +7,7 @@
  */
 
 import { findScore } from "@statsify/util";
+import { rainbow } from "#prefixes";
 
 export const getExpReq = (level: number) => {
   const progress = level % 100;
@@ -32,26 +33,34 @@ export const getLevel = (exp = 0): number => {
   return level + remainingExp / getExpReq(level + 1);
 };
 
-const applyFormat = ({ format }: { format: string[] }, n: number) => {
-  if (format.length == 2) {
-    return `${format[0]}${n}${format[1]}`;
-  }
+/*
+  Hypixel uses names for symbols for the field wool_wars_prestige_icon
+  Currently these are the symbols that are known
+  CROWN: ♕
+  STAR: ✫
+  CROSS: ✙
+  PLANE: ✈︎
+  HEART: ❤️
+*/
 
-  const nums = [...n.toString()].map((v, i) => (v = `${format[i] ?? ""}${v}`)).join(",");
-
-  return `${nums}${format.at(-1)}`;
-};
+const PRESTIGE_COLORS: { req: number; format: (level: number) => string }[] = [
+  { req: 0, format: (l) => `§7[${l}❤]` },
+  { req: 100, format: (l) => `§f[${l}✙]` },
+  { req: 200, format: (l) => `§c[${l}✫]` },
+  { req: 300, format: (l) => `§6[${l}✈]` },
+  { req: 400, format: (l) => `§e[${l}✠]` },
+  { req: 500, format: (l) => `§a[${l}♕]` },
+  { req: 600, format: (l) => `§3[${l}⚡]` },
+  { req: 700, format: (l) => `§5[${l}☢]` },
+  { req: 800, format: (l) => `§d[${l}☢]` },
+  { req: 900, format: (l) => rainbow(`[${l}✏]`) },
+  { req: 1000, format: (l) => `§0[§f${l}☯§0]` },
+];
 
 export const getFormattedLevel = (star: number): string => {
   star = Math.floor(star);
 
-  const prestigeColors: { req: number; format: string[] }[] = [
-    { req: 0, format: ["§7[", "✫]"] },
-    { req: 100, format: ["§f[", "✫]"] },
-    { req: 200, format: ["§c[", "✫]"] },
-    { req: 300, format: ["§6[", "✫]"] },
-    { req: 400, format: ["§e[", "✫]"] },
-  ];
+  const { format } = findScore(PRESTIGE_COLORS, star);
 
-  return applyFormat(findScore(prestigeColors, star), star);
+  return format(star);
 };

@@ -9,7 +9,7 @@
 import { Historical, Table } from "#components";
 import { HoleInTheWall } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
-import type { ProfileTime } from "../../base.hypixel-command";
+import type { ProfileTime } from "#commands/base.hypixel-command";
 
 interface HoleInTheWallTableProps {
   stats: HoleInTheWall;

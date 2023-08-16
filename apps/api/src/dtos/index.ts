@@ -6,17 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./cache.dto";
-export * from "./cached-player.dto";
-export * from "./guild-leaderboard.dto";
-export * from "./guild-rankings.dto";
-export * from "./guild.dto";
-export * from "./head.dto";
-export * from "./user.dto";
-export * from "./verify-code.dto";
-export * from "./reset-player.dto";
-export * from "./command.dto";
-export * from "./update-player.dto";
-export * from "./player-group.dto";
-export * from "./player-search.dto";
-export * from "./historical-leaderboard.dto";
+export * from "./cache.dto.js";
+export * from "./cached-player.dto.js";
+export * from "./guild-leaderboard.dto.js";
+export * from "./guild-rankings.dto.js";
+export * from "./guild.dto.js";
+export * from "./head.dto.js";
+export * from "./user.dto.js";
+export * from "./verify-code.dto.js";
+export * from "./command.dto.js";
+export * from "./update-player.dto.js";
+export * from "./player-group.dto.js";
+export * from "./player-search.dto.js";
+export * from "./player.dto.js";
+export * from "./key.dto.js";
+export * from "./uuid.dto.js";
+export * from "./player-rankings.dto.js";
+export * from "./player-leaderboard.dto.js";
+export * from "./session.dto.js";

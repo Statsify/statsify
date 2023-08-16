@@ -26,8 +26,8 @@ import {
   GuildTopMember,
   GuildTopProfile,
   GuildTopProfileProps,
-} from "./guild-top.profile";
-import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.subcommand";
+} from "./guild-top.profile.js";
+import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.subcommand.js";
 import { GuildQuery } from "@statsify/api-client";
 import { Theme, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
@@ -105,34 +105,34 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
     const changePage =
       (fn: (interaction: Interaction) => Partial<GuildTopPageState>) =>
-      async (interaction: Interaction) => {
-        if (user?.locale) interaction.setLocale(user.locale);
+        async (interaction: Interaction) => {
+          if (user?.locale) interaction.setLocale(user.locale);
 
-        const state = fn(interaction);
+          const state = fn(interaction);
 
-        const mode = modes[state.modeIndex ?? modeIndex];
+          const mode = modes[state.modeIndex ?? modeIndex];
 
-        const message = await this.getGuildTopPageMessage(
-          cache,
-          components,
-          props,
-          mode[1],
-          mode[0],
-          state.page ?? page,
-          theme
-        );
+          const message = await this.getGuildTopPageMessage(
+            cache,
+            components,
+            props,
+            mode[1],
+            mode[0],
+            state.page ?? page,
+            theme
+          );
 
-        if (interaction.getUserId() === userId) {
-          if (state.page !== undefined) page = state.page;
-          if (state.modeIndex !== undefined) modeIndex = state.modeIndex;
+          if (interaction.getUserId() === userId) {
+            if (state.page !== undefined) page = state.page;
+            if (state.modeIndex !== undefined) modeIndex = state.modeIndex;
 
-          dropdown.activeOption(modeIndex);
+            dropdown.activeOption(modeIndex);
 
-          context.reply(message);
-        } else {
-          interaction.sendFollowup({ ...message, components: [], ephemeral: true });
-        }
-      };
+            context.reply(message);
+          } else {
+            interaction.sendFollowup({ ...message, components: [], ephemeral: true });
+          }
+        };
 
     listener.addHook(
       up.getCustomId(),

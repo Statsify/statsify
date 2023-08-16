@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
@@ -10,14 +11,15 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.28.1",
-    "@sentry/tracing": "^7.28.1",
-    "@statsify/assets": "workspace:^",
-    "@statsify/logger": "workspace:^",
-    "@statsify/schemas": "workspace:^",
-    "@statsify/util": "workspace:^",
-    "@typegoose/typegoose": "^10.0.0",
-    "minecraft-protocol": "^1.36.2",
-    "mongoose": "^6.8.2"
+    "@sentry/node": "^7.61.0",
+    "@sentry/tracing": "^7.61.0",
+    "@statsify/assets": "*",
+    "@statsify/logger": "*",
+    "@statsify/schemas": "*",
+    "@statsify/util": "*",
+    "@swc/helpers": "^0.5.1",
+    "@typegoose/typegoose": "^11.4.1",
+    "minecraft-protocol": "^1.43.2",
+    "mongoose": "^7.4.2"
   }
 }

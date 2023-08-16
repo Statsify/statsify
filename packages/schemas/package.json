@@ -1,20 +1,55 @@
 {
   "name": "@statsify/schemas",
   "version": "0.0.0",
-  "main": "dist/index.js",
   "types": "src/index.ts",
+  "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist",
     "test:types": "tsc --noEmit",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@nestjs/swagger": "^6.1.4",
-    "@statsify/logger": "workspace:^",
-    "@statsify/math": "workspace:^",
-    "@statsify/util": "workspace:^",
-    "@typegoose/typegoose": "^10.0.0"
+    "@nestjs/swagger": "^7.1.6",
+    "@statsify/logger": "*",
+    "@statsify/math": "*",
+    "@statsify/util": "*",
+    "@swc/helpers": "^0.5.1",
+    "@typegoose/typegoose": "^11.4.1",
+    "class-validator": "^0.14.0",
+    "luxon": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/luxon": "^3.3.1"
+  },
+  "imports": {
+    "#metadata": {
+      "types": "./src/metadata/index.ts",
+      "default": "./dist/metadata/index.js"
+    },
+    "#game": {
+      "types": "./src/game/index.ts",
+      "default": "./dist/game/index.js"
+    },
+    "#color": {
+      "types": "./src/color.ts",
+      "default": "./dist/color.js"
+    },
+    "#progression": {
+      "types": "./src/progression.ts",
+      "default": "./dist/progression.js"
+    },
+    "#player": {
+      "types": "./src/player/index.ts",
+      "default": "./dist/player/index.js"
+    },
+    "#ratios": {
+      "types": "./src/ratios.ts",
+      "default": "./dist/ratios.js"
+    },
+    "#prefixes": {
+      "types": "./src/player/gamemodes/prefixes.ts",
+      "default": "./dist/player/gamemodes/prefixes.js"
+    }
   }
 }

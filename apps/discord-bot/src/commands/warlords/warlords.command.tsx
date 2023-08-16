@@ -10,10 +10,10 @@ import {
   BaseHypixelCommand,
   BaseProfileProps,
   ProfileData,
-} from "../base.hypixel-command";
+} from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { WARLORDS_MODES, WarlordsModes } from "@statsify/schemas";
-import { WarlordsProfile } from "./warlords.profile";
+import { WarlordsProfile } from "./warlords.profile.js";
 
 @Command({ description: (t) => t("commands.warlords") })
 export class WarlordsCommand extends BaseHypixelCommand<WarlordsModes> {

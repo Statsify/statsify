@@ -7,17 +7,13 @@
  */
 
 import { Canvas } from "skia-canvas";
+import { FontRenderer } from "@statsify/rendering";
+import { Logger } from "@statsify/logger";
 import { RestClient } from "tiny-discord";
-import { createRequire } from "node:module";
+import { config, minecraftColors } from "@statsify/util";
+import { getMinecraftTexturePath } from "@statsify/assets";
+import { rankMap } from "@statsify/schemas";
 import { writeFileSync } from "node:fs";
-
-const require = createRequire(import.meta.url);
-
-const { getMinecraftTexturePath } = require("@statsify/assets");
-const { FontRenderer } = require("@statsify/rendering");
-const { rankMap } = require("@statsify/schemas");
-const { minecraftColors } = require("@statsify/util");
-const { Logger } = require("@statsify/logger");
 
 const COLOR_CHANGERS = ["MVP+", "MVP++", "bMVP++"];
 const SIZE = 20;
@@ -55,7 +51,7 @@ export const ALPHABET = [
 
 const logger = new Logger("rank-emojis");
 
-const token = process.env.RANK_EMOJI_DISCORD_BOT_TOKEN;
+const token = config("rankEmojis.botToken");
 
 if (!token) {
   logger.error(
@@ -182,14 +178,14 @@ const client = new RestClient({ token });
 
 for (let i = 0; i < serverCount; i++) {
   const guild = await client
-    .post(`/guilds`, { name: `Statsify Ranks ${i + 1}` })
-    .then((res) => res.body);
+    .post("/guilds", { name: `Statsify Ranks ${i + 1}` })
+    .then((res) => res.body.json);
 
   const channel = guild.system_channel_id;
 
   const invite = await client
     .post(`/channels/${channel}/invites`, { type: 1 })
-    .then((res) => res.body);
+    .then((res) => res.body.json);
 
   logger.log(`Created guild ${guild.id} with invite: discord.gg/${invite.code}`);
 
@@ -205,7 +201,7 @@ for (let i = 0; i < serverCount; i++) {
         image: emoji.buffer,
         roles: [],
       })
-      .then((res) => res.body);
+      .then((res) => res.body.json);
 
     const isColorChanger = COLOR_CHANGERS.includes(emoji.rank);
 

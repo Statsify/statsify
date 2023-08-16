@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field } from "../metadata";
+import { Field } from "#metadata";
 
 export const GameIdMapping = {
   ARCADE: "ARCADE",
@@ -101,7 +101,7 @@ export enum FormattedGame {
  */
 export type GameCode = keyof typeof GameIdMapping;
 
-export type GameId = typeof GameIdMapping[keyof typeof GameIdMapping];
+export type GameId = (typeof GameIdMapping)[keyof typeof GameIdMapping];
 
 export class Game {
   @Field({

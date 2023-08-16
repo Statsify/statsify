@@ -7,18 +7,12 @@
  */
 
 import { FILE_ENDINGS, FILE_ENDING_REGEX, ROOT, fetchWorkspaces } from "./utils.js";
-import { basename, dirname, join } from "node:path";
-import { createRequire } from "node:module";
+import { Logger } from "@statsify/logger";
+import { basename, join } from "node:path";
 import { existsSync } from "node:fs";
-import { fileURLToPath } from "node:url";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { transformFile } from "@swc/core";
 import { watch } from "chokidar";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-const require = createRequire(import.meta.url);
-const { Logger } = require("@statsify/logger");
 
 const IGNORED_WORKSPACES = ["site", "scripts"];
 
@@ -60,14 +54,11 @@ await Promise.all(
   )
 );
 
-let isReady = false;
-
 /**
  *
  * @param {string} path
  */
 function shouldProcess(path) {
-  if (!isReady) return false;
   if (!FILE_ENDINGS.some((ending) => path.endsWith(ending))) return false;
   return true;
 }
@@ -127,11 +118,14 @@ async function deleteFile(path) {
 
 const watcher = watch(
   workspaces.map((workspace) => join(workspace, "/src/**/*")),
-  { ignored: [/node_modules/] }
+  {
+    ignored: [/node_modules/],
+    ignoreInitial: true,
+    usePolling: process.env.USE_POLLING == "true",
+  }
 );
 
 watcher.on("ready", () => {
-  isReady = true;
   logger.setContext("build-watch");
   logger.log("Ready");
 });

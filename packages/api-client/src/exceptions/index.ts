@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./guild.404";
-export * from "./player.404";
-export * from "./recentgames.404";
-export * from "./status.404";
-export * from "./friends.404";
+export * from "./guild.404.js";
+export * from "./player.404.js";
+export * from "./recentgames.404.js";
+export * from "./status.404.js";
+export * from "./session.404.js";

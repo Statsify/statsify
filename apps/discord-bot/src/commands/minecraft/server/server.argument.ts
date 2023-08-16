@@ -6,15 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Fuse from "fuse.js";
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
-import { getServerMappings } from "@statsify/assets";
-
-type Server = ReturnType<typeof getServerMappings>[number];
+import { Fuse } from "fuse.js";
+import { type ServerMappingsServer, getServerMappings } from "./server.util.js";
 
 export class ServerArgument extends AbstractArgument {
   public name = "server";
@@ -23,22 +21,23 @@ export class ServerArgument extends AbstractArgument {
   public required = true;
   public autocomplete = true;
 
-  private servers: Server[];
-  private fuse: Fuse<Server>;
+  private servers: ServerMappingsServer[];
+  private fuse: Fuse<ServerMappingsServer>;
 
   public constructor() {
     super();
     this.description = (t) => t("arguments.server");
 
-    this.servers = getServerMappings();
-
-    this.fuse = new Fuse(this.servers, {
-      keys: ["id", "name", "addresses"],
-      includeScore: false,
-      shouldSort: true,
-      isCaseSensitive: false,
-      threshold: 0.3,
-      ignoreLocation: true,
+    getServerMappings().then((servers) => {
+      this.servers = servers;
+      this.fuse = new Fuse(this.servers, {
+        keys: ["id", "name", "addresses", "primaryAddress"],
+        includeScore: false,
+        shouldSort: true,
+        isCaseSensitive: false,
+        threshold: 0.3,
+        ignoreLocation: true,
+      });
     });
   }
 
@@ -49,13 +48,13 @@ export class ServerArgument extends AbstractArgument {
 
     if (!currentValue) {
       return this.servers
-        .map((result) => ({ name: result.name, value: result.addresses[0] }))
+        .map((result) => ({ name: result.name, value: result.primaryAddress }))
         .slice(0, 25);
     }
 
     return this.fuse
       .search(currentValue)
-      .map((result) => ({ name: result.item.name, value: result.item.addresses[0] }))
+      .map((result) => ({ name: result.item.name, value: result.item.primaryAddress }))
       .slice(0, 25);
   }
 }

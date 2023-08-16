@@ -6,19 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
-import { BlitzSGKit } from "./kit";
-import { BlitzSGMode, BlitzSGOverall } from "./mode";
-import { Field } from "../../../metadata";
-import { GameModes, IGameModes } from "../../../game";
+import { BlitzSGKit } from "./kit.js";
+import { BlitzSGMode, BlitzSGOverall } from "./mode.js";
+import { Field } from "#metadata";
+import { GameModes, type IGameModes } from "#game";
 import {
   GamePrefix,
   createPrefixProgression,
   defaultPrefix,
   getFormattedPrefix,
-} from "../prefixes";
-import { Progression } from "../../../progression";
+} from "#prefixes";
+import { Progression } from "#progression";
 import { sub } from "@statsify/math";
+import type { APIData } from "@statsify/util";
 
 export const BLITZSG_MODES = new GameModes([
   { api: "overall" },
@@ -322,5 +322,5 @@ export class BlitzSG {
   }
 }
 
-export * from "./kit";
-export * from "./mode";
+export * from "./kit.js";
+export * from "./mode.js";

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Progression } from "../../progression";
+import { Progression } from "#progression";
 import { abbreviationNumber, findScoreIndex } from "@statsify/util";
 
 export type GamePrefix<T extends unknown[] = []> = {
@@ -102,9 +102,20 @@ export const getFormattedPrefix = <T extends unknown[] = []>({
   if (!abbreviation)
     return prefix.fmt(`${trueScore ? Math.floor(score) : prefix.req}`, ...prefixParams);
 
-  const [number, suffix] = abbreviationNumber(trueScore ? score : prefix.req);
-  const formattedScore = trueScore ? Math.floor(number) : number;
-  return prefix.fmt(`${formattedScore}${suffix}`, ...prefixParams);
+  const [prefixNumber, prefixSuffix] = abbreviationNumber(prefix.req);
+
+  if (!trueScore) return prefix.fmt(`${prefixNumber}${prefixSuffix}`, ...prefixParams);
+
+  let [number, suffix] = abbreviationNumber(score);
+
+  number = Math.floor(number);
+
+  if (number < prefixNumber) {
+    number = prefixNumber;
+    suffix = prefixSuffix;
+  }
+
+  return prefix.fmt(`${number}${suffix}`, ...prefixParams);
 };
 
 export const defaultPrefix = <T extends unknown[] = []>(

@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, formatTime } from "@statsify/util";
-import { Field } from "../../../metadata";
+import { type APIData, formatTime } from "@statsify/util";
+import { Field } from "#metadata";
 import { add, ratio } from "@statsify/math";
 
 const limit = 10_000;
@@ -71,18 +71,27 @@ export class MegaWallsKit {
     this.kills = data[`${kit}kills`];
     this.assists = data[`${kit}assists`];
     this.deaths = data[`${kit}deaths`];
-    this.kdr = ratio(this.kills, this.deaths);
 
     this.finalKills = data[`${kit}final_kills`];
     this.finalAssists = data[`${kit}final_assists`];
     this.finalDeaths = data[`${kit}final_deaths`];
-    this.fkdr = ratio(this.finalKills, this.finalDeaths);
 
     this.playtime = (data[`${kit}time_played`] ?? 0) * 60_000;
     this.witherDamage = data[`${kit}wither_damage`];
     this.witherKills = data[`${kit}wither_kills`];
 
-    this.points = add(this.finalKills, this.finalAssists, (this.wins ?? 0) * 10);
+    const standardFinalKills = data[`${kit}final_kills_standard`];
+    const standardFinalAssists = data[`${kit}final_assists_standard`];
+    const standardWins = data[`${kit}wins_standard`] ?? 0;
+
+    this.points = add(standardFinalKills, standardFinalAssists, standardWins * 10);
+
+    MegaWallsKit.applyRatios(this);
+  }
+
+  public static applyRatios(kit: MegaWallsKit) {
+    kit.kdr = ratio(kit.kills, kit.deaths);
+    kit.fkdr = ratio(kit.finalKills, kit.finalDeaths);
   }
 }
 
@@ -122,4 +131,14 @@ export class MegaWallsOverall extends MegaWallsKit {
 
   @Field({ leaderboard: { formatter: formatTime } })
   public declare playtime: number;
+
+  public constructor(data: APIData) {
+    super(data, "");
+
+    this.finalDeaths = add(data.final_deaths, data.finalDeaths);
+    this.witherDamage = add(data.wither_damage, data.witherDamage);
+    this.playtime = add(data.time_played, data.time_played_standard) * 60_000;
+
+    MegaWallsOverall.applyRatios(this);
+  }
 }

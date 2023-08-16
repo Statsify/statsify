@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Δες τη λίστα των Hypixel φίλων σου",
     "game-counts": "Δες τις τρέχον μετρήσεις του Hypixel παιχνιδιού",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Δημιούργησε μια λίστα με πιθανές απαντήσεις Guess The Build με βάση τη δεδομένη υπόδειξη",
@@ -83,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "View your {{name}} session stats",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "Δες τα στατιστικά του {{name}}",
     "invite": "Προσκάλεσε το Statsify",
     "language": "Άλλαξε τη γλώσσα στην οποία βλέπεις τις απαντήσεις",
@@ -120,7 +144,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Δες τους κοινούς Hypixel φίλους σου με έναν άλλο παίκτη",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Δες τους δημιουργούς και τους συνεισφέροντες του Statsify",
@@ -177,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "Δες τα πρόσφατα παιχνίδια κάποιου στον Hypixel",
-    "reset": "Επανάφερε τα ιστορικά σου στατιστικά",
     "server": "Δες την κατάσταση του Minecraft διακομιστή",
     "skin": "Δες την Minecraft εμφάνιση κάποιου",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -214,7 +236,9 @@
     "watchdog": "Δες την καταμέτρηση αποκλεισμών του Hypixel Watchdog",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "reset-historical": "Reset your historical stats",
+    "reset-session": "Reset your session stats"
   },
   "config": {
     "badge": {
@@ -282,9 +306,9 @@
         "description": "Το Statsify υποστηρίζει την πλειοψηφία των παιχνιδιών που προσφέρονται στον Hypixel. Για να ελέγξεις τα στατιστικά σου σε ένα παιχνίδι γράψε `/[game]`. Για παράδειγμα, μπορείς να γράψεις \"/bedwars\" για να ελέγξεις τα  BedWars στατιστικά σου.",
         "title": "Παιχνίδια"
       },
-      "historical": {
-        "description": "Το Statsify σoυ επιτρέπει να ελέγχεις τα ημερήσια, εβδομαδιαία και μηνιαία στατιστικά σου μέσω των `/daily`, `/weekly` και `/monthly`. Εαν χάσεις μία επαναφορά μπορείς να τη δεις γράφοντας `/yesterday`, `/lastweek`, και `/lastmonth`. ",
-        "title": "Ιστορικό"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Το Statsify προσφέρει χιλιάδες κατατάξεις μέσω της `/leaderboard` εντολής. Γράψε `/leaderboard`, μετά επίλεξε το gamemode, και επίλεξε μία κατάταξη για προβολή. Μπορείς να πατήσεις το κουμπί αναζήτησης για έναν συγκεκριμένο παίκτη ή θέση. Μπορείς επίσης να πατήσεις τα πάνω και κάτω κουμπιά για να δεις περισσότερες σελίδες.",
@@ -362,6 +386,10 @@
       "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Μη Έγκυρος Παίκτης"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` δεν ταιριάζει με τη μορφή `h:mm a`. Εισήγε μία ώρα σε παρόμοια μορφή με `12:00 ΜΜ` ή `1:00 ΠΜ`.",
       "title": "Μη Έγκυρος Χρόνος Επαναφοράς"
@@ -408,7 +436,7 @@
       "title": "Λείπει Επαλήθευση"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -424,17 +452,9 @@
       "description": "Ο **{{username}}** δεν έχει καμία κάπα!",
       "title": "Λείπει Κάπα"
     },
-    "noFriends": {
-      "description": "Ο **{{displayName}}** δεν έχει φίλους $t(emojis:sad)! :(",
-      "title": "Δε Βρέθηκαν Φίλοι"
-    },
     "noGTBSolutions": {
       "description": "Δεν μπορέσαμε να βρούμε λύσεις για το παρεχόμενο στοιχείο!",
       "title": "Καμία Guess The Build Λύση"
-    },
-    "noMutuals": {
-      "description": "Ο **{{displayNameOne}}** και ο **{{displayNameTwo}}** δεν έχουν κοινούς φίλους!",
-      "title": "Κανένας Κοινός"
     },
     "noRankings": {
       "description": "Ο **{{displayName}}** δεν έχει κατατάξεις!",
@@ -494,7 +514,13 @@
     "new": "Τα ιστορικά στατιστικά του **{{displayName}}** έχουν ελεγχθεί για πρώτη φορά στο Statsify. Τα στατιστικά τους θα ενημερώνονται σε αυτή την ώρα κάθε μέρα.",
     "reset": "$t(emojis:clock) **Επαναφέρεται** <t:{{time}}:R>",
     "resetButton": "Κάνε κλικ για Επαναφορά",
-    "setResetTime": "Ρύθμισε την ώρα επαναφοράς σε <t:{{time}}:t>."
+    "setResetTime": "Ρύθμισε την ώρα επαναφοράς σε <t:{{time}}:t>.",
+    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -581,7 +607,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Χρόνος Δυναμικού πεδίου",
     "fortune": "Τύχη",
-    "friends": "Φίλοι",
     "game": "Παιχνίδι",
     "game-total": "{{game}} Σύνολο",
     "gamesPlayed": "Παιχνίδια Που Παίχτηκαν",
@@ -696,6 +721,7 @@
     "ranksGifted": "Δωρισμένα Ranks",
     "rebelKills": "Σκοτωμοί ως Επιτιθέμενος",
     "renown": "Φήμη",
+    "rewardStreak": "Reward Streak",
     "roundWins": "Νίκες Γύρου",
     "rune": "Ρούνος",
     "score": "Βαθμολογία",
@@ -755,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Κάνε κλικ **[here](<https://statsify.net/invite>)** για να προσκαλέσεις το Statsify στον δικό σου server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** προσφέρει πρόσθετες λειτουργίες, όπως εξατομικευμένα σήματα προφίλ. Βρες την πλήρη λίστα με τα οφέλη **[here](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Δες τις κορυφαίες θέσεις σου στο leaderboard με **[Statsify Premium](<https://statsify.net/premium>)** χρησιμοποιώντας το `/rankings`",
-    "verify": "$t(emojis:check) Εκτέλεσε το `/verify` για να εκτελέσεις εντολές χωρίς να εισάγεις το όνομα χρήστη σου καθώς και να λάβεις **10% χαμηλότερα cooldowns**"
+    "verify": "$t(emojis:check) Εκτέλεσε το `/verify` για να εκτελέσεις εντολές χωρίς να εισάγεις το όνομα χρήστη σου καθώς και να λάβεις **10% χαμηλότερα cooldowns**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Άγνωστο",
   "verification": {

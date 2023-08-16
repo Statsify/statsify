@@ -7,7 +7,7 @@
     "guild-query": "Ett guild namn eller en guild medlem",
     "guild-type": "Typen av guild sökning att utföra",
     "mojang-player": "Ett Minecraft användarnamn eller UUID",
-    "number": "Ett siffra",
+    "number": "En siffra",
     "player": "$t(arguments.mojang-player)",
     "player-leaderboard": "Välj en rankningslista",
     "reason": "The reason for closing the support ticket",
@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Visa din Hypixel vänlista",
     "game-counts": "Visa Hypixels aktuella spelnummer",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Generera en lista över möjliga Guess The Build svar baserat på den givna ledtråden",
@@ -83,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "Visa din {{name}} sessions statistik",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "Visa statistik för {{name}}",
     "invite": "Bjud in Statsify",
     "language": "Ändra språket du ser svar på",
@@ -120,7 +144,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Visa dina gemensamma Hypixel vänner med en annan spelare",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Visa Statsify's skapare och bidragsgivare",
@@ -177,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "Visa någons Hypixel senaste spel spelade",
-    "reset": "Återställ din historiska statistik",
     "server": "Visa Minecraft server status",
     "skin": "Se någons Minecraft skin",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -214,7 +236,9 @@
     "watchdog": "Visa Hypixel Watchdog ban räkning",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "reset-historical": "Återställ din historiska statistik",
+    "reset-session": "Återställ din sessions statistik"
   },
   "config": {
     "badge": {
@@ -282,9 +306,9 @@
         "description": "Statsify stöder de flesta spel som erbjuds på Hypixel. För att kolla din statistik i ett spel kör `/[game]`. Till exempel kan du köra `/bedwars` för att kolla dina BedWars statistik.",
         "title": "Spel"
       },
-      "historical": {
-        "description": "Statsify kan du kontrollera din dagliga, veckovisa och måntliga statistik genom `/daily`, `/weekly` och `/monthly`. Om du missade en återställning kan du se dem genom att köra `/yesterday`, `/last week` och `/last month`. ",
-        "title": "Historisk"
+      "session": {
+        "description": "Statsify låter dig se din statistik som om du började spela idag via `/session`. Med `/reset session` kan du återställa din sessions statistik samt påbörja en ny session.",
+        "title": "Sessioner"
       },
       "leaderboards": {
         "description": "Statsify erbjuder tusentals rankningslistor genom kommandot `/leaderboard`. Kör `/leaderboard`, välj sedan spelläge och välj en rankningslista att visa. Du kan trycka på sökknappen för att söka efter en viss spelare eller position. Du kan också trycka upp och ner knapparna för att se fler sidor.",
@@ -357,13 +381,17 @@
       "title": "Ogiltig Guild"
     },
     "invalidPlayer": {
-      "description_username": "A player by the username of `{{tag}}` could not be found!",
-      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
-      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
+      "description_username": "En spelare med användarnamnet `{{tag}}` kunde inte hittas!",
+      "description_uuid": "En spelare med UUID av `{{tag}}` kunde inte hittas!",
+      "description_discordId": "Det gick inte att hitta en spelare med discord-id för `{{tag}}!",
       "title": "Ogiltig spelare"
     },
+    "invalidSession": {
+      "title": "Ogiltig Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
-      "description": "`{{time}}` does not match the format `h:mm a`. Enter a time in the format similar to `12:00 PM` or `1:00 AM`.",
+      "description": "`{{time}}` matchar inte formatet `h:mm a`. Ange en tid i formatet som liknar `12:00 PM` eller `1:00 AM`.",
       "title": "Ogiltig återställningstid"
     },
     "invalidResetTimezone": {
@@ -408,7 +436,7 @@
       "title": "Verifiering saknas"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** är inte **verifierad**. De måste köra `/verify` för att verifiera sitt konto.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -424,17 +452,9 @@
       "description": "**{{username}}** har inga mantlar!",
       "title": "Mantel saknas"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** har inga vänner $t(emojis:sad)! :(",
-      "title": "Vänner kunde inte hittas"
-    },
     "noGTBSolutions": {
       "description": "Vi kunde inte hitta några lösningar för den angivna ledtråden!",
       "title": "Inga Guess The Build Lösningar"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** och **{{displayNameTwo}}** har inga gemensamma vänner!",
-      "title": "Inga gemensamma vänner"
     },
     "noRankings": {
       "description": "**{{displayName}}** har inga rankningar!",
@@ -458,7 +478,7 @@
     },
     "premiumRequired": {
       "description": "Kolla in alla tillgängliga funktioner [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
+      "preview": "Kolla in alla tillgängliga funktioner [here](https://statsify.net/premium). Nedan följer en liten förhandsvisning av vad kommandot gör/ändrar.",
       "title": "Statsify {{tier}} krävs för att köra detta kommando"
     },
     "staffOnly": {
@@ -494,7 +514,13 @@
     "new": "**{{displayName}}**s historiska statistik har kontrollerats för första gången på Statsify. Deras statistik kommer nu att uppdateras denna gång varje dag.",
     "reset": "$t(emojis:clock) **Återställs** <t:{{time}}:R>",
     "resetButton": "Klicka för att återställa",
-    "setResetTime": "Ställ in din återställningstid till <t:{{time}}:t>."
+    "setResetTime": "Ställ in din återställningstid till <t:{{time}}:t>.",
+    "newSession": "**{{displayName}}**s sessions statistik har blivit checkad för första gången på Statsify.",
+    "setSessionReset": "Lyckades med återställningen av din sessions statistik.",
+    "disabledWarning": {
+      "title": "Historiska Kommandon är Inte Längre Tillgängliga",
+      "description": "Hypixels nya [API Terms](https://developer.hypixel.net/policies/) tillåter inte längre \"kontinuerlig erhållning av spelardata\", vilket betyder att Statsify inte längre kan hålla reda på en spelares dagliga statistik.\n\nIstället kan du försöka starta en session med `/session`. När du startar en session, kommer botten hålla reda på din statistik från det ögonblick du först körde kommandot tills nästa gång du kör det. För att återställa din sessions statistik kan du köra `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -567,7 +593,7 @@
     "ended": "Avslutad",
     "endurance": "Uthållighet",
     "event-level": "Event nivå",
-    "event-exp": "Event EXP",
+    "event-exp": "Evenemang EXP",
     "exp": "EXP",
     "expGained": "EXP vunnet",
     "extraUltimates": "Extra ultimater",
@@ -581,7 +607,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Forcefield Tid",
     "fortune": "Fortune",
-    "friends": "Vänner",
     "game": "Spel",
     "game-total": "{{game}} Totalt",
     "gamesPlayed": "Spel spelade",
@@ -680,7 +705,7 @@
     "points": "Poäng",
     "poopCollected": "Bajs samlad",
     "powerKicks": "Ström Sparkar",
-    "powerupActivations": "Power-Up Activations",
+    "powerupActivations": "Power-Up Aktiveringar",
     "powerups": "Power-Ups",
     "prefix": "Prefix",
     "prevent": "Förhindra",
@@ -688,7 +713,7 @@
       "exp": "EXP framsteg",
       "gexp": "GEXP framsteg",
       "goldTrophy": "Guld Trofé framsteg",
-      "kill": "Kill Progress",
+      "kill": "Kill framsteg",
       "score": "Poäng framsteg",
       "win": "Vinst framsteg"
     },
@@ -696,6 +721,7 @@
     "ranksGifted": "Ranker Giftade",
     "rebelKills": "Attackerar Kills",
     "renown": "Renown",
+    "rewardStreak": "Belöningsstreak",
     "roundWins": "Rund vinster",
     "rune": "Rune",
     "score": "Poäng",
@@ -744,10 +770,10 @@
     "woolCaptures": "Ull fångster",
     "woolPlaced": "Ull placerad",
     "zombieKills": "Zombie Kills",
-    "potionsBrewed": "Potions Brewed",
-    "positions": "Positions",
-    "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed",
+    "potionsBrewed": "Brygder Bryggda",
+    "positions": "Positioner",
+    "powerupsCollected": "Power-Ups Samlade",
+    "roundsCompleted": "Rundor Slutförda",
     "totalExp": "Total EXP"
   },
   "tips": {
@@ -755,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Klicka på **[here](<https://statsify.net/invite>)** för att bjuda in Statsify till din egen server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** erbjuder ytterligare funktioner så som personliga profilmärken. Hitta hela listan över förmåner **[här](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Se dina topprankningspositioner med **[Statsify Premium](<https://statsify.net/premium>)** genom att använda `/rankings`",
-    "verify": "$t(emojis:check) Kör `/verify` för att köra kommandon utan att mata in ditt användarnamn samt få **10% lägre cooldowns**"
+    "verify": "$t(emojis:check) Kör `/verify` för att köra kommandon utan att mata in ditt användarnamn samt få **10% lägre cooldowns**",
+    "resetSession": "$t(emojis:reset) Du kan **återställa** din sessions statistik med `/reset session`.",
+    "sessions": "$t(emojis:reset) Håll reda på din statistikprogression med Sessioner och `/session`."
   },
   "unknown": "Okänd",
   "verification": {

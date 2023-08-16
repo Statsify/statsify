@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Nézd meg a Hypixel barátlistád",
     "game-counts": "Nézd meg a Hypixel játékosszámokat",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Megmutatja milyen megoldások lehetnek a segítség alapján GTB-ben",
@@ -83,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "View your {{name}} session stats",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "Nézd meg a {{name}} statisztikáid",
     "invite": "Statsify Meghívása",
     "language": "Saját Nyelv Megváltoztatása",
@@ -120,7 +144,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Nézd meg egy játékossal való közös barátaid",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Nézd meg a Statsify készítőit és támogatóit",
@@ -177,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "Nézd meg valaki játékelőzményét a Hypixelen",
-    "reset": "Történelmi Statisztikáid Újrakezdési Idejének Beállítása",
     "server": "Nézd meg egy Minecraft szerver státuszát",
     "skin": "Nézd meg valaki Minecraft skinjét",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -214,7 +236,9 @@
     "watchdog": "Nézd meg a Hypixel Watchdog kitiltások számát",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "reset-historical": "Reset your historical stats",
+    "reset-session": "Reset your session stats"
   },
   "config": {
     "badge": {
@@ -282,9 +306,9 @@
         "description": "A Statsify támogatja a legtöbb Hypixel játékot. Statisztikáid megtekintéséhez használd a `/[játék]` parancsot. Például `/bedwars` a BedWars statisztikáid megtekintéséhez.",
         "title": "Játékok"
       },
-      "historical": {
-        "description": "A Statsify-al megtekintheted a napi, heti és havi statisztikáid a `/daily`, `/weekly` és `/monthly` parancsokkal. Ha visszaállítódtak a statisztikáid, megnézheted őket a `/yesterday`, `/lastweek`, és `/lastmonth` parancsokkal. ",
-        "title": "Történelmi Statisztikák"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "A Statsify számtalan toplistát nyújt a `/leaderboard` parancsával. Futtasd a `/leaderboard` parancsot, válassz egy játékmódot és egy toplistát amit megszeretnél tekinteni. A keresés gombbal kereshetsz egy adott játékosra vagy pozícióra is. A fel és le gombokkal pedig a különböző oldalakat tekintheted meg.",
@@ -362,6 +386,10 @@
       "description_discordId": "Nem található játékos `{{tag}}` discord idvel!",
       "title": "Ismeretlen Játékos"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "Az általad megadott idő formátuma nem megfelelő: `{{time}}`. Kérjük használd a következő formátumot: `h:mm a` pl:`12:00 PM` vagy `1:00 AM`.",
       "title": "Érvénytelen Visszaállítási Idő"
@@ -408,7 +436,7 @@
       "title": "Hiányzó Igazolás"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -424,17 +452,9 @@
       "description": "**{{username}}** nem rendelkezik egy köpennyel sem!",
       "title": "Hiányzó Köpeny"
     },
-    "noFriends": {
-      "description": "**{{displayName}}** nem rendelkezik barátokkal $t(emojis:sad)! :(",
-      "title": "Nem Találhatóak Barátok"
-    },
     "noGTBSolutions": {
       "description": "Nem találtunk megoldást a megadott segítséggel!",
       "title": "Nem Található GTB Megoldás"
-    },
-    "noMutuals": {
-      "description": "**{{displayNameOne}}** és **{{displayNameTwo}}** nem rendelkezik közös baráttal!",
-      "title": "Nem Található Közös Barát"
     },
     "noRankings": {
       "description": "**{{displayName}}** nem rendelkezik kiemelkedő pozícióval!",
@@ -494,7 +514,13 @@
     "new": "**{{displayName}}** történelmi statisztikái most lettek előszőr megtekintve a Statsify-on. Mostantól minden nap ebben az időpontban fognak frissülni a történelmi statisztikái.",
     "reset": "$t(emojis:clock) **Visszaállítás** <t:{{time}}:R>",
     "resetButton": "Kattints a Visszaállításhoz",
-    "setResetTime": "Visszaállíási idő beállítva erre: <t:{{time}}:t>."
+    "setResetTime": "Visszaállíási idő beállítva erre: <t:{{time}}:t>.",
+    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -581,7 +607,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Forcefield Idő",
     "fortune": "Szerencse",
-    "friends": "Barátok",
     "game": "Játék",
     "game-total": "{{game}} Összesen",
     "gamesPlayed": "Lejátszott Játékok",
@@ -696,6 +721,7 @@
     "ranksGifted": "Ajándékozott Rangok",
     "rebelKills": "Támadó Ölések",
     "renown": "Renown",
+    "rewardStreak": "Reward Streak",
     "roundWins": "Nyert Körök",
     "rune": "Rúna",
     "score": "Pontszám",
@@ -755,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Kattints **[ide](<https://statsify.net/invite>)**, hogy meghívd a Statsify-t a saját szerveredre!",
     "premium": "$t(emojis:logos.gold) **[Statsify Prémium](<https://statsify.net/premium>)** új funkciókat nyújt a felhasználóknak, mint például egyéni profil ikonok. Az összes előnyről találhatsz egy listát **[itt](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Nézd meg a toplistás pozícióidat **[Statsify Premium]**-al (<https://statsify.net/premium>) a `/rankings` használatával",
-    "verify": "$t(emojis:check) Használd a `/verify` parancsot, hogy a későbbiekben ne kelljen beírni a játékosneved és **10%-al kevesebb várakozási időd** legyen"
+    "verify": "$t(emojis:check) Használd a `/verify` parancsot, hogy a későbbiekben ne kelljen beírni a játékosneved és **10%-al kevesebb várakozási időd** legyen",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Ismeretlen",
   "verification": {

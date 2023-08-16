@@ -47,7 +47,6 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "friends": "Tarkastele Hypixel-kaverilistaasi",
     "game-counts": "Näytä Hypixelin nykyiset pelimäärät",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "Luo luettelo mahdollisista Guess The Build -vastauksista perustuen annettuun vihjeeseen",
@@ -83,6 +82,31 @@
     "historical-walls": "$t(commands.historical-command, { \"name\": \"Walls\" })",
     "historical-warlords": "$t(commands.historical-command, { \"name\": \"Warlords\" })",
     "historical-woolwars": "$t(commands.historical-command, { \"name\": \"WoolWars\" })",
+    "session-arcade": "$t(commands.session-command, { \"name\": \"Arcade\" })",
+    "session-arenabrawl": "$t(commands.session-command, { \"name\": \"Arena Brawl\" })",
+    "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
+    "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
+    "session-bridge": "$t(commands.session-command, { \"name\": \"Bridge\" })",
+    "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
+    "session-command": "View your {{name}} session stats",
+    "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
+    "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
+    "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
+    "session-murdermystery": "$t(commands.session-command, { \"name\": \"Murder Mystery\" })",
+    "session-paintball": "$t(commands.session-command, { \"name\": \"Paintball\" })",
+    "session-pit": "$t(commands.session-command, { \"name\": \"Pit\" })",
+    "session-quake": "$t(commands.session-command, { \"name\": \"Quake\" })",
+    "session-skywars": "$t(commands.session-command, { \"name\": \"SkyWars\" })",
+    "session-smashheroes": "$t(commands.session-command, { \"name\": \"Smash Heroes\" })",
+    "session-speeduhc": "$t(commands.session-command, { \"name\": \"Speed UHC\" })",
+    "session-tntgames": "$t(commands.session-command, { \"name\": \"TNT Games\" })",
+    "session-turbokartracers": "$t(commands.session-command, { \"name\": \"Turbo Kart Racers\" })",
+    "session-uhc": "$t(commands.session-command, { \"name\": \"UHC\" })",
+    "session-vampirez": "$t(commands.session-command, { \"name\": \"VampireZ\" })",
+    "session-walls": "$t(commands.session-command, { \"name\": \"Walls\" })",
+    "session-warlords": "$t(commands.session-command, { \"name\": \"Warlords\" })",
+    "session-woolwars": "$t(commands.session-command, { \"name\": \"WoolWars\" })",
     "hypixel-command": "Näytä tilastosi pelissä {{name}}",
     "invite": "Kutsu Statsify",
     "language": "Vaihda kieltä, jolla näet vastaukset",
@@ -120,7 +144,6 @@
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
-    "mutuals": "Tarkastele yhteisiä Hypixel-kavereitasi toisen pelaajan kanssa",
     "paintball": "$t(commands.hypixel-command, { \"name\": \"Paintball\" })",
     "parkour": "$t(commands.hypixel-command, { \"name\": \"Parkour\" })",
     "ping": "Näytä Statsifyn kehittäjät ja osallistujat",
@@ -177,7 +200,6 @@
     "ratios-warlords": "$t(commands.ratios-command, { \"name\": \"Warlords\" })",
     "ratios-woolwars": "$t(commands.ratios-command, { \"name\": \"WoolWars\" })",
     "recentgames": "Näytä jonkun viimeisimmät Hypixel-pelit",
-    "reset": "Nollaa historialliset tilastosi",
     "server": "Näytä Minecraft-palvelimien status",
     "skin": "Näytä jonkun Minecraft-skini",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
@@ -214,7 +236,9 @@
     "watchdog": "Tarkastele Watchdogin antamien porttikieltojen määrää",
     "weekly": "View your weekly stats in various games",
     "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
-    "yesterday": "View your stats from yesterday in various games"
+    "yesterday": "View your stats from yesterday in various games",
+    "reset-historical": "Reset your historical stats",
+    "reset-session": "Reset your session stats"
   },
   "config": {
     "badge": {
@@ -282,9 +306,9 @@
         "description": "Statsify tukee suurinta osaa Hypixelin peleistä. Voit tarkistaa tilastosi pelissä komennolla `/[game]`. Voit esimerkiksi suorittaa `/bedwars` tarkistaaksesi BedWars tilastosi.",
         "title": "Pelit"
       },
-      "historical": {
-        "description": "Statsifyn avulla voit tarkistaa päivittäiset, viikottaiset ja kuukausittaiset tilastot komennoilla `/daily`, `/weekly` ja `/monthly`. Jos missasit nollauksen, voit katsella niitä suorittamalla `/yesterday`, `/lastweek`, ja `/lastmonth`. ",
-        "title": "Historiallinen"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify tarjoaa tuhansia tulostaulukoita `/leaderboard` komennon kautta. Tee `/leaderboard`, sitten valitse pelitila, ja valitse tulostaulukko, jota haluat katsella. Käytä hakupainiketta etsiäksesi tiettyä pelaajaa tai sijoitusta. Voit myös painaa ylös ja alas painikkeita nähdäksesi lisää sivuja.",
@@ -362,6 +386,10 @@
       "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Virheellinen pelaaja"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` ei vastaa muotoa `h:mm a`. Kirjoita aika muodossa `12:00 PM` tai `1:00 AM`.",
       "title": "Virheellinen nollausaika"
@@ -408,7 +436,7 @@
       "title": "Puuttuva vahvistus"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -424,17 +452,9 @@
       "description": "**{{username}}** ei omista yhtäkään viittaa!",
       "title": "Puuttuva viitta"
     },
-    "noFriends": {
-      "description": "Pelaajalla **{{displayName}}** ei ole kavereita $t(emojis:sad)! :(",
-      "title": "Kavereita ei löytynyt"
-    },
     "noGTBSolutions": {
       "description": "Emme löytäneet ratkaisuja annetulla vihjeellä!",
       "title": "Ei Guess The Build -ratkaisuja"
-    },
-    "noMutuals": {
-      "description": "Pelaajilla **{{displayNameOne}}** ja **{{displayNameTwo}}** ei ole yhteisiä kavereita!",
-      "title": "Ei yhteisiä kavereita"
     },
     "noRankings": {
       "description": "Pelaajalla **{{displayName}}** ei ole sijoituksia!",
@@ -494,7 +514,13 @@
     "new": "Pelaajan **{{displayName}}** historialliset tilastot on tarkistettu ensimmäistä kertaa Statsifylla. Heidän tilastonsa päivitetään nyt tähän aikaan joka päivä.",
     "reset": "$t(emojis:clock) **Nollaantuu** <t:{{time}}:R>",
     "resetButton": "Klikkaa nollataksesi",
-    "setResetTime": "Aseta nollausajaksi <t:{{time}}:t>."
+    "setResetTime": "Aseta nollausajaksi <t:{{time}}:t>.",
+    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -581,7 +607,6 @@
     "fkdr": "FKDR",
     "forcefieldTime": "Voimakentän aika",
     "fortune": "Onni",
-    "friends": "Kaverit",
     "game": "Peli",
     "game-total": "Yhteensä pelissä {{game}}",
     "gamesPlayed": "Peliä pelattu",
@@ -696,6 +721,7 @@
     "ranksGifted": "Rankkia lahjoitettu",
     "rebelKills": "Hyökkääjätapot",
     "renown": "Reownia",
+    "rewardStreak": "Reward Streak",
     "roundWins": "Kierrosvoittoja",
     "rune": "Riimu",
     "score": "Pisteet",
@@ -755,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Klikkaa **[tästä](<https://statsify.net/invite>)** kutsuaksesi Statsifyn omalle palvelimellesi!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** tarjoaa lisäominaisuuksia, kuten henkilökohtaiset profiilimerkit. Löydät täyden luettelon eduista **[täältä](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Tarkastele parhaita sijoituksiasi tulostaulukoilla **[Statsify Premium](<https://statsify.net/premium>)** käyttämällä `/rankings` -komentoa",
-    "verify": "$t(emojis:check) Tee `/verify` suorittaaksesi komentoja antamatta käyttäjänimeäsi sekä saadaksesi **10% lyhyemmät odotussajat**"
+    "verify": "$t(emojis:check) Tee `/verify` suorittaaksesi komentoja antamatta käyttäjänimeäsi sekä saadaksesi **10% lyhyemmät odotussajat**",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Tuntematon",
   "verification": {
