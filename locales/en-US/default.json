@@ -788,8 +788,8 @@
   "unknown": "Unknown",
   "verification": {
     "alreadyVerified": {
-      "description": "You are already linked to a Minecraft account. Run `/unlink` to unlink your current Minecraft account.",
-      "title": "Already Linked"
+      "description": "You are already linked to a Minecraft account. Run `/unverify` to unlink your current Minecraft account.",
+      "title": "Already Verified"
     },
     "invalidCode": {
       "description": "$t(verification.instructions.description)",
@@ -805,14 +805,14 @@
       "button": "Click Here to Enter Code"
     },
     "notVerified": {
-      "description": "Your Minecraft account has to be linked before you are able to unlink!",
-      "title": "Not Linked"
+      "description": "You have to be verified to a Minecraft account before you are able to unverify!",
+      "title": "Not Verified"
     },
     "requiredVerification": {
-      "description": "To use this command your Minecraft account must be linked. Run `/link` to link your account.",
-      "title": "Minecraft Account Link Required"
+      "description": "To use this command your Minecraft account must be verified. Run `/verify` to link your account.",
+      "title": "Verification Required"
     },
-    "successfulUnverification": "Successfully unlinked your account!",
-    "successfulVerification": "You are now linked to **{{displayName}}**"
+    "successfulUnverification": "Successfully unverified your account!",
+    "successfulVerification": "You are now verified to **{{displayName}}**"
   }
 }
