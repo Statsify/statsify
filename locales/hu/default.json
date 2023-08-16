@@ -306,9 +306,9 @@
         "description": "A Statsify támogatja a legtöbb Hypixel játékot. Statisztikáid megtekintéséhez használd a `/[játék]` parancsot. Például `/bedwars` a BedWars statisztikáid megtekintéséhez.",
         "title": "Játékok"
       },
-      "historical": {
-        "description": "A Statsify-al megtekintheted a napi, heti és havi statisztikáid a `/daily`, `/weekly` és `/monthly` parancsokkal. Ha visszaállítódtak a statisztikáid, megnézheted őket a `/yesterday`, `/lastweek`, és `/lastmonth` parancsokkal. ",
-        "title": "Történelmi Statisztikák"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "A Statsify számtalan toplistát nyújt a `/leaderboard` parancsával. Futtasd a `/leaderboard` parancsot, válassz egy játékmódot és egy toplistát amit megszeretnél tekinteni. A keresés gombbal kereshetsz egy adott játékosra vagy pozícióra is. A fel és le gombokkal pedig a különböző oldalakat tekintheted meg.",
@@ -386,6 +386,10 @@
       "description_discordId": "Nem található játékos `{{tag}}` discord idvel!",
       "title": "Ismeretlen Játékos"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "Az általad megadott idő formátuma nem megfelelő: `{{time}}`. Kérjük használd a következő formátumot: `h:mm a` pl:`12:00 PM` vagy `1:00 AM`.",
       "title": "Érvénytelen Visszaállítási Idő"
@@ -432,7 +436,7 @@
       "title": "Hiányzó Igazolás"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -512,7 +516,11 @@
     "resetButton": "Kattints a Visszaállításhoz",
     "setResetTime": "Visszaállíási idő beállítva erre: <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Kattints **[ide](<https://statsify.net/invite>)**, hogy meghívd a Statsify-t a saját szerveredre!",
     "premium": "$t(emojis:logos.gold) **[Statsify Prémium](<https://statsify.net/premium>)** új funkciókat nyújt a felhasználóknak, mint például egyéni profil ikonok. Az összes előnyről találhatsz egy listát **[itt](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Nézd meg a toplistás pozícióidat **[Statsify Premium]**-al (<https://statsify.net/premium>) a `/rankings` használatával",
-    "verify": "$t(emojis:check) Használd a `/verify` parancsot, hogy a későbbiekben ne kelljen beírni a játékosneved és **10%-al kevesebb várakozási időd** legyen"
+    "verify": "$t(emojis:check) Használd a `/verify` parancsot, hogy a későbbiekben ne kelljen beírni a játékosneved és **10%-al kevesebb várakozási időd** legyen",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Ismeretlen",
   "verification": {
