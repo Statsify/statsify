@@ -47,7 +47,7 @@ export class VerifyCommand {
     const user = context.getUser();
     if (user?.uuid) throw new ErrorMessage("verification.alreadyVerified");
 
-    const verifyGif = this.getVerifyGif();
+    // const verifyGif = this.getVerifyGif();
 
     const embed = new EmbedBuilder()
       .title((t) => t("verification.instructions.title"))
