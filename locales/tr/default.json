@@ -388,7 +388,7 @@
     },
     "invalidSession": {
       "title": "Geçersiz Oturum",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+      "description": "**{{displayName}}** oyuncusunun aktif bir oturumu yok. Doğrulanmışken`/session` komutu ile bir oturum açabilirler."
     },
     "invalidResetTime": {
       "description": "`{{time}}`, `h:mm a` formatına uymamaktadır. `12:00 PM` veya `1:00 AM`'ye benzer bir saat girin.",
