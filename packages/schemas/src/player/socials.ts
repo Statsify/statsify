@@ -19,6 +19,9 @@ export class PlayerSocials {
   public instagram?: string;
 
   @Field({ store: { required: false } })
+  public tiktok?: string;
+
+  @Field({ store: { required: false } })
   public twitch?: string;
 
   @Field({ store: { required: false } })
@@ -31,6 +34,7 @@ export class PlayerSocials {
     this.discord = data.DISCORD;
     this.forums = data.HYPIXEL;
     this.instagram = data.INSTAGRAM;
+    this.tiktok = data.TIKTOK;
     this.twitch = data.TWITCH;
     this.twitter = data.TWITTER;
     this.youtube = data.YOUTUBE;

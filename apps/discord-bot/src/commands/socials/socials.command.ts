@@ -50,11 +50,15 @@ export class SocialsCommand {
         this.formatSocial(socials.instagram)
       )
       .field(
+        (t) => `${t("emojis:socials.embed.tiktok")} TikTok`,
+        this.formatSocial(socials.tiktok)
+      )
+      .field(
         (t) => `${t("emojis:socials.embed.twitch")} Twitch`,
         this.formatSocial(socials.twitch)
       )
       .field(
-        (t) => `${t("emojis:socials.embed.twitter")} Twitter`,
+        (t) => `${t("emojis:socials.embed.twitter")} X`,
         this.formatSocial(socials.twitter)
       )
       .field(
