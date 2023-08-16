@@ -802,7 +802,7 @@
         "title": "Enter your Verification Code",
         "input": "Verification Code"
       },
-      "button": "Click Here to Enter Code"
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "You have to be verified before you are able to unverify!",
