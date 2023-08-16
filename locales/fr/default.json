@@ -307,7 +307,7 @@
         "title": "Jeux"
       },
       "session": {
-        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "description": "Statsify vous permet de voir vos stats comme si vous aviez commencé à jouer aujourd'hui avec `/session`. La commande `/reset session` vous permet de réinnisialiser votre session et d'en recommencer une nouvelle.",
         "title": "Sessions"
       },
       "leaderboards": {
@@ -387,8 +387,8 @@
       "title": "Joueur Invalide"
     },
     "invalidSession": {
-      "title": "Invalid Session",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+      "title": "Session Invalide",
+      "description": "**{{displayName}}** n'a pas de session active. Il peut en créer une en tappant `/session` en étant vérifié."
     },
     "invalidResetTime": {
       "description": "`{{time}}` ne correspond pas au format `h:mm a`. Entrez une heure dans le format similaire à `12:00 PM` ou `1:00 AM`.",
@@ -436,7 +436,7 @@
       "title": "Vérification Manquante"
     },
     "missingPlayerVerification": {
-      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** n'est pas **verifié**. Il doit tapper `/verify` afin de vérifier son compte.",
       "title": "Vérification Manquante"
     },
     "missingSelfVerification": {
@@ -518,8 +518,8 @@
     "newSession": "Les stats de session de **{{displayName}}** ont été vérifiées pour la première fois sur Statsify.",
     "setSessionReset": "Vous avez bien réinitialisé vos stats de session.",
     "disabledWarning": {
-      "title": "Historical Commands are no Longer Available",
-      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+      "title": "Les Commandes Historiques ne sont Plus Disponnibles",
+      "description": "Les nouvelles [conditions de l'API](https://developer.hypixel.net/policies/) d'Hypixel ne permettent plus de \"sondages en continu des données des joueurs\", ce qui signifie que Statsify ne peut plus suivre les stats des joueurs tous les jours.\n\nAu lieu de cela, vous pouvez essayer de démarrer une session avec `/session`. Quand vous démarrez une session, le bot gardera une trace de vos stats à partir du moment où vous avez initialement exécuté la commande jusqu'à la prochaine fois que vous l'exécuterez. Pour réinitialiser vos stats de session, vous pouvez exécuter `/reset session`."
     }
   },
   "leaderboard": {
@@ -782,8 +782,8 @@
     "premium": "$t(emojis:logos.gold) **[Statsify Prime](<https://statsify.net/premium>)** offre des fonctionnalités supplémentaires comme des badges de profil personnalisés. Trouvez la liste complète des avantages **[ici](<https://statsify.net/premium> )** !",
     "rankings": "$t(emojis:logos.iron) Voire vos meilleures positions dans les leaderboards avec **[Statsify Prime](<https://statsify.net/premium>)** en utilisant `/rankings`",
     "verify": "$t(emojis:check) Exécutez `/verify` pour exécuter des commandes sans entrer votre nom d'utilisateur et recevez **10% de temps de recharge réduits**",
-    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
-    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
+    "resetSession": "$t(emojis:reset) Vous pouvez **réinitialiser** vos stats de session avec `/reset session`.",
+    "sessions": "$t(emojis:reset) Suivez votre progression de stat avec Sessions et `/session`."
   },
   "unknown": "Inconnu",
   "verification": {
