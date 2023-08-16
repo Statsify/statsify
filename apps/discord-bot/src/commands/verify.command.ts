@@ -72,7 +72,7 @@ export class VerifyCommand {
     const button = new ButtonBuilder()
       .label((t) => t("verification.instructions.button"))
       .style(ButtonStyle.Primary)
-      .emoji((t) => t("emojis:check"));
+      .emoji((t) => t("emojis:text-select"));
 
     const listener = context.getListener();
 
