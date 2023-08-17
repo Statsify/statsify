@@ -326,7 +326,7 @@
     },
     "ping": {
       "contributors": "Contributeurs",
-      "core": "Core",
+      "core": "Créateurs",
       "pong": "Pong !",
       "title": "Crédits de Statsify",
       "translators": "Traducteurs"
@@ -453,7 +453,7 @@
       "title": "Cape Manquante"
     },
     "noGTBSolutions": {
-      "description": "Nous n'avons pas pu trouver des solutions pour l'indice fourni !",
+      "description": "Nous n'avons pas pu trouver de solutions pour l'indice fourni !",
       "title": "Pas de Solutions pour le Guess The Build"
     },
     "noRankings": {
@@ -477,14 +477,14 @@
       "title": "Guilde Invalide"
     },
     "premiumRequired": {
-      "description": "Regardez tous les fonctionnalités disponibles [ici](https://statsify.net/premium).",
+      "description": "Découvrez toutes les fonctionnalités disponibles [here](https://statsify.net/premium).",
       "preview": "Découvrez toutes les fonctionnalités disponibles [here](https://statsify.net/premium). Vous trouverez ci-dessous un petit aperçu de ce que la commande fait/change.",
       "title": "Statsify {{tier}} est requis pour exécuter cette commande"
     },
     "staffOnly": {
       "description": "Cette commande est uniquement disponible pour les membres du staff de Statsify !",
       "preview": "Ci-dessous, un petit aperçu de ce que la commande fait/change",
-      "title": "Uniquement pour le Staff"
+      "title": "Résérvé au Staff"
     },
     "tagNotFound": {
       "description": "Le tag que vous avez fourni n'a pas été trouvé !",
@@ -504,16 +504,16 @@
     }
   },
   "historical": {
-    "aboutResetting": "Cliquez sur reset ci-dessous pour réinitialiser vos statistiques historiques tous les jours **en ce moment**.\n\n**ATTENTION** : Ceci supprimera toutes vos statistiques historiques et **ne pourra pas être annulé**. \nSi vous voulez être en mesure de réinitialiser à un moment spécifique, regarde $t(socials.premium).",
+    "aboutResetting": "Cliquez sur reset ci-dessous pour réinitialiser vos statistiques historiques tous les jours **à l'heure actuelle**.\n\n**ATTENTION** : Ceci supprimera toutes vos statistiques historiques et **ne pourra pas être annulé**. \nSi vous voulez être en mesure de réinitialiser à un moment spécifique, regardez $t(socials.premium).",
     "aboutResettingPremium": "Cliquez sur le bouton reset ci-dessous pour réinitialiser vos statistiques historiques. \n\n**ATTENTION:** Cela supprimera toutes vos statistiques historiques et **ne peut pas être annulé**.",
     "modal": {
-      "resetTime": "Choisir une heure de réinitialisation",
-      "timezone": "Choisir un fuseau horaire",
-      "title": "Heure de réinitialisation historique"
+      "resetTime": "Choisir une Heure de Réinitialisation",
+      "timezone": "Choisir un Fuseau Horaire",
+      "title": "Heure de Réinitialisation Historique"
     },
     "new": "** Les statistiques historiques de {{displayName}}** ont été vérifiées pour la première fois sur Statsify. Ses statistiques seront maintenant mises à jour chaque jour à cette heure.",
-    "reset": "$t(emojis:clock) **Réinitialise à** <t:{{time}}:R>",
-    "resetButton": "Cliquez pour réinitialiser",
+    "reset": "$t(emojis:clock) **Se réinitialise** <t:{{time}}:R>",
+    "resetButton": "Cliquer pour Réinitialiser",
     "setResetTime": "Définissez votre temps de réinitialisation à <t:{{time}}:t>.",
     "newSession": "Les stats de session de **{{displayName}}** ont été vérifiées pour la première fois sur Statsify.",
     "setSessionReset": "Vous avez bien réinitialisé vos stats de session.",
@@ -524,18 +524,18 @@
   },
   "leaderboard": {
     "guildInput": {
-      "label": "Rechercher par une guilde",
+      "label": "Rechercher par une Guilde",
       "placeholder": "Entrez le nom d'une guilde. Exemple : Les Gaulois"
     },
     "modal": {
-      "title": "Rechercher dans le classement"
+      "title": "Rechercher dans le Classement"
     },
     "playerInput": {
       "label": "Rechercher par un joueur",
       "placeholder": "Entrez le nom d'un joueur. Par exemple : CanadaLands"
     },
     "positionInput": {
-      "label": "Rechercher par position",
+      "label": "Rechercher par une Position",
       "placeholder": "Entrez une position, par exemple: 5000"
     }
   },
@@ -560,10 +560,10 @@
     "adrenaline": "Adrénaline",
     "assists": "Assistances",
     "bblr": "BBLR",
-    "bedsBroken": "Lits détruits",
+    "bedsBroken": "Lits Détruits",
     "bedsLost": "Lits Perdus",
     "bestRound": "Meilleure Manche",
-    "bestTime": "Meilleure temps",
+    "bestTime": "Meilleurs Temps",
     "bestWinstreak": "Meilleure Winstreak",
     "bigShot": "Tir Large",
     "blocksBroken": "Bloques Cassés",
@@ -572,8 +572,8 @@
     "bombsDefused": "Bombes Désamorcées",
     "bombsPlanted": "Bombes Plantées",
     "bounty": "Bounty",
-    "bountyKills": "Eliminations de Bounty",
-    "bowKills": "Eliminations à l'Arc",
+    "bountyKills": "Éliminations de Bounty",
+    "bowKills": "Éliminations à l'Arc",
     "boxesPickedUp": "Boîtes Collectées",
     "bronzeTrophies": "Trophées de Bronze",
     "candyFound": "Bonbons Trouvés",
@@ -589,13 +589,13 @@
     "doublesWins": "Victoires en Doubles",
     "eggsFound": "Oeufs Trouvés",
     "emeralds": "Émeraudes",
-    "empireKills": "Eliminations en Défense",
+    "empireKills": "Éliminations en Défenseur",
     "ended": "Terminé",
     "endurance": "Endurance",
     "event-level": "Niveau d''Événement",
     "event-exp": "EXP d'Evénement",
     "exp": "EXP",
-    "expGained": "EXP Obtenues",
+    "expGained": "EXP obtenue",
     "extraUltimates": "Ultimates Supplémentaires",
     "fastestDetectiveWin": "Victoire la Plus Rapide en Détective",
     "fastestMurdererWin": "Victoire la Plus Rapide en Meurtrier",
@@ -622,7 +622,7 @@
     "grandPrixTokens": "Jetons de GP",
     "guild": {
       "averageMemberGexp": "GEXP Moyenne des Membres",
-      "createdOn": "Créé le",
+      "createdOn": "Créé Le",
       "daily": "Quotidienne",
       "daily-gexp": "$t(stats.guild.daily) $t(stats.guild.gexp)",
       "date": "Date",
@@ -636,7 +636,7 @@
       "monthly-gexp": "$t(stats.guild.gexp) $t(stats.guild.monthly)",
       "quests": "Quêtes de Guilde",
       "rank": "Grade de Guilde",
-      "scaledGexp": "GEXP mise à l'échelle",
+      "scaledGexp": "GEXP Mise à l'Échelle",
       "weekly": "Hebdomadaire",
       "weekly-gexp": "$t(stats.guild.weekly) $t(stats.guild.gexp)"
     },
@@ -644,13 +644,13 @@
     "heads": "Têtes",
     "headsEaten": "Têtes Consommées",
     "headshotKills": "Tirs Mortels dans la Tête",
-    "headshots": "Tirs Dans La Tête",
+    "headshots": "Tirs dans la Tête",
     "headstart": "Avance",
     "healing": "Guérison",
     "heroWins": "Victoires en Héro",
     "hidden": "Caché",
-    "hiderWins": "Victoires en tant que Cacheur",
-    "highestKillstreak": "Killstreak le Plus Élevée",
+    "hiderWins": "Victoires en Cacheur",
+    "highestKillstreak": "Killstreak La Plus Élevée",
     "highestScoreFinals": "Meilleurs Score en Finale",
     "highestScoreQualifications": "Meilleurs Score en Épreuve de Qualification",
     "highestStreak": "Série la Plus Élevée",
@@ -661,10 +661,10 @@
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Frappes",
-    "kills": "Eliminations",
+    "kills": "Éliminations",
     "killsAsInfected": "Eliminations en Infecté",
-    "killsAsMurderer": "Eliminations en Meurtrier",
-    "killsAsSurvivor": "Eliminations en Survivant",
+    "killsAsMurderer": "Éliminations en Meurtrier",
+    "killsAsSurvivor": "Éliminations en Survivant",
     "killstreaks": "Killstreaks",
     "kit": "Kit Actuel",
     "kwr": "KWR",
@@ -688,7 +688,7 @@
     "maxPoints": "Score Maximum",
     "maxWave": "Vague Maximale",
     "mode": "Mode",
-    "mostVampireKills": "Le Plus d'Eliminations de Vampire",
+    "mostVampireKills": "Le Plus de Vampires Tués",
     "mounts": "Montures",
     "murdererWins": "Victoires en Meurtrier",
     "mysticsEnchanted": "Mystiques Enchantés",
@@ -719,7 +719,7 @@
     },
     "quests": "Quêtes",
     "ranksGifted": "Grades Offerts",
-    "rebelKills": "Eliminations en Attaquant",
+    "rebelKills": "Éliminations en Attaquant",
     "renown": "Renommée",
     "rewardStreak": "Série de Récompenses",
     "roundWins": "Manches gagnées",
@@ -743,14 +743,14 @@
     "survivorWins": "Victoires en Survivant",
     "tags": "Tags",
     "tauntsUsed": "Taunts utilisées",
-    "thrownKnifeKills": "Eliminations en Lançant le Couteau",
+    "thrownKnifeKills": "Éliminations en Lançant le Couteau",
     "title": "Titre",
     "tokens": "Jetons",
     "total": "Total",
     "totalTrophies": "Trophées Totaux",
     "trail": "Traînée",
     "transfusion": "Transfusion",
-    "trapKills": "Eliminations avec des Pièges",
+    "trapKills": "Éliminations avec des Pièges",
     "trigger": "Déclencheur",
     "tripleShot": "Triple Tir",
     "trophyRate": "Taux de Trophée",
@@ -764,12 +764,12 @@
     "wins": "Victoires",
     "winstreak": "Winstreak",
     "witherDamage": "Dégâts au Wither",
-    "witherKills": "Withers tués",
+    "witherKills": "Withers Tués",
     "wlr": "WLR",
     "wool": "Laine",
     "woolCaptures": "Laines Capturées",
     "woolPlaced": "Laine Placée",
-    "zombieKills": "Zombies tués",
+    "zombieKills": "Zombies Tués",
     "potionsBrewed": "Potions Distillées",
     "positions": "Positions",
     "powerupsCollected": "Power-Ups collectés",
