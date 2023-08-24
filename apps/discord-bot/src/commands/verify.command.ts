@@ -15,7 +15,7 @@ import {
   EmbedBuilder,
   ErrorMessage,
   IMessage,
-  InteractionAttachment,
+  LocalizeFunction,
   MemberService,
   ModalBuilder,
   TextInputBuilder,
@@ -27,11 +27,10 @@ import {
 } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
 import { config } from "@statsify/util";
-import { getAssetPath } from "@statsify/assets";
-import { readFileSync } from "node:fs";
 
 const SUPPORT_BOT_GUILD_ID = config("supportBot.guild");
 const SUPPORT_BOT_MEMBER_ROLE_ID = config("supportBot.memberRole");
+const VERIFY_VIDEO = "https://www.youtube.com/watch?v=CCqBxdXZ9G4";
 
 @Command({ description: (t) => t("commands.verify"), cooldown: 5 })
 export class VerifyCommand {
@@ -45,15 +44,8 @@ export class VerifyCommand {
 
     const userId = context.getInteraction().getUserId();
     const user = context.getUser();
+
     if (user?.uuid) throw new ErrorMessage("verification.alreadyVerified");
-
-    // const verifyGif = this.getVerifyGif();
-
-    const embed = new EmbedBuilder()
-      .title((t) => t("verification.instructions.title"))
-      .description((t) => t("verification.instructions.description"))
-      .color(STATUS_COLORS.info);
-    // .image(`attachment://${verifyGif.name}`);
 
     const modal = new ModalBuilder()
       .title((t) => t("verification.instructions.modal.title"))
@@ -69,20 +61,23 @@ export class VerifyCommand {
         )
       );
 
-    const button = new ButtonBuilder()
+    const codeButton = new ButtonBuilder()
       .label((t) => t("verification.instructions.button"))
       .style(ButtonStyle.Primary)
       .emoji((t) => t("emojis:text-select"));
 
+    const tutorialButton = this.tutorialButton();
+
     const listener = context.getListener();
 
     const removeComponentsTimeout = setTimeout(() => {
-      listener.removeHook(button.getCustomId());
+      listener.removeHook(codeButton.getCustomId());
+      listener.removeHook(tutorialButton.getCustomId());
       listener.removeHook(modal.getCustomId());
       context.reply({ components: [] });
     }, 1000 * 60 * 5);
 
-    listener.addHook(button.getCustomId(), () => ({
+    listener.addHook(codeButton.getCustomId(), () => ({
       type: InteractionResponseType.Modal,
       data: modal.build(t),
     }));
@@ -131,29 +126,43 @@ export class VerifyCommand {
 
       context.reply({ embeds: [embed], components: [] });
 
-      listener.removeHook(button.getCustomId());
+      listener.removeHook(codeButton.getCustomId());
       listener.removeHook(modal.getCustomId());
     });
 
-    const row = new ActionRowBuilder([button]);
+    const row = new ActionRowBuilder([codeButton, tutorialButton]);
 
     return {
-      embeds: [embed],
+      content: (t) => `# [${t("verification.instructions.title")} ${t("emojis:socials.h1.youtube")}](${VERIFY_VIDEO})\n${this.verificationSteps(t, false)}`,
       components: [row],
-      // files: [verifyGif],
     };
   }
 
-  private getVerifyGif(): InteractionAttachment {
-    const buffer = readFileSync(getAssetPath("verify.gif"));
-    return { name: "verify.gif", data: buffer };
+  private verificationSteps(t: LocalizeFunction, inEmbed: boolean): string {
+    const minecraft = inEmbed ? t("emojis:socials.embed.minecraft") : t("emojis:socials.minecraft");
+    const check = inEmbed ? t("emojis:socials.embed.check") : t("emojis:socials.check");
+    const discord = inEmbed ? t("emojis:socials.embed.discord") : t("emojis:socials.discord");
+
+    return [
+      `${minecraft} ${t("verification.instructions.steps.one")}`,
+      `${check} ${t("verification.instructions.steps.two")}`,
+      `${discord} ${t("verification.instructions.steps.three")}`,
+    ].join("\n");
+  }
+
+  private tutorialButton() {
+    return new ButtonBuilder()
+      .label((t) => t("verification.invalidCode.button"))
+      .style(ButtonStyle.Link)
+      .url(VERIFY_VIDEO)
+      .emoji((t) => t("emojis:socials.youtube"));
   }
 
   private invalidCodeError() {
     return new ErrorMessage(
       (t) => t("verification.invalidCode.title"),
-      (t) => t("verification.invalidCode.description"),
-      { image: this.getVerifyGif() }
+      (t) => `${t("verification.invalidCode.description")}\n\n${this.verificationSteps(t, true)}`,
+      { buttons: [this.tutorialButton()] }
     );
   }
 }
