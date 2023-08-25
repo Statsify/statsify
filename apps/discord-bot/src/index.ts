@@ -13,10 +13,10 @@ import { Container } from "typedi";
 import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 import { Logger } from "@statsify/logger";
+import { VerifyCommand } from "#commands/verify.command";
 import { config } from "@statsify/util";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import "@sentry/tracing";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -64,5 +64,9 @@ const listener = CommandListener.create(
   rest,
   commands
 );
+
+// Register universal component listeners that never reset
+const verifyCommand = Container.get(VerifyCommand);
+verifyCommand.registerComponentListeners(listener);
 
 await listener.listen();

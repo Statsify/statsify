@@ -794,7 +794,7 @@
     "invalidCode": {
       "title": "Invalid Verification Code",
       "description": "Check your verification code or try again by following these steps: ",
-      "button": "Watch the Tutorial"
+      "button": "Watch Tutorial"
     },
     "instructions": {
       "title": "Link your Minecraft Account to Statsify",
