@@ -116,9 +116,6 @@ importers:
       '@sentry/node':
         specifier: ^7.64.0
         version: 7.64.0
-      '@sentry/tracing':
-        specifier: ^7.64.0
-        version: 7.64.0
       '@statsify/api-client':
         specifier: '*'
         version: link:../../packages/api-client
@@ -187,9 +184,6 @@ importers:
   apps/discord-bot:
     dependencies:
       '@sentry/node':
-        specifier: ^7.64.0
-        version: 7.64.0
-      '@sentry/tracing':
         specifier: ^7.64.0
         version: 7.64.0
       '@statsify/api-client':
@@ -366,9 +360,6 @@ importers:
       '@sentry/node':
         specifier: ^7.64.0
         version: 7.64.0
-      '@sentry/tracing':
-        specifier: ^7.64.0
-        version: 7.64.0
       '@statsify/api-client':
         specifier: '*'
         version: link:../../packages/api-client
@@ -431,9 +422,6 @@ importers:
   apps/verify-server:
     dependencies:
       '@sentry/node':
-        specifier: ^7.64.0
-        version: 7.64.0
-      '@sentry/tracing':
         specifier: ^7.64.0
         version: 7.64.0
       '@statsify/assets':
@@ -2064,13 +2052,6 @@ packages:
       tslib: 2.6.1
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /@sentry/tracing@7.64.0:
-    resolution: {integrity: sha512-Php0XnnJolfxkFdgLlgwgRz3bgHmu/7gDRQaGQHJeDgCCjrmNHI+sHi8zmkWCWSO0Z1mi111n2ZUr9B9YLPBTg==}
-    engines: {node: '>=8'}
-    dependencies:
-      '@sentry-internal/tracing': 7.64.0
     dev: false
 
   /@sentry/types@7.64.0:
