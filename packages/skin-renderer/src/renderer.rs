@@ -6,11 +6,11 @@ use crate::instance::{Instance, InstanceRaw};
 use crate::light::LightUniform;
 use crate::model::{DrawModel, Material, Model, ModelVertex, Vertex};
 use crate::resources::load_model;
+use crate::skin_loader::SkinLoader;
 use crate::texture::Texture;
 use bytemuck::cast_slice;
 use futures_intrusive::channel;
 use image::{ImageBuffer, Rgba};
-use reqwest::Client;
 use std::io::{BufWriter, Cursor};
 use wgpu::util::DeviceExt;
 
@@ -38,7 +38,7 @@ pub struct SkinRenderer {
   texture_extent: wgpu::Extent3d,
   texture_bind_group_layout: wgpu::BindGroupLayout,
 
-  client: Client,
+  loader: SkinLoader,
 }
 
 impl SkinRenderer {
@@ -241,7 +241,7 @@ impl SkinRenderer {
       texture_extent,
       texture_bind_group_layout,
 
-      client: Client::new(),
+      loader: SkinLoader::new(),
     })
   }
 
@@ -250,7 +250,7 @@ impl SkinRenderer {
     model_type: SkinModelType,
     model_texture_url: &str,
   ) -> SkinRendererResult<Vec<u8>> {
-    let model_texture_bytes = self.get_skin_from_url(model_texture_url).await?;
+    let model_texture_bytes = self.loader.get_skin(model_texture_url).await?;
     let model_texture = Texture::from_bytes(&self.device, &self.queue, &model_texture_bytes)?;
     let material = Material::new(&self.device, model_texture, &self.texture_bind_group_layout);
 
@@ -427,17 +427,6 @@ impl SkinRenderer {
       Ok(bytes)
     } else {
       Err(SkinRendererError::RenderFailure)
-    }
-  }
-
-  async fn get_skin_from_url(&self, url: &str) -> SkinRendererResult<Vec<u8>> {
-    let response = self.client.get(url).send().await?;
-
-    if response.status().is_success() {
-      let bytes = response.bytes().await?;
-      Ok(bytes.to_vec())
-    } else {
-      Err(SkinRendererError::MissingSkinTexture)
     }
   }
 }

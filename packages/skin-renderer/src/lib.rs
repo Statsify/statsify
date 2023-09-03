@@ -6,6 +6,7 @@ mod light;
 mod model;
 mod renderer;
 mod resources;
+mod skin_loader;
 mod texture;
 
 use async_once::AsyncOnce;
