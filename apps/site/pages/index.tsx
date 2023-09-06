@@ -141,9 +141,8 @@ const Index = () => (
       align="left"
     >
       Statsify has a plethora of helpful Hypixel utilities. For example, you can use{" "}
-      <Code>/friends</Code> to access any player's friend list or <Code>/mutuals</Code> to
-      see mutual friends between players. Statsify also allows you to monitor player
-      activity using <Code>/status</Code> and <Code>/recentgames</Code>. Using{" "}
+      <Code>/recentgames</Code> to see any player's last played games or <Code>/status</Code> to
+      see what a player is currently playing. Using{" "}
       <Code>/gamecounts</Code>, you can track Hypixel's game popularity without ever
       opening minecraft.
     </Feature>
