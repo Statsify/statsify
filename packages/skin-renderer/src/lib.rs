@@ -25,6 +25,8 @@ lazy_static! {
 
 #[napi]
 pub async fn render_skin(skin_url: Option<String>, is_slim: bool) -> Result<Buffer> {
+  let start = std::time::Instant::now();
+
   let renderer = SKIN_RENDERER.get().await;
 
   let model_type = if is_slim {
@@ -38,6 +40,8 @@ pub async fn render_skin(skin_url: Option<String>, is_slim: bool) -> Result<Buff
   } else {
     renderer.render_default_texture(model_type).await?
   };
+
+  println!("Rendered skin in {:?}", start.elapsed());
 
   Ok(skin_render.into())
 }

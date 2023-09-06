@@ -1,22 +1,7 @@
-use bytes::{Bytes, BytesMut};
-use image::DynamicImage;
+use image::{DynamicImage, GenericImage, GenericImageView, ImageResult, Rgba};
 use reqwest::Client;
 
 use crate::error::{SkinRendererError, SkinRendererResult};
-
-fn has_trasnparency(image: &[u8], x0: usize, y0: usize, width: usize, height: usize) -> bool {
-  for x in x0..width {
-    for y in y0..height {
-      let index = (y * width + x) * 4;
-
-      if image[index + 3] != 255 {
-        return true;
-      }
-    }
-  }
-
-  false
-}
 
 pub struct SkinLoader {
   client: Client,
@@ -30,6 +15,27 @@ enum SkinFormat {
   Modern = 64,
 }
 
+trait SkinSize {
+  fn width(&self) -> u32;
+  fn height(&self) -> u32;
+}
+
+impl SkinSize for SkinFormat {
+  fn height(&self) -> u32 {
+    match self {
+      SkinFormat::Legacy => 32,
+      SkinFormat::Modern => 64,
+    }
+  }
+
+  fn width(&self) -> u32 {
+    match self {
+      SkinFormat::Legacy => 64,
+      SkinFormat::Modern => 64,
+    }
+  }
+}
+
 impl SkinLoader {
   pub fn new() -> Self {
     Self {
@@ -37,83 +43,123 @@ impl SkinLoader {
     }
   }
 
-  pub async fn get_skin(&self, url: &str) -> SkinRendererResult<Vec<u8>> {
+  pub async fn get_skin(&self, url: &str) -> SkinRendererResult<DynamicImage> {
     let response = self.client.get(url).send().await?;
 
     if response.status().is_success() {
       let bytes = response.bytes().await?;
-      let skin = image::load_from_memory(&bytes)?;
+      let image = image::load_from_memory_with_format(&bytes, image::ImageFormat::Png)?;
+      let skin = Self::process_skin(image)?;
 
-      let skin = Self::process_skin(skin);
-      Ok(skin.to_vec())
+      Ok(skin)
     } else {
       Err(SkinRendererError::MissingSkinTexture)
     }
   }
 
-  fn process_skin(skin: DynamicImage) -> Bytes {
+  fn process_skin(skin: DynamicImage) -> ImageResult<DynamicImage> {
     let format = Self::skin_format(&skin);
 
-    println!("Skin format: {:?}", format);
-
     let mut skin = match format {
-      SkinFormat::Legacy => Self::convert_legacy_skin(skin),
+      SkinFormat::Legacy => Self::convert_legacy_skin(skin)?,
       SkinFormat::Modern => skin,
     };
 
-    Self::fix_opacity(&mut skin);
+    Self::fix_opaque_skin(&mut skin, format);
 
-    skin
+    Ok(skin)
   }
 
   fn skin_format(skin: &DynamicImage) -> SkinFormat {
-    if skin.height() == SkinFormat::Legacy as u32 {
+    if skin.height() == SkinFormat::Legacy.height() {
       SkinFormat::Legacy
     } else {
       SkinFormat::Modern
     }
   }
 
-  fn convert_legacy_skin(legacy_skin: DynamicImage) -> DynamicImage {
-    legacy_skin.resize(nwidth, nheight, filter)
+  /// Legacy skins are 64x32 and are missing separate textures for the left leg and arm.
+  /// Legacy skins also do not have any 2nd layer textures.
+  fn convert_legacy_skin(legacy_skin: DynamicImage) -> ImageResult<DynamicImage> {
+    let modern = SkinFormat::Modern;
+    let mut skin = DynamicImage::new_rgba8(modern.width(), modern.height());
 
-    copy_region(&mut skin, 4, 16, 4, 4, 20, 48); // Top Leg
-    copy_region(&mut skin, 8, 16, 4, 4, 24, 48); // Bottom Leg
-    copy_region(&mut skin, 0, 20, 4, 12, 24, 52); // Outer Leg
-    copy_region(&mut skin, 4, 20, 4, 12, 20, 52); // Front Leg
-    copy_region(&mut skin, 8, 20, 4, 12, 16, 52); // Inner Leg
-    copy_region(&mut skin, 12, 20, 4, 12, 28, 52); // Back Leg
-    copy_region(&mut skin, 44, 16, 4, 4, 36, 48); // Top Arm
-    copy_region(&mut skin, 48, 16, 4, 4, 40, 48); // Bottom Arm
-    copy_region(&mut skin, 40, 20, 4, 12, 40, 52); // Outer Arm
-    copy_region(&mut skin, 44, 20, 4, 12, 36, 52); // Front Arm
-    copy_region(&mut skin, 48, 20, 4, 12, 32, 52); // Inner Arm
-    copy_region(&mut skin, 52, 20, 4, 12, 44, 52); // Back Arm
+    skin.copy_from(&legacy_skin, 0, 0)?;
 
-    skin.freeze()
+    // Copy right leg to left leg position
+    skin.copy_from(&legacy_skin.crop_imm(0, 16, 16, 16), 16, 48)?;
+
+    // Copy right arm to left arm position
+    skin.copy_from(&legacy_skin.crop_imm(40, 16, 16, 16), 32, 48)?;
+
+    Ok(skin)
   }
 
-  fn fix_opacity(skin: &mut DynamicImage) {}
+  // See https://github.com/bs-community/skinview3d/issues/93
+  /// Fixes skins with opaque backgrounds by making the background transparent.
+  fn fix_opaque_skin(skin: &mut DynamicImage, original_format: SkinFormat) {
+    // if the skin has any transparent pixels then it's not an opaque skin
+    let width = original_format.width();
+    let height = original_format.height();
+
+    for x in 0..width {
+      for y in 0..height {
+        let pixel = skin.get_pixel(x, y);
+
+        if pixel[3] == 0 {
+          return;
+        }
+      }
+    }
+
+    let transparent = Rgba([0, 0, 0, 0]);
+
+    fill_rect(skin, 40, 0, 8, 8, transparent); // Helm Top
+    fill_rect(skin, 48, 0, 8, 8, transparent); // Helm Bottom
+    fill_rect(skin, 32, 8, 8, 8, transparent); // Helm Right
+    fill_rect(skin, 40, 8, 8, 8, transparent); // Helm Front
+    fill_rect(skin, 48, 8, 8, 8, transparent); // Helm Left
+    fill_rect(skin, 56, 8, 8, 8, transparent); // Helm Back
+
+    if matches!(original_format, SkinFormat::Modern) {
+      fill_rect(skin, 4, 32, 4, 4, transparent); // Right Leg Layer 2 Top
+      fill_rect(skin, 8, 32, 4, 4, transparent); // Right Leg Layer 2 Bottom
+      fill_rect(skin, 0, 36, 4, 12, transparent); // Right Leg Layer 2 Right
+      fill_rect(skin, 4, 36, 4, 12, transparent); // Right Leg Layer 2 Front
+      fill_rect(skin, 8, 36, 4, 12, transparent); // Right Leg Layer 2 Left
+      fill_rect(skin, 12, 36, 4, 12, transparent); // Right Leg Layer 2 Back
+      fill_rect(skin, 20, 32, 8, 4, transparent); // Torso Layer 2 Top
+      fill_rect(skin, 28, 32, 8, 4, transparent); // Torso Layer 2 Bottom
+      fill_rect(skin, 16, 36, 4, 12, transparent); // Torso Layer 2 Right
+      fill_rect(skin, 20, 36, 8, 12, transparent); // Torso Layer 2 Front
+      fill_rect(skin, 28, 36, 4, 12, transparent); // Torso Layer 2 Left
+      fill_rect(skin, 32, 36, 8, 12, transparent); // Torso Layer 2 Back
+      fill_rect(skin, 44, 32, 4, 4, transparent); // Right Arm Layer 2 Top
+      fill_rect(skin, 48, 32, 4, 4, transparent); // Right Arm Layer 2 Bottom
+      fill_rect(skin, 40, 36, 4, 12, transparent); // Right Arm Layer 2 Right
+      fill_rect(skin, 44, 36, 4, 12, transparent); // Right Arm Layer 2 Front
+      fill_rect(skin, 48, 36, 4, 12, transparent); // Right Arm Layer 2 Left
+      fill_rect(skin, 52, 36, 12, 12, transparent); // Right Arm Layer 2 Back
+      fill_rect(skin, 4, 48, 4, 4, transparent); // Left Leg Layer 2 Top
+      fill_rect(skin, 8, 48, 4, 4, transparent); // Left Leg Layer 2 Bottom
+      fill_rect(skin, 0, 52, 4, 12, transparent); // Left Leg Layer 2 Right
+      fill_rect(skin, 4, 52, 4, 12, transparent); // Left Leg Layer 2 Front
+      fill_rect(skin, 8, 52, 4, 12, transparent); // Left Leg Layer 2 Left
+      fill_rect(skin, 12, 52, 4, 12, transparent); // Left Leg Layer 2 Back
+      fill_rect(skin, 52, 48, 4, 4, transparent); // Left Arm Layer 2 Top
+      fill_rect(skin, 56, 48, 4, 4, transparent); // Left Arm Layer 2 Bottom
+      fill_rect(skin, 48, 52, 4, 12, transparent); // Left Arm Layer 2 Right
+      fill_rect(skin, 52, 52, 4, 12, transparent); // Left Arm Layer 2 Front
+      fill_rect(skin, 56, 52, 4, 12, transparent); // Left Arm Layer 2 Left
+      fill_rect(skin, 60, 52, 4, 12, transparent); // Left Arm Layer 2 Back
+    }
+  }
 }
 
-fn copy_region(
-  bytes: &mut BytesMut,
-  x0: usize,
-  y0: usize,
-  width: usize,
-  height: usize,
-  x1: usize,
-  y1: usize,
-) {
-  let src_start = to_pixel(x0, y0, width);
-  let src_end = to_pixel(x0, y0 + height, width);
-  let src = src_start..src_end;
-
-  let dest_start = to_pixel(x1, y1, width);
-
-  bytes.copy_within(src, dest_start);
-}
-
-fn to_pixel(x: usize, y: usize, width: usize) -> usize {
-  (y * width + x) * 4
+fn fill_rect(image: &mut DynamicImage, x: u32, y: u32, width: u32, height: u32, pixel: Rgba<u8>) {
+  for x in x..x + width {
+    for y in y..y + height {
+      image.put_pixel(x, y, pixel);
+    }
+  }
 }
