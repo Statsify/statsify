@@ -12,6 +12,7 @@ import {
   CaptureTheWool,
   CreeperAttack,
   DragonWars,
+  Dropper,
   EnderSpleef,
   FarmHunt,
   Football,
@@ -38,6 +39,8 @@ export const ARCADE_MODES = new GameModes([
   { api: "captureTheWool", hypixel: "PVP_CTW" },
   { api: "creeperAttack", hypixel: "DEFENDER" },
   { api: "dragonWars", hypixel: "DRAGONWARS2" },
+  // TODO: get hypixel name
+  { api: "dropper", hypixel: "DROPPER" },
   { api: "enderSpleef", hypixel: "ENDER" },
   { api: "farmHunt", hypixel: "FARM_HUNT" },
   { api: "football", hypixel: "SOCCER" },
@@ -77,6 +80,9 @@ export class Arcade {
 
   @Field()
   public dragonWars: DragonWars;
+
+  @Field()
+  public dropper: Dropper;
 
   @Field()
   public enderSpleef: EnderSpleef;
@@ -125,9 +131,10 @@ export class Arcade {
     this.wins = ap.arcade_arcade_winner;
     this.blockingDead = new BlockingDead(data);
     this.bountyHunters = new BountyHunters(data);
-    this.captureTheWool = new CaptureTheWool(ap);
+    this.captureTheWool = new CaptureTheWool(data);
     this.creeperAttack = new CreeperAttack(data);
     this.dragonWars = new DragonWars(data, ap);
+    this.dropper = new Dropper(data?.dropper);
     this.enderSpleef = new EnderSpleef(data);
     this.farmHunt = new FarmHunt(data);
     this.football = new Football(data);

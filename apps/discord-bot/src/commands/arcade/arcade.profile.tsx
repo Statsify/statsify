@@ -13,6 +13,7 @@ import {
   CaptureTheWoolTable,
   CreeperAttackTable,
   DragonWarsTable,
+  DropperTable,
   EnderSpleefTable,
   FarmHuntTable,
   FootballTable,
@@ -28,7 +29,8 @@ import {
   SeasonalTable,
   ThrowOutTable,
   ZombiesTable,
-} from "./tables/index.js";
+  captureTheWoolSiderbar,
+} from "./modes/index.js";
 import { Container, Footer, Header, SidebarItem } from "#components";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
@@ -49,9 +51,9 @@ export const ArcadeProfile = ({
 }: ArcadeProfileProps) => {
   const { arcade } = player.stats;
 
-  const sidebar: SidebarItem[] = [
+  let sidebar: SidebarItem[] = [
     [t("stats.coins"), t(arcade.coins), "§6"],
-    [t("stats.overallWins"), t(arcade.wins), "§b"],
+    [t("stats.arcadeWins"), t(arcade.wins), "§b"],
   ];
 
   const { api } = mode;
@@ -67,7 +69,8 @@ export const ArcadeProfile = ({
       break;
 
     case "captureTheWool":
-      table = <CaptureTheWoolTable stats={arcade[api]} t={t} />;
+      table = <CaptureTheWoolTable stats={arcade[api]} t={t} time={time} />;
+      sidebar = captureTheWoolSiderbar(arcade, t);
       break;
 
     case "creeperAttack":
@@ -76,6 +79,10 @@ export const ArcadeProfile = ({
 
     case "dragonWars":
       table = <DragonWarsTable stats={arcade[api]} t={t} />;
+      break;
+
+    case "dropper":
+      table = <DropperTable stats={arcade[api]} t={t} />;
       break;
 
     case "enderSpleef":

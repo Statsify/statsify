@@ -66,15 +66,120 @@ export class BountyHunters {
   }
 }
 export class CaptureTheWool {
-  @Field({ leaderboard: { additionalFields: ["this.captures"] } })
+  @Field()
+  public wins: number;
+
+  @Field()
+  public losses: number;
+
+  @Field()
+  public wlr: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.participatedLosses", "this.participatedWlr"] } })
+  public participatedWins: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.participatedWins", "this.participatedWlr"] } })
+  public participatedLosses: number;
+
+  @Field({
+    leaderboard: {
+      additionalFields: ["this.participatedWins", "this.participatedLosses"] ,
+      fieldName: "Participated WLR",
+    },
+  })
+  public participatedWlr: number;
+
+  @Field()
   public kills: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.kills"] } })
-  public captures: number;
+  @Field()
+  public deaths: number;
 
-  public constructor(ap: APIData) {
-    this.kills = ap.arcade_ctw_slayer;
-    this.captures = ap.arcade_ctw_oh_sheep;
+  @Field()
+  public kdr: number;
+
+  @Field()
+  public assists: number;
+
+  @Field()
+  public woolCaptured: number;
+
+  @Field()
+  public woolStolen: number;
+
+  @Field({
+    leaderboard: {
+      sort: "ASC",
+      formatter: formatTime,
+      additionalFields: ["this.wins"],
+    },
+    historical: { enabled: false },
+  })
+  public fastestWin: number;
+
+  @Field({
+    leaderboard: {
+      sort: "ASC",
+      formatter: formatTime,
+      additionalFields: ["this.woolCaptured"],
+    },
+    historical: { enabled: false },
+  })
+  public fastestWoolCapture: number;
+
+  @Field({
+    leaderboard: { formatter: formatTime },
+    historical: { enabled: false },
+  })
+  public longestGame: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.goldSpent"] } })
+  public goldEarned: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.goldEarned"] } })
+  public goldSpent: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.deathsToWoolHolder"] } })
+  public killsOnWoolHolder: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.killsOnWoolHolder"] } })
+  public deathsToWoolHolder: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.deathsAsWoolHolder"] } })
+  public killsAsWoolHolder: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.killsAsWoolHolder"] } })
+  public deathsAsWoolHolder: number;
+
+  public constructor(data: APIData) {
+    this.wins = data.woolhunt_experienced_wins;
+    this.losses = data.woolhunt_experienced_losses;
+    this.wlr = ratio(this.wins, this.losses);
+
+    this.participatedWins = data.woolhunt_participated_wins;
+    this.participatedLosses = data.woolhunt_participated_losses;
+    this.participatedWlr = ratio(this.participatedWins, this.participatedLosses);
+
+    this.kills = data.woolhunt_kills;
+    this.deaths = data.woolhunt_deaths;
+    this.kdr = ratio(this.kills, this.deaths);
+    this.assists = data.woolhunt_assists;
+
+    this.woolCaptured = data.woolhunt_wools_captured;
+    this.woolStolen = data.woolhunt_wools_stolen;
+
+    this.longestGame = (data.woolhunt_longest_game ?? 0) * 1000;
+    this.fastestWin = (data.woolhunt_fastest_win ?? 0) * 1000;
+    this.fastestWoolCapture = (data.woolhunt_fastest_wool_capture ?? 0) * 1000;
+
+    this.goldEarned = data.woolhunt_gold_earned;
+    this.goldSpent = Math.abs(data.woolhunt_gold_spent ?? 0);
+
+    this.killsOnWoolHolder = data.woolhunt_kills_on_woolholder;
+    this.deathsToWoolHolder = data.woolhunt_deaths_to_woolholder;
+
+    this.killsAsWoolHolder = data.woolhunt_kills_with_wool;
+    this.deathsAsWoolHolder = data.woolhunt_deaths_with_wool;
   }
 }
 
@@ -101,6 +206,40 @@ export class DragonWars {
     this.wins = data.wins_dragonwars2;
     this.kills = data.kills_dragonwars2;
     this.mounts = ap.arcade_dw_dragonborn;
+  }
+}
+
+export class Dropper {
+  @Field()
+  public wins: number;
+
+  @Field()
+  public fails: number;
+
+  @Field()
+  public mapsCompleted: number;
+
+  @Field()
+  public gamesPlayed: number;
+
+  @Field()
+  public gamesFinished: number;
+
+  @Field()
+  public flawlessGames: number;
+
+  @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
+  public bestTime: number;
+
+  public constructor(dropper: APIData = {}) {
+    this.wins = dropper.wins;
+    this.fails = dropper.fails;
+    this.mapsCompleted = dropper.maps_completed;
+
+    this.gamesPlayed = dropper.games_played;
+    this.gamesFinished = dropper.games_finished;
+    this.flawlessGames = dropper.flawless_games;
+    this.bestTime = dropper.fastest_game;
   }
 }
 
