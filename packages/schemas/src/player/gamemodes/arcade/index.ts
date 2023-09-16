@@ -30,6 +30,7 @@ import {
 } from "./mode.js";
 import { Field } from "#metadata";
 import { GameModes, type IGameModes } from "#game";
+import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export const ARCADE_MODES = new GameModes([
@@ -128,7 +129,6 @@ export class Arcade {
 
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
-    this.wins = ap.arcade_arcade_winner;
     this.blockingDead = new BlockingDead(data);
     this.bountyHunters = new BountyHunters(data);
     this.captureTheWool = new CaptureTheWool(data);
@@ -149,6 +149,29 @@ export class Arcade {
     this.seasonal = new Seasonal(data);
     this.throwOut = new ThrowOut(data);
     this.zombies = new Zombies(data);
+
+    this.wins = add(
+      this.blockingDead.wins,
+      this.bountyHunters.wins,
+      this.captureTheWool.wins,
+      this.dragonWars.wins,
+      this.dropper.wins,
+      this.enderSpleef.wins,
+      this.farmHunt.wins,
+      this.football.wins,
+      this.galaxyWars.wins,
+      this.hideAndSeek.overall.wins,
+      this.holeInTheWall.wins,
+      this.hypixelSays.wins,
+      this.miniWalls.wins,
+      this.partyGames.wins,
+      this.pixelPainters.wins,
+      this.pixelParty.overall.wins,
+      this.seasonal.totalWins,
+      this.throwOut.wins,
+      this.zombies.overall.wins
+    );
+
   }
 }
 
