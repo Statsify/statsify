@@ -30,7 +30,7 @@ import { config } from "@statsify/util";
 
 const SUPPORT_BOT_GUILD_ID = config("supportBot.guild");
 const SUPPORT_BOT_MEMBER_ROLE_ID = config("supportBot.memberRole");
-const VERIFY_VIDEO = "https://www.youtube.com/watch?v=CCqBxdXZ9G4";
+const VERIFY_VIDEO = "https://www.youtube.com/watch?v=e5tF89tHEsg";
 
 const VERIFY_MODAL = new ModalBuilder()
   .title((t) => t("verification.instructions.modal.title"))
