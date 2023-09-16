@@ -6,17 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { If, Table } from "#components";
+import { Historical, If, Table } from "#components";
 import { formatTime } from "@statsify/util";
 import type { Dropper } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
+import type { ProfileTime } from "#commands/base.hypixel-command";
 
 interface DropperTableProps {
   stats: Dropper;
   t: LocalizeFunction;
+  time: ProfileTime;
 }
 
-export const DropperTable = ({ stats, t }: DropperTableProps) => (
+export const DropperTable = ({ stats, t, time }: DropperTableProps) => (
   <Table.table>
     <Table.tr>
       <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
@@ -29,7 +31,9 @@ export const DropperTable = ({ stats, t }: DropperTableProps) => (
     </Table.tr>
     <If condition={stats.bestTime > 0}>
       <Table.tr>
-        <Table.td title={t("stats.bestTime")} value={formatTime(stats.bestTime)} color="§b" />
+        <Historical.exclude time={time}>
+          <Table.td title={t("stats.bestTime")} value={formatTime(stats.bestTime)} color="§b" />
+        </Historical.exclude>
         <Table.td title={t("stats.flawlessGames")} value={t(stats.flawlessGames)} color="§2" />
       </Table.tr>
     </If>

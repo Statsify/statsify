@@ -82,7 +82,7 @@ export const ArcadeProfile = ({
       break;
 
     case "dropper":
-      table = <DropperTable stats={arcade[api]} t={t} />;
+      table = <DropperTable stats={arcade[api]} t={t} time={time} />;
       break;
 
     case "enderSpleef":
