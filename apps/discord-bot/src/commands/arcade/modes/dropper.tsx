@@ -26,15 +26,15 @@ export const DropperTable = ({ stats, t, time }: DropperTableProps) => (
       <Table.td title={t("stats.mapsCompleted")} value={t(stats.mapsCompleted)} color="§e" />
     </Table.tr>
     <Table.tr>
-      <Table.td title={t("stats.gamesFinished")} value={t(stats.gamesFinished)} color="§9" />
-      <Table.td title={t("stats.gamesPlayed")} value={t(stats.gamesPlayed)} color="§d" />
+      <Table.td title={t("stats.gamesPlayed")} value={t(stats.gamesPlayed)} color="§b" />
+      <Table.td title={t("stats.gamesFinished")} value={t(stats.gamesFinished)} color="§3" />
     </Table.tr>
     <If condition={stats.bestTime > 0}>
       <Table.tr>
         <Historical.exclude time={time}>
-          <Table.td title={t("stats.bestTime")} value={formatTime(stats.bestTime)} color="§b" />
+          <Table.td title={t("stats.bestTime")} value={formatTime(stats.bestTime)} color="§d" />
         </Historical.exclude>
-        <Table.td title={t("stats.flawlessGames")} value={t(stats.flawlessGames)} color="§2" />
+        <Table.td title={t("stats.flawlessGames")} value={t(stats.flawlessGames)} color="§5" />
       </Table.tr>
     </If>
   </Table.table>

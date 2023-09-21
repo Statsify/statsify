@@ -60,6 +60,14 @@ export const ARCADE_MODES = new GameModes([
 
 export type ArcadeModes = IGameModes<typeof ARCADE_MODES>;
 
+export const DROPPER_MODES = new GameModes([
+  { api: "overall" },
+  { api: "bestTimes" },
+  { api: "completions" },
+]);
+
+export type DropperModes = IGameModes<typeof DROPPER_MODES>;
+
 export class Arcade {
   @Field({ historical: { enabled: false } })
   public coins: number;

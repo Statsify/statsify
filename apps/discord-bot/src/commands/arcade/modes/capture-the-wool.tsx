@@ -20,32 +20,61 @@ interface CaptureTheWoolTableProps {
 
 export const CaptureTheWoolTable = ({ stats, t, time }: CaptureTheWoolTableProps) => (
   <Table.table>
-    <Table.tr>
-      <Table.ts title="§6Overall">
+    <Table.ts title="§6Overall">
+      <Table.tr>
+        <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+        <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
+        <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
+        <Table.td title={t("stats.draws")} value={t(stats.draws)} color="§e" />
+      </Table.tr>
+      <Table.tr>
+        <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+        <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+        <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+        <Table.td
+          title={t("stats.assists")}
+          value={t(stats.assists)}
+          color="§e"
+        />
+      </Table.tr>
+      <Table.tr>
+        <Table.td
+          title={t("stats.woolPickedUp")}
+          value={t(stats.woolPickedUp)}
+          color="§2"
+        />
+        <Table.td
+          title={t("stats.woolCaptured")}
+          value={t(stats.woolCaptured)}
+          color="§b"
+        />
+      </Table.tr>
+      <Historical.exclude time={time}>
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-          <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
-          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
+          <If condition={stats.fastestWin > 0}>
+            <Table.td
+              title={t("stats.fastestWin")}
+              value={formatTime(stats.fastestWin)}
+              color="§e"
+            />
+          </If>
+          <If condition={stats.fastestWoolCapture > 0}>
+            <Table.td
+              title={t("stats.fastestWoolCapture")}
+              value={formatTime(stats.fastestWoolCapture)}
+              color="§6"
+            />
+          </If>
+          <If condition={stats.longestGame > 0}>
+            <Table.td
+              title={t("stats.longestGame")}
+              value={formatTime(stats.longestGame)}
+              color="§d"
+            />
+          </If>
         </Table.tr>
-      </Table.ts>
-      <Table.ts title="§6Participated">
-        <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(stats.participatedWins)} color="§a" />
-          <Table.td title={t("stats.losses")} value={t(stats.participatedLosses)} color="§c" />
-          <Table.td title={t("stats.wlr")} value={t(stats.participatedWlr)} color="§6" />
-        </Table.tr>
-      </Table.ts>
-    </Table.tr>
-    <Table.tr>
-      <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
-      <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
-      <Table.td
-        title={t("stats.assists")}
-        value={t(stats.assists)}
-        color="§e"
-      />
-    </Table.tr>
+      </Historical.exclude>
+    </Table.ts>
     <Table.tr>
       <Table.ts title="§6Against Wool Holder">
         <Table.tr>
@@ -60,46 +89,6 @@ export const CaptureTheWoolTable = ({ stats, t, time }: CaptureTheWoolTableProps
         </Table.tr>
       </Table.ts>
     </Table.tr>
-    <Table.tr>
-      <Table.td
-        title={t("stats.woolStolen")}
-        value={t(stats.woolStolen)}
-        color="§2"
-      />
-      <Table.td
-        title={t("stats.woolCaptured")}
-        value={t(stats.woolCaptured)}
-        color="§b"
-      />
-    </Table.tr>
-    <Historical.exclude time={time}>
-      <Table.tr>
-        <If condition={stats.fastestWin > 0}>
-          <Table.td
-            title={t("stats.fastestWin")}
-            value={formatTime(stats.fastestWin)}
-            color="§b"
-            size="small"
-          />
-        </If>
-        <If condition={stats.fastestWoolCapture > 0}>
-          <Table.td
-            title={t("stats.fastestWoolCapture")}
-            value={formatTime(stats.fastestWoolCapture)}
-            color="§2"
-            size="small"
-          />
-        </If>
-        <If condition={stats.longestGame > 0}>
-          <Table.td
-            title={t("stats.longestGame")}
-            value={formatTime(stats.longestGame)}
-            color="§b"
-            size="small"
-          />
-        </If>
-      </Table.tr>
-    </Historical.exclude>
   </Table.table>
 );
 

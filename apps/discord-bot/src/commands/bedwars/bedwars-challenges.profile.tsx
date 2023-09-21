@@ -30,7 +30,8 @@ export const BedWarsChallengesProfile = ({
 
   delete challenges.uniqueChallenges;
   delete challenges.totalChallenges;
-  const rows = arrayGroup(Object.entries(challenges), 4);
+
+  const rows = arrayGroup(Object.entries(challenges), 3);
 
   return (
     <Container background={background}>
@@ -46,12 +47,11 @@ export const BedWarsChallengesProfile = ({
         {rows.map((row) => (
           <Table.tr>
             {row.map((challenge) => (
-              // Hypixel doesn't localize the challenge names, so we dont't need to localize them
-              <Table.td
-                title={prettify(challenge[0]).replace("Ultimate U H C", "Ultimate UHC")}
-                value={t(challenge[1])}
-                color={challenge[1] > 0 ? "§a" : "§c"}
-              />
+              <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
+                <text>§l{challenge[1] > 0 ? "§a" : "§c"}{prettify(challenge[0]).replace("Ultimate U H C", "Ultimate UHC")}</text>
+                <div width="remaining" margin={{ left: 4, right: 4 }} />
+                <text>{challenge[1] > 0 ? "§a" : "§c"}{t(challenge[1])}</text>
+              </box>
             ))}
           </Table.tr>
         ))}

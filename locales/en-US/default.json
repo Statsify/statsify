@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -772,7 +773,7 @@
     "wlr": "WLR",
     "wool": "Wool",
     "woolCaptured": "Wool Captured",
-    "woolStolen": "Wool Stolen",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "Wool Placed",
     "zombieKills": "Zombie Kills",
     "potionsBrewed": "Potions Brewed",
@@ -784,7 +785,8 @@
     "flawlessGames": "Flawless Games",
     "fails": "Fails",
     "mapsCompleted": "Maps Completed",
-    "arcadeWins": "Arcade Wins"
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
