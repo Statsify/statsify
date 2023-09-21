@@ -388,7 +388,7 @@
     },
     "invalidSession": {
       "title": "Ogiltig Session",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+      "description": "**{{displayName}}** har inga aktiva sessioner. De kan skapa en session genom att köra `/session` när de är verifierade."
     },
     "invalidResetTime": {
       "description": "`{{time}}` matchar inte formatet `h:mm a`. Ange en tid i formatet som liknar `12:00 PM` eller `1:00 AM`.",
