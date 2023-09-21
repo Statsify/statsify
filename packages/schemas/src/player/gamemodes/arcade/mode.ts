@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
+import { type APIData, formatRaceTime, formatTime } from "@statsify/util";
 import {
   EasterSimulator,
   GrinchSimulator,
@@ -66,15 +66,106 @@ export class BountyHunters {
   }
 }
 export class CaptureTheWool {
-  @Field({ leaderboard: { additionalFields: ["this.captures"] } })
+  @Field()
+  public wins: number;
+
+  @Field()
+  public losses: number;
+
+  @Field()
+  public wlr: number;
+
+  @Field()
+  public draws: number;
+
+  @Field()
   public kills: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.kills"] } })
-  public captures: number;
+  @Field()
+  public deaths: number;
 
-  public constructor(ap: APIData) {
-    this.kills = ap.arcade_ctw_slayer;
-    this.captures = ap.arcade_ctw_oh_sheep;
+  @Field()
+  public kdr: number;
+
+  @Field()
+  public assists: number;
+
+  @Field()
+  public woolCaptured: number;
+
+  @Field()
+  public woolPickedUp: number;
+
+  @Field({
+    leaderboard: {
+      sort: "ASC",
+      formatter: formatTime,
+      additionalFields: ["this.wins"],
+    },
+    historical: { enabled: false },
+  })
+  public fastestWin: number;
+
+  @Field({
+    leaderboard: {
+      sort: "ASC",
+      formatter: formatTime,
+      additionalFields: ["this.woolCaptured"],
+    },
+    historical: { enabled: false },
+  })
+  public fastestWoolCapture: number;
+
+  @Field({
+    leaderboard: { formatter: formatTime },
+    historical: { enabled: false },
+  })
+  public longestGame: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.goldSpent"] } })
+  public goldEarned: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.goldEarned"] } })
+  public goldSpent: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.deathsToWoolHolder"] } })
+  public killsOnWoolHolder: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.killsOnWoolHolder"] } })
+  public deathsToWoolHolder: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.deathsAsWoolHolder"] } })
+  public killsAsWoolHolder: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.killsAsWoolHolder"] } })
+  public deathsAsWoolHolder: number;
+
+  public constructor(data: APIData) {
+    this.wins = data.woolhunt_participated_wins;
+    this.losses = data.woolhunt_participated_losses;
+    this.wlr = ratio(this.wins, this.losses);
+    this.draws = data.woolhunt_participated_draws;
+
+    this.kills = data.woolhunt_kills;
+    this.deaths = data.woolhunt_deaths;
+    this.kdr = ratio(this.kills, this.deaths);
+    this.assists = data.woolhunt_assists;
+
+    this.woolCaptured = data.woolhunt_wools_captured;
+    this.woolPickedUp = data.woolhunt_wools_stolen;
+
+    this.longestGame = (data.woolhunt_longest_game ?? 0) * 1000;
+    this.fastestWin = (data.woolhunt_fastest_win ?? 0) * 1000;
+    this.fastestWoolCapture = (data.woolhunt_fastest_wool_capture ?? 0) * 1000;
+
+    this.goldEarned = data.woolhunt_gold_earned;
+    this.goldSpent = Math.abs(data.woolhunt_gold_spent ?? 0);
+
+    this.killsOnWoolHolder = data.woolhunt_kills_on_woolholder;
+    this.deathsToWoolHolder = data.woolhunt_deaths_to_woolholder;
+
+    this.killsAsWoolHolder = data.woolhunt_kills_with_wool;
+    this.deathsAsWoolHolder = data.woolhunt_deaths_with_wool;
   }
 }
 
@@ -101,6 +192,304 @@ export class DragonWars {
     this.wins = data.wins_dragonwars2;
     this.kills = data.kills_dragonwars2;
     this.mounts = ap.arcade_dw_dragonborn;
+  }
+}
+
+export class DropperMap {
+  @Field()
+  public completions: number;
+
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC"} })
+  public bestTime: number;
+
+  public constructor (map: APIData = {}) {
+    this.bestTime = map.best_time;
+    this.completions = map.completions;
+  }
+}
+
+export class DropperMaps {
+
+  @Field({ leaderboard: { name: "§cAtlantis§f" } })
+  public atlantis: DropperMap;
+
+  @Field({ leaderboard: { name: "§aBalloons§f" } })
+  public balloons: DropperMap;
+
+  @Field({ leaderboard: { name: "§aBBQ§f" } })
+  public bbq: DropperMap;
+
+  @Field({ leaderboard: { name: "§eBeanstalk§f" } })
+  public beanstalk: DropperMap;
+
+  @Field({ leaderboard: { name: "§cBirdcage§f" } })
+  public birdcage: DropperMap;
+
+  @Field({ leaderboard: { name: "§aBoard Games§f" } })
+  public boardGames: DropperMap;
+
+  @Field({ leaderboard: { name: "§aBridges§f" } })
+  public bridges: DropperMap;
+
+  @Field({ leaderboard: { name: "§eButterflies§f" } })
+  public butterflies: DropperMap;
+
+  @Field({ leaderboard: { name: "§eCabin§f" } })
+  public cabin: DropperMap;
+
+  @Field({ leaderboard: { name: "§eCastle§f" } })
+  public castle: DropperMap;
+
+  @Field({ leaderboard: { name: "§eCity§f" } })
+  public city: DropperMap;
+
+  @Field({ leaderboard: { name: "§aDistance§f" } })
+  public distance: DropperMap;
+
+  @Field({ leaderboard: { name: "§aDistortion§f" } })
+  public distortion: DropperMap;
+
+  @Field({ leaderboard: { name: "§aDrainage§f" } })
+  public drainage: DropperMap;
+
+  @Field({ leaderboard: { name: "§eEmoji§f" } })
+  public emoji: DropperMap;
+
+  @Field({ leaderboard: { name: "§cFactory§f" } })
+  public factory: DropperMap;
+
+  @Field({ leaderboard: { name: "§eFloating Islands§f" } })
+  public floatingIslands: DropperMap;
+
+  @Field({ leaderboard: { name: "§cFlytrap§f" } })
+  public flytrap: DropperMap;
+
+  @Field({ leaderboard: { name: "§cFrogspawn§f" } })
+  public frogspawn: DropperMap;
+
+  @Field({ leaderboard: { name: "§cGears§f" } })
+  public gears: DropperMap;
+
+  @Field({ leaderboard: { name: "§eGeometry§f" } })
+  public geometry: DropperMap;
+
+  @Field({ leaderboard: { name: "§eGlacier§f" } })
+  public glacier: DropperMap;
+
+  @Field({ leaderboard: { name: "§cHell Gate§f" } })
+  public hellGate: DropperMap;
+
+  @Field({ leaderboard: { name: "§cIllusion§f" } })
+  public illusion: DropperMap;
+
+  @Field({ leaderboard: { name: "§cIris§f" } })
+  public iris: DropperMap;
+
+  @Field({ leaderboard: { name: "§aKingdom Mines§f" } })
+  public kingdomMines: DropperMap;
+
+  @Field({ leaderboard: { name: "§aKing's Pass§f" } })
+  public kingsPass: DropperMap;
+
+  @Field({ leaderboard: { name: "§aKraken§f" } })
+  public kraken: DropperMap;
+
+  @Field({ leaderboard: { name: "§eLaunch Zone§f" } })
+  public launchZone: DropperMap;
+
+  @Field({ leaderboard: { name: "§eLavafall§f" } })
+  public lavafall: DropperMap;
+
+  @Field({ leaderboard: { name: "§aLily§f" } })
+  public lily: DropperMap;
+
+  @Field({ leaderboard: { name: "§eMaelstrom§f" } })
+  public maelstrom: DropperMap;
+
+  @Field({ leaderboard: { name: "§aMainframe§f" } })
+  public mainframe: DropperMap;
+
+  @Field({ leaderboard: { name: "§aMicroscope§f" } })
+  public microscope: DropperMap;
+
+  @Field({ leaderboard: { name: "§eMineshaft§f" } })
+  public mineshaft: DropperMap;
+
+  @Field({ leaderboard: { name: "§aMushroom§f" } })
+  public mushroom: DropperMap;
+
+  @Field({ leaderboard: { name: "§eNightlife§f" } })
+  public nightlife: DropperMap;
+
+  @Field({ leaderboard: { name: "§cOcean§f" } })
+  public ocean: DropperMap;
+
+  @Field({ leaderboard: { name: "§eOvergrown§f" } })
+  public overgrown: DropperMap;
+
+  @Field({ leaderboard: { name: "§ePainted§f" } })
+  public painted: DropperMap;
+
+  @Field({ leaderboard: { name: "§eParadigm§f" } })
+  public paradigm: DropperMap;
+
+  @Field({ leaderboard: { name: "§aRaindrops§f" } })
+  public raindrops: DropperMap;
+
+  @Field({ leaderboard: { name: "§eRavine§f" } })
+  public ravine: DropperMap;
+
+  @Field({ leaderboard: { name: "§eRetro§f" } })
+  public retro: DropperMap;
+
+  @Field({ leaderboard: { name: "§aRevolve§f" } })
+  public revolve: DropperMap;
+
+  @Field({ leaderboard: { name: "§cSandworm§f" } })
+  public sandworm: DropperMap;
+
+  @Field({ leaderboard: { name: "§aSewer§f" } })
+  public sewer: DropperMap;
+
+  @Field({ leaderboard: { name: "§aSpace§f" } })
+  public space: DropperMap;
+
+  @Field({ leaderboard: { name: "§eStratocumulus§f" } })
+  public stratocumulus: DropperMap;
+
+  @Field({ leaderboard: { name: "§eSweets§f" } })
+  public sweets: DropperMap;
+
+  @Field({ leaderboard: { name: "§aTangle§f" } })
+  public tangle: DropperMap;
+
+  @Field({ leaderboard: { name: "§aTime§f" } })
+  public time: DropperMap;
+
+  @Field({ leaderboard: { name: "§eUFO§f" } })
+  public ufo: DropperMap;
+
+  @Field({ leaderboard: { name: "§aUpside Down§f" } })
+  public upsideDown: DropperMap;
+
+  @Field({ leaderboard: { name: "§aVintage§f" } })
+  public vintage: DropperMap;
+
+  @Field({ leaderboard: { name: "§cVortex§f" } })
+  public vortex: DropperMap;
+
+  @Field({ leaderboard: { name: "§aWarp§f" } })
+  public warp: DropperMap;
+
+  @Field({ leaderboard: { name: "§eWarportal§f" } })
+  public warportal: DropperMap;
+
+  @Field({ leaderboard: { name: "§aWell§f" } })
+  public well: DropperMap;
+
+  @Field({ leaderboard: { name: "§eWestern§f" } })
+  public western: DropperMap;
+
+  public constructor(mapStats: APIData = {}) {
+    this.atlantis = new DropperMap(mapStats?.atlantis);
+    this.balloons = new DropperMap(mapStats?.balloons);
+    this.bbq = new DropperMap(mapStats?.bbq);
+    this.beanstalk = new DropperMap(mapStats?.beanstalk);
+    this.birdcage = new DropperMap(mapStats?.birdcage);
+    this.boardGames = new DropperMap(mapStats?.boardgames);
+    this.bridges = new DropperMap(mapStats?.bridges);
+    this.butterflies = new DropperMap(mapStats?.butterflies);
+    this.cabin = new DropperMap(mapStats?.cabin);
+    this.castle = new DropperMap(mapStats?.castle);
+    this.city = new DropperMap(mapStats?.city);
+    this.distance = new DropperMap(mapStats?.distance);
+    this.distortion = new DropperMap(mapStats?.distortion);
+    this.drainage = new DropperMap(mapStats?.drainage);
+    this.emoji = new DropperMap(mapStats?.emoji);
+    this.factory = new DropperMap(mapStats?.factory);
+    this.floatingIslands = new DropperMap(mapStats?.floatingislands);
+    this.flytrap = new DropperMap(mapStats?.flytrap);
+    this.frogspawn = new DropperMap(mapStats?.frogspawn);
+    this.gears = new DropperMap(mapStats?.gears);
+    this.geometry = new DropperMap(mapStats?.geometry);
+    this.glacier = new DropperMap(mapStats?.glacier);
+    this.hellGate = new DropperMap(mapStats?.hellgate);
+    this.illusion = new DropperMap(mapStats?.illusion);
+    this.iris = new DropperMap(mapStats?.iris);
+    this.kingdomMines = new DropperMap(mapStats?.kingdommines);
+    this.kingsPass = new DropperMap(mapStats?.kingspass);
+    this.kraken = new DropperMap(mapStats?.kraken);
+    this.launchZone = new DropperMap(mapStats?.launchzone);
+    this.lavafall = new DropperMap(mapStats?.lavafall);
+    this.lily = new DropperMap(mapStats?.lily);
+    this.maelstrom = new DropperMap(mapStats?.maelstrom);
+    this.mainframe = new DropperMap(mapStats?.mainframe);
+    this.microscope = new DropperMap(mapStats?.microscope);
+    this.mineshaft = new DropperMap(mapStats?.mineshaft);
+    this.mushroom = new DropperMap(mapStats?.mushroom);
+    this.nightlife = new DropperMap(mapStats?.nightlife);
+    this.ocean = new DropperMap(mapStats?.ocean);
+    this.overgrown = new DropperMap(mapStats?.overgrown);
+    this.painted = new DropperMap(mapStats?.painted);
+    this.paradigm = new DropperMap(mapStats?.paradigm);
+    this.raindrops = new DropperMap(mapStats?.raindrops);
+    this.ravine = new DropperMap(mapStats?.ravine);
+    this.retro = new DropperMap(mapStats?.retro);
+    this.revolve = new DropperMap(mapStats?.revolve);
+    this.sandworm = new DropperMap(mapStats?.sandworm);
+    this.sewer = new DropperMap(mapStats?.sewer);
+    this.space = new DropperMap(mapStats?.space);
+    this.stratocumulus = new DropperMap(mapStats?.stratocumulus);
+    this.sweets = new DropperMap(mapStats?.sweets);
+    this.tangle = new DropperMap(mapStats?.tangle);
+    this.time = new DropperMap(mapStats?.time);
+    this.ufo = new DropperMap(mapStats?.ufo);
+    this.upsideDown = new DropperMap(mapStats?.upsidedown);
+    this.vintage = new DropperMap(mapStats?.vintage);
+    this.vortex = new DropperMap(mapStats?.vortex);
+    this.warp = new DropperMap(mapStats?.warp);
+    this.warportal = new DropperMap(mapStats?.warportal);
+    this.well = new DropperMap(mapStats?.well);
+    this.western = new DropperMap(mapStats?.western);
+  }
+}
+
+export class Dropper {
+  @Field()
+  public wins: number;
+
+  @Field()
+  public fails: number;
+
+  @Field()
+  public mapsCompleted: number;
+
+  @Field()
+  public gamesPlayed: number;
+
+  @Field()
+  public gamesFinished: number;
+
+  @Field()
+  public flawlessGames: number;
+
+  @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
+  public bestTime: number;
+
+  @Field({ leaderboard: { name: "Maps:"} })
+  public maps: DropperMaps;
+
+  public constructor(dropper: APIData = {}) {
+    this.wins = dropper.wins;
+    this.fails = dropper.fails;
+    this.mapsCompleted = dropper.maps_completed;
+
+    this.gamesPlayed = dropper.games_played;
+    this.gamesFinished = dropper.games_finished;
+    this.flawlessGames = dropper.flawless_games;
+    this.bestTime = dropper.fastest_game;
+
+    this.maps = new DropperMaps(dropper.map_stats);
   }
 }
 

@@ -12,6 +12,7 @@ import {
   CaptureTheWool,
   CreeperAttack,
   DragonWars,
+  Dropper,
   EnderSpleef,
   FarmHunt,
   Football,
@@ -29,6 +30,7 @@ import {
 } from "./mode.js";
 import { Field } from "#metadata";
 import { GameModes, type IGameModes } from "#game";
+import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export const ARCADE_MODES = new GameModes([
@@ -38,6 +40,7 @@ export const ARCADE_MODES = new GameModes([
   { api: "captureTheWool", hypixel: "PVP_CTW" },
   { api: "creeperAttack", hypixel: "DEFENDER" },
   { api: "dragonWars", hypixel: "DRAGONWARS2" },
+  { api: "dropper", hypixel: "DROPPER" },
   { api: "enderSpleef", hypixel: "ENDER" },
   { api: "farmHunt", hypixel: "FARM_HUNT" },
   { api: "football", hypixel: "SOCCER" },
@@ -55,6 +58,14 @@ export const ARCADE_MODES = new GameModes([
 ]);
 
 export type ArcadeModes = IGameModes<typeof ARCADE_MODES>;
+
+export const DROPPER_MODES = new GameModes([
+  { api: "overall" },
+  { api: "bestTimes" },
+  { api: "completions" },
+]);
+
+export type DropperModes = IGameModes<typeof DROPPER_MODES>;
 
 export class Arcade {
   @Field({ historical: { enabled: false } })
@@ -77,6 +88,9 @@ export class Arcade {
 
   @Field()
   public dragonWars: DragonWars;
+
+  @Field()
+  public dropper: Dropper;
 
   @Field()
   public enderSpleef: EnderSpleef;
@@ -122,12 +136,12 @@ export class Arcade {
 
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
-    this.wins = ap.arcade_arcade_winner;
     this.blockingDead = new BlockingDead(data);
     this.bountyHunters = new BountyHunters(data);
-    this.captureTheWool = new CaptureTheWool(ap);
+    this.captureTheWool = new CaptureTheWool(data);
     this.creeperAttack = new CreeperAttack(data);
     this.dragonWars = new DragonWars(data, ap);
+    this.dropper = new Dropper(data?.dropper);
     this.enderSpleef = new EnderSpleef(data);
     this.farmHunt = new FarmHunt(data);
     this.football = new Football(data);
@@ -142,6 +156,29 @@ export class Arcade {
     this.seasonal = new Seasonal(data);
     this.throwOut = new ThrowOut(data);
     this.zombies = new Zombies(data);
+
+    this.wins = add(
+      this.blockingDead.wins,
+      this.bountyHunters.wins,
+      this.captureTheWool.wins,
+      this.dragonWars.wins,
+      this.dropper.wins,
+      this.enderSpleef.wins,
+      this.farmHunt.wins,
+      this.football.wins,
+      this.galaxyWars.wins,
+      this.hideAndSeek.overall.wins,
+      this.holeInTheWall.wins,
+      this.hypixelSays.wins,
+      this.miniWalls.wins,
+      this.partyGames.wins,
+      this.pixelPainters.wins,
+      this.pixelParty.overall.wins,
+      this.seasonal.totalWins,
+      this.throwOut.wins,
+      this.zombies.overall.wins
+    );
+
   }
 }
 
