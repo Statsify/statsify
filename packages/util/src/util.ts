@@ -103,28 +103,28 @@ export const removeFormatting = (s: string): string =>
   s.replace(/§#([A-Fa-f0-9]{6})|§./gm, "");
 
 export interface FormatTimeOptions {
-   /**
-   * Whether or not to use `s`, `m`, `h`, `d` or `seconds`, `minutes`, `hours`, `days`
-   * @default true
-   */
-   short?: boolean;
+  /**
+  * Whether or not to use `s`, `m`, `h`, `d` or `seconds`, `minutes`, `hours`, `days`
+  * @default true
+  */
+  short?: boolean;
 
-   /**
-    * How many units to display
-    * @default 2
-    *
-    * @example
-    * ```ts
-    * formatTime(90060000 , { short: true, units: 1 })
-    * // => 1d
-    * ```
-    *@example
-    * ```ts
-    * formatTime(90060000 , { short: true, units: 2 })
-    * // => 1d 1h
-    *```
-    */
-   entries?: number;
+  /**
+   * How many units to display
+   * @default 2
+   *
+   * @example
+   * ```ts
+   * formatTime(90060000 , { short: true, units: 1 })
+   * // => 1d
+   * ```
+   *@example
+   * ```ts
+   * formatTime(90060000 , { short: true, units: 2 })
+   * // => 1d 1h
+   *```
+   */
+  entries?: number;
 }
 
 const MS = 1000;
