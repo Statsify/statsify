@@ -7,75 +7,145 @@
  */
 
 import {
+  AbstractCommandListener,
+  ActionRowBuilder,
   ApiService,
+  ButtonBuilder,
   Command,
-  CommandContext,
   EmbedBuilder,
   ErrorMessage,
   IMessage,
-  InteractionAttachment,
+  LocalizeFunction,
   MemberService,
-  NumberArgument,
+  ModalBuilder,
+  TextInputBuilder,
 } from "@statsify/discord";
+import {
+  ButtonStyle,
+  InteractionResponseType,
+  TextInputStyle,
+} from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
 import { config } from "@statsify/util";
-import { getAssetPath } from "@statsify/assets";
-import { readFileSync } from "node:fs";
 
-@Command({
-  description: (t) => t("commands.verify"),
-  args: [new NumberArgument("code", 1000, 9999)],
-  cooldown: 5,
-})
+const SUPPORT_BOT_GUILD_ID = config("supportBot.guild");
+const SUPPORT_BOT_MEMBER_ROLE_ID = config("supportBot.memberRole");
+const VERIFY_VIDEO = "https://www.youtube.com/watch?v=e5tF89tHEsg";
+
+const VERIFY_MODAL = new ModalBuilder()
+  .title((t) => t("verification.instructions.modal.title"))
+  .customId("verification-modal")
+  .component(
+    new ActionRowBuilder().component(
+      new TextInputBuilder()
+        .label((t) => t("verification.instructions.modal.input"))
+        .placeholder(() => "XXXX")
+        .minLength(4)
+        .maxLength(4)
+        .style(TextInputStyle.Short)
+        .required(true)
+    )
+  );
+
+const VERIFY_BUTTON = new ButtonBuilder()
+  .label((t) => t("verification.instructions.button"))
+  .customId("verification-button")
+  .style(ButtonStyle.Primary)
+  .emoji((t) => t("emojis:text-select"));
+
+@Command({ description: (t) => t("commands.verify"), cooldown: 5 })
 export class VerifyCommand {
   public constructor(
     private readonly apiService: ApiService,
     private readonly memberService: MemberService
   ) {}
 
-  public async run(context: CommandContext): Promise<IMessage> {
-    const userId = context.getInteraction().getUserId();
-    let user = context.getUser();
-
-    if (user?.uuid) throw new ErrorMessage("verification.alreadyVerified");
-
-    const code = context.option<number>("code");
-
-    if (!code)
-      throw new ErrorMessage(
-        (t) => t("verification.noCode.title"),
-        (t) => t("verification.noCode.description"),
-        { image: this.getVerifyGif() }
-      );
-
-    user = await this.apiService.verifyUser(`${code}`, userId);
-
-    if (!user)
-      throw new ErrorMessage(
-        (t) => t("verification.invalidCode.title"),
-        (t) => t("verification.invalidCode.description"),
-        { image: this.getVerifyGif() }
-      );
-
-    await this.memberService
-      .addRole(config("supportBot.guild"), userId, config("supportBot.memberRole"))
-      .then(() => this.apiService.updateUser(userId, { serverMember: true }))
-      .catch(() => null);
-
-    const player = await this.apiService.getPlayer(user?.uuid as string);
-    const displayName = this.apiService.emojiDisplayName(context.t(), player.displayName);
-
-    const embed = new EmbedBuilder()
-      .description((t) => t("verification.successfulVerification", { displayName }))
-      .color(STATUS_COLORS.success);
+  public async run(): Promise<IMessage> {
+    const row = new ActionRowBuilder([VERIFY_BUTTON]);
 
     return {
-      embeds: [embed],
+      content: (t) => `# [${t("verification.instructions.title")}](${VERIFY_VIDEO}) ${t("emojis:socials.h1.youtube")}\n${this.verificationSteps(t, false)}`,
+      components: [row],
     };
   }
 
-  private getVerifyGif(): InteractionAttachment {
-    const buffer = readFileSync(getAssetPath("verify.gif"));
-    return { name: "verify.gif", data: buffer };
+  public registerComponentListeners(listener: AbstractCommandListener) {
+    listener.addHook(VERIFY_BUTTON.getCustomId(), (interaction) => ({
+      type: InteractionResponseType.Modal,
+      data: VERIFY_MODAL.build(interaction.t()),
+    }));
+
+    listener.addHook(VERIFY_MODAL.getCustomId(), async (interaction) => {
+      const t = interaction.t();
+      const data = interaction.getData();
+      const input = data.components[0].components[0].value as string;
+      const code = Number.parseInt(input);
+
+      if (Number.isNaN(code)) {
+        const error = this.invalidCodeError();
+
+        return interaction.sendFollowup({
+          ...error,
+          ephemeral: true,
+        });
+      }
+
+      const userId = interaction.getUserId();
+      const user = await this.apiService.verifyUser(`${code}`, userId);
+
+      if (!user) {
+        const error = this.invalidCodeError();
+
+        return interaction.sendFollowup({
+          ...error,
+          ephemeral: true,
+        });
+      }
+
+      await this.memberService
+        .addRole(SUPPORT_BOT_GUILD_ID, userId, SUPPORT_BOT_MEMBER_ROLE_ID)
+        .then(() => this.apiService.updateUser(userId, { serverMember: true }))
+        .catch(() => null);
+
+      const player = await this.apiService.getPlayer(user.uuid as string);
+
+      const displayName = this.apiService.emojiDisplayName(t, player.displayName);
+
+      const embed = new EmbedBuilder()
+        .description((t) => t("verification.successfulVerification", { displayName }))
+        .color(STATUS_COLORS.success);
+
+      interaction.sendFollowup({ embeds: [embed], ephemeral: true });
+    });
   }
+
+  private verificationSteps(t: LocalizeFunction, inEmbed: boolean): string {
+    const minecraft = inEmbed ? t("emojis:socials.embed.minecraft") : t("emojis:socials.minecraft");
+    const check = inEmbed ? t("emojis:socials.embed.check") : t("emojis:socials.check");
+    const discord = inEmbed ? t("emojis:socials.embed.discord") : t("emojis:socials.discord");
+
+    return [
+      `${minecraft} ${t("verification.instructions.steps.one")}`,
+      `${check} ${t("verification.instructions.steps.two")}`,
+      `${discord} ${t("verification.instructions.steps.three")}`,
+    ].join("\n");
+  }
+
+  private invalidCodeError() {
+    const button = new ButtonBuilder()
+      .label((t) => t("verification.invalidCode.button"))
+      .style(ButtonStyle.Link)
+      .url(VERIFY_VIDEO)
+      .emoji((t) => t("emojis:socials.button.youtube"));
+
+    return new ErrorMessage(
+      (t) => t("verification.invalidCode.title"),
+      (t) => `${t("verification.invalidCode.description")}\n\n${this.verificationSteps(t, true)}`,
+      { buttons: [button] }
+    );
+  }
+
 }
+
+@Command({ description: (t) => t("commands.verify"), cooldown: 5 })
+export class LinkCommand extends VerifyCommand {}

@@ -28,7 +28,6 @@ import { config } from "@statsify/util";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { setGlobalOptions } from "@typegoose/typegoose";
-import "@sentry/tracing";
 import "reflect-metadata";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

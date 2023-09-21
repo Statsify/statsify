@@ -8,7 +8,6 @@
 
 import * as Sentry from "@sentry/node";
 import { Logger } from "@statsify/logger";
-import { Integrations as TracingIntegrations } from "@sentry/tracing";
 import { UserLogo, VerifyCode } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { connect } from "mongoose";
@@ -30,7 +29,7 @@ const codeCreatedMessage = (code: string, time: Date) => {
   let expireTime = time.getTime() + 300 * 1000;
   expireTime -= Date.now();
 
-  return `§9§lStatsify Verification Server\n\n§r§7Your verification code is §c§l${code}§r§7\n\nHead back over to §5Discord §r§7and run §f§l/verify code:${code}§r§7\nYour code will expire in §8${formatTime(
+  return `§9§lStatsify Verification Server\n\n§r§7Your verification code is §c§l${code}§r§7\n\nHead back over to §5Discord §r§7and run §f§l/verify§r§7\nYour code will expire in §8${formatTime(
     expireTime,
     { short: false }
   )}§r§7.`;
@@ -41,7 +40,7 @@ const sentryDsn = config("sentry.verifyServerDsn", { required: false });
 if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
-    integrations: [new TracingIntegrations.Mongo({ useMongoose: true })],
+    integrations: [new Sentry.Integrations.Mongo({ useMongoose: true })],
     normalizeDepth: 3,
     tracesSampleRate: config("sentry.tracesSampleRate"),
     environment: config("environment"),

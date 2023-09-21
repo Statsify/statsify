@@ -16,7 +16,6 @@ import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
-import { Integrations as TracingIntegrations } from "@sentry/tracing";
 import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
 import { dirname, join } from "node:path";
@@ -38,7 +37,7 @@ if (sentryDsn) {
     dsn: sentryDsn,
     integrations: [
       new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true }),
-      new TracingIntegrations.Mongo({ useMongoose: true }),
+      new Sentry.Integrations.Mongo({ useMongoose: true }),
     ],
     normalizeDepth: 3,
     tracesSampleRate: config("sentry.tracesSampleRate"),
