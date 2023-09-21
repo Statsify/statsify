@@ -40,7 +40,6 @@ export const ARCADE_MODES = new GameModes([
   { api: "captureTheWool", hypixel: "PVP_CTW" },
   { api: "creeperAttack", hypixel: "DEFENDER" },
   { api: "dragonWars", hypixel: "DRAGONWARS2" },
-  // TODO: get hypixel name
   { api: "dropper", hypixel: "DROPPER" },
   { api: "enderSpleef", hypixel: "ENDER" },
   { api: "farmHunt", hypixel: "FARM_HUNT" },
