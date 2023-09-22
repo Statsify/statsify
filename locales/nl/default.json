@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "Snelste Detective Win",
     "fastestMurdererWin": "Snelste Moordenaar Overwinning",
     "fastestWin": "Snelste Win",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "Geholpen Eliminaties",
     "finalDeaths": "Definitieve Doden",
     "finalKills": "Definitieve Moorden",
@@ -616,8 +618,10 @@
     "godfather": "Godvader",
     "godlikes": "Goddelijken",
     "gold": "Goud",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "Goud Opgepakt",
     "goldRate": "Goud Koers",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "Gouden Trofeeën",
     "grandPrixTokens": "GP Tokens",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "Levels Verkregen",
     "loginTime": "Login Tijd",
     "logoutTime": "Uitlog Tijd",
+    "longestGame": "Longest Game",
     "lootChests": "Loot Kisten",
     "losses": "Verloren",
     "magicalChests": "Magische Kisten",
@@ -767,14 +772,21 @@
     "witherKills": "Withers Gedood",
     "wlr": "WLR",
     "wool": "Wol",
-    "woolCaptures": "Wol Gestolen",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "Wol Geplaatst",
     "zombieKills": "Zombie Moorden",
     "potionsBrewed": "Potions Brewed",
     "positions": "Positions",
     "powerupsCollected": "Power-Ups Collected",
     "roundsCompleted": "Rounds Completed",
-    "totalExp": "Total EXP"
+    "totalExp": "Total EXP",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Sluit je aan bij onze **$t(socials.discord)** en krijg **20% lagere cooldowns** $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "Al geverifieerd"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "Ongeldige verificatiecode"
+      "title": "Ongeldige verificatiecode",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "**Hoe te verifiëren**\n`1.` Open Minecraft en ga naar de serverlijst\n`2.` Verbind met `verify.statsify.net` en kopieer de weergegeven code\n`3.` Ga terug naar discord en voer `/verify code:XXXX` uit",
-      "title": "Verificatiecode ontbreekt"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "Je moet geverifieerd zijn om te onverifieëren!",
