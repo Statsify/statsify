@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "Γρηγορότερη Νίκη ως Ντετέκτιβ",
     "fastestMurdererWin": "Γρηγορότερη Νίκη ως Δολοφόνος",
     "fastestWin": "Γρηγορότερη Νίκη",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "Τελικές Βοήθειες",
     "finalDeaths": "Τελικοί Θάνατοι",
     "finalKills": "Τελικοί Σκοτωμοί",
@@ -616,8 +618,10 @@
     "godfather": "Noνός",
     "godlikes": "Θεϊκά",
     "gold": "Χρυσός",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "Μαζεμένος Χρυσός",
     "goldRate": "Ποσοστό Χρυσού",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "Χρυσά Τρόπαια",
     "grandPrixTokens": "GP Ανταμοιβές",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "Αποκτημένα Επίπεδα",
     "loginTime": "Ώρα Σύνδεσης",
     "logoutTime": "Ώρα Αποσύνδεσης",
+    "longestGame": "Longest Game",
     "lootChests": "Loot Chests",
     "losses": "Ήττες",
     "magicalChests": "Μαγικά Σεντούκια",
@@ -767,14 +772,21 @@
     "witherKills": "Wither Σκοτωμοί",
     "wlr": "WLR",
     "wool": "Μαλλί",
-    "woolCaptures": "Αιχμαλωτισμένα Μαλλιά",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "Τοποθετημένα Wool",
     "zombieKills": "Zombie Σκοτωμοί",
     "potionsBrewed": "Παρασκευασμένα Φίλτρα",
     "positions": "Positions",
     "powerupsCollected": "Power-Ups Collected",
     "roundsCompleted": "Rounds Completed",
-    "totalExp": "Total EXP"
+    "totalExp": "Total EXP",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Μπες στο **$t(socials.discord)** και κέρδισε **20% χαμηλότερο χρόνο επαναφόρτισης** $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "Ήδη Επαληθευμένος"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "Μη Έγκυρος Κωδικός Επαλήθευσης"
+      "title": "Μη Έγκυρος Κωδικός Επαλήθευσης",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "**Τρόπος επαλήθευσης**\n`1.` Άνοιξε το Minecraft και πήγαινε στη server λίστα\n`2.` Συνδέσου στο `verify.statsify.net` και αντίγραψε τον κωδικό που εμφανίζεται\n`3.` Γύρνα στο discord και εκτέλεσε το '/verify code:XXXX'",
-      "title": "Λείπει Κωδικός Επαλήθευσης"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "Πρέπει να επαληθευτείς για να μπορείς να καταργήσεις την επαλήθευση!",
