@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "วินนักสืบที่เร็วที่สุด",
     "fastestMurdererWin": "ฆาตกรที่เร็วที่สุดชนะ",
     "fastestWin": "ชนะเร็วที่สุด",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "การช่วยเหลือครั้งสุดท้าย",
     "finalDeaths": "ความตายครั้งสุดท้าย",
     "finalKills": "สังหารสุดท้าย",
@@ -616,8 +618,10 @@
     "godfather": "เจ้าพ่อ",
     "godlikes": "เทพบุตร",
     "gold": "ทอง",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "รับทอง",
     "goldRate": "อัตราทอง",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "ถ้วยรางวัลทองคำ",
     "grandPrixTokens": "โทเค็น GP",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "ระดับที่ได้รับ",
     "loginTime": "เวลาเข้าสู่ระบบ",
     "logoutTime": "เวลาออกจากระบบ",
+    "longestGame": "Longest Game",
     "lootChests": "หีบสมบัติ",
     "losses": "ขาดทุน",
     "magicalChests": "หีบวิเศษ",
@@ -767,14 +772,21 @@
     "witherKills": "เหี่ยวเฉาฆ่า",
     "wlr": "WLR",
     "wool": "ขนสัตว์",
-    "woolCaptures": "ผ้าขนสัตว์จับ",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "ผ้าขนสัตว์วาง",
     "zombieKills": "ซอมบี้ฆ่า",
     "potionsBrewed": "ปรุงยา",
     "positions": "Positions",
     "powerupsCollected": "Power-Ups Collected",
     "roundsCompleted": "Rounds Completed",
-    "totalExp": "Total EXP"
+    "totalExp": "Total EXP",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) เข้าร่วมกับเรา **$t(socials.discord)** และรับ **20% คูลดาวน์ที่ต่ำกว่า**$t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "ยืนยันแล้ว"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "รหัสยืนยันไม่ถูกต้อง"
+      "title": "รหัสยืนยันไม่ถูกต้อง",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "**วิธีการตรวจสอบ**`\n`1.` เปิด Minecraft และไปที่รายการเซิร์ฟเวอร์\n`2.` เชื่อมต่อกับ `verify.statsify.net` และคัดลอกรหัสที่แสดง\n`3.` กลับไปที่ discord และเรียกใช้ `/verify code:XXXX`",
-      "title": "ไม่มีรหัสยืนยัน"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "คุณต้องได้รับการยืนยันก่อนที่จะไม่สามารถยืนยันได้!",

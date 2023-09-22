@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "Trò chơi thắng bằng thám tử nhanh nhất",
     "fastestMurdererWin": "Trò chơi thắng bằng kẻ giết người nhanh nhất",
     "fastestWin": "Chiến thắng nhanh nhất",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "Số lần hỗ trợ cuối",
     "finalDeaths": "Số lần chết cuối",
     "finalKills": "Số lần giết cuối",
@@ -616,8 +618,10 @@
     "godfather": "Số lần thành Godfather",
     "godlikes": "Số lần thành Godlikes",
     "gold": "Vàng",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "Số vàng nhặt được",
     "goldRate": "Tỉ lệ vàng",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "Số cúp vàng",
     "grandPrixTokens": "Số GP Token",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "Số cấp nhận được",
     "loginTime": "Thời gian đăng nhập",
     "logoutTime": "Thời gian đăng xuất",
+    "longestGame": "Longest Game",
     "lootChests": "Số rương loot",
     "losses": "Số lần thua",
     "magicalChests": "Số rương phép thuật",
@@ -767,14 +772,21 @@
     "witherKills": "Số lần giết Wither",
     "wlr": "WLR",
     "wool": "Len",
-    "woolCaptures": "Số lông đã thu hoạch",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "Lông đã đặt",
     "zombieKills": "Số lần giết Thây Ma",
     "potionsBrewed": "Số thuốc đã làm",
     "positions": "Vị trí",
     "powerupsCollected": "Power-Ups đã thu được",
     "roundsCompleted": "Số vòng hoàn thành",
-    "totalExp": "Tổng EXP"
+    "totalExp": "Tổng EXP",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Vô **$t(socials.discord)** của chúng tôi và lấy **20% lower cooldowns** $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "Đã liên kết sẵn"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "Sai mã xác minh"
+      "title": "Sai mã xác minh",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "**How to verify**\n`1.` Mở Minecraft và vô danh sách máy chủ\n`2.` Kết nối tới `verify.statsify.net` và sao chép mã có ở trong\n`3.` Quay lại tới discord và chạy `/verify code:XXXX`",
-      "title": "Thiếu mã xác minh"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "Bạn đã xác minh từ trước bạn có thể hủy xác minh!",

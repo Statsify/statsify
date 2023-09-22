@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "Victoire la Plus Rapide en Détective",
     "fastestMurdererWin": "Victoire la Plus Rapide en Meurtrier",
     "fastestWin": "Victoire la Plus Rapide",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "Assistances Finales",
     "finalDeaths": "Morts Finales",
     "finalKills": "Éliminations Finales",
@@ -616,8 +618,10 @@
     "godfather": "Soutien",
     "godlikes": "Divins",
     "gold": "Or",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "Or collecté",
     "goldRate": "Taux de Trophées d'Or",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "Trophées d'Or",
     "grandPrixTokens": "Jetons de GP",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "Niveaux Gagnés",
     "loginTime": "Heure de Connexion",
     "logoutTime": "Heure de Déconnexion",
+    "longestGame": "Longest Game",
     "lootChests": "Loot Chests",
     "losses": "Défaites",
     "magicalChests": "Coffres Magiques",
@@ -767,14 +772,21 @@
     "witherKills": "Withers Tués",
     "wlr": "WLR",
     "wool": "Laine",
-    "woolCaptures": "Laines Capturées",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "Laine Placée",
     "zombieKills": "Zombies Tués",
     "potionsBrewed": "Potions Distillées",
     "positions": "Positions",
     "powerupsCollected": "Power-Ups collectés",
     "roundsCompleted": "Tours Terminés",
-    "totalExp": "EXP Totale"
+    "totalExp": "EXP Totale",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Rejoignez notre **$t(socials.discord)** et obtenez **20% de temps d'attente en moins** $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "Déjà Vérifié"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "Code de Vérification Invalide"
+      "title": "Code de Vérification Invalide",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "**Comment vérifier**\n`1.` Ouvrez Minecraft et allez dans la liste des serveurs\n`2.` Connectez-vous à `verify.statsify.net` et copiez le code affiché\n`3.` Retournez sur discord et exécutez `/verify code:XXXX`",
-      "title": "Code de Vérification Manquant"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "Vous devez être vérifié avant pour annuler votre vérification !",
