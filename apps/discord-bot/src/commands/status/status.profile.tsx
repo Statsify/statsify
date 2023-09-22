@@ -51,13 +51,13 @@ const OnlineTable = ({ status, t }: StatusTableProps) => (
       </Table.tr>
       <Table.tr>
         <Table.td
-          title={t("stats.lastActionTime")}
-          value={relativeTime(status.actions.lastActionTime)}
+          title={t("stats.lastAction")}
+          value={prettify(status.actions.lastAction)}
           color="§a"
         />
         <Table.td
-          title={t("stats.lastAction")}
-          value={prettify(status.actions.lastAction)}
+          title={t("stats.lastActionTime")}
+          value={relativeTime(status.actions.lastActionTime)}
           color="§a"
         />
       </Table.tr>
@@ -72,13 +72,13 @@ const OfflineTable = ({ status, t }: StatusTableProps) => (
     </Table.tr>
     <Table.tr>
       <Table.td
-        title={t("stats.logoutTime")}
-        value={relativeTime(status.actions.lastLogout)}
+        title={t("stats.lastGame")}
+        value={FormattedGame[status.actions.lastGame.id]}
         color="§a"
       />
       <Table.td
-        title={t("stats.lastGame")}
-        value={FormattedGame[status.actions.lastGame.id]}
+        title={t("stats.logoutTime")}
+        value={relativeTime(status.actions.lastLogout)}
         color="§a"
       />
     </Table.tr>
@@ -92,13 +92,13 @@ const HiddenTable = ({ status, t }: StatusTableProps) => (
     </Table.tr>
     <Table.tr>
       <Table.td
-        title={t("stats.lastActionTime")}
-        value={relativeTime(status.actions.lastActionTime)}
+        title={t("stats.lastAction")}
+        value={prettify(status.actions.lastAction)}
         color="§a"
       />
       <Table.td
-        title={t("stats.lastAction")}
-        value={prettify(status.actions.lastAction)}
+        title={t("stats.lastActionTime")}
+        value={relativeTime(status.actions.lastActionTime)}
         color="§a"
       />
     </Table.tr>
