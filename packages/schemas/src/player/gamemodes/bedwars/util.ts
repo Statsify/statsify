@@ -222,7 +222,7 @@ const PRESTIGE_COLORS: { req: number; fn: (n: number) => string }[] = [
     req: 4200,
     fn: (n) => {
       const nums = [...n.toString()];
-      return `§1[§9${nums[0]}§3${nums[1]}§5${nums[2]}${nums[3]}§d§l✥§r§1]`;
+      return `§1[§9${nums[0]}§3${nums[1]}§b${nums[2]}§f${nums[3]}§7§l✥§r§7]`;
     },
   },
   {
