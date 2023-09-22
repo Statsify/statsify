@@ -72,13 +72,13 @@ const OfflineTable = ({ status, t }: StatusTableProps) => (
     </Table.tr>
     <Table.tr>
       <Table.td
-        title={t("stats.logoutTime")}
-        value={relativeTime(status.actions.lastLogout)}
+        title={t("stats.lastGame")}
+        value={FormattedGame[status.actions.lastGame.id]}
         color="§a"
       />
       <Table.td
-        title={t("stats.lastGame")}
-        value={FormattedGame[status.actions.lastGame.id]}
+        title={t("stats.logoutTime")}
+        value={relativeTime(status.actions.lastLogout)}
         color="§a"
       />
     </Table.tr>
