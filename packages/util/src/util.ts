@@ -170,11 +170,7 @@ export const formatTime = (
 
 export const relativeTime = (time: number) => `${formatTime(Date.now() - time)} ago`;
 
-export const formatRaceTime = (timeMs: number) => {
-  const seconds = Math.floor(timeMs / MS);
-  const ms = timeMs % SECONDS;
-  return `${seconds}.${ms}s`;
-};
+export const formatRaceTime = (timeMs: number) => `${(timeMs / 1000).toFixed(2)}s`;
 
 export const abbreviationNumber = (num: number): [num: number, suffix: string] => {
   const abbreviation = ["", "K", "M", "B", "T"];
