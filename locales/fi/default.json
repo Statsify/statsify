@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "Nopein voitto etsivänä",
     "fastestMurdererWin": "Nopein voitto murhaajana",
     "fastestWin": "Nopein voitto",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "Viimeistelyavustukset",
     "finalDeaths": "Lopulliset kuolemat",
     "finalKills": "Viimeistelyt",
@@ -616,8 +618,10 @@
     "godfather": "Kummisetä",
     "godlikes": "Godlike-tappoputkia",
     "gold": "Kultaa",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "Kultaa kerätty",
     "goldRate": "Kultasuhde",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "Kultapokaaleja",
     "grandPrixTokens": "GP-tokenit",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "Tasoa ansaittu",
     "loginTime": "Kirjautumisaika",
     "logoutTime": "Uloskirjautumisaika",
+    "longestGame": "Longest Game",
     "lootChests": "Loot Chestiä",
     "losses": "Häviöt",
     "magicalChests": "Taika-arkkuja",
@@ -767,14 +772,21 @@
     "witherKills": "Wither-tapot",
     "wlr": "WLR",
     "wool": "Villaa",
-    "woolCaptures": "Villaa kaapattu",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "Villaa asetettu",
     "zombieKills": "Zombitapot",
     "potionsBrewed": "Potions Brewed",
     "positions": "Positions",
     "powerupsCollected": "Power-Ups Collected",
     "roundsCompleted": "Rounds Completed",
-    "totalExp": "Total EXP"
+    "totalExp": "Total EXP",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Liity **$t(socials.discord)** ja saat **20% lyhyemmät odotusajat** $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "Jo vahvistettu"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "Virheellinen vahvistuskoodi"
+      "title": "Virheellinen vahvistuskoodi",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "**Miten vahvistan käyttäjän?**\n`1.` Avaa Minecraft ja siirry palvelinluetteloon\n`2.` Yhdistä osoitteeseen `verify.statsify.net` ja kopioi näytetty koodi\n`3.` Palaa takaisin discordiin ja suorita `/verify code:XXXX`",
-      "title": "Puuttuva vahvistuskoodi"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "Sinun on oltava vahvistettu ennen kuin pystyt poistamaan vahvistuksen!",
