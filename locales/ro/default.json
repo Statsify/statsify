@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "Câștig cel mai rapid ca Detectiv",
     "fastestMurdererWin": "Cel mai rapid win ca Murderer",
     "fastestWin": "Cel mai rapid câștig",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "Ucideri Finale Asistate",
     "finalDeaths": "Decese Finale",
     "finalKills": "Ucideri Finale",
@@ -616,8 +618,10 @@
     "godfather": "Godfather",
     "godlikes": "Godlike-uri",
     "gold": "Aur",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "Aur cules",
     "goldRate": "Rata de aur",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "Trofeuri de aur",
     "grandPrixTokens": "Tokene GP",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "Nivele Obținute",
     "loginTime": "Timp conectat",
     "logoutTime": "Timp de deconectare",
+    "longestGame": "Longest Game",
     "lootChests": "Loot Cufere",
     "losses": "Pierderi",
     "magicalChests": "Cufere magice",
@@ -767,14 +772,21 @@
     "witherKills": "Omorături Wither",
     "wlr": "WLR",
     "wool": "Lână",
-    "woolCaptures": "Capturi Lână",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "Lână plasată",
     "zombieKills": "Omorături Zombi",
     "potionsBrewed": "Poţiuni preparate",
     "positions": "Poziții",
     "powerupsCollected": "Power-Up-uri Colectate",
     "roundsCompleted": "Runde finalizate",
-    "totalExp": "EXP total"
+    "totalExp": "EXP total",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Alătură-te serverului de discord **$t(socials.discord)** și obține **20% mai mic cooldown** $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "Deja verificat"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "Cod de verificare invalid"
+      "title": "Cod de verificare invalid",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "** Cum să te verifici**\n`1.` Deschide Minecraft și dute la lista de servere\n`2.` Conectează-te la `verify.statsify.net` și copiază codul arătat\n`3.` Dute înapoi pe discord si executează `/verify code:XXXX`",
-      "title": "Lipsește codul de verificare"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "Trebuie să fiți verificat înainte de a putea să vă neverificați!",
