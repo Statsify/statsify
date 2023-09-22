@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "侦探最快胜利",
     "fastestMurdererWin": "杀手最快胜利",
     "fastestWin": "最快胜利",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "最终助攻",
     "finalDeaths": "最终死亡数",
     "finalKills": "最终击杀数",
@@ -616,8 +618,10 @@
     "godfather": "额外生命技能数",
     "godlikes": "完美游戏次数",
     "gold": "金锭收集",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "捡起的金锭数",
     "goldRate": "金锭率",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "黄金奖杯",
     "grandPrixTokens": "GP 代币",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "得到等级",
     "loginTime": "登录时间",
     "logoutTime": "登出时间",
+    "longestGame": "Longest Game",
     "lootChests": "战利品宝箱",
     "losses": "败场",
     "magicalChests": "神秘宝箱",
@@ -767,14 +772,21 @@
     "witherKills": "凋灵击杀数",
     "wlr": "WLR",
     "wool": "羊毛",
-    "woolCaptures": "获取的羊毛",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "放置羊毛数",
     "zombieKills": "僵尸击杀数",
     "potionsBrewed": "酿造药水",
     "positions": "排名",
     "powerupsCollected": "加成收集次数",
     "roundsCompleted": "回合完成数",
-    "totalExp": "总计经验"
+    "totalExp": "总计经验",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) 加入我们的**$t(socials.discord)**可以获得**减少20%的冷却时间** $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "已经验证了"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "无效的验证码"
+      "title": "无效的验证码",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "**如何验证**\n`1.` 打开我的世界并进入服务器列表\n`2.` 连接到`verify.statsify.net`并复制显示的代码\n`3.` 返回到discord并运行`/verify：XXXX`。",
-      "title": "缺少验证码"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "你必须经过验证才能解除验证!",
