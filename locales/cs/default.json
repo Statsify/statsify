@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "Nejrychlejší výhra za detektiva",
     "fastestMurdererWin": "Nejrychlejší výhra za vraha",
     "fastestWin": "Nejrychlejší výhra",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "Finální asistence",
     "finalDeaths": "Finální smrti",
     "finalKills": "Finální zabití",
@@ -616,8 +618,10 @@
     "godfather": "Godfather",
     "godlikes": "Godlikes",
     "gold": "Zlato",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "Sebraná zlata",
     "goldRate": "Míra zlatých trofejí",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "Zlaté trofeje",
     "grandPrixTokens": "Tokeny GP",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "Získané levely",
     "loginTime": "Doba přihlášení",
     "logoutTime": "Doba odhlášení",
+    "longestGame": "Longest Game",
     "lootChests": "Loot Chests",
     "losses": "Prohry",
     "magicalChests": "Kouzelné truhly",
@@ -767,14 +772,21 @@
     "witherKills": "Zabití witherů",
     "wlr": "WLR",
     "wool": "Vlny",
-    "woolCaptures": "Získané vlny",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "Položené vlny",
     "zombieKills": "Zabití zombií",
     "potionsBrewed": "Uvařené lektvary",
     "positions": "Pozice",
     "powerupsCollected": "Sebraná vylepšení",
     "roundsCompleted": "Dokončena kola",
-    "totalExp": "Celkem XP"
+    "totalExp": "Celkem XP",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Připoj se na náš **$t(socials.discord)** a získej **20% nižší časový limit* $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "Již ověřený"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "Neplatný ověřovací kód"
+      "title": "Neplatný ověřovací kód",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "**Jak se ověřit**\n`1.` Otevři Minecraft a jdi do seznamu serverů\n`2.` Připoj se na `verify.statsify.net` a zkopíruj zobrazený kód\n`3.` Vrať se zpět na Discord a spusť příkaz `/verify code:XXXX`",
-      "title": "Chybějící ověřovací kód"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "Musíš být ověřen, než si budeš moci zrušit ověření!",
