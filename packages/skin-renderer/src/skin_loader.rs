@@ -66,6 +66,7 @@ impl SkinLoader {
     };
 
     Self::fix_opaque_skin(&mut skin, format);
+    Self::fix_transparent_skin(&mut skin);
 
     Ok(skin)
   }
@@ -105,8 +106,9 @@ impl SkinLoader {
     for x in 0..width {
       for y in 0..height {
         let pixel = skin.get_pixel(x, y);
+        let opacity = pixel[3];
 
-        if pixel[3] == 0 {
+        if opacity == 0 {
           return;
         }
       }
@@ -154,11 +156,45 @@ impl SkinLoader {
       fill_rect(skin, 60, 52, 4, 12, transparent); // Left Arm Layer 2 Back
     }
   }
+
+  fn fix_transparent_skin(skin: &mut DynamicImage) {
+    remove_transparency(skin, 0, 8, 32, 8);
+    remove_transparency(skin, 8, 0, 16, 8);
+    remove_transparency(skin, 0, 20, 56, 12);
+    remove_transparency(skin, 4, 16, 8, 4);
+    remove_transparency(skin, 20, 16, 16, 4);
+    remove_transparency(skin, 44, 16, 8, 4);
+    remove_transparency(skin, 16, 52, 32, 12);
+    remove_transparency(skin, 20, 48, 8, 4);
+    remove_transparency(skin, 36, 48, 8, 4);
+  }
 }
 
 fn fill_rect(image: &mut DynamicImage, x: u32, y: u32, width: u32, height: u32, pixel: Rgba<u8>) {
   for x in x..x + width {
     for y in y..y + height {
+      image.put_pixel(x, y, pixel);
+    }
+  }
+}
+
+fn remove_transparency(image: &mut DynamicImage, x: u32, y: u32, width: u32, height: u32) {
+  for x in x..x + width {
+    for y in y..y + height {
+      let mut pixel = image.get_pixel(x, y);
+      let opacity = pixel[3];
+
+      if opacity == 255 {
+        continue;
+      }
+
+      let opacity = opacity as f32 / 255.0;
+
+      pixel[0] = (opacity * pixel[0] as f32) as u8;
+      pixel[1] = (opacity * pixel[1] as f32) as u8;
+      pixel[2] = (opacity * pixel[2] as f32) as u8;
+      pixel[3] = 255;
+
       image.put_pixel(x, y, pixel);
     }
   }

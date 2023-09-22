@@ -41,7 +41,5 @@ pub async fn render_skin(skin_url: Option<String>, is_slim: bool) -> Result<Buff
     renderer.render_default_texture(model_type).await?
   };
 
-  println!("Rendered skin in {:?}", start.elapsed());
-
   Ok(skin_render.into())
 }
