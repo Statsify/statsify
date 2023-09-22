@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "En Hızlı Dedektif Kazanması",
     "fastestMurdererWin": "En Hızlı Katil Kazanması",
     "fastestWin": "En Hızlı Kazanma",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "Final Assistler",
     "finalDeaths": "Final Ölümler",
     "finalKills": "Final Öldürmeler",
@@ -616,8 +618,10 @@
     "godfather": "Godfather",
     "godlikes": "Godlike'lar",
     "gold": "Altın",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "Toplanan Altın",
     "goldRate": "Altın Madalya Oranı",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "Altın Madalyalar",
     "grandPrixTokens": "GP Jetonları",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "Elde Edilen Seviyeler",
     "loginTime": "Giriş Zamanı",
     "logoutTime": "Çıkış Zamanı",
+    "longestGame": "Longest Game",
     "lootChests": "Loot Chests",
     "losses": "Kaybetmeler",
     "magicalChests": "Büyülü Sandıklar",
@@ -767,14 +772,21 @@
     "witherKills": "Wither Öldürmeleri",
     "wlr": "WLR",
     "wool": "Yün",
-    "woolCaptures": "Yakalanan Yünler",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "Koyulan Yün",
     "zombieKills": "Zombi Öldürmeleri",
     "potionsBrewed": "Üretilen İksirler",
     "positions": "Pozisyonlar",
     "powerupsCollected": "Toplanan Power-Up",
     "roundsCompleted": "Bitirilen Rauntlar",
-    "totalExp": "Toplam EXP"
+    "totalExp": "Toplam EXP",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) $t(socials.discord) katılın ve **%20 daha az cooldown** kazanın $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "Çoktan Doğrulanmış"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "Geçersiz Doğrulanma Kodu"
+      "title": "Geçersiz Doğrulanma Kodu",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "**Nasıl doğrulanılır**\n`1.` Minecraft'ı açın ve sunucu listesine gidin\n`2.` `verify.statsify.net` sunucusuna bağlanın ve gösterilen kodu kopyalayın\n`3.` Discord'a geri yönelin ve `/verify code:XXXX` yazın",
-      "title": "Eksik Doğrulanma Kodu"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "Doğrulanmayı kaldırmak için doğrulanmış olmanız gerekir!",

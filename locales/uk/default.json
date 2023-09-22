@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "Найшвидша перемога за детектива",
     "fastestMurdererWin": "Найшвидша перемога за вбивцю",
     "fastestWin": "Найшвидша перемога",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "Фінальних сприянь",
     "finalDeaths": "Фінальних смертей",
     "finalKills": "Фінальних вбивств",
@@ -616,8 +618,10 @@
     "godfather": "Хрещений батько",
     "godlikes": "Богоподібні",
     "gold": "Золото",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "Зібрано золота",
     "goldRate": "Шанс золотого трофею",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "Золотих Трофеїв",
     "grandPrixTokens": "Токени GP",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "Рівнів отримано",
     "loginTime": "Час входу",
     "logoutTime": "Час виходу",
+    "longestGame": "Longest Game",
     "lootChests": "Loot Chests",
     "losses": "Програшів",
     "magicalChests": "Чарівних Скринь",
@@ -767,14 +772,21 @@
     "witherKills": "Вбивст візера",
     "wlr": "WLR",
     "wool": "Вовна",
-    "woolCaptures": "Вовни захоплено",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "Вовни розміщено",
     "zombieKills": "Зомбі вбито",
     "potionsBrewed": "Зіллів зварено",
     "positions": "Позиції",
     "powerupsCollected": "Зібрано бонусів",
     "roundsCompleted": "Раунди завершено",
-    "totalExp": "Усього досвіду"
+    "totalExp": "Усього досвіду",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Приєднуйся до нас**$t(socials.discord)**, та отримуйте **перезаряджання на 20% нижче** $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "Вже перевірено"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "Невірний код прив'язки"
+      "title": "Невірний код прив'язки",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "**Як прив'язати**\n`1.` Відкрийте Minecraft та перейдіть до списку серверів\n`2.` Підключіться до `verify.statsify.net`, і скопіюйте код, що відображається\n`3.` Поверніться до discord і запустіть `/verify code:XXXX`",
-      "title": "Відсутній код прив'язки"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "Ви повинні пройти верифікацію, перш ніж ви зможете скасувати верифікацію!",

@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "탐정으로 한 가장 빠른 승리",
     "fastestMurdererWin": "살인자로 한 가장 빠른 승리",
     "fastestWin": "가장 빠른 승리",
+    "fastestWoolCapture": "가장 빠른 양털 점령",
     "finalAssists": "파이널 어시스트",
     "finalDeaths": "파이널 데스",
     "finalKills": "파이널 킬",
@@ -616,8 +618,10 @@
     "godfather": "Godfather",
     "godlikes": "Godlikes",
     "gold": "골드",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "수집한 금괴",
     "goldRate": "금 트로피 비율",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "금 트로피",
     "grandPrixTokens": "GP 토큰",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "획득한 레벨",
     "loginTime": "로그인 시간",
     "logoutTime": "로그아웃 시간",
+    "longestGame": "Longest Game",
     "lootChests": "전리품 상자",
     "losses": "패배",
     "magicalChests": "마법 상자",
@@ -767,14 +772,21 @@
     "witherKills": "위더 킬",
     "wlr": "WLR",
     "wool": "양털",
-    "woolCaptures": "점령한 양털",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "설치한 양털",
     "zombieKills": "좀비 킬",
     "potionsBrewed": "양조한 포션",
     "positions": "위치",
     "powerupsCollected": "수집한 파워업",
     "roundsCompleted": "완료한 라운드",
-    "totalExp": "총 경험치"
+    "totalExp": "총 경험치",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "실패",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "무승부"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) **$t(socials.discord)**에 참여해 **대기 시간 20% 감소**를 받아보세요 $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "이미 인증됨"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "잘못된 인증 코드"
+      "title": "잘못된 인증 코드",
+      "description": "인증 코드를 확인하거나 다음 단계를 따라 다시 시도해 보세요: ",
+      "button": "튜토리얼 보기"
     },
-    "noCode": {
-      "description": "**어떻게 인증하나요?**\n`1.` Minecraft를 열고 서버 목록으로 이동하세요\n`2.` `verify.statsify.net`에 연결해 표시된 코드를 복사하세요\n`3.` Discord로 다시 와서 `/verify code:표시된 코드` 명령어를 실행하세요",
-      "title": "인증 코드 필요"
+    "instructions": {
+      "title": "Statisfy에 내 Minecraft 계정을 연동하세요",
+      "steps": {
+        "one": "**Minecraft**를 열고 서버 목록으로 이동하세요",
+        "two": "**`verify.statsify.net`**로 연결하고 표시된 코드를 복사하세요",
+        "three": "**Discord**로 다시 와서 아래 버튼을 누르세요. 그리고, 코드를 입력하세요"
+      },
+      "modal": {
+        "title": "인증 코드를 입력하세요",
+        "input": "인증 코드"
+      },
+      "button": "인증 코드 입력"
     },
     "notVerified": {
       "description": "인증을 해제하기 전에 먼저 인증을 진행해야 해요!",

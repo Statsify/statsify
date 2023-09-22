@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "Raskeste detektiv-seier",
     "fastestMurdererWin": "Raskeste morder-seier",
     "fastestWin": "Raskeste seier",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "Endelige drapsmedvirkninger",
     "finalDeaths": "Endelige dødsfall",
     "finalKills": "Endelige drap",
@@ -616,8 +618,10 @@
     "godfather": "Gudfar",
     "godlikes": "Guddommelig",
     "gold": "Gull",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "Gull plukket opp",
     "goldRate": "Gullsats",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "Gulltrofeer",
     "grandPrixTokens": "GP-polletter",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "Levler tjent",
     "loginTime": "Innloggingstid",
     "logoutTime": "Utloggingstid",
+    "longestGame": "Longest Game",
     "lootChests": "Loot Chests",
     "losses": "Tap",
     "magicalChests": "Magiske kister",
@@ -767,14 +772,21 @@
     "witherKills": "Witherdrap",
     "wlr": "WLR",
     "wool": "Ull",
-    "woolCaptures": "Ull fanget",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "Ull plassert",
     "zombieKills": "Zombiedrap",
     "potionsBrewed": "Eliksir brygget",
     "positions": "Positions",
     "powerupsCollected": "Power-Ups Collected",
     "roundsCompleted": "Runder fullført",
-    "totalExp": "Total EXP"
+    "totalExp": "Total EXP",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Bli med i vår **$t(socials.discord)** og få **20% kortere cooldowns** $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "Allerede verifisert"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "Ugyldig verifiseringskode"
+      "title": "Ugyldig verifiseringskode",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "**Slik verifiserer du**\n`1.` Åpne Minecraft og gå til serverlisten\n`2.` Koble til `verify.statsify.net` og kopiér koden som vises\n`3.` Gå tilbake til Discord og utfør `/verify code:XXXX`",
-      "title": "Manglende verifiseringskode"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "Du må verifiseres før du kan avverifises!",
