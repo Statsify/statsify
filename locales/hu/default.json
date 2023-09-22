@@ -43,6 +43,7 @@
     "copsandcrims": "$t(commands.hypixel-command, { \"name\": \"Cops and Crims\" })",
     "daily": "View your daily stats in various games",
     "delete-player": "Delete a player from Statsify",
+    "dropper": "$t(commands.hypixel-command, { \"name\": \"Dropper\" })",
     "duels": "$t(commands.hypixel-command, { \"name\": \"Duels\" })",
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
@@ -600,6 +601,7 @@
     "fastestDetectiveWin": "Leggyorsabb Győzelem Detektívként",
     "fastestMurdererWin": "Leggyorsabb Győzelem Gyilkosként",
     "fastestWin": "Leggyorsabb Győzelem",
+    "fastestWoolCapture": "Fastest Wool Capture",
     "finalAssists": "Végső Asszisztálások",
     "finalDeaths": "Végső Halálok",
     "finalKills": "Végső Ölések",
@@ -616,8 +618,10 @@
     "godfather": "Nagypapa",
     "godlikes": "Godlikes",
     "gold": "Arany",
+    "goldEarned": "Gold Earned",
     "goldPickedUp": "Felvett Arany",
     "goldRate": "Arany Arány",
+    "goldSpent": "Gold Spent",
     "goldTrophies": "Arany Trófeák",
     "grandPrixTokens": "GP Tokenek",
     "guild": {
@@ -679,6 +683,7 @@
     "levelsGained": "Szerzett Szintek",
     "loginTime": "Csatlakozás",
     "logoutTime": "Lecsatlakozás",
+    "longestGame": "Longest Game",
     "lootChests": "Loot Chestek",
     "losses": "Vereségek",
     "magicalChests": "Misztikus Ládák",
@@ -767,14 +772,21 @@
     "witherKills": "Wither Ölések",
     "wlr": "WLR",
     "wool": "Gyapjú",
-    "woolCaptures": "Ellopott Gyapjúk",
+    "woolCaptured": "Wool Captured",
+    "woolPickedUp": "Wool Picked Up",
     "woolPlaced": "Letett Gyapjúk",
     "zombieKills": "Zombi Ölések",
     "potionsBrewed": "Főzött Bájitalok",
     "positions": "Positions",
     "powerupsCollected": "Begyűjtött Power-Upok",
     "roundsCompleted": "Túlélt Körök",
-    "totalExp": "Összes XP"
+    "totalExp": "Összes XP",
+    "gamesFinished": "Games Finished",
+    "flawlessGames": "Flawless Games",
+    "fails": "Fails",
+    "mapsCompleted": "Maps Completed",
+    "arcadeWins": "Arcade Wins",
+    "draws": "Draws"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Csatlakozz a **$t(socials.discord)** és szerezz **-20% várakozási időt** $t(emojis:heart)",
@@ -792,12 +804,22 @@
       "title": "Igazolva Van"
     },
     "invalidCode": {
-      "description": "$t(verification.noCode.description)",
-      "title": "Helytelen Igazolási Kód"
+      "title": "Helytelen Igazolási Kód",
+      "description": "Check your verification code or try again by following these steps: ",
+      "button": "Watch Tutorial"
     },
-    "noCode": {
-      "description": "**Hogyan igazold magad**\n`1.` Nyisd meg a Minecraftot és menj a szerver listához\n`2.` Csatlakozz fel a `verify.statsify.net`-re és másold ki a megjelenő kódod\n`3.` Menj vissza discordra és írd be `/verify code:XXXX`",
-      "title": "Hiányzó Igazolási Kód"
+    "instructions": {
+      "title": "Link your Minecraft Account to Statsify",
+      "steps": {
+        "one": "Open **Minecraft** and go to the server list",
+        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
+        "three": "Head back to **Discord** and click the button below, then type in your code"
+      },
+      "modal": {
+        "title": "Enter your Verification Code",
+        "input": "Verification Code"
+      },
+      "button": "Enter Verification Code"
     },
     "notVerified": {
       "description": "Igazolásod törléséhez, már igazolva kell lenned!",
