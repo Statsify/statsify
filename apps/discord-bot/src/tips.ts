@@ -40,6 +40,10 @@ export const tips: Tip[] = [
     disabled: ["rankings", "positions"],
   },
   {
+    message: { content: (t) => t("tips.sessions") },
+    disabled: ["session", "daily", "weekly", "monthly", "yesterday", "lastday", "lastweek", "lastmonth", "reset"],
+  },
+  {
     message: { content: (t) => t("tips.invite") },
     disabled: ["help", "invite", "links"],
   },

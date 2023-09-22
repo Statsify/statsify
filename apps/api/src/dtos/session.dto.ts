@@ -6,8 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { modelOptions as ModelOptions } from "@typegoose/typegoose";
-import { Player } from "@statsify/schemas";
+import { IsOptional, IsString } from "class-validator";
+import { PlayerDto } from "./player.dto.js";
 
-@ModelOptions({ schemaOptions: { collection: "lastDay" } })
-export class LastDay extends Player {}
+export class SessionDto extends PlayerDto {
+
+  @IsOptional()
+  @IsString()
+  public userUuid?: string;
+}

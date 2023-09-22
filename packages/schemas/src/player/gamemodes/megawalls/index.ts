@@ -131,7 +131,7 @@ export class MegaWalls {
     this.mythicFavor = data.mythic_favor;
     this.class = data.chosen_class ?? "none";
 
-    this.overall = new MegaWallsOverall(data, "");
+    this.overall = new MegaWallsOverall(data);
     this.arcanist = new MegaWallsKit(data, "arcanist");
     this.assassin = new MegaWallsKit(data, "assassin");
     this.automaton = new MegaWallsKit(data, "automaton");

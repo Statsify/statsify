@@ -10,7 +10,7 @@
     "target": "es5",
     "module": "ESNext",
     "moduleResolution": "node",
-    "resolveJsonModule": false,
+    "resolveJsonModule": true,
     "resolvePackageJsonExports": false,
     "resolvePackageJsonImports": false,
     "forceConsistentCasingInFileNames": true,

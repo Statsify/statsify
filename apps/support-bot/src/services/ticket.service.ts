@@ -102,7 +102,7 @@ export class TicketService {
 
   public async create(guildId: string, user: APIUser, username: string, issue: string) {
     const channel = await this.channelService.create(config("supportBot.guild"), {
-      name: `${user.username}-${user.discriminator}`,
+      name: user.username,
       parent_id: config("supportBot.ticketCategory"),
       type: ChannelType.GuildText,
       permission_overwrites: [

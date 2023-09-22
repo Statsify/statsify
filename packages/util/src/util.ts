@@ -104,9 +104,9 @@ export const removeFormatting = (s: string): string =>
 
 export interface FormatTimeOptions {
   /**
-   * Whether or not to use `s`, `m`, `h`, `d` or `seconds`, `minutes`, `hours`, `days`
-   * @default true
-   */
+  * Whether or not to use `s`, `m`, `h`, `d` or `seconds`, `minutes`, `hours`, `days`
+  * @default true
+  */
   short?: boolean;
 
   /**
@@ -136,12 +136,12 @@ const YEARS = 12;
 
 //Format milliseconds to a human readable string
 export const formatTime = (
-  ms: number,
+  timeMs: number,
   { short = true, entries = 2 }: FormatTimeOptions = {}
 ): string => {
-  if (ms < MS) return `${ms}${short ? "ms" : " milliseconds"}`;
+  if (timeMs < MS) return `${timeMs}${short ? "ms" : " milliseconds"}`;
 
-  const seconds = Math.floor(ms / MS);
+  const seconds = Math.floor(timeMs / MS);
   const minutes = Math.floor(seconds / SECONDS);
   const hours = Math.floor(minutes / MINUTES);
   const days = Math.floor(hours / HOURS);
@@ -155,7 +155,7 @@ export const formatTime = (
     { value: hours % HOURS, short: "h", long: "hour" },
     { value: minutes % MINUTES, short: "m", long: "minute" },
     { value: seconds % SECONDS, short: "s", long: "second" },
-    { value: ms - seconds * MS, short: "ms", long: "millisecond" },
+    { value: timeMs - seconds * MS, short: "ms", long: "millisecond" },
   ];
 
   return time
@@ -169,6 +169,8 @@ export const formatTime = (
 };
 
 export const relativeTime = (time: number) => `${formatTime(Date.now() - time)} ago`;
+
+export const formatRaceTime = (timeMs: number) => `${(timeMs / 1000).toFixed(3)}s`;
 
 export const abbreviationNumber = (num: number): [num: number, suffix: string] => {
   const abbreviation = ["", "K", "M", "B", "T"];

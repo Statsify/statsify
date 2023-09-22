@@ -90,6 +90,9 @@
     "@typescript-eslint/no-unused-vars": [
       "off"
     ],
+    "@typescript-eslint/no-unsafe-declaration-merging": [
+      "off"
+    ],
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
       "error",
@@ -103,6 +106,13 @@
     "arrow-body-style": [
       "error",
       "as-needed"
+    ],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1,
+        "maxEOF": 1
+      }
     ],
     "sort-imports-es6-autofix/sort-imports-es6": [
       "error",

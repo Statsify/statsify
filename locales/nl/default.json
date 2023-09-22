@@ -306,9 +306,9 @@
         "description": "Statsify ondersteunt de meeste spellen die worden aangeboden op Hypixel. Om je statistieken in een spel te zien, voer je `/[game]` uit. Je kunt bijvoorbeeld `/bedwars` uitvoeren om je BedWars statistieken te bekijken.",
         "title": "Spellen"
       },
-      "historical": {
-        "description": "Statsify laat je je dagelijkse, wekelijkse en maandelijkse statistieken zien door `/daily`, `/weekly` en `/monthly` uit te voeren. Als je een reset hebt gemist kan je eerdere statistieken zien met `/yesterday`, `/lastweek`, en `/lastmonth`. ",
-        "title": "Historisch"
+      "session": {
+        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "title": "Sessions"
       },
       "leaderboards": {
         "description": "Statsify biedt duizenden leaderboards via het `/leaderboard` commando. Voer `/leaderboard` uit en kies een spelmodus en leaderboard om te bekijken. Je kunt op de zoekknop drukken om naar een specifieke speler of positie te zoeken. Klik op de knoppen omhoog en omlaag om meer pagina's te bekijken.",
@@ -386,6 +386,10 @@
       "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
       "title": "Ongeldige Speler"
     },
+    "invalidSession": {
+      "title": "Invalid Session",
+      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+    },
     "invalidResetTime": {
       "description": "`{{time}}` komt niet overeen met het formaat `u:mm a`. Voor een tijd formaat in dat lijkt op `12:00 PM` or `1:00 AM`.",
       "title": "Ongeldige Resettijd"
@@ -432,7 +436,7 @@
       "title": "Verificatie Ontbreekt"
     },
     "missingPlayerVerification": {
-      "description": "{{displayName}} is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -512,7 +516,11 @@
     "resetButton": "Klik om te Resetten",
     "setResetTime": "Je reset tijd is gezet op <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats."
+    "setSessionReset": "Successfully reset your session stats.",
+    "disabledWarning": {
+      "title": "Historical Commands are no Longer Available",
+      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+    }
   },
   "leaderboard": {
     "guildInput": {
@@ -773,7 +781,9 @@
     "invite": "$t(emojis:socials.discord) Klik **[hier](<https://statsify.net/invite>)** om Statsify uit te nodigen voor je eigen server!",
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** biedt extra features, zoals gepersonaliseerde profielbadges. Vind de volledige lijst met voordelen **[hier](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Bekijk jouw top leaderboard posities met **[Statsify Premium](<https://statsify.net/premium>)** door `/rankings` uit te voeren",
-    "verify": "$t(emojis:check) Voer `/verify` uit om commando's uit te voeren zonder je gebruikersnaam in te voeren en ook **10% lagere afkoeldowns** te ontvangen"
+    "verify": "$t(emojis:check) Voer `/verify` uit om commando's uit te voeren zonder je gebruikersnaam in te voeren en ook **10% lagere afkoeldowns** te ontvangen",
+    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Onbekend",
   "verification": {

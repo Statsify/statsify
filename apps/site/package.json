@@ -16,15 +16,15 @@
     "react-dom": "^18.2.0",
     "react-responsive-carousel": "^3.2.23",
     "react-typed": "^1.2.0",
-    "sharp": "^0.32.4"
+    "sharp": "^0.32.5"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^12.3.4",
-    "@types/node": "^18.17.0",
-    "@types/react": "^18.2.15",
+    "@types/node": "^18.17.5",
+    "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@types/sharp": "^0.31.1",
-    "sass": "^1.64.1",
-    "typescript": "5.2.0-dev.20230724"
+    "sass": "^1.65.1",
+    "typescript": "5.2.0-dev.20230807"
   }
 }

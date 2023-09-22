@@ -23,7 +23,9 @@ import {
   COPS_AND_CRIMS_MODES,
   ChallengeModes,
   CopsAndCrimsModes,
+  DROPPER_MODES,
   DUELS_MODES,
+  DropperModes,
   DuelsModes,
   FormattedGame,
   GENERAL_MODES,
@@ -80,6 +82,7 @@ export type GamesWithBackgrounds =
   | BlitzSGModes
   | BuildBattleModes
   | CopsAndCrimsModes
+  | DropperModes
   | DuelsModes
   | GeneralModes
   | ChallengeModes
@@ -199,6 +202,8 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
 
       return ["duels", map];
     }
+    case DROPPER_MODES:
+      return ["arcade", "dropper"];
     case PARKOUR_MODES:
       return ["parkour", "overall"];
 

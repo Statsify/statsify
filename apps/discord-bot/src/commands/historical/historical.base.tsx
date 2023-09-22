@@ -39,7 +39,8 @@ import {
   ApiService,
   Command,
   CommandContext,
-  Page,
+  EmbedBuilder,
+  IMessage,
   PaginateService,
   PlayerArgument,
   SubCommand,
@@ -52,15 +53,15 @@ import { BridgeProfile } from "../duels/bridge.profile.js";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
 import { Container } from "typedi";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
-import { DateTime } from "luxon";
 import { DuelsProfile } from "../duels/duels.profile.js";
-import { GamesWithBackgrounds, mapBackground } from "#constants";
+import { GamesWithBackgrounds } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
 import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
 import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile.js";
 import { PaintballProfile } from "../paintball/paintball.profile.js";
 import { PitProfile } from "../pit/pit.profile.js";
 import { QuakeProfile } from "../quake/quake.profile.js";
+import { STATUS_COLORS } from "@statsify/logger";
 import { SkyWarsProfile } from "../skywars/skywars.profile.js";
 import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
 import { SpeedUHCProfile } from "../speeduhc/speeduhc.profile.js";
@@ -71,9 +72,8 @@ import { VampireZProfile } from "../vampirez/vampirez.profile.js";
 import { WallsProfile } from "../walls/walls.profile.js";
 import { WarlordsProfile } from "../warlords/warlords.profile.js";
 import { WoolWarsProfile } from "../woolwars/woolwars.profile.js";
-import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
-import { render } from "@statsify/rendering";
+import { getAssetPath } from "@statsify/assets";
+import { readFileSync } from "node:fs";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { HistoricalType } from "@statsify/api-client";
 
@@ -279,75 +279,24 @@ export class HistoricalBase {
     ));
   }
 
-  protected async run<T extends GamesWithBackgrounds>(
-    context: CommandContext,
-    modes: GameModes<T>,
-    getProfile: (base: BaseProfileProps, mode: GameMode<T>) => JSX.Element,
-    filterModes?: (player: Player, modes: GameMode<T>[]) => GameMode<T>[]
-  ) {
-    const user = context.getUser();
+  protected run<T extends GamesWithBackgrounds>(
+    _context: CommandContext,
+    _modes: GameModes<T>,
+    _getProfile: (base: BaseProfileProps, mode: GameMode<T>) => JSX.Element,
+    _filterModes?: (player: Player, modes: GameMode<T>[]) => GameMode<T>[]
+  ): IMessage {
+    const preview = {
+      name: "preview.png",
+      data: readFileSync(getAssetPath("previews/session.png")),
+      type: "image/png",
+    };
 
-    const player = await this.apiService.getPlayerHistorical(
-      context.option("player"),
-      this.time,
-      true,
-      user
-    );
+    const embed = new EmbedBuilder()
+      .color(STATUS_COLORS.info)
+      .title(t => t("historical.disabledWarning.title"))
+      .description(t => t("historical.disabledWarning.description"))
+      .image(`attachment://${preview.name}`);
 
-    const [logo, skin, badge] = await Promise.all([
-      getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid),
-      this.apiService.getUserBadge(player.uuid),
-    ]);
-
-    const allModes = modes.getModes();
-    const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
-
-    const pages: Page[] = displayedModes.map((mode) => ({
-      label: mode.formatted,
-      generator: async (t) => {
-        const background = await getBackground(...mapBackground(modes, mode.api));
-
-        const displayName = this.apiService.emojiDisplayName(t, player.displayName);
-
-        let content = player.isNew ? t("historical.new", { displayName }) : undefined;
-        content = `${content ? `${content}\n` : ""}${t("historical.reset", {
-          time: player.nextReset,
-        })}`;
-
-        const profile = getProfile(
-          {
-            player,
-            skin,
-            background,
-            logo,
-            t,
-            user,
-            badge,
-            time: {
-              timeType: this.time,
-              startTime: player.lastReset
-                ? DateTime.fromSeconds(player.lastReset)
-                : undefined,
-              endTime: player.nextReset
-                ? DateTime.fromSeconds(player.nextReset)
-                : undefined,
-            },
-          },
-          mode
-        );
-
-        const canvas = render(profile, getTheme(user));
-        const buffer = await canvas.toBuffer("png");
-
-        return {
-          content,
-          files: [{ name: `${this.time}.png`, data: buffer, type: "image/png" }],
-          attachments: [],
-        };
-      },
-    }));
-
-    return this.paginateService.paginate(context, pages);
+    return { embeds: [embed], files: [preview] };
   }
 }
