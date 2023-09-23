@@ -15,17 +15,18 @@ body:
         - general
         - api
         - discord-bot
-        - support-bot
-        - site
         - scripts
+        - site
+        - support-bot
         - verify-server
         - "@statsify/api-client"
         - "@statsify/assets"
         - "@statsify/discord"
-        - "@statsify/rendering"
         - "@statsify/logger"
         - "@statsify/math"
+        - "@statsify/rendering"
         - "@statsify/schemas"
+        - "@statsify/skin-renderer"
         - "@statsify/util"
     validations:
       required: true

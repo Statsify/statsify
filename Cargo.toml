@@ -1,0 +1,6 @@
+[workspace]
+members = ["packages/skin-renderer"]
+resolver = "2"
+
+[profile.release]
+lto = true
