@@ -3,6 +3,7 @@ on:
   push:
     tags:
     - "v*"
+  workflow_dispatch:
 
 permissions:
   checks: write
@@ -19,6 +20,9 @@ jobs:
         with:
           token: ${{ secrets.REPO_PAT }}
           submodules: recursive
+
+      - name: Debug
+        run: echo $PATH
 
       - name: Install dependencies
         run: pnpm install --force
