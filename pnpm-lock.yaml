@@ -23,6 +23,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^17.7.0
         version: 17.7.0
+      '@napi-rs/cli':
+        specifier: ^2.14.6
+        version: 2.14.6
       '@rollup/pluginutils':
         specifier: ^5.0.3
         version: 5.0.3
@@ -131,6 +134,9 @@ importers:
       '@statsify/schemas':
         specifier: '*'
         version: link:../../packages/schemas
+      '@statsify/skin-renderer':
+        specifier: '*'
+        version: link:../../packages/skin-renderer
       '@statsify/util':
         specifier: '*'
         version: link:../../packages/util
@@ -668,6 +674,8 @@ importers:
       '@types/luxon':
         specifier: ^3.3.1
         version: 3.3.1
+
+  packages/skin-renderer: {}
 
   packages/util:
     dependencies:
@@ -1550,6 +1558,12 @@ packages:
       filenamify: 5.1.1
       got: 11.8.6
       os-filter-obj: 2.0.0
+    dev: true
+
+  /@napi-rs/cli@2.14.6:
+    resolution: {integrity: sha512-q63+fI0JB9LV3RDYQN7yyAzmWDrErz+5ZMM1EyB5RA7ZwTTRYvXxg204w9+xTuZnpQfSyLMxxKGz2mfDVqFing==}
+    engines: {node: '>= 10'}
+    hasBin: true
     dev: true
 
   /@nestjs/axios@3.0.0(@nestjs/common@10.1.3)(axios@1.4.0)(reflect-metadata@0.1.13)(rxjs@7.8.1):

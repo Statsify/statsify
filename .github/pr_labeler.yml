@@ -4,14 +4,14 @@
 "discord-bot":
   - apps/discord-bot/**/*
 
-"support-bot":
-  - apps/support-bot/**/*
-
 "scripts":
   - apps/scripts/**/*
 
 "site":
   - apps/site/**/*
+
+"support-bot":
+  - apps/support-bot/**/*
 
 "verify-server":
   - apps/verify-server/**/*
@@ -25,17 +25,20 @@
 "@statsify/discord":
   - packages/discord/**/*
 
-"@statsify/rendering":
-  - packages/rendering/**/*
-
 "@statsify/logger":
   - packages/logger/**/*
 
 "@statsify/math":
   - packages/math/**/*
 
+"@statsify/rendering":
+  - packages/rendering/**/*
+
 "@statsify/schemas":
   - packages/schemas/**/*
+
+"@statsify/skin-renderer":
+  - packages/skin-renderer/**/*
 
 "@statsify/util":
   - packages/util/**/*
