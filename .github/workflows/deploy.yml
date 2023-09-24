@@ -21,9 +21,6 @@ jobs:
           token: ${{ secrets.REPO_PAT }}
           submodules: recursive
 
-      - name: Debug
-        run: echo $PATH
-
       - name: Install dependencies
         run: pnpm install --force
 
