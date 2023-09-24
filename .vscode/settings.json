@@ -43,8 +43,5 @@
   ],
   "i18n-ally.keystyle": "nested",
   "todo-tree.tree.scanMode": "workspace only",
-  "testing.automaticallyOpenPeekView": "never",
-  "[rust]": {
-    "editor.defaultFormatter": "rust-lang.rust-analyzer"
-  }
+  "testing.automaticallyOpenPeekView": "never"
 }

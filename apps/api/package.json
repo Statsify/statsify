@@ -26,7 +26,6 @@
     "@statsify/logger": "*",
     "@statsify/rendering": "*",
     "@statsify/schemas": "*",
-    "@statsify/skin-renderer": "*",
     "@statsify/util": "*",
     "@swc/helpers": "^0.5.1",
     "@typegoose/typegoose": "^11.4.1",

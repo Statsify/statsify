@@ -12,20 +12,21 @@ import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map, of } from "rxjs";
-import { getMinecraftTexturePath } from "@statsify/assets";
+import { getMinecraftTexturePath, importAsset } from "@statsify/assets";
 import { loadImage } from "@statsify/rendering";
-import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class SkinService {
+  private skinRenderer: ((skin: Image, slim: boolean) => Promise<Buffer>) | null;
+
   public constructor(
     private readonly httpService: HttpService,
     @InjectModel(Skin) private readonly skinModel: ReturnModelType<typeof Skin>
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
-    const { skin } = await this.getSkin(uuid).then(skin => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false));
+    const { skin } = await this.getSkin(uuid);
 
     const canvas = new Canvas(size, size);
     const ctx = canvas.getContext("2d");
@@ -41,30 +42,56 @@ export class SkinService {
   }
 
   public async getRender(uuid: string): Promise<Buffer> {
-    const skin = await this.getSkin(uuid);
-    return renderSkin(skin?.skinUrl, skin?.slim ?? false);
+    const { skin, slim } = await this.getSkin(uuid);
+
+    const renderer = await this.getSkinRenderer();
+
+    if (!renderer) {
+      const canvas = new Canvas(380, 640);
+      const ctx = canvas.getContext("2d");
+
+      const skin = await loadImage(`https://crafatar.com/renders/body/${uuid}?overlay`);
+
+      const scale = 2;
+      const width = skin.width * scale;
+      const height = skin.height * scale;
+
+      ctx.drawImage(
+        skin,
+        (canvas.width - width) / 2,
+        (canvas.height - height) / 2,
+        width,
+        height
+      );
+
+      return canvas.toBuffer("png");
+    }
+
+    return renderer(skin, slim);
   }
 
-  public async getSkin(uuid: string): Promise<Skin | undefined> {
+  public async getSkin(uuid: string) {
     uuid = uuid.replaceAll("-", "");
 
     const skin = await this.skinModel.findOne().where("uuid").equals(uuid).lean().exec();
 
     if (skin && Date.now() < skin.expiresAt) {
-      return skin;
+      return this.resolveSkin(skin.skinUrl, skin.slim);
     }
 
     const skinData = await this.requestSkin(uuid);
 
     //Possibly the service is down or we are ratelimited
-    if (!skinData) return undefined;
+    if (!skinData) {
+      return this.resolveSkin(skin?.skinUrl, skin?.slim);
+    }
 
     //Cache for  6 hours
     skinData.expiresAt = Date.now() + 2.16e7;
 
     await this.skinModel.replaceOne({ uuid }, skinData, { upsert: true }).lean().exec();
 
-    return skinData;
+    return this.resolveSkin(skinData.skinUrl, skinData.slim);
   }
 
   private async resolveSkin(
@@ -94,5 +121,17 @@ export class SkinService {
         catchError(() => of(null))
       )
     );
+  }
+
+  private async getSkinRenderer() {
+    if (this.skinRenderer) return this.skinRenderer;
+
+    const renderer = await importAsset<any>("skin-renderer");
+
+    if (!renderer) return null;
+
+    this.skinRenderer = renderer.renderSkin;
+
+    return this.skinRenderer;
   }
 }
