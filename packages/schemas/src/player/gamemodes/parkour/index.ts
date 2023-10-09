@@ -133,8 +133,8 @@ export class Parkour {
     const getTime = (key: string): number =>
       data[key]?.sort?.((a: any, b: any) => a.timeTook - b.timeTook)[0]?.timeTook;
 
-    this.ARCADE = getTime("ArcadeGames");
-    this.BEDWARS = getTime("Bedwars");
+    this.ARCADE = getTime("ArcadeGames2");
+    this.BEDWARS = getTime("BedwarsSpring2023");
     this.BLITZSG = getTime("BlitzLobby");
     this.BUILD_BATTLE = getTime("BuildBattle");
     this.CLASSIC = getTime("Legacy");
