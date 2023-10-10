@@ -389,7 +389,7 @@
     },
     "invalidSession": {
       "title": "Недійсна сесія",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+      "description": "**{{displayName}}** немає активних сесій. Вони можуть створити сесію, запустивши команду /session, будучи перевіреними."
     },
     "invalidResetTime": {
       "description": "{{time}} Не відповідає формату 'h:mm a'. Введіть час у форматі, подібному до '12:00 PM' або '1:00 AM'.",
@@ -601,7 +601,7 @@
     "fastestDetectiveWin": "Найшвидша перемога за детектива",
     "fastestMurdererWin": "Найшвидша перемога за вбивцю",
     "fastestWin": "Найшвидша перемога",
-    "fastestWoolCapture": "Fastest Wool Capture",
+    "fastestWoolCapture": "Найшвидше захоплення вовни",
     "finalAssists": "Фінальних сприянь",
     "finalDeaths": "Фінальних смертей",
     "finalKills": "Фінальних вбивств",
@@ -618,10 +618,10 @@
     "godfather": "Хрещений батько",
     "godlikes": "Богоподібні",
     "gold": "Золото",
-    "goldEarned": "Gold Earned",
+    "goldEarned": "Зароблене золото",
     "goldPickedUp": "Зібрано золота",
     "goldRate": "Шанс золотого трофею",
-    "goldSpent": "Gold Spent",
+    "goldSpent": "Витрачене золото",
     "goldTrophies": "Золотих Трофеїв",
     "grandPrixTokens": "Токени GP",
     "guild": {
@@ -683,7 +683,7 @@
     "levelsGained": "Рівнів отримано",
     "loginTime": "Час входу",
     "logoutTime": "Час виходу",
-    "longestGame": "Longest Game",
+    "longestGame": "Найдовша гра",
     "lootChests": "Loot Chests",
     "losses": "Програшів",
     "magicalChests": "Чарівних Скринь",
@@ -772,8 +772,8 @@
     "witherKills": "Вбивст візера",
     "wlr": "WLR",
     "wool": "Вовна",
-    "woolCaptured": "Wool Captured",
-    "woolPickedUp": "Wool Picked Up",
+    "woolCaptured": "Захоплена вовна",
+    "woolPickedUp": "Вовна піднята",
     "woolPlaced": "Вовни розміщено",
     "zombieKills": "Зомбі вбито",
     "potionsBrewed": "Зіллів зварено",
@@ -781,12 +781,12 @@
     "powerupsCollected": "Зібрано бонусів",
     "roundsCompleted": "Раунди завершено",
     "totalExp": "Усього досвіду",
-    "gamesFinished": "Games Finished",
-    "flawlessGames": "Flawless Games",
-    "fails": "Fails",
-    "mapsCompleted": "Maps Completed",
-    "arcadeWins": "Arcade Wins",
-    "draws": "Draws"
+    "gamesFinished": "Закінчено ігор",
+    "flawlessGames": "Бездоганні ігри",
+    "fails": "Невдач",
+    "mapsCompleted": "Мапи завершено",
+    "arcadeWins": "Arcade перемоги",
+    "draws": "Нічиї"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Приєднуйся до нас**$t(socials.discord)**, та отримуйте **перезаряджання на 20% нижче** $t(emojis:heart)",
@@ -805,21 +805,21 @@
     },
     "invalidCode": {
       "title": "Невірний код прив'язки",
-      "description": "Check your verification code or try again by following these steps: ",
-      "button": "Watch Tutorial"
+      "description": "Перевірте ваш код підтвердження або спробуйте ще раз, дотримуючись цих кроків: ",
+      "button": "Переглянути інструкцію"
     },
     "instructions": {
-      "title": "Link your Minecraft Account to Statsify",
+      "title": "Пов'яжіть ваш обліковий запис Minecraft з Statsify",
       "steps": {
-        "one": "Open **Minecraft** and go to the server list",
-        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
-        "three": "Head back to **Discord** and click the button below, then type in your code"
+        "one": "Відкрийте **Minecraft** і перейдіть до списку серверів",
+        "two": "Підключіться до **`verify.statsify.net`** та скопіюйте відображений код",
+        "three": "Поверніться до **Discord** та натисніть кнопку нижче, потім введіть свій код"
       },
       "modal": {
-        "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "title": "Введіть ваш код підтвердження",
+        "input": "Код підтвердження"
       },
-      "button": "Enter Verification Code"
+      "button": "Введіть код підтвердження"
     },
     "notVerified": {
       "description": "Ви повинні пройти верифікацію, перш ніж ви зможете скасувати верифікацію!",
