@@ -783,10 +783,10 @@
     "totalExp": "EXP Totale",
     "gamesFinished": "Games Finished",
     "flawlessGames": "Flawless Games",
-    "fails": "Fails",
+    "fails": "Tentativi Falliti",
     "mapsCompleted": "Maps Completed",
-    "arcadeWins": "Arcade Wins",
-    "draws": "Draws"
+    "arcadeWins": "Vittorie Arcade",
+    "draws": "Pareggi"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Unisciti al nostro **$t(socials.discord)** e ottieni **cooldown 20% più brevi** $t(emojis:heart)",
@@ -813,13 +813,13 @@
       "steps": {
         "one": "Open **Minecraft** and go to the server list",
         "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
-        "three": "Head back to **Discord** and click the button below, then type in your code"
+        "three": "Torna su **Discord** e clicca il pulsante qui sotto, poi inserisci il tuo codice"
       },
       "modal": {
-        "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "title": "Inserisci il tuo Codice di Verifica",
+        "input": "Codice di Verifica"
       },
-      "button": "Enter Verification Code"
+      "button": "Inserisci il Codice di Verifica"
     },
     "notVerified": {
       "description": "Devi verificarti prima di essere in grado di annullare la verifica!",
