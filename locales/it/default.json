@@ -309,7 +309,7 @@
       },
       "session": {
         "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
-        "title": "Sessions"
+        "title": "Sessioni"
       },
       "leaderboards": {
         "description": "Statsify offre migliaia di leaderboard attraverso il comando `/leaderboard`. Esegui `/leaderboard`, poi scegli la modalità di gioco, e scegli la classifica da vedere. Puoi cliccare il bottone ricerca per cercare specifici giocatori o posizioni. Puoi anche cliccare i bottoni \"sopra\" e \"sotto\" per vedere altre pagine.",
@@ -388,7 +388,7 @@
       "title": "Giocatore non valido"
     },
     "invalidSession": {
-      "title": "Invalid Session",
+      "title": "Sessione Invalida",
       "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
     },
     "invalidResetTime": {
@@ -783,10 +783,10 @@
     "totalExp": "EXP Totale",
     "gamesFinished": "Games Finished",
     "flawlessGames": "Flawless Games",
-    "fails": "Fails",
+    "fails": "Tentativi Falliti",
     "mapsCompleted": "Maps Completed",
-    "arcadeWins": "Arcade Wins",
-    "draws": "Draws"
+    "arcadeWins": "Vittorie Arcade",
+    "draws": "Pareggi"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Unisciti al nostro **$t(socials.discord)** e ottieni **cooldown 20% più brevi** $t(emojis:heart)",
@@ -811,15 +811,15 @@
     "instructions": {
       "title": "Link your Minecraft Account to Statsify",
       "steps": {
-        "one": "Open **Minecraft** and go to the server list",
-        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
-        "three": "Head back to **Discord** and click the button below, then type in your code"
+        "one": "Apri **Minecraft** e vai alla lista dei server",
+        "two": "Connettiti a **`verify.statsify.net`** e copia il codice visualizzato",
+        "three": "Torna su **Discord** e clicca il pulsante qui sotto, poi inserisci il tuo codice"
       },
       "modal": {
-        "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "title": "Inserisci il tuo Codice di Verifica",
+        "input": "Codice di Verifica"
       },
-      "button": "Enter Verification Code"
+      "button": "Inserisci il Codice di Verifica"
     },
     "notVerified": {
       "description": "Devi verificarti prima di essere in grado di annullare la verifica!",
