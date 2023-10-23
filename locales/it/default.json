@@ -308,7 +308,7 @@
         "title": "Modalità"
       },
       "session": {
-        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "description": "Statsify ti permette di controllare le tue statistiche come se avessi iniziato a giocare oggi attraverso `/session`. Con `/reset session` puoi resettare la tua sessione di statistiche e avviare una nuova sessione.",
         "title": "Sessioni"
       },
       "leaderboards": {
