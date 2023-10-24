@@ -519,7 +519,7 @@
     "newSession": "La sessione di statistiche di **{{displayName}}** è stato controllata per la prima volta su Statsify.",
     "setSessionReset": "La tua sessione di statistiche è stata ripristinata con successo.",
     "disabledWarning": {
-      "title": "Historical Commands are no Longer Available",
+      "title": "I Vecchi Comandi non sono Più Disponibili",
       "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
     }
   },
@@ -601,7 +601,7 @@
     "fastestDetectiveWin": "Vittoria da Investigatore più veloce",
     "fastestMurdererWin": "Vittoria da Assassino più veloce",
     "fastestWin": "Vittoria più veloce",
-    "fastestWoolCapture": "Fastest Wool Capture",
+    "fastestWoolCapture": "Lana Catturata Più Velocemente",
     "finalAssists": "Assist Finali",
     "finalDeaths": "Morti Finali",
     "finalKills": "Uccisioni Finali",
@@ -618,10 +618,10 @@
     "godfather": "Padrone",
     "godlikes": "Godlikes",
     "gold": "Oro",
-    "goldEarned": "Gold Earned",
+    "goldEarned": "Oro Guadagnato",
     "goldPickedUp": "Oro raccolto",
     "goldRate": "Tasso d'Oro",
-    "goldSpent": "Gold Spent",
+    "goldSpent": "Oro Speso",
     "goldTrophies": "Trofei D'Oro",
     "grandPrixTokens": "Gettoni GP",
     "guild": {
@@ -683,7 +683,7 @@
     "levelsGained": "Livelli Ottenuti",
     "loginTime": "Tempo di Login",
     "logoutTime": "Tempo di Logout",
-    "longestGame": "Longest Game",
+    "longestGame": "Parita Più Lunga",
     "lootChests": "Loot Chest",
     "losses": "Perse",
     "magicalChests": "Magical Chest",
@@ -772,8 +772,8 @@
     "witherKills": "Uccisioni Wither",
     "wlr": "WLR",
     "wool": "Lana",
-    "woolCaptured": "Wool Captured",
-    "woolPickedUp": "Wool Picked Up",
+    "woolCaptured": "Lana Catturata",
+    "woolPickedUp": "Lana Raccolta",
     "woolPlaced": "Lana Piazzata",
     "zombieKills": "Uccisioni Zombie",
     "potionsBrewed": "Pozioni preparate",
@@ -784,7 +784,7 @@
     "gamesFinished": "Games Finished",
     "flawlessGames": "Flawless Games",
     "fails": "Tentativi Falliti",
-    "mapsCompleted": "Maps Completed",
+    "mapsCompleted": "Mappe Completate",
     "arcadeWins": "Vittorie Arcade",
     "draws": "Pareggi"
   },
@@ -794,7 +794,7 @@
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** offre funzionalità aggiuntive ad esempio emblemi profilo personalizzati. Trova l'elenco completo dei vantaggi **[qui](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Visualizza le tue migliori posizioni sulla classifica con **[Statsify Premium] (<https://statsify.net/premium>)** usando `/rankings`",
     "verify": "$t(emojis:check) Esegui `/verify` per eseguire comandi senza inserire il tuo nome utente oltre che a ricevere **cooldown 10% più brevi**",
-    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
+    "resetSession": "$t(emojis:reset) È possibile **resettare** le statistiche della sessione con `/reset session`.",
     "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
   },
   "unknown": "Sconosciuto",
@@ -806,10 +806,10 @@
     "invalidCode": {
       "title": "Codice Di Verifica Non Valido",
       "description": "Check your verification code or try again by following these steps: ",
-      "button": "Watch Tutorial"
+      "button": "Guarda il Tutorial"
     },
     "instructions": {
-      "title": "Link your Minecraft Account to Statsify",
+      "title": "Collega il tuo account Minecraft a Statsify",
       "steps": {
         "one": "Apri **Minecraft** e vai alla lista dei server",
         "two": "Connettiti a **`verify.statsify.net`** e copia il codice visualizzato",
