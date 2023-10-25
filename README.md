@@ -10,6 +10,7 @@ A Hypixel and Minecraft focused Discord Bot
 ## 💻 Developing
 ### ⚒️ Requirements
 -   [`Node.js`]: For running code (`v18`)
+-   [`Rust`]: For skin rendering (`v1.72.0`)
 -   [`pnpm`]: Installing packages and running scripts (`npm install -g pnpm`)
 -   [`MongoDB`]: For Persistent data ([`Atlas`])
 -   [`Redis`]: For Leaderboards ([`Redis Cloud`])
@@ -78,6 +79,7 @@ $ pnpm test:types
 [`discord`]: https://statsify.net/discord
 [`donate`]: https://statsify.net/donate
 [`node.js`]: https://nodejs.org/en/download/current/
+[`rust`]: https://rustup.rs/
 [`redis`]: https://redis.io
 [`mongodb`]: https://www.mongodb.com/
 [`hypixel api key`]: https://api.hypixel.net

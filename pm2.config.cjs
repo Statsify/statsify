@@ -10,6 +10,7 @@ const cron_restart = "0 20 * * *";
 const exp_backoff_restart_delay = 500;
 const script = "pnpm";
 const with_color = "--color=16m";
+const interpreter = "/bin/bash";
 const env = {
   FORCE_COLOR: 3,
   NODE_OPTIONS: "--unhandled-rejections=warn",
@@ -19,10 +20,11 @@ module.exports = {
   apps: [
     {
       name: "api",
-      args: `api prod-start ${with_color}`,
+      args: `api start ${with_color}`,
       script,
       cron_restart,
       exp_backoff_restart_delay,
+      interpreter,
       env,
     },
     {
@@ -31,6 +33,7 @@ module.exports = {
       script,
       cron_restart,
       exp_backoff_restart_delay,
+      interpreter,
       env,
     },
     {
@@ -39,6 +42,7 @@ module.exports = {
       script,
       cron_restart,
       exp_backoff_restart_delay,
+      interpreter,
       env,
     },
     {
@@ -47,6 +51,7 @@ module.exports = {
       script,
       cron_restart,
       exp_backoff_restart_delay,
+      interpreter,
       env,
     },
     {
@@ -55,6 +60,7 @@ module.exports = {
       script,
       cron_restart,
       exp_backoff_restart_delay,
+      interpreter,
       env,
     },
   ],

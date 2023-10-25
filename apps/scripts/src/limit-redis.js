@@ -7,13 +7,10 @@
  */
 
 import Redis from "ioredis";
+import { CurrentHistoricalType } from "@statsify/api-client";
+import { Guild, MetadataScanner, Player  } from "@statsify/schemas";
+import { Logger } from "@statsify/logger";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
-import { createRequire } from "node:module";
-
-const require = createRequire(import.meta.url);
-const { Logger } = require("@statsify/logger");
-const { CurrentHistoricalType } = require("@statsify/api-client");
-const { MetadataScanner, Player, Guild } = require("@statsify/schemas");
 
 const logger = new Logger("Redis Limiter");
 const redis = new Redis(process.env.REDIS_URL);
