@@ -462,8 +462,8 @@
       "title": "Sem Ranking"
     },
     "noRecentGames": {
-      "description": "Os jogos recentes de {{displayName}} não foram encontrados!",
-      "title": "Jogos Recentes Não Encontrados"
+      "description": "As partidas recentes de {{displayName}} não foram encontradas!",
+      "title": "Partidas recentes não encontradas"
     },
     "noStatus": {
       "description": "O status do Hypixel de {{displayName}} não pode ser encontrado!",
@@ -601,7 +601,7 @@
     "fastestDetectiveWin": "Vitória de Detetive Mais Rápida",
     "fastestMurdererWin": "Vitória de Assassino Mais Rápida",
     "fastestWin": "Vitória mais rápida",
-    "fastestWoolCapture": "Fastest Wool Capture",
+    "fastestWoolCapture": "Captura mais rápida de lã",
     "finalAssists": "Assistências Finais",
     "finalDeaths": "Mortes finais",
     "finalKills": "Abates finais",
@@ -618,10 +618,10 @@
     "godfather": "Godfather",
     "godlikes": "Divinos",
     "gold": "Ouros",
-    "goldEarned": "Gold Earned",
+    "goldEarned": "Ouro ganho",
     "goldPickedUp": "Ouro coletado",
     "goldRate": "Taxa de Troféus Dourados",
-    "goldSpent": "Gold Spent",
+    "goldSpent": "Ouro gasto",
     "goldTrophies": "Troféus de Ouro",
     "grandPrixTokens": "GP Tokens",
     "guild": {
@@ -683,7 +683,7 @@
     "levelsGained": "Níveis Adquiridos",
     "loginTime": "Tempo de Login",
     "logoutTime": "Tempo de Logout",
-    "longestGame": "Longest Game",
+    "longestGame": "Partida mais longa",
     "lootChests": "Loot Chests",
     "losses": "Derrotas",
     "magicalChests": "Baús mágicos",
@@ -772,8 +772,8 @@
     "witherKills": "Withers abatidos",
     "wlr": "WLR",
     "wool": "Lã",
-    "woolCaptured": "Wool Captured",
-    "woolPickedUp": "Wool Picked Up",
+    "woolCaptured": "Lãs capturadas",
+    "woolPickedUp": "Lãs coletadas",
     "woolPlaced": "Lãs colocadas",
     "zombieKills": "Zumbis abatidos",
     "potionsBrewed": "Poções preparadas",
@@ -781,12 +781,12 @@
     "powerupsCollected": "Poderes coletados",
     "roundsCompleted": "Rodadas concluídas",
     "totalExp": "EXP total",
-    "gamesFinished": "Games Finished",
-    "flawlessGames": "Flawless Games",
-    "fails": "Fails",
-    "mapsCompleted": "Maps Completed",
-    "arcadeWins": "Arcade Wins",
-    "draws": "Draws"
+    "gamesFinished": "Partidas finalizadas",
+    "flawlessGames": "Partidas perfeitas",
+    "fails": "Falhas",
+    "mapsCompleted": "Mapas concluídos",
+    "arcadeWins": "Vitórias no Arcade",
+    "draws": "Empates"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Entre no nosso $t(socials.discord) e receba **menos 20% de tempo de espera** $t(emojis:heart)",
@@ -805,21 +805,21 @@
     },
     "invalidCode": {
       "title": "Código de verificação inválido",
-      "description": "Check your verification code or try again by following these steps: ",
-      "button": "Watch Tutorial"
+      "description": "Verifique o seu código de verificação ou tente novamente seguindo estes passos: ",
+      "button": "Assistir ao tutorial"
     },
     "instructions": {
-      "title": "Link your Minecraft Account to Statsify",
+      "title": "Vincule sua conta do Minecraft ao Statsify",
       "steps": {
-        "one": "Open **Minecraft** and go to the server list",
-        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
-        "three": "Head back to **Discord** and click the button below, then type in your code"
+        "one": "Abra o **Minecraft** e vá para a lista de servidores",
+        "two": "Conecte-se à **`verify.statsify.net`** e copie o código exibido",
+        "three": "Volte para o **Discord** e clique no botão abaixo, então digite seu código"
       },
       "modal": {
-        "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "title": "Digite seu código de verificação",
+        "input": "Código de verificação"
       },
-      "button": "Enter Verification Code"
+      "button": "Digite código de verificação"
     },
     "notVerified": {
       "description": "Você precisa estar verificado para remover sua verificação!",
