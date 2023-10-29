@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ArenaBrawlMode } from "./mode.js";
+import { ArenaBrawlMode, ArenaBrawlModeExt } from "./mode.js";
 import { Field } from "#metadata";
 import { GameModes, type IGameModes } from "#game";
 import {
@@ -59,13 +59,13 @@ export class ArenaBrawl {
   public overall: ArenaBrawlMode;
 
   @Field()
-  public solo: ArenaBrawlMode;
+  public solo: ArenaBrawlModeExt;
 
   @Field()
-  public doubles: ArenaBrawlMode;
+  public doubles: ArenaBrawlModeExt;
 
   @Field()
-  public fours: ArenaBrawlMode;
+  public fours: ArenaBrawlModeExt;
 
   @Field()
   public magicalChests: number;
@@ -95,9 +95,9 @@ export class ArenaBrawl {
   public tokens: number;
 
   public constructor(data: APIData, legacy: APIData) {
-    this.solo = new ArenaBrawlMode(data, "1v1");
-    this.doubles = new ArenaBrawlMode(data, "2v2");
-    this.fours = new ArenaBrawlMode(data, "4v4");
+    this.solo = new ArenaBrawlModeExt(data, "1v1");
+    this.doubles = new ArenaBrawlModeExt(data, "2v2");
+    this.fours = new ArenaBrawlModeExt(data, "4v4");
     this.overall = deepAdd(this.solo, this.doubles, this.fours);
 
     const score = this.overall.wins;
