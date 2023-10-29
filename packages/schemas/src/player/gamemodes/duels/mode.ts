@@ -31,7 +31,7 @@ const prefixes = getPrefixes(titleScores());
 const overallPrefixes = getPrefixes(titleScores(true));
 
 export class BaseDuelsGameMode {
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public bestWinstreak: number;
 
   @Field({ leaderboard: { enabled: false } })
