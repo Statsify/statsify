@@ -43,3 +43,16 @@ export class ArenaBrawlMode {
     data.wlr = ratio(data.wins, data.losses);
   }
 }
+
+/**
+ * Additional fields for the individual Arena Brawl modes: 1v1, 2v2, 4v4.
+ */
+export class ArenaBrawlModeExt extends ArenaBrawlMode {
+  @Field()
+  public winstreak: number;
+
+  public constructor(data: APIData, mode: string) {
+    super(data, mode);
+    this.winstreak = data[`win_streaks_${mode}`];
+  }
+}
