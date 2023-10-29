@@ -7,6 +7,7 @@
  */
 
 import Head from "next/head";
+import { Analytics } from "@vercel/analytics/react";
 import { Layout } from "../components/Layout";
 import "../globals.scss";
 import type { AppProps } from "next/app";
@@ -69,6 +70,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Layout>
         <Component {...pageProps} />
       </Layout>
+      <Analytics />
     </>
   );
 }
