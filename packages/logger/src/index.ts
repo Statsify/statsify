@@ -12,7 +12,7 @@ import { DateTime } from "luxon";
 import { config } from "@statsify/util";
 import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/common";
 
-const DEFAULT_LOG_LEVELS: LogLevel[] = ["log", "error", "warn", "debug", "verbose"];
+const DEFAULT_LOG_LEVELS: LogLevel[] = ["log", "error", "warn", "debug", "verbose", "fatal"];
 
 export const STATUS_COLORS = {
   debug: 0xc700e7,
@@ -20,6 +20,7 @@ export const STATUS_COLORS = {
   error: 0xcd1820,
   info: 0x6469f5,
   success: 0x36d494,
+  fatal: 0x81181a
 } as const;
 
 const isProduction = config("environment") === "prod";
@@ -129,6 +130,29 @@ export class Logger implements LoggerService {
     this.printMessage(messages, context, "verbose");
   }
 
+  public fatal(message: any, context?: string): void;
+  public fatal(message: any, ...optionalParams: [...any, string?]): void;
+  public fatal(message: any, ...optionalParams: any[]) {
+    if (!this.isLevelEnabled("fatal")) {
+      return;
+    }
+
+    if (message instanceof Error) {
+      const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+      transaction?.setStatus("internal_error");
+
+      Sentry.captureException(message);
+      message = message.stack;
+    }
+
+    const { messages, context } = this.getContextAndMessages([
+      message,
+      ...optionalParams,
+    ]);
+
+    this.printMessage(messages, context, "fatal", "stderr", "📉");
+  }
+
   public setLogLevels(levels: LogLevel[]) {
     this.options.logLevels = levels;
   }
@@ -179,6 +203,9 @@ export class Logger implements LoggerService {
 
       case "log":
         return STATUS_COLORS.success;
+
+      case "fatal":
+        return STATUS_COLORS.fatal;
     }
   }
 
