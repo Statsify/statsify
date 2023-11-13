@@ -809,7 +809,7 @@
       "button": "튜토리얼 보기"
     },
     "instructions": {
-      "title": "Statisfy에 내 Minecraft 계정을 연동하세요",
+      "title": "Statsify에 내 Minecraft 계정을 연동하세요",
       "steps": {
         "one": "**Minecraft**를 열고 서버 목록으로 이동하세요",
         "two": "**`verify.statsify.net`**로 연결하고 표시된 코드를 복사하세요",
