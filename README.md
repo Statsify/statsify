@@ -15,7 +15,7 @@ A Hypixel and Minecraft focused Discord Bot
 -   [`MongoDB`]: For Persistent data ([`Atlas`])
 -   [`Redis`]: For Leaderboards ([`Redis Cloud`])
 -   [`RediSearch`]: For Autocomplete *optional*
--   [`Hypixel API Key`]: For requesting Hypixel data, Run `/api new` on hypixel.net
+-   [`Hypixel API Key`]: For requesting Hypixel data, create an API Key on [developer.hypixel.net](https://developer.hypixel.net/dashboard)
 
 
 ### 🖼️ Assets
@@ -51,7 +51,8 @@ $ pnpm test:types
 
 ## 💁 Contributing
 * Follow the guidelines in [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md)
-* If you are unsure of anything join our [`Discord`] and then message, `jacob#5432`
+* If you are unsure of anything join our [`Discord`] and then message, `@jacobkoshy`
+
 
 ## 😕 Help
 * If you require support join our [`Discord`] and create a ticket in the `#create-ticket` channel
