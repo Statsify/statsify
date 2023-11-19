@@ -51,7 +51,8 @@ $ pnpm test:types
 
 ## 💁 Contributing
 * Follow the guidelines in [`.github/CONTRIBUTING.md`](.github/CONTRIBUTING.md)
-* If you are unsure of anything join our [`Discord`] and then message, @`jacobkoshy`
+* If you are unsure of anything join our [`Discord`] and then message, `@jacobkoshy`
+
 
 ## 😕 Help
 * If you require support join our [`Discord`] and create a ticket in the `#create-ticket` channel
