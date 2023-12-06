@@ -12,6 +12,7 @@ import { User, UserBoxes, UserFont, UserPalette } from "@statsify/schemas";
 import { getBoxRenderer } from "./boxes/index.js";
 import { getColorPalette } from "./palette.js";
 import { getFontRenderer } from "./renderer.js";
+import { noop } from "@statsify/util";
 
 export const getTheme = (user: User | null): Theme | undefined => {
   if (!user) return undefined;
@@ -29,7 +30,11 @@ export const getTheme = (user: User | null): Theme | undefined => {
   const colorPalette = User.isDiamond(user) ? getColorPalette(palette) : undefined;
 
   return {
-    context: { renderer },
+    context: {
+      renderer,
+      // This can be null since @statsify/rendering's render function will override this
+      winterTheme: noop(),
+    },
     elements: {
       box(ctx, props, location, theme) {
         if (colorPalette?.boxes?.color) props.color ??= colorPalette.boxes.color;
