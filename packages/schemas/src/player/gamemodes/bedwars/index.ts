@@ -10,6 +10,7 @@ import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from "./mode.js";
 import { Field } from "#metadata";
 import { GameModes, type IGameModes } from "#game";
 import { Progression } from "#progression";
+import { Slumber } from "./slumber.js";
 import { add, deepSub } from "@statsify/math";
 import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
 import type { APIData } from "@statsify/util";
@@ -56,6 +57,15 @@ export class BedWars {
 
   @Field({ historical: { enabled: false } })
   public lootChests: number;
+
+  @Field()
+  public totalSlumberTickets: number;
+
+  @Field({ historical: { enabled: false }, leaderboard: { enabled: false } })
+  public slumberTickets: number;
+
+  @Field({ historical: { enabled: false }, leaderboard: { enabled: false } })
+  public slumberWalletSize: number;
 
   @Field({
     leaderboard: {
@@ -140,8 +150,12 @@ export class BedWars {
   @Field()
   public challenges: ChallengesBedWars;
 
+  @Field()
+  public slumber: Slumber;
+
   public constructor(data: APIData = {}) {
     this.coins = data.coins;
+
     this.exp = data.Experience || 0;
     this.level = getLevel(this.exp);
     this.levelFormatted = getFormattedLevel(Math.floor(this.level));
@@ -187,6 +201,7 @@ export class BedWars {
     this.core.winstreak = this.overall.winstreak;
 
     this.challenges = new ChallengesBedWars(data);
+    this.slumber = new Slumber(data.slumber);
   }
 }
 
