@@ -521,9 +521,6 @@ importers:
       '@statsify/logger':
         specifier: '*'
         version: link:../logger
-      '@statsify/rendering':
-        specifier: '*'
-        version: link:../rendering
       '@statsify/schemas':
         specifier: '*'
         version: link:../schemas
