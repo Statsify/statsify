@@ -39,8 +39,9 @@ export const BedWarsProfile = ({
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(bedwars.coins), "§6"],
     [t("stats.lootChests"), t(bedwars.lootChests), "§e"],
-    [t("stats.slumberTickets"), `${t()}/${t(bedwars)}`]
-      [t("stats.iron"), t(stats.itemsCollected.iron), "§7"],
+    [t("stats.slumberTickets"), `${t(bedwars.slumber.tickets)}§7/${t(bedwars.slumber.wallet)}`, "§b"],
+    [t("stats.slumberTicketsAllTime"), t(bedwars.slumber.ticketsAllTime), "§d"],
+    [t("stats.iron"), t(stats.itemsCollected.iron), "§7"],
     [t("stats.gold"), t(stats.itemsCollected.gold), "§6"],
     [t("stats.diamonds"), t(stats.itemsCollected.diamond), "§b"],
     [t("stats.emeralds"), t(stats.itemsCollected.emerald), "§2"],

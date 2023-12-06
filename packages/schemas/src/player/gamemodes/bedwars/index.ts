@@ -58,15 +58,6 @@ export class BedWars {
   @Field({ historical: { enabled: false } })
   public lootChests: number;
 
-  @Field()
-  public totalSlumberTickets: number;
-
-  @Field({ historical: { enabled: false }, leaderboard: { enabled: false } })
-  public slumberTickets: number;
-
-  @Field({ historical: { enabled: false }, leaderboard: { enabled: false } })
-  public slumberWalletSize: number;
-
   @Field({
     leaderboard: {
       fieldName: "Level",
@@ -206,3 +197,4 @@ export class BedWars {
 }
 
 export * from "./mode.js";
+export * from "./slumber.js";
