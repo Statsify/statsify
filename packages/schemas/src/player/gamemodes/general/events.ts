@@ -64,6 +64,9 @@ export class Events {
   @Field({ leaderboard: { name: "Halloween 2023" } })
   public halloween2023: Event;
 
+  @Field({ leaderboard: { name: "Christmas 2023" } })
+  public christmas2023: Event;
+
   @Field()
   public silver: number;
 
@@ -74,6 +77,7 @@ export class Events {
     this.easter2023 = new Event(10_000, data.easter?.["2023"]);
     this.summer2023 = new Event(25_000, data.summer?.["2023"]);
     this.halloween2023 = new Event(10_000, data.halloween?.["2023"]);
+    this.christmas2023 = new Event(10_000, data.christmas?.["2023"]);
 
     this.silver = data.silver;
   }
