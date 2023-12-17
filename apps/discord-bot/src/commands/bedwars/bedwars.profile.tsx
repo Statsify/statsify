@@ -45,8 +45,12 @@ export const BedWarsProfile = ({
     [t("stats.emeralds"), t(stats.itemsCollected.emerald), "§2"],
   ];
 
-  if (stats.winstreak && time === "LIVE")
-    sidebar.push([t("stats.winstreak"), t(stats.winstreak), "§a"]);
+  if (bedwars.slumber.wallet) sidebar.push(
+    [t("stats.slumberTickets"), `${t(bedwars.slumber.tickets)}§7/${t(bedwars.slumber.wallet)}`, "§b"],
+    [t("stats.totalSlumberTickets"), t(bedwars.slumber.totalTickets), "§d"]
+  );
+
+  if (time === "LIVE" && stats.winstreak) sidebar.push([t("stats.winstreak"), t(stats.winstreak), "§a"]);
 
   return (
     <Container background={background}>
