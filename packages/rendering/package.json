@@ -24,7 +24,7 @@
     "@statsify/util": "*",
     "@swc/helpers": "^0.5.1",
     "axios": "1.4.0",
-    "skia-canvas": "^0.9.30",
+    "skia-canvas": "^1.0.1",
     "typedi": "^0.10.0"
   },
   "imports": {
