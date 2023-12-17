@@ -141,7 +141,7 @@ export class BedWars {
   @Field()
   public challenges: ChallengesBedWars;
 
-  @Field()
+  @Field({ leaderboard: { fieldName: "" } })
   public slumber: Slumber;
 
   public constructor(data: APIData = {}) {
