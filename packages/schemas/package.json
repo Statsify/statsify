@@ -15,7 +15,7 @@
     "@statsify/math": "*",
     "@statsify/util": "*",
     "@swc/helpers": "^0.5.1",
-    "@typegoose/typegoose": "^11.4.1",
+    "@typegoose/typegoose": "^12.0.0",
     "class-validator": "^0.14.0",
     "luxon": "^3.4.0"
   },
