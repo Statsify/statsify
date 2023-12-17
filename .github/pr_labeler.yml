@@ -1,44 +1,59 @@
 "api":
-  - apps/api/**/*
+  - changed-files:
+    - any-glob-to-any-file: apps/api/**/*
 
 "discord-bot":
-  - apps/discord-bot/**/*
+  - changed-files:
+    - any-glob-to-any-file: apps/discord-bot/**/*
 
 "scripts":
-  - apps/scripts/**/*
+  - changed-files:
+    - any-glob-to-any-file: apps/scripts/**/*
 
 "site":
-  - apps/site/**/*
+  - changed-files:
+    - any-glob-to-any-file: apps/site/**/*
 
 "support-bot":
-  - apps/support-bot/**/*
+  - changed-files:
+    - any-glob-to-any-file: apps/support-bot/**/*
 
 "verify-server":
-  - apps/verify-server/**/*
+  - changed-files:
+    - any-glob-to-any-file: apps/verify-server/**/*
 
 "@statsify/api-client":
-  - packages/api-client/**/*
+  - changed-files:
+    - any-glob-to-any-file: packages/api-client/**/*
 
 "@statsify/assets":
-  - packages/assets/**/*
+  - changed-files:
+    - any-glob-to-any-file: packages/assets/**/*
 
 "@statsify/discord":
-  - packages/discord/**/*
+  - changed-files:
+    - any-glob-to-any-file: packages/discord/**/*
 
 "@statsify/logger":
-  - packages/logger/**/*
+  - changed-files:
+    - any-glob-to-any-file: packages/logger/**/*
 
 "@statsify/math":
-  - packages/math/**/*
+  - changed-files:
+    - any-glob-to-any-file: packages/math/**/*
 
 "@statsify/rendering":
-  - packages/rendering/**/*
+  - changed-files:
+    - any-glob-to-any-file: packages/rendering/**/*
 
 "@statsify/schemas":
-  - packages/schemas/**/*
+  - changed-files:
+    - any-glob-to-any-file: packages/schemas/**/*
 
 "@statsify/skin-renderer":
-  - packages/skin-renderer/**/*
+  - changed-files:
+    - any-glob-to-any-file: packages/skin-renderer/**/*
 
 "@statsify/util":
-  - packages/util/**/*
+  - changed-files:
+    - any-glob-to-any-file: packages/util/**/*
