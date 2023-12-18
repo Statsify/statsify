@@ -601,7 +601,7 @@
     "fastestDetectiveWin": "Snabbaste Detektiv Vinnst",
     "fastestMurdererWin": "Snabbaste mördare Vinnst",
     "fastestWin": "Snabbaste vinsten",
-    "fastestWoolCapture": "Fastest Wool Capture",
+    "fastestWoolCapture": "Snabbast Ullfångst",
     "finalAssists": "Final Assister",
     "finalDeaths": "Final Deaths",
     "finalKills": "Final Kills",
@@ -618,10 +618,10 @@
     "godfather": "Godfather",
     "godlikes": "Godlikes",
     "gold": "Guld",
-    "goldEarned": "Gold Earned",
+    "goldEarned": "Guld Tjänat",
     "goldPickedUp": "Guld upplockat",
     "goldRate": "Guld Rate",
-    "goldSpent": "Gold Spent",
+    "goldSpent": "Guld Spenderat",
     "goldTrophies": "Guld Troféer",
     "grandPrixTokens": "GP Tokens",
     "guild": {
@@ -683,7 +683,7 @@
     "levelsGained": "Nivåer uppnådda",
     "loginTime": "Inloggningstid",
     "logoutTime": "Utloggningstid",
-    "longestGame": "Longest Game",
+    "longestGame": "Längsta Runda",
     "lootChests": "Loot Kistor",
     "losses": "Förluster",
     "magicalChests": "Magiska kistor",
@@ -735,6 +735,7 @@
     "shotsFired": "Skott avfyrade",
     "silver": "Silver",
     "silverTrophies": "Silver Troféer",
+    "slumberTickets": "Slummerbiljetter",
     "soloWins": "Solo Vinster",
     "souls": "Själar",
     "stampLevel": "Konverteringar av mynt",
@@ -752,6 +753,7 @@
     "title": "Titel",
     "tokens": "Tokens",
     "total": "Total",
+    "totalSlumberTickets": "Totala Slummerbiljetter",
     "totalTrophies": "Totalla Troféer",
     "trail": "Spår",
     "transfusion": "Transfusion",
@@ -772,8 +774,8 @@
     "witherKills": "Wither Kills",
     "wlr": "WLR",
     "wool": "Ull",
-    "woolCaptured": "Wool Captured",
-    "woolPickedUp": "Wool Picked Up",
+    "woolCaptured": "Ull Fångat",
+    "woolPickedUp": "Ull Upplockat",
     "woolPlaced": "Ull placerad",
     "zombieKills": "Zombie Kills",
     "potionsBrewed": "Brygder Bryggda",
@@ -781,11 +783,11 @@
     "powerupsCollected": "Power-Ups Samlade",
     "roundsCompleted": "Rundor Slutförda",
     "totalExp": "Total EXP",
-    "gamesFinished": "Games Finished",
-    "flawlessGames": "Flawless Games",
-    "fails": "Fails",
-    "mapsCompleted": "Maps Completed",
-    "arcadeWins": "Arcade Wins",
+    "gamesFinished": "Rundor Avslutade",
+    "flawlessGames": "Felfria Rundor",
+    "fails": "Misslyckanden",
+    "mapsCompleted": "Kartor Avklarade",
+    "arcadeWins": "Arkadvinster",
     "draws": "Draws"
   },
   "tips": {
@@ -805,21 +807,21 @@
     },
     "invalidCode": {
       "title": "Ogiltig verifieringskod",
-      "description": "Check your verification code or try again by following these steps: ",
-      "button": "Watch Tutorial"
+      "description": "Kontrollera din verifikationskod eller försök igen genom att följa dessa steg: ",
+      "button": "Titta på Handledning"
     },
     "instructions": {
-      "title": "Link your Minecraft Account to Statsify",
+      "title": "Länka ditt Minecraft-konto till Statsify",
       "steps": {
-        "one": "Open **Minecraft** and go to the server list",
-        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
-        "three": "Head back to **Discord** and click the button below, then type in your code"
+        "one": "Öppna **Minecraft** och gå till serverlistan",
+        "two": "Anslut till **`verify.statsify.net`** och kopiera koden som visas",
+        "three": "Gå tillbaka till **Discord** och klicka på knappen nedan, skriv sedan in din kod"
       },
       "modal": {
-        "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "title": "Ange din Verifikationskod",
+        "input": "Verifikationskod"
       },
-      "button": "Enter Verification Code"
+      "button": "Ange Verifikationskod"
     },
     "notVerified": {
       "description": "Du måste vara verifierad innan du kan avverifiera!",
