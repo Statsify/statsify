@@ -37,6 +37,7 @@ export type EventTypes = Exclude<keyof Events, "silver">;
 export type EventPeriods = "summer" | "halloween" | "christmas" | "easter";
 
 export const EVENT_TYPES: EventTypes[] = [
+  "christmas2023",
   "halloween2023",
   "summer2023",
   "easter2023",
