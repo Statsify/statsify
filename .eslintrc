@@ -8,7 +8,8 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:unicorn/recommended"
+    "plugin:unicorn/recommended",
+    "next"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
