@@ -348,6 +348,9 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0
     devDependencies:
+      '@statsify/schemas':
+        specifier: workspace:*
+        version: link:../../packages/schemas
       '@types/node':
         specifier: ^20
         version: 20.8.10

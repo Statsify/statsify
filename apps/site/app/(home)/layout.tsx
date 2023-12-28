@@ -20,7 +20,7 @@ export default function Layout({ children }: PropsWithChildren) {
 	return (
 		<>
 			<Background />
-			<Navbar className="absolute" />
+			<Navbar />
 			{children}
 		</>
 	);

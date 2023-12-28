@@ -20,18 +20,20 @@ export interface NavbarProperties {
 	children?: ReactNode;
 }
 
-// TODO: fix ring
+// TODO: tabIndex
 export function Navbar({ className, children }: NavbarProperties) {
 	const path = usePathname();
 
 	return (
-		<nav className={twMerge("bg-black/60 shadow-md p-4 flex items-center text-white w-full gap-8 md:gap-0", className)}>
-			<Link className="flex items-center gap-3 text-4xl font-bold md:w-1/4" href="/">
-				<Image src="/logo.png" width={48} height={48} alt="Statsify Logo" unoptimized />
-				<p className="hidden md:block">Statsify</p>
-			</Link>
+		<nav className={twMerge("bg-black/60 shadow-md p-4 flex items-center text-white w-full gap-8 md:gap-0 justify-center", className)}>
+			<div className="grow md:w-1/4">
+				<Link className="flex items-center gap-3 text-4xl font-bold" href="/">
+					<Image src="/logo.png" width={48} height={48} alt="Statsify Logo" unoptimized />
+					<p className="hidden md:block">Statsify</p>
+				</Link>
+			</div>
 			<div className="flex grow justify-center md:w-1/2 md:grow-0">{children}</div>
-			<div className="hidden flex-row items-center justify-end md:flex md:w-1/4 md:gap-3 lg:gap-6">
+			<div className="hidden flex-row items-center justify-end md:flex md:w-1/4 md:gap-3">
 				<NavbarItem href="/premium" path={path}>
 					Premium
 				</NavbarItem>

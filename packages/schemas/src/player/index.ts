@@ -30,6 +30,9 @@ export class Player {
 	public rank: string;
 
 	@Field()
+	public rankColor: Color;
+
+	@Field()
 	public plusColor: Color;
 
 	@Field({
@@ -86,7 +89,8 @@ export class Player {
 
 		this.rank = PlayerUtil.getRank(data);
 		this.plusColor = PlayerUtil.getPlusColor(this.rank, data?.rankPlusColor);
-		this.prefixName = `${PlayerUtil.getRankColor(this.rank).toString()}${this.username}`;
+		this.rankColor = PlayerUtil.getRankColor(this.rank);
+		this.prefixName = `${this.rankColor.toString()}${this.username}`;
 		this.displayName = PlayerUtil.getDisplayName(this.username, this.rank, this.plusColor.code);
 
 		this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});

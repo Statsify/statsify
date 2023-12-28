@@ -35,6 +35,9 @@ export default {
 		boxShadow: {
 			md: "0px 4px 16px 0px rgba(0, 0, 0, 0.25)",
 		},
+		fontFamily: {
+			sans: ["var(--font-inter)"],
+		},
 	},
 	plugins: [],
 } satisfies Config;

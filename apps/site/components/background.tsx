@@ -14,7 +14,7 @@ export function Background() {
 			src="/backgrounds/hypixel_overall_2.png"
 			alt="background"
 			fill
-			className="absolute z-[-5] blur-lg brightness-75"
+			className="sticky z-[-5] blur-lg brightness-75"
 			style={{ objectFit: "cover" }}
 		/>
 	);
