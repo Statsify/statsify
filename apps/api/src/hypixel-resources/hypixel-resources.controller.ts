@@ -6,51 +6,42 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ApiBadRequestResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Auth } from "#auth";
 import { Controller, Get } from "@nestjs/common";
-import {
-  ErrorResponse,
-  GetGamecountsResponse,
-  GetWatchdogResponse,
-} from "@statsify/api-client";
+import { ErrorResponse, GetGamecountsResponse, GetWatchdogResponse } from "@statsify/api-client";
 import { HypixelService } from "#hypixel";
 
 @Controller("/hypixelresources")
 @ApiTags("Hypixel Resources")
 export class HypixelResourcesController {
-  public constructor(private readonly hypixelService: HypixelService) {}
+	public constructor(private readonly hypixelService: HypixelService) {}
 
-  @Get("/watchdog")
-  @ApiOperation({ summary: "Get Watchdog Stats" })
-  @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiOkResponse({ type: GetWatchdogResponse })
-  @Auth()
-  public async getWatchdog() {
-    const watchdog = await this.hypixelService.getWatchdog();
+	@Get("/watchdog")
+	@ApiOperation({ summary: "Get Watchdog Stats" })
+	@ApiBadRequestResponse({ type: ErrorResponse })
+	@ApiOkResponse({ type: GetWatchdogResponse })
+	@Auth()
+	public async getWatchdog() {
+		const watchdog = await this.hypixelService.getWatchdog();
 
-    return {
-      success: !!watchdog,
-      watchdog,
-    };
-  }
+		return {
+			success: !!watchdog,
+			watchdog,
+		};
+	}
 
-  @Get("/gamecounts")
-  @ApiOperation({ summary: "Get Hypixel Game Counts" })
-  @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiOkResponse({ type: GetGamecountsResponse })
-  @Auth()
-  public async getGameCounts() {
-    const gamecounts = await this.hypixelService.getGameCounts();
+	@Get("/gamecounts")
+	@ApiOperation({ summary: "Get Hypixel Game Counts" })
+	@ApiBadRequestResponse({ type: ErrorResponse })
+	@ApiOkResponse({ type: GetGamecountsResponse })
+	@Auth()
+	public async getGameCounts() {
+		const gamecounts = await this.hypixelService.getGameCounts();
 
-    return {
-      success: !!gamecounts,
-      gamecounts,
-    };
-  }
+		return {
+			success: !!gamecounts,
+			gamecounts,
+		};
+	}
 }

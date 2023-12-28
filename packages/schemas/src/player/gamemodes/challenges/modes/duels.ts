@@ -14,28 +14,28 @@ import { challengeFieldData } from "../util.js";
 import type { GameChallenges } from "../game-challenges.js";
 
 export class DuelsChallenges implements GameChallenges {
-  @Field(challengeFieldData)
-  public feedTheVoid: number;
+	@Field(challengeFieldData)
+	public feedTheVoid: number;
 
-  @Field(challengeFieldData)
-  public teams: number;
+	@Field(challengeFieldData)
+	public teams: number;
 
-  @Field(challengeFieldData)
-  public targetPractice: number;
+	@Field(challengeFieldData)
+	public targetPractice: number;
 
-  @Field({
-    leaderboard: {
-      fieldName: `${removeFormatting(FormattedGame.DUELS)} Total`,
-      name: "Total",
-    },
-  })
-  public total: number;
+	@Field({
+		leaderboard: {
+			fieldName: `${removeFormatting(FormattedGame.DUELS)} Total`,
+			name: "Total",
+		},
+	})
+	public total: number;
 
-  public constructor(challenges: APIData) {
-    this.feedTheVoid = challenges.DUELS__feed_the_void_challenge;
-    this.teams = challenges.DUELS__teams_challenge;
-    this.targetPractice = challenges.DUELS__target_practice_challenge;
+	public constructor(challenges: APIData) {
+		this.feedTheVoid = challenges.DUELS__feed_the_void_challenge;
+		this.teams = challenges.DUELS__teams_challenge;
+		this.targetPractice = challenges.DUELS__target_practice_challenge;
 
-    this.total = add(this.feedTheVoid, this.teams, this.targetPractice);
-  }
+		this.total = add(this.feedTheVoid, this.teams, this.targetPractice);
+	}
 }

@@ -13,8 +13,8 @@ import { UserController } from "./user.controller.js";
 import { UserService } from "./user.service.js";
 
 @Module({
-  imports: [TypegooseModule.forFeature([User, VerifyCode])],
-  controllers: [UserController],
-  providers: [UserService],
+	imports: [TypegooseModule.forFeature([User, VerifyCode])],
+	controllers: [UserController],
+	providers: [UserService],
 })
 export class UserModule {}

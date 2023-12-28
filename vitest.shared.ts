@@ -11,25 +11,25 @@ import { readFile } from "node:fs/promises";
 import { swc } from "./vite.swc.js";
 
 async function getSwcrc(path?: string) {
-  const config = await readFile(path ?? "./.swcrc", "utf8").then(JSON.parse);
-  delete config["$schema"];
-  return config;
+	const config = await readFile(path ?? "./.swcrc", "utf8").then(JSON.parse);
+	delete config["$schema"];
+	return config;
 }
 
 export async function config(path?: string) {
-  const swcrc = await getSwcrc(path);
+	const swcrc = await getSwcrc(path);
 
-  return defineConfig({
-    optimizeDeps: {
-      disabled: true,
-    },
-    envPrefix: "VITEST",
-    test: {
-      environment: "node",
-      includeSource: ["./src/**/*.ts", "./src/**/*.tsx"],
-      globals: false,
-      passWithNoTests: true,
-    },
-    plugins: [swc.vite(swcrc)],
-  });
+	return defineConfig({
+		optimizeDeps: {
+			disabled: true,
+		},
+		envPrefix: "VITEST",
+		test: {
+			environment: "node",
+			includeSource: ["./src/**/*.ts", "./src/**/*.tsx"],
+			globals: false,
+			passWithNoTests: true,
+		},
+		plugins: [swc.vite(swcrc)],
+	});
 }

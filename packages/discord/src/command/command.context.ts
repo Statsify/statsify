@@ -6,10 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  APIApplicationCommandInteractionDataBasicOption,
-  ApplicationCommandOptionType,
-} from "discord-api-types/v10";
+import { APIApplicationCommandInteractionDataBasicOption, ApplicationCommandOptionType } from "discord-api-types/v10";
 import { AbstractCommandListener } from "./abstract-command.listener.js";
 import { IMessage, LocalizeFunction, Message } from "#messages";
 import { User } from "@statsify/schemas";
@@ -17,56 +14,54 @@ import { noop } from "@statsify/util";
 import type { Interaction } from "#interaction";
 
 export class CommandContext {
-  private user: User | null;
+	private user: User | null;
 
-  public constructor(
-    private readonly listener: AbstractCommandListener,
-    private readonly interaction: Interaction,
-    private readonly data: any
-  ) {
-    this.user = null;
-  }
+	public constructor(
+		private readonly listener: AbstractCommandListener,
+		private readonly interaction: Interaction,
+		private readonly data: any
+	) {
+		this.user = null;
+	}
 
-  public getListener() {
-    return this.listener;
-  }
+	public getListener() {
+		return this.listener;
+	}
 
-  public getUser() {
-    return this.user;
-  }
+	public getUser() {
+		return this.user;
+	}
 
-  public setUser(user: User | null) {
-    this.user = user;
-    if (user?.locale) this.interaction.setLocale(user?.locale);
-  }
+	public setUser(user: User | null) {
+		this.user = user;
+		if (user?.locale) this.interaction.setLocale(user?.locale);
+	}
 
-  public option<T>(name: string, defaultValue: T): T;
-  public option<T>(name: string): T;
-  public option<T>(name: string, defaultValue?: T): T {
-    const data = (
-      this.data.options as APIApplicationCommandInteractionDataBasicOption[]
-    )?.find((o) => o.name === name);
+	public option<T>(name: string, defaultValue: T): T;
+	public option<T>(name: string): T;
+	public option<T>(name: string, defaultValue?: T): T {
+		const data = (this.data.options as APIApplicationCommandInteractionDataBasicOption[])?.find((o) => o.name === name);
 
-    if (!data) {
-      return defaultValue ?? noop();
-    }
+		if (!data) {
+			return defaultValue ?? noop();
+		}
 
-    if (data.type === ApplicationCommandOptionType.Attachment) {
-      return this.getInteraction().getData().resolved.attachments[data.value];
-    }
+		if (data.type === ApplicationCommandOptionType.Attachment) {
+			return this.getInteraction().getData().resolved.attachments[data.value];
+		}
 
-    return data.value as unknown as T;
-  }
+		return data.value as unknown as T;
+	}
 
-  public t(): LocalizeFunction {
-    return this.interaction.t();
-  }
+	public t(): LocalizeFunction {
+		return this.interaction.t();
+	}
 
-  public reply(data: Message | IMessage) {
-    return this.interaction.editReply(data);
-  }
+	public reply(data: Message | IMessage) {
+		return this.interaction.editReply(data);
+	}
 
-  public getInteraction() {
-    return this.interaction;
-  }
+	public getInteraction() {
+		return this.interaction;
+	}
 }

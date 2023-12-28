@@ -8,134 +8,112 @@
 
 import { Field } from "#metadata";
 import { GameModes, type IGameModes } from "#game";
-import {
-  GamePrefix,
-  createPrefixProgression,
-  defaultPrefix,
-  getFormattedPrefix,
-} from "#prefixes";
+import { GamePrefix, createPrefixProgression, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { Progression } from "#progression";
 import { QuakeMode } from "./mode.js";
 import { deepAdd } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
-export const QUAKE_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo", hypixel: "solo" },
-  { api: "teams", hypixel: "teams" },
-]);
+export const QUAKE_MODES = new GameModes([{ api: "overall" }, { api: "solo", hypixel: "solo" }, { api: "teams", hypixel: "teams" }]);
 
 export type QuakeModes = IGameModes<typeof QUAKE_MODES>;
 
-const indexes = [
-  "zero",
-  "one",
-  "two",
-  "three",
-  "four",
-  "five",
-  "six",
-  "seven",
-  "eight",
-  "nine",
-];
+const indexes = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
 const prefixes: GamePrefix[] = [
-  { fmt: (n) => `§8[${n}]`, req: 0 },
-  { fmt: (n) => `§7[${n}]`, req: 25_000 },
-  { fmt: (n) => `§f[${n}]`, req: 50_000 },
-  { fmt: (n) => `§2[${n}]`, req: 75_000 },
-  { fmt: (n) => `§e[${n}]`, req: 100_000 },
-  { fmt: (n) => `§a[${n}]`, req: 200_000 },
-  { fmt: (n) => `§9[${n}]`, req: 300_000 },
-  { fmt: (n) => `§3[${n}]`, req: 400_000 },
-  { fmt: (n) => `§d[${n}]`, req: 500_000 },
-  { fmt: (n) => `§5[${n}]`, req: 600_000 },
-  { fmt: (n) => `§c[${n}]`, req: 750_000 },
-  { fmt: (n) => `§6[${n}]`, req: 1_000_000 },
-  { fmt: (n) => `§0[${n}]`, req: 2_000_000 },
+	{ fmt: (n) => `§8[${n}]`, req: 0 },
+	{ fmt: (n) => `§7[${n}]`, req: 25_000 },
+	{ fmt: (n) => `§f[${n}]`, req: 50_000 },
+	{ fmt: (n) => `§2[${n}]`, req: 75_000 },
+	{ fmt: (n) => `§e[${n}]`, req: 100_000 },
+	{ fmt: (n) => `§a[${n}]`, req: 200_000 },
+	{ fmt: (n) => `§9[${n}]`, req: 300_000 },
+	{ fmt: (n) => `§3[${n}]`, req: 400_000 },
+	{ fmt: (n) => `§d[${n}]`, req: 500_000 },
+	{ fmt: (n) => `§5[${n}]`, req: 600_000 },
+	{ fmt: (n) => `§c[${n}]`, req: 750_000 },
+	{ fmt: (n) => `§6[${n}]`, req: 1_000_000 },
+	{ fmt: (n) => `§0[${n}]`, req: 2_000_000 },
 ];
 
 export class Quake {
-  @Field()
-  public progression: Progression;
+	@Field()
+	public progression: Progression;
 
-  @Field()
-  public currentPrefix: string;
+	@Field()
+	public currentPrefix: string;
 
-  @Field({ store: { default: defaultPrefix(prefixes) } })
-  public naturalPrefix: string;
+	@Field({ store: { default: defaultPrefix(prefixes) } })
+	public naturalPrefix: string;
 
-  @Field()
-  public nextPrefix: string;
+	@Field()
+	public nextPrefix: string;
 
-  @Field()
-  public overall: QuakeMode;
+	@Field()
+	public overall: QuakeMode;
 
-  @Field()
-  public solo: QuakeMode;
+	@Field()
+	public solo: QuakeMode;
 
-  @Field()
-  public teams: QuakeMode;
+	@Field()
+	public teams: QuakeMode;
 
-  @Field({ historical: { enabled: false } })
-  public coins: number;
+	@Field({ historical: { enabled: false } })
+	public coins: number;
 
-  @Field({ historical: { enabled: false } })
-  public highestKillstreak: number;
+	@Field({ historical: { enabled: false } })
+	public highestKillstreak: number;
 
-  @Field()
-  public godlikes: number;
+	@Field()
+	public godlikes: number;
 
-  @Field({ historical: { enabled: false } })
-  public tokens: number;
+	@Field({ historical: { enabled: false } })
+	public tokens: number;
 
-  @Field({ leaderboard: { enabled: false }, store: { default: 1.3 } })
-  public trigger: number;
+	@Field({ leaderboard: { enabled: false }, store: { default: 1.3 } })
+	public trigger: number;
 
-  public constructor(data: APIData, ap: APIData, legacy: APIData) {
-    this.solo = new QuakeMode(data, "");
-    this.teams = new QuakeMode(data, "teams");
+	public constructor(data: APIData, ap: APIData, legacy: APIData) {
+		this.solo = new QuakeMode(data, "");
+		this.teams = new QuakeMode(data, "teams");
 
-    this.overall = deepAdd(this.solo, this.teams);
+		this.overall = deepAdd(this.solo, this.teams);
 
-    const score = this.overall.kills;
+		const score = this.overall.kills;
 
-    this.currentPrefix = getFormattedPrefix({ prefixes, score });
+		this.currentPrefix = getFormattedPrefix({ prefixes, score });
 
-    this.naturalPrefix = getFormattedPrefix({
-      prefixes,
-      score,
-      trueScore: true,
-    });
+		this.naturalPrefix = getFormattedPrefix({
+			prefixes,
+			score,
+			trueScore: true,
+		});
 
-    this.nextPrefix = getFormattedPrefix({
-      prefixes,
-      score,
-      skip: true,
-    });
+		this.nextPrefix = getFormattedPrefix({
+			prefixes,
+			score,
+			skip: true,
+		});
 
-    this.progression = createPrefixProgression(prefixes, score);
+		this.progression = createPrefixProgression(prefixes, score);
 
-    QuakeMode.applyRatios(this.overall);
+		QuakeMode.applyRatios(this.overall);
 
-    this.coins = data.coins;
-    this.highestKillstreak = data.highest_killstreak;
-    this.godlikes = ap.quake_godlikes;
-    this.tokens = legacy.quakecraft_tokens;
+		this.coins = data.coins;
+		this.highestKillstreak = data.highest_killstreak;
+		this.godlikes = ap.quake_godlikes;
+		this.tokens = legacy.quakecraft_tokens;
 
-    // NINE_POINT_ZERO becomes 9.0
-    // ALWAYS in seconds
-    this.trigger =
-      +data.trigger
-        ?.toLowerCase()
-        .split("_")
-        // Converts string numbers to actually number && remove the 'point'
-        .map((trigger: string) =>
-          indexes.includes(trigger) ? indexes.indexOf(trigger) : "."
-        )
-        .join("") || 1.3;
-  }
+		// NINE_POINT_ZERO becomes 9.0
+		// ALWAYS in seconds
+		this.trigger =
+			+data.trigger
+				?.toLowerCase()
+				.split("_")
+				// Converts string numbers to actually number && remove the 'point'
+				.map((trigger: string) => (indexes.includes(trigger) ? indexes.indexOf(trigger) : "."))
+				.join("") || 1.3;
+	}
 }
 
 export * from "./mode.js";

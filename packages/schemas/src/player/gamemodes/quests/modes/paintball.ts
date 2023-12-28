@@ -10,10 +10,10 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const PaintballQuests = createGameModeQuests({
-  game: FormattedGame.PAINTBALL,
-  daily: [
-    { field: "paintballer", propertyKey: "paintballer" },
-    { field: "paintball_killer", propertyKey: "killer" },
-  ],
-  weekly: [{ field: "paintball_expert", propertyKey: "expert" }],
+	game: FormattedGame.PAINTBALL,
+	daily: [
+		{ field: "paintballer", propertyKey: "paintballer" },
+		{ field: "paintball_killer", propertyKey: "killer" },
+	],
+	weekly: [{ field: "paintball_expert", propertyKey: "expert" }],
 });

@@ -8,158 +8,146 @@
 
 import { ArcadeModes, FormattedGame, GameMode } from "@statsify/schemas";
 import {
-  BlockingDeadTable,
-  BountyHuntersTable,
-  CaptureTheWoolTable,
-  CreeperAttackTable,
-  DragonWarsTable,
-  DropperTable,
-  EnderSpleefTable,
-  FarmHuntTable,
-  FootballTable,
-  GalaxyWarsTable,
-  HideAndSeekTable,
-  HoleInTheWallTable,
-  HypixelSaysTable,
-  MiniWallsTable,
-  OverallArcadeTable,
-  PartyGamesTable,
-  PixelPaintersTable,
-  PixelPartyTable,
-  SeasonalTable,
-  ThrowOutTable,
-  ZombiesTable,
-  captureTheWoolSiderbar,
+	BlockingDeadTable,
+	BountyHuntersTable,
+	CaptureTheWoolTable,
+	CreeperAttackTable,
+	DragonWarsTable,
+	DropperTable,
+	EnderSpleefTable,
+	FarmHuntTable,
+	FootballTable,
+	GalaxyWarsTable,
+	HideAndSeekTable,
+	HoleInTheWallTable,
+	HypixelSaysTable,
+	MiniWallsTable,
+	OverallArcadeTable,
+	PartyGamesTable,
+	PixelPaintersTable,
+	PixelPartyTable,
+	SeasonalTable,
+	ThrowOutTable,
+	ZombiesTable,
+	captureTheWoolSiderbar,
 } from "./modes/index.js";
 import { Container, Footer, Header, SidebarItem } from "#components";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface ArcadeProfileProps extends BaseProfileProps {
-  mode: GameMode<ArcadeModes>;
+	mode: GameMode<ArcadeModes>;
 }
 
-export const ArcadeProfile = ({
-  skin,
-  player,
-  background,
-  logo,
-  user,
-  badge,
-  mode,
-  t,
-  time,
-}: ArcadeProfileProps) => {
-  const { arcade } = player.stats;
+export const ArcadeProfile = ({ skin, player, background, logo, user, badge, mode, t, time }: ArcadeProfileProps) => {
+	const { arcade } = player.stats;
 
-  let sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(arcade.coins), "§6"],
-    [t("stats.arcadeWins"), t(arcade.wins), "§b"],
-  ];
+	let sidebar: SidebarItem[] = [
+		[t("stats.coins"), t(arcade.coins), "§6"],
+		[t("stats.arcadeWins"), t(arcade.wins), "§b"],
+	];
 
-  const { api } = mode;
-  let table: JSX.Element;
+	const { api } = mode;
+	let table: JSX.Element;
 
-  switch (api) {
-    case "blockingDead":
-      table = <BlockingDeadTable stats={arcade[api]} t={t} />;
-      break;
+	switch (api) {
+		case "blockingDead":
+			table = <BlockingDeadTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "bountyHunters":
-      table = <BountyHuntersTable stats={arcade[api]} t={t} />;
-      break;
+		case "bountyHunters":
+			table = <BountyHuntersTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "captureTheWool":
-      table = <CaptureTheWoolTable stats={arcade[api]} t={t} time={time} />;
-      sidebar = captureTheWoolSiderbar(arcade, t);
-      break;
+		case "captureTheWool":
+			table = <CaptureTheWoolTable stats={arcade[api]} t={t} time={time} />;
+			sidebar = captureTheWoolSiderbar(arcade, t);
+			break;
 
-    case "creeperAttack":
-      table = <CreeperAttackTable stats={arcade[api]} t={t} />;
-      break;
+		case "creeperAttack":
+			table = <CreeperAttackTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "dragonWars":
-      table = <DragonWarsTable stats={arcade[api]} t={t} />;
-      break;
+		case "dragonWars":
+			table = <DragonWarsTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "dropper":
-      table = <DropperTable stats={arcade[api]} t={t} time={time} />;
-      break;
+		case "dropper":
+			table = <DropperTable stats={arcade[api]} t={t} time={time} />;
+			break;
 
-    case "enderSpleef":
-      table = <EnderSpleefTable stats={arcade[api]} t={t} />;
-      break;
+		case "enderSpleef":
+			table = <EnderSpleefTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "farmHunt":
-      table = <FarmHuntTable stats={arcade[api]} t={t} />;
-      break;
+		case "farmHunt":
+			table = <FarmHuntTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "football":
-      table = <FootballTable stats={arcade[api]} t={t} />;
-      break;
+		case "football":
+			table = <FootballTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "galaxyWars":
-      table = <GalaxyWarsTable stats={arcade[api]} t={t} />;
-      break;
+		case "galaxyWars":
+			table = <GalaxyWarsTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "hideAndSeek":
-      table = <HideAndSeekTable stats={arcade[api]} t={t} />;
-      break;
+		case "hideAndSeek":
+			table = <HideAndSeekTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "holeInTheWall":
-      table = <HoleInTheWallTable stats={arcade[api]} t={t} time={time} />;
-      break;
+		case "holeInTheWall":
+			table = <HoleInTheWallTable stats={arcade[api]} t={t} time={time} />;
+			break;
 
-    case "hypixelSays":
-      table = <HypixelSaysTable stats={arcade[api]} t={t} />;
-      break;
+		case "hypixelSays":
+			table = <HypixelSaysTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "miniWalls":
-      table = <MiniWallsTable stats={arcade[api]} t={t} />;
-      break;
+		case "miniWalls":
+			table = <MiniWallsTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "partyGames":
-      table = <PartyGamesTable stats={arcade[api]} t={t} />;
-      break;
+		case "partyGames":
+			table = <PartyGamesTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "pixelPainters":
-      table = <PixelPaintersTable stats={arcade[api]} t={t} />;
-      break;
+		case "pixelPainters":
+			table = <PixelPaintersTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "pixelParty":
-      table = <PixelPartyTable stats={arcade[api]} t={t} />;
-      break;
+		case "pixelParty":
+			table = <PixelPartyTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "seasonal":
-      table = <SeasonalTable stats={arcade[api]} t={t} />;
-      break;
+		case "seasonal":
+			table = <SeasonalTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "throwOut":
-      table = <ThrowOutTable stats={arcade[api]} t={t} />;
-      break;
+		case "throwOut":
+			table = <ThrowOutTable stats={arcade[api]} t={t} />;
+			break;
 
-    case "zombies":
-      table = <ZombiesTable stats={arcade[api]} t={t} time={time} />;
-      break;
+		case "zombies":
+			table = <ZombiesTable stats={arcade[api]} t={t} time={time} />;
+			break;
 
-    default:
-      table = <OverallArcadeTable stats={arcade} t={t} />;
-      break;
-  }
+		default:
+			table = <OverallArcadeTable stats={arcade} t={t} />;
+			break;
+	}
 
-  return (
-    <Container background={background}>
-      <Header
-        skin={skin}
-        name={player.prefixName}
-        badge={badge}
-        sidebar={sidebar}
-        title={`§l${FormattedGame.ARCADE} §f${
-          api === "overall" ? t("stats.wins") : "Stats"
-        } §r(${mode.formatted})`}
-        time={time}
-      />
-      {table}
-      <Footer logo={logo} user={user} />
-    </Container>
-  );
+	return (
+		<Container background={background}>
+			<Header
+				skin={skin}
+				name={player.prefixName}
+				badge={badge}
+				sidebar={sidebar}
+				title={`§l${FormattedGame.ARCADE} §f${api === "overall" ? t("stats.wins") : "Stats"} §r(${mode.formatted})`}
+				time={time}
+			/>
+			{table}
+			<Footer logo={logo} user={user} />
+		</Container>
+	);
 };

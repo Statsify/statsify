@@ -9,14 +9,11 @@
 import { APIMessageComponentEmoji } from "discord-api-types/v10";
 import { LocalizationString, LocalizeFunction, translateField } from "../localize.js";
 
-export function parseEmoji(
-  emote: LocalizationString,
-  locale: LocalizeFunction
-): APIMessageComponentEmoji {
-  const emoji = translateField(locale, emote);
-  const animated = emoji.startsWith("<a:");
-  const name = emoji.replace(/<:|<a:|>/g, "");
-  const id = name.split(":")[1];
+export function parseEmoji(emote: LocalizationString, locale: LocalizeFunction): APIMessageComponentEmoji {
+	const emoji = translateField(locale, emote);
+	const animated = emoji.startsWith("<a:");
+	const name = emoji.replace(/<:|<a:|>/g, "");
+	const id = name.split(":")[1];
 
-  return { name: name.replace(id, ""), animated, id };
+	return { name: name.replace(id, ""), animated, id };
 }

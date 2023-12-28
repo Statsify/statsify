@@ -11,6 +11,6 @@ import { SuccessResponse } from "./success.response.js";
 import { Watchdog } from "@statsify/schemas";
 
 export class GetWatchdogResponse extends SuccessResponse {
-  @ApiProperty()
-  public watchdog: Watchdog;
+	@ApiProperty()
+	public watchdog: Watchdog;
 }

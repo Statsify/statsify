@@ -14,27 +14,23 @@ import { findSolutions } from "./find-solutions.js";
 
 @Command({ description: (t) => t("commands.gtbhelper"), args: [GTBHelperArgument] })
 export class GTBHelperCommand {
-  public run(context: CommandContext) {
-    const hint = context.option<string>("hint");
-    const words = findSolutions(hint);
+	public run(context: CommandContext) {
+		const hint = context.option<string>("hint");
+		const words = findSolutions(hint);
 
-    if (!words.length) {
-      throw new ErrorMessage(
-        (t) => t("errors.noGTBSolutions.title"),
-        (t) => t("errors.noGTBSolutions.description")
-      );
-    }
+		if (!words.length) {
+			throw new ErrorMessage(
+				(t) => t("errors.noGTBSolutions.title"),
+				(t) => t("errors.noGTBSolutions.description")
+			);
+		}
 
-    const embed = new EmbedBuilder()
-      .title((t) => t("embeds.gtbhelper.title"))
-      .color(STATUS_COLORS.info);
+		const embed = new EmbedBuilder().title((t) => t("embeds.gtbhelper.title")).color(STATUS_COLORS.info);
 
-    const groups = arrayGroup(words, Math.ceil(words.length / 3));
+		const groups = arrayGroup(words, Math.ceil(words.length / 3));
 
-    groups.forEach((solutions) =>
-      embed.field("\u200b", solutions.map((s) => `\`•\` ${s}`).join("\n"), true)
-    );
+		groups.forEach((solutions) => embed.field("\u200b", solutions.map((s) => `\`•\` ${s}`).join("\n"), true));
 
-    return { embeds: [embed] };
-  }
+		return { embeds: [embed] };
+	}
 }

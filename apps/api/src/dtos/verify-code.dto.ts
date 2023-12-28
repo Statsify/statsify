@@ -11,15 +11,15 @@ import { IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 import { UuidDto } from "./uuid.dto.js";
 
 export class VerifyCodeDto extends PartialType(UuidDto) {
-  @ApiProperty({ description: "Discord ID" })
-  @IsString()
-  @MinLength(17)
-  public id: string;
+	@ApiProperty({ description: "Discord ID" })
+	@IsString()
+	@MinLength(17)
+	public id: string;
 
-  @ApiProperty({ description: "Verification Code" })
-  @IsString()
-  @IsOptional()
-  @MinLength(4)
-  @MaxLength(4)
-  public code?: string;
+	@ApiProperty({ description: "Verification Code" })
+	@IsString()
+	@IsOptional()
+	@MinLength(4)
+	@MaxLength(4)
+	public code?: string;
 }

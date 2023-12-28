@@ -14,32 +14,32 @@ import { challengeFieldData } from "../util.js";
 import type { GameChallenges } from "../game-challenges.js";
 
 export class SpeedUHCChallenges implements GameChallenges {
-  @Field(challengeFieldData)
-  public alchemist: number;
+	@Field(challengeFieldData)
+	public alchemist: number;
 
-  @Field(challengeFieldData)
-  public wizard: number;
+	@Field(challengeFieldData)
+	public wizard: number;
 
-  @Field(challengeFieldData)
-  public marksman: number;
+	@Field(challengeFieldData)
+	public marksman: number;
 
-  @Field(challengeFieldData)
-  public nether: number;
+	@Field(challengeFieldData)
+	public nether: number;
 
-  @Field({
-    leaderboard: {
-      fieldName: `${removeFormatting(FormattedGame.SPEED_UHC)} Total`,
-      name: "Total",
-    },
-  })
-  public total: number;
+	@Field({
+		leaderboard: {
+			fieldName: `${removeFormatting(FormattedGame.SPEED_UHC)} Total`,
+			name: "Total",
+		},
+	})
+	public total: number;
 
-  public constructor(challenges: APIData) {
-    this.alchemist = challenges.SPEED_UHC__alchemist_challenge;
-    this.wizard = challenges.SPEED_UHC__wizard_challenge;
-    this.marksman = challenges.SPEED_UHC__marksman_challenge;
-    this.nether = challenges.SPEED_UHC__nether_challenge;
+	public constructor(challenges: APIData) {
+		this.alchemist = challenges.SPEED_UHC__alchemist_challenge;
+		this.wizard = challenges.SPEED_UHC__wizard_challenge;
+		this.marksman = challenges.SPEED_UHC__marksman_challenge;
+		this.nether = challenges.SPEED_UHC__nether_challenge;
 
-    this.total = add(this.alchemist, this.wizard, this.marksman, this.nether);
-  }
+		this.total = add(this.alchemist, this.wizard, this.marksman, this.nether);
+	}
 }

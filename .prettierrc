@@ -1,0 +1,13 @@
+{
+  "endOfLine": "lf",
+  "printWidth": 150,
+  "quoteProps": "consistent",
+  "semi": true,
+  "singleQuote": false,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "useTabs": true,
+  "plugins": [
+    "prettier-plugin-packagejson"
+  ]
+}

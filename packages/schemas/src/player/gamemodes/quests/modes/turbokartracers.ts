@@ -10,12 +10,12 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const TurboKartRacersQuests = createGameModeQuests({
-  game: FormattedGame.TURBO_KART_RACERS,
-  fieldPrefix: "gingerbread",
-  daily: [
-    { field: "bling_bling", propertyKey: "blingBling" },
-    { field: "maps", propertyKey: "internationalChampionship" },
-    { field: "racer", propertyKey: "racer" },
-  ],
-  weekly: [{ field: "mastery", propertyKey: "turboKartRacers" }],
+	game: FormattedGame.TURBO_KART_RACERS,
+	fieldPrefix: "gingerbread",
+	daily: [
+		{ field: "bling_bling", propertyKey: "blingBling" },
+		{ field: "maps", propertyKey: "internationalChampionship" },
+		{ field: "racer", propertyKey: "racer" },
+	],
+	weekly: [{ field: "mastery", propertyKey: "turboKartRacers" }],
 });

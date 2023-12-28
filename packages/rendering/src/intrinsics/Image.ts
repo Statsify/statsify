@@ -15,85 +15,67 @@ type ImageCropLocation = [sx: number, sy: number, sw: number, sh: number];
 type ImageCrop = "none" | "resize" | "height-crop" | ImageCropLocation;
 
 export interface ImageRenderProps {
-  image: CanvasImage;
-  crop?: ImageCrop;
+	image: CanvasImage;
+	crop?: ImageCrop;
 }
 
 export interface ImageProps extends ImageRenderProps {
-  width?: JSX.Measurement;
-  height?: JSX.Measurement;
-  margin?: JSX.Spacing;
+	width?: JSX.Measurement;
+	height?: JSX.Measurement;
+	margin?: JSX.Spacing;
 }
 
-export const component: JSX.RawFC<ImageProps> = ({
-  image,
-  width = image.width,
-  height = image.height,
-  margin,
-  crop,
-  children,
-}) => ({
-  name: "Image",
-  dimension: {
-    width,
-    height,
-    margin,
-  },
-  style: { location: "center", direction: "row", align: "center" },
-  props: { image, crop },
-  children,
+export const component: JSX.RawFC<ImageProps> = ({ image, width = image.width, height = image.height, margin, crop, children }) => ({
+	name: "Image",
+	dimension: {
+		width,
+		height,
+		margin,
+	},
+	style: { location: "center", direction: "row", align: "center" },
+	props: { image, crop },
+	children,
 });
 
-export const render: JSX.Render<ImageRenderProps> = (
-  ctx,
-  { image, crop },
-  { x, y, width, height }
-) => {
-  if (!crop || crop === "none") {
-    crop = [0, 0, image.width, image.height];
-  } else if (crop === "height-crop") {
-    const scale = image.width / width;
-    crop = [0, 0, image.width, Math.round(height * scale)];
-  } else if (crop === "resize") {
-    const newAspectRatio = width / height;
+export const render: JSX.Render<ImageRenderProps> = (ctx, { image, crop }, { x, y, width, height }) => {
+	if (!crop || crop === "none") {
+		crop = [0, 0, image.width, image.height];
+	} else if (crop === "height-crop") {
+		const scale = image.width / width;
+		crop = [0, 0, image.width, Math.round(height * scale)];
+	} else if (crop === "resize") {
+		const newAspectRatio = width / height;
 
-    let resizeWidth = image.width;
-    let resizeHeight = image.height;
+		let resizeWidth = image.width;
+		let resizeHeight = image.height;
 
-    if (resizeWidth > resizeHeight) {
-      resizeWidth = Math.round(resizeHeight * newAspectRatio);
-    } else {
-      resizeHeight = Math.round(resizeWidth / newAspectRatio);
-    }
+		if (resizeWidth > resizeHeight) {
+			resizeWidth = Math.round(resizeHeight * newAspectRatio);
+		} else {
+			resizeHeight = Math.round(resizeWidth / newAspectRatio);
+		}
 
-    if (resizeWidth > image.width) {
-      resizeWidth = image.width;
-      resizeHeight = Math.round(resizeWidth / newAspectRatio);
-    } else if (resizeHeight > image.height) {
-      resizeHeight = image.height;
-      resizeWidth = Math.round(resizeHeight * newAspectRatio);
-    }
+		if (resizeWidth > image.width) {
+			resizeWidth = image.width;
+			resizeHeight = Math.round(resizeWidth / newAspectRatio);
+		} else if (resizeHeight > image.height) {
+			resizeHeight = image.height;
+			resizeWidth = Math.round(resizeHeight * newAspectRatio);
+		}
 
-    let sx = 0;
-    let sy = 0;
+		let sx = 0;
+		let sy = 0;
 
-    if (resizeWidth < image.width) {
-      sx = Math.round((image.width - resizeWidth) / 2);
-    }
+		if (resizeWidth < image.width) {
+			sx = Math.round((image.width - resizeWidth) / 2);
+		}
 
-    if (resizeHeight < image.height) {
-      sy = Math.round((image.height - resizeHeight) / 2);
-    }
+		if (resizeHeight < image.height) {
+			sy = Math.round((image.height - resizeHeight) / 2);
+		}
 
-    crop = [sx, sy, resizeWidth, resizeHeight];
-  }
+		crop = [sx, sy, resizeWidth, resizeHeight];
+	}
 
-  ctx.drawImage(
-    image,
-    ...crop,
-    Math.round(x),
-    Math.round(y),
-    Math.round(width),
-    Math.round(height)
-  );
+	ctx.drawImage(image, ...crop, Math.round(x), Math.round(y), Math.round(width), Math.round(height));
 };

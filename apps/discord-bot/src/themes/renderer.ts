@@ -11,11 +11,11 @@ import { FontRenderer } from "@statsify/rendering";
 import { UserFont } from "@statsify/schemas";
 
 export function getFontRenderer(font: UserFont): FontRenderer {
-  switch (font) {
-    case UserFont.HD:
-      return Container.get("HDFontRenderer");
+	switch (font) {
+		case UserFont.HD:
+			return Container.get("HDFontRenderer");
 
-    default:
-      return Container.get(FontRenderer);
-  }
+		default:
+			return Container.get(FontRenderer);
+	}
 }

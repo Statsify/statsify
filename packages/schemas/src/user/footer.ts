@@ -9,23 +9,23 @@
 import { Field } from "#metadata";
 
 export enum UserLogo {
-  DEFAULT = 0,
-  IRON = 100,
-  GOLD = 200,
-  DIAMOND = 300,
-  EMERALD = 400,
-  VENOM = 401,
-  PINK = 402,
-  AMETHYST = 420,
-  SCULK = 421,
-  NETHERITE = 422,
-  RUBY = 423,
+	DEFAULT = 0,
+	IRON = 100,
+	GOLD = 200,
+	DIAMOND = 300,
+	EMERALD = 400,
+	VENOM = 401,
+	PINK = 402,
+	AMETHYST = 420,
+	SCULK = 421,
+	NETHERITE = 422,
+	RUBY = 423,
 }
 
 export class UserFooter {
-  @Field({ store: { required: false }, type: () => String })
-  public message?: string | null;
+	@Field({ store: { required: false }, type: () => String })
+	public message?: string | null;
 
-  @Field({ store: { required: false }, type: () => Number })
-  public icon?: UserLogo;
+	@Field({ store: { required: false }, type: () => Number })
+	public icon?: UserLogo;
 }

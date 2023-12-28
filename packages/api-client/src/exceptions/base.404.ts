@@ -10,24 +10,24 @@ import { ApiProperty } from "@nestjs/swagger";
 import { NotFoundException as BaseNotFoundException } from "@nestjs/common";
 
 export class NotFoundException extends BaseNotFoundException {
-  @ApiProperty()
-  public statusCode: number;
+	@ApiProperty()
+	public statusCode: number;
 
-  @ApiProperty()
-  public message: string;
+	@ApiProperty()
+	public message: string;
 
-  @ApiProperty()
-  public error: string;
+	@ApiProperty()
+	public error: string;
 
-  public constructor(objectOrError?: string | any) {
-    let error: any = { statusCode: 404, error: "Not Found" };
+	public constructor(objectOrError?: string | any) {
+		let error: any = { statusCode: 404, error: "Not Found" };
 
-    if (typeof objectOrError === "string") {
-      error.message = objectOrError;
-    } else if (typeof objectOrError === "object") {
-      error = { ...error, ...objectOrError };
-    }
+		if (typeof objectOrError === "string") {
+			error.message = objectOrError;
+		} else if (typeof objectOrError === "object") {
+			error = { ...error, ...objectOrError };
+		}
 
-    super(error);
-  }
+		super(error);
+	}
 }

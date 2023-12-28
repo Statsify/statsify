@@ -16,104 +16,80 @@ import type { CommandResolvable } from "./command.resolvable.js";
 
 @Service()
 export class CommandPoster {
-  private readonly logger = new Logger("CommandPoster");
+	private readonly logger = new Logger("CommandPoster");
 
-  public constructor(private readonly rest: RestClient) {}
+	public constructor(private readonly rest: RestClient) {}
 
-  public async post(
-    command: CommandResolvable,
-    applicationId: string,
-    guildId?: string
-  ): Promise<APIApplicationCommand>;
-  public async post(
-    commands: Map<string, CommandResolvable>,
-    applicationId: string,
-    guildId?: string
-  ): Promise<APIApplicationCommand[] | null>;
-  public async post(
-    commands: CommandResolvable | Map<string, CommandResolvable>,
-    applicationId: string,
-    guildId?: string
-  ): Promise<APIApplicationCommand | APIApplicationCommand[] | null> {
-    if (commands instanceof Map) return this.postAll(commands, applicationId, guildId);
-    return this.postSingle(commands, applicationId, guildId);
-  }
+	public async post(command: CommandResolvable, applicationId: string, guildId?: string): Promise<APIApplicationCommand>;
+	public async post(commands: Map<string, CommandResolvable>, applicationId: string, guildId?: string): Promise<APIApplicationCommand[] | null>;
+	public async post(
+		commands: CommandResolvable | Map<string, CommandResolvable>,
+		applicationId: string,
+		guildId?: string
+	): Promise<APIApplicationCommand | APIApplicationCommand[] | null> {
+		if (commands instanceof Map) return this.postAll(commands, applicationId, guildId);
+		return this.postSingle(commands, applicationId, guildId);
+	}
 
-  public async delete(id: string, applicationId: string, guildId?: string) {
-    const response = await this.rest.delete(
-      `/applications/${applicationId}/${this.getGuildRoute(guildId)}/commands/${id}`
-    );
+	public async delete(id: string, applicationId: string, guildId?: string) {
+		const response = await this.rest.delete(`/applications/${applicationId}/${this.getGuildRoute(guildId)}/commands/${id}`);
 
-    parseDiscordResponse(response);
-  }
+		parseDiscordResponse(response);
+	}
 
-  private async postAll(
-    commands: Map<string, CommandResolvable>,
-    applicationId: string,
-    guildId?: string
-  ): Promise<APIApplicationCommand[] | null> {
-    const commandsToPost = [...commands.values()];
+	private async postAll(commands: Map<string, CommandResolvable>, applicationId: string, guildId?: string): Promise<APIApplicationCommand[] | null> {
+		const commandsToPost = [...commands.values()];
 
-    if (!(await this.shouldPost(commands, guildId))) {
-      this.logger.log("No changes to commands, skipping");
-      return null;
-    }
+		if (!(await this.shouldPost(commands, guildId))) {
+			this.logger.log("No changes to commands, skipping");
+			return null;
+		}
 
-    const response = await this.rest.put(
-      `/applications/${applicationId}/${this.getGuildRoute(guildId)}/commands`,
-      commandsToPost
-    );
+		const response = await this.rest.put(`/applications/${applicationId}/${this.getGuildRoute(guildId)}/commands`, commandsToPost);
 
-    try {
-      const cmds = parseDiscordResponse<APIApplicationCommand[]>(response);
-      this.logger.log(`Successfully posted ${commandsToPost.length} commands`);
-      return cmds;
-    } catch (err) {
-      this.logger.error("Failed to post commands");
-      this.logger.error(err);
-      return null;
-    }
-  }
+		try {
+			const cmds = parseDiscordResponse<APIApplicationCommand[]>(response);
+			this.logger.log(`Successfully posted ${commandsToPost.length} commands`);
+			return cmds;
+		} catch (err) {
+			this.logger.error("Failed to post commands");
+			this.logger.error(err);
+			return null;
+		}
+	}
 
-  private async postSingle(
-    command: CommandResolvable,
-    applicationId: string,
-    guildId?: string
-  ): Promise<APIApplicationCommand> {
-    const response = await this.rest.post(
-      `/applications/${applicationId}/${this.getGuildRoute(guildId)}/commands/`,
-      command.toJSON()
-    );
+	private async postSingle(command: CommandResolvable, applicationId: string, guildId?: string): Promise<APIApplicationCommand> {
+		const response = await this.rest.post(`/applications/${applicationId}/${this.getGuildRoute(guildId)}/commands/`, command.toJSON());
 
-    return parseDiscordResponse(response);
-  }
+		return parseDiscordResponse(response);
+	}
 
-  private async shouldPost(commands: Map<string, CommandResolvable>, guildId?: string) {
-    const file = await readFile("./commands.json", "utf8").catch(() => null);
+	private async shouldPost(commands: Map<string, CommandResolvable>, guildId?: string) {
+		const file = await readFile("./commands.json", "utf8").catch(() => null);
 
-    await writeFile(
-      "./commands.json",
-      JSON.stringify({
-        guildId,
-        commands: Object.fromEntries(commands),
-      })
-    );
+		await writeFile(
+			"./commands.json",
+			JSON.stringify({
+				guildId,
+				commands: Object.fromEntries(commands),
+			})
+		);
 
-    if (!file) return true;
+		if (!file) return true;
 
-    const parsed = JSON.parse(file);
+		const parsed = JSON.parse(file);
 
-    if (parsed.guildId !== guildId) return true;
+		if (parsed.guildId !== guildId) return true;
 
-    for (const [key, value] of commands) {
-      if (!parsed.commands[key]) return true;
-      if (!value.equals(parsed.commands[key])) return true;
-    }
+		for (const [key, value] of commands) {
+			if (!parsed.commands[key]) return true;
+			if (!value.equals(parsed.commands[key])) return true;
+		}
 
-    return false;
-  }
+		return false;
+	}
 
-  private getGuildRoute(guildId?: string) {
-    return guildId ? `guilds/${guildId}` : "";
-  }
+	private getGuildRoute(guildId?: string) {
+		return guildId ? `guilds/${guildId}` : "";
+	}
 }

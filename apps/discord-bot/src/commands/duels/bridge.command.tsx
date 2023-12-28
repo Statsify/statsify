@@ -7,24 +7,17 @@
  */
 
 import { BRIDGE_MODES, BridgeModes } from "@statsify/schemas";
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { BridgeProfile } from "./bridge.profile.js";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.bridge") })
 export class BridgeCommand extends BaseHypixelCommand<BridgeModes> {
-  public constructor() {
-    super(BRIDGE_MODES);
-  }
+	public constructor() {
+		super(BRIDGE_MODES);
+	}
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<BridgeModes>
-  ): JSX.Element {
-    return <BridgeProfile {...base} mode={mode} />;
-  }
+	public getProfile(base: BaseProfileProps, { mode }: ProfileData<BridgeModes>): JSX.Element {
+		return <BridgeProfile {...base} mode={mode} />;
+	}
 }

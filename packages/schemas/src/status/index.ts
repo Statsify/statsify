@@ -12,34 +12,34 @@ import { PlayerStatus } from "#player";
 import type { APIData } from "@statsify/util";
 
 export class Status {
-  @Field()
-  public uuid: string;
+	@Field()
+	public uuid: string;
 
-  @Field()
-  public displayName: string;
+	@Field()
+	public displayName: string;
 
-  @Field()
-  public prefixName: string;
+	@Field()
+	public prefixName: string;
 
-  @Field()
-  public actions: PlayerStatus;
+	@Field()
+	public actions: PlayerStatus;
 
-  @Field()
-  public online: boolean;
+	@Field()
+	public online: boolean;
 
-  @Field()
-  public game: Game;
+	@Field()
+	public game: Game;
 
-  @Field({ store: { required: false } })
-  public mode?: string;
+	@Field({ store: { required: false } })
+	public mode?: string;
 
-  @Field({ store: { required: false } })
-  public map?: string;
+	@Field({ store: { required: false } })
+	public map?: string;
 
-  public constructor(data: APIData) {
-    this.online = data.online;
-    this.game = new Game(data.gameType ?? "LIMBO");
-    this.mode = data.mode;
-    this.map = data.map;
-  }
+	public constructor(data: APIData) {
+		this.online = data.online;
+		this.game = new Game(data.gameType ?? "LIMBO");
+		this.mode = data.mode;
+		this.map = data.map;
+	}
 }

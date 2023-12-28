@@ -14,32 +14,32 @@ import { challengeFieldData } from "../util.js";
 import type { GameChallenges } from "../game-challenges.js";
 
 export class SkyWarsChallenges implements GameChallenges {
-  @Field(challengeFieldData)
-  public feedingTheVoid: number;
+	@Field(challengeFieldData)
+	public feedingTheVoid: number;
 
-  @Field(challengeFieldData)
-  public rush: number;
+	@Field(challengeFieldData)
+	public rush: number;
 
-  @Field(challengeFieldData)
-  public ranked: number;
+	@Field(challengeFieldData)
+	public ranked: number;
 
-  @Field(challengeFieldData)
-  public enderman: number;
+	@Field(challengeFieldData)
+	public enderman: number;
 
-  @Field({
-    leaderboard: {
-      fieldName: `${removeFormatting(FormattedGame.SKYWARS)} Total`,
-      name: "Total",
-    },
-  })
-  public total: number;
+	@Field({
+		leaderboard: {
+			fieldName: `${removeFormatting(FormattedGame.SKYWARS)} Total`,
+			name: "Total",
+		},
+	})
+	public total: number;
 
-  public constructor(challenges: APIData) {
-    this.feedingTheVoid = challenges.SKYWARS__feeding_the_void_challenge;
-    this.rush = challenges.SKYWARS__rush_challenge;
-    this.ranked = challenges.SKYWARS__ranked_challenge;
-    this.enderman = challenges.SKYWARS__enderman_challenge;
+	public constructor(challenges: APIData) {
+		this.feedingTheVoid = challenges.SKYWARS__feeding_the_void_challenge;
+		this.rush = challenges.SKYWARS__rush_challenge;
+		this.ranked = challenges.SKYWARS__ranked_challenge;
+		this.enderman = challenges.SKYWARS__enderman_challenge;
 
-    this.total = add(this.feedingTheVoid, this.rush, this.ranked, this.enderman);
-  }
+		this.total = add(this.feedingTheVoid, this.rush, this.ranked, this.enderman);
+	}
 }

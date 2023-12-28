@@ -15,8 +15,8 @@ import { isObject } from "@statsify/util";
  * @returns The rounded number
  */
 export const roundTo = (n: number, precision = 2) => {
-  const factor = Math.pow(10, precision);
-  return Math.round(n * factor) / factor;
+	const factor = Math.pow(10, precision);
+	return Math.round(n * factor) / factor;
 };
 
 /**
@@ -27,22 +27,20 @@ export const roundTo = (n: number, precision = 2) => {
  * @returns The value of the fraction * the `multiply` value rounded to 2 decimal places
  */
 export const ratio = (n1 = 0, n2 = 0, multiply = 1) => {
-  const result = n1 / n2;
+	const result = n1 / n2;
 
-  if (Number.isFinite(result)) {
-    return roundTo(result * multiply);
-  } else if (n1 === 0 && n2 === 0) {
-    return 0;
-  } else {
-    return roundTo(n1 * multiply) || 0;
-  }
+	if (Number.isFinite(result)) {
+		return roundTo(result * multiply);
+	} else if (n1 === 0 && n2 === 0) {
+		return 0;
+	} else {
+		return roundTo(n1 * multiply) || 0;
+	}
 };
 
-export const add = (...args: number[]): number =>
-  args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
+export const add = (...args: number[]): number => args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
 
-export const sub = (...args: number[]): number =>
-  args.reduce((a, b) => (a ?? 0) - (b ?? 0));
+export const sub = (...args: number[]): number => args.reduce((a, b) => (a ?? 0) - (b ?? 0));
 
 /**
  *
@@ -52,15 +50,13 @@ export const sub = (...args: number[]): number =>
  * @returns A new instance of the constructor with all non object values manipulated by the `fn` function
  */
 const deep = <T>(fn: (...args: number[]) => unknown, ...args: T[]): T => {
-  const obj: Record<string, unknown> = {};
+	const obj: Record<string, unknown> = {};
 
-  for (const key in args[0]) {
-    obj[key] = isObject(args[0][key])
-      ? deep(fn, ...args.map((a) => a[key]))
-      : fn(...args.map((a) => a[key] as unknown as number));
-  }
+	for (const key in args[0]) {
+		obj[key] = isObject(args[0][key]) ? deep(fn, ...args.map((a) => a[key])) : fn(...args.map((a) => a[key] as unknown as number));
+	}
 
-  return obj as T;
+	return obj as T;
 };
 
 /**
@@ -86,44 +82,47 @@ export const deepAdd = <T>(...args: T[]): T => deep(add, ...args);
 export const deepSub = <T>(...args: T[]): T => deep(sub, ...args);
 
 if (import.meta.vitest) {
-  const { test, it, expect } = import.meta.vitest;
+	const { test, it, expect } = import.meta.vitest;
 
-  test("basic math", () => {
-    it("should add numbers together", () => {
-      expect(add(1, 2)).toBe(3);
-      expect(add(1, 2, 3)).toBe(6);
-      expect(add(1, 2, undefined as unknown as number)).toBe(3);
-    });
+	test("basic math", () => {
+		it("should add numbers together", () => {
+			expect(add(1, 2)).toBe(3);
+			expect(add(1, 2, 3)).toBe(6);
+			expect(add(1, 2, undefined as unknown as number)).toBe(3);
+		});
 
-    it("should subtract numbers", () => {
-      expect(sub(2, 1)).toBe(1);
-      expect(sub(1, 2)).toBe(-1);
-      expect(sub(1, 2, 3)).toBe(-4);
-      expect(sub(1, 2, undefined as unknown as number)).toBe(-1);
-    });
+		it("should subtract numbers", () => {
+			expect(sub(2, 1)).toBe(1);
+			expect(sub(1, 2)).toBe(-1);
+			expect(sub(1, 2, 3)).toBe(-4);
+			expect(sub(1, 2, undefined as unknown as number)).toBe(-1);
+		});
 
-    it("should calculate ratios", () => {
-      expect(ratio(1, 2)).toBe(0.5);
-      expect(ratio(1, 3)).toBe(0.33);
-      expect(ratio(1, undefined)).toBe(1);
-      expect(ratio(1, 0)).toBe(1);
-      expect(ratio(Number.NaN, 1)).toBe(0);
-    });
-  });
+		it("should calculate ratios", () => {
+			expect(ratio(1, 2)).toBe(0.5);
+			expect(ratio(1, 3)).toBe(0.33);
+			expect(ratio(1, undefined)).toBe(1);
+			expect(ratio(1, 0)).toBe(1);
+			expect(ratio(Number.NaN, 1)).toBe(0);
+		});
+	});
 
-  test("math with classes", () => {
-    class TestClass {
-      public constructor(public a: number, public b: number) {}
-    }
+	test("math with classes", () => {
+		class TestClass {
+			public constructor(
+				public a: number,
+				public b: number
+			) {}
+		}
 
-    const a = new TestClass(1, 2);
-    const b = new TestClass(1, 2);
-    it("should add numbers together", () => {
-      expect(deepAdd(a, b)).toMatchObject(new TestClass(2, 4));
-    });
+		const a = new TestClass(1, 2);
+		const b = new TestClass(1, 2);
+		it("should add numbers together", () => {
+			expect(deepAdd(a, b)).toMatchObject(new TestClass(2, 4));
+		});
 
-    it("should subtract numbers", () => {
-      expect(deepSub(a, b)).toMatchObject(new TestClass(0, 0));
-    });
-  });
+		it("should subtract numbers", () => {
+			expect(deepSub(a, b)).toMatchObject(new TestClass(0, 0));
+		});
+	});
 }

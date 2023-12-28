@@ -14,28 +14,28 @@ import { challengeFieldData } from "../util.js";
 import type { GameChallenges } from "../game-challenges.js";
 
 export class WoolWarsChallenges implements GameChallenges {
-  @Field(challengeFieldData)
-  public flawless: number;
+	@Field(challengeFieldData)
+	public flawless: number;
 
-  @Field(challengeFieldData)
-  public builder: number;
+	@Field(challengeFieldData)
+	public builder: number;
 
-  @Field(challengeFieldData)
-  public mercilessKiller: number;
+	@Field(challengeFieldData)
+	public mercilessKiller: number;
 
-  @Field({
-    leaderboard: {
-      fieldName: `${removeFormatting(FormattedGame.WOOLWARS)} Total`,
-      name: "Total",
-    },
-  })
-  public total: number;
+	@Field({
+		leaderboard: {
+			fieldName: `${removeFormatting(FormattedGame.WOOLWARS)} Total`,
+			name: "Total",
+		},
+	})
+	public total: number;
 
-  public constructor(challenges: APIData) {
-    this.flawless = challenges.WOOL_GAMES__flawless_challenge;
-    this.builder = challenges.WOOL_GAMES__builder_challenge;
-    this.mercilessKiller = challenges.WOOL_GAMES__merciless_killer_challenge;
+	public constructor(challenges: APIData) {
+		this.flawless = challenges.WOOL_GAMES__flawless_challenge;
+		this.builder = challenges.WOOL_GAMES__builder_challenge;
+		this.mercilessKiller = challenges.WOOL_GAMES__merciless_killer_challenge;
 
-    this.total = add(this.flawless, this.builder, this.mercilessKiller);
-  }
+		this.total = add(this.flawless, this.builder, this.mercilessKiller);
+	}
 }

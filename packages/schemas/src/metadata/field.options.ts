@@ -8,41 +8,31 @@
 
 import type { BasePropOptions } from "@typegoose/typegoose/lib/types.js";
 import type { Constructor } from "@statsify/util";
-import type {
-  HistoricalEnabledMetadata,
-  LeaderboardEnabledMetadata,
-  StoreMetadata,
-} from "./metadata.interface.js";
+import type { HistoricalEnabledMetadata, LeaderboardEnabledMetadata, StoreMetadata } from "./metadata.interface.js";
 
 export type TypeOptions = () => Constructor | [Constructor];
-export type LeaderboardOptions = Omit<
-  BasePropOptions | Partial<LeaderboardEnabledMetadata>,
-  "default"
->;
+export type LeaderboardOptions = Omit<BasePropOptions | Partial<LeaderboardEnabledMetadata>, "default">;
 
-export type HistoricalOptions = Omit<
-  BasePropOptions | Partial<HistoricalEnabledMetadata>,
-  "default"
->;
+export type HistoricalOptions = Omit<BasePropOptions | Partial<HistoricalEnabledMetadata>, "default">;
 
 export type StoreOptions = Partial<StoreMetadata>;
 
 export type DocOptions = Partial<{
-  hide: boolean;
-  examples: string[];
-  enum: any[];
-  enumName: string;
-  description: string;
-  deprecated: boolean;
-  min: number;
-  max: number;
+	hide: boolean;
+	examples: string[];
+	enum: any[];
+	enumName: string;
+	description: string;
+	deprecated: boolean;
+	min: number;
+	max: number;
 }>;
 
 export interface FieldOptions {
-  type?: TypeOptions;
-  leaderboard?: LeaderboardOptions;
-  historical?: HistoricalOptions;
-  store?: StoreOptions;
-  docs?: DocOptions;
-  mongo?: Partial<BasePropOptions>;
+	type?: TypeOptions;
+	leaderboard?: LeaderboardOptions;
+	historical?: HistoricalOptions;
+	store?: StoreOptions;
+	docs?: DocOptions;
+	mongo?: Partial<BasePropOptions>;
 }

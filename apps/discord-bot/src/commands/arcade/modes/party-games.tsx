@@ -11,16 +11,16 @@ import { PartyGames } from "@statsify/schemas";
 import { Table } from "#components";
 
 interface PartyGamesTableProps {
-  stats: PartyGames;
-  t: LocalizeFunction;
+	stats: PartyGames;
+	t: LocalizeFunction;
 }
 
 export const PartyGamesTable = ({ stats, t }: PartyGamesTableProps) => (
-  <Table.table>
-    <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-      <Table.td title={t("stats.roundWins")} value={t(stats.roundsWon)} color="§e" />
-      <Table.td title={t("stats.starsEarned")} value={t(stats.starsEarned)} color="§6" />
-    </Table.tr>
-  </Table.table>
+	<Table.table>
+		<Table.tr>
+			<Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+			<Table.td title={t("stats.roundWins")} value={t(stats.roundsWon)} color="§e" />
+			<Table.td title={t("stats.starsEarned")} value={t(stats.starsEarned)} color="§6" />
+		</Table.tr>
+	</Table.table>
 );

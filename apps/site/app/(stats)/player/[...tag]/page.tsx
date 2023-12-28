@@ -6,4 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export default function Page() {}
+export default function Page() {
+	return <div>Goodbye</div>;
+}

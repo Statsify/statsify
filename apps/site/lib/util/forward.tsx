@@ -7,39 +7,39 @@
  */
 
 import {
-  type Component,
-  type ComponentProps,
-  type ElementRef,
-  type ForwardRefExoticComponent,
-  type ForwardRefRenderFunction,
-  type ReactNode,
-  forwardRef,
+	type Component,
+	type ComponentProps,
+	type ElementRef,
+	type ForwardRefExoticComponent,
+	type ForwardRefRenderFunction,
+	type ReactNode,
+	forwardRef,
 } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function forward<
 	T extends
 		| ForwardRefExoticComponent<any>
-		| (new (props: any) => Component<any>)
-		| ((props: any, context?: any) => ReactNode)
+		| (new (properties: any) => Component<any>)
+		| ((properties: any, context?: any) => ReactNode)
 		| keyof JSX.IntrinsicElements,
 	P = {},
 >(render: ForwardRefRenderFunction<ElementRef<T>, ComponentProps<T> & P>) {
-  return forwardRef(render);
+	return forwardRef(render);
 }
 
 export function withDefault<
 	T extends
 		| ForwardRefExoticComponent<any>
-		| (new (props: any) => Component<any>)
-		| ((props: any, context?: any) => ReactNode)
+		| (new (properties: any) => Component<any>)
+		| ((properties: any, context?: any) => ReactNode)
 		| keyof JSX.IntrinsicElements,
 >(displayName: string, Component: T, defaultProps: Partial<ComponentProps<T>>) {
-  const forwardedComponent = forward((props, ref) => (
-    <Component {...props} {...defaultProps} className={twMerge(defaultProps.className, props.className)} ref={ref} />
-  ));
+	const forwardedComponent = forward((properties, reference) => (
+		<Component {...properties} {...defaultProps} className={twMerge(defaultProps.className, properties.className)} ref={reference} />
+	));
 
-  forwardedComponent.displayName = displayName;
+	forwardedComponent.displayName = displayName;
 
-  return forwardedComponent;
+	return forwardedComponent;
 }

@@ -18,17 +18,14 @@ const IGNORED_WORKSPACES = ["site", "scripts"];
 
 const logger = new Logger();
 
-const workspaces = [
-  ...(await fetchWorkspaces("apps", IGNORED_WORKSPACES)),
-  ...(await fetchWorkspaces("packages", IGNORED_WORKSPACES)),
-];
+const workspaces = [...(await fetchWorkspaces("apps", IGNORED_WORKSPACES)), ...(await fetchWorkspaces("packages", IGNORED_WORKSPACES))];
 
 /**
  *
  * @param {string} path
  */
 function getWorkspaceFromPath(path) {
-  return path.replace(ROOT, "").split("/")[1];
+	return path.replace(ROOT, "").split("/")[1];
 }
 
 /**
@@ -41,26 +38,20 @@ const configs = new Map();
  * @param {string} workspace The workspace
  */
 async function fetchConfig(workspace) {
-  const configPath = join(workspace, ".swcrc");
-  if (existsSync(configPath)) return configPath;
-  return join(ROOT, ".swcrc");
+	const configPath = join(workspace, ".swcrc");
+	if (existsSync(configPath)) return configPath;
+	return join(ROOT, ".swcrc");
 }
 
-await Promise.all(
-  workspaces.map((workspace) =>
-    fetchConfig(workspace).then((config) =>
-      configs.set(getWorkspaceFromPath(workspace), config)
-    )
-  )
-);
+await Promise.all(workspaces.map((workspace) => fetchConfig(workspace).then((config) => configs.set(getWorkspaceFromPath(workspace), config))));
 
 /**
  *
  * @param {string} path
  */
 function shouldProcess(path) {
-  if (!FILE_ENDINGS.some((ending) => path.endsWith(ending))) return false;
-  return true;
+	if (!FILE_ENDINGS.some((ending) => path.endsWith(ending))) return false;
+	return true;
 }
 
 /**
@@ -68,66 +59,66 @@ function shouldProcess(path) {
  * @param {string} path
  */
 async function handleFile(path) {
-  if (!shouldProcess(path)) return;
+	if (!shouldProcess(path)) return;
 
-  const workspace = getWorkspaceFromPath(path);
-  const configFile = configs.get(workspace);
+	const workspace = getWorkspaceFromPath(path);
+	const configFile = configs.get(workspace);
 
-  if (!configFile) return;
+	if (!configFile) return;
 
-  try {
-    let { code, map } = await transformFile(path, { configFile });
+	try {
+		let { code, map } = await transformFile(path, { configFile });
 
-    const srcFileName = basename(path);
-    const distFileName = srcFileName.replace(FILE_ENDING_REGEX, ".js");
-    const distFolder = path.replace("src", "dist").replace(srcFileName, "");
+		const srcFileName = basename(path);
+		const distFileName = srcFileName.replace(FILE_ENDING_REGEX, ".js");
+		const distFolder = path.replace("src", "dist").replace(srcFileName, "");
 
-    let files = [mkdir(distFolder, { recursive: true })];
+		let files = [mkdir(distFolder, { recursive: true })];
 
-    if (map) {
-      const mapFileName = `${distFileName}.map`;
-      code += `\n//# sourceMappingURL=${mapFileName}`;
-      files.push(writeFile(join(distFolder, mapFileName), map));
-    }
+		if (map) {
+			const mapFileName = `${distFileName}.map`;
+			code += `\n//# sourceMappingURL=${mapFileName}`;
+			files.push(writeFile(join(distFolder, mapFileName), map));
+		}
 
-    files.push(writeFile(join(distFolder, distFileName), code));
+		files.push(writeFile(join(distFolder, distFileName), code));
 
-    await Promise.all(files);
+		await Promise.all(files);
 
-    logger.setContext(workspace);
-    logger.log(`COMPILE ${srcFileName} -> ${distFileName}`);
-  } catch (err) {
-    console.error(err);
-  }
+		logger.setContext(workspace);
+		logger.log(`COMPILE ${srcFileName} -> ${distFileName}`);
+	} catch (err) {
+		console.error(err);
+	}
 }
 
 async function deleteFile(path) {
-  if (!shouldProcess(path)) return;
+	if (!shouldProcess(path)) return;
 
-  const workspace = getWorkspaceFromPath(path);
+	const workspace = getWorkspaceFromPath(path);
 
-  const srcFileName = basename(path);
-  const distFileName = srcFileName.replace(FILE_ENDING_REGEX, ".js");
-  const distPath = path.replace("src", "dist").replace(srcFileName, distFileName);
+	const srcFileName = basename(path);
+	const distFileName = srcFileName.replace(FILE_ENDING_REGEX, ".js");
+	const distPath = path.replace("src", "dist").replace(srcFileName, distFileName);
 
-  await rm(distPath, { force: true });
+	await rm(distPath, { force: true });
 
-  logger.setContext(workspace);
-  logger.error(`DELETE ${srcFileName} -> ${distFileName}`);
+	logger.setContext(workspace);
+	logger.error(`DELETE ${srcFileName} -> ${distFileName}`);
 }
 
 const watcher = watch(
-  workspaces.map((workspace) => join(workspace, "/src/**/*")),
-  {
-    ignored: [/node_modules/],
-    ignoreInitial: true,
-    usePolling: process.env.USE_POLLING == "true",
-  }
+	workspaces.map((workspace) => join(workspace, "/src/**/*")),
+	{
+		ignored: [/node_modules/],
+		ignoreInitial: true,
+		usePolling: process.env.USE_POLLING == "true",
+	}
 );
 
 watcher.on("ready", () => {
-  logger.setContext("build-watch");
-  logger.log("Ready");
+	logger.setContext("build-watch");
+	logger.log("Ready");
 });
 
 watcher.on("change", handleFile);

@@ -12,8 +12,8 @@ import { TableRow } from "./TableRow.js";
 import { TableSeparator } from "./TableSeparator.js";
 
 export const Table = {
-  table: TableComponent,
-  td: TableData,
-  tr: TableRow,
-  ts: TableSeparator,
+	table: TableComponent,
+	td: TableData,
+	tr: TableRow,
+	ts: TableSeparator,
 };

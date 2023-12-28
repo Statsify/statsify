@@ -6,74 +6,58 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  AbstractCommandListener,
-  CommandContext,
-  CommandResolvable,
-  Interaction,
-} from "@statsify/discord";
+import { AbstractCommandListener, CommandContext, CommandResolvable, Interaction } from "@statsify/discord";
 import { ApiService } from "@statsify/api-client";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { config } from "@statsify/util";
 
 export class CommandListener extends AbstractCommandListener {
-  private readonly apiService: ApiService;
-  private static instance: CommandListener;
+	private readonly apiService: ApiService;
+	private static instance: CommandListener;
 
-  private constructor(
-    client: WebsocketShard,
-    rest: RestClient,
-    commands: Map<string, CommandResolvable>
-  ) {
-    super(client, rest, commands, config("supportBot.applicationId"));
+	private constructor(client: WebsocketShard, rest: RestClient, commands: Map<string, CommandResolvable>) {
+		super(client, rest, commands, config("supportBot.applicationId"));
 
-    this.apiService = new ApiService(config("apiClient.route"), config("apiClient.key"));
-  }
+		this.apiService = new ApiService(config("apiClient.route"), config("apiClient.key"));
+	}
 
-  public addCommand(command: CommandResolvable) {
-    this.commands.set(command.name, command);
-  }
+	public addCommand(command: CommandResolvable) {
+		this.commands.set(command.name, command);
+	}
 
-  public removeCommand(name: string) {
-    this.commands.delete(name);
-  }
+	public removeCommand(name: string) {
+		this.commands.delete(name);
+	}
 
-  protected async onCommand(interaction: Interaction): Promise<void> {
-    const parentData = interaction.getData();
+	protected async onCommand(interaction: Interaction): Promise<void> {
+		const parentData = interaction.getData();
 
-    if (interaction.getGuildId() !== config("supportBot.guild")) return;
+		if (interaction.getGuildId() !== config("supportBot.guild")) return;
 
-    const parentCommand = this.commands.get(parentData.name)!;
-    if (!parentCommand) return;
+		const parentCommand = this.commands.get(parentData.name)!;
+		if (!parentCommand) return;
 
-    const id = interaction.getUserId();
+		const id = interaction.getUserId();
 
-    const [command, data, commandName] = this.getCommandAndData(
-      parentCommand,
-      parentData
-    );
+		const [command, data, commandName] = this.getCommandAndData(parentCommand, parentData);
 
-    const user = await this.apiService.getUser(id);
+		const user = await this.apiService.getUser(id);
 
-    const context = new CommandContext(this, interaction, data);
-    context.setUser(user);
+		const context = new CommandContext(this, interaction, data);
+		context.setUser(user);
 
-    const preconditions = [this.tierPrecondition.bind(this, command, user)];
+		const preconditions = [this.tierPrecondition.bind(this, command, user)];
 
-    return this.executeCommand({ commandName, command, context, preconditions });
-  }
+		return this.executeCommand({ commandName, command, context, preconditions });
+	}
 
-  public static create(
-    client: WebsocketShard,
-    rest: RestClient,
-    commands: Map<string, CommandResolvable>
-  ) {
-    this.instance = new CommandListener(client, rest, commands);
-    return this.instance;
-  }
+	public static create(client: WebsocketShard, rest: RestClient, commands: Map<string, CommandResolvable>) {
+		this.instance = new CommandListener(client, rest, commands);
+		return this.instance;
+	}
 
-  public static getInstance() {
-    if (!this.instance) throw new Error("CommandListener has not been initialized");
-    return this.instance;
-  }
+	public static getInstance() {
+		if (!this.instance) throw new Error("CommandListener has not been initialized");
+		return this.instance;
+	}
 }

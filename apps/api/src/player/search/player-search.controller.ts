@@ -16,18 +16,18 @@ import { PlayerSearchService } from "./player-search.service.js";
 @Controller("/player/search")
 @ApiTags("Player")
 export class PlayerSearchController {
-  public constructor(private readonly playerSearchService: PlayerSearchService) {}
+	public constructor(private readonly playerSearchService: PlayerSearchService) {}
 
-  @ApiOperation({ summary: "Get a Fuzzy Searched List of Players" })
-  @ApiOkResponse({ type: GetPlayerSearchResponse })
-  @Auth({ weight: 0 })
-  @Get()
-  public async getPlayers(@Query() { query }: PlayerSearchDto) {
-    const players = await this.playerSearchService.get(query);
+	@ApiOperation({ summary: "Get a Fuzzy Searched List of Players" })
+	@ApiOkResponse({ type: GetPlayerSearchResponse })
+	@Auth({ weight: 0 })
+	@Get()
+	public async getPlayers(@Query() { query }: PlayerSearchDto) {
+		const players = await this.playerSearchService.get(query);
 
-    return {
-      success: true,
-      players,
-    };
-  }
+		return {
+			success: true,
+			players,
+		};
+	}
 }

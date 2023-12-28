@@ -11,64 +11,64 @@ import { getBackground } from "@statsify/assets";
 import { loadImage } from "@statsify/rendering";
 
 export interface Server {
-  ip: string;
-  port: number;
-  debug: {
-    ping: boolean;
-    query: boolean;
-    srv: boolean;
-    querymismatch: boolean;
-    cnameinsrv: boolean;
-    animatedmotd: boolean;
-    cachetime: number;
-    apiversion: number;
-  };
-  motd: {
-    raw: string[];
-    clean: string[];
-    html: string[];
-  };
-  players: {
-    online: number;
-    max: number;
-  };
-  version?: string;
-  online: boolean;
-  protocol: number;
-  hostname: string;
-  name: string;
-  icon: string;
-  ping: number;
-  mapping?: ServerMappingsServer;
+	ip: string;
+	port: number;
+	debug: {
+		ping: boolean;
+		query: boolean;
+		srv: boolean;
+		querymismatch: boolean;
+		cnameinsrv: boolean;
+		animatedmotd: boolean;
+		cachetime: number;
+		apiversion: number;
+	};
+	motd: {
+		raw: string[];
+		clean: string[];
+		html: string[];
+	};
+	players: {
+		online: number;
+		max: number;
+	};
+	version?: string;
+	online: boolean;
+	protocol: number;
+	hostname: string;
+	name: string;
+	icon: string;
+	ping: number;
+	mapping?: ServerMappingsServer;
 }
 
 export interface ServerMappingsServer {
-  id: string;
-  name: string;
-  addresses: string[];
-  primaryAddress: string;
-  inactive: boolean;
-  enriched: boolean;
+	id: string;
+	name: string;
+	addresses: string[];
+	primaryAddress: string;
+	inactive: boolean;
+	enriched: boolean;
 }
 
 const SERVER_MAPPINGS_CDN_URL = "https://servermappings.lunarclientcdn.com";
 
 export async function getServerMappings() {
-  const servers = await  axios
-    .get<ServerMappingsServer[]>(`${SERVER_MAPPINGS_CDN_URL}/servers.json`)
-    .then((res) => res.data)
-    .catch(() => []);
+	const servers = await axios
+		.get<ServerMappingsServer[]>(`${SERVER_MAPPINGS_CDN_URL}/servers.json`)
+		.then((res) => res.data)
+		.catch(() => []);
 
-  return  servers.filter((s) => !s.inactive && s.enriched);
+	return servers.filter((s) => !s.inactive && s.enriched);
 }
 
 export async function getServerBackground(server?: ServerMappingsServer) {
-  if (!server?.id || !server?.enriched) return getBackground("minecraft", "overall");
+	if (!server?.id || !server?.enriched) return getBackground("minecraft", "overall");
 
-  try {
-    const background = await loadImage(`${SERVER_MAPPINGS_CDN_URL}/backgrounds/${server.id}.png`);
-    return background;
-  } catch {
-    return getBackground("minecraft", "overall");
-  }
+	try {
+		const background = await loadImage(`${SERVER_MAPPINGS_CDN_URL}/backgrounds/${server.id}.png`);
+		return background;
+	} catch {
+		return getBackground("minecraft", "overall");
+	}
 }

@@ -11,9 +11,9 @@ import { HistoricalHeader } from "./Historical-Header.js";
 import { HistoricalProgression } from "./Historical-Progression.js";
 
 export const Historical = {
-  header: HistoricalHeader,
-  progression: HistoricalProgression,
-  exclude: HistoricalExclude,
+	header: HistoricalHeader,
+	progression: HistoricalProgression,
+	exclude: HistoricalExclude,
 };
 
 export type { HistoricalTimeData } from "./Historical-Header.js";

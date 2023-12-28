@@ -6,39 +6,58 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { ReactNode } from "react";
 import { forward } from "~/lib/util/forward";
 import { twMerge } from "tailwind-merge";
+import { usePathname } from "next/navigation";
 
-export interface NavbarProps {
-  className?: string;
+export interface NavbarProperties {
+	className?: string;
+	children?: ReactNode;
 }
 
 // TODO: fix ring
-export function Navbar({ className }: NavbarProps) {
-  return <nav className={twMerge("bg-black/60 shadow-md p-4 flex justify-between items-center text-white w-full", className)}>
-    <div className="font-bold text-4xl flex gap-3 items-center">
-      <Image src="/logo.png" width={48} height={48} alt="Statsify Logo" unoptimized />
-      Statsify
-    </div>
-    <div className="flex flex-row gap-6 items-center">
-      <NavbarItem href="/premium" active>Premium</NavbarItem>
-      <NavbarItem href="/player">Discord</NavbarItem>
-      <NavbarItem href="/player">Bot</NavbarItem>
-      { /* TODO: impl Account Dropdown */ }
-      <Link href="/player">
-        <div className="w-12 h-12 rounded-md bg-red"/>
-      </Link>
-    </div>
-  </nav>;
+export function Navbar({ className, children }: NavbarProperties) {
+	const path = usePathname();
+
+	return (
+		<nav className={twMerge("bg-black/60 shadow-md p-4 flex items-center text-white w-full gap-8 md:gap-0", className)}>
+			<Link className="flex items-center gap-3 text-4xl font-bold md:w-1/4" href="/">
+				<Image src="/logo.png" width={48} height={48} alt="Statsify Logo" unoptimized />
+				<p className="hidden md:block">Statsify</p>
+			</Link>
+			<div className="flex grow justify-center md:w-1/2 md:grow-0">{children}</div>
+			<div className="hidden flex-row items-center justify-end md:flex md:w-1/4 md:gap-3 lg:gap-6">
+				<NavbarItem href="/premium" path={path}>
+					Premium
+				</NavbarItem>
+				<NavbarItem href="/discord" path={path}>
+					Discord
+				</NavbarItem>
+				<NavbarItem href="/bot" path={path}>
+					Bot
+				</NavbarItem>
+				{/* TODO: impl Account Dropdown */}
+				<Link href="/player">
+					<div className="h-12 w-12 rounded-md bg-red" />
+				</Link>
+			</div>
+		</nav>
+	);
 }
 
-const NavbarItem = forward<typeof Link, { active?: boolean }>(function NavbarItem({active=false,...props}, ref) {
-  return <Link
-    {...props}
-    ref={ref}
-    data-active={active}
-    className="text-lg font-semibold transition duration-[200ms] hover:bg-white/25 px-4 py-2 rounded-xl ring-white ring-offset-4 outline-white/50 outline-offset-[-2px] data-[active=true]:bg-white/30 outline-2 data-[active=true]:outline focus-visible:ring"
-  />;
+const NavbarItem = forward<typeof Link, { path: string }>(function NavbarItem({ path, href, ...properties }, reference) {
+	return (
+		<Link
+			{...properties}
+			ref={reference}
+			href={href}
+			data-active={href === path}
+			className="rounded-xl py-2 text-lg font-semibold outline-2 outline-offset-[-2px] outline-white/50 transition duration-[200ms] hover:bg-white/25 focus-visible:underline data-[active=true]:bg-white/30 data-[active=true]:outline md:px-2 lg:px-4"
+		/>
+	);
 });

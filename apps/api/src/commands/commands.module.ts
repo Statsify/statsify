@@ -13,8 +13,8 @@ import { Module } from "@nestjs/common";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
-  imports: [TypegooseModule.forFeature([Commands])],
-  controllers: [CommandsController],
-  providers: [CommandsService],
+	imports: [TypegooseModule.forFeature([Commands])],
+	controllers: [CommandsController],
+	providers: [CommandsService],
 })
 export class CommandsModule {}

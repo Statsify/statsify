@@ -17,83 +17,79 @@ import type { APIData } from "@statsify/util";
 
 const formatLevel = (level: number | string) => `§6[${level}✫]`;
 
-export const UHC_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo", hypixel: "SOLO" },
-  { api: "teams", hypixel: "TEAMS" },
-]);
+export const UHC_MODES = new GameModes([{ api: "overall" }, { api: "solo", hypixel: "SOLO" }, { api: "teams", hypixel: "TEAMS" }]);
 
 const prefixes: GamePrefix[] = titleScores.map((level) => ({
-  fmt: formatLevel,
-  req: level.req,
+	fmt: formatLevel,
+	req: level.req,
 }));
 
 export type UHCModes = IGameModes<typeof UHC_MODES>;
 
 export class UHC {
-  @Field()
-  public overall: UHCMode;
+	@Field()
+	public overall: UHCMode;
 
-  @Field()
-  public solo: UHCMode;
+	@Field()
+	public solo: UHCMode;
 
-  @Field()
-  public teams: UHCMode;
+	@Field()
+	public teams: UHCMode;
 
-  @Field({ historical: { enabled: false } })
-  public coins: number;
+	@Field({ historical: { enabled: false } })
+	public coins: number;
 
-  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
-  public level: number;
+	@Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+	public level: number;
 
-  @Field({ store: { default: formatLevel(1) } })
-  public levelFormatted: string;
+	@Field({ store: { default: formatLevel(1) } })
+	public levelFormatted: string;
 
-  @Field()
-  public nextLevelFormatted: string;
+	@Field()
+	public nextLevelFormatted: string;
 
-  @Field()
-  public progression: Progression;
+	@Field()
+	public progression: Progression;
 
-  @Field()
-  public score: number;
+	@Field()
+	public score: number;
 
-  @Field({ store: { default: "none" } })
-  public kit: string;
+	@Field({ store: { default: "none" } })
+	public kit: string;
 
-  @Field({ store: { default: titleScores[0].title } })
-  public title: string;
+	@Field({ store: { default: titleScores[0].title } })
+	public title: string;
 
-  public constructor(data: APIData) {
-    this.coins = data.coins;
-    this.score = data.score;
+	public constructor(data: APIData) {
+		this.coins = data.coins;
+		this.score = data.score;
 
-    this.kit = data.equippedKit ?? "none";
+		this.kit = data.equippedKit ?? "none";
 
-    const index = getLevelIndex(this.score);
+		const index = getLevelIndex(this.score);
 
-    this.progression = createPrefixProgression(prefixes, this.score);
+		this.progression = createPrefixProgression(prefixes, this.score);
 
-    this.level = index + 1;
-    this.levelFormatted = formatLevel(this.level);
-    this.nextLevelFormatted = formatLevel(Math.floor(this.level) + 1);
-    this.title = titleScores[index].title;
+		this.level = index + 1;
+		this.levelFormatted = formatLevel(this.level);
+		this.nextLevelFormatted = formatLevel(Math.floor(this.level) + 1);
+		this.title = titleScores[index].title;
 
-    this.solo = new UHCMode(data, "solo");
-    this.teams = new UHCMode(data, "");
+		this.solo = new UHCMode(data, "solo");
+		this.teams = new UHCMode(data, "");
 
-    this.overall = deepAdd(
-      this.solo,
-      this.teams,
-      new UHCMode(data, "no_diamonds"),
-      new UHCMode(data, "vanilla_doubles"),
-      new UHCMode(data, "brawl"),
-      new UHCMode(data, "solo_brawl"),
-      new UHCMode(data, "duo_brawl")
-    );
+		this.overall = deepAdd(
+			this.solo,
+			this.teams,
+			new UHCMode(data, "no_diamonds"),
+			new UHCMode(data, "vanilla_doubles"),
+			new UHCMode(data, "brawl"),
+			new UHCMode(data, "solo_brawl"),
+			new UHCMode(data, "duo_brawl")
+		);
 
-    UHCMode.applyRatios(this.overall);
-  }
+		UHCMode.applyRatios(this.overall);
+	}
 }
 
 export * from "./mode.js";

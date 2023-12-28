@@ -12,68 +12,64 @@ import type { Progression } from "@statsify/schemas";
 export type ProgressFunction = (pecentage: number) => string;
 
 const xpBar: ProgressFunction = (percentage) => {
-  const max = 10;
-  const count = Math.ceil(max * percentage);
+	const max = 10;
+	const count = Math.ceil(max * percentage);
 
-  return `§r§8[§b${"■".repeat(count)}§7${"■".repeat(max - count)}§8]`;
+	return `§r§8[§b${"■".repeat(count)}§7${"■".repeat(max - count)}§8]`;
 };
 
 export const lineXpBar =
-  (color: string): ProgressFunction =>
-    (percentage: number) => {
-      const max = 40;
-      const count = Math.ceil(max * percentage);
-      return `§8[${color}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]§r`;
-    };
+	(color: string): ProgressFunction =>
+	(percentage: number) => {
+		const max = 40;
+		const count = Math.ceil(max * percentage);
+		return `§8[${color}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]§r`;
+	};
 
 interface BaseFormatProgressionOptions {
-  t: LocalizeFunction;
-  progression: Progression;
-  currentLevel: string;
-  nextLevel: string;
-  showLevel?: boolean;
-  renderXp?: ProgressFunction;
+	t: LocalizeFunction;
+	progression: Progression;
+	currentLevel: string;
+	nextLevel: string;
+	showLevel?: boolean;
+	renderXp?: ProgressFunction;
 }
 
 interface LabeledFormatProgressionOptions extends BaseFormatProgressionOptions {
-  label: string;
-  showProgress?: true;
+	label: string;
+	showProgress?: true;
 }
 
 interface UnlabeledFormatProgressionOptions extends BaseFormatProgressionOptions {
-  label?: never;
-  showProgress: false;
+	label?: never;
+	showProgress: false;
 }
 
-export type FormatProgressionOptions =
-  | LabeledFormatProgressionOptions
-  | UnlabeledFormatProgressionOptions;
+export type FormatProgressionOptions = LabeledFormatProgressionOptions | UnlabeledFormatProgressionOptions;
 
 export const formatProgression = ({
-  t,
-  label,
-  progression,
-  currentLevel,
-  nextLevel,
-  showLevel = true,
-  showProgress = true,
-  renderXp = xpBar,
+	t,
+	label,
+	progression,
+	currentLevel,
+	nextLevel,
+	showLevel = true,
+	showProgress = true,
+	renderXp = xpBar,
 }: FormatProgressionOptions) => {
-  let output = "§^2^";
+	let output = "§^2^";
 
-  if (!progression.max) {
-    if (showProgress) output += `§7${label}: `;
-    output += "§r§b§lMAXED§r";
-    return output;
-  }
+	if (!progression.max) {
+		if (showProgress) output += `§7${label}: `;
+		output += "§r§b§lMAXED§r";
+		return output;
+	}
 
-  if (showProgress)
-    output += `§7${label}: §b${t(progression.current)}§7/§a${t(progression.max)}`;
+	if (showProgress) output += `§7${label}: §b${t(progression.current)}§7/§a${t(progression.max)}`;
 
-  if (showProgress && showLevel) output += "\n";
+	if (showProgress && showLevel) output += "\n";
 
-  if (showLevel)
-    output += `${currentLevel} ${renderXp(progression.percent)} ${nextLevel}`;
+	if (showLevel) output += `${currentLevel} ${renderXp(progression.percent)} ${nextLevel}`;
 
-  return output;
+	return output;
 };

@@ -7,24 +7,17 @@
  */
 
 import { BEDWARS_MODES, BedWarsModes } from "@statsify/schemas";
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { BedWarsProfile } from "./bedwars.profile.js";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.bedwars") })
 export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
-  public constructor() {
-    super(BEDWARS_MODES);
-  }
+	public constructor() {
+		super(BEDWARS_MODES);
+	}
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<BedWarsModes, never>
-  ): JSX.Element {
-    return <BedWarsProfile {...base} mode={mode} />;
-  }
+	public getProfile(base: BaseProfileProps, { mode }: ProfileData<BedWarsModes, never>): JSX.Element {
+		return <BedWarsProfile {...base} mode={mode} />;
+	}
 }

@@ -11,14 +11,14 @@ import { PixelPainters } from "@statsify/schemas";
 import { Table } from "#components";
 
 interface PixelPaintersTableProps {
-  stats: PixelPainters;
-  t: LocalizeFunction;
+	stats: PixelPainters;
+	t: LocalizeFunction;
 }
 
 export const PixelPaintersTable = ({ stats, t }: PixelPaintersTableProps) => (
-  <Table.table>
-    <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-    </Table.tr>
-  </Table.table>
+	<Table.table>
+		<Table.tr>
+			<Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+		</Table.tr>
+	</Table.table>
 );

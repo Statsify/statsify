@@ -10,13 +10,13 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const SmashHeroesQuests = createGameModeQuests({
-  game: FormattedGame.SMASH_HEROES,
-  fieldPrefix: "supersmash",
-  daily: [
-    { field: "solo_win", propertyKey: "soloWin" },
-    { field: "solo_kills", propertyKey: "soloKills" },
-    { field: "team_win", propertyKey: "teamWin" },
-    { field: "team_kills", propertyKey: "teamKills" },
-  ],
-  weekly: [{ field: "weekly_kills", propertyKey: "weeklyKills" }],
+	game: FormattedGame.SMASH_HEROES,
+	fieldPrefix: "supersmash",
+	daily: [
+		{ field: "solo_win", propertyKey: "soloWin" },
+		{ field: "solo_kills", propertyKey: "soloKills" },
+		{ field: "team_win", propertyKey: "teamWin" },
+		{ field: "team_kills", propertyKey: "teamKills" },
+	],
+	weekly: [{ field: "weekly_kills", propertyKey: "weeklyKills" }],
 });

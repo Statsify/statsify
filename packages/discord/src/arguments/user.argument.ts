@@ -11,11 +11,14 @@ import { ApplicationCommandOptionType } from "discord-api-types/v10";
 import { LocalizationString } from "#messages";
 
 export class UserArgument extends AbstractArgument {
-  public description: LocalizationString;
-  public type = ApplicationCommandOptionType.User;
+	public description: LocalizationString;
+	public type = ApplicationCommandOptionType.User;
 
-  public constructor(public name = "user", public required = true) {
-    super();
-    this.description = (t) => t("arguments.user");
-  }
+	public constructor(
+		public name = "user",
+		public required = true
+	) {
+		super();
+		this.description = (t) => t("arguments.user");
+	}
 }

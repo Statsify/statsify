@@ -9,30 +9,30 @@
 import { Field } from "#metadata";
 
 export enum UserFont {
-  DEFAULT = "default",
-  HD = "hd",
+	DEFAULT = "default",
+	HD = "hd",
 }
 
 export enum UserPalette {
-  DEFAULT = "default",
-  LIGHT = "light",
-  DARK = "dark",
-  NO_BACKGROUNDS = "no-backgrounds",
+	DEFAULT = "default",
+	LIGHT = "light",
+	DARK = "dark",
+	NO_BACKGROUNDS = "no-backgrounds",
 }
 
 export enum UserBoxes {
-  DEFAULT = "default",
-  HD = "hd",
-  UHD = "uhd",
+	DEFAULT = "default",
+	HD = "hd",
+	UHD = "uhd",
 }
 
 export class UserTheme {
-  @Field({ store: { required: false }, type: () => String })
-  public font?: UserFont;
+	@Field({ store: { required: false }, type: () => String })
+	public font?: UserFont;
 
-  @Field({ store: { required: false }, type: () => String })
-  public palette?: UserPalette;
+	@Field({ store: { required: false }, type: () => String })
+	public palette?: UserPalette;
 
-  @Field({ store: { required: false }, type: () => String })
-  public boxes?: UserBoxes;
+	@Field({ store: { required: false }, type: () => String })
+	public boxes?: UserBoxes;
 }

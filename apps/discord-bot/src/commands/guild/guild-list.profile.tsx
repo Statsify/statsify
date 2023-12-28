@@ -13,100 +13,91 @@ import { useComponentWidth } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
 
 export interface GuildListProfileProps {
-  guild: Guild;
-  t: LocalizeFunction;
-  background: Image;
-  logo: Image;
-  user: User | null;
+	guild: Guild;
+	t: LocalizeFunction;
+	background: Image;
+	logo: Image;
+	user: User | null;
 }
 
-export const GuildListProfile = ({
-  guild,
-  background,
-  logo,
-  user,
-  t,
-}: GuildListProfileProps) => {
-  // The width of each member row
-  const WIDTH = 1600;
+export const GuildListProfile = ({ guild, background, logo, user, t }: GuildListProfileProps) => {
+	// The width of each member row
+	const WIDTH = 1600;
 
-  const header = (
-    <box width="100%">
-      <text>§^4^{guild.nameFormatted}</text>
-    </box>
-  );
+	const header = (
+		<box width="100%">
+			<text>§^4^{guild.nameFormatted}</text>
+		</box>
+	);
 
-  //Hypixel does not always return all the ranks in `guild.ranks` so a special rank map is needed
-  const rankMap: Record<string, string[]> = {};
+	//Hypixel does not always return all the ranks in `guild.ranks` so a special rank map is needed
+	const rankMap: Record<string, string[]> = {};
 
-  guild.members.forEach((member) => {
-    rankMap[member.rank] = rankMap[member.rank] ?? [];
-    rankMap[member.rank].push(member.displayName ?? "ERROR");
-  });
+	guild.members.forEach((member) => {
+		rankMap[member.rank] = rankMap[member.rank] ?? [];
+		rankMap[member.rank].push(member.displayName ?? "ERROR");
+	});
 
-  //A map of the all the ranks in the guild
-  const guildRankMap = guild.ranks.reduce((acc, rank) => {
-    acc[rank.name] = rank;
-    return acc;
-  }, {} as Record<string, GuildRank>);
+	//A map of the all the ranks in the guild
+	const guildRankMap = guild.ranks.reduce(
+		(acc, rank) => {
+			acc[rank.name] = rank;
+			return acc;
+		},
+		{} as Record<string, GuildRank>
+	);
 
-  const ranks = Object.entries(rankMap)
-    .sort(
-      ([rankNameA], [rankNameB]) =>
-        (guildRankMap[rankNameB]?.priority ?? 0) -
-        (guildRankMap[rankNameA]?.priority ?? 0)
-    )
-    .map(([rankName, members]) => {
-      const guildRank = guildRankMap[rankName];
+	const ranks = Object.entries(rankMap)
+		.sort(([rankNameA], [rankNameB]) => (guildRankMap[rankNameB]?.priority ?? 0) - (guildRankMap[rankNameA]?.priority ?? 0))
+		.map(([rankName, members]) => {
+			const guildRank = guildRankMap[rankName];
 
-      const guildRankName = guildRank
-        ? `${guildRank.name}${guildRank.tag ? ` [${guildRank.tag}]` : ""}`
-        : rankName;
+			const guildRankName = guildRank ? `${guildRank.name}${guildRank.tag ? ` [${guildRank.tag}]` : ""}` : rankName;
 
-      const rows: JSX.Element[][] = [[]];
-      let currentRowWidth = 0;
+			const rows: JSX.Element[][] = [[]];
+			let currentRowWidth = 0;
 
-      for (const member of members) {
-        const memberBox = (
-          <box padding={{ left: 10, right: 10, top: 4, bottom: 4 }}>
-            <text margin={0}>{member}</text>
-          </box>
-        );
+			for (const member of members) {
+				const memberBox = (
+					<box padding={{ left: 10, right: 10, top: 4, bottom: 4 }}>
+						<text margin={0}>{member}</text>
+					</box>
+				);
 
-        const memberBoxWidth = useComponentWidth(memberBox);
-        const currentRow = rows.length - 1;
+				const memberBoxWidth = useComponentWidth(memberBox);
+				const currentRow = rows.length - 1;
 
-        if (currentRowWidth + memberBoxWidth > WIDTH) {
-          rows.push([memberBox]);
-          currentRowWidth = memberBoxWidth;
-        } else {
-          rows[currentRow].push(memberBox);
-          currentRowWidth += memberBoxWidth;
-        }
-      }
+				if (currentRowWidth + memberBoxWidth > WIDTH) {
+					rows.push([memberBox]);
+					currentRowWidth = memberBoxWidth;
+				} else {
+					rows[currentRow].push(memberBox);
+					currentRowWidth += memberBoxWidth;
+				}
+			}
 
-      return (
-        <div width="100%" direction="column">
-          <box width="100%">
-            <text>
-              {guild.tagColor.code}
-              {guildRankName} §7- §8(§f{t(members.length)}§8)
-            </text>
-          </box>
-          <>
-            {rows.map((row) => (
-              <div width="100%">{row}</div>
-            ))}
-          </>
-        </div>
-      );
-    });
+			return (
+				<div width="100%" direction="column">
+					<box width="100%">
+						<text>
+							{guild.tagColor.code}
+							{guildRankName} §7- §8(§f{t(members.length)}§8)
+						</text>
+					</box>
+					<>
+						{rows.map((row) => (
+							<div width="100%">{row}</div>
+						))}
+					</>
+				</div>
+			);
+		});
 
-  return (
-    <Container background={background}>
-      {header}
-      <>{ranks}</>
-      <Footer logo={logo} user={user} />
-    </Container>
-  );
+	return (
+		<Container background={background}>
+			{header}
+			<>{ranks}</>
+			<Footer logo={logo} user={user} />
+		</Container>
+	);
 };

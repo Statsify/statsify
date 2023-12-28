@@ -13,31 +13,31 @@ import { GuildQuery } from "@statsify/api-client";
 import { LocalizationString } from "#messages";
 
 class GuildQueryArgument extends AbstractArgument {
-  public description: LocalizationString;
-  public name = "query";
-  public type = ApplicationCommandOptionType.String;
-  public required = false;
+	public description: LocalizationString;
+	public name = "query";
+	public type = ApplicationCommandOptionType.String;
+	public required = false;
 
-  public constructor() {
-    super();
-    this.description = (t) => t("arguments.guild-query");
-  }
+	public constructor() {
+		super();
+		this.description = (t) => t("arguments.guild-query");
+	}
 }
 
 class GuildTypeArgument extends ChoiceArgument {
-  public constructor() {
-    super({
-      name: "type",
-      required: false,
-      choices: [
-        ["name", GuildQuery.NAME],
-        ["player", GuildQuery.PLAYER],
-        ["id", GuildQuery.ID],
-      ],
-    });
+	public constructor() {
+		super({
+			name: "type",
+			required: false,
+			choices: [
+				["name", GuildQuery.NAME],
+				["player", GuildQuery.PLAYER],
+				["id", GuildQuery.ID],
+			],
+		});
 
-    this.description = (t) => t("arguments.guild-type");
-  }
+		this.description = (t) => t("arguments.guild-type");
+	}
 }
 
 export const GuildArgument = [GuildQueryArgument, GuildTypeArgument];

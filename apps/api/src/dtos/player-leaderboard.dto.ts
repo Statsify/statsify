@@ -15,20 +15,20 @@ import { Transform } from "class-transformer";
 const fields = LeaderboardScanner.getLeaderboardFields(Player).map(([key]) => key);
 
 export class PlayerLeaderboardDto extends PartialType(PlayerDto) {
-  @IsEnum(fields)
-  @ApiProperty({ enum: fields })
-  public field: string;
+	@IsEnum(fields)
+	@ApiProperty({ enum: fields })
+	public field: string;
 
-  @Transform((params) => +params.value)
-  @IsInt()
-  @Min(0)
-  @ApiProperty({ default: 0, minimum: 0, type: () => Number, required: false })
-  public page = 0;
+	@Transform((params) => +params.value)
+	@IsInt()
+	@Min(0)
+	@ApiProperty({ default: 0, minimum: 0, type: () => Number, required: false })
+	public page = 0;
 
-  @Transform((params) => +params.value)
-  @IsOptional()
-  @IsInt()
-  @Min(1)
-  @ApiProperty({ minimum: 1, type: () => Number, required: false })
-  public position?: number;
+	@Transform((params) => +params.value)
+	@IsOptional()
+	@IsInt()
+	@Min(1)
+	@ApiProperty({ minimum: 1, type: () => Number, required: false })
+	public position?: number;
 }

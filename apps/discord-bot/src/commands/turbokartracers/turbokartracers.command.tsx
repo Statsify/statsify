@@ -13,11 +13,11 @@ import { TurboKartRacersProfile } from "./turbokartracers.profile.js";
 
 @Command({ description: (t) => t("commands.turbokartracers") })
 export class TurboKartRacersCommand extends BaseHypixelCommand<TurboKartRacersModes> {
-  public constructor() {
-    super(TURBO_KART_RACERS_MODES);
-  }
+	public constructor() {
+		super(TURBO_KART_RACERS_MODES);
+	}
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
-    return <TurboKartRacersProfile {...base} />;
-  }
+	public getProfile(base: BaseProfileProps): JSX.Element {
+		return <TurboKartRacersProfile {...base} />;
+	}
 }

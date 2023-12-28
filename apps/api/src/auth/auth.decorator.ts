@@ -12,22 +12,17 @@ import { AuthRole } from "./auth.role.js";
 import { SetMetadata, UseGuards, applyDecorators } from "@nestjs/common";
 
 export interface AuthDecoratorOptions {
-  /**
-   * @description The required weight for the request, for example if the route adds more than a single api request limit
-   */
-  weight?: number;
+	/**
+	 * @description The required weight for the request, for example if the route adds more than a single api request limit
+	 */
+	weight?: number;
 
-  /**
-   * @description The required roles for the request
-   */
-  role?: AuthRole;
+	/**
+	 * @description The required roles for the request
+	 */
+	role?: AuthRole;
 }
 
 export function Auth({ weight = 1, role = AuthRole.MEMBER }: AuthDecoratorOptions = {}) {
-  return applyDecorators(
-    SetMetadata("auth-weight", weight),
-    SetMetadata("auth-role", role),
-    UseGuards(AuthGuard),
-    ApiSecurity("ApiKey")
-  );
+	return applyDecorators(SetMetadata("auth-weight", weight), SetMetadata("auth-role", role), UseGuards(AuthGuard), ApiSecurity("ApiKey"));
 }

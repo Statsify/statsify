@@ -10,23 +10,23 @@ import { Field } from "#metadata";
 import { ratio } from "@statsify/math";
 
 export class Progression {
-  @Field({ leaderboard: { enabled: false } })
-  public current: number;
+	@Field({ leaderboard: { enabled: false } })
+	public current: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public max?: number;
+	@Field({ leaderboard: { enabled: false } })
+	public max?: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public percent: number;
+	@Field({ leaderboard: { enabled: false } })
+	public percent: number;
 
-  public constructor(current: number, max: number) {
-    this.current = current || 0;
+	public constructor(current: number, max: number) {
+		this.current = current || 0;
 
-    if (max) {
-      this.max = max;
-      this.percent = ratio(current, max);
-    } else {
-      this.percent = 1;
-    }
-  }
+		if (max) {
+			this.max = max;
+			this.percent = ratio(current, max);
+		} else {
+			this.percent = 1;
+		}
+	}
 }

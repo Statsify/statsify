@@ -14,35 +14,27 @@ import { parseDiscordResponse } from "#util/parse-discord-error";
 
 @Service()
 export class MessageService {
-  public constructor(private readonly rest: RestClient) {}
+	public constructor(private readonly rest: RestClient) {}
 
-  public async send(channelId: string, message: Message | IMessage): Promise<APIMessage> {
-    const data = message instanceof Message ? message : new Message(message);
+	public async send(channelId: string, message: Message | IMessage): Promise<APIMessage> {
+		const data = message instanceof Message ? message : new Message(message);
 
-    const response = await this.rest.post(
-      `/channels/${channelId}/messages`,
-      data.toAPI(getLocalizeFunction("en-US"))
-    );
+		const response = await this.rest.post(`/channels/${channelId}/messages`, data.toAPI(getLocalizeFunction("en-US")));
 
-    return parseDiscordResponse(response);
-  }
+		return parseDiscordResponse(response);
+	}
 
-  public async edit(channelId: string, messageId: string, message: Message | IMessage) {
-    const data = message instanceof Message ? message : new Message(message);
+	public async edit(channelId: string, messageId: string, message: Message | IMessage) {
+		const data = message instanceof Message ? message : new Message(message);
 
-    const response = await this.rest.patch(
-      `/channels/${channelId}/messages/${messageId}`,
-      data.toAPI(getLocalizeFunction("en-US"))
-    );
+		const response = await this.rest.patch(`/channels/${channelId}/messages/${messageId}`, data.toAPI(getLocalizeFunction("en-US")));
 
-    return parseDiscordResponse(response);
-  }
+		return parseDiscordResponse(response);
+	}
 
-  public async delete(channelId: string, messageId: string) {
-    const response = await this.rest.delete(
-      `/channels/${channelId}/messages/${messageId}`
-    );
+	public async delete(channelId: string, messageId: string) {
+		const response = await this.rest.delete(`/channels/${channelId}/messages/${messageId}`);
 
-    return parseDiscordResponse(response);
-  }
+		return parseDiscordResponse(response);
+	}
 }

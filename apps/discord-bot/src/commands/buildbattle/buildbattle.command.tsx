@@ -13,11 +13,11 @@ import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.buildbattle") })
 export class BuildBattleCommand extends BaseHypixelCommand<BuildBattleModes> {
-  public constructor() {
-    super(BUILD_BATTLE_MODES);
-  }
+	public constructor() {
+		super(BUILD_BATTLE_MODES);
+	}
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
-    return <BuildBattleProfile {...base} />;
-  }
+	public getProfile(base: BaseProfileProps): JSX.Element {
+		return <BuildBattleProfile {...base} />;
+	}
 }

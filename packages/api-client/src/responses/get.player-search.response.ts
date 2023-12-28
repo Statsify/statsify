@@ -10,6 +10,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { SuccessResponse } from "./success.response.js";
 
 export class GetPlayerSearchResponse extends SuccessResponse {
-  @ApiProperty({ type: [String] })
-  public players: string[];
+	@ApiProperty({ type: [String] })
+	public players: string[];
 }

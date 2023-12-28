@@ -12,25 +12,22 @@ import type { APIData } from "./types.js";
 export type Flatten<T> = Record<string | keyof T, any>;
 
 export type DeepFlatten<T> = {
-  [K in keyof T]-?: (
-    x: NonNullable<T[K]> extends infer V
-      ? V extends object
-        ? V extends readonly any[]
-          ? Pick<T, K>
-          : DeepFlatten<V> extends infer FV
-          ? {
-              [P in keyof FV as `${Extract<K, string | number>}.${Extract<
-                P,
-                string | number
-              >}`]: FV[P];
-            }
-          : never
-        : Pick<T, K>
-      : never
-  ) => void;
+	[K in keyof T]-?: (
+		x: NonNullable<T[K]> extends infer V
+			? V extends object
+				? V extends readonly any[]
+					? Pick<T, K>
+					: DeepFlatten<V> extends infer FV
+						? {
+								[P in keyof FV as `${Extract<K, string | number>}.${Extract<P, string | number>}`]: FV[P];
+							}
+						: never
+				: Pick<T, K>
+			: never
+	) => void;
 } extends Record<keyof T, (y: infer O) => void>
-  ? { [K in keyof O]: O[K] }
-  : never;
+	? { [K in keyof O]: O[K] }
+	: never;
 
 /**
  *
@@ -43,30 +40,30 @@ export type DeepFlatten<T> = {
  * ```
  */
 export const flatten = <T>(data: T, prefix = "", dest: APIData = {}): Flatten<T> => {
-  if (isObject(data)) {
-    Object.keys(data ?? {}).forEach((key) => {
-      const tmpPrefix = prefix.length > 0 ? `${prefix}.${key}` : prefix + key;
-      flatten(data[key as keyof T], tmpPrefix, dest);
-    });
-  } else {
-    dest[prefix] = data;
-  }
+	if (isObject(data)) {
+		Object.keys(data ?? {}).forEach((key) => {
+			const tmpPrefix = prefix.length > 0 ? `${prefix}.${key}` : prefix + key;
+			flatten(data[key as keyof T], tmpPrefix, dest);
+		});
+	} else {
+		dest[prefix] = data;
+	}
 
-  return dest as Flatten<T>;
+	return dest as Flatten<T>;
 };
 
 if (import.meta.vitest) {
-  const { test, it, expect } = import.meta.vitest;
+	const { test, it, expect } = import.meta.vitest;
 
-  test("flatten", () => {
-    it("should flatten objects", () => {
-      expect(flatten({ a: 1 })).toMatchObject({ a: 1 });
-      expect(flatten({ a: { b: { c: 1 } } })).toMatchObject({ "a.b.c": 1 });
-      expect(flatten({ a: { b: { c: 1, d: 2 } } })).toMatchObject({
-        "a.b.c": 1,
-        "a.b.d": 2,
-      });
-      expect(flatten({ a: [{ b: { c: 1 } }] })).toMatchObject({ a: [{ b: { c: 1 } }] });
-    });
-  });
+	test("flatten", () => {
+		it("should flatten objects", () => {
+			expect(flatten({ a: 1 })).toMatchObject({ a: 1 });
+			expect(flatten({ a: { b: { c: 1 } } })).toMatchObject({ "a.b.c": 1 });
+			expect(flatten({ a: { b: { c: 1, d: 2 } } })).toMatchObject({
+				"a.b.c": 1,
+				"a.b.d": 2,
+			});
+			expect(flatten({ a: [{ b: { c: 1 } }] })).toMatchObject({ a: [{ b: { c: 1 } }] });
+		});
+	});
 }

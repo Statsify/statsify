@@ -9,9 +9,9 @@
 export type APIData = Record<string, any>;
 
 export type RemoveMethods<T> = Pick<
-  T,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  { [Key in keyof T]: T[Key] extends Function ? never : Key }[keyof T]
+	T,
+	// eslint-disable-next-line @typescript-eslint/ban-types
+	{ [Key in keyof T]: T[Key] extends Function ? never : Key }[keyof T]
 >;
 
 export type Constructor<T = any> = new (...args: any[]) => T;

@@ -10,18 +10,18 @@ import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
 
 export class WatchdogMode {
-  @Field()
-  public bans: number;
+	@Field()
+	public bans: number;
 
-  @Field()
-  public lastMinute: number;
+	@Field()
+	public lastMinute: number;
 
-  @Field()
-  public lastDay: number;
+	@Field()
+	public lastDay: number;
 
-  public constructor(data: APIData, mode: string) {
-    this.bans = data[`${mode}_total`];
-    this.lastMinute = data[`${mode}_lastMinute`];
-    this.lastDay = data[`${mode}_rollingDaily`];
-  }
+	public constructor(data: APIData, mode: string) {
+		this.bans = data[`${mode}_total`];
+		this.lastMinute = data[`${mode}_lastMinute`];
+		this.lastDay = data[`${mode}_rollingDaily`];
+	}
 }

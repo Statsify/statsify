@@ -12,33 +12,33 @@ import type { AbstractArgument } from "#arguments";
 import type { Constructor } from "@statsify/util";
 
 export interface CommandOptions {
-  name?: string;
-  description: LocalizationString;
-  args?: (AbstractArgument | Constructor<AbstractArgument>)[];
-  cooldown?: number;
+	name?: string;
+	description: LocalizationString;
+	args?: (AbstractArgument | Constructor<AbstractArgument>)[];
+	cooldown?: number;
 
-  /**
-   * The minimum user tier required to use this command.
-   */
-  tier?: UserTier;
+	/**
+	 * The minimum user tier required to use this command.
+	 */
+	tier?: UserTier;
 
-  /**
-   * The path to a preview image for this command. The preview will show on error messages sent to the user because they do not have the required tier to run the command.
-   * @example badge.png
-   */
-  preview?: string;
+	/**
+	 * The path to a preview image for this command. The preview will show on error messages sent to the user because they do not have the required tier to run the command.
+	 * @example badge.png
+	 */
+	preview?: string;
 }
 
 export interface SubCommandOptions extends Omit<CommandOptions, "cooldown"> {
-  group?: string;
+	group?: string;
 }
 
 export interface CommandMetadata extends Omit<CommandOptions, "name"> {
-  name: string;
-  methodName: string;
+	name: string;
+	methodName: string;
 }
 
 export interface SubCommandMetadata extends Omit<SubCommandOptions, "name"> {
-  name: string;
-  methodName: string;
+	name: string;
+	methodName: string;
 }

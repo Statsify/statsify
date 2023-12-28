@@ -8,18 +8,47 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:unicorn/recommended",
-    "next"
+    "plugin:prettier/recommended",
+    "plugin:unicorn/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": "latest"
+    "project": [
+      "./tsconfig.base.json",
+      "./packages/*/tsconfig.json",
+      "./apps/*/tsconfig.json"
+    ],
+    "ecmaVersion": "latest",
+    "warnOnUnsupportedTypeScriptVersion": false
   },
   "plugins": [
     "@typescript-eslint",
     "license-header",
     "sort-imports-es6-autofix",
-    "unused-imports"
+    "unused-imports",
+    "import-newlines"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "apps/site/**/*.{js,jsx,ts,tsx}"
+      ],
+      "extends": [
+        "plugin:tailwindcss/recommended",
+        "next"
+      ],
+      "settings": {
+        "next": {
+          "rootDir": "apps/site"
+        },
+        "react": {
+          "version": "18"
+        },
+        "tailwindcss": {
+          "config": "apps/site/tailwind.config.ts"
+        }
+      }
+    }
   ],
   "root": true,
   "rules": {
@@ -45,12 +74,8 @@
         "ts-nocheck": true
       }
     ],
-    "@typescript-eslint/default-param-last": [
-      "error"
-    ],
-    "@typescript-eslint/explicit-member-accessibility": [
-      "error"
-    ],
+    "@typescript-eslint/default-param-last": "error",
+    "@typescript-eslint/explicit-member-accessibility": "error",
     "@typescript-eslint/member-ordering": [
       "error",
       {
@@ -79,21 +104,11 @@
         ]
       }
     ],
-    "@typescript-eslint/ban-types": [
-      "off"
-    ],
-    "@typescript-eslint/no-explicit-any": [
-      "off"
-    ],
-    "@typescript-eslint/no-non-null-assertion": [
-      "off"
-    ],
-    "@typescript-eslint/no-unused-vars": [
-      "off"
-    ],
-    "@typescript-eslint/no-unsafe-declaration-merging": [
-      "off"
-    ],
+    "@typescript-eslint/ban-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-unsafe-declaration-merging": "off",
     "unused-imports/no-unused-imports": "error",
     "unused-imports/no-unused-vars": [
       "error",
@@ -128,9 +143,7 @@
         ]
       }
     ],
-    "unicorn/prefer-at": [
-      "error"
-    ],
+    "unicorn/prefer-at": "error",
     "unicorn/import-style": [
       "error",
       {
@@ -142,85 +155,25 @@
         }
       }
     ],
-    "unicorn/no-static-only-class": [
-      "off"
-    ],
-    "unicorn/no-null": [
-      "off"
-    ],
-    "unicorn/no-array-reduce": [
-      "off"
-    ],
-    "unicorn/prevent-abbreviations": [
-      "off"
-    ],
-    "unicorn/no-array-callback-reference": [
-      "off"
-    ],
-    "unicorn/escape-case": [
-      "off"
-    ],
-    "unicorn/no-useless-undefined": [
-      "off"
-    ],
-    "unicorn/no-array-for-each": [
-      "off"
-    ],
-    "unicorn/no-useless-switch-case": [
-      "off"
-    ],
+    "unicorn/no-static-only-class": "off",
+    "unicorn/no-null": "off",
+    "unicorn/no-array-reduce": "off",
+    "unicorn/prevent-abbreviations": "off",
+    "unicorn/no-array-callback-reference": "off",
+    "unicorn/escape-case": "off",
+    "unicorn/no-useless-undefined": "off",
+    "unicorn/no-array-for-each": "off",
+    "unicorn/no-useless-switch-case": "off",
     "unicorn/switch-case-braces": [
       "error",
       "avoid"
     ],
-    "comma-dangle": [
-      "error",
-      {
-        "arrays": "always-multiline",
-        "objects": "always-multiline",
-        "imports": "always-multiline",
-        "exports": "always-multiline",
-        "functions": "never"
-      }
-    ],
-    "indent": [
-      "error",
-      2,
-      {
-        "SwitchCase": 1
-      }
-    ],
-    "max-len": [
-      "error",
-      {
-        "code": 120,
-        "tabWidth": 2,
-        "ignoreComments": true,
-        "ignoreTrailingComments": true,
-        "ignoreUrls": true,
-        "ignoreStrings": true,
-        "ignoreTemplateLiterals": true,
-        "ignoreRegExpLiterals": true
-      }
-    ],
-    "no-constant-binary-expression": [
-      "error"
-    ],
-    "no-constructor-return": [
-      "error"
-    ],
-    "no-duplicate-imports": [
-      "error"
-    ],
-    "no-extra-semi": [
-      "error"
-    ],
-    "no-floating-decimal": [
-      "error"
-    ],
-    "no-lonely-if": [
-      "error"
-    ],
+    "no-constant-binary-expression": "error",
+    "no-constructor-return": "error",
+    "no-duplicate-imports": "error",
+    "no-extra-semi": "error",
+    "no-floating-decimal": "error",
+    "no-lonely-if": "error",
     "object-shorthand": [
       "error",
       "always"
@@ -229,51 +182,18 @@
       "error",
       "never"
     ],
-    "prefer-template": [
-      "error"
-    ],
-    "quote-props": [
-      "error",
-      "consistent-as-needed"
-    ],
-    "quotes": [
-      "error",
-      "double"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ],
-    "unicorn/better-regex": [
-      "off"
-    ],
-    "unicorn/catch-error-name": [
-      "off"
-    ],
-    "unicorn/consistent-destructuring": [
-      "off"
-    ],
-    "unicorn/explicit-length-check": [
-      "off"
-    ],
-    "unicorn/filename-case": [
-      "off"
-    ],
-    "unicorn/no-await-expression-member": [
-      "off"
-    ],
-    "unicorn/no-object-as-default": [
-      "off"
-    ],
-    "unicorn/no-process-exit": [
-      "off"
-    ],
-    "unicorn/no-unsafe-regex": [
-      "warn"
-    ],
-    "unicorn/number-literal-case": [
-      "off"
-    ],
+    "prefer-template": "error",
+    "unicorn/better-regex": "off",
+    "unicorn/catch-error-name": "off",
+    "unicorn/consistent-destructuring": "off",
+    "unicorn/explicit-length-check": "off",
+    "unicorn/filename-case": "off",
+    "unicorn/no-await-expression-member": "off",
+    "unicorn/no-object-as-default": "off",
+    "unicorn/no-process-exit": "off",
+    "unicorn/no-unsafe-regex": "warn",
+    "unicorn/number-literal-case": "off",
+    "unicorn/prefer-module": "off",
     "unicorn/numeric-separators-style": [
       "error",
       {
@@ -285,12 +205,15 @@
         }
       }
     ],
-    "unicorn/prefer-string-replace-all": [
-      "off"
-    ],
+    "unicorn/prefer-string-replace-all": "off",
     "unicorn/relative-url-style": [
       "error",
       "always"
     ]
-  }
+  },
+  "ignorePatterns": [
+    "packages/skin-renderer/index.d.ts",
+    "packages/skin-renderer/index.cjs",
+    "apps/site/next-env.d.ts"
+  ]
 }

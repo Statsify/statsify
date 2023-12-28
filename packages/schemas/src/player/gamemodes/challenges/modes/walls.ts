@@ -14,32 +14,32 @@ import { challengeFieldData } from "../util.js";
 import type { GameChallenges } from "../game-challenges.js";
 
 export class WallsChallenges implements GameChallenges {
-  @Field(challengeFieldData)
-  public firstBlood: number;
+	@Field(challengeFieldData)
+	public firstBlood: number;
 
-  @Field(challengeFieldData)
-  public powerhouse: number;
+	@Field(challengeFieldData)
+	public powerhouse: number;
 
-  @Field(challengeFieldData)
-  public looting: number;
+	@Field(challengeFieldData)
+	public looting: number;
 
-  @Field(challengeFieldData)
-  public doubleKill: number;
+	@Field(challengeFieldData)
+	public doubleKill: number;
 
-  @Field({
-    leaderboard: {
-      fieldName: `${removeFormatting(FormattedGame.WALLS)} Total`,
-      name: "Total",
-    },
-  })
-  public total: number;
+	@Field({
+		leaderboard: {
+			fieldName: `${removeFormatting(FormattedGame.WALLS)} Total`,
+			name: "Total",
+		},
+	})
+	public total: number;
 
-  public constructor(challenges: APIData) {
-    this.firstBlood = challenges.WALLS__first_blood_challenge;
-    this.powerhouse = challenges.WALLS__powerhouse_challenge;
-    this.looting = challenges.WALLS__looting_challenge;
-    this.doubleKill = challenges.WALLS__double_kill_challenge;
+	public constructor(challenges: APIData) {
+		this.firstBlood = challenges.WALLS__first_blood_challenge;
+		this.powerhouse = challenges.WALLS__powerhouse_challenge;
+		this.looting = challenges.WALLS__looting_challenge;
+		this.doubleKill = challenges.WALLS__double_kill_challenge;
 
-    this.total = add(this.firstBlood, this.powerhouse, this.looting, this.doubleKill);
-  }
+		this.total = add(this.firstBlood, this.powerhouse, this.looting, this.doubleKill);
+	}
 }

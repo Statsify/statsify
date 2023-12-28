@@ -6,55 +6,48 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  APIApplicationCommandOptionChoice,
-  ApplicationCommandOptionType,
-} from "discord-api-types/v10";
+import { APIApplicationCommandOptionChoice, ApplicationCommandOptionType } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import { Fuse } from "fuse.js";
 import { type ServerMappingsServer, getServerMappings } from "./server.util.js";
 
 export class ServerArgument extends AbstractArgument {
-  public name = "server";
-  public description: LocalizationString;
-  public type = ApplicationCommandOptionType.String;
-  public required = true;
-  public autocomplete = true;
+	public name = "server";
+	public description: LocalizationString;
+	public type = ApplicationCommandOptionType.String;
+	public required = true;
+	public autocomplete = true;
 
-  private servers: ServerMappingsServer[];
-  private fuse: Fuse<ServerMappingsServer>;
+	private servers: ServerMappingsServer[];
+	private fuse: Fuse<ServerMappingsServer>;
 
-  public constructor() {
-    super();
-    this.description = (t) => t("arguments.server");
+	public constructor() {
+		super();
+		this.description = (t) => t("arguments.server");
 
-    getServerMappings().then((servers) => {
-      this.servers = servers;
-      this.fuse = new Fuse(this.servers, {
-        keys: ["id", "name", "addresses", "primaryAddress"],
-        includeScore: false,
-        shouldSort: true,
-        isCaseSensitive: false,
-        threshold: 0.3,
-        ignoreLocation: true,
-      });
-    });
-  }
+		getServerMappings().then((servers) => {
+			this.servers = servers;
+			this.fuse = new Fuse(this.servers, {
+				keys: ["id", "name", "addresses", "primaryAddress"],
+				includeScore: false,
+				shouldSort: true,
+				isCaseSensitive: false,
+				threshold: 0.3,
+				ignoreLocation: true,
+			});
+		});
+	}
 
-  public autocompleteHandler(
-    context: CommandContext
-  ): APIApplicationCommandOptionChoice[] {
-    const currentValue = context.option<string>(this.name, "").toLowerCase();
+	public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
+		const currentValue = context.option<string>(this.name, "").toLowerCase();
 
-    if (!currentValue) {
-      return this.servers
-        .map((result) => ({ name: result.name, value: result.primaryAddress }))
-        .slice(0, 25);
-    }
+		if (!currentValue) {
+			return this.servers.map((result) => ({ name: result.name, value: result.primaryAddress })).slice(0, 25);
+		}
 
-    return this.fuse
-      .search(currentValue)
-      .map((result) => ({ name: result.item.name, value: result.item.primaryAddress }))
-      .slice(0, 25);
-  }
+		return this.fuse
+			.search(currentValue)
+			.map((result) => ({ name: result.item.name, value: result.item.primaryAddress }))
+			.slice(0, 25);
+	}
 }

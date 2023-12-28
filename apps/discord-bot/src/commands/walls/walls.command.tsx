@@ -13,11 +13,11 @@ import { WallsProfile } from "./walls.profile.js";
 
 @Command({ description: (t) => t("commands.walls") })
 export class WallsCommand extends BaseHypixelCommand<WallsModes> {
-  public constructor() {
-    super(WALLS_MODES);
-  }
+	public constructor() {
+		super(WALLS_MODES);
+	}
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
-    return <WallsProfile {...base} />;
-  }
+	public getProfile(base: BaseProfileProps): JSX.Element {
+		return <WallsProfile {...base} />;
+	}
 }

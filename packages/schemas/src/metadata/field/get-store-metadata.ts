@@ -7,34 +7,30 @@
  */
 
 import type { Constructor } from "@statsify/util";
-import type {
-  LeaderboardMetadata,
-  StoreMetadata,
-  TypeMetadata,
-} from "../metadata.interface.js";
+import type { LeaderboardMetadata, StoreMetadata, TypeMetadata } from "../metadata.interface.js";
 import type { StoreOptions } from "../field.options.js";
 
 const getDefaultValue = (type: Constructor) => {
-  switch (type) {
-    case String:
-      return "";
-    case Number:
-      return 0;
-    case Boolean:
-      return false;
-    default:
-      return undefined;
-  }
+	switch (type) {
+		case String:
+			return "";
+		case Number:
+			return 0;
+		case Boolean:
+			return false;
+		default:
+			return undefined;
+	}
 };
 
 export const getStoreMetadata = (
-  typeMetadata: TypeMetadata,
-  leaderboardMetadata: LeaderboardMetadata,
-  storeOptions?: StoreOptions
+	typeMetadata: TypeMetadata,
+	leaderboardMetadata: LeaderboardMetadata,
+	storeOptions?: StoreOptions
 ): StoreMetadata => ({
-  required: storeOptions?.required ?? true,
-  store: (leaderboardMetadata.enabled || storeOptions?.store) ?? true,
-  serialize: storeOptions?.serialize ?? true,
-  deserialize: storeOptions?.deserialize ?? true,
-  default: storeOptions?.default ?? getDefaultValue(typeMetadata.type),
+	required: storeOptions?.required ?? true,
+	store: (leaderboardMetadata.enabled || storeOptions?.store) ?? true,
+	serialize: storeOptions?.serialize ?? true,
+	deserialize: storeOptions?.deserialize ?? true,
+	default: storeOptions?.default ?? getDefaultValue(typeMetadata.type),
 });

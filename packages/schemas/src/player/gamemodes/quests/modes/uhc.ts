@@ -10,12 +10,12 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const UHCQuests = createGameModeQuests({
-  game: FormattedGame.UHC,
-  fieldPrefix: "uhc",
-  daily: [
-    { field: "team", propertyKey: "teamUHCChampions", fieldName: "Team UHC Champions" },
-    { field: "solo", propertyKey: "soloUHCChampions", fieldName: "Solo UHC Champions" },
-    { field: "dm", propertyKey: "uhcDeathmatch", fieldName: "UHC Deathmatch" },
-  ],
-  weekly: [{ field: "weekly", propertyKey: "uhcChampions", fieldName: "UHC Champions" }],
+	game: FormattedGame.UHC,
+	fieldPrefix: "uhc",
+	daily: [
+		{ field: "team", propertyKey: "teamUHCChampions", fieldName: "Team UHC Champions" },
+		{ field: "solo", propertyKey: "soloUHCChampions", fieldName: "Solo UHC Champions" },
+		{ field: "dm", propertyKey: "uhcDeathmatch", fieldName: "UHC Deathmatch" },
+	],
+	weekly: [{ field: "weekly", propertyKey: "uhcChampions", fieldName: "UHC Champions" }],
 });

@@ -7,5 +7,5 @@
  */
 
 export interface GameChallenges {
-  total: number;
+	total: number;
 }

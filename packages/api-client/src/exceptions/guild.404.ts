@@ -10,10 +10,10 @@ import { ApiProperty } from "@nestjs/swagger";
 import { NotFoundException } from "./base.404.js";
 
 export class GuildNotFoundException extends NotFoundException {
-  @ApiProperty()
-  public displayName?: string;
+	@ApiProperty()
+	public displayName?: string;
 
-  public constructor(displayName?: string) {
-    super({ message: "guild", displayName });
-  }
+	public constructor(displayName?: string) {
+		super({ message: "guild", displayName });
+	}
 }

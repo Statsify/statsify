@@ -9,6 +9,6 @@
 import { forward } from "~/lib/util/forward";
 import { twMerge } from "tailwind-merge";
 
-export const Box = forward<"div">(function Box({ className,...props }, ref) {
-  return <div ref={ref} {...props} className={twMerge("bg-black/60 border-4 border-black/50 text-white", className)}/>;
+export const Box = forward<"div">(function Box({ className, ...properties }, reference) {
+	return <div ref={reference} {...properties} className={twMerge("bg-black/60 border-4 border-black/50 text-white shadow-md", className)} />;
 });

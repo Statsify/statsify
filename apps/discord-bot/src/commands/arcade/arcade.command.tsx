@@ -8,23 +8,16 @@
 
 import { ARCADE_MODES, ArcadeModes } from "@statsify/schemas";
 import { ArcadeProfile } from "./arcade.profile.js";
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.arcade") })
 export class ArcadeCommand extends BaseHypixelCommand<ArcadeModes> {
-  public constructor() {
-    super(ARCADE_MODES);
-  }
+	public constructor() {
+		super(ARCADE_MODES);
+	}
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<ArcadeModes>
-  ): JSX.Element {
-    return <ArcadeProfile {...base} mode={mode} />;
-  }
+	public getProfile(base: BaseProfileProps, { mode }: ProfileData<ArcadeModes>): JSX.Element {
+		return <ArcadeProfile {...base} mode={mode} />;
+	}
 }

@@ -12,11 +12,11 @@ import type { RedisModuleOptions } from "./redis.interfaces.js";
 
 @Module({})
 export class RedisModule {
-  public static forRoot(options: RedisModuleOptions, connection?: string): DynamicModule {
-    return {
-      module: RedisModule,
-      imports: [RedisCoreModule.forRoot(options, connection)],
-      exports: [RedisCoreModule],
-    };
-  }
+	public static forRoot(options: RedisModuleOptions, connection?: string): DynamicModule {
+		return {
+			module: RedisModule,
+			imports: [RedisCoreModule.forRoot(options, connection)],
+			exports: [RedisCoreModule],
+		};
+	}
 }

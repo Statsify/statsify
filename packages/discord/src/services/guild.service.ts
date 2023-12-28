@@ -13,10 +13,10 @@ import { parseDiscordResponse } from "#util/parse-discord-error";
 
 @Service()
 export class GuildService {
-  public constructor(private readonly rest: RestClient) {}
+	public constructor(private readonly rest: RestClient) {}
 
-  public async get(guildId: string): Promise<APIGuild> {
-    const response = await this.rest.get(`/guilds/${guildId}?with_counts=true`);
-    return parseDiscordResponse(response);
-  }
+	public async get(guildId: string): Promise<APIGuild> {
+		const response = await this.rest.get(`/guilds/${guildId}?with_counts=true`);
+		return parseDiscordResponse(response);
+	}
 }

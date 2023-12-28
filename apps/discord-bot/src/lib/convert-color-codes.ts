@@ -7,7 +7,7 @@
  */
 
 export const convertColorCodes = (content: string) =>
-  content
-    .replaceAll("\\&", "󰀀")
-    .replace(/&\S/g, (m) => m.replace("&", "§"))
-    .replaceAll("󰀀", "&");
+	content
+		.replaceAll("\\&", "󰀀")
+		.replace(/&\S/g, (m) => m.replace("&", "§"))
+		.replaceAll("󰀀", "&");

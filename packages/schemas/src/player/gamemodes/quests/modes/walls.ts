@@ -10,12 +10,12 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const WallsQuests = createGameModeQuests({
-  game: FormattedGame.WALLS,
-  fieldPrefix: "walls",
-  daily: [
-    { field: "daily_play", propertyKey: "waller" },
-    { field: "daily_kill", propertyKey: "kills" },
-    { field: "daily_win", propertyKey: "win" },
-  ],
-  weekly: [{ field: "weekly", propertyKey: "wallsWeekly" }],
+	game: FormattedGame.WALLS,
+	fieldPrefix: "walls",
+	daily: [
+		{ field: "daily_play", propertyKey: "waller" },
+		{ field: "daily_kill", propertyKey: "kills" },
+		{ field: "daily_win", propertyKey: "win" },
+	],
+	weekly: [{ field: "weekly", propertyKey: "wallsWeekly" }],
 });

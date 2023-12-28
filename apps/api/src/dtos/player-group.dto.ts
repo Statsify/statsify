@@ -11,14 +11,14 @@ import { IsNumber, Min } from "class-validator";
 import { Transform } from "class-transformer";
 
 export class PlayerGroupDto {
-  @Transform((params) => +params.value)
-  @IsNumber()
-  @Min(0)
-  @ApiProperty()
-  public start: number;
+	@Transform((params) => +params.value)
+	@IsNumber()
+	@Min(0)
+	@ApiProperty()
+	public start: number;
 
-  @Transform((params) => +params.value)
-  @IsNumber()
-  @ApiProperty()
-  public end: number;
+	@Transform((params) => +params.value)
+	@IsNumber()
+	@ApiProperty()
+	public end: number;
 }

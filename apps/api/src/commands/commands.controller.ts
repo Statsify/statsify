@@ -15,26 +15,26 @@ import { Controller, Get, Patch, Query } from "@nestjs/common";
 @Controller("/commands")
 @ApiTags("Commands")
 export class CommandsController {
-  public constructor(private readonly commandService: CommandsService) {}
+	public constructor(private readonly commandService: CommandsService) {}
 
-  @Get()
-  @ApiOperation({ summary: "Get Command Usage" })
-  @Auth({ role: AuthRole.ADMIN })
-  public async getCommandUsage() {
-    const usage = await this.commandService.getCommandUsage();
+	@Get()
+	@ApiOperation({ summary: "Get Command Usage" })
+	@Auth({ role: AuthRole.ADMIN })
+	public async getCommandUsage() {
+		const usage = await this.commandService.getCommandUsage();
 
-    return {
-      success: true,
-      usage,
-    };
-  }
+		return {
+			success: true,
+			usage,
+		};
+	}
 
-  @Patch()
-  @ApiOperation({ summary: "Increment Command Usage" })
-  @Auth({ role: AuthRole.ADMIN })
-  public async patchCommandRun(@Query() { command }: CommandDto) {
-    await this.commandService.incrementCommandRun(command);
+	@Patch()
+	@ApiOperation({ summary: "Increment Command Usage" })
+	@Auth({ role: AuthRole.ADMIN })
+	public async patchCommandRun(@Query() { command }: CommandDto) {
+		await this.commandService.incrementCommandRun(command);
 
-    return { success: true };
-  }
+		return { success: true };
+	}
 }

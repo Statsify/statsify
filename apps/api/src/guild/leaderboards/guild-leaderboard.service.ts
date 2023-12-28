@@ -18,60 +18,48 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class GuildLeaderboardService extends LeaderboardService {
-  public constructor(
-    @InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>,
-    @InjectRedis() redis: Redis
-  ) {
-    super(redis);
-  }
+	public constructor(
+		@InjectModel(Guild) private readonly guildModel: ReturnModelType<typeof Guild>,
+		@InjectRedis() redis: Redis
+	) {
+		super(redis);
+	}
 
-  protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
-    if (!GUILD_ID_REGEX.test(input)) {
-      const guild = await this.guildModel
-        .findOne()
-        .where("nameToLower")
-        .equals(input.toLowerCase())
-        .select({ id: true })
-        .lean()
-        .exec();
+	protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
+		if (!GUILD_ID_REGEX.test(input)) {
+			const guild = await this.guildModel.findOne().where("nameToLower").equals(input.toLowerCase()).select({ id: true }).lean().exec();
 
-      if (!guild) throw new GuildNotFoundException();
-      input = guild.id;
-    }
+			if (!guild) throw new GuildNotFoundException();
+			input = guild.id;
+		}
 
-    const ranking = await this.getLeaderboardRankings(Guild, [field], input);
+		const ranking = await this.getLeaderboardRankings(Guild, [field], input);
 
-    if (!ranking || !ranking[0].rank) throw new GuildNotFoundException();
+		if (!ranking || !ranking[0].rank) throw new GuildNotFoundException();
 
-    return ranking[0].rank;
-  }
+		return ranking[0].rank;
+	}
 
-  protected async getAdditionalStats(
-    ids: string[],
-    fields: string[]
-  ): Promise<LeaderboardAdditionalStats[]> {
-    const selector = fields.reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {} as Record<string, boolean>);
+	protected async getAdditionalStats(ids: string[], fields: string[]): Promise<LeaderboardAdditionalStats[]> {
+		const selector = fields.reduce(
+			(acc, key) => {
+				acc[key] = true;
+				return acc;
+			},
+			{} as Record<string, boolean>
+		);
 
-    selector.nameFormatted = true;
+		selector.nameFormatted = true;
 
-    return await Promise.all(
-      ids.map(async (id) => {
-        const guild = await this.guildModel
-          .findOne()
-          .where("id")
-          .equals(id)
-          .select(selector)
-          .lean()
-          .exec();
+		return await Promise.all(
+			ids.map(async (id) => {
+				const guild = await this.guildModel.findOne().where("id").equals(id).select(selector).lean().exec();
 
-        const additionalStats = flatten(guild) as LeaderboardAdditionalStats;
-        additionalStats.name = additionalStats.nameFormatted;
+				const additionalStats = flatten(guild) as LeaderboardAdditionalStats;
+				additionalStats.name = additionalStats.nameFormatted;
 
-        return additionalStats;
-      })
-    );
-  }
+				return additionalStats;
+			})
+		);
+	}
 }

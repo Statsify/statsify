@@ -10,41 +10,41 @@ import { IMessage } from "@statsify/discord";
 import { User } from "@statsify/schemas";
 
 export interface Tip {
-  message: IMessage;
+	message: IMessage;
 
-  /**
-   * A list of commands that this tip cannot be used on
-   */
-  disabled?: string[];
+	/**
+	 * A list of commands that this tip cannot be used on
+	 */
+	disabled?: string[];
 
-  /**
-   * Whether or not the user is uneligible to receive this tip.
-   */
-  uneligible?: (user: User | null) => boolean;
+	/**
+	 * Whether or not the user is uneligible to receive this tip.
+	 */
+	uneligible?: (user: User | null) => boolean;
 }
 
 export const tips: Tip[] = [
-  {
-    message: { content: (t) => t("tips.discord") },
-    uneligible: (user) => Boolean(user?.serverMember),
-    disabled: ["help", "invite", "links"],
-  },
-  {
-    message: { content: (t) => t("tips.verify") },
-    uneligible: (user) => Boolean(user?.uuid),
-    disabled: ["verify"],
-  },
-  { message: { content: (t) => t("tips.premium") } },
-  {
-    message: { content: (t) => t("tips.rankings") },
-    disabled: ["rankings", "positions"],
-  },
-  {
-    message: { content: (t) => t("tips.sessions") },
-    disabled: ["session", "daily", "weekly", "monthly", "yesterday", "lastday", "lastweek", "lastmonth", "reset"],
-  },
-  {
-    message: { content: (t) => t("tips.invite") },
-    disabled: ["help", "invite", "links"],
-  },
+	{
+		message: { content: (t) => t("tips.discord") },
+		uneligible: (user) => Boolean(user?.serverMember),
+		disabled: ["help", "invite", "links"],
+	},
+	{
+		message: { content: (t) => t("tips.verify") },
+		uneligible: (user) => Boolean(user?.uuid),
+		disabled: ["verify"],
+	},
+	{ message: { content: (t) => t("tips.premium") } },
+	{
+		message: { content: (t) => t("tips.rankings") },
+		disabled: ["rankings", "positions"],
+	},
+	{
+		message: { content: (t) => t("tips.sessions") },
+		disabled: ["session", "daily", "weekly", "monthly", "yesterday", "lastday", "lastweek", "lastmonth", "reset"],
+	},
+	{
+		message: { content: (t) => t("tips.invite") },
+		disabled: ["help", "invite", "links"],
+	},
 ];

@@ -12,16 +12,16 @@ import { Transform } from "class-transformer";
 import { UuidDto } from "./uuid.dto.js";
 
 export class HeadDto extends UuidDto {
-  @IsOptional()
-  @Transform(({ value }) => +value)
-  @IsInt()
-  @Min(8)
-  @Max(800)
-  @ApiProperty({
-    description: "The size of the head",
-    default: 160,
-    minimum: 8,
-    maximum: 800,
-  })
-  public size = 160;
+	@IsOptional()
+	@Transform(({ value }) => +value)
+	@IsInt()
+	@Min(8)
+	@Max(800)
+	@ApiProperty({
+		description: "The size of the head",
+		default: 160,
+		minimum: 8,
+		maximum: 800,
+	})
+	public size = 160;
 }

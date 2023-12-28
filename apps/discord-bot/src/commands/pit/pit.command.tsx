@@ -13,11 +13,11 @@ import { PitProfile } from "./pit.profile.js";
 
 @Command({ description: (t) => t("commands.pit"), args: [PlayerArgument] })
 export class PitCommand extends BaseHypixelCommand<PitModes> {
-  public constructor() {
-    super(PIT_MODES);
-  }
+	public constructor() {
+		super(PIT_MODES);
+	}
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
-    return <PitProfile {...base} />;
-  }
+	public getProfile(base: BaseProfileProps): JSX.Element {
+		return <PitProfile {...base} />;
+	}
 }

@@ -12,14 +12,14 @@ import { Box, Render } from "@statsify/rendering";
 import { UserBoxes } from "@statsify/schemas";
 
 export function getBoxRenderer(boxes: UserBoxes): Render<Box.BoxRenderProps> {
-  switch (boxes) {
-    case UserBoxes.DEFAULT:
-      return Box.render;
+	switch (boxes) {
+		case UserBoxes.DEFAULT:
+			return Box.render;
 
-    case UserBoxes.HD:
-      return HDBox.render;
+		case UserBoxes.HD:
+			return HDBox.render;
 
-    case UserBoxes.UHD:
-      return UHDBox.render;
-  }
+		case UserBoxes.UHD:
+			return UHDBox.render;
+	}
 }

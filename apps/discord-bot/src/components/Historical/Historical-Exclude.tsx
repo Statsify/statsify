@@ -10,10 +10,8 @@ import { If } from "../If.js";
 import type { ProfileTime } from "#commands/base.hypixel-command";
 
 export interface HistoricalExcludeProps {
-  time: ProfileTime;
-  children: JSX.Children;
+	time: ProfileTime;
+	children: JSX.Children;
 }
 
-export const HistoricalExclude = ({ time, children }: HistoricalExcludeProps) => (
-  <If condition={time === "LIVE"}>{children}</If>
-);
+export const HistoricalExclude = ({ time, children }: HistoricalExcludeProps) => <If condition={time === "LIVE"}>{children}</If>;

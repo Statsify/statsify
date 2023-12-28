@@ -14,49 +14,36 @@ import { Table } from "../Table/index.js";
 import { formatProgression } from "../Header/progression.js";
 
 export interface HistoricalProgressionProps {
-  progression: Progression;
-  t: LocalizeFunction;
-  level: number;
-  exp: number;
-  current: string;
-  next: string;
-  time: "LIVE" | HistoricalTimeData;
+	progression: Progression;
+	t: LocalizeFunction;
+	level: number;
+	exp: number;
+	current: string;
+	next: string;
+	time: "LIVE" | HistoricalTimeData;
 }
 
-export const HistoricalProgression = ({
-  progression,
-  t,
-  level,
-  exp,
-  current,
-  next,
-  time,
-}: HistoricalProgressionProps) => (
-  <If condition={time !== "LIVE"}>
-    <>
-      <Table.tr>
-        <Table.td
-          title={t("stats.levelsGained")}
-          value={t(level)}
-          color="§b"
-          size="small"
-        />
-        <Table.td title={t("stats.expGained")} value={t(exp)} color="§b" size="small" />
-      </Table.tr>
-      <Table.tr>
-        <box width="100%">
-          <text>
-            {formatProgression({
-              t,
-              progression,
-              currentLevel: current,
-              nextLevel: next,
-              showLevel: true,
-              showProgress: false,
-            })}
-          </text>
-        </box>
-      </Table.tr>
-    </>
-  </If>
+export const HistoricalProgression = ({ progression, t, level, exp, current, next, time }: HistoricalProgressionProps) => (
+	<If condition={time !== "LIVE"}>
+		<>
+			<Table.tr>
+				<Table.td title={t("stats.levelsGained")} value={t(level)} color="§b" size="small" />
+				<Table.td title={t("stats.expGained")} value={t(exp)} color="§b" size="small" />
+			</Table.tr>
+			<Table.tr>
+				<box width="100%">
+					<text>
+						{formatProgression({
+							t,
+							progression,
+							currentLevel: current,
+							nextLevel: next,
+							showLevel: true,
+							showProgress: false,
+						})}
+					</text>
+				</box>
+			</Table.tr>
+		</>
+	</If>
 );

@@ -11,6 +11,6 @@ import { Status } from "@statsify/schemas";
 import { SuccessResponse } from "./success.response.js";
 
 export class GetStatusResponse extends SuccessResponse {
-  @ApiProperty()
-  public status: Status;
+	@ApiProperty()
+	public status: Status;
 }

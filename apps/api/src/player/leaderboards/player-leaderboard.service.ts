@@ -19,58 +19,52 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class PlayerLeaderboardService extends LeaderboardService {
-  public constructor(
-    @Inject(forwardRef(() => PlayerService))
-    private readonly playerService: Circular<PlayerService>,
-    @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
-    @InjectRedis() redis: Redis
-  ) {
-    super(redis);
-  }
+	public constructor(
+		@Inject(forwardRef(() => PlayerService))
+		private readonly playerService: Circular<PlayerService>,
+		@InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>,
+		@InjectRedis() redis: Redis
+	) {
+		super(redis);
+	}
 
-  protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
-    if (input.length <= 16) {
-      const player = await this.playerService.get(input, HypixelCache.CACHE_ONLY, {
-        uuid: true,
-      });
+	protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
+		if (input.length <= 16) {
+			const player = await this.playerService.get(input, HypixelCache.CACHE_ONLY, {
+				uuid: true,
+			});
 
-      if (!player) throw new PlayerNotFoundException();
-      input = player.uuid;
-    }
+			if (!player) throw new PlayerNotFoundException();
+			input = player.uuid;
+		}
 
-    const ranking = await this.getLeaderboardRankings(Player, [field], input);
+		const ranking = await this.getLeaderboardRankings(Player, [field], input);
 
-    if (!ranking || !ranking[0] || !ranking[0].rank) throw new PlayerNotFoundException();
+		if (!ranking || !ranking[0] || !ranking[0].rank) throw new PlayerNotFoundException();
 
-    return ranking[0].rank;
-  }
+		return ranking[0].rank;
+	}
 
-  protected async getAdditionalStats(
-    ids: string[],
-    fields: string[]
-  ): Promise<LeaderboardAdditionalStats[]> {
-    const selector = fields.reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {} as Record<string, boolean>);
+	protected async getAdditionalStats(ids: string[], fields: string[]): Promise<LeaderboardAdditionalStats[]> {
+		const selector = fields.reduce(
+			(acc, key) => {
+				acc[key] = true;
+				return acc;
+			},
+			{} as Record<string, boolean>
+		);
 
-    selector.displayName = true;
+		selector.displayName = true;
 
-    return await Promise.all(
-      ids.map(async (id) => {
-        const player = await this.playerModel
-          .findOne()
-          .where("uuid")
-          .equals(id)
-          .select(selector)
-          .lean()
-          .exec();
+		return await Promise.all(
+			ids.map(async (id) => {
+				const player = await this.playerModel.findOne().where("uuid").equals(id).select(selector).lean().exec();
 
-        const additionalStats = flatten(player) as LeaderboardAdditionalStats;
-        additionalStats.name = additionalStats.displayName;
+				const additionalStats = flatten(player) as LeaderboardAdditionalStats;
+				additionalStats.name = additionalStats.displayName;
 
-        return additionalStats;
-      })
-    );
-  }
+				return additionalStats;
+			})
+		);
+	}
 }

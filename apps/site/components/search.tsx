@@ -7,19 +7,24 @@
  */
 
 import { SearchSm } from "~/icons/search-sm";
+import { twMerge } from "tailwind-merge";
 
-export function Search() {
-  return (
-    <div className="w-full flex items-center focus-within:text-white text-white/70 ">
-      <input
-        id="input"
-        type="text"
-        autoComplete="off"
-        spellCheck="false"
-        placeholder="Search a Player, Guild, or Leaderboard"
-        className="bg-white/20 w-full py-6 pl-16 pr-5 rounded-3xl backdrop-blur-2xl outline outline-2 outline-white/15 outline-offset-[-2px] shadow-md font-semibold text-2xl placeholder-white/50 decoration"
-      />
-      <SearchSm className="absolute ml-5"/>
-    </div>
-  );
+export interface SearchProperties {
+	className?: string;
+}
+
+export function Search({ className }: SearchProperties) {
+	return (
+		<div className={twMerge("flex items-center focus-within:text-white text-white/70", className)}>
+			<input
+				id="input"
+				type="text"
+				autoComplete="off"
+				spellCheck="false"
+				placeholder="Search"
+				className="w-full rounded-3xl bg-white/20 py-6 pl-16 pr-5 text-2xl font-semibold shadow-md outline outline-2 outline-offset-[-2px] outline-white/15 backdrop-blur-2xl placeholder:text-white/50"
+			/>
+			<SearchSm className="absolute ml-5" />
+		</div>
+	);
 }

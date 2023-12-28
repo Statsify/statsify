@@ -9,129 +9,113 @@
 import { Box, Render } from "@statsify/rendering";
 
 export const render: Render<Box.BoxRenderProps> = (
-  ctx,
-  {
-    color = Box.DEFAULT_COLOR,
-    border,
-    shadowDistance,
-    shadowOpacity = Box.SHADOW_OPACITY,
-    outline,
-    outlineSize,
-  },
-  { x, y, width, height, padding },
-  { winterTheme }
+	ctx,
+	{ color = Box.DEFAULT_COLOR, border, shadowDistance, shadowOpacity = Box.SHADOW_OPACITY, outline, outlineSize },
+	{ x, y, width, height, padding },
+	{ winterTheme }
 ) => {
-  const fill = Box.resolveFill(color, ctx, x, y, width, height);
-  ctx.fillStyle =  winterTheme.getIce(ctx);
+	const fill = Box.resolveFill(color, ctx, x, y, width, height);
+	ctx.fillStyle = winterTheme.getIce(ctx);
 
-  width = width + padding.left + padding.right;
-  height = height + padding.top + padding.bottom;
+	width = width + padding.left + padding.right;
+	height = height + padding.top + padding.bottom;
 
-  /**
-   * Prevent Anti Aliasing
-   */
-  x = Math.round(x);
-  y = Math.round(y);
-  width = Math.round(width);
-  height = Math.round(height);
+	/**
+	 * Prevent Anti Aliasing
+	 */
+	x = Math.round(x);
+	y = Math.round(y);
+	width = Math.round(width);
+	height = Math.round(height);
 
-  border = { ...border };
+	border = { ...border };
 
-  border.bottomLeft *= 2;
-  border.bottomRight *= 2;
-  border.topLeft *= 2;
-  border.topRight *= 2;
+	border.bottomLeft *= 2;
+	border.bottomRight *= 2;
+	border.topLeft *= 2;
+	border.topRight *= 2;
 
-  ctx.beginPath();
-  ctx.moveTo(x + border.topLeft, y);
-  ctx.lineTo(x + width - border.topRight, y);
+	ctx.beginPath();
+	ctx.moveTo(x + border.topLeft, y);
+	ctx.lineTo(x + width - border.topRight, y);
 
-  // Top Right Corner
-  ctx.quadraticCurveTo(x + width, y, x + width, y + border.topRight);
-  ctx.lineTo(x + width, y + height - border.bottomRight);
+	// Top Right Corner
+	ctx.quadraticCurveTo(x + width, y, x + width, y + border.topRight);
+	ctx.lineTo(x + width, y + height - border.bottomRight);
 
-  // Bottom Right Corner
-  ctx.quadraticCurveTo(x + width, y + height, x + width - border.bottomRight, y + height);
-  ctx.lineTo(x + border.bottomLeft, y + height);
+	// Bottom Right Corner
+	ctx.quadraticCurveTo(x + width, y + height, x + width - border.bottomRight, y + height);
+	ctx.lineTo(x + border.bottomLeft, y + height);
 
-  // Bottom Left Corner
-  ctx.quadraticCurveTo(x, y + height, x, y + height - border.bottomLeft);
-  ctx.lineTo(x, y + border.topLeft);
+	// Bottom Left Corner
+	ctx.quadraticCurveTo(x, y + height, x, y + height - border.bottomLeft);
+	ctx.lineTo(x, y + border.topLeft);
 
-  // Top Left Corner
-  ctx.quadraticCurveTo(x, y, x + border.topLeft, y);
+	// Top Left Corner
+	ctx.quadraticCurveTo(x, y, x + border.topLeft, y);
 
-  ctx.closePath();
-  ctx.fill();
+	ctx.closePath();
+	ctx.fill();
 
-  if (fill !== Box.DEFAULT_COLOR) {
-    ctx.fillStyle = fill;
-    ctx.fill();
-  }
+	if (fill !== Box.DEFAULT_COLOR) {
+		ctx.fillStyle = fill;
+		ctx.fill();
+	}
 
-  ctx.globalCompositeOperation = "overlay";
+	ctx.globalCompositeOperation = "overlay";
 
-  const overlay = ctx.createLinearGradient(x, y, x, y + height);
-  overlay.addColorStop(0, "rgba(255, 255, 255, 0.15)");
-  overlay.addColorStop(1, "rgba(0, 0, 0, 0.15)");
-  ctx.fillStyle = overlay;
+	const overlay = ctx.createLinearGradient(x, y, x, y + height);
+	overlay.addColorStop(0, "rgba(255, 255, 255, 0.15)");
+	overlay.addColorStop(1, "rgba(0, 0, 0, 0.15)");
+	ctx.fillStyle = overlay;
 
-  ctx.fill();
+	ctx.fill();
 
-  ctx.globalCompositeOperation = "source-over";
+	ctx.globalCompositeOperation = "source-over";
 
-  if (outline) {
-    ctx.strokeStyle =
-      outline === true ? Box.resolveFill(color, ctx, x, y, width, height) : outline;
-    ctx.lineWidth = outlineSize;
-    ctx.stroke();
-  }
+	if (outline) {
+		ctx.strokeStyle = outline === true ? Box.resolveFill(color, ctx, x, y, width, height) : outline;
+		ctx.lineWidth = outlineSize;
+		ctx.stroke();
+	}
 
-  if (!shadowDistance) return;
+	if (!shadowDistance) return;
 
-  ctx.globalAlpha = shadowOpacity;
-  ctx.fillStyle = fill;
+	ctx.globalAlpha = shadowOpacity;
+	ctx.fillStyle = fill;
 
-  ctx.beginPath();
-  ctx.moveTo(x + width, y + shadowDistance);
+	ctx.beginPath();
+	ctx.moveTo(x + width, y + shadowDistance);
 
-  // Shadow Top Right Corner
-  ctx.quadraticCurveTo(
-    x + width,
-    y + shadowDistance,
-    x + width + shadowDistance,
-    y + border.topRight + shadowDistance
-  );
+	// Shadow Top Right Corner
+	ctx.quadraticCurveTo(x + width, y + shadowDistance, x + width + shadowDistance, y + border.topRight + shadowDistance);
 
-  ctx.lineTo(
-    x + width + shadowDistance,
-    y + height - border.bottomRight + shadowDistance
-  );
+	ctx.lineTo(x + width + shadowDistance, y + height - border.bottomRight + shadowDistance);
 
-  // Shadow Outer Bottom Right Corner
-  ctx.quadraticCurveTo(
-    x + width + shadowDistance,
-    y + height + shadowDistance,
-    x + width - border.bottomRight + shadowDistance,
-    y + height + shadowDistance
-  );
+	// Shadow Outer Bottom Right Corner
+	ctx.quadraticCurveTo(
+		x + width + shadowDistance,
+		y + height + shadowDistance,
+		x + width - border.bottomRight + shadowDistance,
+		y + height + shadowDistance
+	);
 
-  ctx.lineTo(x + border.bottomLeft + shadowDistance, y + height + shadowDistance);
+	ctx.lineTo(x + border.bottomLeft + shadowDistance, y + height + shadowDistance);
 
-  // Shadow Bottom Left Corner
-  ctx.quadraticCurveTo(x + shadowDistance, y + height, x + shadowDistance, y + height);
+	// Shadow Bottom Left Corner
+	ctx.quadraticCurveTo(x + shadowDistance, y + height, x + shadowDistance, y + height);
 
-  ctx.lineTo(x + width - border.bottomRight, y + height);
+	ctx.lineTo(x + width - border.bottomRight, y + height);
 
-  // Shadow Inner Bottom Right Corner
-  ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - border.bottomRight);
+	// Shadow Inner Bottom Right Corner
+	ctx.quadraticCurveTo(x + width, y + height, x + width, y + height - border.bottomRight);
 
-  ctx.lineTo(x + width, y + shadowDistance);
+	ctx.lineTo(x + width, y + shadowDistance);
 
-  ctx.closePath();
-  ctx.fill();
+	ctx.closePath();
+	ctx.fill();
 
-  ctx.globalAlpha = 1;
+	ctx.globalAlpha = 1;
 
-  Box.renderSnow(ctx, winterTheme, x, y, width);
+	Box.renderSnow(ctx, winterTheme, x, y, width);
 };

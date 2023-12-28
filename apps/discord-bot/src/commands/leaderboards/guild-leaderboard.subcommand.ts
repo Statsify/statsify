@@ -14,26 +14,26 @@ import { getBackground } from "@statsify/assets";
 
 @Service()
 export class GuildLeaderboardSubCommand extends BaseLeaderboardCommand {
-  public constructor(protected readonly apiService: ApiService) {
-    super();
-  }
+	public constructor(protected readonly apiService: ApiService) {
+		super();
+	}
 
-  @SubCommand({
-    description: (t) => t("commands.guild-leaderboard"),
-    args: [GuildLeaderboardArgument],
-  })
-  public async leaderboard(context: CommandContext) {
-    const leaderboard = context.option<string>("leaderboard");
+	@SubCommand({
+		description: (t) => t("commands.guild-leaderboard"),
+		args: [GuildLeaderboardArgument],
+	})
+	public async leaderboard(context: CommandContext) {
+		const leaderboard = context.option<string>("leaderboard");
 
-    const field = leaderboard.replace(/ /g, ".");
-    const background = await getBackground("hypixel", "overall");
+		const field = leaderboard.replace(/ /g, ".");
+		const background = await getBackground("hypixel", "overall");
 
-    return this.createLeaderboard({
-      context,
-      background,
-      field,
-      getLeaderboard: this.apiService.getGuildLeaderboard.bind(this.apiService),
-      type: "guild",
-    });
-  }
+		return this.createLeaderboard({
+			context,
+			background,
+			field,
+			getLeaderboard: this.apiService.getGuildLeaderboard.bind(this.apiService),
+			type: "guild",
+		});
+	}
 }

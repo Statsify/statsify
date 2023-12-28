@@ -18,8 +18,8 @@ Container.set("HDFontRenderer", hdRenderer);
 
 @Service()
 export class FontLoaderService {
-  public async init() {
-    await renderer.loadImages(getMinecraftTexturePath("textures/font"));
-    await hdRenderer.loadImages(getMinecraftTexturePath("textures/font", "hd"));
-  }
+	public async init() {
+		await renderer.loadImages(getMinecraftTexturePath("textures/font"));
+		await hdRenderer.loadImages(getMinecraftTexturePath("textures/font", "hd"));
+	}
 }

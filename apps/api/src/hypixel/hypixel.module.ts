@@ -12,17 +12,17 @@ import { Module } from "@nestjs/common";
 import { config } from "@statsify/util";
 
 @Module({
-  imports: [
-    HttpModule.register({
-      baseURL: "https://api.hypixel.net/",
-      headers: {
-        "API-Key": config("hypixelApi.key"),
-        "accept-encoding": "*",
-      },
-      timeout: config("hypixelApi.timeout", { default: 5000 }),
-    }),
-  ],
-  providers: [HypixelService],
-  exports: [HypixelService],
+	imports: [
+		HttpModule.register({
+			baseURL: "https://api.hypixel.net/",
+			headers: {
+				"API-Key": config("hypixelApi.key"),
+				"accept-encoding": "*",
+			},
+			timeout: config("hypixelApi.timeout", { default: 5000 }),
+		}),
+	],
+	providers: [HypixelService],
+	exports: [HypixelService],
 })
 export class HypixelModule {}

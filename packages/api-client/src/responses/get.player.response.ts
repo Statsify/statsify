@@ -11,6 +11,6 @@ import { Player } from "@statsify/schemas";
 import { SuccessResponse } from "./success.response.js";
 
 export class GetPlayerResponse extends SuccessResponse {
-  @ApiProperty()
-  public player: Player;
+	@ApiProperty()
+	public player: Player;
 }

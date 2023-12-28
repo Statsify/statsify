@@ -11,6 +11,6 @@ import { RecentGames } from "@statsify/schemas";
 import { SuccessResponse } from "./success.response.js";
 
 export class GetRecentGamesResponse extends SuccessResponse {
-  @ApiProperty()
-  public recentGames: RecentGames;
+	@ApiProperty()
+	public recentGames: RecentGames;
 }

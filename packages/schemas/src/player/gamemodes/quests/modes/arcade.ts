@@ -10,11 +10,11 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const ArcadeQuests = createGameModeQuests({
-  game: FormattedGame.ARCADE,
-  fieldPrefix: "arcade",
-  daily: [
-    { field: "gamer", propertyKey: "gamer" },
-    { field: "winner", propertyKey: "winner" },
-  ],
-  weekly: [{ field: "specialist", propertyKey: "specialist" }],
+	game: FormattedGame.ARCADE,
+	fieldPrefix: "arcade",
+	daily: [
+		{ field: "gamer", propertyKey: "gamer" },
+		{ field: "winner", propertyKey: "winner" },
+	],
+	weekly: [{ field: "specialist", propertyKey: "specialist" }],
 });

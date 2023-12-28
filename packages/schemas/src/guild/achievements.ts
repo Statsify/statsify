@@ -11,99 +11,93 @@ import { Field } from "#metadata";
 import { Progression } from "#progression";
 
 const PRESTIGE_REQUIREMENTS = [
-  { req: 20, tier: "I" },
-  { req: 40, tier: "II" },
-  { req: 60, tier: "III" },
-  { req: 80, tier: "IV" },
-  { req: 100, tier: "V" },
+	{ req: 20, tier: "I" },
+	{ req: 40, tier: "II" },
+	{ req: 60, tier: "III" },
+	{ req: 80, tier: "IV" },
+	{ req: 100, tier: "V" },
 ];
 
 const EXPERIENCE_KINGS_REQUIREMENTS = [
-  { req: 50_000, tier: "I" },
-  { req: 100_000, tier: "II" },
-  { req: 150_000, tier: "III" },
-  { req: 200_000, tier: "IV" },
-  { req: 250_000, tier: "V" },
-  { req: 275_000, tier: "VI" },
-  { req: 300_000, tier: "VII" },
+	{ req: 50_000, tier: "I" },
+	{ req: 100_000, tier: "II" },
+	{ req: 150_000, tier: "III" },
+	{ req: 200_000, tier: "IV" },
+	{ req: 250_000, tier: "V" },
+	{ req: 275_000, tier: "VI" },
+	{ req: 300_000, tier: "VII" },
 ];
 
 const WINNERS_REQUIREMENTS = [
-  { req: 100, tier: "I" },
-  { req: 200, tier: "II" },
-  { req: 300, tier: "III" },
-  { req: 400, tier: "IV" },
-  { req: 500, tier: "V" },
-  { req: 750, tier: "VI" },
-  { req: 1000, tier: "VII" },
+	{ req: 100, tier: "I" },
+	{ req: 200, tier: "II" },
+	{ req: 300, tier: "III" },
+	{ req: 400, tier: "IV" },
+	{ req: 500, tier: "V" },
+	{ req: 750, tier: "VI" },
+	{ req: 1000, tier: "VII" },
 ];
 
 const FAMILY_REQUIREMENTS = [
-  { req: 5, tier: "I" },
-  { req: 15, tier: "II" },
-  { req: 30, tier: "III" },
-  { req: 40, tier: "IV" },
-  { req: 50, tier: "V" },
-  { req: 60, tier: "VI" },
-  { req: 70, tier: "VII" },
+	{ req: 5, tier: "I" },
+	{ req: 15, tier: "II" },
+	{ req: 30, tier: "III" },
+	{ req: 40, tier: "IV" },
+	{ req: 50, tier: "V" },
+	{ req: 60, tier: "VI" },
+	{ req: 70, tier: "VII" },
 ];
 
 /**
  * Better names for the guild achievements
  */
 export class GuildAchievements {
-  @Field()
-  public familyProgression: Progression;
+	@Field()
+	public familyProgression: Progression;
 
-  @Field({ store: { default: "I" } })
-  public familyTier: string;
+	@Field({ store: { default: "I" } })
+	public familyTier: string;
 
-  @Field()
-  public winnersProgression: Progression;
+	@Field()
+	public winnersProgression: Progression;
 
-  @Field({ store: { default: "I" } })
-  public winnersTier: string;
+	@Field({ store: { default: "I" } })
+	public winnersTier: string;
 
-  @Field()
-  public experienceKingsProgression: Progression;
+	@Field()
+	public experienceKingsProgression: Progression;
 
-  @Field({ store: { default: "I" } })
-  public experienceKingsTier: string;
+	@Field({ store: { default: "I" } })
+	public experienceKingsTier: string;
 
-  @Field()
-  public prestigeProgression: Progression;
+	@Field()
+	public prestigeProgression: Progression;
 
-  @Field({ store: { default: "I" } })
-  public prestigeTier: string;
+	@Field({ store: { default: "I" } })
+	public prestigeTier: string;
 
-  public constructor(level: number, data: APIData = {}) {
-    const familyScore = data.ONLINE_PLAYERS ?? 0;
-    const winnersScore = data.WINNERS ?? 0;
-    const expierienceKingsScore = data.EXPERIENCE_KINGS ?? 0;
-    const prestigeScore = level;
+	public constructor(level: number, data: APIData = {}) {
+		const familyScore = data.ONLINE_PLAYERS ?? 0;
+		const winnersScore = data.WINNERS ?? 0;
+		const expierienceKingsScore = data.EXPERIENCE_KINGS ?? 0;
+		const prestigeScore = level;
 
-    const familyLevel = findScore(FAMILY_REQUIREMENTS, familyScore);
-    this.familyProgression = new Progression(familyScore, familyLevel?.req);
-    this.familyTier = familyLevel?.tier;
+		const familyLevel = findScore(FAMILY_REQUIREMENTS, familyScore);
+		this.familyProgression = new Progression(familyScore, familyLevel?.req);
+		this.familyTier = familyLevel?.tier;
 
-    const winnersLevel = findScore(WINNERS_REQUIREMENTS, winnersScore);
-    this.winnersProgression = new Progression(winnersScore, winnersLevel?.req);
-    this.winnersTier = winnersLevel?.tier;
+		const winnersLevel = findScore(WINNERS_REQUIREMENTS, winnersScore);
+		this.winnersProgression = new Progression(winnersScore, winnersLevel?.req);
+		this.winnersTier = winnersLevel?.tier;
 
-    const experienceKingsLevel = findScore(
-      EXPERIENCE_KINGS_REQUIREMENTS,
-      expierienceKingsScore
-    );
+		const experienceKingsLevel = findScore(EXPERIENCE_KINGS_REQUIREMENTS, expierienceKingsScore);
 
-    this.experienceKingsProgression = new Progression(
-      expierienceKingsScore,
-      experienceKingsLevel?.req
-    );
+		this.experienceKingsProgression = new Progression(expierienceKingsScore, experienceKingsLevel?.req);
 
-    this.experienceKingsTier = experienceKingsLevel?.tier;
+		this.experienceKingsTier = experienceKingsLevel?.tier;
 
-    const prestigeLevel = findScore(PRESTIGE_REQUIREMENTS, prestigeScore);
-    this.prestigeProgression = new Progression(prestigeScore, prestigeLevel?.req);
-    this.prestigeTier = prestigeLevel?.tier;
-  }
+		const prestigeLevel = findScore(PRESTIGE_REQUIREMENTS, prestigeScore);
+		this.prestigeProgression = new Progression(prestigeScore, prestigeLevel?.req);
+		this.prestigeTier = prestigeLevel?.tier;
+	}
 }

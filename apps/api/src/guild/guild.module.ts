@@ -17,8 +17,8 @@ import { PlayerModule } from "#player";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
-  imports: [HypixelModule, PlayerModule, TypegooseModule.forFeature([Guild, Player])],
-  controllers: [GuildController, GuildLeaderboardController],
-  providers: [GuildService, GuildLeaderboardService],
+	imports: [HypixelModule, PlayerModule, TypegooseModule.forFeature([Guild, Player])],
+	controllers: [GuildController, GuildLeaderboardController],
+	providers: [GuildService, GuildLeaderboardService],
 })
 export class GuildModule {}

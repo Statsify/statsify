@@ -9,15 +9,15 @@
 import { Field } from "#metadata";
 
 export class Tag {
-  @Field({ mongo: { unique: true } })
-  public name: string;
+	@Field({ mongo: { unique: true } })
+	public name: string;
 
-  @Field({ mongo: { unique: true } })
-  public id: string;
+	@Field({ mongo: { unique: true } })
+	public id: string;
 
-  @Field()
-  public content: string;
+	@Field()
+	public content: string;
 
-  @Field({ store: { required: false } })
-  public attachment?: string;
+	@Field({ store: { required: false } })
+	public attachment?: string;
 }

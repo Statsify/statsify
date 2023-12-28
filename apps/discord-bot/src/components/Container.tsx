@@ -11,35 +11,35 @@ import { Image } from "skia-canvas";
 import { Percent } from "@statsify/rendering";
 
 export interface ContainerProps {
-  /**
-   * @default 97
-   * @description The percent size of the container. The number should be 1-100.
-   */
-  percent?: Percent;
+	/**
+	 * @default 97
+	 * @description The percent size of the container. The number should be 1-100.
+	 */
+	percent?: Percent;
 
-  background?: Image;
+	background?: Image;
 
-  children: JSX.Children;
+	children: JSX.Children;
 }
 
 export const Container = ({ background, percent = "97%", children }: ContainerProps) => {
-  const inner = (
-    <div direction="column" width={percent} height={percent} align="center">
-      {children}
-    </div>
-  );
+	const inner = (
+		<div direction="column" width={percent} height={percent} align="center">
+			{children}
+		</div>
+	);
 
-  if (background) {
-    return (
-      <div>
-        <Background background={background}>{inner}</Background>
-      </div>
-    );
-  }
+	if (background) {
+		return (
+			<div>
+				<Background background={background}>{inner}</Background>
+			</div>
+		);
+	}
 
-  return (
-    <div width="100%" height="100%">
-      {inner}
-    </div>
-  );
+	return (
+		<div width="100%" height="100%">
+			{inner}
+		</div>
+	);
 };

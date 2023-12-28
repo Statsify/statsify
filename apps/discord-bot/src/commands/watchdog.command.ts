@@ -10,43 +10,29 @@ import { ApiService, Command, EmbedBuilder } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 
 @Command({
-  description: (t) => t("commands.watchdog"),
+	description: (t) => t("commands.watchdog"),
 })
 export class WatchdogCommand {
-  public constructor(private readonly apiService: ApiService) {}
+	public constructor(private readonly apiService: ApiService) {}
 
-  public async run() {
-    const watchdog = await this.apiService.getWatchdog();
+	public async run() {
+		const watchdog = await this.apiService.getWatchdog();
 
-    const embed = new EmbedBuilder()
-      .title("Watchdog Ban Stats")
-      .field(
-        "Overall",
-        (t) =>
-          `\`•\` **Lifetime**: \`${t(watchdog.overall.bans)}\`\n\`•\` **Last Day**: \`${t(
-            watchdog.overall.lastDay
-          )}\``
-      )
-      .field(
-        "Watchdog",
-        (t) =>
-          `\`•\` **Lifetime**: \`${t(
-            watchdog.watchdog.bans
-          )}\`\n\`•\` **Last Day**: \`${t(
-            watchdog.watchdog.lastDay
-          )}\`\n\`•\` **Last Minute**: \`${t(watchdog.watchdog.lastMinute)}\``
-      )
-      .field(
-        "Staff",
-        (t) =>
-          `\`•\` **Lifetime**: \`${t(watchdog.staff.bans)}\`\n\`•\` **Last Day**: \`${t(
-            watchdog.staff.lastDay
-          )}\``
-      )
-      .color(STATUS_COLORS.info);
+		const embed = new EmbedBuilder()
+			.title("Watchdog Ban Stats")
+			.field("Overall", (t) => `\`•\` **Lifetime**: \`${t(watchdog.overall.bans)}\`\n\`•\` **Last Day**: \`${t(watchdog.overall.lastDay)}\``)
+			.field(
+				"Watchdog",
+				(t) =>
+					`\`•\` **Lifetime**: \`${t(watchdog.watchdog.bans)}\`\n\`•\` **Last Day**: \`${t(
+						watchdog.watchdog.lastDay
+					)}\`\n\`•\` **Last Minute**: \`${t(watchdog.watchdog.lastMinute)}\``
+			)
+			.field("Staff", (t) => `\`•\` **Lifetime**: \`${t(watchdog.staff.bans)}\`\n\`•\` **Last Day**: \`${t(watchdog.staff.lastDay)}\``)
+			.color(STATUS_COLORS.info);
 
-    return {
-      embeds: [embed],
-    };
-  }
+		return {
+			embeds: [embed],
+		};
+	}
 }
