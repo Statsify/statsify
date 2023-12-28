@@ -9,12 +9,12 @@
 import { Field } from "#metadata";
 
 export class Ticket {
-  @Field({ mongo: { unique: true } })
-  public channel: string;
+	@Field({ mongo: { unique: true } })
+	public channel: string;
 
-  @Field({ mongo: { unique: true, index: true } })
-  public owner: string;
+	@Field({ mongo: { unique: true, index: true } })
+	public owner: string;
 
-  @Field()
-  public username: string;
+	@Field()
+	public username: string;
 }

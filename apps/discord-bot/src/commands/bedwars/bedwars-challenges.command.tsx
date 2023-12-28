@@ -13,17 +13,14 @@ import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.bedwars-challenges") })
 export class BedWarsChallengesCommand extends BaseHypixelCommand<BedWarsModes> {
-  public constructor() {
-    super(BEDWARS_MODES);
-  }
+	public constructor() {
+		super(BEDWARS_MODES);
+	}
 
-  public filterModes(
-    player: Player,
-    modes: GameMode<BedWarsModes>[]
-  ): GameMode<BedWarsModes>[] {
-    return [modes[0]];
-  }
-  public getProfile(base: BaseProfileProps): JSX.Element {
-    return <BedWarsChallengesProfile {...base} />;
-  }
+	public filterModes(player: Player, modes: GameMode<BedWarsModes>[]): GameMode<BedWarsModes>[] {
+		return [modes[0]];
+	}
+	public getProfile(base: BaseProfileProps): JSX.Element {
+		return <BedWarsChallengesProfile {...base} />;
+	}
 }

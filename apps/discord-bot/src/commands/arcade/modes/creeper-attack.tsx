@@ -11,14 +11,14 @@ import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
 
 interface CreeperAttackTableProps {
-  stats: CreeperAttack;
-  t: LocalizeFunction;
+	stats: CreeperAttack;
+	t: LocalizeFunction;
 }
 
 export const CreeperAttackTable = ({ stats, t }: CreeperAttackTableProps) => (
-  <Table.table>
-    <Table.tr>
-      <Table.td title={t("stats.maxWave")} value={t(stats.maxWave)} color="§a" />
-    </Table.tr>
-  </Table.table>
+	<Table.table>
+		<Table.tr>
+			<Table.td title={t("stats.maxWave")} value={t(stats.maxWave)} color="§a" />
+		</Table.tr>
+	</Table.table>
 );

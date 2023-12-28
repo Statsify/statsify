@@ -12,29 +12,25 @@ import { parseDiscordResponse } from "#util/parse-discord-error";
 
 @Service()
 export class MemberService {
-  public constructor(private readonly rest: RestClient) {}
+	public constructor(private readonly rest: RestClient) {}
 
-  public async addRole(guildId: string, userId: string, roleId: string) {
-    const response = await this.rest.put(
-      `/guilds/${guildId}/members/${userId}/roles/${roleId}`
-    );
+	public async addRole(guildId: string, userId: string, roleId: string) {
+		const response = await this.rest.put(`/guilds/${guildId}/members/${userId}/roles/${roleId}`);
 
-    return parseDiscordResponse(response);
-  }
+		return parseDiscordResponse(response);
+	}
 
-  public async removeRole(guildId: string, userId: string, roleId: string) {
-    const response = await this.rest.delete(
-      `/guilds/${guildId}/members/${userId}/roles/${roleId}`
-    );
+	public async removeRole(guildId: string, userId: string, roleId: string) {
+		const response = await this.rest.delete(`/guilds/${guildId}/members/${userId}/roles/${roleId}`);
 
-    return parseDiscordResponse(response);
-  }
+		return parseDiscordResponse(response);
+	}
 
-  public async changeNickname(guildId: string, userId: string, nick: string) {
-    const response = await this.rest.patch(`/guilds/${guildId}/members/${userId}`, {
-      nick,
-    });
+	public async changeNickname(guildId: string, userId: string, nick: string) {
+		const response = await this.rest.patch(`/guilds/${guildId}/members/${userId}`, {
+			nick,
+		});
 
-    return parseDiscordResponse(response);
-  }
+		return parseDiscordResponse(response);
+	}
 }

@@ -6,23 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  REDIS_MODULE_CONNECTION,
-  REDIS_MODULE_CONNECTION_TOKEN,
-  REDIS_MODULE_OPTIONS_TOKEN,
-} from "./redis.constants.js";
+import { REDIS_MODULE_CONNECTION, REDIS_MODULE_CONNECTION_TOKEN, REDIS_MODULE_OPTIONS_TOKEN } from "./redis.constants.js";
 import { Redis } from "ioredis";
 import type { RedisModuleOptions } from "./redis.interfaces.js";
 
 export function getRedisOptionsToken(connection?: string): string {
-  return `${connection || REDIS_MODULE_CONNECTION}_${REDIS_MODULE_OPTIONS_TOKEN}`;
+	return `${connection || REDIS_MODULE_CONNECTION}_${REDIS_MODULE_OPTIONS_TOKEN}`;
 }
 
 export function getRedisConnectionToken(connection?: string): string {
-  return `${connection || REDIS_MODULE_CONNECTION}_${REDIS_MODULE_CONNECTION_TOKEN}`;
+	return `${connection || REDIS_MODULE_CONNECTION}_${REDIS_MODULE_CONNECTION_TOKEN}`;
 }
 
 export function createRedisConnection(options: RedisModuleOptions) {
-  const { config } = options;
-  return config.url ? new Redis(config.url, config) : new Redis(config);
+	const { config } = options;
+	return config.url ? new Redis(config.url, config) : new Redis(config);
 }

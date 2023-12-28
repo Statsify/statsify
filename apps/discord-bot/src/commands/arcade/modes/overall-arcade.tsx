@@ -12,50 +12,50 @@ import { Table } from "#components";
 import { arrayGroup } from "@statsify/util";
 
 interface OverallArcadeTableProps {
-  stats: Arcade;
-  t: LocalizeFunction;
+	stats: Arcade;
+	t: LocalizeFunction;
 }
 
 export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
-  const rowSize = 5;
+	const rowSize = 5;
 
-  const games: [string, number][] = [
-    ["Blocking Dead", stats.blockingDead.wins],
-    ["Bounty Hunters", stats.bountyHunters.wins],
-    ["Capture The Wool", stats.captureTheWool.wins],
-    ["Dragon Wars", stats.dragonWars.wins],
-    ["Dropper", stats.dropper.wins],
-    ["Ender Spleef", stats.enderSpleef.wins],
-    ["Farm Hunt", stats.farmHunt.wins],
-    ["Football", stats.football.wins],
-    ["Galaxy Wars", stats.galaxyWars.wins],
-    ["Hide And Seek", stats.hideAndSeek.overall.wins],
-    ["Hole In The Wall", stats.holeInTheWall.wins],
-    ["Hypixel Says", stats.hypixelSays.wins],
-    ["Mini Walls", stats.miniWalls.wins],
-    ["Party Games", stats.partyGames.wins],
-    ["Pixel Painters", stats.pixelPainters.wins],
-    ["Pixel Party", stats.pixelParty.overall.wins],
-    ["Seasonal", stats.seasonal.totalWins],
-    ["Throw Out", stats.throwOut.wins],
-    ["Zombies", stats.zombies.overall.wins],
-  ];
+	const games: [string, number][] = [
+		["Blocking Dead", stats.blockingDead.wins],
+		["Bounty Hunters", stats.bountyHunters.wins],
+		["Capture The Wool", stats.captureTheWool.wins],
+		["Dragon Wars", stats.dragonWars.wins],
+		["Dropper", stats.dropper.wins],
+		["Ender Spleef", stats.enderSpleef.wins],
+		["Farm Hunt", stats.farmHunt.wins],
+		["Football", stats.football.wins],
+		["Galaxy Wars", stats.galaxyWars.wins],
+		["Hide And Seek", stats.hideAndSeek.overall.wins],
+		["Hole In The Wall", stats.holeInTheWall.wins],
+		["Hypixel Says", stats.hypixelSays.wins],
+		["Mini Walls", stats.miniWalls.wins],
+		["Party Games", stats.partyGames.wins],
+		["Pixel Painters", stats.pixelPainters.wins],
+		["Pixel Party", stats.pixelParty.overall.wins],
+		["Seasonal", stats.seasonal.totalWins],
+		["Throw Out", stats.throwOut.wins],
+		["Zombies", stats.zombies.overall.wins],
+	];
 
-  games.sort((a, b) => b[1] - a[1]);
+	games.sort((a, b) => b[1] - a[1]);
 
-  const rows = arrayGroup(games, rowSize);
+	const rows = arrayGroup(games, rowSize);
 
-  const colors = ["§a", "§e", "§6", "§c", "§4"];
+	const colors = ["§a", "§e", "§6", "§c", "§4"];
 
-  return (
-    <Table.table>
-      {rows.map((row, index) => (
-        <Table.tr>
-          {row.map((game) => (
-            <Table.td title={game[0]} value={t(game[1])} color={colors[index]} />
-          ))}
-        </Table.tr>
-      ))}
-    </Table.table>
-  );
+	return (
+		<Table.table>
+			{rows.map((row, index) => (
+				<Table.tr>
+					{row.map((game) => (
+						<Table.td title={game[0]} value={t(game[1])} color={colors[index]} />
+					))}
+				</Table.tr>
+			))}
+		</Table.table>
+	);
 };

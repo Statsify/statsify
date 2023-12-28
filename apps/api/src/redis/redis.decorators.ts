@@ -9,5 +9,4 @@
 import { Inject } from "@nestjs/common";
 import { getRedisConnectionToken } from "./redis.utils.js";
 
-export const InjectRedis = (connection?: string) =>
-  Inject(getRedisConnectionToken(connection));
+export const InjectRedis = (connection?: string) => Inject(getRedisConnectionToken(connection));

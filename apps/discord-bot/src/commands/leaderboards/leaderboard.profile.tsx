@@ -16,89 +16,71 @@ import type { Image } from "skia-canvas";
 export type LeaderboardType = "player" | "guild";
 
 export interface LeaderboardData {
-  fields: (number | string)[];
-  name: string;
-  icon?: Image;
-  position: number;
-  highlight?: boolean;
+	fields: (number | string)[];
+	name: string;
+	icon?: Image;
+	position: number;
+	highlight?: boolean;
 }
 
 export interface LeaderboardProfileProps {
-  background: Image;
-  logo: Image;
-  user: User | null;
-  fields: string[];
-  name: string;
-  data: LeaderboardData[];
-  t: LocalizeFunction;
-  type: LeaderboardType;
+	background: Image;
+	logo: Image;
+	user: User | null;
+	fields: string[];
+	name: string;
+	data: LeaderboardData[];
+	t: LocalizeFunction;
+	type: LeaderboardType;
 }
 
-export const LeaderboardProfile = ({
-  background,
-  logo,
-  user,
-  data,
-  fields,
-  name,
-  t,
-  type,
-}: LeaderboardProfileProps) => {
-  const titles = ["Pos", prettify(type), ...fields].map((field, index) => (
-    <box
-      width={index === 1 ? "remaining" : "100%"}
-      border={{ topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }}
-    >
-      <text>§l{field}</text>
-    </box>
-  ));
+export const LeaderboardProfile = ({ background, logo, user, data, fields, name, t, type }: LeaderboardProfileProps) => {
+	const titles = ["Pos", prettify(type), ...fields].map((field, index) => (
+		<box width={index === 1 ? "remaining" : "100%"} border={{ topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }}>
+			<text>§l{field}</text>
+		</box>
+	));
 
-  const items = data.map((d) => {
-    const highlight = d.highlight
-      ? { color: "rgba(255, 255, 255, 0.35)", shadowOpacity: 0.3 }
-      : undefined;
+	const items = data.map((d) => {
+		const highlight = d.highlight ? { color: "rgba(255, 255, 255, 0.35)", shadowOpacity: 0.3 } : undefined;
 
-    return (
-      <>
-        <box width="100%" {...highlight}>
-          <text>{formatPosition(t, d.position)}</text>
-        </box>
-        <div width="remaining">
-          <If condition={d.icon}>
-            {(icon) => (
-              <box padding={{ left: 12, right: 12, top: 4, bottom: 4 }} {...highlight}>
-                <img image={icon} />
-              </box>
-            )}
-          </If>
-          <box width="remaining" direction="column" {...highlight}>
-            <text align="left">{d.name}</text>
-          </box>
-        </div>
-        {d.fields.map((field) => {
-          const formatted = typeof field === "number" ? t(field) : field;
+		return (
+			<>
+				<box width="100%" {...highlight}>
+					<text>{formatPosition(t, d.position)}</text>
+				</box>
+				<div width="remaining">
+					<If condition={d.icon}>
+						{(icon) => (
+							<box padding={{ left: 12, right: 12, top: 4, bottom: 4 }} {...highlight}>
+								<img image={icon} />
+							</box>
+						)}
+					</If>
+					<box width="remaining" direction="column" {...highlight}>
+						<text align="left">{d.name}</text>
+					</box>
+				</div>
+				{d.fields.map((field) => {
+					const formatted = typeof field === "number" ? t(field) : field;
 
-          return (
-            <box width="100%" {...highlight}>
-              <text>{formatted}</text>
-            </box>
-          );
-        })}
-      </>
-    );
-  });
+					return (
+						<box width="100%" {...highlight}>
+							<text>{formatted}</text>
+						</box>
+					);
+				})}
+			</>
+		);
+	});
 
-  return (
-    <Container background={background}>
-      <box width="100%">
-        <text>§^3^§l{name}</text>
-      </box>
-      <List items={[<>{titles}</>, ...items]} />
-      <Footer
-        logo={logo}
-        user={user}
-        border={{ bottomLeft: 4, bottomRight: 4, topLeft: 0, topRight: 0 }}
-      />
-    </Container>
-  );
+	return (
+		<Container background={background}>
+			<box width="100%">
+				<text>§^3^§l{name}</text>
+			</box>
+			<List items={[<>{titles}</>, ...items]} />
+			<Footer logo={logo} user={user} border={{ bottomLeft: 4, bottomRight: 4, topLeft: 0, topRight: 0 }} />
+		</Container>
+	);
 };

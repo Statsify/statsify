@@ -7,31 +7,21 @@
  */
 
 import { BLITZSG_MODES, BlitzSGModes, GameMode, Player } from "@statsify/schemas";
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { BlitzSGProfile, filterBlitzKits } from "./blitzsg.profile.js";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.blitzsg") })
 export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
-  public constructor() {
-    super(BLITZSG_MODES);
-  }
+	public constructor() {
+		super(BLITZSG_MODES);
+	}
 
-  public filterModes(
-    player: Player,
-    modes: GameMode<BlitzSGModes>[]
-  ): GameMode<BlitzSGModes>[] {
-    return filterBlitzKits(player, modes);
-  }
+	public filterModes(player: Player, modes: GameMode<BlitzSGModes>[]): GameMode<BlitzSGModes>[] {
+		return filterBlitzKits(player, modes);
+	}
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<BlitzSGModes, never>
-  ): JSX.Element {
-    return <BlitzSGProfile {...base} mode={mode} />;
-  }
+	public getProfile(base: BaseProfileProps, { mode }: ProfileData<BlitzSGModes, never>): JSX.Element {
+		return <BlitzSGProfile {...base} mode={mode} />;
+	}
 }

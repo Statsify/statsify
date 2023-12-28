@@ -10,53 +10,53 @@ import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
 
 export class EasterSimulator {
-  @Field()
-  public wins: number;
+	@Field()
+	public wins: number;
 
-  @Field()
-  public eggsFound: number;
+	@Field()
+	public eggsFound: number;
 
-  public constructor(data: APIData) {
-    this.wins = data.wins_easter_simulator;
-    this.eggsFound = data.eggs_found_easter_simulator;
-  }
+	public constructor(data: APIData) {
+		this.wins = data.wins_easter_simulator;
+		this.eggsFound = data.eggs_found_easter_simulator;
+	}
 }
 
 export class GrinchSimulator {
-  @Field()
-  public wins: number;
+	@Field()
+	public wins: number;
 
-  @Field()
-  public giftsFound: number;
+	@Field()
+	public giftsFound: number;
 
-  public constructor(data: APIData) {
-    this.wins = data.wins_grinch_simulator_v2;
-    this.giftsFound = data.gifts_grinch_simulator_v2;
-  }
+	public constructor(data: APIData) {
+		this.wins = data.wins_grinch_simulator_v2;
+		this.giftsFound = data.gifts_grinch_simulator_v2;
+	}
 }
 
 export class HalloweenSimulator {
-  @Field()
-  public wins: number;
+	@Field()
+	public wins: number;
 
-  @Field()
-  public candyFound: number;
+	@Field()
+	public candyFound: number;
 
-  public constructor(data: APIData) {
-    this.wins = data.wins_halloween_simulator;
-    this.candyFound = data.candy_found_halloween_simulator;
-  }
+	public constructor(data: APIData) {
+		this.wins = data.wins_halloween_simulator;
+		this.candyFound = data.candy_found_halloween_simulator;
+	}
 }
 
 export class ScubaSimulator {
-  @Field()
-  public wins: number;
+	@Field()
+	public wins: number;
 
-  @Field()
-  public points: number;
+	@Field()
+	public points: number;
 
-  public constructor(data: APIData) {
-    this.wins = data.wins_scuba_simulator;
-    this.points = data.total_points_scuba_simulator;
-  }
+	public constructor(data: APIData) {
+		this.wins = data.wins_scuba_simulator;
+		this.points = data.total_points_scuba_simulator;
+	}
 }

@@ -7,73 +7,65 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-  ValidateNested,
-} from "class-validator";
+import { IsBoolean, IsNumber, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from "class-validator";
 import { Transform } from "class-transformer";
 
 export class UserDto {
-  @ApiProperty({ description: "Discord ID or UUID" })
-  @IsString()
-  @MinLength(17)
-  @MaxLength(36)
-  public tag: string;
+	@ApiProperty({ description: "Discord ID or UUID" })
+	@IsString()
+	@MinLength(17)
+	@MaxLength(36)
+	public tag: string;
 }
 
 class UserTheme {
-  @IsOptional()
-  @IsString()
-  public font?: string;
+	@IsOptional()
+	@IsString()
+	public font?: string;
 
-  @IsOptional()
-  @IsString()
-  public palette?: string;
+	@IsOptional()
+	@IsString()
+	public palette?: string;
 
-  @IsOptional()
-  @IsString()
-  public boxes?: string;
+	@IsOptional()
+	@IsString()
+	public boxes?: string;
 }
 
 class UserFooter {
-  @IsOptional()
-  @IsString()
-  public message?: string;
+	@IsOptional()
+	@IsString()
+	public message?: string;
 
-  @IsOptional()
-  @IsNumber()
-  public icon?: number;
+	@IsOptional()
+	@IsNumber()
+	public icon?: number;
 }
 
 export class UpdateUserDto {
-  @IsBoolean()
-  @IsOptional()
-  public serverMember?: boolean;
+	@IsBoolean()
+	@IsOptional()
+	public serverMember?: boolean;
 
-  @IsOptional()
-  @ValidateNested()
-  @Transform((params) => {
-    const theme = new UserTheme();
-    Object.assign(theme, params.value);
-    return theme;
-  })
-  public theme?: UserTheme;
+	@IsOptional()
+	@ValidateNested()
+	@Transform((params) => {
+		const theme = new UserTheme();
+		Object.assign(theme, params.value);
+		return theme;
+	})
+	public theme?: UserTheme;
 
-  @IsOptional()
-  @ValidateNested()
-  @Transform((params) => {
-    const footer = new UserFooter();
-    Object.assign(footer, params.value);
-    return footer;
-  })
-  public footer?: UserFooter;
+	@IsOptional()
+	@ValidateNested()
+	@Transform((params) => {
+		const footer = new UserFooter();
+		Object.assign(footer, params.value);
+		return footer;
+	})
+	public footer?: UserFooter;
 
-  @IsString()
-  @IsOptional()
-  public locale?: string;
+	@IsString()
+	@IsOptional()
+	public locale?: string;
 }

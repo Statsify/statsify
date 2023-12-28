@@ -20,47 +20,31 @@ import { DropperModes, FormattedGame, GameMode } from "@statsify/schemas";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface DropperProfileProps extends BaseProfileProps {
-  mode: GameMode<DropperModes>;
+	mode: GameMode<DropperModes>;
 }
 
-export const DropperProfile = ({
-  skin,
-  player,
-  background,
-  logo,
-  user,
-  badge,
-  mode,
-  t,
-  time,
-}: DropperProfileProps) => {
-  const { arcade } = player.stats;
+export const DropperProfile = ({ skin, player, background, logo, user, badge, mode, t, time }: DropperProfileProps) => {
+	const { arcade } = player.stats;
 
-  let table;
+	let table;
 
-  switch (mode.api) {
-    case "overall":
-      table = <DropperTable stats={arcade.dropper} t={t} time={time} />;
-      break;
-    case "bestTimes":
-      table = <DropperMapsTable dropper={arcade.dropper} t={t} stat="bestTime" />;
-      break;
-    case "completions":
-      table = <DropperMapsTable dropper={arcade.dropper} t={t} stat="completions" />;
-      break;
-  }
+	switch (mode.api) {
+		case "overall":
+			table = <DropperTable stats={arcade.dropper} t={t} time={time} />;
+			break;
+		case "bestTimes":
+			table = <DropperMapsTable dropper={arcade.dropper} t={t} stat="bestTime" />;
+			break;
+		case "completions":
+			table = <DropperMapsTable dropper={arcade.dropper} t={t} stat="completions" />;
+			break;
+	}
 
-  return (
-    <Container background={background}>
-      <Header
-        skin={skin}
-        name={player.prefixName}
-        badge={badge}
-        title={`§l${FormattedGame.DROPPER} §fStats §r(${mode.formatted})`}
-        time={time}
-      />
-      {table}
-      <Footer logo={logo} user={user} />
-    </Container>
-  );
+	return (
+		<Container background={background}>
+			<Header skin={skin} name={player.prefixName} badge={badge} title={`§l${FormattedGame.DROPPER} §fStats §r(${mode.formatted})`} time={time} />
+			{table}
+			<Footer logo={logo} user={user} />
+		</Container>
+	);
 };

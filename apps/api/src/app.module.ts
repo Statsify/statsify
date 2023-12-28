@@ -21,30 +21,30 @@ import { UserModule } from "#user";
 import { config } from "@statsify/util";
 
 @Module({
-  imports: [
-    TypegooseModule.forRootAsync({
-      useFactory: () => ({
-        uri: config("database.mongoUri"),
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        maxPoolSize: 200,
-        minPoolSize: 20,
-      }),
-    }),
-    RedisModule.forRoot({
-      config: {
-        url: config("database.redisUrl"),
-      },
-    }),
-    PlayerModule,
-    GuildModule,
-    HypixelResourcesModule,
-    SkinModule,
-    SessionModule,
-    AuthModule,
-    UserModule,
-    CommandsModule,
-  ],
-  controllers: [AppController],
+	imports: [
+		TypegooseModule.forRootAsync({
+			useFactory: () => ({
+				uri: config("database.mongoUri"),
+				useNewUrlParser: true,
+				useUnifiedTopology: true,
+				maxPoolSize: 200,
+				minPoolSize: 20,
+			}),
+		}),
+		RedisModule.forRoot({
+			config: {
+				url: config("database.redisUrl"),
+			},
+		}),
+		PlayerModule,
+		GuildModule,
+		HypixelResourcesModule,
+		SkinModule,
+		SessionModule,
+		AuthModule,
+		UserModule,
+		CommandsModule,
+	],
+	controllers: [AppController],
 })
 export class AppModule {}

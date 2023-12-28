@@ -11,34 +11,34 @@ import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export class PaintballPerks {
-  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
-  public adrenaline: number;
+	@Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+	public adrenaline: number;
 
-  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
-  public endurance: number;
+	@Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+	public endurance: number;
 
-  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
-  public fortune: number;
+	@Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+	public fortune: number;
 
-  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
-  public godfather: number;
+	@Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+	public godfather: number;
 
-  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
-  public headstart: number;
+	@Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+	public headstart: number;
 
-  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
-  public superluck: number;
+	@Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+	public superluck: number;
 
-  @Field({ leaderboard: { enabled: false }, store: { default: 1 } })
-  public transfusion: number;
+	@Field({ leaderboard: { enabled: false }, store: { default: 1 } })
+	public transfusion: number;
 
-  public constructor(data: APIData) {
-    this.adrenaline = add(data.adrenaline, 1);
-    this.endurance = add(data.endurance, 1);
-    this.fortune = add(data.fortune, 1);
-    this.godfather = add(data.godfather, 1);
-    this.headstart = data.headstart; // Only one properly returned in API
-    this.superluck = add(data.superluck, 1);
-    this.transfusion = add(data.transfusion, 1);
-  }
+	public constructor(data: APIData) {
+		this.adrenaline = add(data.adrenaline, 1);
+		this.endurance = add(data.endurance, 1);
+		this.fortune = add(data.fortune, 1);
+		this.godfather = add(data.godfather, 1);
+		this.headstart = data.headstart; // Only one properly returned in API
+		this.superluck = add(data.superluck, 1);
+		this.transfusion = add(data.transfusion, 1);
+	}
 }

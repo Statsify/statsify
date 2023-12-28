@@ -12,30 +12,22 @@ import { LocalizeFunction } from "@statsify/discord";
 import type { ProfileTime } from "#commands/base.hypixel-command";
 
 interface HoleInTheWallTableProps {
-  stats: HoleInTheWall;
-  t: LocalizeFunction;
-  time: ProfileTime;
+	stats: HoleInTheWall;
+	t: LocalizeFunction;
+	time: ProfileTime;
 }
 
 export const HoleInTheWallTable = ({ stats, t, time }: HoleInTheWallTableProps) => (
-  <Table.table>
-    <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-      <Table.td title={t("stats.wallsFaced")} value={t(stats.wallsFaced)} color="§c" />
-    </Table.tr>
-    <Historical.exclude time={time}>
-      <Table.tr>
-        <Table.td
-          title={t("stats.highestScoreQualifications")}
-          value={t(stats.highestScoreQualifications)}
-          color="§b"
-        />
-        <Table.td
-          title={t("stats.highestScoreFinals")}
-          value={t(stats.highestScoreFinals)}
-          color="§6"
-        />
-      </Table.tr>
-    </Historical.exclude>
-  </Table.table>
+	<Table.table>
+		<Table.tr>
+			<Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+			<Table.td title={t("stats.wallsFaced")} value={t(stats.wallsFaced)} color="§c" />
+		</Table.tr>
+		<Historical.exclude time={time}>
+			<Table.tr>
+				<Table.td title={t("stats.highestScoreQualifications")} value={t(stats.highestScoreQualifications)} color="§b" />
+				<Table.td title={t("stats.highestScoreFinals")} value={t(stats.highestScoreFinals)} color="§6" />
+			</Table.tr>
+		</Historical.exclude>
+	</Table.table>
 );

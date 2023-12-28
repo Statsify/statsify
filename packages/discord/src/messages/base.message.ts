@@ -16,51 +16,51 @@ import type { RemoveMethods } from "@statsify/util";
 export type IMessage = RemoveMethods<Message>;
 
 export class Message {
-  public attachments?: APIAttachment[];
-  public components?: ActionRowBuilder[];
-  public content?: LocalizationString;
-  public embeds?: EmbedBuilder[];
-  public ephemeral?: boolean;
-  public files?: InteractionAttachment[];
-  public mentions?: APIAllowedMentions;
-  public tts?: boolean;
+	public attachments?: APIAttachment[];
+	public components?: ActionRowBuilder[];
+	public content?: LocalizationString;
+	public embeds?: EmbedBuilder[];
+	public ephemeral?: boolean;
+	public files?: InteractionAttachment[];
+	public mentions?: APIAllowedMentions;
+	public tts?: boolean;
 
-  public constructor(data: IMessage) {
-    Object.assign(this, data);
-  }
+	public constructor(data: IMessage) {
+		Object.assign(this, data);
+	}
 
-  public build(locale: LocalizeFunction): InteractionContent {
-    return {
-      attachments: this.attachments,
-      components: this.components?.map((component) => component.build(locale)),
-      content: translateField(locale, this.content),
-      embeds: this.embeds?.map((embed) => embed.build(locale)),
-      ephemeral: this.ephemeral,
-      files: this.files,
-      mentions: this.mentions,
-      tts: this.tts,
-    };
-  }
+	public build(locale: LocalizeFunction): InteractionContent {
+		return {
+			attachments: this.attachments,
+			components: this.components?.map((component) => component.build(locale)),
+			content: translateField(locale, this.content),
+			embeds: this.embeds?.map((embed) => embed.build(locale)),
+			ephemeral: this.ephemeral,
+			files: this.files,
+			mentions: this.mentions,
+			tts: this.tts,
+		};
+	}
 
-  public toAPI(locale: LocalizeFunction) {
-    const data = this.build(locale);
+	public toAPI(locale: LocalizeFunction) {
+		const data = this.build(locale);
 
-    const res = {
-      content: data.content,
-      tts: data.tts,
-      flags: data.ephemeral ? 1 << 6 : undefined,
-      allowed_mentions: data.mentions,
-      embeds: data.embeds,
-      attachments: data.attachments,
-      components: data.components,
-    };
+		const res = {
+			content: data.content,
+			tts: data.tts,
+			flags: data.ephemeral ? 1 << 6 : undefined,
+			allowed_mentions: data.mentions,
+			embeds: data.embeds,
+			attachments: data.attachments,
+			components: data.components,
+		};
 
-    if (data.files)
-      return {
-        files: data.files,
-        payload_json: res,
-      };
+		if (data.files)
+			return {
+				files: data.files,
+				payload_json: res,
+			};
 
-    return res;
-  }
+		return res;
+	}
 }

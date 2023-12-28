@@ -14,32 +14,32 @@ import { challengeFieldData } from "../util.js";
 import type { GameChallenges } from "../game-challenges.js";
 
 export class PaintballChallenges implements GameChallenges {
-  @Field(challengeFieldData)
-  public killStreak: number;
+	@Field(challengeFieldData)
+	public killStreak: number;
 
-  @Field(challengeFieldData)
-  public killingSpree: number;
+	@Field(challengeFieldData)
+	public killingSpree: number;
 
-  @Field(challengeFieldData)
-  public nuke: number;
+	@Field(challengeFieldData)
+	public nuke: number;
 
-  @Field(challengeFieldData)
-  public finish: number;
+	@Field(challengeFieldData)
+	public finish: number;
 
-  @Field({
-    leaderboard: {
-      fieldName: `${removeFormatting(FormattedGame.PAINTBALL)} Total`,
-      name: "Total",
-    },
-  })
-  public total: number;
+	@Field({
+		leaderboard: {
+			fieldName: `${removeFormatting(FormattedGame.PAINTBALL)} Total`,
+			name: "Total",
+		},
+	})
+	public total: number;
 
-  public constructor(challenges: APIData) {
-    this.killStreak = challenges.PAINTBALL__kill_streak_challenge;
-    this.killingSpree = challenges.PAINTBALL__killing_spree_challenge;
-    this.nuke = challenges.PAINTBALL__nuke_challenge;
-    this.finish = challenges.PAINTBALL__finish_challenge;
+	public constructor(challenges: APIData) {
+		this.killStreak = challenges.PAINTBALL__kill_streak_challenge;
+		this.killingSpree = challenges.PAINTBALL__killing_spree_challenge;
+		this.nuke = challenges.PAINTBALL__nuke_challenge;
+		this.finish = challenges.PAINTBALL__finish_challenge;
 
-    this.total = add(this.killStreak, this.killingSpree, this.nuke, this.finish);
-  }
+		this.total = add(this.killStreak, this.killingSpree, this.nuke, this.finish);
+	}
 }

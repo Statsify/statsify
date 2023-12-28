@@ -13,8 +13,8 @@ import { Global, Module } from "@nestjs/common";
 
 @Global()
 @Module({
-  providers: [AuthGuard, AuthService],
-  controllers: [AuthController],
-  exports: [AuthService],
+	providers: [AuthGuard, AuthService],
+	controllers: [AuthController],
+	exports: [AuthService],
 })
 export class AuthModule {}

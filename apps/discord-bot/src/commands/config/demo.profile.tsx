@@ -11,34 +11,26 @@ import type { Canvas, Image } from "skia-canvas";
 import type { Player, User } from "@statsify/schemas";
 
 export interface DemoProfileProps {
-  background: Image;
-  logo: Image;
-  skin: Image;
-  player: Player;
-  user: User | null;
-  badge?: Image | Canvas;
-  message: string;
+	background: Image;
+	logo: Image;
+	skin: Image;
+	player: Player;
+	user: User | null;
+	badge?: Image | Canvas;
+	message: string;
 }
 
-export const DemoProfile = ({
-  background,
-  skin,
-  player,
-  badge,
-  user,
-  logo,
-  message,
-}: DemoProfileProps) => (
-  <Container background={background}>
-    <div width="100%" height="100%">
-      <Skin skin={skin} />
-      <div direction="column" width="remaining" height="100%">
-        <HeaderNametag name={player.prefixName} badge={badge} />
-        <box width="100%">
-          <text>{message}</text>
-        </box>
-        <Footer logo={logo} user={user}></Footer>
-      </div>
-    </div>
-  </Container>
+export const DemoProfile = ({ background, skin, player, badge, user, logo, message }: DemoProfileProps) => (
+	<Container background={background}>
+		<div width="100%" height="100%">
+			<Skin skin={skin} />
+			<div direction="column" width="remaining" height="100%">
+				<HeaderNametag name={player.prefixName} badge={badge} />
+				<box width="100%">
+					<text>{message}</text>
+				</box>
+				<Footer logo={logo} user={user}></Footer>
+			</div>
+		</div>
+	</Container>
 );

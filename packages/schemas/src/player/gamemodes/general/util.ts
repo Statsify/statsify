@@ -8,8 +8,6 @@
 
 import { roundTo } from "@statsify/math";
 
-export const getNetworkExp = (networkLevel = 1) =>
-  (Math.pow((networkLevel + 2.5) * 50, 2) - 30_625) / 2;
+export const getNetworkExp = (networkLevel = 1) => (Math.pow((networkLevel + 2.5) * 50, 2) - 30_625) / 2;
 
-export const getNetworkLevel = (networkExp = 0) =>
-  networkExp ? roundTo(Math.sqrt(networkExp * 2 + 30_625) / 50 - 2.5) : 1;
+export const getNetworkLevel = (networkExp = 0) => (networkExp ? roundTo(Math.sqrt(networkExp * 2 + 30_625) / 50 - 2.5) : 1);

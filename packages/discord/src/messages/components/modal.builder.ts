@@ -12,39 +12,39 @@ import { LocalizationString, LocalizeFunction, translateField } from "../localiz
 import { randomUUID } from "node:crypto";
 
 export class ModalBuilder {
-  #custom_id: string;
-  #components: ActionRowBuilder[];
-  #title: LocalizationString;
+	#custom_id: string;
+	#components: ActionRowBuilder[];
+	#title: LocalizationString;
 
-  public constructor(components: ActionRowBuilder[] = []) {
-    this.#components = components;
-    this.customId(randomUUID());
-  }
+	public constructor(components: ActionRowBuilder[] = []) {
+		this.#components = components;
+		this.customId(randomUUID());
+	}
 
-  public component(component: ActionRowBuilder): this {
-    this.#components.push(component);
-    return this;
-  }
+	public component(component: ActionRowBuilder): this {
+		this.#components.push(component);
+		return this;
+	}
 
-  public customId(customId: string): this {
-    this.#custom_id = customId;
-    return this;
-  }
+	public customId(customId: string): this {
+		this.#custom_id = customId;
+		return this;
+	}
 
-  public title(title: LocalizationString): this {
-    this.#title = title;
-    return this;
-  }
+	public title(title: LocalizationString): this {
+		this.#title = title;
+		return this;
+	}
 
-  public getCustomId() {
-    return this.#custom_id;
-  }
+	public getCustomId() {
+		return this.#custom_id;
+	}
 
-  public build(locale: LocalizeFunction): APIModalInteractionResponseCallbackData {
-    return {
-      title: translateField(locale, this.#title),
-      custom_id: this.#custom_id,
-      components: this.#components.map((component) => component.build(locale)),
-    };
-  }
+	public build(locale: LocalizeFunction): APIModalInteractionResponseCallbackData {
+		return {
+			title: translateField(locale, this.#title),
+			custom_id: this.#custom_id,
+			components: this.#components.map((component) => component.build(locale)),
+		};
+	}
 }

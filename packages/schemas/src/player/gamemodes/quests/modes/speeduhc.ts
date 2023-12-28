@@ -10,10 +10,10 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const SpeedUHCQuests = createGameModeQuests({
-  game: FormattedGame.SPEED_UHC,
-  daily: [
-    { field: "solo_brawler", propertyKey: "soloSpeedBrawler" },
-    { field: "team_brawler", propertyKey: "teamSpeedBrawler" },
-  ],
-  weekly: [{ field: "uhc_madness", propertyKey: "madness" }],
+	game: FormattedGame.SPEED_UHC,
+	daily: [
+		{ field: "solo_brawler", propertyKey: "soloSpeedBrawler" },
+		{ field: "team_brawler", propertyKey: "teamSpeedBrawler" },
+	],
+	weekly: [{ field: "uhc_madness", propertyKey: "madness" }],
 });

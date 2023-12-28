@@ -14,24 +14,24 @@ import { challengeFieldData } from "../util.js";
 import type { GameChallenges } from "../game-challenges.js";
 
 export class BuildBattleChallenges implements GameChallenges {
-  @Field(challengeFieldData)
-  public topThree: number;
+	@Field(challengeFieldData)
+	public topThree: number;
 
-  @Field(challengeFieldData)
-  public guesser: number;
+	@Field(challengeFieldData)
+	public guesser: number;
 
-  @Field({
-    leaderboard: {
-      fieldName: `${removeFormatting(FormattedGame.BUILD_BATTLE)} Total`,
-      name: "Total",
-    },
-  })
-  public total: number;
+	@Field({
+		leaderboard: {
+			fieldName: `${removeFormatting(FormattedGame.BUILD_BATTLE)} Total`,
+			name: "Total",
+		},
+	})
+	public total: number;
 
-  public constructor(challenges: APIData) {
-    this.topThree = challenges.BUILD_BATTLE__top_3_challenge;
-    this.guesser = challenges.BUILD_BATTLE__guesser_challenge;
+	public constructor(challenges: APIData) {
+		this.topThree = challenges.BUILD_BATTLE__top_3_challenge;
+		this.guesser = challenges.BUILD_BATTLE__guesser_challenge;
 
-    this.total = add(this.topThree, this.guesser);
-  }
+		this.total = add(this.topThree, this.guesser);
+	}
 }

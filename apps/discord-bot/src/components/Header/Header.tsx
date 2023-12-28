@@ -16,78 +16,62 @@ import { Skin } from "../Skin.js";
 import { useChildren } from "@statsify/rendering";
 
 interface BaseHeaderProps {
-  skin: Image;
-  badge?: Image;
-  size?: number;
-  name: string;
-  time: "LIVE" | HistoricalTimeData;
-  startTime?: DateTime;
-  endTime?: DateTime;
-  title: string;
+	skin: Image;
+	badge?: Image;
+	size?: number;
+	name: string;
+	time: "LIVE" | HistoricalTimeData;
+	startTime?: DateTime;
+	endTime?: DateTime;
+	title: string;
 
-  historicalSidebar?: boolean;
+	historicalSidebar?: boolean;
 }
 
 interface SidebarlessHeaderProps extends BaseHeaderProps {
-  description?: string;
+	description?: string;
 }
 
 interface SidebarHeaderProps extends SidebarlessHeaderProps {
-  sidebar: SidebarItem[];
+	sidebar: SidebarItem[];
 }
 
 interface CustomHeaderBodyProps extends BaseHeaderProps {
-  children: JSX.Children;
+	children: JSX.Children;
 }
 
-export type HeaderProps =
-  | SidebarlessHeaderProps
-  | SidebarHeaderProps
-  | CustomHeaderBodyProps;
+export type HeaderProps = SidebarlessHeaderProps | SidebarHeaderProps | CustomHeaderBodyProps;
 
 export const Header = (props: HeaderProps) => {
-  const skin = <Skin skin={props.skin} />;
-  const nameTag = (
-    <HeaderNametag name={props.name} badge={props.badge} size={props.size} />
-  );
+	const skin = <Skin skin={props.skin} />;
+	const nameTag = <HeaderNametag name={props.name} badge={props.badge} size={props.size} />;
 
-  const sidebar =
-    "sidebar" in props &&
-    props.sidebar.length &&
-    (props.time === "LIVE" ? true : props.historicalSidebar) ? (
-        <Sidebar items={props.sidebar} />
-      ) : (
-        <></>
-      );
+	const sidebar =
+		"sidebar" in props && props.sidebar.length && (props.time === "LIVE" ? true : props.historicalSidebar) ? (
+			<Sidebar items={props.sidebar} />
+		) : (
+			<></>
+		);
 
-  let body: JSX.Element;
+	let body: JSX.Element;
 
-  if ("children" in props) {
-    const children = useChildren(props.children);
-    body = <>{children}</>;
-  } else {
-    body = <HeaderBody title={props.title} description={props.description} />;
-  }
+	if ("children" in props) {
+		const children = useChildren(props.children);
+		body = <>{children}</>;
+	} else {
+		body = <HeaderBody title={props.title} description={props.description} />;
+	}
 
-  if (props.time !== "LIVE")
-    return (
-      <Historical.header
-        nameTag={nameTag}
-        skin={skin}
-        title={props.title}
-        time={props.time}
-        sidebar={sidebar}
-      />
-    );
+	if (props.time !== "LIVE") return <Historical.header nameTag={nameTag} skin={skin} title={props.title} time={props.time} sidebar={sidebar} />;
 
-  return (
-    <div width="100%">
-      {skin}
-      <div direction="column" width="remaining" height="100%">
-        {nameTag}
-        {body}
-      </div>
-      {sidebar}
-    </div>
-  );
+	return (
+		<div width="100%">
+			{skin}
+			<div direction="column" width="remaining" height="100%">
+				{nameTag}
+				{body}
+			</div>
+			{sidebar}
+		</div>
+	);
 };

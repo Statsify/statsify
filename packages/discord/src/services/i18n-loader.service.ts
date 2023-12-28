@@ -16,55 +16,53 @@ const DEFAULT_LANGUAGE = "en-US";
 
 @Service()
 export class I18nLoaderService {
-  private languages: string[] = [];
-  private namespaces: string[] = [];
+	private languages: string[] = [];
+	private namespaces: string[] = [];
 
-  public async init() {
-    this.languages = await readdir("../../locales");
-    this.namespaces = (await readdir(`../../locales/${DEFAULT_LANGUAGE}/`)).map((p) =>
-      p.replace(".json", "")
-    );
+	public async init() {
+		this.languages = await readdir("../../locales");
+		this.namespaces = (await readdir(`../../locales/${DEFAULT_LANGUAGE}/`)).map((p) => p.replace(".json", ""));
 
-    await i18next.use(Backend).init({
-      backend: {
-        loadPath: "../../locales/{{lng}}/{{ns}}.json",
-      },
-      debug: false,
-      fallbackLng: DEFAULT_LANGUAGE,
-      lng: DEFAULT_LANGUAGE,
-      supportedLngs: this.languages,
-      ns: this.namespaces,
-      load: "all",
-      preload: this.languages,
-      initImmediate: false,
-      defaultNS: "default",
-      interpolation: {
-        format: this.format,
-        escapeValue: false,
-      },
-    });
-  }
+		await i18next.use(Backend).init({
+			backend: {
+				loadPath: "../../locales/{{lng}}/{{ns}}.json",
+			},
+			debug: false,
+			fallbackLng: DEFAULT_LANGUAGE,
+			lng: DEFAULT_LANGUAGE,
+			supportedLngs: this.languages,
+			ns: this.namespaces,
+			load: "all",
+			preload: this.languages,
+			initImmediate: false,
+			defaultNS: "default",
+			interpolation: {
+				format: this.format,
+				escapeValue: false,
+			},
+		});
+	}
 
-  private format(value: any, format?: string | undefined, lng?: string): string {
-    switch (format) {
-      case "number": {
-        const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
-        const digits = hasDecimals ? 2 : 0;
+	private format(value: any, format?: string | undefined, lng?: string): string {
+		switch (format) {
+			case "number": {
+				const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
+				const digits = hasDecimals ? 2 : 0;
 
-        const formatOptions = {
-          maximumFractionDigits: digits,
-          minimumFractionDigits: digits,
-        };
+				const formatOptions = {
+					maximumFractionDigits: digits,
+					minimumFractionDigits: digits,
+				};
 
-        if ((value as number) >= 1_000_000) {
-          const [number, suffix] = abbreviationNumber(value);
-          return `${Intl.NumberFormat(lng, formatOptions).format(number)}${suffix}`;
-        }
+				if ((value as number) >= 1_000_000) {
+					const [number, suffix] = abbreviationNumber(value);
+					return `${Intl.NumberFormat(lng, formatOptions).format(number)}${suffix}`;
+				}
 
-        return Intl.NumberFormat(lng, formatOptions).format(value as number);
-      }
-    }
+				return Intl.NumberFormat(lng, formatOptions).format(value as number);
+			}
+		}
 
-    return value;
-  }
+		return value;
+	}
 }

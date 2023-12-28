@@ -16,69 +16,54 @@ import { loadImage } from "skia-canvas";
 import { render } from "@statsify/rendering";
 
 @Command({
-  description: (t) => t("commands.server"),
-  args: [ServerArgument],
+	description: (t) => t("commands.server"),
+	args: [ServerArgument],
 })
 export class ServerCommand {
-  private readonly axios: AxiosInstance;
-  private mappings: ServerMappingsServer[];
+	private readonly axios: AxiosInstance;
+	private mappings: ServerMappingsServer[];
 
-  public constructor() {
-    this.axios = axios.create({
-      baseURL: "https://api.mcsrvstat.us/2/",
-    });
+	public constructor() {
+		this.axios = axios.create({
+			baseURL: "https://api.mcsrvstat.us/2/",
+		});
 
-    getServerMappings().then((mappings) => {
-      this.mappings = mappings;
-    });
-  }
+		getServerMappings().then((mappings) => {
+			this.mappings = mappings;
+		});
+	}
 
-  public async run(context: CommandContext): Promise<IMessage> {
-    const t = context.t();
-    const user = context.getUser();
+	public async run(context: CommandContext): Promise<IMessage> {
+		const t = context.t();
+		const user = context.getUser();
 
-    const server = await this.getServer(context.option<string>("server"));
+		const server = await this.getServer(context.option<string>("server"));
 
-    const [serverLogo, background] = await Promise.all([
-      loadImage(server.icon),
-      getServerBackground(server.mapping),
-    ]);
+		const [serverLogo, background] = await Promise.all([loadImage(server.icon), getServerBackground(server.mapping)]);
 
-    const canvas = render(
-      <ServerProfile
-        background={background}
-        server={server}
-        serverLogo={serverLogo}
-        t={t}
-      />,
-      getTheme(user)
-    );
+		const canvas = render(<ServerProfile background={background} server={server} serverLogo={serverLogo} t={t} />, getTheme(user));
 
-    const buffer = await canvas.toBuffer("png");
+		const buffer = await canvas.toBuffer("png");
 
-    return { files: [{ name: "server.png", data: buffer, type: "image/png" }] };
-  }
+		return { files: [{ name: "server.png", data: buffer, type: "image/png" }] };
+	}
 
-  private async getServer(tag: string) {
-    tag = tag.toLowerCase();
+	private async getServer(tag: string) {
+		tag = tag.toLowerCase();
 
-    const mappedServer = this.mappings.find(
-      (s) =>
-        s.name.toLowerCase() === tag ||
-        s.addresses.find((address) => tag.endsWith(address))
-    );
+		const mappedServer = this.mappings.find((s) => s.name.toLowerCase() === tag || s.addresses.find((address) => tag.endsWith(address)));
 
-    const server = await this.axios
-      .get<Server>(mappedServer?.primaryAddress ?? tag)
-      .then((res) => res.data)
-      .catch(() => null);
+		const server = await this.axios
+			.get<Server>(mappedServer?.primaryAddress ?? tag)
+			.then((res) => res.data)
+			.catch(() => null);
 
-    if (!server || !server.online) throw new ErrorMessage("errors.invalidServer");
+		if (!server || !server.online) throw new ErrorMessage("errors.invalidServer");
 
-    server.hostname = mappedServer?.primaryAddress ?? server.hostname;
-    server.name = mappedServer?.name ?? server.hostname;
-    server.mapping = mappedServer;
+		server.hostname = mappedServer?.primaryAddress ?? server.hostname;
+		server.name = mappedServer?.name ?? server.hostname;
+		server.mapping = mappedServer;
 
-    return server;
-  }
+		return server;
+	}
 }

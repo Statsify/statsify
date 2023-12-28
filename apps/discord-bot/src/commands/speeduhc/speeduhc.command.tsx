@@ -6,25 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { SPEED_UHC_MODES, SpeedUHCModes } from "@statsify/schemas";
 import { SpeedUHCProfile } from "./speeduhc.profile.js";
 
 @Command({ description: (t) => t("commands.speeduhc") })
 export class SpeedUHCCommand extends BaseHypixelCommand<SpeedUHCModes> {
-  public constructor() {
-    super(SPEED_UHC_MODES);
-  }
+	public constructor() {
+		super(SPEED_UHC_MODES);
+	}
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<SpeedUHCModes, never>
-  ): JSX.Element {
-    return <SpeedUHCProfile {...base} mode={mode} />;
-  }
+	public getProfile(base: BaseProfileProps, { mode }: ProfileData<SpeedUHCModes, never>): JSX.Element {
+		return <SpeedUHCProfile {...base} mode={mode} />;
+	}
 }

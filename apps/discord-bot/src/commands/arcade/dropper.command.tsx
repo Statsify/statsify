@@ -6,25 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { DROPPER_MODES, DropperModes } from "@statsify/schemas";
 import { DropperProfile } from "./dropper.profile.js";
 
 @Command({ description: (t) => t("commands.dropper") })
 export class DropperCommand extends BaseHypixelCommand<DropperModes> {
-  public constructor() {
-    super(DROPPER_MODES);
-  }
+	public constructor() {
+		super(DROPPER_MODES);
+	}
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<DropperModes>
-  ): JSX.Element {
-    return <DropperProfile {...base} mode={mode} />;
-  }
+	public getProfile(base: BaseProfileProps, { mode }: ProfileData<DropperModes>): JSX.Element {
+		return <DropperProfile {...base} mode={mode} />;
+	}
 }

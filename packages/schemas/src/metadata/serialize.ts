@@ -10,82 +10,76 @@ import { MetadataScanner } from "./metadata-scanner.js";
 import type { Constructor, Flatten } from "@statsify/util";
 import type { FieldMetadata } from "./metadata.interface.js";
 
-export const serialize = <T>(
-  constructor: Constructor<T>,
-  instance: Flatten<T>
-): Flatten<T> => {
-  const metadataEntries = MetadataScanner.scan(constructor) as [
-    keyof Flatten<T>,
-    FieldMetadata
-  ][];
+export const serialize = <T>(constructor: Constructor<T>, instance: Flatten<T>): Flatten<T> => {
+	const metadataEntries = MetadataScanner.scan(constructor) as [keyof Flatten<T>, FieldMetadata][];
 
-  const serialized: Flatten<T> = {} as Flatten<T>;
+	const serialized: Flatten<T> = {} as Flatten<T>;
 
-  for (const [
-    key,
-    {
-      store: { store, serialize, default: defaultValue },
-    },
-  ] of metadataEntries) {
-    //This value shouldn't be stored in the database
-    if (!store) continue;
+	for (const [
+		key,
+		{
+			store: { store, serialize, default: defaultValue },
+		},
+	] of metadataEntries) {
+		//This value shouldn't be stored in the database
+		if (!store) continue;
 
-    //The value should not be processed
-    if (!serialize) {
-      serialized[key] = instance[key];
-      continue;
-    }
+		//The value should not be processed
+		if (!serialize) {
+			serialized[key] = instance[key];
+			continue;
+		}
 
-    //Don't include the value if it is undefined or it is the default value
-    if (instance[key] === undefined || instance[key] === defaultValue) continue;
-    serialized[key] = instance[key];
-  }
+		//Don't include the value if it is undefined or it is the default value
+		if (instance[key] === undefined || instance[key] === defaultValue) continue;
+		serialized[key] = instance[key];
+	}
 
-  return serialized;
+	return serialized;
 };
 
 if (import.meta.vitest) {
-  const { test, it, expect } = import.meta.vitest;
-  const { flatten } = await import("@statsify/util");
-  const { Field } = await import("./field/index.js");
+	const { test, it, expect } = import.meta.vitest;
+	const { flatten } = await import("@statsify/util");
+	const { Field } = await import("./field/index.js");
 
-  test("serialize", () => {
-    class TesterB {
-      @Field()
-      public field1: number;
-    }
+	test("serialize", () => {
+		class TesterB {
+			@Field()
+			public field1: number;
+		}
 
-    class Tester {
-      @Field()
-      public field1: string;
+		class Tester {
+			@Field()
+			public field1: string;
 
-      @Field()
-      public field2: number;
+			@Field()
+			public field2: number;
 
-      @Field({ leaderboard: { enabled: false } })
-      public field3: number;
+			@Field({ leaderboard: { enabled: false } })
+			public field3: number;
 
-      @Field({ store: { store: false } })
-      public field4: number;
+			@Field({ store: { store: false } })
+			public field4: number;
 
-      @Field()
-      public field5: TesterB;
+			@Field()
+			public field5: TesterB;
 
-      public constructor() {
-        this.field1 = "field1";
-        this.field2 = 0;
-        this.field3 = 3;
-        this.field5 = new TesterB();
-      }
-    }
+			public constructor() {
+				this.field1 = "field1";
+				this.field2 = 0;
+				this.field3 = 3;
+				this.field5 = new TesterB();
+			}
+		}
 
-    it("should correctly remove fields", () => {
-      const result = serialize(Tester, flatten(new Tester()));
+		it("should correctly remove fields", () => {
+			const result = serialize(Tester, flatten(new Tester()));
 
-      expect(result).toEqual({
-        field1: "field1",
-        field3: 3,
-      });
-    });
-  });
+			expect(result).toEqual({
+				field1: "field1",
+				field3: 3,
+			});
+		});
+	});
 }

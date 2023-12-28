@@ -12,7 +12,7 @@ import { HistoricalTimes } from "@statsify/api-client";
 
 @Command({ description: (t) => t("commands.last-day") })
 export class LastDayCommand extends HistoricalBase {
-  public constructor() {
-    super(HistoricalTimes.LAST_DAY);
-  }
+	public constructor() {
+		super(HistoricalTimes.LAST_DAY);
+	}
 }

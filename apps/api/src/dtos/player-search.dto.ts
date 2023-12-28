@@ -10,8 +10,8 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsString, MaxLength } from "class-validator";
 
 export class PlayerSearchDto {
-  @IsString()
-  @MaxLength(16)
-  @ApiProperty()
-  public query: string;
+	@IsString()
+	@MaxLength(16)
+	@ApiProperty()
+	public query: string;
 }

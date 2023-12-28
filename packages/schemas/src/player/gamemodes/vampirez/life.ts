@@ -14,64 +14,64 @@ import { ratio } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export class VampireZHuman {
-  @Field({ leaderboard: { fieldName: "Vampires Killed" } })
-  public kills: number;
+	@Field({ leaderboard: { fieldName: "Vampires Killed" } })
+	public kills: number;
 
-  @Field()
-  public deaths: number;
+	@Field()
+	public deaths: number;
 
-  @Field()
-  public kdr: number;
+	@Field()
+	public kdr: number;
 
-  @Field()
-  public wins: number;
+	@Field()
+	public wins: number;
 
-  @Field()
-  public currentPrefix: string;
+	@Field()
+	public currentPrefix: string;
 
-  @Field()
-  public nextPrefix: string;
+	@Field()
+	public nextPrefix: string;
 
-  @Field({ store: { default: defaultPrefix(humanPrefixes) } })
-  public naturalPrefix: string;
+	@Field({ store: { default: defaultPrefix(humanPrefixes) } })
+	public naturalPrefix: string;
 
-  @Field()
-  public progression: Progression;
+	@Field()
+	public progression: Progression;
 
-  public constructor(data: APIData, mode: string) {
-    this.wins = data[`${mode}_wins`];
-    this.kills = data[`${mode === "human" ? "vampire" : "human"}_kills`];
-    this.deaths = data[`${mode}_deaths`];
+	public constructor(data: APIData, mode: string) {
+		this.wins = data[`${mode}_wins`];
+		this.kills = data[`${mode === "human" ? "vampire" : "human"}_kills`];
+		this.deaths = data[`${mode}_deaths`];
 
-    const prefixes = mode === "human" ? humanPrefixes : vampirePrefixes;
-    const score = mode === "human" ? this.wins : data["human_kills"];
+		const prefixes = mode === "human" ? humanPrefixes : vampirePrefixes;
+		const score = mode === "human" ? this.wins : data["human_kills"];
 
-    this.currentPrefix = getFormattedPrefix({ prefixes, score });
+		this.currentPrefix = getFormattedPrefix({ prefixes, score });
 
-    this.naturalPrefix = getFormattedPrefix({
-      prefixes,
-      score,
-      trueScore: true,
-      abbreviation: false,
-    });
+		this.naturalPrefix = getFormattedPrefix({
+			prefixes,
+			score,
+			trueScore: true,
+			abbreviation: false,
+		});
 
-    this.nextPrefix = getFormattedPrefix({
-      prefixes,
-      score,
-      skip: true,
-    });
+		this.nextPrefix = getFormattedPrefix({
+			prefixes,
+			score,
+			skip: true,
+		});
 
-    this.progression = createPrefixProgression(prefixes, score);
+		this.progression = createPrefixProgression(prefixes, score);
 
-    VampireZHuman.applyRatios(this);
-  }
+		VampireZHuman.applyRatios(this);
+	}
 
-  public static applyRatios(data: VampireZHuman) {
-    data.kdr = ratio(data.kills, data.deaths);
-  }
+	public static applyRatios(data: VampireZHuman) {
+		data.kdr = ratio(data.kills, data.deaths);
+	}
 }
 
 export class VampireZVampire extends VampireZHuman {
-  @Field({ leaderboard: { fieldName: "Humans Killed" } })
-  public declare kills: number;
+	@Field({ leaderboard: { fieldName: "Humans Killed" } })
+	public declare kills: number;
 }

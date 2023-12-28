@@ -10,17 +10,17 @@ import { Field } from "#metadata";
 import { RecentGame } from "./recentgame.js";
 
 export class RecentGames {
-  @Field()
-  public uuid: string;
+	@Field()
+	public uuid: string;
 
-  @Field()
-  public displayName: string;
+	@Field()
+	public displayName: string;
 
-  @Field()
-  public prefixName: string;
+	@Field()
+	public prefixName: string;
 
-  @Field()
-  public games: RecentGame[];
+	@Field()
+	public games: RecentGame[];
 }
 
 export * from "./recentgame.js";

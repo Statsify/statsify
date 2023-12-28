@@ -13,72 +13,56 @@ import { LocalizeFunction } from "@statsify/discord";
 import { arrayGroup } from "@statsify/util";
 
 export interface GuildTopMember {
-  name: string;
-  value: number;
+	name: string;
+	value: number;
 }
 
 export interface GuildTopProfileProps {
-  guild: Guild;
-  members: GuildTopMember[];
-  page: number;
-  title: string;
-  t: LocalizeFunction;
-  background: Image;
-  logo: Image;
-  user: User | null;
+	guild: Guild;
+	members: GuildTopMember[];
+	page: number;
+	title: string;
+	t: LocalizeFunction;
+	background: Image;
+	logo: Image;
+	user: User | null;
 }
 
 export const GUILD_TOP_PAGE_SIZE = 30;
 
-export const GuildTopProfile = ({
-  guild,
-  members,
-  title,
-  page,
-  t,
-  background,
-  user,
-  logo,
-}: GuildTopProfileProps) => {
-  const groups = arrayGroup(members, Math.ceil(members.length / 2));
-  const indexOffset = page * GUILD_TOP_PAGE_SIZE + 1;
+export const GuildTopProfile = ({ guild, members, title, page, t, background, user, logo }: GuildTopProfileProps) => {
+	const groups = arrayGroup(members, Math.ceil(members.length / 2));
+	const indexOffset = page * GUILD_TOP_PAGE_SIZE + 1;
 
-  const lists = groups.map((members, i) => (
-    <List
-      width={`1/${groups.length}`}
-      items={members.map((member, index) => (
-        <>
-          <box border={{ bottomLeft: 4, topLeft: 4, bottomRight: 0, topRight: 0 }}>
-            <text>#§l{t(indexOffset + index + (groups[i - 1]?.length ?? 0))}</text>
-          </box>
-          <box
-            width="remaining"
-            border={{ bottomLeft: 0, topLeft: 0, bottomRight: 0, topRight: 0 }}
-            direction="column"
-          >
-            <text align="left">{member.name}</text>
-          </box>
-          <box
-            padding={{ left: 4, right: 4 }}
-            border={{ bottomLeft: 0, topLeft: 0, bottomRight: 4, topRight: 4 }}
-          >
-            <text>{t(member.value)}</text>
-          </box>
-        </>
-      ))}
-    />
-  ));
+	const lists = groups.map((members, i) => (
+		<List
+			width={`1/${groups.length}`}
+			items={members.map((member, index) => (
+				<>
+					<box border={{ bottomLeft: 4, topLeft: 4, bottomRight: 0, topRight: 0 }}>
+						<text>#§l{t(indexOffset + index + (groups[i - 1]?.length ?? 0))}</text>
+					</box>
+					<box width="remaining" border={{ bottomLeft: 0, topLeft: 0, bottomRight: 0, topRight: 0 }} direction="column">
+						<text align="left">{member.name}</text>
+					</box>
+					<box padding={{ left: 4, right: 4 }} border={{ bottomLeft: 0, topLeft: 0, bottomRight: 4, topRight: 4 }}>
+						<text>{t(member.value)}</text>
+					</box>
+				</>
+			))}
+		/>
+	));
 
-  return (
-    <Container background={background}>
-      <box width="100%">
-        <text>§^4^{guild.nameFormatted}</text>
-      </box>
-      <box width="100%">
-        <text>§l§2GEXP for {title}</text>
-      </box>
-      <div width="100%">{lists}</div>
-      <Footer logo={logo} user={user} />
-    </Container>
-  );
+	return (
+		<Container background={background}>
+			<box width="100%">
+				<text>§^4^{guild.nameFormatted}</text>
+			</box>
+			<box width="100%">
+				<text>§l§2GEXP for {title}</text>
+			</box>
+			<div width="100%">{lists}</div>
+			<Footer logo={logo} user={user} />
+		</Container>
+	);
 };

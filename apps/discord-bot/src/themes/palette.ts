@@ -10,38 +10,38 @@ import { Fill } from "@statsify/rendering";
 import { UserPalette } from "@statsify/schemas";
 
 export interface Palette {
-  background?: Fill | null;
-  boxes?: {
-    color?: Fill;
-    shadowOpacity?: number;
-  };
+	background?: Fill | null;
+	boxes?: {
+		color?: Fill;
+		shadowOpacity?: number;
+	};
 }
 
 export const getColorPalette = (palette: UserPalette): Palette | undefined => {
-  switch (palette) {
-    case UserPalette.DEFAULT:
-      return undefined;
+	switch (palette) {
+		case UserPalette.DEFAULT:
+			return undefined;
 
-    case UserPalette.DARK:
-      return {
-        boxes: {
-          color: "rgba(0, 0, 0, 0.75)",
-          shadowOpacity: 0.6,
-        },
-      };
+		case UserPalette.DARK:
+			return {
+				boxes: {
+					color: "rgba(0, 0, 0, 0.75)",
+					shadowOpacity: 0.6,
+				},
+			};
 
-    case UserPalette.LIGHT:
-      return {
-        boxes: {
-          color: "rgba(220, 220, 240, 0.65)",
-          shadowOpacity: 0.4,
-        },
-        background: "rgba(0, 0, 0, 0.32)",
-      };
+		case UserPalette.LIGHT:
+			return {
+				boxes: {
+					color: "rgba(220, 220, 240, 0.65)",
+					shadowOpacity: 0.4,
+				},
+				background: "rgba(0, 0, 0, 0.32)",
+			};
 
-    case UserPalette.NO_BACKGROUNDS:
-      return {
-        background: null,
-      };
-  }
+		case UserPalette.NO_BACKGROUNDS:
+			return {
+				background: null,
+			};
+	}
 };

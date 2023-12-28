@@ -9,28 +9,22 @@
 import { type ElementNode, getTotalSize } from "#jsx";
 
 interface UseComponentSizeOptions {
-  includeMargin?: boolean;
-  includePadding?: boolean;
-  includeSize?: boolean;
+	includeMargin?: boolean;
+	includePadding?: boolean;
+	includeSize?: boolean;
 }
 
 const useComponentSize = (
-  node: ElementNode,
-  side: "x" | "y",
-  {
-    includeMargin = true,
-    includePadding = true,
-    includeSize = true,
-  }: UseComponentSizeOptions = {}
+	node: ElementNode,
+	side: "x" | "y",
+	{ includeMargin = true, includePadding = true, includeSize = true }: UseComponentSizeOptions = {}
 ): number =>
-  getTotalSize(node[side], {
-    margin: includeMargin,
-    padding: includePadding,
-    size: includeSize,
-  });
+	getTotalSize(node[side], {
+		margin: includeMargin,
+		padding: includePadding,
+		size: includeSize,
+	});
 
-export const useComponentWidth = (node: ElementNode, opts?: UseComponentSizeOptions) =>
-  useComponentSize(node, "x", opts);
+export const useComponentWidth = (node: ElementNode, opts?: UseComponentSizeOptions) => useComponentSize(node, "x", opts);
 
-export const useComponentHeight = (node: ElementNode, opts?: UseComponentSizeOptions) =>
-  useComponentSize(node, "y", opts);
+export const useComponentHeight = (node: ElementNode, opts?: UseComponentSizeOptions) => useComponentSize(node, "y", opts);

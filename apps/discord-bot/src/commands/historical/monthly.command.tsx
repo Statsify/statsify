@@ -12,7 +12,7 @@ import { HistoricalTimes } from "@statsify/api-client";
 
 @Command({ description: (t) => t("commands.monthly") })
 export class MonthlyCommand extends HistoricalBase {
-  public constructor() {
-    super(HistoricalTimes.MONTHLY);
-  }
+	public constructor() {
+		super(HistoricalTimes.MONTHLY);
+	}
 }

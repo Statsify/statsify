@@ -10,24 +10,24 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const ArenaBrawlQuests = createGameModeQuests({
-  game: FormattedGame.ARENA_BRAWL,
-  fieldPrefix: "arena",
-  daily: [
-    { field: "daily_kills", propertyKey: "kills" },
-    { field: "daily_wins", propertyKey: "wins" },
-    {
-      field: "daily_play",
-      propertyKey: "playArenaDaily",
-      fieldName: "Play Arena",
-      overall: { fieldName: "Play Arena (Daily)" },
-    },
-  ],
-  weekly: [
-    {
-      field: "weekly_play",
-      propertyKey: "playArenaWeekly",
-      fieldName: "Play Arena",
-      overall: { fieldName: "Play Arena (Weekly)" },
-    },
-  ],
+	game: FormattedGame.ARENA_BRAWL,
+	fieldPrefix: "arena",
+	daily: [
+		{ field: "daily_kills", propertyKey: "kills" },
+		{ field: "daily_wins", propertyKey: "wins" },
+		{
+			field: "daily_play",
+			propertyKey: "playArenaDaily",
+			fieldName: "Play Arena",
+			overall: { fieldName: "Play Arena (Daily)" },
+		},
+	],
+	weekly: [
+		{
+			field: "weekly_play",
+			propertyKey: "playArenaWeekly",
+			fieldName: "Play Arena",
+			overall: { fieldName: "Play Arena (Weekly)" },
+		},
+	],
 });

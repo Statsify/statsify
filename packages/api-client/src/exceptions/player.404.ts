@@ -9,7 +9,7 @@
 import { NotFoundException } from "./base.404.js";
 
 export class PlayerNotFoundException extends NotFoundException {
-  public constructor() {
-    super("player");
-  }
+	public constructor() {
+		super("player");
+	}
 }

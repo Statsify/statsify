@@ -15,21 +15,21 @@ import type { TextInputBuilder } from "./text-input.builder.js";
 export type ActionRowComponent = ButtonBuilder | SelectMenuBuilder | TextInputBuilder;
 
 export class ActionRowBuilder {
-  #components: ActionRowComponent[];
+	#components: ActionRowComponent[];
 
-  public constructor(components: ActionRowComponent[] = []) {
-    this.#components = components;
-  }
+	public constructor(components: ActionRowComponent[] = []) {
+		this.#components = components;
+	}
 
-  public component(component: ActionRowComponent): this {
-    this.#components.push(component);
-    return this;
-  }
+	public component(component: ActionRowComponent): this {
+		this.#components.push(component);
+		return this;
+	}
 
-  public build(locale: LocalizeFunction): APIActionRowComponent<any> {
-    return {
-      type: ComponentType.ActionRow,
-      components: this.#components.map((c) => c.build(locale)),
-    };
-  }
+	public build(locale: LocalizeFunction): APIActionRowComponent<any> {
+		return {
+			type: ComponentType.ActionRow,
+			components: this.#components.map((c) => c.build(locale)),
+		};
+	}
 }

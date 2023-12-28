@@ -10,11 +10,11 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const BuildBattleQuests = createGameModeQuests({
-  game: FormattedGame.BUILD_BATTLE,
-  fieldPrefix: "build_battle",
-  daily: [
-    { field: "player", propertyKey: "player" },
-    { field: "winner", propertyKey: "winner" },
-  ],
-  weekly: [{ field: "weekly", propertyKey: "masterArchitect" }],
+	game: FormattedGame.BUILD_BATTLE,
+	fieldPrefix: "build_battle",
+	daily: [
+		{ field: "player", propertyKey: "player" },
+		{ field: "winner", propertyKey: "winner" },
+	],
+	weekly: [{ field: "weekly", propertyKey: "masterArchitect" }],
 });

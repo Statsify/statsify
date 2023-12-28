@@ -11,14 +11,12 @@ import { removeFormatting } from "@statsify/util";
 
 export const removeGameDash = (game: string) => game.replace(" -", "");
 
-export const games = Object.entries(
-  Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
-).map(([key, value]) => {
-  const name = value.leaderboard.fieldName ?? value.leaderboard.name;
+export const games = Object.entries(Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata).map(([key, value]) => {
+	const name = value.leaderboard.fieldName ?? value.leaderboard.name;
 
-  return {
-    key: key as keyof PlayerStats,
-    name: removeGameDash(removeFormatting(name)),
-    formatted: name,
-  };
+	return {
+		key: key as keyof PlayerStats,
+		name: removeGameDash(removeFormatting(name)),
+		formatted: name,
+	};
 });

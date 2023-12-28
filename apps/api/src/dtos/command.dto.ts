@@ -10,7 +10,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsString } from "class-validator";
 
 export class CommandDto {
-  @IsString()
-  @ApiProperty()
-  public command: string;
+	@IsString()
+	@ApiProperty()
+	public command: string;
 }

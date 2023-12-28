@@ -10,13 +10,13 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const MegaWallsQuests = createGameModeQuests({
-  game: FormattedGame.MEGAWALLS,
-  fieldPrefix: "mega_walls",
-  daily: [
-    { field: "play", propertyKey: "gameOfTheDay" },
-    { field: "win", propertyKey: "win" },
-    { field: "kill", propertyKey: "kills" },
-    { field: "faithful", propertyKey: "faithful" },
-  ],
-  weekly: [{ field: "weekly", propertyKey: "megaWaller" }],
+	game: FormattedGame.MEGAWALLS,
+	fieldPrefix: "mega_walls",
+	daily: [
+		{ field: "play", propertyKey: "gameOfTheDay" },
+		{ field: "win", propertyKey: "win" },
+		{ field: "kill", propertyKey: "kills" },
+		{ field: "faithful", propertyKey: "faithful" },
+	],
+	weekly: [{ field: "weekly", propertyKey: "megaWaller" }],
 });

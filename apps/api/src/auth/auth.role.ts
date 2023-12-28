@@ -7,7 +7,7 @@
  */
 
 export enum AuthRole {
-  MEMBER = 0,
-  WORKER = 300,
-  ADMIN = 999,
+	MEMBER = 0,
+	WORKER = 300,
+	ADMIN = 999,
 }

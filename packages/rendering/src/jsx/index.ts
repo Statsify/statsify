@@ -7,12 +7,7 @@
  */
 
 export * from "./create-instructions.js";
-export {
-  type IntrinsicElement,
-  type IntrinsicProps,
-  type IntrinsicRenders,
-  intrinsicElements,
-} from "./instrinsics.js";
+export { type IntrinsicElement, type IntrinsicProps, type IntrinsicRenders, intrinsicElements } from "./instrinsics.js";
 export * from "./render.js";
 export * from "./types.js";
 export * from "./util.js";

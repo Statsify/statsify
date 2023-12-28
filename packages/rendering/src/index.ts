@@ -18,19 +18,19 @@ export { WinterThemeService } from "./winter-theme.service.js";
 import type * as JSXInternal from "./jsx/index.js";
 
 declare global {
-  namespace JSX {
-    //@ts-ignore Typescript for the love of god won't let me override this interface
-    type IntrinsicElements = JSXInternal.IntrinsicProps;
+	namespace JSX {
+		//@ts-ignore Typescript for the love of god won't let me override this interface
+		type IntrinsicElements = JSXInternal.IntrinsicProps;
 
-    //@ts-ignore Typescript for the love of god won't let me override this interface
-    type Element = JSXInternal.ElementNode;
+		//@ts-ignore Typescript for the love of god won't let me override this interface
+		type Element = JSXInternal.ElementNode;
 
-    type Children<T = Element> = JSXInternal.Children<T>;
+		type Children<T = Element> = JSXInternal.Children<T>;
 
-    type Measurement = JSXInternal.Measurement;
+		type Measurement = JSXInternal.Measurement;
 
-    interface ElementChildrenAttribute {
-      children: {};
-    }
-  }
+		interface ElementChildrenAttribute {
+			children: {};
+		}
+	}
 }

@@ -11,19 +11,19 @@ import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
 
 interface HypixelSaysTableProps {
-  stats: HypixelSays;
-  t: LocalizeFunction;
+	stats: HypixelSays;
+	t: LocalizeFunction;
 }
 
 export const HypixelSaysTable = ({ stats, t }: HypixelSaysTableProps) => (
-  <Table.table>
-    <Table.tr>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-      <Table.td title={t("stats.roundWins")} value={t(stats.roundsWon)} color="§b" />
-    </Table.tr>
-    <Table.tr>
-      <Table.td title={t("stats.points")} value={t(stats.points)} color="§e" />
-      <Table.td title={t("stats.maxPoints")} value={t(stats.maxScore)} color="§6" />
-    </Table.tr>
-  </Table.table>
+	<Table.table>
+		<Table.tr>
+			<Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+			<Table.td title={t("stats.roundWins")} value={t(stats.roundsWon)} color="§b" />
+		</Table.tr>
+		<Table.tr>
+			<Table.td title={t("stats.points")} value={t(stats.points)} color="§e" />
+			<Table.td title={t("stats.maxPoints")} value={t(stats.maxScore)} color="§6" />
+		</Table.tr>
+	</Table.table>
 );

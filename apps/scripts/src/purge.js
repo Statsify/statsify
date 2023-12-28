@@ -22,16 +22,13 @@ const __dirname = dirname(__filename);
  * @param {string} script
  */
 const exec = (script) =>
-  promisify(_exec)(script, {
-    shell: true,
-    stdio: "inherit",
-    cwd: resolve(__dirname, "../../../"),
-  });
+	promisify(_exec)(script, {
+		shell: true,
+		stdio: "inherit",
+		cwd: resolve(__dirname, "../../../"),
+	});
 
-const workspaces = [
-  ...(await fetchWorkspaces("apps")),
-  ...(await fetchWorkspaces("packages")),
-];
+const workspaces = [...(await fetchWorkspaces("apps")), ...(await fetchWorkspaces("packages"))];
 
 /**
  *
@@ -40,31 +37,27 @@ const workspaces = [
  * @returns {Promise<void>}
  */
 function deleteFromWorkspaces(path, _workspaces = workspaces) {
-  return Promise.all(
-    _workspaces.map((workspace) =>
-      rm(join(workspace, path), { recursive: true, force: true })
-    )
-  );
+	return Promise.all(_workspaces.map((workspace) => rm(join(workspace, path), { recursive: true, force: true })));
 }
 
 const nodeModules = async () => {
-  await deleteFromWorkspaces("node_modules", [ROOT, ...workspaces]);
+	await deleteFromWorkspaces("node_modules", [ROOT, ...workspaces]);
 
-  if (!(await inquirerConfirmation("Recreate node_modules"))) return;
+	if (!(await inquirerConfirmation("Recreate node_modules"))) return;
 
-  await exec("pnpm");
+	await exec("pnpm");
 
-  inquirerLogger("Recreater", "node_modules installed");
+	inquirerLogger("Recreater", "node_modules installed");
 };
 
 const dist = async () => {
-  await deleteFromWorkspaces("dist");
+	await deleteFromWorkspaces("dist");
 
-  if (!(await inquirerConfirmation("Recreate dist"))) return;
+	if (!(await inquirerConfirmation("Recreate dist"))) return;
 
-  await exec("pnpm build");
+	await exec("pnpm build");
 
-  inquirerLogger("Recreater", "monorepo freshly built");
+	inquirerLogger("Recreater", "monorepo freshly built");
 };
 
 const turboRepo = () => deleteFromWorkspaces(".turbo", [ROOT, ...workspaces]);
@@ -72,56 +65,56 @@ const coverage = () => deleteFromWorkspaces("coverage");
 const swc = () => deleteFromWorkspaces(".swc");
 
 const all = async () => {
-  await nodeModules();
-  await dist();
-  await Promise.all([turboRepo(), coverage(), swc()]);
+	await nodeModules();
+	await dist();
+	await Promise.all([turboRepo(), coverage(), swc()]);
 };
 
 const purge = async () => {
-  if (process.argv.includes("--dist")) {
-    await deleteFromWorkspaces("dist");
-    return process.exit(0);
-  }
+	if (process.argv.includes("--dist")) {
+		await deleteFromWorkspaces("dist");
+		return process.exit(0);
+	}
 
-  const { method } = await inquirer.prompt([
-    {
-      type: "list",
-      name: "method",
-      message: "Purge Action?",
-      choices: ["node_modules", ".turbo", "dist", "coverage", ".swc", "ALL"],
-      default: "create",
-    },
-  ]);
+	const { method } = await inquirer.prompt([
+		{
+			type: "list",
+			name: "method",
+			message: "Purge Action?",
+			choices: ["node_modules", ".turbo", "dist", "coverage", ".swc", "ALL"],
+			default: "create",
+		},
+	]);
 
-  if (!(await inquirerConfirmation())) return;
+	if (!(await inquirerConfirmation())) return;
 
-  switch (method) {
-    case "node_modules":
-      await nodeModules();
-      break;
+	switch (method) {
+		case "node_modules":
+			await nodeModules();
+			break;
 
-    case ".turbo":
-      await turboRepo();
-      break;
+		case ".turbo":
+			await turboRepo();
+			break;
 
-    case "dist":
-      await dist();
-      break;
+		case "dist":
+			await dist();
+			break;
 
-    case "coverage":
-      await coverage();
-      break;
+		case "coverage":
+			await coverage();
+			break;
 
-    case ".swc":
-      await swc();
-      break;
+		case ".swc":
+			await swc();
+			break;
 
-    case "ALL":
-      await all();
-      break;
-  }
+		case "ALL":
+			await all();
+			break;
+	}
 
-  process.exit(0);
+	process.exit(0);
 };
 
 purge();

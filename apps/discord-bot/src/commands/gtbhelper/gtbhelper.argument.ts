@@ -6,33 +6,28 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  APIApplicationCommandOptionChoice,
-  ApplicationCommandOptionType,
-} from "discord-api-types/v10";
+import { APIApplicationCommandOptionChoice, ApplicationCommandOptionType } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import { findSolutions } from "./find-solutions.js";
 
 export class GTBHelperArgument extends AbstractArgument {
-  public name = "hint";
-  public description: LocalizationString;
-  public type = ApplicationCommandOptionType.String;
-  public required = true;
-  public autocomplete = true;
+	public name = "hint";
+	public description: LocalizationString;
+	public type = ApplicationCommandOptionType.String;
+	public required = true;
+	public autocomplete = true;
 
-  public constructor() {
-    super();
-    this.description = (t) => t("arguments.gtbhelper");
-  }
+	public constructor() {
+		super();
+		this.description = (t) => t("arguments.gtbhelper");
+	}
 
-  public autocompleteHandler(
-    context: CommandContext
-  ): APIApplicationCommandOptionChoice[] {
-    const hint = context.option<string>(this.name, "");
+	public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
+		const hint = context.option<string>(this.name, "");
 
-    return findSolutions(hint, 25).map((m) => ({
-      name: m,
-      value: m,
-    }));
-  }
+		return findSolutions(hint, 25).map((m) => ({
+			name: m,
+			value: m,
+		}));
+	}
 }

@@ -10,17 +10,17 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const WarlordsQuests = createGameModeQuests({
-  game: FormattedGame.WARLORDS,
-  fieldPrefix: "warlords",
-  daily: [
-    { field: "ctf", propertyKey: "captureTheFlag" },
-    { field: "tdm", propertyKey: "teamDeathmatch" },
-    { field: "domination", propertyKey: "domination" },
-    { field: "victorious", propertyKey: "victorious" },
-    { field: "objectives", propertyKey: "carrySecured", name: "Carry, Secured!" },
-  ],
-  weekly: [
-    { field: "dedication", propertyKey: "dedication" },
-    { field: "all_star", propertyKey: "allStar" },
-  ],
+	game: FormattedGame.WARLORDS,
+	fieldPrefix: "warlords",
+	daily: [
+		{ field: "ctf", propertyKey: "captureTheFlag" },
+		{ field: "tdm", propertyKey: "teamDeathmatch" },
+		{ field: "domination", propertyKey: "domination" },
+		{ field: "victorious", propertyKey: "victorious" },
+		{ field: "objectives", propertyKey: "carrySecured", name: "Carry, Secured!" },
+	],
+	weekly: [
+		{ field: "dedication", propertyKey: "dedication" },
+		{ field: "all_star", propertyKey: "allStar" },
+	],
 });

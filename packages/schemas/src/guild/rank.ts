@@ -10,22 +10,22 @@ import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
 
 export class GuildRank {
-  @Field()
-  public name: string;
+	@Field()
+	public name: string;
 
-  @Field({ store: { required: false } })
-  public tag?: string;
+	@Field({ store: { required: false } })
+	public tag?: string;
 
-  @Field({ leaderboard: { enabled: false } })
-  public priority: number;
+	@Field({ leaderboard: { enabled: false } })
+	public priority: number;
 
-  @Field({ store: { default: false } })
-  public default: boolean;
+	@Field({ store: { default: false } })
+	public default: boolean;
 
-  public constructor(data: APIData) {
-    this.name = data.name;
-    this.default = data.default;
-    this.tag = data.tag;
-    this.priority = data.priority;
-  }
+	public constructor(data: APIData) {
+		this.name = data.name;
+		this.default = data.default;
+		this.tag = data.tag;
+		this.priority = data.priority;
+	}
 }

@@ -11,6 +11,6 @@ import { Guild } from "@statsify/schemas";
 import { SuccessResponse } from "./success.response.js";
 
 export class GetGuildResponse extends SuccessResponse {
-  @ApiProperty()
-  public guild: Guild;
+	@ApiProperty()
+	public guild: Guild;
 }

@@ -9,15 +9,15 @@
 import { ApiProperty } from "@nestjs/swagger";
 
 export class PostLeaderboardRankingsResponse {
-  @ApiProperty({ description: "The name of the requested ranking" })
-  public field: string;
+	@ApiProperty({ description: "The name of the requested ranking" })
+	public field: string;
 
-  @ApiProperty()
-  public name: string;
+	@ApiProperty()
+	public name: string;
 
-  @ApiProperty()
-  public value: number | string;
+	@ApiProperty()
+	public value: number | string;
 
-  @ApiProperty()
-  public rank: number;
+	@ApiProperty()
+	public rank: number;
 }

@@ -14,13 +14,13 @@ import { SkinService } from "./skin.service.js";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
-  imports: [
-    TypegooseModule.forFeature([Skin]),
-    HttpModule.register({
-      baseURL: "https://sessionserver.mojang.com/",
-    }),
-  ],
-  controllers: [SkinController],
-  providers: [SkinService],
+	imports: [
+		TypegooseModule.forFeature([Skin]),
+		HttpModule.register({
+			baseURL: "https://sessionserver.mojang.com/",
+		}),
+	],
+	controllers: [SkinController],
+	providers: [SkinService],
 })
 export class SkinModule {}

@@ -14,32 +14,32 @@ import { challengeFieldData } from "../util.js";
 import type { GameChallenges } from "../game-challenges.js";
 
 export class UHCChallenges implements GameChallenges {
-  @Field(challengeFieldData)
-  public longshot: number;
+	@Field(challengeFieldData)
+	public longshot: number;
 
-  @Field(challengeFieldData)
-  public perfectStart: number;
+	@Field(challengeFieldData)
+	public perfectStart: number;
 
-  @Field(challengeFieldData)
-  public hunter: number;
+	@Field(challengeFieldData)
+	public hunter: number;
 
-  @Field(challengeFieldData)
-  public threat: number;
+	@Field(challengeFieldData)
+	public threat: number;
 
-  @Field({
-    leaderboard: {
-      fieldName: `${removeFormatting(FormattedGame.UHC)} Total`,
-      name: "Total",
-    },
-  })
-  public total: number;
+	@Field({
+		leaderboard: {
+			fieldName: `${removeFormatting(FormattedGame.UHC)} Total`,
+			name: "Total",
+		},
+	})
+	public total: number;
 
-  public constructor(challenges: APIData) {
-    this.longshot = challenges.UHC__longshot_challenge;
-    this.perfectStart = challenges.UHC__perfect_start_challenge;
-    this.hunter = challenges.UHC__hunter_challenge;
-    this.threat = challenges.UHC__threat_challenge;
+	public constructor(challenges: APIData) {
+		this.longshot = challenges.UHC__longshot_challenge;
+		this.perfectStart = challenges.UHC__perfect_start_challenge;
+		this.hunter = challenges.UHC__hunter_challenge;
+		this.threat = challenges.UHC__threat_challenge;
 
-    this.total = add(this.longshot, this.perfectStart, this.hunter, this.threat);
-  }
+		this.total = add(this.longshot, this.perfectStart, this.hunter, this.threat);
+	}
 }

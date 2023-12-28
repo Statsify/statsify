@@ -11,6 +11,6 @@ import { GameCounts } from "@statsify/schemas";
 import { SuccessResponse } from "./success.response.js";
 
 export class GetGamecountsResponse extends SuccessResponse {
-  @ApiProperty()
-  public gamecounts: GameCounts;
+	@ApiProperty()
+	public gamecounts: GameCounts;
 }

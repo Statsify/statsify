@@ -10,22 +10,17 @@ import { Command, CommandContext, ErrorMessage, TextArgument } from "@statsify/d
 import { TicketService } from "#services";
 
 @Command({
-  description: (t) => t("commands.close"),
-  args: [new TextArgument("reason", (t) => t("arguments.reason"), false)],
+	description: (t) => t("commands.close"),
+	args: [new TextArgument("reason", (t) => t("arguments.reason"), false)],
 })
 export class CloseCommand {
-  public constructor(private readonly ticketService: TicketService) {}
+	public constructor(private readonly ticketService: TicketService) {}
 
-  public async run(context: CommandContext) {
-    const interaction = context.getInteraction();
+	public async run(context: CommandContext) {
+		const interaction = context.getInteraction();
 
-    const deleted = await this.ticketService.close(
-      interaction.getChannelId()!,
-      "channel",
-      interaction.getUserId(),
-      context.option<string>("reason")
-    );
+		const deleted = await this.ticketService.close(interaction.getChannelId()!, "channel", interaction.getUserId(), context.option<string>("reason"));
 
-    if (!deleted) throw new ErrorMessage("errors.invalidTicketChannel");
-  }
+		if (!deleted) throw new ErrorMessage("errors.invalidTicketChannel");
+	}
 }

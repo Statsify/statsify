@@ -10,12 +10,12 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const QuakeQuests = createGameModeQuests({
-  game: FormattedGame.QUAKE,
-  fieldPrefix: "quake",
-  daily: [
-    { field: "daily_play", propertyKey: "player" },
-    { field: "daily_kill", propertyKey: "sniper" },
-    { field: "daily_win", propertyKey: "winner" },
-  ],
-  weekly: [{ field: "weekly_play", propertyKey: "bazinga", name: "Bazinga!" }],
+	game: FormattedGame.QUAKE,
+	fieldPrefix: "quake",
+	daily: [
+		{ field: "daily_play", propertyKey: "player" },
+		{ field: "daily_kill", propertyKey: "sniper" },
+		{ field: "daily_win", propertyKey: "winner" },
+	],
+	weekly: [{ field: "weekly_play", propertyKey: "bazinga", name: "Bazinga!" }],
 });

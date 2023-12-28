@@ -11,7 +11,7 @@ import { HypixelResourcesController } from "./hypixel-resources.controller.js";
 import { Module } from "@nestjs/common";
 
 @Module({
-  imports: [HypixelModule],
-  controllers: [HypixelResourcesController],
+	imports: [HypixelModule],
+	controllers: [HypixelResourcesController],
 })
 export class HypixelResourcesModule {}

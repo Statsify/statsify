@@ -16,251 +16,222 @@ const redis = new Redis(config("database.redisUrl"));
 
 //TODO unify functions (one createKey)
 const createKey = async ({ name, key, role, limit }) => {
-  const activeKeys = await getKeyNames();
+	const activeKeys = await getKeyNames();
 
-  if (activeKeys.includes(name)) {
-    inquirerLogger("Duplicate Key!", `The key ID of ${name} already exists!`);
-    return false;
-  } else if (activeKeys.includes(key)) {
-    inquirerLogger("Duplicate Key!", `The key value of ${key} already exists!`);
-    return false;
-  }
+	if (activeKeys.includes(name)) {
+		inquirerLogger("Duplicate Key!", `The key ID of ${name} already exists!`);
+		return false;
+	} else if (activeKeys.includes(key)) {
+		inquirerLogger("Duplicate Key!", `The key value of ${key} already exists!`);
+		return false;
+	}
 
-  const hash = createHash("sha256").update(key).digest("hex");
+	const hash = createHash("sha256").update(key).digest("hex");
 
-  await redis.hmset(
-    `key:${hash}`,
-    "name",
-    name,
-    "role",
-    roles[role],
-    "limit",
-    limit,
-    "requests",
-    0,
-    "createdAt",
-    Date.now()
-  );
+	await redis.hmset(`key:${hash}`, "name", name, "role", roles[role], "limit", limit, "requests", 0, "createdAt", Date.now());
 
-  return true;
+	return true;
 };
 
 const getKeys = async () => {
-  const keys = await redis.keys("key:*");
+	const keys = await redis.keys("key:*");
 
-  const pipeline = redis.pipeline();
+	const pipeline = redis.pipeline();
 
-  keys.forEach((key) => {
-    pipeline.hgetall(key);
-  });
+	keys.forEach((key) => {
+		pipeline.hgetall(key);
+	});
 
-  const keyValues = await pipeline.exec();
+	const keyValues = await pipeline.exec();
 
-  return Object.assign(
-    {},
-    ...keyValues.map((key, index) => ({ [keys[index].replace("key:", "")]: key[1] }))
-  );
+	return Object.assign({}, ...keyValues.map((key, index) => ({ [keys[index].replace("key:", "")]: key[1] })));
 };
 
 const getKeyNames = async () => Object.values(await getKeys()).map((key) => key.name);
 
 const defaultKey = () =>
-  (
-    process.env.SUDO_USER ||
-    process.env.C9_USER ||
-    process.env.LOGNAME ||
-    process.env.USER ||
-    process.env.LNAME ||
-    process.env.USERNAME ||
-    randomUUID()
-  )
-    .trim()
-    .toLowerCase() + Math.floor(Math.random() * 1000);
+	(
+		process.env.SUDO_USER ||
+		process.env.C9_USER ||
+		process.env.LOGNAME ||
+		process.env.USER ||
+		process.env.LNAME ||
+		process.env.USERNAME ||
+		randomUUID()
+	)
+		.trim()
+		.toLowerCase() + Math.floor(Math.random() * 1000);
 
 const roles = {
-  member: 0,
-  worker: 300,
-  admin: 999,
+	member: 0,
+	worker: 300,
+	admin: 999,
 };
 
 const keyManager = async () => {
-  if (process.argv.includes("--nonInteractiveKeyCreation")) {
-    const keyStatus = await createKey({
-      name: "testKey",
-      key: "testKey",
-      role: "admin",
-      limit: 999,
-    });
+	if (process.argv.includes("--nonInteractiveKeyCreation")) {
+		const keyStatus = await createKey({
+			name: "testKey",
+			key: "testKey",
+			role: "admin",
+			limit: 999,
+		});
 
-    if (!keyStatus) process.exit(0);
+		if (!keyStatus) process.exit(0);
 
-    inquirerLogger(
-      "New Key!",
-      "testKey with ID of testKey and role of admin with weighted limit of 999 was just created non interactively."
-    );
+		inquirerLogger("New Key!", "testKey with ID of testKey and role of admin with weighted limit of 999 was just created non interactively.");
 
-    process.exit(0);
-  }
+		process.exit(0);
+	}
 
-  const availableMethods = ["create"];
+	const availableMethods = ["create"];
 
-  if ((await getKeyNames()).length) availableMethods.push("delete", "edit", "list");
+	if ((await getKeyNames()).length) availableMethods.push("delete", "edit", "list");
 
-  const { method } = await inquirer.prompt([
-    {
-      type: "list",
-      name: "method",
-      message: "API Key Action?",
-      choices: availableMethods,
-      default: "create",
-    },
-  ]);
+	const { method } = await inquirer.prompt([
+		{
+			type: "list",
+			name: "method",
+			message: "API Key Action?",
+			choices: availableMethods,
+			default: "create",
+		},
+	]);
 
-  switch (method) {
-    case "create":
-      await createNewKey();
-      break;
+	switch (method) {
+		case "create":
+			await createNewKey();
+			break;
 
-    case "delete":
-      await deleteKey();
-      break;
+		case "delete":
+			await deleteKey();
+			break;
 
-    case "list":
-      await listKeys();
-      break;
+		case "list":
+			await listKeys();
+			break;
 
-    case "edit":
-      await editKey();
-      break;
-  }
+		case "edit":
+			await editKey();
+			break;
+	}
 
-  process.exit(0);
+	process.exit(0);
 };
 
 const createNewKey = async () => {
-  const defaultKeyValue = defaultKey();
-  const { key, name, role, limit } = await inquirer.prompt([
-    {
-      type: "input",
-      name: "key",
-      message: "API Key Value?",
-      default: defaultKeyValue,
-    },
-    {
-      type: "input",
-      name: "name",
-      message: "API Key Identifier (internal purposes)?",
-      default: defaultKeyValue,
-    },
-    {
-      type: "list",
-      name: "role",
-      message: "API Key Role?",
-      choices: Object.keys(roles),
-      default: "admin",
-    },
-    {
-      type: "number",
-      name: "limit",
-      message: "Weighted request limit per minute?",
-      default: 999,
-    },
-  ]);
+	const defaultKeyValue = defaultKey();
+	const { key, name, role, limit } = await inquirer.prompt([
+		{
+			type: "input",
+			name: "key",
+			message: "API Key Value?",
+			default: defaultKeyValue,
+		},
+		{
+			type: "input",
+			name: "name",
+			message: "API Key Identifier (internal purposes)?",
+			default: defaultKeyValue,
+		},
+		{
+			type: "list",
+			name: "role",
+			message: "API Key Role?",
+			choices: Object.keys(roles),
+			default: "admin",
+		},
+		{
+			type: "number",
+			name: "limit",
+			message: "Weighted request limit per minute?",
+			default: 999,
+		},
+	]);
 
-  let keyCreated = await createKey({ key, name, role, limit });
+	let keyCreated = await createKey({ key, name, role, limit });
 
-  if (keyCreated)
-    inquirerLogger(
-      "New Key!",
-      `${key} with ID of ${name} and role of ${role} with weighted limit of ${limit}.`
-    );
+	if (keyCreated) inquirerLogger("New Key!", `${key} with ID of ${name} and role of ${role} with weighted limit of ${limit}.`);
 };
 
 const deleteKey = async () => {
-  const { deletedKey } = await inquirer.prompt([
-    {
-      type: "list",
-      name: "deletedKey",
-      message: "Which API Key?",
-      choices: await getKeyNames(),
-    },
-  ]);
+	const { deletedKey } = await inquirer.prompt([
+		{
+			type: "list",
+			name: "deletedKey",
+			message: "Which API Key?",
+			choices: await getKeyNames(),
+		},
+	]);
 
-  if (!(await inquirerConfirmation(false))) return;
+	if (!(await inquirerConfirmation(false))) return;
 
-  const activeKeys = await getKeys();
+	const activeKeys = await getKeys();
 
-  for (const key in activeKeys) {
-    let currentKey = activeKeys[key];
+	for (const key in activeKeys) {
+		let currentKey = activeKeys[key];
 
-    if (currentKey.name === deletedKey) {
-      await redis.del(`key:${key}`);
-      inquirerLogger(
-        "Deleted Key!",
-        `Key with ID of ${deletedKey} has been deleted (${key})`
-      );
-      return;
-    }
-  }
+		if (currentKey.name === deletedKey) {
+			await redis.del(`key:${key}`);
+			inquirerLogger("Deleted Key!", `Key with ID of ${deletedKey} has been deleted (${key})`);
+			return;
+		}
+	}
 };
 
 const listKeys = async () => {
-  const activeKeys = await getKeys();
+	const activeKeys = await getKeys();
 
-  const idToRole = Object.fromEntries(
-    Object.entries(roles).map(([key, value]) => [value, key])
-  );
+	const idToRole = Object.fromEntries(Object.entries(roles).map(([key, value]) => [value, key]));
 
-  for (const key in activeKeys) {
-    let currentKey = activeKeys[key];
-    inquirerLogger(
-      `${currentKey.name}`,
-      `with ${idToRole[currentKey.role]} role and weighted limit of ${
-        currentKey.limit
-      } and ${currentKey.requests} lifetime requests.`
-    );
-  }
+	for (const key in activeKeys) {
+		let currentKey = activeKeys[key];
+		inquirerLogger(
+			`${currentKey.name}`,
+			`with ${idToRole[currentKey.role]} role and weighted limit of ${currentKey.limit} and ${currentKey.requests} lifetime requests.`
+		);
+	}
 };
 
 const editKey = async () => {
-  const { editedKey, field } = await inquirer.prompt([
-    {
-      type: "list",
-      name: "editedKey",
-      message: "Which API Key?",
-      choices: await getKeyNames(),
-    },
-    {
-      type: "list",
-      name: "field",
-      message: "Which Field?",
-      choices: ["name", "role", "limit"],
-    },
-  ]);
+	const { editedKey, field } = await inquirer.prompt([
+		{
+			type: "list",
+			name: "editedKey",
+			message: "Which API Key?",
+			choices: await getKeyNames(),
+		},
+		{
+			type: "list",
+			name: "field",
+			message: "Which Field?",
+			choices: ["name", "role", "limit"],
+		},
+	]);
 
-  if (!(await inquirerConfirmation("Are you sure?"))) return;
+	if (!(await inquirerConfirmation("Are you sure?"))) return;
 
-  const activeKeys = await getKeys();
+	const activeKeys = await getKeys();
 
-  let currentValue = "";
-  let currentHash = "";
-  for (const key in activeKeys) {
-    if (activeKeys[key].name === editedKey) {
-      currentValue = activeKeys[key][`${field}`];
-      currentHash = key;
-    }
-  }
+	let currentValue = "";
+	let currentHash = "";
+	for (const key in activeKeys) {
+		if (activeKeys[key].name === editedKey) {
+			currentValue = activeKeys[key][`${field}`];
+			currentHash = key;
+		}
+	}
 
-  const newValue = await inquirer.prompt([
-    {
-      type: "number",
-      name: "newValue",
-      message: `New ${field} value?`,
-      default: currentValue,
-    },
-  ]);
+	const newValue = await inquirer.prompt([
+		{
+			type: "number",
+			name: "newValue",
+			message: `New ${field} value?`,
+			default: currentValue,
+		},
+	]);
 
-  await redis.hset(`key:${currentHash}`, field, Object.values(newValue)[0]);
+	await redis.hset(`key:${currentHash}`, field, Object.values(newValue)[0]);
 };
 
 keyManager();

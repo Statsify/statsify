@@ -16,8 +16,7 @@ const PRIVATE_PATH = join(PATH, "private");
 
 const hasPrivateAssets = existsSync(join(PRIVATE_PATH, "package.json"));
 
-const checkAsset = (file: string) =>
-  hasPrivateAssets && existsSync(join(PRIVATE_PATH, file)) ? "private" : "public";
+const checkAsset = (file: string) => (hasPrivateAssets && existsSync(join(PRIVATE_PATH, file)) ? "private" : "public");
 
 export const getAssetPath = (path: string) => join(PATH, checkAsset(path), path);
 
@@ -30,128 +29,120 @@ const getImage = (path: string) => loadImage(getAssetPath(path));
  * @returns the full path to the texture
  */
 export const getMinecraftTexturePath = (texturePath: string, pack = "default") => {
-  if (!hasPrivateAssets) pack = "default";
-  return join(getAssetPath(`minecraft-textures/${pack}/assets/minecraft/`), texturePath);
+	if (!hasPrivateAssets) pack = "default";
+	return join(getAssetPath(`minecraft-textures/${pack}/assets/minecraft/`), texturePath);
 };
 
 export const getAllGameIcons = async () => {
-  const gameIconPaths = readdirSync(getAssetPath("games"));
+	const gameIconPaths = readdirSync(getAssetPath("games"));
 
-  const gameIconsRequest = await Promise.all(
-    gameIconPaths.map(async (g) => [g.replace(".png", ""), await getImage(`games/${g}`)])
-  );
+	const gameIconsRequest = await Promise.all(gameIconPaths.map(async (g) => [g.replace(".png", ""), await getImage(`games/${g}`)]));
 
-  return Object.fromEntries(gameIconsRequest);
+	return Object.fromEntries(gameIconsRequest);
 };
 
 let backgrounds: string[] = [];
 
 function getBackgroundPaths() {
-  if (backgrounds.length) return backgrounds;
-  backgrounds = readdirSync(getAssetPath("out/backgrounds"));
-  return backgrounds;
+	if (backgrounds.length) return backgrounds;
+	backgrounds = readdirSync(getAssetPath("out/backgrounds"));
+	return backgrounds;
 }
 
 export function getBackground(path: string): Promise<Image>;
 export function getBackground(game: string, mode: string): Promise<Image>;
 export function getBackground(pathOrGame: string, mode?: string): Promise<Image> {
-  if (!hasPrivateAssets) return getImage("out/backgrounds/background.png");
+	if (!hasPrivateAssets) return getImage("out/backgrounds/background.png");
 
-  if (typeof mode === "string") {
-    const path = `${pathOrGame}_${mode}_`;
-    const backgrounds = getBackgroundPaths().filter((p) => p.startsWith(path));
+	if (typeof mode === "string") {
+		const path = `${pathOrGame}_${mode}_`;
+		const backgrounds = getBackgroundPaths().filter((p) => p.startsWith(path));
 
-    const background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+		const background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
-    if (!background) throw new Error(`No background found for ${pathOrGame}_${mode}`);
+		if (!background) throw new Error(`No background found for ${pathOrGame}_${mode}`);
 
-    return getImage(`out/backgrounds/${background}`);
-  }
+		return getImage(`out/backgrounds/${background}`);
+	}
 
-  return getImage(`out/backgrounds/${pathOrGame}.png`);
+	return getImage(`out/backgrounds/${pathOrGame}.png`);
 }
 
 export function getLogo(user: User | null, size?: number): Promise<Image>;
 export function getLogo(logo: UserLogo | null, size?: number): Promise<Image>;
 export function getLogo(path: string, size?: number): Promise<Image>;
-export function getLogo(
-  userOrLogoOrPath: User | UserLogo | string | null,
-  size?: number
-): Promise<Image> {
-  return loadImage(getLogoPath(userOrLogoOrPath as User, size));
+export function getLogo(userOrLogoOrPath: User | UserLogo | string | null, size?: number): Promise<Image> {
+	return loadImage(getLogoPath(userOrLogoOrPath as User, size));
 }
 
 export function getLogoPath(user: User | null, size?: number): string;
 export function getLogoPath(logo: UserLogo | null, size?: number): string;
 export function getLogoPath(path: string, size?: number): string;
-export function getLogoPath(
-  userOrLogoOrPath: User | UserLogo | string | null,
-  size = 26
-): string {
-  let path: string | undefined;
-  let logo: UserLogo | undefined;
+export function getLogoPath(userOrLogoOrPath: User | UserLogo | string | null, size = 26): string {
+	let path: string | undefined;
+	let logo: UserLogo | undefined;
 
-  switch (typeof userOrLogoOrPath) {
-    case "string":
-      path = `${userOrLogoOrPath}_`;
-      break;
+	switch (typeof userOrLogoOrPath) {
+		case "string":
+			path = `${userOrLogoOrPath}_`;
+			break;
 
-    case "object":
-      logo = User.getLogo(userOrLogoOrPath);
-      break;
+		case "object":
+			logo = User.getLogo(userOrLogoOrPath);
+			break;
 
-    case "number":
-      logo = userOrLogoOrPath;
-      break;
-  }
+		case "number":
+			logo = userOrLogoOrPath;
+			break;
+	}
 
-  switch (logo) {
-    case UserLogo.RUBY:
-      path = "ruby_";
-      break;
+	switch (logo) {
+		case UserLogo.RUBY:
+			path = "ruby_";
+			break;
 
-    case UserLogo.AMETHYST:
-      path = "amethyst_";
-      break;
+		case UserLogo.AMETHYST:
+			path = "amethyst_";
+			break;
 
-    case UserLogo.NETHERITE:
-      path = "netherite_";
-      break;
+		case UserLogo.NETHERITE:
+			path = "netherite_";
+			break;
 
-    case UserLogo.SCULK:
-      path = "sculk_";
-      break;
+		case UserLogo.SCULK:
+			path = "sculk_";
+			break;
 
-    case UserLogo.PINK:
-      path = "pink_";
-      break;
+		case UserLogo.PINK:
+			path = "pink_";
+			break;
 
-    case UserLogo.VENOM:
-      path = "venom_";
-      break;
+		case UserLogo.VENOM:
+			path = "venom_";
+			break;
 
-    case UserLogo.EMERALD:
-      path = "emerald_";
-      break;
+		case UserLogo.EMERALD:
+			path = "emerald_";
+			break;
 
-    case UserLogo.DIAMOND:
-      path = "diamond_";
-      break;
+		case UserLogo.DIAMOND:
+			path = "diamond_";
+			break;
 
-    case UserLogo.GOLD:
-      path = "gold_";
-      break;
+		case UserLogo.GOLD:
+			path = "gold_";
+			break;
 
-    case UserLogo.IRON:
-      path = "iron_";
-      break;
+		case UserLogo.IRON:
+			path = "iron_";
+			break;
 
-    case UserLogo.DEFAULT:
-      path = "";
-      break;
-  }
+		case UserLogo.DEFAULT:
+			path = "";
+			break;
+	}
 
-  if (path === undefined) throw new Error("Invalid logo path");
+	if (path === undefined) throw new Error("Invalid logo path");
 
-  return getAssetPath(`logos/${path}logo_${size}.png`);
+	return getAssetPath(`logos/${path}logo_${size}.png`);
 }

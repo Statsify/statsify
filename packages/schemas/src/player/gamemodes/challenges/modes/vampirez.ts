@@ -14,32 +14,32 @@ import { challengeFieldData } from "../util.js";
 import type { GameChallenges } from "../game-challenges.js";
 
 export class VampireZChallenges implements GameChallenges {
-  @Field(challengeFieldData)
-  public fang: number;
+	@Field(challengeFieldData)
+	public fang: number;
 
-  @Field(challengeFieldData)
-  public gold: number;
+	@Field(challengeFieldData)
+	public gold: number;
 
-  @Field(challengeFieldData)
-  public purifying: number;
+	@Field(challengeFieldData)
+	public purifying: number;
 
-  @Field(challengeFieldData)
-  public lastStand: number;
+	@Field(challengeFieldData)
+	public lastStand: number;
 
-  @Field({
-    leaderboard: {
-      fieldName: `${removeFormatting(FormattedGame.VAMPIREZ)} Total`,
-      name: "Total",
-    },
-  })
-  public total: number;
+	@Field({
+		leaderboard: {
+			fieldName: `${removeFormatting(FormattedGame.VAMPIREZ)} Total`,
+			name: "Total",
+		},
+	})
+	public total: number;
 
-  public constructor(challenges: APIData) {
-    this.fang = challenges.VAMPIREZ__fang_challenge;
-    this.gold = challenges.VAMPIREZ__gold_challenge;
-    this.purifying = challenges.VAMPIREZ__purifying_challenge;
-    this.lastStand = challenges.VAMPIREZ__last_stand_challenge;
+	public constructor(challenges: APIData) {
+		this.fang = challenges.VAMPIREZ__fang_challenge;
+		this.gold = challenges.VAMPIREZ__gold_challenge;
+		this.purifying = challenges.VAMPIREZ__purifying_challenge;
+		this.lastStand = challenges.VAMPIREZ__last_stand_challenge;
 
-    this.total = add(this.fang, this.gold, this.purifying, this.lastStand);
-  }
+		this.total = add(this.fang, this.gold, this.purifying, this.lastStand);
+	}
 }

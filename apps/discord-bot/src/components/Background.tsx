@@ -9,12 +9,12 @@
 import type { Canvas, Image } from "skia-canvas";
 
 export interface BackgroundProps {
-  background: Canvas | Image;
-  children: JSX.Children;
+	background: Canvas | Image;
+	children: JSX.Children;
 }
 
 export const Background = ({ background, children }: BackgroundProps) => (
-  <img image={background} width="100%" height="100%" crop="resize">
-    {children}
-  </img>
+	<img image={background} width="100%" height="100%" crop="resize">
+		{children}
+	</img>
 );

@@ -10,85 +10,67 @@ import { minecraftColors } from "@statsify/util";
 import type { Fill } from "#jsx";
 
 export interface TextNode {
-  text: string;
-  color: Fill;
-  bold: boolean;
-  italic: boolean;
-  underline: boolean;
-  strikethrough: boolean;
-  size: number;
+	text: string;
+	color: Fill;
+	bold: boolean;
+	italic: boolean;
+	underline: boolean;
+	strikethrough: boolean;
+	size: number;
 }
 
 export interface Token {
-  regex: RegExp;
-  effect: (
-    part: string,
-    matches: RegExpMatchArray,
-    defaultState: Omit<TextNode, "text">
-  ) => Partial<TextNode>;
+	regex: RegExp;
+	effect: (part: string, matches: RegExpMatchArray, defaultState: Omit<TextNode, "text">) => Partial<TextNode>;
 }
 
 const bold: Token = { regex: /^l/, effect: () => ({ bold: true }) };
 
 const italic: Token = {
-  regex: /^o/,
-  effect: () => ({ italic: true }),
+	regex: /^o/,
+	effect: () => ({ italic: true }),
 };
 
 const underline: Token = {
-  regex: /^n|^u/,
-  effect: () => ({ underline: true }),
+	regex: /^n|^u/,
+	effect: () => ({ underline: true }),
 };
 
 const strikethrough: Token = {
-  regex: /^m/,
-  effect: () => ({ strikethrough: true }),
+	regex: /^m/,
+	effect: () => ({ strikethrough: true }),
 };
 
 const obfuscated: Token = {
-  regex: /^k/,
-  effect: () => ({}),
+	regex: /^k/,
+	effect: () => ({}),
 };
 
 const reset: Token = {
-  regex: /^r/,
-  effect: (_, __, defaultState) => defaultState,
+	regex: /^r/,
+	effect: (_, __, defaultState) => defaultState,
 };
 
-const minecraftColorList = minecraftColors.map((color) => [
-  color.code.replace("§", ""),
-  color.hex,
-]);
+const minecraftColorList = minecraftColors.map((color) => [color.code.replace("§", ""), color.hex]);
 
 const textColors = Object.fromEntries(minecraftColorList);
 
-const colorRegex = new RegExp(
-  `^${Object.keys(textColors).join("|^")}|^#([A-Fa-f0-9]{6})`
-);
+const colorRegex = new RegExp(`^${Object.keys(textColors).join("|^")}|^#([A-Fa-f0-9]{6})`);
 
 const color: Token = {
-  regex: colorRegex,
-  effect: (part) => ({
-    color: part.startsWith("#") ? part.slice(0, 7) : textColors[part[0]],
-    strikethrough: false,
-    underline: false,
-  }),
+	regex: colorRegex,
+	effect: (part) => ({
+		color: part.startsWith("#") ? part.slice(0, 7) : textColors[part[0]],
+		strikethrough: false,
+		underline: false,
+	}),
 };
 
 const size: Token = {
-  regex: /^\^\d\^/,
-  effect: (_, [match]) => ({
-    size: Number.parseInt(match.slice(1, -1)),
-  }),
+	regex: /^\^\d\^/,
+	effect: (_, [match]) => ({
+		size: Number.parseInt(match.slice(1, -1)),
+	}),
 };
 
-export const tokens: Token[] = [
-  color,
-  bold,
-  reset,
-  size,
-  italic,
-  underline,
-  strikethrough,
-  obfuscated,
-];
+export const tokens: Token[] = [color, bold, reset, size, italic, underline, strikethrough, obfuscated];

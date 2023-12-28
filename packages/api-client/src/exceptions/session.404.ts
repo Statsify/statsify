@@ -10,17 +10,17 @@ import { ApiProperty } from "@nestjs/swagger";
 import { NotFoundException } from "./base.404.js";
 
 export class SessionNotFoundException extends NotFoundException {
-  @ApiProperty()
-  public uuid: string;
+	@ApiProperty()
+	public uuid: string;
 
-  @ApiProperty()
-  public displayName: string;
+	@ApiProperty()
+	public displayName: string;
 
-  public constructor(uuid: string, displayName: string) {
-    super({
-      message: "session",
-      uuid,
-      displayName,
-    });
-  }
+	public constructor(uuid: string, displayName: string) {
+		super({
+			message: "session",
+			uuid,
+			displayName,
+		});
+	}
 }

@@ -6,37 +6,25 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ApiService,
-  Command,
-  CommandContext,
-  EmbedBuilder,
-  ErrorMessage,
-  IMessage,
-  SubCommand,
-} from "@statsify/discord";
+import { ApiService, Command, CommandContext, EmbedBuilder, ErrorMessage, IMessage, SubCommand } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 
 @Command({ description: "Reset" })
 export class ResetCommand {
-  public constructor(private readonly apiService: ApiService) {}
+	public constructor(private readonly apiService: ApiService) {}
 
-  @SubCommand({ description: (t) => t("commands.reset-session")  })
-  public async session(context: CommandContext): Promise<IMessage> {
-    const user = context.getUser();
-    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
+	@SubCommand({ description: (t) => t("commands.reset-session") })
+	public async session(context: CommandContext): Promise<IMessage> {
+		const user = context.getUser();
+		if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
 
-    await this.apiService.resetPlayerSession(
-      user.uuid!
-    );
+		await this.apiService.resetPlayerSession(user.uuid!);
 
-    const embed = new EmbedBuilder()
-      .color(STATUS_COLORS.success)
-      .description((t) => t("historical.setSessionReset"));
+		const embed = new EmbedBuilder().color(STATUS_COLORS.success).description((t) => t("historical.setSessionReset"));
 
-    return {
-      embeds: [embed],
-      ephemeral: true,
-    };
-  }
+		return {
+			embeds: [embed],
+			ephemeral: true,
+		};
+	}
 }

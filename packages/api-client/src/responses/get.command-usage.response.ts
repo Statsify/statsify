@@ -9,5 +9,5 @@
 import { SuccessResponse } from "./success.response.js";
 
 export class GetCommandUsageResponse extends SuccessResponse {
-  public usage: Record<string, number>;
+	public usage: Record<string, number>;
 }

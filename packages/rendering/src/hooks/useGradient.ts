@@ -8,13 +8,7 @@
 
 import type { CanvasGradient, CanvasRenderingContext2D } from "skia-canvas";
 
-export type DeferredGradient = (
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  width: number,
-  height: number
-) => CanvasGradient;
+export type DeferredGradient = (ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number) => CanvasGradient;
 
 export type GradientDirection = "horizontal" | "vertical";
 /**
@@ -24,18 +18,12 @@ export type GradientDirection = "horizontal" | "vertical";
  */
 export type GradientColor = [offset: number, color: string];
 
-export function useGradient(
-  type: GradientDirection,
-  ...colors: GradientColor[]
-): DeferredGradient {
-  return (ctx, x, y, width, height) => {
-    const gradient =
-      type === "horizontal"
-        ? ctx.createLinearGradient(x, y, x + width, y)
-        : ctx.createLinearGradient(x, y, x, y + height);
+export function useGradient(type: GradientDirection, ...colors: GradientColor[]): DeferredGradient {
+	return (ctx, x, y, width, height) => {
+		const gradient = type === "horizontal" ? ctx.createLinearGradient(x, y, x + width, y) : ctx.createLinearGradient(x, y, x, y + height);
 
-    colors.forEach(([offset, color]) => gradient.addColorStop(offset, color));
+		colors.forEach(([offset, color]) => gradient.addColorStop(offset, color));
 
-    return gradient;
-  };
+		return gradient;
+	};
 }

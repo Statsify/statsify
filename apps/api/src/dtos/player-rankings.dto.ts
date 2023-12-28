@@ -14,7 +14,7 @@ import { UuidDto } from "./uuid.dto.js";
 const fields = LeaderboardScanner.getLeaderboardFields(Player).map(([key]) => key);
 
 export class PlayerRankingsDto extends UuidDto {
-  @ApiProperty({ enum: fields, type: [String] })
-  @IsEnum(fields, { each: true })
-  public fields: string[];
+	@ApiProperty({ enum: fields, type: [String] })
+	@IsEnum(fields, { each: true })
+	public fields: string[];
 }

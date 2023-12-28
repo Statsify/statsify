@@ -16,7 +16,7 @@ Container.set(FontRenderer, renderer);
 
 @Service()
 export class FontLoaderService {
-  public async init() {
-    await renderer.loadImages(getMinecraftTexturePath("textures/font"));
-  }
+	public async init() {
+		await renderer.loadImages(getMinecraftTexturePath("textures/font"));
+	}
 }

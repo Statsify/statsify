@@ -9,9 +9,9 @@
 import { Field } from "#metadata";
 
 export class Commands {
-  @Field({ mongo: { unique: true, index: true } })
-  public name: string;
+	@Field({ mongo: { unique: true, index: true } })
+	public name: string;
 
-  @Field({ type: () => Object })
-  public usage: Record<string, number>;
+	@Field({ type: () => Object })
+	public usage: Record<string, number>;
 }

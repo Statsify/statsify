@@ -21,74 +21,70 @@ import { stat } from "node:fs/promises";
 const RESOLVE_EXTENSIONS = [".tsx", ".ts", ".jsx", ".js", ".mjs", ".cjs"];
 
 const resolveFile = (resolved: string, index = false) => {
-  for (const ext of RESOLVE_EXTENSIONS) {
-    const file = index ? join(resolved, `index${ext}`) : `${resolved}${ext}`;
-    if (existsSync(file)) return file;
-  }
+	for (const ext of RESOLVE_EXTENSIONS) {
+		const file = index ? join(resolved, `index${ext}`) : `${resolved}${ext}`;
+		if (existsSync(file)) return file;
+	}
 };
 
 export const resolveId = async (importee: string, importer?: string) => {
-  if (importer && importee[0] === ".") {
-    const absolutePath = resolve(importer ? dirname(importer) : process.cwd(), importee);
-    let resolved = resolveFile(absolutePath);
+	if (importer && importee[0] === ".") {
+		const absolutePath = resolve(importer ? dirname(importer) : process.cwd(), importee);
+		let resolved = resolveFile(absolutePath);
 
-    if (
-      !resolved &&
-      existsSync(absolutePath) &&
-      (await stat(absolutePath).then((stat) => stat.isDirectory()))
-    ) {
-      resolved = resolveFile(absolutePath, true);
-    }
+		if (!resolved && existsSync(absolutePath) && (await stat(absolutePath).then((stat) => stat.isDirectory()))) {
+			resolved = resolveFile(absolutePath, true);
+		}
 
-    return resolved;
-  }
+		return resolved;
+	}
 };
 
 export const swc = createUnplugin(({ minify, ...options }: SwcOptions = {}) => {
-  const filter = createFilter(/\.[jt]sx?$/, /node_modules/);
+	const filter = createFilter(/\.[jt]sx?$/, /node_modules/);
 
-  if (options.jsc?.transform?.optimizer?.globals?.vars) {
-    delete options.jsc.transform.optimizer.globals.vars["import.meta.vitest"];
-  }
+	if (options.jsc?.transform?.optimizer?.globals?.vars) {
+		delete options.jsc.transform.optimizer.globals.vars["import.meta.vitest"];
+	}
 
-  return {
-    name: "swc",
-    resolveId,
-    async transform(code, id) {
-      if (!filter(id)) return null;
+	return {
+		name: "swc",
+		resolveId,
+		async transform(code, id) {
+			if (!filter(id)) return null;
 
-      const result = await transform(code, {
-        filename: id,
-        ...options,
-      });
+			const result = await transform(code, {
+				filename: id,
+				...options,
+			});
 
-      return {
-        code: result.code,
-        map: result.map && JSON.parse(result.map),
-      };
-    },
-    vite: {
-      config() {
-        return {
-          esbuild: false,
-        };
-      },
-    },
-    rollup: {
-      async renderChunk(code, chunk) {
-        if (minify) {
-          const result = await transform(code, {
-            sourceMaps: true,
-            minify: true,
-            filename: chunk.fileName,
-          });
-          return {
-            code: result.code,
-            map: result.map,
-          };
-        }
-        return null;
-      },
-    },
-  };
+			return {
+				code: result.code,
+				map: result.map && JSON.parse(result.map),
+			};
+		},
+		vite: {
+			config() {
+				return {
+					esbuild: false,
+				};
+			},
+		},
+		rollup: {
+			async renderChunk(code, chunk) {
+				if (minify) {
+					const result = await transform(code, {
+						sourceMaps: true,
+						minify: true,
+						filename: chunk.fileName,
+					});
+					return {
+						code: result.code,
+						map: result.map,
+					};
+				}
+				return null;
+			},
+		},
+	};
 });

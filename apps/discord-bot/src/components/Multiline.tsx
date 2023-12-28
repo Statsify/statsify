@@ -9,14 +9,14 @@
 import { Text, useChildren } from "@statsify/rendering";
 
 export const Multiline = (props: Text.TextProps) => {
-  const children = useChildren(props.children);
+	const children = useChildren(props.children);
 
-  if (props.margin === undefined) props.margin = 1;
+	if (props.margin === undefined) props.margin = 1;
 
-  const text = children
-    .join(" ")
-    .split("\n")
-    .map((t) => <text {...props}>{t}</text>);
+	const text = children
+		.join(" ")
+		.split("\n")
+		.map((t) => <text {...props}>{t}</text>);
 
-  return <>{text}</>;
+	return <>{text}</>;
 };

@@ -13,132 +13,132 @@ import { add, ratio } from "@statsify/math";
 const limit = 10_000;
 
 export class MegaWallsKit {
-  @Field({ leaderboard: { limit } })
-  public wins: number;
+	@Field({ leaderboard: { limit } })
+	public wins: number;
 
-  @Field({ leaderboard: { limit } })
-  public losses: number;
+	@Field({ leaderboard: { limit } })
+	public losses: number;
 
-  @Field({ leaderboard: { limit } })
-  public wlr: number;
+	@Field({ leaderboard: { limit } })
+	public wlr: number;
 
-  @Field({ leaderboard: { limit } })
-  public kills: number;
+	@Field({ leaderboard: { limit } })
+	public kills: number;
 
-  @Field({ leaderboard: { limit } })
-  public deaths: number;
+	@Field({ leaderboard: { limit } })
+	public deaths: number;
 
-  @Field({ leaderboard: { limit } })
-  public kdr: number;
+	@Field({ leaderboard: { limit } })
+	public kdr: number;
 
-  @Field({ leaderboard: { limit } })
-  public finalKills: number;
+	@Field({ leaderboard: { limit } })
+	public finalKills: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public finalAssists: number;
+	@Field({ leaderboard: { enabled: false } })
+	public finalAssists: number;
 
-  @Field({ leaderboard: { limit } })
-  public finalDeaths: number;
+	@Field({ leaderboard: { limit } })
+	public finalDeaths: number;
 
-  @Field({ leaderboard: { limit } })
-  public fkdr: number;
+	@Field({ leaderboard: { limit } })
+	public fkdr: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public assists: number;
+	@Field({ leaderboard: { enabled: false } })
+	public assists: number;
 
-  @Field({
-    leaderboard: { limit, formatter: formatTime },
-    historical: { enabled: false },
-  })
-  public playtime: number;
+	@Field({
+		leaderboard: { limit, formatter: formatTime },
+		historical: { enabled: false },
+	})
+	public playtime: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public witherDamage: number;
+	@Field({ leaderboard: { enabled: false } })
+	public witherDamage: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public witherKills: number;
+	@Field({ leaderboard: { enabled: false } })
+	public witherKills: number;
 
-  @Field({ leaderboard: { limit } })
-  public points: number;
+	@Field({ leaderboard: { limit } })
+	public points: number;
 
-  public constructor(data: APIData, kit: string) {
-    kit = kit ? `${kit}_` : kit;
+	public constructor(data: APIData, kit: string) {
+		kit = kit ? `${kit}_` : kit;
 
-    this.wins = data[`${kit}wins`];
-    this.losses = data[`${kit}losses`];
-    this.wlr = ratio(this.wins, this.losses);
+		this.wins = data[`${kit}wins`];
+		this.losses = data[`${kit}losses`];
+		this.wlr = ratio(this.wins, this.losses);
 
-    this.kills = data[`${kit}kills`];
-    this.assists = data[`${kit}assists`];
-    this.deaths = data[`${kit}deaths`];
+		this.kills = data[`${kit}kills`];
+		this.assists = data[`${kit}assists`];
+		this.deaths = data[`${kit}deaths`];
 
-    this.finalKills = data[`${kit}final_kills`];
-    this.finalAssists = data[`${kit}final_assists`];
-    this.finalDeaths = data[`${kit}final_deaths`];
+		this.finalKills = data[`${kit}final_kills`];
+		this.finalAssists = data[`${kit}final_assists`];
+		this.finalDeaths = data[`${kit}final_deaths`];
 
-    this.playtime = (data[`${kit}time_played`] ?? 0) * 60_000;
-    this.witherDamage = data[`${kit}wither_damage`];
-    this.witherKills = data[`${kit}wither_kills`];
+		this.playtime = (data[`${kit}time_played`] ?? 0) * 60_000;
+		this.witherDamage = data[`${kit}wither_damage`];
+		this.witherKills = data[`${kit}wither_kills`];
 
-    const standardFinalKills = data[`${kit}final_kills_standard`];
-    const standardFinalAssists = data[`${kit}final_assists_standard`];
-    const standardWins = data[`${kit}wins_standard`] ?? 0;
+		const standardFinalKills = data[`${kit}final_kills_standard`];
+		const standardFinalAssists = data[`${kit}final_assists_standard`];
+		const standardWins = data[`${kit}wins_standard`] ?? 0;
 
-    this.points = add(standardFinalKills, standardFinalAssists, standardWins * 10);
+		this.points = add(standardFinalKills, standardFinalAssists, standardWins * 10);
 
-    MegaWallsKit.applyRatios(this);
-  }
+		MegaWallsKit.applyRatios(this);
+	}
 
-  public static applyRatios(kit: MegaWallsKit) {
-    kit.kdr = ratio(kit.kills, kit.deaths);
-    kit.fkdr = ratio(kit.finalKills, kit.finalDeaths);
-  }
+	public static applyRatios(kit: MegaWallsKit) {
+		kit.kdr = ratio(kit.kills, kit.deaths);
+		kit.fkdr = ratio(kit.finalKills, kit.finalDeaths);
+	}
 }
 
 export class MegaWallsOverall extends MegaWallsKit {
-  @Field()
-  public declare wins: number;
+	@Field()
+	public declare wins: number;
 
-  @Field()
-  public declare losses: number;
+	@Field()
+	public declare losses: number;
 
-  @Field()
-  public declare wlr: number;
+	@Field()
+	public declare wlr: number;
 
-  @Field()
-  public declare kills: number;
+	@Field()
+	public declare kills: number;
 
-  @Field()
-  public declare deaths: number;
+	@Field()
+	public declare deaths: number;
 
-  @Field()
-  public declare kdr: number;
+	@Field()
+	public declare kdr: number;
 
-  @Field()
-  public declare finalKills: number;
+	@Field()
+	public declare finalKills: number;
 
-  @Field()
-  public declare finalAssists: number;
+	@Field()
+	public declare finalAssists: number;
 
-  @Field()
-  public declare finalDeaths: number;
+	@Field()
+	public declare finalDeaths: number;
 
-  @Field()
-  public declare fkdr: number;
+	@Field()
+	public declare fkdr: number;
 
-  @Field()
-  public declare assists: number;
+	@Field()
+	public declare assists: number;
 
-  @Field({ leaderboard: { formatter: formatTime } })
-  public declare playtime: number;
+	@Field({ leaderboard: { formatter: formatTime } })
+	public declare playtime: number;
 
-  public constructor(data: APIData) {
-    super(data, "");
+	public constructor(data: APIData) {
+		super(data, "");
 
-    this.finalDeaths = add(data.final_deaths, data.finalDeaths);
-    this.witherDamage = add(data.wither_damage, data.witherDamage);
-    this.playtime = add(data.time_played, data.time_played_standard) * 60_000;
+		this.finalDeaths = add(data.final_deaths, data.finalDeaths);
+		this.witherDamage = add(data.wither_damage, data.witherDamage);
+		this.playtime = add(data.time_played, data.time_played_standard) * 60_000;
 
-    MegaWallsOverall.applyRatios(this);
-  }
+		MegaWallsOverall.applyRatios(this);
+	}
 }

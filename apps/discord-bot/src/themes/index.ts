@@ -15,48 +15,43 @@ import { getFontRenderer } from "./renderer.js";
 import { noop } from "@statsify/util";
 
 export const getTheme = (user: User | null): Theme | undefined => {
-  if (!user) return undefined;
-  if (!User.isGold(user)) return undefined;
-  if (!user.theme) return undefined;
+	if (!user) return undefined;
+	if (!User.isGold(user)) return undefined;
+	if (!user.theme) return undefined;
 
-  const {
-    boxes = UserBoxes.DEFAULT,
-    font = UserFont.DEFAULT,
-    palette = UserPalette.DEFAULT,
-  } = user.theme;
+	const { boxes = UserBoxes.DEFAULT, font = UserFont.DEFAULT, palette = UserPalette.DEFAULT } = user.theme;
 
-  const renderer = getFontRenderer(font);
-  const box = getBoxRenderer(boxes);
-  const colorPalette = User.isDiamond(user) ? getColorPalette(palette) : undefined;
+	const renderer = getFontRenderer(font);
+	const box = getBoxRenderer(boxes);
+	const colorPalette = User.isDiamond(user) ? getColorPalette(palette) : undefined;
 
-  return {
-    context: {
-      renderer,
-      // This can be null since @statsify/rendering's render function will override this
-      winterTheme: noop(),
-    },
-    elements: {
-      box(ctx, props, location, theme) {
-        if (colorPalette?.boxes?.color) props.color ??= colorPalette.boxes.color;
-        if (colorPalette?.boxes?.shadowOpacity !== undefined) {
-          props.shadowOpacity ??= colorPalette.boxes.shadowOpacity;
-        }
+	return {
+		context: {
+			renderer,
+			// This can be null since @statsify/rendering's render function will override this
+			winterTheme: noop(),
+		},
+		elements: {
+			box(ctx, props, location, theme) {
+				if (colorPalette?.boxes?.color) props.color ??= colorPalette.boxes.color;
+				if (colorPalette?.boxes?.shadowOpacity !== undefined) {
+					props.shadowOpacity ??= colorPalette.boxes.shadowOpacity;
+				}
 
-        box(ctx, props, location, theme);
-      },
-      img(ctx, props, location, theme, component) {
-        if (component !== Background.name)
-          return Image.render(ctx, props, location, theme, component);
+				box(ctx, props, location, theme);
+			},
+			img(ctx, props, location, theme, component) {
+				if (component !== Background.name) return Image.render(ctx, props, location, theme, component);
 
-        if (colorPalette?.background === null) return;
+				if (colorPalette?.background === null) return;
 
-        Image.render(ctx, props, location, theme, component);
+				Image.render(ctx, props, location, theme, component);
 
-        if (!colorPalette?.background || !component) return;
+				if (!colorPalette?.background || !component) return;
 
-        ctx.fillStyle = colorPalette.background;
-        ctx.fillRect(location.x, location.y, location.width, location.height);
-      },
-    },
-  };
+				ctx.fillStyle = colorPalette.background;
+				ctx.fillRect(location.x, location.y, location.width, location.height);
+			},
+		},
+	};
 };

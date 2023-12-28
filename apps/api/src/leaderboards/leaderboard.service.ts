@@ -16,304 +16,254 @@ import { LeaderboardQuery } from "@statsify/api-client";
 import { Redis } from "ioredis";
 
 const DAYS_IN_WEEK = {
-  monday: 0,
-  tuesday: 1,
-  wednesday: 2,
-  thursday: 3,
-  friday: 4,
-  saturday: 5,
-  sunday: 6,
+	monday: 0,
+	tuesday: 1,
+	wednesday: 2,
+	thursday: 3,
+	friday: 4,
+	saturday: 5,
+	sunday: 6,
 };
 
 export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 
 @Injectable()
 export abstract class LeaderboardService {
-  public constructor(@InjectRedis() protected readonly redis: Redis) {}
-
-  public async addLeaderboards<T>(
-    constructor: Constructor<T>,
-    instance: Flatten<T>,
-    idField: keyof T,
-    remove = false
-  ) {
-    const fields = LeaderboardScanner.getLeaderboardFields(constructor);
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "redis",
-      description: `add ${constructor.name} leaderboards`,
-    });
-
-    const pipeline = this.redis.pipeline();
-    const name = constructor.name.toLowerCase();
-
-    const id = instance[idField] as unknown as string;
-
-    fields
-      .filter(([field]) => remove || typeof instance[field] === "number")
-      .forEach(([field, metadata]) => {
-        const value = instance[field] as unknown as number;
-        const key = `${name}.${String(field)}`;
-
-        if (remove || value === 0 || Number.isNaN(value)) return pipeline.zrem(key, id);
-
-        pipeline.zadd(key, value, id);
-
-        if (metadata.leaderboard.enabled && metadata.leaderboard.resetEvery) {
-          const time = this.getLeaderboardExpiryTime(metadata.leaderboard);
-          pipeline.expireat(key, time);
-        }
-      });
-
-    await pipeline.exec();
-
-    child?.finish();
-  }
-
-  public async getLeaderboard<T>(
-    constructor: Constructor<T>,
-    field: string,
-    input: number | string,
-    type: LeaderboardQuery
-  ) {
-    const PAGE_SIZE = 10;
-
-    const {
-      fieldName,
-      additionalFields = [],
-      extraDisplay,
-      formatter,
-      sort,
-      name,
-      hidden,
-    } = LeaderboardScanner.getLeaderboardField(
-      constructor,
-      field
-    ) as LeaderboardEnabledMetadata;
-
-    let top: number;
-    let bottom: number;
-    let highlight: number | undefined = undefined;
-
-    switch (type) {
-      case LeaderboardQuery.PAGE:
-        top = (input as number) * PAGE_SIZE;
-        bottom = top + PAGE_SIZE;
-        break;
-
-      case LeaderboardQuery.INPUT: {
-        const ranking = await this.searchLeaderboardInput(input as string, field);
-        highlight = ranking - 1;
-        top = highlight - (highlight % 10);
-        bottom = top + PAGE_SIZE;
-        break;
-      }
-      case LeaderboardQuery.POSITION: {
-        const position = (input as number) - 1;
-        highlight = position;
-        top = position - (position % 10);
-        bottom = top + PAGE_SIZE;
-        break;
-      }
-    }
-
-    const leaderboard = await this.getLeaderboardFromRedis(
-      constructor,
-      field,
-      top,
-      bottom - 1,
-      sort
-    );
-
-    const additionalFieldMetadata = additionalFields.map((k) =>
-      LeaderboardScanner.getLeaderboardField(constructor, k, false)
-    );
-
-    const extraDisplayMetadata = extraDisplay
-      ? LeaderboardScanner.getLeaderboardField(constructor, extraDisplay, false)
-      : undefined;
+	public constructor(@InjectRedis() protected readonly redis: Redis) {}
+
+	public async addLeaderboards<T>(constructor: Constructor<T>, instance: Flatten<T>, idField: keyof T, remove = false) {
+		const fields = LeaderboardScanner.getLeaderboardFields(constructor);
+		const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
-    const additionalStats = await this.getAdditionalStats(
-      leaderboard.map(({ id }) => id),
-      [
-        ...additionalFields.filter((k) => k !== field),
-        ...(extraDisplay ? [extraDisplay] : []),
-      ]
-    );
+		const child = transaction?.startChild({
+			op: "redis",
+			description: `add ${constructor.name} leaderboards`,
+		});
 
-    const data = leaderboard.map((doc, index) => {
-      const stats = additionalStats[index];
+		const pipeline = this.redis.pipeline();
+		const name = constructor.name.toLowerCase();
+
+		const id = instance[idField] as unknown as string;
+
+		fields
+			.filter(([field]) => remove || typeof instance[field] === "number")
+			.forEach(([field, metadata]) => {
+				const value = instance[field] as unknown as number;
+				const key = `${name}.${String(field)}`;
+
+				if (remove || value === 0 || Number.isNaN(value)) return pipeline.zrem(key, id);
+
+				pipeline.zadd(key, value, id);
+
+				if (metadata.leaderboard.enabled && metadata.leaderboard.resetEvery) {
+					const time = this.getLeaderboardExpiryTime(metadata.leaderboard);
+					pipeline.expireat(key, time);
+				}
+			});
+
+		await pipeline.exec();
+
+		child?.finish();
+	}
+
+	public async getLeaderboard<T>(constructor: Constructor<T>, field: string, input: number | string, type: LeaderboardQuery) {
+		const PAGE_SIZE = 10;
+
+		const {
+			fieldName,
+			additionalFields = [],
+			extraDisplay,
+			formatter,
+			sort,
+			name,
+			hidden,
+		} = LeaderboardScanner.getLeaderboardField(constructor, field) as LeaderboardEnabledMetadata;
 
-      if (extraDisplay)
-        stats.name = `${stats[extraDisplay] ?? extraDisplayMetadata?.default}§r ${
-          stats.name
-        }`;
+		let top: number;
+		let bottom: number;
+		let highlight: number | undefined = undefined;
+
+		switch (type) {
+			case LeaderboardQuery.PAGE:
+				top = (input as number) * PAGE_SIZE;
+				bottom = top + PAGE_SIZE;
+				break;
 
-      const field = formatter ? formatter(doc.score) : doc.score;
+			case LeaderboardQuery.INPUT: {
+				const ranking = await this.searchLeaderboardInput(input as string, field);
+				highlight = ranking - 1;
+				top = highlight - (highlight % 10);
+				bottom = top + PAGE_SIZE;
+				break;
+			}
+			case LeaderboardQuery.POSITION: {
+				const position = (input as number) - 1;
+				highlight = position;
+				top = position - (position % 10);
+				bottom = top + PAGE_SIZE;
+				break;
+			}
+		}
 
-      const additionalValues = additionalFields.map((key, index) => {
-        const value = stats[key] ?? additionalFieldMetadata[index].default;
+		const leaderboard = await this.getLeaderboardFromRedis(constructor, field, top, bottom - 1, sort);
 
-        if (additionalFieldMetadata[index].formatter)
-          return additionalFieldMetadata[index].formatter?.(value);
+		const additionalFieldMetadata = additionalFields.map((k) => LeaderboardScanner.getLeaderboardField(constructor, k, false));
 
-        return value;
-      });
+		const extraDisplayMetadata = extraDisplay ? LeaderboardScanner.getLeaderboardField(constructor, extraDisplay, false) : undefined;
 
-      const fields = [];
+		const additionalStats = await this.getAdditionalStats(
+			leaderboard.map(({ id }) => id),
+			[...additionalFields.filter((k) => k !== field), ...(extraDisplay ? [extraDisplay] : [])]
+		);
 
-      if (!hidden) fields.push(field);
-      fields.push(...additionalValues);
+		const data = leaderboard.map((doc, index) => {
+			const stats = additionalStats[index];
 
-      return {
-        id: doc.id,
-        fields,
-        name: stats.name,
-        position: doc.index + 1,
-        highlight: doc.index === highlight,
-      };
-    });
+			if (extraDisplay) stats.name = `${stats[extraDisplay] ?? extraDisplayMetadata?.default}§r ${stats.name}`;
 
-    const fields = [];
-    if (!hidden) fields.push(fieldName);
-    fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
-
-    return {
-      name,
-      fields,
-      data,
-      page: top / PAGE_SIZE,
-    };
-  }
+			const field = formatter ? formatter(doc.score) : doc.score;
 
-  public async getLeaderboardRankings<T>(
-    constructor: Constructor<T>,
-    fields: string[],
-    id: string
-  ) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+			const additionalValues = additionalFields.map((key, index) => {
+				const value = stats[key] ?? additionalFieldMetadata[index].default;
 
-    const child = transaction?.startChild({
-      op: "redis",
-      description: `get ${constructor.name} rankings`,
-    });
+				if (additionalFieldMetadata[index].formatter) return additionalFieldMetadata[index].formatter?.(value);
 
-    const pipeline = this.redis.pipeline();
-    const constructorName = constructor.name.toLowerCase();
+				return value;
+			});
 
-    const leaderboardFields: LeaderboardEnabledMetadata[] = [];
+			const fields = [];
 
-    fields.forEach((field) => {
-      const metadata = LeaderboardScanner.getLeaderboardField(constructor, field);
-      leaderboardFields.push(metadata);
+			if (!hidden) fields.push(field);
+			fields.push(...additionalValues);
 
-      const key = `${constructorName}.${field}`;
+			return {
+				id: doc.id,
+				fields,
+				name: stats.name,
+				position: doc.index + 1,
+				highlight: doc.index === highlight,
+			};
+		});
 
-      pipeline.zscore(key, id);
+		const fields = [];
+		if (!hidden) fields.push(fieldName);
+		fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
 
-      if (metadata.sort === "ASC") {
-        pipeline.zrank(key, id);
-      } else {
-        pipeline.zrevrank(key, id);
-      }
-    });
+		return {
+			name,
+			fields,
+			data,
+			page: top / PAGE_SIZE,
+		};
+	}
 
-    const responses = await pipeline.exec();
+	public async getLeaderboardRankings<T>(constructor: Constructor<T>, fields: string[], id: string) {
+		const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
-    child?.finish();
+		const child = transaction?.startChild({
+			op: "redis",
+			description: `get ${constructor.name} rankings`,
+		});
 
-    if (!responses) throw new InternalServerErrorException();
+		const pipeline = this.redis.pipeline();
+		const constructorName = constructor.name.toLowerCase();
 
-    const rankings = [];
+		const leaderboardFields: LeaderboardEnabledMetadata[] = [];
 
-    for (let i = 0; i < responses.length; i += 2) {
-      const rank = responses[i + 1][1];
-      const value = responses[i][1];
+		fields.forEach((field) => {
+			const metadata = LeaderboardScanner.getLeaderboardField(constructor, field);
+			leaderboardFields.push(metadata);
 
-      if (rank === undefined || rank === null || !value) continue;
+			const key = `${constructorName}.${field}`;
 
-      const index = i / 2;
-      const metadata = leaderboardFields[index];
+			pipeline.zscore(key, id);
 
-      if (Number(rank) > metadata.limit) continue;
+			if (metadata.sort === "ASC") {
+				pipeline.zrank(key, id);
+			} else {
+				pipeline.zrevrank(key, id);
+			}
+		});
 
-      const numberValue = Number(value);
+		const responses = await pipeline.exec();
 
-      const formattedValue = metadata.formatter
-        ? metadata.formatter(numberValue)
-        : numberValue;
+		child?.finish();
 
-      rankings.push({
-        field: fields[index],
-        rank: Number(rank) + 1,
-        value: formattedValue,
-        name: metadata.name,
-      });
-    }
+		if (!responses) throw new InternalServerErrorException();
 
-    return rankings;
-  }
+		const rankings = [];
 
-  protected abstract searchLeaderboardInput(
-    input: string,
-    field: string
-  ): Promise<number>;
+		for (let i = 0; i < responses.length; i += 2) {
+			const rank = responses[i + 1][1];
+			const value = responses[i][1];
 
-  protected abstract getAdditionalStats(
-    ids: string[],
-    fields: string[]
-  ): Promise<LeaderboardAdditionalStats[]>;
+			if (rank === undefined || rank === null || !value) continue;
 
-  private async getLeaderboardFromRedis<T>(
-    constructor: Constructor<T>,
-    field: string,
-    top: number,
-    bottom: number,
-    sort = "DESC"
-  ) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+			const index = i / 2;
+			const metadata = leaderboardFields[index];
 
-    const child = transaction?.startChild({
-      op: "redis",
-      description: `get ${constructor.name} leaderboards`,
-    });
+			if (Number(rank) > metadata.limit) continue;
 
-    const name = constructor.name.toLowerCase();
-    field = `${name}.${field}`;
+			const numberValue = Number(value);
 
-    const scores = await (sort === "ASC"
-      ? this.redis.zrange(field, top, bottom, "WITHSCORES")
-      : this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
+			const formattedValue = metadata.formatter ? metadata.formatter(numberValue) : numberValue;
 
-    child?.finish();
+			rankings.push({
+				field: fields[index],
+				rank: Number(rank) + 1,
+				value: formattedValue,
+				name: metadata.name,
+			});
+		}
 
-    const response: { id: string; score: number; index: number }[] = [];
+		return rankings;
+	}
 
-    for (let i = 0; i < scores.length; i += 2) {
-      const id = scores[i];
-      const score = Number(scores[i + 1]);
+	protected abstract searchLeaderboardInput(input: string, field: string): Promise<number>;
 
-      response.push({ id, score, index: i / 2 + top });
-    }
+	protected abstract getAdditionalStats(ids: string[], fields: string[]): Promise<LeaderboardAdditionalStats[]>;
 
-    return response;
-  }
+	private async getLeaderboardFromRedis<T>(constructor: Constructor<T>, field: string, top: number, bottom: number, sort = "DESC") {
+		const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
-  private getLeaderboardExpiryTime(leaderboard: LeaderboardEnabledMetadata): number {
-    if (!leaderboard.resetEvery)
-      throw new Error("To get a leaderboard expiry time, `resetEvery` must be specified");
+		const child = transaction?.startChild({
+			op: "redis",
+			description: `get ${constructor.name} leaderboards`,
+		});
 
-    if (leaderboard.resetEvery === "day")
-      return Math.ceil(DateTime.now().endOf("day").toSeconds());
+		const name = constructor.name.toLowerCase();
+		field = `${name}.${field}`;
 
-    const now = new Date();
-    const dayIndex = DAYS_IN_WEEK[leaderboard.resetEvery];
+		const scores = await (sort === "ASC"
+			? this.redis.zrange(field, top, bottom, "WITHSCORES")
+			: this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
 
-    //Reset at 12:00 AM on the next day
-    now.setDate(now.getDate() + ((dayIndex - now.getDay() + 7) % 7) + 1);
-    now.setHours(0, 0, 0, 0);
+		child?.finish();
 
-    return Math.ceil(now.getTime() / 1000);
-  }
+		const response: { id: string; score: number; index: number }[] = [];
+
+		for (let i = 0; i < scores.length; i += 2) {
+			const id = scores[i];
+			const score = Number(scores[i + 1]);
+
+			response.push({ id, score, index: i / 2 + top });
+		}
+
+		return response;
+	}
+
+	private getLeaderboardExpiryTime(leaderboard: LeaderboardEnabledMetadata): number {
+		if (!leaderboard.resetEvery) throw new Error("To get a leaderboard expiry time, `resetEvery` must be specified");
+
+		if (leaderboard.resetEvery === "day") return Math.ceil(DateTime.now().endOf("day").toSeconds());
+
+		const now = new Date();
+		const dayIndex = DAYS_IN_WEEK[leaderboard.resetEvery];
+
+		//Reset at 12:00 AM on the next day
+		now.setDate(now.getDate() + ((dayIndex - now.getDay() + 7) % 7) + 1);
+		now.setHours(0, 0, 0, 0);
+
+		return Math.ceil(now.getTime() / 1000);
+	}
 }

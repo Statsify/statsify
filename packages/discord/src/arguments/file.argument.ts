@@ -11,11 +11,14 @@ import { ApplicationCommandOptionType } from "discord-api-types/v10";
 import { LocalizationString } from "#messages";
 
 export class FileArgument extends AbstractArgument {
-  public description: LocalizationString;
-  public type = ApplicationCommandOptionType.Attachment;
+	public description: LocalizationString;
+	public type = ApplicationCommandOptionType.Attachment;
 
-  public constructor(public name = "file", public required = false) {
-    super();
-    this.description = (t) => t("arguments.file");
-  }
+	public constructor(
+		public name = "file",
+		public required = false
+	) {
+		super();
+		this.description = (t) => t("arguments.file");
+	}
 }

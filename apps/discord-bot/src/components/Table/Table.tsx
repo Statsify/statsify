@@ -7,8 +7,8 @@
  */
 
 export interface TableProps {
-  width?: JSX.Measurement;
-  children: JSX.Children;
+	width?: JSX.Measurement;
+	children: JSX.Children;
 }
 
 /**
@@ -31,7 +31,7 @@ export interface TableProps {
  * ```
  */
 export const Table = ({ width = "100%", children }: TableProps) => (
-  <div width={width} direction="column">
-    {children}
-  </div>
+	<div width={width} direction="column">
+		{children}
+	</div>
 );

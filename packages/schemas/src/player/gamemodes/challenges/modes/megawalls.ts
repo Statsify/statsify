@@ -14,32 +14,32 @@ import { challengeFieldData } from "../util.js";
 import type { GameChallenges } from "../game-challenges.js";
 
 export class MegaWallsChallenges implements GameChallenges {
-  @Field(challengeFieldData)
-  public wither: number;
+	@Field(challengeFieldData)
+	public wither: number;
 
-  @Field(challengeFieldData)
-  public protector: number;
+	@Field(challengeFieldData)
+	public protector: number;
 
-  @Field(challengeFieldData)
-  public berserk: number;
+	@Field(challengeFieldData)
+	public berserk: number;
 
-  @Field(challengeFieldData)
-  public comeback: number;
+	@Field(challengeFieldData)
+	public comeback: number;
 
-  @Field({
-    leaderboard: {
-      fieldName: `${removeFormatting(FormattedGame.MEGAWALLS)} Total`,
-      name: "Total",
-    },
-  })
-  public total: number;
+	@Field({
+		leaderboard: {
+			fieldName: `${removeFormatting(FormattedGame.MEGAWALLS)} Total`,
+			name: "Total",
+		},
+	})
+	public total: number;
 
-  public constructor(challenges: APIData) {
-    this.wither = challenges.WALLS3__wither_challenge;
-    this.protector = challenges.WALLS3__protector_challenge;
-    this.berserk = challenges.WALLS3__berserk_challenge;
-    this.comeback = challenges.WALLS3__comeback_challenge;
+	public constructor(challenges: APIData) {
+		this.wither = challenges.WALLS3__wither_challenge;
+		this.protector = challenges.WALLS3__protector_challenge;
+		this.berserk = challenges.WALLS3__berserk_challenge;
+		this.comeback = challenges.WALLS3__comeback_challenge;
 
-    this.total = add(this.wither, this.protector, this.berserk, this.comeback);
-  }
+		this.total = add(this.wither, this.protector, this.berserk, this.comeback);
+	}
 }

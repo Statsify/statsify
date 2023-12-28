@@ -11,21 +11,21 @@ import { NotFoundException } from "./base.404.js";
 import { Player } from "@statsify/schemas";
 
 export class RecentGamesNotFoundException extends NotFoundException {
-  @ApiProperty()
-  public uuid: string;
+	@ApiProperty()
+	public uuid: string;
 
-  @ApiProperty()
-  public displayName: string;
+	@ApiProperty()
+	public displayName: string;
 
-  @ApiProperty()
-  public prefixName: string;
+	@ApiProperty()
+	public prefixName: string;
 
-  public constructor(player: Player) {
-    super({
-      message: "recentGames",
-      uuid: player.uuid,
-      displayName: player.displayName,
-      prefixName: player.prefixName,
-    });
-  }
+	public constructor(player: Player) {
+		super({
+			message: "recentGames",
+			uuid: player.uuid,
+			displayName: player.displayName,
+			prefixName: player.prefixName,
+		});
+	}
 }

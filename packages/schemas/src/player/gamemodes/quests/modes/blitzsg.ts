@@ -10,16 +10,16 @@ import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
 export const BlitzSGQuests = createGameModeQuests({
-  game: FormattedGame.BLITZSG,
-  fieldPrefix: "blitz",
-  daily: [
-    { field: "game_of_the_day", propertyKey: "gameOfTheDay" },
-    { field: "win", propertyKey: "winNormal" },
-    { field: "loot_chest_daily", propertyKey: "chestLooter" },
-    { field: "kills", propertyKey: "kills" },
-  ],
-  weekly: [
-    { field: "weekly_master", propertyKey: "master" },
-    { field: "loot_chest_weekly", propertyKey: "expert" },
-  ],
+	game: FormattedGame.BLITZSG,
+	fieldPrefix: "blitz",
+	daily: [
+		{ field: "game_of_the_day", propertyKey: "gameOfTheDay" },
+		{ field: "win", propertyKey: "winNormal" },
+		{ field: "loot_chest_daily", propertyKey: "chestLooter" },
+		{ field: "kills", propertyKey: "kills" },
+	],
+	weekly: [
+		{ field: "weekly_master", propertyKey: "master" },
+		{ field: "loot_chest_weekly", propertyKey: "expert" },
+	],
 });

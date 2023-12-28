@@ -9,7 +9,7 @@
 import { useChildren } from "@statsify/rendering";
 
 export interface TableRow {
-  children: JSX.Children;
+	children: JSX.Children;
 }
 
 /**
@@ -23,14 +23,14 @@ export interface TableRow {
  * ```
  */
 export const TableRow = ({ children: _children }: TableRow) => {
-  const children = useChildren(_children);
-  const length = children.length;
+	const children = useChildren(_children);
+	const length = children.length;
 
-  return (
-    <div width="100%" direction="row">
-      {children.map((child) => (
-        <div width={`1/${length}`}>{child}</div>
-      ))}
-    </div>
-  );
+	return (
+		<div width="100%" direction="row">
+			{children.map((child) => (
+				<div width={`1/${length}`}>{child}</div>
+			))}
+		</div>
+	);
 };

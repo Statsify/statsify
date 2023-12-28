@@ -14,14 +14,14 @@ import { getModelForClass } from "@typegoose/typegoose";
 
 @Service()
 export class MongoLoaderService {
-  public init() {
-    const connection = createConnection(config("database.mongoUri"));
+	public init() {
+		const connection = createConnection(config("database.mongoUri"));
 
-    const models = [Ticket, Tag, User];
+		const models = [Ticket, Tag, User];
 
-    models.forEach((modelClass) => {
-      const model = getModelForClass(modelClass, { existingConnection: connection });
-      Container.set(modelClass, model);
-    });
-  }
+		models.forEach((modelClass) => {
+			const model = getModelForClass(modelClass, { existingConnection: connection });
+			Container.set(modelClass, model);
+		});
+	}
 }
