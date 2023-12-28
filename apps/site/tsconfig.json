@@ -12,6 +12,7 @@
 		"allowJs": true,
 		"strict": true,
 		"esModuleInterop": true,
+		"skipLibCheck": true,
 		"plugins": [
 			{
 				"name": "next"
