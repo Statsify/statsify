@@ -783,7 +783,7 @@
     "powerupsCollected": "Power-Up Collezionati",
     "roundsCompleted": "Round Completati",
     "totalExp": "EXP Totale",
-    "gamesFinished": "Games Finished",
+    "gamesFinished": "Partite Terminate",
     "flawlessGames": "Flawless Games",
     "fails": "Tentativi Falliti",
     "mapsCompleted": "Mappe Completate",
@@ -797,7 +797,7 @@
     "rankings": "$t(emojis:logos.iron) Visualizza le tue migliori posizioni sulla classifica con **[Statsify Premium] (<https://statsify.net/premium>)** usando `/rankings`",
     "verify": "$t(emojis:check) Esegui `/verify` per eseguire comandi senza inserire il tuo nome utente oltre che a ricevere **cooldown 10% più brevi**",
     "resetSession": "$t(emojis:reset) È possibile **resettare** le statistiche della sessione con `/reset session`.",
-    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
+    "sessions": "$t(emojis:reset) Traccia i progressi della tue statistiche con Sessioni e `/session`."
   },
   "unknown": "Sconosciuto",
   "verification": {
@@ -807,7 +807,7 @@
     },
     "invalidCode": {
       "title": "Codice Di Verifica Non Valido",
-      "description": "Check your verification code or try again by following these steps: ",
+      "description": "Controlla il tuo codice di verifica o riprova seguendo questi passaggi: ",
       "button": "Guarda il Tutorial"
     },
     "instructions": {
