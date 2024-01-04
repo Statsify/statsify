@@ -788,7 +788,7 @@
     "fails": "Misslyckanden",
     "mapsCompleted": "Kartor Avklarade",
     "arcadeWins": "Arkadvinster",
-    "draws": "Draws"
+    "draws": "Oavgjorda"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Gå med i vår **$t(socials.discord)** och få **20% lägre cooldowns** $t(emojis:heart)",
