@@ -6,18 +6,22 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 16px;
+  padding-top: 16px;
+  padding-bottom: 16px;
 }
 
-.socials, .links {
+.socials,
+.links {
   display: flex;
   flex-direction: row;
   justify-content: center;
-
-  margin-bottom: 10px;
+  gap: 8px;
 }
 
 .links {
-  margin-bottom: 32px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 
   @media (max-width: 640px) {
     flex-direction: column;
@@ -25,16 +29,15 @@
 }
 
 .link {
-  margin-left: 8px;
-  margin-right: 8px;
-
-  margin-top: 4px;
-  margin-bottom: 4px;
-
   text-align: center;
 
   &:hover {
     cursor: pointer;
     text-decoration: underline;
   }
+}
+
+.copyright {
+  padding-top: 4px;
+  padding-bottom: 4px;
 }

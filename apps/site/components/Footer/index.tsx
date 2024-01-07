@@ -54,5 +54,8 @@ export const Footer = () => (
         <div className={styles.link}>Privacy Policy</div>
       </Link>
     </div>
+    <p className={styles.copyright}>
+      © {new Date().getFullYear()} Statsify (Formerly Hystats) - All Rights Reserved
+    </p>
   </footer>
 );
