@@ -77,13 +77,7 @@ export class Duels {
     leaderboard: { extraDisplay: "this.overall.titleFormatted" },
     historical: { enabled: false },
   })
-  public coins: number;
-
-  @Field({
-    leaderboard: { extraDisplay: "this.overall.titleFormatted" },
-    historical: { enabled: false },
-  })
-  public lootChests: number;
+  public tokens: number;
 
   @Field({ leaderboard: { extraDisplay: "this.overall.titleFormatted" } })
   public overall: SinglePVPDuelsGameMode;
@@ -179,8 +173,7 @@ export class Duels {
     this.uhc = new UHCDuels(data);
 
     this.pingRange = data?.pingPreference ?? 300;
-    this.coins = data.coins;
-    this.lootChests = data.duels_chests;
+    this.tokens = data.coins;
   }
 }
 

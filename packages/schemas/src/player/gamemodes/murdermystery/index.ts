@@ -14,7 +14,6 @@ import {
 } from "./mode.js";
 import { Field } from "#metadata";
 import { GameModes, type IGameModes } from "#game";
-import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export const MURDER_MYSTERY_MODES = new GameModes([
@@ -34,10 +33,7 @@ export type MurderMysteryModes = IGameModes<typeof MURDER_MYSTERY_MODES>;
 
 export class MurderMystery {
   @Field({ historical: { enabled: false } })
-  public coins: number;
-
-  @Field({ historical: { enabled: false } })
-  public lootChests: number;
+  public tokens: number;
 
   @Field()
   public overall: StandardMurderMysteryMode;
@@ -55,16 +51,7 @@ export class MurderMystery {
   public infection: InfectionMurderMysteryMode;
 
   public constructor(data: APIData, ap: APIData) {
-    this.coins = data.coins;
-
-    this.lootChests = add(
-      data.mm_chests,
-      data.mm_easter_chests,
-      data.mm_christmas_chests,
-      data.mm_halloween_chests,
-      data.mm_lunar_chests,
-      data.mm_golden_chests
-    );
+    this.tokens = data.coins;
 
     this.overall = new StandardMurderMysteryMode(data, "");
     this.classic = new ClassicMurderMysteryMode(data, "MURDER_CLASSIC");

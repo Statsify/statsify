@@ -53,10 +53,7 @@ export type BedWarsModes = IGameModes<typeof BEDWARS_MODES>;
 
 export class BedWars {
   @Field({ historical: { enabled: false } })
-  public coins: number;
-
-  @Field({ historical: { enabled: false } })
-  public lootChests: number;
+  public tokens: number;
 
   @Field({
     leaderboard: {
@@ -145,7 +142,7 @@ export class BedWars {
   public slumber: Slumber;
 
   public constructor(data: APIData = {}) {
-    this.coins = data.coins;
+    this.tokens = data.coins;
 
     this.exp = data.Experience || 0;
     this.level = getLevel(this.exp);

@@ -78,9 +78,6 @@ export class SkyWars {
   @Field()
   public potionsBrewed: number;
 
-  @Field({ historical: { enabled: false } })
-  public lootChests: number;
-
   @Field({ store: { default: "⋆" } })
   public star: string;
 
@@ -116,15 +113,6 @@ export class SkyWars {
     this.heads = data.heads;
     this.tokens = data.cosmetic_tokens;
     this.potionsBrewed = ap.skywars_tonic_taker;
-
-    this.lootChests = add(
-      data.skywars_chests,
-      data.skywars_easter_boxes,
-      data.skywars_halloween_boxes,
-      data.skywars_christmas_boxes,
-      data.skywars_lunar_boxes,
-      data.skywars_golden_boxes
-    );
 
     this.star = (data.levelFormatted || "⋆").replace(/\d|[a-f]|k|r|l|§/g, "");
     this.level = getLevel(this.exp);
