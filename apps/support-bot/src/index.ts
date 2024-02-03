@@ -24,7 +24,6 @@ import {
 import { GatewayIntentBits } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
 import { RestClient, WebsocketShard } from "tiny-discord";
-import { WinterThemeService } from "@statsify/rendering";
 import { config } from "@statsify/util";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -57,7 +56,7 @@ const rest = new RestClient({ token: config("supportBot.token") });
 Container.set(RestClient, rest);
 
 await Promise.all(
-  [I18nLoaderService, FontLoaderService, WinterThemeService, MongoLoaderService].map((service) =>
+  [I18nLoaderService, FontLoaderService, MongoLoaderService].map((service) =>
     Container.get(service).init()
   )
 );
