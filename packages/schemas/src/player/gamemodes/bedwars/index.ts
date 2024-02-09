@@ -157,15 +157,6 @@ export class BedWars {
 
     this.progression = new Progression(exp, getExpReq(Math.floor(this.level)));
 
-    this.lootChests = add(
-      data.bedwars_boxes,
-      data.bedwars_christmas_boxes,
-      data.bedwars_halloween_boxes,
-      data.bedwars_lunar_boxes,
-      data.bedwars_golden_boxes,
-      data.bedwars_easter_boxes
-    );
-
     this.overall = new BedWarsMode(data, "");
     this.solo = new BedWarsMode(data, "eight_one");
     this.doubles = new BedWarsMode(data, "eight_two");
