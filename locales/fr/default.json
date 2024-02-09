@@ -601,7 +601,7 @@
     "fastestDetectiveWin": "Victoire la Plus Rapide en Détective",
     "fastestMurdererWin": "Victoire la Plus Rapide en Meurtrier",
     "fastestWin": "Victoire la Plus Rapide",
-    "fastestWoolCapture": "Fastest Wool Capture",
+    "fastestWoolCapture": "Capture de Laine la Plus Rapide",
     "finalAssists": "Assistances Finales",
     "finalDeaths": "Morts Finales",
     "finalKills": "Éliminations Finales",
@@ -618,10 +618,10 @@
     "godfather": "Soutien",
     "godlikes": "Divins",
     "gold": "Or",
-    "goldEarned": "Gold Earned",
+    "goldEarned": "Or Récolter",
     "goldPickedUp": "Or collecté",
     "goldRate": "Taux de Trophées d'Or",
-    "goldSpent": "Gold Spent",
+    "goldSpent": "Or Dépensé",
     "goldTrophies": "Trophées d'Or",
     "grandPrixTokens": "Jetons de GP",
     "guild": {
@@ -683,7 +683,7 @@
     "levelsGained": "Niveaux Gagnés",
     "loginTime": "Heure de Connexion",
     "logoutTime": "Heure de Déconnexion",
-    "longestGame": "Longest Game",
+    "longestGame": "Partie la Plus Longue",
     "lootChests": "Loot Chests",
     "losses": "Défaites",
     "magicalChests": "Coffres Magiques",
@@ -735,7 +735,7 @@
     "shotsFired": "Coups Tirés",
     "silver": "Argent",
     "silverTrophies": "Trophées d'Argent",
-    "slumberTickets": "Slumber Tickets",
+    "slumberTickets": "Tickets de Sommeil",
     "soloWins": "Victoires en Solo",
     "souls": "Âmes",
     "stampLevel": "Conversions de Pièces",
@@ -753,7 +753,7 @@
     "title": "Titre",
     "tokens": "Jetons",
     "total": "Total",
-    "totalSlumberTickets": "Total Slumber Tickets",
+    "totalSlumberTickets": "Total de Tickets de Sommeil",
     "totalTrophies": "Trophées Totaux",
     "trail": "Traînée",
     "transfusion": "Transfusion",
@@ -774,8 +774,8 @@
     "witherKills": "Withers Tués",
     "wlr": "WLR",
     "wool": "Laine",
-    "woolCaptured": "Wool Captured",
-    "woolPickedUp": "Wool Picked Up",
+    "woolCaptured": "Laines Capturées",
+    "woolPickedUp": "Laines Collectées",
     "woolPlaced": "Laine Placée",
     "zombieKills": "Zombies Tués",
     "potionsBrewed": "Potions Distillées",
@@ -783,12 +783,12 @@
     "powerupsCollected": "Power-Ups collectés",
     "roundsCompleted": "Tours Terminés",
     "totalExp": "EXP Totale",
-    "gamesFinished": "Games Finished",
-    "flawlessGames": "Flawless Games",
-    "fails": "Fails",
-    "mapsCompleted": "Maps Completed",
-    "arcadeWins": "Arcade Wins",
-    "draws": "Draws"
+    "gamesFinished": "Parties Terminées",
+    "flawlessGames": "Parties Parfaites",
+    "fails": "Échecs",
+    "mapsCompleted": "Cartes Complétées",
+    "arcadeWins": "Victoires en Arcade",
+    "draws": "Égalités"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Rejoignez notre **$t(socials.discord)** et obtenez **20% de temps d'attente en moins** $t(emojis:heart)",
@@ -807,21 +807,21 @@
     },
     "invalidCode": {
       "title": "Code de Vérification Invalide",
-      "description": "Check your verification code or try again by following these steps: ",
-      "button": "Watch Tutorial"
+      "description": "Vérifiez votre code de vérification, ou réessayez en suivant ces étapes : ",
+      "button": "Visionnez le Tutoriel"
     },
     "instructions": {
-      "title": "Link your Minecraft Account to Statsify",
+      "title": "Liez votre Compte Minecraft à Statsify",
       "steps": {
-        "one": "Open **Minecraft** and go to the server list",
-        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
-        "three": "Head back to **Discord** and click the button below, then type in your code"
+        "one": "Ouvrez **Minecraft** et allez dans la liste de serveurs",
+        "two": "Connectez-vous à **`verify.statsify.net`** et copiez le code affiché",
+        "three": "Revenez sur **Discord** et cliquez sur le bouton ci-dessous, puis tapez votre code"
       },
       "modal": {
-        "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "title": "Entrez votre Code de Vérification",
+        "input": "Code de Vérification"
       },
-      "button": "Enter Verification Code"
+      "button": "Entrez le Code de Vérification"
     },
     "notVerified": {
       "description": "Vous devez être vérifié avant pour annuler votre vérification !",
