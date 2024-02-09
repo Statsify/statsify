@@ -39,7 +39,6 @@ export const SkyWarsProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(skywars.coins), "§6"],
-    [t("stats.lootChests"), t(skywars.lootChests), "§e"],
     [t("stats.tokens"), t(skywars.tokens), "§2"],
     [t("stats.souls"), t(skywars.souls), "§b"],
     [t("stats.opals"), t(skywars.opals), "§9"],

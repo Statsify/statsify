@@ -34,9 +34,8 @@ export const DuelsProfile = ({
   const { duels } = player.stats;
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(duels.coins), "§6"],
-    [t("stats.lootChests"), t(duels.lootChests), "§e"],
-    [t("stats.pingRange"), `${t(duels.pingRange)}ms`, "§2"],
+    [t("stats.tokens"), t(duels.tokens), "§2"],
+    [t("stats.pingRange"), `${t(duels.pingRange)}ms`, "§a"],
     [t("stats.blocksPlaced"), t(duels.overall.blocksPlaced), "§9"],
   ];
 

@@ -1,5 +1,5 @@
 [package]
-name    = "statsify-skin-renderer"
+name = "statsify-skin-renderer"
 authors = ["Jacob Koshy <jababakoshy@gmail.com>"]
 edition = "2021"
 version = "0.1.0"
@@ -10,8 +10,8 @@ version = "0.1.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-napi = { version = "2.13.3", features = ["async"] }
-napi-derive = "2.13.0"
+napi = { version = "2.15.0", features = ["async"] }
+napi-derive = "2.15.0"
 bytemuck = { version = "1.13.1", features = ["derive"] }
 cgmath = "0.18.0"
 futures-intrusive = "0.5.0"
