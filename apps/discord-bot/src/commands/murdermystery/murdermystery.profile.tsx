@@ -29,8 +29,7 @@ export const MurderMysteryProfile = ({
   const { murdermystery } = player.stats;
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(murdermystery.coins), "§6"],
-    [t("stats.lootChests"), t(murdermystery.lootChests), "§e"],
+    [t("stats.tokens"), t(murdermystery.tokens), "§2"],
     [t("stats.goldPickedUp"), t(murdermystery[mode.api].goldPickedUp), "§6"],
     [t("stats.gamesPlayed"), t(murdermystery[mode.api].gamesPlayed), "§b"],
   ];

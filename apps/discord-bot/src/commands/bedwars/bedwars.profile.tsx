@@ -37,8 +37,7 @@ export const BedWarsProfile = ({
   const stats = bedwars[mode.api];
 
   const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(bedwars.coins), "§6"],
-    [t("stats.lootChests"), t(bedwars.lootChests), "§e"],
+    [t("stats.tokens"), t(bedwars.tokens), "§2"],
     [t("stats.iron"), t(stats.itemsCollected.iron), "§7"],
     [t("stats.gold"), t(stats.itemsCollected.gold), "§6"],
     [t("stats.diamonds"), t(stats.itemsCollected.diamond), "§b"],
