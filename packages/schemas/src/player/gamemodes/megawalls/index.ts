@@ -9,6 +9,7 @@
 import { Field } from "#metadata";
 import { GameModes, type IGameModes } from "#game";
 import { MegaWallsKit, MegaWallsOverall } from "./kit.js";
+import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export const MEGAWALLS_MODES = new GameModes([
@@ -131,7 +132,6 @@ export class MegaWalls {
     this.mythicFavor = data.mythic_favor;
     this.class = data.chosen_class ?? "none";
 
-    this.overall = new MegaWallsOverall(data);
     this.arcanist = new MegaWallsKit(data, "arcanist");
     this.assassin = new MegaWallsKit(data, "assassin");
     this.automaton = new MegaWallsKit(data, "automaton");
@@ -156,6 +156,35 @@ export class MegaWalls {
     this.squid = new MegaWallsKit(data, "squid");
     this.werewolf = new MegaWallsKit(data, "werewolf");
     this.zombie = new MegaWallsKit(data, "zombie");
+
+    this.overall = new MegaWallsOverall(data);
+
+    this.overall.points = add(
+      this.arcanist.points,
+      this.assassin.points,
+      this.automaton.points,
+      this.blaze.points,
+      this.cow.points,
+      this.creeper.points,
+      this.dreadlord.points,
+      this.enderman.points,
+      this.golem.points,
+      this.herobrine.points,
+      this.hunter.points,
+      this.moleman.points,
+      this.phoenix.points,
+      this.pigman.points,
+      this.pirate.points,
+      this.renegade.points,
+      this.shaman.points,
+      this.shark.points,
+      this.skeleton.points,
+      this.snowman.points,
+      this.spider.points,
+      this.squid.points,
+      this.werewolf.points,
+      this.zombie.points
+    );
   }
 }
 
