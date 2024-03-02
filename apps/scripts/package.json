@@ -28,7 +28,7 @@
     "discord-bot": "*",
     "inquirer": "^9.2.10",
     "ioredis": "^5.3.2",
-    "skia-canvas": "^0.9.30",
+    "skia-canvas": "^1.0.1",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb",
     "toad-scheduler": "^3.0.0",
     "zod": "^3.22.1"
