@@ -19,7 +19,7 @@ const TRANSLATORS = (
     [":flag_cz:", "Čeština", ["@davidczpdy", "@farmans"]],
     [":flag_nl:", "Nederlands", ["@mauritswilke", "@kinderfeest"]],
     [":flag_fi:", "Suomi", ["@diyn", "@idakoi"]],
-    [":flag_fr:", "Français", ["@o3w", "@pineapples._.", "@skorlex"]],
+    [":flag_fr:", "Français", ["@o3w", "@pineapples._.", "@skorlex", "@volcanofr"]],
     [":flag_de:", "Deutsch", ["@fasa.", "@mxny69", "@pekk."]],
     [":flag_gr:", "Ελληνικά", ["@pauldopa", "@thrilly"]],
     [":flag_hu:", "Magyar", ["@mustangk", "@royys"]],
