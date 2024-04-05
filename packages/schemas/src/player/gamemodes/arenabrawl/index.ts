@@ -122,7 +122,8 @@ export class ArenaBrawl {
 
     this.offensive = data.offensive || "none";
     this.utility = data.utility || "none";
-    this.ultimate = data.ultimate || "none";
+    // Hypixel spelled berserk wrong
+    this.ultimate = (data.ultimate || "none").replace("bersek", "berserk");
     this.support = data.support || "none";
     this.rune = data.active_rune || "none";
     this.keys = data.keys;
