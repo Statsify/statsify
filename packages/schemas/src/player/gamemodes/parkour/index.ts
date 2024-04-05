@@ -147,7 +147,7 @@ export class Parkour {
     this.PROTOTYPE = getTime("Prototype");
     this.SKYWARS = getTime("SkywarsStandard2022");
     this.SMASH_HEROES = getTime("SuperSmash");
-    this.TNT_GAMES = getTime("TNT");
+    this.TNT_GAMES = getTime("tntLobby2024");
     this.TOURNAMENT_LOBBY = getTime("Tourney");
     this.UHC = getTime("uhc");
     this.WARLORDS = getTime("Warlords");
