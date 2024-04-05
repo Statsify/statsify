@@ -96,7 +96,7 @@ export class CopsAndCrims {
     this.gunGame = new GunGame(data);
     this.overall = new CopsAndCrimsOverall(this.defusal, this.deathmatch, this.gunGame);
 
-    const scoreKills = add(this.defusal.kills, this.deathmatch.kills);
+    const scoreKills = add(this.defusal.kills, this.deathmatch.kills, this.gunGame.kills);
 
     const prefixParams: PrefixParams = [
       scoreKills,
