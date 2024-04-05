@@ -9,7 +9,7 @@
 import { Field } from "#metadata";
 import { GameModes, type IGameModes } from "#game";
 import { Progression } from "#progression";
-import { SkyWarsMode } from "./mode.js";
+import { ChallengesSkyWars, SkyWarsMode } from "./mode.js";
 import { add } from "@statsify/math";
 import { getFormattedLevel, getLevel, getLevelProgress, parseKit } from "./util.js";
 import type { APIData } from "@statsify/util";
@@ -105,6 +105,9 @@ export class SkyWars {
   @Field()
   public doubles: SkyWarsMode;
 
+  @Field()
+  public challenges: ChallengesSkyWars;
+
   public constructor(data: APIData, ap: APIData) {
     this.exp = data.skywars_experience ?? 0;
     this.coins = data.coins;
@@ -130,10 +133,10 @@ export class SkyWars {
       data.activeKit_TEAMS_random ? "random" : data.activeKit_TEAMS
     );
 
-    const soloInsaneWins = data["wins_solo_insane"];
-    const soloNormalWins = data["wins_solo_normal"];
-    const doublesInsaneWins = data["wins_team_insane"];
-    const doublesNormalWins = data["wins_team_normal"];
+    const soloInsaneWins = data.wins_solo_insane;
+    const soloNormalWins = data.wins_solo_normal;
+    const doublesInsaneWins = data.wins_team_insane;
+    const doublesNormalWins = data.wins_team_normal;
 
     const chooseKit = (insane = 0, normal = 0) =>
       insane > normal ? insaneKit : normalKit;
@@ -150,6 +153,8 @@ export class SkyWars {
       add(soloInsaneWins, doublesInsaneWins),
       add(soloNormalWins, doublesNormalWins)
     );
+
+    this.challenges = new ChallengesSkyWars(data);
   }
 }
 

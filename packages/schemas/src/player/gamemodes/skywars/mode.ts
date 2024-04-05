@@ -63,3 +63,44 @@ export class SkyWarsMode {
     data.wlr = ratio(data.wins, data.losses);
   }
 }
+
+export class ChallengesSkyWars {
+  @Field()
+  public totalWins: number;
+
+  @Field()
+  public archerWins: number;
+
+  @Field()
+  public halfHealthWins: number;
+
+  @Field()
+  public noBlockWins: number;
+
+  @Field()
+  public noChestWins: number;
+
+  @Field()
+  public paperWins: number;
+
+  @Field()
+  public rookieWins: number;
+
+  @Field({ leaderboard: { fieldName: "UHC Wins" } })
+  public uhcWins: number;
+
+  @Field()
+  public ultimateWarriorWins: number;
+
+  public constructor(data: APIData) {
+    this.totalWins = data.challenge_wins;
+    this.archerWins = data.challenge_wins_archer;
+    this.halfHealthWins = data.challenge_wins_half_health;
+    this.noBlockWins = data.challenge_wins_no_block;
+    this.noChestWins = data.challenge_wins_no_chest;
+    this.paperWins = data.challenge_wins_paper;
+    this.rookieWins = data.challenge_wins_rookie;
+    this.uhcWins = data.challenge_wins_uhc;
+    this.ultimateWarriorWins = data.challenge_wins_ultimate_warrior;
+  }
+}
