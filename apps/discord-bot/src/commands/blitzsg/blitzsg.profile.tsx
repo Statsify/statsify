@@ -198,12 +198,9 @@ export function filterBlitzKits(
   const { blitzsg } = player.stats;
   const [overall, ...kits] = modes;
 
-  const filteredKits = kits
-    .slice(1, -1)
-    .sort(
-      (a, b) => (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp
-    )
+  const filteredKits = [...kits]
+    .sort((a, b) => (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp)
     .slice(0, 24);
-
+    
   return [overall, ...filteredKits];
 }
