@@ -204,6 +204,7 @@
     "server": "查看我的世界服务器状态",
     "skin": "查看玩家的我的世界皮肤",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
+    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"SkyWars Challenges\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
     "socials": "查看玩家绑定Hypixel的社交网站",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
