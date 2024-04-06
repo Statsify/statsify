@@ -204,6 +204,7 @@
     "server": "Δες την κατάσταση του Minecraft διακομιστή",
     "skin": "Δες την Minecraft εμφάνιση κάποιου",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
+    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"SkyWars Challenges\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
     "socials": "Δες τα Hypixel συνδεδεμένα socials κάποιου",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
