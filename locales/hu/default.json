@@ -204,6 +204,7 @@
     "server": "Nézd meg egy Minecraft szerver státuszát",
     "skin": "Nézd meg valaki Minecraft skinjét",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
+    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"SkyWars Challenges\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
     "socials": "Nézd meg valakinek a Hypixelhez kötött közösségi oldalait",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
