@@ -204,6 +204,7 @@
     "server": "查看當個創世神的伺服器狀態",
     "skin": "查看玩家當個創世神的外觀",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
+    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"SkyWars Challenges\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
     "socials": "查看玩家連結到Hypixel的社群媒體",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",

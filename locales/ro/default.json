@@ -204,6 +204,7 @@
     "server": "Vezi starea serverului de Minecraft",
     "skin": "Vezi skin-ul unei persoane pe Minecraft",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
+    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"SkyWars Challenges\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
     "socials": "Vezi socialele conectate pe Hypixel ale unei persoane",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",

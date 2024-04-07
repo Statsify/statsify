@@ -204,6 +204,7 @@
     "server": "Minecraft sunucu statüsünü görüntüleyin",
     "skin": "Birinin Minecraft dış görünüşünü görüntüleyin",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
+    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"SkyWars Challenges\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
     "socials": "Birinin Hypixel'a bağlantılı sosyal medya hesaplarını görüntüleyin",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",

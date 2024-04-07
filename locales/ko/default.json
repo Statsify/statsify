@@ -204,6 +204,7 @@
     "server": "Minecraft 서버 상태를 봐요",
     "skin": "다른 분의 Minecraft 스킨을 봐요",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
+    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"SkyWars Challenges\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
     "socials": "Hypixel에 연동된 다른 분의 소셜 미디어 계정을 봐요",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",

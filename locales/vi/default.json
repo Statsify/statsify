@@ -204,6 +204,7 @@
     "server": "Xem trạng thái của máy chủ minecraft",
     "skin": "Xem nhân vật Minecraft của một ai đó",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
+    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"SkyWars Challenges\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
     "socials": "Xem nền tảng xã hội đã được liên kết vào tài khoản của một ai đó trong Hypixel",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",

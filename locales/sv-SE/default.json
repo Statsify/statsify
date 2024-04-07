@@ -204,6 +204,7 @@
     "server": "Visa Minecraft server status",
     "skin": "Se någons Minecraft skin",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
+    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"SkyWars Challenges\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
     "socials": "Visa någons Hypixel länkade sociala medier",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
