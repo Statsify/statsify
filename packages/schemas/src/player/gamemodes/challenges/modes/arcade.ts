@@ -30,6 +30,9 @@ export class ArcadeChallenges implements GameChallenges {
   public dragonWars: number;
 
   @Field(challengeFieldData)
+  public dropper: number;
+
+  @Field(challengeFieldData)
   public enderSpleef: number;
 
   @Field(challengeFieldData)
@@ -82,6 +85,7 @@ export class ArcadeChallenges implements GameChallenges {
     this.bountyHunters = challenges.ARCADE__bounty_hunter_challenge;
     this.creeperAttack = challenges.ARCADE__creeper_attack_challenge;
     this.dragonWars = challenges.ARCADE__dragon_wars_challenge;
+    this.dropper = challenges.ARCADE__dropper_challenge;
     this.enderSpleef = challenges.ARCADE__ender_spleef_challenge;
     this.galaxyWars = challenges.ARCADE__galaxy_wars_challenge;
     this.throwOut = challenges.ARCADE__throw_out_challenge;
@@ -102,6 +106,7 @@ export class ArcadeChallenges implements GameChallenges {
       this.bountyHunters,
       this.creeperAttack,
       this.dragonWars,
+      this.dropper,
       this.enderSpleef,
       this.galaxyWars,
       this.throwOut,
