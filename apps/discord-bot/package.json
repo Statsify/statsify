@@ -23,7 +23,7 @@
     "@swc/helpers": "^0.5.1",
     "@typegoose/typegoose": "^12.0.0",
     "axios": "1.4.0",
-    "discord-api-types": "^0.37.53",
+    "discord-api-types": "^0.37.81",
     "fuse.js": "^6.6.2",
     "luxon": "^3.4.0",
     "mongoose": "^8.0.3",

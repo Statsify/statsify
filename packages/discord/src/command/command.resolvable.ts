@@ -98,10 +98,12 @@ export class CommandResolvable {
       description_localizations: this.description_localizations,
       type: this.type,
       options: this.options?.map((o) => (o.toJSON ? o.toJSON() : o)),
+      integration_types: [0,1],
+      contexts: [0,1,2],
     };
   }
 
-  public equals(other: CommandResolvable): boolean {
+  public equals(other: CommandResolvable): boolean {    
     const d = this.toJSON();
 
     if (
