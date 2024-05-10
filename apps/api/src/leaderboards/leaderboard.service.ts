@@ -54,7 +54,7 @@ export abstract class LeaderboardService {
       const value = instance[field] as unknown as number;
       const key = `${name}.${String(field)}`;
 
-      if (remove || value === 0 || Number.isNaN(value)) {
+      if (remove || value === 0 || Number.isNaN(value) || typeof value !== "number") {
         pipeline.zrem(key, id);
         continue;
       }
