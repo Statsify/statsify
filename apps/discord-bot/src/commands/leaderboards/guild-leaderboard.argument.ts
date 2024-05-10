@@ -15,7 +15,7 @@ import { Fuse } from "fuse.js";
 import { Guild, LeaderboardScanner } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
-const list = LeaderboardScanner.getLeaderboardMetadata(Guild).map(
+const list = LeaderboardScanner.getLeaderboardFields(Guild).map(
   ([key, { leaderboard }]) => ({
     value: key,
     name: removeFormatting(leaderboard.name),

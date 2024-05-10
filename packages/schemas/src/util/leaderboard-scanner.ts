@@ -15,16 +15,12 @@ import { parseAdditionalFields } from "./parse-fields.js";
 import type { Constructor } from "@statsify/util";
 
 export class LeaderboardScanner {
-  public static getLeaderboardMetadata<T>(constructor: Constructor<T>) {
+  public static getLeaderboardFields<T>(constructor: Constructor<T>) {
     const metadata = MetadataScanner.scan(constructor);
 
     const fields = metadata.filter(([, { leaderboard }]) => leaderboard.enabled);
 
     return fields;
-  }
-
-  public static getLeaderboardFields<T>(constructor: Constructor<T>) {
-    return this.getLeaderboardMetadata(constructor);
   }
 
   public static getLeaderboardField<T>(
