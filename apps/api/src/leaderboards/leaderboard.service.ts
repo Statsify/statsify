@@ -50,21 +50,22 @@ export abstract class LeaderboardService {
 
     const id = instance[idField] as unknown as string;
 
-    fields
-      .filter(([field]) => remove || typeof instance[field] === "number")
-      .forEach(([field, metadata]) => {
-        const value = instance[field] as unknown as number;
-        const key = `${name}.${String(field)}`;
+    for (const [field, metadata] of fields) {
+      const value = instance[field] as unknown as number;
+      const key = `${name}.${String(field)}`;
 
-        if (remove || value === 0 || Number.isNaN(value)) return pipeline.zrem(key, id);
+      if (remove || value === 0 || Number.isNaN(value)) {
+        pipeline.zrem(key, id);
+        continue;
+      }
 
-        pipeline.zadd(key, value, id);
+      pipeline.zadd(key, value, id);
 
-        if (metadata.leaderboard.enabled && metadata.leaderboard.resetEvery) {
-          const time = this.getLeaderboardExpiryTime(metadata.leaderboard);
-          pipeline.expireat(key, time);
-        }
-      });
+      if (metadata.leaderboard.enabled && metadata.leaderboard.resetEvery) {
+        const time = this.getLeaderboardExpiryTime(metadata.leaderboard);
+        pipeline.expireat(key, time);
+      }
+    }
 
     await pipeline.exec();
 
