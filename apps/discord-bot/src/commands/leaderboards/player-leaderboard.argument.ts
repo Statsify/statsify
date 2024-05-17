@@ -34,7 +34,7 @@ const FUSE_OPTIONS = {
 };
 
 const fields = entries.reduce((acc, [prefix, value]) => {
-  const list = LeaderboardScanner.getLeaderboardMetadata(value.type.type).map(
+  const list = LeaderboardScanner.getLeaderboardFields(value.type.type).map(
     ([key, { leaderboard }]) => ({ value: key, name: removeFormatting(leaderboard.name) })
   );
 
