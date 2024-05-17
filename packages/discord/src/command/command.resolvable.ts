@@ -146,6 +146,20 @@ export class CommandResolvable {
           return false;
     }
 
+    if (d.integration_types && other.integration_types) {
+      if (d.integration_types.length !== other.integration_types.length) return false;
+
+      for (let i = 0; i < d.integration_types.length; i++)
+        if (this.integration_types[i] !== other.integration_types[i]) return false;
+    }
+
+    if (d.contexts && other.contexts) {
+      if (d.contexts.length !== other.contexts.length) return false;
+
+      for (let i = 0; i < d.contexts.length; i++)
+        if (this.contexts[i] !== other.contexts[i]) return false;
+    }
+
     return true;
   }
 }
