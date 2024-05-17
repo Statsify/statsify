@@ -226,8 +226,8 @@ importers:
         specifier: 1.4.0
         version: 1.4.0
       discord-api-types:
-        specifier: ^0.37.81
-        version: 0.37.81
+        specifier: ^0.37.84
+        version: 0.37.84
       fuse.js:
         specifier: ^6.6.2
         version: 6.6.2(patch_hash=ixymitzt2d2gv6bcg37qvfxc4q)
@@ -400,8 +400,8 @@ importers:
         specifier: 1.4.0
         version: 1.4.0
       discord-api-types:
-        specifier: ^0.37.81
-        version: 0.37.81
+        specifier: ^0.37.84
+        version: 0.37.84
       luxon:
         specifier: ^3.4.0
         version: 3.4.3
@@ -564,8 +564,8 @@ importers:
         specifier: ^1.4.0
         version: 1.4.0
       discord-api-types:
-        specifier: ^0.37.81
-        version: 0.37.81
+        specifier: ^0.37.84
+        version: 0.37.84
       i18next:
         specifier: ^21.10.0
         version: 21.10.0
@@ -3753,8 +3753,8 @@ packages:
       path-type: 4.0.0
     dev: true
 
-  /discord-api-types@0.37.81:
-    resolution: {integrity: sha512-GNUnmQeIO5S9lSDbH3hFCIbfhSO62BYtXEFVWMUsV2H7Xx/lCZIe53uQcYtfaO8nxO0kcqNkYgohrhqQMGxthg==}
+  /discord-api-types@0.37.84:
+    resolution: {integrity: sha512-NngmTBW8vermlbO0qNtaS7SHCWB/R96ICqflTwM/cV7zsxyQGd38E2bBlwaxLbXgb2YTF3+Yx6+qGs/3sXedCw==}
     dev: false
 
   /discord-bot@0.2.16:
@@ -8088,6 +8088,11 @@ packages:
 
   /ws@0.7.2:
     resolution: {integrity: sha512-8mJ1Ku743qD/PKmO9Dg+y7BXTwzUgKdXguecfIyOVHFmez4JMqMF+V+M684btmQXHlwzyrJqRl3NYDltGDf6CQ==}
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
     dependencies:
       options: 0.0.6
       ultron: 1.0.2

@@ -11,7 +11,7 @@ import { Field } from "#metadata";
 import { GameModes, type IGameModes } from "#game";
 import { Progression } from "#progression";
 import { Slumber } from "./slumber.js";
-import { add, deepSub } from "@statsify/math";
+import { deepSub } from "@statsify/math";
 import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
 import type { APIData } from "@statsify/util";
 

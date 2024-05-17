@@ -262,8 +262,8 @@ impl SkinRenderer {
     model_type: SkinModelType,
   ) -> SkinRendererResult<Vec<u8>> {
     let material = match model_type {
-      SkinModelType::Classic => self.classic_model.materials.get(0),
-      SkinModelType::Slim => self.slim_model.materials.get(0),
+      SkinModelType::Classic => self.classic_model.materials.first(),
+      SkinModelType::Slim => self.slim_model.materials.first(),
     };
 
     self.render_material(model_type, material.unwrap()).await

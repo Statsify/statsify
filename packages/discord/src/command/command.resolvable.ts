@@ -10,6 +10,8 @@ import { AbstractArgument } from "#arguments";
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
+  ApplicationIntegrationType,
+  InteractionContextType,
 } from "discord-api-types/v10";
 import { UserTier } from "@statsify/schemas";
 import { getLocalizeFunction, translateField, translateToAllLanguages } from "#messages";
@@ -25,6 +27,8 @@ export class CommandResolvable {
   public description: string;
   public options?: any[];
   public description_localizations: Record<string, string>;
+  public integration_types: ApplicationIntegrationType[];
+  public contexts: InteractionContextType[];
 
   public args: AbstractArgument[];
   public cooldown: number;
@@ -39,6 +43,8 @@ export class CommandResolvable {
       name,
       description,
       args,
+      guildCommand = true,
+      userCommand = true,
       methodName,
       tier = UserTier.NONE,
       preview,
@@ -49,6 +55,19 @@ export class CommandResolvable {
     this.name = name;
     this.description = translateField(getLocalizeFunction("en_US"), description);
     this.description_localizations = translateToAllLanguages(description);
+
+    this.integration_types = [];
+    this.contexts = [];
+
+    if (guildCommand) {
+      this.integration_types.push(ApplicationIntegrationType.GuildInstall);
+      this.contexts.push(InteractionContextType.Guild);
+    }
+    
+    if (userCommand) {
+      this.integration_types.push(ApplicationIntegrationType.UserInstall);
+      this.contexts.push(InteractionContextType.PrivateChannel, InteractionContextType.BotDM);
+    }
 
     this.type = ApplicationCommandType.ChatInput;
     this.cooldown = cooldown;
@@ -98,8 +117,8 @@ export class CommandResolvable {
       description_localizations: this.description_localizations,
       type: this.type,
       options: this.options?.map((o) => (o.toJSON ? o.toJSON() : o)),
-      integration_types: [0,1],
-      contexts: [0,1,2],
+      integration_types: this.integration_types,
+      contexts: this.contexts,
     };
   }
 
