@@ -12,6 +12,7 @@ import { TicketService } from "#services";
 @Command({
   description: (t) => t("commands.close"),
   args: [new TextArgument("reason", (t) => t("arguments.reason"), false)],
+  userCommand: false,
 })
 export class CloseCommand {
   public constructor(private readonly ticketService: TicketService) {}

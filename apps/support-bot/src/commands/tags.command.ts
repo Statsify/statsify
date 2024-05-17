@@ -21,7 +21,7 @@ import { STATUS_COLORS } from "@statsify/logger";
 import { TagService } from "#services";
 import { UserTier } from "@statsify/schemas";
 
-@Command({ description: (t) => t("commands.tags") })
+@Command({ description: (t) => t("commands.tags"), userCommand: false })
 export class TagsCommand {
   public constructor(private readonly tagService: TagService) {}
 

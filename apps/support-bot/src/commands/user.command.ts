@@ -22,6 +22,7 @@ import { prettify } from "@statsify/util";
   description: (t) => t("commands.user"),
   args: [new UserArgument("user", false)],
   tier: UserTier.STAFF,
+  userCommand: false,
 })
 export class UserCommand {
   public constructor(private readonly apiService: ApiService) {}

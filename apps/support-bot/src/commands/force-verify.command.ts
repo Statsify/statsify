@@ -24,6 +24,7 @@ import { config } from "@statsify/util";
   description: (t) => t("commands.force-verify"),
   args: [new UserArgument(), new PlayerArgument("player", true)],
   tier: UserTier.STAFF,
+  userCommand: false,
 })
 export class ForceVerifyCommand {
   public constructor(
