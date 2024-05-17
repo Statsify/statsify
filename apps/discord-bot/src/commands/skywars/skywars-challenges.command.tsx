@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { GameMode, Player, SKYWARS_MODES, SkyWarsModes } from "@statsify/schemas";
 import { BaseHypixelCommand, BaseProfileProps } from "#commands/base.hypixel-command";
-import { SkyWarsChallengesProfile } from "./skywars-challenges.profile.js";
 import { Command } from "@statsify/discord";
+import { GameMode, Player, SKYWARS_MODES, SkyWarsModes } from "@statsify/schemas";
+import { SkyWarsChallengesProfile } from "./skywars-challenges.profile.js";
 
 @Command({ description: (t) => t("commands.skywars-challenges") })
 export class SkyWarsChallengesCommand extends BaseHypixelCommand<SkyWarsModes> {

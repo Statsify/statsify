@@ -23,6 +23,7 @@ import { config } from "@statsify/util";
   description: (t) => t("commands.force-unverify"),
   args: [new PlayerArgument("player", true)],
   tier: UserTier.STAFF,
+  userCommand: false,
 })
 export class ForceUnverifyCommand {
   public constructor(

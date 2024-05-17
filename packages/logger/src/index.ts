@@ -20,7 +20,7 @@ export const STATUS_COLORS = {
   error: 0xcd1820,
   info: 0x6469f5,
   success: 0x36d494,
-  fatal: 0x81181a
+  fatal: 0x81181a,
 } as const;
 
 const isProduction = config("environment") === "prod";

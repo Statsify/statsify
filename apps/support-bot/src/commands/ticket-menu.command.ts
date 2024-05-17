@@ -19,7 +19,7 @@ import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
 import { config } from "@statsify/util";
 
-@Command({ description: (t) => t("commands.ticket-menu"), tier: UserTier.CORE })
+@Command({ description: (t) => t("commands.ticket-menu"), tier: UserTier.CORE, userCommand: false })
 export class TicketMenuCommand {
   public constructor(private readonly messageService: MessageService) {}
 

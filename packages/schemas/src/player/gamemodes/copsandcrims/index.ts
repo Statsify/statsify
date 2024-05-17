@@ -10,7 +10,6 @@ import { CopsAndCrimsOverall, Deathmatch, Defusal, GunGame } from "./mode.js";
 import { Field } from "#metadata";
 import { GameModes, type IGameModes } from "#game";
 import { GamePrefix, defaultPrefix, getFormattedPrefix } from "#prefixes";
-import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export const COPS_AND_CRIMS_MODES = new GameModes([

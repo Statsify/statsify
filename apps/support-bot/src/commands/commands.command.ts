@@ -25,6 +25,7 @@ const COMMANDS_PER_PAGE = 25;
   description: (t) => t("commands.commands"),
   tier: UserTier.CORE,
   args: [new TextArgument("highlight", "The string to highlight", false)],
+  userCommand: false,
 })
 export class CommandsCommand {
   public constructor(

@@ -21,6 +21,7 @@ import { UserTier } from "@statsify/schemas";
   description: (t) => t("commands.delete-player"),
   args: [new PlayerArgument("player", true)],
   tier: UserTier.STAFF,
+  userCommand: false,
 })
 export class DeletePlayerCommand {
   public constructor(private readonly apiService: ApiService) {}
