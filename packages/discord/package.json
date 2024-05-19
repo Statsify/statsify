@@ -23,7 +23,7 @@
     "i18next-fs-backend": "^2.1.5",
     "reflect-metadata": "^0.1.13",
     "skia-canvas": "^0.9.30",
-    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb",
+    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#5b03d3ad5379b2f61c908013bb28720b5067947f",
     "typedi": "^0.10.0"
   },
   "devDependencies": {

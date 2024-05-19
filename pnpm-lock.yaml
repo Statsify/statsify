@@ -244,8 +244,8 @@ importers:
         specifier: ^0.9.30
         version: 0.9.30
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb
-        version: github.com/timotejroiko/tiny-discord/62cf5c895ce9287b4517356970fd6771957e43cb
+        specifier: https://github.com/timotejroiko/tiny-discord.git#5b03d3ad5379b2f61c908013bb28720b5067947f
+        version: github.com/timotejroiko/tiny-discord/5b03d3ad5379b2f61c908013bb28720b5067947f
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -299,8 +299,8 @@ importers:
         specifier: ^0.9.30
         version: 0.9.30
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb
-        version: github.com/timotejroiko/tiny-discord/62cf5c895ce9287b4517356970fd6771957e43cb
+        specifier: https://github.com/timotejroiko/tiny-discord.git#5b03d3ad5379b2f61c908013bb28720b5067947f
+        version: github.com/timotejroiko/tiny-discord/5b03d3ad5379b2f61c908013bb28720b5067947f
       toad-scheduler:
         specifier: ^3.0.0
         version: 3.0.0
@@ -415,8 +415,8 @@ importers:
         specifier: ^0.9.30
         version: 0.9.30
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb
-        version: github.com/timotejroiko/tiny-discord/62cf5c895ce9287b4517356970fd6771957e43cb
+        specifier: https://github.com/timotejroiko/tiny-discord.git#5b03d3ad5379b2f61c908013bb28720b5067947f
+        version: github.com/timotejroiko/tiny-discord/5b03d3ad5379b2f61c908013bb28720b5067947f
       toad-scheduler:
         specifier: ^3.0.0
         version: 3.0.0
@@ -548,8 +548,8 @@ importers:
         specifier: ^0.9.30
         version: 0.9.30
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb
-        version: github.com/timotejroiko/tiny-discord/62cf5c895ce9287b4517356970fd6771957e43cb
+        specifier: https://github.com/timotejroiko/tiny-discord.git#5b03d3ad5379b2f61c908013bb28720b5067947f
+        version: github.com/timotejroiko/tiny-discord/5b03d3ad5379b2f61c908013bb28720b5067947f
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -7723,8 +7723,8 @@ packages:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
     dev: false
 
-  github.com/timotejroiko/tiny-discord/62cf5c895ce9287b4517356970fd6771957e43cb:
-    resolution: {tarball: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/62cf5c895ce9287b4517356970fd6771957e43cb}
+  github.com/timotejroiko/tiny-discord/5b03d3ad5379b2f61c908013bb28720b5067947f:
+    resolution: {tarball: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/5b03d3ad5379b2f61c908013bb28720b5067947f}
     name: tiny-discord
     version: 0.0.1
     dev: false
