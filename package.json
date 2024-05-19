@@ -64,8 +64,7 @@
   },
   "pnpm": {
     "overrides": {
-      "countup.js": "2.6.0",
-      "gl": "^8.0.2"
+      "countup.js": "2.6.0"
     },
     "patchedDependencies": {
       "fuse.js@6.6.2": "patches/fuse.js@6.6.2.patch"
