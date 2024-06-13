@@ -7,11 +7,11 @@
  */
 
 import { AbstractEventListener, ApiService, MemberService } from "@statsify/discord";
+import { CacheLevel } from "@statsify/api-client";
 import {
   GatewayDispatchEvents,
   GatewayMessageCreateDispatchData,
 } from "discord-api-types/v10";
-import { CacheLevel } from "@statsify/api-client";
 import { Logger } from "@statsify/logger";
 import { Service } from "typedi";
 import { SimpleIntervalJob, Task } from "toad-scheduler";

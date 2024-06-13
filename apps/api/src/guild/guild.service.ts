@@ -7,14 +7,14 @@
  */
 
 /* eslint-disable require-atomic-updates */
-import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
-import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
 import {
+  CacheLevel,
   GuildNotFoundException,
   GuildQuery,
-  CacheLevel,
   PlayerNotFoundException,
 } from "@statsify/api-client";
+import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
+import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
 import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";

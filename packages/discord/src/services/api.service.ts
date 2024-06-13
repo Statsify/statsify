@@ -9,13 +9,11 @@
 import { AxiosError } from "axios";
 import { ButtonBuilder, LocalizeFunction } from "#messages";
 import { ButtonStyle } from "discord-api-types/v10";
-import { Color, Skin, User } from "@statsify/schemas";
-import { ErrorMessage } from "#util/error.message";
 import {
+  CacheLevel,
   GUILD_ID_REGEX,
   GuildNotFoundException,
   GuildQuery,
-  CacheLevel,
   LeaderboardQuery,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
@@ -23,6 +21,8 @@ import {
   ApiService as StatsifyApiService,
   StatusNotFoundException,
 } from "@statsify/api-client";
+import { Color, User } from "@statsify/schemas";
+import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
 

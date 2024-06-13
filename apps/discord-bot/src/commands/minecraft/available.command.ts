@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { minecraftHeadUrl } from "#lib/minecraft-head";
 import {
   ApiService,
   Command,
@@ -14,6 +13,7 @@ import {
   EmbedBuilder,
   MojangPlayerArgument,
 } from "@statsify/discord";
+import { minecraftHeadUrl } from "#lib/minecraft-head";
 
 @Command({
   description: (t) => t("commands.available"),

@@ -7,6 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
+import { CacheLevel } from "@statsify/api-client";
 import {
   GameCounts,
   Guild,
@@ -16,7 +17,6 @@ import {
   Watchdog,
 } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
-import { CacheLevel } from "@statsify/api-client";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";

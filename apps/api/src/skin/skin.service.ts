@@ -10,13 +10,13 @@ import { Canvas, type Image } from "skia-canvas";
 import { HttpService } from "@nestjs/axios";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { PlayerNotFoundException } from "@statsify/api-client";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { loadImage } from "@statsify/rendering";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
-import { PlayerNotFoundException } from "@statsify/api-client";
 
 @Injectable()
 export class SkinService {
@@ -90,7 +90,6 @@ export class SkinService {
       slim: slim ?? false,
     };
   }
-
 
   private getUuid(username: string): Promise<string> {
     return lastValueFrom(

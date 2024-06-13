@@ -19,9 +19,7 @@ import { STATUS_COLORS } from "@statsify/logger";
 
 @Command({ description: (t) => t("commands.skin"), args: [MojangPlayerArgument] })
 export class SkinCommand {
-  public constructor(
-    private readonly apiService: ApiService,
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();

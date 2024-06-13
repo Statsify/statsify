@@ -9,6 +9,11 @@
 import * as Sentry from "@sentry/node";
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
+  CacheLevel,
+  GuildQuery,
+  LeaderboardQuery,
+} from "./constants.js";
+import {
   DeletePlayerResponse,
   GetCommandUsageResponse,
   GetGamecountsResponse,
@@ -26,11 +31,6 @@ import {
   PostLeaderboardResponse,
   PutUserBadgeResponse,
 } from "#responses";
-import {
-  GuildQuery,
-  CacheLevel,
-  LeaderboardQuery,
-} from "./constants.js";
 import { UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { loadImage } from "@statsify/rendering";
@@ -186,8 +186,8 @@ export class ApiService {
 
   public getPlayerSkinTextures(tag: string) {
     return this.requestKey<GetSkinTexturesResponse, "skin">("/skin/textures", "skin", {
-      player: tag
-    })
+      player: tag,
+    });
   }
 
   public getPlayerSession(tag: string, userUuid?: string) {

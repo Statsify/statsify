@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { minecraftHeadUrl } from "#lib/minecraft-head";
 import {
   ApiService,
   Command,
@@ -15,6 +14,7 @@ import {
   MojangPlayerArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
+import { minecraftHeadUrl } from "#lib/minecraft-head";
 
 @Command({ description: (t) => t("commands.uuid"), args: [new MojangPlayerArgument()] })
 export class UUIDCommand {

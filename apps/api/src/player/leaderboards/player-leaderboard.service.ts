@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type Circular, flatten } from "@statsify/util";
 import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
+import { type Circular, flatten } from "@statsify/util";
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
