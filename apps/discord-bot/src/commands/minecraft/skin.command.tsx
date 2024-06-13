@@ -15,20 +15,18 @@ import {
   MojangPlayerArgument,
 } from "@statsify/discord";
 import { Canvas } from "skia-canvas";
-import { MojangApiService } from "#services";
 import { STATUS_COLORS } from "@statsify/logger";
 
 @Command({ description: (t) => t("commands.skin"), args: [MojangPlayerArgument] })
 export class SkinCommand {
   public constructor(
     private readonly apiService: ApiService,
-    private readonly mojangApiService: MojangApiService
   ) {}
 
   public async run(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
 
-    const player = await this.mojangApiService.getPlayer(
+    const player = await this.apiService.getPlayerSkinTextures(
       context.option<string>("player"),
       user
     );

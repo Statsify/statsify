@@ -16,9 +16,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 @Module({
   imports: [
     TypegooseModule.forFeature([Skin]),
-    HttpModule.register({
-      baseURL: "https://sessionserver.mojang.com/",
-    }),
+    HttpModule.register({}),
   ],
   controllers: [SkinController],
   providers: [SkinService],

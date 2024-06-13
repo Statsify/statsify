@@ -11,7 +11,7 @@ import {
   GatewayDispatchEvents,
   GatewayMessageCreateDispatchData,
 } from "discord-api-types/v10";
-import { HypixelCache } from "@statsify/api-client";
+import { CacheLevel } from "@statsify/api-client";
 import { Logger } from "@statsify/logger";
 import { Service } from "typedi";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
@@ -59,7 +59,7 @@ export class MessageCreateEventListener extends AbstractEventListener<GatewayDis
     }
 
     const player = await this.apiService
-      .getCachedPlayer(user.uuid, HypixelCache.CACHE_ONLY)
+      .getCachedPlayer(user.uuid, CacheLevel.CACHE_ONLY)
       .catch(() => null);
 
     if (!player) {

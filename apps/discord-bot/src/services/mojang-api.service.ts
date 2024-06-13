@@ -12,10 +12,9 @@ import { Service } from "typedi";
 import { User } from "@statsify/schemas";
 import { randomUUID } from "node:crypto";
 
-export interface AshconResponse {
+export interface MojangResponse {
   uuid: string;
   username: string;
-  username_history: { username: string; changed_at?: string }[];
   textures: {
     custom: boolean;
     slim: boolean;
@@ -43,22 +42,12 @@ export class MojangApiService {
   }
 
   public async getPlayer(tag: string, user: User | null = null) {
-    const [formattedTag, type] = this.apiService.parseTag(tag);
-    const input = await this.apiService.resolveTag(formattedTag, type, user);
-
-    return this.getData<AshconResponse>(input).catch((e) => {
-      if (!e.response || !e.response.data) throw this.apiService.unknownError();
-      const error = e.response.data as AshconErrorResponse;
-
-      if (error.code === 404) throw this.apiService.missingPlayer(type, input);
-
-      throw this.apiService.unknownError();
-    });
+    return this.apiService.getPlayerSkinTextures(tag, user);
   }
 
-  public async checkName(name: string) {
+  public async checkName(name: string): Promise<{ name: string, uuid: string } | undefined> {
     try {
-      const data = await this.getData<AshconResponse>(name);
+      const data = await this.getData<MojangResponse>(name);
       return { name: data.username, uuid: data.uuid };
     } catch (e: any) {
       if (!e.response || !e.response.data) throw this.apiService.unknownError();
@@ -68,10 +57,8 @@ export class MojangApiService {
   }
 
   public faceIconUrl(uuid: string) {
-    return `https://crafatar.com/avatars/${uuid.replaceAll(
-      "-",
-      ""
-    )}?size=160&default=MHF_Steve&overlay&id=${randomUUID()}`;
+    const dashlessUuid = uuid.replaceAll("-", "");
+    return `https://crafatar.com/avatars/${dashlessUuid}?size=160&default=MHF_Steve&overlay&id=${randomUUID()}`;
   }
 
   private async getData<T>(input: string): Promise<T> {

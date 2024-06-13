@@ -22,6 +22,9 @@ export class Skin {
   @Field({ store: { required: false } })
   public slim?: boolean;
 
+  @Field({ store: { required: false } })
+  public capeUrl?: string;
+
   @Field()
   public expiresAt: number;
 
@@ -34,5 +37,7 @@ export class Skin {
 
     this.skinUrl = textures.SKIN.url;
     this.slim = textures.SKIN.metadata?.model === "slim";
+
+    this.capeUrl = textures.CAPE?.url;
   }
 }

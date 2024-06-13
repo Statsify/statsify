@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiBadRequestResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Auth } from "#auth";
 import { Controller, Get, Query, StreamableFile } from "@nestjs/common";
-import { ErrorResponse } from "@statsify/api-client";
-import { HeadDto, UuidDto } from "#dtos";
+import { ErrorResponse, GetSkinTexturesResponse, PlayerNotFoundException } from "@statsify/api-client";
+import { HeadDto, PlayerDto, UuidDto } from "#dtos";
 import { SkinService } from "./skin.service.js";
 
 @Controller("/skin")
@@ -19,8 +19,8 @@ export class SkinController {
   public constructor(private readonly skinService: SkinService) {}
 
   @Get("/head")
-  @ApiOperation({ summary: "Get a Player Head" })
   @Auth()
+  @ApiOperation({ summary: "Get a Player Head" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getHead(@Query() { uuid, size }: HeadDto) {
     const head = await this.skinService.getHead(uuid, size);
@@ -29,12 +29,23 @@ export class SkinController {
   }
 
   @Get()
-  @ApiOperation({ summary: "Get a Player Render" })
   @Auth()
+  @ApiOperation({ summary: "Get a Player Render" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getRender(@Query() { uuid }: UuidDto) {
     const render = await this.skinService.getRender(uuid);
 
     return new StreamableFile(render, { type: "image/png" });
+  }
+
+  @Get("/textures")
+  @Auth()
+  @ApiOperation({ summary: "Get a Player's Texture Information" })
+  @ApiOkResponse({ type: GetSkinTexturesResponse })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  @ApiNotFoundResponse({ type: PlayerNotFoundException })
+  public async getTextures(@Query() { player }: PlayerDto) {
+    const skin = await this.skinService.getSkin(player);
+    return { success: !!skin, skin };
   }
 }

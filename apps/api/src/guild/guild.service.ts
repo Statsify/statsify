@@ -12,7 +12,7 @@ import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.servic
 import {
   GuildNotFoundException,
   GuildQuery,
-  HypixelCache,
+  CacheLevel,
   PlayerNotFoundException,
 } from "@statsify/api-client";
 import { HypixelService } from "#hypixel";
@@ -38,7 +38,7 @@ export class GuildService {
   public async get(
     inputtedTag: string,
     type: GuildQuery,
-    cache: HypixelCache
+    cache: CacheLevel
   ): Promise<Guild | null> {
     // eslint-disable-next-line prefer-const
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
@@ -169,7 +169,7 @@ export class GuildService {
     tag = tag.toLowerCase();
 
     if (type === GuildQuery.PLAYER) {
-      const player = await this.playerService.get(tag, HypixelCache.CACHE_ONLY, {
+      const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, {
         uuid: true,
         displayName: true,
         guildId: true,
@@ -230,7 +230,7 @@ export class GuildService {
     }
 
     const player = await this.playerService
-      .get(member.uuid, HypixelCache.CACHE_ONLY, {
+      .get(member.uuid, CacheLevel.CACHE_ONLY, {
         username: true,
         displayName: true,
         guildId: true,

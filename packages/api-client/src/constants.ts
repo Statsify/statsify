@@ -28,7 +28,7 @@ export enum LastHistoricalType {
 export const HistoricalTimes = { ...LastHistoricalType, ...CurrentHistoricalType };
 export type HistoricalType = LastHistoricalType | CurrentHistoricalType;
 
-export enum HypixelCache {
+export enum CacheLevel {
   CACHE = "CACHE",
   CACHE_ONLY = "CACHE_ONLY",
   LIVE = "LIVE",

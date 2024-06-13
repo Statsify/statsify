@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { minecraftHeadUrl } from "#lib/minecraft-head";
 import {
   ApiService,
   Command,
@@ -14,14 +15,12 @@ import {
   IMessage,
   PlayerArgument,
 } from "@statsify/discord";
-import { MojangApiService } from "#services";
 import { STATUS_COLORS } from "@statsify/logger";
 
 @Command({ description: (t) => t("commands.socials"), args: [PlayerArgument] })
 export class SocialsCommand {
   public constructor(
     private readonly apiService: ApiService,
-    private readonly mojangApiService: MojangApiService
   ) {}
 
   public async run(context: CommandContext): Promise<IMessage> {
@@ -35,7 +34,7 @@ export class SocialsCommand {
     const embed = new EmbedBuilder()
       .title((t) => this.apiService.emojiDisplayName(t, displayName))
       .author("Player Socials")
-      .thumbnail(this.mojangApiService.faceIconUrl(uuid))
+      .thumbnail(minecraftHeadUrl(uuid))
       .color(STATUS_COLORS.info)
       .field(
         (t) => `${t("emojis:socials.embed.discord")} Discord`,

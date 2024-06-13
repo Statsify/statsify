@@ -18,6 +18,7 @@ import {
   GetPlayerSearchResponse,
   GetRecentGamesResponse,
   GetSessionResponse,
+  GetSkinTexturesResponse,
   GetStatusResponse,
   GetUserResponse,
   GetWatchdogResponse,
@@ -27,7 +28,7 @@ import {
 } from "#responses";
 import {
   GuildQuery,
-  HypixelCache,
+  CacheLevel,
   LeaderboardQuery,
 } from "./constants.js";
 import { UserFooter, UserTheme } from "@statsify/schemas";
@@ -63,7 +64,7 @@ export class ApiService {
     });
   }
 
-  public getCachedPlayer(tag: string, cache: HypixelCache) {
+  public getCachedPlayer(tag: string, cache: CacheLevel) {
     return this.requestKey<GetPlayerResponse, "player">("/player", "player", {
       player: tag,
       cache,
@@ -181,6 +182,12 @@ export class ApiService {
     return this.requestImage(isProduction ? "https://api.statsify.net/skin" : "/skin", {
       uuid,
     });
+  }
+
+  public getPlayerSkinTextures(tag: string) {
+    return this.requestKey<GetSkinTexturesResponse, "skin">("/skin/textures", "skin", {
+      player: tag
+    })
   }
 
   public getPlayerSession(tag: string, userUuid?: string) {

@@ -8,7 +8,7 @@
 
 import { type APIData, type Circular, type Flatten, flatten } from "@statsify/util";
 import {
-  HypixelCache,
+  CacheLevel,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
   StatusNotFoundException,
@@ -45,7 +45,7 @@ export class PlayerService {
    */
   public async get(
     tag: string,
-    cacheLevel: HypixelCache,
+    cacheLevel: CacheLevel,
     selector?: Record<string, boolean>
   ): Promise<Player | null> {
     const mongoPlayer = await this.findMongoDocument(tag, selector);
@@ -106,7 +106,7 @@ export class PlayerService {
   }
 
   public async getStatus(tag: string) {
-    const player = await this.get(tag, HypixelCache.CACHE, {
+    const player = await this.get(tag, CacheLevel.CACHE, {
       uuid: true,
       displayName: true,
       prefixName: true,
@@ -128,7 +128,7 @@ export class PlayerService {
   }
 
   public async getRecentGames(tag: string) {
-    const player = await this.get(tag, HypixelCache.CACHE_ONLY, {
+    const player = await this.get(tag, CacheLevel.CACHE_ONLY, {
       uuid: true,
       displayName: true,
       prefixName: true,

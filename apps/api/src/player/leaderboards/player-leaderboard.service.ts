@@ -7,7 +7,7 @@
  */
 
 import { type Circular, flatten } from "@statsify/util";
-import { HypixelCache, PlayerNotFoundException } from "@statsify/api-client";
+import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
@@ -30,7 +30,7 @@ export class PlayerLeaderboardService extends LeaderboardService {
 
   protected async searchLeaderboardInput(input: string, field: string): Promise<number> {
     if (input.length <= 16) {
-      const player = await this.playerService.get(input, HypixelCache.CACHE_ONLY, {
+      const player = await this.playerService.get(input, CacheLevel.CACHE_ONLY, {
         uuid: true,
       });
 
