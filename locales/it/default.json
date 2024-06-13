@@ -390,7 +390,7 @@
     },
     "invalidSession": {
       "title": "Sessione Invalida",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+      "description": "**{{displayName}}** non ha sessioni attive. Possono fare una sessione eseguendo `/session` mentre sono verificati."
     },
     "invalidResetTime": {
       "description": "`{{time}}` non corrisponde al formato `h:mm a`. Inserisci un'ora nel formato simile a `12:00 PM` o `1:00 AM`.",
@@ -438,7 +438,7 @@
       "title": "Verifica mancante"
     },
     "missingPlayerVerification": {
-      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** non è **verificato**. Devono eseguire `/verify` per verificare il loro account.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -521,7 +521,7 @@
     "setSessionReset": "La tua sessione di statistiche è stata ripristinata con successo.",
     "disabledWarning": {
       "title": "I Vecchi Comandi non sono Più Disponibili",
-      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+      "description": "I nuovi [Termini API](https://developer.hypixel.net/policies/) di Hypixel non consentono più \"il sondaggio continuo dei dati del giocatore\", il che significa che Statsify non può più tenere traccia delle statistiche del giocatore ogni giorno.\n\nInvece puoi provare ad avviare una sessione con `/session`. Quando avvii una sessione, il bot terrà traccia delle tue statistiche dal momento in cui hai eseguito inizialmente il comando fino alla prossima volta che lo esegui. Per resettare le statistiche della sessione è possibile eseguire `/reset session`."
     }
   },
   "leaderboard": {
@@ -736,7 +736,7 @@
     "shotsFired": "Colpi Sparati",
     "silver": "Argento",
     "silverTrophies": "Trofei d'Argento",
-    "slumberTickets": "Slumber Tickets",
+    "slumberTickets": "Biglietti Slumber",
     "soloWins": "Vittorie in Singolo",
     "souls": "Souls",
     "stampLevel": "Conversione Monete",
@@ -754,7 +754,7 @@
     "title": "Titolo",
     "tokens": "Gettoni",
     "total": "Totale",
-    "totalSlumberTickets": "Total Slumber Tickets",
+    "totalSlumberTickets": "Totale Biglietti Slumber",
     "totalTrophies": "Trofei Totali",
     "trail": "Scia",
     "transfusion": "Trasfusione",
@@ -785,7 +785,7 @@
     "roundsCompleted": "Round Completati",
     "totalExp": "EXP Totale",
     "gamesFinished": "Partite Terminate",
-    "flawlessGames": "Flawless Games",
+    "flawlessGames": "Giochi Flawless",
     "fails": "Tentativi Falliti",
     "mapsCompleted": "Mappe Completate",
     "arcadeWins": "Vittorie Arcade",
