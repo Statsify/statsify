@@ -33,8 +33,16 @@ export class SkinController {
   @ApiOperation({ summary: "Get a Player Render" })
   @ApiBadRequestResponse({ type: ErrorResponse })
   public async getRender(@Query() { uuid }: UuidDto) {
-    const render = await this.skinService.getRender(uuid);
+    const render = await this.skinService.getRender(uuid, false);
+    return new StreamableFile(render, { type: "image/png" });
+  }
 
+  @Get("/extruded")
+  @Auth()
+  @ApiOperation({ summary: "Get an Extruded Player Render" })
+  @ApiBadRequestResponse({ type: ErrorResponse })
+  public async getExtrudedRender(@Query() { uuid }: UuidDto) {
+    const render = await this.skinService.getRender(uuid, true);
     return new StreamableFile(render, { type: "image/png" });
   }
 

@@ -1,5 +1,6 @@
-use crate::error::SkinRendererResult;
 use image::GenericImageView;
+
+use crate::error::Result;
 
 pub struct Texture {
   pub texture: wgpu::Texture,
@@ -53,20 +54,11 @@ impl Texture {
     }
   }
 
-  pub fn from_bytes(
-    device: &wgpu::Device,
-    queue: &wgpu::Queue,
-    bytes: &[u8],
-  ) -> SkinRendererResult<Self> {
-    let img = image::load_from_memory(bytes)?;
-    Self::from_image(device, queue, &img)
-  }
-
   pub fn from_image(
     device: &wgpu::Device,
     queue: &wgpu::Queue,
     img: &image::DynamicImage,
-  ) -> SkinRendererResult<Self> {
+  ) -> Result<Self> {
     let dimensions = img.dimensions();
     let rgba = img.to_rgba8();
 

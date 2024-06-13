@@ -31,7 +31,7 @@ import {
   PostLeaderboardResponse,
   PutUserBadgeResponse,
 } from "#responses";
-import { UserFooter, UserTheme } from "@statsify/schemas";
+import { User, UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { loadImage } from "@statsify/rendering";
 
@@ -178,8 +178,9 @@ export class ApiService {
     );
   }
 
-  public getPlayerSkin(uuid: string) {
-    return this.requestImage(isProduction ? "https://api.statsify.net/skin" : "/skin", {
+  public getPlayerSkin(uuid: string, user: User | null) {
+    const route = User.hasExtrudedSkins(user) ? "skin/extruded" : "skin";
+    return this.requestImage(isProduction ? `https://api.statsify.net/${route}` : `/${route}`, {
       uuid,
     });
   }

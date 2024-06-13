@@ -286,7 +286,7 @@ export class SessionCommand {
 
     const [logo, skin, badge] = await Promise.all([
       getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid),
+      this.apiService.getPlayerSkin(player.uuid. user),
       this.apiService.getUserBadge(player.uuid),
     ]);
 
