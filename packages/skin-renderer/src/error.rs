@@ -1,55 +1,43 @@
 #[derive(Debug, thiserror::Error)]
-pub enum SkinRendererError {
+pub enum Error {
   #[error(transparent)]
   Io(#[from] std::io::Error),
 
-  #[error(transparent)]
-  ObjLoad(#[from] tobj::LoadError),
-
-  #[error("A material is missing a diffuse texture")]
-  MissingDiffuseTexture,
-
-  #[error("The provided url is not a valid skin texture")]
-  MissingSkinTexture,
-
-  #[error("Request error: {status_code} {url} {message}")]
-  RequestError {
-    status_code: u16,
-    url: String,
-    message: String,
-    #[source]
-    source: reqwest::Error,
-  },
+  #[error("The provided image is not a valid skin texture")]
+  InvalidSkinTexture,
 
   #[error(transparent)]
   Image(#[from] image::ImageError),
 
   #[error("Failed to render skin")]
   RenderFailure,
+
+  #[error(transparent)]
+  RequestDevice(#[from] wgpu::RequestDeviceError),
+
+  #[error("Instance did not provide any adapters")]
+  MissingAdapter,
+
+  #[error(transparent)]
+  CreateSurface(#[from] wgpu::CreateSurfaceError),
+
+  #[cfg(target_arch = "wasm32")]
+  #[error("Failed to access canvas")]
+  CanvasNotFound,
+
+  #[cfg(target_arch = "wasm32")]
+  #[error("Failed to create window")]
+  WindowCreationFailed(#[from] winit::error::OsError),
 }
 
-impl From<reqwest::Error> for SkinRendererError {
-  fn from(error: reqwest::Error) -> Self {
-    let status_code = error.status().map(|s| s.as_u16()).unwrap_or(0);
-    let url = error.url().map(|u| u.to_string()).unwrap_or_default();
-    let message = error.to_string();
+pub type Result<T> = std::result::Result<T, Error>;
 
-    Self::RequestError {
-      status_code,
-      url,
-      message,
-      source: error,
-    }
-  }
-}
-
-impl From<SkinRendererError> for napi::Error {
-  fn from(value: SkinRendererError) -> Self {
-    napi::Error::new(
+#[cfg(not(target_arch = "wasm32"))]
+impl From<Error> for napi::Error {
+  fn from(value: Error) -> Self {
+    Self::new(
       napi::Status::GenericFailure,
-      format!("SkinRendererError: {}", value),
+      format!("SkinRendererError: {value}"),
     )
   }
 }
-
-pub type SkinRendererResult<T> = std::result::Result<T, SkinRendererError>;
