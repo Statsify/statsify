@@ -161,9 +161,12 @@ export class HistoricalBase {
 
   @SubCommand({ description: (t) => t("commands.historical-megawalls"), args })
   public megawalls(context: CommandContext) {
-    return this.run(context, MEGAWALLS_MODES, (base, mode) => (
-      <MegaWallsProfile {...base} mode={mode} />
-    ),filterMegaWallsKits);
+    return this.run(
+      context, 
+      MEGAWALLS_MODES, 
+      (base, mode) => <MegaWallsProfile {...base} mode={mode} />,
+      filterMegaWallsKits
+    );
   }
 
   @SubCommand({ description: (t) => t("commands.historical-murdermystery"), args })
