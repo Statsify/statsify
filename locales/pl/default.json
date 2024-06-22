@@ -309,8 +309,8 @@
         "title": "Gry"
       },
       "session": {
-        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
-        "title": "Sessions"
+        "description": "Statsify pozwala ci sprawdzać jak twoje statystyki wyglądałyby, gdybyś zaczął grać dzisiaj używając `/session`. Używając `/reset session` możesz zresetować swoje statystyki sesji i rozpocząć nową sesję.",
+        "title": "Sesje"
       },
       "leaderboards": {
         "description": "Statsify oferuje tysiące tablic wyników za pomocą komendy `/leaderboard`. Wpisz `/leaderboard`, a następnie wybierz tryb gry oraz wybierz tablicę wyników, aby ją wyświetlić. Możesz nacisnąć przycisk wyszukiwania, aby wyszukać określonego gracza lub pozycji. Możesz również wcisnąć przyciski w górę i w dół, aby wyświetlić więcej stron.",
@@ -389,8 +389,8 @@
       "title": "Niepoprawny gracz"
     },
     "invalidSession": {
-      "title": "Invalid Session",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+      "title": "Nieprawidłowa sesja",
+      "description": "**{{displayName}}** nie ma aktywnych sesji. Może on stworzyć nową sesję używając komendy `/session` po zweryfikowaniu konta."
     },
     "invalidResetTime": {
       "description": "`{{time}}` nie pasuje do formatu `h:mm a`. Wprowadź czas w formacie podobnym do `12:00 PM` lub `1:00 AM`.",
@@ -438,7 +438,7 @@
       "title": "Brak weryfikacji"
     },
     "missingPlayerVerification": {
-      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** nie jest **zweryfikowany**. Musi on(a) dokonać weryfikacji używając `/verify`.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -520,8 +520,8 @@
     "newSession": "Statystyki sesji **{{displayName}}** po raz pierwszy zostały sprawdzone w Statsify.",
     "setSessionReset": "Pomyślnie zresetowano twoje statystyki sesji.",
     "disabledWarning": {
-      "title": "Historical Commands are no Longer Available",
-      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+      "title": "Komendy historyczne nie są już dostępne",
+      "description": "Nowe [zasady API](https://developer.hypixel.net/policies/) Hypixela nie zezwalają już na \"ciągłe zbieranie danych graczy\", co uniemożliwia Statsify śledzenie dziennych statystyk graczy.\n\nZamiast tego możesz stworzyć nową sesję używając `/session`. Kiedy stworzysz sesję, bot zacznie śledzić twoje statystyki od momentu uruchomienia komendy aż do momentu jej ponownego uruchomienia. Możesz zresetować swoją sesję używając `/reset session`."
     }
   },
   "leaderboard": {
@@ -602,7 +602,7 @@
     "fastestDetectiveWin": "Najszybsza wygrana jako Detektyw",
     "fastestMurdererWin": "Najszybsza wygrana jako Morderca",
     "fastestWin": "Najszybsza wygrana",
-    "fastestWoolCapture": "Fastest Wool Capture",
+    "fastestWoolCapture": "Najszybsze zdobycie wełny",
     "finalAssists": "Finalne Asysty",
     "finalDeaths": "Finalne Śmierci",
     "finalKills": "Finalne Zabójstwa",
@@ -619,10 +619,10 @@
     "godfather": "Bóg Ojciec",
     "godlikes": "Godlikes",
     "gold": "Złoto",
-    "goldEarned": "Gold Earned",
+    "goldEarned": "Zdobyte złoto",
     "goldPickedUp": "Podniesione Złoto",
     "goldRate": "Stawka złota",
-    "goldSpent": "Gold Spent",
+    "goldSpent": "Wydane złoto",
     "goldTrophies": "Złote trofea",
     "grandPrixTokens": "Tokeny GP",
     "guild": {
@@ -684,7 +684,7 @@
     "levelsGained": "Zdobyte poziomy",
     "loginTime": "Czas logowania",
     "logoutTime": "Czas wylogowania",
-    "longestGame": "Longest Game",
+    "longestGame": "Najdłuższa gra",
     "lootChests": "Loot Chesty",
     "losses": "Przegrane",
     "magicalChests": "Magiczne Skrzynie",
@@ -736,7 +736,7 @@
     "shotsFired": "Wystrzelone strzały",
     "silver": "Srebro",
     "silverTrophies": "Srebrne trofea",
-    "slumberTickets": "Slumber Tickets",
+    "slumberTickets": "Senne bilety",
     "soloWins": "Wygrane Solo",
     "souls": "Dusze",
     "stampLevel": "Konwersje monet",
@@ -754,7 +754,7 @@
     "title": "Tytuł",
     "tokens": "Tokeny",
     "total": "Łącznie",
-    "totalSlumberTickets": "Total Slumber Tickets",
+    "totalSlumberTickets": "Wszystkie Senne bilety",
     "totalTrophies": "Wszystkie Trofea",
     "trail": "Ślad",
     "transfusion": "Transfuzja",
@@ -775,8 +775,8 @@
     "witherKills": "Zabójstwa Withera",
     "wlr": "WLR",
     "wool": "Wełna",
-    "woolCaptured": "Wool Captured",
-    "woolPickedUp": "Wool Picked Up",
+    "woolCaptured": "Zdobyta wełna",
+    "woolPickedUp": "Podniesiona wełna",
     "woolPlaced": "Wełna postawiona",
     "zombieKills": "Zabójstwa Zombie",
     "potionsBrewed": "Mikstury wytworzone",
@@ -784,12 +784,12 @@
     "powerupsCollected": "Zebrane ulepszenia",
     "roundsCompleted": "Ukończone rundy",
     "totalExp": "Razem punktów doświadczenia",
-    "gamesFinished": "Games Finished",
-    "flawlessGames": "Flawless Games",
-    "fails": "Fails",
-    "mapsCompleted": "Maps Completed",
-    "arcadeWins": "Arcade Wins",
-    "draws": "Draws"
+    "gamesFinished": "Zakończone gry",
+    "flawlessGames": "Bezbłędne gry",
+    "fails": "Porażki",
+    "mapsCompleted": "Ukończone mapy",
+    "arcadeWins": "Wygrane w Arcade",
+    "draws": "Remisy"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Dołącz do naszego **$t(socials.discord)** i otrzymaj **20% mniej czasu odnowienia** $t(emojis:heart)",
@@ -797,8 +797,8 @@
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** oferuje dodatkowe funkcje, takie jak spersonalizowane odznaki profilowe. Znajdź pełną listę korzyści **[tutaj](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Zobacz swoje pozycje w rankingach z **[Statsify Premium](<https://statsify.net/premium>)** używając `/rankings`",
     "verify": "$t(emojis:check) Wpisz `/verify` aby wpisywać komendy bez wprowadzania nazwy użytkownika oraz otrzymuj **10% mniej czasu odnowienia**",
-    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
-    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
+    "resetSession": "$t(emojis:reset) Możesz **zresetować** swoje statystyki sesji używając `/reset session`.",
+    "sessions": "$t(emojis:reset) Śledź zmiany w swoich statystykach używając sesji i `/session`."
   },
   "unknown": "Nieznane",
   "verification": {
@@ -808,21 +808,21 @@
     },
     "invalidCode": {
       "title": "Nieprawidłowy kod weryfikacyjny",
-      "description": "Check your verification code or try again by following these steps: ",
-      "button": "Watch Tutorial"
+      "description": "Sprawdź swój kod weryfikacyjny lub spróbuj ponownie wykonując następujące kroki: ",
+      "button": "Oglądnij poradnik"
     },
     "instructions": {
-      "title": "Link your Minecraft Account to Statsify",
+      "title": "Połącz swoje konto Minecraft ze Statsify",
       "steps": {
-        "one": "Open **Minecraft** and go to the server list",
-        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
-        "three": "Head back to **Discord** and click the button below, then type in your code"
+        "one": "Otwórz **Minecraft** i przejdź do listy serwerów",
+        "two": "Połącz się z **`verify.statsify.net`** i skopiuj wyświetlany kod",
+        "three": "Wróć do **Discorda** i kliknij przycisk poniżej, a następnie wpisz swój kod"
       },
       "modal": {
-        "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "title": "Wprowadź swój kod weryfikacyjny",
+        "input": "Kod weryfikacyjny"
       },
-      "button": "Enter Verification Code"
+      "button": "Wprowadź kod weryfikacyjny"
     },
     "notVerified": {
       "description": "Musisz być zweryfikowany, zanim będziesz w stanie cofnąć weryfikacje!",
