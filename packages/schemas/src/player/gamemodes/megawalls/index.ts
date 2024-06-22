@@ -9,17 +9,18 @@
 import { Field } from "#metadata";
 import { GameModes, type IGameModes } from "#game";
 import { MegaWallsKit, MegaWallsOverall } from "./kit.js";
-import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export const MEGAWALLS_MODES = new GameModes([
   { api: "overall" },
+  { api: "angel" },
   { api: "arcanist" },
   { api: "assassin" },
   { api: "automaton" },
   { api: "blaze" },
   { api: "cow" },
   { api: "creeper" },
+  { api: "dragon" },
   { api: "dreadlord" },
   { api: "enderman" },
   { api: "golem" },
@@ -32,6 +33,7 @@ export const MEGAWALLS_MODES = new GameModes([
   { api: "renegade" },
   { api: "shaman" },
   { api: "shark" },
+  { api: "sheep" },
   { api: "skeleton" },
   { api: "snowman" },
   { api: "spider" },
@@ -56,6 +58,9 @@ export class MegaWalls {
   public overall: MegaWallsOverall;
 
   @Field({ store: { required: false } })
+  public angel: MegaWallsKit;
+
+  @Field({ store: { required: false } })
   public arcanist: MegaWallsKit;
 
   @Field({ store: { required: false } })
@@ -72,6 +77,9 @@ export class MegaWalls {
 
   @Field({ store: { required: false } })
   public creeper: MegaWallsKit;
+
+  @Field({ store: { required: false } })
+  public dragon: MegaWallsKit;
 
   @Field({ store: { required: false } })
   public dreadlord: MegaWallsKit;
@@ -110,6 +118,9 @@ export class MegaWalls {
   public shark: MegaWallsKit;
 
   @Field({ store: { required: false } })
+  public sheep: MegaWallsKit;
+
+  @Field({ store: { required: false } })
   public skeleton: MegaWallsKit;
 
   @Field({ store: { required: false } })
@@ -132,12 +143,14 @@ export class MegaWalls {
     this.mythicFavor = data.mythic_favor;
     this.class = data.chosen_class ?? "none";
 
+    this.angel = new MegaWallsKit(data, "angel");
     this.arcanist = new MegaWallsKit(data, "arcanist");
     this.assassin = new MegaWallsKit(data, "assassin");
     this.automaton = new MegaWallsKit(data, "automaton");
     this.blaze = new MegaWallsKit(data, "blaze");
     this.cow = new MegaWallsKit(data, "cow");
     this.creeper = new MegaWallsKit(data, "creeper");
+    this.dragon = new MegaWallsKit(data, "dragon");
     this.dreadlord = new MegaWallsKit(data, "dreadlord");
     this.enderman = new MegaWallsKit(data, "enderman");
     this.golem = new MegaWallsKit(data, "golem");
@@ -150,41 +163,14 @@ export class MegaWalls {
     this.renegade = new MegaWallsKit(data, "renegade");
     this.shaman = new MegaWallsKit(data, "shaman");
     this.shark = new MegaWallsKit(data, "shark");
+    this.sheep = new MegaWallsKit(data, "sheep");
     this.skeleton = new MegaWallsKit(data, "skeleton");
     this.snowman = new MegaWallsKit(data, "snowman");
     this.spider = new MegaWallsKit(data, "spider");
     this.squid = new MegaWallsKit(data, "squid");
     this.werewolf = new MegaWallsKit(data, "werewolf");
     this.zombie = new MegaWallsKit(data, "zombie");
-
     this.overall = new MegaWallsOverall(data);
-
-    this.overall.points = add(
-      this.arcanist.points,
-      this.assassin.points,
-      this.automaton.points,
-      this.blaze.points,
-      this.cow.points,
-      this.creeper.points,
-      this.dreadlord.points,
-      this.enderman.points,
-      this.golem.points,
-      this.herobrine.points,
-      this.hunter.points,
-      this.moleman.points,
-      this.phoenix.points,
-      this.pigman.points,
-      this.pirate.points,
-      this.renegade.points,
-      this.shaman.points,
-      this.shark.points,
-      this.skeleton.points,
-      this.snowman.points,
-      this.spider.points,
-      this.squid.points,
-      this.werewolf.points,
-      this.zombie.points
-    );
   }
 }
 

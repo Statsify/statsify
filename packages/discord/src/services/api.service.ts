@@ -251,7 +251,7 @@ export class ApiService extends StatsifyApiService {
   }
 
   public emojiDisplayName(t: LocalizeFunction, displayName: string, space = true) {
-    displayName = displayName.replaceAll("_", "\\_");
+    displayName = displayName.replaceAll("_", String.raw`\_`);
 
     const [rank, name] = displayName.replace(/\[|\]/g, "").split(" ");
 

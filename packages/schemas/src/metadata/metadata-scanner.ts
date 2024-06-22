@@ -124,9 +124,8 @@ if (import.meta.vitest) {
   const { prettify } = await import("@statsify/util");
 
   const stringMetadata = (name: string): FieldMetadata => {
-    const fieldName = prettify(
-      name.slice(Math.max(0, name.lastIndexOf(".") > -1 ? name.lastIndexOf(".") + 1 : 0))
-    );
+    const lastIndexOfDot = name.lastIndexOf(".");
+    const fieldName = prettify(name.slice(Math.max(0, lastIndexOfDot > -1 ? lastIndexOfDot + 1 : 0)));
 
     return {
       leaderboard: {

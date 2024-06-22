@@ -12,13 +12,20 @@ import {
   ProfileData,
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
-import { MEGAWALLS_MODES, MegaWallsModes } from "@statsify/schemas";
-import { MegaWallsProfile } from "./megawalls.profile.js";
+import { GameMode, MEGAWALLS_MODES, MegaWallsModes, Player } from "@statsify/schemas";
+import { MegaWallsProfile, filterMegaWallsKits } from "./megawalls.profile.js";
 
 @Command({ description: (t) => t("commands.megawalls") })
 export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
   public constructor() {
     super(MEGAWALLS_MODES);
+  }
+
+  public filterModes(
+    player: Player,
+    modes: GameMode<MegaWallsModes>[]
+  ): GameMode<MegaWallsModes>[] {
+    return filterMegaWallsKits(player, modes);
   }
 
   public getProfile(

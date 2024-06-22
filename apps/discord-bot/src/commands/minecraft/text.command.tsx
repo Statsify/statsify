@@ -39,7 +39,7 @@ export class TextCommand {
     const size = Math.min(context.option<number>("size", 2), 9);
     const alignment = context.option<StyleLocation>("alignment", "left");
 
-    const text = convertColorCodes(content).replaceAll("\\n", "\n");
+    const text = convertColorCodes(content).replaceAll(String.raw`\n`, "\n");
 
     const canvas = render(
       <div direction="column">
