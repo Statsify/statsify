@@ -7,7 +7,7 @@
  */
 
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
-import { FormattedGame, GameMode, MegaWallsModes } from "@statsify/schemas";
+import { FormattedGame, GameMode, MegaWallsModes, Player } from "@statsify/schemas";
 import { formatTime, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
@@ -98,3 +98,17 @@ export const MegaWallsProfile = ({
     </Container>
   );
 };
+
+export function filterMegaWallsKits(
+  player: Player,
+  modes: GameMode<MegaWallsModes>[]
+): GameMode<MegaWallsModes>[] {
+  const { megawalls } = player.stats;
+  const [overall, ...kits] = modes;
+
+  const filteredKits = [...kits]
+    .sort((a, b) => megawalls[b.api].points - megawalls[a.api].points)
+    .slice(0, 24);
+    
+  return [overall, ...filteredKits];
+}

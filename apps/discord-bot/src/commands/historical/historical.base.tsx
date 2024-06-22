@@ -56,7 +56,7 @@ import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
 import { DuelsProfile } from "../duels/duels.profile.js";
 import { GamesWithBackgrounds } from "#constants";
 import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
-import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
+import { MegaWallsProfile, filterMegaWallsKits } from "../megawalls/megawalls.profile.js";
 import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile.js";
 import { PaintballProfile } from "../paintball/paintball.profile.js";
 import { PitProfile } from "../pit/pit.profile.js";
@@ -163,7 +163,7 @@ export class HistoricalBase {
   public megawalls(context: CommandContext) {
     return this.run(context, MEGAWALLS_MODES, (base, mode) => (
       <MegaWallsProfile {...base} mode={mode} />
-    ));
+    ),filterMegaWallsKits);
   }
 
   @SubCommand({ description: (t) => t("commands.historical-murdermystery"), args })
