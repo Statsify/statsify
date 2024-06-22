@@ -1067,10 +1067,14 @@ export class Zombies {
   @Field()
   public alienArcadium: ZombiesMap;
 
+  @Field()
+  public prison: ZombiesMap;
+
   public constructor(data: APIData) {
     this.overall = new ZombiesMap(data);
     this.deadEnd = new ZombiesMap(data, "deadend");
     this.badBlood = new ZombiesMap(data, "badblood");
     this.alienArcadium = new ZombiesMap(data, "alienarcadium");
+    this.prison = new ZombiesMap(data, "prison");
   }
 }

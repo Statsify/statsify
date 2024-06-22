@@ -125,7 +125,7 @@ if (import.meta.vitest) {
 
   const stringMetadata = (name: string): FieldMetadata => {
     const fieldName = prettify(
-      name.slice(Math.max(0, name.lastIndexOf(".") > -1 ? name.lastIndexOf(".") + 1 : 0))
+      name.slice(Math.max(0, name.includes(".") ? name.lastIndexOf(".") + 1 : 0))
     );
 
     return {
