@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type Circular, flatten } from "@statsify/util";
-import { DateTime } from "luxon";
 import {
-  HypixelCache,
+  CacheLevel,
   PlayerNotFoundException,
   SessionNotFoundException,
 } from "@statsify/api-client";
+import { type Circular, flatten } from "@statsify/util";
+import { DateTime } from "luxon";
 import {
   Inject,
   Injectable,
@@ -41,7 +41,7 @@ export class SessionService {
   ) {}
 
   public async getAndReset(tag: string) {
-    const player = await this.playerService.get(tag, HypixelCache.LIVE);
+    const player = await this.playerService.get(tag, CacheLevel.LIVE);
     if (!player) throw new PlayerNotFoundException();
     return this.resetPlayer(player);
   }
@@ -66,7 +66,7 @@ export class SessionService {
     tag: string,
     userUuid?: string
   ): Promise<Player | null> {
-    const player = await this.playerService.get(tag, HypixelCache.CACHE_ONLY, {
+    const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, {
       uuid: true,
       displayName: true,
     });
@@ -82,7 +82,7 @@ export class SessionService {
 
     if (!oldPlayer && userUuid !== player.uuid) throw new SessionNotFoundException(player.uuid, player.displayName);
 
-    const newPlayer = await this.playerService.get(player.uuid, HypixelCache.LIVE);
+    const newPlayer = await this.playerService.get(player.uuid, CacheLevel.LIVE);
 
     if (!newPlayer) throw new PlayerNotFoundException();
 

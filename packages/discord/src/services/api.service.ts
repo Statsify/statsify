@@ -9,13 +9,11 @@
 import { AxiosError } from "axios";
 import { ButtonBuilder, LocalizeFunction } from "#messages";
 import { ButtonStyle } from "discord-api-types/v10";
-import { Color, User } from "@statsify/schemas";
-import { ErrorMessage } from "#util/error.message";
 import {
+  CacheLevel,
   GUILD_ID_REGEX,
   GuildNotFoundException,
   GuildQuery,
-  HypixelCache,
   LeaderboardQuery,
   PlayerNotFoundException,
   RecentGamesNotFoundException,
@@ -23,6 +21,8 @@ import {
   ApiService as StatsifyApiService,
   StatusNotFoundException,
 } from "@statsify/api-client";
+import { Color, User } from "@statsify/schemas";
+import { ErrorMessage } from "#util/error.message";
 import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
 
@@ -45,7 +45,7 @@ export class ApiService extends StatsifyApiService {
     const input = await this.resolveTag(formattedTag, type, user);
 
     return super
-      .getCachedPlayer(input, User.isGold(user) ? HypixelCache.LIVE : HypixelCache.CACHE)
+      .getCachedPlayer(input, User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE)
       .catch((err) => {
         if (!err.response || !err.response.data) throw this.unknownError();
         const error = err.response.data as PlayerNotFoundException;
@@ -227,6 +227,26 @@ export class ApiService extends StatsifyApiService {
     return super.getGuildLeaderboard(field, input, type).catch((err: AxiosError) => {
       if ((err.response?.data as GuildNotFoundException).statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
+    });
+  }
+
+  /**
+   *
+   * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
+   * @param user User to use if no tag is provided.
+   * @returns a Skin
+  */
+  public override async getPlayerSkinTextures(tag: string, user: User | null = null) {
+    const [formattedTag, type] = this.parseTag(tag);
+    const input = await this.resolveTag(formattedTag, type, user);
+
+    return super.getPlayerSkinTextures(input).catch((err) => {
+      if (!err.response || !err.response.data) throw this.unknownError();
+
+      const error = err.response.data as PlayerNotFoundException;
+      if (error.message === "player") throw this.missingPlayer(type, tag);
+
+      throw this.unknownError();
     });
   }
 

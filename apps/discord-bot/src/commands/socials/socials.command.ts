@@ -14,15 +14,12 @@ import {
   IMessage,
   PlayerArgument,
 } from "@statsify/discord";
-import { MojangApiService } from "#services";
 import { STATUS_COLORS } from "@statsify/logger";
+import { minecraftHeadUrl } from "#lib/minecraft-head";
 
 @Command({ description: (t) => t("commands.socials"), args: [PlayerArgument] })
 export class SocialsCommand {
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly mojangApiService: MojangApiService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
@@ -35,7 +32,7 @@ export class SocialsCommand {
     const embed = new EmbedBuilder()
       .title((t) => this.apiService.emojiDisplayName(t, displayName))
       .author("Player Socials")
-      .thumbnail(this.mojangApiService.faceIconUrl(uuid))
+      .thumbnail(minecraftHeadUrl(uuid))
       .color(STATUS_COLORS.info)
       .field(
         (t) => `${t("emojis:socials.embed.discord")} Discord`,

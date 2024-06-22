@@ -9,6 +9,11 @@
 import * as Sentry from "@sentry/node";
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
 import {
+  CacheLevel,
+  GuildQuery,
+  LeaderboardQuery,
+} from "./constants.js";
+import {
   DeletePlayerResponse,
   GetCommandUsageResponse,
   GetGamecountsResponse,
@@ -18,6 +23,7 @@ import {
   GetPlayerSearchResponse,
   GetRecentGamesResponse,
   GetSessionResponse,
+  GetSkinTexturesResponse,
   GetStatusResponse,
   GetUserResponse,
   GetWatchdogResponse,
@@ -25,11 +31,6 @@ import {
   PostLeaderboardResponse,
   PutUserBadgeResponse,
 } from "#responses";
-import {
-  GuildQuery,
-  HypixelCache,
-  LeaderboardQuery,
-} from "./constants.js";
 import { UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { loadImage } from "@statsify/rendering";
@@ -63,7 +64,7 @@ export class ApiService {
     });
   }
 
-  public getCachedPlayer(tag: string, cache: HypixelCache) {
+  public getCachedPlayer(tag: string, cache: CacheLevel) {
     return this.requestKey<GetPlayerResponse, "player">("/player", "player", {
       player: tag,
       cache,
@@ -180,6 +181,12 @@ export class ApiService {
   public getPlayerSkin(uuid: string) {
     return this.requestImage(isProduction ? "https://api.statsify.net/skin" : "/skin", {
       uuid,
+    });
+  }
+
+  public getPlayerSkinTextures(tag: string) {
+    return this.requestKey<GetSkinTexturesResponse, "skin">("/skin/textures", "skin", {
+      player: tag,
     });
   }
 

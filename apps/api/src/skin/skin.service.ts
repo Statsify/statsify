@@ -9,9 +9,10 @@
 import { Canvas, type Image } from "skia-canvas";
 import { HttpService } from "@nestjs/axios";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Injectable } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { PlayerNotFoundException } from "@statsify/api-client";
 import { Skin } from "@statsify/schemas";
-import { catchError, lastValueFrom, map, of } from "rxjs";
+import { catchError, lastValueFrom, map } from "rxjs";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { loadImage } from "@statsify/rendering";
 import { renderSkin } from "@statsify/skin-renderer";
@@ -45,26 +46,30 @@ export class SkinService {
     return renderSkin(skin?.skinUrl, skin?.slim ?? false);
   }
 
-  public async getSkin(uuid: string): Promise<Skin | undefined> {
-    uuid = uuid.replaceAll("-", "");
+  public async getSkin(tag: string): Promise<Skin> {
+    tag = tag.replaceAll("-", "").toLowerCase();
+    const isUsername = tag.length <= 16;
 
-    const skin = await this.skinModel.findOne().where("uuid").equals(uuid).lean().exec();
+    const cachedSkin = await this.skinModel
+      .findOne()
+      .where(isUsername ? "usernameToLower" : "uuid")
+      .equals(tag)
+      .lean()
+      .exec();
 
-    if (skin && Date.now() < skin.expiresAt) {
-      return skin;
+    if (cachedSkin && Date.now() < cachedSkin.expiresAt) {
+      return cachedSkin;
     }
 
-    const skinData = await this.requestSkin(uuid);
+    const uuid = isUsername ? await this.getUuid(tag) : tag;
+    const skin = await this.requestSkin(uuid);
 
-    //Possibly the service is down or we are ratelimited
-    if (!skinData) return undefined;
+    // Cache for 3 hours
+    skin.expiresAt = Date.now() + (1000 * 60 * 60 * 3);
 
-    //Cache for  6 hours
-    skinData.expiresAt = Date.now() + 2.16e7;
+    await this.skinModel.replaceOne({ uuid }, skin, { upsert: true }).lean().exec();
 
-    await this.skinModel.replaceOne({ uuid }, skinData, { upsert: true }).lean().exec();
-
-    return skinData;
+    return skin;
   }
 
   private async resolveSkin(
@@ -86,13 +91,44 @@ export class SkinService {
     };
   }
 
-  private async requestSkin(uuid: string) {
+  private getUuid(username: string): Promise<string> {
     return lastValueFrom(
-      this.httpService.get(`/session/minecraft/profile/${uuid}`).pipe(
-        map((data) => data.data),
-        map((data) => new Skin(data)),
-        catchError(() => of(null))
+      this.httpService.get(`https://api.mojang.com/users/profiles/minecraft/${username}`).pipe(
+        map((response) => response.data as MojangProfile),
+        map((data) => data.id),
+        catchError((error) => {
+          if (error.response.status === 404) throw new PlayerNotFoundException();
+          // Ratelimited
+          if (error.response.status === 429) throw new InternalServerErrorException();
+
+          // Unknown
+          throw new InternalServerErrorException();
+        })
       )
     );
   }
+
+  private requestSkin(uuid: string) {
+    return lastValueFrom(
+      this.httpService.get(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`).pipe(
+        map((response) => {
+          if (response.status !== 200) throw response;
+          return response.data;
+        }),
+        map((data) => new Skin(data)),
+        catchError((error) => {
+          // Player not found
+          if (error.status === 204) throw new PlayerNotFoundException();
+          throw new InternalServerErrorException();
+        })
+      )
+    );
+  }
+}
+
+interface MojangProfile {
+  id: string;
+  name: string;
+  legacy?: true;
+  demo?: true;
 }

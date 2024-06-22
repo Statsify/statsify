@@ -7,6 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
+import { CacheLevel } from "@statsify/api-client";
 import {
   GameCounts,
   Guild,
@@ -16,7 +17,6 @@ import {
   Watchdog,
 } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
-import { HypixelCache } from "@statsify/api-client";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
@@ -29,10 +29,10 @@ export class HypixelService {
 
   public constructor(private readonly httpService: HttpService) {}
 
-  public shouldCache(expirey: number, cache: HypixelCache): boolean {
+  public shouldCache(expirey: number, cache: CacheLevel): boolean {
     return (
-      cache !== HypixelCache.LIVE &&
-      (cache == HypixelCache.CACHE_ONLY || Date.now() < expirey)
+      cache !== CacheLevel.LIVE &&
+      (cache == CacheLevel.CACHE_ONLY || Date.now() < expirey)
     );
   }
 

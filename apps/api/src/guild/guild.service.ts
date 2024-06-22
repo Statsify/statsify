@@ -7,14 +7,14 @@
  */
 
 /* eslint-disable require-atomic-updates */
-import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
-import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
 import {
+  CacheLevel,
   GuildNotFoundException,
   GuildQuery,
-  HypixelCache,
   PlayerNotFoundException,
 } from "@statsify/api-client";
+import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
+import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
 import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";
@@ -38,7 +38,7 @@ export class GuildService {
   public async get(
     inputtedTag: string,
     type: GuildQuery,
-    cache: HypixelCache
+    cache: CacheLevel
   ): Promise<Guild | null> {
     // eslint-disable-next-line prefer-const
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
@@ -169,7 +169,7 @@ export class GuildService {
     tag = tag.toLowerCase();
 
     if (type === GuildQuery.PLAYER) {
-      const player = await this.playerService.get(tag, HypixelCache.CACHE_ONLY, {
+      const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, {
         uuid: true,
         displayName: true,
         guildId: true,
@@ -230,7 +230,7 @@ export class GuildService {
     }
 
     const player = await this.playerService
-      .get(member.uuid, HypixelCache.CACHE_ONLY, {
+      .get(member.uuid, CacheLevel.CACHE_ONLY, {
         username: true,
         displayName: true,
         guildId: true,

@@ -7,4 +7,3 @@
  */
 
 export * from "./font-loader.service.js";
-export * from "./mojang-api.service.js";

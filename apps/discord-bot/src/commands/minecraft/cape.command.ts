@@ -6,27 +6,28 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AshconResponse, MojangApiService } from "#services";
-import { Canvas, Image, loadImage } from "skia-canvas";
 import {
+  ApiService,
   Command,
   CommandContext,
   ErrorMessage,
   MojangPlayerArgument,
   PaginateService,
 } from "@statsify/discord";
+import { Canvas, Image, loadImage } from "skia-canvas";
+import type { Skin } from "@statsify/schemas";
 
 @Command({ description: (t) => t("commands.cape"), args: [MojangPlayerArgument] })
 export class CapeCommand {
   public constructor(
-    private readonly mojangApiService: MojangApiService,
+    private readonly apiService: ApiService,
     private readonly paginateService: PaginateService
   ) {}
 
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    const player = await this.mojangApiService.getPlayer(
+    const player = await this.apiService.getPlayerSkinTextures(
       context.option<string>("player"),
       user
     );
@@ -61,9 +62,9 @@ export class CapeCommand {
     };
   }
 
-  private async getMojangCape(player: AshconResponse) {
-    const image = player.textures.cape?.url
-      ? await loadImage(player.textures.cape.url).catch(() => null)
+  private async getMojangCape(player: Skin) {
+    const image = player.capeUrl
+      ? await loadImage(player.capeUrl).catch(() => null)
       : null;
 
     return { label: "Mojang", image };

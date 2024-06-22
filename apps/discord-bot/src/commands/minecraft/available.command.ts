@@ -7,19 +7,20 @@
  */
 
 import {
+  ApiService,
   Command,
   CommandContext,
   EmbedBuilder,
   MojangPlayerArgument,
 } from "@statsify/discord";
-import { MojangApiService } from "#services";
+import { minecraftHeadUrl } from "#lib/minecraft-head";
 
 @Command({
   description: (t) => t("commands.available"),
   args: [new MojangPlayerArgument(true)],
 })
 export class AvailableCommand {
-  public constructor(private readonly mojangApiService: MojangApiService) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   public async run(context: CommandContext) {
     const name = context.option<string>("player");
@@ -44,21 +45,23 @@ export class AvailableCommand {
       return { embeds: [base] };
     }
 
-    const nameInfo = await this.mojangApiService.checkName(name.trim());
+    const uuid = await this.apiService.getPlayerSkinTextures(name.trim())
+      .then(player => player.uuid.replaceAll("-", ""))
+      .catch(() => undefined);
 
-    if (nameInfo) {
+    if (uuid) {
       base
-        .field((t) => t("minecraft.uuid"), `\`${nameInfo.uuid.replaceAll("-", "")}\``)
+        .field((t) => t("minecraft.uuid"), `\`${uuid}\``)
         .field(
           "NameMC",
-          `[\`Here\`](https://namemc.com/profile/${nameInfo.uuid.replaceAll("-", "")})`
+          `[\`Here\`](https://namemc.com/profile/${uuid})`
         )
         .field(
           (t) => t("stats.status"),
           (t) => `\`${t("minecraft.unavailable")}\``
         )
         .color(0xf7_c4_6c)
-        .thumbnail(this.mojangApiService.faceIconUrl(nameInfo.uuid));
+        .thumbnail(minecraftHeadUrl(uuid));
     } else {
       base
         .field("NameMC", `[\`Here\`](https://namemc.com/profile/${name})`)
