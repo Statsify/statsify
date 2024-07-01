@@ -13,8 +13,8 @@
     "@statsify/logger": "*",
     "@statsify/rendering": "*",
     "@statsify/schemas": "*",
-    "@swc/helpers": "^0.5.1",
-    "axios": "1.4.0",
+    "@swc/helpers": "^0.5.11",
+    "axios": "1.7.2",
     "skia-canvas": "^0.9.30"
   }
 }
