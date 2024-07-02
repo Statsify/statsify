@@ -204,7 +204,7 @@
     "server": "Vezi starea serverului de Minecraft",
     "skin": "Vezi skin-ul unei persoane pe Minecraft",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
-    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"SkyWars Challenges\" })",
+    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"Provocări SkyWars\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
     "socials": "Vezi socialele conectate pe Hypixel ale unei persoane",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
@@ -309,7 +309,7 @@
         "title": "Jocuri"
       },
       "session": {
-        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
+        "description": "Statsify vă permite să verificați statisticile ca și cum ați începe să redați astăzi prin `/session`. Cu `/reset session` poți reseta statisticile sesiunii și începe o nouă sesiune.",
         "title": "Sessions"
       },
       "leaderboards": {
@@ -390,7 +390,7 @@
     },
     "invalidSession": {
       "title": "Invalid Session",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+      "description": "**{{displayName}}** nu are nicio sesiune activă. Ei pot face o sesiune rulând `/session` în timp ce sunt verificați."
     },
     "invalidResetTime": {
       "description": "`{{time}}` nu se potrivește cu formatul `h:mm a`. Introdu un timp în format similar cu `12:00 PM` sau `1:00 AM`.",
@@ -438,7 +438,7 @@
       "title": "Lipsește Verificarea"
     },
     "missingPlayerVerification": {
-      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}> nu este **verificat**. Trebuie să execute `/verify` pentru a-și verifica contul.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -520,8 +520,8 @@
     "newSession": "Statisticile sesiunii pentru **{{displayName}}** au fost verificate pentru prima dată pe Statsify.",
     "setSessionReset": "Statisticile sesiunii tale au fost resetate cu succes.",
     "disabledWarning": {
-      "title": "Historical Commands are no Longer Available",
-      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+      "title": "Comenzile istorice nu mai sunt disponibile",
+      "description": "Noul [Termeni API](https://developer.hypixel.net/policies/) al Hypixel nu mai permite \"urmărirea statisticilelor a jucătorilor\", ceea ce înseamnă că Statsify nu mai poate urmări statisticile jucătorului zilnic.\n\nÎn schimb poți încerca să începi o sesiune cu `/session`. Când începeți o sesiune, bot-ul va ține evidența statisticilor dvs. din momentul în care ați rulat inițial comanda până la următoarea dată când o veți executa. Pentru a reseta statisticile sesiunii puteți rula `/reset session`."
     }
   },
   "leaderboard": {
@@ -602,7 +602,7 @@
     "fastestDetectiveWin": "Câștig cel mai rapid ca Detectiv",
     "fastestMurdererWin": "Cel mai rapid win ca Murderer",
     "fastestWin": "Cel mai rapid câștig",
-    "fastestWoolCapture": "Fastest Wool Capture",
+    "fastestWoolCapture": "Cea mai rapidă capturare al lânei",
     "finalAssists": "Ucideri Finale Asistate",
     "finalDeaths": "Decese Finale",
     "finalKills": "Ucideri Finale",
@@ -619,10 +619,10 @@
     "godfather": "Godfather",
     "godlikes": "Godlike-uri",
     "gold": "Aur",
-    "goldEarned": "Gold Earned",
+    "goldEarned": "Aur câștigat",
     "goldPickedUp": "Aur cules",
     "goldRate": "Rata de aur",
-    "goldSpent": "Gold Spent",
+    "goldSpent": "Aur cheltuit",
     "goldTrophies": "Trofeuri de aur",
     "grandPrixTokens": "Tokene GP",
     "guild": {
@@ -684,7 +684,7 @@
     "levelsGained": "Nivele Obținute",
     "loginTime": "Timp conectat",
     "logoutTime": "Timp de deconectare",
-    "longestGame": "Longest Game",
+    "longestGame": "Cel mai lung meci",
     "lootChests": "Loot Cufere",
     "losses": "Pierderi",
     "magicalChests": "Cufere magice",
@@ -736,7 +736,7 @@
     "shotsFired": "Şuturi trase",
     "silver": "Argint",
     "silverTrophies": "Trofeuri de argint",
-    "slumberTickets": "Slumber Tickets",
+    "slumberTickets": "Tichete Slumber",
     "soloWins": "Câştiguri Singur",
     "souls": "Suflete",
     "stampLevel": "Conversii din monede",
