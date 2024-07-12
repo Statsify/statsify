@@ -204,7 +204,7 @@
     "server": "Vezi starea serverului de Minecraft",
     "skin": "Vezi skin-ul unei persoane pe Minecraft",
     "skywars": "$t(commands.hypixel-command, { \"name\": \"SkyWars\" })",
-    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"SkyWars Challenges\" })",
+    "skywars-challenges": "$t(commands.hypixel-command, { \"name\": \"Provocări SkyWars\" })",
     "smashheroes": "$t(commands.hypixel-command, { \"name\": \"Smash Heroes\" })",
     "socials": "Vezi socialele conectate pe Hypixel ale unei persoane",
     "speeduhc": "$t(commands.hypixel-command, { \"name\": \"Speed UHC\" })",
@@ -309,8 +309,8 @@
         "title": "Jocuri"
       },
       "session": {
-        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
-        "title": "Sessions"
+        "description": "Statsify vă permite să verificați statisticile ca și cum ați începe să redați astăzi prin `/session`. Cu `/reset session` poți reseta statisticile sesiunii și începe o nouă sesiune.",
+        "title": "Sesiuni"
       },
       "leaderboards": {
         "description": "Statsify oferă mii de clasamente prin comanda `/leaderboard`. Rulează `/leaderboard`, apoi alege gamemode-ul şi alege un clasament pentru a vedea. Puteți apăsa butonul de căutare pentru a căuta un anumit jucător sau o anumită poziție. Poţi apăsa şi butoanele sus şi jos pentru a vedea mai multe pagini.",
@@ -389,8 +389,8 @@
       "title": "Jucător Invalid"
     },
     "invalidSession": {
-      "title": "Invalid Session",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+      "title": "Sesiune Invalidă",
+      "description": "**{{displayName}}** nu are nicio sesiune activă. Ei pot face o sesiune rulând `/session` în timp ce sunt verificați."
     },
     "invalidResetTime": {
       "description": "`{{time}}` nu se potrivește cu formatul `h:mm a`. Introdu un timp în format similar cu `12:00 PM` sau `1:00 AM`.",
@@ -438,7 +438,7 @@
       "title": "Lipsește Verificarea"
     },
     "missingPlayerVerification": {
-      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}> nu este **verificat**. Trebuie să execute `/verify` pentru a-și verifica contul.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -520,8 +520,8 @@
     "newSession": "Statisticile sesiunii pentru **{{displayName}}** au fost verificate pentru prima dată pe Statsify.",
     "setSessionReset": "Statisticile sesiunii tale au fost resetate cu succes.",
     "disabledWarning": {
-      "title": "Historical Commands are no Longer Available",
-      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+      "title": "Comenzile istorice nu mai sunt disponibile",
+      "description": "Noul [Termeni API](https://developer.hypixel.net/policies/) al Hypixel nu mai permite \"urmărirea statisticilelor a jucătorilor\", ceea ce înseamnă că Statsify nu mai poate urmări statisticile jucătorului zilnic.\n\nÎn schimb poți încerca să începi o sesiune cu `/session`. Când începeți o sesiune, bot-ul va ține evidența statisticilor dvs. din momentul în care ați rulat inițial comanda până la următoarea dată când o veți executa. Pentru a reseta statisticile sesiunii puteți rula `/reset session`."
     }
   },
   "leaderboard": {
@@ -602,7 +602,7 @@
     "fastestDetectiveWin": "Câștig cel mai rapid ca Detectiv",
     "fastestMurdererWin": "Cel mai rapid win ca Murderer",
     "fastestWin": "Cel mai rapid câștig",
-    "fastestWoolCapture": "Fastest Wool Capture",
+    "fastestWoolCapture": "Cea mai rapidă capturare al lânei",
     "finalAssists": "Ucideri Finale Asistate",
     "finalDeaths": "Decese Finale",
     "finalKills": "Ucideri Finale",
@@ -619,10 +619,10 @@
     "godfather": "Godfather",
     "godlikes": "Godlike-uri",
     "gold": "Aur",
-    "goldEarned": "Gold Earned",
+    "goldEarned": "Aur câștigat",
     "goldPickedUp": "Aur cules",
     "goldRate": "Rata de aur",
-    "goldSpent": "Gold Spent",
+    "goldSpent": "Aur cheltuit",
     "goldTrophies": "Trofeuri de aur",
     "grandPrixTokens": "Tokene GP",
     "guild": {
@@ -684,7 +684,7 @@
     "levelsGained": "Nivele Obținute",
     "loginTime": "Timp conectat",
     "logoutTime": "Timp de deconectare",
-    "longestGame": "Longest Game",
+    "longestGame": "Cel mai lung meci",
     "lootChests": "Loot Cufere",
     "losses": "Pierderi",
     "magicalChests": "Cufere magice",
@@ -736,7 +736,7 @@
     "shotsFired": "Şuturi trase",
     "silver": "Argint",
     "silverTrophies": "Trofeuri de argint",
-    "slumberTickets": "Slumber Tickets",
+    "slumberTickets": "Tichete Slumber",
     "soloWins": "Câştiguri Singur",
     "souls": "Suflete",
     "stampLevel": "Conversii din monede",
@@ -754,7 +754,7 @@
     "title": "Titlu",
     "tokens": "Token-uri",
     "total": "Total",
-    "totalSlumberTickets": "Total Slumber Tickets",
+    "totalSlumberTickets": "Totalul de Tichete Slumber",
     "totalTrophies": "Total trofee",
     "trail": "Urme",
     "transfusion": "Transfuzie",
@@ -775,8 +775,8 @@
     "witherKills": "Omorături Wither",
     "wlr": "WLR",
     "wool": "Lână",
-    "woolCaptured": "Wool Captured",
-    "woolPickedUp": "Wool Picked Up",
+    "woolCaptured": "Lână capturată",
+    "woolPickedUp": "Lână ridicată",
     "woolPlaced": "Lână plasată",
     "zombieKills": "Omorături Zombi",
     "potionsBrewed": "Poţiuni preparate",
@@ -784,12 +784,12 @@
     "powerupsCollected": "Power-Up-uri Colectate",
     "roundsCompleted": "Runde finalizate",
     "totalExp": "EXP total",
-    "gamesFinished": "Games Finished",
-    "flawlessGames": "Flawless Games",
-    "fails": "Fails",
-    "mapsCompleted": "Maps Completed",
-    "arcadeWins": "Arcade Wins",
-    "draws": "Draws"
+    "gamesFinished": "Meciuri terminate",
+    "flawlessGames": "Meciuri Perfecte",
+    "fails": "Eșecuri",
+    "mapsCompleted": "Hărţi finalizate",
+    "arcadeWins": "Câștiguri Arcadă",
+    "draws": "Egaluri"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Alătură-te serverului de discord **$t(socials.discord)** și obține **20% mai mic cooldown** $t(emojis:heart)",
@@ -797,8 +797,8 @@
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** oferă caracteristici suplimentare precum insigne de profil personalizate. Găsiți lista completă de beneficii [here](<https://statsify.net/premium>)!",
     "rankings": "$t(emojis:logos.iron) Vizualizați pozițiile tale de top în clasament cu **[Statsify Premium](<https://statsify.net/premium>)** folosind `/rankings`",
     "verify": "$t(emojis:check) Rulează `/verify` pentru a rula comenzi fără a vă pune numele de utilizator și de a primi **10% cooldown mai mic**",
-    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
-    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
+    "resetSession": "$t(emojis:reset) Puteți **reseta** statisticile sesiunii cu '/reset session'.",
+    "sessions": "$t(emojis:reset) Urmărește progresia statului cu Sessions și `/session`."
   },
   "unknown": "Necunoscut",
   "verification": {
@@ -808,21 +808,21 @@
     },
     "invalidCode": {
       "title": "Cod de verificare invalid",
-      "description": "Check your verification code or try again by following these steps: ",
-      "button": "Watch Tutorial"
+      "description": "Verificați codul de verificare sau încercați din nou urmând acești pași: ",
+      "button": "Urmăriți Tutorialul"
     },
     "instructions": {
-      "title": "Link your Minecraft Account to Statsify",
+      "title": "Conectează-ți contul Minecraft cu Statsify",
       "steps": {
-        "one": "Open **Minecraft** and go to the server list",
-        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
-        "three": "Head back to **Discord** and click the button below, then type in your code"
+        "one": "Deschideți **Minecraft** și mergeți la lista de servere",
+        "two": "Conectați-vă la **`verify.statsify.net`** și copiați codul afișat",
+        "three": "Întoarce-ți vă la **Discord** și apăsați pe butonul de jos, apoi tastați codul"
       },
       "modal": {
-        "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "title": "Introduceți Codul tău de Verificare",
+        "input": "Codul de Verificare"
       },
-      "button": "Enter Verification Code"
+      "button": "Introduceți Codul de Verificare"
     },
     "notVerified": {
       "description": "Trebuie să fiți verificat înainte de a putea să vă neverificați!",
