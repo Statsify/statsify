@@ -19,15 +19,13 @@ export const findSolutions = (hint: string, limit?: number) => {
       continue;
 
     word = word.toLowerCase();
-
-    // eslint-disable-next-line unicorn/no-for-loop
+     
     for (let i = 0; i < hint.length; i++) {
       const hintChar = hint[i];
       const wordChar = word[i];
 
-      if (hintChar === "?") {
-        if (wordChar === " ") break;
-      } else if (wordChar !== hintChar) break;
+      if (hintChar === "?" && wordChar === " ") break;
+      if (hintChar !== "?" && wordChar !== hintChar) break;
 
       if (i === hint.length - 1) solutions.push(word);
     }

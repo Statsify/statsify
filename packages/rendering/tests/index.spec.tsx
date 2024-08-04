@@ -6,11 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { createInstructions } from "../src/index.js";
-import { expect, it, test } from "vitest";
+import { expect, it, suite } from "vitest";
 
-test("createInstructions with no relative sizes", () => {
+suite("createInstructions with no relative sizes", () => {
   it("a box with defined sizes", () => {
     const instructions = createInstructions(<div width={10} height={10} />);
 
@@ -41,7 +40,7 @@ test("createInstructions with no relative sizes", () => {
   });
 });
 
-test("createInstructions with relative sizes", () => {
+suite("createInstructions with relative sizes", () => {
   it("percentages that exceed 100%", () => {
     expect(() => (
       <div>
@@ -106,7 +105,7 @@ test("createInstructions with relative sizes", () => {
   });
 });
 
-test("createInstructions with remaining sizes", () => {
+suite("createInstructions with remaining sizes", () => {
   it("a basic remaining size", () => {
     const parentHeight = 10;
 
@@ -143,7 +142,7 @@ test("createInstructions with remaining sizes", () => {
   });
 });
 
-test("JSX Fragments", () => {
+suite("JSX Fragments", () => {
   it("JSX Fragments", () => {
     const instructions = createInstructions(
       <div>

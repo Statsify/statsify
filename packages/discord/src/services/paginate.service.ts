@@ -156,7 +156,7 @@ export class PaginateService {
         cache.set(page, message);
 
         if (interaction.getUserId() === userId) {
-          // eslint-disable-next-line require-atomic-updates
+           
           index = page;
           return context.reply(message);
         }

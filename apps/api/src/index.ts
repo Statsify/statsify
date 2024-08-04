@@ -36,8 +36,9 @@ if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
     integrations: [
-      new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true }),
-      new Sentry.Integrations.Mongo({ useMongoose: true }),
+      Sentry.httpIntegration({ breadcrumbs:true }),
+      Sentry.mongooseIntegration(),
+      Sentry.mongoIntegration(),
     ],
     normalizeDepth: 3,
     tracesSampleRate: config("sentry.tracesSampleRate"),

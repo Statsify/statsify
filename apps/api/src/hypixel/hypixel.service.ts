@@ -142,27 +142,13 @@ export class HypixelService {
   }
 
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
+    return Sentry.startSpan({
+      name: `GET ${this.httpService.axiosRef.getUri({ url })}`,
       op: "http.client",
-      description: `GET ${this.httpService.axiosRef.getUri({ url })}`,
-    });
-
-    return this.httpService.get(url, { params }).pipe(
-      tap((res) => {
-        child?.setHttpStatus(res.status);
-        child?.finish();
-      }),
-      map((res) => res.data),
-      catchError((err) =>
-        throwError(
-          () =>
-            new Error(`Fetching ${url} failed with reason: ${err.message}`, {
-              cause: err,
-            })
-        )
-      )
-    );
+    }, (span) => this.httpService.get(url, { params }).pipe(
+      tap((response) => Sentry.setHttpStatus(span, response.status)),
+      map((response) => response.data),
+      catchError((err) => throwError(() => new Error(`Fetching ${url} failed with reason: ${err.message}`, { cause: err })))
+    ));
   }
 }

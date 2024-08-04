@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import {
   APIUser,
   ApplicationCommandOptionType,
@@ -136,7 +135,6 @@ export abstract class AbstractCommandListener {
     preconditions = [],
     message,
   }: ExecuteCommandOptions) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     try {
       preconditions.forEach((precondition) => precondition());
@@ -144,21 +142,17 @@ export abstract class AbstractCommandListener {
       const response = await command.execute(context);
 
       if (typeof response !== "object") return;
-      transaction?.finish();
 
       context.reply({
         ...message,
         ...response,
       });
     } catch (err) {
-      if (err instanceof Message) {
-        transaction?.finish();
+      if (err instanceof Message) 
         return context.reply(err);
-      }
 
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
-      transaction?.finish();
     }
   }
 

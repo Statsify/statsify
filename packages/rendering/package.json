@@ -19,10 +19,10 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.64.0",
+    "@sentry/node": "^8.22.0",
     "@statsify/util": "*",
     "@swc/helpers": "^0.5.1",
-    "axios": "1.4.0",
+    "axios": "1.7.3",
     "skia-canvas": "^0.9.30",
     "typedi": "^0.10.0"
   },

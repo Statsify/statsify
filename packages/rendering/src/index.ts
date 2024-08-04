@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-namespace */
 export * from "./colors/index.js";
 export * from "./font/index.js";
@@ -29,7 +28,7 @@ declare global {
     type Measurement = JSXInternal.Measurement;
 
     interface ElementChildrenAttribute {
-      children: {};
+      children: object;
     }
   }
 }

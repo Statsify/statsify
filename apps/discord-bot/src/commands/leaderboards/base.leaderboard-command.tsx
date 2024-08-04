@@ -240,8 +240,7 @@ export class BaseLeaderboardCommand {
       context.reply({ embeds: [], components: [] });
       cache.clear();
     }, 300_000);
-
-    // eslint-disable-next-line require-atomic-updates
+     
     currentPage = page || currentPage;
 
     return { ...message, components: [row] };

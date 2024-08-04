@@ -75,6 +75,14 @@ const _render = (
 
   applyDelta(getPositionalDelta(instruction, side));
 
+  const incrementPosition = (oppositeSide: string, amount: number) => {
+    if (oppositeSide === "x") {
+      x += amount;
+    } else {
+      y += amount;
+    }
+  };
+
   instruction.children.forEach((child) => {
     const size = getTotalSize(child[side]);
 
@@ -84,10 +92,11 @@ const _render = (
         const oppSize = getTotalSize(child[oppSide]);
 
         const centerDelta = (instruction[oppSide].size - oppSize) / 2;
-
-        oppSide === "x" ? (x += centerDelta) : (y += centerDelta);
+        
+        incrementPosition(oppSide, centerDelta);
         _render(ctx, context, intrinsicElements, child, x, y);
-        oppSide === "x" ? (x -= centerDelta) : (y -= centerDelta);
+        incrementPosition(oppSide, -centerDelta);
+
         break;
       }
       case "left":
@@ -99,9 +108,9 @@ const _render = (
           instruction[oppSide].size -
           (child[oppSide].size + child[oppSide].margin2 + child[oppSide].padding2);
 
-        oppSide === "x" ? (x += delta) : (y += delta);
+        incrementPosition(oppSide, delta);
         _render(ctx, context, intrinsicElements, child, x, y);
-        oppSide === "x" ? (x -= delta) : (y -= delta);
+        incrementPosition(oppSide, -delta);
 
         break;
       }
@@ -112,24 +121,10 @@ const _render = (
 };
 
 export function render(node: ElementNode, theme?: Theme): Canvas {
-  const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-  const instructionsTransaction = transaction?.startChild({
-    op: "jsx.createInstructions",
-    description: "Create instructions",
-  });
-
-  const instructions = createInstructions(node);
-
-  instructionsTransaction?.finish();
+  const instructions = Sentry.startSpan({ name: "Create Instructions", op: "jsx.createInstructions" }, () => createInstructions(node));
 
   const width = Math.round(getTotalSize(instructions.x));
   const height = Math.round(getTotalSize(instructions.y));
-
-  const renderTransaction = transaction?.startChild({
-    op: "jsx.render",
-    description: "Render JSX",
-  });
 
   const canvas = new Canvas(width, height);
   const ctx = canvas.getContext("2d");
@@ -144,9 +139,7 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
 
   if (!context.renderer) context.renderer = Container.get(FontRenderer);
 
-  _render(ctx, context, { ...intrinsicRenders, ...theme?.elements }, instructions, 0, 0);
-
-  renderTransaction?.finish();
+  Sentry.startSpan({ name: "Render JSX", op: "jsx.render" }, () => _render(ctx, context, { ...intrinsicRenders, ...theme?.elements }, instructions, 0, 0));
 
   return canvas;
 }

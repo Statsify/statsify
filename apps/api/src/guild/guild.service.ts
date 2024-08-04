@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/* eslint-disable require-atomic-updates */
 import {
   CacheLevel,
   GuildNotFoundException,

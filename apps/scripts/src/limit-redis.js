@@ -42,8 +42,10 @@ const runLimit = async (constructors, prefixes) => {
       const { sort } = value.leaderboard;
       let { limit } = value.leaderboard;
       if (limit === Number.POSITIVE_INFINITY) return;
-
-      prefixes ? Math.floor((limit /= 10)) : limit; // Reduce historical leaderboard max size
+      
+      // Reduce historical leaderboard max size
+      if (prefixes) {
+        limit = Math.floor((limit /= 10)); }
 
       memberCount += limit;
 

@@ -55,7 +55,7 @@ export class CommandListener extends AbstractCommandListener {
 
     if (!parentCommand) return;
 
-    const { id, username, discriminator } = interaction.getUser();
+    const { id, username } = interaction.getUser();
     const locale = interaction.getLocale();
 
     const [command, data, commandName] = this.getCommandAndData(
@@ -63,44 +63,45 @@ export class CommandListener extends AbstractCommandListener {
       parentData
     );
 
-    const transaction = Sentry.startTransaction({ name: commandName, op: "command" });
+    return Sentry.startSpan({
+      name: commandName,
+      op: "command",
+    }, async () => {
+      Sentry.setContext("command", {
+        command: commandName,
+        options: data.options,
+        guild: interaction.getGuildId() ?? null,
+      });
 
-    Sentry.configureScope((scope) => scope.setSpan(transaction));
+      const user = await this.apiService.getUser(id);
 
-    Sentry.setContext("command", {
-      command: commandName,
-      options: data.options,
-      guild: interaction.getGuildId() ?? null,
-    });
+      Sentry.setUser({
+        id,
+        username,
+        locale,
+        uuid: user?.uuid ?? null,
+        tier: user?.tier ?? UserTier.NONE,
+        serverMember: user?.serverMember ?? false,
+        theme: user?.theme ?? null,
+      });
 
-    const user = await this.apiService.getUser(id);
+      const context = new CommandContext(this, interaction, data);
+      context.setUser(user);
 
-    Sentry.setUser({
-      id,
-      username: `${username}#${discriminator}`,
-      locale,
-      uuid: user?.uuid ?? null,
-      tier: user?.tier ?? UserTier.NONE,
-      serverMember: user?.serverMember ?? false,
-      theme: user?.theme ?? null,
-    });
+      const preconditions = [
+        this.tierPrecondition.bind(this, command, user),
+        this.cooldownPrecondition.bind(this, parentCommand, user, id),
+      ];
 
-    const context = new CommandContext(this, interaction, data);
-    context.setUser(user);
+      this.apiService.incrementCommand(commandName);
 
-    const preconditions = [
-      this.tierPrecondition.bind(this, command, user),
-      this.cooldownPrecondition.bind(this, parentCommand, user, id),
-    ];
-
-    this.apiService.incrementCommand(commandName);
-
-    return this.executeCommand({
-      commandName,
-      command,
-      context,
-      preconditions,
-      message: this.getTipResponse(commandName, user),
+      return this.executeCommand({
+        commandName,
+        command,
+        context,
+        preconditions,
+        message: this.getTipResponse(commandName, user),
+      });
     });
   }
 

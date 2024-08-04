@@ -3,27 +3,49 @@
   "remoteCache": {
     "signature": true
   },
-  "globalDependencies": ["pnpm.lock", "tsconfig.json", ".swcrc", ".eslintrc"],
-  "pipeline": {
+  "globalDependencies": [
+    "pnpm.lock",
+    "tsconfig.json",
+    ".swcrc",
+    "eslnit.config.mjs"
+  ],
+  "tasks": {
     "build": {
-      "outputs": ["dist/**", ".next/**"],
-      "dependsOn": ["^build"]
+      "outputs": [
+        "dist/**",
+        ".next/**"
+      ],
+      "dependsOn": [
+        "^build"
+      ]
     },
     "test:types": {
       "outputs": [],
-      "dependsOn": ["^test:types"]
+      "dependsOn": [
+        "^test:types"
+      ]
     },
     "test": {
       "outputs": [],
-      "dependsOn": ["build", "^test"]
+      "dependsOn": [
+        "build",
+        "^test"
+      ]
     },
     "test:coverage": {
-      "outputs": ["coverage"],
-      "dependsOn": ["build", "^test:coverage"]
+      "outputs": [
+        "coverage"
+      ],
+      "dependsOn": [
+        "build",
+        "^test:coverage"
+      ]
     },
     "lint": {
       "outputs": [],
-      "dependsOn": ["^lint"]
+      "dependsOn": [
+        "^lint"
+      ]
     }
   }
 }

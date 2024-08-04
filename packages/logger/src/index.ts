@@ -9,6 +9,7 @@
 import * as Sentry from "@sentry/node";
 import chalk from "chalk";
 import { DateTime } from "luxon";
+import { SpanStatus } from "@sentry/types";
 import { config } from "@statsify/util";
 import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/common";
 
@@ -24,6 +25,8 @@ export const STATUS_COLORS = {
 } as const;
 
 const isProduction = config("environment") === "prod";
+
+const SPAN_STATUS_ERROR: SpanStatus["code"] = 2;
 
 /**
  * A logger implementing the NestJS LoggerService interface. However can be used anywhere.
@@ -70,8 +73,10 @@ export class Logger implements LoggerService {
     }
 
     if (message instanceof Error) {
-      const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-      transaction?.setStatus("internal_error");
+      Sentry.getActiveSpan()?.setStatus({
+        code: SPAN_STATUS_ERROR,
+        message:"internal_error",
+      });
 
       Sentry.captureException(message);
       message = message.stack;
@@ -138,8 +143,10 @@ export class Logger implements LoggerService {
     }
 
     if (message instanceof Error) {
-      const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-      transaction?.setStatus("internal_error");
+      Sentry.getActiveSpan()?.setStatus({
+        code:SPAN_STATUS_ERROR,
+        message:"internal_error",
+      });
 
       Sentry.captureException(message);
       message = message.stack;
@@ -248,10 +255,10 @@ export class Logger implements LoggerService {
 }
 
 if (import.meta.vitest) {
-  const { test, it, expect, vi } = import.meta.vitest;
+  const { suite, it, expect, vi } = import.meta.vitest;
 
   DEFAULT_LOG_LEVELS.forEach((logLevel) => {
-    test(`logging of ${logLevel}`, () => {
+    suite(`logging of ${logLevel}`, () => {
       it(`should ${logLevel}`, () => {
         const logger = new Logger(logLevel);
 
@@ -269,7 +276,7 @@ if (import.meta.vitest) {
     });
   });
 
-  test("logging levels", () => {
+  suite("logging levels", () => {
     it("should ignore all log levels", () => {
       const logger = new Logger("default", { logLevels: [] });
 

@@ -19,7 +19,7 @@ export enum UserTier {
   EMERALD = 404,
   NETHERITE = 505,
   STAFF = 666,
-  CORE = 999,
+  CORE = 999
 }
 
 const tiers = Object.entries(UserTier);

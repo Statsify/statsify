@@ -10,17 +10,17 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@nestjs/swagger": "^7.1.8",
+    "@nestjs/swagger": "^7.4.0",
     "@statsify/logger": "*",
     "@statsify/math": "*",
     "@statsify/util": "*",
     "@swc/helpers": "^0.5.1",
-    "@typegoose/typegoose": "^12.0.0",
-    "class-validator": "^0.14.0",
-    "luxon": "^3.4.0"
+    "@typegoose/typegoose": "^12.6.0",
+    "class-validator": "^0.14.1",
+    "luxon": "^3.5.0"
   },
   "devDependencies": {
-    "@types/luxon": "^3.3.1"
+    "@types/luxon": "^3.4.2"
   },
   "imports": {
     "#metadata": {

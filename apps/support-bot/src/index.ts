@@ -45,7 +45,7 @@ const sentryDsn = config("sentry.supportBotDsn", { required: false });
 if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
-    integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
+    integrations: [Sentry.httpIntegration({ breadcrumbs: true })],
     normalizeDepth: 3,
     tracesSampleRate: config("sentry.tracesSampleRate"),
     environment: config("environment"),

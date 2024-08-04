@@ -10,7 +10,7 @@ export type APIData = Record<string, any>;
 
 export type RemoveMethods<T> = Pick<
   T,
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   { [Key in keyof T]: T[Key] extends Function ? never : Key }[keyof T]
 >;
 

@@ -287,26 +287,23 @@ export class ApiService {
     method: Method = "GET",
     { body, headers, responseType }: ExtraData = {}
   ): Promise<T> {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
+    const data = await Sentry.startSpan({
+      name: `${method} ${url}`,
       op: "http.client",
-      description: `${method} ${url}`,
+    }, async (span) => {
+      const response = await this.axios.request({
+        url,
+        method,
+        params,
+        headers,
+        data: body,
+        responseType,
+      });
+      
+      Sentry.setHttpStatus(span, response.status);
+
+      return response.data;
     });
-
-    const res = await this.axios.request({
-      url,
-      method,
-      params,
-      headers,
-      data: body,
-      responseType,
-    });
-
-    child?.setHttpStatus(res.status);
-    child?.finish();
-
-    const data = res.data;
 
     if (data.success === false) throw new Error("API request was unsuccessful");
 

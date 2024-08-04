@@ -38,38 +38,35 @@ export abstract class LeaderboardService {
     remove = false
   ) {
     const fields = LeaderboardScanner.getLeaderboardFields(constructor);
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
-    const child = transaction?.startChild({
+    Sentry.startSpan({
+      name: `add ${constructor.name} leaderboards`,
       op: "redis",
-      description: `add ${constructor.name} leaderboards`,
+    }, async () => {
+      const pipeline = this.redis.pipeline();
+      const name = constructor.name.toLowerCase();
+  
+      const id = instance[idField] as unknown as string;
+  
+      for (const [field, metadata] of fields) {
+        const value = instance[field] as unknown as number;
+        const key = `${name}.${String(field)}`;
+  
+        if (remove || value === 0 || Number.isNaN(value) || typeof value !== "number") {
+          pipeline.zrem(key, id);
+          continue;
+        }
+  
+        pipeline.zadd(key, value, id);
+  
+        if (metadata.leaderboard.enabled && metadata.leaderboard.resetEvery) {
+          const time = this.getLeaderboardExpiryTime(metadata.leaderboard);
+          pipeline.expireat(key, time);
+        }
+      }
+  
+      await pipeline.exec();
     });
-
-    const pipeline = this.redis.pipeline();
-    const name = constructor.name.toLowerCase();
-
-    const id = instance[idField] as unknown as string;
-
-    for (const [field, metadata] of fields) {
-      const value = instance[field] as unknown as number;
-      const key = `${name}.${String(field)}`;
-
-      if (remove || value === 0 || Number.isNaN(value) || typeof value !== "number") {
-        pipeline.zrem(key, id);
-        continue;
-      }
-
-      pipeline.zadd(key, value, id);
-
-      if (metadata.leaderboard.enabled && metadata.leaderboard.resetEvery) {
-        const time = this.getLeaderboardExpiryTime(metadata.leaderboard);
-        pipeline.expireat(key, time);
-      }
-    }
-
-    await pipeline.exec();
-
-    child?.finish();
   }
 
   public async getLeaderboard<T>(
@@ -193,36 +190,32 @@ export abstract class LeaderboardService {
     fields: string[],
     id: string
   ) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "redis",
-      description: `get ${constructor.name} rankings`,
-    });
-
-    const pipeline = this.redis.pipeline();
-    const constructorName = constructor.name.toLowerCase();
-
     const leaderboardFields: LeaderboardEnabledMetadata[] = [];
 
-    fields.forEach((field) => {
-      const metadata = LeaderboardScanner.getLeaderboardField(constructor, field);
-      leaderboardFields.push(metadata);
-
-      const key = `${constructorName}.${field}`;
-
-      pipeline.zscore(key, id);
-
-      if (metadata.sort === "ASC") {
-        pipeline.zrank(key, id);
-      } else {
-        pipeline.zrevrank(key, id);
-      }
+    const responses = await Sentry.startSpan({
+      name: `get ${constructor.name} rankings`,
+      op: "redis",
+    }, () => {
+      const pipeline = this.redis.pipeline();
+      const constructorName = constructor.name.toLowerCase();
+  
+      fields.forEach((field) => {
+        const metadata = LeaderboardScanner.getLeaderboardField(constructor, field);
+        leaderboardFields.push(metadata);
+  
+        const key = `${constructorName}.${field}`;
+  
+        pipeline.zscore(key, id);
+  
+        if (metadata.sort === "ASC") {
+          pipeline.zrank(key, id);
+        } else {
+          pipeline.zrevrank(key, id);
+        }
+      });
+  
+      return pipeline.exec();
     });
-
-    const responses = await pipeline.exec();
-
-    child?.finish();
 
     if (!responses) throw new InternalServerErrorException();
 
@@ -273,21 +266,14 @@ export abstract class LeaderboardService {
     bottom: number,
     sort = "DESC"
   ) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "redis",
-      description: `get ${constructor.name} leaderboards`,
-    });
-
+    
     const name = constructor.name.toLowerCase();
     field = `${name}.${field}`;
 
-    const scores = await (sort === "ASC"
-      ? this.redis.zrange(field, top, bottom, "WITHSCORES")
-      : this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
-
-    child?.finish();
+    const scores = await Sentry.startSpan({
+      name: `get ${constructor.name} leaderboards`,
+      op: "redis",
+    }, () => sort === "ASC" ? this.redis.zrange(field, top, bottom, "WITHSCORES") : this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
 
     const response: { id: string; score: number; index: number }[] = [];
 
