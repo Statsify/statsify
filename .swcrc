@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json.schemastore.org/swcrc",
+  "$schema": "https://swc.rs/schema.json",
   "jsc": {
     "parser": {
       "syntax": "typescript",
@@ -10,7 +10,6 @@
       "legacyDecorator": true,
       "decoratorMetadata": true,
       "optimizer": {
-        "simplify": true,
         "globals": {
           "vars": {
             "import.meta.vitest": "false"
@@ -21,13 +20,13 @@
         }
       }
     },
-    "target": "es2022",
+    "target": "esnext",
     "keepClassNames": true,
     "loose": false,
     "externalHelpers": true,
     "preserveAllComments": false,
     "experimental": {
-      "keepImportAssertions": true
+      "keepImportAttributes": true
     }
   },
   "module": {

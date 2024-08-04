@@ -14,14 +14,14 @@
     }
   },
   "scripts": {
-    "build": "swc src --out-dir dist",
+    "build": "swc src --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
     "@sentry/node": "^8.22.0",
-    "@statsify/util": "*",
-    "@swc/helpers": "^0.5.1",
+    "@statsify/util": "workspace:^",
+    "@swc/helpers": "^0.5.12",
     "axios": "1.7.3",
     "skia-canvas": "^0.9.30",
     "typedi": "^0.10.0"

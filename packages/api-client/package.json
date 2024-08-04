@@ -5,7 +5,7 @@
   "types": "src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "swc src  --config-file ../../.swcrc --out-dir dist",
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
@@ -13,10 +13,10 @@
     "@nestjs/common": "^10.3.10",
     "@nestjs/swagger": "^7.4.0",
     "@sentry/node": "^8.22.0",
-    "@statsify/rendering": "*",
-    "@statsify/schemas": "*",
-    "@statsify/util": "*",
-    "@swc/helpers": "^0.5.1",
+    "@statsify/rendering": "workspace:^",
+    "@statsify/schemas": "workspace:^",
+    "@statsify/util": "workspace:^",
+    "@swc/helpers": "^0.5.12",
     "axios": "^1.7.3"
   },
   "imports": {

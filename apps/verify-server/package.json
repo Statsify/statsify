@@ -6,17 +6,17 @@
   "type": "module",
   "scripts": {
     "start": "node --enable-source-maps .",
-    "build": "swc src  --config-file ../../.swcrc --out-dir dist",
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
     "@sentry/node": "^8.22.0",
-    "@statsify/assets": "*",
-    "@statsify/logger": "*",
-    "@statsify/schemas": "*",
-    "@statsify/util": "*",
-    "@swc/helpers": "^0.5.1",
+    "@statsify/assets": "workspace:^",
+    "@statsify/logger": "workspace:^",
+    "@statsify/schemas": "workspace:^",
+    "@statsify/util": "workspace:^",
+    "@swc/helpers": "^0.5.12",
     "@typegoose/typegoose": "^12.6.0",
     "minecraft-protocol": "^1.47.0",
     "mongoose": "^8.5.2"

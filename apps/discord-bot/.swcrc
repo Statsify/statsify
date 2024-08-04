@@ -14,7 +14,6 @@
         "throwIfNamespace": false
       },
       "optimizer": {
-        "simplify": true,
         "globals": {
           "vars": {
             "import.meta.vitest": "false"
@@ -25,13 +24,13 @@
         }
       }
     },
-    "target": "es2022",
+    "target": "esnext",
     "keepClassNames": true,
     "loose": false,
     "externalHelpers": true,
     "preserveAllComments": false,
     "experimental": {
-      "keepImportAssertions": true
+      "keepImportAttributes": true
     }
   },
   "module": {
