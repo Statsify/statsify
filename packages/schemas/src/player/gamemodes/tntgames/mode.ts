@@ -86,7 +86,7 @@ export class TNTTag {
   public constructor(data: APIData, ap: APIData) {
     this.wins = data.wins_tntag;
     this.kills = data.kills_tntag;
-    this.tags = ap?.tntgames_clinic;
+    this.tags = ap.tntgames_clinic;
   }
 }
 

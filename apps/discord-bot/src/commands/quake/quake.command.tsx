@@ -23,7 +23,7 @@ export class QuakeCommand extends BaseHypixelCommand<QuakeModes> {
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<QuakeModes, never>
+    { mode }: ProfileData<QuakeModes>
   ): JSX.Element {
     return <QuakeProfile {...base} mode={mode} />;
   }

@@ -23,7 +23,7 @@ import type { FastifyRequest } from "fastify";
 export class SentryInterceptor implements NestInterceptor {
   public intercept(
     context: ExecutionContext,
-    next: CallHandler<any>
+    next: CallHandler
   ): Observable<any> | Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest<FastifyRequest>();
     const url = new URL(`https://statsify.net${request.url}`);

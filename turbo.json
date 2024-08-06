@@ -3,6 +3,7 @@
   "remoteCache": {
     "signature": true
   },
+  "ui": "tui",
   "globalDependencies": [
     "pnpm.lock",
     "tsconfig.json",

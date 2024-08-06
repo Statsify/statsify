@@ -88,7 +88,7 @@ export abstract class LeaderboardService {
     } = LeaderboardScanner.getLeaderboardField(
       constructor,
       field
-    ) as LeaderboardEnabledMetadata;
+    );
 
     let top: number;
     let bottom: number;
@@ -154,7 +154,7 @@ export abstract class LeaderboardService {
         const value = stats[key] ?? additionalFieldMetadata[index].default;
 
         if (additionalFieldMetadata[index].formatter)
-          return additionalFieldMetadata[index].formatter?.(value);
+          return additionalFieldMetadata[index].formatter(value);
 
         return value;
       });

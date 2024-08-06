@@ -86,7 +86,7 @@ export class PaginateService {
     });
 
     setTimeout(() => {
-      controller.forEach((component) => listener.removeHook(component.getCustomId()));
+      controller.forEach((component) => { listener.removeHook(component.getCustomId()); });
 
       context.reply({
         components: [],
@@ -166,7 +166,7 @@ export class PaginateService {
     });
 
     setTimeout(() => {
-      controller.forEach((component) => listener.removeHook(component.getCustomId()));
+      controller.forEach((component) => { listener.removeHook(component.getCustomId()); });
 
       context.reply({
         components: [],

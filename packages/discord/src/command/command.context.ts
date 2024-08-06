@@ -37,7 +37,7 @@ export class CommandContext {
 
   public setUser(user: User | null) {
     this.user = user;
-    if (user?.locale) this.interaction.setLocale(user?.locale);
+    if (user?.locale) this.interaction.setLocale(user.locale);
   }
 
   public option<T>(name: string, defaultValue: T): T;
@@ -45,7 +45,7 @@ export class CommandContext {
   public option<T>(name: string, defaultValue?: T): T {
     const data = (
       this.data.options as APIApplicationCommandInteractionDataBasicOption[]
-    )?.find((o) => o.name === name);
+    ).find((o) => o.name === name);
 
     if (!data) {
       return defaultValue ?? noop();

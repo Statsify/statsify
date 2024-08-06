@@ -172,7 +172,7 @@ export class Duels {
     this.sumo = new SinglePVPDuelsGameMode(data, "Sumo", "sumo_duel");
     this.uhc = new UHCDuels(data);
 
-    this.pingRange = data?.pingPreference ?? 300;
+    this.pingRange = data.pingPreference ?? 300;
     this.tokens = data.coins;
   }
 }

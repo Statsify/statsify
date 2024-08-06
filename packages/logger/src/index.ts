@@ -245,7 +245,7 @@ export class Logger implements LoggerService {
       const output = typeof message === "object" ? JSON.stringify(message) : message;
       const timeStamp = this.getTimeStamp();
 
-      const computedMessage = `${chalk.bold(`${icon}`)} ${chalk.hex(color.toString(16))(
+      const computedMessage = `${chalk.bold(icon)} ${chalk.hex(color.toString(16))(
         context
       )} ${chalk.gray(`${timeStamp}${isProduction ? "" : "ms"}`)} ${output}\n`;
 

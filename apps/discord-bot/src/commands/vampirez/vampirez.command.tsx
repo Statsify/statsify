@@ -23,7 +23,7 @@ export class VampireZCommand extends BaseHypixelCommand<VampireZModes> {
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<VampireZModes, never>
+    { mode }: ProfileData<VampireZModes>
   ): JSX.Element {
     return <VampireZProfile {...base} mode={mode} />;
   }

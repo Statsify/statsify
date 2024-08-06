@@ -391,66 +391,66 @@ export class DropperMaps {
   public western: DropperMap;
 
   public constructor(mapStats: APIData = {}) {
-    this.atlantis = new DropperMap(mapStats?.atlantis);
-    this.balloons = new DropperMap(mapStats?.balloons);
-    this.bbq = new DropperMap(mapStats?.bbq);
-    this.beanstalk = new DropperMap(mapStats?.beanstalk);
-    this.birdcage = new DropperMap(mapStats?.birdcage);
-    this.boardGames = new DropperMap(mapStats?.boardgames);
-    this.bridges = new DropperMap(mapStats?.bridges);
-    this.butterflies = new DropperMap(mapStats?.butterflies);
-    this.cabin = new DropperMap(mapStats?.cabin);
-    this.castle = new DropperMap(mapStats?.castle);
-    this.city = new DropperMap(mapStats?.city);
-    this.distance = new DropperMap(mapStats?.distance);
-    this.distortion = new DropperMap(mapStats?.distortion);
-    this.drainage = new DropperMap(mapStats?.drainage);
-    this.emoji = new DropperMap(mapStats?.emoji);
-    this.factory = new DropperMap(mapStats?.factory);
-    this.floatingIslands = new DropperMap(mapStats?.floatingislands);
-    this.flytrap = new DropperMap(mapStats?.flytrap);
-    this.frogspawn = new DropperMap(mapStats?.frogspawn);
-    this.gears = new DropperMap(mapStats?.gears);
-    this.geometry = new DropperMap(mapStats?.geometry);
-    this.glacier = new DropperMap(mapStats?.glacier);
-    this.hellGate = new DropperMap(mapStats?.hellgate);
-    this.illusion = new DropperMap(mapStats?.illusion);
-    this.iris = new DropperMap(mapStats?.iris);
-    this.kingdomMines = new DropperMap(mapStats?.kingdommines);
-    this.kingsPass = new DropperMap(mapStats?.kingspass);
-    this.kraken = new DropperMap(mapStats?.kraken);
-    this.launchZone = new DropperMap(mapStats?.launchzone);
-    this.lavafall = new DropperMap(mapStats?.lavafall);
-    this.lily = new DropperMap(mapStats?.lily);
-    this.maelstrom = new DropperMap(mapStats?.maelstrom);
-    this.mainframe = new DropperMap(mapStats?.mainframe);
-    this.microscope = new DropperMap(mapStats?.microscope);
-    this.mineshaft = new DropperMap(mapStats?.mineshaft);
-    this.mushroom = new DropperMap(mapStats?.mushroom);
-    this.nightlife = new DropperMap(mapStats?.nightlife);
-    this.ocean = new DropperMap(mapStats?.ocean);
-    this.overgrown = new DropperMap(mapStats?.overgrown);
-    this.painted = new DropperMap(mapStats?.painted);
-    this.paradigm = new DropperMap(mapStats?.paradigm);
-    this.raindrops = new DropperMap(mapStats?.raindrops);
-    this.ravine = new DropperMap(mapStats?.ravine);
-    this.retro = new DropperMap(mapStats?.retro);
-    this.revolve = new DropperMap(mapStats?.revolve);
-    this.sandworm = new DropperMap(mapStats?.sandworm);
-    this.sewer = new DropperMap(mapStats?.sewer);
-    this.space = new DropperMap(mapStats?.space);
-    this.stratocumulus = new DropperMap(mapStats?.stratocumulus);
-    this.sweets = new DropperMap(mapStats?.sweets);
-    this.tangle = new DropperMap(mapStats?.tangle);
-    this.time = new DropperMap(mapStats?.time);
-    this.ufo = new DropperMap(mapStats?.ufo);
-    this.upsideDown = new DropperMap(mapStats?.upsidedown);
-    this.vintage = new DropperMap(mapStats?.vintage);
-    this.vortex = new DropperMap(mapStats?.vortex);
-    this.warp = new DropperMap(mapStats?.warp);
-    this.warportal = new DropperMap(mapStats?.warportal);
-    this.well = new DropperMap(mapStats?.well);
-    this.western = new DropperMap(mapStats?.western);
+    this.atlantis = new DropperMap(mapStats.atlantis);
+    this.balloons = new DropperMap(mapStats.balloons);
+    this.bbq = new DropperMap(mapStats.bbq);
+    this.beanstalk = new DropperMap(mapStats.beanstalk);
+    this.birdcage = new DropperMap(mapStats.birdcage);
+    this.boardGames = new DropperMap(mapStats.boardgames);
+    this.bridges = new DropperMap(mapStats.bridges);
+    this.butterflies = new DropperMap(mapStats.butterflies);
+    this.cabin = new DropperMap(mapStats.cabin);
+    this.castle = new DropperMap(mapStats.castle);
+    this.city = new DropperMap(mapStats.city);
+    this.distance = new DropperMap(mapStats.distance);
+    this.distortion = new DropperMap(mapStats.distortion);
+    this.drainage = new DropperMap(mapStats.drainage);
+    this.emoji = new DropperMap(mapStats.emoji);
+    this.factory = new DropperMap(mapStats.factory);
+    this.floatingIslands = new DropperMap(mapStats.floatingislands);
+    this.flytrap = new DropperMap(mapStats.flytrap);
+    this.frogspawn = new DropperMap(mapStats.frogspawn);
+    this.gears = new DropperMap(mapStats.gears);
+    this.geometry = new DropperMap(mapStats.geometry);
+    this.glacier = new DropperMap(mapStats.glacier);
+    this.hellGate = new DropperMap(mapStats.hellgate);
+    this.illusion = new DropperMap(mapStats.illusion);
+    this.iris = new DropperMap(mapStats.iris);
+    this.kingdomMines = new DropperMap(mapStats.kingdommines);
+    this.kingsPass = new DropperMap(mapStats.kingspass);
+    this.kraken = new DropperMap(mapStats.kraken);
+    this.launchZone = new DropperMap(mapStats.launchzone);
+    this.lavafall = new DropperMap(mapStats.lavafall);
+    this.lily = new DropperMap(mapStats.lily);
+    this.maelstrom = new DropperMap(mapStats.maelstrom);
+    this.mainframe = new DropperMap(mapStats.mainframe);
+    this.microscope = new DropperMap(mapStats.microscope);
+    this.mineshaft = new DropperMap(mapStats.mineshaft);
+    this.mushroom = new DropperMap(mapStats.mushroom);
+    this.nightlife = new DropperMap(mapStats.nightlife);
+    this.ocean = new DropperMap(mapStats.ocean);
+    this.overgrown = new DropperMap(mapStats.overgrown);
+    this.painted = new DropperMap(mapStats.painted);
+    this.paradigm = new DropperMap(mapStats.paradigm);
+    this.raindrops = new DropperMap(mapStats.raindrops);
+    this.ravine = new DropperMap(mapStats.ravine);
+    this.retro = new DropperMap(mapStats.retro);
+    this.revolve = new DropperMap(mapStats.revolve);
+    this.sandworm = new DropperMap(mapStats.sandworm);
+    this.sewer = new DropperMap(mapStats.sewer);
+    this.space = new DropperMap(mapStats.space);
+    this.stratocumulus = new DropperMap(mapStats.stratocumulus);
+    this.sweets = new DropperMap(mapStats.sweets);
+    this.tangle = new DropperMap(mapStats.tangle);
+    this.time = new DropperMap(mapStats.time);
+    this.ufo = new DropperMap(mapStats.ufo);
+    this.upsideDown = new DropperMap(mapStats.upsidedown);
+    this.vintage = new DropperMap(mapStats.vintage);
+    this.vortex = new DropperMap(mapStats.vortex);
+    this.warp = new DropperMap(mapStats.warp);
+    this.warportal = new DropperMap(mapStats.warportal);
+    this.well = new DropperMap(mapStats.well);
+    this.western = new DropperMap(mapStats.western);
   }
 }
 
@@ -848,55 +848,55 @@ export class PartyGames {
     this.starsEarned = data.total_stars_party;
     this.roundsWon = data.round_wins_party;
 
-    this.animalSlaughterWins = data?.animal_slaughter_round_wins_party;
+    this.animalSlaughterWins = data.animal_slaughter_round_wins_party;
 
-    this.anvilSpleefWins = data?.anvil_spleef_round_wins_party;
+    this.anvilSpleefWins = data.anvil_spleef_round_wins_party;
 
-    this.bombardmentWins = data?.bombardment_round_wins_party;
+    this.bombardmentWins = data.bombardment_round_wins_party;
 
-    this.chickenRingsWins = data?.chicken_rings_round_wins_party;
+    this.chickenRingsWins = data.chicken_rings_round_wins_party;
 
-    this.diveWins = data?.dive_round_wins_party;
+    this.diveWins = data.dive_round_wins_party;
 
-    this.highGroundWins = data?.high_ground_round_wins_party;
+    this.highGroundWins = data.high_ground_round_wins_party;
 
-    this.hoeHoeHoeWins = data?.hoe_hoe_hoe_round_wins_party;
+    this.hoeHoeHoeWins = data.hoe_hoe_hoe_round_wins_party;
 
-    this.jungleJumpWins = data?.jungle_jump_round_wins_party;
+    this.jungleJumpWins = data.jungle_jump_round_wins_party;
 
-    this.labEscapeWins = data?.lab_escape_round_wins_party;
+    this.labEscapeWins = data.lab_escape_round_wins_party;
 
-    this.lawnMoowerWins = data?.lawn_moower_round_wins_party;
+    this.lawnMoowerWins = data.lawn_moower_round_wins_party;
 
-    this.minecartRacingWins = data?.minecart_racing_round_wins_party;
+    this.minecartRacingWins = data.minecart_racing_round_wins_party;
 
-    this.rpg16Wins = data?.rpg_16_round_wins_party;
+    this.rpg16Wins = data.rpg_16_round_wins_party;
 
-    this.spiderMazeWins = data?.spider_maze_round_wins_party;
+    this.spiderMazeWins = data.spider_maze_round_wins_party;
 
-    this.theFloorIsLavaWins = data?.the_floor_is_lava_round_wins_party;
+    this.theFloorIsLavaWins = data.the_floor_is_lava_round_wins_party;
 
-    this.avalancheWins = data?.avalanche_round_wins_party;
+    this.avalancheWins = data.avalanche_round_wins_party;
 
-    this.volcanoWins = data?.volcano_round_wins_party;
+    this.volcanoWins = data.volcano_round_wins_party;
 
-    this.pigFishingWins = data?.pig_fishing_round_wins_party;
+    this.pigFishingWins = data.pig_fishing_round_wins_party;
 
-    this.pigJoustingWins = data?.pig_jousting_round_wins_party;
+    this.pigJoustingWins = data.pig_jousting_round_wins_party;
 
-    this.trampolinioWins = data?.trampolinio_round_wins_party;
+    this.trampolinioWins = data.trampolinio_round_wins_party;
 
-    this.workshopWins = data?.workshop_round_wins_party;
+    this.workshopWins = data.workshop_round_wins_party;
 
-    this.shootingRangeWins = data?.shooting_range_round_wins_party;
+    this.shootingRangeWins = data.shooting_range_round_wins_party;
 
-    this.frozenFloorWins = data?.frozen_floor_round_wins_party;
+    this.frozenFloorWins = data.frozen_floor_round_wins_party;
 
-    this.cannonPaintingWins = data?.cannon_painting_round_wins_party;
+    this.cannonPaintingWins = data.cannon_painting_round_wins_party;
 
-    this.fireLeapersWins = data?.fire_leapers_round_wins_party;
+    this.fireLeapersWins = data.fire_leapers_round_wins_party;
 
-    this.superSheepWins = data?.super_sheep_round_wins_party;
+    this.superSheepWins = data.super_sheep_round_wins_party;
   }
 }
 

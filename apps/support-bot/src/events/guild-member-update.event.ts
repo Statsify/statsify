@@ -131,7 +131,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
   }
 
   private findTier(memberId: string) {
-    return PREMIUM_TIERS.find((tier) => this.tiers[tier]!.has(memberId));
+    return PREMIUM_TIERS.find((tier) => this.tiers[tier].has(memberId));
   }
 
   private findRoleTier(roles: string[]) {
@@ -221,7 +221,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     await this.roleService.addRole(
       GUILD_ID,
       memberId,
-      TIER_ROLES[tier as keyof typeof TIER_ROLES]
+      TIER_ROLES[tier]
     );
 
     await this.roleService.addRole(GUILD_ID, memberId, PREMIUM_ROLE);

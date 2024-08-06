@@ -196,7 +196,7 @@ export class ApiService extends StatsifyApiService {
           (t) => t("errors.invalidGuild.title"),
           (t) =>
             t("errors.invalidGuild.description", {
-              context: type?.toLowerCase(),
+              context: type.toLowerCase(),
               tag: input,
             })
         );

@@ -26,7 +26,7 @@ export class SkinService {
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
-    const { skin } = await this.getSkin(uuid).then(skin => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false));
+    const { skin } = await this.getSkin(uuid).then(skin => this.resolveSkin(skin.skinUrl, skin.slim ?? false));
 
     const canvas = new Canvas(size, size);
     const ctx = canvas.getContext("2d");
@@ -43,7 +43,7 @@ export class SkinService {
 
   public async getRender(uuid: string): Promise<Buffer> {
     const skin = await this.getSkin(uuid);
-    return renderSkin(skin?.skinUrl, skin?.slim ?? false);
+    return renderSkin(skin.skinUrl, skin.slim ?? false);
   }
 
   public async getSkin(tag: string): Promise<Skin> {

@@ -81,7 +81,7 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
 
   if (time === QuestTime.Overall) {
     const entries: GameEntry[] = questEntries
-      .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
+      .sort((a, b) => (b[1].total ?? 0) - (a[1].total ?? 0))
       .map(([k, v]) => [k as GameId, t(v.total)]);
 
     return <GameList entries={entries} gameIcons={gameIcons} />;
@@ -91,7 +91,7 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
 
   const entries: GameEntry[] = questEntries
     .map(([k, v]) => [k, v, Object.keys(v).length - 1] as const)
-    .sort((a, b) => ratio(b[1]?.total ?? 0, b[2]) - ratio(a[1]?.total ?? 0, a[2]))
+    .sort((a, b) => ratio(b[1].total ?? 0, b[2]) - ratio(a[1].total ?? 0, a[2]))
     .map(([k, v, total]) => {
       const completed = v.total;
 

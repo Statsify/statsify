@@ -73,7 +73,7 @@ const processQuests = (
 };
 
 const assignQuestMetadata = (
-  constructor: Constructor<any>,
+  constructor: Constructor,
   time: QuestTime,
   options: QuestOption<string>[]
 ) => {

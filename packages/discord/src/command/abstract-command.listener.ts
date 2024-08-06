@@ -90,7 +90,7 @@ export abstract class AbstractCommandListener {
   public listen() {
     if (this.port !== undefined) {
       this.logger.log(`Listening with InteractionServer on port ${this.port}`);
-      return (this.client as InteractionServer).listen(this.port as number);
+      return (this.client as InteractionServer).listen(this.port);
     }
 
     this.logger.log("Connecting to gateway with WebsocketShard");
@@ -137,7 +137,7 @@ export abstract class AbstractCommandListener {
   }: ExecuteCommandOptions) {
 
     try {
-      preconditions.forEach((precondition) => precondition());
+      preconditions.forEach((precondition) => { precondition(); });
 
       const response = await command.execute(context);
 

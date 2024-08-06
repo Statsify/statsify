@@ -139,7 +139,7 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
 
   if (!context.renderer) context.renderer = Container.get(FontRenderer);
 
-  Sentry.startSpan({ name: "Render JSX", op: "jsx.render" }, () => _render(ctx, context, { ...intrinsicRenders, ...theme?.elements }, instructions, 0, 0));
+  Sentry.startSpan({ name: "Render JSX", op: "jsx.render" }, () => { _render(ctx, context, { ...intrinsicRenders, ...theme?.elements }, instructions, 0, 0); });
 
   return canvas;
 }

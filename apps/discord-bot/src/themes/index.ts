@@ -41,7 +41,7 @@ export const getTheme = (user: User | null): Theme | undefined => {
       },
       img(ctx, props, location, theme, component) {
         if (component !== Background.name)
-          return Image.render(ctx, props, location, theme, component);
+        { Image.render(ctx, props, location, theme, component); return; }
 
         if (colorPalette?.background === null) return;
 

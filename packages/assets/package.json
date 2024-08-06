@@ -7,7 +7,7 @@
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",
-    "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
+    "lint": "eslint --fix"
   },
   "dependencies": {
     "@statsify/logger": "workspace:^",

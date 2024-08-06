@@ -33,7 +33,7 @@ const FUSE_OPTIONS = {
   ignoreLocation: true,
 };
 
-const fields = entries.reduce((acc, [prefix, value]) => {
+const fields = entries.reduce<Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>>((acc, [prefix, value]) => {
   const list = LeaderboardScanner.getLeaderboardFields(value.type.type).map(
     ([key, { leaderboard }]) => ({ value: key, name: removeFormatting(leaderboard.name) })
   );
@@ -41,7 +41,7 @@ const fields = entries.reduce((acc, [prefix, value]) => {
   const fuse = new Fuse(list, FUSE_OPTIONS);
 
   return { ...acc, [prefix]: [fuse, list] };
-}, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);
+}, {});
 
 export class PlayerLeaderboardArgument extends AbstractArgument {
   public name = "leaderboard";

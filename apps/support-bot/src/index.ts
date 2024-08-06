@@ -57,7 +57,7 @@ Container.set(RestClient, rest);
 
 await Promise.all(
   [I18nLoaderService, FontLoaderService, MongoLoaderService].map((service) =>
-    Container.get(service).init()
+  { Container.get(service).init(); }
   )
 );
 

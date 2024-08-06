@@ -23,7 +23,7 @@ export class WarlordsCommand extends BaseHypixelCommand<WarlordsModes> {
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<WarlordsModes, never>
+    { mode }: ProfileData<WarlordsModes>
   ): JSX.Element {
     return <WarlordsProfile {...base} mode={mode} />;
   }

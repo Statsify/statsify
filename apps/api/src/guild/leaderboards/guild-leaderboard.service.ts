@@ -50,10 +50,10 @@ export class GuildLeaderboardService extends LeaderboardService {
     ids: string[],
     fields: string[]
   ): Promise<LeaderboardAdditionalStats[]> {
-    const selector = fields.reduce((acc, key) => {
+    const selector = fields.reduce<Record<string, boolean>>((acc, key) => {
       acc[key] = true;
       return acc;
-    }, {} as Record<string, boolean>);
+    }, {});
 
     selector.nameFormatted = true;
 

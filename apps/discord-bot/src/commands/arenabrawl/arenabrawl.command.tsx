@@ -23,7 +23,7 @@ export class ArenaBrawlCommand extends BaseHypixelCommand<ArenaBrawlModes> {
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<ArenaBrawlModes, never>
+    { mode }: ProfileData<ArenaBrawlModes>
   ): JSX.Element {
     return <ArenaBrawlProfile {...base} mode={mode} />;
   }

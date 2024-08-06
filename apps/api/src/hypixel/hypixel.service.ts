@@ -146,7 +146,7 @@ export class HypixelService {
       name: `GET ${this.httpService.axiosRef.getUri({ url })}`,
       op: "http.client",
     }, (span) => this.httpService.get(url, { params }).pipe(
-      tap((response) => Sentry.setHttpStatus(span, response.status)),
+      tap((response) => { Sentry.setHttpStatus(span, response.status); }),
       map((response) => response.data),
       catchError((err) => throwError(() => new Error(`Fetching ${url} failed with reason: ${err.message}`, { cause: err })))
     ));

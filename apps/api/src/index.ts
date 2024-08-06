@@ -60,7 +60,7 @@ const adapter = new FastifyAdapter({ bodyLimit: 5e6 });
 adapter
   .getInstance()
   .addContentTypeParser("image/png", { parseAs: "buffer" }, (_, body, done) =>
-    done(null, body)
+  { done(null, body); }
   );
 
 const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {

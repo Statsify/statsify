@@ -45,16 +45,16 @@ export const GuildListProfile = ({
   });
 
   //A map of the all the ranks in the guild
-  const guildRankMap = guild.ranks.reduce((acc, rank) => {
+  const guildRankMap = guild.ranks.reduce<Record<string, GuildRank>>((acc, rank) => {
     acc[rank.name] = rank;
     return acc;
-  }, {} as Record<string, GuildRank>);
+  }, {});
 
   const ranks = Object.entries(rankMap)
     .sort(
       ([rankNameA], [rankNameB]) =>
-        (guildRankMap[rankNameB]?.priority ?? 0) -
-        (guildRankMap[rankNameA]?.priority ?? 0)
+        (guildRankMap[rankNameB].priority ?? 0) -
+        (guildRankMap[rankNameA].priority ?? 0)
     )
     .map(([rankName, members]) => {
       const guildRank = guildRankMap[rankName];

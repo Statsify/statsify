@@ -82,10 +82,10 @@ export const getLeaderboardMetadata = (
   } else if (leaderboardOptions?.enabled === false) {
     leaderboard = {
       enabled: false,
-      additionalFields: leaderboardOptions?.additionalFields || [],
-      extraDisplay: leaderboardOptions?.extraDisplay,
-      formatter: leaderboardOptions?.formatter,
-      resetEvery: leaderboardOptions?.resetEvery,
+      additionalFields: leaderboardOptions.additionalFields || [],
+      extraDisplay: leaderboardOptions.extraDisplay,
+      formatter: leaderboardOptions.formatter,
+      resetEvery: leaderboardOptions.resetEvery,
       fieldName,
       name,
     };

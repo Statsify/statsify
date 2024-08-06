@@ -1,0 +1,8 @@
+{
+	"recommendations": [
+		"dbaeumer.vscode-eslint",
+		"rust-lang.rust-analyzer",
+		"lokalise.i18n-ally",
+		"IronGeek.vscode-env"
+	]
+}

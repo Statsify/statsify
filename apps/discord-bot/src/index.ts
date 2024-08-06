@@ -59,7 +59,7 @@ const port = config("discordBot.port", { required: false });
 
 const listener = CommandListener.create(
   port
-    ? new InteractionServer({ key: config("discordBot.publicKey")! })
+    ? new InteractionServer({ key: config("discordBot.publicKey") })
     : new WebsocketShard({ token: config("discordBot.token"), intents: 1 }),
   rest,
   commands

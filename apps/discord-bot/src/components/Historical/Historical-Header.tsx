@@ -82,7 +82,7 @@ export const HistoricalHeader = ({
               ? `Started ${sessionReset?.toFormat(
                 DATE_FORMAT
               )} (${sessionReset?.toRelative()})`
-              : `${start!.toFormat(DATE_FORMAT)} ➡ ${end!.toFormat(DATE_FORMAT)}`}
+              : `${start.toFormat(DATE_FORMAT)} ➡ ${end.toFormat(DATE_FORMAT)}`}
           </text>
         </box>
         <div width="100%">

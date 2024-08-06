@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "TIMING=1 eslint './src/**/*.{ts,tsx,js,jsx}' --fix",
+    "lint": "eslint './src/**/*.{ts,tsx,js,jsx}' --fix",
     "api-key": "node src/api-key.js",
     "build-watch": "node src/build-watch.js",
     "delete-sessions": "node src/delete-sessions.js",

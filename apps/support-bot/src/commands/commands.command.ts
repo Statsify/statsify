@@ -52,7 +52,7 @@ export class CommandsCommand {
             index,
             group,
             totalCommands,
-            context.option<string>("highlight")?.toLowerCase().replace(" ", "_")
+            context.option<string>("highlight").toLowerCase().replace(" ", "_")
           )
       )
     );

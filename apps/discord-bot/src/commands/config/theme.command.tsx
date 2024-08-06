@@ -219,7 +219,7 @@ export class ThemeCommand {
   }
 
   private async getProfile(t: LocalizeFunction, mode: "theme" | "footer", user: User) {
-    if (!user?.uuid) throw new ErrorMessage("errors.unknown");
+    if (!user.uuid) throw new ErrorMessage("errors.unknown");
 
     const [player, skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayer(user.uuid),

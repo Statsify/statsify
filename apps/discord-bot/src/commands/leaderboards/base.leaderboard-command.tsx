@@ -296,7 +296,7 @@ export class BaseLeaderboardCommand {
       return [message, null];
     }
 
-    if (!leaderboard?.data.length) {
+    if (!leaderboard.data.length) {
       const message = {
         ...new ErrorMessage("errors.leaderboardEmpty"),
         ephemeral: true,

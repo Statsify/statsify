@@ -23,7 +23,7 @@ export class WoolWarsCommand extends BaseHypixelCommand<WoolWarsModes> {
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<WoolWarsModes, never>
+    { mode }: ProfileData<WoolWarsModes>
   ): JSX.Element {
     return <WoolWarsProfile {...base} mode={mode} />;
   }

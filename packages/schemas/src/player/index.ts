@@ -82,10 +82,10 @@ export class Player {
   public constructor(data: APIData = {}) {
     this.uuid = data.uuid;
     this.username = data.displayname;
-    this.usernameToLower = this.username?.toLowerCase();
+    this.usernameToLower = this.username.toLowerCase();
 
     this.rank = PlayerUtil.getRank(data);
-    this.plusColor = PlayerUtil.getPlusColor(this.rank, data?.rankPlusColor);
+    this.plusColor = PlayerUtil.getPlusColor(this.rank, data.rankPlusColor);
     this.prefixName = `${PlayerUtil.getRankColor(this.rank).toString()}${this.username}`;
     this.displayName = PlayerUtil.getDisplayName(
       this.username,
@@ -93,7 +93,7 @@ export class Player {
       this.plusColor.code
     );
 
-    this.socials = new PlayerSocials(data?.socialMedia?.links ?? {});
+    this.socials = new PlayerSocials(data.socialMedia?.links ?? {});
     this.stats = new PlayerStats(data);
     this.status = new PlayerStatus(data);
 

@@ -29,7 +29,7 @@ export class GameModes<K extends string> {
   private hypixelModes: Record<string, string>;
 
   public constructor(modes: (StatsifyGameMode<K> | HypixelGameMode)[]) {
-    this.modes = (modes.filter((m) => "api" in m) as StatsifyGameMode<K>[]).map((m) => ({
+    this.modes = (modes.filter((m) => "api" in m)).map((m) => ({
       hypixel: m.hypixel,
       api: m.api,
       formatted: m.formatted ?? prettify(m.api),

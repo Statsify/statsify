@@ -20,7 +20,7 @@ export class NotFoundException extends BaseNotFoundException {
   public error: string;
 
   public constructor(objectOrError?: string | any) {
-    let error: any = { statusCode: 404, error: "Not Found" };
+    let error: { statusCode: number; error: string; message?: string } = { statusCode: 404, error: "Not Found" }  ;
 
     if (typeof objectOrError === "string") {
       error.message = objectOrError;

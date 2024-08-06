@@ -146,7 +146,7 @@ export class Quests {
 
     // Some quests like SkyClash and Crazy Walls aren't stored by us.
     this.total = Object.values(quests).reduce(
-      (p: number, c: APIData) => p + (c?.completions?.length ?? 0),
+      (p: number, c: APIData) => p + (c.completions?.length ?? 0),
       0
     );
 
