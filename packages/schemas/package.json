@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@nestjs/swagger": "^7.1.8",
-    "@statsify/logger": "*",
-    "@statsify/math": "*",
-    "@statsify/util": "*",
+    "@statsify/logger": "workspace:^",
+    "@statsify/math": "workspace:^",
+    "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.1",
     "@typegoose/typegoose": "^12.0.0",
     "class-validator": "^0.14.0",
