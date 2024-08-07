@@ -27,7 +27,7 @@
     "mongoose": "^8.5.2",
     "reflect-metadata": "^0.2.2",
     "skia-canvas": "^0.9.30",
-    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb",
+    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83",
     "toad-scheduler": "^3.0.1",
     "typedi": "^0.10.0"
   },
