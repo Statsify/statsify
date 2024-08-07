@@ -223,7 +223,7 @@ export class ThemeCommand {
 
     const [player, skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayer(user.uuid),
-      this.apiService.getPlayerSkin(user.uuid),
+      this.apiService.getPlayerSkin(user.uuid, user),
       this.apiService.getUserBadge(user.uuid),
       getLogo(user),
       getBackground("hypixel", "overall"),

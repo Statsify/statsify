@@ -29,7 +29,7 @@ export class SkinCommand {
       user
     );
 
-    const skin = await this.apiService.getPlayerSkin(player.uuid);
+    const skin = await this.apiService.getPlayerSkin(player.uuid, user);
     const canvas = new Canvas(skin.width, skin.height);
     canvas.getContext("2d").drawImage(skin, 0, 0);
 

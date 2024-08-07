@@ -41,9 +41,12 @@ export class SkinService {
     return canvas.toBuffer("png");
   }
 
-  public async getRender(uuid: string): Promise<Buffer> {
+  public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {
     const skin = await this.getSkin(uuid);
-    return renderSkin(skin?.skinUrl, skin?.slim ?? false);
+    const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
+    // This field is set by loadImage from `@statsify/rendering`
+    const { _data: buffer } = image as unknown as { _data: Buffer };
+    return renderSkin(buffer, skin.slim ?? false, extruded);
   }
 
   public async getSkin(tag: string): Promise<Skin> {
