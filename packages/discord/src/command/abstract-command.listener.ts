@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import {
   APIUser,
   ApplicationCommandOptionType,
@@ -91,7 +90,7 @@ export abstract class AbstractCommandListener {
   public listen() {
     if (this.port !== undefined) {
       this.logger.log(`Listening with InteractionServer on port ${this.port}`);
-      return (this.client as InteractionServer).listen(this.port as number);
+      return (this.client as InteractionServer).listen(this.port);
     }
 
     this.logger.log("Connecting to gateway with WebsocketShard");
@@ -136,29 +135,24 @@ export abstract class AbstractCommandListener {
     preconditions = [],
     message,
   }: ExecuteCommandOptions) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     try {
-      preconditions.forEach((precondition) => precondition());
+      preconditions.forEach((precondition) => { precondition(); });
 
       const response = await command.execute(context);
 
       if (typeof response !== "object") return;
-      transaction?.finish();
 
       context.reply({
         ...message,
         ...response,
       });
     } catch (err) {
-      if (err instanceof Message) {
-        transaction?.finish();
+      if (err instanceof Message) 
         return context.reply(err);
-      }
 
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
-      transaction?.finish();
     }
   }
 

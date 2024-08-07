@@ -23,7 +23,7 @@ export class SkyWarsCommand extends BaseHypixelCommand<SkyWarsModes> {
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<SkyWarsModes, never>
+    { mode }: ProfileData<SkyWarsModes>
   ): JSX.Element {
     return <SkyWarsProfile {...base} mode={mode} />;
   }

@@ -34,7 +34,7 @@ export function useGradient(
         ? ctx.createLinearGradient(x, y, x + width, y)
         : ctx.createLinearGradient(x, y, x, y + height);
 
-    colors.forEach(([offset, color]) => gradient.addColorStop(offset, color));
+    colors.forEach(([offset, color]) => { gradient.addColorStop(offset, color); });
 
     return gradient;
   };

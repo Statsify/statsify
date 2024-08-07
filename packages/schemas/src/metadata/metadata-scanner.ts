@@ -118,7 +118,7 @@ export class MetadataScanner {
 }
 
 if (import.meta.vitest) {
-  const { test, it, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
   const { Field } = await import("./field/index.js");
   const { prettify } = await import("@statsify/util");
@@ -155,7 +155,7 @@ if (import.meta.vitest) {
     };
   };
 
-  test("MetadataScanner", () => {
+  suite("MetadataScanner", () => {
     it("should read and write basic string metadata", () => {
       class Clazz {
         @Field()

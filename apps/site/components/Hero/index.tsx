@@ -7,7 +7,7 @@
  */
 
 import Image from "next/image";
-import Typed from "react-typed";
+import { ReactTyped as Typed } from "react-typed";
 import discordImage from "../../public/discord.svg";
 import heroImage from "../../public/hero.png";
 import inviteImage from "../../public/invite.svg";

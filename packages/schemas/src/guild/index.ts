@@ -115,7 +115,7 @@ export class Guild {
   public constructor(data: APIData = {}) {
     this.id = data._id;
     this.name = data.name;
-    this.nameToLower = this.name?.toLowerCase();
+    this.nameToLower = this.name.toLowerCase();
     this.description = data.description;
 
     this.createdAt = data.created;

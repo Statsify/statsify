@@ -224,7 +224,7 @@ export class ApiService {
   }
 
   public getUserBadge(tag: string) {
-    return this.requestImage("/user/badge", { tag }).catch(() => undefined);
+    return this.requestImage("/user/badge", { tag }).catch(() => {});
   }
 
   public updateUserBadge(tag: string, badge: Buffer) {
@@ -269,10 +269,10 @@ export class ApiService {
   private async requestKey<T, K extends keyof T>(
     url: string,
     key: K,
-    params?: Record<string, unknown>,
+    parameters?: Record<string, unknown>,
     method: Method = "GET"
   ) {
-    const data = await this.request<T>(url, params, method);
+    const data = await this.request<T>(url, parameters, method);
 
     if (data[key] === undefined || data[key] === null) {
       throw new Error(`Key not found: ${String(key)}`);
@@ -283,38 +283,35 @@ export class ApiService {
 
   private async request<T>(
     url: string,
-    params: Record<string, unknown> | undefined,
+    parameters: Record<string, unknown> | undefined,
     method: Method = "GET",
     { body, headers, responseType }: ExtraData = {}
   ): Promise<T> {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
+    const data = await Sentry.startSpan({
+      name: `${method} ${url}`,
       op: "http.client",
-      description: `${method} ${url}`,
+    }, async (span) => {
+      const response = await this.axios.request({
+        url,
+        method,
+        params: parameters,
+        headers,
+        data: body,
+        responseType,
+      });
+      
+      Sentry.setHttpStatus(span, response.status);
+
+      return response.data;
     });
-
-    const res = await this.axios.request({
-      url,
-      method,
-      params,
-      headers,
-      data: body,
-      responseType,
-    });
-
-    child?.setHttpStatus(res.status);
-    child?.finish();
-
-    const data = res.data;
 
     if (data.success === false) throw new Error("API request was unsuccessful");
 
     return data;
   }
 
-  private async requestImage(url: string, params?: Record<string, unknown>) {
-    const uri = this.axios.getUri({ url, params: { key: this.apiKey, ...params } });
+  private async requestImage(url: string, parameters?: Record<string, unknown>) {
+    const uri = this.axios.getUri({ url, params: { key: this.apiKey, ...parameters } });
     const image = await loadImage(uri);
 
     return image;

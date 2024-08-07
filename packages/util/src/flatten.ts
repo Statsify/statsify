@@ -18,13 +18,13 @@ export type DeepFlatten<T> = {
         ? V extends readonly any[]
           ? Pick<T, K>
           : DeepFlatten<V> extends infer FV
-          ? {
+            ? {
               [P in keyof FV as `${Extract<K, string | number>}.${Extract<
                 P,
                 string | number
               >}`]: FV[P];
             }
-          : never
+            : never
         : Pick<T, K>
       : never
   ) => void;
@@ -56,9 +56,9 @@ export const flatten = <T>(data: T, prefix = "", dest: APIData = {}): Flatten<T>
 };
 
 if (import.meta.vitest) {
-  const { test, it, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("flatten", () => {
+  suite("flatten", () => {
     it("should flatten objects", () => {
       expect(flatten({ a: 1 })).toMatchObject({ a: 1 });
       expect(flatten({ a: { b: { c: 1 } } })).toMatchObject({ "a.b.c": 1 });

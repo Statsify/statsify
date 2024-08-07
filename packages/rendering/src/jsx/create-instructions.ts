@@ -7,7 +7,7 @@
  */
 
 import { getTotalSize, toDecimal } from "./util.js";
-import type { ElementNode, Fraction, Instruction, Percent } from "./types.js";
+import type { ElementNode, Instruction } from "./types.js";
 
 export const createInstructions = (
   node: ElementNode,
@@ -48,7 +48,7 @@ export const createInstructions = (
       child[otherSide].size =
         child[otherSide].size === "remaining"
           ? size
-          : size * toDecimal(child[otherSide].size as Percent | Fraction);
+          : size * toDecimal(child[otherSide].size);
     }
 
     if (typeof child[side].size === "string") {
@@ -58,8 +58,8 @@ export const createInstructions = (
       }
 
       child[side].size =
-        paddlessSideLength * toDecimal(child[side].size as Percent | Fraction);
-      remainingSide -= child[side].size as number;
+        paddlessSideLength * toDecimal(child[side].size);
+      remainingSide -= child[side].size;
     }
 
     remainingSide -= child[side].size as number;

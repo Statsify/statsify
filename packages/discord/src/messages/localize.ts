@@ -6,8 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import i18next, {
   StringMap,
   TFunction,

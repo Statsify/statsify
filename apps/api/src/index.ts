@@ -8,7 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import handlebars from "handlebars";
-import packageJson from "../package.json" assert { type: "json" };
+import packageJson from "../package.json" with { type: "json" };
 import { AppModule } from "./app.module.js";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
@@ -36,8 +36,9 @@ if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
     integrations: [
-      new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true }),
-      new Sentry.Integrations.Mongo({ useMongoose: true }),
+      Sentry.httpIntegration({ breadcrumbs:true }),
+      Sentry.mongooseIntegration(),
+      Sentry.mongoIntegration(),
     ],
     normalizeDepth: 3,
     tracesSampleRate: config("sentry.tracesSampleRate"),
@@ -59,7 +60,7 @@ const adapter = new FastifyAdapter({ bodyLimit: 5e6 });
 adapter
   .getInstance()
   .addContentTypeParser("image/png", { parseAs: "buffer" }, (_, body, done) =>
-    done(null, body)
+  { done(null, body); }
   );
 
 const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {

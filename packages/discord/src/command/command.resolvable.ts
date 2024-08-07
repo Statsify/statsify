@@ -72,7 +72,7 @@ export class CommandResolvable {
     this.type = ApplicationCommandType.ChatInput;
     this.cooldown = cooldown;
 
-    const argsResolved = (args ?? [])?.map((a) =>
+    const argsResolved = (args ?? []).map((a) =>
       a instanceof AbstractArgument ? a : new a()
     );
 

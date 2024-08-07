@@ -61,7 +61,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
     const guild = await this.guildService.get(guildId);
 
-    const memberId = data.user!.id;
+    const memberId = data.user.id;
 
     const user = await this.apiService.getUser(memberId);
 
@@ -74,7 +74,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
       getBackground("minecraft", "overall"),
     ]);
 
-    const username = data.user!.username;
+    const username = data.user.username;
 
     const canvas = render(
       <WelcomeProfile
@@ -93,26 +93,26 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
   }
 
   private getDiscordAvatar(member: APIGuildMember): Promise<Image> {
-    const avatar = member.user?.avatar ?? member.avatar;
+    const avatar = member.user.avatar ?? member.avatar;
 
     if (avatar)
       return loadImage(
-        `https://cdn.discordapp.com/avatars/${member.user!.id}/${avatar}.png?size=96`
+        `https://cdn.discordapp.com/avatars/${member.user.id}/${avatar}.png?size=96`
       );
 
     return loadImage(
       `https://cdn.discordapp.com/embed/avatars/${
-        Number(member.user!.discriminator) % 5
+        Number(member.user.discriminator) % 5
       }.png?size=96`
     );
   }
 
   private async sendVerifiedMessage(member: APIGuildMember): Promise<IMessage> {
-    await this.roleService.addRole(GUILD_ID, member.user!.id, MEMBER_ROLE);
-    await this.apiService.updateUser(member.user!.id, { serverMember: true });
+    await this.roleService.addRole(GUILD_ID, member.user.id, MEMBER_ROLE);
+    await this.apiService.updateUser(member.user.id, { serverMember: true });
 
     const embed = new EmbedBuilder()
-      .description(`<@${member.user!.id}> ${this.randomJoinMessage()}`)
+      .description(`<@${member.user.id}> ${this.randomJoinMessage()}`)
       .image("attachment://welcome.png")
       .color(STATUS_COLORS.info);
 
@@ -122,12 +122,12 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
   private async sendUnverifiedMessage(member: APIGuildMember): Promise<IMessage> {
     this.messageService.send(UNVERIFIED_CHANNEL_ID, {
       content: `<@${
-        member.user!.id
+        member.user.id
       }>, run and complete \`/verify\` to get access to the rest of the discord server.`,
     });
 
     const embed = new EmbedBuilder()
-      .description(`<@${member.user!.id}> ${this.randomJoinMessage()}`)
+      .description(`<@${member.user.id}> ${this.randomJoinMessage()}`)
       .image("attachment://welcome.png")
       .color(STATUS_COLORS.info);
 

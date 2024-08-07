@@ -240,8 +240,7 @@ export class BaseLeaderboardCommand {
       context.reply({ embeds: [], components: [] });
       cache.clear();
     }, 300_000);
-
-    // eslint-disable-next-line require-atomic-updates
+     
     currentPage = page || currentPage;
 
     return { ...message, components: [row] };
@@ -297,7 +296,7 @@ export class BaseLeaderboardCommand {
       return [message, null];
     }
 
-    if (!leaderboard?.data.length) {
+    if (!leaderboard.data.length) {
       const message = {
         ...new ErrorMessage("errors.leaderboardEmpty"),
         ephemeral: true,

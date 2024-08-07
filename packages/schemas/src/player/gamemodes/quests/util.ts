@@ -23,7 +23,7 @@ interface Quest {
 export enum QuestTime {
   Daily,
   Weekly,
-  Overall,
+  Overall
 }
 
 export interface QuestOption<TField extends string> {
@@ -73,7 +73,7 @@ const processQuests = (
 };
 
 const assignQuestMetadata = (
-  constructor: Constructor<any>,
+  constructor: Constructor,
   time: QuestTime,
   options: QuestOption<string>[]
 ) => {
@@ -125,9 +125,9 @@ export function createGameModeQuests<
   daily,
   weekly,
 }: CreateQuestsOptions<DailyFields, WeeklyFields>): GameWithQuests<
-  DailyFields,
-  WeeklyFields
-> {
+    DailyFields,
+    WeeklyFields
+  > {
   class Daily {
     [key: string]: number;
 

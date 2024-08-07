@@ -14,7 +14,7 @@
     "downlevelIteration": true,
     "strictPropertyInitialization": false,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2022",
+    "target": "esnext",
     "strict": true,
     "types": [
       "vitest/importMeta"

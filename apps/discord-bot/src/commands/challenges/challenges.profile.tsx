@@ -36,7 +36,7 @@ const NormalTable = ({ challenges, t, gameIcons }: NormalTableProps) => {
   const { total: _, ...challengesByGame } = challenges;
 
   const entries: [GameId, any][] = Object.entries(challengesByGame)
-    .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
+    .sort((a, b) => (b[1].total ?? 0) - (a[1].total ?? 0))
     .map(([k, v]) => [k as GameId, t(v.total)]);
 
   return <GameList entries={entries} gameIcons={gameIcons} />;
@@ -60,7 +60,7 @@ const GameTable = ({ gameChallenges, constructor, t }: GameTableProps) => {
       .sort((a, b) => b[1] - a[1])
       .map(([challenge, completions]) => {
         const field = metadata.find(([k]) => k === challenge);
-        const realName = field?.[1]?.leaderboard?.name ?? prettify(challenge);
+        const realName = field?.[1]?.leaderboard.name ?? prettify(challenge);
         return [realName, t(completions)];
       }),
     GROUP_SIZE

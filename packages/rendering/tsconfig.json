@@ -5,6 +5,8 @@
   },
   "include": [
     "src",
-    "tests"
+    "tests",
+    "eslint.config.js",
+    "vitest.config.ts"
   ]
 }

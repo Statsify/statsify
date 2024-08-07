@@ -76,7 +76,7 @@ export class BadgeCommand {
         const profile = await this.getProfile(t, user, badge);
 
         return {
-          content: t("config.badge.view") as string,
+          content: t("config.badge.view"),
           files: [{ name: "badge.png", data: profile, type: "image/png" }],
         };
       }
@@ -122,7 +122,7 @@ export class BadgeCommand {
         const profile = await this.getProfile(t, user, canvas);
 
         return {
-          content: t("config.badge.set") as string,
+          content: t("config.badge.set"),
           files: [{ name: "badge.png", data: profile, type: "image/png" }],
         };
       }
@@ -134,7 +134,7 @@ export class BadgeCommand {
         const profile = await this.getProfile(t, user, badge);
 
         return {
-          content: t("config.badge.reset") as string,
+          content: t("config.badge.reset"),
           files: [{ name: "badge.png", data: profile, type: "image/png" }],
         };
       }
@@ -142,7 +142,7 @@ export class BadgeCommand {
   }
 
   private async getProfile(t: LocalizeFunction, user: User, badge?: Image | Canvas) {
-    if (!user?.uuid) throw new ErrorMessage("errors.unknown");
+    if (!user.uuid) throw new ErrorMessage("errors.unknown");
 
     const [player, skin, logo, background] = await Promise.all([
       this.apiService.getPlayer(user.uuid),

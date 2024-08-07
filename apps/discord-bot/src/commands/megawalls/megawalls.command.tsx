@@ -30,7 +30,7 @@ export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<MegaWallsModes, never>
+    { mode }: ProfileData<MegaWallsModes>
   ): JSX.Element {
     return <MegaWallsProfile {...base} mode={mode} />;
   }

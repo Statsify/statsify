@@ -23,7 +23,7 @@ export class SmashHeroesCommand extends BaseHypixelCommand<SmashHeroesModes> {
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<SmashHeroesModes, never>
+    { mode }: ProfileData<SmashHeroesModes>
   ): JSX.Element {
     return <SmashHeroesProfile {...base} mode={mode} />;
   }

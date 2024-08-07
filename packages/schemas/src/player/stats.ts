@@ -204,8 +204,8 @@ export class PlayerStats {
   public woolwars: WoolWars;
 
   public constructor(data: APIData = {}) {
-    const achievements = data?.achievements ?? {};
-    const stats = data?.stats ?? {};
+    const achievements = data.achievements ?? {};
+    const stats = data.stats ?? {};
     const legacy = stats.Legacy ?? {};
 
     this.arcade = new Arcade(stats.Arcade ?? {}, achievements);
@@ -213,7 +213,7 @@ export class PlayerStats {
     this.bedwars = new BedWars(stats.Bedwars ?? {});
     this.blitzsg = new BlitzSG(stats.HungerGames ?? {});
     this.buildbattle = new BuildBattle(stats.BuildBattle ?? {});
-    this.challenges = new Challenges(data?.challenges?.all_time ?? {}, achievements);
+    this.challenges = new Challenges(data.challenges?.all_time ?? {}, achievements);
     this.copsandcrims = new CopsAndCrims(stats.MCGO ?? {});
     this.duels = new Duels(stats.Duels ?? {});
     this.general = new General(data, legacy);

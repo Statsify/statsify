@@ -40,9 +40,9 @@ export const unflatten = <T>(instance: Flatten<T>): T => {
 };
 
 if (import.meta.vitest) {
-  const { test, it, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("unflatten", () => {
+  suite("unflatten", () => {
     it("should unflatten objects", () => {
       expect(unflatten({ a: 1 })).toMatchObject({ a: 1 });
       expect(unflatten({ "a.b.c": 1 })).toMatchObject({ a: { b: { c: 1 } } });

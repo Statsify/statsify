@@ -13,7 +13,7 @@ import type { APIData } from "@statsify/util";
 function findLastAction(data: APIData): { action: string; time: number } {
   const actions: { action: string; time: number }[] = [];
 
-  const allQuests = data?.quests ?? {};
+  const allQuests = data.quests ?? {};
 
   let lastQuestEnd = 0;
   let lastQuestStart = 0;
@@ -32,7 +32,7 @@ function findLastAction(data: APIData): { action: string; time: number } {
 
   actions.push({ action: "QUEST_START", time: lastQuestStart }, { action: "QUEST_COMPLETED", time: lastQuestEnd });
 
-  const allPets = data?.petStats ?? {};
+  const allPets = data.petStats ?? {};
 
   let lastPetTime = 0;
 
@@ -55,13 +55,13 @@ function findLastAction(data: APIData): { action: string; time: number } {
   // known whereabouts.
   actions.push({ action: "PET", time: lastPetTime }, {
     action: "PET_JOURNEY",
-    time: data?.petJourneyTimestamp ?? 0,
+    time: data.petJourneyTimestamp ?? 0,
   });
 
-  if (data?.stats?.SkyWars) {
+  if (data.stats?.SkyWars) {
     // Lab modes are explained each first time any player enters the game
     // as well as when they click the book while in queue.
-    const explains = Object.entries(data?.stats?.SkyWars).filter((e) =>
+    const explains = Object.entries(data.stats?.SkyWars).filter((e) =>
       e[0].endsWith("explained_last")
     );
 
@@ -73,7 +73,7 @@ function findLastAction(data: APIData): { action: string; time: number } {
     // Every collection of a player head in skywars has a timestamp
     // this means that high level players with status off will show
     // relatively accurate times if they play skywars.
-    const swHeads = data?.stats?.SkyWars?.head_collection ?? {};
+    const swHeads = data.stats?.SkyWars?.head_collection ?? {};
 
     if (swHeads.recent) {
       actions.push({
@@ -90,8 +90,8 @@ function findLastAction(data: APIData): { action: string; time: number } {
     }
   }
 
-  if (data?.stats?.Pit?.profile) {
-    const pitProfile = data?.stats?.Pit?.profile;
+  if (data.stats?.Pit?.profile) {
+    const pitProfile = data.stats?.Pit?.profile;
 
     // Pit profile saves are any stat changing, this makes other actions redundant
     // but they do show a little bit more info as to what the player is doing.
@@ -120,26 +120,26 @@ function findLastAction(data: APIData): { action: string; time: number } {
   actions.push(
     {
       action: "CLAIM_DAILY_EXP",
-      time: data?.eugene?.dailyTwoKExp ?? 0,
+      time: data.eugene?.dailyTwoKExp ?? 0,
     },
     {
       action: "CLAIM_REWARD",
-      time: data?.lastClaimedReward ?? 0,
+      time: data.lastClaimedReward ?? 0,
     },
     {
       action: "LOGIN",
-      time: data?.lastLogin ?? 0,
+      time: data.lastLogin ?? 0,
     },
     {
       action: "LOGOUT",
-      time: data?.lastLogout ?? 0,
+      time: data.lastLogout ?? 0,
     }
   );
 
   // This is good for tracking ap hunters who are playing games with very
   // little in the way of time stats in the game they are playing.
-  if (data?.achievementRewardsNew) {
-    const rewardsArr: number[] = Object.values(data?.achievementRewardsNew ?? {});
+  if (data.achievementRewardsNew) {
+    const rewardsArr: number[] = Object.values(data.achievementRewardsNew ?? {});
     actions.push({ action: "ACHIEVEMENT_REWARD", time: Math.max(...rewardsArr) });
   }
 
@@ -160,7 +160,7 @@ function findLastAction(data: APIData): { action: string; time: number } {
 
   // First login is used as a baseline due to it being literally the oldest timestamp
   // that can be found in a players stats.
-  let lastAction = { action: "FIRST_LOGIN", time: data?.firstLogin ?? 0 };
+  let lastAction = { action: "FIRST_LOGIN", time: data.firstLogin ?? 0 };
 
   for (const action of actions) {
     if (action.time > lastAction.time) {

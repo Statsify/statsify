@@ -63,7 +63,7 @@ export async function getServerMappings() {
 }
 
 export async function getServerBackground(server?: ServerMappingsServer) {
-  if (!server?.id || !server?.enriched) return getBackground("minecraft", "overall");
+  if (!server?.id || !server.enriched) return getBackground("minecraft", "overall");
 
   try {
     const background = await loadImage(`${SERVER_MAPPINGS_CDN_URL}/backgrounds/${server.id}.png`);

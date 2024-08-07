@@ -31,7 +31,7 @@ const sentryDsn = config("sentry.discordBotDsn", { required: false });
 if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
-    integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
+    integrations: [Sentry.httpIntegration({ breadcrumbs: true })],
     normalizeDepth: 3,
     tracesSampleRate: config("sentry.tracesSampleRate"),
     environment: config("environment"),
@@ -59,7 +59,7 @@ const port = config("discordBot.port", { required: false });
 
 const listener = CommandListener.create(
   port
-    ? new InteractionServer({ key: config("discordBot.publicKey")! })
+    ? new InteractionServer({ key: config("discordBot.publicKey") })
     : new WebsocketShard({ token: config("discordBot.token"), intents: 1 }),
   rest,
   commands

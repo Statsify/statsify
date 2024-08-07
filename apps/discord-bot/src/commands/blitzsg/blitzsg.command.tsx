@@ -30,7 +30,7 @@ export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<BlitzSGModes, never>
+    { mode }: ProfileData<BlitzSGModes>
   ): JSX.Element {
     return <BlitzSGProfile {...base} mode={mode} />;
   }

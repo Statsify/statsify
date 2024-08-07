@@ -52,12 +52,12 @@ export class Color {
   })
   public id: ColorId;
 
-  public constructor(code: ColorCode | ColorHex | ColorId) {
+  public constructor(code: ColorCode    ) {
     const color = colors.find((c) => c.code === code || c.hex === code || c.id === code)!;
 
-    this.code = color?.code;
-    this.hex = color?.hex;
-    this.id = color?.id;
+    this.code = color.code;
+    this.hex = color.hex;
+    this.id = color.id;
   }
 
   public toString() {

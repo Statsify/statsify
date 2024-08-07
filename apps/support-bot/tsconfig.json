@@ -4,6 +4,7 @@
     "jsx": "preserve",
   },
   "include": [
-    "src"
+    "src",
+    "eslint.config.js"
   ]
 }

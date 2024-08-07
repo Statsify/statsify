@@ -40,7 +40,7 @@ const sentryDsn = config("sentry.verifyServerDsn", { required: false });
 if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
-    integrations: [new Sentry.Integrations.Mongo({ useMongoose: true })],
+    integrations: [Sentry.mongoIntegration(), Sentry.mongooseIntegration()],
     normalizeDepth: 3,
     tracesSampleRate: config("sentry.tracesSampleRate"),
     environment: config("environment"),

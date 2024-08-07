@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import Fuse from "fuse.js";
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
-import { Fuse } from "fuse.js";
 import { Guild, LeaderboardScanner } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 

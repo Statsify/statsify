@@ -45,11 +45,11 @@ export const serialize = <T>(
 };
 
 if (import.meta.vitest) {
-  const { test, it, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
   const { flatten } = await import("@statsify/util");
   const { Field } = await import("./field/index.js");
 
-  test("serialize", () => {
+  suite("serialize", () => {
     class TesterB {
       @Field()
       public field1: number;

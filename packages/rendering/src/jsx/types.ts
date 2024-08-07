@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/* eslint-disable @typescript-eslint/ban-types */
 import type {
   CanvasGradient,
   CanvasPattern,
@@ -120,7 +119,7 @@ export type Children<T = ElementNode> = T extends ElementNode ? T | T[] : T;
 export type PropsWithChildren<T, K = Children | undefined> = T &
   (K extends undefined ? { children?: K } : { children: K });
 
-export type FC<T = {}> = (
+export type FC<T = object> = (
   props: T extends { children: any } ? T : PropsWithChildren<T>
 ) => ElementNode | null;
 
@@ -129,6 +128,6 @@ export type FC<T = {}> = (
  * K is the type of the element's render function props
  * C is the type of the element's children
  */
-export type RawFC<T = {}, K = T, C = Children | undefined> = (
+export type RawFC<T = object, K = T, C = Children | undefined> = (
   props: PropsWithChildren<T, C>
 ) => RawElement<K>;

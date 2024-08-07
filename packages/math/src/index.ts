@@ -86,9 +86,9 @@ export const deepAdd = <T>(...args: T[]): T => deep(add, ...args);
 export const deepSub = <T>(...args: T[]): T => deep(sub, ...args);
 
 if (import.meta.vitest) {
-  const { test, it, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("basic math", () => {
+  suite("basic math", () => {
     it("should add numbers together", () => {
       expect(add(1, 2)).toBe(3);
       expect(add(1, 2, 3)).toBe(6);
@@ -111,7 +111,7 @@ if (import.meta.vitest) {
     });
   });
 
-  test("math with classes", () => {
+  suite("math with classes", () => {
     class TestClass {
       public constructor(public a: number, public b: number) {}
     }

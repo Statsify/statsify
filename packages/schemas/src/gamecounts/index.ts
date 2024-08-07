@@ -18,8 +18,8 @@ export class GamePlayers {
   public modes?: Record<string, number>;
 
   public constructor(game: APIData) {
-    this.players = game?.players;
-    this.modes = game?.modes;
+    this.players = game.players;
+    this.modes = game.modes;
   }
 }
 

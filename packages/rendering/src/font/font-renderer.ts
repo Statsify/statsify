@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import _positions from "../../positions.json" assert { type: "json" };
-import _sizes from "../../sizes.json" assert { type: "json" };
+import _positions from "../../positions.json" with { type: "json" };
+import _sizes from "../../sizes.json" with { type: "json" };
 import { Canvas, type CanvasRenderingContext2D, type ImageData } from "skia-canvas";
 import { type TextNode, type Token, tokens } from "./tokens.js";
 import { join } from "node:path";
@@ -127,7 +127,7 @@ export class FontRenderer {
 
       if (!matches) continue;
 
-      const effect = token?.effect(part, matches as RegExpMatchArray, defaultState);
+      const effect = token?.effect(part, matches, defaultState);
       let text = effect?.text ?? part;
 
       if (matches) text = text.slice(matches[0].length);
@@ -196,8 +196,8 @@ export class FontRenderer {
 
     const characterSize = sizes[isAscii ? "ascii" : "unicode"][unicode.toUpperCase()];
 
-    const startOffset = characterSize?.start ?? 0;
-    const width = characterSize?.width ?? 0;
+    const startOffset = characterSize.start ?? 0;
+    const width = characterSize.width ?? 0;
 
     return {
       x: (startOffset + x * 16) * scale,
@@ -437,7 +437,7 @@ export class FontRenderer {
     resizeFactor: number,
     color: Fill
   ) {
-    return this.fillLine(ctx, x, y + 16 * resizeFactor, width, resizeFactor, color);
+    this.fillLine(ctx, x, y + 16 * resizeFactor, width, resizeFactor, color);
   }
 
   private fillStrikethrough(
@@ -448,6 +448,6 @@ export class FontRenderer {
     resizeFactor: number,
     color: Fill
   ) {
-    return this.fillLine(ctx, x, y + 6 * resizeFactor, width, resizeFactor, color);
+    this.fillLine(ctx, x, y + 6 * resizeFactor, width, resizeFactor, color);
   }
 }

@@ -32,7 +32,6 @@ import {
   GameCodeMapping,
   GameId,
   GameModes,
-  GeneralModes,
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
   MegaWallsModes,
@@ -40,9 +39,6 @@ import {
   PAINTBALL_MODES,
   PARKOUR_MODES,
   PIT_MODES,
-  PaintballModes,
-  ParkourModes,
-  PitModes,
   PlayerStats,
   QUAKE_MODES,
   QUEST_MODES,
@@ -54,18 +50,14 @@ import {
   SkyWarsModes,
   SmashHeroesModes,
   SpeedUHCModes,
-  TNTGamesModes,
   TNT_GAMES_MODES,
   TURBO_KART_RACERS_MODES,
-  TurboKartRacersModes,
-  UHCModes,
   UHC_MODES,
   VAMPIREZ_MODES,
   VampireZModes,
   WALLS_MODES,
   WARLORDS_MODES,
   WOOLWARS_MODES,
-  WallsModes,
   WarlordsModes,
   WoolWarsModes,
 } from "@statsify/schemas";
@@ -84,26 +76,22 @@ export type GamesWithBackgrounds =
   | CopsAndCrimsModes
   | DropperModes
   | DuelsModes
-  | GeneralModes
+   
   | ChallengeModes
   | MegaWallsModes
   | MurderMysteryModes
-  | PaintballModes
-  | ParkourModes
-  | PitModes
+   
   | QuakeModes
   | SkyWarsModes
   | SmashHeroesModes
   | SpeedUHCModes
-  | TNTGamesModes
-  | TurboKartRacersModes
-  | UHCModes
+   
   | VampireZModes
-  | WallsModes
+   
   | WarlordsModes
   | WoolWarsModes
   | QuestModes
-  | ChallengeModes;
+   ;
 
 export const mapBackground = <T extends GamesWithBackgrounds>(
   modes: GameModes<T>,
@@ -462,8 +450,8 @@ const HYPIXEL_GAME_LIST = Object.fromEntries(
 );
 
 export const mapGame = (game: GameId, mode: string) => {
-  if (HYPIXEL_GAME_LIST[game] && mode in HYPIXEL_GAME_LIST[game]!)
-    return HYPIXEL_GAME_LIST[game]![mode];
+  if (HYPIXEL_GAME_LIST[game] && mode in HYPIXEL_GAME_LIST[game])
+    return HYPIXEL_GAME_LIST[game][mode];
 
   //Pit's mode in the  api is also called PIT
   if (mode === game) return prettify(mode);

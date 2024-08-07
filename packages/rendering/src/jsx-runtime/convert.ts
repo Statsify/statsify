@@ -9,9 +9,7 @@
 import {
   type CompleteSpacing,
   type ElementNode,
-  type Fraction,
   type IntrinsicElement,
-  type Percent,
   type RawElement,
   type Spacing,
   getTotalSize,
@@ -80,7 +78,7 @@ const gatherSideData = (child: ElementNode, side: Side, data: SideData) => {
   const minSize = child[side].minSize;
 
   if (typeof child[side].size === "string" && child[side].size !== "remaining") {
-    const percent = toDecimal(child[side].size as Percent | Fraction);
+    const percent = toDecimal(child[side].size);
     data.percentSpaceLeft -= percent;
     if (data.percentSpaceLeft < 0) throw new Error("Space required exceeds 100%");
 
@@ -162,7 +160,7 @@ export const elementToNode = (
     sideData = gatherSideData(child, side, sideData);
 
     if (typeof child[other].size === "string" && child[other].size !== "remaining") {
-      const percent = toDecimal(child[other].size as Percent | Fraction);
+      const percent = toDecimal(child[other].size);
 
       const otherSize =
         child[other].minSize / percent + getTotalSize(child[other], { size: false });

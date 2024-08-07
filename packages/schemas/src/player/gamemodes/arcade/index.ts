@@ -141,7 +141,7 @@ export class Arcade {
     this.captureTheWool = new CaptureTheWool(data);
     this.creeperAttack = new CreeperAttack(data);
     this.dragonWars = new DragonWars(data, ap);
-    this.dropper = new Dropper(data?.dropper);
+    this.dropper = new Dropper(data.dropper);
     this.enderSpleef = new EnderSpleef(data);
     this.farmHunt = new FarmHunt(data);
     this.football = new Football(data);

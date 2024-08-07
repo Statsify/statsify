@@ -23,7 +23,7 @@ export class SpeedUHCCommand extends BaseHypixelCommand<SpeedUHCModes> {
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<SpeedUHCModes, never>
+    { mode }: ProfileData<SpeedUHCModes>
   ): JSX.Element {
     return <SpeedUHCProfile {...base} mode={mode} />;
   }
