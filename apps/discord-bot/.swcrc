@@ -1,7 +1,9 @@
 {
+  "$schema": "https://swc.rs/schema.json",
   "jsc": {
     "parser": {
       "syntax": "typescript",
+      "tsx": true,
       "decorators": true,
       "dynamicImport": true
     },
@@ -10,8 +12,7 @@
       "decoratorMetadata": true,
       "react": {
         "runtime": "automatic",
-        "importSource": "@statsify/rendering",
-        "throwIfNamespace": false
+        "importSource": "@statsify/rendering"
       },
       "optimizer": {
         "simplify": true,
@@ -31,7 +32,7 @@
     "externalHelpers": true,
     "preserveAllComments": false,
     "experimental": {
-      "keepImportAssertions": true
+      "keepImportAttributes": true
     }
   },
   "module": {

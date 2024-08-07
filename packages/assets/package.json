@@ -5,7 +5,7 @@
   "types": "src/index.ts",
   "type": "module",
   "scripts": {
-    "build": "swc src  --config-file ../../.swcrc --out-dir dist",
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
@@ -13,7 +13,7 @@
     "@statsify/logger": "workspace:^",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
-    "@swc/helpers": "^0.5.1",
+    "@swc/helpers": "^0.5.12",
     "axios": "1.4.0",
     "skia-canvas": "^0.9.30"
   }
