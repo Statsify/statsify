@@ -16,7 +16,7 @@ export class MemberService {
 
   public async addRole(guildId: string, userId: string, roleId: string) {
     const response = await this.rest.put(
-      `/guilds/${guildId}/members/${userId}/roles/${roleId}`
+      `/guilds/${guildId}/members/${userId}/roles/${roleId}`, undefined
     );
 
     return parseDiscordResponse(response);

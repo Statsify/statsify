@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { RestResponse } from "tiny-discord";
 import { noop } from "@statsify/util";
+import type { RestClient } from "tiny-discord";
 
-export const parseDiscordResponse = <T>(response: RestResponse): T => {
+export const parseDiscordResponse = <T>(response: RestClient.RequestResult): T => {
   if (response.headers["content-type"] !== "application/json") return noop();
 
   //@ts-ignore tiny-discord doesn't have a proper types yet

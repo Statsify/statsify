@@ -238,8 +238,8 @@ importers:
         specifier: ^0.9.30
         version: 0.9.30
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb
-        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/62cf5c895ce9287b4517356970fd6771957e43cb
+        specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
+        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -293,8 +293,8 @@ importers:
         specifier: ^0.9.30
         version: 0.9.30
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb
-        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/62cf5c895ce9287b4517356970fd6771957e43cb
+        specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
+        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
       toad-scheduler:
         specifier: ^3.0.1
         version: 3.0.1
@@ -409,8 +409,8 @@ importers:
         specifier: ^0.9.30
         version: 0.9.30
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb
-        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/62cf5c895ce9287b4517356970fd6771957e43cb
+        specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
+        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
       toad-scheduler:
         specifier: ^3.0.1
         version: 3.0.1
@@ -573,8 +573,8 @@ importers:
         specifier: ^0.9.30
         version: 0.9.30
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb
-        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/62cf5c895ce9287b4517356970fd6771957e43cb
+        specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
+        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -4557,8 +4557,8 @@ packages:
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
 
-  tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/62cf5c895ce9287b4517356970fd6771957e43cb:
-    resolution: {tarball: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/62cf5c895ce9287b4517356970fd6771957e43cb}
+  tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83:
+    resolution: {tarball: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83}
     version: 0.0.1
 
   tinybench@2.9.0:
@@ -5765,7 +5765,7 @@ snapshots:
 
   '@pm2/pm2-version-check@1.0.4':
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
@@ -6229,13 +6229,13 @@ snapshots:
 
   agent-base@6.0.2:
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
   agent-base@7.1.0:
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
@@ -7298,7 +7298,7 @@ snapshots:
     dependencies:
       basic-ftp: 5.0.3
       data-uri-to-buffer: 6.0.1
-      debug: 4.3.4
+      debug: 4.3.6
       fs-extra: 8.1.0
     transitivePeerDependencies:
       - supports-color
@@ -7449,7 +7449,7 @@ snapshots:
   http-proxy-agent@7.0.0:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.4
+      debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
@@ -7461,14 +7461,14 @@ snapshots:
   https-proxy-agent@5.0.1:
     dependencies:
       agent-base: 6.0.2
-      debug: 4.3.4
+      debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
   https-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.4
+      debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
@@ -8237,7 +8237,7 @@ snapshots:
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
       agent-base: 7.1.0
-      debug: 4.3.4
+      debug: 4.3.6
       get-uri: 6.0.2
       http-proxy-agent: 7.0.0
       https-proxy-agent: 7.0.2
@@ -8508,7 +8508,7 @@ snapshots:
   proxy-agent@6.3.1:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.4
+      debug: 4.3.6
       http-proxy-agent: 7.0.0
       https-proxy-agent: 7.0.2
       lru-cache: 7.18.3
@@ -8645,7 +8645,7 @@ snapshots:
 
   require-in-the-middle@5.2.0:
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.6
       module-details-from-path: 1.0.3
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -8868,7 +8868,7 @@ snapshots:
   socks-proxy-agent@8.0.2:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.4
+      debug: 4.3.6
       socks: 2.7.1
     transitivePeerDependencies:
       - supports-color
@@ -9037,7 +9037,7 @@ snapshots:
 
   through@2.3.8: {}
 
-  tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/62cf5c895ce9287b4517356970fd6771957e43cb: {}
+  tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83: {}
 
   tinybench@2.9.0: {}
 

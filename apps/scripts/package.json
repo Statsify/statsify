@@ -29,7 +29,7 @@
     "inquirer": "^10.1.8",
     "ioredis": "^5.4.1",
     "skia-canvas": "^0.9.30",
-    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb",
+    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83",
     "toad-scheduler": "^3.0.1",
     "zod": "^3.23.8"
   },
