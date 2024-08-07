@@ -10,24 +10,24 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.64.0",
+    "@sentry/node": "^7.118.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.12",
-    "axios": "^1.4.0",
-    "discord-api-types": "^0.37.84",
+    "axios": "^1.7.3",
+    "discord-api-types": "^0.37.93",
     "i18next": "^21.10.0",
-    "i18next-fs-backend": "^2.1.5",
-    "reflect-metadata": "^0.1.13",
+    "i18next-fs-backend": "^2.3.2",
+    "reflect-metadata": "^0.1.14",
     "skia-canvas": "^0.9.30",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@types/i18next-fs-backend": "^1.1.2"
+    "@types/i18next-fs-backend": "^1.1.5"
   },
   "imports": {
     "#arguments": {
