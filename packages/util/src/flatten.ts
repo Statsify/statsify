@@ -56,9 +56,9 @@ export const flatten = <T>(data: T, prefix = "", dest: APIData = {}): Flatten<T>
 };
 
 if (import.meta.vitest) {
-  const { test, it, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("flatten", () => {
+  suite("flatten", () => {
     it("should flatten objects", () => {
       expect(flatten({ a: 1 })).toMatchObject({ a: 1 });
       expect(flatten({ a: { b: { c: 1 } } })).toMatchObject({ "a.b.c": 1 });

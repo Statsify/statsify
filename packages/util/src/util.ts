@@ -221,9 +221,9 @@ export const wordGroup = (
 };
 
 if (import.meta.vitest) {
-  const { test, it, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
-  test("findScore", () => {
+  suite("findScore", () => {
     const scores = [{ req: 0 }, { req: 10 }, { req: 20 }, { req: 30 }];
 
     it("finds the correct score", () => {
@@ -233,7 +233,7 @@ if (import.meta.vitest) {
     });
   });
 
-  test("isObject", () => {
+  suite("isObject", () => {
     it("returns true for objects", () => {
       expect(isObject({})).toBe(true);
       expect(isObject({ a: 1 })).toBe(true);
@@ -255,7 +255,7 @@ if (import.meta.vitest) {
     });
   });
 
-  test("romanNumeral", () => {
+  suite("romanNumeral", () => {
     it("should give the correct roman numeral", () => {
       expect(romanNumeral(-1)).toBe("I");
       expect(romanNumeral(1)).toBe("I");
@@ -270,7 +270,7 @@ if (import.meta.vitest) {
     });
   });
 
-  test("prettify", () => {
+  suite("prettify", () => {
     it("should format the string in a nice way", () => {
       expect(prettify("normal")).toBe("Normal");
       expect(prettify("two words")).toBe("Two Words");
@@ -284,14 +284,14 @@ if (import.meta.vitest) {
     });
   });
 
-  test("removeFormatting", () => {
+  suite("removeFormatting", () => {
     it("should remove formatting", () => {
       expect(removeFormatting("§ahello§r world")).toBe("hello world");
       expect(removeFormatting("hello world")).toBe("hello world");
     });
   });
 
-  test("formatTime", () => {
+  suite("formatTime", () => {
     it("should format time", () => {
       const milliseconds = 500;
       const second = 1000;

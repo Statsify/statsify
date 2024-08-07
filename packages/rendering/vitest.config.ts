@@ -8,4 +8,4 @@
 
 import { config } from "../../vitest.shared.js";
 
-export default await config("./packages/rendering/.swcrc");
+export default await config("./.swcrc");
