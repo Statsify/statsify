@@ -7,7 +7,7 @@
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "files.exclude": {
-    "**/dist/**": true,
+    // "**/dist/**": true,
     // "**/node_modules/**": true,
     "**/.turbo/**": true,
     "**/.pnpm-store/**": true
