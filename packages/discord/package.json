@@ -21,7 +21,7 @@
     "discord-api-types": "^0.37.93",
     "i18next": "^21.10.0",
     "i18next-fs-backend": "^2.3.2",
-    "reflect-metadata": "^0.1.14",
+    "reflect-metadata": "^0.2.2",
     "skia-canvas": "^0.9.30",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb",
     "typedi": "^0.10.0"

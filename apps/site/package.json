@@ -16,8 +16,8 @@
     "react-countup": "^6.5.3",
     "react-dom": "^18.3.1",
     "react-responsive-carousel": "^3.2.23",
-    "react-typed": "^1.2.0",
-    "sharp": "^0.32.5"
+    "react-typed": "^2.0.12",
+    "sharp": "^0.33.4"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^12.3.4",
