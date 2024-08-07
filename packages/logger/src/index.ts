@@ -248,10 +248,10 @@ export class Logger implements LoggerService {
 }
 
 if (import.meta.vitest) {
-  const { test, it, expect, vi } = import.meta.vitest;
+  const { suite, it, expect, vi } = import.meta.vitest;
 
   DEFAULT_LOG_LEVELS.forEach((logLevel) => {
-    test(`logging of ${logLevel}`, () => {
+    suite(`logging of ${logLevel}`, () => {
       it(`should ${logLevel}`, () => {
         const logger = new Logger(logLevel);
 
@@ -269,7 +269,7 @@ if (import.meta.vitest) {
     });
   });
 
-  test("logging levels", () => {
+  suite("logging levels", () => {
     it("should ignore all log levels", () => {
       const logger = new Logger("default", { logLevels: [] });
 

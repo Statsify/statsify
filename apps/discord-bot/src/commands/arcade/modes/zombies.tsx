@@ -42,7 +42,7 @@ export interface ZombiesTableProps {
 }
 
 export const ZombiesTable = ({ stats, t, time }: ZombiesTableProps) => {
-  const { overall, deadEnd, badBlood, alienArcadium } = stats;
+  const { overall, deadEnd, badBlood, alienArcadium, prison } = stats;
 
   return (
     <Table.table>
@@ -59,6 +59,12 @@ export const ZombiesTable = ({ stats, t, time }: ZombiesTableProps) => {
         <ZombiesMapColumn
           title="§#75ae00Alien Arcadium"
           stats={alienArcadium}
+          t={t}
+          time={time}
+        />
+        <ZombiesMapColumn
+          title="§#aaa5c2Prison"
+          stats={prison}
           t={t}
           time={time}
         />

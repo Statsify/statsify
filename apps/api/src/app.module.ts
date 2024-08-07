@@ -25,8 +25,6 @@ import { config } from "@statsify/util";
     TypegooseModule.forRootAsync({
       useFactory: () => ({
         uri: config("database.mongoUri"),
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
         maxPoolSize: 200,
         minPoolSize: 20,
       }),

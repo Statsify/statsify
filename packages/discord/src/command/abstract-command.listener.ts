@@ -8,23 +8,21 @@
 
 import * as Sentry from "@sentry/node";
 import {
-  APIUser,
+  type APIUser,
   ApplicationCommandOptionType,
   GatewayDispatchEvents,
   InteractionResponseType,
 } from "discord-api-types/v10";
 import { CommandContext } from "./command.context.js";
-import { CommandResolvable } from "./command.resolvable.js";
 import { ErrorMessage } from "#util/error.message";
-import { IMessage, Message } from "#messages";
-import { Interaction, InteractionAttachment } from "#interaction";
+import { type IMessage, Message } from "#messages";
+import { Interaction, type InteractionAttachment } from "#interaction";
 import { Logger } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
+import type { CommandResolvable } from "./command.resolvable.js";
 import type {
-  Interaction as DiscordInteraction,
-  InteractionResponse,
   InteractionServer,
   RestClient,
   WebsocketShard,
@@ -35,7 +33,7 @@ type CommandInteractionResponse = typeof COMMAND_INTERACTION_RESPONSE;
 
 export type InteractionHook = (
   interaction: Interaction
-) => InteractionResponse | void | Promise<any>;
+) => InteractionServer.InteractionReply | void | Promise<any>;
 
 export type CommandPrecondition = () => void;
 
@@ -229,7 +227,7 @@ export abstract class AbstractCommandListener {
     }
   }
 
-  protected onMessageComponent(interaction: Interaction): InteractionResponse {
+  protected onMessageComponent(interaction: Interaction): InteractionServer.InteractionReply {
     const hook = this.hooks.get(interaction.getCustomId());
 
     const res = hook?.(interaction);
@@ -239,12 +237,12 @@ export abstract class AbstractCommandListener {
     return { type: InteractionResponseType.DeferredMessageUpdate };
   }
 
-  protected onModal(interaction: Interaction): InteractionResponse {
+  protected onModal(interaction: Interaction): InteractionServer.InteractionReply {
     //Currently the message component handler is the same implementation as the modal handler
     return this.onMessageComponent(interaction);
   }
 
-  protected async onAutocomplete(interaction: Interaction): Promise<InteractionResponse> {
+  protected async onAutocomplete(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
     const defaultResponse = {
       type: InteractionResponseType.ApplicationCommandAutocompleteResult,
       data: { choices: [] },
@@ -275,7 +273,7 @@ export abstract class AbstractCommandListener {
 
   private async onInteraction(
     interaction: Interaction
-  ): Promise<InteractionResponse | CommandInteractionResponse> {
+  ): Promise<InteractionServer.InteractionReply | CommandInteractionResponse> {
     if (interaction.isCommandInteraction()) {
       await interaction.reply({
         type: InteractionResponseType.DeferredChannelMessageWithSource,
@@ -300,16 +298,20 @@ export abstract class AbstractCommandListener {
     });
 
     //@ts-ignore Discord supports sending a blank object as a response
-    client.on("interaction", (_interaction) => {
-      const interaction = new Interaction(this.rest, _interaction, this.applicationId);
+    client.on("interaction", (event) => {
+      const interaction = new Interaction(this.rest, event.interaction, this.applicationId);
       return this.onInteraction(interaction);
     });
   }
 
   private handleWebsocketShard(client: WebsocketShard) {
-    client.on("ready", (data) => {
+    client.on("ready", (event) => {
+      if (event.type === "resume") return;
+      const data = event.data as WebsocketShard.ShardReady;
+      const user = data.user as APIUser;
+
       this.logger.log(
-        `Connected to gateway with WebsocketShard on ${(data.user as APIUser).username}`
+        `Connected to gateway with WebsocketShard on ${user.username}`
       );
     });
 
@@ -318,14 +320,14 @@ export abstract class AbstractCommandListener {
 
       const interaction = new Interaction(
         this.rest,
-        event.d as DiscordInteraction,
+        event.d as InteractionServer.InteractionData,
         this.applicationId
       );
 
       const response = await this.onInteraction(interaction);
       if (response === COMMAND_INTERACTION_RESPONSE) return;
 
-      interaction.reply(response as InteractionResponse);
+      interaction.reply(response as InteractionServer.InteractionReply);
     });
   }
 

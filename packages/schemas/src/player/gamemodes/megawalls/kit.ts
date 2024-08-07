@@ -80,11 +80,7 @@ export class MegaWallsKit {
     this.witherDamage = data[`${kit}wither_damage`];
     this.witherKills = data[`${kit}wither_kills`];
 
-    const standardFinalKills = data[`${kit}final_kills_standard`];
-    const standardFinalAssists = data[`${kit}final_assists_standard`];
-    const standardWins = data[`${kit}wins_standard`] ?? 0;
-
-    this.points = add(standardFinalKills, standardFinalAssists, standardWins * 10);
+    this.points = data[`${kit}class_points`];
 
     MegaWallsKit.applyRatios(this);
   }

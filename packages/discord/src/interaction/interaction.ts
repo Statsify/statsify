@@ -7,18 +7,16 @@
  */
 
 import {
-  APIGuildMember,
-  APIUser,
+  type APIGuildMember,
+  type APIUser,
   ComponentType,
   InteractionType,
 } from "discord-api-types/v10";
-import { IMessage, Message, getLocalizeFunction } from "#messages";
+import { type IMessage, Message, getLocalizeFunction } from "#messages";
 import { parseDiscordResponse } from "#util/parse-discord-error";
 import type {
-  Interaction as DiscordInteraction,
-  InteractionResponse,
+  InteractionServer,
   RestClient,
-  RestRequestOptions,
 } from "tiny-discord";
 
 export class Interaction {
@@ -26,7 +24,7 @@ export class Interaction {
 
   public constructor(
     private readonly rest: RestClient,
-    private readonly data: DiscordInteraction,
+    private readonly data: InteractionServer.InteractionData,
     private readonly applicationId: string
   ) {}
 
@@ -89,7 +87,7 @@ export class Interaction {
   }
 
   public getLocale() {
-    return this.locale ?? (this.data as any).locale ?? "en-US";
+    return this.locale ?? this.data.locale ?? "en-US";
   }
 
   public setLocale(locale: string | null) {
@@ -104,7 +102,7 @@ export class Interaction {
     return this.getData().custom_id;
   }
 
-  public async reply(data: InteractionResponse) {
+  public async reply(data: InteractionServer.InteractionReply) {
     await this.request({
       method: "post",
       path: `/interactions/${this.data.id}/${this.data.token}/callback`,
@@ -155,7 +153,7 @@ export class Interaction {
     return message.toAPI(getLocalizeFunction(this.getLocale()));
   }
 
-  private async request(options: RestRequestOptions) {
+  private async request(options: RestClient.RequestOptions) {
     const response = await this.rest.request(options);
     return parseDiscordResponse(response);
   }

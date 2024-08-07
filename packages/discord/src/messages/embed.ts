@@ -143,10 +143,10 @@ export class EmbedBuilder {
 }
 
 if (import.meta.vitest) {
-  const { test, it, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
   const { getLocalizeFunction } = await import("./localize.js");
 
-  test("EmbedBuilder", () => {
+  suite("EmbedBuilder", () => {
     it("should create an embed", () => {
       const embed = new EmbedBuilder()
         .title("title")

@@ -6,33 +6,33 @@
   "type": "module",
   "scripts": {
     "start": "node --enable-source-maps .",
-    "build": "swc src --out-dir dist",
+    "build": "swc src --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.64.0",
-    "@statsify/api-client": "*",
-    "@statsify/assets": "*",
-    "@statsify/discord": "*",
-    "@statsify/logger": "*",
-    "@statsify/rendering": "*",
-    "@statsify/schemas": "*",
-    "@statsify/util": "*",
-    "@swc/helpers": "^0.5.1",
-    "@typegoose/typegoose": "^12.0.0",
-    "axios": "1.4.0",
-    "discord-api-types": "^0.37.84",
-    "luxon": "^3.4.0",
-    "mongoose": "^8.0.3",
-    "reflect-metadata": "^0.1.13",
+    "@sentry/node": "^7.118.0",
+    "@statsify/api-client": "workspace:^",
+    "@statsify/assets": "workspace:^",
+    "@statsify/discord": "workspace:^",
+    "@statsify/logger": "workspace:^",
+    "@statsify/rendering": "workspace:^",
+    "@statsify/schemas": "workspace:^",
+    "@statsify/util": "workspace:^",
+    "@swc/helpers": "^0.5.12",
+    "@typegoose/typegoose": "^12.6.0",
+    "axios": "1.7.3",
+    "discord-api-types": "^0.37.93",
+    "luxon": "^3.5.0",
+    "mongoose": "^8.5.2",
+    "reflect-metadata": "^0.2.2",
     "skia-canvas": "^0.9.30",
-    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#62cf5c895ce9287b4517356970fd6771957e43cb",
-    "toad-scheduler": "^3.0.0",
+    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83",
+    "toad-scheduler": "^3.0.1",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@types/luxon": "^3.3.1"
+    "@types/luxon": "^3.4.2"
   },
   "imports": {
     "#services": {

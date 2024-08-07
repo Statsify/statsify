@@ -46,7 +46,7 @@ export class TurboKartRacers {
   @Field({ historical: { enabled: false } })
   public tokens: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public grandPrixTokens: number;
 
   @Field()

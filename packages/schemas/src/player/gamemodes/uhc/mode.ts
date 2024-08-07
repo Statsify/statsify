@@ -23,13 +23,13 @@ export class UHCMode {
   @Field()
   public kdr: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public headsEaten: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public ultimatesCrafted: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public extraUltimates: number;
 
   public constructor(data: APIData, mode: string) {
