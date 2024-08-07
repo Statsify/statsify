@@ -8,7 +8,6 @@
 
 import Head from "next/head";
 import { Analytics } from "@vercel/analytics/react";
-import { Layout } from "../components/Layout";
 import "../globals.scss";
 import type { AppProps } from "next/app";
 
@@ -67,9 +66,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="topic" content="Minecraft" />
         <meta name="copyright" content="Statsify" />
       </Head>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <Component {...pageProps} />
       <Analytics />
     </>
   );

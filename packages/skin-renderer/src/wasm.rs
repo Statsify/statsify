@@ -257,3 +257,9 @@ fn send_renderer(window: Window, tx: oneshot::Sender<SkinRenderer<WasmBackend>>)
     };
   });
 }
+
+#[wasm_bindgen(start)]
+pub fn start() {
+  console_error_panic_hook::set_once();
+  tracing_wasm::set_as_global_default();
+}

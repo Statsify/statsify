@@ -179,10 +179,7 @@ impl Prism {
       ],
     };
 
-    // Calculate normals for each face
-    let normal = -(vectors[1] - vectors[0])
-      .cross(vectors[2] - vectors[0])
-      .normalize();
+    let normal = face.direction();
 
     let (u1, v1, u2, v2) = texture_provider.uvs(face, &self.dimensions);
 

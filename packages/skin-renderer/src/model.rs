@@ -41,8 +41,10 @@ struct BodyPart<'a> {
 }
 
 impl<'a> BodyPart<'a> {
-  fn create(self, device: &wgpu::Device) -> (Mesh, Mesh) {
+  fn create(mut self, device: &wgpu::Device) -> (Mesh, Mesh) {
     let texture_size = (64, 64);
+
+    self.position.y -= 1.0;
 
     let rotation = self.rotation.map(|rotation| Rotation {
       quaternion: rotation.quaternion,
