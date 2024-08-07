@@ -24,7 +24,7 @@
     "@typegoose/typegoose": "^12.6.0",
     "axios": "1.4.0",
     "discord-api-types": "^0.37.93",
-    "fuse.js": "^6.6.2",
+    "fuse.js": "^7.0.0",
     "luxon": "^3.5.0",
     "mongoose": "^8.5.2",
     "reflect-metadata": "^0.1.14",
