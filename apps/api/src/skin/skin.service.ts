@@ -62,7 +62,11 @@ export class SkinService {
     }
 
     const uuid = isUsername ? await this.getUuid(tag) : tag;
-    const skin = await this.requestSkin(uuid);
+    
+    const skin = await this.requestSkin(uuid).catch((error) => {
+      if (cachedSkin) return cachedSkin;
+      throw error;
+    });
 
     // Cache for 3 hours
     skin.expiresAt = Date.now() + (1000 * 60 * 60 * 3);
