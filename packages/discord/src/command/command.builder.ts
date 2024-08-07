@@ -6,7 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ApplicationIntegrationType } from "discord-api-types/v9";
 import { CommandResolvable } from "./command.resolvable.js";
+import { InteractionContextType } from "discord-api-types/v10";
 import type { CommandMetadata, SubCommandMetadata } from "./command.interface.js";
 import type { Constructor } from "@statsify/util";
 
@@ -62,7 +64,7 @@ export class CommandBuilder {
 }
 
 if (import.meta.vitest) {
-  const { test, it, expect } = import.meta.vitest;
+  const { suite, it, expect } = import.meta.vitest;
 
   const { Command } = await import("./command.decorator.js");
   const { SubCommand } = await import("./subcommand.decorator.js");
@@ -72,7 +74,15 @@ if (import.meta.vitest) {
     "discord-api-types/v10"
   );
 
-  test("CommandBuilder", () => {
+  suite("CommandBuilder", () => {
+    const integration_types = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
+
+    const contexts = [
+      InteractionContextType.Guild, 
+      InteractionContextType.PrivateChannel, 
+      InteractionContextType.BotDM,
+    ];
+
     it("should read basic metadata", () => {
       @Command({ description: "test" })
       class TestCommand {}
@@ -82,6 +92,8 @@ if (import.meta.vitest) {
         description: "test",
         description_localizations: {},
         type: ApplicationCommandType.ChatInput,
+        integration_types,
+        contexts,
         options: [],
       });
     });
@@ -100,12 +112,16 @@ if (import.meta.vitest) {
         description: "test",
         description_localizations: {},
         type: ApplicationCommandType.ChatInput,
+        integration_types,
+        contexts,
         options: [
           {
             name: "subcommand",
             description: "test",
             description_localizations: {},
             type: ApplicationCommandOptionType.Subcommand,
+            integration_types,
+            contexts,
             options: [],
           },
         ],
@@ -136,18 +152,24 @@ if (import.meta.vitest) {
         description: "test",
         type: ApplicationCommandType.ChatInput,
         description_localizations: {},
+        integration_types,
+        contexts,
         options: [
           {
             name: "group",
             description: "group",
             description_localizations: {},
             type: ApplicationCommandOptionType.SubcommandGroup,
+            integration_types,
+            contexts,
             options: [
               {
                 name: "subcommand",
                 description: "test",
                 description_localizations: {},
                 type: ApplicationCommandOptionType.Subcommand,
+                integration_types,
+                contexts,
                 options: [],
               },
               {
@@ -155,6 +177,8 @@ if (import.meta.vitest) {
                 description: "test",
                 description_localizations: {},
                 type: ApplicationCommandOptionType.Subcommand,
+                integration_types,
+                contexts,
                 options: [],
               },
             ],
@@ -164,12 +188,16 @@ if (import.meta.vitest) {
             description: "group",
             description_localizations: {},
             type: ApplicationCommandOptionType.SubcommandGroup,
+            integration_types,
+            contexts,
             options: [
               {
                 name: "subcommand3",
                 description: "test",
                 description_localizations: {},
                 type: ApplicationCommandOptionType.Subcommand,
+                integration_types,
+                contexts,
                 options: [],
               },
             ],
@@ -194,6 +222,8 @@ if (import.meta.vitest) {
         description: "test",
         description_localizations: {},
         type: ApplicationCommandType.ChatInput,
+        integration_types,
+        contexts,
         options: [
           {
             name: "test",
