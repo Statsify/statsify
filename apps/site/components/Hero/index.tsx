@@ -7,7 +7,6 @@
  */
 
 import Image from "next/image";
-import Typed from "react-typed";
 import discordImage from "../../public/discord.svg";
 import heroImage from "../../public/hero.png";
 import inviteImage from "../../public/invite.svg";
@@ -16,6 +15,7 @@ import styles from "./hero.module.scss";
 import { Button } from "../Button";
 import { Divider } from "../Divider";
 import { Navbar } from "./Navbar";
+import { ReactTyped as Typed } from "react-typed";
 
 export const Hero = () => (
   <div className={styles.hero}>
