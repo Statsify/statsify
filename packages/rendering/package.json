@@ -19,7 +19,7 @@
     "lint": "TIMING=1 eslint './{src,tests}/**/*.{ts,tsx,js,jsx}' --fix"
   },
   "dependencies": {
-    "@sentry/node": "^7.64.0",
+    "@sentry/node": "^7.118.0",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.12",
     "axios": "1.4.0",
