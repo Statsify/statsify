@@ -9,7 +9,7 @@ A Hypixel and Minecraft focused Discord Bot
 
 ## 💻 Developing
 ### ⚒️ Requirements
--   [`Node.js`]: For running code (`v20`)
+-   [`Node.js`]: For running code (`v22.6.0`)
 -   [`Rust`]: For skin rendering (`v1.72.0`)
 -   [`pnpm`]: Installing packages and running scripts (`npm install -g pnpm`)
 -   [`MongoDB`]: For Persistent data ([`Atlas`])
