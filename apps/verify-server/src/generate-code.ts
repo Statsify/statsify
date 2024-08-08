@@ -16,7 +16,7 @@ export const generateCode = async (
 ) => {
   let code = createCode();
 
-  //Make sure the code is unique
+  // Make sure the code is unique
   while (await verifyCodesModel.exists({ code }).lean().exec()) {
     code = createCode();
   }
