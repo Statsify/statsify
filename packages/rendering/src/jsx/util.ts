@@ -18,13 +18,13 @@ export const toDecimal = (measurement: Percent | Fraction): number => {
   if (measurement.endsWith("%"))
     return Number.parseFloat(measurement.replace("%", "")) / 100;
 
-  const [num, denom] = measurement.split("/").map((v) => Number.parseInt(v, 10));
+  const [num, denom] = measurement.split("/").map(v => Number.parseInt(v, 10));
   return num / denom;
 };
 
 export const innerSize = (bidirectional: ElementNodeBiDirectional, size: number) =>
-  ((bidirectional.size as number) ?? size) -
-  (bidirectional.padding1 + bidirectional.padding2);
+  ((bidirectional.size as number) ?? size)
+  - (bidirectional.padding1 + bidirectional.padding2);
 
 const getMargin = (bidirectional: InstructionBiDirectional | ElementNodeBiDirectional) =>
   bidirectional.margin1 + bidirectional.margin2;
@@ -45,8 +45,8 @@ export const getTotalSize = (
   let s = 0;
 
   if (size) {
-    s +=
-      typeof bidirectional.size === "number" ? bidirectional.size : bidirectional.minSize;
+    s
+      += typeof bidirectional.size === "number" ? bidirectional.size : bidirectional.minSize;
   }
   if (margin) s += getMargin(bidirectional);
   if (padding) s += getPadding(bidirectional);
@@ -72,7 +72,7 @@ const getChildrenSize = (
       break;
 
     case "column":
-      min = Math.max(...instruction.children!.map((child) => getTotalSize(child[side])));
+      min = Math.max(...instruction.children!.map(child => getTotalSize(child[side])));
       break;
   }
 

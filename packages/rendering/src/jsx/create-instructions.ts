@@ -41,12 +41,12 @@ export const createInstructions = (
     const child = node.children[i];
 
     if (typeof child[otherSide].size === "string") {
-      const size =
-        (node[otherSide].size as number) -
-        getTotalSize(child[otherSide], { size: false });
+      const size
+        = (node[otherSide].size as number)
+        - getTotalSize(child[otherSide], { size: false });
 
-      child[otherSide].size =
-        child[otherSide].size === "remaining"
+      child[otherSide].size
+        = child[otherSide].size === "remaining"
           ? size
           : size * toDecimal(child[otherSide].size as Percent | Fraction);
     }
@@ -57,8 +57,8 @@ export const createInstructions = (
         continue;
       }
 
-      child[side].size =
-        paddlessSideLength * toDecimal(child[side].size as Percent | Fraction);
+      child[side].size
+        = paddlessSideLength * toDecimal(child[side].size as Percent | Fraction);
       remainingSide -= child[side].size as number;
     }
 

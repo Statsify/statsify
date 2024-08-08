@@ -6,9 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { createInstructions } from "../src/index.js";
-import { expect,it, suite } from "vitest";
+import { expect, it, suite } from "vitest";
 
 suite("createInstructions with no relative sizes", () => {
   it("a box with defined sizes", () => {

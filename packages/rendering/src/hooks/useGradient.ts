@@ -29,8 +29,8 @@ export function useGradient(
   ...colors: GradientColor[]
 ): DeferredGradient {
   return (ctx, x, y, width, height) => {
-    const gradient =
-      type === "horizontal"
+    const gradient
+      = type === "horizontal"
         ? ctx.createLinearGradient(x, y, x + width, y)
         : ctx.createLinearGradient(x, y, x, y + height);
 

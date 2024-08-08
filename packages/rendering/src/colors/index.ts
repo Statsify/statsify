@@ -28,12 +28,12 @@ export const hexToRgb = (hex: string): RGB => {
 };
 
 export const rgbToHex = (rgb: RGB | RGBA): string =>
-  `#${rgb.map((o) => o.toString(16).toUpperCase().padStart(2, "0")).join("")}`;
+  `#${rgb.map(o => o.toString(16).toUpperCase().padStart(2, "0")).join("")}`;
 
 export const rgbToString = (rgb: RGB | RGBA): string => `rgba(${rgb.join(", ")})`;
 
 export const mcShadow = (color: string): string =>
-  rgbToHex(hexToRgb(color).map((o) => Math.floor(o * 0.25)) as RGB);
+  rgbToHex(hexToRgb(color).map(o => Math.floor(o * 0.25)) as RGB);
 
 export const parseColor = (color: string): RGBA => {
   if (color.startsWith("#")) {
@@ -43,7 +43,7 @@ export const parseColor = (color: string): RGBA => {
       .split("(")[1]
       .split(")")[0]
       .split(",")
-      .map((o) => +o) as RGBA;
+      .map(o => +o) as RGBA;
   } else {
     return [0, 0, 0, 0];
   }
