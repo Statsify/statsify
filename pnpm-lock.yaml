@@ -174,8 +174,8 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
       toad-scheduler:
         specifier: ^3.0.1
         version: 3.0.1
@@ -241,8 +241,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
@@ -296,8 +296,8 @@ importers:
         specifier: ^5.4.1
         version: 5.4.1
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
@@ -357,9 +357,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
-      '@types/sharp':
-        specifier: ^0.31.1
-        version: 0.31.1
       sass:
         specifier: ^1.77.8
         version: 1.77.8
@@ -415,8 +412,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
@@ -464,8 +461,8 @@ importers:
   assets/private:
     dependencies:
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
       stackblur-canvas:
         specifier: ^2.7.0
         version: 2.7.0
@@ -486,8 +483,8 @@ importers:
   assets/public:
     dependencies:
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
       stackblur-canvas:
         specifier: 2.7.0
         version: 2.7.0
@@ -537,8 +534,8 @@ importers:
         specifier: 1.7.3
         version: 1.7.3
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
 
   packages/discord:
     dependencies:
@@ -579,8 +576,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
@@ -641,8 +638,8 @@ importers:
         specifier: 1.7.3
         version: 1.7.3
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -1785,9 +1782,6 @@ packages:
   '@types/responselike@1.0.3':
     resolution: {integrity: sha512-H/+L+UkTV33uf49PH5pCAUBVPNj2nDBXTN+qS1dOwyyg24l3CcicicCA7ca+HMvJBZcFgl5r8e+RR6elsb4Lyw==}
 
-  '@types/sharp@0.31.1':
-    resolution: {integrity: sha512-5nWwamN9ZFHXaYEincMSuza8nNfOof8nmO+mcI+Agx1uMUk4/pQnNIcix+9rLPXzKrm1pS34+6WRDbDV0Jn7ag==}
-
   '@types/through@0.0.32':
     resolution: {integrity: sha512-7XsfXIsjdfJM2wFDRAtEWp3zb2aVPk5QeyZxGlVK57q4u26DczMHhJmlhr0Jqv0THwxam/L8REXkj8M2I/lcvw==}
 
@@ -2167,8 +2161,8 @@ packages:
   caniuse-lite@1.0.30001651:
     resolution: {integrity: sha512-9Cf+Xv1jJNe1xPZLGuUXLNkE1BoDkqRqYyFJ9TDYSqhduqA4hu4oR9HluGoWYQC/aj8WHjsGVV+bwkh0+tegRg==}
 
-  cargo-cp-artifact@0.1.8:
-    resolution: {integrity: sha512-3j4DaoTrsCD1MRkTF2Soacii0Nx7UHCce0EwUf4fHnggwiE4fbmF2AbnfzayR36DF8KGadfh7M/Yfy625kgPlA==}
+  cargo-cp-artifact@0.1.9:
+    resolution: {integrity: sha512-6F+UYzTaGB+awsTXg0uSJA1/b/B3DDJzpKVRu0UmyI7DmNeaAl2RFHuTGIN6fEgpadRxoXGb7gbC1xo4C3IdyA==}
     hasBin: true
 
   chai@5.1.1:
@@ -2481,10 +2475,6 @@ packages:
 
   detect-indent@6.1.0:
     resolution: {integrity: sha512-reYkTUJAZb9gUuZ2RvVCNhVHdg62RHnJ7WJl8ftMi4diZ6NWlciOzQN88pUhSELEwflJht4oQDv0F0BMlwaYtA==}
-    engines: {node: '>=8'}
-
-  detect-libc@2.0.2:
-    resolution: {integrity: sha512-UX6sGumvvqSaXgdKGUsgZWqcUyIXZ/vZTrlRT/iobiKhGL0zL4d3osHj3uqllWJK+i+sixDS/3COVEOFbupFyw==}
     engines: {node: '>=8'}
 
   detect-libc@2.0.3:
@@ -4299,11 +4289,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  semver@7.6.2:
-    resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.6.3:
     resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
     engines: {node: '>=10'}
@@ -4373,8 +4358,8 @@ packages:
     resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
     engines: {node: '>= 10'}
 
-  skia-canvas@0.9.30:
-    resolution: {integrity: sha512-Y4BZZhJpdGeRRfu/pyT1395UAE5Hgzup+P5tDq1vTTKcOgXmUuAWeDhvfeDn9FWaE6tNkOTQWO/mK7fdD5qIrw==}
+  skia-canvas@1.0.1:
+    resolution: {integrity: sha512-/HtZlmib2BD3Fi6P4ZywSq7VquPl2A1Frc0pA+xD5hJSvSzN7FoOJpBWDpDd0e1ByzrVO6ZIjO98dNSQ2XqlKw==}
 
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
@@ -4556,8 +4541,8 @@ packages:
     os: [darwin, linux, win32, freebsd, openbsd, netbsd, sunos, android]
     hasBin: true
 
-  tar@6.2.0:
-    resolution: {integrity: sha512-/Wo7DcT0u5HUV486xg675HtjNd3BXZ6xDbzsCUZPt5iw8bTQ63bP0Raut3mvro9u+CUyq7YQd8Cx55fsZXxqLQ==}
+  tar@6.2.1:
+    resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
 
   test-exclude@7.0.1:
@@ -5547,15 +5532,15 @@ snapshots:
 
   '@mapbox/node-pre-gyp@1.0.11':
     dependencies:
-      detect-libc: 2.0.2
+      detect-libc: 2.0.3
       https-proxy-agent: 5.0.1
       make-dir: 3.1.0
       node-fetch: 2.7.0
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.6.2
-      tar: 6.2.0
+      semver: 7.6.3
+      tar: 6.2.1
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -5770,7 +5755,7 @@ snapshots:
 
   '@pm2/pm2-version-check@1.0.4':
     dependencies:
-      debug: 4.3.6
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
 
@@ -6079,10 +6064,6 @@ snapshots:
     dependencies:
       '@types/node': 22.1.0
 
-  '@types/sharp@0.31.1':
-    dependencies:
-      '@types/node': 22.1.0
-
   '@types/through@0.0.32':
     dependencies:
       '@types/node': 22.1.0
@@ -6285,7 +6266,7 @@ snapshots:
 
   agent-base@7.1.0:
     dependencies:
-      debug: 4.3.6
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
 
@@ -6507,7 +6488,7 @@ snapshots:
 
   caniuse-lite@1.0.30001651: {}
 
-  cargo-cp-artifact@0.1.8: {}
+  cargo-cp-artifact@0.1.9: {}
 
   chai@5.1.1:
     dependencies:
@@ -6800,8 +6781,6 @@ snapshots:
   detect-file@1.0.0: {}
 
   detect-indent@6.1.0: {}
-
-  detect-libc@2.0.2: {}
 
   detect-libc@2.0.3: {}
 
@@ -7330,7 +7309,7 @@ snapshots:
     dependencies:
       basic-ftp: 5.0.3
       data-uri-to-buffer: 6.0.1
-      debug: 4.3.6
+      debug: 4.3.4
       fs-extra: 8.1.0
     transitivePeerDependencies:
       - supports-color
@@ -7478,7 +7457,7 @@ snapshots:
   http-proxy-agent@7.0.0:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.6
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
 
@@ -7497,7 +7476,7 @@ snapshots:
   https-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.6
+      debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
 
@@ -8266,7 +8245,7 @@ snapshots:
     dependencies:
       '@tootallnate/quickjs-emscripten': 0.23.0
       agent-base: 7.1.0
-      debug: 4.3.6
+      debug: 4.3.4
       get-uri: 6.0.2
       http-proxy-agent: 7.0.0
       https-proxy-agent: 7.0.2
@@ -8800,8 +8779,6 @@ snapshots:
     dependencies:
       lru-cache: 6.0.0
 
-  semver@7.6.2: {}
-
   semver@7.6.3: {}
 
   server-only@0.0.1: {}
@@ -8880,10 +8857,10 @@ snapshots:
       mrmime: 2.0.0
       totalist: 3.0.1
 
-  skia-canvas@0.9.30:
+  skia-canvas@1.0.1:
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
-      cargo-cp-artifact: 0.1.8
+      cargo-cp-artifact: 0.1.9
       glob: 8.1.0
       path-browserify: 1.0.1
       simple-get: 4.0.1
@@ -8899,7 +8876,7 @@ snapshots:
   socks-proxy-agent@8.0.2:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.6
+      debug: 4.3.4
       socks: 2.7.1
     transitivePeerDependencies:
       - supports-color
@@ -9043,7 +9020,7 @@ snapshots:
   systeminformation@5.21.15:
     optional: true
 
-  tar@6.2.0:
+  tar@6.2.1:
     dependencies:
       chownr: 2.0.0
       fs-minipass: 2.1.0
