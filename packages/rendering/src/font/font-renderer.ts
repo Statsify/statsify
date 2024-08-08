@@ -31,7 +31,7 @@ export class FontRenderer {
   public async loadImages(fontPath: string) {
     const files = await readdir(fontPath);
 
-    const pictures = files.filter(file => file.endsWith(".png"));
+    const pictures = files.filter((file) => file.endsWith(".png"));
 
     for (const file of pictures) {
       const image = await loadImage(join(fontPath, file));
@@ -70,7 +70,7 @@ export class FontRenderer {
     x: number,
     y: number
   ) {
-    const largestSize = Math.max(...nodes.map(node => node.size));
+    const largestSize = Math.max(...nodes.map((node) => node.size));
 
     for (const { text, color, bold, italic, underline, strikethrough, size } of nodes) {
       const adjustY = y + size + (largestSize - size) * 5;
@@ -168,7 +168,7 @@ export class FontRenderer {
 
   private getCharacterIndexLocation(unicode: string, isAscii: boolean) {
     if (isAscii) {
-      const y = positions.findIndex(row => row.includes(unicode));
+      const y = positions.findIndex((row) => row.includes(unicode));
       const x = positions[y].indexOf(unicode);
 
       return {

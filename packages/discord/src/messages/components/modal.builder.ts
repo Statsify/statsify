@@ -44,7 +44,7 @@ export class ModalBuilder {
     return {
       title: translateField(locale, this.#title),
       custom_id: this.#custom_id,
-      components: this.#components.map(component => component.build(locale)),
+      components: this.#components.map((component) => component.build(locale)),
     };
   }
 }

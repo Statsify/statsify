@@ -73,7 +73,7 @@ export class EmbedBuilder {
   }
 
   public fields(...fields: Field[]): this {
-    fields.forEach(field => this.field(...field));
+    fields.forEach((field) => this.field(...field));
 
     return this;
   }
@@ -131,7 +131,7 @@ export class EmbedBuilder {
     return {
       title: translateField(locale, this.#title),
       description: translateField(locale, this.#description),
-      fields: this.#fields?.map(field => translateObject(locale, field)),
+      fields: this.#fields?.map((field) => translateObject(locale, field)),
       url: this.#url,
       footer: translateObject(locale, this.#footer),
       color: this.#color,

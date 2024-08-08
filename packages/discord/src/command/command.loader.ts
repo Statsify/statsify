@@ -36,7 +36,7 @@ export class CommandLoader {
     const command = await import(file);
 
     return Object.keys(command)
-      .filter(key => key !== "default")
+      .filter((key) => key !== "default")
       .map((key) => {
         try {
           const constructor = command[key];

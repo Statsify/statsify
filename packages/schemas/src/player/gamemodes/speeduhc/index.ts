@@ -32,7 +32,7 @@ export const SPEED_UHC_MODES = new GameModes([
   { api: "vampirism" },
 ]);
 
-const prefixes: GamePrefix[] = titleScores.map(level => ({
+const prefixes: GamePrefix[] = titleScores.map((level) => ({
   fmt: formatLevel,
   req: level.req,
 }));

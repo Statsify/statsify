@@ -92,7 +92,7 @@ export class BlitzSGKit {
 
       this.level
         = findScoreIndex(
-          prestiges.map(n => ({ req: n })),
+          prestiges.map((n) => ({ req: n })),
           this.exp
         ) + 1;
     }

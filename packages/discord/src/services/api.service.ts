@@ -74,8 +74,8 @@ export class ApiService extends StatsifyApiService {
         const { displayName } = error as SessionNotFoundException;
 
         throw new ErrorMessage(
-          t => t("errors.invalidSession.title"),
-          t => t("errors.invalidSession.description", { displayName: this.emojiDisplayName(t, displayName) })
+          (t) => t("errors.invalidSession.title"),
+          (t) => t("errors.invalidSession.description", { displayName: this.emojiDisplayName(t, displayName) })
         );
       }
 
@@ -105,8 +105,8 @@ export class ApiService extends StatsifyApiService {
         const { displayName } = error as RecentGamesNotFoundException;
 
         throw new ErrorMessage(
-          t => t("errors.noRecentGames.title"),
-          t =>
+          (t) => t("errors.noRecentGames.title"),
+          (t) =>
             t("errors.noRecentGames.description", {
               displayName: this.emojiDisplayName(t, displayName),
             })
@@ -139,8 +139,8 @@ export class ApiService extends StatsifyApiService {
         const { displayName } = error as StatusNotFoundException;
 
         throw new ErrorMessage(
-          t => t("errors.noStatus.title"),
-          t =>
+          (t) => t("errors.noStatus.title"),
+          (t) =>
             t("errors.noStatus.description", {
               displayName: this.emojiDisplayName(t, displayName),
             })
@@ -184,8 +184,8 @@ export class ApiService extends StatsifyApiService {
           const displayName = (error as GuildNotFoundException).displayName;
 
           throw new ErrorMessage(
-            t => t("errors.playerNotInGuild.title"),
-            t =>
+            (t) => t("errors.playerNotInGuild.title"),
+            (t) =>
               t("errors.playerNotInGuild.description", {
                 displayName: this.emojiDisplayName(t, displayName ?? "ERROR"),
               })
@@ -193,8 +193,8 @@ export class ApiService extends StatsifyApiService {
         }
 
         throw new ErrorMessage(
-          t => t("errors.invalidGuild.title"),
-          t =>
+          (t) => t("errors.invalidGuild.title"),
+          (t) =>
             t("errors.invalidGuild.description", {
               context: type?.toLowerCase(),
               tag: input,
@@ -296,8 +296,8 @@ export class ApiService extends StatsifyApiService {
       if (searchedUser?.uuid) return searchedUser.uuid;
 
       throw new ErrorMessage(
-        t => t("errors.missingMentionVerification.title"),
-        t => t("errors.missingMentionVerification.description", { tag })
+        (t) => t("errors.missingMentionVerification.title"),
+        (t) => t("errors.missingMentionVerification.description", { tag })
       );
     }
 
@@ -322,8 +322,8 @@ export class ApiService extends StatsifyApiService {
     }
 
     return new ErrorMessage(
-      t => t("errors.invalidPlayer.title"),
-      t => t("errors.invalidPlayer.description", { context: type, tag }),
+      (t) => t("errors.invalidPlayer.title"),
+      (t) => t("errors.invalidPlayer.description", { context: type, tag }),
       { buttons }
     );
   }

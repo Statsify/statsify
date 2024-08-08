@@ -40,7 +40,7 @@ export class ChoiceArgument extends AbstractArgument {
     this.name = name;
     this.required = required;
     this.type = type || ApplicationCommandOptionType.String;
-    this.description = t => t("arguments.choice");
+    this.description = (t) => t("arguments.choice");
 
     this.choices = choices.map((choice) => {
       if (typeof choice === "string") return { name: choice, value: choice };

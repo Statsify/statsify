@@ -24,18 +24,18 @@ export const WALLS_MODES = new GameModes([{ api: "overall" }]);
 export type WallsModes = IGameModes<typeof WALLS_MODES>;
 
 const prefixes: GamePrefix[] = [
-  { fmt: n => `§8[${n}]`, req: 0 },
-  { fmt: n => `§7[${n}]`, req: 20 },
-  { fmt: n => `§e[${n}]`, req: 50 },
-  { fmt: n => `§a[${n}]`, req: 100 },
-  { fmt: n => `§2[${n}]`, req: 200 },
-  { fmt: n => `§9[${n}]`, req: 300 },
-  { fmt: n => `§1[${n}]`, req: 400 },
-  { fmt: n => `§d[${n}]`, req: 500 },
-  { fmt: n => `§4[${n}]`, req: 750 },
-  { fmt: n => `§6[${n}]`, req: 1000 },
-  { fmt: n => `§0§l[${n}]`, req: 2000 },
-  { fmt: n => rainbow(`[${n}]`), req: 2001 },
+  { fmt: (n) => `§8[${n}]`, req: 0 },
+  { fmt: (n) => `§7[${n}]`, req: 20 },
+  { fmt: (n) => `§e[${n}]`, req: 50 },
+  { fmt: (n) => `§a[${n}]`, req: 100 },
+  { fmt: (n) => `§2[${n}]`, req: 200 },
+  { fmt: (n) => `§9[${n}]`, req: 300 },
+  { fmt: (n) => `§1[${n}]`, req: 400 },
+  { fmt: (n) => `§d[${n}]`, req: 500 },
+  { fmt: (n) => `§4[${n}]`, req: 750 },
+  { fmt: (n) => `§6[${n}]`, req: 1000 },
+  { fmt: (n) => `§0§l[${n}]`, req: 2000 },
+  { fmt: (n) => rainbow(`[${n}]`), req: 2001 },
 ];
 
 export class Walls {

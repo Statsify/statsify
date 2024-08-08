@@ -61,12 +61,12 @@ function findLastAction(data: APIData): { action: string; time: number } {
   if (data?.stats?.SkyWars) {
     // Lab modes are explained each first time any player enters the game
     // as well as when they click the book while in queue.
-    const explains = Object.entries(data?.stats?.SkyWars).filter(e =>
+    const explains = Object.entries(data?.stats?.SkyWars).filter((e) =>
       e[0].endsWith("explained_last")
     );
 
     if (explains.length > 0) {
-      const lastLabExplain = Math.max(...explains.map(e => e[1] as number));
+      const lastLabExplain = Math.max(...explains.map((e) => e[1] as number));
       actions.push({ action: "SW_LAB_MODE_EXPLANATION", time: lastLabExplain });
     }
 
@@ -154,7 +154,7 @@ function findLastAction(data: APIData): { action: string; time: number } {
 
   if (data.stats) {
     const games = Object.values(data.stats);
-    const tourneyAds = games.map((g: any) => g.lastTourneyAd).filter(v => !!v);
+    const tourneyAds = games.map((g: any) => g.lastTourneyAd).filter((v) => !!v);
     actions.push({ action: "TOURNAMENT_ADVERTISEMENT", time: Math.max(...tourneyAds) });
   }
 

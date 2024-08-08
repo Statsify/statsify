@@ -285,7 +285,7 @@ async function loadConfig(): Promise<{ default: Config }> {
   }
 }
 
-const cfg: Config = await loadConfig().then(c => c.default);
+const cfg: Config = await loadConfig().then((c) => c.default);
 
 export interface ConfigOptions<T extends keyof FlatConfig> {
   required?: boolean;

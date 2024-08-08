@@ -100,7 +100,7 @@ export class SelectMenuBuilder {
       custom_id: this.#custom_id,
       type: ComponentType.SelectMenu,
       disabled: this.#disabled,
-      options: this.#options.map(option => option.build(locale)),
+      options: this.#options.map((option) => option.build(locale)),
     };
   }
 }

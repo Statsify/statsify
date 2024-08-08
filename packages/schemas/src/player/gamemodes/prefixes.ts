@@ -34,7 +34,7 @@ const getPrefixRequirement = <T extends unknown[] = []>(
   score: number,
   skip = 0
 ): number => {
-  const prefixIndex = prefixes.findIndex(requirement => requirement.req > (score || 0));
+  const prefixIndex = prefixes.findIndex((requirement) => requirement.req > (score || 0));
 
   return prefixIndex === -1
     ? prefixes.at(-1)!.req

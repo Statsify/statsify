@@ -36,7 +36,7 @@ export class EventLoader {
     const event = await import(file);
 
     return Object.keys(event)
-      .filter(key => key !== "default")
+      .filter((key) => key !== "default")
       .map((key) => {
         try {
           const constructor = event[key];

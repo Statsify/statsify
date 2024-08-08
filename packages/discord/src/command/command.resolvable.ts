@@ -73,7 +73,7 @@ export class CommandResolvable {
     this.type = ApplicationCommandType.ChatInput;
     this.cooldown = cooldown;
 
-    const argsResolved = (args ?? [])?.map(a =>
+    const argsResolved = (args ?? [])?.map((a) =>
       a instanceof AbstractArgument ? a : new a()
     );
 
@@ -117,7 +117,7 @@ export class CommandResolvable {
       description: this.description,
       description_localizations: this.description_localizations,
       type: this.type,
-      options: this.options?.map(o => (o.toJSON ? o.toJSON() : o)),
+      options: this.options?.map((o) => (o.toJSON ? o.toJSON() : o)),
       integration_types: this.integration_types,
       contexts: this.contexts,
     };

@@ -61,8 +61,8 @@ export class MetadataScanner {
         if (!ratio.includes(key)) continue;
 
         const remainingStats = ratio
-          .filter(r => r !== key && keys.includes(r))
-          .map(r => `${base ? `${base}.` : ""}${r}`);
+          .filter((r) => r !== key && keys.includes(r))
+          .map((r) => `${base ? `${base}.` : ""}${r}`);
 
         if (!remainingStats.length) continue;
 

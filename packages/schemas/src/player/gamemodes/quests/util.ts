@@ -241,5 +241,5 @@ export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) =
 
   const millis = t.toMillis();
 
-  return quest.completions.filter(ms => ms.time >= millis).length;
+  return quest.completions.filter((ms) => ms.time >= millis).length;
 };

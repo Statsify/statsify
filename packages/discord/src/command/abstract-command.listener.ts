@@ -108,7 +108,7 @@ export abstract class AbstractCommandListener {
     const hasSubCommandGroup
       = firstOption.type === ApplicationCommandOptionType.SubcommandGroup;
     const findCommand = () =>
-      command.options?.find(opt => opt.name === firstOption.name);
+      command.options?.find((opt) => opt.name === firstOption.name);
 
     if (hasSubCommandGroup) {
       const group = findCommand();
@@ -137,7 +137,7 @@ export abstract class AbstractCommandListener {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     try {
-      preconditions.forEach(precondition => precondition());
+      preconditions.forEach((precondition) => precondition());
 
       const response = await command.execute(context);
 
@@ -207,8 +207,8 @@ export abstract class AbstractCommandListener {
       const hasPreview = Boolean(command.preview);
 
       const tierError = new ErrorMessage(
-        t => t(`errors.${tierName}Only.title`),
-        t => t(`errors.${tierName}Only.${hasPreview ? "preview" : "description"}`),
+        (t) => t(`errors.${tierName}Only.title`),
+        (t) => t(`errors.${tierName}Only.${hasPreview ? "preview" : "description"}`),
         { color, thumbnail }
       );
 
@@ -259,7 +259,7 @@ export abstract class AbstractCommandListener {
     const focusedOption = data.options.find((opt: any) => opt.focused);
     if (!focusedOption) return defaultResponse;
 
-    const autocompleteArg = command.args.find(opt => opt.name === focusedOption.name);
+    const autocompleteArg = command.args.find((opt) => opt.name === focusedOption.name);
     if (!autocompleteArg) return defaultResponse;
 
     const context = new CommandContext(this, interaction, data);

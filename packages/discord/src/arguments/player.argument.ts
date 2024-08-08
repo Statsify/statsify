@@ -25,7 +25,7 @@ export class PlayerArgument extends AbstractArgument {
 
   public constructor(public name = "player", public required = false) {
     super();
-    this.description = t => t("arguments.player");
+    this.description = (t) => t("arguments.player");
   }
 
   public async autocompleteHandler(
@@ -39,9 +39,9 @@ export class PlayerArgument extends AbstractArgument {
 
     const players = await apiClient.getPlayerAutocomplete(query);
 
-    let results = players.map(p => ({ name: p, value: p }));
+    let results = players.map((p) => ({ name: p, value: p }));
 
-    if (query && (!players.length || !players.some(p => p.toLowerCase() === query))) {
+    if (query && (!players.length || !players.some((p) => p.toLowerCase() === query))) {
       results = results.slice(0, 24);
       results.push(searched);
     }

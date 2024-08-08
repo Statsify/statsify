@@ -15,7 +15,7 @@ export class TextArgument extends AbstractArgument {
 
   public constructor(
     public name = "content",
-    public description: LocalizationString = t => t("arguments.text"),
+    public description: LocalizationString = (t) => t("arguments.text"),
     public required = true
   ) {
     super();

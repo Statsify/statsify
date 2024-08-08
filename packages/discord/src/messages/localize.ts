@@ -85,6 +85,6 @@ export const translateToAllLanguages = (
   if (!Array.isArray(options.preload)) return {};
 
   return Object.fromEntries(
-    options.preload.map(lang => [lang, translateField(getLocalizeFunction(lang), key)])
+    options.preload.map((lang) => [lang, translateField(getLocalizeFunction(lang), key)])
   );
 };

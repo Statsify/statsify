@@ -18,7 +18,7 @@ export const toDecimal = (measurement: Percent | Fraction): number => {
   if (measurement.endsWith("%"))
     return Number.parseFloat(measurement.replace("%", "")) / 100;
 
-  const [num, denom] = measurement.split("/").map(v => Number.parseInt(v, 10));
+  const [num, denom] = measurement.split("/").map((v) => Number.parseInt(v, 10));
   return num / denom;
 };
 
@@ -72,7 +72,7 @@ const getChildrenSize = (
       break;
 
     case "column":
-      min = Math.max(...instruction.children!.map(child => getTotalSize(child[side])));
+      min = Math.max(...instruction.children!.map((child) => getTotalSize(child[side])));
       break;
   }
 

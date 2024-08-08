@@ -19,7 +19,7 @@ const getPrefixes = (titles: Title[]) =>
 
     for (let i = 0; i < (title.max ?? 5); i++) {
       calculatedTitles.push({
-        fmt: n => `${title.color.code}[${n}]`,
+        fmt: (n) => `${title.color.code}[${n}]`,
         req: title.req + i * title.inc,
       });
     }

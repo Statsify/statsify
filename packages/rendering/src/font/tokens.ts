@@ -55,7 +55,7 @@ const reset: Token = {
   effect: (_, __, defaultState) => defaultState,
 };
 
-const minecraftColorList = minecraftColors.map(color => [
+const minecraftColorList = minecraftColors.map((color) => [
   color.code.replace("§", ""),
   color.hex,
 ]);
@@ -68,7 +68,7 @@ const colorRegex = new RegExp(
 
 const color: Token = {
   regex: colorRegex,
-  effect: part => ({
+  effect: (part) => ({
     color: part.startsWith("#") ? part.slice(0, 7) : textColors[part[0]],
     strikethrough: false,
     underline: false,

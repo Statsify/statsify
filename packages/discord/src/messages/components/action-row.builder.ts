@@ -29,7 +29,7 @@ export class ActionRowBuilder {
   public build(locale: LocalizeFunction): APIActionRowComponent<any> {
     return {
       type: ComponentType.ActionRow,
-      components: this.#components.map(c => c.build(locale)),
+      components: this.#components.map((c) => c.build(locale)),
     };
   }
 }

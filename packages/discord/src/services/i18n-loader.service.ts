@@ -21,7 +21,7 @@ export class I18nLoaderService {
 
   public async init() {
     this.languages = await readdir("../../locales");
-    this.namespaces = (await readdir(`../../locales/${DEFAULT_LANGUAGE}/`)).map(p =>
+    this.namespaces = (await readdir(`../../locales/${DEFAULT_LANGUAGE}/`)).map((p) =>
       p.replace(".json", "")
     );
 
