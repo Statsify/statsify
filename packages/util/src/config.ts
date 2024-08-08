@@ -285,7 +285,7 @@ async function loadConfig(): Promise<{ default: Config }> {
   }
 }
 
-const cfg: Config = await loadConfig().then((c) => c.default);
+const cfg: Config = await loadConfig().then(c => c.default);
 
 export interface ConfigOptions<T extends keyof FlatConfig> {
   required?: boolean;
@@ -299,8 +299,8 @@ export const config = <T extends keyof FlatConfig>(
   // Don't load the config while testing
   if (process.env.VITEST) return defaultValue as FlatConfig[T];
 
-  const value =
-    (key as string).split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;
+  const value
+    = (key as string).split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;
 
   const isValueDefined = value !== undefined && value !== "";
 
