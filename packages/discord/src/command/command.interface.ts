@@ -15,7 +15,7 @@ export interface CommandOptions {
   name?: string;
   description: LocalizationString;
   args?: (AbstractArgument | Constructor<AbstractArgument>)[];
-  
+
   /**
    * @default true
    */

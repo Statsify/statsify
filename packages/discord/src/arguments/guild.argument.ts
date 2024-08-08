@@ -20,7 +20,7 @@ class GuildQueryArgument extends AbstractArgument {
 
   public constructor() {
     super();
-    this.description = (t) => t("arguments.guild-query");
+    this.description = t => t("arguments.guild-query");
   }
 }
 
@@ -36,7 +36,7 @@ class GuildTypeArgument extends ChoiceArgument {
       ],
     });
 
-    this.description = (t) => t("arguments.guild-type");
+    this.description = t => t("arguments.guild-type");
   }
 }
 

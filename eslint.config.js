@@ -142,7 +142,8 @@ export default tseslint.config(
 		semi: true,
 		quotes: "double",
 		quoteProps: "consistent-as-needed",
-    braceStyle: "1tbs"
+    braceStyle: "1tbs",
+    arrowParens: "always",
 	}),
   {
     rules: {

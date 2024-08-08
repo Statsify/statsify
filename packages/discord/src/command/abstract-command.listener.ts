@@ -33,7 +33,7 @@ type CommandInteractionResponse = typeof COMMAND_INTERACTION_RESPONSE;
 
 export type InteractionHook = (
   interaction: Interaction
-) => InteractionServer.InteractionReply | void | Promise<any>;
+) => InteractionServer.InteractionReply | undefined | Promise<any>;
 
 export type CommandPrecondition = () => void;
 
@@ -105,10 +105,10 @@ export abstract class AbstractCommandListener {
 
     const firstOption = data.options[0];
 
-    const hasSubCommandGroup =
-      firstOption.type === ApplicationCommandOptionType.SubcommandGroup;
+    const hasSubCommandGroup
+      = firstOption.type === ApplicationCommandOptionType.SubcommandGroup;
     const findCommand = () =>
-      command.options?.find((opt) => opt.name === firstOption.name);
+      command.options?.find(opt => opt.name === firstOption.name);
 
     if (hasSubCommandGroup) {
       const group = findCommand();
@@ -137,7 +137,7 @@ export abstract class AbstractCommandListener {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     try {
-      preconditions.forEach((precondition) => precondition());
+      preconditions.forEach(precondition => precondition());
 
       const response = await command.execute(context);
 
@@ -207,8 +207,8 @@ export abstract class AbstractCommandListener {
       const hasPreview = Boolean(command.preview);
 
       const tierError = new ErrorMessage(
-        (t) => t(`errors.${tierName}Only.title`),
-        (t) => t(`errors.${tierName}Only.${hasPreview ? "preview" : "description"}`),
+        t => t(`errors.${tierName}Only.title`),
+        t => t(`errors.${tierName}Only.${hasPreview ? "preview" : "description"}`),
         { color, thumbnail }
       );
 
@@ -238,7 +238,7 @@ export abstract class AbstractCommandListener {
   }
 
   protected onModal(interaction: Interaction): InteractionServer.InteractionReply {
-    //Currently the message component handler is the same implementation as the modal handler
+    // Currently the message component handler is the same implementation as the modal handler
     return this.onMessageComponent(interaction);
   }
 
@@ -259,7 +259,7 @@ export abstract class AbstractCommandListener {
     const focusedOption = data.options.find((opt: any) => opt.focused);
     if (!focusedOption) return defaultResponse;
 
-    const autocompleteArg = command.args.find((opt) => opt.name === focusedOption.name);
+    const autocompleteArg = command.args.find(opt => opt.name === focusedOption.name);
     if (!autocompleteArg) return defaultResponse;
 
     const context = new CommandContext(this, interaction, data);
@@ -297,7 +297,7 @@ export abstract class AbstractCommandListener {
       this.logger.error(err);
     });
 
-    //@ts-ignore Discord supports sending a blank object as a response
+    // @ts-ignore Discord supports sending a blank object as a response
     client.on("interaction", (event) => {
       const interaction = new Interaction(this.rest, event.interaction, this.applicationId);
       return this.onInteraction(interaction);

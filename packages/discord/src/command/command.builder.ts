@@ -13,7 +13,7 @@ import type { CommandMetadata, SubCommandMetadata } from "./command.interface.js
 import type { Constructor } from "@statsify/util";
 
 export class CommandBuilder {
-  public static scan<T extends {}>(target: T, constructor: Constructor<T>) {
+  public static scan<T extends object>(target: T, constructor: Constructor<T>) {
     const commandMetadata = Reflect.getMetadata(
       "statsify:command",
       constructor
@@ -78,8 +78,8 @@ if (import.meta.vitest) {
     const integration_types = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];
 
     const contexts = [
-      InteractionContextType.Guild, 
-      InteractionContextType.PrivateChannel, 
+      InteractionContextType.Guild,
+      InteractionContextType.PrivateChannel,
       InteractionContextType.BotDM,
     ];
 

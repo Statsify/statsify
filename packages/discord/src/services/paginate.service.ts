@@ -86,7 +86,7 @@ export class PaginateService {
     });
 
     setTimeout(() => {
-      controller.forEach((component) => listener.removeHook(component.getCustomId()));
+      controller.forEach(component => listener.removeHook(component.getCustomId()));
 
       context.reply({
         components: [],
@@ -142,10 +142,10 @@ export class PaginateService {
         let page: number;
 
         if (i === 0) {
-          //Backwards
+          // Backwards
           page = index == 0 ? pages.length - 1 : index - 1;
         } else {
-          //Forwards
+          // Forwards
           page = index == pages.length - 1 ? 0 : index + 1;
         }
 
@@ -156,7 +156,6 @@ export class PaginateService {
         cache.set(page, message);
 
         if (interaction.getUserId() === userId) {
-          // eslint-disable-next-line require-atomic-updates
           index = page;
           return context.reply(message);
         }
@@ -166,7 +165,7 @@ export class PaginateService {
     });
 
     setTimeout(() => {
-      controller.forEach((component) => listener.removeHook(component.getCustomId()));
+      controller.forEach(component => listener.removeHook(component.getCustomId()));
 
       context.reply({
         components: [],

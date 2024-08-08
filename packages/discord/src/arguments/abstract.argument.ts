@@ -57,15 +57,15 @@ export abstract class AbstractArgument {
     const d = this.toJSON();
 
     if (
-      d.name !== other.name ||
-      d.description !== other.description ||
-      d.type !== other.type ||
-      d.required !== other.required ||
-      d.channel_types !== other.channel_types ||
-      d.min_value !== other.min_value ||
-      d.max_value !== other.max_value ||
-      d.autocomplete !== other.autocomplete ||
-      Boolean(d.choices) !== Boolean(other.choices)
+      d.name !== other.name
+      || d.description !== other.description
+      || d.type !== other.type
+      || d.required !== other.required
+      || d.channel_types !== other.channel_types
+      || d.min_value !== other.min_value
+      || d.max_value !== other.max_value
+      || d.autocomplete !== other.autocomplete
+      || Boolean(d.choices) !== Boolean(other.choices)
     ) {
       return false;
     }
@@ -75,8 +75,8 @@ export abstract class AbstractArgument {
 
       for (let i = 0; i < d.choices.length; i++)
         if (
-          d.choices[i].name !== other.choices[i].name ||
-          d.choices[i].value !== other.choices[i].value
+          d.choices[i].name !== other.choices[i].name
+          || d.choices[i].value !== other.choices[i].value
         ) {
           return false;
         }

@@ -21,6 +21,6 @@ export class NumberArgument extends AbstractArgument {
     public max_value?: number
   ) {
     super();
-    this.description = (t) => t("arguments.number");
+    this.description = t => t("arguments.number");
   }
 }

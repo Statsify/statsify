@@ -32,9 +32,9 @@ export class Message {
   public build(locale: LocalizeFunction): InteractionContent {
     return {
       attachments: this.attachments,
-      components: this.components?.map((component) => component.build(locale)),
+      components: this.components?.map(component => component.build(locale)),
       content: translateField(locale, this.content),
-      embeds: this.embeds?.map((embed) => embed.build(locale)),
+      embeds: this.embeds?.map(embed => embed.build(locale)),
       ephemeral: this.ephemeral,
       files: this.files,
       mentions: this.mentions,

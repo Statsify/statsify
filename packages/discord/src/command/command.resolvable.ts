@@ -23,6 +23,7 @@ export class CommandResolvable {
     | ApplicationCommandType.ChatInput
     | ApplicationCommandOptionType.Subcommand
     | ApplicationCommandOptionType.SubcommandGroup;
+
   public name: string;
   public description: string;
   public options?: any[];
@@ -63,7 +64,7 @@ export class CommandResolvable {
       this.integration_types.push(ApplicationIntegrationType.GuildInstall);
       this.contexts.push(InteractionContextType.Guild);
     }
-    
+
     if (userCommand) {
       this.integration_types.push(ApplicationIntegrationType.UserInstall);
       this.contexts.push(InteractionContextType.PrivateChannel, InteractionContextType.BotDM);
@@ -72,7 +73,7 @@ export class CommandResolvable {
     this.type = ApplicationCommandType.ChatInput;
     this.cooldown = cooldown;
 
-    const argsResolved = (args ?? [])?.map((a) =>
+    const argsResolved = (args ?? [])?.map(a =>
       a instanceof AbstractArgument ? a : new a()
     );
 
@@ -116,19 +117,19 @@ export class CommandResolvable {
       description: this.description,
       description_localizations: this.description_localizations,
       type: this.type,
-      options: this.options?.map((o) => (o.toJSON ? o.toJSON() : o)),
+      options: this.options?.map(o => (o.toJSON ? o.toJSON() : o)),
       integration_types: this.integration_types,
       contexts: this.contexts,
     };
   }
 
-  public equals(other: CommandResolvable): boolean {    
+  public equals(other: CommandResolvable): boolean {
     const d = this.toJSON();
 
     if (
-      d.name !== other.name ||
-      d.description !== other.description ||
-      d.type !== other.type
+      d.name !== other.name
+      || d.description !== other.description
+      || d.type !== other.type
     ) {
       return false;
     }

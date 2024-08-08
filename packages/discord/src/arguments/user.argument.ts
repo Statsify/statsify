@@ -16,6 +16,6 @@ export class UserArgument extends AbstractArgument {
 
   public constructor(public name = "user", public required = true) {
     super();
-    this.description = (t) => t("arguments.user");
+    this.description = t => t("arguments.user");
   }
 }

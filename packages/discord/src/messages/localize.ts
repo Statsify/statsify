@@ -6,8 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import i18next, {
   StringMap,
   TFunction,
@@ -20,19 +18,7 @@ interface ILocalizeFunction {
   <TKeys extends TFunctionKeys = string>(key: TKeys | TKeys[]): string;
   <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
     key: TKeys | TKeys[],
-    options?: TOptions<TInterpolationMap> & { returnDetails: true; returnObjects: true }
-  ): string;
-  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
-    key: TKeys | TKeys[],
-    options?: TOptions<TInterpolationMap> & { returnDetails: true }
-  ): string;
-  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
-    key: TKeys | TKeys[],
-    options?: TOptions<TInterpolationMap> & { returnObjects: true }
-  ): string;
-  <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
-    key: TKeys | TKeys[],
-    options?: TOptions<TInterpolationMap> | string
+    options?: TOptions<TInterpolationMap> & { returnDetails?: true; returnObjects?: true } | string
   ): string;
   <TKeys extends TFunctionKeys = string, TInterpolationMap extends object = StringMap>(
     key: TKeys | TKeys[],
@@ -99,6 +85,6 @@ export const translateToAllLanguages = (
   if (!Array.isArray(options.preload)) return {};
 
   return Object.fromEntries(
-    options.preload.map((lang) => [lang, translateField(getLocalizeFunction(lang), key)])
+    options.preload.map(lang => [lang, translateField(getLocalizeFunction(lang), key)])
   );
 };

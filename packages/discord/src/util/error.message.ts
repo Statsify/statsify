@@ -49,8 +49,8 @@ export class ErrorMessage extends Message {
       embed.title(titleOrKey).description(description);
     } else {
       embed
-        .title((t) => t(`${titleOrKey}.title`))
-        .description((t) => t(`${titleOrKey}.description`));
+        .title(t => t(`${titleOrKey}.title`))
+        .description(t => t(`${titleOrKey}.description`));
     }
 
     const data: IMessage = { embeds: [embed] };

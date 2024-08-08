@@ -17,6 +17,6 @@ export class MojangPlayerArgument extends AbstractArgument {
 
   public constructor(public required = false) {
     super();
-    this.description = (t) => t("arguments.mojang-player");
+    this.description = t => t("arguments.mojang-player");
   }
 }

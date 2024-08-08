@@ -16,6 +16,6 @@ export class FileArgument extends AbstractArgument {
 
   public constructor(public name = "file", public required = false) {
     super();
-    this.description = (t) => t("arguments.file");
+    this.description = t => t("arguments.file");
   }
 }
