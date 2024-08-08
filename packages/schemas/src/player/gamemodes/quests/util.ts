@@ -233,10 +233,10 @@ export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) =
     t = t.startOf("day");
   } else if (time === QuestTime.Weekly) {
     t = t.startOf("week");
-    t
-      = t.plus({ days: 4 }).toMillis() < Date.now()
-        ? t.plus({ days: 4 })
-        : t.minus({ days: 3 });
+    t =
+      t.plus({ days: 4 }).toMillis() < Date.now() ?
+        t.plus({ days: 4 }) :
+        t.minus({ days: 3 });
   }
 
   const millis = t.toMillis();

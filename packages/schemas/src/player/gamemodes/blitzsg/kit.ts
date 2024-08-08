@@ -90,8 +90,8 @@ export class BlitzSGKit {
     } else if (specialKits.includes(kit)) {
       const prestiges = [1, 100, 250, 500, 1000, 1500, 2000, 2500, 5000, 10_000];
 
-      this.level
-        = findScoreIndex(
+      this.level =
+        findScoreIndex(
           prestiges.map((n) => ({ req: n })),
           this.exp
         ) + 1;

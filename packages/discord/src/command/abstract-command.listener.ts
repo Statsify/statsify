@@ -105,10 +105,8 @@ export abstract class AbstractCommandListener {
 
     const firstOption = data.options[0];
 
-    const hasSubCommandGroup
-      = firstOption.type === ApplicationCommandOptionType.SubcommandGroup;
-    const findCommand = () =>
-      command.options?.find((opt) => opt.name === firstOption.name);
+    const hasSubCommandGroup = firstOption.type === ApplicationCommandOptionType.SubcommandGroup;
+    const findCommand = () => command.options?.find((opt) => opt.name === firstOption.name);
 
     if (hasSubCommandGroup) {
       const group = findCommand();

@@ -69,9 +69,9 @@ export class PaginateService {
         else if (interaction.isSelectMenuInteraction())
           page = Number(interaction.getData().values[0]);
 
-        const message = cache.has(page)
-          ? cache.get(page)!
-          : await this.getMessage(context, controller, page, pages);
+        const message = cache.has(page) ?
+          cache.get(page)! :
+          await this.getMessage(context, controller, page, pages);
 
         cache.set(page, message);
 
@@ -149,9 +149,9 @@ export class PaginateService {
           page = index == pages.length - 1 ? 0 : index + 1;
         }
 
-        const message = cache.has(page)
-          ? cache.get(page)!
-          : await this.getMessage(context, controller, page, pages);
+        const message = cache.has(page) ?
+          cache.get(page)! :
+          await this.getMessage(context, controller, page, pages);
 
         cache.set(page, message);
 

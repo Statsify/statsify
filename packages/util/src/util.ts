@@ -88,9 +88,9 @@ export const prettify = (s: string): string => {
 
   // Convert camelCase to Snake_Case (if applicable)
   if (!["_", " "].some((l) => s.includes(l))) {
-    s
-      = s.charAt(0).toLowerCase()
-      + s.slice(1).replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+    s =
+      s.charAt(0).toLowerCase() +
+      s.slice(1).replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
   }
 
   // Convert snake_case to Title Case

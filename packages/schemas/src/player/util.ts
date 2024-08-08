@@ -41,10 +41,10 @@ export class PlayerUtil {
           rank = "bMVP++";
         }
       } else {
-        rank
-          = data.packageRank && data.newPackageRank
-            ? data.newPackageRank
-            : data.packageRank || data.newPackageRank;
+        rank =
+          data.packageRank && data.newPackageRank ?
+            data.newPackageRank :
+            data.packageRank || data.newPackageRank;
       }
     }
 

@@ -52,9 +52,9 @@ export function Field({
     );
 
     // Swagger api doc options
-    const apiProperty = docsOptions?.hide
-      ? ApiHideProperty()
-      : ApiProperty({
+    const apiProperty = docsOptions?.hide ?
+      ApiHideProperty() :
+      ApiProperty({
         type: type.type,
         isArray: type.array,
         default: store.default,

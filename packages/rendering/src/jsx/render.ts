@@ -95,9 +95,9 @@ const _render = (
         break;
       case "right": {
         const oppositeSide = side === "x" ? "y" : "x";
-        const delta
-          = instruction[oppositeSide].size
-          - (child[oppositeSide].size + child[oppositeSide].margin2 + child[oppositeSide].padding2);
+        const delta =
+          instruction[oppositeSide].size -
+          (child[oppositeSide].size + child[oppositeSide].margin2 + child[oppositeSide].padding2);
 
         applyDelta(delta, oppositeSide);
         _render(ctx, context, intrinsicElements, child, x, y);

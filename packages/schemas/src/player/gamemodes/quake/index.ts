@@ -126,8 +126,8 @@ export class Quake {
 
     // NINE_POINT_ZERO becomes 9.0
     // ALWAYS in seconds
-    this.trigger
-      = +data.trigger
+    this.trigger =
+      +data.trigger
         ?.toLowerCase()
         .split("_")
         // Converts string numbers to actually number && remove the 'point'

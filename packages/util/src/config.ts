@@ -299,8 +299,8 @@ export const config = <T extends keyof FlatConfig>(
   // Don't load the config while testing
   if (process.env.VITEST) return defaultValue as FlatConfig[T];
 
-  const value
-    = (key as string).split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;
+  const value =
+    (key as string).split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;
 
   const isValueDefined = value !== undefined && value !== "";
 

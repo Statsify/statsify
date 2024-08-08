@@ -43,14 +43,14 @@ const normalizeNode = (node: ElementNode, side: Side, other: Side) => {
   const otherType = typeof node[other].size;
 
   if (
-    sideType === "undefined"
-    || (sideType === "number" && (node[side].size as number) < node[side].minSize)
+    sideType === "undefined" ||
+    (sideType === "number" && (node[side].size as number) < node[side].minSize)
   )
     node[side].size = node[side].minSize;
 
   if (
-    otherType === "undefined"
-    || (otherType === "number" && (node[other].size as number) < node[other].minSize)
+    otherType === "undefined" ||
+    (otherType === "number" && (node[other].size as number) < node[other].minSize)
   )
     node[other].size = node[other].minSize;
 
@@ -101,9 +101,9 @@ const processSideData = (data: SideData) => {
   const remainingPixelPercentRatio = data.staticLength / data.percentSpaceLeft;
 
   return (
-    (data.highestPixelToPercentRatio > remainingPixelPercentRatio
-      ? data.highestPixelToPercentRatio
-      : remainingPixelPercentRatio) + data.paddedLength
+    (data.highestPixelToPercentRatio > remainingPixelPercentRatio ?
+      data.highestPixelToPercentRatio :
+      remainingPixelPercentRatio) + data.paddedLength
   );
 };
 
@@ -164,8 +164,8 @@ export const elementToNode = (
     if (typeof child[other].size === "string" && child[other].size !== "remaining") {
       const percent = toDecimal(child[other].size as Percent | Fraction);
 
-      const otherSize
-        = child[other].minSize / percent + getTotalSize(child[other], { size: false });
+      const otherSize =
+        child[other].minSize / percent + getTotalSize(child[other], { size: false });
 
       if (otherSize > nodeOtherLength) nodeOtherLength = otherSize;
     } else {

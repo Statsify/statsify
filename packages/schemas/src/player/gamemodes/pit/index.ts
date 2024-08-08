@@ -145,10 +145,10 @@ export class Pit {
     );
 
     this.levelFormatted = getLevelFormatted(level, prestige);
-    this.nextLevelFormatted
-      = prestige === 50
-        ? getLevelFormatted(120, prestige)
-        : getLevelFormatted(1, prestige + 1);
+    this.nextLevelFormatted =
+      prestige === 50 ?
+        getLevelFormatted(120, prestige) :
+        getLevelFormatted(1, prestige + 1);
 
     this.contractsCompleted = data.contracts_completed;
 

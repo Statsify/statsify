@@ -46,15 +46,15 @@ export class Interaction {
 
   public isButtonInteraction() {
     return (
-      this.isMessageComponentInteraction()
-      && this.getData().component_type === ComponentType.Button
+      this.isMessageComponentInteraction() &&
+      this.getData().component_type === ComponentType.Button
     );
   }
 
   public isSelectMenuInteraction() {
     return (
-      this.isMessageComponentInteraction()
-      && this.getData().component_type === ComponentType.SelectMenu
+      this.isMessageComponentInteraction() &&
+      this.getData().component_type === ComponentType.SelectMenu
     );
   }
 

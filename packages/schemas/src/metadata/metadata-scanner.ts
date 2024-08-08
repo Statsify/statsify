@@ -49,13 +49,13 @@ export class MetadataScanner {
 
     entries.forEach(([key, value]) => {
       const path = `${base ? `${base}.` : ""}${key}`;
-      const name = value.leaderboard.name
-        ? `${baseName ? `${baseName} ` : ""}${value.leaderboard.name}`
-        : baseName;
+      const name = value.leaderboard.name ?
+        `${baseName ? `${baseName} ` : ""}${value.leaderboard.name}` :
+        baseName;
 
-      const historicalName = value.historical.name
-        ? `${baseName ? `${baseName} ` : ""}${value.historical.name}`
-        : baseName;
+      const historicalName = value.historical.name ?
+        `${baseName ? `${baseName} ` : ""}${value.historical.name}` :
+        baseName;
 
       for (const ratio of LEADERBOARD_RATIO_KEYS) {
         if (!ratio.includes(key)) continue;
@@ -76,8 +76,8 @@ export class MetadataScanner {
 
       // Apply metadata to historical
       if (
-        !value.historical.additionalFields
-        || value.historical.additionalFields.length === 0
+        !value.historical.additionalFields ||
+        value.historical.additionalFields.length === 0
       )
         value.historical.additionalFields = value.leaderboard.additionalFields;
 

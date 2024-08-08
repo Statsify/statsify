@@ -102,10 +102,10 @@ export class ClassicMurderMysteryMode extends StandardMurderMysteryMode {
     super(data, mode);
     mode = mode ? `_${mode}` : mode;
 
-    this.fastestDetectiveWin
-      = (data[`quickest_detective_win_time_seconds${mode}`] ?? 0) * 1000;
-    this.fastestMurdererWin
-      = (data[`quickest_murderer_win_time_seconds${mode}`] ?? 0) * 1000;
+    this.fastestDetectiveWin =
+      (data[`quickest_detective_win_time_seconds${mode}`] ?? 0) * 1000;
+    this.fastestMurdererWin =
+      (data[`quickest_murderer_win_time_seconds${mode}`] ?? 0) * 1000;
   }
 }
 

@@ -178,6 +178,8 @@ export default tseslint.config(
       ],
       "@stylistic/type-generic-spacing": "error",
       "@stylistic/yield-star-spacing": ["error", { before: false, after: true }],
+      "@stylistic/jsx-one-expression-per-line": "off",
+      "@stylistic/operator-linebreak": ["error", "after"]
     }
   },
   {

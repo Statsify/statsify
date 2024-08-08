@@ -157,9 +157,9 @@ export class FontRenderer {
   }
 
   private getCharacterImage(unicode: string, isAscii: boolean) {
-    return isAscii
-      ? this.images.get("ascii")
-      : this.images.get(`${unicode[0]}${unicode[1]}`);
+    return isAscii ?
+      this.images.get("ascii") :
+      this.images.get(`${unicode[0]}${unicode[1]}`);
   }
 
   private getTextureScale(image: CanvasRenderingContext2D) {

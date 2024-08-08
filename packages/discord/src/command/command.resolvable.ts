@@ -127,9 +127,9 @@ export class CommandResolvable {
     const d = this.toJSON();
 
     if (
-      d.name !== other.name
-      || d.description !== other.description
-      || d.type !== other.type
+      d.name !== other.name ||
+      d.description !== other.description ||
+      d.type !== other.type
     ) {
       return false;
     }

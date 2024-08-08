@@ -141,8 +141,8 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.globalCompositeOperation = "source-over";
 
   if (outline) {
-    ctx.strokeStyle
-      = outline === true ? resolveFill(color, ctx, x, y, width, height) : outline;
+    ctx.strokeStyle =
+      outline === true ? resolveFill(color, ctx, x, y, width, height) : outline;
     ctx.lineWidth = outlineSize;
     ctx.stroke();
   }

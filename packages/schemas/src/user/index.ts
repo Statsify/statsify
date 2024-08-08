@@ -126,8 +126,8 @@ export class User {
   }
 
   public static getTierName(userOrTier: User | null | UserTier): string {
-    const tier
-      = typeof userOrTier === "number" ? userOrTier : userOrTier?.tier ?? UserTier.NONE;
+    const tier =
+      typeof userOrTier === "number" ? userOrTier : userOrTier?.tier ?? UserTier.NONE;
 
     return prettify(tiers.find(([, value]) => value === tier)?.[0] ?? "NONE");
   }

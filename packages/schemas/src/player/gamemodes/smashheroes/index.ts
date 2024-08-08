@@ -158,8 +158,8 @@ export class SmashHeroes {
 
     this.coins = data.coins;
     this.level = data.smashLevel;
-    this.kit
-      = SmashHeroesClass[data.active_class as keyof typeof SmashHeroesClass] ?? "none";
+    this.kit =
+      SmashHeroesClass[data.active_class as keyof typeof SmashHeroesClass] ?? "none";
     this.levelFormatted = formatLevel(this.level ?? 0);
   }
 }

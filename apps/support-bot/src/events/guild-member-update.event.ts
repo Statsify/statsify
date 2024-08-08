@@ -104,17 +104,17 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     // They are a new patreon
     if (!isPatreon && hasPatreonRole) return this.patreonAdd(memberId);
 
-    //They don't have premium and the role was added
+    // They don't have premium and the role was added
     if (currentRoleTier && currentRoleTier > (currentTier ?? 0))
       return this.handlePremiumAdd(memberId, currentRoleTier);
 
     if (hasPatreonRole) return;
 
-    //They were nitro boosting but stopped boosting
+    // They were nitro boosting but stopped boosting
     if (isServerBooster && !hasServerBoosterRole)
       return this.serverBoosterRemove(memberId);
 
-    //Has the nitro boosting role but isn't registered as a booster
+    // Has the nitro boosting role but isn't registered as a booster
     if (hasServerBoosterRole && !isServerBooster) return this.serverBoosterAdd(memberId);
   }
 
@@ -144,7 +144,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     const user = await this.userService.removeServerBooster(memberId);
 
-    //Don't remove their premium if they are a patreon
+    // Don't remove their premium if they are a patreon
     if (user?.patreon && user.tier !== UserTier.IRON) {
       await this.roleService.removeRole(GUILD_ID, memberId, TIER_ROLES[UserTier.IRON]);
       return;
@@ -159,7 +159,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     const user = await this.userService.addServerBooster(memberId);
 
-    //Don't mess with their premium if they are a patreon
+    // Don't mess with their premium if they are a patreon
     if (!user?.patreon) return this.handlePremiumAdd(memberId, UserTier.IRON);
   }
 
