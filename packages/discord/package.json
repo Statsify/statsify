@@ -19,7 +19,7 @@
     "@swc/helpers": "^0.5.12",
     "axios": "^1.7.3",
     "discord-api-types": "^0.37.93",
-    "i18next": "^21.10.0",
+    "i18next": "^23.12.2",
     "i18next-fs-backend": "^2.3.2",
     "reflect-metadata": "^0.2.2",
     "skia-canvas": "^0.9.30",
