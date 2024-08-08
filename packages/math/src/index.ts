@@ -38,11 +38,11 @@ export const ratio = (n1 = 0, n2 = 0, multiply = 1) => {
   }
 };
 
-export const add = (...args: number[]): number =>
-  args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
+export const add = (...arguments_: number[]): number =>
+  arguments_.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
 
-export const sub = (...args: number[]): number =>
-  args.reduce((a, b) => (a ?? 0) - (b ?? 0));
+export const sub = (...arguments_: number[]): number =>
+  arguments_.reduce((a, b) => (a ?? 0) - (b ?? 0));
 
 /**
  *
@@ -51,16 +51,16 @@ export const sub = (...args: number[]): number =>
  * @param args An array of instances of the constructor
  * @returns A new instance of the constructor with all non object values manipulated by the `fn` function
  */
-const deep = <T>(fn: (...args: number[]) => unknown, ...args: T[]): T => {
-  const obj: Record<string, unknown> = {};
+const deep = <T>(function_: (...arguments_: number[]) => unknown, ...arguments_: T[]): T => {
+  const object: Record<string, unknown> = {};
 
-  for (const key in args[0]) {
-    obj[key] = isObject(args[0][key])
-      ? deep(fn, ...args.map((a) => a[key]))
-      : fn(...args.map((a) => a[key] as unknown as number));
+  for (const key in arguments_[0]) {
+    object[key] = isObject(arguments_[0][key])
+      ? deep(function_, ...arguments_.map((a) => a[key]))
+      : function_(...arguments_.map((a) => a[key] as unknown as number));
   }
 
-  return obj as T;
+  return object as T;
 };
 
 /**
@@ -72,7 +72,7 @@ const deep = <T>(fn: (...args: number[]) => unknown, ...args: T[]): T => {
  * const obj = deepAdd(SomeClass, new SomeClass({ a: 1, b: 2 }), new SomeClass({ a: 3, b: 4 })); //SomeClass { a: 4, b: 6 }
  * ```
  */
-export const deepAdd = <T>(...args: T[]): T => deep(add, ...args);
+export const deepAdd = <T>(...arguments_: T[]): T => deep(add, ...arguments_);
 
 /**
  *
@@ -83,7 +83,7 @@ export const deepAdd = <T>(...args: T[]): T => deep(add, ...args);
  * const obj = deepSub(SomeClass, new SomeClass({ a: 1, b: 2 }), new SomeClass({ a: 3, b: 4 })); //SomeClass { a: -2, b: -2 }
  * ```
  */
-export const deepSub = <T>(...args: T[]): T => deep(sub, ...args);
+export const deepSub = <T>(...arguments_: T[]): T => deep(sub, ...arguments_);
 
 if (import.meta.vitest) {
   const { suite, it, expect } = import.meta.vitest;
@@ -105,7 +105,7 @@ if (import.meta.vitest) {
     it("should calculate ratios", () => {
       expect(ratio(1, 2)).toBe(0.5);
       expect(ratio(1, 3)).toBe(0.33);
-      expect(ratio(1, undefined)).toBe(1);
+      expect(ratio(1)).toBe(1);
       expect(ratio(1, 0)).toBe(1);
       expect(ratio(Number.NaN, 1)).toBe(0);
     });
