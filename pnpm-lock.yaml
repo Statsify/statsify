@@ -311,6 +311,9 @@ importers:
       '@types/inquirer':
         specifier: ^9.0.7
         version: 9.0.7
+      globals:
+        specifier: ^15.9.0
+        version: 15.9.0
 
   apps/site:
     dependencies:
