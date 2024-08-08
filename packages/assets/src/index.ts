@@ -53,8 +53,6 @@ function getBackgroundPaths() {
   return backgrounds;
 }
 
-export function getBackground(path: string): Promise<Image>;
-export function getBackground(game: string, mode: string): Promise<Image>;
 export function getBackground(pathOrGame: string, mode?: string): Promise<Image> {
   if (!hasPrivateAssets) return getImage("out/backgrounds/background.png");
 
@@ -72,9 +70,6 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
   return getImage(`out/backgrounds/${pathOrGame}.png`);
 }
 
-export function getLogo(user: User | null, size?: number): Promise<Image>;
-export function getLogo(logo: UserLogo | null, size?: number): Promise<Image>;
-export function getLogo(path: string, size?: number): Promise<Image>;
 export function getLogo(
   userOrLogoOrPath: User | UserLogo | string | null,
   size?: number
@@ -82,9 +77,6 @@ export function getLogo(
   return loadImage(getLogoPath(userOrLogoOrPath as User, size));
 }
 
-export function getLogoPath(user: User | null, size?: number): string;
-export function getLogoPath(logo: UserLogo | null, size?: number): string;
-export function getLogoPath(path: string, size?: number): string;
 export function getLogoPath(
   userOrLogoOrPath: User | UserLogo | string | null,
   size = 26
@@ -93,77 +85,63 @@ export function getLogoPath(
   let logo: UserLogo | undefined;
 
   switch (typeof userOrLogoOrPath) {
-    case "string": {
+    case "string":
       path = `${userOrLogoOrPath}_`;
       break;
-    }
 
-    case "object": {
+    case "object":
       logo = User.getLogo(userOrLogoOrPath);
       break;
-    }
 
-    case "number": {
+    case "number":
       logo = userOrLogoOrPath;
       break;
-    }
   }
 
   switch (logo) {
-    case UserLogo.RUBY: {
+    case UserLogo.RUBY:
       path = "ruby_";
       break;
-    }
 
-    case UserLogo.AMETHYST: {
+    case UserLogo.AMETHYST:
       path = "amethyst_";
       break;
-    }
 
-    case UserLogo.NETHERITE: {
+    case UserLogo.NETHERITE:
       path = "netherite_";
       break;
-    }
 
-    case UserLogo.SCULK: {
+    case UserLogo.SCULK:
       path = "sculk_";
       break;
-    }
 
-    case UserLogo.PINK: {
+    case UserLogo.PINK:
       path = "pink_";
       break;
-    }
 
-    case UserLogo.VENOM: {
+    case UserLogo.VENOM:
       path = "venom_";
       break;
-    }
 
-    case UserLogo.EMERALD: {
+    case UserLogo.EMERALD:
       path = "emerald_";
       break;
-    }
 
-    case UserLogo.DIAMOND: {
+    case UserLogo.DIAMOND:
       path = "diamond_";
       break;
-    }
 
-    case UserLogo.GOLD: {
+    case UserLogo.GOLD:
       path = "gold_";
       break;
-    }
 
-    case UserLogo.IRON: {
+    case UserLogo.IRON:
       path = "iron_";
       break;
-    }
 
-    case UserLogo.DEFAULT: {
+    case UserLogo.DEFAULT:
       path = "";
       break;
-    }
   }
 
   if (path === undefined) throw new Error("Invalid logo path");
