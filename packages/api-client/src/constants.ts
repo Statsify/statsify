@@ -9,20 +9,20 @@
 export enum GuildQuery {
   ID = "ID",
   NAME = "NAME",
-  PLAYER = "PLAYER",
+  PLAYER = "PLAYER"
 }
 
 export enum CurrentHistoricalType {
   SESSION = "SESSION",
   DAILY = "DAILY",
   WEEKLY = "WEEKLY",
-  MONTHLY = "MONTHLY",
+  MONTHLY = "MONTHLY"
 }
 
 export enum LastHistoricalType {
   LAST_DAY = "LAST_DAY",
   LAST_WEEK = "LAST_WEEK",
-  LAST_MONTH = "LAST_MONTH",
+  LAST_MONTH = "LAST_MONTH"
 }
 
 export const HistoricalTimes = { ...LastHistoricalType, ...CurrentHistoricalType };
@@ -31,11 +31,11 @@ export type HistoricalType = LastHistoricalType | CurrentHistoricalType;
 export enum CacheLevel {
   CACHE = "CACHE",
   CACHE_ONLY = "CACHE_ONLY",
-  LIVE = "LIVE",
+  LIVE = "LIVE"
 }
 
 export enum LeaderboardQuery {
   PAGE = "page",
   INPUT = "input",
-  POSITION = "position",
+  POSITION = "position"
 }

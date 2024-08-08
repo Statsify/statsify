@@ -41,7 +41,7 @@ interface ExtraData {
   responseType?: ResponseType;
 }
 
-//TODO: Move dtos in api to @statsify/api-client
+// TODO: Move dtos in api to @statsify/api-client
 interface UpdateUser {
   serverMember?: boolean;
   theme?: UserTheme;
