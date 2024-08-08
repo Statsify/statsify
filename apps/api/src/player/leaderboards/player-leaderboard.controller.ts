@@ -37,7 +37,7 @@ export class PlayerLeaderboardsController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
   public getPlayerLeaderboard(
-    @Body() { field, page, player, position }: PlayerLeaderboardDto
+  @Body() { field, page, player, position }: PlayerLeaderboardDto
   ) {
     let input: number | string;
     let type: LeaderboardQuery;

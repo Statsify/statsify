@@ -26,7 +26,7 @@ export class SkinService {
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
-    const { skin } = await this.getSkin(uuid).then(skin => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false));
+    const { skin } = await this.getSkin(uuid).then((skin) => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false));
 
     const canvas = new Canvas(size, size);
     const ctx = canvas.getContext("2d");
@@ -62,7 +62,7 @@ export class SkinService {
     }
 
     const uuid = isUsername ? await this.getUuid(tag) : tag;
-    
+
     const skin = await this.requestSkin(uuid).catch((error) => {
       if (cachedSkin) return cachedSkin;
       throw error;

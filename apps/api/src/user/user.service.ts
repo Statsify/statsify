@@ -90,17 +90,17 @@ export class UserService {
 
   public async verifyUser(uuidOrCode: string, id: string): Promise<User | null> {
     const uuid =
-      uuidOrCode.length >= 32
-        ? uuidOrCode.replace(/-/g, "")
-        : await this.getUuidFromCode(uuidOrCode);
+      uuidOrCode.length >= 32 ?
+        uuidOrCode.replace(/-/g, "") :
+        await this.getUuidFromCode(uuidOrCode);
 
-    //Unverify anyone previously linked to this UUID
+    // Unverify anyone previously linked to this UUID
     await this.userModel
       .updateMany({ uuid }, { $unset: { uuid: "" } })
       .lean()
       .exec();
 
-    //Link the discord id to the UUID
+    // Link the discord id to the UUID
     const user = await this.userModel
       .findOneAndUpdate(
         { id },

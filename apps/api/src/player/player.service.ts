@@ -166,7 +166,7 @@ export class PlayerService {
   }
 
   public async saveOne(player: Player, registerAutocomplete: boolean) {
-    //Serialize and flatten the player
+    // Serialize and flatten the player
     const flatPlayer = flatten(player);
     const serializedPlayer = serialize<Player>(Player, flatPlayer);
 

@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-/* eslint-disable require-atomic-updates */
 import {
   CacheLevel,
   GuildNotFoundException,
@@ -60,7 +59,7 @@ export class GuildService {
       throw new GuildNotFoundException(displayName);
     }
 
-    //The cached guild doesn't match the one we got from the API, just ignore the cached guild
+    // The cached guild doesn't match the one we got from the API, just ignore the cached guild
     if (guild.id !== cachedGuild?.id) {
       cachedGuild = null;
     }
@@ -77,13 +76,13 @@ export class GuildService {
 
       await this.getMemberName(member, cacheMember);
 
-      //These members will need their player document updated with the correct guild id
+      // These members will need their player document updated with the correct guild id
       if (member.guildId !== guild.id) {
         requireGuildId.push(member.uuid);
         member.guildId = guild.id;
       }
 
-      //Merge the exp history from hypixel and the cached guild
+      // Merge the exp history from hypixel and the cached guild
       const combinedExpHistory: Record<string, number> = {
         ...cacheMember?.expHistoryDays?.reduce(
           (acc, day, index) => ({ ...acc, [day]: cacheMember.expHistory[index] }),
@@ -94,7 +93,7 @@ export class GuildService {
         ),
       };
 
-      //Add all the days to the guild total exp history
+      // Add all the days to the guild total exp history
       Object.entries(combinedExpHistory)
         .sort()
         .reverse()
@@ -120,7 +119,7 @@ export class GuildService {
       .lean()
       .exec();
 
-    //Get scaled gexp
+    // Get scaled gexp
     Object.entries(guildExpHistory)
       .sort()
       .reverse()
@@ -146,7 +145,7 @@ export class GuildService {
         guild.scaledMonthly += scaled;
       });
 
-    //Cache guilds responses for 10 minutes
+    // Cache guilds responses for 10 minutes
     guild.expiresAt = Date.now() + 600_000;
 
     const flatGuild = flatten(guild);
@@ -204,11 +203,11 @@ export class GuildService {
     tag: string,
     type: GuildQuery
   ) {
-    //There is nothing to delete so just escape
+    // There is nothing to delete so just escape
     if (!cachedGuild) return;
 
     if (type === GuildQuery.PLAYER) {
-      //Remove this guild id from the player document, because the player is no longer in the guild
+      // Remove this guild id from the player document, because the player is no longer in the guild
       return await this.playerModel
         .updateOne({ $unset: { guildId: "" } })
         .where("uuid")
@@ -242,7 +241,7 @@ export class GuildService {
       member.displayName = player.displayName;
       member.guildId = player.guildId;
 
-      //Cache names for a day
+      // Cache names for a day
       member.expiresAt = Date.now() + 86_400_000;
       return;
     }
@@ -253,7 +252,7 @@ export class GuildService {
       member.username = `ERROR ${member.uuid}`;
       member.displayName = member.username;
 
-      //Try again in 10 minutes
+      // Try again in 10 minutes
       member.expiresAt = Date.now() + 600_000;
     }
   }
