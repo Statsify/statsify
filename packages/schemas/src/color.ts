@@ -21,7 +21,7 @@ export type ColorId = (typeof colors)[number]["id"];
 export class Color {
   @Field({
     docs: {
-      enum: colors.map((c) => c.code),
+      enum: colors.map(c => c.code),
       enumName: "ColorCode",
       examples: [colors[0].code],
       description: "A Minecraft color code",
@@ -32,7 +32,7 @@ export class Color {
 
   @Field({
     docs: {
-      enum: colors.map((c) => c.hex),
+      enum: colors.map(c => c.hex),
       enumName: "ColorHex",
       examples: [colors[0].hex],
       description: "A hex color code",
@@ -43,7 +43,7 @@ export class Color {
 
   @Field({
     docs: {
-      enum: colors.map((c) => c.id),
+      enum: colors.map(c => c.id),
       enumName: "ColorId",
       examples: [colors[0].id],
       description: "A name of a Minecraft color",
@@ -53,7 +53,7 @@ export class Color {
   public id: ColorId;
 
   public constructor(code: ColorCode | ColorHex | ColorId) {
-    const color = colors.find((c) => c.code === code || c.hex === code || c.id === code)!;
+    const color = colors.find(c => c.code === code || c.hex === code || c.id === code)!;
 
     this.code = color?.code;
     this.hex = color?.hex;

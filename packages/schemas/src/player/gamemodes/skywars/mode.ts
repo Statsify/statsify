@@ -38,7 +38,7 @@ export class SkyWarsMode {
   @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
   public playtime: number;
 
-  //Kit gets applied in the main class
+  // Kit gets applied in the main class
   @Field({ store: { default: "default" } })
   public kit: string;
 
@@ -52,7 +52,7 @@ export class SkyWarsMode {
     this.gamesPlayed = add(this.wins, this.losses);
     this.assists = data[`assists${mode}`];
 
-    //Convert to milliseconds
+    // Convert to milliseconds
     this.playtime = (data[`time_played${mode}`] ?? 0) * 1000;
 
     SkyWarsMode.applyRatios(this);

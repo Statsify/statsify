@@ -24,18 +24,18 @@ export const PAINTBALL_MODES = new GameModes([{ api: "overall" }]);
 export type PaintballModes = IGameModes<typeof PAINTBALL_MODES>;
 
 const prefixes: GamePrefix[] = [
-  { fmt: (n) => `§8[${n}]`, req: 0 },
-  { fmt: (n) => `§7[${n}]`, req: 1000 },
-  { fmt: (n) => `§f[${n}]`, req: 2500 },
-  { fmt: (n) => `§2[${n}]`, req: 5000 },
-  { fmt: (n) => `§e[${n}]`, req: 10_000 },
-  { fmt: (n) => `§a[${n}]`, req: 20_000 },
-  { fmt: (n) => `§9[${n}]`, req: 50_000 },
-  { fmt: (n) => `§b[${n}]`, req: 75_000 },
-  { fmt: (n) => `§d[${n}]`, req: 100_000 },
-  { fmt: (n) => `§5[${n}]`, req: 200_000 },
-  { fmt: (n) => `§c[${n}]`, req: 500_000 },
-  { fmt: (n) => `§6[${n}]`, req: 1_000_000 },
+  { fmt: n => `§8[${n}]`, req: 0 },
+  { fmt: n => `§7[${n}]`, req: 1000 },
+  { fmt: n => `§f[${n}]`, req: 2500 },
+  { fmt: n => `§2[${n}]`, req: 5000 },
+  { fmt: n => `§e[${n}]`, req: 10_000 },
+  { fmt: n => `§a[${n}]`, req: 20_000 },
+  { fmt: n => `§9[${n}]`, req: 50_000 },
+  { fmt: n => `§b[${n}]`, req: 75_000 },
+  { fmt: n => `§d[${n}]`, req: 100_000 },
+  { fmt: n => `§5[${n}]`, req: 200_000 },
+  { fmt: n => `§c[${n}]`, req: 500_000 },
+  { fmt: n => `§6[${n}]`, req: 1_000_000 },
 ];
 
 export class Paintball {

@@ -28,16 +28,16 @@ export const ARENA_BRAWL_MODES = new GameModes([
 ]);
 
 const prefixes: GamePrefix[] = [
-  { fmt: (n) => `§8[${n}]`, req: 0 },
-  { fmt: (n) => `§7[${n}]`, req: 500 },
-  { fmt: (n) => `§a[${n}]`, req: 1000 },
-  { fmt: (n) => `§2[${n}]`, req: 2000 },
-  { fmt: (n) => `§d[${n}]`, req: 3000 },
-  { fmt: (n) => `§5[${n}]`, req: 4000 },
-  { fmt: (n) => `§c[${n}]`, req: 5000 },
-  { fmt: (n) => `§4[${n}]`, req: 7500 },
-  { fmt: (n) => `§6[${n}]`, req: 10_000 },
-  { fmt: (n) => rainbow(`[${n}]`), req: 15_000 },
+  { fmt: n => `§8[${n}]`, req: 0 },
+  { fmt: n => `§7[${n}]`, req: 500 },
+  { fmt: n => `§a[${n}]`, req: 1000 },
+  { fmt: n => `§2[${n}]`, req: 2000 },
+  { fmt: n => `§d[${n}]`, req: 3000 },
+  { fmt: n => `§5[${n}]`, req: 4000 },
+  { fmt: n => `§c[${n}]`, req: 5000 },
+  { fmt: n => `§4[${n}]`, req: 7500 },
+  { fmt: n => `§6[${n}]`, req: 10_000 },
+  { fmt: n => rainbow(`[${n}]`), req: 15_000 },
 ];
 
 export type ArenaBrawlModes = IGameModes<typeof ARENA_BRAWL_MODES>;

@@ -10,7 +10,6 @@ import { APIData } from "@statsify/util";
 import { Field } from "#metadata";
 
 export class Slumber {
-
   @Field({ historical: { enabled: false }, leaderboard: { enabled: false } })
   public tickets: number;
 

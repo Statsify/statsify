@@ -19,7 +19,7 @@ export enum UserTier {
   EMERALD = 404,
   NETHERITE = 505,
   STAFF = 666,
-  CORE = 999,
+  CORE = 999
 }
 
 const tiers = Object.entries(UserTier);
@@ -125,11 +125,9 @@ export class User {
     }
   }
 
-  public static getTierName(user: User | null): string;
-  public static getTierName(tier: UserTier): string;
   public static getTierName(userOrTier: User | null | UserTier): string {
-    const tier =
-      typeof userOrTier === "number" ? userOrTier : userOrTier?.tier ?? UserTier.NONE;
+    const tier
+      = typeof userOrTier === "number" ? userOrTier : userOrTier?.tier ?? UserTier.NONE;
 
     return prettify(tiers.find(([, value]) => value === tier)?.[0] ?? "NONE");
   }

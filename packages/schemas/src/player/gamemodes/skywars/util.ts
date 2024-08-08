@@ -12,7 +12,7 @@ export const getLevel = (xp: number): number => {
   const totalXp = [0, 2, 7, 15, 25, 50, 100, 200, 350, 600, 1000, 1500];
   if (xp >= 15_000) return Math.floor((xp - 15_000) / 10_000 + 12);
 
-  const level = totalXp.findIndex((x) => x * 10 - xp > 0);
+  const level = totalXp.findIndex(x => x * 10 - xp > 0);
   return level;
 };
 
@@ -40,7 +40,7 @@ export const getLevelProgress = (xp: number): { current: number; total: number }
     };
   }
 
-  const totalXptoNextLevel = xpToNextLvl[totalXp.findIndex((x) => x * 10 - xp > 0)] * 10;
+  const totalXptoNextLevel = xpToNextLvl[totalXp.findIndex(x => x * 10 - xp > 0)] * 10;
 
   for (const element of xpToNextLvl) {
     if (currentLevelXp - element * 10 < 0) break;

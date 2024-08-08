@@ -199,17 +199,16 @@ export class DropperMap {
   @Field()
   public completions: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC"} })
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
   public bestTime: number;
 
-  public constructor (map: APIData = {}) {
+  public constructor(map: APIData = {}) {
     this.bestTime = map.best_time;
     this.completions = map.completions;
   }
 }
 
 export class DropperMaps {
-
   @Field({ leaderboard: { name: "§cAtlantis§f" } })
   public atlantis: DropperMap;
 
@@ -476,7 +475,7 @@ export class Dropper {
   @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
   public bestTime: number;
 
-  @Field({ leaderboard: { name: "Maps:"} })
+  @Field({ leaderboard: { name: "Maps:" } })
   public maps: DropperMaps;
 
   public constructor(dropper: APIData = {}) {
@@ -1046,8 +1045,8 @@ export class ZombiesMap {
     map = map ? `_${map}` : "";
 
     this.wins = data[`wins_zombies${map}`];
-    this.fastestWin =
-      (data[`fastest_time_30_zombies${map ? `${map}_normal` : ""}`] ?? 0) * 1000;
+    this.fastestWin
+      = (data[`fastest_time_30_zombies${map ? `${map}_normal` : ""}`] ?? 0) * 1000;
     this.kills = data[`zombie_kills_zombies${map}`];
     this.deaths = data[`deaths_zombies${map}`];
     this.bestRound = data[`best_round_zombies${map}`];

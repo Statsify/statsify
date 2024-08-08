@@ -70,7 +70,7 @@ export const titleScores = (isOverall = false): Title[] =>
       color: new Color("RED"),
       bold: true,
     },
-  ].map((data) => ({
+  ].map(data => ({
     ...data,
     req: data.req * (isOverall ? 2 : 1),
     inc: data.inc * (isOverall ? 2 : 1),

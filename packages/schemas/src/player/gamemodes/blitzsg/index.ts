@@ -72,16 +72,16 @@ export const BLITZSG_MODES = new GameModes([
 ]);
 
 const prefixes: GamePrefix[] = [
-  { fmt: (n) => `§f[§7${n}§f]`, req: 0 },
-  { fmt: (n) => `§e[${n}]`, req: 1000 },
-  { fmt: (n) => `§a[${n}]`, req: 25_000 },
-  { fmt: (n) => `§c[${n}]`, req: 50_000 },
-  { fmt: (n) => `§b[${n}]`, req: 75_000 },
-  { fmt: (n) => `§6§l[${n}]`, req: 100_000 },
-  { fmt: (n) => `§5§l[${n}]`, req: 150_000 },
-  { fmt: (n) => `§4§l[${n}]`, req: 200_000 },
-  { fmt: (n) => `§9§l[${n}]`, req: 250_000 },
-  { fmt: (n) => `§2§l[${n}]`, req: 300_000 },
+  { fmt: n => `§f[§7${n}§f]`, req: 0 },
+  { fmt: n => `§e[${n}]`, req: 1000 },
+  { fmt: n => `§a[${n}]`, req: 25_000 },
+  { fmt: n => `§c[${n}]`, req: 50_000 },
+  { fmt: n => `§b[${n}]`, req: 75_000 },
+  { fmt: n => `§6§l[${n}]`, req: 100_000 },
+  { fmt: n => `§5§l[${n}]`, req: 150_000 },
+  { fmt: n => `§4§l[${n}]`, req: 200_000 },
+  { fmt: n => `§9§l[${n}]`, req: 250_000 },
+  { fmt: n => `§2§l[${n}]`, req: 300_000 },
 ];
 
 export type BlitzSGModes = IGameModes<typeof BLITZSG_MODES>;

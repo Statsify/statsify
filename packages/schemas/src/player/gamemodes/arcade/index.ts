@@ -178,7 +178,6 @@ export class Arcade {
       this.throwOut.wins,
       this.zombies.overall.wins
     );
-
   }
 }
 

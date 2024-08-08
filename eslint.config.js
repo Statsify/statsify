@@ -74,9 +74,69 @@ export default tseslint.config(
       "@typescript-eslint/no-unsafe-call": "off",
       "@typescript-eslint/no-unsafe-return": "off",
       "@typescript-eslint/no-unused-vars": "off",
+      "@typescript-eslint/no-extraneous-class": "off"
     }
   },
   unicorn.configs["flat/recommended"],
+  {
+    rules: {
+      "unicorn/better-regex": "off",
+      "unicorn/catch-error-name": "off",
+      "unicorn/consistent-destructuring": "off",
+      "unicorn/escape-case": "off",
+      "unicorn/explicit-length-check": "off",
+      "unicorn/filename-case": "off",
+      "unicorn/import-style": [
+        "error",
+        {
+          styles: {
+            "node:path": {
+              named: true,
+              default: false,
+            },
+          },
+        },
+      ],
+      "unicorn/no-array-callback-reference": "off",
+      "unicorn/no-array-for-each": "off",
+      "unicorn/no-array-reduce": "off",
+      "unicorn/no-await-expression-member": "off",
+      "unicorn/no-null": "off",
+      "unicorn/no-object-as-default": "off",
+      "unicorn/no-process-exit": "off",
+      "unicorn/no-static-only-class": "off",
+      "unicorn/no-unsafe-regex": "warn",
+      "unicorn/no-useless-switch-case": "off",
+      "unicorn/no-useless-undefined": "off",
+      "unicorn/number-literal-case": "off",
+      "unicorn/numeric-separators-style": [
+        "error",
+        {
+          onlyIfContainsSeparator: true,
+          number: {
+            minimumDigits: 5,
+            groupLength: 3,
+            onlyIfContainsSeparator: false,
+          },
+        },
+      ],
+      "unicorn/prefer-at": "error",
+      "unicorn/prefer-string-replace-all": "off",
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/relative-url-style": ["error", "always"],
+      "unicorn/switch-case-braces": ["error", "avoid"],
+      "unused-imports/no-unused-imports": "error",
+      "unused-imports/no-unused-vars": [
+        "error",
+        {
+          vars: "all",
+          varsIgnorePattern: "^_",
+          args: "after-used",
+          argsIgnorePattern: "^_",
+        },
+      ],
+    }
+  },
 	stylistic.configs.customize({
 		jsx: true,
 		semi: true,
@@ -158,62 +218,7 @@ export default tseslint.config(
             "none",
           ],
         },
-      ],
-      "unicorn/better-regex": "off",
-      "unicorn/catch-error-name": "off",
-      "unicorn/consistent-destructuring": "off",
-      "unicorn/escape-case": "off",
-      "unicorn/explicit-length-check": "off",
-      "unicorn/filename-case": "off",
-      "unicorn/import-style": [
-        "error",
-        {
-          styles: {
-            "node:path": {
-              named: true,
-              default: false,
-            },
-          },
-        },
-      ],
-      "unicorn/no-array-callback-reference": "off",
-      "unicorn/no-array-for-each": "off",
-      "unicorn/no-array-reduce": "off",
-      "unicorn/no-await-expression-member": "off",
-      "unicorn/no-null": "off",
-      "unicorn/no-object-as-default": "off",
-      "unicorn/no-process-exit": "off",
-      "unicorn/no-static-only-class": "off",
-      "unicorn/no-unsafe-regex": "warn",
-      "unicorn/no-useless-switch-case": "off",
-      "unicorn/no-useless-undefined": "off",
-      "unicorn/number-literal-case": "off",
-      "unicorn/numeric-separators-style": [
-        "error",
-        {
-          onlyIfContainsSeparator: true,
-          number: {
-            minimumDigits: 5,
-            groupLength: 3,
-            onlyIfContainsSeparator: false,
-          },
-        },
-      ],
-      "unicorn/prefer-at": "error",
-      "unicorn/prefer-string-replace-all": "off",
-      "unicorn/prevent-abbreviations": "off",
-      "unicorn/relative-url-style": ["error", "always"],
-      "unicorn/switch-case-braces": ["error", "avoid"],
-      "unused-imports/no-unused-imports": "error",
-      "unused-imports/no-unused-vars": [
-        "error",
-        {
-          vars: "all",
-          varsIgnorePattern: "^_",
-          args: "after-used",
-          argsIgnorePattern: "^_",
-        },
-      ],
+      ]
     }
   }
 );

@@ -23,7 +23,7 @@ export const UHC_MODES = new GameModes([
   { api: "teams", hypixel: "TEAMS" },
 ]);
 
-const prefixes: GamePrefix[] = titleScores.map((level) => ({
+const prefixes: GamePrefix[] = titleScores.map(level => ({
   fmt: formatLevel,
   req: level.req,
 }));

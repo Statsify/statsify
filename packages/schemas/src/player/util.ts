@@ -10,9 +10,9 @@ import { Color, type ColorCode, type ColorId } from "#color";
 import type { APIData } from "@statsify/util";
 
 export const rankMap: Record<string, (color: string) => string> = {
-  "MVP+": (plusColor) => `§b[MVP${plusColor}+§b]`,
-  "MVP++": (plusColor) => `§6[MVP${plusColor}++§6]`,
-  "bMVP++": (plusColor) => `§b[MVP${plusColor}++§b]`,
+  "MVP+": plusColor => `§b[MVP${plusColor}+§b]`,
+  "MVP++": plusColor => `§6[MVP${plusColor}++§6]`,
+  "bMVP++": plusColor => `§b[MVP${plusColor}++§b]`,
   "MVP": () => "§b[MVP]",
   "VIP+": () => "§a[VIP§6+§a]",
   "VIP": () => "§a[VIP]",
@@ -41,8 +41,8 @@ export class PlayerUtil {
           rank = "bMVP++";
         }
       } else {
-        rank =
-          data.packageRank && data.newPackageRank
+        rank
+          = data.packageRank && data.newPackageRank
             ? data.newPackageRank
             : data.packageRank || data.newPackageRank;
       }

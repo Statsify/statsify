@@ -23,7 +23,7 @@ interface Quest {
 export enum QuestTime {
   Daily,
   Weekly,
-  Overall,
+  Overall
 }
 
 export interface QuestOption<TField extends string> {
@@ -125,9 +125,9 @@ export function createGameModeQuests<
   daily,
   weekly,
 }: CreateQuestsOptions<DailyFields, WeeklyFields>): GameWithQuests<
-  DailyFields,
-  WeeklyFields
-> {
+    DailyFields,
+    WeeklyFields
+  > {
   class Daily {
     [key: string]: number;
 
@@ -233,13 +233,13 @@ export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) =
     t = t.startOf("day");
   } else if (time === QuestTime.Weekly) {
     t = t.startOf("week");
-    t =
-      t.plus({ days: 4 }).toMillis() < Date.now()
+    t
+      = t.plus({ days: 4 }).toMillis() < Date.now()
         ? t.plus({ days: 4 })
         : t.minus({ days: 3 });
   }
 
   const millis = t.toMillis();
 
-  return quest.completions.filter((ms) => ms.time >= millis).length;
+  return quest.completions.filter(ms => ms.time >= millis).length;
 };

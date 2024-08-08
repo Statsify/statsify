@@ -61,23 +61,23 @@ export class MetadataScanner {
         if (!ratio.includes(key)) continue;
 
         const remainingStats = ratio
-          .filter((r) => r !== key && keys.includes(r))
-          .map((r) => `${base ? `${base}.` : ""}${r}`);
+          .filter(r => r !== key && keys.includes(r))
+          .map(r => `${base ? `${base}.` : ""}${r}`);
 
         if (!remainingStats.length) continue;
 
         value.leaderboard.additionalFields = remainingStats;
-        //TODO: Investigate if this is needed or if there is another way
-        //TODO: Does this break anything?
-        //! This is needed for the ratios to work with sub modes
+        // TODO: Investigate if this is needed or if there is another way
+        // TODO: Does this break anything?
+        // ! This is needed for the ratios to work with sub modes
         value.historical.additionalFields = remainingStats;
         break;
       }
 
       // Apply metadata to historical
       if (
-        !value.historical.additionalFields ||
-        value.historical.additionalFields.length === 0
+        !value.historical.additionalFields
+        || value.historical.additionalFields.length === 0
       )
         value.historical.additionalFields = value.leaderboard.additionalFields;
 
@@ -91,7 +91,7 @@ export class MetadataScanner {
           },
         ]);
 
-      //Carry the metadata down to the children
+      // Carry the metadata down to the children
       const subMetadataEntries = this.getMetadataEntries(value.type.type, path, name).map(
         ([keyPath, metadata]) => {
           if (!metadata.leaderboard.additionalFields?.length)
