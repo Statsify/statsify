@@ -144,7 +144,6 @@ export class VerifyCommand {
       { buttons: [button] }
     );
   }
-
 }
 
 @Command({ description: (t) => t("commands.verify"), cooldown: 5 })

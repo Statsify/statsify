@@ -27,10 +27,10 @@ const EASY_DROPPER_MAP_GROUPS = arrayGroup(DROPPER_MAPS.filter(([_, name]) => na
 interface DropperMapsTableProps {
   dropper: Dropper;
   t: LocalizeFunction;
-  stat: "bestTime" | "completions"
+  stat: "bestTime" | "completions";
 }
 
-export const DropperMapsTable = ({ dropper, t, stat  }: DropperMapsTableProps) => (
+export const DropperMapsTable = ({ dropper, t, stat }: DropperMapsTableProps) => (
   <Table.table>
     <Table.ts title="§cHard">
       {HARD_DROPPER_MAP_GROUPS.map((group) => <DropperMapGroup dropper={dropper} group={group} stat={stat} t={t} />)}
@@ -45,7 +45,7 @@ export const DropperMapsTable = ({ dropper, t, stat  }: DropperMapsTableProps) =
 );
 
 interface DropperMapGroupProps extends DropperMapsTableProps {
-  group: [keyof DropperMaps, string][]
+  group: [keyof DropperMaps, string][];
 }
 
 const DropperMapGroup = ({ dropper, group, stat, t }: DropperMapGroupProps) => (

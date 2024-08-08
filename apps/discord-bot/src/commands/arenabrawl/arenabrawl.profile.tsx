@@ -45,7 +45,7 @@ export const ArenaBrawlProfile = ({
     [t("stats.rune"), prettify(arenabrawl.rune), "§9"],
   ];
 
-  if (time === "LIVE" && "winstreak" in stats && stats["winstreak"]> 0)
+  if (time === "LIVE" && "winstreak" in stats && stats["winstreak"] > 0)
     sidebar.push([t("stats.winstreak"), t(stats.winstreak), "§a"]);
 
   return (

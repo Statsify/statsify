@@ -78,11 +78,11 @@ export const HistoricalHeader = ({
         {nameTag}
         <box width="100%" height="remaining">
           <text>
-            {timeType === HistoricalTimes.SESSION
-              ? `Started ${sessionReset?.toFormat(
+            {timeType === HistoricalTimes.SESSION ?
+              `Started ${sessionReset?.toFormat(
                 DATE_FORMAT
-              )} (${sessionReset?.toRelative()})`
-              : `${start!.toFormat(DATE_FORMAT)} ➡ ${end!.toFormat(DATE_FORMAT)}`}
+              )} (${sessionReset?.toRelative()})` :
+              `${start!.toFormat(DATE_FORMAT)} ➡ ${end!.toFormat(DATE_FORMAT)}`}
           </text>
         </box>
         <div width="100%">

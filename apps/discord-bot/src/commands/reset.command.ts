@@ -21,7 +21,7 @@ import { STATUS_COLORS } from "@statsify/logger";
 export class ResetCommand {
   public constructor(private readonly apiService: ApiService) {}
 
-  @SubCommand({ description: (t) => t("commands.reset-session")  })
+  @SubCommand({ description: (t) => t("commands.reset-session") })
   public async session(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
     if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");

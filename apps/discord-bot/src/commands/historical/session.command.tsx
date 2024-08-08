@@ -156,9 +156,9 @@ export class SessionCommand {
   @SubCommand({ description: (t) => t("commands.session-megawalls"), args: [PlayerArgument] })
   public megawalls(context: CommandContext) {
     return this.run(
-      context, 
-      MEGAWALLS_MODES, 
-      (base, mode) => <MegaWallsProfile {...base} mode={mode} />, 
+      context,
+      MEGAWALLS_MODES,
+      (base, mode) => <MegaWallsProfile {...base} mode={mode} />,
       filterMegaWallsKits
     );
   }
@@ -322,9 +322,9 @@ export class SessionCommand {
             badge,
             time: {
               timeType: HistoricalTimes.SESSION,
-              sessionReset: player.sessionReset
-                ? DateTime.fromSeconds(player.sessionReset)
-                : DateTime.now(),
+              sessionReset: player.sessionReset ?
+                DateTime.fromSeconds(player.sessionReset) :
+                DateTime.now(),
             },
           },
           mode

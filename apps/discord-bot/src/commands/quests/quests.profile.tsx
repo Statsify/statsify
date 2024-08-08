@@ -154,11 +154,9 @@ const GameTable = ({ quests, t, game, time, logos }: GameTableProps) => {
             {completions > 0 ? "§a" : "§c"}§l{name}
           </text>
           <div width="remaining" />
-          {isOverall ? (
-            <text>{t(completions)}</text>
-          ) : (
-            <img margin={2} image={logos[completions]} />
-          )}
+          {isOverall ?
+            <text>{t(completions)}</text> :
+            <img margin={2} image={logos[completions]} />}
         </box>
       );
     });
@@ -208,9 +206,9 @@ export const QuestsProfile = ({
   const { api, formatted } = mode;
   let table: JSX.Element;
 
-  const colorPalette = User.isDiamond(user)
-    ? getColorPalette(user?.theme?.palette ?? UserPalette.DEFAULT)
-    : undefined;
+  const colorPalette = User.isDiamond(user) ?
+    getColorPalette(user?.theme?.palette ?? UserPalette.DEFAULT) :
+    undefined;
 
   switch (api) {
     case "overall":
@@ -249,17 +247,17 @@ export const QuestsProfile = ({
   }
 
   const title =
-    api in FormattedGame
-      ? `§l${FormattedGame[api as keyof typeof FormattedGame]}`
-      : formatted;
+    api in FormattedGame ?
+      `§l${FormattedGame[api as keyof typeof FormattedGame]}` :
+      formatted;
 
   if (time === QuestTime.Weekly) {
     const dt = DateTime.now().setZone("America/New_York").startOf("week");
 
     (historicalTime as HistoricalTimeData).startTime =
-      dt.plus({ days: 4 }).toMillis() < Date.now()
-        ? dt.plus({ days: 4 })
-        : dt.minus({ days: 3 });
+      dt.plus({ days: 4 }).toMillis() < Date.now() ?
+        dt.plus({ days: 4 }) :
+        dt.minus({ days: 3 });
 
     (historicalTime as HistoricalTimeData).endTime = (
       historicalTime as HistoricalTimeData

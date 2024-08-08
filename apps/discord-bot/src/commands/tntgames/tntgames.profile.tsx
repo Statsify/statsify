@@ -69,13 +69,13 @@ export const TNTGamesProfile = ({
           <TNTGamesModeColumn
             title="TNT Run"
             stats={
-              time === "LIVE"
-                ? [
+              time === "LIVE" ?
+                [
                   [t("stats.wins"), t(tntgames.tntRun.wins)],
                   [t("stats.wlr"), t(tntgames.tntRun.wlr)],
                   [t("stats.bestTime"), formatTime(tntgames.tntRun.record)],
-                ]
-                : [
+                ] :
+                [
                   [t("stats.wins"), t(tntgames.tntRun.wins)],
                   [t("stats.losses"), t(tntgames.tntRun.losses)],
                   [t("stats.wlr"), t(tntgames.tntRun.wlr)],

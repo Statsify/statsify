@@ -162,8 +162,8 @@ export class HistoricalBase {
   @SubCommand({ description: (t) => t("commands.historical-megawalls"), args })
   public megawalls(context: CommandContext) {
     return this.run(
-      context, 
-      MEGAWALLS_MODES, 
+      context,
+      MEGAWALLS_MODES,
       (base, mode) => <MegaWallsProfile {...base} mode={mode} />,
       filterMegaWallsKits
     );
@@ -296,8 +296,8 @@ export class HistoricalBase {
 
     const embed = new EmbedBuilder()
       .color(STATUS_COLORS.info)
-      .title(t => t("historical.disabledWarning.title"))
-      .description(t => t("historical.disabledWarning.description"))
+      .title((t) => t("historical.disabledWarning.title"))
+      .description((t) => t("historical.disabledWarning.description"))
       .image(`attachment://${preview.name}`);
 
     return { embeds: [embed], files: [preview] };

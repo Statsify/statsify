@@ -15,7 +15,7 @@ interface ServerLogoProps {
   serverLogo: Image;
 }
 
-//Required for theming
+// Required for theming
 const ServerLogo = ({ serverLogo }: ServerLogoProps) => (
   <box>
     <img margin={8} image={serverLogo} />

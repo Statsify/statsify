@@ -54,11 +54,9 @@ export const Header = (props: HeaderProps) => {
   const sidebar =
     "sidebar" in props &&
     props.sidebar.length &&
-    (props.time === "LIVE" ? true : props.historicalSidebar) ? (
-        <Sidebar items={props.sidebar} />
-      ) : (
-        <></>
-      );
+    (props.time === "LIVE" ? true : props.historicalSidebar) ?
+      <Sidebar items={props.sidebar} /> :
+      <></>;
 
   let body: JSX.Element;
 
