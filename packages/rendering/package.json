@@ -23,7 +23,7 @@
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.12",
     "axios": "1.7.3",
-    "skia-canvas": "^0.9.30",
+    "skia-canvas": "^1.0.1",
     "typedi": "^0.10.0"
   },
   "imports": {
