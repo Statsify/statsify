@@ -21,9 +21,9 @@ type Props = PropsWithChildren<unknown>;
 
 export const jsx = (type: IntrinsicElement | FC, props: Props): ElementNode | null => {
   if (props.children) {
-    props.children = Array.isArray(props.children)
-      ? props.children.flat().filter(Boolean)
-      : [props.children];
+    props.children = Array.isArray(props.children) ?
+      props.children.flat().filter(Boolean) :
+      [props.children];
   }
 
   if (typeof type === "string" && type in intrinsicElements) {

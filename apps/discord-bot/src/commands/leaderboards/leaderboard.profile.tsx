@@ -54,9 +54,9 @@ export const LeaderboardProfile = ({
   ));
 
   const items = data.map((d) => {
-    const highlight = d.highlight
-      ? { color: "rgba(255, 255, 255, 0.35)", shadowOpacity: 0.3 }
-      : undefined;
+    const highlight = d.highlight ?
+      { color: "rgba(255, 255, 255, 0.35)", shadowOpacity: 0.3 } :
+      undefined;
 
     return (
       <>

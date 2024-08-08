@@ -199,17 +199,16 @@ export class DropperMap {
   @Field()
   public completions: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC"} })
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
   public bestTime: number;
 
-  public constructor (map: APIData = {}) {
+  public constructor(map: APIData = {}) {
     this.bestTime = map.best_time;
     this.completions = map.completions;
   }
 }
 
 export class DropperMaps {
-
   @Field({ leaderboard: { name: "§cAtlantis§f" } })
   public atlantis: DropperMap;
 
@@ -476,7 +475,7 @@ export class Dropper {
   @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
   public bestTime: number;
 
-  @Field({ leaderboard: { name: "Maps:"} })
+  @Field({ leaderboard: { name: "Maps:" } })
   public maps: DropperMaps;
 
   public constructor(dropper: APIData = {}) {

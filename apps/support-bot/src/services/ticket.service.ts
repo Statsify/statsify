@@ -85,7 +85,7 @@ export class TicketService {
       await this.create(interaction.getGuildId() as string, user, username, issue);
     });
 
-    //Add hooks for all tickets in the database since they may have been created before the bot was started
+    // Add hooks for all tickets in the database since they may have been created before the bot was started
     const tickets = await this.ticketModel.find().select({ channel: true }).lean().exec();
 
     tickets.forEach((ticket) => {
@@ -201,7 +201,7 @@ export class TicketService {
     listener.removeHook(ticket.channel);
     listener.removeHook(this.copyUsernameButtonId(ticket.channel));
 
-    //A list of people who talked in the ticket
+    // A list of people who talked in the ticket
     const participants: Set<string> = new Set();
     participants.add(`<@${ticket.owner}>`);
 

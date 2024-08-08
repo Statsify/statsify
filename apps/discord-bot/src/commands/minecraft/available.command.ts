@@ -46,7 +46,7 @@ export class AvailableCommand {
     }
 
     const uuid = await this.apiService.getPlayerSkinTextures(name.trim())
-      .then(player => player.uuid.replaceAll("-", ""))
+      .then((player) => player.uuid.replaceAll("-", ""))
       .catch(() => undefined);
 
     if (uuid) {

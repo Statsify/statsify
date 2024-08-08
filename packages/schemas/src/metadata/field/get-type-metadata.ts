@@ -12,8 +12,7 @@ import type { TypeOptions } from "../field.options.js";
 
 export const getTypeMetadata = (
   typeOptions: TypeOptions | undefined,
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  target: Object,
+  target: object,
   propertyKey: string | symbol
 ): TypeMetadata => {
   if (typeOptions) {

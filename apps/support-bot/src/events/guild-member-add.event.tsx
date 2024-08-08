@@ -65,9 +65,9 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
     const user = await this.apiService.getUser(memberId);
 
-    const message = user?.uuid
-      ? await this.sendVerifiedMessage(data)
-      : await this.sendUnverifiedMessage(data);
+    const message = user?.uuid ?
+      await this.sendVerifiedMessage(data) :
+      await this.sendUnverifiedMessage(data);
 
     const [avatar, background] = await Promise.all([
       this.getDiscordAvatar(data),

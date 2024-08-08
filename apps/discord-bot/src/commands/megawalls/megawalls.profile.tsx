@@ -109,6 +109,6 @@ export function filterMegaWallsKits(
   const filteredKits = [...kits]
     .sort((a, b) => megawalls[b.api].points - megawalls[a.api].points)
     .slice(0, 24);
-    
+
   return [overall, ...filteredKits];
 }

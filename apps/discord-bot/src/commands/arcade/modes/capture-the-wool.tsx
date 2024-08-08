@@ -96,7 +96,7 @@ export function captureTheWoolSiderbar(arcade: Arcade, t: LocalizeFunction): Sid
   const captureTheWool = arcade.captureTheWool;
 
   return [
-    [t("stats.coins"),  t(arcade.coins), "§6"],
+    [t("stats.coins"), t(arcade.coins), "§6"],
     [t("stats.goldEarned"), t(captureTheWool.goldEarned), "§6"],
     [t("stats.goldSpent"), t(captureTheWool.goldSpent), "§6"],
   ];

@@ -259,9 +259,9 @@ export class RatiosCommand {
       if (!mode.api) continue;
 
       const modeClass =
-        mode.api === "overall"
-          ? Reflect.getMetadata("design:type", gameClass.prototype, mode.api) || gameClass
-          : Reflect.getMetadata("design:type", gameClass.prototype, mode.api);
+        mode.api === "overall" ?
+          Reflect.getMetadata("design:type", gameClass.prototype, mode.api) || gameClass :
+          Reflect.getMetadata("design:type", gameClass.prototype, mode.api);
 
       if (!modeClass) continue;
       const ratios = LEADERBOARD_RATIOS.filter(([numerator, denominator]) => {

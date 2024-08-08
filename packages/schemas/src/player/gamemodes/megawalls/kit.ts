@@ -133,7 +133,7 @@ export class MegaWallsOverall extends MegaWallsKit {
 
     this.finalDeaths = add(data.final_deaths, data.finalDeaths);
     this.witherDamage = add(data.wither_damage, data.witherDamage);
-    this.playtime = data.time_played * 60_000; 
+    this.playtime = data.time_played * 60_000;
 
     MegaWallsOverall.applyRatios(this);
   }

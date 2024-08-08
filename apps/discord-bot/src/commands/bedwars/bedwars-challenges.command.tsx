@@ -23,6 +23,7 @@ export class BedWarsChallengesCommand extends BaseHypixelCommand<BedWarsModes> {
   ): GameMode<BedWarsModes>[] {
     return [modes[0]];
   }
+
   public getProfile(base: BaseProfileProps): JSX.Element {
     return <BedWarsChallengesProfile {...base} />;
   }

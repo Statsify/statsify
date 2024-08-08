@@ -52,15 +52,15 @@ export const sub = (...args: number[]): number =>
  * @returns A new instance of the constructor with all non object values manipulated by the `fn` function
  */
 const deep = <T>(fn: (...args: number[]) => unknown, ...args: T[]): T => {
-  const obj: Record<string, unknown> = {};
+  const object: Record<string, unknown> = {};
 
   for (const key in args[0]) {
-    obj[key] = isObject(args[0][key])
-      ? deep(fn, ...args.map((a) => a[key]))
-      : fn(...args.map((a) => a[key] as unknown as number));
+    object[key] = isObject(args[0][key]) ?
+      deep(fn, ...args.map((a) => a[key])) :
+      fn(...args.map((a) => a[key] as unknown as number));
   }
 
-  return obj as T;
+  return object as T;
 };
 
 /**
@@ -105,7 +105,7 @@ if (import.meta.vitest) {
     it("should calculate ratios", () => {
       expect(ratio(1, 2)).toBe(0.5);
       expect(ratio(1, 3)).toBe(0.33);
-      expect(ratio(1, undefined)).toBe(1);
+      expect(ratio(1)).toBe(1);
       expect(ratio(1, 0)).toBe(1);
       expect(ratio(Number.NaN, 1)).toBe(0);
     });

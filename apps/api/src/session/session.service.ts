@@ -33,7 +33,6 @@ type PlayerModel = ReturnModelType<typeof Player>;
 
 @Injectable()
 export class SessionService {
-
   public constructor(
     @Inject(forwardRef(() => PlayerService))
     private readonly playerService: Circular<PlayerService>,
@@ -51,7 +50,7 @@ export class SessionService {
    * @param player The player data to reset
    * @returns The flattened player data
    */
-  public async resetPlayer(player: Player ) {
+  public async resetPlayer(player: Player) {
     const flatPlayer = flatten(player);
     const doc = serialize(Player, flatPlayer);
 

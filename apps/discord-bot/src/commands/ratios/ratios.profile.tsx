@@ -62,7 +62,7 @@ const Estimation = ({
 
   const newNumerator = Math.ceil(
     (1 + targetRatio / (targetRatio + 1) - ratioValue / targetRatio) * numeratorValue +
-      denominatorValue
+    denominatorValue
   );
 
   return (

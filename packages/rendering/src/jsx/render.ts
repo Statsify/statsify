@@ -59,13 +59,13 @@ const _render = (
   x += instruction.x.padding1;
   y += instruction.y.padding1;
 
-  const applyDelta = (delta: number) => {
-    switch (instruction.style.direction) {
-      case "row":
+  const applyDelta = (delta: number, side: "x" | "y") => {
+    switch (side) {
+      case "x":
         x += delta;
         break;
 
-      case "column":
+      case "y":
         y += delta;
         break;
     }
@@ -73,41 +73,40 @@ const _render = (
 
   const side = instruction.style.direction === "row" ? "x" : "y";
 
-  applyDelta(getPositionalDelta(instruction, side));
+  applyDelta(getPositionalDelta(instruction, side), side);
 
   instruction.children.forEach((child) => {
     const size = getTotalSize(child[side]);
 
     switch (child.style.align) {
       case "center": {
-        const oppSide = side === "x" ? "y" : "x";
-        const oppSize = getTotalSize(child[oppSide]);
+        const oppositeSide = side === "x" ? "y" : "x";
+        const oppositeSize = getTotalSize(child[oppositeSide]);
 
-        const centerDelta = (instruction[oppSide].size - oppSize) / 2;
+        const centerDelta = (instruction[oppositeSide].size - oppositeSize) / 2;
 
-        oppSide === "x" ? (x += centerDelta) : (y += centerDelta);
+        applyDelta(centerDelta, oppositeSide);
         _render(ctx, context, intrinsicElements, child, x, y);
-        oppSide === "x" ? (x -= centerDelta) : (y -= centerDelta);
+        applyDelta(-centerDelta, oppositeSide);
         break;
       }
       case "left":
         _render(ctx, context, intrinsicElements, child, x, y);
         break;
       case "right": {
-        const oppSide = side === "x" ? "y" : "x";
+        const oppositeSide = side === "x" ? "y" : "x";
         const delta =
-          instruction[oppSide].size -
-          (child[oppSide].size + child[oppSide].margin2 + child[oppSide].padding2);
+          instruction[oppositeSide].size -
+          (child[oppositeSide].size + child[oppositeSide].margin2 + child[oppositeSide].padding2);
 
-        oppSide === "x" ? (x += delta) : (y += delta);
+        applyDelta(delta, oppositeSide);
         _render(ctx, context, intrinsicElements, child, x, y);
-        oppSide === "x" ? (x -= delta) : (y -= delta);
-
+        applyDelta(-delta, oppositeSide);
         break;
       }
     }
 
-    applyDelta(size);
+    applyDelta(size, side);
   });
 };
 

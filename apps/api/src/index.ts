@@ -47,7 +47,7 @@ if (sentryDsn) {
 
 await mkdir(join(config("api.mediaRoot"), "badges"), { recursive: true });
 
-//Removes the `_id` fields created from sub classes of documents
+// Removes the `_id` fields created from sub classes of documents
 setGlobalOptions({
   options: { allowMixed: Severity.ALLOW },
   schemaOptions: { _id: false },
@@ -66,13 +66,13 @@ const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter,
   logger: new Logger(),
 });
 
-//Validation using `class-validator` and `class-transformer`
+// Validation using `class-validator` and `class-transformer`
 app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
-//Sentry
+// Sentry
 app.useGlobalInterceptors(new SentryInterceptor());
 
-//Swagger/Redoc docs
+// Swagger/Redoc docs
 const redoc = new DocumentBuilder()
   .setTitle("Statsify API")
   .setVersion(packageJson.version)
@@ -86,7 +86,7 @@ const redoc = new DocumentBuilder()
   })
   .build();
 
-//Fastify template renderer for Redoc
+// Fastify template renderer for Redoc
 app.setViewEngine({
   engine: { handlebars },
   templates: join(__dirname, "..", "views"),

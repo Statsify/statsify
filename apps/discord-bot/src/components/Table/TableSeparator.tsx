@@ -34,11 +34,13 @@ export const TableSeparator = ({ children, title }: TableSeparatorProps) => {
       border={{ topLeft: border, topRight: border, bottomLeft: 0, bottomRight: 0 }}
       padding={0}
     >
-      {title ? (
-        <text margin={{ top: 1, left: 8, right: 8, bottom: 1 }}>§l{title}</text>
-      ) : (
-        <></>
-      )}
+      {title ?
+        (
+          <text margin={{ top: 1, left: 8, right: 8, bottom: 1 }}>
+            §l{title}
+          </text>
+        ) :
+        <></>}
     </box>
   );
 

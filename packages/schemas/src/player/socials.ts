@@ -12,6 +12,7 @@ import type { APIData } from "@statsify/util";
 export class PlayerSocials {
   @Field({ store: { required: false } })
   public discord?: string;
+
   @Field({ store: { required: false } })
   public forums?: string;
 

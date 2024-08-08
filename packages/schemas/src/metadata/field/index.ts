@@ -51,10 +51,10 @@ export function Field({
       target
     );
 
-    //Swagger api doc options
-    const apiProperty = docsOptions?.hide
-      ? ApiHideProperty()
-      : ApiProperty({
+    // Swagger api doc options
+    const apiProperty = docsOptions?.hide ?
+      ApiHideProperty() :
+      ApiProperty({
         type: type.type,
         isArray: type.array,
         default: store.default,
@@ -72,7 +72,7 @@ export function Field({
 
     if (!store.store) return;
 
-    //Typegoose options
+    // Typegoose options
     prop({
       type: type.type,
       required: store.required,

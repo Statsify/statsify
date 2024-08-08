@@ -69,9 +69,9 @@ export class PaginateService {
         else if (interaction.isSelectMenuInteraction())
           page = Number(interaction.getData().values[0]);
 
-        const message = cache.has(page)
-          ? cache.get(page)!
-          : await this.getMessage(context, controller, page, pages);
+        const message = cache.has(page) ?
+          cache.get(page)! :
+          await this.getMessage(context, controller, page, pages);
 
         cache.set(page, message);
 
@@ -142,21 +142,20 @@ export class PaginateService {
         let page: number;
 
         if (i === 0) {
-          //Backwards
+          // Backwards
           page = index == 0 ? pages.length - 1 : index - 1;
         } else {
-          //Forwards
+          // Forwards
           page = index == pages.length - 1 ? 0 : index + 1;
         }
 
-        const message = cache.has(page)
-          ? cache.get(page)!
-          : await this.getMessage(context, controller, page, pages);
+        const message = cache.has(page) ?
+          cache.get(page)! :
+          await this.getMessage(context, controller, page, pages);
 
         cache.set(page, message);
 
         if (interaction.getUserId() === userId) {
-          // eslint-disable-next-line require-atomic-updates
           index = page;
           return context.reply(message);
         }

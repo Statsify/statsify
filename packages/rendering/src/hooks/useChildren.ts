@@ -11,7 +11,7 @@ import type { ElementNode } from "#jsx";
 type Child<T> = [T] extends [ElementNode | ElementNode[]]
   ? ElementNode[]
   : T extends any[]
-  ? T
-  : [T];
+    ? T
+    : [T];
 
 export const useChildren = <T>(children: T): Child<T> => children as any;

@@ -27,10 +27,10 @@ export const deserialize = <T>(constructor: Constructor<T>, instance: Flatten<T>
   ] of metadataEntries) {
     deserialized[key] = instance[key];
 
-    //The value should not be processed
+    // The value should not be processed
     if (!shouldDeserialize) continue;
 
-    //If the value is undefined use the default value
+    // If the value is undefined use the default value
     if (deserialized[key] === undefined) deserialized[key] = defaultValue;
 
     // If the value is numimercal round it to 2 digits of precision
@@ -38,7 +38,7 @@ export const deserialize = <T>(constructor: Constructor<T>, instance: Flatten<T>
       deserialized[key] = roundTo(deserialized[key] as unknown as number) as any;
   }
 
-  //Unflatten the object to return the original type
+  // Unflatten the object to return the original type
   return unflatten(deserialized);
 };
 

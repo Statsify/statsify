@@ -42,9 +42,9 @@ export class PlayerUtil {
         }
       } else {
         rank =
-          data.packageRank && data.newPackageRank
-            ? data.newPackageRank
-            : data.packageRank || data.newPackageRank;
+          data.packageRank && data.newPackageRank ?
+            data.newPackageRank :
+            data.packageRank || data.newPackageRank;
       }
     }
 

@@ -70,9 +70,9 @@ export class Events {
   @Field({ leaderboard: { name: "Christmas 2023" } })
   public christmas2023: Event;
 
-  @Field({ leaderboard: { name: "Easter 2024" }})
+  @Field({ leaderboard: { name: "Easter 2024" } })
   public easter2024: Event;
-  
+
   @Field({ leaderboard: { name: "Summer 2024" } })
   public summer2024: Event;
 

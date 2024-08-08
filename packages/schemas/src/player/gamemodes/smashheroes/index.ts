@@ -57,7 +57,7 @@ enum SmashHeroesClass {
   SKULLFIRE = "Skullfire",
   SPODERMAN = "Spooderman",
   THE_BULK = "Bulk",
-  TINMAN = "Tinman",
+  TINMAN = "Tinman"
 }
 
 export class SmashHeroes {

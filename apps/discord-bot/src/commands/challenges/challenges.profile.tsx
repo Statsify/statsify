@@ -125,9 +125,9 @@ export const ChallengesProfile = ({
   }
 
   const title =
-    api in FormattedGame
-      ? `§l${FormattedGame[api as keyof typeof FormattedGame]}`
-      : formatted;
+    api in FormattedGame ?
+      `§l${FormattedGame[api as keyof typeof FormattedGame]}` :
+      formatted;
 
   return (
     <Container background={background}>

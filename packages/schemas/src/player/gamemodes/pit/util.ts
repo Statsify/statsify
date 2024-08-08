@@ -89,7 +89,7 @@ export const getLevel = (pres: number, xp: number) => {
   )
     return 120;
 
-  for (let xpRemaining = PRESTIGE_XP_REQUIREMENTS[pres]; xpRemaining > xp; ) {
+  for (let xpRemaining = PRESTIGE_XP_REQUIREMENTS[pres]; xpRemaining > xp;) {
     level -= 1;
     xpRemaining -= Math.ceil((XP_MAP[Math.floor(level / 10)] * PRESTIGES[pres]) / 100);
   }

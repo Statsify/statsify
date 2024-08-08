@@ -63,9 +63,9 @@ export class CapeCommand {
   }
 
   private async getMojangCape(player: Skin) {
-    const image = player.capeUrl
-      ? await loadImage(player.capeUrl).catch(() => null)
-      : null;
+    const image = player.capeUrl ?
+      await loadImage(player.capeUrl).catch(() => null) :
+      null;
 
     return { label: "Mojang", image };
   }

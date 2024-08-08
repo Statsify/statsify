@@ -465,7 +465,7 @@ export const mapGame = (game: GameId, mode: string) => {
   if (HYPIXEL_GAME_LIST[game] && mode in HYPIXEL_GAME_LIST[game]!)
     return HYPIXEL_GAME_LIST[game]![mode];
 
-  //Pit's mode in the  api is also called PIT
+  // Pit's mode in the  api is also called PIT
   if (mode === game) return prettify(mode);
 
   return prettify(mode.replace(`${GameCodeMapping[game]}_`, "").replace(game, ""));

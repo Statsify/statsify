@@ -25,7 +25,7 @@ process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
 
 const codeCreatedMessage = (code: string, time: Date) => {
-  //Add on the expirey time to the time provided by mongo
+  // Add on the expirey time to the time provided by mongo
   let expireTime = time.getTime() + 300 * 1000;
   expireTime -= Date.now();
 
@@ -64,10 +64,10 @@ const server = createServer({
     logger.error(error);
   },
   beforePing: (response) => {
-    //Remove the version from the response
+    // Remove the version from the response
     response.version.name = "";
 
-    //Set the server icon
+    // Set the server icon
     response.favicon = `data:image/png;base64,${serverLogo}`;
   },
 });

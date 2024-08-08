@@ -23,6 +23,7 @@ export class CommandResolvable {
     | ApplicationCommandType.ChatInput
     | ApplicationCommandOptionType.Subcommand
     | ApplicationCommandOptionType.SubcommandGroup;
+
   public name: string;
   public description: string;
   public options?: any[];
@@ -63,7 +64,7 @@ export class CommandResolvable {
       this.integration_types.push(ApplicationIntegrationType.GuildInstall);
       this.contexts.push(InteractionContextType.Guild);
     }
-    
+
     if (userCommand) {
       this.integration_types.push(ApplicationIntegrationType.UserInstall);
       this.contexts.push(InteractionContextType.PrivateChannel, InteractionContextType.BotDM);
@@ -122,7 +123,7 @@ export class CommandResolvable {
     };
   }
 
-  public equals(other: CommandResolvable): boolean {    
+  public equals(other: CommandResolvable): boolean {
     const d = this.toJSON();
 
     if (

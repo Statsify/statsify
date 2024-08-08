@@ -8,7 +8,7 @@
 
 import Redis from "ioredis";
 import { CurrentHistoricalType } from "@statsify/api-client";
-import { Guild, MetadataScanner, Player  } from "@statsify/schemas";
+import { Guild, MetadataScanner, Player } from "@statsify/schemas";
 import { Logger } from "@statsify/logger";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
 
@@ -31,9 +31,9 @@ const runLimit = async (constructors, prefixes) => {
 
     await oldLeaderboardPipeline.exec();
 
-    const leaderboards = prefixes
-      ? fields.filter(([, value]) => value.historical.enabled)
-      : fields.filter(([, value]) => value.leaderboard.enabled);
+    const leaderboards = prefixes ?
+      fields.filter(([, value]) => value.historical.enabled) :
+      fields.filter(([, value]) => value.leaderboard.enabled);
 
     let memberCount = 0;
 
@@ -43,7 +43,8 @@ const runLimit = async (constructors, prefixes) => {
       let { limit } = value.leaderboard;
       if (limit === Number.POSITIVE_INFINITY) return;
 
-      prefixes ? Math.floor((limit /= 10)) : limit; // Reduce historical leaderboard max size
+      // Reduce historical leaderboard max size
+      if (prefixes) limit = Math.floor(limit / 10);
 
       memberCount += limit;
 

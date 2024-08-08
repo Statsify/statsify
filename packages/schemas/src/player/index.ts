@@ -97,7 +97,7 @@ export class Player {
     this.stats = new PlayerStats(data);
     this.status = new PlayerStatus(data);
 
-    //These will all be filled in by a service
+    // These will all be filled in by a service
     this.expiresAt = 0;
   }
 }

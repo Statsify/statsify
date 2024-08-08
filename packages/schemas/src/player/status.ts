@@ -200,7 +200,7 @@ export class PlayerStatus {
   public lastGame: Game;
 
   public constructor(data: APIData) {
-    //The first login provided by hypixel is not fully accurate for very old players, it is better to use the `_id` field
+    // The first login provided by hypixel is not fully accurate for very old players, it is better to use the `_id` field
     this.firstLogin = Number.parseInt(data._id?.slice(0, 8) ?? 0, 16) * 1000;
 
     const lastAction = findLastAction(data);

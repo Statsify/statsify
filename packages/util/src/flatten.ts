@@ -18,13 +18,13 @@ export type DeepFlatten<T> = {
         ? V extends readonly any[]
           ? Pick<T, K>
           : DeepFlatten<V> extends infer FV
-          ? {
+            ? {
               [P in keyof FV as `${Extract<K, string | number>}.${Extract<
                 P,
                 string | number
               >}`]: FV[P];
             }
-          : never
+            : never
         : Pick<T, K>
       : never
   ) => void;

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Fuse  from "fuse.js";
+import Fuse from "fuse.js";
 import {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,

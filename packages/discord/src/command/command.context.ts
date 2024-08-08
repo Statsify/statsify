@@ -40,8 +40,6 @@ export class CommandContext {
     if (user?.locale) this.interaction.setLocale(user?.locale);
   }
 
-  public option<T>(name: string, defaultValue: T): T;
-  public option<T>(name: string): T;
   public option<T>(name: string, defaultValue?: T): T {
     const data = (
       this.data.options as APIApplicationCommandInteractionDataBasicOption[]

@@ -12,7 +12,7 @@ import { readFile } from "node:fs/promises";
 
 const bufferToImage = (buffer: Buffer): Image => {
   const image = new Image();
-  //skia-canvas doesn't support Buffers in its typings
+  // skia-canvas doesn't support Buffers in its typings
   image.src = buffer as unknown as string;
 
   Object.defineProperty(image, "_data", { value: buffer });

@@ -29,7 +29,7 @@ export class UUIDCommand {
     );
 
     const dashedUuid = `${uuid.slice(0, 8)}-${uuid.slice(8, 12)}-${uuid.slice(12, 16)}-${uuid.slice(16, 20)}-${uuid.slice(20)}`;
-    
+
     const embed = new EmbedBuilder()
       .field((t) => t("minecraft.username"), `\`${username}\``)
       .field((t) => t("minecraft.uuid"), `\`${dashedUuid}\``)
