@@ -15,12 +15,12 @@ import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/comm
 const DEFAULT_LOG_LEVELS: LogLevel[] = ["log", "error", "warn", "debug", "verbose", "fatal"];
 
 export const STATUS_COLORS = {
-  debug: 0xC7_00_E7,
-  warn: 0xFA_B6_27,
-  error: 0xCD_18_20,
-  info: 0x64_69_F5,
-  success: 0x36_D4_94,
-  fatal: 0x81_18_1A,
+  debug: 0xC700E7,
+  warn: 0xFAB627,
+  error: 0xCD1820,
+  info: 0x6469F5,
+  success: 0x36D494,
+  fatal: 0x81181A,
 } as const;
 
 const isProduction = config("environment") === "prod";
@@ -189,29 +189,23 @@ export class Logger implements LoggerService {
 
   private getColorByLogLevel(logLevel: LogLevel) {
     switch (logLevel) {
-      case "debug": {
+      case "debug":
         return STATUS_COLORS.debug;
-      }
 
-      case "warn": {
+      case "warn":
         return STATUS_COLORS.warn;
-      }
 
-      case "error": {
+      case "error":
         return STATUS_COLORS.error;
-      }
 
-      case "verbose": {
+      case "verbose":
         return STATUS_COLORS.info;
-      }
 
-      case "log": {
+      case "log":
         return STATUS_COLORS.success;
-      }
 
-      case "fatal": {
+      case "fatal":
         return STATUS_COLORS.fatal;
-      }
     }
   }
 
