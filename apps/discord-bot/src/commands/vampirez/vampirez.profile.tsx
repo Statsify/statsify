@@ -38,7 +38,7 @@ export const VampireZProfile = ({
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(vampirez.coins), "§6"],
     [t("stats.tokens"), t(vampirez.tokens), "§e"],
-    [t("stats.overallWins"), t(vampirez.overallWins), "§a"],
+    [t("stats.overallWins"), t(vampirez.wins), "§a"],
     [t("stats.zombieKills"), t(vampirez.zombieKills), "§2"],
   ];
 
