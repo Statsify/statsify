@@ -18,6 +18,7 @@ export const rankMap: Record<string, (color: string) => string> = {
   "VIP": () => "§a[VIP]",
   "YOUTUBE": () => "§c[§fYOUTUBE§c]",
   "PIG+++": () => "§d[PIG§b+++§d]",
+  "INNIT": () => "§d[INNIT]",
   "GM": () => "§2[GM]",
   "ADMIN": () => "§c[ADMIN]",
   "OWNER": () => "§c[OWNER]",
@@ -98,6 +99,7 @@ export class PlayerUtil {
         return new Color("RED");
 
       case "PIG+++":
+      case "INNIT":
         return new Color("LIGHT_PURPLE");
 
       case "MOD":
