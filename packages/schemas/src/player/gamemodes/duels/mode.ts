@@ -98,7 +98,17 @@ export class PVPBaseDuelsGameMode extends BaseDuelsGameMode {
   }
 }
 
-export class BridgeDuelsMode extends PVPBaseDuelsGameMode {
+export class BowPVPBaseDuelsGameMode extends PVPBaseDuelsGameMode {
+  @Field()
+  public shotsFired: number;
+
+  public constructor(data: APIData, mode: string) {
+    super(data, mode);
+    this.shotsFired = data[`${mode}_bow_shots`];
+  }
+}
+
+export class BridgeDuelsMode extends BowPVPBaseDuelsGameMode {
   @Field()
   public goals: number;
 
@@ -209,20 +219,20 @@ export class MultiPVPDuelsGameMode {
   public progression: Progression;
 
   @Field()
-  public overall: PVPBaseDuelsGameMode;
+  public overall: BowPVPBaseDuelsGameMode;
 
   @Field()
-  public solo: PVPBaseDuelsGameMode;
+  public solo: BowPVPBaseDuelsGameMode;
 
   @Field()
-  public doubles: PVPBaseDuelsGameMode;
+  public doubles: BowPVPBaseDuelsGameMode;
 
   public constructor(data: APIData, title: string, short: string, long: string) {
-    this.solo = new PVPBaseDuelsGameMode(data, `${short}_duel`);
-    this.doubles = new PVPBaseDuelsGameMode(data, `${short}_doubles`);
+    this.solo = new BowPVPBaseDuelsGameMode(data, `${short}_duel`);
+    this.doubles = new BowPVPBaseDuelsGameMode(data, `${short}_doubles`);
 
     this.overall = deepAdd(this.solo, this.doubles);
-    PVPBaseDuelsGameMode.applyRatios(this.overall);
+    BowPVPBaseDuelsGameMode.applyRatios(this.overall);
 
     this.overall.bestWinstreak = data[`best_${long}_winstreak`];
     this.overall.winstreak = data[`current_${long}_winstreak`];
@@ -292,6 +302,17 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
   }
 }
 
+export class SingleBowPVPDuelsGameMode extends SinglePVPDuelsGameMode {
+  @Field()
+  public shotsFired: number;
+
+  public constructor(data: APIData, title: string, mode: string) {
+    super(data, title, mode);
+    mode = mode ? `${mode}_` : mode;
+    this.shotsFired = data[`${mode}bow_shots`];
+  }
+}
+
 export class SingleDuelsGameMode extends BaseDuelsGameMode {
   @Field({ store: { default: "§7None§r" } })
   public titleFormatted: string;
@@ -311,6 +332,16 @@ export class SingleDuelsGameMode extends BaseDuelsGameMode {
   }
 }
 
+export class SingleBowDuelsGameMode extends SingleDuelsGameMode {
+  @Field()
+  public shotsFired: number;
+
+  public constructor(data: APIData, title: string, mode: string) {
+    super(data, title, mode);
+    this.shotsFired = data[`${mode}_bow_shots`];
+  }
+}
+
 export class UHCDuels {
   @Field()
   public titleFormatted: string;
@@ -325,32 +356,32 @@ export class UHCDuels {
   public progression: Progression;
 
   @Field()
-  public overall: PVPBaseDuelsGameMode;
+  public overall: BowPVPBaseDuelsGameMode;
 
   @Field()
-  public solo: PVPBaseDuelsGameMode;
+  public solo: BowPVPBaseDuelsGameMode;
 
   @Field()
-  public doubles: PVPBaseDuelsGameMode;
+  public doubles: BowPVPBaseDuelsGameMode;
 
   @Field()
-  public fours: PVPBaseDuelsGameMode;
+  public fours: BowPVPBaseDuelsGameMode;
 
   @Field()
-  public deathmatch: PVPBaseDuelsGameMode;
+  public deathmatch: BowPVPBaseDuelsGameMode;
 
   public constructor(data: APIData) {
-    this.solo = new PVPBaseDuelsGameMode(data, "uhc_duel");
-    this.doubles = new PVPBaseDuelsGameMode(data, "uhc_doubles");
-    this.fours = new PVPBaseDuelsGameMode(data, "uhc_four");
-    this.deathmatch = new PVPBaseDuelsGameMode(data, "uhc_meetup");
+    this.solo = new BowPVPBaseDuelsGameMode(data, "uhc_duel");
+    this.doubles = new BowPVPBaseDuelsGameMode(data, "uhc_doubles");
+    this.fours = new BowPVPBaseDuelsGameMode(data, "uhc_four");
+    this.deathmatch = new BowPVPBaseDuelsGameMode(data, "uhc_meetup");
 
     this.overall = deepAdd(this.solo, this.doubles, this.fours, this.deathmatch);
 
     this.overall.winstreak = data.current_uhc_winstreak;
     this.overall.bestWinstreak = data.best_uhc_winstreak;
 
-    PVPBaseDuelsGameMode.applyRatios(this.overall);
+    BowPVPBaseDuelsGameMode.applyRatios(this.overall);
 
     const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
       this.overall.wins,
@@ -372,3 +403,27 @@ export class UHCDuels {
     this.progression = createPrefixProgression(prefixes, this.overall.wins);
   }
 }
+
+export class SkyWarsDuels extends MultiPVPDuelsGameMode {
+  @Field({ store: { default: "none" } })
+  public kit: string;
+
+  public constructor(data: APIData) {
+    super(data, "SkyWars", "sw", "skywars");
+
+    const kit = data.sw_duels_kit_new3 ?? data.sw_duels_kit_new2 ?? data.sw_duels_kit_new ?? "none";
+    this.kit = kit.replace("kit_", "").replaceAll("ranked_", "").replaceAll("mega_", "").replaceAll("defending_team_", "");
+  }
+}
+
+export class BlitzSGDuels extends SingleBowPVPDuelsGameMode {
+  @Field({ store: { default: "none" } })
+  public kit: string;
+
+  public constructor(data: APIData) {
+    super(data, "Blitz", "blitz_duel");
+    this.kit = data.blitz_duels_kit ?? "none";
+  }
+}
+
+// [INFO]: Hypixel doesn't seem to store MegaWalls Duels kits in the API

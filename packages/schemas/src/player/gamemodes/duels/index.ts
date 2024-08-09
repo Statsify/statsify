@@ -7,10 +7,14 @@
  */
 
 import {
+  BlitzSGDuels,
   BridgeDuels,
   MultiPVPDuelsGameMode,
+  SingleBowDuelsGameMode,
+  SingleBowPVPDuelsGameMode,
   SingleDuelsGameMode,
   SinglePVPDuelsGameMode,
+  SkyWarsDuels,
   UHCDuels,
 } from "./mode.js";
 import { Field } from "#metadata";
@@ -80,10 +84,10 @@ export class Duels {
   public tokens: number;
 
   @Field({ leaderboard: { extraDisplay: "this.overall.titleFormatted" } })
-  public overall: SinglePVPDuelsGameMode;
+  public overall: SingleBowPVPDuelsGameMode;
 
   @Field({ leaderboard: { extraDisplay: "this.arena.titleFormatted" } })
-  public arena: SingleDuelsGameMode;
+  public arena: SingleBowDuelsGameMode;
 
   @Field({
     leaderboard: {
@@ -91,13 +95,13 @@ export class Duels {
       extraDisplay: "this.blitzsg.titleFormatted",
     },
   })
-  public blitzsg: SinglePVPDuelsGameMode;
+  public blitzsg: BlitzSGDuels;
 
   @Field({ leaderboard: { extraDisplay: "this.bow.titleFormatted" } })
-  public bow: SinglePVPDuelsGameMode;
+  public bow: SingleBowPVPDuelsGameMode;
 
   @Field({ leaderboard: { extraDisplay: "this.bowSpleef.titleFormatted" } })
-  public bowSpleef: SingleDuelsGameMode;
+  public bowSpleef: SingleBowDuelsGameMode;
 
   @Field({ leaderboard: { extraDisplay: "this.boxing.titleFormatted" } })
   public boxing: SinglePVPDuelsGameMode;
@@ -106,7 +110,7 @@ export class Duels {
   public bridge: BridgeDuels;
 
   @Field({ leaderboard: { extraDisplay: "this.classic.titleFormatted" } })
-  public classic: SinglePVPDuelsGameMode;
+  public classic: SingleBowPVPDuelsGameMode;
 
   @Field({ leaderboard: { extraDisplay: "this.combo.titleFormatted" } })
   public combo: SinglePVPDuelsGameMode;
@@ -141,7 +145,7 @@ export class Duels {
       extraDisplay: "this.skywars.titleFormatted",
     },
   })
-  public skywars: MultiPVPDuelsGameMode;
+  public skywars: SkyWarsDuels;
 
   @Field({ leaderboard: { extraDisplay: "this.sumo.titleFormatted" } })
   public sumo: SinglePVPDuelsGameMode;
@@ -152,23 +156,23 @@ export class Duels {
   public uhc: UHCDuels;
 
   public constructor(data: APIData) {
-    this.overall = new SinglePVPDuelsGameMode(data, "", "");
-    this.arena = new SinglePVPDuelsGameMode(data, "Arena", "duel_arena");
+    this.overall = new SingleBowPVPDuelsGameMode(data, "", "");
+    this.arena = new SingleBowDuelsGameMode(data, "Arena", "duel_arena");
 
-    this.blitzsg = new SinglePVPDuelsGameMode(data, "Blitz", "blitz_duel");
-    this.bow = new SinglePVPDuelsGameMode(data, "Bow", "bow_duel");
-    this.bowSpleef = new SinglePVPDuelsGameMode(data, "TNT", "bowspleef_duel");
+    this.blitzsg = new BlitzSGDuels(data);
+    this.bow = new SingleBowPVPDuelsGameMode(data, "Bow", "bow_duel");
+    this.bowSpleef = new SingleBowDuelsGameMode(data, "TNT", "bowspleef_duel");
     this.boxing = new SinglePVPDuelsGameMode(data, "Boxing", "boxing_duel");
 
     this.bridge = new BridgeDuels(data);
-    this.classic = new SinglePVPDuelsGameMode(data, "Classic", "classic_duel");
+    this.classic = new SingleBowPVPDuelsGameMode(data, "Classic", "classic_duel");
     this.combo = new SinglePVPDuelsGameMode(data, "Combo", "combo_duel");
     this.megawalls = new MultiPVPDuelsGameMode(data, "MW", "mw", "mega_walls");
     this.nodebuff = new SinglePVPDuelsGameMode(data, "NoDebuff", "potion_duel");
     this.op = new MultiPVPDuelsGameMode(data, "OP", "op", "op");
 
-    this.parkour = new SinglePVPDuelsGameMode(data, "Parkour", "parkour_eight");
-    this.skywars = new MultiPVPDuelsGameMode(data, "SkyWars", "sw", "skywars");
+    this.parkour = new SingleDuelsGameMode(data, "Parkour", "parkour_eight");
+    this.skywars = new SkyWarsDuels(data);
     this.sumo = new SinglePVPDuelsGameMode(data, "Sumo", "sumo_duel");
     this.uhc = new UHCDuels(data);
 
