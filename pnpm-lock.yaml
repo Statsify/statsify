@@ -187,6 +187,67 @@ importers:
         specifier: ^3.4.2
         version: 3.4.2
 
+  apps/apiv2:
+    dependencies:
+      '@sentry/node':
+        specifier: ^7.118.0
+        version: 7.118.0
+      '@statsify/api-client':
+        specifier: workspace:^
+        version: link:../../packages/api-client
+      '@statsify/assets':
+        specifier: workspace:^
+        version: link:../../packages/assets
+      '@statsify/logger':
+        specifier: workspace:^
+        version: link:../../packages/logger
+      '@statsify/rendering':
+        specifier: workspace:^
+        version: link:../../packages/rendering
+      '@statsify/schemas':
+        specifier: workspace:^
+        version: link:../../packages/schemas
+      '@statsify/skin-renderer':
+        specifier: workspace:^
+        version: link:../../packages/skin-renderer
+      '@statsify/util':
+        specifier: workspace:^
+        version: link:../../packages/util
+      '@swc/helpers':
+        specifier: ^0.5.12
+        version: 0.5.12
+      '@trpc/server':
+        specifier: 11.0.0-rc.477
+        version: 11.0.0-rc.477
+      '@typegoose/typegoose':
+        specifier: ^12.6.0
+        version: 12.6.0(mongoose@8.5.2(socks@2.8.3))
+      ioredis:
+        specifier: 5.4.1
+        version: 5.4.1
+      luxon:
+        specifier: ^3.5.0
+        version: 3.5.0
+      mongoose:
+        specifier: ^8.5.2
+        version: 8.5.2(socks@2.8.3)
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      skia-canvas:
+        specifier: ^0.9.30
+        version: 0.9.30
+      toad-scheduler:
+        specifier: ^3.0.1
+        version: 3.0.1
+      zod:
+        specifier: ^3.23.8
+        version: 3.23.8
+    devDependencies:
+      '@types/luxon':
+        specifier: ^3.4.2
+        version: 3.4.2
+
   apps/discord-bot:
     dependencies:
       '@sentry/node':
@@ -1719,6 +1780,9 @@ packages:
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
+  '@trpc/server@11.0.0-rc.477':
+    resolution: {integrity: sha512-K6zmjRv96fWilqm/ETehEK1DWsy5bSyrs2xbsNzCbjguMgamMhOClRHgYzJcwgLp2kasJ7QgD9YbahOhV1/u1w==}
+
   '@typegoose/typegoose@12.6.0':
     resolution: {integrity: sha512-CUhJaQ6krTYH6y4ZzxShEYu2IltlK5o/gWLp56gTozQvk6BU7g7NNZlBWpBW625LSgSQgae/JqjnBwmgQrIQig==}
     engines: {node: '>=16.20.1'}
@@ -2481,10 +2545,6 @@ packages:
 
   detect-indent@6.1.0:
     resolution: {integrity: sha512-reYkTUJAZb9gUuZ2RvVCNhVHdg62RHnJ7WJl8ftMi4diZ6NWlciOzQN88pUhSELEwflJht4oQDv0F0BMlwaYtA==}
-    engines: {node: '>=8'}
-
-  detect-libc@2.0.2:
-    resolution: {integrity: sha512-UX6sGumvvqSaXgdKGUsgZWqcUyIXZ/vZTrlRT/iobiKhGL0zL4d3osHj3uqllWJK+i+sixDS/3COVEOFbupFyw==}
     engines: {node: '>=8'}
 
   detect-libc@2.0.3:
@@ -4299,11 +4359,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  semver@7.6.2:
-    resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.6.3:
     resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
     engines: {node: '>=10'}
@@ -5547,14 +5602,14 @@ snapshots:
 
   '@mapbox/node-pre-gyp@1.0.11':
     dependencies:
-      detect-libc: 2.0.2
+      detect-libc: 2.0.3
       https-proxy-agent: 5.0.1
       make-dir: 3.1.0
       node-fetch: 2.7.0
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.6.2
+      semver: 7.6.3
       tar: 6.2.0
     transitivePeerDependencies:
       - encoding
@@ -5728,7 +5783,7 @@ snapshots:
       async: 3.2.5
       chalk: 3.0.0
       dayjs: 1.8.36
-      debug: 4.3.4
+      debug: 4.3.6
       eventemitter2: 5.0.1
       fast-json-patch: 3.1.1
       fclone: 1.0.11
@@ -5746,7 +5801,7 @@ snapshots:
   '@pm2/io@6.0.1':
     dependencies:
       async: 2.6.4
-      debug: 4.3.4
+      debug: 4.3.6
       eventemitter2: 6.4.9
       require-in-the-middle: 5.2.0
       semver: 7.5.4
@@ -5759,9 +5814,9 @@ snapshots:
   '@pm2/js-api@0.8.0':
     dependencies:
       async: 2.6.4
-      debug: 4.3.4
+      debug: 4.3.6
       eventemitter2: 6.4.9
-      extrareqp2: 1.0.0(debug@4.3.4)
+      extrareqp2: 1.0.0(debug@4.3.6)
       ws: 7.5.10
     transitivePeerDependencies:
       - bufferutil
@@ -5996,6 +6051,8 @@ snapshots:
   '@tokenizer/token@0.3.0': {}
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
+
+  '@trpc/server@11.0.0-rc.477': {}
 
   '@typegoose/typegoose@12.6.0(mongoose@8.5.2(socks@2.8.3))':
     dependencies:
@@ -6249,10 +6306,10 @@ snapshots:
 
   '@xboxreplay/errors@0.1.0': {}
 
-  '@xboxreplay/xboxlive-auth@3.3.3(debug@4.3.4)':
+  '@xboxreplay/xboxlive-auth@3.3.3(debug@4.3.6)':
     dependencies:
       '@xboxreplay/errors': 0.1.0
-      axios: 0.21.4(debug@4.3.4)
+      axios: 0.21.4(debug@4.3.6)
     transitivePeerDependencies:
       - debug
 
@@ -6393,15 +6450,15 @@ snapshots:
       '@fastify/error': 3.4.1
       fastq: 1.17.1
 
-  axios@0.21.4(debug@4.3.4):
+  axios@0.21.4(debug@4.3.6):
     dependencies:
-      follow-redirects: 1.15.6(debug@4.3.4)
+      follow-redirects: 1.15.6(debug@4.3.6)
     transitivePeerDependencies:
       - debug
 
   axios@1.7.3:
     dependencies:
-      follow-redirects: 1.15.6(debug@4.3.4)
+      follow-redirects: 1.15.6(debug@4.3.6)
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -6801,8 +6858,6 @@ snapshots:
 
   detect-indent@6.1.0: {}
 
-  detect-libc@2.0.2: {}
-
   detect-libc@2.0.3: {}
 
   dir-glob@3.0.1:
@@ -7067,9 +7122,9 @@ snapshots:
       iconv-lite: 0.4.24
       tmp: 0.0.33
 
-  extrareqp2@1.0.0(debug@4.3.4):
+  extrareqp2@1.0.0(debug@4.3.6):
     dependencies:
-      follow-redirects: 1.15.6(debug@4.3.4)
+      follow-redirects: 1.15.6(debug@4.3.6)
     transitivePeerDependencies:
       - debug
 
@@ -7252,9 +7307,9 @@ snapshots:
 
   flatted@3.3.1: {}
 
-  follow-redirects@1.15.6(debug@4.3.4):
+  follow-redirects@1.15.6(debug@4.3.6):
     optionalDependencies:
-      debug: 4.3.4
+      debug: 4.3.6
 
   foreground-child@3.2.1:
     dependencies:
@@ -8381,7 +8436,7 @@ snapshots:
 
   pm2-axon-rpc@0.7.1:
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
@@ -8389,7 +8444,7 @@ snapshots:
     dependencies:
       amp: 0.3.1
       amp-message: 0.1.2
-      debug: 4.3.4
+      debug: 4.3.6
       escape-string-regexp: 4.0.0
     transitivePeerDependencies:
       - supports-color
@@ -8406,7 +8461,7 @@ snapshots:
   pm2-sysmonit@1.2.8:
     dependencies:
       async: 3.2.5
-      debug: 4.3.4
+      debug: 4.3.6
       pidusage: 2.0.21
       systeminformation: 5.21.15
       tx2: 1.0.5
@@ -8469,8 +8524,8 @@ snapshots:
   prismarine-auth@2.3.0:
     dependencies:
       '@azure/msal-node': 2.4.0
-      '@xboxreplay/xboxlive-auth': 3.3.3(debug@4.3.4)
-      debug: 4.3.4
+      '@xboxreplay/xboxlive-auth': 3.3.3(debug@4.3.6)
+      debug: 4.3.6
       jose: 4.15.4
       node-fetch: 2.7.0
       smart-buffer: 4.2.0
@@ -8491,7 +8546,7 @@ snapshots:
 
   prismarine-realms@1.3.2:
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.6
       node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
@@ -8539,7 +8594,7 @@ snapshots:
   proxy-agent@6.3.1:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.4
+      debug: 4.3.6
       http-proxy-agent: 7.0.0
       https-proxy-agent: 7.0.2
       lru-cache: 7.18.3
@@ -8676,7 +8731,7 @@ snapshots:
 
   require-in-the-middle@5.2.0:
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.6
       module-details-from-path: 1.0.3
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -8799,8 +8854,6 @@ snapshots:
   semver@7.5.4:
     dependencies:
       lru-cache: 6.0.0
-
-  semver@7.6.2: {}
 
   semver@7.6.3: {}
 

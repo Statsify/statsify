@@ -29,3 +29,4 @@ export * from "./user/index.js";
 export * from "./util/index.js";
 export * from "./verify-codes/index.js";
 export * from "./watchdog/index.js";
+export * from "./session.js";

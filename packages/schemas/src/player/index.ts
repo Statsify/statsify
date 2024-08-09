@@ -63,13 +63,6 @@ export class Player {
   })
   public expiresAt: number;
 
-  @Field({
-    leaderboard: { enabled: false },
-    store: { required: false, serialize: false, deserialize: false },
-    docs: { description: "The time the player's session stats last reset" },
-  })
-  public sessionReset?: number;
-
   @Field({ store: { required: false, store: false } })
   public cached?: boolean;
 
