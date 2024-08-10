@@ -814,7 +814,7 @@
     "instructions": {
       "title": "Пов'яжіть ваш обліковий запис Minecraft з Statsify",
       "steps": {
-        "one": "Відкрийте **Minecraft** і перейдіть до списку серверів",
+        "one": "Open **Minecraft** (`1.7.10` - `1.19.4`) and go to the server list",
         "two": "Підключіться до **`verify.statsify.net`** та скопіюйте відображений код",
         "three": "Поверніться до **Discord** та натисніть кнопку нижче, потім введіть свій код"
       },
