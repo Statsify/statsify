@@ -17,7 +17,7 @@ cgmath = "0.18.0"
 futures-intrusive = "0.5.0"
 image = "0.24.7"
 tobj = { version = "4.0.0", features = ["async"] }
-wgpu = "0.17.0"
+wgpu = "22.0.0"
 thiserror = "1.0.48"
 tokio = { version = "1.32.0", features = ["full"] }
 lazy_static = "1.4.0"
