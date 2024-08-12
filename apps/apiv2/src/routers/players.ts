@@ -19,6 +19,7 @@ import { procedure, router } from "#routing";
 
 export const isUsername = (player: string) => player.length <= 16;
 
+const CACHE_TIME = 2 * ONE_MINUTE;
 const PlayerInput = z.object({ player: PlayerTag, caching: Caching });
 
 export async function getPlayer(ctx: Context, input: z.TypeOf<typeof PlayerInput>): Promise<Player> {
@@ -45,7 +46,7 @@ export async function getPlayer(ctx: Context, input: z.TypeOf<typeof PlayerInput
   const queryType = (canUseCachedUuid || !isInputUsername) ? "uuid" : "name";
   const player = await ctx.hypixel.player(canUseCachedUuid ? cachedPlayer.uuid : input.player, queryType);
 
-  player.expiresAt = Date.now() + (2 * ONE_MINUTE);
+  player.expiresAt = Date.now() + CACHE_TIME;
   player.guildId = cachedPlayer?.guildId;
   player.isNew = cachedPlayer === null;
 

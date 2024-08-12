@@ -17,7 +17,10 @@ import { flatten } from "@statsify/util";
 import { getPlayer, isUsername } from "#routers/players";
 import { procedure, router } from "#routing";
 import { Context } from "#trpc";
-import { shouldCache } from "#util";
+import { ONE_DAY, ONE_MINUTE, shouldCache } from "#util";
+
+const CACHE_TIME = 10 * ONE_MINUTE;
+const MEMBER_NAME_CACHE_TIME = ONE_DAY;
 
 export const guildsRouter = router({
   get: procedure
@@ -62,7 +65,7 @@ export const guildsRouter = router({
           member.displayName = cachedMember.displayName;
         }
 
-        // [TODO]: update member expiresAt
+        member.expiresAt = Date.now() + MEMBER_NAME_CACHE_TIME;
 
         return member
       }));
@@ -141,6 +144,8 @@ async function getGuild(ctx: Context, input: z.TypeOf<typeof GuildInput>): Promi
   guild.scaledDaily = guild.scaledExpHistory[0];
   guild.scaledWeekly = guild.scaledExpHistory.slice(0, 7).reduce((sum, exp) => sum + exp, 0);
   guild.scaledMonthly = guild.scaledExpHistory.reduce((sum, exp) => sum + exp, 0);
+
+  guild.expiresAt = Date.now() + CACHE_TIME;
 
   return guild;
 }
