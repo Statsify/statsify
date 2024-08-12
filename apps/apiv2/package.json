@@ -32,5 +32,11 @@
   },
   "devDependencies": {
     "@types/luxon": "^3.4.2"
+  },
+  "imports": {
+    "#*": {
+      "types": "./src/*.ts",
+      "default": "./dist/*.js"
+    }
   }
 }

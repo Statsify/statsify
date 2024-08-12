@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { procedure, router } from "../routing.js";
+import { procedure, router } from "#routing";
 
 export const analyticsRouter = router({
   commandUsage: procedure.query(() => ({ analytics: [] })),

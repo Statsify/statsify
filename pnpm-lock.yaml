@@ -532,7 +532,7 @@ importers:
         version: 2.7.0
     devDependencies:
       '@commitlint/cli':
-        specifier: ^19.4.0
+        specifier: ^19.3.0
         version: 19.4.0(@types/node@22.1.0)(typescript@5.5.4)
       '@commitlint/config-conventional':
         specifier: ^19.2.2
@@ -740,8 +740,6 @@ importers:
         version: 3.4.2
 
   packages/skin-renderer: {}
-
-  packages/skin-renderer/pkg: {}
 
   packages/util:
     dependencies:

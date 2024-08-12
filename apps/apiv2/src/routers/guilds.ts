@@ -7,9 +7,11 @@
  */
 
 import z from "zod";
-import { Caching, GuildInput } from "../validation.js";
+import { Caching, GuildInput } from "#validation";
 import { Guild } from "@statsify/schemas";
-import { procedure, router } from "../routing.js";
+import { createAutocompleteRouter } from "#services/autocomplete";
+import { createLeaderboardRouter } from "#services/leaderboards";
+import { procedure, router } from "#routing";
 
 export const guildsRouter = router({
   get: procedure
@@ -23,4 +25,7 @@ export const guildsRouter = router({
   delete: procedure
     .input(GuildInput)
     .mutation(() => ({ players: [] })),
+
+  leaderboards: createLeaderboardRouter(Guild),
+  autocomplete: createAutocompleteRouter(),
 });

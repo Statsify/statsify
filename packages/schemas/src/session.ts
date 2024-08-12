@@ -6,9 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
 import { Field } from "#metadata";
+import { ModelOptions, Severity } from "@typegoose/typegoose";
+import type { APIData } from "@statsify/util";
 
+@ModelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class Session {
   @Field({ mongo: { index: true } })
   public id: string;

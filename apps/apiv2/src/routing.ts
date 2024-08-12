@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { logging } from "./middleware/logger.js";
-import { t } from "./trpc.js";
+import { logging } from "#middleware/logger";
+import { t } from "#trpc";
 
 export const router = t.router;
 export const procedure = t.procedure.use(logging);

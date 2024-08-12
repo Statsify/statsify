@@ -7,11 +7,13 @@
  */
 
 import z from "zod";
-import { Caching, PlayerTag } from "../validation.js";
-import { Players } from "../db.js";
-import { procedure, router } from "../routing.js";
+import { Caching, PlayerTag } from "#validation";
+import { Players } from "#db";
+import { procedure, router } from "#routing";
 import { deserialize, Player, serialize } from "@statsify/schemas";
 import { flatten } from "@statsify/util";
+import { createLeaderboardRouter } from "#services/leaderboards";
+import { createAutocompleteRouter } from "#services/autocomplete";
 
 const isUsername = (player: string) => player.length <= 16;
 const shouldCache = (record: { expiresAt: number }, caching: z.TypeOf<typeof Caching>) => caching === "CacheOnly" || (caching === "Cached" && record.expiresAt > Date.now());
@@ -51,4 +53,7 @@ export const playersRouter = router({
 
       return { success: result.acknowledged };
     }),
+
+  leaderboards: createLeaderboardRouter(Player),
+  autocomplete: createAutocompleteRouter()
 });

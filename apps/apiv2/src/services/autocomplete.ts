@@ -7,10 +7,12 @@
  */
 
 import { procedure, router } from "#routing";
+import { z } from "zod";
 
-export const usersRouter = router({
-  get: procedure.query(() => ({ players: [] })),
-  update: procedure.mutation(() => ({ players: [] })),
-  verify: procedure.mutation(() => ({ players: [] })),
-  unverify: procedure.mutation(() => ({ players: [] })),
-});
+export function createAutocompleteRouter() {
+  return router({
+    search: procedure
+      .input(z.object({ query: z.string() }))
+      .query(() => []),
+  });
+}

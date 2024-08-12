@@ -6,14 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { createContext } from "./trpc.js";
+import { createContext } from "#trpc";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
-import { guildsRouter } from "./routers/guilds.js";
-import { playersRouter } from "./routers/players.js";
-import { router } from "./routing.js";
-import { sessionsRouter } from "./routers/sessions.js";
-import { skinsRouter } from "./routers/skins.js";
-import { usersRouter } from "./routers/users.js";
+import { guildsRouter } from "#routers/guilds";
+import { playersRouter } from "#routers/players";
+import { router } from "#routing";
+import { sessionsRouter } from "#routers/sessions";
+import { skinsRouter } from "#routers/skins";
+import { usersRouter } from "#routers/users";
 
 const app = router({
   guilds: guildsRouter,
