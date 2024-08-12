@@ -17,9 +17,9 @@ export const logging = t.middleware(async ({ ctx, getRawInput, path, next }) => 
   const duration = Date.now() - start;
 
   if (result.ok) {
-    ctx.logger.log(`responded in ${duration}ms`);
+    ctx.logger.log(`Responded in ${duration}ms`);
   } else {
-    ctx.logger.error(`responded in ${duration}ms`);
+    ctx.logger.error(`Responded in ${duration}ms`);
   }
 
   return result;

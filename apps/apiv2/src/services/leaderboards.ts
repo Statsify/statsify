@@ -144,7 +144,25 @@ export function createLeaderboardRouter<T, K extends { name: string }>(
   });
 }
 
-export async function modifyLeaderboardEntries<T>(ctx: Context, constructor: Constructor<T>, method: "add" | "remove", instance: Flatten<T>, idField: keyof T) {
+export function addLeaderboardEntries<T>(
+  ctx: Context,
+  constructor: Constructor<T>,
+  instance: Flatten<T>,
+  idField: keyof T
+) {
+  return modifyLeaderboardEntries(ctx, constructor, "add", instance, idField);
+}
+
+export function removeLeaderboardEntries<T>(
+  ctx: Context,
+  constructor: Constructor<T>,
+  instance: Flatten<T>,
+  idField: keyof T
+) {
+  return modifyLeaderboardEntries(ctx, constructor, "remove", instance, idField);
+}
+
+async function modifyLeaderboardEntries<T>(ctx: Context, constructor: Constructor<T>, method: "add" | "remove", instance: Flatten<T>, idField: keyof T) {
   const isRemove = method === "remove";
   const fields = LeaderboardScanner.getLeaderboardFields(constructor);
   const pipeline = ctx.redis.pipeline();

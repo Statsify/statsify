@@ -19,7 +19,7 @@ if (sentryDsn) {
       nodeProfilingIntegration(),
       Sentry.httpIntegration({ breadcrumbs: true }),
       Sentry.mongooseIntegration(),
-      Sentry.redisIntegration(),
+      Sentry.redisIntegration({ cachePrefixes: ["zadd", "zrem"] }),
     ],
     normalizeDepth: 3,
     tracesSampleRate: config("sentry.tracesSampleRate"),

@@ -18,6 +18,6 @@ export const PlayerTag = z.union([
 
 export const GuildInput = z.discriminatedUnion("type", [
   z.object({ type: z.literal("id"), tag: z.string().uuid() }),
-  z.object({ type: z.literal("name"), tag: z.string().min(1).max(32) }),
+  z.object({ type: z.literal("name"), tag: z.string().min(1).max(32).toLowerCase() }),
   z.object({ type: z.literal("member"), tag: PlayerTag }),
 ]);

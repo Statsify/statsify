@@ -11,6 +11,4 @@ import { createContext, t } from "#trpc";
 
 const caller = t.createCallerFactory(app)(await createContext());
 
-const player = await caller.players.get({ player: "j4cobi" });
-
-console.log(player);
+const result = await caller.guilds.getWithMemberNames({ tag: "manhal_iq_", type: "member" });
