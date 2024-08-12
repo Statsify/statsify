@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import z from "zod";
 import { Guild, Player } from "@statsify/schemas";
-import { z } from "zod";
 
 const BASE_URL = "https://api.hypixel.net/v2";
 

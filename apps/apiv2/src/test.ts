@@ -11,9 +11,6 @@ import { createContext, t } from "#trpc";
 
 const caller = t.createCallerFactory(app)(await createContext());
 
-const leaderboard = await caller.guilds.leaderboards.get({
-  field: "exp",
-  page: 0,
-});
+const leaderboard = await caller.players.autocomplete.search("j4");
 
 console.log(leaderboard);

@@ -8,12 +8,12 @@
 
 import z from "zod";
 import { Caching, PlayerTag } from "#validation";
-import { Players } from "#db";
-import { procedure, router } from "#routing";
 import { deserialize, Player, serialize } from "@statsify/schemas";
-import { flatten } from "@statsify/util";
-import { createLeaderboardRouter } from "#services/leaderboards";
+import { Players } from "#db";
 import { createAutocompleteRouter } from "#services/autocomplete";
+import { createLeaderboardRouter } from "#services/leaderboards";
+import { flatten } from "@statsify/util";
+import { procedure, router } from "#routing";
 
 const isUsername = (player: string) => player.length <= 16;
 const shouldCache = (record: { expiresAt: number }, caching: z.TypeOf<typeof Caching>) => caching === "CacheOnly" || (caching === "Cached" && record.expiresAt > Date.now());
@@ -55,7 +55,7 @@ export const playersRouter = router({
     }),
 
   leaderboards: createLeaderboardRouter(
-    Player, 
+    Player,
     (ids, fields) => Players
       .aggregate()
       .match({ uuid: { $in: ids } })
@@ -67,5 +67,5 @@ export const playersRouter = router({
       .then((players) => players.map((player) => flatten(player) as any))
   ),
 
-  autocomplete: createAutocompleteRouter()
+  autocomplete: createAutocompleteRouter(Player),
 });

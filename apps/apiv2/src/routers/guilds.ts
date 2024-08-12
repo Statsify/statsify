@@ -40,5 +40,6 @@ export const guildsRouter = router({
       .exec()
       .then((guilds) => guilds.map((guild) => flatten(guild) as any))
   ),
-  autocomplete: createAutocompleteRouter(),
+
+  autocomplete: createAutocompleteRouter(Guild),
 });
