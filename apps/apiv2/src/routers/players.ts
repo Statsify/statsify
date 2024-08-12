@@ -9,8 +9,9 @@
 import z from "zod";
 import { Caching, PlayerTag } from "#validation";
 import { deserialize, Player, serialize } from "@statsify/schemas";
+import { ONE_MINUTE } from "#time";
 import { Players } from "#db";
-import { addAutocompleteEntry, createAutocompleteRouter } from "#services/autocomplete";
+import { addAutocompleteEntry, createAutocompleteRouter, removeAutocompleteEntry } from "#services/autocomplete";
 import { createLeaderboardRouter, modifyLeaderboardEntries } from "#services/leaderboards";
 import { flatten } from "@statsify/util";
 import { procedure, router } from "#routing";
@@ -33,28 +34,65 @@ export const playersRouter = router({
         return deserialize(Player, flatten(cachedPlayer));
       }
 
-      const player = await ctx.hypixel.player(input.player, isUsername(input.player) ? "name" : "uuid");
+      const isInputUsername = isUsername(input.player);
+
+      // Only use the cached UUID if the input is a username and the cached player's expiration time is less than 5 minutes
+      // This is to prevent an issue where two players with the same username exist in Hypixel's database because one hasn't logged in after changing their name
+      const canUseCachedUuid =
+        isInputUsername &&
+        cachedPlayer !== null &&
+        Date.now() - cachedPlayer.expiresAt <= 5 * ONE_MINUTE;
+
+      const queryType = (canUseCachedUuid || !isInputUsername) ? "uuid" : "name";
+
+      const player = await ctx.hypixel.player(canUseCachedUuid ? cachedPlayer.uuid : input.player, queryType);
+      player.expiresAt = Date.now() + (2 * ONE_MINUTE);
+
       const flattened = flatten(player);
 
-      await Promise.all([
-        Players.replaceOne({ uuid: player.uuid }, serialize(Player, flattened), { upsert: true }).exec(),
-        addAutocompleteEntry(ctx, Player, player.username),
-        modifyLeaderboardEntries(ctx, Player, flattened, "uuid", "add")
-      ]);
+      // Don't await these operations because they don't affect the response
+      Players
+        .replaceOne({ uuid: player.uuid }, serialize(Player, flattened), { upsert: true })
+        .exec()
+        .catch((error) => ctx.logger.error(`Failed to cache player ${player.uuid} in MongoDB`, error));
 
-      return player;
+      addAutocompleteEntry(ctx, Player, player.username);
+      modifyLeaderboardEntries(ctx, Player, "add", flattened, "uuid");
+
+      // If the player's username has changed, remove the old autocomplete entry
+      if (cachedPlayer?.uuid === player.uuid && cachedPlayer.username !== player.username) {
+        removeAutocompleteEntry(ctx, Player, cachedPlayer.username);
+      }
+
+      return deserialize(Player, flattened);
     }),
 
   delete: procedure
     .input(z.object({ player: PlayerTag }))
-    .mutation(async ({ input }) => {
-      const result = await Players
-        .deleteOne()
+    .mutation(async ({ ctx, input }): Promise<{ success: boolean }> => {
+      const players = await Players
+        .find()
         .where(isUsername(input.player) ? "usernameToLower" : "uuid")
         .equals(input.player)
         .exec();
 
-      return { success: result.acknowledged };
+      if (players.length === 0) return { success: false };
+
+      const transactions = players.map(async (player) => {
+        removeAutocompleteEntry(ctx, Player, player.username);
+        modifyLeaderboardEntries(ctx, Player, "remove", player, "uuid");
+      });
+
+      transactions.push(
+        Players
+          .deleteMany({ _id: { $in: players.map((player) => player._id) } })
+          .exec()
+          .then(() => {})
+      );
+
+      await Promise.all(transactions);
+
+      return { success: true };
     }),
 
   leaderboards: createLeaderboardRouter(

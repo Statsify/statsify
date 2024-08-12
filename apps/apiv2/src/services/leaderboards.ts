@@ -144,7 +144,7 @@ export function createLeaderboardRouter<T, K extends { name: string }>(
   });
 }
 
-export async function modifyLeaderboardEntries<T>(ctx: Context, constructor: Constructor<T>, instance: Flatten<T>, idField: keyof T, method: "add" | "remove") {
+export async function modifyLeaderboardEntries<T>(ctx: Context, constructor: Constructor<T>, method: "add" | "remove", instance: Flatten<T>, idField: keyof T) {
   const isRemove = method === "remove";
   const fields = LeaderboardScanner.getLeaderboardFields(constructor);
   const pipeline = ctx.redis.pipeline();
@@ -169,7 +169,11 @@ export async function modifyLeaderboardEntries<T>(ctx: Context, constructor: Con
     }
   }
 
-  await pipeline.exec();
+  try {
+    await pipeline.exec();
+  } catch (error) {
+    ctx.logger.error(`Failed to ${method} ${constructor.name.toLowerCase()} ${id} in the leaderboard: ${error}`);
+  }
 }
 
 type ResetEvery = NonNullable<LeaderboardMetadata["resetEvery"]>;

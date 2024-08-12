@@ -11,6 +11,6 @@ import { createContext, t } from "#trpc";
 
 const caller = t.createCallerFactory(app)(await createContext());
 
-const leaderboard = await caller.players.get({ player: "j4cobi" });
+const player = await caller.players.get({ player: "j4cobi" });
 
-console.log(leaderboard);
+console.log(player);

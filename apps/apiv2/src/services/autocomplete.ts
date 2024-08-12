@@ -25,22 +25,20 @@ export function createAutocompleteRouter<T>(constructor: Constructor<T>) {
   });
 }
 
-export async function addAutocompleteEntry<T>(ctx: Context, constructor: Constructor<T>, entry: string) {
-  try {
-    await ctx.redis.call(
-      "FT.SUGADD",
-      `${constructor.name}:autocomplete`,
-      entry,
-      "1",
-      "INCR"
-    );
-  } catch (error) {
-    handleAutocompleteError(ctx, error);
-  }
+export function addAutocompleteEntry<T>(ctx: Context, constructor: Constructor<T>, entry: string) {
+  return ctx.redis
+    .call("FT.SUGADD", `${constructor.name.toLowerCase()}:autocomplete`, entry, "1", "INCR")
+    .catch((error) => handleAutocompleteError(ctx, error));
+}
+
+export function removeAutocompleteEntry<T>(ctx: Context, constructor: Constructor<T>, entry: string) {
+  return ctx.redis
+    .call("FT.SUGDEL", `${constructor.name.toLowerCase()}:autocomplete`, entry)
+    .catch((error) => handleAutocompleteError(ctx, error));
 }
 
 function handleAutocompleteError(ctx: Context, error: unknown) {
-  if (error instanceof Error && error.message.startsWith("ERR unknown command 'FT.SUGGET'")) {
+  if (error instanceof Error && error.message.startsWith("ERR unknown command 'FT.SUG")) {
     ctx.logger.warn("Autocomplete failed because RediSearch is not installed.");
   } else {
     ctx.logger.error(error);

@@ -6,12 +6,5 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { logging } from "#middleware/logger";
-import { sentry } from "#middleware/sentry";
-import { t } from "#trpc";
-
-export const router = t.router;
-
-export const procedure = t.procedure
-  .use(logging)
-  .use(sentry);
+export const ONE_SECOND = 1000;
+export const ONE_MINUTE = 60 * ONE_SECOND;

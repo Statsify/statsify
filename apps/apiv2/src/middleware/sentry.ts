@@ -7,6 +7,6 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { t } from "../trpc.js";
+import { t } from "#trpc";
 
 export const sentry = t.middleware(Sentry.trpcMiddleware({ attachRpcInput: true }));
