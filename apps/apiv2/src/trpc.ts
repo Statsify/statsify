@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CreateHTTPContextOptions } from "@trpc/server/adapters/standalone";
 import { Hypixel } from "#services/hypixel";
 import { Logger } from "@statsify/logger";
 import { Redis } from "ioredis";
@@ -15,10 +14,11 @@ import { initTRPC } from "@trpc/server";
 
 export const t = initTRPC.context<typeof createContext>().create();
 
-export async function createContext(_: CreateHTTPContextOptions) {
+// Can optionally take 1 parameter of `CreateHTTPContextOptions` from "@trpc/server/adapters/standalone"
+export async function createContext() {
   const logger = new Logger();
   const hypixel = new Hypixel(config("hypixelApi.key"));
-  const redis = new Redis();
+  const redis = new Redis(config("database.redisUrl"));
 
   return { logger, hypixel, redis };
 }

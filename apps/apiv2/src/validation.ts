@@ -12,6 +12,7 @@ export const Caching = z.enum(["Live", "Cached", "CacheOnly"]).optional().defaul
 
 export const PlayerTag = z.union([
   z.string().min(1).max(16).toLowerCase(),
+  // [TODO]: Add support for dashless UUIDs
   z.string().uuid().toLowerCase().transform((uuid) => uuid.replaceAll("-", "")),
 ]);
 

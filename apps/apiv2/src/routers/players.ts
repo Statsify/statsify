@@ -54,6 +54,18 @@ export const playersRouter = router({
       return { success: result.acknowledged };
     }),
 
-  leaderboards: createLeaderboardRouter(Player),
+  leaderboards: createLeaderboardRouter(
+    Player, 
+    (ids, fields) => Players
+      .aggregate()
+      .match({ uuid: { $in: ids } })
+      .append({ $set: { _index: { $indexOfArray: [ids, "$uuid"] } } })
+      .sort({ _index: 1 })
+      .append({ $unset: "_index" })
+      .project({ name: "$displayName", ...Object.fromEntries(fields.map((field) => [field, 1])) })
+      .exec()
+      .then((players) => players.map((player) => flatten(player) as any))
+  ),
+
   autocomplete: createAutocompleteRouter()
 });

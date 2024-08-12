@@ -11,7 +11,12 @@ import { LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schema
 import { procedure, router } from "#routing";
 import type { Constructor } from "@statsify/util";
 
-export function createLeaderboardRouter<T>(constructor: Constructor<T>) {
+const PAGE_SIZE = 10;
+
+export function createLeaderboardRouter<T, K extends { name: string }>(
+  constructor: Constructor<T>,
+  getDatabaseStats: (ids: string[], fields: (keyof K)[]) => Promise<K[]>
+) {
   const fields = LeaderboardScanner.getLeaderboardFields(constructor);
 
   const paths = new Set(fields.map(([path]) => path));
@@ -29,14 +34,14 @@ export function createLeaderboardRouter<T>(constructor: Constructor<T>) {
         ])
       ))
       .query(async ({ ctx, input }) => {
-        const PAGE_SIZE = 10;
-
         const metadata = LeaderboardScanner.getLeaderboardField(
           constructor,
           input.field
         ) as LeaderboardEnabledMetadata;
 
+        // The fisrt leaderboard position of the page
         let top: number;
+        // A position searched by the user either via position or tag
         let highlight: number | undefined = undefined;
 
         if ("page" in input) {
@@ -53,72 +58,78 @@ export function createLeaderboardRouter<T>(constructor: Constructor<T>) {
 
         const bottom = top + PAGE_SIZE;
 
-        const leaderboard = await this.getLeaderboardFromRedis(
-          constructor,
-          input.field,
-          top,
-          bottom - 1,
-          metadata.sort
+        // Query the redis sorted set for the leaderboard
+        const scores = await (metadata.sort === "ASC" ?
+          ctx.redis.zrange(`${constructor.name.toLowerCase()}.${input.field}`, top, bottom, "WITHSCORES") :
+          ctx.redis.zrevrange(`${constructor.name.toLowerCase()}.${input.field}`, top, bottom, "WITHSCORES"));
+
+        const parsedScores: { id: string; score: number; position: number }[] = [];
+
+        for (let i = 0; i < scores.length; i += 2) {
+          parsedScores.push({ id: scores[i], score: Number(scores[i + 1]), position: i / 2 + top });
+        }
+
+        const prefixField = metadata.extraDisplay as keyof K | undefined;
+
+        const additionalFields = (metadata
+          .additionalFields
+          ?.filter((field) => field !== input.field) ?? []) as unknown as (keyof K)[];
+
+        const databaseFields = [...additionalFields];
+        if (prefixField) databaseFields.push(prefixField);
+
+        // Query the database for the additional fields and the prefix field
+        const databaseStats = await getDatabaseStats(
+          parsedScores.map(({ id }) => id),
+          databaseFields
         );
 
-        const additionalFieldMetadata = metadata.additionalFields.map((k) =>
-          LeaderboardScanner.getLeaderboardField(constructor, k, false)
-        );
-
-        const extraDisplayMetadata = metadata.extraDisplay ?
-          LeaderboardScanner.getLeaderboardField(constructor, metadata.extraDisplay, false) :
+        const prefixMetadata = prefixField ?
+          LeaderboardScanner.getLeaderboardField(constructor, prefixField as string, false) :
           undefined;
 
-        const additionalStats = await this.getAdditionalStats(
-          leaderboard.map(({ id }) => id),
-          [
-            ...additionalFields.filter((k) => k !== field),
-            ...(extraDisplay ? [extraDisplay] : []),
-          ]
-        );
+        const additionalFieldsMetadata = metadata
+          .additionalFields
+          ?.map((field) => LeaderboardScanner.getLeaderboardField(constructor, field, false)) ?? [];
 
-        const data = leaderboard.map((doc, index) => {
-          const stats = additionalStats[index];
+        console.log(additionalFieldsMetadata);
 
-          if (extraDisplay)
-            stats.name = `${stats[extraDisplay] ?? extraDisplayMetadata?.default}§r ${
-              stats.name
-            }`;
+        const items = parsedScores.map((item, index) => {
+          const itemStats = databaseStats[index];
 
-          const field = formatter ? formatter(doc.score) : doc.score;
+          // Append the extra display field to the name
+          if (prefixField) {
+            const prefix = itemStats[prefixField] ?? prefixMetadata?.default;
+            itemStats.name = `${prefix}§r ${itemStats.name}`;
+          }
 
-          const additionalValues = additionalFields.map((key, index) => {
-            const value = stats[key] ?? additionalFieldMetadata[index].default;
+          const value = metadata.formatter ? metadata.formatter(item.score) : item.score;
 
-            if (additionalFieldMetadata[index].formatter)
-              return additionalFieldMetadata[index].formatter?.(value);
-
-            return value;
+          const fields = additionalFields.map((field, index) => {
+            const fieldMetadata = additionalFieldsMetadata[index];
+            const value = itemStats[field] ?? fieldMetadata.default;
+            return fieldMetadata.formatter ? fieldMetadata.formatter(value) : value;
           });
 
-          const fields = [];
-
-          if (!hidden) fields.push(field);
-          fields.push(...additionalValues);
+          if (!metadata.hidden) fields.unshift(value);
 
           return {
-            id: doc.id,
+            id: item.id,
             fields,
-            name: stats.name,
-            position: doc.index + 1,
-            highlight: doc.index === highlight,
+            name: itemStats.name,
+            position: item.position,
+            highlight: item.position === highlight,
           };
         });
 
-        const fields = [];
-        if (!hidden) fields.push(fieldName);
-        fields.push(...additionalFieldMetadata.map(({ fieldName }) => fieldName));
+        const fields = additionalFieldsMetadata.map((field) => field.fieldName!);
+        if (!metadata.hidden) fields.unshift(metadata.fieldName!);
 
         return {
-          name,
-          fields,
-          data,
+          title: metadata.name,
           page: top / PAGE_SIZE,
+          items,
+          fields,
         };
       }),
 

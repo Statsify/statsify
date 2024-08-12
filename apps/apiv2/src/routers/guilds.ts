@@ -9,8 +9,10 @@
 import z from "zod";
 import { Caching, GuildInput } from "#validation";
 import { Guild } from "@statsify/schemas";
+import { Guilds } from "#db";
 import { createAutocompleteRouter } from "#services/autocomplete";
 import { createLeaderboardRouter } from "#services/leaderboards";
+import { flatten } from "@statsify/util";
 import { procedure, router } from "#routing";
 
 export const guildsRouter = router({
@@ -26,6 +28,17 @@ export const guildsRouter = router({
     .input(GuildInput)
     .mutation(() => ({ players: [] })),
 
-  leaderboards: createLeaderboardRouter(Guild),
+  leaderboards: createLeaderboardRouter(
+    Guild,
+    (ids, fields) => Guilds
+      .aggregate()
+      .match({ id: { $in: ids } })
+      .append({ $set: { _index: { $indexOfArray: [ids, "$id"] } } })
+      .sort({ _index: 1 })
+      .append({ $unset: "_index" })
+      .project({ name: 1, ...Object.fromEntries(fields.map((field) => [field, 1])) })
+      .exec()
+      .then((guilds) => guilds.map((guild) => flatten(guild) as any))
+  ),
   autocomplete: createAutocompleteRouter(),
 });

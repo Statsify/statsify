@@ -6,12 +6,13 @@
   "type": "module",
   "scripts": {
     "start": "node --enable-source-maps .",
+    "start:test": "node --enable-source-maps ./dist/test.js",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",
     "lint": "eslint"
   },
   "dependencies": {
-    "@sentry/node": "^7.118.0",
+    "@sentry/node": "^8.25.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
@@ -31,7 +32,8 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/luxon": "^3.4.2"
+    "@types/luxon": "^3.4.2",
+    "trpc-cli": "^0.3.1"
   },
   "imports": {
     "#*": {
