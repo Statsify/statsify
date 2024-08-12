@@ -7,6 +7,7 @@
  */
 
 import z from "zod";
+import { Context } from "#trpc";
 import { procedure, router } from "#routing";
 import type { Constructor } from "@statsify/util";
 
@@ -17,14 +18,31 @@ export function createAutocompleteRouter<T>(constructor: Constructor<T>) {
       .query(({ ctx, input }) => ctx.redis
         .call("FT.SUGGET", `${constructor.name}:autocomplete`, input, "FUZZY", "MAX", "25")
         .catch((error) => {
-          if (error instanceof Error && error.message.startsWith("ERR unknown command 'FT.SUGGET'")) {
-            ctx.logger.warn("Autocomplete failed because RediSearch is not installed.");
-          } else {
-            ctx.logger.error(error);
-          }
-
+          handleAutocompleteError(error, ctx.logger);
           return [];
         }) as Promise<string[]>
       ),
   });
+}
+
+export async function addAutocompleteEntry<T>(ctx: Context, constructor: Constructor<T>, entry: string) {
+  try {
+    await ctx.redis.call(
+      "FT.SUGADD",
+      `${constructor.name}:autocomplete`,
+      entry,
+      "1",
+      "INCR"
+    );
+  } catch (error) {
+    handleAutocompleteError(ctx, error);
+  }
+}
+
+function handleAutocompleteError(ctx: Context, error: unknown) {
+  if (error instanceof Error && error.message.startsWith("ERR unknown command 'FT.SUGGET'")) {
+    ctx.logger.warn("Autocomplete failed because RediSearch is not installed.");
+  } else {
+    ctx.logger.error(error);
+  }
 }

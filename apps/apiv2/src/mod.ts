@@ -6,8 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
-import { config } from "@statsify/util";
 import { createContext } from "#trpc";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import { guildsRouter } from "#routers/guilds";
@@ -16,22 +14,6 @@ import { router } from "#routing";
 import { sessionsRouter } from "#routers/sessions";
 import { skinsRouter } from "#routers/skins";
 import { usersRouter } from "#routers/users";
-
-const sentryDsn = config("sentry.apiDsn", { required: false });
-
-if (sentryDsn) {
-  Sentry.init({
-    dsn: sentryDsn,
-    integrations: [
-      Sentry.httpIntegration({ breadcrumbs: true }),
-      Sentry.mongooseIntegration(),
-      Sentry.redisIntegration(),
-    ],
-    normalizeDepth: 3,
-    tracesSampleRate: config("sentry.tracesSampleRate"),
-    environment: config("environment"),
-  });
-}
 
 export const app = router({
   guilds: guildsRouter,

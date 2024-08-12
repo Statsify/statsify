@@ -10,8 +10,8 @@ import z from "zod";
 import { Caching, PlayerTag } from "#validation";
 import { deserialize, Player, serialize } from "@statsify/schemas";
 import { Players } from "#db";
-import { createAutocompleteRouter } from "#services/autocomplete";
-import { createLeaderboardRouter } from "#services/leaderboards";
+import { addAutocompleteEntry, createAutocompleteRouter } from "#services/autocomplete";
+import { createLeaderboardRouter, modifyLeaderboardEntries } from "#services/leaderboards";
 import { flatten } from "@statsify/util";
 import { procedure, router } from "#routing";
 
@@ -34,10 +34,13 @@ export const playersRouter = router({
       }
 
       const player = await ctx.hypixel.player(input.player, isUsername(input.player) ? "name" : "uuid");
+      const flattened = flatten(player);
 
-      await Players
-        .replaceOne({ uuid: player.uuid }, serialize(Player, flatten(player)), { upsert: true })
-        .exec();
+      await Promise.all([
+        Players.replaceOne({ uuid: player.uuid }, serialize(Player, flattened), { upsert: true }).exec(),
+        addAutocompleteEntry(ctx, Player, player.username),
+        modifyLeaderboardEntries(ctx, Player, flattened, "uuid", "add")
+      ]);
 
       return player;
     }),

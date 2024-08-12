@@ -12,7 +12,7 @@ import { Redis } from "ioredis";
 import { config } from "@statsify/util";
 import { initTRPC } from "@trpc/server";
 
-export const t = initTRPC.context<typeof createContext>().create();
+export const t = initTRPC.context<Context>().create();
 
 // Can optionally take 1 parameter of `CreateHTTPContextOptions` from "@trpc/server/adapters/standalone"
 export async function createContext() {
@@ -23,3 +23,4 @@ export async function createContext() {
   return { logger, hypixel, redis };
 }
 
+export type Context = Awaited<ReturnType<typeof createContext>>;

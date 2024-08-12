@@ -5,14 +5,15 @@
   "main": "dist/mod.js",
   "type": "module",
   "scripts": {
-    "start": "node --enable-source-maps .",
-    "start:test": "node --enable-source-maps ./dist/test.js",
+    "start": "node --enable-source-maps --import ./dist/instrument.js .",
+    "start:test": "node --enable-source-maps --import ./dist/instrument.js ./dist/test.js",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",
     "lint": "eslint"
   },
   "dependencies": {
     "@sentry/node": "^8.25.0",
+    "@sentry/profiling-node": "^8.25.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",

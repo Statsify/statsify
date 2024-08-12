@@ -192,6 +192,9 @@ importers:
       '@sentry/node':
         specifier: ^8.25.0
         version: 8.25.0
+      '@sentry/profiling-node':
+        specifier: ^8.25.0
+        version: 8.25.0
       '@statsify/api-client':
         specifier: workspace:^
         version: link:../../packages/api-client
@@ -1814,6 +1817,11 @@ packages:
       '@opentelemetry/instrumentation': ^0.52.1
       '@opentelemetry/sdk-trace-base': ^1.25.1
       '@opentelemetry/semantic-conventions': ^1.25.1
+
+  '@sentry/profiling-node@8.25.0':
+    resolution: {integrity: sha512-bFe5FYjk0ShxIp1ZVSSdBpDKWR17vTuDL06Fh9QbIy7Ni6Wudipxu3a5RlLrgQ1mf3w+tIZf1m8cNuplnXNC4g==}
+    engines: {node: '>=14.18'}
+    hasBin: true
 
   '@sentry/types@7.118.0':
     resolution: {integrity: sha512-2drqrD2+6kgeg+W/ycmiti3G4lJrV3hGjY9PpJ3bJeXrh6T2+LxKPzlgSEnKFaeQWkXdZ4eaUbtTXVebMjb5JA==}
@@ -4047,6 +4055,10 @@ packages:
   nice-napi@1.0.2:
     resolution: {integrity: sha512-px/KnJAJZf5RuBGcfD+Sp2pAKq0ytz8j+1NehvgIGFkvtvFrDM3T8E4x/JJODXK9WZow8RRGrbA9QQ3hs+pDhA==}
     os: ['!win32']
+
+  node-abi@3.65.0:
+    resolution: {integrity: sha512-ThjYBfoDNr08AWx6hGaRbfPwxKV9kVzAzOzlLKbk2CuqXE2xnCh+cbAGnwM3t8Lq4v9rUB7VfondlkBckcJrVA==}
+    engines: {node: '>=10'}
 
   node-addon-api@3.2.1:
     resolution: {integrity: sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A==}
@@ -6522,6 +6534,17 @@ snapshots:
       '@sentry/types': 8.25.0
       '@sentry/utils': 8.25.0
 
+  '@sentry/profiling-node@8.25.0':
+    dependencies:
+      '@sentry/core': 8.25.0
+      '@sentry/node': 8.25.0
+      '@sentry/types': 8.25.0
+      '@sentry/utils': 8.25.0
+      detect-libc: 2.0.3
+      node-abi: 3.65.0
+    transitivePeerDependencies:
+      - supports-color
+
   '@sentry/types@7.118.0': {}
 
   '@sentry/types@8.25.0': {}
@@ -8897,6 +8920,10 @@ snapshots:
       node-addon-api: 3.2.1
       node-gyp-build: 4.8.1
     optional: true
+
+  node-abi@3.65.0:
+    dependencies:
+      semver: 7.6.3
 
   node-addon-api@3.2.1:
     optional: true

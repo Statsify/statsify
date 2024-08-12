@@ -8,10 +8,17 @@
 
 import mongoose from "mongoose";
 import { Guild, Player, Session, Skin, User } from "@statsify/schemas";
+import { Logger } from "@statsify/logger";
 import { config } from "@statsify/util";
 import { getModelForClass } from "@typegoose/typegoose";
 
-await mongoose.connect(config("database.mongoUri"));
+try {
+  await mongoose.connect(config("database.mongoUri"));
+} catch (error) {
+  const logger = new Logger("database");
+  logger.fatal("Failed to connect to MongoDB", error);
+  process.exit(1);
+}
 
 export const Players = getModelForClass(Player);
 export const Guilds = getModelForClass(Guild);

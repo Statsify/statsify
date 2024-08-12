@@ -7,9 +7,11 @@
  */
 
 import z from "zod";
-import { LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schemas";
+import { Context } from "#trpc";
+import { DateTime } from "luxon";
+import { LeaderboardEnabledMetadata, LeaderboardMetadata, LeaderboardScanner } from "@statsify/schemas";
 import { procedure, router } from "#routing";
-import type { Constructor } from "@statsify/util";
+import type { Constructor, Flatten } from "@statsify/util";
 
 const PAGE_SIZE = 10;
 
@@ -140,4 +142,58 @@ export function createLeaderboardRouter<T, K extends { name: string }>(
       }))
       .query(() => ({})),
   });
+}
+
+export async function modifyLeaderboardEntries<T>(ctx: Context, constructor: Constructor<T>, instance: Flatten<T>, idField: keyof T, method: "add" | "remove") {
+  const isRemove = method === "remove";
+  const fields = LeaderboardScanner.getLeaderboardFields(constructor);
+  const pipeline = ctx.redis.pipeline();
+  const name = constructor.name.toLowerCase();
+
+  const id = instance[idField] as unknown as string;
+
+  for (const [field, metadata] of fields) {
+    const value = instance[field] as unknown as number;
+    const key = `${name}.${String(field)}`;
+
+    // Remove the entry if the method is remove or if the value is an invalid leaderboard value
+    if (isRemove || value === 0 || Number.isNaN(value) || typeof value !== "number") {
+      pipeline.zrem(key, id);
+      continue;
+    }
+
+    pipeline.zadd(key, value, id);
+
+    if (metadata.leaderboard.enabled && metadata.leaderboard.resetEvery) {
+      pipeline.expireat(key, getResetTime(metadata.leaderboard.resetEvery));
+    }
+  }
+
+  await pipeline.exec();
+}
+
+type ResetEvery = NonNullable<LeaderboardMetadata["resetEvery"]>;
+
+const DAYS_IN_WEEK: Record<Exclude<ResetEvery, "day">, number> = {
+  monday: 0,
+  tuesday: 1,
+  wednesday: 2,
+  thursday: 3,
+  friday: 4,
+  saturday: 5,
+  sunday: 6,
+};
+
+function getResetTime(resetEvery: ResetEvery) {
+  if (resetEvery === "day")
+    return Math.ceil(DateTime.now().endOf("day").toSeconds());
+
+  const now = new Date();
+  const dayIndex = DAYS_IN_WEEK[resetEvery];
+
+  // Reset at 12:00 AM on the next day
+  now.setDate(now.getDate() + ((dayIndex - now.getDay() + 7) % 7) + 1);
+  now.setHours(0, 0, 0, 0);
+
+  return Math.ceil(now.getTime() / 1000);
 }
