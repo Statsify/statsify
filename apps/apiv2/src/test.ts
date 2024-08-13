@@ -11,4 +11,4 @@ import { createContext, t } from "#trpc";
 
 const caller = t.createCallerFactory(app)(await createContext());
 
-const result = await caller.guilds.getWithMemberNames({ tag: "manhal_iq_", type: "member" });
+const result = await caller.players.leaderboards.rankings({ tag: "manhal_iq_", type: "member" });

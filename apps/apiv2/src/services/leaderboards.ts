@@ -17,7 +17,8 @@ const PAGE_SIZE = 10;
 
 export function createLeaderboardRouter<T, K extends { name: string }>(
   constructor: Constructor<T>,
-  getDatabaseStats: (ids: string[], fields: (keyof K)[]) => Promise<K[]>
+  getDatabaseStats: (ids: string[], fields: (keyof K)[]) => Promise<K[]>,
+  getIdFromTag: (tag: string) => Promise<string | undefined>
 ) {
   const fields = LeaderboardScanner.getLeaderboardFields(constructor);
 
@@ -53,6 +54,7 @@ export function createLeaderboardRouter<T, K extends { name: string }>(
           top = input.position - (input.position % PAGE_SIZE);
         } else {
           // [TODO]: find ranking of tag
+          const id = await getIdFromTag(input.tag);
           const ranking = 0;
           highlight = ranking;
           top = ranking - (ranking % PAGE_SIZE);
@@ -93,8 +95,6 @@ export function createLeaderboardRouter<T, K extends { name: string }>(
         const additionalFieldsMetadata = metadata
           .additionalFields
           ?.map((field) => LeaderboardScanner.getLeaderboardField(constructor, field, false)) ?? [];
-
-        console.log(additionalFieldsMetadata);
 
         const items = parsedScores.map((item, index) => {
           const itemStats = databaseStats[index];
@@ -140,7 +140,59 @@ export function createLeaderboardRouter<T, K extends { name: string }>(
         fields: z.array(LeaderboardField),
         tag: z.string(),
       }))
-      .query(() => ({})),
+      .query(async ({ ctx, input }) => {
+        const id = await getIdFromTag(input.tag);
+        const pipeline = ctx.redis.pipeline();
+        const constructorName = constructor.name.toLowerCase();
+
+        const leaderboardFields: LeaderboardEnabledMetadata[] = [];
+
+        input.fields.forEach((field) => {
+          const metadata = LeaderboardScanner.getLeaderboardField(constructor, field);
+          leaderboardFields.push(metadata);
+
+          const key = `${constructorName}.${field}`;
+
+          pipeline.zscore(key, id);
+
+          if (metadata.sort === "ASC") {
+            pipeline.zrank(key, id);
+          } else {
+            pipeline.zrevrank(key, id);
+          }
+        });
+
+        const responses = await pipeline.exec() ?? [];
+        const rankings: { field: string; position: number; value: any; title: string }[] = [];
+
+        for (let i = 0; i < responses.length; i += 2) {
+          const rank = responses[i + 1][1];
+          const value = responses[i][1];
+
+          if (rank === undefined || rank === null || !value) continue;
+
+          const index = i / 2;
+          const metadata = leaderboardFields[index];
+
+          // Filter out any invalid rankings
+          if (Number(rank) > metadata.limit) continue;
+
+          const numberValue = Number(value);
+
+          const formattedValue = metadata.formatter ?
+            metadata.formatter(numberValue) :
+            numberValue;
+
+          rankings.push({
+            field: input.fields[index],
+            position: Number(rank),
+            value: formattedValue,
+            title: metadata.name,
+          });
+        }
+
+        return { id, rankings };
+      }),
   });
 }
 
