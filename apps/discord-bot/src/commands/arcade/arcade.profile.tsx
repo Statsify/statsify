@@ -53,6 +53,7 @@ export const ArcadeProfile = ({
 
   let sidebar: SidebarItem[] = [
     [t("stats.coins"), t(arcade.coins), "§6"],
+    [t("stats.coinConversions"), t(arcade.coinConversions), "§e"],
     [t("stats.arcadeWins"), t(arcade.wins), "§b"],
   ];
 

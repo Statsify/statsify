@@ -67,12 +67,22 @@ export const DROPPER_MODES = new GameModes([
 
 export type DropperModes = IGameModes<typeof DROPPER_MODES>;
 
+export const PARTY_GAMES_MODES = new GameModes([
+  { api: "overall" },
+  { api: "roundWins" },
+]);
+
+export type PartyGamesModes = IGameModes<typeof PARTY_GAMES_MODES>;
+
 export class Arcade {
   @Field({ historical: { enabled: false } })
   public coins: number;
 
   @Field()
   public wins: number;
+
+  @Field()
+  public coinConversions: number;
 
   @Field()
   public blockingDead: BlockingDead;
@@ -136,6 +146,8 @@ export class Arcade {
 
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
+    this.coinConversions = data.stamp_level;
+
     this.blockingDead = new BlockingDead(data);
     this.bountyHunters = new BountyHunters(data);
     this.captureTheWool = new CaptureTheWool(data);
