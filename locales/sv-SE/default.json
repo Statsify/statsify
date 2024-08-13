@@ -814,7 +814,7 @@
     "instructions": {
       "title": "Länka ditt Minecraft-konto till Statsify",
       "steps": {
-        "one": "Öppna **Minecraft** och gå till serverlistan",
+        "one": "Öppna **Minecraft** (`1.7.10` - `1.19.4`) och gå till serverlistan",
         "two": "Anslut till **`verify.statsify.net`** och kopiera koden som visas",
         "three": "Gå tillbaka till **Discord** och klicka på knappen nedan, skriv sedan in din kod"
       },

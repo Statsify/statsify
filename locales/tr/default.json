@@ -814,7 +814,7 @@
     "instructions": {
       "title": "Minecraft Hesabını Statsify'a Bağla",
       "steps": {
-        "one": "**Minecraft**'ı aç ve sunucu listesine git",
+        "one": "Open **Minecraft** (`1.7.10` - `1.19.4`) and go to the server list",
         "two": "**`verify.statsify.net`** sunucusuna bağlan ve gösterilen kodu kopyala",
         "three": "**Discord**'a geri gel ve alttaki düğmeye tıkla, sonra kodunu yaz"
       },

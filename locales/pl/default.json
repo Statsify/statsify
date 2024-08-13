@@ -814,7 +814,7 @@
     "instructions": {
       "title": "Połącz swoje konto Minecraft ze Statsify",
       "steps": {
-        "one": "Otwórz **Minecraft** i przejdź do listy serwerów",
+        "one": "Open **Minecraft** (`1.7.10` - `1.19.4`) and go to the server list",
         "two": "Połącz się z **`verify.statsify.net`** i skopiuj wyświetlany kod",
         "three": "Wróć do **Discorda** i kliknij przycisk poniżej, a następnie wpisz swój kod"
       },

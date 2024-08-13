@@ -814,7 +814,7 @@
     "instructions": {
       "title": "Conectează-ți contul Minecraft cu Statsify",
       "steps": {
-        "one": "Deschideți **Minecraft** și mergeți la lista de servere",
+        "one": "Open **Minecraft** (`1.7.10` - `1.19.4`) and go to the server list",
         "two": "Conectați-vă la **`verify.statsify.net`** și copiați codul afișat",
         "three": "Întoarce-ți vă la **Discord** și apăsați pe butonul de jos, apoi tastați codul"
       },
