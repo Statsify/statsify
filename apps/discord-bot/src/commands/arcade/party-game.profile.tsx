@@ -16,7 +16,7 @@
 
 import { Container, Footer, Header, Table } from "#components";
 import { PartyGamesTable } from "./modes/index.js";
-import { PartyGamesModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { type PartyGamesModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface PartyGamesProfileProps extends BaseProfileProps {
