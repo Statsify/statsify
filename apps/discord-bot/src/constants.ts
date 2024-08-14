@@ -39,9 +39,11 @@ import {
   MurderMysteryModes,
   PAINTBALL_MODES,
   PARKOUR_MODES,
+  PARTY_GAMES_MODES,
   PIT_MODES,
   PaintballModes,
   ParkourModes,
+  PartyGamesModes,
   PitModes,
   PlayerStats,
   QUAKE_MODES,
@@ -90,6 +92,7 @@ export type GamesWithBackgrounds =
   | MurderMysteryModes
   | PaintballModes
   | ParkourModes
+  | PartyGamesModes
   | PitModes
   | QuakeModes
   | SkyWarsModes
@@ -206,6 +209,9 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["arcade", "dropper"];
     case PARKOUR_MODES:
       return ["parkour", "overall"];
+
+    case PARTY_GAMES_MODES:
+      return ["arcade", "partyGames"];
 
     case QUEST_MODES:
     case CHALLENGE_MODES:
