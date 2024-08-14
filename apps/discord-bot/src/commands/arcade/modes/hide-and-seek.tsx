@@ -34,61 +34,57 @@ export const HideAndSeekTable = ({ stats, t }: HideAndSeekTableProps) => {
             color="§b"
           />
         </Table.tr>
+      </Table.ts>
+      <Table.ts title="§6Party Pooper">
+        <Table.tr>
+          <Table.td
+            title={t("stats.wins")}
+            value={t(partyPooper.wins)}
+            color="§a"
+          />
+          <Table.td
+            title={t("stats.hiderWins")}
+            value={t(partyPooper.hiderWins)}
+            color="§e"
+          />
+          <Table.td
+            title={t("stats.seekerWins")}
+            value={t(partyPooper.seekerWins)}
+            color="§b"
+          />
+        </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.objectives")}
             value={t(objectivesCompleted)}
             color="§a"
           />
-          <Table.td title={t("stats.kills")} value={t(kills)} color="§b" />
+          <Table.td
+            title={t("stats.kills")}
+            value={t(kills)}
+            color="§b"
+          />
         </Table.tr>
       </Table.ts>
-      <Table.tr>
-        <Table.ts title="§6Party Pooper">
-          <Table.tr>
-            <Table.td
-              title={t("stats.wins")}
-              value={t(partyPooper.wins)}
-              color="§a"
-              size="small"
-            />
-            <Table.td
-              title={t("stats.hiderWins")}
-              value={t(partyPooper.hiderWins)}
-              color="§e"
-              size="small"
-            />
-            <Table.td
-              title={t("stats.seekerWins")}
-              value={t(partyPooper.seekerWins)}
-              color="§b"
-              size="small"
-            />
-          </Table.tr>
-        </Table.ts>
-        <Table.ts title="§6Prop Hunt">
-          <Table.tr>
-            <Table.td
-              title={t("stats.wins")}
-              value={t(propHunt.wins)}
-              color="§a"
-              size="small"
-            />
-            <Table.td
-              title={t("stats.hiderWins")}
-              value={t(propHunt.hiderWins)}
-              color="§e"
-              size="small"
-            />
-            <Table.td
-              title={t("stats.seekerWins")}
-              value={t(propHunt.seekerWins)}
-              color="§b"
-              size="small"
-            />
-          </Table.tr>
-        </Table.ts>
-      </Table.tr>
+      <Table.ts title="§6Prop Hunt">
+        <Table.tr>
+          <Table.td
+            title={t("stats.wins")}
+            value={t(propHunt.wins)}
+            color="§a"
+          />
+          <Table.td
+            title={t("stats.hiderWins")}
+            value={t(propHunt.hiderWins)}
+            color="§e"
+          />
+          <Table.td
+            title={t("stats.seekerWins")}
+            value={t(propHunt.seekerWins)}
+            color="§b"
+          />
+        </Table.tr>
+      </Table.ts>
     </Table.table>
   );
 };
