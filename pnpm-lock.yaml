@@ -20,6 +20,9 @@ importers:
       '@eslint/js':
         specifier: ^9.8.0
         version: 9.8.0
+      '@j4cobi/eslint-plugin-sort-imports':
+        specifier: ^1.0.2
+        version: 1.0.2(eslint@9.8.0)(typescript@5.5.4)
       '@napi-rs/cli':
         specifier: ^2.18.4
         version: 2.18.4
@@ -62,9 +65,6 @@ importers:
       eslint-plugin-license-header:
         specifier: ^0.6.1
         version: 0.6.1
-      eslint-plugin-sort-imports-es6-autofix:
-        specifier: ^0.6.0
-        version: 0.6.0(eslint@9.8.0)
       eslint-plugin-unicorn:
         specifier: ^55.0.0
         version: 55.0.0(eslint@9.8.0)
@@ -1202,6 +1202,9 @@ packages:
     resolution: {integrity: sha512-ZXRY4jNvVgSVQ8DL3LTcakaAtXwTVUxE81hslsyD2AtoXW/wVob10HkOJ1X/pAlcI7D+2YoZKg5do8G/w6RYgA==}
     engines: {node: '>=8'}
 
+  '@j4cobi/eslint-plugin-sort-imports@1.0.2':
+    resolution: {integrity: sha512-0bTHYIohk2RnWW8+FQoE06s/80aF1iPxP62JiS2+9chUFrs9D7+p0niFtNctcZGRPo5aOKG9q/ypPlT8OWcwyg==}
+
   '@jridgewell/gen-mapping@0.3.5':
     resolution: {integrity: sha512-IzL8ZoEDIBRWEzlCcRhOaCupYyN5gdIK+Q6fbFdPDg6HqX6jpkItn7DFIpW9LQzXG6Df9sA7+OKnq0qlz/GaQg==}
     engines: {node: '>=6.0.0'}
@@ -1828,6 +1831,10 @@ packages:
     resolution: {integrity: sha512-NpixInP5dm7uukMiRyiHjRKkom5RIFA4dfiHvalanD2cF0CLUuQqxfg8PtEUo9yqJI2bBhF+pcSafqnG3UBnRQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  '@typescript-eslint/scope-manager@8.1.0':
+    resolution: {integrity: sha512-DsuOZQji687sQUjm4N6c9xABJa7fjvfIdjqpSIIVOgaENf2jFXiM9hIBZOL3hb6DHK9Nvd2d7zZnoMLf9e0OtQ==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
   '@typescript-eslint/type-utils@8.0.1':
     resolution: {integrity: sha512-+/UT25MWvXeDX9YaHv1IS6KI1fiuTto43WprE7pgSMswHbn1Jm9GEM4Txp+X74ifOWV8emu2AWcbLhpJAvD5Ng==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -1841,8 +1848,21 @@ packages:
     resolution: {integrity: sha512-PpqTVT3yCA/bIgJ12czBuE3iBlM3g4inRSC5J0QOdQFAn07TYrYEQBBKgXH1lQpglup+Zy6c1fxuwTk4MTNKIw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
+  '@typescript-eslint/types@8.1.0':
+    resolution: {integrity: sha512-q2/Bxa0gMOu/2/AKALI0tCKbG2zppccnRIRCW6BaaTlRVaPKft4oVYPp7WOPpcnsgbr0qROAVCVKCvIQ0tbWog==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
   '@typescript-eslint/typescript-estree@8.0.1':
     resolution: {integrity: sha512-8V9hriRvZQXPWU3bbiUV4Epo7EvgM6RTs+sUmxp5G//dBGy402S7Fx0W0QkB2fb4obCF8SInoUzvTYtc3bkb5w==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+
+  '@typescript-eslint/typescript-estree@8.1.0':
+    resolution: {integrity: sha512-NTHhmufocEkMiAord/g++gWKb0Fr34e9AExBRdqgWdVBaKoei2dIyYKD9Q0jBnvfbEA5zaf8plUFMUH6kQ0vGg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
     peerDependencies:
       typescript: '*'
@@ -1856,8 +1876,18 @@ packages:
     peerDependencies:
       eslint: ^8.57.0 || ^9.0.0
 
+  '@typescript-eslint/utils@8.1.0':
+    resolution: {integrity: sha512-ypRueFNKTIFwqPeJBfeIpxZ895PQhNyH4YID6js0UoBImWYoSjBsahUn9KMiJXh94uOjVBgHD9AmkyPsPnFwJA==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0
+
   '@typescript-eslint/visitor-keys@8.0.1':
     resolution: {integrity: sha512-W5E+o0UfUcK5EgchLZsyVWqARmsM7v54/qEq6PY3YI5arkgmCzHiuk0zKSJJbm71V0xdRna4BGomkCTXz2/LkQ==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@typescript-eslint/visitor-keys@8.1.0':
+    resolution: {integrity: sha512-ba0lNI19awqZ5ZNKh6wCModMwoZs457StTebQ0q1NP58zSi2F6MOZRXwfKZy+jB78JNJ/WH8GSh2IQNzXX8Nag==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@vercel/analytics@1.3.1':
@@ -2568,11 +2598,6 @@ packages:
 
   eslint-plugin-license-header@0.6.1:
     resolution: {integrity: sha512-9aIz8q3OaMr1/uQmCGCWySjTs5nEXUJexNegz/8lluNcZbEl82Ag1Vyr1Hu3oIveRW1NbXDPs6nu4zu9mbrmWA==}
-
-  eslint-plugin-sort-imports-es6-autofix@0.6.0:
-    resolution: {integrity: sha512-2NVaBGF9NN+727Fyq+jJYihdIeegjXeUUrZED9Q8FVB8MsV3YQEyXG96GVnXqWt0pmn7xfCZOZf3uKnIhBrfeQ==}
-    peerDependencies:
-      eslint: '>=7.7.0'
 
   eslint-plugin-unicorn@55.0.0:
     resolution: {integrity: sha512-n3AKiVpY2/uDcGrS3+QsYDkjPfaOrNrsfQxU9nt5nitd9KuvVXrfAvgCO9DYPSfap+Gqjw9EOrXIsBp5tlHZjA==}
@@ -5516,6 +5541,14 @@ snapshots:
 
   '@istanbuljs/schema@0.1.3': {}
 
+  '@j4cobi/eslint-plugin-sort-imports@1.0.2(eslint@9.8.0)(typescript@5.5.4)':
+    dependencies:
+      '@typescript-eslint/utils': 8.1.0(eslint@9.8.0)(typescript@5.5.4)
+    transitivePeerDependencies:
+      - eslint
+      - supports-color
+      - typescript
+
   '@jridgewell/gen-mapping@0.3.5':
     dependencies:
       '@jridgewell/set-array': 1.2.1
@@ -6133,6 +6166,11 @@ snapshots:
       '@typescript-eslint/types': 8.0.1
       '@typescript-eslint/visitor-keys': 8.0.1
 
+  '@typescript-eslint/scope-manager@8.1.0':
+    dependencies:
+      '@typescript-eslint/types': 8.1.0
+      '@typescript-eslint/visitor-keys': 8.1.0
+
   '@typescript-eslint/type-utils@8.0.1(eslint@9.8.0)(typescript@5.5.4)':
     dependencies:
       '@typescript-eslint/typescript-estree': 8.0.1(typescript@5.5.4)
@@ -6147,10 +6185,27 @@ snapshots:
 
   '@typescript-eslint/types@8.0.1': {}
 
+  '@typescript-eslint/types@8.1.0': {}
+
   '@typescript-eslint/typescript-estree@8.0.1(typescript@5.5.4)':
     dependencies:
       '@typescript-eslint/types': 8.0.1
       '@typescript-eslint/visitor-keys': 8.0.1
+      debug: 4.3.6
+      globby: 11.1.0
+      is-glob: 4.0.3
+      minimatch: 9.0.5
+      semver: 7.6.3
+      ts-api-utils: 1.3.0(typescript@5.5.4)
+    optionalDependencies:
+      typescript: 5.5.4
+    transitivePeerDependencies:
+      - supports-color
+
+  '@typescript-eslint/typescript-estree@8.1.0(typescript@5.5.4)':
+    dependencies:
+      '@typescript-eslint/types': 8.1.0
+      '@typescript-eslint/visitor-keys': 8.1.0
       debug: 4.3.6
       globby: 11.1.0
       is-glob: 4.0.3
@@ -6173,9 +6228,25 @@ snapshots:
       - supports-color
       - typescript
 
+  '@typescript-eslint/utils@8.1.0(eslint@9.8.0)(typescript@5.5.4)':
+    dependencies:
+      '@eslint-community/eslint-utils': 4.4.0(eslint@9.8.0)
+      '@typescript-eslint/scope-manager': 8.1.0
+      '@typescript-eslint/types': 8.1.0
+      '@typescript-eslint/typescript-estree': 8.1.0(typescript@5.5.4)
+      eslint: 9.8.0
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
   '@typescript-eslint/visitor-keys@8.0.1':
     dependencies:
       '@typescript-eslint/types': 8.0.1
+      eslint-visitor-keys: 3.4.3
+
+  '@typescript-eslint/visitor-keys@8.1.0':
+    dependencies:
+      '@typescript-eslint/types': 8.1.0
       eslint-visitor-keys: 3.4.3
 
   '@vercel/analytics@1.3.1(next@12.3.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.8))(react@18.3.1)':
@@ -6249,10 +6320,10 @@ snapshots:
 
   '@xboxreplay/errors@0.1.0': {}
 
-  '@xboxreplay/xboxlive-auth@3.3.3(debug@4.3.4)':
+  '@xboxreplay/xboxlive-auth@3.3.3(debug@4.3.6)':
     dependencies:
       '@xboxreplay/errors': 0.1.0
-      axios: 0.21.4(debug@4.3.4)
+      axios: 0.21.4(debug@4.3.6)
     transitivePeerDependencies:
       - debug
 
@@ -6393,15 +6464,15 @@ snapshots:
       '@fastify/error': 3.4.1
       fastq: 1.17.1
 
-  axios@0.21.4(debug@4.3.4):
+  axios@0.21.4(debug@4.3.6):
     dependencies:
-      follow-redirects: 1.15.6(debug@4.3.4)
+      follow-redirects: 1.15.6(debug@4.3.6)
     transitivePeerDependencies:
       - debug
 
   axios@1.7.3:
     dependencies:
-      follow-redirects: 1.15.6(debug@4.3.4)
+      follow-redirects: 1.15.6(debug@4.3.6)
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -6893,10 +6964,6 @@ snapshots:
     dependencies:
       requireindex: 1.2.0
 
-  eslint-plugin-sort-imports-es6-autofix@0.6.0(eslint@9.8.0):
-    dependencies:
-      eslint: 9.8.0
-
   eslint-plugin-unicorn@55.0.0(eslint@9.8.0):
     dependencies:
       '@babel/helper-validator-identifier': 7.24.7
@@ -7255,6 +7322,10 @@ snapshots:
   follow-redirects@1.15.6(debug@4.3.4):
     optionalDependencies:
       debug: 4.3.4
+
+  follow-redirects@1.15.6(debug@4.3.6):
+    optionalDependencies:
+      debug: 4.3.6
 
   foreground-child@3.2.1:
     dependencies:
@@ -8469,8 +8540,8 @@ snapshots:
   prismarine-auth@2.3.0:
     dependencies:
       '@azure/msal-node': 2.4.0
-      '@xboxreplay/xboxlive-auth': 3.3.3(debug@4.3.4)
-      debug: 4.3.4
+      '@xboxreplay/xboxlive-auth': 3.3.3(debug@4.3.6)
+      debug: 4.3.6
       jose: 4.15.4
       node-fetch: 2.7.0
       smart-buffer: 4.2.0
@@ -8491,7 +8562,7 @@ snapshots:
 
   prismarine-realms@1.3.2:
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.6
       node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
@@ -8539,7 +8610,7 @@ snapshots:
   proxy-agent@6.3.1:
     dependencies:
       agent-base: 7.1.0
-      debug: 4.3.4
+      debug: 4.3.6
       http-proxy-agent: 7.0.0
       https-proxy-agent: 7.0.2
       lru-cache: 7.18.3
@@ -8676,7 +8747,7 @@ snapshots:
 
   require-in-the-middle@5.2.0:
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.6
       module-details-from-path: 1.0.3
       resolve: 1.22.8
     transitivePeerDependencies:
