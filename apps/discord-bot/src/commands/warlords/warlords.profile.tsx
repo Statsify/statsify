@@ -50,7 +50,7 @@ export const WarlordsProfile = ({
 
       table = (
         <Table.table>
-          <Table.ts title="Overall">
+          <Table.ts title="§6Overall">
             <Table.tr>
               <Table.td title={t("stats.wins")} value={t(warlords.wins)} color="§a" />
               <Table.td title={t("stats.losses")} value={t(warlords.losses)} color="§c" />
@@ -68,29 +68,29 @@ export const WarlordsProfile = ({
               <Table.td title={t("stats.assists")} value={t(warlords.assists)} color="§e" />
             </Table.tr>
           </Table.ts>
-          <Table.ts title="Domination">
-            <Table.tr>
-              <Table.td title={t("stats.wins")} value={t(warlords.domination.wins)} color="§a" />
-              <Table.td title={t("stats.kills")} value={t(warlords.domination.kills)} color="§a" />
-              <Table.td title={t("stats.score")} value={t(warlords.domination.score)} color="§a" />
-              <Table.td title={t("stats.capturePoints")} value={t(warlords.domination.capturePoints)} color="§a" />
-              <Table.td title={t("stats.defendPoints")} value={t(warlords.domination.defendPoints)} color="§a" />
-            </Table.tr>
-          </Table.ts>
           <Table.tr>
-            <Table.ts title="Capture the Flag">
+            <Table.ts title="§6Capture the Flag">
               <Table.tr>
                 <Table.td title={t("stats.wins")} value={t(warlords.captureTheFlag.wins)} color="§a" />
-                <Table.td title={t("stats.kills")} value={t(warlords.captureTheFlag.kills)} color="§a" />
+                <Table.td title={t("stats.kills")} value={t(warlords.captureTheFlag.kills)} color="§e" />
               </Table.tr>
             </Table.ts>
-            <Table.ts title="Team Deathmatch">
+            <Table.ts title="§6Team Deathmatch">
               <Table.tr>
                 <Table.td title={t("stats.wins")} value={t(warlords.teamDeathmatch.wins)} color="§a" />
-                <Table.td title={t("stats.kills")} value={t(warlords.teamDeathmatch.kills)} color="§a" />
+                <Table.td title={t("stats.kills")} value={t(warlords.teamDeathmatch.kills)} color="§e" />
               </Table.tr>
             </Table.ts>
           </Table.tr>
+          <Table.ts title="§6Domination">
+            <Table.tr>
+              <Table.td title={t("stats.wins")} value={t(warlords.domination.wins)} color="§a" />
+              <Table.td title={t("stats.kills")} value={t(warlords.domination.kills)} color="§e" />
+              <Table.td title={t("stats.score")} value={t(warlords.domination.score)} color="§6" />
+              <Table.td title={t("stats.capturePoints")} value={t(warlords.domination.capturePoints)} color="§2" />
+              <Table.td title={t("stats.defendPoints")} value={t(warlords.domination.defendPoints)} color="§b" />
+            </Table.tr>
+          </Table.ts>
         </Table.table>
       );
       break;
