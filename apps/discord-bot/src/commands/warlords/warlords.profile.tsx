@@ -7,7 +7,7 @@
  */
 
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
-import { FormattedGame, GameMode, WarlordsModes } from "@statsify/schemas";
+import { FormattedGame, GameMode, WarlordsMage, WarlordsModes, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "@statsify/schemas";
 import { WarlordsClassTable } from "./tables/index.js";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -31,37 +31,85 @@ export const WarlordsProfile = ({
 
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(warlords.coins), "§6"],
-    [t("stats.class"), prettify(warlords.class), "§e"],
   ];
+
+  if (mode.api !== "overall")
+    sidebar.push(
+      [t("stats.spec"), prettify(warlords[mode.api].specification), "§a"],
+      [t("stats.level"), t(warlords[mode.api].level), "§a"]
+    );
 
   let table: JSX.Element;
 
   switch (mode.api) {
-    case "overall":
+    case "overall": {
+      sidebar.push([t("stats.class"), prettify(warlords.class), "§e"]);
+      const clazz = warlords.class as "mage" | "warrior" | "paladin" | "shaman";
+      // Verify that the cast is correct and the class is a valid class
+      if (clazz in warlords && typeof warlords[clazz] === "object") sidebar.push([t("stats.spec"), prettify(warlords[clazz].specification), "§a"]);
+
       table = (
         <Table.table>
+          <Table.ts title="Overall">
+            <Table.tr>
+              <Table.td title={t("stats.wins")} value={t(warlords.wins)} color="§a" />
+              <Table.td title={t("stats.losses")} value={t(warlords.losses)} color="§c" />
+              <Table.td title={t("stats.wlr")} value={t(warlords.wlr)} color="§6" />
+              <Table.td
+                title={t("stats.gamesPlayed")}
+                value={t(warlords.gamesPlayed)}
+                color="§e"
+              />
+            </Table.tr>
+            <Table.tr>
+              <Table.td title={t("stats.kills")} value={t(warlords.kills)} color="§a" />
+              <Table.td title={t("stats.deaths")} value={t(warlords.deaths)} color="§c" />
+              <Table.td title={t("stats.kdr")} value={t(warlords.kdr)} color="§6" />
+              <Table.td title={t("stats.assists")} value={t(warlords.assists)} color="§e" />
+            </Table.tr>
+          </Table.ts>
+          <Table.ts title="Domination">
+            <Table.tr>
+              <Table.td title={t("stats.wins")} value={t(warlords.domination.wins)} color="§a" />
+              <Table.td title={t("stats.kills")} value={t(warlords.domination.kills)} color="§a" />
+              <Table.td title={t("stats.score")} value={t(warlords.domination.score)} color="§a" />
+              <Table.td title={t("stats.capturePoints")} value={t(warlords.domination.capturePoints)} color="§a" />
+              <Table.td title={t("stats.defendPoints")} value={t(warlords.domination.defendPoints)} color="§a" />
+            </Table.tr>
+          </Table.ts>
           <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(warlords.wins)} color="§a" />
-            <Table.td title={t("stats.losses")} value={t(warlords.losses)} color="§c" />
-            <Table.td title={t("stats.wlr")} value={t(warlords.wlr)} color="§6" />
-            <Table.td
-              title={t("stats.gamesPlayed")}
-              value={t(warlords.gamesPlayed)}
-              color="§e"
-            />
-          </Table.tr>
-          <Table.tr>
-            <Table.td title={t("stats.kills")} value={t(warlords.kills)} color="§a" />
-            <Table.td title={t("stats.deaths")} value={t(warlords.deaths)} color="§c" />
-            <Table.td title={t("stats.kdr")} value={t(warlords.kdr)} color="§6" />
-            <Table.td title={t("stats.assists")} value={t(warlords.assists)} color="§e" />
+            <Table.ts title="Capture the Flag">
+              <Table.tr>
+                <Table.td title={t("stats.wins")} value={t(warlords.captureTheFlag.wins)} color="§a" />
+                <Table.td title={t("stats.kills")} value={t(warlords.captureTheFlag.kills)} color="§a" />
+              </Table.tr>
+            </Table.ts>
+            <Table.ts title="Team Deathmatch">
+              <Table.tr>
+                <Table.td title={t("stats.wins")} value={t(warlords.teamDeathmatch.wins)} color="§a" />
+                <Table.td title={t("stats.kills")} value={t(warlords.teamDeathmatch.kills)} color="§a" />
+              </Table.tr>
+            </Table.ts>
           </Table.tr>
         </Table.table>
       );
       break;
+    }
 
-    case "classes":
-      table = <WarlordsClassTable warlords={warlords} t={t} />;
+    case "mage":
+      table = <WarlordsClassTable stats={warlords.mage} constructor={WarlordsMage} color="§b" t={t} />;
+      break;
+
+    case "warrior":
+      table = <WarlordsClassTable stats={warlords.warrior} constructor={WarlordsWarrior} color="§7" t={t} />;
+      break;
+
+    case "paladin":
+      table = <WarlordsClassTable stats={warlords.paladin} constructor={WarlordsPaladin} color="§e" t={t} />;
+      break;
+
+    case "shaman":
+      table = <WarlordsClassTable stats={warlords.shaman} constructor={WarlordsShaman} color="§2" t={t} />;
       break;
   }
 
