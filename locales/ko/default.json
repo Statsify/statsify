@@ -48,7 +48,7 @@
     "events": "$t(commands.hypixel-command, { \"name\": \"Events\" })",
     "force-unverify": "Forcefully unverify a player",
     "force-verify": "Forcefully verify a player",
-    "game-counts": "View Hypixel current game counts",
+    "game-counts": "Hypixel의 현재 게임 수를 봐요",
     "general": "$t(commands.hypixel-command, { \"name\": \"General\" })",
     "gtbhelper": "주어진 힌트로 가능한 Guess The Build의 정답 목록을 생성해요",
     "guild": "View your guild's stats",
