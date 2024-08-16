@@ -8,20 +8,20 @@
 
 import { If, Table } from "#components";
 import type { LocalizeFunction } from "@statsify/discord";
-import type { WoolWars } from "@statsify/schemas";
+import type { SubModesForMode, WoolGamesModes, WoolWars } from "@statsify/schemas";
 
 export interface WoolWarsTableProps {
   woolwars: WoolWars;
+  submode: SubModesForMode<WoolGamesModes, "woolwars">;
   t: LocalizeFunction;
 }
 
-export const WoolWarsTable = ({ woolwars, t }: WoolWarsTableProps) => {
+export const WoolWarsTable = ({ woolwars, submode, t }: WoolWarsTableProps) => {
   const stats = woolwars.overall;
 
   return (
     <>
-      {/* <If condition={mode.api === "overall"}> */}
-      <If condition={true}>
+      <If condition={submode.api === "overall"}>
         {() => (
           <Table.tr>
             <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />

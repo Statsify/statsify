@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ArcadeModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { ArcadeModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   BlockingDeadTable,
   BountyHuntersTable,

@@ -268,7 +268,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
   }
 
   @SubCommand({
-    description: (t) => t("commands.leaderboard-woolwars"),
+    description: (t) => t("commands.leaderboard-woolgames"),
     args: [new PlayerLeaderboardArgument("woolgames")],
   })
   public woolgames(context: CommandContext) {

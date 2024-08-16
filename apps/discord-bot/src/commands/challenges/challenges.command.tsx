@@ -12,7 +12,7 @@ import {
   ModeEmoji,
   ProfileData,
 } from "#commands/base.hypixel-command";
-import { CHALLENGE_MODES, ChallengeModes, GameId, GameMode } from "@statsify/schemas";
+import { CHALLENGE_MODES, ChallengeModes, GameId, GameModeWithSubModes } from "@statsify/schemas";
 import { ChallengesProfile } from "./challenges.profile.js";
 import { Command } from "@statsify/discord";
 import { Image } from "skia-canvas";
@@ -35,7 +35,7 @@ export class ChallengesCommand extends BaseHypixelCommand<
     return { gameIcons: await getAllGameIcons() };
   }
 
-  public getModeEmojis(modes: GameMode<ChallengeModes>[]): ModeEmoji[] {
+  public getModeEmojis(modes: GameModeWithSubModes<ChallengeModes>[]): ModeEmoji[] {
     return modes.map((m) => m.api !== "overall" && ((t) => t(`emojis:games.${m.api}`)));
   }
 

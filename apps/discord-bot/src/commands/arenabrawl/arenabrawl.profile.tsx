@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ArenaBrawlModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { ArenaBrawlModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   Container,
   Footer,

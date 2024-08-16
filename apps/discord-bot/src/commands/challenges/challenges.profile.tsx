@@ -11,8 +11,8 @@ import {
   Challenges,
   FormattedGame,
   GameChallenges,
-  GameId,
-  GameMode,
+  type GameId,
+  type GameMode,
   MetadataScanner,
 } from "@statsify/schemas";
 import { Container, Footer, GameList, Header, SidebarItem, Table } from "#components";

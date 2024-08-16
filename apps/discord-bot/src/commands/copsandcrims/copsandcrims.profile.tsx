@@ -7,7 +7,7 @@
  */
 
 import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
-import { CopsAndCrimsModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { CopsAndCrimsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 

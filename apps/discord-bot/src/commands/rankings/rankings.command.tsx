@@ -298,7 +298,7 @@ export class RankingsCommand {
 
   @SubCommand({
     ...options,
-    description: (t) => t("commands.rankings-woolwars"),
+    description: (t) => t("commands.rankings-woolgames"),
   })
   public woolgames(context: CommandContext) {
     return this.run(context, "woolgames", WOOLGAMES_MODES);

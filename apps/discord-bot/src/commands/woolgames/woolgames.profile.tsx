@@ -18,7 +18,7 @@ import {
 } from "#components";
 import {
   FormattedGame,
-  GameMode,
+  type GameMode,
   WoolGamesModes,
 } from "@statsify/schemas";
 import { SheepWarsTable } from "./sheepwars.table.js";
@@ -53,7 +53,7 @@ export const WoolGamesProfile = ({
 
   switch (mode.api) {
     case "woolwars":
-      table = <WoolWarsTable woolwars={woolgames[mode.api]} t={t} />;
+      table = <WoolWarsTable woolwars={woolgames[mode.api]} submode={mode.submode} t={t} />;
       sidebar.push(
         [t("stats.woolPlaced"), t(woolgames.woolwars.overall.woolPlaced), "§e"],
         [t("stats.blocksBroken"), t(woolgames.woolwars.overall.blocksBroken), "§c"],
@@ -81,7 +81,7 @@ export const WoolGamesProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.WOOLGAMES} §fStats §r(${mode.formatted})`}
+        title={`§l${FormattedGame.WOOLGAMES} §fStats §r(${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""})`}
         description={`§7${t("stats.level")}: ${
           woolgames.levelFormatted
         }\n${formatProgression({

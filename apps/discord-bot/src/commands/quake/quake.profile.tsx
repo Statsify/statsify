@@ -14,7 +14,7 @@ import {
   Table,
   formatProgression,
 } from "#components";
-import { FormattedGame, GameMode, QuakeModes } from "@statsify/schemas";
+import { FormattedGame, type GameMode, QuakeModes } from "@statsify/schemas";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface QuakeProfileProps extends BaseProfileProps {

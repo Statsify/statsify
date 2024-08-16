@@ -88,7 +88,7 @@ export class QuestsCommand {
           user,
           badge,
           time,
-          mode,
+          mode: { ...mode, submode: undefined },
           gameIcons,
           logos: [crossLogo, verifiedLogo],
         });

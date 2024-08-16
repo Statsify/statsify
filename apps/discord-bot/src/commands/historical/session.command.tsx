@@ -17,6 +17,7 @@ import {
   DUELS_MODES,
   GENERAL_MODES,
   GameMode,
+  GameModeWithSubModes,
   GameModes,
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
@@ -43,6 +44,7 @@ import {
   PaginateService,
   PlayerArgument,
   SubCommand,
+  SubPage,
 } from "@statsify/discord";
 import { ArcadeProfile } from "../arcade/arcade.profile.js";
 import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile.js";
@@ -266,7 +268,7 @@ export class SessionCommand {
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-woolwars"), args: [PlayerArgument] })
+  @SubCommand({ description: (t) => t("commands.session-woolgames"), args: [PlayerArgument] })
   public woolgames(context: CommandContext) {
     return this.run(context, WOOLGAMES_MODES, (base, mode) => (
       <WoolGamesProfile {...base} mode={mode} />
@@ -277,7 +279,7 @@ export class SessionCommand {
     context: CommandContext,
     modes: GameModes<T>,
     getProfile: (base: BaseProfileProps, mode: GameMode<T>) => JSX.Element,
-    filterModes?: (player: Player, modes: GameMode<T>[]) => GameMode<T>[]
+    filterModes?: (player: Player, modes: GameModeWithSubModes<T>[]) => GameModeWithSubModes<T>[]
   ) {
     const user = context.getUser();
 
@@ -296,50 +298,88 @@ export class SessionCommand {
     const allModes = modes.getModes();
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
 
-    const pages: Page[] = displayedModes.map((mode) => ({
-      label: mode.formatted,
-      generator: async (t) => {
-        const background = await getBackground(...mapBackground(modes, mode.api));
+    const pages: Page[] = displayedModes.map((mode) => {
+      if (mode.submodes.length === 0) return {
+        label: mode.formatted,
+        generator: async (t) => {
+          const background = await getBackground(...mapBackground(modes, mode.api));
 
-        const displayName = this.apiService.emojiDisplayName(t, player.displayName);
+          const displayName = this.apiService.emojiDisplayName(t, player.displayName);
 
-        let content: string | undefined = undefined;
+          let content: string | undefined = undefined;
 
-        if (player.isNew) {
-          content = t("historical.newSession", { displayName });
-        } else if (Math.random() < 0.1) {
-          content = t("tips.resetSession");
-        }
+          if (player.isNew) {
+            content = t("historical.newSession", { displayName });
+          } else if (Math.random() < 0.1) {
+            content = t("tips.resetSession");
+          }
 
-        const profile = getProfile(
-          {
-            player,
-            skin,
-            background,
-            logo,
-            t,
-            user,
-            badge,
-            time: {
-              timeType: HistoricalTimes.SESSION,
-              sessionReset: player.sessionReset ?
-                DateTime.fromSeconds(player.sessionReset) :
-                DateTime.now(),
+          const profile = getProfile(
+            {
+              player,
+              skin,
+              background,
+              logo,
+              t,
+              user,
+              badge,
+              time: {
+                timeType: HistoricalTimes.SESSION,
+                sessionReset: player.sessionReset ?
+                  DateTime.fromSeconds(player.sessionReset) :
+                  DateTime.now(),
+              },
             },
-          },
-          mode
-        );
+            { ...mode, submode: undefined } as unknown as GameMode<T>
+          );
 
-        const canvas = render(profile, getTheme(user));
-        const buffer = await canvas.toBuffer("png");
+          const canvas = render(profile, getTheme(user));
+          const buffer = await canvas.toBuffer("png");
 
-        return {
-          content,
-          files: [{ name: "session.png", data: buffer, type: "image/png" }],
-          attachments: [],
-        };
-      },
-    }));
+          return {
+            content,
+            files: [{ name: "session.png", data: buffer, type: "image/png" }],
+            attachments: [],
+          };
+        },
+      };
+
+      const subPages = mode.submodes.map((submode): SubPage => ({
+        label: submode.formatted,
+        generator: async (t) => {
+          const background = await getBackground(...mapBackground(modes, mode.api));
+
+          const profile = getProfile(
+            {
+              player,
+              skin,
+              background,
+              logo,
+              t,
+              user,
+              badge,
+              time: {
+                timeType: HistoricalTimes.SESSION,
+                sessionReset: player.sessionReset ?
+                  DateTime.fromSeconds(player.sessionReset) :
+                  DateTime.now(),
+              },
+            },
+            { api: mode.api, formatted: mode.formatted, hypixel: mode.hypixel, submode } as GameMode<T>
+          );
+
+          const canvas = render(profile, getTheme(user));
+          const buffer = await canvas.toBuffer("png");
+
+          return {
+            files: [{ name: "session.png", data: buffer, type: "image/png" }],
+            attachments: [],
+          };
+        },
+      }));
+
+      return { label: mode.formatted, subPages };
+    });
 
     return this.paginateService.paginate(context, pages);
   }

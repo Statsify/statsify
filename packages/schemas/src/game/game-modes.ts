@@ -13,6 +13,15 @@ export type GameMode<Modes extends Mode[]> = {
     api: Key;
     formatted: string;
     hypixel?: string;
+    submode: Extract<Modes[number], { api: Key }> extends { submodes: SubMode[] } ? Omit<Exclude<Extract<Modes[number], { api: Key }>["submodes"], undefined>[number], "formatted"> & { formatted: string } : undefined;
+  }
+}[ApiModeFromGameModes<Modes>];
+
+export type GameModeWithSubModes<Modes extends Mode[]> = {
+  [Key in ApiModeFromGameModes<Modes>]: {
+    api: Key;
+    formatted: string;
+    hypixel?: string;
     submodes: Array<Omit<Exclude<Extract<Modes[number], { api: Key }>["submodes"], undefined>[number], "formatted"> & { formatted: string }>;
   }
 }[ApiModeFromGameModes<Modes>];
@@ -30,7 +39,7 @@ export type Mode = {
 type SubMode = { api: string; formatted?: string };
 
 export class GameModes<Modes extends Mode[]> {
-  private modes: GameMode<Modes>[];
+  private modes: GameModeWithSubModes<Modes>[];
   private hypixelModes: Record<string, string>;
 
   public constructor(modes: Modes) {
@@ -39,7 +48,7 @@ export class GameModes<Modes extends Mode[]> {
       api: m.api,
       formatted: m.formatted ?? prettify(m.api),
       submodes: m.submodes?.map((sm) => ({ api: sm.api, formatted: sm.formatted ?? prettify(sm.api) })) ?? [],
-    })) as GameMode<Modes>[];
+    })) as GameModeWithSubModes<Modes>[];
 
     this.hypixelModes = Object.fromEntries(
       modes
@@ -59,10 +68,6 @@ export class GameModes<Modes extends Mode[]> {
     return this.modes.map(({ api }) => api);
   }
 
-  public getApiSubModes<Key extends Extract<Modes[number], { api: string }>["api"]>(mode: Key): SubModesForMode<Modes, Key>[] {
-    return this.modes.find((m) => m.api === mode)?.submodes?.map(({ api }) => api) ?? [];
-  }
-
   public getModes() {
     return this.modes;
   }
@@ -75,4 +80,4 @@ export class GameModes<Modes extends Mode[]> {
 export type ExtractGameModes<T> = T extends GameModes<infer U> ? U : never;
 export type ModeFromGameModes<T extends Mode[]> = Extract<T[number], { api: string }>;
 export type ApiModeFromGameModes<T extends Mode[]> = ModeFromGameModes<T>["api"];
-export type SubModesForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> = Extract<T[number], { api: M; submodes: SubMode[] }>["submodes"][number]["api"];
+export type SubModesForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> = Omit<Extract<T[number], { api: M; submodes: SubMode[] }>["submodes"][number], "formatted"> & { formatted: string };
