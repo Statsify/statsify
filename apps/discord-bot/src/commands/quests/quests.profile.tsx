@@ -62,7 +62,7 @@ const questMetadata = [DailyQuests, WeeklyQuests, OverallQuests].map((constructo
 export interface QuestProfileProps extends Omit<BaseProfileProps, "time"> {
   mode: GameMode<QuestModes>;
   gameIcons: Record<GameId, Image>;
-  logos: [check: Image, cross: Image];
+  logos: [cross: Image, check: Image];
   time: QuestTime;
 }
 
@@ -136,10 +136,10 @@ interface GameTableProps {
   t: LocalizeFunction;
   time: QuestTime;
   game: keyof typeof FormattedGame;
-  logos: [Image, Image];
+  logos: [cross: Image, check: Image];
 }
 
-const GameTable = ({ quests, t, game, time, logos }: GameTableProps) => {
+const GameTable = ({ quests, t, game, time, logos: [cross, check] }: GameTableProps) => {
   const isOverall = time === QuestTime.Overall;
 
   const entries = Object.entries(quests)
@@ -156,7 +156,7 @@ const GameTable = ({ quests, t, game, time, logos }: GameTableProps) => {
           <div width="remaining" />
           {isOverall ?
             <text>{t(completions)}</text> :
-            <img margin={2} image={logos[completions]} />}
+            <img margin={2} image={completions === 0 ? cross : check} />}
         </box>
       );
     });
