@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import {
   GamePrefix,
   createPrefixProgression,
@@ -23,9 +23,9 @@ export const QUAKE_MODES = new GameModes([
   { api: "overall" },
   { api: "solo", hypixel: "solo" },
   { api: "teams", hypixel: "teams" },
-]);
+] as const);
 
-export type QuakeModes = IGameModes<typeof QUAKE_MODES>;
+export type QuakeModes = ExtractGameModes<typeof QUAKE_MODES>;
 
 const indexes = [
   "zero",

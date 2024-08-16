@@ -237,7 +237,7 @@
     "warlords": "$t(commands.hypixel-command, { \"name\": \"Warlords\" })",
     "watchdog": "Hypixel Watchdog이 한 차단 횟수를 봐요",
     "weekly": "View your weekly stats in various games",
-    "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
+    "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
     "reset-historical": "기간 전적을 초기화해요",
     "reset-session": "세션 전적을 초기화해요"

@@ -12,8 +12,8 @@ import {
   InfectionMurderMysteryMode,
   StandardMurderMysteryMode,
 } from "./mode.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import type { APIData } from "@statsify/util";
 
 export const MURDER_MYSTERY_MODES = new GameModes([
@@ -27,9 +27,9 @@ export const MURDER_MYSTERY_MODES = new GameModes([
   { hypixel: "MURDER_INFECTION", formatted: "Infection" },
   { hypixel: "MURDER_ASSASSINS", formatted: "Assassins" },
   { hypixel: "MURDER_CLASSIC", formatted: "Classic" },
-]);
+] as const);
 
-export type MurderMysteryModes = IGameModes<typeof MURDER_MYSTERY_MODES>;
+export type MurderMysteryModes = ExtractGameModes<typeof MURDER_MYSTERY_MODES>;
 
 export class MurderMystery {
   @Field({ historical: { enabled: false } })

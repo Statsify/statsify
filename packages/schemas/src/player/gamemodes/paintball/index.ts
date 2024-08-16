@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import {
   GamePrefix,
   createPrefixProgression,
@@ -19,9 +19,9 @@ import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
-export const PAINTBALL_MODES = new GameModes([{ api: "overall" }]);
+export const PAINTBALL_MODES = new GameModes([{ api: "overall" }] as const);
 
-export type PaintballModes = IGameModes<typeof PAINTBALL_MODES>;
+export type PaintballModes = ExtractGameModes<typeof PAINTBALL_MODES>;
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },

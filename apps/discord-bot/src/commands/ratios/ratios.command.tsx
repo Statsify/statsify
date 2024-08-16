@@ -31,7 +31,7 @@ import {
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
-  WOOLWARS_MODES,
+  WOOLGAMES_MODES,
 } from "@statsify/schemas";
 import {
   ApiService,
@@ -174,7 +174,7 @@ export class RatiosCommand {
 
   @SubCommand({ description: (t) => t("commands.ratios-woolwars"), args })
   public woolwars(context: CommandContext) {
-    return this.run(context, WOOLWARS_MODES);
+    return this.run(context, WOOLGAMES_MODES);
   }
 
   private async run<T extends GamesWithBackgrounds>(

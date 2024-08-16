@@ -237,7 +237,7 @@
     "warlords": "$t(commands.hypixel-command, { \"name\": \"Warlords\" })",
     "watchdog": "Visualizza il conteggio dei ban del \"Watchdog\" di Hypixel",
     "weekly": "View your weekly stats in various games",
-    "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
+    "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
     "reset-historical": "Ripristina le tue statistiche storiche",
     "reset-session": "Ripristina la tua sessione di statistiche"

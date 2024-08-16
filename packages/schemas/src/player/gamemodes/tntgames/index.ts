@@ -7,8 +7,8 @@
  */
 
 import { BowSpleef, PVPRun, TNTRun, TNTTag, Wizards } from "./mode.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import type { APIData } from "@statsify/util";
 
 export const TNT_GAMES_MODES = new GameModes([
@@ -18,9 +18,9 @@ export const TNT_GAMES_MODES = new GameModes([
   { hypixel: "TNTRUN", formatted: "TNT Run" },
   { hypixel: "BOWSPLEEF", formatted: "Bow Spleef" },
   { hypixel: "CAPTURE", formatted: "Wizards" },
-]);
+] as const);
 
-export type TNTGamesModes = IGameModes<typeof TNT_GAMES_MODES>;
+export type TNTGamesModes = ExtractGameModes<typeof TNT_GAMES_MODES>;
 
 export class TNTGames {
   @Field({ historical: { enabled: false } })

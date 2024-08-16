@@ -34,7 +34,7 @@ import {
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
-  WOOLWARS_MODES,
+  WOOLGAMES_MODES,
 } from "@statsify/schemas";
 import {
   ApiService,
@@ -269,10 +269,10 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
   @SubCommand({
     description: (t) => t("commands.leaderboard-woolwars"),
-    args: [new PlayerLeaderboardArgument("woolwars")],
+    args: [new PlayerLeaderboardArgument("woolgames")],
   })
-  public woolwars(context: CommandContext) {
-    return this.run(context, "woolwars", WOOLWARS_MODES);
+  public woolgames(context: CommandContext) {
+    return this.run(context, "woolgames", WOOLGAMES_MODES);
   }
 
   @SubCommand({
@@ -293,7 +293,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
     const field = `stats.${prefix}.${leaderboard.replaceAll(" ", ".")}`;
 
     const background = await getBackground(
-      ...mapBackground(modes, modes.getModes()[0].api)
+      ...mapBackground(modes, modes.getApiModes()[0])
     );
 
     const getLeaderboard = this.apiService.getPlayerLeaderboard.bind(this.apiService);

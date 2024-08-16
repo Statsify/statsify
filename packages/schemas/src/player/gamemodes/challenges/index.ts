@@ -28,10 +28,10 @@ import {
   VampireZChallenges,
   WallsChallenges,
   WarlordsChallenges,
-  WoolWarsChallenges,
+  WoolGamesChallenges,
 } from "./modes/index.js";
+import { ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { Field } from "#metadata";
-import { FormattedGame, GameModes, IGameModes } from "#game";
 
 export const CHALLENGE_MODES = new GameModes([
   { api: "overall" },
@@ -58,10 +58,10 @@ export const CHALLENGE_MODES = new GameModes([
   { api: "VAMPIREZ", formatted: removeFormatting(FormattedGame.VAMPIREZ) },
   { api: "WALLS", formatted: removeFormatting(FormattedGame.WALLS) },
   { api: "WARLORDS", formatted: removeFormatting(FormattedGame.WARLORDS) },
-  { api: "WOOLWARS", formatted: removeFormatting(FormattedGame.WOOLWARS) },
-]);
+  { api: "WOOLGAMES", formatted: removeFormatting(FormattedGame.WOOLGAMES) },
+] as const);
 
-export type ChallengeModes = IGameModes<typeof CHALLENGE_MODES>;
+export type ChallengeModes = ExtractGameModes<typeof CHALLENGE_MODES>;
 
 export class Challenges {
   @Field({ leaderboard: { fieldName: `${FormattedGame.ARCADE} Challenges -` } })
@@ -126,8 +126,8 @@ export class Challenges {
   @Field({ leaderboard: { fieldName: `${FormattedGame.WARLORDS} Challenges -` } })
   public WARLORDS: WarlordsChallenges;
 
-  @Field({ leaderboard: { fieldName: `${FormattedGame.WOOLWARS} Challenges -` } })
-  public WOOLWARS: WoolWarsChallenges;
+  @Field({ leaderboard: { fieldName: `${FormattedGame.WOOLGAMES} Challenges -` } })
+  public WOOLGAMES: WoolGamesChallenges;
 
   @Field({ leaderboard: { name: "Total Challenges", fieldName: "Challenges" } })
   public total: number;
@@ -153,7 +153,7 @@ export class Challenges {
     this.VAMPIREZ = new VampireZChallenges(challenges);
     this.WALLS = new WallsChallenges(challenges);
     this.WARLORDS = new WarlordsChallenges(challenges);
-    this.WOOLWARS = new WoolWarsChallenges(challenges);
+    this.WOOLGAMES = new WoolGamesChallenges(challenges);
 
     this.total = Math.max(
       Object.values(challenges ?? {}).reduce((p, c) => p + c, 0),

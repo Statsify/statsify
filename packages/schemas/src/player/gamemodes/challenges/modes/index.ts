@@ -26,4 +26,4 @@ export * from "./uhc.js";
 export * from "./vampirez.js";
 export * from "./walls.js";
 export * from "./warlords.js";
-export * from "./woolwars.js";
+export * from "./woolgames.js";

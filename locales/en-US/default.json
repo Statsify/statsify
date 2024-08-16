@@ -238,7 +238,7 @@
     "warlords": "$t(commands.hypixel-command, { \"name\": \"Warlords\" })",
     "watchdog": "View Hypixel Watchdog ban counts",
     "weekly": "View your weekly stats in various games",
-    "woolwars": "$t(commands.hypixel-command, { \"name\": \"WoolWars\" })",
+    "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
     "reset-historical": "Reset your historical stats",
     "reset-session": "Reset your session stats"
@@ -790,7 +790,9 @@
     "fails": "Fails",
     "mapsCompleted": "Maps Completed",
     "arcadeWins": "Arcade Wins",
-    "draws": "Draws"
+    "draws": "Draws",
+    "sheepThrown": "Sheep Thrown",
+    "magicWoolHit": "Magic Wool"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",

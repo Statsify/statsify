@@ -28,7 +28,7 @@ export * from "./uhc/index.js";
 export * from "./vampirez/index.js";
 export * from "./walls/index.js";
 export * from "./warlords/index.js";
-export * from "./woolwars/index.js";
+export * from "./woolgames/index.js";
 export * from "./pit/index.js";
 export * from "./challenges/index.js";
 export * from "./quests/index.js";

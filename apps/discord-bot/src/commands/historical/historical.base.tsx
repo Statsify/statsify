@@ -33,7 +33,7 @@ import {
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
-  WOOLWARS_MODES,
+  WOOLGAMES_MODES,
 } from "@statsify/schemas";
 import {
   ApiService,
@@ -71,7 +71,7 @@ import { UHCProfile } from "../uhc/uhc.profile.js";
 import { VampireZProfile } from "../vampirez/vampirez.profile.js";
 import { WallsProfile } from "../walls/walls.profile.js";
 import { WarlordsProfile } from "../warlords/warlords.profile.js";
-import { WoolWarsProfile } from "../woolwars/woolwars.profile.js";
+import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
 import { getAssetPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -276,9 +276,9 @@ export class HistoricalBase {
   }
 
   @SubCommand({ description: (t) => t("commands.historical-woolwars"), args })
-  public woolwars(context: CommandContext) {
-    return this.run(context, WOOLWARS_MODES, (base, mode) => (
-      <WoolWarsProfile {...base} mode={mode} />
+  public woolgames(context: CommandContext) {
+    return this.run(context, WOOLGAMES_MODES, (base, mode) => (
+      <WoolGamesProfile {...base} mode={mode} />
     ));
   }
 
