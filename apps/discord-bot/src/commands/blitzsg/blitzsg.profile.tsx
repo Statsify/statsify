@@ -11,7 +11,8 @@ import {
   BlitzSGKit,
   BlitzSGModes,
   FormattedGame,
-  GameMode,
+  type GameMode,
+  type GameModeWithSubModes,
   Player,
 } from "@statsify/schemas";
 import {
@@ -193,8 +194,8 @@ export const BlitzSGProfile = ({
 
 export function filterBlitzKits(
   player: Player,
-  modes: GameMode<BlitzSGModes>[]
-): GameMode<BlitzSGModes>[] {
+  modes: GameModeWithSubModes<BlitzSGModes>[]
+): GameModeWithSubModes<BlitzSGModes>[] {
   const { blitzsg } = player.stats;
   const [overall, ...kits] = modes;
 

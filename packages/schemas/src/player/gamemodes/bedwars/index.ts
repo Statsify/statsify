@@ -7,8 +7,8 @@
  */
 
 import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from "./mode.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { Progression } from "#progression";
 import { Slumber } from "./slumber.js";
 import { deepSub } from "@statsify/math";
@@ -47,9 +47,9 @@ export const BEDWARS_MODES = new GameModes([
   { hypixel: "BEDWARS_EIGHT_TWO_VOIDLESS", formatted: "Voidless Doubles" },
   { hypixel: "BEDWARS_FOUR_FOUR_VOIDLESS", formatted: "Voidless Fours" },
   { hypixel: "BEDWARS_PRACTICE", formatted: "Practice" },
-]);
+] as const);
 
-export type BedWarsModes = IGameModes<typeof BEDWARS_MODES>;
+export type BedWarsModes = ExtractGameModes<typeof BEDWARS_MODES>;
 
 export class BedWars {
   @Field({ historical: { enabled: false } })

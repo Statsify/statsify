@@ -17,8 +17,8 @@ import {
   SkyWarsDuels,
   UHCDuels,
 } from "./mode.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import type { APIData } from "@statsify/util";
 
 export const DUELS_MODES = new GameModes([
@@ -56,9 +56,9 @@ export const DUELS_MODES = new GameModes([
   { hypixel: "DUELS_BRIDGE_2V2V2V2", formatted: "Bridge 2v2v2v2" },
   { hypixel: "DUELS_BRIDGE_3V3V3V3", formatted: "Bridge 3v3v3v3" },
   { hypixel: "DUELS_CAPTURE_THREES", formatted: "Bridge CTF" },
-]);
+] as const);
 
-export type DuelsModes = IGameModes<typeof DUELS_MODES>;
+export type DuelsModes = ExtractGameModes<typeof DUELS_MODES>;
 
 export const BRIDGE_MODES = new GameModes([
   { api: "overall" },
@@ -69,9 +69,9 @@ export const BRIDGE_MODES = new GameModes([
   { api: "2v2v2v2" },
   { api: "3v3v3v3" },
   { api: "ctf", formatted: "CTF" },
-]);
+] as const);
 
-export type BridgeModes = IGameModes<typeof BRIDGE_MODES>;
+export type BridgeModes = ExtractGameModes<typeof BRIDGE_MODES>;
 
 export class Duels {
   @Field({ store: { default: 300 }, leaderboard: { enabled: false } })

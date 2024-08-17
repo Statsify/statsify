@@ -9,8 +9,8 @@
 import { FormattedGame } from "#game";
 import { createGameModeQuests } from "../util.js";
 
-export const WoolWarsQuests = createGameModeQuests({
-  game: FormattedGame.WOOLWARS,
+export const WoolGamesQuests = createGameModeQuests({
+  game: FormattedGame.WOOLGAMES,
   daily: [
     { field: "wool_wars_daily_play", propertyKey: "firstPlayOfTheDay" },
     { field: "wool_wars_daily_wins", propertyKey: "winnerWinnerLambDinner" },

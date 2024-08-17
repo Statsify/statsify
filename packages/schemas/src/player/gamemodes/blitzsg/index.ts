@@ -8,8 +8,8 @@
 
 import { BlitzSGKit } from "./kit.js";
 import { BlitzSGMode, BlitzSGOverall } from "./mode.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import {
   GamePrefix,
   createPrefixProgression,
@@ -69,7 +69,7 @@ export const BLITZSG_MODES = new GameModes([
 
   { hypixel: "solo_normal", formatted: "Solo" },
   { hypixel: "teams_normal", formatted: "Doubles" },
-]);
+] as const);
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§f[§7${n}§f]`, req: 0 },
@@ -84,7 +84,7 @@ const prefixes: GamePrefix[] = [
   { fmt: (n) => `§2§l[${n}]`, req: 300_000 },
 ];
 
-export type BlitzSGModes = IGameModes<typeof BLITZSG_MODES>;
+export type BlitzSGModes = ExtractGameModes<typeof BLITZSG_MODES>;
 
 export class BlitzSG {
   @Field({ historical: { enabled: false } })

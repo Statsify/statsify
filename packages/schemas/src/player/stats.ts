@@ -32,7 +32,7 @@ import {
   VampireZ,
   Walls,
   Warlords,
-  WoolWars,
+  WoolGames,
 } from "./gamemodes/index.js";
 import { Field } from "#metadata";
 import { FormattedGame } from "#game";
@@ -197,11 +197,11 @@ export class PlayerStats {
 
   @Field({
     leaderboard: {
-      fieldName: FormattedGame.WOOLWARS,
-      extraDisplay: "this.woolwars.levelFormatted",
+      fieldName: FormattedGame.WOOLGAMES,
+      extraDisplay: "this.woolgames.levelFormatted",
     },
   })
-  public woolwars: WoolWars;
+  public woolgames: WoolGames;
 
   public constructor(data: APIData = {}) {
     const achievements = data?.achievements ?? {};
@@ -233,6 +233,6 @@ export class PlayerStats {
     this.vampirez = new VampireZ(stats.VampireZ ?? {}, legacy);
     this.walls = new Walls(stats.Walls ?? {}, legacy);
     this.warlords = new Warlords(stats.Battleground ?? {});
-    this.woolwars = new WoolWars(stats.WoolGames ?? {});
+    this.woolgames = new WoolGames(stats.WoolGames ?? {});
   }
 }

@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { GamePrefix, createPrefixProgression } from "#prefixes";
 import { Progression } from "#progression";
 import { SpeedUHCMastery } from "./mastery.js";
@@ -30,14 +30,14 @@ export const SPEED_UHC_MODES = new GameModes([
   { api: "huntsman" },
   { api: "fortune" },
   { api: "vampirism" },
-]);
+] as const);
 
 const prefixes: GamePrefix[] = titleScores.map((level) => ({
   fmt: formatLevel,
   req: level.req,
 }));
 
-export type SpeedUHCModes = IGameModes<typeof SPEED_UHC_MODES>;
+export type SpeedUHCModes = ExtractGameModes<typeof SPEED_UHC_MODES>;
 
 export class SpeedUHC {
   @Field()

@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { WarlordsClass } from "./class.js";
 import { add, ratio, sub } from "@statsify/math";
 import type { APIData } from "@statsify/util";
@@ -19,9 +19,9 @@ export const WARLORDS_MODES = new GameModes([
   { hypixel: "ctf_mini", formatted: "CTF" },
   { hypixel: "domination", formatted: "Domination" },
   { hypixel: "team_deathmatch", formatted: "Deathmatch" },
-]);
+] as const);
 
-export type WarlordsModes = IGameModes<typeof WARLORDS_MODES>;
+export type WarlordsModes = ExtractGameModes<typeof WARLORDS_MODES>;
 
 export class Warlords {
   @Field()
