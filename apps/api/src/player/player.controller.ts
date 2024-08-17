@@ -20,10 +20,8 @@ import {
   DeletePlayerResponse,
   ErrorResponse,
   GetPlayerResponse,
-  GetRecentGamesResponse,
   GetStatusResponse,
   PlayerNotFoundException,
-  RecentGamesNotFoundException,
   StatusNotFoundException,
 } from "@statsify/api-client";
 
@@ -75,22 +73,6 @@ export class PlayerController {
 
     return {
       success: !!deleted,
-    };
-  }
-
-  @ApiOperation({ summary: "Get the Recent Games of a Player" })
-  @ApiOkResponse({ type: GetRecentGamesResponse })
-  @ApiBadRequestResponse({ type: ErrorResponse })
-  @ApiNotFoundResponse({ type: RecentGamesNotFoundException })
-  @ApiNotFoundResponse({ type: PlayerNotFoundException })
-  @Auth()
-  @Get("/recentgames")
-  public async getRecentGames(@Query() { player: tag }: PlayerDto) {
-    const recentGames = await this.playerService.getRecentGames(tag);
-
-    return {
-      success: !!recentGames,
-      recentGames,
     };
   }
 
