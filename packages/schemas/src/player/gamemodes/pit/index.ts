@@ -19,7 +19,10 @@ import {
   getPrestigeReq,
 } from "./util.js";
 
-export const PIT_MODES = new GameModes([{ api: "overall", hypixel: "PIT", formatted: "Pit" }] as const);
+export const PIT_MODES = new GameModes([
+  { api: "overall" },
+  { hypixel: "PIT", formatted: "Pit" },
+] as const);
 
 export type PitModes = ExtractGameModes<typeof PIT_MODES>;
 
