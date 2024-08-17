@@ -71,6 +71,10 @@ export const WoolGamesProfile = ({
 
     case "sheepwars":
       table = <SheepWarsTable sheepwars={woolgames[mode.api]} t={t} />;
+      sidebar.push(
+        [t("stats.magicWool"), t(woolgames.sheepwars.magicWool), "§5"],
+        [t("stats.sheepThrown"), t(woolgames.sheepwars.sheepThrown), "§c"]
+      );
       break;
   }
 
