@@ -322,6 +322,7 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["smashheroes", "overall"];
 
     case TNT_GAMES_MODES:
+      // [TODO]: use custom backgrounds for each mode
       return ["tntgames", "overall"];
 
     case TURBO_KART_RACERS_MODES:

@@ -99,7 +99,6 @@ export class PaginateService {
       }
 
       if (index !== currentIndex) {
-        // [TODO]: remove all hooks for sub pages
         subController?.unregister(listener);
         mainController.switchPage(index);
 
