@@ -187,6 +187,7 @@
     "ratios-megawalls": "$t(commands.ratios-command, { \"name\": \"MegaWalls\" })",
     "ratios-murdermystery": "$t(commands.ratios-command, { \"name\": \"Murder Mystery\" })",
     "ratios-paintball": "$t(commands.ratios-command, { \"name\": \"Paintball\" })",
+    "ratios-pit": "$t(commands.ratios-command, { \"name\": \"Pit\" })",
     "ratios-quake": "$t(commands.ratios-command, { \"name\": \"Quake\" })",
     "ratios-skywars": "$t(commands.ratios-command, { \"name\": \"SkyWars\" })",
     "ratios-smashheroes": "$t(commands.ratios-command, { \"name\": \"Smash Heroes\" })",
@@ -786,7 +787,7 @@
     "arcadeWins": "Arcade Wins",
     "draws": "Draws",
     "sheepThrown": "Sheep Thrown",
-    "magicWoolHit": "Magic Wool"
+    "magicWool": "Magic Wool"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",

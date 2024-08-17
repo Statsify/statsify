@@ -25,7 +25,6 @@ export const SheepWarsTable = ({ sheepwars, t }: SheepWarsTableProps) => {
         <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
         <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
         <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
-        <Table.td title={t("stats.gamesPlayed")} value={t(stats.gamesPlayed)} color="§e" />
       </Table.tr>
       <Table.tr>
         <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
@@ -33,9 +32,8 @@ export const SheepWarsTable = ({ sheepwars, t }: SheepWarsTableProps) => {
         <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
       </Table.tr>
       <Table.tr>
-        <Table.td title={t("stats.sheepThrown")} value={t(stats.sheepThrown)} color="§a" />
-        <Table.td title={t("stats.magicWoolHit")} value={t(stats.magicWool)} color="§c" />
-        <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color="§6" />
+        <Table.td title={t("stats.gamesPlayed")} value={t(stats.gamesPlayed)} color="§e" />
+        <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color="§b" />
       </Table.tr>
     </>
   );

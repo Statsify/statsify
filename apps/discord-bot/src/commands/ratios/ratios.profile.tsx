@@ -92,9 +92,7 @@ export type RatioWithStats = [
 
 export interface RatiosProfileProps extends Omit<BaseProfileProps, "time"> {
   mode: GameMode<any>;
-
   ratios: RatioWithStats[];
-
   gameName: FormattedGame;
 }
 
