@@ -14,19 +14,15 @@ import {
   ArenaBrawlModes,
   BEDWARS_MODES,
   BLITZSG_MODES,
-  BRIDGE_MODES,
   BUILD_BATTLE_MODES,
   BedWarsModes,
   BlitzSGModes,
-  BridgeModes,
   BuildBattleModes,
   CHALLENGE_MODES,
   COPS_AND_CRIMS_MODES,
   ChallengeModes,
   CopsAndCrimsModes,
-  DROPPER_MODES,
   DUELS_MODES,
-  DropperModes,
   DuelsModes,
   FormattedGame,
   GENERAL_MODES,
@@ -41,11 +37,9 @@ import {
   MurderMysteryModes,
   PAINTBALL_MODES,
   PARKOUR_MODES,
-  PARTY_GAMES_MODES,
   PIT_MODES,
   PaintballModes,
   ParkourModes,
-  PartyGamesModes,
   PitModes,
   PlayerStats,
   QUAKE_MODES,
@@ -82,11 +76,9 @@ export type GamesWithBackgrounds =
   | ArcadeModes
   | ArenaBrawlModes
   | BedWarsModes
-  | BridgeModes
   | BlitzSGModes
   | BuildBattleModes
   | CopsAndCrimsModes
-  | DropperModes
   | DuelsModes
   | GeneralModes
   | ChallengeModes
@@ -94,7 +86,6 @@ export type GamesWithBackgrounds =
   | MurderMysteryModes
   | PaintballModes
   | ParkourModes
-  | PartyGamesModes
   | PitModes
   | QuakeModes
   | SkyWarsModes
@@ -159,9 +150,6 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
     case COPS_AND_CRIMS_MODES:
       return ["copsandcrims", "overall"];
 
-    case BRIDGE_MODES:
-      return ["duels", "bridge"];
-
     case DUELS_MODES: {
       let map: string;
 
@@ -207,13 +195,9 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
 
       return ["duels", map];
     }
-    case DROPPER_MODES:
-      return ["arcade", "dropper"];
+
     case PARKOUR_MODES:
       return ["parkour", "overall"];
-
-    case PARTY_GAMES_MODES:
-      return ["arcade", "partyGames"];
 
     case QUEST_MODES:
     case CHALLENGE_MODES:

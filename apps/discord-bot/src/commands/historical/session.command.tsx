@@ -11,7 +11,6 @@ import {
   ARENA_BRAWL_MODES,
   BEDWARS_MODES,
   BLITZSG_MODES,
-  BRIDGE_MODES,
   BUILD_BATTLE_MODES,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
@@ -50,7 +49,6 @@ import { ArcadeProfile } from "../arcade/arcade.profile.js";
 import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile.js";
 import { BedWarsProfile } from "../bedwars/bedwars.profile.js";
 import { BlitzSGProfile, filterBlitzKits } from "../blitzsg/blitzsg.profile.js";
-import { BridgeProfile } from "../duels/bridge.profile.js";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
 import { DateTime } from "luxon";
@@ -87,9 +85,17 @@ export class SessionCommand {
 
   @SubCommand({ description: (t) => t("commands.session-arcade"), args: [PlayerArgument] })
   public arcade(context: CommandContext) {
-    return this.run(context, ARCADE_MODES, (base, mode) => (
-      <ArcadeProfile {...base} mode={mode} />
-    ));
+    return this.run(
+      context,
+      ARCADE_MODES,
+      (base, mode) => <ArcadeProfile {...base} mode={mode} />,
+      undefined,
+      (_, mode) => {
+        if (mode.api === "dropper") return mode.submodes.filter((submode) => submode.api !== "bestTimes");
+        if (mode.api === "partyGames") return mode.submodes.filter((submode) => submode.api !== "roundWins");
+        return mode.submodes;
+      }
+    );
   }
 
   @SubCommand({
@@ -107,13 +113,6 @@ export class SessionCommand {
   public bedwars(context: CommandContext) {
     return this.run(context, BEDWARS_MODES, (base, mode) => (
       <BedWarsProfile {...base} mode={mode} />
-    ));
-  }
-
-  @SubCommand({ description: (t) => t("commands.session-bridge"), args: [PlayerArgument] })
-  public bridge(context: CommandContext) {
-    return this.run(context, BRIDGE_MODES, (base, mode) => (
-      <BridgeProfile {...base} mode={mode} />
     ));
   }
 
@@ -279,7 +278,8 @@ export class SessionCommand {
     context: CommandContext,
     modes: GameModes<T>,
     getProfile: (base: BaseProfileProps, mode: GameMode<T>) => JSX.Element,
-    filterModes?: (player: Player, modes: GameModeWithSubModes<T>[]) => GameModeWithSubModes<T>[]
+    filterModes?: (player: Player, modes: GameModeWithSubModes<T>[]) => GameModeWithSubModes<T>[],
+    filterSubmodes?: (player: Player, mode: GameModeWithSubModes<T>) => GameModeWithSubModes<T>["submodes"]
   ) {
     const user = context.getUser();
 
@@ -299,7 +299,9 @@ export class SessionCommand {
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
 
     const pages: Page[] = displayedModes.map((mode) => {
-      if (mode.submodes.length === 0) return {
+      const submodes = filterSubmodes?.(player, mode) ?? mode.submodes;
+
+      if (submodes.length === 0) return {
         label: mode.formatted,
         generator: async (t) => {
           const background = await getBackground(...mapBackground(modes, mode.api));
@@ -344,7 +346,7 @@ export class SessionCommand {
         },
       };
 
-      const subPages = mode.submodes.map((submode): SubPage => ({
+      const subPages = submodes.map((submode): SubPage => ({
         label: submode.formatted,
         generator: async (t) => {
           const background = await getBackground(...mapBackground(modes, mode.api));

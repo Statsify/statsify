@@ -76,7 +76,7 @@ export const ArcadeProfile = ({
       break;
 
     case "dropper":
-      table = <DropperTable stats={arcade[api]} t={t} time={time} />;
+      table = <DropperTable stats={arcade[api]} t={t} time={time} submode={mode.submode} />;
       break;
 
     case "enderSpleef":
@@ -112,7 +112,7 @@ export const ArcadeProfile = ({
       break;
 
     case "partyGames":
-      table = <PartyGamesTable stats={arcade[api]} t={t} />;
+      table = <PartyGamesTable stats={arcade[api]} t={t} submode={mode.submode} time={time} />;
       break;
 
     case "pixelPainters":
@@ -149,7 +149,7 @@ export const ArcadeProfile = ({
         sidebar={sidebar}
         title={`§l${FormattedGame.ARCADE} §f${
           api === "overall" ? t("stats.wins") : "Stats"
-        } §r(${mode.formatted})`}
+        } §r(${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""})`}
         time={time}
       />
       {table}

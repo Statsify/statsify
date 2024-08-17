@@ -56,7 +56,7 @@ export const DuelsProfile = ({
 
   switch (api) {
     case "bridge":
-      table = <BridgeDuelsTable stats={duels[api]} t={t} />;
+      table = <BridgeDuelsTable stats={duels[api][mode.submode.api]} t={t} time={time} />;
       break;
 
     case "uhc":
@@ -81,7 +81,7 @@ export const DuelsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.DUELS} §fStats §r(${mode.formatted})`}
+        title={`§l${FormattedGame.DUELS} §fStats §r(${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""})`}
         description={`§7${t("stats.title")}: ${
           duels[api].titleFormatted
         }\n${formatProgression({
