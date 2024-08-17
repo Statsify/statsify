@@ -106,7 +106,6 @@ export class PaginateService {
         currentIndex = index;
         currentSubIndex = 0;
 
-<<<<<<< HEAD
         if ("subPages" in pages[index] && pages[index].subPages.length > 1) {
           subController = new PageController(pages[index].subPages, currentSubIndex);
           subController.register(listener, (interaction, subIndex) => handler(interaction, currentIndex, subIndex));
@@ -129,31 +128,6 @@ export class PaginateService {
     function onTimeout() {
       mainController.unregister(listener);
       subController?.unregister(listener);
-||||||| aee3ac6
-=======
-        if ("subPages" in pages[index]) {
-          subController = new PageController(pages[index].subPages, currentSubIndex);
-          subController.register(listener, (interaction, subIndex) => handler(interaction, currentIndex, subIndex));
-        } else {
-          subController = undefined;
-        }
-      } else if (subIndex !== currentSubIndex) {
-        subController?.switchPage(subIndex);
-        currentSubIndex = subIndex;
-      }
-
-      const message = await getMessage(index, subIndex);
-
-      message.components = [mainController.getActionRow(), subController?.getActionRow()]
-        .filter((row) => row !== undefined);
-
-      return context.reply(message);
-    }
-
-    function onTimeout() {
-      mainController.unregister(listener);
-      subController?.unregister(listener);
->>>>>>> main
       cache.clear();
       return context.reply({ components: [] });
     }
