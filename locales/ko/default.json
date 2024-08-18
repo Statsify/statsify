@@ -793,7 +793,8 @@
     "arcadeWins": "아케이드 승리",
     "draws": "무승부",
     "sheepThrown": "Sheep Thrown",
-    "magicWool": "Magic Wool"
+    "magicWool": "Magic Wool",
+    "sheepKilled": "Sheep Killed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) **$t(socials.discord)**에 참여해 **대기 시간 20% 감소**를 받아보세요 $t(emojis:heart)",
