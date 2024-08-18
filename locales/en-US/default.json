@@ -788,8 +788,9 @@
     "draws": "Draws",
     "sheepThrown": "Sheep Thrown",
     "airTime": "Air Time",
-    "potionsSplashed": "Potions Splashed"
-    "magicWool": "Magic Wool"
+    "potionsSplashed": "Potions Splashed",
+    "magicWool": "Magic Wool",
+    "powerOrbs": "Power Orbs"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",

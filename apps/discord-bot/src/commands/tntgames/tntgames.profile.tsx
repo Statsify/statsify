@@ -31,7 +31,6 @@ export const TNTGamesProfile = ({
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(tntgames.coins), "§6"],
     [t("stats.overallWins"), t(tntgames.wins), "§e"],
-    [t("stats.blocksRan"), t(tntgames.blocksRan), "§7"],
   ];
 
   let table;
@@ -46,11 +45,13 @@ export const TNTGamesProfile = ({
             <Table.td title={t("stats.wlr")} value={t(tntgames.tntRun.wlr)} color="§6" />
             <Historical.include time={time}>
               <Table.td title={t("stats.potionsSplashed")} value={t(tntgames.tntRun.potionsSplashed)} color="§5" />
+              <Table.td title={t("stats.blocksRan")} value={t(tntgames.tntRun.blocksRan)} color="§5" />
             </Historical.include>
           </Table.tr>
           <Historical.exclude time={time}>
             <Table.tr>
               <Table.td title={t("stats.potionsSplashed")} value={t(tntgames.tntRun.potionsSplashed)} color="§5" />
+              <Table.td title={t("stats.blocksRan")} value={t(tntgames.tntRun.blocksRan)} color="§9" />
               <Table.td title={t("stats.bestTime")} value={formatTime(tntgames.tntRun.record)} color="§e" />
             </Table.tr>
           </Historical.exclude>
@@ -99,6 +100,7 @@ export const TNTGamesProfile = ({
           <Table.tr>
             <Table.td title={t("stats.wins")} value={t(tntgames.tntTag.wins)} color="§a" />
             <Table.td title={t("stats.tags")} value={t(tntgames.tntTag.tags)} color="§e" />
+            <Table.td title={t("stats.powerups")} value={t(tntgames.tntTag.powerups)} color="§b" />
           </Table.tr>
         </>
       );
@@ -119,6 +121,7 @@ export const TNTGamesProfile = ({
                 <Table.td title={t("stats.wins")} value={t(tntgames.wizards.wins)} color="§a" />
                 <Table.td title={t("stats.points")} value={t(tntgames.wizards.points)} color="§e" />
                 <Table.td title={t("stats.airTime")} value={formatTime(tntgames.wizards.airTime)} color="§b" />
+                <Table.td title={t("stats.powerOrbs")} value={t(tntgames.wizards.powerOrbs)} color="§b" />
               </Table.tr>
             </>
           );

@@ -12,7 +12,6 @@ import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
 
 export const TNT_GAMES_MODES = new GameModes([
-  // { api: "overall" },
   { api: "pvpRun", hypixel: "PVPRUN", formatted: "PVP Run" },
   { api: "tntTag", hypixel: "TNTAG", formatted: "TNT Tag" },
   { api: "tntRun", hypixel: "TNTRUN", formatted: "TNT Run" },
@@ -44,9 +43,6 @@ export class TNTGames {
   @Field()
   public wins: number;
 
-  @Field()
-  public blocksRan: number;
-
   @Field({
     leaderboard: { fieldName: "TNT Run", extraDisplay: "this.tntRun.naturalPrefix" },
   })
@@ -67,12 +63,11 @@ export class TNTGames {
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
     this.wins = data.wins;
-    this.blocksRan = ap.tntgames_block_runner;
 
-    this.tntRun = new TNTRun(data);
+    this.tntRun = new TNTRun(data, ap);
     this.pvpRun = new PVPRun(data);
     this.bowSpleef = new BowSpleef(data);
-    this.wizards = new Wizards(data);
+    this.wizards = new Wizards(data, ap);
     this.tntTag = new TNTTag(data, ap);
   }
 }

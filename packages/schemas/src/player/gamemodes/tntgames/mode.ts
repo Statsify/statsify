@@ -154,6 +154,9 @@ export class TNTRun {
   public potionsSplashed: number;
 
   @Field()
+  public blocksRan: number;
+
+  @Field()
   public progression: Progression;
 
   @Field()
@@ -165,12 +168,13 @@ export class TNTRun {
   @Field()
   public nextPrefix: string;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData, ap: APIData) {
     this.wins = data.wins_tntrun;
     this.losses = data.deaths_tntrun;
     this.wlr = ratio(this.wins, this.losses);
     this.record = (data.record_tntrun ?? 0) * 1000;
     this.potionsSplashed = data.run_potions_splashed_on_players;
+    this.blocksRan = ap?.tntgames_block_runner;
 
     const score = this.wins ?? 0;
 
@@ -225,6 +229,9 @@ export class TNTTag {
   @Field()
   public tags: number;
 
+  @Field({ leaderboard: { name: "Power-Ups" } })
+  public powerups: number;
+
   @Field()
   public progression: Progression;
 
@@ -243,6 +250,7 @@ export class TNTTag {
     this.deaths = data.deaths_tntag;
     this.kdr = ratio(this.kills, this.deaths);
     this.tags = ap?.tntgames_clinic;
+    this.powerups = ap?.tntgames_the_upper_hand;
 
     const score = this.wins ?? 0;
 
@@ -313,6 +321,9 @@ export class Wizards {
   public airTime: number;
 
   @Field()
+  public powerOrbs: number;
+
+  @Field()
   public progression: Progression;
 
   @Field()
@@ -351,7 +362,7 @@ export class Wizards {
   @Field()
   public arcaneWizard: WizardsClass;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData, ap: APIData) {
     this.class = data.wizards_selected_class ?? "none";
     // Hypixel doesn't capitalize the word "Wizard" so the class name cant't be pretty printed
     this.class = this.class.replace("new_", "").replace("wizard", "Wizard");
@@ -363,6 +374,7 @@ export class Wizards {
     this.assists = data.assists_capture;
     this.points = data.points_capture;
     this.airTime = data.air_time_capture;
+    this.powerOrbs = ap?.tntgames_power_hungry;
 
     const score = this.wins ?? 0;
 
