@@ -233,6 +233,6 @@ export class PlayerStats {
     this.vampirez = new VampireZ(stats.VampireZ ?? {}, legacy);
     this.walls = new Walls(stats.Walls ?? {}, legacy);
     this.warlords = new Warlords(stats.Battleground ?? {});
-    this.woolgames = new WoolGames(stats.WoolGames ?? {});
+    this.woolgames = new WoolGames(stats.WoolGames ?? {}, achievements);
   }
 }
