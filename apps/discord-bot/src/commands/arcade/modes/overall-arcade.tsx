@@ -44,7 +44,7 @@ export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
 
   const rows = arrayGroup(games, rowSize);
 
-  const colors = ["§a", "§2", "§e", "§6", "§c", "§4"];
+  const colors = ["§d", "§b", "§a", "§e", "§6", "§c"];
 
   return (
     <Table.table>

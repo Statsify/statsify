@@ -86,30 +86,30 @@ export class CaptureTheWool {
   public deathsAsWoolHolder: number;
 
   public constructor(data: APIData = {}) {
-    this.wins = data.woolhunt_participated_wins;
-    this.losses = data.woolhunt_participated_losses;
+    this.wins = data.participated_wins;
+    this.losses = data.participated_losses;
     this.wlr = ratio(this.wins, this.losses);
-    this.draws = data.woolhunt_participated_draws;
+    this.draws = data.participated_draws;
 
-    this.kills = data.woolhunt_kills;
-    this.deaths = data.woolhunt_deaths;
+    this.kills = data.kills;
+    this.deaths = data.deaths;
     this.kdr = ratio(this.kills, this.deaths);
-    this.assists = data.woolhunt_assists;
+    this.assists = data.assists;
 
-    this.woolCaptured = data.woolhunt_wools_captured;
-    this.woolPickedUp = data.woolhunt_wools_stolen;
+    this.woolCaptured = data.wools_captured;
+    this.woolPickedUp = data.wools_stolen;
 
-    this.longestGame = (data.woolhunt_longest_game ?? 0) * 1000;
-    this.fastestWin = (data.woolhunt_fastest_win ?? 0) * 1000;
-    this.fastestWoolCapture = (data.woolhunt_fastest_wool_capture ?? 0) * 1000;
+    this.longestGame = (data.longest_game ?? 0) * 1000;
+    this.fastestWin = (data.fastest_win ?? 0) * 1000;
+    this.fastestWoolCapture = (data.fastest_wool_capture ?? 0) * 1000;
 
-    this.goldEarned = data.woolhunt_gold_earned;
-    this.goldSpent = Math.abs(data.woolhunt_gold_spent ?? 0);
+    this.goldEarned = data.gold_earned;
+    this.goldSpent = Math.abs(data.gold_spent ?? 0);
 
-    this.killsOnWoolHolder = data.woolhunt_kills_on_woolholder;
-    this.deathsToWoolHolder = data.woolhunt_deaths_to_woolholder;
+    this.killsOnWoolHolder = data.kills_on_woolholder;
+    this.deathsToWoolHolder = data.deaths_to_woolholder;
 
-    this.killsAsWoolHolder = data.woolhunt_kills_with_wool;
-    this.deathsAsWoolHolder = data.woolhunt_deaths_with_wool;
+    this.killsAsWoolHolder = data.kills_with_wool;
+    this.deathsAsWoolHolder = data.deaths_with_wool;
   }
 }

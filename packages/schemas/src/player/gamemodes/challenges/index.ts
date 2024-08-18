@@ -163,3 +163,4 @@ export class Challenges {
 }
 
 export * from "./game-challenges.js";
+export * from "./modes/index.js";

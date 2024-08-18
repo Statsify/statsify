@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HistoricalTimeData } from "./Header.jsx";
+import { HistoricalTimeData } from "./Header.js";
 import { If } from "../If.js";
 import { LocalizeFunction } from "@statsify/discord";
 import { Progression } from "@statsify/schemas";

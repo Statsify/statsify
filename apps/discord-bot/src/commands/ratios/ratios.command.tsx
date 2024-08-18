@@ -20,6 +20,7 @@ import {
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
+  PIT_MODES,
   Player,
   PlayerStats,
   QUAKE_MODES,
@@ -126,6 +127,11 @@ export class RatiosCommand {
   })
   public paintball(context: CommandContext) {
     return this.run(context, PAINTBALL_MODES);
+  }
+
+  @SubCommand({ description: (t) => t("commands.ratios-pit"), args })
+  public pit(context: CommandContext) {
+    return this.run(context, PIT_MODES);
   }
 
   @SubCommand({ description: (t) => t("commands.ratios-quake"), args, group: "classic" })
