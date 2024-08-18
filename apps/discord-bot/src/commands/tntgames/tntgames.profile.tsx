@@ -43,18 +43,14 @@ export const TNTGamesProfile = ({
             <Table.td title={t("stats.wins")} value={t(tntgames.tntRun.wins)} color="§a" />
             <Table.td title={t("stats.losses")} value={t(tntgames.tntRun.losses)} color="§c" />
             <Table.td title={t("stats.wlr")} value={t(tntgames.tntRun.wlr)} color="§6" />
-            <Historical.include time={time}>
-              <Table.td title={t("stats.potionsSplashed")} value={t(tntgames.tntRun.potionsSplashed)} color="§5" />
-              <Table.td title={t("stats.blocksRan")} value={t(tntgames.tntRun.blocksRan)} color="§5" />
-            </Historical.include>
           </Table.tr>
-          <Historical.exclude time={time}>
-            <Table.tr>
-              <Table.td title={t("stats.potionsSplashed")} value={t(tntgames.tntRun.potionsSplashed)} color="§5" />
-              <Table.td title={t("stats.blocksRan")} value={t(tntgames.tntRun.blocksRan)} color="§9" />
+          <Table.tr>
+            <Table.td title={t("stats.potionsSplashed")} value={t(tntgames.tntRun.potionsSplashed)} color="§5" />
+            <Table.td title={t("stats.blocksRan")} value={t(tntgames.tntRun.blocksRan)} color="§b" />
+            <Historical.exclude time={time}>
               <Table.td title={t("stats.bestTime")} value={formatTime(tntgames.tntRun.record)} color="§e" />
-            </Table.tr>
-          </Historical.exclude>
+            </Historical.exclude>
+          </Table.tr>
         </>
       );
       break;
@@ -90,6 +86,7 @@ export const TNTGamesProfile = ({
       break;
 
     case "tntTag":
+      sidebar.push([t("stats.powerups"), t(tntgames.tntTag.powerups), "§d"]);
       table = (
         <>
           <Table.tr>
@@ -100,7 +97,6 @@ export const TNTGamesProfile = ({
           <Table.tr>
             <Table.td title={t("stats.wins")} value={t(tntgames.tntTag.wins)} color="§a" />
             <Table.td title={t("stats.tags")} value={t(tntgames.tntTag.tags)} color="§e" />
-            <Table.td title={t("stats.powerups")} value={t(tntgames.tntTag.powerups)} color="§b" />
           </Table.tr>
         </>
       );
@@ -108,7 +104,11 @@ export const TNTGamesProfile = ({
     case "wizards":
       switch (mode.submode.api) {
         case "overall":
-          sidebar.push([t("stats.class"), prettify(tntgames.wizards.class), "§a"]);
+          sidebar.push(
+            [t("stats.class"), prettify(tntgames.wizards.class), "§2"],
+            [t("stats.powerOrbs"), t(tntgames.wizards.powerOrbs), "§a"]
+          );
+
           table = (
             <>
               <Table.tr>
@@ -119,9 +119,8 @@ export const TNTGamesProfile = ({
               </Table.tr>
               <Table.tr>
                 <Table.td title={t("stats.wins")} value={t(tntgames.wizards.wins)} color="§a" />
-                <Table.td title={t("stats.points")} value={t(tntgames.wizards.points)} color="§e" />
+                <Table.td title={t("stats.points")} value={t(tntgames.wizards.points)} color="§5" />
                 <Table.td title={t("stats.airTime")} value={formatTime(tntgames.wizards.airTime)} color="§b" />
-                <Table.td title={t("stats.powerOrbs")} value={t(tntgames.wizards.powerOrbs)} color="§b" />
               </Table.tr>
             </>
           );
