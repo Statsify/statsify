@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "TIMING=1 eslint './src/**/*.{ts,tsx,js,jsx}' --fix",
+    "lint": "eslint",
     "api-key": "node src/api-key.js",
     "build-watch": "node src/build-watch.js",
     "delete-sessions": "node src/delete-sessions.js",
@@ -34,6 +34,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/inquirer": "^9.0.7"
+    "@types/inquirer": "^9.0.7",
+    "globals": "^15.9.0"
   }
 }

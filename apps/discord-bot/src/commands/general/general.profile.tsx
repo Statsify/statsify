@@ -30,9 +30,9 @@ const GeneralProfileHeaderBody = ({
     locale: t.locale,
   });
 
-  const lastLogin = status.lastLogin
-    ? DateTime.fromMillis(status.lastLogin).toFormat(format, { locale: t.locale })
-    : "N/A";
+  const lastLogin = status.lastLogin ?
+    DateTime.fromMillis(status.lastLogin).toFormat(format, { locale: t.locale }) :
+    "N/A";
 
   return (
     <div height="remaining" width="remaining" direction="row">

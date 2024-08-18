@@ -40,7 +40,7 @@ export class CommandLoader {
       .map((key) => {
         try {
           const constructor = command[key];
-          const instance = Container.get<{}>(constructor);
+          const instance = Container.get<object>(constructor);
 
           return CommandBuilder.scan(instance, constructor);
         } catch (err) {

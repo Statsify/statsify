@@ -36,7 +36,7 @@ export const GameIdMapping = {
   VAMPIREZ: "VAMPIREZ",
   WALLS: "WALLS",
   BATTLEGROUND: "WARLORDS",
-  WOOL_GAMES: "WOOLWARS",
+  WOOL_GAMES: "WOOLGAMES",
   TOURNAMENT: "TOURNAMENT_LOBBY",
   MAIN_LOBBY: "MAIN_LOBBY",
   MAIN: "MAIN_LOBBY",
@@ -70,6 +70,7 @@ export enum FormattedGame {
   MURDER_MYSTERY = "§4Murder Mystery§f",
   PAINTBALL = "§bPaint§fball§f",
   PARKOUR = "§fParkour§f",
+  PARTY_GAMES = "§bParty Games",
   PIT = "§eThe §aPit§f",
   PROTOTYPE = "§3Proto§ftype§f",
   QUAKE = "§5Quake§f",
@@ -84,7 +85,7 @@ export enum FormattedGame {
   VAMPIREZ = "§4VampireZ§f",
   WALLS = "§eWalls§f",
   WARLORDS = "§cWar§elords§f",
-  WOOLWARS = "§cWool§9Wars§f",
+  WOOLGAMES = "§cWool§9Games§f",
 
   TOURNAMENT_LOBBY = "§4Tournament §6Lobby",
   MAIN_LOBBY = "§3Main §fLobby",
@@ -94,7 +95,7 @@ export enum FormattedGame {
   REPLAY = "§fReplay§f",
   IDLE = "§fIdle§f",
   LIMBO = "§fLimbo§f",
-  SMP = "§fSMP§f",
+  SMP = "§fSMP§f"
 }
 
 /**

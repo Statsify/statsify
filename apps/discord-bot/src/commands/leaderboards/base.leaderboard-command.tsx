@@ -241,7 +241,6 @@ export class BaseLeaderboardCommand {
       cache.clear();
     }, 300_000);
 
-    // eslint-disable-next-line require-atomic-updates
     currentPage = page || currentPage;
 
     return { ...message, components: [row] };
@@ -306,14 +305,14 @@ export class BaseLeaderboardCommand {
       return [message, null];
     }
 
-    const leaderboardData = getLeaderboardDataIcon
-      ? await Promise.all(
+    const leaderboardData = getLeaderboardDataIcon ?
+      await Promise.all(
         leaderboard.data.map(async (d) => ({
           ...d,
           icon: await getLeaderboardDataIcon(d.id),
         }))
-      )
-      : leaderboard.data;
+      ) :
+      leaderboard.data;
 
     const canvas = render(
       <LeaderboardProfile

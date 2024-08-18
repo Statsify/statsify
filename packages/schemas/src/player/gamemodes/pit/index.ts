@@ -7,8 +7,8 @@
  */
 
 import { type APIData, formatTime } from "@statsify/util";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { Progression } from "#progression";
 import { add, ratio } from "@statsify/math";
 import {
@@ -20,10 +20,11 @@ import {
 } from "./util.js";
 
 export const PIT_MODES = new GameModes([
-  { api: "overall", hypixel: "PIT", formatted: "Pit" },
-]);
+  { api: "overall" },
+  { hypixel: "PIT", formatted: "Pit" },
+] as const);
 
-export type PitModes = IGameModes<typeof PIT_MODES>;
+export type PitModes = ExtractGameModes<typeof PIT_MODES>;
 
 export class Pit {
   @Field({
@@ -146,9 +147,9 @@ export class Pit {
 
     this.levelFormatted = getLevelFormatted(level, prestige);
     this.nextLevelFormatted =
-      prestige === 50
-        ? getLevelFormatted(120, prestige)
-        : getLevelFormatted(1, prestige + 1);
+      prestige === 50 ?
+        getLevelFormatted(120, prestige) :
+        getLevelFormatted(1, prestige + 1);
 
     this.contractsCompleted = data.contracts_completed;
 

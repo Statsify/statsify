@@ -33,7 +33,7 @@ type CommandInteractionResponse = typeof COMMAND_INTERACTION_RESPONSE;
 
 export type InteractionHook = (
   interaction: Interaction
-) => InteractionServer.InteractionReply | void | Promise<any>;
+) => InteractionServer.InteractionReply | undefined | Promise<any>;
 
 export type CommandPrecondition = () => void;
 
@@ -105,10 +105,8 @@ export abstract class AbstractCommandListener {
 
     const firstOption = data.options[0];
 
-    const hasSubCommandGroup =
-      firstOption.type === ApplicationCommandOptionType.SubcommandGroup;
-    const findCommand = () =>
-      command.options?.find((opt) => opt.name === firstOption.name);
+    const hasSubCommandGroup = firstOption.type === ApplicationCommandOptionType.SubcommandGroup;
+    const findCommand = () => command.options?.find((opt) => opt.name === firstOption.name);
 
     if (hasSubCommandGroup) {
       const group = findCommand();
@@ -238,7 +236,7 @@ export abstract class AbstractCommandListener {
   }
 
   protected onModal(interaction: Interaction): InteractionServer.InteractionReply {
-    //Currently the message component handler is the same implementation as the modal handler
+    // Currently the message component handler is the same implementation as the modal handler
     return this.onMessageComponent(interaction);
   }
 
@@ -297,7 +295,7 @@ export abstract class AbstractCommandListener {
       this.logger.error(err);
     });
 
-    //@ts-ignore Discord supports sending a blank object as a response
+    // @ts-ignore Discord supports sending a blank object as a response
     client.on("interaction", (event) => {
       const interaction = new Interaction(this.rest, event.interaction, this.applicationId);
       return this.onInteraction(interaction);

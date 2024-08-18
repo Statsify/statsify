@@ -65,109 +65,6 @@ export class BountyHunters {
     this.bountyKills = data.bounty_kills_oneinthequiver;
   }
 }
-export class CaptureTheWool {
-  @Field()
-  public wins: number;
-
-  @Field()
-  public losses: number;
-
-  @Field()
-  public wlr: number;
-
-  @Field()
-  public draws: number;
-
-  @Field()
-  public kills: number;
-
-  @Field()
-  public deaths: number;
-
-  @Field()
-  public kdr: number;
-
-  @Field()
-  public assists: number;
-
-  @Field()
-  public woolCaptured: number;
-
-  @Field()
-  public woolPickedUp: number;
-
-  @Field({
-    leaderboard: {
-      sort: "ASC",
-      formatter: formatTime,
-      additionalFields: ["this.wins"],
-    },
-    historical: { enabled: false },
-  })
-  public fastestWin: number;
-
-  @Field({
-    leaderboard: {
-      sort: "ASC",
-      formatter: formatTime,
-      additionalFields: ["this.woolCaptured"],
-    },
-    historical: { enabled: false },
-  })
-  public fastestWoolCapture: number;
-
-  @Field({
-    leaderboard: { formatter: formatTime },
-    historical: { enabled: false },
-  })
-  public longestGame: number;
-
-  @Field({ leaderboard: { additionalFields: ["this.goldSpent"] } })
-  public goldEarned: number;
-
-  @Field({ leaderboard: { additionalFields: ["this.goldEarned"] } })
-  public goldSpent: number;
-
-  @Field({ leaderboard: { additionalFields: ["this.deathsToWoolHolder"] } })
-  public killsOnWoolHolder: number;
-
-  @Field({ leaderboard: { additionalFields: ["this.killsOnWoolHolder"] } })
-  public deathsToWoolHolder: number;
-
-  @Field({ leaderboard: { additionalFields: ["this.deathsAsWoolHolder"] } })
-  public killsAsWoolHolder: number;
-
-  @Field({ leaderboard: { additionalFields: ["this.killsAsWoolHolder"] } })
-  public deathsAsWoolHolder: number;
-
-  public constructor(data: APIData) {
-    this.wins = data.woolhunt_participated_wins;
-    this.losses = data.woolhunt_participated_losses;
-    this.wlr = ratio(this.wins, this.losses);
-    this.draws = data.woolhunt_participated_draws;
-
-    this.kills = data.woolhunt_kills;
-    this.deaths = data.woolhunt_deaths;
-    this.kdr = ratio(this.kills, this.deaths);
-    this.assists = data.woolhunt_assists;
-
-    this.woolCaptured = data.woolhunt_wools_captured;
-    this.woolPickedUp = data.woolhunt_wools_stolen;
-
-    this.longestGame = (data.woolhunt_longest_game ?? 0) * 1000;
-    this.fastestWin = (data.woolhunt_fastest_win ?? 0) * 1000;
-    this.fastestWoolCapture = (data.woolhunt_fastest_wool_capture ?? 0) * 1000;
-
-    this.goldEarned = data.woolhunt_gold_earned;
-    this.goldSpent = Math.abs(data.woolhunt_gold_spent ?? 0);
-
-    this.killsOnWoolHolder = data.woolhunt_kills_on_woolholder;
-    this.deathsToWoolHolder = data.woolhunt_deaths_to_woolholder;
-
-    this.killsAsWoolHolder = data.woolhunt_kills_with_wool;
-    this.deathsAsWoolHolder = data.woolhunt_deaths_with_wool;
-  }
-}
 
 export class CreeperAttack {
   @Field({ historical: { enabled: false } })
@@ -199,17 +96,16 @@ export class DropperMap {
   @Field()
   public completions: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC"} })
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
   public bestTime: number;
 
-  public constructor (map: APIData = {}) {
+  public constructor(map: APIData = {}) {
     this.bestTime = map.best_time;
     this.completions = map.completions;
   }
 }
 
 export class DropperMaps {
-
   @Field({ leaderboard: { name: "§cAtlantis§f" } })
   public atlantis: DropperMap;
 
@@ -476,7 +372,7 @@ export class Dropper {
   @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
   public bestTime: number;
 
-  @Field({ leaderboard: { name: "Maps:"} })
+  @Field({ leaderboard: { name: "Maps:" } })
   public maps: DropperMaps;
 
   public constructor(dropper: APIData = {}) {
@@ -772,13 +668,25 @@ export class PartyGames {
   public anvilSpleefWins: number;
 
   @Field()
+  public avalancheWins: number;
+
+  @Field()
   public bombardmentWins: number;
+
+  @Field()
+  public cannonPaintingWins: number;
 
   @Field()
   public chickenRingsWins: number;
 
   @Field()
   public diveWins: number;
+
+  @Field()
+  public fireLeapersWins: number;
+
+  @Field()
+  public frozenFloorWins: number;
 
   @Field()
   public highGroundWins: number;
@@ -802,46 +710,79 @@ export class PartyGames {
   public minecartRacingWins: number;
 
   @Field()
-  public rpg16Wins: number;
-
-  @Field()
-  public spiderMazeWins: number;
-
-  @Field()
-  public theFloorIsLavaWins: number;
-
-  @Field()
-  public avalancheWins: number;
-
-  @Field()
-  public volcanoWins: number;
-
-  @Field()
   public pigFishingWins: number;
-
-  @Field()
-  public trampolinioWins: number;
 
   @Field()
   public pigJoustingWins: number;
 
   @Field()
-  public workshopWins: number;
+  public rpg16Wins: number;
 
   @Field()
   public shootingRangeWins: number;
 
   @Field()
-  public frozenFloorWins: number;
-
-  @Field()
-  public cannonPaintingWins: number;
-
-  @Field()
-  public fireLeapersWins: number;
+  public spiderMazeWins: number;
 
   @Field()
   public superSheepWins: number;
+
+  @Field()
+  public theFloorIsLavaWins: number;
+
+  @Field()
+  public trampolinioWins: number;
+
+  @Field()
+  public volcanoWins: number;
+
+  @Field()
+  public workshopWins: number;
+
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  public anvilSpleefBestTime: number;
+
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  public labEscapeBestTime: number;
+
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  public jigsawRushBestTime: number;
+
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  public theFloorIsLavaBestTime: number;
+
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  public chickenRingsBestTime: number;
+
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  public jungleJumpBestTime: number;
+
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  public bombardmentBestTime: number;
+
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  public minecartRacingBestTime: number;
+
+  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  public spiderMazeBestTime: number;
+
+  @Field()
+  public animalSlaughterBestScore: number;
+
+  @Field()
+  public diveBestScore: number;
+
+  @Field()
+  public highGroundBestScore: number;
+
+  @Field()
+  public hoeHoeHoeBestScore: number;
+
+  @Field()
+  public lawnMoowerBestScore: number;
+
+  @Field()
+  public rpg16BestScore: number;
 
   public constructor(data: APIData) {
     this.wins = add(data.wins_party, data.wins_party_2, data.wins_party_3);
@@ -849,54 +790,48 @@ export class PartyGames {
     this.roundsWon = data.round_wins_party;
 
     this.animalSlaughterWins = data?.animal_slaughter_round_wins_party;
-
     this.anvilSpleefWins = data?.anvil_spleef_round_wins_party;
-
-    this.bombardmentWins = data?.bombardment_round_wins_party;
-
-    this.chickenRingsWins = data?.chicken_rings_round_wins_party;
-
-    this.diveWins = data?.dive_round_wins_party;
-
-    this.highGroundWins = data?.high_ground_round_wins_party;
-
-    this.hoeHoeHoeWins = data?.hoe_hoe_hoe_round_wins_party;
-
-    this.jungleJumpWins = data?.jungle_jump_round_wins_party;
-
-    this.labEscapeWins = data?.lab_escape_round_wins_party;
-
-    this.lawnMoowerWins = data?.lawn_moower_round_wins_party;
-
-    this.minecartRacingWins = data?.minecart_racing_round_wins_party;
-
-    this.rpg16Wins = data?.rpg_16_round_wins_party;
-
-    this.spiderMazeWins = data?.spider_maze_round_wins_party;
-
-    this.theFloorIsLavaWins = data?.the_floor_is_lava_round_wins_party;
-
     this.avalancheWins = data?.avalanche_round_wins_party;
-
-    this.volcanoWins = data?.volcano_round_wins_party;
-
+    this.bombardmentWins = data?.bombardment_round_wins_party;
+    this.cannonPaintingWins = data?.cannon_painting_round_wins_party;
+    this.chickenRingsWins = data?.chicken_rings_round_wins_party;
+    this.diveWins = data?.dive_round_wins_party;
+    this.fireLeapersWins = data?.fire_leapers_round_wins_party;
+    this.frozenFloorWins = data?.frozen_floor_round_wins_party;
+    this.highGroundWins = data?.high_ground_round_wins_party;
+    this.hoeHoeHoeWins = data?.hoe_hoe_hoe_round_wins_party;
+    this.jigsawRushWins = data?.jigsaw_rush_round_wins_party;
+    this.jungleJumpWins = data?.jungle_jump_round_wins_party;
+    this.labEscapeWins = data?.lab_escape_round_wins_party;
+    this.lawnMoowerWins = data?.lawn_moower_round_wins_party;
+    this.minecartRacingWins = data?.minecart_racing_round_wins_party;
     this.pigFishingWins = data?.pig_fishing_round_wins_party;
-
     this.pigJoustingWins = data?.pig_jousting_round_wins_party;
-
+    this.rpg16Wins = data?.rpg_16_round_wins_party;
+    this.shootingRangeWins = data?.shooting_range_round_wins_party;
+    this.spiderMazeWins = data?.spider_maze_round_wins_party;
+    this.superSheepWins = data?.super_sheep_round_wins_party;
+    this.theFloorIsLavaWins = data?.the_floor_is_lava_round_wins_party;
     this.trampolinioWins = data?.trampolinio_round_wins_party;
-
+    this.volcanoWins = data?.volcano_round_wins_party;
     this.workshopWins = data?.workshop_round_wins_party;
 
-    this.shootingRangeWins = data?.shooting_range_round_wins_party;
+    this.anvilSpleefBestTime = data?.anvil_spleef_best_time_party;
+    this.labEscapeBestTime = data?.lab_escape_best_time_party;
+    this.jigsawRushBestTime = data?.jigsaw_rush_best_time_party;
+    this.theFloorIsLavaBestTime = data?.the_floor_is_lava_best_time_party;
+    this.chickenRingsBestTime = data?.chicken_rings_best_time_party;
+    this.jungleJumpBestTime = data?.jungle_jump_best_time_party;
+    this.bombardmentBestTime = data?.bombardment_best_time_party;
+    this.minecartRacingBestTime = data?.minecart_racing_best_time_party;
+    this.spiderMazeBestTime = data?.spider_maze_best_time_party;
 
-    this.frozenFloorWins = data?.frozen_floor_round_wins_party;
-
-    this.cannonPaintingWins = data?.cannon_painting_round_wins_party;
-
-    this.fireLeapersWins = data?.fire_leapers_round_wins_party;
-
-    this.superSheepWins = data?.super_sheep_round_wins_party;
+    this.animalSlaughterBestScore = data?.animal_slaughter_best_score_party;
+    this.diveBestScore = data?.dive_best_score_party;
+    this.highGroundBestScore = data?.high_ground_best_score_party;
+    this.hoeHoeHoeBestScore = data?.hoe_hoe_hoe_best_score_party;
+    this.lawnMoowerBestScore = data?.lawn_moower_mowed_best_score_party;
+    this.rpg16BestScore = data?.rpg_16_kills_best_score_party;
   }
 }
 

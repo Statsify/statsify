@@ -71,7 +71,7 @@ interface SideData {
 }
 
 const gatherSideData = (child: ElementNode, side: Side, data: SideData) => {
-  //There can't be anymore children if whole is already 0
+  // There can't be anymore children if whole is already 0
   if (data.percentSpaceLeft === 0) throw new Error("Space required exceeds 100%");
 
   const paddingAndMargin = getTotalSize(child[side], { size: false });
@@ -101,9 +101,9 @@ const processSideData = (data: SideData) => {
   const remainingPixelPercentRatio = data.staticLength / data.percentSpaceLeft;
 
   return (
-    (data.highestPixelToPercentRatio > remainingPixelPercentRatio
-      ? data.highestPixelToPercentRatio
-      : remainingPixelPercentRatio) + data.paddedLength
+    (data.highestPixelToPercentRatio > remainingPixelPercentRatio ?
+      data.highestPixelToPercentRatio :
+      remainingPixelPercentRatio) + data.paddedLength
   );
 };
 

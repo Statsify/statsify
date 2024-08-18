@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ArenaBrawlModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { ArenaBrawlModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   Container,
   Footer,
@@ -45,7 +45,7 @@ export const ArenaBrawlProfile = ({
     [t("stats.rune"), prettify(arenabrawl.rune), "§9"],
   ];
 
-  if (time === "LIVE" && "winstreak" in stats && stats["winstreak"]> 0)
+  if (time === "LIVE" && "winstreak" in stats && stats["winstreak"] > 0)
     sidebar.push([t("stats.winstreak"), t(stats.winstreak), "§a"]);
 
   return (

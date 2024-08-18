@@ -9,7 +9,6 @@
 import {
   BlockingDead,
   BountyHunters,
-  CaptureTheWool,
   CreeperAttack,
   DragonWars,
   Dropper,
@@ -28,8 +27,8 @@ import {
   ThrowOut,
   Zombies,
 } from "./mode.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
@@ -37,7 +36,6 @@ export const ARCADE_MODES = new GameModes([
   { api: "overall" },
   { api: "blockingDead", hypixel: "DAYONE" },
   { api: "bountyHunters", hypixel: "ONEINTHEQUIVER" },
-  { api: "captureTheWool", hypixel: "PVP_CTW" },
   { api: "creeperAttack", hypixel: "DEFENDER" },
   { api: "dragonWars", hypixel: "DRAGONWARS2" },
   { api: "dropper", hypixel: "DROPPER" },
@@ -55,17 +53,24 @@ export const ARCADE_MODES = new GameModes([
   { api: "seasonal" },
   { api: "throwOut", hypixel: "THROW_OUT" },
   { api: "zombies" },
-]);
+] as const);
 
-export type ArcadeModes = IGameModes<typeof ARCADE_MODES>;
+export type ArcadeModes = ExtractGameModes<typeof ARCADE_MODES>;
 
 export const DROPPER_MODES = new GameModes([
   { api: "overall" },
   { api: "bestTimes" },
   { api: "completions" },
-]);
+] as const);
 
-export type DropperModes = IGameModes<typeof DROPPER_MODES>;
+export type DropperModes = ExtractGameModes<typeof DROPPER_MODES>;
+
+export const PARTY_GAMES_MODES = new GameModes([
+  { api: "overall" },
+  { api: "roundWins" },
+] as const);
+
+export type PartyGamesModes = ExtractGameModes<typeof PARTY_GAMES_MODES>;
 
 export class Arcade {
   @Field({ historical: { enabled: false } })
@@ -75,13 +80,13 @@ export class Arcade {
   public wins: number;
 
   @Field()
+  public coinConversions: number;
+
+  @Field()
   public blockingDead: BlockingDead;
 
   @Field()
   public bountyHunters: BountyHunters;
-
-  @Field()
-  public captureTheWool: CaptureTheWool;
 
   @Field()
   public creeperAttack: CreeperAttack;
@@ -136,9 +141,10 @@ export class Arcade {
 
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
+    this.coinConversions = data.stamp_level;
+
     this.blockingDead = new BlockingDead(data);
     this.bountyHunters = new BountyHunters(data);
-    this.captureTheWool = new CaptureTheWool(data);
     this.creeperAttack = new CreeperAttack(data);
     this.dragonWars = new DragonWars(data, ap);
     this.dropper = new Dropper(data?.dropper);
@@ -160,7 +166,6 @@ export class Arcade {
     this.wins = add(
       this.blockingDead.wins,
       this.bountyHunters.wins,
-      this.captureTheWool.wins,
       this.dragonWars.wins,
       this.dropper.wins,
       this.enderSpleef.wins,
@@ -178,7 +183,6 @@ export class Arcade {
       this.throwOut.wins,
       this.zombies.overall.wins
     );
-
   }
 }
 

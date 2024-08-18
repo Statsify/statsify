@@ -11,7 +11,8 @@ import {
   BlitzSGKit,
   BlitzSGModes,
   FormattedGame,
-  GameMode,
+  type GameMode,
+  type GameModeWithSubModes,
   Player,
 } from "@statsify/schemas";
 import {
@@ -173,15 +174,15 @@ export const BlitzSGProfile = ({
         sidebar={sidebar}
         title={`§l${FormattedGame.BLITZSG} §fStats §r(${mode.formatted})`}
         description={
-          mode.api === "overall"
-            ? `§7${t("stats.prefix")}: ${blitzsg.naturalPrefix}\n${formatProgression({
+          mode.api === "overall" ?
+            `§7${t("stats.prefix")}: ${blitzsg.naturalPrefix}\n${formatProgression({
               t,
               label: t("stats.progression.kill"),
               progression: blitzsg.progression,
               currentLevel: blitzsg.currentPrefix,
               nextLevel: blitzsg.nextPrefix,
-            })}`
-            : ""
+            })}` :
+            ""
         }
         time={time}
       />
@@ -193,14 +194,14 @@ export const BlitzSGProfile = ({
 
 export function filterBlitzKits(
   player: Player,
-  modes: GameMode<BlitzSGModes>[]
-): GameMode<BlitzSGModes>[] {
+  modes: GameModeWithSubModes<BlitzSGModes>[]
+): GameModeWithSubModes<BlitzSGModes>[] {
   const { blitzsg } = player.stats;
   const [overall, ...kits] = modes;
 
   const filteredKits = [...kits]
     .sort((a, b) => (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp)
     .slice(0, 24);
-    
+
   return [overall, ...filteredKits];
 }

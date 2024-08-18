@@ -54,12 +54,12 @@ export interface ServerMappingsServer {
 const SERVER_MAPPINGS_CDN_URL = "https://servermappings.lunarclientcdn.com";
 
 export async function getServerMappings() {
-  const servers = await  axios
+  const servers = await axios
     .get<ServerMappingsServer[]>(`${SERVER_MAPPINGS_CDN_URL}/servers.json`)
     .then((res) => res.data)
     .catch(() => []);
 
-  return  servers.filter((s) => !s.inactive && s.enriched);
+  return servers.filter((s) => !s.inactive && s.enriched);
 }
 
 export async function getServerBackground(server?: ServerMappingsServer) {

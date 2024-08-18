@@ -13,7 +13,8 @@ import {
   UHCDuelsTable,
 } from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
-import { DuelsModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
+import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface DuelsProfileProps extends BaseProfileProps {
@@ -38,6 +39,17 @@ export const DuelsProfile = ({
     [t("stats.pingRange"), `${t(duels.pingRange)}ms`, "§a"],
     [t("stats.blocksPlaced"), t(duels.overall.blocksPlaced), "§9"],
   ];
+
+  const stats = duels[mode.api];
+
+  if ("shotsFired" in stats) {
+    sidebar.push([t("stats.shotsFired"), t(stats.shotsFired), "§6"]);
+  } else if ("overall" in stats && "shotsFired" in stats.overall) {
+    sidebar.push([t("stats.shotsFired"), t(stats.overall.shotsFired), "§6"]);
+  }
+
+  if ("kit" in stats)
+    sidebar.push([t("stats.kit"), prettify(stats.kit), "§e"]);
 
   let table: JSX.Element;
   const { api } = mode;

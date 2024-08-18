@@ -14,7 +14,7 @@ import { inquirerConfirmation, inquirerLogger } from "./utils.js";
 
 const redis = new Redis(config("database.redisUrl"));
 
-//TODO unify functions (one createKey)
+// TODO unify functions (one createKey)
 const createKey = async ({ name, key, role, limit }) => {
   const activeKeys = await getKeyNames();
 

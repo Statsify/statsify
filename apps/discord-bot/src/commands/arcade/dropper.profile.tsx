@@ -16,7 +16,7 @@
 
 import { Container, Footer, Header } from "#components";
 import { DropperMapsTable, DropperTable } from "./modes/index.js";
-import { DropperModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { DropperModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface DropperProfileProps extends BaseProfileProps {

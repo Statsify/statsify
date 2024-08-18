@@ -21,9 +21,9 @@ interface ZombiesMapColumnProps {
 
 const ZombiesMapColumn = ({ title, stats, t, time }: ZombiesMapColumnProps) => {
   const mapStat =
-    stats.wins > 0
-      ? [t("stats.fastestWin"), formatTime(stats.fastestWin)]
-      : [t("stats.bestRound"), t(stats.bestRound)];
+    stats.wins > 0 ?
+      [t("stats.fastestWin"), formatTime(stats.fastestWin)] :
+      [t("stats.bestRound"), t(stats.bestRound)];
 
   return (
     <Table.ts title={title}>

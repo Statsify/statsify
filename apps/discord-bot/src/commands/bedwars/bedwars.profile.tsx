@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BedWarsModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   Container,
   Footer,

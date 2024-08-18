@@ -36,9 +36,9 @@ const getPrefixRequirement = <T extends unknown[] = []>(
 ): number => {
   const prefixIndex = prefixes.findIndex((requirement) => requirement.req > (score || 0));
 
-  return prefixIndex === -1
-    ? prefixes.at(-1)!.req
-    : prefixes[Math.min(prefixIndex + skip - 1, prefixes.length - 1)].req || 0;
+  return prefixIndex === -1 ?
+    prefixes.at(-1)!.req :
+    prefixes[Math.min(prefixIndex + skip - 1, prefixes.length - 1)].req || 0;
 };
 
 export const createPrefixProgression = <T extends unknown[] = []>(

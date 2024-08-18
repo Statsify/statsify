@@ -7,8 +7,8 @@
  */
 
 import { ChallengesSkyWars, SkyWarsMode } from "./mode.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { Progression } from "#progression";
 import { add } from "@statsify/math";
 import { getFormattedLevel, getLevel, getLevelProgress, parseKit } from "./util.js";
@@ -33,9 +33,9 @@ export const SKYWARS_MODES = new GameModes([
   { hypixel: "teams_insane_tnt_madness", formatted: "TNT Madness Doubles" },
   { hypixel: "mega_normal", formatted: "Mega" },
   { hypixel: "mega_doubles", formatted: "Mega Doubles" },
-]);
+] as const);
 
-export type SkyWarsModes = IGameModes<typeof SKYWARS_MODES>;
+export type SkyWarsModes = ExtractGameModes<typeof SKYWARS_MODES>;
 
 export class SkyWars {
   @Field({

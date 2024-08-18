@@ -19,7 +19,7 @@ export enum UserLogo {
   AMETHYST = 420,
   SCULK = 421,
   NETHERITE = 422,
-  RUBY = 423,
+  RUBY = 423
 }
 
 export class UserFooter {

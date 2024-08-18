@@ -7,8 +7,8 @@
  */
 
 import { ArenaBrawlMode, ArenaBrawlModeExt } from "./mode.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import {
   GamePrefix,
   createPrefixProgression,
@@ -25,7 +25,7 @@ export const ARENA_BRAWL_MODES = new GameModes([
   { api: "solo" },
   { api: "doubles" },
   { api: "fours" },
-]);
+] as const);
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },
@@ -40,7 +40,7 @@ const prefixes: GamePrefix[] = [
   { fmt: (n) => rainbow(`[${n}]`), req: 15_000 },
 ];
 
-export type ArenaBrawlModes = IGameModes<typeof ARENA_BRAWL_MODES>;
+export type ArenaBrawlModes = ExtractGameModes<typeof ARENA_BRAWL_MODES>;
 
 export class ArenaBrawl {
   @Field()

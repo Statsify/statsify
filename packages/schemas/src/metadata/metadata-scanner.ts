@@ -49,13 +49,13 @@ export class MetadataScanner {
 
     entries.forEach(([key, value]) => {
       const path = `${base ? `${base}.` : ""}${key}`;
-      const name = value.leaderboard.name
-        ? `${baseName ? `${baseName} ` : ""}${value.leaderboard.name}`
-        : baseName;
+      const name = value.leaderboard.name ?
+        `${baseName ? `${baseName} ` : ""}${value.leaderboard.name}` :
+        baseName;
 
-      const historicalName = value.historical.name
-        ? `${baseName ? `${baseName} ` : ""}${value.historical.name}`
-        : baseName;
+      const historicalName = value.historical.name ?
+        `${baseName ? `${baseName} ` : ""}${value.historical.name}` :
+        baseName;
 
       for (const ratio of LEADERBOARD_RATIO_KEYS) {
         if (!ratio.includes(key)) continue;
@@ -67,9 +67,9 @@ export class MetadataScanner {
         if (!remainingStats.length) continue;
 
         value.leaderboard.additionalFields = remainingStats;
-        //TODO: Investigate if this is needed or if there is another way
-        //TODO: Does this break anything?
-        //! This is needed for the ratios to work with sub modes
+        // TODO: Investigate if this is needed or if there is another way
+        // TODO: Does this break anything?
+        // ! This is needed for the ratios to work with sub modes
         value.historical.additionalFields = remainingStats;
         break;
       }
@@ -91,7 +91,7 @@ export class MetadataScanner {
           },
         ]);
 
-      //Carry the metadata down to the children
+      // Carry the metadata down to the children
       const subMetadataEntries = this.getMetadataEntries(value.type.type, path, name).map(
         ([keyPath, metadata]) => {
           if (!metadata.leaderboard.additionalFields?.length)

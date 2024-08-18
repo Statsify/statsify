@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { SmashHeroesKit, SmashHeroesMode } from "./mode.js";
 import type { APIData } from "@statsify/util";
 
@@ -37,9 +37,9 @@ export const SMASH_HEROES_MODES = new GameModes([
 
   { hypixel: "1v1_normal", formatted: "1v1" },
   { hypixel: "friends_normal", formatted: "Friends" },
-]);
+] as const);
 
-export type SmashHeroesModes = IGameModes<typeof SMASH_HEROES_MODES>;
+export type SmashHeroesModes = ExtractGameModes<typeof SMASH_HEROES_MODES>;
 
 enum SmashHeroesClass {
   BOTMUN = "Botmon",
@@ -57,7 +57,7 @@ enum SmashHeroesClass {
   SKULLFIRE = "Skullfire",
   SPODERMAN = "Spooderman",
   THE_BULK = "Bulk",
-  TINMAN = "Tinman",
+  TINMAN = "Tinman"
 }
 
 export class SmashHeroes {

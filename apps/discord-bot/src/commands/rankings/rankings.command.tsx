@@ -37,7 +37,7 @@ import {
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
-  WOOLWARS_MODES,
+  WOOLGAMES_MODES,
 } from "@statsify/schemas";
 import {
   ApiService,
@@ -298,10 +298,10 @@ export class RankingsCommand {
 
   @SubCommand({
     ...options,
-    description: (t) => t("commands.rankings-woolwars"),
+    description: (t) => t("commands.rankings-woolgames"),
   })
-  public woolwars(context: CommandContext) {
-    return this.run(context, "woolwars", WOOLWARS_MODES);
+  public woolgames(context: CommandContext) {
+    return this.run(context, "woolgames", WOOLGAMES_MODES);
   }
 
   private async run<T extends GamesWithBackgrounds>(
@@ -316,9 +316,9 @@ export class RankingsCommand {
 
     const isGameNotAll = game !== "all";
 
-    const filteredFields = isGameNotAll
-      ? fields.filter((f) => f.startsWith(`stats.${game}`))
-      : fields;
+    const filteredFields = isGameNotAll ?
+      fields.filter((f) => f.startsWith(`stats.${game}`)) :
+      fields;
 
     const rankings = await this.apiService.getPlayerRankings(filteredFields, player.uuid);
 
@@ -343,9 +343,9 @@ export class RankingsCommand {
       10
     );
 
-    const formattedGame = isGameNotAll
-      ? games.find((g) => g.key === game)?.formatted
-      : undefined;
+    const formattedGame = isGameNotAll ?
+      games.find((g) => g.key === game)?.formatted :
+      undefined;
 
     return this.paginateService.scrollingPagination(
       context,

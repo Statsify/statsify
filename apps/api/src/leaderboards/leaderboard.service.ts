@@ -131,9 +131,9 @@ export abstract class LeaderboardService {
       LeaderboardScanner.getLeaderboardField(constructor, k, false)
     );
 
-    const extraDisplayMetadata = extraDisplay
-      ? LeaderboardScanner.getLeaderboardField(constructor, extraDisplay, false)
-      : undefined;
+    const extraDisplayMetadata = extraDisplay ?
+      LeaderboardScanner.getLeaderboardField(constructor, extraDisplay, false) :
+      undefined;
 
     const additionalStats = await this.getAdditionalStats(
       leaderboard.map(({ id }) => id),
@@ -241,9 +241,9 @@ export abstract class LeaderboardService {
 
       const numberValue = Number(value);
 
-      const formattedValue = metadata.formatter
-        ? metadata.formatter(numberValue)
-        : numberValue;
+      const formattedValue = metadata.formatter ?
+        metadata.formatter(numberValue) :
+        numberValue;
 
       rankings.push({
         field: fields[index],
@@ -283,9 +283,9 @@ export abstract class LeaderboardService {
     const name = constructor.name.toLowerCase();
     field = `${name}.${field}`;
 
-    const scores = await (sort === "ASC"
-      ? this.redis.zrange(field, top, bottom, "WITHSCORES")
-      : this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
+    const scores = await (sort === "ASC" ?
+      this.redis.zrange(field, top, bottom, "WITHSCORES") :
+      this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
 
     child?.finish();
 
@@ -311,7 +311,7 @@ export abstract class LeaderboardService {
     const now = new Date();
     const dayIndex = DAYS_IN_WEEK[leaderboard.resetEvery];
 
-    //Reset at 12:00 AM on the next day
+    // Reset at 12:00 AM on the next day
     now.setDate(now.getDate() + ((dayIndex - now.getDay() + 7) % 7) + 1);
     now.setHours(0, 0, 0, 0);
 

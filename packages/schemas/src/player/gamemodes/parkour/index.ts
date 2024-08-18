@@ -7,12 +7,12 @@
  */
 
 import { type APIData, formatTime } from "@statsify/util";
+import { type ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { Field } from "#metadata";
-import { FormattedGame, GameModes, type IGameModes } from "#game";
 
-export const PARKOUR_MODES = new GameModes([{ api: "overall" }]);
+export const PARKOUR_MODES = new GameModes([{ api: "overall" }] as const);
 
-export type ParkourModes = IGameModes<typeof PARKOUR_MODES>;
+export type ParkourModes = ExtractGameModes<typeof PARKOUR_MODES>;
 
 const fieldOptions = { sort: "ASC", formatter: formatTime, fieldName: "Time" };
 const historical = { enabled: false };
@@ -124,7 +124,7 @@ export class Parkour {
   public WARLORDS: number;
 
   @Field({
-    leaderboard: { ...fieldOptions, name: `${FormattedGame.WOOLWARS} Lobby` },
+    leaderboard: { ...fieldOptions, name: `${FormattedGame.WOOLGAMES} Lobby` },
     historical,
   })
   public WOOLWARS: number;

@@ -48,13 +48,11 @@ export const getAllGameIcons = async () => {
 let backgrounds: string[] = [];
 
 function getBackgroundPaths() {
-  if (backgrounds.length) return backgrounds;
+  if (backgrounds.length > 0) return backgrounds;
   backgrounds = readdirSync(getAssetPath("out/backgrounds"));
   return backgrounds;
 }
 
-export function getBackground(path: string): Promise<Image>;
-export function getBackground(game: string, mode: string): Promise<Image>;
 export function getBackground(pathOrGame: string, mode?: string): Promise<Image> {
   if (!hasPrivateAssets) return getImage("out/backgrounds/background.png");
 
@@ -72,9 +70,6 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
   return getImage(`out/backgrounds/${pathOrGame}.png`);
 }
 
-export function getLogo(user: User | null, size?: number): Promise<Image>;
-export function getLogo(logo: UserLogo | null, size?: number): Promise<Image>;
-export function getLogo(path: string, size?: number): Promise<Image>;
 export function getLogo(
   userOrLogoOrPath: User | UserLogo | string | null,
   size?: number
@@ -82,9 +77,6 @@ export function getLogo(
   return loadImage(getLogoPath(userOrLogoOrPath as User, size));
 }
 
-export function getLogoPath(user: User | null, size?: number): string;
-export function getLogoPath(logo: UserLogo | null, size?: number): string;
-export function getLogoPath(path: string, size?: number): string;
 export function getLogoPath(
   userOrLogoOrPath: User | UserLogo | string | null,
   size = 26

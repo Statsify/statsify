@@ -7,7 +7,7 @@
  */
 
 import { Container, Footer, Header, List, Table } from "#components";
-import { FormattedGame, GameMode } from "@statsify/schemas";
+import { FormattedGame, type GameMode } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import { ratio } from "@statsify/math";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -62,7 +62,7 @@ const Estimation = ({
 
   const newNumerator = Math.ceil(
     (1 + targetRatio / (targetRatio + 1) - ratioValue / targetRatio) * numeratorValue +
-      denominatorValue
+    denominatorValue
   );
 
   return (
@@ -92,9 +92,7 @@ export type RatioWithStats = [
 
 export interface RatiosProfileProps extends Omit<BaseProfileProps, "time"> {
   mode: GameMode<any>;
-
   ratios: RatioWithStats[];
-
   gameName: FormattedGame;
 }
 

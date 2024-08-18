@@ -162,10 +162,12 @@ const GuildOverallPage = ({
             <text {...text}>{`§3${t("stats.guild.createdOn")}: §7${createdAt}`}</text>
             <text {...text}>{`§9${t("stats.guild.members")}: §f${t(
               guild.members.length
-            )}§8/§f125`}</text>
+            )}§8/§f125`}
+            </text>
             <text {...text}>{`§2${t("stats.guild.gexp")}:§f ${t(guild.exp)} §8[§7#§f${t(
               ranking
-            )}§8]`}</text>
+            )}§8]`}
+            </text>
             <text {...text}>{`§e${t("stats.guild.level")}:§f ${t(guild.level)}`}</text>
           </box>
         </GuildBlock>

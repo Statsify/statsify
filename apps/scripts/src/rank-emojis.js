@@ -236,6 +236,7 @@ COLOR_CHANGERS.forEach((rank) => {
       .join("");
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
   delete json[rank];
 });
 

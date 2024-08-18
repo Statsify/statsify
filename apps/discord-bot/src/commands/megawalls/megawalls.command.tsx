@@ -12,7 +12,7 @@ import {
   ProfileData,
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
-import { GameMode, MEGAWALLS_MODES, MegaWallsModes, Player } from "@statsify/schemas";
+import { GameModeWithSubModes, MEGAWALLS_MODES, MegaWallsModes, Player } from "@statsify/schemas";
 import { MegaWallsProfile, filterMegaWallsKits } from "./megawalls.profile.js";
 
 @Command({ description: (t) => t("commands.megawalls") })
@@ -23,8 +23,8 @@ export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
 
   public filterModes(
     player: Player,
-    modes: GameMode<MegaWallsModes>[]
-  ): GameMode<MegaWallsModes>[] {
+    modes: GameModeWithSubModes<MegaWallsModes>[]
+  ): GameModeWithSubModes<MegaWallsModes>[] {
     return filterMegaWallsKits(player, modes);
   }
 

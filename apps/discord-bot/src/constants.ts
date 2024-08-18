@@ -9,6 +9,7 @@
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
+  ApiModeFromGameModes,
   ArcadeModes,
   ArenaBrawlModes,
   BEDWARS_MODES,
@@ -36,12 +37,15 @@ import {
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
   MegaWallsModes,
+  Mode,
   MurderMysteryModes,
   PAINTBALL_MODES,
   PARKOUR_MODES,
+  PARTY_GAMES_MODES,
   PIT_MODES,
   PaintballModes,
   ParkourModes,
+  PartyGamesModes,
   PitModes,
   PlayerStats,
   QUAKE_MODES,
@@ -64,14 +68,14 @@ import {
   VampireZModes,
   WALLS_MODES,
   WARLORDS_MODES,
-  WOOLWARS_MODES,
+  WOOLGAMES_MODES,
   WallsModes,
   WarlordsModes,
-  WoolWarsModes,
+  WoolGamesModes,
 } from "@statsify/schemas";
 import { noop, prettify } from "@statsify/util";
 
-const getDefaultApiMode = <T extends string>(modes: GameModes<T>) =>
+const getDefaultApiMode = <T extends Mode[]>(modes: GameModes<T>) =>
   modes.getApiModes()[0];
 
 export type GamesWithBackgrounds =
@@ -90,6 +94,7 @@ export type GamesWithBackgrounds =
   | MurderMysteryModes
   | PaintballModes
   | ParkourModes
+  | PartyGamesModes
   | PitModes
   | QuakeModes
   | SkyWarsModes
@@ -101,13 +106,13 @@ export type GamesWithBackgrounds =
   | VampireZModes
   | WallsModes
   | WarlordsModes
-  | WoolWarsModes
+  | WoolGamesModes
   | QuestModes
   | ChallengeModes;
 
 export const mapBackground = <T extends GamesWithBackgrounds>(
   modes: GameModes<T>,
-  mode: T[number]
+  mode: ApiModeFromGameModes<T>
 ): [game: string, mode: string] => {
   switch (modes) {
     case BEDWARS_MODES: {
@@ -207,6 +212,9 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
     case PARKOUR_MODES:
       return ["parkour", "overall"];
 
+    case PARTY_GAMES_MODES:
+      return ["arcade", "partyGames"];
+
     case QUEST_MODES:
     case CHALLENGE_MODES:
       switch (mode) {
@@ -285,8 +293,8 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
         case "WARLORDS":
           return mapBackground(WARLORDS_MODES, getDefaultApiMode(WARLORDS_MODES));
 
-        case "WOOLWARS":
-          return mapBackground(WOOLWARS_MODES, getDefaultApiMode(WOOLWARS_MODES));
+        case "WOOLGAMES":
+          return mapBackground(WOOLGAMES_MODES, getDefaultApiMode(WOOLGAMES_MODES));
       }
 
       throw new Error(`Missing background for mode: ${mode}`);
@@ -350,8 +358,8 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
     case WARLORDS_MODES:
       return ["warlords", "overall"];
 
-    case WOOLWARS_MODES:
-      return ["woolwars", "overall"];
+    case WOOLGAMES_MODES:
+      return ["woolgames", mode];
 
     default:
       return ["default", ""];
@@ -381,7 +389,7 @@ const GAME_ID_TO_MODES: Record<GameId, GameModes<any> | null> = {
   VAMPIREZ: VAMPIREZ_MODES,
   WALLS: WALLS_MODES,
   WARLORDS: WARLORDS_MODES,
-  WOOLWARS: WOOLWARS_MODES,
+  WOOLGAMES: WOOLGAMES_MODES,
   PIT: PIT_MODES,
   HOUSING: noop(),
   PROTOTYPE: noop(),
@@ -410,6 +418,7 @@ export const MODES_TO_API = new Map<GameModes<GamesWithBackgrounds>, keyof Playe
   [MEGAWALLS_MODES, "megawalls"],
   [MURDER_MYSTERY_MODES, "murdermystery"],
   [PAINTBALL_MODES, "paintball"],
+  [PIT_MODES, "pit"],
   [PARKOUR_MODES, "parkour"],
   [QUAKE_MODES, "quake"],
   [SKYWARS_MODES, "skywars"],
@@ -421,7 +430,7 @@ export const MODES_TO_API = new Map<GameModes<GamesWithBackgrounds>, keyof Playe
   [VAMPIREZ_MODES, "vampirez"],
   [WALLS_MODES, "walls"],
   [WARLORDS_MODES, "warlords"],
-  [WOOLWARS_MODES, "woolwars"],
+  [WOOLGAMES_MODES, "woolgames"],
 ]);
 
 export const MODES_TO_FORMATTED = new Map<GameModes<GamesWithBackgrounds>, FormattedGame>(
@@ -437,6 +446,7 @@ export const MODES_TO_FORMATTED = new Map<GameModes<GamesWithBackgrounds>, Forma
     [MEGAWALLS_MODES, FormattedGame.MEGAWALLS],
     [MURDER_MYSTERY_MODES, FormattedGame.MURDER_MYSTERY],
     [PAINTBALL_MODES, FormattedGame.PAINTBALL],
+    [PIT_MODES, FormattedGame.PIT],
     [PARKOUR_MODES, FormattedGame.PARKOUR],
     [QUAKE_MODES, FormattedGame.QUAKE],
     [SKYWARS_MODES, FormattedGame.SKYWARS],
@@ -448,7 +458,7 @@ export const MODES_TO_FORMATTED = new Map<GameModes<GamesWithBackgrounds>, Forma
     [VAMPIREZ_MODES, FormattedGame.VAMPIREZ],
     [WALLS_MODES, FormattedGame.WALLS],
     [WARLORDS_MODES, FormattedGame.WARLORDS],
-    [WOOLWARS_MODES, FormattedGame.WOOLWARS],
+    [WOOLGAMES_MODES, FormattedGame.WOOLGAMES],
   ]
 );
 
@@ -465,7 +475,7 @@ export const mapGame = (game: GameId, mode: string) => {
   if (HYPIXEL_GAME_LIST[game] && mode in HYPIXEL_GAME_LIST[game]!)
     return HYPIXEL_GAME_LIST[game]![mode];
 
-  //Pit's mode in the  api is also called PIT
+  // Pit's mode in the  api is also called PIT
   if (mode === game) return prettify(mode);
 
   return prettify(mode.replace(`${GameCodeMapping[game]}_`, "").replace(game, ""));

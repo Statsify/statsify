@@ -8,7 +8,7 @@
 
 import { BaseHypixelCommand, BaseProfileProps } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
-import { GameMode, Player, SKYWARS_MODES, SkyWarsModes } from "@statsify/schemas";
+import { type GameModeWithSubModes, Player, SKYWARS_MODES, SkyWarsModes } from "@statsify/schemas";
 import { SkyWarsChallengesProfile } from "./skywars-challenges.profile.js";
 
 @Command({ description: (t) => t("commands.skywars-challenges") })
@@ -19,8 +19,8 @@ export class SkyWarsChallengesCommand extends BaseHypixelCommand<SkyWarsModes> {
 
   public filterModes(
     player: Player,
-    modes: GameMode<SkyWarsModes>[]
-  ): GameMode<SkyWarsModes>[] {
+    modes: GameModeWithSubModes<SkyWarsModes>[]
+  ): GameModeWithSubModes<SkyWarsModes>[] {
     return [modes[0]];
   }
 

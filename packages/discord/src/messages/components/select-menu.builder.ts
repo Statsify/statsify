@@ -62,9 +62,11 @@ export class SelectMenuBuilder {
   #custom_id: string;
   #disabled: boolean;
   #options: SelectMenuOptionBuilder[] = [];
+  #defaultIndex: number;
 
   public constructor() {
     this.customId(randomUUID());
+    this.#defaultIndex = 0;
   }
 
   public option(option: SelectMenuOptionBuilder): this {
@@ -84,9 +86,9 @@ export class SelectMenuBuilder {
   }
 
   public activeOption(index: number): this {
-    this.#options.forEach((option, i) => {
-      option.default(i === index);
-    });
+    this.#options[this.#defaultIndex].default(false);
+    this.#defaultIndex = index;
+    this.#options[index].default(true);
 
     return this;
   }
@@ -98,7 +100,7 @@ export class SelectMenuBuilder {
   public build(locale: LocalizeFunction): APISelectMenuComponent {
     return {
       custom_id: this.#custom_id,
-      type: ComponentType.SelectMenu,
+      type: ComponentType.StringSelect,
       disabled: this.#disabled,
       options: this.#options.map((option) => option.build(locale)),
     };

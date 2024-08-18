@@ -7,7 +7,7 @@
  */
 
 import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
-import { FormattedGame, GameMode, MurderMysteryModes } from "@statsify/schemas";
+import { FormattedGame, type GameMode, MurderMysteryModes } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
@@ -141,9 +141,9 @@ export const MurderMysteryProfile = ({
               <Table.td
                 title={t("stats.fastestDetectiveWin")}
                 value={
-                  stats.fastestDetectiveWin
-                    ? formatTime(stats.fastestDetectiveWin)
-                    : "N/A"
+                  stats.fastestDetectiveWin ?
+                    formatTime(stats.fastestDetectiveWin) :
+                    "N/A"
                 }
                 color="§b"
               />

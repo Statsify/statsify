@@ -12,10 +12,10 @@ import type { RestClient } from "tiny-discord";
 export const parseDiscordResponse = <T>(response: RestClient.RequestResult): T => {
   if (response.headers["content-type"] !== "application/json") return noop();
 
-  //@ts-ignore tiny-discord doesn't have a proper types yet
+  // @ts-ignore tiny-discord doesn't have a proper types yet
   if (response.status >= 200 && response.status < 300) return response.body.json as T;
 
-  //@ts-ignore tiny-discord doesn't have a proper types yet
+  // @ts-ignore tiny-discord doesn't have a proper types yet
   const body = response.body.json as Record<string, any>;
 
   let message = body.message;

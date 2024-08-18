@@ -46,9 +46,9 @@ export const createInstructions = (
         getTotalSize(child[otherSide], { size: false });
 
       child[otherSide].size =
-        child[otherSide].size === "remaining"
-          ? size
-          : size * toDecimal(child[otherSide].size as Percent | Fraction);
+        child[otherSide].size === "remaining" ?
+          size :
+          size * toDecimal(child[otherSide].size as Percent | Fraction);
     }
 
     if (typeof child[side].size === "string") {

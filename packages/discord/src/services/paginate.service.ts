@@ -21,7 +21,8 @@ import {
   SelectMenuBuilder,
   SelectMenuOptionBuilder,
 } from "#messages";
-import type { CommandContext } from "#command";
+import { Interaction } from "#interaction";
+import type { AbstractCommandListener, CommandContext, InteractionHook } from "#command";
 
 type PaginateInteractionContent = IMessage | Message | EmbedBuilder | Canvas;
 
@@ -29,13 +30,15 @@ type PaginateInteractionContentGenerator = (
   t: LocalizeFunction
 ) => PaginateInteractionContent | Promise<PaginateInteractionContent>;
 
-export interface Page {
+export type Page = PageInput & ({ subPages: SubPage[] } | { generator: PaginateInteractionContentGenerator });
+export type SubPage = PageInput & { generator: PaginateInteractionContentGenerator };
+
+interface PageInput {
   label: LocalizationString;
   emoji?: LocalizationString | false;
-  generator: PaginateInteractionContentGenerator;
 }
 
-type PageController = ButtonBuilder[] | [SelectMenuBuilder];
+type PageId = `${number}|${number}`;
 
 @Service()
 export class PaginateService {
@@ -46,57 +49,94 @@ export class PaginateService {
    * @param timeout When to stop the pagination (ms), defaults to 300000
    */
   public async paginate(context: CommandContext, pages: Page[], timeout = 300_000) {
-    if (pages.length === 1)
-      return context.reply(await this.getMessage(context, [], 0, pages));
+    const cache = new Map<PageId, Message>();
+    const t = context.t();
+
+    const getMessage = async (index: number, subIndex: number) => {
+      const pageId: PageId = `${index}|${subIndex}`;
+      if (cache.has(pageId)) return cache.get(pageId)!;
+
+      const page = pages[index];
+      let content: PaginateInteractionContent;
+
+      if ("subPages" in page) {
+        const subPage = page.subPages[subIndex];
+        content = await subPage.generator(t);
+      } else {
+        content = await page.generator(t);
+      }
+
+      const message = await this.toMessage(content);
+      cache.set(pageId, message);
+
+      return message;
+    };
+
+    // If there is only one page with no sub pages, return the message immediately without pagination
+    if (pages.length === 1 && "generator" in pages[0]) return getMessage(0, 0);
 
     const userId = context.getInteraction().getUserId();
-    const user = context.getUser();
-
-    const cache = new Map<number, Message>();
-    let index = 0;
-
-    const controller = this.getPageController(pages, index);
-
     const listener = context.getListener();
 
-    controller.forEach((component, i) => {
-      listener.addHook(component.getCustomId(), async (interaction) => {
-        if (user?.locale) interaction.setLocale(user.locale);
+    let currentIndex = 0;
+    let currentSubIndex = 0;
 
-        let page = 0;
+    const mainController = new PageController(pages, currentIndex);
 
-        if (interaction.isButtonInteraction()) page = i;
-        else if (interaction.isSelectMenuInteraction())
-          page = Number(interaction.getData().values[0]);
+    const page = pages[currentIndex];
+    let subController = "subPages" in page ? new PageController(page.subPages, currentSubIndex) : undefined;
 
-        const message = cache.has(page)
-          ? cache.get(page)!
-          : await this.getMessage(context, controller, page, pages);
+    mainController.register(listener, (interaction, index) => handler(interaction, index, 0));
+    subController?.register(listener, (interaction, subIndex) => handler(interaction, currentIndex, subIndex));
 
-        cache.set(page, message);
+    async function handler(interaction: Interaction, index: number, subIndex: number) {
+      interaction.setLocale(t.locale);
 
-        if (interaction.getUserId() === userId) {
-          index = page;
-          this.setActiveControl(controller, index);
-          return context.reply(message);
-        }
-
+      // Send an ephemeral preview if the user is not the one who initiated the interaction
+      if (interaction.getUserId() !== userId) {
+        const message = await getMessage(index, subIndex);
         return interaction.sendFollowup({ ...message, components: [], ephemeral: true });
-      });
-    });
+      }
 
-    setTimeout(() => {
-      controller.forEach((component) => listener.removeHook(component.getCustomId()));
+      if (index !== currentIndex) {
+        // [TODO]: remove all hooks for sub pages
+        subController?.unregister(listener);
+        mainController.switchPage(index);
 
-      context.reply({
-        components: [],
-      });
+        currentIndex = index;
+        currentSubIndex = 0;
 
+        if ("subPages" in pages[index]) {
+          subController = new PageController(pages[index].subPages, currentSubIndex);
+          subController.register(listener, (interaction, subIndex) => handler(interaction, currentIndex, subIndex));
+        } else {
+          subController = undefined;
+        }
+      } else if (subIndex !== currentSubIndex) {
+        subController?.switchPage(subIndex);
+        currentSubIndex = subIndex;
+      }
+
+      const message = await getMessage(index, subIndex);
+
+      message.components = [mainController.getActionRow(), subController?.getActionRow()]
+        .filter((row) => row !== undefined);
+
+      return context.reply(message);
+    }
+
+    function onTimeout() {
+      mainController.unregister(listener);
+      subController?.unregister(listener);
       cache.clear();
-    }, timeout);
+      return context.reply({ components: [] });
+    }
 
-    const message = await this.getMessage(context, controller, index, pages);
-    cache.set(index, message);
+    setTimeout(onTimeout, timeout);
+
+    const message = await getMessage(currentIndex, currentSubIndex);
+    message.components = [mainController.getActionRow(), subController?.getActionRow()]
+      .filter((row) => row !== undefined);
 
     return message;
   }
@@ -108,7 +148,7 @@ export class PaginateService {
    * @param forwardButton The button to use for forward pagination
    * @param backwardButton The button to use for back pagination
    * @param invertButtons Whether to invert the buttons (backward becomes forward, forward becomes backward)
-   * @param index  The starting page
+   * @param startingIndex  The starting page
    * @param timeout When to stop the pagination (ms), defaults to 300000
    */
   public async scrollingPagination(
@@ -117,14 +157,26 @@ export class PaginateService {
     forwardButton?: ButtonBuilder,
     backwardButton?: ButtonBuilder,
     invertButtons = false,
-    index = 0,
+    startingIndex = 0,
     timeout = 300_000
   ) {
-    const userId = context.getInteraction().getUserId();
-    const user = context.getUser();
+    const currentIndex = startingIndex;
     const cache = new Map<number, Message>();
-
     const t = context.t();
+
+    const getMessage = async (index: number) => {
+      if (cache.has(index)) return cache.get(index)!;
+
+      const content = await pages[index](t);
+      const message = await this.toMessage(content);
+      cache.set(index, message);
+
+      return message;
+    };
+
+    if (pages.length === 1) return getMessage(currentIndex);
+
+    const userId = context.getInteraction().getUserId();
 
     const controller = [
       backwardButton ?? new ButtonBuilder().emoji(t("emojis:backward")),
@@ -137,27 +189,23 @@ export class PaginateService {
 
     controller.forEach((component, i) => {
       listener.addHook(component.getCustomId(), async (interaction) => {
-        if (user?.locale) interaction.setLocale(user.locale);
+        interaction.setLocale(t.locale);
 
         let page: number;
 
         if (i === 0) {
-          //Backwards
-          page = index == 0 ? pages.length - 1 : index - 1;
+          // Backwards
+          page = startingIndex == 0 ? pages.length - 1 : startingIndex - 1;
         } else {
-          //Forwards
-          page = index == pages.length - 1 ? 0 : index + 1;
+          // Forwards
+          page = startingIndex == pages.length - 1 ? 0 : startingIndex + 1;
         }
 
-        const message = cache.has(page)
-          ? cache.get(page)!
-          : await this.getMessage(context, controller, page, pages);
-
-        cache.set(page, message);
+        const message = await getMessage(page);
 
         if (interaction.getUserId() === userId) {
-          // eslint-disable-next-line require-atomic-updates
-          index = page;
+          startingIndex = page;
+          message.components = [new ActionRowBuilder(controller)];
           return context.reply(message);
         }
 
@@ -165,100 +213,89 @@ export class PaginateService {
       });
     });
 
-    setTimeout(() => {
+    function onTimeout() {
       controller.forEach((component) => listener.removeHook(component.getCustomId()));
-
-      context.reply({
-        components: [],
-      });
-
+      context.reply({ components: [] });
       cache.clear();
-    }, timeout);
+    }
 
-    const message = await this.getMessage(context, controller, index, pages);
-    cache.set(index, message);
+    setTimeout(onTimeout, timeout);
+
+    const message = await getMessage(startingIndex);
+    message.components = [new ActionRowBuilder(controller)];
 
     return message;
   }
 
-  private getPageController(pages: Page[], index: number): PageController {
-    if (pages.length > 5) {
-      const controller = new SelectMenuBuilder();
-
-      pages.forEach((page, i) => {
-        const option = new SelectMenuOptionBuilder()
-          .label(page.label)
-          .value(`${i}`)
-          .default(i === index);
-
-        if (page.emoji) option.emoji(page.emoji);
-
-        controller.option(option);
-      });
-
-      return [controller];
-    }
-
-    return pages.map((page, i) => {
-      const button = new ButtonBuilder()
-        .label(page.label)
-        .style(i === index ? ButtonStyle.Primary : ButtonStyle.Secondary);
-
-      if (page.emoji) button.emoji(page.emoji);
-
-      return button;
+  private async toMessage(content: PaginateInteractionContent): Promise<Message> {
+    if (content instanceof Message) return content;
+    if (content instanceof EmbedBuilder) return new Message({ embeds: [content] });
+    if (content instanceof Canvas) return new Message({
+      files: [{ name: "image.png", data: await content.toBuffer("png"), type: "image/png" }],
+      attachments: [],
     });
+
+    return new Message(content);
   }
+}
 
-  private async getMessage(
-    context: CommandContext,
-    controller: PageController,
-    index: number,
-    pages: Page[] | PaginateInteractionContentGenerator[]
-  ): Promise<Message> {
-    const t = context.t();
-    const content = pages[index];
-    const isScrolling = typeof content === "function";
-    const pageContent = await (isScrolling ? content(t) : content.generator(t));
+class PageController {
+  #menu: SelectMenuBuilder | ButtonBuilder[];
 
-    let page: Message;
+  public constructor(pages: PageInput[], selected: number) {
+    if (pages.length > 5) {
+      const menu = new SelectMenuBuilder();
 
-    if (pageContent instanceof Message) {
-      page = pageContent;
-    } else if (pageContent instanceof EmbedBuilder) {
-      page = new Message({ embeds: [pageContent] });
-    } else if (pageContent instanceof Canvas) {
-      page = new Message({
-        files: [
-          {
-            name: "image.png",
-            data: await pageContent.toBuffer("png"),
-            type: "image/png",
-          },
-        ],
-        attachments: [],
+      pages.forEach((page, index) => {
+        const option = new SelectMenuOptionBuilder().label(page.label).value(`${index}`);
+        if (page.emoji) option.emoji(page.emoji);
+        menu.option(option);
       });
+
+      menu.activeOption(selected);
+      this.#menu = menu;
     } else {
-      page = new Message(pageContent);
+      this.#menu = pages.map((page, index) => {
+        const button = new ButtonBuilder().label(page.label).style(ButtonStyle.Secondary);
+        if (page.emoji) button.emoji(page.emoji);
+        if (index === selected) button.style(ButtonStyle.Primary);
+        return button;
+      });
     }
-
-    if (controller.length && pages.length > 1) {
-      page.components = [new ActionRowBuilder(controller)];
-    }
-
-    return page;
   }
 
-  private setActiveControl(controller: PageController, index: number) {
-    if (controller.length === 1) {
-      (controller[0] as SelectMenuBuilder).activeOption(index);
+  public switchPage(index: number) {
+    if (this.#menu instanceof SelectMenuBuilder) {
+      this.#menu.activeOption(index);
       return;
     }
 
-    controller.forEach((component, i) =>
-      (component as ButtonBuilder).style(
-        i === index ? ButtonStyle.Primary : ButtonStyle.Secondary
-      )
-    );
+    this.#menu.forEach((button, i) => button.style(i === index ? ButtonStyle.Primary : ButtonStyle.Secondary));
+  }
+
+  public getActionRow(): ActionRowBuilder {
+    if (this.#menu instanceof SelectMenuBuilder) return new ActionRowBuilder([this.#menu]);
+    return new ActionRowBuilder(this.#menu);
+  }
+
+  public register(
+    listener: AbstractCommandListener,
+    handler: (interaction: Interaction, index: number) => ReturnType<InteractionHook>
+  ) {
+    if (this.#menu instanceof SelectMenuBuilder) {
+      return listener.addHook(this.#menu.getCustomId(), (interaction) => {
+        const index = Number(interaction.getData().values[0]);
+        return handler(interaction, index);
+      });
+    }
+
+    this.#menu.forEach((button, index) => {
+      listener.addHook(button.getCustomId(), (interaction) => handler(interaction, index));
+    });
+  }
+
+  public unregister(listener: AbstractCommandListener) {
+    if (this.#menu instanceof SelectMenuBuilder) listener.removeHook(this.#menu.getCustomId());
+    else this.#menu.forEach((button) => listener.removeHook(button.getCustomId()));
   }
 }

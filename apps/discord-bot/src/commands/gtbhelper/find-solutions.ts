@@ -20,7 +20,6 @@ export const findSolutions = (hint: string, limit?: number) => {
 
     word = word.toLowerCase();
 
-    // eslint-disable-next-line unicorn/no-for-loop
     for (let i = 0; i < hint.length; i++) {
       const hintChar = hint[i];
       const wordChar = word[i];

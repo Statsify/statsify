@@ -100,22 +100,22 @@ export const render: Render<Box.BoxRenderProps> = (
     y + shadowDistance + border.topRight + border.topRight,
     shadowDistance,
     height -
-      shadowDistance -
-      border.bottomRight -
-      border.bottomRight -
-      border.topRight -
-      border.topRight
+    shadowDistance -
+    border.bottomRight -
+    border.bottomRight -
+    border.topRight -
+    border.topRight
   );
 
   ctx.fillRect(
     x + shadowDistance + border.bottomLeft + border.bottomLeft,
     y + height,
     width -
-      shadowDistance -
-      border.bottomRight -
-      border.bottomRight -
-      border.bottomLeft -
-      border.bottomLeft,
+    shadowDistance -
+    border.bottomRight -
+    border.bottomRight -
+    border.bottomLeft -
+    border.bottomLeft,
     shadowDistance
   );
 

@@ -15,12 +15,12 @@ import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/comm
 const DEFAULT_LOG_LEVELS: LogLevel[] = ["log", "error", "warn", "debug", "verbose", "fatal"];
 
 export const STATUS_COLORS = {
-  debug: 0xc700e7,
-  warn: 0xfab627,
-  error: 0xcd1820,
-  info: 0x6469f5,
-  success: 0x36d494,
-  fatal: 0x81181a,
+  debug: 0xC700E7,
+  warn: 0xFAB627,
+  error: 0xCD1820,
+  info: 0x6469F5,
+  success: 0x36D494,
+  fatal: 0x81181A,
 } as const;
 
 const isProduction = config("environment") === "prod";
@@ -48,23 +48,23 @@ export class Logger implements LoggerService {
   }
 
   public log(message: any, context?: string): void;
-  public log(message: any, ...optionalParams: [...any, string?]): void;
-  public log(message: any, ...optionalParams: any[]) {
+  public log(message: any, ...optionalParameters: [...any, string?]): void;
+  public log(message: any, ...optionalParameters: any[]) {
     if (!this.isLevelEnabled("log")) {
       return;
     }
 
     const { messages, context } = this.getContextAndMessages([
       message,
-      ...optionalParams,
+      ...optionalParameters,
     ]);
 
     this.printMessage(messages, context, "log");
   }
 
   public error(message: any, context?: string): void;
-  public error(message: any, ...optionalParams: [...any, string?]): void;
-  public error(message: any, ...optionalParams: any[]) {
+  public error(message: any, ...optionalParameters: [...any, string?]): void;
+  public error(message: any, ...optionalParameters: any[]) {
     if (!this.isLevelEnabled("error")) {
       return;
     }
@@ -79,60 +79,60 @@ export class Logger implements LoggerService {
 
     const { messages, context } = this.getContextAndMessages([
       message,
-      ...optionalParams,
+      ...optionalParameters,
     ]);
 
     this.printMessage(messages, context, "error", "stderr", "📉");
   }
 
   public warn(message: any, context?: string): void;
-  public warn(message: any, ...optionalParams: [...any, string?]): void;
-  public warn(message: any, ...optionalParams: any[]) {
+  public warn(message: any, ...optionalParameters: [...any, string?]): void;
+  public warn(message: any, ...optionalParameters: any[]) {
     if (!this.isLevelEnabled("warn")) {
       return;
     }
 
     const { messages, context } = this.getContextAndMessages([
       message,
-      ...optionalParams,
+      ...optionalParameters,
     ]);
 
     this.printMessage(messages, context, "warn");
   }
 
   public debug(message: any, context?: string): void;
-  public debug(message: any, ...optionalParams: [...any, string?]): void;
-  public debug(message: any, ...optionalParams: any[]) {
+  public debug(message: any, ...optionalParameters: [...any, string?]): void;
+  public debug(message: any, ...optionalParameters: any[]) {
     if (!this.isLevelEnabled("debug")) {
       return;
     }
 
     const { messages, context } = this.getContextAndMessages([
       message,
-      ...optionalParams,
+      ...optionalParameters,
     ]);
 
     this.printMessage(messages, context, "debug");
   }
 
   public verbose(message: any, context?: string): void;
-  public verbose(message: any, ...optionalParams: [...any, string?]): void;
-  public verbose(message: any, ...optionalParams: any[]): void {
+  public verbose(message: any, ...optionalParameters: [...any, string?]): void;
+  public verbose(message: any, ...optionalParameters: any[]): void {
     if (!this.isLevelEnabled("verbose")) {
       return;
     }
 
     const { messages, context } = this.getContextAndMessages([
       message,
-      ...optionalParams,
+      ...optionalParameters,
     ]);
 
     this.printMessage(messages, context, "verbose");
   }
 
   public fatal(message: any, context?: string): void;
-  public fatal(message: any, ...optionalParams: [...any, string?]): void;
-  public fatal(message: any, ...optionalParams: any[]) {
+  public fatal(message: any, ...optionalParameters: [...any, string?]): void;
+  public fatal(message: any, ...optionalParameters: any[]) {
     if (!this.isLevelEnabled("fatal")) {
       return;
     }
@@ -147,7 +147,7 @@ export class Logger implements LoggerService {
 
     const { messages, context } = this.getContextAndMessages([
       message,
-      ...optionalParams,
+      ...optionalParameters,
     ]);
 
     this.printMessage(messages, context, "fatal", "stderr", "📉");
@@ -174,13 +174,13 @@ export class Logger implements LoggerService {
       return { messages, context: this.context };
     }
 
-    const lastEl = messages.at(-1);
-    const isContext = typeof lastEl === "string";
+    const lastElement = messages.at(-1);
+    const isContext = typeof lastElement === "string";
 
     if (isContext) {
       return {
         messages: messages.slice(0, -1),
-        context: lastEl,
+        context: lastElement,
       };
     }
 
@@ -234,7 +234,7 @@ export class Logger implements LoggerService {
   ) {
     const color = this.getColorByLogLevel(logLevel);
 
-    messages.forEach((message) => {
+    for (const message of messages) {
       const output = typeof message === "object" ? JSON.stringify(message) : message;
       const timeStamp = this.getTimeStamp();
 
@@ -243,14 +243,14 @@ export class Logger implements LoggerService {
       )} ${chalk.gray(`${timeStamp}${isProduction ? "" : "ms"}`)} ${output}\n`;
 
       process[writeStreamType].write(computedMessage);
-    });
+    }
   }
 }
 
 if (import.meta.vitest) {
   const { suite, it, expect, vi } = import.meta.vitest;
 
-  DEFAULT_LOG_LEVELS.forEach((logLevel) => {
+  for (const logLevel of DEFAULT_LOG_LEVELS) {
     suite(`logging of ${logLevel}`, () => {
       it(`should ${logLevel}`, () => {
         const logger = new Logger(logLevel);
@@ -267,7 +267,7 @@ if (import.meta.vitest) {
         expect(mock).toHaveBeenCalledOnce();
       });
     });
-  });
+  }
 
   suite("logging levels", () => {
     it("should ignore all log levels", () => {
@@ -278,9 +278,9 @@ if (import.meta.vitest) {
       process.stdout.write = mock;
       process.stderr.write = mock;
 
-      DEFAULT_LOG_LEVELS.forEach((logLevel) => {
+      for (const logLevel of DEFAULT_LOG_LEVELS) {
         logger[logLevel]("message");
-      });
+      }
 
       expect(mock).not.toHaveBeenCalled();
     });

@@ -134,7 +134,7 @@ const HOURS = 24;
 const MONTHS = 30;
 const YEARS = 12;
 
-//Format milliseconds to a human readable string
+// Format milliseconds to a human readable string
 export const formatTime = (
   timeMs: number,
   { short = true, entries = 2 }: FormatTimeOptions = {}

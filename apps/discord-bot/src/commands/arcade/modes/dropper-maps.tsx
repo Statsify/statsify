@@ -27,10 +27,10 @@ const EASY_DROPPER_MAP_GROUPS = arrayGroup(DROPPER_MAPS.filter(([_, name]) => na
 interface DropperMapsTableProps {
   dropper: Dropper;
   t: LocalizeFunction;
-  stat: "bestTime" | "completions"
+  stat: "bestTime" | "completions";
 }
 
-export const DropperMapsTable = ({ dropper, t, stat  }: DropperMapsTableProps) => (
+export const DropperMapsTable = ({ dropper, t, stat }: DropperMapsTableProps) => (
   <Table.table>
     <Table.ts title="§cHard">
       {HARD_DROPPER_MAP_GROUPS.map((group) => <DropperMapGroup dropper={dropper} group={group} stat={stat} t={t} />)}
@@ -45,7 +45,7 @@ export const DropperMapsTable = ({ dropper, t, stat  }: DropperMapsTableProps) =
 );
 
 interface DropperMapGroupProps extends DropperMapsTableProps {
-  group: [keyof DropperMaps, string][]
+  group: [keyof DropperMaps, string][];
 }
 
 const DropperMapGroup = ({ dropper, group, stat, t }: DropperMapGroupProps) => (
@@ -53,7 +53,6 @@ const DropperMapGroup = ({ dropper, group, stat, t }: DropperMapGroupProps) => (
     {group
       .map(([key, mapName]) => {
         const map = dropper.maps[key];
-
         let value;
 
         switch (stat) {
@@ -65,13 +64,7 @@ const DropperMapGroup = ({ dropper, group, stat, t }: DropperMapGroupProps) => (
             break;
         }
 
-        return (
-          <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
-            <text>§l{mapName}</text>
-            <div width="remaining" margin={{ left: 2, right: 2 }} />
-            <text>{value}</text>
-          </box>
-        );
+        return <Table.td title={mapName} value={value} size="inline" color="§f" />;
       })}
   </Table.tr>
 );
