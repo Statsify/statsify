@@ -12,19 +12,19 @@ import {
   ProfileData,
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
-import { WOOLWARS_MODES, WoolWarsModes } from "@statsify/schemas";
-import { WoolWarsProfile } from "./woolwars.profile.js";
+import { WOOLGAMES_MODES, WoolGamesModes } from "@statsify/schemas";
+import { WoolGamesProfile } from "./woolgames.profile.js";
 
-@Command({ description: (t) => t("commands.woolwars") })
-export class WoolWarsCommand extends BaseHypixelCommand<WoolWarsModes> {
+@Command({ description: (t) => t("commands.woolgames") })
+export class WoolGamesCommand extends BaseHypixelCommand<WoolGamesModes> {
   public constructor() {
-    super(WOOLWARS_MODES);
+    super(WOOLGAMES_MODES);
   }
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<WoolWarsModes, never>
+    { mode }: ProfileData<WoolGamesModes>
   ): JSX.Element {
-    return <WoolWarsProfile {...base} mode={mode} />;
+    return <WoolGamesProfile {...base} mode={mode} />;
   }
 }

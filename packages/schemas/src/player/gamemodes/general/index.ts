@@ -7,13 +7,13 @@
  */
 
 import { Events } from "./events.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { getNetworkLevel } from "./util.js";
 import type { APIData } from "@statsify/util";
 
-export const GENERAL_MODES = new GameModes([{ api: "overall" }]);
-export type GeneralModes = IGameModes<typeof GENERAL_MODES>;
+export const GENERAL_MODES = new GameModes([{ api: "overall" }] as const);
+export type GeneralModes = ExtractGameModes<typeof GENERAL_MODES>;
 
 export class General {
   @Field()

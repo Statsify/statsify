@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BridgeModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { BridgeModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   Container,
   Footer,

@@ -66,3 +66,44 @@ export class WoolWarsOverall extends WoolWarsClass {
     this.wlr = ratio(this.wins, this.losses);
   }
 }
+
+export class WoolWars {
+  @Field()
+  public overall: WoolWarsOverall;
+
+  @Field()
+  public tank: WoolWarsClass;
+
+  @Field()
+  public archer: WoolWarsClass;
+
+  @Field()
+  public builder: WoolWarsClass;
+
+  @Field()
+  public swordsman: WoolWarsClass;
+
+  @Field()
+  public engineer: WoolWarsClass;
+
+  @Field()
+  public golem: WoolWarsClass;
+
+  @Field()
+  public assault: WoolWarsClass;
+
+  @Field({ store: { default: "none" } })
+  public class: string;
+
+  public constructor(data: APIData = {}) {
+    this.overall = new WoolWarsOverall(data.stats);
+    this.tank = new WoolWarsClass(data.stats?.classes?.tank);
+    this.archer = new WoolWarsClass(data.stats?.classes?.archer);
+    this.builder = new WoolWarsClass(data.stats?.classes?.builder);
+    this.swordsman = new WoolWarsClass(data.stats?.classes?.swordsman);
+    this.engineer = new WoolWarsClass(data.stats?.classes?.engineer);
+    this.golem = new WoolWarsClass(data.stats?.classes?.golem);
+    this.assault = new WoolWarsClass(data.stats?.classes?.assault);
+    this.class = data.selected_class;
+  }
+}

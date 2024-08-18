@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { WarlordsCaptureTheFlag, WarlordsDomination, WarlordsTeamDeathmatch } from "./mode.js";
 import { WarlordsMage, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "./class.js";
 import { add, ratio, sub } from "@statsify/math";
@@ -24,12 +24,12 @@ export const WARLORDS_MODES = new GameModes([
   { hypixel: "ctf_mini", formatted: "Capture the Flag" },
   { hypixel: "domination", formatted: "Domination" },
   { hypixel: "team_deathmatch", formatted: "Team Deathmatch" },
-]);
+] as const);
 
-export type WarlordsModes = IGameModes<typeof WARLORDS_MODES>;
+export type WarlordsModes = ExtractGameModes<typeof WARLORDS_MODES>;
 
-// flag_conquer_self
-// flag_returns
+// [TODO]: flag_conquer_self
+// [TODO]: flag_returns
 
 export class Warlords {
   @Field({ store: { default: "warrior" } })

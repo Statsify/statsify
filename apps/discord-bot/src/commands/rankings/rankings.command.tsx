@@ -37,7 +37,7 @@ import {
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
-  WOOLWARS_MODES,
+  WOOLGAMES_MODES,
 } from "@statsify/schemas";
 import {
   ApiService,
@@ -298,10 +298,10 @@ export class RankingsCommand {
 
   @SubCommand({
     ...options,
-    description: (t) => t("commands.rankings-woolwars"),
+    description: (t) => t("commands.rankings-woolgames"),
   })
-  public woolwars(context: CommandContext) {
-    return this.run(context, "woolwars", WOOLWARS_MODES);
+  public woolgames(context: CommandContext) {
+    return this.run(context, "woolgames", WOOLGAMES_MODES);
   }
 
   private async run<T extends GamesWithBackgrounds>(

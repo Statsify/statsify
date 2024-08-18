@@ -6,11 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ArcadeModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { ArcadeModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   BlockingDeadTable,
   BountyHuntersTable,
-  CaptureTheWoolTable,
   CreeperAttackTable,
   DragonWarsTable,
   DropperTable,
@@ -29,7 +28,6 @@ import {
   SeasonalTable,
   ThrowOutTable,
   ZombiesTable,
-  captureTheWoolSiderbar,
 } from "./modes/index.js";
 import { Container, Footer, Header, SidebarItem } from "#components";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -51,7 +49,7 @@ export const ArcadeProfile = ({
 }: ArcadeProfileProps) => {
   const { arcade } = player.stats;
 
-  let sidebar: SidebarItem[] = [
+  const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(arcade.coins), "§6"],
     [t("stats.coinConversions"), t(arcade.coinConversions), "§e"],
     [t("stats.arcadeWins"), t(arcade.wins), "§b"],
@@ -67,11 +65,6 @@ export const ArcadeProfile = ({
 
     case "bountyHunters":
       table = <BountyHuntersTable stats={arcade[api]} t={t} />;
-      break;
-
-    case "captureTheWool":
-      table = <CaptureTheWoolTable stats={arcade[api]} t={t} time={time} />;
-      sidebar = captureTheWoolSiderbar(arcade, t);
       break;
 
     case "creeperAttack":

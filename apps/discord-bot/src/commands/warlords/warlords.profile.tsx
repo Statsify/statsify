@@ -7,7 +7,7 @@
  */
 
 import { Container, Footer, Header, SidebarItem, Table } from "#components";
-import { FormattedGame, GameMode, WarlordsMage, WarlordsModes, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "@statsify/schemas";
+import { FormattedGame, type GameMode, WarlordsMage, WarlordsModes, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "@statsify/schemas";
 import { WarlordsClassTable } from "./tables/index.js";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";

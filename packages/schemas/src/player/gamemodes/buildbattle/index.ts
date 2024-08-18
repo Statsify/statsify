@@ -12,8 +12,8 @@ import {
   BuildBattleOverall,
   BuildBattlePro,
 } from "./mode.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import {
   GameTitle,
   createPrefixProgression,
@@ -31,7 +31,7 @@ export const BUILD_BATTLE_MODES = new GameModes([
   { hypixel: "BUILD_BATTLE_TEAMS_NORMAL", formatted: "Teams" },
   { hypixel: "BUILD_BATTLE_SOLO_NORMAL", formatted: "Solo" },
   { hypixel: "BUILD_BATTLE_SOLO_PRO", formatted: "Pro" },
-]);
+] as const);
 
 const titles: GameTitle[] = [
   { req: 0, fmt: (n) => `§f${n}`, title: "Rookie" },
@@ -48,7 +48,7 @@ const titles: GameTitle[] = [
   { req: 20_000, fmt: (n) => `§4${n}`, title: "Master" },
 ];
 
-export type BuildBattleModes = IGameModes<typeof BUILD_BATTLE_MODES>;
+export type BuildBattleModes = ExtractGameModes<typeof BUILD_BATTLE_MODES>;
 
 export class BuildBattle {
   @Field()

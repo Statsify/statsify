@@ -13,7 +13,7 @@ import {
   UHCDuelsTable,
 } from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
-import { DuelsModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 

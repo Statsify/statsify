@@ -86,8 +86,8 @@ export class ExpByGame {
   @Field({ leaderboard: { name: FormattedGame.WARLORDS, fieldName, limit } })
   public WARLORDS: number;
 
-  @Field({ leaderboard: { name: FormattedGame.WOOLWARS, fieldName, limit } })
-  public WOOLWARS: number;
+  @Field({ leaderboard: { name: FormattedGame.WOOLGAMES, fieldName, limit } })
+  public WOOLGAMES: number;
 
   public constructor(data: APIData) {
     this.ARCADE = data[GameCodeMapping.ARCADE];
@@ -113,6 +113,6 @@ export class ExpByGame {
     this.VAMPIREZ = data[GameCodeMapping.VAMPIREZ];
     this.WALLS = data[GameCodeMapping.WALLS];
     this.WARLORDS = data[GameCodeMapping.WARLORDS];
-    this.WOOLWARS = data[GameCodeMapping.WOOLWARS];
+    this.WOOLGAMES = data[GameCodeMapping.WOOLGAMES];
   }
 }
