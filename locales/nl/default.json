@@ -793,7 +793,8 @@
     "arcadeWins": "Arcade Wins",
     "draws": "Draws",
     "sheepThrown": "Sheep Thrown",
-    "magicWool": "Magic Wool"
+    "magicWool": "Magic Wool",
+    "sheepKilled": "Sheep Killed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Sluit je aan bij onze **$t(socials.discord)** en krijg **20% lagere cooldowns** $t(emojis:heart)",
