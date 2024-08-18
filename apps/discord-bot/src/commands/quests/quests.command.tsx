@@ -66,7 +66,7 @@ export class QuestsCommand {
 
     const [logo, skin, badge, gameIcons, verifiedLogo, crossLogo] = await Promise.all([
       getLogo(user),
-      this.apiService.getPlayerSkin(player.uuid),
+      this.apiService.getPlayerSkin(player.uuid, user),
       this.apiService.getUserBadge(player.uuid),
       getAllGameIcons(),
       getLogo("verified", 28),

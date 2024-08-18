@@ -1,12 +1,24 @@
 {
   "name": "@statsify/skin-renderer",
   "version": "0.0.0",
-  "main": "./index.cjs",
-  "types": "./index.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.cjs"
+    },
+    "./wasm": {
+      "types": "./pkg/statsify_skin_renderer.d.ts",
+      "default": "./pkg/statsify_skin_renderer.js"
+    }
+  },
   "scripts": {
-    "build": "napi build --platform --release && mv index.js index.cjs",
-    "build:debug": "napi build --platform && mv index.js index.cjs",
+    "build": "pnpm build:napi && pnpm build:wasm",
+    "build:debug": "pnpm build:napi:debug && pnpm build:wasm:debug",
+    "build:napi": "napi build --platform --release && mv index.js index.cjs",
+    "build:napi:debug": "napi build --platform && mv index.js index.cjs",
+    "build:wasm": "wasm-pack build --target web --release",
+    "build:wasm:debug": "wasm-pack build --target web --dev",
     "lint": "cargo fmt && cargo clippy --fix --allow-dirty"
   },
   "napi": {

@@ -317,6 +317,9 @@ importers:
 
   apps/site:
     dependencies:
+      '@statsify/skin-renderer':
+        specifier: workspace:^
+        version: link:../../packages/skin-renderer
       '@swc/helpers':
         specifier: ^0.5.12
         version: 0.5.12
@@ -357,9 +360,6 @@ importers:
       '@types/react-dom':
         specifier: ^18.3.0
         version: 18.3.0
-      '@types/sharp':
-        specifier: ^0.31.1
-        version: 0.31.1
       sass:
         specifier: ^1.77.8
         version: 1.77.8
@@ -464,8 +464,8 @@ importers:
   assets/private:
     dependencies:
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
       stackblur-canvas:
         specifier: ^2.7.0
         version: 2.7.0
@@ -486,8 +486,8 @@ importers:
   assets/public:
     dependencies:
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
       stackblur-canvas:
         specifier: 2.7.0
         version: 2.7.0
@@ -1787,9 +1787,6 @@ packages:
 
   '@types/responselike@1.0.3':
     resolution: {integrity: sha512-H/+L+UkTV33uf49PH5pCAUBVPNj2nDBXTN+qS1dOwyyg24l3CcicicCA7ca+HMvJBZcFgl5r8e+RR6elsb4Lyw==}
-
-  '@types/sharp@0.31.1':
-    resolution: {integrity: sha512-5nWwamN9ZFHXaYEincMSuza8nNfOof8nmO+mcI+Agx1uMUk4/pQnNIcix+9rLPXzKrm1pS34+6WRDbDV0Jn7ag==}
 
   '@types/through@0.0.32':
     resolution: {integrity: sha512-7XsfXIsjdfJM2wFDRAtEWp3zb2aVPk5QeyZxGlVK57q4u26DczMHhJmlhr0Jqv0THwxam/L8REXkj8M2I/lcvw==}
@@ -4401,6 +4398,9 @@ packages:
   skia-canvas@0.9.30:
     resolution: {integrity: sha512-Y4BZZhJpdGeRRfu/pyT1395UAE5Hgzup+P5tDq1vTTKcOgXmUuAWeDhvfeDn9FWaE6tNkOTQWO/mK7fdD5qIrw==}
 
+  skia-canvas@1.0.1:
+    resolution: {integrity: sha512-/HtZlmib2BD3Fi6P4ZywSq7VquPl2A1Frc0pA+xD5hJSvSzN7FoOJpBWDpDd0e1ByzrVO6ZIjO98dNSQ2XqlKw==}
+
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
@@ -6109,10 +6109,6 @@ snapshots:
       safe-buffer: 5.1.2
 
   '@types/responselike@1.0.3':
-    dependencies:
-      '@types/node': 22.1.0
-
-  '@types/sharp@0.31.1':
     dependencies:
       '@types/node': 22.1.0
 
@@ -8952,6 +8948,18 @@ snapshots:
       totalist: 3.0.1
 
   skia-canvas@0.9.30:
+    dependencies:
+      '@mapbox/node-pre-gyp': 1.0.11
+      cargo-cp-artifact: 0.1.8
+      glob: 8.1.0
+      path-browserify: 1.0.1
+      simple-get: 4.0.1
+      string-split-by: 1.0.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  skia-canvas@1.0.1:
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
       cargo-cp-artifact: 0.1.8

@@ -52,6 +52,9 @@ export class User {
   @Field({ store: { required: false } })
   public hasBadge?: boolean;
 
+  @Field({ store: { required: false } })
+  public extrudedSkins?: boolean;
+
   @Field({ type: () => String, store: { required: false } })
   public theme?: UserTheme;
 
@@ -87,6 +90,10 @@ export class User {
 
   public static isCore(user: User | null): boolean {
     return this.isTier(user, UserTier.CORE);
+  }
+
+  public static hasExtrudedSkins(user: User | null): boolean {
+    return this.isTier(user, UserTier.GOLD) && (user?.extrudedSkins ?? false);
   }
 
   public static getLogo(user: User | null) {

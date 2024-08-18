@@ -28,10 +28,11 @@ import woolwarsLeaderboard from "../public/examples/woolwars-leaderboard.png";
 import { Code } from "../components/Code";
 import { Feature } from "../components/Feature";
 import { Invite } from "../components/Invite";
+import { Layout } from "../components/Layout";
 import { StatCircle, StatCircleContainer } from "../components/StatCircle";
 
 const Index = () => (
-  <>
+  <Layout>
     <StatCircleContainer>
       <StatCircle
         title="Servers"
@@ -158,7 +159,7 @@ const Index = () => (
       create your own Minecraft text with <Code>/text</Code>!
     </Feature>
     <Invite />
-  </>
+  </Layout>
 );
 
 export default Index;

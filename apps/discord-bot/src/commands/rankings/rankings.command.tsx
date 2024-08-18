@@ -332,7 +332,7 @@ export class RankingsCommand {
       );
 
     const [skin, badge, logo, background] = await Promise.all([
-      this.apiService.getPlayerSkin(player.uuid),
+      this.apiService.getPlayerSkin(player.uuid, user),
       this.apiService.getUserBadge(player.uuid),
       getLogo(user),
       getBackground(...mapBackground(modes, modes.getApiModes()[0])),
