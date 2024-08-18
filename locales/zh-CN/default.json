@@ -793,7 +793,8 @@
     "arcadeWins": "Arcade Wins",
     "draws": "Draws",
     "sheepThrown": "Sheep Thrown",
-    "magicWool": "Magic Wool"
+    "magicWool": "Magic Wool",
+    "sheepKilled": "Sheep Killed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) 加入我们的**$t(socials.discord)**可以获得**减少20%的冷却时间** $t(emojis:heart)",
