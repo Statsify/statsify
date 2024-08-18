@@ -793,7 +793,8 @@
     "arcadeWins": "Vitórias no Arcade",
     "draws": "Empates",
     "sheepThrown": "Sheep Thrown",
-    "magicWool": "Magic Wool"
+    "magicWool": "Magic Wool",
+    "sheepKilled": "Sheep Killed"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Entre no nosso $t(socials.discord) e receba **menos 20% de tempo de espera** $t(emojis:heart)",
