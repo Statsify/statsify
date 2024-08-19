@@ -8,6 +8,5 @@
 
 export * from "./guild.404.js";
 export * from "./player.404.js";
-export * from "./recentgames.404.js";
 export * from "./status.404.js";
 export * from "./session.404.js";

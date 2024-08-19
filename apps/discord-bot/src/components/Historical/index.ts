@@ -6,14 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HistoricalExclude } from "./Historical-Exclude.js";
-import { HistoricalHeader } from "./Historical-Header.js";
-import { HistoricalProgression } from "./Historical-Progression.js";
+import { HistoricalExclude } from "./Exclude.js";
+import { HistoricalHeader } from "./Header.js";
+import { HistoricalInclude } from "./Include.js";
+import { HistoricalProgression } from "./Progression.js";
 
 export const Historical = {
   header: HistoricalHeader,
   progression: HistoricalProgression,
   exclude: HistoricalExclude,
+  include: HistoricalInclude,
 };
 
-export type { HistoricalTimeData } from "./Historical-Header.js";
+export type { HistoricalTimeData } from "./Header.js";

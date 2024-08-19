@@ -28,7 +28,19 @@ export const DUELS_MODES = new GameModes([
   { api: "bow", hypixel: "DUELS_BOW_DUEL" },
   { api: "bowSpleef", hypixel: "DUELS_BOWSPLEEF_DUEL" },
   { api: "boxing", hypixel: "DUELS_BOXING_DUEL" },
-  { api: "bridge" },
+  {
+    api: "bridge",
+    submodes: [
+      { api: "overall" },
+      { api: "solo" },
+      { api: "doubles" },
+      { api: "threes" },
+      { api: "fours" },
+      { api: "2v2v2v2" },
+      { api: "3v3v3v3" },
+      { api: "ctf", formatted: "CTF" },
+    ],
+  },
   { api: "classic", hypixel: "DUELS_CLASSIC_DUEL" },
   { api: "combo", hypixel: "DUELS_COMBO_DUEL" },
   { api: "megawalls", formatted: "MegaWalls" },
@@ -59,19 +71,6 @@ export const DUELS_MODES = new GameModes([
 ] as const);
 
 export type DuelsModes = ExtractGameModes<typeof DUELS_MODES>;
-
-export const BRIDGE_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo" },
-  { api: "doubles" },
-  { api: "threes" },
-  { api: "fours" },
-  { api: "2v2v2v2" },
-  { api: "3v3v3v3" },
-  { api: "ctf", formatted: "CTF" },
-] as const);
-
-export type BridgeModes = ExtractGameModes<typeof BRIDGE_MODES>;
 
 export class Duels {
   @Field({ store: { default: 300 }, leaderboard: { enabled: false } })

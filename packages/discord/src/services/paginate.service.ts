@@ -84,7 +84,7 @@ export class PaginateService {
     const mainController = new PageController(pages, currentIndex);
 
     const page = pages[currentIndex];
-    let subController = "subPages" in page ? new PageController(page.subPages, currentSubIndex) : undefined;
+    let subController = "subPages" in page && page.subPages.length > 1 ? new PageController(page.subPages, currentSubIndex) : undefined;
 
     mainController.register(listener, (interaction, index) => handler(interaction, index, 0));
     subController?.register(listener, (interaction, subIndex) => handler(interaction, currentIndex, subIndex));
@@ -106,7 +106,7 @@ export class PaginateService {
         currentIndex = index;
         currentSubIndex = 0;
 
-        if ("subPages" in pages[index]) {
+        if ("subPages" in pages[index] && pages[index].subPages.length > 1) {
           subController = new PageController(pages[index].subPages, currentSubIndex);
           subController.register(listener, (interaction, subIndex) => handler(interaction, currentIndex, subIndex));
         } else {
