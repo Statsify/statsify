@@ -15,21 +15,16 @@ import type { APIData } from "@statsify/util";
 
 export const WARLORDS_MODES = new GameModes([
   { api: "overall" },
-
+  { api: "captureTheFlag", hypixel: "ctf_mini", formatted: "Capture the Flag" },
+  { api: "domination", hypixel: "domination", formatted: "Domination" },
+  { api: "teamDeathmatch", hypixel: "team_deathmatch", formatted: "Team Deathmatch" },
   { api: "mage" },
   { api: "warrior" },
   { api: "paladin" },
   { api: "shaman" },
-
-  { hypixel: "ctf_mini", formatted: "Capture the Flag" },
-  { hypixel: "domination", formatted: "Domination" },
-  { hypixel: "team_deathmatch", formatted: "Team Deathmatch" },
 ] as const);
 
 export type WarlordsModes = ExtractGameModes<typeof WARLORDS_MODES>;
-
-// [TODO]: flag_conquer_self
-// [TODO]: flag_returns
 
 export class Warlords {
   @Field({ store: { default: "warrior" } })

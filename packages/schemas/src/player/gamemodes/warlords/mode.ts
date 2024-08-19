@@ -41,9 +41,18 @@ export class WarlordsCaptureTheFlag {
   @Field()
   public kills: number;
 
+  @Field()
+  public flagCaptures: number;
+
+  @Field()
+  public flagReturns: number;
+
   public constructor(data: APIData) {
     this.wins = data.wins_capturetheflag;
     this.kills = data.kills_capturetheflag;
+
+    this.flagCaptures = data.flag_conquer_self;
+    this.flagReturns = data.flag_returns;
   }
 }
 

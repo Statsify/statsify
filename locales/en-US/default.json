@@ -796,7 +796,9 @@
     "defendPoints": "Defend Points",
     "draws": "Draws",
     "sheepThrown": "Sheep Thrown",
-    "magicWool": "Magic Wool"
+    "magicWool": "Magic Wool",
+    "flagCaptures": "Flag Captures",
+    "flagReturns": "Flag Returns"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
