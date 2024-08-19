@@ -9,8 +9,6 @@
 import { type APIData, type Circular, type Flatten, flatten } from "@statsify/util";
 import {
   CacheLevel,
-  PlayerNotFoundException,
-  RecentGamesNotFoundException,
   StatusNotFoundException,
 } from "@statsify/api-client";
 import { HypixelService } from "#hypixel";
@@ -115,7 +113,10 @@ export class PlayerService {
 
     if (!player) throw new NotFoundException("player");
 
-    const status = await this.hypixelService.getStatus(player.uuid);
+    const [status, games] = await Promise.all([
+      this.hypixelService.getStatus(player.uuid),
+      this.hypixelService.getRecentGames(player.uuid),
+    ]);
 
     if (!status) throw new StatusNotFoundException(player);
 
@@ -123,29 +124,9 @@ export class PlayerService {
     status.prefixName = player.prefixName;
     status.uuid = player.uuid;
     status.actions = player.status;
+    status.recentGames = games;
 
     return status;
-  }
-
-  public async getRecentGames(tag: string) {
-    const player = await this.get(tag, CacheLevel.CACHE_ONLY, {
-      uuid: true,
-      displayName: true,
-      prefixName: true,
-    });
-
-    if (!player) throw new PlayerNotFoundException();
-
-    const games = await this.hypixelService.getRecentGames(player.uuid);
-
-    if (!games || !games.length) throw new RecentGamesNotFoundException(player);
-
-    return {
-      uuid: player.uuid,
-      displayName: player.displayName,
-      prefixName: player.prefixName,
-      games,
-    };
   }
 
   /**

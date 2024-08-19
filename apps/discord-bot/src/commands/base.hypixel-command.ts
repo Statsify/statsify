@@ -50,6 +50,7 @@ export type ModeEmoji = LocalizationString | false | undefined;
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   getPreProfileData?(player: Player): K | Promise<K>;
   filterModes?(player: Player, modes: GameModeWithSubModes<T>[]): GameModeWithSubModes<T>[];
+  filterSubmodes?(player: Player, mode: GameModeWithSubModes<T>): GameModeWithSubModes<T>["submodes"];
   getModeEmojis?(modes: GameModeWithSubModes<T>[]): ModeEmoji[];
 }
 
@@ -90,7 +91,9 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
         emoji: emojis[index],
       };
 
-      if (mode.submodes.length === 0) {
+      const filteredSubmodes = this.filterSubmodes?.(player, mode) ?? mode.submodes;
+
+      if (filteredSubmodes.length === 0) {
         const gameMode = { ...mode, submode: undefined } as unknown as GameMode<T>;
 
         return {
@@ -117,7 +120,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
         };
       }
 
-      const subPages = mode.submodes.map((submode): SubPage => ({
+      const subPages = filteredSubmodes.map((submode): SubPage => ({
         label: submode.formatted,
         generator: async (t) => {
           const background = await getBackground(...mapBackground(this.modes, mode.api));

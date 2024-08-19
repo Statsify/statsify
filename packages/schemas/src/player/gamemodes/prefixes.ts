@@ -124,6 +124,12 @@ export const defaultPrefix = <T extends unknown[] = []>(
 ) => getFormattedPrefix({ prefixes, score: prefixes[0].req, ...options });
 
 const RAINBOW_COLORS = ["c", "6", "e", "a", "b", "d", "9"];
+const ALT_RAINBOW_COLORS = ["c", "6", "e", "a", "b", "d", "5"];
 
-export const rainbow = (text: string) =>
-  [...text].map((l, i) => `§${RAINBOW_COLORS[i % RAINBOW_COLORS.length]}${l}`).join("");
+export const rainbow = (text: string, useAltPalette = false) => {
+  const colors = useAltPalette ? ALT_RAINBOW_COLORS : RAINBOW_COLORS;
+
+  return [...text]
+    .map((l, i) => `§${colors[i % colors.length]}${l}`)
+    .join("");
+};

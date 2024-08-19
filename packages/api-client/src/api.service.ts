@@ -21,7 +21,6 @@ import {
   GetKeyResponse,
   GetPlayerResponse,
   GetPlayerSearchResponse,
-  GetRecentGamesResponse,
   GetSessionResponse,
   GetSkinTexturesResponse,
   GetStatusResponse,
@@ -75,16 +74,6 @@ export class ApiService {
     return this.request<DeletePlayerResponse>("/player", { player: tag }, "DELETE")
       .then(() => true)
       .catch(() => false);
-  }
-
-  public getRecentGames(tag: string) {
-    return this.requestKey<GetRecentGamesResponse, "recentGames">(
-      "/player/recentgames",
-      "recentGames",
-      {
-        player: tag,
-      }
-    );
   }
 
   public getStatus(tag: string) {
