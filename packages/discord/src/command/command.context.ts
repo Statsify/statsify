@@ -7,13 +7,13 @@
  */
 
 import {
-  APIApplicationCommandInteractionDataBasicOption,
+  type APIApplicationCommandInteractionDataBasicOption,
   ApplicationCommandOptionType,
 } from "discord-api-types/v10";
-import { AbstractCommandListener } from "./abstract-command.listener.js";
-import { IMessage, LocalizeFunction, Message } from "#messages";
 import { User } from "@statsify/schemas";
 import { noop } from "@statsify/util";
+import type { AbstractCommandListener } from "./abstract-command.listener.js";
+import type { IMessage, LocalizeFunction, Message } from "#messages";
 import type { Interaction } from "#interaction";
 
 export class CommandContext {

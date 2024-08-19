@@ -553,6 +553,11 @@
     "premium": "[Premium](<https://statsify.net/premium>)",
     "website": "[Website](https://statsify.net/)"
   },
+  "deprecated": {
+    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} has been merged into the {{newCommandName}} command. Please run {{newCommand}} and select {{mode}} in the dropdown.",
+    "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} has been removed in favor of {{newCommandName}}. Please run {{newCommand}} instead.",
+    "command-description": "This command has been removed in favor of {{newCommandName}}."
+  },
   "stats": {
     "achievementPoints": "Achievement Points",
     "adrenaline": "Adrenaline",
