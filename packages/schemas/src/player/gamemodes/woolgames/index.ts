@@ -84,7 +84,7 @@ export class WoolGames {
   @Field()
   public captureTheWool: CaptureTheWool;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
     this.layers = data.progression?.available_layers;
     this.exp = Math.round(data.progression?.experience ?? 0);
@@ -104,7 +104,7 @@ export class WoolGames {
     this.playtime = (data.playtime ?? 0) * 1000;
 
     this.woolwars = new WoolWars(data.wool_wars);
-    this.sheepwars = new SheepWars(data.sheep_wars);
+    this.sheepwars = new SheepWars(data.sheep_wars, ap);
     this.captureTheWool = new CaptureTheWool(data.capture_the_wool?.stats);
   }
 }

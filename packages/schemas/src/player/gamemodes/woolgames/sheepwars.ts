@@ -36,12 +36,15 @@ export class SheepWars {
   public sheepThrown: number;
 
   @Field()
+  public sheepKilled: number;
+
+  @Field()
   public magicWool: number;
 
   @Field({ store: { default: "none" } })
   public kit: string;
 
-  public constructor(data: APIData = {}) {
+  public constructor(data: APIData = {}, ap: APIData = {}) {
     this.gamesPlayed = data.stats?.games_played;
     this.wins = data.stats?.wins;
     this.losses = data.stats?.losses;
@@ -52,6 +55,7 @@ export class SheepWars {
     this.kdr = ratio(this.kills, this.deaths);
 
     this.sheepThrown = data.stats?.sheep_thrown;
+    this.sheepKilled = ap?.woolgames_sheep_wars_sheep_slayer;
     this.magicWool = data.stats?.magic_wool_hit;
 
     this.kit = data.default_kit;

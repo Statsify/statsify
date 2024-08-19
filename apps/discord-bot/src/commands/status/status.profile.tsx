@@ -184,11 +184,16 @@ export const StatusProfile = ({
         time="LIVE"
       />
       <Table.table>
-        {table}
         <If condition={status.recentGames.length > 0}>
+          <Table.ts title="§6Status">
+            {table}
+          </Table.ts>
           <Table.ts title="§6Recent Games">
             <RecentGamesTable recentGames={status.recentGames} gameIcons={gameIcons} t={t} />
           </Table.ts>
+        </If>
+        <If condition={status.recentGames.length === 0}>
+          {table}
         </If>
       </Table.table>
       <Footer logo={logo} user={user} />
