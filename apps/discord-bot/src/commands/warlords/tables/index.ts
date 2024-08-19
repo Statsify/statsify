@@ -7,3 +7,7 @@
  */
 
 export * from "./classes.table.js";
+export * from "./capture-the-flag.table.js";
+export * from "./domination.table.js";
+export * from "./overall.table.js";
+export * from "./deathmatch.table.js";
