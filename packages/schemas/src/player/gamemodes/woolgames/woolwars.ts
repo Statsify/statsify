@@ -23,7 +23,7 @@ export class WoolWarsClass {
   @Field()
   public assists: number;
 
-  @Field()
+  @Field({ leaderboard: { name: "Power-Ups" } })
   public powerups: number;
 
   @Field({ leaderboard: { additionalFields: ["this.woolPlaced"] } })

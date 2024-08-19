@@ -219,7 +219,7 @@ export class SessionCommand {
 
   @SubCommand({ description: (t) => t("commands.session-tntgames"), args: [PlayerArgument] })
   public tntgames(context: CommandContext) {
-    return this.run(context, TNT_GAMES_MODES, (base) => <TNTGamesProfile {...base} />);
+    return this.run(context, TNT_GAMES_MODES, (base, mode) => <TNTGamesProfile {...base} mode={mode} />);
   }
 
   @SubCommand({

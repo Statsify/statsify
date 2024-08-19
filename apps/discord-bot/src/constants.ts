@@ -257,7 +257,7 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
           return mapBackground(SPEED_UHC_MODES, getDefaultApiMode(SPEED_UHC_MODES));
 
         case "TNT_GAMES":
-          return mapBackground(TNT_GAMES_MODES, getDefaultApiMode(TNT_GAMES_MODES));
+          return ["tntgames", "overall"];
 
         case "TURBO_KART_RACERS":
           return mapBackground(
@@ -278,7 +278,7 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
           return mapBackground(WARLORDS_MODES, getDefaultApiMode(WARLORDS_MODES));
 
         case "WOOLGAMES":
-          return mapBackground(WOOLGAMES_MODES, getDefaultApiMode(WOOLGAMES_MODES));
+          return ["woolgames", "overall"];
       }
 
       throw new Error(`Missing background for mode: ${mode}`);
@@ -322,7 +322,7 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["smashheroes", "overall"];
 
     case TNT_GAMES_MODES:
-      return ["tntgames", "overall"];
+      return ["tntgames", mode];
 
     case TURBO_KART_RACERS_MODES:
       return ["turbokartracers", "overall"];
