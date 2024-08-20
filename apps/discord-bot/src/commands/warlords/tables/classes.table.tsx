@@ -6,17 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ClassMetadata, METADATA_KEY, WarlordsClass, WarlordsSpecification } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
-import { Warlords, WarlordsClass } from "@statsify/schemas";
+import type { Constructor } from "@statsify/util";
 
 interface WarlordsClassColumnProps {
   title: string;
-  stats: WarlordsClass;
+  stats: WarlordsSpecification;
   t: LocalizeFunction;
 }
 
-const WarlordsClassColumn = ({ title, stats, t }: WarlordsClassColumnProps) => (
+const WarlordsSpecificationColumn = ({ title, stats, t }: WarlordsClassColumnProps) => (
   <Table.ts title={title}>
     <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§e" />
     <Table.td title={t("stats.damage")} value={t(stats.damage)} color="§c" />
@@ -27,17 +28,33 @@ const WarlordsClassColumn = ({ title, stats, t }: WarlordsClassColumnProps) => (
 );
 
 export interface WarlordsClassTableProps {
-  warlords: Warlords;
+  stats: WarlordsClass;
+  constructor: Constructor<WarlordsClass>;
+  color: string;
   t: LocalizeFunction;
 }
 
-export const WarlordsClassTable = ({ warlords, t }: WarlordsClassTableProps) => (
-  <Table.table>
-    <Table.tr>
-      <WarlordsClassColumn title="§bMage" stats={warlords.mage} t={t} />
-      <WarlordsClassColumn title="§7Warrior" stats={warlords.warrior} t={t} />
-      <WarlordsClassColumn title="§ePaladin" stats={warlords.paladin} t={t} />
-      <WarlordsClassColumn title="§2Shaman" stats={warlords.shaman} t={t} />
-    </Table.tr>
-  </Table.table>
-);
+export const WarlordsClassTable = ({ stats, t, constructor, color }: WarlordsClassTableProps) => {
+  const { attack, defense, healer } = getSpecificationNames(constructor);
+
+  return (
+    <Table.table>
+      <Table.tr>
+        <WarlordsSpecificationColumn title={`${color}Overall`} stats={stats} t={t} />
+        <WarlordsSpecificationColumn title={`§4${attack}`} stats={stats.attack} t={t} />
+        <WarlordsSpecificationColumn title={`§7${defense}`} stats={stats.defense} t={t} />
+        <WarlordsSpecificationColumn title={`§3${healer}`} stats={stats.healer} t={t} />
+      </Table.tr>
+    </Table.table>
+  );
+};
+
+function getSpecificationNames(constructor: Constructor<WarlordsClass>) {
+  const metadata = Reflect.getMetadata(METADATA_KEY, constructor.prototype) as ClassMetadata;
+
+  return {
+    attack: metadata.attack.leaderboard.name,
+    defense: metadata.defense.leaderboard.name,
+    healer: metadata.healer.leaderboard.name,
+  };
+}

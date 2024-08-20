@@ -15,6 +15,7 @@ import {
   Page,
   PaginateService,
   PlayerArgument,
+  SubPage,
 } from "@statsify/discord";
 import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
@@ -23,7 +24,7 @@ import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { noop } from "@statsify/util";
 import { render } from "@statsify/rendering";
-import type { GameMode, GameModes, Player, User } from "@statsify/schemas";
+import type { GameMode, GameModeWithSubModes, GameModes, Player, User } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
 
 export type ProfileTime = "LIVE" | HistoricalTimeData;
@@ -48,8 +49,9 @@ export type ModeEmoji = LocalizationString | false | undefined;
 
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   getPreProfileData?(player: Player): K | Promise<K>;
-  filterModes?(player: Player, modes: GameMode<T>[]): GameMode<T>[];
-  getModeEmojis?(modes: GameMode<T>[]): ModeEmoji[];
+  filterModes?(player: Player, modes: GameModeWithSubModes<T>[]): GameModeWithSubModes<T>[];
+  filterSubmodes?(player: Player, mode: GameModeWithSubModes<T>): GameModeWithSubModes<T>["submodes"];
+  getModeEmojis?(modes: GameModeWithSubModes<T>[]): ModeEmoji[];
 }
 
 @Command({
@@ -83,29 +85,73 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     const filteredModes = this.filterModes?.(player, allModes) ?? allModes;
     const emojis = this.getModeEmojis?.(filteredModes) ?? [];
 
-    const pages: Page[] = filteredModes.map((mode, index) => ({
-      label: mode.formatted,
-      emoji: emojis[index],
-      generator: async (t) => {
-        const background = await getBackground(...mapBackground(this.modes, mode.api));
+    const pages: Page[] = filteredModes.map((mode, index) => {
+      const pageInput = {
+        label: mode.formatted,
+        emoji: emojis[index],
+      };
 
-        const profile = this.getProfile(
-          {
-            player,
-            skin,
-            background,
-            logo,
-            t,
-            user,
-            badge,
-            time: "LIVE",
+      const filteredSubmodes = this.filterSubmodes?.(player, mode) ?? mode.submodes;
+
+      if (filteredSubmodes.length === 0) {
+        const gameMode = { ...mode, submode: undefined } as unknown as GameMode<T>;
+
+        return {
+          ...pageInput,
+          generator: async (t) => {
+            const background = await getBackground(...mapBackground(this.modes, mode.api));
+
+            const profile = this.getProfile(
+              {
+                player,
+                skin,
+                background,
+                logo,
+                t,
+                user,
+                badge,
+                time: "LIVE",
+              },
+              { mode: gameMode, data }
+            );
+
+            return render(profile, getTheme(user));
           },
-          { mode, data }
-        );
+        };
+      }
 
-        return render(profile, getTheme(user));
-      },
-    }));
+      const subPages = filteredSubmodes.map((submode): SubPage => ({
+        label: submode.formatted,
+        generator: async (t) => {
+          const background = await getBackground(...mapBackground(this.modes, mode.api));
+
+          const gameMode = {
+            api: mode.api,
+            formatted: mode.formatted,
+            hypixel: mode.hypixel,
+            submode,
+          } as GameMode<T>;
+
+          const profile = this.getProfile(
+            {
+              player,
+              skin,
+              background,
+              logo,
+              t,
+              user,
+              badge,
+              time: "LIVE",
+            },
+            { mode: gameMode, data }
+          );
+
+          return render(profile, getTheme(user));
+        },
+      }));
+
+      return { ...pageInput, subPages };
+    });
 
     return this.paginateService.paginate(context, pages);
   }

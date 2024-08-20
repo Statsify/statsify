@@ -8,7 +8,7 @@
 
 import eslint from "@eslint/js";
 import licenseHeader from "eslint-plugin-license-header";
-import sortImports from "eslint-plugin-sort-imports-es6-autofix";
+import sortImports from "@j4cobi/eslint-plugin-sort-imports";
 import stylistic from "@stylistic/eslint-plugin";
 import tseslint from "typescript-eslint";
 import unusedImports from "eslint-plugin-unused-imports";
@@ -209,7 +209,7 @@ export default tseslint.config(
       "object-shorthand": ["error", "always"],
       "one-var": ["error", "never"],
       "prefer-template": "error",
-      "sort-imports/sort-imports-es6": [
+      "sort-imports/sort-imports": [
         "error",
         {
           ignoreCase: false,

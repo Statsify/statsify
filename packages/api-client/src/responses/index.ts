@@ -13,7 +13,6 @@ export * from "./get.guild.response.js";
 export * from "./get.session.response.js";
 export * from "./get.key.response.js";
 export * from "./get.player.response.js";
-export * from "./get.recentgames.response.js";
 export * from "./get.skin-textures.response.js";
 export * from "./get.status.response.js";
 export * from "./get.user.response.js";

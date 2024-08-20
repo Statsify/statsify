@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { GamePrefix, createPrefixProgression } from "#prefixes";
 import { Progression } from "#progression";
 import { UHCMode } from "./mode.js";
@@ -21,14 +21,14 @@ export const UHC_MODES = new GameModes([
   { api: "overall" },
   { api: "solo", hypixel: "SOLO" },
   { api: "teams", hypixel: "TEAMS" },
-]);
+] as const);
 
 const prefixes: GamePrefix[] = titleScores.map((level) => ({
   fmt: formatLevel,
   req: level.req,
 }));
 
-export type UHCModes = IGameModes<typeof UHC_MODES>;
+export type UHCModes = ExtractGameModes<typeof UHC_MODES>;
 
 export class UHC {
   @Field()

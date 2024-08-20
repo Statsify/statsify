@@ -10,7 +10,7 @@ export interface TableDataProps {
   title: string;
   value: string;
   color: string;
-  size?: "small" | "regular";
+  size?: "small" | "regular" | "inline";
 }
 
 /**
@@ -33,6 +33,16 @@ export const TableData = ({ title, value, color, size = "regular" }: TableDataPr
         >{`${color}${title}`}
         </text>
         <text margin={{ top: 0, bottom: 6 }}>{`${color}${value}`}</text>
+      </box>
+    );
+  }
+
+  if (size === "inline") {
+    return (
+      <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
+        <text>§l{color}{title}</text>
+        <div width="remaining" margin={{ left: 2, right: 2 }} />
+        <text>{color}{value}</text>
       </box>
     );
   }

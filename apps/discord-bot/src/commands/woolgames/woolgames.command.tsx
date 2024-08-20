@@ -12,19 +12,19 @@ import {
   ProfileData,
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
-import { DROPPER_MODES, DropperModes } from "@statsify/schemas";
-import { DropperProfile } from "./dropper.profile.js";
+import { WOOLGAMES_MODES, WoolGamesModes } from "@statsify/schemas";
+import { WoolGamesProfile } from "./woolgames.profile.js";
 
-@Command({ description: (t) => t("commands.dropper") })
-export class DropperCommand extends BaseHypixelCommand<DropperModes> {
+@Command({ description: (t) => t("commands.woolgames") })
+export class WoolGamesCommand extends BaseHypixelCommand<WoolGamesModes> {
   public constructor() {
-    super(DROPPER_MODES);
+    super(WOOLGAMES_MODES);
   }
 
   public getProfile(
     base: BaseProfileProps,
-    { mode }: ProfileData<DropperModes>
+    { mode }: ProfileData<WoolGamesModes>
   ): JSX.Element {
-    return <DropperProfile {...base} mode={mode} />;
+    return <WoolGamesProfile {...base} mode={mode} />;
   }
 }

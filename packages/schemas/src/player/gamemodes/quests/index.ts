@@ -29,10 +29,10 @@ import {
   VampireZQuests,
   WallsQuests,
   WarlordsQuests,
-  WoolWarsQuests,
+  WoolGamesQuests,
 } from "./modes/index.js";
+import { ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { Field } from "#metadata";
-import { FormattedGame, GameModes, IGameModes } from "#game";
 import { QuestTime, createQuestsInstance } from "./util.js";
 
 export const QUEST_MODES = new GameModes([
@@ -53,18 +53,15 @@ export const QUEST_MODES = new GameModes([
   { api: "SMASH_HEROES", formatted: removeFormatting(FormattedGame.SMASH_HEROES) },
   { api: "SPEED_UHC", formatted: removeFormatting(FormattedGame.SPEED_UHC) },
   { api: "TNT_GAMES", formatted: removeFormatting(FormattedGame.TNT_GAMES) },
-  {
-    api: "TURBO_KART_RACERS",
-    formatted: removeFormatting(FormattedGame.TURBO_KART_RACERS),
-  },
+  { api: "TURBO_KART_RACERS", formatted: removeFormatting(FormattedGame.TURBO_KART_RACERS) },
   { api: "UHC", formatted: removeFormatting(FormattedGame.UHC) },
   { api: "VAMPIREZ", formatted: removeFormatting(FormattedGame.VAMPIREZ) },
   { api: "WALLS", formatted: removeFormatting(FormattedGame.WALLS) },
   { api: "WARLORDS", formatted: removeFormatting(FormattedGame.WARLORDS) },
-  { api: "WOOLWARS", formatted: removeFormatting(FormattedGame.WOOLWARS) },
-]);
+  { api: "WOOLGAMES", formatted: removeFormatting(FormattedGame.WOOLGAMES) },
+] as const);
 
-export type QuestModes = IGameModes<typeof QUEST_MODES>;
+export type QuestModes = ExtractGameModes<typeof QUEST_MODES>;
 
 const questModes = {
   ARCADE: ArcadeQuests,
@@ -88,7 +85,7 @@ const questModes = {
   VAMPIREZ: VampireZQuests,
   WALLS: WallsQuests,
   WARLORDS: WarlordsQuests,
-  WOOLWARS: WoolWarsQuests,
+  WOOLGAMES: WoolGamesQuests,
 } as const;
 
 export const DailyQuests = createQuestsInstance(QuestTime.Daily, questModes);

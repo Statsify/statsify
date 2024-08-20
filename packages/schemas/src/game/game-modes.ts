@@ -8,37 +8,55 @@
 
 import { prettify } from "@statsify/util";
 
-interface StatsifyGameMode<T extends string> {
-  hypixel?: string;
-  api: T;
-  formatted?: string;
-}
+export type GameMode<Modes extends Mode[]> = {
+  [Key in ApiModeFromGameModes<Modes>]: {
+    api: Key;
+    formatted: string;
+    hypixel?: string;
+    submode: Extract<Modes[number], { api: Key }> extends { submodes: SubMode[] } ? Omit<Exclude<Extract<Modes[number], { api: Key }>["submodes"], undefined>[number], "formatted"> & { formatted: string } : undefined;
+  }
+}[ApiModeFromGameModes<Modes>];
 
-interface HypixelGameMode {
+export type GameModeWithSubModes<Modes extends Mode[]> = {
+  [Key in ApiModeFromGameModes<Modes>]: {
+    api: Key;
+    formatted: string;
+    hypixel?: string;
+    submodes: Array<Omit<Exclude<Extract<Modes[number], { api: Key }>["submodes"], undefined>[number], "formatted"> & { formatted: string }>;
+  }
+}[ApiModeFromGameModes<Modes>];
+
+export type Mode = {
   hypixel: string;
   formatted: string;
-}
+} | {
+  hypixel?: string;
+  api: string;
+  formatted?: string;
+  submodes?: SubMode[];
+};
 
-export interface GameMode<T extends string>
-  extends Omit<StatsifyGameMode<T>, "formatted"> {
-  formatted: string;
-}
+type SubMode = { api: string; formatted?: string };
 
-export class GameModes<K extends string> {
-  private modes: GameMode<K>[] = [];
+export class GameModes<Modes extends Mode[]> {
+  private modes: GameModeWithSubModes<Modes>[];
   private hypixelModes: Record<string, string>;
 
-  public constructor(modes: (StatsifyGameMode<K> | HypixelGameMode)[]) {
-    this.modes = (modes.filter((m) => "api" in m) as StatsifyGameMode<K>[]).map((m) => ({
+  public constructor(modes: Modes) {
+    this.modes = modes.filter((m) => "api" in m).map((m) => ({
       hypixel: m.hypixel,
       api: m.api,
       formatted: m.formatted ?? prettify(m.api),
-    }));
+      submodes: m.submodes?.map((sm) => ({ api: sm.api, formatted: sm.formatted ?? prettify(sm.api) })) ?? [],
+    })) as GameModeWithSubModes<Modes>[];
 
     this.hypixelModes = Object.fromEntries(
       modes
-        .filter((m) => "hypixel" in m)
-        .map((m) => [m.hypixel, m.formatted ?? prettify((m as GameMode<any>).api)])
+        .map((m) => {
+          if (typeof m.hypixel !== "string") return undefined;
+          const formatted = m.formatted ?? prettify((m as { api: string }).api);
+          return [m.hypixel, formatted] as const;
+        }).filter((entry) => entry !== undefined)
     );
   }
 
@@ -46,7 +64,7 @@ export class GameModes<K extends string> {
     return this.modes.map(({ formatted }) => formatted);
   }
 
-  public getApiModes(): K[] {
+  public getApiModes(): ApiModeFromGameModes<Modes>[] {
     return this.modes.map(({ api }) => api);
   }
 
@@ -59,4 +77,7 @@ export class GameModes<K extends string> {
   }
 }
 
-export type IGameModes<T> = T extends GameModes<infer U> ? U : never;
+export type ExtractGameModes<T> = T extends GameModes<infer U> ? U : never;
+export type ModeFromGameModes<T extends Mode[]> = Extract<T[number], { api: string }>;
+export type ApiModeFromGameModes<T extends Mode[]> = ModeFromGameModes<T>["api"];
+export type SubModesForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> = Omit<Extract<T[number], { api: M; submodes: SubMode[] }>["submodes"][number], "formatted"> & { formatted: string };

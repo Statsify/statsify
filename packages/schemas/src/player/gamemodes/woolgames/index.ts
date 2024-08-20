@@ -6,27 +6,38 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type APIData, formatTime } from "@statsify/util";
+import { CaptureTheWool } from "./capture-the-wool.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { Progression } from "#progression";
-import { WoolWarsClass, WoolWarsOverall } from "./class.js";
+import { SheepWars } from "./sheepwars.js";
+import { WoolWars } from "./woolwars.js";
 import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
-import type { APIData } from "@statsify/util";
 
-export const WOOLWARS_MODES = new GameModes([
-  { api: "overall" },
-  { api: "tank" },
-  { api: "archer" },
-  { api: "builder" },
-  { api: "swordsman" },
-  { api: "engineer" },
-  { api: "golem" },
-  { api: "assault" },
-]);
+export const WOOLGAMES_MODES = new GameModes([
+  {
+    api: "woolwars",
+    formatted: "Wool Wars",
+    hypixel: "wool_wars_two_four",
+    submodes: [
+      { api: "overall" },
+      { api: "tank" },
+      { api: "archer" },
+      { api: "builder" },
+      { api: "swordsman" },
+      { api: "engineer" },
+      { api: "golem" },
+      { api: "assault" },
+    ],
+  },
+  { api: "sheepwars", formatted: "Sheep Wars", hypixel: "sheep_wars_two_six" },
+  { api: "captureTheWool", hypixel: "capture_the_wool_two_twenty" },
+] as const);
 
-export type WoolWarsModes = IGameModes<typeof WOOLWARS_MODES>;
+export type WoolGamesModes = ExtractGameModes<typeof WOOLGAMES_MODES>;
 
-export class WoolWars {
+export class WoolGames {
   @Field({ historical: { enabled: false } })
   public coins: number;
 
@@ -61,31 +72,19 @@ export class WoolWars {
   @Field()
   public nextLevelFormatted: string;
 
-  @Field()
-  public overall: WoolWarsOverall;
+  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  public playtime: number;
+
+  @Field({ leaderboard: { name: "WoolWars" } })
+  public woolwars: WoolWars;
+
+  @Field({ leaderboard: { name: "SheepWars" } })
+  public sheepwars: SheepWars;
 
   @Field()
-  public tank: WoolWarsClass;
+  public captureTheWool: CaptureTheWool;
 
-  @Field()
-  public archer: WoolWarsClass;
-
-  @Field()
-  public builder: WoolWarsClass;
-
-  @Field()
-  public swordsman: WoolWarsClass;
-
-  @Field()
-  public engineer: WoolWarsClass;
-
-  @Field()
-  public golem: WoolWarsClass;
-
-  @Field()
-  public assault: WoolWarsClass;
-
-  public constructor(data: APIData) {
+  public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
     this.layers = data.progression?.available_layers;
     this.exp = Math.round(data.progression?.experience ?? 0);
@@ -102,16 +101,14 @@ export class WoolWars {
 
     this.progression = new Progression(exp, getExpReq(Math.floor(this.level)));
 
-    this.overall = new WoolWarsOverall(data.wool_wars?.stats);
+    this.playtime = (data.playtime ?? 0) * 1000;
 
-    this.tank = new WoolWarsClass(data.wool_wars?.stats?.classes?.tank);
-    this.archer = new WoolWarsClass(data.wool_wars?.stats?.classes?.archer);
-    this.builder = new WoolWarsClass(data.wool_wars?.stats?.classes?.builder);
-    this.swordsman = new WoolWarsClass(data.wool_wars?.stats?.classes?.swordsman);
-    this.engineer = new WoolWarsClass(data.wool_wars?.stats?.classes?.engineer);
-    this.golem = new WoolWarsClass(data.wool_wars?.stats?.classes?.golem);
-    this.assault = new WoolWarsClass(data.wool_wars?.stats?.classes?.assault);
+    this.woolwars = new WoolWars(data.wool_wars);
+    this.sheepwars = new SheepWars(data.sheep_wars, ap);
+    this.captureTheWool = new CaptureTheWool(data.capture_the_wool?.stats);
   }
 }
 
-export * from "./class.js";
+export * from "./woolwars.js";
+export * from "./sheepwars.js";
+export * from "./capture-the-wool.js";

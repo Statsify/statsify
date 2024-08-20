@@ -14,7 +14,7 @@ import {
   Table,
   formatProgression,
 } from "#components";
-import { FormattedGame, GameMode, VampireZModes } from "@statsify/schemas";
+import { FormattedGame, type GameMode, VampireZModes } from "@statsify/schemas";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface VampireZProfileProps extends BaseProfileProps {

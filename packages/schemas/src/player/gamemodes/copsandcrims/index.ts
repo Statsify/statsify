@@ -7,8 +7,8 @@
  */
 
 import { CopsAndCrimsOverall, Deathmatch, Defusal, GunGame } from "./mode.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { GamePrefix, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import type { APIData } from "@statsify/util";
 
@@ -18,9 +18,9 @@ export const COPS_AND_CRIMS_MODES = new GameModes([
   { api: "deathmatch", hypixel: "deathmatch" },
   { api: "gunGame", hypixel: "gungame" },
   { hypixel: "normal_party", formatted: "Challenge" },
-]);
+] as const);
 
-export type CopsAndCrimsModes = IGameModes<typeof COPS_AND_CRIMS_MODES>;
+export type CopsAndCrimsModes = ExtractGameModes<typeof COPS_AND_CRIMS_MODES>;
 
 type PrefixParams = [kills: number, prefix: string];
 

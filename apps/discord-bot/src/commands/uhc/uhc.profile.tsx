@@ -14,7 +14,7 @@ import {
   Table,
   formatProgression,
 } from "#components";
-import { FormattedGame, GameMode, UHCModes } from "@statsify/schemas";
+import { FormattedGame, type GameMode, UHCModes } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 

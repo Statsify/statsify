@@ -9,7 +9,6 @@
 import {
   BlockingDead,
   BountyHunters,
-  CaptureTheWool,
   CreeperAttack,
   DragonWars,
   Dropper,
@@ -28,8 +27,8 @@ import {
   ThrowOut,
   Zombies,
 } from "./mode.js";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
@@ -37,10 +36,17 @@ export const ARCADE_MODES = new GameModes([
   { api: "overall" },
   { api: "blockingDead", hypixel: "DAYONE" },
   { api: "bountyHunters", hypixel: "ONEINTHEQUIVER" },
-  { api: "captureTheWool", hypixel: "PVP_CTW" },
   { api: "creeperAttack", hypixel: "DEFENDER" },
   { api: "dragonWars", hypixel: "DRAGONWARS2" },
-  { api: "dropper", hypixel: "DROPPER" },
+  {
+    api: "dropper",
+    hypixel: "DROPPER",
+    submodes: [
+      { api: "overall" },
+      { api: "bestTimes" },
+      { api: "completions" },
+    ],
+  },
   { api: "enderSpleef", hypixel: "ENDER" },
   { api: "farmHunt", hypixel: "FARM_HUNT" },
   { api: "football", hypixel: "SOCCER" },
@@ -49,23 +55,22 @@ export const ARCADE_MODES = new GameModes([
   { api: "holeInTheWall", hypixel: "HOLE_IN_THE_WALL" },
   { api: "hypixelSays", hypixel: "SIMON_SAYS" },
   { api: "miniWalls", hypixel: "MINI_WALLS" },
-  { api: "partyGames", hypixel: "PARTY" },
+  {
+    api: "partyGames",
+    hypixel: "PARTY",
+    submodes: [
+      { api: "overall" },
+      { api: "roundWins" },
+    ],
+  },
   { api: "pixelPainters", hypixel: "DRAW_THEIR_THING" },
   { api: "pixelParty", hypixel: "PIXEL_PARTY" },
   { api: "seasonal" },
   { api: "throwOut", hypixel: "THROW_OUT" },
   { api: "zombies" },
-]);
+] as const);
 
-export type ArcadeModes = IGameModes<typeof ARCADE_MODES>;
-
-export const DROPPER_MODES = new GameModes([
-  { api: "overall" },
-  { api: "bestTimes" },
-  { api: "completions" },
-]);
-
-export type DropperModes = IGameModes<typeof DROPPER_MODES>;
+export type ArcadeModes = ExtractGameModes<typeof ARCADE_MODES>;
 
 export class Arcade {
   @Field({ historical: { enabled: false } })
@@ -75,13 +80,13 @@ export class Arcade {
   public wins: number;
 
   @Field()
+  public coinConversions: number;
+
+  @Field()
   public blockingDead: BlockingDead;
 
   @Field()
   public bountyHunters: BountyHunters;
-
-  @Field()
-  public captureTheWool: CaptureTheWool;
 
   @Field()
   public creeperAttack: CreeperAttack;
@@ -136,9 +141,10 @@ export class Arcade {
 
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
+    this.coinConversions = data.stamp_level;
+
     this.blockingDead = new BlockingDead(data);
     this.bountyHunters = new BountyHunters(data);
-    this.captureTheWool = new CaptureTheWool(data);
     this.creeperAttack = new CreeperAttack(data);
     this.dragonWars = new DragonWars(data, ap);
     this.dropper = new Dropper(data?.dropper);
@@ -160,7 +166,6 @@ export class Arcade {
     this.wins = add(
       this.blockingDead.wins,
       this.bountyHunters.wins,
-      this.captureTheWool.wins,
       this.dragonWars.wins,
       this.dropper.wins,
       this.enderSpleef.wins,

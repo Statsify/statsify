@@ -118,7 +118,7 @@ export class GameCounts {
   public WARLORDS: GamePlayers;
 
   @Field()
-  public WOOLWARS: GamePlayers;
+  public WOOLGAMES: GamePlayers;
 
   public constructor(data: APIData = {}) {
     this.ARCADE = new GamePlayers(data[GameCodeMapping.ARCADE]);
@@ -168,6 +168,6 @@ export class GameCounts {
     });
 
     this.WARLORDS = new GamePlayers(data[GameCodeMapping.WARLORDS]);
-    this.WOOLWARS = new GamePlayers(data[GameCodeMapping.WOOLWARS]);
+    this.WOOLGAMES = new GamePlayers(data[GameCodeMapping.WOOLGAMES]);
   }
 }

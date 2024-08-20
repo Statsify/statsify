@@ -7,15 +7,38 @@
  */
 
 import {
+  ArcadeChallenges,
+  ArenaBrawlChallenges,
+  BedWarsChallenges,
+  BlitzSGChallenges,
+  BuildBattleChallenges,
   ChallengeModes,
   Challenges,
+  CopsAndCrimsChallenges,
+  DuelsChallenges,
   FormattedGame,
   GameChallenges,
-  GameId,
-  GameMode,
+  type GameId,
+  type GameMode,
+  MegaWallsChallenges,
+  MetadataEntry,
   MetadataScanner,
+  MurderMysteryChallenges,
+  PaintballChallenges,
+  QuakeChallenges,
+  SkyWarsChallenges,
+  SmashHeroesChallenges,
+  SpeedUHCChallenges,
+  TNTGamesChallenges,
+  TurboKartRacersChallenges,
+  UHCChallenges,
+  VampireZChallenges,
+  WallsChallenges,
+  WarlordsChallenges,
+  WoolGamesChallenges,
 } from "@statsify/schemas";
 import { Container, Footer, GameList, Header, SidebarItem, Table } from "#components";
+
 import { arrayGroup, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { Image } from "skia-canvas";
@@ -44,12 +67,36 @@ const NormalTable = ({ challenges, t, gameIcons }: NormalTableProps) => {
 
 interface GameTableProps {
   gameChallenges: GameChallenges;
-  constructor: any;
+  mode: Exclude<GameMode<ChallengeModes>["api"], "overall">;
   t: LocalizeFunction;
 }
 
-const GameTable = ({ gameChallenges, constructor, t }: GameTableProps) => {
-  const metadata = MetadataScanner.scan(constructor);
+const METADATA: Record<Exclude<GameMode<ChallengeModes>["api"], "overall">, MetadataEntry[]> = {
+  ARCADE: MetadataScanner.scan(ArcadeChallenges),
+  ARENA_BRAWL: MetadataScanner.scan(ArenaBrawlChallenges),
+  BEDWARS: MetadataScanner.scan(BedWarsChallenges),
+  BLITZSG: MetadataScanner.scan(BlitzSGChallenges),
+  BUILD_BATTLE: MetadataScanner.scan(BuildBattleChallenges),
+  COPS_AND_CRIMS: MetadataScanner.scan(CopsAndCrimsChallenges),
+  DUELS: MetadataScanner.scan(DuelsChallenges),
+  MEGAWALLS: MetadataScanner.scan(MegaWallsChallenges),
+  MURDER_MYSTERY: MetadataScanner.scan(MurderMysteryChallenges),
+  PAINTBALL: MetadataScanner.scan(PaintballChallenges),
+  QUAKE: MetadataScanner.scan(QuakeChallenges),
+  SKYWARS: MetadataScanner.scan(SkyWarsChallenges),
+  SMASH_HEROES: MetadataScanner.scan(SmashHeroesChallenges),
+  SPEED_UHC: MetadataScanner.scan(SpeedUHCChallenges),
+  TNT_GAMES: MetadataScanner.scan(TNTGamesChallenges),
+  TURBO_KART_RACERS: MetadataScanner.scan(TurboKartRacersChallenges),
+  UHC: MetadataScanner.scan(UHCChallenges),
+  VAMPIREZ: MetadataScanner.scan(VampireZChallenges),
+  WALLS: MetadataScanner.scan(WallsChallenges),
+  WARLORDS: MetadataScanner.scan(WarlordsChallenges),
+  WOOLGAMES: MetadataScanner.scan(WoolGamesChallenges),
+};
+
+const GameTable = ({ gameChallenges, mode, t }: GameTableProps) => {
+  const metadata = METADATA[mode];
   const entries = Object.entries(gameChallenges);
 
   const GROUP_SIZE = entries.length < 5 ? 4 : (entries.length - 1) ** 0.5;
@@ -59,8 +106,9 @@ const GameTable = ({ gameChallenges, constructor, t }: GameTableProps) => {
       .filter(([k]) => k !== "total")
       .sort((a, b) => b[1] - a[1])
       .map(([challenge, completions]) => {
-        const field = metadata.find(([k]) => k === challenge);
-        const realName = field?.[1]?.leaderboard?.name ?? prettify(challenge);
+        const [_, field] = metadata.find(([k]) => k === challenge)!;
+
+        const realName = field.leaderboard?.name ?? prettify(challenge);
         return [realName, t(completions)];
       }),
     GROUP_SIZE
@@ -107,7 +155,7 @@ export const ChallengesProfile = ({
       table = (
         <GameTable
           gameChallenges={challenges[api]}
-          constructor={challenges[api].constructor}
+          mode={api}
           t={t}
         />
       );

@@ -7,8 +7,8 @@
  */
 
 import { type APIData, formatTime } from "@statsify/util";
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { Progression } from "#progression";
 import { add, ratio } from "@statsify/math";
 import {
@@ -20,10 +20,11 @@ import {
 } from "./util.js";
 
 export const PIT_MODES = new GameModes([
-  { api: "overall", hypixel: "PIT", formatted: "Pit" },
-]);
+  { api: "overall" },
+  { hypixel: "PIT", formatted: "Pit" },
+] as const);
 
-export type PitModes = IGameModes<typeof PIT_MODES>;
+export type PitModes = ExtractGameModes<typeof PIT_MODES>;
 
 export class Pit {
   @Field({

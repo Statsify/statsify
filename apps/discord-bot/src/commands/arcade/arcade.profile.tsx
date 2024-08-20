@@ -6,11 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ArcadeModes, FormattedGame, GameMode } from "@statsify/schemas";
+import { ArcadeModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   BlockingDeadTable,
   BountyHuntersTable,
-  CaptureTheWoolTable,
   CreeperAttackTable,
   DragonWarsTable,
   DropperTable,
@@ -29,7 +28,6 @@ import {
   SeasonalTable,
   ThrowOutTable,
   ZombiesTable,
-  captureTheWoolSiderbar,
 } from "./modes/index.js";
 import { Container, Footer, Header, SidebarItem } from "#components";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -51,8 +49,9 @@ export const ArcadeProfile = ({
 }: ArcadeProfileProps) => {
   const { arcade } = player.stats;
 
-  let sidebar: SidebarItem[] = [
+  const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(arcade.coins), "§6"],
+    [t("stats.coinConversions"), t(arcade.coinConversions), "§e"],
     [t("stats.arcadeWins"), t(arcade.wins), "§b"],
   ];
 
@@ -68,11 +67,6 @@ export const ArcadeProfile = ({
       table = <BountyHuntersTable stats={arcade[api]} t={t} />;
       break;
 
-    case "captureTheWool":
-      table = <CaptureTheWoolTable stats={arcade[api]} t={t} time={time} />;
-      sidebar = captureTheWoolSiderbar(arcade, t);
-      break;
-
     case "creeperAttack":
       table = <CreeperAttackTable stats={arcade[api]} t={t} />;
       break;
@@ -82,7 +76,7 @@ export const ArcadeProfile = ({
       break;
 
     case "dropper":
-      table = <DropperTable stats={arcade[api]} t={t} time={time} />;
+      table = <DropperTable stats={arcade[api]} t={t} time={time} submode={mode.submode} />;
       break;
 
     case "enderSpleef":
@@ -118,7 +112,7 @@ export const ArcadeProfile = ({
       break;
 
     case "partyGames":
-      table = <PartyGamesTable stats={arcade[api]} t={t} />;
+      table = <PartyGamesTable stats={arcade[api]} t={t} submode={mode.submode} time={time} />;
       break;
 
     case "pixelPainters":
@@ -155,7 +149,7 @@ export const ArcadeProfile = ({
         sidebar={sidebar}
         title={`§l${FormattedGame.ARCADE} §f${
           api === "overall" ? t("stats.wins") : "Stats"
-        } §r(${mode.formatted})`}
+        } §r(${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""})`}
         time={time}
       />
       {table}

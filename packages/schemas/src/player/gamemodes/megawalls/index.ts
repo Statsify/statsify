@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GameModes, type IGameModes } from "#game";
 import { MegaWallsKit, MegaWallsOverall } from "./kit.js";
 import type { APIData } from "@statsify/util";
 
@@ -40,9 +40,9 @@ export const MEGAWALLS_MODES = new GameModes([
   { api: "squid" },
   { api: "werewolf" },
   { api: "zombie" },
-]);
+] as const);
 
-export type MegaWallsModes = IGameModes<typeof MEGAWALLS_MODES>;
+export type MegaWallsModes = ExtractGameModes<typeof MEGAWALLS_MODES>;
 
 export class MegaWalls {
   @Field({ historical: { enabled: false } })

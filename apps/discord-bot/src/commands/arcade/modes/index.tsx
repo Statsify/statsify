@@ -8,11 +8,9 @@
 
 export * from "./blocking-dead.js";
 export * from "./bounty-hunters.js";
-export * from "./capture-the-wool.js";
 export * from "./creeper-attack.js";
 export * from "./dragon-wars.js";
 export * from "./dropper.js";
-export * from "./dropper-maps.js";
 export * from "./ender-spleef.js";
 export * from "./farm-hunt.js";
 export * from "./football.js";

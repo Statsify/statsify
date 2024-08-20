@@ -11,12 +11,12 @@ import {
   ARENA_BRAWL_MODES,
   BEDWARS_MODES,
   BLITZSG_MODES,
-  BRIDGE_MODES,
   BUILD_BATTLE_MODES,
   COPS_AND_CRIMS_MODES,
   DUELS_MODES,
   GENERAL_MODES,
   GameMode,
+  GameModeWithSubModes,
   GameModes,
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
@@ -33,7 +33,7 @@ import {
   VAMPIREZ_MODES,
   WALLS_MODES,
   WARLORDS_MODES,
-  WOOLWARS_MODES,
+  WOOLGAMES_MODES,
 } from "@statsify/schemas";
 import {
   ApiService,
@@ -43,12 +43,12 @@ import {
   PaginateService,
   PlayerArgument,
   SubCommand,
+  SubPage,
 } from "@statsify/discord";
 import { ArcadeProfile } from "../arcade/arcade.profile.js";
 import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile.js";
 import { BedWarsProfile } from "../bedwars/bedwars.profile.js";
 import { BlitzSGProfile, filterBlitzKits } from "../blitzsg/blitzsg.profile.js";
-import { BridgeProfile } from "../duels/bridge.profile.js";
 import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
 import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
 import { DateTime } from "luxon";
@@ -70,7 +70,7 @@ import { UHCProfile } from "../uhc/uhc.profile.js";
 import { VampireZProfile } from "../vampirez/vampirez.profile.js";
 import { WallsProfile } from "../walls/walls.profile.js";
 import { WarlordsProfile } from "../warlords/warlords.profile.js";
-import { WoolWarsProfile } from "../woolwars/woolwars.profile.js";
+import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
@@ -85,9 +85,17 @@ export class SessionCommand {
 
   @SubCommand({ description: (t) => t("commands.session-arcade"), args: [PlayerArgument] })
   public arcade(context: CommandContext) {
-    return this.run(context, ARCADE_MODES, (base, mode) => (
-      <ArcadeProfile {...base} mode={mode} />
-    ));
+    return this.run(
+      context,
+      ARCADE_MODES,
+      (base, mode) => <ArcadeProfile {...base} mode={mode} />,
+      undefined,
+      (_, mode) => {
+        if (mode.api === "dropper") return mode.submodes.filter((submode) => submode.api !== "bestTimes");
+        if (mode.api === "partyGames") return mode.submodes.filter((submode) => submode.api !== "roundWins");
+        return mode.submodes;
+      }
+    );
   }
 
   @SubCommand({
@@ -105,13 +113,6 @@ export class SessionCommand {
   public bedwars(context: CommandContext) {
     return this.run(context, BEDWARS_MODES, (base, mode) => (
       <BedWarsProfile {...base} mode={mode} />
-    ));
-  }
-
-  @SubCommand({ description: (t) => t("commands.session-bridge"), args: [PlayerArgument] })
-  public bridge(context: CommandContext) {
-    return this.run(context, BRIDGE_MODES, (base, mode) => (
-      <BridgeProfile {...base} mode={mode} />
     ));
   }
 
@@ -218,7 +219,7 @@ export class SessionCommand {
 
   @SubCommand({ description: (t) => t("commands.session-tntgames"), args: [PlayerArgument] })
   public tntgames(context: CommandContext) {
-    return this.run(context, TNT_GAMES_MODES, (base) => <TNTGamesProfile {...base} />);
+    return this.run(context, TNT_GAMES_MODES, (base, mode) => <TNTGamesProfile {...base} mode={mode} />);
   }
 
   @SubCommand({
@@ -266,10 +267,10 @@ export class SessionCommand {
     ));
   }
 
-  @SubCommand({ description: (t) => t("commands.session-woolwars"), args: [PlayerArgument] })
-  public woolwars(context: CommandContext) {
-    return this.run(context, WOOLWARS_MODES, (base, mode) => (
-      <WoolWarsProfile {...base} mode={mode} />
+  @SubCommand({ description: (t) => t("commands.session-woolgames"), args: [PlayerArgument] })
+  public woolgames(context: CommandContext) {
+    return this.run(context, WOOLGAMES_MODES, (base, mode) => (
+      <WoolGamesProfile {...base} mode={mode} />
     ));
   }
 
@@ -277,7 +278,8 @@ export class SessionCommand {
     context: CommandContext,
     modes: GameModes<T>,
     getProfile: (base: BaseProfileProps, mode: GameMode<T>) => JSX.Element,
-    filterModes?: (player: Player, modes: GameMode<T>[]) => GameMode<T>[]
+    filterModes?: (player: Player, modes: GameModeWithSubModes<T>[]) => GameModeWithSubModes<T>[],
+    filterSubmodes?: (player: Player, mode: GameModeWithSubModes<T>) => GameModeWithSubModes<T>["submodes"]
   ) {
     const user = context.getUser();
 
@@ -296,50 +298,90 @@ export class SessionCommand {
     const allModes = modes.getModes();
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
 
-    const pages: Page[] = displayedModes.map((mode) => ({
-      label: mode.formatted,
-      generator: async (t) => {
-        const background = await getBackground(...mapBackground(modes, mode.api));
+    const pages: Page[] = displayedModes.map((mode) => {
+      const submodes = filterSubmodes?.(player, mode) ?? mode.submodes;
 
-        const displayName = this.apiService.emojiDisplayName(t, player.displayName);
+      if (submodes.length === 0) return {
+        label: mode.formatted,
+        generator: async (t) => {
+          const background = await getBackground(...mapBackground(modes, mode.api));
 
-        let content: string | undefined = undefined;
+          const displayName = this.apiService.emojiDisplayName(t, player.displayName);
 
-        if (player.isNew) {
-          content = t("historical.newSession", { displayName });
-        } else if (Math.random() < 0.1) {
-          content = t("tips.resetSession");
-        }
+          let content: string | undefined = undefined;
 
-        const profile = getProfile(
-          {
-            player,
-            skin,
-            background,
-            logo,
-            t,
-            user,
-            badge,
-            time: {
-              timeType: HistoricalTimes.SESSION,
-              sessionReset: player.sessionReset ?
-                DateTime.fromSeconds(player.sessionReset) :
-                DateTime.now(),
+          if (player.isNew) {
+            content = t("historical.newSession", { displayName });
+          } else if (Math.random() < 0.1) {
+            content = t("tips.resetSession");
+          }
+
+          const profile = getProfile(
+            {
+              player,
+              skin,
+              background,
+              logo,
+              t,
+              user,
+              badge,
+              time: {
+                timeType: HistoricalTimes.SESSION,
+                sessionReset: player.sessionReset ?
+                  DateTime.fromSeconds(player.sessionReset) :
+                  DateTime.now(),
+              },
             },
-          },
-          mode
-        );
+            { ...mode, submode: undefined } as unknown as GameMode<T>
+          );
 
-        const canvas = render(profile, getTheme(user));
-        const buffer = await canvas.toBuffer("png");
+          const canvas = render(profile, getTheme(user));
+          const buffer = await canvas.toBuffer("png");
 
-        return {
-          content,
-          files: [{ name: "session.png", data: buffer, type: "image/png" }],
-          attachments: [],
-        };
-      },
-    }));
+          return {
+            content,
+            files: [{ name: "session.png", data: buffer, type: "image/png" }],
+            attachments: [],
+          };
+        },
+      };
+
+      const subPages = submodes.map((submode): SubPage => ({
+        label: submode.formatted,
+        generator: async (t) => {
+          const background = await getBackground(...mapBackground(modes, mode.api));
+
+          const profile = getProfile(
+            {
+              player,
+              skin,
+              background,
+              logo,
+              t,
+              user,
+              badge,
+              time: {
+                timeType: HistoricalTimes.SESSION,
+                sessionReset: player.sessionReset ?
+                  DateTime.fromSeconds(player.sessionReset) :
+                  DateTime.now(),
+              },
+            },
+            { api: mode.api, formatted: mode.formatted, hypixel: mode.hypixel, submode } as GameMode<T>
+          );
+
+          const canvas = render(profile, getTheme(user));
+          const buffer = await canvas.toBuffer("png");
+
+          return {
+            files: [{ name: "session.png", data: buffer, type: "image/png" }],
+            attachments: [],
+          };
+        },
+      }));
+
+      return { label: mode.formatted, subPages };
+    });
 
     return this.paginateService.paginate(context, pages);
   }
