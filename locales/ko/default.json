@@ -137,7 +137,7 @@
     "leaderboard-walls": "$t(commands.leaderboard-command, { \"name\": \"Walls\" })",
     "leaderboard-warlords": "$t(commands.leaderboard-command, { \"name\": \"Warlords\" })",
     "leaderboard-woolgames": "$t(commands.leaderboard-command, { \"name\": \"WoolGames\" })",
-    "links": "Statsify의 소셜 미디어를 확인해요",
+    "links": "Statsify의 소셜 미디어를 봐요",
     "megawalls": "$t(commands.hypixel-command, { \"name\": \"MegaWalls\" })",
     "monthly": "View your monthly stats in various games",
     "murdermystery": "$t(commands.hypixel-command, { \"name\": \"Murder Mystery\" })",
@@ -147,14 +147,14 @@
     "pit": "$t(commands.hypixel-command, { \"name\": \"Pit\" })",
     "player-leaderboard": "$t(commands.leaderboard-command, { \"name\": \"Player\" })",
     "quake": "$t(commands.hypixel-command, { \"name\": \"Quake\" })",
-    "rankings": "순위표 순위를 확인해요",
+    "rankings": "순위표 순위를 봐요",
     "rankings-all": "$t(commands.rankings)",
     "rankings-arcade": "$t(commands.rankings-command, { \"name\": \"Arcade\" })",
     "rankings-arenabrawl": "$t(commands.rankings-command, { \"name\": \"Arena Brawl\" })",
     "rankings-bedwars": "$t(commands.rankings-command, { \"name\": \"BedWars\" })",
     "rankings-blitzsg": "$t(commands.rankings-command, { \"name\": \"BlitzSG\" })",
     "rankings-buildbattle": "$t(commands.rankings-command, { \"name\": \"Build Battle\" })",
-    "rankings-command": "{{name}}의 순위표 순위를 확인해요",
+    "rankings-command": "{{name}}의 순위표 순위를 봐요",
     "rankings-challenges": "$t(commands.rankings-command, { \"name\": \"Challenges\" })",
     "rankings-copsandcrims": "$t(commands.rankings-command, { \"name\": \"Cops and Crims\" })",
     "rankings-duels": "$t(commands.rankings-command, { \"name\": \"Duels\" })",
@@ -211,7 +211,7 @@
     "tags-rename": "Rename a support tag",
     "text": "Minecraft 문자를 생성해요",
     "theme": "Change your theme for every profile",
-    "theme-boxes": "프로필 창의 외관을 변경해요",
+    "theme-boxes": "프로필 상자의 외관을 변경해요",
     "theme-font": "프로필의 글꼴을 변경해요",
     "theme-footer": "Customize your profile's footer",
     "theme-footer-icon": "프로필 하단 아이콘을 변경해요",
@@ -226,7 +226,7 @@
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
     "unverify": "Discord와 Minecraft 계정 연동을 해제해요",
     "user": "View someone's Statsify user info",
-    "uuid": "다른 분의 Minecraft UUID를 확인해요",
+    "uuid": "다른 사람의 Minecraft UUID를 확인해요",
     "vampirez": "$t(commands.hypixel-command, { \"name\": \"VampireZ\" })",
     "verify": "Discord와 Minecraft 계정을 연동해요",
     "walls": "$t(commands.hypixel-command, { \"name\": \"Walls\" })",
@@ -247,8 +247,8 @@
     },
     "footer": {
       "profile": "내 프로필 하단은 이렇게 보일 거예요",
-      "reset": "$t(emojis:config.reset) 내 프로필 하단을 초기화했어요.",
-      "set": "$t(emojis:config.success) 내 프로필 하단을 갱신했어요."
+      "reset": "$t(emojis:config.reset) 프로필 하단을 초기화했어요.",
+      "set": "$t(emojis:config.success) 프로필 하단을 갱신했어요."
     },
     "language": {
       "description": "$t(emojis:config.success) 언어를 `{{locale}}`으(로) 갱신했어요."
@@ -256,16 +256,16 @@
     "theme": {
       "profile": "내 프로필에 테마가 이렇게 보일 거예요",
       "set": "$t(emojis:config.success) 테마를 갱신했어요.",
-      "view": "$t(emojis:config.view) 나의 현재 테마:"
+      "view": "$t(emojis:config.view) 현재 테마:"
     }
   },
   "cooldown": {
-    "description": "`{{command}}` 명령어를 이용하려면 `{{time}}`을(를) 기다리세요.\n\n대기 시간 감소 방법을 [여기](https://statsify.net/premium)서 확인하세요.",
+    "description": "`{{command}}` 명령어를 이용하려면 `{{time}}`을(를) 기다리세요.\n\n대기 시간 감소 방법을 [여기](https://statsify.net/premium)에서 확인해 보세요.",
     "title": "활성 대기 시간"
   },
   "embeds": {
     "available": {
-      "blocked": "Mojang이 이 사용자 이름을 임시적 또는 영구적으로 차단하지 않은 경우",
+      "blocked": "Mojang이 이 사용자 이름을 일시적 또는 영구적으로 차단하지 않은 경우",
       "invalidCharacters": "잘못된 문자",
       "tooLong": "너무 긺"
     },
@@ -309,7 +309,7 @@
         "title": "세션"
       },
       "leaderboards": {
-        "description": "Statsify는 `/leaderboard` 명령어로 수많은 순위표를 제공해요. `/leaderboard` 명령어를 실행한 후, 게임모드와 볼 순위표를 선택하세요. 검색 버튼을 눌러 특정 플레이어나 순위를 확인하세요. 위나 아래 버튼을 클릭해 더 많은 페이지를 볼 수도 있어요.",
+        "description": "Statsify는 `/leaderboard` 명령어로 수많은 순위표를 제공해요. `/leaderboard` 명령어를 실행한 후, 게임 모드와 볼 순위표를 선택하세요. 검색 버튼을 눌러 특정 플레이어나 순위를 검색하세요. 위나 아래 버튼을 눌러서 더 많은 페이지를 볼 수도 있어요.",
         "title": "순위표"
       },
       "minecraft": {
@@ -319,7 +319,7 @@
       "title": "Statsify 도움말"
     },
     "invite": {
-      "description": "아래 링크로 내 Discord 서버에 Statsify를 초대하세요.",
+      "description": "Discord 서버에 Statsify를 초대하려면 아래 링크를 눌러주세요.",
       "title": "Statsify 링크"
     },
     "ping": {
@@ -430,7 +430,7 @@
       "title": "순위표를 찾지 못함"
     },
     "missingMentionVerification": {
-      "description": "<@{{tag}}>님은 **인증되지 않았어요**. 멘션 하려면, 그분이 `/verify` 명령어로 계정을 인증해야 해요.",
+      "description": "<@{{tag}}>님은 **인증되지 않았어요**. 멘션하려면, `/verify` 명령어로 계정을 인증해야 해요.",
       "title": "인증 필요"
     },
     "missingPlayerVerification": {
@@ -476,7 +476,7 @@
     },
     "premiumRequired": {
       "description": "사용 가능한 기능을 [여기](https://statsify.net/premium)서 확인하세요.",
-      "preview": "사용 가능한 기능을 [여기](https://statsify.net/premium)서 확인하세요.\n다음은 이 명령어가 무엇을 하거나/변경하는지에 관한 간략한 미리 보기예요.",
+      "preview": "사용 가능한 기능을 [여기](https://statsify.net/premium)서 확인하세요.\n아래는 이 명령어가 무엇을 하거나/변경하는지에 관한 간략한 미리 보기예요.",
       "title": "이 명령어를 실행하려면 Statsify {{tier}}이(가) 필요함"
     },
     "staffOnly": {
@@ -493,7 +493,7 @@
       "title": "Ticket Already Exists"
     },
     "unknown": {
-      "description": "무언가 잘못됐어요. 나중에 다시 시도하세요. 문제가 지속되는 경우, [Discord](<https://statsify.net/discord>)에 제보해 주세요.",
+      "description": "무언가 잘못됐어요. 나중에 다시 시도해 주세요. 문제가 지속되는 경우, [Discord](<https://statsify.net/discord>)에 제보하세요.",
       "title": "알 수 없는 오류 발생"
     },
     "unsupportedFileType": {
@@ -511,7 +511,7 @@
     },
     "new": "Statsify에서 **{{displayName}}**님의 기간 전적을 처음으로 확인했어요. 이제 매일 이 시간에 갱신돼요.",
     "reset": "$t(emojis:clock) <t:{{time}}:R> **초기화**",
-    "resetButton": "클릭해서 초기화",
+    "resetButton": "눌러서 초기화",
     "setResetTime": "초기화 시간을 <t:{{time}}:t>로 설정했어요.",
     "newSession": "Statsify에서 **{{displayName}}**님의 세션 전적을 처음으로 확인했어요.",
     "setSessionReset": "세션 전적을 초기화했어요.",
@@ -523,18 +523,18 @@
   "leaderboard": {
     "guildInput": {
       "label": "길드로 검색",
-      "placeholder": "길드의 이름을 입력하세요. 예시: Quote"
+      "placeholder": "길드의 이름을 입력하세요. 예: Quote"
     },
     "modal": {
       "title": "순위표 검색"
     },
     "playerInput": {
       "label": "플레이어로 검색",
-      "placeholder": "플레이어의 이름을 입력하세요. 예시: Mecrea"
+      "placeholder": "플레이어의 이름을 입력하세요. 예: Mecrea"
     },
     "positionInput": {
       "label": "순위로 검색",
-      "placeholder": "순위를 입력하세요. 예시: 5000"
+      "placeholder": "순위를 입력하세요. 예: 5000"
     }
   },
   "minecraft": {
@@ -556,7 +556,7 @@
   "deprecated": {
     "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} has been merged into the {{newCommandName}} command. Please run {{newCommand}} and select {{mode}} in the dropdown.",
     "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} has been removed in favor of {{newCommandName}}. Please run {{newCommand}} instead.",
-    "command-description": "This command has been removed in favor of {{newCommandName}}."
+    "command-description": "이 명령어는 {{newCommandName}} 명령어로 대체됐어요."
   },
   "stats": {
     "achievementPoints": "도전과제 점수",
@@ -804,18 +804,18 @@
     "powerOrbs": "Power Orbs"
   },
   "tips": {
-    "discord": "$t(emojis:socials.discord) **$t(socials.discord)**에 참여해 **대기 시간 20% 감소**를 받아보세요 $t(emojis:heart)",
-    "invite": "$t(emojis:socials.discord) **[여기](<https://statsify.net/invite>)**를 클릭해 Statsify를 서버에 초대하세요!",
+    "discord": "$t(emojis:socials.discord) 저희의 **$t(socials.discord)**에 참가하고 **대기 시간 20% 감소**를 얻어보세요 $t(emojis:heart)",
+    "invite": "$t(emojis:socials.discord) **[여기](<https://statsify.net/invite>)**를 눌러 Statsify를 서버에 초대하세요!",
     "premium": "$t(emojis:logos.gold) **[Statsify 프리미엄](<https://statsify.net/premium>)**은 개인 프로필 배지와 같은 추가 기능을 제공해요. [여기](<https://statsify.net/premium>)에서 모든 혜택을 찾아보세요!",
     "rankings": "$t(emojis:logos.iron) **[Statsify 프리미엄](<https://statsify.net/premium>)**으로 `/rankings` 명령어를 사용해 순위표 순위를 확인하세요",
-    "verify": "$t(emojis:check) `/verify` 명령어로 사용자 이름 없이 명령어를 실행하고 **대기 시간 10% 감소**를 받아보세요",
-    "resetSession": "$t(emojis:reset) `/reset session` 명령어로 기간 전적을 **초기화**할 수 있어요.",
+    "verify": "$t(emojis:check) `/verify` 명령어로 사용자 이름 없이 명령어를 실행하고 **대기 시간 10% 감소**를 얻어보세요",
+    "resetSession": "$t(emojis:reset) `/reset session` 명령어로 세션 전적을 **초기화**할 수 있어요.",
     "sessions": "$t(emojis:reset) 세션(`/session`)으로 전적 진행도를 추적해 보세요."
   },
   "unknown": "알 수 없음",
   "verification": {
     "alreadyVerified": {
-      "description": "Minecraft 계정과 이미 연동했어요. `/unverify` 명령어를 실행해 Minecraft 계정의 연동을 해제하세요.",
+      "description": "이미 Minecraft 계정에 연동했어요. Minecraft 계정 연동을 해제하려면 `/unverify` 명령어를 실행하세요.",
       "title": "이미 인증됨"
     },
     "invalidCode": {
@@ -837,14 +837,14 @@
       "button": "인증 코드 입력"
     },
     "notVerified": {
-      "description": "인증을 해제하기 전에 먼저 인증을 진행해야 해요!",
+      "description": "인증을 먼저 해야 인증을 해제할 수 있어요!",
       "title": "인증되지 않음"
     },
     "requiredVerification": {
-      "description": "이 명령어를 사용하려면 인증해야 해요. `/verify` 명령어로 계정을 인증하세요.",
+      "description": "이 명령어를 사용하려면 인증해야 해요. 계정을 인증하려면 `/verify` 명령어를 실행하세요.",
       "title": "인증 필요"
     },
     "successfulUnverification": "계정과의 인증을 해제했어요!",
-    "successfulVerification": "**{{displayName}}**으(로) 인증됐어요"
+    "successfulVerification": "**{{displayName}}**으(로) 인증했어요"
   }
 }
