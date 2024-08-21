@@ -8,7 +8,7 @@
 
 import { Command, type IMessage } from "@statsify/discord";
 
-@Command({ description: (t) => t("deprecated.command-description", { newCommandName: "arcade" }) })
+@Command({ description: (t) => t("deprecated.command-description", { newCommandName: "/arcade" }) })
 export class DropperCommand {
   public run(): IMessage {
     return {

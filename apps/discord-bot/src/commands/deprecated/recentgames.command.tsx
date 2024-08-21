@@ -8,7 +8,7 @@
 
 import { Command, type IMessage } from "@statsify/discord";
 
-@Command({ description: (t) => t("deprecated.command-description", { command: "status" }) })
+@Command({ description: (t) => t("deprecated.command-description", { command: "/status" }) })
 export class RecentGamesCommand {
   public run(): IMessage {
     return {
