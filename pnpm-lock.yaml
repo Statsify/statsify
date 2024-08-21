@@ -464,8 +464,8 @@ importers:
   assets/private:
     dependencies:
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
       stackblur-canvas:
         specifier: ^2.7.0
         version: 2.7.0
@@ -486,8 +486,8 @@ importers:
   assets/public:
     dependencies:
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.1
+        version: 1.0.1
       stackblur-canvas:
         specifier: 2.7.0
         version: 2.7.0
@@ -2513,10 +2513,6 @@ packages:
     resolution: {integrity: sha512-reYkTUJAZb9gUuZ2RvVCNhVHdg62RHnJ7WJl8ftMi4diZ6NWlciOzQN88pUhSELEwflJht4oQDv0F0BMlwaYtA==}
     engines: {node: '>=8'}
 
-  detect-libc@2.0.2:
-    resolution: {integrity: sha512-UX6sGumvvqSaXgdKGUsgZWqcUyIXZ/vZTrlRT/iobiKhGL0zL4d3osHj3uqllWJK+i+sixDS/3COVEOFbupFyw==}
-    engines: {node: '>=8'}
-
   detect-libc@2.0.3:
     resolution: {integrity: sha512-bwy0MGW55bG41VqxxypOsdSdGqLwXPI/focwgTYCFMbdUiBAxLg9CFzG08sz2aqzknwiX7Hkl0bQENjg8iLByw==}
     engines: {node: '>=8'}
@@ -4324,11 +4320,6 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
-  semver@7.6.2:
-    resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   semver@7.6.3:
     resolution: {integrity: sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==}
     engines: {node: '>=10'}
@@ -4400,6 +4391,9 @@ packages:
 
   skia-canvas@0.9.30:
     resolution: {integrity: sha512-Y4BZZhJpdGeRRfu/pyT1395UAE5Hgzup+P5tDq1vTTKcOgXmUuAWeDhvfeDn9FWaE6tNkOTQWO/mK7fdD5qIrw==}
+
+  skia-canvas@1.0.1:
+    resolution: {integrity: sha512-/HtZlmib2BD3Fi6P4ZywSq7VquPl2A1Frc0pA+xD5hJSvSzN7FoOJpBWDpDd0e1ByzrVO6ZIjO98dNSQ2XqlKw==}
 
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
@@ -5580,14 +5574,14 @@ snapshots:
 
   '@mapbox/node-pre-gyp@1.0.11':
     dependencies:
-      detect-libc: 2.0.2
+      detect-libc: 2.0.3
       https-proxy-agent: 5.0.1
       make-dir: 3.1.0
       node-fetch: 2.7.0
       nopt: 5.0.0
       npmlog: 5.0.1
       rimraf: 3.0.2
-      semver: 7.6.2
+      semver: 7.6.3
       tar: 6.2.0
     transitivePeerDependencies:
       - encoding
@@ -6871,8 +6865,6 @@ snapshots:
   detect-file@1.0.0: {}
 
   detect-indent@6.1.0: {}
-
-  detect-libc@2.0.2: {}
 
   detect-libc@2.0.3: {}
 
@@ -8871,8 +8863,6 @@ snapshots:
     dependencies:
       lru-cache: 6.0.0
 
-  semver@7.6.2: {}
-
   semver@7.6.3: {}
 
   server-only@0.0.1: {}
@@ -8952,6 +8942,18 @@ snapshots:
       totalist: 3.0.1
 
   skia-canvas@0.9.30:
+    dependencies:
+      '@mapbox/node-pre-gyp': 1.0.11
+      cargo-cp-artifact: 0.1.8
+      glob: 8.1.0
+      path-browserify: 1.0.1
+      simple-get: 4.0.1
+      string-split-by: 1.0.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  skia-canvas@1.0.1:
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
       cargo-cp-artifact: 0.1.8
