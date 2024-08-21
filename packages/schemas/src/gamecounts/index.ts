@@ -123,7 +123,7 @@ export class GameCounts {
   public constructor(data: APIData = {}) {
     this.ARCADE = new GamePlayers(data[GameCodeMapping.ARCADE]);
     this.ARENA_BRAWL = new GamePlayers({
-      players: data[GameCodeMapping.CLASSIC]?.modes[GameCodeMapping.ARENA_BRAWL],
+      players: data[GameCodeMapping.CLASSIC]?.modes?.[GameCodeMapping.ARENA_BRAWL],
     });
     this.BEDWARS = new GamePlayers(data[GameCodeMapping.BEDWARS]);
     this.BLITZSG = new GamePlayers(data[GameCodeMapping.BLITZSG]);
@@ -137,12 +137,12 @@ export class GameCounts {
     this.MEGAWALLS = new GamePlayers(data[GameCodeMapping.MEGAWALLS]);
     this.MURDER_MYSTERY = new GamePlayers(data[GameCodeMapping.MURDER_MYSTERY]);
     this.PAINTBALL = new GamePlayers({
-      players: data[GameCodeMapping.CLASSIC]?.modes[GameCodeMapping.PAINTBALL],
+      players: data[GameCodeMapping.CLASSIC]?.modes?.[GameCodeMapping.PAINTBALL],
     });
     this.PIT = new GamePlayers(data[GameCodeMapping.PIT]);
     this.PROTOTYPE = new GamePlayers(data[GameCodeMapping.PROTOTYPE]);
     this.QUAKE = new GamePlayers({
-      players: data[GameCodeMapping.CLASSIC]?.modes[GameCodeMapping.QUAKE],
+      players: data[GameCodeMapping.CLASSIC]?.modes?.[GameCodeMapping.QUAKE],
     });
 
     this.QUEUE = new GamePlayers(data[GameCodeMapping.QUEUE]);
@@ -155,16 +155,16 @@ export class GameCounts {
     this.TNT_GAMES = new GamePlayers(data[GameCodeMapping.TNT_GAMES]);
     this.TOURNAMENT_LOBBY = new GamePlayers(data[GameCodeMapping.TOURNAMENT_LOBBY]);
     this.TURBO_KART_RACERS = new GamePlayers({
-      players: data[GameCodeMapping.CLASSIC]?.modes[GameCodeMapping.TURBO_KART_RACERS],
+      players: data[GameCodeMapping.CLASSIC]?.modes?.[GameCodeMapping.TURBO_KART_RACERS],
     });
 
     this.UHC = new GamePlayers(data[GameCodeMapping.UHC]);
     this.VAMPIREZ = new GamePlayers({
-      players: data[GameCodeMapping.CLASSIC]?.modes[GameCodeMapping.VAMPIREZ],
+      players: data[GameCodeMapping.CLASSIC]?.modes?.[GameCodeMapping.VAMPIREZ],
     });
 
     this.WALLS = new GamePlayers({
-      players: data[GameCodeMapping.CLASSIC]?.modes[GameCodeMapping.WALLS],
+      players: data[GameCodeMapping.CLASSIC]?.modes?.[GameCodeMapping.WALLS],
     });
 
     this.WARLORDS = new GamePlayers(data[GameCodeMapping.WARLORDS]);
