@@ -260,7 +260,7 @@
     }
   },
   "cooldown": {
-    "description": "`{{command}}` 명령어를 이용하려면 `{{time}}`을(를) 기다리세요.\n\n대기 시간 감소 방법을 [여기](https://statsify.net/premium)에서 확인해 보세요.",
+    "description": "`{{command}}` 명령어를 다시 사용하려면 `{{time}}`을(를) 기다리세요.\n\n대기 시간 감소 방법을 [여기](https://statsify.net/premium)에서 확인해 보세요.",
     "title": "활성 대기 시간"
   },
   "embeds": {
@@ -438,7 +438,7 @@
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
-      "description": "내 사용자 이름을 적지 않고 명령어를 실행하려면, 인증하셔야 해요. `/verify` 명령어를 사용해 인증 후 다시 시도하세요.",
+      "description": "사용자 이름을 입력하지 않고 명령어를 실행하려면, 인증하셔야 해요. 인증하려면 `/verify` 명령어를 실행하고 인증을 완료하고 나서 다시 시도해 주세요.",
       "title": "인증 필요"
     },
     "netheriteOnly": {
@@ -554,8 +554,8 @@
     "website": "[Website](https://statsify.net/)"
   },
   "deprecated": {
-    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} has been merged into the {{newCommandName}} command. Please run {{newCommand}} and select {{mode}} in the dropdown.",
-    "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} has been removed in favor of {{newCommandName}}. Please run {{newCommand}} instead.",
+    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} 명령어가 {{newCommandName}} 명령어로 병합됐어요. {{newCommand}} 명령어를 실행하고 드롭다운에서 {{mode}} 모드를 선택해 주세요.",
+    "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} 명령어가 {{newCommandName}} 명령어로 대체됐어요. {{newCommand}} 명령어를 대신 실행해 주세요.",
     "command-description": "이 명령어는 {{newCommandName}} 명령어로 대체됐어요."
   },
   "stats": {
@@ -797,11 +797,11 @@
     "sheepThrown": "Sheep Thrown",
     "sheepKilled": "Sheep Killed",
     "magicWool": "Magic Wool",
-    "flagCaptures": "Flag Captures",
-    "flagReturns": "Flag Returns",
+    "flagCaptures": "점령한 깃발",
+    "flagReturns": "반환한 깃발",
     "airTime": "Air Time",
-    "potionsSplashed": "Potions Splashed",
-    "powerOrbs": "Power Orbs"
+    "potionsSplashed": "투척한 포션",
+    "powerOrbs": "파워 구슬"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) 저희의 **$t(socials.discord)**에 참가하고 **대기 시간 20% 감소**를 얻어보세요 $t(emojis:heart)",
