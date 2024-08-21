@@ -127,7 +127,7 @@ export class Parkour {
     leaderboard: { ...fieldOptions, name: `${FormattedGame.WOOLGAMES} Lobby` },
     historical,
   })
-  public WOOLWARS: number;
+  public WOOLGAMES: number;
 
   public constructor(data: APIData) {
     const getTime = (key: string): number =>
@@ -151,6 +151,6 @@ export class Parkour {
     this.TOURNAMENT_LOBBY = getTime("Tourney");
     this.UHC = getTime("uhc");
     this.WARLORDS = getTime("Warlords");
-    this.WOOLWARS = getTime("WoolGames");
+    this.WOOLGAMES = getTime("WoolGames");
   }
 }
