@@ -739,7 +739,8 @@ export class PartyGames {
   @Field()
   public workshopWins: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  // The goal of anvil spleef is to live the longest not the shortest so we sort in descending order
+  @Field({ leaderboard: { formatter: formatRaceTime } })
   public anvilSpleefBestTime: number;
 
   @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
@@ -757,7 +758,8 @@ export class PartyGames {
   @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
   public jungleJumpBestTime: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  // The goal of bombardment is to live the longest not the shortest so we sort in descending order
+  @Field({ leaderboard: { formatter: formatRaceTime } })
   public bombardmentBestTime: number;
 
   @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
