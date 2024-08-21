@@ -28,9 +28,6 @@ import type {
   WebsocketShard,
 } from "tiny-discord";
 
-const COMMAND_INTERACTION_RESPONSE = {};
-type CommandInteractionResponse = typeof COMMAND_INTERACTION_RESPONSE;
-
 export type InteractionHook = (
   interaction: Interaction
 ) => InteractionServer.InteractionReply | undefined | Promise<any>;
@@ -269,17 +266,10 @@ export abstract class AbstractCommandListener {
     };
   }
 
-  private async onInteraction(
-    interaction: Interaction
-  ): Promise<InteractionServer.InteractionReply | CommandInteractionResponse> {
+  private async onInteraction(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
     if (interaction.isCommandInteraction()) {
-      await interaction.reply({
-        type: InteractionResponseType.DeferredChannelMessageWithSource,
-      });
-
       this.onCommand(interaction);
-
-      return COMMAND_INTERACTION_RESPONSE;
+      return { type: InteractionResponseType.DeferredChannelMessageWithSource };
     }
 
     if (interaction.isAutocompleteInteraction()) return this.onAutocomplete(interaction);
@@ -296,9 +286,10 @@ export abstract class AbstractCommandListener {
     });
 
     // @ts-ignore Discord supports sending a blank object as a response
-    client.on("interaction", (event) => {
+    client.on("interaction", async (event) => {
       const interaction = new Interaction(this.rest, event.interaction, this.applicationId);
-      return this.onInteraction(interaction);
+      const response = await this.onInteraction(interaction);
+      interaction.reply(response);
     });
   }
 
@@ -323,9 +314,7 @@ export abstract class AbstractCommandListener {
       );
 
       const response = await this.onInteraction(interaction);
-      if (response === COMMAND_INTERACTION_RESPONSE) return;
-
-      interaction.reply(response as InteractionServer.InteractionReply);
+      interaction.reply(response);
     });
   }
 
