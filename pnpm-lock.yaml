@@ -174,8 +174,8 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.2
+        version: 1.0.2
       toad-scheduler:
         specifier: ^3.0.1
         version: 3.0.1
@@ -241,8 +241,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.2
+        version: 1.0.2
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
@@ -296,8 +296,8 @@ importers:
         specifier: ^5.4.1
         version: 5.4.1
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.2
+        version: 1.0.2
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
@@ -415,8 +415,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.2
+        version: 1.0.2
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
@@ -460,37 +460,6 @@ importers:
       mongoose:
         specifier: ^8.5.2
         version: 8.5.2(socks@2.8.3)
-
-  assets/private:
-    dependencies:
-      skia-canvas:
-        specifier: ^1.0.1
-        version: 1.0.1
-      stackblur-canvas:
-        specifier: ^2.7.0
-        version: 2.7.0
-    devDependencies:
-      '@commitlint/cli':
-        specifier: ^19.4.0
-        version: 19.4.0(@types/node@22.1.0)(typescript@5.5.4)
-      '@commitlint/config-conventional':
-        specifier: ^19.2.2
-        version: 19.2.2
-      commitizen:
-        specifier: ^4.3.0
-        version: 4.3.0(@types/node@22.1.0)(typescript@5.5.4)
-      cz-conventional-changelog:
-        specifier: ^3.3.0
-        version: 3.3.0(@types/node@22.1.0)(typescript@5.5.4)
-
-  assets/public:
-    dependencies:
-      skia-canvas:
-        specifier: ^1.0.1
-        version: 1.0.1
-      stackblur-canvas:
-        specifier: 2.7.0
-        version: 2.7.0
 
   packages/api-client:
     dependencies:
@@ -537,8 +506,8 @@ importers:
         specifier: 1.7.3
         version: 1.7.3
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.2
+        version: 1.0.2
 
   packages/discord:
     dependencies:
@@ -579,8 +548,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.2
+        version: 1.0.2
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
@@ -641,8 +610,8 @@ importers:
         specifier: 1.7.3
         version: 1.7.3
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: ^1.0.2
+        version: 1.0.2
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -679,8 +648,6 @@ importers:
         version: 3.4.2
 
   packages/skin-renderer: {}
-
-  packages/skin-renderer/pkg: {}
 
   packages/util:
     dependencies:
@@ -4386,11 +4353,8 @@ packages:
     resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
     engines: {node: '>= 10'}
 
-  skia-canvas@0.9.30:
-    resolution: {integrity: sha512-Y4BZZhJpdGeRRfu/pyT1395UAE5Hgzup+P5tDq1vTTKcOgXmUuAWeDhvfeDn9FWaE6tNkOTQWO/mK7fdD5qIrw==}
-
-  skia-canvas@1.0.1:
-    resolution: {integrity: sha512-/HtZlmib2BD3Fi6P4ZywSq7VquPl2A1Frc0pA+xD5hJSvSzN7FoOJpBWDpDd0e1ByzrVO6ZIjO98dNSQ2XqlKw==}
+  skia-canvas@1.0.2:
+    resolution: {integrity: sha512-9IjebOdBf6ir5Ktq0aM0wPshZ61oNX+T+2/ZBNJQZ63Z3SsSAd7i6YaYbqqtP6X8bK9mqB8QO1Y5DUZXNXuYHw==}
 
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
@@ -4469,10 +4433,6 @@ packages:
 
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
-
-  stackblur-canvas@2.7.0:
-    resolution: {integrity: sha512-yf7OENo23AGJhBriGx0QivY5JP6Y1HbrrDI6WLt6C5auYZXlQrheoY8hD4ibekFKz1HOfE48Ww8kMWMnJD/zcQ==}
-    engines: {node: '>=0.1.14'}
 
   standard-as-callback@2.1.0:
     resolution: {integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==}
@@ -6463,7 +6423,7 @@ snapshots:
 
   axios@1.7.3:
     dependencies:
-      follow-redirects: 1.15.6(debug@4.3.6)
+      follow-redirects: 1.15.6(debug@4.3.4)
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -8930,19 +8890,7 @@ snapshots:
       mrmime: 2.0.0
       totalist: 3.0.1
 
-  skia-canvas@0.9.30:
-    dependencies:
-      '@mapbox/node-pre-gyp': 1.0.11
-      cargo-cp-artifact: 0.1.8
-      glob: 8.1.0
-      path-browserify: 1.0.1
-      simple-get: 4.0.1
-      string-split-by: 1.0.0
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-
-  skia-canvas@1.0.1:
+  skia-canvas@1.0.2:
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
       cargo-cp-artifact: 0.1.8
@@ -9028,8 +8976,6 @@ snapshots:
     optional: true
 
   stackback@0.0.2: {}
-
-  stackblur-canvas@2.7.0: {}
 
   standard-as-callback@2.1.0: {}
 
