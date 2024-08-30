@@ -47,7 +47,7 @@ export class SessionController {
   @Delete()
   @Auth({ role: AuthRole.MEMBER })
   public async resetSession(
-  @Query() { player: tag }: PlayerDto
+    @Query() { player: tag }: PlayerDto
   ) {
     const player = await this.sessionService.getAndReset(tag);
     return { success: !!player, player };
