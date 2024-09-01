@@ -27,7 +27,7 @@
     "mongoose": "^8.5.2",
     "reflect-metadata": "^0.2.2",
     "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz",
-    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83",
+    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
     "toad-scheduler": "^3.0.1",
     "typedi": "^0.10.0"
   },
