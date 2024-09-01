@@ -56,15 +56,14 @@ const serverLogo = readFileSync(getLogoPath(UserLogo.DEFAULT, 64), {
 });
 
 const server = createServer({
-  "host": config("verifyServer.hostIp"),
-  "maxPlayers": 2,
-  "motd": "§9§lStatsify Verification",
-  "version": false,
-  "online-mode": false,
-  "errorHandler": (_, error) => {
+  host: config("verifyServer.hostIp"),
+  maxPlayers: 2,
+  motd: "§9§lStatsify Verification",
+  version: false,
+  errorHandler: (_, error) => {
     logger.error(error);
   },
-  "beforePing": (response) => {
+  beforePing: (response) => {
     // Remove the version from the response
     response.version.name = "";
 
@@ -77,7 +76,7 @@ logger.log("Server Started");
 
 server.on("login", async (client) => {
   try {
-    logger.verbose(`${client.username} has joined`);
+    logger.verbose(`${client.username} [${client.uuid}] has joined`);
 
     const uuid = client.uuid.replaceAll("-", "");
 
