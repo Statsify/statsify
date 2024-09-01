@@ -38,7 +38,7 @@
     "mongoose": "^8.5.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
-    "skia-canvas": "^0.9.30",
+    "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz",
     "toad-scheduler": "^3.0.1"
   },
   "devDependencies": {
