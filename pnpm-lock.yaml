@@ -174,8 +174,8 @@ importers:
         specifier: ^7.8.1
         version: 7.8.1
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
+        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
       toad-scheduler:
         specifier: ^3.0.1
         version: 3.0.1
@@ -241,8 +241,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
+        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
@@ -296,8 +296,8 @@ importers:
         specifier: ^5.4.1
         version: 5.4.1
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
+        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
@@ -415,8 +415,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
+        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
@@ -464,8 +464,8 @@ importers:
   assets/private:
     dependencies:
       skia-canvas:
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
+        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
       stackblur-canvas:
         specifier: ^2.7.0
         version: 2.7.0
@@ -486,8 +486,8 @@ importers:
   assets/public:
     dependencies:
       skia-canvas:
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
+        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
       stackblur-canvas:
         specifier: 2.7.0
         version: 2.7.0
@@ -537,8 +537,8 @@ importers:
         specifier: 1.7.3
         version: 1.7.3
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
+        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
 
   packages/discord:
     dependencies:
@@ -579,8 +579,8 @@ importers:
         specifier: ^0.2.2
         version: 0.2.2
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
+        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/4461f6a390d168ed312d27a30574ebdb1f448a83
@@ -641,8 +641,8 @@ importers:
         specifier: 1.7.3
         version: 1.7.3
       skia-canvas:
-        specifier: ^0.9.30
-        version: 0.9.30
+        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
+        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -4386,11 +4386,9 @@ packages:
     resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
     engines: {node: '>= 10'}
 
-  skia-canvas@0.9.30:
-    resolution: {integrity: sha512-Y4BZZhJpdGeRRfu/pyT1395UAE5Hgzup+P5tDq1vTTKcOgXmUuAWeDhvfeDn9FWaE6tNkOTQWO/mK7fdD5qIrw==}
-
-  skia-canvas@1.0.1:
-    resolution: {integrity: sha512-/HtZlmib2BD3Fi6P4ZywSq7VquPl2A1Frc0pA+xD5hJSvSzN7FoOJpBWDpDd0e1ByzrVO6ZIjO98dNSQ2XqlKw==}
+  skia-canvas@https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz:
+    resolution: {tarball: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz}
+    version: 0.9.30
 
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
@@ -8930,19 +8928,7 @@ snapshots:
       mrmime: 2.0.0
       totalist: 3.0.1
 
-  skia-canvas@0.9.30:
-    dependencies:
-      '@mapbox/node-pre-gyp': 1.0.11
-      cargo-cp-artifact: 0.1.8
-      glob: 8.1.0
-      path-browserify: 1.0.1
-      simple-get: 4.0.1
-      string-split-by: 1.0.0
-    transitivePeerDependencies:
-      - encoding
-      - supports-color
-
-  skia-canvas@1.0.1:
+  skia-canvas@https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz:
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
       cargo-cp-artifact: 0.1.8
