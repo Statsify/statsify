@@ -397,7 +397,7 @@
       "title": "잘못된 초기화 시간대"
     },
     "invalidSearch": {
-      "description": "찾으시는 걸 정확히 알아내지 못했어요.\n사용자 이름이나 UUID이나 Discord 멘션을 입력하세요.",
+      "description": "찾으시는 걸 정확히 알아내지 못했어요!\n사용자 이름이나 UUID나 Discord 멘션을 입력하세요.",
       "title": "잘못된 검색"
     },
     "invalidServer": {
@@ -621,7 +621,7 @@
     "godlikes": "Godlikes",
     "gold": "골드",
     "goldEarned": "획득한 골드",
-    "goldPickedUp": "수집한 금괴",
+    "goldPickedUp": "Gold Picked Up",
     "goldRate": "금 트로피 비율",
     "goldSpent": "사용한 골드",
     "goldTrophies": "금 트로피",
