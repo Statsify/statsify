@@ -554,9 +554,9 @@
     "website": "[Website](https://statsify.net/)"
   },
   "deprecated": {
-    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} has been merged into the {{newCommandName}} command. Please run {{newCommand}} and select {{mode}} in the dropdown.",
-    "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} has been removed in favor of {{newCommandName}}. Please run {{newCommand}} instead.",
-    "command-description": "This command has been removed in favor of {{newCommandName}}."
+    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} було об'єднано в команду {{newCommandName}}. Будь ласка, запустіть {{newCommand}} і виберіть {{mode}} в розкривному списку.",
+    "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} було видалено на користь {{newCommandName}}. Будь ласка запустіть {{newCommand}} натомість.",
+    "command-description": "Цю команду було видалено на користь {{newCommandName}}."
   },
   "stats": {
     "achievementPoints": "Очки досягнень",
@@ -737,10 +737,10 @@
     "shotsFired": "Постріли",
     "silver": "Срібло",
     "silverTrophies": "Срібних трофеїв",
-    "slumberTickets": "Slumber Tickets",
+    "slumberTickets": "Сонні квитки",
     "soloWins": "Перемог в соло ",
     "souls": "Душі",
-    "coinConversions": "Coin Conversions",
+    "coinConversions": "Конвертацій монет",
     "starsEarned": "Зірок зароблено",
     "started": "Розпочав",
     "status": "Статус",
@@ -755,7 +755,7 @@
     "title": "Титул",
     "tokens": "Токенів",
     "total": "Всього",
-    "totalSlumberTickets": "Total Slumber Tickets",
+    "totalSlumberTickets": "Всього сонних квитків",
     "totalTrophies": "Всього Трофеїв",
     "trail": "Слід",
     "transfusion": "Transfusion",
@@ -790,18 +790,18 @@
     "fails": "Невдач",
     "mapsCompleted": "Мапи завершено",
     "arcadeWins": "Arcade перемоги",
-    "spec": "Spec",
-    "capturePoints": "Capture Points",
-    "defendPoints": "Defend Points",
+    "spec": "Спеціалізація",
+    "capturePoints": "Захоплено точок",
+    "defendPoints": "Захищено точок",
     "draws": "Нічиї",
-    "sheepThrown": "Sheep Thrown",
-    "sheepKilled": "Sheep Killed",
-    "magicWool": "Magic Wool",
-    "flagCaptures": "Flag Captures",
-    "flagReturns": "Flag Returns",
-    "airTime": "Air Time",
-    "potionsSplashed": "Potions Splashed",
-    "powerOrbs": "Power Orbs"
+    "sheepThrown": "Овець кинуто",
+    "sheepKilled": "Овець убито",
+    "magicWool": "Магічної вовни",
+    "flagCaptures": "Захоплено прапорів",
+    "flagReturns": "Повернуто прапорів",
+    "airTime": "Час у повітрі",
+    "potionsSplashed": "Використано вибухових зіллів",
+    "powerOrbs": "Куль сили"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Приєднуйся до нас**$t(socials.discord)**, та отримуйте **перезаряджання на 20% нижче** $t(emojis:heart)",
@@ -826,7 +826,7 @@
     "instructions": {
       "title": "Пов'яжіть ваш обліковий запис Minecraft з Statsify",
       "steps": {
-        "one": "Open **Minecraft** (`1.7.10` - `1.19.4`) and go to the server list",
+        "one": "Відкрийте **Minecraft** (`1.7.10` - `1.19.4`) та перейдіть до списку серверів",
         "two": "Підключіться до **`verify.statsify.net`** та скопіюйте відображений код",
         "three": "Поверніться до **Discord** та натисніть кнопку нижче, потім введіть свій код"
       },
