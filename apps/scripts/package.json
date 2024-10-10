@@ -22,11 +22,11 @@
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/core": "^1.7.22",
-    "@swc/helpers": "^0.5.12",
+    "@swc/helpers": "^0.5.13",
     "chalk": "^5.3.0",
     "chokidar": "^3.6.0",
     "discord-bot": "workspace:^",
-    "inquirer": "^10.1.8",
+    "inquirer": "^10.2.2",
     "ioredis": "^5.4.1",
     "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
@@ -35,6 +35,6 @@
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.7",
-    "globals": "^15.9.0"
+    "globals": "^15.11.0"
   }
 }
