@@ -12,7 +12,7 @@ permissions:
 jobs:
   deploy:
     name: Deploy
-    runs-on: self-hosted
+    runs-on: core
     environment: production
     steps:
       - name: Checkout repository
