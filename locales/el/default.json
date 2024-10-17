@@ -9,7 +9,7 @@
     "mojang-player": "Ένα όνομα χρήστη ή UUID του Minecraft",
     "number": "Ένας αριθμός",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard",
+    "player-leaderboard": "Επίλεξε ένα πίνακα κατάταξης",
     "reason": "The reason for closing the support ticket",
     "server": "Ένα όνομα ενός Minecraft διακομιστή ή μία IP δικομιστή",
     "tags-content": "The content of the tag",
@@ -31,7 +31,7 @@
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "Δες τις Minecraft και Optifine κάπες κάποιου",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
-    "quests-command": "View your {{name}} questing stats",
+    "quests-command": "Δες τα στατιστικά αποστολών του {{name}}",
     "quests": "$t(commands.hypixel-command, { \"name\": \"Questing\" })",
     "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
     "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
@@ -85,7 +85,7 @@
     "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "Δες τα στατιστικά συνεδριών του {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
@@ -115,7 +115,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-command": "Δες τους {{name}} πίνακες κατατάξεων",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -235,8 +235,8 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "Επανάφερε τα ιστορικά στατιστικά σου",
+    "reset-session": "Επανάφερε τα στατιστικά συνεδριών σου"
   },
   "config": {
     "badge": {
@@ -305,8 +305,8 @@
         "title": "Παιχνίδια"
       },
       "session": {
-        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
-        "title": "Sessions"
+        "description": "Το Statsify σου επιτρέπει να ελέγξεις τα στατιστικά σου σαν να άρχισες να παίζεις σήμερα μέσω του `/session`. Με το `/reset session` μπορείς να επαναφέρεις τα στατιστικά της συνεδρίας σου και να ξεκινήσεις μια νέα συνεδρία.",
+        "title": "Συνεδρίες"
       },
       "leaderboards": {
         "description": "Το Statsify προσφέρει χιλιάδες κατατάξεις μέσω της `/leaderboard` εντολής. Γράψε `/leaderboard`, μετά επίλεξε το gamemode, και επίλεξε μία κατάταξη για προβολή. Μπορείς να πατήσεις το κουμπί αναζήτησης για έναν συγκεκριμένο παίκτη ή θέση. Μπορείς επίσης να πατήσεις τα πάνω και κάτω κουμπιά για να δεις περισσότερες σελίδες.",
@@ -373,20 +373,20 @@
       "title": "Απαιτείται Ανώτερη Βαθμίδα"
     },
     "invalidGuild": {
-      "description_id": "A guild with the id of `{{tag}}` could not be found!",
-      "description_name": "A guild by the name of `{{tag}}` could not be found!",
-      "description_player": "A guild with the player `{{tag}}` could not be found!",
+      "description_id": "Μία guild με το `{{tag}}` id δεν μπόρεσε να βρεθεί!",
+      "description_name": "Μία guild με το `{{tag}}` όνομα δεν μπόρεσε να βρεθεί!",
+      "description_player": "Μία guild με τον `{{tag}}` παίκτη δεν μπόρεσε να βρεθεί!",
       "title": "Μη Έγκυρη Guild"
     },
     "invalidPlayer": {
-      "description_username": "A player by the username of `{{tag}}` could not be found!",
-      "description_uuid": "A player with the UUID of `{{tag}}` could not be found!",
-      "description_discordId": "A player with the discord id of `{{tag}}` could not be found!",
+      "description_username": "Ένας παίκτης με το `{{tag}}` όνομα χρήστη δεν μπόρεσε να βρεθεί!",
+      "description_uuid": "Ένας παίκτης με το `{{tag}}` UUID δεν μπόρεσε να βρεθεί!",
+      "description_discordId": "Ένας παίκτης με το `{{tag}}` discord id δεν μπόρεσε να βρεθεί!",
       "title": "Μη Έγκυρος Παίκτης"
     },
     "invalidSession": {
-      "title": "Invalid Session",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+      "title": "Μη Έγκυρη Συνεδρία",
+      "description": "Ο **{{displayName}}** δεν έχει καμία ενεργή συνεδρία. Μπορεί να κάνει μια συνεδρία γράφοντας `/session` ενώ είναι επαληθευμένος."
     },
     "invalidResetTime": {
       "description": "`{{time}}` δεν ταιριάζει με τη μορφή `h:mm a`. Εισήγε μία ώρα σε παρόμοια μορφή με `12:00 ΜΜ` ή `1:00 ΠΜ`.",
@@ -434,7 +434,7 @@
       "title": "Λείπει Επαλήθευση"
     },
     "missingPlayerVerification": {
-      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
+      "description": "Ο **{{displayName}}** δεν είναι **επαληθευμένος**. Πρέπει να γράψει `/verify` για να επαληθεύσει τον λογαριασμό του.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -476,7 +476,7 @@
     },
     "premiumRequired": {
       "description": "Έλεγξε όλα τα διαθέσιμα χαρακτηριστικά [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
+      "preview": "Έλεγξε όλα τα διαθέσιμα χαρακτηριστικά [here](https://statsify.net/premium). Παρακάτω βρίσκεται μια μικρή προεπισκόπηση για το τι κάνει/αλλάζει η εντολή.",
       "title": "To Statsify {{tier}} απαιτείται για την εκτέλεση αυτής της εντολής"
     },
     "staffOnly": {
@@ -513,11 +513,11 @@
     "reset": "$t(emojis:clock) **Επαναφέρεται** <t:{{time}}:R>",
     "resetButton": "Κάνε κλικ για Επαναφορά",
     "setResetTime": "Ρύθμισε την ώρα επαναφοράς σε <t:{{time}}:t>.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats.",
+    "newSession": "Τα στατιστικά συνεδρίας του **{{displayName}}** έχουν ελεγχθεί για πρώτη φορά στο Statsify.",
+    "setSessionReset": "Επιτυχής επαναφορά των στατιστικών συνεδρίας σου.",
     "disabledWarning": {
-      "title": "Historical Commands are no Longer Available",
-      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+      "title": "Οι Ιστορικές Εντολές δεν είναι Πλέον Διαθέσιμες",
+      "description": "Το νέο Hypixel [API Terms](https://developer.hypixel.net/policies/) δεν επιτρέπει \"τη συνεχή έρευνα των δεδομένων παικτών\", που σημαίνει ότι το Statsify δεν μπορεί να παρακολουθήσει τα στατιστικά παικτών καθημερινά πλέον.\n\nΑντί αυτού μπορείς να ξεκινήσεις μια συνεδρία με `/session`. Όταν ξεκινήσεις μια συνεδρία, το bot θα συνεχίσει να παρακολουθεί τα στατιστικά σου από την στιγμή που τρέξεις την εντολή, μέχρι την επόμενη φορά που θα την ξανατρέξεις. Για να επαναφέρεις τα στατιστικά συνεδρίας, που μπορείς να γράψεις `/reset session`."
     }
   },
   "leaderboard": {
@@ -554,9 +554,9 @@
     "website": "[Website](https://statsify.net/)"
   },
   "deprecated": {
-    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} has been merged into the {{newCommandName}} command. Please run {{newCommand}} and select {{mode}} in the dropdown.",
-    "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} has been removed in favor of {{newCommandName}}. Please run {{newCommand}} instead.",
-    "command-description": "This command has been removed in favor of {{newCommandName}}."
+    "merged-dropdown": "$t(emojis:icons.warning)Η {{oldCommandName}} έχει συγχωνευθεί με την {{newCommandName}} εντολή. Παρακαλώ γράψε {{newCommand}} και επίλεξε {{mode}} στο αναπτυσσόμενο μενού.",
+    "merged-direct": "$t(emojis:icons.warning)Η {{oldCommandName}} έχει αφαιρεθεί υπέρ του {{newCommandName}}. Παρακαλώ γράψε {{newCommand}} αντί αυτού.",
+    "command-description": "Η εντολή έχει αφαιρεθεί υπέρ του {{newCommandName}}."
   },
   "stats": {
     "achievementPoints": "Πόντοι Επιτευγμάτων",
@@ -603,7 +603,7 @@
     "fastestDetectiveWin": "Γρηγορότερη Νίκη ως Ντετέκτιβ",
     "fastestMurdererWin": "Γρηγορότερη Νίκη ως Δολοφόνος",
     "fastestWin": "Γρηγορότερη Νίκη",
-    "fastestWoolCapture": "Fastest Wool Capture",
+    "fastestWoolCapture": "Γρηγορότερη Αιχμαλώτιση Μαλλιού",
     "finalAssists": "Τελικές Βοήθειες",
     "finalDeaths": "Τελικοί Θάνατοι",
     "finalKills": "Τελικοί Σκοτωμοί",
@@ -620,10 +620,10 @@
     "godfather": "Noνός",
     "godlikes": "Θεϊκά",
     "gold": "Χρυσός",
-    "goldEarned": "Gold Earned",
+    "goldEarned": "Χρυσό που Αποκτήθηκε",
     "goldPickedUp": "Μαζεμένος Χρυσός",
     "goldRate": "Ποσοστό Χρυσού",
-    "goldSpent": "Gold Spent",
+    "goldSpent": "Χρυσό που Δαπανήθηκε",
     "goldTrophies": "Χρυσά Τρόπαια",
     "grandPrixTokens": "GP Ανταμοιβές",
     "guild": {
@@ -685,7 +685,7 @@
     "levelsGained": "Αποκτημένα Επίπεδα",
     "loginTime": "Ώρα Σύνδεσης",
     "logoutTime": "Ώρα Αποσύνδεσης",
-    "longestGame": "Longest Game",
+    "longestGame": "Μεγαλύτερο Παιχνίδι",
     "lootChests": "Loot Chests",
     "losses": "Ήττες",
     "magicalChests": "Μαγικά Σεντούκια",
@@ -712,8 +712,8 @@
     "points": "Πόντοι",
     "poopCollected": "Συλλεγμένα Κακάκια",
     "powerKicks": "Δυνατές Κλωτσιές",
-    "powerupActivations": "Power-Up Activations",
-    "powerups": "Power-Ups",
+    "powerupActivations": "Ενεργοποιήσεις Ενισχύσεων",
+    "powerups": "Ενισχύσεις",
     "prefix": "Πρόθεμα",
     "prevent": "Αποτροπή",
     "progression": {
@@ -728,7 +728,7 @@
     "ranksGifted": "Δωρισμένα Ranks",
     "rebelKills": "Σκοτωμοί ως Επιτιθέμενος",
     "renown": "Φήμη",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "Σερί Ανταμοιβής",
     "roundWins": "Νίκες Γύρου",
     "rune": "Ρούνος",
     "score": "Βαθμολογία",
@@ -737,10 +737,10 @@
     "shotsFired": "Πυροβολισμοί",
     "silver": "Ασήμι",
     "silverTrophies": "Ασημένια Τρόπαια",
-    "slumberTickets": "Slumber Tickets",
+    "slumberTickets": "Slumber Εισιτήρια",
     "soloWins": "Solo Νίκες",
     "souls": "Ψυχές",
-    "coinConversions": "Coin Conversions",
+    "coinConversions": "Μετατροπές Νομισμάτων",
     "starsEarned": "Αποκτημένα Αστέρια",
     "started": "Ξεκίνησε",
     "status": "Κατάσταση",
@@ -755,7 +755,7 @@
     "title": "Τίτλος",
     "tokens": "Μάρκες",
     "total": "Σύνολο",
-    "totalSlumberTickets": "Total Slumber Tickets",
+    "totalSlumberTickets": "Συνολικά Slumber Εισιτήρια",
     "totalTrophies": "Συνολικά Τρόπαια",
     "trail": "Μονοπάτι",
     "transfusion": "Μετάγγιση",
@@ -776,32 +776,32 @@
     "witherKills": "Wither Σκοτωμοί",
     "wlr": "WLR",
     "wool": "Μαλλί",
-    "woolCaptured": "Wool Captured",
-    "woolPickedUp": "Wool Picked Up",
+    "woolCaptured": "Αιχμαλωτισμένα Μαλλιά",
+    "woolPickedUp": "Μαζεμένα Μαλλιά",
     "woolPlaced": "Τοποθετημένα Wool",
     "zombieKills": "Zombie Σκοτωμοί",
     "potionsBrewed": "Παρασκευασμένα Φίλτρα",
-    "positions": "Positions",
-    "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed",
-    "totalExp": "Total EXP",
-    "gamesFinished": "Games Finished",
-    "flawlessGames": "Flawless Games",
-    "fails": "Fails",
-    "mapsCompleted": "Maps Completed",
-    "arcadeWins": "Arcade Wins",
+    "positions": "Θέσεις",
+    "powerupsCollected": "Ενισχύσεις που Συλλέχθηκαν",
+    "roundsCompleted": "Ολοκληρωμένοι Γύροι",
+    "totalExp": "Συνολικό EXP",
+    "gamesFinished": "Ολοκληρωμένα Παιχνίδια",
+    "flawlessGames": "Άψογα Παιχνίδια",
+    "fails": "Αποτυχίες",
+    "mapsCompleted": "Ολοκληρωμένοι Χάρτες",
+    "arcadeWins": "Arcade Νίκες",
     "spec": "Spec",
-    "capturePoints": "Capture Points",
-    "defendPoints": "Defend Points",
-    "draws": "Draws",
-    "sheepThrown": "Sheep Thrown",
-    "sheepKilled": "Sheep Killed",
-    "magicWool": "Magic Wool",
-    "flagCaptures": "Flag Captures",
-    "flagReturns": "Flag Returns",
-    "airTime": "Air Time",
-    "potionsSplashed": "Potions Splashed",
-    "powerOrbs": "Power Orbs"
+    "capturePoints": "Αιχμαλώτιση Πόντων",
+    "defendPoints": "Πόντοι Προστασίας",
+    "draws": "Ισοπαλίες",
+    "sheepThrown": "Πρόβατα που Ρίχτηκαν",
+    "sheepKilled": "Πρόβατα Που Σκοτώθηκαν",
+    "magicWool": "Μαγικό Μαλλί",
+    "flagCaptures": "Αιχμαλωτίσεις Σημαίας",
+    "flagReturns": "Επιστροφές Σημαίας",
+    "airTime": "Χρόνος Αέρος",
+    "potionsSplashed": "Φίλτρα που Ρίχτηκαν",
+    "powerOrbs": "Σφαίρες Ισχύος"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Μπες στο **$t(socials.discord)** και κέρδισε **20% χαμηλότερο χρόνο επαναφόρτισης** $t(emojis:heart)",
@@ -809,8 +809,8 @@
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** προσφέρει πρόσθετες λειτουργίες, όπως εξατομικευμένα σήματα προφίλ. Βρες την πλήρη λίστα με τα οφέλη **[here](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) Δες τις κορυφαίες θέσεις σου στο leaderboard με **[Statsify Premium](<https://statsify.net/premium>)** χρησιμοποιώντας το `/rankings`",
     "verify": "$t(emojis:check) Εκτέλεσε το `/verify` για να εκτελέσεις εντολές χωρίς να εισάγεις το όνομα χρήστη σου καθώς και να λάβεις **10% χαμηλότερα cooldowns**",
-    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
-    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
+    "resetSession": "$t(emojis:reset) Μπορείς να **επαναφέρεις** τα στατιστικά συνεδρίας σου με `/reset session`.",
+    "sessions": "$t(emojis:reset) Παρακολούθησε την πρόοδο των στατιστικών σου με Συνεδρίες και `/session`."
   },
   "unknown": "Άγνωστο",
   "verification": {
@@ -820,21 +820,21 @@
     },
     "invalidCode": {
       "title": "Μη Έγκυρος Κωδικός Επαλήθευσης",
-      "description": "Check your verification code or try again by following these steps: ",
-      "button": "Watch Tutorial"
+      "description": "Έλεγξε τον κωδικό επαλήθευσης ή προσπάθησε ξανά ακολουθώντας αυτά τα βήματα: ",
+      "button": "Παρακολούθηση Σεμιναρίου"
     },
     "instructions": {
-      "title": "Link your Minecraft Account to Statsify",
+      "title": "Σύνδεσε τον Minecraft λογαριασμό σου στο Statsify",
       "steps": {
-        "one": "Open **Minecraft** (`1.7.10` - `1.19.4`) and go to the server list",
-        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
-        "three": "Head back to **Discord** and click the button below, then type in your code"
+        "one": "Άνοιξε **Minecraft** (`1.7.10` - `1.19.4`) και πήγαινε στη λίστα διακομιστών",
+        "two": "Συνδέσου στο **`verify.statsify.net`** και αντίγραψε τον κωδικό που εμφανίζεται",
+        "three": "Πήγαινε πίσω στο **Discord**, κάνε κλικ στο παρακάτω κουμπί και πληκτρολόγησε τον κωδικό σου"
       },
       "modal": {
-        "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "title": "Γράψε τον Κωδικό Επαλήθευσής σου",
+        "input": "Κωδικός Επαλήθευσης"
       },
-      "button": "Enter Verification Code"
+      "button": "Γράψε Κωδικό Επαλήθευσης"
     },
     "notVerified": {
       "description": "Πρέπει να επαληθευτείς για να μπορείς να καταργήσεις την επαλήθευση!",
