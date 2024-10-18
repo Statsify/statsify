@@ -18,7 +18,7 @@
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.12",
     "@typegoose/typegoose": "^12.6.0",
-    "minecraft-protocol": "https://github.com/jacobk999/node-minecraft-protocol#cd8f06e3ee74f67dfc6deeeeb6b33b869bf705a2",
+    "minecraft-protocol": "https://github.com/jacobk999/node-minecraft-protocol#7057ad979b416192ada235f2f4e3b5eb26af5fa1",
     "mongoose": "^8.5.2"
   }
 }
