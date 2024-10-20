@@ -26,7 +26,17 @@ interface Sizes {
 }
 
 export class FontRenderer {
-  private images: Map<string, CanvasRenderingContext2D> = new Map();
+  private images: Map<string, CanvasRenderingContext2D>;
+  private forceUnicode: boolean;
+
+  public constructor() {
+    this.images = new Map();
+    this.forceUnicode = false;
+  }
+
+  public forceUnicodeFont(forceUnicode: boolean) {
+    this.forceUnicode = forceUnicode;
+  }
 
   public async loadImages(fontPath: string) {
     const files = await readdir(fontPath);
@@ -153,7 +163,9 @@ export class FontRenderer {
   }
 
   private isAscii(unicode: string) {
-    return unicode.toUpperCase() in sizes.ascii;
+    // Don't force unicode for spaces
+    const shoudlForceUnicode = this.forceUnicode && unicode !== "0020";
+    return !shoudlForceUnicode && unicode.toUpperCase() in sizes.ascii;
   }
 
   private getCharacterImage(unicode: string, isAscii: boolean) {

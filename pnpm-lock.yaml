@@ -680,8 +680,6 @@ importers:
 
   packages/skin-renderer: {}
 
-  packages/skin-renderer/pkg: {}
-
   packages/util:
     dependencies:
       '@swc/helpers':
@@ -5801,7 +5799,7 @@ snapshots:
 
   '@pm2/pm2-version-check@1.0.4':
     dependencies:
-      debug: 4.3.4
+      debug: 4.3.6
     transitivePeerDependencies:
       - supports-color
 
