@@ -10,15 +10,15 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@sentry/node": "^7.118.0",
+    "@sentry/node": "^7.119.2",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
+    "@swc/helpers": "^0.5.13",
     "axios": "^1.7.7",
-    "discord-api-types": "^0.37.98",
+    "discord-api-types": "^0.37.103",
     "i18next": "^21.10.0",
     "i18next-fs-backend": "^2.3.2",
     "reflect-metadata": "^0.2.2",
