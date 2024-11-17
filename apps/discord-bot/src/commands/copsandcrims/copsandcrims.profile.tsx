@@ -151,7 +151,7 @@ export const CopsAndCrimsProfile = ({
         title={`§l${FormattedGame.COPS_AND_CRIMS} §fStats §r(${mode.formatted})`}
         description={`§7${t("stats.level")}: ${copsandcrims.levelFormatted}\n${formatProgression({
           t,
-          label: t("stats.progression.level"),
+          label: t("stats.progression.score"),
           progression: copsandcrims.progression,
           currentLevel: copsandcrims.naturalLevelFormatted,
           nextLevel: copsandcrims.nextLevelFormatted,
