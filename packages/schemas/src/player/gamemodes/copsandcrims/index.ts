@@ -65,7 +65,7 @@ export class CopsAndCrims {
     this.defusal = new Defusal(data);
     this.deathmatch = new Deathmatch(data);
     this.gunGame = new GunGame(data);
-    this.overall = new CopsAndCrimsOverall(this.defusal, this.deathmatch, this.gunGame);
+    this.overall = new CopsAndCrimsOverall(data, this.defusal, this.deathmatch, this.gunGame);
 
     if (data.score === undefined) {
       this.score = Math.floor(add(
