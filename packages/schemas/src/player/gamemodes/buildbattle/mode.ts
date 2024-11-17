@@ -44,3 +44,16 @@ export class BuildBattlePro {
     this.wins = data.wins_solo_pro;
   }
 }
+
+export class BuildBattleSpeedBuilders {
+  @Field()
+  public wins: number;
+
+  @Field()
+  public perfectBuilds: number;
+
+  public constructor(data: APIData, achievements: APIData) {
+    this.wins = data.wins_speed_builders;
+    this.perfectBuilds = achievements.buildbattle_speed_builders_perfectionist;
+  }
+}
