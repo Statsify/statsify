@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
+import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
 import { CopsAndCrimsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -131,7 +131,13 @@ export const CopsAndCrimsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.COPS_AND_CRIMS} §fStats §r(${mode.formatted})`}
-        description={`§7${t("stats.prefix")}: ${copsandcrims.naturalPrefix}`}
+        description={`§7${t("stats.level")}: ${copsandcrims.levelFormatted}\n${formatProgression({
+          t,
+          label: t("stats.progression.level"),
+          progression: copsandcrims.progression,
+          currentLevel: copsandcrims.naturalLevelFormatted,
+          nextLevel: copsandcrims.nextLevelFormatted,
+        })}`}
         time={time}
       />
       {table}

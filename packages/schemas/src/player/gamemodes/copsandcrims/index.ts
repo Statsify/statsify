@@ -6,11 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type APIData, findScoreIndex } from "@statsify/util";
 import { CopsAndCrimsOverall, Deathmatch, Defusal, GunGame } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { GamePrefix, defaultPrefix, getFormattedPrefix } from "#prefixes";
-import type { APIData } from "@statsify/util";
+import { LEVEL_REQUIREMENTS, getFormattedLevel, getIntendedLevelFormatted } from "./util.js";
+import { Progression } from "#progression";
+import { add } from "@statsify/math";
+import { createPrefixProgression } from "#prefixes";
 
 export const COPS_AND_CRIMS_MODES = new GameModes([
   { api: "overall" },
@@ -22,58 +25,27 @@ export const COPS_AND_CRIMS_MODES = new GameModes([
 
 export type CopsAndCrimsModes = ExtractGameModes<typeof COPS_AND_CRIMS_MODES>;
 
-type PrefixParams = [kills: number, prefix: string];
-
-const prefixes: GamePrefix<PrefixParams>[] = [
-  { req: 0, fmt: (_, kills, prefix) => `§7[${kills}${prefix}]` },
-  { req: 1, fmt: (_, kills, prefix) => `§f[${kills}${prefix}]` },
-  { req: 2, fmt: (_, kills, prefix) => `§e[${kills}${prefix}]` },
-  { req: 3, fmt: (_, kills, prefix) => `§6[${kills}${prefix}]` },
-  { req: 4, fmt: (_, kills, prefix) => `§3[${kills}${prefix}]` },
-  { req: 5, fmt: (_, kills, prefix) => `§c[${kills}${prefix}]` },
-];
-
-const PREFIX_COLORS: Record<string, number> = {
-  GRAY: 0,
-  WHITE: 1,
-  YELLOW: 2,
-  GOLD: 3,
-  AQUA: 4,
-  RED: 5,
-};
-
-const PREFIX_MAP: Record<string, string> = {
-  helmet: "ᨽ",
-  armor: "ᨾ",
-  knife: "ᨯ",
-  msg: "ᨢ",
-  pistol: "ᨠ",
-  grenade: "ᨬ",
-  firebomb: "ᨹ",
-  c4: "ᨶ",
-  defuse: "ᨻ",
-  headshot: "ᨰ",
-  hp: "ᩀ",
-  fire: "ᨳ",
-  crims: "ᩑ",
-  cops: "ᩐ",
-  bullpup: "ᩒᩓ",
-  scopedRifle: "ᩖᩗ",
-  autoShotgun: "ᩚᩛ",
-  handgun: "ᩞ",
-  sniper: "ᨪᨫ",
-  magnum: "ᨡ",
-  carbine: "ᨦᨧ",
-};
-
 export class CopsAndCrims {
   @Field({ historical: { enabled: false } })
   public coins: number;
 
-  @Field({
-    store: { default: defaultPrefix(prefixes, { prefixParams: [0, PREFIX_MAP.helmet] }) },
-  })
-  public naturalPrefix: string;
+  @Field()
+  public score: number;
+
+  @Field()
+  public level: number;
+
+  @Field({ store: { default: getIntendedLevelFormatted(0) } })
+  public naturalLevelFormatted: string;
+
+  @Field()
+  public levelFormatted: string;
+
+  @Field()
+  public nextLevelFormatted: string;
+
+  @Field()
+  public progression: Progression;
 
   @Field()
   public overall: CopsAndCrimsOverall;
@@ -95,19 +67,23 @@ export class CopsAndCrims {
     this.gunGame = new GunGame(data);
     this.overall = new CopsAndCrimsOverall(this.defusal, this.deathmatch, this.gunGame);
 
-    const prefixParams: PrefixParams = [
-      this.overall.kills,
-      PREFIX_MAP[data.selected_lobby_prefix ?? "helmet"],
-    ];
+    if (data.score === undefined) {
+      this.score = Math.floor(add(
+        this.overall.kills / 2,
+        add(this.defusal.bombsDefused, this.defusal.bombsPlanted) / 3,
+        this.overall.wins
+      ));
 
-    const score = PREFIX_COLORS[data.lobbyPrefixColor ?? "GRAY"] ?? 0;
+      this.level = findScoreIndex(LEVEL_REQUIREMENTS, this.score) + 1;
+    } else {
+      this.score = data.score;
+      this.level = data.level ?? 0;
+    }
 
-    this.naturalPrefix = getFormattedPrefix({
-      prefixes,
-      score,
-      trueScore: true,
-      prefixParams,
-    });
+    this.naturalLevelFormatted = getIntendedLevelFormatted(this.level);
+    this.levelFormatted = getFormattedLevel(this.level, data.active_scheme, data.active_emblem);
+    this.nextLevelFormatted = getIntendedLevelFormatted(this.level + 1);
+    this.progression = createPrefixProgression(LEVEL_REQUIREMENTS, this.score);
   }
 }
 
