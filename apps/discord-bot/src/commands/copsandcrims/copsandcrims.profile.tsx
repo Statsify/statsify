@@ -28,7 +28,10 @@ export const CopsAndCrimsProfile = ({
 }: CopsAndCrimsProfileProps) => {
   const { copsandcrims } = player.stats;
 
-  const sidebar: SidebarItem[] = [[t("stats.coins"), t(copsandcrims.coins), "§6"]];
+  const sidebar: SidebarItem[] = [
+    [t("stats.coins"), t(copsandcrims.coins), "§6"],
+    [t("stats.score"), t(copsandcrims.score), "§a"],
+  ];
 
   let table: JSX.Element;
 
