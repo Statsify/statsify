@@ -10,8 +10,10 @@ import {
   AssassinsMurderMysteryMode,
   ClassicMurderMysteryMode,
   InfectionMurderMysteryMode,
+  MurderMysteryKnife,
   StandardMurderMysteryMode,
 } from "./mode.js";
+import { Color } from "#color";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
@@ -39,6 +41,9 @@ export class MurderMystery {
   public emblemFormatted: string;
 
   @Field()
+  public knife: MurderMysteryKnife;
+
+  @Field()
   public overall: StandardMurderMysteryMode;
 
   @Field()
@@ -56,6 +61,12 @@ export class MurderMystery {
   public constructor(data: APIData, ap: APIData) {
     this.tokens = data.coins;
 
+    const emblemSelection = data.emblem?.selected_icon;
+    const emblemColor = new Color(data.emblem?.selected_color ?? "GRAY");
+
+    this.emblemFormatted = EMBLEM_MAP[emblemSelection] ? `${emblemColor.code}${EMBLEM_MAP[emblemSelection]}` : "";
+    this.knife = new MurderMysteryKnife(data);
+
     this.overall = new StandardMurderMysteryMode(data, "");
     this.classic = new ClassicMurderMysteryMode(data, "MURDER_CLASSIC");
     this.doubleUp = new ClassicMurderMysteryMode(data, "MURDER_DOUBLE_UP");
@@ -65,5 +76,17 @@ export class MurderMystery {
     this.overall.heroWins = ap.murdermystery_countermeasures;
   }
 }
+
+const EMBLEM_MAP: Record<string, string> = {
+  DIVINE: "Φ",
+  ZERO: "∅",
+  SIGMA: "Σ",
+  OMEGA: "Ω",
+  ALPHA: "α",
+  EQUIVALENCE: "≡",
+  RICH: "$",
+  PODIUM: "π",
+  FLORIN: "ƒ",
+};
 
 export * from "./mode.js";
