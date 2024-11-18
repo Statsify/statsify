@@ -31,6 +31,8 @@ export const CopsAndCrimsProfile = ({
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(copsandcrims.coins), "§6"],
     [t("stats.score"), t(copsandcrims.score), "§a"],
+    [t("stats.knifeKills"), t(copsandcrims.overall.knifeKills), "§7"],
+    [t("stats.headshotKills"), t(copsandcrims.overall.headshotKills), "§4"],
   ];
 
   let table: JSX.Element;
@@ -66,17 +68,13 @@ export const CopsAndCrimsProfile = ({
               value={t(stats.bombsPlanted)}
               color="§c"
             />
-            <Table.td
-              title={t("stats.headshotKills")}
-              value={t(stats.headshotKills)}
-              color="§6"
-            />
           </Table.tr>
         </Table.table>
       );
 
       break;
     }
+    case "deathmatch":
     case "overall": {
       const stats = copsandcrims[mode.api];
 
@@ -84,32 +82,12 @@ export const CopsAndCrimsProfile = ({
         <Table.table>
           <Table.tr>
             <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-            <Table.td title={t("stats.knifeKills")} value={t(stats.knifeKills)} color="§e" />
+            <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
           </Table.tr>
           <Table.tr>
             <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
             <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
             <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
-            <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
-          </Table.tr>
-        </Table.table>
-      );
-
-      break;
-    }
-    case "deathmatch": {
-      const stats = copsandcrims[mode.api];
-
-      table = (
-        <Table.table>
-          <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§e" />
-            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-          </Table.tr>
-          <Table.tr>
-            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
-            <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
-            <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
           </Table.tr>
         </Table.table>
       );

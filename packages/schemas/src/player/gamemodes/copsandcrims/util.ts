@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { cycleColors } from "#prefixes";
 import { findScore, minecraftColors } from "@statsify/util";
-import { rainbow } from "#prefixes";
 
 const MAX_LEVEL = 50;
 const INDIVIDUAL_LEVEL_REQUIREMENTS = [
@@ -69,7 +69,13 @@ const DEFAULT_SCHEME = "gray";
 const COLOR_SCHEMES = Object.fromEntries(minecraftColors.map((color) => [color.id.toLowerCase(), (level: number, emblem: string) => `${color.code}[${level}${emblem}]`]));
 const SCHEME_MAP: Record<string, (level: number, emblem: string) => string> = {
   ...COLOR_SCHEMES,
-  chroma: (level, emblem) => rainbow(`[${level}${emblem}]`),
+  chroma: (level, emblem) => {
+    const colorless = `[${level}${emblem}]`;
+    const colors = ["c", "e", "a", "b", "5"];
+    if (emblem.length >= 2) colors.splice(1, 0, "6");
+    if (emblem.length >= 3) colors.splice(5, 0, "9");
+    return cycleColors(colorless, colors);
+  },
 };
 
 const DEFAULT_EMBLEM = "rookie";

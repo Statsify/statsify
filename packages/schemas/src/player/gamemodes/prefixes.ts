@@ -128,10 +128,11 @@ export const defaultPrefix = <T extends unknown[] = []>(
 const RAINBOW_COLORS = ["c", "6", "e", "a", "b", "d", "9"];
 const ALT_RAINBOW_COLORS = ["c", "6", "e", "a", "b", "d", "5"];
 
-export const rainbow = (text: string, useAltPalette = false) => {
-  const colors = useAltPalette ? ALT_RAINBOW_COLORS : RAINBOW_COLORS;
+export const rainbow = (text: string, useAltPalette = false) => cycleColors(
+  text,
+  useAltPalette ? ALT_RAINBOW_COLORS : RAINBOW_COLORS
+);
 
-  return [...text]
-    .map((l, i) => `§${colors[i % colors.length]}${l}`)
-    .join("");
-};
+export const cycleColors = (text: string, colors: string[]) => [...text]
+  .map((l, i) => `§${colors[i % colors.length]}${l}`)
+  .join("");
