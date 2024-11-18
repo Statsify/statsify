@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, type SidebarItem } from "#components";
+import { Container, Footer, Header, type SidebarItem, formatProgression } from "#components";
 import { FormattedGame, type GameMode, WarlordsMage, WarlordsModes, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "@statsify/schemas";
 import { WarlordsCaptureTheFlagTable, WarlordsClassTable, WarlordsDeathmatchTable, WarlordsDominationTable, WarlordsOverallTable } from "./tables/index.js";
 import { prettify } from "@statsify/util";
@@ -89,6 +89,15 @@ export const WarlordsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.WARLORDS} §fStats §r(${mode.formatted})`}
+        description={`§7${t("stats.title")}: ${
+          warlords.titleFormatted
+        }\n${formatProgression({
+          t,
+          label: t("stats.progression.win"),
+          progression: warlords.progression,
+          currentLevel: warlords.titleFormatted,
+          nextLevel: warlords.nextTitleFormatted,
+        })}`}
         time={time}
       />
       {table}

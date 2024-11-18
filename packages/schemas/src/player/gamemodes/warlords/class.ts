@@ -95,14 +95,14 @@ export class WarlordsMage extends WarlordsClass {
   @Field({ leaderboard: { name: "Pyromancer" } })
   public declare attack: WarlordsSpecification;
 
-  @Field({ leaderboard: { name: "Cyromancer" } })
+  @Field({ leaderboard: { name: "Cryomancer" } })
   public declare defense: WarlordsSpecification;
 
   @Field({ leaderboard: { name: "Aquamancer" } })
   public declare healer: WarlordsSpecification;
 
   public constructor(data: APIData) {
-    super(data, "mage", "pyromancer", "cyromancer", "aquamancer");
+    super(data, "mage", "pyromancer", "cryomancer", "aquamancer");
   }
 }
 

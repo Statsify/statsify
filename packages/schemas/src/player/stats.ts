@@ -80,7 +80,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.COPS_AND_CRIMS,
-      extraDisplay: "this.copsandcrims.naturalPrefix",
+      extraDisplay: "this.copsandcrims.levelFormatted",
     },
   })
   public copsandcrims: CopsAndCrims;
@@ -197,7 +197,12 @@ export class PlayerStats {
   })
   public walls: Walls;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.WARLORDS } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.WARLORDS,
+      extraDisplay: "this.warlords.titleFormatted",
+    },
+  })
   public warlords: Warlords;
 
   @Field({
