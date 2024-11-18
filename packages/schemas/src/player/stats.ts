@@ -94,7 +94,12 @@ export class PlayerStats {
   @Field({ leaderboard: { fieldName: FormattedGame.MEGAWALLS } })
   public megawalls: MegaWalls;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.MURDER_MYSTERY } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.MURDER_MYSTERY,
+      extraDisplay: "this.murdermystery.emblemFormatted",
+    },
+  })
   public murdermystery: MurderMystery;
 
   @Field({
