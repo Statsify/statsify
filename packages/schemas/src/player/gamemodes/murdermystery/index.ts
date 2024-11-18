@@ -36,6 +36,9 @@ export class MurderMystery {
   public tokens: number;
 
   @Field()
+  public emblemFormatted: string;
+
+  @Field()
   public overall: StandardMurderMysteryMode;
 
   @Field()

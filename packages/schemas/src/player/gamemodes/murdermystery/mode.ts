@@ -111,7 +111,10 @@ export class ClassicMurderMysteryMode extends StandardMurderMysteryMode {
 
 export class InfectionMurderMysteryMode extends BaseMurderMysteryMode {
   @Field()
-  public survivorWins: number;
+  public alphaWins: number;
+
+  @Field()
+  public killsAsAlpha: number;
 
   @Field()
   public killsAsSurvivor: number;
@@ -125,7 +128,7 @@ export class InfectionMurderMysteryMode extends BaseMurderMysteryMode {
   public constructor(data: APIData, mode: string) {
     super(data, mode);
 
-    this.survivorWins = data.survivor_wins_MURDER_INFECTION;
+    this.alphaWins = data.survivor_wins_MURDER_INFECTION;
 
     this.killsAsSurvivor = data.kills_as_survivor_MURDER_INFECTION;
 
