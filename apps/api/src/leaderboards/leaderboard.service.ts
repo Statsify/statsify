@@ -146,10 +146,11 @@ export abstract class LeaderboardService {
     const data = leaderboard.map((doc, index) => {
       const stats = additionalStats[index];
 
-      if (extraDisplay)
-        stats.name = `${stats[extraDisplay] ?? extraDisplayMetadata?.default}§r ${
-          stats.name
-        }`;
+      if (extraDisplay) {
+        const extraDisplayValue = stats[extraDisplay] ?? extraDisplayMetadata?.default;
+        // Only add the extra display if it exists
+        stats.name = extraDisplayValue ? `${extraDisplayValue}§r ${stats.name}` : stats.name;
+      }
 
       const field = formatter ? formatter(doc.score) : doc.score;
 

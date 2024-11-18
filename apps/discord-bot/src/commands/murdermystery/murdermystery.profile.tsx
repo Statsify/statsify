@@ -190,11 +190,13 @@ export const MurderMysteryProfile = ({
         <Table.table>
           <Table.tr>
             <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-            <Table.td
-              title={t("stats.survivorWins")}
-              value={t(stats.survivorWins)}
-              color="§e"
-            />
+            <Historical.exclude time={time}>
+              <Table.td
+                title={t("stats.lastAliveGames")}
+                value={t(stats.lastAliveGames)}
+                color="§b"
+              />
+            </Historical.exclude>
           </Table.tr>
           <Table.tr>
             <Table.td
@@ -208,21 +210,30 @@ export const MurderMysteryProfile = ({
               color="§6"
             />
           </Table.tr>
-          <Historical.exclude time={time}>
-            <Table.tr>
-              <Table.td
-                title={t("stats.lastAliveGames")}
-                value={t(stats.lastAliveGames)}
-                color="§b"
-              />
-            </Table.tr>
-          </Historical.exclude>
+          <Table.tr>
+            <Table.td title={t("stats.alphaWins")} value={t(stats.alphaWins)} color="§c" />
+            <Table.td
+              title={t("stats.killsAsAlpha")}
+              value={t(stats.killsAsAlpha)}
+              color="§4"
+            />
+          </Table.tr>
         </Table.table>
       );
 
       break;
     }
   }
+
+  const description = [];
+
+  if (murdermystery.emblemFormatted) description.push(`§7${t("stats.emblem")}: ${murdermystery.emblemFormatted}`);
+  description.push(`§7${t("stats.knife")}: §a${murdermystery.knife.name}`);
+
+  if (murdermystery.knife.progression.percent >= 1)
+    description.push(`§7${t("stats.progression.exp")}: §l§dPRESTIGED`);
+  else
+    description.push(`§7${t("stats.progression.exp")}: ${knifePrestigeProgressBar(murdermystery.knife.progression.percent)} §e${murdermystery.knife.progression.current}§7/§d${murdermystery.knife.progression.max}`);
 
   return (
     <Container background={background}>
@@ -232,6 +243,7 @@ export const MurderMysteryProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.MURDER_MYSTERY} §fStats §r(${mode.formatted})`}
+        description={description.join("\n")}
         time={time}
         historicalSidebar
       />
@@ -239,4 +251,10 @@ export const MurderMysteryProfile = ({
       <Footer logo={logo} user={user} />
     </Container>
   );
+};
+
+const knifePrestigeProgressBar = (percentage: number) => {
+  const max = 10;
+  const count = Math.ceil(max * percentage);
+  return `§a${"-".repeat(count)}§7${"-".repeat(max - count)}§r`;
 };
