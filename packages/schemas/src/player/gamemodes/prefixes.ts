@@ -126,11 +126,10 @@ export const defaultPrefix = <T extends unknown[] = []>(
 ) => getFormattedPrefix({ prefixes, score: prefixes[0].req, ...options });
 
 const RAINBOW_COLORS = ["c", "6", "e", "a", "b", "d", "9"];
-const ALT_RAINBOW_COLORS = ["c", "6", "e", "a", "b", "d", "5"];
 
-export const rainbow = (text: string, useAltPalette = false) => cycleColors(
+export const rainbow = (text: string) => cycleColors(
   text,
-  useAltPalette ? ALT_RAINBOW_COLORS : RAINBOW_COLORS
+  RAINBOW_COLORS
 );
 
 export const cycleColors = (text: string, colors: string[]) => [...text]

@@ -8,9 +8,11 @@
 
 import { type APIData, formatTime } from "@statsify/util";
 import { Field } from "#metadata";
-import { type GamePrefix, createPrefixProgression, defaultPrefix, getFormattedPrefix, rainbow } from "#prefixes";
+import { type GamePrefix, createPrefixProgression, cycleColors, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
+
+const tntgamesRainbow = (text: string) => cycleColors(text, ["c", "6", "e", "a", "b", "d", "5"]);
 
 // Prefixes for TNT Run, PVP Run and Bow Spleef
 const prefixes1: GamePrefix[] = [
@@ -24,7 +26,7 @@ const prefixes1: GamePrefix[] = [
   { fmt: (n) => `§6[${n}]`, req: 5000 },
   { fmt: (n) => `§c[${n}]`, req: 7500 },
   { fmt: (n) => `§0[${n}]`, req: 10_000 },
-  { fmt: (n) => rainbow(`[${n}]`, true), req: 15_000 },
+  { fmt: (n) => tntgamesRainbow(`[${n}]`), req: 15_000 },
 ];
 
 export class BowSpleef {
@@ -210,7 +212,7 @@ const prefixes2: GamePrefix[] = [
   { fmt: (n) => `§6[${n}]`, req: 1500 },
   { fmt: (n) => `§c[${n}]`, req: 2500 },
   { fmt: (n) => `§0[${n}]`, req: 5000 },
-  { fmt: (n) => rainbow(`[${n}]`, true), req: 10_000 },
+  { fmt: (n) => tntgamesRainbow(`[${n}]`), req: 10_000 },
 ];
 
 export class TNTTag {

@@ -32,7 +32,7 @@ export class CopsAndCrims {
   @Field()
   public score: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public level: number;
 
   @Field({ store: { default: getIntendedLevelFormatted(0) } })
