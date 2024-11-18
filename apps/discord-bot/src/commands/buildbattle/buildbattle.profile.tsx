@@ -50,6 +50,7 @@ export const BuildBattleProfile = ({
     [t("stats.votes"), t(buildbattle.votes), "§c"],
     [t("stats.superVotes"), t(buildbattle.superVotes), "§b"],
     [t("stats.correctGuesses"), t(buildbattle.correctGuesses), "§9"],
+    [t("stats.perfectBuilds"), t(buildbattle.speedBuilders.perfectBuilds), "§e"],
   ];
 
   return (
@@ -67,7 +68,7 @@ export const BuildBattleProfile = ({
           t,
           label: t("stats.progression.score"),
           progression: buildbattle.progression,
-          currentLevel: buildbattle.titleFormatted,
+          currentLevel: buildbattle.naturalTitleFormatted,
           nextLevel: buildbattle.nextTitleFormatted,
         })}`}
         time={time}
@@ -77,8 +78,8 @@ export const BuildBattleProfile = ({
           <BuildBattleModeTable title="Overall" stats={buildbattle.overall} t={t} />
           <BuildBattleModeTable title="Pro" stats={buildbattle.pro} t={t} />
           <BuildBattleModeTable
-            title="1.14"
-            stats={{ wins: buildbattle.latestWins }}
+            title="Speed Builders"
+            stats={{ wins: buildbattle.speedBuilders.wins }}
             t={t}
           />
         </Table.tr>

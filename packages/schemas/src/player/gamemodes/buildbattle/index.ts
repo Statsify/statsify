@@ -11,7 +11,9 @@ import {
   BuildBattleMultiplayerMode,
   BuildBattleOverall,
   BuildBattlePro,
+  BuildBattleSpeedBuilders,
 } from "./mode.js";
+import { Color } from "#color";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import {
@@ -34,18 +36,20 @@ export const BUILD_BATTLE_MODES = new GameModes([
 ] as const);
 
 const titles: GameTitle[] = [
-  { req: 0, fmt: (n) => `§f${n}`, title: "Rookie" },
-  { req: 100, fmt: (n) => `§8${n}`, title: "Untrained" },
-  { req: 250, fmt: (n) => `§e${n}`, title: "Amateur" },
+  { req: 0, fmt: (n) => `§f${n}`, title: "Prospect" },
+  { req: 100, fmt: (n) => `§7${n}`, title: "Rookie" },
+  { req: 250, fmt: (n) => `§8${n}`, title: "Amateur" },
   { req: 500, fmt: (n) => `§a${n}`, title: "Apprentice" },
-  { req: 1000, fmt: (n) => `§d${n}`, title: "Experienced" },
-  { req: 2000, fmt: (n) => `§9${n}`, title: "Seasoned" },
-  { req: 3500, fmt: (n) => `§2${n}`, title: "Trained" },
-  { req: 5000, fmt: (n) => `§3${n}`, title: "Skilled" },
-  { req: 7500, fmt: (n) => `§c${n}`, title: "Talented" },
-  { req: 10_000, fmt: (n) => `§5${n}`, title: "Professional" },
-  { req: 15_000, fmt: (n) => `§1${n}`, title: "Expert" },
-  { req: 20_000, fmt: (n) => `§4${n}`, title: "Master" },
+  { req: 1000, fmt: (n) => `§2${n}`, title: "Trained" },
+  { req: 2500, fmt: (n) => `§b${n}`, title: "Experienced" },
+  { req: 5000, fmt: (n) => `§3${n}`, title: "Seasoned" },
+  { req: 10_000, fmt: (n) => `§9${n}`, title: "Skilled" },
+  { req: 25_000, fmt: (n) => `§1${n}`, title: "Talented" },
+  { req: 50_000, fmt: (n) => `§5${n}`, title: "Professional" },
+  { req: 100_000, fmt: (n) => `§d${n}`, title: "Artisan" },
+  { req: 200_000, fmt: (n) => `§c${n}`, title: "Expert" },
+  { req: 350_000, fmt: (n) => `§4${n}`, title: "Master" },
+  { req: 500_000, fmt: (n) => `§6${n}`, title: "Grandmaster" },
 ];
 
 export type BuildBattleModes = ExtractGameModes<typeof BUILD_BATTLE_MODES>;
@@ -66,6 +70,9 @@ export class BuildBattle {
   @Field()
   public guessTheBuild: BuildBattleGuessTheBuild;
 
+  @Field()
+  public speedBuilders: BuildBattleSpeedBuilders;
+
   @Field({ historical: { enabled: false } })
   public coins: number;
 
@@ -84,16 +91,16 @@ export class BuildBattle {
   @Field({ store: { default: defaultPrefix(titles) } })
   public titleFormatted: string;
 
-  @Field()
-  public progression: Progression;
+  @Field({ store: { default: defaultPrefix(titles) } })
+  public naturalTitleFormatted: string;
 
   @Field()
   public nextTitleFormatted: string;
 
-  @Field({ leaderboard: { fieldName: "Wins", name: "1.14 Wins" } })
-  public latestWins: number;
+  @Field()
+  public progression: Progression;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData, achievements: APIData) {
     this.overall = new BuildBattleOverall(data);
 
     this.solo = new BuildBattleMultiplayerMode(data, "solo");
@@ -101,8 +108,8 @@ export class BuildBattle {
 
     this.pro = new BuildBattlePro(data);
     this.guessTheBuild = new BuildBattleGuessTheBuild(data);
+    this.speedBuilders = new BuildBattleSpeedBuilders(data, achievements);
 
-    this.latestWins = data.wins_solo_normal_latest;
     this.coins = data.coins;
     this.score = data.score;
 
@@ -110,7 +117,13 @@ export class BuildBattle {
     this.votes = data.total_votes;
     this.superVotes = data.super_votes;
 
-    this.titleFormatted = getFormattedPrefix({ prefixes: titles, score: this.score });
+    this.naturalTitleFormatted = getFormattedPrefix({ prefixes: titles, score: this.score });
+
+    const emblemColor = new Color(data.emblem?.selected_color ?? "WHITE");
+    const emblemSymbol = data.emblem?.selected_icon;
+    const emblemFormatted = `${emblemColor.code}${EMBLEM_MAP[emblemSymbol] ?? ""}${EMBLEM_MAP[emblemSymbol] ? " " : ""}`;
+
+    this.titleFormatted = `${emblemFormatted}${this.naturalTitleFormatted}`;
 
     this.nextTitleFormatted = getFormattedPrefix({
       prefixes: titles,
@@ -121,5 +134,14 @@ export class BuildBattle {
     this.progression = createPrefixProgression(titles, this.score);
   }
 }
+
+const EMBLEM_MAP: Record<string, string> = {
+  REMINISCENCE: "≈",
+  ALPHA: "α",
+  OMEGA: "Ω",
+  RICH: "$",
+  PODIUM: "π",
+  FLORIN: "ƒ",
+};
 
 export * from "./mode.js";

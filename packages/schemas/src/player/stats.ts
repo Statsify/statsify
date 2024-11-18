@@ -217,7 +217,7 @@ export class PlayerStats {
     this.arenabrawl = new ArenaBrawl(stats.Arena ?? {}, legacy);
     this.bedwars = new BedWars(stats.Bedwars ?? {});
     this.blitzsg = new BlitzSG(stats.HungerGames ?? {});
-    this.buildbattle = new BuildBattle(stats.BuildBattle ?? {});
+    this.buildbattle = new BuildBattle(stats.BuildBattle ?? {}, achievements);
     this.challenges = new Challenges(data?.challenges?.all_time ?? {}, achievements);
     this.copsandcrims = new CopsAndCrims(stats.MCGO ?? {});
     this.duels = new Duels(stats.Duels ?? {});
