@@ -9,6 +9,8 @@
 import { Progression } from "#progression";
 import { abbreviationNumber, findScoreIndex } from "@statsify/util";
 
+type Requirement = { req: number };
+
 export type GamePrefix<T extends unknown[] = []> = {
   fmt: (n: string, ...args: T) => string;
   req: number;
@@ -29,8 +31,8 @@ type Prefixes<T extends unknown[] = []> = GamePrefix<T>[] | GameTitle<T>[];
  * @param skip The number of prefixes to skip
  * @returns The score needed to reach the requested prefix
  */
-const getPrefixRequirement = <T extends unknown[] = []>(
-  prefixes: Prefixes<T>,
+const getPrefixRequirement = (
+  prefixes: Requirement[],
   score: number,
   skip = 0
 ): number => {
@@ -41,8 +43,8 @@ const getPrefixRequirement = <T extends unknown[] = []>(
     prefixes[Math.min(prefixIndex + skip - 1, prefixes.length - 1)].req || 0;
 };
 
-export const createPrefixProgression = <T extends unknown[] = []>(
-  prefixes: Prefixes<T>,
+export const createPrefixProgression = (
+  prefixes: Requirement[],
   score: number
 ) => {
   const currentRequirement = getPrefixRequirement(prefixes, score);
@@ -126,10 +128,11 @@ export const defaultPrefix = <T extends unknown[] = []>(
 const RAINBOW_COLORS = ["c", "6", "e", "a", "b", "d", "9"];
 const ALT_RAINBOW_COLORS = ["c", "6", "e", "a", "b", "d", "5"];
 
-export const rainbow = (text: string, useAltPalette = false) => {
-  const colors = useAltPalette ? ALT_RAINBOW_COLORS : RAINBOW_COLORS;
+export const rainbow = (text: string, useAltPalette = false) => cycleColors(
+  text,
+  useAltPalette ? ALT_RAINBOW_COLORS : RAINBOW_COLORS
+);
 
-  return [...text]
-    .map((l, i) => `§${colors[i % colors.length]}${l}`)
-    .join("");
-};
+export const cycleColors = (text: string, colors: string[]) => [...text]
+  .map((l, i) => `§${colors[i % colors.length]}${l}`)
+  .join("");

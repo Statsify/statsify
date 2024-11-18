@@ -26,9 +26,6 @@ export class Defusal {
   @Field()
   public kdr: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public headshotKills: number;
-
   @Field()
   public assists: number;
 
@@ -44,7 +41,6 @@ export class Defusal {
     this.kills = data.kills;
     this.deaths = data.deaths;
     this.kdr = ratio(this.kills, this.deaths);
-    this.headshotKills = data.headshot_kills;
     this.assists = data.assists;
     this.bombsPlanted = data.bombs_planted;
     this.bombsDefused = data.bombs_defused;
@@ -121,11 +117,19 @@ export class CopsAndCrimsOverall {
   @Field()
   public assists: number;
 
-  public constructor(defusal: Defusal, deathmatch: Deathmatch, gunGame: GunGame) {
+  @Field()
+  public knifeKills: number;
+
+  @Field()
+  public headshotKills: number;
+
+  public constructor(data: APIData, defusal: Defusal, deathmatch: Deathmatch, gunGame: GunGame) {
     this.wins = add(defusal.wins, deathmatch.wins, gunGame.wins);
     this.kills = add(defusal.kills, deathmatch.kills, gunGame.kills);
     this.deaths = add(defusal.deaths, deathmatch.deaths, gunGame.deaths);
     this.kdr = ratio(this.kills, this.deaths);
     this.assists = add(defusal.assists, deathmatch.assists, gunGame.assists);
+    this.knifeKills = data.knife_kills;
+    this.headshotKills = data.headshot_kills;
   }
 }

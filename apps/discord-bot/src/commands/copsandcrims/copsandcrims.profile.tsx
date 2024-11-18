@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
+import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
 import { CopsAndCrimsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -28,7 +28,12 @@ export const CopsAndCrimsProfile = ({
 }: CopsAndCrimsProfileProps) => {
   const { copsandcrims } = player.stats;
 
-  const sidebar: SidebarItem[] = [[t("stats.coins"), t(copsandcrims.coins), "§6"]];
+  const sidebar: SidebarItem[] = [
+    [t("stats.coins"), t(copsandcrims.coins), "§6"],
+    [t("stats.score"), t(copsandcrims.score), "§a"],
+    [t("stats.knifeKills"), t(copsandcrims.overall.knifeKills), "§7"],
+    [t("stats.headshotKills"), t(copsandcrims.overall.headshotKills), "§4"],
+  ];
 
   let table: JSX.Element;
 
@@ -63,38 +68,32 @@ export const CopsAndCrimsProfile = ({
               value={t(stats.bombsPlanted)}
               color="§c"
             />
-            <Table.td
-              title={t("stats.headshotKills")}
-              value={t(stats.headshotKills)}
-              color="§6"
-            />
           </Table.tr>
         </Table.table>
       );
 
       break;
     }
-    case "overall":
-    case "deathmatch": {
+    case "deathmatch":
+    case "overall": {
       const stats = copsandcrims[mode.api];
 
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§e" />
-            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
+            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+            <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
           </Table.tr>
           <Table.tr>
+            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
             <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
             <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
-            <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
           </Table.tr>
         </Table.table>
       );
 
       break;
     }
-
     case "gunGame": {
       const stats = copsandcrims[mode.api];
 
@@ -131,7 +130,13 @@ export const CopsAndCrimsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.COPS_AND_CRIMS} §fStats §r(${mode.formatted})`}
-        description={`§7${t("stats.prefix")}: ${copsandcrims.naturalPrefix}`}
+        description={`§7${t("stats.level")}: ${copsandcrims.levelFormatted}\n${formatProgression({
+          t,
+          label: t("stats.progression.score"),
+          progression: copsandcrims.progression,
+          currentLevel: copsandcrims.naturalLevelFormatted,
+          nextLevel: copsandcrims.nextLevelFormatted,
+        })}`}
         time={time}
       />
       {table}
