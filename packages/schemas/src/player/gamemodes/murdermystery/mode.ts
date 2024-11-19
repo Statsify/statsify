@@ -139,7 +139,8 @@ export class InfectionMurderMysteryMode extends BaseMurderMysteryMode {
   public constructor(data: APIData, mode: string) {
     super(data, mode);
 
-    this.alphaWins = data.survivor_wins_MURDER_INFECTION;
+    this.alphaWins = data.alpha_wins_MURDER_INFECTION;
+    this.killsAsAlpha = data.kills_as_alpha_MURDER_INFECTION;
 
     this.killsAsSurvivor = data.kills_as_survivor_MURDER_INFECTION;
 
