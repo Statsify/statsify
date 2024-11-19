@@ -69,7 +69,7 @@ export class CopsAndCrims {
 
     if (data.score === undefined) {
       this.score = Math.floor(add(
-        this.overall.kills / 2,
+        (this.overall.kills ?? 0) / 2,
         add(this.defusal.bombsDefused, this.defusal.bombsPlanted) / 3,
         this.overall.wins
       ));
