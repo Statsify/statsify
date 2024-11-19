@@ -24,7 +24,7 @@ lazy_static! {
 }
 
 #[napi]
-pub async fn render_skin(skin_url: Option<String>, is_slim: bool) -> Result<Buffer> {
+pub async fn render_skin(skin_textures: Option<Buffer>, is_slim: bool) -> Result<Buffer> {
   let renderer = SKIN_RENDERER.get().await;
 
   let model_type = if is_slim {
@@ -33,8 +33,8 @@ pub async fn render_skin(skin_url: Option<String>, is_slim: bool) -> Result<Buff
     SkinModelType::Classic
   };
 
-  let skin_render = if let Some(skin_url) = skin_url {
-    renderer.render(model_type, &skin_url).await?
+  let skin_render = if let Some(skin_textures) = skin_textures {
+    renderer.render(skin_textures.into(), model_type).await?
   } else {
     renderer.render_default_texture(model_type).await?
   };

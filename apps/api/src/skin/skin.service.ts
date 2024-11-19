@@ -26,7 +26,9 @@ export class SkinService {
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
-    const { skin } = await this.getSkin(uuid).then((skin) => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false));
+    const { skin } = await this.getSkin(uuid)
+      .then((skin) => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false))
+      .catch(() => this.resolveSkin(undefined, false));
 
     const canvas = new Canvas(size, size);
     const ctx = canvas.getContext("2d");
@@ -42,8 +44,11 @@ export class SkinService {
   }
 
   public async getRender(uuid: string): Promise<Buffer> {
-    const skin = await this.getSkin(uuid);
-    return renderSkin(skin?.skinUrl, skin?.slim ?? false);
+    const data = await this.getSkin(uuid).catch(() => undefined);
+    const { skin, slim } = await this.resolveSkin(data?.skinUrl, data?.slim ?? false);
+    // @ts-expect-error _data is a property set by our custom loadImage function
+    const buffer = skin["_data"] as Buffer;
+    return renderSkin(buffer, slim);
   }
 
   public async getSkin(tag: string): Promise<Skin> {
