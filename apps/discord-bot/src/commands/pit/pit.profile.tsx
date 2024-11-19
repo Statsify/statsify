@@ -35,7 +35,9 @@ export const PitProfile = ({
     [t("stats.gold"), t(pit.gold), "§6"],
     [t("stats.contracts"), t(pit.contractsCompleted), "§a"],
     [t("stats.renown"), t(pit.renown), "§e"],
+    [t("stats.lifetimeRenown"), t(pit.lifetimeRenown), "§b"],
     [t("stats.bounty"), t(pit.bounty), "§6"],
+    [t("stats.blocksPlaced"), t(pit.blocksPlaced), "§9"],
   ];
 
   return (
