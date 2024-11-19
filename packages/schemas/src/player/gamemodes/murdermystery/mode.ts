@@ -90,9 +90,9 @@ export class OverallMurderMysteryMode extends StandardMurderMysteryMode {
   @Field()
   public heroWins: number;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData, ap: APIData) {
     super(data, "");
-    this.heroWins = data.murdermystery_countermeasures;
+    this.heroWins = ap.murdermystery_countermeasures;
   }
 }
 

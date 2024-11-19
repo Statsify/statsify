@@ -149,7 +149,7 @@ export class Pit {
     this.gold = profile.cash;
     this.renown = profile.renown;
 
-    const darkPantsCreated = data.dark_pants_crated;
+    const darkPantsCreated = data.dark_pants_crated ?? 0;
     const renownUnlocks = (profile.renown_unlocks ?? []) as RenownUnlock[];
     const renownShopCost = getRenownShopCost(renownUnlocks.filter((unlock) => unlock.key !== "unlock_golden_pickaxe"));
     this.lifetimeRenown = add(renownShopCost, this.renown, 2 * darkPantsCreated);

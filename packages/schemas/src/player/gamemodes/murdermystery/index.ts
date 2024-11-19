@@ -67,13 +67,11 @@ export class MurderMystery {
     this.emblemFormatted = EMBLEM_MAP[emblemSelection] ? `${emblemColor.code}${EMBLEM_MAP[emblemSelection]}` : "";
     this.knife = new MurderMysteryKnife(data);
 
-    this.overall = new OverallMurderMysteryMode(data);
+    this.overall = new OverallMurderMysteryMode(data, ap);
     this.classic = new ClassicMurderMysteryMode(data, "MURDER_CLASSIC");
     this.doubleUp = new ClassicMurderMysteryMode(data, "MURDER_DOUBLE_UP");
     this.assassins = new AssassinsMurderMysteryMode(data, "MURDER_ASSASSINS");
     this.infection = new InfectionMurderMysteryMode(data, "MURDER_INFECTION");
-
-    this.overall.heroKills = ap.murdermystery_countermeasures;
   }
 }
 
