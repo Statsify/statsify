@@ -53,7 +53,7 @@ export class StandardMurderMysteryMode extends BaseMurderMysteryMode {
   public thrownKnifeKills: number;
 
   @Field()
-  public heroWins: number;
+  public heroKills: number;
 
   @Field()
   public detectiveWins: number;
@@ -77,12 +77,22 @@ export class StandardMurderMysteryMode extends BaseMurderMysteryMode {
 
     this.trapKills = data[`trap_kills${mode}`];
     this.thrownKnifeKills = data[`thrown_knife_kills${mode}`];
+    this.heroKills = data[`was_hero${mode}`];
 
-    this.heroWins = data[`was_hero${mode}`];
     this.detectiveWins = data[`detective_wins${mode}`];
     this.murdererWins = data[`murderer_wins${mode}`];
     this.killsAsMurderer = data[`kills_as_murderer${mode}`];
     this.suicides = data[`suicides${mode}`];
+  }
+}
+
+export class OverallMurderMysteryMode extends StandardMurderMysteryMode {
+  @Field()
+  public heroWins: number;
+
+  public constructor(data: APIData) {
+    super(data, "");
+    this.heroWins = data.murdermystery_countermeasures;
   }
 }
 

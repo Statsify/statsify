@@ -77,6 +77,7 @@ export const MurderMysteryProfile = ({
               value={t(stats.trapKills)}
               color="§c"
             />
+            <Table.td title={t("stats.heroKills")} value={t(stats.heroKills)} color="§e" />
             <Table.td title={t("stats.bowKills")} value={t(stats.bowKills)} color="§6" />
             <Table.td title={t("stats.suicides")} value={t(stats.suicides)} color="§4" />
           </Table.tr>
@@ -103,7 +104,6 @@ export const MurderMysteryProfile = ({
               value={t(stats.detectiveWins)}
               color="§b"
             />
-            <Table.td title={t("stats.heroWins")} value={t(stats.heroWins)} color="§e" />
           </Table.tr>
           <Table.tr>
             <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
@@ -126,6 +126,7 @@ export const MurderMysteryProfile = ({
               value={t(stats.trapKills)}
               color="§c"
             />
+            <Table.td title={t("stats.heroKills")} value={t(stats.heroKills)} color="§e" />
             <Table.td title={t("stats.bowKills")} value={t(stats.bowKills)} color="§6" />
             <Table.td title={t("stats.suicides")} value={t(stats.suicides)} color="§4" />
           </Table.tr>
