@@ -43,18 +43,10 @@ impl SkinLoader {
     }
   }
 
-  pub async fn get_skin(&self, url: &str) -> SkinRendererResult<DynamicImage> {
-    let response = self.client.get(url).send().await?;
-
-    if response.status().is_success() {
-      let bytes = response.bytes().await?;
-      let image = image::load_from_memory_with_format(&bytes, image::ImageFormat::Png)?;
-      let skin = Self::process_skin(image)?;
-
-      Ok(skin)
-    } else {
-      Err(SkinRendererError::MissingSkinTexture)
-    }
+  pub fn get_skin(&self, bytes: Vec<u8>) -> SkinRendererResult<DynamicImage> {
+    let image = image::load_from_memory_with_format(&bytes, image::ImageFormat::Png)?;
+    let skin = Self::process_skin(image)?;
+    Ok(skin)
   }
 
   fn process_skin(skin: DynamicImage) -> ImageResult<DynamicImage> {

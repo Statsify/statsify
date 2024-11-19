@@ -247,10 +247,10 @@ impl SkinRenderer {
 
   pub async fn render(
     &self,
+    model_textures: Vec<u8>,
     model_type: SkinModelType,
-    model_texture_url: &str,
   ) -> SkinRendererResult<Vec<u8>> {
-    let model_texture_image = self.loader.get_skin(model_texture_url).await?;
+    let model_texture_image = self.loader.get_skin(model_textures)?;
     let model_texture = Texture::from_image(&self.device, &self.queue, &model_texture_image)?;
     let material = Material::new(&self.device, model_texture, &self.texture_bind_group_layout);
 
