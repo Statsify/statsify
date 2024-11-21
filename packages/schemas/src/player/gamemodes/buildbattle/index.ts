@@ -36,20 +36,25 @@ export const BUILD_BATTLE_MODES = new GameModes([
 ] as const);
 
 const titles: GameTitle[] = [
-  { req: 0, fmt: (n) => `§f${n}`, title: "Prospect" },
-  { req: 100, fmt: (n) => `§7${n}`, title: "Rookie" },
+  { req: 0, fmt: (n) => `§f${n}`, title: "Rookie" },
+  { req: 100, fmt: (n) => `§7${n}`, title: "Untrained" },
   { req: 250, fmt: (n) => `§8${n}`, title: "Amateur" },
-  { req: 500, fmt: (n) => `§a${n}`, title: "Apprentice" },
-  { req: 1000, fmt: (n) => `§2${n}`, title: "Trained" },
-  { req: 2500, fmt: (n) => `§b${n}`, title: "Experienced" },
-  { req: 5000, fmt: (n) => `§3${n}`, title: "Seasoned" },
-  { req: 10_000, fmt: (n) => `§9${n}`, title: "Skilled" },
-  { req: 25_000, fmt: (n) => `§1${n}`, title: "Talented" },
-  { req: 50_000, fmt: (n) => `§5${n}`, title: "Professional" },
-  { req: 100_000, fmt: (n) => `§d${n}`, title: "Artisan" },
-  { req: 200_000, fmt: (n) => `§c${n}`, title: "Expert" },
-  { req: 350_000, fmt: (n) => `§4${n}`, title: "Master" },
-  { req: 500_000, fmt: (n) => `§6${n}`, title: "Grandmaster" },
+  { req: 500, fmt: (n) => `§a${n}`, title: "Prospect" },
+  { req: 1000, fmt: (n) => `§2${n}`, title: "Apprentice" },
+  { req: 2000, fmt: (n) => `§b${n}`, title: "Experienced" },
+  { req: 3500, fmt: (n) => `§3${n}`, title: "Seasoned" },
+  { req: 5000, fmt: (n) => `§9${n}`, title: "Trained" },
+  { req: 7500, fmt: (n) => `§1${n}`, title: "Skilled" },
+  { req: 10_000, fmt: (n) => `§5${n}`, title: "Talented" },
+  { req: 15_000, fmt: (n) => `§d${n}`, title: "Professional" },
+  { req: 20_000, fmt: (n) => `§c${n}`, title: "Artisan" },
+  { req: 30_000, fmt: (n) => `§4${n}`, title: "Expert" },
+  { req: 50_000, fmt: (n) => `§6${n}`, title: "Master" },
+  { req: 100_000, fmt: (n) => `§l§a${n}`, title: "Legend" },
+  { req: 200_000, fmt: (n) => `§l§b${n}`, title: "Grandmaster" },
+  { req: 300_000, fmt: (n) => `§l§d${n}`, title: "Celestial" },
+  { req: 400_000, fmt: (n) => `§l§c${n}`, title: "Divine" },
+  { req: 500_000, fmt: (n) => `§l§6${n}`, title: "Ascended" },
 ];
 
 export type BuildBattleModes = ExtractGameModes<typeof BUILD_BATTLE_MODES>;
