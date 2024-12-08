@@ -8,6 +8,12 @@
 
 import { Box, Render } from "@statsify/rendering";
 
+const WHITE = "rgb(245, 248, 255)";
+const RED = "rgb(255, 53, 53)";
+const RED_HIGHLIGHT = "rgb(255, 98, 98)";
+const GREEN = "rgb(34, 175, 31)";
+const GREEN_HIGHLIGHT = "rgb(47, 209, 44)";
+
 export const render: Render<Box.BoxRenderProps> = (
   ctx,
   {
@@ -89,6 +95,34 @@ export const render: Render<Box.BoxRenderProps> = (
     ctx.stroke();
   }
 
+  drawPattern(ctx, "horizontal", x + (2 * border.topLeft), y, width - (2 * border.topRight) - (2 * border.topLeft));
+  drawPattern(ctx, "horizontal", x + (2 * border.bottomLeft), y + height - 4, width - (2 * border.bottomRight) - (2 * border.bottomLeft));
+
+  drawPattern(ctx, "vertical", x, y + (2 * border.topLeft), height - (2 * border.topLeft) - (2 * border.bottomLeft));
+  drawPattern(ctx, "vertical", x + width - 4, y + (2 * border.topRight), height - (2 * border.topRight) - (2 * border.bottomRight));
+
+  ctx.fillStyle = WHITE;
+
+  if (border.topLeft !== 0) {
+    ctx.fillRect(x + border.topLeft, y + border.topLeft, border.topLeft, border.topLeft);
+    ctx.fillRect(x + (2 * border.topLeft), y + (2 * border.topLeft), border.topLeft, border.topLeft);
+  }
+
+  if (border.topRight !== 0) {
+    ctx.fillRect(x + width - (2 * border.topRight), y + border.topRight, border.topRight, border.topRight);
+    ctx.fillRect(x + width - (3 * border.topRight), y + (2 * border.topRight), border.topRight, border.topRight);
+  }
+
+  if (border.bottomLeft !== 0) {
+    ctx.fillRect(x + border.bottomLeft, y + height - (2 * border.bottomLeft), border.bottomLeft, border.bottomLeft);
+    ctx.fillRect(x + (2 * border.bottomLeft), y + height - (3 * border.bottomLeft), border.bottomLeft, border.bottomLeft);
+  }
+
+  if (border.bottomRight !== 0) {
+    ctx.fillRect(x + width - (2 * border.bottomRight), y + height - (2 * border.bottomRight), border.bottomRight, border.bottomRight);
+    ctx.fillRect(x + width - (3 * border.bottomRight), y + height - (3 * border.bottomRight), border.bottomRight, border.bottomRight);
+  }
+
   if (!shadowDistance) return;
   shadowDistance /= 2;
 
@@ -141,3 +175,63 @@ export const render: Render<Box.BoxRenderProps> = (
 
   ctx.globalAlpha = 1;
 };
+
+function drawPattern(ctx: CanvasRenderingContext2D, direction: "horizontal" | "vertical", x: number, y: number, length: number) {
+  if (direction === "horizontal") {
+    const patternWidth = 60;
+    const patternHeight = 4;
+
+    for (let i = 0; i < length; i += patternWidth) {
+      const width = Math.min(patternWidth, length - i);
+      ctx.fillStyle = WHITE;
+      ctx.fillRect(x + i, y, width, patternHeight);
+
+      if (width >= 30) horizontalSquiggle(ctx, x + i + 6, y, RED, RED_HIGHLIGHT);
+      if (width >= 60) horizontalSquiggle(ctx, x + i + 36, y, GREEN, GREEN_HIGHLIGHT);
+    }
+  } else {
+    const patternWidth = 4;
+    const patternHeight = 60;
+    for (let i = 0; i < length; i += patternHeight) {
+      const height = Math.min(patternHeight, length - i);
+      ctx.fillStyle = WHITE;
+      ctx.fillRect(x, y + i, patternWidth, height);
+
+      if (height >= 30) verticalSquiggle(ctx, x, y + i + 6, RED, RED_HIGHLIGHT);
+      if (height >= 60) verticalSquiggle(ctx, x, y + i + 36, GREEN, GREEN_HIGHLIGHT);
+    }
+  }
+}
+
+function horizontalSquiggle(ctx: CanvasRenderingContext2D, x: number, y: number, color: string, highlight: string) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x + 3, y + 2, 12, 2);
+  ctx.fillRect(x + 9, y, 12, 2);
+
+  ctx.fillRect(x + 15, y + 2, 3, 1);
+
+  ctx.fillStyle = highlight;
+  ctx.fillRect(x + 3, y + 2, 1, 2);
+  ctx.fillRect(x + 3, y + 2, 4, 1);
+  ctx.fillRect(x + 9, y, 12, 1);
+
+  ctx.fillRect(x + 6, y + 1, 4, 1);
+  ctx.fillRect(x + 21, y, 3, 1);
+  ctx.fillRect(x, y + 3, 3, 1);
+}
+
+function verticalSquiggle(ctx: CanvasRenderingContext2D, x: number, y: number, color: string, highlight: string) {
+  ctx.fillStyle = color;
+  ctx.fillRect(x, y + 3, 2, 12);
+  ctx.fillRect(x + 2, y + 9, 2, 12);
+  ctx.fillRect(x + 2, y + 6, 1, 3);
+
+  ctx.fillStyle = highlight;
+  ctx.fillRect(x, y + 3, 1, 12);
+  ctx.fillRect(x + 2, y + 17, 1, 4);
+  ctx.fillRect(x + 2, y + 20, 2, 1);
+
+  ctx.fillRect(x, y, 1, 3);
+  ctx.fillRect(x + 1, y + 14, 1, 4);
+  ctx.fillRect(x + 3, y + 21, 1, 3);
+}
