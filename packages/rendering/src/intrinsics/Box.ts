@@ -168,11 +168,34 @@ export const render: JSX.Render<BoxRenderProps> = (
   drawPattern(ctx, "vertical", x + width - 4, y + border.topRight, height - border.topRight - border.bottomRight);
 
   ctx.fillStyle = WHITE;
-  if (border.topLeft !== 0) ctx.fillRect(x + border.topLeft, y + border.topLeft, border.topLeft, border.topLeft);
-  if (border.topRight !== 0) ctx.fillRect(x + width - (2 * border.topRight), y + border.topRight, border.topRight, border.topRight);
 
-  if (border.bottomLeft !== 0) ctx.fillRect(x + border.bottomLeft, y + height - (2 * border.bottomLeft), border.bottomLeft, border.bottomLeft);
-  if (border.bottomRight !== 0)ctx.fillRect(x + width - (2 * border.bottomRight), y + height - (2 * border.bottomRight), border.bottomRight, border.bottomRight);
+  if (border.topLeft !== 0) ctx.fillRect(
+    x + border.topLeft,
+    y + border.topLeft,
+    border.topLeft,
+    border.topLeft
+  );
+
+  if (border.topRight !== 0) ctx.fillRect(
+    x + width - (2 * border.topRight),
+    y + border.topRight,
+    border.topRight,
+    border.topRight
+  );
+
+  if (border.bottomLeft !== 0) ctx.fillRect(
+    x + border.bottomLeft,
+    y + height - (2 * border.bottomLeft),
+    border.bottomLeft,
+    border.bottomLeft
+  );
+
+  if (border.bottomRight !== 0) ctx.fillRect(
+    x + width - (2 * border.bottomRight),
+    y + height - (2 * border.bottomRight),
+    border.bottomRight,
+    border.bottomRight
+  );
 
   if (!shadowDistance) return;
 

@@ -139,7 +139,15 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.stroke();
 };
 
-function boxPath(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, border: Box.Border, offset: number) {
+function boxPath(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  border: Box.BoxRenderProps["border"],
+  offset: number
+) {
   x += offset;
   y += offset;
   width -= offset * 2;

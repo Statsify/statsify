@@ -7,6 +7,7 @@
  */
 
 import { Box, Render } from "@statsify/rendering";
+import { CanvasRenderingContext2D } from "skia-canvas";
 
 const WHITE = "rgb(245, 248, 255)";
 const RED = "rgb(255, 53, 53)";
@@ -104,23 +105,67 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.fillStyle = WHITE;
 
   if (border.topLeft !== 0) {
-    ctx.fillRect(x + border.topLeft, y + border.topLeft, border.topLeft, border.topLeft);
-    ctx.fillRect(x + (2 * border.topLeft), y + (2 * border.topLeft), border.topLeft, border.topLeft);
+    ctx.fillRect(
+      x + border.topLeft,
+      y + border.topLeft,
+      border.topLeft,
+      border.topLeft
+    );
+
+    ctx.fillRect(
+      x + (2 * border.topLeft),
+      y + (2 * border.topLeft),
+      border.topLeft,
+      border.topLeft
+    );
   }
 
   if (border.topRight !== 0) {
-    ctx.fillRect(x + width - (2 * border.topRight), y + border.topRight, border.topRight, border.topRight);
-    ctx.fillRect(x + width - (3 * border.topRight), y + (2 * border.topRight), border.topRight, border.topRight);
+    ctx.fillRect(
+      x + width - (2 * border.topRight),
+      y + border.topRight,
+      border.topRight,
+      border.topRight
+    );
+
+    ctx.fillRect(
+      x + width - (3 * border.topRight),
+      y + (2 * border.topRight),
+      border.topRight,
+      border.topRight
+    );
   }
 
   if (border.bottomLeft !== 0) {
-    ctx.fillRect(x + border.bottomLeft, y + height - (2 * border.bottomLeft), border.bottomLeft, border.bottomLeft);
-    ctx.fillRect(x + (2 * border.bottomLeft), y + height - (3 * border.bottomLeft), border.bottomLeft, border.bottomLeft);
+    ctx.fillRect(
+      x + border.bottomLeft,
+      y + height - (2 * border.bottomLeft),
+      border.bottomLeft,
+      border.bottomLeft
+    );
+
+    ctx.fillRect(
+      x + (2 * border.bottomLeft),
+      y + height - (3 * border.bottomLeft),
+      border.bottomLeft,
+      border.bottomLeft
+    );
   }
 
   if (border.bottomRight !== 0) {
-    ctx.fillRect(x + width - (2 * border.bottomRight), y + height - (2 * border.bottomRight), border.bottomRight, border.bottomRight);
-    ctx.fillRect(x + width - (3 * border.bottomRight), y + height - (3 * border.bottomRight), border.bottomRight, border.bottomRight);
+    ctx.fillRect(
+      x + width - (2 * border.bottomRight),
+      y + height - (2 * border.bottomRight),
+      border.bottomRight,
+      border.bottomRight
+    );
+
+    ctx.fillRect(
+      x + width - (3 * border.bottomRight),
+      y + height - (3 * border.bottomRight),
+      border.bottomRight,
+      border.bottomRight
+    );
   }
 
   if (!shadowDistance) return;
