@@ -590,6 +590,27 @@ export class HoleInTheWall {
   }
 }
 
+export class HypixelSaysMode {
+  @Field()
+  public points: number;
+
+  @Field()
+  public roundsWon: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.roundsWon", "this.points"] } })
+  public wins: number;
+
+  @Field({ historical: { enabled: false } })
+  public maxScore: number;
+
+  public constructor(data: APIData, mode: "simon" | "santa") {
+    this.points = data[`rounds_${mode}_says`];
+    this.roundsWon = data[`round_wins_${mode}_says`];
+    this.wins = data[`wins_${mode}_says`];
+    this.maxScore = data[`top_score_${mode}_says`] ?? 0;
+  }
+}
+
 export class HypixelSays {
   @Field()
   public points: number;
@@ -603,13 +624,22 @@ export class HypixelSays {
   @Field({ historical: { enabled: false } })
   public maxScore: number;
 
+  @Field()
+  public simonSays: HypixelSaysMode;
+
+  @Field({ leaderboard: { enabled: false } })
+  public santaSays: HypixelSaysMode;
+
   public constructor(data: APIData) {
-    this.points = add(data.rounds_simon_says, data.rounds_santa_says);
-    this.roundsWon = add(data.round_wins_simon_says, data.round_wins_santa_says);
-    this.wins = add(data.wins_simon_says, data.wins_santa_says);
+    this.simonSays = new HypixelSaysMode(data, "simon");
+    this.santaSays = new HypixelSaysMode(data, "santa");
+
+    this.points = add(this.simonSays.points, this.santaSays.points);
+    this.roundsWon = add(this.simonSays.roundsWon, this.santaSays.roundsWon);
+    this.wins = add(this.simonSays.wins, this.santaSays.wins);
     this.maxScore = Math.max(
-      data.top_score_simon_says ?? 0,
-      data.top_score_santa_says ?? 0
+      this.simonSays.maxScore,
+      this.santaSays.maxScore
     );
   }
 }
