@@ -10,12 +10,12 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@nestjs/swagger": "^7.4.0",
+    "@nestjs/swagger": "^7.4.2",
     "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
-    "@typegoose/typegoose": "^12.6.0",
+    "@swc/helpers": "^0.5.15",
+    "@typegoose/typegoose": "^12.9.1",
     "class-validator": "^0.14.1",
     "luxon": "^3.5.0"
   },

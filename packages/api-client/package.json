@@ -10,14 +10,14 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@nestjs/common": "^10.4.1",
-    "@nestjs/swagger": "^7.4.0",
-    "@sentry/node": "^7.118.0",
+    "@nestjs/common": "^10.4.15",
+    "@nestjs/swagger": "^7.4.2",
+    "@sentry/node": "^7.120.1",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
-    "axios": "^1.7.7"
+    "@swc/helpers": "^0.5.15",
+    "axios": "^1.7.9"
   },
   "imports": {
     "#exceptions": {
