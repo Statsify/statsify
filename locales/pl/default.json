@@ -748,7 +748,7 @@
     "slumberTickets": "Senne bilety",
     "soloWins": "Wygrane Solo",
     "souls": "Dusze",
-    "coinConversions": "Coin Conversions",
+    "coinConversions": "Konwersje monet",
     "starsEarned": "Zdobyte Gwiazdki",
     "started": "Rozpoczęto",
     "status": "Status",
@@ -802,9 +802,9 @@
     "capturePoints": "Capture Points",
     "defendPoints": "Defend Points",
     "draws": "Remisy",
-    "sheepThrown": "Sheep Thrown",
+    "sheepThrown": "Rzucone owce",
     "sheepKilled": "Sheep Killed",
-    "magicWool": "Magic Wool",
+    "magicWool": "Magiczna wełna",
     "flagCaptures": "Flag Captures",
     "flagReturns": "Flag Returns",
     "airTime": "Air Time",
@@ -834,7 +834,7 @@
     "instructions": {
       "title": "Połącz swoje konto Minecraft ze Statsify",
       "steps": {
-        "one": "Open **Minecraft** (`1.7.10` - `1.19.4`) and go to the server list",
+        "one": "Otwórz **Minecraft** (`1.7.10` - `1.19.4`) i przejdź do listy serwerów",
         "two": "Połącz się z **`verify.statsify.net`** i skopiuj wyświetlany kod",
         "three": "Wróć do **Discorda** i kliknij przycisk poniżej, a następnie wpisz swój kod"
       },
