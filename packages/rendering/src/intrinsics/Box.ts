@@ -162,36 +162,6 @@ export const render: JSX.Render<BoxRenderProps> = (
   drawPattern(ctx, "vertical", x, y + border.topLeft, height - border.topLeft - border.bottomLeft);
   drawPattern(ctx, "vertical", x + width - 4, y + border.topRight, height - border.topRight - border.bottomRight);
 
-  // ctx.fillStyle = WHITE;
-
-  // if (border.topLeft !== 0) ctx.fillRect(
-  //   x + border.topLeft,
-  //   y + border.topLeft,
-  //   border.topLeft,
-  //   border.topLeft
-  // );
-
-  // if (border.topRight !== 0) ctx.fillRect(
-  //   x + width - (2 * border.topRight),
-  //   y + border.topRight,
-  //   border.topRight,
-  //   border.topRight
-  // );
-
-  // if (border.bottomLeft !== 0) ctx.fillRect(
-  //   x + border.bottomLeft,
-  //   y + height - (2 * border.bottomLeft),
-  //   border.bottomLeft,
-  //   border.bottomLeft
-  // );
-
-  // if (border.bottomRight !== 0) ctx.fillRect(
-  //   x + width - (2 * border.bottomRight),
-  //   y + height - (2 * border.bottomRight),
-  //   border.bottomRight,
-  //   border.bottomRight
-  // );
-
   if (!shadowDistance) return;
 
   ctx.globalAlpha = shadowOpacity;
@@ -236,7 +206,6 @@ export const render: JSX.Render<BoxRenderProps> = (
 function drawPattern(ctx: CanvasRenderingContext2D, direction: "horizontal" | "vertical", x: number, y: number, length: number) {
   if (direction === "horizontal") {
     const patternWidth = 48;
-    const patternHeight = 4;
 
     for (let i = 0; i < length; i += patternWidth) {
       const width = Math.min(patternWidth, length - i);
@@ -245,18 +214,17 @@ function drawPattern(ctx: CanvasRenderingContext2D, direction: "horizontal" | "v
 
       const center = (width - 18) / 2;
       horizontalSquiggle(ctx, x + i + center, y, SQUIGGLE, SQUIGGLE_HIGHLIGHT);
-      // if (width >= 48) horizontalSquiggle(ctx, x + i + 30, y, GREEN, GREEN_HIGHLIGHT);
     }
   } else {
-    const patternWidth = 4;
     const patternHeight = 48;
+
     for (let i = 0; i < length; i += patternHeight) {
       const height = Math.min(patternHeight, length - i);
 
       if (height < 18) continue;
+
       const center = (height - 18) / 2;
       verticalSquiggle(ctx, x, y + i + center, SQUIGGLE, SQUIGGLE_HIGHLIGHT);
-      // if (height >= 48) verticalSquiggle(ctx, x, y + i + 30, GREEN, GREEN_HIGHLIGHT);
     }
   }
 }

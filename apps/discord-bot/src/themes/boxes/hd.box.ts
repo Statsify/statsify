@@ -135,26 +135,25 @@ export const render: Render<Box.BoxRenderProps> = (
 function drawPattern(ctx: CanvasRenderingContext2D, direction: "horizontal" | "vertical", x: number, y: number, length: number) {
   if (direction === "horizontal") {
     const patternWidth = 60;
-    const patternHeight = 4;
 
     for (let i = 0; i < length; i += patternWidth) {
       const width = Math.min(patternWidth, length - i);
-      ctx.fillStyle = WHITE;
-      ctx.fillRect(x + i, y, width, patternHeight);
 
-      if (width >= 30) horizontalSquiggle(ctx, x + i + 6, y, RED, RED_HIGHLIGHT);
-      if (width >= 60) horizontalSquiggle(ctx, x + i + 36, y, GREEN, GREEN_HIGHLIGHT);
+      if (width < 30) continue;
+
+      const center = (width - 30) / 2;
+      horizontalSquiggle(ctx, x + i + center, y, Box.SQUIGGLE, Box.SQUIGGLE_HIGHLIGHT);
     }
   } else {
-    const patternWidth = 4;
     const patternHeight = 60;
+
     for (let i = 0; i < length; i += patternHeight) {
       const height = Math.min(patternHeight, length - i);
-      ctx.fillStyle = WHITE;
-      ctx.fillRect(x, y + i, patternWidth, height);
 
-      if (height >= 30) verticalSquiggle(ctx, x, y + i + 6, RED, RED_HIGHLIGHT);
-      if (height >= 60) verticalSquiggle(ctx, x, y + i + 36, GREEN, GREEN_HIGHLIGHT);
+      if (height < 30) continue;
+
+      const center = (height - 30) / 2;
+      verticalSquiggle(ctx, x, y + i + center, Box.SQUIGGLE, Box.SQUIGGLE_HIGHLIGHT);
     }
   }
 }
