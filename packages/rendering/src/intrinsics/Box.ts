@@ -253,7 +253,15 @@ function verticalSquiggle(ctx: CanvasRenderingContext2D, x: number, y: number, c
   ctx.fillRect(x + 2, y + 17, 2, 1);
 }
 
-function boxPath(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, border: BoxBorderRadius, offset: number) {
+function boxPath(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  border: BoxBorderRadius,
+  offset: number
+) {
   x += offset;
   y += offset;
   width -= 2 * offset;
