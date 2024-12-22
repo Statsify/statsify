@@ -9,10 +9,6 @@
 import { Box, Render } from "@statsify/rendering";
 import { CanvasRenderingContext2D } from "skia-canvas";
 
-const WHITE = "rgb(245, 248, 255)";
-const RED = "rgb(255, 53, 53)";
-const GREEN = "rgb(34, 175, 31)";
-
 export const render: Render<Box.BoxRenderProps> = (
   ctx,
   {
@@ -116,9 +112,9 @@ export const render: Render<Box.BoxRenderProps> = (
   boxPath(ctx, x, y, width, height, border, 2);
   const gradient = ctx.createLinearGradient(x, y, x + width, (width / 1.25) + y);
 
-  const COLORS = [WHITE, RED, WHITE, GREEN];
+  const COLORS = [Box.BORDER, Box.SQUIGGLE];
   let index = 0;
-  const delta = (3 * COLORS.length) / width;
+  const delta = (5 * COLORS.length) / width;
 
   for (let i = 0; i <= (1 - delta); i += delta) {
     const color = COLORS[index];
@@ -133,10 +129,12 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.lineWidth = 4;
   ctx.stroke();
 
+  ctx.globalCompositeOperation = "lighter";
   boxPath(ctx, x, y, width, height, border, 1);
   ctx.lineWidth = 2;
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
   ctx.stroke();
+  ctx.globalCompositeOperation = "source-over";
 };
 
 function boxPath(

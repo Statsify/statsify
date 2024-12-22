@@ -9,12 +9,6 @@
 import { Box, Render } from "@statsify/rendering";
 import { CanvasRenderingContext2D } from "skia-canvas";
 
-const WHITE = "rgb(245, 248, 255)";
-const RED = "rgb(255, 53, 53)";
-const RED_HIGHLIGHT = "rgb(255, 98, 98)";
-const GREEN = "rgb(34, 175, 31)";
-const GREEN_HIGHLIGHT = "rgb(47, 209, 44)";
-
 export const render: Render<Box.BoxRenderProps> = (
   ctx,
   {
@@ -48,34 +42,7 @@ export const render: Render<Box.BoxRenderProps> = (
   border.topLeft /= 2;
   border.topRight /= 2;
 
-  ctx.beginPath();
-  ctx.moveTo(x, y + border.topLeft + border.topLeft);
-  ctx.lineTo(x + border.topLeft, y + border.topLeft + border.topLeft);
-  ctx.lineTo(x + border.topLeft, y + border.topLeft);
-  ctx.lineTo(x + border.topLeft + border.topLeft, y + border.topLeft);
-  ctx.lineTo(x + border.topLeft + border.topLeft, y);
-  ctx.lineTo(x + width - border.topRight - border.topRight, y);
-  ctx.lineTo(x + width - border.topRight - border.topRight, y + border.topRight);
-  ctx.lineTo(x + width - border.topRight, y + border.topRight);
-  ctx.lineTo(x + width - border.topRight, y + border.topRight + border.topRight);
-  ctx.lineTo(x + width, y + border.topRight + border.topRight);
-  ctx.lineTo(x + width, y + height - border.bottomRight - border.bottomRight);
-  ctx.lineTo(
-    x + width - border.bottomRight,
-    y + height - border.bottomRight - border.bottomRight
-  );
-  ctx.lineTo(x + width - border.bottomRight, y + height - border.bottomRight);
-  ctx.lineTo(
-    x + width - border.bottomRight - border.bottomRight,
-    y + height - border.bottomRight
-  );
-  ctx.lineTo(x + width - border.bottomRight - border.bottomRight, y + height);
-  ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height);
-  ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height - border.bottomLeft);
-  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft);
-  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft - border.bottomLeft);
-  ctx.lineTo(x, y + height - border.bottomLeft - border.bottomLeft);
-  ctx.closePath();
+  boxPath(ctx, x, y, width, height, border, 0);
   ctx.fill();
 
   ctx.globalCompositeOperation = "overlay";
@@ -96,77 +63,21 @@ export const render: Render<Box.BoxRenderProps> = (
     ctx.stroke();
   }
 
+  boxPath(ctx, x, y, width, height, border, 2);
+  ctx.strokeStyle = Box.BORDER;
+  ctx.lineWidth = 4;
+  ctx.stroke();
+
+  boxPath(ctx, x, y, width, height, border, 1);
+  ctx.strokeStyle = Box.BORDER_HIGHLIGHT;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
   drawPattern(ctx, "horizontal", x + (2 * border.topLeft), y, width - (2 * border.topRight) - (2 * border.topLeft));
   drawPattern(ctx, "horizontal", x + (2 * border.bottomLeft), y + height - 4, width - (2 * border.bottomRight) - (2 * border.bottomLeft));
 
   drawPattern(ctx, "vertical", x, y + (2 * border.topLeft), height - (2 * border.topLeft) - (2 * border.bottomLeft));
   drawPattern(ctx, "vertical", x + width - 4, y + (2 * border.topRight), height - (2 * border.topRight) - (2 * border.bottomRight));
-
-  ctx.fillStyle = WHITE;
-
-  if (border.topLeft !== 0) {
-    ctx.fillRect(
-      x + border.topLeft,
-      y + border.topLeft,
-      border.topLeft,
-      border.topLeft
-    );
-
-    ctx.fillRect(
-      x + (2 * border.topLeft),
-      y + (2 * border.topLeft),
-      border.topLeft,
-      border.topLeft
-    );
-  }
-
-  if (border.topRight !== 0) {
-    ctx.fillRect(
-      x + width - (2 * border.topRight),
-      y + border.topRight,
-      border.topRight,
-      border.topRight
-    );
-
-    ctx.fillRect(
-      x + width - (3 * border.topRight),
-      y + (2 * border.topRight),
-      border.topRight,
-      border.topRight
-    );
-  }
-
-  if (border.bottomLeft !== 0) {
-    ctx.fillRect(
-      x + border.bottomLeft,
-      y + height - (2 * border.bottomLeft),
-      border.bottomLeft,
-      border.bottomLeft
-    );
-
-    ctx.fillRect(
-      x + (2 * border.bottomLeft),
-      y + height - (3 * border.bottomLeft),
-      border.bottomLeft,
-      border.bottomLeft
-    );
-  }
-
-  if (border.bottomRight !== 0) {
-    ctx.fillRect(
-      x + width - (2 * border.bottomRight),
-      y + height - (2 * border.bottomRight),
-      border.bottomRight,
-      border.bottomRight
-    );
-
-    ctx.fillRect(
-      x + width - (3 * border.bottomRight),
-      y + height - (3 * border.bottomRight),
-      border.bottomRight,
-      border.bottomRight
-    );
-  }
 
   if (!shadowDistance) return;
   shadowDistance /= 2;
@@ -279,4 +190,40 @@ function verticalSquiggle(ctx: CanvasRenderingContext2D, x: number, y: number, c
   ctx.fillRect(x, y, 1, 3);
   ctx.fillRect(x + 1, y + 14, 1, 4);
   ctx.fillRect(x + 3, y + 21, 1, 3);
+}
+
+function boxPath(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, border: Box.BoxBorderRadius, offset: number) {
+  x += offset;
+  y += offset;
+  width -= 2 * offset;
+  height -= 2 * offset;
+
+  ctx.beginPath();
+  ctx.moveTo(x, y + border.topLeft + border.topLeft);
+  ctx.lineTo(x + border.topLeft, y + border.topLeft + border.topLeft);
+  ctx.lineTo(x + border.topLeft, y + border.topLeft);
+  ctx.lineTo(x + border.topLeft + border.topLeft, y + border.topLeft);
+  ctx.lineTo(x + border.topLeft + border.topLeft, y);
+  ctx.lineTo(x + width - border.topRight - border.topRight, y);
+  ctx.lineTo(x + width - border.topRight - border.topRight, y + border.topRight);
+  ctx.lineTo(x + width - border.topRight, y + border.topRight);
+  ctx.lineTo(x + width - border.topRight, y + border.topRight + border.topRight);
+  ctx.lineTo(x + width, y + border.topRight + border.topRight);
+  ctx.lineTo(x + width, y + height - border.bottomRight - border.bottomRight);
+  ctx.lineTo(
+    x + width - border.bottomRight,
+    y + height - border.bottomRight - border.bottomRight
+  );
+  ctx.lineTo(x + width - border.bottomRight, y + height - border.bottomRight);
+  ctx.lineTo(
+    x + width - border.bottomRight - border.bottomRight,
+    y + height - border.bottomRight
+  );
+  ctx.lineTo(x + width - border.bottomRight - border.bottomRight, y + height);
+  ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height);
+  ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height - border.bottomLeft);
+  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft);
+  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft - border.bottomLeft);
+  ctx.lineTo(x, y + height - border.bottomLeft - border.bottomLeft);
+  ctx.closePath();
 }

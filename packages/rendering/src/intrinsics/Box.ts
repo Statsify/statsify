@@ -95,11 +95,10 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   });
 };
 
-const WHITE = "rgb(245, 248, 255)";
-const RED = "rgb(255, 53, 53)";
-const RED_HIGHLIGHT = "rgb(255, 98, 98)";
-const GREEN = "rgb(34, 175, 31)";
-const GREEN_HIGHLIGHT = "rgb(47, 209, 44)";
+export const BORDER = "#014600";
+export const BORDER_HIGHLIGHT = "#086306";
+export const SQUIGGLE = "#9B0E0E";
+export const SQUIGGLE_HIGHLIGHT = "#B92121";
 
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
@@ -127,20 +126,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   width = Math.round(width);
   height = Math.round(height);
 
-  ctx.beginPath();
-  ctx.moveTo(x + border.topLeft, y);
-  ctx.lineTo(x + width - border.topRight, y);
-  ctx.lineTo(x + width - border.topRight, y + border.topRight);
-  ctx.lineTo(x + width, y + border.topRight);
-  ctx.lineTo(x + width, y + height - border.bottomRight);
-  ctx.lineTo(x + width - border.bottomRight, y + height - border.bottomRight);
-  ctx.lineTo(x + width - border.bottomRight, y + height);
-  ctx.lineTo(x + border.bottomLeft, y + height);
-  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft);
-  ctx.lineTo(x, y + height - border.bottomLeft);
-  ctx.lineTo(x, y + border.topLeft);
-  ctx.lineTo(x + border.topLeft, y + border.topLeft);
-  ctx.closePath();
+  boxPath(ctx, x, y, width, height, border, 0);
   ctx.fill();
 
   ctx.globalCompositeOperation = "overlay";
@@ -149,7 +135,6 @@ export const render: JSX.Render<BoxRenderProps> = (
   overlay.addColorStop(0, "rgba(255, 255, 255, 0.15)");
   overlay.addColorStop(1, "rgba(0, 0, 0, 0.15)");
   ctx.fillStyle = overlay;
-
   ctx.fill();
 
   ctx.globalCompositeOperation = "source-over";
@@ -161,41 +146,51 @@ export const render: JSX.Render<BoxRenderProps> = (
     ctx.stroke();
   }
 
+  boxPath(ctx, x, y, width, height, border, 2);
+  ctx.strokeStyle = BORDER;
+  ctx.lineWidth = 4;
+  ctx.stroke();
+
+  boxPath(ctx, x, y, width, height, border, 1);
+  ctx.strokeStyle = BORDER_HIGHLIGHT;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
   drawPattern(ctx, "horizontal", x + border.topLeft, y, width - border.topRight - border.topLeft);
   drawPattern(ctx, "horizontal", x + border.bottomLeft, y + height - 4, width - border.bottomRight - border.bottomLeft);
 
   drawPattern(ctx, "vertical", x, y + border.topLeft, height - border.topLeft - border.bottomLeft);
   drawPattern(ctx, "vertical", x + width - 4, y + border.topRight, height - border.topRight - border.bottomRight);
 
-  ctx.fillStyle = WHITE;
+  // ctx.fillStyle = WHITE;
 
-  if (border.topLeft !== 0) ctx.fillRect(
-    x + border.topLeft,
-    y + border.topLeft,
-    border.topLeft,
-    border.topLeft
-  );
+  // if (border.topLeft !== 0) ctx.fillRect(
+  //   x + border.topLeft,
+  //   y + border.topLeft,
+  //   border.topLeft,
+  //   border.topLeft
+  // );
 
-  if (border.topRight !== 0) ctx.fillRect(
-    x + width - (2 * border.topRight),
-    y + border.topRight,
-    border.topRight,
-    border.topRight
-  );
+  // if (border.topRight !== 0) ctx.fillRect(
+  //   x + width - (2 * border.topRight),
+  //   y + border.topRight,
+  //   border.topRight,
+  //   border.topRight
+  // );
 
-  if (border.bottomLeft !== 0) ctx.fillRect(
-    x + border.bottomLeft,
-    y + height - (2 * border.bottomLeft),
-    border.bottomLeft,
-    border.bottomLeft
-  );
+  // if (border.bottomLeft !== 0) ctx.fillRect(
+  //   x + border.bottomLeft,
+  //   y + height - (2 * border.bottomLeft),
+  //   border.bottomLeft,
+  //   border.bottomLeft
+  // );
 
-  if (border.bottomRight !== 0) ctx.fillRect(
-    x + width - (2 * border.bottomRight),
-    y + height - (2 * border.bottomRight),
-    border.bottomRight,
-    border.bottomRight
-  );
+  // if (border.bottomRight !== 0) ctx.fillRect(
+  //   x + width - (2 * border.bottomRight),
+  //   y + height - (2 * border.bottomRight),
+  //   border.bottomRight,
+  //   border.bottomRight
+  // );
 
   if (!shadowDistance) return;
 
@@ -245,22 +240,23 @@ function drawPattern(ctx: CanvasRenderingContext2D, direction: "horizontal" | "v
 
     for (let i = 0; i < length; i += patternWidth) {
       const width = Math.min(patternWidth, length - i);
-      ctx.fillStyle = WHITE;
-      ctx.fillRect(x + i, y, width, patternHeight);
 
-      if (width >= 24) horizontalSquiggle(ctx, x + i + 6, y, RED, RED_HIGHLIGHT);
-      if (width >= 48) horizontalSquiggle(ctx, x + i + 30, y, GREEN, GREEN_HIGHLIGHT);
+      if (width < 18) continue;
+
+      const center = (width - 18) / 2;
+      horizontalSquiggle(ctx, x + i + center, y, SQUIGGLE, SQUIGGLE_HIGHLIGHT);
+      // if (width >= 48) horizontalSquiggle(ctx, x + i + 30, y, GREEN, GREEN_HIGHLIGHT);
     }
   } else {
     const patternWidth = 4;
     const patternHeight = 48;
     for (let i = 0; i < length; i += patternHeight) {
       const height = Math.min(patternHeight, length - i);
-      ctx.fillStyle = WHITE;
-      ctx.fillRect(x, y + i, patternWidth, height);
 
-      if (height >= 24) verticalSquiggle(ctx, x, y + i + 6, RED, RED_HIGHLIGHT);
-      if (height >= 48) verticalSquiggle(ctx, x, y + i + 30, GREEN, GREEN_HIGHLIGHT);
+      if (height < 18) continue;
+      const center = (height - 18) / 2;
+      verticalSquiggle(ctx, x, y + i + center, SQUIGGLE, SQUIGGLE_HIGHLIGHT);
+      // if (height >= 48) verticalSquiggle(ctx, x, y + i + 30, GREEN, GREEN_HIGHLIGHT);
     }
   }
 }
@@ -287,6 +283,28 @@ function verticalSquiggle(ctx: CanvasRenderingContext2D, x: number, y: number, c
   ctx.fillRect(x, y + 11, 3, 1);
   ctx.fillRect(x + 2, y + 12, 1, 6);
   ctx.fillRect(x + 2, y + 17, 2, 1);
+}
+
+function boxPath(ctx: CanvasRenderingContext2D, x: number, y: number, width: number, height: number, border: BoxBorderRadius, offset: number) {
+  x += offset;
+  y += offset;
+  width -= 2 * offset;
+  height -= 2 * offset;
+
+  ctx.beginPath();
+  ctx.moveTo(x + border.topLeft, y);
+  ctx.lineTo(x + width - border.topRight, y);
+  ctx.lineTo(x + width - border.topRight, y + border.topRight);
+  ctx.lineTo(x + width, y + border.topRight);
+  ctx.lineTo(x + width, y + height - border.bottomRight);
+  ctx.lineTo(x + width - border.bottomRight, y + height - border.bottomRight);
+  ctx.lineTo(x + width - border.bottomRight, y + height);
+  ctx.lineTo(x + border.bottomLeft, y + height);
+  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft);
+  ctx.lineTo(x, y + height - border.bottomLeft);
+  ctx.lineTo(x, y + border.topLeft);
+  ctx.lineTo(x + border.topLeft, y + border.topLeft);
+  ctx.closePath();
 }
 
 function toCompleteSpacing(spacing: JSX.Spacing): JSX.CompleteSpacing {
