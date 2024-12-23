@@ -224,7 +224,7 @@
     "top-reset": "View Top Historical Reset Minutes",
     "turbokartracers": "$t(commands.hypixel-command, { \"name\": \"Turbo Kart Racers\" })",
     "uhc": "$t(commands.hypixel-command, { \"name\": \"UHC\" })",
-    "unverify": "Discord와 Minecraft 계정 연동을 해제해요",
+    "unverify": "Discord와 Minecraft 계정의 연결을 해제해요",
     "user": "View someone's Statsify user info",
     "uuid": "다른 사람의 Minecraft UUID를 확인해요",
     "vampirez": "$t(commands.hypixel-command, { \"name\": \"VampireZ\" })",
@@ -823,7 +823,7 @@
   "unknown": "알 수 없음",
   "verification": {
     "alreadyVerified": {
-      "description": "이미 Minecraft 계정에 연동했어요. Minecraft 계정 연동을 해제하려면 `/unverify` 명령어를 실행하세요.",
+      "description": "이미 Minecraft 계정과 연결했어요. Minecraft 계정 연결을 해제하려면 `/unverify` 명령어를 실행하세요.",
       "title": "이미 인증됨"
     },
     "invalidCode": {
@@ -832,7 +832,7 @@
       "button": "튜토리얼 보기"
     },
     "instructions": {
-      "title": "Statsify에 내 Minecraft 계정을 연동하세요",
+      "title": "Statsify에 Minecraft 계정을 연결하세요",
       "steps": {
         "one": "**Minecraft**(`1.7.10` - `1.19.4`)를 열고 서버 목록으로 이동하세요",
         "two": "**`verify.statsify.net`**로 접속하고 표시된 코드를 복사하세요",
