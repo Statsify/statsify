@@ -809,7 +809,8 @@
     "flagReturns": "Flag Returns",
     "airTime": "Air Time",
     "potionsSplashed": "Potions Splashed",
-    "powerOrbs": "Power Orbs"
+    "powerOrbs": "Power Orbs",
+    "grenadeKills": "Grenade Kills"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Entre no nosso $t(socials.discord) e receba **menos 20% de tempo de espera** $t(emojis:heart)",
