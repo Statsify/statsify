@@ -809,7 +809,8 @@
     "flagReturns": "Flag Returns",
     "airTime": "Air Time",
     "potionsSplashed": "Potions Splashed",
-    "powerOrbs": "Power Orbs"
+    "powerOrbs": "Power Orbs",
+    "grenadeKills": "Grenade Kills"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) 加入我们的**$t(socials.discord)**可以获得**减少20%的冷却时间** $t(emojis:heart)",
