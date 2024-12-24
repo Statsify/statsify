@@ -809,7 +809,8 @@
     "flagReturns": "반환한 깃발",
     "airTime": "Air Time",
     "potionsSplashed": "투척한 포션",
-    "powerOrbs": "파워 구슬"
+    "powerOrbs": "파워 구슬",
+    "grenadeKills": "Grenade Kills"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) 저희의 **$t(socials.discord)**에 참가하고 **대기 시간 20% 감소**를 얻어보세요 $t(emojis:heart)",
