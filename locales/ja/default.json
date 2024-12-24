@@ -809,7 +809,8 @@
     "flagReturns": "Flag Returns",
     "airTime": "Air Time",
     "potionsSplashed": "Potions Splashed",
-    "powerOrbs": "Power Orbs"
+    "powerOrbs": "Power Orbs",
+    "grenadeKills": "Grenade Kills"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Join our **$t(socials.discord)** and get **20% lower cooldowns** $t(emojis:heart)",
