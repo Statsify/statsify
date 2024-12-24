@@ -809,7 +809,8 @@
     "flagReturns": "Повернуто прапорів",
     "airTime": "Час у повітрі",
     "potionsSplashed": "Використано вибухових зіллів",
-    "powerOrbs": "Куль сили"
+    "powerOrbs": "Куль сили",
+    "grenadeKills": "Grenade Kills"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Приєднуйся до нас**$t(socials.discord)**, та отримуйте **перезаряджання на 20% нижче** $t(emojis:heart)",
