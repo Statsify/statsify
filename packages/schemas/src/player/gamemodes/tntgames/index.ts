@@ -12,10 +12,11 @@ import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
 
 export const TNT_GAMES_MODES = new GameModes([
-  { api: "pvpRun", hypixel: "PVPRUN", formatted: "PVP Run" },
-  { api: "tntTag", hypixel: "TNTAG", formatted: "TNT Tag" },
+  { api: "overall" },
   { api: "tntRun", hypixel: "TNTRUN", formatted: "TNT Run" },
+  { api: "pvpRun", hypixel: "PVPRUN", formatted: "PVP Run" },
   { api: "bowSpleef", hypixel: "BOWSPLEEF" },
+  { api: "tntTag", hypixel: "TNTAG", formatted: "TNT Tag" },
   {
     api: "wizards",
     hypixel: "CAPTURE",
