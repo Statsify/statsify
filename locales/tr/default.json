@@ -810,7 +810,7 @@
     "airTime": "Havada Kalma Süresi",
     "potionsSplashed": "Atılan İksirler",
     "powerOrbs": "Power Orblar",
-    "grenadeKills": "Grenade Kills"
+    "grenadeKills": "El Bombası Öldürmeleri"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) $t(socials.discord) katılın ve **%20 daha az cooldown** kazanın $t(emojis:heart)",
