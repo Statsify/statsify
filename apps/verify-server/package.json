@@ -11,14 +11,14 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@sentry/node": "^7.118.0",
+    "@sentry/node": "^7.120.2",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
-    "@typegoose/typegoose": "^12.6.0",
+    "@swc/helpers": "^0.5.15",
+    "@typegoose/typegoose": "^12.10.1",
     "minecraft-protocol": "https://github.com/jacobk999/node-minecraft-protocol#cd8f06e3ee74f67dfc6deeeeb6b33b869bf705a2",
-    "mongoose": "^8.5.2"
+    "mongoose": "^8.9.3"
   }
 }
