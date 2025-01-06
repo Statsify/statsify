@@ -155,11 +155,13 @@ export const renderOverlay = (
   y: number,
   height: number
 ) => {
+  ctx.globalCompositeOperation = "overlay";
   const overlay = ctx.createLinearGradient(x, y, x, y + height);
   overlay.addColorStop(0, "rgba(255, 255, 255, 0.30)");
   overlay.addColorStop(1, "rgba(0, 0, 0, 0.30)");
   ctx.fillStyle = overlay;
   ctx.fill();
+  ctx.globalCompositeOperation = "source-over";
 };
 
 export const render: JSX.Render<BoxRenderProps> = (
@@ -209,15 +211,6 @@ export const render: JSX.Render<BoxRenderProps> = (
   }
 
   renderOverlay(ctx, x, y, height);
-  ctx.globalCompositeOperation = "overlay";
-
-  const overlay = ctx.createLinearGradient(x, y, x, y + height);
-  overlay.addColorStop(0, "rgba(255, 255, 255, 0.30)");
-  overlay.addColorStop(1, "rgba(0, 0, 0, 0.30)");
-  ctx.fillStyle = overlay;
-  ctx.fill();
-
-  ctx.globalCompositeOperation = "source-over";
 
   if (outline) {
     ctx.strokeStyle =

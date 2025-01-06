@@ -68,11 +68,7 @@ export const render: Render<Box.BoxRenderProps> = (
     ctx.fill();
   }
 
-  ctx.globalCompositeOperation = "overlay";
-
   Box.renderOverlay(ctx, x, y, height);
-
-  ctx.globalCompositeOperation = "source-over";
 
   if (outline) {
     ctx.strokeStyle =
