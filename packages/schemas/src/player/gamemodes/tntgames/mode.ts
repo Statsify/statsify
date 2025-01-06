@@ -375,7 +375,9 @@ export class Wizards {
     this.kdr = ratio(this.kills, this.deaths);
     this.assists = data.assists_capture;
     this.points = data.points_capture;
-    this.airTime = data.air_time_capture;
+    // air_time_capture is stored in ticks
+    // 1 tick = 50ms
+    this.airTime = (data.air_time_capture ?? 0) * 50;
     this.powerOrbs = ap?.tntgames_power_hungry;
 
     const score = this.wins ?? 0;
