@@ -30,6 +30,7 @@ export const TNT_GAMES_MODES = new GameModes([
       { api: "toxicWizard" },
       { api: "hydroWizard" },
       { api: "ancientWizard" },
+      { api: "stormWizard" },
       { api: "arcaneWizard" },
     ],
   },
