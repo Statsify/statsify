@@ -76,7 +76,7 @@ export const Footer = ({ logo, user, border }: FooterProps) => {
         break;
 
       case UserLogo.DEFAULT:
-        text = "§#D6DEF1s§#B0DBC5t§#8BD799a§#65D46Ct§#3FD040s§#71D57Bi§#A4D9B6f§#D6DEF1y§#D1B0C4.§#CC8196n§#C65369e§#C1243Bt";
+        text = "§#6799E1s§#71A2E9t§#7AABF0a§#84B3F8t§#8DBCFFs§#A3C9FFi§#B9D6FFf§#CFE3FFy§#D5E7FF.§#DBEAFFn§#E0EEFFe§#E6F1FFt";
         break;
     }
   }
