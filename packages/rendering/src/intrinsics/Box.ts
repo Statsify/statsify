@@ -149,6 +149,19 @@ export const renderSnow = (
   ctx.drawImage(rightSnow, x + leftSnow.width + snowWidth, y - SNOW_OFFSET + 4);
 };
 
+export const renderOverlay = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  height: number
+) => {
+  const overlay = ctx.createLinearGradient(x, y, x, y + height);
+  overlay.addColorStop(0, "rgba(255, 255, 255, 0.30)");
+  overlay.addColorStop(1, "rgba(0, 0, 0, 0.30)");
+  ctx.fillStyle = overlay;
+  ctx.fill();
+};
+
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
   {
@@ -162,7 +175,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   { x, y, width, height, padding },
   { winterTheme }
 ) => {
-  ctx.filter = "brightness(70%)";
+  ctx.filter = "brightness(90%)";
   const fill = resolveFill(color, ctx, x, y, width, height);
   ctx.fillStyle = winterTheme.getIce(ctx);
 
@@ -198,8 +211,8 @@ export const render: JSX.Render<BoxRenderProps> = (
     ctx.fill();
   }
 
-  ctx.filter = "brightness(70%)";
-
+  ctx.filter = "brightness(90%)";
+  renderOverlay(ctx, x, y, height);
   ctx.globalCompositeOperation = "overlay";
 
   const overlay = ctx.createLinearGradient(x, y, x, y + height);
