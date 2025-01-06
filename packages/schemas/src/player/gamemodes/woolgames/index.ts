@@ -13,6 +13,7 @@ import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { SheepWars } from "./sheepwars.js";
 import { WoolWars } from "./woolwars.js";
+import { add } from "@statsify/math";
 import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
 
 export const WOOLGAMES_MODES = new GameModes([
@@ -49,7 +50,7 @@ export class WoolGames {
       fieldName: "Level",
       hidden: true,
       formatter: (exp: number) => getFormattedLevel(Math.floor(getLevel(exp))),
-      additionalFields: ["this.overall.wins", "this.overall.kills", "this.overall.kdr"],
+      additionalFields: ["this.wins", "this.playtime"],
     },
     historical: {
       hidden: false,
@@ -74,6 +75,9 @@ export class WoolGames {
 
   @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
   public playtime: number;
+
+  @Field()
+  public wins: number;
 
   @Field({ leaderboard: { name: "WoolWars" } })
   public woolwars: WoolWars;
@@ -106,6 +110,7 @@ export class WoolGames {
     this.woolwars = new WoolWars(data.wool_wars);
     this.sheepwars = new SheepWars(data.sheep_wars, ap);
     this.captureTheWool = new CaptureTheWool(data.capture_the_wool?.stats);
+    this.wins = add(this.woolwars.overall.wins, this.sheepwars.wins, this.captureTheWool.wins);
   }
 }
 

@@ -60,9 +60,6 @@ export class ArcadeChallenges implements GameChallenges {
   public miniWalls: number;
 
   @Field(challengeFieldData)
-  public captureTheWool: number;
-
-  @Field(challengeFieldData)
   public zombies: number;
 
   @Field(challengeFieldData)
@@ -95,7 +92,6 @@ export class ArcadeChallenges implements GameChallenges {
     this.partyGames = challenges.ARCADE__party_games_challenge;
     this.football = challenges.ARCADE__football_challenge;
     this.miniWalls = challenges.ARCADE__mini_walls_challenge;
-    this.captureTheWool = challenges.ARCADE__capture_the_wool_challenge;
     this.zombies = challenges.ARCADE__zombies_challenge;
     this.hideAndSeek = challenges.ARCADE__hide_and_seek_challenge;
     this.pixelParty = challenges.ARCADE__pixel_party_challenge;
@@ -116,7 +112,6 @@ export class ArcadeChallenges implements GameChallenges {
       this.partyGames,
       this.football,
       this.miniWalls,
-      this.captureTheWool,
       this.zombies,
       this.hideAndSeek,
       this.pixelParty

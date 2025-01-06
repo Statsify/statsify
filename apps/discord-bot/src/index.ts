@@ -42,7 +42,7 @@ await Promise.all(
   [I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init())
 );
 
-const rest = new RestClient({ token: config("discordBot.token") });
+const rest = new RestClient({ token: config("discordBot.token"), timeout: 60 * 1000 });
 Container.set(RestClient, rest);
 
 const commands = await CommandLoader.load(join(__dirname, "./commands"));

@@ -8,6 +8,8 @@
 
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
+import { GameTitle, createPrefixProgression, cycleColors, defaultPrefix, getFormattedPrefix } from "#prefixes";
+import { Progression } from "#progression";
 import { WarlordsCaptureTheFlag, WarlordsDomination, WarlordsTeamDeathmatch } from "./mode.js";
 import { WarlordsMage, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "./class.js";
 import { add, ratio, sub } from "@statsify/math";
@@ -26,12 +28,38 @@ export const WARLORDS_MODES = new GameModes([
 
 export type WarlordsModes = ExtractGameModes<typeof WARLORDS_MODES>;
 
+const warlordsRainbow = (text: string) => cycleColors(text, ["c", "6", "e", "a", "2", "b", "d", "9"]);
+
+const titles: GameTitle[] = [
+  { req: 0, fmt: (n) => `§8${n}`, title: "Rookie" },
+  { req: 5, fmt: (n) => `§7${n}`, title: "Recruit" },
+  { req: 25, fmt: (n) => `§e${n}`, title: "Novice" },
+  { req: 50, fmt: (n) => `§a${n}`, title: "Apprentice" },
+  { req: 125, fmt: (n) => `§2${n}`, title: "Soldier" },
+  { req: 250, fmt: (n) => `§b${n}`, title: "Captain" },
+  { req: 500, fmt: (n) => `§9${n}`, title: "General" },
+  { req: 1000, fmt: (n) => `§d${n}`, title: "Vanquisher" },
+  { req: 2500, fmt: (n) => `§5${n}`, title: "Gladiator" },
+  { req: 5000, fmt: (n) => `§c${n}`, title: "Champion" },
+  { req: 7500, fmt: (n) => `§6${n}`, title: "Warlord" },
+  { req: 10_000, fmt: (n) => `§l${warlordsRainbow(n)}`, title: "Overlord" },
+];
+
 export class Warlords {
   @Field({ store: { default: "warrior" } })
   public class: string;
 
   @Field({ historical: { enabled: false } })
   public coins: number;
+
+  @Field({ store: { default: defaultPrefix(titles) } })
+  public titleFormatted: string;
+
+  @Field()
+  public progression: Progression;
+
+  @Field()
+  public nextTitleFormatted: string;
 
   @Field()
   public mage: WarlordsMage;
@@ -122,6 +150,16 @@ export class Warlords {
     this.deaths = data.deaths;
     this.kdr = ratio(this.kills, this.deaths);
     this.assists = data.assists;
+
+    this.titleFormatted = getFormattedPrefix({ prefixes: titles, score: this.wins });
+
+    this.nextTitleFormatted = getFormattedPrefix({
+      prefixes: titles,
+      score: this.wins,
+      skip: true,
+    });
+
+    this.progression = createPrefixProgression(titles, this.wins);
   }
 }
 

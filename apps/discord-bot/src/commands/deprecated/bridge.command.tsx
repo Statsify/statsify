@@ -8,11 +8,11 @@
 
 import { Command, type IMessage } from "@statsify/discord";
 
-@Command({ description: (t) => t("deprecated.command-description", { newCommandName: "duels" }) })
+@Command({ description: (t) => t("deprecated.command-description", { newCommandName: "/duels" }) })
 export class BridgeCommand {
   public run(): IMessage {
     return {
-      content: (t) => t("deprecated.merged-mode", {
+      content: (t) => t("deprecated.merged-dropdown", {
         oldCommandName: "`/bridge`",
         newCommand: "</duels:1140654940658868317>",
         newCommandName: `${t("emojis:games.DUELS")} **Duels**`,

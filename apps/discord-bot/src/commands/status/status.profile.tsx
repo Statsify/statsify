@@ -23,7 +23,6 @@ const OnlineTable = ({ status, t }: StatusTableProps) => (
   <>
     <Table.tr>
       <Table.td title={t("stats.status")} value={t("stats.online")} color="§a" />
-      <Table.td title={t("stats.version")} value={status.actions.version} color="§b" />
       <Table.td
         title={t("stats.loginTime")}
         value={relativeTime(status.actions.lastLogin)}

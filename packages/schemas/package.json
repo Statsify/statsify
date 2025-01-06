@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths --copy-files",
     "test:types": "tsc --noEmit",
     "lint": "eslint"
   },

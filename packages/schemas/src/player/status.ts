@@ -193,9 +193,6 @@ export class PlayerStatus {
   @Field()
   public statusHidden: boolean;
 
-  @Field({ store: { default: "Unknown" } })
-  public version: string;
-
   @Field()
   public lastGame: Game;
 
@@ -213,9 +210,6 @@ export class PlayerStatus {
     this.online = this.lastLogin > this.lastLogout;
 
     this.statusHidden = this.lastLogout === 0;
-
-    this.version = data.mcVersionRp ?? "Unknown";
-
     this.lastGame = new Game(data.mostRecentGameType ?? "LIMBO");
   }
 }

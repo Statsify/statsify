@@ -80,7 +80,7 @@ export class PlayerStats {
   @Field({
     leaderboard: {
       fieldName: FormattedGame.COPS_AND_CRIMS,
-      extraDisplay: "this.copsandcrims.naturalPrefix",
+      extraDisplay: "this.copsandcrims.levelFormatted",
     },
   })
   public copsandcrims: CopsAndCrims;
@@ -94,7 +94,12 @@ export class PlayerStats {
   @Field({ leaderboard: { fieldName: FormattedGame.MEGAWALLS } })
   public megawalls: MegaWalls;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.MURDER_MYSTERY } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.MURDER_MYSTERY,
+      extraDisplay: "this.murdermystery.emblemFormatted",
+    },
+  })
   public murdermystery: MurderMystery;
 
   @Field({
@@ -192,7 +197,12 @@ export class PlayerStats {
   })
   public walls: Walls;
 
-  @Field({ leaderboard: { fieldName: FormattedGame.WARLORDS } })
+  @Field({
+    leaderboard: {
+      fieldName: FormattedGame.WARLORDS,
+      extraDisplay: "this.warlords.titleFormatted",
+    },
+  })
   public warlords: Warlords;
 
   @Field({
@@ -212,7 +222,7 @@ export class PlayerStats {
     this.arenabrawl = new ArenaBrawl(stats.Arena ?? {}, legacy);
     this.bedwars = new BedWars(stats.Bedwars ?? {});
     this.blitzsg = new BlitzSG(stats.HungerGames ?? {});
-    this.buildbattle = new BuildBattle(stats.BuildBattle ?? {});
+    this.buildbattle = new BuildBattle(stats.BuildBattle ?? {}, achievements);
     this.challenges = new Challenges(data?.challenges?.all_time ?? {}, achievements);
     this.copsandcrims = new CopsAndCrims(stats.MCGO ?? {});
     this.duels = new Duels(stats.Duels ?? {});
