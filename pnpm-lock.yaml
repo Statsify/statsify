@@ -34,7 +34,7 @@ importers:
         version: 2.7.2(eslint@9.9.1(jiti@1.21.0))(typescript@5.5.4)
       '@swc/cli':
         specifier: ^0.4.0
-        version: 0.4.0(@swc/core@1.7.6(@swc/helpers@0.5.12))(chokidar@3.6.0)
+        version: 0.4.0(@swc/core@1.7.6(@swc/helpers@0.5.12))(chokidar@4.0.3)
       '@swc/core':
         specifier: 1.7.6
         version: 1.7.6(@swc/helpers@0.5.12)
@@ -46,13 +46,13 @@ importers:
         version: 22.5.2
       '@vitest/coverage-v8':
         specifier: ^2.0.5
-        version: 2.0.5(vitest@2.0.5)
+        version: 2.0.5(vitest@2.0.5(@types/node@22.5.2)(@vitest/ui@2.0.5)(sass@1.77.8))
       '@vitest/ui':
         specifier: ^2.0.5
         version: 2.0.5(vitest@2.0.5)
       chokidar:
-        specifier: ^3.6.0
-        version: 3.6.0
+        specifier: ^4.0.3
+        version: 4.0.3
       commitizen:
         specifier: ^4.3.0
         version: 4.3.0(@types/node@22.5.2)(typescript@5.5.4)
@@ -284,8 +284,8 @@ importers:
         specifier: ^5.3.0
         version: 5.3.0
       chokidar:
-        specifier: ^3.6.0
-        version: 3.6.0
+        specifier: ^4.0.3
+        version: 4.0.3
       discord-bot:
         specifier: workspace:^
         version: link:../discord-bot
@@ -460,37 +460,6 @@ importers:
       mongoose:
         specifier: ^8.5.2
         version: 8.5.2(socks@2.8.3)
-
-  assets/private:
-    dependencies:
-      skia-canvas:
-        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
-        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
-      stackblur-canvas:
-        specifier: ^2.7.0
-        version: 2.7.0
-    devDependencies:
-      '@commitlint/cli':
-        specifier: ^19.4.1
-        version: 19.4.1(@types/node@22.5.2)(typescript@5.5.4)
-      '@commitlint/config-conventional':
-        specifier: ^19.4.1
-        version: 19.4.1
-      commitizen:
-        specifier: ^4.3.0
-        version: 4.3.0(@types/node@22.5.2)(typescript@5.5.4)
-      cz-conventional-changelog:
-        specifier: ^3.3.0
-        version: 3.3.0(@types/node@22.5.2)(typescript@5.5.4)
-
-  assets/public:
-    dependencies:
-      skia-canvas:
-        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
-        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
-      stackblur-canvas:
-        specifier: 2.7.0
-        version: 2.7.0
 
   packages/api-client:
     dependencies:
@@ -679,8 +648,6 @@ importers:
         version: 3.4.2
 
   packages/skin-renderer: {}
-
-  packages/skin-renderer/pkg: {}
 
   packages/util:
     dependencies:
@@ -2261,6 +2228,10 @@ packages:
   chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
     engines: {node: '>= 8.10.0'}
+
+  chokidar@4.0.3:
+    resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
+    engines: {node: '>= 14.16.0'}
 
   chownr@2.0.0:
     resolution: {integrity: sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==}
@@ -4172,6 +4143,10 @@ packages:
     resolution: {integrity: sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==}
     engines: {node: '>=8.10.0'}
 
+  readdirp@4.0.2:
+    resolution: {integrity: sha512-yDMz9g+VaZkqBYS/ozoBJwaBhTbZo3UNYQHNRw1D3UFQB8oHB4uS/tAODO+ZLjGWmUbKnIlOWO+aaIiAxrUWHA==}
+    engines: {node: '>= 14.16.0'}
+
   real-require@0.2.0:
     resolution: {integrity: sha512-57frrGM/OCTLqLOAh0mhVA9VBMHd+9U7Zb2THMGdBUoZVOtGbJzjxsYGDJ3A9AYYCP4hn6y1TVbaOfzWtm5GFg==}
     engines: {node: '>= 12.13.0'}
@@ -4483,10 +4458,6 @@ packages:
 
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
-
-  stackblur-canvas@2.7.0:
-    resolution: {integrity: sha512-yf7OENo23AGJhBriGx0QivY5JP6Y1HbrrDI6WLt6C5auYZXlQrheoY8hD4ibekFKz1HOfE48Ww8kMWMnJD/zcQ==}
-    engines: {node: '>=0.1.14'}
 
   standard-as-callback@2.1.0:
     resolution: {integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==}
@@ -5910,7 +5881,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@swc/cli@0.4.0(@swc/core@1.7.6(@swc/helpers@0.5.12))(chokidar@3.6.0)':
+  '@swc/cli@0.4.0(@swc/core@1.7.6(@swc/helpers@0.5.12))(chokidar@4.0.3)':
     dependencies:
       '@mole-inc/bin-wrapper': 8.0.1
       '@swc/core': 1.7.6(@swc/helpers@0.5.12)
@@ -5923,7 +5894,7 @@ snapshots:
       slash: 3.0.0
       source-map: 0.7.4
     optionalDependencies:
-      chokidar: 3.6.0
+      chokidar: 4.0.3
 
   '@swc/core-darwin-arm64@1.7.22':
     optional: true
@@ -6272,7 +6243,7 @@ snapshots:
       next: 12.3.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.77.8)
       react: 18.3.1
 
-  '@vitest/coverage-v8@2.0.5(vitest@2.0.5)':
+  '@vitest/coverage-v8@2.0.5(vitest@2.0.5(@types/node@22.5.2)(@vitest/ui@2.0.5)(sass@1.77.8))':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 0.2.3
@@ -6473,7 +6444,7 @@ snapshots:
 
   axios@1.7.3:
     dependencies:
-      follow-redirects: 1.15.6(debug@4.3.6)
+      follow-redirects: 1.15.6(debug@4.3.4)
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -6481,7 +6452,7 @@ snapshots:
 
   axios@1.7.7:
     dependencies:
-      follow-redirects: 1.15.6(debug@4.3.6)
+      follow-redirects: 1.15.6(debug@4.3.4)
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -6632,6 +6603,10 @@ snapshots:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.3
+
+  chokidar@4.0.3:
+    dependencies:
+      readdirp: 4.0.2
 
   chownr@2.0.0: {}
 
@@ -8690,6 +8665,8 @@ snapshots:
     dependencies:
       picomatch: 2.3.1
 
+  readdirp@4.0.2: {}
+
   real-require@0.2.0: {}
 
   redis-errors@1.2.0: {}
@@ -9000,8 +8977,6 @@ snapshots:
     optional: true
 
   stackback@0.0.2: {}
-
-  stackblur-canvas@2.7.0: {}
 
   standard-as-callback@2.1.0: {}
 
