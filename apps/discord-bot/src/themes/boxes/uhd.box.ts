@@ -9,10 +9,6 @@
 import { Box, Render } from "@statsify/rendering";
 import { CanvasRenderingContext2D } from "skia-canvas";
 
-const WHITE = "rgb(245, 248, 255)";
-const RED = "rgb(255, 53, 53)";
-const GREEN = "rgb(34, 175, 31)";
-
 export const render: Render<Box.BoxRenderProps> = (
   ctx,
   {
@@ -26,6 +22,7 @@ export const render: Render<Box.BoxRenderProps> = (
   { x, y, width, height, padding },
   { winterTheme }
 ) => {
+  ctx.filter = "brightness(70%)";
   const fill = Box.resolveFill(color, ctx, x, y, width, height);
   ctx.fillStyle = winterTheme.getIce(ctx);
 
@@ -50,11 +47,14 @@ export const render: Render<Box.BoxRenderProps> = (
   boxPath(ctx, x, y, width, height, border, 0);
   ctx.fill();
 
+  ctx.filter = "none";
+
   if (fill !== Box.DEFAULT_COLOR) {
     ctx.fillStyle = fill;
     ctx.fill();
   }
 
+  ctx.filter = "brightness(70%)";
   ctx.globalCompositeOperation = "overlay";
 
   const overlay = ctx.createLinearGradient(x, y, x, y + height);
@@ -118,6 +118,7 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.fill();
 
   ctx.globalAlpha = 1;
+  ctx.filter = "none";
 
   Box.renderSnow(ctx, winterTheme, x, y, width);
 };

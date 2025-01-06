@@ -21,6 +21,7 @@ export const render: Render<Box.BoxRenderProps> = (
   { x, y, width, height, padding },
   { winterTheme }
 ) => {
+  ctx.filter = "brightness(70%)";
   const fill = Box.resolveFill(color, ctx, x, y, width, height);
   ctx.fillStyle = winterTheme.getIce(ctx);
 
@@ -72,10 +73,13 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.closePath();
   ctx.fill();
 
+  ctx.filter = "none";
+
   if (fill !== Box.DEFAULT_COLOR) {
     ctx.fillStyle = fill;
     ctx.fill();
   }
+  ctx.filter = "brightness(70%)";
 
   ctx.globalCompositeOperation = "overlay";
 
@@ -146,6 +150,7 @@ export const render: Render<Box.BoxRenderProps> = (
   }
 
   ctx.globalAlpha = 1;
+  ctx.filter = "none";
 
   Box.renderSnow(ctx, winterTheme, x, y, width);
 };
