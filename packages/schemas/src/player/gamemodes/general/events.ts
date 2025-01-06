@@ -33,21 +33,21 @@ export class Event {
   }
 }
 
-export type EventTypes = Exclude<keyof Events, "silver">;
-export type EventPeriods = "summer" | "halloween" | "christmas" | "easter";
+export type EventType = { period: EventPeriod; year: number; key: Exclude<keyof Events, "silver"> };
+export type EventPeriod = "summer" | "halloween" | "christmas" | "easter";
 
-export const EVENT_TYPES: EventTypes[] = [
-  "christmas2024",
-  "halloween2024",
-  "summer2024",
-  "easter2024",
-  "christmas2023",
-  "halloween2023",
-  "summer2023",
-  "easter2023",
-  "christmas2022",
-  "halloween2022",
-  "summer2022",
+export const EVENT_TYPES: EventType[] = [
+  { period: "christmas", year: 2024, key: "christmas2024" },
+  { period: "halloween", year: 2024, key: "halloween2024" },
+  { period: "summer", year: 2024, key: "summer2024" },
+  { period: "easter", year: 2024, key: "easter2024" },
+  { period: "christmas", year: 2023, key: "christmas2023" },
+  { period: "halloween", year: 2023, key: "halloween2023" },
+  { period: "summer", year: 2023, key: "summer2023" },
+  { period: "easter", year: 2023, key: "easter2023" },
+  { period: "christmas", year: 2022, key: "christmas2022" },
+  { period: "halloween", year: 2022, key: "halloween2022" },
+  { period: "summer", year: 2022, key: "summer2022" },
 ];
 
 export class Events {
