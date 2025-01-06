@@ -7,8 +7,12 @@
  */
 
 import { Container, Footer, Header, Table } from "#components";
-import { FormattedGame } from "@statsify/schemas";
+import { EVENT_COLORS } from "#commands/events/event-colors";
+import { EVENT_TYPES, FormattedGame } from "@statsify/schemas";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
+
+const latestEvent = EVENT_TYPES[0];
+const latestEventColor = EVENT_COLORS[latestEvent.period];
 
 export const HistoricalGeneralProfile = ({
   background,
@@ -45,8 +49,8 @@ export const HistoricalGeneralProfile = ({
           />
           <Table.td
             title={t("stats.event-exp")}
-            value={t(general.events.christmas2022.exp)}
-            color="§c"
+            value={t(general.events[latestEvent.key].exp)}
+            color={latestEventColor}
           />
         </Table.tr>
         <Table.tr>
