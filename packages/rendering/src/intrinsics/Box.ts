@@ -51,7 +51,7 @@ export const resolveFill = (
   return fill(ctx, x, y, width, height);
 };
 
-export const DEFAULT_COLOR = "rgba(117, 146, 197, 0.5)";
+export const DEFAULT_COLOR = "rgba(75, 112, 177, 0.5)";
 export const SHADOW_OPACITY = 0.84;
 
 function increaseSpacing(
@@ -175,7 +175,6 @@ export const render: JSX.Render<BoxRenderProps> = (
   { x, y, width, height, padding },
   { winterTheme }
 ) => {
-  ctx.filter = "brightness(90%)";
   const fill = resolveFill(color, ctx, x, y, width, height);
   ctx.fillStyle = winterTheme.getIce(ctx);
 
@@ -204,14 +203,11 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.closePath();
   ctx.fill();
 
-  ctx.filter = "none";
-
   if (fill !== DEFAULT_COLOR) {
     ctx.fillStyle = fill;
     ctx.fill();
   }
 
-  ctx.filter = "brightness(90%)";
   renderOverlay(ctx, x, y, height);
   ctx.globalCompositeOperation = "overlay";
 
@@ -269,7 +265,6 @@ export const render: JSX.Render<BoxRenderProps> = (
     );
 
   ctx.globalAlpha = 1;
-  ctx.filter = "none";
 
   renderSnow(ctx, winterTheme, x, y, width);
 };
