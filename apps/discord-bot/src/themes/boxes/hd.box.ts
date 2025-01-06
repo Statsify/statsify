@@ -67,10 +67,6 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.lineTo(x + width - border.bottomRight - border.bottomRight, y + height);
   ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height);
   ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height - border.bottomLeft);
-  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft);
-  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft - border.bottomLeft);
-  ctx.lineTo(x, y + height - border.bottomLeft - border.bottomLeft);
-  ctx.closePath();
   ctx.fill();
 
   ctx.filter = "none";
@@ -79,8 +75,8 @@ export const render: Render<Box.BoxRenderProps> = (
     ctx.fillStyle = fill;
     ctx.fill();
   }
-  ctx.filter = "brightness(70%)";
 
+  ctx.filter = "brightness(70%)";
   ctx.globalCompositeOperation = "overlay";
 
   const overlay = ctx.createLinearGradient(x, y, x, y + height);

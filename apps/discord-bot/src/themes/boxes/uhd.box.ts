@@ -7,7 +7,6 @@
  */
 
 import { Box, Render } from "@statsify/rendering";
-import { CanvasRenderingContext2D } from "skia-canvas";
 
 export const render: Render<Box.BoxRenderProps> = (
   ctx,
@@ -44,7 +43,25 @@ export const render: Render<Box.BoxRenderProps> = (
   border.topLeft *= 2;
   border.topRight *= 2;
 
-  boxPath(ctx, x, y, width, height, border, 0);
+  ctx.beginPath();
+  ctx.moveTo(x + border.topLeft, y);
+  ctx.lineTo(x + width - border.topRight, y);
+
+  // Top Right Corner
+  ctx.quadraticCurveTo(x + width, y, x + width, y + border.topRight);
+  ctx.lineTo(x + width, y + height - border.bottomRight);
+
+  // Bottom Right Corner
+  ctx.quadraticCurveTo(x + width, y + height, x + width - border.bottomRight, y + height);
+  ctx.lineTo(x + border.bottomLeft, y + height);
+
+  // Bottom Left Corner
+  ctx.quadraticCurveTo(x, y + height, x, y + height - border.bottomLeft);
+  ctx.lineTo(x, y + border.topLeft);
+
+  // Top Left Corner
+  ctx.quadraticCurveTo(x, y, x + border.topLeft, y);
+  ctx.closePath();
   ctx.fill();
 
   ctx.filter = "none";
@@ -123,37 +140,3 @@ export const render: Render<Box.BoxRenderProps> = (
   Box.renderSnow(ctx, winterTheme, x, y, width);
 };
 
-function boxPath(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  border: Box.BoxRenderProps["border"],
-  offset: number
-) {
-  x += offset;
-  y += offset;
-  width -= offset * 2;
-  height -= offset * 2;
-
-  ctx.beginPath();
-  ctx.moveTo(x + border.topLeft, y);
-  ctx.lineTo(x + width - border.topRight, y);
-
-  // Top Right Corner
-  ctx.quadraticCurveTo(x + width, y, x + width, y + border.topRight);
-  ctx.lineTo(x + width, y + height - border.bottomRight);
-
-  // Bottom Right Corner
-  ctx.quadraticCurveTo(x + width, y + height, x + width - border.bottomRight, y + height);
-  ctx.lineTo(x + border.bottomLeft, y + height);
-
-  // Bottom Left Corner
-  ctx.quadraticCurveTo(x, y + height, x, y + height - border.bottomLeft);
-  ctx.lineTo(x, y + border.topLeft);
-
-  // Top Left Corner
-  ctx.quadraticCurveTo(x, y, x + border.topLeft, y);
-  ctx.closePath();
-}

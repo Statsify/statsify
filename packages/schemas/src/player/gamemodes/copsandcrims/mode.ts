@@ -123,6 +123,9 @@ export class CopsAndCrimsOverall {
   @Field()
   public headshotKills: number;
 
+  @Field()
+  public grenadeKills: number;
+
   public constructor(data: APIData, defusal: Defusal, deathmatch: Deathmatch, gunGame: GunGame) {
     this.wins = add(defusal.wins, deathmatch.wins, gunGame.wins);
     this.kills = add(defusal.kills, deathmatch.kills, gunGame.kills);
@@ -131,5 +134,6 @@ export class CopsAndCrimsOverall {
     this.assists = add(defusal.assists, deathmatch.assists, gunGame.assists);
     this.knifeKills = data.knife_kills;
     this.headshotKills = data.headshot_kills;
+    this.grenadeKills = data.grenade_kills;
   }
 }

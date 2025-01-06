@@ -188,8 +188,6 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.lineTo(x + border.bottomLeft, y + height);
   ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft);
   ctx.lineTo(x, y + height - border.bottomLeft);
-  ctx.lineTo(x, y + border.topLeft);
-  ctx.lineTo(x + border.topLeft, y + border.topLeft);
   ctx.closePath();
   ctx.fill();
 
@@ -208,7 +206,6 @@ export const render: JSX.Render<BoxRenderProps> = (
   overlay.addColorStop(0, "rgba(255, 255, 255, 0.30)");
   overlay.addColorStop(1, "rgba(0, 0, 0, 0.30)");
   ctx.fillStyle = overlay;
-
   ctx.fill();
 
   ctx.globalCompositeOperation = "source-over";

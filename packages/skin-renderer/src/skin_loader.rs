@@ -1,7 +1,7 @@
 use image::{DynamicImage, GenericImage, GenericImageView, ImageResult, Rgba};
 use reqwest::Client;
 
-use crate::error::{SkinRendererError, SkinRendererResult};
+use crate::error::SkinRendererResult;
 
 pub struct SkinLoader {
   client: Client,
