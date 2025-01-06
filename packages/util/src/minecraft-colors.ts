@@ -24,3 +24,22 @@ export const minecraftColors = [
   { code: "§e", hex: "#FFFF55", id: "YELLOW" },
   { code: "§f", hex: "#FFFFFF", id: "WHITE" },
 ];
+
+export const winterMinecraftColors = [
+  { code: "§0", hex: "#000A19", id: "BLACK" },
+  { code: "§1", hex: "#151FDB", id: "DARK_BLUE" },
+  { code: "§2", hex: "#00A26F", id: "DARK_GREEN" },
+  { code: "§3", hex: "#0EA5C8", id: "DARK_AQUA" },
+  { code: "§4", hex: "#990A5E", id: "DARK_RED" },
+  { code: "§5", hex: "#9019DC", id: "DARK_PURPLE" },
+  { code: "§6", hex: "#E2B450", id: "GOLD" },
+  { code: "§7", hex: "#93A6C2", id: "GRAY" },
+  { code: "§8", hex: "#283F62", id: "DARK_GRAY" },
+  { code: "§9", hex: "#4953F1", id: "BLUE" },
+  { code: "§a", hex: "#12E795", id: "GREEN" },
+  { code: "§b", hex: "#1EEDFF", id: "AQUA" },
+  { code: "§c", hex: "#E14A88", id: "RED" },
+  { code: "§d", hex: "#D87BFC", id: "LIGHT_PURPLE" },
+  { code: "§e", hex: "#D9F06C", id: "YELLOW" },
+  { code: "§f", hex: "#E6F0FF", id: "WHITE" },
+];

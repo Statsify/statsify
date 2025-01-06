@@ -23,10 +23,11 @@ export const render: Render<Box.BoxRenderProps> = (
     outline,
     outlineSize,
   },
-  { x, y, width, height, padding }
+  { x, y, width, height, padding },
+  { winterTheme }
 ) => {
   const fill = Box.resolveFill(color, ctx, x, y, width, height);
-  ctx.fillStyle = fill;
+  ctx.fillStyle = winterTheme.getIce(ctx);
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -48,6 +49,11 @@ export const render: Render<Box.BoxRenderProps> = (
 
   boxPath(ctx, x, y, width, height, border, 0);
   ctx.fill();
+
+  if (fill !== Box.DEFAULT_COLOR) {
+    ctx.fillStyle = fill;
+    ctx.fill();
+  }
 
   ctx.globalCompositeOperation = "overlay";
 
@@ -113,30 +119,7 @@ export const render: Render<Box.BoxRenderProps> = (
 
   ctx.globalAlpha = 1;
 
-  boxPath(ctx, x, y, width, height, border, 2);
-  const gradient = ctx.createLinearGradient(x, y, x + width, (width / 1.25) + y);
-
-  const COLORS = [WHITE, RED, WHITE, GREEN];
-  let index = 0;
-  const delta = (3 * COLORS.length) / width;
-
-  for (let i = 0; i <= (1 - delta); i += delta) {
-    const color = COLORS[index];
-
-    gradient.addColorStop(i, color);
-    gradient.addColorStop(i + delta, color);
-
-    index = (index + 1) % COLORS.length;
-  }
-
-  ctx.strokeStyle = gradient;
-  ctx.lineWidth = 4;
-  ctx.stroke();
-
-  boxPath(ctx, x, y, width, height, border, 1);
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
-  ctx.stroke();
+  Box.renderSnow(ctx, winterTheme, x, y, width);
 };
 
 function boxPath(

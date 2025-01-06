@@ -12,6 +12,7 @@ export * from "./font/index.js";
 export * from "./hooks/index.js";
 export * from "./jsx/index.js";
 export * from "./intrinsics/index.js";
+export { WinterThemeService } from "./winter-theme.service.js";
 
 import type * as JSXInternal from "./jsx/index.js";
 
