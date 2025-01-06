@@ -10,6 +10,7 @@ import { Container, Footer, Header, If, Table } from "#components";
 import { DateTime } from "luxon";
 import { FormattedGame, Guild, PlayerStats, PlayerStatus } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
+import { arcadeWins } from "#commands/arcade/wins";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 interface GeneralProfileHeaderBodyProps {
@@ -127,7 +128,7 @@ export const GeneralProfile = ({
             color="§d"
           />
         </Table.tr>
-        <Table.ts title={`§l${FormattedPlayableGame[mostPlayedGame]} §l§fStats`}>
+        <Table.ts title={`§l${FormattedPlayableGame[mostPlayedGame]} §l§f${mostPlayedGame === "arcade" ? "Wins" : "Stats"}`}>
           <Table.tr>
             <GamePreviewTable game={mostPlayedGame} stats={player.stats} t={t} />
           </Table.tr>
@@ -271,8 +272,8 @@ function gameWeight(stats: PlayerStats, game: PlayableGame) {
       score = stats.warlords.wins;
       break;
 
-    case "woolwars":
-      score = stats.woolwars.overall.wins;
+    case "woolgames":
+      score = stats.woolgames.wins;
       break;
   }
 
@@ -287,9 +288,34 @@ interface GamePreviewTableProps {
 
 function GamePreviewTable({ game, stats, t }: GamePreviewTableProps) {
   switch (game) {
-    case "arcade":
-      // [TODO]: Add Arcade stats
-      return [t("stats.wins"), t(stats[game].wins)];
+    case "arcade":{
+      const [first, second, third] = arcadeWins(stats[game]);
+
+      return (
+        <>
+          <Table.td
+            title="Overall"
+            value={t(stats[game].wins)}
+            color="§a"
+          />
+          <Table.td
+            title={first[0]}
+            value={t(first[1])}
+            color="§e"
+          />
+          <Table.td
+            title={second[0]}
+            value={t(second[1])}
+            color="§6"
+          />
+          <Table.td
+            title={third[0]}
+            value={t(third[1])}
+            color="§c"
+          />
+        </>
+      );
+    }
     case "arenabrawl":
       return (
         <>
@@ -316,7 +342,7 @@ function GamePreviewTable({ game, stats, t }: GamePreviewTableProps) {
           <Table.td
             title={t("stats.level")}
             value={stats[game].levelFormatted}
-            color="§a"
+            color="§7"
           />
           <Table.td
             title={t("stats.wins")}
@@ -380,7 +406,7 @@ function GamePreviewTable({ game, stats, t }: GamePreviewTableProps) {
         <>
           <Table.td
             title={t("stats.kills")}
-            value={stats[game].naturalPrefix}
+            value={stats[game].levelFormatted}
             color="§a"
           />
           <Table.td
@@ -703,7 +729,7 @@ function GamePreviewTable({ game, stats, t }: GamePreviewTableProps) {
           />
         </>
       );
-    case "woolwars":
+    case "woolgames":
       return (
         <>
           <Table.td
@@ -712,18 +738,18 @@ function GamePreviewTable({ game, stats, t }: GamePreviewTableProps) {
             color="§a"
           />
           <Table.td
-            title={t("stats.wins")}
-            value={t(stats[game].overall.wins)}
+            title="WoolWars"
+            value={t(stats[game].woolwars.overall.wins)}
             color="§a"
           />
           <Table.td
-            title={t("stats.losses")}
-            value={t(stats[game].overall.losses)}
+            title="SheepWars"
+            value={t(stats[game].sheepwars.wins)}
             color="§c"
           />
           <Table.td
-            title={t("stats.wlr")}
-            value={t(stats[game].overall.wlr)}
+            title="Capture the Wool"
+            value={t(stats[game].captureTheWool.wins)}
             color="§6"
           />
         </>
@@ -753,7 +779,7 @@ const FormattedPlayableGame: Record<PlayableGame, FormattedGame> = {
   vampirez: FormattedGame.VAMPIREZ,
   walls: FormattedGame.WALLS,
   warlords: FormattedGame.WARLORDS,
-  woolwars: FormattedGame.WOOLWARS,
+  woolgames: FormattedGame.WOOLGAMES,
 };
 
 /* eslint-disable unicorn/numeric-separators-style */
@@ -769,7 +795,7 @@ const GameNormal: Record<keyof PlayerStats, [mean: number, stdev: number]> = {
   general: [2093.1178095654386, 1720.0900266142357],
   megawalls: [24.53680465485529, 131.15816805113383],
   murdermystery: [150.76623514552855, 915.9276449171637],
-  paintball: [13.34181091905699, 117.86448713259242],
+  paintball: [23.34181091905699, 117.86448713259242],
   parkour: [0, 0],
   pit: [102.56580072764409, 277.06822675957835],
   quake: [26.814050527274105, 430.61202349308223],
@@ -783,6 +809,6 @@ const GameNormal: Record<keyof PlayerStats, [mean: number, stdev: number]> = {
   vampirez: [20.305040582036874, 231.25314292785842],
   walls: [8.220307526093416, 79.08187919057073],
   warlords: [27.839182249700166, 217.31182795352672],
-  woolwars: [21.583678620368413, 285.09386895294614],
+  woolgames: [21.583678620368413, 285.09386895294614],
 };
 
