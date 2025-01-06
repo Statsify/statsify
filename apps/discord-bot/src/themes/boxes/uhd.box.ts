@@ -7,7 +7,6 @@
  */
 
 import { Box, Render } from "@statsify/rendering";
-import { CanvasRenderingContext2D } from "skia-canvas";
 
 export const render: Render<Box.BoxRenderProps> = (
   ctx,
@@ -19,10 +18,11 @@ export const render: Render<Box.BoxRenderProps> = (
     outline,
     outlineSize,
   },
-  { x, y, width, height, padding }
+  { x, y, width, height, padding },
+  { winterTheme }
 ) => {
   const fill = Box.resolveFill(color, ctx, x, y, width, height);
-  ctx.fillStyle = fill;
+  ctx.fillStyle = winterTheme.getIce(ctx);
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -42,17 +42,35 @@ export const render: Render<Box.BoxRenderProps> = (
   border.topLeft *= 2;
   border.topRight *= 2;
 
-  boxPath(ctx, x, y, width, height, border, 0);
+  ctx.beginPath();
+  ctx.moveTo(x + border.topLeft, y);
+  ctx.lineTo(x + width - border.topRight, y);
+
+  // Top Right Corner
+  ctx.quadraticCurveTo(x + width, y, x + width, y + border.topRight);
+  ctx.lineTo(x + width, y + height - border.bottomRight);
+
+  // Bottom Right Corner
+  ctx.quadraticCurveTo(x + width, y + height, x + width - border.bottomRight, y + height);
+  ctx.lineTo(x + border.bottomLeft, y + height);
+
+  // Bottom Left Corner
+  ctx.quadraticCurveTo(x, y + height, x, y + height - border.bottomLeft);
+  ctx.lineTo(x, y + border.topLeft);
+
+  // Top Left Corner
+  ctx.quadraticCurveTo(x, y, x + border.topLeft, y);
+  ctx.closePath();
   ctx.fill();
+
+  if (fill !== Box.DEFAULT_COLOR) {
+    ctx.fillStyle = fill;
+    ctx.fill();
+  }
 
   ctx.globalCompositeOperation = "overlay";
 
-  const overlay = ctx.createLinearGradient(x, y, x, y + height);
-  overlay.addColorStop(0, "rgba(255, 255, 255, 0.15)");
-  overlay.addColorStop(1, "rgba(0, 0, 0, 0.15)");
-  ctx.fillStyle = overlay;
-
-  ctx.fill();
+  Box.renderOverlay(ctx, x, y, height);
 
   ctx.globalCompositeOperation = "source-over";
 
@@ -109,65 +127,6 @@ export const render: Render<Box.BoxRenderProps> = (
 
   ctx.globalAlpha = 1;
 
-  boxPath(ctx, x, y, width, height, border, 2);
-  const gradient = ctx.createLinearGradient(x, y, x + width, (width / 1.25) + y);
-
-  const COLORS = [Box.BORDER, Box.SQUIGGLE];
-  let index = 0;
-  const delta = (5 * COLORS.length) / width;
-
-  for (let i = 0; i <= (1 - delta); i += delta) {
-    const color = COLORS[index];
-
-    gradient.addColorStop(i, color);
-    gradient.addColorStop(i + delta, color);
-
-    index = (index + 1) % COLORS.length;
-  }
-
-  ctx.strokeStyle = gradient;
-  ctx.lineWidth = 4;
-  ctx.stroke();
-
-  ctx.globalCompositeOperation = "lighter";
-  boxPath(ctx, x, y, width, height, border, 1);
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
-  ctx.stroke();
-  ctx.globalCompositeOperation = "source-over";
+  Box.renderSnow(ctx, winterTheme, x, y, width);
 };
 
-function boxPath(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  border: Box.BoxRenderProps["border"],
-  offset: number
-) {
-  x += offset;
-  y += offset;
-  width -= offset * 2;
-  height -= offset * 2;
-
-  ctx.beginPath();
-  ctx.moveTo(x + border.topLeft, y);
-  ctx.lineTo(x + width - border.topRight, y);
-
-  // Top Right Corner
-  ctx.quadraticCurveTo(x + width, y, x + width, y + border.topRight);
-  ctx.lineTo(x + width, y + height - border.bottomRight);
-
-  // Bottom Right Corner
-  ctx.quadraticCurveTo(x + width, y + height, x + width - border.bottomRight, y + height);
-  ctx.lineTo(x + border.bottomLeft, y + height);
-
-  // Bottom Left Corner
-  ctx.quadraticCurveTo(x, y + height, x, y + height - border.bottomLeft);
-  ctx.lineTo(x, y + border.topLeft);
-
-  // Top Left Corner
-  ctx.quadraticCurveTo(x, y, x + border.topLeft, y);
-  ctx.closePath();
-}

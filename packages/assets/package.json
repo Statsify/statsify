@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@statsify/logger": "workspace:^",
-    "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@swc/helpers": "^0.5.12",
     "axios": "1.7.3",

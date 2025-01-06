@@ -7,6 +7,7 @@
  */
 
 import { type CanvasRenderingContext2D } from "skia-canvas";
+import { WinterThemeService } from "../winter-theme.service.js";
 import type * as JSX from "#jsx";
 import type { DeferredGradient } from "#hooks";
 
@@ -50,8 +51,28 @@ export const resolveFill = (
   return fill(ctx, x, y, width, height);
 };
 
-export const DEFAULT_COLOR = "rgba(0, 10, 5, 0.5)";
+export const DEFAULT_COLOR = "rgba(75, 112, 177, 0.5)";
 export const SHADOW_OPACITY = 0.84;
+
+function increaseSpacing(
+  spacing: JSX.Spacing,
+  side: keyof JSX.CompleteSpacing,
+  amount: number
+) {
+  if (typeof spacing === "number")
+    return {
+      top: spacing,
+      right: spacing,
+      bottom: spacing,
+      left: spacing,
+      [side]: spacing + amount,
+    };
+
+  return {
+    ...spacing,
+    [side]: (spacing?.[side] ?? 0) + amount,
+  };
+}
 
 export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   children,
@@ -68,37 +89,78 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   shadowOpacity,
   outlineSize = 4,
   outline,
-}) => {
-  const completePadding = toCompleteSpacing(padding);
-  completePadding.top += 4;
-  completePadding.bottom += 4;
-  completePadding.left += 4;
-  completePadding.right += 4;
+}) => ({
+  dimension: {
+    padding: increaseSpacing(padding, "top", 2),
+    margin: increaseSpacing(margin, "top", 4),
+    width,
+    height,
+  },
+  style: { location, direction, align },
+  props: {
+    border,
+    color,
+    shadowDistance,
+    shadowOpacity,
+    outlineSize,
+    outline,
+  },
+  children,
+});
 
-  return ({
-    dimension: {
-      padding: completePadding,
-      margin,
-      width,
-      height,
-    },
-    style: { location, direction, align },
-    props: {
-      border,
-      color,
-      shadowDistance,
-      shadowOpacity,
-      outlineSize,
-      outline,
-    },
-    children,
-  });
+const SNOW_OFFSET = 6;
+
+export const renderSnow = (
+  ctx: CanvasRenderingContext2D,
+  winterTheme: WinterThemeService,
+  x: number,
+  y: number,
+  width: number
+) => {
+  const centerSnow = winterTheme.getAsset("box-snow-center");
+  const leftSnow = winterTheme.getAsset("box-snow-left");
+  const rightSnow = winterTheme.getAsset("box-snow-right");
+
+  const snowWidth = width - leftSnow.width - rightSnow.width;
+
+  let drawnSnow = 0;
+  let snowLeft = snowWidth - drawnSnow;
+
+  while (drawnSnow < snowWidth) {
+    const drawn = snowLeft < centerSnow.width ? snowLeft : centerSnow.width;
+
+    ctx.drawImage(
+      centerSnow,
+      0,
+      0,
+      drawn,
+      centerSnow.height,
+      x + drawnSnow + leftSnow.width,
+      y - SNOW_OFFSET,
+      drawn,
+      centerSnow.height
+    );
+
+    drawnSnow += drawn;
+    snowLeft -= drawn;
+  }
+
+  ctx.drawImage(leftSnow, x, y - SNOW_OFFSET + 4);
+  ctx.drawImage(rightSnow, x + leftSnow.width + snowWidth, y - SNOW_OFFSET + 4);
 };
 
-export const BORDER = "#014600";
-export const BORDER_HIGHLIGHT = "#086306";
-export const SQUIGGLE = "#9B0E0E";
-export const SQUIGGLE_HIGHLIGHT = "#B92121";
+export const renderOverlay = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  height: number
+) => {
+  const overlay = ctx.createLinearGradient(x, y, x, y + height);
+  overlay.addColorStop(0, "rgba(255, 255, 255, 0.30)");
+  overlay.addColorStop(1, "rgba(0, 0, 0, 0.30)");
+  ctx.fillStyle = overlay;
+  ctx.fill();
+};
 
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
@@ -110,10 +172,11 @@ export const render: JSX.Render<BoxRenderProps> = (
     outline,
     outlineSize,
   },
-  { x, y, width, height, padding }
+  { x, y, width, height, padding },
+  { winterTheme }
 ) => {
   const fill = resolveFill(color, ctx, x, y, width, height);
-  ctx.fillStyle = fill;
+  ctx.fillStyle = winterTheme.getIce(ctx);
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -126,14 +189,31 @@ export const render: JSX.Render<BoxRenderProps> = (
   width = Math.round(width);
   height = Math.round(height);
 
-  boxPath(ctx, x, y, width, height, border, 0);
+  ctx.beginPath();
+  ctx.moveTo(x + border.topLeft, y);
+  ctx.lineTo(x + width - border.topRight, y);
+  ctx.lineTo(x + width - border.topRight, y + border.topRight);
+  ctx.lineTo(x + width, y + border.topRight);
+  ctx.lineTo(x + width, y + height - border.bottomRight);
+  ctx.lineTo(x + width - border.bottomRight, y + height - border.bottomRight);
+  ctx.lineTo(x + width - border.bottomRight, y + height);
+  ctx.lineTo(x + border.bottomLeft, y + height);
+  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft);
+  ctx.lineTo(x, y + height - border.bottomLeft);
+  ctx.closePath();
   ctx.fill();
 
+  if (fill !== DEFAULT_COLOR) {
+    ctx.fillStyle = fill;
+    ctx.fill();
+  }
+
+  renderOverlay(ctx, x, y, height);
   ctx.globalCompositeOperation = "overlay";
 
   const overlay = ctx.createLinearGradient(x, y, x, y + height);
-  overlay.addColorStop(0, "rgba(255, 255, 255, 0.15)");
-  overlay.addColorStop(1, "rgba(0, 0, 0, 0.15)");
+  overlay.addColorStop(0, "rgba(255, 255, 255, 0.30)");
+  overlay.addColorStop(1, "rgba(0, 0, 0, 0.30)");
   ctx.fillStyle = overlay;
   ctx.fill();
 
@@ -145,22 +225,6 @@ export const render: JSX.Render<BoxRenderProps> = (
     ctx.lineWidth = outlineSize;
     ctx.stroke();
   }
-
-  boxPath(ctx, x, y, width, height, border, 2);
-  ctx.strokeStyle = BORDER;
-  ctx.lineWidth = 4;
-  ctx.stroke();
-
-  boxPath(ctx, x, y, width, height, border, 1);
-  ctx.strokeStyle = BORDER_HIGHLIGHT;
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  drawPattern(ctx, "horizontal", x + border.topLeft, y, width - border.topRight - border.topLeft);
-  drawPattern(ctx, "horizontal", x + border.bottomLeft, y + height - 4, width - border.bottomRight - border.bottomLeft);
-
-  drawPattern(ctx, "vertical", x, y + border.topLeft, height - border.topLeft - border.bottomLeft);
-  drawPattern(ctx, "vertical", x + width - 4, y + border.topRight, height - border.topRight - border.bottomRight);
 
   if (!shadowDistance) return;
 
@@ -201,95 +265,6 @@ export const render: JSX.Render<BoxRenderProps> = (
     );
 
   ctx.globalAlpha = 1;
+
+  renderSnow(ctx, winterTheme, x, y, width);
 };
-
-function drawPattern(ctx: CanvasRenderingContext2D, direction: "horizontal" | "vertical", x: number, y: number, length: number) {
-  if (direction === "horizontal") {
-    const patternWidth = 48;
-
-    for (let i = 0; i < length; i += patternWidth) {
-      const width = Math.min(patternWidth, length - i);
-
-      if (width < 18) continue;
-
-      const center = (width - 18) / 2;
-      horizontalSquiggle(ctx, x + i + center, y, SQUIGGLE, SQUIGGLE_HIGHLIGHT);
-    }
-  } else {
-    const patternHeight = 48;
-
-    for (let i = 0; i < length; i += patternHeight) {
-      const height = Math.min(patternHeight, length - i);
-
-      if (height < 18) continue;
-
-      const center = (height - 18) / 2;
-      verticalSquiggle(ctx, x, y + i + center, SQUIGGLE, SQUIGGLE_HIGHLIGHT);
-    }
-  }
-}
-
-function horizontalSquiggle(ctx: CanvasRenderingContext2D, x: number, y: number, color: string, highlight: string) {
-  ctx.fillStyle = color;
-  ctx.fillRect(x, y + 2, 12, 2);
-  ctx.fillRect(x + 6, y, 12, 2);
-
-  ctx.fillStyle = highlight;
-  ctx.fillRect(x, y + 2, 1, 2);
-  ctx.fillRect(x, y + 2, 6, 1);
-  ctx.fillRect(x + 6, y, 1, 3);
-  ctx.fillRect(x + 6, y, 12, 1);
-}
-
-function verticalSquiggle(ctx: CanvasRenderingContext2D, x: number, y: number, color: string, highlight: string) {
-  ctx.fillStyle = color;
-  ctx.fillRect(x + 2, y + 6, 2, 12);
-  ctx.fillRect(x, y, 2, 12);
-
-  ctx.fillStyle = highlight;
-  ctx.fillRect(x, y, 1, 12);
-  ctx.fillRect(x, y + 11, 3, 1);
-  ctx.fillRect(x + 2, y + 12, 1, 6);
-  ctx.fillRect(x + 2, y + 17, 2, 1);
-}
-
-function boxPath(
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  border: BoxBorderRadius,
-  offset: number
-) {
-  x += offset;
-  y += offset;
-  width -= 2 * offset;
-  height -= 2 * offset;
-
-  ctx.beginPath();
-  ctx.moveTo(x + border.topLeft, y);
-  ctx.lineTo(x + width - border.topRight, y);
-  ctx.lineTo(x + width - border.topRight, y + border.topRight);
-  ctx.lineTo(x + width, y + border.topRight);
-  ctx.lineTo(x + width, y + height - border.bottomRight);
-  ctx.lineTo(x + width - border.bottomRight, y + height - border.bottomRight);
-  ctx.lineTo(x + width - border.bottomRight, y + height);
-  ctx.lineTo(x + border.bottomLeft, y + height);
-  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft);
-  ctx.lineTo(x, y + height - border.bottomLeft);
-  ctx.lineTo(x, y + border.topLeft);
-  ctx.lineTo(x + border.topLeft, y + border.topLeft);
-  ctx.closePath();
-}
-
-function toCompleteSpacing(spacing: JSX.Spacing): JSX.CompleteSpacing {
-  if (typeof spacing === "number") return { top: spacing, right: spacing, bottom: spacing, left: spacing };
-
-  return {
-    top: spacing.top ?? 0,
-    right: spacing.right ?? 0,
-    bottom: spacing.bottom ?? 0,
-    left: spacing.left ?? 0,
-  };
-}

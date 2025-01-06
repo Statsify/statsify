@@ -524,9 +524,6 @@ importers:
       '@statsify/logger':
         specifier: workspace:^
         version: link:../logger
-      '@statsify/rendering':
-        specifier: workspace:^
-        version: link:../rendering
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../schemas
@@ -631,6 +628,9 @@ importers:
       '@sentry/node':
         specifier: ^7.118.0
         version: 7.118.0
+      '@statsify/assets':
+        specifier: workspace:^
+        version: link:../assets
       '@statsify/util':
         specifier: workspace:^
         version: link:../util

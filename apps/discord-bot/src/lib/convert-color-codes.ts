@@ -6,8 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export const convertColorCodes = (content: string) =>
-  content
+import { minecraftColors } from "@statsify/util";
+
+export const convertColorCodes = (content: string) => {
+  content = content
     .replaceAll(String.raw`\&`, "󰀀")
     .replace(/&\S/g, (m) => m.replace("&", "§"))
     .replaceAll("󰀀", "&");
+
+  for (const color of minecraftColors) {
+    content = content.replaceAll(color.code, `§${color.hex}`);
+  }
+
+  return `§#FFFFFF${content}`;
+};
+
