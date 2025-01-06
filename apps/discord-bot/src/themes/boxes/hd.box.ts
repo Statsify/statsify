@@ -68,18 +68,12 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height - border.bottomLeft);
   ctx.fill();
 
-  ctx.filter = "none";
-
   if (fill !== Box.DEFAULT_COLOR) {
     ctx.fillStyle = fill;
     ctx.fill();
   }
 
-  ctx.globalCompositeOperation = "overlay";
-
   Box.renderOverlay(ctx, x, y, height);
-
-  ctx.globalCompositeOperation = "source-over";
 
   if (outline) {
     ctx.strokeStyle =
