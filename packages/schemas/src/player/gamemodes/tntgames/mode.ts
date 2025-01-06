@@ -290,10 +290,10 @@ export class WizardsClass {
   public assists: number;
 
   public constructor(data: APIData, clazz: string) {
-    this.kills = data[`new_${clazz}_kills`];
-    this.deaths = data[`new_${clazz}_deaths`];
+    this.kills = data[`${clazz}_kills`];
+    this.deaths = data[`${clazz}_deaths`];
     this.kdr = ratio(this.kills, this.deaths);
-    this.assists = data[`new_${clazz}_assists`];
+    this.assists = data[`${clazz}_assists`];
   }
 }
 
@@ -362,6 +362,9 @@ export class Wizards {
   public ancientWizard: WizardsClass;
 
   @Field()
+  public stormWizard: WizardsClass;
+
+  @Field()
   public arcaneWizard: WizardsClass;
 
   public constructor(data: APIData, ap: APIData) {
@@ -398,15 +401,16 @@ export class Wizards {
 
     this.progression = createPrefixProgression(prefixes2, score);
 
-    this.fireWizard = new WizardsClass(data, "firewizard");
-    this.iceWizard = new WizardsClass(data, "icewizard");
-    this.witherWizard = new WizardsClass(data, "witherwizard");
-    this.kineticWizard = new WizardsClass(data, "kineticwizard");
-    this.bloodWizard = new WizardsClass(data, "bloodwizard");
-    this.toxicWizard = new WizardsClass(data, "toxicwizard");
-    this.hydroWizard = new WizardsClass(data, "hydrowizard");
-    this.ancientWizard = new WizardsClass(data, "ancientwizard");
-    this.arcaneWizard = new WizardsClass(data, "arcanewizard");
+    this.fireWizard = new WizardsClass(data, "new_firewizard");
+    this.iceWizard = new WizardsClass(data, "new_icewizard");
+    this.witherWizard = new WizardsClass(data, "new_witherwizard");
+    this.kineticWizard = new WizardsClass(data, "new_kineticwizard");
+    this.bloodWizard = new WizardsClass(data, "new_bloodwizard");
+    this.toxicWizard = new WizardsClass(data, "new_toxicwizard");
+    this.hydroWizard = new WizardsClass(data, "new_hydrowizard");
+    this.ancientWizard = new WizardsClass(data, "new_ancientwizard");
+    this.stormWizard = new WizardsClass(data, "new_stormwizard");
+    this.arcaneWizard = new WizardsClass(data, "arcane_wizard");
   }
 }
 
