@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --font-minecraft: "Minecraft";
+
+  --color-mc-black: #000000;
+  --color-mc-dark-blue: #0000AA;
+  --color-mc-dark-green: #00AA00;
+  --color-mc-dark-aqua: #00AAAA;
+  --color-mc-dark-red: #AA0000;
+  --color-mc-dark-purple: #AA00AA;
+  --color-mc-gold: #FFAA00;
+  --color-mc-gray: #AAAAAA;
+  --color-mc-dark-gray: #555555;
+  --color-mc-blue: #5555FF;
+  --color-mc-green: #55FF55;
+  --color-mc-aqua: #55FFFF;
+  --color-mc-red: #FF5555;
+  --color-mc-pink: #FF55FF;
+  --color-mc-yellow: #FFFF55;
+  --color-mc-white: #FFFFFF;
+
+  --drop-shadow-mc-1: 1px 1px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-2: 2px 2px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-3: 3px 3px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-4: 4px 4px color-mix(in srgb, currentColor 25%, #000 75%);
+}
+
+.text-mc-1 {
+  font-family: var(--font-minecraft);
+  font-size: 16px;
+  text-shadow: var(--drop-shadow-mc-1);
+}
+
+.text-mc-2 {
+  font-family: var(--font-minecraft);
+  font-size: 32px;
+  text-shadow: var(--drop-shadow-mc-2);
+}
+
+.text-mc-3 {
+  font-family: var(--font-minecraft);
+  font-size: 48px;
+  text-shadow: var(--drop-shadow-mc-3);
+}
+
+.text-mc-4 {
+  font-family: var(--font-minecraft);
+  font-size: 64px;
+  text-shadow: var(--drop-shadow-mc-4);
+}
+
+body {
+  background-color: #111111;
+}
