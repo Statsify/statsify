@@ -26,29 +26,32 @@
   --drop-shadow-mc-4: 4px 4px color-mix(in srgb, currentColor 25%, #000 75%);
 }
 
-.text-mc-1 {
-  font-family: var(--font-minecraft);
-  font-size: 16px;
-  text-shadow: var(--drop-shadow-mc-1);
+@layer utilities {
+  .text-mc-1 {
+    font-family: var(--font-minecraft);
+    font-size: 16px;
+    text-shadow: var(--drop-shadow-mc-1);
+  }
+  
+  .text-mc-2 {
+    font-family: var(--font-minecraft);
+    font-size: 32px;
+    text-shadow: var(--drop-shadow-mc-2);
+  }
+  
+  .text-mc-3 {
+    font-family: var(--font-minecraft);
+    font-size: 48px;
+    text-shadow: var(--drop-shadow-mc-3);
+  }
+  
+  .text-mc-4 {
+    font-family: var(--font-minecraft);
+    font-size: 64px;
+    text-shadow: var(--drop-shadow-mc-4);
+  }
 }
 
-.text-mc-2 {
-  font-family: var(--font-minecraft);
-  font-size: 32px;
-  text-shadow: var(--drop-shadow-mc-2);
-}
-
-.text-mc-3 {
-  font-family: var(--font-minecraft);
-  font-size: 48px;
-  text-shadow: var(--drop-shadow-mc-3);
-}
-
-.text-mc-4 {
-  font-family: var(--font-minecraft);
-  font-size: 64px;
-  text-shadow: var(--drop-shadow-mc-4);
-}
 
 body {
   background-color: #111111;

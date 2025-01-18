@@ -4,6 +4,16 @@
   "types": "src/index.ts",
   "main": "dist/index.js",
   "type": "module",
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./dist/*.js",
+      "types": "./src/*.ts"
+    }
+  },
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths --copy-files",
     "test:types": "tsc --noEmit",

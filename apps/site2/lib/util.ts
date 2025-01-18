@@ -6,6 +6,4 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./game.js";
-export * from "./game-modes.js";
-export * from "./constants.js";
+export { twMerge as cn } from "tailwind-merge";
