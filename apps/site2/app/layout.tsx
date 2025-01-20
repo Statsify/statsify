@@ -17,10 +17,10 @@ export const metadata: Metadata = {
 
 const MinecraftFont = localFont({
   src: [
-    { style: "Regular", weight: "400", path: "./fonts/Faithful.ttf" },
-    { style: "Bold", weight: "600", path: "./fonts/Faithful Bold.ttf" },
-    { style: "Italic", weight: "400", path: "./fonts/Faithful Italic.ttf" },
-    { style: "Italic", weight: "600", path: "./fonts/Faithful Bold Italic.ttf" },
+    { style: "Regular", weight: "400", path: "./fonts/Minecraft.ttf" },
+    { style: "Bold", weight: "600", path: "./fonts/Minecraft Bold.ttf" },
+    { style: "Italic", weight: "400", path: "./fonts/Minecraft Italic.ttf" },
+    { style: "Italic", weight: "600", path: "./fonts/Minecraft Bold Italic.ttf" },
   ],
   preload: true,
   variable: "--font-minecraft",
@@ -33,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${MinecraftFont.variable} antialiased`}>
+      <body className={`${MinecraftFont.variable} antialiased leading-[normal] `}>
         {children}
       </body>
     </html>

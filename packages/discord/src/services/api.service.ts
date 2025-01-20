@@ -27,10 +27,13 @@ import { config, removeFormatting } from "@statsify/util";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
+const apiClientRoute = await config("apiClient.route");
+const apiClientKey = await config("apiClient.key");
+
 @Service()
 export class ApiService extends StatsifyApiService {
   public constructor() {
-    super(config("apiClient.route"), config("apiClient.key"));
+    super(apiClientRoute, apiClientKey);
   }
 
   /**

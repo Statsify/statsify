@@ -6,72 +6,61 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import BackgroundImage from "../public/background.png";
-import Image from "next/image";
 import { Background } from "~/components/ui/background";
-import { Box } from "~/components/ui/box";
+import { TableData } from "~/components/ui/table";
 
 export default function Home() {
   return (
-    <div className="flex justify-center text-[32px] leading-[normal] ">
+    <div>
       <Background />
-      <div className="grid grid-cols-3 w-fit gap-4">
-        <div className="col-span-3 flex gap-4">
-          <Box contentClass="relative flex justify-center text-mc-blue w-[180px] h-full">
-            <Image src="https://api.statsify.net/skin?key=KEY&uuid=96f645ba026b4e45bc34dd8f0531334c" fill alt="skin" className="object-top object-cover" />
-          </Box>
-          <div className="flex flex-col gap-4 grow text-center">
-            <Box><span className="text-mc-aqua text-mc-4">Amony</span></Box>
-            <Box containerClass="text-mc-gray">
-              <p>Level: [<span className="text-mc-yellow">1214</span><span className="text-mc-gold">✪</span>]</p>
-              <p>EXP Progress: <span className="text-mc-aqua">3,197</span>/<span className="text-mc-green">5,000</span></p>
-              <p>[<span className="text-mc-yellow">1214</span><span className="text-mc-gold">✪</span>] <span className="text-mc-dark-gray">[</span><span className="text-mc-aqua">■■■■■■■</span>■■■<span className="text-mc-dark-gray">]</span> [<span className="text-mc-yellow">1215</span><span className="text-mc-gold">✪</span>]</p>
-            </Box>
-            <Box>
-              <span className="font-bold"><span className="text-mc-red">Bed</span>Wars Stats</span> (Overall)
-            </Box>
+      <div className="relative flex justify-between items-center h-[80dvh]">
+        <div className="relative flex flex-col gap-10 justify-center w-1/2 h-fit px-16 py-16 text-mc-white">
+          <div className="flex flex-col gap-3">
+            <div className="text-mc-8"><span className="text-[#D0EEFC]">S</span><span className="text-[#8EC3E7]">t</span><span className="text-[#4C97D2]">a</span><span className="text-[#418DCC]">t</span><span className="text-[#3784C5]">s</span><span className="text-[#2C7ABF]">i</span><span className="text-[#2171B8]">f</span><span className="text-[#1668B1]">y</span></div>
+            <div className="text-mc-3">Statsify is the most advanced bot in 2025</div>
           </div>
-          <Box contentClass="flex flex-col justify-center gap-2">
-            <p><span className="text-mc-dark-green">●</span> Tokens: <span className="text-mc-dark-green">13.16M</span></p>
-            <p><span className="text-mc-gray">●</span> Iron: <span className="text-mc-gray">1.87M</span></p>
-            <p><span className="text-mc-gold">●</span> Gold: <span className="text-mc-gold">295,786</span></p>
-            <p><span className="text-mc-aqua">●</span> Diamonds: <span className="text-mc-aqua">61,834</span></p>
-            <p><span className="text-mc-dark-green">●</span> Emeralds: <span className="text-mc-dark-green">15,200</span></p>
-            <p><span className="text-mc-aqua">●</span> Slumber Tickets: <span className="text-mc-aqua">47,516<span className="text-mc-gray">/100,000</span></span></p>
-            <p><span className="text-mc-pink">●</span> Total Slumber Tickets: <span className="text-mc-pink">320,391</span></p>
-            <p><span className="text-mc-green">●</span> Winstreak: <span className="text-mc-green">2</span></p>
-          </Box>
+          <div className="w-1/2 h-16 flex items-center px-4 gap-4 bg-white/30 border-4 border-white/40">
+            <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="size-8 text-white drop-shadow-mc-2">
+              <path d="M6 2h8v2H6V2zM4 6V4h2v2H4zm0 8H2V6h2v8zm2 2H4v-2h2v2zm8 0v2H6v-2h8zm2-2h-2v2h2v2h2v2h2v2h2v-2h-2v-2h-2v-2h-2v-2zm0-8h2v8h-2V6zm0 0V4h-2v2h2z" fill="currentColor" />
+            </svg>
+            <input placeholder="Search your stats" className="text-mc-2 placeholder-mc-darkgray text-white outline-none h-full w-full selection:bg-white/50" spellCheck={false} />
+          </div>
+          <div
+            className="bg-black/50 w-full h-full absolute -z-20 left-0 backdrop-blur-lg"
+            style={{
+              mask: "linear-gradient(90deg, rgb(255 255 255) 10%, rgb(0 0 0 / 0) 100%)",
+            }}
+          />
         </div>
-        <TableData title="Wins" value="8,056" color="text-mc-green" />
-        <TableData title="Losses" value="1,656" color="text-mc-red" />
-        <TableData title="WLR" value="4.86" color="text-mc-gold" />
-        <TableData title="Final Kills" value="27,210" color="text-mc-green" />
-        <TableData title="Final Deaths" value="1,919" color="text-mc-red" />
-        <TableData title="FKDR" value="14.18" color="text-mc-gold" />
-        <TableData title="Kills" value="37,105" color="text-mc-green" />
-        <TableData title="Deaths" value="39,353" color="text-mc-red" />
-        <TableData title="KDR" value="0.94" color="text-mc-gold" />
-        <TableData title="Beds Broken" value="12,120" color="text-mc-green" />
-        <TableData title="Beds Lost" value="2,775" color="text-mc-red" />
-        <TableData title="BBLR" value="4.37" color="text-mc-gold" />
-        <Box
-          borderRadius={{ top: 0 }}
-          containerClass="col-span-3 text-mc-blue"
-          contentClass="flex justify-center"
-        >
-          <span className="text-[#D0EEFC]">s</span><span className="text-[#AFD8F2]">t</span><span className="text-[#8EC3E7]">a</span><span className="text-[#6DADDD]">t</span><span className="text-[#4C97D2]">s</span><span className="text-[#418DCC]">i</span><span className="text-[#3784C5]">f</span><span className="text-[#2C7ABF]">y</span><span className="text-[#2776BC]">.</span><span className="text-[#2171B8]">n</span><span className="text-[#1C6DB5]">e</span><span className="text-[#1668B1]">t</span>
-        </Box>
+        <div className="relative flex gap-2 overflow-hidden mr-16">
+          <div className="flex flex-col gap-2">
+            <TableData title="Kills" value="100" color="text-mc-red" />
+            <TableData title="Kills" value="100" color="text-mc-red" />
+            <TableData title="Kills" value="100" color="text-mc-red" />
+            <TableData title="Kills" value="100" color="text-mc-red" />
+            <TableData title="Kills" value="100" color="text-mc-red" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <TableData title="Kills" value="100" color="text-mc-red" />
+            <TableData title="Kills" value="100" color="text-mc-red" />
+            <TableData title="Kills" value="100" color="text-mc-red" />
+            <TableData title="Kills" value="100" color="text-mc-red" />
+            <TableData title="Kills" value="100" color="text-mc-red" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <TableData title="Kills" value="100" color="text-mc-red" />
+            <TableData title="Kills" value="100" color="text-mc-red" />
+            <TableData title="Kills" value="100" color="text-mc-red" />
+            <TableData title="Kills" value="100" color="text-mc-red" />
+            <TableData title="Kills" value="100" color="text-mc-red" />
+          </div>
+        </div>
+      </div>
+      <div className="h-full text-mc-2 text-white flex gap-4 items-center">
+        <button className="text-nowrap h-16 bg-[#5865F2] border-4 border-[color-mix(in_srgb,_#5865F2_50%,_rgb(0_0_0)_15%)] text-mc-2 text-white outline-none px-4">Try on Discord</button>
       </div>
     </div>
   );
 }
 
-function TableData({ title, value, color }: { title: string; value: string;color: string }) {
-  return (
-    <Box contentClass={`p-4 flex flex-col items-center gap-4 ${color}`}>
-      <p className="text-mc-2 mx-3">{title}</p>
-      <p className="text-mc-4 mx-5">{value}</p>
-    </Box>
-  );
-}
 

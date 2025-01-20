@@ -23,7 +23,7 @@ export default function BedWarsStats() {
     <div className="grid grid-cols-3 w-fit gap-4">
       <div className="col-span-3 flex gap-4">
         <Box contentClass="relative flex justify-center text-mc-blue w-[180px] h-full">
-          <Image src={`https://api.statsify.net/skin?key=KEY&uuid=${player.uuid}`} fill alt="skin" className="object-top object-cover" />
+          <Image src={`https://api.statsify.net/skin?key=${process.env.API_KEY}&uuid=${player.uuid}`} fill alt="skin" className="object-top object-cover" />
         </Box>
         <div className="flex flex-col gap-4 grow text-center">
           <Box>

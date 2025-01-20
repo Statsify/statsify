@@ -10,7 +10,6 @@
 
 import Link from "next/link";
 import { Box } from "~/components/ui/box";
-import { FormattedGame } from "@statsify/schemas/game/constants";
 import { Fragment } from "react";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { usePlayer } from "./context";
@@ -22,7 +21,7 @@ export default function PlayerOverview() {
   return (
     <div>
       <GameCard
-        name={FormattedGame.BEDWARS}
+        name="BedWars"
         stats={[
           ["Wins", stats.bedwars.overall.wins, "text-mc-green"],
           ["Losses", stats.bedwars.overall.losses, "text-mc-red"],

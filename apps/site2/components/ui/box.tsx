@@ -120,14 +120,14 @@ export function Box({
   );
 
   return (
-    <div className={cn("relative text-mc-white", containerClassName)}>
+    <div className={cn("relative text-mc-white me-2 mb-2", containerClassName)}>
       <div
         className="absolute bg-black/42 w-full h-full"
         style={{ transform: `translate(${shadow}px, ${shadow}px)`, clipPath: shadowPath }}
       />
       <div
         {...props}
-        className={cn("p-4 text-mc-2 h-full inset-shadow-2xs", contentClassName)}
+        className={cn("p-4 text-mc-2 h-full", contentClassName)}
         style={{
           ...style,
           background: "linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.06) 100%), rgba(0, 0, 0, 0.50)",

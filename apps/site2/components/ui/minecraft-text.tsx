@@ -55,7 +55,6 @@ export function MinecraftText({ children, className }: { children: string | stri
         italic = false;
         color = "text-mc-white";
         text = part.slice(1);
-
         break;
 
       default: {

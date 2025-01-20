@@ -30,7 +30,7 @@ const handleError = logger.error.bind(logger);
 process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
 
-const sentryDsn = config("sentry.apiDsn", { required: false });
+const sentryDsn = await config("sentry.apiDsn", { required: false });
 
 if (sentryDsn) {
   Sentry.init({
@@ -40,12 +40,12 @@ if (sentryDsn) {
       new Sentry.Integrations.Mongo({ useMongoose: true }),
     ],
     normalizeDepth: 3,
-    tracesSampleRate: config("sentry.tracesSampleRate"),
-    environment: config("environment"),
+    tracesSampleRate: await config("sentry.tracesSampleRate"),
+    environment: await config("environment"),
   });
 }
 
-await mkdir(join(config("api.mediaRoot"), "badges"), { recursive: true });
+await mkdir(join(await config("api.mediaRoot"), "badges"), { recursive: true });
 
 // Removes the `_id` fields created from sub classes of documents
 setGlobalOptions({
@@ -96,4 +96,4 @@ const document = SwaggerModule.createDocument(app, redoc);
 
 SwaggerModule.setup("swagger", app, document);
 
-await app.listen(config("api.port"));
+await app.listen(await config("api.port"));

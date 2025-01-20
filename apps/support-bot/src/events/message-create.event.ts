@@ -17,8 +17,8 @@ import { Service } from "typedi";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
 import { config } from "@statsify/util";
 
-const GUILD_ID = config("supportBot.guild");
-const MEMBER_ROLE = config("supportBot.memberRole");
+const GUILD_ID = await config("supportBot.guild");
+const MEMBER_ROLE = await config("supportBot.memberRole");
 
 @Service()
 export class MessageCreateEventListener extends AbstractEventListener<GatewayDispatchEvents.MessageCreate> {

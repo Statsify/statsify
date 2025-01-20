@@ -24,6 +24,10 @@
   --drop-shadow-mc-2: 2px 2px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-3: 3px 3px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-4: 4px 4px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-5: 5px 5px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-6: 6px 6px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-7: 7px 7px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-8: 8px 8px color-mix(in srgb, currentColor 25%, #000 75%);
 }
 
 @layer utilities {
@@ -49,6 +53,30 @@
     font-family: var(--font-minecraft);
     font-size: 64px;
     text-shadow: var(--drop-shadow-mc-4);
+  }
+
+  .text-mc-5 {
+    font-family: var(--font-minecraft);
+    font-size: 80px;
+    text-shadow: var(--drop-shadow-mc-5);
+  }
+
+  .text-mc-6 {
+    font-family: var(--font-minecraft);
+    font-size: 96px;
+    text-shadow: var(--drop-shadow-mc-6);
+  }
+
+  .text-mc-7 {
+    font-family: var(--font-minecraft);
+    font-size: 112px;
+    text-shadow: var(--drop-shadow-mc-7);
+  }
+
+  .text-mc-8 {
+    font-family: var(--font-minecraft);
+    font-size: 128px;
+    text-shadow: var(--drop-shadow-mc-8);
   }
 }
 
