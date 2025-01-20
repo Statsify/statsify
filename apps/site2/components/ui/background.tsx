@@ -11,14 +11,17 @@ import Image from "next/image";
 
 export function Background() {
   return (
-    <div className="absolute w-screen h-[100dvh]">
-      <Image src={BackgroundImage} alt="" fill={true} className="object-cover" />
-      <div
-        className=" absolute w-full h-full"
+    <div className="absolute w-screen h-[80dvh]">
+      <Image
+        src={BackgroundImage}
+        alt=""
+        fill={true}
+        className="object-cover object-top blur-xs"
         style={{
-          background: "linear-gradient(180deg, rgba(17, 17, 17, 0) 0%, rgba(17, 17, 17, 0) 20%, rgba(17, 17, 17, 1) 100%)",
+          mask: "linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
         }}
       />
     </div>
   );
 }
+

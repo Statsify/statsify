@@ -62,15 +62,15 @@ function toBorderRadius(borderRadius: BoxBorderRadius): {
 interface BoxProps extends Omit<ComponentProps<"div">, "className"> {
   borderRadius?: BoxBorderRadius;
   shadow?: number;
-  contentClassName?: string;
-  containerClassName?: string;
+  contentClass?: string;
+  containerClass?: string;
 }
 
 export function Box({
   borderRadius: partialBorderRadius = {},
   shadow = 8,
-  contentClassName,
-  containerClassName,
+  contentClass: contentClassName,
+  containerClass: containerClassName,
   style,
   ...props
 }: BoxProps) {
@@ -127,7 +127,7 @@ export function Box({
       />
       <div
         {...props}
-        className={cn("p-4 backdrop-blur-lg text-mc-2 h-full", contentClassName)}
+        className={cn("p-4 text-mc-2 h-full inset-shadow-2xs", contentClassName)}
         style={{
           ...style,
           background: "linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.06) 100%), rgba(0, 0, 0, 0.50)",

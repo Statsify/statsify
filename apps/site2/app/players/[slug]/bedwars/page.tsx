@@ -22,14 +22,14 @@ export default function BedWarsStats() {
   return (
     <div className="grid grid-cols-3 w-fit gap-4">
       <div className="col-span-3 flex gap-4">
-        <Box contentClassName="relative flex justify-center text-mc-blue w-[180px] h-full">
+        <Box contentClass="relative flex justify-center text-mc-blue w-[180px] h-full">
           <Image src={`https://api.statsify.net/skin?key=KEY&uuid=${player.uuid}`} fill alt="skin" className="object-top object-cover" />
         </Box>
         <div className="flex flex-col gap-4 grow text-center">
           <Box>
             <MinecraftText className="text-mc-4">{player.prefixName}</MinecraftText>
           </Box>
-          <Box containerClassName="text-mc-gray">
+          <Box containerClass="text-mc-gray">
             <p>Level: <MinecraftText>{bedwars.levelFormatted}</MinecraftText></p>
             <p>EXP Progress: <span className="text-mc-aqua">{bedwars.progression.current}</span>/<span className="text-mc-green">{bedwars.progression.max}</span></p>
             <p>
@@ -42,7 +42,7 @@ export default function BedWarsStats() {
             <span className="font-bold"><span className="text-mc-red">Bed</span>Wars Stats</span> (Overall)
           </Box>
         </div>
-        <Box contentClassName="flex flex-col justify-center gap-2">
+        <Box contentClass="flex flex-col justify-center gap-2">
           <p><span className="text-mc-dark-green">●</span> Tokens: <span className="text-mc-dark-green">{bedwars.tokens}</span></p>
           <p><span className="text-mc-gray">●</span> Iron: <span className="text-mc-gray">{stats.itemsCollected.iron}</span></p>
           <p><span className="text-mc-gold">●</span> Gold: <span className="text-mc-gold">{stats.itemsCollected.gold}</span></p>
@@ -67,8 +67,8 @@ export default function BedWarsStats() {
       <TableData title="BBLR" value={stats.bblr} color="text-mc-gold" />
       <Box
         borderRadius={{ top: 0 }}
-        containerClassName="col-span-3 text-mc-blue"
-        contentClassName="flex justify-center"
+        containerClass="col-span-3 text-mc-blue"
+        contentClass="flex justify-center"
       >
         <span className="text-[#D0EEFC]">s</span><span className="text-[#AFD8F2]">t</span><span className="text-[#8EC3E7]">a</span><span className="text-[#6DADDD]">t</span><span className="text-[#4C97D2]">s</span><span className="text-[#418DCC]">i</span><span className="text-[#3784C5]">f</span><span className="text-[#2C7ABF]">y</span><span className="text-[#2776BC]">.</span><span className="text-[#2171B8]">n</span><span className="text-[#1C6DB5]">e</span><span className="text-[#1668B1]">t</span>
       </Box>
