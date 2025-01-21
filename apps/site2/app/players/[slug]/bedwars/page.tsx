@@ -8,9 +8,9 @@
 
 "use client";
 
-import Image from "next/image";
 import { Box } from "~/components/ui/box";
 import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { usePlayer } from "../context";
 
@@ -22,9 +22,7 @@ export default function BedWarsStats() {
   return (
     <div className="grid grid-cols-3 w-fit gap-4">
       <div className="col-span-3 flex gap-4">
-        <Box contentClass="relative flex justify-center text-mc-blue w-[180px] h-full">
-          <Image src={`https://api.statsify.net/skin?key=${process.env.API_KEY}&uuid=${player.uuid}`} fill alt="skin" className="object-top object-cover" />
-        </Box>
+        <Skin uuid={player.uuid} className="h-full" />
         <div className="flex flex-col gap-4 grow text-center">
           <Box>
             <MinecraftText className="text-mc-4">{player.prefixName}</MinecraftText>

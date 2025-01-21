@@ -7,7 +7,11 @@
  */
 
 import { Background } from "~/components/ui/background";
+import { Box } from "~/components/ui/box";
+import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
+import { Ticker } from "~/components/ui/ticker";
 
 export default function Home() {
   return (
@@ -33,27 +37,46 @@ export default function Home() {
           />
         </div>
         <div className="relative flex gap-2 overflow-hidden mr-16">
-          <div className="flex flex-col gap-2">
-            <TableData title="Kills" value="100" color="text-mc-red" />
-            <TableData title="Kills" value="100" color="text-mc-red" />
-            <TableData title="Kills" value="100" color="text-mc-red" />
-            <TableData title="Kills" value="100" color="text-mc-red" />
-            <TableData title="Kills" value="100" color="text-mc-red" />
-          </div>
-          <div className="flex flex-col gap-2">
-            <TableData title="Kills" value="100" color="text-mc-red" />
-            <TableData title="Kills" value="100" color="text-mc-red" />
-            <TableData title="Kills" value="100" color="text-mc-red" />
-            <TableData title="Kills" value="100" color="text-mc-red" />
-            <TableData title="Kills" value="100" color="text-mc-red" />
-          </div>
-          <div className="flex flex-col gap-2">
-            <TableData title="Kills" value="100" color="text-mc-red" />
-            <TableData title="Kills" value="100" color="text-mc-red" />
-            <TableData title="Kills" value="100" color="text-mc-red" />
-            <TableData title="Kills" value="100" color="text-mc-red" />
-            <TableData title="Kills" value="100" color="text-mc-red" />
-          </div>
+          <Ticker direction="positive" className="flex flex-col gap-2 max-h-[500px]">
+            <TableData title="Wins" value="3,676" color="text-mc-green" />
+            <TableData title="Losses" value="3,536" color="text-mc-red" />
+            <TableData title="WLR" value="1.04" color="text-mc-gold" />
+            <TableData title="Wins" value="3,676" color="text-mc-green" />
+            <TableData title="Losses" value="3,536" color="text-mc-red" />
+            <TableData title="WLR" value="1.04" color="text-mc-gold" />
+            <Skin
+              uuid="618a96fec8b0493fa89427891049550b"
+              className="h-40"
+            />
+          </Ticker>
+          <Ticker direction="negative" className="flex flex-col gap-2 max-h-[500px]">
+            <Box contentClass="flex flex-col justify-center gap-2">
+              <p><span className="text-mc-dark-green">●</span> Tokens: <span className="text-mc-dark-green">846,942</span></p>
+              <p><span className="text-mc-gray">●</span> Iron: <span className="text-mc-gray">1.26M</span></p>
+              <p><span className="text-mc-gold">●</span> Gold: <span className="text-mc-gold">202,077</span></p>
+              <p><span className="text-mc-aqua">●</span> Diamonds: <span className="text-mc-aqua">28,706</span></p>
+              <p><span className="text-mc-dark-green">●</span> Emeralds: <span className="text-mc-dark-green">11,542</span></p>
+              <p><span className="text-mc-green">●</span> Winstreak: <span className="text-mc-green">2</span></p>
+            </Box>
+            <TableData title="Deaths" value="100" color="text-mc-red" />
+            <TableData title="KDR" value="100" color="text-mc-gold" />
+          </Ticker>
+          <Ticker direction="positive" className="flex flex-col gap-2 max-h-[500px]">
+            <Box containerClass="text-mc-gray text-center" contentClass="flex items-center gap-2 justify-center">
+              <MinecraftText className="text-mc-3">§b[MVP§4+§b] j4cobi</MinecraftText>
+              <MinecraftText>§7[GTB]</MinecraftText>
+            </Box>
+            <Box containerClass="text-mc-gray text-center">
+              <p>Title: <MinecraftText>§l§5Godlike V</MinecraftText></p>
+              <p>Win Progress: <span className="text-mc-aqua">2,641</span>/<span className="text-mc-green">3,000</span></p>
+              <p>
+                <MinecraftText>§l§5[V]</MinecraftText>
+                {" "} <span className="text-mc-dark-gray">[</span><span className="text-mc-aqua">■■■■■■■</span>■■■<span className="text-mc-dark-gray">]</span> {" "}
+                <MinecraftText>§l§b[I]</MinecraftText>
+              </p>
+            </Box>
+            <TableData title="Weekly GEXP" value="92,053" color="text-mc-dark-green" />
+          </Ticker>
         </div>
       </div>
       <div className="h-full text-mc-2 text-white flex gap-4 items-center">
@@ -62,5 +85,4 @@ export default function Home() {
     </div>
   );
 }
-
 

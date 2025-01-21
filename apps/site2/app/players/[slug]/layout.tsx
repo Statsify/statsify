@@ -10,7 +10,10 @@ import { Background } from "~/components/ui/background";
 import { PlayerProvider } from "./context";
 import { ReactNode } from "react";
 
-export default async function PlayerLayout({ params, children }: { params: Promise<{ slug: string }>; children: ReactNode }) {
+export default async function PlayerLayout({ params, children }: {
+  params: Promise<{ slug: string }>;
+  children: ReactNode;
+}) {
   const { slug } = await params;
   const response = await fetch(`https://api.statsify.net/player?key=${process.env.API_KEY}&player=${slug}`);
   const { player } = await response.json();

@@ -33,7 +33,11 @@ export default function PlayerOverview() {
   );
 }
 
-function GameCard({ name, stats, href }: { name: string; stats: [name: string, value: string, color: string][]; href: string }) {
+function GameCard({ name, stats, href }: {
+  name: string;
+  stats: [name: string, value: string, color: string][];
+  href: string;
+}) {
   const player = usePlayer();
 
   return (
