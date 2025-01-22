@@ -16,12 +16,12 @@ export function Background() {
         src={BackgroundImage}
         alt=""
         fill={true}
-        className="object-cover object-top"
+        className="object-cover object-top brightness-85"
         style={{
           mask: "linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)",
         }}
       />
-      <div className="relative backdrop-blur-xs w-full h-full" />
+      <div className="relative backdrop-blur-sm w-full h-full" />
     </div>
   );
 }
