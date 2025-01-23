@@ -8,17 +8,18 @@
 
 import BackgroundImage from "~/public/background.png";
 import Image from "next/image";
+import { cn } from "~/lib/util";
 
-export function Background() {
+export function Background({ className, mask }: { className?: string; mask?: string }) {
   return (
-    <div className="absolute w-screen h-[80dvh] pointer-events-none -z-50">
+    <div className={cn("absolute w-screen pointer-events-none -z-50", className)}>
       <Image
         src={BackgroundImage}
         alt=""
         fill={true}
         className="object-cover object-top brightness-85"
         style={{
-          mask: "linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)",
+          mask,
         }}
       />
       <div className="relative backdrop-blur-sm w-full h-full" />
