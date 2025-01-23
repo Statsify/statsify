@@ -22,7 +22,7 @@ export default function BedWarsStats() {
   return (
     <div className="grid grid-cols-3 w-fit gap-4">
       <div className="col-span-3 flex gap-4">
-        <Skin uuid={player.uuid} className="h-full" />
+        <Skin uuid={player.uuid} contentClass="h-full" />
         <div className="flex flex-col gap-4 grow text-center">
           <Box>
             <MinecraftText className="text-mc-4">{player.prefixName}</MinecraftText>

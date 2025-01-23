@@ -47,7 +47,7 @@ export default function Home() {
             <TableData title="WLR" value="1.04" color="text-mc-gold" />
             <Skin
               uuid="618a96fec8b0493fa89427891049550b"
-              className="h-40"
+              contentClass="h-40"
             />
           </Ticker>
           <Ticker direction="negative" className="flex flex-col gap-2 max-h-[500px]">

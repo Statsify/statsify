@@ -93,6 +93,13 @@
   text-shadow: var(--drop-shadow-mc-10);
 }
 
+@utility grid-areas-stack {
+  grid-template-areas: "stack";
+}
+
+@utility grid-area-stack {
+  grid-area: stack;
+}
 
 body {
   background-color: #111111;

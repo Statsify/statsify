@@ -15,10 +15,10 @@ import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
 import { usePlayer } from "~/app/players/[slug]/context";
 
-export function BedWarsPreview({ className }: { className?: string }) {
+export function SkyWarsPreview({ className }: { className?: string }) {
   const player = usePlayer();
-  const bedwars = player.stats.bedwars;
-  const stats = bedwars.overall;
+  const skywars = player.stats.skywars;
+  const stats = skywars.overall;
 
   return (
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>
@@ -28,24 +28,24 @@ export function BedWarsPreview({ className }: { className?: string }) {
           <MinecraftText className="text-mc-4">{player.prefixName}</MinecraftText>
         </Box>
         <Box containerClass="text-mc-gray row-start-2 xl:col-start-2">
-          <p>Level: <MinecraftText>{bedwars.levelFormatted}</MinecraftText></p>
-          <p>EXP Progress: <span className="text-mc-aqua">{bedwars.progression.current}</span>/<span className="text-mc-green">{bedwars.progression.max}</span></p>
+          <p>Level: <MinecraftText>{skywars.levelFormatted}</MinecraftText></p>
+          <p>EXP Progress: <span className="text-mc-aqua">{skywars.progression.current}</span>/<span className="text-mc-green">{skywars.progression.max}</span></p>
           <p>
-            <MinecraftText>{bedwars.levelFormatted}</MinecraftText>
+            <MinecraftText>{skywars.levelFormatted}</MinecraftText>
             {" "} <span className="text-mc-dark-gray">[</span><span className="text-mc-aqua">■■■■■■■</span>■■■<span className="text-mc-dark-gray">]</span> {" "}
-            <MinecraftText>{bedwars.nextLevelFormatted}</MinecraftText>
+            <MinecraftText>{skywars.nextLevelFormatted}</MinecraftText>
           </p>
         </Box>
         <Box containerClass="row-start-4 xl:row-start-3 xl:col-start-2">
-          <span className="font-bold"><span className="text-mc-red">Bed</span>Wars Stats</span> (Overall)
+          <span className="font-bold"><span className="text-mc-aqua">Sky</span><span className="text-mc-yellow">Wars</span> Stats</span> (Overall)
         </Box>
         <Box containerClass="row-start-3 xl:row-start-1 xl:row-end-4" contentClass="grid grid-cols-2 xl:flex xl:flex-col justify-center gap-2 text-start">
-          <p><span className="text-mc-dark-green">●</span> Tokens: <span className="text-mc-dark-green">{bedwars.tokens}</span></p>
-          <p><span className="text-mc-gray">●</span> Iron: <span className="text-mc-gray">{stats.itemsCollected.iron}</span></p>
-          <p><span className="text-mc-gold">●</span> Gold: <span className="text-mc-gold">{stats.itemsCollected.gold}</span></p>
-          <p><span className="text-mc-aqua">●</span> Diamonds: <span className="text-mc-aqua">{stats.itemsCollected.diamond}</span></p>
-          <p><span className="text-mc-dark-green">●</span> Emeralds: <span className="text-mc-dark-green">{stats.itemsCollected.emerald}</span></p>
-          <p><span className="text-mc-green">●</span> Winstreak: <span className="text-mc-green">{stats.winstreak}</span></p>
+          <p><span className="text-mc-gold">●</span> Coins: <span className="text-mc-gold">{skywars.coins}</span></p>
+          <p><span className="text-mc-dark-green">●</span> Tokens: <span className="text-mc-dark-green">{skywars.tokens}</span></p>
+          <p><span className="text-mc-aqua">●</span> Souls: <span className="text-mc-aqua">{skywars.souls}</span></p>
+          <p><span className="text-mc-blue">●</span> Opals: <span className="text-mc-blue">{skywars.opals}</span></p>
+          <p><span className="text-mc-dark-purple">●</span> Heads: <span className="text-mc-dark-purple">{skywars.heads}</span></p>
+          <p><span className="text-mc-pink">●</span> Potions Brewed: <span className="text-mc-pink">{skywars.potionsBrewed}</span></p>
         </Box>
       </div>
       <TableData title="Wins" value={stats.wins} color="text-mc-green" />

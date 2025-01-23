@@ -10,9 +10,9 @@ import { Box } from "./box";
 
 export function TableData({ title, value, color }: { title: string; value: string;color: string }) {
   return (
-    <Box contentClass={`p-4 flex flex-col items-center gap-2 ${color}`}>
+    <Box contentClass={`p-4 flex flex-col justify-center items-center gap-2 ${color}`}>
       <p className="text-mc-2 mx-3">{title}</p>
-      <p className="text-mc-4 mx-5">{value}</p>
+      <p className="text-mc-3 lg:text-mc-4 mx-5">{value}</p>
     </Box>
   );
 }

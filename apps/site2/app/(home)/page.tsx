@@ -7,15 +7,14 @@
  */
 
 import { Background } from "~/components/ui/background";
-import { BedWarsPreview } from "./previews/bedwars";
-import { Box } from "~/components/ui/box";
 import { InteractiveLogo } from "./interactive-logo";
 import { PlayerProvider } from "../players/[slug]/context";
 import { SearchIcon } from "~/components/icons/search";
+import { Tabs } from "./tabs";
 import { cn } from "~/lib/util";
 
 export default async function Home() {
-  const response = await fetch(`https://api.statsify.net/player?key=${process.env.API_KEY}&player=j4cobi`);
+  const response = await fetch(`https://api.statsify.net/player?key=${process.env.API_KEY}&player=amony`);
   const { player } = await response.json();
 
   return (
@@ -37,35 +36,33 @@ export default async function Home() {
         </div>
         <InteractiveLogo />
       </div>
-      <div className="flex flex-col items-center">
-        <section className="w-4/5 max-w-[1800px] relative flex flex-col lg:flex-row lg:justify-around lg:items-center gap-4">
-          <Background className="w-screen h-full" />
-          <div
-            className="absolute w-screen h-full -z-10"
-            style={{
-              background: "linear-gradient(0deg, rgba(17,17,17,1) 10%, rgba(17,17,17,0) 50%, rgba(17,17,17,1) 90%)",
-            }}
-          />
-          <div className="flex flex-col gap-4 max-w-150 text-mc-white text-center lg:text-start ">
-            <h1 className="text-mc-7 font-bold">Players</h1>
-            <p className="text-mc-2">Beautiful visuals are provided by Statsify for every game on Hypixel. Simply input /bedwars into Discord to see your BedWars stats or those of your friends. To see further games, type / followed by the name of the game. To quickly search for yourself, you may link your Minecraft account to your Discord with /verify</p>
-          </div>
-          <div
-            className="relative flex flex-col justify-center items-center gap-8 p-8 before:bg-gradient-to-b before:from-white/20 before:to-white/50 before:mix-blend-overlay before:w-full before:h-[80%] before:content-[''] before:absolute before:-z-20 after:mix-blend-overlay after:w-full after:h-[80%] after:content-[''] after:absolute after:shadow-[0_0_10px_white,0_0_30px_10px_white] after:shadow-white after:-z-20 py-36"
-          >
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <Box borderRadius={{ bottom: 0 }} contentClass="font-bold">BedWars</Box>
-              <Box borderRadius={{ bottom: 0 }}>SkyWars</Box>
-              <Box borderRadius={{ bottom: 0 }}>Duels</Box>
-              <Box borderRadius={{ bottom: 0 }}>Arcade</Box>
+      <section className="w-full relative grid grid-rows-[1fr_8fr_1fr] justify-stretch">
+        <Background className="w-full h-full" />
+        <div
+          className="absolute w-full h-full -z-10"
+          style={{
+            background: "linear-gradient(0deg, rgba(17,17,17,1) 10%, rgba(17,17,17,0) 50%, rgba(17,17,17,1) 90%)",
+          }}
+        />
+        <div className="min-h-1" />
+        <div className="flex justify-center">
+          <div className="w-full max-w-[1800px] flex flex-col lg:flex-row justify-around lg:items-center gap-8 pt-8 lg:pt-0">
+            <div className="mx-auto lg:mx-0 flex flex-col gap-4 max-w-100 xl:max-w-120 text-mc-white text-center lg:text-start ">
+              <h1 className="text-mc-7 font-bold">Players</h1>
+              <p className="text-mc-2">Beautiful visuals are provided by Statsify for every game on Hypixel. Simply input /bedwars into Discord to see your BedWars stats or those of your friends. To see further games, type / followed by the name of the game. To quickly search for yourself, you may link your Minecraft account to your Discord with /verify</p>
             </div>
-            <PlayerProvider player={player}>
-              <BedWarsPreview />
-            </PlayerProvider>
+            <div
+              className="relative w-full lg:w-fit h-full flex flex-col justify-center items-center gap-8 p-4 lg:p-8 before:absolute before:bg-gradient-to-b before:from-white/20 before:to-white/50 before:mix-blend-overlay before:w-full before:h-full before:-z-20 after:mix-blend-overlay after:w-full after:h-full after:content-[''] after:absolute after:shadow-[0_0_10px_white,0_0_30px_10px_white] after:shadow-white after:-z-20"
+            >
+              <PlayerProvider player={player}>
+                <Tabs />
+              </PlayerProvider>
+            </div>
           </div>
-        </section>
-        <div className="h-1000 w-10" />
-      </div>
+        </div>
+        <div className="min-h-1" />
+      </section>
+      <div className="h-1000 w-10" />
     </div>
   );
 }
