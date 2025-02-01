@@ -17,7 +17,7 @@ import type { HistoricalOptions, LeaderboardOptions } from "../field.options.js"
 
 const getLeaderboardName = (field: string) => {
   const ratioIndex = RATIOS.indexOf(field);
-  if (ratioIndex > -1) return RATIO_STATS[ratioIndex][3];
+  if (ratioIndex !== -1) return RATIO_STATS[ratioIndex][3];
   if (field === "exp") return "EXP";
   return prettify(field);
 };

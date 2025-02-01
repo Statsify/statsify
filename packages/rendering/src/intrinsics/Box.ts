@@ -127,7 +127,7 @@ export const renderSnow = (
   let snowLeft = snowWidth - drawnSnow;
 
   while (drawnSnow < snowWidth) {
-    const drawn = snowLeft < centerSnow.width ? snowLeft : centerSnow.width;
+    const drawn = Math.min(snowLeft, centerSnow.width);
 
     ctx.drawImage(
       centerSnow,
