@@ -476,7 +476,7 @@
     },
     "premiumRequired": {
       "description": "Sjekk ut alle de tilgjengelige funksjonene [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
+      "preview": "Sjekk ut alle de tilgjengelige funksjonene [here] (https://statsify.net/premium). Nedenfor ser du en liten forhåndsvisning av hva kommandoen gjør/endrer.",
       "title": "Statsify {{tier}} kreves for å utføre denne kommandoen"
     },
     "staffOnly": {
@@ -677,7 +677,7 @@
     "killsAsAlpha": "Kills as Alpha",
     "killstreaks": "Drapsrekker",
     "kit": "Valgt sett",
-    "knife": "Knife",
+    "knife": "Kniv",
     "knifeKills": "Knife Kills",
     "kwr": "KWR",
     "lapsCompleted": "Runder",
@@ -692,7 +692,7 @@
     "lifetimeRenown": "Lifetime Renown",
     "loginTime": "Innloggingstid",
     "logoutTime": "Utloggingstid",
-    "longestGame": "Longest Game",
+    "longestGame": "Lengste spill",
     "lootChests": "Loot Chests",
     "losses": "Tap",
     "magicalChests": "Magiske kister",
