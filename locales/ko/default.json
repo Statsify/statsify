@@ -87,6 +87,7 @@
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "{{name}}의 세션 전적을 봐요",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-delete": "Delete your session stats",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -515,6 +516,7 @@
     "setResetTime": "초기화 시간을 <t:{{time}}:t>로 설정했어요.",
     "newSession": "Statsify에서 **{{displayName}}**님의 세션 전적을 처음으로 확인했어요.",
     "setSessionReset": "세션 전적을 초기화했어요.",
+    "deleteSession": "Successfully deleted your session stats.",
     "disabledWarning": {
       "title": "기간 전적을 더 이상 사용할 수 없음",
       "description": "Hypixel의 새 [API 약관](https://developer.hypixel.net/policies/)이 \"플레이어 데이터의 연속적인 동기화\"를 허용하지 않게 되었습니다.\n따라서, Statsify가 플레이어 전적을 더 이상 추적할 수 없게 됩니다.\n\n대신, `/session` 명령어로 세션을 시작해 보세요. 세션을 시작하면, 봇이 다음 번에 명령어를 실행하기 전까지 전적을 추적할 거예요. 세션 전적을 초기화하려면 `/reset session` 명령어를 실행하세요. "
