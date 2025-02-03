@@ -53,26 +53,6 @@ export const resolveFill = (
 export const DEFAULT_COLOR = "rgba(0, 10, 5, 0.5)";
 export const SHADOW_OPACITY = 0.84;
 
-function increaseSpacing(
-  spacing: JSX.Spacing,
-  side: keyof JSX.CompleteSpacing,
-  amount: number
-) {
-  if (typeof spacing === "number")
-    return {
-      top: spacing,
-      right: spacing,
-      bottom: spacing,
-      left: spacing,
-      [side]: spacing + amount,
-    };
-
-  return {
-    ...spacing,
-    [side]: (spacing?.[side] ?? 0) + amount,
-  };
-}
-
 export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   children,
   width,
@@ -90,8 +70,8 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   outline,
 }) => ({
   dimension: {
-    padding: increaseSpacing(padding, "top", 2),
-    margin: increaseSpacing(margin, "top", 4),
+    padding,
+    margin,
     width,
     height,
   },

@@ -11,7 +11,7 @@ import { readFile } from "node:fs/promises";
 import { swc } from "./vite.swc.js";
 
 async function getSwcrc(path?: string) {
-  const config = await readFile(path ?? "../../.swcrc", "utf8").then(JSON.parse);
+  const config = await readFile(path ?? "./.swcrc", "utf8").then(JSON.parse);
   delete config["$schema"];
   return config;
 }
