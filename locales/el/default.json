@@ -87,6 +87,7 @@
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "Δες τα στατιστικά συνεδριών του {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-delete": "Delete your session stats",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -515,6 +516,7 @@
     "setResetTime": "Ρύθμισε την ώρα επαναφοράς σε <t:{{time}}:t>.",
     "newSession": "Τα στατιστικά συνεδρίας του **{{displayName}}** έχουν ελεγχθεί για πρώτη φορά στο Statsify.",
     "setSessionReset": "Επιτυχής επαναφορά των στατιστικών συνεδρίας σου.",
+    "deleteSession": "Successfully deleted your session stats.",
     "disabledWarning": {
       "title": "Οι Ιστορικές Εντολές δεν είναι Πλέον Διαθέσιμες",
       "description": "Το νέο Hypixel [API Terms](https://developer.hypixel.net/policies/) δεν επιτρέπει \"τη συνεχή έρευνα των δεδομένων παικτών\", που σημαίνει ότι το Statsify δεν μπορεί να παρακολουθήσει τα στατιστικά παικτών καθημερινά πλέον.\n\nΑντί αυτού μπορείς να ξεκινήσεις μια συνεδρία με `/session`. Όταν ξεκινήσεις μια συνεδρία, το bot θα συνεχίσει να παρακολουθεί τα στατιστικά σου από την στιγμή που τρέξεις την εντολή, μέχρι την επόμενη φορά που θα την ξανατρέξεις. Για να επαναφέρεις τα στατιστικά συνεδρίας, που μπορείς να γράψεις `/reset session`."
