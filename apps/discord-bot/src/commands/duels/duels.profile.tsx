@@ -10,15 +10,18 @@ import {
   BridgeDuelsTable,
   MultiDuelsGameModeTable,
   SingleDuelsGameModeTable,
+  TitlesTable,
   UHCDuelsTable,
 } from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
 import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { DuelsModeIcons } from "./duels.command.js";
 
 export interface DuelsProfileProps extends BaseProfileProps {
   mode: GameMode<DuelsModes>;
+  modeIcons: DuelsModeIcons;
 }
 
 export const DuelsProfile = ({
@@ -31,6 +34,7 @@ export const DuelsProfile = ({
   mode,
   t,
   time,
+  modeIcons,
 }: DuelsProfileProps) => {
   const { duels } = player.stats;
 
@@ -51,27 +55,42 @@ export const DuelsProfile = ({
   if ("kit" in stats)
     sidebar.push([t("stats.kit"), prettify(stats.kit), "§e"]);
 
-  let table: JSX.Element;
-  const { api } = mode;
+  const isTitles = mode.api === "overall" && mode.submode.api === "titles";
 
-  switch (api) {
+  let table: JSX.Element;
+
+  switch (mode.api) {
     case "bridge":
-      table = <BridgeDuelsTable stats={duels[api][mode.submode.api]} t={t} time={time} />;
+      table = <BridgeDuelsTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
       break;
 
     case "uhc":
-      table = <UHCDuelsTable stats={duels[api]} t={t} time={time} />;
+      table = <UHCDuelsTable stats={duels[mode.api]} t={t} time={time} />;
       break;
 
     case "skywars":
     case "op":
     case "megawalls":
-      table = <MultiDuelsGameModeTable stats={duels[api]} t={t} time={time} />;
+      table = <MultiDuelsGameModeTable stats={duels[mode.api]} t={t} time={time} />;
+      break;
+
+    case "overall":
+      table = isTitles ?
+        <TitlesTable duels={duels} t={t} modeIcons={modeIcons} /> :
+        <SingleDuelsGameModeTable stats={duels[mode.api]} t={t} time={time} />;
       break;
 
     default:
-      table = <SingleDuelsGameModeTable stats={duels[api]} t={t} time={time} />;
+      table = <SingleDuelsGameModeTable stats={duels[mode.api]} t={t} time={time} />;
       break;
+  }
+
+  let formattedMode;
+
+  if (mode.api === "overall") {
+    formattedMode = mode.submode.api === "stats" ? "Overall" : mode.submode.formatted;
+  } else {
+    formattedMode = `${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""}`;
   }
 
   return (
@@ -80,17 +99,19 @@ export const DuelsProfile = ({
         skin={skin}
         name={player.prefixName}
         badge={badge}
-        sidebar={sidebar}
-        title={`§l${FormattedGame.DUELS} §fStats §r(${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""})`}
-        description={`§7${t("stats.title")}: ${
-          duels[api].titleFormatted
-        }\n${formatProgression({
-          t,
-          label: t("stats.progression.win"),
-          progression: duels[api].progression,
-          currentLevel: duels[api].titleLevelFormatted,
-          nextLevel: duels[api].nextTitleLevelFormatted,
-        })}`}
+        sidebar={isTitles ? [] : sidebar}
+        title={`§l${FormattedGame.DUELS} §fStats §r(${formattedMode})`}
+        description={isTitles ?
+          undefined :
+          `§7${t("stats.title")}: ${
+            duels[mode.api].titleFormatted
+          }\n${formatProgression({
+            t,
+            label: t("stats.progression.win"),
+            progression: duels[mode.api].progression,
+            currentLevel: duels[mode.api].titleLevelFormatted,
+            nextLevel: duels[mode.api].nextTitleLevelFormatted,
+          })}`}
         time={time}
       />
       {table}
