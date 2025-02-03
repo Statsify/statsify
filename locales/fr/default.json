@@ -87,6 +87,7 @@
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "Voir vos stats de session en {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-delete": "Delete your session stats",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -515,6 +516,7 @@
     "setResetTime": "Définissez votre temps de réinitialisation à <t:{{time}}:t>.",
     "newSession": "Les stats de session de **{{displayName}}** ont été vérifiées pour la première fois sur Statsify.",
     "setSessionReset": "Vous avez bien réinitialisé vos stats de session.",
+    "deleteSession": "Successfully deleted your session stats.",
     "disabledWarning": {
       "title": "Les Commandes Historiques ne sont Plus Disponnibles",
       "description": "Les nouvelles [conditions de l'API](https://developer.hypixel.net/policies/) d'Hypixel ne permettent plus de \"sondages en continu des données des joueurs\", ce qui signifie que Statsify ne peut plus suivre les stats des joueurs tous les jours.\n\nAu lieu de cela, vous pouvez essayer de démarrer une session avec `/session`. Quand vous démarrez une session, le bot gardera une trace de vos stats à partir du moment où vous avez initialement exécuté la commande jusqu'à la prochaine fois que vous l'exécuterez. Pour réinitialiser vos stats de session, vous pouvez exécuter `/reset session`."
