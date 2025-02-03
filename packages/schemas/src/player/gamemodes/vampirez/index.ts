@@ -23,7 +23,7 @@ export class VampireZ {
   public tokens: number;
 
   @Field()
-  public overallWins: number;
+  public wins: number;
 
   @Field({ historical: { enabled: false } })
   public mostVampireKills: number;
@@ -57,7 +57,7 @@ export class VampireZ {
     this.human = new VampireZHuman(data, "human");
     this.vampire = new VampireZVampire(data, "vampire");
 
-    this.overallWins = add(this.human.wins, this.vampire.wins);
+    this.wins = add(this.human.wins, this.vampire.wins);
   }
 }
 
