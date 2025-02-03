@@ -87,6 +87,7 @@
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "Visa din {{name}} sessions statistik",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-delete": "Delete your session stats",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -515,6 +516,7 @@
     "setResetTime": "Ställ in din återställningstid till <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**s sessions statistik har blivit checkad för första gången på Statsify.",
     "setSessionReset": "Lyckades med återställningen av din sessions statistik.",
+    "deleteSession": "Successfully deleted your session stats.",
     "disabledWarning": {
       "title": "Historiska Kommandon är Inte Längre Tillgängliga",
       "description": "Hypixels nya [API Terms](https://developer.hypixel.net/policies/) tillåter inte längre \"kontinuerlig erhållning av spelardata\", vilket betyder att Statsify inte längre kan hålla reda på en spelares dagliga statistik.\n\nIstället kan du försöka starta en session med `/session`. När du startar en session, kommer botten hålla reda på din statistik från det ögonblick du först körde kommandot tills nästa gång du kör det. För att återställa din sessions statistik kan du köra `/reset session`."
