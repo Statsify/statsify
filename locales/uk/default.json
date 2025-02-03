@@ -87,6 +87,7 @@
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "Перегляньте статистику ваших сеансів {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-delete": "Delete your session stats",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -515,6 +516,7 @@
     "setResetTime": "Установіть час скидання на <t:{{time}}:t>.",
     "newSession": "**{{displayName}}** Статистика сесії була вперше перевірена за допомогою Statsify.",
     "setSessionReset": "Успішно скинуто статистику сеансу.",
+    "deleteSession": "Successfully deleted your session stats.",
     "disabledWarning": {
       "title": "Історичні команди більше не доступні",
       "description": "Нові [Умови API] Hypixel(https://developer.hypixel.net/policies/) більше не дозволяють \"постійне отримання даних гравця\", що означає, що Statsify більше не зможе відстежувати статистику гравців щодня.\n\nНатомість ви можете спробувати запустити сесію використовуючи `/session`. Коли ви починаєте сесію, бот буде автоматично відстежувати вашу статистику від моменту коли ви використовуєте команду до моменту коли ви використаєте цю команду ще раз. Щоб скинути вашу сесію ви можете використати `/reset session`."
