@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { winterMinecraftColors } from "@statsify/util";
+import { minecraftColors } from "@statsify/util";
 import type { Fill } from "#jsx";
 
 export interface TextNode {
@@ -55,7 +55,7 @@ const reset: Token = {
   effect: (_, __, defaultState) => defaultState,
 };
 
-const minecraftColorList = winterMinecraftColors.map((color) => [
+const minecraftColorList = minecraftColors.map((color) => [
   color.code.replace("§", ""),
   color.hex,
 ]);
