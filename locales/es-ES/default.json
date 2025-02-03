@@ -87,6 +87,7 @@
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "Ve las estadísticas de tu sesión de {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-delete": "Delete your session stats",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -515,6 +516,7 @@
     "setResetTime": "Establece tu hora de reinicio a <t:{{time}}:t>.",
     "newSession": "La sesión de estadísticas de **{{displayName}}** han sido revisadas por primera vez en Statsify.",
     "setSessionReset": "Reinicio exitoso de tu sesión de estadísticas.",
+    "deleteSession": "Successfully deleted your session stats.",
     "disabledWarning": {
       "title": "Los Comandos del Historial ya no están disponibles",
       "description": "Los nuevos [Términos API](https://developer.hypixel.net/policies/) de Hypixel ya no permiten \"respuestas continuas de los datos del jugador\", lo que significa que Statsify ya no puede seguir las estadísticas de los jugadores diarios.\n\nEn su lugar, puedes intentar iniciar una sesión con `/session`. Cuando comienza una sesión, el bot mantendrá el seguimiento de tus estadísticas desde el momento en que ejecutaste el comando hasta la próxima vez que lo ejecutes. Para restablecer las estadísticas de tu sesión, puedes ejecutar `/reset session`."
