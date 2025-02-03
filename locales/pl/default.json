@@ -87,6 +87,7 @@
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "Zobacz swoje statystyki sesji {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-delete": "Delete your session stats",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -515,6 +516,7 @@
     "setResetTime": "Ustawiono czas resetowania na <t:{{time}}:t>.",
     "newSession": "Statystyki sesji **{{displayName}}** po raz pierwszy zostały sprawdzone w Statsify.",
     "setSessionReset": "Pomyślnie zresetowano twoje statystyki sesji.",
+    "deleteSession": "Successfully deleted your session stats.",
     "disabledWarning": {
       "title": "Komendy historyczne nie są już dostępne",
       "description": "Nowe [zasady API](https://developer.hypixel.net/policies/) Hypixela nie zezwalają już na \"ciągłe zbieranie danych graczy\", co uniemożliwia Statsify śledzenie dziennych statystyk graczy.\n\nZamiast tego możesz stworzyć nową sesję używając `/session`. Kiedy stworzysz sesję, bot zacznie śledzić twoje statystyki od momentu uruchomienia komendy aż do momentu jej ponownego uruchomienia. Możesz zresetować swoją sesję używając `/reset session`."
