@@ -39,6 +39,7 @@ import {
   ApiService,
   Command,
   CommandContext,
+  EmbedBuilder,
   Page,
   PaginateService,
   PlayerArgument,
@@ -61,6 +62,7 @@ import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile.js"
 import { PaintballProfile } from "../paintball/paintball.profile.js";
 import { PitProfile } from "../pit/pit.profile.js";
 import { QuakeProfile } from "../quake/quake.profile.js";
+import { STATUS_COLORS } from "@statsify/logger";
 import { SkyWarsProfile } from "../skywars/skywars.profile.js";
 import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
 import { SpeedUHCProfile } from "../speeduhc/speeduhc.profile.js";
@@ -272,6 +274,18 @@ export class SessionCommand {
     return this.run(context, WOOLGAMES_MODES, (base, mode) => (
       <WoolGamesProfile {...base} mode={mode} />
     ));
+  }
+
+  @SubCommand({ description: (t) => t("commands.session-delete") })
+  public async delete(context: CommandContext) {
+    const userId = context.getInteraction().getUserId();
+    await this.apiService.deletePlayerSession(userId);
+
+    const embed = new EmbedBuilder()
+      .color(STATUS_COLORS.success)
+      .description((t) => t("historical.deleteSession"));
+
+    return { embeds: [embed] };
   }
 
   protected async run<T extends GamesWithBackgrounds>(

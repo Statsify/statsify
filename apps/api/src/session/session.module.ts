@@ -7,7 +7,7 @@
  */
 
 import { Module, forwardRef } from "@nestjs/common";
-import { Player } from "@statsify/schemas";
+import { Player, User } from "@statsify/schemas";
 import { PlayerModule } from "#player";
 import { Session } from "./session.model.js";
 import { SessionController } from "./session.controller.js";
@@ -20,6 +20,7 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
     TypegooseModule.forFeature([
       Session,
       Player,
+      User,
     ]),
   ],
   controllers: [SessionController],
