@@ -87,6 +87,7 @@
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "Vezi statisticile de misiuni pentru {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
+    "session-delete": "Delete your session stats",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -515,6 +516,7 @@
     "setResetTime": "Setează timpul de resetare la <t:{{time}}:t>.",
     "newSession": "Statisticile sesiunii pentru **{{displayName}}** au fost verificate pentru prima dată pe Statsify.",
     "setSessionReset": "Statisticile sesiunii tale au fost resetate cu succes.",
+    "deleteSession": "Successfully deleted your session stats.",
     "disabledWarning": {
       "title": "Comenzile istorice nu mai sunt disponibile",
       "description": "Noul [Termeni API](https://developer.hypixel.net/policies/) al Hypixel nu mai permite \"urmărirea statisticilelor a jucătorilor\", ceea ce înseamnă că Statsify nu mai poate urmări statisticile jucătorului zilnic.\n\nÎn schimb poți încerca să începi o sesiune cu `/session`. Când începeți o sesiune, bot-ul va ține evidența statisticilor dvs. din momentul în care ați rulat inițial comanda până la următoarea dată când o veți executa. Pentru a reseta statisticile sesiunii puteți rula `/reset session`."
