@@ -8,7 +8,7 @@
 
 import { Historical, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
-import { Zombies, ZombiesMap } from "@statsify/schemas";
+import { Zombies, ZombiesMap, ZombiesMapDifficulty } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { ProfileTime } from "#commands/base.hypixel-command";
 
@@ -21,13 +21,13 @@ interface ZombiesMapColumnProps {
 
 const ZombiesMapColumn = ({ title, stats, t, time }: ZombiesMapColumnProps) => {
   const mapStat =
-    stats.wins > 0 ?
-      [t("stats.fastestWin"), formatTime(stats.fastestWin)] :
-      [t("stats.bestRound"), t(stats.bestRound)];
+    (stats.overall.bestRound >= 30 && stats.overall.wins >= 1) ?
+      [t("stats.fastestWin"), formatTime(stats.overall.fastestWin)] :
+      [t("stats.bestRound"), t(stats.overall.bestRound)];
 
   return (
     <Table.ts title={title}>
-      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" size="small" />
+      <Table.td title={t("stats.wins")} value={t(stats.overall.wins)} color="§a" size="small" />
       <Historical.exclude time={time}>
         <Table.td title={mapStat[0]} value={mapStat[1]} color="§e" size="small" />
       </Historical.exclude>
@@ -72,3 +72,47 @@ export const ZombiesTable = ({ stats, t, time }: ZombiesTableProps) => {
     </Table.table>
   );
 };
+
+interface ZombiesMapDifficultyTableProps {
+  stats: ZombiesMapDifficulty;
+  t: LocalizeFunction;
+  time: ProfileTime;
+  difficulty: string;
+}
+
+export const ZombiesMapDifficultyTable = ({ stats, t, time, difficulty }: ZombiesMapDifficultyTableProps) => (
+  <Table.ts title={difficulty}>
+    <Table.tr>
+      {time === "LIVE" && stats.wins === 0 ?
+        <Table.td title={t("stats.bestRound")} value={t(stats.bestRound)} color="§a" /> :
+        <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />}
+      <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§e" />
+      <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+    </Table.tr>
+    <Historical.exclude time={time}>
+      <Table.tr>
+        <Table.td title={t("stats.fastestWin")} value={stats.fastestWin ? formatTime(stats.fastestWin) : "N/A"} color="§b" size="small" />
+        <Table.td title={t("stats.totalRounds")} value={t(stats.totalRounds)} color="§d" size="small" />
+      </Table.tr>
+    </Historical.exclude>
+  </Table.ts>
+);
+
+export interface ZombiesMapTableProps {
+  stats: ZombiesMap;
+  t: LocalizeFunction;
+  time: ProfileTime;
+}
+
+export const ZombiesMapTable = ({ stats, t, time }: ZombiesMapTableProps) => (
+  <Table.table>
+    <Table.tr>
+      <ZombiesMapDifficultyTable difficulty="§6Overall" stats={stats.overall} t={t} time={time} />
+      <ZombiesMapDifficultyTable difficulty="§aNormal" stats={stats.normal} t={t} time={time} />
+    </Table.tr>
+    <Table.tr>
+      <ZombiesMapDifficultyTable difficulty="§cHard" stats={stats.hard} t={t} time={time} />
+      <ZombiesMapDifficultyTable difficulty="§4RIP" stats={stats.rip} t={t} time={time} />
+    </Table.tr>
+  </Table.table>
+);
