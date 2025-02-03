@@ -18,6 +18,14 @@ import {
 } from "class-validator";
 import { Transform } from "class-transformer";
 
+export class UserIdDto {
+  @ApiProperty({ description: "Discord ID" })
+  @IsString()
+  @MinLength(17)
+  @MaxLength(20)
+  public id: string;
+}
+
 export class UserDto {
   @ApiProperty({ description: "Discord ID or UUID" })
   @IsString()
