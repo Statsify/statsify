@@ -16,15 +16,16 @@ import {
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
 import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { BaseProfileProps, ProfileTime } from "#commands/base.hypixel-command";
 import type { DuelsModeIcons } from "./duels.command.js";
 
-export interface DuelsProfileProps extends BaseProfileProps {
+export type DuelsProfileProps<T extends ProfileTime> = Omit<BaseProfileProps, "time"> & {
   mode: GameMode<DuelsModes>;
-  modeIcons: DuelsModeIcons;
-}
+  time: T;
+  modeIcons: T extends "LIVE" ? DuelsModeIcons : undefined;
+};
 
-export const DuelsProfile = ({
+export const DuelsProfile = <T extends ProfileTime>({
   skin,
   player,
   background,
@@ -35,7 +36,7 @@ export const DuelsProfile = ({
   t,
   time,
   modeIcons,
-}: DuelsProfileProps) => {
+}: DuelsProfileProps<T>) => {
   const { duels } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -55,7 +56,7 @@ export const DuelsProfile = ({
   if ("kit" in stats)
     sidebar.push([t("stats.kit"), prettify(stats.kit), "§e"]);
 
-  const isTitles = mode.api === "overall" && mode.submode.api === "titles";
+  const isTitles = time === "LIVE" && mode.api === "overall" && mode.submode.api === "titles";
 
   let table: JSX.Element;
 
@@ -75,8 +76,9 @@ export const DuelsProfile = ({
       break;
 
     case "overall":
+      // ensures the profile is not a historical one so modeIcons is defined
       table = isTitles ?
-        <TitlesTable duels={duels} t={t} modeIcons={modeIcons} /> :
+        <TitlesTable duels={duels} t={t} modeIcons={modeIcons!} /> :
         <SingleDuelsGameModeTable stats={duels[mode.api]} t={t} time={time} />;
       break;
 

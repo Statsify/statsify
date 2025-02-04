@@ -42,7 +42,7 @@ export class DuelsCommand extends BaseHypixelCommand<DuelsModes, PreProfileData>
   }
 
   public getModeEmojis(modes: GameModeWithSubModes<DuelsModes>[]): ModeEmoji[] {
-    return modes.map((m) => (t) => t(`emojis:duels.${m.api}`));
+    return getDuelsModeEmojis(modes);
   }
 
   public getProfile(
@@ -51,4 +51,8 @@ export class DuelsCommand extends BaseHypixelCommand<DuelsModes, PreProfileData>
   ): JSX.Element {
     return <DuelsProfile {...base} mode={mode} modeIcons={data.modeIcons} />;
   }
+}
+
+export function getDuelsModeEmojis(modes: GameModeWithSubModes<DuelsModes>[]): ModeEmoji[] {
+  return modes.map((m) => (t) => t(`emojis:duels.${m.api}`));
 }
