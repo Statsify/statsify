@@ -80,4 +80,4 @@ export class GameModes<Modes extends Mode[]> {
 export type ExtractGameModes<T> = T extends GameModes<infer U> ? U : never;
 export type ModeFromGameModes<T extends Mode[]> = Extract<T[number], { api: string }>;
 export type ApiModeFromGameModes<T extends Mode[]> = ModeFromGameModes<T>["api"];
-export type SubModesForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> = Omit<Extract<T[number], { api: M; submodes: SubMode[] }>["submodes"][number], "formatted"> & { formatted: string };
+export type SubModeForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> = Omit<Extract<T[number], { api: M; submodes: SubMode[] }>["submodes"][number], "formatted"> & { formatted: string };

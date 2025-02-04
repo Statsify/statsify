@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE_MODES, ApiModeFromGameModes, ArcadeModes, GameModeWithSubModes, SubModesForMode } from "@statsify/schemas";
+import { ARCADE_MODES, ApiModeFromGameModes, ArcadeModes, GameModeWithSubModes, SubModeForMode } from "@statsify/schemas";
 import { ArcadeProfile } from "./arcade.profile.js";
 import {
   BaseHypixelCommand,
@@ -28,7 +28,7 @@ export class ArcadeCommand extends BaseHypixelCommand<ArcadeModes> {
 
   public getSubModeEmojis<M extends ApiModeFromGameModes<ArcadeModes>>(
     mode: M,
-    submodes: SubModesForMode<ArcadeModes, M>[]
+    submodes: SubModeForMode<ArcadeModes, M>[]
   ): ModeEmoji[] {
     if (mode === "zombies")
       return submodes.map((submode) => (t) => t(`emojis:zombies.${submode.api}`));

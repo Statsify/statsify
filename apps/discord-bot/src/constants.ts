@@ -52,6 +52,7 @@ import {
   SkyWarsModes,
   SmashHeroesModes,
   SpeedUHCModes,
+  SubModeForMode,
   TNTGamesModes,
   TNT_GAMES_MODES,
   TURBO_KART_RACERS_MODES,
@@ -101,9 +102,10 @@ export type GamesWithBackgrounds =
   | QuestModes
   | ChallengeModes;
 
-export const mapBackground = <T extends GamesWithBackgrounds>(
+export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeFromGameModes<T>>(
   modes: GameModes<T>,
-  mode: ApiModeFromGameModes<T>
+  mode: M,
+  submode?: SubModeForMode<T, M>
 ): [game: string, mode: string] => {
   switch (modes) {
     case BEDWARS_MODES: {
@@ -136,7 +138,9 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["bedwars", map];
     }
     case ARCADE_MODES:
-      return ["arcade", mode === "seasonal" ? "overall" : mode];
+      if (mode === "seasonal") return ["arcade", "overall"];
+      if (mode === "zombies" && submode?.api && submode.api !== "overall") return ["arcade", `zombies_${submode.api}`];
+      return ["arcade", mode];
 
     case ARENA_BRAWL_MODES:
       return ["arenabrawl", "overall"];
