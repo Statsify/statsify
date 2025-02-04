@@ -158,6 +158,35 @@
     "LIMBO": "<:UNKNOWN:996630413441245204>",
     "QUEUE": "<:UNKNOWN:996630413441245204>"
   },
+  "arcade": {
+    "overall": "<:sumo:1336079907440164964>",
+    "blockingDead": "<:blockingDead:1336087005595041852>",
+    "bountyHunters": "<:bountyHunters:1336087007038017546>",
+    "creeperAttack": "<:creeperAttack:1336087008547700857>",
+    "dragonWars": "<:dragonWars:1336087010208780421>",
+    "dropper": "<:dropper:1336087011920056444>",
+    "enderSpleef": "<:enderSpleef:1336087013258039468>",
+    "farmHunt": "<:farmHunt:1336087014612664442>",
+    "football": "<:football:1336087015984468008>",
+    "galaxyWars": "<:galaxyWars:1336087017624305737>",
+    "hideAndSeek": "<:hideAndSeek:1336087202228342946>",
+    "holeInTheWall": "<:holeInTheWall:1336087021839581364>",
+    "hypixelSays": "<:hypixelSays:1336087023353593906>",
+    "miniWalls": "<:miniWalls:1336087203759259688>",
+    "partyGames": "<:partyGames:1336087027250364469>",
+    "pixelPainters": "<:pixelPainters:1336087205793501225>",
+    "pixelParty": "<:pixelParty:1336087031461314631>",
+    "seasonal": "<:seasonal:1336090919052771329>",
+    "zombies": "<:zombies:1336087034812436501>",
+    "throwOut": "<:throwOut:1336087207777140736>"
+  },
+  "zombies": {
+    "overall": "<:deadEnd:1336121667444805693>",
+    "alienArcadium": "<:alienArcadium:1336121670762631192>",
+    "badBlood": "<:badBlood:1336121668913070130>",
+    "deadEnd": "<:deadEnd:1336121667444805693>",
+    "prison": "<:prison:1336121672801058977>"
+  },
   "duels": {
     "overall": "<:overall:1336079932044087326>",
     "arena": "<:arena:1336079920744366200>",

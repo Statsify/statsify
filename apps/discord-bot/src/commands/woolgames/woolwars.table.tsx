@@ -8,11 +8,11 @@
 
 import { If, Table } from "#components";
 import type { LocalizeFunction } from "@statsify/discord";
-import type { SubModesForMode, WoolGamesModes, WoolWars, WoolWarsOverall } from "@statsify/schemas";
+import type { SubModeForMode, WoolGamesModes, WoolWars, WoolWarsOverall } from "@statsify/schemas";
 
 export interface WoolWarsTableProps {
   woolwars: WoolWars;
-  submode: SubModesForMode<WoolGamesModes, "woolwars">;
+  submode: SubModeForMode<WoolGamesModes, "woolwars">;
   t: LocalizeFunction;
 }
 

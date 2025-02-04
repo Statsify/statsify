@@ -10,6 +10,7 @@ import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
   ApiModeFromGameModes,
+  ApiSubModeForMode,
   ArcadeModes,
   ArenaBrawlModes,
   BEDWARS_MODES,
@@ -101,9 +102,10 @@ export type GamesWithBackgrounds =
   | QuestModes
   | ChallengeModes;
 
-export const mapBackground = <T extends GamesWithBackgrounds>(
+export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeFromGameModes<T>>(
   modes: GameModes<T>,
-  mode: ApiModeFromGameModes<T>
+  mode: M,
+  submode?: ApiSubModeForMode<T, M>
 ): [game: string, mode: string] => {
   switch (modes) {
     case BEDWARS_MODES: {
@@ -136,7 +138,9 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["bedwars", map];
     }
     case ARCADE_MODES:
-      return ["arcade", mode === "seasonal" ? "overall" : mode];
+      if (mode === "seasonal") return ["arcade", "overall"];
+      if (mode === "zombies" && submode !== "overall") return ["arcade", `zombies_${submode}`];
+      return ["arcade", mode];
 
     case ARENA_BRAWL_MODES:
       return ["arenabrawl", "overall"];

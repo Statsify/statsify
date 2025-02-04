@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ArcadeModes, type Dropper, DropperMaps, MetadataScanner, type SubModesForMode } from "@statsify/schemas";
+import { type ArcadeModes, type Dropper, DropperMaps, MetadataScanner, type SubModeForMode } from "@statsify/schemas";
 import { Historical, If, Table } from "#components";
 import { arrayGroup, formatRaceTime, formatTime } from "@statsify/util";
 import type { LocalizeFunction } from "@statsify/discord";
@@ -14,7 +14,7 @@ import type { ProfileTime } from "#commands/base.hypixel-command";
 
 interface DropperTableProps {
   stats: Dropper;
-  submode: SubModesForMode<ArcadeModes, "dropper">;
+  submode: SubModeForMode<ArcadeModes, "dropper">;
   t: LocalizeFunction;
   time: ProfileTime;
 }
@@ -61,7 +61,7 @@ const EASY_DROPPER_MAP_GROUPS = arrayGroup(DROPPER_MAPS.filter(([_, name]) => na
 interface DropperMapsTableProps {
   dropper: Dropper;
   t: LocalizeFunction;
-  stat: Exclude<SubModesForMode<ArcadeModes, "dropper">["api"], "overall">;
+  stat: Exclude<SubModeForMode<ArcadeModes, "dropper">["api"], "overall">;
 }
 
 const DropperMapsTable = ({ dropper, t, stat }: DropperMapsTableProps) => (

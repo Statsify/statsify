@@ -13,7 +13,7 @@ export type GameMode<Modes extends Mode[]> = {
     api: Key;
     formatted: string;
     hypixel?: string;
-    submode: Extract<Modes[number], { api: Key }> extends { submodes: SubMode[] } ? Omit<Exclude<Extract<Modes[number], { api: Key }>["submodes"], undefined>[number], "formatted"> & { formatted: string } : undefined;
+    submode: [SubModeForMode<Modes, Key>] extends [never] ? undefined : SubModeForMode<Modes, Key>;
   }
 }[ApiModeFromGameModes<Modes>];
 
@@ -22,7 +22,7 @@ export type GameModeWithSubModes<Modes extends Mode[]> = {
     api: Key;
     formatted: string;
     hypixel?: string;
-    submodes: Array<Omit<Exclude<Extract<Modes[number], { api: Key }>["submodes"], undefined>[number], "formatted"> & { formatted: string }>;
+    submodes: SubModeForMode<Modes, Key>[];
   }
 }[ApiModeFromGameModes<Modes>];
 
@@ -80,4 +80,14 @@ export class GameModes<Modes extends Mode[]> {
 export type ExtractGameModes<T> = T extends GameModes<infer U> ? U : never;
 export type ModeFromGameModes<T extends Mode[]> = Extract<T[number], { api: string }>;
 export type ApiModeFromGameModes<T extends Mode[]> = ModeFromGameModes<T>["api"];
-export type SubModesForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> = Omit<Extract<T[number], { api: M; submodes: SubMode[] }>["submodes"][number], "formatted"> & { formatted: string };
+
+type ExtractSubModes<T extends Mode[], M extends ApiModeFromGameModes<T>> = Extract<T[number], { api: M; submodes: SubMode[] }>["submodes"][number];
+
+export type SubModeForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> =
+  [ExtractSubModes<T, M>] extends [never] ?
+    never :
+    ExtractSubModes<T, M> & { formatted: string };
+
+export type ApiSubModeForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> = NeverToUndefined<ExtractSubModes<T, M>["api"]>;
+
+type NeverToUndefined<T> = [T] extends [never] ? undefined : T;

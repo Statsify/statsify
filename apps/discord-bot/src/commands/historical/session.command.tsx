@@ -9,6 +9,8 @@
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
+  type ApiModeFromGameModes,
+  ApiSubModeForMode,
   BEDWARS_MODES,
   BLITZSG_MODES,
   BUILD_BATTLE_MODES,
@@ -16,7 +18,7 @@ import {
   DUELS_MODES,
   GENERAL_MODES,
   GameMode,
-  GameModeWithSubModes,
+  type GameModeWithSubModes,
   GameModes,
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
@@ -27,6 +29,7 @@ import {
   SKYWARS_MODES,
   SMASH_HEROES_MODES,
   SPEED_UHC_MODES,
+  type SubModeForMode,
   TNT_GAMES_MODES,
   TURBO_KART_RACERS_MODES,
   UHC_MODES,
@@ -75,6 +78,7 @@ import { WarlordsProfile } from "../warlords/warlords.profile.js";
 import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
 import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";
 import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
+import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "../arcade/arcade.command.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getDuelsModeEmojis } from "../duels/duels.command.js";
 import { getTheme } from "#themes";
@@ -100,6 +104,8 @@ export class SessionCommand {
         if (mode.api === "partyGames") return mode.submodes.filter((submode) => submode.api !== "roundWins");
         return mode.submodes;
       },
+      getModeEmojis: getArcadeModeEmojis,
+      getSubModeEmojis: getArcadeSubModeEmojis,
     });
   }
 
@@ -351,6 +357,7 @@ export class SessionCommand {
     filterModes,
     filterSubmodes,
     getModeEmojis,
+    getSubModeEmojis,
   }: {
     context: CommandContext;
     modes: GameModes<T>;
@@ -358,6 +365,7 @@ export class SessionCommand {
     filterModes?: (player: Player, modes: GameModeWithSubModes<T>[]) => GameModeWithSubModes<T>[];
     filterSubmodes?: (player: Player, mode: GameModeWithSubModes<T>) => GameModeWithSubModes<T>["submodes"];
     getModeEmojis?(modes: GameModeWithSubModes<T>[]): ModeEmoji[];
+    getSubModeEmojis?<M extends ApiModeFromGameModes<T>>(mode: M, submodes: SubModeForMode<T, M>[]): ModeEmoji[];
   }) {
     const user = context.getUser();
 
@@ -426,10 +434,13 @@ export class SessionCommand {
         },
       };
 
-      const subPages = submodes.map((submode): SubPage => ({
+      const submodeEmojis = getSubModeEmojis ? getSubModeEmojis(mode.api, submodes) : [];
+
+      const subPages = submodes.map((submode, index): SubPage => ({
         label: submode.formatted,
+        emoji: submodeEmojis[index],
         generator: async (t) => {
-          const background = await getBackground(...mapBackground(modes, mode.api));
+          const background = await getBackground(...mapBackground(modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
 
           const profile = getProfile(
             {

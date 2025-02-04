@@ -983,7 +983,7 @@ export class ThrowOut {
   }
 }
 
-export class ZombiesMap {
+export class ZombiesMapDifficulty {
   @Field({
     leaderboard: { additionalFields: ["this.fastestWin"] },
     historical: { enabled: false },
@@ -1009,21 +1009,58 @@ export class ZombiesMap {
   @Field({ leaderboard: { enabled: false } })
   public bestRound: number;
 
-  public constructor(data: APIData, map?: string) {
-    map = map ? `_${map}` : "";
+  @Field()
+  public doorsOpened: number;
 
-    this.wins = data[`wins_zombies${map}`];
-    this.fastestWin =
-      (data[`fastest_time_30_zombies${map ? `${map}_normal` : ""}`] ?? 0) * 1000;
-    this.kills = data[`zombie_kills_zombies${map}`];
-    this.deaths = data[`deaths_zombies${map}`];
-    this.bestRound = data[`best_round_zombies${map}`];
+  @Field()
+  public totalRounds: number;
+
+  public constructor(data: APIData, map?: string, difficulty?: string) {
+    const mode = map ? `_${map}${difficulty ? `_${difficulty}` : ""}` : "";
+
+    this.wins = data[`wins_zombies${mode}`];
+    this.fastestWin = (data[`fastest_time_30_zombies${mode}`] ?? 0) * 1000;
+    this.kills = data[`zombie_kills_zombies${mode}`];
+    this.deaths = data[`deaths_zombies${mode}`];
+    this.bestRound = data[`best_round_zombies${mode}`];
+    this.doorsOpened = data[`deaths_zombies${mode}`];
+    this.totalRounds = data[`total_rounds_survived_zombies${mode}`];
+  }
+}
+
+export class ZombiesMap {
+  @Field()
+  public normal: ZombiesMapDifficulty;
+
+  @Field()
+  public hard: ZombiesMapDifficulty;
+
+  @Field()
+  public rip: ZombiesMapDifficulty;
+
+  @Field()
+  public overall: ZombiesMapDifficulty;
+
+  public constructor(data: APIData, map?: string) {
+    this.normal = new ZombiesMapDifficulty(data, map, "normal");
+    this.hard = new ZombiesMapDifficulty(data, map, "hard");
+    this.rip = new ZombiesMapDifficulty(data, map, "rip");
+    this.overall = new ZombiesMapDifficulty(data, map);
+
+    this.overall.fastestWin = Math.min(
+      this.normal.fastestWin || Number.MAX_SAFE_INTEGER,
+      this.hard.fastestWin || Number.MAX_SAFE_INTEGER,
+      this.rip.fastestWin || Number.MAX_SAFE_INTEGER
+    );
+    this.overall.fastestWin = this.overall.fastestWin === Number.MAX_SAFE_INTEGER ?
+      0 :
+      this.overall.fastestWin;
   }
 }
 
 export class Zombies {
   @Field()
-  public overall: ZombiesMap;
+  public overall: ZombiesMapDifficulty;
 
   @Field()
   public deadEnd: ZombiesMap;
@@ -1038,7 +1075,7 @@ export class Zombies {
   public prison: ZombiesMap;
 
   public constructor(data: APIData) {
-    this.overall = new ZombiesMap(data);
+    this.overall = new ZombiesMapDifficulty(data);
     this.deadEnd = new ZombiesMap(data, "deadend");
     this.badBlood = new ZombiesMap(data, "badblood");
     this.alienArcadium = new ZombiesMap(data, "alienarcadium");
