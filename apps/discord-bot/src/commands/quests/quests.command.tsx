@@ -15,7 +15,7 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { GameModes, QUEST_MODES, QuestModes, QuestTime } from "@statsify/schemas";
+import { QUEST_MODES, QuestTime } from "@statsify/schemas";
 import { QuestProfileProps, QuestsProfile } from "./quests.profile.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -24,7 +24,7 @@ import { render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.quests") })
 export class QuestsCommand {
-  private readonly modes: GameModes<QuestModes> = QUEST_MODES;
+  private readonly modes = QUEST_MODES;
 
   public constructor(
     private readonly apiService: ApiService,

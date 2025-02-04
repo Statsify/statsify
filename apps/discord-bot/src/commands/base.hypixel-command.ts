@@ -24,7 +24,7 @@ import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { noop } from "@statsify/util";
 import { render } from "@statsify/rendering";
-import type { ApiModeFromGameModes, GameMode, GameModeWithSubModes, GameModes, Player, SubModeForMode, User } from "@statsify/schemas";
+import type { ApiModeFromGameModes, ApiSubModeForMode, GameMode, GameModeWithSubModes, GameModes, Player, SubModeForMode, User } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
 
 export type ProfileTime = "LIVE" | HistoricalTimeData;
@@ -129,7 +129,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
         label: submode.formatted,
         emoji: submodeEmojis[index],
         generator: async (t) => {
-          const background = await getBackground(...mapBackground(this.modes, mode.api, submode as SubModeForMode<T, (typeof mode)["api"]>));
+          const background = await getBackground(...mapBackground(this.modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
 
           const gameMode = {
             api: mode.api,
