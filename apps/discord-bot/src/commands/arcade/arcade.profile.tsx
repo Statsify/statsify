@@ -135,7 +135,7 @@ export const ArcadeProfile = ({
     case "zombies":
       table = submode.api === "overall" ?
         <ZombiesTable stats={arcade[api]} t={t} time={time} /> :
-        <ZombiesMapTable stats={arcade[api][submode.api]} t={t} time={time} />;
+        <ZombiesMapTable stats={arcade[api]} map={submode.api} t={t} time={time} />;
       break;
 
     default:
