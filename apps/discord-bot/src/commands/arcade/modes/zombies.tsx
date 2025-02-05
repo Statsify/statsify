@@ -6,28 +6,27 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ApiSubModeForMode, ArcadeModes, Zombies, ZombiesMapDifficulty } from "@statsify/schemas";
 import { Historical, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
-import { Zombies, ZombiesMap, ZombiesMapDifficulty } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { ProfileTime } from "#commands/base.hypixel-command";
 
 interface ZombiesMapColumnProps {
   title: string;
-  stats: ZombiesMap;
+  stats: ZombiesMapDifficulty;
   t: LocalizeFunction;
   time: ProfileTime;
 }
 
 const ZombiesMapColumn = ({ title, stats, t, time }: ZombiesMapColumnProps) => {
-  const mapStat =
-    (stats.overall.bestRound >= 30 && stats.overall.wins >= 1) ?
-      [t("stats.fastestWin"), formatTime(stats.overall.fastestWin)] :
-      [t("stats.bestRound"), t(stats.overall.bestRound)];
+  const mapStat = stats.wins >= 1 ?
+    [t("stats.fastestWin"), stats.fastestWin ? formatTime(stats.fastestWin) : "N/A"] :
+    [t("stats.bestRound"), t(stats.bestRound)];
 
   return (
     <Table.ts title={title}>
-      <Table.td title={t("stats.wins")} value={t(stats.overall.wins)} color="§a" size="small" />
+      <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" size="small" />
       <Historical.exclude time={time}>
         <Table.td title={mapStat[0]} value={mapStat[1]} color="§e" size="small" />
       </Historical.exclude>
@@ -54,8 +53,8 @@ export const ZombiesTable = ({ stats, t, time }: ZombiesTableProps) => {
         </Table.tr>
       </Table.ts>
       <Table.tr>
-        <ZombiesMapColumn title="§#813781Dead End" stats={deadEnd} t={t} time={time} />
-        <ZombiesMapColumn title="§#8f1721Bad Blood" stats={badBlood} t={t} time={time} />
+        <ZombiesMapColumn title="§#813781Dead End" stats={deadEnd.overall} t={t} time={time} />
+        <ZombiesMapColumn title="§#8f1721Bad Blood" stats={badBlood.overall} t={t} time={time} />
         <ZombiesMapColumn
           title="§#75ae00Alien Arcadium"
           stats={alienArcadium}
@@ -64,7 +63,7 @@ export const ZombiesTable = ({ stats, t, time }: ZombiesTableProps) => {
         />
         <ZombiesMapColumn
           title="§#aaa5c2Prison"
-          stats={prison}
+          stats={prison.overall}
           t={t}
           time={time}
         />
@@ -77,11 +76,10 @@ interface ZombiesMapDifficultyTableProps {
   stats: ZombiesMapDifficulty;
   t: LocalizeFunction;
   time: ProfileTime;
-  difficulty: string;
 }
 
-export const ZombiesMapDifficultyTable = ({ stats, t, time, difficulty }: ZombiesMapDifficultyTableProps) => (
-  <Table.ts title={difficulty}>
+export const ZombiesMapDifficultyTable = ({ stats, t, time }: ZombiesMapDifficultyTableProps) => (
+  <>
     <Table.tr>
       {time === "LIVE" && stats.wins === 0 ?
         <Table.td title={t("stats.bestRound")} value={t(stats.bestRound)} color="§a" /> :
@@ -95,24 +93,35 @@ export const ZombiesMapDifficultyTable = ({ stats, t, time, difficulty }: Zombie
         <Table.td title={t("stats.totalRounds")} value={t(stats.totalRounds)} color="§d" size="small" />
       </Table.tr>
     </Historical.exclude>
-  </Table.ts>
+  </>
 );
 
 export interface ZombiesMapTableProps {
-  stats: ZombiesMap;
+  stats: Zombies;
   t: LocalizeFunction;
   time: ProfileTime;
+  map: Exclude<ApiSubModeForMode<ArcadeModes, "zombies">, "overall">;
 }
 
-export const ZombiesMapTable = ({ stats, t, time }: ZombiesMapTableProps) => (
-  <Table.table>
-    <Table.tr>
-      <ZombiesMapDifficultyTable difficulty="§6Overall" stats={stats.overall} t={t} time={time} />
-      <ZombiesMapDifficultyTable difficulty="§aNormal" stats={stats.normal} t={t} time={time} />
-    </Table.tr>
-    <Table.tr>
-      <ZombiesMapDifficultyTable difficulty="§cHard" stats={stats.hard} t={t} time={time} />
-      <ZombiesMapDifficultyTable difficulty="§4RIP" stats={stats.rip} t={t} time={time} />
-    </Table.tr>
-  </Table.table>
-);
+export const ZombiesMapTable = ({ stats, t, time, map }: ZombiesMapTableProps) => map === "alienArcadium" ?
+  <ZombiesMapDifficultyTable stats={stats[map]} t={t} time={time} /> :
+  (
+    <Table.table>
+      <Table.tr>
+        <Table.ts title="§6Overall">
+          <ZombiesMapDifficultyTable stats={stats[map].overall} t={t} time={time} />
+        </Table.ts>
+        <Table.ts title="§aNormal">
+          <ZombiesMapDifficultyTable stats={stats[map].normal} t={t} time={time} />
+        </Table.ts>
+      </Table.tr>
+      <Table.tr>
+        <Table.ts title="§cHard">
+          <ZombiesMapDifficultyTable stats={stats[map].hard} t={t} time={time} />
+        </Table.ts>
+        <Table.ts title="§4RIP">
+          <ZombiesMapDifficultyTable stats={stats[map].rip} t={t} time={time} />
+        </Table.ts>
+      </Table.tr>
+    </Table.table>
+  );
