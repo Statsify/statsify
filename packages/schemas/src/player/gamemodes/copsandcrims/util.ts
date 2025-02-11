@@ -110,8 +110,8 @@ const EMBLEM_MAP: Record<string, string> = {
   "smg": "ᨢ",
   "pistol": "ᨠ",
   "bullpup": "ᩒᩓ",
-  "scoped_rifle": "ᩖᩗ",
-  "auto_shotgun": "ᩚᩛ",
+  "scopedRifle": "ᩖᩗ",
+  "augoShotgun": "ᩚᩛ",
   "handgun": "ᩞ",
   "sniper": "ᨪᨫ",
   "magnum": "ᨡ",
@@ -142,7 +142,7 @@ const EMBLEM_MAP: Record<string, string> = {
   "death": "☠",
   "lightning": "⚡",
   "king": "♔",
-  "#1": "❶",
+  "num_one": "❶",
   "rage": "(╯°□°)╯",
 };
 
