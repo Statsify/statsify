@@ -107,7 +107,7 @@ const EMBLEM_MAP: Record<string, string> = {
   "helmet": "ᨽ",
   "armor": "ᨾ",
   "knife": "ᨯ",
-  "smg": "ᨢ",
+  "msg": "ᨢ",
   "pistol": "ᨠ",
   "bullpup": "ᩒᩓ",
   "scopedRifle": "ᩖᩗ",
