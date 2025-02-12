@@ -11,6 +11,7 @@ import BedWarsImage from "~/public/bedwars.png";
 import SkyWarsImage from "~/public/skywars.png";
 import DuelsImage from "~/public/duels.png";
 import ArcadeImage from "~/public/arcade.png";
+import BuildBattleImage from "~/public/buildbattle.png";
 
 import Image from "next/image";
 import { cn } from "~/lib/util";
@@ -21,11 +22,12 @@ bedwars:BedWarsImage,
 skywars:SkyWarsImage,
 duels:DuelsImage,
 arcade:ArcadeImage,
+buildbattle:BuildBattleImage
 }
 
 export function Background({ background,className, mask }: { background:keyof typeof Backgrounds,className?: string; mask?: string }) {
   return (
-    <div className={cn("absolute w-screen pointer-events-none -z-50", className)}>
+    <div className={cn("absolute w-full pointer-events-none -z-50", className)}>
       <Image
         src={Backgrounds[background]}
         alt=""

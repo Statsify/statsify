@@ -11,13 +11,40 @@ import { InteractiveLogo } from "./interactive-logo";
 import { SearchIcon } from "~/components/icons/search";
 import { PlayerSection } from "./sections/player-section";
 import { cn } from "~/lib/util";
+import { LeaderboardSection } from "./sections/leaderboard-section";
+import type { PostLeaderboardResponse } from "@statsify/api-client";
 
-export default async function Home() {
+async function getPlayer() {
   const response = await fetch(`https://api.statsify.net/player?key=${process.env.API_KEY}&player=amony`);
   const { player } = await response.json();
+  return player;
+}
+
+async function getLeaderboard() {
+  const response = await fetch(`https://api.statsify.net/player/leaderboards?key=${process.env.API_KEY}`,{
+    method: "POST",
+    headers:{
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+   "field": "stats.uhc.score",
+   "page": 0
+    })
+  });
+
+  const body = await response.json();
+
+  return body as PostLeaderboardResponse;
+}
+
+export default async function Home() {
+  const [player, leaderboard] = await Promise.all([
+    getPlayer(),
+    getLeaderboard()
+  ]);
 
   return (
-    <div>
+    <div className="relative">
       <Background
       background="background"
         className="h-[80dvh]"
@@ -37,6 +64,7 @@ export default async function Home() {
         <InteractiveLogo />
       </div>
       <PlayerSection player={player}/>
+      <LeaderboardSection leaderboard={leaderboard} />
       <div className="h-1000 w-10" />
     </div>
   );
