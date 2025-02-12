@@ -7,14 +7,27 @@
  */
 
 import BackgroundImage from "~/public/background.png";
+import BedWarsImage from "~/public/bedwars.png";
+import SkyWarsImage from "~/public/skywars.png";
+import DuelsImage from "~/public/duels.png";
+import ArcadeImage from "~/public/arcade.png";
+
 import Image from "next/image";
 import { cn } from "~/lib/util";
 
-export function Background({ className, mask }: { className?: string; mask?: string }) {
+const Backgrounds = {
+background:BackgroundImage,
+bedwars:BedWarsImage,
+skywars:SkyWarsImage,
+duels:DuelsImage,
+arcade:ArcadeImage,
+}
+
+export function Background({ background,className, mask }: { background:keyof typeof Backgrounds,className?: string; mask?: string }) {
   return (
     <div className={cn("absolute w-screen pointer-events-none -z-50", className)}>
       <Image
-        src={BackgroundImage}
+        src={Backgrounds[background]}
         alt=""
         fill={true}
         className="object-cover object-top brightness-85"

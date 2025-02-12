@@ -8,9 +8,8 @@
 
 import { Background } from "~/components/ui/background";
 import { InteractiveLogo } from "./interactive-logo";
-import { PlayerProvider } from "../players/[slug]/context";
 import { SearchIcon } from "~/components/icons/search";
-import { Tabs } from "./tabs";
+import { PlayerSection } from "./sections/player-section";
 import { cn } from "~/lib/util";
 
 export default async function Home() {
@@ -20,6 +19,7 @@ export default async function Home() {
   return (
     <div>
       <Background
+      background="background"
         className="h-[80dvh]"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />
@@ -36,32 +36,7 @@ export default async function Home() {
         </div>
         <InteractiveLogo />
       </div>
-      <section className="w-full relative grid grid-rows-[1fr_8fr_1fr] justify-stretch">
-        <Background className="w-full h-full" />
-        <div
-          className="absolute w-full h-full -z-10"
-          style={{
-            background: "linear-gradient(0deg, rgba(17,17,17,1) 10%, rgba(17,17,17,0) 50%, rgba(17,17,17,1) 90%)",
-          }}
-        />
-        <div className="min-h-1" />
-        <div className="flex justify-center">
-          <div className="w-full max-w-[1800px] flex flex-col lg:flex-row justify-around lg:items-center gap-8 pt-8 lg:pt-0">
-            <div className="mx-auto lg:mx-0 flex flex-col gap-4 max-w-100 xl:max-w-120 text-mc-white text-center lg:text-start ">
-              <h1 className="text-mc-7 font-bold">Players</h1>
-              <p className="text-mc-2">Beautiful visuals are provided by Statsify for every game on Hypixel. Simply input /bedwars into Discord to see your BedWars stats or those of your friends. To see further games, type / followed by the name of the game. To quickly search for yourself, you may link your Minecraft account to your Discord with /verify</p>
-            </div>
-            <div
-              className="relative w-full lg:w-fit h-full flex flex-col justify-center items-center gap-8 p-4 lg:p-8 before:absolute before:bg-gradient-to-b before:from-white/20 before:to-white/50 before:mix-blend-overlay before:w-full before:h-full before:-z-20 after:mix-blend-overlay after:w-full after:h-full after:content-[''] after:absolute after:shadow-[0_0_10px_white,0_0_30px_10px_white] after:shadow-white after:-z-20"
-            >
-              <PlayerProvider player={player}>
-                <Tabs />
-              </PlayerProvider>
-            </div>
-          </div>
-        </div>
-        <div className="min-h-1" />
-      </section>
+      <PlayerSection player={player}/>
       <div className="h-1000 w-10" />
     </div>
   );
