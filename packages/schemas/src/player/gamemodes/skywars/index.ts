@@ -10,14 +10,37 @@ import { ChallengesSkyWars, SkyWarsMode } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
+import { SkyWarsPerks } from "./perks.js";
 import { add } from "@statsify/math";
 import { getFormattedLevel, getLevel, getLevelProgress, parseKit } from "./util.js";
 import type { APIData } from "@statsify/util";
 
 export const SKYWARS_MODES = new GameModes([
-  { api: "overall" },
-  { api: "solo" },
-  { api: "doubles" },
+  {
+    api: "overall",
+    submodes: [
+      { api: "stats" },
+      { api: "perks" },
+      { api: "lastHead" },
+      { api: "challenges" },
+    ],
+  },
+  {
+    api: "solo",
+    submodes: [
+      { api: "overall" },
+      { api: "normal" },
+      { api: "insane" },
+    ],
+  },
+  {
+    api: "doubles",
+    submodes: [
+      { api: "overall" },
+      { api: "normal" },
+      { api: "insane" },
+    ],
+  },
 
   { hypixel: "solo_insane_lucky", formatted: "Lucky Solo" },
   { hypixel: "teams_insane_lucky", formatted: "Lucky Doubles" },
@@ -108,6 +131,12 @@ export class SkyWars {
   @Field()
   public challenges: ChallengesSkyWars;
 
+  @Field()
+  public normalPerks: SkyWarsPerks;
+
+  @Field()
+  public insanePerks: SkyWarsPerks;
+
   public constructor(data: APIData, ap: APIData) {
     this.exp = data.skywars_experience ?? 0;
     this.coins = data.coins;
@@ -155,7 +184,11 @@ export class SkyWars {
     );
 
     this.challenges = new ChallengesSkyWars(data);
+
+    this.normalPerks = new SkyWarsPerks(data?.perkslot?.normal ?? {});
+    this.insanePerks = new SkyWarsPerks(data?.perkslot?.insane ?? {});
   }
 }
 
 export * from "./mode.js";
+export * from "./perks.js";

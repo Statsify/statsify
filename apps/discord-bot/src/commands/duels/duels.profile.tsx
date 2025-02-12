@@ -10,22 +10,18 @@ import {
   BridgeDuelsTable,
   MultiDuelsGameModeTable,
   SingleDuelsGameModeTable,
-  TitlesTable,
   UHCDuelsTable,
 } from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
 import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
-import type { BaseProfileProps, ProfileTime } from "#commands/base.hypixel-command";
-import type { DuelsModeIcons } from "./duels.command.js";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
-export type DuelsProfileProps<T extends ProfileTime> = Omit<BaseProfileProps, "time"> & {
+export interface DuelsProfileProps extends BaseProfileProps {
   mode: GameMode<DuelsModes>;
-  time: T;
-  modeIcons: T extends "LIVE" ? DuelsModeIcons : undefined;
-};
+}
 
-export const DuelsProfile = <T extends ProfileTime>({
+export const DuelsProfile = ({
   skin,
   player,
   background,
@@ -35,8 +31,7 @@ export const DuelsProfile = <T extends ProfileTime>({
   mode,
   t,
   time,
-  modeIcons,
-}: DuelsProfileProps<T>) => {
+}: DuelsProfileProps) => {
   const { duels } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -56,8 +51,6 @@ export const DuelsProfile = <T extends ProfileTime>({
   if ("kit" in stats)
     sidebar.push([t("stats.kit"), prettify(stats.kit), "§e"]);
 
-  const isTitles = time === "LIVE" && mode.api === "overall" && mode.submode.api === "titles";
-
   let table: JSX.Element;
 
   switch (mode.api) {
@@ -73,13 +66,6 @@ export const DuelsProfile = <T extends ProfileTime>({
     case "op":
     case "megawalls":
       table = <MultiDuelsGameModeTable stats={duels[mode.api]} t={t} time={time} />;
-      break;
-
-    case "overall":
-      // ensures the profile is not a historical one so modeIcons is defined
-      table = isTitles ?
-        <TitlesTable duels={duels} t={t} modeIcons={modeIcons!} /> :
-        <SingleDuelsGameModeTable stats={duels[mode.api]} t={t} time={time} />;
       break;
 
     default:
@@ -101,19 +87,17 @@ export const DuelsProfile = <T extends ProfileTime>({
         skin={skin}
         name={player.prefixName}
         badge={badge}
-        sidebar={isTitles ? [] : sidebar}
+        sidebar={sidebar}
         title={`§l${FormattedGame.DUELS} §fStats §r(${formattedMode})`}
-        description={isTitles ?
-          undefined :
-          `§7${t("stats.title")}: ${
-            duels[mode.api].titleFormatted
-          }\n${formatProgression({
-            t,
-            label: t("stats.progression.win"),
-            progression: duels[mode.api].progression,
-            currentLevel: duels[mode.api].titleLevelFormatted,
-            nextLevel: duels[mode.api].nextTitleLevelFormatted,
-          })}`}
+        description={`§7${t("stats.title")}: ${
+          duels[mode.api].titleFormatted
+        }\n${formatProgression({
+          t,
+          label: t("stats.progression.win"),
+          progression: duels[mode.api].progression,
+          currentLevel: duels[mode.api].titleLevelFormatted,
+          nextLevel: duels[mode.api].nextTitleLevelFormatted,
+        })}`}
         time={time}
       />
       {table}
