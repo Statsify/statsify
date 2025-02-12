@@ -16,7 +16,13 @@ import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
 import type { APIData } from "@statsify/util";
 
 export const BEDWARS_MODES = new GameModes([
-  { api: "overall" },
+  {
+    api: "overall",
+    submodes: [
+      { api: "stats" },
+      { api: "challenges" },
+    ],
+  },
   { api: "core" },
   { api: "solo", hypixel: "BEDWARS_EIGHT_ONE" },
   { api: "doubles", hypixel: "BEDWARS_EIGHT_TWO" },

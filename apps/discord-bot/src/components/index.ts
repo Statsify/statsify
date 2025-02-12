@@ -19,3 +19,4 @@ export * from "./Sidebar.js";
 export * from "./Skin.js";
 export * from "./Table/index.js";
 export * from "./GameList.js";
+export * from "./WordWrap.js";

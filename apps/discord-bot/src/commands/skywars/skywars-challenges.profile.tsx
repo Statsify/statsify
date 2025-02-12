@@ -19,8 +19,7 @@ export const SkyWarsChallengesProfile = ({
   user,
   badge,
   t,
-  time,
-}: BaseProfileProps) => {
+}: Omit<BaseProfileProps, "time">) => {
   const { challenges } = player.stats.skywars;
   const rows = arrayGroup(Object.entries(challenges), 3);
 
@@ -31,7 +30,7 @@ export const SkyWarsChallengesProfile = ({
         name={player.prefixName}
         badge={badge}
         title={`§l${FormattedGame.SKYWARS} §fChallenges`}
-        time={time}
+        time="LIVE"
       />
       <Table.table>
         {rows.map((row) => (
