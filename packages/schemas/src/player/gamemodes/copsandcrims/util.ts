@@ -61,7 +61,7 @@ const PRESTIGE_EMBLEMS = [
   { req: 42, emblem: "death" },
   { req: 44, emblem: "lightning" },
   { req: 47, emblem: "king" },
-  { req: 49, emblem: "#1" },
+  { req: 49, emblem: "num_one" },
   { req: 50, emblem: "rage" },
 ];
 
