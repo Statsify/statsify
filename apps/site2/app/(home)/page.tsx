@@ -11,9 +11,9 @@ import { InteractiveLogo } from "./interactive-logo";
 import { LeaderboardSection } from "./sections/leaderboard-section";
 import { PlayerSection } from "./sections/player-section";
 import { SearchIcon } from "~/components/icons/search";
+import { SessionSection } from "./sections/session-section";
 import { cn } from "~/lib/util";
 import type { PostLeaderboardResponse } from "@statsify/api-client";
-import { SessionSection } from "./sections/session-section";
 
 async function getPlayer() {
   const response = await fetch(`https://api.statsify.net/player?key=${process.env.API_KEY}&player=amony`);
@@ -66,7 +66,7 @@ export default async function Home() {
       </div>
       <PlayerSection player={player} />
       <LeaderboardSection leaderboard={leaderboard} />
-      <SessionSection />
+      <SessionSection player={player} />
       <div className="h-1000 w-10" />
     </div>
   );

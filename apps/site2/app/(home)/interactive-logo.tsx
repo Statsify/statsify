@@ -9,7 +9,7 @@
 "use client";
 
 import * as motion from "motion/react-client";
-import { AnimatedNumber } from "~/components/ui/animated-number";
+import { AnimatedNumber } from "~/components/animations/number";
 import { Logo } from "~/components/icons/logo";
 import { ReactNode, useEffect, useState } from "react";
 import { SpotlightBox } from "~/components/ui/spotlight-box";
