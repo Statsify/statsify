@@ -1078,7 +1078,11 @@ export class Zombies {
     this.overall = new ZombiesMapDifficulty(data);
     this.deadEnd = new ZombiesMap(data, "deadend");
     this.badBlood = new ZombiesMap(data, "badblood");
+
     this.alienArcadium = new ZombiesMapDifficulty(data, "alienarcadium");
+    // Alien Arcadium doesn't have different difficulties but fastest time is stored as "normal" difficulty
+    this.alienArcadium.fastestWin = (data[`fastest_time_30_zombies_alienarcadium_normal`] ?? 0) * 1000;
+
     this.prison = new ZombiesMap(data, "prison");
   }
 }
