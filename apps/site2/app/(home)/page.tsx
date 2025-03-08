@@ -8,11 +8,12 @@
 
 import { Background } from "~/components/ui/background";
 import { InteractiveLogo } from "./interactive-logo";
-import { SearchIcon } from "~/components/icons/search";
-import { PlayerSection } from "./sections/player-section";
-import { cn } from "~/lib/util";
 import { LeaderboardSection } from "./sections/leaderboard-section";
+import { PlayerSection } from "./sections/player-section";
+import { SearchIcon } from "~/components/icons/search";
+import { cn } from "~/lib/util";
 import type { PostLeaderboardResponse } from "@statsify/api-client";
+import { SessionSection } from "./sections/session-section";
 
 async function getPlayer() {
   const response = await fetch(`https://api.statsify.net/player?key=${process.env.API_KEY}&player=amony`);
@@ -21,15 +22,15 @@ async function getPlayer() {
 }
 
 async function getLeaderboard() {
-  const response = await fetch(`https://api.statsify.net/player/leaderboards?key=${process.env.API_KEY}`,{
+  const response = await fetch(`https://api.statsify.net/player/leaderboards?key=${process.env.API_KEY}`, {
     method: "POST",
-    headers:{
-      "Content-Type": "application/json"
+    headers: {
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
-   "field": "stats.uhc.score",
-   "page": 0
-    })
+      field: "stats.uhc.score",
+      page: 0,
+    }),
   });
 
   const body = await response.json();
@@ -40,17 +41,17 @@ async function getLeaderboard() {
 export default async function Home() {
   const [player, leaderboard] = await Promise.all([
     getPlayer(),
-    getLeaderboard()
+    getLeaderboard(),
   ]);
 
   return (
     <div className="relative">
       <Background
-      background="background"
+        background="background"
         className="h-[80dvh]"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />
-      <div className="w-4/5 max-w-[1800px] mx-auto flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-10 lg:text-start lg:justify-between items-center text-mc-white h-[76dvh]">
+      <div className="w-4/5 max-w-[1800px] mx-auto flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-10 lg:text-start lg:justify-between items-center text-mc-white min-h-[76dvh]">
         <div className="flex flex-col gap-10 lg:gap-6 md:max-w-[500px] xl:max-w-[600px]">
           <div className="flex flex-col gap-3">
             <p className="text-mc-8 xl:text-mc-10 font-bold"><span className="text-[#D0EEFC]">S</span><span className="text-[#8EC3E7]">t</span><span className="text-[#4C97D2]">a</span><span className="text-[#418DCC]">t</span><span className="text-[#3784C5]">s</span><span className="text-[#2C7ABF]">i</span><span className="text-[#2171B8]">f</span><span className="text-[#1668B1]">y</span></p>
@@ -63,8 +64,9 @@ export default async function Home() {
         </div>
         <InteractiveLogo />
       </div>
-      <PlayerSection player={player}/>
+      <PlayerSection player={player} />
       <LeaderboardSection leaderboard={leaderboard} />
+      <SessionSection />
       <div className="h-1000 w-10" />
     </div>
   );

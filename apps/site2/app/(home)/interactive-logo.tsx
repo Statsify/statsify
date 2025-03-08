@@ -58,10 +58,10 @@ export function InteractiveLogo() {
 
   return (
     <div className="relative lg:ml-22 lg:mr-39 scale-79 lg:scale-90 xl:scale-100 transition-transform">
-      <Draggable className="translate-[-50px]  -z-5">
+      <Draggable className="translate-x-[-50px] translate-y-[5px] lg:translate-y-[-50px] -z-5">
         <SpotlightTableData title="Wins" value={wins} className="text-mc-green" />
       </Draggable>
-      <Draggable className="translate-x-[290px] translate-y-[150px]">
+      <Draggable className="translate-x-[280px] translate-y-[150px]">
         <SpotlightTableData title="Losses" value={losses} className="text-mc-red" />
       </Draggable>
       <Draggable className="translate-x-[-90px] translate-y-[260px] ">
