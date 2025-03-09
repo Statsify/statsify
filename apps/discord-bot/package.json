@@ -41,7 +41,10 @@
       "default": "./dist/components/index.js"
     },
     "#commands/*": {
-      "types": "./src/commands/*.ts",
+      "types": [
+        "./src/commands/*.ts",
+        "./src/commands/*.tsx"
+      ],
       "default": "./dist/commands/*.js"
     },
     "#services": {
