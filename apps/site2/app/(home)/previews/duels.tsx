@@ -10,6 +10,7 @@
 
 import { Box } from "~/components/ui/box";
 import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
@@ -39,12 +40,12 @@ export function DuelsPreview({ className }: { className?: string }) {
         <Box containerClass="row-start-4 xl:row-start-3 xl:col-start-2">
           <span className="font-bold"><span className="text-mc-aqua">Duels</span> Stats</span> (Overall)
         </Box>
-        <Box containerClass="row-start-3 xl:row-start-1 xl:row-end-4" contentClass="grid grid-cols-2 xl:flex xl:flex-col justify-center gap-2 text-start">
-          <p><span className="text-mc-dark-green">●</span> Tokens: <span className="text-mc-dark-green">{duels.tokens}</span></p>
-          <p><span className="text-mc-green">●</span> Coins: <span className="text-mc-green">{duels.pingRange}ms</span></p>
-          <p><span className="text-mc-blue">●</span> Blocks: <span className="text-mc-blue">{stats.blocksPlaced}</span></p>
-          <p><span className="text-mc-gold">●</span> Shots Fired: <span className="text-mc-gold">{stats.shotsFired}</span></p>
-        </Box>
+        <Sidebar className="row-start-3 xl:row-start-1 xl:row-end-4">
+          <SidebarItem color="text-mc-dark-green" name="Tokens" value={duels.tokens} />
+          <SidebarItem color="text-mc-green" name="Coins" value={duels.pingRange}ms />
+          <SidebarItem color="text-mc-blue" name="Blocks" value={stats.blocksPlaced} />
+          <SidebarItem color="text-mc-gold" name="Shots Fired" value={stats.shotsFired} />
+        </Sidebar>
       </div>
       <TableData title="Wins" value={stats.wins} color="text-mc-green" />
       <TableData title="Losses" value={stats.losses} color="text-mc-red" />

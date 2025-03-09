@@ -101,6 +101,10 @@
   grid-area: stack;
 }
 
+button {
+  cursor: pointer;
+}
+
 body {
   background-color: #111111;
 }

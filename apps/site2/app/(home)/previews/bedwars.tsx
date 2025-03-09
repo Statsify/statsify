@@ -10,6 +10,7 @@
 
 import { Box } from "~/components/ui/box";
 import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
@@ -39,14 +40,14 @@ export function BedWarsPreview({ className }: { className?: string }) {
         <Box containerClass="row-start-4 xl:row-start-3 xl:col-start-2">
           <span className="font-bold"><span className="text-mc-red">Bed</span>Wars Stats</span> (Overall)
         </Box>
-        <Box containerClass="row-start-3 xl:row-start-1 xl:row-end-4" contentClass="grid grid-cols-2 xl:flex xl:flex-col justify-center gap-2 text-start">
-          <p><span className="text-mc-dark-green">●</span> Tokens: <span className="text-mc-dark-green">{bedwars.tokens}</span></p>
-          <p><span className="text-mc-gray">●</span> Iron: <span className="text-mc-gray">{stats.itemsCollected.iron}</span></p>
-          <p><span className="text-mc-gold">●</span> Gold: <span className="text-mc-gold">{stats.itemsCollected.gold}</span></p>
-          <p><span className="text-mc-aqua">●</span> Diamonds: <span className="text-mc-aqua">{stats.itemsCollected.diamond}</span></p>
-          <p><span className="text-mc-dark-green">●</span> Emeralds: <span className="text-mc-dark-green">{stats.itemsCollected.emerald}</span></p>
-          <p><span className="text-mc-green">●</span> Winstreak: <span className="text-mc-green">{stats.winstreak}</span></p>
-        </Box>
+        <Sidebar className="row-start-3 xl:row-start-1 xl:row-end-4">
+          <SidebarItem color="text-mc-dark-green" name="Tokens" value={bedwars.tokens} />
+          <SidebarItem color="text-mc-gray" name="Iron" value={stats.itemsCollected.iron} />
+          <SidebarItem color="text-mc-gold" name="Gold" value={stats.itemsCollected.gold} />
+          <SidebarItem color="text-mc-aqua" name="Diamonds" value={stats.itemsCollected.diamond} />
+          <SidebarItem color="text-mc-dark-green" name="Emeralds" value={stats.itemsCollected.emerald} />
+          <SidebarItem color="text-mc-green" name="Winstreak" value={stats.winstreak} />
+        </Sidebar>
       </div>
       <TableData title="Wins" value={stats.wins} color="text-mc-green" />
       <TableData title="Losses" value={stats.losses} color="text-mc-red" />

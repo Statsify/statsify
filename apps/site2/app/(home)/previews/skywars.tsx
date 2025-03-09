@@ -10,6 +10,7 @@
 
 import { Box } from "~/components/ui/box";
 import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
@@ -39,14 +40,14 @@ export function SkyWarsPreview({ className }: { className?: string }) {
         <Box containerClass="row-start-4 xl:row-start-3 xl:col-start-2">
           <span className="font-bold"><span className="text-mc-aqua">Sky</span><span className="text-mc-yellow">Wars</span> Stats</span> (Overall)
         </Box>
-        <Box containerClass="row-start-3 xl:row-start-1 xl:row-end-4" contentClass="grid grid-cols-2 xl:flex xl:flex-col justify-center gap-2 text-start">
-          <p><span className="text-mc-gold">●</span> Coins: <span className="text-mc-gold">{skywars.coins}</span></p>
-          <p><span className="text-mc-dark-green">●</span> Tokens: <span className="text-mc-dark-green">{skywars.tokens}</span></p>
-          <p><span className="text-mc-aqua">●</span> Souls: <span className="text-mc-aqua">{skywars.souls}</span></p>
-          <p><span className="text-mc-blue">●</span> Opals: <span className="text-mc-blue">{skywars.opals}</span></p>
-          <p><span className="text-mc-dark-purple">●</span> Heads: <span className="text-mc-dark-purple">{skywars.heads}</span></p>
-          <p><span className="text-mc-pink">●</span> Potions Brewed: <span className="text-mc-pink">{skywars.potionsBrewed}</span></p>
-        </Box>
+        <Sidebar className="row-start-3 xl:row-start-1 xl:row-end-4">
+          <SidebarItem color="text-mc-gold" name="Coins" value={skywars.coins} />
+          <SidebarItem color="text-mc-dark-green" name="Tokens" value={skywars.tokens} />
+          <SidebarItem color="text-mc-aqua" name="Souls" value={skywars.souls} />
+          <SidebarItem color="text-mc-blue" name="Opals" value={skywars.opals} />
+          <SidebarItem color="text-mc-dark-purple" name="Heads" value={skywars.heads} />
+          <SidebarItem color="text-mc-pink" name="Potions Brewed" value={skywars.potionsBrewed} />
+        </Sidebar>
       </div>
       <TableData title="Wins" value={stats.wins} color="text-mc-green" />
       <TableData title="Losses" value={stats.losses} color="text-mc-red" />

@@ -34,7 +34,7 @@ export function WoolWarsPreview({ className }: { className?: string }) {
           Session
         </Box>
         <Box>
-          <span className="font-bold"><span className="text-mc-red">Wool</span><span className="text-mc-blue">Games</span> Stats</span> (Overall)
+          <span className="font-bold"><span className="text-mc-red">Wool</span><span className="text-mc-blue">Games</span> Stats</span> (Wool Wars)
         </Box>
       </div>
       <TableData title="Wins" value={stats.wins} color="text-mc-green" />

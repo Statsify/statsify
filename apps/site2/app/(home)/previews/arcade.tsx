@@ -10,6 +10,7 @@
 
 import { Box } from "~/components/ui/box";
 import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
@@ -65,11 +66,11 @@ export function ArcadePreview({ className }: { className?: string }) {
         <Box containerClass="row-start-4 xl:row-start-3 xl:col-start-2">
           <span className="font-bold"><MinecraftText>§cA§6r§ec§aa§bd§de§f</MinecraftText> Wins</span> (Overall)
         </Box>
-        <Box containerClass="row-start-3 xl:row-start-1 xl:row-end-4" contentClass="grid grid-cols-2 xl:flex xl:flex-col justify-center gap-2 text-start">
-          <p><span className="text-mc-gold">●</span> Coins: <span className="text-mc-gold">{arcade.coins}</span></p>
-          <p><span className="text-mc-yellow">●</span> Conversions: <span className="text-mc-yellow">{arcade.coinConversions}</span></p>
-          <p><span className="text-mc-aqua">●</span> Arcade Wins: <span className="text-mc-aqua">{arcade.wins}</span></p>
-        </Box>
+        <Sidebar className="row-start-3 xl:row-start-1 xl:row-end-4">
+          <SidebarItem color="text-mc-gold" name="Coins" value={arcade.coins} />
+          <SidebarItem color="text-mc-yellow" name="Conversions" value={arcade.coinConversions} />
+          <SidebarItem color="text-mc-aqua" name="Arcade Wins" value={arcade.wins} />
+        </Sidebar>
       </div>
       {rows.slice(0, 2).map((row, index) => row.map(([game, wins]) => (
         <TableData

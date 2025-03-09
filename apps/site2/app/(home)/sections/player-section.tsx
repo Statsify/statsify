@@ -8,6 +8,11 @@
 
 "use client";
 
+import ArcadeIcon from "~/public/icons/arcade.png";
+import BedWarsIcon from "~/public/icons/bedwars.png";
+import DuelsIcon from "~/public/icons/duels.png";
+import Image from "next/image";
+import SkyWarsIcon from "~/public/icons/skywars.png";
 import { ArcadePreview } from "../previews/arcade";
 import { BaseSection } from "./base-section";
 import { BedWarsPreview } from "../previews/bedwars";
@@ -33,7 +38,7 @@ export function PlayerSection({ player }: { player: Player }) {
           <p className="text-mc-2 leading-6">Beautiful visuals are provided by Statsify for every game on Hypixel. Simply input <Command>/bedwars</Command> into Discord to see your BedWars stats or those of your friends. To see further games, type / followed by the name of the game. To quickly search for yourself, you may link your Minecraft account to your Discord with <Command>/verify</Command></p>
         </div>
         <div
-          className="relative w-full lg:w-fit h-full flex flex-col justify-center items-center gap-8 p-4 lg:p-8 before:absolute before:bg-gradient-to-b before:from-white/20 before:to-white/50 before:mix-blend-overlay before:w-full before:h-full before:-z-20 after:mix-blend-overlay after:w-full after:h-full after:content-[''] after:absolute after:shadow-[0_0_10px_white,0_0_30px_10px_white] after:shadow-white after:-z-20"
+          className="relative w-full lg:w-fit h-full flex flex-col justify-center items-center p-4 lg:p-8 before:absolute before:bg-gradient-to-b before:from-white/20 before:to-white/50 before:mix-blend-overlay before:w-full before:h-full before:-z-20 after:mix-blend-overlay after:w-full after:h-full after:content-[''] after:absolute after:shadow-[0_0_10px_white,0_0_30px_10px_white] after:shadow-white after:-z-20"
         >
           <PlayerProvider player={player}>
             <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -45,20 +50,67 @@ export function PlayerSection({ player }: { player: Player }) {
 }
 
 function Tabs({ activeTab, setActiveTab }: { activeTab: Tab; setActiveTab: (activeTab: Tab) => void }) {
+  const games = [
+    {
+      tab: "bedwars",
+      formatted: "BedWars",
+      component: BedWarsPreview,
+      icon: BedWarsIcon,
+    },
+    {
+      tab: "skywars",
+      formatted: "SkyWars",
+      component: SkyWarsPreview,
+      icon: SkyWarsIcon,
+
+    },
+    {
+      tab: "duels",
+      formatted: "Duels",
+      component: DuelsPreview,
+      icon: DuelsIcon,
+
+    },
+    {
+      tab: "arcade",
+      formatted: "Arcade",
+      component: ArcadePreview,
+      icon: ArcadeIcon,
+    },
+  ] as const;
+
   return (
-    <>
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 text-center">
-        <button aria-pressed={activeTab === "bedwars"} className="aria-pressed:font-bold" type="button" onClick={() => setActiveTab("bedwars")}><Box borderRadius={{ bottom: 0 }}>BedWars</Box></button>
-        <button aria-pressed={activeTab === "skywars"} className="aria-pressed:font-bold" type="button" onClick={() => setActiveTab("skywars")}><Box borderRadius={{ bottom: 0 }}>SkyWars</Box></button>
-        <button aria-pressed={activeTab === "duels"} className="aria-pressed:font-bold" type="button" onClick={() => setActiveTab("duels")}><Box borderRadius={{ bottom: 0 }}>Duels</Box></button>
-        <button aria-pressed={activeTab === "arcade"} className="aria-pressed:font-bold" type="button" onClick={() => setActiveTab("arcade")}><Box borderRadius={{ bottom: 0 }}>Arcade</Box></button>
+    <div className="w-fit flex flex-col gap-4">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 text-center xl:w-full">
+        {games.map(({ tab, formatted, icon }) => (
+          <button
+            key={tab}
+            aria-pressed={activeTab === tab}
+            className="group"
+            type="button"
+            onClick={() => setActiveTab(tab)}
+          >
+            <Box borderRadius={{ bottom: 0 }}>
+              <div className="flex items-center justify-center gap-2 text-mc-gray group-aria-pressed:font-bold group-aria-pressed:text-mc-white transition-colors">
+                <Image src={icon} width={32} height={32} alt="icon" style={{ imageRendering: "pixelated" }} className="opacity-80 group-aria-pressed:opacity-100 transition-opacity" />
+                {formatted}
+              </div>
+            </Box>
+          </button>
+        )
+        )}
+
       </div>
+      <div className="w-full h-[2px] bg-black/50" />
       <div className="grid grid-areas-stack">
-        <BedWarsPreview className={cn("grid-area-stack invisible", activeTab === "bedwars" && "visible")} />
-        <SkyWarsPreview className={cn("grid-area-stack invisible", activeTab === "skywars" && "visible")} />
-        <DuelsPreview className={cn("grid-area-stack invisible", activeTab === "duels" && "visible")} />
-        <ArcadePreview className={cn("grid-area-stack invisible", activeTab === "arcade" && "visible")} />
+        {games.map(({ tab, component: GamePreview }) => (
+          <GamePreview
+            key={tab}
+            className={cn("grid-area-stack invisible", activeTab === tab && "visible")}
+          />
+        ))}
       </div>
-    </>
+    </div>
   );
 }
+

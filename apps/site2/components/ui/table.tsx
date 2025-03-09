@@ -8,7 +8,7 @@
 
 import { Box } from "./box";
 
-export function TableData({ title, value, color }: { title: string; value: string;color: string }) {
+export function TableData({ title, value, color }: { title: string; value: string; color: string }) {
   return (
     <Box contentClass={`p-4 flex flex-col justify-center items-center gap-2 ${color}`}>
       <p className="text-mc-2 mx-3">{title}</p>

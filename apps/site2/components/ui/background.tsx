@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import ArcadeImage from "~/public/arcade.png";
-import BackgroundImage from "~/public/background.png";
-import BedWarsImage from "~/public/bedwars.png";
-import BuildBattleImage from "~/public/buildbattle.png";
-import DuelsImage from "~/public/duels.png";
-import SkyWarsImage from "~/public/skywars.png";
-import UHCImage from "~/public/uhc.png";
+import ArcadeImage from "~/public/backgrounds/arcade.png";
+import BackgroundImage from "~/public/backgrounds/background.png";
+import BedWarsImage from "~/public/backgrounds/bedwars.png";
+import BuildBattleImage from "~/public/backgrounds/buildbattle.png";
+import DuelsImage from "~/public/backgrounds/duels.png";
+import SkyWarsImage from "~/public/backgrounds/skywars.png";
+import UHCImage from "~/public/backgrounds/uhc.png";
 
 import Image from "next/image";
 import { cn } from "~/lib/util";
