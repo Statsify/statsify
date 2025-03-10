@@ -13,13 +13,16 @@ import { Box } from "~/components/ui/box";
 import { Fragment } from "react";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { cn } from "~/lib/util";
+import { t } from "~/localize";
 import type { PostLeaderboardResponse } from "@statsify/api-client";
 
-export function LeaderboardPreview({ leaderboard, className }: { leaderboard: PostLeaderboardResponse; className?: string }) {
-
+export function LeaderboardPreview({ leaderboard, className }: {
+  leaderboard: PostLeaderboardResponse;
+  className?: string;
+}) {
   const columns = leaderboard.fields.length + 3;
 
-	// [TODO]: fix heads resizing on certain sizes
+  // [TODO]: fix heads resizing on certain sizes
 
   return (
     <div
@@ -41,7 +44,7 @@ export function LeaderboardPreview({ leaderboard, className }: { leaderboard: Po
           <Box containerClass="hidden md:block" contentClass="font-bold flex items-center justify-center">#{player.position}</Box>
           <Box containerClass="hidden md:block" contentClass="py-3 px-5"><Image height={32} width={32} alt={player.name} src={`https://api.statsify.net/skin/head?uuid=${player.id}&size=32&key=${process.env.API_KEY}`} /></Box>
           <Box containerClass="col-span-3 md:col-span-1" contentClass="text-start flex items-center"><MinecraftText>{player.name}</MinecraftText></Box>
-          {player.fields.map((field, index) => <Box key={`${leaderboard.fields[index]}-${player.id}`} contentClass="flex justify-center items-center">{field}</Box>)}
+          {player.fields.map((field, index) => <Box key={`${leaderboard.fields[index]}-${player.id}`} contentClass="flex justify-center items-center">{t(field)}</Box>)}
         </Fragment>
       ))}
     </div>

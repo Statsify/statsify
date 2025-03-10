@@ -26,6 +26,12 @@ const MinecraftFont = localFont({
   variable: "--font-minecraft",
 });
 
+// const MinecraftFont = localFont({
+//   src: "./fonts/Minecraft-VF.ttf",
+//   preload: true,
+//   variable: "--font-minecraft",
+// });
+
 export default function RootLayout({
   children,
 }: Readonly<{

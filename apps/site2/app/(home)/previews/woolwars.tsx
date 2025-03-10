@@ -13,6 +13,7 @@ import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
+import { t } from "~/localize";
 import { usePlayer } from "~/app/players/[slug]/context";
 
 export function WoolWarsPreview({ className }: { className?: string }) {
@@ -22,7 +23,7 @@ export function WoolWarsPreview({ className }: { className?: string }) {
 
   return (
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>
-      <div className="col-span-3 grid grid-cols-[repeat(minmax(min-content,max-content),_2)] lg:grid-cols-[repeat(minmax(min-content,max-content),_3)] gap-2 text-center">
+      <div className="col-span-3 grid grid-cols-content-2 lg:grid-cols-content-3 gap-2 text-center">
         <Skin uuid={player.uuid} containerClass="hidden lg:block lg:col-span-1 lg:row-span-3" contentClass="h-full" />
         <Box containerClass="col-span-2 col-start-1 lg:col-start-2">
           <MinecraftText className="text-mc-4">{player.prefixName}</MinecraftText>
@@ -37,9 +38,9 @@ export function WoolWarsPreview({ className }: { className?: string }) {
           <span className="font-bold"><span className="text-mc-red">Wool</span><span className="text-mc-blue">Games</span> Stats</span> (Wool Wars)
         </Box>
       </div>
-      <TableData title="Wins" value={stats.wins} color="text-mc-green" />
-      <TableData title="Losses" value={stats.losses} color="text-mc-red" />
-      <TableData title="WLR" value={stats.wlr} color="text-mc-gold" />
+      <TableData title="Wins" value={t(stats.wins)} color="text-mc-green" />
+      <TableData title="Losses" value={t(stats.losses)} color="text-mc-red" />
+      <TableData title="WLR" value={t(stats.wlr)} color="text-mc-gold" />
     </div>
   );
 }

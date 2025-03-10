@@ -10,10 +10,12 @@
 
 import { Box } from "~/components/ui/box";
 import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Progression } from "~/components/ui/progression";
 import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
+import { t } from "~/localize";
 import { usePlayer } from "~/app/players/[slug]/context";
 
 export function DuelsPreview({ className }: { className?: string }) {
@@ -23,33 +25,32 @@ export function DuelsPreview({ className }: { className?: string }) {
 
   return (
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>
-      <div className="col-span-3 grid grid-cols-1 xl:grid-cols-[minmax(min-content,max-content)_1fr_minmax(min-content,max-content)] gap-2 text-center">
+      <div className="col-span-3 grid grid-cols-1 xl:grid-cols-balanced gap-2 text-center">
         <Skin uuid={player.uuid} containerClass="xl:row-start-1 xl:row-end-4 hidden xl:block" contentClass="h-full" />
         <Box containerClass="row-start-1 xl:col-start-2">
           <MinecraftText className="text-mc-4">{player.prefixName}</MinecraftText>
         </Box>
-        <Box containerClass="text-mc-gray row-start-2 xl:col-start-2">
-          <p>Title: <MinecraftText>{stats.titleFormatted}</MinecraftText></p>
-          <p>Win Progress: <span className="text-mc-aqua">{stats.progression.current}</span>/<span className="text-mc-green">{stats.progression.max}</span></p>
-          <p>
-            <MinecraftText>{stats.titleLevelFormatted}</MinecraftText>
-            {" "} <span className="text-mc-dark-gray">[</span><span className="text-mc-aqua">■■■■■■■</span>■■■<span className="text-mc-dark-gray">]</span> {" "}
-            <MinecraftText>{stats.nextTitleLevelFormatted}</MinecraftText>
-          </p>
-        </Box>
+        <Progression
+          className="row-start-2 xl:col-start-2"
+          label="Title"
+          metric="Win"
+          progression={stats.progression}
+          currentLevel={stats.titleLevelFormatted}
+          nextLevel={stats.nextTitleLevelFormatted}
+        />
         <Box containerClass="row-start-4 xl:row-start-3 xl:col-start-2">
           <span className="font-bold"><span className="text-mc-aqua">Duels</span> Stats</span> (Overall)
         </Box>
         <Sidebar className="row-start-3 xl:row-start-1 xl:row-end-4">
-          <SidebarItem color="text-mc-dark-green" name="Tokens" value={duels.tokens} />
-          <SidebarItem color="text-mc-green" name="Coins" value={duels.pingRange}ms />
-          <SidebarItem color="text-mc-blue" name="Blocks" value={stats.blocksPlaced} />
-          <SidebarItem color="text-mc-gold" name="Shots Fired" value={stats.shotsFired} />
+          <SidebarItem color="text-mc-dark-green" name="Tokens" value={t(duels.tokens)} />
+          <SidebarItem color="text-mc-green" name="Coins" value={`${duels.pingRange}ms`} />
+          <SidebarItem color="text-mc-blue" name="Blocks" value={t(stats.blocksPlaced)} />
+          <SidebarItem color="text-mc-gold" name="Shots Fired" value={t(stats.shotsFired)} />
         </Sidebar>
       </div>
-      <TableData title="Wins" value={stats.wins} color="text-mc-green" />
-      <TableData title="Losses" value={stats.losses} color="text-mc-red" />
-      <TableData title="WLR" value={stats.wlr} color="text-mc-gold" />
+      <TableData title="Wins" value={t(stats.wins)} color="text-mc-green" />
+      <TableData title="Losses" value={t(stats.losses)} color="text-mc-red" />
+      <TableData title="WLR" value={t(stats.wlr)} color="text-mc-gold" />
     </div>
   );
 }
