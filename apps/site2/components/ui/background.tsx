@@ -15,6 +15,7 @@ import BuildBattleImage from "~/public/backgrounds/buildbattle.png";
 import DuelsImage from "~/public/backgrounds/duels.png";
 import SkyWarsImage from "~/public/backgrounds/skywars.png";
 import UHCImage from "~/public/backgrounds/uhc.png";
+import WoolGamesImage from "~/public/backgrounds/woolgames.png";
 
 import Image from "next/image";
 import { animate, motion, useMotionValue } from "motion/react";
@@ -29,6 +30,7 @@ const Backgrounds = {
   arcade: ArcadeImage,
   buildbattle: BuildBattleImage,
   uhc: UHCImage,
+  woolgames: WoolGamesImage,
 };
 
 export function Background({ background, className, mask }: {

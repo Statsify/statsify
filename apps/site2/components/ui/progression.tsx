@@ -20,13 +20,16 @@ export function Progression({ label, metric, progression, currentLevel, nextLeve
   nextLevel: string;
   className?: string;
 }) {
+  const max = 10;
+  const count = Math.ceil(max * progression.percent);
+
   return (
     <Box containerClass={cn("text-mc-gray", className)}>
       <p>{label}: <MinecraftText>{currentLevel}</MinecraftText></p>
       <p>{metric} Progress: <span className="text-mc-aqua">{t(progression.current)}</span>/<span className="text-mc-green">{t(progression.max)}</span></p>
       <p>
         <MinecraftText>{currentLevel}</MinecraftText>
-        {" "} <span className="text-mc-dark-gray">[</span><span className="text-mc-aqua">■■■■■■■</span>■■■<span className="text-mc-dark-gray">]</span> {" "}
+        {" "} <span className="text-mc-dark-gray">[</span><span className="text-mc-aqua">{"■".repeat(count)}</span>■{"■".repeat(max - count)}<span className="text-mc-dark-gray">]</span> {" "}
         <MinecraftText>{nextLevel}</MinecraftText>
       </p>
     </Box>

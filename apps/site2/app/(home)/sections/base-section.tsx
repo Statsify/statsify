@@ -7,11 +7,12 @@
  */
 
 import { Background } from "~/components/ui/background";
+import { cn } from "~/lib/util";
 import type { ComponentProps, ReactNode } from "react";
 
-export function BaseSection({ children, background }: Pick<ComponentProps<typeof Background>, "background"> & { children: ReactNode }) {
+export function BaseSection({ children, background, className }: Pick<ComponentProps<typeof Background>, "background"> & { children: ReactNode; className?: string }) {
   return (
-    <section className="w-full relative grid grid-rows-[1fr_8fr_1fr] justify-stretch">
+    <section className="w-full relative grid grid-rows-[1fr_8fr_1fr] first:mt-0 -my-6">
       <Background className="w-full h-full" background={background} />
       <div
         className="absolute w-full h-full -z-10"
@@ -21,7 +22,9 @@ export function BaseSection({ children, background }: Pick<ComponentProps<typeof
       />
       <div className="min-h-1" />
       <div className="flex justify-center">
-        {children}
+        <div className={cn("w-full max-w-[1800px] flex gap-8", className)}>
+          {children}
+        </div>
       </div>
       <div className="min-h-1" />
     </section>

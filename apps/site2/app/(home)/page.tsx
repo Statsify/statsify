@@ -15,8 +15,8 @@ import { SessionSection } from "./sections/session-section";
 import { cn } from "~/lib/util";
 import type { PostLeaderboardResponse } from "@statsify/api-client";
 
-async function getPlayer() {
-  const response = await fetch(`https://api.statsify.net/player?key=${process.env.API_KEY}&player=amony`);
+async function getPlayer(slug: string) {
+  const response = await fetch(`https://api.statsify.net/player?key=${process.env.API_KEY}&player=${slug}`);
   const { player } = await response.json();
   return player;
 }
@@ -39,8 +39,12 @@ async function getLeaderboard() {
 }
 
 export default async function Home() {
-  const [player, leaderboard] = await Promise.all([
-    getPlayer(),
+  const [player1, player2, player3, player4, player5, leaderboard] = await Promise.all([
+    getPlayer("j4cobi"),
+    getPlayer("amony"),
+    getPlayer("ugcodrr"),
+    getPlayer("vnmm"),
+    getPlayer("canadalands"),
     getLeaderboard(),
   ]);
 
@@ -64,9 +68,11 @@ export default async function Home() {
         </div>
         <InteractiveLogo />
       </div>
-      <PlayerSection player={player} />
-      <LeaderboardSection leaderboard={leaderboard} />
-      <SessionSection player={player} />
+      <div>
+        <PlayerSection players={[player1, player2, player3, player4]} />
+        <LeaderboardSection leaderboard={leaderboard} />
+        <SessionSection player={player5} />
+      </div>
       <div className="h-1000 w-10" />
     </div>
   );

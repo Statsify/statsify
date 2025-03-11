@@ -10,6 +10,7 @@
 
 import { Box } from "~/components/ui/box";
 import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Nametag } from "~/components/ui/nametag";
 import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
@@ -61,13 +62,11 @@ export function ArcadePreview({ className }: { className?: string }) {
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-1 xl:grid-cols-balanced gap-2 text-center">
         <Skin uuid={player.uuid} containerClass="xl:row-start-1 xl:row-end-4 hidden xl:block" contentClass="h-full" />
-        <Box containerClass="row-start-1 xl:col-start-2">
-          <MinecraftText className="text-mc-4">{player.prefixName}</MinecraftText>
-        </Box>
-        <Box containerClass="row-start-4 xl:row-start-3 xl:col-start-2">
+        <Nametag className="row-start-1 xl:col-start-2" />
+        <Box containerClass="row-start-3 xl:row-start-2 xl:row-span-2 xl:col-start-2">
           <span className="font-bold"><MinecraftText>§cA§6r§ec§aa§bd§de§f</MinecraftText> Wins</span> (Overall)
         </Box>
-        <Sidebar className="row-start-3 xl:row-start-1 xl:row-end-4">
+        <Sidebar className="row-start-2 xl:row-start-1 xl:row-end-4">
           <SidebarItem color="text-mc-gold" name="Coins" value={t(arcade.coins)} />
           <SidebarItem color="text-mc-yellow" name="Conversions" value={t(arcade.coinConversions)} />
           <SidebarItem color="text-mc-aqua" name="Arcade Wins" value={t(arcade.wins)} />

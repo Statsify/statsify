@@ -9,7 +9,7 @@
 "use client";
 
 import { Box } from "~/components/ui/box";
-import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Nametag } from "~/components/ui/nametag";
 import { Progression } from "~/components/ui/progression";
 import { Sidebar, SidebarItem } from "~/components/ui/sidebar";
 import { Skin } from "~/components/ui/skin";
@@ -27,9 +27,7 @@ export function DuelsPreview({ className }: { className?: string }) {
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-1 xl:grid-cols-balanced gap-2 text-center">
         <Skin uuid={player.uuid} containerClass="xl:row-start-1 xl:row-end-4 hidden xl:block" contentClass="h-full" />
-        <Box containerClass="row-start-1 xl:col-start-2">
-          <MinecraftText className="text-mc-4">{player.prefixName}</MinecraftText>
-        </Box>
+        <Nametag className="row-start-1 xl:col-start-2" />
         <Progression
           className="row-start-2 xl:col-start-2"
           label="Title"
@@ -43,7 +41,7 @@ export function DuelsPreview({ className }: { className?: string }) {
         </Box>
         <Sidebar className="row-start-3 xl:row-start-1 xl:row-end-4">
           <SidebarItem color="text-mc-dark-green" name="Tokens" value={t(duels.tokens)} />
-          <SidebarItem color="text-mc-green" name="Coins" value={`${duels.pingRange}ms`} />
+          <SidebarItem color="text-mc-green" name="Ping Range" value={`${duels.pingRange}ms`} />
           <SidebarItem color="text-mc-blue" name="Blocks" value={t(stats.blocksPlaced)} />
           <SidebarItem color="text-mc-gold" name="Shots Fired" value={t(stats.shotsFired)} />
         </Sidebar>

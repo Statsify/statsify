@@ -9,7 +9,7 @@
 "use client";
 
 import { Box } from "~/components/ui/box";
-import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Nametag } from "~/components/ui/nametag";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
@@ -25,9 +25,7 @@ export function WoolWarsPreview({ className }: { className?: string }) {
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-content-2 lg:grid-cols-content-3 gap-2 text-center">
         <Skin uuid={player.uuid} containerClass="hidden lg:block lg:col-span-1 lg:row-span-3" contentClass="h-full" />
-        <Box containerClass="col-span-2 col-start-1 lg:col-start-2">
-          <MinecraftText className="text-mc-4">{player.prefixName}</MinecraftText>
-        </Box>
+        <Nametag className="col-span-2 col-start-1 lg:col-start-2" />
         <Box containerClass="col-span-2">
           Started 02/13/2025 (23 days ago)
         </Box>

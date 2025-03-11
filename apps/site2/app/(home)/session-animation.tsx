@@ -9,11 +9,11 @@
 "use client";
 
 import { Chevron } from "~/components/icons/chevron";
+import { ObjectSegmentWithTransition, motion, useAnimate, useInView } from "motion/react";
 import { WoolWarsPreview } from "./previews/woolwars";
-import { motion, useAnimate, useInView } from "motion/react";
 import { useEffect, useRef } from "react";
 
-const text = "/session bedwars";
+const text = "/session woolgames";
 const SPLIT_TEXT = [...text];
 
 export function SessionAnimation() {
@@ -22,33 +22,34 @@ export function SessionAnimation() {
   const typingRefs = useRef<HTMLDivElement[]>([]);
   const profileRef = useRef<HTMLDivElement>(null);
 
-  const inView = useInView(scope, { amount: "all" });
+  const inView = useInView(scope, { amount: "some" });
 
   useEffect(() => {
+    if (!searchRef.current || !profileRef.current) return;
+
     if (inView) {
-      const enter = async () => {
-        if (!searchRef.current || !profileRef.current) return;
+      const controls = animate([
+        ...typingRefs.current.map((ref, i) => [
+          ref,
+          { y: 0, opacity: 1 },
+          { delay: i === 0 ? 0.5 : 0, duration: 0.05 },
+        ] satisfies ObjectSegmentWithTransition),
+        [searchRef.current, { opacity: 0 }, { duration: 0.2, delay: 0.4 }],
+        [profileRef.current, { opacity: 1, y: 0, filter: "blur(0px)" }, { duration: 0.2 }],
+      ]);
 
-        for (let i = 0; i < SPLIT_TEXT.length; i++)
-          await animate(typingRefs.current[i], { y: 0, opacity: 1 }, { duration: 0.05 });
-
-        await animate(searchRef.current, { opacity: 0 }, { duration: 0.2, delay: 0.4 });
-        await animate(profileRef.current, { opacity: 1, y: 0, filter: "blur(0px)" }, { duration: 0.2 });
-      };
-
-      enter();
+      return () => controls.cancel();
     } else {
-      const exit = async () => {
-        if (!searchRef.current || !profileRef.current) return;
+      const controls = animate([
+        ...typingRefs.current.map((ref) => [
+          ref,
+          { y: 10, opacity: 0 }, { duration: 0.01 },
+        ] satisfies ObjectSegmentWithTransition),
+        [profileRef.current, { opacity: 0, y: 20, filter: "blur(5px)" }, { duration: 0.2 }],
+        [searchRef.current, { opacity: 1 }, { duration: 0.2 }],
+      ]);
 
-        for (let i = 0; i < SPLIT_TEXT.length; i++)
-          await animate(typingRefs.current[i], { y: 10, opacity: 0 }, { duration: 0.01 });
-
-        await animate(profileRef.current, { opacity: 0, y: 20, filter: "blur(5px)" }, { duration: 0.2 });
-        await animate(searchRef.current, { opacity: 1 }, { duration: 0.2 });
-      };
-
-      exit();
+      return () => controls.cancel();
     }
   }, [inView]);
 
