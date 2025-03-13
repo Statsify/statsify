@@ -52,7 +52,7 @@ export default async function Home() {
     getPlayer("ugcodrr"),
     getPlayer("vnmm"),
     getPlayer("canadalands"),
-    getGuild("3li_666"),
+    getGuild("amony"),
     getLeaderboard(),
   ]);
 
