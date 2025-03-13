@@ -9,7 +9,7 @@
 "use client";
 
 import { Chevron } from "~/components/icons/chevron";
-import { ObjectSegmentWithTransition, motion, useAnimate, useInView } from "motion/react";
+import { ObjectSegmentWithTransition, cubicBezier, motion, useAnimate, useInView, useMotionValue } from "motion/react";
 import { WoolWarsPreview } from "./previews/woolwars";
 import { useEffect, useRef } from "react";
 
@@ -21,6 +21,7 @@ export function SessionAnimation() {
   const searchRef = useRef<HTMLDivElement>(null);
   const typingRefs = useRef<HTMLDivElement[]>([]);
   const profileRef = useRef<HTMLDivElement>(null);
+  const daysBack = useMotionValue(0);
 
   const inView = useInView(scope, { amount: "some" });
 
@@ -36,6 +37,7 @@ export function SessionAnimation() {
         ] satisfies ObjectSegmentWithTransition),
         [searchRef.current, { opacity: 0 }, { duration: 0.2, delay: 0.4 }],
         [profileRef.current, { opacity: 1, y: 0, filter: "blur(0px)" }, { duration: 0.2 }],
+        [daysBack, 7, { duration: 2.5, ease: cubicBezier(0.21, 0.73, 0.63, 0.89) }],
       ]);
 
       return () => controls.cancel();
@@ -43,10 +45,11 @@ export function SessionAnimation() {
       const controls = animate([
         ...typingRefs.current.map((ref) => [
           ref,
-          { y: 10, opacity: 0 }, { duration: 0.01 },
+          { y: 10, opacity: 0 }, { duration: 0 },
         ] satisfies ObjectSegmentWithTransition),
-        [profileRef.current, { opacity: 0, y: 20, filter: "blur(5px)" }, { duration: 0.2 }],
-        [searchRef.current, { opacity: 1 }, { duration: 0.2 }],
+        [profileRef.current, { opacity: 0, y: 20, filter: "blur(5px)" }, { duration: 0 }],
+        [searchRef.current, { opacity: 1 }, { duration: 0 }],
+        [daysBack, 0, { duration: 0 }],
       ]);
 
       return () => controls.cancel();
@@ -73,7 +76,7 @@ export function SessionAnimation() {
         </div>
       </motion.div>
       <motion.div ref={profileRef} initial={{ opacity: 0, y: 20, filter: "blur(5px)" }}>
-        <WoolWarsPreview />
+        <WoolWarsPreview daysBack={daysBack} />
       </motion.div>
     </div>
   );

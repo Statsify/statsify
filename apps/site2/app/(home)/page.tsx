@@ -7,6 +7,7 @@
  */
 
 import { Background } from "~/components/ui/background";
+import { GuildSection } from "./sections/guild-section";
 import { InteractiveLogo } from "./interactive-logo";
 import { LeaderboardSection } from "./sections/leaderboard-section";
 import { PlayerSection } from "./sections/player-section";
@@ -19,6 +20,12 @@ async function getPlayer(slug: string) {
   const response = await fetch(`https://api.statsify.net/player?key=${process.env.API_KEY}&player=${slug}`);
   const { player } = await response.json();
   return player;
+}
+
+async function getGuild(slug: string) {
+  const response = await fetch(`https://api.statsify.net/guild?key=${process.env.API_KEY}&guild=${slug}&type=PLAYER`);
+  const { guild } = await response.json();
+  return guild;
 }
 
 async function getLeaderboard() {
@@ -39,12 +46,13 @@ async function getLeaderboard() {
 }
 
 export default async function Home() {
-  const [player1, player2, player3, player4, player5, leaderboard] = await Promise.all([
+  const [player1, player2, player3, player4, player5, guild, leaderboard] = await Promise.all([
     getPlayer("j4cobi"),
     getPlayer("amony"),
     getPlayer("ugcodrr"),
     getPlayer("vnmm"),
     getPlayer("canadalands"),
+    getGuild("3li_666"),
     getLeaderboard(),
   ]);
 
@@ -72,6 +80,7 @@ export default async function Home() {
         <PlayerSection players={[player1, player2, player3, player4]} />
         <LeaderboardSection leaderboard={leaderboard} />
         <SessionSection player={player5} />
+        <GuildSection guild={guild} />
       </div>
       <div className="h-1000 w-10" />
     </div>

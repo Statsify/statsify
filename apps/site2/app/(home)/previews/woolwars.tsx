@@ -9,17 +9,39 @@
 "use client";
 
 import { Box } from "~/components/ui/box";
+import { MotionValue, easeIn, easeOut, motion, useTransform } from "motion/react";
+import { MotionValueTableData } from "~/components/ui/table";
 import { Nametag } from "~/components/ui/nametag";
 import { Skin } from "~/components/ui/skin";
-import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
-import { t } from "~/localize";
+import { formatDate, subDays } from "date-fns";
 import { usePlayer } from "~/app/players/[slug]/context";
 
-export function WoolWarsPreview({ className }: { className?: string }) {
+export function WoolWarsPreview({ className, daysBack }: { className?: string; daysBack: MotionValue<number> }) {
   const player = usePlayer();
-  const { woolwars } = player.stats.woolgames;
-  const stats = woolwars.overall;
+  const today = new Date();
+
+  const oldDate = useTransform(daysBack, (daysBack) => formatDate(subDays(today, daysBack), "MM/dd/yyyy"));
+
+  const intFormatter = Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
+  });
+
+  const decimalFormatter = Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+  });
+
+  const daysBackFormatted = useTransform(daysBack, intFormatter.format.bind(intFormatter));
+
+  const wins = useTransform(daysBack, [0, 3, 7], [0, 44, 132], { ease: easeIn });
+  const losses = useTransform(daysBack, [0, 3, 7], [0, 21, 42], { ease: easeOut });
+  const wlr = useTransform(() => wins.get() / (losses.get() || 1));
+
+  const winsFormatted = useTransform(wins, intFormatter.format.bind(intFormatter));
+  const lossesFormatted = useTransform(losses, intFormatter.format.bind(intFormatter));
+  const wlrFormatted = useTransform(wlr, decimalFormatter.format.bind(decimalFormatter));
 
   return (
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>
@@ -27,7 +49,7 @@ export function WoolWarsPreview({ className }: { className?: string }) {
         <Skin uuid={player.uuid} containerClass="hidden lg:block lg:col-span-1 lg:row-span-3" contentClass="h-full" />
         <Nametag className="col-span-2 col-start-1 lg:col-start-2" />
         <Box containerClass="col-span-2">
-          Started 02/13/2025 (23 days ago)
+          Started <motion.span>{oldDate}</motion.span> (<motion.span>{daysBackFormatted}</motion.span> days ago)
         </Box>
         <Box containerClass="font-bold">
           Session
@@ -36,9 +58,9 @@ export function WoolWarsPreview({ className }: { className?: string }) {
           <span className="font-bold"><span className="text-mc-red">Wool</span><span className="text-mc-blue">Games</span> Stats</span> (Wool Wars)
         </Box>
       </div>
-      <TableData title="Wins" value={t(stats.wins)} color="text-mc-green" />
-      <TableData title="Losses" value={t(stats.losses)} color="text-mc-red" />
-      <TableData title="WLR" value={t(stats.wlr)} color="text-mc-gold" />
+      <MotionValueTableData title="Wins" value={winsFormatted} color="text-mc-green" />
+      <MotionValueTableData title="Losses" value={lossesFormatted} color="text-mc-red" />
+      <MotionValueTableData title="WLR" value={wlrFormatted} color="text-mc-gold" />
     </div>
   );
 }

@@ -13,6 +13,7 @@ import BackgroundImage from "~/public/backgrounds/background.png";
 import BedWarsImage from "~/public/backgrounds/bedwars.png";
 import BuildBattleImage from "~/public/backgrounds/buildbattle.png";
 import DuelsImage from "~/public/backgrounds/duels.png";
+import GuildImage from "~/public/backgrounds/guild.png";
 import SkyWarsImage from "~/public/backgrounds/skywars.png";
 import UHCImage from "~/public/backgrounds/uhc.png";
 import WoolGamesImage from "~/public/backgrounds/woolgames.png";
@@ -24,6 +25,7 @@ import { useEffect, useRef } from "react";
 
 const Backgrounds = {
   background: BackgroundImage,
+  guild: GuildImage,
   bedwars: BedWarsImage,
   skywars: SkyWarsImage,
   duels: DuelsImage,
