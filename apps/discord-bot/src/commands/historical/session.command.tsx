@@ -49,38 +49,38 @@ import {
   SubCommand,
   SubPage,
 } from "@statsify/discord";
-import { ArcadeProfile } from "../arcade/arcade.profile.js";
-import { ArenaBrawlProfile } from "../arenabrawl/arenabrawl.profile.js";
-import { BedWarsProfile } from "../bedwars/bedwars.profile.js";
-import { BlitzSGProfile } from "../blitzsg/blitzsg.profile.js";
-import { BuildBattleProfile } from "../buildbattle/buildbattle.profile.js";
-import { CopsAndCrimsProfile } from "../copsandcrims/copsandcrims.profile.js";
+import { ArcadeProfile } from "#commands/arcade/arcade.profile";
+import { ArenaBrawlProfile } from "#commands/arenabrawl/arenabrawl.profile";
+import { BedWarsProfile } from "#commands/bedwars/bedwars.profile";
+import { BlitzSGProfile } from "#commands/blitzsg/blitzsg.profile";
+import { BuildBattleProfile } from "#commands/buildbattle/buildbattle.profile";
+import { CopsAndCrimsProfile } from "#commands/copsandcrims/copsandcrims.profile";
 import { DateTime } from "luxon";
-import { DuelsProfile } from "../duels/duels.profile.js";
+import { DuelsProfile } from "#commands/duels/duels.profile";
 import { type GamesWithBackgrounds, mapBackground } from "#constants";
-import { HistoricalGeneralProfile } from "../general/historical-general.profile.js";
+import { HistoricalGeneralProfile } from "#commands/general/historical-general.profile";
 import { HistoricalTimes } from "@statsify/api-client";
-import { MegaWallsProfile } from "../megawalls/megawalls.profile.js";
-import { MurderMysteryProfile } from "../murdermystery/murdermystery.profile.js";
-import { PaintballProfile } from "../paintball/paintball.profile.js";
-import { PitProfile } from "../pit/pit.profile.js";
-import { QuakeProfile } from "../quake/quake.profile.js";
+import { MegaWallsProfile } from "#commands/megawalls/megawalls.profile";
+import { MurderMysteryProfile } from "#commands/murdermystery/murdermystery.profile";
+import { PaintballProfile } from "#commands/paintball/paintball.profile";
+import { PitProfile } from "#commands/pit/pit.profile";
+import { QuakeProfile } from "#commands/quake/quake.profile";
 import { STATUS_COLORS } from "@statsify/logger";
-import { SkyWarsProfile } from "../skywars/skywars.profile.js";
-import { SmashHeroesProfile } from "../smashheroes/smashheroes.profile.js";
-import { SpeedUHCProfile } from "../speeduhc/speeduhc.profile.js";
-import { TNTGamesProfile } from "../tntgames/tntgames.profile.js";
-import { TurboKartRacersProfile } from "../turbokartracers/turbokartracers.profile.js";
-import { UHCProfile } from "../uhc/uhc.profile.js";
-import { VampireZProfile } from "../vampirez/vampirez.profile.js";
-import { WallsProfile } from "../walls/walls.profile.js";
-import { WarlordsProfile } from "../warlords/warlords.profile.js";
-import { WoolGamesProfile } from "../woolgames/woolgames.profile.js";
-import { filterBlitzKits } from "../blitzsg/blitzsg.command.js";
-import { filterMegaWallsKits } from "../megawalls/megawalls.command.js";
-import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "../arcade/arcade.command.js";
+import { SkyWarsProfile } from "#commands/skywars/skywars.profile";
+import { SmashHeroesProfile } from "#commands/smashheroes/smashheroes.profile";
+import { SpeedUHCProfile } from "#commands/speeduhc/speeduhc.profile";
+import { TNTGamesProfile } from "#commands/tntgames/tntgames.profile";
+import { TurboKartRacersProfile } from "#commands/turbokartracers/turbokartracers.profile";
+import { UHCProfile } from "#commands/uhc/uhc.profile";
+import { VampireZProfile } from "#commands/vampirez/vampirez.profile";
+import { WallsProfile } from "#commands/walls/walls.profile";
+import { WarlordsProfile } from "#commands/warlords/warlords.profile";
+import { WoolGamesProfile } from "#commands/woolgames/woolgames.profile";
+import { filterBlitzKits } from "#commands/blitzsg/blitzsg.command";
+import { filterMegaWallsKits } from "#commands/megawalls/megawalls.command";
+import { getArcadeModeEmojis, getArcadeSubModeEmojis } from "#commands/arcade/arcade.command";
 import { getBackground, getLogo } from "@statsify/assets";
-import { getDuelsModeEmojis } from "../duels/duels.command.js";
+import { getDuelsModeEmojis } from "#commands/duels/duels.command";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 import type { BaseProfileProps, ModeEmoji } from "#commands/base.hypixel-command";
@@ -164,7 +164,7 @@ export class SessionCommand {
     return this.run({
       context,
       modes: DUELS_MODES,
-      getProfile: (base, mode) => <DuelsProfile {...base} mode={mode} modeIcons={undefined} />,
+      getProfile: (base, mode) => <DuelsProfile {...base} mode={mode} />,
       filterSubmodes: (_, mode) => {
         if (mode.api === "overall") return mode.submodes.filter((submode) => submode.api !== "titles");
         return mode.submodes;

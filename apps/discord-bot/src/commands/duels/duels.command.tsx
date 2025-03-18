@@ -15,6 +15,7 @@ import {
 } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { DuelsProfile } from "./duels.profile.js";
+import { DuelsTitlesProfile } from "./duels-titles.profile.js";
 import { getAssetPath } from "@statsify/assets";
 import { loadImage } from "@statsify/rendering";
 import { readdir } from "node:fs/promises";
@@ -49,7 +50,8 @@ export class DuelsCommand extends BaseHypixelCommand<DuelsModes, PreProfileData>
     base: BaseProfileProps,
     { mode, data }: ProfileData<DuelsModes, PreProfileData>
   ): JSX.Element {
-    return <DuelsProfile {...base} mode={mode} modeIcons={data.modeIcons} />;
+    if (mode.api === "overall" && mode.submode.api === "titles") return <DuelsTitlesProfile {...base} modeIcons={data.modeIcons} />;
+    return <DuelsProfile {...base} mode={mode} />;
   }
 }
 
