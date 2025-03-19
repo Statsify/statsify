@@ -113,6 +113,10 @@
   grid-template-columns: minmax(min-content, max-content) 1fr minmax(min-content,max-content);
 }
 
+@utility mask-feather-* {
+  mask: linear-gradient(90deg, rgb(0 0 0 / 0) 0%, rgb(0 0 0 / 1) --value(integer)%, rgb(0 0 0 / 1) calc(100% - --value(integer)%), rgb(0 0 0 / 0) 100%);
+}
+
 @layer base {
   button {
     cursor: pointer;
