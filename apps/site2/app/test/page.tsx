@@ -6,19 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box } from "~/components/ui/box";
-import { CardStack } from "~/components/ui/card-stack";
+import { Carousel } from "~/components/ui/card-stack";
 
 export default function TestPage() {
   return (
-    <CardStack>
-      <div className="bg-red-300">
-        <Box>Hello World 1</Box>
-      </div>
-      <div className="bg-yellow-300">Hello World 2</div>
-      <div className="bg-blue-300">Hello World 3</div>
-      <div className="bg-green-300">Hello World 4</div>
-    </CardStack>
+    <Carousel>
+      <div className="bg-red-400 p-10">1</div>
+      <div className="bg-green-400 p-10">2</div>
+      <div className="bg-blue-400 p-10">3</div>
+      <div className="bg-yellow-400 p-10">4</div>
+    </Carousel>
   );
 }
 

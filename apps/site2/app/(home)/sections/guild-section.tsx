@@ -6,10 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background } from "~/components/ui/background";
 import { BaseSection } from "./base-section";
 import { Box } from "~/components/ui/box";
-import { CardStack } from "~/components/ui/card-stack";
+import { Carousel } from "~/components/ui/card-stack";
 import { Command } from "~/components/ui/command";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Skin } from "~/components/ui/skin";
@@ -19,18 +18,12 @@ import type { Guild } from "@statsify/schemas";
 export function GuildSection({ guild }: { guild: Guild }) {
   return (
     <BaseSection background="guild" className="flex-col items-center relative py-24">
-
-      {/* <PlayerProvider player={player}>
-        <SessionAnimation />
-      </PlayerProvider> */}
-
-      <CardStack>
+      <Carousel>
         <GuildOverall guild={guild} />
         <GuildLevelling guild={guild} />
         <GuildTop guild={guild} />
-        {/* <GuildMember guild={guild} /> */}
-      </CardStack>
-
+        <GuildMember guild={guild} />
+      </Carousel>
       <div className="mx-auto lg:mx-0 flex flex-col gap-4 max-w-120 xl:max-w-200 text-mc-white text-center lg:text-start">
         <h1 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow text-center">Guilds</h1>
         <p className="text-mc-2 leading-6 text-center">Using session stats, Statsify allows you to display your stats as if you began playing today. There is no need to worry about your past losses, you can just focus on the now. To quickly obtain your session stats, type <Command>/session</Command> followed by the game of your choice. For example, enter <Command>/session tntgames</Command> to get your session TNT Games stats. Session stats are tracked independently of your overall stats so you can reset them via <Command>/reset session</Command>.</p>
@@ -41,8 +34,7 @@ export function GuildSection({ guild }: { guild: Guild }) {
 
 function GuildOverall({ guild }: { guild: Guild }) {
   return (
-    <div className="p-4 relative shadow-md grid grid-cols-2 gap-2 isolate">
-      <Background background="guild" className="h-full" />
+    <div className="relative grid grid-cols-2 gap-2 isolate">
       <Box containerClass="col-span-2 text-center"><MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText></Box>
       <Box><p className="text-mc-2 text-mc-gray text-center">Guild Info</p></Box>
       <Box><p className="text-mc-2 text-mc-gray text-center">Guild Description</p></Box>
@@ -63,7 +55,7 @@ function GuildOverall({ guild }: { guild: Guild }) {
           Guild Level: <span className="text-mc-white">{guild.level}</span>
         </p>
       </Box>
-      <Box containerClass="max-w-132 leading-[24px]">
+      <Box containerClass="max-w-120 leading-[24px]">
         {guild.description}
       </Box>
       <Box containerClass="col-span-2 text-center"><p className="text-mc-2 text-mc-gray">Preferred Games</p></Box>
@@ -78,8 +70,7 @@ function GuildOverall({ guild }: { guild: Guild }) {
 
 function GuildLevelling({ guild }: { guild: Guild }) {
   return (
-    <div className="p-4 relative shadow-md grid grid-cols-3 gap-2">
-      <Background background="guild" className="h-full" />
+    <div className="relative grid grid-cols-3 gap-2">
       <Box containerClass="col-span-3 text-center"><MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText></Box>
       <Box containerClass="leading-[24px] col-span-3 text-center">
         <p className="text-mc-gray">
@@ -102,8 +93,7 @@ function GuildLevelling({ guild }: { guild: Guild }) {
 
 function GuildTop({ guild }: { guild: Guild }) {
   return (
-    <div className="p-4 relative shadow-md grid grid-cols-2 gap-2">
-      <Background background="guild" className="h-full" />
+    <div className="relative grid grid-cols-2 gap-2">
       <Box containerClass="col-span-2 text-center"><MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText></Box>
       <Box containerClass="col-span-2 text-center"><p className="text-mc-dark-green font-bold">GEXP for Today</p></Box>
       <div className="flex gap-2">
@@ -142,8 +132,7 @@ function GuildTop({ guild }: { guild: Guild }) {
 
 function GuildMember({ guild }: { guild: Guild }) {
   return (
-    <div className="p-4 relative shadow-md">
-      <Background background="guild" className="h-full" />
+    <div className="relative">
       <div className="flex gap-2">
         <Skin uuid={guild.members[8].uuid} contentClass="h-full" />
         <div className="flex flex-col gap-2">
