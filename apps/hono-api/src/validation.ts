@@ -33,3 +33,6 @@ export const UserSlugSchema = z.union([
   UuidSchema,
   DiscordIdSchema,
 ]);
+
+export const CacheLevelSchema = z.enum(["Cache", "CacheOnly", "Live"]);
+export type CacheLevel = z.infer<typeof CacheLevelSchema>;

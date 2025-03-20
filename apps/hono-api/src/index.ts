@@ -10,12 +10,14 @@ import { Hono } from "hono";
 import { playersRouter } from "./routes/players.js";
 import { serve } from "@hono/node-server";
 import { showRoutes } from "hono/dev";
+import { skinsRouter } from "./routes/skins.js";
 import { usersRouter } from "./routes/users.js";
 import "./db.js";
 
 const app = new Hono()
   .route("/users", usersRouter)
   .route("/players", playersRouter)
+  .route("/skins", skinsRouter)
   .get("/", (c) => c.text("Hello Hono!"));
 
 serve({
