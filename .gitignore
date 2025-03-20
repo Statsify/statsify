@@ -24,3 +24,4 @@ apps/support-bot/commands.json
 Cargo.lock
 /target
 *.node
+site2
