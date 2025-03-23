@@ -6,7 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { z } from "zod";
+import { Env, Input, MiddlewareHandler, ValidationTargets } from "hono";
+import { ZodSchema, z } from "zod";
+import { zValidator } from "@hono/zod-validator";
 
 export const UuidSchema = z
   .string()
@@ -36,3 +38,27 @@ export const UserSlugSchema = z.union([
 
 export const CacheLevelSchema = z.enum(["Cache", "CacheOnly", "Live"]);
 export type CacheLevel = z.infer<typeof CacheLevelSchema>;
+
+export function validator<
+  T extends ZodSchema<any, z.ZodTypeDef, any>,
+  Target extends keyof ValidationTargets,
+  E extends Env,
+  P extends string,
+  I extends Input = {
+    in: { [K in Target]: z.input<T> };
+    out: { [K_2 in Target]: z.output<T>; };
+  }
+>(
+  target: Target,
+  schema: T
+): MiddlewareHandler<E, P, I> {
+  // zValidator has strange typing where it only accepts string inputs for certain targets
+  // By typing the input more simply it lets numbers and other stringifiable types be passed through the hono client
+  return zValidator(target, schema, (result, c) => {
+    if (!result.success) {
+      return c.json({ success: false, issues: result.error.flatten().fieldErrors }, 400);
+    }
+
+    return result.data;
+  }) as unknown as MiddlewareHandler<E, P, I>;
+}

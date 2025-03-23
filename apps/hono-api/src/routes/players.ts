@@ -6,29 +6,66 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type CacheLevel, CacheLevelSchema, PlayerSlugSchema } from "../validation.js";
-import { HTTPException } from "hono/http-exception";
+import { ApiException } from "../exception.js";
+import { type CacheLevel, CacheLevelSchema, PlayerSlugSchema, UsernameSchema, UuidSchema, validator } from "../validation.js";
 import { Hono } from "hono";
+import { type LeaderboardAdditionalStats, createLeaderboardService } from "./leaderboards.js";
 import { Player, deserialize, serialize } from "@statsify/schemas";
+import { createAutocompleteService, onRediSearchError } from "./autocomplete.js";
 import { flatten } from "@statsify/util";
 import { getModelForClass } from "@typegoose/typegoose";
 import { hypixel } from "../hypixel.js";
+import { redis } from "../db/redis.js";
 import { z } from "zod";
-import { zValidator } from "@hono/zod-validator";
-import type { Project, Projection } from "../project.js";
+import type { Project, Projection } from "../db/project.js";
 
 const PlayerModel = getModelForClass(Player);
 
-const PlayerNotFoundException = new HTTPException(404, { message: "Player not found" });
-const StatusNotFoundException = new HTTPException(404, { message: "Status not found" });
+const PlayerNotFoundException = new ApiException(404, ["Player Not Found"]);
+const StatusNotFoundException = new ApiException(404, ["Status Not Found"]);
+const HypixelInternalException = new ApiException(500, ["Hypixel API Failure"]);
 
 // TODO: Update Player, Get Player Group
 
+const { router: autocompleteRouter, addAutocomplete, removeAutocomplete } = createAutocompleteService({
+  constructor: Player,
+  querySchema: UsernameSchema,
+});
+
+const { router: leaderboardsRouter, addLeaderboards, removeLeaderboards } = createLeaderboardService({
+  constructor: Player,
+  identifier: "uuid",
+  identifierSchema: UuidSchema,
+  getAdditionalStats: async (ids, fields) => {
+    const projection = fields.reduce((acc, key) => {
+      acc[key] = true;
+      return acc;
+    }, {} as Record<string, boolean>);
+
+    const players: Player[] = await PlayerModel
+      .aggregate()
+      .match({ uuid: { $in: ids } })
+      .project({
+        ...projection,
+        name: "$displayName",
+        order: {
+          $indexOfArray: [ids, "$uuid"],
+        },
+      })
+      .sort({ order: 1 })
+      .exec();
+
+    return players.map((player) => flatten(player) as LeaderboardAdditionalStats);
+  },
+});
+
 export const playersRouter = new Hono()
+  .route("/search", autocompleteRouter)
+  .route("/leaderboards", leaderboardsRouter)
   // Get Player
   .get(
     "/",
-    zValidator("query", z.object({
+    validator("query", z.object({
       player: PlayerSlugSchema,
       cache: CacheLevelSchema.default("Cache"),
     })),
@@ -41,7 +78,7 @@ export const playersRouter = new Hono()
   // Update Player
   .post("/", (c) => c.text("Hello World"))
   // Delete Player
-  .delete("/", zValidator("query", z.object({ player: PlayerSlugSchema })), async (c) => {
+  .delete("/", validator("query", z.object({ player: PlayerSlugSchema })), async (c) => {
     const { player: tag } = c.req.valid("query");
     const kind = identifyTagKind(tag);
 
@@ -54,15 +91,26 @@ export const playersRouter = new Hono()
 
     if (!players.length) throw PlayerNotFoundException;
 
-    // TODO: delete from leaderboards and autocomplete
-    await PlayerModel
-      .deleteMany({ uuid: { $in: players.map((player) => player.uuid) } })
-      .exec();
+    const pipeline = redis.pipeline();
+
+    for (const player of players) {
+      removeLeaderboards(pipeline, player);
+      removeAutocomplete(pipeline, player.username);
+    }
+
+    try {
+      await Promise.allSettled([
+        PlayerModel.deleteMany({ uuid: { $in: players.map((player) => player.uuid) } }).exec(),
+        pipeline.exec(),
+      ]);
+    } catch (error) {
+      onRediSearchError(error);
+    }
 
     return c.json({ success: true });
   })
   // Get Player Status
-  .get("/status", zValidator("query", z.object({ player: PlayerSlugSchema })), async (c) => {
+  .get("/status", validator("query", z.object({ player: PlayerSlugSchema })), async (c) => {
     const { player: tag } = c.req.valid("query");
 
     const player = await getPlayer(tag, "Cache", {
@@ -75,7 +123,10 @@ export const playersRouter = new Hono()
     const [status, recentGames] = await Promise.all([
       hypixel.status(player.uuid),
       hypixel.recentGames(player.uuid),
-    ]);
+    ]).catch((error) => {
+      console.error(error);
+      throw HypixelInternalException;
+    });
 
     if (!status) throw StatusNotFoundException;
 
@@ -90,7 +141,7 @@ export const playersRouter = new Hono()
   // Get a Group of Players
   .get(
     "/group",
-    zValidator("query", z.object({
+    validator("query", z.object({
       start: z.number().int().nonnegative(),
       end: z.number().int().positive(),
     })),
@@ -130,7 +181,7 @@ async function getPlayer<P extends Projection<Player>>(
     .findOne()
     .where(kind === "name" ? "usernameToLower" : "uuid")
     .equals(tag)
-    .projection(projection)
+    .select(projection as Record<string, boolean>)
     .lean()
     .exec();
 
@@ -138,10 +189,21 @@ async function getPlayer<P extends Projection<Player>>(
 
   if (cachedPlayer && shouldCachePlayer(cachedPlayer, cache)) {
     const player = deserialize(Player, flatten(cachedPlayer));
-    return player;
+    return player as Project<Player, P>;
   }
 
-  const player = await hypixel.player(tag, kind);
+  let player: Player | undefined;
+
+  try {
+    player = await hypixel.player(tag, kind);
+  } catch (error) {
+    console.error(error);
+
+    if (cachedPlayer) {
+      const player = deserialize(Player, flatten(cachedPlayer));
+      return player as Project<Player, P>;
+    }
+  }
 
   if (!player) throw PlayerNotFoundException;
 
@@ -149,34 +211,28 @@ async function getPlayer<P extends Projection<Player>>(
   player.sessionReset = cachedPlayer?.sessionReset;
   player.guildId = cachedPlayer?.guildId;
 
-  if (cachedPlayer && cachedPlayer.username !== player.username) {
-    // TODO: delete autocomplete
-    // await this.playerSearchService.delete(mongoPlayer.username);
-  }
-
-  const flatPlayer = await savePlayer(player, true);
+  const flatPlayer = await savePlayer(player, true, cachedPlayer?.username);
   flatPlayer.isNew = !cachedPlayer;
 
   return deserialize(Player, flatPlayer) as Project<Player, P>;
 }
 
-async function savePlayer(player: Player, registerSearch: boolean) {
+async function savePlayer(player: Player, registerSearch: boolean, oldUsername?: string) {
   const flatPlayer = flatten(player);
 
-  const promises = [
-    PlayerModel
-      .replaceOne({ uuid: player.uuid }, serialize(Player, flatPlayer), { upsert: true })
-      .exec(),
-    // TODO: add player to leaderboards
-    // this.playerLeaderboardService.addLeaderboards(Player, flatPlayer, "uuid", false),
-  ];
+  const pipeline = redis.pipeline();
+  addLeaderboards(pipeline, flatPlayer);
+  if (oldUsername && oldUsername !== player.username) removeAutocomplete(pipeline, oldUsername);
+  if (registerSearch) addAutocomplete(pipeline, player.username);
 
-  if (registerSearch) {
-    // TODO: add player to autocomplete
-    //   promises.push(this.playerSearchService.add(flatPlayer as RedisPlayer));
+  try {
+    await Promise.allSettled([
+      PlayerModel.replaceOne({ uuid: player.uuid }, serialize(Player, flatPlayer), { upsert: true }).exec(),
+      pipeline.exec(),
+    ]);
+  } catch (error) {
+    onRediSearchError(error);
   }
-
-  await Promise.all(promises);
 
   return flatPlayer;
 }

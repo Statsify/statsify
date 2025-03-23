@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { DiscordIdSchema, UserSlugSchema, UuidSchema, VerifyCodeSchema } from "../validation.js";
-import { HTTPException } from "hono/http-exception";
+import { ApiException } from "../exception.js";
+import { DiscordIdSchema, UserSlugSchema, UuidSchema, VerifyCodeSchema, validator } from "../validation.js";
 import { Hono } from "hono";
 import { Readable } from "node:stream";
 import { User, VerifyCode } from "@statsify/schemas";
@@ -18,20 +18,19 @@ import { getModelForClass } from "@typegoose/typegoose";
 import { join } from "node:path";
 import { rm } from "node:fs/promises";
 import { z } from "zod";
-import { zValidator } from "@hono/zod-validator";
 
 const UserModel = getModelForClass(User);
 const VerifyCodeModel = getModelForClass(VerifyCode);
 
-const UserNotFoundException = new HTTPException(404, { message: "User not found" });
-const BadgeNotFoundException = new HTTPException(404, { message: "Badge not found" });
-const VerifyCodeNotFoundException = new HTTPException(404, { message: "Verification code not found" });
+const UserNotFoundException = new ApiException(404, ["User Not Found"]);
+const BadgeNotFoundException = new ApiException(404, ["Badge Not Found"]);
+const VerifyCodeNotFoundException = new ApiException(404, ["Verification Code Not Found"]);
 
 // [TODO]: update user, set badge
 
 export const usersRouter = new Hono()
   // Get User
-  .get("/", zValidator("query", z.object({ tag: UserSlugSchema })), async (c) => {
+  .get("/", validator("query", z.object({ tag: UserSlugSchema })), async (c) => {
     const { tag } = c.req.valid("query");
     const kind = identifyTagKind(tag);
     const user = await UserModel.findOne().where(kind).equals(tag).lean().exec();
@@ -43,7 +42,7 @@ export const usersRouter = new Hono()
   // Update User
   .patch("/", (c) => c.text("hello world"))
   // Verify User
-  .put("/", zValidator("query", z.intersection(
+  .put("/", validator("query", z.intersection(
     z.union([z.object({ uuid: UuidSchema }), z.object({ code: VerifyCodeSchema })]),
     z.object({ id: DiscordIdSchema })
   )), async (c) => {
@@ -87,7 +86,7 @@ export const usersRouter = new Hono()
     return c.json({ success: true, user: user as User });
   })
   // Unverify User
-  .delete("/", zValidator("query", z.object({ tag: UserSlugSchema })), async (c) => {
+  .delete("/", validator("query", z.object({ tag: UserSlugSchema })), async (c) => {
     const { tag } = c.req.valid("query");
     const kind = identifyTagKind(tag);
 
@@ -105,7 +104,7 @@ export const usersRouter = new Hono()
     return c.json({ success: true, user: user as User });
   })
   // Get Badge
-  .get("/badge", zValidator("query", z.object({ tag: UserSlugSchema })), async (c) => {
+  .get("/badge", validator("query", z.object({ tag: UserSlugSchema })), async (c) => {
     const { tag } = c.req.valid("query");
     const kind = identifyTagKind(tag);
     const user = await UserModel.findOne().where(kind).equals(tag).lean().exec();
@@ -134,7 +133,7 @@ export const usersRouter = new Hono()
   // Set Badge
   .put("/badge", (c) => c.text("hello world"))
   // Reset Badge
-  .delete("/badge", zValidator("query", z.object({ tag: UserSlugSchema })), async (c) => {
+  .delete("/badge", validator("query", z.object({ tag: UserSlugSchema })), async (c) => {
     const { tag } = c.req.valid("query");
     const kind = identifyTagKind(tag);
 

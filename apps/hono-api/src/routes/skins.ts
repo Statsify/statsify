@@ -6,25 +6,24 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ApiException } from "../exception.js";
 import { Canvas, Image, loadImage } from "skia-canvas";
-import { HTTPException } from "hono/http-exception";
 import { Hono } from "hono";
 import { Skin } from "@statsify/schemas";
-import { UuidSchema } from "../validation.js";
+import { UuidSchema, validator } from "../validation.js";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
 import { renderSkin } from "@statsify/skin-renderer";
 import { z } from "zod";
-import { zValidator } from "@hono/zod-validator";
 
 const SkinModel = getModelForClass(Skin);
 
-const SkinNotFoundException = new HTTPException(404, { message: "Skin not found" });
-const MojangInternalException = new HTTPException(500, { message: "" });
+const SkinNotFoundException = new ApiException(404, ["Skin Not Found"]);
+const MojangInternalException = new ApiException(500, ["Mojang API Failure"]);
 
 export const skinsRouter = new Hono()
 // Get Player Render
-  .get("/", zValidator("query", z.object({ uuid: UuidSchema })), async (c) => {
+  .get("/", validator("query", z.object({ uuid: UuidSchema })), async (c) => {
     const { uuid } = c.req.valid("query");
     const { texture, slim } = await getSkinTexture(uuid);
 
@@ -37,11 +36,15 @@ export const skinsRouter = new Hono()
     return c.body(render);
   })
 // Get Player Texture Information
-  .get("/textures", (c) => c.text("Hello World"))
+  .get("/textures", validator("query", z.object({ uuid: UuidSchema })), async (c) => {
+    const { uuid } = c.req.valid("query");
+    const skin = await getSkinTextureData(uuid);
+    return c.json({ success: true, skin });
+  })
 // Get Player Head
   .get(
     "/head",
-    zValidator("query", z.object({
+    validator("query", z.object({
       uuid: UuidSchema,
       size: z
         .coerce

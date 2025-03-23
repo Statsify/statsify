@@ -13,6 +13,7 @@
     "@statsify/skin-renderer": "workspace:^",
     "@statsify/util": "workspace:^",
     "@typegoose/typegoose": "^12.6.0",
+    "date-fns": "^4.1.0",
     "hono": "^4.7.4",
     "ioredis": "^5.6.0",
     "mongoose": "^8.5.2",
