@@ -11,6 +11,7 @@ import { type CacheLevel, CacheLevelSchema, PlayerSlugSchema, UsernameSchema, Uu
 import { Hono } from "hono";
 import { type LeaderboardAdditionalStats, createLeaderboardService } from "./leaderboards.js";
 import { Player, deserialize, serialize } from "@statsify/schemas";
+import { auth } from "../auth.js";
 import { createAutocompleteService, onRediSearchError } from "./autocomplete.js";
 import { flatten } from "@statsify/util";
 import { getModelForClass } from "@typegoose/typegoose";
@@ -65,6 +66,7 @@ export const playersRouter = new Hono()
   // Get Player
   .get(
     "/",
+    auth({}),
     validator("query", z.object({
       player: PlayerSlugSchema,
       cache: CacheLevelSchema.default("Cache"),
