@@ -49,7 +49,7 @@ export const Policy = {
     const definedPredicates = predicates.filter((predicate) => predicate !== undefined);
     return (permissions) => definedPredicates.some((predicate) => predicate(permissions));
   },
-  has: (permission: number): Predicate => (permissions) => (permissions & permission) === 1,
+  has: (permission: number): Predicate => (permissions) => (permissions & permission) === permission,
 };
 
 export type AuthOptions = {
