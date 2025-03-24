@@ -6,17 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiException } from "../exception.js";
+import { ApiException } from "../exception.ts";
 import { type Day, endOfToday, nextDay, startOfDay } from "date-fns";
 import { Hono } from "hono";
-import { KeysOfType } from "../db/project.js";
 import { type LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schemas";
-import { Permissions, Policy, type Predicate, auth } from "../auth.js";
-import { redis } from "../db/redis.js";
-import { validator } from "../validation.js";
+import { Permissions, Policy, type Predicate, auth } from "../auth.ts";
+import { redis } from "../db/redis.ts";
+import { validator } from "../validation.ts";
 import { z } from "zod";
 import type { ChainableCommander } from "ioredis";
 import type { Constructor, Flatten } from "@statsify/util";
+import type { KeysOfType } from "../db/project.ts";
 
 const LEADERBOARD_PAGE_SIZE = 10;
 

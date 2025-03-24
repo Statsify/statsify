@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiException } from "../exception.js";
+import { ApiException } from "../exception.ts";
 import { Canvas, Image, loadImage } from "skia-canvas";
 import { Hono } from "hono";
-import { Permissions, Policy, auth } from "../auth.js";
+import { Permissions, Policy, auth } from "../auth.ts";
 import { Skin } from "@statsify/schemas";
-import { UuidSchema, validator } from "../validation.js";
+import { UuidSchema, validator } from "../validation.ts";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
 import { renderSkin } from "@statsify/skin-renderer";

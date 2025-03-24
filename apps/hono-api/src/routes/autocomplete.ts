@@ -6,13 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Constructor } from "@statsify/util";
 import { Hono } from "hono";
-import { Permissions, Policy, Predicate, auth } from "../auth.js";
-import { redis } from "../db/redis.js";
-import { validator } from "../validation.js";
+import { Permissions, Policy, type Predicate, auth } from "../auth.ts";
+import { redis } from "../db/redis.ts";
+import { validator } from "../validation.ts";
 import { z } from "zod";
 import type { ChainableCommander } from "ioredis";
+import type { Constructor } from "@statsify/util";
 
 export type AutocompleteServiceOptions<T> = {
   constructor: Constructor<T>;

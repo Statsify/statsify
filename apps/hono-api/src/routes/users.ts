@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiException } from "../exception.js";
-import { DiscordIdSchema, UserSlugSchema, UuidSchema, VerifyCodeSchema, validator } from "../validation.js";
+import { ApiException } from "../exception.ts";
+import { DiscordIdSchema, UserSlugSchema, UuidSchema, VerifyCodeSchema, validator } from "../validation.ts";
 import { Hono } from "hono";
-import { Permissions, Policy, auth } from "../auth.js";
+import { Permissions, Policy, auth } from "../auth.ts";
 import { Readable } from "node:stream";
 import { User, VerifyCode } from "@statsify/schemas";
 import { config } from "@statsify/util";

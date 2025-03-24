@@ -6,12 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiException } from "../exception.js";
+import { ApiException } from "../exception.ts";
 import { Commands } from "@statsify/schemas";
 import { Hono } from "hono";
-import { Permissions, Policy, auth } from "../auth.js";
+import { Permissions, Policy, auth } from "../auth.ts";
 import { getModelForClass } from "@typegoose/typegoose";
-import { validator } from "../validation.js";
+import { validator } from "../validation.ts";
 import { z } from "zod";
 
 // Store all command analytics in one mongodb document

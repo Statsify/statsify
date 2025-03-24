@@ -6,23 +6,32 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Env, Input, MiddlewareHandler, ValidationTargets } from "hono";
-import { ZodSchema, z } from "zod";
+import { type ZodSchema, z } from "zod";
 import { zValidator } from "@hono/zod-validator";
+import type { Env, Input, MiddlewareHandler, ValidationTargets } from "hono";
 
 export const UuidSchema = z
   .string()
   .transform((value) => value.toLowerCase().replaceAll("-", ""))
-  .pipe(z.string().length(32).regex(/^[0-9a-f]{8}[0-9a-f]{4}4[0-9a-f]{3}[089ab][0-9a-f]{3}[0-9a-f]{12}/i, "Invalid UUID"))
-  .describe("UUID v4");
+  .pipe(z.string().length(32).regex(/^[0-9a-f]{8}[0-9a-f]{4}4[0-9a-f]{3}[089ab][0-9a-f]{3}[0-9a-f]{12}/i, "Invalid UUID"));
+  // .openapi({
+  //   description: "Uuid",
+  //   examples: [
+  //     "618a96fec8b0493fa89427891049550b",
+  //     "618a96fe-c8b0-493f-a894-27891049550b",
+  //   ],
+  // });
 
 export const DiscordIdSchema = z.string();
 
 export const UsernameSchema = z.string()
   .min(1)
   .max(16)
-  .transform((username) => username.toLowerCase())
-  .describe("Minecraft Username");
+  .transform((username) => username.toLowerCase());
+  // .openapi({
+  //   description: "Minecraft Username",
+  //   example: "j4cobi",
+  // });
 
 export const VerifyCodeSchema = z.string().length(4);
 
@@ -30,6 +39,10 @@ export const PlayerSlugSchema = z.union([
   UuidSchema,
   UsernameSchema,
 ]);
+// .openapi({
+//   description: "Username or Uuid",
+//   examples: ["j4cobi", "618a96fec8b0493fa89427891049550b"],
+// });
 
 export const UserSlugSchema = z.union([
   UuidSchema,

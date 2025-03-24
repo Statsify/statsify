@@ -6,19 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiException } from "../exception.js";
-import { type CacheLevel, CacheLevelSchema, PlayerSlugSchema, UsernameSchema, UuidSchema, validator } from "../validation.js";
+import { ApiException } from "../exception.ts";
+import { type CacheLevel, CacheLevelSchema, PlayerSlugSchema, UsernameSchema, UuidSchema, validator } from "../validation.ts";
 import { Hono } from "hono";
-import { type LeaderboardAdditionalStats, createLeaderboardService } from "./leaderboards.js";
-import { Permissions, Policy, auth } from "../auth.js";
+import { type LeaderboardAdditionalStats, createLeaderboardService } from "./leaderboards.ts";
+import { Permissions, Policy, auth } from "../auth.ts";
 import { Player, deserialize, serialize } from "@statsify/schemas";
-import { createAutocompleteService, onRediSearchError } from "./autocomplete.js";
+import { createAutocompleteService, onRediSearchError } from "./autocomplete.ts";
 import { flatten } from "@statsify/util";
 import { getModelForClass } from "@typegoose/typegoose";
-import { hypixel } from "../hypixel.js";
-import { redis } from "../db/redis.js";
+import { hypixel } from "../hypixel.ts";
+import { redis } from "../db/redis.ts";
 import { z } from "zod";
-import type { Project, Projection } from "../db/project.js";
+import type { Project, Projection } from "../db/project.ts";
 
 const PlayerModel = getModelForClass(Player);
 
