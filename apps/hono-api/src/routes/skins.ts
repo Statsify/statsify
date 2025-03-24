@@ -9,6 +9,7 @@
 import { ApiException } from "../exception.js";
 import { Canvas, Image, loadImage } from "skia-canvas";
 import { Hono } from "hono";
+import { Permissions, Policy, auth } from "../auth.js";
 import { Skin } from "@statsify/schemas";
 import { UuidSchema, validator } from "../validation.js";
 import { getMinecraftTexturePath } from "@statsify/assets";
@@ -23,27 +24,36 @@ const MojangInternalException = new ApiException(500, ["Mojang API Failure"]);
 
 export const skinsRouter = new Hono()
 // Get Player Render
-  .get("/", validator("query", z.object({ uuid: UuidSchema })), async (c) => {
-    const { uuid } = c.req.valid("query");
-    const { texture, slim } = await getSkinTexture(uuid);
+  .get(
+    "/",
+    auth({ policy: Policy.has(Permissions.SkinRead) }),
+    validator("query", z.object({ uuid: UuidSchema })),
+    async (c) => {
+      const { uuid } = c.req.valid("query");
+      const { texture, slim } = await getSkinTexture(uuid);
 
-    // @ts-expect-error _data is a property set by our custom loadImage function
-    const buffer = texture["_data"] as Buffer;
+      // @ts-expect-error _data is a property set by our custom loadImage function
+      const buffer = texture["_data"] as Buffer;
 
-    c.header("Content-Type", "image/png");
+      c.header("Content-Type", "image/png");
 
-    const render = await renderSkin(buffer, slim);
-    return c.body(render);
-  })
+      const render = await renderSkin(buffer, slim);
+      return c.body(render);
+    })
 // Get Player Texture Information
-  .get("/textures", validator("query", z.object({ uuid: UuidSchema })), async (c) => {
-    const { uuid } = c.req.valid("query");
-    const skin = await getSkinTextureData(uuid);
-    return c.json({ success: true, skin });
-  })
+  .get(
+    "/textures",
+    auth({ policy: Policy.has(Permissions.SkinRead) }),
+    validator("query", z.object({ uuid: UuidSchema })),
+    async (c) => {
+      const { uuid } = c.req.valid("query");
+      const skin = await getSkinTextureData(uuid);
+      return c.json({ success: true, skin });
+    })
 // Get Player Head
   .get(
     "/head",
+    auth({ policy: Policy.has(Permissions.SkinRead) }),
     validator("query", z.object({
       uuid: UuidSchema,
       size: z

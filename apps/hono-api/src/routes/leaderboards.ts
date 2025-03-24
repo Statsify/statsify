@@ -11,6 +11,7 @@ import { type Day, endOfToday, nextDay, startOfDay } from "date-fns";
 import { Hono } from "hono";
 import { KeysOfType } from "../db/project.js";
 import { type LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schemas";
+import { Permissions, Policy, type Predicate, auth } from "../auth.js";
 import { redis } from "../db/redis.js";
 import { validator } from "../validation.js";
 import { z } from "zod";
@@ -29,6 +30,7 @@ type LeaderboardServiceOptions<T extends object, K extends keyof T> = {
   identifier: T[K] extends string ? K : never;
   identifierSchema: z.ZodSchema<string>;
   getAdditionalStats: (ids: string[], fields: string[]) => Promise<LeaderboardAdditionalStats[]>;
+  policy?: Predicate;
 };
 
 export function createLeaderboardService<T extends object, K extends keyof T>({
@@ -36,6 +38,7 @@ export function createLeaderboardService<T extends object, K extends keyof T>({
   identifier,
   identifierSchema,
   getAdditionalStats,
+  policy,
 }: LeaderboardServiceOptions<T, K>) {
   const name = constructor.name.toLowerCase();
   const fields = LeaderboardScanner.getLeaderboardFields(constructor);
@@ -142,6 +145,7 @@ export function createLeaderboardService<T extends object, K extends keyof T>({
   const router = new Hono()
     .get(
       "/",
+      auth({ policy: Policy.all(Policy.has(Permissions.LeaderboardRead), policy), weight: 3 }),
       validator("query", z.intersection(z.object({ field: fieldsSchema }), z.union([
         z.object({ page: z.coerce.number().int().nonnegative() }),
         z.object({ id: identifierSchema }),

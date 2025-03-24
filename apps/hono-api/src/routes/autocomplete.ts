@@ -8,6 +8,7 @@
 
 import { Constructor } from "@statsify/util";
 import { Hono } from "hono";
+import { Permissions, Policy, Predicate, auth } from "../auth.js";
 import { redis } from "../db/redis.js";
 import { validator } from "../validation.js";
 import { z } from "zod";
@@ -16,6 +17,7 @@ import type { ChainableCommander } from "ioredis";
 export type AutocompleteServiceOptions<T> = {
   constructor: Constructor<T>;
   querySchema: z.ZodSchema<string>;
+  policy?: Predicate;
 };
 
 let loggedRediSearchInstallationError = false;
@@ -31,7 +33,7 @@ export function onRediSearchError(error: unknown) {
   }
 }
 
-export function createAutocompleteService<T>({ constructor, querySchema }: AutocompleteServiceOptions<T>) {
+export function createAutocompleteService<T>({ constructor, querySchema, policy }: AutocompleteServiceOptions<T>) {
   const name = constructor.name.toLowerCase();
   const key = `${name}:autocomplete`;
 
@@ -53,25 +55,29 @@ export function createAutocompleteService<T>({ constructor, querySchema }: Autoc
   }
 
   const router = new Hono()
-    .get("/", validator("query", z.object({ query: querySchema })), async (c) => {
-      const { query } = c.req.valid("query");
+    .get(
+      "/",
+      auth({ policy: Policy.all(Policy.has(Permissions.AutocompleteRead), policy) }),
+      validator("query", z.object({ query: querySchema })),
+      async (c) => {
+        const { query } = c.req.valid("query");
 
-      try {
-        const results = await redis.call(
-          "FT.SUGGET",
-          key,
-          query,
-          "FUZZY",
-          "MAX",
-          "25"
-        ) as string[];
+        try {
+          const results = await redis.call(
+            "FT.SUGGET",
+            key,
+            query,
+            "FUZZY",
+            "MAX",
+            "25"
+          ) as string[];
 
-        return c.json({ success: true, results });
-      } catch (error) {
-        onRediSearchError(error);
-        return c.json({ success: false, issues: ["Failed to search autocomplete"] }, 500);
-      }
-    });
+          return c.json({ success: true, results });
+        } catch (error) {
+          onRediSearchError(error);
+          return c.json({ success: false, issues: ["Failed to search autocomplete"] }, 500);
+        }
+      });
 
   return { router, addAutocomplete, removeAutocomplete };
 }

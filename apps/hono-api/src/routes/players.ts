@@ -10,8 +10,8 @@ import { ApiException } from "../exception.js";
 import { type CacheLevel, CacheLevelSchema, PlayerSlugSchema, UsernameSchema, UuidSchema, validator } from "../validation.js";
 import { Hono } from "hono";
 import { type LeaderboardAdditionalStats, createLeaderboardService } from "./leaderboards.js";
+import { Permissions, Policy, auth } from "../auth.js";
 import { Player, deserialize, serialize } from "@statsify/schemas";
-import { auth } from "../auth.js";
 import { createAutocompleteService, onRediSearchError } from "./autocomplete.js";
 import { flatten } from "@statsify/util";
 import { getModelForClass } from "@typegoose/typegoose";
@@ -26,17 +26,21 @@ const PlayerNotFoundException = new ApiException(404, ["Player Not Found"]);
 const StatusNotFoundException = new ApiException(404, ["Status Not Found"]);
 const HypixelInternalException = new ApiException(500, ["Hypixel API Failure"]);
 
+const PlayerReadOrManage = Policy.some(Policy.has(Permissions.PlayerRead), Policy.has(Permissions.PlayerManage));
+
 // TODO: Update Player, Get Player Group
 
 const { router: autocompleteRouter, addAutocomplete, removeAutocomplete } = createAutocompleteService({
   constructor: Player,
   querySchema: UsernameSchema,
+  policy: PlayerReadOrManage,
 });
 
 const { router: leaderboardsRouter, addLeaderboards, removeLeaderboards } = createLeaderboardService({
   constructor: Player,
   identifier: "uuid",
   identifierSchema: UuidSchema,
+  policy: PlayerReadOrManage,
   getAdditionalStats: async (ids, fields) => {
     const projection = fields.reduce((acc, key) => {
       acc[key] = true;
@@ -66,7 +70,7 @@ export const playersRouter = new Hono()
   // Get Player
   .get(
     "/",
-    auth({}),
+    auth({ policy: PlayerReadOrManage }),
     validator("query", z.object({
       player: PlayerSlugSchema,
       cache: CacheLevelSchema.default("Cache"),
@@ -78,71 +82,84 @@ export const playersRouter = new Hono()
       return c.json({ player });
     })
   // Update Player
-  .post("/", (c) => c.text("Hello World"))
+  .post(
+    "/",
+    auth({ policy: Policy.has(Permissions.PlayerManage) }),
+    (c) => c.text("Hello World")
+  )
   // Delete Player
-  .delete("/", validator("query", z.object({ player: PlayerSlugSchema })), async (c) => {
-    const { player: tag } = c.req.valid("query");
-    const kind = identifyTagKind(tag);
+  .delete(
+    "/",
+    auth({ policy: Policy.has(Permissions.PlayerManage) }),
+    validator("query", z.object({ player: PlayerSlugSchema })),
+    async (c) => {
+      const { player: tag } = c.req.valid("query");
+      const kind = identifyTagKind(tag);
 
-    const players = await PlayerModel
-      .find()
-      .where(kind)
-      .equals(tag)
-      .lean()
-      .exec();
+      const players = await PlayerModel
+        .find()
+        .where(kind)
+        .equals(tag)
+        .lean()
+        .exec();
 
-    if (!players.length) throw PlayerNotFoundException;
+      if (!players.length) throw PlayerNotFoundException;
 
-    const pipeline = redis.pipeline();
+      const pipeline = redis.pipeline();
 
-    for (const player of players) {
-      removeLeaderboards(pipeline, player);
-      removeAutocomplete(pipeline, player.username);
-    }
+      for (const player of players) {
+        removeLeaderboards(pipeline, player);
+        removeAutocomplete(pipeline, player.username);
+      }
 
-    try {
-      await Promise.allSettled([
-        PlayerModel.deleteMany({ uuid: { $in: players.map((player) => player.uuid) } }).exec(),
-        pipeline.exec(),
-      ]);
-    } catch (error) {
-      onRediSearchError(error);
-    }
+      try {
+        await Promise.allSettled([
+          PlayerModel.deleteMany({ uuid: { $in: players.map((player) => player.uuid) } }).exec(),
+          pipeline.exec(),
+        ]);
+      } catch (error) {
+        onRediSearchError(error);
+      }
 
-    return c.json({ success: true });
-  })
+      return c.json({ success: true });
+    })
   // Get Player Status
-  .get("/status", validator("query", z.object({ player: PlayerSlugSchema })), async (c) => {
-    const { player: tag } = c.req.valid("query");
+  .get(
+    "/status",
+    auth({ policy: PlayerReadOrManage, weight: 3 }),
+    validator("query", z.object({ player: PlayerSlugSchema })),
+    async (c) => {
+      const { player: tag } = c.req.valid("query");
 
-    const player = await getPlayer(tag, "Cache", {
-      uuid: true,
-      displayName: true,
-      prefixName: true,
-      status: true,
-    });
+      const player = await getPlayer(tag, "Cache", {
+        uuid: true,
+        displayName: true,
+        prefixName: true,
+        status: true,
+      });
 
-    const [status, recentGames] = await Promise.all([
-      hypixel.status(player.uuid),
-      hypixel.recentGames(player.uuid),
-    ]).catch((error) => {
-      console.error(error);
-      throw HypixelInternalException;
-    });
+      const [status, recentGames] = await Promise.all([
+        hypixel.status(player.uuid),
+        hypixel.recentGames(player.uuid),
+      ]).catch((error) => {
+        console.error(error);
+        throw HypixelInternalException;
+      });
 
-    if (!status) throw StatusNotFoundException;
+      if (!status) throw StatusNotFoundException;
 
-    status.uuid = player.uuid;
-    status.displayName = player.displayName;
-    status.prefixName = player.prefixName;
-    status.actions = player.status;
-    status.recentGames = recentGames;
+      status.uuid = player.uuid;
+      status.displayName = player.displayName;
+      status.prefixName = player.prefixName;
+      status.actions = player.status;
+      status.recentGames = recentGames;
 
-    return c.json({ player });
-  })
+      return c.json({ player });
+    })
   // Get a Group of Players
   .get(
     "/group",
+    auth({ policy: Policy.has(Permissions.PlayerManage) }),
     validator("query", z.object({
       start: z.number().int().nonnegative(),
       end: z.number().int().positive(),
