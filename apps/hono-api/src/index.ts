@@ -6,9 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import "zod-openapi/extend";
+
 import { Hono } from "hono";
 import { apiReference } from "@scalar/hono-api-reference";
 import { commandsRouter } from "./routes/commands.ts";
+import { createOpenApiDocs } from "./middleware/openapi.ts";
 import { playersRouter } from "./routes/players.ts";
 import { serve } from "@hono/node-server";
 import { showRoutes } from "hono/dev";
@@ -21,23 +24,24 @@ const app = new Hono()
   .route("/players", playersRouter)
   .route("/skins", skinsRouter)
   .route("/commands", commandsRouter)
-  .get("/", apiReference({ theme: "saturn", url: "/openapi" }));
+  .get("/", apiReference({ theme: "deepSpace", url: "/openapi" }));
 
-// app.get(
-//   "/openapi",
-//   openAPISpecs(app, {
-//     documentation: {
-//       info: {
-//         title: "Statsify API",
-//         version: "1.0.0",
-//       },
-//       servers: [
-//         { url: "https://api.statsify.net", description: "Production Server" },
-//         { url: "http://localhost:3000", description: "Local Server" },
-//       ],
-//     },
-//   })
-// );
+export type AppType = typeof app;
+
+const openapiDocs = createOpenApiDocs(app, {
+  info: {
+    version: "1.0.0",
+    title: "Statsify API",
+    description: "The Statsify API powers the Statsify discord bot (https://statsify.net)",
+    license: { name: "GPL-3.0" },
+  },
+  servers: [
+    { description: "Production", url: "https://api.statsify.net" },
+    { description: "Local", url: "http://localhost:3000" },
+  ],
+});
+
+app.get("/openapi", (c) => c.json(openapiDocs));
 
 serve({
   fetch: app.fetch,

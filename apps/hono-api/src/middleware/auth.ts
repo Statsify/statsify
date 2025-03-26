@@ -7,11 +7,11 @@
  */
 
 import assert from "node:assert";
-import { ApiException } from "./exception.ts";
+import { ApiException } from "../exception.ts";
 import { config } from "@statsify/util";
 import { createHash, randomUUID } from "node:crypto";
 import { createMiddleware } from "hono/factory";
-import { redis } from "./db/redis.ts";
+import { redis } from "../db/redis.ts";
 
 const MissingApiKeyException = new ApiException(400, ["Missing 'X-API-Key' header or 'key' query"]);
 const UnauthorizedApiKeyException = new ApiException(401, ["Unauthorized API Key"]);

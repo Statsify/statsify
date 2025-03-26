@@ -9,11 +9,12 @@
 import { ApiException } from "../exception.ts";
 import { Canvas, Image, loadImage } from "skia-canvas";
 import { Hono } from "hono";
-import { Permissions, Policy, auth } from "../auth.ts";
+import { Permissions, Policy, auth } from "../middleware/auth.ts";
 import { Skin } from "@statsify/schemas";
-import { UuidSchema, validator } from "../validation.ts";
+import { UuidSchema, validator } from "../middleware/validation.ts";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
+import { openapi } from "../middleware/openapi.ts";
 import { renderSkin } from "@statsify/skin-renderer";
 import { z } from "zod";
 
@@ -26,6 +27,11 @@ export const skinsRouter = new Hono()
 // Get Player Render
   .get(
     "/",
+    openapi({
+      tags: ["Skins"],
+      operationId: "getSkinRender",
+      summary: "Get a Skin Render",
+    }),
     auth({ policy: Policy.has(Permissions.SkinRead) }),
     validator("query", z.object({ uuid: UuidSchema })),
     async (c) => {
@@ -43,6 +49,11 @@ export const skinsRouter = new Hono()
 // Get Player Texture Information
   .get(
     "/textures",
+    openapi({
+      tags: ["Skins"],
+      operationId: "getSkinTextureData",
+      summary: "Get a Skin's Texture Data",
+    }),
     auth({ policy: Policy.has(Permissions.SkinRead) }),
     validator("query", z.object({ uuid: UuidSchema })),
     async (c) => {
@@ -53,6 +64,11 @@ export const skinsRouter = new Hono()
 // Get Player Head
   .get(
     "/head",
+    openapi({
+      tags: ["Skins"],
+      operationId: "getSkinHead",
+      summary: "Get a Skin's Head",
+    }),
     auth({ policy: Policy.has(Permissions.SkinRead) }),
     validator("query", z.object({
       uuid: UuidSchema,

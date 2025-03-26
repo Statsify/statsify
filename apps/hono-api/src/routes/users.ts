@@ -7,9 +7,9 @@
  */
 
 import { ApiException } from "../exception.ts";
-import { DiscordIdSchema, UserSlugSchema, UuidSchema, VerifyCodeSchema, validator } from "../validation.ts";
+import { DiscordIdSchema, UserSlugSchema, UuidSchema, VerifyCodeSchema, validator } from "../middleware/validation.ts";
 import { Hono } from "hono";
-import { Permissions, Policy, auth } from "../auth.ts";
+import { Permissions, Policy, auth } from "../middleware/auth.ts";
 import { Readable } from "node:stream";
 import { User, VerifyCode } from "@statsify/schemas";
 import { config } from "@statsify/util";
@@ -17,6 +17,7 @@ import { createReadStream } from "node:fs";
 import { getLogoPath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
 import { join } from "node:path";
+import { openapi } from "../middleware/openapi.ts";
 import { rm } from "node:fs/promises";
 import { z } from "zod";
 
@@ -35,6 +36,11 @@ export const usersRouter = new Hono()
   // Get User
   .get(
     "/",
+    openapi({
+      tags: ["Users"],
+      operationId: "getUser",
+      summary: "Get a User",
+    }),
     auth({ policy: UserReadOrManage }),
     validator("query", z.object({ tag: UserSlugSchema })),
     async (c) => {
@@ -49,12 +55,22 @@ export const usersRouter = new Hono()
   // Update User
   .patch(
     "/",
+    openapi({
+      tags: ["Users"],
+      operationId: "updateUser",
+      summary: "Update a User",
+    }),
     auth({ policy: Policy.has(Permissions.UserManage) }),
     (c) => c.text("hello world")
   )
   // Verify User
   .put(
     "/",
+    openapi({
+      tags: ["Users"],
+      operationId: "verifyUser",
+      summary: "Verify a User",
+    }),
     auth({ policy: Policy.has(Permissions.UserManage) }),
     validator("query", z.intersection(
       z.union([z.object({ uuid: UuidSchema }), z.object({ code: VerifyCodeSchema })]),
@@ -103,6 +119,11 @@ export const usersRouter = new Hono()
   // Unverify User
   .delete(
     "/",
+    openapi({
+      tags: ["Users"],
+      operationId: "unverifyUser",
+      summary: "Unverify a User",
+    }),
     auth({ policy: Policy.has(Permissions.UserManage) }),
     validator("query", z.object({ tag: UserSlugSchema })),
     async (c) => {
@@ -125,6 +146,11 @@ export const usersRouter = new Hono()
   // Get Badge
   .get(
     "/badge",
+    openapi({
+      tags: ["Users"],
+      operationId: "getUserBadge",
+      summary: "Get a User's Badge",
+    }),
     auth({ policy: UserReadOrManage }),
     validator("query", z.object({ tag: UserSlugSchema })),
     async (c) => {
@@ -156,12 +182,22 @@ export const usersRouter = new Hono()
   // Set Badge
   .put(
     "/badge",
+    openapi({
+      tags: ["Users"],
+      operationId: "updateUserBadge",
+      summary: "Set a User's Badge",
+    }),
     auth({ policy: Policy.has(Permissions.UserManage) }),
     (c) => c.text("hello world")
   )
   // Reset Badge
   .delete(
     "/badge",
+    openapi({
+      tags: ["Users"],
+      operationId: "resetUserBadge",
+      summary: "Reset a User's Badge",
+    }),
     auth({ policy: Policy.has(Permissions.UserManage) }),
     validator("query", z.object({ tag: UserSlugSchema })),
     async (c) => {

@@ -10,9 +10,10 @@ import { ApiException } from "../exception.ts";
 import { type Day, endOfToday, nextDay, startOfDay } from "date-fns";
 import { Hono } from "hono";
 import { type LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schemas";
-import { Permissions, Policy, type Predicate, auth } from "../auth.ts";
+import { Permissions, Policy, type Predicate, auth } from "../middleware/auth.ts";
+import { openapi } from "../middleware/openapi.ts";
 import { redis } from "../db/redis.ts";
-import { validator } from "../validation.ts";
+import { validator } from "../middleware/validation.ts";
 import { z } from "zod";
 import type { ChainableCommander } from "ioredis";
 import type { Constructor, Flatten } from "@statsify/util";
@@ -145,6 +146,11 @@ export function createLeaderboardService<T extends object, K extends keyof T>({
   const router = new Hono()
     .get(
       "/",
+      openapi({
+        tags: ["Leaderboards"],
+        operationId: `get${constructor.name}Leaderboards`,
+        summary: `Get ${constructor.name} Leaderboards`,
+      }),
       auth({ policy: Policy.all(Policy.has(Permissions.LeaderboardRead), policy), weight: 3 }),
       validator("query", z.intersection(z.object({ field: fieldsSchema }), z.union([
         z.object({ page: z.coerce.number().int().nonnegative() }),

@@ -7,9 +7,10 @@
  */
 
 import { Hono } from "hono";
-import { Permissions, Policy, type Predicate, auth } from "../auth.ts";
+import { Permissions, Policy, type Predicate, auth } from "../middleware/auth.ts";
+import { openapi } from "../middleware/openapi.ts";
 import { redis } from "../db/redis.ts";
-import { validator } from "../validation.ts";
+import { validator } from "../middleware/validation.ts";
 import { z } from "zod";
 import type { ChainableCommander } from "ioredis";
 import type { Constructor } from "@statsify/util";
@@ -57,6 +58,11 @@ export function createAutocompleteService<T>({ constructor, querySchema, policy 
   const router = new Hono()
     .get(
       "/",
+      openapi({
+        tags: ["Autocomplete"],
+        operationId: `get${constructor.name}Autocomplete`,
+        summary: `Get ${constructor.name} Autocomplete`,
+      }),
       auth({ policy: Policy.all(Policy.has(Permissions.AutocompleteRead), policy) }),
       validator("query", z.object({ query: querySchema })),
       async (c) => {

@@ -7,15 +7,16 @@
  */
 
 import { ApiException } from "../exception.ts";
-import { type CacheLevel, CacheLevelSchema, PlayerSlugSchema, UsernameSchema, UuidSchema, validator } from "../validation.ts";
+import { type CacheLevel, CacheLevelSchema, PlayerSlugSchema, UsernameSchema, UuidSchema, validator } from "../middleware/validation.ts";
 import { Hono } from "hono";
 import { type LeaderboardAdditionalStats, createLeaderboardService } from "./leaderboards.ts";
-import { Permissions, Policy, auth } from "../auth.ts";
+import { Permissions, Policy, auth } from "../middleware/auth.ts";
 import { Player, deserialize, serialize } from "@statsify/schemas";
 import { createAutocompleteService, onRediSearchError } from "./autocomplete.ts";
 import { flatten } from "@statsify/util";
 import { getModelForClass } from "@typegoose/typegoose";
 import { hypixel } from "../hypixel.ts";
+import { openapi } from "../middleware/openapi.ts";
 import { redis } from "../db/redis.ts";
 import { z } from "zod";
 import type { Project, Projection } from "../db/project.ts";
@@ -67,9 +68,13 @@ const { router: leaderboardsRouter, addLeaderboards, removeLeaderboards } = crea
 export const playersRouter = new Hono()
   .route("/search", autocompleteRouter)
   .route("/leaderboards", leaderboardsRouter)
-  // Get Player
   .get(
     "/",
+    openapi({
+      tags: ["Players"],
+      operationId: "getPlayer",
+      summary: "Get a Player",
+    }),
     auth({ policy: PlayerReadOrManage }),
     validator("query", z.object({
       player: PlayerSlugSchema,
@@ -84,12 +89,22 @@ export const playersRouter = new Hono()
   // Update Player
   .post(
     "/",
+    openapi({
+      tags: ["Players"],
+      operationId: "updatePlayer",
+      summary: "Update a Player",
+    }),
     auth({ policy: Policy.has(Permissions.PlayerManage) }),
     (c) => c.text("Hello World")
   )
   // Delete Player
   .delete(
     "/",
+    openapi({
+      tags: ["Players"],
+      operationId: "deletePlayer",
+      summary: "Delete a Player",
+    }),
     auth({ policy: Policy.has(Permissions.PlayerManage) }),
     validator("query", z.object({ player: PlayerSlugSchema })),
     async (c) => {
@@ -126,6 +141,11 @@ export const playersRouter = new Hono()
   // Get Player Status
   .get(
     "/status",
+    openapi({
+      tags: ["Players"],
+      operationId: "getPlayerStatus",
+      summary: "Get a Player's Status",
+    }),
     auth({ policy: PlayerReadOrManage, weight: 3 }),
     validator("query", z.object({ player: PlayerSlugSchema })),
     async (c) => {
@@ -159,6 +179,11 @@ export const playersRouter = new Hono()
   // Get a Group of Players
   .get(
     "/group",
+    openapi({
+      tags: ["Players"],
+      operationId: "getPlayerGroup",
+      summary: "Get a Group of Players",
+    }),
     auth({ policy: Policy.has(Permissions.PlayerManage) }),
     validator("query", z.object({
       start: z.number().int().nonnegative(),

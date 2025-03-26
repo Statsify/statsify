@@ -20,9 +20,11 @@
     "ioredis": "^5.6.0",
     "mongoose": "^8.5.2",
     "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zod-openapi": "^4.2.3"
   },
   "devDependencies": {
-    "@types/node": "^22.13.10"
+    "@types/node": "^22.13.10",
+    "openapi-types": "^12.1.3"
   }
 }

@@ -9,9 +9,10 @@
 import { ApiException } from "../exception.ts";
 import { Commands } from "@statsify/schemas";
 import { Hono } from "hono";
-import { Permissions, Policy, auth } from "../auth.ts";
+import { Permissions, Policy, auth } from "../middleware/auth.ts";
 import { getModelForClass } from "@typegoose/typegoose";
-import { validator } from "../validation.ts";
+import { openapi } from "../middleware/openapi.ts";
+import { validator } from "../middleware/validation.ts";
 import { z } from "zod";
 
 // Store all command analytics in one mongodb document
@@ -24,6 +25,11 @@ export const commandsRouter = new Hono()
 // Get Command Usage
   .get(
     "/",
+    openapi({
+      tags: ["Analytics"],
+      operationId: "getCommandUsage",
+      summary: "Get Command Usage",
+    }),
     auth({ policy: Policy.has(Permissions.AnalyticsManage) }),
     async (c) => {
       const commands = await CommandsModel
@@ -40,6 +46,11 @@ export const commandsRouter = new Hono()
 // Increment Command Usage
   .patch(
     "/",
+    openapi({
+      tags: ["Analytics"],
+      operationId: "incrementCommandUsage",
+      summary: "Increment Command Usage",
+    }),
     auth({ policy: Policy.has(Permissions.AnalyticsManage) }),
     validator("query", z.object({ command: z.string() })),
     async (c) => {
