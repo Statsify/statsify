@@ -28,14 +28,14 @@ async function getGuild(slug: string) {
   return guild;
 }
 
-async function getLeaderboard() {
+async function getLeaderboard(field: string) {
   const response = await fetch(`https://api.statsify.net/player/leaderboards?key=${process.env.API_KEY}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      field: "stats.uhc.score",
+      field,
       page: 0,
     }),
   });
@@ -47,13 +47,13 @@ async function getLeaderboard() {
 
 export default async function Home() {
   const [player1, player2, player3, player4, player5, guild, leaderboard] = await Promise.all([
-    getPlayer("j4cobi"),
-    getPlayer("amony"),
-    getPlayer("ugcodrr"),
-    getPlayer("vnmm"),
-    getPlayer("canadalands"),
-    getGuild("amony"),
-    getLeaderboard(),
+    getPlayer("618a96fec8b0493fa89427891049550b"),
+    getPlayer("96f645ba026b4e45bc34dd8f0531334c"),
+    getPlayer("20aa2cf67b7443a093b5f3666c160f5f"),
+    getPlayer("92a5199614ac4bd181d1f3c951fb719f"),
+    getPlayer("855c4abb7d2e42a1a8bfa236afed83f3"),
+    getGuild("96f645ba026b4e45bc34dd8f0531334c"),
+    getLeaderboard("stats.uhc.score"),
   ]);
 
   return (

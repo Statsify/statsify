@@ -11,6 +11,7 @@ import { Box } from "~/components/ui/box";
 import { Carousel } from "~/components/ui/carousel";
 import { Command } from "~/components/ui/command";
 import { Fragment } from "react";
+import { GameIcon } from "~/components/ui/game-icon";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
@@ -66,7 +67,7 @@ function GuildOverall({ guild }: { guild: Guild }) {
       <Box containerClass="col-span-2 text-center"><p className="text-mc-2 text-mc-gray ">Preferred Games</p></Box>
       <Box containerClass="col-span-2 text-center">
         <div className="flex gap-2 items-center justify-center flex-wrap max-w-80 lg:max-w-none">
-          {guild.preferredGames.map((game) => <div className="w-8 h-8 bg-red-200" key={game}></div>)}
+          {guild.preferredGames.map((game) => <GameIcon key={game} game={game} />)}
         </div>
       </Box>
     </div>
@@ -122,7 +123,7 @@ function GuildMember({ guild }: { guild: Guild }) {
   return (
     <div className="relative grid grid-cols-content-1 lg:grid-cols-content-2 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
       <Skin uuid={member.uuid} containerClass="row-span-3 hidden lg:block" contentClass="h-full" />
-      <Box contentClass="flex items-center gap-4">
+      <Box contentClass="flex justify-center items-center gap-4">
         <MinecraftText className="text-mc-4">{member.displayName ?? ""}</MinecraftText>
         <p className="hidden lg:block text-mc-3"><MinecraftText>{guild.tagFormatted}</MinecraftText></p>
       </Box>
@@ -143,6 +144,11 @@ function GuildMember({ guild }: { guild: Guild }) {
       <Box containerClass="font-bold text-center">
         <span className="text-mc-dark-green">Guild Member</span> <span>Stats</span>
       </Box>
+      <div className="col-span-full grid grid-cols-1 lg:grid-cols-content-3 gap-2">
+        <TableData color="text-mc-dark-green" title="Daily" value={t(member.daily)} />
+        <TableData color="text-mc-dark-green" title="Weekly" value={t(member.weekly)} />
+        <TableData color="text-mc-dark-green" title="Monthly" value={t(member.monthly)} />
+      </div>
     </div>
   );
 }

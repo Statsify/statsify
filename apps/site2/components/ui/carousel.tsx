@@ -66,11 +66,11 @@ export function Carousel({ children, className }: { children: ReactNode;classNam
   return (
     <div className="flex flex-col gap-10">
       <div className="flex items-center text-white gap-4 lg:gap-8">
-        <button aria-label="Previous Card" type="button" className="hidden lg:block z-10 h-fit active:scale-[0.8] transition-transform" onClick={() => paginate(-1)}>
-          <Box contentClass="backdrop-blur-2xl">
-            <Chevron className="rotate-180" />
-          </Box>
-        </button>
+        {/* TODO: investigate why clicking the very edges of the button doesn't work */}
+        <Box containerClass="hidden lg:block has-[button:active]:scale-[0.8] transition-transform z-10" contentClass="backdrop-blur-2xl relative">
+          <Chevron className="rotate-180" />
+          <button aria-label="Previous Card" type="button" className="absolute inset-0" onClick={() => paginate(-1)} />
+        </Box>
         <div className={cn("relative flex overflow-visible", "cursor-pointer")}>
           <div className="grid grid-areas-stack">{cards.map((card, index) => <div key={index} className="grid-area-stack invisible">{card}</div>)}</div>
           <div className="absolute w-full h-full">
@@ -82,7 +82,6 @@ export function Carousel({ children, className }: { children: ReactNode;classNam
                 exit="exit"
                 variants={variants}
                 custom={direction}
-                dragTransition={{ bounceStiffness: 100 }}
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 dragElastic={1}
@@ -103,11 +102,10 @@ export function Carousel({ children, className }: { children: ReactNode;classNam
             </AnimatePresence>
           </div>
         </div>
-        <button aria-label="Next Card" type="button" className="hidden lg:block z-10 h-fit active:scale-[0.8] transition-transform" onClick={() => paginate(1)}>
-          <Box contentClass="backdrop-blur-2xl">
-            <Chevron />
-          </Box>
-        </button>
+        <Box containerClass="hidden lg:block has-[button:active]:scale-[0.8] transition-transform" contentClass="backdrop-blur-2xl relative">
+          <button aria-label="Next Card" type="button" className="z-10 absolute inset-0" onClick={() => paginate(1)} />
+          <Chevron />
+        </Box>
       </div>
       <div className="flex items-center justify-center gap-6">
         {cards.map((_, index) => (
