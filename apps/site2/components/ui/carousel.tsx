@@ -76,12 +76,26 @@ export function Carousel({ children, className }: { children: ReactNode;classNam
           <div className="absolute w-full h-full">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
-                key={page}
+                key={`${page}-${direction}`}
                 initial="enter"
                 animate="center"
                 exit="exit"
                 variants={variants}
                 custom={direction}
+                dragTransition={{ bounceStiffness: 100 }}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={1}
+                onDragEnd={(_, dragInfo) => {
+                  const offset = dragInfo.offset.x;
+                  const swipeThreshold = 50;
+
+                  if (offset > swipeThreshold) {
+                    paginate(1);
+                  } else if (offset < -swipeThreshold) {
+                    paginate(-1);
+                  }
+                }}
                 className={cn("w-fit absolute top-1/2 -translate-y-1/2 left-0 right-0 mx-auto select-none", className)}
               >
                 {cards[cardIndex] as ReactNode}

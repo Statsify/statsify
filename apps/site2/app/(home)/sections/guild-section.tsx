@@ -65,8 +65,8 @@ function GuildOverall({ guild }: { guild: Guild }) {
       </Box>
       <Box containerClass="col-span-2 text-center"><p className="text-mc-2 text-mc-gray ">Preferred Games</p></Box>
       <Box containerClass="col-span-2 text-center">
-        <div className="flex gap-2 items-center justify-center">
-          {guild.preferredGames.slice(0, 5).map((game) => <span key={game}>{game.slice(0, 3)}</span>)}
+        <div className="flex gap-2 items-center justify-center flex-wrap max-w-80 lg:max-w-none">
+          {guild.preferredGames.map((game) => <div className="w-8 h-8 bg-red-200" key={game}></div>)}
         </div>
       </Box>
     </div>
@@ -120,33 +120,29 @@ function GuildMember({ guild }: { guild: Guild }) {
   const member = guild.members[8];
 
   return (
-    <div className="relative grid grid-cols-content-2 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
-      <Skin uuid={member.uuid} containerClass="hidden lg:block" contentClass="h-full" />
-      <div className="flex flex-col gap-2">
-        <Box>
-          <span className="flex items-center gap-4">
-            <MinecraftText className="text-mc-4">{member.displayName ?? ""}</MinecraftText>
-            <MinecraftText className="text-mc-2 hidden lg:block">{guild.tagFormatted}</MinecraftText>
-          </span>
-        </Box>
-        <Box containerClass="leading-[24px] text-center">
-          <p className="text-mc-gray">
-            Guild: <span className="text-mc-yellow">{guild.name}</span>
-          </p>
-          <p className="text-mc-gray">
-            Guild Rank: <span className="text-mc-yellow">{member.rank}</span>
-          </p>
-          <p className="text-mc-gray">
-            Joined At: <span className="text-mc-dark-aqua">{formatDate(new Date(member.joinTime), "MM/dd/yyy")}</span>
-          </p>
-          <p className="text-mc-gray">
-            Guild Quests: <span className="text-mc-aqua">{t(member.questParticipation)}</span>
-          </p>
-        </Box>
-        <Box containerClass="font-bold text-center">
-          <span className="text-mc-dark-green">Guild Member</span> <span>Stats</span>
-        </Box>
-      </div>
+    <div className="relative grid grid-cols-content-1 lg:grid-cols-content-2 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
+      <Skin uuid={member.uuid} containerClass="row-span-3 hidden lg:block" contentClass="h-full" />
+      <Box contentClass="flex items-center gap-4">
+        <MinecraftText className="text-mc-4">{member.displayName ?? ""}</MinecraftText>
+        <p className="hidden lg:block text-mc-3"><MinecraftText>{guild.tagFormatted}</MinecraftText></p>
+      </Box>
+      <Box containerClass="leading-[24px] text-center">
+        <p className="text-mc-gray">
+          Guild: <span className="text-mc-yellow">{guild.name}</span>
+        </p>
+        <p className="text-mc-gray">
+          Guild Rank: <span className="text-mc-yellow">{member.rank}</span>
+        </p>
+        <p className="text-mc-gray">
+          Joined At: <span className="text-mc-dark-aqua">{formatDate(new Date(member.joinTime), "MM/dd/yyy")}</span>
+        </p>
+        <p className="text-mc-gray">
+          Guild Quests: <span className="text-mc-aqua">{t(member.questParticipation)}</span>
+        </p>
+      </Box>
+      <Box containerClass="font-bold text-center">
+        <span className="text-mc-dark-green">Guild Member</span> <span>Stats</span>
+      </Box>
     </div>
   );
 }
