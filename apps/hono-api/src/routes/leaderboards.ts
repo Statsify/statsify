@@ -10,14 +10,14 @@ import { ApiException } from "../exception.ts";
 import { type Day, endOfToday, nextDay, startOfDay } from "date-fns";
 import { Hono } from "hono";
 import { type LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schemas";
-import { Permissions, Policy, type Predicate, auth } from "../middleware/auth.ts";
-import { openapi } from "../middleware/openapi.ts";
-import { redis } from "../db/redis.ts";
-import { validator } from "../middleware/validation.ts";
+import { Permissions, Policy, type Predicate, auth } from "#middleware/auth";
+import { openapi } from "#middleware/openapi";
+import { redis } from "#db/redis";
+import { validator } from "#middleware/validation";
 import { z } from "zod";
 import type { ChainableCommander } from "ioredis";
 import type { Constructor, Flatten } from "@statsify/util";
-import type { KeysOfType } from "../db/project.ts";
+import type { KeysOfType } from "#db/project";
 
 const LEADERBOARD_PAGE_SIZE = 10;
 

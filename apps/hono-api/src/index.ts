@@ -10,14 +10,14 @@ import "zod-openapi/extend";
 
 import { Hono } from "hono";
 import { apiReference } from "@scalar/hono-api-reference";
-import { commandsRouter } from "./routes/commands.ts";
-import { createOpenApiDocs } from "./middleware/openapi.ts";
-import { playersRouter } from "./routes/players.ts";
+import { commandsRouter } from "#routes/commands";
+import { createOpenApiDocs } from "#middleware/openapi";
+import { playersRouter } from "#routes/players";
 import { serve } from "@hono/node-server";
 import { showRoutes } from "hono/dev";
-import { skinsRouter } from "./routes/skins.ts";
-import { usersRouter } from "./routes/users.ts";
-import "./db/mongo.ts";
+import { skinsRouter } from "#routes/skins";
+import { usersRouter } from "#routes/users";
+import "#db/mongo";
 
 const app = new Hono()
   .route("/users", usersRouter)

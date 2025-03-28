@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { OpenApiSymbol } from "./openapi.ts";
+import { OpenApiSymbol } from "#middleware/openapi";
 import { type SchemaResult, createSchema } from "zod-openapi";
 import { type ZodSchema, z } from "zod";
 import { zValidator } from "@hono/zod-validator";

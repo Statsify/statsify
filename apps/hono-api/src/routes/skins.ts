@@ -9,12 +9,12 @@
 import { ApiException } from "../exception.ts";
 import { Canvas, Image, loadImage } from "skia-canvas";
 import { Hono } from "hono";
-import { Permissions, Policy, auth } from "../middleware/auth.ts";
+import { Permissions, Policy, auth } from "#middleware/auth";
 import { Skin } from "@statsify/schemas";
-import { UuidSchema, validator } from "../middleware/validation.ts";
+import { UuidSchema, validator } from "#middleware/validation";
 import { getMinecraftTexturePath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
-import { openapi } from "../middleware/openapi.ts";
+import { openapi } from "#middleware/openapi";
 import { renderSkin } from "@statsify/skin-renderer";
 import { z } from "zod";
 

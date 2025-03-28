@@ -5,6 +5,11 @@
     "start": "node src/index.ts",
     "dev": "node --watch src/index.ts"
   },
+  "imports": {
+    "#routes/*": "./src/routes/*.ts",
+    "#middleware/*": "./src/middleware/*.ts",
+    "#db/*": "./src/db/*.ts"
+  },
   "dependencies": {
     "@hono/node-server": "^1.13.8",
     "@hono/zod-validator": "^0.4.3",

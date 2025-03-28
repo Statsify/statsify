@@ -7,19 +7,19 @@
  */
 
 import { ApiException } from "../exception.ts";
-import { type CacheLevel, CacheLevelSchema, PlayerSlugSchema, UsernameSchema, UuidSchema, validator } from "../middleware/validation.ts";
+import { type CacheLevel, CacheLevelSchema, PlayerSlugSchema, UsernameSchema, UuidSchema, validator } from "#middleware/validation";
 import { Hono } from "hono";
-import { type LeaderboardAdditionalStats, createLeaderboardService } from "./leaderboards.ts";
-import { Permissions, Policy, auth } from "../middleware/auth.ts";
+import { type LeaderboardAdditionalStats, createLeaderboardService } from "#routes/leaderboards";
+import { Permissions, Policy, auth } from "#middleware/auth";
 import { Player, deserialize, serialize } from "@statsify/schemas";
-import { createAutocompleteService, onRediSearchError } from "./autocomplete.ts";
+import { createAutocompleteService, onRediSearchError } from "#routes/autocomplete";
 import { flatten } from "@statsify/util";
 import { getModelForClass } from "@typegoose/typegoose";
 import { hypixel } from "../hypixel.ts";
-import { openapi } from "../middleware/openapi.ts";
-import { redis } from "../db/redis.ts";
+import { openapi } from "#middleware/openapi";
+import { redis } from "#db/redis";
 import { z } from "zod";
-import type { Project, Projection } from "../db/project.ts";
+import type { Project, Projection } from "#db/project";
 
 const PlayerModel = getModelForClass(Player);
 

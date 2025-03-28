@@ -9,10 +9,10 @@
 import { ApiException } from "../exception.ts";
 import { Commands } from "@statsify/schemas";
 import { Hono } from "hono";
-import { Permissions, Policy, auth } from "../middleware/auth.ts";
+import { Permissions, Policy, auth } from "#middleware/auth";
 import { getModelForClass } from "@typegoose/typegoose";
-import { openapi } from "../middleware/openapi.ts";
-import { validator } from "../middleware/validation.ts";
+import { openapi } from "#middleware/openapi";
+import { validator } from "#middleware/validation";
 import { z } from "zod";
 
 // Store all command analytics in one mongodb document

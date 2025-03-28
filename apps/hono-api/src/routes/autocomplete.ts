@@ -7,10 +7,10 @@
  */
 
 import { Hono } from "hono";
-import { Permissions, Policy, type Predicate, auth } from "../middleware/auth.ts";
-import { openapi } from "../middleware/openapi.ts";
-import { redis } from "../db/redis.ts";
-import { validator } from "../middleware/validation.ts";
+import { Permissions, Policy, type Predicate, auth } from "#middleware/auth";
+import { openapi } from "#middleware/openapi";
+import { redis } from "#db/redis";
+import { validator } from "#middleware/validation";
 import { z } from "zod";
 import type { ChainableCommander } from "ioredis";
 import type { Constructor } from "@statsify/util";

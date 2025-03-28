@@ -7,9 +7,9 @@
  */
 
 import { ApiException } from "../exception.ts";
-import { DiscordIdSchema, UserSlugSchema, UuidSchema, VerifyCodeSchema, validator } from "../middleware/validation.ts";
+import { DiscordIdSchema, UserSlugSchema, UuidSchema, VerifyCodeSchema, validator } from "#middleware/validation";
 import { Hono } from "hono";
-import { Permissions, Policy, auth } from "../middleware/auth.ts";
+import { Permissions, Policy, auth } from "#middleware/auth";
 import { Readable } from "node:stream";
 import { User, VerifyCode } from "@statsify/schemas";
 import { config } from "@statsify/util";
@@ -17,7 +17,7 @@ import { createReadStream } from "node:fs";
 import { getLogoPath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
 import { join } from "node:path";
-import { openapi } from "../middleware/openapi.ts";
+import { openapi } from "#middleware/openapi";
 import { rm } from "node:fs/promises";
 import { z } from "zod";
 
