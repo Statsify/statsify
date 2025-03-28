@@ -11,7 +11,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { Box } from "./box";
 import { Chevron } from "~/components/icons/chevron";
-import { Children, ReactNode, useState } from "react";
+import { Children, ReactNode, useEffect, useState } from "react";
 import { cn } from "~/lib/util";
 
 const variants = {
@@ -60,8 +60,13 @@ export function Carousel({ children, className }: { children: ReactNode;classNam
   const cardIndex = (((page % cards.length) + cards.length) % cards.length);
 
   function paginate(newDirection: number) {
-    setPage([page + newDirection, newDirection]);
+    setPage(([page]) => [page + newDirection, newDirection]);
   }
+
+  useEffect(() => {
+    const interval = setInterval(() => paginate(1), 7500);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="flex flex-col gap-10">

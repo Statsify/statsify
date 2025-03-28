@@ -13,6 +13,7 @@ import { Command } from "~/components/ui/command";
 import { Fragment } from "react";
 import { GameIcon } from "~/components/ui/game-icon";
 import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Progression } from "~/components/ui/progression";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { formatDate } from "date-fns";
@@ -75,19 +76,24 @@ function GuildOverall({ guild }: { guild: Guild }) {
 }
 
 function GuildLevelling({ guild }: { guild: Guild }) {
+  const color = guild.tagColor.code;
+
   return (
     <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
       <Box containerClass="lg:col-span-3 text-center"><MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText></Box>
       <Box containerClass="leading-[24px] lg:col-span-3 text-center">
-        <p className="text-mc-gray">
-          Guild Level: <span className="text-mc-yellow">{t(guild.level)}</span>
-        </p>
-        <p className="text-mc-gray">
-          Progress: <span className="text-mc-aqua">{guild.progression.current}</span><span className="text-mc-gray">/</span><span className="text-mc-green">{guild.progression.current}</span>
-        </p>
-        <p>
-          <span className="text-mc-yellow">{Math.ceil(guild.level)}</span> <span className="text-mc-dark-gray">[</span><span className="text-mc-yellow">{"|".repeat(20)}</span><span className="text-mc-gray">{"|".repeat(20)}</span><span className="text-mc-dark-gray">]</span> <span className="text-mc-yellow">{Math.ceil(guild.level) + 1}</span>
-        </p>
+        <Progression
+          currentLevel={`${color}${Math.floor(guild.level)}`}
+          nextLevel={`${color}${Math.floor(guild.level) + 1}`}
+          label="Guild Level"
+          metric=""
+          progression={guild.progression}
+          xpBar={(percentage) => {
+            const max = 40;
+            const count = Math.ceil(max * percentage);
+            return `§8[${color}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]`;
+          }}
+        />
       </Box>
       <Box containerClass="lg:col-span-3 text-center"><p className="text-mc-2 text-mc-gray">Guild Experience</p></Box>
       <TableData title="Daily" value={t(guild.daily)} color="text-mc-dark-green" />
