@@ -50,4 +50,3 @@ serve({
   showRoutes(app, { colorize: true });
   console.log(`Server is running on http://localhost:${info.port}`);
 });
-

@@ -84,7 +84,7 @@ export const playersRouter = new Hono()
       const { player: tag, cache } = c.req.valid("query");
       const player = await getPlayer(tag, cache);
 
-      return c.json({ player });
+      return c.json({ sucess: true, player });
     })
   // Update Player
   .post(
