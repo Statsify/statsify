@@ -12,6 +12,7 @@ import { config } from "@statsify/util";
 import { createHash, randomUUID } from "node:crypto";
 import { createMiddleware } from "hono/factory";
 import { redis } from "#db/redis";
+import type { Env, Input, MiddlewareHandler } from "hono";
 
 const MissingApiKeyException = new ApiException(400, ["Missing 'X-API-Key' header or 'key' query"]);
 const UnauthorizedApiKeyException = new ApiException(401, ["Unauthorized API Key"]);
@@ -57,7 +58,9 @@ export type AuthOptions = {
   weight?: number;
 };
 
-export function auth({ policy, weight = 1 }: AuthOptions) {
+export function auth<E extends Env, P extends string, I extends Input>(
+  { policy, weight = 1 }: AuthOptions
+): MiddlewareHandler<E, P, I> {
   assert(weight >= 1, "Auth weight should be greater than 0");
 
   return createMiddleware(async (c, next) => {

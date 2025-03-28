@@ -16,34 +16,21 @@ import type { OpenAPIV3_1 } from "openapi-types";
 export const UuidSchema = z
   .string()
   .transform((value) => value.toLowerCase().replaceAll("-", ""))
-  .pipe(z.string().length(32).regex(/^[0-9a-f]{8}[0-9a-f]{4}4[0-9a-f]{3}[089ab][0-9a-f]{3}[0-9a-f]{12}/i, "Invalid UUID"))
-  .openapi({
-    description: "Minecraft Uuid",
-    example: "618a96fec8b0493fa89427891049550b",
-  });
+  .pipe(z.string().length(32).regex(/^[0-9a-f]{8}[0-9a-f]{4}4[0-9a-f]{3}[089ab][0-9a-f]{3}[0-9a-f]{12}/i, "Invalid UUID"));
 
 export const DiscordIdSchema = z.string();
 
 export const UsernameSchema = z.string()
   .min(1)
   .max(16)
-  .transform((username) => username.toLowerCase())
-  .openapi({
-    description: "Minecraft Username",
-    example: "j4cobi",
-  });
+  .transform((username) => username.toLowerCase());
 
 export const VerifyCodeSchema = z.string().length(4);
 
 export const PlayerSlugSchema = z.union([
   UuidSchema,
   UsernameSchema,
-])
-  .openapi({
-    description: "Username or Uuid",
-    type: "string",
-    examples: ["j4cobi", "618a96fec8b0493fa89427891049550b"],
-  });
+]);
 
 export const UserSlugSchema = z.union([
   UuidSchema,

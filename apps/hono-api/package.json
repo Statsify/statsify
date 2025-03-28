@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.13.8",
+    "@hono/zod-openapi": "^0.19.2",
     "@hono/zod-validator": "^0.4.3",
     "@scalar/hono-api-reference": "^0.7.2",
     "@sentry/node": "^7.118.0",
