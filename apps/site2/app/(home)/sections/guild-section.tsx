@@ -22,7 +22,7 @@ import type { Guild } from "@statsify/schemas";
 
 export function GuildSection({ guild }: { guild: Guild }) {
   return (
-    <BaseSection background="guild" className="flex-col items-center relative py-24 overflow-hidden">
+    <BaseSection background="guild" className="flex-col items-center relative overflow-hidden">
       <Carousel className="backdrop-blur-2xl bg-black/40">
         <GuildOverall guild={guild} />
         <GuildLevelling guild={guild} />

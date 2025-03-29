@@ -15,7 +15,7 @@ import type { PostLeaderboardResponse } from "@statsify/api-client";
 
 export function LeaderboardSection({ leaderboard }: { leaderboard: PostLeaderboardResponse }) {
   return (
-    <BaseSection background="uhc" className="flex-col-reverse lg:flex-row justify-around lg:items-center pt-100 lg:pt-0">
+    <BaseSection background="uhc" className="flex-col-reverse lg:flex-row justify-around lg:items-center lg:py-0">
       <div
         className="relative w-full lg:w-fit h-full flex flex-col justify-center items-center gap-8 p-4 lg:p-8 before:absolute before:bg-gradient-to-b before:from-white/20 before:to-white/50 before:mix-blend-overlay before:w-full before:h-full before:-z-20 after:mix-blend-overlay after:w-full after:h-full after:content-[''] after:absolute after:shadow-[0_0_10px_white,0_0_30px_10px_white] after:shadow-white after:-z-20"
       >

@@ -63,10 +63,16 @@ export default async function Home() {
         className="h-[80dvh]"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />
+      <div
+        className="absolute w-full h-[80dvh] bg-red-200 -z-10"
+        style={{
+          background: "linear-gradient(180deg, rgb(17 17 17 / 0) 80%, rgb(17 17 17 / 1) calc(100% - 50px))",
+        }}
+      />
       <div className="w-4/5 max-w-[1800px] mx-auto flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-10 lg:text-start lg:justify-between items-center text-mc-white min-h-[76dvh]">
         <div className="flex flex-col gap-10 lg:gap-6 md:max-w-[500px] xl:max-w-[600px]">
           <div className="flex flex-col gap-3">
-            <p className="text-mc-8 xl:text-mc-10 font-bold"><span className="text-[#D0EEFC]">S</span><span className="text-[#8EC3E7]">t</span><span className="text-[#4C97D2]">a</span><span className="text-[#418DCC]">t</span><span className="text-[#3784C5]">s</span><span className="text-[#2C7ABF]">i</span><span className="text-[#2171B8]">f</span><span className="text-[#1668B1]">y</span></p>
+            <p className="text-mc-8 xl:text-mc-10 font-bold"><span className="text-[#D0EFFF]">S</span><span className="text-[#7DC6FA]">t</span><span className="text-[#2A9DF4]">a</span><span className="text-[#2492E7]">t</span><span className="text-[#1E86DA]">s</span><span className="text-[#187BCD]">i</span><span className="text-[#1571BF]">f</span><span className="text-[#1167B1]">y</span></p>
             <p className="text-mc-3">Statsify is the most advanced bot in 2025</p>
           </div>
           <div className="flex flex-col xl:flex-row gap-4 w-full">
@@ -82,7 +88,7 @@ export default async function Home() {
         <SessionSection player={player5} />
         <GuildSection guild={guild} />
       </div>
-      <div className="h-1000 w-10" />
+
     </div>
   );
 }
@@ -101,3 +107,4 @@ function DiscordInvite() {
     <button className="text-nowrap h-16 bg-[#5865F2] border-4 border-[color-mix(in_srgb,_#5865F2_50%,_rgb(0_0_0)_15%)] text-mc-2 text-white outline-none px-4">Try on Discord</button>
   );
 }
+

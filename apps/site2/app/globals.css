@@ -32,65 +32,10 @@
   --drop-shadow-mc-10: 10px 10px color-mix(in srgb, currentColor 25%, #000 75%);
 }
 
-
-@utility text-mc-1 {
+@utility text-mc-* {
   font-family: var(--font-minecraft);
-  font-size: 16px;
-  text-shadow: var(--drop-shadow-mc-1);
-}
-
-@utility text-mc-2 {
-  font-family: var(--font-minecraft);
-  font-size: 32px;
-  text-shadow: var(--drop-shadow-mc-2);
-}
-
-@utility text-mc-3 {
-  font-family: var(--font-minecraft);
-  font-size: 48px;
-  text-shadow: var(--drop-shadow-mc-3);
-}
-
-@utility text-mc-4 {
-  font-family: var(--font-minecraft);
-  font-size: 64px;
-  text-shadow: var(--drop-shadow-mc-4);
-}
-
-@utility text-mc-5 {
-  font-family: var(--font-minecraft);
-  font-size: 80px;
-  text-shadow: var(--drop-shadow-mc-5);
-}
-
-@utility text-mc-6 {
-  font-family: var(--font-minecraft);
-  font-size: 96px;
-  text-shadow: var(--drop-shadow-mc-6);
-}
-
-@utility text-mc-7 {
-  font-family: var(--font-minecraft);
-  font-size: 112px;
-  text-shadow: var(--drop-shadow-mc-7);
-}
-
-@utility text-mc-8 {
-  font-family: var(--font-minecraft);
-  font-size: 128px;
-  text-shadow: var(--drop-shadow-mc-8);
-}
-
-@utility text-mc-9 {
-  font-family: var(--font-minecraft);
-  font-size: 144px;
-  text-shadow: var(--drop-shadow-mc-9);
-}
-
-@utility text-mc-10 {
-  font-family: var(--font-minecraft);
-  font-size: 160px;
-  text-shadow: var(--drop-shadow-mc-10);
+  font-size: calc(16px * --value(number));
+  text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
 }
 
 @utility grid-areas-stack {
@@ -115,6 +60,10 @@
 
 @utility mask-feather-* {
   mask: linear-gradient(90deg, rgb(0 0 0 / 0) 0%, rgb(0 0 0 / 1) --value(integer)%, rgb(0 0 0 / 1) calc(100% - --value(integer)%), rgb(0 0 0 / 0) 100%);
+}
+
+@utility logo-shadow-* {
+  filter: drop-shadow(0 1px 0 color-mix(in srgb, --value([color]) 25%, #000 75%)) drop-shadow(0 -1px 0 color-mix(in srgb, --value([color]) 85%, #fff 15%));
 }
 
 @layer base {

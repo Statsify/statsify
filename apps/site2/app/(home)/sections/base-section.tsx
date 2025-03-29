@@ -12,17 +12,17 @@ import type { ComponentProps, ReactNode } from "react";
 
 export function BaseSection({ children, background, className }: Pick<ComponentProps<typeof Background>, "background"> & { children: ReactNode; className?: string }) {
   return (
-    <section className="w-full relative grid grid-rows-[1fr_8fr_1fr] first:mt-0 -my-6">
+    <section className="w-full relative grid grid-rows-[50px_8fr_50px]">
       <Background className="w-full h-full" background={background} />
       <div
         className="absolute w-full h-full -z-10"
         style={{
-          background: "linear-gradient(0deg, rgba(17,17,17,1) 10%, rgba(17,17,17,0) 50%, rgba(17,17,17,1) 90%)",
+          background: "linear-gradient(0deg, rgb(17 17 17 / 1) 50px, rgb(17 17 17 / 0) 50%, rgb(17 17 17 / 1) calc(100% - 50px))",
         }}
       />
       <div className="min-h-1" />
       <div className="flex justify-center">
-        <div className={cn("w-full max-w-[1800px] flex gap-8", className)}>
+        <div className={cn("w-full max-w-[1800px] flex gap-8 py-24", className)}>
           {children}
         </div>
       </div>

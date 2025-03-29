@@ -58,7 +58,7 @@ export function PlayerSection({ players }: { players: [Player, Player, Player, P
   const [activeTab, setActiveTab] = useState<number>(0);
 
   return (
-    <BaseSection background={games[activeTab].tab} className="flex-col lg:flex-row justify-around lg:items-center pt-8 lg:pt-0">
+    <BaseSection background={games[activeTab].tab} className="flex-col lg:flex-row justify-around lg:items-center lg:py-0">
       <div className="mx-auto lg:mx-0 flex flex-col gap-4 max-w-100 xl:max-w-120 text-mc-white text-center lg:text-start ">
         <h1 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow">Players</h1>
         <p className="text-mc-2 leading-6">Beautiful visuals are provided by Statsify for every game on Hypixel. Simply input <Command>/bedwars</Command> into Discord to see your BedWars stats or those of your friends. To see further games, type / followed by the name of the game. To quickly search for yourself, you may link your Minecraft account to your Discord with <Command>/verify</Command></p>

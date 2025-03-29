@@ -7,6 +7,7 @@
  */
 
 import localFont from "next/font/local";
+import { Footer } from "~/components/ui/footer";
 import "./globals.css";
 import type { Metadata } from "next";
 
@@ -26,12 +27,6 @@ const MinecraftFont = localFont({
   variable: "--font-minecraft",
 });
 
-// const MinecraftFont = localFont({
-//   src: "./fonts/Minecraft-VF.ttf",
-//   preload: true,
-//   variable: "--font-minecraft",
-// });
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -39,8 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${MinecraftFont.variable} antialiased leading-[normal] `}>
+      <body className={`${MinecraftFont.variable} antialiased leading-[normal]`}>
         {children}
+        <Footer />
       </body>
     </html>
   );

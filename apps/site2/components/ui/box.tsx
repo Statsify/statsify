@@ -11,7 +11,7 @@ import type { ComponentProps } from "react";
 
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 
-type BoxBorderRadius =
+export type BoxBorderRadius =
   | Partial<{ topLeft: number; topRight: number; bottomLeft: number; bottomRight: number }>
   | AtLeastOne<{ top: number; bottom: number }>
   | AtLeastOne<{ left: number; right: number }>
@@ -19,7 +19,7 @@ type BoxBorderRadius =
 
 const DEFAULT_BORDER_RADIUS = 8;
 
-function toBorderRadius(borderRadius: BoxBorderRadius): {
+export function toBorderRadius(borderRadius: BoxBorderRadius): {
   topLeft: number;
   topRight: number;
   bottomLeft: number;
@@ -59,7 +59,7 @@ function toBorderRadius(borderRadius: BoxBorderRadius): {
   };
 }
 
-interface BoxProps extends Omit<ComponentProps<"div">, "className"> {
+export interface BoxProps extends Omit<ComponentProps<"div">, "className"> {
   borderRadius?: BoxBorderRadius;
   shadow?: number;
   contentClass?: string;
@@ -139,7 +139,7 @@ export function Box({
   );
 }
 
-function polygon(
+export function polygon(
   ...points: (`${string} ${string}` | false)[]
 ) {
   return `polygon(${points.filter(Boolean).join(", ")})`;
