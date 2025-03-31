@@ -7,10 +7,16 @@
  */
 
 import { Button } from "~/components/ui/button";
+import { Discord } from "~/components/icons/discord";
 
 export default function TestPage() {
   return (
-    <Button>Hello World</Button>
+    <div className="p-4 w-full flex justify-center">
+      <Button>
+        <Discord className="drop-shadow-mc-1" />
+        <p>Discord</p>
+      </Button>
+    </div>
   );
 }
 

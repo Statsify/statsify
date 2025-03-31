@@ -6,44 +6,30 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BoxProps, polygon, toBorderRadius } from "~/components/ui/box";
+import styles from "./button.module.css";
+import { ComponentProps } from "react";
 import { cn } from "~/lib/util";
 
 export function Button({
-  borderRadius: partialBorderRadius = {},
-  shadow = 8,
-  contentClass: contentClassName,
-  containerClass: containerClassName,
-  style,
+  children,
+  className,
   ...props
-}: BoxProps) {
-  const borderRadius = toBorderRadius(partialBorderRadius);
-
-  const contentPath = polygon(
-    `${borderRadius.topLeft}px 0`,
-    `calc(100% - ${borderRadius.topRight}px) 0`,
-    `calc(100% - ${borderRadius.topRight}px) ${borderRadius.topRight}px`,
-    `100% ${borderRadius.topRight}px`,
-    `100% calc(100% - ${borderRadius.bottomRight}px)`,
-    `calc(100% - ${borderRadius.bottomRight}px) calc(100% - ${borderRadius.bottomRight}px)`,
-    `calc(100% - ${borderRadius.bottomRight}px) 100%`,
-    `${borderRadius.bottomLeft}px 100%`,
-    `${borderRadius.bottomLeft}px calc(100% - ${borderRadius.bottomLeft}px)`,
-    `0 calc(100% - ${borderRadius.bottomLeft}px)`,
-    `0px ${borderRadius.topLeft}px`,
-    `${borderRadius.topLeft}px ${borderRadius.topLeft}px`
-  );
-
+}: ComponentProps<"button">) {
   return (
-    <button
-      {...props}
-      className={cn("p-4 text-mc-2 h-full", contentClassName)}
+    <div
+      className="text-mc-white"
       style={{
-        ...style,
-        background: "linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.06) 100%), rgba(255, 0, 0, 1)",
-        backgroundBlendMode: "overlay, normal",
-        clipPath: contentPath,
+        filter: `drop-shadow(8px 8px rgb(0 0 0 / 0.5))`,
       }}
-    />
+    >
+      <button
+        {...props}
+        className={cn("w-full relative flex justify-center items-center gap-1 text-mc-2", styles.button, className)}
+      >
+        <div className={`absolute top-0 left-0 w-full ${styles.topShadow}`} />
+        {children}
+        <div className={`absolute bottom-0 left-0 w-full  ${styles.bottomShadow}`} />
+      </button>
+    </div>
   );
 }

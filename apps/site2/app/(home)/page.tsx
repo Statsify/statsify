@@ -7,6 +7,8 @@
  */
 
 import { Background } from "~/components/ui/background";
+import { Button } from "~/components/ui/button";
+import { Discord } from "~/components/icons/discord";
 import { GuildSection } from "./sections/guild-section";
 import { InteractiveLogo } from "./interactive-logo";
 import { LeaderboardSection } from "./sections/leaderboard-section";
@@ -75,9 +77,11 @@ export default async function Home() {
             <p className="text-mc-8 xl:text-mc-10 font-bold"><span className="text-[#D0EFFF]">S</span><span className="text-[#7DC6FA]">t</span><span className="text-[#2A9DF4]">a</span><span className="text-[#2492E7]">t</span><span className="text-[#1E86DA]">s</span><span className="text-[#187BCD]">i</span><span className="text-[#1571BF]">f</span><span className="text-[#1167B1]">y</span></p>
             <p className="text-mc-3">Statsify is the most advanced bot in 2025</p>
           </div>
-          <div className="flex flex-col xl:flex-row gap-4 w-full">
+          <div className="flex flex-col lg:flex-row flex-wrap gap-4 w-full">
             <Search className="grow" />
-            <DiscordInvite />
+            <div className="grow">
+              <DiscordInvite />
+            </div>
           </div>
         </div>
         <InteractiveLogo />
@@ -104,7 +108,10 @@ function Search({ className }: { className?: string }) {
 
 function DiscordInvite() {
   return (
-    <button className="text-nowrap h-16 bg-[#5865F2] border-4 border-[color-mix(in_srgb,_#5865F2_50%,_rgb(0_0_0)_15%)] text-mc-2 text-white outline-none px-4">Try on Discord</button>
+    <Button>
+      <Discord className="drop-shadow-mc-1" />
+      <p className="text-nowrap">Try On Discord</p>
+    </Button>
   );
 }
 

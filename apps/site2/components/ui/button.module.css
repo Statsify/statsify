@@ -1,0 +1,105 @@
+@property --top-scale {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1.5;
+}
+
+@property --bottom-scale {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 2;
+}
+
+.button {
+  --border: 8px;
+  --duration: 0.2s;
+
+  --top-scale: 1.5;
+  --bottom-scale: 2;
+
+  background-color: rgb(88 101 242);
+  padding: calc(2 * var(--border)) calc(3 * var(--border));
+  
+  clip-path: polygon(
+    var(--border) 0,
+    calc(100% - var(--border)) 0,
+    calc(100% - var(--border)) var(--border),
+    100% var(--border),
+    100% calc(100% - var(--border)),
+    calc(100% - var(--border)) calc(100% - var(--border)),
+    calc(100% - var(--border)) 100%,
+    var(--border) 100%,
+    var(--border) calc(100% - var(--border)),
+    0 calc(100% - var(--border)),
+    0px var(--border),
+    var(--border) var(--border)
+  );
+  
+  transition: --top-scale var(--duration) ease-in-out, 
+              --bottom-scale var(--duration) ease-in-out, 
+              background-color var(--duration) ease-in-out;
+
+  &:hover {
+    --top-scale: 2;
+    --bottom-scale: 1.5;
+
+    background-color: rgb(113 125 244);
+
+    .topShadow {
+      background-color: rgb(124 136 245);
+    }
+
+    .bottomShadow {
+      background-color: rgb(100 112 242);
+    }
+  }
+
+  &:active {
+    --top-scale: 1.5;
+    --bottom-scale: 1.5;
+
+    background-color: rgb(76 89 240);
+
+    .topShadow {
+      background-color: rgb(89 101 241);
+    }
+
+    .bottomShadow {
+      background-color: rgb(65 77 237);
+    }
+  }
+}
+
+.topShadow {
+  background-color: rgb(100 113 243);
+  transition: background-color var(--duration) ease-in-out;
+
+  height: calc(var(--border) * var(--top-scale));
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% 100%,
+    calc(100% - (var(--border) * var(--top-scale))) 100%,
+    calc(100% - (var(--border) * var(--top-scale))) calc(var(--border) * (var(--top-scale) - 1)),
+    calc(var(--border) * var(--top-scale)) calc(var(--border) * (var(--top-scale) - 1)),
+    calc(var(--border) * var(--top-scale)) 100%,
+    0 100%
+  );
+}
+
+.bottomShadow {
+  background-color: rgb(76 89 240);
+  transition: background-color var(--duration) ease-in-out;
+
+  height: calc(var(--border) * var(--bottom-scale));
+  clip-path: polygon(
+    0 0,
+    calc(var(--border) * var(--bottom-scale)) 0,
+    calc(var(--border) * var(--bottom-scale)) var(--border),
+    calc(100% - (var(--border) * var(--bottom-scale))) var(--border),
+    calc(100% - (var(--border) * var(--bottom-scale))) 0,
+    100% 0,
+    100% 100%,
+    0 100%
+  );
+}
