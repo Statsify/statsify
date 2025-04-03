@@ -20,6 +20,8 @@
   --color-mc-yellow: #FFFF55;
   --color-mc-white: #FFFFFF;
 
+  --color-discord-500: rgb(88 101 242);
+
   --drop-shadow-mc-1: 1px 1px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-2: 2px 2px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-3: 3px 3px color-mix(in srgb, currentColor 25%, #000 75%);

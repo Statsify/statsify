@@ -71,7 +71,7 @@ export default async function Home() {
           background: "linear-gradient(180deg, rgb(17 17 17 / 0) 80%, rgb(17 17 17 / 1) calc(100% - 50px))",
         }}
       />
-      <div className="w-4/5 max-w-[1800px] mx-auto flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-10 lg:text-start lg:justify-between items-center text-mc-white min-h-[76dvh]">
+      <div className="w-4/5 max-w-[1800px] mx-auto flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-12 lg:text-start lg:justify-between items-center text-mc-white min-h-[76dvh]">
         <div className="flex flex-col gap-10 lg:gap-6 md:max-w-[500px] xl:max-w-[600px]">
           <div className="flex flex-col gap-3">
             <p className="text-mc-8 xl:text-mc-10 font-bold"><span className="text-[#D0EFFF]">S</span><span className="text-[#7DC6FA]">t</span><span className="text-[#2A9DF4]">a</span><span className="text-[#2492E7]">t</span><span className="text-[#1E86DA]">s</span><span className="text-[#187BCD]">i</span><span className="text-[#1571BF]">f</span><span className="text-[#1167B1]">y</span></p>
@@ -92,7 +92,16 @@ export default async function Home() {
         <SessionSection player={player5} />
         <GuildSection guild={guild} />
       </div>
-
+      <div className="bg-white/10 backdrop-blur-lg text-mc-white -mt-45 p-8 flex flex-col gap-6 max-w-4/5 mx-auto">
+        <div className="flex flex-col gap-2">
+          <p className="text-mc-4 font-bold">What are you waiting for?</p>
+          <p className="text-mc-2">Invite Statsify today to enhance your Hypixel experience!</p>
+        </div>
+        <Button className="bg-discord-500">
+          <Discord className="drop-shadow-mc-1" />
+          <p className="text-nowrap">Try On Discord</p>
+        </Button>
+      </div>
     </div>
   );
 }
@@ -108,7 +117,7 @@ function Search({ className }: { className?: string }) {
 
 function DiscordInvite() {
   return (
-    <Button>
+    <Button className="bg-discord-500">
       <Discord className="drop-shadow-mc-1" />
       <p className="text-nowrap">Try On Discord</p>
     </Button>

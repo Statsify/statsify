@@ -24,9 +24,10 @@ export function Button({
     >
       <button
         {...props}
-        className={cn("w-full relative flex justify-center items-center gap-1 text-mc-2", styles.button, className)}
+        className={cn("w-full relative flex justify-center items-center gap-1 text-mc-2 select-none", styles.button, className)}
       >
         <div className={`absolute top-0 left-0 w-full ${styles.topShadow}`} />
+        <div className={`absolute inset-0 ${styles.buttonOverlay}`} />
         {children}
         <div className={`absolute bottom-0 left-0 w-full  ${styles.bottomShadow}`} />
       </button>

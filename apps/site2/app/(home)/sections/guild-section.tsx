@@ -33,6 +33,7 @@ export function GuildSection({ guild }: { guild: Guild }) {
         <h1 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow text-center">Guilds</h1>
         <p className="text-mc-2 leading-6 text-center">Using session stats, Statsify allows you to display your stats as if you began playing today. There is no need to worry about your past losses, you can just focus on the now. To quickly obtain your session stats, type <Command>/session</Command> followed by the game of your choice. For example, enter <Command>/session tntgames</Command> to get your session TNT Games stats. Session stats are tracked independently of your overall stats so you can reset them via <Command>/reset session</Command>.</p>
       </div>
+      <div className="h-20 w-full" />
     </BaseSection>
   );
 }

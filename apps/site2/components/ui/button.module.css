@@ -17,7 +17,6 @@
   --top-scale: 1.5;
   --bottom-scale: 2;
 
-  background-color: rgb(88 101 242);
   padding: calc(2 * var(--border)) calc(3 * var(--border));
   
   clip-path: polygon(
@@ -36,21 +35,14 @@
   );
   
   transition: --top-scale var(--duration) ease-in-out, 
-              --bottom-scale var(--duration) ease-in-out, 
-              background-color var(--duration) ease-in-out;
+              --bottom-scale var(--duration) ease-in-out;
 
   &:hover {
     --top-scale: 2;
     --bottom-scale: 1.5;
 
-    background-color: rgb(113 125 244);
-
-    .topShadow {
-      background-color: rgb(124 136 245);
-    }
-
-    .bottomShadow {
-      background-color: rgb(100 112 242);
+    .buttonOverlay {
+      background-color: rgb(255 255 255 / 0.20);
     }
   }
 
@@ -58,21 +50,21 @@
     --top-scale: 1.5;
     --bottom-scale: 1.5;
 
-    background-color: rgb(76 89 240);
-
-    .topShadow {
-      background-color: rgb(89 101 241);
-    }
-
-    .bottomShadow {
-      background-color: rgb(65 77 237);
+    .buttonOverlay {
+      background-color: rgb(0 0 0 / 0.20);
     }
   }
 }
 
-.topShadow {
-  background-color: rgb(100 113 243);
+.buttonOverlay {
+  background-color: rgb(0 0 0 / 0);
   transition: background-color var(--duration) ease-in-out;
+  mix-blend-mode: soft-light;
+}
+
+.topShadow {
+  background-color: rgb(255 255 255 / 0.25);
+  mix-blend-mode: soft-light;
 
   height: calc(var(--border) * var(--top-scale));
   clip-path: polygon(
@@ -88,8 +80,8 @@
 }
 
 .bottomShadow {
-  background-color: rgb(76 89 240);
-  transition: background-color var(--duration) ease-in-out;
+  background-color: rgb(0 0 0 / 0.25);
+  mix-blend-mode: soft-light;
 
   height: calc(var(--border) * var(--bottom-scale));
   clip-path: polygon(
