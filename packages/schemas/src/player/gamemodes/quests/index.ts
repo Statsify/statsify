@@ -90,6 +90,7 @@ const questModes = {
 
 export const DailyQuests = createQuestsInstance(QuestTime.Daily, questModes);
 export const WeeklyQuests = createQuestsInstance(QuestTime.Weekly, questModes);
+export const MonthlyQuests = createQuestsInstance(QuestTime.Monthly, questModes);
 export const OverallQuests = createQuestsInstance(QuestTime.Overall, questModes);
 
 export interface GameQuests {
@@ -127,8 +128,13 @@ export class Quests {
   })
   public dailyTotal: number;
 
+  // TODO: add monthlyTotal
+
   @Field({ type: () => OverallQuests, leaderboard: { fieldName: "" } })
   public overall: UnwrapConstructor<typeof OverallQuests>;
+
+  @Field({ type: () => MonthlyQuests })
+  public monthly: UnwrapConstructor<typeof MonthlyQuests>;
 
   @Field({ type: () => WeeklyQuests })
   public weekly: UnwrapConstructor<typeof WeeklyQuests>;
@@ -138,6 +144,7 @@ export class Quests {
 
   public constructor(quests: APIData) {
     this.overall = new OverallQuests(quests);
+    this.monthly = new MonthlyQuests(quests);
     this.weekly = new WeeklyQuests(quests);
     this.daily = new DailyQuests(quests);
 

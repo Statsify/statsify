@@ -40,6 +40,14 @@ export class QuestsCommand {
   }
 
   @SubCommand({
+    description: (t) => t("commands.quests-monthly"),
+    args: [PlayerArgument],
+  })
+  public async monthly(context: CommandContext) {
+    return this.run(context, QuestTime.Monthly);
+  }
+
+  @SubCommand({
     description: (t) => t("commands.quests-weekly"),
     args: [PlayerArgument],
   })
@@ -73,29 +81,41 @@ export class QuestsCommand {
       getLogo("cross", 28),
     ]);
 
-    const pages: Page[] = this.modes.getModes().map((mode) => ({
-      label: mode.formatted,
-      emoji: mode.api !== "overall" && ((t) => t(`emojis:games.${mode.api}`)),
-      generator: async (t) => {
-        const background = await getBackground(...mapBackground(this.modes, mode.api));
+    const { quests } = player.stats;
+    let modes = this.modes.getModes();
 
-        const profile = this.getProfile({
-          player,
-          skin,
-          background,
-          logo,
-          t,
-          user,
-          badge,
-          time,
-          mode: { ...mode, submode: undefined },
-          gameIcons,
-          logos: [crossLogo, verifiedLogo],
-        });
+    if (time == QuestTime.Monthly) {
+      modes = modes.filter((mode) => mode.api === "overall" || Object.entries(quests.monthly[mode.api]).length > 1);
+    }
 
-        return render(profile, getTheme(user));
-      },
-    }));
+    switch (time) {
+      case QuestTime.Monthly:
+    }
+
+    const pages: Page[] = modes
+      .map((mode) => ({
+        label: mode.formatted,
+        emoji: mode.api !== "overall" && ((t) => t(`emojis:games.${mode.api}`)),
+        generator: async (t) => {
+          const background = await getBackground(...mapBackground(this.modes, mode.api));
+
+          const profile = this.getProfile({
+            player,
+            skin,
+            background,
+            logo,
+            t,
+            user,
+            badge,
+            time,
+            mode: { ...mode, submode: undefined },
+            gameIcons,
+            logos: [crossLogo, verifiedLogo],
+          });
+
+          return render(profile, getTheme(user));
+        },
+      }));
 
     return this.paginateService.paginate(context, pages);
   }
