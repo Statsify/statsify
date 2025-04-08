@@ -11,7 +11,7 @@ import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { add } from "@statsify/math";
-import { getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
+import { getFormattedLevel, getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
 import type { APIData } from "@statsify/util";
 
 export const SKYWARS_MODES = new GameModes([
@@ -121,16 +121,13 @@ export class SkyWars {
     this.tokens = data.cosmetic_tokens;
     this.potionsBrewed = ap.skywars_tonic_taker;
 
-    // this.star = (data.levelFormatted || "⋆").replace(/\d|[a-f]|k|r|l|§/g, "");
     this.level = getLevel(this.exp);
 
     this.naturalLevelFormatted = getIntendedLevelFormatted(this.level);
-    // TODO: get the player's scheme and emblem somehow
-    this.levelFormatted = getIntendedLevelFormatted(this.level);
+    this.levelFormatted = getFormattedLevel(this.level, data.active_scheme, data.active_emblem);
     this.nextLevelFormatted = getIntendedLevelFormatted(this.level + 1);
 
-    const { current, total } = getLevelProgress(this.exp);
-    this.progression = new Progression(current, total);
+    this.progression = getLevelProgress(this.exp, this.level);
 
     const normalKit = parseKit(
       data.activeKit_SOLO_random ? "random" : data.activeKit_SOLO
