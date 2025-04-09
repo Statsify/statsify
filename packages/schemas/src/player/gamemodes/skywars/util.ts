@@ -85,51 +85,51 @@ const EMBLEM_MAP = {
   florin: "ƒ",
 };
 
-type Scheme = (level: number, emblem?: string) => string;
+type Scheme = (level: number, bold: boolean, underline: boolean, strikethrough: boolean, emblem?: string,) => string;
 
 const SCHEME_MAP = {
-  "stone_prestige": (n, m = "") => `§7[${n}${m}]`,
-  "iron_prestige": (n, m = "") => `§f[${n}${m}]`,
-  "gold_prestige": (n, m = "") => `§6[${n}${m}]`,
-  "diamond_prestige": (n, m = "") => `§b[${n}${m}]`,
-  "ruby_prestige": (n, m = "") => `§c[${n}${m}]`,
-  "crystal_prestige": (n, m = "") => `§d[${n}${m}]`,
-  "amethyst_prestige": (n, m = "") => `§5[${n}${m}]`,
-  "opal_prestige": (n, m = "") => `§9[${n}${m}]`,
-  "topaz_prestige": (n, m = "") => `§e[${n}${m}]`,
-  "jade_prestige": (n, m = "") => `§a[${n}${m}]`,
+  "stone_prestige": formatStaticColorLevel("§7"),
+  "iron_prestige": formatStaticColorLevel("§f"),
+  "gold_prestige": formatStaticColorLevel("§6"),
+  "diamond_prestige": formatStaticColorLevel("§b"),
+  "ruby_prestige": formatStaticColorLevel("§c"),
+  "crystal_prestige": formatStaticColorLevel("§d"),
+  "amethyst_prestige": formatStaticColorLevel("§5"),
+  "opal_prestige": formatStaticColorLevel("§9"),
+  "topaz_prestige": formatStaticColorLevel("§e"),
+  "jade_prestige": formatStaticColorLevel("§a"),
   "mythic_i_prestige": formatDigitColorLevel(["§c", "§6", "§e", "§a", "§b", "§d"]),
-  "bloody_prestige": (n, m = "") => `§4[§c${n}${m}§4]`,
-  "cobalt_prestige": (n, m = "") => `§1[${n}${m}]`,
-  "content_prestige": (n, m = "") => `§c[§f${n}${m}§c]`,
-  "crimson_prestige": (n, m = "") => `§4[${n}${m}]`,
-  "firefly_prestige": (n, m = "") => `§6[§e${n}${m}§6]`,
-  "emerald_prestige": (n, m = "") => `§2[${n}${m}]`,
-  "abyss_prestige": (n, m = "") => `§1[§9${n}${m}§1]`,
-  "sapphire_prestige": (n, m = "") => `§3[${n}${m}]`,
-  "emergency_prestige": (n, m = "") => `§4[§e${n}${m}§4]`,
+  "bloody_prestige": formatStaticColorLevel("§4", "§c"),
+  "cobalt_prestige": formatStaticColorLevel("§1"),
+  "content_prestige": formatStaticColorLevel("§c", "§f"),
+  "crimson_prestige": formatStaticColorLevel("§4"),
+  "firefly_prestige": formatStaticColorLevel("§6", "§e"),
+  "emerald_prestige": formatStaticColorLevel("§2"),
+  "abyss_prestige": formatStaticColorLevel("§1", "§9"),
+  "sapphire_prestige": formatStaticColorLevel("§3"),
+  "emergency_prestige": formatStaticColorLevel("§4", "§e"),
   "mythic_ii_prestige": formatDigitColorLevel(["§6", "§e", "§a", "§b", "§d", "§c"]),
-  "mulberry_prestige": (n, m = "") => `§5[§d${n}${m}§5]`,
-  "slate_prestige": (n, m = "") => `§8[${n}${m}]`,
-  "blood_god_prestige": (n, m = "") => `§d[§b${n}${m}]§d`,
-  "midnight_prestige": (n, m = "") => `§0[${n}${m}]`,
+  "mulberry_prestige": formatStaticColorLevel("§5", "§d"),
+  "slate_prestige": formatStaticColorLevel("§8"),
+  "blood_god_prestige": formatStaticColorLevel("§d", "§b"),
+  "midnight_prestige": formatStaticColorLevel("§0"),
   "sun_prestige": formatDigitColorLevel(["§c", "§6", "§e", "§e", "§6", "§c"]),
   "bulb_prestige": formatDigitColorLevel(["§0", "§e", "§6", "§6", "§e", "§0"]),
-  "twilight_prestige": (n, m = "") => `§1[§3${n}${m}§1]`,
+  "twilight_prestige": formatStaticColorLevel("§1", "§3"),
   "natural_prestige": formatDigitColorLevel(["§a", "§2", "§a", "§e", "§a", "§2"]),
-  "icile_prestige": (n, m = "") => `§9[§b${n}${m}§9]`,
+  "icile_prestige": formatStaticColorLevel("§9", "§b"),
   "mythic_iii_prestige": formatDigitColorLevel(["§e", "§a", "§b", "§d", "§c", "§6"]),
-  "graphite_prestige": (n, m = "") => `§8[§7${n}${m}§8]`,
-  "punk_prestige": (n, m = "") => `§d[§a${n}${m}§d]`,
-  "meltdown_prestige": (n, m = "") => `§e[§c${n}${m}§e]`,
+  "graphite_prestige": formatStaticColorLevel("§8", "§7"),
+  "punk_prestige": formatStaticColorLevel("§d", "§a"),
+  "meltdown_prestige": formatStaticColorLevel("§e", "§c"),
   "iridescent_prestige": formatDigitColorLevel(["§b", "§a", "§b", "§d", "§a", "§a"]),
   "marigold_prestige": formatDigitColorLevel(["§f", "§f", "§e", "§e", "§6", "§6"]),
   "beach_prestige": formatDigitColorLevel(["§9", "§3", "§b", "§f", "§e", "§e"]),
   "spark_prestige": formatDigitColorLevel(["§e", "§e", "§f", "§f", "§8", "§8"]),
   "target_prestige": formatDigitColorLevel(["§c", "§f", "§c", "§c", "§f", "§c"]),
-  "limelight_prestige": (n, m = "") => `§2[§a${n}${m}§2]`,
+  "limelight_prestige": formatStaticColorLevel("§2", "§a"),
   "mythic_iv_prestige": formatDigitColorLevel(["§a", "§b", "§d", "§c", "§6", "§e"]),
-  "cerulean_prestige": (n, m = "") => `§3[§b${n}${m}§3]`,
+  "cerulean_prestige": formatStaticColorLevel("§3", "§b"),
   "magical_prestige": formatDigitColorLevel(["§0", "§5", "§8", "§8", "§5", "§0"]),
   "luminous_prestige": formatDigitColorLevel(["§6", "§6", "§f", "§f", "§b", "§3"]),
   "synthesis_prestige": formatDigitColorLevel(["§a", "§2", "§a", "§e", "§f", "§f"]),
@@ -140,72 +140,72 @@ const SCHEME_MAP = {
   "firework_prestige": formatDigitColorLevel(["§9", "§b", "§f", "§f", "§c", "§4"]),
   "mythic_v_prestige": formatDigitColorLevel(["§b", "§d", "§c", "§6", "§e", "§a"]),
 
-  "ancient": (n, m = "") => `§7[§8${n}${m}§7]`,
-  "the_new_default": (n, m = "") => `§6[§7${n}§6${m}]`,
-  "the_new_new_default": (n, m = "") => `§b[§7${n}§b${m}]`,
-  "launch": (n, m = "") => `§6[${n}§8${m}]`,
-  "jersey": (n, m = "") => `§f[${n}§c${m}§f]`,
-  "spotlight": (n, m = "") => `§0[§f${n}${m}§0]`,
-  "earth": (n, m = "") => `§4[${n}§a${m}§4]`,
-  "glint": (n, m = "") => `§d[${n}§b${m}§d]`,
-  "strength": (n, m = "") => `§c[§d${n}${m}§c]`,
-  "adrenaline": (n, m = "") => `§c[§a${n}${m}§c]`,
-  "pumpkin": (n, m = "") => `§4[§6${n}${m}§4]`,
-  "seashell": (n, m = "") => `§e[${n}§c${m}§e]`,
-  "obsidian": (n, m = "") => `§8[${n}§5${m}§8 ]`,
-  "support": (n, m = "") => `§f[§c${n}${m}§f]`,
-  "mahogany": (n, m = "") => `§e[§6${n}${m}§e]`,
+  "ancient": formatStaticColorLevel("§7", "§8"),
+  "the_new_default": formatStaticColorLevel("§6", "§7", "§6"),
+  "the_new_new_default": formatStaticColorLevel("§b", "§7", "§b"),
+  "launch": formatStaticColorLevel("§6", "§6", "§8"),
+  "jersey": formatStaticColorLevel("§f", "§f", "§c"),
+  "spotlight": formatStaticColorLevel("§0", "§f"),
+  "earth": formatStaticColorLevel("§4", "§4", "§a"),
+  "glint": formatStaticColorLevel("§d", "§d", "§b"),
+  "strength": formatStaticColorLevel("§c", "§d"),
+  "adrenaline": formatStaticColorLevel("§c", "§a"),
+  "pumpkin": formatStaticColorLevel("§4", "§6"),
+  "seashell": formatStaticColorLevel("§e", "§e", "§c"),
+  "obsidian": formatStaticColorLevel("§8", "§8", "§5"),
+  "support": formatStaticColorLevel("§f", "§c"),
+  "mahogany": formatStaticColorLevel("§e", "§6"),
   "spell": formatDigitColorLevel(["§d", "§d", "§d", "§e", "§e", "§e"]),
-  "pillar": (n, m = "") => `§f[§6${n}${m}§f]`,
-  "agile": (n, m = "") => `§a[§f${n}${m}§a]`,
-  "bone": (n, m = "") => `§f[§7${n}§f${m}]`,
-  "slimy": (n, m = "") => `§a[§2${n}${m}§a]`,
-  "holiday": (n, m = "") => `§4[§a${n}${m}§4]`,
-  "iconic": (n, m = "") => `§0[${n}§f${m}§0]`,
+  "pillar": formatStaticColorLevel("§f", "§6"),
+  "agile": formatStaticColorLevel("§a", "§f"),
+  "bone": formatStaticColorLevel("§f", "§7", "§f"),
+  "slimy": formatStaticColorLevel("§a", "§2"),
+  "holiday": formatStaticColorLevel("§4", "§a"),
+  "iconic": formatStaticColorLevel("§0", "§0", "§f"),
   // TODO: Figure out name: Level-conic?
-  "level-conic?": (n, m = "") => `§0[§f${n}§0${m}]`,
+  "level-conic?": formatStaticColorLevel("§0", "§f", "§0"),
   "safari": formatDigitColorLevel(["§2", "§2", "§2", "§6", "§6", "§6"]),
   "gummy_worm": formatDigitColorLevel(["§c", "§c", "§c", "§b", "§b", "§b"]),
   "timetravel": formatDigitColorLevel(["§7", "§0", "§0", "§7", "§7", "§7"]),
-  "horned": (n, m = "") => `§c[§8${n}${m}§c]`,
+  "horned": formatStaticColorLevel("§c", "§8"),
   "sandy": formatDigitColorLevel(["§6", "§e", "§f", "§e", "§6", "§e"]),
   "brutus": formatDigitColorLevel(["§9", "§9", "§8", "§8", "§f", "§f"]),
   "coinsmith": formatDigitColorLevel(["§e", "§8", "§8", "§8", "§6", "§e"]),
   "soulsmith": formatDigitColorLevel(["§7", "§b", "§b", "§f", "§f", "§f"]),
-  "grand_slam": (n, m = "") => `§2[§a${n}§f${m}§2]`,
+  "grand_slam": formatStaticColorLevel("§2", "§a", "§f"),
   "fleet": formatDigitColorLevel(["§0", "§c", "§e", "§a", "§a", "§0"]),
-  "vengeance": (n, m = "") => `§0[§8${n}§e${m}§0]`,
-  "dry": (n, m = "") => `§e[§f${n}§6${m}§e]`,
-  "prickly": (n, m = "") => `§e[§a${n}§f${m}§e]`,
+  "vengeance": formatStaticColorLevel("§0", "§8", "§e"),
+  "dry": formatStaticColorLevel("§e", "§f", "§6"),
+  "prickly": formatStaticColorLevel("§e", "§a", "§f"),
   "cast_iron": formatDigitColorLevel(["§7", "§7", "§8", "§8", "§3", "§3"]),
   "explosive": formatDigitColorLevel(["§c", "§c", "§e", "§e", "§6", "§6"]),
   "verdant": formatDigitColorLevel(["§2", "§a", "§a", "§e", "§6", "§e"]),
   "enchantment": formatDigitColorLevel(["§f", "§d", "§5", "§5", "§d", "§f"]),
-  "void": (n, m = "") => `§8[§5${n}§d${m}§8]`,
-  "fragile": (n, m = "") => `§0[§3${n}§a${m}§0]`,
+  "void": formatStaticColorLevel("§8", "§5", "§d"),
+  "fragile": formatStaticColorLevel("§0", "§3", "§a"),
   "mite": formatDigitColorLevel(["§3", "§2", "§8", "§2", "§a", "§3"]),
-  "shulker": (n, m = "") => `§5[§e${n}§f${m}§5]`,
-  "redstone": (n, m = "") => `§0[§c${n}§4${m}§0]`,
+  "shulker": formatStaticColorLevel("§5", "§e", "§f"),
+  "redstone": formatStaticColorLevel("§0", "§c", "§4"),
   "technical": formatDigitColorLevel(["§c", "§c", "§7", "§7", "§8", "§8"]),
   "melon": formatDigitColorLevel(["§a", "§2", "§a", "§2", "§e", "§a"]),
   "driftwood": formatDigitColorLevel(["§3", "§3", "§e", "§e", "§4", "§4"]),
-  "river": (n, m = "") => `§2[§9${n}§a${m}§2]`,
+  "river": formatStaticColorLevel("§2", "§9", "§a"),
   "mangrove": formatDigitColorLevel(["§4", "§4", "§c", "§c", "§2", "§2"]),
-  "jeremiah": (n, m = "") => `§3[§6${n}§e${m}§3]`,
+  "jeremiah": formatStaticColorLevel("§3", "§6", "§e"),
   "poppy": formatDigitColorLevel(["§c", "§4", "§0", "§0", "§4", "§c"]),
   "creeper": formatDigitColorLevel(["§f", "§f", "§a", "§a", "§2", "§2"]),
   "camo": formatDigitColorLevel(["§8", "§8", "§2", "§2", "§a", "§a"]),
-  "first_aid": (n, m = "") => `§4[§f${n}§c${m}§4]`,
-  "penguin": (n, m = "") => `§8[§9${n}§e${m}§8]`,
+  "first_aid": formatStaticColorLevel("§4", "§f", "§c"),
+  "penguin": formatStaticColorLevel("§8", "§9", "§e"),
   "nether": formatDigitColorLevel(["§7", "§7", "§3", "§3", "§c", "§c"]),
   "wilderness": formatDigitColorLevel(["§2", "§2", "§3", "§3", "§6", "§6"]),
   "one_stone": formatDigitColorLevel(["§7", "§7", "§2", "§2", "§8", "§8"]),
   "circus": formatDigitColorLevel(["§c", "§c", "§6", "§6", "§2", "§2"]),
-  "veracious": (n, m = "") => `§5[§f${n}§6${m}§5]`,
-  "valiant": (n, m = "") => `§c[§f${n}§a${m}§c]`,
-  "venerable": (n, m = "") => `§9[§f${n}§e${m}§9]`,
+  "veracious": formatStaticColorLevel("§5", "§f", "§6"),
+  "valiant": formatStaticColorLevel("§c", "§f", "§a"),
+  "venerable": formatStaticColorLevel("§9", "§f", "§e"),
   "portal": formatDigitColorLevel(["§a", "§a", "§d", "§d", "§c", "§c"]),
-  "sorcratic": (n, m = "") => `§8[§f${n}§e${m}§8]`,
+  "sorcratic": formatStaticColorLevel("§8", "§f", "§e"),
   "parallel_dimension": formatDigitColorLevel(["§9", "§9", "§8", "§8", "§d", "§d"]),
   "tomb": formatDigitColorLevel(["§6", "§9", "§6", "§9", "§e", "§e"]),
   "irigation": formatDigitColorLevel(["§b", "§b", "§a", "§6", "§e", "§e"]),
@@ -213,27 +213,27 @@ const SCHEME_MAP = {
   "potato": formatDigitColorLevel(["§e", "§d", "§d", "§c", "§c", "§8"]),
   "royal": formatDigitColorLevel(["§9", "§9", "§6", "§6", "§c", "§c"]),
   "bubblegum": formatDigitColorLevel(["§5", "§d", "§d", "§f", "§f", "§d"]),
-  "insane": (n, m = "") => `§7[§f${n}§6${m}§7]`,
+  "insane": formatStaticColorLevel("§7", "§f", "§6"),
   "smoke": formatDigitColorLevel(["§0", "§0", "§8", "§8", "§f", "§f"]),
   "scarlet": formatDigitColorLevel(["§8", "§8", "§4", "§4", "§c", "§c"]),
   "afterburn": formatDigitColorLevel(["§b", "§b", "§6", "§8", "§8", "§7"]),
-  "normal": (n, m = "") => `§8[§7${n}§6${m}§8]`,
+  "normal": formatStaticColorLevel("§8", "§7", "§6"),
   "salmon": formatDigitColorLevel(["§c", "§c", "§3", "§3", "§2", "§2"]),
-  "lucky": (n, m = "") => `§0[§2${n}§6${m}§0]`,
+  "lucky": formatStaticColorLevel("§0", "§2", "§6"),
   "likeable": formatDigitColorLevel(["§4", "§4", "§c", "§c", "§f", "§f"]),
   "lunar": formatDigitColorLevel(["§f", "§f", "§f", "§7", "§8", "§8"]),
-  "hypixel": (n, m = "") => `§4[§6${n}§e${m}§4]`,
+  "hypixel": formatStaticColorLevel("§4", "§6", "§e"),
   "sky": formatDigitColorLevel(["§e", "§e", "§b", "§b", "§f", "§f"]),
-  "frosty": (n, m = "") => `§8[§f${n}§7${m}§8]`,
+  "frosty": formatStaticColorLevel("§8", "§f", "§7"),
   "treasure": formatDigitColorLevel(["§6", "§6", "§f", "§f", "§e", "§e"]),
   "gemstone": formatDigitColorLevel(["§4", "§c", "§f", "§f", "§c", "§4"]),
   "dark_magic": formatDigitColorLevel(["§4", "§4", "§5", "§5", "§c", "§c"]),
   "reflections": formatDigitColorLevel(["§1", "§0", "§0", "§d", "§d", "§5"]),
-  "brewery": (n, m = "") => `§5[§c${n}§d${m}§5]`,
+  "brewery": formatStaticColorLevel("§5", "§c", "§d$"),
   "leo": formatDigitColorLevel(["§e", "§e", "§e", "§6", "§4", "§4"]),
   "zebra": formatDigitColorLevel(["§7", "§8", "§7", "§8", "§f", "§8"]),
   "emit": formatDigitColorLevel(["§5", "§d", "§f", "§f", "§d", "§5"]),
-  "smoldering": (n, m = "") => `§0[§4${n}§c${m}§0]`,
+  "smoldering": formatStaticColorLevel("§0", "§4", "§c"),
   "stormy": formatDigitColorLevel(["§e", "§e", "§f", "§f", "§7", "§7"]),
   "borealis": formatDigitColorLevel(["§d", "§d", "§b", "§b", "§a", "§a"]),
   "devil": formatDigitColorLevel(["§0", "§8", "§8", "§4", "§4", "§c"]),
@@ -242,7 +242,7 @@ const SCHEME_MAP = {
   "uplifting": formatDigitColorLevel(["§8", "§8", "§7", "§7", "§e", "§e"]),
   "the_world_moves_on": formatDigitColorLevel(["§8", "§8", "§6", "§6", "§c", "§c"]),
   "swine": formatDigitColorLevel(["§5", "§5", "§d", "§d", "§f", "§f"]),
-  "beagle": (n, m = "") => `§f[§7${n}§f${m}]`,
+  "beagle": formatStaticColorLevel("§f", "§7", "§f"),
   "the_prestige_prestige": formatDigitColorLevel(["§7", "§f", "§6", "§b", "§c", "§d"]),
   "opalsmith": formatDigitColorLevel(["§9", "§9", "§b", "§3", "§d", "§5"]),
   "scurvy": formatDigitColorLevel(["§9", "§3", "§b", "§f", "§a", "§2"]),
@@ -310,14 +310,49 @@ const PRESTIGE_SCHEMES: { req: number;scheme: keyof typeof SCHEME_MAP }[] = [
   { req: 500, scheme: "mythic_v_prestige" },
 ];
 
+function formatStaticColorLevel(bracketColor: string, digitColor = bracketColor, emblemColor = digitColor): Scheme {
+  return (level, bold, underline, strikethrough, emblem) => {
+    const boldFormat = bold ? "§l" : "";
+    const underlineFormat = underline ? "§n" : "";
+    const strikethroughFormat = strikethrough ? "§m" : "";
+
+    digitColor = `${digitColor}${underlineFormat}`;
+    emblemColor = `${emblemColor}${underlineFormat}`;
+
+    return `${bracketColor}${underlineFormat}${strikethroughFormat}[§r${boldFormat}${digitColor}${underlineFormat}${level}${emblemColor}${emblem}§r${bracketColor}${underlineFormat}${strikethroughFormat}]§r`;
+  };
+}
+
 function formatDigitColorLevel(
-  colors: [string, string, string, string, string, string],
+  colors: [
+    leftBracket: string,
+    firstDigit: string,
+    secondDigit: string,
+    thirdDigit: string,
+    emblem: string,
+    rightBracket: string
+  ],
   bracketKind: "square" | "curly" = "square"
-): (level: number, emblem?: string) => string {
+): Scheme {
   const leftBracket = bracketKind === "square" ? "[" : "{";
   const rightBracket = bracketKind === "square" ? "]" : "}";
 
-  return (level: number, emblem?: string) => {
+  return (level, bold, underline, strikethrough, emblem) => {
+    console.log(level, bold, underline, strikethrough, emblem);
+
+    const boldFormat = bold ? "§l" : "";
+    const underlineFormat = underline ? "§n" : "";
+    const strikethroughFormat = strikethrough ? "§m" : "";
+
+    colors = colors.map((color) => `${color}${underlineFormat}`) as [
+      leftBracket: string,
+      firstDigit: string,
+      secondDigit: string,
+      thirdDigit: string,
+      emblem: string,
+      rightBracket: string
+    ];
+
     const formattedEmblem = emblem ? `${colors.at(-2)}${emblem}` : "";
     const formattedLevel = [...`${level}`]
       .reverse()
@@ -325,7 +360,7 @@ function formatDigitColorLevel(
       .reverse()
       .join("");
 
-    return `${colors[0]}${leftBracket}${formattedLevel}${formattedEmblem}${colors.at(-1)}${rightBracket}`;
+    return `§r${colors[0]}${strikethroughFormat}${leftBracket}§r${boldFormat}${formattedLevel}${formattedEmblem}§r${colors.at(-1)}${strikethroughFormat}${rightBracket}§r`;
   };
 }
 
@@ -343,6 +378,10 @@ const PRESTIGE_EMBLEMS: { req: number; emblem: keyof typeof EMBLEM_MAP }[] = [
   { req: 500, emblem: "three_fourths_jam" },
 ];
 
+const BOLD_LEVEL_REQUIREMENT = 300;
+const UNDERLINE_LEVEL_REQUIREMENT = 400;
+const STRIKETHROUGH_LEVEL_REQUIREMENT = 500;
+
 export const getIntendedLevelFormatted = (level: number) => {
   level = Math.floor(level);
 
@@ -352,13 +391,22 @@ export const getIntendedLevelFormatted = (level: number) => {
   const emblem = EMBLEM_MAP[emblemKey];
   const scheme = SCHEME_MAP[schemeKey];
 
-  return scheme(level, emblem);
+  return scheme(
+    level,
+    level >= BOLD_LEVEL_REQUIREMENT,
+    level >= UNDERLINE_LEVEL_REQUIREMENT,
+    level >= STRIKETHROUGH_LEVEL_REQUIREMENT,
+    emblem
+  );
 };
 
 export function getFormattedLevel(
   level: number,
   selectedScheme: string | undefined,
-  selectedEmblem: string | undefined
+  selectedEmblem: string | undefined,
+  bold: boolean,
+  underline: boolean,
+  strikethrough: boolean
 ) {
   selectedScheme = selectedScheme?.replace("scheme_", "");
   selectedEmblem = selectedEmblem?.replace("emblem_", "");
@@ -391,7 +439,7 @@ export function getFormattedLevel(
   const emblem = emblemKey ? EMBLEM_MAP[emblemKey] : undefined;
   const scheme = SCHEME_MAP[schemeKey];
 
-  return scheme(level, emblem);
+  return scheme(level, bold, underline, strikethrough, emblem);
 }
 
 const MYTHICAL_KIT = "kit_mythical_";

@@ -124,8 +124,20 @@ export class SkyWars {
     this.level = getLevel(this.exp);
 
     this.naturalLevelFormatted = getIntendedLevelFormatted(this.level);
-    this.levelFormatted = getFormattedLevel(this.level, data.active_scheme, data.active_emblem);
     this.nextLevelFormatted = getIntendedLevelFormatted(this.level + 1);
+
+    const isBold = data.levelFormattedWithBrackets?.includes("§l") ?? false;
+    const isUnderline = data.levelFormattedWithBrackets?.includes("§n") ?? false;
+    const isStrikethrough = data.levelFormattedWithBrackets?.includes("§m") ?? false;
+
+    this.levelFormatted = getFormattedLevel(
+      this.level,
+      data.active_scheme,
+      data.active_emblem,
+      isBold,
+      isUnderline,
+      isStrikethrough
+    );
 
     this.progression = getLevelProgress(this.exp, this.level);
 
@@ -158,6 +170,7 @@ export class SkyWars {
     );
 
     this.mini = new SkyWarsMode(data, "mini");
+    this.mini.kit = parseKit(data.activeKit_SOLO);
 
     this.challenges = new ChallengesSkyWars(data);
   }
