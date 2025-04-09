@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ChallengesSkyWars, SkyWarsMode } from "./mode.js";
+import { ChallengesSkyWars, SkyWarsMini, SkyWarsMode } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
@@ -107,7 +107,7 @@ export class SkyWars {
   public doubles: SkyWarsMode;
 
   @Field()
-  public mini: SkyWarsMode;
+  public mini: SkyWarsMini;
 
   @Field()
   public challenges: ChallengesSkyWars;
@@ -169,7 +169,7 @@ export class SkyWars {
       add(soloNormalWins, doublesNormalWins)
     );
 
-    this.mini = new SkyWarsMode(data, "mini");
+    this.mini = new SkyWarsMini(data);
     this.mini.kit = parseKit(data.activeKit_SOLO);
 
     this.challenges = new ChallengesSkyWars(data);
