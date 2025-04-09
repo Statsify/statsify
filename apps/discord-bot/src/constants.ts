@@ -314,6 +314,10 @@ export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeF
           map = "map";
           break;
 
+        case "mini":
+          map = "mini";
+          break;
+
         case "overall":
         default:
           map = "overall";

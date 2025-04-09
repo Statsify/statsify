@@ -11,13 +11,14 @@ import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { add } from "@statsify/math";
-import { getFormattedLevel, getLevel, getLevelProgress, parseKit } from "./util.js";
+import { getFormattedLevel, getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
 import type { APIData } from "@statsify/util";
 
 export const SKYWARS_MODES = new GameModes([
   { api: "overall" },
   { api: "solo" },
   { api: "doubles" },
+  { api: "mini", hypixel: "mini_normal" },
 
   { hypixel: "solo_insane_lucky", formatted: "Lucky Solo" },
   { hypixel: "teams_insane_lucky", formatted: "Lucky Doubles" },
@@ -78,14 +79,14 @@ export class SkyWars {
   @Field()
   public potionsBrewed: number;
 
-  @Field({ store: { default: "⋆" } })
-  public star: string;
-
   @Field({
     leaderboard: { enabled: false },
     historical: { enabled: false, fieldName: "Levels Gained" },
   })
   public level: number;
+
+  @Field({ store: { default: getIntendedLevelFormatted(0) } })
+  public naturalLevelFormatted: string;
 
   @Field()
   public levelFormatted: string;
@@ -106,6 +107,9 @@ export class SkyWars {
   public doubles: SkyWarsMode;
 
   @Field()
+  public mini: SkyWarsMode;
+
+  @Field()
   public challenges: ChallengesSkyWars;
 
   public constructor(data: APIData, ap: APIData) {
@@ -117,14 +121,25 @@ export class SkyWars {
     this.tokens = data.cosmetic_tokens;
     this.potionsBrewed = ap.skywars_tonic_taker;
 
-    this.star = (data.levelFormatted || "⋆").replace(/\d|[a-f]|k|r|l|§/g, "");
     this.level = getLevel(this.exp);
-    this.levelFormatted = getFormattedLevel(this.level, this.star);
 
-    const { current, total } = getLevelProgress(this.exp);
-    this.progression = new Progression(current, total);
+    this.naturalLevelFormatted = getIntendedLevelFormatted(this.level);
+    this.nextLevelFormatted = getIntendedLevelFormatted(this.level + 1);
 
-    this.nextLevelFormatted = getFormattedLevel(this.level + 1, this.star);
+    const isBold = data.levelFormattedWithBrackets?.includes("§l") ?? false;
+    const isUnderline = data.levelFormattedWithBrackets?.includes("§n") ?? false;
+    const isStrikethrough = data.levelFormattedWithBrackets?.includes("§m") ?? false;
+
+    this.levelFormatted = getFormattedLevel(
+      this.level,
+      data.active_scheme,
+      data.active_emblem,
+      isBold,
+      isUnderline,
+      isStrikethrough
+    );
+
+    this.progression = getLevelProgress(this.exp, this.level);
 
     const normalKit = parseKit(
       data.activeKit_SOLO_random ? "random" : data.activeKit_SOLO
@@ -153,6 +168,9 @@ export class SkyWars {
       add(soloInsaneWins, doublesInsaneWins),
       add(soloNormalWins, doublesNormalWins)
     );
+
+    this.mini = new SkyWarsMode(data, "mini");
+    this.mini.kit = parseKit(data.activeKit_SOLO);
 
     this.challenges = new ChallengesSkyWars(data);
   }
