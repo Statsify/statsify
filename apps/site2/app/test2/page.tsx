@@ -7,11 +7,12 @@
  */
 
 import Image from "next/image";
-import { SearchIcon } from "~/components/icons/search";
+import SkyWarsIcon from "~/public/icons/skywars.png";
 import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
+import { MinecraftText } from "~/components/ui/minecraft-text";
+import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
-import SkyWarsIcon from "~/public/icons/skywars.png";
 
 const boards = {
   easy: {
@@ -19,29 +20,31 @@ const boards = {
       diagonalRewards: [
         {
           name: "Diagonal One",
-          description: "§8+§610,000§7 Arcade Games Coins§r",
+          description: "§8+§610,000 §7Arcade Games Coins§r",
         },
         {
           name: "Digaonal Two",
-          description: "§8+25,000§6 Murder Mystery Tokens§r",
+          description: "§8+§25,000 §7Murder Mystery Tokens§r",
         },
       ],
       columnRewards: [
-        { name: "Column One", description: "§8+§35,000§7 Build Battle Tokens§r" },
-        { name: "Column Two", description: "§8+§250,000§7 Hypixel Experience§r" },
-        { name: "Column Three", description: "§8+§35,000§7 Murder Mystery Tokens§r" },
-        { name: "Column Four", description: "§8+§71§6 2.0x§7 Personal Coin Booster (§bTwo Hour§7)§r" },
+        { name: "Column One", description: "§8+§25,000 §7Build Battle Tokens§r" },
+        { name: "Column Two", description: "§8+§350,000 §7Hypixel Experience§r" },
+        { name: "Column Three", description: "§8+§25,000 §7Murder Mystery Tokens§r" },
+        { name: "Column Four", description: "§8+§71§6 2.0x §7Personal Coin Booster (§bTwo Hour§7)§r" },
       ],
       rowRewards: [
-        { name: "Row One", description: "§8+§250,000§7 Hypixel Experience§r" },
-        { name: "Row Two", description: "§8+§b175,000§7 Event Experience§r" },
-        { name: "Row Three", description: "§8+§610,000§7 Arcade Games Coins§r" },
-        { name: "Row Four", description: "§8+§e3§d Daily Reward Token§r" },
+        { name: "Row One", description: "§8+§350,000 §7Hypixel Experience§r" },
+        { name: "Row Two", description: "§8+§b175,000 §7Event Experience§r" },
+        { name: "Row Three", description: "§8+§610,000 §7Arcade Games Coins§r" },
+        { name: "Row Four", description: "§8+§e3 §dDaily Reward Token§r" },
       ],
       blackoutReward: {
         name: "Blackout",
         description:
-          "§8+§a§l4§r§7 Bingo Bucks§r\n§8+§650,000§7 Coins in All Minigames§r\n§8+§350,000§7 Hypixel Experience§r\n§8+§b175,000§7 Event Experience§r",
+          [
+            "§8+ §a§l4§r §7Bingo Bucks§r", "§8+§650,000 §7Coins in All Minigames§r", "§8+§350,000 §7Hypixel Experience§r", "§8+§b175,000 §7Event Experience§r",
+          ],
       },
       tasks: [
         {
@@ -103,7 +106,7 @@ const boards = {
         {
           game: "build_battle",
           name: "Festive Spirit",
-          description: 'Receive a "Good" or higher vote in a game of Build Battle',
+          description: "Receive a \"Good\" or higher vote in a game of Build Battle",
           progress: "Progress: ✖",
           field: "festiveSpirit",
         },
@@ -159,6 +162,33 @@ const boards = {
       ],
     },
     pvp: {
+      diagonalRewards: [
+        {
+          name: "Diagonal One",
+          description: "§8+§65,000 §7Wool Games Wool§r",
+        },
+        {
+          name: "Digaonal Two",
+          description: "§8+§25,000 §7Bed Wars Tokens§r",
+        },
+      ],
+      columnRewards: [
+        { name: "Column One", description: "§8+§35,000§7 Build Battle Tokens§r" },
+        { name: "Column Two", description: "§8+§350,000§7 §7Hypixel Experience§r" },
+        { name: "Column Three", description: "§8+§25,000 §7SkyWars Tokens§r" },
+        { name: "Column Four", description: "§8+§71 §62.0x §7Personal Coin Booster §7(§bTwo Hour§7)§r" },
+      ],
+      rowRewards: [
+        { name: "Row One", description: "§8+§350,000§7 §7Hypixel Experience§r" },
+        { name: "Row Two", description: "§8+§b175,000§7 §7Event Experience§r" },
+        { name: "Row Three", description: "§8+§25,000 §7Duels Tokens§r" },
+        { name: "Row Four", description: "§8+§e3 §dDaily Reward Token§r" },
+      ],
+      blackoutReward: {
+        name: "Blackout",
+        description:
+          ["§8+§a§l4 §7Bingo Buck§r", "§8+§650,000 §7Coins in All Minigames§r", "§8+§350,000§7 §7Hypixel Experience§r", "§8+§b175,000§7 §7Event Experience§r"],
+      },
       tasks: [
         {
           field: "littleShopOfTraps",
@@ -275,6 +305,33 @@ const boards = {
       ],
     },
     classic: {
+      diagonalRewards: [
+        {
+          name: "Diagonal One",
+          description: "§8+§65,000 §7VampireZ Coins§r",
+        },
+        {
+          name: "Digaonal Two",
+          description: "§8+§65,000 §7Smash Heroes Coins§r",
+        },
+      ],
+      columnRewards: [
+        { name: "Column One", description: "§8+§65,000 §7Mega Walls Coins§r" },
+        { name: "Column Two", description: "§8+§350,000§7 §7Hypixel Experience§r" },
+        { name: "Column Three", description: "§8+§65,000 §7Cops and Crims Coins§r" },
+        { name: "Column Four", description: "§8+§71 §62.0x §7Personal Coin Booster §7(§bTwo Hour§7)§r" },
+      ],
+      rowRewards: [
+        { name: "Row One", description: "§8+§350,000§7 §7Hypixel Experience§r" },
+        { name: "Row Two", description: "§8+§b175,000§7 §7Event Experience§r" },
+        { name: "Row Three", description: "§8+§25,000 §7The TNT Games Tokens§r" },
+        { name: "Row Four", description: "§8+§e3 §dDaily Reward Token§r" },
+      ],
+      blackoutReward: {
+        name: "Blackout",
+        description:
+          ["§8+§a§l4 §7Bingo Bucks§r", "§8+§650,000 §7Coins in All Minigames§r", "§8+§350,000§7 §7Hypixel Experience§r", "§8+§b175,000§7 §7Event Experience"],
+      },
       tasks: [
         {
           field: "notEnoughToGoAround",
@@ -394,151 +451,139 @@ const boards = {
 };
 
 export default function TestPage() {
-  const difficulty = "easy";
-  const category = "casual";
-
-  const bingo = boards[difficulty][category];
-
   return (
-    <div className="relative h-[100dvh]">
+    <>
       <Background
         background="background"
         className="h-full"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />
       <div className="absolute h-[100dvh] w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
-      <div className="w-full h-full flex justify-center items-center flex-col gap-8">
+      <div className="w-[95%] max-w-[1800px] mx-auto flex justify-center items-center flex-col gap-8">
         <div className="flex flex-col gap-2 items-center">
           <h1 className="text-mc-yellow text-mc-7 font-bold">Bingo Tracker</h1>
           <h2 className="text-mc-gold text-mc-3">12th Anniversary Bingo</h2>
         </div>
-        <Search className="w-[80%]" />
-        <div className="flex gap-4 items-center justify-center">
-          <div className="flex gap-2">
-            <Box borderRadius={{ bottom: 0 }}>
-              <span className="text-mc-white font-bold">Casual</span>
-            </Box>
-            <Box borderRadius={{ bottom: 0 }}>
-              <span className="text-mc-white/60">PvP</span>
-            </Box>
-            <Box borderRadius={{ bottom: 0 }}>
-              <span className="text-mc-white/60">Classic</span>
-            </Box>
-          </div>
-          <div className="h-[70%] w-[2px] bg-white/20" />
-          <div className="flex gap-2">
-            <Box borderRadius={{ bottom: 0 }}>
-              <span className="text-mc-green font-bold">Easy</span>
-            </Box>
-            <Box borderRadius={{ bottom: 0 }}>
-              <span className="text-mc-red/50">Hard</span>
-            </Box>
-          </div>
+        <div className="w-[80%] flex items-stretch flex-col gap-8">
+          <Search />
+          <Box contentClass="grid grid-cols-3 gap-8">
+            <CategoryOverview />
+            <CategoryOverview />
+            <CategoryOverview />
+          </Box>
+          <Tabs />
         </div>
-        <div className="flex justify-evenly w-full">
-          <div className="flex flex-col">
-            <Box contentClass="flex flex-col gap-8">
-              <div className="flex flex-col gap-4">
-                <p className="text-center">
-                  <span className="flex items-center justify-center gap-2">
-                    <Image
-                      src={SkyWarsIcon}
-                      width={32}
-                      height={32}
-                      alt="icon"
-                      style={{ imageRendering: "pixelated" }}
-                      className="opacity-80 group-aria-pressed:opacity-100 transition-opacity"
-                    />
-                    Casual Bingo Cards
-                  </span>
-                </p>
-                <div className="flex flex-col gap-1">
-                  <p className="text-mc-gray">
-                    <span className="text-mc-green">Easy</span>: <span className="text-mc-red">0%</span> completed
-                  </p>
-                  <p className="text-mc-gray">
-                    <span className="text-mc-red">Hard</span>: <span className="text-mc-red">0%</span> completed
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4">
-                <p className="text-center">
-                  <span className="flex items-center justify-center gap-2">
-                    <Image
-                      src={SkyWarsIcon}
-                      width={32}
-                      height={32}
-                      alt="icon"
-                      style={{ imageRendering: "pixelated" }}
-                      className="opacity-80 group-aria-pressed:opacity-100 transition-opacity"
-                    />
-                    PvP Bingo Cards
-                  </span>
-                </p>
-                <div className="flex flex-col gap-1">
-                  <p className="text-mc-gray">
-                    <span className="text-mc-green">Easy</span>: <span className="text-mc-red">0%</span> completed
-                  </p>
-                  <p className="text-mc-gray">
-                    <span className="text-mc-red">Hard</span>: <span className="text-mc-red">0%</span> completed
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4">
-                <p className="text-center">
-                  <span className="flex items-center justify-center gap-2">
-                    <Image
-                      src={SkyWarsIcon}
-                      width={32}
-                      height={32}
-                      alt="icon"
-                      style={{ imageRendering: "pixelated" }}
-                      className="opacity-80 group-aria-pressed:opacity-100 transition-opacity"
-                    />
-                    Classic Bingo Cards
-                  </span>
-                </p>
-                <div className="flex flex-col gap-1">
-                  <p className="text-mc-gray">
-                    <span className="text-mc-green">Easy</span>: <span className="text-mc-red">0%</span> completed
-                  </p>
-                  <p className="text-mc-gray">
-                    <span className="text-mc-red">Hard</span>: <span className="text-mc-red">0%</span> completed
-                  </p>
-                </div>
-              </div>
-            </Box>
-          </div>
-          <div className="grid grid-cols-6 grid-rows-6">
-            <Box>{bingo.diagonalRewards[0].name}</Box>
-            {bingo.columnRewards.map((reward) => (
-              <Box key={reward.name}>{reward.name}</Box>
-            ))}
-            <Box>{bingo.diagonalRewards[1].name}</Box>
-
-            <div className="grid grid-cols-4 grid-rows-4 row-span-5 col-span-5">
-              {["task1", "task2", "task3", "task4"].map((item, index) => (
-                <Box key={index}>{item}</Box>
-              ))}
-              {["task5", "task6", "task7", "task8"].map((item, index) => (
-                <Box key={index}>{item}</Box>
-              ))}
-              {["task9", "task10", "task11", "task12"].map((item, index) => (
-                <Box key={index}>{item}</Box>
-              ))}
-              {["task13", "task14", "task15", "task16"].map((item, index) => (
-                <Box key={index}>{item}</Box>
-              ))}
-            </div>
-
-            {bingo.rowRewards.map((reward) => (
-              <Box key={reward.name} containerClass="col-start-6">
-                {reward.name}
-              </Box>
-            ))}
-          </div>
+        <div className="flex flex-col justify-evenly w-full">
+          <BingoBoard />
         </div>
       </div>
+    </>
+  );
+}
+
+function CategoryOverview() {
+  return (
+    <div className="flex flex-col justify-center gap-4 text-center">
+      <div className="flex gap-2 justify-center">
+        <Image
+          src={SkyWarsIcon}
+          width={32}
+          height={32}
+          alt="icon"
+          style={{ imageRendering: "pixelated" }}
+          className="opacity-80 group-aria-pressed:opacity-100 transition-opacity"
+        />
+        <p className="flex items-center justify-center gap-2">
+          Casual Bingo Cards
+        </p>
+      </div>
+      <div className="flex flex-col justify-center gap-1">
+        <p className="text-mc-gray">
+          <span className="text-mc-green">Easy</span>: <span className="text-mc-red">0%</span> completed
+        </p>
+        <p className="text-mc-gray">
+          <span className="text-mc-red">Hard</span>: <span className="text-mc-red">0%</span> completed
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function BingoBoard() {
+  const difficulty = "easy";
+  const category = "casual";
+
+  const bingo = boards[difficulty][category];
+
+  return (
+    <>
+      <div className="grid md:hidden grid-cols-4 grid-rows-4 gap-2 **:text-mc-1">
+        {bingo.tasks.map((task) => (
+          <Box key={task.field} contentClass="@container flex flex-col gap-2 text-center">
+            <p className="font-bold text-mc-gold text-center leading-[16px]">{task.name}</p>
+            <p className="leading-[16px] @min-[150px]:block hidden">{task.description}</p>
+          </Box>
+        ))}
+      </div>
+      <div className="hidden md:grid grid-cols-6 grid-rows-6 gap-2 **:text-mc-1.5">
+        <Box containerClass="@container" contentClass="flex flex-col gap-2">
+          <p className="font-bold text-mc-gold text-center leading-[16px]">{bingo.diagonalRewards[0].name}</p>
+          <p className="leading-[16px] @min-[150px]:block hidden"><MinecraftText>{bingo.diagonalRewards[0].description}</MinecraftText></p>
+        </Box>
+        {bingo.columnRewards.map((reward) => (
+          <Box key={reward.name} containerClass="@container" contentClass="flex flex-col gap-2">
+            <p className="font-bold text-mc-gold text-center leading-[16px]">{reward.name}</p>
+            <p className="leading-[16px] @min-[150px]:block hidden"><MinecraftText>{reward.description}</MinecraftText></p>
+          </Box>
+        ))}
+        <Box containerClass="@container" contentClass="flex flex-col gap-2">
+          <p className="font-bold text-mc-gold text-center leading-[16px]">{bingo.diagonalRewards[1].name}</p>
+          <p className="leading-[16px] @min-[150px]:block hidden"><MinecraftText>{bingo.diagonalRewards[1].description}</MinecraftText></p>
+        </Box>
+        <div className="row-start-2 col-start-2 grid grid-cols-subgrid grid-rows-subgrid row-span-4 col-span-4">
+          {bingo.tasks.map((task) => (
+            <Box key={task.field} containerClass="@container" contentClass="flex flex-col gap-2 text-center">
+              <p className="font-bold text-mc-gold text-center leading-[16px]">{task.name}</p>
+              <p className="leading-[16px] @min-[150px]:block hidden">{task.description}</p>
+            </Box>
+          ))}
+        </div>
+        {bingo.rowRewards.map((reward) => (
+          <Box key={reward.name} containerClass="col-start-6 @container" contentClass="flex flex-col gap-2">
+            <p className="font-bold text-mc-gold text-center">{reward.name}</p>
+            <p className="leading-[16px] @min-[150px]:block hidden"><MinecraftText>{reward.description}</MinecraftText></p>
+          </Box>
+        ))}
+        <Box containerClass="col-start-6 @container" contentClass="flex flex-col gap-2">
+          <p className="font-bold text-mc-pink text-center">{bingo.blackoutReward.name}</p>
+          <div className="flex-col gap-1  @min-[150px]:flex hidden">
+            {bingo.blackoutReward.description.map((part) => <MinecraftText key={part}>{part}</MinecraftText>)}
+          </div>
+        </Box>
+      </div>
+    </>
+  );
+}
+
+function Tabs() {
+  return (
+    <div className="grid grid-cols-[repeat(3,1fr)_2px_repeat(2,1fr)] gap-4 items-center justify-center text-center">
+      <Box borderRadius={{ bottom: 0 }}>
+        <span className="text-mc-white font-bold">Casual</span>
+      </Box>
+      <Box borderRadius={{ bottom: 0 }}>
+        <span className="text-mc-white/60">PvP</span>
+      </Box>
+      <Box borderRadius={{ bottom: 0 }}>
+        <span className="text-mc-white/60">Classic</span>
+      </Box>
+      <div className="h-[70%] bg-white/20" />
+      <Box borderRadius={{ bottom: 0 }}>
+        <span className="text-mc-green font-bold">Easy</span>
+      </Box>
+      <Box borderRadius={{ bottom: 0 }}>
+        <span className="text-mc-red/50">Hard</span>
+      </Box>
     </div>
   );
 }
