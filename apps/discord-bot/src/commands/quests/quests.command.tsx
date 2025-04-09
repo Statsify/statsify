@@ -84,12 +84,10 @@ export class QuestsCommand {
     const { quests } = player.stats;
     let modes = this.modes.getModes();
 
+    // Currently only SkyWars has a monthly quest so it is useless to show other modes
     if (time == QuestTime.Monthly) {
+      // Filter for objects with more than 1 field (the total field)
       modes = modes.filter((mode) => mode.api === "overall" || Object.entries(quests.monthly[mode.api]).length > 1);
-    }
-
-    switch (time) {
-      case QuestTime.Monthly:
     }
 
     const pages: Page[] = modes
