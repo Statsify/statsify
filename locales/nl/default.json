@@ -36,6 +36,7 @@
     "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
     "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
     "quests-weekly": "$t(commands.quests-command, { \"name\": \"Weekly\" })",
+    "quests-monthly": "$t(commands.quests-command, { \"name\": \"Monthly\" })",
     "close": "Close the current support ticket",
     "colors": "Een lijst met Minecraft kleurcodes",
     "commands": "View Statsify command usage",
