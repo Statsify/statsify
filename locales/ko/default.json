@@ -36,6 +36,7 @@
     "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
     "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
     "quests-weekly": "$t(commands.quests-command, { \"name\": \"Weekly\" })",
+    "quests-monthly": "$t(commands.quests-command, { \"name\": \"월간\" })",
     "close": "This is a test to see if hidden translations get uploaded, hopefully, they do Not!",
     "colors": "Minecraft 색상 코드 목록을 확인해요",
     "commands": "View Statsify command usage",
