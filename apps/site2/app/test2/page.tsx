@@ -155,7 +155,7 @@ const boards = {
           name: "The Thing!",
           description: "Have 5 players correctly guess your build in a game of Guess the Build in Build Battle",
           progress: "Progress: ✔",
-          field: "theThing!",
+          field: "theThing",
         },
         {
           game: "Murder Mystery",
@@ -510,7 +510,7 @@ const boards = {
           progress: "Progress: ✔",
         },
         {
-          field: "canTCatchMe!",
+          field: "canTCatchMe",
           game: "Murder Mystery",
           name: "Can't Catch Me!",
           description: "Kill 13 players as Murderer in games of Murder Mystery",
@@ -521,7 +521,7 @@ const boards = {
           game: "Prototype",
           name: "Untouchable",
           description: "Win a game of Disasters in the Prototype Lobby with full health remaining",
-          progress: "Progress: 13/50",
+          progress: "Progress: ✔",
         },
         {
           field: "vacationFunds",
@@ -664,7 +664,7 @@ const boards = {
           progress: "Progress: ✖",
         },
         {
-          field: "giveThatBack!",
+          field: "giveThatBack",
           game: "Wool Games",
           name: "Give That Back!",
           description: "Kill a player carrying your team's wool in a game of Capture the Wool in the Wool Games Lobby",
@@ -741,7 +741,7 @@ const boards = {
           progress: "Progress: ✖",
         },
         {
-          field: "canTStopTheCelebrations!",
+          field: "cantStopTheCelebrations",
           game: "Bed Wars",
           name: "Can't Stop the Celebrations!",
           description: "Win a game of Bed Wars with a challenge active",
@@ -811,7 +811,7 @@ const boards = {
           progress: "Progress: ✖",
         },
         {
-          field: "snowbodySSafe!",
+          field: "snowbodySSafe",
           game: "The TNT Games",
           name: "Snowbody's Safe!",
           description: "Kill 4 players in a game of PvP Run in the TNT Games Lobby",
@@ -839,7 +839,7 @@ const boards = {
           progress: "Progress: ✖",
         },
         {
-          field: "whatDoesTheRedWireDo?",
+          field: "whatDoesTheRedWireDo",
           game: "Cops and Crims",
           name: "What Does the Red Wire do?",
           description: "Defuse a bomb in a game of Defusal in Cops and Crims",
