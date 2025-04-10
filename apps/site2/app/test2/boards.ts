@@ -69,7 +69,7 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
         },
         {
           description: "§8+§25,000 §7Murder Mystery Tokens§r",
-          name: "Digaonal Two",
+          name: "Diagonal Two",
         },
       ],
       rowRewards: [
@@ -240,7 +240,7 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
         },
         {
           description: "§8+§65,000 §7Smash Heroes Coins§r",
-          name: "Digaonal Two",
+          name: "Diagonal Two",
         },
       ],
       rowRewards: [
@@ -411,7 +411,7 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
         },
         {
           description: "§8+§25,000 §7Bed Wars Tokens§r",
-          name: "Digaonal Two",
+          name: "Diagonal Two",
         },
       ],
       rowRewards: [
@@ -584,7 +584,7 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
         },
         {
           description: "§8+§225,000 §7Murder Mystery Tokens§r",
-          name: "Digaonal Two",
+          name: "Diagonal Two",
         },
       ],
       rowRewards: [
@@ -755,7 +755,7 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
         },
         {
           description: "§8+§625,000 §7Blitz SG Coins§r",
-          name: "Digaonal Two",
+          name: "Diagonal Two",
         },
       ],
       rowRewards: [
@@ -926,7 +926,7 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
         },
         {
           description: "§8+§225,000 §7Bed Wars Tokens§r",
-          name: "Digaonal Two",
+          name: "Diagonal Two",
         },
       ],
       rowRewards: [

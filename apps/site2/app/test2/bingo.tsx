@@ -12,7 +12,7 @@ import Image from "next/image";
 import SkyWarsIcon from "~/public/icons/skywars.png";
 import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
-import { type Category, type Difficulty, boards } from "./boards";
+import { type Category, type Difficulty, Reward, Task, boards } from "./boards";
 import { ComponentProps, useState } from "react";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SearchIcon } from "~/components/icons/search";
@@ -22,8 +22,6 @@ import type { Player } from "@statsify/schemas";
 export function BingoPage({ player }: { player: Player }) {
   const [category, setCategory] = useState<Category>("casual");
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
-
-  console.log(player.stats.general.bingo);
 
   return (
     <div className="h-full">
@@ -41,7 +39,9 @@ export function BingoPage({ player }: { player: Player }) {
         <div className="w-[80%] flex items-stretch flex-col gap-4">
           <Search />
           <div className="w-full h-[2px] bg-black/50 my-2" />
-          <Box contentClass="text-center text-mc-3"><MinecraftText>{player.displayName}</MinecraftText></Box>
+          <Box contentClass="text-center text-mc-3">
+            <MinecraftText>{player.displayName}</MinecraftText>
+          </Box>
           <Box contentClass="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
             <CategoryOverview category="Casual" easyCompletion={24} hardComp={25} />
             <CategoryOverview category="PvP" easyCompletion={12} hardComp={0} />
@@ -62,7 +62,15 @@ export function BingoPage({ player }: { player: Player }) {
   );
 }
 
-function CategoryOverview({ category, easyCompletion: easyCompletion, hardComp }: { category: string; easyCompletion: number; hardComp: number }) {
+function CategoryOverview({
+  category,
+  easyCompletion: easyCompletion,
+  hardComp,
+}: {
+  category: string;
+  easyCompletion: number;
+  hardComp: number;
+}) {
   return (
     <div className="flex flex-col justify-center gap-1 lg:gap-4 text-center text-mc-1.5 lg:text-mc-2">
       <div className="flex gap-2 justify-center">
@@ -81,11 +89,11 @@ function CategoryOverview({ category, easyCompletion: easyCompletion, hardComp }
           <span className="text-mc-green">Easy</span>:{" "}
           <span
             className={
-              easyCompletion == 0 ?
-                "text-mc-red" :
-                (easyCompletion > 0 && easyCompletion < 100 ?
-                  "text-mc-yellow" :
-                  "text-mc-green font-bold")
+              easyCompletion == 0
+                ? "text-mc-red"
+                : easyCompletion > 0 && easyCompletion < 100
+                ? "text-mc-yellow"
+                : "text-mc-green font-bold"
             }
           >
             {easyCompletion}%
@@ -110,13 +118,16 @@ function BingoBoard({ player, category, difficulty }: { player: Player; category
     <>
       <div className="overflow-x-auto grid grid-cols-[repeat(6,1fr)] grid-rows-6 gap-2 **:text-mc-1.25 md:**:text-mc-1.5 leading-4">
         <RewardCard reward={bingo.diagonalRewards[0]} />
-        {bingo.columnRewards.map((reward) => <RewardCard key={reward.name} reward={reward} />)}
+        {bingo.columnRewards.map((reward) => (
+          <RewardCard key={reward.name} reward={reward} />
+        ))}
         <RewardCard reward={bingo.diagonalRewards[1]} />
         <div className="row-start-2 col-start-2 grid grid-cols-subgrid grid-rows-subgrid row-span-4 col-span-4">
           {bingo.tasks.map((task) => (
             <TaskCard
               key={task.field as string}
               task={task}
+              finished={ASDA[task.field]}
               complete={ASDA[task.field] >= task.progress}
             />
           ))}
@@ -139,31 +150,54 @@ function RewardCard({
 }: { reward: Reward; variant?: "blackout" | "regular" } & ComponentProps<typeof Box>) {
   return (
     <Box {...props} containerClass={`${containerClass} min-w-50`} contentClass={`flex flex-col gap-2  ${contentClass}`}>
-      <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>{reward.name} Reward</p>
-      {typeof reward.description === "string" ?
-        (
-          <p className="">
-            <MinecraftText>{reward.description}</MinecraftText>
-          </p>
-        ) :
-        (
-          <div className="flex flex-col gap-0.5">
-            {reward.description.map((part) => (
-              <MinecraftText key={part}>{part}</MinecraftText>
-            ))}
-          </div>
-        )}
+      <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
+        {reward.name} Reward
+      </p>
+      {typeof reward.description === "string" ? (
+        <p className="">
+          <MinecraftText>{reward.description}</MinecraftText>
+        </p>
+      ) : (
+        <div className="flex flex-col gap-0.5">
+          {reward.description.map((part) => (
+            <MinecraftText key={part}>{part}</MinecraftText>
+          ))}
+        </div>
+      )}
     </Box>
   );
 }
-function TaskCard({ task, complete }: { task: Task; complete: boolean }) {
+
+function TaskCard({ task, finished, complete }: { task: Task; finished: number; complete: boolean }) {
   return (
-    <Box containerClass="min-w-50" contentClass="flex flex-col gap-2 text-center">
-      <div className={complete ? "bg-green-200" : "bg-red-200"}>
-        <p className="font-bold text-mc-gold text-center">{task.name}</p>
-        <p className="text-mc-dark-gray text-center">{task.game} Task</p>
+    <Box
+      containerClass="min-w-50"
+      contentClass="flex flex-col justify-between gap-2 text-center"
+      variant={complete ? "green" : "red"}
+    >
+      <div className="flex flex-col gap-2">
+        <div className={complete ? "first:text-mc-green" : "first:text-mc-red"}>
+          <p className="font-bold text-center">{task.name}</p>
+          <p className="text-mc-dark-gray text-center">{task.game} Task</p>
+        </div>
+        <p>{task.description}</p>
       </div>
-      <p>{task.description}</p>
+      <p className="text-mc-gray">
+        Progress:{" "}
+        <span
+          className={`${
+            finished > 0 && finished < task.progress
+              ? "text-mc-yellow"
+              : finished >= task.progress
+              ? "text-mc-green"
+              : "text-mc-red"
+          }`}
+        >
+          {finished}
+        </span>
+        <span className={complete ? "text-mc-green" : "text-mc-gray"}>/</span>
+        <span className={complete ? "text-mc-green" : "text-mc-gray"}>{task.progress}</span>
+      </p>
     </Box>
   );
 }

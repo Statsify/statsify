@@ -48,7 +48,7 @@
   grid-area: stack;
 }
 
-@utility grid-cols-fluid-*{
+@utility grid-cols-fluid-* {
   grid-template-columns: repeat(--value(integer), minmax(min-content, 1fr));
 }
 
@@ -57,7 +57,7 @@
 }
 
 @utility grid-cols-balanced {
-  grid-template-columns: minmax(min-content, max-content) 1fr minmax(min-content,max-content);
+  grid-template-columns: minmax(min-content, max-content) 1fr minmax(min-content, max-content);
 }
 
 @utility mask-feather-* {

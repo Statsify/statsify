@@ -64,7 +64,30 @@ export interface BoxProps extends Omit<ComponentProps<"div">, "className"> {
   shadow?: number;
   contentClass?: string;
   containerClass?: string;
+  variant?: keyof typeof boxVariants;
 }
+
+const boxVariants = {
+  default: {
+    background: "linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.50) 100%), rgba(0, 0, 0, 0.50)",
+    shadow: "bg-black/42",
+  },
+  red: {
+    background:
+      "radial-gradient(circle at 50% -10%, rgba(0, 0, 0, 0.06) 40%, hsla(0, 100%, 30%, 0.5) 110%), rgba(0, 0, 0, 0.50)",
+    shadow: "bg-[#0a0000]/42",
+  },
+  green: {
+    background:
+      "radial-gradient(circle at 50% -10%, rgba(0, 0, 0, 0.06) 40%, hsla(120, 100%, 30%, 0.4) 110%), rgba(0, 0, 0, 0.50)",
+    shadow: "bg-[#000a00]/42",
+  },
+  pink: {
+    background:
+      "radial-gradient(circle at 50% -10%, rgba(0, 0, 0, 0.06) 40%, hsla(311, 100%, 50%, 0.4) 110%), rgba(0, 0, 0, 0.50)",
+    shadow: "bg-[#000a00]/42",
+  },
+};
 
 export function Box({
   borderRadius: partialBorderRadius = {},
@@ -72,20 +95,21 @@ export function Box({
   contentClass: contentClassName,
   containerClass: containerClassName,
   style,
+  variant = "default",
   ...props
 }: BoxProps) {
   const borderRadius = toBorderRadius(partialBorderRadius);
 
   const shadowPath = polygon(
-    ...(borderRadius.bottomRight === 0 ?
-      [] :
-      [
-        `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-        `calc(100% - ${shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-        `calc(100% - ${shadow}px) calc(100% - ${shadow}px)`,
-        `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${shadow}px)`,
-        `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-      ] as const),
+    ...(borderRadius.bottomRight === 0
+      ? []
+      : ([
+          `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
+          `calc(100% - ${shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
+          `calc(100% - ${shadow}px) calc(100% - ${shadow}px)`,
+          `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${shadow}px)`,
+          `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
+        ] as const)),
 
     `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)`,
     `${borderRadius.bottomLeft}px 100%`,
@@ -93,7 +117,8 @@ export function Box({
     `calc(100% - ${borderRadius.bottomRight || shadow}px) calc(100% - ${shadow}px)`,
     `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)`,
 
-    borderRadius.bottomRight !== 0 && `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
+    borderRadius.bottomRight !== 0 &&
+      `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
 
     `calc(100% - ${shadow}px) ${borderRadius.topRight}px`,
     `100% ${borderRadius.topRight}px`,
@@ -101,7 +126,9 @@ export function Box({
     `calc(100% - ${shadow}px) calc(100% - ${borderRadius.bottomRight}px)`,
     `calc(100% - ${shadow}px) ${borderRadius.topRight}px`,
 
-    borderRadius.bottomRight === 0 ? `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)` : `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`
+    borderRadius.bottomRight === 0
+      ? `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)`
+      : `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`
   );
 
   const contentPath = polygon(
@@ -122,7 +149,7 @@ export function Box({
   return (
     <div className={cn("relative text-mc-white me-2 mb-2", containerClassName)}>
       <div
-        className="absolute bg-black/42 w-full h-full"
+        className={`absolute w-full h-full ${boxVariants[variant].shadow}`}
         style={{ transform: `translate(${shadow}px, ${shadow}px)`, clipPath: shadowPath }}
       />
       <div
@@ -130,7 +157,7 @@ export function Box({
         className={cn("p-4 text-mc-2 h-full", contentClassName)}
         style={{
           ...style,
-          background: "linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.06) 100%), rgba(0, 0, 0, 0.50)",
+          background: boxVariants[variant].background,
           backgroundBlendMode: "overlay, normal",
           clipPath: contentPath,
         }}
@@ -139,8 +166,6 @@ export function Box({
   );
 }
 
-export function polygon(
-  ...points: (`${string} ${string}` | false)[]
-) {
+export function polygon(...points: (`${string} ${string}` | false)[]) {
   return `polygon(${points.filter(Boolean).join(", ")})`;
 }
