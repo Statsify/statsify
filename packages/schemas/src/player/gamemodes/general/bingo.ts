@@ -1,56 +1,64 @@
-import { Field } from "#metadata";
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
 import { APIData } from "@statsify/util";
+import { Field } from "#metadata";
 
 export class BingoCasualEasy2025 {
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public goldenSun: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public robinHood: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public ifYouGiveAHouseACookie: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public fallinPastTheFall: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public homeRun: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public podiumPosition: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public intermediateEggHunter: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public doomsdayPrep: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public iSurvivedAnniversaryBingo: number;
 
-  @Field({ leaderboard: { enabled: false }})
-  public ainTNoTNTTag: number;
+  @Field({ leaderboard: { enabled: false } })
+  public aintNoTNTTag: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public intoTheLabyrinth: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public notQuiteADeadEnd: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public aPerfectMedium: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public theThing: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public oneWithTheFish: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public festiveSpirit: number;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData = {}) {
     this.goldenSun = data.Murdergoldensun;
     this.robinHood = data.Murderbowkill;
     this.ifYouGiveAHouseACookie = data.Housingcookie;
@@ -60,7 +68,7 @@ export class BingoCasualEasy2025 {
     this.intermediateEggHunter = data.Arcadeintermediateegghunter;
     this.doomsdayPrep = data.Murdersurvivorwin;
     this.iSurvivedAnniversaryBingo = data.Disasterssurvive;
-    this.ainTNoTNTTag = data.Disasterspotato;
+    this.aintNoTNTTag = data.Disasterspotato;
     this.intoTheLabyrinth = data.Arcadeintothelabyrinth;
     this.notQuiteADeadEnd = data.Arcadezombiesdoor;
     this.aPerfectMedium = data.Bbspeedmedium;
@@ -71,55 +79,55 @@ export class BingoCasualEasy2025 {
 }
 
 export class BingoPvPEasy2025 {
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public treasureHunter: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public multifacetedKiller: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public sumoVictor: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public aLongWayDown: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public ironWall: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public swiftOfFoot: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public classicVictor: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public funWithFriends: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public suitUp: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public woolThatKills: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public crushingVictory: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public bedDestroyer: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public greenEyedMonster: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public littleShopOfTraps: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public infestation: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public andStayDown: number;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData = {}) {
     this.treasureHunter = data.Skywarsopenchests;
     this.multifacetedKiller = data.Duelseasykillsacrossmodes;
     this.sumoVictor = data.Duelssumowin;
@@ -140,55 +148,55 @@ export class BingoPvPEasy2025 {
 }
 
 export class BingoClassicEasy2025 {
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public bloodthirsty: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public tooStronk: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public sunnyDelight: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public luckyLooter: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public revelingInTheSun: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public amateurWizard: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public notEnoughToGoAround: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public defusalVictor: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public ninjaVanish: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public quenchy: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public shutdown: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public slowingThemDown: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public witheringHeights: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public handOfTheKing: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public longNight: number;
 
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public threeTimesTheFun: number;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData = {}) {
     this.bloodthirsty = data.Smashbloodthirsty;
     this.tooStronk = data.Smashthrowoff;
     this.sunnyDelight = data.Quakesunnydelight;
@@ -209,55 +217,55 @@ export class BingoClassicEasy2025 {
 }
 
 export class BingoCasualHard2025 {
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public fastANDAccurate: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public scaryGood: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public lightningFast: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public freakyFalling: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public masterEggHunter: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public grandSlam: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public springParty: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public vacationFunds: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public caughtInTheAct: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public canTCatchMe: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public infectiousFun: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public untouchable2: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public untouchable1: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public junkHoarder: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public safeAndSound: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public slayinThroughTheEnd: number;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData = {}) {
     this.fastANDAccurate = data.Bbspeedfirst;
     this.scaryGood = data.Bbscarygood;
     this.lightningFast = data.Bbfastguess;
@@ -278,55 +286,55 @@ export class BingoCasualHard2025 {
 }
 
 export class BingoPvPHard2025 {
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public cabinetOfSouls: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public anOffering: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public betterNerfThis: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public funInTheSun: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public renaissanceKiller: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public hardcoreChampion: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public cleanSheet: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public headInTheClouds: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public giveThatBack: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public notAChance: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public technicolorMurder: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public immortal: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public partySOver: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public oneForAll: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public cantStopTheCelebrations: number;
-  
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public finalDestination: number;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData = {}) {
     this.cabinetOfSouls = data.Skywarscabinetofsouls;
     this.anOffering = data.Swoffering;
     this.betterNerfThis = data.Skywarschallenge;
@@ -347,40 +355,55 @@ export class BingoPvPHard2025 {
 }
 
 export class BingoClassicHard2025 {
-  @Field({ leaderboard: { enabled: false }})
+  @Field({ leaderboard: { enabled: false } })
   public unlimitedPower: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public fromRichesToRags: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public deadlyDrifting: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public landslideVictory: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public undeath: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public anExerciseInRestraint: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public oneStepAbove: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public whatDoesTheRedWireDo: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public unassailable: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public aLoudSilence: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public multifaceted: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public oneLastChallenge: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public notSoClose: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public catchMeIfYouCan: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public snowbodySSafe: number;
-  @Field({ leaderboard: { enabled: false }})
+
+  @Field({ leaderboard: { enabled: false } })
   public sharpenedDiamond: number;
 
-  public constructor(data: APIData) {
+  public constructor(data: APIData = {}) {
     this.unlimitedPower = data.Blitzstar;
     this.fromRichesToRags = data.Blitzdiamondarmorkill;
     this.deadlyDrifting = data.Tkrdeadlydrifting;
@@ -410,10 +433,10 @@ export class BingoEasy {
   @Field()
   public classic: BingoClassicEasy2025;
 
-  public constructor(data: APIData) {
-    this.casual = new BingoCasualEasy2025(data.casual_easy);
-    this.pvp = new BingoPvPEasy2025(data.pvp_easy);
-    this.classic = new BingoClassicEasy2025(data.classic_easy);
+  public constructor(data: APIData = {}) {
+    this.casual = new BingoCasualEasy2025(data.casual_easy?.objectives);
+    this.pvp = new BingoPvPEasy2025(data.pvp_easy?.objectives);
+    this.classic = new BingoClassicEasy2025(data.classic_easy?.objectives);
   }
 }
 
@@ -427,10 +450,10 @@ export class BingoHard {
   @Field()
   public classic: BingoClassicHard2025;
 
-  public constructor(data: APIData) {
-    this.casual = new BingoCasualHard2025(data.casual_hard);
-    this.pvp = new BingoPvPHard2025(data.pvp_hard);
-    this.classic = new BingoClassicHard2025(data.classic_hard);
+  public constructor(data: APIData = {}) {
+    this.casual = new BingoCasualHard2025(data.casual_hard?.objectives);
+    this.pvp = new BingoPvPHard2025(data.pvp_hard?.objectives);
+    this.classic = new BingoClassicHard2025(data.classic_hard?.objectives);
   }
 }
 
@@ -441,8 +464,8 @@ export class Bingo {
   @Field()
   public hard: BingoHard;
 
-  public constructor(data: APIData) {
-    this.easy = new BingoEasy(data.easter[2025].bingo);
-    this.hard = new BingoHard(data.easter[2025].bingo);
+  public constructor(data: APIData = {}) {
+    this.easy = new BingoEasy(data.easter?.["2025"]?.bingo);
+    this.hard = new BingoHard(data.easter?.["2025"]?.bingo);
   }
 }

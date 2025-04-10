@@ -1,27 +1,50 @@
 {
 	"$schema": "https://turborepo.org/schema.json",
-	"globalDependencies": ["pnpm.lock", "tsconfig.json", ".swcrc", "eslint.config.js"],
+	"globalDependencies": [
+		"pnpm.lock",
+		"tsconfig.json",
+		".swcrc",
+		"eslint.config.js"
+	],
 	"ui": "tui",
 	"tasks": {
 		"build": {
-			"outputs": ["dist/**", ".next/**", "pkg/**"],
-			"dependsOn": ["^build"]
+			"outputs": [
+				"dist/**",
+				".next/**",
+				"pkg/**"
+			],
+			"dependsOn": [
+				"^build"
+			]
 		},
 		"test:types": {
 			"outputs": [],
-			"dependsOn": ["^test:types"]
+			"dependsOn": [
+				"^test:types"
+			]
 		},
 		"test": {
 			"outputs": [],
-			"dependsOn": ["build", "^test"]
+			"dependsOn": [
+				"build",
+				"^test"
+			]
 		},
 		"test:coverage": {
-			"outputs": ["coverage"],
-			"dependsOn": ["build", "^test:coverage"]
+			"outputs": [
+				"coverage"
+			],
+			"dependsOn": [
+				"build",
+				"^test:coverage"
+			]
 		},
 		"lint": {
 			"outputs": [],
-			"dependsOn": ["^lint"]
+			"dependsOn": [
+				"^lint"
+			]
 		}
 	}
 }

@@ -11,7 +11,7 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import type { DeepFlatten } from "./flatten.js";
 
-// const __dirname = dirname(fileURLToPath(import.meta.url));
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export interface Config {
   database: {
@@ -298,7 +298,7 @@ export const config = async <T extends keyof FlatConfig>(
 ): Promise<FlatConfig[T]> => {
   // Don't load the config while testing
   if (process.env.VITEST) return defaultValue as FlatConfig[T];
-  if (!cfg) 
+  if (!cfg)
     cfg = await loadConfig().then((c) => c.default);
 
   const value =
