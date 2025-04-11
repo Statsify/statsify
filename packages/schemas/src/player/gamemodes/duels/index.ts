@@ -22,7 +22,13 @@ import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
 
 export const DUELS_MODES = new GameModes([
-  { api: "overall" },
+  {
+    api: "overall",
+    submodes: [
+      { api: "stats" },
+      { api: "titles" },
+    ],
+  },
   { api: "arena", hypixel: "DUELS_DUEL_ARENA" },
   { api: "blitzsg", hypixel: "DUELS_BLITZ_DUEL", formatted: "BlitzSG" },
   { api: "bow", hypixel: "DUELS_BOW_DUEL" },

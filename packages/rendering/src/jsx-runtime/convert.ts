@@ -101,9 +101,7 @@ const processSideData = (data: SideData) => {
   const remainingPixelPercentRatio = data.staticLength / data.percentSpaceLeft;
 
   return (
-    (data.highestPixelToPercentRatio > remainingPixelPercentRatio ?
-      data.highestPixelToPercentRatio :
-      remainingPixelPercentRatio) + data.paddedLength
+    (Math.max(data.highestPixelToPercentRatio, remainingPixelPercentRatio)) + data.paddedLength
   );
 };
 

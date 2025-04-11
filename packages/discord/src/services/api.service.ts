@@ -19,6 +19,7 @@ import {
   SessionNotFoundException,
   ApiService as StatsifyApiService,
   StatusNotFoundException,
+  SuccessResponse,
 } from "@statsify/api-client";
 import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
@@ -215,6 +216,12 @@ export class ApiService extends StatsifyApiService {
       if (error.message === "player") throw this.missingPlayer(type, tag);
 
       throw this.unknownError();
+    });
+  }
+
+  public override async deletePlayerSession(id: string): Promise<SuccessResponse> {
+    return super.deletePlayerSession(id).catch(() => {
+      throw new ErrorMessage("verification.requiredVerification");
     });
   }
 

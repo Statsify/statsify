@@ -9,12 +9,12 @@
 import { Historical, Table } from "#components";
 import { ProfileTime } from "#commands/base.hypixel-command";
 import { formatRaceTime } from "@statsify/util";
-import type { ArcadeModes, PartyGames, SubModesForMode } from "@statsify/schemas";
+import type { ArcadeModes, PartyGames, SubModeForMode } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
 
 interface PartyGamesTableProps {
   stats: PartyGames;
-  submode: SubModesForMode<ArcadeModes, "partyGames">;
+  submode: SubModeForMode<ArcadeModes, "partyGames">;
   t: LocalizeFunction;
   time: ProfileTime;
 }

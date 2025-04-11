@@ -13,17 +13,17 @@ export const SkyWarsQuests = createGameModeQuests({
   game: FormattedGame.SKYWARS,
   fieldPrefix: "skywars",
   daily: [
-    { field: "solo_win", propertyKey: "soloWin" },
-    { field: "solo_kills", propertyKey: "soloKills" },
-    { field: "team_win", propertyKey: "doublesWin" },
-    { field: "team_kills", propertyKey: "doublesKills" },
-    { field: "arcade_win", propertyKey: "labWin" },
-    { field: "corrupt_win", propertyKey: "corruptedWin" },
-    { field: "daily_tokens", propertyKey: "tokens", name: "Tokens!" },
+    { field: "daily_mini_win", propertyKey: "miniSkyWarsWins" },
+    { field: "solo_win", propertyKey: "skyWarsSoloWins" },
+    { field: "team_win", propertyKey: "skyWarsDoublesWins" },
+    { field: "arcade_win", propertyKey: "luckyBlockSkyWarsWins" },
+    { field: "daily_mega_kills", propertyKey: "megaSkyWarsKills" },
   ],
   weekly: [
-    { field: "weekly_kills", propertyKey: "weeklyKills" },
-    { field: "weekly_arcade_win_all", propertyKey: "scientist" },
-    { field: "weekly_free_loot_chest", propertyKey: "freeLootChest" },
+    { field: "weekly_wins", propertyKey: "skyWarsWins" },
+    { field: "weekly_kills", propertyKey: "skyWarsKills" },
+  ],
+  monthly: [
+    { field: "monthly_earn_opals", propertyKey: "earnAnOpal" },
   ],
 });

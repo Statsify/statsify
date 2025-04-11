@@ -29,6 +29,7 @@ import {
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
   PutUserBadgeResponse,
+  SuccessResponse,
 } from "#responses";
 import { UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
@@ -192,6 +193,16 @@ export class ApiService {
     return this.request<GetPlayerResponse>(
       "/session",
       { player: tag },
+      "PATCH"
+    );
+  }
+
+  public deletePlayerSession(
+    id: string
+  ) {
+    return this.request<SuccessResponse>(
+      "/session",
+      { id },
       "DELETE"
     );
   }
