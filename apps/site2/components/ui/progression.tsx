@@ -23,6 +23,7 @@ export function Progression({
   metric,
   progression,
   currentLevel,
+  naturalLevel = currentLevel,
   nextLevel,
   className,
   xpBar = minigameXpBar,
@@ -31,6 +32,7 @@ export function Progression({
   metric: string;
   progression: ProgressionSchema;
   currentLevel: string;
+  naturalLevel?: string;
   nextLevel: string;
   xpBar?: (percentage: number) => string;
   className?: string;
@@ -40,7 +42,7 @@ export function Progression({
       <p>{label}: <MinecraftText>{currentLevel}</MinecraftText></p>
       <p>{metric} Progress: <span className="text-mc-aqua">{t(progression.current)}</span>/<span className="text-mc-green">{t(progression.max)}</span></p>
       <p>
-        <MinecraftText>{currentLevel} {xpBar(progression.percent)} {nextLevel}</MinecraftText>
+        <MinecraftText>{naturalLevel} {xpBar(progression.percent)} {nextLevel}</MinecraftText>
       </p>
     </Box>
   );

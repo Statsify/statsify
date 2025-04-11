@@ -34,6 +34,7 @@ export function SkyWarsPreview({ className }: { className?: string }) {
           metric="EXP"
           progression={skywars.progression}
           currentLevel={skywars.levelFormatted}
+          naturalLevel={skywars.naturalLevel}
           nextLevel={skywars.nextLevelFormatted}
         />
         <Box containerClass="row-start-4 xl:row-start-3 xl:col-start-2">
