@@ -25,7 +25,9 @@ import { readFileSync } from "node:fs";
 import { tips } from "../tips.js";
 import type { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 
-const isDevelopment = config("environment") === "dev";
+const isDevelopment = await config("environment") === "dev";
+const applicationId = await config("discordBot.applicationId");
+const port = await config("discordBot.port", { required: false });
 
 export class CommandListener extends AbstractCommandListener {
   private cooldowns: Map<string, Map<string, number>>;
@@ -41,8 +43,8 @@ export class CommandListener extends AbstractCommandListener {
       client as InteractionServer,
       rest,
       commands,
-      config("discordBot.applicationId"),
-      config("discordBot.port", { required: false })!
+      applicationId,
+      port!
     );
 
     this.apiService = Container.get(ApiService);

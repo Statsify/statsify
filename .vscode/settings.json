@@ -25,7 +25,7 @@
     "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
@@ -46,5 +46,10 @@
   "testing.automaticallyOpenPeekView": "never",
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer"
-  }
+  },
+  "tailwindCSS.classAttributes": [
+    "className",
+    "containerClass",
+    "contentClass"
+  ]
 }

@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --font-minecraft: "Minecraft";
+
+  --color-mc-black: #000000;
+  --color-mc-dark-blue: #0000AA;
+  --color-mc-dark-green: #00AA00;
+  --color-mc-dark-aqua: #00AAAA;
+  --color-mc-dark-red: #AA0000;
+  --color-mc-dark-purple: #AA00AA;
+  --color-mc-gold: #FFAA00;
+  --color-mc-gray: #AAAAAA;
+  --color-mc-dark-gray: #555555;
+  --color-mc-blue: #5555FF;
+  --color-mc-green: #55FF55;
+  --color-mc-aqua: #55FFFF;
+  --color-mc-red: #FF5555;
+  --color-mc-pink: #FF55FF;
+  --color-mc-yellow: #FFFF55;
+  --color-mc-white: #FFFFFF;
+
+  --color-discord-500: rgb(88 101 242);
+
+  --drop-shadow-mc-1: 1px 1px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-2: 2px 2px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-3: 3px 3px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-4: 4px 4px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-5: 5px 5px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-6: 6px 6px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-7: 7px 7px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-8: 8px 8px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-9: 9px 9px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-10: 10px 10px color-mix(in srgb, currentColor 25%, #000 75%);
+}
+
+@utility text-mc-* {
+  font-family: var(--font-minecraft);
+  font-size: calc(16px * --value(number));
+  text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
+}
+
+@utility grid-areas-stack {
+  grid-template-areas: "stack";
+}
+
+@utility grid-area-stack {
+  grid-area: stack;
+}
+
+@utility grid-cols-fluid-* {
+  grid-template-columns: repeat(--value(integer), minmax(min-content, 1fr));
+}
+
+@utility grid-cols-content-* {
+  grid-template-columns: repeat(--value(integer), minmax(min-content, max-content));
+}
+
+@utility grid-cols-balanced {
+  grid-template-columns: minmax(min-content, max-content) 1fr minmax(min-content, max-content);
+}
+
+@utility mask-feather-* {
+  mask: linear-gradient(90deg, rgb(0 0 0 / 0) 0%, rgb(0 0 0 / 1) --value(integer)%, rgb(0 0 0 / 1) calc(100% - --value(integer)%), rgb(0 0 0 / 0) 100%);
+}
+
+@utility logo-shadow-* {
+  filter: drop-shadow(0 1px 0 color-mix(in srgb, --value([color]) 25%, #000 75%)) drop-shadow(0 -1px 0 color-mix(in srgb, --value([color]) 85%, #fff 15%));
+}
+
+@layer base {
+  button {
+    cursor: pointer;
+  }
+
+  body {
+    background-color: #111111;
+  }
+}

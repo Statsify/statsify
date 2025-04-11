@@ -1,0 +1,35 @@
+{
+  "name": "site2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@statsify/schemas": "workspace:^",
+    "date-fns": "^4.1.0",
+    "motion": "^12.5.0",
+    "next": "^15.1.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tailwind-merge": "^3.0.2",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@statsify/api-client": "workspace:^",
+    "@tailwindcss/postcss": "4.0.13",
+    "@types/node": "^20.17.16",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "15.1.4",
+    "mongoose": "^8.9.5",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^4.0.13",
+    "typescript": "^5.7.3"
+  }
+}

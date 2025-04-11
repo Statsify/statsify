@@ -1,0 +1,588 @@
+{
+  "pvp_easy": {
+    "objectives": [
+      {
+        "hypixelName": "Skywarsopenchests",
+        "hypixelMaxProgress": 10,
+        "statsifyName": "treasureHunter"
+      },
+      {
+        "hypixelName": "Duelseasykillsacrossmodes",
+        "hypixelMaxProgress": 4,
+        "statsifyName": "multifacetedKiller"
+      },
+      {
+        "hypixelName": "Duelssumowin",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "sumoVictor"
+      },
+      {
+        "hypixelName": "Skywarsvoidkill",
+        "hypixelMaxProgress": 3,
+        "statsifyName": "aLongWayDown"
+      },
+      {
+        "hypixelName": "Skywarsironarmor",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "ironWall"
+      },
+      {
+        "hypixelName": "Duelsparkour3rd",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "swiftOfFoot"
+      },
+      {
+        "hypixelName": "Duelsclassicwin",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "classicVictor"
+      },
+      {
+        "hypixelName": "Skywarsfunwithfriends",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "funWithFriends"
+      },
+      {
+        "hypixelName": "Woolctwkit",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "suitUp"
+      },
+      {
+        "hypixelName": "Woolsheepexplosion",
+        "hypixelMaxProgress": 2,
+        "statsifyName": "woolThatKills"
+      },
+      {
+        "hypixelName": "Wwflawless",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "crushingVictory"
+      },
+      {
+        "hypixelName": "Bedwarsnorest",
+        "hypixelMaxProgress": 2,
+        "statsifyName": "bedDestroyer"
+      },
+      {
+        "hypixelName": "Bedwarsemerald",
+        "hypixelMaxProgress": 2,
+        "statsifyName": "greenEyedMonster"
+      },
+      {
+        "hypixelName": "Bedwarsshopoftraps",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "littleShopOfTraps"
+      },
+      {
+        "hypixelName": "Bedwarsbedbug",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "infestation"
+      },
+      {
+        "hypixelName": "Bedwarsstaydead",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "andStayDown"
+      }
+    ],
+    "rewards": [
+      "diagonal_one",
+      "column_one",
+      "column_two",
+      "column_three",
+      "column_four",
+      "diagonal_two",
+      "row_one",
+      "row_two",
+      "row_three",
+      "row_four",
+      "black_out"
+    ]
+  },
+  "casual_easy": {
+    "objectives": [
+      {
+        "hypixelName": "Murdergoldensun",
+        "hypixelMaxProgress": 15,
+        "statsifyName": "goldenSun"
+      },
+      {
+        "hypixelName": "Murderbowkill",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "robinHood"
+      },
+      {
+        "hypixelName": "Housingcookie",
+        "hypixelMaxProgress": 5,
+        "statsifyName": "ifYouGiveAHouseACookie"
+      },
+      {
+        "hypixelName": "Arcadedropperfallinpast",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "fallinPastTheFall"
+      },
+      {
+        "hypixelName": "Arcademanywinseasy",
+        "hypixelMaxProgress": 3,
+        "statsifyName": "homeRun"
+      },
+      {
+        "hypixelName": "Arcadetop3round",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "podiumPosition"
+      },
+      {
+        "hypixelName": "Arcadeintermediateegghunter",
+        "hypixelMaxProgress": 25,
+        "statsifyName": "intermediateEggHunter"
+      },
+      {
+        "hypixelName": "Murdersurvivorwin",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "doomsdayPrep"
+      },
+      {
+        "hypixelName": "Disasterssurvive",
+        "hypixelMaxProgress": 5,
+        "statsifyName": "iSurvivedAnniversaryBingo"
+      },
+      {
+        "hypixelName": "Disasterspotato",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "ainTNoTNTTag"
+      },
+      {
+        "hypixelName": "Arcadeintothelabyrinth",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "intoTheLabyrinth"
+      },
+      {
+        "hypixelName": "Arcadezombiesdoor",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "notQuiteADeadEnd"
+      },
+      {
+        "hypixelName": "Bbspeedmedium",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "aPerfectMedium"
+      },
+      {
+        "hypixelName": "Bbthething",
+        "hypixelMaxProgress": 5,
+        "statsifyName": "theThing"
+      },
+      {
+        "hypixelName": "Maincatchfish",
+        "hypixelMaxProgress": 25,
+        "statsifyName": "oneWithTheFish"
+      },
+      {
+        "hypixelName": "Bbvote",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "festiveSpirit"
+      }
+    ],
+    "rewards": [
+      "row_two",
+      "diagonal_two",
+      "column_four",
+      "column_three",
+      "diagonal_one",
+      "row_four",
+      "column_two",
+      "row_one",
+      "row_three",
+      "column_one",
+      "black_out"
+    ]
+  },
+  "classic_easy": {
+    "objectives": [
+      {
+        "hypixelName": "Smashbloodthirsty",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "bloodthirsty"
+      },
+      {
+        "hypixelName": "Smashthrowoff",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "tooStronk"
+      },
+      {
+        "hypixelName": "Quakesunnydelight",
+        "hypixelMaxProgress": 10,
+        "statsifyName": "sunnyDelight"
+      },
+      {
+        "hypixelName": "Tkrluckylooter",
+        "hypixelMaxProgress": 10,
+        "statsifyName": "luckyLooter"
+      },
+      {
+        "hypixelName": "Tntrevelingsun",
+        "hypixelMaxProgress": 5,
+        "statsifyName": "revelingInTheSun"
+      },
+      {
+        "hypixelName": "Wizardscapture",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "amateurWizard"
+      },
+      {
+        "hypixelName": "Tntnotenough",
+        "hypixelMaxProgress": 2,
+        "statsifyName": "notEnoughToGoAround"
+      },
+      {
+        "hypixelName": "Cvcdefusalwin",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "defusalVictor"
+      },
+      {
+        "hypixelName": "Cvctrickortreat",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "ninjaVanish"
+      },
+      {
+        "hypixelName": "Blitzquenchy",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "quenchy"
+      },
+      {
+        "hypixelName": "Blitzshutdown",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "shutdown"
+      },
+      {
+        "hypixelName": "Warlordsdamageflag",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "slowingThemDown"
+      },
+      {
+        "hypixelName": "Megawallswitheringheights",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "witheringHeights"
+      },
+      {
+        "hypixelName": "Megawallsdefense",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "handOfTheKing"
+      },
+      {
+        "hypixelName": "Vampzlongnight",
+        "hypixelMaxProgress": 5,
+        "statsifyName": "longNight"
+      },
+      {
+        "hypixelName": "Paintballthreetimes",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "threeTimesTheFun"
+      }
+    ],
+    "rewards": [
+      "diagonal_one",
+      "column_one",
+      "column_two",
+      "column_three",
+      "column_four",
+      "diagonal_two",
+      "row_one",
+      "row_two",
+      "row_three",
+      "row_four",
+      "black_out"
+    ]
+  },
+  "classic_hard": {
+    "objectives": [
+      {
+        "hypixelName": "Blitzstar",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "unlimitedPower"
+      },
+      {
+        "hypixelName": "Blitzdiamondarmorkill",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "fromRichesToRags"
+      },
+      {
+        "hypixelName": "Tkrdeadlydrifting",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "deadlyDrifting"
+      },
+      {
+        "hypixelName": "Wizardslandslide",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "landslideVictory"
+      },
+      {
+        "hypixelName": "Quakekillstreak",
+        "hypixelMaxProgress": 10,
+        "statsifyName": "undeath"
+      },
+      {
+        "hypixelName": "Arenaexerciserestraint",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "anExerciseInRestraint"
+      },
+      {
+        "hypixelName": "Tntrunonestepabove",
+        "hypixelMaxProgress": 4,
+        "statsifyName": "oneStepAbove"
+      },
+      {
+        "hypixelName": "Cvcredwire",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "whatDoesTheRedWireDo"
+      },
+      {
+        "hypixelName": "Vampzsurvive",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "unassailable"
+      },
+      {
+        "hypixelName": "Paintballloudsilence",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "aLoudSilence"
+      },
+      {
+        "hypixelName": "Cvcallaround",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "multifaceted"
+      },
+      {
+        "hypixelName": "Megawallsfinaldestination",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "oneLastChallenge"
+      },
+      {
+        "hypixelName": "Smashtwolives",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "notSoClose"
+      },
+      {
+        "hypixelName": "Warlordscapture",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "catchMeIfYouCan"
+      },
+      {
+        "hypixelName": "Tntpvpholidaykills",
+        "hypixelMaxProgress": 4,
+        "statsifyName": "snowbodySSafe"
+      },
+      {
+        "hypixelName": "Wallssharpeneddiamond",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "sharpenedDiamond"
+      }
+    ],
+    "rewards": [
+      "row_two",
+      "column_three",
+      "column_two",
+      "column_one",
+      "row_three",
+      "diagonal_two",
+      "row_one",
+      "diagonal_one",
+      "column_four",
+      "row_four",
+      "black_out"
+    ]
+  },
+  "rewards": {
+    "easy": true,
+    "hard": true
+  },
+  "casual_hard": {
+    "objectives": [
+      {
+        "hypixelName": "Bbspeedfirst",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "fastANDAccurate"
+      },
+      {
+        "hypixelName": "Bbscarygood",
+        "hypixelMaxProgress": 200,
+        "statsifyName": "scaryGood"
+      },
+      {
+        "hypixelName": "Bbfastguess",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "lightningFast"
+      },
+      {
+        "hypixelName": "Arcadefreakyfalling",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "freakyFalling"
+      },
+      {
+        "hypixelName": "Arcademasteregghunter",
+        "hypixelMaxProgress": 50,
+        "statsifyName": "masterEggHunter"
+      },
+      {
+        "hypixelName": "Arcademanywins",
+        "hypixelMaxProgress": 10,
+        "statsifyName": "grandSlam"
+      },
+      {
+        "hypixelName": "Arcadespringparty",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "springParty"
+      },
+      {
+        "hypixelName": "Murdercollectgoldmultigame",
+        "hypixelMaxProgress": 100,
+        "statsifyName": "vacationFunds"
+      },
+      {
+        "hypixelName": "Murdercaughtintheact",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "caughtInTheAct"
+      },
+      {
+        "hypixelName": "Murdercantcatchme",
+        "hypixelMaxProgress": 13,
+        "statsifyName": "canTCatchMe"
+      },
+      {
+        "hypixelName": "Murderinfectionstreak",
+        "hypixelMaxProgress": 10,
+        "statsifyName": "infectiousFun"
+      },
+      {
+        "hypixelName": "Disasterssurvivehard",
+        "hypixelMaxProgress": 50,
+        "statsifyName": "untouchable2"
+      },
+      {
+        "hypixelName": "Disastersfullhealth",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "untouchable1"
+      },
+      {
+        "hypixelName": "Maincatchjunk",
+        "hypixelMaxProgress": 50,
+        "statsifyName": "junkHoarder"
+      },
+      {
+        "hypixelName": "Arcadezombies25",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "safeAndSound"
+      },
+      {
+        "hypixelName": "Arcadezombiesprison",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "slayinThroughTheEnd"
+      }
+    ],
+    "rewards": [
+      "diagonal_one",
+      "column_one",
+      "column_two",
+      "column_three",
+      "row_four",
+      "row_three",
+      "row_one",
+      "diagonal_two",
+      "column_four",
+      "row_two",
+      "black_out"
+    ]
+  },
+  "pvp_hard": {
+    "objectives": [
+      {
+        "hypixelName": "Skywarscabinetofsouls",
+        "hypixelMaxProgress": 3,
+        "statsifyName": "cabinetOfSouls"
+      },
+      {
+        "hypixelName": "Swoffering",
+        "hypixelMaxProgress": 5,
+        "statsifyName": "anOffering"
+      },
+      {
+        "hypixelName": "Skywarschallenge",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "betterNerfThis"
+      },
+      {
+        "hypixelName": "Skywarsfunsun",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "funInTheSun"
+      },
+      {
+        "hypixelName": "Duelshardkillsacrossmodes",
+        "hypixelMaxProgress": 25,
+        "statsifyName": "renaissanceKiller"
+      },
+      {
+        "hypixelName": "Duelsuhcwins",
+        "hypixelMaxProgress": 3,
+        "statsifyName": "hardcoreChampion"
+      },
+      {
+        "hypixelName": "Duelsbridgeflawless",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "cleanSheet"
+      },
+      {
+        "hypixelName": "Duelsheadintheclouds",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "headInTheClouds"
+      },
+      {
+        "hypixelName": "Woolctwcarrier",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "giveThatBack"
+      },
+      {
+        "hypixelName": "Wwnoenemywool",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "notAChance"
+      },
+      {
+        "hypixelName": "Wooltechnicolor",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "technicolorMurder"
+      },
+      {
+        "hypixelName": "Bedwarsflawless",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "immortal"
+      },
+      {
+        "hypixelName": "Bedwarspartysover",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "partySOver"
+      },
+      {
+        "hypixelName": "Bedwarsoneforall",
+        "hypixelMaxProgress": 5,
+        "statsifyName": "oneForAll"
+      },
+      {
+        "hypixelName": "Bedwarscelebrations",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "cantStopTheCelebrations"
+      },
+      {
+        "hypixelName": "Bedwarsfinaldestination",
+        "hypixelMaxProgress": 1,
+        "statsifyName": "finalDestination"
+      }
+    ],
+    "rewards": [
+      "diagonal_one",
+      "column_one",
+      "column_two",
+      "column_three",
+      "column_four",
+      "diagonal_two",
+      "row_one",
+      "row_two",
+      "row_three",
+      "row_four",
+      "black_out"
+    ]
+  }
+}
