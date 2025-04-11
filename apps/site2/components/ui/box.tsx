@@ -96,20 +96,21 @@ export function Box({
   containerClass: containerClassName,
   style,
   variant = "default",
+  ref,
   ...props
 }: BoxProps) {
   const borderRadius = toBorderRadius(partialBorderRadius);
 
   const shadowPath = polygon(
-    ...(borderRadius.bottomRight === 0
-      ? []
-      : ([
-          `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-          `calc(100% - ${shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-          `calc(100% - ${shadow}px) calc(100% - ${shadow}px)`,
-          `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${shadow}px)`,
-          `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-        ] as const)),
+    ...(borderRadius.bottomRight === 0 ?
+      [] :
+      ([
+        `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
+        `calc(100% - ${shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
+        `calc(100% - ${shadow}px) calc(100% - ${shadow}px)`,
+        `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${shadow}px)`,
+        `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
+      ] as const)),
 
     `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)`,
     `${borderRadius.bottomLeft}px 100%`,
@@ -118,7 +119,7 @@ export function Box({
     `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)`,
 
     borderRadius.bottomRight !== 0 &&
-      `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
+    `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
 
     `calc(100% - ${shadow}px) ${borderRadius.topRight}px`,
     `100% ${borderRadius.topRight}px`,
@@ -126,9 +127,9 @@ export function Box({
     `calc(100% - ${shadow}px) calc(100% - ${borderRadius.bottomRight}px)`,
     `calc(100% - ${shadow}px) ${borderRadius.topRight}px`,
 
-    borderRadius.bottomRight === 0
-      ? `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)`
-      : `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`
+    borderRadius.bottomRight === 0 ?
+      `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)` :
+      `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`
   );
 
   const contentPath = polygon(
@@ -147,7 +148,7 @@ export function Box({
   );
 
   return (
-    <div className={cn("relative text-mc-white me-2 mb-2", containerClassName)}>
+    <div ref={ref} className={cn("relative text-mc-white me-2 mb-2", containerClassName)}>
       <div
         className={`absolute w-full h-full ${boxVariants[variant].shadow}`}
         style={{ transform: `translate(${shadow}px, ${shadow}px)`, clipPath: shadowPath }}

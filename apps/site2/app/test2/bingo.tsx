@@ -10,18 +10,33 @@
 
 import Image from "next/image";
 import SkyWarsIcon from "~/public/icons/skywars.png";
+import { AnimatePresence, motion } from "motion/react";
 import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
 import { type Category, type Difficulty, Reward, Task, boards } from "./boards";
-import { ComponentProps, useState } from "react";
+import { ComponentProps, createContext, use, useState } from "react";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
 import type { Player } from "@statsify/schemas";
 
+const closestTileToCategory: Record<Category, [number, number]> = {
+  casual: [0.5, 0],
+  pvp: [1.5, 0],
+  classic: [2.5, 0],
+};
+
+const closestTileToDifficulty: Record<Difficulty, [number, number]> = {
+  easy: [3.5, 0],
+  hard: [4.5, 0],
+};
+
+const BingoContext = createContext<{ animationSource: [number, number] }>({ animationSource: [0, 0] });
+
 export function BingoPage({ player }: { player: Player }) {
   const [category, setCategory] = useState<Category>("casual");
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
+  const [animationSource, setAnimationSource] = useState<[number, number]>([0, 0]);
 
   return (
     <div className="h-full">
@@ -48,14 +63,32 @@ export function BingoPage({ player }: { player: Player }) {
             <CategoryOverview category="Classic" easyCompletion={100} hardComp={12.5} />
           </Box>
           <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4">
-            <CategoryTabs category={category} setCategory={setCategory} />
+            <CategoryTabs
+              category={category}
+              onCategoryChange={(category) => {
+                setCategory(category);
+                setAnimationSource(closestTileToCategory[category]);
+              }}
+            />
             <div className="h-[32px] bg-white/20 hidden lg:block" />
-            <DifficultyTabs difficulty={difficulty} setDifficulty={setDifficulty} />
+            <DifficultyTabs
+              difficulty={difficulty}
+              onDifficultyChange={(difficulty) => {
+                setDifficulty(difficulty);
+                setAnimationSource(closestTileToDifficulty[difficulty]);
+              }}
+            />
           </div>
           <div className="w-full h-[2px] bg-black/50" />
         </div>
         <div className="flex flex-col justify-evenly w-full">
-          <BingoBoard player={player} category={category} difficulty={difficulty} />
+          <BingoContext.Provider value={{ animationSource }}>
+            <BingoBoard
+              player={player}
+              category={category}
+              difficulty={difficulty}
+            />
+          </BingoContext.Provider>
         </div>
       </div>
     </div>
@@ -89,11 +122,11 @@ function CategoryOverview({
           <span className="text-mc-green">Easy</span>:{" "}
           <span
             className={
-              easyCompletion == 0
-                ? "text-mc-red"
-                : easyCompletion > 0 && easyCompletion < 100
-                ? "text-mc-yellow"
-                : "text-mc-green font-bold"
+              easyCompletion == 0 ?
+                "text-mc-red" :
+                (easyCompletion > 0 && easyCompletion < 100 ?
+                  "text-mc-yellow" :
+                  "text-mc-green font-bold")
             }
           >
             {easyCompletion}%
@@ -113,119 +146,179 @@ function BingoBoard({ player, category, difficulty }: { player: Player; category
   const ASDA = player.stats.general.bingo[difficulty][category];
 
   // HERE
-
   return (
-    <>
-      <div className="overflow-x-auto grid grid-cols-[repeat(6,1fr)] grid-rows-6 gap-2 **:text-mc-1.25 md:**:text-mc-1.5 leading-4">
-        <RewardCard reward={bingo.diagonalRewards[0]} />
-        {bingo.columnRewards.map((reward) => (
-          <RewardCard key={reward.name} reward={reward} />
+    <div className="overflow-x-auto grid grid-cols-[repeat(6,1fr)] grid-rows-6 gap-2 **:text-mc-1.25 md:**:text-mc-1.5 leading-4">
+      <AnimatePresence mode="wait" initial={false}>
+        <RewardCard
+          key={`${difficulty}-${category}-diagonal-0`}
+          reward={bingo.diagonalRewards[0]}
+          location={[0, 0]}
+        />
+        {bingo.columnRewards.map((reward, index) => (
+          <RewardCard
+            key={`${difficulty}-${category}-${reward.name}`}
+            reward={reward}
+            location={[1 + index, 0]}
+          />
         ))}
-        <RewardCard reward={bingo.diagonalRewards[1]} />
+        <RewardCard
+          key={`${difficulty}-${category}-diagonal-1`}
+          reward={bingo.diagonalRewards[1]}
+          location={[1 + bingo.columnRewards.length, 0]}
+        />
         <div className="row-start-2 col-start-2 grid grid-cols-subgrid grid-rows-subgrid row-span-4 col-span-4">
-          {bingo.tasks.map((task) => (
+          {bingo.tasks.map((task, index) => (
             <TaskCard
-              key={task.field as string}
+              key={`${difficulty}-${category}-${task.field}`}
               task={task}
               finished={ASDA[task.field]}
               complete={ASDA[task.field] >= task.progress}
+              location={[1 + (index % 4), 1 + Math.floor(index / 4)]}
             />
           ))}
         </div>
-        {bingo.rowRewards.map((reward) => (
-          <RewardCard key={reward.name} containerClass="col-start-6" reward={reward} />
+        {bingo.rowRewards.map((reward, index) => (
+          <RewardCard
+            key={`${difficulty}-${category}-${reward.name}`}
+            containerClass="col-start-6"
+            reward={reward}
+            location={[1 + bingo.columnRewards.length, 1 + index]}
+          />
         ))}
-        <RewardCard containerClass="col-start-6" reward={bingo.blackoutReward} variant="blackout" />
-      </div>
-    </>
+        <RewardCard
+          key={`${difficulty}-${category}-blackout`}
+          containerClass="col-start-6"
+          reward={bingo.blackoutReward}
+          variant="blackout"
+          location={[1 + bingo.columnRewards.length, 1 + bingo.rowRewards.length]}
+        />
+      </AnimatePresence>
+    </div>
   );
 }
+
+const DELAY_DISTANCE_SCALE = 40;
+const DURATION = 0.17;
 
 function RewardCard({
   containerClass,
   contentClass,
   variant = "regular",
+  location: [x, y],
   reward,
   ...props
-}: { reward: Reward; variant?: "blackout" | "regular" } & ComponentProps<typeof Box>) {
+}: { reward: Reward; location: [number, number]; variant?: "blackout" | "regular" } & Omit<ComponentProps<typeof Box>, "variant">) {
+  const { animationSource } = use(BingoContext);
+  const distance = Math.sqrt(Math.pow(x - animationSource[0], 2) + Math.pow(y - animationSource[1], 2));
+
   return (
-    <Box {...props} containerClass={`${containerClass} min-w-50`} contentClass={`flex flex-col gap-2  ${contentClass}`}>
-      <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
-        {reward.name} Reward
-      </p>
-      {typeof reward.description === "string" ? (
-        <p className="">
-          <MinecraftText>{reward.description}</MinecraftText>
+    <motion.div
+      className={`${containerClass} min-w-50 flex`}
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0 }}
+      transition={{ delay: distance / DELAY_DISTANCE_SCALE, type: "spring", duration: DURATION, bounce: 0.2 }}
+    >
+      <Box
+        {...props}
+        containerClass="grow"
+        contentClass={`flex flex-col gap-2  ${contentClass}`}
+      >
+        <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
+          {reward.name} Reward
         </p>
-      ) : (
-        <div className="flex flex-col gap-0.5">
-          {reward.description.map((part) => (
-            <MinecraftText key={part}>{part}</MinecraftText>
-          ))}
-        </div>
-      )}
-    </Box>
+        {typeof reward.description === "string" ?
+          (
+            <p className="">
+              <MinecraftText>{reward.description}</MinecraftText>
+            </p>
+          ) :
+          (
+            <div className="flex flex-col gap-0.5">
+              {reward.description.map((part) => (
+                <MinecraftText key={part}>{part}</MinecraftText>
+              ))}
+            </div>
+          )}
+      </Box>
+    </motion.div>
   );
 }
 
-function TaskCard({ task, finished, complete }: { task: Task; finished: number; complete: boolean }) {
+function TaskCard({ task, location: [x, y], finished, complete }: {
+  task: Task;
+  location: [number, number];
+  finished: number;
+  complete: boolean;
+}) {
+  const { animationSource } = use(BingoContext);
+  const distance = Math.sqrt(Math.pow(x - animationSource[0], 2) + Math.pow(y - animationSource[1], 2));
+
   return (
-    <Box
-      containerClass="min-w-50"
-      contentClass="flex flex-col justify-between gap-2 text-center"
-      variant={complete ? "green" : "red"}
+    <motion.div
+      className="min-w-50 flex"
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0 }}
+      transition={{ delay: distance / DELAY_DISTANCE_SCALE, type: "spring", duration: DURATION, bounce: 0.2 }}
     >
-      <div className="flex flex-col gap-2">
-        <div className={complete ? "first:text-mc-green" : "first:text-mc-red"}>
-          <p className="font-bold text-center">{task.name}</p>
-          <p className="text-mc-dark-gray text-center">{task.game} Task</p>
+      <Box
+        containerClass="grow"
+        contentClass="flex flex-col justify-between gap-2 text-center"
+        variant={complete ? "green" : "red"}
+      >
+        <div className="flex flex-col gap-2">
+          <div className={complete ? "first:text-mc-green" : "first:text-mc-red"}>
+            <p className="font-bold text-center">{task.name}</p>
+            <p className="text-mc-dark-gray text-center">{task.game} Task</p>
+          </div>
+          <p>{task.description}</p>
         </div>
-        <p>{task.description}</p>
-      </div>
-      <p className="text-mc-gray">
-        Progress:{" "}
-        <span
-          className={`${
-            finished > 0 && finished < task.progress
-              ? "text-mc-yellow"
-              : finished >= task.progress
-              ? "text-mc-green"
-              : "text-mc-red"
-          }`}
-        >
-          {finished}
-        </span>
-        <span className={complete ? "text-mc-green" : "text-mc-gray"}>/</span>
-        <span className={complete ? "text-mc-green" : "text-mc-gray"}>{task.progress}</span>
-      </p>
-    </Box>
+        <p className="text-mc-gray">
+          Progress:{" "}
+          <span
+            className={`${
+              finished > 0 && finished < task.progress ?
+                "text-mc-yellow" :
+                (finished >= task.progress ?
+                  "text-mc-green" :
+                  "text-mc-red")
+            }`}
+          >
+            {finished}
+          </span>
+          <span className={complete ? "text-mc-green" : "text-mc-gray"}>/</span>
+          <span className={complete ? "text-mc-green" : "text-mc-gray"}>{task.progress}</span>
+        </p>
+      </Box>
+    </motion.div>
   );
 }
 
 function CategoryTabs({
   category,
-  setCategory,
+  onCategoryChange,
 }: {
   category: string;
-  setCategory: React.Dispatch<React.SetStateAction<"casual" | "pvp" | "classic">>;
+  onCategoryChange: (category: Category) => void;
 }) {
   return (
     <div className="grid grid-cols-3 gap-4 grow items-center justify-center text-center **:text-mc-1.5 **:lg:text-mc-2">
-      <button aria-pressed={category === "casual"} className="group" onClick={() => setCategory("casual")}>
+      <button aria-pressed={category === "casual"} className="group" onClick={() => onCategoryChange("casual")}>
         <Box borderRadius={{ bottom: 0 }}>
           <span className="text-mc-white/60 group-aria-pressed:font-bold group-aria-pressed:text-mc-white transition-colors">
             Casual
           </span>
         </Box>
       </button>
-      <button aria-pressed={category === "pvp"} className="group" onClick={() => setCategory("pvp")}>
+      <button aria-pressed={category === "pvp"} className="group" onClick={() => onCategoryChange("pvp")}>
         <Box borderRadius={{ bottom: 0 }}>
           <span className="text-mc-white/60 group-aria-pressed:font-bold group-aria-pressed:text-mc-white transition-colors">
             PvP
           </span>
         </Box>
       </button>
-      <button aria-pressed={category === "classic"} className="group" onClick={() => setCategory("classic")}>
+      <button aria-pressed={category === "classic"} className="group" onClick={() => onCategoryChange("classic")}>
         <Box borderRadius={{ bottom: 0 }}>
           <span className="text-mc-white/60 group-aria-pressed:font-bold group-aria-pressed:text-mc-white transition-colors">
             Classic
@@ -238,21 +331,21 @@ function CategoryTabs({
 
 function DifficultyTabs({
   difficulty,
-  setDifficulty,
+  onDifficultyChange,
 }: {
   difficulty: string;
-  setDifficulty: React.Dispatch<React.SetStateAction<"easy" | "hard">>;
+  onDifficultyChange: (difficulty: Difficulty) => void;
 }) {
   return (
     <div className="grid grid-cols-2 grow gap-4 items-center justify-center text-center **:text-mc-1.5 **:lg:text-mc-2">
-      <button aria-pressed={difficulty === "easy"} className="group" onClick={() => setDifficulty("easy")}>
+      <button aria-pressed={difficulty === "easy"} className="group" onClick={() => onDifficultyChange("easy")}>
         <Box borderRadius={{ bottom: 0 }}>
           <span className="text-mc-green/50 group-aria-pressed:font-bold group-aria-pressed:text-mc-green transition-colors">
             Easy
           </span>
         </Box>
       </button>
-      <button aria-pressed={difficulty === "hard"} className="group" onClick={() => setDifficulty("hard")}>
+      <button aria-pressed={difficulty === "hard"} className="group" onClick={() => onDifficultyChange("hard")}>
         <Box borderRadius={{ bottom: 0 }}>
           <span className="text-mc-red/50 group-aria-pressed:font-bold group-aria-pressed:text-mc-red transition-colors">
             Hard

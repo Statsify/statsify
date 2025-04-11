@@ -23,7 +23,7 @@ export function LeaderboardSection({ leaderboard }: { leaderboard: PostLeaderboa
       </div>
       <div className="mx-auto lg:mx-0 flex flex-col gap-4 max-w-100 xl:max-w-150 text-mc-white text-center lg:text-start ">
         <h1 className="text-mc-4 lg:text-mc-7 break-words font-bold text-mc-yellow">Leader<wbr />boards</h1>
-        <p className="text-mc-2 leading-6">Using Statsify's robust leaderboard command, you can browse approximately 2,000 leaderboards. The leaderboards may be seen using <Command>/leaderboard</Command> followed by the game and the stat. For instance, to display the leaderboard for WoolWars Wins, for instance, write <Command>/leaderboard woolwars leaderboard: overall wins</Command>.</p>
+        <p className="text-mc-2 leading-6">Explore more than 2,000 Hypixel games leaderboards with Statsify! Leaderboards can be viewed by using the <Command>/leaderboard</Command> command followed by the desired game and stat. Try <Command>/leaderboard uhc leaderboard: score</Command> for an example.</p>
       </div>
     </BaseSection>
   );

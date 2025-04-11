@@ -7,6 +7,7 @@
  */
 
 import { Background } from "~/components/ui/background";
+import { Board } from "~/components/icons/board";
 import { Button } from "~/components/ui/button";
 import { Discord } from "~/components/icons/discord";
 import { GuildSection } from "./sections/guild-section";
@@ -75,12 +76,15 @@ export default async function Home() {
         <div className="flex flex-col gap-10 lg:gap-6 md:max-w-[500px] xl:max-w-[600px]">
           <div className="flex flex-col gap-3">
             <p className="text-mc-8 xl:text-mc-10 font-bold"><span className="text-[#D0EFFF]">S</span><span className="text-[#7DC6FA]">t</span><span className="text-[#2A9DF4]">a</span><span className="text-[#2492E7]">t</span><span className="text-[#1E86DA]">s</span><span className="text-[#187BCD]">i</span><span className="text-[#1571BF]">f</span><span className="text-[#1167B1]">y</span></p>
-            <p className="text-mc-3">Statsify is the most advanced bot in 2025</p>
+            <p className="text-mc-3">The largest Hypixel Discord bot to view stats from any game on the Hypixel Network.</p>
           </div>
-          <div className="flex flex-col lg:flex-row flex-wrap gap-4 w-full">
-            <Search className="grow" />
+          <div className="flex flex-col lg:flex-row items-center flex-wrap gap-4 w-full">
             <div className="grow">
               <DiscordInvite />
+            </div>
+            <div className="h-[32px] w-[2px] bg-white/20 hidden lg:block" />
+            <div>
+              <BingoInvite />
             </div>
           </div>
         </div>
@@ -120,6 +124,15 @@ function DiscordInvite() {
     <Button className="bg-discord-500">
       <Discord className="drop-shadow-mc-1" />
       <p className="text-nowrap">Try On Discord</p>
+    </Button>
+  );
+}
+
+function BingoInvite() {
+  return (
+    <Button className="bg-green-500">
+      <Board className="drop-shadow-mc-1" />
+      <p className="text-nowrap">Bingo Tracker</p>
     </Button>
   );
 }
