@@ -84,10 +84,7 @@ export default function BingoPage() {
         </div>
         <div className="flex flex-col justify-evenly w-full">
           <BingoContext.Provider value={{ animationSource }}>
-            <BingoBoard
-              category={category}
-              difficulty={difficulty}
-            />
+            <BingoBoard category={category} difficulty={difficulty} />
           </BingoContext.Provider>
         </div>
       </div>
@@ -122,11 +119,11 @@ function CategoryOverview({
           <span className="text-mc-green">Easy</span>:{" "}
           <span
             className={
-              easyCompletion == 0 ?
-                "text-mc-red" :
-                (easyCompletion > 0 && easyCompletion < 100 ?
-                  "text-mc-yellow" :
-                  "text-mc-green font-bold")
+              easyCompletion == 0
+                ? "text-mc-red"
+                : easyCompletion > 0 && easyCompletion < 100
+                ? "text-mc-yellow"
+                : "text-mc-green font-bold"
             }
           >
             {easyCompletion}%
@@ -150,17 +147,9 @@ function BingoBoard({ category, difficulty }: { category: Category; difficulty: 
   return (
     <div className="overflow-x-auto grid grid-cols-[repeat(6,1fr)] grid-rows-6 gap-2 **:text-mc-1.25 md:**:text-mc-1.5 leading-4">
       <AnimatePresence mode="popLayout" initial={false}>
-        <RewardCard
-          key={`${difficulty}-${category}-diagonal-0`}
-          reward={bingo.diagonalRewards[0]}
-          location={[0, 0]}
-        />
+        <RewardCard key={`${difficulty}-${category}-diagonal-0`} reward={bingo.diagonalRewards[0]} location={[0, 0]} />
         {bingo.columnRewards.map((reward, index) => (
-          <RewardCard
-            key={`${difficulty}-${category}-${reward.name}`}
-            reward={reward}
-            location={[1 + index, 0]}
-          />
+          <RewardCard key={`${difficulty}-${category}-${reward.name}`} reward={reward} location={[1 + index, 0]} />
         ))}
         <RewardCard
           key={`${difficulty}-${category}-diagonal-1`}
@@ -208,7 +197,10 @@ function RewardCard({
   location: [x, y],
   reward,
   ...props
-}: { reward: Reward; location: [number, number]; variant?: "blackout" | "regular" } & Omit<ComponentProps<typeof Box>, "variant">) {
+}: { reward: Reward; location: [number, number]; variant?: "blackout" | "regular" } & Omit<
+  ComponentProps<typeof Box>,
+  "variant"
+>) {
   const { animationSource } = use(BingoContext);
   const distance = Math.sqrt(Math.pow(x - animationSource[0], 2) + Math.pow(y - animationSource[1], 2));
 
@@ -220,33 +212,32 @@ function RewardCard({
       exit={{ opacity: 0, scale: 0 }}
       transition={{ delay: distance / DELAY_DISTANCE_SCALE, type: "spring", duration: DURATION, bounce: 0.2 }}
     >
-      <Box
-        {...props}
-        containerClass="grow"
-        contentClass={`flex flex-col gap-2  ${contentClass}`}
-      >
+      <Box {...props} containerClass="grow" contentClass={`flex flex-col gap-2  ${contentClass}`}>
         <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
           {reward.name} Reward
         </p>
-        {typeof reward.description === "string" ?
-          (
-            <p className="">
-              <MinecraftText>{reward.description}</MinecraftText>
-            </p>
-          ) :
-          (
-            <div className="flex flex-col gap-0.5">
-              {reward.description.map((part) => (
-                <MinecraftText key={part}>{part}</MinecraftText>
-              ))}
-            </div>
-          )}
+        {typeof reward.description === "string" ? (
+          <p className="">
+            <MinecraftText>{reward.description}</MinecraftText>
+          </p>
+        ) : (
+          <div className="flex flex-col gap-0.5">
+            {reward.description.map((part) => (
+              <MinecraftText key={part}>{part}</MinecraftText>
+            ))}
+          </div>
+        )}
       </Box>
     </motion.div>
   );
 }
 
-function TaskCard({ task, location: [x, y], finished, complete }: {
+function TaskCard({
+  task,
+  location: [x, y],
+  finished,
+  complete,
+}: {
   task: Task;
   location: [number, number];
   finished: number;
@@ -279,11 +270,11 @@ function TaskCard({ task, location: [x, y], finished, complete }: {
           Progress:{" "}
           <span
             className={`${
-              finished > 0 && finished < task.progress ?
-                "text-mc-yellow" :
-                (finished >= task.progress ?
-                  "text-mc-green" :
-                  "text-mc-red")
+              finished > 0 && finished < task.progress
+                ? "text-mc-yellow"
+                : finished >= task.progress
+                ? "text-mc-green"
+                : "text-mc-red"
             }`}
           >
             {finished}
