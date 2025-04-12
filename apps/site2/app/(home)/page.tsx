@@ -17,36 +17,7 @@ import { PlayerSection } from "./sections/player-section";
 import { SearchIcon } from "~/components/icons/search";
 import { SessionSection } from "./sections/session-section";
 import { cn } from "~/lib/util";
-import type { PostLeaderboardResponse } from "@statsify/api-client";
-
-async function getPlayer(slug: string) {
-  const response = await fetch(`https://api.statsify.net/player?key=${process.env.API_KEY}&player=${slug}`);
-  const { player } = await response.json();
-  return player;
-}
-
-async function getGuild(slug: string) {
-  const response = await fetch(`https://api.statsify.net/guild?key=${process.env.API_KEY}&guild=${slug}&type=PLAYER`);
-  const { guild } = await response.json();
-  return guild;
-}
-
-async function getLeaderboard(field: string) {
-  const response = await fetch(`https://api.statsify.net/player/leaderboards?key=${process.env.API_KEY}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      field,
-      page: 0,
-    }),
-  });
-
-  const body = await response.json();
-
-  return body as PostLeaderboardResponse;
-}
+import { getGuild, getLeaderboard, getPlayer } from "~/app/api";
 
 export default async function Home() {
   const [player1, player2, player3, player4, player5, guild, leaderboard] = await Promise.all([

@@ -13,12 +13,12 @@ import SkyWarsIcon from "~/public/icons/skywars.png";
 import { AnimatePresence, motion } from "motion/react";
 import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
-import { type Category, type Difficulty, Reward, Task, boards } from "./boards";
+import { type Category, type Difficulty, type Reward, type Task, boards } from "./boards";
 import { ComponentProps, createContext, use, useState } from "react";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
-import type { Player } from "@statsify/schemas";
+import { usePlayer } from "~/app/players/[slug]/context";
 
 const closestTileToCategory: Record<Category, [number, number]> = {
   casual: [0.5, 0],
@@ -33,10 +33,11 @@ const closestTileToDifficulty: Record<Difficulty, [number, number]> = {
 
 const BingoContext = createContext<{ animationSource: [number, number] }>({ animationSource: [0, 0] });
 
-export function BingoPage({ player }: { player: Player }) {
+export default function BingoPage() {
   const [category, setCategory] = useState<Category>("casual");
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
   const [animationSource, setAnimationSource] = useState<[number, number]>([0, 0]);
+  const player = usePlayer();
 
   return (
     <div className="h-full">
@@ -84,7 +85,6 @@ export function BingoPage({ player }: { player: Player }) {
         <div className="flex flex-col justify-evenly w-full">
           <BingoContext.Provider value={{ animationSource }}>
             <BingoBoard
-              player={player}
               category={category}
               difficulty={difficulty}
             />
@@ -141,14 +141,15 @@ function CategoryOverview({
   );
 }
 
-function BingoBoard({ player, category, difficulty }: { player: Player; category: Category; difficulty: Difficulty }) {
+function BingoBoard({ category, difficulty }: { category: Category; difficulty: Difficulty }) {
   const bingo = boards[difficulty][category];
+  const player = usePlayer();
   const ASDA = player.stats.general.bingo[difficulty][category];
 
   // HERE
   return (
     <div className="overflow-x-auto grid grid-cols-[repeat(6,1fr)] grid-rows-6 gap-2 **:text-mc-1.25 md:**:text-mc-1.5 leading-4">
-      <AnimatePresence mode="wait" initial={false}>
+      <AnimatePresence mode="popLayout" initial={false}>
         <RewardCard
           key={`${difficulty}-${category}-diagonal-0`}
           reward={bingo.diagonalRewards[0]}

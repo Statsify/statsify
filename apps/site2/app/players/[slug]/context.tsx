@@ -8,17 +8,23 @@
 
 "use client";
 
-import { ReactNode, createContext, use } from "react";
+import { type ReactNode, createContext, use } from "react";
 import type { Player } from "@statsify/schemas";
 
 const PlayerContext = createContext<{ player: Player | undefined }>({ player: undefined });
 
+export const PlayerProvider = ({ player, children }: { player: Player; children: ReactNode }) => (
+  <PlayerContext value={{ player }}>
+    {children}
+  </PlayerContext>
+);
+
 export function usePlayer() {
   const { player } = use(PlayerContext);
-  if (!player) throw new Error("`usePlayer` must be used within a loaded `PlayerProvider`");
-  return player;
-}
 
-export function PlayerProvider({ player, children }: { player: Player; children: ReactNode }) {
-  return <PlayerContext.Provider value={{ player }}>{children}</PlayerContext.Provider>;
+  if (!player) {
+    throw new Error("Either usePlayer isn't being used in a PlayerContext or the player doesn't exist");
+  }
+
+  return player;
 }

@@ -15,10 +15,16 @@ const nextConfig: NextConfig = {
   },
   serverExternalPackages: ["mongoose"],
   images: {
-    remotePatterns: [{
-      protocol: "https",
-      hostname: "api.statsify.net",
-    }],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "api.statsify.net",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost:3000",
+      },
+    ],
   },
 };
 

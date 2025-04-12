@@ -6,26 +6,25 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background } from "~/components/ui/background";
 import { PlayerProvider } from "./context";
-import { ReactNode } from "react";
+import { getPlayer } from "~/app/api";
+import { z } from "zod";
+import type { ReactNode } from "react";
 
-export default async function PlayerLayout({ params, children }: {
-  params: Promise<{ slug: string }>;
-  children: ReactNode;
-}) {
-  const { slug } = await params;
-  const response = await fetch(`https://api.statsify.net/player?key=${process.env.API_KEY}&player=${slug}`);
-  const { player } = await response.json();
+const PlayerParams = z.object({
+  slug: z.string(),
+});
+
+export default async function PlayerLayout({
+  params,
+  children,
+}: { params: Promise<{ slug: string }>; children: ReactNode }) {
+  const { slug } = PlayerParams.parse(await params);
+  const player = await getPlayer(slug);
 
   return (
-    <div>
-      <PlayerProvider player={player}>
-        <div className="flex justify-center text-[32px]">
-          <Background />
-          {children}
-        </div>
-      </PlayerProvider>
-    </div>
+    <PlayerProvider player={player}>
+      {children}
+    </PlayerProvider>
   );
 }

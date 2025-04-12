@@ -45,7 +45,9 @@ if (sentryDsn) {
   });
 }
 
-await mkdir(join(await config("api.mediaRoot"), "badges"), { recursive: true });
+const mediaRoot = await config("api.mediaRoot");
+
+await mkdir(join(mediaRoot, "badges"), { recursive: true });
 
 // Removes the `_id` fields created from sub classes of documents
 setGlobalOptions({
