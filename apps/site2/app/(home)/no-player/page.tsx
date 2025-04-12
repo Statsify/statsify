@@ -8,7 +8,9 @@
 
 import { LogoError } from "~/components/icons/logo-error";
 import { Background } from "~/components/ui/background";
+import { Box } from "~/components/ui/box";
 import { MinecraftText } from "~/components/ui/minecraft-text";
+import { Skin } from "~/components/ui/skin";
 
 export default function NotFound() {
   return (
@@ -27,17 +29,16 @@ export default function NotFound() {
         />
       </div>
       <div className="absolute top-0 w-full h-full flex flex-col items-center justify-center z-10">
-        <LogoError className="size-64 lg:size-128" />
         <div className="flex flex-col items-center gap-4">
-          <h1 className="text-mc-6 lgtext-mc-12 font-bold">
-            <span className="text-[#FFD0D7]">O</span>
-            <span className="text-[#F42A37]">O</span>
-            <span className="text-[#CD1820]">P</span>
-            <span className="text-[#B11117]">S</span>
-            <span className="text-[#A10B10]">!</span>
-          </h1>
+          <Box>
+            <span className="text-mc-dark-red">[</span>
+            <span className="text-mc-red">???</span>
+            <span className="text-mc-dark-red">]</span> Non-Existent
+          </Box>
+          <Skin uuid="76a56ac7fcf649fca0531cb5c77cd9ae" contentClass="h-64" />
+          <h1 className="text-mc-6 lgtext-mc-12 text-mc-red font-bold">WHO?</h1>
           <p className="text-mc-1.5 lg:text-mc-2 text-mc-gray text-center">
-            Looks like the page you're trying to reach does not exist
+            This player does not exist. Make sure you spelled the name correctly
           </p>
         </div>
       </div>

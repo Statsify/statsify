@@ -51,11 +51,13 @@ export function WoolWarsPreview({ className, daysBack }: { className?: string; d
         <Box containerClass="col-span-2">
           Started <motion.span>{oldDate}</motion.span> (<motion.span>{daysBackFormatted}</motion.span> days ago)
         </Box>
-        <Box containerClass="font-bold">
-          Session
-        </Box>
+        <Box containerClass="font-bold">Session</Box>
         <Box>
-          <span className="font-bold"><span className="text-mc-red">Wool</span><span className="text-mc-blue">Games</span> Stats</span> (Wool Wars)
+          <span className="font-bold">
+            <span className="text-mc-red">Wool</span>
+            <span className="text-mc-blue">Games</span> Stats
+          </span>{" "}
+          <span className="text-mc-1.5 lg:text-mc-2">(WoolWars)</span>
         </Box>
       </div>
       <MotionValueTableData title="Wins" value={winsFormatted} color="text-mc-green" />
@@ -64,4 +66,3 @@ export function WoolWarsPreview({ className, daysBack }: { className?: string; d
     </div>
   );
 }
-
