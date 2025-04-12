@@ -88,7 +88,7 @@
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "Ve las estadísticas de tu sesión de {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
-    "session-delete": "Delete your session stats",
+    "session-delete": "Elimina las estadísticas de tu sesión",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -517,7 +517,7 @@
     "setResetTime": "Establece tu hora de reinicio a <t:{{time}}:t>.",
     "newSession": "La sesión de estadísticas de **{{displayName}}** han sido revisadas por primera vez en Statsify.",
     "setSessionReset": "Reinicio exitoso de tu sesión de estadísticas.",
-    "deleteSession": "Successfully deleted your session stats.",
+    "deleteSession": "Se eliminaron correctamente las estadísticas de tu sesión.",
     "disabledWarning": {
       "title": "Los Comandos del Historial ya no están disponibles",
       "description": "Los nuevos [Términos API](https://developer.hypixel.net/policies/) de Hypixel ya no permiten \"respuestas continuas de los datos del jugador\", lo que significa que Statsify ya no puede seguir las estadísticas de los jugadores diarios.\n\nEn su lugar, puedes intentar iniciar una sesión con `/session`. Cuando comienza una sesión, el bot mantendrá el seguimiento de tus estadísticas desde el momento en que ejecutaste el comando hasta la próxima vez que lo ejecutes. Para restablecer las estadísticas de tu sesión, puedes ejecutar `/reset session`."
@@ -557,7 +557,7 @@
     "website": "[Website](https://statsify.net/)"
   },
   "deprecated": {
-    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} has been merged into the {{newCommandName}} command. Please run {{newCommand}} and select {{mode}} in the dropdown.",
+    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} se ha fusionado con el comando {{newCommandName}}. Por favor, ejecuta {{newCommand}} y selecciona {{mode}} en el menú desplegable.",
     "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} has been removed in favor of {{newCommandName}}. Please run {{newCommand}} instead.",
     "command-description": "This command has been removed in favor of {{newCommandName}}."
   },
@@ -845,9 +845,9 @@
       },
       "modal": {
         "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "input": "Código de Verificación"
       },
-      "button": "Enter Verification Code"
+      "button": "Ingresa el codigo de Verificacion"
     },
     "notVerified": {
       "description": "¡Tienes que estar verificado antes de que puedas desvincular!",
