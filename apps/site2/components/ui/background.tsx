@@ -8,15 +8,15 @@
 
 "use client";
 
-import ArcadeImage from "~/public/backgrounds/arcade.png";
-import BackgroundImage from "~/public/backgrounds/background.png";
-import BedWarsImage from "~/public/backgrounds/bedwars.png";
-import BuildBattleImage from "~/public/backgrounds/buildbattle.png";
-import DuelsImage from "~/public/backgrounds/duels.png";
-import GuildImage from "~/public/backgrounds/guild.png";
-import SkyWarsImage from "~/public/backgrounds/skywars.png";
-import UHCImage from "~/public/backgrounds/uhc.png";
-import WoolGamesImage from "~/public/backgrounds/woolgames.png";
+import Main from "~/public/backgrounds/main.png";
+import Bingo from "~/public/backgrounds/bingo.png";
+import Guilds from "~/public/backgrounds/guilds.png";
+import Leaderboards from "~/public/backgrounds/leaderboards.png";
+import PlayersArcade from "~/public/backgrounds/players-arcade.png";
+import PlayersBedWars from "~/public/backgrounds/players-bedwars.png";
+import PlayersDuels from "~/public/backgrounds/players-duels.png";
+import PlayersSkyWars from "~/public/backgrounds/players-skywars.png";
+import Sessions from "~/public/backgrounds/sessions.png";
 
 import Image from "next/image";
 import { animate, motion, useMotionValue } from "motion/react";
@@ -24,18 +24,22 @@ import { cn } from "~/lib/util";
 import { useEffect, useRef } from "react";
 
 const Backgrounds = {
-  background: BackgroundImage,
-  guild: GuildImage,
-  bedwars: BedWarsImage,
-  skywars: SkyWarsImage,
-  duels: DuelsImage,
-  arcade: ArcadeImage,
-  buildbattle: BuildBattleImage,
-  uhc: UHCImage,
-  woolgames: WoolGamesImage,
+  main: Main,
+  guilds: Guilds,
+  bingo: Bingo,
+  bedwars: PlayersBedWars,
+  skywars: PlayersSkyWars,
+  duels: PlayersDuels,
+  arcade: PlayersArcade,
+  leaderboards: Leaderboards,
+  sessions: Sessions,
 };
 
-export function Background({ background, className, mask }: {
+export function Background({
+  background,
+  className,
+  mask,
+}: {
   background: keyof typeof Backgrounds;
   className?: string;
   mask?: string;
@@ -73,8 +77,7 @@ export function Background({ background, className, mask }: {
           />
         </motion.div>
       )}
-      <div className="relative backdrop-blur-sm w-full h-full" />
+      <div className="relative w-full h-full" />
     </div>
   );
 }
-

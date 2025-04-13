@@ -13,7 +13,7 @@ export default function TestPage() {
   return (
     <div className="relative h-[100dvh]">
       <Background
-        background="background"
+        background="bingo"
         className="h-full"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />

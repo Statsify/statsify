@@ -36,7 +36,7 @@ export default async function Home() {
   return (
     <div className="relative">
       <Background
-        background="background"
+        background="main"
         className="h-[80dvh]"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />
