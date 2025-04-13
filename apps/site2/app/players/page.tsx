@@ -17,7 +17,7 @@ export default function PlayerSearchPage() {
         className="h-full"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />
-      <div className="absolute h-[100dvh] w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+      <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
       <div className="w-full h-full flex justify-center items-center flex-col gap-8">
         <div className="flex flex-col gap-2 items-center">
           <h1 className="text-mc-yellow text-mc-7 font-bold">Bingo Tracker</h1>
