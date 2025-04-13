@@ -40,9 +40,6 @@ export default async function Home() {
         className="h-[80dvh]"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />
-      {/* TODO: lazy fix, later change how this padding works because of navbar */}
-      <div className="h-12 lg:h-8" />
-
       <div
         className="absolute w-full h-[80dvh] -z-10"
         style={{
