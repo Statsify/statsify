@@ -19,6 +19,7 @@ import { getGuild, getLeaderboard, getPlayer } from "~/app/api";
 import Image from "next/image";
 import Commands from "~/public/icons/commands.png";
 import Servers from "~/public/icons/servers.png";
+import { Box } from "~/components/ui/box";
 
 export default async function Home() {
   const [player1, player2, player3, player4, player5, guild, leaderboard] = await Promise.all([
@@ -73,8 +74,8 @@ export default async function Home() {
         </div>
         <InteractiveLogo />
       </div>
-      <div className="flex items-center mt-16 lg:mt-0 gap-10 lg:gap-0 flex-col lg:flex-row justify-evenly">
-        <div className="flex items-center flex-col gap-1">
+      <div className="flex items-center mt-16 lg:-mt-20 gap-10 lg:gap-0 flex-col lg:flex-row justify-evenly">
+        <Box contentClass="flex items-center flex-col gap-1" containerClass="w-[60%] lg:w-[20%]">
           <Image
             src={Commands}
             alt="commands"
@@ -86,8 +87,8 @@ export default async function Home() {
           />
           <p className="text-center text-mc-3 text-mc-white font-bold">50,000,000</p>
           <p className="text-center text-mc-2 text-mc-white">Commands Ran</p>
-        </div>
-        <div className="flex items-center flex-col gap-1">
+        </Box>
+        <Box contentClass="flex items-center flex-col gap-1" containerClass="w-[60%] lg:w-[20%]">
           <Image
             src={Servers}
             alt="servers"
@@ -99,7 +100,7 @@ export default async function Home() {
           />
           <p className="text-center text-mc-3 text-mc-white font-bold">100,000</p>
           <p className="text-center text-mc-2 text-mc-white">Servers</p>
-        </div>
+        </Box>
       </div>
       <div>
         <PlayerSection players={[player1, player2, player3, player4]} />
