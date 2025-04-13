@@ -7,7 +7,7 @@
  */
 
 import { cn } from "~/lib/util";
-import type { ComponentProps } from "react";
+import type { ComponentProps, JSX } from "react";
 
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 
@@ -59,14 +59,6 @@ export function toBorderRadius(borderRadius: BoxBorderRadius): {
   };
 }
 
-export interface BoxProps extends Omit<ComponentProps<"div">, "className"> {
-  borderRadius?: BoxBorderRadius;
-  shadow?: number;
-  contentClass?: string;
-  containerClass?: string;
-  variant?: keyof typeof boxVariants;
-}
-
 const boxVariants = {
   default: {
     background: "linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(0, 0, 0, 0.50) 100%), rgba(0, 0, 0, 0.50)",
@@ -89,17 +81,29 @@ const boxVariants = {
   },
 };
 
-export function Box({
+type BoxOnlyProps = {
+  borderRadius?: BoxBorderRadius;
+  shadow?: number;
+  contentClass?: string;
+  containerClass?: string;
+  variant?: keyof typeof boxVariants;
+};
+
+type BoxProps<T extends (keyof JSX.IntrinsicElements) = "div"> = BoxOnlyProps & { as?: T } & Omit<ComponentProps<T>, keyof BoxOnlyProps | "className">;
+
+export function Box<T extends (keyof JSX.IntrinsicElements) = "div">({
   borderRadius: partialBorderRadius = {},
   shadow = 8,
   contentClass: contentClassName,
   containerClass: containerClassName,
-  style,
   variant = "default",
-  ref,
+  as,
+  style,
+  children,
   ...props
-}: BoxProps) {
+}: BoxProps<T>) {
   const borderRadius = toBorderRadius(partialBorderRadius);
+  const Component = as ?? "div";
 
   const shadowPath = polygon(
     ...(borderRadius.bottomRight === 0 ?
@@ -148,13 +152,15 @@ export function Box({
   );
 
   return (
-    <div ref={ref} className={cn("relative text-mc-white me-2 mb-2", containerClassName)}>
+    <Component
+      className={cn("relative text-mc-white me-2 mb-2", containerClassName)}
+      {...props}
+    >
       <div
         className={`absolute w-full h-full ${boxVariants[variant].shadow}`}
         style={{ transform: `translate(${shadow}px, ${shadow}px)`, clipPath: shadowPath }}
       />
       <div
-        {...props}
         className={cn("p-4 text-mc-2 h-full", contentClassName)}
         style={{
           ...style,
@@ -162,8 +168,9 @@ export function Box({
           backgroundBlendMode: "overlay, normal",
           clipPath: contentPath,
         }}
-      />
-    </div>
+      >{children}
+      </div>
+    </Component>
   );
 }
 

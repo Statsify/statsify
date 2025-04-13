@@ -13,7 +13,7 @@ import { cn } from "~/lib/util";
 import { motion, useMotionTemplate, useMotionValue } from "motion/react";
 import type { ComponentProps } from "react";
 
-export function SpotlightBox({ contentClass, onMouseMove, children, ...props }: ComponentProps<typeof Box>) {
+export function SpotlightBox({ contentClass, onMouseMove, children, ...props }: ComponentProps<typeof Box<"div">>) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 

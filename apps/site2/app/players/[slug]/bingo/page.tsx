@@ -17,6 +17,7 @@ import { type Category, type Difficulty, type Reward, type Task, boards } from "
 import { ComponentProps, createContext, use, useState } from "react";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SearchIcon } from "~/components/icons/search";
+import { Tab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
 import { usePlayer } from "~/app/players/[slug]/context";
 import { Divider } from "~/components/ui/divider";
@@ -64,22 +65,34 @@ export default function BingoPage() {
             <CategoryOverview category="PvP" easyCompletion={12} hardComp={0} />
             <CategoryOverview category="Classic" easyCompletion={100} hardComp={12.5} />
           </Box>
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4">
-            <CategoryTabs
-              category={category}
-              onCategoryChange={(category) => {
+          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4 **:text-mc-1.5 **:lg:text-mc-2">
+            <Tabs
+              tab={category}
+              onTabChange={(category) => {
                 setCategory(category);
                 setAnimationSource(closestTileToCategory[category]);
               }}
-            />
+            >
+              <Tab tab="casual">Casual</Tab>
+              <Tab tab="pvp">PvP</Tab>
+              <Tab tab="classic">Classic</Tab>
+            </Tabs>
+
             <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
-            <DifficultyTabs
-              difficulty={difficulty}
-              onDifficultyChange={(difficulty) => {
+            <Tabs
+              tab={difficulty}
+              onTabChange={(difficulty) => {
                 setDifficulty(difficulty);
                 setAnimationSource(closestTileToDifficulty[difficulty]);
               }}
-            />
+            >
+              <Tab tab="easy" containerClass="text-mc-green/50 aria-pressed:text-mc-green">
+                Easy
+              </Tab>
+              <Tab tab="hard" containerClass="text-mc-red/50 aria-pressed:text-mc-red">
+                Hard
+              </Tab>
+            </Tabs>
           </div>
           <Divider variant="black" />
         </div>
@@ -285,67 +298,6 @@ function TaskCard({
         </p>
       </Box>
     </motion.div>
-  );
-}
-
-function CategoryTabs({
-  category,
-  onCategoryChange,
-}: {
-  category: string;
-  onCategoryChange: (category: Category) => void;
-}) {
-  return (
-    <div className="grid grid-cols-3 gap-4 grow items-center justify-center text-center **:text-mc-1.5 **:lg:text-mc-2">
-      <button aria-pressed={category === "casual"} className="group" onClick={() => onCategoryChange("casual")}>
-        <Box borderRadius={{ bottom: 0 }}>
-          <span className="text-mc-white/60 group-aria-pressed:font-bold group-aria-pressed:text-mc-white transition-colors">
-            Casual
-          </span>
-        </Box>
-      </button>
-      <button aria-pressed={category === "pvp"} className="group" onClick={() => onCategoryChange("pvp")}>
-        <Box borderRadius={{ bottom: 0 }}>
-          <span className="text-mc-white/60 group-aria-pressed:font-bold group-aria-pressed:text-mc-white transition-colors">
-            PvP
-          </span>
-        </Box>
-      </button>
-      <button aria-pressed={category === "classic"} className="group" onClick={() => onCategoryChange("classic")}>
-        <Box borderRadius={{ bottom: 0 }}>
-          <span className="text-mc-white/60 group-aria-pressed:font-bold group-aria-pressed:text-mc-white transition-colors">
-            Classic
-          </span>
-        </Box>
-      </button>
-    </div>
-  );
-}
-
-function DifficultyTabs({
-  difficulty,
-  onDifficultyChange,
-}: {
-  difficulty: string;
-  onDifficultyChange: (difficulty: Difficulty) => void;
-}) {
-  return (
-    <div className="grid grid-cols-2 grow gap-4 items-center justify-center text-center **:text-mc-1.5 **:lg:text-mc-2">
-      <button aria-pressed={difficulty === "easy"} className="group" onClick={() => onDifficultyChange("easy")}>
-        <Box borderRadius={{ bottom: 0 }}>
-          <span className="text-mc-green/50 group-aria-pressed:font-bold group-aria-pressed:text-mc-green transition-colors">
-            Easy
-          </span>
-        </Box>
-      </button>
-      <button aria-pressed={difficulty === "hard"} className="group" onClick={() => onDifficultyChange("hard")}>
-        <Box borderRadius={{ bottom: 0 }}>
-          <span className="text-mc-red/50 group-aria-pressed:font-bold group-aria-pressed:text-mc-red transition-colors">
-            Hard
-          </span>
-        </Box>
-      </button>
-    </div>
   );
 }
 
