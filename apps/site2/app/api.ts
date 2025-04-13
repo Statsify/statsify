@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+"use server";
+
 import { env } from "~/app/env";
 import type { Guild, Player } from "@statsify/schemas";
 import type { PostLeaderboardResponse } from "@statsify/api-client";
@@ -17,6 +19,15 @@ export async function getPlayer(slug: string): Promise<Player | undefined> {
 
   const body = await response.json();
   return body.player;
+}
+
+export async function getPlayerSuggestions(query: string): Promise<string[]> {
+  const response = await fetch(`${env.API_URL}/player/search?query=${query}`, {
+    headers: { "X-API-KEY": env.API_KEY },
+  });
+
+  const body = await response.json();
+  return body.players ?? [];
 }
 
 export async function getGuild(slug: string): Promise<Guild> {
