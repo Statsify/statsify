@@ -17,6 +17,7 @@ import { ArcadePreview } from "../previews/arcade";
 import { BaseSection } from "./base-section";
 import { BedWarsPreview } from "../previews/bedwars";
 import { Command } from "~/components/ui/command";
+import { Divider } from "~/components/ui/divider";
 import { DuelsPreview } from "../previews/duels";
 import { PlayerProvider } from "~/app/players/[slug]/context";
 import { SkyWarsPreview } from "../previews/skywars";
@@ -24,7 +25,6 @@ import { Tab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
 import { useState } from "react";
 import type { Player } from "@statsify/schemas";
-import { Divider } from "~/components/ui/divider";
 
 const games = [
   {

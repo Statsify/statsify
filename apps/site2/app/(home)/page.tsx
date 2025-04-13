@@ -6,21 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import Commands from "~/public/icons/commands.png";
+import Image from "next/image";
+import Servers from "~/public/icons/servers.png";
 import { Background } from "~/components/ui/background";
 import { Board } from "~/components/icons/board";
+import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
 import { Discord } from "~/components/icons/discord";
+import { Divider } from "~/components/ui/divider";
 import { GuildSection } from "./sections/guild-section";
 import { InteractiveLogo } from "./interactive-logo";
 import { LeaderboardSection } from "./sections/leaderboard-section";
 import { PlayerSection } from "./sections/player-section";
 import { SessionSection } from "./sections/session-section";
 import { getGuild, getLeaderboard, getPlayer } from "~/app/api";
-import Image from "next/image";
-import Commands from "~/public/icons/commands.png";
-import Servers from "~/public/icons/servers.png";
-import { Box } from "~/components/ui/box";
-import { Divider } from "~/components/ui/divider";
 
 export default async function Home() {
   const [player1, player2, player3, player4, player5, guild, leaderboard] = await Promise.all([
@@ -36,7 +36,7 @@ export default async function Home() {
   return (
     <div className="relative">
       <Background
-        background="main"
+        background="general"
         className="h-[80dvh]"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />
@@ -78,19 +78,6 @@ export default async function Home() {
       <div className="flex items-center mt-16 lg:-mt-20 gap-10 lg:gap-0 flex-col lg:flex-row justify-evenly">
         <Box contentClass="flex items-center flex-col gap-1" containerClass="w-[60%] lg:w-[20%]">
           <Image
-            src={Commands}
-            alt="commands"
-            height={64}
-            width={64}
-            quality={100}
-            style={{ imageRendering: "pixelated" }}
-            className="mb-3"
-          />
-          <p className="text-center text-mc-3 text-mc-white font-bold">50,000,000</p>
-          <p className="text-center text-mc-2 text-mc-white">Commands Ran</p>
-        </Box>
-        <Box contentClass="flex items-center flex-col gap-1" containerClass="w-[60%] lg:w-[20%]">
-          <Image
             src={Servers}
             alt="servers"
             height={64}
@@ -102,11 +89,24 @@ export default async function Home() {
           <p className="text-center text-mc-3 text-mc-white font-bold">100,000</p>
           <p className="text-center text-mc-2 text-mc-white">Servers</p>
         </Box>
+        <Box contentClass="flex items-center flex-col gap-1" containerClass="w-[60%] lg:w-[20%]">
+          <Image
+            src={Commands}
+            alt="commands"
+            height={64}
+            width={64}
+            quality={100}
+            style={{ imageRendering: "pixelated" }}
+            className="mb-3"
+          />
+          <p className="text-center text-mc-3 text-mc-white font-bold">50,000,000</p>
+          <p className="text-center text-mc-2 text-mc-white">Commands Ran</p>
+        </Box>
       </div>
       <div>
-        <PlayerSection players={[player1, player2, player3, player4]} />
+        <PlayerSection players={[player1!, player2!, player3!, player4!]} />
         <LeaderboardSection leaderboard={leaderboard} />
-        <SessionSection player={player5} />
+        <SessionSection player={player5!} />
         <GuildSection guild={guild} />
       </div>
       <div className="bg-white/10 backdrop-blur-lg text-mc-white -mt-45 p-8 flex flex-col gap-6 max-w-4/5 mx-auto">

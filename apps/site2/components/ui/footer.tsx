@@ -8,13 +8,13 @@
 
 import Link from "next/link";
 import { Discord } from "~/components/icons/discord";
+import { Divider } from "./divider";
 import { GitHub } from "~/components/icons/github";
 import { Logo } from "~/components/icons/logo";
 import { Patreon } from "~/components/icons/patreon";
 import { ReactNode } from "react";
 import { Twitter } from "~/components/icons/twitter";
 import { YouTube } from "~/components/icons/youtube";
-import { Divider } from "./divider";
 
 export function Footer() {
   return (

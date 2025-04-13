@@ -8,6 +8,7 @@
 
 import { PlayerProvider } from "./context";
 import { getPlayer } from "~/app/api";
+import { notFound } from "next/navigation";
 import { z } from "zod";
 import type { ReactNode } from "react";
 
@@ -21,6 +22,7 @@ export default async function PlayerLayout({
 }: { params: Promise<{ slug: string }>; children: ReactNode }) {
   const { slug } = PlayerParams.parse(await params);
   const player = await getPlayer(slug);
+  if (!player) notFound();
 
   return (
     <PlayerProvider player={player}>

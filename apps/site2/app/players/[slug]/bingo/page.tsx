@@ -15,12 +15,12 @@ import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
 import { type Category, type Difficulty, type Reward, type Task, boards } from "./boards";
 import { ComponentProps, createContext, use, useState } from "react";
+import { Divider } from "~/components/ui/divider";
 import { MinecraftText } from "~/components/ui/minecraft-text";
-import { SearchIcon } from "~/components/icons/search";
+import { Search } from "~/app/players/search";
 import { Tab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
 import { usePlayer } from "~/app/players/[slug]/context";
-import { Divider } from "~/components/ui/divider";
 
 const closestTileToCategory: Record<Category, [number, number]> = {
   casual: [0.5, 0],
@@ -44,7 +44,7 @@ export default function BingoPage() {
   return (
     <div className="h-full">
       <Background
-        background="background"
+        background="bingo"
         className="h-full aspect-auto"
         mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
       />
@@ -61,9 +61,9 @@ export default function BingoPage() {
             <MinecraftText>{player.displayName}</MinecraftText>
           </Box>
           <Box contentClass="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
-            <CategoryOverview category="Casual" easyCompletion={24} hardComp={25} />
-            <CategoryOverview category="PvP" easyCompletion={12} hardComp={0} />
-            <CategoryOverview category="Classic" easyCompletion={100} hardComp={12.5} />
+            <CategoryOverview category="Casual" easyCompletion={24} hardCompletion={25} />
+            <CategoryOverview category="PvP" easyCompletion={12} hardCompletion={0} />
+            <CategoryOverview category="Classic" easyCompletion={100} hardCompletion={12.5} />
           </Box>
           <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4 **:text-mc-1.5 **:lg:text-mc-2">
             <Tabs
@@ -77,7 +77,6 @@ export default function BingoPage() {
               <Tab tab="pvp">PvP</Tab>
               <Tab tab="classic">Classic</Tab>
             </Tabs>
-
             <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
             <Tabs
               tab={difficulty}
@@ -108,36 +107,35 @@ export default function BingoPage() {
 
 function CategoryOverview({
   category,
-  easyCompletion: easyCompletion,
-  hardComp,
+  easyCompletion,
+  hardCompletion,
 }: {
   category: string;
   easyCompletion: number;
-  hardComp: number;
+  hardCompletion: number;
 }) {
   return (
     <div className="flex flex-col justify-center gap-1 lg:gap-4 text-center text-mc-1.5 lg:text-mc-2">
-      <div className="flex gap-2 justify-center">
+      <div className="flex gap-2 items-center justify-center">
         <Image
           src={SkyWarsIcon}
           width={32}
           height={32}
           alt="icon"
           style={{ imageRendering: "pixelated" }}
-          className="opacity-80 group-aria-pressed:opacity-100 transition-opacity w-[24px] lg:w-[32px]"
         />
-        <p className="flex items-center justify-center gap-2">{category} Bingo Cards</p>
+        <p>{category} Bingo Cards</p>
       </div>
       <div className="flex flex-col justify-center gap-1">
         <p className="text-mc-gray">
           <span className="text-mc-green">Easy</span>:{" "}
           <span
             className={
-              easyCompletion == 0
-                ? "text-mc-red"
-                : easyCompletion > 0 && easyCompletion < 100
-                ? "text-mc-yellow"
-                : "text-mc-green font-bold"
+              easyCompletion == 0 ?
+                "text-mc-red" :
+                (easyCompletion > 0 && easyCompletion < 100 ?
+                  "text-mc-yellow" :
+                  "text-mc-green font-bold")
             }
           >
             {easyCompletion}%
@@ -145,7 +143,7 @@ function CategoryOverview({
           completed
         </p>
         <p className="text-mc-gray">
-          <span className="text-mc-red">Hard</span>: <span className="text-mc-red">{hardComp}%</span> completed
+          <span className="text-mc-red">Hard</span>: <span className="text-mc-red">{hardCompletion}%</span> completed
         </p>
       </div>
     </div>
@@ -154,8 +152,8 @@ function CategoryOverview({
 
 function BingoBoard({ category, difficulty }: { category: Category; difficulty: Difficulty }) {
   const bingo = boards[difficulty][category];
-  // const player = usePlayer();
-  // const ASDA = player.stats.general.bingo[difficulty][category];
+  const player = usePlayer();
+  const ASDA = player.stats.general.bingo[difficulty][category];
 
   // HERE
   return (
@@ -230,17 +228,19 @@ function RewardCard({
         <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
           {reward.name} Reward
         </p>
-        {typeof reward.description === "string" ? (
-          <p className="">
-            <MinecraftText>{reward.description}</MinecraftText>
-          </p>
-        ) : (
-          <div className="flex flex-col gap-0.5">
-            {reward.description.map((part) => (
-              <MinecraftText key={part}>{part}</MinecraftText>
-            ))}
-          </div>
-        )}
+        {typeof reward.description === "string" ?
+          (
+            <p className="">
+              <MinecraftText>{reward.description}</MinecraftText>
+            </p>
+          ) :
+          (
+            <div className="flex flex-col gap-0.5">
+              {reward.description.map((part) => (
+                <MinecraftText key={part}>{part}</MinecraftText>
+              ))}
+            </div>
+          )}
       </Box>
     </motion.div>
   );
@@ -284,11 +284,11 @@ function TaskCard({
           Progress:{" "}
           <span
             className={`${
-              finished > 0 && finished < task.progress
-                ? "text-mc-yellow"
-                : finished >= task.progress
-                ? "text-mc-green"
-                : "text-mc-red"
+              finished > 0 && finished < task.progress ?
+                "text-mc-yellow" :
+                (finished >= task.progress ?
+                  "text-mc-green" :
+                  "text-mc-red")
             }`}
           >
             {finished}
@@ -301,20 +301,3 @@ function TaskCard({
   );
 }
 
-function Search({ className }: { className?: string }) {
-  return (
-    <div
-      className={cn(
-        "h-16 flex items-center px-4 gap-4 bg-white/30 border-4 border-white/40 backdrop-blur-sm",
-        className
-      )}
-    >
-      <SearchIcon className="size-8 text-white drop-shadow-mc-2" />
-      <input
-        placeholder="Search a player"
-        className="text-mc-2 placeholder-mc-darkgray text-white outline-none h-full w-full selection:bg-white/50"
-        spellCheck={false}
-      />
-    </div>
-  );
-}

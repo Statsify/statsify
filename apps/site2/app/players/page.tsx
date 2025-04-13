@@ -9,7 +9,7 @@
 import { Background } from "~/components/ui/background";
 import { Search } from "./search";
 
-export default function TestPage() {
+export default function PlayerSearchPage() {
   return (
     <div className="relative h-[100dvh]">
       <Background

@@ -6,10 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LogoError } from "~/components/icons/logo-error";
 import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
-import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Skin } from "~/components/ui/skin";
 
 export default function NotFound() {
@@ -17,7 +15,7 @@ export default function NotFound() {
     <div className="relative">
       <div className="relative h-[100dvh]">
         <Background
-          background="background"
+          background="general"
           className="h-full"
           mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
         />
@@ -36,8 +34,8 @@ export default function NotFound() {
             <span className="text-mc-dark-red">]</span> Non-Existent
           </Box>
           <Skin uuid="76a56ac7fcf649fca0531cb5c77cd9ae" contentClass="h-64" />
-          <h1 className="text-mc-6 lgtext-mc-12 text-mc-red font-bold">WHO?</h1>
-          <p className="text-mc-1.5 lg:text-mc-2 text-mc-gray text-center">
+          <h1 className="text-mc-6 lg:text-mc-12 text-mc-red font-bold">WHO?</h1>
+          <p className="max-w-64 lg:max-w-none text-mc-1.5 lg:text-mc-2 text-mc-gray text-center">
             This player does not exist. Make sure you spelled the name correctly
           </p>
         </div>

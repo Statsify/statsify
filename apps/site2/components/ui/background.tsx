@@ -8,15 +8,15 @@
 
 "use client";
 
-import Main from "~/public/backgrounds/main.png";
+import Arcade from "~/public/backgrounds/arcade.png";
+import BedWars from "~/public/backgrounds/bedwars.png";
 import Bingo from "~/public/backgrounds/bingo.png";
+import Duels from "~/public/backgrounds/duels.png";
+import General from "~/public/backgrounds/general.png";
 import Guilds from "~/public/backgrounds/guilds.png";
 import Leaderboards from "~/public/backgrounds/leaderboards.png";
-import PlayersArcade from "~/public/backgrounds/players-arcade.png";
-import PlayersBedWars from "~/public/backgrounds/players-bedwars.png";
-import PlayersDuels from "~/public/backgrounds/players-duels.png";
-import PlayersSkyWars from "~/public/backgrounds/players-skywars.png";
-import Sessions from "~/public/backgrounds/sessions.png";
+import SkyWars from "~/public/backgrounds/skywars.png";
+import WoolGames from "~/public/backgrounds/woolgames.png";
 
 import Image from "next/image";
 import { animate, motion, useMotionValue } from "motion/react";
@@ -24,15 +24,15 @@ import { cn } from "~/lib/util";
 import { useEffect, useRef } from "react";
 
 const Backgrounds = {
-  main: Main,
+  general: General,
   guilds: Guilds,
   bingo: Bingo,
-  bedwars: PlayersBedWars,
-  skywars: PlayersSkyWars,
-  duels: PlayersDuels,
-  arcade: PlayersArcade,
+  bedwars: BedWars,
+  skywars: SkyWars,
+  duels: Duels,
+  arcade: Arcade,
   leaderboards: Leaderboards,
-  sessions: Sessions,
+  woolgames: WoolGames,
 };
 
 export function Background({
@@ -61,9 +61,7 @@ export function Background({
         alt=""
         fill={true}
         className="object-cover object-top brightness-85"
-        style={{
-          mask,
-        }}
+        style={{ mask }}
       />
       {/* Crossfade between oldBackground and currentBackground */}
       {oldBackground.current && oldBackground.current != background && (
