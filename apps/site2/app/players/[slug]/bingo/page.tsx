@@ -42,63 +42,65 @@ export default function BingoPage() {
   const player = usePlayer();
 
   return (
-    <div className="h-full">
-      <Background
-        background="bingo"
-        className="h-full aspect-auto"
-        mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
-      />
-      <div className="absolute h-[100dvh] w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
-      <div className="w-[95%] max-w-[1800px] mx-auto flex justify-center items-center flex-col gap-4">
-        <div className="flex flex-col gap-2 items-center mt-12 mb-4 lg:mb-8">
-          <h1 className="text-mc-yellow text-mc-4 lg:text-mc-7 font-bold">Bingo Tracker</h1>
-          <h2 className="text-mc-gold text-mc-2 lg:text-mc-3">12th Anniversary Bingo</h2>
-        </div>
-        <div className="w-[80%] flex items-stretch flex-col gap-4">
-          <Search />
-          <Divider variant="black" className="my-2" />
-          <Box contentClass="text-center text-mc-3">
-            <MinecraftText>{player.displayName}</MinecraftText>
-          </Box>
-          <Box contentClass="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
-            <CategoryOverview category="Casual" easyCompletion={24} hardCompletion={25} />
-            <CategoryOverview category="PvP" easyCompletion={12} hardCompletion={0} />
-            <CategoryOverview category="Classic" easyCompletion={100} hardCompletion={12.5} />
-          </Box>
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4 **:text-mc-1.5 **:lg:text-mc-2">
-            <Tabs
-              tab={category}
-              onTabChange={(category) => {
-                setCategory(category);
-                setAnimationSource(closestTileToCategory[category]);
-              }}
-            >
-              <Tab tab="casual">Casual</Tab>
-              <Tab tab="pvp">PvP</Tab>
-              <Tab tab="classic">Classic</Tab>
-            </Tabs>
-            <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
-            <Tabs
-              tab={difficulty}
-              onTabChange={(difficulty) => {
-                setDifficulty(difficulty);
-                setAnimationSource(closestTileToDifficulty[difficulty]);
-              }}
-            >
-              <Tab tab="easy" containerClass="text-mc-green/50 aria-pressed:text-mc-green">
-                Easy
-              </Tab>
-              <Tab tab="hard" containerClass="text-mc-red/50 aria-pressed:text-mc-red">
-                Hard
-              </Tab>
-            </Tabs>
+    <div className="grow">
+      <div className="relative h-full">
+        <Background
+          background="bingo"
+          className="h-full aspect-auto"
+          mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
+        />
+        <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
+        <div className="w-[95%] max-w-[1800px] mx-auto flex justify-center items-center flex-col gap-4">
+          <div className="flex flex-col gap-2 items-center mt-12 mb-4 lg:mb-8">
+            <h1 className="text-mc-yellow text-mc-4 lg:text-mc-7 font-bold">Bingo Tracker</h1>
+            <h2 className="text-mc-gold text-mc-2 lg:text-mc-3">12th Anniversary Bingo</h2>
           </div>
-          <Divider variant="black" />
-        </div>
-        <div className="flex flex-col justify-evenly w-full">
-          <BingoContext.Provider value={{ animationSource }}>
-            <BingoBoard category={category} difficulty={difficulty} />
-          </BingoContext.Provider>
+          <div className="w-[80%] flex items-stretch flex-col gap-4">
+            <Search />
+            <Divider variant="black" className="my-2" />
+            <Box contentClass="text-center text-mc-3">
+              <MinecraftText>{player.displayName}</MinecraftText>
+            </Box>
+            <Box contentClass="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
+              <CategoryOverview category="Casual" easyCompletion={24} hardCompletion={25} />
+              <CategoryOverview category="PvP" easyCompletion={12} hardCompletion={0} />
+              <CategoryOverview category="Classic" easyCompletion={100} hardCompletion={12.5} />
+            </Box>
+            <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4 **:text-mc-1.5 **:lg:text-mc-2">
+              <Tabs
+                tab={category}
+                onTabChange={(category) => {
+                  setCategory(category);
+                  setAnimationSource(closestTileToCategory[category]);
+                }}
+              >
+                <Tab tab="casual">Casual</Tab>
+                <Tab tab="pvp">PvP</Tab>
+                <Tab tab="classic">Classic</Tab>
+              </Tabs>
+              <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
+              <Tabs
+                tab={difficulty}
+                onTabChange={(difficulty) => {
+                  setDifficulty(difficulty);
+                  setAnimationSource(closestTileToDifficulty[difficulty]);
+                }}
+              >
+                <Tab tab="easy" containerClass="text-mc-green/50 aria-pressed:text-mc-green">
+                  Easy
+                </Tab>
+                <Tab tab="hard" containerClass="text-mc-red/50 aria-pressed:text-mc-red">
+                  Hard
+                </Tab>
+              </Tabs>
+            </div>
+            <Divider variant="black" />
+          </div>
+          <div className="flex flex-col justify-evenly w-full">
+            <BingoContext.Provider value={{ animationSource }}>
+              <BingoBoard category={category} difficulty={difficulty} />
+            </BingoContext.Provider>
+          </div>
         </div>
       </div>
     </div>
@@ -117,13 +119,7 @@ function CategoryOverview({
   return (
     <div className="flex flex-col justify-center gap-1 lg:gap-4 text-center text-mc-1.5 lg:text-mc-2">
       <div className="flex gap-2 items-center justify-center">
-        <Image
-          src={SkyWarsIcon}
-          width={32}
-          height={32}
-          alt="icon"
-          style={{ imageRendering: "pixelated" }}
-        />
+        <Image src={SkyWarsIcon} width={32} height={32} alt="icon" style={{ imageRendering: "pixelated" }} />
         <p>{category} Bingo Cards</p>
       </div>
       <div className="flex flex-col justify-center gap-1">
@@ -131,11 +127,11 @@ function CategoryOverview({
           <span className="text-mc-green">Easy</span>:{" "}
           <span
             className={
-              easyCompletion == 0 ?
-                "text-mc-red" :
-                (easyCompletion > 0 && easyCompletion < 100 ?
-                  "text-mc-yellow" :
-                  "text-mc-green font-bold")
+              easyCompletion == 0
+                ? "text-mc-red"
+                : easyCompletion > 0 && easyCompletion < 100
+                ? "text-mc-yellow"
+                : "text-mc-green font-bold"
             }
           >
             {easyCompletion}%
@@ -228,19 +224,17 @@ function RewardCard({
         <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
           {reward.name} Reward
         </p>
-        {typeof reward.description === "string" ?
-          (
-            <p className="">
-              <MinecraftText>{reward.description}</MinecraftText>
-            </p>
-          ) :
-          (
-            <div className="flex flex-col gap-0.5">
-              {reward.description.map((part) => (
-                <MinecraftText key={part}>{part}</MinecraftText>
-              ))}
-            </div>
-          )}
+        {typeof reward.description === "string" ? (
+          <p className="">
+            <MinecraftText>{reward.description}</MinecraftText>
+          </p>
+        ) : (
+          <div className="flex flex-col gap-0.5">
+            {reward.description.map((part) => (
+              <MinecraftText key={part}>{part}</MinecraftText>
+            ))}
+          </div>
+        )}
       </Box>
     </motion.div>
   );
@@ -284,11 +278,11 @@ function TaskCard({
           Progress:{" "}
           <span
             className={`${
-              finished > 0 && finished < task.progress ?
-                "text-mc-yellow" :
-                (finished >= task.progress ?
-                  "text-mc-green" :
-                  "text-mc-red")
+              finished > 0 && finished < task.progress
+                ? "text-mc-yellow"
+                : finished >= task.progress
+                ? "text-mc-green"
+                : "text-mc-red"
             }`}
           >
             {finished}
@@ -300,4 +294,3 @@ function TaskCard({
     </motion.div>
   );
 }
-

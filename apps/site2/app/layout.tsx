@@ -34,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${MinecraftFont.variable} antialiased leading-[normal]`}>
+      <body className={`${MinecraftFont.variable} antialiased leading-[normal] h-screen flex flex-col`}>
         {children}
         <Footer />
       </body>

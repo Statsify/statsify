@@ -12,8 +12,8 @@ import { Skin } from "~/components/ui/skin";
 
 export default function NotFound() {
   return (
-    <div className="relative">
-      <div className="relative h-[100dvh]">
+    <div className="relative grow">
+      <div className="relative h-full">
         <Background
           background="general"
           className="h-full"

@@ -7,12 +7,16 @@
  */
 
 import { Background } from "~/components/ui/background";
-import { LogoError } from "~/components/icons/logo-error";
+import { Box } from "~/components/ui/box";
+import { Skin } from "~/components/ui/skin";
 
 export default function NotFound() {
+  // TODO: take the wrong ign from the url here v
+  const misspelled_ign = "URL-WRONG-NAME";
+
   return (
-    <div className="relative">
-      <div className="relative h-[100dvh]">
+    <div className="relative grow">
+      <div className="relative h-full">
         <Background
           background="general"
           className="h-full"
@@ -26,17 +30,16 @@ export default function NotFound() {
         />
       </div>
       <div className="absolute top-0 w-full h-full flex flex-col items-center justify-center z-10">
-        <LogoError className="size-64 lg:size-128" />
         <div className="flex flex-col items-center gap-4">
-          <h1 className="text-mc-7 lg:text-mc-13 font-bold">
-            <span className="text-[#FFD0D7]">O</span>
-            <span className="text-[#F42A37]">O</span>
-            <span className="text-[#CD1820]">P</span>
-            <span className="text-[#B11117]">S</span>
-            <span className="text-[#A10B10]">!</span>
-          </h1>
+          <Box>
+            <span className="text-mc-dark-red">[</span>
+            <span className="text-mc-red">???</span>
+            <span className="text-mc-dark-red">]</span> {misspelled_ign}
+          </Box>
+          <Skin uuid="76a56ac7fcf649fca0531cb5c77cd9ae" contentClass="h-64" />
+          <h1 className="text-mc-4 lg:text-mc-7 text-mc-red font-bold">Player Not Found</h1>
           <p className="max-w-64 lg:max-w-none text-mc-1.5 lg:text-mc-2 text-mc-gray text-center">
-            Looks like the page you're trying to reach does not exist
+            This player does not exist. Make sure you spelled the name correctly
           </p>
         </div>
       </div>
