@@ -14,7 +14,7 @@ import Bingo from "~/public/backgrounds/bingo.png";
 import Duels from "~/public/backgrounds/duels.png";
 import General from "~/public/backgrounds/general.png";
 import Guilds from "~/public/backgrounds/guilds.png";
-import Leaderboards from "~/public/backgrounds/leaderboards.png";
+import UHC from "~/public/backgrounds/uhc.png";
 import SkyWars from "~/public/backgrounds/skywars.png";
 import WoolGames from "~/public/backgrounds/woolgames.png";
 
@@ -31,7 +31,7 @@ const Backgrounds = {
   skywars: SkyWars,
   duels: Duels,
   arcade: Arcade,
-  leaderboards: Leaderboards,
+  uhc: UHC,
   woolgames: WoolGames,
 };
 
@@ -75,7 +75,7 @@ export function Background({
           />
         </motion.div>
       )}
-      <div className="relative w-full h-full" />
+      <div className="relative w-full h-full backdrop-blur-sm" />
     </div>
   );
 }
