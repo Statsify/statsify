@@ -10,6 +10,7 @@ import localFont from "next/font/local";
 import { Footer } from "~/components/ui/footer";
 import "./globals.css";
 import type { Metadata } from "next";
+import { Navbar } from "~/components/ui/navbar";
 
 export const metadata: Metadata = {
   title: "Statsify",
@@ -35,6 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${MinecraftFont.variable} antialiased leading-[normal]`}>
+        <Navbar />
         {children}
         <Footer />
       </body>

@@ -154,8 +154,8 @@ function CategoryOverview({
 
 function BingoBoard({ category, difficulty }: { category: Category; difficulty: Difficulty }) {
   const bingo = boards[difficulty][category];
-  const player = usePlayer();
-  const ASDA = player.stats.general.bingo[difficulty][category];
+  // const player = usePlayer();
+  // const ASDA = player.stats.general.bingo[difficulty][category];
 
   // HERE
   return (
