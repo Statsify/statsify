@@ -20,6 +20,7 @@ import Image from "next/image";
 import Commands from "~/public/icons/commands.png";
 import Servers from "~/public/icons/servers.png";
 import { Box } from "~/components/ui/box";
+import { Divider } from "~/components/ui/divider";
 
 export default async function Home() {
   const [player1, player2, player3, player4, player5, guild, leaderboard] = await Promise.all([
@@ -66,7 +67,7 @@ export default async function Home() {
             <div className="grow">
               <DiscordInvite />
             </div>
-            <div className="h-[32px] w-[2px] bg-white/20 hidden lg:block" />
+            <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
             <div>
               <BingoInvite />
             </div>

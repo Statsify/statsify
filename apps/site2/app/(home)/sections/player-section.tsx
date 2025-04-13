@@ -24,6 +24,7 @@ import { SkyWarsPreview } from "../previews/skywars";
 import { cn } from "~/lib/util";
 import { useState } from "react";
 import type { Player } from "@statsify/schemas";
+import { Divider } from "~/components/ui/divider";
 
 const games = [
   {
@@ -112,7 +113,7 @@ function Tabs({
           </button>
         ))}
       </div>
-      <div className="w-full h-[2px] bg-black/50" />
+      <Divider variant="black" />
       <div className="grid grid-areas-stack">
         {games.map(({ tab, component: GamePreview }, index) => (
           <PlayerProvider key={tab} player={players[index]}>

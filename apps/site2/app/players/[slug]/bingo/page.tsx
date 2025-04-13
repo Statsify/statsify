@@ -19,6 +19,7 @@ import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
 import { usePlayer } from "~/app/players/[slug]/context";
+import { Divider } from "~/components/ui/divider";
 
 const closestTileToCategory: Record<Category, [number, number]> = {
   casual: [0.5, 0],
@@ -54,7 +55,7 @@ export default function BingoPage() {
         </div>
         <div className="w-[80%] flex items-stretch flex-col gap-4">
           <Search />
-          <div className="w-full h-[2px] bg-black/50 my-2" />
+          <Divider variant="black" className="my-2" />
           <Box contentClass="text-center text-mc-3">
             <MinecraftText>{player.displayName}</MinecraftText>
           </Box>
@@ -71,7 +72,7 @@ export default function BingoPage() {
                 setAnimationSource(closestTileToCategory[category]);
               }}
             />
-            <div className="h-[32px] bg-white/20 hidden lg:block" />
+            <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
             <DifficultyTabs
               difficulty={difficulty}
               onDifficultyChange={(difficulty) => {
@@ -80,7 +81,7 @@ export default function BingoPage() {
               }}
             />
           </div>
-          <div className="w-full h-[2px] bg-black/50" />
+          <Divider variant="black" />
         </div>
         <div className="flex flex-col justify-evenly w-full">
           <BingoContext.Provider value={{ animationSource }}>
