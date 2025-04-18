@@ -6,10 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import Link from "next/link";
+import { LogoError } from "~/components/icons/logo-error";
 import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
+import { Button } from "~/components/ui/button";
 import { Skin } from "~/components/ui/skin";
-import { Search } from "./search";
 
 export default function NotFound() {
   // TODO: take the wrong ign from the url here v
@@ -30,20 +32,19 @@ export default function NotFound() {
       />
       <div className="w-full h-full min-h-150 flex flex-col items-center justify-between z-10">
         <div className="flex grow flex-col items-center justify-center gap-4">
-          <Box>
-            <span className="text-mc-dark-red">[</span>
-            <span className="text-mc-red">???</span>
-            <span className="text-mc-dark-red">]</span> {misspelled_ign}
-          </Box>
-          <Skin uuid="76a56ac7fcf649fca0531cb5c77cd9ae" contentClass="h-64" />
-          <h1 className="text-mc-4 lg:text-mc-7 text-mc-red font-bold">Player Not Found</h1>
-          <p className="max-w-64 lg:max-w-none text-mc-1.5 lg:text-mc-2 text-mc-gray text-center">
-            This player does not exist. Make sure you spelled the name correctly
-          </p>
+          <LogoError className="size-64 lg:size-80" />
+          <div className="flex flex-col items-center gap-4">
+            <h1 className="text-mc-4 lg:text-mc-8 text-mc-red font-bold">Unkown Error</h1>
+            <p className="max-w-64 lg:max-w-none text-mc-1.5 lg:text-mc-2 text-mc-gray text-center">
+              Something went wrong!
+            </p>
+          </div>
         </div>
-        <div className="mb-8 w-[50%]">
-          <Search />
-        </div>
+        <Link href="/" className="mb-4">
+          <Button className="bg-blue-500">
+            <p className="text-nowrap">Home Page</p>
+          </Button>
+        </Link>
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ import { Search } from "./search";
 
 export default function PlayerSearchPage() {
   return (
-    <div className="relative h-[100dvh]">
+    <div className="relative grow">
       <Background
         background="bingo"
         className="h-full"

@@ -22,6 +22,7 @@ import { Wordmark } from "~/components/icons/logo";
 import { PlayerSection } from "./sections/player-section";
 import { SessionSection } from "./sections/session-section";
 import { getGuild, getLeaderboard, getPlayer } from "~/app/api";
+import Link from "next/link";
 
 export default async function Home() {
   const [player1, player2, player3, player4, player5, guild, leaderboard] = await Promise.all([
@@ -56,13 +57,13 @@ export default async function Home() {
             </p>
           </div>
           <div className="flex flex-col lg:flex-row items-center flex-wrap gap-4 w-full">
-            <div className="grow">
+            <Link className="grow" href="https://statsify.net/invite">
               <DiscordInvite />
-            </div>
+            </Link>
             <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
-            <div>
+            <Link href="/players">
               <BingoInvite />
-            </div>
+            </Link>
           </div>
         </div>
         <InteractiveLogo />

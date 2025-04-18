@@ -75,7 +75,7 @@ export function PlayerSection({ players }: { players: [Player, Player, Player, P
           <Tabs
             tab={gameIndex}
             onTabChange={setGameIndex}
-            className="grid grid-cols-2 xl:grid-cols-4 gap-4 text-center xl:w-full"
+            className="grid grid-cols-2 xl:grid-cols-4 grid-flow-row gap-4 text-center xl:w-full"
           >
             {games.map(({ tab, formatted, icon }, index) => (
               <Tab key={tab} tab={index}>
