@@ -18,3 +18,4 @@ export function Skin({ uuid, contentClass, ...props }: ComponentProps<typeof Box
     </Box>
   );
 }
+

@@ -11,9 +11,14 @@
 import { type ReactNode, createContext, use } from "react";
 import type { Player } from "@statsify/schemas";
 
-const PlayerContext = createContext<{ player: Player | undefined }>({ player: undefined });
+const PlayerContext = createContext<{ player: Player | undefined }>({
+  player: undefined,
+});
 
-export const PlayerProvider = ({ player, children }: { player: Player; children: ReactNode }) => (
+export const PlayerProvider = ({ player, children }: {
+  player: Player;
+  children: ReactNode;
+}) => (
   <PlayerContext value={{ player }}>
     {children}
   </PlayerContext>
@@ -28,3 +33,4 @@ export function usePlayer() {
 
   return player;
 }
+

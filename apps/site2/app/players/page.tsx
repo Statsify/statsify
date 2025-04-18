@@ -6,7 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import Link from "next/link";
 import { Background } from "~/components/ui/background";
+import { Brand } from "~/components/icons/logo";
 import { Search } from "./search";
 
 export default function PlayerSearchPage() {
@@ -19,9 +21,12 @@ export default function PlayerSearchPage() {
       />
       <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
       <div className="w-full h-full flex justify-center items-center flex-col gap-8">
-        <div className="flex flex-col gap-2 items-center">
-          <h1 className="text-mc-yellow text-mc-7 font-bold">Bingo Tracker</h1>
-          <h2 className="text-mc-gold text-mc-3">12th Anniversary Bingo</h2>
+        <Link href="/" className="absolute top-0 mt-3 scale-[0.75]">
+          <Brand />
+        </Link>
+        <div className="flex flex-col gap-3 items-center mt-12 mb-4 lg:mb-8">
+          <h1 className="text-mc-yellow text-mc-4 lg:text-mc-7 font-bold">Bingoify</h1>
+          <h2 className="text-mc-gold text-mc-2 lg:text-mc-3">12th Anniversary Bingo</h2>
         </div>
         <div className="w-[80%]">
           <Search />

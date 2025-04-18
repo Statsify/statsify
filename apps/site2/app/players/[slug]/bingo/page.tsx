@@ -8,51 +8,50 @@
 
 "use client";
 
+import CasualIcon from "~/public/icons/slime-ball.png";
+import ClassicIcon from "~/public/icons/snowball.png";
 import Image from "next/image";
-import SkyWarsIcon from "~/public/icons/skywars.png";
-import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
+import PvPIcon from "~/public/icons/ender-eye.png";
 import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
+import { Brand } from "~/components/icons/logo";
 import { type Category, type Difficulty, type Reward, type Task, boards } from "./boards";
-import { ComponentProps, createContext, use, useState } from "react";
+import { ComponentProps, useState } from "react";
 import { Divider } from "~/components/ui/divider";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Search } from "~/app/players/search";
 import { Tab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
 import { usePlayer } from "~/app/players/[slug]/context";
+import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 
-const closestTileToCategory: Record<Category, [number, number]> = {
-  casual: [0.5, 0],
-  pvp: [1.5, 0],
-  classic: [2.5, 0],
+const FormattedCategories: Record<Category, string> = {
+  casual: "Casual",
+  classic: "Classic",
+  pvp: "PvP",
 };
-
-const closestTileToDifficulty: Record<Difficulty, [number, number]> = {
-  easy: [3.5, 0],
-  hard: [4.5, 0],
-};
-
-const BingoContext = createContext<{ animationSource: [number, number] }>({ animationSource: [0, 0] });
 
 export default function BingoPage() {
   const [category, setCategory] = useState<Category>("casual");
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
-  const [animationSource, setAnimationSource] = useState<[number, number]>([0, 0]);
   const player = usePlayer();
 
   return (
     <div className="grow">
-      <div className="relative h-full">
+      <div className="relative h-full mb-8">
         <Background
           background="bingo"
           className="h-full aspect-auto"
-          mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
+          mask="linear-gradient(rgb(255 255 255) 50%, rgb(0 0 0 / 0) calc(100% - 32px))"
         />
         <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
         <div className="w-[95%] max-w-[1800px] mx-auto flex justify-center items-center flex-col gap-4">
-          <div className="flex flex-col gap-2 items-center mt-12 mb-4 lg:mb-8">
-            <h1 className="text-mc-yellow text-mc-4 lg:text-mc-7 font-bold">Bingo Tracker</h1>
+          <Link href="/" className="absolute top-0 mt-3 scale-[0.75]">
+            <Brand />
+          </Link>
+          <div className="flex flex-col gap-2 items-center mt-30 mb-4 lg:mb-8">
+            <h1 className="text-mc-yellow text-mc-4 lg:text-mc-7 font-bold">Bingoify</h1>
             <h2 className="text-mc-gold text-mc-2 lg:text-mc-3">12th Anniversary Bingo</h2>
           </div>
           <div className="w-[80%] flex items-stretch flex-col gap-4">
@@ -62,17 +61,15 @@ export default function BingoPage() {
               <MinecraftText>{player.displayName}</MinecraftText>
             </Box>
             <Box contentClass="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
-              <CategoryOverview category="Casual" easyCompletion={24} hardCompletion={25} />
-              <CategoryOverview category="PvP" easyCompletion={12} hardCompletion={0} />
-              <CategoryOverview category="Classic" easyCompletion={100} hardCompletion={12.5} />
+              <CategoryOverview icon={CasualIcon} category="casual" />
+              <CategoryOverview icon={PvPIcon} category="pvp" />
+              <CategoryOverview icon={ClassicIcon} category="classic" />
             </Box>
+            <Divider variant="black" />
             <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4 **:text-mc-1.5 **:lg:text-mc-2">
               <Tabs
                 tab={category}
-                onTabChange={(category) => {
-                  setCategory(category);
-                  setAnimationSource(closestTileToCategory[category]);
-                }}
+                onTabChange={setCategory}
               >
                 <Tab tab="casual">Casual</Tab>
                 <Tab tab="pvp">PvP</Tab>
@@ -81,10 +78,7 @@ export default function BingoPage() {
               <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
               <Tabs
                 tab={difficulty}
-                onTabChange={(difficulty) => {
-                  setDifficulty(difficulty);
-                  setAnimationSource(closestTileToDifficulty[difficulty]);
-                }}
+                onTabChange={setDifficulty}
               >
                 <Tab tab="easy" containerClass="text-mc-green/50 aria-pressed:text-mc-green">
                   Easy
@@ -94,174 +88,173 @@ export default function BingoPage() {
                 </Tab>
               </Tabs>
             </div>
-            <Divider variant="black" />
           </div>
           <div className="flex flex-col justify-evenly w-full">
-            <BingoContext.Provider value={{ animationSource }}>
-              <BingoBoard category={category} difficulty={difficulty} />
-            </BingoContext.Provider>
+            <BingoBoard category={category} difficulty={difficulty} />
           </div>
         </div>
       </div>
     </div>
   );
+}
+
+function completetionColor(completion: number) {
+  if (completion === 0) return "text-mc-red";
+  if (completion === 16) return "text-mc-green font-bold";
+  return "text-mc-yellow";
 }
 
 function CategoryOverview({
   category,
-  easyCompletion,
-  hardCompletion,
+  icon,
 }: {
-  category: string;
-  easyCompletion: number;
-  hardCompletion: number;
+  category: Category;
+  icon: StaticImport;
 }) {
+  const player = usePlayer();
+
+  const easyBingo = player.stats.general.bingo.easy[category];
+  const hardBingo = player.stats.general.bingo.hard[category];
+
+  const easyCompletion = boards.easy[category].tasks.filter((task) => easyBingo[task.field] >= task.progress).length;
+  const hardCompletion = boards.hard[category].tasks.filter((task) => hardBingo[task.field] >= task.progress).length;
+
   return (
-    <div className="flex flex-col justify-center gap-1 lg:gap-4 text-center text-mc-1.5 lg:text-mc-2">
+    <div className="flex flex-col justify-center gap-1 lg:gap-3 text-center text-mc-1.5 lg:text-mc-2">
       <div className="flex gap-2 items-center justify-center">
-        <Image src={SkyWarsIcon} width={32} height={32} alt="icon" style={{ imageRendering: "pixelated" }} />
-        <p>{category} Bingo Cards</p>
+        <Image src={icon} width={32} height={32} alt="icon" style={{ imageRendering: "pixelated" }} className="w-6 h-6 lg:w-8 lg:h-8" />
+        <p className="font-bold text-mc-yellow">{FormattedCategories[category]} Bingo Cards</p>
       </div>
       <div className="flex flex-col justify-center gap-1">
         <p className="text-mc-gray">
           <span className="text-mc-green">Easy</span>:{" "}
-          <span
-            className={
-              easyCompletion == 0
-                ? "text-mc-red"
-                : easyCompletion > 0 && easyCompletion < 100
-                ? "text-mc-yellow"
-                : "text-mc-green font-bold"
-            }
-          >
-            {easyCompletion}%
-          </span>{" "}
-          completed
+          <span className={completetionColor(easyCompletion)}>{easyCompletion}</span><span className="text-mc-gray">/16</span> completed
         </p>
         <p className="text-mc-gray">
-          <span className="text-mc-red">Hard</span>: <span className="text-mc-red">{hardCompletion}%</span> completed
+          <span className="text-mc-red">Hard</span>:{" "}
+          <span className={completetionColor(hardCompletion)}>{hardCompletion}</span><span className="text-mc-gray">/16</span> completed
         </p>
       </div>
     </div>
   );
 }
 
-function BingoBoard({ category, difficulty }: { category: Category; difficulty: Difficulty }) {
-  const bingo = boards[difficulty][category];
+function BingoBoard<D extends Difficulty, C extends Category>(
+  { category, difficulty }: { category: C; difficulty: D }
+) {
+  const board = boards[difficulty][category];
   const player = usePlayer();
-  const ASDA = player.stats.general.bingo[difficulty][category];
+  const bingo = player.stats.general.bingo[difficulty][category];
+
+  const isLineComplete = (transformation: (index: number, line: number) => number) => (line: number) => {
+    for (let i = 0; i < 4; i++) {
+      const task = board.tasks[transformation(i, line)];
+      if (bingo[task.field] < task.progress) return false;
+    }
+
+    return true;
+  };
+
+  const isRowComplete = isLineComplete((i, row) => i + row * 4);
+  const isColumnComplete = isLineComplete((i, column) => i * 4 + column);
+  const isDiagonalComplete = isLineComplete((i, diagonal) => i * 4 + (diagonal === 0 ? i : 3 - i));
 
   // HERE
   return (
     <div className="overflow-x-auto grid grid-cols-[repeat(6,1fr)] grid-rows-6 gap-2 **:text-mc-1.25 md:**:text-mc-1.5 leading-4">
-      <AnimatePresence mode="popLayout" initial={false}>
-        <RewardCard key={`${difficulty}-${category}-diagonal-0`} reward={bingo.diagonalRewards[0]} location={[0, 0]} />
-        {bingo.columnRewards.map((reward, index) => (
-          <RewardCard key={`${difficulty}-${category}-${reward.name}`} reward={reward} location={[1 + index, 0]} />
-        ))}
+      <RewardCard
+        key={`${difficulty}-${category}-diagonal-0`}
+        reward={board.diagonalRewards[0]}
+        completed={isDiagonalComplete(0)}
+      />
+      {board.columnRewards.map((reward, column) => (
         <RewardCard
-          key={`${difficulty}-${category}-diagonal-1`}
-          reward={bingo.diagonalRewards[1]}
-          location={[1 + bingo.columnRewards.length, 0]}
+          key={`${difficulty}-${category}-${reward.name}`}
+          reward={reward}
+          completed={isColumnComplete(column)}
         />
-        <div className="row-start-2 col-start-2 grid grid-cols-subgrid grid-rows-subgrid row-span-4 col-span-4">
-          {bingo.tasks.map((task, index) => (
-            <TaskCard
-              key={`${difficulty}-${category}-${task.field}`}
-              task={task}
-              finished={ASDA[task.field]}
-              complete={ASDA[task.field] >= task.progress}
-              location={[1 + (index % 4), 1 + Math.floor(index / 4)]}
-            />
-          ))}
-        </div>
-        {bingo.rowRewards.map((reward, index) => (
-          <RewardCard
-            key={`${difficulty}-${category}-${reward.name}`}
-            containerClass="col-start-6"
-            reward={reward}
-            location={[1 + bingo.columnRewards.length, 1 + index]}
+      ))}
+      <RewardCard
+        key={`${difficulty}-${category}-diagonal-1`}
+        reward={board.diagonalRewards[1]}
+        completed={isDiagonalComplete(1)}
+      />
+      <div className="row-start-2 col-start-2 grid grid-cols-subgrid grid-rows-subgrid row-span-4 col-span-4">
+        {board.tasks.map((task) => (
+          <TaskCard
+            key={`${difficulty}-${category}-${task.field}`}
+            task={task}
+            finished={bingo[task.field]}
+            complete={bingo[task.field] >= task.progress}
+
           />
         ))}
+      </div>
+      {board.rowRewards.map((reward, row) => (
         <RewardCard
-          key={`${difficulty}-${category}-blackout`}
+          key={`${difficulty}-${category}-${reward.name}`}
           containerClass="col-start-6"
-          reward={bingo.blackoutReward}
-          variant="blackout"
-          location={[1 + bingo.columnRewards.length, 1 + bingo.rowRewards.length]}
+          reward={reward}
+          completed={isRowComplete(row)}
         />
-      </AnimatePresence>
+      ))}
+      <RewardCard
+        key={`${difficulty}-${category}-blackout`}
+        containerClass="col-start-6"
+        reward={board.blackoutReward}
+        variant="blackout"
+        completed={board.tasks.every((task) => bingo[task.field] >= task.progress)}
+      />
     </div>
   );
 }
-
-const DELAY_DISTANCE_SCALE = 40;
-const DURATION = 0.17;
 
 function RewardCard({
   containerClass,
   contentClass,
   variant = "regular",
-  location: [x, y],
+  completed,
   reward,
   ...props
-}: { reward: Reward; location: [number, number]; variant?: "blackout" | "regular" } & Omit<
+}: { reward: Reward; variant?: "blackout" | "regular"; completed: boolean } & Omit<
   ComponentProps<typeof Box>,
   "variant"
 >) {
-  const { animationSource } = use(BingoContext);
-  const distance = Math.sqrt(Math.pow(x - animationSource[0], 2) + Math.pow(y - animationSource[1], 2));
-
   return (
-    <motion.div
-      className={`${containerClass} min-w-50 flex`}
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0 }}
-      transition={{ delay: distance / DELAY_DISTANCE_SCALE, type: "spring", duration: DURATION, bounce: 0.2 }}
-    >
-      <Box {...props} containerClass="grow" contentClass={`flex flex-col gap-2  ${contentClass}`}>
+    <div className={`${containerClass} min-w-50 flex`}>
+      <Box {...props} containerClass="grow" contentClass={`flex flex-col gap-2  ${contentClass}`} variant={completed ? "pink" : "default"}>
         <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
           {reward.name} Reward
         </p>
-        {typeof reward.description === "string" ? (
-          <p className="">
-            <MinecraftText>{reward.description}</MinecraftText>
-          </p>
-        ) : (
-          <div className="flex flex-col gap-0.5">
-            {reward.description.map((part) => (
-              <MinecraftText key={part}>{part}</MinecraftText>
-            ))}
-          </div>
-        )}
+        {typeof reward.description === "string" ?
+          (
+            <p className="">
+              <MinecraftText>{reward.description}</MinecraftText>
+            </p>
+          ) :
+          (
+            <div className="flex flex-col gap-0.5">
+              {reward.description.map((part) => (
+                <MinecraftText key={part}>{part}</MinecraftText>
+              ))}
+            </div>
+          )}
       </Box>
-    </motion.div>
+    </div>
   );
 }
 
 function TaskCard({
   task,
-  location: [x, y],
   finished,
   complete,
 }: {
   task: Task;
-  location: [number, number];
   finished: number;
   complete: boolean;
 }) {
-  const { animationSource } = use(BingoContext);
-  const distance = Math.sqrt(Math.pow(x - animationSource[0], 2) + Math.pow(y - animationSource[1], 2));
-
   return (
-    <motion.div
-      className="min-w-50 flex"
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0 }}
-      transition={{ delay: distance / DELAY_DISTANCE_SCALE, type: "spring", duration: DURATION, bounce: 0.2 }}
-    >
+    <div className="min-w-50 flex">
       <Box
         containerClass="grow"
         contentClass="flex flex-col justify-between gap-2 text-center"
@@ -278,11 +271,11 @@ function TaskCard({
           Progress:{" "}
           <span
             className={`${
-              finished > 0 && finished < task.progress
-                ? "text-mc-yellow"
-                : finished >= task.progress
-                ? "text-mc-green"
-                : "text-mc-red"
+              finished > 0 && finished < task.progress ?
+                "text-mc-yellow" :
+                (finished >= task.progress ?
+                  "text-mc-green" :
+                  "text-mc-red")
             }`}
           >
             {finished}
@@ -291,6 +284,6 @@ function TaskCard({
           <span className={complete ? "text-mc-green" : "text-mc-gray"}>{task.progress}</span>
         </p>
       </Box>
-    </motion.div>
+    </div>
   );
 }

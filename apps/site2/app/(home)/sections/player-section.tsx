@@ -8,11 +8,11 @@
 
 "use client";
 
-import ArcadeIcon from "~/public/icons/arcade.png";
-import BedWarsIcon from "~/public/icons/bedwars.png";
-import DuelsIcon from "~/public/icons/duels.png";
+import ArcadeIcon from "~/public/icons/slime-ball.png";
+import BedWarsIcon from "~/public/icons/bed.png";
+import DuelsIcon from "~/public/icons/fishing-rod.png";
 import Image from "next/image";
-import SkyWarsIcon from "~/public/icons/skywars.png";
+import SkyWarsIcon from "~/public/icons/ender-eye.png";
 import { ArcadePreview } from "../previews/arcade";
 import { BaseSection } from "./base-section";
 import { BedWarsPreview } from "../previews/bedwars";

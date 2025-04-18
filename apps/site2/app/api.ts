@@ -53,3 +53,12 @@ export async function getLeaderboard(field: string) {
 
   return body as PostLeaderboardResponse;
 }
+
+export async function getSkinRender(uuid: string): Promise<ArrayBuffer> {
+  const response = await fetch(`${env.API_URL}/skin?uuid=${uuid}`, {
+    headers: { "X-API-KEY": env.API_KEY },
+  });
+
+  const body = await response.arrayBuffer();
+  return body;
+}

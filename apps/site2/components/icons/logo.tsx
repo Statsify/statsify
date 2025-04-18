@@ -6,6 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { cn } from "~/lib/util";
+
+// Icon
 export function Logo({ className }: { className?: string }) {
   return (
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
@@ -20,5 +23,31 @@ export function Logo({ className }: { className?: string }) {
       <path fillRule="evenodd" clipRule="evenodd" d="M18 16H21V17H22V27H21V28H18V27H17V17H18V16Z" className="fill-[#187BCD] logo-shadow-[#187BCD]" />
       <path fillRule="evenodd" clipRule="evenodd" d="M25 12H28V13H29V27H28V28H25V27H24V13H25V12Z" className="fill-[#1167B1] logo-shadow-[#1167B1]" />
     </svg>
+  );
+}
+
+// Text
+export function Wordmark({ className }: { className?: string }) {
+  return (
+    <p className={cn("text-mc-5 font-bold", className)}>
+      <span className="text-[#D0EFFF]">S</span>
+      <span className="text-[#7DC6FA]">t</span>
+      <span className="text-[#2A9DF4]">a</span>
+      <span className="text-[#2492E7]">t</span>
+      <span className="text-[#1E86DA]">s</span>
+      <span className="text-[#187BCD]">i</span>
+      <span className="text-[#1571BF]">f</span>
+      <span className="text-[#1167B1]">y</span>
+    </p>
+  );
+}
+
+// Icon + Text
+export function Brand({ className }: { className?: string }) {
+  return (
+    <div className={cn("flex items-center gap-4", className)}>
+      <Logo className="size-18" />
+      <Wordmark />
+    </div>
   );
 }

@@ -7,10 +7,10 @@
  */
 
 import Link from "next/link";
+import { Brand } from "~/components/icons/logo";
 import { Discord } from "~/components/icons/discord";
 import { Divider } from "./divider";
 import { GitHub } from "~/components/icons/github";
-import { Logo } from "~/components/icons/logo";
 import { Patreon } from "~/components/icons/patreon";
 import { ReactNode } from "react";
 import { Twitter } from "~/components/icons/twitter";
@@ -22,19 +22,9 @@ export function Footer() {
       <div className="w-full max-w-[1440px] flex flex-col gap-8 md:gap-4 pb-8">
         <Divider className="opacity-10" />
         <div className="flex flex-col gap-4 md:flex-row md:justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Logo className="size-18" />
-            <p className="text-mc-5 font-bold">
-              <span className="text-[#D0EFFF]">S</span>
-              <span className="text-[#7DC6FA]">t</span>
-              <span className="text-[#2A9DF4]">a</span>
-              <span className="text-[#2492E7]">t</span>
-              <span className="text-[#1E86DA]">s</span>
-              <span className="text-[#187BCD]">i</span>
-              <span className="text-[#1571BF]">f</span>
-              <span className="text-[#1167B1]">y</span>
-            </p>
-          </div>
+          <Link href="/">
+            <Brand />
+          </Link>
           <div className="flex gap-4">
             <IconContainer href="/youtube" label="YouTube">
               <YouTube className="drop-shadow-mc-1" />

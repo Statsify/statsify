@@ -22,6 +22,7 @@ export type Board<D extends Difficulty, C extends Category> = {
   rowRewards: Reward[];
   blackoutReward: Reward;
   tasks: Task<D, C>[];
+  name: string;
 };
 
 export type Task<D extends Difficulty = Difficulty, C extends Category = Category> = {
@@ -35,6 +36,7 @@ export type Task<D extends Difficulty = Difficulty, C extends Category = Categor
 export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
   easy: {
     casual: {
+      name: "Casual",
       blackoutReward: {
         description: [
           "§8+§a§l4§r §7Bingo Bucks§r",
