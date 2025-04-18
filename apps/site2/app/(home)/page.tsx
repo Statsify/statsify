@@ -8,6 +8,7 @@
 
 import Commands from "~/public/icons/book.png";
 import Image from "next/image";
+import Link from "next/link";
 import Servers from "~/public/icons/iron-door.png";
 import { Background } from "~/components/ui/background";
 import { Board } from "~/components/icons/board";
@@ -18,11 +19,10 @@ import { Divider } from "~/components/ui/divider";
 import { GuildSection } from "./sections/guild-section";
 import { InteractiveLogo } from "./interactive-logo";
 import { LeaderboardSection } from "./sections/leaderboard-section";
-import { Wordmark } from "~/components/icons/logo";
 import { PlayerSection } from "./sections/player-section";
 import { SessionSection } from "./sections/session-section";
+import { Wordmark } from "~/components/icons/logo";
 import { getGuild, getLeaderboard, getPlayer } from "~/app/api";
-import Link from "next/link";
 
 export default async function Home() {
   const [player1, player2, player3, player4, player5, guild, leaderboard] = await Promise.all([
@@ -57,9 +57,7 @@ export default async function Home() {
             </p>
           </div>
           <div className="flex flex-col lg:flex-row items-center flex-wrap gap-4 w-full">
-            <Link className="grow" href="https://statsify.net/invite">
-              <DiscordInvite />
-            </Link>
+            <DiscordInvite className="grow" />
             <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
             <Link href="/players">
               <BingoInvite />
@@ -69,7 +67,7 @@ export default async function Home() {
         <InteractiveLogo />
       </div>
       <div className="flex items-center mt-16 lg:-mt-20 gap-10 lg:gap-0 flex-col lg:flex-row justify-evenly">
-        <Box contentClass="flex items-center flex-col gap-1" containerClass="w-[60%] lg:w-[20%]">
+        <Box className="flex items-center flex-col gap-1 container:w-[60%] container:lg:w-[20%]">
           <Image
             src={Servers}
             alt="servers"
@@ -82,7 +80,7 @@ export default async function Home() {
           <p className="text-center text-mc-3 text-mc-white font-bold">100,000</p>
           <p className="text-center text-mc-2 text-mc-white">Servers</p>
         </Box>
-        <Box contentClass="flex items-center flex-col gap-1" containerClass="w-[60%] lg:w-[20%]">
+        <Box className="flex items-center flex-col gap-1 container:w-[60%] container:lg:w-[20%]">
           <Image
             src={Commands}
             alt="commands"
@@ -107,10 +105,7 @@ export default async function Home() {
           <p className="text-mc-4 font-bold">What are you waiting for?</p>
           <p className="text-mc-2">Invite Statsify today to enhance your Hypixel experience!</p>
         </div>
-        <Button className="bg-discord-500">
-          <Discord className="drop-shadow-mc-1" />
-          <p className="text-nowrap">Try On Discord</p>
-        </Button>
+        <DiscordInvite />
       </div>
     </div>
   );
@@ -118,9 +113,11 @@ export default async function Home() {
 
 function DiscordInvite() {
   return (
-    <Button className="bg-discord-500">
-      <Discord className="drop-shadow-mc-1" />
-      <p className="text-nowrap">Try On Discord</p>
+    <Button className="bg-discord-500 @[header]:grow" asChild>
+      <Link href="/invite">
+        <Discord className="drop-shadow-mc-1" />
+        <p className="text-nowrap">Try On Discord</p>
+      </Link>
     </Button>
   );
 }

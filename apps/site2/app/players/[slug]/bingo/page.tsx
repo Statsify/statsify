@@ -57,10 +57,10 @@ export default function BingoPage() {
           <div className="w-[80%] flex items-stretch flex-col gap-4">
             <Search />
             <Divider variant="black" className="my-2" />
-            <Box contentClass="text-center text-mc-3">
+            <Box className="text-center text-mc-3">
               <MinecraftText>{player.displayName}</MinecraftText>
             </Box>
-            <Box contentClass="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
+            <Box className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
               <CategoryOverview icon={CasualIcon} category="casual" />
               <CategoryOverview icon={PvPIcon} category="pvp" />
               <CategoryOverview icon={ClassicIcon} category="classic" />
@@ -80,10 +80,10 @@ export default function BingoPage() {
                 tab={difficulty}
                 onTabChange={setDifficulty}
               >
-                <Tab tab="easy" containerClass="text-mc-green/50 aria-pressed:text-mc-green">
+                <Tab tab="easy" className="container:text-mc-green/50 container:aria-pressed:text-mc-green">
                   Easy
                 </Tab>
-                <Tab tab="hard" containerClass="text-mc-red/50 aria-pressed:text-mc-red">
+                <Tab tab="hard" className="container:text-mc-red/50 container:aria-pressed:text-mc-red">
                   Hard
                 </Tab>
               </Tabs>
@@ -220,6 +220,7 @@ function RewardCard({
   ComponentProps<typeof Box>,
   "variant"
 >) {
+  // TODO: fix containerClass
   return (
     <div className={`${containerClass} min-w-50 flex`}>
       <Box {...props} containerClass="grow" contentClass={`flex flex-col gap-2  ${contentClass}`} variant={completed ? "pink" : "default"}>
@@ -256,8 +257,7 @@ function TaskCard({
   return (
     <div className="min-w-50 flex">
       <Box
-        containerClass="grow"
-        contentClass="flex flex-col justify-between gap-2 text-center"
+        className="container:grow flex flex-col justify-between gap-2 text-center"
         variant={complete ? "green" : "red"}
       >
         <div className="flex flex-col gap-2">

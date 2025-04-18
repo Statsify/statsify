@@ -9,18 +9,17 @@
 "use client";
 
 import { Box } from "./box";
-import { cn } from "~/lib/util";
 import { motion, useMotionTemplate, useMotionValue } from "motion/react";
 import type { ComponentProps } from "react";
 
-export function SpotlightBox({ contentClass, onMouseMove, children, ...props }: ComponentProps<typeof Box<"div">>) {
+export function SpotlightBox({ className = "", onMouseMove, children, ...props }: ComponentProps<typeof Box<"div">>) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
   return (
     <Box
       {...props}
-      contentClass={cn("group relative px-8 py-16", contentClass)}
+      className={`group relative px-8 py-16 ${className}`}
       onMouseMove={(event) => {
         onMouseMove?.(event);
         const { top, left } = event.currentTarget.getBoundingClientRect();

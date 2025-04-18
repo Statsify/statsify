@@ -9,11 +9,10 @@
 import Image from "next/image";
 import { Box } from "./box";
 import { ComponentProps } from "react";
-import { cn } from "~/lib/util";
 
-export function Skin({ uuid, contentClass, ...props }: ComponentProps<typeof Box> & { uuid: string }) {
+export function Skin({ uuid, className = "", ...props }: ComponentProps<typeof Box> & { uuid: string }) {
   return (
-    <Box {...props} contentClass={cn("relative flex justify-center min-w-[180px]", contentClass)}>
+    <Box {...props} className={`relative flex justify-center min-w-[180px] h-full ${className}`}>
       <Image src={`https://api.statsify.net/skin?key=${process.env.API_KEY}&uuid=${uuid}`} fill alt="skin" className="object-top object-cover pointer-events-none" />
     </Box>
   );

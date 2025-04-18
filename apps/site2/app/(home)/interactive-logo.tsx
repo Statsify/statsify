@@ -29,9 +29,9 @@ function Draggable({ children, className }: { children: ReactNode; className?: s
   );
 }
 
-function SpotlightTableData({ title, value, className }: { title: string; value: number; className?: string }) {
+function SpotlightTableData({ title, value, className = "" }: { title: string; value: number; className?: string }) {
   return (
-    <SpotlightBox contentClass={cn("p-4 flex flex-col items-center gap-2", className)}>
+    <SpotlightBox className={`p-4 flex flex-col items-center gap-2 ${className}`}>
       <p className="text-mc-2 mx-3">{title}</p>
       <p className="text-mc-4 mx-5"><AnimatedNumber value={value} /></p>
     </SpotlightBox>

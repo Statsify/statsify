@@ -8,7 +8,6 @@
 
 import { Box } from "./box";
 import { MinecraftText } from "./minecraft-text";
-import { cn } from "~/lib/util";
 import { t } from "~/localize";
 import type { Progression as ProgressionSchema } from "@statsify/schemas";
 
@@ -25,7 +24,7 @@ export function Progression({
   currentLevel,
   naturalLevel = currentLevel,
   nextLevel,
-  className,
+  className = "",
   xpBar = minigameXpBar,
 }: {
   label: string;
@@ -38,7 +37,7 @@ export function Progression({
   className?: string;
 }) {
   return (
-    <Box containerClass={cn("text-mc-gray", className)}>
+    <Box className={`text-mc-gray ${className}`}>
       <p>{label}: <MinecraftText>{currentLevel}</MinecraftText></p>
       <p>{metric} Progress: <span className="text-mc-aqua">{t(progression.current)}</span>/<span className="text-mc-green">{t(progression.max)}</span></p>
       <p>

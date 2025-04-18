@@ -7,11 +7,9 @@
  */
 
 import Link from "next/link";
-import { LogoError } from "~/components/icons/logo-error";
 import { Background } from "~/components/ui/background";
-import { Box } from "~/components/ui/box";
 import { Button } from "~/components/ui/button";
-import { Skin } from "~/components/ui/skin";
+import { LogoError } from "~/components/icons/logo-error";
 
 export default function NotFound() {
   // TODO: take the wrong ign from the url here v

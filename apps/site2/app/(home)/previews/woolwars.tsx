@@ -46,12 +46,12 @@ export function WoolWarsPreview({ className, daysBack }: { className?: string; d
   return (
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-content-2 lg:grid-cols-content-3 gap-2 text-center">
-        <Skin uuid={player.uuid} containerClass="hidden lg:block lg:col-span-1 lg:row-span-3" contentClass="h-full" />
-        <Nametag className="col-span-2 col-start-1 lg:col-start-2" />
-        <Box containerClass="col-span-2">
+        <Skin uuid={player.uuid} className="container:hidden container:lg:block container:lg:col-span-1 container:lg:row-span-3 h-full" />
+        <Nametag className="container:col-span-2 container:col-start-1 container:lg:col-start-2" />
+        <Box className="container:col-span-2">
           Started <motion.span>{oldDate}</motion.span> (<motion.span>{daysBackFormatted}</motion.span> days ago)
         </Box>
-        <Box containerClass="font-bold">Session</Box>
+        <Box className="container:font-bold">Session</Box>
         <Box>
           <span className="font-bold">
             <span className="text-mc-red">Wool</span>

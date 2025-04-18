@@ -26,10 +26,10 @@ export function SkyWarsPreview({ className }: { className?: string }) {
   return (
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-1 xl:grid-cols-balanced gap-2 text-center">
-        <Skin uuid={player.uuid} containerClass="xl:row-start-1 xl:row-end-4 hidden xl:block" contentClass="h-full" />
-        <Nametag className="row-start-1 xl:col-start-2" />
+        <Skin uuid={player.uuid} className="container:xl:row-start-1 container:xl:row-end-4 container:hidden container:xl:block h-full" />
+        <Nametag className="container:row-start-1 container:xl:col-start-2" />
         <Progression
-          className="row-start-2 xl:col-start-2"
+          className="container:row-start-2 container:xl:col-start-2"
           label="Level"
           metric="EXP"
           progression={skywars.progression}
@@ -37,10 +37,10 @@ export function SkyWarsPreview({ className }: { className?: string }) {
           naturalLevel={skywars.naturalLevelFormatted}
           nextLevel={skywars.nextLevelFormatted}
         />
-        <Box containerClass="row-start-4 xl:row-start-3 xl:col-start-2">
+        <Box className="container:row-start-4 container:xl:row-start-3 container:xl:col-start-2">
           <span className="font-bold"><span className="text-mc-aqua">Sky</span><span className="text-mc-yellow">Wars</span> Stats</span> (Overall)
         </Box>
-        <Sidebar className="row-start-3 xl:row-start-1 xl:row-end-4">
+        <Sidebar className="container:row-start-3 container:xl:row-start-1 container:xl:row-end-4">
           <SidebarItem color="text-mc-gold" name="Coins" value={t(skywars.coins)} />
           <SidebarItem color="text-mc-dark-green" name="Tokens" value={t(skywars.tokens)} />
           <SidebarItem color="text-mc-aqua" name="Souls" value={t(skywars.souls)} />

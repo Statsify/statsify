@@ -14,7 +14,7 @@ export function Nametag({ className }: { className?: string }) {
   const player = usePlayer();
 
   return (
-    <Box containerClass={className}>
+    <Box className={className}>
       <MinecraftText className="text-mc-4">{player.prefixName}</MinecraftText>
     </Box>
   );

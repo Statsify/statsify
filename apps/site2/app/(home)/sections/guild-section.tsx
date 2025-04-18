@@ -47,16 +47,16 @@ export function GuildSection({ guild }: { guild: Guild }) {
 function GuildOverall({ guild }: { guild: Guild }) {
   return (
     <div className="relative grid grid-cols-1 xl:grid-cols-2 gap-2 p-4 z-10 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
-      <Box containerClass="xl:col-span-2 text-center">
+      <Box className="container:xl:col-span-2 container:text-center">
         <MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText>
       </Box>
-      <Box containerClass="row-start-2">
+      <Box className="container:row-start-2">
         <p className="text-mc-2 text-mc-gray text-center">Guild Info</p>
       </Box>
-      <Box containerClass="hidden xl:block xl:row-start-2">
+      <Box className="container:hidden container:xl:block container:xl:row-start-2">
         <p className="text-mc-2 text-mc-gray text-center">Guild Description</p>
       </Box>
-      <Box containerClass="row-start-3 leading-[24px]">
+      <Box className="container:row-start-3 container:leading-[24px]">
         <p className="text-mc-aqua flex gap-2">
           <span className="hidden lg:block">Guild Master: </span>
           <span className="block lg:hidden">GM: </span>
@@ -77,13 +77,13 @@ function GuildOverall({ guild }: { guild: Guild }) {
           Guild Level: <span className="text-mc-white">{guild.level}</span>
         </p>
       </Box>
-      <Box containerClass="hidden xl:block xl:row-start-3 xl:max-w-120 leading-[24px] text-ellipsis">
+      <Box className="container:hidden container:xl:block container:xl:row-start-3 container:xl:max-w-120 container:leading-[24px] container:text-ellipsis">
         {guild.description}
       </Box>
-      <Box containerClass="col-span-2 text-center">
+      <Box className="container:col-span-2 container:text-center">
         <p className="text-mc-2 text-mc-gray ">Preferred Games</p>
       </Box>
-      <Box containerClass="col-span-2 text-center">
+      <Box className="container:col-span-2 container:text-center">
         <div className="flex gap-2 items-center justify-center flex-wrap max-w-80 lg:max-w-none">
           {guild.preferredGames.map((game) => (
             <GameIcon key={game} game={game} />
@@ -99,10 +99,10 @@ function GuildLevelling({ guild }: { guild: Guild }) {
 
   return (
     <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
-      <Box containerClass="lg:col-span-3 text-center">
+      <Box className="container:lg:col-span-3 container:text-center">
         <MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText>
       </Box>
-      <Box containerClass="leading-[24px] lg:col-span-3 text-center">
+      <Box className="container:leading-[24px] container:lg:col-span-3 container:text-center">
         <Progression
           currentLevel={`${color}${Math.floor(guild.level)}`}
           nextLevel={`${color}${Math.floor(guild.level) + 1}`}
@@ -116,7 +116,7 @@ function GuildLevelling({ guild }: { guild: Guild }) {
           }}
         />
       </Box>
-      <Box containerClass="lg:col-span-3 text-center">
+      <Box className="container:lg:col-span-3 container:text-center">
         <p className="text-mc-2 text-mc-gray">Guild Experience</p>
       </Box>
       <TableData title="Daily" value={t(guild.daily)} color="text-mc-dark-green" />
@@ -131,19 +131,19 @@ function GuildTop({ guild }: { guild: Guild }) {
 
   return (
     <div className="relative grid grid-cols-content-3 xl:grid-cols-content-6 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
-      <Box containerClass="col-span-full text-center">
+      <Box className="container:col-span-full container:text-center">
         <MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText>
       </Box>
-      <Box containerClass="col-span-full text-center text-mc-dark-green font-bold">GEXP for Today</Box>
+      <Box className="container:col-span-full container:text-center container:text-mc-dark-green container:font-bold">GEXP for Today</Box>
       {members.map((member, index) => (
         <Fragment key={member.uuid}>
-          <Box contentClass="flex items-center" borderRadius={{ right: 0 }} containerClass="font-bold">
+          <Box className="container:font-bold flex items-center" borderRadius={{ right: 0 }}>
             #{index + 1}
           </Box>
-          <Box contentClass="flex items-center" borderRadius={{ left: 0, right: 0 }} containerClass="grow">
+          <Box className="container:grow flex items-center" borderRadius={{ left: 0, right: 0 }}>
             <MinecraftText>{member.displayName ?? ""}</MinecraftText>
           </Box>
-          <Box contentClass="flex items-center" borderRadius={{ left: 0 }}>
+          <Box className="flex items-center" borderRadius={{ left: 0 }}>
             {t(member.daily)}
           </Box>
         </Fragment>
@@ -157,14 +157,14 @@ function GuildMember({ guild }: { guild: Guild }) {
 
   return (
     <div className="relative grid grid-cols-content-1 lg:grid-cols-content-2 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
-      <Skin uuid={member.uuid} containerClass="row-span-3 hidden lg:block" contentClass="h-full" />
-      <Box contentClass="flex justify-center items-center gap-4">
+      <Skin uuid={member.uuid} className="container:row-span-3 container:hidden container:lg:block" />
+      <Box className="flex justify-center items-center gap-4">
         <MinecraftText className="text-mc-4">{member.displayName ?? ""}</MinecraftText>
         <p className="hidden lg:block text-mc-3">
           <MinecraftText>{guild.tagFormatted}</MinecraftText>
         </p>
       </Box>
-      <Box containerClass="leading-[24px] text-center">
+      <Box className="container:leading-[24px] container:text-center">
         <p className="text-mc-gray">
           Guild: <span className="text-mc-yellow">{guild.name}</span>
         </p>
@@ -178,10 +178,10 @@ function GuildMember({ guild }: { guild: Guild }) {
           Guild Quests: <span className="text-mc-aqua">{t(member.questParticipation)}</span>
         </p>
       </Box>
-      <Box containerClass="font-bold text-center">
+      <Box className="container:font-bold container:text-center">
         <span className="text-mc-dark-green">Guild Member</span> <span>Stats</span>
       </Box>
-      <div className="col-span-full grid grid-cols-1 lg:grid-cols-content-3 gap-2">
+      <div className="col-span-full grid grid-cols-1 lg:grid-cols-[repeat(3,1fr)] gap-2">
         <TableData color="text-mc-dark-green" title="Daily" value={t(member.daily)} />
         <TableData color="text-mc-dark-green" title="Weekly" value={t(member.weekly)} />
         <TableData color="text-mc-dark-green" title="Monthly" value={t(member.monthly)} />

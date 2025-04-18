@@ -7,30 +7,32 @@
  */
 
 import styles from "./button.module.css";
-import { ComponentProps } from "react";
-import { cn } from "~/lib/util";
+import { Slot, SlotProps, Slottable } from "@radix-ui/react-slot";
+import { cn, splitSlotClasses } from "~/lib/util";
 
 export function Button({
   children,
   className,
+  asChild = false,
   ...props
-}: ComponentProps<"button">) {
+}: SlotProps & { asChild?: boolean }) {
+  const Component = asChild ? Slot : "button";
+  const { container, defaultClass: content } = splitSlotClasses(["container"], className ?? "");
+
   return (
     <div
-      className="text-mc-white"
-      style={{
-        filter: `drop-shadow(8px 8px rgb(0 0 0 / 0.5))`,
-      }}
+      className={cn("text-mc-white", container)}
+      style={{ filter: `drop-shadow(8px 8px rgb(0 0 0 / 0.5))` }}
     >
-      <button
+      <Component
         {...props}
-        className={cn("w-full relative flex justify-center items-center gap-1 text-mc-2 select-none", styles.button, className)}
+        className={cn("w-full relative flex justify-center items-center gap-1 text-mc-2 select-none", styles.button, content)}
       >
         <div className={`absolute top-0 left-0 w-full ${styles.topShadow}`} />
         <div className={`absolute inset-0 ${styles.buttonOverlay}`} />
-        {children}
-        <div className={`absolute bottom-0 left-0 w-full  ${styles.bottomShadow}`} />
-      </button>
+        <Slottable>{children}</Slottable>
+        <div className={`absolute bottom-0 left-0 w-full ${styles.bottomShadow}`} />
+      </Component>
     </div>
   );
 }
