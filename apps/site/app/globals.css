@@ -83,6 +83,12 @@
   filter: drop-shadow(0 1px 0 color-mix(in srgb, --value(--color-*, [color]) 25%, #000 75%)) drop-shadow(0 -1px 0 color-mix(in srgb, --value(--color-*, [color]) 85%, #fff 15%));
 }
 
+@utility w-container {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+}
+
 @custom-variant content {
   & > [data-slot="content"] {
     @slot;

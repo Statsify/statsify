@@ -21,8 +21,8 @@ export function BaseSection({ children, background, className }: Pick<ComponentP
         }}
       />
       <div className="min-h-1" />
-      <div className="flex justify-center">
-        <div className={cn("w-full max-w-[1800px] flex gap-8 py-24", className)}>
+      <div className="flex justify-center w-container">
+        <div className={cn("w-full flex gap-8 py-24", className)}>
           {children}
         </div>
       </div>

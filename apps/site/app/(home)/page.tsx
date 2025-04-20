@@ -49,7 +49,7 @@ export default async function Home() {
           background: "linear-gradient(180deg, rgb(17 17 17 / 0) 80%, rgb(17 17 17 / 1) calc(100% - 50px))",
         }}
       />
-      <div className="w-4/5 max-w-[1800px] mx-auto flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-12 lg:text-start lg:justify-between items-center text-mc-white min-h-[76dvh]">
+      <div className="w-container flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-12 lg:text-start lg:justify-between items-center text-mc-white min-h-[76dvh]">
         <div className="flex flex-col gap-10 lg:gap-6 md:max-w-[500px] xl:max-w-[600px]">
           <div className="flex flex-col gap-3">
             <Wordmark className="text-mc-8 xl:text-mc-10" />
@@ -65,7 +65,7 @@ export default async function Home() {
         </div>
         <InteractiveLogo />
       </div>
-      <div className="flex items-center mt-16 lg:-mt-20 gap-10 lg:gap-0 flex-col lg:flex-row justify-evenly">
+      <div className="w-container flex items-center mt-16 lg:-mt-20 gap-10 lg:gap-0 flex-col lg:flex-row justify-evenly">
         <Box className="content:flex content:items-center content:flex-col content:gap-1 w-[60%] lg:w-[20%]">
           <Image
             src={Servers}
@@ -99,7 +99,7 @@ export default async function Home() {
         <SessionSection player={player5!} />
         <GuildSection guild={guild} />
       </div>
-      <div className="bg-white/10 backdrop-blur-lg text-mc-white -mt-45 p-8 flex flex-col gap-6 max-w-4/5 mx-auto">
+      <div className="bg-white/10 backdrop-blur-lg text-mc-white -mt-45 p-8 flex flex-col gap-6 w-container">
         <div className="flex flex-col gap-2">
           <p className="text-mc-4 font-bold">What are you waiting for?</p>
           <p className="text-mc-2">Invite Statsify today to enhance your Hypixel experience!</p>
