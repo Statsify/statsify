@@ -6,21 +6,32 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-module.exports = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
   typescript: {
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  swcMinify: true,
+  serverExternalPackages: ["mongoose"],
   poweredByHeader: false,
   reactStrictMode: true,
-  redirects: () => [
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "api.statsify.net",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost:3000",
+      },
+    ],
+  },
+  redirects: async () => [
     {
       source: "/invite",
-      destination:
-        "https://discord.com/oauth2/authorize?client_id=718827787422793820&scope=applications.commands%20bot&permissions=412384021568",
+      destination: "https://discord.com/oauth2/authorize?client_id=718827787422793820&scope=applications.commands%20bot&permissions=412384021568",
       permanent: true,
     },
     {
@@ -60,14 +71,12 @@ module.exports = {
     },
     {
       source: "/terms",
-      destination:
-        "https://j4cobi.notion.site/Statsify-Terms-of-Service-0482207df97f4f41909594241cd0b381",
+      destination: "https://j4cobi.notion.site/Statsify-Terms-of-Service-0482207df97f4f41909594241cd0b381",
       permanent: true,
     },
     {
       source: "/privacy",
-      destination:
-        "https://j4cobi.notion.site/Statsify-Privacy-Policy-2e636dcacf1e4237b35d7d2ce2d53613",
+      destination: "https://j4cobi.notion.site/Statsify-Privacy-Policy-2e636dcacf1e4237b35d7d2ce2d53613",
       permanent: true,
     },
     {
@@ -77,3 +86,5 @@ module.exports = {
     },
   ],
 };
+
+export default nextConfig;

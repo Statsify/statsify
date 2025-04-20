@@ -9,8 +9,8 @@
     "url": "git+https://github.com/Statsify/statsify.git"
   },
   "scripts": {
-    "build": "turbo run build --filter=!site --filter=!site2 --parallel --cache-dir='.turbo'",
-    "build:watch": "turbo watch build --filter=!site --filter=!site2 ",
+    "build": "turbo run build --filter=!site --parallel --cache-dir='.turbo'",
+    "build:watch": "turbo watch build --filter=!site",
     "test:types": "turbo run test:types --cache-dir='.turbo'",
     "test": "vitest",
     "test:ui": "vitest --ui",
