@@ -52,7 +52,7 @@ export default async function Home() {
       <div className="w-4/5 max-w-[1800px] mx-auto flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-12 lg:text-start lg:justify-between items-center text-mc-white min-h-[76dvh]">
         <div className="flex flex-col gap-10 lg:gap-6 md:max-w-[500px] xl:max-w-[600px]">
           <div className="flex flex-col gap-3">
-            <Wordmark className="text-mc-8 xl:text-mc-10 font-bold" />
+            <Wordmark className="text-mc-8 xl:text-mc-10" />
             <p className="text-mc-3">
               The largest Hypixel Discord bot to view stats from any game on the Hypixel Network.
             </p>
@@ -60,9 +60,7 @@ export default async function Home() {
           <div className="flex flex-col lg:flex-row items-center flex-wrap gap-4 w-full">
             <DiscordInvite className="grow" />
             <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
-            <Link href="/players">
-              <BingoInvite />
-            </Link>
+            <BingoInvite />
           </div>
         </div>
         <InteractiveLogo />
@@ -112,9 +110,9 @@ export default async function Home() {
   );
 }
 
-function DiscordInvite() {
+function DiscordInvite({ className = "" }: { className?: string }) {
   return (
-    <Button className="grow content:bg-discord-500" asChild>
+    <Button className={`content:bg-discord-500 ${className}`} asChild>
       <Link href="/invite">
         <Discord className="drop-shadow-mc-1" />
         <p className="text-nowrap">Try On Discord</p>
@@ -125,9 +123,11 @@ function DiscordInvite() {
 
 function BingoInvite() {
   return (
-    <Button className="content:bg-green-500">
-      <Board className="drop-shadow-mc-1" />
-      <p className="text-nowrap">Bingo Tracker</p>
+    <Button className="content:bg-green-500" asChild>
+      <Link href="/players">
+        <Board className="drop-shadow-mc-1" />
+        <p className="text-nowrap">Bingo Tracker</p>
+      </Link>
     </Button>
   );
 }

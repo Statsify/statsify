@@ -9,7 +9,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -49,17 +48,17 @@ const nextConfig: NextConfig = {
     },
     {
       source: "/premium",
-      destination: "https://www.patreon.com/statsify",
+      destination: "https://patreon.com/statsify",
       permanent: true,
     },
     {
       source: "/patreon",
-      destination: "https://www.patreon.com/statsify",
+      destination: "https://patreon.com/statsify",
       permanent: true,
     },
     {
       source: "/donate",
-      destination: "https://www.patreon.com/statsify",
+      destination: "https://patreon.com/statsify",
       permanent: true,
     },
     {
@@ -70,6 +69,11 @@ const nextConfig: NextConfig = {
     {
       source: "/twitter",
       destination: "https://twitter.com/statsifybot",
+      permanent: true,
+    },
+    {
+      source: "/youtube",
+      destination: "https://youtube.com/@statsifybot",
       permanent: true,
     },
     {

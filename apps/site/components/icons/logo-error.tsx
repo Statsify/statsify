@@ -24,25 +24,25 @@ export function LogoError({ className }: { className?: string }) {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M4 13H3V28H4V29H7V28H8V13H7V12H4V13Z"
-        className="fill-[#FFD0D7] logo-shadow-[#FFD0D7]"
+        className="fill-redify-100 logo-shadow-redify-100"
       />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M11 20H10V28H11V29H14V28H15V20H14V19H11V20Z"
-        className="fill-[#F42A37] logo-shadow-[#F42A37]"
+        className="fill-redify-200 logo-shadow-redify-200"
       />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M18 21H17V28H18V29H21V28H22V21H21V20H18V21Z"
-        className="fill-[#CD1820] logo-shadow-[#CD1820]"
+        className="fill-redify-300 logo-shadow-redify-300"
       />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M25 23H24V28H25V29H28V28H29V23H28V22H25V23Z"
-        className="fill-[#B11117] logo-shadow-[#B11117]"
+        className="fill-redify-400 logo-shadow-redify-400"
       />
     </svg>
   );

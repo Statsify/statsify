@@ -34,13 +34,8 @@ export function Search({ className }: { className?: string }) {
   }
 
   return (
-    <form className="relative">
-      <div
-        className={cn(
-          "h-16 flex items-center px-4 gap-4 bg-white/30 border-4 border-white/40 backdrop-blur-sm",
-          className
-        )}
-      >
+    <form className={cn("relative", className)}>
+      <div className="h-16 flex items-center px-4 gap-4 bg-white/30 border-4 border-white/40 backdrop-blur-sm">
         <SearchIcon className="size-8 text-white drop-shadow-mc-2" />
         <input
           placeholder="Search a player"

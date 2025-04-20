@@ -22,6 +22,21 @@
 
   --color-discord-500: rgb(88 101 242);
 
+  --color-blueify-100: #D0EFFF;
+  --color-blueify-200: #7DC6FA;
+  --color-blueify-300: #2A9DF4;
+  --color-blueify-400: #2492E7;
+  --color-blueify-500: #1E86DA;
+  --color-blueify-600: #187BCD;
+  --color-blueify-700: #1571BF;
+  --color-blueify-800: #1167B1;
+
+  --color-redify-100: #FFD0D7;
+  --color-redify-200: #F42A37;
+  --color-redify-300: #CD1820;
+  --color-redify-400: #B11117;
+  --color-redify-500: #A10B10;
+
   --drop-shadow-mc-1: 1px 1px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-2: 2px 2px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-3: 3px 3px color-mix(in srgb, currentColor 25%, #000 75%);
@@ -65,7 +80,7 @@
 }
 
 @utility logo-shadow-* {
-  filter: drop-shadow(0 1px 0 color-mix(in srgb, --value([color]) 25%, #000 75%)) drop-shadow(0 -1px 0 color-mix(in srgb, --value([color]) 85%, #fff 15%));
+  filter: drop-shadow(0 1px 0 color-mix(in srgb, --value(--color-*, [color]) 25%, #000 75%)) drop-shadow(0 -1px 0 color-mix(in srgb, --value(--color-*, [color]) 85%, #fff 15%));
 }
 
 @custom-variant content {
