@@ -9,6 +9,10 @@
 	"ui": "tui",
 	"tasks": {
 		"build": {
+			"env": [
+				"API_URL",
+				"API_KEY"
+			],
 			"outputs": [
 				"dist/**",
 				".next/**",
