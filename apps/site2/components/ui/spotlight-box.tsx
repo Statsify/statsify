@@ -19,7 +19,7 @@ export function SpotlightBox({ className = "", onMouseMove, children, ...props }
   return (
     <Box
       {...props}
-      className={`group relative px-8 py-16 ${className}`}
+      className={`group content:relative content:px-8 content:py-16 ${className}`}
       onMouseMove={(event) => {
         onMouseMove?.(event);
         const { top, left } = event.currentTarget.getBoundingClientRect();

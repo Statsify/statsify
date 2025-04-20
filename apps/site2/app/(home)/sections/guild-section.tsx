@@ -11,6 +11,7 @@ import { Box } from "~/components/ui/box";
 import { Carousel } from "~/components/ui/carousel";
 import { Command } from "~/components/ui/command";
 import { Fragment } from "react";
+import { GUILD_MEMBER_PREVIEW } from "../preview-constants";
 import { GameIcon } from "~/components/ui/game-icon";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Progression } from "~/components/ui/progression";
@@ -47,16 +48,16 @@ export function GuildSection({ guild }: { guild: Guild }) {
 function GuildOverall({ guild }: { guild: Guild }) {
   return (
     <div className="relative grid grid-cols-1 xl:grid-cols-2 gap-2 p-4 z-10 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
-      <Box className="container:xl:col-span-2 container:text-center">
+      <Box className="xl:col-span-2 text-center">
         <MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText>
       </Box>
-      <Box className="container:row-start-2">
+      <Box className="row-start-2">
         <p className="text-mc-2 text-mc-gray text-center">Guild Info</p>
       </Box>
-      <Box className="container:hidden container:xl:block container:xl:row-start-2">
+      <Box className="hidden xl:block xl:row-start-2">
         <p className="text-mc-2 text-mc-gray text-center">Guild Description</p>
       </Box>
-      <Box className="container:row-start-3 container:leading-[24px]">
+      <Box className="row-start-3 leading-[24px]">
         <p className="text-mc-aqua flex gap-2">
           <span className="hidden lg:block">Guild Master: </span>
           <span className="block lg:hidden">GM: </span>
@@ -77,13 +78,13 @@ function GuildOverall({ guild }: { guild: Guild }) {
           Guild Level: <span className="text-mc-white">{guild.level}</span>
         </p>
       </Box>
-      <Box className="container:hidden container:xl:block container:xl:row-start-3 container:xl:max-w-120 container:leading-[24px] container:text-ellipsis">
+      <Box className="hidden xl:block xl:row-start-3 xl:max-w-120 leading-[24px] text-ellipsis">
         {guild.description}
       </Box>
-      <Box className="container:col-span-2 container:text-center">
+      <Box className="col-span-2 text-center">
         <p className="text-mc-2 text-mc-gray ">Preferred Games</p>
       </Box>
-      <Box className="container:col-span-2 container:text-center">
+      <Box className="col-span-2 text-center">
         <div className="flex gap-2 items-center justify-center flex-wrap max-w-80 lg:max-w-none">
           {guild.preferredGames.map((game) => (
             <GameIcon key={game} game={game} />
@@ -99,10 +100,10 @@ function GuildLevelling({ guild }: { guild: Guild }) {
 
   return (
     <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
-      <Box className="container:lg:col-span-3 container:text-center">
+      <Box className="lg:col-span-3 text-center">
         <MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText>
       </Box>
-      <Box className="container:leading-[24px] container:lg:col-span-3 container:text-center">
+      <Box className="leading-[24px] lg:col-span-3 text-center">
         <Progression
           currentLevel={`${color}${Math.floor(guild.level)}`}
           nextLevel={`${color}${Math.floor(guild.level) + 1}`}
@@ -116,7 +117,7 @@ function GuildLevelling({ guild }: { guild: Guild }) {
           }}
         />
       </Box>
-      <Box className="container:lg:col-span-3 container:text-center">
+      <Box className="lg:col-span-3 text-center">
         <p className="text-mc-2 text-mc-gray">Guild Experience</p>
       </Box>
       <TableData title="Daily" value={t(guild.daily)} color="text-mc-dark-green" />
@@ -131,19 +132,19 @@ function GuildTop({ guild }: { guild: Guild }) {
 
   return (
     <div className="relative grid grid-cols-content-3 xl:grid-cols-content-6 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
-      <Box className="container:col-span-full container:text-center">
+      <Box className="col-span-full text-center">
         <MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText>
       </Box>
-      <Box className="container:col-span-full container:text-center container:text-mc-dark-green container:font-bold">GEXP for Today</Box>
+      <Box className="col-span-full text-center text-mc-dark-green font-bold">GEXP for Today</Box>
       {members.map((member, index) => (
         <Fragment key={member.uuid}>
-          <Box className="container:font-bold flex items-center" borderRadius={{ right: 0 }}>
+          <Box className="font-bold content:flex content:items-center" borderRadius={{ right: 0 }}>
             #{index + 1}
           </Box>
-          <Box className="container:grow flex items-center" borderRadius={{ left: 0, right: 0 }}>
+          <Box className="grow content:flex content:items-center" borderRadius={{ left: 0, right: 0 }}>
             <MinecraftText>{member.displayName ?? ""}</MinecraftText>
           </Box>
-          <Box className="flex items-center" borderRadius={{ left: 0 }}>
+          <Box className="content:flex content:items-center" borderRadius={{ left: 0 }}>
             {t(member.daily)}
           </Box>
         </Fragment>
@@ -153,18 +154,19 @@ function GuildTop({ guild }: { guild: Guild }) {
 }
 
 function GuildMember({ guild }: { guild: Guild }) {
-  const member = guild.members[8];
+  const member = guild.members.find((member) => member.uuid === GUILD_MEMBER_PREVIEW);
+  if (!member) throw new Error(`Could not find Guild Member: ${GUILD_MEMBER_PREVIEW}`);
 
   return (
     <div className="relative grid grid-cols-content-1 lg:grid-cols-content-2 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
-      <Skin uuid={member.uuid} className="container:row-span-3 container:hidden container:lg:block" />
-      <Box className="flex justify-center items-center gap-4">
+      <Skin uuid={member.uuid} className="row-span-3 hidden lg:block" />
+      <Box className="content:flex content:justify-center content:items-center content:gap-4">
         <MinecraftText className="text-mc-4">{member.displayName ?? ""}</MinecraftText>
         <p className="hidden lg:block text-mc-3">
           <MinecraftText>{guild.tagFormatted}</MinecraftText>
         </p>
       </Box>
-      <Box className="container:leading-[24px] container:text-center">
+      <Box className="leading-[24px] text-center">
         <p className="text-mc-gray">
           Guild: <span className="text-mc-yellow">{guild.name}</span>
         </p>
@@ -178,7 +180,7 @@ function GuildMember({ guild }: { guild: Guild }) {
           Guild Quests: <span className="text-mc-aqua">{t(member.questParticipation)}</span>
         </p>
       </Box>
-      <Box className="container:font-bold container:text-center">
+      <Box className="font-bold text-center">
         <span className="text-mc-dark-green">Guild Member</span> <span>Stats</span>
       </Box>
       <div className="col-span-full grid grid-cols-1 lg:grid-cols-[repeat(3,1fr)] gap-2">

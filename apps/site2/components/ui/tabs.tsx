@@ -54,7 +54,7 @@ type TabProps = {
   tab: string | number;
 } & Omit<ComponentProps<typeof Box<"button">>, "borderRadius">;
 
-export function Tab({ tab, onClick, className, ...props }: TabProps) {
+export function Tab({ tab, onClick, className = "", ...props }: TabProps) {
   const { tab: activeTab, onTabChange } = use(TabsContext);
 
   return (
@@ -69,7 +69,7 @@ export function Tab({ tab, onClick, className, ...props }: TabProps) {
       }}
 
       borderRadius={{ bottom: 0 }}
-      className={`container:group container:text-mc-gray container:aria-pressed:font-bold container:aria-pressed:text-mc-white container:transition-colors flex items-center justify-center gap-2 ${className}`}
+      className={`group text-mc-gray aria-pressed:font-bold aria-pressed:text-mc-white transition-colors content:flex content:items-center content:justify-center content:gap-2 ${className}`}
     />
   );
 }

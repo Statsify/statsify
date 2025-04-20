@@ -17,13 +17,14 @@ import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
 import { Brand } from "~/components/icons/logo";
 import { type Category, type Difficulty, type Reward, type Task, boards } from "./boards";
-import { ComponentProps, useState } from "react";
+import { ComponentProps } from "react";
 import { Divider } from "~/components/ui/divider";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Search } from "~/app/players/search";
 import { Tab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
 import { usePlayer } from "~/app/players/[slug]/context";
+import { useUrlState } from "~/hooks/use-url-state";
 import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 const FormattedCategories: Record<Category, string> = {
@@ -33,8 +34,8 @@ const FormattedCategories: Record<Category, string> = {
 };
 
 export default function BingoPage() {
-  const [category, setCategory] = useState<Category>("casual");
-  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
+  const [category, setCategory] = useUrlState<Category>("category", "casual");
+  const [difficulty, setDifficulty] = useUrlState<Difficulty>("difficulty", "easy");
   const player = usePlayer();
 
   return (
@@ -57,10 +58,10 @@ export default function BingoPage() {
           <div className="w-[80%] flex items-stretch flex-col gap-4">
             <Search />
             <Divider variant="black" className="my-2" />
-            <Box className="text-center text-mc-3">
+            <Box className="content:text-center content:text-mc-3">
               <MinecraftText>{player.displayName}</MinecraftText>
             </Box>
-            <Box className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
+            <Box className="content:grid content:grid-cols-1 content:lg:grid-cols-3 content:gap-4 content:lg:gap-8">
               <CategoryOverview icon={CasualIcon} category="casual" />
               <CategoryOverview icon={PvPIcon} category="pvp" />
               <CategoryOverview icon={ClassicIcon} category="classic" />
@@ -80,10 +81,10 @@ export default function BingoPage() {
                 tab={difficulty}
                 onTabChange={setDifficulty}
               >
-                <Tab tab="easy" className="container:text-mc-green/50 container:aria-pressed:text-mc-green">
+                <Tab tab="easy" className="text-mc-green/50 aria-pressed:text-mc-green">
                   Easy
                 </Tab>
-                <Tab tab="hard" className="container:text-mc-red/50 container:aria-pressed:text-mc-red">
+                <Tab tab="hard" className="text-mc-red/50 aria-pressed:text-mc-red">
                   Hard
                 </Tab>
               </Tabs>
@@ -193,14 +194,14 @@ function BingoBoard<D extends Difficulty, C extends Category>(
       {board.rowRewards.map((reward, row) => (
         <RewardCard
           key={`${difficulty}-${category}-${reward.name}`}
-          containerClass="col-start-6"
+          className="col-start-6"
           reward={reward}
           completed={isRowComplete(row)}
         />
       ))}
       <RewardCard
         key={`${difficulty}-${category}-blackout`}
-        containerClass="col-start-6"
+        className="col-start-6"
         reward={board.blackoutReward}
         variant="blackout"
         completed={board.tasks.every((task) => bingo[task.field] >= task.progress)}
@@ -210,8 +211,7 @@ function BingoBoard<D extends Difficulty, C extends Category>(
 }
 
 function RewardCard({
-  containerClass,
-  contentClass,
+  className = "",
   variant = "regular",
   completed,
   reward,
@@ -220,28 +220,23 @@ function RewardCard({
   ComponentProps<typeof Box>,
   "variant"
 >) {
-  // TODO: fix containerClass
   return (
-    <div className={`${containerClass} min-w-50 flex`}>
-      <Box {...props} containerClass="grow" contentClass={`flex flex-col gap-2  ${contentClass}`} variant={completed ? "pink" : "default"}>
-        <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
-          {reward.name} Reward
-        </p>
-        {typeof reward.description === "string" ?
-          (
-            <p className="">
-              <MinecraftText>{reward.description}</MinecraftText>
-            </p>
-          ) :
-          (
-            <div className="flex flex-col gap-0.5">
-              {reward.description.map((part) => (
-                <MinecraftText key={part}>{part}</MinecraftText>
-              ))}
-            </div>
-          )}
-      </Box>
-    </div>
+    <Box {...props} className={`min-w-50 grow content:flex content:flex-col content:gap-2 ${className}`} variant={completed ? "pink" : "default"}>
+      <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
+        {reward.name} Reward
+      </p>
+      {typeof reward.description === "string" ?
+        (
+          <MinecraftText>{reward.description}</MinecraftText>
+        ) :
+        (
+          <div className="flex flex-col gap-0.5">
+            {reward.description.map((part) => (
+              <MinecraftText key={part}>{part}</MinecraftText>
+            ))}
+          </div>
+        )}
+    </Box>
   );
 }
 
@@ -255,35 +250,33 @@ function TaskCard({
   complete: boolean;
 }) {
   return (
-    <div className="min-w-50 flex">
-      <Box
-        className="container:grow flex flex-col justify-between gap-2 text-center"
-        variant={complete ? "green" : "red"}
-      >
-        <div className="flex flex-col gap-2">
-          <div className={complete ? "first:text-mc-green" : "first:text-mc-red"}>
-            <p className="font-bold text-center">{task.name}</p>
-            <p className="text-mc-dark-gray text-center">{task.game} Task</p>
-          </div>
-          <p>{task.description}</p>
+    <Box
+      className="grow min-w-50 content:flex content:flex-col content:justify-between content:gap-2 content:text-center"
+      variant={complete ? "green" : "red"}
+    >
+      <div className="flex flex-col gap-2">
+        <div className={complete ? "first:text-mc-green" : "first:text-mc-red"}>
+          <p className="font-bold text-center">{task.name}</p>
+          <p className="text-mc-dark-gray text-center">{task.game} Task</p>
         </div>
-        <p className="text-mc-gray">
-          Progress:{" "}
-          <span
-            className={`${
-              finished > 0 && finished < task.progress ?
-                "text-mc-yellow" :
-                (finished >= task.progress ?
-                  "text-mc-green" :
-                  "text-mc-red")
-            }`}
-          >
-            {finished}
-          </span>
-          <span className={complete ? "text-mc-green" : "text-mc-gray"}>/</span>
-          <span className={complete ? "text-mc-green" : "text-mc-gray"}>{task.progress}</span>
-        </p>
-      </Box>
-    </div>
+        <p>{task.description}</p>
+      </div>
+      <p className="text-mc-gray">
+        Progress:{" "}
+        <span
+          className={`${
+            finished > 0 && finished < task.progress ?
+              "text-mc-yellow" :
+              (finished >= task.progress ?
+                "text-mc-green" :
+                "text-mc-red")
+          }`}
+        >
+          {finished}
+        </span>
+        <span className={complete ? "text-mc-green" : "text-mc-gray"}>/</span>
+        <span className={complete ? "text-mc-green" : "text-mc-gray"}>{task.progress}</span>
+      </p>
+    </Box>
   );
 }

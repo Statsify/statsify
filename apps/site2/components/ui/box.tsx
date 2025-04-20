@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { cn, splitSlotClasses } from "~/lib/util";
+import { cn } from "~/lib/util";
 import type { ComponentProps, JSX } from "react";
 
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
@@ -100,7 +100,6 @@ export function Box<T extends (keyof JSX.IntrinsicElements) = "div">({
   ...props
 }: BoxProps<T>) {
   const borderRadius = toBorderRadius(partialBorderRadius);
-  const { container, defaultClass: content } = splitSlotClasses(["container"], className ?? "");
   const Component = as ?? "div";
 
   const shadowPath = polygon(
@@ -151,7 +150,7 @@ export function Box<T extends (keyof JSX.IntrinsicElements) = "div">({
 
   return (
     <Component
-      className={cn("relative text-mc-white me-2 mb-2", container)}
+      className={cn("relative text-mc-white me-2 mb-2 content:p-4 content:text-mc-2 content:h-full", className)}
       {...props}
     >
       <div
@@ -159,7 +158,7 @@ export function Box<T extends (keyof JSX.IntrinsicElements) = "div">({
         style={{ transform: `translate(${shadow}px, ${shadow}px)`, clipPath: shadowPath }}
       />
       <div
-        className={cn("p-4 text-mc-2 h-full", content)}
+        data-slot="content"
         style={{
           ...style,
           background: boxVariants[variant].background,

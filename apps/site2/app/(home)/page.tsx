@@ -10,6 +10,7 @@ import Commands from "~/public/icons/book.png";
 import Image from "next/image";
 import Link from "next/link";
 import Servers from "~/public/icons/iron-door.png";
+import { ARCADE_PREVIEW, BEDWARS_PREVIEW, DUELS_PREVIEW, GUILD_MEMBER_PREVIEW, LEADERBOARD_PREVIEW, SESSION_PREVIEW, SKYWARS_PREVIEW } from "./preview-constants";
 import { Background } from "~/components/ui/background";
 import { Board } from "~/components/icons/board";
 import { Box } from "~/components/ui/box";
@@ -26,13 +27,13 @@ import { getGuild, getLeaderboard, getPlayer } from "~/app/api";
 
 export default async function Home() {
   const [player1, player2, player3, player4, player5, guild, leaderboard] = await Promise.all([
-    getPlayer("618a96fec8b0493fa89427891049550b"),
-    getPlayer("96f645ba026b4e45bc34dd8f0531334c"),
-    getPlayer("20aa2cf67b7443a093b5f3666c160f5f"),
-    getPlayer("92a5199614ac4bd181d1f3c951fb719f"),
-    getPlayer("855c4abb7d2e42a1a8bfa236afed83f3"),
-    getGuild("96f645ba026b4e45bc34dd8f0531334c"),
-    getLeaderboard("stats.uhc.score"),
+    getPlayer(BEDWARS_PREVIEW),
+    getPlayer(SKYWARS_PREVIEW),
+    getPlayer(DUELS_PREVIEW),
+    getPlayer(ARCADE_PREVIEW),
+    getPlayer(SESSION_PREVIEW),
+    getGuild(GUILD_MEMBER_PREVIEW),
+    getLeaderboard(LEADERBOARD_PREVIEW),
   ]);
 
   return (
@@ -67,7 +68,7 @@ export default async function Home() {
         <InteractiveLogo />
       </div>
       <div className="flex items-center mt-16 lg:-mt-20 gap-10 lg:gap-0 flex-col lg:flex-row justify-evenly">
-        <Box className="flex items-center flex-col gap-1 container:w-[60%] container:lg:w-[20%]">
+        <Box className="content:flex content:items-center content:flex-col content:gap-1 w-[60%] lg:w-[20%]">
           <Image
             src={Servers}
             alt="servers"
@@ -80,7 +81,7 @@ export default async function Home() {
           <p className="text-center text-mc-3 text-mc-white font-bold">100,000</p>
           <p className="text-center text-mc-2 text-mc-white">Servers</p>
         </Box>
-        <Box className="flex items-center flex-col gap-1 container:w-[60%] container:lg:w-[20%]">
+        <Box className="content:flex content:items-center content:flex-col content:gap-1 w-[60%] lg:w-[20%]">
           <Image
             src={Commands}
             alt="commands"
@@ -113,7 +114,7 @@ export default async function Home() {
 
 function DiscordInvite() {
   return (
-    <Button className="bg-discord-500 @[header]:grow" asChild>
+    <Button className="grow content:bg-discord-500" asChild>
       <Link href="/invite">
         <Discord className="drop-shadow-mc-1" />
         <p className="text-nowrap">Try On Discord</p>
@@ -124,7 +125,7 @@ function DiscordInvite() {
 
 function BingoInvite() {
   return (
-    <Button className="bg-green-500">
+    <Button className="content:bg-green-500">
       <Board className="drop-shadow-mc-1" />
       <p className="text-nowrap">Bingo Tracker</p>
     </Button>

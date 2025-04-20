@@ -61,12 +61,12 @@ export function ArcadePreview({ className }: { className?: string }) {
   return (
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-1 xl:grid-cols-balanced gap-2 text-center">
-        <Skin uuid={player.uuid} className="container:xl:row-start-1 container:xl:row-end-4 container:hidden container:xl:block h-full" />
-        <Nametag className="container:row-start-1 container:xl:col-start-2" />
-        <Box className="container:row-start-3 container:xl:row-start-2 container:xl:row-span-2 container:xl:col-start-2">
+        <Skin uuid={player.uuid} className="xl:row-start-1 xl:row-end-4 hidden xl:block" />
+        <Nametag className="row-start-1 xl:col-start-2" />
+        <Box className="row-start-3 xl:row-start-2 xl:row-span-2 xl:col-start-2">
           <span className="font-bold"><MinecraftText>§cA§6r§ec§aa§bd§de§f</MinecraftText> Wins</span> (Overall)
         </Box>
-        <Sidebar className="container:row-start-2 container:xl:row-start-1 container:xl:row-end-4">
+        <Sidebar className="row-start-2 xl:row-start-1 xl:row-end-4">
           <SidebarItem color="text-mc-gold" name="Coins" value={t(arcade.coins)} />
           <SidebarItem color="text-mc-yellow" name="Conversions" value={t(arcade.coinConversions)} />
           <SidebarItem color="text-mc-aqua" name="Arcade Wins" value={t(arcade.wins)} />

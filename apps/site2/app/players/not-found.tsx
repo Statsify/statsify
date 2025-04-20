@@ -31,9 +31,9 @@ export default function NotFound() {
       <div className="w-full h-full min-h-150 flex flex-col items-center justify-between z-10">
         <div className="flex grow flex-col items-center justify-center gap-4">
           <Box>
-            <span className="text-mc-dark-red">[</span>
-            <span className="text-mc-red">???</span>
-            <span className="text-mc-dark-red">]</span> {misspelled_ign}
+            <span className="content:text-mc-dark-red">[</span>
+            <span className="content:text-mc-red">???</span>
+            <span className="content:text-mc-dark-red">]</span> {misspelled_ign}
           </Box>
           <Skin uuid="76a56ac7fcf649fca0531cb5c77cd9ae" className="h-64" />
           <h1 className="text-mc-4 lg:text-mc-7 text-mc-red font-bold">Player Not Found</h1>

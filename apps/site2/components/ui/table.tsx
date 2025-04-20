@@ -11,7 +11,7 @@ import { type MotionValue, motion } from "motion/react";
 
 export function TableData({ title, value, color }: { title: string; value: string; color: string }) {
   return (
-    <Box className={`p-4 flex flex-col justify-center items-center gap-2 ${color}`}>
+    <Box className={`content:p-4 content:flex content:flex-col content:justify-center content:items-center content:gap-2 ${color}`}>
       <p className="text-mc-2 mx-3">{title}</p>
       <p className="text-mc-3 lg:text-mc-4 mx-5">{value}</p>
     </Box>
@@ -24,7 +24,7 @@ export function MotionValueTableData({ title, value, color }: {
   color: string;
 }) {
   return (
-    <Box className={`p-4 flex flex-col justify-center items-center gap-2 ${color}`}>
+    <Box className={`content:p-4 content:flex content:flex-col content:justify-center content:items-center content:gap-2 ${color}`}>
       <p className="text-mc-2 mx-3">{title}</p>
       <motion.p className="text-mc-3 lg:text-mc-4 mx-5">{value}</motion.p>
     </Box>

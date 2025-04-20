@@ -11,7 +11,7 @@ import type { ReactNode } from "react";
 
 export function Sidebar({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <Box className={`grid grid-cols-2 xl:flex xl:flex-col justify-center gap-2 text-start ${className}`}>
+    <Box className={`content:grid content:grid-cols-2 content:xl:flex content:xl:flex-col content:justify-center content:gap-2 content:text-start ${className}`}>
       {children}
     </Box>
   );
