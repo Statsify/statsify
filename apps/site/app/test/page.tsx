@@ -13,7 +13,7 @@ import { LogoError } from "~/components/icons/logo-error";
 
 export default function NotFound() {
   // TODO: take the wrong ign from the url here v
-  const misspelled_ign = "URL-WRONG-NAME";
+  // const misspelled_ign = "URL-WRONG-NAME";
 
   return (
     <div className="relative grow">
