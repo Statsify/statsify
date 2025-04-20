@@ -128,7 +128,7 @@ function GuildLevelling({ guild }: { guild: Guild }) {
 }
 
 function GuildTop({ guild }: { guild: Guild }) {
-  const members = guild.members.toSorted((a, b) => b.daily - a.daily).slice(0, 6);
+  const members = [...guild.members].sort((a, b) => b.daily - a.daily).slice(0, 6);
 
   return (
     <div className="relative grid grid-cols-content-3 xl:grid-cols-content-6 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
