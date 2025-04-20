@@ -13,9 +13,9 @@ import { type RefObject, useEffect, useState } from "react";
 export function useMeasure<T extends Element>(ref: RefObject<T>) {
   const [size, setSize] = useState({ width: 0, height: 0 });
 
-  const observer = typeof globalThis === "undefined" ?
-    undefined :
-    new ResizeObserver((entries) => setSize(entries[0].contentRect));
+  // This must check for window since ResizeObserver only exists on the web
+  // eslint-disable-next-line unicorn/prefer-global-this
+  const observer = typeof window === "undefined" ? undefined : new ResizeObserver((entries) => setSize(entries[0].contentRect));
 
   useEffect(() => {
     observer?.observe(ref.current);

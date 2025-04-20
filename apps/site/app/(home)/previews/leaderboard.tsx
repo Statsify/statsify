@@ -8,10 +8,10 @@
 
 "use client";
 
-import Image from "next/image";
 import { Box } from "~/components/ui/box";
 import { Fragment } from "react";
 import { MinecraftText } from "~/components/ui/minecraft-text";
+import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
 import { t } from "~/localize";
 import type { PostLeaderboardResponse } from "@statsify/api-client";
@@ -42,7 +42,7 @@ export function LeaderboardPreview({ leaderboard, className }: {
       {leaderboard.data.slice(0, 3).map((player) => (
         <Fragment key={player.id}>
           <Box className="hidden md:block content:font-bold content:flex content:items-center content:justify-center">#{player.position}</Box>
-          <Box className="hidden md:block content:py-3 content:px-5"><Image height={32} width={32} alt={player.name} src={`https://api.statsify.net/skin/head?uuid=${player.id}&size=32&key=${process.env.API_KEY}`} /></Box>
+          <Box className="hidden md:block content:py-3 content:px-5"><SkinHead uuid={player.id} /></Box>
           <Box className="col-span-3 md:col-span-1 content:text-start content:flex content:items-center"><MinecraftText>{player.name}</MinecraftText></Box>
           {player.fields.map((field, index) => <Box key={`${leaderboard.fields[index]}-${player.id}`} className="content:flex content:justify-center content:items-center">{t(field)}</Box>)}
         </Fragment>

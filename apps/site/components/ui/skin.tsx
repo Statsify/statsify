@@ -13,8 +13,13 @@ import { ComponentProps } from "react";
 export function Skin({ uuid, className = "", ...props }: ComponentProps<typeof Box> & { uuid: string }) {
   return (
     <Box {...props} className={`content:relative content:flex content:justify-center content:min-w-[180px] content:h-full ${className}`}>
-      <Image src={`https://api.statsify.net/skin?key=${process.env.API_KEY}&uuid=${uuid}`} fill alt="skin" className="object-top object-cover pointer-events-none" />
+      <Image src={`https://api.statsify.net/skin?uuid=${uuid}`} fill alt="skin" className="object-top object-cover pointer-events-none" />
     </Box>
   );
 }
 
+export function SkinHead({ uuid, size = 32 }: { uuid: string;size?: number }) {
+  return (
+    <Image height={size} width={size} alt="skin" src={`https://api.statsify.net/skin/head?uuid=${uuid}&size=${size}`} />
+  );
+}
