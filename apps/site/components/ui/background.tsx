@@ -14,8 +14,8 @@ import Bingo from "~/public/backgrounds/bingo.png";
 import Duels from "~/public/backgrounds/duels.png";
 import General from "~/public/backgrounds/general.png";
 import Guilds from "~/public/backgrounds/guilds.png";
-import UHC from "~/public/backgrounds/uhc.png";
 import SkyWars from "~/public/backgrounds/skywars.png";
+import UHC from "~/public/backgrounds/uhc.png";
 import WoolGames from "~/public/backgrounds/woolgames.png";
 
 import Image from "next/image";
@@ -56,7 +56,7 @@ export function Background({
 
   return (
     <div className={cn("absolute w-full pointer-events-none -z-50", className)}>
-      <Image src={Backgrounds[background]} alt="" fill={true} className="object-cover object-top" style={{ mask }} />
+      <Image src={Backgrounds[background]} alt="" fill={true} className="object-cover object-top" style={{ mask }} priority />
       {/* Crossfade between oldBackground and currentBackground */}
       {oldBackground.current && oldBackground.current != background && (
         <motion.div style={{ opacity }}>
