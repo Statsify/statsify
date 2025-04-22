@@ -16,7 +16,10 @@ import { cn } from "~/lib/util";
 import { t } from "~/localize";
 import type { PostLeaderboardResponse } from "@statsify/api-client";
 
-export function LeaderboardPreview({ leaderboard, className }: {
+export function LeaderboardPreview({
+  leaderboard,
+  className,
+}: {
   leaderboard: PostLeaderboardResponse;
   className?: string;
 }) {
@@ -38,16 +41,32 @@ export function LeaderboardPreview({ leaderboard, className }: {
       </div>
       <Box className="hidden md:block content:font-bold">Pos</Box>
       <Box className="col-span-3 md:col-span-2 font-bold">Player</Box>
-      {leaderboard.fields.map((field) => <Box key={field} className="font-bold">{field}</Box>)}
+      {leaderboard.fields.map((field) => (
+        <Box key={field} className="font-bold">
+          {field}
+        </Box>
+      ))}
       {leaderboard.data.slice(0, 3).map((player) => (
         <Fragment key={player.id}>
-          <Box className="hidden md:block content:font-bold content:flex content:items-center content:justify-center">#{player.position}</Box>
-          <Box className="hidden md:block content:py-3 content:px-5"><SkinHead uuid={player.id} /></Box>
-          <Box className="col-span-3 md:col-span-1 content:text-start content:flex content:items-center"><MinecraftText>{player.name}</MinecraftText></Box>
-          {player.fields.map((field, index) => <Box key={`${leaderboard.fields[index]}-${player.id}`} className="content:flex content:justify-center content:items-center">{t(field)}</Box>)}
+          <Box className="hidden md:block content:font-bold content:flex content:items-center content:justify-center">
+            #{player.position}
+          </Box>
+          <Box className="hidden md:block content:py-3 content:px-5">
+            <SkinHead uuid={player.id} />
+          </Box>
+          <Box className="col-span-3 md:col-span-1 content:text-start justify-center content:flex content:items-center">
+            <MinecraftText className="text-mc-1.5 lg:text-mc-2">{player.name}</MinecraftText>
+          </Box>
+          {player.fields.map((field, index) => (
+            <Box
+              key={`${leaderboard.fields[index]}-${player.id}`}
+              className="content:flex content:justify-center content:items-center"
+            >
+              <span className="text-mc-1.75 lg:text-mc-2">{t(field)}</span>
+            </Box>
+          ))}
         </Fragment>
       ))}
     </div>
   );
 }
-

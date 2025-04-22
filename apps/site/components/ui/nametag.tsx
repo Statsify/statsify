@@ -15,7 +15,7 @@ export function Nametag({ className }: { className?: string }) {
 
   return (
     <Box className={className}>
-      <MinecraftText className="text-mc-4">{player.prefixName}</MinecraftText>
+      <MinecraftText className="text-mc-3 lg:text-mc-4">{player.prefixName}</MinecraftText>
     </Box>
   );
 }

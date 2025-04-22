@@ -30,11 +30,14 @@ export function SessionAnimation() {
 
     if (inView) {
       const controls = animate([
-        ...typingRefs.current.map((ref, i) => [
-          ref,
-          { y: 0, opacity: 1 },
-          { delay: i === 0 ? 0.5 : 0, duration: 0.05 },
-        ] satisfies ObjectSegmentWithTransition),
+        ...typingRefs.current.map(
+          (ref, i) =>
+            [
+              ref,
+              { y: 0, opacity: 1 },
+              { delay: i === 0 ? 0.5 : 0, duration: 0.05 },
+            ] satisfies ObjectSegmentWithTransition
+        ),
         [searchRef.current, { opacity: 0 }, { duration: 0.2, delay: 0.4 }],
         [profileRef.current, { opacity: 1, y: 0, filter: "blur(0px)" }, { duration: 0.2 }],
         [daysBack, 7, { duration: 2.5, ease: cubicBezier(0.21, 0.73, 0.63, 0.89) }],
@@ -43,10 +46,9 @@ export function SessionAnimation() {
       return () => controls.cancel();
     } else {
       const controls = animate([
-        ...typingRefs.current.map((ref) => [
-          ref,
-          { y: 10, opacity: 0 }, { duration: 0 },
-        ] satisfies ObjectSegmentWithTransition),
+        ...typingRefs.current.map(
+          (ref) => [ref, { y: 10, opacity: 0 }, { duration: 0 }] satisfies ObjectSegmentWithTransition
+        ),
         [profileRef.current, { opacity: 0, y: 20, filter: "blur(5px)" }, { duration: 0 }],
         [searchRef.current, { opacity: 1 }, { duration: 0 }],
         [daysBack, 0, { duration: 0 }],
@@ -58,13 +60,17 @@ export function SessionAnimation() {
 
   return (
     <div ref={scope} className="relative">
-      <motion.div ref={searchRef} initial={{ opacity: 1 }} className="absolute w-full h-16 flex items-center px-4 gap-4 bg-white/30 border-4 border-white/40 backdrop-blur-sm">
+      <motion.div
+        ref={searchRef}
+        initial={{ opacity: 1 }}
+        className="absolute w-full h-16 flex items-center px-4 gap-4 bg-white/30 border-4 border-white/40 backdrop-blur-sm"
+      >
         <div className="w-full text-mc-2 placeholder-mc-darkgray text-white outline-none h-full selection:bg-white/50 flex items-center justify-between">
           <div className="flex justify-center">
             {SPLIT_TEXT.map((current, i) => (
               <motion.div
                 key={i}
-                ref={(el) => typingRefs.current[i] = el!}
+                ref={(el) => (typingRefs.current[i] = el!)}
                 initial={{ y: 10, opacity: 0 }}
                 className="whitespace-pre"
               >

@@ -61,9 +61,9 @@ export function PlayerSection({ players }: { players: [Player, Player, Player, P
       background={games[gameIndex].tab}
       className="flex-col lg:flex-row justify-between lg:items-center lg:py-0"
     >
-      <div className="mx-auto lg:mx-0 flex flex-col gap-4 max-w-100 xl:max-w-120 text-mc-white text-center lg:text-start ">
+      <div className="mx-4 lg:mx-0 flex flex-col gap-4 max-w-100 xl:max-w-120 text-mc-white text-center lg:text-start ">
         <h1 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow">Players</h1>
-        <p className="text-mc-2 leading-6">
+        <p className="text-mc-1.75 lg:text-mc-2 leading-6">
           Beautiful profiles and visuals are provided by Statsify for all of Hypixel games. Enter the game name in the
           Discord command to view your stats. For example, run the <Command>/bedwars</Command> command to check your
           BedWars stats! Make sure to verify using <Command>/verify</Command> to make running Statsify's commands easier
@@ -85,7 +85,7 @@ export function PlayerSection({ players }: { players: [Player, Player, Player, P
                   height={32}
                   alt="icon"
                   style={{ imageRendering: "pixelated" }}
-                  className="opacity-80 group-aria-pressed:opacity-100 transition-opacity"
+                  className="w-6 h-6 lg:w-8 lg:h-8 opacity-80 group-aria-pressed:opacity-100 transition-opacity"
                 />
                 {formatted}
               </Tab>

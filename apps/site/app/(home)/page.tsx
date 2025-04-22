@@ -10,7 +10,15 @@ import Commands from "~/public/icons/book.png";
 import Image from "next/image";
 import Link from "next/link";
 import Servers from "~/public/icons/iron-door.png";
-import { ARCADE_PREVIEW, BEDWARS_PREVIEW, DUELS_PREVIEW, GUILD_MEMBER_PREVIEW, LEADERBOARD_PREVIEW, SESSION_PREVIEW, SKYWARS_PREVIEW } from "./preview-constants";
+import {
+  ARCADE_PREVIEW,
+  BEDWARS_PREVIEW,
+  DUELS_PREVIEW,
+  GUILD_MEMBER_PREVIEW,
+  LEADERBOARD_PREVIEW,
+  SESSION_PREVIEW,
+  SKYWARS_PREVIEW,
+} from "./preview-constants";
 import { Background } from "~/components/ui/background";
 import { Board } from "~/components/icons/board";
 import { Box } from "~/components/ui/box";
@@ -52,8 +60,8 @@ export default async function Home() {
       <div className="w-container flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-12 lg:text-start lg:justify-between items-center text-mc-white min-h-[76dvh]">
         <div className="flex flex-col gap-10 lg:gap-6 md:max-w-[500px] xl:max-w-[600px]">
           <div className="flex flex-col gap-3">
-            <Wordmark className="text-mc-8 xl:text-mc-10" />
-            <p className="text-mc-3">
+            <Wordmark className="text-mc-6 xl:text-mc-10" />
+            <p className="text-mc-2">
               The largest Hypixel Discord bot to view stats from any game on the Hypixel Network.
             </p>
           </div>

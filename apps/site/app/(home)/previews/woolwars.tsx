@@ -48,16 +48,19 @@ export function WoolWarsPreview({ className, daysBack }: { className?: string; d
       <div className="col-span-3 grid grid-cols-content-2 lg:grid-cols-content-3 gap-2 text-center">
         <Skin uuid={player.uuid} className="hidden lg:block lg:col-span-1 lg:row-span-3" />
         <Nametag className="col-span-2 col-start-1 lg:col-start-2" />
-        <Box className="col-span-2">
+        <Box className="col-span-2 content:text-mc-1.5 content:lg:text-mc-">
           Started <motion.span>{oldDate}</motion.span> (<motion.span>{daysBackFormatted}</motion.span> days ago)
         </Box>
-        <Box className="font-bold">Session</Box>
-        <Box>
+        <Box className="font-bold content:flex content:items-center content:justify-center content:text-mc-1.5 content:lg:text-mc-2">
+          Session
+        </Box>
+        <Box className="content:text-mc-1.5 content:lg:text-mc-2">
           <span className="font-bold">
             <span className="text-mc-red">Wool</span>
             <span className="text-mc-blue">Games</span> Stats
           </span>{" "}
-          <span className="text-mc-1.5 lg:text-mc-2">(WoolWars)</span>
+          <wbr />
+          <span className="">(WoolWars)</span>
         </Box>
       </div>
       <MotionValueTableData title="Wins" value={winsFormatted} color="text-mc-green" />
