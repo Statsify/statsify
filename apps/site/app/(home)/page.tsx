@@ -107,12 +107,12 @@ export default async function Home() {
         <SessionSection player={player5!} />
         <GuildSection guild={guild} />
       </div>
-      <div className="bg-white/10 backdrop-blur-lg text-mc-white -mt-45 p-8 flex flex-col gap-6 w-container">
+      <div className="bg-white/10 backdrop-blur-lg text-mc-white -mt-45 p-8 flex flex-col gap-6 w-container w-auto lg:w-[50%] lg:text-center">
         <div className="flex flex-col gap-2">
           <p className="text-mc-4 font-bold">What are you waiting for?</p>
           <p className="text-mc-2">Invite Statsify today to enhance your Hypixel experience!</p>
         </div>
-        <DiscordInvite />
+        <DiscordInvite className="" />
       </div>
     </div>
   );
