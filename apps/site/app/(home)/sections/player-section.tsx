@@ -59,7 +59,7 @@ export function PlayerSection({ players }: { players: [Player, Player, Player, P
   return (
     <BaseSection
       background={games[gameIndex].tab}
-      className="flex-col lg:flex-row justify-between lg:items-center lg:py-0"
+      className="flex-col lg:flex-row justify-between items-center lg:py-0"
     >
       <div className="mx-4 lg:mx-0 flex flex-col gap-4 max-w-100 xl:max-w-120 text-mc-white text-center lg:text-start ">
         <h1 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow">Players</h1>
