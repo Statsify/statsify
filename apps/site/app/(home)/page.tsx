@@ -109,7 +109,7 @@ export default async function Home() {
       </div>
       <div className="bg-white/10 backdrop-blur-lg text-mc-white -mt-45 p-8 flex flex-col gap-6 w-container w-auto lg:w-[50%] lg:text-center">
         <div className="flex flex-col gap-2">
-          <p className="text-mc-4 font-bold">What are you waiting for?</p>
+          <p className="text-mc-3 lg:text-mc-4 font-bold">What are you waiting for?</p>
           <p className="text-mc-2">Invite Statsify today to enhance your Hypixel experience!</p>
         </div>
         <DiscordInvite className="" />
