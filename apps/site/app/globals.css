@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme {
+  --font-minecraft: "Minecraft";
+
+  --color-mc-black: #000000;
+  --color-mc-dark-blue: #0000AA;
+  --color-mc-dark-green: #00AA00;
+  --color-mc-dark-aqua: #00AAAA;
+  --color-mc-dark-red: #AA0000;
+  --color-mc-dark-purple: #AA00AA;
+  --color-mc-gold: #FFAA00;
+  --color-mc-gray: #AAAAAA;
+  --color-mc-dark-gray: #555555;
+  --color-mc-blue: #5555FF;
+  --color-mc-green: #55FF55;
+  --color-mc-aqua: #55FFFF;
+  --color-mc-red: #FF5555;
+  --color-mc-pink: #FF55FF;
+  --color-mc-yellow: #FFFF55;
+  --color-mc-white: #FFFFFF;
+
+  --color-discord-500: rgb(88 101 242);
+
+  --color-blueify-100: #D0EFFF;
+  --color-blueify-200: #7DC6FA;
+  --color-blueify-300: #2A9DF4;
+  --color-blueify-400: #2492E7;
+  --color-blueify-500: #1E86DA;
+  --color-blueify-600: #187BCD;
+  --color-blueify-700: #1571BF;
+  --color-blueify-800: #1167B1;
+
+  --color-redify-100: #FFD0D7;
+  --color-redify-200: #F42A37;
+  --color-redify-300: #CD1820;
+  --color-redify-400: #B11117;
+  --color-redify-500: #A10B10;
+
+  --drop-shadow-mc-1: 1px 1px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-2: 2px 2px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-3: 3px 3px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-4: 4px 4px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-5: 5px 5px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-6: 6px 6px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-7: 7px 7px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-8: 8px 8px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-9: 9px 9px color-mix(in srgb, currentColor 25%, #000 75%);
+  --drop-shadow-mc-10: 10px 10px color-mix(in srgb, currentColor 25%, #000 75%);
+}
+
+@utility text-mc-* {
+  font-family: var(--font-minecraft);
+  font-size: calc(16px * --value(number));
+  text-shadow: --value(number)px --value(number)px color-mix(in srgb, currentColor 25%, #000 75%);
+}
+
+@utility grid-areas-stack {
+  grid-template-areas: "stack";
+}
+
+@utility grid-area-stack {
+  grid-area: stack;
+}
+
+@utility grid-cols-fluid-* {
+  grid-template-columns: repeat(--value(integer), minmax(min-content, 1fr));
+}
+
+@utility grid-cols-content-* {
+  grid-template-columns: repeat(--value(integer), minmax(min-content, max-content));
+}
+
+@utility grid-cols-balanced {
+  grid-template-columns: minmax(min-content, max-content) 1fr minmax(min-content, max-content);
+}
+
+@utility mask-feather-* {
+  mask: linear-gradient(90deg, rgb(0 0 0 / 0) 0%, rgb(0 0 0 / 1) --value(integer)%, rgb(0 0 0 / 1) calc(100% - --value(integer)%), rgb(0 0 0 / 0) 100%);
+}
+
+@utility logo-shadow-* {
+  filter: drop-shadow(0 1px 0 color-mix(in srgb, --value(--color-*, [color]) 25%, #000 75%)) drop-shadow(0 -1px 0 color-mix(in srgb, --value(--color-*, [color]) 85%, #fff 15%));
+}
+
+@utility w-container {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+}
+
+@custom-variant content {
+  & > [data-slot="content"] {
+    @slot;
+  }
+}
+
+
+@layer base {
+  button {
+    cursor: pointer;
+  }
+
+  body {
+    background-color: #111111;
+  }
+}

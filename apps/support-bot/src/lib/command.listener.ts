@@ -16,6 +16,10 @@ import { ApiService } from "@statsify/api-client";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { config } from "@statsify/util";
 
+const applicationId = await config("supportBot.applicationId");
+const apiClientRoute = await config("apiClient.route");
+const apiClientKey = await config("apiClient.key");
+
 export class CommandListener extends AbstractCommandListener {
   private readonly apiService: ApiService;
   private static instance: CommandListener;
@@ -25,9 +29,9 @@ export class CommandListener extends AbstractCommandListener {
     rest: RestClient,
     commands: Map<string, CommandResolvable>
   ) {
-    super(client, rest, commands, config("supportBot.applicationId"));
+    super(client, rest, commands, applicationId);
 
-    this.apiService = new ApiService(config("apiClient.route"), config("apiClient.key"));
+    this.apiService = new ApiService(apiClientRoute, apiClientKey);
   }
 
   public addCommand(command: CommandResolvable) {
@@ -41,7 +45,7 @@ export class CommandListener extends AbstractCommandListener {
   protected async onCommand(interaction: Interaction): Promise<void> {
     const parentData = interaction.getData();
 
-    if (interaction.getGuildId() !== config("supportBot.guild")) return;
+    if (interaction.getGuildId() !== await config("supportBot.guild")) return;
 
     const parentCommand = this.commands.get(parentData.name)!;
     if (!parentCommand) return;
