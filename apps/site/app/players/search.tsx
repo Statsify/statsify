@@ -29,7 +29,7 @@ export function Search({ className }: { className?: string }) {
 
     startTransition(async () => {
       const suggestions = await getPlayerSuggestions(query);
-      setSuggestions(suggestions);
+      startTransition(() => setSuggestions(suggestions));
     });
   }
 

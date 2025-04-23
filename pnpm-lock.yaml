@@ -46,7 +46,7 @@ importers:
         version: 22.14.0
       '@vitest/coverage-v8':
         specifier: ^3.0.4
-        version: 3.1.1(vitest@3.1.1(@types/node@22.14.0)(@vitest/ui@3.1.1)(lightningcss@1.29.2)(sass@1.77.8))
+        version: 3.1.1(vitest@3.1.1)
       '@vitest/ui':
         specifier: ^3.0.4
         version: 3.1.1(vitest@3.1.1)
@@ -469,6 +469,37 @@ importers:
       mongoose:
         specifier: ^8.5.2
         version: 8.5.2(socks@2.8.3)
+
+  assets/private:
+    dependencies:
+      skia-canvas:
+        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
+        version: https://objects.githubusercontent.com/github-production-release-asset-2e65be/285112082/82e4d5a1-f7da-446f-8c66-4efd9041e98a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20250423%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250423T175906Z&X-Amz-Expires=300&X-Amz-Signature=2e34248341e6efbc93ccc380df8109051dd15da195a5c446d003e17b898efdd5&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dskia-canvas-v0.9.30-linux-x64-glibc.tar.gz&response-content-type=application%2Foctet-stream
+      stackblur-canvas:
+        specifier: ^2.7.0
+        version: 2.7.0
+    devDependencies:
+      '@commitlint/cli':
+        specifier: ^19.4.1
+        version: 19.8.0(@types/node@22.14.0)(typescript@5.7.3)
+      '@commitlint/config-conventional':
+        specifier: ^19.4.1
+        version: 19.8.0
+      commitizen:
+        specifier: ^4.3.0
+        version: 4.3.1(@types/node@22.14.0)(typescript@5.7.3)
+      cz-conventional-changelog:
+        specifier: ^3.3.0
+        version: 3.3.0(@types/node@22.14.0)(typescript@5.7.3)
+
+  assets/public:
+    dependencies:
+      skia-canvas:
+        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
+        version: https://objects.githubusercontent.com/github-production-release-asset-2e65be/285112082/82e4d5a1-f7da-446f-8c66-4efd9041e98a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20250423%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250423T175906Z&X-Amz-Expires=300&X-Amz-Signature=2e34248341e6efbc93ccc380df8109051dd15da195a5c446d003e17b898efdd5&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dskia-canvas-v0.9.30-linux-x64-glibc.tar.gz&response-content-type=application%2Foctet-stream
+      stackblur-canvas:
+        specifier: 2.7.0
+        version: 2.7.0
 
   packages/api-client:
     dependencies:
@@ -5091,6 +5122,10 @@ packages:
     resolution: {tarball: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz}
     version: 0.9.30
 
+  skia-canvas@https://objects.githubusercontent.com/github-production-release-asset-2e65be/285112082/82e4d5a1-f7da-446f-8c66-4efd9041e98a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20250423%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250423T175906Z&X-Amz-Expires=300&X-Amz-Signature=2e34248341e6efbc93ccc380df8109051dd15da195a5c446d003e17b898efdd5&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dskia-canvas-v0.9.30-linux-x64-glibc.tar.gz&response-content-type=application%2Foctet-stream:
+    resolution: {tarball: https://objects.githubusercontent.com/github-production-release-asset-2e65be/285112082/82e4d5a1-f7da-446f-8c66-4efd9041e98a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20250423%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250423T175906Z&X-Amz-Expires=300&X-Amz-Signature=2e34248341e6efbc93ccc380df8109051dd15da195a5c446d003e17b898efdd5&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dskia-canvas-v0.9.30-linux-x64-glibc.tar.gz&response-content-type=application%2Foctet-stream}
+    version: 0.9.30
+
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
@@ -5167,6 +5202,10 @@ packages:
 
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
+
+  stackblur-canvas@2.7.0:
+    resolution: {integrity: sha512-yf7OENo23AGJhBriGx0QivY5JP6Y1HbrrDI6WLt6C5auYZXlQrheoY8hD4ibekFKz1HOfE48Ww8kMWMnJD/zcQ==}
+    engines: {node: '>=0.1.14'}
 
   standard-as-callback@2.1.0:
     resolution: {integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==}
@@ -7210,7 +7249,7 @@ snapshots:
       '@typescript-eslint/types': 8.29.1
       eslint-visitor-keys: 4.2.0
 
-  '@vitest/coverage-v8@3.1.1(vitest@3.1.1(@types/node@22.14.0)(@vitest/ui@3.1.1)(lightningcss@1.29.2)(sass@1.77.8))':
+  '@vitest/coverage-v8@3.1.1(vitest@3.1.1)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2
@@ -10671,6 +10710,18 @@ snapshots:
       - encoding
       - supports-color
 
+  skia-canvas@https://objects.githubusercontent.com/github-production-release-asset-2e65be/285112082/82e4d5a1-f7da-446f-8c66-4efd9041e98a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=releaseassetproduction%2F20250423%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250423T175906Z&X-Amz-Expires=300&X-Amz-Signature=2e34248341e6efbc93ccc380df8109051dd15da195a5c446d003e17b898efdd5&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3Dskia-canvas-v0.9.30-linux-x64-glibc.tar.gz&response-content-type=application%2Foctet-stream:
+    dependencies:
+      '@mapbox/node-pre-gyp': 1.0.11
+      cargo-cp-artifact: 0.1.8
+      glob: 8.1.0
+      path-browserify: 1.0.1
+      simple-get: 4.0.1
+      string-split-by: 1.0.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
   slash@3.0.0: {}
 
   smart-buffer@4.2.0: {}
@@ -10745,6 +10796,8 @@ snapshots:
   stable-hash@0.0.4: {}
 
   stackback@0.0.2: {}
+
+  stackblur-canvas@2.7.0: {}
 
   standard-as-callback@2.1.0: {}
 

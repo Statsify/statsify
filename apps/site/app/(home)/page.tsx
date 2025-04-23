@@ -19,6 +19,7 @@ import {
   SESSION_PREVIEW,
   SKYWARS_PREVIEW,
 } from "./preview-constants";
+import { AnimatedNumber } from "~/components/animations/number";
 import { Background } from "~/components/ui/background";
 import { Board } from "~/components/icons/board";
 import { Box } from "~/components/ui/box";
@@ -84,7 +85,9 @@ export default async function Home() {
             className="mb-3"
             style={{ imageRendering: "pixelated" }}
           />
-          <p className="text-center text-mc-3 text-mc-white font-bold">100,000</p>
+          <p className="text-center text-mc-3 text-mc-white font-bold">
+            <AnimatedNumber value={100_000} />
+          </p>
           <p className="text-center text-mc-2 text-mc-white">Servers</p>
         </Box>
         <Box className="content:flex content:items-center content:flex-col content:gap-1 w-[60%] lg:w-[20%]">
@@ -97,7 +100,7 @@ export default async function Home() {
             style={{ imageRendering: "pixelated" }}
             className="mb-3"
           />
-          <p className="text-center text-mc-3 text-mc-white font-bold">50,000,000</p>
+          <p className="text-center text-mc-3 text-mc-white font-bold"><AnimatedNumber value={50_000_000} /></p>
           <p className="text-center text-mc-2 text-mc-white">Commands Ran</p>
         </Box>
       </div>
