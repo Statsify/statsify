@@ -74,8 +74,6 @@ const processQuests = (
     const k = quest.propertyKey ?? quest.field;
     const field = fieldPrefix ? `${fieldPrefix}_${quest.field}` : quest.field;
 
-    if (time === QuestTime.Monthly) console.log(field);
-
     instance[k] = getQuestCountDuring(time, quests[field]);
     instance.total += instance[k] ?? 0;
   });

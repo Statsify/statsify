@@ -265,10 +265,7 @@ function createUniformScheme(bracketColor: string, digitColor = bracketColor, em
     const underlineFormat = underline ? "§n" : "";
     const strikethroughFormat = strikethrough ? "§m" : "";
 
-    digitColor = `${digitColor}${underlineFormat}`;
-    emblemColor = `${emblemColor}${underlineFormat}`;
-
-    return `${bracketColor}${underlineFormat}${strikethroughFormat}[§r${boldFormat}${digitColor}${underlineFormat}${level}${emblemColor}${emblem}§r${bracketColor}${underlineFormat}${strikethroughFormat}]§r`;
+    return `${bracketColor}${underlineFormat}${strikethroughFormat}[§r${boldFormat}${digitColor}${underlineFormat}${underlineFormat}${level}${emblemColor}${underlineFormat}${emblem}§r${bracketColor}${underlineFormat}${strikethroughFormat}]§r`;
   };
 }
 
@@ -290,13 +287,11 @@ function createMultiDigitColorScheme(
   const rightBracket = bracketKind === "square" ? "]" : "}";
 
   return (level, bold, underline, strikethrough, emblem) => {
-    console.log(level, bold, underline, strikethrough, emblem);
-
     const boldFormat = bold ? "§l" : "";
     const underlineFormat = underline ? "§n" : "";
     const strikethroughFormat = strikethrough ? "§m" : "";
 
-    colors = colors.map((color) => `${color}${underlineFormat}`) as [
+    const formattedColors = colors.map((color) => `${color}${underlineFormat}`) as [
       leftBracket: string,
       firstDigit: string,
       secondDigit: string,
@@ -305,14 +300,14 @@ function createMultiDigitColorScheme(
       rightBracket: string
     ];
 
-    const formattedEmblem = emblem ? `${colors.at(-2)}${emblem}` : "";
+    const formattedEmblem = emblem ? `${formattedColors.at(-2)}${emblem}` : "";
     const formattedLevel = [...`${level}`]
       .reverse()
-      .map((digit, index) => `${colors[3 - index]}${digit}`)
+      .map((digit, index) => `${formattedColors[3 - index]}${digit}`)
       .reverse()
       .join("");
 
-    return `§r${colors[0]}${strikethroughFormat}${leftBracket}§r${boldFormat}${formattedLevel}${formattedEmblem}§r${colors.at(-1)}${strikethroughFormat}${rightBracket}§r`;
+    return `§r${formattedColors[0]}${strikethroughFormat}${leftBracket}§r${boldFormat}${formattedLevel}${formattedEmblem}§r${formattedColors.at(-1)}${strikethroughFormat}${rightBracket}§r`;
   };
 }
 
