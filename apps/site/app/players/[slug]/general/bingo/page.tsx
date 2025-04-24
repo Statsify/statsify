@@ -21,6 +21,7 @@ import { ComponentProps } from "react";
 import { Divider } from "~/components/ui/divider";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Search } from "~/app/players/search";
+import { SkinHead } from "~/components/ui/skin";
 import { Tab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
 import { usePlayer } from "~/app/players/[slug]/context";
@@ -56,9 +57,10 @@ export default function BingoPage() {
             <h2 className="text-mc-gold text-mc-2 lg:text-mc-3">12th Anniversary Bingo</h2>
           </div>
           <div className="w-[80%] flex items-stretch flex-col gap-4">
-            <Search />
+            <Search defaultValue={player.username} />
             <Divider variant="black" className="my-2" />
-            <Box className="content:text-center content:text-mc-3">
+            <Box className="content:text-center content:text-mc-3 content:flex content:items-center content:justify-center content:gap-4">
+              <SkinHead uuid={player.uuid} />
               <MinecraftText>{player.displayName}</MinecraftText>
             </Box>
             <Box className="content:grid content:grid-cols-1 content:lg:grid-cols-3 content:gap-4 content:lg:gap-8">

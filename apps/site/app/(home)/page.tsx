@@ -47,32 +47,34 @@ export default async function Home() {
 
   return (
     <div className="relative">
-      <Background
-        background="general"
-        className="h-[80dvh]"
-        mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
-      />
-      <div
-        className="absolute w-full h-[80dvh] -z-10"
-        style={{
-          background: "linear-gradient(180deg, rgb(17 17 17 / 0) 80%, rgb(17 17 17 / 1) calc(100% - 50px))",
-        }}
-      />
-      <div className="w-container flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-12 lg:text-start lg:justify-between items-center text-mc-white min-h-[76dvh]">
-        <div className="flex flex-col gap-10 lg:gap-6 md:max-w-[500px] xl:max-w-[600px]">
-          <div className="flex flex-col gap-3">
-            <Wordmark className="text-mc-6 xl:text-mc-10" />
-            <p className="text-mc-2">
-              The largest Hypixel Discord bot to view stats from any game on the Hypixel Network.
-            </p>
+      <div className="relative">
+        <Background
+          background="general"
+          className="h-full"
+          mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
+        />
+        <div
+          className="absolute w-full h-full -z-10"
+          style={{
+            background: "linear-gradient(180deg, rgb(17 17 17 / 0) 80%, rgb(17 17 17 / 1) calc(100% - 50px))",
+          }}
+        />
+        <div className="w-container flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-12 lg:text-start lg:justify-between items-center text-mc-white min-h-[76dvh]">
+          <div className="flex flex-col gap-10 lg:gap-6 md:max-w-[500px] xl:max-w-[600px]">
+            <div className="flex flex-col gap-3">
+              <Wordmark className="text-mc-6 xl:text-mc-10" />
+              <p className="text-mc-2">
+                The largest Hypixel Discord bot to view stats from any game on the Hypixel Network.
+              </p>
+            </div>
+            <div className="flex flex-col lg:flex-row items-center flex-wrap gap-4 w-full">
+              <DiscordInvite className="grow" />
+              <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
+              <BingoInvite />
+            </div>
           </div>
-          <div className="flex flex-col lg:flex-row items-center flex-wrap gap-4 w-full">
-            <DiscordInvite className="grow" />
-            <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
-            <BingoInvite />
-          </div>
+          <InteractiveLogo />
         </div>
-        <InteractiveLogo />
       </div>
       <div className="w-container flex items-center mt-16 lg:-mt-20 gap-10 lg:gap-0 flex-col lg:flex-row justify-evenly">
         <Box className="content:flex content:items-center content:flex-col content:gap-1 w-[60%] lg:w-[20%]">
@@ -110,7 +112,7 @@ export default async function Home() {
         <SessionSection player={player5!} />
         <GuildSection guild={guild} />
       </div>
-      <div className="bg-white/10 backdrop-blur-lg text-mc-white -mt-45 p-8 flex flex-col gap-6 w-container w-auto lg:w-[50%] lg:text-center">
+      <div className="bg-white/10 backdrop-blur-lg text-mc-white -mt-45 p-8 flex flex-col gap-6 w-container w-auto lg:w-[50%] text-balance text-center">
         <div className="flex flex-col gap-2">
           <p className="text-mc-3 lg:text-mc-4 font-bold">What are you waiting for?</p>
           <p className="text-mc-2">Invite Statsify today to enhance your Hypixel experience!</p>

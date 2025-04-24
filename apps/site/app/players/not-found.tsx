@@ -18,13 +18,13 @@ export default function NotFound() {
   const { slug } = useParams<{ slug: string }>();
 
   return (
-    <Error>
-      <Search className="w-full" />
+    <Error className="gap-8 flex-col-reverse md:flex-col px-8">
+      <Search className="w-full" defaultValue={slug} />
       <div className="flex flex-col items-center justify-center gap-4">
         <Box>
-          <span className="content:text-mc-dark-red">[</span>
-          <span className="content:text-mc-red">???</span>
-          <span className="content:text-mc-dark-red">]</span> {slug}
+          <span className="text-mc-dark-red">[</span>
+          <span className="text-mc-red">???</span>
+          <span className="text-mc-dark-red">]</span> {slug}
         </Box>
         <Skin uuid="76a56ac7fcf649fca0531cb5c77cd9ae" className="h-64" />
         <h1 className="text-mc-4 lg:text-mc-7 text-mc-red font-bold">Player Not Found</h1>

@@ -57,11 +57,11 @@ export function InteractiveLogo() {
   const wlr = wins / losses;
 
   return (
-    <div className="relative scale-79 lg:scale-90 xl:scale-100 transition-transform">
+    <div className="relative scale-79 lg:scale-90 xl:scale-95 transition-transform">
       <Draggable className="translate-x-[-30px] translate-y-[5px] lg:translate-y-[-20px] -z-5">
         <SpotlightTableData title="Wins" value={wins} className="text-mc-green" />
       </Draggable>
-      <Draggable className="translate-x-[230px] translate-y-[150px] lg:translate-x-[320px] lg:translate-y-[190px]">
+      <Draggable className="translate-x-[230px] translate-y-[150px] lg:translate-x-[320px] lg:translate-y-[190px] 2xl:translate-x-[270px] 2xl:translate-y-[240px]">
         <SpotlightTableData title="Losses" value={losses} className="text-mc-red" />
       </Draggable>
       <Draggable className="translate-y-[230px] translate-x-[-60px] lg:translate-y-[320px]">
