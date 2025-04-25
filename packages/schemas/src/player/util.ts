@@ -22,6 +22,7 @@ export const rankMap: Record<string, (color: string) => string> = {
   "GM": () => "§2[GM]",
   "ADMIN": () => "§c[ADMIN]",
   "OWNER": () => "§c[OWNER]",
+  "STAFF": () => "§c[§6ዞ§c]",
   "MOJANG": () => "§6[MOJANG]",
   "EVENTS": () => "§6[EVENTS]",
   "DEFAULT": () => "§7",
@@ -90,6 +91,7 @@ export class PlayerUtil {
 
   public static getRankColor(rank: string): Color {
     switch (rank) {
+      case "STAFF":
       case "YOUTUBE":
       case "ADMIN":
       case "OWNER":
