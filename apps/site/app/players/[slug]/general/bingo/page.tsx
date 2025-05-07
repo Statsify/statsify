@@ -26,6 +26,7 @@ import { Tab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
 import { usePlayer } from "~/app/players/[slug]/context";
 import { useUrlState } from "~/hooks/use-url-state";
+import { z } from "zod";
 import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 const FormattedCategories: Record<Category, string> = {
@@ -34,9 +35,12 @@ const FormattedCategories: Record<Category, string> = {
   pvp: "PvP",
 };
 
+const CategorySchema = z.enum(["casual", "pvp", "classic"]);
+const DifficultySchema = z.enum(["easy", "hard"]);
+
 export default function BingoPage() {
-  const [category, setCategory] = useUrlState<Category>("category", "casual");
-  const [difficulty, setDifficulty] = useUrlState<Difficulty>("difficulty", "easy");
+  const [category, setCategory] = useUrlState<Category>("category", CategorySchema, "casual");
+  const [difficulty, setDifficulty] = useUrlState<Difficulty>("difficulty", DifficultySchema, "easy");
   const player = usePlayer();
 
   return (

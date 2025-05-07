@@ -17,7 +17,7 @@ export function BaseSection({ children, background, className }: Pick<ComponentP
       <div
         className="absolute w-full h-full -z-10"
         style={{
-          background: "linear-gradient(0deg, rgb(17 17 17 / 1) 50px, rgb(17 17 17 / 0) 50%, rgb(17 17 17 / 1) calc(100% - 50px))",
+          background: "linear-gradient(0deg, var(--color-blackify-950) 50px, transparent 50%, var(--color-blackify-950) calc(100% - 50px))",
         }}
       />
       <div className="min-h-1" />

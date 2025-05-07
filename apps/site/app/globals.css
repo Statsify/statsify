@@ -37,6 +37,8 @@
   --color-redify-400: #B11117;
   --color-redify-500: #A10B10;
 
+  --color-blackify-950:  #111111;
+
   --drop-shadow-mc-1: 1px 1px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-2: 2px 2px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-3: 3px 3px color-mix(in srgb, currentColor 25%, #000 75%);
@@ -99,9 +101,5 @@
 @layer base {
   button {
     cursor: pointer;
-  }
-
-  body {
-    background-color: #111111;
   }
 }

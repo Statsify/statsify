@@ -19,7 +19,7 @@ export default function UnknownErrorPage() {
       <div className="flex grow flex-col items-center justify-center gap-4">
         <LogoError className="size-64 lg:size-80" />
         <div className="flex flex-col items-center gap-4">
-          <h1 className="text-mc-4 lg:text-mc-8 text-mc-red font-bold">Unkown Error</h1>
+          <h1 className="text-mc-4 lg:text-mc-8 text-mc-red font-bold">Unknown Error</h1>
           <p className="max-w-64 lg:max-w-none text-mc-1.5 lg:text-mc-2 text-mc-gray text-center">
             Something went wrong!
           </p>

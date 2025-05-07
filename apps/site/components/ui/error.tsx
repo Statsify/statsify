@@ -10,7 +10,7 @@ import { Background } from "~/components/ui/background";
 import { cn } from "~/lib/util";
 import type { ReactNode } from "react";
 
-export function Error({ children, className }: { className?: string;children: ReactNode }) {
+export function Error({ children, className }: { className?: string; children: ReactNode }) {
   return (
     <div className="relative grow">
       <Background
@@ -22,7 +22,7 @@ export function Error({ children, className }: { className?: string;children: Re
       <div className="absolute w-full h-full bg-black/80 -z-10" />
       <div
         className="absolute w-full h-full -z-10"
-        style={{ background: "linear-gradient(rgb(17 17 17 /0) 20%, rgb(17 17 17 /1) 95%)" }}
+        style={{ background: "linear-gradient(transparent 20%, var(--color-blackify-950) 95%)" }}
       />
       <div className={cn("w-container h-full min-h-150 flex flex-col items-center justify-center z-10", className)}>
         {children}

@@ -48,18 +48,15 @@ export default async function Home() {
   return (
     <div className="relative">
       <div className="relative">
-        <Background
-          background="general"
-          className="h-full"
-          mask="linear-gradient(rgb(255 255 255) 20%, rgb(0 0 0 / 0) 95%)"
-        />
+        <Background background="general" className="h-full" />
         <div
           className="absolute w-full h-full -z-10"
           style={{
-            background: "linear-gradient(180deg, rgb(17 17 17 / 0) 80%, rgb(17 17 17 / 1) calc(100% - 50px))",
+            // Where the gradient ends needs to be added onto the padding bottom of the header so py-30 + pb-6 = pb-36
+            background: "linear-gradient(180deg, transparent 80%, var(--color-blackify-950) calc(100% - (var(--spacing) * 6)))",
           }}
         />
-        <div className="w-container flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-12 lg:text-start lg:justify-between items-center text-mc-white min-h-[76dvh]">
+        <div className="w-container flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-12 lg:text-start lg:justify-between items-center text-mc-white py-15 pb-21 lg:py-30 lg:pb-36">
           <div className="flex flex-col gap-10 lg:gap-6 md:max-w-[500px] xl:max-w-[600px]">
             <div className="flex flex-col gap-3">
               <Wordmark className="text-mc-6 xl:text-mc-10" />
@@ -76,7 +73,7 @@ export default async function Home() {
           <InteractiveLogo />
         </div>
       </div>
-      <div className="w-container flex items-center mt-16 lg:-mt-20 gap-10 lg:gap-0 flex-col lg:flex-row justify-evenly">
+      <div className="w-container flex items-center lg:-mt-20 gap-10 lg:gap-0 flex-col lg:flex-row justify-evenly">
         <Box className="content:flex content:items-center content:flex-col content:gap-1 w-[60%] lg:w-[20%]">
           <Image
             src={Servers}
