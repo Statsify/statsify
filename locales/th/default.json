@@ -9,7 +9,7 @@
     "mojang-player": "ชื่อผู้ใช้ Minecraft หรือ UUID",
     "number": "หมายเลข",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard",
+    "player-leaderboard": "เลือกกระดานผู้นำ",
     "reason": "The reason for closing the support ticket",
     "server": "ชื่อเซิร์ฟเวอร์ Minecraft หรือ IP ของเซิร์ฟเวอร์",
     "tags-content": "The content of the tag",
@@ -31,12 +31,12 @@
     "buildbattle": "$t(commands.hypixel-command, { \"name\": \"Build Battle\" })",
     "cape": "ดู Minecraft และเสื้อคลุม Optifine ของใครบางคน",
     "challenges": "$t(commands.hypixel-command, { \"name\": \"Challenge\" })",
-    "quests-command": "View your {{name}} questing stats",
+    "quests-command": "ดูสถิติภารกิจของคุณ {{name}}",
     "quests": "$t(commands.hypixel-command, { \"name\": \"Questing\" })",
     "quests-overall": "$t(commands.quests-command, { \"name\": \"Overall\" })",
     "quests-daily": "$t(commands.quests-command, { \"name\": \"Daily\" })",
     "quests-weekly": "$t(commands.quests-command, { \"name\": \"Weekly\" })",
-    "quests-monthly": "$t(commands.quests-command, { \"name\": \"Monthly\" })",
+    "quests-monthly": "$t(commands.quests-command, { \"name\": \"Monthly })",
     "close": "Close the current support ticket",
     "colors": "รายการรหัสสี Minecraft",
     "commands": "View Statsify command usage",
@@ -86,9 +86,9 @@
     "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "ดูสถิติช่วงเวลาเล่นของคุณ {{name}}",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
-    "session-delete": "Delete your session stats",
+    "session-delete": "ลบสถิติช่วงเวลาเล่นของคุณ",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -117,7 +117,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-command": "ดูตารางผู้นำของ {{name}}",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -237,8 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "รีเซ็ตสถิติย้อนหลังของคุณ",
+    "reset-session": "รีเซ็ตสถิติช่วงเวลาเล่นของคุณ"
   },
   "config": {
     "badge": {
@@ -307,8 +307,8 @@
         "title": "เกม"
       },
       "session": {
-        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
-        "title": "Sessions"
+        "description": "Statsify ให้คุณตรวจสอบสถิติของคุณราวกับว่าคุณเริ่มเล่นวันนี้ผ่านคำสั่ง `/session` โดยใช้คำสั่ง `/reset session` คุณสามารถรีเซ็ตสถิติช่วงเวลาเล่นและเริ่มช่วงเวลาใหม่ได้",
+        "title": "ช่วงเวลาเล่น"
       },
       "leaderboards": {
         "description": "Statsify นำเสนอกระดานผู้นำนับพันผ่านคำสั่ง `/leaderboard`. เรียกใช้ `/leaderboard` จากนั้นเลือกโหมดเกม และเลือกกระดานผู้นำเพื่อดู. คุณสามารถกดปุ่มค้นหาเพื่อค้นหาผู้เล่นหรือตำแหน่งที่ต้องการ. คุณยังสามารถกดปุ่มขึ้นและลงเพื่อดูหน้าเพิ่มเติม.",
@@ -387,8 +387,8 @@
       "title": "ผู้เล่นไม่ถูกต้อง"
     },
     "invalidSession": {
-      "title": "Invalid Session",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+      "title": "ช่วงเวลาเล่นไม่ถูกต้อง",
+      "description": "**{{displayName}}** ยังไม่มีช่วงเวลาเล่นที่ใช้งานอยู่ พวกเขาสามารถเริ่มช่วงเวลาได้โดยรันคำสั่ง /session ขณะผ่านการยืนยันตัวตนแล้ว"
     },
     "invalidResetTime": {
       "description": "`{{time}}` ไม่ตรงกับรูปแบบ `h:mm a`. ป้อนเวลาในรูปแบบที่คล้ายกับ `12:00 PM` หรือ `01:00 AM`.",
@@ -436,7 +436,7 @@
       "title": "ไม่มีการยืนยัน"
     },
     "missingPlayerVerification": {
-      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** ยังไม่ได้รับการยืนยัน พวกเขาต้องรันคำสั่ง `/verify` เพื่อยืนยันบัญชีของตน",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -478,7 +478,7 @@
     },
     "premiumRequired": {
       "description": "ตรวจสอบคุณสมบัติที่มีทั้งหมด [here](https://statsify.net/premium).",
-      "preview": "Check out all the available features [here](https://statsify.net/premium). Below is a small preview of what the command does/changes.",
+      "preview": "ดูฟีเจอร์ทั้งหมดที่มีได้ที่ [ที่นี่](https://statsify.net/premium) ด้านล่างคือตัวอย่างเล็กน้อยของสิ่งที่คำสั่งนี้ทำหรือเปลี่ยนแปลง",
       "title": "จำเป็นต้องมี Statsify {{tier}} เพื่อเรียกใช้คำสั่งนี้"
     },
     "staffOnly": {
@@ -515,12 +515,12 @@
     "reset": "$t(emojis:clock) **รีเซ็ต** <t:{{time}}:R>",
     "resetButton": "คลิกเพื่อรีเซ็ต",
     "setResetTime": "ตั้งเวลารีเซ็ตเป็น <t:{{time}}:t>.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats.",
-    "deleteSession": "Successfully deleted your session stats.",
+    "newSession": "สถิติช่วงเวลาเล่นของ **{{displayName}}** ถูกตรวจสอบเป็นครั้งแรกบน Statsify แล้ว",
+    "setSessionReset": "รีเซ็ตสถิติช่วงเวลาเล่นของคุณเรียบร้อยแล้ว",
+    "deleteSession": "ลบสถิติช่วงเวลาเล่นของคุณเรียบร้อยแล้ว",
     "disabledWarning": {
-      "title": "Historical Commands are no Longer Available",
-      "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
+      "title": "ไม่สามารถใช้คำสั่งย้อนหลังได้อีกต่อไป",
+      "description": "[ข้อกำหนด API ใหม่ของ Hypixel](https://developer.hypixel.net/policies/) ไม่อนุญาตให้มีการ “ดึงข้อมูลผู้เล่นอย่างต่อเนื่อง” อีกต่อไป ซึ่งหมายความว่า Statsify ไม่สามารถติดตามสถิติผู้เล่นรายวันได้แล้ว\n\nคุณสามารถเริ่มช่วงเวลาเล่นได้ด้วยคำสั่ง `/session` เมื่อคุณเริ่มช่วงเวลา ระบบจะติดตามสถิติตั้งแต่เวลาที่คุณรันคำสั่งครั้งแรกจนถึงครั้งถัดไปที่คุณรันมัน หากต้องการรีเซ็ตสถิติช่วงเวลาเล่น ให้ใช้คำสั่ง `/reset session`"
     }
   },
   "leaderboard": {
@@ -557,15 +557,15 @@
     "website": "[Website](https://statsify.net/)"
   },
   "deprecated": {
-    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} has been merged into the {{newCommandName}} command. Please run {{newCommand}} and select {{mode}} in the dropdown.",
-    "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} has been removed in favor of {{newCommandName}}. Please run {{newCommand}} instead.",
-    "command-description": "This command has been removed in favor of {{newCommandName}}."
+    "merged-dropdown": "$t(emojis:icons.warning) คำสั่ง {{oldCommandName}} ถูกรวมเข้ากับคำสั่ง {{newCommandName}} แล้ว กรุณารันคำสั่ง {{newCommand}} และเลือก {{mode}} จากเมนูแบบเลื่อนลง",
+    "merged-direct": "$t(emojis:icons.warning) คำสั่ง {{oldCommandName}} ถูกลบออกแล้วและแทนที่ด้วย {{newCommandName}} กรุณาใช้คำสั่ง {{newCommand}} แทน",
+    "command-description": "คำสั่งนี้ถูกลบออกแล้วและแทนที่ด้วย {{newCommandName}}"
   },
   "stats": {
     "achievementPoints": "คะแนนความสำเร็จ",
     "adrenaline": "อะดรีนาลีน",
     "assists": "อะดรีนาลีน",
-    "alphaWins": "Alpha Wins",
+    "alphaWins": "อัลฟาชนะ",
     "bblr": "BBLR",
     "bedsBroken": "เตียงหัก",
     "bedsLost": "เตียงหาย",
@@ -597,18 +597,18 @@
     "eggsFound": "พบไข่",
     "emeralds": "มรกต",
     "empireKills": "ผู้พิทักษ์สังหาร",
-    "emblem": "Emblem",
+    "emblem": "สัญลักษณ์",
     "ended": "สิ้นสุดแล้ว",
     "endurance": "ความอดทน",
     "event-level": "ระดับเหตุการณ์",
-    "event-exp": "Event EXP",
+    "event-exp": "EXP กิจกรรม",
     "exp": "EXP",
     "expGained": "ได้รับ EXP",
     "extraUltimates": "อัลติเมทพิเศษ",
     "fastestDetectiveWin": "วินนักสืบที่เร็วที่สุด",
     "fastestMurdererWin": "ฆาตกรที่เร็วที่สุดชนะ",
     "fastestWin": "ชนะเร็วที่สุด",
-    "fastestWoolCapture": "Fastest Wool Capture",
+    "fastestWoolCapture": "จับขนแกะได้เร็วที่สุด",
     "finalAssists": "การช่วยเหลือครั้งสุดท้าย",
     "finalDeaths": "ความตายครั้งสุดท้าย",
     "finalKills": "สังหารสุดท้าย",
@@ -625,10 +625,10 @@
     "godfather": "เจ้าพ่อ",
     "godlikes": "เทพบุตร",
     "gold": "ทอง",
-    "goldEarned": "Gold Earned",
+    "goldEarned": "ทองที่ได้รับ",
     "goldPickedUp": "รับทอง",
     "goldRate": "อัตราทอง",
-    "goldSpent": "Gold Spent",
+    "goldSpent": "ทองที่ใช้ไป",
     "goldTrophies": "ถ้วยรางวัลทองคำ",
     "grandPrixTokens": "โทเค็น GP",
     "guild": {
@@ -658,7 +658,7 @@
     "headshots": "ยิงหัว",
     "headstart": "เริ่มต้น",
     "healing": "การรักษา",
-    "heroKills": "Hero Kills",
+    "heroKills": "สังหารฮีโร่",
     "heroWins": "ฮีโร่ชนะ",
     "hidden": "ที่ซ่อนอยู่",
     "hiderWins": "ไฮเดอร์ชนะ",
@@ -677,11 +677,11 @@
     "killsAsInfected": "ฆ่าเมื่อติดเชื้อ",
     "killsAsMurderer": "ฆ่าอย่างฆาตกร",
     "killsAsSurvivor": "ฆ่าในฐานะผู้รอดชีวิต",
-    "killsAsAlpha": "Kills as Alpha",
+    "killsAsAlpha": "สังหารในบทบาทอัลฟา",
     "killstreaks": "คิลสตรีค",
     "kit": "ชุดปัจจุบัน",
-    "knife": "Knife",
-    "knifeKills": "Knife Kills",
+    "knife": "มีด",
+    "knifeKills": "สังหารด้วยมีด",
     "kwr": "KWR",
     "lapsCompleted": "รอบ",
     "lastAction": "การกระทำครั้งสุดท้าย",
@@ -692,10 +692,10 @@
     "layers": "เลเยอร์",
     "level": "ระดับ",
     "levelsGained": "ระดับที่ได้รับ",
-    "lifetimeRenown": "Lifetime Renown",
+    "lifetimeRenown": "เกียรติยศตลอดชีวิต",
     "loginTime": "เวลาเข้าสู่ระบบ",
     "logoutTime": "เวลาออกจากระบบ",
-    "longestGame": "Longest Game",
+    "longestGame": "เกมที่ใช้เวลานานที่สุด",
     "lootChests": "หีบสมบัติ",
     "losses": "ขาดทุน",
     "magicalChests": "หีบวิเศษ",
@@ -717,14 +717,14 @@
     "online": "ออนไลน์",
     "opals": "โอปอล",
     "overallWins": "ชัยชนะโดยรวม",
-    "perfectBuilds": "Perfect Builds",
+    "perfectBuilds": "บิลด์สมบูรณ์แบบ",
     "pingRange": "ช่วงปิง",
     "playtime": "เวลาเล่น",
     "points": "คะแนน",
     "poopCollected": "เก็บอึ",
     "powerKicks": "พาวเวอร์คิกส์",
-    "powerupActivations": "Power-Up Activations",
-    "powerups": "Power-Ups",
+    "powerupActivations": "การเปิดใช้งานพาวเวอร์อัพ",
+    "powerups": "พาวเวอร์อัพ",
     "prefix": "คำนำหน้า",
     "prevent": "ป้องกัน",
     "progression": {
@@ -739,7 +739,7 @@
     "ranksGifted": "อันดับพรสวรรค์",
     "rebelKills": "ผู้โจมตีสังหาร",
     "renown": "ชื่อเสียง",
-    "rewardStreak": "Reward Streak",
+    "rewardStreak": "สถิติรับรางวัลต่อเนื่อง",
     "roundWins": "รอบชนะ",
     "rune": "รูน",
     "score": "คะแนน",
@@ -748,10 +748,10 @@
     "shotsFired": "นัดยิง",
     "silver": "เงิน",
     "silverTrophies": "ถ้วยรางวัลเงิน",
-    "slumberTickets": "Slumber Tickets",
+    "slumberTickets": "ตั๋วหลับฝัน",
     "soloWins": "โซโลชนะ",
     "souls": "วิญญาณ",
-    "coinConversions": "Coin Conversions",
+    "coinConversions": "การแลกเปลี่ยนเหรียญ",
     "starsEarned": "รับดาว",
     "started": "เริ่ม",
     "status": "สถานะ",
@@ -766,7 +766,7 @@
     "title": "ชื่อ",
     "tokens": "โทเค็น",
     "total": "ทั้งหมด",
-    "totalSlumberTickets": "Total Slumber Tickets",
+    "totalSlumberTickets": "ตั๋วหลับฝันทั้งหมด",
     "totalTrophies": "ถ้วยรางวัลทั้งหมด",
     "trail": "เส้นทาง",
     "transfusion": "การถ่ายเลือด",
@@ -787,34 +787,34 @@
     "witherKills": "เหี่ยวเฉาฆ่า",
     "wlr": "WLR",
     "wool": "ขนสัตว์",
-    "woolCaptured": "Wool Captured",
-    "woolPickedUp": "Wool Picked Up",
+    "woolCaptured": "ขนแกะที่จับได้",
+    "woolPickedUp": "ขนแกะที่เก็บได้",
     "woolPlaced": "ผ้าขนสัตว์วาง",
     "zombieKills": "ซอมบี้ฆ่า",
     "potionsBrewed": "ปรุงยา",
-    "positions": "Positions",
-    "powerupsCollected": "Power-Ups Collected",
-    "roundsCompleted": "Rounds Completed",
-    "totalRounds": "Total Rounds",
-    "totalExp": "Total EXP",
-    "gamesFinished": "Games Finished",
-    "flawlessGames": "Flawless Games",
-    "fails": "Fails",
-    "mapsCompleted": "Maps Completed",
-    "arcadeWins": "Arcade Wins",
-    "spec": "Spec",
-    "capturePoints": "Capture Points",
-    "defendPoints": "Defend Points",
-    "draws": "Draws",
-    "sheepThrown": "Sheep Thrown",
-    "sheepKilled": "Sheep Killed",
-    "magicWool": "Magic Wool",
-    "flagCaptures": "Flag Captures",
-    "flagReturns": "Flag Returns",
-    "airTime": "Air Time",
-    "potionsSplashed": "Potions Splashed",
-    "powerOrbs": "Power Orbs",
-    "grenadeKills": "Grenade Kills"
+    "positions": "ตำแหน่ง",
+    "powerupsCollected": "พาวเวอร์อัพที่เก็บได้",
+    "roundsCompleted": "รอบที่เล่นจบแล้ว",
+    "totalRounds": "จำนวนรอบทั้งหมด",
+    "totalExp": "EXP ทั้งหมด",
+    "gamesFinished": "เกมที่เล่นจบแล้ว",
+    "flawlessGames": "เกมไร้ที่ติ",
+    "fails": "พลาด",
+    "mapsCompleted": "แผนที่ที่เล่นจบแล้ว",
+    "arcadeWins": "ชนะในเกมอาร์เคด",
+    "spec": "สายอาชีพ",
+    "capturePoints": "จุดยึดครอง",
+    "defendPoints": "จุดป้องกัน",
+    "draws": "เสมอ",
+    "sheepThrown": "แกะที่ถูกโยน",
+    "sheepKilled": "แกะที่ถูกฆ่า",
+    "magicWool": "ขนแกะวิเศษ",
+    "flagCaptures": "การยึดธง",
+    "flagReturns": "การนำธงกลับ",
+    "airTime": "เวลาอยู่กลางอากาศ",
+    "potionsSplashed": "โพชันที่สาดไป",
+    "powerOrbs": "ลูกแก้วพลังงาน",
+    "grenadeKills": "สังหารด้วยระเบิดมือ"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) เข้าร่วมกับเรา **$t(socials.discord)** และรับ **20% คูลดาวน์ที่ต่ำกว่า**$t(emojis:heart)",
@@ -822,8 +822,8 @@
     "premium": "$t(emojis:logos.gold) **[Statsify Premium](<https://statsify.net/premium>)** มีคุณสมบัติเพิ่มเติม เช่น ป้ายโปรไฟล์ส่วนบุคคล. พบสิทธิประโยชน์ทั้งหมด **[here](<https://statsify.net/premium>)**!",
     "rankings": "$t(emojis:logos.iron) ดูตำแหน่งกระดานผู้นำอันดับสูงสุดของคุณด้วย **[Statsify Premium] \n (<https://statsify.net/premium>)** โดยใช้ `/rankings`",
     "verify": "$t(emojis:check) รัน `/verify` เพื่อรันคำสั่งโดยไม่ต้องป้อนชื่อผู้ใช้ของคุณ และรับ **10% คูลดาวน์ที่ต่ำกว่า**",
-    "resetSession": "$t(emojis:reset) You can **reset** your session stats with `/reset session`.",
-    "sessions": "$t(emojis:reset) Track your stat progression with Sessions and `/session`."
+    "resetSession": "$t(emojis:reset) คุณสามารถ **รีเซ็ต** สถิติช่วงเวลาเล่นของคุณได้ด้วยคำสั่ง `/reset session`",
+    "sessions": "$t(emojis:reset) ติดตามความก้าวหน้าของสถิติของคุณด้วยระบบช่วงเวลาและคำสั่ง `/session`"
   },
   "unknown": "ไม่รู้จัก",
   "verification": {
@@ -833,21 +833,21 @@
     },
     "invalidCode": {
       "title": "รหัสยืนยันไม่ถูกต้อง",
-      "description": "Check your verification code or try again by following these steps: ",
-      "button": "Watch Tutorial"
+      "description": "ตรวจสอบรหัสยืนยันของคุณหรือลองใหม่โดยทำตามขั้นตอนเหล่านี้: ",
+      "button": "ดูวิดีโอแนะนำ"
     },
     "instructions": {
-      "title": "Link your Minecraft Account to Statsify",
+      "title": "เชื่อมบัญชี Minecraft ของคุณกับ Statsify",
       "steps": {
-        "one": "Open **Minecraft** (`1.7.10` - `1.19.4`) and go to the server list",
-        "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
-        "three": "Head back to **Discord** and click the button below, then type in your code"
+        "one": "เปิด **Minecraft** (`1.7.10` - `1.19.4`) และไปที่รายการเซิร์ฟเวอร์",
+        "two": "เชื่อมต่อกับ **`verify.statsify.net`** และคัดลอกรหัสที่แสดงขึ้นมา",
+        "three": "กลับไปที่ **Discord** แล้วคลิกปุ่มด้านล่าง จากนั้นพิมพ์รหัสของคุณ"
       },
       "modal": {
-        "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "title": "กรอกรหัสยืนยันของคุณ",
+        "input": "รหัสยืนยัน"
       },
-      "button": "Enter Verification Code"
+      "button": "กรอกรหัสยืนยัน"
     },
     "notVerified": {
       "description": "คุณต้องได้รับการยืนยันก่อนที่จะไม่สามารถยืนยันได้!",
