@@ -69,7 +69,7 @@ export enum FormattedGame {
   PIT = "§eThe §aPit§f",
   PROTOTYPE = "§3Proto§ftype§f",
   QUAKE = "§5Quake§f",
-  SKYBLOCK = "§bSky§fblock§f",
+  SKYBLOCK = "§bSky§fBlock§f",
   SKYCLASH = "§7Sky§6clash§f",
   SKYWARS = "§bSky§eWars§f",
   SMASH_HEROES = "§dSmash §eHeroes§f",
