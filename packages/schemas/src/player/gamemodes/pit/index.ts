@@ -10,14 +10,16 @@ import { type APIData, formatTime } from "@statsify/util";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
-import { add, ratio } from "@statsify/math";
 import {
+  RenownUnlock,
   getBounty,
   getLevel,
   getLevelFormatted,
   getPrestige,
   getPrestigeReq,
+  getRenownShopCost,
 } from "./util.js";
+import { add, ratio } from "@statsify/math";
 
 export const PIT_MODES = new GameModes([
   { api: "overall" },
@@ -80,6 +82,9 @@ export class Pit {
   @Field({ historical: { enabled: false } })
   public renown: number;
 
+  @Field()
+  public lifetimeRenown: number;
+
   @Field({ historical: { enabled: false } })
   public bounty: number;
 
@@ -127,10 +132,28 @@ export class Pit {
   @Field()
   public joins: number;
 
+  @Field()
+  public ragePotatoesEaten: number;
+
+  @Field()
+  public goldIngotsGathered: number;
+
+  @Field()
+  public blocksPlaced: number;
+
+  @Field()
+  public vampireHealing: number;
+
   public constructor(profile: APIData, data: APIData) {
     this.exp = profile.xp ?? 0;
     this.gold = profile.cash;
     this.renown = profile.renown;
+
+    const darkPantsCreated = data.dark_pants_crated ?? 0;
+    const renownUnlocks = (profile.renown_unlocks ?? []) as RenownUnlock[];
+    const renownShopCost = getRenownShopCost(renownUnlocks.filter((unlock) => unlock.key !== "unlock_golden_pickaxe"));
+    this.lifetimeRenown = add(renownShopCost, this.renown, 2 * darkPantsCreated);
+
     this.bounty = getBounty(profile.bounties);
 
     const prestige = getPrestige(this.exp);
@@ -173,5 +196,10 @@ export class Pit {
     this.playtime = (data.playtime_minutes ?? 0) * 60 * 1000;
     this.highestStreak = data.max_streak;
     this.joins = data.joins;
+
+    this.ragePotatoesEaten = data.rage_potatoes_eaten;
+    this.goldIngotsGathered = data.ingots_picked_up;
+    this.blocksPlaced = data.blocks_placed;
+    this.vampireHealing = data.vampire_healed_hp;
   }
 }

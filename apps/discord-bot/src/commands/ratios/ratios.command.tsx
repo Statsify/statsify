@@ -303,8 +303,7 @@ export class RatiosCommand {
 
     if (mode.submodes.length === 0) return modeType;
 
-    // @ts-expect-error TypeScript doesn't realize that an api field will always be present when submodes is not empty
-    const submode = mode.submodes[0].api as string;
+    const submode = mode.submodes[0].api;
     const submodeType = Reflect.getMetadata("design:type", modeType.prototype, submode);
     return submode === "overall" ? submodeType || modeType : submodeType;
   }

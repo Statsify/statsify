@@ -38,7 +38,15 @@ export const ARCADE_MODES = new GameModes([
   { api: "bountyHunters", hypixel: "ONEINTHEQUIVER" },
   { api: "creeperAttack", hypixel: "DEFENDER" },
   { api: "dragonWars", hypixel: "DRAGONWARS2" },
-  { api: "dropper", hypixel: "DROPPER" },
+  {
+    api: "dropper",
+    hypixel: "DROPPER",
+    submodes: [
+      { api: "overall" },
+      { api: "bestTimes" },
+      { api: "completions" },
+    ],
+  },
   { api: "enderSpleef", hypixel: "ENDER" },
   { api: "farmHunt", hypixel: "FARM_HUNT" },
   { api: "football", hypixel: "SOCCER" },
@@ -47,30 +55,34 @@ export const ARCADE_MODES = new GameModes([
   { api: "holeInTheWall", hypixel: "HOLE_IN_THE_WALL" },
   { api: "hypixelSays", hypixel: "SIMON_SAYS" },
   { api: "miniWalls", hypixel: "MINI_WALLS" },
-  { api: "partyGames", hypixel: "PARTY" },
+  {
+    api: "partyGames",
+    hypixel: "PARTY",
+    submodes: [
+      { api: "overall" },
+      { api: "roundWins" },
+    ],
+  },
   { api: "pixelPainters", hypixel: "DRAW_THEIR_THING" },
   { api: "pixelParty", hypixel: "PIXEL_PARTY" },
   { api: "seasonal" },
   { api: "throwOut", hypixel: "THROW_OUT" },
-  { api: "zombies" },
+  {
+    api: "zombies",
+    submodes: [
+      { api: "overall" },
+      { api: "deadEnd" },
+      { api: "badBlood" },
+      { api: "alienArcadium" },
+      { api: "prison" },
+    ],
+  },
+
+  { hypixel: "HIDE_AND_SEEK_PARTY_POOPER", formatted: "Hide and Seek Party Pooper" },
+  { hypixel: "HIDE_AND_SEEK_PROP_HUNT", formatted: " Hide and Seek Prop Hunt" },
 ] as const);
 
 export type ArcadeModes = ExtractGameModes<typeof ARCADE_MODES>;
-
-export const DROPPER_MODES = new GameModes([
-  { api: "overall" },
-  { api: "bestTimes" },
-  { api: "completions" },
-] as const);
-
-export type DropperModes = ExtractGameModes<typeof DROPPER_MODES>;
-
-export const PARTY_GAMES_MODES = new GameModes([
-  { api: "overall" },
-  { api: "roundWins" },
-] as const);
-
-export type PartyGamesModes = ExtractGameModes<typeof PARTY_GAMES_MODES>;
 
 export class Arcade {
   @Field({ historical: { enabled: false } })

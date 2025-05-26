@@ -17,13 +17,13 @@
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.12",
-    "axios": "^1.7.3",
-    "discord-api-types": "^0.37.93",
+    "axios": "^1.7.7",
+    "discord-api-types": "^0.37.98",
     "i18next": "^21.10.0",
     "i18next-fs-backend": "^2.3.2",
     "reflect-metadata": "^0.2.2",
-    "skia-canvas": "^0.9.30",
-    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#4461f6a390d168ed312d27a30574ebdb1f448a83",
+    "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz",
+    "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
     "typedi": "^0.10.0"
   },
   "devDependencies": {

@@ -32,6 +32,10 @@
   "forward": "<:forward:995761547492204684>",
   "backward": "<:backward:995761554580578394>",
   "text-select": "<:textselect:1141485815046885416>",
+  "icons": {
+    "warning": "<:warning:1274900962468696084>",
+    "status": "<:status:1274907414797353043>"
+  },
   "ranks": {
     "GM": "<:i0:973758897343045644><:i1:973758898601353216>",
     "MVP": "<:d0:973758899301802015><:d1:973758900341973042><:d2:973758901000503348>",
@@ -153,6 +157,53 @@
     "IDLE": "<:UNKNOWN:996630413441245204>",
     "LIMBO": "<:UNKNOWN:996630413441245204>",
     "QUEUE": "<:UNKNOWN:996630413441245204>"
+  },
+  "arcade": {
+    "overall": "<:sumo:1336079907440164964>",
+    "blockingDead": "<:blockingDead:1336087005595041852>",
+    "bountyHunters": "<:bountyHunters:1336087007038017546>",
+    "creeperAttack": "<:creeperAttack:1336087008547700857>",
+    "dragonWars": "<:dragonWars:1336087010208780421>",
+    "dropper": "<:dropper:1336087011920056444>",
+    "enderSpleef": "<:enderSpleef:1336087013258039468>",
+    "farmHunt": "<:farmHunt:1336087014612664442>",
+    "football": "<:football:1336087015984468008>",
+    "galaxyWars": "<:galaxyWars:1336087017624305737>",
+    "hideAndSeek": "<:hideAndSeek:1336087202228342946>",
+    "holeInTheWall": "<:holeInTheWall:1336087021839581364>",
+    "hypixelSays": "<:hypixelSays:1336087023353593906>",
+    "miniWalls": "<:miniWalls:1336087203759259688>",
+    "partyGames": "<:partyGames:1336087027250364469>",
+    "pixelPainters": "<:pixelPainters:1336087205793501225>",
+    "pixelParty": "<:pixelParty:1336087031461314631>",
+    "seasonal": "<:seasonal:1336090919052771329>",
+    "zombies": "<:zombies:1336087034812436501>",
+    "throwOut": "<:throwOut:1336087207777140736>"
+  },
+  "zombies": {
+    "overall": "<:deadEnd:1347773258941993063>",
+    "alienArcadium": "<:aleinArcadium:1347773212322168925>",
+    "badBlood": "<:badBlood:1347773209478565968>",
+    "deadEnd": "<:deadEnd:1347773258941993063>",
+    "prison": "<:prison:1347773274498662471>"
+  },
+  "duels": {
+    "overall": "<:overall:1336079932044087326>",
+    "arena": "<:arena:1336079920744366200>",
+    "blitzsg": "<:blitz:1336079992668422165>",
+    "bow": "<:bow:1336079928055038096>",
+    "bowSpleef": "<:bowSpleef:1336079916504055820>",
+    "boxing": "<:boxing:1336079918949466183>",
+    "bridge": "<:bridge:1336079922481070112>",
+    "classic": "<:classic:1336079994165792838>",
+    "combo": "<:combo:1336079914939711558>",
+    "megawalls": "<:megawalls:1336079913169584199>",
+    "nodebuff": "<:nodebuff:1336079911710097468>",
+    "op": "<:op:1336079923764269161>",
+    "parkour": "<:parkour:1336079995713490974>",
+    "skywars": "<:skywars:1336079905657716817>",
+    "sumo": "<:sumo:1336079907440164964>",
+    "uhc": "<:uhc:1336079909260365985>"
   },
   "socials": {
     "embed": {

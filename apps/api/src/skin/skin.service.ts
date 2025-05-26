@@ -26,7 +26,9 @@ export class SkinService {
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
-    const { skin } = await this.getSkin(uuid).then((skin) => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false));
+    const { skin } = await this.getSkin(uuid)
+      .then((skin) => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false))
+      .catch(() => this.resolveSkin(undefined, false));
 
     const canvas = new Canvas(size, size);
     const ctx = canvas.getContext("2d");

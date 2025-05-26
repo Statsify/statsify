@@ -14,7 +14,7 @@ import {
   PlayerArgument,
 } from "@statsify/discord";
 import { StatusProfile } from "./status.profile.js";
-import { getBackground, getLogo } from "@statsify/assets";
+import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { mapGameIdToBackground } from "#constants";
 import { render } from "@statsify/rendering";
@@ -33,16 +33,18 @@ export class StatusCommand {
 
     const status = await this.apiService.getStatus(context.option("player"), user);
 
-    const [logo, skin, badge, background] = await Promise.all([
+    const [logo, skin, badge, background, gameIcons] = await Promise.all([
       getLogo(user),
       this.apiService.getPlayerSkin(status.uuid, user),
       this.apiService.getUserBadge(status.uuid),
       getBackground(...mapGameIdToBackground(status.game.id ?? "LIMBO")),
+      getAllGameIcons(),
     ]);
 
     const canvas = render(
       <StatusProfile
         status={status}
+        gameIcons={gameIcons}
         skin={skin}
         logo={logo}
         badge={badge}

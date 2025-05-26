@@ -76,7 +76,7 @@ logger.log("Server Started");
 
 server.on("login", async (client) => {
   try {
-    logger.verbose(`${client.username} has joined`);
+    logger.verbose(`${client.username} [${client.uuid}] has joined`);
 
     const uuid = client.uuid.replaceAll("-", "");
 

@@ -41,7 +41,7 @@ export class ArenaBrawlChallenges implements GameChallenges {
     this.whereIsIt = challenges.ARENA__where_is_it_challenge;
     this.tripleKill = challenges.ARENA__triple_kill_challenge;
     this.noUltimate = challenges.ARENA__no_ultimate_challenge;
-    this.cooperation = challenges.ARENA__no_ultimate_challenge;
+    this.cooperation = challenges.ARENA__cooperation_challenge;
 
     this.total = add(this.whereIsIt, this.tripleKill, this.noUltimate, this.cooperation);
   }

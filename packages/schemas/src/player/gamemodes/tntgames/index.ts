@@ -13,11 +13,27 @@ import type { APIData } from "@statsify/util";
 
 export const TNT_GAMES_MODES = new GameModes([
   { api: "overall" },
-  { hypixel: "PVPRUN", formatted: "PVP Run" },
-  { hypixel: "TNTAG", formatted: "TNT Tag" },
-  { hypixel: "TNTRUN", formatted: "TNT Run" },
-  { hypixel: "BOWSPLEEF", formatted: "Bow Spleef" },
-  { hypixel: "CAPTURE", formatted: "Wizards" },
+  { api: "tntRun", hypixel: "TNTRUN", formatted: "TNT Run" },
+  { api: "pvpRun", hypixel: "PVPRUN", formatted: "PVP Run" },
+  { api: "bowSpleef", hypixel: "BOWSPLEEF" },
+  { api: "tntTag", hypixel: "TNTAG", formatted: "TNT Tag" },
+  {
+    api: "wizards",
+    hypixel: "CAPTURE",
+    submodes: [
+      { api: "overall" },
+      { api: "fireWizard" },
+      { api: "iceWizard" },
+      { api: "witherWizard" },
+      { api: "kineticWizard" },
+      { api: "bloodWizard" },
+      { api: "toxicWizard" },
+      { api: "hydroWizard" },
+      { api: "ancientWizard" },
+      { api: "stormWizard" },
+      { api: "arcaneWizard" },
+    ],
+  },
 ] as const);
 
 export type TNTGamesModes = ExtractGameModes<typeof TNT_GAMES_MODES>;
@@ -29,33 +45,31 @@ export class TNTGames {
   @Field()
   public wins: number;
 
-  @Field()
-  public blocksRan: number;
-
-  @Field({ leaderboard: { fieldName: "TNT Run" } })
+  @Field({
+    leaderboard: { fieldName: "TNT Run", extraDisplay: "this.tntRun.naturalPrefix" },
+  })
   public tntRun: TNTRun;
 
-  @Field({ leaderboard: { fieldName: "PVP Run" } })
+  @Field({ leaderboard: { fieldName: "PVP Run", extraDisplay: "this.pvpRun.naturalPrefix" } })
   public pvpRun: PVPRun;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: "this.bowSpleef.naturalPrefix" } })
   public bowSpleef: BowSpleef;
 
-  @Field()
+  @Field({ leaderboard: { extraDisplay: "this.wizards.naturalPrefix" } })
   public wizards: Wizards;
 
-  @Field({ leaderboard: { fieldName: "TNT Tag" } })
+  @Field({ leaderboard: { fieldName: "TNT Tag", extraDisplay: "this.tntTag.naturalPrefix" } })
   public tntTag: TNTTag;
 
   public constructor(data: APIData, ap: APIData) {
     this.coins = data.coins;
     this.wins = data.wins;
-    this.blocksRan = ap.tntgames_block_runner;
 
-    this.tntRun = new TNTRun(data);
+    this.tntRun = new TNTRun(data, ap);
     this.pvpRun = new PVPRun(data);
     this.bowSpleef = new BowSpleef(data);
-    this.wizards = new Wizards(data);
+    this.wizards = new Wizards(data, ap);
     this.tntTag = new TNTTag(data, ap);
   }
 }

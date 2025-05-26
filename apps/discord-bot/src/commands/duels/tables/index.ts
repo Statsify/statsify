@@ -10,3 +10,4 @@ export * from "./bridge-duels.table.js";
 export * from "./multi-duels-game-mode.table.js";
 export * from "./single-duels-game-mode.table.js";
 export * from "./uhc-duels.table.js";
+export * from "./titles.table.js";

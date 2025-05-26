@@ -24,7 +24,7 @@ import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { noop } from "@statsify/util";
 import { render } from "@statsify/rendering";
-import type { GameMode, GameModeWithSubModes, GameModes, Player, User } from "@statsify/schemas";
+import type { ApiModeFromGameModes, ApiSubModeForMode, GameMode, GameModeWithSubModes, GameModes, Player, SubModeForMode, User } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
 
 export type ProfileTime = "LIVE" | HistoricalTimeData;
@@ -50,7 +50,9 @@ export type ModeEmoji = LocalizationString | false | undefined;
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   getPreProfileData?(player: Player): K | Promise<K>;
   filterModes?(player: Player, modes: GameModeWithSubModes<T>[]): GameModeWithSubModes<T>[];
+  filterSubmodes?(player: Player, mode: GameModeWithSubModes<T>): GameModeWithSubModes<T>["submodes"];
   getModeEmojis?(modes: GameModeWithSubModes<T>[]): ModeEmoji[];
+  getSubModeEmojis?<M extends ApiModeFromGameModes<T>>(mode: M, submodes: SubModeForMode<T, M>[]): ModeEmoji[];
 }
 
 @Command({
@@ -90,7 +92,13 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
         emoji: emojis[index],
       };
 
-      if (mode.submodes.length === 0) {
+      const filteredSubmodes = this.filterSubmodes?.(player, mode) ?? mode.submodes;
+      const submodeEmojis = this.getSubModeEmojis?.(
+        mode.api,
+        filteredSubmodes as SubModeForMode<T, (typeof mode)["api"]>[]
+      ) ?? [];
+
+      if (filteredSubmodes.length === 0) {
         const gameMode = { ...mode, submode: undefined } as unknown as GameMode<T>;
 
         return {
@@ -117,10 +125,11 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
         };
       }
 
-      const subPages = mode.submodes.map((submode): SubPage => ({
+      const subPages = filteredSubmodes.map((submode, index): SubPage => ({
         label: submode.formatted,
+        emoji: submodeEmojis[index],
         generator: async (t) => {
-          const background = await getBackground(...mapBackground(this.modes, mode.api));
+          const background = await getBackground(...mapBackground(this.modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
 
           const gameMode = {
             api: mode.api,

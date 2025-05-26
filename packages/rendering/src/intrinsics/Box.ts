@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type CanvasRenderingContext2D } from "skia-canvas";
 import type * as JSX from "#jsx";
-import type { CanvasRenderingContext2D } from "skia-canvas";
 import type { DeferredGradient } from "#hooks";
 
 export interface BoxBorderRadius {
@@ -50,7 +50,7 @@ export const resolveFill = (
   return fill(ctx, x, y, width, height);
 };
 
-export const DEFAULT_COLOR = "rgba(0, 0, 0, 0.5)";
+export const DEFAULT_COLOR = "rgba(0, 10, 5, 0.5)";
 export const SHADOW_OPACITY = 0.84;
 
 export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
@@ -86,6 +86,21 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   },
   children,
 });
+
+export const renderOverlay = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  height: number
+) => {
+  ctx.globalCompositeOperation = "overlay";
+  const overlay = ctx.createLinearGradient(x, y, x, y + height);
+  overlay.addColorStop(0, "rgba(255, 255, 255, 0.30)");
+  overlay.addColorStop(1, "rgba(0, 0, 0, 0.30)");
+  ctx.fillStyle = overlay;
+  ctx.fill();
+  ctx.globalCompositeOperation = "source-over";
+};
 
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
@@ -129,16 +144,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.closePath();
   ctx.fill();
 
-  ctx.globalCompositeOperation = "overlay";
-
-  const overlay = ctx.createLinearGradient(x, y, x, y + height);
-  overlay.addColorStop(0, "rgba(255, 255, 255, 0.15)");
-  overlay.addColorStop(1, "rgba(0, 0, 0, 0.15)");
-  ctx.fillStyle = overlay;
-
-  ctx.fill();
-
-  ctx.globalCompositeOperation = "source-over";
+  renderOverlay(ctx, x, y, height);
 
   if (outline) {
     ctx.strokeStyle =

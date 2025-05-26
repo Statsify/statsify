@@ -33,19 +33,22 @@ export class Event {
   }
 }
 
-export type EventTypes = Exclude<keyof Events, "silver">;
-export type EventPeriods = "summer" | "halloween" | "christmas" | "easter";
+export type EventType = { period: EventPeriod; year: number; key: Exclude<keyof Events, "silver"> };
+export type EventPeriod = "summer" | "halloween" | "christmas" | "easter";
 
-export const EVENT_TYPES: EventTypes[] = [
-  "summer2024",
-  "easter2024",
-  "christmas2023",
-  "halloween2023",
-  "summer2023",
-  "easter2023",
-  "christmas2022",
-  "halloween2022",
-  "summer2022",
+export const EVENT_TYPES: EventType[] = [
+  { period: "easter", year: 2025, key: "easter2025" },
+  { period: "christmas", year: 2024, key: "christmas2024" },
+  { period: "halloween", year: 2024, key: "halloween2024" },
+  { period: "summer", year: 2024, key: "summer2024" },
+  { period: "easter", year: 2024, key: "easter2024" },
+  { period: "christmas", year: 2023, key: "christmas2023" },
+  { period: "halloween", year: 2023, key: "halloween2023" },
+  { period: "summer", year: 2023, key: "summer2023" },
+  { period: "easter", year: 2023, key: "easter2023" },
+  { period: "christmas", year: 2022, key: "christmas2022" },
+  { period: "halloween", year: 2022, key: "halloween2022" },
+  { period: "summer", year: 2022, key: "summer2022" },
 ];
 
 export class Events {
@@ -76,6 +79,15 @@ export class Events {
   @Field({ leaderboard: { name: "Summer 2024" } })
   public summer2024: Event;
 
+  @Field({ leaderboard: { name: "Halloween 2024" } })
+  public halloween2024: Event;
+
+  @Field({ leaderboard: { name: "Christmas 2024" } })
+  public christmas2024: Event;
+
+  @Field({ leaderboard: { name: "Easter 2025" } })
+  public easter2025: Event;
+
   @Field()
   public silver: number;
 
@@ -89,6 +101,9 @@ export class Events {
     this.christmas2023 = new Event(10_000, data.christmas?.["2023"]);
     this.easter2024 = new Event(10_000, data.easter?.["2024"]);
     this.summer2024 = new Event(25_000, data.summer?.["2024"]);
+    this.halloween2024 = new Event(10_000, data.halloween?.["2024"]);
+    this.christmas2024 = new Event(10_000, data.christmas?.["2024"]);
+    this.easter2025 = new Event(10_000, data.easter?.["2025"]);
 
     this.silver = data.silver;
   }

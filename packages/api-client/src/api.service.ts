@@ -21,7 +21,6 @@ import {
   GetKeyResponse,
   GetPlayerResponse,
   GetPlayerSearchResponse,
-  GetRecentGamesResponse,
   GetSessionResponse,
   GetSkinTexturesResponse,
   GetStatusResponse,
@@ -30,6 +29,7 @@ import {
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
   PutUserBadgeResponse,
+  SuccessResponse,
 } from "#responses";
 import { User, UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
@@ -75,16 +75,6 @@ export class ApiService {
     return this.request<DeletePlayerResponse>("/player", { player: tag }, "DELETE")
       .then(() => true)
       .catch(() => false);
-  }
-
-  public getRecentGames(tag: string) {
-    return this.requestKey<GetRecentGamesResponse, "recentGames">(
-      "/player/recentgames",
-      "recentGames",
-      {
-        player: tag,
-      }
-    );
   }
 
   public getStatus(tag: string) {
@@ -204,6 +194,16 @@ export class ApiService {
     return this.request<GetPlayerResponse>(
       "/session",
       { player: tag },
+      "PATCH"
+    );
+  }
+
+  public deletePlayerSession(
+    id: string
+  ) {
+    return this.request<SuccessResponse>(
+      "/session",
+      { id },
       "DELETE"
     );
   }

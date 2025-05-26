@@ -27,6 +27,7 @@ import {
   PixelPartyTable,
   SeasonalTable,
   ThrowOutTable,
+  ZombiesMapTable,
   ZombiesTable,
 } from "./modes/index.js";
 import { Container, Footer, Header, SidebarItem } from "#components";
@@ -55,7 +56,7 @@ export const ArcadeProfile = ({
     [t("stats.arcadeWins"), t(arcade.wins), "§b"],
   ];
 
-  const { api } = mode;
+  const { api, submode } = mode;
   let table: JSX.Element;
 
   switch (api) {
@@ -76,7 +77,7 @@ export const ArcadeProfile = ({
       break;
 
     case "dropper":
-      table = <DropperTable stats={arcade[api]} t={t} time={time} />;
+      table = <DropperTable stats={arcade[api]} t={t} time={time} submode={mode.submode} />;
       break;
 
     case "enderSpleef":
@@ -112,7 +113,7 @@ export const ArcadeProfile = ({
       break;
 
     case "partyGames":
-      table = <PartyGamesTable stats={arcade[api]} t={t} />;
+      table = <PartyGamesTable stats={arcade[api]} t={t} submode={mode.submode} time={time} />;
       break;
 
     case "pixelPainters":
@@ -132,7 +133,9 @@ export const ArcadeProfile = ({
       break;
 
     case "zombies":
-      table = <ZombiesTable stats={arcade[api]} t={t} time={time} />;
+      table = submode.api === "overall" ?
+        <ZombiesTable stats={arcade[api]} t={t} time={time} /> :
+        <ZombiesMapTable stats={arcade[api]} map={submode.api} t={t} time={time} />;
       break;
 
     default:
@@ -149,7 +152,7 @@ export const ArcadeProfile = ({
         sidebar={sidebar}
         title={`§l${FormattedGame.ARCADE} §f${
           api === "overall" ? t("stats.wins") : "Stats"
-        } §r(${mode.formatted})`}
+        } §r(${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""})`}
         time={time}
       />
       {table}

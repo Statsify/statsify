@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import renownUpgrades from "./renown-upgrades.json" with { type: "json" };
 import { romanNumeral } from "@statsify/util";
 
 const XP_MAP = [15, 30, 50, 75, 125, 300, 600, 800, 900, 1000, 1200, 1500];
@@ -118,3 +119,20 @@ export const getLevelFormatted = (level: number, prestige: number) => {
     prestige > 0 ? `§e${romanNumeral(prestige)}§${presColor}-` : ""
   }§${levelColor}${level}§r§${presColor}]`;
 };
+
+const upgrades = renownUpgrades as Record<string, number[]>;
+
+export type RenownUnlock = { key: string; tier: number };
+
+export function getRenownShopCost(renownUnlocks: RenownUnlock[]) {
+  let cost = 0;
+
+  for (const unlock of renownUnlocks) {
+    if (unlock.key in upgrades) {
+      const upgrade = upgrades[unlock.key];
+      cost += upgrade[unlock.tier] ?? upgrade[0];
+    }
+  }
+
+  return cost;
+}

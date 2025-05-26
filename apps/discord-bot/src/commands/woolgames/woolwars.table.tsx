@@ -8,31 +8,35 @@
 
 import { If, Table } from "#components";
 import type { LocalizeFunction } from "@statsify/discord";
-import type { SubModesForMode, WoolGamesModes, WoolWars } from "@statsify/schemas";
+import type { SubModeForMode, WoolGamesModes, WoolWars, WoolWarsOverall } from "@statsify/schemas";
 
 export interface WoolWarsTableProps {
   woolwars: WoolWars;
-  submode: SubModesForMode<WoolGamesModes, "woolwars">;
+  submode: SubModeForMode<WoolGamesModes, "woolwars">;
   t: LocalizeFunction;
 }
 
 export const WoolWarsTable = ({ woolwars, submode, t }: WoolWarsTableProps) => {
-  const stats = woolwars.overall;
+  const stats = woolwars[submode.api];
 
   return (
     <>
       <If condition={submode.api === "overall"}>
-        {() => (
-          <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-            <Table.td
-              title={t("stats.losses")}
-              value={t(stats.losses)}
-              color="§c"
-            />
-            <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
-          </Table.tr>
-        )}
+        {() => {
+          const overall = stats as WoolWarsOverall;
+
+          return (
+            <Table.tr>
+              <Table.td title={t("stats.wins")} value={t(overall.wins)} color="§a" />
+              <Table.td
+                title={t("stats.losses")}
+                value={t(overall.losses)}
+                color="§c"
+              />
+              <Table.td title={t("stats.wlr")} value={t(overall.wlr)} color="§6" />
+            </Table.tr>
+          );
+        }}
       </If>
       <Table.tr>
         <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />

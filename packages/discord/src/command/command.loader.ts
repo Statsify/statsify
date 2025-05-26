@@ -37,6 +37,11 @@ export class CommandLoader {
 
     return Object.keys(command)
       .filter((key) => key !== "default")
+      .filter((key) => {
+        const value = command[key];
+        // try to filter out function exports since classes will not have a writeable prototype.
+        return typeof value === "function" && !(Object.getOwnPropertyDescriptor(value, "prototype")?.writable);
+      })
       .map((key) => {
         try {
           const constructor = command[key];

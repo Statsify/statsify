@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export const convertColorCodes = (content: string) =>
-  content
-    .replaceAll(String.raw`\&`, "󰀀")
-    .replace(/&\S/g, (m) => m.replace("&", "§"))
-    .replaceAll("󰀀", "&");
+export const convertColorCodes = (content: string) => content
+  .replaceAll(String.raw`\&`, "󰀀")
+  .replace(/&\S/g, (m) => m.replace("&", "§"))
+  .replaceAll("󰀀", "&");
+

@@ -590,6 +590,27 @@ export class HoleInTheWall {
   }
 }
 
+export class HypixelSaysMode {
+  @Field()
+  public points: number;
+
+  @Field()
+  public roundsWon: number;
+
+  @Field({ leaderboard: { additionalFields: ["this.roundsWon", "this.points"] } })
+  public wins: number;
+
+  @Field({ historical: { enabled: false } })
+  public maxScore: number;
+
+  public constructor(data: APIData, mode: "simon" | "santa") {
+    this.points = data[`rounds_${mode}_says`];
+    this.roundsWon = data[`round_wins_${mode}_says`];
+    this.wins = data[`wins_${mode}_says`];
+    this.maxScore = data[`top_score_${mode}_says`] ?? 0;
+  }
+}
+
 export class HypixelSays {
   @Field()
   public points: number;
@@ -603,13 +624,22 @@ export class HypixelSays {
   @Field({ historical: { enabled: false } })
   public maxScore: number;
 
+  @Field()
+  public simonSays: HypixelSaysMode;
+
+  @Field({ leaderboard: { enabled: false } })
+  public santaSays: HypixelSaysMode;
+
   public constructor(data: APIData) {
-    this.points = add(data.rounds_simon_says, data.rounds_santa_says);
-    this.roundsWon = add(data.round_wins_simon_says, data.round_wins_santa_says);
-    this.wins = add(data.wins_simon_says, data.wins_santa_says);
+    this.simonSays = new HypixelSaysMode(data, "simon");
+    this.santaSays = new HypixelSaysMode(data, "santa");
+
+    this.points = add(this.simonSays.points, this.santaSays.points);
+    this.roundsWon = add(this.simonSays.roundsWon, this.santaSays.roundsWon);
+    this.wins = add(this.simonSays.wins, this.santaSays.wins);
     this.maxScore = Math.max(
-      data.top_score_simon_says ?? 0,
-      data.top_score_santa_says ?? 0
+      this.simonSays.maxScore,
+      this.santaSays.maxScore
     );
   }
 }
@@ -739,7 +769,8 @@ export class PartyGames {
   @Field()
   public workshopWins: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  // The goal of anvil spleef is to live the longest not the shortest so we sort in descending order
+  @Field({ leaderboard: { formatter: formatRaceTime } })
   public anvilSpleefBestTime: number;
 
   @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
@@ -757,7 +788,8 @@ export class PartyGames {
   @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
   public jungleJumpBestTime: number;
 
-  @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
+  // The goal of bombardment is to live the longest not the shortest so we sort in descending order
+  @Field({ leaderboard: { formatter: formatRaceTime } })
   public bombardmentBestTime: number;
 
   @Field({ leaderboard: { formatter: formatRaceTime, sort: "ASC" } })
@@ -951,7 +983,7 @@ export class ThrowOut {
   }
 }
 
-export class ZombiesMap {
+export class ZombiesMapDifficulty {
   @Field({
     leaderboard: { additionalFields: ["this.fastestWin"] },
     historical: { enabled: false },
@@ -977,21 +1009,58 @@ export class ZombiesMap {
   @Field({ leaderboard: { enabled: false } })
   public bestRound: number;
 
-  public constructor(data: APIData, map?: string) {
-    map = map ? `_${map}` : "";
+  @Field()
+  public doorsOpened: number;
 
-    this.wins = data[`wins_zombies${map}`];
-    this.fastestWin =
-      (data[`fastest_time_30_zombies${map ? `${map}_normal` : ""}`] ?? 0) * 1000;
-    this.kills = data[`zombie_kills_zombies${map}`];
-    this.deaths = data[`deaths_zombies${map}`];
-    this.bestRound = data[`best_round_zombies${map}`];
+  @Field()
+  public totalRounds: number;
+
+  public constructor(data: APIData, map?: string, difficulty?: string) {
+    const mode = map ? `_${map}${difficulty ? `_${difficulty}` : ""}` : "";
+
+    this.wins = data[`wins_zombies${mode}`];
+    this.fastestWin = (data[`fastest_time_30_zombies${mode}`] ?? 0) * 1000;
+    this.kills = data[`zombie_kills_zombies${mode}`];
+    this.deaths = data[`deaths_zombies${mode}`];
+    this.bestRound = data[`best_round_zombies${mode}`];
+    this.doorsOpened = data[`deaths_zombies${mode}`];
+    this.totalRounds = data[`total_rounds_survived_zombies${mode}`];
+  }
+}
+
+export class ZombiesMap {
+  @Field()
+  public normal: ZombiesMapDifficulty;
+
+  @Field()
+  public hard: ZombiesMapDifficulty;
+
+  @Field()
+  public rip: ZombiesMapDifficulty;
+
+  @Field()
+  public overall: ZombiesMapDifficulty;
+
+  public constructor(data: APIData, map?: string) {
+    this.normal = new ZombiesMapDifficulty(data, map, "normal");
+    this.hard = new ZombiesMapDifficulty(data, map, "hard");
+    this.rip = new ZombiesMapDifficulty(data, map, "rip");
+    this.overall = new ZombiesMapDifficulty(data, map);
+
+    this.overall.fastestWin = Math.min(
+      this.normal.fastestWin || Number.MAX_SAFE_INTEGER,
+      this.hard.fastestWin || Number.MAX_SAFE_INTEGER,
+      this.rip.fastestWin || Number.MAX_SAFE_INTEGER
+    );
+    this.overall.fastestWin = this.overall.fastestWin === Number.MAX_SAFE_INTEGER ?
+      0 :
+      this.overall.fastestWin;
   }
 }
 
 export class Zombies {
   @Field()
-  public overall: ZombiesMap;
+  public overall: ZombiesMapDifficulty;
 
   @Field()
   public deadEnd: ZombiesMap;
@@ -1000,16 +1069,20 @@ export class Zombies {
   public badBlood: ZombiesMap;
 
   @Field()
-  public alienArcadium: ZombiesMap;
+  public alienArcadium: ZombiesMapDifficulty;
 
   @Field()
   public prison: ZombiesMap;
 
   public constructor(data: APIData) {
-    this.overall = new ZombiesMap(data);
+    this.overall = new ZombiesMapDifficulty(data);
     this.deadEnd = new ZombiesMap(data, "deadend");
     this.badBlood = new ZombiesMap(data, "badblood");
-    this.alienArcadium = new ZombiesMap(data, "alienarcadium");
+
+    this.alienArcadium = new ZombiesMapDifficulty(data, "alienarcadium");
+    // Alien Arcadium doesn't have different difficulties but fastest time is stored as "normal" difficulty
+    this.alienArcadium.fastestWin = (data[`fastest_time_30_zombies_alienarcadium_normal`] ?? 0) * 1000;
+
     this.prison = new ZombiesMap(data, "prison");
   }
 }

@@ -16,11 +16,13 @@ import { DateTime } from "luxon";
 import {
   Inject,
   Injectable,
+  UnauthorizedException,
   forwardRef,
 } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import {
   Player,
+  User,
   createHistoricalPlayer,
   deserialize,
   serialize,
@@ -36,7 +38,8 @@ export class SessionService {
   public constructor(
     @Inject(forwardRef(() => PlayerService))
     private readonly playerService: Circular<PlayerService>,
-    @InjectModel(Session) private readonly sessionModel: PlayerModel
+    @InjectModel(Session) private readonly sessionModel: PlayerModel,
+    @InjectModel(User) private readonly userModel: ReturnModelType<typeof User>
   ) {}
 
   public async getAndReset(tag: string) {
@@ -98,5 +101,23 @@ export class SessionService {
     merged.isNew = isNew;
 
     return merged;
+  }
+
+  public async delete(discordId: string) {
+    const user = await this.userModel
+      .findOne()
+      .where("id")
+      .equals(discordId)
+      .lean()
+      .exec();
+
+    if (!user || !user.uuid) throw new UnauthorizedException();
+
+    await this.sessionModel
+      .deleteOne()
+      .where("uuid")
+      .equals(user.uuid)
+      .lean()
+      .exec();
   }
 }

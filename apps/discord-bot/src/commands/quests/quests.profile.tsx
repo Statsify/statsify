@@ -90,6 +90,8 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
   const BOX_COLOR = (colorPalette?.boxes?.color as string) ?? Box.DEFAULT_COLOR;
 
   const entries: GameEntry[] = questEntries
+    // Require more than just a total field
+    .filter(([_, q]) => Object.keys(q).length > 1)
     .map(([k, v]) => [k, v, Object.keys(v).length - 1] as const)
     .sort((a, b) => ratio(b[1]?.total ?? 0, b[2]) - ratio(a[1]?.total ?? 0, a[2]))
     .map(([k, v, total]) => {
@@ -183,7 +185,7 @@ export const QuestsProfile = ({
 }: QuestProfileProps) => {
   const { quests } = player.stats;
 
-  let period: "overall" | "weekly" | "daily";
+  let period: "overall" | "weekly" | "daily" | "monthly";
   let historicalTime: "LIVE" | HistoricalTimeData;
 
   switch (time) {
@@ -200,6 +202,11 @@ export const QuestsProfile = ({
     case QuestTime.Daily:
       period = "daily";
       historicalTime = { timeType: HistoricalTimes.DAILY };
+      break;
+
+    case QuestTime.Monthly:
+      period = "monthly";
+      historicalTime = { timeType: HistoricalTimes.MONTHLY };
       break;
   }
 

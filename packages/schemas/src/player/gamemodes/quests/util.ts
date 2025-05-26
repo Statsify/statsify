@@ -7,9 +7,9 @@
  */
 
 import {
-  APIData,
-  Constructor,
-  UnwrapConstructor,
+  type APIData,
+  type Constructor,
+  type UnwrapConstructor,
   removeFormatting,
 } from "@statsify/util";
 import { DateTime } from "luxon";
@@ -23,6 +23,7 @@ interface Quest {
 export enum QuestTime {
   Daily,
   Weekly,
+  Monthly,
   Overall
 }
 
@@ -40,7 +41,8 @@ export interface QuestOption<TField extends string> {
 
 export interface CreateQuestsOptions<
   DailyFields extends string,
-  WeeklyFields extends string
+  WeeklyFields extends string,
+  MonthlyFields extends string
 > {
   game: FormattedGame;
   fieldPrefix?: string;
@@ -54,6 +56,11 @@ export interface CreateQuestsOptions<
    * A list of weekly quests
    */
   weekly: QuestOption<WeeklyFields>[];
+
+  /**
+   * A list of monthly quests
+   */
+  monthly?: QuestOption<MonthlyFields>[];
 }
 
 const processQuests = (
@@ -110,23 +117,27 @@ type GameWithQuestMode<Fields extends string> = {
   [K in Fields]: number;
 } & { total: number };
 
-type GameWithQuests<DailyFields extends string, WeeklyFields extends string> = [
+type GameWithQuests<DailyFields extends string, WeeklyFields extends string, MonthlyFields extends string> = [
   daily: Constructor<GameWithQuestMode<DailyFields>>,
   weekly: Constructor<GameWithQuestMode<WeeklyFields>>,
-  overall: Constructor<GameWithQuestMode<DailyFields | WeeklyFields>>
+  monthly: Constructor<GameWithQuestMode<MonthlyFields>>,
+  overall: Constructor<GameWithQuestMode<DailyFields | WeeklyFields | MonthlyFields>>
 ];
 
 export function createGameModeQuests<
   DailyFields extends string,
-  WeeklyFields extends string
+  WeeklyFields extends string,
+  MonthlyFields extends string
 >({
   game,
   fieldPrefix,
   daily,
   weekly,
-}: CreateQuestsOptions<DailyFields, WeeklyFields>): GameWithQuests<
+  monthly = [],
+}: CreateQuestsOptions<DailyFields, WeeklyFields, MonthlyFields>): GameWithQuests<
     DailyFields,
-    WeeklyFields
+    WeeklyFields,
+    MonthlyFields
   > {
   class Daily {
     [key: string]: number;
@@ -156,6 +167,20 @@ export function createGameModeQuests<
 
   assignQuestMetadata(Weekly, QuestTime.Weekly, weekly);
 
+  class Monthly {
+    [key: string]: number;
+
+    @Field(questTotalFieldData(game))
+    public total: number;
+
+    public constructor(quests: APIData) {
+      this.total = 0;
+      processQuests(this, quests, QuestTime.Monthly, monthly, fieldPrefix);
+    }
+  }
+
+  assignQuestMetadata(Monthly, QuestTime.Monthly, monthly);
+
   class Overall {
     [key: string]: number;
 
@@ -167,24 +192,26 @@ export function createGameModeQuests<
 
       processQuests(this, quests, QuestTime.Overall, daily, fieldPrefix);
       processQuests(this, quests, QuestTime.Overall, weekly, fieldPrefix);
+      processQuests(this, quests, QuestTime.Overall, monthly, fieldPrefix);
     }
   }
 
   assignQuestMetadata(Overall, QuestTime.Overall, daily);
   assignQuestMetadata(Overall, QuestTime.Overall, weekly);
+  assignQuestMetadata(Overall, QuestTime.Overall, monthly);
 
-  return [Daily, Weekly, Overall] as GameWithQuests<DailyFields, WeeklyFields>;
+  return [Daily, Weekly, Monthly, Overall] as GameWithQuests<DailyFields, WeeklyFields, MonthlyFields>;
 }
 
 type BaseGamesWithQuestsRecord = {
-  [K in keyof typeof FormattedGame]?: GameWithQuests<string, string>;
+  [K in keyof typeof FormattedGame]?: GameWithQuests<string, string, string>;
 };
 
 type IQuestInstance<
   Time extends QuestTime,
   GamesWithQuests extends BaseGamesWithQuestsRecord
 > = Constructor<{
-  [K in keyof GamesWithQuests]: GamesWithQuests[K] extends GameWithQuests<string, string>
+  [K in keyof GamesWithQuests]: GamesWithQuests[K] extends GameWithQuests<string, string, string>
     ? UnwrapConstructor<GamesWithQuests[K][Time]>
     : never;
 }>;
@@ -195,7 +222,7 @@ export function createQuestsInstance<
 >(time: Time, record: GamesWithQuests): IQuestInstance<Time, GamesWithQuests> {
   const modes = Object.entries(record) as [
     keyof typeof FormattedGame,
-    GameWithQuests<string, string>
+    GameWithQuests<string, string, string>
   ][];
 
   class QuestInstance {
@@ -229,14 +256,21 @@ export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) =
 
   let t: DateTime = DateTime.now().setZone("America/New_York");
 
-  if (time === QuestTime.Daily) {
-    t = t.startOf("day");
-  } else if (time === QuestTime.Weekly) {
-    t = t.startOf("week");
-    t =
-      t.plus({ days: 4 }).toMillis() < Date.now() ?
+  switch (time) {
+    case QuestTime.Daily:
+      t = t.startOf("day");
+      break;
+
+    case QuestTime.Weekly:
+      t = t.startOf("week");
+      t = t.plus({ days: 4 }).toMillis() < Date.now() ?
         t.plus({ days: 4 }) :
         t.minus({ days: 3 });
+      break;
+
+    case QuestTime.Monthly:
+      t = t.startOf("month");
+      break;
   }
 
   const millis = t.toMillis();

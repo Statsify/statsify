@@ -65,22 +65,11 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.lineTo(x + width - border.bottomRight - border.bottomRight, y + height);
   ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height);
   ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height - border.bottomLeft);
-  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft);
   ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft - border.bottomLeft);
   ctx.lineTo(x, y + height - border.bottomLeft - border.bottomLeft);
-  ctx.closePath();
   ctx.fill();
 
-  ctx.globalCompositeOperation = "overlay";
-
-  const overlay = ctx.createLinearGradient(x, y, x, y + height);
-  overlay.addColorStop(0, "rgba(255, 255, 255, 0.15)");
-  overlay.addColorStop(1, "rgba(0, 0, 0, 0.15)");
-  ctx.fillStyle = overlay;
-
-  ctx.fill();
-
-  ctx.globalCompositeOperation = "source-over";
+  Box.renderOverlay(ctx, x, y, height);
 
   if (outline) {
     ctx.strokeStyle =

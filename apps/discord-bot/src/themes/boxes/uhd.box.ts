@@ -59,20 +59,10 @@ export const render: Render<Box.BoxRenderProps> = (
 
   // Top Left Corner
   ctx.quadraticCurveTo(x, y, x + border.topLeft, y);
-
   ctx.closePath();
   ctx.fill();
 
-  ctx.globalCompositeOperation = "overlay";
-
-  const overlay = ctx.createLinearGradient(x, y, x, y + height);
-  overlay.addColorStop(0, "rgba(255, 255, 255, 0.15)");
-  overlay.addColorStop(1, "rgba(0, 0, 0, 0.15)");
-  ctx.fillStyle = overlay;
-
-  ctx.fill();
-
-  ctx.globalCompositeOperation = "source-over";
+  Box.renderOverlay(ctx, x, y, height);
 
   if (outline) {
     ctx.strokeStyle =
@@ -127,3 +117,4 @@ export const render: Render<Box.BoxRenderProps> = (
 
   ctx.globalAlpha = 1;
 };
+

@@ -16,31 +16,22 @@ import {
   formatProgression,
   lineXpBar,
 } from "#components";
+import { EVENT_COLORS } from "./event-colors.js";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
-import type { Event, EventPeriods, EventTypes } from "@statsify/schemas";
+import type { Event, EventPeriod, EventType } from "@statsify/schemas";
 import type { LocalizeFunction } from "@statsify/discord";
 
 interface EventTableProps {
-  type: EventTypes;
+  type: EventType;
   event: Event;
   t: LocalizeFunction;
 }
 
-const EVENT_COLORS: Record<EventPeriods, string> = {
-  summer: "§e",
-  halloween: "§5",
-  christmas: "§c",
-  easter: "§b",
-};
-
 const EventTable = ({ type, event, t }: EventTableProps) => {
-  const yearIndex = type.indexOf("20");
-  const year = type.slice(yearIndex, yearIndex + 4);
-  const period = type.slice(0, yearIndex);
-
+  const { period, year } = type;
   const title = `${prettify(period)} ${year}`;
-  const color = EVENT_COLORS[period as EventPeriods];
+  const color = EVENT_COLORS[period as EventPeriod];
 
   const levelling = [
     `§7${t("stats.event-level")}: ${color}${t(Math.floor(event.level))}`,
@@ -65,7 +56,7 @@ const EventTable = ({ type, event, t }: EventTableProps) => {
 };
 
 interface EventsProfileProps extends Omit<BaseProfileProps, "time"> {
-  eventNames: EventTypes[];
+  eventNames: EventType[];
 }
 
 export const EventsProfile = ({
@@ -96,7 +87,7 @@ export const EventsProfile = ({
         {arrayGroup(eventNames, 2).map((eventTypes) => (
           <Table.tr>
             {eventTypes.map((type) => (
-              <EventTable type={type} event={events[type]} t={t} />
+              <EventTable type={type} event={events[type.key]} t={t} />
             ))}
           </Table.tr>
         ))}

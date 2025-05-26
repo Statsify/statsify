@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseHypixelCommand, BaseProfileProps } from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, type BaseProfileProps, type ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
-import { TNTGamesModes, TNT_GAMES_MODES } from "@statsify/schemas";
+import { type TNTGamesModes, TNT_GAMES_MODES } from "@statsify/schemas";
 import { TNTGamesProfile } from "./tntgames.profile.js";
 
 @Command({ description: (t) => t("commands.tntgames") })
@@ -17,7 +17,7 @@ export class TNTGamesCommand extends BaseHypixelCommand<TNTGamesModes> {
     super(TNT_GAMES_MODES);
   }
 
-  public getProfile(base: BaseProfileProps): JSX.Element {
-    return <TNTGamesProfile {...base} />;
+  public getProfile(base: BaseProfileProps, { mode }: ProfileData<TNTGamesModes>): JSX.Element {
+    return <TNTGamesProfile {...base} mode={mode} />;
   }
 }

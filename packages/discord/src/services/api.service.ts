@@ -16,10 +16,10 @@ import {
   GuildQuery,
   LeaderboardQuery,
   PlayerNotFoundException,
-  RecentGamesNotFoundException,
   SessionNotFoundException,
   ApiService as StatsifyApiService,
   StatusNotFoundException,
+  SuccessResponse,
 } from "@statsify/api-client";
 import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
@@ -76,40 +76,6 @@ export class ApiService extends StatsifyApiService {
         throw new ErrorMessage(
           (t) => t("errors.invalidSession.title"),
           (t) => t("errors.invalidSession.description", { displayName: this.emojiDisplayName(t, displayName) })
-        );
-      }
-
-      throw this.unknownError();
-    });
-  }
-
-  /**
-   *
-   * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
-   * @param user User to use if no tag is provided.
-   * @returns The player's recent games
-   */
-  public override async getRecentGames(tag: string, user: User | null = null) {
-    const [formattedTag, type] = this.parseTag(tag);
-    const input = await this.resolveTag(formattedTag, type, user);
-
-    return super.getRecentGames(input).catch((err) => {
-      if (!err.response || !err.response.data) throw this.unknownError();
-      const error = err.response.data as
-        | RecentGamesNotFoundException
-        | PlayerNotFoundException;
-
-      if (error.message === "player") throw this.missingPlayer(type, tag);
-
-      if (error.message === "recentGames") {
-        const { displayName } = error as RecentGamesNotFoundException;
-
-        throw new ErrorMessage(
-          (t) => t("errors.noRecentGames.title"),
-          (t) =>
-            t("errors.noRecentGames.description", {
-              displayName: this.emojiDisplayName(t, displayName),
-            })
         );
       }
 
@@ -247,6 +213,12 @@ export class ApiService extends StatsifyApiService {
       if (error.message === "player") throw this.missingPlayer(type, tag);
 
       throw this.unknownError();
+    });
+  }
+
+  public override async deletePlayerSession(id: string): Promise<SuccessResponse> {
+    return super.deletePlayerSession(id).catch(() => {
+      throw new ErrorMessage("verification.requiredVerification");
     });
   }
 
