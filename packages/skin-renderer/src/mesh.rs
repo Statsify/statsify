@@ -52,6 +52,11 @@ impl<'a> DrawMesh<'a> for wgpu::RenderPass<'a> {
     camera_bind_group: &'a wgpu::BindGroup,
     light_bind_group: &'a wgpu::BindGroup,
   ) {
+    // wgpu panics if the mesh is empty: https://github.com/gfx-rs/wgpu/issues/6779
+    if mesh.indices == 0 {
+      return;
+    }
+
     self.set_vertex_buffer(0, mesh.vertex_buffer.slice(..));
     self.set_index_buffer(mesh.index_buffer.slice(..), wgpu::IndexFormat::Uint32);
     self.set_bind_group(0, &material.bind_group, &[]);
