@@ -209,6 +209,8 @@ impl Model {
     let texture = Texture::from_image(device, queue, &image).unwrap();
     let material = Material::new(device, texture, layout);
 
+    // When the meshes exactly overlap a weird flickering occurs called z fighting
+    // This is fixed by making some parts slightly bigger
     let z_fighting_scale = 0.002;
     let (head_inner, head_outer) = head.create(1.0 + 2.0 * z_fighting_scale, device);
     let (body_inner, body_outer) = body.create(1.0, device);
