@@ -13,7 +13,7 @@ pub trait Backend {
   fn queue(&self) -> &wgpu::Queue;
 
   fn create_instance() -> wgpu::Instance {
-    wgpu::Instance::new(wgpu::InstanceDescriptor {
+    wgpu::Instance::new(&wgpu::InstanceDescriptor {
       backends: wgpu::Backends::all(),
       ..Default::default()
     })
@@ -23,7 +23,7 @@ pub trait Backend {
     instance
       .request_adapter(&wgpu::RequestAdapterOptions::default())
       .await
-      .ok_or(Error::MissingAdapter)
+      .map_err(|_| Error::MissingAdapter)
   }
 
   async fn request_device(

@@ -57,11 +57,11 @@ impl OrbitalCamera {
       theta: -0.245,
       phi: 1.383,
 
-      min_polar_angle: std::f32::NEG_INFINITY,
-      max_polar_angle: std::f32::INFINITY,
+      min_polar_angle: f32::NEG_INFINITY,
+      max_polar_angle: f32::INFINITY,
 
-      min_azimuth_angle: std::f32::EPSILON,
-      max_azimuth_angle: std::f32::consts::PI - std::f32::EPSILON,
+      min_azimuth_angle: f32::EPSILON,
+      max_azimuth_angle: std::f32::consts::PI - f32::EPSILON,
 
       fovy: 40.0,
       znear: 0.1,

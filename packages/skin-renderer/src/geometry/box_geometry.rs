@@ -10,13 +10,12 @@ pub struct BoxGeometry {
   pub dimensions: Vector3<f32>,
   pub texture_region: TextureRegion,
   pub rotation: Option<Rotation>,
-  pub scale: f32,
 }
 
 impl BoxGeometry {
   pub fn create(self) -> Geometry {
     let mut geometry = Geometry::new(vec![], vec![]);
-    let prism = Prism::new(self.dimensions, self.position, self.scale);
+    let prism = Prism::new(self.dimensions, self.position);
 
     Orientation::iter()
       .for_each(|face| geometry.combine(prism.vertices(&face, &self.texture_region)));

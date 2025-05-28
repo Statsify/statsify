@@ -1,14 +1,14 @@
 use cgmath::Vector3;
 use strum::EnumIter;
 
-#[derive(EnumIter, Debug)]
+#[derive(EnumIter, Debug, PartialEq, Clone, Copy)]
 pub(super) enum Orientation {
   Left,
   Right,
-  Top,
   Bottom,
-  Front,
+  Top,
   Back,
+  Front,
 }
 
 impl Orientation {

@@ -66,14 +66,13 @@ impl Backend for NativeBackend {
     adapter: &wgpu::Adapter,
   ) -> Result<(wgpu::Device, wgpu::Queue), wgpu::RequestDeviceError> {
     adapter
-      .request_device(
-        &wgpu::DeviceDescriptor {
-          label: None,
-          features: wgpu::Features::empty(),
-          limits: wgpu::Limits::downlevel_defaults(),
-        },
-        None,
-      )
+      .request_device(&wgpu::DeviceDescriptor {
+        label: None,
+        required_features: wgpu::Features::empty(),
+        required_limits: wgpu::Limits::downlevel_defaults(),
+        memory_hints: Default::default(),
+        trace: wgpu::Trace::Off,
+      })
       .await
   }
 
@@ -86,6 +85,7 @@ impl Backend for NativeBackend {
       present_mode: wgpu::PresentMode::default(),
       alpha_mode: wgpu::CompositeAlphaMode::default(),
       view_formats: vec![],
+      desired_maximum_frame_latency: 2,
     }
   }
 
@@ -110,9 +110,9 @@ impl Backend for NativeBackend {
 
     encoder.copy_texture_to_buffer(
       self.texture.as_image_copy(),
-      wgpu::ImageCopyBuffer {
+      wgpu::TexelCopyBufferInfo {
         buffer: &output_buffer,
-        layout: wgpu::ImageDataLayout {
+        layout: wgpu::TexelCopyBufferLayout {
           offset: 0,
           bytes_per_row: Some(self.dimensions.padded_bytes_per_row),
           rows_per_image: Some(self.dimensions.height),
@@ -129,7 +129,7 @@ impl Backend for NativeBackend {
 
     self
       .device
-      .poll(wgpu::Maintain::WaitForSubmissionIndex(index));
+      .poll(wgpu::PollType::WaitForSubmissionIndex(index))?;
 
     if let Some(Ok(())) = receiver.receive().await {
       let padded_buffer = buffer_slice.get_mapped_range();
@@ -147,7 +147,7 @@ impl Backend for NativeBackend {
 
       let mut writer = BufWriter::new(Cursor::new(Vec::new()));
 
-      image.write_to(&mut writer, image::ImageOutputFormat::Png)?;
+      image.write_to(&mut writer, image::ImageFormat::Png)?;
 
       let bytes = writer.into_inner().unwrap().into_inner();
 

@@ -233,17 +233,19 @@ impl<T: Backend> SkinRenderer<T> {
       layout: Some(&layout),
       vertex: wgpu::VertexState {
         module: &shader,
-        entry_point: "vs_main",
+        entry_point: Some("vs_main"),
         buffers: &[Vertex::descriptor(), InstanceRaw::descriptor()],
+        compilation_options: wgpu::PipelineCompilationOptions::default(),
       },
       fragment: Some(wgpu::FragmentState {
         module: &shader,
-        entry_point: "fs_main",
+        entry_point: Some("fs_main"),
         targets: &[Some(wgpu::ColorTargetState {
           format: config.format,
           blend: Some(wgpu::BlendState::ALPHA_BLENDING),
           write_mask: wgpu::ColorWrites::ALL,
         })],
+        compilation_options: wgpu::PipelineCompilationOptions::default(),
       }),
       primitive: wgpu::PrimitiveState {
         topology: wgpu::PrimitiveTopology::TriangleList,
@@ -257,7 +259,7 @@ impl<T: Backend> SkinRenderer<T> {
       depth_stencil: Some(wgpu::DepthStencilState {
         format: Texture::DEPTH_FORMAT,
         depth_write_enabled: true,
-        depth_compare: wgpu::CompareFunction::Less,
+        depth_compare: wgpu::CompareFunction::LessEqual,
         stencil: wgpu::StencilState::default(),
         bias: wgpu::DepthBiasState::default(),
       }),
@@ -267,6 +269,7 @@ impl<T: Backend> SkinRenderer<T> {
         alpha_to_coverage_enabled: false,
       },
       multiview: None,
+      cache: None,
     })
   }
 
@@ -342,6 +345,7 @@ impl SkinRenderer<wasm::WasmBackend> {
 
   pub fn render(&self, model: &Model) {
     let (encoder, output_texture) = self.render_sync(model);
+
     self
       .backend
       .handle_encoder_after_render(encoder, output_texture)

@@ -15,6 +15,9 @@ pub enum Error {
   #[error(transparent)]
   RequestDevice(#[from] wgpu::RequestDeviceError),
 
+  #[error(transparent)]
+  Poll(#[from] wgpu::PollError),
+
   #[error("Instance did not provide any adapters")]
   MissingAdapter,
 

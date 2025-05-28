@@ -15,7 +15,7 @@ module.exports = {
   },
   swcMinify: true,
   poweredByHeader: false,
-  reactStrictMode: false,
+  reactStrictMode: true,
   redirects: () => [
     {
       source: "/invite",

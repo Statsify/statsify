@@ -24,6 +24,7 @@ pub async fn render_skin(skin: &[u8], slim: bool, extruded: bool) -> Result<Buff
   } else {
     ModelKind::Classic
   };
+
   let model_outer_layer = if extruded {
     ModelOuterLayer::D3
   } else {

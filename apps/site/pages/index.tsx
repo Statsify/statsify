@@ -32,7 +32,7 @@ import { Layout } from "../components/Layout";
 import { StatCircle, StatCircleContainer } from "../components/StatCircle";
 
 const Index = () => (
-  <Layout>
+  <>
     <StatCircleContainer>
       <StatCircle
         title="Servers"
@@ -159,7 +159,7 @@ const Index = () => (
       create your own Minecraft text with <Code>/text</Code>!
     </Feature>
     <Invite />
-  </Layout>
+  </>
 );
 
 export default Index;

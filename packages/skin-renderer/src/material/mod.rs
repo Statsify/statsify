@@ -1,7 +1,6 @@
 use crate::texture::Texture;
 
 pub struct Material {
-  pub diffuse_texture: Texture,
   pub bind_group: wgpu::BindGroup,
 }
 
@@ -26,9 +25,6 @@ impl Material {
       label: None,
     });
 
-    Self {
-      diffuse_texture,
-      bind_group,
-    }
+    Self { bind_group }
   }
 }

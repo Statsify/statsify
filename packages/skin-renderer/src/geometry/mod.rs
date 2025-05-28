@@ -1,14 +1,14 @@
 mod box_geometry;
 pub mod coordinate;
-mod extruded_geometry;
 mod orientation;
+mod outer_layer_geometry;
 mod prism;
 pub mod vertex;
 
 use cgmath::{Quaternion, Vector3};
 
 pub use self::box_geometry::*;
-pub use self::extruded_geometry::*;
+pub use self::outer_layer_geometry::*;
 pub use self::prism::TextureRegion;
 use self::vertex::Vertex;
 
@@ -43,5 +43,12 @@ impl Geometry {
       .vertices
       .iter_mut()
       .for_each(|vertex| vertex.rotate_around(rotation));
+  }
+
+  pub fn scale_around(&mut self, scale: f32, origin: Vector3<f32>) {
+    self
+      .vertices
+      .iter_mut()
+      .for_each(|vertex| vertex.scale_around(scale, origin));
   }
 }

@@ -45,6 +45,8 @@
   "todo-tree.tree.scanMode": "workspace only",
   "testing.automaticallyOpenPeekView": "never",
   "[rust]": {
-    "editor.defaultFormatter": "rust-lang.rust-analyzer"
-  }
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+  },
+  // Uncomment this for working with skin-renderer and WASM
+  // "rust-analyzer.cargo.target": "wasm32-unknown-unknown"
 }

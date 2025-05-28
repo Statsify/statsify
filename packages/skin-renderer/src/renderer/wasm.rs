@@ -1,3 +1,5 @@
+use std::sync::Arc;
+use wgpu::TextureFormat;
 use winit::dpi::PhysicalSize;
 use winit::window::Window;
 
@@ -8,9 +10,9 @@ pub struct WasmBackend {
   device: wgpu::Device,
   queue: wgpu::Queue,
   adapter: wgpu::Adapter,
-  pub surface: wgpu::Surface,
+  pub surface: wgpu::Surface<'static>,
 
-  window: Window,
+  window: Arc<Window>,
   pub size: PhysicalSize<u32>,
 
   pub mouse_pressed: bool,
@@ -19,7 +21,8 @@ pub struct WasmBackend {
 impl WasmBackend {
   pub async fn new(window: Window) -> SkinRendererResult<Self> {
     let instance = Self::create_instance();
-    let surface = unsafe { instance.create_surface(&window) }?;
+    let window = Arc::new(window);
+    let surface = instance.create_surface(Arc::clone(&window))?;
     let adapter = Self::request_adapter(instance).await?;
     let (device, queue) = Self::request_device(&adapter).await?;
 
@@ -50,20 +53,20 @@ impl Backend for WasmBackend {
     adapter: &wgpu::Adapter,
   ) -> Result<(wgpu::Device, wgpu::Queue), wgpu::RequestDeviceError> {
     adapter
-      .request_device(
-        &wgpu::DeviceDescriptor {
-          label: None,
-          features: wgpu::Features::empty(),
-          limits: wgpu::Limits::downlevel_webgl2_defaults(),
-        },
-        None,
-      )
+      .request_device(&wgpu::DeviceDescriptor {
+        label: None,
+        required_features: wgpu::Features::empty(),
+        required_limits: wgpu::Limits::downlevel_defaults(),
+        memory_hints: Default::default(),
+        trace: wgpu::Trace::Off,
+      })
       .await
   }
 
   fn create_config(&self) -> wgpu::SurfaceConfiguration {
     let surface_caps = self.surface.get_capabilities(&self.adapter);
 
+    // TODO: handle non srgb surfaces
     // Shader code in this tutorial assumes an Srgb surface texture. Using a
     // different one will result all the colors comming out darker. If you want
     // to support non Srgb surfaces, you'll need to account for that when
@@ -83,6 +86,7 @@ impl Backend for WasmBackend {
       present_mode: surface_caps.present_modes[0],
       alpha_mode: surface_caps.alpha_modes[0],
       view_formats: vec![],
+      desired_maximum_frame_latency: 2,
     };
 
     self.surface.configure(&self.device, &config);

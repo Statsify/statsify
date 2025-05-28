@@ -2,7 +2,7 @@ use cgmath::{Deg, Matrix3, Matrix4, Quaternion, Rotation3, Vector3, Zero};
 use image::DynamicImage;
 
 use crate::geometry::coordinate::Coordinate;
-use crate::geometry::{BoxGeometry, ExtrudedGeometry, Rotation, TextureRegion};
+use crate::geometry::{BoxGeometry, OuterLayerGeometry, Rotation, TextureRegion};
 use crate::instance::InstanceRaw;
 use crate::material::Material;
 use crate::mesh::{DrawMesh, Mesh};
@@ -20,6 +20,8 @@ pub enum ModelOuterLayer {
   D2,
 }
 
+const VOXEL_3D_THICKNESS: f32 = 0.75;
+
 struct CenterRotation {
   pub quaternion: Quaternion<f32>,
   pub pivot_delta: Vector3<f32>,
@@ -30,7 +32,6 @@ struct BodyPart<'a> {
   pub dimensions: Vector3<f32>,
 
   pub image: &'a DynamicImage,
-  pub voxel: f32,
 
   pub layer1_location: Coordinate<u32>,
   pub layer2_location: Coordinate<u32>,
@@ -41,7 +42,7 @@ struct BodyPart<'a> {
 }
 
 impl<'a> BodyPart<'a> {
-  fn create(mut self, device: &wgpu::Device) -> (Mesh, Mesh) {
+  fn create(mut self, scale: f32, device: &wgpu::Device) -> (Mesh, Mesh) {
     let texture_size = (64, 64);
 
     self.position.y -= 1.0;
@@ -51,7 +52,7 @@ impl<'a> BodyPart<'a> {
       pivot: self.position + rotation.pivot_delta,
     });
 
-    let inner_geometry = BoxGeometry {
+    let mut inner_geometry = BoxGeometry {
       position: self.position,
       dimensions: self.dimensions,
       texture_region: TextureRegion {
@@ -59,7 +60,6 @@ impl<'a> BodyPart<'a> {
         texture_size,
       },
       rotation,
-      scale: 1.0,
     }
     .create();
 
@@ -68,25 +68,36 @@ impl<'a> BodyPart<'a> {
       texture_size,
     };
 
-    let outer_geometry = match self.outer_layer {
-      ModelOuterLayer::D3 => ExtrudedGeometry {
+    let mut outer_geometry = match self.outer_layer {
+      ModelOuterLayer::D3 => OuterLayerGeometry {
         position: self.position,
         dimensions: self.dimensions,
         image: self.image,
-        voxel: self.voxel,
+        thickness: VOXEL_3D_THICKNESS,
         texture_region,
         rotation,
+        extrude: true,
       }
       .create(),
-      ModelOuterLayer::D2 => BoxGeometry {
-        position: self.position,
-        dimensions: self.dimensions,
-        texture_region,
-        rotation,
-        scale: 1.125,
+      ModelOuterLayer::D2 => {
+        let mut layer = OuterLayerGeometry {
+          position: self.position,
+          dimensions: self.dimensions,
+          image: self.image,
+          thickness: 0.01,
+          texture_region,
+          rotation,
+          extrude: false,
+        }
+        .create();
+        // In Minecraft the outer layer is scaled up 12.5%
+        layer.scale_around(1.125, self.position);
+        layer
       }
-      .create(),
     };
+
+    inner_geometry.scale_around(scale, self.position);
+    outer_geometry.scale_around(scale, self.position);
 
     (
       Mesh::from_geometry(device, inner_geometry),
@@ -109,15 +120,12 @@ impl Model {
     kind: ModelKind,
     outer_layer: ModelOuterLayer,
   ) -> Self {
-    let voxel = 0.75;
-
     let outer_layer = &outer_layer;
 
     let head = BodyPart {
       position: Vector3::new(0.0, 12.0, 0.0),
       dimensions: Vector3::new(8.0, 8.0, 8.0),
       image: &image,
-      voxel,
       layer1_location: (0, 0),
       layer2_location: (32, 0),
       rotation: Some(CenterRotation {
@@ -131,7 +139,6 @@ impl Model {
       position: Vector3::new(0.0, 2.0, 0.0),
       dimensions: Vector3::new(8.0, 12.0, 4.0),
       image: &image,
-      voxel,
       layer1_location: (16, 16),
       layer2_location: (16, 32),
       rotation: None,
@@ -149,7 +156,6 @@ impl Model {
       position: Vector3::new((-body.dimensions.x - arm_width) / 2.0, 2.0, 0.0),
       dimensions: arm_dimensions,
       image: &image,
-      voxel,
       layer1_location: (40, 16),
       layer2_location: (40, 32),
       rotation: Some(CenterRotation {
@@ -163,7 +169,6 @@ impl Model {
       position: Vector3::new((body.dimensions.x + arm_width) / 2.0, 2.0, 0.0),
       dimensions: arm_dimensions,
       image: &image,
-      voxel,
       layer1_location: (32, 48),
       layer2_location: (48, 48),
       rotation: Some(CenterRotation {
@@ -179,7 +184,6 @@ impl Model {
       position: Vector3::new(-leg_dimensions.x / 2.0, -10.0, 0.0),
       dimensions: leg_dimensions,
       image: &image,
-      voxel,
       layer1_location: (0, 16),
       layer2_location: (0, 32),
       rotation: Some(CenterRotation {
@@ -193,7 +197,6 @@ impl Model {
       position: Vector3::new(leg_dimensions.x / 2.0, -10.0, 0.0),
       dimensions: leg_dimensions,
       image: &image,
-      voxel,
       layer1_location: (16, 48),
       layer2_location: (0, 48),
       rotation: Some(CenterRotation {
@@ -206,12 +209,13 @@ impl Model {
     let texture = Texture::from_image(device, queue, &image).unwrap();
     let material = Material::new(device, texture, layout);
 
-    let (head_inner, head_outer) = head.create(device);
-    let (body_inner, body_outer) = body.create(device);
-    let (left_arm_inner, left_arm_outer) = left_arm.create(device);
-    let (right_arm_inner, right_arm_outer) = right_arm.create(device);
-    let (left_leg_inner, left_leg_outer) = left_leg.create(device);
-    let (right_leg_inner, right_leg_outer) = right_leg.create(device);
+    let z_fighting_scale = 0.002;
+    let (head_inner, head_outer) = head.create(1.0 + 2.0 * z_fighting_scale, device);
+    let (body_inner, body_outer) = body.create(1.0, device);
+    let (left_arm_inner, left_arm_outer) = left_arm.create(1.0 + z_fighting_scale, device);
+    let (right_arm_inner, right_arm_outer) = right_arm.create(1.0 + z_fighting_scale, device);
+    let (left_leg_inner, left_leg_outer) = left_leg.create(1.0 + z_fighting_scale, device);
+    let (right_leg_inner, right_leg_outer) = right_leg.create(1.0 + 2.0 * z_fighting_scale, device);
 
     let meshes = vec![
       head_inner,

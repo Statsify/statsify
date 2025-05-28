@@ -1,4 +1,4 @@
-use cgmath::{InnerSpace, Vector3};
+use cgmath::Vector3;
 
 use super::coordinate::Coordinate;
 use super::orientation::Orientation;
@@ -107,10 +107,11 @@ pub(super) struct Prism {
 }
 
 impl Prism {
-  pub fn new(dimensions: Vector3<f32>, position: Vector3<f32>, scale: f32) -> Self {
-    let half_width = dimensions.x / 2.0 * scale;
-    let half_height = dimensions.y / 2.0 * scale;
-    let half_depth = dimensions.z / 2.0 * scale;
+  pub fn new(dimensions: Vector3<f32>, position: Vector3<f32>) -> Self {
+    // Scale the prism from the center
+    let half_width = dimensions.x / 2.0;
+    let half_height = dimensions.y / 2.0;
+    let half_depth = dimensions.z / 2.0;
 
     // Vertices relative to the center
     let top_left_front = Vector3::new(-half_width, half_height, half_depth) + position;
@@ -188,6 +189,7 @@ impl Prism {
     let c = Vertex::new(vectors[2], [u2, v2], normal);
     let d = Vertex::new(vectors[1], [u2, v1], normal);
 
+    // Indice Order:
     // A -> B -> C
     // D -> A -> C
 
