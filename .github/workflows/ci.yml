@@ -28,6 +28,9 @@ jobs:
         with:
           node-version: 22.6.0
 
+      - name: Install wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
       - name: Turbo cache
         id: turbo-cache
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4
