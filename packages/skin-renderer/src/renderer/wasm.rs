@@ -67,10 +67,7 @@ impl Backend for WasmBackend {
     let surface_caps = self.surface.get_capabilities(&self.adapter);
 
     // TODO: handle non srgb surfaces
-    // Shader code in this tutorial assumes an Srgb surface texture. Using a
-    // different one will result all the colors comming out darker. If you want
-    // to support non Srgb surfaces, you'll need to account for that when
-    // drawing to the frame.
+    // If the surface isn't srgb then it will appear darker
     let surface_format = surface_caps
       .formats
       .iter()
