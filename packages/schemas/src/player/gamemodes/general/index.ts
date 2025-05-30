@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Bingo } from "./bingo.js";
 import { Events } from "./events.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
@@ -75,6 +76,9 @@ export class General {
   @Field()
   public events: Events;
 
+  @Field()
+  public bingo: Bingo;
+
   public constructor(data: APIData, legacy: APIData) {
     this.achievementPoints = data.achievementPoints;
 
@@ -93,7 +97,9 @@ export class General {
     this.classicTokens = legacy.total_tokens;
 
     this.events = new Events(data.seasonal);
+    this.bingo = new Bingo(data.seasonal);
   }
 }
 
 export * from "./events.js";
+export * from "./bingo.js";
