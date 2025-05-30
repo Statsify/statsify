@@ -19,7 +19,7 @@
     "@nestjs/core": "^10.4.1",
     "@nestjs/platform-fastify": "^10.4.1",
     "@nestjs/swagger": "^7.4.0",
-    "@sentry/node": "^7.118.0",
+    "@sentry/node": "^9.24.0",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
