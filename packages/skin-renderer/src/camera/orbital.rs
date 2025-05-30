@@ -54,7 +54,7 @@ impl OrbitalCamera {
       max_radius: 100.0,
 
       radius: 50.0,
-      theta: -0.245,
+      theta: -0.3,
       phi: 1.383,
 
       min_polar_angle: f32::NEG_INFINITY,

@@ -84,7 +84,7 @@ impl<'a> BodyPart<'a> {
           position: self.position,
           dimensions: self.dimensions,
           image: self.image,
-          thickness: 0.01,
+          thickness: 0.001,
           texture_region,
           rotation,
           extrude: false,
