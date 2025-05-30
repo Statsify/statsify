@@ -449,42 +449,11 @@ importers:
         specifier: ^12.6.0
         version: 12.6.0(mongoose@8.5.2(socks@2.8.3))
       minecraft-protocol:
-        specifier: https://github.com/jacobk999/node-minecraft-protocol#cd8f06e3ee74f67dfc6deeeeb6b33b869bf705a2
-        version: https://codeload.github.com/jacobk999/node-minecraft-protocol/tar.gz/cd8f06e3ee74f67dfc6deeeeb6b33b869bf705a2
+        specifier: https://github.com/jacobk999/node-minecraft-protocol#556b9ddb376e089327c3fbb4ecbcabd32c7fd117
+        version: https://codeload.github.com/jacobk999/node-minecraft-protocol/tar.gz/556b9ddb376e089327c3fbb4ecbcabd32c7fd117
       mongoose:
         specifier: ^8.5.2
         version: 8.5.2(socks@2.8.3)
-
-  assets/private:
-    dependencies:
-      skia-canvas:
-        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
-        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
-      stackblur-canvas:
-        specifier: ^2.7.0
-        version: 2.7.0
-    devDependencies:
-      '@commitlint/cli':
-        specifier: ^19.4.1
-        version: 19.8.1(@types/node@22.15.21)(typescript@5.7.3)
-      '@commitlint/config-conventional':
-        specifier: ^19.4.1
-        version: 19.8.1
-      commitizen:
-        specifier: ^4.3.0
-        version: 4.3.0(@types/node@22.15.21)(typescript@5.7.3)
-      cz-conventional-changelog:
-        specifier: ^3.3.0
-        version: 3.3.0(@types/node@22.15.21)(typescript@5.7.3)
-
-  assets/public:
-    dependencies:
-      skia-canvas:
-        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
-        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
-      stackblur-canvas:
-        specifier: 2.7.0
-        version: 2.7.0
 
   packages/api-client:
     dependencies:
@@ -673,8 +642,6 @@ importers:
         version: 3.4.2
 
   packages/skin-renderer: {}
-
-  packages/skin-renderer/pkg: {}
 
   packages/util:
     dependencies:
@@ -2032,6 +1999,9 @@ packages:
   '@types/mute-stream@0.0.4':
     resolution: {integrity: sha512-CPM9nzrCPPJHQNA9keH9CVkVI+WR5kMa+7XEs5jcGQ0VoAGnLv242w8lIVgwAEfmE4oufJRaTc9PNLQl0ioAow==}
 
+  '@types/node-rsa@1.1.4':
+    resolution: {integrity: sha512-dB0ECel6JpMnq5ULvpUTunx3yNm8e/dIkv8Zu9p2c8me70xIRUUG3q+qXRwcSf9rN3oqamv4116iHy90dJGRpA==}
+
   '@types/node@22.15.21':
     resolution: {integrity: sha512-EV/37Td6c+MgKAbkcLG6vqZ2zEYHD7bvSrzqqs2RIhbA6w3x+Dqz8MZM3sP6kGTeLrdoOgKZe+Xja7tUB2DNkQ==}
 
@@ -2454,6 +2424,7 @@ packages:
   bson@6.8.0:
     resolution: {integrity: sha512-iOJg8pr7wq2tg/zSlCCHMi3hMm5JTOxLTagf3zxhcenHsFp+c6uOs6K7W5UE7A4QIJGtqh/ZovFNMP4mOPJynQ==}
     engines: {node: '>=16.20.1'}
+    deprecated: a critical bug affecting only useBigInt64=true deserialization usage is fixed in bson@6.10.3
 
   buffer-crc32@0.2.13:
     resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==}
@@ -2636,11 +2607,6 @@ packages:
   commander@8.3.0:
     resolution: {integrity: sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==}
     engines: {node: '>= 12'}
-
-  commitizen@4.3.0:
-    resolution: {integrity: sha512-H0iNtClNEhT0fotHvGV3E9tDejDeS04sN1veIebsKYGMuGscFaswRoYJKmT3eW85eIJAs0F28bG2+a/9wCOfPw==}
-    engines: {node: '>= 12'}
-    hasBin: true
 
   commitizen@4.3.1:
     resolution: {integrity: sha512-gwAPAVTy/j5YcOOebcCRIijn+mSjWJC+IYKivTu6aG8Ei/scoXgfsMRnuAk6b0GRste2J4NGxVdMN3ZpfNaVaw==}
@@ -3884,15 +3850,15 @@ packages:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
 
-  minecraft-data@3.67.0:
-    resolution: {integrity: sha512-/hLeYXopx9o1UdViPPFenLJ3hT5S4qUEwLQM0MAHOIhqkAUGXdkl47O7ohG+f87DH3+cZksbbM61sTnSRsQpsA==}
+  minecraft-data@3.89.0:
+    resolution: {integrity: sha512-v6dUr1M7Pjc6N4ujanrBZu3IP4/HbSBpxSSXNbK6HVFVJqfaqKSMXN57G/JAlDcwqXYsVd9H4tbKFHCO+VmQpg==}
 
   minecraft-folder-path@1.2.0:
     resolution: {integrity: sha512-qaUSbKWoOsH9brn0JQuBhxNAzTDMwrOXorwuRxdJKKKDYvZhtml+6GVCUrY5HRiEsieBEjCUnhVpDuQiKsiFaw==}
 
-  minecraft-protocol@https://codeload.github.com/jacobk999/node-minecraft-protocol/tar.gz/cd8f06e3ee74f67dfc6deeeeb6b33b869bf705a2:
-    resolution: {tarball: https://codeload.github.com/jacobk999/node-minecraft-protocol/tar.gz/cd8f06e3ee74f67dfc6deeeeb6b33b869bf705a2}
-    version: 1.47.0
+  minecraft-protocol@https://codeload.github.com/jacobk999/node-minecraft-protocol/tar.gz/556b9ddb376e089327c3fbb4ecbcabd32c7fd117:
+    resolution: {tarball: https://codeload.github.com/jacobk999/node-minecraft-protocol/tar.gz/556b9ddb376e089327c3fbb4ecbcabd32c7fd117}
+    version: 1.53.0
     engines: {node: '>=14'}
 
   minimatch@3.1.2:
@@ -4377,8 +4343,8 @@ packages:
     resolution: {integrity: sha512-lZ5FWKZYR9xOjpMw1+EfZRfCjzNRQWPq+Dk+jki47Sikl2EeWEPnTfnJERwnU/EwFq6us+0zqHHzSsmLeYX+Lg==}
     hasBin: true
 
-  protodef@1.15.0:
-    resolution: {integrity: sha512-bZ2Omw8dT+DACjJHLrBWZlqN4MlT9g9oSpJDdkUAJOStUzgJp+Zn42FJfPUdwutUxjaxA0PftN0PDlNa2XbneA==}
+  protodef@1.19.0:
+    resolution: {integrity: sha512-94f3GR7pk4Qi5YVLaLvWBfTGUIzzO8hyo7vFVICQuu5f5nwKtgGDaeC1uXIu49s5to/49QQhEYeL0aigu1jEGA==}
     engines: {node: '>=14'}
 
   proxy-addr@2.0.7:
@@ -4783,10 +4749,6 @@ packages:
 
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
-
-  stackblur-canvas@2.7.0:
-    resolution: {integrity: sha512-yf7OENo23AGJhBriGx0QivY5JP6Y1HbrrDI6WLt6C5auYZXlQrheoY8hD4ibekFKz1HOfE48Ww8kMWMnJD/zcQ==}
-    engines: {node: '>=0.1.14'}
 
   standard-as-callback@2.1.0:
     resolution: {integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==}
@@ -5743,7 +5705,7 @@ snapshots:
   '@eslint/config-array@0.20.0':
     dependencies:
       '@eslint/object-schema': 2.1.6
-      debug: 4.3.6
+      debug: 4.4.1
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -5757,7 +5719,7 @@ snapshots:
   '@eslint/eslintrc@3.3.1':
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.6
+      debug: 4.4.1
       espree: 10.3.0
       globals: 14.0.0
       ignore: 5.3.1
@@ -6597,6 +6559,10 @@ snapshots:
     dependencies:
       '@types/node': 22.15.21
 
+  '@types/node-rsa@1.1.4':
+    dependencies:
+      '@types/node': 22.15.21
+
   '@types/node@22.15.21':
     dependencies:
       undici-types: 6.21.0
@@ -7042,7 +7008,7 @@ snapshots:
 
   axios@1.7.3:
     dependencies:
-      follow-redirects: 1.15.6(debug@4.4.1)
+      follow-redirects: 1.15.6(debug@4.3.6)
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -7050,7 +7016,7 @@ snapshots:
 
   axios@1.9.0:
     dependencies:
-      follow-redirects: 1.15.6(debug@4.4.1)
+      follow-redirects: 1.15.6(debug@4.3.6)
       form-data: 4.0.0
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
@@ -7281,26 +7247,6 @@ snapshots:
   commander@6.2.1: {}
 
   commander@8.3.0: {}
-
-  commitizen@4.3.0(@types/node@22.15.21)(typescript@5.7.3):
-    dependencies:
-      cachedir: 2.3.0
-      cz-conventional-changelog: 3.3.0(@types/node@22.15.21)(typescript@5.7.3)
-      dedent: 0.7.0
-      detect-indent: 6.1.0
-      find-node-modules: 2.1.3
-      find-root: 1.1.0
-      fs-extra: 9.1.0
-      glob: 7.2.3
-      inquirer: 8.2.5
-      is-utf8: 0.2.1
-      lodash: 4.17.21
-      minimist: 1.2.7
-      strip-bom: 4.0.0
-      strip-json-comments: 3.1.1
-    transitivePeerDependencies:
-      - '@types/node'
-      - typescript
 
   commitizen@4.3.1(@types/node@22.15.21)(typescript@5.7.3):
     dependencies:
@@ -8615,20 +8561,21 @@ snapshots:
 
   min-indent@1.0.1: {}
 
-  minecraft-data@3.67.0: {}
+  minecraft-data@3.89.0: {}
 
   minecraft-folder-path@1.2.0: {}
 
-  minecraft-protocol@https://codeload.github.com/jacobk999/node-minecraft-protocol/tar.gz/cd8f06e3ee74f67dfc6deeeeb6b33b869bf705a2:
+  minecraft-protocol@https://codeload.github.com/jacobk999/node-minecraft-protocol/tar.gz/556b9ddb376e089327c3fbb4ecbcabd32c7fd117:
     dependencies:
+      '@types/node-rsa': 1.1.4
       '@types/readable-stream': 4.0.4
       aes-js: 3.1.2
       buffer-equal: 1.0.1
-      debug: 4.3.6
+      debug: 4.4.1
       endian-toggle: 0.0.0
       lodash.get: 4.4.2
       lodash.merge: 4.6.2
-      minecraft-data: 3.67.0
+      minecraft-data: 3.89.0
       minecraft-folder-path: 1.2.0
       node-fetch: 2.7.0
       node-rsa: 0.4.2
@@ -8636,7 +8583,7 @@ snapshots:
       prismarine-chat: 1.10.1
       prismarine-nbt: 2.5.0
       prismarine-realms: 1.3.2
-      protodef: 1.15.0
+      protodef: 1.19.0
       readable-stream: 4.5.2
       uuid-1345: 1.0.2
       yggdrasil: 1.7.0
@@ -9032,7 +8979,7 @@ snapshots:
 
   pm2-axon-rpc@0.7.1:
     dependencies:
-      debug: 4.3.6
+      debug: 4.4.1
     transitivePeerDependencies:
       - supports-color
 
@@ -9040,7 +8987,7 @@ snapshots:
     dependencies:
       amp: 0.3.1
       amp-message: 0.1.2
-      debug: 4.3.6
+      debug: 4.4.1
       escape-string-regexp: 4.0.0
     transitivePeerDependencies:
       - supports-color
@@ -9057,7 +9004,7 @@ snapshots:
   pm2-sysmonit@1.2.8:
     dependencies:
       async: 3.2.5
-      debug: 4.3.6
+      debug: 4.4.1
       pidusage: 2.0.21
       systeminformation: 5.21.15
       tx2: 1.0.5
@@ -9144,7 +9091,7 @@ snapshots:
 
   prismarine-nbt@2.5.0:
     dependencies:
-      protodef: 1.15.0
+      protodef: 1.19.0
 
   prismarine-realms@1.3.2:
     dependencies:
@@ -9156,7 +9103,7 @@ snapshots:
 
   prismarine-registry@1.7.0:
     dependencies:
-      minecraft-data: 3.67.0
+      minecraft-data: 3.89.0
       prismarine-nbt: 2.5.0
 
   process-warning@2.3.2: {}
@@ -9181,12 +9128,11 @@ snapshots:
     dependencies:
       ajv: 6.12.6
 
-  protodef@1.15.0:
+  protodef@1.19.0:
     dependencies:
-      lodash.get: 4.4.2
       lodash.reduce: 4.6.0
       protodef-validator: 1.3.1
-      readable-stream: 3.6.2
+      readable-stream: 4.5.2
 
   proxy-addr@2.0.7:
     dependencies:
@@ -9626,8 +9572,6 @@ snapshots:
     optional: true
 
   stackback@0.0.2: {}
-
-  stackblur-canvas@2.7.0: {}
 
   standard-as-callback@2.1.0: {}
 
