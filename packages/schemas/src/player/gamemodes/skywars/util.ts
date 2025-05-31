@@ -79,7 +79,7 @@ const EMBLEM_MAP = {
   rich: "$",
   podium: "π",
   fallen_crest: "☬",
-  null_icon: "∅",
+  null: "∅",
   sigma: "Σ",
   delta: "δ",
   florin: "ƒ",
