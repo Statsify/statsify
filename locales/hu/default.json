@@ -86,7 +86,7 @@
     "session-bedwars": "$t(commands.session-command, { \"name\": \"BedWars\" })",
     "session-blitzsg": "$t(commands.session-command, { \"name\": \"BlitzSG\" })",
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
-    "session-command": "View your {{name}} session stats",
+    "session-command": "Nézd meg a {{name}} munkamenet statisztikáid",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
     "session-delete": "Delete your session stats",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
