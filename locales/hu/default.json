@@ -88,7 +88,7 @@
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "Nézd meg a {{name}} munkamenet statisztikáid",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
-    "session-delete": "Delete your session stats",
+    "session-delete": "Munkamenet statisztikák törlése",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -237,8 +237,8 @@
     "weekly": "View your weekly stats in various games",
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
-    "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-historical": "Munkamenet statisztikák nullázása",
+    "reset-session": "Munkamenet statisztikáid nullázása"
   },
   "config": {
     "badge": {
@@ -307,8 +307,8 @@
         "title": "Játékok"
       },
       "session": {
-        "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
-        "title": "Sessions"
+        "description": "A Statsify lehetőséget ad statisztikáid megtekintésére ha használtad a `/session` parancsot. A `/reset session` paranccsal nullázhatod a munkamenet statisztikáid és indithatsz egy újat.",
+        "title": "Munkamenetek"
       },
       "leaderboards": {
         "description": "A Statsify számtalan toplistát nyújt a `/leaderboard` parancsával. Futtasd a `/leaderboard` parancsot, válassz egy játékmódot és egy toplistát amit megszeretnél tekinteni. A keresés gombbal kereshetsz egy adott játékosra vagy pozícióra is. A fel és le gombokkal pedig a különböző oldalakat tekintheted meg.",
@@ -387,8 +387,8 @@
       "title": "Ismeretlen Játékos"
     },
     "invalidSession": {
-      "title": "Invalid Session",
-      "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
+      "title": "Érvénytelen Munkamenet",
+      "description": "**{{displayName}}** nem rendelkezik aktív munkamenettel. Lehetősége van csinálni egyet, ha használja a `/session` parancsot és ellenőrzött a fiókja."
     },
     "invalidResetTime": {
       "description": "Az általad megadott idő formátuma nem megfelelő: `{{time}}`. Kérjük használd a következő formátumot: `h:mm a` pl:`12:00 PM` vagy `1:00 AM`.",
@@ -436,7 +436,7 @@
       "title": "Hiányzó Igazolás"
     },
     "missingPlayerVerification": {
-      "description": "**{{displayName}}** is not **verified**. They must run `/verify` to verify their account.",
+      "description": "**{{displayName}}** fiókja nincs **ellenőrizve**. A `/verify` parancs használatával tudja ezt megtenni.",
       "title": "Missing Verification"
     },
     "missingSelfVerification": {
@@ -515,11 +515,11 @@
     "reset": "$t(emojis:clock) **Visszaállítás** <t:{{time}}:R>",
     "resetButton": "Kattints a Visszaállításhoz",
     "setResetTime": "Visszaállíási idő beállítva erre: <t:{{time}}:t>.",
-    "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats.",
-    "deleteSession": "Successfully deleted your session stats.",
+    "newSession": "**{{displayName}}** munkamenet statisztikái most először lettek megtekintve Statsify-on.",
+    "setSessionReset": "Sikeresen visszaállítottad a munkamenet statisztikáid.",
+    "deleteSession": "Sikeresen törölted a munkamenet statisztikáid.",
     "disabledWarning": {
-      "title": "Historical Commands are no Longer Available",
+      "title": "Múltbéli Parancsok már többé Nem Elérhetőek",
       "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
     }
   },
@@ -601,7 +601,7 @@
     "ended": "Véget ért",
     "endurance": "Kitartás",
     "event-level": "Event Szint",
-    "event-exp": "Event EXP",
+    "event-exp": "Event XP",
     "exp": "EXP",
     "expGained": "Szerzett EXP",
     "extraUltimates": "Extra Ultimatek",
@@ -792,7 +792,7 @@
     "woolPlaced": "Letett Gyapjúk",
     "zombieKills": "Zombi Ölések",
     "potionsBrewed": "Főzött Bájitalok",
-    "positions": "Positions",
+    "positions": "Pozíciók",
     "powerupsCollected": "Begyűjtött Power-Upok",
     "roundsCompleted": "Túlélt Körök",
     "totalRounds": "Total Rounds",
