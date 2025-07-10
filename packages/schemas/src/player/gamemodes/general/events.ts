@@ -108,7 +108,7 @@ export class Events {
     this.halloween2024 = new Event(10_000, data.halloween?.["2024"]);
     this.christmas2024 = new Event(10_000, data.christmas?.["2024"]);
     this.easter2025 = new Event(10_000, data.easter?.["2025"]);
-    this.summer2025 = new Event(10_000, data.summer?.["2025"]);
+    this.summer2025 = new Event(25_000, data.summer?.["2025"]);
 
     this.silver = data.silver;
   }
