@@ -37,6 +37,7 @@ export type EventType = { period: EventPeriod; year: number; key: Exclude<keyof 
 export type EventPeriod = "summer" | "halloween" | "christmas" | "easter";
 
 export const EVENT_TYPES: EventType[] = [
+  { period: "summer", year: 2025, key: "summer2025" },
   { period: "easter", year: 2025, key: "easter2025" },
   { period: "christmas", year: 2024, key: "christmas2024" },
   { period: "halloween", year: 2024, key: "halloween2024" },
@@ -88,6 +89,9 @@ export class Events {
   @Field({ leaderboard: { name: "Easter 2025" } })
   public easter2025: Event;
 
+  @Field({ leaderboard: { name: "Summer 2025" } })
+  public summer2025: Event;
+
   @Field()
   public silver: number;
 
@@ -104,6 +108,7 @@ export class Events {
     this.halloween2024 = new Event(10_000, data.halloween?.["2024"]);
     this.christmas2024 = new Event(10_000, data.christmas?.["2024"]);
     this.easter2025 = new Event(10_000, data.easter?.["2025"]);
+    this.summer2025 = new Event(10_000, data.summer?.["2025"]);
 
     this.silver = data.silver;
   }
