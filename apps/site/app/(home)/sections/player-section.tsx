@@ -53,7 +53,11 @@ const games = [
   },
 ] as const;
 
-export function PlayerSection({ players }: { players: [Player, Player, Player, Player] }) {
+export function PlayerSection({
+  players,
+}: {
+  players: [Player, Player, Player, Player];
+}) {
   const [gameIndex, setGameIndex] = useState<number>(0);
 
   return (
@@ -62,12 +66,16 @@ export function PlayerSection({ players }: { players: [Player, Player, Player, P
       className="flex-col lg:flex-row justify-between items-center lg:py-0"
     >
       <div className="mx-4 lg:mx-0 flex flex-col gap-4 max-w-100 xl:max-w-120 text-mc-white text-center lg:text-start ">
-        <h1 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow">Players</h1>
+        <h1 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow">
+          Players
+        </h1>
         <p className="text-mc-1.75 lg:text-mc-2 leading-6">
-          Beautiful profiles and visuals are provided by Statsify for all of Hypixel games. Enter the game name in the
-          Discord command to view your stats. For example, run the <Command>/bedwars</Command> command to check your
-          BedWars stats! Make sure to verify using <Command>/verify</Command> to make running Statsify's commands easier
-          and faster, and explore the rest of the provided features.
+          Beautiful profiles and visuals are provided by Statsify for all of
+          Hypixel games. Enter the game name in the Discord command to view your
+          stats. For example, run the <Command command="/bedwars" /> command to
+          check your BedWars stats! Make sure to verify using{" "}
+          <Command command="/verify" /> to make running Statsify's commands
+          easier and faster, and explore the rest of the provided features.
         </p>
       </div>
       <div className="relative w-full lg:w-fit h-full flex flex-col justify-center items-center p-4 lg:p-8 before:absolute before:bg-gradient-to-b before:from-white/20 before:to-white/50 before:mix-blend-overlay before:w-full before:h-full before:-z-20 after:mix-blend-overlay after:w-full after:h-full after:content-[''] after:absolute after:shadow-[0_0_10px_white,0_0_30px_10px_white] after:shadow-white after:-z-20">
@@ -95,7 +103,12 @@ export function PlayerSection({ players }: { players: [Player, Player, Player, P
           <div className="grid grid-areas-stack">
             {games.map(({ tab, component: GamePreview }, index) => (
               <PlayerProvider key={tab} player={players[index]}>
-                <GamePreview className={cn("grid-area-stack invisible", index === gameIndex && "visible")} />
+                <GamePreview
+                  className={cn(
+                    "grid-area-stack invisible",
+                    index === gameIndex && "visible"
+                  )}
+                />
               </PlayerProvider>
             ))}
           </div>

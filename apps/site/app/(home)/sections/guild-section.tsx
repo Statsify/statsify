@@ -23,7 +23,10 @@ import type { Guild } from "@statsify/schemas";
 
 export function GuildSection({ guild }: { guild: Guild }) {
   return (
-    <BaseSection background="guilds" className="flex-col items-center relative overflow-hidden">
+    <BaseSection
+      background="guilds"
+      className="flex-col items-center relative overflow-hidden"
+    >
       <Carousel className="backdrop-blur-2xl bg-black/40">
         <GuildOverall guild={guild} />
         <GuildLevelling guild={guild} />
@@ -31,13 +34,19 @@ export function GuildSection({ guild }: { guild: Guild }) {
         <GuildMember guild={guild} />
       </Carousel>
       <div className="mx-4 lg:mx-0 flex flex-col gap-4 max-w-120 xl:max-w-200 text-mc-white text-center lg:text-start">
-        <h1 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow text-center">Guilds</h1>
+        <h1 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow text-center">
+          Guilds
+        </h1>
         <p className="text-mc-1.75 lg:text-mc-2 leading-6 text-center">
-          Manage and keep track of your guild easier with Statsify. You can view all of the guild information needed
-          within the <Command>/guild</Command> command. Want to see your guild top GEXP but lazy to log on? No problem!
-          Just run <Command>/guild top</Command> and view your top grinders. Use <Command>/guild member</Command> to
-          view your player information inside your guild. And many more commands like{" "}
-          <Command>/guild leaderboard</Command> and <Command>/guild overall</Command>.
+          Manage and keep track of your guild easier with Statsify. You can view
+          all of the guild information needed within the{" "}
+          <Command command="/guild" /> command. Want to see your guild top GEXP
+          but lazy to log on? No problem! Just run{" "}
+          <Command command="/guild top" /> and view your top grinders. Use{" "}
+          <Command command="/guild member" /> to view your player information
+          inside your guild. And many more commands like{" "}
+          <Command command="/guild leaderboard" /> and{" "}
+          <Command command="/guild overall" />.
         </p>
       </div>
       <div className="h-20 w-full" />
@@ -49,7 +58,9 @@ function GuildOverall({ guild }: { guild: Guild }) {
   return (
     <div className="relative grid grid-cols-1 xl:grid-cols-2 gap-2 p-4 z-10 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
       <Box className="xl:col-span-2 text-center">
-        <MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText>
+        <MinecraftText className="text-mc-4">
+          {guild.nameFormatted}
+        </MinecraftText>
       </Box>
       <Box className="row-start-2">
         <p className="text-mc-2 text-mc-gray text-center">Guild Info</p>
@@ -64,10 +75,14 @@ function GuildOverall({ guild }: { guild: Guild }) {
           <MinecraftText>{guild.members[1].displayName ?? ""}</MinecraftText>
         </p>
         <p className="text-mc-dark-aqua">
-          Created On: <span className="text-mc-gray">{formatDate(new Date(guild.createdAt), "MM/dd/yyyy")}</span>
+          Created On:{" "}
+          <span className="text-mc-gray">
+            {formatDate(new Date(guild.createdAt), "MM/dd/yyyy")}
+          </span>
         </p>
         <p className="text-mc-blue">
-          Guild Members: <span className="text-mc-white">{guild.members.length}</span>
+          Guild Members:{" "}
+          <span className="text-mc-white">{guild.members.length}</span>
           <span className="text-mc-dark-gray">/</span>
           <span className="text-mc-white">125</span>
         </p>
@@ -101,7 +116,9 @@ function GuildLevelling({ guild }: { guild: Guild }) {
   return (
     <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
       <Box className="lg:col-span-3 text-center">
-        <MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText>
+        <MinecraftText className="text-mc-4">
+          {guild.nameFormatted}
+        </MinecraftText>
       </Box>
       <Box className="leading-[24px] lg:col-span-3 text-center">
         <Progression
@@ -113,39 +130,68 @@ function GuildLevelling({ guild }: { guild: Guild }) {
           xpBar={(percentage) => {
             const max = 40;
             const count = Math.ceil(max * percentage);
-            return `§8[${color}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]`;
+            return `§8[${color}${"|".repeat(count)}§7${"|".repeat(
+              max - count
+            )}§8]`;
           }}
         />
       </Box>
       <Box className="lg:col-span-3 text-center">
         <p className="text-mc-2 text-mc-gray">Guild Experience</p>
       </Box>
-      <TableData title="Daily" value={t(guild.daily)} color="text-mc-dark-green" />
-      <TableData title="Weekly" value={t(guild.weekly)} color="text-mc-dark-green" />
-      <TableData title="Monthly" value={t(guild.monthly)} color="text-mc-dark-green" />
+      <TableData
+        title="Daily"
+        value={t(guild.daily)}
+        color="text-mc-dark-green"
+      />
+      <TableData
+        title="Weekly"
+        value={t(guild.weekly)}
+        color="text-mc-dark-green"
+      />
+      <TableData
+        title="Monthly"
+        value={t(guild.monthly)}
+        color="text-mc-dark-green"
+      />
     </div>
   );
 }
 
 function GuildTop({ guild }: { guild: Guild }) {
   // TODO: Vercel doesn't support the toSorted function
-  const members = [...guild.members].sort((a, b) => b.daily - a.daily).slice(0, 6);
+  const members = [...guild.members]
+    .sort((a, b) => b.daily - a.daily)
+    .slice(0, 6);
 
   return (
     <div className="relative grid grid-cols-content-3 xl:grid-cols-content-6 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
       <Box className="col-span-full text-center">
-        <MinecraftText className="text-mc-4">{guild.nameFormatted}</MinecraftText>
+        <MinecraftText className="text-mc-4">
+          {guild.nameFormatted}
+        </MinecraftText>
       </Box>
-      <Box className="col-span-full text-center text-mc-dark-green font-bold">GEXP for Today</Box>
+      <Box className="col-span-full text-center text-mc-dark-green font-bold">
+        GEXP for Today
+      </Box>
       {members.map((member, index) => (
         <Fragment key={member.uuid}>
-          <Box className="font-bold content:flex content:items-center" borderRadius={{ right: 0 }}>
+          <Box
+            className="font-bold content:flex content:items-center"
+            borderRadius={{ right: 0 }}
+          >
             #{index + 1}
           </Box>
-          <Box className="grow content:flex content:items-center" borderRadius={{ left: 0, right: 0 }}>
+          <Box
+            className="grow content:flex content:items-center"
+            borderRadius={{ left: 0, right: 0 }}
+          >
             <MinecraftText>{member.displayName ?? ""}</MinecraftText>
           </Box>
-          <Box className="content:flex content:items-center" borderRadius={{ left: 0 }}>
+          <Box
+            className="content:flex content:items-center"
+            borderRadius={{ left: 0 }}
+          >
             {t(member.daily)}
           </Box>
         </Fragment>
@@ -155,14 +201,19 @@ function GuildTop({ guild }: { guild: Guild }) {
 }
 
 function GuildMember({ guild }: { guild: Guild }) {
-  const member = guild.members.find((member) => member.uuid === GUILD_MEMBER_PREVIEW);
-  if (!member) throw new Error(`Could not find Guild Member: ${GUILD_MEMBER_PREVIEW}`);
+  const member = guild.members.find(
+    (member) => member.uuid === GUILD_MEMBER_PREVIEW
+  );
+  if (!member)
+    throw new Error(`Could not find Guild Member: ${GUILD_MEMBER_PREVIEW}`);
 
   return (
     <div className="relative grid grid-cols-content-1 lg:grid-cols-content-2 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
       <Skin uuid={member.uuid} className="row-span-3 hidden lg:block" />
       <Box className="content:flex content:justify-center content:items-center content:gap-4">
-        <MinecraftText className="text-mc-4">{member.displayName ?? ""}</MinecraftText>
+        <MinecraftText className="text-mc-4">
+          {member.displayName ?? ""}
+        </MinecraftText>
         <p className="hidden lg:block text-mc-3">
           <MinecraftText>{guild.tagFormatted}</MinecraftText>
         </p>
@@ -175,19 +226,36 @@ function GuildMember({ guild }: { guild: Guild }) {
           Guild Rank: <span className="text-mc-yellow">{member.rank}</span>
         </p>
         <p className="text-mc-gray">
-          Joined At: <span className="text-mc-dark-aqua">{formatDate(new Date(member.joinTime), "MM/dd/yyy")}</span>
+          Joined At:{" "}
+          <span className="text-mc-dark-aqua">
+            {formatDate(new Date(member.joinTime), "MM/dd/yyy")}
+          </span>
         </p>
         <p className="text-mc-gray">
-          Guild Quests: <span className="text-mc-aqua">{t(member.questParticipation)}</span>
+          Guild Quests:{" "}
+          <span className="text-mc-aqua">{t(member.questParticipation)}</span>
         </p>
       </Box>
       <Box className="font-bold text-center">
-        <span className="text-mc-dark-green">Guild Member</span> <span>Stats</span>
+        <span className="text-mc-dark-green">Guild Member</span>{" "}
+        <span>Stats</span>
       </Box>
       <div className="col-span-full grid grid-cols-1 lg:grid-cols-[repeat(3,1fr)] gap-2">
-        <TableData color="text-mc-dark-green" title="Daily" value={t(member.daily)} />
-        <TableData color="text-mc-dark-green" title="Weekly" value={t(member.weekly)} />
-        <TableData color="text-mc-dark-green" title="Monthly" value={t(member.monthly)} />
+        <TableData
+          color="text-mc-dark-green"
+          title="Daily"
+          value={t(member.daily)}
+        />
+        <TableData
+          color="text-mc-dark-green"
+          title="Weekly"
+          value={t(member.weekly)}
+        />
+        <TableData
+          color="text-mc-dark-green"
+          title="Monthly"
+          value={t(member.monthly)}
+        />
       </div>
     </div>
   );

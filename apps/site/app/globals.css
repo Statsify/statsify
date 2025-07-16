@@ -4,40 +4,41 @@
   --font-minecraft: "Minecraft";
 
   --color-mc-black: #000000;
-  --color-mc-dark-blue: #0000AA;
-  --color-mc-dark-green: #00AA00;
-  --color-mc-dark-aqua: #00AAAA;
-  --color-mc-dark-red: #AA0000;
-  --color-mc-dark-purple: #AA00AA;
-  --color-mc-gold: #FFAA00;
-  --color-mc-gray: #AAAAAA;
+  --color-mc-dark-blue: #0000aa;
+  --color-mc-dark-green: #00aa00;
+  --color-mc-dark-aqua: #00aaaa;
+  --color-mc-dark-red: #aa0000;
+  --color-mc-dark-purple: #aa00aa;
+  --color-mc-gold: #ffaa00;
+  --color-mc-gray: #aaaaaa;
   --color-mc-dark-gray: #555555;
-  --color-mc-blue: #5555FF;
-  --color-mc-green: #55FF55;
-  --color-mc-aqua: #55FFFF;
-  --color-mc-red: #FF5555;
-  --color-mc-pink: #FF55FF;
-  --color-mc-yellow: #FFFF55;
-  --color-mc-white: #FFFFFF;
+  --color-mc-blue: #5555ff;
+  --color-mc-green: #55ff55;
+  --color-mc-aqua: #55ffff;
+  --color-mc-red: #ff5555;
+  --color-mc-pink: #ff55ff;
+  --color-mc-yellow: #ffff55;
+  --color-mc-white: #ffffff;
 
   --color-discord-500: rgb(88 101 242);
 
-  --color-blueify-100: #D0EFFF;
-  --color-blueify-200: #7DC6FA;
-  --color-blueify-300: #2A9DF4;
-  --color-blueify-400: #2492E7;
-  --color-blueify-500: #1E86DA;
-  --color-blueify-600: #187BCD;
-  --color-blueify-700: #1571BF;
-  --color-blueify-800: #1167B1;
+  --color-blueify-100: #d0efff;
+  --color-blueify-200: #7dc6fa;
+  --color-blueify-300: #2a9df4;
+  --color-blueify-400: #2492e7;
+  --color-blueify-500: #1e86da;
+  --color-blueify-600: #187bcd;
+  --color-blueify-700: #1571bf;
+  --color-blueify-800: #1167b1;
 
-  --color-redify-100: #FFD0D7;
-  --color-redify-200: #F42A37;
-  --color-redify-300: #CD1820;
-  --color-redify-400: #B11117;
-  --color-redify-500: #A10B10;
+  --color-redify-100: #ffd0d7;
+  --color-redify-200: #f42a37;
+  --color-redify-300: #cd1820;
+  --color-redify-400: #b11117;
+  --color-redify-500: #a10b10;
 
-  --color-blackify-950:  #111111;
+  --color-blackify-800: #1d1d1d;
+  --color-blackify-950: #111111;
 
   --drop-shadow-mc-1: 1px 1px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-2: 2px 2px color-mix(in srgb, currentColor 25%, #000 75%);
@@ -49,6 +50,113 @@
   --drop-shadow-mc-8: 8px 8px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-9: 9px 9px color-mix(in srgb, currentColor 25%, #000 75%);
   --drop-shadow-mc-10: 10px 10px color-mix(in srgb, currentColor 25%, #000 75%);
+
+  @keyframes slide-in-up-and-fade {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes slide-out-down-and-fade {
+    from {
+      opacity: 1;
+      transform: translateY(0px);
+
+    }
+
+    to {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+
+  @keyframes slide-in-down-and-fade {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes slide-out-up-and-fade {
+    from {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+
+  @keyframes slide-in-left-and-fade {
+    from {
+      opacity: 0;
+      transform: translateX(4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes slide-out-right-and-fade {
+    from {
+      opacity: 1;
+      transform: translateX(0px);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateX(4px);
+    }
+  }
+
+  @keyframes slide-in-right-and-fade {
+    from {
+      opacity: 0;
+      transform: translateX(-4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes slide-out-left-and-fade {
+    from {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+
+    to {
+      opacity: 0;
+      transform: translateX(-4px);
+    }
+  }
+
+  --animate-slide-in-up-and-fade: slide-in-up-and-fade 150ms ease-in;
+  --animate-slide-in-down-and-fade: slide-in-down-and-fade 150ms ease-in;
+  --animate-slide-in-left-and-fade: slide-in-left-and-fade 150ms ease-in;
+  --animate-slide-in-right-and-fade: slide-in-right-and-fade 150ms ease-in;
+
+  --animate-slide-out-up-and-fade: slide-out-up-and-fade 150ms ease-out;
+  --animate-slide-out-down-and-fade: slide-out-down-and-fade 150ms ease-out;
+  --animate-slide-out-left-and-fade: slide-out-left-and-fade 150ms ease-out;
+  --animate-slide-out-right-and-fade: slide-out-right-and-fade 150ms ease-out;
 }
 
 @utility text-mc-* {
@@ -70,19 +178,25 @@
 }
 
 @utility grid-cols-content-* {
-  grid-template-columns: repeat(--value(integer), minmax(min-content, max-content));
+  grid-template-columns: repeat(--value(integer),
+      minmax(min-content, max-content));
 }
 
 @utility grid-cols-balanced {
-  grid-template-columns: minmax(min-content, max-content) 1fr minmax(min-content, max-content);
+  grid-template-columns: minmax(min-content, max-content) 1fr minmax(min-content,
+      max-content);
 }
 
 @utility mask-feather-* {
-  mask: linear-gradient(90deg, rgb(0 0 0 / 0) 0%, rgb(0 0 0 / 1) --value(integer)%, rgb(0 0 0 / 1) calc(100% - --value(integer)%), rgb(0 0 0 / 0) 100%);
+  mask: linear-gradient(90deg,
+      rgb(0 0 0 / 0) 0%,
+      rgb(0 0 0 / 1) --value(integer) %,
+      rgb(0 0 0 / 1) calc(100% - --value(integer) %),
+      rgb(0 0 0 / 0) 100%);
 }
 
 @utility logo-shadow-* {
-  filter: drop-shadow(0 1px 0 color-mix(in srgb, --value(--color-*, [color]) 25%, #000 75%)) drop-shadow(0 -1px 0 color-mix(in srgb, --value(--color-*, [color]) 85%, #fff 15%));
+  filter: drop-shadow(0 1px 0 color-mix(in srgb, --value(--color- *, [color]) 25%, #000 75%)) drop-shadow(0 -1px 0 color-mix(in srgb, --value(--color- *, [color]) 85%, #fff 15%));
 }
 
 @utility w-container {
@@ -92,11 +206,10 @@
 }
 
 @custom-variant content {
-  & > [data-slot="content"] {
+  &>[data-slot="content"] {
     @slot;
   }
 }
-
 
 @layer base {
   button {
