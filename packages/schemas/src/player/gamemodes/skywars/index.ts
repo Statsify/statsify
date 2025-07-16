@@ -133,7 +133,7 @@ export class SkyWars {
     this.levelFormatted = getFormattedLevel(
       this.level,
       data.active_scheme,
-      data.active_emblem,
+      data.active_emblem?.replace("_icon", ""),
       isBold,
       isUnderline,
       isStrikethrough

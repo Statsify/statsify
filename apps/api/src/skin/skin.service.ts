@@ -43,12 +43,12 @@ export class SkinService {
     return canvas.toBuffer("png");
   }
 
-  public async getRender(uuid: string): Promise<Buffer> {
-    const data = await this.getSkin(uuid).catch(() => undefined);
-    const { skin, slim } = await this.resolveSkin(data?.skinUrl, data?.slim ?? false);
-    // @ts-expect-error _data is a property set by our custom loadImage function
-    const buffer = skin["_data"] as Buffer;
-    return renderSkin(buffer, slim);
+  public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {
+    const skin = await this.getSkin(uuid);
+    const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
+    // This field is set by loadImage from `@statsify/rendering`
+    const { _data: buffer } = image as unknown as { _data: Buffer };
+    return renderSkin(buffer, skin.slim ?? false, extruded);
   }
 
   public async getSkin(tag: string): Promise<Skin> {

@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
 import { Field } from "#metadata";
+import type { APIData } from "@statsify/util";
 
 export class BingoCasualEasy2025 {
   @Field({ leaderboard: { enabled: false } })
@@ -464,8 +464,12 @@ export class Bingo {
   @Field()
   public hard: BingoHard;
 
+  @Field()
+  public bucks: number;
+
   public constructor(data: APIData = {}) {
     this.easy = new BingoEasy(data.easter?.["2025"]?.bingo);
     this.hard = new BingoHard(data.easter?.["2025"]?.bingo);
+    this.bucks = data.bingo?.bucks;
   }
 }

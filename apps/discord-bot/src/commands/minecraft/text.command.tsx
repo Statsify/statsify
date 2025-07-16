@@ -42,7 +42,7 @@ export class TextCommand {
     const text = convertColorCodes(content).replaceAll(String.raw`\n`, "\n");
 
     const canvas = render(
-      <div direction="column">
+      <div direction="column" padding={2}>
         <Multiline size={size} align={alignment}>
           {text}
         </Multiline>

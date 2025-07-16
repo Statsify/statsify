@@ -35,7 +35,7 @@ export class StatusCommand {
 
     const [logo, skin, badge, background, gameIcons] = await Promise.all([
       getLogo(user),
-      this.apiService.getPlayerSkin(status.uuid),
+      this.apiService.getPlayerSkin(status.uuid, user),
       this.apiService.getUserBadge(status.uuid),
       getBackground(...mapGameIdToBackground(status.game.id ?? "LIMBO")),
       getAllGameIcons(),
