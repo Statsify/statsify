@@ -19,17 +19,17 @@ const TabsContext = createContext<{ tab: string | number; onTabChange: (tab: str
 
 type TabsProps<T extends string | number> = (
   | {
-      tab: T;
-      onTabChange: (tab: T) => void;
-      defaultTab?: T;
-    }
+    tab: T;
+    onTabChange: (tab: T) => void;
+    defaultTab?: T;
+  }
   | {
-      tab?: T;
-      onTabChange?: (tab: T) => void;
-      defaultTab: T;
-    }
+    tab?: T;
+    onTabChange?: (tab: T) => void;
+    defaultTab: T;
+  }
 ) &
-  ComponentProps<"div">;
+ComponentProps<"div">;
 
 export function Tabs<T extends string | number>({
   tab: externalTab,

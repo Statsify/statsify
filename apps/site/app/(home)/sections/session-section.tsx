@@ -27,7 +27,7 @@ export function SessionSection({ player }: { player: Player }) {
           tracking your stats and check your progress at the end of the day! Use
           the sessions stats with the <Command command="/session" /> command
           followed by the game of your choice, such as{" "}
-          <Command command="/session woolgames" />. "But my past losses?" you
+          <Command command="/session woolgames" />. &quot;But my past losses?&quot; you
           might say, there is no worry! You can reset your session at any time
           with <Command command="/reset session" />.
         </p>

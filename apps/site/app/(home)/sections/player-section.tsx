@@ -74,7 +74,7 @@ export function PlayerSection({
           Hypixel games. Enter the game name in the Discord command to view your
           stats. For example, run the <Command command="/bedwars" /> command to
           check your BedWars stats! Make sure to verify using{" "}
-          <Command command="/verify" /> to make running Statsify's commands
+          <Command command="/verify" /> to make running Statsify&apos;s commands
           easier and faster, and explore the rest of the provided features.
         </p>
       </div>

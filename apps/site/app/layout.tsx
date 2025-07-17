@@ -14,9 +14,9 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    env.ENVIRONMENT === "production"
-      ? "https://statsify-git-feat-sitev2-statsify-net.vercel.app"
-      : "http://localhost:5000"
+    env.ENVIRONMENT === "production" ?
+      "https://statsify-git-feat-sitev2-statsify-net.vercel.app" :
+      "http://localhost:5000"
   ),
   title: "Statsify",
   description: "",

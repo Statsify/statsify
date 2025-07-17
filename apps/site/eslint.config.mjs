@@ -7,24 +7,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import workspaceConfig from "../../eslint.config.js";
-
-import { dirname } from "path";
-import { fileURLToPath } from "url";
+import { defineConfig } from "../../eslint.config.js";
 import { FlatCompat } from "@eslint/eslintrc";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 const compat = new FlatCompat({
-  baseDirectory: __dirname,
+  baseDirectory: import.meta.dirname,
 });
 
-const eslintConfig = [
-  ...workspaceConfig,
-  // ...compat.extends("next/core-web-vitals", "next/typescript"),
+export default [
+  ...defineConfig({ tsconfigDirName: import.meta.dirname }),
+  ...compat.extends("next/core-web-vitals"),
 ];
 
-export default eslintConfig;
 
 

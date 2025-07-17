@@ -56,7 +56,7 @@ export function SessionAnimation() {
 
       return () => controls.cancel();
     }
-  }, [inView]);
+  }, [inView, animate, daysBack]);
 
   return (
     <div ref={scope} className="relative">

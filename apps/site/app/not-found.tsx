@@ -22,7 +22,7 @@ export default function NotFound() {
           <span className="text-redify-500">!</span>
         </h1>
         <p className="text-mc-1.5 lg:text-mc-2 text-mc-gray text-center">
-          Looks like the page you're trying to reach does not exist
+          Looks like the page you&apos;re trying to reach does not exist
         </p>
       </div>
     </Error>

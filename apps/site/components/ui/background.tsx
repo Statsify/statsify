@@ -52,7 +52,7 @@ export function Background({
     oldBackground.current = background;
     const controls = animate(opacity, 0, { duration: 0.4 });
     return () => controls.stop();
-  }, [background]);
+  }, [background, opacity]);
 
   return (
     <div className={cn("absolute w-full pointer-events-none -z-50", className)}>

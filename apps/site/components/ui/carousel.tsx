@@ -115,6 +115,7 @@ export function Carousel({ children, className }: { children: ReactNode;classNam
       <div className="flex items-center justify-center gap-6">
         {cards.map((_, index) => (
           <button
+            role="tab"
             aria-selected={cardIndex === index}
             key={index}
             onClick={() => setPage([index, index > cardIndex ? 1 : -1])}
