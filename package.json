@@ -66,6 +66,14 @@
   "pnpm": {
     "overrides": {
       "countup.js": "2.6.0"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "@swc/core",
+      "esbuild",
+      "sharp",
+      "skia-canvas",
+      "unrs-resolver"
+    ]
   }
 }

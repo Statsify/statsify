@@ -45,7 +45,7 @@ export function WoolWarsPreview({ className, daysBack }: { className?: string; d
 
   return (
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>
-      <div className="col-span-3 grid grid-cols-content-2 lg:grid-cols-content-3 gap-2 text-center">
+      <div className="col-span-3 grid grid-cols-[minmax(min-content, max-content)_1fr] lg:grid-cols-content-3 gap-2 text-center">
         <Skin uuid={player.uuid} className="hidden lg:block lg:col-span-1 lg:row-span-3" />
         <Nametag className="col-span-2 col-start-1 lg:col-start-2" />
         <Box className="col-span-2 content:text-mc-1.5 content:lg:text-mc-">
@@ -60,7 +60,7 @@ export function WoolWarsPreview({ className, daysBack }: { className?: string; d
             <span className="text-mc-blue">Games</span> Stats
           </span>{" "}
           <wbr />
-          <span className="">(WoolWars)</span>
+          <span className="hidden md:inline">(WoolWars)</span>
         </Box>
       </div>
       <MotionValueTableData title="Wins" value={winsFormatted} color="text-mc-green" />

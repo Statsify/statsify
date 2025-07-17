@@ -15,6 +15,7 @@ import { cn } from "~/lib/util";
 import { getPlayerSuggestions } from "~/app/api";
 import { redirect } from "next/navigation";
 import { useState, useTransition } from "react";
+import Link from "next/link";
 
 export function Search({ className, defaultValue }: { className?: string; defaultValue?: string }) {
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -34,12 +35,13 @@ export function Search({ className, defaultValue }: { className?: string; defaul
     });
   }
 
+
   return (
     <form
       className={cn("relative", className)}
       onSubmit={(event) => {
         event.preventDefault();
-        const formData = new FormData(event.target);
+        const formData = new FormData(event.currentTarget);
         const query = formData.get("search");
         if (!query) return;
         redirect(`/players/${query}`);
@@ -56,6 +58,9 @@ export function Search({ className, defaultValue }: { className?: string; defaul
           defaultValue={defaultValue}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
+          onKeyDown={(event) =>{
+            if (event.key==="Enter") {}
+          }}
         />
       </div>
       <ResizablePanel containerClass="w-full absolute max-h-[300px] bg-white/25 backdrop-blur-2xl z-100">
@@ -89,12 +94,12 @@ export function Search({ className, defaultValue }: { className?: string; defaul
 
 function SearchPlayer({ player }: { player: string }) {
   return (
-    <button type="submit" className="flex items-center gap-4 w-full p-2 hover:bg-white/20 active:bg-white/10">
+    <Link href={`/players/${player}`} className="flex items-center gap-4 w-full p-2 hover:bg-white/20 active:bg-white/10">
       {/* <div className="w-8 h-8 bg-red-300 drop-shadow-mc-2" /> */}
       <p className="text-mc-2 text-white selection:bg-white/50">
         {player}
       </p>
-    </button>
+    </Link>
   );
 }
 

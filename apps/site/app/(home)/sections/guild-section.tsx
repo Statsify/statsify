@@ -20,6 +20,7 @@ import { TableData } from "~/components/ui/table";
 import { formatDate } from "date-fns";
 import { t } from "~/localize";
 import type { Guild } from "@statsify/schemas";
+import { cn } from "~/lib/util";
 
 export function GuildSection({ guild }: { guild: Guild }) {
   return (
@@ -27,12 +28,17 @@ export function GuildSection({ guild }: { guild: Guild }) {
       background="guilds"
       className="flex-col items-center relative overflow-hidden"
     >
-      <Carousel className="backdrop-blur-2xl bg-black/40">
-        <GuildOverall guild={guild} />
-        <GuildLevelling guild={guild} />
-        <GuildTop guild={guild} />
-        <GuildMember guild={guild} />
-      </Carousel>
+      <div className="hidden md:block">
+        <Carousel className="backdrop-blur-2xl bg-black/40">
+          <GuildOverall guild={guild} />
+          <GuildLevelling guild={guild} />
+          <GuildTop guild={guild} />
+          <GuildMember guild={guild} />
+        </Carousel>
+      </div>
+      <div className="block md:hidden">
+        <GuildOverall guild={guild} className="shadow-none"/>
+      </div>
       <div className="mx-4 lg:mx-0 flex flex-col gap-4 max-w-120 xl:max-w-200 text-mc-white text-center lg:text-start">
         <h1 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow text-center">
           Guilds
@@ -54,11 +60,11 @@ export function GuildSection({ guild }: { guild: Guild }) {
   );
 }
 
-function GuildOverall({ guild }: { guild: Guild }) {
+function GuildOverall({ guild,className }: { guild: Guild;className?:string }) {
   return (
-    <div className="relative grid grid-cols-1 xl:grid-cols-2 gap-2 p-4 z-10 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
+    <div className={cn("relative grid grid-cols-1 xl:grid-cols-2 gap-2 p-4 z-10 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]",className)}>
       <Box className="xl:col-span-2 text-center">
-        <MinecraftText className="text-mc-4">
+        <MinecraftText className="text-mc-3 md:text-mc-4">
           {guild.nameFormatted}
         </MinecraftText>
       </Box>
@@ -116,7 +122,7 @@ function GuildLevelling({ guild }: { guild: Guild }) {
   return (
     <div className="relative grid grid-cols-1 lg:grid-cols-3 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
       <Box className="lg:col-span-3 text-center">
-        <MinecraftText className="text-mc-4">
+        <MinecraftText className="text-mc-3 md:text-mc-4 ">
           {guild.nameFormatted}
         </MinecraftText>
       </Box>
@@ -167,7 +173,7 @@ function GuildTop({ guild }: { guild: Guild }) {
   return (
     <div className="relative grid grid-cols-content-3 xl:grid-cols-content-6 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
       <Box className="col-span-full text-center">
-        <MinecraftText className="text-mc-4">
+        <MinecraftText className="text-mc-3 md:text-mc-4">
           {guild.nameFormatted}
         </MinecraftText>
       </Box>
@@ -186,7 +192,7 @@ function GuildTop({ guild }: { guild: Guild }) {
             className="grow content:flex content:items-center"
             borderRadius={{ left: 0, right: 0 }}
           >
-            <MinecraftText>{member.displayName ?? ""}</MinecraftText>
+            <MinecraftText className="truncate">{member.displayName ?? ""}</MinecraftText>
           </Box>
           <Box
             className="content:flex content:items-center"
@@ -211,7 +217,7 @@ function GuildMember({ guild }: { guild: Guild }) {
     <div className="relative grid grid-cols-content-1 lg:grid-cols-content-2 gap-2 p-4 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]">
       <Skin uuid={member.uuid} className="row-span-3 hidden lg:block" />
       <Box className="content:flex content:justify-center content:items-center content:gap-4">
-        <MinecraftText className="text-mc-4">
+        <MinecraftText className="text-mc-3 md:text-mc-4">
           {member.displayName ?? ""}
         </MinecraftText>
         <p className="hidden lg:block text-mc-3">
