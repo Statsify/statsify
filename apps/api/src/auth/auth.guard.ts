@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
   ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
-    if (config("api.ignoreAuth", { required: false })) {
+    if (await config("api.ignoreAuth", { required: false })) {
       return true;
     }
 

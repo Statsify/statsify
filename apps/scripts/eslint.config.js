@@ -6,12 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import config from "../../eslint.config.js";
 import globals from "globals";
+import { defineConfig } from "../../eslint.config.js";
 
 export default [
-  {
-    languageOptions: { globals: globals.node },
-  },
-  ...config,
+  { languageOptions: { globals: globals.node } },
+  ...defineConfig({ tsconfigDirName: import.meta.dirname }),
 ];

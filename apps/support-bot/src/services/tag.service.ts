@@ -50,8 +50,8 @@ export class TagService {
 
     const { id } = await this.commandPoster.post(
       command,
-      config("supportBot.applicationId"),
-      config("supportBot.guild")
+      await config("supportBot.applicationId"),
+      await config("supportBot.guild")
     );
 
     await this.tagModel
@@ -110,8 +110,8 @@ export class TagService {
 
     await this.commandPoster.delete(
       tag.id,
-      config("supportBot.applicationId"),
-      config("supportBot.guild")
+      await config("supportBot.applicationId"),
+      await config("supportBot.guild")
     );
   }
 

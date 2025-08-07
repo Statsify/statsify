@@ -15,7 +15,7 @@ import { Service } from "typedi";
 import { TicketService, UserService } from "#services";
 import { config } from "@statsify/util";
 
-const GUILD_ID = config("supportBot.guild");
+const GUILD_ID = await config("supportBot.guild");
 
 @Service()
 export class GuildMemberRemoveEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberRemove> {
@@ -41,7 +41,7 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
       this.ticketService.close(
         memberId,
         "owner",
-        config("supportBot.applicationId"),
+        await config("supportBot.applicationId"),
         "Member Left"
       ),
     ]);
