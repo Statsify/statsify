@@ -162,6 +162,7 @@ export class Duels {
 
   public constructor(data: APIData) {
     this.overall = new SingleBowPVPDuelsGameMode(data, "", "");
+    this.overall.winstreak = data?.currentStreak ?? this.overall.winstreak;
     this.arena = new SingleBowDuelsGameMode(data, "Arena", "duel_arena");
 
     this.blitzsg = new BlitzSGDuels(data);
