@@ -1023,7 +1023,7 @@ export class ZombiesMapDifficulty {
     this.kills = data[`zombie_kills_zombies${mode}`];
     this.deaths = data[`deaths_zombies${mode}`];
     this.bestRound = data[`best_round_zombies${mode}`];
-    this.doorsOpened = data[`deaths_zombies${mode}`];
+    this.doorsOpened = data[`doors_opened_zombies${mode}`];
     this.totalRounds = data[`total_rounds_survived_zombies${mode}`];
   }
 }
