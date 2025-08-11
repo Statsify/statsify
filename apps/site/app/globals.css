@@ -37,6 +37,7 @@
   --color-redify-400: #b11117;
   --color-redify-500: #a10b10;
 
+  --color-blackify-700: #292929;
   --color-blackify-800: #1d1d1d;
   --color-blackify-950: #111111;
 
@@ -148,6 +149,16 @@
     }
   }
 
+  @keyframes gradient-loading-slide {
+    0% {
+      transform: translateX(-100%);
+    }
+
+    100% {
+      transform: translateX(50%);
+    }
+  }
+
   --animate-slide-in-up-and-fade: slide-in-up-and-fade 150ms ease-in;
   --animate-slide-in-down-and-fade: slide-in-down-and-fade 150ms ease-in;
   --animate-slide-in-left-and-fade: slide-in-left-and-fade 150ms ease-in;
@@ -157,6 +168,8 @@
   --animate-slide-out-down-and-fade: slide-out-down-and-fade 150ms ease-out;
   --animate-slide-out-left-and-fade: slide-out-left-and-fade 150ms ease-out;
   --animate-slide-out-right-and-fade: slide-out-right-and-fade 150ms ease-out;
+
+  --animate-gradient-loading-slide: 6000ms cubic-bezier(0.5, 0, 0.3, 1) infinite normal both running gradient-loading-slide;
 }
 
 @utility text-mc-* {
