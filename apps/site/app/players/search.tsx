@@ -53,6 +53,8 @@ function usePlayerSuggestions(input: string) {
   return { isPending, suggestions };
 }
 
+const playerUrl = (tag: string) => `/players/${tag}/general/bingo`;
+
 export function Search({
   className,
   defaultValue = "",
@@ -76,9 +78,8 @@ export function Search({
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const query = formData.get("search");
-        if (!query) return;
-        console.log(query);
-        redirect(`/players/${query}`);
+        if (!query || typeof query  !== "string") return;
+        redirect(playerUrl(query));
       }}
     >
       <div className="h-16 flex items-center px-4 gap-4 bg-white/30 border-4 border-white/40 backdrop-blur-sm">
@@ -133,7 +134,7 @@ export function Search({
 function SearchPlayer({ player }: { player: string }) {
   return (
     <Link
-      href={`/players/${player}/general/bingo`}
+      href={playerUrl(player)}
       className="flex items-center gap-4 w-full p-2 hover:bg-white/20 active:bg-white/10"
     >
       {/* <div className="w-8 h-8 bg-red-300 drop-shadow-mc-2" /> */}
