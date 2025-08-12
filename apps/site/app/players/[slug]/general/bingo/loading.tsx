@@ -20,15 +20,12 @@ import { ComponentProps } from "react";
 import { Divider } from "~/components/ui/divider";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Search } from "~/app/players/search";
-import { Tab, Tabs } from "~/components/ui/tabs";
+import { SkeletonTab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
 import type { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { FormattedCategories } from "./bingo";
 
-const FormattedCategories: Record<Category, string> = {
-  casual: "Casual",
-  classic: "Classic",
-  pvp: "PvP",
-};
+
 
 export default function BingoSkeleton() {
   return (
@@ -55,25 +52,25 @@ export default function BingoSkeleton() {
               <div className="w-8 h-8" />
             </SkeletonBox>
             <SkeletonBox className="content:grid content:grid-cols-1 content:lg:grid-cols-3 content:gap-4 content:lg:gap-8">
-              <CategoryOverview icon={CasualIcon} category="casual" />
-              <CategoryOverview icon={PvPIcon} category="pvp" />
-              <CategoryOverview icon={ClassicIcon} category="classic" />
+              <SkeletonCategoryOverview icon={CasualIcon} category="casual" />
+              <SkeletonCategoryOverview icon={PvPIcon} category="pvp" />
+              <SkeletonCategoryOverview icon={ClassicIcon} category="classic" />
             </SkeletonBox>
             <Divider variant="black" />
             <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4 **:text-mc-1.5 **:lg:text-mc-2">
-              <Tabs>
-                <Tab tab="casual">Casual</Tab>
-                <Tab tab="pvp">PvP</Tab>
-                <Tab tab="classic">Classic</Tab>
+              <Tabs defaultTab="casual">
+                <SkeletonTab tab="casual">Casual</SkeletonTab>
+                <SkeletonTab tab="pvp">PvP</SkeletonTab>
+                <SkeletonTab tab="classic">Classic</SkeletonTab>
               </Tabs>
               <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
-              <Tabs>
-                <Tab tab="easy" className="text-mc-green/50 aria-pressed:text-mc-green">
+              <Tabs defaultTab="easy">
+                <SkeletonTab tab="easy" className="text-mc-green/50 aria-pressed:text-mc-green">
                   Easy
-                </Tab>
-                <Tab tab="hard" className="text-mc-red/50 aria-pressed:text-mc-red">
+                </SkeletonTab>
+                <SkeletonTab tab="hard" className="text-mc-red/50 aria-pressed:text-mc-red">
                   Hard
-                </Tab>
+                </SkeletonTab>
               </Tabs>
             </div>
           </div>
@@ -86,13 +83,7 @@ export default function BingoSkeleton() {
   );
 }
 
-function completetionColor(completion: number) {
-  if (completion === 0) return "text-mc-red";
-  if (completion === 16) return "text-mc-green font-bold";
-  return "text-mc-yellow";
-}
-
-function CategoryOverview({ category, icon }: { category: Category; icon: StaticImport }) {
+function SkeletonCategoryOverview({ category, icon }: { category: Category; icon: StaticImport }) {
   return (
     <div className="flex flex-col justify-center gap-1 lg:gap-3 text-center text-mc-1.5 lg:text-mc-2">
       <div className="flex gap-2 items-center justify-center">
@@ -109,12 +100,12 @@ function CategoryOverview({ category, icon }: { category: Category; icon: Static
       <div className="flex flex-col justify-center gap-1">
         <p className="text-mc-gray">
           <span className="text-mc-green">Easy</span>:{" "}
-          {/* <span className={completetionColor(easyCompletion)}>{easyCompletion}</span> */}
+          <span>0</span>
           <span className="text-mc-gray">/16</span> completed
         </p>
         <p className="text-mc-gray">
           <span className="text-mc-red">Hard</span>:{" "}
-          {/* <span className={completetionColor(hardCompletion)}>{hardCompletion}</span> */}
+          <span>0</span>
           <span className="text-mc-gray">/16</span> completed
         </p>
       </div>
@@ -131,11 +122,10 @@ function BingoBoard<D extends Difficulty, C extends Category>({
 }) {
   const board = boards[difficulty][category];
 
-  // HERE
   return (
     <div className="overflow-x-auto grid grid-cols-[repeat(6,1fr)] grid-rows-6 gap-2 **:text-mc-1.25 md:**:text-mc-1.5 leading-4">
       <RewardCard key={`${difficulty}-${category}-diagonal-0`} reward={board.diagonalRewards[0]} />
-      {board.columnRewards.map((reward, column) => (
+      {board.columnRewards.map((reward) => (
         <RewardCard key={`${difficulty}-${category}-${reward.name}`} reward={reward} />
       ))}
       <RewardCard key={`${difficulty}-${category}-diagonal-1`} reward={board.diagonalRewards[1]} />
@@ -144,7 +134,7 @@ function BingoBoard<D extends Difficulty, C extends Category>({
           <TaskCard key={`${difficulty}-${category}-${task.field}`} task={task} />
         ))}
       </div>
-      {board.rowRewards.map((reward, row) => (
+      {board.rowRewards.map((reward) => (
         <RewardCard key={`${difficulty}-${category}-${reward.name}`} className="col-start-6" reward={reward} />
       ))}
       <RewardCard
@@ -182,8 +172,6 @@ function RewardCard({
 }
 
 function TaskCard({ task }: { task: Task }) {
-  const finished = 0;
-
   return (
     <SkeletonBox
       className="grow min-w-50 content:flex content:flex-col content:justify-between content:gap-2 content:text-center"
@@ -198,16 +186,8 @@ function TaskCard({ task }: { task: Task }) {
       </div>
       <p className="text-mc-gray">
         Progress:{" "}
-        <span
-          className={`${
-            finished > 0 && finished < task.progress
-              ? "text-mc-yellow"
-              : finished >= task.progress
-              ? "text-mc-green"
-              : "text-mc-red"
-          }`}
-        >
-          {finished}
+        <span className="text-mc-red">
+          0
         </span>
         <span className="text-mc-gray">/</span>
         <span className="text-mc-gray">{task.progress}</span>

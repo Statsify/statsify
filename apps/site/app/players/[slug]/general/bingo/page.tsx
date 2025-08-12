@@ -21,6 +21,5 @@ export default async function BingoPage({ params }: { params: Promise<{ slug: st
   const player = await getPlayer(slug);
   if (!player) notFound();
 
-  // return <BingoSkeleton />;
   return <Bingo player={player} />;
 }

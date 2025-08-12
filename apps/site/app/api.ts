@@ -13,7 +13,8 @@ import type { Guild, Player } from "@statsify/schemas";
 import type { PostLeaderboardResponse } from "@statsify/api-client";
 
 export async function getPlayer(slug: string): Promise<Player | undefined> {
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+  // TODO: remove this delay
+  await new Promise((resolve) => setTimeout(resolve, 2500));
   const response = await fetch(`${env.API_URL}/player?player=${slug}`, {
     headers: { "X-API-KEY": env.API_KEY },
   });

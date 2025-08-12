@@ -30,7 +30,7 @@ import { z } from "zod";
 import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import type { Player } from "@statsify/schemas";
 
-const FormattedCategories: Record<Category, string> = {
+export const FormattedCategories: Record<Category, string> = {
   casual: "Casual",
   classic: "Classic",
   pvp: "PvP",

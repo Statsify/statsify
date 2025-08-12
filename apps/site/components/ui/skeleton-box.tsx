@@ -6,11 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { cn } from "~/lib/util";
 import type { JSX } from "react";
 import { type BoxProps, Box } from "./box";
-
-const skeletonBoxVariants = {};
 
 const GRADIENT =
   "linear-gradient(110deg, transparent 15%, color-mix(in oklab, var(--color-blackify-700) 50%, transparent) 30%, color-mix(in oklab, var(--color-blackify-950) 50%, transparent) 60%, color-mix(in oklab, var(--color-blackify-950) 50%, transparent) 75%, color-mix(in oklab, var(--color-blackify-700) 50%, transparent) 90%, transparent 95%)";
@@ -21,22 +18,20 @@ export function SkeletonBox<T extends keyof JSX.IntrinsicElements = "div">({
   ...props
 }: BoxProps<T>) {
   return (
-    <Box className={`content:overflow-clip content:relative content:!bg-blackify-800/50`} {...props}>
+    <Box className={`${className} content:overflow-clip content:relative content:!bg-blackify-800/50 content:*:nth-[n+4]:invisible`} {...props}>
       <div
         style={{ background: GRADIENT, animationDelay: "-1600ms" }}
-        className="absolute inset-y-0 w-[300%] animate-gradient-loading-slide"
+        className="absolute inset-y-0 w-[300%] animate-gradient-loading-slide visbile"
       />
       <div
         style={{ background: GRADIENT, animationDelay: "400ms" }}
-        className="absolute inset-y-0 w-[300%] animate-gradient-loading-slide "
+        className="absolute inset-y-0 w-[300%] animate-gradient-loading-slide visbile"
       />
       <div
         style={{ background: GRADIENT, animationDelay: "2400ms" }}
-        className="absolute inset-y-0 w-[300%] animate-gradient-loading-slide "
+        className="absolute inset-y-0 w-[300%] animate-gradient-loading-slide visbile"
       />
-      <div data-slot="content" className={cn("invisible", className)}>
         {children}
-      </div>
     </Box>
   );
 }
