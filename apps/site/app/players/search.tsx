@@ -133,7 +133,7 @@ export function Search({
 function SearchPlayer({ player }: { player: string }) {
   return (
     <Link
-      href={`/players/${player}`}
+      href={`/players/${player}/general/bingo`}
       className="flex items-center gap-4 w-full p-2 hover:bg-white/20 active:bg-white/10"
     >
       {/* <div className="w-8 h-8 bg-red-300 drop-shadow-mc-2" /> */}
