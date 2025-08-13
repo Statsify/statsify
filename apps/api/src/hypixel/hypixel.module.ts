@@ -16,10 +16,10 @@ import { config } from "@statsify/util";
     HttpModule.register({
       baseURL: "https://api.hypixel.net/",
       headers: {
-        "API-Key": config("hypixelApi.key"),
+        "API-Key": await config("hypixelApi.key"),
         "accept-encoding": "*",
       },
-      timeout: config("hypixelApi.timeout", { default: 5000 }),
+      timeout: await config("hypixelApi.timeout", { default: 5000 }),
     }),
   ],
   providers: [HypixelService],

@@ -28,8 +28,8 @@ import {
 import { STATUS_COLORS } from "@statsify/logger";
 import { config } from "@statsify/util";
 
-const SUPPORT_BOT_GUILD_ID = config("supportBot.guild");
-const SUPPORT_BOT_MEMBER_ROLE_ID = config("supportBot.memberRole");
+const SUPPORT_BOT_GUILD_ID = await config("supportBot.guild");
+const SUPPORT_BOT_MEMBER_ROLE_ID = await config("supportBot.memberRole");
 const VERIFY_VIDEO = "https://www.youtube.com/watch?v=e5tF89tHEsg";
 
 const VERIFY_MODAL = new ModalBuilder()

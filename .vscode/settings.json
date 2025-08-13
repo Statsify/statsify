@@ -16,7 +16,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.css-language-features"
   },
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
@@ -25,7 +25,7 @@
     "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[typescriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
@@ -45,8 +45,14 @@
   "todo-tree.tree.scanMode": "workspace only",
   "testing.automaticallyOpenPeekView": "never",
   "[rust]": {
-    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
   },
-  // Uncomment this for working with skin-renderer and WASM
-  // "rust-analyzer.cargo.target": "wasm32-unknown-unknown"
+  "tailwindCSS.classAttributes": [
+    "className",
+    "containerClass",
+    "contentClass"
+  ],
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  }
 }

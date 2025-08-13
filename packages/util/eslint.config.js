@@ -6,4 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export { default } from "../../eslint.config.js";
+import { defineConfig } from "../../eslint.config.js";
+
+export default defineConfig({ tsconfigDirName: import.meta.dirname });

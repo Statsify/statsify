@@ -14,8 +14,8 @@ import { getModelForClass } from "@typegoose/typegoose";
 
 @Service()
 export class MongoLoaderService {
-  public init() {
-    const connection = createConnection(config("database.mongoUri"));
+  public async init() {
+    const connection = createConnection(await config("database.mongoUri"));
 
     const models = [Ticket, Tag, User];
 

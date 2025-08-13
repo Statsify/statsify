@@ -34,19 +34,19 @@ const PREMIUM_TIERS = [
 type PremiumTier = (typeof PREMIUM_TIERS)[number];
 
 const TIER_ROLES = {
-  [UserTier.NETHERITE]: config("supportBot.netheriteRole"),
-  [UserTier.EMERALD]: config("supportBot.emeraldRole"),
-  [UserTier.DIAMOND]: config("supportBot.diamondRole"),
-  [UserTier.GOLD]: config("supportBot.goldRole"),
-  [UserTier.IRON]: config("supportBot.ironRole"),
+  [UserTier.NETHERITE]: await config("supportBot.netheriteRole"),
+  [UserTier.EMERALD]: await config("supportBot.emeraldRole"),
+  [UserTier.DIAMOND]: await config("supportBot.diamondRole"),
+  [UserTier.GOLD]: await config("supportBot.goldRole"),
+  [UserTier.IRON]: await config("supportBot.ironRole"),
 };
 
-const PREMIUM_ROLE = config("supportBot.premiumRole");
-const PATREON_ROLE = config("supportBot.patreonRole");
-const NITRO_BOOSTER_ROLE = config("supportBot.nitroBoosterRole");
+const PREMIUM_ROLE = await config("supportBot.premiumRole");
+const PATREON_ROLE = await config("supportBot.patreonRole");
+const NITRO_BOOSTER_ROLE = await config("supportBot.nitroBoosterRole");
 
-const PREMIUM_LOG_CHANNEL = config("supportBot.premiumLogsChannel");
-const GUILD_ID = config("supportBot.guild");
+const PREMIUM_LOG_CHANNEL = await config("supportBot.premiumLogsChannel");
+const GUILD_ID = await config("supportBot.guild");
 
 @Service()
 export class GuildMemberUpdateEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberUpdate> {
