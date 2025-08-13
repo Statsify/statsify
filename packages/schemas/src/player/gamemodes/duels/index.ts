@@ -181,6 +181,12 @@ export class Duels {
   })
   public uhc: UHCDuels;
 
+  @Field()
+  public scheme: string;
+
+  @Field()
+  public icon: string;
+
   public constructor(data: APIData) {
     this.overall = new SingleBowPVPDuelsGameMode(data, "", "");
     this.overall.winstreak = data?.currentStreak ?? this.overall.winstreak;
@@ -207,6 +213,9 @@ export class Duels {
 
     this.pingRange = data?.pingPreference ?? 300;
     this.tokens = data.coins;
+
+    this.icon = data.active_prefix_icon;
+    this.scheme = data.active_prefix_scheme;
   }
 }
 

@@ -161,6 +161,7 @@ export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeF
         case "bedwars":
           if (submode === "rush") map = "bedwars_rush";
           else map = "bedwars";
+          break;
 
         case "spleef":
           if (submode === "bowSpleef") map = "spleef_bowSpleef";
