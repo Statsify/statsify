@@ -11,7 +11,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@fastify/static": "^7.0.4",
+    "@fastify/static": "^8.2.0",
     "@fastify/view": "^9.1.0",
     "@m8a/nestjs-typegoose": "^12.0.0",
     "@nestjs/axios": "^3.0.3",
