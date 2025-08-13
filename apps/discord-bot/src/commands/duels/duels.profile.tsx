@@ -11,7 +11,7 @@ import {
   BridgeDuelsTable,
   MultiDuelsGameModeTable,
   SingleDuelsGameModeTable,
-  TitlesTable, 
+  TitlesTable,
 } from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
 import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
@@ -104,7 +104,7 @@ export const DuelsProfile = <T extends ProfileTime>({
 
   if (mode.api === "overall") {
     formattedMode = mode.submode.api === "stats" ? "Overall" : mode.submode.formatted;
-  } else if ((mode.api === "bedwars" || mode.api ==="spleef" )&& mode.submode.api !== "overall") {
+  } else if ((mode.api === "bedwars" || mode.api === "spleef") && mode.submode.api !== "overall") {
     formattedMode = mode.submode.formatted;
   } else {
     formattedMode = `${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""}`;

@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { BaseDuelsGameMode, PVPBaseDuelsGameMode, SingleDuelsGameMode, SinglePVPDuelsGameMode } from "@statsify/schemas";
 import { Historical, If, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
-import { BaseDuelsGameMode, PVPBaseDuelsGameMode, SingleDuelsGameMode, SinglePVPDuelsGameMode } from "@statsify/schemas";
 import type { ProfileTime } from "#commands/base.hypixel-command";
 
 interface SingleDuelsGameModeTableProps {

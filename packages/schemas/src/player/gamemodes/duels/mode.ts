@@ -161,7 +161,6 @@ export class BridgeDuels {
   @Field()
   public fours: BridgeDuelsMode;
 
-
   public constructor(data: APIData) {
     this.solo = new BridgeDuelsMode(data, "bridge_duel");
     this.doubles = new BridgeDuelsMode(data, "bridge_doubles");
@@ -172,7 +171,7 @@ export class BridgeDuels {
       this.solo,
       this.doubles,
       this.threes,
-      this.fours,
+      this.fours
     );
 
     this.overall.winstreak = data.current_bridge_winstreak;
@@ -587,10 +586,10 @@ export class SpleefDuels {
   @Field()
   public progression: Progression;
 
-  @Field({ leaderboard: {name:"Spleef Overall Wins",fieldName:"Wins"}})
+  @Field({ leaderboard: { name: "Spleef Overall Wins", fieldName: "Wins" } })
   public overallWins: number;
 
-  @Field({ leaderboard: {fieldName:"Spleef"}})
+  @Field({ leaderboard: { fieldName: "Spleef" } })
   public spleef: SpleefDuelMode;
 
   @Field()
@@ -599,7 +598,7 @@ export class SpleefDuels {
   public constructor(data: APIData) {
     this.spleef = new SpleefDuelMode(data);
     this.bowSpleef = new BowSpleefDuelMode(data);
-    this.overallWins=add(this.spleef.wins,this.bowSpleef.wins);
+    this.overallWins = add(this.spleef.wins, this.bowSpleef.wins);
 
     const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
       this.overallWins,

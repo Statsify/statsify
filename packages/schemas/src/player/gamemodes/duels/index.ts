@@ -61,16 +61,16 @@ export const DUELS_MODES = new GameModes([
   { api: "parkour", hypixel: "DUELS_PARKOUR_EIGHT" },
   { api: "skywars", formatted: "SkyWars" },
   { api: "spleef", submodes: [
-    {api: "spleef" },
-    {api: "bowSpleef"},
+    { api: "spleef" },
+    { api: "bowSpleef" },
   ] },
   { api: "sumo", hypixel: "DUELS_SUMO_DUEL" },
-  { api: "uhc", formatted: "UHC", submodes:[
-    {api:"overall"},
-    {api:"solo"},
-    {api:"doubles"},
-    {api:"fours"},
-    {api:"deathmatch"},
+  { api: "uhc", formatted: "UHC", submodes: [
+    { api: "overall" },
+    { api: "solo" },
+    { api: "doubles" },
+    { api: "fours" },
+    { api: "deathmatch" },
   ] },
 
   { hypixel: "DUELS_MW_DUEL", formatted: "MegaWalls Solo" },
