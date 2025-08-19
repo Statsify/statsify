@@ -12,9 +12,10 @@ import {
   BlitzSGDuels,
   BridgeDuels,
   MultiPVPDuelsGameMode,
+  PVPBaseDuelsGameMode,
+  ParkourDuels,
   QuakeDuels,
   SingleBowPVPDuelsGameMode,
-  SingleDuelsGameMode,
   SinglePVPDuelsGameMode,
   SkyWarsDuels,
   SpleefDuels,
@@ -22,6 +23,7 @@ import {
 } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
+import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export const DUELS_MODES = new GameModes([
@@ -33,11 +35,14 @@ export const DUELS_MODES = new GameModes([
     ],
   },
   { api: "arena", hypixel: "DUELS_DUEL_ARENA" },
-  { api: "bedwars", formatted: "BedWars", submodes: [
-    { api: "overall" },
-    { api: "bedwars", formatted: "BedWars Duel" },
-    { api: "rush", formatted: "Bed Rush" },
-  ],
+  {
+    api: "bedwars",
+    formatted: "BedWars",
+    submodes: [
+      { api: "overall" },
+      { api: "bedwars", formatted: "BedWars Duel" },
+      { api: "rush", formatted: "Bed Rush" },
+    ],
   },
   { api: "blitzsg", hypixel: "DUELS_BLITZ_DUEL", formatted: "BlitzSG" },
   { api: "bow", hypixel: "DUELS_BOW_DUEL" },
@@ -57,22 +62,28 @@ export const DUELS_MODES = new GameModes([
   { api: "megawalls", formatted: "MegaWalls" },
   { api: "nodebuff", hypixel: "DUELS_POTION_DUEL", formatted: "NoDebuff" },
   { api: "op", formatted: "OP" },
-  { api: "quake" },
+  { api: "quake", hypixel: "DUELS_QUAKE_DUEL" },
   { api: "parkour", hypixel: "DUELS_PARKOUR_EIGHT" },
   { api: "skywars", formatted: "SkyWars" },
-  { api: "spleef", submodes: [
-    { api: "spleef" },
-    { api: "bowSpleef" },
-  ] },
+  {
+    api: "spleef",
+    submodes: [
+      { api: "spleef" },
+      { api: "bowSpleef" },
+    ],
+  },
   { api: "sumo", hypixel: "DUELS_SUMO_DUEL" },
-  { api: "uhc", formatted: "UHC", submodes: [
-    { api: "overall" },
-    { api: "solo" },
-    { api: "doubles" },
-    { api: "fours" },
-    { api: "deathmatch" },
-  ] },
-
+  {
+    api: "uhc",
+    formatted: "UHC",
+    submodes: [
+      { api: "overall" },
+      { api: "solo" },
+      { api: "doubles" },
+      { api: "fours" },
+      { api: "deathmatch" },
+    ],
+  },
   { hypixel: "DUELS_MW_DUEL", formatted: "MegaWalls Solo" },
   { hypixel: "DUELS_MW_DOUBLES", formatted: "MegaWalls Doubles" },
   { hypixel: "DUELS_UHC_DUEL", formatted: "UHC Solo" },
@@ -157,7 +168,7 @@ export class Duels {
   public op: MultiPVPDuelsGameMode;
 
   @Field({ leaderboard: { extraDisplay: "this.parkour.titleFormatted" } })
-  public parkour: SingleDuelsGameMode;
+  public parkour: ParkourDuels;
 
   @Field({ leaderboard: { extraDisplay: "this.quake.titleFormatted" } })
   public quake: QuakeDuels;
@@ -200,11 +211,21 @@ export class Duels {
     this.bridge = new BridgeDuels(data);
     this.classic = new MultiPVPDuelsGameMode(data, "Classic", "classic", "classic");
     this.combo = new SinglePVPDuelsGameMode(data, "Combo", "combo_duel");
+
+    // Add removed doubles stats
     this.megawalls = new SinglePVPDuelsGameMode(data, "MW", "mw_duel");
+    const megawallsDoubles = new PVPBaseDuelsGameMode(data, "mw_doubles");
+    this.megawalls.wins = add(this.megawalls.wins, megawallsDoubles.wins);
+    this.megawalls.losses = add(this.megawalls.losses, megawallsDoubles.losses);
+    this.megawalls.kills = add(this.megawalls.kills, megawallsDoubles.kills);
+    this.megawalls.deaths = add(this.megawalls.deaths, megawallsDoubles.wins);
+    this.megawalls.blocksPlaced = add(this.megawalls.blocksPlaced, megawallsDoubles.blocksPlaced);
+    PVPBaseDuelsGameMode.applyRatios(this.megawalls);
+
     this.nodebuff = new SinglePVPDuelsGameMode(data, "NoDebuff", "potion_duel");
     this.op = new MultiPVPDuelsGameMode(data, "OP", "op", "op");
 
-    this.parkour = new SingleDuelsGameMode(data, "Parkour", "parkour_eight");
+    this.parkour = new ParkourDuels(data);
     this.quake = new QuakeDuels(data);
     this.skywars = new SkyWarsDuels(data);
     this.spleef = new SpleefDuels(data);

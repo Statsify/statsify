@@ -6,29 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, romanNumeral } from "@statsify/util";
+import { type APIData, formatTime } from "@statsify/util";
 import { Field } from "#metadata";
-import { GamePrefix, createPrefixProgression } from "#prefixes";
 import { Progression } from "#progression";
-import { type Title, getTitle, titleScores } from "./util.js";
 import { add, deepAdd, ratio } from "@statsify/math";
-
-const getPrefixes = (titles: Title[]) =>
-  titles.flatMap((title) => {
-    const calculatedTitles: GamePrefix[] = [];
-
-    for (let i = 0; i < (title.max ?? 5); i++) {
-      calculatedTitles.push({
-        fmt: (n) => `${title.color.code}[${n}]`,
-        req: title.req + i * title.inc,
-      });
-    }
-
-    return calculatedTitles;
-  });
-
-const prefixes = getPrefixes(titleScores());
-const overallPrefixes = getPrefixes(titleScores(true));
+import { getTitleAndProgression } from "./util.js";
 
 export class BaseDuelsGameMode {
   @Field()
@@ -171,7 +153,10 @@ export class BridgeDuels {
       this.solo,
       this.doubles,
       this.threes,
-      this.fours
+      this.fours,
+      new BridgeDuelsMode(data, "bridge_2v2v2v2"),
+      new BridgeDuelsMode(data, "bridge_3v3v3v3"),
+      new BridgeDuelsMode(data, "capture_threes")
     );
 
     this.overall.winstreak = data.current_bridge_winstreak;
@@ -179,24 +164,16 @@ export class BridgeDuels {
 
     PVPBaseDuelsGameMode.applyRatios(this.overall);
 
-    const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
-      this.overall.wins,
-      "Bridge"
-    );
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.overall.wins,
+      mode: "Bridge",
+      data,
+    });
 
-    this.titleFormatted = formatted;
-
-    this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
-      index
-    )}]`;
-
-    const nextData = getTitle(req + index * inc, "Bridge");
-
-    this.nextTitleLevelFormatted = `${nextData.color.code}${
-      nextData.bold || nextData.semi ? "§l" : ""
-    }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
-
-    this.progression = createPrefixProgression(prefixes, this.overall.wins);
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
   }
 }
 
@@ -232,51 +209,18 @@ export class MultiPVPDuelsGameMode {
     this.overall.bestWinstreak = data[`best_${long}_winstreak`];
     this.overall.winstreak = data[`current_${long}_winstreak`];
 
-    const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
-      this.overall.wins,
-      title
-    );
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.overall.wins,
+      mode: title,
+      data,
+    });
 
-    this.titleFormatted = formatted;
-
-    this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
-      index
-    )}]`;
-
-    const nextData = getTitle(req + index * inc, title);
-
-    this.nextTitleLevelFormatted = `${nextData.color.code}${
-      nextData.bold || nextData.semi ? "§l" : ""
-    }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
-
-    this.progression = createPrefixProgression(prefixes, this.overall.wins);
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
   }
 }
-
-const assignTitles = (
-  data: SinglePVPDuelsGameMode | SingleDuelsGameMode,
-  title: string
-) => {
-  const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
-    data.wins,
-    title
-  );
-
-  data.titleFormatted = formatted;
-
-  data.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
-    index
-  )}]`;
-
-  const nextData = getTitle(req + index * inc, title);
-
-  data.nextTitleLevelFormatted = `${nextData.color.code}${
-    nextData.bold || nextData.semi ? "§l" : ""
-  }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
-
-  const titlePrefixes = title === "" ? overallPrefixes : prefixes;
-  data.progression = createPrefixProgression(titlePrefixes, data.wins);
-};
 
 export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
   @Field({ store: { default: "§7None§r" } })
@@ -293,7 +237,17 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
 
   public constructor(data: APIData, title: string, mode: string) {
     super(data, mode);
-    assignTitles(this, title);
+
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.wins,
+      mode: title,
+      data,
+    });
+
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
   }
 }
 
@@ -323,7 +277,17 @@ export class SingleDuelsGameMode extends BaseDuelsGameMode {
 
   public constructor(data: APIData, title: string, mode: string) {
     super(data, mode);
-    assignTitles(this, title);
+
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.wins,
+      mode: title,
+      data,
+    });
+
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
   }
 }
 
@@ -365,6 +329,9 @@ export class UHCDuels {
   @Field()
   public deathmatch: BowPVPBaseDuelsGameMode;
 
+  @Field()
+  public gapplesEaten: number;
+
   public constructor(data: APIData) {
     this.solo = new BowPVPBaseDuelsGameMode(data, "uhc_duel");
     this.doubles = new BowPVPBaseDuelsGameMode(data, "uhc_doubles");
@@ -372,30 +339,27 @@ export class UHCDuels {
     this.deathmatch = new BowPVPBaseDuelsGameMode(data, "uhc_meetup");
 
     this.overall = deepAdd(this.solo, this.doubles, this.fours, this.deathmatch);
-
     this.overall.winstreak = data.current_uhc_winstreak;
     this.overall.bestWinstreak = data.best_uhc_winstreak;
-
     BowPVPBaseDuelsGameMode.applyRatios(this.overall);
 
-    const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
-      this.overall.wins,
-      "UHC"
+    this.gapplesEaten = add(
+      data.uhc_duel_golden_apples_eaten,
+      data.uhc_doubles_golden_apples_eaten,
+      data.uhc_four_golden_apples_eaten,
+      data.uhc_meetu_golden_apples_eaten
     );
 
-    this.titleFormatted = formatted;
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.overall.wins,
+      mode: "UHC",
+      data,
+    });
 
-    this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
-      index
-    )}]`;
-
-    const nextData = getTitle(req + index * inc, "UHC");
-
-    this.nextTitleLevelFormatted = `${nextData.color.code}${
-      nextData.bold || nextData.semi ? "§l" : ""
-    }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
-
-    this.progression = createPrefixProgression(prefixes, this.overall.wins);
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
   }
 }
 
@@ -532,24 +496,16 @@ export class BedwarsDuels {
     this.rush = new PVPBaseDuelsGameMode(data, "bedwars_two_one_duels_rush");
     this.overall = new BedWarsDuelsOverallMode(data);
 
-    const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
-      this.overall.wins,
-      "BedWars"
-    );
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.overall.wins,
+      mode: "Bed Wars",
+      data,
+    });
 
-    this.titleFormatted = formatted;
-
-    this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
-      index
-    )}]`;
-
-    const nextData = getTitle(req + index * inc, "BedWars");
-
-    this.nextTitleLevelFormatted = `${nextData.color.code}${
-      nextData.bold || nextData.semi ? "§l" : ""
-    }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
-
-    this.progression = createPrefixProgression(prefixes, this.overall.wins);
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
   }
 }
 
@@ -600,24 +556,30 @@ export class SpleefDuels {
     this.bowSpleef = new BowSpleefDuelMode(data);
     this.overallWins = add(this.spleef.wins, this.bowSpleef.wins);
 
-    const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
-      this.overallWins,
-      "Spleef"
-    );
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.overallWins,
+      mode: "Spleef",
+      data,
+    });
 
-    this.titleFormatted = formatted;
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
+  }
+}
 
-    this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
-      index
-    )}]`;
+export class ParkourDuels extends SingleDuelsGameMode {
+  @Field()
+  public checkpoints: number;
 
-    const nextData = getTitle(req + index * inc, "Spleef");
+  @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
+  public bestTime: number;
 
-    this.nextTitleLevelFormatted = `${nextData.color.code}${
-      nextData.bold || nextData.semi ? "§l" : ""
-    }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
-
-    this.progression = createPrefixProgression(prefixes, this.overallWins);
+  public constructor(data: APIData) {
+    super(data, "Parkour", "parkour_eight");
+    this.checkpoints = data.parkour_checkpoints_reached;
+    this.bestTime = (data.parkour_personal_best ?? 0) * 1000;
   }
 }
 
