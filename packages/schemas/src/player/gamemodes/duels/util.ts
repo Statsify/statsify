@@ -49,7 +49,7 @@ const getPrefixes = (titles: Title[]) =>
   });
 
 const overallTitlePrefixes = getPrefixes(overallTitleScores);
-const modeTitlePrefixes = getPrefixes(overallTitleScores);
+const modeTitlePrefixes = getPrefixes(modeTitleScores);
 
 const BOLD_TITLE_REQUIREMENT = 100_000;
 
