@@ -7,18 +7,23 @@
  */
 
 import {
+  ArenaDuels,
+  BedwarsDuels,
   BlitzSGDuels,
   BridgeDuels,
   MultiPVPDuelsGameMode,
-  SingleBowDuelsGameMode,
+  PVPBaseDuelsGameMode,
+  ParkourDuels,
+  QuakeDuels,
   SingleBowPVPDuelsGameMode,
-  SingleDuelsGameMode,
   SinglePVPDuelsGameMode,
   SkyWarsDuels,
+  SpleefDuels,
   UHCDuels,
 } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
+import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export const DUELS_MODES = new GameModes([
@@ -30,9 +35,17 @@ export const DUELS_MODES = new GameModes([
     ],
   },
   { api: "arena", hypixel: "DUELS_DUEL_ARENA" },
+  {
+    api: "bedwars",
+    formatted: "BedWars",
+    submodes: [
+      { api: "overall" },
+      { api: "bedwars", formatted: "BedWars Duel" },
+      { api: "rush", formatted: "Bed Rush" },
+    ],
+  },
   { api: "blitzsg", hypixel: "DUELS_BLITZ_DUEL", formatted: "BlitzSG" },
   { api: "bow", hypixel: "DUELS_BOW_DUEL" },
-  { api: "bowSpleef", hypixel: "DUELS_BOWSPLEEF_DUEL" },
   { api: "boxing", hypixel: "DUELS_BOXING_DUEL" },
   {
     api: "bridge",
@@ -42,9 +55,6 @@ export const DUELS_MODES = new GameModes([
       { api: "doubles" },
       { api: "threes" },
       { api: "fours" },
-      { api: "2v2v2v2" },
-      { api: "3v3v3v3" },
-      { api: "ctf", formatted: "CTF" },
     ],
   },
   { api: "classic", hypixel: "DUELS_CLASSIC_DUEL" },
@@ -52,11 +62,28 @@ export const DUELS_MODES = new GameModes([
   { api: "megawalls", formatted: "MegaWalls" },
   { api: "nodebuff", hypixel: "DUELS_POTION_DUEL", formatted: "NoDebuff" },
   { api: "op", formatted: "OP" },
+  { api: "quake", hypixel: "DUELS_QUAKE_DUEL" },
   { api: "parkour", hypixel: "DUELS_PARKOUR_EIGHT" },
   { api: "skywars", formatted: "SkyWars" },
+  {
+    api: "spleef",
+    submodes: [
+      { api: "spleef" },
+      { api: "bowSpleef" },
+    ],
+  },
   { api: "sumo", hypixel: "DUELS_SUMO_DUEL" },
-  { api: "uhc", formatted: "UHC" },
-
+  {
+    api: "uhc",
+    formatted: "UHC",
+    submodes: [
+      { api: "overall" },
+      { api: "solo" },
+      { api: "doubles" },
+      { api: "fours" },
+      { api: "deathmatch" },
+    ],
+  },
   { hypixel: "DUELS_MW_DUEL", formatted: "MegaWalls Solo" },
   { hypixel: "DUELS_MW_DOUBLES", formatted: "MegaWalls Doubles" },
   { hypixel: "DUELS_UHC_DUEL", formatted: "UHC Solo" },
@@ -74,6 +101,7 @@ export const DUELS_MODES = new GameModes([
   { hypixel: "DUELS_BRIDGE_2V2V2V2", formatted: "Bridge 2v2v2v2" },
   { hypixel: "DUELS_BRIDGE_3V3V3V3", formatted: "Bridge 3v3v3v3" },
   { hypixel: "DUELS_CAPTURE_THREES", formatted: "Bridge CTF" },
+  // TODO: add new duels modes
 ] as const);
 
 export type DuelsModes = ExtractGameModes<typeof DUELS_MODES>;
@@ -92,7 +120,7 @@ export class Duels {
   public overall: SingleBowPVPDuelsGameMode;
 
   @Field({ leaderboard: { extraDisplay: "this.arena.titleFormatted" } })
-  public arena: SingleBowDuelsGameMode;
+  public arena: ArenaDuels;
 
   @Field({
     leaderboard: {
@@ -105,17 +133,17 @@ export class Duels {
   @Field({ leaderboard: { extraDisplay: "this.bow.titleFormatted" } })
   public bow: SingleBowPVPDuelsGameMode;
 
-  @Field({ leaderboard: { extraDisplay: "this.bowSpleef.titleFormatted" } })
-  public bowSpleef: SingleBowDuelsGameMode;
-
   @Field({ leaderboard: { extraDisplay: "this.boxing.titleFormatted" } })
   public boxing: SinglePVPDuelsGameMode;
 
   @Field({ leaderboard: { extraDisplay: "this.bridge.titleFormatted" } })
   public bridge: BridgeDuels;
 
+  @Field({ leaderboard: { name: "", extraDisplay: "this.bedwars.titleFormatted" } })
+  public bedwars: BedwarsDuels;
+
   @Field({ leaderboard: { extraDisplay: "this.classic.titleFormatted" } })
-  public classic: SingleBowPVPDuelsGameMode;
+  public classic: MultiPVPDuelsGameMode;
 
   @Field({ leaderboard: { extraDisplay: "this.combo.titleFormatted" } })
   public combo: SinglePVPDuelsGameMode;
@@ -126,7 +154,7 @@ export class Duels {
       extraDisplay: "this.megawalls.titleFormatted",
     },
   })
-  public megawalls: MultiPVPDuelsGameMode;
+  public megawalls: SinglePVPDuelsGameMode;
 
   @Field({
     leaderboard: {
@@ -136,13 +164,14 @@ export class Duels {
   })
   public nodebuff: SinglePVPDuelsGameMode;
 
-  @Field({
-    leaderboard: { fieldName: "OP", extraDisplay: "this.op.titleFormatted" },
-  })
+  @Field({ leaderboard: { fieldName: "OP", extraDisplay: "this.op.titleFormatted" } })
   public op: MultiPVPDuelsGameMode;
 
   @Field({ leaderboard: { extraDisplay: "this.parkour.titleFormatted" } })
-  public parkour: SingleDuelsGameMode;
+  public parkour: ParkourDuels;
+
+  @Field({ leaderboard: { extraDisplay: "this.quake.titleFormatted" } })
+  public quake: QuakeDuels;
 
   @Field({
     leaderboard: {
@@ -152,6 +181,9 @@ export class Duels {
   })
   public skywars: SkyWarsDuels;
 
+  @Field({ leaderboard: { fieldName: "", extraDisplay: "this.spleef.titleFormatted" } })
+  public spleef: SpleefDuels;
+
   @Field({ leaderboard: { extraDisplay: "this.sumo.titleFormatted" } })
   public sumo: SinglePVPDuelsGameMode;
 
@@ -160,30 +192,51 @@ export class Duels {
   })
   public uhc: UHCDuels;
 
+  @Field()
+  public scheme: string;
+
+  @Field()
+  public icon: string;
+
   public constructor(data: APIData) {
     this.overall = new SingleBowPVPDuelsGameMode(data, "", "");
     this.overall.winstreak = data?.currentStreak ?? this.overall.winstreak;
-    this.arena = new SingleBowDuelsGameMode(data, "Arena", "duel_arena");
+    this.arena = new ArenaDuels(data, "Arena", "duel_arena");
 
     this.blitzsg = new BlitzSGDuels(data);
     this.bow = new SingleBowPVPDuelsGameMode(data, "Bow", "bow_duel");
-    this.bowSpleef = new SingleBowDuelsGameMode(data, "TNT", "bowspleef_duel");
     this.boxing = new SinglePVPDuelsGameMode(data, "Boxing", "boxing_duel");
+    this.bedwars = new BedwarsDuels(data);
 
     this.bridge = new BridgeDuels(data);
-    this.classic = new SingleBowPVPDuelsGameMode(data, "Classic", "classic_duel");
+    this.classic = new MultiPVPDuelsGameMode(data, "Classic", "classic", "classic");
     this.combo = new SinglePVPDuelsGameMode(data, "Combo", "combo_duel");
-    this.megawalls = new MultiPVPDuelsGameMode(data, "MW", "mw", "mega_walls");
+
+    // Add removed doubles stats
+    this.megawalls = new SinglePVPDuelsGameMode(data, "MW", "mw_duel");
+    const megawallsDoubles = new PVPBaseDuelsGameMode(data, "mw_doubles");
+    this.megawalls.wins = add(this.megawalls.wins, megawallsDoubles.wins);
+    this.megawalls.losses = add(this.megawalls.losses, megawallsDoubles.losses);
+    this.megawalls.kills = add(this.megawalls.kills, megawallsDoubles.kills);
+    this.megawalls.deaths = add(this.megawalls.deaths, megawallsDoubles.wins);
+    this.megawalls.blocksPlaced = add(this.megawalls.blocksPlaced, megawallsDoubles.blocksPlaced);
+    PVPBaseDuelsGameMode.applyRatios(this.megawalls);
+
     this.nodebuff = new SinglePVPDuelsGameMode(data, "NoDebuff", "potion_duel");
     this.op = new MultiPVPDuelsGameMode(data, "OP", "op", "op");
 
-    this.parkour = new SingleDuelsGameMode(data, "Parkour", "parkour_eight");
+    this.parkour = new ParkourDuels(data);
+    this.quake = new QuakeDuels(data);
     this.skywars = new SkyWarsDuels(data);
+    this.spleef = new SpleefDuels(data);
     this.sumo = new SinglePVPDuelsGameMode(data, "Sumo", "sumo_duel");
     this.uhc = new UHCDuels(data);
 
     this.pingRange = data?.pingPreference ?? 300;
     this.tokens = data.coins;
+
+    this.icon = data.active_prefix_icon;
+    this.scheme = data.active_prefix_scheme;
   }
 }
 

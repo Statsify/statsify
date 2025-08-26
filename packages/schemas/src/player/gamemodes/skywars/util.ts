@@ -246,8 +246,7 @@ const SCHEME_MAP = {
   "the_prestige_prestige": createMultiDigitColorScheme(["§7", "§f", "§6", "§b", "§c", "§d"]),
   "opalsmith": createMultiDigitColorScheme(["§9", "§9", "§b", "§3", "§d", "§5"]),
   "scurvy": createMultiDigitColorScheme(["§9", "§3", "§b", "§f", "§a", "§2"]),
-  // TODO how is this named: Fool's Mythic
-  "fool's_mythic": createMultiDigitColorScheme(["§4", "§c", "§6", "§2", "§9", "§5"]),
+  "fools_mythic": createMultiDigitColorScheme(["§4", "§c", "§6", "§2", "§9", "§5"]),
   "eponymous": createMultiDigitColorScheme(["§3", "§3", "§2", "§a", "§e", "§6"]),
   "bandage": createMultiDigitColorScheme(["§0", "§8", "§7", "§f", "§c", "§4"]),
   "clown": createMultiDigitColorScheme(["§2", "§c", "§f", "§f", "§c", "§4"]),
