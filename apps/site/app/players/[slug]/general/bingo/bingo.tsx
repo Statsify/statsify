@@ -65,7 +65,7 @@ export function Bingo({ player }: { player: Player }) {
               <Search defaultValue={player.username} />
               <Divider variant="black" className="my-2" />
               <Box className="content:text-center content:text-mc-3 content:flex content:items-center content:justify-center content:gap-4">
-                <SkinHead uuid={player.uuid} />
+                <SkinHead uuid={player.uuid} className="drop-shadow-mc-4 text-mc-black " />
                 <MinecraftText>{player.displayName}</MinecraftText>
               </Box>
               <Box className="content:grid content:grid-cols-1 content:lg:grid-cols-3 content:gap-4 content:lg:gap-8">

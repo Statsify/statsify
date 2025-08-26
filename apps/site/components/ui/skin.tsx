@@ -18,8 +18,15 @@ export function Skin({ uuid, className = "", ...props }: ComponentProps<typeof B
   );
 }
 
-export function SkinHead({ uuid, size = 32 }: { uuid: string; size?: number }) {
+export function SkinHead({ uuid, size = 32, className }: { uuid: string; size?: number; className?: string }) {
   return (
-    <Image height={size} width={size} alt="skin" src={`/api/skin/head?uuid=${uuid}&size=${size}`} style={{ imageRendering: "pixelated" }} />
+    <Image 
+      height={size} 
+      width={size} 
+      alt="skin" 
+      src={`/api/skin/head?uuid=${uuid}&size=${size}`} 
+      style={{ imageRendering: "pixelated" }} 
+      className={className}
+    />
   );
 }

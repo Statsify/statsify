@@ -10,7 +10,6 @@ import { notFound } from "next/navigation";
 import { z } from "zod";
 import { getPlayer } from "~/app/api";
 import { Bingo } from "./bingo";
-import BingoSkeleton from "./loading";
 
 const PlayerParams = z.object({
   slug: z.string(),

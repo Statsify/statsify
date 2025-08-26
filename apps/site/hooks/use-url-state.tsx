@@ -8,11 +8,10 @@
 
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import type { ZodSchema } from "zod";
 
 export function useUrlState<T extends string>(key: string, schema: ZodSchema<T>, defaultValue: T) {
-  const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
   const result = schema.safeParse(params.get(key));
@@ -22,7 +21,7 @@ export function useUrlState<T extends string>(key: string, schema: ZodSchema<T>,
     if (newValue === value) return;
     const newParams = new URLSearchParams(params.toString());
     newParams.set(key, newValue);
-    router.push(`${pathname}?${newParams.toString()}`, { scroll: false });
+    window.history.replaceState(null, '', `${pathname}?${newParams.toString()}`);
   }
 
   return [value, setParams] as const;
