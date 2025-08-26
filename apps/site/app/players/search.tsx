@@ -9,16 +9,18 @@
 "use client";
 
 import Link from "next/link";
-import { AnimatePresence, motion } from "motion/react";
 import { ComponentProps, useEffect, useRef, useState, useTransition } from "react";
 import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
 import { getPlayerSuggestions } from "~/app/api";
+import { motion } from "motion/react";
 import { redirect } from "next/navigation";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useOutisdeClick } from "~/hooks/use-outside-click";
 
 const SEARCH_DEBOUNCE_MS = 300;
+const SEARCH_ITEM_HEIGHT = 51;
+const SEARCH_MAX_HEIGHT = 300;
 
 function usePlayerSuggestions(input: string) {
   const query = useDebounce(input, SEARCH_DEBOUNCE_MS);
@@ -53,9 +55,6 @@ function usePlayerSuggestions(input: string) {
 }
 
 const playerUrl = (tag: string) => `/players/${tag}/general/bingo`;
-
-const SEARCH_ITEM_HEIGHT = 51;
-const SEARCH_MAX_HEIGHT = 300;
 
 export function Search({
   className,
@@ -115,8 +114,8 @@ export function Search({
           case "Escape":
             setSelected(undefined);
             break;
-          
-            case "ArrowDown": {
+
+          case "ArrowDown": {
             const newSelected = ((selected ?? -1) + 1) % suggestions.length;
             onSelectionChange(newSelected);
             break;
@@ -150,8 +149,8 @@ export function Search({
       <motion.div
         ref={containerRef}
         className="w-full overflow-auto absolute bg-white/25 backdrop-blur-2xl z-100"
-        animate={{ 
-          height: +focused * Math.min(SEARCH_MAX_HEIGHT, isPending ? 3 * SEARCH_ITEM_HEIGHT : suggestions.length * SEARCH_ITEM_HEIGHT) 
+        animate={{
+          height: +focused * Math.min(SEARCH_MAX_HEIGHT, isPending ? 3 * SEARCH_ITEM_HEIGHT : suggestions.length * SEARCH_ITEM_HEIGHT),
         }}
       >
         {focused && isPending && (
@@ -162,7 +161,7 @@ export function Search({
           </>
         )}
         {
-          focused && 
+          focused &&
           !isPending &&
           suggestions.length &&
           suggestions.map((suggestion, index) => (

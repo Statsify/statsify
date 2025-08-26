@@ -9,14 +9,10 @@
 import { Bingo } from "./bingo";
 import { getPlayer } from "~/app/api";
 import { notFound } from "next/navigation";
-import { z } from "zod";
 
-const PlayerParams = z.object({
-  slug: z.string(),
-});
-
-export default async function BingoPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = PlayerParams.parse(await params);
+export default async function BingoPage({ params }: PageProps<"/players/[slug]/general/bingo">) {
+  const { slug } = await params;
+  
   const player = await getPlayer(slug);
   if (!player) notFound();
 

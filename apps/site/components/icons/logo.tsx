@@ -9,24 +9,24 @@
 import { cn } from "~/lib/util";
 
 function LogoBarShadow({
-   id, color
-}:{id:string; color: string}) {
+  id, color,
+}: { id: string; color: string }) {
   return (
     <filter id={id}>
-      <feDropShadow 
-        dx="0" 
-        dy="-1" 
-        stdDeviation="0" 
-        floodColor={`color-mix(in srgb, var(${color}) 85%, #fff 15%)`} 
+      <feDropShadow
+        dx="0"
+        dy="-1"
+        stdDeviation="0"
+        floodColor={`color-mix(in srgb, var(${color}) 85%, #fff 15%)`}
       />
-      <feDropShadow 
+      <feDropShadow
         dx="0"
         dy="1"
-        stdDeviation="0" 
-        floodColor={`color-mix(in srgb, var(${color}) 25%, #000 75%)`} 
+        stdDeviation="0"
+        floodColor={`color-mix(in srgb, var(${color}) 25%, #000 75%)`}
       />
     </filter>
-  )
+  );
 }
 
 // Icon
@@ -34,11 +34,11 @@ export function Logo({ className }: { className?: string }) {
   return (
     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
       <filter id="arrow">
-        <feDropShadow 
-          dx="0" 
-          dy="1" 
-          stdDeviation="0" 
-          floodColor="#404040" 
+        <feDropShadow
+          dx="0"
+          dy="1"
+          stdDeviation="0"
+          floodColor="#404040"
         />
       </filter>
       <path

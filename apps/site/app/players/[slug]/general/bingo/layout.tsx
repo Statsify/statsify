@@ -13,7 +13,7 @@ import { Divider } from "~/components/ui/divider";
 import { Search } from "~/app/players/search";
 import type { ReactNode } from "react";
 
-export default async function BingoLayout({ children, params }: { children: ReactNode; params: Promise<{ slug: string }> }) {
+export default async function BingoLayout({ children, params }: LayoutProps<"/players/[slug]/general/bingo">) {
   const { slug } = await params;
 
   return (
