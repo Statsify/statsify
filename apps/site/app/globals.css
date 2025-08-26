@@ -208,10 +208,6 @@
       rgb(0 0 0 / 0) 100%);
 }
 
-@utility logo-shadow-* {
-  filter: drop-shadow(0 1px color-mix(in srgb, --value(--color- *, [color]) 25%, #000 75%)) drop-shadow(0 -1px color-mix(in srgb, --value(--color- *, [color]) 85%, #fff 15%));
-}
-
 @utility w-container {
   width: 100%;
   max-width: 1440px;
