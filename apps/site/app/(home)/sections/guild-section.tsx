@@ -17,10 +17,10 @@ import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Progression } from "~/components/ui/progression";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
+import { cn } from "~/lib/util";
 import { formatDate } from "date-fns";
 import { t } from "~/localize";
 import type { Guild } from "@statsify/schemas";
-import { cn } from "~/lib/util";
 
 export function GuildSection({ guild }: { guild: Guild }) {
   return (
@@ -37,7 +37,7 @@ export function GuildSection({ guild }: { guild: Guild }) {
         </Carousel>
       </div>
       <div className="block md:hidden">
-        <GuildOverall guild={guild} className="shadow-none"/>
+        <GuildOverall guild={guild} className="shadow-none" />
       </div>
       <div className="mx-4 lg:mx-0 flex flex-col gap-4 max-w-120 xl:max-w-200 text-mc-white text-center lg:text-start">
         <h1 className="text-mc-4 lg:text-mc-7 font-bold text-mc-yellow text-center">
@@ -60,9 +60,9 @@ export function GuildSection({ guild }: { guild: Guild }) {
   );
 }
 
-function GuildOverall({ guild,className }: { guild: Guild;className?:string }) {
+function GuildOverall({ guild, className }: { guild: Guild;className?: string }) {
   return (
-    <div className={cn("relative grid grid-cols-1 xl:grid-cols-2 gap-2 p-4 z-10 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]",className)}>
+    <div className={cn("relative grid grid-cols-1 xl:grid-cols-2 gap-2 p-4 z-10 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]", className)}>
       <Box className="xl:col-span-2 text-center">
         <MinecraftText className="text-mc-3 md:text-mc-4">
           {guild.nameFormatted}

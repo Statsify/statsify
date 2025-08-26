@@ -8,14 +8,13 @@
 
 "use client";
 
+import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { ResizablePanel } from "~/components/ui/resizable-panel";
+import { ComponentProps, useEffect, useRef, useState, useTransition } from "react";
 import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
 import { getPlayerSuggestions } from "~/app/api";
 import { redirect } from "next/navigation";
-import { useState, useEffect, useRef, useTransition, type TransitionStartFunction } from "react";
-import Link from "next/link";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useOutisdeClick } from "~/hooks/use-outside-click";
 
@@ -44,7 +43,7 @@ function usePlayerSuggestions(input: string) {
       try {
         const suggestions = await getPlayerSuggestions(query);
         startTransition(() => onSuggestionsChange(suggestions, currentRequestId));
-      } catch (error) {
+      } catch {
         startTransition(() => onSuggestionsChange([], currentRequestId));
       }
     });
@@ -54,6 +53,9 @@ function usePlayerSuggestions(input: string) {
 }
 
 const playerUrl = (tag: string) => `/players/${tag}/general/bingo`;
+
+const SEARCH_ITEM_HEIGHT = 51;
+const SEARCH_MAX_HEIGHT = 300;
 
 export function Search({
   className,
@@ -65,77 +67,128 @@ export function Search({
   disabled?: boolean;
 }) {
   const [input, setInput] = useState(defaultValue);
-  const { suggestions, isPending } = usePlayerSuggestions(input ?? "");
+  const [query, setQuery] = useState(defaultValue);
+  const { suggestions, isPending } = usePlayerSuggestions(query ?? "");
   const [focused, setFocused] = useState(false);
-  const ref = useOutisdeClick<HTMLFormElement>(() => setFocused(false));
+  const [selected, setSelected] = useState<number | undefined>(undefined);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const ref = useOutisdeClick<HTMLFormElement>(() => {
+    setFocused(false);
+    setSelected(undefined);
+  });
+
+  function onSelectionChange(selected: number) {
+    setSelected(selected);
+    setInput(suggestions[selected]);
+
+    const maxScroll = suggestions.length * SEARCH_ITEM_HEIGHT - SEARCH_MAX_HEIGHT;
+    const halfVisible = Math.floor(SEARCH_MAX_HEIGHT / 2);
+    let scrollTop = selected * SEARCH_ITEM_HEIGHT - halfVisible + SEARCH_ITEM_HEIGHT / 2;
+    scrollTop = Math.max(0, Math.min(scrollTop, maxScroll));
+
+    containerRef.current?.scrollTo({
+      top: scrollTop,
+      behavior: "instant",
+    });
+  }
 
   return (
     <form
       ref={ref}
-      method="POST"
       className={cn("relative", className)}
       onSubmit={(event) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const query = formData.get("search");
-        if (!query || typeof query  !== "string") return;
+        if (!query || typeof query !== "string") return;
         redirect(playerUrl(query));
       }}
+      onKeyDown={(event) => {
+        if (event.key === "Enter") {
+          ref.current?.requestSubmit();
+        }
+
+        if (isPending) return;
+
+        switch (event.key) {
+          case "Escape":
+            setSelected(undefined);
+            break;
+          
+            case "ArrowDown": {
+            const newSelected = ((selected ?? -1) + 1) % suggestions.length;
+            onSelectionChange(newSelected);
+            break;
+          }
+
+          case "ArrowUp": {
+            const newSelected = selected ? selected - 1 : suggestions.length - 1;
+            onSelectionChange(newSelected);
+            break;
+          }
+        }
+      }}
     >
-      <div className="h-16 flex items-center px-4 gap-4 bg-white/30 border-4 border-white/40 backdrop-blur-sm">
+      <div className="h-16 flex items-center px-4 gap-4 bg-gradient-to-r from-white/20 to-white/40 outline-white/0 outline-4 transition-all duration-150 focus-within:outline-white/50 -outline-offset-4 backdrop-blur-sm">
         <SearchIcon className="size-8 text-white drop-shadow-mc-2" />
         <input
           name="search"
           placeholder="Search a player"
           className="text-mc-2 placeholder-mc-darkgray text-white outline-none h-full w-full selection:bg-white/50"
           value={input}
-          onChange={(event) => setInput(event.target.value)}
+          onChange={(event) => {
+            setQuery(event.target.value);
+            setInput(event.target.value);
+          }}
           spellCheck={false}
+          autoComplete="off"
           disabled={disabled}
           onFocus={() => setFocused(true)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              ref.current?.requestSubmit();
-            }
-          }}
         />
       </div>
-      <ResizablePanel containerClass="w-full absolute max-h-[300px] bg-white/25 backdrop-blur-2xl z-100">
-        {focused && (
-          <AnimatePresence>
-            {isPending && (
-              <>
-                <SearchPlayerSkeleton />
-                <SearchPlayerSkeleton />
-                <SearchPlayerSkeleton />
-              </>
-            )}
-            {!isPending &&
-              suggestions.length &&
-              suggestions.map((suggestion) => (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.1 }}
-                  key={suggestion}
-                  className="w-full flex flex-col items-center p-2"
-                >
-                  <SearchPlayer player={suggestion} />
-                </motion.div>
-              ))}
-          </AnimatePresence>
+      <motion.div
+        ref={containerRef}
+        className="w-full overflow-auto absolute bg-white/25 backdrop-blur-2xl z-100"
+        animate={{ 
+          height: +focused * Math.min(SEARCH_MAX_HEIGHT, isPending ? 3 * SEARCH_ITEM_HEIGHT : suggestions.length * SEARCH_ITEM_HEIGHT) 
+        }}
+      >
+        {focused && isPending && (
+          <>
+            <SearchPlayerSkeleton />
+            <SearchPlayerSkeleton />
+            <SearchPlayerSkeleton />
+          </>
         )}
-      </ResizablePanel>
+        {
+          focused && 
+          !isPending &&
+          suggestions.length &&
+          suggestions.map((suggestion, index) => (
+            <div
+              key={suggestion}
+              className="w-full flex flex-col items-center p-2"
+            >
+              <SearchPlayer
+                player={suggestion}
+                selected={selected === index}
+              />
+            </div>
+          ))
+        }
+      </motion.div>
     </form>
   );
 }
 
-function SearchPlayer({ player }: { player: string }) {
+function SearchPlayer({ player, selected = false, ...props }: Omit<ComponentProps<typeof Link>, "href" | "aria-selected" | "className" | "children"> & { player: string; selected?: boolean }) {
   return (
     <Link
+      {...props}
       href={playerUrl(player)}
-      className="flex items-center gap-4 w-full p-2 hover:bg-white/20 active:bg-white/10"
+      aria-selected={selected}
+      className="relative flex items-center gap-4 w-full p-2 hover:bg-white/20 active:bg-white/10 aria-selected:bg-white/20 aria-selected:before:content-[''] aria-selected:before:absolute aria-selected:before:bg-blueify-500 aria-selected:before:h-full aria-selected:before:w-0.5 aria-selected:before:left-0"
     >
       {/* <div className="w-8 h-8 bg-red-300 drop-shadow-mc-2" /> */}
       <p className="text-mc-2 text-white selection:bg-white/50">{player}</p>
@@ -145,9 +198,9 @@ function SearchPlayer({ player }: { player: string }) {
 
 function SearchPlayerSkeleton() {
   return (
-    <div className="flex items-center gap-4 w-full p-4">
+    <div className="relative flex items-center gap-4 w-full p-4">
       {/* <div className="w-8 h-8 bg-gray-200/40  animate-pulse drop-shadow-mc-2" /> */}
-      <div className="text-mc-2 bg-gray-200/40 animate-pulse w-1/3 h-5 selection:bg-white/50" />
+      <div className="text-mc-2 bg-gray-200/40 animate-pulse w-1/3 h-[19px] selection:bg-white/50" />
     </div>
   );
 }

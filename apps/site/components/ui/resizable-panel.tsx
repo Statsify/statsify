@@ -16,21 +16,23 @@ import { useMeasure } from "~/hooks/use-measure";
 export function ResizablePanel({
   children,
   containerClass,
+  ref,
   ...rest
 }: {
   children: ReactNode;
   containerClass: string;
 } & ComponentProps<"div">) {
-  const ref = useRef(null);
-  const size = useMeasure(ref);
+  const measureRef = useRef<HTMLDivElement>(null);
+  const size = useMeasure(measureRef);
 
   return (
     <motion.div
       animate={{ height: size.height }}
-      transition={{ type: "spring", bounce: 0, duration: 0.8 }}
-      className={cn("overflow-hidden relative", containerClass)}
+      transition={{ duration: 0.8 }}
+      className={cn("overflow-auto relative", containerClass)}
+      ref={ref}
     >
-      <div ref={ref}>
+      <div ref={measureRef}>
         <div {...rest}>{children}</div>
       </div>
     </motion.div>

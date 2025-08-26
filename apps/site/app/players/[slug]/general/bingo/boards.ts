@@ -9,7 +9,7 @@
 import type { Bingo } from "@statsify/schemas";
 
 export type Difficulty = Exclude<keyof Bingo, "bucks">;
-export type Category = keyof Bingo[Difficulty]
+export type Category = keyof Bingo[Difficulty];
 
 export type Reward = {
   name: string;

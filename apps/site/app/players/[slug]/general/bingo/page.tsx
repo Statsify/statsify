@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Bingo } from "./bingo";
+import { getPlayer } from "~/app/api";
 import { notFound } from "next/navigation";
 import { z } from "zod";
-import { getPlayer } from "~/app/api";
-import { Bingo } from "./bingo";
 
 const PlayerParams = z.object({
   slug: z.string(),

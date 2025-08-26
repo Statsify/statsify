@@ -25,7 +25,7 @@ export default function PlayerSearchPage() {
           <Brand />
         </Link>
         <div className="flex flex-col gap-3 items-center mt-12 mb-4 lg:mb-8">
-          <h1 className="text-mc-yellow text-mc-4 lg:text-mc-7 font-bold">Bingoify</h1>
+          <h1 className="text-mc-yellow text-mc-4 lg:text-mc-7 font-bold"><span className="text-[#FFFF55]">B</span><span className="text-[#FFF349]">i</span><span className="text-[#FFE73D]">n</span><span className="text-[#FFDB31]">g</span><span className="text-[#FFCE24]">o</span><span className="text-[#FFC218]">i</span><span className="text-[#FFB60C]">f</span><span className="text-[#FFAA00]">y</span></h1>
           <h2 className="text-mc-gold text-mc-2 lg:text-mc-3">12th Anniversary Bingo</h2>
         </div>
         <div className="w-[80%]">

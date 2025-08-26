@@ -11,24 +11,20 @@
 import CasualIcon from "~/public/icons/slime-ball.png";
 import ClassicIcon from "~/public/icons/snowball.png";
 import Image from "next/image";
-import Link from "next/link";
 import PvPIcon from "~/public/icons/ender-eye.png";
-import { Background } from "~/components/ui/background";
 import { Box } from "~/components/ui/box";
-import { Brand } from "~/components/icons/logo";
 import { type Category, type Difficulty, type Reward, type Task, boards } from "./boards";
 import { ComponentProps } from "react";
 import { Divider } from "~/components/ui/divider";
 import { MinecraftText } from "~/components/ui/minecraft-text";
-import { Search } from "~/app/players/search";
+import { PlayerProvider, usePlayer } from "~/app/players/[slug]/context";
 import { SkinHead } from "~/components/ui/skin";
 import { Tab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
-import { PlayerProvider, usePlayer } from "~/app/players/[slug]/context";
 import { useUrlState } from "~/hooks/use-url-state";
 import { z } from "zod";
-import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import type { Player } from "@statsify/schemas";
+import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 export const FormattedCategories: Record<Category, string> = {
   casual: "Casual",
@@ -45,57 +41,36 @@ export function Bingo({ player }: { player: Player }) {
 
   return (
     <PlayerProvider player={player}>
-      <div className="grow">
-        <div className="relative h-full mb-8">
-          <Background
-            background="bingo"
-            className="h-full aspect-auto"
-            mask="linear-gradient(rgb(255 255 255) 50%, rgb(0 0 0 / 0) calc(100% - 32px))"
-          />
-          <div className="absolute h-full w-full bg-[rgb(17_17_17_/0.7)] -z-10" />
-          <div className="w-[95%] max-w-[1800px] mx-auto flex justify-center items-center flex-col gap-4">
-            <Link href="/" className="absolute top-0 mt-3 scale-[0.75]">
-              <Brand />
-            </Link>
-            <div className="flex flex-col gap-2 items-center mt-30 mb-4 lg:mb-8">
-              <h1 className="text-mc-yellow text-mc-4 lg:text-mc-7 font-bold">Bingoify</h1>
-              <h2 className="text-mc-gold text-mc-2 lg:text-mc-3">12th Anniversary Hypixel Bingo</h2>
-            </div>
-            <div className="w-[80%] flex items-stretch flex-col gap-4">
-              <Search defaultValue={player.username} />
-              <Divider variant="black" className="my-2" />
-              <Box className="content:text-center content:text-mc-3 content:flex content:items-center content:justify-center content:gap-4">
-                <SkinHead uuid={player.uuid} className="drop-shadow-mc-4 text-mc-black " />
-                <MinecraftText>{player.displayName}</MinecraftText>
-              </Box>
-              <Box className="content:grid content:grid-cols-1 content:lg:grid-cols-3 content:gap-4 content:lg:gap-8">
-                <CategoryOverview icon={CasualIcon} category="casual" />
-                <CategoryOverview icon={PvPIcon} category="pvp" />
-                <CategoryOverview icon={ClassicIcon} category="classic" />
-              </Box>
-              <Divider variant="black" />
-              <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4 **:text-mc-1.5 **:lg:text-mc-2">
-                <Tabs tab={category} onTabChange={setCategory}>
-                  <Tab tab="casual">Casual</Tab>
-                  <Tab tab="pvp">PvP</Tab>
-                  <Tab tab="classic">Classic</Tab>
-                </Tabs>
-                <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
-                <Tabs tab={difficulty} onTabChange={setDifficulty}>
-                  <Tab tab="easy" className="text-mc-green/50 aria-pressed:text-mc-green">
-                    Easy
-                  </Tab>
-                  <Tab tab="hard" className="text-mc-red/50 aria-pressed:text-mc-red">
-                    Hard
-                  </Tab>
-                </Tabs>
-              </div>
-            </div>
-            <div className="flex flex-col justify-evenly w-full">
-              <BingoBoard category={category} difficulty={difficulty} />
-            </div>
-          </div>
+      <div className="w-[80%] flex items-stretch flex-col gap-4">
+        <Box className="content:text-center content:text-mc-3 content:flex content:items-center content:justify-center content:gap-4">
+          <SkinHead uuid={player.uuid} className="drop-shadow-mc-4 text-mc-black " />
+          <MinecraftText>{player.displayName}</MinecraftText>
+        </Box>
+        <Box className="content:grid content:grid-cols-1 content:lg:grid-cols-3 content:gap-4 content:lg:gap-8">
+          <CategoryOverview icon={CasualIcon} category="casual" />
+          <CategoryOverview icon={PvPIcon} category="pvp" />
+          <CategoryOverview icon={ClassicIcon} category="classic" />
+        </Box>
+        <Divider variant="black" />
+        <div className="grid grid-cols-1 lg:grid-cols-[3fr_2px_2fr] items-center gap-4 **:text-mc-1.5 **:lg:text-mc-2">
+          <Tabs tab={category} onTabChange={setCategory}>
+            <Tab tab="casual">Casual</Tab>
+            <Tab tab="pvp">PvP</Tab>
+            <Tab tab="classic">Classic</Tab>
+          </Tabs>
+          <Divider orientation="vertical" className="h-[32px] hidden lg:block opacity-15" />
+          <Tabs tab={difficulty} onTabChange={setDifficulty}>
+            <Tab tab="easy" className="text-mc-green/50 aria-pressed:text-mc-green">
+              Easy
+            </Tab>
+            <Tab tab="hard" className="text-mc-red/50 aria-pressed:text-mc-red">
+              Hard
+            </Tab>
+          </Tabs>
         </div>
+      </div>
+      <div className="flex flex-col justify-evenly w-full">
+        <BingoBoard category={category} difficulty={difficulty} />
       </div>
     </PlayerProvider>
   );
@@ -109,6 +84,8 @@ function completetionColor(completion: number) {
 
 function CategoryOverview({ category, icon }: { category: Category; icon: StaticImport }) {
   const player = usePlayer();
+  const [_, setCategory] = useUrlState<Category>("category", CategorySchema, "casual");
+  const [__, setDifficulty] = useUrlState<Difficulty>("difficulty", DifficultySchema, "easy");
 
   const easyBingo = player.stats.general.bingo.easy[category];
   const hardBingo = player.stats.general.bingo.hard[category];
@@ -129,13 +106,25 @@ function CategoryOverview({ category, icon }: { category: Category; icon: Static
         />
         <p className="font-bold text-mc-yellow">{FormattedCategories[category]} Bingo Cards</p>
       </div>
-      <div className="flex flex-col justify-center gap-1">
-        <p className="text-mc-gray">
+      <div className="flex flex-col justify-center items-center gap-1">
+        <p
+          className="text-mc-gray cursor-pointer w-fit"
+          onClick={() => {
+            setCategory(category);
+            setDifficulty("easy");
+          }}
+        >
           <span className="text-mc-green">Easy</span>:{" "}
           <span className={completetionColor(easyCompletion)}>{easyCompletion}</span>
           <span className="text-mc-gray">/16</span> completed
         </p>
-        <p className="text-mc-gray">
+        <p
+          className="text-mc-gray cursor-pointer w-fit"
+          onClick={() => {
+            setCategory(category);
+            setDifficulty("hard");
+          }}
+        >
           <span className="text-mc-red">Hard</span>:{" "}
           <span className={completetionColor(hardCompletion)}>{hardCompletion}</span>
           <span className="text-mc-gray">/16</span> completed
@@ -237,15 +226,17 @@ function RewardCard({
       <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
         {reward.name} Reward
       </p>
-      {typeof reward.description === "string" ? (
-        <MinecraftText>{reward.description}</MinecraftText>
-      ) : (
-        <div className="flex flex-col gap-0.5">
-          {reward.description.map((part) => (
-            <MinecraftText key={part}>{part}</MinecraftText>
-          ))}
-        </div>
-      )}
+      {typeof reward.description === "string" ?
+        (
+          <MinecraftText>{reward.description}</MinecraftText>
+        ) :
+        (
+          <div className="flex flex-col gap-0.5">
+            {reward.description.map((part) => (
+              <MinecraftText key={part}>{part}</MinecraftText>
+            ))}
+          </div>
+        )}
     </Box>
   );
 }
@@ -267,11 +258,11 @@ function TaskCard({ task, finished, complete }: { task: Task; finished: number; 
         Progress:{" "}
         <span
           className={`${
-            finished > 0 && finished < task.progress
-              ? "text-mc-yellow"
-              : finished >= task.progress
-              ? "text-mc-green"
-              : "text-mc-red"
+            finished > 0 && finished < task.progress ?
+              "text-mc-yellow" :
+              (finished >= task.progress ?
+                "text-mc-green" :
+                "text-mc-red")
           }`}
         >
           {finished}

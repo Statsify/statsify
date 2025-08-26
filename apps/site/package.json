@@ -11,6 +11,7 @@
   "dependencies": {
     "@radix-ui/react-popover": "^1.1.14",
     "@radix-ui/react-slot": "^1.2.0",
+    "@seznam/compose-react-refs": "^1.0.6",
     "@statsify/schemas": "workspace:^",
     "date-fns": "^4.1.0",
     "motion": "^12.6.5",

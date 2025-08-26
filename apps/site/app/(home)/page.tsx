@@ -104,10 +104,10 @@ export default async function Home() {
         </Box>
       </div>
       <div>
-        <PlayerSection players={[player1!, player2!, player3!, player4!]} /> 
-        <LeaderboardSection leaderboard={leaderboard} /> 
-        <SessionSection player={player5!} /> 
-        <GuildSection guild={guild} /> 
+        <PlayerSection players={[player1!, player2!, player3!, player4!]} />
+        <LeaderboardSection leaderboard={leaderboard} />
+        <SessionSection player={player5!} />
+        <GuildSection guild={guild} />
       </div>
       <div className="bg-white/10 backdrop-blur-lg text-mc-white -mt-45 p-8 flex flex-col gap-6 w-container w-auto lg:w-[50%] text-balance text-center">
         <div className="flex flex-col gap-2">
