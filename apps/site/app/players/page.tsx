@@ -10,6 +10,12 @@ import Link from "next/link";
 import { Background } from "~/components/ui/background";
 import { Brand } from "~/components/icons/logo";
 import { Search } from "./search";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Search | Statsify",
+  description: "Search players to view their Hypixel stats."
+};
 
 export default function PlayerSearchPage() {
   return (

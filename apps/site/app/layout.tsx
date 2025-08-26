@@ -19,7 +19,7 @@ export const metadata: Metadata = {
       "http://localhost:5000"
   ),
   title: "Statsify",
-  description: "",
+  description: "Statsify is the largest Hypixel Discord bot for viewing your Hypixel Network stats, leaderboards, sessions, and more. Easily track stats in BedWars, SkyWars, Duels, and all other minigames to see your progression and improvement over time.",
   icons: "../public/logos/logo_64.png",
 };
 
