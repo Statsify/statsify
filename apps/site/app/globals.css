@@ -209,7 +209,7 @@
 }
 
 @utility logo-shadow-* {
-  filter: drop-shadow(0 1px 0 color-mix(in srgb, --value(--color- *, [color]) 25%, #000 75%)) drop-shadow(0 -1px 0 color-mix(in srgb, --value(--color- *, [color]) 85%, #fff 15%));
+  filter: drop-shadow(0 1px color-mix(in srgb, --value(--color- *, [color]) 25%, #000 75%)) drop-shadow(0 -1px color-mix(in srgb, --value(--color- *, [color]) 85%, #fff 15%));
 }
 
 @utility w-container {
