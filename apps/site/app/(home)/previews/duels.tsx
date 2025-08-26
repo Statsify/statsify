@@ -33,7 +33,8 @@ export function DuelsPreview({ className }: { className?: string }) {
           label="Title"
           metric="Win"
           progression={stats.progression}
-          currentLevel={stats.titleLevelFormatted}
+          currentLevel={stats.titleFormatted}
+          naturalLevel={stats.titleLevelFormatted}
           nextLevel={stats.nextTitleLevelFormatted}
         />
         <Box className="row-start-4 xl:row-start-3 xl:col-start-2">
