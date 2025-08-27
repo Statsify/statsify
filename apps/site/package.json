@@ -32,6 +32,6 @@
     "mongoose": "^8.18.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.12",
-    "typescript": "^5.9.2"
+    "typescript": "^5.7.3"
   }
 }

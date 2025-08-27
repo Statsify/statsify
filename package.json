@@ -25,7 +25,7 @@
     "scripts": "pnpm --filter scripts",
     "verify-server": "pnpm --filter verify-server"
   },
-  "packageManager": "pnpm@10.9.0",
+  "packageManager": "pnpm@9.7.0",
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
@@ -48,7 +48,7 @@
     "eslint-plugin-unused-imports": "^4.1.4",
     "pm2": "^5.4.2",
     "turbo": "^2.4.0",
-    "typescript": "5.7.3",
+    "typescript": "^5.7.3",
     "typescript-eslint": "^8.22.0",
     "unplugin": "^2.1.2",
     "vitest": "^3.0.4"
@@ -66,14 +66,6 @@
   "pnpm": {
     "overrides": {
       "countup.js": "2.6.0"
-    },
-    "onlyBuiltDependencies": [
-      "@nestjs/core",
-      "@swc/core",
-      "esbuild",
-      "sharp",
-      "skia-canvas",
-      "unrs-resolver"
-    ]
+    }
   }
 }
