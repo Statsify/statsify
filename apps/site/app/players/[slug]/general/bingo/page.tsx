@@ -22,6 +22,7 @@ export async function generateMetadata({ params }: PageProps<"/players/[slug]/ge
   return {
     title: `${nameWithAppostrophe} Bingo Stats | Statsify`,
     description: `View ${nameWithAppostrophe} Hypixel 12th Anniversary Bingo Tasks.`,
+    icons: { icon: `/api/skin/head?uuid=${player.uuid}&size=32` }
   };
 }
 
