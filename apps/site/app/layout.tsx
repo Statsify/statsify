@@ -11,6 +11,7 @@ import { Footer } from "~/components/ui/footer";
 import { env } from "./env";
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         className={`${MinecraftFont.variable} antialiased leading-[normal] h-screen flex flex-col bg-blackify-950`}
       >
         {children}
+        <SpeedInsights />
         <Footer />
       </body>
     </html>
