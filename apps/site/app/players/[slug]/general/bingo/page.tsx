@@ -29,7 +29,7 @@ export default async function BingoPage({ params }: PageProps<"/players/[slug]/g
   const { slug } = await params;
 
   const player = await getPlayer(slug);
-  if (!player) notFound();
+  if (!player) return notFound();
 
   return <Bingo player={player} />;
 }

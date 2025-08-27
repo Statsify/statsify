@@ -8,8 +8,9 @@
 
 "use client";
 
-import Link from "next/link";
-import { ComponentProps, useEffect, useRef, useState, useTransition } from "react";
+import Link, { type LinkProps } from "next/link";
+import type { Route } from "next";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
 import { getPlayerSuggestions } from "~/app/api";
@@ -54,7 +55,7 @@ function usePlayerSuggestions(input: string) {
   return { isPending, suggestions };
 }
 
-const playerUrl = (tag: string) => `/players/${tag}/general/bingo`;
+const playerUrl = (tag: string): Route => `/players/${tag}/general/bingo`;
 
 export function Search({
   className,
@@ -184,9 +185,9 @@ export function Search({
   );
 }
 
-function SearchPlayer({ player, selected = false, ...props }: Omit<ComponentProps<typeof Link>, "href" | "aria-selected" | "className" | "children"> & { player: string; selected?: boolean }) {
+function SearchPlayer<RouteType,>({ player, selected = false, ...props }: Omit<LinkProps<RouteType>, "href" | "aria-selected" | "className" | "children"> & { player: string; selected?: boolean }) {
   return (
-    <Link
+    <Link<RouteType>
       {...props}
       href={playerUrl(player)}
       aria-selected={selected}

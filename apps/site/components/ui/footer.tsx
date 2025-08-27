@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Link, { LinkProps } from "next/link";
+import Link from "next/link";
+import type { Route } from "next";
 import { Brand } from "~/components/icons/logo";
 import { Discord } from "~/components/icons/discord";
 import { Divider } from "./divider";
@@ -55,9 +56,9 @@ export function Footer() {
   );
 }
 
-function IconContainer<RouteType>({ children, label, href }: { children: ReactNode; label: string; href: LinkProps<RouteType>["href"] }) {
+function IconContainer({ children, label, href }: { children: ReactNode; label: string; href: Route }) {
   return (
-    <Link<RouteType> href={href} aria-label={label} className="group" prefetch={false}>
+    <Link href={href} aria-label={label} className="group" prefetch={false}>
       <div className="bg-black/50 flex items-center justify-center p-0.5 group-hover:-translate-y-[4px] transition-all shadow-[4px_4px_0_rgb(0_0_0_/_0.2)]">
         {children}
       </div>

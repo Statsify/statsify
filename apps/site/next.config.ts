@@ -10,25 +10,16 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   typedRoutes: true,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  eslint: { ignoreDuringBuilds: true },
+  typescript: { ignoreBuildErrors: true },
   serverExternalPackages: ["mongoose"],
   poweredByHeader: false,
   reactStrictMode: true,
   images: {
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "api.statsify.net",
-      },
-      {
-        protocol: "http",
-        hostname: "localhost:3000",
-      },
+      { protocol: "https", hostname: "api.statsify.net" },
+      { protocol: "http", hostname: "localhost:3000" },
+      { protocol: "http", hostname: "localhost:5000" },
     ],
   },
   redirects: async () => [
