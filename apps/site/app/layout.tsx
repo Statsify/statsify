@@ -16,7 +16,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 export const metadata: Metadata = {
   metadataBase: new URL(
     env.ENVIRONMENT === "production" ?
-      "https://statsify-git-feat-sitev2-statsify-net.vercel.app" :
+      "https://statsify.net" :
       "http://localhost:5000"
   ),
   title: "Statsify",
