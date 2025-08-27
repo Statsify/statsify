@@ -10,49 +10,33 @@
 
 import Link, { type LinkProps } from "next/link";
 import type { Route } from "next";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState } from "react";
 import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
 import { getPlayerSuggestions } from "~/app/api";
 import { motion } from "motion/react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useOutisdeClick } from "~/hooks/use-outside-click";
+import { useQuery } from "@tanstack/react-query";
 
 const SEARCH_DEBOUNCE_MS = 300;
 const SEARCH_ITEM_HEIGHT = 51;
 const SEARCH_MAX_HEIGHT = 300;
+const SEARCH_CACHE_TIME_MS = 5 * 60 * 1000;
 
-function usePlayerSuggestions(input: string) {
-  const query = useDebounce(input, SEARCH_DEBOUNCE_MS);
-  const requestId = useRef(0);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [isPending, startTransition] = useTransition();
+function usePlayerSuggestions(input: string, focused: boolean) {
+  const debouncedInput = useDebounce(input, SEARCH_DEBOUNCE_MS);
+  
+  const query = useQuery({ 
+    queryKey: ["players:autocomplete", debouncedInput], 
+    queryFn: () => getPlayerSuggestions(debouncedInput),
+    enabled: focused,
+    retry: false,
+    gcTime: SEARCH_CACHE_TIME_MS,
+  });
 
-  function onSuggestionsChange(suggestions: string[], currentRequestId: number) {
-    if (currentRequestId !== requestId.current) return;
-    setSuggestions(suggestions);
-  }
-
-  useEffect(() => {
-    const currentRequestId = ++requestId.current;
-
-    if (!query || query.length > 16) {
-      setSuggestions([]);
-      return;
-    }
-
-    startTransition(async () => {
-      try {
-        const suggestions = await getPlayerSuggestions(query);
-        startTransition(() => onSuggestionsChange(suggestions, currentRequestId));
-      } catch {
-        startTransition(() => onSuggestionsChange([], currentRequestId));
-      }
-    });
-  }, [query, requestId]);
-
-  return { isPending, suggestions };
+  return query;
 }
 
 const playerUrl = (tag: string): Route => `/players/${tag}/general/bingo`;
@@ -68,10 +52,11 @@ export function Search({
 }) {
   const [input, setInput] = useState(defaultValue);
   const [query, setQuery] = useState(defaultValue);
-  const { suggestions, isPending } = usePlayerSuggestions(query ?? "");
   const [focused, setFocused] = useState(false);
+  const suggestions = usePlayerSuggestions(query ?? "", focused);
   const [selected, setSelected] = useState<number | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const ref = useOutisdeClick<HTMLFormElement>(() => {
     setFocused(false);
@@ -80,9 +65,9 @@ export function Search({
 
   function onSelectionChange(selected: number) {
     setSelected(selected);
-    setInput(suggestions[selected]);
+    if (suggestions.data) setInput(suggestions.data[selected]);
 
-    const maxScroll = suggestions.length * SEARCH_ITEM_HEIGHT - SEARCH_MAX_HEIGHT;
+    const maxScroll = (suggestions.data?.length ?? 0) * SEARCH_ITEM_HEIGHT - SEARCH_MAX_HEIGHT;
     const halfVisible = Math.floor(SEARCH_MAX_HEIGHT / 2);
     let scrollTop = selected * SEARCH_ITEM_HEIGHT - halfVisible + SEARCH_ITEM_HEIGHT / 2;
     scrollTop = Math.max(0, Math.min(scrollTop, maxScroll));
@@ -102,14 +87,15 @@ export function Search({
         const formData = new FormData(event.currentTarget);
         const query = formData.get("search");
         if (!query || typeof query !== "string") return;
-        redirect(playerUrl(query));
+        console.log(`Redirecting to ${playerUrl(query)}`)
+        router.push(playerUrl(query));
       }}
       onKeyDown={(event) => {
         if (event.key === "Enter") {
           ref.current?.requestSubmit();
         }
 
-        if (isPending) return;
+        if (suggestions.isPending || suggestions.isError) return;
 
         switch (event.key) {
           case "Escape":
@@ -117,13 +103,13 @@ export function Search({
             break;
 
           case "ArrowDown": {
-            const newSelected = ((selected ?? -1) + 1) % suggestions.length;
+            const newSelected = ((selected ?? -1) + 1) % suggestions.data.length;
             onSelectionChange(newSelected);
             break;
           }
 
           case "ArrowUp": {
-            const newSelected = selected ? selected - 1 : suggestions.length - 1;
+            const newSelected = selected ? selected - 1 : suggestions.data.length - 1;
             onSelectionChange(newSelected);
             break;
           }
@@ -153,39 +139,28 @@ export function Search({
         animate={{
           height: +focused * Math.min(
             SEARCH_MAX_HEIGHT,
-            isPending ? 3 * SEARCH_ITEM_HEIGHT : suggestions.length * SEARCH_ITEM_HEIGHT
+            suggestions.isPending ? 3 * SEARCH_ITEM_HEIGHT : (suggestions.data?.length ?? 0) * SEARCH_ITEM_HEIGHT
           ),
         }}
       >
-        {focused && isPending && (
+        {focused && suggestions.isPending && (
           <>
             <SearchPlayerSkeleton />
             <SearchPlayerSkeleton />
             <SearchPlayerSkeleton />
           </>
         )}
-        {
-          focused &&
-          !isPending &&
-          suggestions.length &&
-          suggestions.map((suggestion, index) => (
-            <div
-              key={suggestion}
-              className="w-full flex flex-col items-center p-2"
-            >
-              <SearchPlayer
-                player={suggestion}
-                selected={selected === index}
-              />
-            </div>
-          ))
-        }
+        {suggestions.data?.map((suggestion, index) => (
+          <div key={suggestion} className="w-full flex flex-col items-center p-2">
+            <SearchPlayer player={suggestion} selected={selected === index} />
+          </div>
+        ))}
       </motion.div>
     </form>
   );
 }
 
-function SearchPlayer<RouteType,>({ player, selected = false, ...props }: Omit<LinkProps<RouteType>, "href" | "aria-selected" | "className" | "children"> & { player: string; selected?: boolean }) {
+function SearchPlayer<RouteType extends string,>({ player, selected = false, ...props }: Omit<LinkProps<RouteType>, "href" | "aria-selected" | "className" | "children"> & { player: string; selected?: boolean }) {
   return (
     <Link<RouteType>
       {...props}

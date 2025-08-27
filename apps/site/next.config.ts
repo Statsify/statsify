@@ -19,8 +19,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "api.statsify.net" },
       { protocol: "http", hostname: "localhost:3000" },
-      { protocol: "http", hostname: "localhost:5000" },
     ],
+    localPatterns: [
+      { pathname: "/api/skin/head" },
+      { pathname: "/api/skin/render" },
+    ]
   },
   redirects: async () => [
     {

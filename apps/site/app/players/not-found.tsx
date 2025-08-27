@@ -24,7 +24,7 @@ export default function NotFound() {
 
   return (
     <Error className="gap-8 flex-col-reverse md:flex-col px-8">
-      <Search className="w-full" defaultValue={slug} />
+      <Search className="w-full" defaultValue={slug ?? ""} />
       <div className="flex flex-col items-center justify-center gap-4">
         <Box>
           <span className="text-mc-dark-red">[</span>
