@@ -8,7 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import handlebars from "handlebars";
-import packageJson from "../package.json" assert { type: "json" };
+import packageJson from "../package.json" with { type: "json" };
 import { AppModule } from "./app.module.js";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
