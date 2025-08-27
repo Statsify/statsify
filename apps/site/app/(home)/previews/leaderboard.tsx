@@ -6,8 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-"use client";
-
 import { Box } from "~/components/ui/box";
 import { Fragment } from "react";
 import { MinecraftText } from "~/components/ui/minecraft-text";
