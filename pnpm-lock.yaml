@@ -241,8 +241,8 @@ importers:
         specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
         version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d
-        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d
+        specifier: https://github.com/timotejroiko/tiny-discord.git#d10ed4c4dff53c9bb0c24846457afaffbadb2776
+        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -293,8 +293,8 @@ importers:
         specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
         version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d
-        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d
+        specifier: https://github.com/timotejroiko/tiny-discord.git#d10ed4c4dff53c9bb0c24846457afaffbadb2776
+        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776
       toad-scheduler:
         specifier: ^3.0.1
         version: 3.1.0
@@ -436,8 +436,8 @@ importers:
         specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
         version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d
-        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d
+        specifier: https://github.com/timotejroiko/tiny-discord.git#d10ed4c4dff53c9bb0c24846457afaffbadb2776
+        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776
       toad-scheduler:
         specifier: ^3.0.1
         version: 3.1.0
@@ -478,37 +478,6 @@ importers:
       mongoose:
         specifier: ^8.5.2
         version: 8.18.0(socks@2.8.7)
-
-  assets/private:
-    dependencies:
-      skia-canvas:
-        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
-        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
-      stackblur-canvas:
-        specifier: ^2.7.0
-        version: 2.7.0
-    devDependencies:
-      '@commitlint/cli':
-        specifier: ^19.4.1
-        version: 19.8.1(@types/node@24.3.0)(typescript@5.9.2)
-      '@commitlint/config-conventional':
-        specifier: ^19.4.1
-        version: 19.8.1
-      commitizen:
-        specifier: ^4.3.0
-        version: 4.3.1(@types/node@24.3.0)(typescript@5.9.2)
-      cz-conventional-changelog:
-        specifier: ^3.3.0
-        version: 3.3.0(@types/node@24.3.0)(typescript@5.9.2)
-
-  assets/public:
-    dependencies:
-      skia-canvas:
-        specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
-        version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
-      stackblur-canvas:
-        specifier: 2.7.0
-        version: 2.7.0
 
   packages/api-client:
     dependencies:
@@ -597,8 +566,8 @@ importers:
         specifier: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
         version: https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz
       tiny-discord:
-        specifier: https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d
-        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d
+        specifier: https://github.com/timotejroiko/tiny-discord.git#d10ed4c4dff53c9bb0c24846457afaffbadb2776
+        version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776
       typedi:
         specifier: ^0.10.0
         version: 0.10.0
@@ -697,8 +666,6 @@ importers:
         version: 3.7.1
 
   packages/skin-renderer: {}
-
-  packages/skin-renderer/pkg: {}
 
   packages/util:
     dependencies:
@@ -5792,10 +5759,6 @@ packages:
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
 
-  stackblur-canvas@2.7.0:
-    resolution: {integrity: sha512-yf7OENo23AGJhBriGx0QivY5JP6Y1HbrrDI6WLt6C5auYZXlQrheoY8hD4ibekFKz1HOfE48Ww8kMWMnJD/zcQ==}
-    engines: {node: '>=0.1.14'}
-
   standard-as-callback@2.1.0:
     resolution: {integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==}
 
@@ -5964,8 +5927,8 @@ packages:
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
 
-  tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d:
-    resolution: {tarball: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d}
+  tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776:
+    resolution: {tarball: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776}
     version: 0.0.1
 
   tinybench@2.9.0:
@@ -11781,8 +11744,6 @@ snapshots:
 
   stackback@0.0.2: {}
 
-  stackblur-canvas@2.7.0: {}
-
   standard-as-callback@2.1.0: {}
 
   statuses@2.0.1: {}
@@ -11977,7 +11938,7 @@ snapshots:
 
   through@2.3.8: {}
 
-  tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d: {}
+  tiny-discord@https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/d10ed4c4dff53c9bb0c24846457afaffbadb2776: {}
 
   tinybench@2.9.0: {}
 
