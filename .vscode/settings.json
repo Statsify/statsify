@@ -12,25 +12,10 @@
     "**/.turbo/**": true,
     "**/.pnpm-store/**": true
   },
-  "[handlebars]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[css]": {
-    "editor.defaultFormatter": "vscode.css-language-features"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[typescript]": {
+  "[js][ts][tsx]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
-  "[scss]": {
+  "[handlebars][json][jsonc][css][scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "i18n-ally.localesPaths": [
@@ -51,8 +36,5 @@
     "className",
     "containerClass",
     "contentClass"
-  ],
-  "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
-  }
+  ]
 }
