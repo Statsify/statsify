@@ -46,8 +46,8 @@ export function Footer() {
         <div className="flex flex-col gap-4 md:flex-row md:justify-between text-mc-1.5 text-mc-white items-center">
           <p className="opacity-60">© {new Date().getFullYear()} Statsify. All Rights Reserved.</p>
           <div className="flex gap-4 **:opacity-60 **:hover:opacity-100  **:hover:underline **:transition-opacity">
-            <Link href="/privacy">Privacy Policy</Link>
-            <Link href="/terms">Terms of Service</Link>
+            <Link href="/privacy" prefetch={false}>Privacy Policy</Link>
+            <Link href="/terms" prefetch={false}>Terms of Service</Link>
           </div>
         </div>
       </div>
