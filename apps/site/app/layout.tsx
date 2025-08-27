@@ -8,10 +8,10 @@
 
 import localFont from "next/font/local";
 import { Footer } from "~/components/ui/footer";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { env } from "./env";
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(
@@ -22,13 +22,13 @@ export const metadata: Metadata = {
   title: "Statsify",
   description: "Statsify is the largest Hypixel Discord bot for viewing your Hypixel Network stats, leaderboards, sessions, and more. Easily track stats in BedWars, SkyWars, Duels, and all other minigames to see your progression and improvement over time.",
   icons: "../public/logos/logo_64.png",
-  creator: "Statsify Team"
+  creator: "Statsify Team",
 };
 
 export const viewport: Viewport = {
   colorScheme: "dark",
   // Matches --color-blueify-500
-  themeColor: "#1e86da"
+  themeColor: "#1e86da",
 };
 
 const MinecraftFont = localFont({

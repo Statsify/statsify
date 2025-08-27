@@ -1,5 +1,13 @@
+/**
+ * Copyright (c) Statsify
+ *
+ * This source code is licensed under the GNU GPL v3 license found in the
+ * LICENSE file in the root directory of this source tree.
+ * https://github.com/Statsify/statsify/blob/main/LICENSE
+ */
+
 import { Providers } from "./providers";
 
 export default function PlayersLayout({ children }: LayoutProps<"/players">) {
-  return <Providers>{children}</Providers>
+  return <Providers>{children}</Providers>;
 }

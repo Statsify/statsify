@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
     localPatterns: [
       { pathname: "/api/skin/head" },
       { pathname: "/api/skin/render" },
-    ]
+    ],
   },
   redirects: async () => [
     {

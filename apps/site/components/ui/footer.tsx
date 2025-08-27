@@ -7,7 +7,6 @@
  */
 
 import Link from "next/link";
-import type { Route } from "next";
 import { Brand } from "~/components/icons/logo";
 import { Discord } from "~/components/icons/discord";
 import { Divider } from "./divider";
@@ -16,6 +15,7 @@ import { Patreon } from "~/components/icons/patreon";
 import { ReactNode } from "react";
 import { Twitter } from "~/components/icons/twitter";
 import { YouTube } from "~/components/icons/youtube";
+import type { Route } from "next";
 
 export function Footer() {
   return (

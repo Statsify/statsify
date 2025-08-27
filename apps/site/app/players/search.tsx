@@ -9,16 +9,16 @@
 "use client";
 
 import Link, { type LinkProps } from "next/link";
-import type { Route } from "next";
-import { useRef, useState } from "react";
 import { SearchIcon } from "~/components/icons/search";
 import { cn } from "~/lib/util";
 import { getPlayerSuggestions } from "~/app/api";
 import { motion } from "motion/react";
-import { useRouter } from "next/navigation";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useOutisdeClick } from "~/hooks/use-outside-click";
 import { useQuery } from "@tanstack/react-query";
+import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import type { Route } from "next";
 
 const SEARCH_DEBOUNCE_MS = 300;
 const SEARCH_ITEM_HEIGHT = 51;
@@ -27,9 +27,9 @@ const SEARCH_CACHE_TIME_MS = 5 * 60 * 1000;
 
 function usePlayerSuggestions(input: string, focused: boolean) {
   const debouncedInput = useDebounce(input, SEARCH_DEBOUNCE_MS);
-  
-  const query = useQuery({ 
-    queryKey: ["players:autocomplete", debouncedInput], 
+
+  const query = useQuery({
+    queryKey: ["players:autocomplete", debouncedInput],
     queryFn: () => getPlayerSuggestions(debouncedInput),
     enabled: focused,
     retry: false,
@@ -87,7 +87,7 @@ export function Search({
         const formData = new FormData(event.currentTarget);
         const query = formData.get("search");
         if (!query || typeof query !== "string") return;
-        console.log(`Redirecting to ${playerUrl(query)}`)
+        console.log(`Redirecting to ${playerUrl(query)}`);
         router.push(playerUrl(query));
       }}
       onKeyDown={(event) => {
