@@ -43,7 +43,7 @@ export class TicketMenuCommand {
       .style(ButtonStyle.Primary)
       .customId("create-ticket");
 
-    await this.messageService.send(config("supportBot.createTicketChannel"), {
+    await this.messageService.send(await config("supportBot.createTicketChannel"), {
       embeds: [embed],
       components: [new ActionRowBuilder().component(button)],
     });

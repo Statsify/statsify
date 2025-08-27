@@ -13,24 +13,24 @@ export type Flatten<T> = Record<string | keyof T, any>;
 
 export type DeepFlatten<T> = {
   [K in keyof T]-?: (
-    x: NonNullable<T[K]> extends infer V
-      ? V extends object
-        ? V extends readonly any[]
-          ? Pick<T, K>
-          : DeepFlatten<V> extends infer FV
-            ? {
+    x: NonNullable<T[K]> extends infer V ?
+      V extends object ?
+        V extends readonly any[] ?
+          Pick<T, K> :
+          DeepFlatten<V> extends infer FV ?
+            {
               [P in keyof FV as `${Extract<K, string | number>}.${Extract<
                 P,
                 string | number
               >}`]: FV[P];
-            }
-            : never
-        : Pick<T, K>
-      : never
+            } :
+            never :
+        Pick<T, K> :
+      never
   ) => void;
-} extends Record<keyof T, (y: infer O) => void>
-  ? { [K in keyof O]: O[K] }
-  : never;
+} extends Record<keyof T, (y: infer O) => void> ?
+  { [K in keyof O]: O[K] } :
+  never;
 
 /**
  *

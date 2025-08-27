@@ -8,7 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import handlebars from "handlebars";
-import packageJson from "../package.json" assert { type: "json" };
+import packageJson from "../package.json" with { type: "json" };
 import { AppModule } from "./app.module.js";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
@@ -30,7 +30,7 @@ const handleError = logger.error.bind(logger);
 process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
 
-const sentryDsn = config("sentry.apiDsn", { required: false });
+const sentryDsn = await config("sentry.apiDsn", { required: false });
 
 if (sentryDsn) {
   Sentry.init({
@@ -40,12 +40,14 @@ if (sentryDsn) {
       new Sentry.Integrations.Mongo({ useMongoose: true }),
     ],
     normalizeDepth: 3,
-    tracesSampleRate: config("sentry.tracesSampleRate"),
-    environment: config("environment"),
+    tracesSampleRate: await config("sentry.tracesSampleRate"),
+    environment: await config("environment"),
   });
 }
 
-await mkdir(join(config("api.mediaRoot"), "badges"), { recursive: true });
+const mediaRoot = await config("api.mediaRoot");
+
+await mkdir(join(mediaRoot, "badges"), { recursive: true });
 
 // Removes the `_id` fields created from sub classes of documents
 setGlobalOptions({
@@ -96,4 +98,4 @@ const document = SwaggerModule.createDocument(app, redoc);
 
 SwaggerModule.setup("swagger", app, document);
 
-await app.listen(config("api.port"));
+await app.listen(await config("api.port"));

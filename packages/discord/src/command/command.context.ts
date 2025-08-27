@@ -17,15 +17,13 @@ import type { IMessage, LocalizeFunction, Message } from "#messages";
 import type { Interaction } from "#interaction";
 
 export class CommandContext {
-  private user: User | null;
+  private user: User | null = null;
 
   public constructor(
     private readonly listener: AbstractCommandListener,
     private readonly interaction: Interaction,
     private readonly data: any
-  ) {
-    this.user = null;
-  }
+  ) {}
 
   public getListener() {
     return this.listener;

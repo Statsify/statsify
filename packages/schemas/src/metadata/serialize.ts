@@ -57,13 +57,13 @@ if (import.meta.vitest) {
 
     class Tester {
       @Field()
-      public field1: string;
+      public field1: string = "field1";
 
       @Field()
-      public field2: number;
+      public field2: number = 0;
 
       @Field({ leaderboard: { enabled: false } })
-      public field3: number;
+      public field3: number = 3;
 
       @Field({ store: { store: false } })
       public field4: number;
@@ -72,9 +72,6 @@ if (import.meta.vitest) {
       public field5: TesterB;
 
       public constructor() {
-        this.field1 = "field1";
-        this.field2 = 0;
-        this.field3 = 3;
         this.field5 = new TesterB();
       }
     }

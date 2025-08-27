@@ -101,9 +101,9 @@ export class TicketService {
   }
 
   public async create(guildId: string, user: APIUser, username: string, issue: string) {
-    const channel = await this.channelService.create(config("supportBot.guild"), {
+    const channel = await this.channelService.create(await config("supportBot.guild"), {
       name: user.username,
-      parent_id: config("supportBot.ticketCategory"),
+      parent_id: await config("supportBot.ticketCategory"),
       type: ChannelType.GuildText,
       permission_overwrites: [
         {
@@ -243,7 +243,7 @@ export class TicketService {
       ],
     };
 
-    await this.messageService.send(config("supportBot.ticketLogsChannel"), message);
+    await this.messageService.send(await config("supportBot.ticketLogsChannel"), message);
 
     const dm = await this.channelService.create(ticket.owner);
     await this.messageService.send(dm.id, message).catch(() => null);

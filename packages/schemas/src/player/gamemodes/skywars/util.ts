@@ -301,16 +301,16 @@ function createMultiDigitColorScheme(
 
     const formattedEmblem = emblem ? `${formattedColors.at(-2)}${emblem}` : "";
     const formattedLevel = [...`${level}`]
-      .reverse()
+      .toReversed()
       .map((digit, index) => `${formattedColors[3 - index]}${digit}`)
-      .reverse()
+      .toReversed()
       .join("");
 
     return `§r${formattedColors[0]}${strikethroughFormat}${leftBracket}§r${boldFormat}${formattedLevel}${formattedEmblem}§r${formattedColors.at(-1)}${strikethroughFormat}${rightBracket}§r`;
   };
 }
 
-const PRESTIGE_SCHEMES: { req: number;scheme: keyof typeof SCHEME_MAP }[] = [
+const PRESTIGE_SCHEMES: { req: number; scheme: keyof typeof SCHEME_MAP }[] = [
   { req: 0, scheme: "stone_prestige" },
   { req: 10, scheme: "iron_prestige" },
   { req: 20, scheme: "gold_prestige" },

@@ -35,19 +35,19 @@ const codeCreatedMessage = (code: string, time: Date) => {
   )}§r§7.`;
 };
 
-const sentryDsn = config("sentry.verifyServerDsn", { required: false });
+const sentryDsn = await config("sentry.verifyServerDsn", { required: false });
 
 if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
     integrations: [new Sentry.Integrations.Mongo({ useMongoose: true })],
     normalizeDepth: 3,
-    tracesSampleRate: config("sentry.tracesSampleRate"),
-    environment: config("environment"),
+    tracesSampleRate: await config("sentry.tracesSampleRate"),
+    environment: await config("environment"),
   });
 }
 
-await connect(config("database.mongoUri"));
+await connect(await config("database.mongoUri"));
 
 const verifyCodesModel = getModelForClass(VerifyCode);
 
@@ -56,7 +56,7 @@ const serverLogo = readFileSync(getLogoPath(UserLogo.DEFAULT, 64), {
 });
 
 const server = createServer({
-  host: config("verifyServer.hostIp"),
+  host: await config("verifyServer.hostIp"),
   maxPlayers: 2,
   motd: "§9§lStatsify Verification",
   version: false,

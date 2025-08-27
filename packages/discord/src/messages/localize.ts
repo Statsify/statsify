@@ -44,9 +44,9 @@ export const getLocalizeFunction = (locale: string): LocalizeFunction => {
 };
 
 export type LocalizationString =
-  | string
-  | number
-  | ((t: LocalizeFunction) => TFunctionResult);
+  | string |
+  number |
+  ((t: LocalizeFunction) => TFunctionResult);
 
 const shouldTranslate = (str: LocalizationString): boolean => {
   const type = typeof str;

@@ -41,9 +41,9 @@ interface CustomHeaderBodyProps extends BaseHeaderProps {
 }
 
 export type HeaderProps =
-  | SidebarlessHeaderProps
-  | SidebarHeaderProps
-  | CustomHeaderBodyProps;
+  | SidebarlessHeaderProps |
+  SidebarHeaderProps |
+  CustomHeaderBodyProps;
 
 export const Header = (props: HeaderProps) => {
   const skin = <Skin skin={props.skin} />;

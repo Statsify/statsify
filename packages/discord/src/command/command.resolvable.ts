@@ -20,9 +20,9 @@ import type { CommandMetadata } from "./command.interface.js";
 
 export class CommandResolvable {
   public type:
-    | ApplicationCommandType.ChatInput
-    | ApplicationCommandOptionType.Subcommand
-    | ApplicationCommandOptionType.SubcommandGroup;
+    | ApplicationCommandType.ChatInput |
+    ApplicationCommandOptionType.Subcommand |
+    ApplicationCommandOptionType.SubcommandGroup;
 
   public name: string;
   public description: string;
