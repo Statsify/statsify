@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: PageProps<"/players/[slug]/ge
 
   if (!player) return {};
 
-  const nameWithAppostrophe = `${player.username}'${player.username.endsWith("s") ? "s" : ""}`;
+  const nameWithAppostrophe = `${player.username}'${player.username.endsWith("s") ? "" : "s"}`;
 
   return {
     title: `${nameWithAppostrophe} Bingo Stats | Statsify`,
