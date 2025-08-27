@@ -21,7 +21,7 @@ export function useUrlState<T extends string>(key: string, schema: ZodSchema<T>,
     if (newValue === value) return;
     const newParams = new URLSearchParams(params.toString());
     newParams.set(key, newValue);
-    window.history.replaceState(null, '', `${pathname}?${newParams.toString()}`);
+    globalThis.history.replaceState(null, "", `${pathname}?${newParams.toString()}`);
   }
 
   return [value, setParams] as const;

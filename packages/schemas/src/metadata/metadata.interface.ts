@@ -71,14 +71,14 @@ interface BaseLeaderboardMetadata {
    * When to reset the leaderboard, leaderboards will reset at the desired time at midnight.
    */
   resetEvery?:
-    | "day"
-    | "monday"
-    | "tuesday"
-    | "wednesday"
-    | "thursday"
-    | "friday"
-    | "saturday"
-    | "sunday";
+    | "day" |
+    "monday" |
+    "tuesday" |
+    "wednesday" |
+    "thursday" |
+    "friday" |
+    "saturday" |
+    "sunday";
 }
 
 export interface LeaderboardDisabledMetadata extends BaseLeaderboardMetadata {
@@ -112,8 +112,8 @@ export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
 }
 
 export type LeaderboardMetadata =
-  | LeaderboardDisabledMetadata
-  | LeaderboardEnabledMetadata;
+  | LeaderboardDisabledMetadata |
+  LeaderboardEnabledMetadata;
 
 export interface StoreMetadata {
   /**

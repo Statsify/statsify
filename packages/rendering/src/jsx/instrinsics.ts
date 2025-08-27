@@ -19,9 +19,9 @@ export const intrinsicElements = {
 export type IntrinsicElements = typeof intrinsicElements;
 
 export type IntrinsicProps = {
-  [key in IntrinsicElement]: IntrinsicElements[key] extends RawFC<infer P, any, infer C>
-    ? PropsWithChildren<P, C>
-    : never;
+  [key in IntrinsicElement]: IntrinsicElements[key] extends RawFC<infer P, any, infer C> ?
+    PropsWithChildren<P, C> :
+    never;
 };
 
 export type IntrinsicElement = keyof IntrinsicElements;

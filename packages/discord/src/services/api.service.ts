@@ -99,8 +99,8 @@ export class ApiService extends StatsifyApiService {
     return super.getStatus(input).catch((err) => {
       if (!err.response || !err.response.data) throw this.unknownError();
       const error = err.response.data as
-        | StatusNotFoundException
-        | PlayerNotFoundException;
+        | StatusNotFoundException |
+        PlayerNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
 

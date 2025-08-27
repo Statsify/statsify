@@ -23,8 +23,8 @@ type TabsProps<T extends string | number> = (
     tab: T;
     onTabChange: (tab: T) => void;
     defaultTab?: T;
-  }
-  | {
+  } |
+  {
     tab?: T;
     onTabChange?: (tab: T) => void;
     defaultTab: T;

@@ -135,18 +135,17 @@ export function createGameModeQuests<
   weekly,
   monthly = [],
 }: CreateQuestsOptions<DailyFields, WeeklyFields, MonthlyFields>): GameWithQuests<
-    DailyFields,
-    WeeklyFields,
-    MonthlyFields
-  > {
+  DailyFields,
+  WeeklyFields,
+  MonthlyFields
+> {
   class Daily {
     [key: string]: number;
 
     @Field(questTotalFieldData(game))
-    public total: number;
+    public total: number = 0;
 
     public constructor(quests: APIData) {
-      this.total = 0;
       processQuests(this, quests, QuestTime.Daily, daily, fieldPrefix);
     }
   }
@@ -157,10 +156,9 @@ export function createGameModeQuests<
     [key: string]: number;
 
     @Field(questTotalFieldData(game))
-    public total: number;
+    public total: number = 0;
 
     public constructor(quests: APIData) {
-      this.total = 0;
       processQuests(this, quests, QuestTime.Weekly, weekly, fieldPrefix);
     }
   }
@@ -171,10 +169,9 @@ export function createGameModeQuests<
     [key: string]: number;
 
     @Field(questTotalFieldData(game))
-    public total: number;
+    public total: number = 0;
 
     public constructor(quests: APIData) {
-      this.total = 0;
       processQuests(this, quests, QuestTime.Monthly, monthly, fieldPrefix);
     }
   }
@@ -185,11 +182,9 @@ export function createGameModeQuests<
     [key: string]: number;
 
     @Field(questTotalFieldData(game, true))
-    public total: number;
+    public total: number = 0;
 
     public constructor(quests: APIData) {
-      this.total = 0;
-
       processQuests(this, quests, QuestTime.Overall, daily, fieldPrefix);
       processQuests(this, quests, QuestTime.Overall, weekly, fieldPrefix);
       processQuests(this, quests, QuestTime.Overall, monthly, fieldPrefix);
@@ -211,9 +206,9 @@ type IQuestInstance<
   Time extends QuestTime,
   GamesWithQuests extends BaseGamesWithQuestsRecord
 > = Constructor<{
-  [K in keyof GamesWithQuests]: GamesWithQuests[K] extends GameWithQuests<string, string, string>
-    ? UnwrapConstructor<GamesWithQuests[K][Time]>
-    : never;
+  [K in keyof GamesWithQuests]: GamesWithQuests[K] extends GameWithQuests<string, string, string> ?
+    UnwrapConstructor<GamesWithQuests[K][Time]> :
+    never;
 }>;
 
 export function createQuestsInstance<

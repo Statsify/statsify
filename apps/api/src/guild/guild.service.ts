@@ -96,7 +96,7 @@ export class GuildService {
       // Add all the days to the guild total exp history
       Object.entries(combinedExpHistory)
         .sort()
-        .reverse()
+        .toReversed()
         .slice(0, 30)
         .forEach(([day, exp], index) => {
           member.expHistory[index] = exp;
@@ -122,7 +122,7 @@ export class GuildService {
     // Get scaled gexp
     Object.entries(guildExpHistory)
       .sort()
-      .reverse()
+      .toReversed()
       .slice(0, 30)
       .forEach(([day, exp], index) => {
         const scaled = this.scaleGexp(exp);

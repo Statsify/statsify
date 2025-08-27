@@ -163,9 +163,7 @@ function TaskCard({ task }: { task: Task }) {
       </div>
       <p className="text-mc-gray">
         Progress:{" "}
-        <span className="text-mc-red">
-          0
-        </span>
+        <span className="text-mc-red">0</span>
         <span className="text-mc-gray">/</span>
         <span className="text-mc-gray">{task.progress}</span>
       </p>

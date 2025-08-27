@@ -150,7 +150,10 @@ export function Search({
         ref={containerRef}
         className="w-full overflow-auto absolute bg-white/25 backdrop-blur-2xl z-100"
         animate={{
-          height: +focused * Math.min(SEARCH_MAX_HEIGHT, isPending ? 3 * SEARCH_ITEM_HEIGHT : suggestions.length * SEARCH_ITEM_HEIGHT),
+          height: +focused * Math.min(
+            SEARCH_MAX_HEIGHT,
+            isPending ? 3 * SEARCH_ITEM_HEIGHT : suggestions.length * SEARCH_ITEM_HEIGHT
+          ),
         }}
       >
         {focused && isPending && (

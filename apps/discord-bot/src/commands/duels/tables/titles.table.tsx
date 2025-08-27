@@ -18,7 +18,7 @@ interface TitlesTableProps {
   modeIcons: DuelsModeIcons;
 }
 
-function ModeTitle({ icon, title, wins, t }: { icon: Image; title: string;wins: number;t: LocalizeFunction }) {
+function ModeTitle({ icon, title, wins, t }: { icon: Image; title: string; wins: number; t: LocalizeFunction }) {
   return (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
       <img image={icon} width={32} height={32} />

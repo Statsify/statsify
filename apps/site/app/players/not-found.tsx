@@ -16,7 +16,7 @@ import { useParams } from "next/navigation";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Player Not Found | Statsify"
+  title: "Player Not Found | Statsify",
 };
 
 export default function NotFound() {

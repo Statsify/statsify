@@ -21,13 +21,13 @@ export async function generateMetadata({ params }: PageProps<"/players/[slug]/ge
 
   return {
     title: `${nameWithAppostrophe} Bingo Stats | Statsify`,
-    description: `View ${nameWithAppostrophe} Hypixel 12th Anniversary Bingo Tasks.`
-  }
+    description: `View ${nameWithAppostrophe} Hypixel 12th Anniversary Bingo Tasks.`,
+  };
 }
 
 export default async function BingoPage({ params }: PageProps<"/players/[slug]/general/bingo">) {
   const { slug } = await params;
-  
+
   const player = await getPlayer(slug);
   if (!player) notFound();
 

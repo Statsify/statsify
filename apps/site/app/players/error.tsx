@@ -15,7 +15,7 @@ import { LogoError } from "~/components/icons/logo-error";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Unknown Error | Statsify"
+  title: "Unknown Error | Statsify",
 };
 
 export default function UnknownErrorPage() {

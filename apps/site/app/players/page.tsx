@@ -14,7 +14,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Search | Statsify",
-  description: "Search players to view their Hypixel stats."
+  description: "Search players to view their Hypixel stats.",
 };
 
 export default function PlayerSearchPage() {

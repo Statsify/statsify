@@ -53,7 +53,7 @@ const variants = {
   }),
 };
 
-export function Carousel({ children, className }: { children: ReactNode;className?: string }) {
+export function Carousel({ children, className }: { children: ReactNode; className?: string }) {
   const [[page, direction], setPage] = useState([0, 1]);
   const cards = Children.toArray(children) as ReactNode[];
 

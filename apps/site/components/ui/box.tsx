@@ -12,10 +12,10 @@ import type { ComponentProps, JSX } from "react";
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 
 export type BoxBorderRadius =
-  | Partial<{ topLeft: number; topRight: number; bottomLeft: number; bottomRight: number }>
-  | AtLeastOne<{ top: number; bottom: number }>
-  | AtLeastOne<{ left: number; right: number }>
-  | number;
+  | Partial<{ topLeft: number; topRight: number; bottomLeft: number; bottomRight: number }> |
+  AtLeastOne<{ top: number; bottom: number }> |
+  AtLeastOne<{ left: number; right: number }> |
+  number;
 
 const DEFAULT_BORDER_RADIUS = 8;
 

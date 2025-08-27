@@ -60,7 +60,7 @@ export function GuildSection({ guild }: { guild: Guild }) {
   );
 }
 
-function GuildOverall({ guild, className }: { guild: Guild;className?: string }) {
+function GuildOverall({ guild, className }: { guild: Guild; className?: string }) {
   return (
     <div className={cn("relative grid grid-cols-1 xl:grid-cols-2 gap-2 p-4 z-10 shadow-[8px_8px_0_rgb(0_0_0_/_0.5)]", className)}>
       <Box className="xl:col-span-2 text-center">
