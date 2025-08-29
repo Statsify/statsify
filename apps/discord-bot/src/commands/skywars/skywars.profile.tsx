@@ -60,7 +60,7 @@ export const SkyWarsProfile = ({
           t,
           label: t("stats.progression.exp"),
           progression: skywars.progression,
-          currentLevel: skywars.levelFormatted,
+          currentLevel: skywars.naturalLevelFormatted,
           nextLevel: skywars.nextLevelFormatted,
         })}`}
         time={time}

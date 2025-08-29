@@ -12,25 +12,10 @@
     "**/.turbo/**": true,
     "**/.pnpm-store/**": true
   },
-  "[handlebars]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[typescriptreact]": {
+  "[js][ts][tsx]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
-  "[typescript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
-  "[scss]": {
+  "[handlebars][json][jsonc][css][scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "i18n-ally.localesPaths": [
@@ -46,5 +31,10 @@
   "testing.automaticallyOpenPeekView": "never",
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer"
-  }
+  },
+  "tailwindCSS.classAttributes": [
+    "className",
+    "containerClass",
+    "contentClass"
+  ]
 }

@@ -8,7 +8,61 @@
 
 import { type APIData, formatTime } from "@statsify/util";
 import { Field } from "#metadata";
-import { add, ratio } from "@statsify/math";
+import { add, ratio, sub } from "@statsify/math";
+
+export class SkyWarsMini implements SkyWarsMode {
+  @Field()
+  public wins: number;
+
+  @Field()
+  public losses: number;
+
+  @Field()
+  public wlr: number;
+
+  @Field()
+  public kills: number;
+
+  @Field()
+  public deaths: number;
+
+  @Field()
+  public kdr: number;
+
+  @Field()
+  public gamesPlayed: number;
+
+  @Field()
+  public assists: number;
+
+  @Field({ leaderboard: { formatter: formatTime }, historical: { enabled: false } })
+  public playtime: number;
+
+  // Kit gets applied in the main class
+  @Field({ store: { default: "default" } })
+  public kit: string;
+
+  public constructor(data: APIData) {
+    this.wins = data.wins_mini;
+    this.kills = data.kills_mini;
+    this.gamesPlayed = data.games_mini;
+    this.assists = data.assists_mini;
+
+    // Losses and Deaths aren't tracked for mini
+    this.losses = sub(this.gamesPlayed, this.wins);
+    this.deaths = this.losses;
+
+    // Convert to milliseconds
+    this.playtime = (data.time_played_mini ?? 0) * 1000;
+
+    SkyWarsMode.applyRatios(this);
+  }
+
+  public static applyRatios(data: SkyWarsMode) {
+    data.kdr = ratio(data.kills, data.deaths);
+    data.wlr = ratio(data.wins, data.losses);
+  }
+}
 
 export class SkyWarsMode {
   @Field()

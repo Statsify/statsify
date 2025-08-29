@@ -7,21 +7,25 @@
  */
 
 import {
+  BedWarsDuelsTable,
   BridgeDuelsTable,
   MultiDuelsGameModeTable,
   SingleDuelsGameModeTable,
-  UHCDuelsTable,
+  TitlesTable,
 } from "./tables/index.js";
 import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
 import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
-import { prettify } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { formatTime, prettify } from "@statsify/util";
+import type { BaseProfileProps, ProfileTime } from "#commands/base.hypixel-command";
+import type { DuelsModeIcons } from "./duels.command.js";
 
-export interface DuelsProfileProps extends BaseProfileProps {
+export type DuelsProfileProps<T extends ProfileTime> = Omit<BaseProfileProps, "time"> & {
   mode: GameMode<DuelsModes>;
-}
+  time: T;
+  modeIcons: T extends "LIVE" ? DuelsModeIcons : undefined;
+};
 
-export const DuelsProfile = ({
+export const DuelsProfile = <T extends ProfileTime>({
   skin,
   player,
   background,
@@ -31,7 +35,8 @@ export const DuelsProfile = ({
   mode,
   t,
   time,
-}: DuelsProfileProps) => {
+  modeIcons,
+}: DuelsProfileProps<T>) => {
   const { duels } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -48,30 +53,68 @@ export const DuelsProfile = ({
     sidebar.push([t("stats.shotsFired"), t(stats.overall.shotsFired), "§6"]);
   }
 
+  if ("headshots" in stats)
+    sidebar.push([t("stats.headshots"), t(stats.headshots), "§3"]);
+
   if ("kit" in stats)
     sidebar.push([t("stats.kit"), prettify(stats.kit), "§e"]);
 
-  let table: JSX.Element;
-  const { api } = mode;
+  if (mode.api === "parkour") {
+    sidebar.push(
+      [t("stats.bestTime"), duels.parkour.bestTime === 0 ? "N/A" : formatTime(duels.parkour.bestTime), "§d"],
+      [t("stats.checkpoints"), t(duels.parkour.checkpoints), "§5"]
+    );
+  }
 
-  switch (api) {
+  const isTitles = time === "LIVE" && mode.api === "overall" && mode.submode.api === "titles";
+
+  let table: JSX.Element;
+
+  switch (mode.api) {
     case "bridge":
-      table = <BridgeDuelsTable stats={duels[api][mode.submode.api]} t={t} time={time} />;
+      table = <BridgeDuelsTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
       break;
 
     case "uhc":
-      table = <UHCDuelsTable stats={duels[api]} t={t} time={time} />;
+      table = <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
+      break;
+
+    case "bedwars":
+      sidebar.push([t("stats.itemsPurchased"), t(duels.bedwars.overall.itemsPurchased), "§d"]);
+      table = mode.submode.api === "overall" ? <BedWarsDuelsTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} /> : <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
       break;
 
     case "skywars":
     case "op":
-    case "megawalls":
-      table = <MultiDuelsGameModeTable stats={duels[api]} t={t} time={time} />;
+    case "classic":
+      table = <MultiDuelsGameModeTable stats={duels[mode.api]} t={t} time={time} />;
+      break;
+
+    case "spleef":
+      if (mode.submode.api === "spleef") sidebar.push([t("stats.blocksBroken"), t(duels.spleef.spleef.blocksBroken), "§b"]);
+      table = <SingleDuelsGameModeTable stats={duels[mode.api][mode.submode.api]} t={t} time={time} />;
+      break;
+
+    case "overall":
+      // ensures the profile is not a historical one so modeIcons is defined
+      table = isTitles ?
+        <TitlesTable duels={duels} t={t} modeIcons={modeIcons!} /> :
+        <SingleDuelsGameModeTable stats={duels[mode.api]} t={t} time={time} />;
       break;
 
     default:
-      table = <SingleDuelsGameModeTable stats={duels[api]} t={t} time={time} />;
+      table = <SingleDuelsGameModeTable stats={duels[mode.api]} t={t} time={time} />;
       break;
+  }
+
+  let formattedMode;
+
+  if (mode.api === "overall") {
+    formattedMode = mode.submode.api === "stats" ? "Overall" : mode.submode.formatted;
+  } else if ((mode.api === "bedwars" || mode.api === "spleef") && mode.submode.api !== "overall") {
+    formattedMode = mode.submode.formatted;
+  } else {
+    formattedMode = `${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""}`;
   }
 
   return (
@@ -80,17 +123,19 @@ export const DuelsProfile = ({
         skin={skin}
         name={player.prefixName}
         badge={badge}
-        sidebar={sidebar}
-        title={`§l${FormattedGame.DUELS} §fStats §r(${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""})`}
-        description={`§7${t("stats.title")}: ${
-          duels[api].titleFormatted
-        }\n${formatProgression({
-          t,
-          label: t("stats.progression.win"),
-          progression: duels[api].progression,
-          currentLevel: duels[api].titleLevelFormatted,
-          nextLevel: duels[api].nextTitleLevelFormatted,
-        })}`}
+        sidebar={isTitles ? [] : sidebar}
+        title={`§l${FormattedGame.DUELS} §fStats §r(${formattedMode})`}
+        description={isTitles ?
+          undefined :
+          `§7${t("stats.title")}: ${
+            duels[mode.api].titleFormatted
+          }\n${formatProgression({
+            t,
+            label: t("stats.progression.win"),
+            progression: duels[mode.api].progression,
+            currentLevel: duels[mode.api].titleLevelFormatted,
+            nextLevel: duels[mode.api].nextTitleLevelFormatted,
+          })}`}
         time={time}
       />
       {table}

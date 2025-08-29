@@ -8,3 +8,4 @@
 
 export * from "./game.js";
 export * from "./game-modes.js";
+export * from "./constants.js";

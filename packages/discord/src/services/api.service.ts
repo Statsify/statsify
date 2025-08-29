@@ -19,6 +19,7 @@ import {
   SessionNotFoundException,
   ApiService as StatsifyApiService,
   StatusNotFoundException,
+  SuccessResponse,
 } from "@statsify/api-client";
 import { Color, User } from "@statsify/schemas";
 import { ErrorMessage } from "#util/error.message";
@@ -27,10 +28,13 @@ import { config, removeFormatting } from "@statsify/util";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";
 
+const apiClientRoute = await config("apiClient.route");
+const apiClientKey = await config("apiClient.key");
+
 @Service()
 export class ApiService extends StatsifyApiService {
   public constructor() {
-    super(config("apiClient.route"), config("apiClient.key"));
+    super(apiClientRoute, apiClientKey);
   }
 
   /**
@@ -95,8 +99,8 @@ export class ApiService extends StatsifyApiService {
     return super.getStatus(input).catch((err) => {
       if (!err.response || !err.response.data) throw this.unknownError();
       const error = err.response.data as
-        | StatusNotFoundException
-        | PlayerNotFoundException;
+        | StatusNotFoundException |
+        PlayerNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
 
@@ -212,6 +216,12 @@ export class ApiService extends StatsifyApiService {
       if (error.message === "player") throw this.missingPlayer(type, tag);
 
       throw this.unknownError();
+    });
+  }
+
+  public override async deletePlayerSession(id: string): Promise<SuccessResponse> {
+    return super.deletePlayerSession(id).catch(() => {
+      throw new ErrorMessage("verification.requiredVerification");
     });
   }
 

@@ -39,7 +39,7 @@ export class ForceVerifyCommand {
     const user = await this.apiService.verifyUser(player.uuid, userId);
 
     await this.memberService
-      .addRole(config("supportBot.guild"), userId, config("supportBot.memberRole"))
+      .addRole(await config("supportBot.guild"), userId, await config("supportBot.memberRole"))
       .then(() => this.apiService.updateUser(userId, { serverMember: true }))
       .catch(() => null);
 

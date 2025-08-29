@@ -11,6 +11,7 @@ A Hypixel and Minecraft focused Discord Bot
 ### ⚒️ Requirements
 -   [`Node.js`]: For running code (`v22.6.0`)
 -   [`Rust`]: For skin rendering (`v1.72.0`)
+-   [`Wasm Pack`]: For skin rendering on the web (`v0.12.1`)
 -   [`pnpm`]: Installing packages and running scripts (`npm install -g pnpm`)
 -   [`MongoDB`]: For Persistent data ([`Atlas`])
 -   [`Redis`]: For Leaderboards ([`Redis Cloud`])
@@ -66,10 +67,10 @@ $ pnpm test:types
 ## Showcase
 <div align="center">
 
-![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars.png)
-![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars-leaderboard.png)
-![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/guild-overall.png)
-![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/session-tntgames.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/examples/bedwars.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/examples/bedwars-leaderboard.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/examples/guild-overall.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/examples/tntgames-session.png)
 
 </div>
 
@@ -88,3 +89,4 @@ $ pnpm test:types
 [`atlas`]: https://www.mongodb.com/cloud/atlas/register
 [`redis cloud`]: https://redis.com/try-free/
 [`redisearch`]: https://redis.io/docs/stack/search/quick_start/
+[`wasm pack`]: https://rustwasm.github.io/wasm-pack/

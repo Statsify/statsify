@@ -67,7 +67,19 @@ export const ARCADE_MODES = new GameModes([
   { api: "pixelParty", hypixel: "PIXEL_PARTY" },
   { api: "seasonal" },
   { api: "throwOut", hypixel: "THROW_OUT" },
-  { api: "zombies" },
+  {
+    api: "zombies",
+    submodes: [
+      { api: "overall" },
+      { api: "deadEnd" },
+      { api: "badBlood" },
+      { api: "alienArcadium" },
+      { api: "prison" },
+    ],
+  },
+
+  { hypixel: "HIDE_AND_SEEK_PARTY_POOPER", formatted: "Hide and Seek Party Pooper" },
+  { hypixel: "HIDE_AND_SEEK_PROP_HUNT", formatted: " Hide and Seek Prop Hunt" },
 ] as const);
 
 export type ArcadeModes = ExtractGameModes<typeof ARCADE_MODES>;

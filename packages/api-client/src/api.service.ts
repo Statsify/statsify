@@ -29,8 +29,9 @@ import {
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
   PutUserBadgeResponse,
+  SuccessResponse,
 } from "#responses";
-import { UserFooter, UserTheme } from "@statsify/schemas";
+import { User, UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { loadImage } from "@statsify/rendering";
 
@@ -48,7 +49,7 @@ interface UpdateUser {
   locale?: string | null;
 }
 
-const isProduction = config("environment") === "prod";
+const isProduction = await config("environment") === "prod";
 
 export class ApiService {
   private axios: AxiosInstance;
@@ -167,8 +168,9 @@ export class ApiService {
     );
   }
 
-  public getPlayerSkin(uuid: string) {
-    return this.requestImage(isProduction ? "https://api.statsify.net/skin" : "/skin", {
+  public getPlayerSkin(uuid: string, user: User | null) {
+    const route = User.hasExtrudedSkins(user) ? "skin/extruded" : "skin";
+    return this.requestImage(isProduction ? `https://api.statsify.net/${route}` : `/${route}`, {
       uuid,
     });
   }
@@ -192,6 +194,16 @@ export class ApiService {
     return this.request<GetPlayerResponse>(
       "/session",
       { player: tag },
+      "PATCH"
+    );
+  }
+
+  public deletePlayerSession(
+    id: string
+  ) {
+    return this.request<SuccessResponse>(
+      "/session",
+      { id },
       "DELETE"
     );
   }

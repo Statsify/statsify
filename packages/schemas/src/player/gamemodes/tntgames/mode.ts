@@ -290,10 +290,10 @@ export class WizardsClass {
   public assists: number;
 
   public constructor(data: APIData, clazz: string) {
-    this.kills = data[`new_${clazz}_kills`];
-    this.deaths = data[`new_${clazz}_deaths`];
+    this.kills = data[`${clazz}_kills`];
+    this.deaths = data[`${clazz}_deaths`];
     this.kdr = ratio(this.kills, this.deaths);
-    this.assists = data[`new_${clazz}_assists`];
+    this.assists = data[`${clazz}_assists`];
   }
 }
 
@@ -362,6 +362,9 @@ export class Wizards {
   public ancientWizard: WizardsClass;
 
   @Field()
+  public stormWizard: WizardsClass;
+
+  @Field()
   public arcaneWizard: WizardsClass;
 
   public constructor(data: APIData, ap: APIData) {
@@ -375,7 +378,9 @@ export class Wizards {
     this.kdr = ratio(this.kills, this.deaths);
     this.assists = data.assists_capture;
     this.points = data.points_capture;
-    this.airTime = data.air_time_capture;
+    // air_time_capture is stored in ticks
+    // 1 tick = 50ms
+    this.airTime = (data.air_time_capture ?? 0) * 50;
     this.powerOrbs = ap?.tntgames_power_hungry;
 
     const score = this.wins ?? 0;
@@ -396,15 +401,16 @@ export class Wizards {
 
     this.progression = createPrefixProgression(prefixes2, score);
 
-    this.fireWizard = new WizardsClass(data, "firewizard");
-    this.iceWizard = new WizardsClass(data, "icewizard");
-    this.witherWizard = new WizardsClass(data, "witherwizard");
-    this.kineticWizard = new WizardsClass(data, "kineticwizard");
-    this.bloodWizard = new WizardsClass(data, "bloodwizard");
-    this.toxicWizard = new WizardsClass(data, "toxicwizard");
-    this.hydroWizard = new WizardsClass(data, "hydrowizard");
-    this.ancientWizard = new WizardsClass(data, "ancientwizard");
-    this.arcaneWizard = new WizardsClass(data, "arcanewizard");
+    this.fireWizard = new WizardsClass(data, "new_firewizard");
+    this.iceWizard = new WizardsClass(data, "new_icewizard");
+    this.witherWizard = new WizardsClass(data, "new_witherwizard");
+    this.kineticWizard = new WizardsClass(data, "new_kineticwizard");
+    this.bloodWizard = new WizardsClass(data, "new_bloodwizard");
+    this.toxicWizard = new WizardsClass(data, "new_toxicwizard");
+    this.hydroWizard = new WizardsClass(data, "new_hydrowizard");
+    this.ancientWizard = new WizardsClass(data, "new_ancientwizard");
+    this.stormWizard = new WizardsClass(data, "new_stormwizard");
+    this.arcaneWizard = new WizardsClass(data, "arcane_wizard");
   }
 }
 

@@ -24,7 +24,6 @@ import {
 import { GatewayIntentBits } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
 import { RestClient, WebsocketShard } from "tiny-discord";
-import { WinterThemeService } from "@statsify/rendering";
 import { config } from "@statsify/util";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -41,23 +40,23 @@ process.on("unhandledRejection", handleError);
 
 setGlobalOptions({ schemaOptions: { _id: false } });
 
-const sentryDsn = config("sentry.supportBotDsn", { required: false });
+const sentryDsn = await config("sentry.supportBotDsn", { required: false });
 
 if (sentryDsn) {
   Sentry.init({
     dsn: sentryDsn,
     integrations: [new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true })],
     normalizeDepth: 3,
-    tracesSampleRate: config("sentry.tracesSampleRate"),
-    environment: config("environment"),
+    tracesSampleRate: await config("sentry.tracesSampleRate"),
+    environment: await config("environment"),
   });
 }
 
-const rest = new RestClient({ token: config("supportBot.token") });
+const rest = new RestClient({ token: await config("supportBot.token") });
 Container.set(RestClient, rest);
 
 await Promise.all(
-  [I18nLoaderService, FontLoaderService, MongoLoaderService, WinterThemeService].map((service) =>
+  [I18nLoaderService, FontLoaderService, MongoLoaderService].map((service) =>
     Container.get(service).init()
   )
 );
@@ -71,12 +70,12 @@ const poster = Container.get(CommandPoster);
 
 await poster.post(
   commands,
-  config("supportBot.applicationId"),
-  config("supportBot.guild")
+  await config("supportBot.applicationId"),
+  await config("supportBot.guild")
 );
 
 const websocket = new WebsocketShard({
-  token: config("supportBot.token"),
+  token: await config("supportBot.token"),
   intents:
     GatewayIntentBits.Guilds |
     GatewayIntentBits.GuildMessages |

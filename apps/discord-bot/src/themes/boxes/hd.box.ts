@@ -18,11 +18,10 @@ export const render: Render<Box.BoxRenderProps> = (
     outline,
     outlineSize,
   },
-  { x, y, width, height, padding },
-  { winterTheme }
+  { x, y, width, height, padding }
 ) => {
   const fill = Box.resolveFill(color, ctx, x, y, width, height);
-  ctx.fillStyle = winterTheme.getIce(ctx);
+  ctx.fillStyle = fill;
 
   width = width + padding.left + padding.right;
   height = height + padding.top + padding.bottom;
@@ -66,20 +65,11 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.lineTo(x + width - border.bottomRight - border.bottomRight, y + height);
   ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height);
   ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height - border.bottomLeft);
+  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft - border.bottomLeft);
+  ctx.lineTo(x, y + height - border.bottomLeft - border.bottomLeft);
   ctx.fill();
 
-  ctx.filter = "none";
-
-  if (fill !== Box.DEFAULT_COLOR) {
-    ctx.fillStyle = fill;
-    ctx.fill();
-  }
-
-  ctx.globalCompositeOperation = "overlay";
-
   Box.renderOverlay(ctx, x, y, height);
-
-  ctx.globalCompositeOperation = "source-over";
 
   if (outline) {
     ctx.strokeStyle =
@@ -139,6 +129,4 @@ export const render: Render<Box.BoxRenderProps> = (
   }
 
   ctx.globalAlpha = 1;
-
-  Box.renderSnow(ctx, winterTheme, x, y, width);
 };

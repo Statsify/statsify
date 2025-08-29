@@ -20,18 +20,21 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 import { UserModule } from "#user";
 import { config } from "@statsify/util";
 
+const mongoUri = await config("database.mongoUri");
+const redisUrl = await config("database.redisUrl");
+
 @Module({
   imports: [
     TypegooseModule.forRootAsync({
       useFactory: () => ({
-        uri: config("database.mongoUri"),
+        uri: mongoUri,
         maxPoolSize: 200,
         minPoolSize: 20,
       }),
     }),
     RedisModule.forRoot({
       config: {
-        url: config("database.redisUrl"),
+        url: redisUrl,
       },
     }),
     PlayerModule,

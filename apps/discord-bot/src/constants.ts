@@ -10,6 +10,7 @@ import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
   ApiModeFromGameModes,
+  ApiSubModeForMode,
   ArcadeModes,
   ArenaBrawlModes,
   BEDWARS_MODES,
@@ -73,37 +74,38 @@ const getDefaultApiMode = <T extends Mode[]>(modes: GameModes<T>) =>
   modes.getApiModes()[0];
 
 export type GamesWithBackgrounds =
-  | ArcadeModes
-  | ArenaBrawlModes
-  | BedWarsModes
-  | BlitzSGModes
-  | BuildBattleModes
-  | CopsAndCrimsModes
-  | DuelsModes
-  | GeneralModes
-  | ChallengeModes
-  | MegaWallsModes
-  | MurderMysteryModes
-  | PaintballModes
-  | ParkourModes
-  | PitModes
-  | QuakeModes
-  | SkyWarsModes
-  | SmashHeroesModes
-  | SpeedUHCModes
-  | TNTGamesModes
-  | TurboKartRacersModes
-  | UHCModes
-  | VampireZModes
-  | WallsModes
-  | WarlordsModes
-  | WoolGamesModes
-  | QuestModes
-  | ChallengeModes;
+  | ArcadeModes |
+  ArenaBrawlModes |
+  BedWarsModes |
+  BlitzSGModes |
+  BuildBattleModes |
+  CopsAndCrimsModes |
+  DuelsModes |
+  GeneralModes |
+  ChallengeModes |
+  MegaWallsModes |
+  MurderMysteryModes |
+  PaintballModes |
+  ParkourModes |
+  PitModes |
+  QuakeModes |
+  SkyWarsModes |
+  SmashHeroesModes |
+  SpeedUHCModes |
+  TNTGamesModes |
+  TurboKartRacersModes |
+  UHCModes |
+  VampireZModes |
+  WallsModes |
+  WarlordsModes |
+  WoolGamesModes |
+  QuestModes |
+  ChallengeModes;
 
-export const mapBackground = <T extends GamesWithBackgrounds>(
+export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeFromGameModes<T>>(
   modes: GameModes<T>,
-  mode: ApiModeFromGameModes<T>
+  mode: M,
+  submode?: ApiSubModeForMode<T, M>
 ): [game: string, mode: string] => {
   switch (modes) {
     case BEDWARS_MODES: {
@@ -136,7 +138,9 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       return ["bedwars", map];
     }
     case ARCADE_MODES:
-      return ["arcade", mode === "seasonal" ? "overall" : mode];
+      if (mode === "seasonal") return ["arcade", "overall"];
+      if (mode === "zombies" && submode !== "overall") return ["arcade", `zombies_${submode}`];
+      return ["arcade", mode];
 
     case ARENA_BRAWL_MODES:
       return ["arenabrawl", "overall"];
@@ -154,8 +158,12 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
       let map: string;
 
       switch (mode) {
-        case "bowSpleef":
-          map = "bowspleef";
+        case "bedwars":
+          map = submode === "rush" ? "bedwars_rush" : "bedwars";
+          break;
+
+        case "spleef":
+          map = submode === "bowSpleef" ? "spleef_bowSpleef" : "spleef";
           break;
 
         case "bridge":
@@ -176,6 +184,10 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
 
         case "parkour":
           map = "parkour";
+          break;
+
+        case "quake":
+          map = "quake";
           break;
 
         case "skywars":
@@ -308,6 +320,10 @@ export const mapBackground = <T extends GamesWithBackgrounds>(
         case "solo":
         case "doubles":
           map = "map";
+          break;
+
+        case "mini":
+          map = "mini";
           break;
 
         case "overall":

@@ -125,7 +125,7 @@ if (import.meta.vitest) {
 
   const stringMetadata = (name: string): FieldMetadata => {
     const lastIndexOfDot = name.lastIndexOf(".");
-    const fieldName = prettify(name.slice(Math.max(0, lastIndexOfDot > -1 ? lastIndexOfDot + 1 : 0)));
+    const fieldName = prettify(name.slice(Math.max(0, lastIndexOfDot === -1 ? 0 : lastIndexOfDot + 1)));
 
     return {
       leaderboard: {

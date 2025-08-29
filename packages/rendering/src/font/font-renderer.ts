@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import _positions from "../../positions.json" assert { type: "json" };
-import _sizes from "../../sizes.json" assert { type: "json" };
+import _positions from "../../positions.json" with { type: "json" };
+import _sizes from "../../sizes.json" with { type: "json" };
 import { Canvas, type CanvasRenderingContext2D, type ImageData } from "skia-canvas";
 import { type TextNode, type Token, tokens } from "./tokens.js";
 import { join } from "node:path";
@@ -267,27 +267,24 @@ export class FontRenderer {
     const { x: charX, y: charY, width, height, scale, isAscii, image, size } = metadata;
 
     const imageData = image.getImageData(charX, charY, width, height);
-    const resizeFactor = size * scale;
-
-    const offset = isAscii ? 2 : 1;
 
     ctx.filter = "brightness(25%)";
 
     this.fillFormattedCharacter(
       ctx,
       imageData,
-      x + offset * resizeFactor,
-      y + offset * resizeFactor,
+      x,
+      y,
       width,
       scale,
       size,
-      resizeFactor,
       color,
       underline,
       strikethrough,
       bold,
       italic,
-      isAscii
+      isAscii,
+      true
     );
 
     ctx.filter = "brightness(100%)";
@@ -300,13 +297,13 @@ export class FontRenderer {
       width,
       scale,
       size,
-      resizeFactor,
       color,
       underline,
       strikethrough,
       bold,
       italic,
-      isAscii
+      isAscii,
+      false
     );
 
     return this.getCharacterSpacing(char, isAscii, size, scale, width, bold);
@@ -320,25 +317,37 @@ export class FontRenderer {
     width: number,
     scale: number,
     size: number,
-    resizeFactor: number,
     color: Fill,
     underline: boolean,
     strikethrough: boolean,
     bold: boolean,
     italic: boolean,
-    isAscii: boolean
+    isAscii: boolean,
+    isShadow: boolean
   ) {
-    this.fillPlainCharacter(ctx, imageData, x, y, width, scale, size, color, italic);
+    let characterX = x;
+    let characterY = y;
 
-    if (underline) this.fillUnderline(ctx, x, y, width, resizeFactor, color);
-    if (strikethrough) this.fillStrikethrough(ctx, x, y, width, resizeFactor, color);
+    if (isShadow) {
+      const offset = isAscii ? 2 : 1;
+      characterX += offset * scale * size;
+      characterY += offset * scale * size;
+
+      x += 2 * scale * size;
+      y += 2 * scale * size;
+    }
+
+    this.fillPlainCharacter(ctx, imageData, characterX, characterY, width, scale, size, color, italic);
+
+    if (underline) this.fillUnderline(ctx, x, y, width, scale, size, color);
+    if (strikethrough) this.fillStrikethrough(ctx, x, y, width, scale, size, color);
 
     if (bold) {
       this.fillPlainCharacter(
         ctx,
         imageData,
-        x + resizeFactor,
-        y,
+        characterX + (scale * size),
+        characterY,
         width,
         scale,
         size,
@@ -346,23 +355,23 @@ export class FontRenderer {
         italic
       );
 
-      const offset = x + 2 * resizeFactor;
+      const boldOffset = 2 * scale * size;
 
       if (isAscii)
         this.fillPlainCharacter(
           ctx,
           imageData,
-          offset,
-          y,
+          characterX + boldOffset,
+          characterY,
           width,
           scale,
           size,
           color,
           italic
         );
-      if (underline) this.fillUnderline(ctx, offset, y, width, resizeFactor, color);
-      if (strikethrough)
-        this.fillStrikethrough(ctx, offset, y, width, resizeFactor, color);
+
+      if (underline) this.fillUnderline(ctx, x + boldOffset, y, width, scale, size, color);
+      if (strikethrough) this.fillStrikethrough(ctx, x + boldOffset, y, width, scale, size, color);
     }
   }
 
@@ -411,33 +420,23 @@ export class FontRenderer {
     ctx.fill();
   }
 
-  private fillLine(
-    ctx: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    width: number,
-    resizeFactor: number,
-    color: Fill
-  ) {
-    ctx.fillStyle = color;
-
-    ctx.fillRect(
-      x - 2 * resizeFactor,
-      y,
-      (width + 2) * (resizeFactor * 2),
-      resizeFactor * 2
-    );
-  }
-
   private fillUnderline(
     ctx: CanvasRenderingContext2D,
     x: number,
     y: number,
     width: number,
-    resizeFactor: number,
+    scale: number,
+    size: number,
     color: Fill
   ) {
-    return this.fillLine(ctx, x, y + 16 * resizeFactor, width, resizeFactor, color);
+    ctx.fillStyle = color;
+
+    ctx.fillRect(
+      x - (2 * scale * size),
+      y + (16 * size * scale),
+      (width * size) + (4 * scale * size),
+      2 * scale * size
+    );
   }
 
   private fillStrikethrough(
@@ -445,9 +444,17 @@ export class FontRenderer {
     x: number,
     y: number,
     width: number,
-    resizeFactor: number,
+    scale: number,
+    size: number,
     color: Fill
   ) {
-    return this.fillLine(ctx, x, y + 6 * resizeFactor, width, resizeFactor, color);
+    ctx.fillStyle = color;
+
+    ctx.fillRect(
+      x,
+      y + (6 * scale * size),
+      (width * size) + (2 * scale * size),
+      2 * scale * size
+    );
   }
 }

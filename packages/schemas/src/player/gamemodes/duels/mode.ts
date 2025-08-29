@@ -6,29 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, romanNumeral } from "@statsify/util";
+import { type APIData, formatTime } from "@statsify/util";
 import { Field } from "#metadata";
-import { GamePrefix, createPrefixProgression } from "#prefixes";
 import { Progression } from "#progression";
-import { type Title, getTitle, titleScores } from "./util.js";
-import { deepAdd, ratio } from "@statsify/math";
-
-const getPrefixes = (titles: Title[]) =>
-  titles.flatMap((title) => {
-    const calculatedTitles: GamePrefix[] = [];
-
-    for (let i = 0; i < (title.max ?? 5); i++) {
-      calculatedTitles.push({
-        fmt: (n) => `${title.color.code}[${n}]`,
-        req: title.req + i * title.inc,
-      });
-    }
-
-    return calculatedTitles;
-  });
-
-const prefixes = getPrefixes(titleScores());
-const overallPrefixes = getPrefixes(titleScores(true));
+import { add, deepAdd, ratio } from "@statsify/math";
+import { getTitleAndProgression } from "./util.js";
 
 export class BaseDuelsGameMode {
   @Field()
@@ -108,6 +90,16 @@ export class BowPVPBaseDuelsGameMode extends PVPBaseDuelsGameMode {
   }
 }
 
+export class BowBaseDuelsGameMode extends PVPBaseDuelsGameMode {
+  @Field()
+  public shotsFired: number;
+
+  public constructor(data: APIData, mode: string) {
+    super(data, mode);
+    this.shotsFired = data[`${mode}_bow_shots`];
+  }
+}
+
 export class BridgeDuelsMode extends BowPVPBaseDuelsGameMode {
   @Field()
   public goals: number;
@@ -151,32 +143,20 @@ export class BridgeDuels {
   @Field()
   public fours: BridgeDuelsMode;
 
-  @Field()
-  public "2v2v2v2": BridgeDuelsMode;
-
-  @Field()
-  public "3v3v3v3": BridgeDuelsMode;
-
-  @Field({ leaderboard: { fieldName: "CTF" } })
-  public ctf: BridgeDuelsMode;
-
   public constructor(data: APIData) {
     this.solo = new BridgeDuelsMode(data, "bridge_duel");
     this.doubles = new BridgeDuelsMode(data, "bridge_doubles");
     this.threes = new BridgeDuelsMode(data, "bridge_threes");
     this.fours = new BridgeDuelsMode(data, "bridge_four");
-    this["2v2v2v2"] = new BridgeDuelsMode(data, "bridge_2v2v2v2");
-    this["3v3v3v3"] = new BridgeDuelsMode(data, "bridge_3v3v3v3");
-    this.ctf = new BridgeDuelsMode(data, "capture_threes");
 
     this.overall = deepAdd(
       this.solo,
       this.doubles,
       this.threes,
       this.fours,
-      this["2v2v2v2"],
-      this["3v3v3v3"],
-      this.ctf
+      new BridgeDuelsMode(data, "bridge_2v2v2v2"),
+      new BridgeDuelsMode(data, "bridge_3v3v3v3"),
+      new BridgeDuelsMode(data, "capture_threes")
     );
 
     this.overall.winstreak = data.current_bridge_winstreak;
@@ -184,24 +164,16 @@ export class BridgeDuels {
 
     PVPBaseDuelsGameMode.applyRatios(this.overall);
 
-    const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
-      this.overall.wins,
-      "Bridge"
-    );
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.overall.wins,
+      mode: "Bridge",
+      data,
+    });
 
-    this.titleFormatted = formatted;
-
-    this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
-      index
-    )}]`;
-
-    const nextData = getTitle(req + index * inc, "Bridge");
-
-    this.nextTitleLevelFormatted = `${nextData.color.code}${
-      nextData.bold || nextData.semi ? "§l" : ""
-    }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
-
-    this.progression = createPrefixProgression(prefixes, this.overall.wins);
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
   }
 }
 
@@ -237,51 +209,18 @@ export class MultiPVPDuelsGameMode {
     this.overall.bestWinstreak = data[`best_${long}_winstreak`];
     this.overall.winstreak = data[`current_${long}_winstreak`];
 
-    const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
-      this.overall.wins,
-      title
-    );
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.overall.wins,
+      mode: title,
+      data,
+    });
 
-    this.titleFormatted = formatted;
-
-    this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
-      index
-    )}]`;
-
-    const nextData = getTitle(req + index * inc, title);
-
-    this.nextTitleLevelFormatted = `${nextData.color.code}${
-      nextData.bold || nextData.semi ? "§l" : ""
-    }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
-
-    this.progression = createPrefixProgression(prefixes, this.overall.wins);
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
   }
 }
-
-const assignTitles = (
-  data: SinglePVPDuelsGameMode | SingleDuelsGameMode,
-  title: string
-) => {
-  const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
-    data.wins,
-    title
-  );
-
-  data.titleFormatted = formatted;
-
-  data.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
-    index
-  )}]`;
-
-  const nextData = getTitle(req + index * inc, title);
-
-  data.nextTitleLevelFormatted = `${nextData.color.code}${
-    nextData.bold || nextData.semi ? "§l" : ""
-  }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
-
-  const titlePrefixes = title === "" ? overallPrefixes : prefixes;
-  data.progression = createPrefixProgression(titlePrefixes, data.wins);
-};
 
 export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
   @Field({ store: { default: "§7None§r" } })
@@ -298,7 +237,17 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
 
   public constructor(data: APIData, title: string, mode: string) {
     super(data, mode);
-    assignTitles(this, title);
+
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.wins,
+      mode: title,
+      data,
+    });
+
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
   }
 }
 
@@ -328,11 +277,21 @@ export class SingleDuelsGameMode extends BaseDuelsGameMode {
 
   public constructor(data: APIData, title: string, mode: string) {
     super(data, mode);
-    assignTitles(this, title);
+
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.wins,
+      mode: title,
+      data,
+    });
+
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
   }
 }
 
-export class SingleBowDuelsGameMode extends SingleDuelsGameMode {
+export class ArenaDuels extends SingleDuelsGameMode {
   @Field()
   public shotsFired: number;
 
@@ -370,6 +329,9 @@ export class UHCDuels {
   @Field()
   public deathmatch: BowPVPBaseDuelsGameMode;
 
+  @Field()
+  public gapplesEaten: number;
+
   public constructor(data: APIData) {
     this.solo = new BowPVPBaseDuelsGameMode(data, "uhc_duel");
     this.doubles = new BowPVPBaseDuelsGameMode(data, "uhc_doubles");
@@ -377,30 +339,27 @@ export class UHCDuels {
     this.deathmatch = new BowPVPBaseDuelsGameMode(data, "uhc_meetup");
 
     this.overall = deepAdd(this.solo, this.doubles, this.fours, this.deathmatch);
-
     this.overall.winstreak = data.current_uhc_winstreak;
     this.overall.bestWinstreak = data.best_uhc_winstreak;
-
     BowPVPBaseDuelsGameMode.applyRatios(this.overall);
 
-    const { formatted, bold, semi, max, index, color, req, inc } = getTitle(
-      this.overall.wins,
-      "UHC"
+    this.gapplesEaten = add(
+      data.uhc_duel_golden_apples_eaten,
+      data.uhc_doubles_golden_apples_eaten,
+      data.uhc_four_golden_apples_eaten,
+      data.uhc_meetu_golden_apples_eaten
     );
 
-    this.titleFormatted = formatted;
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.overall.wins,
+      mode: "UHC",
+      data,
+    });
 
-    this.titleLevelFormatted = `${color.code}${bold || semi ? "§l" : ""}[${romanNumeral(
-      index
-    )}]`;
-
-    const nextData = getTitle(req + index * inc, "UHC");
-
-    this.nextTitleLevelFormatted = `${nextData.color.code}${
-      nextData.bold || nextData.semi ? "§l" : ""
-    }[${romanNumeral(index + 1 > (max ?? 5) ? 1 : index + 1)}]`;
-
-    this.progression = createPrefixProgression(prefixes, this.overall.wins);
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
   }
 }
 
@@ -423,6 +382,204 @@ export class BlitzSGDuels extends SingleBowPVPDuelsGameMode {
   public constructor(data: APIData) {
     super(data, "Blitz", "blitz_duel");
     this.kit = data.blitz_duels_kit ?? "none";
+  }
+}
+
+export class QuakeDuels extends SinglePVPDuelsGameMode {
+  @Field()
+  public headshots: number;
+
+  @Field()
+  public shotsFired: number;
+
+  public constructor(data: APIData) {
+    super(data, "Quakecraft", "quake_duel");
+    this.headshots = data.quake_duel_quake_headshots;
+    this.shotsFired = data.quake_duel_quake_shots_taken;
+  }
+}
+
+export class BedWarsDuelsOverallMode {
+  @Field()
+  public bestWinstreak: number;
+
+  @Field()
+  public winstreak: number;
+
+  @Field()
+  public wins: number;
+
+  @Field()
+  public losses: number;
+
+  @Field()
+  public wlr: number;
+
+  @Field()
+  public kills: number;
+
+  @Field()
+  public deaths: number;
+
+  @Field()
+  public kdr: number;
+
+  @Field()
+  public finalKills: number;
+
+  @Field()
+  public finalDeaths: number;
+
+  @Field()
+  public fkdr: number;
+
+  @Field()
+  public bedsBroken: number;
+
+  @Field()
+  public bedsLost: number;
+
+  @Field()
+  public bblr: number;
+
+  @Field()
+  public itemsPurchased: number;
+
+  public constructor(data: APIData) {
+    this.bestWinstreak = data.best_bedwars_winstreak;
+    this.winstreak = data.current_bedwars_winstreak;
+
+    this.wins = data.wins_bedwars;
+    this.losses = data.losses_bedwars;
+    this.wlr = ratio(this.wins, this.losses);
+
+    this.kills = data.kills_bedwars;
+    this.deaths = data.deaths_bedwars;
+    this.kdr = ratio(this.kills, this.deaths);
+
+    this.finalKills = data.final_kills_bedwars;
+    this.finalDeaths = data.final_deaths_bedwars;
+    this.fkdr = ratio(this.finalKills, this.finalDeaths);
+
+    this.bedsBroken = data.beds_broken_bedwars;
+    this.bedsLost = data.beds_lost_bedwars;
+    this.bblr = ratio(this.bedsBroken, this.bedsLost);
+
+    this.itemsPurchased = data.items_purchased_bedwars;
+  }
+}
+
+export class BedwarsDuels {
+  @Field()
+  public titleFormatted: string;
+
+  @Field()
+  public titleLevelFormatted: string;
+
+  @Field()
+  public nextTitleLevelFormatted: string;
+
+  @Field()
+  public progression: Progression;
+
+  @Field({ leaderboard: { name: "BedWars Overall" } })
+  public overall: BedWarsDuelsOverallMode;
+
+  @Field({ leaderboard: { name: "BedWars Duel" } })
+  public bedwars: PVPBaseDuelsGameMode;
+
+  @Field({ leaderboard: { name: "Bed Rush" } })
+  public rush: PVPBaseDuelsGameMode;
+
+  public constructor(data: APIData) {
+    this.bedwars = new PVPBaseDuelsGameMode(data, "bedwars_two_one_duels");
+    this.rush = new PVPBaseDuelsGameMode(data, "bedwars_two_one_duels_rush");
+    this.overall = new BedWarsDuelsOverallMode(data);
+
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.overall.wins,
+      mode: "Bed Wars",
+      data,
+    });
+
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
+  }
+}
+
+export class SpleefDuelMode extends BaseDuelsGameMode {
+  @Field()
+  public blocksBroken: number;
+
+  public constructor(data: APIData) {
+    super(data, "spleef_duel");
+    this.blocksBroken = data.spleef_duel_blocks_broken;
+  }
+}
+
+export class BowSpleefDuelMode extends BaseDuelsGameMode {
+  @Field()
+  public shotsFired: number;
+
+  public constructor(data: APIData) {
+    super(data, "bowspleef_duel");
+    this.shotsFired = data.bowspleef_duel_bow_shots;
+  }
+}
+
+export class SpleefDuels {
+  @Field()
+  public titleFormatted: string;
+
+  @Field()
+  public titleLevelFormatted: string;
+
+  @Field()
+  public nextTitleLevelFormatted: string;
+
+  @Field()
+  public progression: Progression;
+
+  @Field({ leaderboard: { name: "Spleef Overall Wins", fieldName: "Wins" } })
+  public overallWins: number;
+
+  @Field({ leaderboard: { fieldName: "Spleef" } })
+  public spleef: SpleefDuelMode;
+
+  @Field()
+  public bowSpleef: BowSpleefDuelMode;
+
+  public constructor(data: APIData) {
+    this.spleef = new SpleefDuelMode(data);
+    this.bowSpleef = new BowSpleefDuelMode(data);
+    this.overallWins = add(this.spleef.wins, this.bowSpleef.wins);
+
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      wins: this.overallWins,
+      mode: "Spleef",
+      data,
+    });
+
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
+  }
+}
+
+export class ParkourDuels extends SingleDuelsGameMode {
+  @Field()
+  public checkpoints: number;
+
+  @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
+  public bestTime: number;
+
+  public constructor(data: APIData) {
+    super(data, "Parkour", "parkour_eight");
+    this.checkpoints = data.parkour_checkpoints_reached;
+    this.bestTime = (data.parkour_personal_best ?? 0) * 1000;
   }
 }
 

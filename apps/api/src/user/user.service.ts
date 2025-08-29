@@ -14,6 +14,8 @@ import { getLogoPath } from "@statsify/assets";
 import { readFile, rm, writeFile } from "node:fs/promises";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
+const mediaRoute = await config("api.mediaRoot");
+
 @Injectable()
 export class UserService {
   public constructor(
@@ -149,6 +151,6 @@ export class UserService {
   }
 
   private getBadgePath(id: string) {
-    return `${config("api.mediaRoot")}/badges/${id}.png`;
+    return `${mediaRoute}/badges/${id}.png`;
   }
 }

@@ -37,10 +37,10 @@ const JOIN_MESSAGES = [
   "has joined the server!",
 ];
 
-const GUILD_ID = config("supportBot.guild");
-const WELCOME_CHANNEL_ID = config("supportBot.welcomeChannel");
-const UNVERIFIED_CHANNEL_ID = config("supportBot.unverifiedChannel");
-const MEMBER_ROLE = config("supportBot.memberRole");
+const GUILD_ID = await config("supportBot.guild");
+const WELCOME_CHANNEL_ID = await config("supportBot.welcomeChannel");
+const UNVERIFIED_CHANNEL_ID = await config("supportBot.unverifiedChannel");
+const MEMBER_ROLE = await config("supportBot.memberRole");
 
 @Service()
 export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDispatchEvents.GuildMemberAdd> {
@@ -120,7 +120,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
   }
 
   private async sendUnverifiedMessage(member: APIGuildMember): Promise<IMessage> {
-    this.messageService.send(UNVERIFIED_CHANNEL_ID, {
+    await this.messageService.send(UNVERIFIED_CHANNEL_ID, {
       content: `<@${
         member.user!.id
       }>, run and complete \`/verify\` to get access to the rest of the discord server.`,

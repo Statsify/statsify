@@ -22,3 +22,4 @@ export * from "./post.rankings.response.js";
 export * from "./put.user-badge.response.js";
 export * from "./get.command-usage.response.js";
 export * from "./get.player-search.response.js";
+export * from "./success.response.js";
