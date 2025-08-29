@@ -7,6 +7,7 @@
  */
 
 import localFont from "next/font/local";
+import { Analytics } from "@vercel/analytics/next";
 import { Footer } from "~/components/ui/footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { env } from "./env";
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         className={`${MinecraftFont.variable} antialiased leading-[normal] h-screen flex flex-col bg-blackify-950`}
       >
         {children}
+        <Analytics />
         <SpeedInsights />
         <Footer />
       </body>
