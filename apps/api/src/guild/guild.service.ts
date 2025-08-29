@@ -113,7 +113,7 @@ export class GuildService {
     guild.members = await Promise.all(fetchMembers);
 
     await this.playerModel
-      .updateMany({ $in: { uuid: requireGuildId } }, { guildId: guild.id })
+      .updateMany({ uuid: { $in: requireGuildId } }, { guildId: guild.id })
       .lean()
       .exec();
 
