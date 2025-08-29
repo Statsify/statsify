@@ -23,7 +23,7 @@
     "@statsify/assets": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.12",
-    "axios": "1.7.3",
+    "axios": "1.11.0",
     "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz",
     "typedi": "^0.10.0"
   },

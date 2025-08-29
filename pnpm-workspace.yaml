@@ -1,4 +1,7 @@
 packages:
-  - "apps/**"
-  - "packages/**"
-  - "assets/**"
+  - apps/**
+  - packages/**
+  - assets/**
+
+onlyBuiltDependencies:
+  - '@nestjs/core'
