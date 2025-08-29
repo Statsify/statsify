@@ -67,10 +67,10 @@ $ pnpm test:types
 ## Showcase
 <div align="center">
 
-![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars.png)
-![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/bedwars-leaderboard.png)
-![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/guild-overall.png)
-![Image](https://raw.githubusercontent.com/Statsify/statsify/main/apps/site/public/examples/session-tntgames.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/examples/bedwars.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/examples/bedwars-leaderboard.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/examples/guild-overall.png)
+![Image](https://raw.githubusercontent.com/Statsify/statsify/main/examples/tntgames-session.png)
 
 </div>
 
