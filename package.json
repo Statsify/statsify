@@ -31,7 +31,7 @@
     "@commitlint/config-conventional": "^19.6.0",
     "@eslint/js": "^9.19.0",
     "@j4cobi/eslint-plugin-sort-imports": "^1.0.2",
-    "@napi-rs/cli": "^2.18.4",
+    "@napi-rs/cli": "^3.1.5",
     "@rollup/pluginutils": "^5.1.0",
     "@stylistic/eslint-plugin": "^5.2.3",
     "@swc/cli": "^0.6.0",
@@ -61,11 +61,6 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "pnpm": {
-    "overrides": {
-      "countup.js": "2.6.0"
     }
   }
 }

@@ -10,7 +10,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@nestjs/swagger": "^7.4.0",
+    "@nestjs/swagger": "^11.2.0",
     "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",

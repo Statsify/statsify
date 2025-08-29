@@ -22,8 +22,8 @@
     "lint": "cargo fmt && cargo clippy --fix --allow-dirty"
   },
   "napi": {
-    "name": "skin-renderer",
-    "triples": {
+    "binaryName": "skin-renderer",
+    "targetes": {
       "defaults": true,
       "additional": [
         "x86_64-unknown-linux-musl",
