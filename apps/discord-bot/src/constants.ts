@@ -74,33 +74,33 @@ const getDefaultApiMode = <T extends Mode[]>(modes: GameModes<T>) =>
   modes.getApiModes()[0];
 
 export type GamesWithBackgrounds =
-  | ArcadeModes
-  | ArenaBrawlModes
-  | BedWarsModes
-  | BlitzSGModes
-  | BuildBattleModes
-  | CopsAndCrimsModes
-  | DuelsModes
-  | GeneralModes
-  | ChallengeModes
-  | MegaWallsModes
-  | MurderMysteryModes
-  | PaintballModes
-  | ParkourModes
-  | PitModes
-  | QuakeModes
-  | SkyWarsModes
-  | SmashHeroesModes
-  | SpeedUHCModes
-  | TNTGamesModes
-  | TurboKartRacersModes
-  | UHCModes
-  | VampireZModes
-  | WallsModes
-  | WarlordsModes
-  | WoolGamesModes
-  | QuestModes
-  | ChallengeModes;
+  | ArcadeModes |
+  ArenaBrawlModes |
+  BedWarsModes |
+  BlitzSGModes |
+  BuildBattleModes |
+  CopsAndCrimsModes |
+  DuelsModes |
+  GeneralModes |
+  ChallengeModes |
+  MegaWallsModes |
+  MurderMysteryModes |
+  PaintballModes |
+  ParkourModes |
+  PitModes |
+  QuakeModes |
+  SkyWarsModes |
+  SmashHeroesModes |
+  SpeedUHCModes |
+  TNTGamesModes |
+  TurboKartRacersModes |
+  UHCModes |
+  VampireZModes |
+  WallsModes |
+  WarlordsModes |
+  WoolGamesModes |
+  QuestModes |
+  ChallengeModes;
 
 export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeFromGameModes<T>>(
   modes: GameModes<T>,
@@ -158,8 +158,12 @@ export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeF
       let map: string;
 
       switch (mode) {
-        case "bowSpleef":
-          map = "bowspleef";
+        case "bedwars":
+          map = submode === "rush" ? "bedwars_rush" : "bedwars";
+          break;
+
+        case "spleef":
+          map = submode === "bowSpleef" ? "spleef_bowSpleef" : "spleef";
           break;
 
         case "bridge":
@@ -180,6 +184,10 @@ export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeF
 
         case "parkour":
           map = "parkour";
+          break;
+
+        case "quake":
+          map = "quake";
           break;
 
         case "skywars":

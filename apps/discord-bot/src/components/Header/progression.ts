@@ -46,8 +46,8 @@ interface UnlabeledFormatProgressionOptions extends BaseFormatProgressionOptions
 }
 
 export type FormatProgressionOptions =
-  | LabeledFormatProgressionOptions
-  | UnlabeledFormatProgressionOptions;
+  | LabeledFormatProgressionOptions |
+  UnlabeledFormatProgressionOptions;
 
 export const formatProgression = ({
   t,

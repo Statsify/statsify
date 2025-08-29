@@ -18,7 +18,7 @@ interface TitlesTableProps {
   modeIcons: DuelsModeIcons;
 }
 
-function ModeTitle({ icon, title, wins, t }: { icon: Image; title: string;wins: number;t: LocalizeFunction }) {
+function ModeTitle({ icon, title, wins, t }: { icon: Image; title: string; wins: number; t: LocalizeFunction }) {
   return (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
       <img image={icon} width={32} height={32} />
@@ -33,16 +33,18 @@ function ModeTitle({ icon, title, wins, t }: { icon: Image; title: string;wins: 
 
 export const TitlesTable = ({ duels, t, modeIcons }: TitlesTableProps) => {
   const games = [
+    { icon: modeIcons.bedwars, title: duels.bedwars.titleFormatted, wins: duels.bedwars.overall.wins },
     { icon: modeIcons.blitzsg, title: duels.blitzsg.titleFormatted, wins: duels.blitzsg.wins },
     { icon: modeIcons.bow, title: duels.bow.titleFormatted, wins: duels.bow.wins },
-    { icon: modeIcons.bowSpleef, title: duels.bowSpleef.titleFormatted, wins: duels.bowSpleef.wins },
+    { icon: modeIcons.spleef, title: duels.spleef.titleFormatted, wins: duels.spleef.overallWins },
     { icon: modeIcons.boxing, title: duels.boxing.titleFormatted, wins: duels.boxing.wins },
     { icon: modeIcons.bridge, title: duels.bridge.titleFormatted, wins: duels.bridge.overall.wins },
-    { icon: modeIcons.classic, title: duels.classic.titleFormatted, wins: duels.classic.wins },
+    { icon: modeIcons.classic, title: duels.classic.titleFormatted, wins: duels.classic.overall.wins },
     { icon: modeIcons.combo, title: duels.combo.titleFormatted, wins: duels.combo.wins },
-    { icon: modeIcons.megawalls, title: duels.megawalls.titleFormatted, wins: duels.megawalls.overall.wins },
+    { icon: modeIcons.megawalls, title: duels.megawalls.titleFormatted, wins: duels.megawalls.wins },
     { icon: modeIcons.nodebuff, title: duels.nodebuff.titleFormatted, wins: duels.nodebuff.wins },
     { icon: modeIcons.op, title: duels.op.titleFormatted, wins: duels.op.overall.wins },
+    { icon: modeIcons.quake, title: duels.quake.titleFormatted, wins: duels.quake.wins },
     { icon: modeIcons.parkour, title: duels.parkour.titleFormatted, wins: duels.parkour.wins },
     { icon: modeIcons.skywars, title: duels.skywars.titleFormatted, wins: duels.skywars.overall.wins },
     { icon: modeIcons.sumo, title: duels.sumo.titleFormatted, wins: duels.sumo.wins },

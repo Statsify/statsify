@@ -23,7 +23,7 @@ export const STATUS_COLORS = {
   fatal: 0x81181A,
 } as const;
 
-const isProduction = config("environment") === "prod";
+const isProduction = await config("environment") === "prod";
 
 /**
  * A logger implementing the NestJS LoggerService interface. However can be used anywhere.

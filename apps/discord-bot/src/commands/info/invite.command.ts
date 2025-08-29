@@ -16,6 +16,8 @@ import { readFile } from "node:fs/promises";
 @Command({ description: (t) => t("commands.invite") })
 export class InviteCommand {
   public async run(): Promise<IMessage> {
+    const applicationId = await config("discordBot.applicationId");
+
     const embed = new EmbedBuilder()
       .title((t) => t("embeds.invite.title"))
       .color(STATUS_COLORS.info)
@@ -23,7 +25,7 @@ export class InviteCommand {
         const description = t("embeds.invite.description");
 
         const links = [
-          `**${t("socials.invite", { id: config("discordBot.applicationId") })}**`,
+          `**${t("socials.invite", { id: applicationId })}**`,
           t("socials.discord"),
           t("socials.premium"),
           t("socials.website"),

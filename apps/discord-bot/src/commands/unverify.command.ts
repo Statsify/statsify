@@ -18,8 +18,8 @@ import {
 import { STATUS_COLORS } from "@statsify/logger";
 import { config } from "@statsify/util";
 
-const SUPPORT_BOT_GUILD_ID = config("supportBot.guild");
-const SUPPORT_BOT_MEMBER_ROLE_ID = config("supportBot.memberRole");
+const SUPPORT_BOT_GUILD_ID = await config("supportBot.guild");
+const SUPPORT_BOT_MEMBER_ROLE_ID = await config("supportBot.memberRole");
 
 @Command({ description: (t) => t("commands.unverify"), cooldown: 5 })
 export class UnverifyCommand {

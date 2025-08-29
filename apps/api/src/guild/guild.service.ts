@@ -96,7 +96,7 @@ export class GuildService {
       // Add all the days to the guild total exp history
       Object.entries(combinedExpHistory)
         .sort()
-        .reverse()
+        .toReversed()
         .slice(0, 30)
         .forEach(([day, exp], index) => {
           member.expHistory[index] = exp;
@@ -113,16 +113,14 @@ export class GuildService {
     guild.members = await Promise.all(fetchMembers);
 
     await this.playerModel
-      .updateMany({ guildId: guild.id })
-      .where("uuid")
-      .in(requireGuildId)
+      .updateMany({ $in: { uuid: requireGuildId } }, { guildId: guild.id })
       .lean()
       .exec();
 
     // Get scaled gexp
     Object.entries(guildExpHistory)
       .sort()
-      .reverse()
+      .toReversed()
       .slice(0, 30)
       .forEach(([day, exp], index) => {
         const scaled = this.scaleGexp(exp);

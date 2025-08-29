@@ -49,7 +49,7 @@ interface UpdateUser {
   locale?: string | null;
 }
 
-const isProduction = config("environment") === "prod";
+const isProduction = await config("environment") === "prod";
 
 export class ApiService {
   private axios: AxiosInstance;
