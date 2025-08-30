@@ -473,8 +473,8 @@ importers:
         specifier: ^12.6.0
         version: 12.19.0(mongoose@8.18.0(socks@2.8.7))
       minecraft-protocol:
-        specifier: https://github.com/jacobk999/node-minecraft-protocol#cd8f06e3ee74f67dfc6deeeeb6b33b869bf705a2
-        version: https://codeload.github.com/jacobk999/node-minecraft-protocol/tar.gz/cd8f06e3ee74f67dfc6deeeeb6b33b869bf705a2
+        specifier: ^1.61.0
+        version: 1.61.0
       mongoose:
         specifier: ^8.5.2
         version: 8.18.0(socks@2.8.7)
@@ -2894,6 +2894,9 @@ packages:
   '@types/mute-stream@0.0.4':
     resolution: {integrity: sha512-CPM9nzrCPPJHQNA9keH9CVkVI+WR5kMa+7XEs5jcGQ0VoAGnLv242w8lIVgwAEfmE4oufJRaTc9PNLQl0ioAow==}
 
+  '@types/node-rsa@1.1.4':
+    resolution: {integrity: sha512-dB0ECel6JpMnq5ULvpUTunx3yNm8e/dIkv8Zu9p2c8me70xIRUUG3q+qXRwcSf9rN3oqamv4116iHy90dJGRpA==}
+
   '@types/node@22.18.0':
     resolution: {integrity: sha512-m5ObIqwsUp6BZzyiy4RdZpzWGub9bqLJMvZDD0QMXhxjqMHMENlj+SqF5QxoUwaQNFe+8kz8XM8ZQhqkQPTgMQ==}
 
@@ -5106,10 +5109,6 @@ packages:
   lodash.defaults@4.2.0:
     resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
 
-  lodash.get@4.4.2:
-    resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
-    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
-
   lodash.includes@4.3.0:
     resolution: {integrity: sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==}
 
@@ -5290,10 +5289,9 @@ packages:
   minecraft-folder-path@1.2.0:
     resolution: {integrity: sha512-qaUSbKWoOsH9brn0JQuBhxNAzTDMwrOXorwuRxdJKKKDYvZhtml+6GVCUrY5HRiEsieBEjCUnhVpDuQiKsiFaw==}
 
-  minecraft-protocol@https://codeload.github.com/jacobk999/node-minecraft-protocol/tar.gz/cd8f06e3ee74f67dfc6deeeeb6b33b869bf705a2:
-    resolution: {tarball: https://codeload.github.com/jacobk999/node-minecraft-protocol/tar.gz/cd8f06e3ee74f67dfc6deeeeb6b33b869bf705a2}
-    version: 1.47.0
-    engines: {node: '>=14'}
+  minecraft-protocol@1.61.0:
+    resolution: {integrity: sha512-LZgcsdC88HZtuEYve7YENYvO6Xhe80Mf1rYLgz1frkMWAHWSSXfrplWoNKkKYcdVGM4Azc99NvbFjZdSDu4yKg==}
+    engines: {node: '>=22'}
 
   minimatch@10.0.3:
     resolution: {integrity: sha512-IPZ167aShDZZUMdRk66cyQAW3qr0WzbHkPdMYa8bzZhlHhO3jALbKdxcaak7W9FfT2rZNpQuUu4Od7ILEpXSaw==}
@@ -8775,6 +8773,10 @@ snapshots:
     dependencies:
       '@types/node': 24.3.0
 
+  '@types/node-rsa@1.1.4':
+    dependencies:
+      '@types/node': 24.3.0
+
   '@types/node@22.18.0':
     dependencies:
       undici-types: 6.21.0
@@ -11293,8 +11295,6 @@ snapshots:
 
   lodash.defaults@4.2.0: {}
 
-  lodash.get@4.4.2: {}
-
   lodash.includes@4.3.0: {}
 
   lodash.isarguments@3.1.0: {}
@@ -11423,14 +11423,14 @@ snapshots:
 
   minecraft-folder-path@1.2.0: {}
 
-  minecraft-protocol@https://codeload.github.com/jacobk999/node-minecraft-protocol/tar.gz/cd8f06e3ee74f67dfc6deeeeb6b33b869bf705a2:
+  minecraft-protocol@1.61.0:
     dependencies:
+      '@types/node-rsa': 1.1.4
       '@types/readable-stream': 4.0.21
       aes-js: 3.1.2
       buffer-equal: 1.0.1
       debug: 4.4.1
       endian-toggle: 0.0.0
-      lodash.get: 4.4.2
       lodash.merge: 4.6.2
       minecraft-data: 3.93.0
       minecraft-folder-path: 1.2.0
