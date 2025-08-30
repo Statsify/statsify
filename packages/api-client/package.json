@@ -12,11 +12,11 @@
   "dependencies": {
     "@nestjs/common": "^11.1.6",
     "@nestjs/swagger": "^11.2.0",
-    "@sentry/node": "^7.118.0",
+    "@sentry/node": "^7.120.4",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
+    "@swc/helpers": "^0.5.17",
     "axios": "^1.11.0"
   },
   "imports": {
