@@ -26,6 +26,7 @@ export function SkinHead({ uuid, size = 32, className }: { uuid: string; size?: 
       alt="skin"
       src={`/api/skin/head?uuid=${uuid}&size=${size}`}
       style={{ imageRendering: "pixelated" }}
+      unoptimized
       className={className}
     />
   );
