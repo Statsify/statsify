@@ -579,7 +579,7 @@ export class ParkourDuels extends SingleDuelsGameMode {
   public constructor(data: APIData) {
     super(data, "Parkour", "parkour_eight");
     this.checkpoints = data.parkour_checkpoints_reached;
-    this.bestTime = (data.parkour_personal_best ?? 0) * 1000;
+    this.bestTime = data.parkour_personal_best;
   }
 }
 
