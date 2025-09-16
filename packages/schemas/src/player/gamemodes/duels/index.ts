@@ -218,7 +218,7 @@ export class Duels {
     this.megawalls.wins = add(this.megawalls.wins, megawallsDoubles.wins);
     this.megawalls.losses = add(this.megawalls.losses, megawallsDoubles.losses);
     this.megawalls.kills = add(this.megawalls.kills, megawallsDoubles.kills);
-    this.megawalls.deaths = add(this.megawalls.deaths, megawallsDoubles.wins);
+    this.megawalls.deaths = add(this.megawalls.deaths, megawallsDoubles.deaths);
     this.megawalls.blocksPlaced = add(this.megawalls.blocksPlaced, megawallsDoubles.blocksPlaced);
     PVPBaseDuelsGameMode.applyRatios(this.megawalls);
 
