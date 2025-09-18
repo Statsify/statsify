@@ -11,8 +11,8 @@ import {
   BedwarsDuels,
   BlitzSGDuels,
   BridgeDuels,
+  MegaWallsDuels,
   MultiPVPDuelsGameMode,
-  PVPBaseDuelsGameMode,
   ParkourDuels,
   QuakeDuels,
   SingleBowPVPDuelsGameMode,
@@ -23,7 +23,6 @@ import {
 } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export const DUELS_MODES = new GameModes([
@@ -101,7 +100,11 @@ export const DUELS_MODES = new GameModes([
   { hypixel: "DUELS_BRIDGE_2V2V2V2", formatted: "Bridge 2v2v2v2" },
   { hypixel: "DUELS_BRIDGE_3V3V3V3", formatted: "Bridge 3v3v3v3" },
   { hypixel: "DUELS_CAPTURE_THREES", formatted: "Bridge CTF" },
-  // TODO: add new duels modes
+  { hypixel: "DUELS_BEDWARS_TWO_ONE", formatted: "BedWars Duel" },
+  { hypixel: "DUELS_BEDWARS_TWO_ONE_RUSH", formatted: "Bed Rush" },
+  { hypixel: "DUELS_SPLEEF_DUEL", formatted: "Spleef" },
+  { hypixel: "DUELS_BOWSPLEEF_DUEL", formatted: "Bow Spleef" },
+  { hypixel: "DUELS_CLASSIC_DOUBLES", formatted: "Classic Doubles" },
 ] as const);
 
 export type DuelsModes = ExtractGameModes<typeof DUELS_MODES>;
@@ -154,7 +157,7 @@ export class Duels {
       extraDisplay: "this.megawalls.titleFormatted",
     },
   })
-  public megawalls: SinglePVPDuelsGameMode;
+  public megawalls: MegaWallsDuels;
 
   @Field({
     leaderboard: {
@@ -199,37 +202,29 @@ export class Duels {
   public icon: string;
 
   public constructor(data: APIData) {
-    this.overall = new SingleBowPVPDuelsGameMode(data, "", "");
+    this.overall = new SingleBowPVPDuelsGameMode(data, "", "", "overall");
     this.overall.winstreak = data?.currentStreak ?? this.overall.winstreak;
-    this.arena = new ArenaDuels(data, "Arena", "duel_arena");
+    this.arena = new ArenaDuels(data);
 
     this.blitzsg = new BlitzSGDuels(data);
-    this.bow = new SingleBowPVPDuelsGameMode(data, "Bow", "bow_duel");
-    this.boxing = new SinglePVPDuelsGameMode(data, "Boxing", "boxing_duel");
+    this.bow = new SingleBowPVPDuelsGameMode(data, "Bow", "bow_duel", "default");
+    this.boxing = new SinglePVPDuelsGameMode(data, "Boxing", "boxing_duel", "half");
     this.bedwars = new BedwarsDuels(data);
 
     this.bridge = new BridgeDuels(data);
-    this.classic = new MultiPVPDuelsGameMode(data, "Classic", "classic", "classic");
-    this.combo = new SinglePVPDuelsGameMode(data, "Combo", "combo_duel");
+    this.classic = new MultiPVPDuelsGameMode(data, "Classic", "classic", "classic", "default");
+    this.combo = new SinglePVPDuelsGameMode(data, "Combo", "combo_duel", "default");
 
-    // Add removed doubles stats
-    this.megawalls = new SinglePVPDuelsGameMode(data, "MW", "mw_duel");
-    const megawallsDoubles = new PVPBaseDuelsGameMode(data, "mw_doubles");
-    this.megawalls.wins = add(this.megawalls.wins, megawallsDoubles.wins);
-    this.megawalls.losses = add(this.megawalls.losses, megawallsDoubles.losses);
-    this.megawalls.kills = add(this.megawalls.kills, megawallsDoubles.kills);
-    this.megawalls.deaths = add(this.megawalls.deaths, megawallsDoubles.deaths);
-    this.megawalls.blocksPlaced = add(this.megawalls.blocksPlaced, megawallsDoubles.blocksPlaced);
-    PVPBaseDuelsGameMode.applyRatios(this.megawalls);
+    this.megawalls = new MegaWallsDuels(data);
 
-    this.nodebuff = new SinglePVPDuelsGameMode(data, "NoDebuff", "potion_duel");
-    this.op = new MultiPVPDuelsGameMode(data, "OP", "op", "op");
+    this.nodebuff = new SinglePVPDuelsGameMode(data, "NoDebuff", "potion_duel", "half");
+    this.op = new MultiPVPDuelsGameMode(data, "OP", "op", "op", "default");
 
     this.parkour = new ParkourDuels(data);
     this.quake = new QuakeDuels(data);
     this.skywars = new SkyWarsDuels(data);
     this.spleef = new SpleefDuels(data);
-    this.sumo = new SinglePVPDuelsGameMode(data, "Sumo", "sumo_duel");
+    this.sumo = new SinglePVPDuelsGameMode(data, "Sumo", "sumo_duel", "default");
     this.uhc = new UHCDuels(data);
 
     this.pingRange = data?.pingPreference ?? 300;

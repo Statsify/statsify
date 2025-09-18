@@ -163,7 +163,7 @@ export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeF
           break;
 
         case "spleef":
-          map = submode === "bowSpleef" ? "spleef_bowSpleef" : "spleef";
+          map = submode === "bowSpleef" ? "bowSpleef" : "spleef";
           break;
 
         case "bridge":
