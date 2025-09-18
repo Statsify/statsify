@@ -31,6 +31,7 @@ export const BEDWARS_MODES = new GameModes([
   { api: "ultimate" },
   { api: "underworld" },
   { api: "voidless" },
+  { api: "oneBlock", hypixel: "BEDWARS_EIGHT_ONE_ONEBLOCK" },
 
   { hypixel: "BEDWARS_EIGHT_TWO_ARMED", formatted: "Armed Doubles" },
   { hypixel: "BEDWARS_FOUR_FOUR_ARMED", formatted: "Armed Fours" },
@@ -136,6 +137,9 @@ export class BedWars {
   public voidless: BedWarsMode;
 
   @Field()
+  public oneBlock: BedWarsMode;
+
+  @Field()
   public challenges: ChallengesBedWars;
 
   @Field({ leaderboard: { fieldName: "" } })
@@ -173,6 +177,7 @@ export class BedWars {
     this.ultimate = DreamsBedWarsMode.new(data, "ultimate");
     this.underworld = DreamsBedWarsMode.new(data, "underworld");
     this.voidless = DreamsBedWarsMode.new(data, "voidless");
+    this.oneBlock = new BedWarsMode(data, "eight_one_oneblock");
 
     this.core = deepSub(this.overall, this["4v4"]);
     BedWarsMode.applyRatios(this.core);
