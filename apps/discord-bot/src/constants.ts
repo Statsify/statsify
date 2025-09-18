@@ -130,6 +130,10 @@ export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeF
           map = "castle";
           break;
 
+        case "oneBlock":
+          map = "oneBlock";
+          break;
+
         default:
           map = "overall";
           break;
