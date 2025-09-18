@@ -267,5 +267,6 @@ const SCHEME_MAP: Record<string, Scheme> = {
   color_of_a_flash: gradientColorScheme(["§8", "§f", "§f", "§f", "§8"]),
   bedding_hues: gradientColorScheme(["§c", "§c", "§c", "§f", "§f"]),
   variety_values: gradientColorScheme(["§b", "§f", "§f", "§f", "§b"]),
+  og_fade: gradientColorScheme(["§6", "§e", "§f", "§7", "§8"]),
 };
 
