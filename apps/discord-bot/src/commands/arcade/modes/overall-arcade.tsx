@@ -9,6 +9,7 @@
 import { Arcade } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
+import { arcadeWins } from "../wins.js";
 import { arrayGroup } from "@statsify/util";
 
 interface OverallArcadeTableProps {
@@ -19,30 +20,7 @@ interface OverallArcadeTableProps {
 export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
   const rowSize = 3;
 
-  const games: [string, number][] = [
-    ["Blocking Dead", stats.blockingDead.wins],
-    ["Bounty Hunters", stats.bountyHunters.wins],
-    ["Dragon Wars", stats.dragonWars.wins],
-    ["Dropper", stats.dropper.wins],
-    ["Ender Spleef", stats.enderSpleef.wins],
-    ["Farm Hunt", stats.farmHunt.wins],
-    ["Football", stats.football.wins],
-    ["Galaxy Wars", stats.galaxyWars.wins],
-    ["Hide And Seek", stats.hideAndSeek.overall.wins],
-    ["Hole In The Wall", stats.holeInTheWall.wins],
-    ["Hypixel Says", stats.hypixelSays.wins],
-    ["Mini Walls", stats.miniWalls.wins],
-    ["Party Games", stats.partyGames.wins],
-    ["Pixel Painters", stats.pixelPainters.wins],
-    ["Pixel Party", stats.pixelParty.overall.wins],
-    ["Seasonal", stats.seasonal.totalWins],
-    ["Throw Out", stats.throwOut.wins],
-    ["Zombies", stats.zombies.overall.wins],
-  ];
-
-  games.sort((a, b) => b[1] - a[1]);
-
-  const rows = arrayGroup(games, rowSize);
+  const rows = arrayGroup(arcadeWins(stats), rowSize);
 
   const colors = ["§d", "§b", "§a", "§e", "§6", "§c"];
 
