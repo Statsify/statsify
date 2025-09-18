@@ -23,4 +23,4 @@ export const minecraftColors = [
   { code: "§d", hex: "#FF55FF", id: "LIGHT_PURPLE" },
   { code: "§e", hex: "#FFFF55", id: "YELLOW" },
   { code: "§f", hex: "#FFFFFF", id: "WHITE" },
-];
+] as const;
