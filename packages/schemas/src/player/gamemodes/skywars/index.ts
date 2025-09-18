@@ -112,6 +112,9 @@ export class SkyWars {
   @Field()
   public challenges: ChallengesSkyWars;
 
+  @Field()
+  public emblem: string;
+
   public constructor(data: APIData, ap: APIData) {
     this.exp = data.skywars_experience ?? 0;
     this.coins = data.coins;
@@ -130,10 +133,11 @@ export class SkyWars {
     const isUnderline = data.levelFormattedWithBrackets?.includes("§n") ?? false;
     const isStrikethrough = data.levelFormattedWithBrackets?.includes("§m") ?? false;
 
+    this.emblem = data.active_emblem;
     this.levelFormatted = getFormattedLevel(
       this.level,
       data.active_scheme,
-      data.active_emblem?.replace("_icon", ""),
+      data.active_emblem?.replace("_icon", "")?.replace("emblem_", ""),
       isBold,
       isUnderline,
       isStrikethrough

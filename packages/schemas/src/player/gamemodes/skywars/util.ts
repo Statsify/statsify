@@ -22,7 +22,7 @@ const TOTAL_XP = XP_TO_NEXT_LEVEL
 // After this XP the level requirement will always be CONSTANT_XP_TO_NEXT_LEVEL
 const CONSTANT_LEVELING_XP = XP_TO_NEXT_LEVEL.reduce((acc, xp) => acc + xp, 0);
 const CONSTANT_XP_TO_NEXT_LEVEL = 5000;
-const LEVEL_MAX = 500;
+const LEVEL_MAX = 10_000;
 
 export const getLevel = (xp: number): number => {
   if (xp >= CONSTANT_LEVELING_XP) {
@@ -83,6 +83,45 @@ const EMBLEM_MAP = {
   sigma: "Σ",
   delta: "δ",
   florin: "ƒ",
+
+  crossed_swords: "⚔",
+  angel_1: "★",
+  angel_2: "☆",
+  angel_3i: "☼",
+  angel_4: "✶",
+  angel_5: "✳",
+  angel_6: "✴",
+  angel_7: "✷",
+  angel_8: "❋",
+  angel_9: "✼",
+  angel_10: "❂",
+  angel_11: "❁",
+  small_star: "⋆",
+  greek_cross: "✙",
+  heart: "❤",
+  skull: "☠",
+  four_points: "✦",
+  peace_out: "✌",
+  floral_heart: "❦",
+  eight_pointed_pinwheel: "✵",
+  heart_exclamation: "❣",
+  yin_and_yang: "☯",
+  sixteen_pointed_asterisk: "✺",
+  airplane: "✈",
+  maltese_cross: "✠",
+  queen: "♕",
+  bolt: "⚡",
+  asterism: "⁂",
+  stacked_asterisks: "⁑",
+  four_clubs: "✥",
+  rocket: "♝",
+  neptune: "♆",
+  circled_star: "⍟",
+  bishop: "♗",
+  king: "♔",
+  knight: "♞",
+  pencil: "✏",
+  heavy_sparkle: "❈",
 };
 
 type Scheme = (level: number, bold: boolean, underline: boolean, strikethrough: boolean, emblem?: string,) => string;
