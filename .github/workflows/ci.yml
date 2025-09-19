@@ -26,7 +26,7 @@ jobs:
       - name: Install node.js v22
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
-          node-version: 22.6.0
+          node-version: 22.19.0
 
       - name: Install wasm-pack
         run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
