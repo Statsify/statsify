@@ -9,7 +9,7 @@
     "mojang-player": "Et Minecraft-brukernavn eller UUID",
     "number": "Et tall",
     "player": "$t(arguments.mojang-player)",
-    "player-leaderboard": "Choose a leaderboard",
+    "player-leaderboard": "Velg en toppliste",
     "reason": "The reason for closing the support ticket",
     "server": "Et Minecraft-servernavn eller server-IP",
     "tags-content": "The content of the tag",
@@ -88,7 +88,7 @@
     "session-buildbattle": "$t(commands.session-command, { \"name\": \"Build Battle\" })",
     "session-command": "View your {{name}} session stats",
     "session-copsandcrims": "$t(commands.session-command, { \"name\": \"Cops and Crims\" })",
-    "session-delete": "Delete your session stats",
+    "session-delete": "Nullstill øktstatistikken din",
     "session-duels": "$t(commands.session-command, { \"name\": \"Duels\" })",
     "session-general": "$t(commands.session-command, { \"name\": \"General\" })",
     "session-megawalls": "$t(commands.session-command, { \"name\": \"MegaWalls\" })",
@@ -117,7 +117,7 @@
     "leaderboard-bedwars": "$t(commands.leaderboard-command, { \"name\": \"BedWars\" })",
     "leaderboard-blitzsg": "$t(commands.leaderboard-command, { \"name\": \"BlitzSG\" })",
     "leaderboard-buildbattle": "$t(commands.leaderboard-command, { \"name\": \"Build Battle\" })",
-    "leaderboard-command": "View {{name}} leaderboards",
+    "leaderboard-command": "Se {{name}} topplister",
     "leaderboard-challenges": "$t(commands.leaderboard-command, { \"name\": \"Challenges\" })",
     "leaderboard-copsandcrims": "$t(commands.leaderboard-command, { \"name\": \"Cops and Crims\" })",
     "leaderboard-duels": "$t(commands.leaderboard-command, { \"name\": \"Duels\" })",
@@ -238,7 +238,7 @@
     "woolgames": "$t(commands.hypixel-command, { \"name\": \"WoolGames\" })",
     "yesterday": "View your stats from yesterday in various games",
     "reset-historical": "Reset your historical stats",
-    "reset-session": "Reset your session stats"
+    "reset-session": "Nullstill øktstatistikken din"
   },
   "config": {
     "badge": {
@@ -308,7 +308,7 @@
       },
       "session": {
         "description": "Statsify lets you check your stats as if you started playing today through `/session`. With `/reset session` you can reset your session stats and start a new session.",
-        "title": "Sessions"
+        "title": "Økter"
       },
       "leaderboards": {
         "description": "Statsify tilbyr tusenvis av topplister gjennom `/leaderboard`-kommandoen. Utfør `/leaderboard`, velg spilltype, og velg topplisten du ønsker å se. Du kan trykke på søkeknappen for å søke etter en spesifikk spiller eller posisjon. Du kan se flere sider ved å trykke opp- og ned-knappene.",
@@ -387,7 +387,7 @@
       "title": "Ugyldig spiller"
     },
     "invalidSession": {
-      "title": "Invalid Session",
+      "title": "Ugyldig økt",
       "description": "**{{displayName}}** has no active sessions. They can make a session by running `/session` while being verified."
     },
     "invalidResetTime": {
@@ -516,8 +516,8 @@
     "resetButton": "Klikk for å nullstille",
     "setResetTime": "Angi nullstillingstid til <t:{{time}}:t>.",
     "newSession": "**{{displayName}}**'s session stats have been checked for the first time on Statsify.",
-    "setSessionReset": "Successfully reset your session stats.",
-    "deleteSession": "Successfully deleted your session stats.",
+    "setSessionReset": "Øktstatistikken din er nullstilt.",
+    "deleteSession": "Øktstatistikken din er nullstilt.",
     "disabledWarning": {
       "title": "Historical Commands are no Longer Available",
       "description": "Hypixel's new [API Terms](https://developer.hypixel.net/policies/) no longer allow for \"continuous polling of player data,\" which means Statsify cannot track player stats daily anymore.\n\nInstead you can try starting a session with `/session`. When you start a session, the bot will keep track of your stats from the moment you initially ran the command until the next time you run it. To reset your session stats you can run `/reset session`."
@@ -585,7 +585,7 @@
     "bronzeTrophies": "Bronsetrofeer",
     "candyFound": "Godteri funnet",
     "challenges": "Utfordringer",
-    "checkpoints": "Checkpoints",
+    "checkpoints": "Sjekkpunkter",
     "class": "Klasse",
     "coins": "Mynter",
     "contracts": "Kontrakter",
@@ -626,10 +626,10 @@
     "godfather": "Gudfar",
     "godlikes": "Guddommelig",
     "gold": "Gull",
-    "goldEarned": "Gold Earned",
+    "goldEarned": "Gull opptjent",
     "goldPickedUp": "Gull plukket opp",
     "goldRate": "Gullsats",
-    "goldSpent": "Gold Spent",
+    "goldSpent": "Gull brukt",
     "goldTrophies": "Gulltrofeer",
     "grandPrixTokens": "GP-polletter",
     "guild": {
@@ -794,7 +794,7 @@
     "woolPlaced": "Ull plassert",
     "zombieKills": "Zombiedrap",
     "potionsBrewed": "Eliksir brygget",
-    "positions": "Positions",
+    "positions": "Posisjoner",
     "powerupsCollected": "Power-Ups Collected",
     "roundsCompleted": "Runder fullført",
     "totalRounds": "Total Rounds",
@@ -810,7 +810,7 @@
     "draws": "Draws",
     "sheepThrown": "Sheep Thrown",
     "sheepKilled": "Sheep Killed",
-    "magicWool": "Magic Wool",
+    "magicWool": "Magisk ull",
     "flagCaptures": "Flag Captures",
     "flagReturns": "Flag Returns",
     "airTime": "Air Time",
@@ -836,20 +836,20 @@
     "invalidCode": {
       "title": "Ugyldig verifiseringskode",
       "description": "Check your verification code or try again by following these steps: ",
-      "button": "Watch Tutorial"
+      "button": "Se veiledning"
     },
     "instructions": {
-      "title": "Link your Minecraft Account to Statsify",
+      "title": "Koble Minecraft kontoen din til Statsify",
       "steps": {
-        "one": "Open **Minecraft** (`1.7.10` - `1.19.4`) and go to the server list",
+        "one": "Åpne **Minecraft** (`1.7.10` - `1.19.4`) og gå til serverlisten",
         "two": "Connect to **`verify.statsify.net`** and copy the code displayed",
         "three": "Head back to **Discord** and click the button below, then type in your code"
       },
       "modal": {
-        "title": "Enter your Verification Code",
-        "input": "Verification Code"
+        "title": "Skriv inn din verifiseringskode",
+        "input": "Verifiseringskode"
       },
-      "button": "Enter Verification Code"
+      "button": "Skriv inn verifiseringskode"
     },
     "notVerified": {
       "description": "Du må verifiseres før du kan avverifises!",
