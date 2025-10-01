@@ -32,12 +32,13 @@ export class StatusCommand {
     const user = context.getUser();
 
     const status = await this.apiService.getStatus(context.option("player"), user);
+    const theme = getTheme(user);
 
     const [logo, skin, badge, background, gameIcons] = await Promise.all([
       getLogo(user),
       this.apiService.getPlayerSkin(status.uuid, user),
       this.apiService.getUserBadge(status.uuid),
-      getBackground(...mapGameIdToBackground(status.game.id ?? "LIMBO")),
+      getBackground(...mapGameIdToBackground(status.game.id ?? "LIMBO"), theme?.context.boxColorId ?? "orange"),
       getAllGameIcons(),
     ]);
 
@@ -52,7 +53,7 @@ export class StatusCommand {
         t={t}
         user={user}
       />,
-      getTheme(user)
+      theme
     );
 
     const buffer = await canvas.toBuffer("png");

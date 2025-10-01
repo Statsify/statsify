@@ -392,7 +392,8 @@ export class SessionCommand {
         label: mode.formatted,
         emoji: modeEmojis[index],
         generator: async (t) => {
-          const background = await getBackground(...mapBackground(modes, mode.api));
+          const theme = getTheme(user);
+          const background = await getBackground(...mapBackground(modes, mode.api), theme?.context.boxColorId ?? "orange");
 
           const displayName = this.apiService.emojiDisplayName(t, player.displayName);
 
@@ -423,7 +424,7 @@ export class SessionCommand {
             { ...mode, submode: undefined } as unknown as GameMode<T>
           );
 
-          const canvas = render(profile, getTheme(user));
+          const canvas = render(profile, theme);
           const buffer = await canvas.toBuffer("png");
 
           return {
@@ -440,7 +441,8 @@ export class SessionCommand {
         label: submode.formatted,
         emoji: submodeEmojis[index],
         generator: async (t) => {
-          const background = await getBackground(...mapBackground(modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
+          const theme = getTheme(user);
+          const background = await getBackground(...mapBackground(modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>), theme?.context.boxColorId ?? "orange");
 
           const profile = getProfile(
             {
@@ -461,7 +463,7 @@ export class SessionCommand {
             { api: mode.api, formatted: mode.formatted, hypixel: mode.hypixel, submode } as GameMode<T>
           );
 
-          const canvas = render(profile, getTheme(user));
+          const canvas = render(profile, themew);
           const buffer = await canvas.toBuffer("png");
 
           return {

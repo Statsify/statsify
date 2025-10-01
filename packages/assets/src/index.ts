@@ -52,12 +52,12 @@ function getBackgroundPaths() {
   return backgrounds;
 }
 
-export function getBackground(pathOrGame: string, mode?: string): Promise<Image> {
+export function getBackground(pathOrGame: string, mode: string | undefined, color: "orange" | "green" | "purple"): Promise<Image> {
   if (!hasPrivateAssets) return getImage("out/backgrounds/background.png");
 
   if (typeof mode === "string") {
     const path = `${pathOrGame}_${mode}_`;
-    const backgrounds = getBackgroundPaths().filter((p) => p.startsWith(path));
+    const backgrounds = getBackgroundPaths().filter((p) => p.startsWith(path) && p.endsWith(`_${color}.png`));
 
     const background = backgrounds[Math.floor(Math.random() * backgrounds.length)];
 
@@ -66,7 +66,7 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
     return getImage(`out/backgrounds/${background}`);
   }
 
-  return getImage(`out/backgrounds/${pathOrGame}.png`);
+  return getImage(`out/backgrounds/${pathOrGame}_${color}.png`);
 }
 
 export function getLogo(

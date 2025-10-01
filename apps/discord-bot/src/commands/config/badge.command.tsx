@@ -143,12 +143,13 @@ export class BadgeCommand {
 
   private async getProfile(t: LocalizeFunction, user: User, badge?: Image | Canvas) {
     if (!user?.uuid) throw new ErrorMessage("errors.unknown");
+    const theme = getTheme(user);
 
     const [player, skin, logo, background] = await Promise.all([
       this.apiService.getPlayer(user.uuid),
       this.apiService.getPlayerSkin(user.uuid, user),
       getLogo(user),
-      getBackground("hypixel", "overall"),
+      getBackground("hypixel", "overall", theme?.context.boxColorId ?? "orange"),
     ]);
 
     const canvas = render(
@@ -161,7 +162,7 @@ export class BadgeCommand {
         user={user}
         message={t("config.badge.profile")}
       />,
-      getTheme(user)
+      theme
     );
 
     return canvas.toBuffer("png");

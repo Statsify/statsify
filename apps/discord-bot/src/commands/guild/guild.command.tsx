@@ -46,13 +46,14 @@ export class GuildCommand extends GuildTopSubCommand {
     const guildMaster = guild.members.find((m) => GuildMember.isGuildMaster(m));
 
     if (!guildMaster) throw new ErrorMessage("errors.unknown");
+    const theme = getTheme(user);
 
     const [gameIcons, guildRanking, skin, logo, background] = await Promise.all([
       getAllGameIcons(),
       this.apiService.getGuildRankings(["exp"], guild.id),
       this.apiService.getPlayerHead(guildMaster.uuid, 16),
       getLogo(user),
-      getBackground("hypixel", "overall"),
+      getBackground("hypixel", "overall", theme?.context.boxColorId ?? "orange"),
     ]);
 
     const ranking = guildRanking[0]?.rank ?? 0;
@@ -73,20 +74,20 @@ export class GuildCommand extends GuildTopSubCommand {
       {
         label: "Overall",
         generator: () =>
-          render(<GuildProfile {...props} page="overall" />, getTheme(user)),
+          render(<GuildProfile {...props} page="overall" />, theme),
       },
       {
         label: "GEXP",
-        generator: () => render(<GuildProfile {...props} page="gexp" />, getTheme(user)),
+        generator: () => render(<GuildProfile {...props} page="gexp" />, theme),
       },
       {
         label: "GEXP Per Game",
         generator: () =>
-          render(<GuildProfile {...props} page="expPerGame" />, getTheme(user)),
+          render(<GuildProfile {...props} page="expPerGame" />, theme),
       },
       {
         label: "Misc",
-        generator: () => render(<GuildProfile {...props} page="misc" />, getTheme(user)),
+        generator: () => render(<GuildProfile {...props} page="misc" />, theme),
       },
     ]);
   }
@@ -97,10 +98,11 @@ export class GuildCommand extends GuildTopSubCommand {
     const t = context.t();
 
     const guild = await this.getGuild(context);
+    const theme = getTheme(user);
 
     const [logo, background] = await Promise.all([
       getLogo(user),
-      getBackground("hypixel", "overall"),
+      getBackground("hypixel", "overall", theme?.context.boxColorId ?? "orange"),
     ]);
 
     const props: GuildListProfileProps = {
@@ -111,7 +113,7 @@ export class GuildCommand extends GuildTopSubCommand {
       t,
     };
 
-    const canvas = render(<GuildListProfile {...props} />, getTheme(user));
+    const canvas = render(<GuildListProfile {...props} />, theme);
     const buffer = await canvas.toBuffer("png");
 
     return {
@@ -131,11 +133,13 @@ export class GuildCommand extends GuildTopSubCommand {
       player.guildId ? GuildQuery.ID : GuildQuery.PLAYER
     );
 
+    const theme = getTheme(user);
+
     const [skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayerSkin(player.uuid, user),
       this.apiService.getUserBadge(player.uuid),
       getLogo(user),
-      getBackground("hypixel", "overall"),
+      getBackground("hypixel", "overall", theme?.context.boxColorId ?? "orange"),
     ]);
 
     const canvas = render(
@@ -149,7 +153,7 @@ export class GuildCommand extends GuildTopSubCommand {
         badge={badge}
         user={user}
       />,
-      getTheme(user)
+      theme
     );
 
     const buffer = await canvas.toBuffer("png");

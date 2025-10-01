@@ -209,7 +209,8 @@ export class RatiosCommand {
     const pages: Page[] = displayedModes.map((mode, index) => ({
       label: mode.formatted,
       generator: async (t) => {
-        const background = await getBackground(...mapBackground(modes, mode.api));
+        const theme = getTheme(user);
+        const background = await getBackground(...mapBackground(modes, mode.api), theme?.context.boxColorId ?? "orange");
 
         const game = player.stats[key];
         const stats = this.getModeStats(game, mode);
@@ -234,7 +235,7 @@ export class RatiosCommand {
           ]),
         };
 
-        const canvas = render(<RatiosProfile {...props} />, getTheme(user));
+        const canvas = render(<RatiosProfile {...props} />, theme);
         const buffer = await canvas.toBuffer("png");
 
         return {
