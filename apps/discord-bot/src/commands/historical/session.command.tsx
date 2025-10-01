@@ -463,7 +463,7 @@ export class SessionCommand {
             { api: mode.api, formatted: mode.formatted, hypixel: mode.hypixel, submode } as GameMode<T>
           );
 
-          const canvas = render(profile, themew);
+          const canvas = render(profile, theme);
           const buffer = await canvas.toBuffer("png");
 
           return {
