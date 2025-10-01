@@ -11,6 +11,7 @@ import { BaseLeaderboardCommand } from "./base.leaderboard-command.js";
 import { GuildLeaderboardArgument } from "./guild-leaderboard.argument.js";
 import { Service } from "typedi";
 import { getBackground } from "@statsify/assets";
+import { getTheme } from "#themes";
 
 @Service()
 export class GuildLeaderboardSubCommand extends BaseLeaderboardCommand {
@@ -24,12 +25,15 @@ export class GuildLeaderboardSubCommand extends BaseLeaderboardCommand {
   })
   public async leaderboard(context: CommandContext) {
     const leaderboard = context.option<string>("leaderboard");
+    const user = context.getUser();
 
     const field = leaderboard.replace(/ /g, ".");
-    const background = await getBackground("hypixel", "overall");
+    const theme = getTheme(user);
+    const background = await getBackground("hypixel", "overall", theme?.context.boxColorId ?? "orange");
 
     return this.createLeaderboard({
       context,
+      theme,
       background,
       field,
       getLeaderboard: this.apiService.getGuildLeaderboard.bind(this.apiService),

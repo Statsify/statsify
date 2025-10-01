@@ -27,10 +27,8 @@ import {
   LeaderboardQuery,
   PostLeaderboardResponse,
 } from "@statsify/api-client";
-import { User } from "@statsify/schemas";
+import { Theme, render } from "@statsify/rendering";
 import { getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
-import { render } from "@statsify/rendering";
 import type { Image } from "skia-canvas";
 
 type BaseLeaderboardProps = Omit<LeaderboardProfileProps, "fields" | "name" | "data">;
@@ -50,6 +48,7 @@ type GetLeaderboardDataIcon = (id: string) => Promise<Image>;
 
 export interface CreateLeaderboardOptions {
   context: CommandContext;
+  theme: Theme | undefined;
   background: Image;
   type: LeaderboardType;
   getLeaderboard: GetLeaderboard;
@@ -60,6 +59,7 @@ export interface CreateLeaderboardOptions {
 export class BaseLeaderboardCommand {
   protected async createLeaderboard({
     context,
+    theme,
     background,
     field,
     getLeaderboard,
@@ -105,7 +105,7 @@ export class BaseLeaderboardCommand {
         const params = fn();
 
         const [message, page] = await this.getLeaderboardMessage(
-          user,
+          theme,
           cache,
           type,
           getLeaderboard,
@@ -217,7 +217,7 @@ export class BaseLeaderboardCommand {
     const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
 
     const [message, page] = await this.getLeaderboardMessage(
-      user,
+      theme,
       cache,
       type,
       getLeaderboard,
@@ -247,7 +247,7 @@ export class BaseLeaderboardCommand {
   }
 
   private async getLeaderboardMessage(
-    user: User | null,
+    theme: Theme | undefined,
     cache: Map<number, IMessage>,
     type: LeaderboardType,
     getLeaderboard: GetLeaderboard,
@@ -262,7 +262,7 @@ export class BaseLeaderboardCommand {
     }
 
     const [message, page] = await this.renderLeaderboardMessage(
-      user,
+      theme,
       type,
       getLeaderboard,
       field,
@@ -277,7 +277,7 @@ export class BaseLeaderboardCommand {
   }
 
   private async renderLeaderboardMessage(
-    user: User | null,
+    theme: Theme | undefined,
     type: LeaderboardType,
     getLeaderboard: GetLeaderboard,
     field: string,
@@ -321,7 +321,7 @@ export class BaseLeaderboardCommand {
         fields={leaderboard.fields}
         data={leaderboardData}
       />,
-      getTheme(user)
+      theme
     );
 
     const buffer = await canvas.toBuffer("png");

@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box, DeferredGradient, useGradient } from "@statsify/rendering";
 import {
   ClassMetadata,
   DailyQuests,
@@ -34,6 +33,8 @@ import {
   SidebarItem,
 } from "#components";
 import { DateTime } from "luxon";
+import { DeferredGradient, type Theme, useGradient } from "@statsify/rendering";
+import { HalloweenBoxColors } from "#themes";
 import { HistoricalTimes } from "@statsify/api-client";
 import { Palette, getColorPalette } from "../../themes/palette.js";
 import { ratio } from "@statsify/math";
@@ -64,6 +65,7 @@ export interface QuestProfileProps extends Omit<BaseProfileProps, "time"> {
   gameIcons: Record<GameId, Image>;
   logos: [cross: Image, check: Image];
   time: QuestTime;
+  theme?: Theme;
 }
 
 interface NormalTableProps {
@@ -71,12 +73,13 @@ interface NormalTableProps {
   t: LocalizeFunction;
   gameIcons: Record<GameId, Image>;
   time: QuestTime;
+  theme?: Theme;
   colorPalette?: Palette;
 }
 
 const GRADIENT_OFFSET = 0.66;
 
-const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTableProps) => {
+const NormalTable = ({ quests, t, gameIcons, theme, colorPalette, time }: NormalTableProps) => {
   const questEntries = Object.entries(quests);
 
   if (time === QuestTime.Overall) {
@@ -87,7 +90,7 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
     return <GameList entries={entries} gameIcons={gameIcons} />;
   }
 
-  const BOX_COLOR = (colorPalette?.boxes?.color as string) ?? Box.DEFAULT_COLOR;
+  const BOX_COLOR = (colorPalette?.boxes?.color as string) ?? HalloweenBoxColors[theme?.context.boxColorId ?? "orange"][0];
 
   const entries: GameEntry[] = questEntries
     // Require more than just a total field
@@ -182,6 +185,7 @@ export const QuestsProfile = ({
   gameIcons,
   time,
   logos,
+  theme,
 }: QuestProfileProps) => {
   const { quests } = player.stats;
 
@@ -225,6 +229,7 @@ export const QuestsProfile = ({
           time={time}
           t={t}
           gameIcons={gameIcons}
+          theme={theme}
           colorPalette={colorPalette}
         />
       );

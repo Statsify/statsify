@@ -71,7 +71,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
     const [avatar, background] = await Promise.all([
       this.getDiscordAvatar(data),
-      getBackground("minecraft", "overall"),
+      getBackground("minecraft", "overall", "orange"),
     ]);
 
     const username = data.user!.username;

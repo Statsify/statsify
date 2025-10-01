@@ -136,6 +136,8 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
 
   const context: ComputedThemeContext = {
     renderer: noop(),
+    boxColorId: "orange",
+    boxColorFill: noop(),
     ...theme?.context,
     canvasWidth: width,
     canvasHeight: height,

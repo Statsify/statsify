@@ -7,8 +7,8 @@
  */
 
 import axios from "axios";
+import { Theme, loadImage } from "@statsify/rendering";
 import { getBackground } from "@statsify/assets";
-import { loadImage } from "@statsify/rendering";
 
 export interface Server {
   ip: string;
@@ -62,13 +62,13 @@ export async function getServerMappings() {
   return servers.filter((s) => !s.inactive && s.enriched);
 }
 
-export async function getServerBackground(server?: ServerMappingsServer) {
-  if (!server?.id || !server?.enriched) return getBackground("minecraft", "overall");
+export async function getServerBackground(theme: Theme | undefined, server?: ServerMappingsServer) {
+  if (!server?.id || !server?.enriched) return getBackground("minecraft", "overall", theme?.context.boxColorId ?? "orange");
 
   try {
     const background = await loadImage(`${SERVER_MAPPINGS_CDN_URL}/backgrounds/${server.id}.png`);
     return background;
   } catch {
-    return getBackground("minecraft", "overall");
+    return getBackground("minecraft", "overall", theme?.context.boxColorId ?? "orange");
   }
 }

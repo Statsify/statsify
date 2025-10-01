@@ -220,13 +220,14 @@ export class ThemeCommand {
 
   private async getProfile(t: LocalizeFunction, mode: "theme" | "footer", user: User) {
     if (!user?.uuid) throw new ErrorMessage("errors.unknown");
+    const theme = getTheme(user);
 
     const [player, skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayer(user.uuid),
       this.apiService.getPlayerSkin(user.uuid, user),
       this.apiService.getUserBadge(user.uuid),
       getLogo(user),
-      getBackground("hypixel", "overall"),
+      getBackground("hypixel", "overall", theme?.context.boxColorId ?? "orange"),
     ]);
 
     const canvas = render(
@@ -241,7 +242,7 @@ export class ThemeCommand {
           mode === "theme" ? t("config.theme.profile") : t("config.footer.profile")
         }
       />,
-      getTheme(user)
+      theme
     );
 
     return canvas.toBuffer("png");
