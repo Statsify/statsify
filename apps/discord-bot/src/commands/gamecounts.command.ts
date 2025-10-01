@@ -62,7 +62,7 @@ export class GameCountsCommand {
     const total = gamecountEntries.reduce((acc, [, v]) => acc + (v.players ?? 0), 0);
 
     const list = gamecountEntries
-      .sort((a, b) => b[1].players - a[1].players)
+      .toSorted((a, b) => (b[1].players ?? 0) - (a[1].players ?? 0))
       .map(([id, { players }]) =>
         this.formatGameCount(
           removeFormatting(FormattedGame[id]),
