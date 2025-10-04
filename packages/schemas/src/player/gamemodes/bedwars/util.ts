@@ -145,7 +145,7 @@ const PRESTIGE_COLORS: { req: number; fn: (n: number) => string }[] = [
     req: 3100,
     fn: (n) => {
       const nums = [...n.toString()];
-      return `§9[${nums[0]}§2${nums[1]}${nums[2]}§6${nums[3]}§l✥§r§e]`;
+      return `§9[${nums[0]}§3${nums[1]}${nums[2]}§6${nums[3]}§l✥§r§e]`;
     },
   },
   {
