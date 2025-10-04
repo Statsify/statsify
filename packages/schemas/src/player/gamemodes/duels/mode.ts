@@ -592,7 +592,7 @@ export class ParkourDuels extends SingleDuelsGameMode {
 
 export class MegaWallsDuels extends SinglePVPDuelsGameMode {
   public constructor(data: APIData) {
-    super(data, "MW", "mw_duel", "half");
+    super(data, "Mega Walls", "mw_duel", "half");
 
     // add back doubles stats
     const doubles = new PVPBaseDuelsGameMode(data, "mw_doubles");
@@ -606,7 +606,7 @@ export class MegaWallsDuels extends SinglePVPDuelsGameMode {
 
     const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
       score: this.wins,
-      mode: "MW",
+      mode: "Mega Walls",
       data,
       titleRequirement: "half",
     });
