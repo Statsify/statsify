@@ -21,7 +21,12 @@ export const render: Render<Box.BoxRenderProps> = (
   { x, y, width, height, padding },
   { boxColorFill }
 ) => {
-  const fill = Box.resolveFill(color === Box.DEFAULT_COLOR ? boxColorFill : color, ctx, x, y, width, height);
+  const fill = Box.resolveFill(
+    color === Box.DEFAULT_COLOR && boxColorFill ? boxColorFill : color,
+    ctx,
+    x, y,
+    width, height
+  );
   ctx.fillStyle = fill;
 
   width = width + padding.left + padding.right;
