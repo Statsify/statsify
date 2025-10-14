@@ -517,7 +517,7 @@
     "setResetTime": "Ustawiono czas resetowania na <t:{{time}}:t>.",
     "newSession": "Statystyki sesji **{{displayName}}** po raz pierwszy zostały sprawdzone w Statsify.",
     "setSessionReset": "Pomyślnie zresetowano twoje statystyki sesji.",
-    "deleteSession": "Successfully deleted your session stats.",
+    "deleteSession": "Pomyślnie usunięto twoje statystyki sesji.",
     "disabledWarning": {
       "title": "Komendy historyczne nie są już dostępne",
       "description": "Nowe [zasady API](https://developer.hypixel.net/policies/) Hypixela nie zezwalają już na \"ciągłe zbieranie danych graczy\", co uniemożliwia Statsify śledzenie dziennych statystyk graczy.\n\nZamiast tego możesz stworzyć nową sesję używając `/session`. Kiedy stworzysz sesję, bot zacznie śledzić twoje statystyki od momentu uruchomienia komendy aż do momentu jej ponownego uruchomienia. Możesz zresetować swoją sesję używając `/reset session`."
@@ -557,8 +557,8 @@
     "website": "[Website](https://statsify.net/)"
   },
   "deprecated": {
-    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} has been merged into the {{newCommandName}} command. Please run {{newCommand}} and select {{mode}} in the dropdown.",
-    "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} has been removed in favor of {{newCommandName}}. Please run {{newCommand}} instead.",
+    "merged-dropdown": "$t(emojis:icons.warning) {{oldCommandName}} zostało połączone z poleceniem {{newCommandName}}. Uruchom {{newCommand}} i wybierz {{mode}} z listy rozwijanej.",
+    "merged-direct": "$t(emojis:icons.warning) {{oldCommandName}} zostało usunięte na rzecz {{newCommandName}}. Zamiast tego uruchom {{newCommand}}.",
     "command-description": "Ta komenda została usunięta na rzecz {{newCommandName}}."
   },
   "stats": {
@@ -671,7 +671,7 @@
     "humans-killed": "Ludzie zabici",
     "infectedWins": "Wygrane jako Zarażony",
     "iron": "Żelazo",
-    "itemsPurchased": "Items Purchased",
+    "itemsPurchased": "Zakupione przedmioty",
     "karma": "Karma",
     "kdr": "KDR",
     "kicks": "Kopnięcia",
@@ -719,7 +719,7 @@
     "online": "Dostępny",
     "opals": "Opale",
     "overallWins": "Zwycięstwa ogółem",
-    "perfectBuilds": "Perfect Builds",
+    "perfectBuilds": "Bezbłędne budowle",
     "pingRange": "Zakres Pingu",
     "playtime": "Czas gry",
     "points": "Punkty",
@@ -797,7 +797,7 @@
     "positions": "Pozycje",
     "powerupsCollected": "Zebrane ulepszenia",
     "roundsCompleted": "Ukończone rundy",
-    "totalRounds": "Total Rounds",
+    "totalRounds": "Całkowita liczba rund",
     "totalExp": "Razem punktów doświadczenia",
     "gamesFinished": "Zakończone gry",
     "flawlessGames": "Bezbłędne gry",
@@ -806,17 +806,17 @@
     "arcadeWins": "Wygrane w Arcade",
     "spec": "Spec",
     "capturePoints": "Capture Points",
-    "defendPoints": "Defend Points",
+    "defendPoints": "Punkty obrony",
     "draws": "Remisy",
     "sheepThrown": "Rzucone owce",
     "sheepKilled": "Zabite owce",
     "magicWool": "Magiczna wełna",
     "flagCaptures": "Zdobyte flagi",
     "flagReturns": "Zwrócone flagi",
-    "airTime": "Air Time",
+    "airTime": "Czas w powietrzu",
     "potionsSplashed": "Rzucone mikstury",
-    "powerOrbs": "Power Orbs",
-    "grenadeKills": "Grenade Kills"
+    "powerOrbs": "Kule mocy",
+    "grenadeKills": "Zabójstwa granatem"
   },
   "tips": {
     "discord": "$t(emojis:socials.discord) Dołącz do naszego **$t(socials.discord)** i otrzymaj **20% mniej czasu odnowienia** $t(emojis:heart)",
