@@ -44,7 +44,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.19.0",
     "eslint-plugin-license-header": "^0.8.0",
-    "eslint-plugin-unicorn": "^60.0.0",
+    "eslint-plugin-unicorn": "^61.0.2",
     "eslint-plugin-unused-imports": "^4.1.4",
     "pm2": "^6.0.8",
     "turbo": "^2.4.0",
