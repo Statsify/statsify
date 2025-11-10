@@ -42,11 +42,10 @@ export class PlayerUtil {
         if (data.monthlyRankColor && data.monthlyRankColor !== "GOLD") {
           rank = "bMVP++";
         }
-      } else {
-        rank =
-          data.packageRank && data.newPackageRank ?
-            data.newPackageRank :
-            data.packageRank || data.newPackageRank;
+      } else if (data.newPackageRank && data.newPackageRank !== "NONE") {
+        rank = data.newPackageRank;
+      } else if (data.packageRank && data.packageRank !== "NONE") {
+        rank = data.packageRank;
       }
     }
 
