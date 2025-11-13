@@ -24,7 +24,7 @@
     "@swc/helpers": "^0.5.12",
     "chalk": "^5.6.0",
     "discord-bot": "workspace:^",
-    "inquirer": "^10.1.8",
+    "inquirer": "^12.11.1",
     "ioredis": "^5.7.0",
     "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
