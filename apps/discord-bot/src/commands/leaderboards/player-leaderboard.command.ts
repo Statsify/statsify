@@ -51,7 +51,6 @@ import {
   PlayerLeaderboardArgument,
 } from "./player-leaderboard.argument.js";
 import { getBackground } from "@statsify/assets";
-import { getTheme } from "#themes";
 
 @Command({
   name: "leaderboard",
@@ -290,21 +289,17 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
     modes: GameModes<T>
   ) {
     const leaderboard = context.option<string>("leaderboard");
-    const user = context.getUser();
-    const theme = getTheme(user);
 
     const field = `stats.${prefix}.${leaderboard.replaceAll(" ", ".")}`;
 
     const background = await getBackground(
-      ...mapBackground(modes, modes.getApiModes()[0]),
-      theme?.context.boxColorId ?? "orange"
+      ...mapBackground(modes, modes.getApiModes()[0])
     );
 
     const getLeaderboard = this.apiService.getPlayerLeaderboard.bind(this.apiService);
 
     return this.createLeaderboard({
       context,
-      theme,
       background,
       field,
       getLeaderboard,

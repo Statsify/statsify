@@ -331,13 +331,11 @@ export class RankingsCommand {
           })
       );
 
-    const theme = getTheme(user);
-
     const [skin, badge, logo, background] = await Promise.all([
       this.apiService.getPlayerSkin(player.uuid, user),
       this.apiService.getUserBadge(player.uuid),
       getLogo(user),
-      getBackground(...mapBackground(modes, modes.getApiModes()[0]), theme?.context.boxColorId ?? "orange"),
+      getBackground(...mapBackground(modes, modes.getApiModes()[0])),
     ]);
 
     const groups = arrayGroup(
@@ -365,7 +363,7 @@ export class RankingsCommand {
               user={user}
               game={formattedGame}
             />,
-            theme
+            getTheme(user)
           )
       ),
       new ButtonBuilder().emoji(t("emojis:up")).style(ButtonStyle.Success),

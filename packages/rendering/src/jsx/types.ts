@@ -12,14 +12,11 @@ import type {
   CanvasRenderingContext2D,
   CanvasTexture,
 } from "skia-canvas";
-import type { DeferredGradient } from "#hooks";
 import type { FontRenderer } from "#font";
 import type { IntrinsicElement, IntrinsicRenders } from "./instrinsics.js";
 
 export interface BaseThemeContext {
   renderer: FontRenderer;
-  boxColorId: "orange" | "green" | "purple";
-  boxColorFill: Fill | DeferredGradient;
 }
 
 export interface ComputedThemeContext extends BaseThemeContext {
