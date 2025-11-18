@@ -3,7 +3,7 @@ use super::SkinRender;
 use crate::error::{Error, Result as SkinRendererResult};
 
 #[cfg(target_arch = "wasm32")]
-pub type OutputTexture = wgpu::SurfaceTexture;
+pub type OutputTexture<'a> = wgpu::SurfaceTexture;
 
 #[cfg(not(target_arch = "wasm32"))]
 pub type OutputTexture<'a> = &'a wgpu::Texture;
