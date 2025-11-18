@@ -95,8 +95,7 @@ export class QuestsCommand {
         label: mode.formatted,
         emoji: mode.api !== "overall" && ((t) => t(`emojis:games.${mode.api}`)),
         generator: async (t) => {
-          const theme = getTheme(user);
-          const background = await getBackground(...mapBackground(this.modes, mode.api), theme?.context.boxColorId ?? "orange");
+          const background = await getBackground(...mapBackground(this.modes, mode.api));
 
           const profile = this.getProfile({
             player,
@@ -110,10 +109,9 @@ export class QuestsCommand {
             mode: { ...mode, submode: undefined },
             gameIcons,
             logos: [crossLogo, verifiedLogo],
-            theme,
           });
 
-          return render(profile, theme);
+          return render(profile, getTheme(user));
         },
       }));
 
