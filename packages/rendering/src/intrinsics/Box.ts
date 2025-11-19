@@ -112,10 +112,9 @@ export const render: JSX.Render<BoxRenderProps> = (
     outline,
     outlineSize,
   },
-  { x, y, width, height, padding },
-  { boxColorFill }
+  { x, y, width, height, padding }
 ) => {
-  const fill = resolveFill(color === DEFAULT_COLOR && boxColorFill ? boxColorFill : color, ctx, x, y, width, height);
+  const fill = resolveFill(color, ctx, x, y, width, height);
   ctx.fillStyle = fill;
 
   width = width + padding.left + padding.right;

@@ -38,11 +38,10 @@ export class ServerCommand {
     const user = context.getUser();
 
     const server = await this.getServer(context.option<string>("server"));
-    const theme = getTheme(user);
 
     const [serverLogo, background] = await Promise.all([
       loadImage(server.icon),
-      getServerBackground(theme, server.mapping),
+      getServerBackground(server.mapping),
     ]);
 
     const canvas = render(
@@ -52,7 +51,7 @@ export class ServerCommand {
         serverLogo={serverLogo}
         t={t}
       />,
-      theme
+      getTheme(user)
     );
 
     const buffer = await canvas.toBuffer("png");

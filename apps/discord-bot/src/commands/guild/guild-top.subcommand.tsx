@@ -47,11 +47,10 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     const t = context.t();
 
     const guild = await this.getGuild(context);
-    const theme = getTheme(user);
 
     const [logo, background] = await Promise.all([
       getLogo(user),
-      getBackground("hypixel", "overall", theme?.context.boxColorId ?? "orange"),
+      getBackground("hypixel", "overall"),
     ]);
 
     const props: BaseGuildTopProfileProps = {
@@ -61,6 +60,8 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       user,
       t,
     };
+
+    const theme = getTheme(user);
 
     const up = new ButtonBuilder().emoji(t("emojis:up")).style(ButtonStyle.Success);
     const down = new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger);

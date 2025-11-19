@@ -104,8 +104,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
         return {
           ...pageInput,
           generator: async (t) => {
-            const theme = getTheme(user);
-            const background = await getBackground(...mapBackground(this.modes, mode.api), theme?.context?.boxColorId ?? "orange");
+            const background = await getBackground(...mapBackground(this.modes, mode.api));
 
             const profile = this.getProfile(
               {
@@ -121,7 +120,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
               { mode: gameMode, data }
             );
 
-            return render(profile, theme);
+            return render(profile, getTheme(user));
           },
         };
       }
@@ -130,8 +129,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
         label: submode.formatted,
         emoji: submodeEmojis[index],
         generator: async (t) => {
-          const theme = getTheme(user);
-          const background = await getBackground(...mapBackground(this.modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>), theme?.context?.boxColorId ?? "orange");
+          const background = await getBackground(...mapBackground(this.modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
 
           const gameMode = {
             api: mode.api,
@@ -154,7 +152,7 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
             { mode: gameMode, data }
           );
 
-          return render(profile, theme);
+          return render(profile, getTheme(user));
         },
       }));
 

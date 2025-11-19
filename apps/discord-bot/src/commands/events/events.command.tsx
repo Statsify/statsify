@@ -43,10 +43,8 @@ export class EventsCommand {
     return this.paginateService.scrollingPagination(
       context,
       arrayGroup(EVENT_TYPES, 4).map((events) => async () => {
-        const theme = getTheme(user);
         const background = await getBackground(
-          ...mapBackground(GENERAL_MODES, GENERAL_MODES.getApiModes()[0]),
-          theme?.context.boxColorId ?? "orange"
+          ...mapBackground(GENERAL_MODES, GENERAL_MODES.getApiModes()[0])
         );
 
         return render(
@@ -60,7 +58,7 @@ export class EventsCommand {
             badge={badge}
             eventNames={events}
           />,
-          theme
+          getTheme(user)
         );
       })
     );
