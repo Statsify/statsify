@@ -116,6 +116,7 @@ export class PlayerUtil {
       case "MVP++":
       case "APPLE":
       case "MOJANG":
+      case "EVENTS":
         return new Color("GOLD");
 
       case "MVP":
