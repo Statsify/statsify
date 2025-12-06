@@ -52,7 +52,8 @@ export const TableData = ({ title, value, color, size = "regular" }: TableDataPr
       <text margin={{ top: 8, bottom: 4, left: 6, right: 6 }}>{`${color}${title}`}</text>
       <text
         margin={{ top: 0, bottom: 8, left: 10, right: 10 }}
-      >{`§^4^${color}${value}`}
+        size={4}
+      >{`${color}${value}`}
       </text>
     </box>
   );
