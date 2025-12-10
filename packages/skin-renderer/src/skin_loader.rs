@@ -147,18 +147,22 @@ unsafe fn fix_opaque_skin(skin: &mut DynamicImage, original_format: SkinFormat) 
   ];
 
   for &region in &REQUIRED_REGIONS {
-    unsafe { unsafe_fill_rect(skin, region, transparent); }
+    unsafe {
+      unsafe_fill_rect(skin, region, transparent);
+    }
   }
 
   if matches!(original_format, SkinFormat::Modern) {
     for &region in &REQUIRED_REGIONS_MODERN {
-      unsafe { unsafe_fill_rect(skin, region, transparent); } 
+      unsafe {
+        unsafe_fill_rect(skin, region, transparent);
+      }
     }
   }
 }
 
 unsafe fn fix_transparent_skin(skin: &mut DynamicImage) {
-  unsafe { 
+  unsafe {
     unsafe_remove_transparency(skin, rect!(0, 8, 32, 8));
     unsafe_remove_transparency(skin, rect!(8, 0, 16, 8));
     unsafe_remove_transparency(skin, rect!(0, 20, 56, 12));
@@ -174,7 +178,9 @@ unsafe fn fix_transparent_skin(skin: &mut DynamicImage) {
 unsafe fn unsafe_fill_rect(image: &mut DynamicImage, rect: Rect, pixel: Rgba<u8>) {
   for x in rect.x..rect.x + rect.width {
     for y in rect.y..rect.y + rect.height {
-      unsafe { image.unsafe_put_pixel(x, y, pixel); }
+      unsafe {
+        image.unsafe_put_pixel(x, y, pixel);
+      }
     }
   }
 }
@@ -196,7 +202,9 @@ unsafe fn unsafe_remove_transparency(image: &mut DynamicImage, rect: Rect) {
       pixel[2] = (opacity * pixel[2] as f32) as u8;
       pixel[3] = 255;
 
-      unsafe { image.unsafe_put_pixel(x, y, pixel); }
+      unsafe {
+        image.unsafe_put_pixel(x, y, pixel);
+      }
     }
   }
 }
