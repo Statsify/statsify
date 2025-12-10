@@ -28,7 +28,7 @@ export class Event {
 
     this.progression = new Progression(
       this.exp % expRequirement,
-      this.level >= MAX_LEVEL ? 0 : expRequirement,
+      this.level >= MAX_LEVEL ? 0 : expRequirement
     );
   }
 }
