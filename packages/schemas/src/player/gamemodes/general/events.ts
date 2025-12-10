@@ -28,15 +28,20 @@ export class Event {
 
     this.progression = new Progression(
       this.exp % expRequirement,
-      this.level >= MAX_LEVEL ? 0 : expRequirement
+      this.level >= MAX_LEVEL ? 0 : expRequirement,
     );
   }
 }
 
-export type EventType = { period: EventPeriod; year: number; key: Exclude<keyof Events, "silver"> };
+export type EventType = {
+  period: EventPeriod;
+  year: number;
+  key: Exclude<keyof Events, "silver">;
+};
 export type EventPeriod = "summer" | "halloween" | "christmas" | "easter";
 
 export const EVENT_TYPES: EventType[] = [
+  { period: "christmas", year: 2025, key: "christmas2025" },
   { period: "halloween", year: 2025, key: "halloween2025" },
   { period: "summer", year: 2025, key: "summer2025" },
   { period: "easter", year: 2025, key: "easter2025" },
@@ -96,6 +101,9 @@ export class Events {
   @Field({ leaderboard: { name: "Halloween 2025" } })
   public halloween2025: Event;
 
+  @Field({ leaderboard: { name: "Christmas 2025" } })
+  public christmas2025: Event;
+
   @Field()
   public silver: number;
 
@@ -114,6 +122,7 @@ export class Events {
     this.easter2025 = new Event(10_000, data.easter?.["2025"]);
     this.summer2025 = new Event(25_000, data.summer?.["2025"]);
     this.halloween2025 = new Event(10_000, data.halloween?.["2025"]);
+    this.christmas2025 = new Event(10_000, data.christmas?.["2025"]);
 
     this.silver = data.silver;
   }
