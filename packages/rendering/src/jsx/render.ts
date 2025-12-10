@@ -14,7 +14,13 @@ import { IntrinsicRenders, intrinsicRenders } from "./instrinsics.js";
 import { createInstructions } from "./create-instructions.js";
 import { getPositionalDelta, getTotalSize } from "./util.js";
 import { noop } from "@statsify/util";
-import type { ComputedThemeContext, ElementNode, Instruction, Theme } from "./types.js";
+import type {
+  ComputedThemeContext,
+  ElementNode,
+  Instruction,
+  Theme,
+} from "./types.js";
+import { type BoxColorId, BoxColors } from "../intrinsics/Box.js";
 
 const _render = (
   ctx: CanvasRenderingContext2D,
@@ -22,7 +28,7 @@ const _render = (
   intrinsicElements: IntrinsicRenders,
   instruction: Instruction,
   x: number,
-  y: number
+  y: number,
 ) => {
   x += instruction.x.margin1;
   y += instruction.y.margin1;
@@ -51,7 +57,7 @@ const _render = (
     instruction.props,
     location,
     context,
-    instruction.component
+    instruction.component,
   );
 
   if (!instruction.children?.length) return;
@@ -97,7 +103,9 @@ const _render = (
         const oppositeSide = side === "x" ? "y" : "x";
         const delta =
           instruction[oppositeSide].size -
-          (child[oppositeSide].size + child[oppositeSide].margin2 + child[oppositeSide].padding2);
+          (child[oppositeSide].size +
+            child[oppositeSide].margin2 +
+            child[oppositeSide].padding2);
 
         applyDelta(delta, oppositeSide);
         _render(ctx, context, intrinsicElements, child, x, y);
@@ -134,16 +142,26 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
   const ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = false;
 
+  const boxColors = Object.keys(BoxColors) as BoxColorId[];
+
   const context: ComputedThemeContext = {
     renderer: noop(),
     ...theme?.context,
+    boxColorId: boxColors[Math.floor(Math.random() * boxColors.length)],
     canvasWidth: width,
     canvasHeight: height,
   };
 
   if (!context.renderer) context.renderer = Container.get(FontRenderer);
 
-  _render(ctx, context, { ...intrinsicRenders, ...theme?.elements }, instructions, 0, 0);
+  _render(
+    ctx,
+    context,
+    { ...intrinsicRenders, ...theme?.elements },
+    instructions,
+    0,
+    0,
+  );
 
   renderTransaction?.finish();
 

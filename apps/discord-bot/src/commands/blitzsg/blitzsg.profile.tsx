@@ -34,14 +34,26 @@ const OverallBlitzSGTable = ({ blitzsg, t }: OverallBlitzSGTableProps) => (
   <Table.table>
     <Table.ts title="§6Overall">
       <Table.tr>
-        <Table.td title={t("stats.wins")} value={t(blitzsg.overall.wins)} color="§e" />
-        <Table.td title={t("stats.kills")} value={t(blitzsg.overall.kills)} color="§a" />
+        <Table.td
+          title={t("stats.wins")}
+          value={t(blitzsg.overall.wins)}
+          color="§e"
+        />
+        <Table.td
+          title={t("stats.kills")}
+          value={t(blitzsg.overall.kills)}
+          color="§a"
+        />
         <Table.td
           title={t("stats.deaths")}
           value={t(blitzsg.overall.deaths)}
           color="§c"
         />
-        <Table.td title={t("stats.kdr")} value={t(blitzsg.overall.kdr)} color="§6" />
+        <Table.td
+          title={t("stats.kdr")}
+          value={t(blitzsg.overall.kdr)}
+          color="§6"
+        />
       </Table.tr>
     </Table.ts>
     <Table.tr>
@@ -104,7 +116,11 @@ const KitBlitzSGTable = ({ stats, t }: KitBlitzSGTableProps) => (
         value={formatTime(stats.playtime)}
         color="§e"
       />
-      <Table.td title={t("stats.gamesPlayed")} value={t(stats.gamesPlayed)} color="§b" />
+      <Table.td
+        title={t("stats.gamesPlayed")}
+        value={t(stats.gamesPlayed)}
+        color="§b"
+      />
     </Table.tr>
   </Table.table>
 );
@@ -138,7 +154,18 @@ export const BlitzSGProfile = ({
       break;
 
     default: {
-      const colors = ["§a", "§a", "§2", "§2", "§e", "§e", "§6", "§6", "§c", "§4"];
+      const colors = [
+        "§a",
+        "§a",
+        "§2",
+        "§2",
+        "§e",
+        "§e",
+        "§6",
+        "§6",
+        "§c",
+        "§4",
+      ];
       const stats = blitzsg[mode.api];
 
       if (stats.level) {
@@ -154,7 +181,7 @@ export const BlitzSGProfile = ({
 
         sidebar.push(
           [t("stats.level"), level, color],
-          [t("stats.exp"), t(stats.exp), "§b"]
+          [t("stats.exp"), t(stats.exp), "§b"],
         );
       }
 
@@ -172,15 +199,17 @@ export const BlitzSGProfile = ({
         sidebar={sidebar}
         title={`§l${FormattedGame.BLITZSG} §fStats §r(${mode.formatted})`}
         description={
-          mode.api === "overall" ?
-            `§7${t("stats.prefix")}: ${blitzsg.naturalPrefix}\n${formatProgression({
-              t,
-              label: t("stats.progression.kill"),
-              progression: blitzsg.progression,
-              currentLevel: blitzsg.currentPrefix,
-              nextLevel: blitzsg.nextPrefix,
-            })}` :
-            ""
+          mode.api === "overall"
+            ? `§7${t("stats.prefix")}: ${blitzsg.naturalPrefix}\n${formatProgression(
+                {
+                  t,
+                  label: t("stats.progression.kill"),
+                  progression: blitzsg.progression,
+                  currentLevel: blitzsg.currentPrefix,
+                  nextLevel: blitzsg.nextPrefix,
+                },
+              )}`
+            : ""
         }
         time={time}
       />
@@ -189,4 +218,3 @@ export const BlitzSGProfile = ({
     </Container>
   );
 };
-
