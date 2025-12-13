@@ -488,16 +488,16 @@ export class FontRenderer {
 
     if (!this.gradient) return;
 
-    createLetterPath((_, y) => y < 4 * scale);
     ctx.globalCompositeOperation = "soft-light";
+
+    createLetterPath((_, y) => y < 4 * scale);
     ctx.fillStyle = GRADIENT_TOP_OVERLAY;
     ctx.fill();
-    ctx.globalCompositeOperation = "source-over";
 
     createLetterPath((_, y) => y > 10 * scale);
-    ctx.globalCompositeOperation = "soft-light";
     ctx.fillStyle = GRADIENT_BOTTOM_OVERLAY;
     ctx.fill();
+
     ctx.globalCompositeOperation = "source-over";
   }
 

@@ -115,6 +115,7 @@ export const renderOverlay = (
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
+  width: number,
   height: number
 ) => {
   ctx.globalCompositeOperation = "overlay";
@@ -122,7 +123,7 @@ export const renderOverlay = (
   overlay.addColorStop(0, "rgba(255, 255, 255, 0.30)");
   overlay.addColorStop(1, "rgba(0, 0, 0, 0.30)");
   ctx.fillStyle = overlay;
-  ctx.fill();
+  ctx.fillRect(x, y, width, height);
   ctx.globalCompositeOperation = "source-over";
 };
 
