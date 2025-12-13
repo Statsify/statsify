@@ -10,9 +10,9 @@ import { Container, Service } from "typedi";
 import { FontRenderer } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
 
-const renderer = new FontRenderer();
-const hdRenderer = new FontRenderer();
-const fpackRenderer = new FontRenderer();
+const renderer = new FontRenderer(false);
+const hdRenderer = new FontRenderer(false);
+const fpackRenderer = new FontRenderer(true);
 
 Container.set(FontRenderer, renderer);
 Container.set("HDFontRenderer", hdRenderer);
@@ -24,7 +24,7 @@ export class FontLoaderService {
     await renderer.loadImages(getMinecraftTexturePath("textures/font"));
     await hdRenderer.loadImages(getMinecraftTexturePath("textures/font", "hd"));
     await fpackRenderer.loadImages(
-      getMinecraftTexturePath("textures/font", "fpack")
+      getMinecraftTexturePath("textures/font", "fpack"),
     );
   }
 }
