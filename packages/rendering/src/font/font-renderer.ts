@@ -8,7 +8,11 @@
 
 import _positions from "../../positions.json" with { type: "json" };
 import _sizes from "../../sizes.json" with { type: "json" };
-import { Canvas, type CanvasRenderingContext2D, type ImageData } from "skia-canvas";
+import {
+  Canvas,
+  type CanvasRenderingContext2D,
+  type ImageData,
+} from "skia-canvas";
 import { type TextNode, type Token, tokens } from "./tokens.js";
 import { join } from "node:path";
 import { loadImage } from "#hooks";
@@ -18,6 +22,9 @@ import type { Fill } from "#jsx";
 const sizes: Sizes = _sizes;
 const positions: string[][] = _positions;
 
+const GRADIENT_TOP_OVERLAY = "rgb(255 255 255 / 0.85)";
+const GRADIENT_BOTTOM_OVERLAY = "rgb(0 0 0 / 0.60)";
+
 type CharacterSizes = Record<string, { start?: number; width?: number }>;
 
 interface Sizes {
@@ -26,7 +33,11 @@ interface Sizes {
 }
 
 export class FontRenderer {
-  private images: Map<string, CanvasRenderingContext2D> = new Map();
+  private images: Map<string, CanvasRenderingContext2D>;
+
+  public constructor(private gradient: boolean) {
+    this.images = new Map();
+  }
 
   public async loadImages(fontPath: string) {
     const files = await readdir(fontPath);
@@ -43,7 +54,10 @@ export class FontRenderer {
 
       ctx.drawImage(image, 0, 0);
 
-      this.images.set(file.replace("unicode_page_", "").replace(".png", ""), ctx);
+      this.images.set(
+        file.replace("unicode_page_", "").replace(".png", ""),
+        ctx
+      );
     }
   }
 
@@ -72,7 +86,15 @@ export class FontRenderer {
   ) {
     const largestSize = Math.max(...nodes.map((node) => node.size));
 
-    for (const { text, color, bold, italic, underline, strikethrough, size } of nodes) {
+    for (const {
+      text,
+      color,
+      bold,
+      italic,
+      underline,
+      strikethrough,
+      size,
+    } of nodes) {
       const adjustY = y + size + (largestSize - size) * 5;
 
       for (const char of text) {
@@ -127,7 +149,11 @@ export class FontRenderer {
 
       if (!matches) continue;
 
-      const effect = token?.effect(part, matches as RegExpMatchArray, defaultState);
+      const effect = token?.effect(
+        part,
+        matches as RegExpMatchArray,
+        defaultState
+      );
       let text = effect?.text ?? part;
 
       if (matches) text = text.slice(matches[0].length);
@@ -194,7 +220,8 @@ export class FontRenderer {
 
     const scale = this.getTextureScale(image);
 
-    const characterSize = sizes[isAscii ? "ascii" : "unicode"][unicode.toUpperCase()];
+    const characterSize =
+      sizes[isAscii ? "ascii" : "unicode"][unicode.toUpperCase()];
 
     const startOffset = characterSize?.start ?? 0;
     const width = characterSize?.width ?? 0;
@@ -233,7 +260,11 @@ export class FontRenderer {
     return gap;
   }
 
-  private measureCharacter(char: string, textSize: number, bold: boolean): number {
+  private measureCharacter(
+    char: string,
+    textSize: number,
+    bold: boolean
+  ): number {
     const metadata = this.getCharacterMetadata(char, textSize);
 
     if (!metadata) return 0;
@@ -264,11 +295,20 @@ export class FontRenderer {
 
     if (!metadata) return 0;
 
-    const { x: charX, y: charY, width, height, scale, isAscii, image, size } = metadata;
+    const {
+      x: charX,
+      y: charY,
+      width,
+      height,
+      scale,
+      isAscii,
+      image,
+      size,
+    } = metadata;
 
     const imageData = image.getImageData(charX, charY, width, height);
 
-    ctx.filter = "brightness(25%)";
+    ctx.filter = this.gradient ? "brightness(15%)" : "brightness(25%)";
 
     this.fillFormattedCharacter(
       ctx,
@@ -337,16 +377,27 @@ export class FontRenderer {
       y += 2 * scale * size;
     }
 
-    this.fillPlainCharacter(ctx, imageData, characterX, characterY, width, scale, size, color, italic);
+    this.fillPlainCharacter(
+      ctx,
+      imageData,
+      characterX,
+      characterY,
+      width,
+      scale,
+      size,
+      color,
+      italic
+    );
 
     if (underline) this.fillUnderline(ctx, x, y, width, scale, size, color);
-    if (strikethrough) this.fillStrikethrough(ctx, x, y, width, scale, size, color);
+    if (strikethrough)
+      this.fillStrikethrough(ctx, x, y, width, scale, size, color);
 
     if (bold) {
       this.fillPlainCharacter(
         ctx,
         imageData,
-        characterX + (scale * size),
+        characterX + scale * size,
         characterY,
         width,
         scale,
@@ -370,8 +421,18 @@ export class FontRenderer {
           italic
         );
 
-      if (underline) this.fillUnderline(ctx, x + boldOffset, y, width, scale, size, color);
-      if (strikethrough) this.fillStrikethrough(ctx, x + boldOffset, y, width, scale, size, color);
+      if (underline)
+        this.fillUnderline(ctx, x + boldOffset, y, width, scale, size, color);
+      if (strikethrough)
+        this.fillStrikethrough(
+          ctx,
+          x + boldOffset,
+          y,
+          width,
+          scale,
+          size,
+          color
+        );
     }
   }
 
@@ -386,38 +447,58 @@ export class FontRenderer {
     color: Fill,
     italic: boolean
   ) {
-    ctx.fillStyle = color;
-    ctx.beginPath();
+    function createLetterPath(filter?: (x: number, y: number) => boolean) {
+      ctx.beginPath();
 
-    for (let i = 0; i < imageData.data.length; i += 4) {
-      if (imageData.data[i + 3] === 0) continue;
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (imageData.data[i + 3] === 0) continue;
 
-      const canvasX = (i / 4) % width;
-      const canvasY = Math.floor(i / 4 / width);
+        const canvasX = (i / 4) % width;
+        const canvasY = Math.floor(i / 4 / width);
 
-      let offset = 0;
+        if (filter && !filter(canvasX, canvasY)) continue;
 
-      if (italic) {
-        if (canvasY < 2 * scale) offset = 2;
-        else if (canvasY < 6 * scale) offset = 1;
-        else if (canvasY < 10 * scale) offset = 0;
-        else if (canvasY < 14 * scale) offset = -1;
-        else if (canvasY < 16 * scale) offset = -2;
+        let offset = 0;
 
-        offset *= scale * size;
+        if (italic) {
+          if (canvasY < 2 * scale) offset = 2;
+          else if (canvasY < 6 * scale) offset = 1;
+          else if (canvasY < 10 * scale) offset = 0;
+          else if (canvasY < 14 * scale) offset = -1;
+          else if (canvasY < 16 * scale) offset = -2;
+
+          offset *= scale * size;
+        }
+
+        const charX = x + offset + canvasX * size;
+        const charY = y + canvasY * size;
+
+        ctx.moveTo(charX, charY);
+        ctx.lineTo(charX + size, charY);
+        ctx.lineTo(charX + size, charY + size);
+        ctx.lineTo(charX, charY + size);
       }
 
-      const charX = x + offset + canvasX * size;
-      const charY = y + canvasY * size;
-
-      ctx.moveTo(charX, charY);
-      ctx.lineTo(charX + size, charY);
-      ctx.lineTo(charX + size, charY + size);
-      ctx.lineTo(charX, charY + size);
+      ctx.closePath();
     }
 
-    ctx.closePath();
+    createLetterPath();
+    ctx.fillStyle = color;
     ctx.fill();
+
+    if (!this.gradient) return;
+
+    ctx.globalCompositeOperation = "soft-light";
+
+    createLetterPath((_, y) => y < 4 * scale);
+    ctx.fillStyle = GRADIENT_TOP_OVERLAY;
+    ctx.fill();
+
+    createLetterPath((_, y) => y > 10 * scale);
+    ctx.fillStyle = GRADIENT_BOTTOM_OVERLAY;
+    ctx.fill();
+
+    ctx.globalCompositeOperation = "source-over";
   }
 
   private fillUnderline(
@@ -432,11 +513,23 @@ export class FontRenderer {
     ctx.fillStyle = color;
 
     ctx.fillRect(
-      x - (2 * scale * size),
-      y + (16 * size * scale),
-      (width * size) + (4 * scale * size),
+      x - 2 * scale * size,
+      y + 16 * size * scale,
+      width * size + 4 * scale * size,
       2 * scale * size
     );
+
+    if (this.gradient) {
+      ctx.globalCompositeOperation = "soft-light";
+      ctx.fillStyle = GRADIENT_BOTTOM_OVERLAY;
+      ctx.fillRect(
+        x - 2 * scale * size,
+        y + 16 * size * scale,
+        width * size + 4 * scale * size,
+        2 * scale * size
+      );
+      ctx.globalCompositeOperation = "source-over";
+    }
   }
 
   private fillStrikethrough(
@@ -452,8 +545,8 @@ export class FontRenderer {
 
     ctx.fillRect(
       x,
-      y + (6 * scale * size),
-      (width * size) + (2 * scale * size),
+      y + 6 * scale * size,
+      width * size + 2 * scale * size,
       2 * scale * size
     );
   }

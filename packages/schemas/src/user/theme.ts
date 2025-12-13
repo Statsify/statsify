@@ -10,7 +10,8 @@ import { Field } from "#metadata";
 
 export enum UserFont {
   DEFAULT = "default",
-  HD = "hd"
+  HD = "hd",
+  FPACK = "fpack"
 }
 
 export enum UserPalette {
