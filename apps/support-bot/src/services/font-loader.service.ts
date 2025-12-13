@@ -11,12 +11,20 @@ import { FontRenderer } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
 
 const renderer = new FontRenderer();
+const hdRenderer = new FontRenderer();
+const fpackRenderer = new FontRenderer();
 
 Container.set(FontRenderer, renderer);
+Container.set("HDFontRenderer", hdRenderer);
+Container.set("FPackFontRenderer", fpackRenderer);
 
 @Service()
 export class FontLoaderService {
   public async init() {
     await renderer.loadImages(getMinecraftTexturePath("textures/font"));
+    await hdRenderer.loadImages(getMinecraftTexturePath("textures/font", "hd"));
+    await fpackRenderer.loadImages(
+      getMinecraftTexturePath("textures/font", "fpack")
+    );
   }
 }

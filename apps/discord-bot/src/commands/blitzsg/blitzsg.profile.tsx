@@ -181,7 +181,7 @@ export const BlitzSGProfile = ({
 
         sidebar.push(
           [t("stats.level"), level, color],
-          [t("stats.exp"), t(stats.exp), "§b"],
+          [t("stats.exp"), t(stats.exp), "§b"]
         );
       }
 
@@ -199,17 +199,17 @@ export const BlitzSGProfile = ({
         sidebar={sidebar}
         title={`§l${FormattedGame.BLITZSG} §fStats §r(${mode.formatted})`}
         description={
-          mode.api === "overall"
-            ? `§7${t("stats.prefix")}: ${blitzsg.naturalPrefix}\n${formatProgression(
-                {
-                  t,
-                  label: t("stats.progression.kill"),
-                  progression: blitzsg.progression,
-                  currentLevel: blitzsg.currentPrefix,
-                  nextLevel: blitzsg.nextPrefix,
-                },
-              )}`
-            : ""
+          mode.api === "overall" ?
+            `§7${t("stats.prefix")}: ${blitzsg.naturalPrefix}\n${formatProgression(
+              {
+                t,
+                label: t("stats.progression.kill"),
+                progression: blitzsg.progression,
+                currentLevel: blitzsg.currentPrefix,
+                nextLevel: blitzsg.nextPrefix,
+              }
+            )}` :
+            ""
         }
         time={time}
       />

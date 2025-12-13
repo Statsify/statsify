@@ -22,6 +22,9 @@ import type { Fill } from "#jsx";
 const sizes: Sizes = _sizes;
 const positions: string[][] = _positions;
 
+const GRADIENT_TOP_OVERLAY = "rgb(255 255 255 / 0.85)";
+const GRADIENT_BOTTOM_OVERLAY = "rgb(0 0 0 / 0.60)";
+
 type CharacterSizes = Record<string, { start?: number; width?: number }>;
 
 interface Sizes {
@@ -30,7 +33,11 @@ interface Sizes {
 }
 
 export class FontRenderer {
-  private images: Map<string, CanvasRenderingContext2D> = new Map();
+  private images: Map<string, CanvasRenderingContext2D>;
+
+  public constructor(private gradient: boolean) {
+    this.images = new Map();
+  }
 
   public async loadImages(fontPath: string) {
     const files = await readdir(fontPath);
@@ -49,7 +56,7 @@ export class FontRenderer {
 
       this.images.set(
         file.replace("unicode_page_", "").replace(".png", ""),
-        ctx,
+        ctx
       );
     }
   }
@@ -75,7 +82,7 @@ export class FontRenderer {
     ctx: CanvasRenderingContext2D,
     nodes: TextNode[],
     x: number,
-    y: number,
+    y: number
   ) {
     const largestSize = Math.max(...nodes.map((node) => node.size));
 
@@ -101,7 +108,7 @@ export class FontRenderer {
           italic,
           underline,
           strikethrough,
-          color,
+          color
         );
       }
     }
@@ -145,7 +152,7 @@ export class FontRenderer {
       const effect = token?.effect(
         part,
         matches as RegExpMatchArray,
-        defaultState,
+        defaultState
       );
       let text = effect?.text ?? part;
 
@@ -176,9 +183,9 @@ export class FontRenderer {
   }
 
   private getCharacterImage(unicode: string, isAscii: boolean) {
-    return isAscii
-      ? this.images.get("ascii")
-      : this.images.get(`${unicode[0]}${unicode[1]}`);
+    return isAscii ?
+      this.images.get("ascii") :
+      this.images.get(`${unicode[0]}${unicode[1]}`);
   }
 
   private getTextureScale(image: CanvasRenderingContext2D) {
@@ -237,7 +244,7 @@ export class FontRenderer {
     size: number,
     scale: number,
     width: number,
-    bold: boolean,
+    bold: boolean
   ) {
     // Minecraft has weird spacing for the space
     let gap = size * (width + (char == " " ? -2 : 2) * scale);
@@ -256,7 +263,7 @@ export class FontRenderer {
   private measureCharacter(
     char: string,
     textSize: number,
-    bold: boolean,
+    bold: boolean
   ): number {
     const metadata = this.getCharacterMetadata(char, textSize);
 
@@ -268,7 +275,7 @@ export class FontRenderer {
       metadata.size,
       metadata.scale,
       metadata.width,
-      bold,
+      bold
     );
   }
 
@@ -282,7 +289,7 @@ export class FontRenderer {
     italic: boolean,
     underline: boolean,
     strikethrough: boolean,
-    color: Fill,
+    color: Fill
   ): number {
     const metadata = this.getCharacterMetadata(char, textSize);
 
@@ -301,7 +308,7 @@ export class FontRenderer {
 
     const imageData = image.getImageData(charX, charY, width, height);
 
-    ctx.filter = "brightness(15%)";
+    ctx.filter = this.gradient ? "brightness(15%)" : "brightness(25%)";
 
     this.fillFormattedCharacter(
       ctx,
@@ -317,7 +324,7 @@ export class FontRenderer {
       bold,
       italic,
       isAscii,
-      true,
+      true
     );
 
     ctx.filter = "brightness(100%)";
@@ -336,7 +343,7 @@ export class FontRenderer {
       bold,
       italic,
       isAscii,
-      false,
+      false
     );
 
     return this.getCharacterSpacing(char, isAscii, size, scale, width, bold);
@@ -356,7 +363,7 @@ export class FontRenderer {
     bold: boolean,
     italic: boolean,
     isAscii: boolean,
-    isShadow: boolean,
+    isShadow: boolean
   ) {
     let characterX = x;
     let characterY = y;
@@ -379,7 +386,7 @@ export class FontRenderer {
       scale,
       size,
       color,
-      italic,
+      italic
     );
 
     if (underline) this.fillUnderline(ctx, x, y, width, scale, size, color);
@@ -396,7 +403,7 @@ export class FontRenderer {
         scale,
         size,
         color,
-        italic,
+        italic
       );
 
       const boldOffset = 2 * scale * size;
@@ -411,7 +418,7 @@ export class FontRenderer {
           scale,
           size,
           color,
-          italic,
+          italic
         );
 
       if (underline)
@@ -424,7 +431,7 @@ export class FontRenderer {
           width,
           scale,
           size,
-          color,
+          color
         );
     }
   }
@@ -438,44 +445,60 @@ export class FontRenderer {
     scale: number,
     size: number,
     color: Fill,
-    italic: boolean,
+    italic: boolean
   ) {
-    for (let i = 0; i < imageData.data.length; i += 4) {
-      if (imageData.data[i + 3] === 0) continue;
+    function createLetterPath(filter?: (x: number, y: number) => boolean) {
+      ctx.beginPath();
 
-      const canvasX = (i / 4) % width;
-      const canvasY = Math.floor(i / 4 / width);
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        if (imageData.data[i + 3] === 0) continue;
 
-      let offset = 0;
+        const canvasX = (i / 4) % width;
+        const canvasY = Math.floor(i / 4 / width);
 
-      if (italic) {
-        if (canvasY < 2 * scale) offset = 2;
-        else if (canvasY < 6 * scale) offset = 1;
-        else if (canvasY < 10 * scale) offset = 0;
-        else if (canvasY < 14 * scale) offset = -1;
-        else if (canvasY < 16 * scale) offset = -2;
+        if (filter && !filter(canvasX, canvasY)) continue;
 
-        offset *= scale * size;
+        let offset = 0;
+
+        if (italic) {
+          if (canvasY < 2 * scale) offset = 2;
+          else if (canvasY < 6 * scale) offset = 1;
+          else if (canvasY < 10 * scale) offset = 0;
+          else if (canvasY < 14 * scale) offset = -1;
+          else if (canvasY < 16 * scale) offset = -2;
+
+          offset *= scale * size;
+        }
+
+        const charX = x + offset + canvasX * size;
+        const charY = y + canvasY * size;
+
+        ctx.moveTo(charX, charY);
+        ctx.lineTo(charX + size, charY);
+        ctx.lineTo(charX + size, charY + size);
+        ctx.lineTo(charX, charY + size);
       }
 
-      const charX = x + offset + canvasX * size;
-      const charY = y + canvasY * size;
-
-      ctx.fillStyle = color;
-      ctx.fillRect(charX, charY, size, size);
-
-      if (canvasY < 4 * scale) {
-        ctx.globalCompositeOperation = "soft-light";
-        ctx.fillStyle = "rgb(255 255 255 / 0.85)";
-        ctx.fillRect(charX, charY, size, size);
-        ctx.globalCompositeOperation = "source-over";
-      } else if (canvasY > 10 * scale) {
-        ctx.globalCompositeOperation = "soft-light";
-        ctx.fillStyle = "rgb(0 0 0 / 0.60)";
-        ctx.fillRect(charX, charY, size, size);
-        ctx.globalCompositeOperation = "source-over";
-      }
+      ctx.closePath();
     }
+
+    createLetterPath();
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    if (!this.gradient) return;
+
+    createLetterPath((_, y) => y < 4 * scale);
+    ctx.globalCompositeOperation = "soft-light";
+    ctx.fillStyle = GRADIENT_TOP_OVERLAY;
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
+
+    createLetterPath((_, y) => y > 10 * scale);
+    ctx.globalCompositeOperation = "soft-light";
+    ctx.fillStyle = GRADIENT_BOTTOM_OVERLAY;
+    ctx.fill();
+    ctx.globalCompositeOperation = "source-over";
   }
 
   private fillUnderline(
@@ -485,7 +508,7 @@ export class FontRenderer {
     width: number,
     scale: number,
     size: number,
-    color: Fill,
+    color: Fill
   ) {
     ctx.fillStyle = color;
 
@@ -493,8 +516,20 @@ export class FontRenderer {
       x - 2 * scale * size,
       y + 16 * size * scale,
       width * size + 4 * scale * size,
-      2 * scale * size,
+      2 * scale * size
     );
+
+    if (this.gradient) {
+      ctx.globalCompositeOperation = "soft-light";
+      ctx.fillStyle = GRADIENT_BOTTOM_OVERLAY;
+      ctx.fillRect(
+        x - 2 * scale * size,
+        y + 16 * size * scale,
+        width * size + 4 * scale * size,
+        2 * scale * size
+      );
+      ctx.globalCompositeOperation = "source-over";
+    }
   }
 
   private fillStrikethrough(
@@ -504,7 +539,7 @@ export class FontRenderer {
     width: number,
     scale: number,
     size: number,
-    color: Fill,
+    color: Fill
   ) {
     ctx.fillStyle = color;
 
@@ -512,7 +547,7 @@ export class FontRenderer {
       x,
       y + 6 * scale * size,
       width * size + 2 * scale * size,
-      2 * scale * size,
+      2 * scale * size
     );
   }
 }

@@ -37,13 +37,15 @@ export const TableSeparator = ({ children, title }: TableSeparatorProps) => {
         bottomLeft: 0,
         bottomRight: 0,
       }}
-      padding={0}
+      padding={-2}
     >
-      {title ? (
-        <text margin={{ top: 1, left: 8, right: 8, bottom: 1 }}>§l{title}</text>
-      ) : (
-        <></>
-      )}
+      {title ?
+        (
+          <text margin={{ top: 1, left: 8, right: 8, bottom: 1 }}>§l{title}</text>
+        ) :
+        (
+          <></>
+        )}
     </box>
   );
 
@@ -60,7 +62,7 @@ export const TableSeparator = ({ children, title }: TableSeparatorProps) => {
         bottomRight: border,
         bottomLeft: border,
       }}
-      padding={0}
+      padding={-4}
     />
   );
 

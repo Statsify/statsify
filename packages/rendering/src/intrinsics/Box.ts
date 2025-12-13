@@ -6,7 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { BoxColors } from "../christmas/colors.js";
 import { type CanvasRenderingContext2D } from "skia-canvas";
+import { PatternIds, Patterns } from "../christmas/patterns.js";
 import type * as JSX from "#jsx";
 import type { DeferredGradient } from "#hooks";
 
@@ -47,7 +49,7 @@ export const resolveFill = (
   x: number,
   y: number,
   width: number,
-  height: number,
+  height: number
 ) => {
   if (typeof fill === "string" || typeof fill === "object") return fill;
   return fill(ctx, x, y, width, height);
@@ -58,14 +60,14 @@ export const SHADOW_OPACITY = 0.84;
 
 function addSpacing(spacing: JSX.Spacing, amount: number) {
   const overall =
-    typeof spacing === "number"
-      ? { left: spacing, right: spacing, top: spacing, bottom: spacing }
-      : {
-          left: spacing.left ?? 0,
-          right: spacing.right ?? 0,
-          top: spacing.top ?? 0,
-          bottom: spacing.bottom ?? 0,
-        };
+    typeof spacing === "number" ?
+      { left: spacing, right: spacing, top: spacing, bottom: spacing } :
+      {
+        left: spacing.left ?? 0,
+        right: spacing.right ?? 0,
+        top: spacing.top ?? 0,
+        bottom: spacing.bottom ?? 0,
+      };
 
   return {
     left: overall.left + amount,
@@ -113,7 +115,7 @@ export const renderOverlay = (
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
-  height: number,
+  height: number
 ) => {
   ctx.globalCompositeOperation = "overlay";
   const overlay = ctx.createLinearGradient(x, y, x, y + height);
@@ -124,138 +126,18 @@ export const renderOverlay = (
   ctx.globalCompositeOperation = "source-over";
 };
 
-export type BoxColorId = "red" | "yellow";
-
-type BoxColor = {
-  background: string;
-  outline: string;
-  ribbonBackground: string;
-  ribbonAccent: string;
-  patternTop: string;
-  patternBottom: string;
-};
-
-export const BoxColors: Record<BoxColorId, BoxColor> = {
-  red: {
-    background: "rgba(142, 0, 0, 0.40)",
-    outline: "rgba(124, 0, 0, 1)",
-    ribbonBackground: "rgba(0, 99, 7, 0.30)",
-    ribbonAccent: "rgba(0, 142, 9, 1)",
-    patternTop: "rgba(92, 19, 19, 0.39)",
-    patternBottom: "rgba(70, 11, 11, 1)",
-  },
-  yellow: {
-    background: "rgba(255, 157, 0, 0.40)",
-    outline: "rgba(218, 151, 7, 1)",
-    ribbonBackground: "rgba(130, 0, 0, 0.30)",
-    ribbonAccent: "rgba(142, 0, 0, 1)",
-    patternTop: "rgba(159, 104, 0, 0.39)",
-    patternBottom: "rgba(120, 79, 3, 0.70)",
-  },
-};
-
-// prettier-ignore
-const CHECKERS = {
-  width: 4,
-  height: 8,
-  scale: 2,
-  data: [
-    1, 1, 0, 0,
-    1, 1, 0, 0,
-    0, 0, 1, 1,
-    0, 0, 1, 1,
-    1, 1, 0, 0,
-    1, 1, 0, 0,
-    1, 1, 1, 1,
-    1, 1, 1, 1
-  ],
-};
-
-// prettier-ignore
-const DOTS = {
-  width: 6,
-  height: 5,
-  scale: 2,
-  data: [
-    1, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 1,
-    0, 0, 0, 0, 0, 0,
-    0, 0, 1, 1, 0, 0,
-    0, 0, 1, 1, 0, 0,
-  ],
-};
-
-// prettier-ignore
-const HEARTS = {
-  width: 22,
-  height: 24,
-  // height: 27,
-  scale: 1,
-  data: [
-    0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0,
-    0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0,
-    1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
-    1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
-    1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    // 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-  ],
-};
-
-// prettier-ignore
-const STRIPES = {
-  width: 6,
-  height: 11,
-  scale: 2,
-  data: [
-    0, 1, 1, 0, 0, 0,
-    0, 1, 1, 1, 0, 0,
-    0, 0, 1, 1, 1, 0,
-    0, 0, 0, 1, 1, 1,
-    1, 0, 0, 0, 1, 1,
-    1, 1, 0, 0, 0, 1,
-    1, 1, 1, 0, 0, 0,
-    0, 1, 1, 1, 0, 0,
-    0, 0, 1, 1, 1, 0,
-    0, 0, 0, 1, 1, 1,
-    0, 0, 0, 0, 1, 1,
-  ],
-};
-
-const AllPatterns = [STRIPES, DOTS, HEARTS, CHECKERS];
-
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
   {
     color = DEFAULT_COLOR,
-    border,
-    shadowDistance,
-    shadowOpacity = SHADOW_OPACITY,
-    outline,
-    outlineSize,
+    // border,
+    // shadowDistance,
+    // shadowOpacity = SHADOW_OPACITY,
+    // outline,
+    // outlineSize,
   },
   { x, y, width, height, padding },
-  { boxColorId },
+  { boxColorId }
 ) => {
   const fill = resolveFill(color, ctx, x, y, width, height);
   ctx.fillStyle = fill;
@@ -287,29 +169,46 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.fillStyle = "rgba(0, 0, 0, 0.42)";
   ctx.fillRect(x, y, width, height);
 
-  const pattern = AllPatterns[Math.floor(Math.random() * AllPatterns.length)];
+  const patternId = PatternIds[Math.floor(Math.random() * PatternIds.length)];
+  const pattern = Patterns[patternId];
 
-  ctx.fillStyle = boxColor.patternTop;
-  drawPresentPatternCanvas(
-    ctx,
-    pattern,
-    x + outlineThickness,
-    y + outlineThickness,
-    width - 2 * outlineThickness,
-    pattern.height * pattern.scale,
-    true,
-  );
+  if (
+    2 * pattern.height * pattern.scale <=
+    height - 2 * outlineThickness - ribbonThickness
+  ) {
+    ctx.fillStyle = boxColor.patternTop;
+    drawPresentPatternCanvas(
+      ctx,
+      pattern,
+      x + outlineThickness,
+      y + outlineThickness,
+      width - 2 * outlineThickness,
+      pattern.height * pattern.scale,
+      true
+    );
 
-  ctx.fillStyle = boxColor.patternBottom;
-  drawPresentPatternCanvas(
-    ctx,
-    pattern,
-    x + outlineThickness,
-    y + height - outlineThickness - pattern.height * pattern.scale,
-    width - 2 * outlineThickness,
-    pattern.height * pattern.scale,
-    false,
-  );
+    ctx.fillStyle = boxColor.patternBottom;
+    drawPresentPatternCanvas(
+      ctx,
+      pattern,
+      x + outlineThickness,
+      y + height - outlineThickness - pattern.height * pattern.scale,
+      width - 2 * outlineThickness,
+      pattern.height * pattern.scale,
+      false
+    );
+  } else if (pattern.height * pattern.scale <= height - 2 * outlineThickness) {
+    ctx.fillStyle = boxColor.patternBottom;
+    drawPresentPatternCanvas(
+      ctx,
+      pattern,
+      x + outlineThickness,
+      y + (height - pattern.height * pattern.scale) / 2,
+      width - 2 * outlineThickness,
+      pattern.height * pattern.scale,
+      false
+    );
+  }
 
   ctx.fillStyle = boxColor.outline;
   strokeRect(ctx, x, y, width, height, outlineThickness);
@@ -319,19 +218,19 @@ export const render: JSX.Render<BoxRenderProps> = (
     x + ribbonAccentThickness,
     y + ribbonHorizontalY,
     width - 2 * ribbonAccentThickness,
-    ribbonThickness,
+    ribbonThickness
   );
   ctx.fillRect(
     x + ribbonVerticalX,
     y + ribbonAccentThickness,
     ribbonThickness,
-    ribbonHorizontalY - ribbonAccentThickness,
+    ribbonHorizontalY - ribbonAccentThickness
   );
   ctx.fillRect(
     x + ribbonVerticalX,
     y + ribbonHorizontalY + ribbonThickness,
     ribbonThickness,
-    height - ribbonHorizontalY - ribbonThickness - ribbonAccentThickness,
+    height - ribbonHorizontalY - ribbonThickness - ribbonAccentThickness
   );
 
   ctx.fillStyle = boxColor.ribbonAccent;
@@ -339,13 +238,13 @@ export const render: JSX.Render<BoxRenderProps> = (
     x,
     y + ribbonHorizontalY,
     ribbonAccentThickness,
-    ribbonThickness,
+    ribbonThickness
   );
   ctx.fillRect(
     x + width - ribbonAccentThickness,
     y + ribbonHorizontalY,
     ribbonAccentThickness,
-    ribbonThickness,
+    ribbonThickness
   );
 
   ctx.fillRect(x + ribbonVerticalX, y, ribbonThickness, ribbonAccentThickness);
@@ -353,7 +252,7 @@ export const render: JSX.Render<BoxRenderProps> = (
     x + ribbonVerticalX,
     y + height - ribbonAccentThickness,
     ribbonThickness,
-    ribbonAccentThickness,
+    ribbonAccentThickness
   );
 
   ctx.globalCompositeOperation = "soft-light";
@@ -364,13 +263,13 @@ export const render: JSX.Render<BoxRenderProps> = (
     x,
     y + ribbonHorizontalY,
     ribbonVerticalX,
-    ribbonOverlayThickness,
+    ribbonOverlayThickness
   );
   ctx.fillRect(
     x + ribbonVerticalX,
     y,
     ribbonOverlayThickness,
-    ribbonHorizontalY + ribbonOverlayThickness,
+    ribbonHorizontalY + ribbonOverlayThickness
   );
 
   ctx.fillStyle = "rgba(87, 87, 87, 0.42)";
@@ -378,14 +277,14 @@ export const render: JSX.Render<BoxRenderProps> = (
     x + ribbonVerticalX + ribbonThickness,
     y + ribbonHorizontalY + ribbonThickness - ribbonOverlayThickness,
     width - (ribbonVerticalX + ribbonThickness),
-    ribbonOverlayThickness,
+    ribbonOverlayThickness
   );
 
   ctx.fillRect(
     x + ribbonVerticalX + ribbonThickness - ribbonOverlayThickness,
     y + ribbonHorizontalY + ribbonThickness,
     ribbonOverlayThickness,
-    height - (ribbonHorizontalY + ribbonThickness),
+    height - (ribbonHorizontalY + ribbonThickness)
   );
 
   // Outline Overlay
@@ -396,7 +295,7 @@ export const render: JSX.Render<BoxRenderProps> = (
     x,
     y + halfOutlineThickness,
     halfOutlineThickness,
-    height - halfOutlineThickness,
+    height - halfOutlineThickness
   );
 
   ctx.fillStyle = "rgba(0, 0, 0, 0.63)";
@@ -404,15 +303,17 @@ export const render: JSX.Render<BoxRenderProps> = (
     x,
     y + height - halfOutlineThickness,
     width,
-    halfOutlineThickness,
+    halfOutlineThickness
   );
   ctx.fillRect(
     x + width - halfOutlineThickness,
     y,
     halfOutlineThickness,
-    height - halfOutlineThickness,
+    height - halfOutlineThickness
   );
   ctx.globalCompositeOperation = "source-over";
+
+  renderOverlay(ctx, x, y, width, height);
 };
 
 function strokeRect(
@@ -421,7 +322,7 @@ function strokeRect(
   y: number,
   width: number,
   height: number,
-  thickness: number,
+  thickness: number
 ) {
   ctx.fillRect(x, y, width, thickness);
   ctx.fillRect(x, y + height - thickness, width, thickness);
@@ -431,7 +332,7 @@ function strokeRect(
     x + width - thickness,
     y + thickness,
     thickness,
-    height - 2 * thickness,
+    height - 2 * thickness
   );
 }
 
@@ -447,7 +348,7 @@ function drawPresentPatternCanvas(
   y0: number,
   width: number,
   height: number,
-  flip: boolean,
+  flip: boolean
 ) {
   for (let i = 0; i < width; i += pattern.width * pattern.scale) {
     for (let py = 0; py < pattern.height; py++) {

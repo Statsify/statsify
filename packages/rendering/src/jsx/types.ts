@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { BoxColorId } from "../christmas/colors.js";
 import type {
   CanvasGradient,
   CanvasPattern,
@@ -14,7 +15,6 @@ import type {
 } from "skia-canvas";
 import type { FontRenderer } from "#font";
 import type { IntrinsicElement, IntrinsicRenders } from "./instrinsics.js";
-import type { BoxColorId } from "../intrinsics/Box.js";
 
 export interface BaseThemeContext {
   renderer: FontRenderer;
