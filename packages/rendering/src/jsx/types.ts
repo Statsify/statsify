@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { BoxColorId } from "../christmas/colors.js";
 import type {
   CanvasGradient,
   CanvasPattern,
@@ -17,11 +18,13 @@ import type { IntrinsicElement, IntrinsicRenders } from "./instrinsics.js";
 
 export interface BaseThemeContext {
   renderer: FontRenderer;
+  boxColorId?: BoxColorId;
 }
 
 export interface ComputedThemeContext extends BaseThemeContext {
   canvasWidth: number;
   canvasHeight: number;
+  boxColorId: BoxColorId;
 }
 
 export interface Theme {
@@ -74,7 +77,7 @@ export type Render<T = unknown> = (
   props: T,
   location: Location,
   theme: ComputedThemeContext,
-  component?: string
+  component?: string,
 ) => void;
 
 export interface ElementNodeBiDirectional {
@@ -120,7 +123,7 @@ export type PropsWithChildren<T, K = Children | undefined> = T &
   (K extends undefined ? { children?: K } : { children: K });
 
 export type FC<T = object> = (
-  props: T extends { children: any } ? T : PropsWithChildren<T>
+  props: T extends { children: any } ? T : PropsWithChildren<T>,
 ) => ElementNode | null;
 
 /**
@@ -129,5 +132,5 @@ export type FC<T = object> = (
  * C is the type of the element's children
  */
 export type RawFC<T = object, K = T, C = Children | undefined> = (
-  props: PropsWithChildren<T, C>
+  props: PropsWithChildren<T, C>,
 ) => RawElement<K>;

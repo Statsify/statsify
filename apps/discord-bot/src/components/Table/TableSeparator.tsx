@@ -31,16 +31,21 @@ export const TableSeparator = ({ children, title }: TableSeparatorProps) => {
   const topDivider = (
     <box
       width="100%"
-      border={{ topLeft: border, topRight: border, bottomLeft: 0, bottomRight: 0 }}
-      padding={0}
+      border={{
+        topLeft: border,
+        topRight: border,
+        bottomLeft: 0,
+        bottomRight: 0,
+      }}
+      padding={-2}
     >
       {title ?
         (
-          <text margin={{ top: 1, left: 8, right: 8, bottom: 1 }}>
-            §l{title}
-          </text>
+          <text margin={{ top: 1, left: 8, right: 8, bottom: 1 }}>§l{title}</text>
         ) :
-        <></>}
+        (
+          <></>
+        )}
     </box>
   );
 
@@ -51,8 +56,13 @@ export const TableSeparator = ({ children, title }: TableSeparatorProps) => {
     <box
       width="100%"
       height={title ? Math.round(topDividerHeight / 2) : topDividerHeight}
-      border={{ topLeft: 0, topRight: 0, bottomRight: border, bottomLeft: border }}
-      padding={0}
+      border={{
+        topLeft: 0,
+        topRight: 0,
+        bottomRight: border,
+        bottomLeft: border,
+      }}
+      padding={-4}
     />
   );
 

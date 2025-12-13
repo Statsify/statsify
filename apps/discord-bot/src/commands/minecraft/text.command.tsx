@@ -14,8 +14,9 @@ import {
   NumberArgument,
   TextArgument,
 } from "@statsify/discord";
+import { Container } from "typedi";
+import { FontRenderer, StyleLocation, render } from "@statsify/rendering";
 import { Multiline } from "#components";
-import { StyleLocation, render } from "@statsify/rendering";
 import { convertColorCodes } from "#lib/convert-color-codes";
 import { getTheme } from "#themes";
 
@@ -40,6 +41,14 @@ export class TextCommand {
     const alignment = context.option<StyleLocation>("alignment", "left");
 
     const text = convertColorCodes(content).replaceAll(String.raw`\n`, "\n");
+    let theme = getTheme(user);
+
+    if (theme === undefined) {
+      theme = {
+        context: { renderer: Container.get(FontRenderer) },
+        elements: {},
+      };
+    }
 
     const canvas = render(
       <div direction="column" padding={2}>

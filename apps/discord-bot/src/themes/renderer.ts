@@ -15,6 +15,9 @@ export function getFontRenderer(font: UserFont): FontRenderer {
     case UserFont.HD:
       return Container.get("HDFontRenderer");
 
+    case UserFont.FPACK:
+      return Container.get("FPackFontRenderer");
+
     default:
       return Container.get(FontRenderer);
   }

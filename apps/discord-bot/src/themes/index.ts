@@ -26,13 +26,16 @@ export const getTheme = (user: User | null): Theme | undefined => {
 
   const renderer = getFontRenderer(font);
   const box = getBoxRenderer(boxes);
-  const colorPalette = User.isDiamond(user) ? getColorPalette(palette) : undefined;
+  const colorPalette = User.isDiamond(user) ?
+    getColorPalette(palette) :
+    undefined;
 
   return {
-    context: { renderer },
+    context: { renderer, boxColorId: undefined },
     elements: {
       box(ctx, props, location, theme) {
-        if (colorPalette?.boxes?.color) props.color ??= colorPalette.boxes.color;
+        if (colorPalette?.boxes?.color)
+          props.color ??= colorPalette.boxes.color;
         if (colorPalette?.boxes?.shadowOpacity !== undefined) {
           props.shadowOpacity ??= colorPalette.boxes.shadowOpacity;
         }

@@ -7,14 +7,19 @@
  */
 
 import * as Sentry from "@sentry/node";
+import { BoxColorIds } from "../christmas/colors.js";
 import { Canvas, type CanvasRenderingContext2D } from "skia-canvas";
 import { Container } from "typedi";
-import { FontRenderer } from "#font";
 import { IntrinsicRenders, intrinsicRenders } from "./instrinsics.js";
 import { createInstructions } from "./create-instructions.js";
 import { getPositionalDelta, getTotalSize } from "./util.js";
 import { noop } from "@statsify/util";
-import type { ComputedThemeContext, ElementNode, Instruction, Theme } from "./types.js";
+import type {
+  ComputedThemeContext,
+  ElementNode,
+  Instruction,
+  Theme,
+} from "./types.js";
 
 const _render = (
   ctx: CanvasRenderingContext2D,
@@ -97,7 +102,9 @@ const _render = (
         const oppositeSide = side === "x" ? "y" : "x";
         const delta =
           instruction[oppositeSide].size -
-          (child[oppositeSide].size + child[oppositeSide].margin2 + child[oppositeSide].padding2);
+          (child[oppositeSide].size +
+            child[oppositeSide].margin2 +
+            child[oppositeSide].padding2);
 
         applyDelta(delta, oppositeSide);
         _render(ctx, context, intrinsicElements, child, x, y);
@@ -137,13 +144,21 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
   const context: ComputedThemeContext = {
     renderer: noop(),
     ...theme?.context,
+    boxColorId: BoxColorIds[Math.floor(Math.random() * BoxColorIds.length)],
     canvasWidth: width,
     canvasHeight: height,
   };
 
-  if (!context.renderer) context.renderer = Container.get(FontRenderer);
+  if (!context.renderer) context.renderer = Container.get("FPackFontRenderer");
 
-  _render(ctx, context, { ...intrinsicRenders, ...theme?.elements }, instructions, 0, 0);
+  _render(
+    ctx,
+    context,
+    { ...intrinsicRenders, ...theme?.elements },
+    instructions,
+    0,
+    0
+  );
 
   renderTransaction?.finish();
 
