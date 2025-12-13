@@ -115,7 +115,6 @@ export const renderOverlay = (
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
-  width: number,
   height: number
 ) => {
   ctx.globalCompositeOperation = "overlay";
@@ -123,7 +122,7 @@ export const renderOverlay = (
   overlay.addColorStop(0, "rgba(255, 255, 255, 0.30)");
   overlay.addColorStop(1, "rgba(0, 0, 0, 0.30)");
   ctx.fillStyle = overlay;
-  ctx.fillRect(x, y, width, height);
+  ctx.fill();
   ctx.globalCompositeOperation = "source-over";
 };
 
@@ -314,7 +313,13 @@ export const render: JSX.Render<BoxRenderProps> = (
   );
   ctx.globalCompositeOperation = "source-over";
 
-  renderOverlay(ctx, x, y, width, height);
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x + width, y);
+  ctx.lineTo(x + width, y + height);
+  ctx.lineTo(x, y + height);
+  ctx.closePath();
+  renderOverlay(ctx, x, y, height);
 };
 
 function strokeRect(
