@@ -56,7 +56,7 @@ export class TextCommand {
           {text}
         </Multiline>
       </div>,
-      getTheme(user)
+      theme,
     );
 
     const buffer = await canvas.toBuffer("png");
