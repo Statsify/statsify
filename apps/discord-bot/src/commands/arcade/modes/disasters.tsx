@@ -98,14 +98,14 @@ const DisastersSurvivalsTable = ({
 }: Omit<DisastersTableProps, "submode">) => {
   const entries = Object.entries(DisasterSurvivalsLabels) as [
     keyof DisasterSurvivals,
-    string,
+    string
   ][];
 
   const rows = arrayGroup(
     entries
       .map(([key, label]) => ({ label, survivals: stats.survivals[key] }))
       .toSorted((a, b) => b.survivals - a.survivals),
-    2,
+    2
   );
 
   return (
@@ -159,14 +159,14 @@ const DisastersDeathsTable = ({
 }: Omit<DisastersTableProps, "submode">) => {
   const entries = Object.entries(DisastersDeathsLabels) as [
     keyof DisastersDeaths,
-    string,
+    string
   ][];
 
   const rows = arrayGroup(
     entries
       .map(([key, label]) => ({ label, deaths: stats.deaths[key] }))
       .toSorted((a, b) => b.deaths - a.deaths),
-    2,
+    2
   );
 
   return (
