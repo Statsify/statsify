@@ -77,6 +77,11 @@ export class CreeperAttack {
 
 export class DisasterSurvivals {
   @Field({
+    leaderboard: { fieldName: "Survivals", name: "Survivals" },
+  })
+  public overall: number;
+
+  @Field({
     leaderboard: { fieldName: "Survivals", name: "Acid Rain Survivals" },
   })
   public acidRain: number;
@@ -234,10 +239,42 @@ export class DisasterSurvivals {
     this.redLightGreenLight = data.red_light_green_light;
     this.swappage = data.swappage;
     this.werewolf = data.werewolf;
+    this.overall = add(
+      this.acidRain,
+      this.dragons,
+      this.flood,
+      this.fragileGround,
+      this.lightning,
+      this.meteorShower,
+      this.sinkhole,
+      this.solarFlare,
+      this.stampede,
+      this.theFloorIsLava,
+      this.tntRain,
+      this.tornado,
+      this.withers,
+      this.zombieApocalypse,
+      this.anvilRain,
+      this.batSwarm,
+      this.blackout,
+      this.disco,
+      this.grounded,
+      this.halfHealth,
+      this.hotPotato,
+      this.hypixelSays,
+      this.nuke,
+      this.purge,
+      this.redLightGreenLight,
+      this.swappage,
+      this.werewolf,
+    );
   }
 }
 
 export class DisastersDeaths {
+  @Field({ leaderboard: { fieldName: "Deaths", name: "Deaths" } })
+  public overall: number;
+
   @Field({ leaderboard: { fieldName: "Deaths", name: "Stampede Deaths" } })
   public stampede: number;
 
@@ -337,6 +374,31 @@ export class DisastersDeaths {
     this.disco = data.disco;
     this.nuke = data.nuke;
     this.hypixelSays = data.hypixel_says;
+    this.overall = add(
+      this.stampede,
+      this.void,
+      this.withers,
+      this.fall,
+      this.redLightGreenLight,
+      this.unknown,
+      this.flood,
+      this.lightning,
+      this.zombieApocalypse,
+      this.tntRain,
+      this.solarFlare,
+      this.tornado,
+      this.acidRain,
+      this.batSwarm,
+      this.hotPotato,
+      this.sinkhole,
+      this.dragons,
+      this.theFloorIsLava,
+      this.anvilRain,
+      this.werewolf,
+      this.disco,
+      this.nuke,
+      this.hypixelSays,
+    );
   }
 }
 
@@ -751,7 +813,7 @@ export class FarmHunt {
     this.hunterKills = data.hunter_kills_farm_hunt;
     this.poopCollected = add(
       data.poop_collected,
-      data.poop_collected_farm_hunt
+      data.poop_collected_farm_hunt,
     );
     this.tauntsUsed = data.taunts_used_farm_hunt;
   }
@@ -1268,7 +1330,7 @@ export class Seasonal {
       this.easterSimulator.wins,
       this.grinchSimulator.wins,
       this.halloweenSimulator.wins,
-      this.scubaSimulator.wins
+      this.scubaSimulator.wins,
     );
   }
 }
@@ -1361,12 +1423,12 @@ export class ZombiesMap {
     this.overall.fastestWin = Math.min(
       this.normal.fastestWin || Number.MAX_SAFE_INTEGER,
       this.hard.fastestWin || Number.MAX_SAFE_INTEGER,
-      this.rip.fastestWin || Number.MAX_SAFE_INTEGER
+      this.rip.fastestWin || Number.MAX_SAFE_INTEGER,
     );
     this.overall.fastestWin =
-      this.overall.fastestWin === Number.MAX_SAFE_INTEGER ?
-        0 :
-        this.overall.fastestWin;
+      this.overall.fastestWin === Number.MAX_SAFE_INTEGER
+        ? 0
+        : this.overall.fastestWin;
   }
 }
 
