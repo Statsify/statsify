@@ -75,72 +75,10 @@ export class CreeperAttack {
   }
 }
 
-/*
-
-"player.stats.Arcade.disasters": {
-  "stats": {
-    "games_played": 400,
-    "survived": {
-      "disco": 45,
-      "fragile_ground": 33,
-      "grounded": 44,
-      "swappage": 51,
-      "tornado": 50,
-      "zombie_apocalypse": 24,
-      "acid_rain": 36,
-      "bat_swarm": 34,
-      "hot_potato": 50,
-      "lightning": 48,
-      "purge": 43,
-      "stampede": 28,
-      "nuke": 52,
-      "flood": 22,
-      "withers": 37,
-      "the_floor_is_lava": 52,
-      "hypixel_says": 57,
-      "tnt_rain": 39,
-      "werewolf": 20,
-      "blackout": 46,
-      "solar_flare": 39,
-      "sinkhole": 55,
-      "dragons": 35,
-      "meteor_shower": 40,
-      "half_health": 15,
-      "red_light_green_light": 12,
-      "anvil_rain": 24
-    },
-    "time_survived": 62389,
-    "wins": 164,
-    "deaths": {
-      "stampede": 25,
-      "hypixel_says": 1,
-      "sinkhole": 3,
-      "flood": 12,
-      "void": 25,
-      "tornado": 9,
-      "tnt_rain": 7,
-      "acid_rain": 5,
-      "zombie_apocalypse": 21,
-      "fall": 28,
-      "dragons": 3,
-      "anvil_rain": 9,
-      "unknown": 19,
-      "withers": 11,
-      "lightning": 4,
-      "werewolf": 3,
-      "red_light_green_light": 13,
-      "solar_flare": 1,
-      "the_floor_is_lava": 3,
-      "meteor_shower": 1,
-      "disco": 1
-    },
-    "losses": 204
-  }
-}
-*/
-
 export class DisasterSurvivals {
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Acid Rain Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Acid Rain Survivals" },
+  })
   public acidRain: number;
 
   @Field({ leaderboard: { fieldName: "Survivals", name: "Dragons Survivals" } })
@@ -149,28 +87,47 @@ export class DisasterSurvivals {
   @Field({ leaderboard: { fieldName: "Survivals", name: "Flood Survivals" } })
   public flood: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Fragile Ground Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Fragile Ground Survivals" },
+  })
   public fragileGround: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Lightning Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Lightning Survivals" },
+  })
   public lightning: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Meteor Shower Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Meteor Shower Survivals" },
+  })
   public meteorShower: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Sinkhole Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Sinkhole Survivals" },
+  })
   public sinkhole: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Solar Flare Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Solar Flare Survivals" },
+  })
   public solarFlare: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Stampede Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Stampede Survivals" },
+  })
   public stampede: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "The Floor is Lava Survivals" } })
+  @Field({
+    leaderboard: {
+      fieldName: "Survivals",
+      name: "The Floor is Lava Survivals",
+    },
+  })
   public theFloorIsLava: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "TNT Rain Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "TNT Rain Survivals" },
+  })
   public tntRain: number;
 
   @Field({ leaderboard: { fieldName: "Survivals", name: "Tornado Survivals" } })
@@ -179,31 +136,50 @@ export class DisasterSurvivals {
   @Field({ leaderboard: { fieldName: "Survivals", name: "Withers Survivals" } })
   public withers: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Zombie Apocalypse Survivals" } })
+  @Field({
+    leaderboard: {
+      fieldName: "Survivals",
+      name: "Zombie Apocalypse Survivals",
+    },
+  })
   public zombieApocalypse: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Anvil Rain Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Anvil Rain Survivals" },
+  })
   public anvilRain: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Bat Swarm Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Bat Swarm Survivals" },
+  })
   public batSwarm: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Blackout Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Blackout Survivals" },
+  })
   public blackout: number;
 
   @Field({ leaderboard: { fieldName: "Survivals", name: "Disco Survivals" } })
   public disco: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Grounded Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Grounded Survivals" },
+  })
   public grounded: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Half Health Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Half Health Survivals" },
+  })
   public halfHealth: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Hot Potato Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Hot Potato Survivals" },
+  })
   public hotPotato: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Hypixel Says Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Hypixel Says Survivals" },
+  })
   public hypixelSays: number;
 
   @Field({ leaderboard: { fieldName: "Survivals", name: "Nuke Survivals" } })
@@ -212,13 +188,22 @@ export class DisasterSurvivals {
   @Field({ leaderboard: { fieldName: "Survivals", name: "Purge Survivals" } })
   public purge: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Red Light Green Light Survivals" } })
+  @Field({
+    leaderboard: {
+      fieldName: "Survivals",
+      name: "Red Light Green Light Survivals",
+    },
+  })
   public redLightGreenLight: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Swappage Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Swappage Survivals" },
+  })
   public swappage: number;
 
-  @Field({ leaderboard: { fieldName: "Survivals", name: "Werewolf Survivals" } })
+  @Field({
+    leaderboard: { fieldName: "Survivals", name: "Werewolf Survivals" },
+  })
   public werewolf: number;
 
   public constructor(data: APIData) {
@@ -265,7 +250,9 @@ export class DisastersDeaths {
   @Field({ leaderboard: { fieldName: "Deaths", name: "Fall Deaths" } })
   public fall: number;
 
-  @Field({ leaderboard: { fieldName: "Deaths", name: "Red Light Green Light Deaths" } })
+  @Field({
+    leaderboard: { fieldName: "Deaths", name: "Red Light Green Light Deaths" },
+  })
   public redLightGreenLight: number;
 
   @Field({ leaderboard: { fieldName: "Deaths", name: "Unknown Deaths" } })
@@ -277,7 +264,9 @@ export class DisastersDeaths {
   @Field({ leaderboard: { fieldName: "Deaths", name: "Lightning Deaths" } })
   public lightning: number;
 
-  @Field({ leaderboard: { fieldName: "Deaths", name: "Zombie Apocalypse Deaths" } })
+  @Field({
+    leaderboard: { fieldName: "Deaths", name: "Zombie Apocalypse Deaths" },
+  })
   public zombieApocalypse: number;
 
   @Field({ leaderboard: { fieldName: "Deaths", name: "TNT Rain Deaths" } })
@@ -304,7 +293,9 @@ export class DisastersDeaths {
   @Field({ leaderboard: { fieldName: "Deaths", name: "Dragons Deaths" } })
   public dragons: number;
 
-  @Field({ leaderboard: { fieldName: "Deaths", name: "The Floor is Lava Deaths" } })
+  @Field({
+    leaderboard: { fieldName: "Deaths", name: "The Floor is Lava Deaths" },
+  })
   public theFloorIsLava: number;
 
   @Field({ leaderboard: { fieldName: "Deaths", name: "Anvil Rain Deaths" } })
@@ -362,13 +353,13 @@ export class Disasters {
   @Field()
   public wlr: number;
 
-  @Field()
+  @Field({ leaderboard: { formatter: formatTime } })
   public playtime: number;
 
   @Field({ leaderboard: { name: "" } })
   public survivals: DisasterSurvivals;
 
-  @Field()
+  @Field({ leaderboard: { name: "" } })
   public deaths: DisastersDeaths;
 
   public constructor(data: APIData = {}) {
@@ -758,7 +749,10 @@ export class FarmHunt {
     this.kills = data.kills_farm_hunt;
     this.animalKills = data.animal_kills_farm_hunt;
     this.hunterKills = data.hunter_kills_farm_hunt;
-    this.poopCollected = add(data.poop_collected, data.poop_collected_farm_hunt);
+    this.poopCollected = add(
+      data.poop_collected,
+      data.poop_collected_farm_hunt,
+    );
     this.tauntsUsed = data.taunts_used_farm_hunt;
   }
 }
@@ -814,7 +808,9 @@ export class GalaxyWars {
 }
 
 export class HideAndSeekMode {
-  @Field({ leaderboard: { additionalFields: ["this.seekerWins", "this.hiderWins"] } })
+  @Field({
+    leaderboard: { additionalFields: ["this.seekerWins", "this.hiderWins"] },
+  })
   public wins: number;
 
   @Field({ leaderboard: { additionalFields: ["this.wins"] } })
@@ -860,7 +856,10 @@ export class HideAndSeek {
 export class HoleInTheWall {
   @Field({
     leaderboard: {
-      additionalFields: ["this.highestScoreQualifications", "this.highestScoreFinals"],
+      additionalFields: [
+        "this.highestScoreQualifications",
+        "this.highestScoreFinals",
+      ],
     },
     historical: {
       additionalFields: [],
@@ -904,7 +903,9 @@ export class HypixelSaysMode {
   @Field()
   public roundsWon: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.roundsWon", "this.points"] } })
+  @Field({
+    leaderboard: { additionalFields: ["this.roundsWon", "this.points"] },
+  })
   public wins: number;
 
   @Field({ historical: { enabled: false } })
@@ -925,7 +926,9 @@ export class HypixelSays {
   @Field()
   public roundsWon: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.roundsWon", "this.points"] } })
+  @Field({
+    leaderboard: { additionalFields: ["this.roundsWon", "this.points"] },
+  })
   public wins: number;
 
   @Field({ historical: { enabled: false } })
@@ -944,10 +947,7 @@ export class HypixelSays {
     this.points = add(this.simonSays.points, this.santaSays.points);
     this.roundsWon = add(this.simonSays.roundsWon, this.santaSays.roundsWon);
     this.wins = add(this.simonSays.wins, this.santaSays.wins);
-    this.maxScore = Math.max(
-      this.simonSays.maxScore,
-      this.santaSays.maxScore
-    );
+    this.maxScore = Math.max(this.simonSays.maxScore, this.santaSays.maxScore);
   }
 }
 
@@ -989,13 +989,17 @@ export class MiniWalls {
 }
 
 export class PartyGames {
-  @Field({ leaderboard: { additionalFields: ["this.roundsWon", "this.starsEarned"] } })
+  @Field({
+    leaderboard: { additionalFields: ["this.roundsWon", "this.starsEarned"] },
+  })
   public wins: number;
 
   @Field({ leaderboard: { additionalFields: ["this.roundsWon", "this.wins"] } })
   public starsEarned: number;
 
-  @Field({ leaderboard: { additionalFields: ["this.starsEarned", "this.wins"] } })
+  @Field({
+    leaderboard: { additionalFields: ["this.starsEarned", "this.wins"] },
+  })
   public roundsWon: number;
 
   @Field()
@@ -1264,7 +1268,7 @@ export class Seasonal {
       this.easterSimulator.wins,
       this.grinchSimulator.wins,
       this.halloweenSimulator.wins,
-      this.scubaSimulator.wins
+      this.scubaSimulator.wins,
     );
   }
 }
@@ -1357,11 +1361,12 @@ export class ZombiesMap {
     this.overall.fastestWin = Math.min(
       this.normal.fastestWin || Number.MAX_SAFE_INTEGER,
       this.hard.fastestWin || Number.MAX_SAFE_INTEGER,
-      this.rip.fastestWin || Number.MAX_SAFE_INTEGER
+      this.rip.fastestWin || Number.MAX_SAFE_INTEGER,
     );
-    this.overall.fastestWin = this.overall.fastestWin === Number.MAX_SAFE_INTEGER ?
-      0 :
-      this.overall.fastestWin;
+    this.overall.fastestWin =
+      this.overall.fastestWin === Number.MAX_SAFE_INTEGER
+        ? 0
+        : this.overall.fastestWin;
   }
 }
 
@@ -1388,7 +1393,8 @@ export class Zombies {
 
     this.alienArcadium = new ZombiesMapDifficulty(data, "alienarcadium");
     // Alien Arcadium doesn't have different difficulties but fastest time is stored as "normal" difficulty
-    this.alienArcadium.fastestWin = (data[`fastest_time_30_zombies_alienarcadium_normal`] ?? 0) * 1000;
+    this.alienArcadium.fastestWin =
+      (data[`fastest_time_30_zombies_alienarcadium_normal`] ?? 0) * 1000;
 
     this.prison = new ZombiesMap(data, "prison");
   }
