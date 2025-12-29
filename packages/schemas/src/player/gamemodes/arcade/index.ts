@@ -10,6 +10,7 @@ import {
   BlockingDead,
   BountyHunters,
   CreeperAttack,
+  Disasters,
   DragonWars,
   Dropper,
   EnderSpleef,
@@ -37,6 +38,15 @@ export const ARCADE_MODES = new GameModes([
   { api: "blockingDead", hypixel: "DAYONE" },
   { api: "bountyHunters", hypixel: "ONEINTHEQUIVER" },
   { api: "creeperAttack", hypixel: "DEFENDER" },
+  {
+    api: "disasters",
+    hypixel: "DISASTERS",
+    submodes: [
+      { api: "overall" },
+      { api: "survivals" },
+      { api: "deaths" },
+    ],
+  },
   { api: "dragonWars", hypixel: "DRAGONWARS2" },
   {
     api: "dropper",
@@ -104,6 +114,9 @@ export class Arcade {
   public creeperAttack: CreeperAttack;
 
   @Field()
+  public disasters: Disasters;
+
+  @Field()
   public dragonWars: DragonWars;
 
   @Field()
@@ -158,6 +171,7 @@ export class Arcade {
     this.blockingDead = new BlockingDead(data);
     this.bountyHunters = new BountyHunters(data);
     this.creeperAttack = new CreeperAttack(data);
+    this.disasters = new Disasters(data?.disasters?.stats);
     this.dragonWars = new DragonWars(data, ap);
     this.dropper = new Dropper(data?.dropper);
     this.enderSpleef = new EnderSpleef(data);
@@ -178,6 +192,7 @@ export class Arcade {
     this.wins = add(
       this.blockingDead.wins,
       this.bountyHunters.wins,
+      this.disasters.wins,
       this.dragonWars.wins,
       this.dropper.wins,
       this.enderSpleef.wins,

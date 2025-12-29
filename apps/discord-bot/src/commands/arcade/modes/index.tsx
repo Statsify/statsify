@@ -9,6 +9,7 @@
 export * from "./blocking-dead.js";
 export * from "./bounty-hunters.js";
 export * from "./creeper-attack.js";
+export * from "./disasters.js";
 export * from "./dragon-wars.js";
 export * from "./dropper.js";
 export * from "./ender-spleef.js";
