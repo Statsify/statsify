@@ -35,6 +35,7 @@ export function ArcadePreview({ className }: { className?: string }) {
   const games: [string, number][] = [
     ["Blocking Dead", arcade.blockingDead.wins],
     ["Bounty Hunters", arcade.bountyHunters.wins],
+    ["Disasters", arcade.disasters.wins],
     ["Dragon Wars", arcade.dragonWars.wins],
     ["Dropper", arcade.dropper.wins],
     ["Ender Spleef", arcade.enderSpleef.wins],
@@ -55,8 +56,8 @@ export function ArcadePreview({ className }: { className?: string }) {
 
   games.sort((a, b) => b[1] - a[1]);
 
-  const rows = arrayGroup(games, 3);
-  const colors = ["text-mc-pink", "text-mc-aqua", "text-mc-green", "text-mc-yellow", "text-mc-gold", "text-mc-red"];
+  const rows = arrayGroup(games, 4);
+  const colors = ["text-mc-aqua", "text-mc-green", "text-mc-yellow", "text-mc-gold", "text-mc-red"];
 
   return (
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>

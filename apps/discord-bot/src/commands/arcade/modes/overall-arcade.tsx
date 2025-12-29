@@ -17,11 +17,10 @@ interface OverallArcadeTableProps {
 }
 
 export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
-  const rowSize = 3;
-
   const games: [string, number][] = [
     ["Blocking Dead", stats.blockingDead.wins],
     ["Bounty Hunters", stats.bountyHunters.wins],
+    ["Disasters", stats.disasters.wins],
     ["Dragon Wars", stats.dragonWars.wins],
     ["Dropper", stats.dropper.wins],
     ["Ender Spleef", stats.enderSpleef.wins],
@@ -42,16 +41,20 @@ export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
 
   games.sort((a, b) => b[1] - a[1]);
 
-  const rows = arrayGroup(games, rowSize);
+  const rows = arrayGroup(games, 4);
 
-  const colors = ["§d", "§b", "§a", "§e", "§6", "§c"];
+  const colors = ["§b", "§a", "§e", "§6", "§c"];
 
   return (
     <Table.table>
       {rows.map((row, index) => (
         <Table.tr>
-          {row.map((game) => (
-            <Table.td title={game[0]} value={t(game[1])} color={colors[index]} />
+          {row.map(([game, wins]) => (
+            <Table.td
+              title={game}
+              value={t(wins)}
+              color={colors[index]}
+            />
           ))}
         </Table.tr>
       ))}

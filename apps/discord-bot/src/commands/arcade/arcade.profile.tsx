@@ -11,6 +11,7 @@ import {
   BlockingDeadTable,
   BountyHuntersTable,
   CreeperAttackTable,
+  DisastersTable,
   DragonWarsTable,
   DropperTable,
   EnderSpleefTable,
@@ -70,6 +71,10 @@ export const ArcadeProfile = ({
 
     case "creeperAttack":
       table = <CreeperAttackTable stats={arcade[api]} t={t} />;
+      break;
+
+    case "disasters":
+      table = <DisastersTable stats={arcade[api]} t={t} submode={mode.submode} />;
       break;
 
     case "dragonWars":
