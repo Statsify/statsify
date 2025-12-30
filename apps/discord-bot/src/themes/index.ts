@@ -26,9 +26,9 @@ export const getTheme = (user: User | null): Theme | undefined => {
 
   const renderer = getFontRenderer(font);
   const box = getBoxRenderer(boxes);
-  const colorPalette = User.isDiamond(user)
-    ? getColorPalette(palette)
-    : undefined;
+  const colorPalette = User.isDiamond(user) ?
+    getColorPalette(palette) :
+    undefined;
 
   return {
     context: { renderer },

@@ -47,7 +47,7 @@ export const resolveFill = (
   x: number,
   y: number,
   width: number,
-  height: number,
+  height: number
 ) => {
   if (typeof fill === "string" || typeof fill === "object") return fill;
   return fill(ctx, x, y, width, height);
@@ -94,7 +94,7 @@ export const renderOverlay = (
   ctx: CanvasRenderingContext2D,
   x: number,
   y: number,
-  height: number,
+  height: number
 ) => {
   ctx.globalCompositeOperation = "overlay";
   const overlay = ctx.createLinearGradient(x, y, x, y + height);
@@ -115,7 +115,7 @@ export const render: JSX.Render<BoxRenderProps> = (
     outline,
     outlineSize,
   },
-  { x, y, width, height, padding },
+  { x, y, width, height, padding }
 ) => {
   const fill = resolveFill(color, ctx, x, y, width, height);
   ctx.fillStyle = fill;
@@ -166,7 +166,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.lineTo(x + width + shadowDistance, y + shadowDistance + border.topRight);
   ctx.lineTo(
     x + width + shadowDistance,
-    y + height - border.bottomRight + shadowDistance,
+    y + height - border.bottomRight + shadowDistance
   );
   ctx.lineTo(x + width, y + height - border.bottomRight + shadowDistance);
   ctx.closePath();
@@ -176,15 +176,15 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.moveTo(x + border.bottomLeft + shadowDistance, y + height);
   ctx.lineTo(
     x + border.bottomLeft + shadowDistance,
-    y + height + shadowDistance,
+    y + height + shadowDistance
   );
   ctx.lineTo(
     x + width + shadowDistance - (border.bottomRight || shadowDistance),
-    y + height + shadowDistance,
+    y + height + shadowDistance
   );
   ctx.lineTo(
     x + width + shadowDistance - (border.bottomRight || shadowDistance),
-    y + height,
+    y + height
   );
   ctx.closePath();
   ctx.fill();
@@ -194,7 +194,7 @@ export const render: JSX.Render<BoxRenderProps> = (
       x + width - border.bottomRight,
       y + height - border.bottomRight,
       border.bottomRight,
-      border.bottomRight,
+      border.bottomRight
     );
 
   ctx.globalAlpha = 1;
