@@ -7,9 +7,9 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { BoxColorIds } from "../christmas/colors.js";
 import { Canvas, type CanvasRenderingContext2D } from "skia-canvas";
 import { Container } from "typedi";
+import { FontRenderer } from "#font";
 import { IntrinsicRenders, intrinsicRenders } from "./instrinsics.js";
 import { createInstructions } from "./create-instructions.js";
 import { getPositionalDelta, getTotalSize } from "./util.js";
@@ -144,12 +144,11 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
   const context: ComputedThemeContext = {
     renderer: noop(),
     ...theme?.context,
-    boxColorId: BoxColorIds[Math.floor(Math.random() * BoxColorIds.length)],
     canvasWidth: width,
     canvasHeight: height,
   };
 
-  if (!context.renderer) context.renderer = Container.get("FPackFontRenderer");
+  if (!context.renderer) context.renderer = Container.get(FontRenderer);
 
   _render(
     ctx,

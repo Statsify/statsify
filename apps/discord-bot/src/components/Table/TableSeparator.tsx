@@ -37,7 +37,7 @@ export const TableSeparator = ({ children, title }: TableSeparatorProps) => {
         bottomLeft: 0,
         bottomRight: 0,
       }}
-      padding={-2}
+      padding={0}
     >
       {title ?
         (
@@ -62,7 +62,7 @@ export const TableSeparator = ({ children, title }: TableSeparatorProps) => {
         bottomRight: border,
         bottomLeft: border,
       }}
-      padding={-4}
+      padding={0}
     />
   );
 

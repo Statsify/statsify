@@ -31,7 +31,7 @@ export const getTheme = (user: User | null): Theme | undefined => {
     undefined;
 
   return {
-    context: { renderer, boxColorId: undefined },
+    context: { renderer },
     elements: {
       box(ctx, props, location, theme) {
         if (colorPalette?.boxes?.color)
