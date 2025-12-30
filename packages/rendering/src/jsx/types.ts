@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type { BoxColorId } from "../christmas/colors.js";
 import type {
   CanvasGradient,
   CanvasPattern,
@@ -18,13 +17,11 @@ import type { IntrinsicElement, IntrinsicRenders } from "./instrinsics.js";
 
 export interface BaseThemeContext {
   renderer: FontRenderer;
-  boxColorId?: BoxColorId;
 }
 
 export interface ComputedThemeContext extends BaseThemeContext {
   canvasWidth: number;
   canvasHeight: number;
-  boxColorId: BoxColorId;
 }
 
 export interface Theme {
