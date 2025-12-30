@@ -41,11 +41,7 @@ export const ARCADE_MODES = new GameModes([
   {
     api: "disasters",
     hypixel: "DISASTERS",
-    submodes: [
-      { api: "overall" },
-      { api: "survivals" },
-      { api: "deaths" },
-    ],
+    submodes: [{ api: "overall" }, { api: "survivals" }, { api: "deaths" }],
   },
   { api: "dragonWars", hypixel: "DRAGONWARS2" },
   {
@@ -68,10 +64,7 @@ export const ARCADE_MODES = new GameModes([
   {
     api: "partyGames",
     hypixel: "PARTY",
-    submodes: [
-      { api: "overall" },
-      { api: "roundWins" },
-    ],
+    submodes: [{ api: "overall" }, { api: "roundWins" }],
   },
   { api: "pixelPainters", hypixel: "DRAW_THEIR_THING" },
   { api: "pixelParty", hypixel: "PIXEL_PARTY" },
@@ -88,7 +81,10 @@ export const ARCADE_MODES = new GameModes([
     ],
   },
 
-  { hypixel: "HIDE_AND_SEEK_PARTY_POOPER", formatted: "Hide and Seek Party Pooper" },
+  {
+    hypixel: "HIDE_AND_SEEK_PARTY_POOPER",
+    formatted: "Hide and Seek Party Pooper",
+  },
   { hypixel: "HIDE_AND_SEEK_PROP_HUNT", formatted: " Hide and Seek Prop Hunt" },
 ] as const);
 
@@ -171,7 +167,7 @@ export class Arcade {
     this.blockingDead = new BlockingDead(data);
     this.bountyHunters = new BountyHunters(data);
     this.creeperAttack = new CreeperAttack(data);
-    this.disasters = new Disasters(data?.disasters?.stats);
+    this.disasters = new Disasters(data?.disasters?.stats, ap);
     this.dragonWars = new DragonWars(data, ap);
     this.dropper = new Dropper(data?.dropper);
     this.enderSpleef = new EnderSpleef(data);
