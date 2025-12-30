@@ -424,7 +424,10 @@ export class Disasters {
   @Field({ leaderboard: { name: "" } })
   public deaths: DisastersDeaths;
 
-  public constructor(data: APIData = {}) {
+  @Field()
+  public powerups: number;
+
+  public constructor(data: APIData = {}, ap: APIData = {}) {
     this.gamesPlayed = data.games_played;
     this.wins = data.wins;
     this.losses = data.losses;
@@ -432,6 +435,7 @@ export class Disasters {
     this.playtime = (data.time_survived ?? 0) * 1000;
     this.survivals = new DisasterSurvivals(data.survived ?? {});
     this.deaths = new DisastersDeaths(data.deaths ?? {});
+    this.powerups = ap.arcade_disasters_prepared;
   }
 }
 

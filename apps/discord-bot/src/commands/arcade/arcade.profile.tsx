@@ -74,7 +74,10 @@ export const ArcadeProfile = ({
       break;
 
     case "disasters":
-      table = <DisastersTable stats={arcade[api]} t={t} submode={mode.submode} />;
+      sidebar.push([t("stats.powerups"), t(arcade.disasters.powerups), "§5"]);
+      table = (
+        <DisastersTable stats={arcade[api]} t={t} submode={mode.submode} />
+      );
       break;
 
     case "dragonWars":
@@ -82,7 +85,14 @@ export const ArcadeProfile = ({
       break;
 
     case "dropper":
-      table = <DropperTable stats={arcade[api]} t={t} time={time} submode={mode.submode} />;
+      table = (
+        <DropperTable
+          stats={arcade[api]}
+          t={t}
+          time={time}
+          submode={mode.submode}
+        />
+      );
       break;
 
     case "enderSpleef":
@@ -118,7 +128,14 @@ export const ArcadeProfile = ({
       break;
 
     case "partyGames":
-      table = <PartyGamesTable stats={arcade[api]} t={t} submode={mode.submode} time={time} />;
+      table = (
+        <PartyGamesTable
+          stats={arcade[api]}
+          t={t}
+          submode={mode.submode}
+          time={time}
+        />
+      );
       break;
 
     case "pixelPainters":
@@ -138,9 +155,19 @@ export const ArcadeProfile = ({
       break;
 
     case "zombies":
-      table = submode.api === "overall" ?
-        <ZombiesTable stats={arcade[api]} t={t} time={time} /> :
-        <ZombiesMapTable stats={arcade[api]} map={submode.api} t={t} time={time} />;
+      table =
+        submode.api === "overall" ?
+          (
+            <ZombiesTable stats={arcade[api]} t={t} time={time} />
+          ) :
+          (
+            <ZombiesMapTable
+              stats={arcade[api]}
+              map={submode.api}
+              t={t}
+              time={time}
+            />
+          );
       break;
 
     default:
