@@ -10,14 +10,14 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@sentry/node": "^7.118.0",
+    "@sentry/node": "^7.120.4",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
+    "@swc/helpers": "^0.5.18",
     "chalk": "5.6.0",
-    "luxon": "^3.5.0"
+    "luxon": "^3.7.2"
   },
   "devDependencies": {
-    "@nestjs/common": "^11.1.6",
-    "@types/luxon": "^3.4.2"
+    "@nestjs/common": "^11.1.12",
+    "@types/luxon": "^3.7.1"
   }
 }

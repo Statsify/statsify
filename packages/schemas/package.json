@@ -10,17 +10,17 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@nestjs/swagger": "^11.2.0",
+    "@nestjs/swagger": "^11.2.5",
     "@statsify/logger": "workspace:^",
     "@statsify/math": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
-    "@typegoose/typegoose": "^12.6.0",
-    "class-validator": "^0.14.1",
-    "luxon": "^3.5.0"
+    "@swc/helpers": "^0.5.18",
+    "@typegoose/typegoose": "^12.21.0",
+    "class-validator": "^0.14.3",
+    "luxon": "^3.7.2"
   },
   "devDependencies": {
-    "@types/luxon": "^3.4.2"
+    "@types/luxon": "^3.7.1"
   },
   "imports": {
     "#metadata": {
