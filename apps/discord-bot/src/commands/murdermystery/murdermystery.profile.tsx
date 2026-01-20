@@ -198,18 +198,18 @@ export const MurderMysteryProfile = ({
               <Table.td
                 title={t("stats.fastestMurdererWin")}
                 value={
-                  stats.fastestMurdererWin
-                    ? formatTime(stats.fastestMurdererWin)
-                    : "N/A"
+                  stats.fastestMurdererWin ?
+                    formatTime(stats.fastestMurdererWin) :
+                    "N/A"
                 }
                 color="§c"
               />
               <Table.td
                 title={t("stats.fastestDetectiveWin")}
                 value={
-                  stats.fastestDetectiveWin
-                    ? formatTime(stats.fastestDetectiveWin)
-                    : "N/A"
+                  stats.fastestDetectiveWin ?
+                    formatTime(stats.fastestDetectiveWin) :
+                    "N/A"
                 }
                 color="§b"
               />
@@ -324,7 +324,7 @@ export const MurderMysteryProfile = ({
     description.push(`§7${t("stats.progression.exp")}: §l§dPRESTIGED`);
   else
     description.push(
-      `§7${t("stats.progression.exp")}: ${knifePrestigeProgressBar(murdermystery.knife.progression.percent)} §e${murdermystery.knife.progression.current}§7/§d${murdermystery.knife.progression.max}`,
+      `§7${t("stats.progression.exp")}: ${knifePrestigeProgressBar(murdermystery.knife.progression.percent)} §e${murdermystery.knife.progression.current}§7/§d${murdermystery.knife.progression.max}`
     );
 
   return (
