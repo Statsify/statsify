@@ -43,7 +43,7 @@ importers:
         version: 24.3.0
       '@vitest/coverage-v8':
         specifier: ^3.0.4
-        version: 3.2.4(vitest@3.2.4(@types/node@24.3.0)(@vitest/ui@3.2.4)(jiti@2.6.1)(lightningcss@1.30.2))
+        version: 3.2.4(vitest@3.2.4)
       '@vitest/ui':
         specifier: ^3.0.4
         version: 3.2.4(vitest@3.2.4)
@@ -9050,7 +9050,7 @@ snapshots:
       next: 16.0.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react: 19.2.1
 
-  '@vitest/coverage-v8@3.2.4(vitest@3.2.4(@types/node@24.3.0)(@vitest/ui@3.2.4)(jiti@2.6.1)(lightningcss@1.30.2))':
+  '@vitest/coverage-v8@3.2.4(vitest@3.2.4)':
     dependencies:
       '@ampproject/remapping': 2.3.0
       '@bcoe/v8-coverage': 1.0.2

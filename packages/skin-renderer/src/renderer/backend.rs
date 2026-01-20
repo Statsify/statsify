@@ -32,7 +32,7 @@ pub trait Backend {
 
   fn create_config(&self) -> wgpu::SurfaceConfiguration;
 
-  fn get_output_texture(&self) -> OutputTexture;
+  fn get_output_texture(&self) -> OutputTexture<'_>;
 
   fn create_view(output_texture: &OutputTexture) -> wgpu::TextureView;
 

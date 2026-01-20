@@ -23,5 +23,7 @@ apps/support-bot/commands.json
 .pnpm-store/
 Cargo.lock
 /target
+/data
+compose.dev.yml
 *.node
 .env

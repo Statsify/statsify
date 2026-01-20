@@ -89,7 +89,7 @@ impl Backend for NativeBackend {
     }
   }
 
-  fn get_output_texture(&self) -> OutputTexture {
+  fn get_output_texture(&self) -> OutputTexture<'_> {
     &self.texture
   }
 
