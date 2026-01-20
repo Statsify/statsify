@@ -19,6 +19,15 @@ export class BaseMurderMysteryMode {
   public gamesPlayed: number;
 
   @Field()
+  public kills: number;
+
+  @Field()
+  public deaths: number;
+
+  @Field()
+  public kdr: number;
+
+  @Field()
   public bowKills: number;
 
   @Field()
@@ -32,20 +41,15 @@ export class BaseMurderMysteryMode {
     this.wins = data[`wins${mode}`];
     this.gamesPlayed = data[`games${mode}`];
 
+    this.kills = data[`kills${mode}`];
+    this.deaths = data[`deaths${mode}`];
+    this.kdr = ratio(this.kills, this.deaths);
+
     this.bowKills = data[`bow_kills${mode}`];
   }
 }
 
 export class StandardMurderMysteryMode extends BaseMurderMysteryMode {
-  @Field()
-  public kills: number;
-
-  @Field()
-  public deaths: number;
-
-  @Field()
-  public kdr: number;
-
   @Field()
   public trapKills: number;
 
@@ -70,10 +74,6 @@ export class StandardMurderMysteryMode extends BaseMurderMysteryMode {
   public constructor(data: APIData, mode: string) {
     super(data, mode);
     mode = mode ? `_${mode}` : mode;
-
-    this.kills = data[`kills${mode}`];
-    this.deaths = data[`deaths${mode}`];
-    this.kdr = ratio(this.kills, this.deaths);
 
     this.trapKills = data[`trap_kills${mode}`];
     this.thrownKnifeKills = data[`thrown_knife_kills${mode}`];
@@ -141,24 +141,13 @@ export class InfectionMurderMysteryMode extends BaseMurderMysteryMode {
 
     this.alphaWins = data.alpha_wins_MURDER_INFECTION;
     this.killsAsAlpha = data.kills_as_alpha_MURDER_INFECTION;
-
     this.killsAsSurvivor = data.kills_as_survivor_MURDER_INFECTION;
-
     this.killsAsInfected = data.kills_as_infected_MURDER_INFECTION;
     this.lastAliveGames = data.last_one_alive_MURDER_INFECTION;
   }
 }
 
 export class AssassinsMurderMysteryMode extends BaseMurderMysteryMode {
-  @Field()
-  public kills: number;
-
-  @Field()
-  public deaths: number;
-
-  @Field()
-  public kdr: number;
-
   @Field()
   public trapKills: number;
 
@@ -170,10 +159,6 @@ export class AssassinsMurderMysteryMode extends BaseMurderMysteryMode {
 
   public constructor(data: APIData, mode: string) {
     super(data, mode);
-
-    this.kills = data.kills_MURDER_ASSASSINS;
-    this.deaths = data.deaths_MURDER_ASSASSINS;
-    this.kdr = ratio(this.kills, this.deaths);
 
     this.trapKills = data.trap_kills_MURDER_ASSASSINS;
     this.thrownKnifeKills = data.thrown_knife_kills_MURDER_ASSASSINS;
@@ -251,13 +236,14 @@ export class MurderMysteryKnife {
     if (this.kind === "random_cosmetic") {
       let max: [string, number] | undefined = undefined;
 
-      const knifes = Object.entries(data?.knifeSkinPrestiges?.xp ?? {} as Record<string, number>) as [string, number][];
+      const knifes = Object.entries(
+        data?.knifeSkinPrestiges?.xp ?? ({} as Record<string, number>)
+      ) as [string, number][];
 
       for (const knife of knifes) {
         const value = knife[1];
 
-        if (max === undefined || value > max[1])
-          max = knife;
+        if (max === undefined || value > max[1]) max = knife;
       }
 
       this.kind = max?.[0] ?? "none";

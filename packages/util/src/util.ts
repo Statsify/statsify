@@ -14,10 +14,14 @@ export const noop = <T>() => null as unknown as T;
  * @param score The value to compare against
  * @returns The index of the element that meets the condition
  */
-export const findScoreIndex = <T extends { req: number }>(data: T[], score = 0): number =>
+export const findScoreIndex = <T extends { req: number }>(
+  data: T[],
+  score = 0
+): number =>
   data.findIndex(
     ({ req }, index, arr) =>
-      score >= req && ((arr[index + 1] && score < arr[index + 1].req) || !arr[index + 1])
+      score >= req &&
+      ((arr[index + 1] && score < arr[index + 1].req) || !arr[index + 1])
   );
 
 /**
@@ -96,7 +100,10 @@ export const prettify = (s: string): string => {
   // Convert snake_case to Title Case
   return s
     .replaceAll("_", " ")
-    .replace(/\w\S*/g, (t) => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
+    .replace(
+      /\w\S*/g,
+      (t) => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase()
+    );
 };
 
 export const removeFormatting = (s: string): string =>
@@ -104,9 +111,9 @@ export const removeFormatting = (s: string): string =>
 
 export interface FormatTimeOptions {
   /**
-  * Whether or not to use `s`, `m`, `h`, `d` or `seconds`, `minutes`, `hours`, `days`
-  * @default true
-  */
+   * Whether or not to use `s`, `m`, `h`, `d` or `seconds`, `minutes`, `hours`, `days`
+   * @default true
+   */
   short?: boolean;
 
   /**
@@ -168,14 +175,25 @@ export const formatTime = (
     .join(", ");
 };
 
-export const relativeTime = (time: number) => `${formatTime(Date.now() - time)} ago`;
+export const relativeTime = (time: number) =>
+  `${formatTime(Date.now() - time)} ago`;
 
-export const formatRaceTime = (timeMs: number) => `${(timeMs / 1000).toFixed(3)}s`;
+export const formatRaceTime = (timeMs: number) =>
+  `${(timeMs / 1000).toFixed(3)}s`;
 
-export const abbreviationNumber = (num: number): [num: number, suffix: string] => {
+export const abbreviationNumber = (
+  num: number,
+  decimals = 2
+): [num: number, suffix: string] => {
   const abbreviation = ["", "K", "M", "B", "T"];
   const base = Math.floor(num === 0 ? 0 : Math.log(num) / Math.log(1000));
-  return [+(num / Math.pow(1000, base)).toFixed(2), abbreviation[base]];
+  const shiftDecimal = 10 ** decimals;
+  return [
+    +(
+      Math.floor((num / Math.pow(1000, base)) * shiftDecimal) / shiftDecimal
+    ).toFixed(decimals),
+    abbreviation[base],
+  ];
 };
 
 export const ordinal = (n: number) => {
@@ -299,20 +317,27 @@ if (import.meta.vitest) {
       const hour = 60 * minute;
       const day = 24 * hour;
 
-      expect(formatTime(0, { short: false, entries: 4 })).toBe("0 milliseconds");
-      expect(formatTime(second, { short: false, entries: 4 })).toBe("1 second");
-      expect(formatTime(second + milliseconds, { short: false, entries: 4 })).toBe(
-        "1 second, 500 milliseconds"
+      expect(formatTime(0, { short: false, entries: 4 })).toBe(
+        "0 milliseconds"
       );
-      expect(formatTime(second * 2, { short: false, entries: 4 })).toBe("2 seconds");
+      expect(formatTime(second, { short: false, entries: 4 })).toBe("1 second");
+      expect(
+        formatTime(second + milliseconds, { short: false, entries: 4 })
+      ).toBe("1 second, 500 milliseconds");
+      expect(formatTime(second * 2, { short: false, entries: 4 })).toBe(
+        "2 seconds"
+      );
       expect(formatTime(minute, { short: false, entries: 4 })).toBe("1 minute");
       expect(formatTime(hour, { short: false, entries: 4 })).toBe("1 hour");
       expect(formatTime(day, { short: false, entries: 4 })).toBe("1 day");
-      expect(formatTime(day + hour + minute + second, { short: false, entries: 4 })).toBe(
-        "1 day, 1 hour, 1 minute, 1 second"
-      );
       expect(
-        formatTime((day + hour + minute + second) * 2, { short: false, entries: 4 })
+        formatTime(day + hour + minute + second, { short: false, entries: 4 })
+      ).toBe("1 day, 1 hour, 1 minute, 1 second");
+      expect(
+        formatTime((day + hour + minute + second) * 2, {
+          short: false,
+          entries: 4,
+        })
       ).toBe("2 days, 2 hours, 2 minutes, 2 seconds");
 
       expect(formatTime(0, { short: true, entries: 4 })).toBe("0ms");
@@ -321,14 +346,20 @@ if (import.meta.vitest) {
       expect(formatTime(minute, { short: true, entries: 4 })).toBe("1m");
       expect(formatTime(hour, { short: true, entries: 4 })).toBe("1h");
       expect(formatTime(day, { short: true, entries: 4 })).toBe("1d");
-      expect(formatTime(day + hour + minute + second, { short: true, entries: 4 })).toBe(
-        "1d, 1h, 1m, 1s"
-      );
       expect(
-        formatTime((day + hour + minute + second) * 2, { short: true, entries: 4 })
+        formatTime(day + hour + minute + second, { short: true, entries: 4 })
+      ).toBe("1d, 1h, 1m, 1s");
+      expect(
+        formatTime((day + hour + minute + second) * 2, {
+          short: true,
+          entries: 4,
+        })
       ).toBe("2d, 2h, 2m, 2s");
       expect(
-        formatTime((day + hour + minute + second) * 2, { short: true, entries: 2 })
+        formatTime((day + hour + minute + second) * 2, {
+          short: true,
+          entries: 2,
+        })
       ).toBe("2d, 2h");
     });
   });

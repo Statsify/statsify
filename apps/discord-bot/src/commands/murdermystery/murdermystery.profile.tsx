@@ -6,8 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, Historical, SidebarItem, Table } from "#components";
-import { FormattedGame, type GameMode, MurderMysteryModes } from "@statsify/schemas";
+import {
+  Container,
+  Footer,
+  Header,
+  Historical,
+  SidebarItem,
+  Table,
+} from "#components";
+import {
+  FormattedGame,
+  type GameMode,
+  MurderMysteryModes,
+} from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
@@ -43,7 +54,11 @@ export const MurderMysteryProfile = ({
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+            <Table.td
+              title={t("stats.wins")}
+              value={t(stats.wins)}
+              color="§a"
+            />
             <Table.td
               title={t("stats.murdererWins")}
               value={t(stats.murdererWins)}
@@ -54,11 +69,23 @@ export const MurderMysteryProfile = ({
               value={t(stats.detectiveWins)}
               color="§b"
             />
-            <Table.td title={t("stats.heroWins")} value={t(stats.heroWins)} color="§e" />
+            <Table.td
+              title={t("stats.heroWins")}
+              value={t(stats.heroWins)}
+              color="§e"
+            />
           </Table.tr>
           <Table.tr>
-            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+            <Table.td
+              title={t("stats.kills")}
+              value={t(stats.kills)}
+              color="§a"
+            />
+            <Table.td
+              title={t("stats.deaths")}
+              value={t(stats.deaths)}
+              color="§c"
+            />
             <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
             <Table.td
               title={t("stats.killsAsMurderer")}
@@ -77,9 +104,21 @@ export const MurderMysteryProfile = ({
               value={t(stats.trapKills)}
               color="§c"
             />
-            <Table.td title={t("stats.heroKills")} value={t(stats.heroKills)} color="§e" />
-            <Table.td title={t("stats.bowKills")} value={t(stats.bowKills)} color="§6" />
-            <Table.td title={t("stats.suicides")} value={t(stats.suicides)} color="§4" />
+            <Table.td
+              title={t("stats.heroKills")}
+              value={t(stats.heroKills)}
+              color="§e"
+            />
+            <Table.td
+              title={t("stats.bowKills")}
+              value={t(stats.bowKills)}
+              color="§6"
+            />
+            <Table.td
+              title={t("stats.suicides")}
+              value={t(stats.suicides)}
+              color="§4"
+            />
           </Table.tr>
         </Table.table>
       );
@@ -93,7 +132,11 @@ export const MurderMysteryProfile = ({
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+            <Table.td
+              title={t("stats.wins")}
+              value={t(stats.wins)}
+              color="§a"
+            />
             <Table.td
               title={t("stats.murdererWins")}
               value={t(stats.murdererWins)}
@@ -106,8 +149,16 @@ export const MurderMysteryProfile = ({
             />
           </Table.tr>
           <Table.tr>
-            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+            <Table.td
+              title={t("stats.kills")}
+              value={t(stats.kills)}
+              color="§a"
+            />
+            <Table.td
+              title={t("stats.deaths")}
+              value={t(stats.deaths)}
+              color="§c"
+            />
             <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
             <Table.td
               title={t("stats.killsAsMurderer")}
@@ -126,16 +177,30 @@ export const MurderMysteryProfile = ({
               value={t(stats.trapKills)}
               color="§c"
             />
-            <Table.td title={t("stats.heroKills")} value={t(stats.heroKills)} color="§e" />
-            <Table.td title={t("stats.bowKills")} value={t(stats.bowKills)} color="§6" />
-            <Table.td title={t("stats.suicides")} value={t(stats.suicides)} color="§4" />
+            <Table.td
+              title={t("stats.heroKills")}
+              value={t(stats.heroKills)}
+              color="§e"
+            />
+            <Table.td
+              title={t("stats.bowKills")}
+              value={t(stats.bowKills)}
+              color="§6"
+            />
+            <Table.td
+              title={t("stats.suicides")}
+              value={t(stats.suicides)}
+              color="§4"
+            />
           </Table.tr>
           <Historical.exclude time={time}>
             <Table.tr>
               <Table.td
                 title={t("stats.fastestMurdererWin")}
                 value={
-                  stats.fastestMurdererWin ? formatTime(stats.fastestMurdererWin) : "N/A"
+                  stats.fastestMurdererWin ?
+                    formatTime(stats.fastestMurdererWin) :
+                    "N/A"
                 }
                 color="§c"
               />
@@ -161,9 +226,21 @@ export const MurderMysteryProfile = ({
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§e" />
-            <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-            <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
+            <Table.td
+              title={t("stats.wins")}
+              value={t(stats.wins)}
+              color="§e"
+            />
+            <Table.td
+              title={t("stats.kills")}
+              value={t(stats.kills)}
+              color="§a"
+            />
+            <Table.td
+              title={t("stats.deaths")}
+              value={t(stats.deaths)}
+              color="§c"
+            />
             <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
           </Table.tr>
           <Table.tr>
@@ -177,7 +254,11 @@ export const MurderMysteryProfile = ({
               value={t(stats.trapKills)}
               color="§c"
             />
-            <Table.td title={t("stats.bowKills")} value={t(stats.bowKills)} color="§6" />
+            <Table.td
+              title={t("stats.bowKills")}
+              value={t(stats.bowKills)}
+              color="§6"
+            />
           </Table.tr>
         </Table.table>
       );
@@ -190,7 +271,11 @@ export const MurderMysteryProfile = ({
       table = (
         <Table.table>
           <Table.tr>
-            <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
+            <Table.td
+              title={t("stats.wins")}
+              value={t(stats.wins)}
+              color="§a"
+            />
             <Historical.exclude time={time}>
               <Table.td
                 title={t("stats.lastAliveGames")}
@@ -212,7 +297,11 @@ export const MurderMysteryProfile = ({
             />
           </Table.tr>
           <Table.tr>
-            <Table.td title={t("stats.alphaWins")} value={t(stats.alphaWins)} color="§c" />
+            <Table.td
+              title={t("stats.alphaWins")}
+              value={t(stats.alphaWins)}
+              color="§c"
+            />
             <Table.td
               title={t("stats.killsAsAlpha")}
               value={t(stats.killsAsAlpha)}
@@ -226,15 +315,17 @@ export const MurderMysteryProfile = ({
     }
   }
 
-  const description = [];
-
-  if (murdermystery.emblemFormatted) description.push(`§7${t("stats.emblem")}: ${murdermystery.emblemFormatted}`);
-  description.push(`§7${t("stats.knife")}: §a${murdermystery.knife.name}`);
+  const description = [
+    `§7${t("stats.prefix")}: ${murdermystery.prefix}`,
+    `§7${t("stats.knife")}: §a${murdermystery.knife.name}`,
+  ];
 
   if (murdermystery.knife.progression.percent >= 1)
     description.push(`§7${t("stats.progression.exp")}: §l§dPRESTIGED`);
   else
-    description.push(`§7${t("stats.progression.exp")}: ${knifePrestigeProgressBar(murdermystery.knife.progression.percent)} §e${murdermystery.knife.progression.current}§7/§d${murdermystery.knife.progression.max}`);
+    description.push(
+      `§7${t("stats.progression.exp")}: ${knifePrestigeProgressBar(murdermystery.knife.progression.percent)} §e${murdermystery.knife.progression.current}§7/§d${murdermystery.knife.progression.max}`
+    );
 
   return (
     <Container background={background}>

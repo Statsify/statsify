@@ -273,7 +273,7 @@ impl<T: Backend> SkinRenderer<T> {
     })
   }
 
-  fn render_sync(&self, model: &Model) -> (wgpu::CommandEncoder, OutputTexture) {
+  fn render_sync(&self, model: &Model) -> (wgpu::CommandEncoder, OutputTexture<'_>) {
     let device = self.backend.device();
     let output_texture = self.backend.get_output_texture();
     let view = T::create_view(&output_texture);

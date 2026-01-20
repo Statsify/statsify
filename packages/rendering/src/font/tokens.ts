@@ -24,7 +24,7 @@ export interface Token {
   effect: (
     part: string,
     matches: RegExpMatchArray,
-    defaultState: Omit<TextNode, "text">
+    defaultState: Omit<TextNode, "text">,
   ) => Partial<TextNode>;
 }
 
@@ -70,8 +70,6 @@ const color: Token = {
   regex: colorRegex,
   effect: (part) => ({
     color: part.startsWith("#") ? part.slice(0, 7) : textColors[part[0]],
-    strikethrough: false,
-    underline: false,
   }),
 };
 
