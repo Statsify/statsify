@@ -12,7 +12,7 @@
   "dependencies": {
     "@nestjs/common": "^11.1.6",
     "@nestjs/swagger": "^11.2.0",
-    "@sentry/node": "^7.118.0",
+    "@sentry/node": "^10.37.0",
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
