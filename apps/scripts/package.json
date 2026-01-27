@@ -33,6 +33,6 @@
   },
   "devDependencies": {
     "@types/inquirer": "^9.0.7",
-    "globals": "^16.3.0"
+    "globals": "^17.2.0"
   }
 }
