@@ -10,24 +10,24 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@sentry/node": "^7.118.0",
+    "@sentry/node": "^7.120.4",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
-    "axios": "^1.11.0",
-    "discord-api-types": "^0.38.22",
+    "@swc/helpers": "^0.5.18",
+    "axios": "^1.13.4",
+    "discord-api-types": "^0.38.37",
     "i18next": "^21.10.0",
-    "i18next-fs-backend": "^2.3.2",
+    "i18next-fs-backend": "^2.6.1",
     "reflect-metadata": "^0.2.2",
     "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@types/i18next-fs-backend": "^1.1.5"
+    "@types/i18next-fs-backend": "^1.2.0"
   },
   "imports": {
     "#arguments": {
