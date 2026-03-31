@@ -68,13 +68,13 @@ export class BingoCasualEasy2026 {
     this.ifYouGiveAHouseACookie = data.Housingcookie;
     this.beginnerEggHunter = data.Arcadebeginneregghunter;
     this.seasonalStar = data.Arcadeseasonalstar;
-    this.oneWithTheFish = data. //FILL
+    this.oneWithTheFish = data.Maincatchfish;
     this.shoppingRun = data.Arcadeshoppingrun;
     this.goldenSun = data.Murdergoldensun;
     this.readyOrNot = data.Murderreadyornot;
     this.creepShow = data.Arcadecreepshow;
     this.theThing = data.Bbthething;
-    this.homeRun = data.Arcademanywinseasy; // confirm
+    this.homeRun = data.Arcademanywinseasy;
   }
 }
 
@@ -130,7 +130,7 @@ export class BingoPvPEasy2026 {
   public constructor(data: APIData = {}) {
     this.elfish = data.Skywarsholidayrefill
     this.spleefVictor = data.Duelsspleefvictor;
-    this.willItHatch = data. //FILL
+    this.willItHatch = data.Bedwarswillithatch;
     this.bloodhound = data.Skywarsbloodhound;
     this.quakeVictor = data.Duelsquakevictor;
     this.eatThis = data.Bedwarseatthis
@@ -267,21 +267,21 @@ export class BingoCasualHard2026 {
 
   public constructor(data: APIData = {}) {
     this.deathDestructionDragons = data. //FILL
-    this.thePurger = data. //FILL
+    this.thePurger = data.Arcadepurger;
     this.scaryGood = data.Bbscarygood;
     this.lifeOfTheParty = data.Arcadepartystarswin;
     this.warmingUp = data.Arcadedropperwarmingup;
     this.undisputedMasterpiece = data. //FILL
-    this.caughtInTheAct = data. //FILL
+    this.caughtInTheAct = data.Murderkillmurdermultiple;
     this.noHelpNeeded = data. //FILL
-    this.bloodthirsty = data. //FILL
-    this.heresSteve = data. //FILL
+    this.bloodthirsty = data.Murderstreak;
+    this.heresSteve = data.Arcadesteve;
     this.shiny = data. //FILL
-    this.fastAndAccurate = data. //FILL
+    this.fastAndAccurate = data.Bbspeedfirst; // confirm
     this.bossBuilder = data.Buildbattlebossbuilder;
-    this.vengeance = data. //FILL
+    this.vengeance = data.Murdervengeance
     this.survivorStreak = data.Arcadesurvivorstreak;
-    this.moonlitEscape = data. //FILL
+    this.moonlitEscape = data.Arcademoonlitescape;
   }
 }
 
@@ -335,22 +335,22 @@ export class BingoPvPHard2026 {
   public expensiveSlaying: number;
 
   public constructor(data: APIData = {}) {
-    this.sneaky = data. //FILL
+    this.sneaky = data.Bedwarsinvisibility;
     this.unmoving = data.Woolunmoving;
-    this.technicolorMurder = data. //FILL
+    this.technicolorMurder = data.Wooltechnicolor;
     this.cabinetOfSouls = data.Skywarscabinetofsouls;
     this.cleanSheet = data.Duelsbridgeflawless;
-    this.childsPlay = data. //FILL
-    this.anOffering = data. //FILL
+    this.childsPlay = data.Bedwarschildsplay;
+    this.anOffering = data.Swoffering;
     this.giveThatBack = data.Woolctwcarrier;
     this.prizefighter = data.Duelsprizefighter;
-    this.betterNerfThis = data. //FILL
-    this.immortal = data. //FILL
+    this.betterNerfThis = data.Skywarschallenge;
+    this.immortal = data.Bedwarsflawless;
     this.barbarian = data.Woolbarbarian;
     this.betterWithBuds = data.Skywarsbetterwithbuds;
     this.renaissanceKiller = data.Duelshardkillsacrossmodes;
     this.headInTheClouds = data.Duelsheadintheclouds;
-    this.expensiveSlaying = data. //FILL
+    this.expensiveSlaying = data.Bedwarsdiamondsword;
   }
 }
 
