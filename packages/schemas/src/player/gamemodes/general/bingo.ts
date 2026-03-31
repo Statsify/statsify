@@ -9,451 +9,452 @@
 import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
 
-export class BingoCasualEasy2025 {
+export class BingoCasualEasy2026 {
   @Field({ leaderboard: { enabled: false } })
-  public goldenSun: number;
+  public iSurvivedAnniversaryBingo: number;
 
   @Field({ leaderboard: { enabled: false } })
-  public robinHood: number;
+  public theEvilDead: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public festiveSpirit: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public goal: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public nailedIt: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public readyAim: number;
 
   @Field({ leaderboard: { enabled: false } })
   public ifYouGiveAHouseACookie: number;
 
   @Field({ leaderboard: { enabled: false } })
-  public fallinPastTheFall: number;
+  public beginnerEggHunter: number;
 
   @Field({ leaderboard: { enabled: false } })
-  public homeRun: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public podiumPosition: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public intermediateEggHunter: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public doomsdayPrep: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public iSurvivedAnniversaryBingo: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public aintNoTNTTag: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public intoTheLabyrinth: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public notQuiteADeadEnd: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public aPerfectMedium: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public theThing: number;
+  public seasonalStar: number;
 
   @Field({ leaderboard: { enabled: false } })
   public oneWithTheFish: number;
 
   @Field({ leaderboard: { enabled: false } })
-  public festiveSpirit: number;
+  public shoppingRun: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public goldenSun: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public readyOrNot: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public creepShow: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public theThing: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public homeRun: number;
 
   public constructor(data: APIData = {}) {
-    this.goldenSun = data.Murdergoldensun;
-    this.robinHood = data.Murderbowkill;
-    this.ifYouGiveAHouseACookie = data.Housingcookie;
-    this.fallinPastTheFall = data.Arcadedropperfallinpast;
-    this.homeRun = data.Arcademanywinseasy;
-    this.podiumPosition = data.Arcadetop3round;
-    this.intermediateEggHunter = data.Arcadeintermediateegghunter;
-    this.doomsdayPrep = data.Murdersurvivorwin;
     this.iSurvivedAnniversaryBingo = data.Disasterssurvive;
-    this.aintNoTNTTag = data.Disasterspotato;
-    this.intoTheLabyrinth = data.Arcadeintothelabyrinth;
-    this.notQuiteADeadEnd = data.Arcadezombiesdoor;
-    this.aPerfectMedium = data.Bbspeedmedium;
+    this.theEvilDead = data.Arcadeevildead;
+    this.festiveSpirit = data. //FILL
+    this.goal = data.Arcadefootballgoal;
+    this.nailedIt = data.Bbguess;
+    this.readyAim = data.Murderbowgold;
+    this.ifYouGiveAHouseACookie = data.Housingcookie;
+    this.beginnerEggHunter = data.Arcadebeginneregghunter;
+    this.seasonalStar = data.Arcadeseasonalstar;
+    this.oneWithTheFish = data. //FILL
+    this.shoppingRun = data.Arcadeshoppingrun;
+    this.goldenSun = data.Murdergoldensun;
+    this.readyOrNot = data.Murderreadyornot;
+    this.creepShow = data.Arcadecreepshow;
     this.theThing = data.Bbthething;
-    this.oneWithTheFish = data.Maincatchfish;
-    this.festiveSpirit = data.Bbvote;
+    this.homeRun = data.Arcademanywinseasy; // confirm
   }
 }
 
-export class BingoPvPEasy2025 {
+export class BingoPvPEasy2026 {
+  @Field({ leaderboard: { enabled: false } })
+  public elfish: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public spleefVictor: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public willItHatch: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public bloodhound: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public quakeVictor: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public eatThis: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public suitUp: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public feelingLight: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public brightAndEarly: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public bloodHealing: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public aLongWayDown: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public shiny: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public flowingDefense: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public eggstraterrestrial: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public areaSecured: number;
+  
   @Field({ leaderboard: { enabled: false } })
   public treasureHunter: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public multifacetedKiller: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public sumoVictor: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public aLongWayDown: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public ironWall: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public swiftOfFoot: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public classicVictor: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public funWithFriends: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public suitUp: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public woolThatKills: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public crushingVictory: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public bedDestroyer: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public greenEyedMonster: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public littleShopOfTraps: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public infestation: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public andStayDown: number;
-
   public constructor(data: APIData = {}) {
-    this.treasureHunter = data.Skywarsopenchests;
-    this.multifacetedKiller = data.Duelseasykillsacrossmodes;
-    this.sumoVictor = data.Duelssumowin;
-    this.aLongWayDown = data.Skywarsvoidkill;
-    this.ironWall = data.Skywarsironarmor;
-    this.swiftOfFoot = data.Duelsparkour3rd;
-    this.classicVictor = data.Duelsclassicwin;
-    this.funWithFriends = data.Skywarsfunwithfriends;
+    this.elfish = data.Skywarsholidayrefill
+    this.spleefVictor = data.Duelsspleefvictor;
+    this.willItHatch = data. //FILL
+    this.bloodhound = data.Skywarsbloodhound;
+    this.quakeVictor = data.Duelsquakevictor;
+    this.eatThis = data.Bedwarseatthis
     this.suitUp = data.Woolctwkit;
-    this.woolThatKills = data.Woolsheepexplosion;
-    this.crushingVictory = data.Wwflawless;
-    this.bedDestroyer = data.Bedwarsnorest;
-    this.greenEyedMonster = data.Bedwarsemerald;
-    this.littleShopOfTraps = data.Bedwarsshopoftraps;
-    this.infestation = data.Bedwarsbedbug;
-    this.andStayDown = data.Bedwarsstaydead;
+    this.feelingLight = data.Duelsboost;
+    this.brightAndEarly = data.Skywarsbrightandearly
+    this.bloodHealing = data.Woolbloodhealing
+    this.aLongWayDown = data.Skywarsvoidkill
+    this.shiny = data.Bedwarsdiamond;
+    this.flowingDefense = data.Bedwarsflowingdefense
+    this.eggstraterrestrial = data.Duelsfarmerkit;
+    this.areaSecured = data.Wwplacewool;
+    this.treasureHunter = data.Skywarsopenchests;
   }
 }
 
-export class BingoClassicEasy2025 {
+export class BingoClassicEasy2026 {
   @Field({ leaderboard: { enabled: false } })
-  public bloodthirsty: number;
-
+  public countingDown: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public breakNeckSpeed: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public itFollows: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public prepTime: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public poweringUp: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public braiiiins: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public explosiveEnding: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public freeFood: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public nowhereToHide: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public leafMeAlone: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public hotSpell: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public mutant: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public forTheTeam: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public witheringHeights: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public youreIt: number;
+  
   @Field({ leaderboard: { enabled: false } })
   public tooStronk: number;
 
-  @Field({ leaderboard: { enabled: false } })
-  public sunnyDelight: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public luckyLooter: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public revelingInTheSun: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public amateurWizard: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public notEnoughToGoAround: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public defusalVictor: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public ninjaVanish: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public quenchy: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public shutdown: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public slowingThemDown: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public witheringHeights: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public handOfTheKing: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public longNight: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public threeTimesTheFun: number;
-
   public constructor(data: APIData = {}) {
-    this.bloodthirsty = data.Smashbloodthirsty;
-    this.tooStronk = data.Smashthrowoff;
-    this.sunnyDelight = data.Quakesunnydelight;
-    this.luckyLooter = data.Tkrluckylooter;
-    this.revelingInTheSun = data.Tntrevelingsun;
-    this.amateurWizard = data.Wizardscapture;
-    this.notEnoughToGoAround = data.Tntnotenough;
-    this.defusalVictor = data.Cvcdefusalwin;
-    this.ninjaVanish = data.Cvctrickortreat;
-    this.quenchy = data.Blitzquenchy;
-    this.shutdown = data.Blitzshutdown;
-    this.slowingThemDown = data.Warlordsdamageflag;
+    this.countingDown = data.Blitzcountingdown;
+    this.breakNeckSpeed = data. //FILL
+    this.itFollows = data.Tkritfollows;
+    this.prepTime = data.Vampzprep;
+    this.poweringUp = data.Pbpowerup;
+    this.braiiiins = data.Cvcbrains;
+    this.explosiveEnding = data.Cvcthrowprojectile;
+    this.freeFood = data.Megawallsskywarsfreefood;
+    this.nowhereToHide = data.Smashnowheretohide;
+    this.leafMeAlone = data.Tntleafmealone;
+    this.hotSpell = data.Warlordshotspell;
+    this.mutant = data.Tntmutant;
+    this.forTheTeam = data.Warlordsfortheteam;
     this.witheringHeights = data.Megawallswitheringheights;
-    this.handOfTheKing = data.Megawallsdefense;
-    this.longNight = data.Vampzlongnight;
-    this.threeTimesTheFun = data.Paintballthreetimes;
+    this.youreIt = data.Tnttagplayer;
+    this.tooStronk = data.Smashthrowoff;
   }
 }
 
-export class BingoCasualHard2025 {
+export class BingoCasualHard2026 {
   @Field({ leaderboard: { enabled: false } })
-  public fastANDAccurate: number;
-
+  public deathDestructionDragons: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public thePurger: number;
+  
   @Field({ leaderboard: { enabled: false } })
   public scaryGood: number;
-
+  
   @Field({ leaderboard: { enabled: false } })
-  public lightningFast: number;
-
+  public lifeOfTheParty: number;
+  
   @Field({ leaderboard: { enabled: false } })
-  public freakyFalling: number;
-
+  public warmingUp: number;
+  
   @Field({ leaderboard: { enabled: false } })
-  public masterEggHunter: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public grandSlam: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public springParty: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public vacationFunds: number;
-
+  public undisputedMasterpiece: number;
+  
   @Field({ leaderboard: { enabled: false } })
   public caughtInTheAct: number;
-
+  
   @Field({ leaderboard: { enabled: false } })
-  public canTCatchMe: number;
-
+  public noHelpNeeded: number;
+  
   @Field({ leaderboard: { enabled: false } })
-  public infectiousFun: number;
-
+  public bloodthirsty: number;
+  
   @Field({ leaderboard: { enabled: false } })
-  public untouchable2: number;
-
+  public heresSteve: number;
+  
   @Field({ leaderboard: { enabled: false } })
-  public untouchable1: number;
-
+  public shiny: number;
+  
   @Field({ leaderboard: { enabled: false } })
-  public junkHoarder: number;
-
+  public fastAndAccurate: number;
+  
   @Field({ leaderboard: { enabled: false } })
-  public safeAndSound: number;
-
+  public bossBuilder: number;
+  
   @Field({ leaderboard: { enabled: false } })
-  public slayinThroughTheEnd: number;
+  public vengeance: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public survivorStreak: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public moonlitEscape: number;
 
   public constructor(data: APIData = {}) {
-    this.fastANDAccurate = data.Bbspeedfirst;
+    this.deathDestructionDragons = data. //FILL
+    this.thePurger = data. //FILL
     this.scaryGood = data.Bbscarygood;
-    this.lightningFast = data.Bbfastguess;
-    this.freakyFalling = data.Arcadefreakyfalling;
-    this.masterEggHunter = data.Arcademasteregghunter;
-    this.grandSlam = data.Arcademanywins;
-    this.springParty = data.Arcadespringparty;
-    this.vacationFunds = data.Murdercollectgoldmultigame;
-    this.caughtInTheAct = data.Murdercaughtintheact;
-    this.canTCatchMe = data.Murdercantcatchme;
-    this.infectiousFun = data.Murderinfectionstreak;
-    this.untouchable2 = data.Disasterssurvivehard;
-    this.untouchable1 = data.Disastersfullhealth;
-    this.junkHoarder = data.Maincatchjunk;
-    this.safeAndSound = data.Arcadezombies25;
-    this.slayinThroughTheEnd = data.Arcadezombiesprison;
+    this.lifeOfTheParty = data.Arcadepartystarswin;
+    this.warmingUp = data.Arcadedropperwarmingup;
+    this.undisputedMasterpiece = data. //FILL
+    this.caughtInTheAct = data. //FILL
+    this.noHelpNeeded = data. //FILL
+    this.bloodthirsty = data. //FILL
+    this.heresSteve = data. //FILL
+    this.shiny = data. //FILL
+    this.fastAndAccurate = data. //FILL
+    this.bossBuilder = data.Buildbattlebossbuilder;
+    this.vengeance = data. //FILL
+    this.survivorStreak = data.Arcadesurvivorstreak;
+    this.moonlitEscape = data. //FILL
   }
 }
 
-export class BingoPvPHard2025 {
+export class BingoPvPHard2026 {
   @Field({ leaderboard: { enabled: false } })
-  public cabinetOfSouls: number;
-
+  public sneaky: number;
+  
   @Field({ leaderboard: { enabled: false } })
-  public anOffering: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public betterNerfThis: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public funInTheSun: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public renaissanceKiller: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public hardcoreChampion: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public cleanSheet: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public headInTheClouds: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public giveThatBack: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public notAChance: number;
-
+  public unmoving: number;
+  
   @Field({ leaderboard: { enabled: false } })
   public technicolorMurder: number;
-
+  
+  @Field({ leaderboard: { enabled: false } })
+  public cabinetOfSouls: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public cleanSheet: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public childsPlay: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public anOffering: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public giveThatBack: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public prizefighter: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public betterNerfThis: number;
+  
   @Field({ leaderboard: { enabled: false } })
   public immortal: number;
-
+  
   @Field({ leaderboard: { enabled: false } })
-  public partySOver: number;
-
+  public barbarian: number;
+  
   @Field({ leaderboard: { enabled: false } })
-  public oneForAll: number;
-
+  public betterWithBuds: number;
+  
   @Field({ leaderboard: { enabled: false } })
-  public cantStopTheCelebrations: number;
-
+  public renaissanceKiller: number;
+  
   @Field({ leaderboard: { enabled: false } })
-  public finalDestination: number;
+  public headInTheClouds: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public expensiveSlaying: number;
 
   public constructor(data: APIData = {}) {
+    this.sneaky = data. //FILL
+    this.unmoving = data.Woolunmoving;
+    this.technicolorMurder = data. //FILL
     this.cabinetOfSouls = data.Skywarscabinetofsouls;
-    this.anOffering = data.Swoffering;
-    this.betterNerfThis = data.Skywarschallenge;
-    this.funInTheSun = data.Skywarsfunsun;
-    this.renaissanceKiller = data.Duelshardkillsacrossmodes;
-    this.hardcoreChampion = data.Duelsuhcwins;
     this.cleanSheet = data.Duelsbridgeflawless;
-    this.headInTheClouds = data.Duelsheadintheclouds;
+    this.childsPlay = data. //FILL
+    this.anOffering = data. //FILL
     this.giveThatBack = data.Woolctwcarrier;
-    this.notAChance = data.Wwnoenemywool;
-    this.technicolorMurder = data.Wooltechnicolor;
-    this.immortal = data.Bedwarsflawless;
-    this.partySOver = data.Bedwarspartysover;
-    this.oneForAll = data.Bedwarsoneforall;
-    this.cantStopTheCelebrations = data.Bedwarscelebrations;
-    this.finalDestination = data.Bedwarsfinaldestination;
+    this.prizefighter = data.Duelsprizefighter;
+    this.betterNerfThis = data. //FILL
+    this.immortal = data. //FILL
+    this.barbarian = data.Woolbarbarian;
+    this.betterWithBuds = data.Skywarsbetterwithbuds;
+    this.renaissanceKiller = data.Duelshardkillsacrossmodes;
+    this.headInTheClouds = data.Duelsheadintheclouds;
+    this.expensiveSlaying = data. //FILL
   }
 }
 
-export class BingoClassicHard2025 {
-  @Field({ leaderboard: { enabled: false } })
-  public unlimitedPower: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public fromRichesToRags: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public deadlyDrifting: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public landslideVictory: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public undeath: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public anExerciseInRestraint: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public oneStepAbove: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public whatDoesTheRedWireDo: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public unassailable: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public aLoudSilence: number;
-
+export class BingoClassicHard2026 {
+  
   @Field({ leaderboard: { enabled: false } })
   public multifaceted: number;
-
+  
   @Field({ leaderboard: { enabled: false } })
-  public oneLastChallenge: number;
-
+  public unlimitedPower: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public deathmatchMadness: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public theEndIsNigh: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public graveConsequences: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public springtimeShowcase: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public pursuit: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public triumphant: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public overkill: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public tilDeathDoUsPart: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public safetyIsAnIllusion: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public whatsDeadIsDead: number;
+  
+  @Field({ leaderboard: { enabled: false } })
+  public allHallowsHavoc: number;
+  
   @Field({ leaderboard: { enabled: false } })
   public notSoClose: number;
-
+  
   @Field({ leaderboard: { enabled: false } })
   public catchMeIfYouCan: number;
-
+  
   @Field({ leaderboard: { enabled: false } })
-  public snowbodySSafe: number;
-
-  @Field({ leaderboard: { enabled: false } })
-  public sharpenedDiamond: number;
+  public soulSiphoner: number;
 
   public constructor(data: APIData = {}) {
-    this.unlimitedPower = data.Blitzstar;
-    this.fromRichesToRags = data.Blitzdiamondarmorkill;
-    this.deadlyDrifting = data.Tkrdeadlydrifting;
-    this.landslideVictory = data.Wizardslandslide;
-    this.undeath = data.Quakekillstreak;
-    this.anExerciseInRestraint = data.Arenaexerciserestraint;
-    this.oneStepAbove = data.Tntrunonestepabove;
-    this.whatDoesTheRedWireDo = data.Cvcredwire;
-    this.unassailable = data.Vampzsurvive;
-    this.aLoudSilence = data.Paintballloudsilence;
     this.multifaceted = data.Cvcallaround;
-    this.oneLastChallenge = data.Megawallsfinaldestination;
+    this.unlimitedPower = data.Blitzstar;
+    this.deathmatchMadness = data.Megawallsblitzdeathmatch;
+    this.theEndIsNigh = data.Smashtheendisnigh;
+    this.graveConsequences = data.Warlordsgraveconsequences;
+    this.springtimeShowcase = data. //FILL
+    this.pursuit = data. //FILL
+    this.triumphant = data.Tntspleeftriumphant;
+    this.overkill = data.Pbnuke;
+    this.tilDeathDoUsPart = data.Tnttagtildeath;
+    this.safetyIsAnIllusion = data.Blitzsafetyisanillusion;
+    this.whatsDeadIsDead = data.Megawallsfinal;
+    this.allHallowsHavoc = data.Blitzallhallowshavoc;
     this.notSoClose = data.Smashtwolives;
     this.catchMeIfYouCan = data.Warlordscapture;
-    this.snowbodySSafe = data.Tntpvpholidaykills;
-    this.sharpenedDiamond = data.Wallssharpeneddiamond;
+    this.soulSiphoner = data.Arenasoulsiphoner;
   }
 }
 
 export class BingoEasy {
   @Field()
-  public casual: BingoCasualEasy2025;
+  public casual: BingoCasualEasy2026;
 
   @Field()
-  public pvp: BingoPvPEasy2025;
+  public pvp: BingoPvPEasy2026;
 
   @Field()
-  public classic: BingoClassicEasy2025;
+  public classic: BingoClassicEasy2026;
 
   public constructor(data: APIData = {}) {
-    this.casual = new BingoCasualEasy2025(data.casual_easy?.objectives);
-    this.pvp = new BingoPvPEasy2025(data.pvp_easy?.objectives);
-    this.classic = new BingoClassicEasy2025(data.classic_easy?.objectives);
+    this.casual = new BingoCasualEasy2026(data.casual_easy?.objectives);
+    this.pvp = new BingoPvPEasy2026(data.pvp_easy?.objectives);
+    this.classic = new BingoClassicEasy2026(data.classic_easy?.objectives);
   }
 }
 
 export class BingoHard {
   @Field()
-  public casual: BingoCasualHard2025;
+  public casual: BingoCasualHard2026;
 
   @Field()
-  public pvp: BingoPvPHard2025;
+  public pvp: BingoPvPHard2026;
 
   @Field()
-  public classic: BingoClassicHard2025;
+  public classic: BingoClassicHard2026;
 
   public constructor(data: APIData = {}) {
-    this.casual = new BingoCasualHard2025(data.casual_hard?.objectives);
-    this.pvp = new BingoPvPHard2025(data.pvp_hard?.objectives);
-    this.classic = new BingoClassicHard2025(data.classic_hard?.objectives);
+    this.casual = new BingoCasualHard2026(data.casual_hard?.objectives);
+    this.pvp = new BingoPvPHard2026(data.pvp_hard?.objectives);
+    this.classic = new BingoClassicHard2026(data.classic_hard?.objectives);
   }
 }
 
@@ -468,8 +469,8 @@ export class Bingo {
   public bucks: number;
 
   public constructor(data: APIData = {}) {
-    this.easy = new BingoEasy(data.easter?.["2025"]?.bingo);
-    this.hard = new BingoHard(data.easter?.["2025"]?.bingo);
+    this.easy = new BingoEasy(data.easter?.["2026"]?.bingo);
+    this.hard = new BingoHard(data.easter?.["2026"]?.bingo);
     this.bucks = data.bingo?.bucks;
   }
 }
