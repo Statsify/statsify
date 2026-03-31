@@ -61,7 +61,7 @@ export class BingoCasualEasy2026 {
   public constructor(data: APIData = {}) {
     this.iSurvivedAnniversaryBingo = data.Disasterssurvive;
     this.theEvilDead = data.Arcadeevildead;
-    this.festiveSpirit = data. //FILL
+    this.festiveSpirit = data.Bbvote;
     this.goal = data.Arcadefootballgoal;
     this.nailedIt = data.Bbguess;
     this.readyAim = data.Murderbowgold;
@@ -276,7 +276,7 @@ export class BingoCasualHard2026 {
     this.noHelpNeeded = data. //FILL
     this.bloodthirsty = data.Murderstreak;
     this.heresSteve = data.Arcadesteve;
-    this.shiny = data. //FILL
+    this.shiny = data.Mainraremythical;
     this.fastAndAccurate = data.Bbspeedfirst; // confirm
     this.bossBuilder = data.Buildbattlebossbuilder;
     this.vengeance = data.Murdervengeance
