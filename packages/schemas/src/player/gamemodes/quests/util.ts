@@ -135,10 +135,10 @@ export function createGameModeQuests<
   weekly,
   monthly = [],
 }: CreateQuestsOptions<DailyFields, WeeklyFields, MonthlyFields>): GameWithQuests<
-  DailyFields,
-  WeeklyFields,
-  MonthlyFields
-> {
+    DailyFields,
+    WeeklyFields,
+    MonthlyFields
+  > {
   class Daily {
     [key: string]: number;
 
