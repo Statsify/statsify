@@ -273,10 +273,10 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
           progress: 1,
         },
         {
-          name: "Break-Neck-Speed",
-          field: "breakNeckSpeed",
+          name: "A Dashing Fellow",
+          field: "aDashingFellow",
           game: "Quakecraft",
-          description: "Kill a player within 1 second of dashing in a game of Quakecraft in the Classic Lobby",
+          description: "Use your Dash ability in a game of Quakecraft in the Classic Games Lobby",
           progress: 1,
         },
         {

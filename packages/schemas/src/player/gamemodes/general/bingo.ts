@@ -152,7 +152,7 @@ export class BingoClassicEasy2026 {
   public countingDown: number;
 
   @Field({ leaderboard: { enabled: false } })
-  public breakNeckSpeed: number;
+  public aDashingFellow: number;
 
   @Field({ leaderboard: { enabled: false } })
   public itFollows: number;
@@ -198,7 +198,7 @@ export class BingoClassicEasy2026 {
 
   public constructor(data: APIData = {}) {
     this.countingDown = data.Blitzcountingdown;
-    this.breakNeckSpeed = data.Quakecraftbreakneckspeed; // TODO: Confirm
+    this.aDashingFellow = data.Quakedash;
     this.itFollows = data.Tkritfollows;
     this.prepTime = data.Vampzprep;
     this.poweringUp = data.Pbpowerup;
