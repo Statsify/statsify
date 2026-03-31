@@ -266,12 +266,12 @@ export class BingoCasualHard2026 {
   public moonlitEscape: number;
 
   public constructor(data: APIData = {}) {
-    this.deathDestructionDragons = data. //FILL
+    this.deathDestructionDragons = data.Arcadedragons;
     this.thePurger = data.Arcadepurger;
     this.scaryGood = data.Bbscarygood;
     this.lifeOfTheParty = data.Arcadepartystarswin;
     this.warmingUp = data.Arcadedropperwarmingup;
-    this.undisputedMasterpiece = data. //FILL
+    this.undisputedMasterpiece = data.Bbtop3;
     this.caughtInTheAct = data.Murderkillmurdermultiple;
     this.noHelpNeeded = data. //FILL
     this.bloodthirsty = data.Murderstreak;
