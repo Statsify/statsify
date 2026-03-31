@@ -81,66 +81,66 @@ export class BingoCasualEasy2026 {
 export class BingoPvPEasy2026 {
   @Field({ leaderboard: { enabled: false } })
   public elfish: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public spleefVictor: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public willItHatch: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public bloodhound: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public quakeVictor: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public eatThis: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public suitUp: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public feelingLight: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public brightAndEarly: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public bloodHealing: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public aLongWayDown: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public shiny: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public flowingDefense: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public eggstraterrestrial: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public areaSecured: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public treasureHunter: number;
 
   public constructor(data: APIData = {}) {
-    this.elfish = data.Skywarsholidayrefill
+    this.elfish = data.Skywarsholidayrefill;
     this.spleefVictor = data.Duelsspleefvictor;
     this.willItHatch = data.Bedwarswillithatch;
     this.bloodhound = data.Skywarsbloodhound;
     this.quakeVictor = data.Duelsquakevictor;
-    this.eatThis = data.Bedwarseatthis
+    this.eatThis = data.Bedwarseatthis;
     this.suitUp = data.Woolctwkit;
     this.feelingLight = data.Duelsboost;
-    this.brightAndEarly = data.Skywarsbrightandearly
-    this.bloodHealing = data.Woolbloodhealing
-    this.aLongWayDown = data.Skywarsvoidkill
+    this.brightAndEarly = data.Skywarsbrightandearly;
+    this.bloodHealing = data.Woolbloodhealing;
+    this.aLongWayDown = data.Skywarsvoidkill;
     this.shiny = data.Bedwarsdiamond;
-    this.flowingDefense = data.Bedwarsflowingdefense
+    this.flowingDefense = data.Bedwarsflowingdefense;
     this.eggstraterrestrial = data.Duelsfarmerkit;
     this.areaSecured = data.Wwplacewool;
     this.treasureHunter = data.Skywarsopenchests;
@@ -150,55 +150,55 @@ export class BingoPvPEasy2026 {
 export class BingoClassicEasy2026 {
   @Field({ leaderboard: { enabled: false } })
   public countingDown: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public breakNeckSpeed: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public itFollows: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public prepTime: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public poweringUp: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public braiiiins: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public explosiveEnding: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public freeFood: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public nowhereToHide: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public leafMeAlone: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public hotSpell: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public mutant: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public forTheTeam: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public witheringHeights: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public youreIt: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public tooStronk: number;
 
   public constructor(data: APIData = {}) {
     this.countingDown = data.Blitzcountingdown;
-    this.breakNeckSpeed = data. //FILL
+    this.breakNeckSpeed = data.Quakecraftbreakneckspeed; // TODO: Confirm
     this.itFollows = data.Tkritfollows;
     this.prepTime = data.Vampzprep;
     this.poweringUp = data.Pbpowerup;
@@ -219,49 +219,49 @@ export class BingoClassicEasy2026 {
 export class BingoCasualHard2026 {
   @Field({ leaderboard: { enabled: false } })
   public deathDestructionDragons: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public thePurger: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public scaryGood: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public lifeOfTheParty: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public warmingUp: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public undisputedMasterpiece: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public caughtInTheAct: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public noHelpNeeded: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public bloodthirsty: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public heresSteve: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public shiny: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public fastAndAccurate: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public bossBuilder: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public vengeance: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public survivorStreak: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public moonlitEscape: number;
 
@@ -273,13 +273,13 @@ export class BingoCasualHard2026 {
     this.warmingUp = data.Arcadedropperwarmingup;
     this.undisputedMasterpiece = data.Bbtop3;
     this.caughtInTheAct = data.Murderkillmurdermultiple;
-    this.noHelpNeeded = data. //FILL
+    this.noHelpNeeded = data.Arcadeenderspleef;
     this.bloodthirsty = data.Murderstreak;
     this.heresSteve = data.Arcadesteve;
     this.shiny = data.Mainraremythical;
-    this.fastAndAccurate = data.Bbspeedfirst; // confirm
+    this.fastAndAccurate = data.Bbspeedfirst;
     this.bossBuilder = data.Buildbattlebossbuilder;
-    this.vengeance = data.Murdervengeance
+    this.vengeance = data.Murdervengeance;
     this.survivorStreak = data.Arcadesurvivorstreak;
     this.moonlitEscape = data.Arcademoonlitescape;
   }
@@ -288,49 +288,49 @@ export class BingoCasualHard2026 {
 export class BingoPvPHard2026 {
   @Field({ leaderboard: { enabled: false } })
   public sneaky: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public unmoving: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public technicolorMurder: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public cabinetOfSouls: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public cleanSheet: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public childsPlay: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public anOffering: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public giveThatBack: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public prizefighter: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public betterNerfThis: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public immortal: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public barbarian: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public betterWithBuds: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public renaissanceKiller: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public headInTheClouds: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public expensiveSlaying: number;
 
@@ -355,52 +355,51 @@ export class BingoPvPHard2026 {
 }
 
 export class BingoClassicHard2026 {
-  
   @Field({ leaderboard: { enabled: false } })
   public multifaceted: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public unlimitedPower: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public deathmatchMadness: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public theEndIsNigh: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public graveConsequences: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public springtimeShowcase: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public pursuit: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public triumphant: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public overkill: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public tilDeathDoUsPart: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public safetyIsAnIllusion: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public whatsDeadIsDead: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public allHallowsHavoc: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public notSoClose: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public catchMeIfYouCan: number;
-  
+
   @Field({ leaderboard: { enabled: false } })
   public soulSiphoner: number;
 
@@ -410,8 +409,8 @@ export class BingoClassicHard2026 {
     this.deathmatchMadness = data.Megawallsblitzdeathmatch;
     this.theEndIsNigh = data.Smashtheendisnigh;
     this.graveConsequences = data.Warlordsgraveconsequences;
-    this.springtimeShowcase = data. //FILL
-    this.pursuit = data. //FILL
+    this.springtimeShowcase = data.Quakespringtimeshowcase;
+    this.pursuit = data.Wallspursuit;
     this.triumphant = data.Tntspleeftriumphant;
     this.overkill = data.Pbnuke;
     this.tilDeathDoUsPart = data.Tnttagtildeath;
