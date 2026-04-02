@@ -111,7 +111,7 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
           name: "Festive Spirit",
           field: "festiveSpirit",
           game: "Build Battle",
-          description: 'Receive a "Good" or higher vote in a game of Build Battle',
+          description: "Receive a \"Good\" or higher vote in a game of Build Battle",
           progress: 1,
         },
         {
