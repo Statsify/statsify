@@ -39,57 +39,57 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
       name: "Casual",
       blackoutReward: {
         description: [
-          "§5§o§8+§a§l4 §7Bingo Bucks",
-          "§5§o§8+§650,000 §7Coins in All Minigames",
-          "§5§o§8+§350,000§7 §7Hypixel Experience",
-          "§5§o§8+§b150,000§7 §7Event Experience",
+          "§8+§a§l4 §7Bingo Bucks",
+          "§8+§650,000 §7Coins in All Minigames",
+          "§8+§350,000§7 §7Hypixel Experience",
+          "§8+§b150,000§7 §7Event Experience",
         ],
         name: "Blackout",
       },
       columnRewards: [
         {
           name: "Column One",
-          description: "§5§o§8+§25,000 §7Build Battle Tokens",
+          description: "§8+§25,000 §7Build Battle Tokens",
         },
         {
           name: "Column Two",
-          description: "§5§o§8+§350,000§7 §7Hypixel Experience",
+          description: "§8+§350,000§7 §7Hypixel Experience",
         },
         {
           name: "Column Three",
-          description: "§5§o§8+§25,000 §7Murder Mystery Tokens",
+          description: "§8+§25,000 §7Murder Mystery Tokens",
         },
         {
           name: "Column Four",
-          description: "§5§o§8+§71 §62.0x §7Personal Coin Booster §7(§bTwo Hour§7)",
+          description: "§8+§71 §62.0x §7Personal Coin Booster §7(§bTwo Hour§7)",
         },
       ],
       diagonalRewards: [
         {
           name: "Diagonal One",
-          description: "§5§o§8+§610,000 §7Arcade Games Coins",
+          description: "§8+§610,000 §7Arcade Games Coins",
         },
         {
           name: "Diagonal Two",
-          description: "§5§o§8+§25,000 §7Murder Mystery Tokens",
+          description: "§8+§25,000 §7Murder Mystery Tokens",
         },
       ],
       rowRewards: [
         {
           name: "Row One",
-          description: "§5§o§8+§350,000§7 §7Hypixel Experience",
+          description: "§8+§350,000§7 §7Hypixel Experience",
         },
         {
           name: "Row Two",
-          description: "§5§o§8+§b150,000§7 §7Event Experience",
+          description: "§8+§b150,000§7 §7Event Experience",
         },
         {
           name: "Row Three",
-          description: "§5§o§8+§610,000 §7Arcade Games Coins",
+          description: "§8+§610,000 §7Arcade Games Coins",
         },
         {
           name: "Row Four",
-          description: "§5§o§8+§e3 §dDaily Token",
+          description: "§8+§e3 §dDaily Token",
         },
       ],
       tasks: [
@@ -211,57 +211,57 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
       name: "Classic",
       blackoutReward: {
         description: [
-          "§5§o§8+§a§l4 §7Bingo Bucks",
-          "§5§o§8+§650,000 §7Coins in All Minigames",
-          "§5§o§8+§350,000§7 §7Hypixel Experience",
-          "§5§o§8+§b150,000§7 §7Event Experience",
+          "§8+§a§l4 §7Bingo Bucks",
+          "§8+§650,000 §7Coins in All Minigames",
+          "§8+§350,000§7 §7Hypixel Experience",
+          "§8+§b150,000§7 §7Event Experience",
         ],
         name: "Blackout",
       },
       columnRewards: [
         {
           name: "Column One",
-          description: "§5§o§8+§65,000 §7Mega Walls Coins",
+          description: "§8+§65,000 §7Mega Walls Coins",
         },
         {
           name: "Column Two",
-          description: "§5§o§8+§350,000§7 §7Hypixel Experience",
+          description: "§8+§350,000§7 §7Hypixel Experience",
         },
         {
           name: "Column Three",
-          description: "§5§o§8+§65,000 §7Cops and Crims Coins",
+          description: "§8+§65,000 §7Cops and Crims Coins",
         },
         {
           name: "Column Four",
-          description: "§5§o§8+§71 §62.0x §7Personal Coin Booster §7(§bTwo Hour§7)",
+          description: "§8+§71 §62.0x §7Personal Coin Booster §7(§bTwo Hour§7)",
         },
       ],
       diagonalRewards: [
         {
           name: "Diagonal One",
-          description: "§5§o§8+§65,000 §7VampireZ Coins",
+          description: "§8+§65,000 §7VampireZ Coins",
         },
         {
           name: "Diagonal Two",
-          description: "§5§o§8+§65,000 §7Smash Heroes Coins",
+          description: "§8+§65,000 §7Smash Heroes Coins",
         },
       ],
       rowRewards: [
         {
           name: "Row One",
-          description: "§5§o§8+§350,000§7 §7Hypixel Experience",
+          description: "§8+§350,000§7 §7Hypixel Experience",
         },
         {
           name: "Row Two",
-          description: "§5§o§8+§b150,000§7 §7Event Experience",
+          description: "§8+§b150,000§7 §7Event Experience",
         },
         {
           name: "Row Three",
-          description: "§5§o§8+§25,000 §7The TNT Games Tokens",
+          description: "§8+§25,000 §7The TNT Games Tokens",
         },
         {
           name: "Row Four",
-          description: "§5§o§8+§e3 §dDaily Token",
+          description: "§8+§e3 §dDaily Token",
         },
       ],
       tasks: [
@@ -273,10 +273,10 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
           progress: 1,
         },
         {
-          name: "Break-Neck-Speed",
-          field: "breakNeckSpeed",
+          name: "A Dashing Fellow",
+          field: "aDashingFellow",
           game: "Quakecraft",
-          description: "Kill a player within 1 second of dashing in a game of Quakecraft in the Classic Lobby",
+          description: "Use your Dash ability in a game of Quakecraft in the Classic Games Lobby",
           progress: 1,
         },
         {
@@ -384,57 +384,57 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
       name: "PvP",
       blackoutReward: {
         description: [
-          "§5§o§8+§a§l4 §7Bingo Bucks",
-          "§5§o§8+§650,000 §7Coins in All Minigames",
-          "§5§o§8+§350,000§7 §7Hypixel Experience",
-          "§5§o§8+§b150,000§7 §7Event Experience",
+          "§8+§a§l4 §7Bingo Bucks",
+          "§8+§650,000 §7Coins in All Minigames",
+          "§8+§350,000§7 §7Hypixel Experience",
+          "§8+§b150,000§7 §7Event Experience",
         ],
         name: "Blackout",
       },
       columnRewards: [
         {
           name: "Column One",
-          description: "§5§o§8+§25,000 §7Bed Wars Tokens",
+          description: "§8+§25,000 §7Bed Wars Tokens",
         },
         {
           name: "Column Two",
-          description: "§5§o§8+§350,000§7 §7Hypixel Experience",
+          description: "§8+§350,000§7 §7Hypixel Experience",
         },
         {
           name: "Column Three",
-          description: "§5§o§8+§25,000 §7SkyWars Tokens",
+          description: "§8+§25,000 §7SkyWars Tokens",
         },
         {
           name: "Column Four",
-          description: "§5§o§8+§71 §62.0x §7Personal Coin Booster §7(§bTwo Hour§7)",
+          description: "§8+§71 §62.0x §7Personal Coin Booster §7(§bTwo Hour§7)",
         },
       ],
       diagonalRewards: [
         {
           name: "Diagonal One",
-          description: "§5§o§8+§65,000 §7Wool Games Wool",
+          description: "§8+§65,000 §7Wool Games Wool",
         },
         {
           name: "Diagonal Two",
-          description: "§5§o§8+§25,000 §7Bed Wars Tokens",
+          description: "§8+§25,000 §7Bed Wars Tokens",
         },
       ],
       rowRewards: [
         {
           name: "Row One",
-          description: "§5§o§8+§350,000§7 §7Hypixel Experience",
+          description: "§8+§350,000§7 §7Hypixel Experience",
         },
         {
           name: "Row Two",
-          description: "§5§o§8+§b150,000§7 §7Event Experience",
+          description: "§8+§b150,000§7 §7Event Experience",
         },
         {
           name: "Row Three",
-          description: "§5§o§8+§25,000 §7Duels Tokens",
+          description: "§8+§25,000 §7Duels Tokens",
         },
         {
           name: "Row Four",
-          description: "§5§o§8+§e3 §dDaily Token",
+          description: "§8+§e3 §dDaily Token",
         },
       ],
       tasks: [
@@ -559,57 +559,57 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
       name: "Casual",
       blackoutReward: {
         description: [
-          "§5§o§8+§a§l8 §7Bingo Bucks",
-          "§5§o§8+§6100,000 §7Coins in All Minigames",
-          "§5§o§8+§3250,000§7 §7Hypixel Experience",
-          "§5§o§8+§b750,000§7 §7Event Experience",
+          "§8+§a§l8 §7Bingo Bucks",
+          "§8+§6100,000 §7Coins in All Minigames",
+          "§8+§3250,000§7 §7Hypixel Experience",
+          "§8+§b750,000§7 §7Event Experience",
         ],
         name: "Blackout",
       },
       columnRewards: [
         {
           name: "Column One",
-          description: "§5§o§8+§225,000 §7Build Battle Tokens",
+          description: "§8+§225,000 §7Build Battle Tokens",
         },
         {
           name: "Column Two",
-          description: "§5§o§8+§3150,000§7 §7Hypixel Experience",
+          description: "§8+§3150,000§7 §7Hypixel Experience",
         },
         {
           name: "Column Three",
-          description: "§5§o§8+§225,000 §7Murder Mystery Tokens",
+          description: "§8+§225,000 §7Murder Mystery Tokens",
         },
         {
           name: "Column Four",
-          description: "§5§o§8+§71 §64.0x §7Personal Coin Booster §7(§bOne Day§7)",
+          description: "§8+§71 §64.0x §7Personal Coin Booster §7(§bOne Day§7)",
         },
       ],
       diagonalRewards: [
         {
           name: "Diagonal One",
-          description: "§5§o§8+§650,000 §7Arcade Games Coins",
+          description: "§8+§650,000 §7Arcade Games Coins",
         },
         {
           name: "Diagonal Two",
-          description: "§5§o§8+§225,000 §7Murder Mystery Tokens",
+          description: "§8+§225,000 §7Murder Mystery Tokens",
         },
       ],
       rowRewards: [
         {
           name: "Row One",
-          description: "§5§o§8+§3150,000§7 §7Hypixel Experience",
+          description: "§8+§3150,000§7 §7Hypixel Experience",
         },
         {
           name: "Row Two",
-          description: "§5§o§8+§b450,000§7 §7Event Experience",
+          description: "§8+§b450,000§7 §7Event Experience",
         },
         {
           name: "Row Three",
-          description: "§5§o§8+§650,000 §7Arcade Games Coins",
+          description: "§8+§650,000 §7Arcade Games Coins",
         },
         {
           name: "Row Four",
-          description: "§5§o§8+§e10 §dDaily Token",
+          description: "§8+§e10 §dDaily Token",
         },
       ],
       tasks: [
@@ -731,57 +731,57 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
       name: "Classic",
       blackoutReward: {
         description: [
-          "§5§o§8+§a§l8 §7Bingo Bucks",
-          "§5§o§8+§6100,000 §7Coins in All Minigames",
-          "§5§o§8+§3250,000§7 §7Hypixel Experience",
-          "§5§o§8+§b875,000§7 §7Event Experience",
+          "§8+§a§l8 §7Bingo Bucks",
+          "§8+§6100,000 §7Coins in All Minigames",
+          "§8+§3250,000§7 §7Hypixel Experience",
+          "§8+§b875,000§7 §7Event Experience",
         ],
         name: "Blackout",
       },
       columnRewards: [
         {
           name: "Column One",
-          description: "§5§o§8+§625,000 §7Mega Walls Coins",
+          description: "§8+§625,000 §7Mega Walls Coins",
         },
         {
           name: "Column Two",
-          description: "§5§o§8+§3150,000§7 §7Hypixel Experience",
+          description: "§8+§3150,000§7 §7Hypixel Experience",
         },
         {
           name: "Column Three",
-          description: "§5§o§8+§625,000 §7Cops and Crims Coins",
+          description: "§8+§625,000 §7Cops and Crims Coins",
         },
         {
           name: "Column Four",
-          description: "§5§o§8+§71 §64.0x §7Personal Coin Booster §7(§bOne Day§7)",
+          description: "§8+§71 §64.0x §7Personal Coin Booster §7(§bOne Day§7)",
         },
       ],
       diagonalRewards: [
         {
           name: "Diagonal One",
-          description: "§5§o§8+§625,000 §7Quakecraft Coins",
+          description: "§8+§625,000 §7Quakecraft Coins",
         },
         {
           name: "Diagonal Two",
-          description: "§5§o§8+§625,000 §7Blitz SG Coins",
+          description: "§8+§625,000 §7Blitz SG Coins",
         },
       ],
       rowRewards: [
         {
           name: "Row One",
-          description: "§5§o§8+§3150,000§7 §7Hypixel Experience",
+          description: "§8+§3150,000§7 §7Hypixel Experience",
         },
         {
           name: "Row Two",
-          description: "§5§o§8+§b525,000§7 §7Event Experience",
+          description: "§8+§b525,000§7 §7Event Experience",
         },
         {
           name: "Row Three",
-          description: "§5§o§8+§225,000 §7The TNT Games Tokens",
+          description: "§8+§225,000 §7The TNT Games Tokens",
         },
         {
           name: "Row Four",
-          description: "§5§o§8+§e10 §dDaily Token",
+          description: "§8+§e10 §dDaily Token",
         },
       ],
       tasks: [
@@ -904,57 +904,57 @@ export const boards: { [D in Difficulty]: { [C in Category]: Board<D, C> } } = {
       name: "PvP",
       blackoutReward: {
         description: [
-          "§5§o§8+§a§l8 §7Bingo Bucks",
-          "§5§o§8+§6100,000 §7Coins in All Minigames",
-          "§5§o§8+§3250,000§7 §7Hypixel Experience",
-          "§5§o§8+§b875,000§7 §7Event Experience",
+          "§8+§a§l8 §7Bingo Bucks",
+          "§8+§6100,000 §7Coins in All Minigames",
+          "§8+§3250,000§7 §7Hypixel Experience",
+          "§8+§b875,000§7 §7Event Experience",
         ],
         name: "Blackout",
       },
       columnRewards: [
         {
           name: "Column One",
-          description: "§5§o§8+§225,000 §7Bed Wars Tokens",
+          description: "§8+§225,000 §7Bed Wars Tokens",
         },
         {
           name: "Column Two",
-          description: "§5§o§8+§3150,000§7 §7Hypixel Experience",
+          description: "§8+§3150,000§7 §7Hypixel Experience",
         },
         {
           name: "Column Three",
-          description: "§5§o§8+§225,000 §7SkyWars Tokens",
+          description: "§8+§225,000 §7SkyWars Tokens",
         },
         {
           name: "Column Four",
-          description: "§5§o§8+§71 §64.0x §7Personal Coin Booster §7(§bOne Day§7)",
+          description: "§8+§71 §64.0x §7Personal Coin Booster §7(§bOne Day§7)",
         },
       ],
       diagonalRewards: [
         {
           name: "Diagonal One",
-          description: "§5§o§8+§625,000 §7Wool Games Wool",
+          description: "§8+§625,000 §7Wool Games Wool",
         },
         {
           name: "Diagonal Two",
-          description: "§5§o§8+§225,000 §7Bed Wars Tokens",
+          description: "§8+§225,000 §7Bed Wars Tokens",
         },
       ],
       rowRewards: [
         {
           name: "Row One",
-          description: "§5§o§8+§3150,000§7 §7Hypixel Experience",
+          description: "§8+§3150,000§7 §7Hypixel Experience",
         },
         {
           name: "Row Two",
-          description: "§5§o§8+§b525,000§7 §7Event Experience",
+          description: "§8+§b525,000§7 §7Event Experience",
         },
         {
           name: "Row Three",
-          description: "§5§o§8+§225,000 §7Duels Tokens",
+          description: "§8+§225,000 §7Duels Tokens",
         },
         {
           name: "Row Four",
-          description: "§5§o§8+§e10 §dDaily Token",
+          description: "§8+§e10 §dDaily Token",
         },
       ],
       tasks: [
