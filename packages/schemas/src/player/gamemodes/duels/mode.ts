@@ -38,7 +38,7 @@ export class BaseDuelsGameMode {
     this.losses = data[`${prefix}losses`];
 
     if (mode == "") {
-      this.winstreak = data.current_winstreak;
+      this.winstreak = data.currentStreak;
       this.bestWinstreak = data.best_overall_winstreak;
     } else {
       this.winstreak = data[`current_winstreak_mode_${mode}`];
