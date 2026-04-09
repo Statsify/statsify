@@ -7,22 +7,28 @@
  */
 
 import {
+  ActionRowBuilder,
   ApiService,
+  ButtonBuilder,
   Command,
   CommandContext,
   ErrorMessage,
+  Interaction,
   GuildArgument,
   IMessage,
   PaginateService,
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
+import { ButtonStyle } from "discord-api-types/v10";
 import { GuildListProfile, GuildListProfileProps } from "./guild-list.profile.js";
 import { GuildMember } from "@statsify/schemas";
 import { GuildMemberProfile } from "./guild-member.profile.js";
 import { GuildProfile, GuildProfileProps } from "./guild.profile.js";
 import { GuildQuery } from "@statsify/api-client";
+import { CommandListener } from "#lib/command.listener";
 import { GuildTopSubCommand } from "./guild-top.subcommand.js";
+import { createGuildListExport } from "./guild-export.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
@@ -113,9 +119,34 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const canvas = render(<GuildListProfile {...props} />, getTheme(user));
     const buffer = await canvas.toBuffer("png");
+    const download = new ButtonBuilder()
+      .label("Download TXT")
+      .style(ButtonStyle.Primary);
+    const listener = CommandListener.getInstance();
+
+    listener.addHook(download.getCustomId(), async (interaction: Interaction) => {
+      if (user?.locale) interaction.setLocale(user.locale);
+
+      return interaction.sendFollowup({
+        files: [
+          {
+            name: "guild-list.txt",
+            data: Buffer.from(createGuildListExport(guild)),
+            type: "text/plain",
+          },
+        ],
+        ephemeral: true,
+      });
+    });
+
+    setTimeout(() => {
+      context.reply({ components: [] });
+      listener.removeHook(download.getCustomId());
+    }, 300_000);
 
     return {
       files: [{ name: "guild-list.png", data: buffer, type: "image/png" }],
+      components: [new ActionRowBuilder().component(download)],
     };
   }
 

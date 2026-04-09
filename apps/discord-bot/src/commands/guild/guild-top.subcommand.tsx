@@ -19,6 +19,7 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { CommandListener } from "#lib/command.listener";
+import { createGuildTopExport } from "./guild-export.js";
 import {
   GUILD_TOP_PAGE_SIZE,
   GuildTopMember,
@@ -65,6 +66,9 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
     const up = new ButtonBuilder().emoji(t("emojis:up")).style(ButtonStyle.Success);
     const down = new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger);
+    const download = new ButtonBuilder()
+      .label("Download TXT")
+      .style(ButtonStyle.Primary);
 
     const modes: [GuildTopKey, string][] = [
       ["daily", "Today"],
@@ -89,7 +93,10 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       )
     );
 
-    const components = [new ActionRowBuilder().component(dropdown)];
+    const components = [
+      new ActionRowBuilder().component(dropdown),
+      new ActionRowBuilder().component(download),
+    ];
 
     const pageCount = Math.ceil(guild.members.length / GUILD_TOP_PAGE_SIZE);
     if (pageCount > 1)
@@ -150,6 +157,23 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       })
     );
 
+    listener.addHook(download.getCustomId(), async (interaction) => {
+      if (user?.locale) interaction.setLocale(user.locale);
+
+      return interaction.sendFollowup({
+        files: [
+          {
+            name: "guild-top.txt",
+            data: Buffer.from(
+              createGuildTopExport(guild, modes[modeIndex][1], modes[modeIndex][0])
+            ),
+            type: "text/plain",
+          },
+        ],
+        ephemeral: true,
+      });
+    });
+
     setTimeout(() => {
       context.reply({ components: [] });
       cache.clear();
@@ -157,6 +181,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       listener.removeHook(up.getCustomId());
       listener.removeHook(down.getCustomId());
       listener.removeHook(dropdown.getCustomId());
+      listener.removeHook(download.getCustomId());
     }, 300_000);
 
     const message = await this.getGuildTopPageMessage(
