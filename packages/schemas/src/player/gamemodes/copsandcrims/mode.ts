@@ -126,6 +126,12 @@ export class CopsAndCrimsOverall {
   @Field()
   public grenadeKills: number;
 
+  @Field({ leaderboard: { enabled: false } })
+  public shotsFired: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public shotsPerKill: number;
+
   public constructor(data: APIData, defusal: Defusal, deathmatch: Deathmatch, gunGame: GunGame) {
     this.wins = add(defusal.wins, deathmatch.wins, gunGame.wins);
     this.kills = add(defusal.kills, deathmatch.kills, gunGame.kills);
@@ -135,5 +141,7 @@ export class CopsAndCrimsOverall {
     this.knifeKills = data.knife_kills;
     this.headshotKills = data.headshot_kills;
     this.grenadeKills = data.grenade_kills;
+    this.shotsFired = data.shots_fired;
+    this.shotsPerKill = ratio(this.shotsFired, add(defusal.kills, deathmatch.kills));
   }
 }
