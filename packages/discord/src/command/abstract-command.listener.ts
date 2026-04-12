@@ -8,6 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import {
+  type APIApplicationCommandOptionChoice,
   type APIUser,
   ApplicationCommandOptionType,
   GatewayDispatchEvents,
@@ -41,6 +42,10 @@ export interface ExecuteCommandOptions {
   preconditions?: CommandPrecondition[];
   message?: IMessage | Message;
 }
+
+const MAX_AUTOCOMPLETE_CHOICES = 25;
+const MAX_CHOICE_NAME_LENGTH = 100;
+const MAX_STRING_CHOICE_VALUE_LENGTH = 100;
 
 export abstract class AbstractCommandListener {
   protected hooks: Map<string, InteractionHook>;
@@ -262,8 +267,38 @@ export abstract class AbstractCommandListener {
 
     return {
       type: InteractionResponseType.ApplicationCommandAutocompleteResult,
-      data: { choices: response },
+      data: { choices: this.sanitizeAutocompleteChoices(response) },
     };
+  }
+
+  private sanitizeAutocompleteChoices(
+    choices: APIApplicationCommandOptionChoice[] = []
+  ): APIApplicationCommandOptionChoice[] {
+    return choices
+      .flatMap((choice) => {
+        const valueName =
+          choice.value === undefined || choice.value === null ?
+            "" :
+            String(choice.value);
+        const name = (choice.name || valueName).trim();
+
+        if (!name) return [];
+
+        if (
+          typeof choice.value === "string" &&
+          (choice.value.trim().length === 0 ||
+            choice.value.length > MAX_STRING_CHOICE_VALUE_LENGTH)
+        )
+          return [];
+
+        return [
+          {
+            ...choice,
+            name: name.slice(0, MAX_CHOICE_NAME_LENGTH),
+          },
+        ];
+      })
+      .slice(0, MAX_AUTOCOMPLETE_CHOICES);
   }
 
   private async onInteraction(interaction: Interaction): Promise<InteractionServer.InteractionReply> {
