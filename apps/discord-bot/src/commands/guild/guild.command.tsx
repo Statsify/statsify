@@ -13,20 +13,20 @@ import {
   Command,
   CommandContext,
   ErrorMessage,
-  Interaction,
   GuildArgument,
   IMessage,
+  Interaction,
   PaginateService,
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
+import { CommandListener } from "#lib/command.listener";
 import { GuildListProfile, GuildListProfileProps } from "./guild-list.profile.js";
 import { GuildMember } from "@statsify/schemas";
 import { GuildMemberProfile } from "./guild-member.profile.js";
 import { GuildProfile, GuildProfileProps } from "./guild.profile.js";
 import { GuildQuery } from "@statsify/api-client";
-import { CommandListener } from "#lib/command.listener";
 import { GuildTopSubCommand } from "./guild-top.subcommand.js";
 import { createGuildListExport } from "./guild-export.js";
 import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";

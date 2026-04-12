@@ -19,7 +19,6 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { CommandListener } from "#lib/command.listener";
-import { createGuildTopExport } from "./guild-export.js";
 import {
   GUILD_TOP_PAGE_SIZE,
   GuildTopMember,
@@ -29,6 +28,7 @@ import {
 import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.subcommand.js";
 import { GuildQuery } from "@statsify/api-client";
 import { Theme, render } from "@statsify/rendering";
+import { createGuildTopExport } from "./guild-export.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 

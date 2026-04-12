@@ -18,8 +18,8 @@ const getGuildRankName = (guildRankMap: Record<string, GuildRank>, member: Guild
   const guildRank = guildRankMap[member.rank];
 
   return guildRank ?
-      `${guildRank.name}${guildRank.tag ? ` [${guildRank.tag}]` : ""}` :
-      member.rank;
+    `${guildRank.name}${guildRank.tag ? ` [${guildRank.tag}]` : ""}` :
+    member.rank;
 };
 
 const sortGuildMembers = (guild: Guild) => {
