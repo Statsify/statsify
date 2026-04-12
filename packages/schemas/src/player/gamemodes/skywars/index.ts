@@ -10,12 +10,13 @@ import { ChallengesSkyWars, SkyWarsMini, SkyWarsMode } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
-import { add } from "@statsify/math";
+import { add, deepAdd } from "@statsify/math";
 import { getFormattedLevel, getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
 import type { APIData } from "@statsify/util";
 
 export const SKYWARS_MODES = new GameModes([
   { api: "overall" },
+  { api: "core" },
   { api: "solo" },
   { api: "doubles" },
   { api: "mini", hypixel: "mini_normal" },
@@ -101,6 +102,9 @@ export class SkyWars {
   public overall: SkyWarsMode;
 
   @Field()
+  public core: SkyWarsMode;
+
+  @Field()
   public solo: SkyWarsMode;
 
   @Field()
@@ -162,6 +166,14 @@ export class SkyWars {
 
     this.overall = new SkyWarsMode(data, "");
 
+    this.core = deepAdd(
+      new SkyWarsMode(data, "solo_normal"),
+      new SkyWarsMode(data, "solo_insane"),
+      new SkyWarsMode(data, "team_normal"),
+      new SkyWarsMode(data, "team_insane")
+    );
+    SkyWarsMode.applyRatios(this.core);
+
     this.solo = new SkyWarsMode(data, "solo");
     this.solo.kit = chooseKit(soloInsaneWins, soloNormalWins);
 
@@ -172,6 +184,7 @@ export class SkyWars {
       add(soloInsaneWins, doublesInsaneWins),
       add(soloNormalWins, doublesNormalWins)
     );
+    this.core.kit = this.overall.kit;
 
     this.mini = new SkyWarsMini(data);
     this.mini.kit = parseKit(data.activeKit_SOLO);

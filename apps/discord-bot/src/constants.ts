@@ -321,6 +321,7 @@ export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeF
       let map: string;
 
       switch (mode) {
+        case "core":
         case "solo":
         case "doubles":
           map = "map";
