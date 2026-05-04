@@ -295,23 +295,32 @@ export class ApiService {
       description: `${method} ${url}`,
     });
 
-    const res = await this.axios.request({
-      url,
-      method,
-      params,
-      headers,
-      data: body,
-      responseType,
-    });
+    try {
+      const res = await this.axios.request({
+        url,
+        method,
+        params,
+        headers,
+        data: body,
+        responseType,
+      });
 
-    child?.setHttpStatus(res.status);
-    child?.finish();
+      child?.setHttpStatus(res.status);
 
-    const data = res.data;
+      const data = res.data;
 
-    if (data.success === false) throw new Error("API request was unsuccessful");
+      if (data.success === false) throw new Error("API request was unsuccessful");
 
-    return data;
+      return data;
+    } catch (error) {
+      if (Axios.isAxiosError(error) && error.response?.status) {
+        child?.setHttpStatus(error.response.status);
+      }
+
+      throw error;
+    } finally {
+      child?.finish();
+    }
   }
 
   private async requestImage(url: string, params?: Record<string, unknown>) {

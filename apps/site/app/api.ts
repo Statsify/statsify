@@ -12,8 +12,18 @@ import { env } from "~/app/env";
 import type { Guild, Player } from "@statsify/schemas";
 import type { PostLeaderboardResponse } from "@statsify/api-client";
 
+function getApiUrl(path: string, params: Record<string, string> = {}) {
+  const url = new URL(path, env.API_URL);
+
+  for (const [key, value] of Object.entries(params)) {
+    url.searchParams.set(key, value);
+  }
+
+  return url;
+}
+
 export async function getPlayer(slug: string): Promise<Player | undefined> {
-  const response = await fetch(`${env.API_URL}/player?player=${slug}`, {
+  const response = await fetch(getApiUrl("/player", { player: slug }), {
     headers: { "X-API-KEY": env.API_KEY },
   });
 
@@ -22,7 +32,7 @@ export async function getPlayer(slug: string): Promise<Player | undefined> {
 }
 
 export async function getPlayerSuggestions(query: string): Promise<string[]> {
-  const response = await fetch(`${env.API_URL}/player/search?query=${query}`, {
+  const response = await fetch(getApiUrl("/player/search", { query }), {
     headers: { "X-API-KEY": env.API_KEY },
   });
 
@@ -31,10 +41,10 @@ export async function getPlayerSuggestions(query: string): Promise<string[]> {
 }
 
 export async function getGuild(slug: string): Promise<Guild> {
-  const response = await fetch(`${env.API_URL}/guild?guild=${slug}&type=PLAYER`, {
+  const response = await fetch(getApiUrl("/guild", { guild: slug, type: "PLAYER" }), {
     headers: { "X-API-KEY": env.API_KEY },
-
   });
+
   const { guild } = await response.json();
   return guild;
 }
@@ -55,7 +65,7 @@ export async function getLeaderboard(field: string) {
 }
 
 export async function getSkinRender(uuid: string): Promise<ArrayBuffer> {
-  const response = await fetch(`${env.API_URL}/skin?uuid=${uuid}`, {
+  const response = await fetch(getApiUrl("/skin", { uuid }), {
     headers: { "X-API-KEY": env.API_KEY },
   });
 

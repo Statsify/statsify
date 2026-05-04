@@ -64,8 +64,11 @@ export function Search({
   });
 
   function onSelectionChange(selected: number) {
+    const player = suggestions.data?.[selected];
+    if (!player) return;
+
     setSelected(selected);
-    if (suggestions.data) setInput(suggestions.data[selected]);
+    setInput(player);
 
     const maxScroll = (suggestions.data?.length ?? 0) * SEARCH_ITEM_HEIGHT - SEARCH_MAX_HEIGHT;
     const halfVisible = Math.floor(SEARCH_MAX_HEIGHT / 2);
@@ -87,15 +90,16 @@ export function Search({
         const formData = new FormData(event.currentTarget);
         const query = formData.get("search");
         if (!query || typeof query !== "string") return;
-        console.log(`Redirecting to ${playerUrl(query)}`);
-        router.push(playerUrl(query));
+        const trimmedQuery = query.trim();
+        if (!trimmedQuery) return;
+        router.push(playerUrl(trimmedQuery));
       }}
       onKeyDown={(event) => {
         if (event.key === "Enter") {
           ref.current?.requestSubmit();
         }
 
-        if (suggestions.isPending || suggestions.isError) return;
+        if (suggestions.isPending || suggestions.isError || !suggestions.data?.length) return;
 
         switch (event.key) {
           case "Escape":
