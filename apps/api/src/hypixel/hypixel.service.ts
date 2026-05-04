@@ -7,6 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
+import { BadGatewayException, BadRequestException, Injectable } from "@nestjs/common";
 import { CacheLevel } from "@statsify/api-client";
 import {
   GameCounts,
@@ -17,17 +18,25 @@ import {
   Watchdog,
 } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
-import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
+import { PlayerUuidResolverService } from "../mojang/player-uuid-resolver.service.js";
 import type { APIData } from "@statsify/util";
+
+interface RawHypixelResponse<T = APIData> {
+  status: number;
+  data: T;
+}
 
 @Injectable()
 export class HypixelService {
   private readonly logger = new Logger("HypixelService");
   private resources = new Map<string, APIData>();
 
-  public constructor(private readonly httpService: HttpService) {}
+  public constructor(
+    private readonly httpService: HttpService,
+    private readonly playerUuidResolverService: PlayerUuidResolverService
+  ) {}
 
   public shouldCache(expirey: number, cache: CacheLevel): boolean {
     return (
@@ -141,6 +150,45 @@ export class HypixelService {
     return this.resources.get(resource);
   }
 
+  public async getRawPlayer({
+    name,
+    uuid,
+  }: {
+    name?: string;
+    uuid?: string;
+  }): Promise<RawHypixelResponse> {
+    this.assertExactlyOne("/hypixel/player", { name, uuid });
+
+    const resolvedUuid = await this.playerUuidResolverService.resolvePlayerUuid(uuid ?? name!);
+    return this.requestRaw("/player", { uuid: resolvedUuid });
+  }
+
+  public async getRawGuild({
+    id,
+    name,
+    player,
+  }: {
+    id?: string;
+    name?: string;
+    player?: string;
+  }): Promise<RawHypixelResponse> {
+    this.assertExactlyOne("/hypixel/guild", { id, name, player });
+
+    if (id) return this.requestRaw("/guild", { id });
+    if (name) return this.requestRaw("/guild", { name });
+
+    const resolvedPlayer = await this.playerUuidResolverService.resolvePlayerUuid(player!);
+    return this.requestRaw("/guild", { player: resolvedPlayer });
+  }
+
+  public getRawWatchdogStats(): Promise<RawHypixelResponse> {
+    return this.requestRaw("/watchdogstats");
+  }
+
+  public getRawGameCounts(): Promise<RawHypixelResponse> {
+    return this.requestRaw("/gamecounts");
+  }
+
   private request<T>(url: string, params?: Record<string, unknown>): Observable<T> {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
@@ -163,6 +211,49 @@ export class HypixelService {
             })
         )
       )
+    );
+  }
+
+  private async requestRaw<T = APIData>(
+    url: string,
+    params?: Record<string, unknown>
+  ): Promise<RawHypixelResponse<T>> {
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+    const description = `GET ${this.httpService.axiosRef.getUri({ url, params })}`;
+
+    const child = transaction?.startChild({
+      op: "http.client",
+      description,
+    });
+
+    try {
+      const response = await this.httpService.axiosRef.request<T>({
+        url,
+        method: "GET",
+        params,
+        validateStatus: () => true,
+      });
+
+      child?.setHttpStatus(response.status);
+
+      return {
+        status: response.status,
+        data: response.data,
+      };
+    } catch {
+      throw new BadGatewayException("Failed to reach Hypixel API");
+    } finally {
+      child?.finish();
+    }
+  }
+
+  private assertExactlyOne(route: string, params: Record<string, string | undefined>) {
+    const usedParams = Object.entries(params).filter(([, value]) => value !== undefined);
+
+    if (usedParams.length === 1) return;
+
+    throw new BadRequestException(
+      `${route} requires exactly one of ${Object.keys(params).join(", ")}`
     );
   }
 }

@@ -10,6 +10,7 @@ import { AppController } from "./app.controller.js";
 import { AuthModule } from "#auth";
 import { CommandsModule } from "#commands";
 import { GuildModule } from "#guild";
+import { HypixelProxyModule } from "./hypixel-proxy/hypixel-proxy.module.js";
 import { HypixelResourcesModule } from "#hypixel-resources";
 import { Module } from "@nestjs/common";
 import { PlayerModule } from "#player";
@@ -40,6 +41,7 @@ const redisUrl = await config("database.redisUrl");
     PlayerModule,
     GuildModule,
     HypixelResourcesModule,
+    HypixelProxyModule,
     SkinModule,
     SessionModule,
     AuthModule,

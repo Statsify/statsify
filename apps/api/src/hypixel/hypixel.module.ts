@@ -9,10 +9,12 @@
 import { HttpModule } from "@nestjs/axios";
 import { HypixelService } from "./hypixel.service.js";
 import { Module } from "@nestjs/common";
+import { MojangModule } from "../mojang/mojang.module.js";
 import { config } from "@statsify/util";
 
 @Module({
   imports: [
+    MojangModule,
     HttpModule.register({
       baseURL: "https://api.hypixel.net/",
       headers: {
