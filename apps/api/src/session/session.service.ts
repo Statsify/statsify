@@ -8,9 +8,7 @@
 
 import {
   CacheLevel,
-  PlayerNotFoundException,
-  SessionNotFoundException,
-} from "@statsify/api-client";
+} from "@statsify/api-client/constants";
 import { type Circular, flatten } from "@statsify/util";
 import { DateTime } from "luxon";
 import {
@@ -27,6 +25,10 @@ import {
   deserialize,
   serialize,
 } from "@statsify/schemas";
+import {
+  PlayerNotFoundException,
+  SessionNotFoundException,
+} from "@statsify/api-client/exceptions";
 import { PlayerService } from "#player";
 import { Session } from "./session.model.js";
 import type { ReturnModelType } from "@typegoose/typegoose";

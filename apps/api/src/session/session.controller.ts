@@ -19,7 +19,7 @@ import {
   GetPlayerResponse,
   GetSessionResponse,
   SuccessResponse,
-} from "@statsify/api-client";
+} from "@statsify/api-client/responses";
 import { PlayerDto, SessionDto, UserIdDto } from "#dtos";
 import { SessionService } from "./session.service.js";
 

@@ -6,7 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export * from "./api.service.js";
-export * from "./constants.js";
-export * from "./exceptions/index.js";
-export * from "./responses/index.js";
+declare module "js-yaml" {
+  export function dump(
+    object: unknown,
+    options?: {
+      lineWidth?: number;
+      noRefs?: boolean;
+    }
+  ): string;
+}

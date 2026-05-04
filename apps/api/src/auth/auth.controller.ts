@@ -12,7 +12,7 @@ import { Auth } from "./auth.decorator.js";
 import { AuthRole } from "./auth.role.js";
 import { AuthService } from "./auth.service.js";
 import { Body, Controller, Get, Headers, Post, Query } from "@nestjs/common";
-import { GetKeyResponse } from "@statsify/api-client";
+import { GetKeyResponse } from "@statsify/api-client/responses";
 
 @Controller("/auth")
 export class AuthController {

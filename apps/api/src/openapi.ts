@@ -7,24 +7,23 @@
  */
 
 import * as Sentry from "@sentry/node";
-import handlebars from "handlebars";
 import { AppModule } from "./app.module.js";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
 import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
-import { SwaggerModule } from "@nestjs/swagger";
 import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
 import { createSwaggerDocument } from "./swagger.js";
 import { dirname, join } from "node:path";
+import { dump } from "js-yaml";
 import { fileURLToPath } from "node:url";
-import { mkdir } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const logger = new Logger("api");
+const logger = new Logger("openapi");
 const handleError = logger.error.bind(logger);
 
 process.on("uncaughtException", handleError);
@@ -49,7 +48,6 @@ const mediaRoot = await config("api.mediaRoot");
 
 await mkdir(join(mediaRoot, "badges"), { recursive: true });
 
-// Removes the `_id` fields created from sub classes of documents
 setGlobalOptions({
   options: { allowMixed: Severity.ALLOW },
   schemaOptions: { _id: false },
@@ -57,7 +55,6 @@ setGlobalOptions({
 
 const adapter = new FastifyAdapter({ bodyLimit: 5e6 });
 
-// This parses the content for when PNGs are sent to the API
 adapter
   .getInstance()
   .addContentTypeParser("image/png", { parseAs: "buffer" }, (_, body, done) =>
@@ -68,21 +65,12 @@ const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter,
   logger: new Logger(),
 });
 
-// Validation using `class-validator` and `class-transformer`
 app.useGlobalPipes(new ValidationPipe({ transform: true }));
-
-// Sentry
 app.useGlobalInterceptors(new SentryInterceptor());
 
-// Swagger/Redoc docs
-// Fastify template renderer for Redoc
-app.setViewEngine({
-  engine: { handlebars },
-  templates: join(__dirname, "..", "views"),
-});
-
 const document = createSwaggerDocument(app);
+const outputPath = join(__dirname, "..", "..", "..", "statsify.openapi.yaml");
 
-SwaggerModule.setup("swagger", app, document);
-
-await app.listen(await config("api.port"));
+await writeFile(outputPath, dump(document, { noRefs: true, lineWidth: 120 }));
+void app.close();
+process.exit(0);

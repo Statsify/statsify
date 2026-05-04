@@ -9,7 +9,7 @@
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Auth } from "#auth";
 import { Controller, Get, Query } from "@nestjs/common";
-import { GetPlayerSearchResponse } from "@statsify/api-client";
+import { GetPlayerSearchResponse } from "@statsify/api-client/responses";
 import { PlayerSearchDto } from "#dtos";
 import { PlayerSearchService } from "./player-search.service.js";
 

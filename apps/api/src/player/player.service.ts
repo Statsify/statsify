@@ -9,8 +9,7 @@
 import { type APIData, type Circular, type Flatten, flatten } from "@statsify/util";
 import {
   CacheLevel,
-  StatusNotFoundException,
-} from "@statsify/api-client";
+} from "@statsify/api-client/constants";
 import { HypixelService } from "#hypixel";
 import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
@@ -21,6 +20,9 @@ import {
 } from "@statsify/schemas";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
 import { PlayerSearchService, RedisPlayer } from "./search/player-search.service.js";
+import {
+  StatusNotFoundException,
+} from "@statsify/api-client/exceptions";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;

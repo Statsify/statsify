@@ -11,13 +11,13 @@ import { Auth } from "#auth";
 import { Body, Controller, Post } from "@nestjs/common";
 import {
   ErrorResponse,
-  LeaderboardQuery,
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
-} from "@statsify/api-client";
+} from "@statsify/api-client/responses";
 import { Guild } from "@statsify/schemas";
 import { GuildLeaderboardDto, GuildRankingDto } from "#dtos";
 import { GuildLeaderboardService } from "./guild-leaderboard.service.js";
+import { LeaderboardQuery } from "@statsify/api-client/constants";
 
 @Controller("/guild/leaderboards")
 export class GuildLeaderboardController {

@@ -10,7 +10,6 @@ import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { User, VerifyCode } from "@statsify/schemas";
 import { config, flatten } from "@statsify/util";
-import { getLogoPath } from "@statsify/assets";
 import { readFile, rm, writeFile } from "node:fs/promises";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
@@ -39,6 +38,7 @@ export class UserService {
   }
 
   public async getBadge(idOrUuid: string): Promise<Buffer> {
+    const { getLogoPath } = await import("@statsify/assets");
     const [tag, type] = this.parseTag(idOrUuid);
     const user = await this.userModel.findOne().where(type).equals(tag).lean().exec();
 

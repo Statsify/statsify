@@ -18,7 +18,7 @@ import {
   ErrorResponse,
   GetGamecountsResponse,
   GetWatchdogResponse,
-} from "@statsify/api-client";
+} from "@statsify/api-client/responses";
 import { HypixelService } from "#hypixel";
 
 @Controller("/hypixelresources")

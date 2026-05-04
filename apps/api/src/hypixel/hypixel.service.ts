@@ -7,7 +7,7 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { CacheLevel } from "@statsify/api-client";
+import { CacheLevel } from "@statsify/api-client/constants";
 import {
   GameCounts,
   Guild,

@@ -9,8 +9,9 @@
 import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Auth } from "#auth";
 import { Controller, Get, Query, StreamableFile } from "@nestjs/common";
-import { ErrorResponse, GetSkinTexturesResponse, PlayerNotFoundException } from "@statsify/api-client";
+import { ErrorResponse, GetSkinTexturesResponse } from "@statsify/api-client/responses";
 import { HeadDto, PlayerDto, UuidDto } from "#dtos";
+import { PlayerNotFoundException } from "@statsify/api-client/exceptions";
 import { SkinService } from "./skin.service.js";
 
 @Controller("/skin")

@@ -12,7 +12,7 @@ import { DateTime } from "luxon";
 import { InjectRedis } from "#redis";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schemas";
-import { LeaderboardQuery } from "@statsify/api-client";
+import { LeaderboardQuery } from "@statsify/api-client/constants";
 import { Redis } from "ioredis";
 
 const DAYS_IN_WEEK = {

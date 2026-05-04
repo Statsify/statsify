@@ -28,7 +28,7 @@ import {
   ErrorResponse,
   GetUserResponse,
   PutUserBadgeResponse,
-} from "@statsify/api-client";
+} from "@statsify/api-client/responses";
 import { UpdateUserDto, UserDto, VerifyCodeDto } from "#dtos";
 import { User } from "@statsify/schemas";
 import { UserService } from "./user.service.js";

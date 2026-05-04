@@ -16,10 +16,10 @@ import { Auth } from "#auth";
 import { Body, Controller, Post } from "@nestjs/common";
 import {
   ErrorResponse,
-  LeaderboardQuery,
   PostLeaderboardRankingsResponse,
   PostLeaderboardResponse,
-} from "@statsify/api-client";
+} from "@statsify/api-client/responses";
+import { LeaderboardQuery } from "@statsify/api-client/constants";
 import { Player } from "@statsify/schemas";
 import { PlayerLeaderboardDto, PlayerRankingsDto } from "#dtos";
 import { PlayerLeaderboardService } from "./player-leaderboard.service.js";

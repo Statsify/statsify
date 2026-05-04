@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
+import { CacheLevel } from "@statsify/api-client/constants";
 import { type Circular, flatten } from "@statsify/util";
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
 import { Player } from "@statsify/schemas";
+import { PlayerNotFoundException } from "@statsify/api-client/exceptions";
 import { PlayerService } from "#player";
 import { Redis } from "ioredis";
 import type { ReturnModelType } from "@typegoose/typegoose";

@@ -18,10 +18,12 @@ import { Controller, Get, Query } from "@nestjs/common";
 import {
   ErrorResponse,
   GetGuildResponse,
+} from "@statsify/api-client/responses";
+import { GuildDto } from "#dtos";
+import {
   GuildNotFoundException,
   PlayerNotFoundException,
-} from "@statsify/api-client";
-import { GuildDto } from "#dtos";
+} from "@statsify/api-client/exceptions";
 import { GuildService } from "./guild.service.js";
 
 @Controller("/guild")

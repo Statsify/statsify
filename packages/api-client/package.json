@@ -4,6 +4,24 @@
   "main": "dist/index.js",
   "types": "src/index.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./constants": {
+      "types": "./src/constants.ts",
+      "default": "./dist/constants.js"
+    },
+    "./exceptions": {
+      "types": "./src/exceptions/index.ts",
+      "default": "./dist/exceptions/index.js"
+    },
+    "./responses": {
+      "types": "./src/responses/index.ts",
+      "default": "./dist/responses/index.js"
+    }
+  },
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",

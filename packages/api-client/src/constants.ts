@@ -39,3 +39,5 @@ export enum LeaderboardQuery {
   INPUT = "input",
   POSITION = "position"
 }
+
+export const GUILD_ID_REGEX = /^(?=[\da-f]{24}$)(\d+[a-f]|[a-f]+\d)/i;

@@ -21,9 +21,11 @@ import {
   ErrorResponse,
   GetPlayerResponse,
   GetStatusResponse,
+} from "@statsify/api-client/responses";
+import {
   PlayerNotFoundException,
   StatusNotFoundException,
-} from "@statsify/api-client";
+} from "@statsify/api-client/exceptions";
 
 import { PlayerService } from "./player.service.js";
 

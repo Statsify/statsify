@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { GUILD_ID_REGEX, GuildNotFoundException } from "@statsify/api-client";
+import { GUILD_ID_REGEX } from "@statsify/api-client/constants";
 import { Guild } from "@statsify/schemas";
+import { GuildNotFoundException } from "@statsify/api-client/exceptions";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { InjectRedis } from "#redis";
 import { Injectable } from "@nestjs/common";

@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
+    "openapi:generate": "pnpm --filter @statsify/api-client build && pnpm build && node dist/openapi.js",
     "test:types": "tsc --noEmit",
     "lint": "eslint"
   },
@@ -42,6 +43,7 @@
     "toad-scheduler": "^3.0.1"
   },
   "devDependencies": {
+    "js-yaml": "^4.1.0",
     "@nestjs/testing": "^11.1.6",
     "@types/luxon": "^3.4.2"
   },

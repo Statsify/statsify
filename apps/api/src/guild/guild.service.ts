@@ -8,12 +8,14 @@
 
 import {
   CacheLevel,
-  GuildNotFoundException,
   GuildQuery,
-  PlayerNotFoundException,
-} from "@statsify/api-client";
+} from "@statsify/api-client/constants";
 import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
 import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
+import {
+  GuildNotFoundException,
+  PlayerNotFoundException,
+} from "@statsify/api-client/exceptions";
 import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";

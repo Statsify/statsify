@@ -6,16 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Canvas, type Image } from "skia-canvas";
 import { HttpService } from "@nestjs/axios";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PlayerNotFoundException } from "@statsify/api-client";
+import { PlayerNotFoundException } from "@statsify/api-client/exceptions";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
-import { getMinecraftTexturePath } from "@statsify/assets";
-import { loadImage } from "@statsify/rendering";
-import { renderSkin } from "@statsify/skin-renderer";
+import type { Image } from "skia-canvas";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
@@ -26,6 +23,7 @@ export class SkinService {
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
+    const { Canvas } = await import("skia-canvas");
     const { skin } = await this.getSkin(uuid)
       .then((skin) => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false))
       .catch(() => this.resolveSkin(undefined, false));
@@ -44,6 +42,7 @@ export class SkinService {
   }
 
   public async getRender(uuid: string, extruded: boolean): Promise<Buffer> {
+    const { renderSkin } = await import("@statsify/skin-renderer");
     const skin = await this.getSkin(uuid);
     const { skin: image } = await this.resolveSkin(skin.skinUrl, skin.slim);
     // This field is set by loadImage from `@statsify/rendering`
@@ -86,12 +85,14 @@ export class SkinService {
     slim?: boolean
   ): Promise<{ skin: Image; slim: boolean }> {
     if (!skinUrl) {
+      const { getMinecraftTexturePath } = await import("@statsify/assets");
       return this.resolveSkin(
         getMinecraftTexturePath("textures/entity/steve.png"),
         false
       );
     }
 
+    const { loadImage } = await import("@statsify/rendering");
     const skin = await loadImage(skinUrl);
 
     return {
