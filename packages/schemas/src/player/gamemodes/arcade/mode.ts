@@ -803,6 +803,12 @@ export class FarmHunt {
   public hunterKills: number;
 
   @Field()
+  public animalKillsPerWin: number;
+
+  @Field()
+  public hunterKillsPerWin: number;
+
+  @Field()
   public tauntsUsed: number;
 
   @Field()
@@ -815,6 +821,8 @@ export class FarmHunt {
     this.kills = data.kills_farm_hunt;
     this.animalKills = data.animal_kills_farm_hunt;
     this.hunterKills = data.hunter_kills_farm_hunt;
+    this.animalKillsPerWin = ratio(this.animalKills, this.animalWins);
+    this.hunterKillsPerWin = ratio(this.hunterKills, this.hunterWins);
     this.poopCollected = add(
       data.poop_collected,
       data.poop_collected_farm_hunt
@@ -863,6 +871,9 @@ export class GalaxyWars {
   @Field()
   public rebelKills: number;
 
+  @Field()
+  public shotsFired: number;
+
   public constructor(data: APIData) {
     this.wins = data.sw_game_wins;
     this.kills = data.sw_kills;
@@ -870,6 +881,7 @@ export class GalaxyWars {
     this.kdr = ratio(this.kills, this.deaths);
     this.empireKills = data.sw_empire_kills;
     this.rebelKills = data.sw_rebel_kills;
+    this.shotsFired = data.sw_shots_fired;
   }
 }
 
@@ -1377,7 +1389,7 @@ export class ZombiesMapDifficulty {
   })
   public fastestWin: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public kills: number;
 
   @Field({ leaderboard: { enabled: false } })

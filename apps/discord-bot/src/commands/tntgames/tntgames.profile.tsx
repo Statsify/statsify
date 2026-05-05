@@ -31,6 +31,7 @@ export const TNTGamesProfile = ({
   const sidebar: SidebarItem[] = [
     [t("stats.coins"), t(tntgames.coins), "§6"],
     [t("stats.overallWins"), t(tntgames.wins), "§e"],
+    [t("stats.playtime"), formatTime(tntgames.playtime), "§a"],
   ];
 
   let table;

@@ -1,6 +1,7 @@
 {
   "arguments": {
     "choice": "Choose an option",
+    "emoji": "A Discord emoji",
     "file": "Upload a file",
     "gtbhelper": "The current hint",
     "guild-leaderboard": "$t(arguments.player-leaderboard)",
@@ -427,6 +428,10 @@
       "description": "The leaderboard position you entered is invalid. Enter a number greater than 1.",
       "title": "Invalid Position"
     },
+    "leaderboardInvalidValue": {
+      "description": "The leaderboard value you entered is invalid. Enter a positive number. Suffixes like k, m, b, and t are supported.",
+      "title": "Invalid Value"
+    },
     "leaderboardNotFound": {
       "description": "We can't find the `leaderboard` you are looking for!",
       "title": "Leaderboard Not Found"
@@ -538,6 +543,11 @@
     "positionInput": {
       "label": "Search by a Position",
       "placeholder": "Enter a position, eg: 5000"
+    },
+    "valueInput": {
+      "button": "Value",
+      "label": "Search by a Value",
+      "placeholder": "Enter a value, eg: 5k"
     }
   },
   "minecraft": {
@@ -576,6 +586,7 @@
     "blocksBroken": "Blocks Broken",
     "blocksPlaced": "Blocks Placed",
     "blocksRan": "Blocks Ran",
+    "blocksTravelled": "Blocks Travelled",
     "bombsDefused": "Bombs Defused",
     "bombsPlanted": "Bombs Planted",
     "bounty": "Bounty",
@@ -629,6 +640,7 @@
     "goldEarned": "Gold Earned",
     "goldPickedUp": "Gold Picked Up",
     "goldRate": "Gold Rate",
+    "goldRequirement": "Gold Requirement",
     "goldSpent": "Gold Spent",
     "goldTrophies": "Gold Trophies",
     "grandPrixTokens": "GP Tokens",
@@ -680,6 +692,7 @@
     "killsAsMurderer": "Kills As Murderer",
     "killsAsSurvivor": "Kills as Survivor",
     "killsAsAlpha": "Kills as Alpha",
+    "killsPerWin": "Kills Per Win",
     "killstreaks": "Killstreaks",
     "kit": "Current Kit",
     "knife": "Knife",
@@ -704,6 +717,7 @@
     "magicalKeys": "Magical Keys",
     "map": "Map",
     "mastery": "Mastery",
+    "matchesPlayed": "Matches Played",
     "maxPoints": "Max Score",
     "maxWave": "Max Wave",
     "mode": "Mode",
@@ -728,10 +742,12 @@
     "powerupActivations": "Power-Up Activations",
     "powerups": "Power-Ups",
     "prefix": "Prefix",
+    "prestigeGold": "Prestige Gold",
     "prevent": "Prevent",
     "progression": {
       "exp": "EXP Progress",
       "gexp": "GEXP Progress",
+      "gold": "Gold Progress",
       "goldTrophy": "Gold Trophy Progress",
       "kill": "Kill Progress",
       "score": "Score Progress",
@@ -769,7 +785,9 @@
     "title": "Title",
     "tokens": "Tokens",
     "total": "Total",
+    "totalKills": "Total Kills",
     "totalSlumberTickets": "Total Slumber Tickets",
+    "totalWins": "Total Wins",
     "totalTrophies": "Total Trophies",
     "trail": "Trail",
     "transfusion": "Transfusion",

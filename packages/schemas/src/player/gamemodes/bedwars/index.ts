@@ -33,20 +33,20 @@ export const BEDWARS_MODES = new GameModes([
   { api: "voidless" },
   { api: "oneBlock", hypixel: "BEDWARS_EIGHT_ONE_ONEBLOCK" },
 
-  { hypixel: "BEDWARS_EIGHT_TWO_ARMED", formatted: "Armed Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_ARMED", formatted: "Armed Fours" },
-  { hypixel: "BEDWARS_EIGHT_TWO_LUCKY", formatted: "Lucky Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_LUCKY", formatted: "Lucky Fours" },
-  { hypixel: "BEDWARS_EIGHT_TWO_RUSH", formatted: "Rush Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_RUSH", formatted: "Rush Fours" },
-  { hypixel: "BEDWARS_EIGHT_TWO_SWAP", formatted: "Swap Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_SWAP", formatted: "Swap Fours" },
-  { hypixel: "BEDWARS_EIGHT_TWO_ULTIMATE", formatted: "Ultimate Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_ULTIMATE", formatted: "Ultimate Fours" },
-  { hypixel: "BEDWARS_EIGHT_TWO_UNDERWORLD", formatted: "Underworld Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_UNDERWORLD", formatted: "Underworld Fours" },
-  { hypixel: "BEDWARS_EIGHT_TWO_VOIDLESS", formatted: "Voidless Doubles" },
-  { hypixel: "BEDWARS_FOUR_FOUR_VOIDLESS", formatted: "Voidless Fours" },
+  { api: "armedDoubles", hypixel: "BEDWARS_EIGHT_TWO_ARMED", formatted: "Armed Doubles" },
+  { api: "armedFours", hypixel: "BEDWARS_FOUR_FOUR_ARMED", formatted: "Armed Fours" },
+  { api: "luckyDoubles", hypixel: "BEDWARS_EIGHT_TWO_LUCKY", formatted: "Lucky Doubles" },
+  { api: "luckyFours", hypixel: "BEDWARS_FOUR_FOUR_LUCKY", formatted: "Lucky Fours" },
+  { api: "rushDoubles", hypixel: "BEDWARS_EIGHT_TWO_RUSH", formatted: "Rush Doubles" },
+  { api: "rushFours", hypixel: "BEDWARS_FOUR_FOUR_RUSH", formatted: "Rush Fours" },
+  { api: "swapDoubles", hypixel: "BEDWARS_EIGHT_TWO_SWAP", formatted: "Swap Doubles" },
+  { api: "swapFours", hypixel: "BEDWARS_FOUR_FOUR_SWAP", formatted: "Swap Fours" },
+  { api: "ultimateDoubles", hypixel: "BEDWARS_EIGHT_TWO_ULTIMATE", formatted: "Ultimate Doubles" },
+  { api: "ultimateFours", hypixel: "BEDWARS_FOUR_FOUR_ULTIMATE", formatted: "Ultimate Fours" },
+  { api: "underworldDoubles", hypixel: "BEDWARS_EIGHT_TWO_UNDERWORLD", formatted: "Underworld Doubles" },
+  { api: "underworldFours", hypixel: "BEDWARS_FOUR_FOUR_UNDERWORLD", formatted: "Underworld Fours" },
+  { api: "voidlessDoubles", hypixel: "BEDWARS_EIGHT_TWO_VOIDLESS", formatted: "Voidless Doubles" },
+  { api: "voidlessFours", hypixel: "BEDWARS_FOUR_FOUR_VOIDLESS", formatted: "Voidless Fours" },
   { hypixel: "BEDWARS_PRACTICE", formatted: "Practice" },
 ] as const);
 
@@ -140,6 +140,48 @@ export class BedWars {
   public oneBlock: BedWarsMode;
 
   @Field()
+  public armedDoubles: BedWarsMode;
+
+  @Field()
+  public armedFours: BedWarsMode;
+
+  @Field()
+  public luckyDoubles: BedWarsMode;
+
+  @Field()
+  public luckyFours: BedWarsMode;
+
+  @Field()
+  public rushDoubles: BedWarsMode;
+
+  @Field()
+  public rushFours: BedWarsMode;
+
+  @Field()
+  public swapDoubles: BedWarsMode;
+
+  @Field()
+  public swapFours: BedWarsMode;
+
+  @Field()
+  public ultimateDoubles: BedWarsMode;
+
+  @Field()
+  public ultimateFours: BedWarsMode;
+
+  @Field()
+  public underworldDoubles: BedWarsMode;
+
+  @Field()
+  public underworldFours: BedWarsMode;
+
+  @Field()
+  public voidlessDoubles: BedWarsMode;
+
+  @Field()
+  public voidlessFours: BedWarsMode;
+
+  @Field()
   public challenges: ChallengesBedWars;
 
   @Field({ leaderboard: { fieldName: "" } })
@@ -178,6 +220,21 @@ export class BedWars {
     this.underworld = DreamsBedWarsMode.new(data, "underworld");
     this.voidless = DreamsBedWarsMode.new(data, "voidless");
     this.oneBlock = new BedWarsMode(data, "eight_one_oneblock");
+
+    this.armedDoubles = new BedWarsMode(data, "eight_two_armed");
+    this.armedFours = new BedWarsMode(data, "four_four_armed");
+    this.luckyDoubles = new BedWarsMode(data, "eight_two_lucky");
+    this.luckyFours = new BedWarsMode(data, "four_four_lucky");
+    this.rushDoubles = new BedWarsMode(data, "eight_two_rush");
+    this.rushFours = new BedWarsMode(data, "four_four_rush");
+    this.swapDoubles = new BedWarsMode(data, "eight_two_swap");
+    this.swapFours = new BedWarsMode(data, "four_four_swap");
+    this.ultimateDoubles = new BedWarsMode(data, "eight_two_ultimate");
+    this.ultimateFours = new BedWarsMode(data, "four_four_ultimate");
+    this.underworldDoubles = new BedWarsMode(data, "eight_two_underworld");
+    this.underworldFours = new BedWarsMode(data, "four_four_underworld");
+    this.voidlessDoubles = new BedWarsMode(data, "eight_two_voidless");
+    this.voidlessFours = new BedWarsMode(data, "four_four_voidless");
 
     this.core = deepSub(this.overall, this["4v4"]);
     BedWarsMode.applyRatios(this.core);

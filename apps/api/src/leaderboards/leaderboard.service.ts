@@ -117,6 +117,18 @@ export abstract class LeaderboardService {
         bottom = top + PAGE_SIZE;
         break;
       }
+      case LeaderboardQuery.VALUE: {
+        const ranking = await this.searchLeaderboardValue(
+          constructor,
+          field,
+          input as number,
+          sort
+        );
+        highlight = ranking - 1;
+        top = highlight - (highlight % 10);
+        bottom = top + PAGE_SIZE;
+        break;
+      }
     }
 
     const leaderboard = await this.getLeaderboardFromRedis(
@@ -300,6 +312,36 @@ export abstract class LeaderboardService {
     }
 
     return response;
+  }
+
+  private async searchLeaderboardValue<T>(
+    constructor: Constructor<T>,
+    field: string,
+    value: number,
+    sort = "DESC"
+  ): Promise<number> {
+    const name = constructor.name.toLowerCase();
+    const key = `${name}.${field}`;
+
+    const result = await this.redis.zrevrangebyscore(
+      key,
+      value,
+      "-inf",
+      "LIMIT",
+      0,
+      1
+    );
+
+    const fallback = await this.redis.zrange(key, 0, 0);
+
+    const id = result[0] ?? fallback[0];
+    if (!id) return 1;
+
+    const rank = sort === "ASC" ?
+      await this.redis.zrank(key, id) :
+      await this.redis.zrevrank(key, id);
+
+    return (rank ?? 0) + 1;
   }
 
   private getLeaderboardExpiryTime(leaderboard: LeaderboardEnabledMetadata): number {

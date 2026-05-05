@@ -163,4 +163,4 @@ export class Quests {
   }
 }
 
-export { QuestTime } from "./util.js";
+export { QuestTime, type QuestProgress } from "./util.js";

@@ -57,7 +57,7 @@ export const RankingsProfile = ({
   game,
   badge,
 }: RankingsProfileProps) => {
-  const listTitles = ["Statistic", "Pos", "Value"];
+  const listTitles = ["Statistic", "Pos", "Page", "Value"];
   if (!game) listTitles.unshift("Game");
 
   const titles = listTitles.map((field) => (
@@ -85,6 +85,9 @@ export const RankingsProfile = ({
         </box>
         <box width="100%">
           <text>{formatPosition(t, d.rank)}</text>
+        </box>
+        <box width="100%">
+          <text>{t(Math.floor((d.rank - 1) / 10) + 1)}</text>
         </box>
         <box width="100%">
           <text>{typeof d.value === "string" ? d.value : t(d.value)}</text>

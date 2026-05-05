@@ -42,6 +42,7 @@ export const DuelsProfile = <T extends ProfileTime>({
   const sidebar: SidebarItem[] = [
     [t("stats.tokens"), t(duels.tokens), "§2"],
     [t("stats.pingRange"), `${t(duels.pingRange)}ms`, "§a"],
+    [t("stats.matchesPlayed"), t(duels.overall.wins + duels.overall.losses), "§e"],
     [t("stats.blocksPlaced"), t(duels.overall.blocksPlaced), "§9"],
   ];
 

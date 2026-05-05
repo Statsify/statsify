@@ -36,6 +36,7 @@ import {
 } from "./gamemodes/index.js";
 import { Field } from "#metadata";
 import { FormattedGame } from "#game";
+import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
 
 export class PlayerStats {
@@ -253,5 +254,56 @@ export class PlayerStats {
     this.walls = new Walls(stats.Walls ?? {}, legacy);
     this.warlords = new Warlords(stats.Battleground ?? {});
     this.woolgames = new WoolGames(stats.WoolGames ?? {}, achievements);
+
+    this.general.totalWins = add(
+      this.arcade.wins,
+      this.arenabrawl.overall.wins,
+      this.bedwars.overall.wins,
+      this.blitzsg.overall.wins,
+      this.buildbattle.overall.wins,
+      this.copsandcrims.overall.wins,
+      this.duels.overall.wins,
+      this.megawalls.overall.wins,
+      this.murdermystery.overall.wins,
+      this.paintball.wins,
+      this.quake.overall.wins,
+      this.skywars.overall.wins,
+      this.smashheroes.overall.wins,
+      this.speeduhc.overall.wins,
+      this.tntgames.wins,
+      this.uhc.overall.wins,
+      this.vampirez.overallWins,
+      this.walls.wins,
+      this.warlords.wins,
+      this.woolgames.wins
+    );
+
+    this.general.totalKills = add(
+      this.arenabrawl.overall.kills,
+      this.bedwars.overall.kills,
+      this.blitzsg.overall.kills,
+      this.copsandcrims.overall.kills,
+      this.duels.overall.kills,
+      this.megawalls.overall.kills,
+      this.murdermystery.overall.kills,
+      this.paintball.kills,
+      this.pit.kills,
+      this.quake.overall.kills,
+      this.skywars.overall.kills,
+      this.smashheroes.overall.kills,
+      this.speeduhc.overall.kills,
+      this.tntgames.pvpRun.kills,
+      this.tntgames.tntTag.kills,
+      this.tntgames.wizards.kills,
+      this.uhc.overall.kills,
+      this.vampirez.human.kills,
+      this.vampirez.vampire.kills,
+      this.vampirez.zombieKills,
+      this.walls.kills,
+      this.warlords.kills,
+      this.woolgames.woolwars.overall.kills,
+      this.woolgames.sheepwars.kills,
+      this.woolgames.captureTheWool.kills
+    );
   }
 }

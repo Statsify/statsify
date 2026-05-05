@@ -29,7 +29,7 @@ export class GuildLeaderboardController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 10 })
   public async getGuildLeaderboard(
-    @Body() { field, page, guild, position }: GuildLeaderboardDto
+    @Body() { field, page, guild, position, value }: GuildLeaderboardDto
   ) {
     let input: number | string;
     let type: LeaderboardQuery;
@@ -40,6 +40,9 @@ export class GuildLeaderboardController {
     } else if (position) {
       input = position;
       type = LeaderboardQuery.POSITION;
+    } else if (typeof value === "number") {
+      input = value;
+      type = LeaderboardQuery.VALUE;
     } else {
       input = page;
       type = LeaderboardQuery.PAGE;

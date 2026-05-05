@@ -16,6 +16,7 @@ import {
   getLevel,
   getLevelFormatted,
   getPrestige,
+  getPrestigeGoldReq,
   getPrestigeReq,
   getRenownShopCost,
 } from "./util.js";
@@ -78,6 +79,15 @@ export class Pit {
     historical: { additionalFields: [] },
   })
   public goldEarned: number;
+
+  @Field({ leaderboard: { enabled: false }, historical: { enabled: false } })
+  public prestigeGold: number;
+
+  @Field({ leaderboard: { enabled: false }, historical: { enabled: false } })
+  public goldRequirement: number;
+
+  @Field({ leaderboard: { enabled: false }, historical: { enabled: false } })
+  public goldProgression: Progression;
 
   @Field({ historical: { enabled: false } })
   public renown: number;
@@ -162,10 +172,18 @@ export class Pit {
     this.trueLevel = prestige * 120 + level;
 
     const lastPrestigeReq = getPrestigeReq(prestige - 1);
+    const prestigeGoldReq = getPrestigeGoldReq(prestige);
+
+    this.prestigeGold = profile[`cash_during_prestige_${prestige}`] ?? 0;
+    this.goldRequirement = prestigeGoldReq;
 
     this.progression = new Progression(
       this.exp - lastPrestigeReq,
       Math.min(getPrestigeReq(prestige) - lastPrestigeReq, 11_787_293_080)
+    );
+    this.goldProgression = new Progression(
+      this.prestigeGold,
+      Math.max(prestigeGoldReq, 0)
     );
 
     this.levelFormatted = getLevelFormatted(level, prestige);

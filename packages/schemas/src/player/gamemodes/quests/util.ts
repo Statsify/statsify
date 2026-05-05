@@ -18,6 +18,14 @@ import { FormattedGame } from "#game";
 
 interface Quest {
   completions?: { time: number }[];
+  active?: {
+    objectives?: Record<string, number>;
+  };
+}
+
+export interface QuestProgress {
+  current: number;
+  max?: number;
 }
 
 export enum QuestTime {
@@ -32,6 +40,7 @@ export interface QuestOption<TField extends string> {
   propertyKey: TField;
   fieldName?: string;
   name?: string;
+  objectives?: Record<string, number>;
   leaderboard?: false;
   overall?: {
     fieldName?: string;
@@ -64,7 +73,7 @@ export interface CreateQuestsOptions<
 }
 
 const processQuests = (
-  instance: Record<string, number>,
+  instance: Record<string, number> & { __progress?: Record<string, QuestProgress> },
   quests: APIData,
   time: QuestTime,
   options: QuestOption<string>[],
@@ -76,6 +85,12 @@ const processQuests = (
 
     instance[k] = getQuestCountDuring(time, quests[field]);
     instance.total += instance[k] ?? 0;
+
+    const progress = getQuestProgress(quests[field], quest);
+    if (progress) {
+      instance.__progress ??= {};
+      instance.__progress[k] = progress;
+    }
   });
 };
 
@@ -271,4 +286,25 @@ export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) =
   const millis = t.toMillis();
 
   return quest.completions.filter((ms) => ms.time >= millis).length;
+};
+
+export const getQuestProgress = (
+  quest: Quest | undefined,
+  option: QuestOption<string>
+): QuestProgress | undefined => {
+  const objectives = quest?.active?.objectives;
+  if (!objectives) return undefined;
+
+  const entries = Object.entries(objectives);
+  if (!entries.length) return undefined;
+
+  const current = entries.reduce((total, [, value]) => total + (value ?? 0), 0);
+  const max = option.objectives ?
+    Object.entries(option.objectives).reduce(
+      (total, [objective, value]) => total + (objectives[objective] === undefined ? 0 : value),
+      0
+    ) :
+    undefined;
+
+  return { current, max: max || undefined };
 };

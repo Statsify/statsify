@@ -19,6 +19,7 @@ import {
   MetadataScanner,
   OverallQuests,
   QuestModes,
+  QuestProgress,
   QuestTime,
   User,
   UserPalette,
@@ -143,12 +144,31 @@ interface GameTableProps {
 
 const GameTable = ({ quests, t, game, time, logos: [cross, check] }: GameTableProps) => {
   const isOverall = time === QuestTime.Overall;
+  const progress = (quests as GameQuests & { __progress?: Record<string, QuestProgress> }).__progress ?? {};
 
   const entries = Object.entries(quests)
-    .filter(([k, v]) => k !== "total" && v !== null)
+    .filter(([k, v]) => k !== "total" && k !== "__progress" && v !== null)
     .sort((a, b) => b[1] - a[1])
     .map(([quest, completions]) => {
       const name = questMetadata[time][game][quest].leaderboard.name;
+      const questProgress = progress[quest];
+      let progressText: string | undefined;
+
+      if (questProgress?.max) {
+        progressText = `${t(questProgress.current)}/${t(questProgress.max)}`;
+      } else if (questProgress) {
+        progressText = t(questProgress.current);
+      }
+
+      let status: JSX.Element;
+
+      if (isOverall) {
+        status = <text>{t(completions)}</text>;
+      } else if (progressText && completions === 0) {
+        status = <text>§e{progressText}</text>;
+      } else {
+        status = <img margin={2} image={completions === 0 ? cross : check} />;
+      }
 
       return (
         <box width="100%">
@@ -156,9 +176,7 @@ const GameTable = ({ quests, t, game, time, logos: [cross, check] }: GameTablePr
             {completions > 0 ? "§a" : "§c"}§l{name}
           </text>
           <div width="remaining" />
-          {isOverall ?
-            <text>{t(completions)}</text> :
-            <img margin={2} image={completions === 0 ? cross : check} />}
+          {status}
         </box>
       );
     });

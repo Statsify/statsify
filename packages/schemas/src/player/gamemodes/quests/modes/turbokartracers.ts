@@ -13,8 +13,8 @@ export const TurboKartRacersQuests = createGameModeQuests({
   game: FormattedGame.TURBO_KART_RACERS,
   fieldPrefix: "gingerbread",
   daily: [
-    { field: "bling_bling", propertyKey: "blingBling" },
-    { field: "maps", propertyKey: "internationalChampionship" },
+    { field: "bling_bling", propertyKey: "blingBling", objectives: { gingerbread_gold_pickedup: 50 } },
+    { field: "maps", propertyKey: "internationalChampionship", objectives: { gingerbread_maps: 5 } },
     { field: "racer", propertyKey: "racer" },
   ],
   weekly: [{ field: "mastery", propertyKey: "turboKartRacers" }],

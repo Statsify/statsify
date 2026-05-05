@@ -42,7 +42,11 @@ export const WarlordsProfile = ({
     sidebar.push([t("stats.class"), prettify(warlords.class), "§e"]);
     const clazz = warlords.class as "mage" | "warrior" | "paladin" | "shaman";
     // Verify that the cast is correct and the class is a valid class
-    if (clazz in warlords && typeof warlords[clazz] === "object") sidebar.push([t("stats.spec"), prettify(warlords[clazz].specification), "§a"]);
+    if (clazz in warlords && typeof warlords[clazz] === "object")
+      sidebar.push(
+        [t("stats.spec"), prettify(warlords[clazz].specification), "§a"],
+        [t("stats.level"), t(warlords[clazz].level), "§a"]
+      );
   }
 
   let table: JSX.Element;

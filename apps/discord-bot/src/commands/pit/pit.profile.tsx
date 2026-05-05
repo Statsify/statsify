@@ -54,6 +54,13 @@ export const PitProfile = ({
           currentLevel: pit.levelFormatted,
           nextLevel: pit.nextLevelFormatted,
           showLevel: true,
+        })}\n${formatProgression({
+          t,
+          label: t("stats.progression.gold"),
+          progression: pit.goldProgression,
+          currentLevel: pit.levelFormatted,
+          nextLevel: pit.nextLevelFormatted,
+          showLevel: false,
         })}`}
         sidebar={sidebar}
         badge={badge}
@@ -80,6 +87,21 @@ export const PitProfile = ({
           />
           <Table.td title={t("stats.assists")} value={t(pit.assists)} color="§e" />
         </Table.tr>
+        <Historical.exclude time={time}>
+          <Table.tr>
+            <Table.td title={t("stats.exp")} value={t(pit.exp)} color="§b" />
+            <Table.td
+              title={t("stats.prestigeGold")}
+              value={t(pit.prestigeGold)}
+              color="§6"
+            />
+            <Table.td
+              title={t("stats.goldRequirement")}
+              value={pit.goldRequirement > 0 ? t(pit.goldRequirement) : "§7N/A"}
+              color="§e"
+            />
+          </Table.tr>
+        </Historical.exclude>
       </Table.table>
       <Historical.progression
         time={time}

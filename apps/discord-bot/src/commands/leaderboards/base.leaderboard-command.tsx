@@ -48,6 +48,25 @@ type GetLeaderboard = (
 
 type GetLeaderboardDataIcon = (id: string) => Promise<Image>;
 
+const parseLeaderboardValue = (input: string): number => {
+  const normalized = input.trim().replaceAll(",", "").toLowerCase();
+  const match = normalized.match(/^(\d+(?:\.\d+)?)([kmbt])?$/);
+
+  if (!match) return Number.NaN;
+
+  const suffixes = {
+    k: 1000,
+    m: 1_000_000,
+    b: 1_000_000_000,
+    t: 1_000_000_000_000,
+  };
+
+  const [, value, suffix] = match;
+  const multiplier = suffix ? suffixes[suffix as keyof typeof suffixes] : 1;
+
+  return Number(value) * multiplier;
+};
+
 export interface CreateLeaderboardOptions {
   context: CommandContext;
   background: Image;
@@ -96,6 +115,10 @@ export class BaseLeaderboardCommand {
       .emoji(t("emojis:search.position"))
       .style(ButtonStyle.Primary);
 
+    const searchValue = new ButtonBuilder()
+      .label((t) => t("leaderboard.valueInput.button"))
+      .style(ButtonStyle.Primary);
+
     let currentPage = 0;
 
     const changePage =
@@ -117,8 +140,14 @@ export class BaseLeaderboardCommand {
 
         if (interaction.getUserId() === userId && !message.ephemeral) {
           up.disable(page === 0);
-          currentPage = page || currentPage;
-          const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
+          currentPage = page ?? currentPage;
+          const row = new ActionRowBuilder([
+            up,
+            down,
+            searchDocument,
+            searchPosition,
+            searchValue,
+          ]);
 
           context.reply({
             ...message,
@@ -174,6 +203,19 @@ export class BaseLeaderboardCommand {
         )
       );
 
+    const valueModal = new ModalBuilder()
+      .title((t) => t("leaderboard.modal.title"))
+      .component(
+        new ActionRowBuilder().component(
+          new TextInputBuilder()
+            .label((t) => t("leaderboard.valueInput.label"))
+            .placeholder((t) => t("leaderboard.valueInput.placeholder"))
+            .minLength(1)
+            .maxLength(16)
+            .required(true)
+        )
+      );
+
     listener.addHook(searchDocument.getCustomId(), () => ({
       type: InteractionResponseType.Modal,
       data: documentModal.build(t),
@@ -182,6 +224,11 @@ export class BaseLeaderboardCommand {
     listener.addHook(searchPosition.getCustomId(), () => ({
       type: InteractionResponseType.Modal,
       data: positionModal.build(t),
+    }));
+
+    listener.addHook(searchValue.getCustomId(), () => ({
+      type: InteractionResponseType.Modal,
+      data: valueModal.build(t),
     }));
 
     listener.addHook(documentModal.getCustomId(), async (interaction) => {
@@ -214,7 +261,29 @@ export class BaseLeaderboardCommand {
       );
     });
 
-    const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
+    listener.addHook(valueModal.getCustomId(), async (interaction) => {
+      const data = interaction.getData();
+      const valueInput = data.components[0].components[0].value;
+
+      const value = parseLeaderboardValue(valueInput);
+
+      if (user?.locale) interaction.setLocale(user.locale);
+
+      if (Number.isNaN(value) || value < 0) {
+        const error = new ErrorMessage("errors.leaderboardInvalidValue");
+
+        return interaction.sendFollowup({
+          ...error,
+          ephemeral: true,
+        });
+      }
+
+      changePage(() => ({ input: value, type: LeaderboardQuery.VALUE }))(
+        interaction
+      );
+    });
+
+    const row = new ActionRowBuilder([up, down, searchDocument, searchPosition, searchValue]);
 
     const [message, page] = await this.getLeaderboardMessage(
       user,
@@ -234,14 +303,16 @@ export class BaseLeaderboardCommand {
       listener.removeHook(down.getCustomId());
       listener.removeHook(searchDocument.getCustomId());
       listener.removeHook(searchPosition.getCustomId());
+      listener.removeHook(searchValue.getCustomId());
       listener.removeHook(documentModal.getCustomId());
       listener.removeHook(positionModal.getCustomId());
+      listener.removeHook(valueModal.getCustomId());
 
       context.reply({ embeds: [], components: [] });
       cache.clear();
     }, 300_000);
 
-    currentPage = page || currentPage;
+    currentPage = page ?? currentPage;
 
     return { ...message, components: [row] };
   }
@@ -271,7 +342,7 @@ export class BaseLeaderboardCommand {
       getLeaderboardDataIcon
     );
 
-    if (params.type === LeaderboardQuery.PAGE && page) cache.set(page, message);
+    if (params.type === LeaderboardQuery.PAGE && page !== null) cache.set(page, message);
 
     return [message, page];
   }
