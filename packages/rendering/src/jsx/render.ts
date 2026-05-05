@@ -7,10 +7,11 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { Canvas, type CanvasRenderingContext2D } from "skia-canvas";
+import { type Canvas, type CanvasRenderingContext2D } from "skia-canvas";
 import { Container } from "typedi";
 import { FontRenderer } from "#font";
 import { IntrinsicRenders, intrinsicRenders } from "./instrinsics.js";
+import { createCanvas } from "../canvas.js";
 import { createInstructions } from "./create-instructions.js";
 import { getPositionalDelta, getTotalSize } from "./util.js";
 import { noop } from "@statsify/util";
@@ -137,7 +138,7 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
     description: "Render JSX",
   });
 
-  const canvas = new Canvas(width, height);
+  const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = false;
 
