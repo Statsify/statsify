@@ -111,8 +111,6 @@ export const GeneralProfile = ({
             value={t(challenges.total)}
             color="§a"
           />
-        </Table.tr>
-        <Table.tr>
           <Table.td
             title={t("stats.totalWins")}
             value={t(general.totalWins)}
