@@ -243,8 +243,10 @@ export class FontRenderer {
     const characterSize =
       sizes[isAscii ? "ascii" : "unicode"][unicode.toUpperCase()];
 
-    const startOffset = characterSize?.start ?? 0;
-    const width = characterSize?.width ?? 0;
+    if (!characterSize?.width) return null;
+
+    const startOffset = characterSize.start ?? 0;
+    const width = characterSize.width;
 
     return {
       x: (startOffset + x * 16) * scale,
