@@ -8,16 +8,22 @@
 
 import * as Sentry from "@sentry/node";
 import { Logger } from "@statsify/logger";
-import { type ServerClient, createServer } from "minecraft-protocol";
+import { type ServerClient, createServer, states } from "minecraft-protocol";
 import { UserLogo, VerifyCode } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { connect } from "mongoose";
+import { createRequire } from "node:module";
 import { generateCode } from "./generate-code.js";
 import { getLogoPath } from "@statsify/assets";
 import { getModelForClass } from "@typegoose/typegoose";
 import { readFileSync } from "node:fs";
 
 const logger = new Logger("verify-server");
+const require = createRequire(import.meta.url);
+const minecraftProtocolRequire = createRequire(require.resolve("minecraft-protocol"));
+const minecraftData = minecraftProtocolRequire("minecraft-data") as (
+  protocolVersion: number
+) => unknown;
 
 const handleError = logger.error.bind(logger);
 
@@ -47,6 +53,8 @@ const clientDetails = (client: ServerClient) =>
   `id=${client.id} username=${client.username ?? "unknown"} uuid=${
     client.uuid ?? "unknown"
   } version=${client.version} protocol=${client.protocolVersion} state=${client.state}`;
+
+const isSupportedProtocol = (protocolVersion: number) => Boolean(minecraftData(protocolVersion));
 
 const sentryDsn = await config("sentry.verifyServerDsn", { required: false });
 
@@ -89,6 +97,24 @@ logger.log("Server Started");
 
 server.on("connection", (client) => {
   logger.verbose(`Connection opened: ${clientDetails(client)}`);
+
+  client.prependOnceListener("set_protocol", (packet: {
+    nextState: number;
+    protocolVersion: number;
+  }) => {
+    if (packet.nextState !== 2 || isSupportedProtocol(packet.protocolVersion)) return;
+
+    logger.warn(
+      `Unsupported Minecraft protocol attempted login: ` +
+      `protocol=${packet.protocolVersion} ${clientDetails(client)}`
+    );
+
+    // minecraft-protocol ends unsupported handshakes before setting LOGIN state.
+    // Moving to LOGIN first lets the client receive a visible disconnect packet
+    // instead of continuing into mismatched configuration registry data.
+    client.state = states.LOGIN;
+    client.removeAllListeners("login_start");
+  });
 
   client.on("state", (newState, oldState) => {
     logger.verbose(`Connection state changed: ${clientDetails(client)} ${oldState} -> ${newState}`);
