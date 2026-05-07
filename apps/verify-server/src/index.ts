@@ -12,7 +12,6 @@ import {
   type ServerClient,
   createServer,
   states,
-  supportedVersions,
 } from "minecraft-protocol";
 import { UserLogo, VerifyCode } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
@@ -29,6 +28,8 @@ const minecraftProtocolRequire = createRequire(require.resolve("minecraft-protoc
 const minecraftData = minecraftProtocolRequire("minecraft-data") as (
   protocolVersion: number
 ) => unknown;
+const supportedVersions = minecraftProtocolRequire("minecraft-protocol")
+  .supportedVersions as string[];
 
 const handleError = logger.error.bind(logger);
 
