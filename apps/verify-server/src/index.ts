@@ -74,7 +74,7 @@ const server = createServer({
 
 logger.log("Server Started");
 
-server.on("login", async (client) => {
+server.on("playerJoin", async (client) => {
   try {
     logger.verbose(`${client.username} [${client.uuid}] has joined`);
 
