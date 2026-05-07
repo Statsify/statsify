@@ -8,7 +8,12 @@
 
 import * as Sentry from "@sentry/node";
 import { Logger } from "@statsify/logger";
-import { type ServerClient, createServer, states } from "minecraft-protocol";
+import {
+  type ServerClient,
+  createServer,
+  states,
+  supportedVersions,
+} from "minecraft-protocol";
 import { UserLogo, VerifyCode } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
 import { connect } from "mongoose";
@@ -40,6 +45,11 @@ const codeCreatedMessage = (code: string, time: Date) => {
     { short: false }
   )}§r§7.`;
 };
+
+const unsupportedProtocolMessage = (protocolVersion: number) =>
+  `§9§lStatsify Verification Server\n\n§r§7Your Minecraft version is not supported yet.\n\n§r§7Please try again with §c§lMinecraft ${
+    supportedVersions.at(-1) ?? "a supported version"
+  }§r§7 or older.\n\n§r§8Protocol ${protocolVersion}`;
 
 const supportsFeature = (client: ServerClient, feature: string) => {
   const supportFeature = (client as ServerClient & {
@@ -114,6 +124,16 @@ server.on("connection", (client) => {
     // instead of continuing into mismatched configuration registry data.
     client.state = states.LOGIN;
     client.removeAllListeners("login_start");
+
+    const end = client.end.bind(client);
+
+    client.end = (reason?: string) => {
+      if (reason === `Protocol version ${packet.protocolVersion} is not supported`) {
+        return end(unsupportedProtocolMessage(packet.protocolVersion));
+      }
+
+      return end(reason);
+    };
   });
 
   client.on("state", (newState, oldState) => {
