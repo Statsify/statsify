@@ -143,20 +143,32 @@ export class BridgeDuels {
   @Field()
   public fours: BridgeDuelsMode;
 
+  @Field()
+  public twoVTwoVTwoVTwo: BridgeDuelsMode;
+
+  @Field()
+  public threeVThreeVThreeVThree: BridgeDuelsMode;
+
+  @Field()
+  public capture: BridgeDuelsMode;
+
   public constructor(data: APIData) {
     this.solo = new BridgeDuelsMode(data, "bridge_duel");
     this.doubles = new BridgeDuelsMode(data, "bridge_doubles");
     this.threes = new BridgeDuelsMode(data, "bridge_threes");
     this.fours = new BridgeDuelsMode(data, "bridge_four");
+    this.twoVTwoVTwoVTwo = new BridgeDuelsMode(data, "bridge_2v2v2v2");
+    this.threeVThreeVThreeVThree = new BridgeDuelsMode(data, "bridge_3v3v3v3");
+    this.capture = new BridgeDuelsMode(data, "capture_threes");
 
     this.overall = deepAdd(
       this.solo,
       this.doubles,
       this.threes,
       this.fours,
-      new BridgeDuelsMode(data, "bridge_2v2v2v2"),
-      new BridgeDuelsMode(data, "bridge_3v3v3v3"),
-      new BridgeDuelsMode(data, "capture_threes")
+      this.twoVTwoVTwoVTwo,
+      this.threeVThreeVThreeVThree,
+      this.capture
     );
 
     this.overall.winstreak = data.current_bridge_winstreak;
@@ -591,16 +603,24 @@ export class ParkourDuels extends SingleDuelsGameMode {
 }
 
 export class MegaWallsDuels extends SinglePVPDuelsGameMode {
+  @Field()
+  public solo: PVPBaseDuelsGameMode;
+
+  @Field()
+  public doubles: PVPBaseDuelsGameMode;
+
   public constructor(data: APIData) {
     super(data, "Mega Walls", "mw_duel", "half");
 
     // add back doubles stats
-    const doubles = new PVPBaseDuelsGameMode(data, "mw_doubles");
-    this.wins = add(this.wins, doubles.wins);
-    this.losses = add(this.losses, doubles.losses);
-    this.kills = add(this.kills, doubles.kills);
-    this.deaths = add(this.deaths, doubles.deaths);
-    this.blocksPlaced = add(this.blocksPlaced, doubles.blocksPlaced);
+    this.solo = new PVPBaseDuelsGameMode(data, "mw_duel");
+    this.doubles = new PVPBaseDuelsGameMode(data, "mw_doubles");
+
+    this.wins = add(this.solo.wins, this.doubles.wins);
+    this.losses = add(this.solo.losses, this.doubles.losses);
+    this.kills = add(this.solo.kills, this.doubles.kills);
+    this.deaths = add(this.solo.deaths, this.doubles.deaths);
+    this.blocksPlaced = add(this.solo.blocksPlaced, this.doubles.blocksPlaced);
 
     PVPBaseDuelsGameMode.applyRatios(this);
 

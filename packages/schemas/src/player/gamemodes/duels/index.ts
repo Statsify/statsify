@@ -54,16 +54,51 @@ export const DUELS_MODES = new GameModes([
       { api: "doubles" },
       { api: "threes" },
       { api: "fours" },
+      { api: "twoVTwoVTwoVTwo", formatted: "2v2v2v2" },
+      { api: "threeVThreeVThreeVThree", formatted: "3v3v3v3" },
+      { api: "capture", formatted: "CTF" },
     ],
   },
-  { api: "classic", hypixel: "DUELS_CLASSIC_DUEL" },
+  {
+    api: "classic",
+    hypixel: "DUELS_CLASSIC_DUEL",
+    submodes: [
+      { api: "overall" },
+      { api: "solo" },
+      { api: "doubles" },
+    ],
+  },
   { api: "combo", hypixel: "DUELS_COMBO_DUEL" },
-  { api: "megawalls", formatted: "MegaWalls" },
+  {
+    api: "megawalls",
+    formatted: "MegaWalls",
+    submodes: [
+      { api: "overall" },
+      { api: "solo" },
+      { api: "doubles" },
+    ],
+  },
   { api: "nodebuff", hypixel: "DUELS_POTION_DUEL", formatted: "NoDebuff" },
-  { api: "op", formatted: "OP" },
+  {
+    api: "op",
+    formatted: "OP",
+    submodes: [
+      { api: "overall" },
+      { api: "solo" },
+      { api: "doubles" },
+    ],
+  },
   { api: "quake", hypixel: "DUELS_QUAKE_DUEL" },
   { api: "parkour", hypixel: "DUELS_PARKOUR_EIGHT" },
-  { api: "skywars", formatted: "SkyWars" },
+  {
+    api: "skywars",
+    formatted: "SkyWars",
+    submodes: [
+      { api: "overall" },
+      { api: "solo" },
+      { api: "doubles" },
+    ],
+  },
   {
     api: "spleef",
     submodes: [

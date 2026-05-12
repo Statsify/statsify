@@ -38,6 +38,7 @@ import {
   ApiService,
   Command,
   CommandContext,
+  type LocalizeFunction,
   Page,
   PaginateService,
   PlayerArgument,
@@ -56,6 +57,12 @@ import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
 const args = [PlayerArgument];
+
+type RatioMode<T extends GamesWithBackgrounds> = {
+  mode: GameModeWithSubModes<T>;
+  formatted: string;
+  submode?: GameModeWithSubModes<T>["submodes"][number];
+};
 
 @Command({ description: (t) => t("commands.ratios") })
 export class RatiosCommand {
@@ -92,7 +99,7 @@ export class RatiosCommand {
       const filteredKits = kits
         .sort(
           (a, b) =>
-            (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp
+            (blitzsg[b.mode.api] as BlitzSGKit).exp - (blitzsg[a.mode.api] as BlitzSGKit).exp
         )
         .slice(0, 24);
 
@@ -186,7 +193,7 @@ export class RatiosCommand {
   private async run<T extends GamesWithBackgrounds>(
     context: CommandContext,
     modes: GameModes<T>,
-    filterModes?: (player: Player, modes: GameModeWithSubModes<T>[]) => GameModeWithSubModes<T>[]
+    filterModes?: (player: Player, modes: RatioMode<T>[]) => RatioMode<T>[]
   ) {
     const user = context.getUser();
     const player = await this.apiService.getPlayer(context.option("player"), user);
@@ -203,55 +210,79 @@ export class RatiosCommand {
 
     const ratiosPerMode = this.getRatiosPerMode(key, modes);
 
-    const allModes = ratiosPerMode.map(([mode]) => mode);
+    const allModes = ratiosPerMode.map(({ ratioMode }) => ratioMode);
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
+    const displayedModeKeys = new Set(displayedModes.map((mode) => this.getRatioModeKey(mode)));
+    const displayedRatiosPerMode = ratiosPerMode.filter(({ ratioMode }) =>
+      displayedModeKeys.has(this.getRatioModeKey(ratioMode))
+    );
 
-    const pages: Page[] = displayedModes.map((mode, index) => ({
-      label: mode.formatted,
-      generator: async (t) => {
-        const background = await getBackground(...mapBackground(modes, mode.api));
+    const getGenerator = (ratioMode: RatioMode<T>, ratios: Ratio[]) => async (t: LocalizeFunction) => {
+      const background = await getBackground(...mapBackground(modes, ratioMode.mode.api));
 
-        const game = player.stats[key];
-        const stats = this.getModeStats(game, mode);
+      const game = player.stats[key];
+      const stats = this.getModeStats(game, ratioMode);
 
-        const ratios = ratiosPerMode[index][1];
+      const props: RatiosProfileProps = {
+        player,
+        skin,
+        background,
+        logo,
+        t,
+        user,
+        badge,
+        mode: {
+          ...ratioMode.mode,
+          formatted: ratioMode.formatted,
+          submode: ratioMode.submode,
+        },
+        gameName: MODES_TO_FORMATTED.get(modes)!,
+        ratios: ratios.map((r) => [
+          stats[r[0] as keyof typeof stats],
+          stats[r[1] as keyof typeof stats],
+          prettify(r[0]),
+          r[3],
+        ]),
+      };
 
-        const props: RatiosProfileProps = {
-          player,
-          skin,
-          background,
-          logo,
-          t,
-          user,
-          badge,
-          mode: { ...mode, submode: mode.submodes.length === 0 ? undefined : mode.submodes[0] },
-          gameName: MODES_TO_FORMATTED.get(modes)!,
-          ratios: ratios.map((r) => [
-            stats[r[0] as keyof typeof stats],
-            stats[r[1] as keyof typeof stats],
-            prettify(r[0]),
-            r[3],
-          ]),
-        };
+      const canvas = render(<RatiosProfile {...props} />, getTheme(user));
+      const buffer = await canvas.toBuffer("png");
 
-        const canvas = render(<RatiosProfile {...props} />, getTheme(user));
-        const buffer = await canvas.toBuffer("png");
+      return {
+        files: [{ name: "ratios.png", data: buffer, type: "image/png" }],
+        attachments: [],
+      };
+    };
+
+    const pages: Page[] = this.groupRatioModes(displayedRatiosPerMode).map((group) => {
+      if (group.length === 1) {
+        const [{ ratioMode, ratios }] = group;
 
         return {
-          files: [{ name: "ratios.png", data: buffer, type: "image/png" }],
-          attachments: [],
+          label: ratioMode.formatted,
+          generator: getGenerator(ratioMode, ratios),
         };
-      },
-    }));
+      }
+
+      return {
+        label: group[0].ratioMode.mode.formatted,
+        subPages: group.map(({ ratioMode, ratios }) => ({
+          label: this.getSubPageLabel(ratioMode),
+          generator: getGenerator(ratioMode, ratios),
+        })),
+      };
+    });
 
     return this.paginateService.paginate(context, pages);
   }
 
-  private getModeStats(game: PlayerStats[keyof PlayerStats], mode: GameModeWithSubModes<any>) {
-    if (mode.submodes.length !== 0) {
-      let stats = game[mode.api as keyof typeof game];
-      stats = stats[mode.submodes[0].api as keyof typeof game];
-      return mode.submodes[0].api === "overall" ? stats || game : stats;
+  private getModeStats(game: PlayerStats[keyof PlayerStats], ratioMode: RatioMode<any>) {
+    const { mode, submode } = ratioMode;
+
+    if (submode) {
+      const modeStats = game[mode.api as keyof typeof game];
+      const submodeStats = modeStats?.[submode.api as keyof typeof modeStats];
+      return submode.api === "overall" ? submodeStats || modeStats : submodeStats;
     }
 
     const stats = game[mode.api as keyof typeof game];
@@ -264,47 +295,96 @@ export class RatiosCommand {
   ) {
     const gameClass = Reflect.getMetadata("design:type", PlayerStats.prototype, key);
 
-    const ratioModes: [mode: GameModeWithSubModes<T>, ratios: Ratio[]][] = [];
+    const ratioModes: { ratioMode: RatioMode<T>; ratios: Ratio[] }[] = [];
     const gameModes = modes.getModes();
 
     for (const mode of gameModes) {
       if (!mode.api) continue;
 
-      const modeClass = this.getModeClass(mode, gameClass);
-      if (!modeClass) continue;
+      for (const ratioMode of this.getRatioModes(mode)) {
+        const modeClass = this.getModeClass(ratioMode, gameClass);
+        if (!modeClass) continue;
 
-      const ratios = LEADERBOARD_RATIOS.filter(([numerator, denominator]) => {
-        const numeratorType = Reflect.getMetadata(
-          "design:type",
-          modeClass.prototype,
-          numerator
-        );
+        const ratios = LEADERBOARD_RATIOS.filter(([numerator, denominator]) => {
+          const numeratorType = Reflect.getMetadata(
+            "design:type",
+            modeClass.prototype,
+            numerator
+          );
 
-        const denominatorType = Reflect.getMetadata(
-          "design:type",
-          modeClass.prototype,
-          denominator
-        );
+          const denominatorType = Reflect.getMetadata(
+            "design:type",
+            modeClass.prototype,
+            denominator
+          );
 
-        return numeratorType === Number && denominatorType === Number;
-      });
+          return numeratorType === Number && denominatorType === Number;
+        });
 
-      if (!ratios.length) continue;
+        if (!ratios.length) continue;
 
-      ratioModes.push([mode, ratios]);
+        ratioModes.push({ ratioMode, ratios });
+      }
     }
 
     return ratioModes;
   }
 
-  private getModeClass<T extends GamesWithBackgrounds>(mode: GameModeWithSubModes<T>, gameClass: Constructor<any>) {
+  private getModeClass<T extends GamesWithBackgrounds>(ratioMode: RatioMode<T>, gameClass: Constructor<any>) {
+    const { mode, submode } = ratioMode;
     const apiType = Reflect.getMetadata("design:type", gameClass.prototype, mode.api);
     const modeType = mode.api === "overall" ? apiType || gameClass : apiType;
 
-    if (mode.submodes.length === 0) return modeType;
+    if (!submode) return modeType;
 
-    const submode = mode.submodes[0].api;
-    const submodeType = Reflect.getMetadata("design:type", modeType.prototype, submode);
-    return submode === "overall" ? submodeType || modeType : submodeType;
+    const submodeType = Reflect.getMetadata("design:type", modeType.prototype, submode.api);
+    return submode.api === "overall" ? submodeType || modeType : submodeType;
+  }
+
+  private getRatioModes<T extends GamesWithBackgrounds>(mode: GameModeWithSubModes<T>): RatioMode<T>[] {
+    const baseMode = {
+      mode,
+      formatted: mode.formatted,
+    };
+
+    if (mode.submodes.length === 0) return [baseMode];
+
+    const submodes = mode.submodes
+      .filter((submode) => submode.api !== "stats" && submode.api !== "titles")
+      .map((submode) => ({
+        mode,
+        submode,
+        formatted: this.formatSubmode(mode.formatted, submode),
+      }));
+
+    return mode.api === "overall" ? [baseMode, ...submodes] : submodes;
+  }
+
+  private formatSubmode(mode: string, submode: { api: string; formatted: string }) {
+    if (submode.api === "overall") return `${mode} Overall`;
+    if (submode.formatted.startsWith(mode)) return submode.formatted;
+    return `${mode} ${submode.formatted}`;
+  }
+
+  private getRatioModeKey<T extends GamesWithBackgrounds>(ratioMode: RatioMode<T>) {
+    return `${ratioMode.mode.api}:${ratioMode.submode?.api ?? ""}`;
+  }
+
+  private groupRatioModes<T extends GamesWithBackgrounds>(
+    ratiosPerMode: { ratioMode: RatioMode<T>; ratios: Ratio[] }[]
+  ) {
+    const groups = new Map<string, { ratioMode: RatioMode<T>; ratios: Ratio[] }[]>();
+
+    for (const ratio of ratiosPerMode) {
+      const group = groups.get(ratio.ratioMode.mode.api) ?? [];
+      group.push(ratio);
+      groups.set(ratio.ratioMode.mode.api, group);
+    }
+
+    return [...groups.values()];
+  }
+
+  private getSubPageLabel<T extends GamesWithBackgrounds>(ratioMode: RatioMode<T>) {
+    return ratioMode.submode?.formatted ?? ratioMode.formatted;
   }
 }
