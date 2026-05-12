@@ -55,22 +55,21 @@ export class PlayerLeaderboardService extends LeaderboardService {
     }, {} as Record<string, boolean>);
 
     selector.displayName = true;
+    selector.uuid = true;
 
-    return await Promise.all(
-      ids.map(async (id) => {
-        const player = await this.playerModel
-          .findOne()
-          .where("uuid")
-          .equals(id)
-          .select(selector)
-          .lean()
-          .exec();
+    const players = await this.playerModel
+      .find({ uuid: { $in: ids } })
+      .select(selector)
+      .lean()
+      .exec();
 
-        const additionalStats = flatten(player) as LeaderboardAdditionalStats;
-        additionalStats.name = additionalStats.displayName;
+    const playersById = new Map(players.map((player) => [player.uuid, player]));
 
-        return additionalStats;
-      })
-    );
+    return ids.map((id) => {
+      const additionalStats = flatten(playersById.get(id)) as LeaderboardAdditionalStats;
+      additionalStats.name = additionalStats.displayName;
+
+      return additionalStats;
+    });
   }
 }
