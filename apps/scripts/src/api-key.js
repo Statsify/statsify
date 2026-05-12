@@ -186,7 +186,7 @@ const deleteKey = async () => {
     },
   ]);
 
-  if (!(await inquirerConfirmation(false))) return;
+  if (!(await inquirerConfirmation("Are you sure?", false))) return;
 
   const activeKeys = await getKeys();
 

@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import commands from "discord-bot/commands.json" assert { type: "json" };
+import commands from "discord-bot/commands.json" with { type: "json" };
 import z from "zod";
 
 function toEnum(...args) {
@@ -14,10 +14,10 @@ function toEnum(...args) {
 }
 
 const name = z.string().min(3).max(32);
-const name_localizations = z.optional(z.record(name));
+const name_localizations = z.optional(z.record(z.string(), name));
 
 const description = z.string().min(1).max(100);
-const description_localizations = z.optional(z.record(description));
+const description_localizations = z.optional(z.record(z.string(), description));
 
 const choicesSchema = z.object({
   // this is intentional since choice names can go up to 100 characters
@@ -58,9 +58,9 @@ Object.entries(commands.commands).forEach(([commandName, command]) => {
   } catch (e) {
     console.error(e);
     console.log(command);
-    e.errors.forEach((e) => {
-      console.error(e.message);
-      console.error(`${command.name}.${e.path.join(".")}`);
+    (e.issues ?? [e]).forEach((issue) => {
+      console.error(issue.message);
+      console.error(`${command.name}.${issue.path?.join(".") ?? ""}`);
     });
     console.error(`Command "${commandName}" is invalid.`);
     process.exit(1);
@@ -79,7 +79,7 @@ const findOptionsLength = (options = []) =>
         option.name.length +
         findLongestLocalizationLength(option.description_localizations) +
         (
-          option?.choices?.map((choice) => choice.value.length + choice.name.length) ?? []
+          option?.choices?.map((choice) => String(choice.value).length + choice.name.length) ?? []
         ).reduce((a, b) => a + b, 0)
     )
     .reduce((a, b) => a + b, 0);

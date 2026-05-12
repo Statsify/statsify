@@ -25,7 +25,7 @@ A Hypixel and Minecraft focused Discord Bot
 
 ### 🚀 Running
 * The codebase is split into apps and packages
-* Set up a `config.js` file in the root of the project following the `config.schema.js` file (copy paste it over and fill it in)
+* Set up a `config.js` file in the root of the project following the `config.schema.js` file (copy and paste it over and fill it in)
 * Pull the git submodules (`git submodule update --init`)
 * Set up the assets by running `cd assets/public && pnpm`
 * Use `pnpm build` to build all packages and apps,
@@ -35,10 +35,10 @@ A Hypixel and Minecraft focused Discord Bot
 ### 🤖 Other Important commands
 ```bash
 # Change things in a package/app
-$ pnpm workspace {app or package name} {command}
+$ pnpm --filter {app or package name} {command}
 
 # Example: Adding a dependency
-$ pnpm workspace {app or package name} add {dependency}
+$ pnpm --filter {app or package name} add {dependency}
 
 # Linting
 $ pnpm lint

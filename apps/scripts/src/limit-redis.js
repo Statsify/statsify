@@ -15,8 +15,15 @@ import { SimpleIntervalJob, Task } from "toad-scheduler";
 const logger = new Logger("Redis Limiter");
 const redis = new Redis(process.env.REDIS_URL);
 
+const getLeaderboardPath = (constructor, key, prefix) => {
+  const name = constructor.name.toLowerCase();
+  const path = `${name}.${key}`;
+
+  return prefix ? `${prefix}:${path}` : path;
+};
+
 const runLimit = async (constructors, prefixes) => {
-  constructors.forEach(async (constructor, i) => {
+  await Promise.all(constructors.map(async (constructor, i) => {
     const oldLeaderboardPipeline = redis.pipeline();
     const limitLeaderboardPipeline = redis.pipeline();
 
@@ -24,7 +31,7 @@ const runLimit = async (constructors, prefixes) => {
     const fields = MetadataScanner.scan(constructor);
 
     fields.forEach(([key, value]) => {
-      const path = prefixes ? `${prefixes[i]}:${name}.${key}` : `${name}.${key}`;
+      const path = getLeaderboardPath(constructor, key, prefixes?.[i]);
       if (!value.leaderboard.enabled || (prefixes ? !value.historical.enabled : false))
         oldLeaderboardPipeline.del(path);
     });
@@ -38,7 +45,7 @@ const runLimit = async (constructors, prefixes) => {
     let memberCount = 0;
 
     leaderboards.forEach(([key, value]) => {
-      const path = `${name}.${key}`;
+      const path = getLeaderboardPath(constructor, key, prefixes?.[i]);
       const { sort } = value.leaderboard;
       let { limit } = value.leaderboard;
       if (limit === Number.POSITIVE_INFINITY) return;
@@ -63,7 +70,7 @@ const runLimit = async (constructors, prefixes) => {
         prefixes ? prefixes[i].toLowerCase() : "lifetime"
       } ${name} leaderboards`
     );
-  });
+  }));
 };
 
 const limit = async () => {

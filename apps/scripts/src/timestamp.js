@@ -84,11 +84,11 @@ const setTimestamps = async (collectionName) => {
 
   if (!bulkOperations.length)
     return console.log(`No players to update for ${collectionName}.`);
-  collection.bulkWrite(bulkOperations).then((res) => {
-    console.log(
-      `Updated ${res.modifiedCount}/${players.length} players for ${collectionName}.`
-    );
-  });
+  const res = await collection.bulkWrite(bulkOperations);
+
+  console.log(
+    `Updated ${res.modifiedCount}/${players.length} players for ${collectionName}.`
+  );
 };
 
 await setTimestamps("daily");
