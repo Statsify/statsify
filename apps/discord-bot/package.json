@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@sentry/node": "^7.118.0",
+    "@sentry/profiling-node": "^7.120.4",
     "@statsify/api-client": "workspace:^",
     "@statsify/assets": "workspace:^",
     "@statsify/discord": "workspace:^",

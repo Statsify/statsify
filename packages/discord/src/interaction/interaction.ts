@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import {
   type APIGuildMember,
   type APIUser,
@@ -154,7 +155,17 @@ export class Interaction {
   }
 
   private async request(options: RestClient.RequestOptions) {
-    const response = await this.rest.request(options);
-    return parseDiscordResponse(response);
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+    const span = transaction?.startChild({
+      op: "discord.reply",
+      description: `${options.method.toUpperCase()} ${options.path}`,
+    });
+
+    try {
+      const response = await this.rest.request(options);
+      return parseDiscordResponse(response);
+    } finally {
+      span?.finish();
+    }
   }
 }

@@ -65,12 +65,31 @@ export class CommandListener extends AbstractCommandListener {
       parentData
     );
 
-    const transaction = Sentry.startTransaction({ name: commandName, op: "command" });
+    const [name, ...subcommandParts] = commandName.split(" ");
+    const subcommand = subcommandParts.length ? commandName : undefined;
+
+    const transaction = Sentry.startTransaction({
+      name: commandName,
+      op: "discord.command.total",
+      data: {
+        "command.name": name,
+        "command.group": parentCommand.group ?? command.group ?? "unknown",
+        "command.subcommand": subcommand,
+      },
+      tags: {
+        "command.name": name,
+        "command.group": parentCommand.group ?? command.group ?? "unknown",
+        "command.subcommand": subcommand ?? "none",
+      },
+    });
 
     Sentry.configureScope((scope) => scope.setSpan(transaction));
 
     Sentry.setContext("command", {
       command: commandName,
+      group: parentCommand.group ?? command.group ?? null,
+      name,
+      subcommand: subcommand ?? null,
       options: data.options,
       guild: interaction.getGuildId() ?? null,
     });

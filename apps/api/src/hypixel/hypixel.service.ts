@@ -145,8 +145,12 @@ export class HypixelService {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     const child = transaction?.startChild({
-      op: "http.client",
+      op: "hypixel.api.fetch",
       description: `GET ${this.httpService.axiosRef.getUri({ url })}`,
+      data: {
+        "http.method": "GET",
+        "http.route": url,
+      },
     });
 
     return this.httpService.get(url, { params }).pipe(
@@ -155,14 +159,16 @@ export class HypixelService {
         child?.finish();
       }),
       map((res) => res.data),
-      catchError((err) =>
-        throwError(
+      catchError((err) => {
+        child?.finish();
+
+        return throwError(
           () =>
             new Error(`Fetching ${url} failed with reason: ${err.message}`, {
               cause: err,
             })
-        )
-      )
+        );
+      })
     );
   }
 }

@@ -28,6 +28,11 @@ export interface CommandOptions {
   cooldown?: number;
 
   /**
+   * The product area this command belongs to. Used for observability.
+   */
+  group?: string;
+
+  /**
    * The minimum user tier required to use this command.
    */
   tier?: UserTier;

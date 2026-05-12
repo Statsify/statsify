@@ -7,7 +7,13 @@
  */
 
 import * as Sentry from "@sentry/node";
-import axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
+import Axios, {
+  AxiosInstance,
+  AxiosRequestHeaders,
+  AxiosResponse,
+  Method,
+  ResponseType,
+} from "axios";
 import {
   CacheLevel,
   GuildQuery,
@@ -291,21 +297,30 @@ export class ApiService {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     const child = transaction?.startChild({
-      op: "http.client",
+      op: "statsify.api.fetch",
       description: `${method} ${url}`,
+      data: {
+        "http.method": method,
+        "http.route": url,
+      },
     });
 
-    const res = await this.axios.request({
-      url,
-      method,
-      params,
-      headers,
-      data: body,
-      responseType,
-    });
+    let res: AxiosResponse<any>;
 
-    child?.setHttpStatus(res.status);
-    child?.finish();
+    try {
+      res = await this.axios.request({
+        url,
+        method,
+        params,
+        headers,
+        data: body,
+        responseType,
+      });
+
+      child?.setHttpStatus(res.status);
+    } finally {
+      child?.finish();
+    }
 
     const data = res.data;
 

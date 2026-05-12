@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import {
   REDIS_MODULE_CONNECTION,
   REDIS_MODULE_CONNECTION_TOKEN,
@@ -24,5 +25,20 @@ export function getRedisConnectionToken(connection?: string): string {
 
 export function createRedisConnection(options: RedisModuleOptions) {
   const { config } = options;
-  return config.url ? new Redis(config.url, config) : new Redis(config);
+  const redis = config.url ? new Redis(config.url, config) : new Redis(config);
+  const sendCommand = redis.sendCommand.bind(redis);
+
+  redis.sendCommand = ((command, stream) => {
+    const commandName = String((command as { name: string }).name);
+    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+    const span = transaction?.startChild({
+      op: "redis.query",
+      description: commandName,
+      data: { "redis.command": commandName },
+    });
+
+    return (sendCommand(command, stream) as Promise<unknown>).finally(() => span?.finish());
+  }) as Redis["sendCommand"];
+
+  return redis;
 }

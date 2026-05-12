@@ -130,6 +130,10 @@ export abstract class AbstractCommandListener {
     message,
   }: ExecuteCommandOptions) {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+    const commandSpan = transaction?.startChild({
+      op: "discord.command.execute",
+      description: commandName,
+    });
 
     try {
       for (const precondition of preconditions) {
@@ -137,22 +141,34 @@ export abstract class AbstractCommandListener {
       }
 
       const response = await command.execute(context);
+      commandSpan?.finish();
 
-      if (typeof response !== "object") return;
-      transaction?.finish();
+      if (typeof response !== "object") {
+        this.setMemoryUsage(transaction);
+        transaction?.finish();
+        return;
+      }
 
-      context.reply({
+      await context.reply({
         ...message,
         ...response,
       });
+
+      this.setMemoryUsage(transaction);
+      transaction?.finish();
     } catch (err) {
       if (err instanceof Message) {
+        commandSpan?.finish();
+        await context.reply(err);
+        this.setMemoryUsage(transaction);
         transaction?.finish();
-        return context.reply(err);
+        return;
       }
 
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
+      commandSpan?.finish();
+      this.setMemoryUsage(transaction);
       transaction?.finish();
     }
   }
@@ -317,6 +333,15 @@ export abstract class AbstractCommandListener {
       const response = await this.onInteraction(interaction);
       interaction.reply(response);
     });
+  }
+
+  private setMemoryUsage(transaction?: Sentry.Transaction) {
+    if (!transaction) return;
+
+    const { rss, heapUsed } = process.memoryUsage();
+
+    transaction.setData("memory.rss.bytes", rss);
+    transaction.setData("memory.heap_used.bytes", heapUsed);
   }
 
   protected abstract onCommand(interaction: Interaction): Promise<void> | void;

@@ -122,7 +122,7 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
   const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
   const instructionsTransaction = transaction?.startChild({
-    op: "jsx.createInstructions",
+    op: "render.create_instructions",
     description: "Create instructions",
   });
 
@@ -134,8 +134,9 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
   const height = Math.round(getTotalSize(instructions.y));
 
   const renderTransaction = transaction?.startChild({
-    op: "jsx.render",
-    description: "Render JSX",
+    op: "render.generate",
+    description: "Generate render canvas",
+    data: { width, height },
   });
 
   const canvas = createCanvas(width, height);

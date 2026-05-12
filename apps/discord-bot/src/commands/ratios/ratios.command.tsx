@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import * as Sentry from "@sentry/node";
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
@@ -57,7 +58,7 @@ import { render } from "@statsify/rendering";
 
 const args = [PlayerArgument];
 
-@Command({ description: (t) => t("commands.ratios") })
+@Command({ description: (t) => t("commands.ratios"), group: "hypixel" })
 export class RatiosCommand {
   public constructor(private readonly apiService: ApiService) {}
 
@@ -232,7 +233,20 @@ export class RatiosCommand {
         };
 
         const canvas = render(<RatiosProfile {...props} />, getTheme(user));
-        const buffer = await canvas.toBuffer("png");
+        const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
+        const span = transaction?.startChild({
+          op: "canvas.encode_png",
+          description: "Encode ratios canvas as PNG",
+        });
+
+        let buffer: Buffer;
+
+        try {
+          buffer = await canvas.toBuffer("png");
+          span?.setData("png.bytes", buffer.byteLength);
+        } finally {
+          span?.finish();
+        }
 
         return {
           files: [{ name: "ratios.png", data: buffer, type: "image/png" }],

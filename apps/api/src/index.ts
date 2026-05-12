@@ -20,6 +20,7 @@ import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
 import { join } from "node:path";
 import { mkdir } from "node:fs/promises";
+import { nodeProfilingIntegration } from "@sentry/profiling-node";
 
 const directory = import.meta.dirname;
 
@@ -30,6 +31,11 @@ process.on("uncaughtException", handleError);
 process.on("unhandledRejection", handleError);
 
 const sentryDsn = await config("sentry.apiDsn", { required: false });
+const sentryTracesSampleRate =
+  await config("sentry.tracesSampleRate", { required: false }) ?? 0;
+const sentryProfilesSampleRate =
+  await config("sentry.profilesSampleRate", { required: false }) ??
+  sentryTracesSampleRate;
 
 if (sentryDsn) {
   Sentry.init({
@@ -37,9 +43,11 @@ if (sentryDsn) {
     integrations: [
       new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true }),
       new Sentry.Integrations.Mongo({ useMongoose: true }),
+      nodeProfilingIntegration(),
     ],
     normalizeDepth: 3,
-    tracesSampleRate: await config("sentry.tracesSampleRate"),
+    tracesSampleRate: sentryTracesSampleRate,
+    profilesSampleRate: sentryProfilesSampleRate,
     environment: await config("environment"),
   });
 }
