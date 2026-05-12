@@ -430,11 +430,11 @@ export class Disasters {
   public constructor(data: APIData = {}, ap: APIData = {}) {
     this.gamesPlayed = data.games_played;
     this.wins = data.wins;
+    this.losses = data.losses;
+    this.wlr = ratio(this.wins, this.losses);
     this.playtime = (data.time_survived ?? 0) * 1000;
     this.survivals = new DisasterSurvivals(data.survived ?? {});
     this.deaths = new DisastersDeaths(data.deaths ?? {});
-    this.losses = data.losses;
-    this.wlr = ratio(this.wins, this.losses);
     this.powerups = ap.arcade_disasters_prepared;
   }
 }
