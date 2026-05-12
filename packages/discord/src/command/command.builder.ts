@@ -235,5 +235,26 @@ if (import.meta.vitest) {
         ],
       });
     });
+
+    it("should detect added arguments", () => {
+      class Arg extends AbstractArgument {
+        public name = "test";
+        public description = "test";
+        public required = true;
+        public type = ApplicationCommandOptionType.String;
+      }
+
+      @Command({ description: "test" })
+      class BaseCommand {}
+
+      @Command({ description: "test", args: [Arg] })
+      class CommandWithArgs {}
+
+      expect(
+        CommandBuilder.scan(new BaseCommand(), BaseCommand).equals(
+          CommandBuilder.scan(new CommandWithArgs(), CommandWithArgs)
+        )
+      ).toBe(false);
+    });
   });
 }
