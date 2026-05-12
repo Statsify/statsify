@@ -67,8 +67,8 @@ export class GuildLeaderboardService extends LeaderboardService {
           .lean()
           .exec();
 
-        const additionalStats = flatten(guild) as LeaderboardAdditionalStats;
-        additionalStats.name = additionalStats.nameFormatted;
+        const additionalStats = flatten(guild ?? {}) as LeaderboardAdditionalStats;
+        additionalStats.name = additionalStats.nameFormatted ?? guild?.name ?? id;
 
         return additionalStats;
       })

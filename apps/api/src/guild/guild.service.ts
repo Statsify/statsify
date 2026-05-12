@@ -117,8 +117,10 @@ export class GuildService {
       .lean()
       .exec();
 
+    const combinedGuildExpHistory = this.getCombinedExpHistory(cachedGuild, guildExpHistory);
+
     // Get scaled gexp
-    Object.entries(guildExpHistory)
+    Object.entries(combinedGuildExpHistory)
       .sort()
       .toReversed()
       .slice(0, 30)
@@ -255,9 +257,62 @@ export class GuildService {
     }
   }
 
+  private getExpHistory(days: string[] = [], expHistory: number[] = []) {
+    return Object.fromEntries(days.map((day, index) => [day, expHistory[index] ?? 0]));
+  }
+
+  private getCombinedExpHistory(
+    cachedGuild: Guild | null,
+    guildExpHistory: Record<string, number>
+  ) {
+    // Preserve cached guild totals so GEXP does not drop when member history disappears.
+    const combinedGuildExpHistory = this.getExpHistory(
+      cachedGuild?.expHistoryDays,
+      cachedGuild?.expHistory
+    );
+
+    Object.entries(guildExpHistory).forEach(([day, exp]) => {
+      combinedGuildExpHistory[day] = Math.max(combinedGuildExpHistory[day] ?? 0, exp);
+    });
+
+    return combinedGuildExpHistory;
+  }
+
   private scaleGexp(exp: number) {
     if (exp <= 200_000) return exp;
     if (exp <= 700_000) return (exp - 200_000) / 10 + 200_000;
     return Math.round((exp - 700_000) / 33 + 250_000);
   }
+}
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("GuildService", () => {
+    it("preserves cached guild exp history when refreshed member totals are lower", () => {
+      const service = Object.create(GuildService.prototype) as {
+        getCombinedExpHistory: (
+          cachedGuild: Pick<Guild, "expHistoryDays" | "expHistory">,
+          guildExpHistory: Record<string, number>
+        ) => Record<string, number>;
+      };
+
+      const combined = service.getCombinedExpHistory(
+        {
+          expHistoryDays: ["2026-05-12", "2026-05-11", "2026-05-10"],
+          expHistory: [500, 400, 300],
+        } as Guild,
+        {
+          "2026-05-12": 250,
+          "2026-05-11": 450,
+        }
+      );
+
+      expect(combined).toEqual({
+        "2026-05-12": 500,
+        "2026-05-11": 450,
+        "2026-05-10": 300,
+      });
+    });
+  });
 }
