@@ -11,6 +11,8 @@ import { CopsAndCrimsModes, FormattedGame, type GameMode } from "@statsify/schem
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
+const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
+
 export interface CopsAndCrimsProfileProps extends BaseProfileProps {
   mode: GameMode<CopsAndCrimsModes>;
 }
@@ -105,7 +107,7 @@ export const CopsAndCrimsProfile = ({
             <Historical.exclude time={time}>
               <Table.td
                 title={t("stats.bestTime")}
-                value={formatTime(stats.fastestWin)}
+                value={formatTimeWithSeconds(stats.fastestWin)}
                 color="§b"
               />
             </Historical.exclude>

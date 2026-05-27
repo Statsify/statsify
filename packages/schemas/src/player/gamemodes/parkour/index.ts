@@ -14,7 +14,8 @@ export const PARKOUR_MODES = new GameModes([{ api: "overall" }] as const);
 
 export type ParkourModes = ExtractGameModes<typeof PARKOUR_MODES>;
 
-const fieldOptions = { sort: "ASC", formatter: formatTime, fieldName: "Time" };
+const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
+const fieldOptions = { sort: "ASC", formatter: formatTimeWithSeconds, fieldName: "Time" };
 const historical = { enabled: false };
 
 export class Parkour {

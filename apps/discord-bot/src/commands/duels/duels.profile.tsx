@@ -19,6 +19,8 @@ import { formatTime, prettify } from "@statsify/util";
 import type { BaseProfileProps, ProfileTime } from "#commands/base.hypixel-command";
 import type { DuelsModeIcons } from "./duels.command.js";
 
+const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
+
 export type DuelsProfileProps<T extends ProfileTime> = Omit<BaseProfileProps, "time"> & {
   mode: GameMode<DuelsModes>;
   time: T;
@@ -62,7 +64,7 @@ export const DuelsProfile = <T extends ProfileTime>({
 
   if (mode.api === "parkour") {
     sidebar.push(
-      [t("stats.bestTime"), duels.parkour.bestTime === 0 ? "N/A" : formatTime(duels.parkour.bestTime), "§d"],
+      [t("stats.bestTime"), duels.parkour.bestTime === 0 ? "N/A" : formatTimeWithSeconds(duels.parkour.bestTime), "§d"],
       [t("stats.checkpoints"), t(duels.parkour.checkpoints), "§5"]
     );
   }

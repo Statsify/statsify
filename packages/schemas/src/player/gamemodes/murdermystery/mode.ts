@@ -11,6 +11,8 @@ import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
 
+const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
+
 export class BaseMurderMysteryMode {
   @Field()
   public wins: number;
@@ -98,13 +100,13 @@ export class OverallMurderMysteryMode extends StandardMurderMysteryMode {
 
 export class ClassicMurderMysteryMode extends StandardMurderMysteryMode {
   @Field({
-    leaderboard: { sort: "ASC", formatter: formatTime },
+    leaderboard: { sort: "ASC", formatter: formatTimeWithSeconds },
     historical: { enabled: false },
   })
   public fastestDetectiveWin: number;
 
   @Field({
-    leaderboard: { sort: "ASC", formatter: formatTime },
+    leaderboard: { sort: "ASC", formatter: formatTimeWithSeconds },
     historical: { enabled: false },
   })
   public fastestMurdererWin: number;

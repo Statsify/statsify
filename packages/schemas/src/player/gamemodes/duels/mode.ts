@@ -12,6 +12,8 @@ import { Progression } from "#progression";
 import { TitleRequirement, getTitleAndProgression } from "./util.js";
 import { add, deepAdd, ratio } from "@statsify/math";
 
+const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
+
 export class BaseDuelsGameMode {
   @Field()
   public bestWinstreak: number;
@@ -580,7 +582,7 @@ export class ParkourDuels extends SingleDuelsGameMode {
   @Field()
   public checkpoints: number;
 
-  @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatTimeWithSeconds, sort: "ASC" } })
   public bestTime: number;
 
   public constructor(data: APIData) {

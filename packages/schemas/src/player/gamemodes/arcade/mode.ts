@@ -735,7 +735,7 @@ export class Dropper {
   @Field()
   public flawlessGames: number;
 
-  @Field({ leaderboard: { formatter: formatTime, sort: "ASC" } })
+  @Field({ leaderboard: { formatter: formatTimeWithSeconds, sort: "ASC" } })
   public bestTime: number;
 
   @Field({ leaderboard: { name: "Maps:" } })
@@ -1391,11 +1391,14 @@ export class ZombiesMapDifficulty {
   })
   public fastestWin: number;
 
-  @Field()
+  @Field({ leaderboard: { additionalFields: ["this.deaths", "this.kdr"] } })
   public kills: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { additionalFields: ["this.kills", "this.kdr"] } })
   public deaths: number;
+
+  @Field({ leaderboard: { enabled: false } })
+  public kdr: number;
 
   @Field({ leaderboard: { enabled: false } })
   public bestRound: number;
@@ -1413,6 +1416,7 @@ export class ZombiesMapDifficulty {
     this.fastestWin = (data[`fastest_time_30_zombies${mode}`] ?? 0) * 1000;
     this.kills = data[`zombie_kills_zombies${mode}`];
     this.deaths = data[`deaths_zombies${mode}`];
+    this.kdr = ratio(this.kills, this.deaths);
     this.bestRound = data[`best_round_zombies${mode}`];
     this.doorsOpened = data[`doors_opened_zombies${mode}`];
     this.totalRounds = data[`total_rounds_survived_zombies${mode}`];
