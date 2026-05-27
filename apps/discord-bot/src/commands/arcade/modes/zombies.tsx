@@ -21,7 +21,7 @@ interface ZombiesMapColumnProps {
 
 const ZombiesMapColumn = ({ title, stats, t, time }: ZombiesMapColumnProps) => {
   const mapStat = stats.wins >= 1 ?
-    [t("stats.fastestWin"), stats.fastestWin ? formatTime(stats.fastestWin) : "N/A"] :
+    [t("stats.fastestWin"), stats.fastestWin ? formatTime(stats.fastestWin, { entries: 3 }) : "N/A"] :
     [t("stats.bestRound"), t(stats.bestRound)];
 
   return (
@@ -90,7 +90,7 @@ export const ZombiesMapDifficultyTable = ({ stats, t, time }: ZombiesMapDifficul
     </Table.tr>
     <Historical.exclude time={time}>
       <Table.tr>
-        <Table.td title={t("stats.fastestWin")} value={stats.fastestWin ? formatTime(stats.fastestWin) : "N/A"} color="§b" size="small" />
+        <Table.td title={t("stats.fastestWin")} value={stats.fastestWin ? formatTime(stats.fastestWin, { entries: 3 }) : "N/A"} color="§b" size="small" />
         <Table.td title={t("stats.totalRounds")} value={t(stats.totalRounds)} color="§d" size="small" />
       </Table.tr>
     </Historical.exclude>
