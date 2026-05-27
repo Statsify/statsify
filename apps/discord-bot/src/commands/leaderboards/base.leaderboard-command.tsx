@@ -49,22 +49,30 @@ type GetLeaderboard = (
 type GetLeaderboardDataIcon = (id: string) => Promise<Image>;
 
 const parseLeaderboardValue = (input: string): number => {
-  const normalized = input.trim().replaceAll(",", "").toLowerCase();
-  const match = normalized.match(/^(\d+(?:\.\d+)?)([kmbt])?$/);
+  const normalized = input.trim().toLowerCase().replace(/_/g, "");
 
+  const isEuropean = /\d{1,3}(\.\d{3})+(,\d+)?$/.test(normalized.replace(/^-/, ""));
+
+  const sanitized = isEuropean
+    ? normalized.replace(/\./g, "").replace(",", ".")
+    : normalized.replace(/,/g, "");
+
+  const match = sanitized.match(/^(-?\d+(?:\.\d+)?)(?:e([+-]?\d+))?([kmbt])?$/);
   if (!match) return Number.NaN;
 
   const suffixes = {
-    k: 1000,
+    k: 1_000,
     m: 1_000_000,
     b: 1_000_000_000,
     t: 1_000_000_000_000,
   };
 
-  const [, value, suffix] = match;
+  const [, value, exponent, suffix] = match;
+  const base = exponent ? Number(value) * Math.pow(10, Number(exponent)) : Number(value);
   const multiplier = suffix ? suffixes[suffix as keyof typeof suffixes] : 1;
+  const result = base * multiplier;
 
-  return Number(value) * multiplier;
+  return result === 0 ? 0 : result;
 };
 
 export interface CreateLeaderboardOptions {
