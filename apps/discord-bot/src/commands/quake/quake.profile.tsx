@@ -41,7 +41,7 @@ export const QuakeProfile = ({
     [t("stats.godlikes"), t(quake.godlikes), "§3"],
     [t("stats.trigger"), `${quake.trigger}s`, "§b"],
     [t("stats.highestKillstreak"), t(quake.highestKillstreak), "§4"],
-    [t("stats.blocksTravelled"), t(quake[mode.api].blocksTravelled), "§b"]
+    [t("stats.blocksTravelled"), t(quake[mode.api].blocksTravelled), "§b"],
   ];
 
   return (

@@ -18,14 +18,6 @@ import { FormattedGame } from "#game";
 
 interface Quest {
   completions?: { time: number }[];
-  active?: {
-    objectives?: Record<string, number>;
-  };
-}
-
-export interface QuestProgress {
-  current: number;
-  max?: number;
 }
 
 export enum QuestTime {
@@ -40,7 +32,6 @@ export interface QuestOption<TField extends string> {
   propertyKey: TField;
   fieldName?: string;
   name?: string;
-  objectives?: Record<string, number>;
   leaderboard?: false;
   overall?: {
     fieldName?: string;
@@ -73,7 +64,7 @@ export interface CreateQuestsOptions<
 }
 
 const processQuests = (
-  instance: Record<string, number | null> & { total: number },
+  instance: Record<string, number>,
   quests: APIData,
   time: QuestTime,
   options: QuestOption<string>[],
@@ -85,12 +76,6 @@ const processQuests = (
 
     instance[k] = getQuestCountDuring(time, quests[field]);
     instance.total += instance[k] ?? 0;
-
-    const progress = getQuestProgress(quests[field], quest);
-    if (progress) {
-      instance[`${k}Progress`] = progress.current;
-      instance[`${k}ProgressMax`] = progress.max ?? null;
-    }
   });
 };
 
@@ -115,11 +100,7 @@ const assignQuestMetadata = (
       historical: { enabled: false },
     });
 
-    const key = quest.propertyKey ?? quest.field;
-
-    decorator(constructor.prototype, key);
-    Field(questProgressFieldData)(constructor.prototype, `${key}Progress`);
-    Field(questProgressFieldData)(constructor.prototype, `${key}ProgressMax`);
+    decorator(constructor.prototype, quest.propertyKey ?? quest.field);
   });
 };
 
@@ -132,29 +113,15 @@ const questTotalFieldData = (game: FormattedGame, enabled = false) => ({
   historical: { enabled: false },
 });
 
-const questProgressFieldData = {
-  type: () => Number,
-  leaderboard: { enabled: false },
-  historical: { enabled: false },
-  store: { required: false, default: null },
-};
-
 type GameWithQuestMode<Fields extends string> = {
   [K in Fields]: number;
-} & { [key: string]: number | null; total: number };
+} & { total: number };
 
 type GameWithQuests<DailyFields extends string, WeeklyFields extends string, MonthlyFields extends string> = [
   daily: Constructor<GameWithQuestMode<DailyFields>>,
   weekly: Constructor<GameWithQuestMode<WeeklyFields>>,
   monthly: Constructor<GameWithQuestMode<MonthlyFields>>,
   overall: Constructor<GameWithQuestMode<DailyFields | WeeklyFields | MonthlyFields>>
-];
-
-type AnyGameWithQuests = [
-  daily: Constructor<any>,
-  weekly: Constructor<any>,
-  monthly: Constructor<any>,
-  overall: Constructor<any>
 ];
 
 export function createGameModeQuests<
@@ -173,7 +140,7 @@ export function createGameModeQuests<
   MonthlyFields
 > {
   class Daily {
-    [key: string]: number | null;
+    [key: string]: number;
 
     @Field(questTotalFieldData(game))
     public total: number = 0;
@@ -186,7 +153,7 @@ export function createGameModeQuests<
   assignQuestMetadata(Daily, QuestTime.Daily, daily);
 
   class Weekly {
-    [key: string]: number | null;
+    [key: string]: number;
 
     @Field(questTotalFieldData(game))
     public total: number = 0;
@@ -199,7 +166,7 @@ export function createGameModeQuests<
   assignQuestMetadata(Weekly, QuestTime.Weekly, weekly);
 
   class Monthly {
-    [key: string]: number | null;
+    [key: string]: number;
 
     @Field(questTotalFieldData(game))
     public total: number = 0;
@@ -212,7 +179,7 @@ export function createGameModeQuests<
   assignQuestMetadata(Monthly, QuestTime.Monthly, monthly);
 
   class Overall {
-    [key: string]: number | null;
+    [key: string]: number;
 
     @Field(questTotalFieldData(game, true))
     public total: number = 0;
@@ -232,14 +199,14 @@ export function createGameModeQuests<
 }
 
 type BaseGamesWithQuestsRecord = {
-  [K in keyof typeof FormattedGame]?: AnyGameWithQuests;
+  [K in keyof typeof FormattedGame]?: GameWithQuests<string, string, string>;
 };
 
 type IQuestInstance<
   Time extends QuestTime,
   GamesWithQuests extends BaseGamesWithQuestsRecord
 > = Constructor<{
-  [K in keyof GamesWithQuests]: GamesWithQuests[K] extends AnyGameWithQuests ?
+  [K in keyof GamesWithQuests]: GamesWithQuests[K] extends GameWithQuests<string, string, string> ?
     UnwrapConstructor<GamesWithQuests[K][Time]> :
     never;
 }>;
@@ -250,7 +217,7 @@ export function createQuestsInstance<
 >(time: Time, record: GamesWithQuests): IQuestInstance<Time, GamesWithQuests> {
   const modes = Object.entries(record) as [
     keyof typeof FormattedGame,
-    AnyGameWithQuests
+    GameWithQuests<string, string, string>
   ][];
 
   class QuestInstance {
@@ -304,25 +271,4 @@ export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) =
   const millis = t.toMillis();
 
   return quest.completions.filter((ms) => ms.time >= millis).length;
-};
-
-export const getQuestProgress = (
-  quest: Quest | undefined,
-  option: QuestOption<string>
-): QuestProgress | undefined => {
-  const objectives = quest?.active?.objectives;
-  if (!objectives) return undefined;
-
-  const entries = Object.entries(objectives);
-  if (!entries.length) return undefined;
-
-  const current = entries.reduce((total, [, value]) => total + (value ?? 0), 0);
-  const max = option.objectives ?
-    Object.entries(option.objectives).reduce(
-      (total, [objective, value]) => total + (objectives[objective] === undefined ? 0 : value),
-      0
-    ) :
-    undefined;
-
-  return { current, max: max || undefined };
 };
