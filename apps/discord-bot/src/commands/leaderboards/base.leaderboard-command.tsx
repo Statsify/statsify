@@ -212,7 +212,7 @@ export class BaseLeaderboardCommand {
             .label((t) => t("leaderboard.valueInput.label"))
             .placeholder((t) => t("leaderboard.valueInput.placeholder"))
             .minLength(1)
-            .maxLength(16)
+            .maxLength(20)
             .required(true)
         )
       );
