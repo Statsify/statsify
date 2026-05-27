@@ -16,6 +16,8 @@ import {
 import { Field } from "#metadata";
 import { add, deepAdd, deepSub, ratio, sub } from "@statsify/math";
 
+const formatTimeWithSeconds = (time: number) => formatTime(time, { entries: 3 });
+
 export class BlockingDead {
   @Field()
   public wins: number;
@@ -1382,7 +1384,7 @@ export class ZombiesMapDifficulty {
   @Field({
     leaderboard: {
       sort: "ASC",
-      formatter: formatTime,
+      formatter: formatTimeWithSeconds,
       additionalFields: ["this.wins"],
     },
     historical: { enabled: false },
