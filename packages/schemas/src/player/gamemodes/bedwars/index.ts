@@ -23,30 +23,64 @@ export const BEDWARS_MODES = new GameModes([
   { api: "threes", hypixel: "BEDWARS_FOUR_THREE" },
   { api: "fours", hypixel: "BEDWARS_FOUR_FOUR" },
   { api: "4v4", hypixel: "BEDWARS_TWO_FOUR" },
-  { api: "armed" },
+  {
+    api: "armed",
+    submodes: [
+      { api: "armed", formatted: "Overall" },
+      { api: "armedDoubles", formatted: "Doubles" },
+      { api: "armedFours", formatted: "Fours" },
+    ],
+  },
   { api: "castle", hypixel: "BEDWARS_CASTLE" },
-  { api: "lucky" },
-  { api: "rush" },
-  { api: "swap" },
-  { api: "ultimate" },
-  { api: "underworld" },
-  { api: "voidless" },
+  {
+    api: "lucky",
+    submodes: [
+      { api: "lucky", formatted: "Overall" },
+      { api: "luckyDoubles", formatted: "Doubles" },
+      { api: "luckyFours", formatted: "Fours" },
+    ],
+  },
+  {
+    api: "rush",
+    submodes: [
+      { api: "rush", formatted: "Overall" },
+      { api: "rushDoubles", formatted: "Doubles" },
+      { api: "rushFours", formatted: "Fours" },
+    ],
+  },
+  {
+    api: "swap",
+    submodes: [
+      { api: "swap", formatted: "Overall" },
+      { api: "swapDoubles", formatted: "Doubles" },
+      { api: "swapFours", formatted: "Fours" },
+    ],
+  },
+  {
+    api: "ultimate",
+    submodes: [
+      { api: "ultimate", formatted: "Overall" },
+      { api: "ultimateDoubles", formatted: "Doubles" },
+      { api: "ultimateFours", formatted: "Fours" },
+    ],
+  },
+  {
+    api: "underworld",
+    submodes: [
+      { api: "underworld", formatted: "Overall" },
+      { api: "underworldDoubles", formatted: "Doubles" },
+      { api: "underworldFours", formatted: "Fours" },
+    ],
+  },
+  {
+    api: "voidless",
+    submodes: [
+      { api: "voidless", formatted: "Overall" },
+      { api: "voidlessDoubles", formatted: "Doubles" },
+      { api: "voidlessFours", formatted: "Fours" },
+    ],
+  },
   { api: "oneBlock", hypixel: "BEDWARS_EIGHT_ONE_ONEBLOCK" },
-
-  { api: "armedDoubles", hypixel: "BEDWARS_EIGHT_TWO_ARMED", formatted: "Armed Doubles" },
-  { api: "armedFours", hypixel: "BEDWARS_FOUR_FOUR_ARMED", formatted: "Armed Fours" },
-  { api: "luckyDoubles", hypixel: "BEDWARS_EIGHT_TWO_LUCKY", formatted: "Lucky Doubles" },
-  { api: "luckyFours", hypixel: "BEDWARS_FOUR_FOUR_LUCKY", formatted: "Lucky Fours" },
-  { api: "rushDoubles", hypixel: "BEDWARS_EIGHT_TWO_RUSH", formatted: "Rush Doubles" },
-  { api: "rushFours", hypixel: "BEDWARS_FOUR_FOUR_RUSH", formatted: "Rush Fours" },
-  { api: "swapDoubles", hypixel: "BEDWARS_EIGHT_TWO_SWAP", formatted: "Swap Doubles" },
-  { api: "swapFours", hypixel: "BEDWARS_FOUR_FOUR_SWAP", formatted: "Swap Fours" },
-  { api: "ultimateDoubles", hypixel: "BEDWARS_EIGHT_TWO_ULTIMATE", formatted: "Ultimate Doubles" },
-  { api: "ultimateFours", hypixel: "BEDWARS_FOUR_FOUR_ULTIMATE", formatted: "Ultimate Fours" },
-  { api: "underworldDoubles", hypixel: "BEDWARS_EIGHT_TWO_UNDERWORLD", formatted: "Underworld Doubles" },
-  { api: "underworldFours", hypixel: "BEDWARS_FOUR_FOUR_UNDERWORLD", formatted: "Underworld Fours" },
-  { api: "voidlessDoubles", hypixel: "BEDWARS_EIGHT_TWO_VOIDLESS", formatted: "Voidless Doubles" },
-  { api: "voidlessFours", hypixel: "BEDWARS_FOUR_FOUR_VOIDLESS", formatted: "Voidless Fours" },
   { hypixel: "BEDWARS_PRACTICE", formatted: "Practice" },
 ] as const);
 

@@ -34,7 +34,11 @@ export const BedWarsProfile = ({
   time,
 }: BedWarsProfileProps) => {
   const { bedwars } = player.stats;
-  const stats = bedwars[mode.api];
+  const modeKey = mode.submode?.api ?? mode.api;
+  const formattedMode = mode.submode?.api === mode.api || !mode.submode ?
+    mode.formatted :
+    `${mode.formatted} ${mode.submode.formatted}`;
+  const stats = bedwars[modeKey];
 
   const sidebar: SidebarItem[] = [
     [t("stats.tokens"), t(bedwars.tokens), "§2"],
@@ -58,7 +62,7 @@ export const BedWarsProfile = ({
         name={player.prefixName}
         badge={badge}
         sidebar={sidebar}
-        title={`§l${FormattedGame.BEDWARS} §fStats §r(${mode.formatted})`}
+        title={`§l${FormattedGame.BEDWARS} §fStats §r(${formattedMode})`}
         description={`§7${t("stats.level")}: ${
           bedwars.levelFormatted
         }\n${formatProgression({
