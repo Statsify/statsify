@@ -323,16 +323,13 @@ export abstract class LeaderboardService {
     const name = constructor.name.toLowerCase();
     const key = `${name}.${field}`;
 
-    const result = await this.redis.zrevrangebyscore(
-      key,
-      value,
-      "-inf",
-      "LIMIT",
-      0,
-      1
-    );
+    const result = sort === "ASC" ?
+      await this.redis.zrangebyscore(key, value, "+inf", "LIMIT", 0, 1) :
+      await this.redis.zrevrangebyscore(key, value, "-inf", "LIMIT", 0, 1);
 
-    const fallback = await this.redis.zrange(key, 0, 0);
+    const fallback = sort === "ASC" ?
+      await this.redis.zrevrange(key, 0, 0) :
+      await this.redis.zrange(key, 0, 0);
 
     const id = result[0] ?? fallback[0];
     if (!id) return 1;

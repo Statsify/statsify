@@ -44,6 +44,8 @@ const formatStat = (stat: PostLeaderboardRankingsResponse, game?: string) => {
 export interface RankingsProfileProps extends Omit<BaseProfileProps, "time"> {
   data: PostLeaderboardRankingsResponse[];
   game?: string;
+  page: number;
+  pageCount: number;
 }
 
 export const RankingsProfile = ({
@@ -56,8 +58,10 @@ export const RankingsProfile = ({
   skin,
   game,
   badge,
+  page,
+  pageCount,
 }: RankingsProfileProps) => {
-  const listTitles = ["Statistic", "Pos", "Page", "Value"];
+  const listTitles = ["Statistic", "Pos", "Value"];
   if (!game) listTitles.unshift("Game");
 
   const titles = listTitles.map((field) => (
@@ -87,9 +91,6 @@ export const RankingsProfile = ({
           <text>{formatPosition(t, d.rank)}</text>
         </box>
         <box width="100%">
-          <text>{t(Math.floor((d.rank - 1) / 10) + 1)}</text>
-        </box>
-        <box width="100%">
           <text>{typeof d.value === "string" ? d.value : t(d.value)}</text>
         </box>
       </>
@@ -105,6 +106,7 @@ export const RankingsProfile = ({
         skin={skin}
         time="LIVE"
         title={`§l§bLeaderboard Positions §r(§l${formattedGame}§r)`}
+        description={`§7Page ${t(page + 1)} / ${t(pageCount)}`}
         badge={badge}
       />
       <List items={[<>{titles}</>, ...items]} />

@@ -350,7 +350,7 @@ export class RankingsCommand {
     return this.paginateService.scrollingPagination(
       context,
       groups.map(
-        (group) => () =>
+        (group, page) => () =>
           render(
             <RankingsProfile
               background={background}
@@ -362,6 +362,8 @@ export class RankingsCommand {
               t={t}
               user={user}
               game={formattedGame}
+              page={page}
+              pageCount={groups.length}
             />,
             getTheme(user)
           )
