@@ -44,7 +44,7 @@ export class QuakeMode {
   @Field({ leaderboard: { enabled: false } })
   public quakeShotAccuracy: number;
 
-  @Field()
+  @Field({ leaderboard: { enabled: false } })
   public headshotAccuracy: number;
 
   public constructor(data: APIData, mode: string) {

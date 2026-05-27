@@ -547,7 +547,7 @@
     "valueInput": {
       "button": "Value",
       "label": "Search by a Value",
-      "placeholder": "Enter a value, eg: 5k"
+      "placeholder": "Enter a value, eg: 5k, 15m, 50b"
     }
   },
   "minecraft": {
@@ -718,7 +718,6 @@
     "magicalKeys": "Magical Keys",
     "map": "Map",
     "mastery": "Mastery",
-    "matchesPlayed": "Matches Played",
     "maxPoints": "Max Score",
     "maxWave": "Max Wave",
     "mode": "Mode",

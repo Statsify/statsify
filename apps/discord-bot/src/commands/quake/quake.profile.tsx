@@ -41,6 +41,7 @@ export const QuakeProfile = ({
     [t("stats.godlikes"), t(quake.godlikes), "§3"],
     [t("stats.trigger"), `${quake.trigger}s`, "§b"],
     [t("stats.highestKillstreak"), t(quake.highestKillstreak), "§4"],
+    [t("stats.blocksTravelled"), t(quake[mode.api].blocksTravelled), "§b"]
   ];
 
   return (
@@ -78,23 +79,18 @@ export const QuakeProfile = ({
             value={t(stats.shotsFired)}
             color="§a"
           />
-          <Table.td
-            title={t("stats.blocksTravelled")}
-            value={t(stats.blocksTravelled)}
-            color="§b"
-          />
+          <Table.td title={t("stats.headshots")} value={t(stats.headshots)} color="§6" />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("stats.headshots")} value={t(stats.headshots)} color="§c" />
           <Table.td
             title={t("stats.shotAccuracy")}
             value={`${stats.quakeShotAccuracy}%`}
-            color="§6"
+            color="§a"
           />
           <Table.td
             title={t("stats.headshotAccuracy")}
             value={`${stats.headshotAccuracy}%`}
-            color="§e"
+            color="§6"
           />
         </Table.tr>
         <Table.tr>

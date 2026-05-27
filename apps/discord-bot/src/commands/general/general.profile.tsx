@@ -114,12 +114,12 @@ export const GeneralProfile = ({
           <Table.td
             title={t("stats.totalWins")}
             value={t(general.totalWins)}
-            color="§a"
+            color="§e"
           />
           <Table.td
             title={t("stats.totalKills")}
             value={t(general.totalKills)}
-            color="§c"
+            color="§e"
           />
         </Table.tr>
         <Table.tr>

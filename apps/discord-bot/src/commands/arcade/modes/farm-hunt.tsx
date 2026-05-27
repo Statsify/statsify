@@ -33,14 +33,12 @@ export const FarmHuntTable = ({ stats, t }: FarmHuntTableProps) => (
       <Table.tr>
         <Table.td title={t("stats.wins")} value={t(stats.animalWins)} color="§e" />
         <Table.td title={t("stats.kills")} value={t(stats.animalKills)} color="§a" />
-        <Table.td title={t("stats.killsPerWin")} value={t(stats.animalKillsPerWin)} color="§6" />
       </Table.tr>
     </Table.ts>
     <Table.ts title="§6Hunter">
       <Table.tr>
         <Table.td title={t("stats.wins")} value={t(stats.hunterWins)} color="§e" />
         <Table.td title={t("stats.kills")} value={t(stats.hunterKills)} color="§a" />
-        <Table.td title={t("stats.killsPerWin")} value={t(stats.hunterKillsPerWin)} color="§6" />
       </Table.tr>
     </Table.ts>
   </Table.table>

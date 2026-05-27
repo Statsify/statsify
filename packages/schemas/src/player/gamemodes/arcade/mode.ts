@@ -805,12 +805,6 @@ export class FarmHunt {
   public hunterKills: number;
 
   @Field()
-  public animalKillsPerWin: number;
-
-  @Field()
-  public hunterKillsPerWin: number;
-
-  @Field()
   public tauntsUsed: number;
 
   @Field()
@@ -823,8 +817,6 @@ export class FarmHunt {
     this.kills = data.kills_farm_hunt;
     this.animalKills = data.animal_kills_farm_hunt;
     this.hunterKills = data.hunter_kills_farm_hunt;
-    this.animalKillsPerWin = ratio(this.animalKills, this.animalWins);
-    this.hunterKillsPerWin = ratio(this.hunterKills, this.hunterWins);
     this.poopCollected = add(
       data.poop_collected,
       data.poop_collected_farm_hunt

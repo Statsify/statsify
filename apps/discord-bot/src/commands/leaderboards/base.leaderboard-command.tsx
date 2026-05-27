@@ -116,6 +116,7 @@ export class BaseLeaderboardCommand {
       .style(ButtonStyle.Primary);
 
     const searchValue = new ButtonBuilder()
+      .emoji("🧮")
       .label((t) => t("leaderboard.valueInput.button"))
       .style(ButtonStyle.Primary);
 
