@@ -53,15 +53,15 @@ const parseLeaderboardValue = (input: string): number => {
 
   const isEuropean = /\d{1,3}(\.\d{3})+(,\d+)?$/.test(normalized.replace(/^-/, ""));
 
-  const sanitized = isEuropean
-    ? normalized.replace(/\./g, "").replace(",", ".")
-    : normalized.replace(/,/g, "");
+  const sanitized = isEuropean ?
+    normalized.replace(/\./g, "").replace(",", ".") :
+    normalized.replace(/,/g, "");
 
   const match = sanitized.match(/^(-?\d+(?:\.\d+)?)(?:e([+-]?\d+))?([kmbt])?$/);
   if (!match) return Number.NaN;
 
   const suffixes = {
-    k: 1_000,
+    k: 1000,
     m: 1_000_000,
     b: 1_000_000_000,
     t: 1_000_000_000_000,
