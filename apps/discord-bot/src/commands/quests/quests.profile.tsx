@@ -17,9 +17,9 @@ import {
   GenericQuestInstance,
   METADATA_KEY,
   MetadataScanner,
+  MonthlyQuests,
   OverallQuests,
   QuestModes,
-  QuestProgress,
   QuestTime,
   User,
   UserPalette,
@@ -56,7 +56,7 @@ function getQuestMetadata<T>(constructor: Constructor<T>) {
   return Object.fromEntries(metadata);
 }
 
-const questMetadata = [DailyQuests, WeeklyQuests, OverallQuests].map((constructor) =>
+const questMetadata = [DailyQuests, WeeklyQuests, MonthlyQuests, OverallQuests].map((constructor) =>
   getQuestMetadata(constructor as Constructor<GenericQuestInstance>)
 );
 
@@ -76,6 +76,10 @@ interface NormalTableProps {
 }
 
 const GRADIENT_OFFSET = 0.66;
+const QUEST_INTERNAL_FIELDS = new Set(["total"]);
+
+const isQuestProgressField = (key: string) =>
+  key.endsWith("Progress") || key.endsWith("ProgressMax");
 
 const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTableProps) => {
   const questEntries = Object.entries(quests);
@@ -92,8 +96,12 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
 
   const entries: GameEntry[] = questEntries
     // Require more than just a total field
-    .filter(([_, q]) => Object.keys(q).length > 1)
-    .map(([k, v]) => [k, v, Object.keys(v).length - 1] as const)
+    .filter(([_, q]) => Object.keys(q).some((key) => !QUEST_INTERNAL_FIELDS.has(key) && !isQuestProgressField(key)))
+    .map(([k, v]) => [
+      k,
+      v,
+      Object.keys(v).filter((key) => !QUEST_INTERNAL_FIELDS.has(key) && !isQuestProgressField(key)).length,
+    ] as const)
     .sort((a, b) => ratio(b[1]?.total ?? 0, b[2]) - ratio(a[1]?.total ?? 0, a[2]))
     .map(([k, v, total]) => {
       const completed = v.total;
@@ -144,27 +152,33 @@ interface GameTableProps {
 
 const GameTable = ({ quests, t, game, time, logos: [cross, check] }: GameTableProps) => {
   const isOverall = time === QuestTime.Overall;
-  const progress = (quests as GameQuests & { __progress?: Record<string, QuestProgress> }).__progress ?? {};
 
   const entries = Object.entries(quests)
-    .filter(([k, v]) => k !== "total" && k !== "__progress" && v !== null)
-    .sort((a, b) => b[1] - a[1])
+    .filter(([k, v]) => !QUEST_INTERNAL_FIELDS.has(k) && !isQuestProgressField(k) && v !== null)
+    .sort((a, b) => Number(b[1]) - Number(a[1]))
     .map(([quest, completions]) => {
+      completions = Number(completions);
       const name = questMetadata[time][game][quest].leaderboard.name;
-      const questProgress = progress[quest];
+      const questProgress = quests[`${quest}Progress`];
+      const questProgressMax = quests[`${quest}ProgressMax`];
       let progressText: string | undefined;
 
-      if (questProgress?.max) {
-        progressText = `${t(questProgress.current)}/${t(questProgress.max)}`;
-      } else if (questProgress) {
-        progressText = t(questProgress.current);
+      if (
+        questProgress !== null &&
+        questProgress !== undefined &&
+        questProgressMax !== null &&
+        questProgressMax !== undefined
+      ) {
+        progressText = `${t(questProgress)}/${t(questProgressMax)}`;
+      } else if (questProgress !== null && questProgress !== undefined) {
+        progressText = t(questProgress);
       }
 
       let status: JSX.Element;
 
       if (isOverall) {
         status = <text>{t(completions)}</text>;
-      } else if (progressText && completions === 0) {
+      } else if (progressText !== undefined && completions === 0) {
         status = <text>§e{progressText}</text>;
       } else {
         status = <img margin={2} image={completions === 0 ? cross : check} />;
@@ -248,10 +262,12 @@ export const QuestsProfile = ({
       );
       break;
 
-    default:
+    default: {
+      const gameQuests = quests[period][api]!;
+
       table = (
         <GameTable
-          quests={quests[period][api]}
+          quests={gameQuests}
           game={api}
           time={time}
           logos={logos}
@@ -259,6 +275,7 @@ export const QuestsProfile = ({
         />
       );
       break;
+    }
   }
 
   const sidebar: SidebarItem[] = [[t("stats.total"), t(quests.total), "§b"]];
@@ -266,7 +283,7 @@ export const QuestsProfile = ({
   if (api !== "overall") {
     sidebar.push([
       t("stats.game-total", { game: formatted }),
-      t(quests[period][api].total),
+      t(quests[period][api]!.total),
       "§a",
     ]);
   }

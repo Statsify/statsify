@@ -73,7 +73,7 @@ export interface CreateQuestsOptions<
 }
 
 const processQuests = (
-  instance: Record<string, number> & { __progress?: Record<string, QuestProgress> },
+  instance: Record<string, number | null> & { total: number },
   quests: APIData,
   time: QuestTime,
   options: QuestOption<string>[],
@@ -88,8 +88,8 @@ const processQuests = (
 
     const progress = getQuestProgress(quests[field], quest);
     if (progress) {
-      instance.__progress ??= {};
-      instance.__progress[k] = progress;
+      instance[`${k}Progress`] = progress.current;
+      instance[`${k}ProgressMax`] = progress.max ?? null;
     }
   });
 };
@@ -115,7 +115,11 @@ const assignQuestMetadata = (
       historical: { enabled: false },
     });
 
-    decorator(constructor.prototype, quest.propertyKey ?? quest.field);
+    const key = quest.propertyKey ?? quest.field;
+
+    decorator(constructor.prototype, key);
+    Field(questProgressFieldData)(constructor.prototype, `${key}Progress`);
+    Field(questProgressFieldData)(constructor.prototype, `${key}ProgressMax`);
   });
 };
 
@@ -128,15 +132,29 @@ const questTotalFieldData = (game: FormattedGame, enabled = false) => ({
   historical: { enabled: false },
 });
 
+const questProgressFieldData = {
+  type: () => Number,
+  leaderboard: { enabled: false },
+  historical: { enabled: false },
+  store: { required: false, default: null },
+};
+
 type GameWithQuestMode<Fields extends string> = {
   [K in Fields]: number;
-} & { total: number };
+} & { [key: string]: number | null; total: number };
 
 type GameWithQuests<DailyFields extends string, WeeklyFields extends string, MonthlyFields extends string> = [
   daily: Constructor<GameWithQuestMode<DailyFields>>,
   weekly: Constructor<GameWithQuestMode<WeeklyFields>>,
   monthly: Constructor<GameWithQuestMode<MonthlyFields>>,
   overall: Constructor<GameWithQuestMode<DailyFields | WeeklyFields | MonthlyFields>>
+];
+
+type AnyGameWithQuests = [
+  daily: Constructor<any>,
+  weekly: Constructor<any>,
+  monthly: Constructor<any>,
+  overall: Constructor<any>
 ];
 
 export function createGameModeQuests<
@@ -155,7 +173,7 @@ export function createGameModeQuests<
   MonthlyFields
 > {
   class Daily {
-    [key: string]: number;
+    [key: string]: number | null;
 
     @Field(questTotalFieldData(game))
     public total: number = 0;
@@ -168,7 +186,7 @@ export function createGameModeQuests<
   assignQuestMetadata(Daily, QuestTime.Daily, daily);
 
   class Weekly {
-    [key: string]: number;
+    [key: string]: number | null;
 
     @Field(questTotalFieldData(game))
     public total: number = 0;
@@ -181,7 +199,7 @@ export function createGameModeQuests<
   assignQuestMetadata(Weekly, QuestTime.Weekly, weekly);
 
   class Monthly {
-    [key: string]: number;
+    [key: string]: number | null;
 
     @Field(questTotalFieldData(game))
     public total: number = 0;
@@ -194,7 +212,7 @@ export function createGameModeQuests<
   assignQuestMetadata(Monthly, QuestTime.Monthly, monthly);
 
   class Overall {
-    [key: string]: number;
+    [key: string]: number | null;
 
     @Field(questTotalFieldData(game, true))
     public total: number = 0;
@@ -214,14 +232,14 @@ export function createGameModeQuests<
 }
 
 type BaseGamesWithQuestsRecord = {
-  [K in keyof typeof FormattedGame]?: GameWithQuests<string, string, string>;
+  [K in keyof typeof FormattedGame]?: AnyGameWithQuests;
 };
 
 type IQuestInstance<
   Time extends QuestTime,
   GamesWithQuests extends BaseGamesWithQuestsRecord
 > = Constructor<{
-  [K in keyof GamesWithQuests]: GamesWithQuests[K] extends GameWithQuests<string, string, string> ?
+  [K in keyof GamesWithQuests]: GamesWithQuests[K] extends AnyGameWithQuests ?
     UnwrapConstructor<GamesWithQuests[K][Time]> :
     never;
 }>;
@@ -232,7 +250,7 @@ export function createQuestsInstance<
 >(time: Time, record: GamesWithQuests): IQuestInstance<Time, GamesWithQuests> {
   const modes = Object.entries(record) as [
     keyof typeof FormattedGame,
-    GameWithQuests<string, string, string>
+    AnyGameWithQuests
   ][];
 
   class QuestInstance {

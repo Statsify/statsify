@@ -95,6 +95,7 @@ export const OverallQuests = createQuestsInstance(QuestTime.Overall, questModes)
 
 export interface GameQuests {
   total: number;
+  [key: string]: number | null;
 }
 
 export type GenericQuestInstance = {
