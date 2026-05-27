@@ -52,6 +52,7 @@ export const ZombiesTable = ({ stats, t, time }: ZombiesTableProps) => {
           <Table.td title={t("stats.kills")} value={t(overall.kills)} color="§e" />
           <Table.td title={t("stats.deaths")} value={t(overall.deaths)} color="§c" />
           <Table.td title={t("stats.kdr")} value={t(overall.kdr)} color="§6" />
+          <Table.td title={t("stats.totalRounds")} value={t(overall.totalRounds)} color="§d" />
         </Table.tr>
       </Table.ts>
       <Table.tr>

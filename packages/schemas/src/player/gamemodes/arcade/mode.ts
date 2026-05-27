@@ -1397,7 +1397,7 @@ export class ZombiesMapDifficulty {
   @Field({ leaderboard: { additionalFields: ["this.kills", "this.kdr"] } })
   public deaths: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field({ leaderboard: { additionalFields: ["this.kills", "this.deaths"] } })
   public kdr: number;
 
   @Field({ leaderboard: { enabled: false } })

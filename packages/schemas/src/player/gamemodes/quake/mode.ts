@@ -44,6 +44,9 @@ export class QuakeMode {
   @Field({ leaderboard: { enabled: false } })
   public quakeShotAccuracy: number;
 
+  @Field()
+  public headshotAccuracy: number;
+
   public constructor(data: APIData, mode: string) {
     mode = mode ? `_${mode}` : mode;
 
@@ -62,5 +65,6 @@ export class QuakeMode {
     data.kdr = ratio(data.kills, data.deaths);
     data.kwr = ratio(data.kills, data.wins);
     data.quakeShotAccuracy = ratio(data.postUpdateKills, data.shotsFired, 100);
+    data.headshotAccuracy = ratio(data.headshots, data.postUpdateKills, 100);
   }
 }
