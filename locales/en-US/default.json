@@ -530,6 +530,7 @@
   },
   "leaderboard": {
     "guildInput": {
+      "button": "Guild Name",
       "label": "Search by a Guild",
       "placeholder": "Enter a guild's name, eg: Quote"
     },
@@ -537,10 +538,12 @@
       "title": "Leaderboard Search"
     },
     "playerInput": {
+      "button": "Username",
       "label": "Search by a Player",
       "placeholder": "Enter a player's name, eg: j4cobi"
     },
     "positionInput": {
+      "button": "Position",
       "label": "Search by a Position",
       "placeholder": "Enter a position, eg: 5000"
     },
@@ -668,7 +671,6 @@
     "heads": "Heads",
     "headsEaten": "Heads Eaten",
     "headshotKills": "Headshot Kills",
-    "headshotAccuracy": "Headshot Accuracy",
     "headshots": "Headshots",
     "headstart": "Headstart",
     "healing": "Healing",
@@ -693,7 +695,6 @@
     "killsAsMurderer": "Kills As Murderer",
     "killsAsSurvivor": "Kills as Survivor",
     "killsAsAlpha": "Kills as Alpha",
-    "killsPerWin": "Kills Per Win",
     "killstreaks": "Killstreaks",
     "kit": "Current Kit",
     "knife": "Knife",

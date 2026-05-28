@@ -117,14 +117,16 @@ export class BaseLeaderboardCommand {
 
     const searchDocument = new ButtonBuilder()
       .emoji(t(`emojis:search.${type}`))
+      .label((t) => t(`leaderboard.${type}Input.button`))
       .style(ButtonStyle.Primary);
 
     const searchPosition = new ButtonBuilder()
       .emoji(t("emojis:search.position"))
+      .label((t) => t("leaderboard.positionInput.button"))
       .style(ButtonStyle.Primary);
 
     const searchValue = new ButtonBuilder()
-      .emoji("🧮")
+      .emoji(t("emojis:search.value"))
       .label((t) => t("leaderboard.valueInput.button"))
       .style(ButtonStyle.Primary);
 
