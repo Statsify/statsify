@@ -63,4 +63,16 @@ suite("FontRenderer", () => {
 
     expect(() => renderer.fillText(target, renderer.lex("\u1249"), 0, 0)).not.toThrow();
   });
+
+  it("ignores glyphs with zero scaled dimensions", () => {
+    const pageCtx = createCanvas(256, 256).getContext("2d");
+    const target = createCanvas(16, 16).getContext("2d");
+
+    const renderer = new FontRenderer(false);
+    renderer["images"] = new Map([["ascii", pageCtx]]);
+    renderer["canvases"].set(pageCtx, pageCtx.canvas);
+    renderer["scales"].set(pageCtx, 0);
+
+    expect(() => renderer.fillText(target, renderer.lex("A"), 0, 0)).not.toThrow();
+  });
 });
