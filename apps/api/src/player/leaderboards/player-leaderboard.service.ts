@@ -57,8 +57,10 @@ export class PlayerLeaderboardService extends LeaderboardService {
     selector.displayName = true;
     selector.uuid = true;
 
+    const uniqueIds = [...new Set(ids)];
+
     const players = await this.playerModel
-      .find({ uuid: { $in: ids } })
+      .find({ uuid: { $in: uniqueIds } })
       .select(selector)
       .lean()
       .exec();
@@ -66,7 +68,13 @@ export class PlayerLeaderboardService extends LeaderboardService {
     const playersById = new Map(players.map((player) => [player.uuid, player]));
 
     return ids.map((id) => {
-      const additionalStats = flatten(playersById.get(id)) as LeaderboardAdditionalStats;
+      const player = playersById.get(id);
+
+      if (!player) {
+        return { name: "Unknown" } as LeaderboardAdditionalStats;
+      }
+
+      const additionalStats = flatten(player) as LeaderboardAdditionalStats;
       additionalStats.name = additionalStats.displayName;
 
       return additionalStats;

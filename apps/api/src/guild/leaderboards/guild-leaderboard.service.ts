@@ -58,8 +58,10 @@ export class GuildLeaderboardService extends LeaderboardService {
     selector.id = true;
     selector.nameFormatted = true;
 
+    const uniqueIds = [...new Set(ids)];
+
     const guilds = await this.guildModel
-      .find({ id: { $in: ids } })
+      .find({ id: { $in: uniqueIds } })
       .select(selector)
       .lean()
       .exec();
@@ -67,7 +69,13 @@ export class GuildLeaderboardService extends LeaderboardService {
     const guildsById = new Map(guilds.map((guild) => [guild.id, guild]));
 
     return ids.map((id) => {
-      const additionalStats = flatten(guildsById.get(id)) as LeaderboardAdditionalStats;
+      const guild = guildsById.get(id);
+
+      if (!guild) {
+        return { name: "Unknown" } as LeaderboardAdditionalStats;
+      }
+
+      const additionalStats = flatten(guild) as LeaderboardAdditionalStats;
       additionalStats.name = additionalStats.nameFormatted;
 
       return additionalStats;

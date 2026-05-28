@@ -135,13 +135,15 @@ export abstract class LeaderboardService {
       LeaderboardScanner.getLeaderboardField(constructor, extraDisplay, false) :
       undefined;
 
-    const additionalStats = await this.getAdditionalStats(
-      leaderboard.map(({ id }) => id),
-      [
-        ...additionalFields.filter((k) => k !== field),
-        ...(extraDisplay ? [extraDisplay] : []),
-      ]
-    );
+    const additionalStats = leaderboard.length ?
+      await this.getAdditionalStats(
+        leaderboard.map(({ id }) => id),
+        [
+          ...additionalFields.filter((k) => k !== field),
+          ...(extraDisplay ? [extraDisplay] : []),
+        ]
+      ) :
+      [];
 
     const data = leaderboard.map((doc, index) => {
       const stats = additionalStats[index];
