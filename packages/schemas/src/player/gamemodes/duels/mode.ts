@@ -84,19 +84,26 @@ export class BowPVPBaseDuelsGameMode extends PVPBaseDuelsGameMode {
   @Field()
   public shotsFired: number;
 
+  @Field()
+  public shotsHit: number;
+
   public constructor(data: APIData, mode: string) {
     super(data, mode);
     this.shotsFired = data[`${mode}_bow_shots`];
+    this.shotsHit = data[`${mode}_bow_hits}`];
   }
 }
 
 export class BowBaseDuelsGameMode extends PVPBaseDuelsGameMode {
   @Field()
   public shotsFired: number;
+  @Field()
+  public shotsHit: number;
 
   public constructor(data: APIData, mode: string) {
     super(data, mode);
     this.shotsFired = data[`${mode}_bow_shots`];
+    this.shotsHit = data[`${mode}_bow_hits}`];
   }
 }
 
@@ -257,11 +264,14 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
 export class SingleBowPVPDuelsGameMode extends SinglePVPDuelsGameMode {
   @Field()
   public shotsFired: number;
+  @Field()
+  public shotsHit: number;
 
   public constructor(data: APIData, title: string, mode: string, titleRequirement: TitleRequirement) {
     super(data, title, mode, titleRequirement);
     mode = mode ? `${mode}_` : mode;
     this.shotsFired = data[`${mode}bow_shots`];
+    this.shotsHit = data[`${mode}_bow_hits}`];
   }
 }
 
@@ -397,10 +407,14 @@ export class QuakeDuels extends SinglePVPDuelsGameMode {
   @Field()
   public shotsFired: number;
 
+  @Field()
+  public shotsHit: number;
+
   public constructor(data: APIData) {
     super(data, "Quakecraft", "quake_duel", "default");
     this.headshots = data.quake_duel_quake_headshots;
     this.shotsFired = data.quake_duel_quake_shots_taken;
+    this.shotsHit = data.quake_duel_quake_shots_hit;
   }
 }
 
