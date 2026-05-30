@@ -126,7 +126,7 @@ export class CopsAndCrimsOverall {
   @Field()
   public grenadeKills: number;
 
-  @Field({ leaderboard: { enabled: false } })
+  @Field()
   public shotsFired: number;
 
   @Field({ leaderboard: { enabled: false } })
