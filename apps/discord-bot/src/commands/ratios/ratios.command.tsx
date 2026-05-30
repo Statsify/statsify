@@ -212,10 +212,15 @@ export class RatiosCommand {
 
     const allModes = ratiosPerMode.map(({ ratioMode }) => ratioMode);
     const displayedModes = filterModes ? filterModes(player, allModes) : allModes;
-    const displayedModeKeys = new Set(displayedModes.map((mode) => this.getRatioModeKey(mode)));
-    const displayedRatiosPerMode = ratiosPerMode.filter(({ ratioMode }) =>
-      displayedModeKeys.has(this.getRatioModeKey(ratioMode))
+    const displayedModeOrder = new Map(
+      displayedModes.map((mode, index) => [this.getRatioModeKey(mode), index])
     );
+    const displayedRatiosPerMode = ratiosPerMode
+      .flatMap((ratio) => {
+        const index = displayedModeOrder.get(this.getRatioModeKey(ratio.ratioMode));
+        return index === undefined ? [] : [{ ...ratio, index }];
+      })
+      .sort((a, b) => a.index - b.index);
 
     const getGenerator = (ratioMode: RatioMode<T>, ratios: Ratio[]) => async (t: LocalizeFunction) => {
       const background = await getBackground(...mapBackground(modes, ratioMode.mode.api));
