@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box, Div, Image, Text } from "#intrinsics";
+import { Box, Div, Graph, Image, Text } from "#intrinsics";
 import type { PropsWithChildren, RawFC, Render } from "./types.js";
 
 export const intrinsicElements = {
   div: Div.component,
   box: Box.component,
+  graph: Graph.component,
   img: Image.component,
   text: Text.component,
 };
@@ -35,6 +36,7 @@ export type IntrinsicRenders = {
 export const intrinsicRenders: IntrinsicRenders = {
   div: Div.render,
   box: Box.render,
+  graph: Graph.render,
   img: Image.render,
   text: Text.render,
 };

@@ -7,8 +7,11 @@
  */
 
 export * from "./Background.js";
+export * from "./Badge.js";
+export * from "./BarChart.js";
 export * from "./Container.js";
 export * from "./Footer.js";
+export * from "./Graph.js";
 export * from "./Header/index.js";
 export * from "./Historical/index.js";
 export * from "./If.js";
@@ -17,5 +20,6 @@ export * from "./Multiline.js";
 export * from "./ProgressBar.js";
 export * from "./Sidebar.js";
 export * from "./Skin.js";
+export * from "./StatDelta.js";
 export * from "./Table/index.js";
 export * from "./GameList.js";

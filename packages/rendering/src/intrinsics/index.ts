@@ -8,5 +8,6 @@
 
 export * as Box from "./Box.js";
 export * as Div from "./Div.js";
+export * as Graph from "./Graph.js";
 export * as Image from "./Image.js";
 export * as Text from "./Text.js";
