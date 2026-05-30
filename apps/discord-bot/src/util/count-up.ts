@@ -82,6 +82,7 @@ export function buildCountUpFrames(
         underline: node.underline,
         strikethrough: node.strikethrough,
         obfuscated: false,
+        rainbow: false,
         size: node.size,
       }];
 
