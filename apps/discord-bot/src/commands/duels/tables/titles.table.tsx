@@ -7,7 +7,6 @@
  */
 
 import { type Duels, type TitleRequirement, getTitleAndProgression } from "@statsify/schemas";
-import { arrayGroup } from "@statsify/util";
 import type { DuelsModeIcons } from "../duels.command.js";
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
@@ -18,13 +17,28 @@ interface TitlesTableProps {
   modeIcons: DuelsModeIcons;
 }
 
-function ModeTitle({ icon, title, score, t }: { icon: Image; title: string; score: number; t: LocalizeFunction }) {
+interface TitleMode {
+  icon: Image;
+  mode: string;
+  score: number;
+  titleRequirement: TitleRequirement;
+}
+
+function ModeTitle({
+  icon,
+  title,
+  score,
+  t,
+}: {
+  icon: Image;
+  title: string;
+  score: number;
+  t: LocalizeFunction;
+}) {
   return (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
       <img image={icon} width={32} height={32} />
-      <text margin={{ left: 8 }}>
-        {title}
-      </text>
+      <text margin={{ left: 8 }}>{title}</text>
       <div width="remaining" margin={{ left: 4, right: 4 }} />
       <text>{t(score)}</text>
     </box>
@@ -32,7 +46,11 @@ function ModeTitle({ icon, title, score, t }: { icon: Image; title: string; scor
 }
 
 export const TitlesTable = ({ duels, t, modeIcons }: TitlesTableProps) => {
-  const getBaseTitle = (score: number, mode: string, titleRequirement: TitleRequirement) =>
+  const getBaseTitle = (
+    score: number,
+    mode: string,
+    titleRequirement: TitleRequirement
+  ) =>
     getTitleAndProgression({
       score,
       mode,
@@ -43,6 +61,7 @@ export const TitlesTable = ({ duels, t, modeIcons }: TitlesTableProps) => {
   const titleSortScore = (score: number, titleRequirement: TitleRequirement) => {
     if (titleRequirement === "half") return score * 2;
     if (titleRequirement === "overall") return score / 2;
+
     return score;
   };
 
@@ -64,19 +83,23 @@ export const TitlesTable = ({ duels, t, modeIcons }: TitlesTableProps) => {
     { icon: modeIcons.skywars, mode: "SkyWars", score: duels.skywars.overall.wins, titleRequirement: "default" },
     { icon: modeIcons.sumo, mode: "Sumo", score: duels.sumo.wins, titleRequirement: "default" },
     { icon: modeIcons.uhc, mode: "UHC", score: duels.uhc.overall.wins, titleRequirement: "default" },
-  ] satisfies {
-    icon: Image;
-    mode: string;
-    score: number;
-    titleRequirement: TitleRequirement;
-  }[];
+  ] satisfies TitleMode[];
 
   games.sort(
     (a, b) =>
       titleSortScore(b.score, b.titleRequirement) -
       titleSortScore(a.score, a.titleRequirement)
   );
-  const groups = arrayGroup(games, games.length / 2);
+
+  const rows = games.reduce<TitleMode[][]>((acc, game, index) => {
+    const rowIndex = Math.floor(index / 2);
+
+    acc[rowIndex] ??= [];
+    acc[rowIndex].push(game);
+
+    return acc;
+  }, []);
+
   const overallTitle = getBaseTitle(duels.overall.wins, "", "overall");
 
   return (
@@ -87,16 +110,19 @@ export const TitlesTable = ({ duels, t, modeIcons }: TitlesTableProps) => {
         score={duels.overall.wins}
         t={t}
       />
-      <div width="100%">
-        {groups.map((group) => (
-          <div width={`1/${groups.length}`} direction="column">
-            {group.map(({ icon, mode, score, titleRequirement }) => (
-              <ModeTitle
-                icon={icon}
-                title={getBaseTitle(score, mode, titleRequirement)}
-                score={score}
-                t={t}
-              />
+
+      <div width="100%" direction="column">
+        {rows.map((row) => (
+          <div width="100%">
+            {[...row].reverse().map(({ icon, mode, score, titleRequirement }) => (
+              <div width={row.length === 1 ? "100%" : "1/2"}>
+                <ModeTitle
+                  icon={icon}
+                  title={getBaseTitle(score, mode, titleRequirement)}
+                  score={score}
+                  t={t}
+                />
+              </div>
             ))}
           </div>
         ))}
