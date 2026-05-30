@@ -142,6 +142,6 @@ export class CopsAndCrimsOverall {
     this.headshotKills = data.headshot_kills;
     this.grenadeKills = data.grenade_kills;
     this.shotsFired = data.shots_fired;
-    this.shotsPerKill = ratio(this.shotsFired, add(defusal.kills, deathmatch.kills));
+    this.shotsPerKill = ratio(this.shotsFired, this.kills);
   }
 }
