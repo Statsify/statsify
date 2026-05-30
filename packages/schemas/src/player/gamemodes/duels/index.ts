@@ -33,7 +33,7 @@ export const DUELS_MODES = new GameModes([
       { api: "titles" },
     ],
   },
-  { api: "arena", hypixel: "DUELS_DUEL_ARENA" },
+  { api: "arena", hypixel: "DUELS_DUEL_ARENA", formatted: "Duel Arena" },
   {
     api: "bedwars",
     formatted: "BedWars",
@@ -122,7 +122,7 @@ export class Duels {
   @Field({ leaderboard: { extraDisplay: "this.overall.titleFormatted" } })
   public overall: SingleBowPVPDuelsGameMode;
 
-  @Field({ leaderboard: { extraDisplay: "this.arena.titleFormatted" } })
+  @Field({ leaderboard: { name: "Duel Arena", extraDisplay: "this.arena.titleFormatted" } })
   public arena: ArenaDuels;
 
   @Field({
@@ -236,3 +236,4 @@ export class Duels {
 }
 
 export * from "./mode.js";
+export * from "./util.js";

@@ -237,11 +237,17 @@ export class SinglePVPDuelsGameMode extends PVPBaseDuelsGameMode {
   @Field()
   public progression: Progression;
 
-  public constructor(data: APIData, title: string, mode: string, titleRequirement: TitleRequirement) {
+  public constructor(
+    data: APIData,
+    title: string,
+    mode: string,
+    titleRequirement: TitleRequirement,
+    titleScore?: number
+  ) {
     super(data, mode);
 
     const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
-      score: this.wins,
+      score: titleScore ?? this.wins,
       mode: title,
       data,
       titleRequirement,
@@ -295,12 +301,12 @@ export class SingleDuelsGameMode extends BaseDuelsGameMode {
   }
 }
 
-export class ArenaDuels extends SingleDuelsGameMode {
+export class ArenaDuels extends SinglePVPDuelsGameMode {
   @Field()
   public shotsFired: number;
 
   public constructor(data: APIData) {
-    super(data, "Arena", "duel_arena", "default");
+    super(data, "Duel Arena", "duel_arena", "default", data.duel_arena_kills);
     this.shotsFired = data[`duel_arena_bow_shots`];
   }
 }
