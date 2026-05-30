@@ -56,6 +56,7 @@ export class GuildLeaderboardService extends LeaderboardService {
     }, {} as Record<string, boolean>);
 
     selector.nameFormatted = true;
+    selector.name = true;
 
     return await Promise.all(
       ids.map(async (id) => {

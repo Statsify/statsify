@@ -22,6 +22,24 @@ import { PlayerService } from "#player";
 import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
+function getExpHistory(days: string[] = [], expHistory: number[] = []) {
+  return Object.fromEntries(days.map((day, index) => [day, expHistory[index] ?? 0]));
+}
+
+function mergeExpHistory(
+  cachedDays: string[] | undefined,
+  cachedExpHistory: number[] | undefined,
+  currentExpHistory: Record<string, number>
+) {
+  const combinedExpHistory = getExpHistory(cachedDays, cachedExpHistory);
+
+  Object.entries(currentExpHistory).forEach(([day, exp]) => {
+    combinedExpHistory[day] = Math.max(combinedExpHistory[day] ?? 0, exp);
+  });
+
+  return combinedExpHistory;
+}
+
 @Injectable()
 export class GuildService {
   private readonly logger = new Logger("GuildService");
@@ -84,7 +102,7 @@ export class GuildService {
 
       // Merge the exp history from hypixel and the cached guild
       const combinedExpHistory: Record<string, number> = {
-        ...this.getExpHistory(cacheMember?.expHistoryDays, cacheMember?.expHistory),
+        ...getExpHistory(cacheMember?.expHistoryDays, cacheMember?.expHistory),
         ...Object.fromEntries(
           member.expHistoryDays.map((day, index) => [day, member.expHistory[index]])
         ),
@@ -114,7 +132,11 @@ export class GuildService {
       .lean()
       .exec();
 
-    const combinedGuildExpHistory = this.getCombinedExpHistory(cachedGuild, guildExpHistory);
+    const combinedGuildExpHistory = mergeExpHistory(
+      cachedGuild?.expHistoryDays,
+      cachedGuild?.expHistory,
+      guildExpHistory
+    );
 
     // Get scaled gexp
     Object.entries(combinedGuildExpHistory)
@@ -254,27 +276,6 @@ export class GuildService {
     }
   }
 
-  private getExpHistory(days: string[] = [], expHistory: number[] = []) {
-    return Object.fromEntries(days.map((day, index) => [day, expHistory[index] ?? 0]));
-  }
-
-  private getCombinedExpHistory(
-    cachedGuild: Guild | null,
-    guildExpHistory: Record<string, number>
-  ) {
-    // Preserve cached guild totals so GEXP does not drop when member history disappears.
-    const combinedGuildExpHistory = this.getExpHistory(
-      cachedGuild?.expHistoryDays,
-      cachedGuild?.expHistory
-    );
-
-    Object.entries(guildExpHistory).forEach(([day, exp]) => {
-      combinedGuildExpHistory[day] = Math.max(combinedGuildExpHistory[day] ?? 0, exp);
-    });
-
-    return combinedGuildExpHistory;
-  }
-
   private scaleGexp(exp: number) {
     if (exp <= 200_000) return exp;
     if (exp <= 700_000) return (exp - 200_000) / 10 + 200_000;
@@ -287,18 +288,9 @@ if (import.meta.vitest) {
 
   suite("GuildService", () => {
     it("preserves cached guild exp history when refreshed member totals are lower", () => {
-      const service = Object.create(GuildService.prototype) as {
-        getCombinedExpHistory: (
-          cachedGuild: Pick<Guild, "expHistoryDays" | "expHistory">,
-          guildExpHistory: Record<string, number>
-        ) => Record<string, number>;
-      };
-
-      const combined = service.getCombinedExpHistory(
-        {
-          expHistoryDays: ["2026-05-12", "2026-05-11", "2026-05-10"],
-          expHistory: [500, 400, 300],
-        } as Guild,
+      const combined = mergeExpHistory(
+        ["2026-05-12", "2026-05-11", "2026-05-10"],
+        [500, 400, 300],
         {
           "2026-05-12": 250,
           "2026-05-11": 450,
