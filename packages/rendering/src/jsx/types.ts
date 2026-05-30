@@ -19,9 +19,25 @@ export interface BaseThemeContext {
   renderer: FontRenderer;
 }
 
+export interface AnimatedRegion {
+  /** Absolute pixel position of the text baseline (x, y as passed to fillText). */
+  x: number;
+  y: number;
+  /** Layout location — width/height of the text's own bounding box. */
+  location: Location;
+  /** Final-frame TextNodes; use their style (color, bold, size) to restyle interpolated values. */
+  text: import("../font/tokens.js").TextNode[];
+  /** Raw numeric value to ease from 0 → numericValue over the animation. */
+  numericValue: number;
+}
+
 export interface ComputedThemeContext extends BaseThemeContext {
   canvasWidth: number;
   canvasHeight: number;
+  /** When "static-only": skip animated text nodes but record their positions. */
+  paintMode?: "static-only";
+  /** Populated by renderStatic() — collects animated text regions during static-only render. */
+  animatedRegions?: AnimatedRegion[];
 }
 
 export interface Theme {

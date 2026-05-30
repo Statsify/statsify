@@ -23,6 +23,25 @@ import type { Fill } from "#jsx";
 const sizes: Sizes = _sizes;
 const positions: string[][] = _positions;
 
+// Memoised pool for §k (obfuscated): maps atlas pixel-width → candidate chars.
+// Built once at module init from printable ASCII U+0021–U+007E that exist in sizes.ascii.
+// Same-width substitution guarantees layout never jitters regardless of text size or bold.
+const obfuscatedPool: Map<number, string[]> = (() => {
+  const pool = new Map<number, string[]>();
+  for (let cp = 0x21; cp <= 0x7e; cp++) {
+    const unicode = cp.toString(16).padStart(4, "0").toUpperCase();
+    const entry = sizes.ascii[unicode];
+    if (!entry?.width) continue;
+    let bucket = pool.get(entry.width);
+    if (!bucket) {
+      bucket = [];
+      pool.set(entry.width, bucket);
+    }
+    bucket.push(String.fromCodePoint(cp));
+  }
+  return pool;
+})();
+
 const GRADIENT_TOP_OVERLAY = "rgb(255 255 255 / 0.85)";
 const GRADIENT_BOTTOM_OVERLAY = "rgb(0 0 0 / 0.60)";
 
@@ -103,14 +122,19 @@ export class FontRenderer {
       italic,
       underline,
       strikethrough,
+      obfuscated,
       size,
     } of nodes) {
       const adjustY = y + size + (largestSize - size) * 5;
 
       for (const char of text) {
+        const drawChar =
+          obfuscated && char !== " " && char !== "\n" ?
+            this.pickObfuscatedChar(char) :
+            char;
         x += this.fillCharacter(
           ctx,
-          char,
+          drawChar,
           Math.round(x),
           Math.round(adjustY),
           size,
@@ -130,6 +154,7 @@ export class FontRenderer {
       italic: false,
       underline: false,
       strikethrough: false,
+      obfuscated: false,
       color: "#FFFFFF",
       size: 2,
       ...inputState,
@@ -181,6 +206,15 @@ export class FontRenderer {
     }
 
     return nodes;
+  }
+
+  private pickObfuscatedChar(char: string): string {
+    const unicode = this.getUnicode(char).toUpperCase();
+    const width = sizes.ascii[unicode]?.width;
+    if (!width) return char;
+    const pool = obfuscatedPool.get(width);
+    if (!pool?.length) return char;
+    return pool[Math.floor(Math.random() * pool.length)];
   }
 
   private getUnicode(char: string) {

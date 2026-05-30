@@ -415,4 +415,53 @@ impl SkinRenderer<native::NativeBackend> {
     let (encoder, _) = self.render_sync(model);
     self.backend.handle_encoder_after_render(encoder).await
   }
+
+  // Renders at an explicit horizontal yaw (theta). Caller must hold RENDER_YAW_LOCK.
+  pub async fn render_at_yaw(&self, model: &Model, yaw: f32) -> Result<SkinRender> {
+    let cam = Camera::Orbital(OrbitalCamera::with_theta(
+      (0.0, 0.0, 0.0).into(),
+      self.config.width as f32,
+      self.config.height as f32,
+      yaw,
+    ));
+
+    let queue = self.backend.queue();
+
+    let cam_uniform = CameraUniform::new(&cam);
+    queue.write_buffer(&self.camera_buffer, 0, cast_slice(&[cam_uniform]));
+
+    let light_uniform = LightUniform::from(&cam);
+    queue.write_buffer(
+      &self.light_buffer,
+      0,
+      bytemuck::cast_slice(&[light_uniform]),
+    );
+
+    let (encoder, _) = self.render_sync(model);
+    let result = self.backend.handle_encoder_after_render(encoder).await;
+
+    // Restore default camera so no-yaw renders remain correct after lock release.
+    let default_cam = Camera::Orbital(OrbitalCamera::new(
+      (0.0, 0.0, 0.0).into(),
+      self.config.width as f32,
+      self.config.height as f32,
+    ));
+    let default_cam_uniform = CameraUniform::new(&default_cam);
+    queue.write_buffer(&self.camera_buffer, 0, cast_slice(&[default_cam_uniform]));
+    let default_light_uniform = LightUniform::from(&default_cam);
+    queue.write_buffer(
+      &self.light_buffer,
+      0,
+      bytemuck::cast_slice(&[default_light_uniform]),
+    );
+
+    // Flush restore writes before releasing the caller's lock.
+    let flush_encoder = self
+      .backend
+      .device()
+      .create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
+    queue.submit(Some(flush_encoder.finish()));
+
+    result
+  }
 }

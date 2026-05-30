@@ -16,6 +16,7 @@ import { createInstructions } from "./create-instructions.js";
 import { getPositionalDelta, getTotalSize } from "./util.js";
 import { noop } from "@statsify/util";
 import type {
+  AnimatedRegion,
   ComputedThemeContext,
   ElementNode,
   Instruction,
@@ -51,6 +52,25 @@ const _render = (
       bottom: instruction.y.margin2,
     },
   };
+
+  if (
+    context.paintMode === "static-only" &&
+    instruction.type === "text" &&
+    instruction.props.animated
+  ) {
+    // Record the absolute text position for the animated overlay, then skip drawing.
+    if (context.animatedRegions && instruction.props.numericValue !== undefined) {
+      context.animatedRegions.push({
+        x,
+        y,
+        location,
+        text: instruction.props.text,
+        numericValue: instruction.props.numericValue,
+      });
+    }
+    // Text nodes have no children; return here is safe.
+    return;
+  }
 
   intrinsicElements[instruction.type](
     ctx,
@@ -163,4 +183,48 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
   renderTransaction?.finish();
 
   return canvas;
+}
+
+/**
+ * Renders the card WITHOUT animated text nodes, and returns:
+ * - `canvas`: the static background frame (all boxes, images, non-animated text)
+ * - `regions`: position + style info for every animated text element,
+ *   ready for count-up / progress-bar overlay rendering.
+ */
+export function renderStatic(
+  node: ElementNode,
+  theme?: Theme
+): { canvas: Canvas; regions: AnimatedRegion[] } {
+  const instructions = createInstructions(node);
+
+  const width = Math.round(getTotalSize(instructions.x));
+  const height = Math.round(getTotalSize(instructions.y));
+
+  const canvas = createCanvas(width, height);
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+
+  const regions: AnimatedRegion[] = [];
+
+  const context: ComputedThemeContext = {
+    renderer: noop(),
+    ...theme?.context,
+    canvasWidth: width,
+    canvasHeight: height,
+    paintMode: "static-only",
+    animatedRegions: regions,
+  };
+
+  if (!context.renderer) context.renderer = Container.get(FontRenderer);
+
+  _render(
+    ctx,
+    context,
+    { ...intrinsicRenders, ...theme?.elements },
+    instructions,
+    0,
+    0
+  );
+
+  return { canvas, regions };
 }

@@ -18,7 +18,11 @@ import { Container } from "typedi";
 import { FontRenderer, StyleLocation, render } from "@statsify/rendering";
 import { Multiline } from "#components";
 import { convertColorCodes } from "#lib/convert-color-codes";
+import { encodeAnimatedWebP } from "../../util/animated-webp.js";
 import { getTheme } from "#themes";
+
+const OBFUSCATED_FRAMES = 10;
+const OBFUSCATED_DELAY_MS = 50;
 
 @Command({
   description: (t) => t("commands.text"),
@@ -50,19 +54,37 @@ export class TextCommand {
       };
     }
 
-    const canvas = render(
+    // §k in the converted text means at least one obfuscated run is present.
+    // Animated path: render OBFUSCATED_FRAMES copies; fillText re-scrambles each call.
+    // Static path: unchanged — single PNG.
+    const hasObfuscated = text.includes("§k");
+
+    const profileNode = (
       <div direction="column" padding={2}>
         <Multiline size={size} align={alignment}>
           {text}
         </Multiline>
-      </div>,
-      theme
+      </div>
     );
 
-    const buffer = await canvas.toBuffer("png");
+    if (!hasObfuscated) {
+      const canvas = render(profileNode, theme);
+      const buffer = await canvas.toBuffer("png");
+      return {
+        files: [{ data: buffer, name: "text.png", type: "image/png" }],
+      };
+    }
+
+    // Animated: each render() call picks fresh random glyphs for §k nodes.
+    // Static characters are pixel-identical across frames (same TextNode[], same draw path).
+    const frameCanvases = Array.from({ length: OBFUSCATED_FRAMES }, () =>
+      render(profileNode, theme)
+    );
+
+    const webpData = await encodeAnimatedWebP(frameCanvases, OBFUSCATED_DELAY_MS);
 
     return {
-      files: [{ data: buffer, name: "text.png", type: "image/png" }],
+      files: [{ data: webpData, name: "text.webp", type: "image/webp" }],
     };
   }
 }

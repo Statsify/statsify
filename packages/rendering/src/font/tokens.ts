@@ -16,6 +16,7 @@ export interface TextNode {
   italic: boolean;
   underline: boolean;
   strikethrough: boolean;
+  obfuscated: boolean;
   size: number;
 }
 
@@ -47,7 +48,7 @@ const strikethrough: Token = {
 
 const obfuscated: Token = {
   regex: /^k/,
-  effect: () => ({}),
+  effect: () => ({ obfuscated: true }),
 };
 
 const reset: Token = {
