@@ -276,11 +276,10 @@ export abstract class AbstractCommandListener {
   ): APIApplicationCommandOptionChoice[] {
     return choices
       .flatMap((choice) => {
-        const valueName =
-          choice.value === undefined || choice.value === null ?
-            "" :
-            String(choice.value);
-        const name = (choice.name || valueName).trim();
+        if (choice.value === undefined || choice.value === null) return [];
+
+        const valueName = String(choice.value);
+        const name = (choice.name ?? valueName).trim();
 
         if (!name) return [];
 
@@ -288,8 +287,9 @@ export abstract class AbstractCommandListener {
           typeof choice.value === "string" &&
           (choice.value.trim().length === 0 ||
             choice.value.length > MAX_STRING_CHOICE_VALUE_LENGTH)
-        )
+        ) {
           return [];
+        }
 
         return [
           {
