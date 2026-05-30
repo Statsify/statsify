@@ -29,7 +29,6 @@ const redisUrl = await config("database.redisUrl");
       useFactory: () => ({
         uri: mongoUri,
         maxPoolSize: 200,
-        minPoolSize: 20,
       }),
     }),
     RedisModule.forRoot({

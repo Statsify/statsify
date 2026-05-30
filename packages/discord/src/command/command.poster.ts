@@ -14,6 +14,11 @@ import { parseDiscordResponse } from "#util/parse-discord-error";
 import { readFile, writeFile } from "node:fs/promises";
 import type { CommandResolvable } from "./command.resolvable.js";
 
+type CommandCache = {
+  guildId?: string;
+  commands: Record<string, unknown>;
+};
+
 @Service()
 export class CommandPoster {
   private readonly logger = new Logger("CommandPoster");
@@ -90,30 +95,145 @@ export class CommandPoster {
 
   private async shouldPost(commands: Map<string, CommandResolvable>, guildId?: string) {
     const file = await readFile("./commands.json", "utf8").catch(() => null);
+    const { cache, shouldPost } = getCommandCacheStatus(file, commands, guildId);
 
-    await writeFile(
-      "./commands.json",
-      JSON.stringify({
-        guildId,
-        commands: Object.fromEntries(commands),
-      })
-    );
+    if (file !== cache) await writeFile("./commands.json", cache);
 
-    if (!file) return true;
-
-    const parsed = JSON.parse(file);
-
-    if (parsed.guildId !== guildId) return true;
-
-    for (const [key, value] of commands) {
-      if (!parsed.commands[key]) return true;
-      if (!value.equals(parsed.commands[key])) return true;
-    }
-
-    return false;
+    return shouldPost;
   }
 
   private getGuildRoute(guildId?: string) {
     return guildId ? `guilds/${guildId}` : "";
   }
+}
+
+function getCommandCacheStatus(
+  file: string | null,
+  commands: Map<string, CommandResolvable> | Record<string, unknown>,
+  guildId?: string
+) {
+  const cache = serializeCommandCache(commands, guildId);
+
+  if (file === cache) return { cache, shouldPost: false };
+  if (!file) return { cache, shouldPost: true };
+
+  const parsed = JSON.parse(file) as CommandCache;
+
+  return {
+    cache,
+    shouldPost: serializeCommandCache(parsed.commands, parsed.guildId) !== cache,
+  };
+}
+
+function serializeCommandCache(
+  commands: Map<string, CommandResolvable> | Record<string, unknown>,
+  guildId?: string
+) {
+  const commandEntries = commands instanceof Map ? commands.entries() : Object.entries(commands);
+
+  return JSON.stringify(
+    sortJson({
+      guildId,
+      commands: Object.fromEntries(
+        [...commandEntries]
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([key, value]) => [
+            key,
+            value instanceof Object && "toJSON" in value ?
+              (value.toJSON as () => unknown)() :
+              value,
+          ])
+      ),
+    })
+  );
+}
+
+function sortJson(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(sortJson);
+
+  if (!value || typeof value !== "object") return value;
+
+  return Object.fromEntries(
+    Object.entries(value)
+      .filter(([, nestedValue]) => nestedValue !== undefined)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, nestedValue]) => [key, sortJson(nestedValue)])
+  );
+}
+
+if (import.meta.vitest) {
+  const { suite, it, expect } = import.meta.vitest;
+
+  suite("CommandPoster", () => {
+    it("serializes command caches deterministically", () => {
+      const commands = new Map([
+        [
+          "beta",
+          {
+            toJSON: () => ({ name: "beta", description: "Beta", options: [] }),
+          } as unknown as CommandResolvable,
+        ],
+        [
+          "alpha",
+          {
+            toJSON: () => ({ options: [], description: "Alpha", name: "alpha" }),
+          } as unknown as CommandResolvable,
+        ],
+      ]);
+
+      expect(serializeCommandCache(commands)).toBe(
+        "{\"commands\":{\"alpha\":{\"description\":\"Alpha\",\"name\":\"alpha\",\"options\":[]},\"beta\":{\"description\":\"Beta\",\"name\":\"beta\",\"options\":[]}}}"
+      );
+    });
+
+    it("preserves array order while sorting object keys", () => {
+      expect(
+        serializeCommandCache({
+          alpha: {
+            options: [
+              { name: "first", type: 1 },
+              { type: 1, name: "second" },
+            ],
+            name: "alpha",
+          },
+        })
+      ).toBe(
+        "{\"commands\":{\"alpha\":{\"name\":\"alpha\",\"options\":[{\"name\":\"first\",\"type\":1},{\"name\":\"second\",\"type\":1}]}}}"
+      );
+    });
+
+    it("skips posting when an existing cache is semantically unchanged", () => {
+      const previousCache =
+        "{\"commands\":{\"alpha\":{\"options\":[],\"description\":\"Alpha\",\"name\":\"alpha\"}}}";
+      const commands = new Map([
+        [
+          "alpha",
+          {
+            toJSON: () => ({ name: "alpha", description: "Alpha", options: [] }),
+          } as unknown as CommandResolvable,
+        ],
+      ]);
+
+      expect(getCommandCacheStatus(previousCache, commands).shouldPost).toBe(false);
+    });
+
+    it("posts when commands are removed from the cache", () => {
+      const previousCache =
+        "{\"commands\":{\"alpha\":{\"name\":\"alpha\"},\"beta\":{\"name\":\"beta\"}}}";
+
+      expect(
+        getCommandCacheStatus(previousCache, { alpha: { name: "alpha" } }).shouldPost
+      ).toBe(true);
+    });
+
+    it("posts when the command guild changes", () => {
+      const previousCache =
+        "{\"commands\":{\"alpha\":{\"name\":\"alpha\"}},\"guildId\":\"previous\"}";
+
+      expect(
+        getCommandCacheStatus(previousCache, { alpha: { name: "alpha" } }, "next")
+          .shouldPost
+      ).toBe(true);
+    });
+  });
 }
