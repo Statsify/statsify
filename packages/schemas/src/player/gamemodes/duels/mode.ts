@@ -153,7 +153,11 @@ export class BridgeDuels {
       this.solo,
       this.doubles,
       this.threes,
-      this.fours
+      this.fours,
+      // Needed for accurate calculation of overall stats
+      new BridgeDuelsMode(data, "bridge_2v2v2v2"),
+      new BridgeDuelsMode(data, "bridge_3v3v3v3"),
+      new BridgeDuelsMode(data, "capture_threes")
     );
 
     this.overall.winstreak = data.current_bridge_winstreak;
@@ -588,13 +592,30 @@ export class ParkourDuels extends SingleDuelsGameMode {
 }
 
 export class MegaWallsDuels extends SinglePVPDuelsGameMode {
-  @Field()
-  public solo: PVPBaseDuelsGameMode;
-
   public constructor(data: APIData) {
     super(data, "Mega Walls", "mw_duel", "half");
 
-    this.solo = new PVPBaseDuelsGameMode(data, "mw_duel");
+    // add back doubles stats
+    const doubles = new PVPBaseDuelsGameMode(data, "mw_doubles");
+    this.wins = add(this.wins, doubles.wins);
+    this.losses = add(this.losses, doubles.losses);
+    this.kills = add(this.kills, doubles.kills);
+    this.deaths = add(this.deaths, doubles.deaths);
+    this.blocksPlaced = add(this.blocksPlaced, doubles.blocksPlaced);
+
+    PVPBaseDuelsGameMode.applyRatios(this);
+
+    const { titleFormatted, titleLevelFormatted, nextTitleLevelFormatted, progression } = getTitleAndProgression({
+      score: this.wins,
+      mode: "Mega Walls",
+      data,
+      titleRequirement: "half",
+    });
+
+    this.titleFormatted = titleFormatted;
+    this.titleLevelFormatted = titleLevelFormatted;
+    this.nextTitleLevelFormatted = nextTitleLevelFormatted;
+    this.progression = progression;
   }
 }
 
