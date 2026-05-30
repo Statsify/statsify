@@ -106,7 +106,7 @@ export class GameCountsCommand {
   public async run(context: CommandContext) {
     const t = context.t();
     const gamecounts = await this.apiService.getGamecounts();
-    const selectedGame = context.option<GameCountGameId | undefined>("mode", undefined);
+    const selectedGame = context.option<string | undefined>("mode", undefined);
 
     const gamecountEntries = Object.entries(gamecounts) as [GameCountGameId, GamePlayers][];
 
@@ -114,9 +114,9 @@ export class GameCountsCommand {
       .filter(([, g]) => this.hasSubGames(g))
       .map(([id, game]) => this.createGameCountsPage(id, game));
 
-    if (selectedGame && selectedGame in gamecounts) {
+    if (this.isGameCountGameId(selectedGame)) {
       return this.paginateService.paginate(context, [
-        this.createGameCountsPage(selectedGame, gamecounts[selectedGame]),
+        this.createGameCountsPage(selectedGame, gamecounts[selectedGame], true),
       ]);
     }
 
@@ -155,12 +155,19 @@ export class GameCountsCommand {
     return `\`•\` ${emoji ? `${emoji} ` : ""}**${name}**: \`${count || 0}\``;
   }
 
-  private createGameCountsPage(id: GameId, { players, modes }: GamePlayers): Page {
+  private createGameCountsPage(
+    id: GameId,
+    { players, modes }: GamePlayers,
+    showTitleEmoji = false
+  ): Page {
     const name = removeFormatting(FormattedGame[id]);
     const list = Object.entries(modes ?? {}).sort((a, b) => Number(b[1]) - Number(a[1]));
 
     const embed = new EmbedBuilder()
-      .title((t) => `${name} ${t("players")}`)
+      .title((t) => {
+        const emoji = showTitleEmoji ? `${t(`emojis:games.${id}`)} ` : "";
+        return `${emoji}${name} ${t("players")}`;
+      })
       .color(STATUS_COLORS.info)
       .description(
         (t) => {
@@ -184,5 +191,9 @@ export class GameCountsCommand {
 
   private hasSubGames({ modes }: GamePlayers) {
     return modes && Object.keys(modes).length > 1;
+  }
+
+  private isGameCountGameId(id?: string): id is GameCountGameId {
+    return GAMECOUNT_GAME_IDS.includes(id as GameCountGameId);
   }
 }
