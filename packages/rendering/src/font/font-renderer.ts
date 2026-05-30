@@ -9,11 +9,12 @@
 import _positions from "../../positions.json" with { type: "json" };
 import _sizes from "../../sizes.json" with { type: "json" };
 import {
-  Canvas,
+  type Canvas,
   type CanvasRenderingContext2D,
   type ImageData,
 } from "skia-canvas";
 import { type TextNode, type Token, tokens } from "./tokens.js";
+import { createCanvas } from "../canvas.js";
 import { join } from "node:path";
 import { loadImage } from "#hooks";
 import { readdir } from "node:fs/promises";
@@ -34,9 +35,13 @@ interface Sizes {
 
 export class FontRenderer {
   private images: Map<string, CanvasRenderingContext2D>;
+  private canvases: WeakMap<CanvasRenderingContext2D, Canvas>;
+  private scales: WeakMap<CanvasRenderingContext2D, number>;
 
   public constructor(private gradient: boolean) {
     this.images = new Map();
+    this.canvases = new WeakMap();
+    this.scales = new WeakMap();
   }
 
   public async loadImages(fontPath: string) {
@@ -47,12 +52,15 @@ export class FontRenderer {
     for (const file of pictures) {
       const image = await loadImage(join(fontPath, file));
 
-      const canvas = new Canvas(image.width, image.height);
+      const canvas = createCanvas(image.width, image.height);
       const ctx = canvas.getContext("2d");
 
       ctx.imageSmoothingEnabled = false;
 
       ctx.drawImage(image, 0, 0);
+
+      this.canvases.set(ctx, canvas);
+      this.scales.set(ctx, image.width / 256);
 
       this.images.set(
         file.replace("unicode_page_", "").replace(".png", ""),
@@ -62,6 +70,8 @@ export class FontRenderer {
   }
 
   public measureText(nodes: TextNode[]): { width: number; height: number } {
+    if (!nodes.length) return { width: 0, height: 0 };
+
     let width = 0;
     let largestSize = nodes[0].size;
 
@@ -189,7 +199,18 @@ export class FontRenderer {
   }
 
   private getTextureScale(image: CanvasRenderingContext2D) {
-    return image.canvas.width / 256;
+    return this.scales.get(image) ?? image.canvas.width / 256;
+  }
+
+  private getImageData(
+    image: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number
+  ) {
+    const ctx = this.canvases.get(image)?.getContext("2d") ?? image;
+    return ctx.getImageData(x, y, width, height);
   }
 
   private getCharacterIndexLocation(unicode: string, isAscii: boolean) {
@@ -306,7 +327,7 @@ export class FontRenderer {
       size,
     } = metadata;
 
-    const imageData = image.getImageData(charX, charY, width, height);
+    const imageData = this.getImageData(image, charX, charY, width, height);
 
     ctx.filter = this.gradient ? "brightness(15%)" : "brightness(25%)";
 

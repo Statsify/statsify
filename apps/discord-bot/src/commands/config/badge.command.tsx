@@ -17,12 +17,12 @@ import {
   LocalizeFunction,
   SubCommand,
 } from "@statsify/discord";
-import { Canvas, Image } from "skia-canvas";
+import { type Canvas, Image } from "skia-canvas";
 import { DemoProfile } from "./demo.profile.js";
 import { User, UserTier } from "@statsify/schemas";
+import { createCanvas, loadImage, render } from "@statsify/rendering";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
-import { loadImage, render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.badge") })
 export class BadgeCommand {
@@ -88,7 +88,7 @@ export class BadgeCommand {
             (t) => t("errors.unknown.description")
           );
 
-        const canvas = new Canvas(32, 32);
+        const canvas = createCanvas(32, 32);
         const ctx = canvas.getContext("2d");
         ctx.imageSmoothingEnabled = false;
 

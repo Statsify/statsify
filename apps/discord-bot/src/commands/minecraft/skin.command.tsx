@@ -14,8 +14,8 @@ import {
   IMessage,
   MojangPlayerArgument,
 } from "@statsify/discord";
-import { Canvas } from "skia-canvas";
 import { STATUS_COLORS } from "@statsify/logger";
+import { createCanvas } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.skin"), args: [MojangPlayerArgument] })
 export class SkinCommand {
@@ -30,7 +30,7 @@ export class SkinCommand {
     );
 
     const skin = await this.apiService.getPlayerSkin(player.uuid, user);
-    const canvas = new Canvas(skin.width, skin.height);
+    const canvas = createCanvas(skin.width, skin.height);
     canvas.getContext("2d").drawImage(skin, 0, 0);
 
     const embed = new EmbedBuilder()

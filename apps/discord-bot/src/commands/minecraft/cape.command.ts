@@ -14,7 +14,8 @@ import {
   MojangPlayerArgument,
   PaginateService,
 } from "@statsify/discord";
-import { Canvas, Image, loadImage } from "skia-canvas";
+import { Image, loadImage } from "skia-canvas";
+import { createCanvas } from "@statsify/rendering";
 import type { Skin } from "@statsify/schemas";
 
 @Command({ description: (t) => t("commands.cape"), args: [MojangPlayerArgument] })
@@ -71,7 +72,7 @@ export class CapeCommand {
   }
 
   private renderCape(cape: Image) {
-    const canvas = new Canvas(636, 1024);
+    const canvas = createCanvas(636, 1024);
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
