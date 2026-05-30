@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import { ButtonStyle } from "discord-api-types/v10";
 import { Canvas } from "skia-canvas";
 

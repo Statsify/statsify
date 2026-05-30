@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import {
   type APIGuildMember,
   type APIUser,
@@ -15,6 +14,7 @@ import {
 } from "discord-api-types/v10";
 import { type IMessage, Message, getLocalizeFunction } from "#messages";
 import { parseDiscordResponse } from "#util/parse-discord-error";
+import { withSentrySpan } from "@statsify/logger";
 import type {
   InteractionServer,
   RestClient,
@@ -155,17 +155,31 @@ export class Interaction {
   }
 
   private async request(options: RestClient.RequestOptions) {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-    const span = transaction?.startChild({
-      op: "discord.reply",
-      description: `${options.method.toUpperCase()} ${options.path}`,
-    });
+    const route = this.getRouteName(options.path);
 
-    try {
+    return withSentrySpan({
+      op: "discord.reply",
+      description: `${options.method.toUpperCase()} ${route}`,
+      data: {
+        "http.method": options.method.toUpperCase(),
+        "http.route": route,
+      },
+    }, async () => {
       const response = await this.rest.request(options);
       return parseDiscordResponse(response);
-    } finally {
-      span?.finish();
-    }
+    });
+  }
+
+  private getRouteName(path: string) {
+    return path
+      .replace(
+        /^\/interactions\/[^/]+\/[^/]+\/callback$/,
+        "/interactions/:interactionId/:interactionToken/callback"
+      )
+      .replace(
+        /^\/webhooks\/[^/]+\/[^/]+/,
+        "/webhooks/:applicationId/:interactionToken"
+      )
+      .replace(/\/messages\/[^/]+$/, "/messages/:messageId");
   }
 }

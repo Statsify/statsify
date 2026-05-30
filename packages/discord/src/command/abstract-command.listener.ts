@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import {
   type APIUser,
   ApplicationCommandOptionType,
@@ -17,7 +16,12 @@ import { CommandContext } from "./command.context.js";
 import { ErrorMessage } from "#util/error.message";
 import { type IMessage, Message } from "#messages";
 import { Interaction, type InteractionAttachment } from "#interaction";
-import { Logger } from "@statsify/logger";
+import {
+  Logger,
+  getSentryTransaction,
+  setSentryMemoryUsage,
+  withSentrySpan,
+} from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
@@ -144,7 +148,7 @@ export abstract class AbstractCommandListener {
       commandSpan?.finish();
 
       if (typeof response !== "object") {
-        this.setMemoryUsage(transaction);
+        setSentryMemoryUsage(transaction);
         transaction?.finish();
         return;
       }
@@ -154,21 +158,19 @@ export abstract class AbstractCommandListener {
         ...response,
       });
 
-      this.setMemoryUsage(transaction);
+      setSentryMemoryUsage(transaction);
       transaction?.finish();
     } catch (err) {
       if (err instanceof Message) {
-        commandSpan?.finish();
         await context.reply(err);
-        this.setMemoryUsage(transaction);
+        setSentryMemoryUsage(transaction);
         transaction?.finish();
         return;
       }
 
       this.logger.error(`An error occurred when running "${commandName}"`);
       this.logger.error(err);
-      commandSpan?.finish();
-      this.setMemoryUsage(transaction);
+      setSentryMemoryUsage(transaction);
       transaction?.finish();
     }
   }
@@ -333,15 +335,6 @@ export abstract class AbstractCommandListener {
       const response = await this.onInteraction(interaction);
       interaction.reply(response);
     });
-  }
-
-  private setMemoryUsage(transaction?: Sentry.Transaction) {
-    if (!transaction) return;
-
-    const { rss, heapUsed } = process.memoryUsage();
-
-    transaction.setData("memory.rss.bytes", rss);
-    transaction.setData("memory.heap_used.bytes", heapUsed);
   }
 
   protected abstract onCommand(interaction: Interaction): Promise<void> | void;

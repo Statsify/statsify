@@ -14,7 +14,7 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
 import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
-import { SentryInterceptor } from "./sentry/index.js";
+import { SentryInterceptor, instrumentMongooseQueries } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
 import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
@@ -51,6 +51,8 @@ if (sentryDsn) {
     environment: await config("environment"),
   });
 }
+
+instrumentMongooseQueries();
 
 const mediaRoot = await config("api.mediaRoot");
 

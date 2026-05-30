@@ -22,6 +22,7 @@
   "dependencies": {
     "@sentry/node": "^7.118.0",
     "@statsify/assets": "workspace:^",
+    "@statsify/logger": "workspace:^",
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.23",
     "axios": "1.11.0",

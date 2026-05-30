@@ -66,19 +66,20 @@ export class CommandListener extends AbstractCommandListener {
     );
 
     const [name, ...subcommandParts] = commandName.split(" ");
-    const subcommand = subcommandParts.length ? commandName : undefined;
+    const group = parentCommand.group ?? command.group ?? "unknown";
+    const subcommand = subcommandParts.join(" ") || undefined;
 
     const transaction = Sentry.startTransaction({
       name: commandName,
-      op: "discord.command.total",
+      op: "command.total",
       data: {
         "command.name": name,
-        "command.group": parentCommand.group ?? command.group ?? "unknown",
+        "command.group": group,
         "command.subcommand": subcommand,
       },
       tags: {
         "command.name": name,
-        "command.group": parentCommand.group ?? command.group ?? "unknown",
+        "command.group": group,
         "command.subcommand": subcommand ?? "none",
       },
     });
@@ -87,7 +88,7 @@ export class CommandListener extends AbstractCommandListener {
 
     Sentry.setContext("command", {
       command: commandName,
-      group: parentCommand.group ?? command.group ?? null,
+      group,
       name,
       subcommand: subcommand ?? null,
       options: data.options,

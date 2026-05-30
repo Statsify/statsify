@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
 import Axios, {
   AxiosInstance,
   AxiosRequestHeaders,
@@ -40,6 +39,7 @@ import {
 import { User, UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
 import { loadImage } from "@statsify/rendering";
+import { withSentrySpan } from "@statsify/logger";
 
 interface ExtraData {
   headers?: AxiosRequestHeaders;
@@ -294,21 +294,15 @@ export class ApiService {
     method: Method = "GET",
     { body, headers, responseType }: ExtraData = {}
   ): Promise<T> {
-    const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-    const child = transaction?.startChild({
-      op: "statsify.api.fetch",
+    const res = await withSentrySpan({
+      op: "statsify.fetch",
       description: `${method} ${url}`,
       data: {
         "http.method": method,
         "http.route": url,
       },
-    });
-
-    let res: AxiosResponse<any>;
-
-    try {
-      res = await this.axios.request({
+    }, async (span) => {
+      const response: AxiosResponse<any> = await this.axios.request({
         url,
         method,
         params,
@@ -317,10 +311,10 @@ export class ApiService {
         responseType,
       });
 
-      child?.setHttpStatus(res.status);
-    } finally {
-      child?.finish();
-    }
+      span?.setHttpStatus(response.status);
+
+      return response;
+    });
 
     const data = res.data;
 

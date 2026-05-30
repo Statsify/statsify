@@ -14,6 +14,15 @@ import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/comm
 
 const DEFAULT_LOG_LEVELS: LogLevel[] = ["log", "error", "warn", "debug", "verbose", "fatal"];
 
+type SentryTagValue = boolean | number | string | null | undefined;
+
+export interface SentrySpanOptions {
+  op: string;
+  description?: string;
+  data?: Record<string, unknown>;
+  tags?: Record<string, SentryTagValue>;
+}
+
 export const STATUS_COLORS = {
   debug: 0xC700E7,
   warn: 0xFAB627,
@@ -33,6 +42,61 @@ const ColorByLogLevel: Record<LogLevel, number> = {
 };
 
 const isProduction = await config("environment") === "prod";
+
+export function getSentryTransaction() {
+  return Sentry.getCurrentHub().getScope()?.getTransaction();
+}
+
+export function startSentrySpan({
+  op,
+  description,
+  data,
+  tags,
+}: SentrySpanOptions) {
+  const span = getSentryTransaction()?.startChild({ op, description, data });
+
+  for (const [key, value] of Object.entries(tags ?? {})) {
+    if (value === null || value === undefined) continue;
+    span?.setTag(key, String(value));
+  }
+
+  return span;
+}
+
+export async function withSentrySpan<T>(
+  options: SentrySpanOptions,
+  callback: (span?: Sentry.Span) => Promise<T>
+): Promise<T> {
+  const span = startSentrySpan(options);
+
+  try {
+    return await callback(span);
+  } finally {
+    span?.finish();
+  }
+}
+
+export function withSentrySpanSync<T>(
+  options: SentrySpanOptions,
+  callback: (span?: Sentry.Span) => T
+): T {
+  const span = startSentrySpan(options);
+
+  try {
+    return callback(span);
+  } finally {
+    span?.finish();
+  }
+}
+
+export function setSentryMemoryUsage(span = getSentryTransaction()) {
+  if (!span) return;
+
+  const { rss, heapUsed } = process.memoryUsage();
+
+  span.setData("memory.rss.bytes", rss);
+  span.setData("memory.heap_used.bytes", heapUsed);
+}
 
 /**
  * A logger implementing the NestJS LoggerService interface. However can be used anywhere.

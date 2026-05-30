@@ -15,6 +15,7 @@ import { createCanvas } from "../canvas.js";
 import { createInstructions } from "./create-instructions.js";
 import { getPositionalDelta, getTotalSize } from "./util.js";
 import { noop } from "@statsify/util";
+import { withSentrySpanSync } from "@statsify/logger";
 import type {
   ComputedThemeContext,
   ElementNode,
@@ -119,49 +120,41 @@ const renderRecursive = (
 };
 
 export function render(node: ElementNode, theme?: Theme): Canvas {
-  const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
-
-  const instructionsTransaction = transaction?.startChild({
-    op: "render.create_instructions",
+  const instructions = withSentrySpanSync({
+    op: "render.instructions",
     description: "Create instructions",
-  });
-
-  const instructions = createInstructions(node);
-
-  instructionsTransaction?.finish();
+  }, () => createInstructions(node));
 
   const width = Math.round(getTotalSize(instructions.x));
   const height = Math.round(getTotalSize(instructions.y));
 
-  const renderTransaction = transaction?.startChild({
+  return withSentrySpanSync({
     op: "render.generate",
     description: "Generate render canvas",
     data: { width, height },
+  }, () => {
+    const canvas = createCanvas(width, height);
+    const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+
+    const context: ComputedThemeContext = {
+      renderer: noop(),
+      ...theme?.context,
+      canvasWidth: width,
+      canvasHeight: height,
+    };
+
+    if (!context.renderer) context.renderer = Container.get(FontRenderer);
+
+    renderRecursive(
+      ctx,
+      context,
+      { ...intrinsicRenders, ...theme?.elements },
+      instructions,
+      0,
+      0
+    );
+
+    return canvas;
   });
-
-  const canvas = createCanvas(width, height);
-  const ctx = canvas.getContext("2d");
-  ctx.imageSmoothingEnabled = false;
-
-  const context: ComputedThemeContext = {
-    renderer: noop(),
-    ...theme?.context,
-    canvasWidth: width,
-    canvasHeight: height,
-  };
-
-  if (!context.renderer) context.renderer = Container.get(FontRenderer);
-
-  renderRecursive(
-    ctx,
-    context,
-    { ...intrinsicRenders, ...theme?.elements },
-    instructions,
-    0,
-    0
-  );
-
-  renderTransaction?.finish();
-
-  return canvas;
 }
