@@ -90,6 +90,35 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   children,
 });
 
+/**
+ * Traces the stepped-corner rounded-rect path that Box uses for its fill and clip.
+ * Callers must open a `beginPath` / `closePath` pair around this or call it alone
+ * (this function calls both internally). Pass post-rounding, post-padding values.
+ */
+export const buildBoxPath = (
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  border: BoxBorderRadius
+): void => {
+  ctx.beginPath();
+  ctx.moveTo(x + border.topLeft, y);
+  ctx.lineTo(x + width - border.topRight, y);
+  ctx.lineTo(x + width - border.topRight, y + border.topRight);
+  ctx.lineTo(x + width, y + border.topRight);
+  ctx.lineTo(x + width, y + height - border.bottomRight);
+  ctx.lineTo(x + width - border.bottomRight, y + height - border.bottomRight);
+  ctx.lineTo(x + width - border.bottomRight, y + height);
+  ctx.lineTo(x + border.bottomLeft, y + height);
+  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft);
+  ctx.lineTo(x, y + height - border.bottomLeft);
+  ctx.lineTo(x, y + border.topLeft);
+  ctx.lineTo(x + border.topLeft, y + border.topLeft);
+  ctx.closePath();
+};
+
 export const renderOverlay = (
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -131,20 +160,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   width = Math.round(width);
   height = Math.round(height);
 
-  ctx.beginPath();
-  ctx.moveTo(x + border.topLeft, y);
-  ctx.lineTo(x + width - border.topRight, y);
-  ctx.lineTo(x + width - border.topRight, y + border.topRight);
-  ctx.lineTo(x + width, y + border.topRight);
-  ctx.lineTo(x + width, y + height - border.bottomRight);
-  ctx.lineTo(x + width - border.bottomRight, y + height - border.bottomRight);
-  ctx.lineTo(x + width - border.bottomRight, y + height);
-  ctx.lineTo(x + border.bottomLeft, y + height);
-  ctx.lineTo(x + border.bottomLeft, y + height - border.bottomLeft);
-  ctx.lineTo(x, y + height - border.bottomLeft);
-  ctx.lineTo(x, y + border.topLeft);
-  ctx.lineTo(x + border.topLeft, y + border.topLeft);
-  ctx.closePath();
+  buildBoxPath(ctx, x, y, width, height, border);
   ctx.fill();
 
   renderOverlay(ctx, x, y, height);

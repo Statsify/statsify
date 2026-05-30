@@ -13,16 +13,18 @@ import {
   ProfileData,
 } from "#commands/base.hypixel-command";
 import { BedWarsProfile } from "./bedwars.profile.js";
+import { type BoxGeometry, buildShineFrames, buildShineTheme } from "../../util/shine.js";
 import { Command, CommandContext, Message, Page } from "@statsify/discord";
-import { buildCountUpFrames, renderStatic } from "../../util/count-up.js";
 import { encodeAnimatedWebP } from "../../util/animated-webp.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { mapBackground } from "#constants";
 import { noop } from "@statsify/util";
+import { render } from "@statsify/rendering";
 
-const COUNT_UP_FRAMES = 16;
-const COUNT_UP_DELAY_MS = 60;
+/** Frames × delay = total loop length: 30 × 100 ms = 3.0 s */
+const SHINE_FRAMES = 30;
+const SHINE_DELAY_MS = 100;
 
 @Command({ description: (t) => t("commands.bedwars") })
 export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
@@ -52,24 +54,31 @@ export class BedWarsCommand extends BaseHypixelCommand<BedWarsModes> {
         emoji: emojis[index],
         generator: async (t) => {
           const background = await getBackground(...mapBackground(this.modes, mode.api));
-          const theme = getTheme(user);
+          const baseTheme = getTheme(user);
 
           const profileNode = this.getProfile(
             { player, skin, background, logo, t, user, badge, time: "LIVE" },
             { mode: gameMode, data: noop() }
           );
 
-          const { canvas: staticCanvas, regions } = renderStatic(profileNode, theme);
+          // Render the base card once, collecting every box's painted geometry
+          // via the theme interceptor — single pass, no re-render per frame.
+          const boxes: BoxGeometry[] = [];
+          const shineTheme = buildShineTheme(baseTheme, boxes);
+          const baseCanvas = render(profileNode, shineTheme);
 
-          const countUpFrames = buildCountUpFrames(staticCanvas, regions, {
-            frames: COUNT_UP_FRAMES,
-            delayMs: COUNT_UP_DELAY_MS,
-          });
+          // Per-frame: copy base canvas + draw diagonal highlight on each box.
+          // Only the shine layer changes; all other pixels are identical.
+          const frameCanvases = buildShineFrames(
+            baseCanvas,
+            boxes,
+            baseCanvas.width,
+            baseCanvas.height,
+            { frames: SHINE_FRAMES }
+          );
 
-          // Frame 0 = final values so Discord's static thumbnail shows correct stats.
-          // Animation plays once (loop=1): thumbnail frame, then count from 0 → final.
-          const allFrames = [countUpFrames.at(-1)!, ...countUpFrames];
-          const webpData = await encodeAnimatedWebP(allFrames, COUNT_UP_DELAY_MS, 1);
+          // Looping (loop=0) — the shine sweeps continuously.
+          const webpData = await encodeAnimatedWebP(frameCanvases, SHINE_DELAY_MS, 0);
 
           return new Message({
             files: [{ name: "bedwars.webp", data: webpData, type: "image/webp" }],
