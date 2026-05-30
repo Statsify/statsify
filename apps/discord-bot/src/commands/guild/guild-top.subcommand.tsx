@@ -163,7 +163,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
       return interaction.sendFollowup({
         files: [
           {
-            name: "guild-top.txt",
+            name: `guild-top-${guild.name.toLowerCase().replaceAll(/\W+/g, "-")}.txt`,
             data: Buffer.from(
               createGuildTopExport(guild, modes[modeIndex][1], modes[modeIndex][0])
             ),
