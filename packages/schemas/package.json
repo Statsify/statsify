@@ -7,7 +7,8 @@
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths --copy-files",
     "test:types": "tsc --noEmit",
-    "lint": "eslint"
+    "lint": "eslint",
+    "quests:regen": "pnpm --filter scripts quests:regen"
   },
   "dependencies": {
     "@nestjs/swagger": "^11.2.0",

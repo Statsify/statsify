@@ -15,6 +15,7 @@ import {
 import { DateTime } from "luxon";
 import { Field } from "#metadata";
 import { FormattedGame } from "#game";
+import { QUEST_OBJECTIVE_TARGETS } from "./objective-targets.generated.js";
 
 interface Quest {
   completions?: { time: number }[];
@@ -37,6 +38,8 @@ export interface QuestOption<TField extends string> {
     fieldName?: string;
     name?: string;
   };
+  /** Objective id → integer target, sourced from the Hypixel quests resource. Populated by createGameModeQuests; do not set manually. */
+  objectives?: Record<string, number>;
 }
 
 export interface CreateQuestsOptions<
@@ -139,6 +142,14 @@ export function createGameModeQuests<
   WeeklyFields,
   MonthlyFields
 > {
+  for (const quest of [...daily, ...weekly, ...monthly]) {
+    if (quest.objectives === undefined) {
+      const id = fieldPrefix ? `${fieldPrefix}_${quest.field}` : quest.field;
+      const targets = QUEST_OBJECTIVE_TARGETS[id];
+      if (targets !== undefined) quest.objectives = targets;
+    }
+  }
+
   class Daily {
     [key: string]: number;
 

@@ -11,7 +11,8 @@
     "purge": "node src/purge.js",
     "rank-emojis": "node src/rank-emojis.js",
     "timestamp": "node --no-warnings src/timestamp.js",
-    "validate-commands": "node --no-warnings src/validate-commands.js"
+    "validate-commands": "node --no-warnings src/validate-commands.js",
+    "quests:regen": "node src/regen-quest-targets.js"
   },
   "dependencies": {
     "@statsify/api-client": "workspace:^",
