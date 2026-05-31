@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+        with:
+          fetch-depth: 0
 
       - name: Setup pnpm
         uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
@@ -43,14 +45,23 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Set affected filter
+        id: affected
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "filter=--filter=...[origin/main]" >> $GITHUB_OUTPUT
+          else
+            echo "filter=" >> $GITHUB_OUTPUT
+          fi
+
       - name: Lint
-        run: pnpm lint
+        run: pnpm turbo run lint ${{ steps.affected.outputs.filter }} --parallel --cache-dir='.turbo'
 
       - name: Typecheck
-        run: pnpm test:types
+        run: pnpm turbo run test:types ${{ steps.affected.outputs.filter }} --cache-dir='.turbo'
 
       - name: Build
-        run: pnpm build
+        run: pnpm turbo run build --filter=!site ${{ steps.affected.outputs.filter }} --parallel --cache-dir='.turbo'
 
       - name: Test
-        run: pnpm test:coverage
+        run: pnpm turbo run test:coverage ${{ steps.affected.outputs.filter }} --cache-dir='.turbo'
