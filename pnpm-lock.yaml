@@ -38,6 +38,9 @@ importers:
       '@swc/core':
         specifier: 1.13.5
         version: 1.13.5(@swc/helpers@0.5.17)
+      '@tony.ganchev/eslint-plugin-header':
+        specifier: 3.4.4
+        version: 3.4.4(eslint@9.34.0(jiti@2.6.1))
       '@types/eslint__js':
         specifier: ^9.14.0
         version: 9.14.0
@@ -706,6 +709,8 @@ importers:
         version: 3.7.1
 
   packages/skin-renderer: {}
+
+  packages/skin-renderer/pkg: {}
 
   packages/util:
     dependencies:
@@ -3097,6 +3102,11 @@ packages:
 
   '@tokenizer/token@0.3.0':
     resolution: {integrity: sha512-OvjF+z51L3ov0OyAU0duzsYuvO01PH7x4t6DJx+guahgTnBHkhJdG7soQeTSFLWN3efnHyibZ4Z8l2EuWwJN3A==}
+
+  '@tony.ganchev/eslint-plugin-header@3.4.4':
+    resolution: {integrity: sha512-O3PDvjikVWECu078bLdRb2HwjVgR+wa7D0GX8gN1A8axlgEc7tordHOoEYcKRVxGcAw7bxXjwiKGXaY17qXD+Q==}
+    peerDependencies:
+      eslint: '>=7.7.0'
 
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
@@ -9000,6 +9010,10 @@ snapshots:
       - supports-color
 
   '@tokenizer/token@0.3.0': {}
+
+  '@tony.ganchev/eslint-plugin-header@3.4.4(eslint@9.34.0(jiti@2.6.1))':
+    dependencies:
+      eslint: 9.34.0(jiti@2.6.1)
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 

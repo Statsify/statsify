@@ -1,6 +1,12 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript", "unicorn", "import", "oxc"],
+  "plugins": ["typescript", "unicorn", "import", "oxc", "nextjs"],
+  "jsPlugins": [
+    {
+      "name": "header",
+      "specifier": "./node_modules/@tony.ganchev/eslint-plugin-header/index.js"
+    }
+  ],
   "categories": {
     "correctness": "error"
   },
@@ -10,6 +16,19 @@
   },
   "ignorePatterns": ["**/dist/**", "**/node_modules/**", "**/.next/**", "**/pkg/**"],
   "rules": {
+    "header/header": [
+      "error",
+      "block",
+      [
+        "*",
+        " * Copyright (c) Statsify",
+        " *",
+        " * This source code is licensed under the GNU GPL v3 license found in the",
+        " * LICENSE file in the root directory of this source tree.",
+        " * https://github.com/Statsify/statsify/blob/main/LICENSE",
+        " "
+      ]
+    ],
     "typescript/ban-ts-comment": [
       "error",
       {
@@ -36,14 +55,6 @@
       }
     ],
     "no-duplicate-imports": "error",
-    "sort-imports": [
-      "error",
-      {
-        "ignoreCase": false,
-        "ignoreDeclarationSort": true,
-        "ignoreMemberSort": false
-      }
-    ],
     "arrow-body-style": ["error", "as-needed"],
     "no-constant-binary-expression": "error",
     "no-constructor-return": "error",
@@ -65,7 +76,7 @@
         "number": {
           "minimumDigits": 5,
           "groupLength": 3,
-          "onlyIfContainsSeparator": false
+          "onlyIfContainsSeparator": true
         }
       }
     ],
