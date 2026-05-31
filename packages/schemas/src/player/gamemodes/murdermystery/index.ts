@@ -6,7 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ExtractGameModes, GameModes } from "#game";
+import { Field } from "#metadata";
+import { cycleColors } from "#prefixes";
+import { add } from "@statsify/math";
 import { type APIData, abbreviationNumber } from "@statsify/util";
+
 import {
   AssassinsMurderMysteryMode,
   ClassicMurderMysteryMode,
@@ -14,10 +19,6 @@ import {
   MurderMysteryKnife,
   OverallMurderMysteryMode,
 } from "./mode.js";
-import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
-import { add } from "@statsify/math";
-import { cycleColors } from "#prefixes";
 
 export const MURDER_MYSTERY_MODES = new GameModes([
   { api: "overall" },

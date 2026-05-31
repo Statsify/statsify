@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { Image } from "skia-canvas";
+
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, If, Multiline, Table } from "#components";
+import { mapGame } from "#constants";
+import type { LocalizeFunction } from "@statsify/discord";
 import { FormattedGame, type GameId, type RecentGame, type Status } from "@statsify/schemas";
 import { arrayGroup, prettify, relativeTime } from "@statsify/util";
-import { mapGame } from "#constants";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
-import type { Image } from "skia-canvas";
-import type { LocalizeFunction } from "@statsify/discord";
 
 interface StatusTableProps {
   status: Status;

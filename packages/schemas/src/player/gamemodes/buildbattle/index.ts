@@ -6,6 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Color } from "#color";
+import { type ExtractGameModes, GameModes } from "#game";
+import { Field } from "#metadata";
+import { GameTitle, createPrefixProgression, defaultPrefix, getFormattedPrefix } from "#prefixes";
+import { Progression } from "#progression";
+import type { APIData } from "@statsify/util";
+
 import {
   BuildBattleGuessTheBuild,
   BuildBattleMultiplayerMode,
@@ -13,12 +20,6 @@ import {
   BuildBattlePro,
   BuildBattleSpeedBuilders,
 } from "./mode.js";
-import { Color } from "#color";
-import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
-import { GameTitle, createPrefixProgression, defaultPrefix, getFormattedPrefix } from "#prefixes";
-import { Progression } from "#progression";
-import type { APIData } from "@statsify/util";
 
 export const BUILD_BATTLE_MODES = new GameModes([
   { api: "overall" },

@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData, findScoreIndex, romanNumeral } from "@statsify/util";
-import { GamePrefix, createPrefixProgression, cycleColors } from "#prefixes";
 import type { ColorCode } from "#color";
+import { GamePrefix, createPrefixProgression, cycleColors } from "#prefixes";
+import { APIData, findScoreIndex, romanNumeral } from "@statsify/util";
 
 export interface Title {
   req: number;

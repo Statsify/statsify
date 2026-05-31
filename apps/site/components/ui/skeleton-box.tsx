@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box, type BoxProps } from "./box";
 import type { JSX } from "react";
+
+import { Box, type BoxProps } from "./box";
 
 const GRADIENT =
   "linear-gradient(110deg, transparent 15%, color-mix(in oklab, var(--color-blackify-700) 50%, transparent) 30%, color-mix(in oklab, var(--color-blackify-950) 50%, transparent) 60%, color-mix(in oklab, var(--color-blackify-950) 50%, transparent) 75%, color-mix(in oklab, var(--color-blackify-700) 50%, transparent) 90%, transparent 95%)";

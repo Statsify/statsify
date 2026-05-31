@@ -7,6 +7,7 @@
  */
 
 import axios from "axios";
+
 import { getBackground } from "@statsify/assets";
 import { loadImage } from "@statsify/rendering";
 

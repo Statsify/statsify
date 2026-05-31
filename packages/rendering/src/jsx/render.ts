@@ -9,13 +9,15 @@
 import * as Sentry from "@sentry/node";
 import { type Canvas, type CanvasRenderingContext2D } from "skia-canvas";
 import { Container } from "typedi";
+
 import { FontRenderer } from "#font";
-import { IntrinsicRenders, intrinsicRenders } from "./instrinsics.js";
+import { noop } from "@statsify/util";
+
 import { createCanvas } from "../canvas.js";
 import { createInstructions } from "./create-instructions.js";
-import { getPositionalDelta, getTotalSize } from "./util.js";
-import { noop } from "@statsify/util";
+import { IntrinsicRenders, intrinsicRenders } from "./instrinsics.js";
 import type { ComputedThemeContext, ElementNode, Instruction, Theme } from "./types.js";
+import { getPositionalDelta, getTotalSize } from "./util.js";
 
 const _render = (
   ctx: CanvasRenderingContext2D,

@@ -6,6 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { mapBackground } from "#constants";
+import { getTheme } from "#themes";
+import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import {
   ApiService,
   Command,
@@ -15,12 +18,10 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { QUEST_MODES, QuestTime } from "@statsify/schemas";
-import { QuestProfileProps, QuestsProfile } from "./quests.profile.js";
-import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
-import { mapBackground } from "#constants";
 import { render } from "@statsify/rendering";
+import { QUEST_MODES, QuestTime } from "@statsify/schemas";
+
+import { QuestProfileProps, QuestsProfile } from "./quests.profile.js";
 
 @Command({ description: (t) => t("commands.quests") })
 export class QuestsCommand {

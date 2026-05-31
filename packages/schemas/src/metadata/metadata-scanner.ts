@@ -7,9 +7,10 @@
  */
 
 import { LEADERBOARD_RATIO_KEYS } from "#ratios";
+import type { Constructor } from "@statsify/util";
+
 import { METADATA_KEY } from "./constants.js";
 import type { ClassMetadata, FieldMetadata, LeaderboardEnabledMetadata } from "./metadata.interface.js";
-import type { Constructor } from "@statsify/util";
 
 export type MetadataEntry = [string, FieldMetadata];
 

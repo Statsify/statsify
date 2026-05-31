@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { usePlayer } from "~/app/players/[slug]/context";
+
 import { Box } from "./box";
 import { MinecraftText } from "./minecraft-text";
-import { usePlayer } from "~/app/players/[slug]/context";
 
 export function Nametag({ className }: { className?: string }) {
   const player = usePlayer();

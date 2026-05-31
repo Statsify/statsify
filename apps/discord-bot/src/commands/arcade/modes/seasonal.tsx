@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { Seasonal } from "@statsify/schemas";
-import { Table } from "#components";
 
 interface SeasonalTableProps {
   stats: Seasonal;

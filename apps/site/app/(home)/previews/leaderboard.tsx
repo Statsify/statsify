@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box } from "~/components/ui/box";
 import { Fragment } from "react";
+import { Box } from "~/components/ui/box";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkinHead } from "~/components/ui/skin";
 import { cn } from "~/lib/util";
 import { t } from "~/localize";
+
 import type { PostLeaderboardResponse } from "@statsify/api-client";
 
 export function LeaderboardPreview({

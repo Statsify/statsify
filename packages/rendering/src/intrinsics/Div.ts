@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { noop } from "@statsify/util";
 import type * as JSX from "#jsx";
+import { noop } from "@statsify/util";
 
 export interface DivProps {
   width?: JSX.Measurement;

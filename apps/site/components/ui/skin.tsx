@@ -7,8 +7,9 @@
  */
 
 import Image from "next/image";
-import { Box } from "./box";
 import { ComponentProps } from "react";
+
+import { Box } from "./box";
 
 export function Skin({ uuid, className = "", ...props }: ComponentProps<typeof Box> & { uuid: string }) {
   return (

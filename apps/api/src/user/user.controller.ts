@@ -6,12 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Auth, AuthRole } from "#auth";
 import { BadRequestException, Body, Controller, Delete, Get, Patch, Put, Query, StreamableFile } from "@nestjs/common";
-import { ErrorResponse, GetUserResponse, PutUserBadgeResponse } from "@statsify/api-client";
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+
+import { Auth, AuthRole } from "#auth";
 import { UpdateUserDto, UserDto, VerifyCodeDto } from "#dtos";
+import { ErrorResponse, GetUserResponse, PutUserBadgeResponse } from "@statsify/api-client";
 import { User } from "@statsify/schemas";
+
 import { UserService } from "./user.service.js";
 
 @Controller("/user")

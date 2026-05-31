@@ -7,8 +7,9 @@
  */
 
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
-import { COPS_AND_CRIMS_MODES, CopsAndCrimsModes } from "@statsify/schemas";
 import { Command } from "@statsify/discord";
+import { COPS_AND_CRIMS_MODES, CopsAndCrimsModes } from "@statsify/schemas";
+
 import { CopsAndCrimsProfile } from "./copsandcrims.profile.js";
 
 @Command({ description: (t) => t("commands.copsandcrims") })

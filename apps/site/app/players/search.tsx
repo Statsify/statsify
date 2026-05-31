@@ -8,17 +8,17 @@
 
 "use client";
 
-import Link, { type LinkProps } from "next/link";
-import { SearchIcon } from "~/components/icons/search";
-import { cn } from "~/lib/util";
-import { getPlayerSuggestions } from "~/app/api";
+import { useQuery } from "@tanstack/react-query";
 import { motion } from "motion/react";
+import type { Route } from "next";
+import Link, { type LinkProps } from "next/link";
+import { useRouter } from "next/navigation";
+import { useRef, useState } from "react";
+import { getPlayerSuggestions } from "~/app/api";
+import { SearchIcon } from "~/components/icons/search";
 import { useDebounce } from "~/hooks/use-debounce";
 import { useOutisdeClick } from "~/hooks/use-outside-click";
-import { useQuery } from "@tanstack/react-query";
-import { useRef, useState } from "react";
-import { useRouter } from "next/navigation";
-import type { Route } from "next";
+import { cn } from "~/lib/util";
 
 const SEARCH_DEBOUNCE_MS = 300;
 const SEARCH_ITEM_HEIGHT = 51;

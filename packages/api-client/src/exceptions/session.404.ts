@@ -7,6 +7,7 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
+
 import { NotFoundException } from "./base.404.js";
 
 export class SessionNotFoundException extends NotFoundException {

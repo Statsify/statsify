@@ -9,6 +9,7 @@
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { GameModeWithSubModes, MEGAWALLS_MODES, MegaWallsModes, Player } from "@statsify/schemas";
+
 import { MegaWallsProfile } from "./megawalls.profile.js";
 
 @Command({ description: (t) => t("commands.megawalls") })

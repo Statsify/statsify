@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { readdir } from "node:fs/promises";
+import { join } from "node:path";
+
 import chalk from "chalk";
 import inquirer from "inquirer";
-import { join } from "node:path";
-import { readdir } from "node:fs/promises";
 export const inquirerLogger = (title, message, newLine = true) => {
   console.log(`${newLine ? "\n" : ""}${chalk.magenta("!")} ${chalk.bold(title)} ${chalk.magenta(message)}`);
 };

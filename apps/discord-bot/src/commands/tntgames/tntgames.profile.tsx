@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
 import { FormattedGame, type GameMode, type TNTGamesModes } from "@statsify/schemas";
 import { formatTime, prettify } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface TNTGamesProfileProps extends BaseProfileProps {
   mode: GameMode<TNTGamesModes>;

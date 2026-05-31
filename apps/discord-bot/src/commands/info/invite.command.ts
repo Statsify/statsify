@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { readFile } from "node:fs/promises";
+
+import { getLogoPath } from "@statsify/assets";
 import { Command, EmbedBuilder, IMessage } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserLogo } from "@statsify/schemas";
 import { config } from "@statsify/util";
-import { getLogoPath } from "@statsify/assets";
-import { readFile } from "node:fs/promises";
 
 @Command({ description: (t) => t("commands.invite") })
 export class InviteCommand {

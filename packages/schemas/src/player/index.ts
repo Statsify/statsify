@@ -6,14 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
+
 import { Color } from "#color";
 import { Field } from "#metadata";
-import { modelOptions as ModelOptions, Severity } from "@typegoose/typegoose";
+import type { APIData } from "@statsify/util";
+
 import { PlayerSocials } from "./socials.js";
 import { PlayerStats } from "./stats.js";
 import { PlayerStatus } from "./status.js";
 import { PlayerUtil } from "./util.js";
-import type { APIData } from "@statsify/util";
 
 @ModelOptions({ options: { allowMixed: Severity.ALLOW } })
 export class Player {

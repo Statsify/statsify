@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ChallengesSkyWars, SkyWarsMini, SkyWarsMode } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { add } from "@statsify/math";
-import { getFormattedLevel, getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
 import type { APIData } from "@statsify/util";
+
+import { ChallengesSkyWars, SkyWarsMini, SkyWarsMode } from "./mode.js";
+import { getFormattedLevel, getIntendedLevelFormatted, getLevel, getLevelProgress, parseKit } from "./util.js";
 
 export const SKYWARS_MODES = new GameModes([
   { api: "overall" },

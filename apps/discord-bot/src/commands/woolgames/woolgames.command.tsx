@@ -9,6 +9,7 @@
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { WOOLGAMES_MODES, WoolGamesModes } from "@statsify/schemas";
+
 import { WoolGamesProfile } from "./woolgames.profile.js";
 
 @Command({ description: (t) => t("commands.woolgames") })

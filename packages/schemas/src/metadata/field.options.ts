@@ -7,7 +7,9 @@
  */
 
 import type { BasePropOptions } from "@typegoose/typegoose/lib/types.js";
+
 import type { Constructor } from "@statsify/util";
+
 import type { HistoricalEnabledMetadata, LeaderboardEnabledMetadata, StoreMetadata } from "./metadata.interface.js";
 
 export type TypeOptions = () => Constructor | [Constructor];

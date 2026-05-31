@@ -8,6 +8,7 @@
 
 "use client";
 
+import { usePlayer } from "~/app/players/[slug]/context";
 import { Box } from "~/components/ui/box";
 import { Nametag } from "~/components/ui/nametag";
 import { Progression } from "~/components/ui/progression";
@@ -16,7 +17,6 @@ import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
 import { t } from "~/localize";
-import { usePlayer } from "~/app/players/[slug]/context";
 
 export function DuelsPreview({ className }: { className?: string }) {
   const player = usePlayer();

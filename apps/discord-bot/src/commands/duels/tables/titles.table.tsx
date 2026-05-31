@@ -6,11 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { arrayGroup } from "@statsify/util";
-import type { Duels } from "@statsify/schemas";
-import type { DuelsModeIcons } from "../duels.command.js";
 import type { Image } from "skia-canvas";
+
 import type { LocalizeFunction } from "@statsify/discord";
+import type { Duels } from "@statsify/schemas";
+import { arrayGroup } from "@statsify/util";
+
+import type { DuelsModeIcons } from "../duels.command.js";
 
 interface TitlesTableProps {
   duels: Duels;

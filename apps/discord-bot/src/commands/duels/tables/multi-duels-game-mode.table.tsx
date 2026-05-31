@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { ProfileTime } from "#commands/base.hypixel-command";
 import { Historical, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { MultiPVPDuelsGameMode, PVPBaseDuelsGameMode } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
-import type { ProfileTime } from "#commands/base.hypixel-command";
 
 interface MultiDuelsGameModeModeTableProps {
   stats: PVPBaseDuelsGameMode;

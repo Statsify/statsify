@@ -6,9 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Module } from "@nestjs/common";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
+import { Module } from "@nestjs/common";
+
 import { User, VerifyCode } from "@statsify/schemas";
+
 import { UserController } from "./user.controller.js";
 import { UserService } from "./user.service.js";
 

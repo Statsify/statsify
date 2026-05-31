@@ -8,9 +8,10 @@
 
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { VampireZHuman, VampireZVampire } from "./life.js";
 import { add } from "@statsify/math";
 import type { APIData } from "@statsify/util";
+
+import { VampireZHuman, VampireZVampire } from "./life.js";
 
 export const VAMPIREZ_MODES = new GameModes([{ api: "human" }, { api: "vampire" }] as const);
 export type VampireZModes = ExtractGameModes<typeof VAMPIREZ_MODES>;

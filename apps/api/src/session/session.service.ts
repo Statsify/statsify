@@ -6,15 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CacheLevel, PlayerNotFoundException, SessionNotFoundException } from "@statsify/api-client";
-import { type Circular, flatten } from "@statsify/util";
-import { DateTime } from "luxon";
-import { Inject, Injectable, UnauthorizedException, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { Player, User, createHistoricalPlayer, deserialize, serialize } from "@statsify/schemas";
-import { PlayerService } from "#player";
-import { Session } from "./session.model.js";
+import { Inject, Injectable, UnauthorizedException, forwardRef } from "@nestjs/common";
 import type { ReturnModelType } from "@typegoose/typegoose";
+import { DateTime } from "luxon";
+
+import { PlayerService } from "#player";
+import { CacheLevel, PlayerNotFoundException, SessionNotFoundException } from "@statsify/api-client";
+import { Player, User, createHistoricalPlayer, deserialize, serialize } from "@statsify/schemas";
+import { type Circular, flatten } from "@statsify/util";
+
+import { Session } from "./session.model.js";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 

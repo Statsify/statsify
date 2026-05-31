@@ -6,16 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
-import { type Circular, flatten } from "@statsify/util";
-import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import { InjectRedis } from "#redis";
-import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
-import { Player } from "@statsify/schemas";
-import { PlayerService } from "#player";
-import { Redis } from "ioredis";
+import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import type { ReturnModelType } from "@typegoose/typegoose";
+import { Redis } from "ioredis";
+
+import { LeaderboardAdditionalStats, LeaderboardService } from "#leaderboards";
+import { PlayerService } from "#player";
+import { InjectRedis } from "#redis";
+import { CacheLevel, PlayerNotFoundException } from "@statsify/api-client";
+import { Player } from "@statsify/schemas";
+import { type Circular, flatten } from "@statsify/util";
 
 @Injectable()
 export class PlayerLeaderboardService extends LeaderboardService {

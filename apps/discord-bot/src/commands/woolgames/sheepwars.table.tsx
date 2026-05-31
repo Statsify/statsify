@@ -7,9 +7,9 @@
  */
 
 import { Table } from "#components";
-import { prettify } from "@statsify/util";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { SheepWars } from "@statsify/schemas";
+import { prettify } from "@statsify/util";
 
 export interface SheepWarsTableProps {
   sheepwars: SheepWars;

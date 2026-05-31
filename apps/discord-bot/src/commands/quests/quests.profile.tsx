@@ -6,6 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { DateTime } from "luxon";
+import type { Image } from "skia-canvas";
+
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { Container, Footer, GameEntry, GameList, Header, type HistoricalTimeData, SidebarItem } from "#components";
+import { HistoricalTimes } from "@statsify/api-client";
+import type { LocalizeFunction } from "@statsify/discord";
+import { ratio } from "@statsify/math";
 import { Box, DeferredGradient, useGradient } from "@statsify/rendering";
 import {
   ClassMetadata,
@@ -24,15 +32,9 @@ import {
   UserPalette,
   WeeklyQuests,
 } from "@statsify/schemas";
-import { Container, Footer, GameEntry, GameList, Header, type HistoricalTimeData, SidebarItem } from "#components";
-import { DateTime } from "luxon";
-import { HistoricalTimes } from "@statsify/api-client";
-import { Palette, getColorPalette } from "../../themes/palette.js";
-import { ratio } from "@statsify/math";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import type { Constructor } from "@statsify/util";
-import type { Image } from "skia-canvas";
-import type { LocalizeFunction } from "@statsify/discord";
+
+import { Palette, getColorPalette } from "../../themes/palette.js";
 
 function getQuestMetadata<T>(constructor: Constructor<T>) {
   const entries = Object.entries(Reflect.getMetadata(METADATA_KEY, constructor.prototype) as ClassMetadata);

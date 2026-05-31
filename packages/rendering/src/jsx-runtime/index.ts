@@ -7,6 +7,7 @@
  */
 
 import { type ElementNode, type FC, type IntrinsicElement, type PropsWithChildren, intrinsicElements } from "#jsx";
+
 import { elementToNode } from "./convert.js";
 
 export const Fragment: FC = ({ children }) => children as unknown as null;

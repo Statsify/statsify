@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, List, Table } from "#components";
-import { FormattedGame, type GameMode } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import { ratio } from "@statsify/math";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { FormattedGame, type GameMode } from "@statsify/schemas";
 
 interface RatioProps {
   ratioTitle: string;

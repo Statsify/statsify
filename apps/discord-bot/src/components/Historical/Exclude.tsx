@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { If } from "../If.js";
 import type { ProfileTime } from "#commands/base.hypixel-command";
+
+import { If } from "../If.js";
 
 export interface HistoricalExcludeProps {
   time: ProfileTime;

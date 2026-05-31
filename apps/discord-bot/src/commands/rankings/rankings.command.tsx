@@ -6,6 +6,24 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ButtonStyle } from "discord-api-types/v10";
+
+import { type GamesWithBackgrounds, mapBackground } from "#constants";
+import { getTheme } from "#themes";
+import { getBackground, getLogo } from "@statsify/assets";
+import {
+  ApiService,
+  ButtonBuilder,
+  Choice,
+  Command,
+  CommandContext,
+  ErrorMessage,
+  PaginateService,
+  PlayerArgument,
+  SubCommand,
+  type SubCommandOptions,
+} from "@statsify/discord";
+import { render } from "@statsify/rendering";
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
@@ -39,26 +57,10 @@ import {
   WARLORDS_MODES,
   WOOLGAMES_MODES,
 } from "@statsify/schemas";
-import {
-  ApiService,
-  ButtonBuilder,
-  Choice,
-  Command,
-  CommandContext,
-  ErrorMessage,
-  PaginateService,
-  PlayerArgument,
-  SubCommand,
-  type SubCommandOptions,
-} from "@statsify/discord";
-import { ButtonStyle } from "discord-api-types/v10";
-import { type GamesWithBackgrounds, mapBackground } from "#constants";
-import { RankingsProfile } from "./rankings.profile.js";
 import { arrayGroup } from "@statsify/util";
+
 import { games } from "./games.js";
-import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
-import { render } from "@statsify/rendering";
+import { RankingsProfile } from "./rankings.profile.js";
 
 const fields = LeaderboardScanner.getLeaderboardFields(Player).map(([key]) => key);
 

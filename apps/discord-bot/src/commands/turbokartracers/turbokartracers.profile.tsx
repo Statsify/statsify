@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table, formatProgression } from "#components";
 import { FormattedGame } from "@statsify/schemas";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export const TurboKartRacersProfile = ({ skin, player, background, logo, user, badge, t, time }: BaseProfileProps) => {
   const { turbokartracers } = player.stats;

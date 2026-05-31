@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractEventListener, ApiService } from "@statsify/discord";
 import { GatewayDispatchEvents, GatewayGuildMemberRemoveDispatchData } from "discord-api-types/v10";
 import { Service } from "typedi";
+
 import { TicketService, UserService } from "#services";
+import { AbstractEventListener, ApiService } from "@statsify/discord";
 import { config } from "@statsify/util";
 
 const GUILD_ID = await config("supportBot.guild");

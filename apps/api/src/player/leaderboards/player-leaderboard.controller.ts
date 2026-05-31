@@ -6,9 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Auth } from "#auth";
 import { Body, Controller, Post } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+
+import { Auth } from "#auth";
+import { PlayerLeaderboardDto, PlayerRankingsDto } from "#dtos";
 import {
   ErrorResponse,
   LeaderboardQuery,
@@ -16,7 +18,7 @@ import {
   PostLeaderboardResponse,
 } from "@statsify/api-client";
 import { Player } from "@statsify/schemas";
-import { PlayerLeaderboardDto, PlayerRankingsDto } from "#dtos";
+
 import { PlayerLeaderboardService } from "./player-leaderboard.service.js";
 
 @Controller("/player/leaderboards")

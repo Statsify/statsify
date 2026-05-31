@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/common";
 import * as Sentry from "@sentry/node";
 import chalk from "chalk";
 import { DateTime } from "luxon";
+
 import { config } from "@statsify/util";
-import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/common";
 
 const DEFAULT_LOG_LEVELS: LogLevel[] = ["log", "error", "warn", "debug", "verbose", "fatal"];
 

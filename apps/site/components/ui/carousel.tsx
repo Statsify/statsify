@@ -9,10 +9,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "motion/react";
-import { Box } from "./box";
-import { Chevron } from "~/components/icons/chevron";
 import { Children, ReactNode, useEffect, useState } from "react";
+import { Chevron } from "~/components/icons/chevron";
 import { cn } from "~/lib/util";
+
+import { Box } from "./box";
 
 const variants = {
   enter: (direction: number) => ({

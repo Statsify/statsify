@@ -7,13 +7,15 @@
  */
 
 import { DateTime } from "luxon";
-import { HeaderBody } from "./HeaderBody.js";
-import { HeaderNametag } from "./HeaderNametag.js";
-import { Historical, type HistoricalTimeData } from "../Historical/index.js";
 import { Image } from "skia-canvas";
+
+import { useChildren } from "@statsify/rendering";
+
+import { Historical, type HistoricalTimeData } from "../Historical/index.js";
 import { Sidebar, SidebarItem } from "../Sidebar.js";
 import { Skin } from "../Skin.js";
-import { useChildren } from "@statsify/rendering";
+import { HeaderBody } from "./HeaderBody.js";
+import { HeaderNametag } from "./HeaderNametag.js";
 
 interface BaseHeaderProps {
   skin: Image;

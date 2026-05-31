@@ -6,7 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LocalizationString, LocalizeFunction, translateField, translateObject } from "./localize.js";
 import type {
   APIEmbed,
   APIEmbedAuthor,
@@ -15,6 +14,8 @@ import type {
   APIEmbedImage,
   APIEmbedThumbnail,
 } from "discord-api-types/v10";
+
+import { LocalizationString, LocalizeFunction, translateField, translateObject } from "./localize.js";
 
 type Field = [name: LocalizationString, value: LocalizationString, inline?: boolean];
 

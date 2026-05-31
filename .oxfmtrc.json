@@ -8,6 +8,10 @@
   "arrowParens": "always",
   "semi": true,
   "bracketSpacing": true,
+  "sortImports": {
+    "internalPattern": ["@statsify/"],
+    "newlinesBetween": true
+  },
   "ignorePatterns": [
     "**/dist/**",
     "**/node_modules/**",

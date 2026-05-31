@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ClassMetadata, METADATA_KEY, WarlordsClass, WarlordsSpecification } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { ClassMetadata, METADATA_KEY, WarlordsClass, WarlordsSpecification } from "@statsify/schemas";
 import type { Constructor } from "@statsify/util";
 
 interface WarlordsClassColumnProps {

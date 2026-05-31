@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Error } from "~/components/ui/error";
 import { LogoError } from "~/components/icons/logo-error";
+import { Error } from "~/components/ui/error";
 
 export default function NotFound() {
   return (

@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { Image } from "skia-canvas";
+
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, GameList, Header } from "#components";
 import { FormattedGame, GameId } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
-import type { Image } from "skia-canvas";
 
 interface ParkourProfileProps extends BaseProfileProps {
   gameIcons: Record<GameId, Image>;

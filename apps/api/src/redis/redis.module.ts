@@ -7,6 +7,7 @@
  */
 
 import { DynamicModule, Module } from "@nestjs/common";
+
 import { RedisCoreModule } from "./redis.core-module.js";
 import type { RedisModuleOptions } from "./redis.interfaces.js";
 

@@ -6,6 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { FormattedGame } from "#game";
+import { Field } from "#metadata";
+import type { APIData } from "@statsify/util";
+
 import {
   Arcade,
   ArenaBrawl,
@@ -34,9 +38,6 @@ import {
   Warlords,
   WoolGames,
 } from "./gamemodes/index.js";
-import { Field } from "#metadata";
-import { FormattedGame } from "#game";
-import type { APIData } from "@statsify/util";
 
 export class PlayerStats {
   @Field({ leaderboard: { fieldName: `${FormattedGame.ARCADE} -` } })

@@ -7,8 +7,9 @@
  */
 
 import { Container, Service } from "typedi";
-import { FontRenderer } from "@statsify/rendering";
+
 import { getMinecraftTexturePath } from "@statsify/assets";
+import { FontRenderer } from "@statsify/rendering";
 
 const renderer = new FontRenderer(false);
 const hdRenderer = new FontRenderer(false);

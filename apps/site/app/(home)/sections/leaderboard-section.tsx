@@ -8,10 +8,12 @@
 
 "use client";
 
-import { BaseSection } from "./base-section";
 import { Command } from "~/components/ui/command";
-import { LeaderboardPreview } from "../previews/leaderboard";
+
 import type { PostLeaderboardResponse } from "@statsify/api-client";
+
+import { LeaderboardPreview } from "../previews/leaderboard";
+import { BaseSection } from "./base-section";
 
 export function LeaderboardSection({ leaderboard }: { leaderboard: PostLeaderboardResponse }) {
   return (

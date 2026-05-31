@@ -9,8 +9,9 @@
 "use server";
 
 import { env } from "~/app/env";
-import type { Guild, Player } from "@statsify/schemas";
+
 import type { PostLeaderboardResponse } from "@statsify/api-client";
+import type { Guild, Player } from "@statsify/schemas";
 
 export async function getPlayer(slug: string): Promise<Player | undefined> {
   const response = await fetch(`${env.API_URL}/player?player=${slug}`, {

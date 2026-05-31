@@ -6,14 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
-import { Constructor, Flatten } from "@statsify/util";
-import { DateTime } from "luxon";
-import { InjectRedis } from "#redis";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schemas";
-import { LeaderboardQuery } from "@statsify/api-client";
+import * as Sentry from "@sentry/node";
 import { Redis } from "ioredis";
+import { DateTime } from "luxon";
+
+import { InjectRedis } from "#redis";
+import { LeaderboardQuery } from "@statsify/api-client";
+import { LeaderboardEnabledMetadata, LeaderboardScanner } from "@statsify/schemas";
+import { Constructor, Flatten } from "@statsify/util";
 
 const DAYS_IN_WEEK = {
   monday: 0,

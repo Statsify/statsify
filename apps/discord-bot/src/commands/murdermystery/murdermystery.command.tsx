@@ -9,6 +9,7 @@
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { MURDER_MYSTERY_MODES, MurderMysteryModes } from "@statsify/schemas";
+
 import { MurderMysteryProfile } from "./murdermystery.profile.js";
 
 @Command({ description: (t) => t("commands.murdermystery") })

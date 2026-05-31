@@ -7,7 +7,9 @@
  */
 
 import type { CanvasGradient, CanvasPattern, CanvasRenderingContext2D, CanvasTexture } from "skia-canvas";
+
 import type { FontRenderer } from "#font";
+
 import type { IntrinsicElement, IntrinsicRenders } from "./instrinsics.js";
 
 export interface BaseThemeContext {

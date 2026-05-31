@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ArenaBrawlMode, ArenaBrawlModeExt } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { GamePrefix, createPrefixProgression, defaultPrefix, getFormattedPrefix, rainbow } from "#prefixes";
 import { Progression } from "#progression";
 import { deepAdd } from "@statsify/math";
 import type { APIData } from "@statsify/util";
+
+import { ArenaBrawlMode, ArenaBrawlModeExt } from "./mode.js";
 
 export const ARENA_BRAWL_MODES = new GameModes([
   { api: "overall" },

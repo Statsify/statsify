@@ -6,15 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, type Circular, type Flatten, flatten } from "@statsify/util";
-import { CacheLevel, StatusNotFoundException } from "@statsify/api-client";
-import { HypixelService } from "#hypixel";
-import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
+import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
+import type { ReturnModelType } from "@typegoose/typegoose";
+
+import { HypixelService } from "#hypixel";
+import { CacheLevel, StatusNotFoundException } from "@statsify/api-client";
 import { Player, deserialize, serialize } from "@statsify/schemas";
+import { type APIData, type Circular, type Flatten, flatten } from "@statsify/util";
+
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
 import { PlayerSearchService, RedisPlayer } from "./search/player-search.service.js";
-import type { ReturnModelType } from "@typegoose/typegoose";
 
 type PlayerModel = ReturnModelType<typeof Player>;
 

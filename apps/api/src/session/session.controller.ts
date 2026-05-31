@@ -6,11 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Auth, AuthRole } from "#auth";
 import { Controller, Delete, Get, Patch, Query } from "@nestjs/common";
-import { ErrorResponse, GetPlayerResponse, GetSessionResponse, SuccessResponse } from "@statsify/api-client";
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+
+import { Auth, AuthRole } from "#auth";
 import { PlayerDto, SessionDto, UserIdDto } from "#dtos";
+import { ErrorResponse, GetPlayerResponse, GetSessionResponse, SuccessResponse } from "@statsify/api-client";
+
 import { SessionService } from "./session.service.js";
 
 @Controller("/session")

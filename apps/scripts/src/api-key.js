@@ -6,10 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Redis from "ioredis";
-import inquirer from "inquirer";
-import { config } from "@statsify/util";
 import { createHash, randomUUID } from "node:crypto";
+
+import inquirer from "inquirer";
+import Redis from "ioredis";
+
+import { config } from "@statsify/util";
+
 import { inquirerConfirmation, inquirerLogger } from "./utils.js";
 
 const redis = new Redis(config("database.redisUrl"));

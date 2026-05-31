@@ -7,8 +7,8 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, Min } from "class-validator";
 import { Transform } from "class-transformer";
+import { IsNumber, Min } from "class-validator";
 
 export class PlayerGroupDto {
   @Transform((params) => +params.value)

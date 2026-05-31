@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box } from "./box";
 import type { ReactNode } from "react";
+
+import { Box } from "./box";
 
 export function Sidebar({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (

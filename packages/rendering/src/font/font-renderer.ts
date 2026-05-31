@@ -6,15 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { readdir } from "node:fs/promises";
+import { join } from "node:path";
+
+import { type Canvas, type CanvasRenderingContext2D, type ImageData } from "skia-canvas";
+
+import { loadImage } from "#hooks";
+import type { Fill } from "#jsx";
+
 import _positions from "../../positions.json" with { type: "json" };
 import _sizes from "../../sizes.json" with { type: "json" };
-import { type Canvas, type CanvasRenderingContext2D, type ImageData } from "skia-canvas";
-import { type TextNode, type Token, tokens } from "./tokens.js";
 import { createCanvas } from "../canvas.js";
-import { join } from "node:path";
-import { loadImage } from "#hooks";
-import { readdir } from "node:fs/promises";
-import type { Fill } from "#jsx";
+import { type TextNode, type Token, tokens } from "./tokens.js";
 
 const sizes: Sizes = _sizes;
 const positions: string[][] = _positions;

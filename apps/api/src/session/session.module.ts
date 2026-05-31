@@ -6,13 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Module, forwardRef } from "@nestjs/common";
-import { Player, User } from "@statsify/schemas";
-import { PlayerModule } from "#player";
-import { Session } from "./session.model.js";
-import { SessionController } from "./session.controller.js";
-import { SessionService } from "./session.service.js";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
+import { Module, forwardRef } from "@nestjs/common";
+
+import { PlayerModule } from "#player";
+import { Player, User } from "@statsify/schemas";
+
+import { SessionController } from "./session.controller.js";
+import { Session } from "./session.model.js";
+import { SessionService } from "./session.service.js";
 
 @Module({
   imports: [forwardRef(() => PlayerModule), TypegooseModule.forFeature([Session, Player, User])],

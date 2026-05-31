@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractCommandListener, CommandContext, CommandResolvable, Interaction } from "@statsify/discord";
-import { ApiService } from "@statsify/api-client";
 import { RestClient, WebsocketShard } from "tiny-discord";
+
+import { ApiService } from "@statsify/api-client";
+import { AbstractCommandListener, CommandContext, CommandResolvable, Interaction } from "@statsify/discord";
 import { config } from "@statsify/util";
 
 const applicationId = await config("supportBot.applicationId");

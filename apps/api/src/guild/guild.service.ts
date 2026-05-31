@@ -6,16 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CacheLevel, GuildNotFoundException, GuildQuery, PlayerNotFoundException } from "@statsify/api-client";
-import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
-import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
-import { HypixelService } from "#hypixel";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";
-import { Logger } from "@statsify/logger";
-import { PlayerService } from "#player";
-import { flatten } from "@statsify/util";
 import type { ReturnModelType } from "@typegoose/typegoose";
+
+import { HypixelService } from "#hypixel";
+import { PlayerService } from "#player";
+import { CacheLevel, GuildNotFoundException, GuildQuery, PlayerNotFoundException } from "@statsify/api-client";
+import { Logger } from "@statsify/logger";
+import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
+import { flatten } from "@statsify/util";
+
+import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
 
 @Injectable()
 export class GuildService {

@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, SidebarItem, Table, formatProgression } from "#components";
-import { FormattedGame } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { Container, Footer, Header, SidebarItem, Table, formatProgression } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { FormattedGame } from "@statsify/schemas";
 
 interface BuildBattleModeTableProps {
   title: string;

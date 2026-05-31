@@ -6,9 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Multiline } from "#components";
 import type { Image } from "skia-canvas";
+
+import { Container, Multiline } from "#components";
 import type { LocalizeFunction } from "@statsify/discord";
+
 import type { Server } from "./server.util.js";
 
 interface ServerLogoProps {

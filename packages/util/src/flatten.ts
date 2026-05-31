@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { isObject } from "./util.js";
 import type { APIData } from "./types.js";
+import { isObject } from "./util.js";
 
 export type Flatten<T> = Record<string | keyof T, any>;
 

@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Auth } from "#auth";
 import { Controller, Get } from "@nestjs/common";
-import { ErrorResponse, GetGamecountsResponse, GetWatchdogResponse } from "@statsify/api-client";
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+
+import { Auth } from "#auth";
 import { HypixelService } from "#hypixel";
+import { ErrorResponse, GetGamecountsResponse, GetWatchdogResponse } from "@statsify/api-client";
 
 @Controller("/hypixelresources")
 @ApiTags("Hypixel Resources")

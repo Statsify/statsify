@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, Table } from "#components";
-import { EVENT_COLORS } from "#commands/events/event-colors";
-import { EVENT_TYPES, FormattedGame } from "@statsify/schemas";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { EVENT_COLORS } from "#commands/events/event-colors";
+import { Container, Footer, Header, Table } from "#components";
+import { EVENT_TYPES, FormattedGame } from "@statsify/schemas";
 
 const latestEvent = EVENT_TYPES[0];
 const latestEventColor = EVENT_COLORS[latestEvent.period];

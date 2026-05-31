@@ -7,8 +7,9 @@
  */
 
 import { type LeaderboardEnabledMetadata, type LeaderboardMetadata, MetadataScanner } from "#metadata";
-import { parseAdditionalFields } from "./parse-fields.js";
 import type { Constructor } from "@statsify/util";
+
+import { parseAdditionalFields } from "./parse-fields.js";
 
 export class LeaderboardScanner {
   public static getLeaderboardFields<T>(constructor: Constructor<T>) {

@@ -10,9 +10,10 @@ import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { GamePrefix, createPrefixProgression, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { Progression } from "#progression";
-import { QuakeMode } from "./mode.js";
 import { deepAdd } from "@statsify/math";
 import type { APIData } from "@statsify/util";
+
+import { QuakeMode } from "./mode.js";
 
 export const QUAKE_MODES = new GameModes([
   { api: "overall" },

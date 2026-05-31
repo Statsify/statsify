@@ -7,6 +7,11 @@
  */
 
 import { APIGuildMember, GatewayDispatchEvents, GatewayGuildMemberAddDispatchData } from "discord-api-types/v10";
+import type { Image } from "skia-canvas";
+import { Service } from "typedi";
+
+import { WelcomeProfile } from "#lib";
+import { getBackground } from "@statsify/assets";
 import {
   AbstractEventListener,
   ApiService,
@@ -17,12 +22,8 @@ import {
   MessageService,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
-import { Service } from "typedi";
-import { WelcomeProfile } from "#lib";
-import { config } from "@statsify/util";
-import { getBackground } from "@statsify/assets";
 import { loadImage, render } from "@statsify/rendering";
-import type { Image } from "skia-canvas";
+import { config } from "@statsify/util";
 
 const JOIN_MESSAGES = [
   "has mined into the server!",

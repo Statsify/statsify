@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { User, UserLogo } from "@statsify/schemas";
 import type { Image } from "skia-canvas";
+
+import { User, UserLogo } from "@statsify/schemas";
 
 export interface FooterProps {
   logo: Image;

@@ -8,8 +8,9 @@
 
 "use client";
 
-import { PopoverTooltip } from "./tooltip";
 import { useEffect, useState } from "react";
+
+import { PopoverTooltip } from "./tooltip";
 
 export function Command({ command }: { command: string }) {
   const [copied, setCopied] = useState(false);

@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiProperty } from "@nestjs/swagger";
 import { NotFoundException as BaseNotFoundException } from "@nestjs/common";
+import { ApiProperty } from "@nestjs/swagger";
 
 export class NotFoundException extends BaseNotFoundException {
   @ApiProperty()

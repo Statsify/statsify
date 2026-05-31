@@ -7,8 +7,8 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsNumber, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from "class-validator";
 import { Transform } from "class-transformer";
+import { IsBoolean, IsNumber, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from "class-validator";
 
 export class UserIdDto {
   @ApiProperty({ description: "Discord ID" })

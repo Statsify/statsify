@@ -6,18 +6,20 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
-import { CommandListener } from "#lib";
-import { CommandLoader, CommandPoster, EventLoader, I18nLoaderService } from "@statsify/discord";
-import { Container } from "typedi";
-import { FontLoaderService, MongoLoaderService, TagService, TicketService } from "#services";
-import { GatewayIntentBits } from "discord-api-types/v10";
-import { Logger } from "@statsify/logger";
-import { RestClient, WebsocketShard } from "tiny-discord";
-import { config } from "@statsify/util";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import * as Sentry from "@sentry/node";
 import { setGlobalOptions } from "@typegoose/typegoose";
+import { GatewayIntentBits } from "discord-api-types/v10";
+import { RestClient, WebsocketShard } from "tiny-discord";
+import { Container } from "typedi";
+
+import { CommandListener } from "#lib";
+import { FontLoaderService, MongoLoaderService, TagService, TicketService } from "#services";
+import { CommandLoader, CommandPoster, EventLoader, I18nLoaderService } from "@statsify/discord";
+import { Logger } from "@statsify/logger";
+import { config } from "@statsify/util";
 import "reflect-metadata";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

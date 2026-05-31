@@ -6,17 +6,18 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HttpService } from "@nestjs/axios";
-import { type Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
+import { HttpService } from "@nestjs/axios";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PlayerNotFoundException } from "@statsify/api-client";
-import { Skin } from "@statsify/schemas";
-import { catchError, lastValueFrom, map } from "rxjs";
-import { createCanvas, loadImage } from "@statsify/rendering";
-import { getMinecraftTexturePath } from "@statsify/assets";
-import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
+import { catchError, lastValueFrom, map } from "rxjs";
+import { type Image } from "skia-canvas";
+
+import { PlayerNotFoundException } from "@statsify/api-client";
+import { getMinecraftTexturePath } from "@statsify/assets";
+import { createCanvas, loadImage } from "@statsify/rendering";
+import { Skin } from "@statsify/schemas";
+import { renderSkin } from "@statsify/skin-renderer";
 
 @Injectable()
 export class SkinService {

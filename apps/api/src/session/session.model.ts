@@ -7,6 +7,7 @@
  */
 
 import { modelOptions as ModelOptions } from "@typegoose/typegoose";
+
 import { Player } from "@statsify/schemas";
 
 @ModelOptions({ schemaOptions: { collection: "session" } })

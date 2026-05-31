@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BlitzSG, BlitzSGKit, BlitzSGModes, FormattedGame, type GameMode } from "@statsify/schemas";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, SidebarItem, Table, formatProgression } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
+import { BlitzSG, BlitzSGKit, BlitzSGModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import { formatTime, prettify, romanNumeral } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 interface OverallBlitzSGTableProps {
   blitzsg: BlitzSG;

@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, type SidebarItem, formatProgression } from "#components";
 import {
   FormattedGame,
@@ -16,6 +17,8 @@ import {
   WarlordsShaman,
   WarlordsWarrior,
 } from "@statsify/schemas";
+import { prettify } from "@statsify/util";
+
 import {
   WarlordsCaptureTheFlagTable,
   WarlordsClassTable,
@@ -23,8 +26,6 @@ import {
   WarlordsDominationTable,
   WarlordsOverallTable,
 } from "./tables/index.js";
-import { prettify } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface WarlordsProfileProps extends BaseProfileProps {
   mode: GameMode<WarlordsModes>;

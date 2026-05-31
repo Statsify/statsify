@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Commands } from "@statsify/schemas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable } from "@nestjs/common";
 import type { ReturnModelType } from "@typegoose/typegoose";
+
+import { Commands } from "@statsify/schemas";
 
 @Injectable()
 export class CommandsService {

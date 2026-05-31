@@ -9,6 +9,7 @@
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { SMASH_HEROES_MODES, SmashHeroesModes } from "@statsify/schemas";
+
 import { SmashHeroesProfile } from "./smashheroes.profile.js";
 
 @Command({ description: (t) => t("commands.smashheroes") })

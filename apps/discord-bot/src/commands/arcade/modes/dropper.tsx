@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ArcadeModes, type Dropper, DropperMaps, MetadataScanner, type SubModeForMode } from "@statsify/schemas";
-import { Historical, If, Table } from "#components";
-import { arrayGroup, formatRaceTime, formatTime } from "@statsify/util";
-import type { LocalizeFunction } from "@statsify/discord";
 import type { ProfileTime } from "#commands/base.hypixel-command";
+import { Historical, If, Table } from "#components";
+import type { LocalizeFunction } from "@statsify/discord";
+import { type ArcadeModes, type Dropper, DropperMaps, MetadataScanner, type SubModeForMode } from "@statsify/schemas";
+import { arrayGroup, formatRaceTime, formatTime } from "@statsify/util";
 
 interface DropperTableProps {
   stats: Dropper;

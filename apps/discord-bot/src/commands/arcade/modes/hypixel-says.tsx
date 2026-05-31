@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HypixelSays } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { HypixelSays } from "@statsify/schemas";
 
 interface HypixelSaysTableProps {
   stats: HypixelSays;

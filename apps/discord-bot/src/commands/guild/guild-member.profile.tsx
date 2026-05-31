@@ -6,11 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, Table } from "#components";
 import { DateTime } from "luxon";
-import { GexpTable } from "./gexp.table.js";
-import { Guild } from "@statsify/schemas";
+
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { Container, Footer, Header, Table } from "#components";
+import { Guild } from "@statsify/schemas";
+
+import { GexpTable } from "./gexp.table.js";
 
 export interface GuildMemberProfileProps extends Omit<BaseProfileProps, "time"> {
   guild: Guild;

@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command } from "@statsify/discord";
-import { HistoricalBase } from "./historical.base.js";
 import { HistoricalTimes } from "@statsify/api-client";
+import { Command } from "@statsify/discord";
+
+import { HistoricalBase } from "./historical.base.js";
 
 @Command({ description: (t) => t("commands.last-week") })
 export class LastWeekCommand extends HistoricalBase {

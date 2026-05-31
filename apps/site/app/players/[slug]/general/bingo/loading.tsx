@@ -6,20 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import CasualIcon from "~/public/icons/slime-ball.png";
-import ClassicIcon from "~/public/icons/snowball.png";
+import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
-import PvPIcon from "~/public/icons/ender-eye.png";
-import { Box } from "~/components/ui/box";
-import { type Category, type Difficulty, type Reward, type Task, boards } from "./boards";
 import { ComponentProps } from "react";
+import { Box } from "~/components/ui/box";
 import { Divider } from "~/components/ui/divider";
-import { FormattedCategories } from "./bingo";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { SkeletonBox } from "~/components/ui/skeleton-box";
 import { SkeletonTab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
-import type { StaticImport } from "next/dist/shared/lib/get-img-props";
+import PvPIcon from "~/public/icons/ender-eye.png";
+import CasualIcon from "~/public/icons/slime-ball.png";
+import ClassicIcon from "~/public/icons/snowball.png";
+
+import { FormattedCategories } from "./bingo";
+import { type Category, type Difficulty, type Reward, type Task, boards } from "./boards";
 
 export default function BingoSkeleton() {
   return (

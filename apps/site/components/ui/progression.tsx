@@ -6,10 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { t } from "~/localize";
+
+import type { Progression as ProgressionSchema } from "@statsify/schemas";
+
 import { Box } from "./box";
 import { MinecraftText } from "./minecraft-text";
-import { t } from "~/localize";
-import type { Progression as ProgressionSchema } from "@statsify/schemas";
 
 const minigameXpBar = (percentage: number) => {
   const max = 10;

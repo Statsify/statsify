@@ -9,6 +9,7 @@
 import { BaseHypixelCommand, BaseProfileProps } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { PAINTBALL_MODES, PaintballModes } from "@statsify/schemas";
+
 import { PaintballProfile } from "./paintball.profile.js";
 
 @Command({ description: (t) => t("commands.paintball") })

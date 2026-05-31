@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import Image from "next/image";
 import ARCADE from "~/public/games/ARCADE.png";
 import ARENA_BRAWL from "~/public/games/ARENA_BRAWL.png";
 import BEDWARS from "~/public/games/BEDWARS.png";
@@ -16,7 +17,6 @@ import COPS_AND_CRIMS from "~/public/games/COPS_AND_CRIMS.png";
 import CRAZY_WALLS from "~/public/games/CRAZY_WALLS.png";
 import DUELS from "~/public/games/DUELS.png";
 import HOUSING from "~/public/games/HOUSING.png";
-import Image from "next/image";
 import MAIN_LOBBY from "~/public/games/MAIN_LOBBY.png";
 import MEGAWALLS from "~/public/games/MEGAWALLS.png";
 import MURDER_MYSTERY from "~/public/games/MURDER_MYSTERY.png";
@@ -39,6 +39,7 @@ import VAMPIREZ from "~/public/games/VAMPIREZ.png";
 import WALLS from "~/public/games/WALLS.png";
 import WARLORDS from "~/public/games/WARLORDS.png";
 import WOOLGAMES from "~/public/games/WOOLGAMES.png";
+
 import type { GameCode } from "@statsify/schemas";
 
 const GameIcons = {

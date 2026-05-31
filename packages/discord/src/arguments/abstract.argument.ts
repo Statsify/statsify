@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { LocalizationString, getLocalizeFunction, translateField, translateToAllLanguages } from "#messages";
 import type {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
   ChannelType,
 } from "discord-api-types/v10";
+
 import type { CommandContext } from "#command";
+import { LocalizationString, getLocalizeFunction, translateField, translateToAllLanguages } from "#messages";
 
 export interface AbstractArgument {
   autocompleteHandler?(

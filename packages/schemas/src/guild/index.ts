@@ -7,15 +7,16 @@
  */
 
 import { Color } from "#color";
-import { ExpByGame } from "./exp-by-game.js";
-import { Field } from "#metadata";
 import { GameCode, GameIdMapping } from "#game";
+import { Field } from "#metadata";
+import { Progression } from "#progression";
+import type { APIData } from "@statsify/util";
+
 import { GuildAchievements } from "./achievements.js";
+import { ExpByGame } from "./exp-by-game.js";
 import { GuildMember } from "./member.js";
 import { GuildRank } from "./rank.js";
-import { Progression } from "#progression";
 import { getLevel } from "./util.js";
-import type { APIData } from "@statsify/util";
 
 const limit = 100_000;
 

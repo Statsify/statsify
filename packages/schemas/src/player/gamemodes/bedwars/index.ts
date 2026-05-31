@@ -6,14 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
-import { Slumber } from "./slumber.js";
 import { deepSub } from "@statsify/math";
-import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
 import type { APIData } from "@statsify/util";
+
+import { BedWarsMode, ChallengesBedWars, DreamsBedWarsMode } from "./mode.js";
+import { Slumber } from "./slumber.js";
+import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
 
 export const BEDWARS_MODES = new GameModes([
   { api: "overall" },

@@ -6,6 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { getTheme } from "#themes";
+import { GuildQuery } from "@statsify/api-client";
+import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
 import {
   ApiService,
   Command,
@@ -17,15 +20,13 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { GuildListProfile, GuildListProfileProps } from "./guild-list.profile.js";
-import { GuildMember } from "@statsify/schemas";
-import { GuildMemberProfile } from "./guild-member.profile.js";
-import { GuildProfile, GuildProfileProps } from "./guild.profile.js";
-import { GuildQuery } from "@statsify/api-client";
-import { GuildTopSubCommand } from "./guild-top.subcommand.js";
-import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
+import { GuildMember } from "@statsify/schemas";
+
+import { GuildListProfile, GuildListProfileProps } from "./guild-list.profile.js";
+import { GuildMemberProfile } from "./guild-member.profile.js";
+import { GuildTopSubCommand } from "./guild-top.subcommand.js";
+import { GuildProfile, GuildProfileProps } from "./guild.profile.js";
 
 @Command({ description: (t) => t("commands.guild") })
 export class GuildCommand extends GuildTopSubCommand {

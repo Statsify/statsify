@@ -6,6 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ExtractGameModes, GameModes } from "#game";
+import { Field } from "#metadata";
+import { add } from "@statsify/math";
+import type { APIData } from "@statsify/util";
+
 import {
   BlockingDead,
   BountyHunters,
@@ -28,10 +33,6 @@ import {
   ThrowOut,
   Zombies,
 } from "./mode.js";
-import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
-import { add } from "@statsify/math";
-import type { APIData } from "@statsify/util";
 
 export const ARCADE_MODES = new GameModes([
   { api: "overall" },

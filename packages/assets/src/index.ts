@@ -6,10 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type Image, loadImage } from "skia-canvas";
-import { User, UserLogo } from "@statsify/schemas";
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+
+import { type Image, loadImage } from "skia-canvas";
+
+import { User, UserLogo } from "@statsify/schemas";
 
 const PATH = "../../assets";
 const PRIVATE_PATH = join(PATH, "private");

@@ -7,6 +7,7 @@
  */
 
 import { Box, Div, Image, Text } from "#intrinsics";
+
 import type { PropsWithChildren, RawFC, Render } from "./types.js";
 
 export const intrinsicElements = {

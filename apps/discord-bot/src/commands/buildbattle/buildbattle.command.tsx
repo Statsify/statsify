@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BUILD_BATTLE_MODES, BuildBattleModes } from "@statsify/schemas";
 import { BaseHypixelCommand, BaseProfileProps } from "#commands/base.hypixel-command";
-import { BuildBattleProfile } from "./buildbattle.profile.js";
 import { Command } from "@statsify/discord";
+import { BUILD_BATTLE_MODES, BuildBattleModes } from "@statsify/schemas";
+
+import { BuildBattleProfile } from "./buildbattle.profile.js";
 
 @Command({ description: (t) => t("commands.buildbattle") })
 export class BuildBattleCommand extends BaseHypixelCommand<BuildBattleModes> {

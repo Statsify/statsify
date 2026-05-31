@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Link from "next/link";
-import { Background } from "~/components/ui/background";
-import { Brand } from "~/components/icons/logo";
-import { Search } from "./search";
 import type { Metadata } from "next";
+import Link from "next/link";
+import { Brand } from "~/components/icons/logo";
+import { Background } from "~/components/ui/background";
+
+import { Search } from "./search";
 
 export const metadata: Metadata = {
   title: "Search | Statsify",

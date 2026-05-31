@@ -7,13 +7,15 @@
  */
 
 import axios, { AxiosInstance } from "axios";
+import { loadImage } from "skia-canvas";
+
+import { getTheme } from "#themes";
 import { Command, CommandContext, ErrorMessage, IMessage } from "@statsify/discord";
-import { type Server, type ServerMappingsServer, getServerBackground, getServerMappings } from "./server.util.js";
+import { render } from "@statsify/rendering";
+
 import { ServerArgument } from "./server.argument.js";
 import { ServerProfile } from "./server.profile.js";
-import { getTheme } from "#themes";
-import { loadImage } from "skia-canvas";
-import { render } from "@statsify/rendering";
+import { type Server, type ServerMappingsServer, getServerBackground, getServerMappings } from "./server.util.js";
 
 @Command({
   description: (t) => t("commands.server"),

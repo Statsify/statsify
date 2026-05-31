@@ -7,6 +7,7 @@
  */
 
 import { FormattedGame } from "#game";
+
 import { createGameModeQuests } from "../util.js";
 
 export const SkyWarsQuests = createGameModeQuests({

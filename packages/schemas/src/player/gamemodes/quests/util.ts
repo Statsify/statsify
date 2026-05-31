@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, type Constructor, type UnwrapConstructor, removeFormatting } from "@statsify/util";
 import { DateTime } from "luxon";
-import { Field } from "#metadata";
+
 import { FormattedGame } from "#game";
+import { Field } from "#metadata";
+import { type APIData, type Constructor, type UnwrapConstructor, removeFormatting } from "@statsify/util";
 
 interface Quest {
   completions?: { time: number }[];

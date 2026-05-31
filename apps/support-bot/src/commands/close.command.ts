@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Command, CommandContext, ErrorMessage, TextArgument } from "@statsify/discord";
 import { TicketService } from "#services";
+import { Command, CommandContext, ErrorMessage, TextArgument } from "@statsify/discord";
 
 @Command({
   description: (t) => t("commands.close"),

@@ -1,5 +1,6 @@
-import { renderSkin } from "@statsify/skin-renderer";
 import { writeFile } from "node:fs/promises";
+
+import { renderSkin } from "@statsify/skin-renderer";
 
 const response = await fetch("URL_TO_SKIN");
 const skin = await response.arrayBuffer();

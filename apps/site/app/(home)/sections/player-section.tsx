@@ -8,23 +8,25 @@
 
 "use client";
 
-import ArcadeIcon from "~/public/icons/slime-ball.png";
-import BedWarsIcon from "~/public/icons/bed.png";
-import DuelsIcon from "~/public/icons/fishing-rod.png";
 import Image from "next/image";
-import SkyWarsIcon from "~/public/icons/ender-eye.png";
-import { ArcadePreview } from "../previews/arcade";
-import { BaseSection } from "./base-section";
-import { BedWarsPreview } from "../previews/bedwars";
+import { useState } from "react";
+import { PlayerProvider } from "~/app/players/[slug]/context";
 import { Command } from "~/components/ui/command";
 import { Divider } from "~/components/ui/divider";
-import { DuelsPreview } from "../previews/duels";
-import { PlayerProvider } from "~/app/players/[slug]/context";
-import { SkyWarsPreview } from "../previews/skywars";
 import { Tab, Tabs } from "~/components/ui/tabs";
 import { cn } from "~/lib/util";
-import { useState } from "react";
+import BedWarsIcon from "~/public/icons/bed.png";
+import SkyWarsIcon from "~/public/icons/ender-eye.png";
+import DuelsIcon from "~/public/icons/fishing-rod.png";
+import ArcadeIcon from "~/public/icons/slime-ball.png";
+
 import type { Player } from "@statsify/schemas";
+
+import { ArcadePreview } from "../previews/arcade";
+import { BedWarsPreview } from "../previews/bedwars";
+import { DuelsPreview } from "../previews/duels";
+import { SkyWarsPreview } from "../previews/skywars";
+import { BaseSection } from "./base-section";
 
 const games = [
   {

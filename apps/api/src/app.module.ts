@@ -6,19 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AppController } from "./app.controller.js";
+import { TypegooseModule } from "@m8a/nestjs-typegoose";
+import { Module } from "@nestjs/common";
+
 import { AuthModule } from "#auth";
 import { CommandsModule } from "#commands";
 import { GuildModule } from "#guild";
 import { HypixelResourcesModule } from "#hypixel-resources";
-import { Module } from "@nestjs/common";
 import { PlayerModule } from "#player";
 import { RedisModule } from "#redis";
 import { SessionModule } from "#session";
 import { SkinModule } from "#skin";
-import { TypegooseModule } from "@m8a/nestjs-typegoose";
 import { UserModule } from "#user";
 import { config } from "@statsify/util";
+
+import { AppController } from "./app.controller.js";
 
 const mongoUri = await config("database.mongoUri");
 const redisUrl = await config("database.redisUrl");

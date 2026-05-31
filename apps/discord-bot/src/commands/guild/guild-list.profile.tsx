@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { Image } from "skia-canvas";
+
 import { Container, Footer } from "#components";
-import { Guild, GuildRank, User } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import { useComponentWidth } from "@statsify/rendering";
-import type { Image } from "skia-canvas";
+import { Guild, GuildRank, User } from "@statsify/schemas";
 
 export interface GuildListProfileProps {
   guild: Guild;

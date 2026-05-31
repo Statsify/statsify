@@ -12,8 +12,9 @@ import {
   type MetadataEntry,
   MetadataScanner,
 } from "#metadata";
-import { parseAdditionalFields } from "./parse-fields.js";
 import type { Constructor } from "@statsify/util";
+
+import { parseAdditionalFields } from "./parse-fields.js";
 
 export class HistoricalScanner {
   public static getHistoricalMetadata<T>(constructor: Constructor<T>) {

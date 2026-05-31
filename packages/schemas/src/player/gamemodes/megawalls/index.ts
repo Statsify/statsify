@@ -8,8 +8,9 @@
 
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { MegaWallsKit, MegaWallsOverall } from "./kit.js";
 import type { APIData } from "@statsify/util";
+
+import { MegaWallsKit, MegaWallsOverall } from "./kit.js";
 
 export const MEGAWALLS_MODES = new GameModes([
   { api: "overall" },

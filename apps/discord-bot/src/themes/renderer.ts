@@ -7,6 +7,7 @@
  */
 
 import { Container } from "typedi";
+
 import { FontRenderer } from "@statsify/rendering";
 import { UserFont } from "@statsify/schemas";
 

@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import { MiniWalls } from "@statsify/schemas";
-import { Table } from "#components";
 import { prettify } from "@statsify/util";
 
 interface MiniWallsTableProps {

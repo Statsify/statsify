@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiExcludeEndpoint } from "@nestjs/swagger";
 import { Controller, Get, Header, Render } from "@nestjs/common";
+import { ApiExcludeEndpoint } from "@nestjs/swagger";
 
 @Controller("/")
 export class AppController {

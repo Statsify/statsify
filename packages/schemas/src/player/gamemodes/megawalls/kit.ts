@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
 import { Field } from "#metadata";
 import { add, ratio } from "@statsify/math";
+import { type APIData, formatTime } from "@statsify/util";
 
 const limit = 10_000;
 

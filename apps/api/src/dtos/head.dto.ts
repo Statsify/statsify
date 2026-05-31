@@ -7,8 +7,9 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsOptional, Max, Min } from "class-validator";
 import { Transform } from "class-transformer";
+import { IsInt, IsOptional, Max, Min } from "class-validator";
+
 import { UuidDto } from "./uuid.dto.js";
 
 export class HeadDto extends UuidDto {

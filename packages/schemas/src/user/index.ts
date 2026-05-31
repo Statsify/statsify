@@ -7,9 +7,10 @@
  */
 
 import { Field } from "#metadata";
+import { prettify } from "@statsify/util";
+
 import { UserFooter, UserLogo } from "./footer.js";
 import { UserTheme } from "./theme.js";
-import { prettify } from "@statsify/util";
 
 export enum UserTier {
   NONE = 0,

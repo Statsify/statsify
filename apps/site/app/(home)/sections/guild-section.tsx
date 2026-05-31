@@ -6,21 +6,23 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseSection } from "./base-section";
+import { formatDate } from "date-fns";
+import { Fragment } from "react";
 import { Box } from "~/components/ui/box";
 import { Carousel } from "~/components/ui/carousel";
 import { Command } from "~/components/ui/command";
-import { Fragment } from "react";
-import { GUILD_MEMBER_PREVIEW } from "../preview-constants";
 import { GameIcon } from "~/components/ui/game-icon";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Progression } from "~/components/ui/progression";
 import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
-import { formatDate } from "date-fns";
 import { t } from "~/localize";
+
 import type { Guild } from "@statsify/schemas";
+
+import { GUILD_MEMBER_PREVIEW } from "../preview-constants";
+import { BaseSection } from "./base-section";
 
 export function GuildSection({ guild }: { guild: Guild }) {
   return (

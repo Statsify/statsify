@@ -6,6 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { type ExtractGameModes, GameModes } from "#game";
+import { Field } from "#metadata";
+import type { APIData } from "@statsify/util";
+
 import {
   ArenaDuels,
   BedwarsDuels,
@@ -21,9 +25,6 @@ import {
   SpleefDuels,
   UHCDuels,
 } from "./mode.js";
-import { type ExtractGameModes, GameModes } from "#game";
-import { Field } from "#metadata";
-import type { APIData } from "@statsify/util";
 
 export const DUELS_MODES = new GameModes([
   {

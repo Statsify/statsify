@@ -6,7 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
+import { URL } from "node:url";
+
 import {
   CallHandler,
   ExecutionContext,
@@ -15,9 +16,9 @@ import {
   InternalServerErrorException,
   NestInterceptor,
 } from "@nestjs/common";
-import { Observable, catchError, tap } from "rxjs";
-import { URL } from "node:url";
+import * as Sentry from "@sentry/node";
 import type { FastifyRequest } from "fastify";
+import { Observable, catchError, tap } from "rxjs";
 
 @Injectable()
 export class SentryInterceptor implements NestInterceptor {

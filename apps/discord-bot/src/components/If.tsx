@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { noop } from "@statsify/util";
 import { useChildren } from "@statsify/rendering";
+import { noop } from "@statsify/util";
 
 export interface IfProps<T> {
   condition: T | undefined | null | false;

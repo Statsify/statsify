@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { getModelForClass } from "@typegoose/typegoose";
+import { createConnection } from "mongoose";
 import { Container, Service } from "typedi";
+
 import { Tag, Ticket, User } from "@statsify/schemas";
 import { config } from "@statsify/util";
-import { createConnection } from "mongoose";
-import { getModelForClass } from "@typegoose/typegoose";
 
 @Service()
 export class MongoLoaderService {

@@ -7,8 +7,9 @@
  */
 
 import { DateTime } from "luxon";
-import { ElementNode } from "@statsify/rendering";
+
 import { HistoricalTimes, HistoricalType } from "@statsify/api-client";
+import { ElementNode } from "@statsify/rendering";
 import { prettify } from "@statsify/util";
 
 interface HistoricalHeaderProps {

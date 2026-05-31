@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Historical, Table } from "#components";
 import { ProfileTime } from "#commands/base.hypixel-command";
-import { formatRaceTime } from "@statsify/util";
-import type { ArcadeModes, PartyGames, SubModeForMode } from "@statsify/schemas";
+import { Historical, Table } from "#components";
 import type { LocalizeFunction } from "@statsify/discord";
+import type { ArcadeModes, PartyGames, SubModeForMode } from "@statsify/schemas";
+import { formatRaceTime } from "@statsify/util";
 
 interface PartyGamesTableProps {
   stats: PartyGames;

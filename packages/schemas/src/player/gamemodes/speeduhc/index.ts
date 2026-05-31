@@ -10,10 +10,11 @@ import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { GamePrefix, createPrefixProgression } from "#prefixes";
 import { Progression } from "#progression";
+import type { APIData } from "@statsify/util";
+
 import { SpeedUHCMastery } from "./mastery.js";
 import { SpeedUHCMode } from "./mode.js";
 import { getLevelIndex, titleScores } from "./util.js";
-import type { APIData } from "@statsify/util";
 
 const formatLevel = (level: number | string) => `§d[${level}❋]`;
 

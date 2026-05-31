@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Historical, Table } from "#components";
-import { HoleInTheWall } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
 import type { ProfileTime } from "#commands/base.hypixel-command";
+import { Historical, Table } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { HoleInTheWall } from "@statsify/schemas";
 
 interface HoleInTheWallTableProps {
   stats: HoleInTheWall;

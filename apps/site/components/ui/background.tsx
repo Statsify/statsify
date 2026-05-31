@@ -8,6 +8,10 @@
 
 "use client";
 
+import { animate, motion, useMotionValue } from "motion/react";
+import Image from "next/image";
+import { useEffect, useRef } from "react";
+import { cn } from "~/lib/util";
 import Arcade from "~/public/backgrounds/arcade.png";
 import BedWars from "~/public/backgrounds/bedwars.png";
 import Bingo from "~/public/backgrounds/bingo.png";
@@ -17,11 +21,6 @@ import Guilds from "~/public/backgrounds/guilds.png";
 import SkyWars from "~/public/backgrounds/skywars.png";
 import UHC from "~/public/backgrounds/uhc.png";
 import WoolGames from "~/public/backgrounds/woolgames.png";
-
-import Image from "next/image";
-import { animate, motion, useMotionValue } from "motion/react";
-import { cn } from "~/lib/util";
-import { useEffect, useRef } from "react";
 
 const Backgrounds = {
   general: General,

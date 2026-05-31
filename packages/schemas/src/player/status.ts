@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field } from "#metadata";
 import { Game } from "#game";
+import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
 
 function findLastAction(data: APIData): { action: string; time: number } {

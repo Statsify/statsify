@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Auth, AuthRole } from "#auth";
 import { Body, Controller, Delete, Get, Post, Query } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+
+import { Auth, AuthRole } from "#auth";
 import { CachedPlayerDto, PlayerDto, PlayerGroupDto, UpdatePlayerDto } from "#dtos";
 import {
   DeletePlayerResponse,

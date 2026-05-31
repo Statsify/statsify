@@ -7,6 +7,7 @@
  */
 
 import { APIActionRowComponent, ComponentType } from "discord-api-types/v10";
+
 import { LocalizeFunction } from "../localize.js";
 import type { ButtonBuilder } from "./button.builder.js";
 import type { SelectMenuBuilder } from "./select-menu.builder.js";

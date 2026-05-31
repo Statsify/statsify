@@ -6,11 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
-import { Auth } from "#auth";
 import { Controller, Get, Query } from "@nestjs/common";
-import { GetPlayerSearchResponse } from "@statsify/api-client";
+import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+
+import { Auth } from "#auth";
 import { PlayerSearchDto } from "#dtos";
+import { GetPlayerSearchResponse } from "@statsify/api-client";
+
 import { PlayerSearchService } from "./player-search.service.js";
 
 @Controller("/player/search")

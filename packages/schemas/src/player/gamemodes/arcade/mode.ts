@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatRaceTime, formatTime } from "@statsify/util";
-import { EasterSimulator, GrinchSimulator, HalloweenSimulator, ScubaSimulator } from "./seasonal-mode.js";
 import { Field } from "#metadata";
 import { add, deepAdd, deepSub, ratio, sub } from "@statsify/math";
+import { type APIData, formatRaceTime, formatTime } from "@statsify/util";
+
+import { EasterSimulator, GrinchSimulator, HalloweenSimulator, ScubaSimulator } from "./seasonal-mode.js";
 
 export class BlockingDead {
   @Field()

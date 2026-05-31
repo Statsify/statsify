@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { BaseHypixelCommand, BaseProfileProps, ModeEmoji, ProfileData } from "#commands/base.hypixel-command";
+import { Command } from "@statsify/discord";
 import {
   ARCADE_MODES,
   ApiModeFromGameModes,
@@ -13,9 +15,8 @@ import {
   GameModeWithSubModes,
   SubModeForMode,
 } from "@statsify/schemas";
+
 import { ArcadeProfile } from "./arcade.profile.js";
-import { BaseHypixelCommand, BaseProfileProps, ModeEmoji, ProfileData } from "#commands/base.hypixel-command";
-import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.arcade") })
 export class ArcadeCommand extends BaseHypixelCommand<ArcadeModes> {

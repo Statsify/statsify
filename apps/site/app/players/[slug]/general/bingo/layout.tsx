@@ -7,10 +7,10 @@
  */
 
 import Link from "next/link";
-import { Background } from "~/components/ui/background";
-import { Brand } from "~/components/icons/logo";
-import { Divider } from "~/components/ui/divider";
 import { Search } from "~/app/players/search";
+import { Brand } from "~/components/icons/logo";
+import { Background } from "~/components/ui/background";
+import { Divider } from "~/components/ui/divider";
 
 export default async function BingoLayout({ children, params }: LayoutProps<"/players/[slug]/general/bingo">) {
   const { slug } = await params;

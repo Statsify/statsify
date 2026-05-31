@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Image, loadImage } from "skia-canvas";
+
 import {
   ApiService,
   Command,
@@ -14,7 +16,6 @@ import {
   MojangPlayerArgument,
   PaginateService,
 } from "@statsify/discord";
-import { Image, loadImage } from "skia-canvas";
 import { createCanvas } from "@statsify/rendering";
 import type { Skin } from "@statsify/schemas";
 

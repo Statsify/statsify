@@ -6,11 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { FormattedGame, GameId } from "@statsify/schemas";
 import { Image } from "skia-canvas";
-import { Table } from "./Table/index.js";
-import { arrayGroup } from "@statsify/util";
+
 import type { Box } from "@statsify/rendering";
+import { FormattedGame, GameId } from "@statsify/schemas";
+import { arrayGroup } from "@statsify/util";
+
+import { Table } from "./Table/index.js";
 
 export type GameEntry = [GameId, string] | [GameId, string, Box.BoxProps | Box.BoxRenderProps];
 

@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
-import { CacheLevel } from "@statsify/api-client";
-import { GameCounts, Guild, Player, RecentGame, Status, Watchdog } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { Logger } from "@statsify/logger";
+import * as Sentry from "@sentry/node";
 import { Observable, catchError, lastValueFrom, map, of, tap, throwError } from "rxjs";
+
+import { CacheLevel } from "@statsify/api-client";
+import { Logger } from "@statsify/logger";
+import { GameCounts, Guild, Player, RecentGame, Status, Watchdog } from "@statsify/schemas";
 import type { APIData } from "@statsify/util";
 
 @Injectable()

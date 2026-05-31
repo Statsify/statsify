@@ -6,14 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiModeFromGameModes, DUELS_MODES, DuelsModes, GameModeWithSubModes } from "@statsify/schemas";
-import { BaseHypixelCommand, BaseProfileProps, ModeEmoji, ProfileData } from "#commands/base.hypixel-command";
-import { Command } from "@statsify/discord";
-import { DuelsProfile } from "./duels.profile.js";
-import { getAssetPath } from "@statsify/assets";
-import { loadImage } from "@statsify/rendering";
 import { readdir } from "node:fs/promises";
+
 import type { Image } from "skia-canvas";
+
+import { BaseHypixelCommand, BaseProfileProps, ModeEmoji, ProfileData } from "#commands/base.hypixel-command";
+import { getAssetPath } from "@statsify/assets";
+import { Command } from "@statsify/discord";
+import { loadImage } from "@statsify/rendering";
+import { ApiModeFromGameModes, DUELS_MODES, DuelsModes, GameModeWithSubModes } from "@statsify/schemas";
+
+import { DuelsProfile } from "./duels.profile.js";
 
 export type DuelsModeIcons = Record<ApiModeFromGameModes<DuelsModes>, Image>;
 

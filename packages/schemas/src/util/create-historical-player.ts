@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { RATIOS, RATIO_STATS } from "#ratios";
 import { isObject } from "class-validator";
+
+import { RATIOS, RATIO_STATS } from "#ratios";
 import { ratio, sub } from "@statsify/math";
 
 export function createHistoricalPlayer<T>(oldOne: T, newOne: T): T {

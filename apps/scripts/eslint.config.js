@@ -7,6 +7,7 @@
  */
 
 import globals from "globals";
+
 import { defineConfig } from "../../eslint.config.js";
 
 export default [

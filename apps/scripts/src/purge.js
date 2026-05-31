@@ -6,13 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import inquirer from "inquirer";
-import { ROOT, fetchWorkspaces, inquirerConfirmation, inquirerLogger } from "./utils.js";
 import { exec as _exec } from "node:child_process";
+import { rm } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
-import { rm } from "node:fs/promises";
+
+import inquirer from "inquirer";
+
+import { ROOT, fetchWorkspaces, inquirerConfirmation, inquirerLogger } from "./utils.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

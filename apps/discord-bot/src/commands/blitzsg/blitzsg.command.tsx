@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BLITZSG_MODES, BlitzSGKit, BlitzSGModes, GameModeWithSubModes, Player } from "@statsify/schemas";
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
-import { BlitzSGProfile } from "./blitzsg.profile.js";
 import { Command } from "@statsify/discord";
+import { BLITZSG_MODES, BlitzSGKit, BlitzSGModes, GameModeWithSubModes, Player } from "@statsify/schemas";
+
+import { BlitzSGProfile } from "./blitzsg.profile.js";
 
 @Command({ description: (t) => t("commands.blitzsg") })
 export class BlitzSGCommand extends BaseHypixelCommand<BlitzSGModes> {

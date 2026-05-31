@@ -6,12 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { Image } from "skia-canvas";
+
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
+import { getAllGameIcons } from "@statsify/assets";
 import { Command } from "@statsify/discord";
 import { GameId, PARKOUR_MODES, ParkourModes } from "@statsify/schemas";
+
 import { ParkourProfile } from "./parkour.profile.js";
-import { getAllGameIcons } from "@statsify/assets";
-import type { Image } from "skia-canvas";
 
 interface PreProfileData {
   gameIcons: Record<GameId, Image>;

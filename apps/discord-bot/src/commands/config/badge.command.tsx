@@ -7,6 +7,10 @@
  */
 
 import { APIAttachment } from "discord-api-types/v10";
+import { type Canvas, Image } from "skia-canvas";
+
+import { getTheme } from "#themes";
+import { getBackground, getLogo } from "@statsify/assets";
 import {
   ApiService,
   Command,
@@ -17,12 +21,10 @@ import {
   LocalizeFunction,
   SubCommand,
 } from "@statsify/discord";
-import { type Canvas, Image } from "skia-canvas";
-import { DemoProfile } from "./demo.profile.js";
-import { User, UserTier } from "@statsify/schemas";
 import { createCanvas, loadImage, render } from "@statsify/rendering";
-import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
+import { User, UserTier } from "@statsify/schemas";
+
+import { DemoProfile } from "./demo.profile.js";
 
 @Command({ description: (t) => t("commands.badge") })
 export class BadgeCommand {

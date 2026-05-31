@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { HideAndSeek } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { HideAndSeek } from "@statsify/schemas";
 
 interface HideAndSeekTableProps {
   stats: HideAndSeek;

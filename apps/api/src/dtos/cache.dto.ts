@@ -7,8 +7,9 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { CacheLevel } from "@statsify/api-client";
 import { IsEnum, IsOptional } from "class-validator";
+
+import { CacheLevel } from "@statsify/api-client";
 
 export class CacheDto {
   @ApiProperty({

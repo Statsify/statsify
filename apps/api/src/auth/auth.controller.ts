@@ -6,13 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AddKeyDto, KeyHeaderDto, KeyParamDto } from "#dtos";
+import { Body, Controller, Get, Headers, Post, Query } from "@nestjs/common";
 import { ApiExcludeEndpoint, ApiOkResponse, ApiOperation } from "@nestjs/swagger";
+
+import { AddKeyDto, KeyHeaderDto, KeyParamDto } from "#dtos";
+import { GetKeyResponse } from "@statsify/api-client";
+
 import { Auth } from "./auth.decorator.js";
 import { AuthRole } from "./auth.role.js";
 import { AuthService } from "./auth.service.js";
-import { Body, Controller, Get, Headers, Post, Query } from "@nestjs/common";
-import { GetKeyResponse } from "@statsify/api-client";
 
 @Controller("/auth")
 export class AuthController {

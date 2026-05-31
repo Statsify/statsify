@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import eslint from "@eslint/js";
-import licenseHeader from "eslint-plugin-license-header";
-import sortImports from "@j4cobi/eslint-plugin-sort-imports";
-import tseslint from "typescript-eslint";
-import unusedImports from "eslint-plugin-unused-imports";
-import unicorn from "eslint-plugin-unicorn";
 import { join } from "node:path";
+
+import eslint from "@eslint/js";
+import sortImports from "@j4cobi/eslint-plugin-sort-imports";
+import licenseHeader from "eslint-plugin-license-header";
+import unicorn from "eslint-plugin-unicorn";
+import unusedImports from "eslint-plugin-unused-imports";
+import tseslint from "typescript-eslint";
 
 /**
  *

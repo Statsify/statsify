@@ -8,10 +8,11 @@
 
 "use client";
 
-import { Box } from "~/components/ui/box";
 import { type ComponentProps, createContext, use, useState } from "react";
-import { SkeletonBox } from "./skeleton-box";
+import { Box } from "~/components/ui/box";
 import { cn } from "~/lib/util";
+
+import { SkeletonBox } from "./skeleton-box";
 
 const TabsContext = createContext<{ tab: string | number; onTabChange: (tab: string | number) => void }>({
   tab: "",

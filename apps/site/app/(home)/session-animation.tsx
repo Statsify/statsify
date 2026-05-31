@@ -8,10 +8,11 @@
 
 "use client";
 
-import { Chevron } from "~/components/icons/chevron";
 import { ObjectSegmentWithTransition, cubicBezier, motion, useAnimate, useInView, useMotionValue } from "motion/react";
-import { WoolWarsPreview } from "./previews/woolwars";
 import { useEffect, useRef } from "react";
+import { Chevron } from "~/components/icons/chevron";
+
+import { WoolWarsPreview } from "./previews/woolwars";
 
 const text = "/session woolgames";
 const SPLIT_TEXT = [...text];

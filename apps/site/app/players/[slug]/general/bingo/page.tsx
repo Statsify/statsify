@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Bingo } from "./bingo";
-import { getPlayer } from "~/app/api";
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { getPlayer } from "~/app/api";
+
+import { Bingo } from "./bingo";
 
 export async function generateMetadata({ params }: PageProps<"/players/[slug]/general/bingo">): Promise<Metadata> {
   const { slug } = await params;

@@ -8,23 +8,25 @@
 
 "use client";
 
-import CasualIcon from "~/public/icons/slime-ball.png";
-import ClassicIcon from "~/public/icons/snowball.png";
+import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
-import PvPIcon from "~/public/icons/ender-eye.png";
-import { Box } from "~/components/ui/box";
-import { type Category, type Difficulty, type Reward, type Task, boards } from "./boards";
 import { ComponentProps } from "react";
+import { z } from "zod";
+import { PlayerProvider, usePlayer } from "~/app/players/[slug]/context";
+import { Box } from "~/components/ui/box";
 import { Divider } from "~/components/ui/divider";
 import { MinecraftText } from "~/components/ui/minecraft-text";
-import { PlayerProvider, usePlayer } from "~/app/players/[slug]/context";
 import { SkinHead } from "~/components/ui/skin";
 import { Tab, Tabs } from "~/components/ui/tabs";
-import { cn } from "~/lib/util";
 import { useUrlState } from "~/hooks/use-url-state";
-import { z } from "zod";
+import { cn } from "~/lib/util";
+import PvPIcon from "~/public/icons/ender-eye.png";
+import CasualIcon from "~/public/icons/slime-ball.png";
+import ClassicIcon from "~/public/icons/snowball.png";
+
 import type { Player } from "@statsify/schemas";
-import type { StaticImport } from "next/dist/shared/lib/get-img-props";
+
+import { type Category, type Difficulty, type Reward, type Task, boards } from "./boards";
 
 export const FormattedCategories: Record<Category, string> = {
   casual: "Casual",

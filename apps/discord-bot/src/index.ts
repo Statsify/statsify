@@ -6,17 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
-import { CommandListener } from "#lib/command.listener";
-import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
-import { Container } from "typedi";
-import { FontLoaderService } from "#services";
-import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
-import { Logger } from "@statsify/logger";
-import { VerifyCommand } from "#commands/verify.command";
-import { config } from "@statsify/util";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import * as Sentry from "@sentry/node";
+import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
+import { Container } from "typedi";
+
+import { VerifyCommand } from "#commands/verify.command";
+import { CommandListener } from "#lib/command.listener";
+import { FontLoaderService } from "#services";
+import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
+import { Logger } from "@statsify/logger";
+import { config } from "@statsify/util";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ArenaBrawlModes, FormattedGame, type GameMode } from "@statsify/schemas";
-import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
-import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
+import { ArenaBrawlModes, FormattedGame, type GameMode } from "@statsify/schemas";
+import { prettify } from "@statsify/util";
 
 export interface ArenaBrawlProfileProps extends BaseProfileProps {
   mode: GameMode<ArenaBrawlModes>;

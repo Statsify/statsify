@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractEventListener, ChannelService, EmbedBuilder, MemberService, MessageService } from "@statsify/discord";
 import { GatewayDispatchEvents, GatewayGuildMemberUpdateDispatchData } from "discord-api-types/v10";
-import { Logger, STATUS_COLORS } from "@statsify/logger";
 import { Service } from "typedi";
-import { User, UserTier } from "@statsify/schemas";
+
 import { UserService } from "#services";
+import { AbstractEventListener, ChannelService, EmbedBuilder, MemberService, MessageService } from "@statsify/discord";
+import { Logger, STATUS_COLORS } from "@statsify/logger";
+import { User, UserTier } from "@statsify/schemas";
 import { config } from "@statsify/util";
 
 const PREMIUM_TIERS = [UserTier.NETHERITE, UserTier.EMERALD, UserTier.GOLD, UserTier.DIAMOND, UserTier.IRON] as const;

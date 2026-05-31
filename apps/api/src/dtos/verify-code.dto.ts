@@ -8,6 +8,7 @@
 
 import { ApiProperty, PartialType } from "@nestjs/swagger";
 import { IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+
 import { UuidDto } from "./uuid.dto.js";
 
 export class VerifyCodeDto extends PartialType(UuidDto) {

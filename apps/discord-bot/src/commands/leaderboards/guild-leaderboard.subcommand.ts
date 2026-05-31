@@ -6,11 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Service } from "typedi";
+
+import { getBackground } from "@statsify/assets";
 import { ApiService, CommandContext, SubCommand } from "@statsify/discord";
+
 import { BaseLeaderboardCommand } from "./base.leaderboard-command.js";
 import { GuildLeaderboardArgument } from "./guild-leaderboard.argument.js";
-import { Service } from "typedi";
-import { getBackground } from "@statsify/assets";
 
 @Service()
 export class GuildLeaderboardSubCommand extends BaseLeaderboardCommand {

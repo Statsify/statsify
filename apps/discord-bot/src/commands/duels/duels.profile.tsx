@@ -6,6 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { BaseProfileProps, ProfileTime } from "#commands/base.hypixel-command";
+import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
+import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
+import { formatTime, prettify } from "@statsify/util";
+
+import type { DuelsModeIcons } from "./duels.command.js";
 import {
   BedWarsDuelsTable,
   BridgeDuelsTable,
@@ -13,11 +19,6 @@ import {
   SingleDuelsGameModeTable,
   TitlesTable,
 } from "./tables/index.js";
-import { Container, Footer, Header, SidebarItem, formatProgression } from "#components";
-import { DuelsModes, FormattedGame, type GameMode } from "@statsify/schemas";
-import { formatTime, prettify } from "@statsify/util";
-import type { BaseProfileProps, ProfileTime } from "#commands/base.hypixel-command";
-import type { DuelsModeIcons } from "./duels.command.js";
 
 export type DuelsProfileProps<T extends ProfileTime> = Omit<BaseProfileProps, "time"> & {
   mode: GameMode<DuelsModes>;

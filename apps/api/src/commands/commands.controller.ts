@@ -6,11 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Controller, Get, Patch, Query } from "@nestjs/common";
 import { ApiOperation, ApiTags } from "@nestjs/swagger";
+
 import { Auth, AuthRole } from "#auth";
 import { CommandDto } from "#dtos";
+
 import { CommandsService } from "./commands.service.js";
-import { Controller, Get, Patch, Query } from "@nestjs/common";
 
 @Controller("/commands")
 @ApiTags("Commands")

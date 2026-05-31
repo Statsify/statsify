@@ -6,14 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService, Command, CommandContext, PaginateService, PlayerArgument } from "@statsify/discord";
-import { EVENT_TYPES, GENERAL_MODES } from "@statsify/schemas";
-import { EventsProfile } from "./events.profile.js";
-import { arrayGroup } from "@statsify/util";
-import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
 import { mapBackground } from "#constants";
+import { getTheme } from "#themes";
+import { getBackground, getLogo } from "@statsify/assets";
+import { ApiService, Command, CommandContext, PaginateService, PlayerArgument } from "@statsify/discord";
 import { render } from "@statsify/rendering";
+import { EVENT_TYPES, GENERAL_MODES } from "@statsify/schemas";
+import { arrayGroup } from "@statsify/util";
+
+import { EventsProfile } from "./events.profile.js";
 
 @Command({ description: (t) => t("commands.events"), args: [PlayerArgument] })
 export class EventsCommand {

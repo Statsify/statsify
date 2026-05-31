@@ -6,6 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ApplicationCommandOptionType } from "discord-api-types/v10";
+
+import { convertColorCodes } from "#lib/convert-color-codes";
+import { getTheme } from "#themes";
+import { getBackground, getLogo } from "@statsify/assets";
 import {
   ApiService,
   ChoiceArgument,
@@ -17,14 +22,11 @@ import {
   SubCommand,
   TextArgument,
 } from "@statsify/discord";
-import { ApplicationCommandOptionType } from "discord-api-types/v10";
-import { DemoProfile } from "./demo.profile.js";
-import { User, UserBoxes, UserFont, UserFooter, UserLogo, UserPalette, UserTheme, UserTier } from "@statsify/schemas";
-import { convertColorCodes } from "#lib/convert-color-codes";
-import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
-import { removeFormatting } from "@statsify/util";
 import { render } from "@statsify/rendering";
+import { User, UserBoxes, UserFont, UserFooter, UserLogo, UserPalette, UserTheme, UserTier } from "@statsify/schemas";
+import { removeFormatting } from "@statsify/util";
+
+import { DemoProfile } from "./demo.profile.js";
 
 @Command({ description: (t) => t("commands.theme") })
 export class ThemeCommand {

@@ -8,14 +8,14 @@
 
 "use client";
 
-import { Box } from "~/components/ui/box";
+import { formatDate, subDays } from "date-fns";
 import { MotionValue, easeIn, easeOut, motion, useTransform } from "motion/react";
-import { MotionValueTableData } from "~/components/ui/table";
+import { usePlayer } from "~/app/players/[slug]/context";
+import { Box } from "~/components/ui/box";
 import { Nametag } from "~/components/ui/nametag";
 import { Skin } from "~/components/ui/skin";
+import { MotionValueTableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
-import { formatDate, subDays } from "date-fns";
-import { usePlayer } from "~/app/players/[slug]/context";
 
 export function WoolWarsPreview({ className, daysBack }: { className?: string; daysBack: MotionValue<number> }) {
   const player = usePlayer();

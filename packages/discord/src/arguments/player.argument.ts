@@ -7,11 +7,13 @@
  */
 
 import { APIApplicationCommandOptionChoice, ApplicationCommandOptionType } from "discord-api-types/v10";
-import { AbstractArgument } from "./abstract.argument.js";
-import { ApiService } from "#services";
-import { CommandContext } from "#command";
 import { Container } from "typedi";
+
+import { CommandContext } from "#command";
 import { LocalizationString } from "#messages";
+import { ApiService } from "#services";
+
+import { AbstractArgument } from "./abstract.argument.js";
 
 const apiClient = Container.get(ApiService);
 

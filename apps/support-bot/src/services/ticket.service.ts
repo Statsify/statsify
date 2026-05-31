@@ -6,6 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { ReturnModelType } from "@typegoose/typegoose";
 import {
   APIUser,
   ButtonStyle,
@@ -15,6 +16,9 @@ import {
   PermissionFlagsBits,
   TextInputStyle,
 } from "discord-api-types/v10";
+import { Inject, Service } from "typedi";
+
+import { CommandListener } from "#lib";
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -27,12 +31,9 @@ import {
   ModalBuilder,
   TextInputBuilder,
 } from "@statsify/discord";
-import { CommandListener } from "#lib";
-import { Inject, Service } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
 import { Ticket } from "@statsify/schemas";
 import { config } from "@statsify/util";
-import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Service()
 export class TicketService {

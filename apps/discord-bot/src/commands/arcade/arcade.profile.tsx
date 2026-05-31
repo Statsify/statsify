@@ -6,7 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { Container, Footer, Header, SidebarItem } from "#components";
 import { ArcadeModes, FormattedGame, type GameMode } from "@statsify/schemas";
+
 import {
   BlockingDeadTable,
   BountyHuntersTable,
@@ -31,8 +34,6 @@ import {
   ZombiesMapTable,
   ZombiesTable,
 } from "./modes/index.js";
-import { Container, Footer, Header, SidebarItem } from "#components";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface ArcadeProfileProps extends BaseProfileProps {
   mode: GameMode<ArcadeModes>;

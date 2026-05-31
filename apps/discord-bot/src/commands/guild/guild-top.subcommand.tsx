@@ -6,6 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ButtonStyle } from "discord-api-types/v10";
+
+import { CommandListener } from "#lib/command.listener";
+import { getTheme } from "#themes";
+import { GuildQuery } from "@statsify/api-client";
+import { getBackground, getLogo } from "@statsify/assets";
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -17,14 +23,10 @@ import {
   SelectMenuOptionBuilder,
   SubCommand,
 } from "@statsify/discord";
-import { ButtonStyle } from "discord-api-types/v10";
-import { CommandListener } from "#lib/command.listener";
-import { GUILD_TOP_PAGE_SIZE, GuildTopMember, GuildTopProfile, GuildTopProfileProps } from "./guild-top.profile.js";
-import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.subcommand.js";
-import { GuildQuery } from "@statsify/api-client";
 import { Theme, render } from "@statsify/rendering";
-import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
+
+import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.subcommand.js";
+import { GUILD_TOP_PAGE_SIZE, GuildTopMember, GuildTopProfile, GuildTopProfileProps } from "./guild-top.profile.js";
 
 type BaseGuildTopProfileProps = Omit<GuildTopProfileProps, "page" | "members" | "title">;
 type GuildTopKey = "daily" | "weekly" | "monthly" | number;

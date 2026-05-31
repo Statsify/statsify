@@ -7,6 +7,7 @@
  */
 
 import { APIMessageComponentEmoji } from "discord-api-types/v10";
+
 import { LocalizationString, LocalizeFunction, translateField } from "../localize.js";
 
 export function parseEmoji(emote: LocalizationString, locale: LocalizeFunction): APIMessageComponentEmoji {

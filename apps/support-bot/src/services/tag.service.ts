@@ -6,6 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { ReturnModelType } from "@typegoose/typegoose";
+import { Inject, Service } from "typedi";
+
+import { CommandListener } from "#lib";
 import {
   CommandContext,
   CommandMetadata,
@@ -16,12 +20,9 @@ import {
   IMessage,
   UserArgument,
 } from "@statsify/discord";
-import { CommandListener } from "#lib";
-import { Inject, Service } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
 import { Tag } from "@statsify/schemas";
 import { config } from "@statsify/util";
-import type { ReturnModelType } from "@typegoose/typegoose";
 
 const TAG_NAME_REGEX = /^[\w-]{1,32}$/;
 

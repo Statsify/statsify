@@ -9,6 +9,7 @@
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { WARLORDS_MODES, WarlordsModes } from "@statsify/schemas";
+
 import { WarlordsProfile } from "./warlords.profile.js";
 
 @Command({ description: (t) => t("commands.warlords") })

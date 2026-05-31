@@ -10,10 +10,11 @@ import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { GameTitle, createPrefixProgression, cycleColors, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { Progression } from "#progression";
-import { WarlordsCaptureTheFlag, WarlordsDomination, WarlordsTeamDeathmatch } from "./mode.js";
-import { WarlordsMage, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "./class.js";
 import { add, ratio, sub } from "@statsify/math";
 import type { APIData } from "@statsify/util";
+
+import { WarlordsMage, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "./class.js";
+import { WarlordsCaptureTheFlag, WarlordsDomination, WarlordsTeamDeathmatch } from "./mode.js";
 
 export const WARLORDS_MODES = new GameModes([
   { api: "overall" },

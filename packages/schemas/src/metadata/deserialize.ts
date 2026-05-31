@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type Constructor, type Flatten, unflatten } from "@statsify/util";
-import { MetadataScanner } from "./metadata-scanner.js";
 import { roundTo } from "@statsify/math";
+import { type Constructor, type Flatten, unflatten } from "@statsify/util";
+
+import { MetadataScanner } from "./metadata-scanner.js";
 import type { FieldMetadata } from "./metadata.interface.js";
 
 export const deserialize = <T>(constructor: Constructor<T>, instance: Flatten<T>): T => {

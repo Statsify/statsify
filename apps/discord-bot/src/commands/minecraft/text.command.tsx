@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ChoiceArgument, Command, CommandContext, IMessage, NumberArgument, TextArgument } from "@statsify/discord";
 import { Container } from "typedi";
-import { FontRenderer, StyleLocation, render } from "@statsify/rendering";
+
 import { Multiline } from "#components";
 import { convertColorCodes } from "#lib/convert-color-codes";
 import { getTheme } from "#themes";
+import { ChoiceArgument, Command, CommandContext, IMessage, NumberArgument, TextArgument } from "@statsify/discord";
+import { FontRenderer, StyleLocation, render } from "@statsify/rendering";
 
 @Command({
   description: (t) => t("commands.text"),

@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { SetMetadata, UseGuards, applyDecorators } from "@nestjs/common";
 import { ApiSecurity } from "@nestjs/swagger";
+
 import { AuthGuard } from "./auth.guard.js";
 import { AuthRole } from "./auth.role.js";
-import { SetMetadata, UseGuards, applyDecorators } from "@nestjs/common";
 
 export interface AuthDecoratorOptions {
   /**

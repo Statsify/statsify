@@ -6,14 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BlitzSGKit } from "./kit.js";
-import { BlitzSGMode, BlitzSGOverall } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { GamePrefix, createPrefixProgression, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { Progression } from "#progression";
 import { sub } from "@statsify/math";
 import type { APIData } from "@statsify/util";
+
+import { BlitzSGKit } from "./kit.js";
+import { BlitzSGMode, BlitzSGOverall } from "./mode.js";
 
 export const BLITZSG_MODES = new GameModes([
   { api: "overall" },

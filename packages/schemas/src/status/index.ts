@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field } from "#metadata";
 import { Game } from "#game";
+import { Field } from "#metadata";
 import { PlayerStatus } from "#player";
-import { RecentGame } from "./recent-game.js";
 import type { APIData } from "@statsify/util";
+
+import { RecentGame } from "./recent-game.js";
 
 export class Status {
   @Field()

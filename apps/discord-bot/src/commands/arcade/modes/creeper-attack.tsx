@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CreeperAttack } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { CreeperAttack } from "@statsify/schemas";
 
 interface CreeperAttackTableProps {
   stats: CreeperAttack;

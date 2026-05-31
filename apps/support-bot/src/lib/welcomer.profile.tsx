@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ordinal } from "@statsify/util";
 import type { Image } from "skia-canvas";
+
+import { ordinal } from "@statsify/util";
 
 export interface WelcomeProfileProps {
   username: string;

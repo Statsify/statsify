@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Inject, Service } from "typedi";
-import { User, UserTier } from "@statsify/schemas";
 import type { ReturnModelType } from "@typegoose/typegoose";
+import { Inject, Service } from "typedi";
+
+import { User, UserTier } from "@statsify/schemas";
 
 @Service()
 export class UserService {

@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
-import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
+import { BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 
 export interface BedWarsProfileProps extends BaseProfileProps {
   mode: GameMode<BedWarsModes>;

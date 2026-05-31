@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/next";
-import { Footer } from "~/components/ui/footer";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { env } from "./env";
-import "./globals.css";
 import type { Metadata, Viewport } from "next";
+import localFont from "next/font/local";
+import { Footer } from "~/components/ui/footer";
+
+import "./globals.css";
+import { env } from "./env";
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.ENVIRONMENT === "production" ? "https://statsify.net" : "http://localhost:5000"),

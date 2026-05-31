@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { Image } from "skia-canvas";
+
 import { Container, Footer, If, List } from "#components";
+import { formatPosition } from "#lib/format-position";
 import { LocalizeFunction } from "@statsify/discord";
 import { User } from "@statsify/schemas";
-import { formatPosition } from "#lib/format-position";
 import { prettify } from "@statsify/util";
-import type { Image } from "skia-canvas";
 
 export type LeaderboardType = "player" | "guild";
 

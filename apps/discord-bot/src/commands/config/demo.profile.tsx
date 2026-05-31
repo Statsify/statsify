@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, HeaderNametag, Skin } from "#components";
 import type { Canvas, Image } from "skia-canvas";
+
+import { Container, Footer, HeaderNametag, Skin } from "#components";
 import type { Player, User } from "@statsify/schemas";
 
 export interface DemoProfileProps {

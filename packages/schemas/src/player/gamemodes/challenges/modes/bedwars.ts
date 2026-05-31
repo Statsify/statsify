@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, removeFormatting } from "@statsify/util";
-import { Field } from "#metadata";
 import { FormattedGame } from "#game";
+import { Field } from "#metadata";
 import { add } from "@statsify/math";
-import { challengeFieldData } from "../util.js";
+import { type APIData, removeFormatting } from "@statsify/util";
+
 import type { GameChallenges } from "../game-challenges.js";
+import { challengeFieldData } from "../util.js";
 
 export class BedWarsChallenges implements GameChallenges {
   @Field(challengeFieldData)

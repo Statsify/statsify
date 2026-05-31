@@ -7,6 +7,7 @@
  */
 
 import { Field } from "#metadata";
+
 import { type GameCode, type GameId, GameIdMapping } from "./constants.js";
 
 export class Game {

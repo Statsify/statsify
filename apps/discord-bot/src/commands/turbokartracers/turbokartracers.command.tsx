@@ -9,6 +9,7 @@
 import { BaseHypixelCommand, BaseProfileProps } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { TURBO_KART_RACERS_MODES, TurboKartRacersModes } from "@statsify/schemas";
+
 import { TurboKartRacersProfile } from "./turbokartracers.profile.js";
 
 @Command({ description: (t) => t("commands.turbokartracers") })

@@ -7,6 +7,7 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
+
 import { SuccessResponse } from "./success.response.js";
 
 export class GetPlayerSearchResponse extends SuccessResponse {

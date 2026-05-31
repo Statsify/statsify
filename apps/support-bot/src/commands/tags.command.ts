@@ -7,6 +7,8 @@
  */
 
 import { APIAttachment } from "discord-api-types/v10";
+
+import { TagService } from "#services";
 import {
   Command,
   CommandContext,
@@ -18,7 +20,6 @@ import {
   TextArgument,
 } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
-import { TagService } from "#services";
 import { UserTier } from "@statsify/schemas";
 
 @Command({ description: (t) => t("commands.tags"), userCommand: false })

@@ -11,12 +11,13 @@
  * because the module does not work with ESM
  */
 
-import { Options as SwcOptions, transform } from "@swc/core";
-import { createFilter } from "@rollup/pluginutils";
-import { createUnplugin } from "unplugin";
-import { dirname, join, resolve } from "node:path";
 import { existsSync } from "node:fs";
 import { stat } from "node:fs/promises";
+import { dirname, join, resolve } from "node:path";
+
+import { createFilter } from "@rollup/pluginutils";
+import { Options as SwcOptions, transform } from "@swc/core";
+import { createUnplugin } from "unplugin";
 
 const RESOLVE_EXTENSIONS = [".tsx", ".ts", ".jsx", ".js", ".mjs", ".cjs"];
 

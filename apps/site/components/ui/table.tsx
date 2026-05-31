@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as motion from "motion/react-client";
-import { Box } from "./box";
 import type { MotionValue } from "motion";
+import * as motion from "motion/react-client";
+
+import { Box } from "./box";
 
 export function TableData({ title, value, color }: { title: string; value: string; color: string }) {
   return (

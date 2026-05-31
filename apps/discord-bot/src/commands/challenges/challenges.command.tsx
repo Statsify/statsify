@@ -6,12 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseHypixelCommand, BaseProfileProps, ModeEmoji, ProfileData } from "#commands/base.hypixel-command";
-import { CHALLENGE_MODES, ChallengeModes, GameId, GameModeWithSubModes } from "@statsify/schemas";
-import { ChallengesProfile } from "./challenges.profile.js";
-import { Command } from "@statsify/discord";
 import { Image } from "skia-canvas";
+
+import { BaseHypixelCommand, BaseProfileProps, ModeEmoji, ProfileData } from "#commands/base.hypixel-command";
 import { getAllGameIcons } from "@statsify/assets";
+import { Command } from "@statsify/discord";
+import { CHALLENGE_MODES, ChallengeModes, GameId, GameModeWithSubModes } from "@statsify/schemas";
+
+import { ChallengesProfile } from "./challenges.profile.js";
 
 interface PreProfileData {
   gameIcons: Record<GameId, Image>;

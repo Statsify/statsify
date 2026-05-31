@@ -9,8 +9,9 @@
 "use client";
 
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { Caret } from "../icons/caret";
 import { type ComponentProps, type ReactNode, useState } from "react";
+
+import { Caret } from "../icons/caret";
 
 export function PopoverTooltip({
   children,

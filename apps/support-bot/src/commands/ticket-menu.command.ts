@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ActionRowBuilder, ButtonBuilder, Command, EmbedBuilder, IMessage, MessageService } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
+
+import { ActionRowBuilder, ButtonBuilder, Command, EmbedBuilder, IMessage, MessageService } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
 import { config } from "@statsify/util";

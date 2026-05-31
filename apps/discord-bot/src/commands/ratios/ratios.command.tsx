@@ -6,6 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { GamesWithBackgrounds, MODES_TO_API, MODES_TO_FORMATTED, mapBackground } from "#constants";
+import { getTheme } from "#themes";
+import { getBackground, getLogo } from "@statsify/assets";
+import {
+  ApiService,
+  Command,
+  CommandContext,
+  Page,
+  PaginateService,
+  PlayerArgument,
+  SubCommand,
+} from "@statsify/discord";
+import { render } from "@statsify/rendering";
 import {
   ARCADE_MODES,
   ARENA_BRAWL_MODES,
@@ -34,21 +47,9 @@ import {
   WARLORDS_MODES,
   WOOLGAMES_MODES,
 } from "@statsify/schemas";
-import {
-  ApiService,
-  Command,
-  CommandContext,
-  Page,
-  PaginateService,
-  PlayerArgument,
-  SubCommand,
-} from "@statsify/discord";
 import { Constructor, prettify } from "@statsify/util";
-import { GamesWithBackgrounds, MODES_TO_API, MODES_TO_FORMATTED, mapBackground } from "#constants";
+
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
-import { getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
-import { render } from "@statsify/rendering";
 
 const args = [PlayerArgument];
 

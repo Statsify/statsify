@@ -7,6 +7,7 @@
  */
 
 import { IsOptional, IsString } from "class-validator";
+
 import { PlayerDto } from "./player.dto.js";
 
 export class SessionDto extends PlayerDto {

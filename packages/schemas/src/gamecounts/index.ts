@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Field } from "#metadata";
 import { GameCodeMapping } from "#game";
+import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
 
 export class GamePlayers {

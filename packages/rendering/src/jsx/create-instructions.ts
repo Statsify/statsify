@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { getTotalSize, toDecimal } from "./util.js";
 import type { ElementNode, Fraction, Instruction, Percent } from "./types.js";
+import { getTotalSize, toDecimal } from "./util.js";
 
 export const createInstructions = (node: ElementNode, component = node.component): Instruction => {
   const hasDefinedWidth = typeof node.x.size === "number";

@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type * as JSX from "#jsx";
 import type { Canvas, Image as _Image } from "skia-canvas";
+
+import type * as JSX from "#jsx";
 
 type CanvasImage = _Image | Canvas;
 

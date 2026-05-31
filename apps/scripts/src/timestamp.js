@@ -7,8 +7,9 @@
  */
 
 import { DateTime } from "luxon";
-import { config } from "@statsify/util";
 import { connect } from "mongoose";
+
+import { config } from "@statsify/util";
 
 const mongo = await connect(config("database.mongoUri"));
 const now = DateTime.now();

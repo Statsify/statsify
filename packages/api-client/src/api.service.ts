@@ -8,7 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
-import { CacheLevel, GuildQuery, LeaderboardQuery } from "./constants.js";
+
 import {
   DeletePlayerResponse,
   GetCommandUsageResponse,
@@ -27,9 +27,11 @@ import {
   PutUserBadgeResponse,
   SuccessResponse,
 } from "#responses";
+import { loadImage } from "@statsify/rendering";
 import { User, UserFooter, UserTheme } from "@statsify/schemas";
 import { config } from "@statsify/util";
-import { loadImage } from "@statsify/rendering";
+
+import { CacheLevel, GuildQuery, LeaderboardQuery } from "./constants.js";
 
 interface ExtraData {
   headers?: AxiosRequestHeaders;

@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, List } from "#components";
-import { Guild, User } from "@statsify/schemas";
 import { Image } from "skia-canvas";
+
+import { Container, Footer, List } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
+import { Guild, User } from "@statsify/schemas";
 import { arrayGroup } from "@statsify/util";
 
 export interface GuildTopMember {

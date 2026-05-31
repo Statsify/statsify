@@ -6,10 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Commands from "~/public/icons/book.png";
 import Image from "next/image";
 import Link from "next/link";
+import { getGuild, getLeaderboard, getPlayer } from "~/app/api";
+import { AnimatedNumber } from "~/components/animations/number";
+import { Board } from "~/components/icons/board";
+import { Discord } from "~/components/icons/discord";
+import { Wordmark } from "~/components/icons/logo";
+import { Background } from "~/components/ui/background";
+import { Box } from "~/components/ui/box";
+import { Button } from "~/components/ui/button";
+import { Divider } from "~/components/ui/divider";
+import Commands from "~/public/icons/book.png";
 import Servers from "~/public/icons/iron-door.png";
+
+import { InteractiveLogo } from "./interactive-logo";
 import {
   ARCADE_PREVIEW,
   BEDWARS_PREVIEW,
@@ -19,20 +30,10 @@ import {
   SESSION_PREVIEW,
   SKYWARS_PREVIEW,
 } from "./preview-constants";
-import { AnimatedNumber } from "~/components/animations/number";
-import { Background } from "~/components/ui/background";
-import { Board } from "~/components/icons/board";
-import { Box } from "~/components/ui/box";
-import { Button } from "~/components/ui/button";
-import { Discord } from "~/components/icons/discord";
-import { Divider } from "~/components/ui/divider";
 import { GuildSection } from "./sections/guild-section";
-import { InteractiveLogo } from "./interactive-logo";
 import { LeaderboardSection } from "./sections/leaderboard-section";
 import { PlayerSection } from "./sections/player-section";
 import { SessionSection } from "./sections/session-section";
-import { Wordmark } from "~/components/icons/logo";
-import { getGuild, getLeaderboard, getPlayer } from "~/app/api";
 
 export default async function Home() {
   const [player1, player2, player3, player4, player5, guild, leaderboard] = await Promise.all([

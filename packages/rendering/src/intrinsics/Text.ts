@@ -7,6 +7,7 @@
  */
 
 import { Container } from "typedi";
+
 import { FontRenderer, type TextNode } from "#font";
 import type * as JSX from "#jsx";
 

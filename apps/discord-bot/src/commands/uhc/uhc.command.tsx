@@ -9,6 +9,7 @@
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { UHCModes, UHC_MODES } from "@statsify/schemas";
+
 import { UHCProfile } from "./uhc.profile.js";
 
 @Command({ description: (t) => t("commands.uhc") })

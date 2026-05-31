@@ -6,12 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AuthRole } from "./auth.role.js";
-import { AuthService } from "./auth.service.js";
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { config } from "@statsify/util";
 import type { FastifyReply, FastifyRequest } from "fastify";
+
+import { config } from "@statsify/util";
+
+import { AuthRole } from "./auth.role.js";
+import { AuthService } from "./auth.service.js";
 
 @Injectable()
 export class AuthGuard implements CanActivate {

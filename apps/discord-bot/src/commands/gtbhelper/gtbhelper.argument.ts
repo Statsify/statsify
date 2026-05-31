@@ -7,7 +7,9 @@
  */
 
 import { APIApplicationCommandOptionChoice, ApplicationCommandOptionType } from "discord-api-types/v10";
+
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
+
 import { findSolutions } from "./find-solutions.js";
 
 export class GTBHelperArgument extends AbstractArgument {

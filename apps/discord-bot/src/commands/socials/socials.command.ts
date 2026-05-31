@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { minecraftHeadUrl } from "#lib/minecraft-head";
 import { ApiService, Command, CommandContext, EmbedBuilder, IMessage, PlayerArgument } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
-import { minecraftHeadUrl } from "#lib/minecraft-head";
 
 @Command({ description: (t) => t("commands.socials"), args: [PlayerArgument] })
 export class SocialsCommand {

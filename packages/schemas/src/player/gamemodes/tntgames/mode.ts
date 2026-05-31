@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
 import { Field } from "#metadata";
 import { type GamePrefix, createPrefixProgression, cycleColors, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
+import { type APIData, formatTime } from "@statsify/util";
 
 const tntgamesRainbow = (text: string) => cycleColors(text, ["c", "6", "e", "a", "b", "d", "5"]);
 

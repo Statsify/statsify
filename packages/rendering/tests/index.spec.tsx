@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { createInstructions } from "../src/index.js";
 import { expect, it, suite } from "vitest";
+
+import { createInstructions } from "../src/index.js";
 
 suite("createInstructions with no relative sizes", () => {
   it("a box with defined sizes", () => {

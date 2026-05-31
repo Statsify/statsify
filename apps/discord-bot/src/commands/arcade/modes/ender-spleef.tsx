@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { EnderSpleef } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { EnderSpleef } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 
 interface EnderSpleefTableProps {

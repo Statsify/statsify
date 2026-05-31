@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BEDWARS_MODES, BedWarsModes, GameModeWithSubModes, Player } from "@statsify/schemas";
 import { BaseHypixelCommand, BaseProfileProps } from "#commands/base.hypixel-command";
-import { BedWarsChallengesProfile } from "./bedwars-challenges.profile.js";
 import { Command } from "@statsify/discord";
+import { BEDWARS_MODES, BedWarsModes, GameModeWithSubModes, Player } from "@statsify/schemas";
+
+import { BedWarsChallengesProfile } from "./bedwars-challenges.profile.js";
 
 @Command({ description: (t) => t("commands.bedwars-challenges") })
 export class BedWarsChallengesCommand extends BaseHypixelCommand<BedWarsModes> {

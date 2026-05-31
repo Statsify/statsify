@@ -6,9 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from "@nestjs/swagger";
-import { Auth } from "#auth";
 import { Body, Controller, Post } from "@nestjs/common";
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation } from "@nestjs/swagger";
+
+import { Auth } from "#auth";
+import { GuildLeaderboardDto, GuildRankingDto } from "#dtos";
 import {
   ErrorResponse,
   LeaderboardQuery,
@@ -16,7 +18,7 @@ import {
   PostLeaderboardResponse,
 } from "@statsify/api-client";
 import { Guild } from "@statsify/schemas";
-import { GuildLeaderboardDto, GuildRankingDto } from "#dtos";
+
 import { GuildLeaderboardService } from "./guild-leaderboard.service.js";
 
 @Controller("/guild/leaderboards")

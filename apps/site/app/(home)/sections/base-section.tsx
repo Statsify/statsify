@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { ComponentProps, ReactNode } from "react";
 import { Background } from "~/components/ui/background";
 import { cn } from "~/lib/util";
-import type { ComponentProps, ReactNode } from "react";
 
 export function BaseSection({
   children,

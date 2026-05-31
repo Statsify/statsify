@@ -9,6 +9,7 @@
 import { BaseHypixelCommand, BaseProfileProps } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { WALLS_MODES, WallsModes } from "@statsify/schemas";
+
 import { WallsProfile } from "./walls.profile.js";
 
 @Command({ description: (t) => t("commands.walls") })

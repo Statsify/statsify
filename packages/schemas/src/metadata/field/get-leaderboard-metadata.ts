@@ -8,8 +8,9 @@
 
 import { RATIOS, RATIO_STATS } from "#ratios";
 import { prettify } from "@statsify/util";
-import type { HistoricalMetadata, LeaderboardMetadata, TypeMetadata } from "../metadata.interface.js";
+
 import type { HistoricalOptions, LeaderboardOptions } from "../field.options.js";
+import type { HistoricalMetadata, LeaderboardMetadata, TypeMetadata } from "../metadata.interface.js";
 
 const getLeaderboardName = (field: string) => {
   const ratioIndex = RATIOS.indexOf(field);

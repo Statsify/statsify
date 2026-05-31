@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { readFile } from "node:fs/promises";
+
+import { getLogoPath } from "@statsify/assets";
 import { Command, EmbedBuilder, IMessage } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserLogo } from "@statsify/schemas";
-import { getLogoPath } from "@statsify/assets";
-import { readFile } from "node:fs/promises";
 
 @Command({ description: (t) => t("commands.help") })
 export class HelpCommand {

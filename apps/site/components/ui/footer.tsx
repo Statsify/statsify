@@ -6,16 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { Route } from "next";
 import Link from "next/link";
-import { Brand } from "~/components/icons/logo";
-import { Discord } from "~/components/icons/discord";
-import { Divider } from "./divider";
-import { GitHub } from "~/components/icons/github";
-import { Patreon } from "~/components/icons/patreon";
 import { ReactNode } from "react";
+import { Discord } from "~/components/icons/discord";
+import { GitHub } from "~/components/icons/github";
+import { Brand } from "~/components/icons/logo";
+import { Patreon } from "~/components/icons/patreon";
 import { Twitter } from "~/components/icons/twitter";
 import { YouTube } from "~/components/icons/youtube";
-import type { Route } from "next";
+
+import { Divider } from "./divider";
 
 export function Footer() {
   return (

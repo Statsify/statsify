@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { Redis } from "ioredis";
+
 import {
   REDIS_MODULE_CONNECTION,
   REDIS_MODULE_CONNECTION_TOKEN,
   REDIS_MODULE_OPTIONS_TOKEN,
 } from "./redis.constants.js";
-import { Redis } from "ioredis";
 import type { RedisModuleOptions } from "./redis.interfaces.js";
 
 export function getRedisOptionsToken(connection?: string): string {

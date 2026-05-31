@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Historical, Table } from "#components";
-import type { BedWarsDuelsOverallMode } from "@statsify/schemas";
-import type { LocalizeFunction } from "@statsify/discord";
 import type { ProfileTime } from "#commands/base.hypixel-command";
+import { Historical, Table } from "#components";
+import type { LocalizeFunction } from "@statsify/discord";
+import type { BedWarsDuelsOverallMode } from "@statsify/schemas";
 
 export interface BedWarsDuelsTableProps {
   stats: BedWarsDuelsOverallMode;

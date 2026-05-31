@@ -6,16 +6,19 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { readFileSync } from "node:fs";
+
 import * as Sentry from "@sentry/node";
+import { getModelForClass } from "@typegoose/typegoose";
+import { createServer } from "minecraft-protocol";
+import { connect } from "mongoose";
+
+import { getLogoPath } from "@statsify/assets";
 import { Logger } from "@statsify/logger";
 import { UserLogo, VerifyCode } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
-import { connect } from "mongoose";
-import { createServer } from "minecraft-protocol";
+
 import { generateCode } from "./generate-code.js";
-import { getLogoPath } from "@statsify/assets";
-import { getModelForClass } from "@typegoose/typegoose";
-import { readFileSync } from "node:fs";
 
 const logger = new Logger("verify-server");
 

@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ArcadeModes, DisasterSurvivals, Disasters, DisastersDeaths, SubModeForMode } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { ArcadeModes, DisasterSurvivals, Disasters, DisastersDeaths, SubModeForMode } from "@statsify/schemas";
 import { arrayGroup, formatTime } from "@statsify/util";
 
 interface DisastersTableProps {

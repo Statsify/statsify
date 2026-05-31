@@ -9,10 +9,11 @@
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { GamePrefix, createPrefixProgression, defaultPrefix, getFormattedPrefix } from "#prefixes";
-import { PaintballPerks } from "./perks.js";
 import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
 import type { APIData } from "@statsify/util";
+
+import { PaintballPerks } from "./perks.js";
 
 export const PAINTBALL_MODES = new GameModes([{ api: "overall" }] as const);
 

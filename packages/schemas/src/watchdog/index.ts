@@ -7,9 +7,10 @@
  */
 
 import { Field } from "#metadata";
-import { WatchdogMode } from "./mode.js";
 import { deepAdd } from "@statsify/math";
 import type { APIData } from "@statsify/util";
+
+import { WatchdogMode } from "./mode.js";
 
 export class Watchdog {
   @Field()

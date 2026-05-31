@@ -8,11 +8,11 @@
 
 "use client";
 
+import type { Metadata } from "next";
 import Link from "next/link";
+import { LogoError } from "~/components/icons/logo-error";
 import { Button } from "~/components/ui/button";
 import { Error } from "~/components/ui/error";
-import { LogoError } from "~/components/icons/logo-error";
-import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Unknown Error | Statsify",

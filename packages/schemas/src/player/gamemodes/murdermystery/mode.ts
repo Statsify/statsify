@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime, prettify } from "@statsify/util";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
+import { type APIData, formatTime, prettify } from "@statsify/util";
 
 export class BaseMurderMysteryMode {
   @Field()

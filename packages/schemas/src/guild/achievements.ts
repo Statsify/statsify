@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, findScore } from "@statsify/util";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
+import { type APIData, findScore } from "@statsify/util";
 
 const PRESTIGE_REQUIREMENTS = [
   { req: 20, tier: "I" },

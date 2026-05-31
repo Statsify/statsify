@@ -6,15 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractArgument } from "#arguments";
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
   ApplicationIntegrationType,
   InteractionContextType,
 } from "discord-api-types/v10";
-import { UserTier } from "@statsify/schemas";
+
+import { AbstractArgument } from "#arguments";
 import { getLocalizeFunction, translateField, translateToAllLanguages } from "#messages";
+import { UserTier } from "@statsify/schemas";
+
 import type { CommandContext } from "./command.context.js";
 import type { CommandMetadata } from "./command.interface.js";
 

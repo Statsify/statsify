@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { cn } from "~/lib/util";
 import type { ComponentProps, JSX } from "react";
+import { cn } from "~/lib/util";
 
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 

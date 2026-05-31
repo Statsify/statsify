@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, Table } from "#components";
 import { FormattedGame } from "@statsify/schemas";
 import { arrayGroup, prettify } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export const SkyWarsChallengesProfile = ({
   skin,

@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { findScore } from "@statsify/util";
 import { rainbow } from "#prefixes";
+import { findScore } from "@statsify/util";
 
 export const getExpReq = (level: number) => {
   const progress = level % 100;

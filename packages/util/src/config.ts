@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { dirname, join } from "node:path";
 import { existsSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+
 import type { DeepFlatten } from "./flatten.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

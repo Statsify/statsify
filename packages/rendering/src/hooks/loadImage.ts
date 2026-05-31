@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { readFile } from "node:fs/promises";
+
 import axios from "axios";
 import { Image } from "skia-canvas";
-import { readFile } from "node:fs/promises";
 
 const bufferToImage = (buffer: Buffer): Image => {
   const image = new Image();

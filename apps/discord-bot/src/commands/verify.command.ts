@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ButtonStyle, InteractionResponseType, TextInputStyle } from "discord-api-types/v10";
+
 import {
   AbstractCommandListener,
   ActionRowBuilder,
@@ -20,7 +22,6 @@ import {
   ModalBuilder,
   TextInputBuilder,
 } from "@statsify/discord";
-import { ButtonStyle, InteractionResponseType, TextInputStyle } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
 import { config } from "@statsify/util";
 

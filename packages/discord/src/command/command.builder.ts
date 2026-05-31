@@ -7,10 +7,12 @@
  */
 
 import { ApplicationIntegrationType } from "discord-api-types/v9";
-import { CommandResolvable } from "./command.resolvable.js";
 import { InteractionContextType } from "discord-api-types/v10";
-import type { CommandMetadata, SubCommandMetadata } from "./command.interface.js";
+
 import type { Constructor } from "@statsify/util";
+
+import type { CommandMetadata, SubCommandMetadata } from "./command.interface.js";
+import { CommandResolvable } from "./command.resolvable.js";
 
 export class CommandBuilder {
   public static scan<T extends object>(target: T, constructor: Constructor<T>) {

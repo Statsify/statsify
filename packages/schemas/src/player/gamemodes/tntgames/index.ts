@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BowSpleef, PVPRun, TNTRun, TNTTag, Wizards } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import type { APIData } from "@statsify/util";
+
+import { BowSpleef, PVPRun, TNTRun, TNTTag, Wizards } from "./mode.js";
 
 export const TNT_GAMES_MODES = new GameModes([
   { api: "overall" },

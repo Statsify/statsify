@@ -8,7 +8,9 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum } from "class-validator";
+
 import { LeaderboardScanner, Player } from "@statsify/schemas";
+
 import { UuidDto } from "./uuid.dto.js";
 
 const fields = LeaderboardScanner.getLeaderboardFields(Player).map(([key]) => key);

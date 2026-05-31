@@ -6,13 +6,14 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CaptureTheWoolTable } from "./capture-the-wool.table.js";
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
 import { FormattedGame, type GameMode, WoolGamesModes } from "@statsify/schemas";
+import { formatTime } from "@statsify/util";
+
+import { CaptureTheWoolTable } from "./capture-the-wool.table.js";
 import { SheepWarsTable } from "./sheepwars.table.js";
 import { WoolWarsTable } from "./woolwars.table.js";
-import { formatTime } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface WoolGamesProfileProps extends BaseProfileProps {
   mode: GameMode<WoolGamesModes>;

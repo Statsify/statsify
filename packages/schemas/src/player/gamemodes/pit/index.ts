@@ -6,10 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
+import { add, ratio } from "@statsify/math";
+import { type APIData, formatTime } from "@statsify/util";
+
 import {
   RenownUnlock,
   getBounty,
@@ -19,7 +21,6 @@ import {
   getPrestigeReq,
   getRenownShopCost,
 } from "./util.js";
-import { add, ratio } from "@statsify/math";
 
 export const PIT_MODES = new GameModes([{ api: "overall" }, { hypixel: "PIT", formatted: "Pit" }] as const);
 

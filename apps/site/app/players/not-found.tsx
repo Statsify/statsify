@@ -8,12 +8,13 @@
 
 "use client";
 
+import type { Metadata } from "next";
+import { useParams } from "next/navigation";
 import { Box } from "~/components/ui/box";
 import { Error } from "~/components/ui/error";
-import { Search } from "./search";
 import { Skin } from "~/components/ui/skin";
-import { useParams } from "next/navigation";
-import type { Metadata } from "next";
+
+import { Search } from "./search";
 
 export const metadata: Metadata = {
   title: "Player Not Found | Statsify",

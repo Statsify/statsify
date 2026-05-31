@@ -9,6 +9,7 @@
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { SKYWARS_MODES, SkyWarsModes } from "@statsify/schemas";
+
 import { SkyWarsProfile } from "./skywars.profile.js";
 
 @Command({ description: (t) => t("commands.skywars") })

@@ -7,8 +7,11 @@
  */
 
 import { AxiosError } from "axios";
-import { ButtonBuilder, LocalizeFunction } from "#messages";
 import { ButtonStyle } from "discord-api-types/v10";
+import { Service } from "typedi";
+
+import { ButtonBuilder, LocalizeFunction } from "#messages";
+import { ErrorMessage } from "#util/error.message";
 import {
   CacheLevel,
   GUILD_ID_REGEX,
@@ -22,8 +25,6 @@ import {
   SuccessResponse,
 } from "@statsify/api-client";
 import { Color, User } from "@statsify/schemas";
-import { ErrorMessage } from "#util/error.message";
-import { Service } from "typedi";
 import { config, removeFormatting } from "@statsify/util";
 
 type PlayerTag = "username" | "uuid" | "discordId" | "none";

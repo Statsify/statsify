@@ -7,8 +7,8 @@
  */
 
 import { primitiveConstructors } from "../constants.js";
-import type { TypeMetadata } from "../metadata.interface.js";
 import type { TypeOptions } from "../field.options.js";
+import type { TypeMetadata } from "../metadata.interface.js";
 
 export const getTypeMetadata = (
   typeOptions: TypeOptions | undefined,

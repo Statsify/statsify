@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { AbstractEventListener, ApiService, MemberService } from "@statsify/discord";
-import { CacheLevel } from "@statsify/api-client";
 import { GatewayDispatchEvents, GatewayMessageCreateDispatchData } from "discord-api-types/v10";
-import { Logger } from "@statsify/logger";
-import { Service } from "typedi";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
+import { Service } from "typedi";
+
+import { CacheLevel } from "@statsify/api-client";
+import { AbstractEventListener, ApiService, MemberService } from "@statsify/discord";
+import { Logger } from "@statsify/logger";
 import { config } from "@statsify/util";
 
 const GUILD_ID = await config("supportBot.guild");

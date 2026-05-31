@@ -6,9 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Arcade } from "@statsify/schemas";
-import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { Arcade } from "@statsify/schemas";
 import { arrayGroup } from "@statsify/util";
 
 interface OverallArcadeTableProps {

@@ -6,8 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { APIData } from "@statsify/util";
 import { Field } from "#metadata";
+import { APIData } from "@statsify/util";
 
 export class Slumber {
   @Field({ historical: { enabled: false }, leaderboard: { enabled: false } })

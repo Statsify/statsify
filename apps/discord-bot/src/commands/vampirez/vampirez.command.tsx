@@ -9,6 +9,7 @@
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { VAMPIREZ_MODES, VampireZModes } from "@statsify/schemas";
+
 import { VampireZProfile } from "./vampirez.profile.js";
 
 @Command({ description: (t) => t("commands.vampirez") })

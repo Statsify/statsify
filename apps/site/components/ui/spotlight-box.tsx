@@ -8,9 +8,10 @@
 
 "use client";
 
-import { Box } from "./box";
 import { motion, useMotionTemplate, useMotionValue } from "motion/react";
 import type { ComponentProps } from "react";
+
+import { Box } from "./box";
 
 export function SpotlightBox({ className = "", onMouseMove, children, ...props }: ComponentProps<typeof Box<"div">>) {
   const x = useMotionValue(0);

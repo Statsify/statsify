@@ -6,12 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { readFile, writeFile } from "node:fs/promises";
+
 import { APIApplicationCommand } from "discord-api-types/v10";
-import { Logger } from "@statsify/logger";
 import { RestClient } from "tiny-discord";
 import { Service } from "typedi";
+
 import { parseDiscordResponse } from "#util/parse-discord-error";
-import { readFile, writeFile } from "node:fs/promises";
+import { Logger } from "@statsify/logger";
+
 import type { CommandResolvable } from "./command.resolvable.js";
 
 @Service()

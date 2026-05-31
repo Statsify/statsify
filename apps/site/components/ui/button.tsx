@@ -6,9 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import styles from "./button.module.css";
 import { Slot, SlotProps, Slottable } from "@radix-ui/react-slot";
 import { cn } from "~/lib/util";
+
+import styles from "./button.module.css";
 
 export function Button({ children, className, asChild = false, ...props }: SlotProps & { asChild?: boolean }) {
   const Component = asChild ? Slot : "button";

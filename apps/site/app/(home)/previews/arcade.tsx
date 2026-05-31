@@ -8,6 +8,7 @@
 
 "use client";
 
+import { usePlayer } from "~/app/players/[slug]/context";
 import { Box } from "~/components/ui/box";
 import { MinecraftText } from "~/components/ui/minecraft-text";
 import { Nametag } from "~/components/ui/nametag";
@@ -16,7 +17,6 @@ import { Skin } from "~/components/ui/skin";
 import { TableData } from "~/components/ui/table";
 import { cn } from "~/lib/util";
 import { t } from "~/localize";
-import { usePlayer } from "~/app/players/[slug]/context";
 
 export function arrayGroup<T extends unknown[] | string>(arr: T, groupSize: number): T[] {
   return Array.from({ length: Math.ceil(arr.length / groupSize) }, (_, i) =>

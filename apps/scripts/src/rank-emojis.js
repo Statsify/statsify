@@ -6,13 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { FontRenderer, createCanvas } from "@statsify/rendering";
-import { Logger } from "@statsify/logger";
-import { RestClient } from "tiny-discord";
-import { config, minecraftColors } from "@statsify/util";
-import { getMinecraftTexturePath } from "@statsify/assets";
-import { rankMap } from "@statsify/schemas";
 import { writeFileSync } from "node:fs";
+
+import { RestClient } from "tiny-discord";
+
+import { getMinecraftTexturePath } from "@statsify/assets";
+import { Logger } from "@statsify/logger";
+import { FontRenderer, createCanvas } from "@statsify/rendering";
+import { rankMap } from "@statsify/schemas";
+import { config, minecraftColors } from "@statsify/util";
 
 const COLOR_CHANGERS = ["MVP+", "MVP++", "bMVP++"];
 const SIZE = 20;

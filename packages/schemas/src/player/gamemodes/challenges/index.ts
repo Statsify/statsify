@@ -6,7 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ExtractGameModes, FormattedGame, GameModes } from "#game";
+import { Field } from "#metadata";
 import { type APIData, removeFormatting } from "@statsify/util";
+
 import {
   ArcadeChallenges,
   ArenaBrawlChallenges,
@@ -30,8 +33,6 @@ import {
   WarlordsChallenges,
   WoolGamesChallenges,
 } from "./modes/index.js";
-import { ExtractGameModes, FormattedGame, GameModes } from "#game";
-import { Field } from "#metadata";
 
 export const CHALLENGE_MODES = new GameModes([
   { api: "overall" },

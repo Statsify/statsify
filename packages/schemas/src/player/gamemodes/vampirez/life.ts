@@ -7,11 +7,12 @@
  */
 
 import { Field } from "#metadata";
-import { Progression } from "#progression";
 import { createPrefixProgression, defaultPrefix, getFormattedPrefix } from "#prefixes";
-import { humanPrefixes, vampirePrefixes } from "./prefixes.js";
+import { Progression } from "#progression";
 import { ratio } from "@statsify/math";
 import type { APIData } from "@statsify/util";
+
+import { humanPrefixes, vampirePrefixes } from "./prefixes.js";
 
 export class VampireZHuman {
   @Field({ leaderboard: { fieldName: "Vampires Killed" } })

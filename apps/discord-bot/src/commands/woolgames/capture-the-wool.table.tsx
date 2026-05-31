@@ -6,11 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Historical, If, Table } from "#components";
-import { formatTime } from "@statsify/util";
-import type { CaptureTheWool } from "@statsify/schemas";
-import type { LocalizeFunction } from "@statsify/discord";
 import type { ProfileTime } from "#commands/base.hypixel-command";
+import { Historical, If, Table } from "#components";
+import type { LocalizeFunction } from "@statsify/discord";
+import type { CaptureTheWool } from "@statsify/schemas";
+import { formatTime } from "@statsify/util";
 
 interface CaptureTheWoolTableProps {
   captureTheWool: CaptureTheWool;

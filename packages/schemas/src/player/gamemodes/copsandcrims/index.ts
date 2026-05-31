@@ -6,14 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, findScoreIndex } from "@statsify/util";
-import { CopsAndCrimsOverall, Deathmatch, Defusal, GunGame } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { LEVEL_REQUIREMENTS, getFormattedLevel, getIntendedLevelFormatted } from "./util.js";
+import { createPrefixProgression } from "#prefixes";
 import { Progression } from "#progression";
 import { add } from "@statsify/math";
-import { createPrefixProgression } from "#prefixes";
+import { type APIData, findScoreIndex } from "@statsify/util";
+
+import { CopsAndCrimsOverall, Deathmatch, Defusal, GunGame } from "./mode.js";
+import { LEVEL_REQUIREMENTS, getFormattedLevel, getIntendedLevelFormatted } from "./util.js";
 
 export const COPS_AND_CRIMS_MODES = new GameModes([
   { api: "overall" },

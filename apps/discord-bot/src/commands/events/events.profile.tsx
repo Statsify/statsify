@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, Header, Multiline, SidebarItem, Table, formatProgression, lineXpBar } from "#components";
-import { EVENT_COLORS } from "./event-colors.js";
-import { arrayGroup, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
-import type { Event, EventPeriod, EventType } from "@statsify/schemas";
+import { Container, Footer, Header, Multiline, SidebarItem, Table, formatProgression, lineXpBar } from "#components";
 import type { LocalizeFunction } from "@statsify/discord";
+import type { Event, EventPeriod, EventType } from "@statsify/schemas";
+import { arrayGroup, prettify } from "@statsify/util";
+
+import { EVENT_COLORS } from "./event-colors.js";
 
 interface EventTableProps {
   type: EventType;

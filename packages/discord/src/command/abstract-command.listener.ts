@@ -6,6 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { readFileSync } from "node:fs";
+
 import * as Sentry from "@sentry/node";
 import {
   type APIUser,
@@ -13,16 +15,17 @@ import {
   GatewayDispatchEvents,
   InteractionResponseType,
 } from "discord-api-types/v10";
-import { CommandContext } from "./command.context.js";
-import { ErrorMessage } from "#util/error.message";
-import { type IMessage, Message } from "#messages";
+import type { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
+
 import { Interaction, type InteractionAttachment } from "#interaction";
+import { type IMessage, Message } from "#messages";
+import { ErrorMessage } from "#util/error.message";
+import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { Logger } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
-import { getAssetPath, getLogoPath } from "@statsify/assets";
-import { readFileSync } from "node:fs";
+
+import { CommandContext } from "./command.context.js";
 import type { CommandResolvable } from "./command.resolvable.js";
-import type { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 
 export type InteractionHook = (
   interaction: Interaction

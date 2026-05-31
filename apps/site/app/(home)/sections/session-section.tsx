@@ -6,11 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseSection } from "./base-section";
-import { Command } from "~/components/ui/command";
 import { PlayerProvider } from "~/app/players/[slug]/context";
-import { SessionAnimation } from "../session-animation";
+import { Command } from "~/components/ui/command";
+
 import type { Player } from "@statsify/schemas";
+
+import { SessionAnimation } from "../session-animation";
+import { BaseSection } from "./base-section";
 
 export function SessionSection({ player }: { player: Player }) {
   return (

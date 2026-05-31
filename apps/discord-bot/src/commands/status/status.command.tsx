@@ -6,12 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService, Command, CommandContext, IMessage, PlayerArgument } from "@statsify/discord";
-import { StatusProfile } from "./status.profile.js";
-import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
 import { mapGameIdToBackground } from "#constants";
+import { getTheme } from "#themes";
+import { getAllGameIcons, getBackground, getLogo } from "@statsify/assets";
+import { ApiService, Command, CommandContext, IMessage, PlayerArgument } from "@statsify/discord";
 import { render } from "@statsify/rendering";
+
+import { StatusProfile } from "./status.profile.js";
 
 @Command({
   description: (t) => t("commands.status"),

@@ -6,21 +6,24 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
-import handlebars from "handlebars";
-import packageJson from "../package.json" with { type: "json" };
-import { AppModule } from "./app.module.js";
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { Logger } from "@statsify/logger";
-import { NestFactory } from "@nestjs/core";
-import { SentryInterceptor } from "./sentry/index.js";
-import { Severity, setGlobalOptions } from "@typegoose/typegoose";
-import { ValidationPipe } from "@nestjs/common";
-import { config } from "@statsify/util";
+import { mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { mkdir } from "node:fs/promises";
+
+import { ValidationPipe } from "@nestjs/common";
+import { NestFactory } from "@nestjs/core";
+import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import * as Sentry from "@sentry/node";
+import { Severity, setGlobalOptions } from "@typegoose/typegoose";
+import handlebars from "handlebars";
+
+import { Logger } from "@statsify/logger";
+import { config } from "@statsify/util";
+
+import packageJson from "../package.json" with { type: "json" };
+import { AppModule } from "./app.module.js";
+import { SentryInterceptor } from "./sentry/index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

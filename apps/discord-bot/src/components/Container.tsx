@@ -6,9 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Background } from "./Background.js";
 import { Image } from "skia-canvas";
+
 import { Percent } from "@statsify/rendering";
+
+import { Background } from "./Background.js";
 
 export interface ContainerProps {
   /**

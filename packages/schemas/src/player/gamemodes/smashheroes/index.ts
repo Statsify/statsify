@@ -8,8 +8,9 @@
 
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import { SmashHeroesKit, SmashHeroesMode } from "./mode.js";
 import type { APIData } from "@statsify/util";
+
+import { SmashHeroesKit, SmashHeroesMode } from "./mode.js";
 
 const formatLevel = (level: number) => `§b${level}§6✶`;
 

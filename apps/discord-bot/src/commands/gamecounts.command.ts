@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ApiService, Command, CommandContext, EmbedBuilder, Page, PaginateService } from "@statsify/discord";
-import { FormattedGame, GameId, GamePlayers } from "@statsify/schemas";
-import { STATUS_COLORS } from "@statsify/logger";
 import { mapGame } from "#constants";
+import { ApiService, Command, CommandContext, EmbedBuilder, Page, PaginateService } from "@statsify/discord";
+import { STATUS_COLORS } from "@statsify/logger";
+import { FormattedGame, GameId, GamePlayers } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
 @Command({

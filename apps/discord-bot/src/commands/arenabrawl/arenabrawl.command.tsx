@@ -6,10 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARENA_BRAWL_MODES, ArenaBrawlModes } from "@statsify/schemas";
-import { ArenaBrawlProfile } from "./arenabrawl.profile.js";
 import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
+import { ARENA_BRAWL_MODES, ArenaBrawlModes } from "@statsify/schemas";
+
+import { ArenaBrawlProfile } from "./arenabrawl.profile.js";
 
 @Command({ description: (t) => t("commands.arenabrawl") })
 export class ArenaBrawlCommand extends BaseHypixelCommand<ArenaBrawlModes> {

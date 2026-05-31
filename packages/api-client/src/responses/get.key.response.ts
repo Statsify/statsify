@@ -7,7 +7,9 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
+
 import { Key } from "@statsify/schemas";
+
 import { SuccessResponse } from "./success.response.js";
 
 export class GetKeyResponse extends SuccessResponse {

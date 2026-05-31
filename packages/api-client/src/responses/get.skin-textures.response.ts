@@ -7,7 +7,9 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
+
 import { Skin } from "@statsify/schemas";
+
 import { SuccessResponse } from "./success.response.js";
 
 export class GetSkinTexturesResponse extends SuccessResponse {

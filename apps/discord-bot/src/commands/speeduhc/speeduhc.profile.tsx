@@ -6,10 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import type { BaseProfileProps } from "#commands/base.hypixel-command";
 import { Container, Footer, Header, If, SidebarItem, Table, formatProgression } from "#components";
 import { FormattedGame, type GameMode, SpeedUHCMode, SpeedUHCModes } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
-import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface SpeedUHCProfileProps extends BaseProfileProps {
   mode: GameMode<SpeedUHCModes>;

@@ -6,8 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { defineConfig } from "vitest/config";
 import { readFile } from "node:fs/promises";
+
+import { defineConfig } from "vitest/config";
+
 import { swc } from "./vite.swc.js";
 
 async function getSwcrc(path?: string) {

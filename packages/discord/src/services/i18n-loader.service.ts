@@ -6,11 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import Backend from "i18next-fs-backend";
-import i18next from "i18next";
-import { Service } from "typedi";
-import { abbreviationNumber } from "@statsify/util";
 import { readdir } from "node:fs/promises";
+
+import i18next from "i18next";
+import Backend from "i18next-fs-backend";
+import { Service } from "typedi";
+
+import { abbreviationNumber } from "@statsify/util";
 
 const DEFAULT_LANGUAGE = "en-US";
 

@@ -6,6 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { ButtonStyle, InteractionResponseType } from "discord-api-types/v10";
+import type { Image } from "skia-canvas";
+
+import { CommandListener } from "#lib/command.listener";
+import { getTheme } from "#themes";
+import { LeaderboardQuery, PostLeaderboardResponse } from "@statsify/api-client";
+import { getLogo } from "@statsify/assets";
 import {
   ActionRowBuilder,
   ButtonBuilder,
@@ -16,15 +23,10 @@ import {
   ModalBuilder,
   TextInputBuilder,
 } from "@statsify/discord";
-import { ButtonStyle, InteractionResponseType } from "discord-api-types/v10";
-import { CommandListener } from "#lib/command.listener";
-import { LeaderboardProfile, LeaderboardProfileProps, LeaderboardType } from "./leaderboard.profile.js";
-import { LeaderboardQuery, PostLeaderboardResponse } from "@statsify/api-client";
-import { User } from "@statsify/schemas";
-import { getLogo } from "@statsify/assets";
-import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
-import type { Image } from "skia-canvas";
+import { User } from "@statsify/schemas";
+
+import { LeaderboardProfile, LeaderboardProfileProps, LeaderboardType } from "./leaderboard.profile.js";
 
 type BaseLeaderboardProps = Omit<LeaderboardProfileProps, "fields" | "name" | "data">;
 

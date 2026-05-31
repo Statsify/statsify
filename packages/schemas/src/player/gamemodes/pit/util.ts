@@ -6,8 +6,9 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import renownUpgrades from "./renown-upgrades.json" with { type: "json" };
 import { romanNumeral } from "@statsify/util";
+
+import renownUpgrades from "./renown-upgrades.json" with { type: "json" };
 
 const XP_MAP = [15, 30, 50, 75, 125, 300, 600, 800, 900, 1000, 1200, 1500];
 

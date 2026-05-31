@@ -6,15 +6,17 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Container, Footer, GameList, If, Multiline, Table, formatProgression, lineXpBar } from "#components";
 import { DateTime } from "luxon";
-import { GameId, Guild, GuildMember, Progression, User } from "@statsify/schemas";
-import { GexpTable } from "./gexp.table.js";
-import { LocalizeFunction } from "@statsify/discord";
-import { StyleLocation } from "@statsify/rendering";
-import { arrayGroup, wordGroup } from "@statsify/util";
-import { ratio } from "@statsify/math";
 import type { Image } from "skia-canvas";
+
+import { Container, Footer, GameList, If, Multiline, Table, formatProgression, lineXpBar } from "#components";
+import { LocalizeFunction } from "@statsify/discord";
+import { ratio } from "@statsify/math";
+import { StyleLocation } from "@statsify/rendering";
+import { GameId, Guild, GuildMember, Progression, User } from "@statsify/schemas";
+import { arrayGroup, wordGroup } from "@statsify/util";
+
+import { GexpTable } from "./gexp.table.js";
 
 const LINK_REGEX =
   /https?:\/\/(www\.)?[\w#%+.:=@~-]{1,256}\.[\d()A-Za-z]{1,6}\b([\w#%&()+./:=?@~-]*)|[\w#%+.:=@~-]{1,256}\.[\d()A-Za-z]{1,6}\b([\w#%&()+./:=?@~-]*)/g;

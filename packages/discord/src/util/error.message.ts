@@ -6,11 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ActionRowBuilder, ButtonBuilder, EmbedBuilder, IMessage, LocalizationString, Message } from "#messages";
-import { STATUS_COLORS } from "@statsify/logger";
-import { getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
+
 import type { InteractionAttachment } from "#interaction";
+import { ActionRowBuilder, ButtonBuilder, EmbedBuilder, IMessage, LocalizationString, Message } from "#messages";
+import { getLogoPath } from "@statsify/assets";
+import { STATUS_COLORS } from "@statsify/logger";
 
 interface ErrorMessageOptions {
   color?: number;

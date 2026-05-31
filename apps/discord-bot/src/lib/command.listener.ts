@@ -6,7 +6,13 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
+import { readFileSync } from "node:fs";
+
 import * as Sentry from "@sentry/node";
+import type { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
+import { Container } from "typedi";
+
+import { getAssetPath } from "@statsify/assets";
 import {
   AbstractCommandListener,
   ApiService,
@@ -16,14 +22,11 @@ import {
   IMessage,
   Interaction,
 } from "@statsify/discord";
-import { Container } from "typedi";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserTier } from "@statsify/schemas";
 import { config, formatTime } from "@statsify/util";
-import { getAssetPath } from "@statsify/assets";
-import { readFileSync } from "node:fs";
+
 import { tips } from "../tips.js";
-import type { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 
 const isDevelopment = (await config("environment")) === "dev";
 const applicationId = await config("discordBot.applicationId");

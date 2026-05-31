@@ -7,8 +7,9 @@
  */
 
 import { FlatCompat } from "@eslint/eslintrc";
-import { defineConfig } from "../../eslint.config.js";
 import { globalIgnores } from "eslint/config";
+
+import { defineConfig } from "../../eslint.config.js";
 
 const compat = new FlatCompat({
   baseDirectory: import.meta.dirname,

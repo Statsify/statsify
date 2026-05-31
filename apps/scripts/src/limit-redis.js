@@ -7,10 +7,11 @@
  */
 
 import Redis from "ioredis";
-import { CurrentHistoricalType } from "@statsify/api-client";
-import { Guild, MetadataScanner, Player } from "@statsify/schemas";
-import { Logger } from "@statsify/logger";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
+
+import { CurrentHistoricalType } from "@statsify/api-client";
+import { Logger } from "@statsify/logger";
+import { Guild, MetadataScanner, Player } from "@statsify/schemas";
 
 const logger = new Logger("Redis Limiter");
 const redis = new Redis(process.env.REDIS_URL);

@@ -6,15 +6,16 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData, formatTime } from "@statsify/util";
-import { CaptureTheWool } from "./capture-the-wool.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
 import { Progression } from "#progression";
-import { SheepWars } from "./sheepwars.js";
-import { WoolWars } from "./woolwars.js";
 import { add } from "@statsify/math";
+import { type APIData, formatTime } from "@statsify/util";
+
+import { CaptureTheWool } from "./capture-the-wool.js";
+import { SheepWars } from "./sheepwars.js";
 import { getExpReq, getFormattedLevel, getLevel } from "./util.js";
+import { WoolWars } from "./woolwars.js";
 
 export const WOOLGAMES_MODES = new GameModes([
   {

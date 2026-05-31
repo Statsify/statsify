@@ -7,9 +7,10 @@
  */
 
 import { type APIGuildMember, type APIUser, ComponentType, InteractionType } from "discord-api-types/v10";
+import type { InteractionServer, RestClient } from "tiny-discord";
+
 import { type IMessage, Message, getLocalizeFunction } from "#messages";
 import { parseDiscordResponse } from "#util/parse-discord-error";
-import type { InteractionServer, RestClient } from "tiny-discord";
 
 export class Interaction {
   private locale: string | null = null;
