@@ -23,3 +23,4 @@ export * from "./Skin.js";
 export * from "./StatDelta.js";
 export * from "./Table/index.js";
 export * from "./GameList.js";
+export * from "./theme.js";
