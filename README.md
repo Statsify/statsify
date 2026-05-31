@@ -48,6 +48,15 @@ $ pnpm workspace {app or package name} add {dependency}
 # Linting
 $ pnpm lint
 
+# Format all files
+$ pnpm fmt
+
+# Check formatting without writing
+$ pnpm fmt:check
+
+# Fast lint (oxlint only, no format check)
+$ pnpm lint:fast
+
 # Testing
 $ pnpm test
 

@@ -6,7 +6,7 @@
 ## Guidelines
 
 ### General Concepts
-* Code should follow our ESLint rules as closely as possible (`pnpm lint`)
+* Code should be formatted with oxfmt (`pnpm fmt`) and pass oxlint (`pnpm lint`)
 * Code should attempt to be TypeScript type safe
 * Code should attempt to be consistent, fast, scalable, and efficient
 
