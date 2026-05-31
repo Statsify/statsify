@@ -6,14 +6,21 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Box, Div, Graph, Image, Text } from "#intrinsics";
+import { Arc, Box, Div, Donut, Gradient, Graph, Heatmap, Image, Path, Radar, SparkBar, Text } from "#intrinsics";
 import type { PropsWithChildren, RawFC, Render } from "./types.js";
 
 export const intrinsicElements = {
-  div: Div.component,
+  arc: Arc.component,
   box: Box.component,
+  div: Div.component,
+  donut: Donut.component,
+  gradient: Gradient.component,
   graph: Graph.component,
+  heatmap: Heatmap.component,
   img: Image.component,
+  path: Path.component,
+  radar: Radar.component,
+  sparkbar: SparkBar.component,
   text: Text.component,
 };
 
@@ -34,9 +41,16 @@ export type IntrinsicRenders = {
 };
 
 export const intrinsicRenders: IntrinsicRenders = {
-  div: Div.render,
+  arc: Arc.render,
   box: Box.render,
+  div: Div.render,
+  donut: Donut.render,
+  gradient: Gradient.render,
   graph: Graph.render,
+  heatmap: Heatmap.render,
   img: Image.render,
+  path: Path.render,
+  radar: Radar.render,
+  sparkbar: SparkBar.render,
   text: Text.render,
 };
