@@ -9,7 +9,6 @@
 import eslint from "@eslint/js";
 import licenseHeader from "eslint-plugin-license-header";
 import sortImports from "@j4cobi/eslint-plugin-sort-imports";
-import stylistic from "@stylistic/eslint-plugin";
 import tseslint from "typescript-eslint";
 import unusedImports from "eslint-plugin-unused-imports";
 import unicorn from "eslint-plugin-unicorn";
@@ -141,51 +140,6 @@ export function defineConfig({ tsconfigDirName }) {
             argsIgnorePattern: "^_",
           },
         ],
-      },
-    },
-    stylistic.configs.customize({
-      jsx: true,
-      semi: true,
-      quotes: "double",
-      quoteProps: "consistent-as-needed",
-      braceStyle: "1tbs",
-      arrowParens: "always",
-    }),
-    {
-      rules: {
-        "@stylistic/no-extra-semi": "error",
-        "@stylistic/no-floating-decimal": "error",
-        "@stylistic/quote-props": ["error", "consistent-as-needed"],
-        "@stylistic/no-multiple-empty-lines": ["error", { max: 1, maxEOF: 1 }],
-        "@stylistic/comma-dangle": [
-          "error",
-          {
-            arrays: "always-multiline",
-            objects: "always-multiline",
-            imports: "always-multiline",
-            exports: "always-multiline",
-            functions: "never",
-          },
-        ],
-        "@stylistic/generator-star-spacing": ["error", { before: false, after: true }],
-        "@stylistic/indent": ["error", 2, { SwitchCase: 1 }],
-        "@stylistic/max-len": [
-          "error",
-          {
-            code: 120,
-            tabWidth: 2,
-            ignoreComments: true,
-            ignoreTrailingComments: true,
-            ignoreUrls: true,
-            ignoreStrings: true,
-            ignoreTemplateLiterals: true,
-            ignoreRegExpLiterals: true,
-          },
-        ],
-        "@stylistic/type-generic-spacing": "error",
-        "@stylistic/yield-star-spacing": ["error", { before: false, after: true }],
-        "@stylistic/jsx-one-expression-per-line": "off",
-        "@stylistic/operator-linebreak": ["error", "after"],
       },
     },
     {
