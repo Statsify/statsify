@@ -14,60 +14,60 @@ import { WebsocketShard } from "tiny-discord";
 import { readdir } from "node:fs/promises";
 import { statSync } from "node:fs";
 
-export class EventLoader {
-  private static readonly logger = new Logger("EventLoader");
+const logger = new Logger("EventLoader");
 
-  public static async load(websocket: WebsocketShard, dir: string) {
-    const events = new Map<GatewayDispatchEvents, AbstractEventListener<any>>();
-    const files = await this.getEventFiles(dir);
+export async function loadEvents(websocket: WebsocketShard, dir: string) {
+  const events = new Map<GatewayDispatchEvents, AbstractEventListener<any>>();
+  const files = await getEventFiles(dir);
 
-    for (const file of files) {
-      const imports = await this.importEvent(file);
-      for (const event of imports) events.set(event.event, event);
-    }
-
-    websocket.on("event", (event) => {
-      const listener = events.get(event.t as GatewayDispatchEvents);
-      if (listener) listener.onEvent(event.d);
-    });
+  for (const file of files) {
+    const imports = await importEvent(file);
+    for (const event of imports) events.set(event.event, event);
   }
 
-  private static async importEvent(file: string): Promise<AbstractEventListener<any>[]> {
-    const event = await import(file);
+  websocket.on("event", (event) => {
+    const listener = events.get(event.t as GatewayDispatchEvents);
+    if (listener) listener.onEvent(event.d);
+  });
+}
 
-    return Object.keys(event)
-      .filter((key) => key !== "default")
-      .map((key) => {
-        try {
-          const constructor = event[key];
-          const instance = Container.get<AbstractEventListener<any>>(constructor);
-          return instance;
-        } catch (err) {
-          this.logger.error(`Failed to load event in ${file} with import ${key}`);
-          this.logger.error(err);
-          return null;
-        }
-      })
-      .filter(Boolean) as AbstractEventListener<any>[];
-  }
+async function importEvent(
+  file: string,
+): Promise<AbstractEventListener<any>[]> {
+  const event = await import(file);
 
-  private static async getEventFiles(dir: string): Promise<string[]> {
-    const toLoad: string[] = [];
+  return Object.keys(event)
+    .filter((key) => key !== "default")
+    .map((key) => {
+      try {
+        const constructor = event[key];
+        const instance = Container.get<AbstractEventListener<any>>(constructor);
+        return instance;
+      } catch (err) {
+        logger.error(`Failed to load event in ${file} with import ${key}`);
+        logger.error(err);
+        return null;
+      }
+    })
+    .filter(Boolean) as AbstractEventListener<any>[];
+}
 
-    const files = await readdir(dir);
+async function getEventFiles(dir: string): Promise<string[]> {
+  const toLoad: string[] = [];
 
-    await Promise.all(
-      files.map(async (file) => {
-        const path = `${dir}/${file}`;
+  const files = await readdir(dir);
 
-        if (statSync(path).isDirectory()) {
-          toLoad.push(...(await this.getEventFiles(path)));
-        } else if (file.endsWith(".event.js")) {
-          toLoad.push(path);
-        }
-      })
-    );
+  await Promise.all(
+    files.map(async (file) => {
+      const path = `${dir}/${file}`;
 
-    return toLoad;
-  }
+      if (statSync(path).isDirectory()) {
+        toLoad.push(...(await getEventFiles(path)));
+      } else if (file.endsWith(".event.js")) {
+        toLoad.push(path);
+      }
+    }),
+  );
+
+  return toLoad;
 }

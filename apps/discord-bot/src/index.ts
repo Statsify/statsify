@@ -8,7 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import { CommandListener } from "#lib/command.listener";
-import { CommandLoader, CommandPoster, I18nLoaderService } from "@statsify/discord";
+import { loadCommands, CommandPoster, I18nLoaderService } from "@statsify/discord";
 import { Container } from "typedi";
 import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
@@ -18,7 +18,7 @@ import { config } from "@statsify/util";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const directory = dirname(fileURLToPath(import.meta.url));
 
 const logger = new Logger("discord-bot");
 const handleError = logger.error.bind(logger);
@@ -45,7 +45,7 @@ await Promise.all(
 const rest = new RestClient({ token: await config("discordBot.token"), timeout: 60 * 1000 });
 Container.set(RestClient, rest);
 
-const commands = await CommandLoader.load(join(__dirname, "./commands"));
+const commands = await loadCommands(join(directory, "./commands"));
 
 const poster = Container.get(CommandPoster);
 

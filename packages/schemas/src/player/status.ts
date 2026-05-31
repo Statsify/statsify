@@ -25,12 +25,18 @@ function findLastAction(data: APIData): { action: string; time: number } {
       lastQuestStart = quest.active.started;
     }
 
-    if (quest.completions?.length && quest.completions.at(-1)?.time > lastQuestEnd) {
+    if (
+      quest.completions?.length &&
+      quest.completions.at(-1)?.time > lastQuestEnd
+    ) {
       lastQuestEnd = quest.completions.at(-1).time;
     }
   }
 
-  actions.push({ action: "QUEST_START", time: lastQuestStart }, { action: "QUEST_COMPLETED", time: lastQuestEnd });
+  actions.push(
+    { action: "QUEST_START", time: lastQuestStart },
+    { action: "QUEST_COMPLETED", time: lastQuestEnd },
+  );
 
   const allPets = data?.petStats ?? {};
 
@@ -42,7 +48,7 @@ function findLastAction(data: APIData): { action: string; time: number } {
     const thisPetTime = Math.max(
       pet?.THIRST?.timestamp ?? 0,
       pet?.EXERCISE?.timestamp ?? 0,
-      pet?.HUNGER?.timestamp ?? 0
+      pet?.HUNGER?.timestamp ?? 0,
     );
 
     if (thisPetTime > lastPetTime) {
@@ -53,16 +59,19 @@ function findLastAction(data: APIData): { action: string; time: number } {
   // It really is not necessary to display which pet action was last done
   // Therefore just putting pet is explanation enough to the players last
   // known whereabouts.
-  actions.push({ action: "PET", time: lastPetTime }, {
-    action: "PET_JOURNEY",
-    time: data?.petJourneyTimestamp ?? 0,
-  });
+  actions.push(
+    { action: "PET", time: lastPetTime },
+    {
+      action: "PET_JOURNEY",
+      time: data?.petJourneyTimestamp ?? 0,
+    },
+  );
 
   if (data?.stats?.SkyWars) {
     // Lab modes are explained each first time any player enters the game
     // as well as when they click the book while in queue.
     const explains = Object.entries(data?.stats?.SkyWars).filter((e) =>
-      e[0].endsWith("explained_last")
+      e[0].endsWith("explained_last"),
     );
 
     if (explains.length > 0) {
@@ -111,7 +120,7 @@ function findLastAction(data: APIData): { action: string; time: number } {
       {
         action: "PIT_TRADE",
         time: Math.max(...(pitProfile.trade_timestamps ?? [0])),
-      }
+      },
     );
   }
 
@@ -133,14 +142,19 @@ function findLastAction(data: APIData): { action: string; time: number } {
     {
       action: "LOGOUT",
       time: data?.lastLogout ?? 0,
-    }
+    },
   );
 
   // This is good for tracking ap hunters who are playing games with very
   // little in the way of time stats in the game they are playing.
   if (data?.achievementRewardsNew) {
-    const rewardsArr: number[] = Object.values(data?.achievementRewardsNew ?? {});
-    actions.push({ action: "ACHIEVEMENT_REWARD", time: Math.max(...rewardsArr) });
+    const rewardsArr: number[] = Object.values(
+      data?.achievementRewardsNew ?? {},
+    );
+    actions.push({
+      action: "ACHIEVEMENT_REWARD",
+      time: Math.max(...rewardsArr),
+    });
   }
 
   // Many people who just wait in lobbies will be shown on this stat since they
@@ -154,8 +168,13 @@ function findLastAction(data: APIData): { action: string; time: number } {
 
   if (data.stats) {
     const games = Object.values(data.stats);
-    const tourneyAds = games.map((g: any) => g.lastTourneyAd).filter((v) => !!v);
-    actions.push({ action: "TOURNAMENT_ADVERTISEMENT", time: Math.max(...tourneyAds) });
+    const tourneyAds = games
+      .map((g: any) => g.lastTourneyAd)
+      .filter((v) => !!v);
+    actions.push({
+      action: "TOURNAMENT_ADVERTISEMENT",
+      time: Math.max(...tourneyAds),
+    });
   }
 
   // First login is used as a baseline due to it being literally the oldest timestamp
@@ -198,6 +217,7 @@ export class PlayerStatus {
 
   public constructor(data: APIData) {
     // The first login provided by hypixel is not fully accurate for very old players, it is better to use the `_id` field
+    // oxlint-disable-next-line no-underscore-dangle
     this.firstLogin = Number.parseInt(data._id?.slice(0, 8) ?? 0, 16) * 1000;
 
     const lastAction = findLastAction(data);

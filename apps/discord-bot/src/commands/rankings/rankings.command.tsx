@@ -17,7 +17,6 @@ import {
   DUELS_MODES,
   GENERAL_MODES,
   GameModes,
-  LeaderboardScanner,
   MEGAWALLS_MODES,
   MURDER_MYSTERY_MODES,
   PAINTBALL_MODES,
@@ -38,6 +37,7 @@ import {
   WALLS_MODES,
   WARLORDS_MODES,
   WOOLGAMES_MODES,
+  getLeaderboardFields,
 } from "@statsify/schemas";
 import {
   ApiService,
@@ -60,7 +60,7 @@ import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
-const fields = LeaderboardScanner.getLeaderboardFields(Player).map(([key]) => key);
+const fields = getLeaderboardFields(Player).map(([key]) => key);
 
 const choices = games.map((g) => [g.name, g.key] as Choice);
 choices.unshift(["All", "all"]);

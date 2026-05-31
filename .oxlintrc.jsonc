@@ -1,0 +1,78 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "eslint",
+    "typescript",
+    "unicorn",
+    "oxc",
+    "import",
+    "node",
+    "promise",
+    "vitest",
+  ],
+  "jsPlugins": [
+    { "name": "license-header", "specifier": "eslint-plugin-license-header" },
+  ],
+  "rules": {
+    // OXC
+    "oxc/no-this-in-exported-function": "error",
+    "oxc/misrefactored-assign-op": "error",
+    "oxc/approx-constant": "error",
+
+    // Type Aware Rules
+    "typescript/no-unnecessary-boolean-literal-compare": "error",
+    "typescript/no-unnecessary-template-expression": "error",
+    "typescript/no-unnecessary-type-arguments": "error",
+    "typescript/no-unnecessary-type-conversion": "error",
+    "typescript/no-unnecessary-type-assertion": "error",
+
+    "typescript/no-unnecessary-type-constraint": "error",
+    "typescript/no-extraneous-class": ["error", { "allowWithDecorator": true }],
+    "typescript/no-confusing-non-null-assertion": "error",
+
+    // Eslint
+    "no-unneeded-ternary": "error",
+    "no-unmodified-loop-condition": "error",
+    "no-unexpected-multiline": "error",
+    "no-underscore-dangle": "error",
+    "no-extra-bind": "error",
+    "no-extend-native": "error",
+
+    // React
+    "react/no-unstable-nested-components": "error",
+    "react/jsx-no-script-url": "error",
+    "react/jsx-no-comment-textnodes": "error",
+    "react/iframe-missing-sandbox": "error",
+
+    // Unicorn
+    "unicorn/prefer-add-event-listener": "error",
+    "unicorn/no-instanceof-builtins": "error",
+    "unicorn/no-accessor-recursion": "error",
+    "unicorn/consistent-function-scoping": "error",
+
+    // Import
+    "import/no-self-import": "error",
+    "import/no-named-as-default": "error",
+    "import/no-empty-named-blocks": "error",
+    "import/no-absolute-path": "error",
+
+    // Promise
+    "promise/no-promise-in-callback": "error",
+    "promise/no-multiple-resolved": "error",
+    "promise/always-return": "error",
+
+    // License Header
+    "license-header/header": [
+      "error",
+      [
+        "/**",
+        " * Copyright (c) Statsify",
+        " *",
+        " * This source code is licensed under the GNU GPL v3 license found in the",
+        " * LICENSE file in the root directory of this source tree.",
+        " * https://github.com/Statsify/statsify/blob/main/LICENSE",
+        " */",
+      ],
+    ],
+  },
+}

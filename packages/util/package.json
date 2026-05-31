@@ -1,13 +1,14 @@
 {
   "name": "@statsify/util",
   "version": "0.0.0",
+  "type": "module",
   "main": "dist/index.js",
   "types": "src/index.ts",
-  "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",
-    "lint": "eslint"
+    "lint": "oxlint",
+    "fmt": "oxfmt"
   },
   "dependencies": {
     "@swc/helpers": "^0.5.12"

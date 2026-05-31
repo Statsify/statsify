@@ -6,72 +6,74 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { CommandBuilder } from "./command.builder.js";
 import { Container } from "typedi";
 import { Logger } from "@statsify/logger";
 import { readdir } from "node:fs/promises";
 import { statSync } from "node:fs";
 import type { CommandResolvable } from "./command.resolvable.js";
+import { scanCommands } from "./command.builder.js";
 
-export class CommandLoader {
-  private static readonly logger = new Logger("CommandLoader");
+const logger = new Logger("CommandLoader");
 
-  public static async load(dir: string) {
-    const commands = new Map<string, CommandResolvable>();
-    const files = await this.getCommandFiles(dir);
+export async function loadCommands(dir: string) {
+  const commands = new Map<string, CommandResolvable>();
+  const files = await getCommandFiles(dir);
 
-    for (const file of files) {
-      const imports = await this.importCommand(file);
+  for (const file of files) {
+    const imports = await importCommand(file);
 
-      for (const command of imports) {
-        if (!command) continue;
-        commands.set(command.name, command);
-      }
+    for (const command of imports) {
+      if (!command) continue;
+      commands.set(command.name, command);
     }
-
-    return commands;
   }
 
-  private static async importCommand(file: string) {
-    const command = await import(file);
+  return commands;
+}
 
-    return Object.keys(command)
-      .filter((key) => key !== "default")
-      .filter((key) => {
-        const value = command[key];
-        // try to filter out function exports since classes will not have a writeable prototype.
-        return typeof value === "function" && !(Object.getOwnPropertyDescriptor(value, "prototype")?.writable);
-      })
-      .map((key) => {
-        try {
-          const constructor = command[key];
-          const instance = Container.get<object>(constructor);
+async function importCommand(file: string) {
+  const command = await import(file);
 
-          return CommandBuilder.scan(instance, constructor);
-        } catch (err) {
-          this.logger.error(`Failed to load command in ${file} with import ${key}`);
-          this.logger.error(err);
-        }
-      });
-  }
+  return Object.keys(command)
+    .filter((key) => key !== "default")
+    .filter((key) => {
+      const value = command[key];
+      // try to filter out function exports since classes will not have a writeable prototype.
+      return (
+        typeof value === "function" &&
+        !Object.getOwnPropertyDescriptor(value, "prototype")?.writable
+      );
+    })
+    .map((key) => {
+      try {
+        const constructor = command[key];
+        const instance = Container.get<object>(constructor);
 
-  private static async getCommandFiles(dir: string): Promise<string[]> {
-    const toLoad: string[] = [];
+        return scanCommands(instance, constructor);
+      } catch (err) {
+        logger.error(`Failed to load command in ${file} with import ${key}`);
+        logger.error(err);
+        return undefined;
+      }
+    });
+}
 
-    const files = await readdir(dir);
+async function getCommandFiles(dir: string): Promise<string[]> {
+  const toLoad: string[] = [];
 
-    await Promise.all(
-      files.map(async (file) => {
-        const path = `${dir}/${file}`;
+  const files = await readdir(dir);
 
-        if (statSync(path).isDirectory()) {
-          toLoad.push(...(await this.getCommandFiles(path)));
-        } else if (file.endsWith(".command.js")) {
-          toLoad.push(path);
-        }
-      })
-    );
+  await Promise.all(
+    files.map(async (file) => {
+      const path = `${dir}/${file}`;
 
-    return toLoad;
-  }
+      if (statSync(path).isDirectory()) {
+        toLoad.push(...(await getCommandFiles(path)));
+      } else if (file.endsWith(".command.js")) {
+        toLoad.push(path);
+      }
+    }),
+  );
+
+  return toLoad;
 }

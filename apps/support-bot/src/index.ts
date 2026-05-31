@@ -9,10 +9,10 @@
 import * as Sentry from "@sentry/node";
 import { CommandListener } from "#lib";
 import {
-  CommandLoader,
   CommandPoster,
-  EventLoader,
   I18nLoaderService,
+  loadCommands,
+  loadEvents,
 } from "@statsify/discord";
 import { Container } from "typedi";
 import {
@@ -30,7 +30,7 @@ import { fileURLToPath } from "node:url";
 import { setGlobalOptions } from "@typegoose/typegoose";
 import "reflect-metadata";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const directory = dirname(fileURLToPath(import.meta.url));
 
 const logger = new Logger("support-bot");
 const handleError = logger.error.bind(logger);
@@ -61,7 +61,7 @@ await Promise.all(
   )
 );
 
-const commands = await CommandLoader.load(join(__dirname, "./commands"));
+const commands = await loadCommands(join(directory, "./commands"));
 
 const tags = await Container.get(TagService).fetch();
 tags.forEach((tag) => commands.set(tag.name, tag));
@@ -83,7 +83,7 @@ const websocket = new WebsocketShard({
     GatewayIntentBits.MessageContent,
 });
 
-await EventLoader.load(websocket, join(__dirname, "./events"));
+await loadEvents(websocket, join(directory, "./events"));
 const listener = CommandListener.create(websocket, rest, commands);
 Container.get(TicketService).init();
 

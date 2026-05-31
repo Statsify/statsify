@@ -14,9 +14,9 @@ import {
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import {
   ClassMetadata,
-  LeaderboardScanner,
   METADATA_KEY,
   PlayerStats,
+  getLeaderboardFields,
 } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
@@ -34,7 +34,7 @@ const FUSE_OPTIONS = {
 };
 
 const fields = entries.reduce((acc, [prefix, value]) => {
-  const list = LeaderboardScanner.getLeaderboardFields(value.type.type).map(
+  const list = getLeaderboardFields(value.type.type).map(
     ([key, { leaderboard }]) => ({ value: key, name: removeFormatting(leaderboard.name) })
   );
 

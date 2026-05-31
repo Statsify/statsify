@@ -47,8 +47,13 @@ export const parseDiscordError = (error: any = {}, errorKey = ""): string => {
     }
 
     if (typeof value === "string") message += value;
-    else if ("_errors" in value)
-      for (const error of value._errors) message += parseDiscordError(error, nextKey);
+    else if ("_errors" in value) {
+      // Discord's api uses dangling underscores when reporting errors
+      // oxlint-disable-next-line no-underscore-dangle
+      for (const error of value._errors) { 
+        message += parseDiscordError(error, nextKey);
+      }
+    }
     else message += parseDiscordError(value, nextKey);
   }
 
