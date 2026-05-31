@@ -50,9 +50,13 @@ const sweep = async () => {
       await api.getCachedPlayer(uuid, CacheLevel.LIVE);
       refreshed++;
     } catch {
-      errored++;
-      await players.updateOne({ uuid }, { $set: { expiresAt: Date.now() + penaltyMs } });
-    }
+    errored++;
+    await players.updateOne(
+        { uuid },
+        { $set: { expiresAt: Date.now() + penaltyMs } },
+        { upsert: false }
+    );
+}
     await delay(interval);
   }
 
