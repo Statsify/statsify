@@ -61,7 +61,8 @@ const StatRow = ({ row, rightRow }: { row: VersusStatRow; rightRow: VersusStatRo
       <div width="1/3" location="center">
         <text margin={0} size={1.5}>{`§7${row.label}`}</text>
       </div>
-      <div width="1/3" location="right">
+      <div width="1/3">
+        <div width="remaining" />
         <text margin={0} size={1.75}>
           {`${rightColor}${formatVal(rightValue, row.format)}`}
         </text>
@@ -80,7 +81,8 @@ export const VersusPanel = ({
       <div width="1/2">
         <text margin={{ top: 0, bottom: 0, left: 8, right: 4 }} size={2}>{left.name}</text>
       </div>
-      <div width="1/2" location="right">
+      <div width="1/2">
+        <div width="remaining" />
         <text margin={{ top: 0, bottom: 0, left: 4, right: 8 }} size={2}>{right.name}</text>
       </div>
     </div>

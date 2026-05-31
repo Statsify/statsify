@@ -40,13 +40,10 @@ export const LeaderboardRow = ({
     <div width={28}>
       <text margin={0} size={1.75}>{`${rankColor(rank)}#${rank}`}</text>
     </div>
-    <div width="remaining">
-      <text margin={{ top: 0, bottom: 0, left: 6, right: 6 }} size={1.75}>{`§f${name}`}</text>
-    </div>
-    <div location="right">
-      <text margin={0} size={1.75}>
-        {`${accentMc(accentColor)}${typeof value === "number" ? value.toLocaleString() : value}`}
-      </text>
-    </div>
+    <text margin={{ top: 0, bottom: 0, left: 6, right: 6 }} size={1.75}>{`§f${name}`}</text>
+    <div width="remaining" />
+    <text margin={0} size={1.75}>
+      {`${accentMc(accentColor)}${typeof value === "number" ? value.toLocaleString() : value}`}
+    </text>
   </box>
 );
