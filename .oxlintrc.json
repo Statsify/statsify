@@ -1,0 +1,91 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "import", "oxc"],
+  "categories": {
+    "correctness": "error"
+  },
+  "env": {
+    "builtin": true,
+    "es2022": true
+  },
+  "ignorePatterns": ["**/dist/**", "**/node_modules/**", "**/.next/**", "**/pkg/**"],
+  "rules": {
+    "typescript/ban-ts-comment": [
+      "error",
+      {
+        "ts-check": true,
+        "ts-expect-error": "allow-with-description",
+        "ts-ignore": "allow-with-description",
+        "ts-nocheck": true,
+        "minimumDescriptionLength": 3
+      }
+    ],
+    "typescript/default-param-last": "error",
+    "typescript/explicit-member-accessibility": "error",
+    "typescript/no-explicit-any": "off",
+    "typescript/no-non-null-assertion": "off",
+    "typescript/no-extraneous-class": "off",
+    "typescript/no-unsafe-declaration-merging": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "varsIgnorePattern": "^_",
+        "args": "after-used",
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "no-duplicate-imports": "error",
+    "sort-imports": [
+      "error",
+      {
+        "ignoreCase": false,
+        "ignoreDeclarationSort": true,
+        "ignoreMemberSort": false
+      }
+    ],
+    "arrow-body-style": ["error", "as-needed"],
+    "no-constant-binary-expression": "error",
+    "no-constructor-return": "error",
+    "no-lonely-if": "error",
+    "object-shorthand": ["error", "always"],
+    "prefer-template": "error",
+    "unicorn/import-style": [
+      "error",
+      {
+        "styles": {
+          "node:path": { "named": true, "default": false }
+        }
+      }
+    ],
+    "unicorn/numeric-separators-style": [
+      "error",
+      {
+        "onlyIfContainsSeparator": true,
+        "number": {
+          "minimumDigits": 5,
+          "groupLength": 3,
+          "onlyIfContainsSeparator": false
+        }
+      }
+    ],
+    "unicorn/prefer-at": "error",
+    "unicorn/relative-url-style": ["error", "always"],
+    "unicorn/switch-case-braces": ["error", "avoid"],
+    "unicorn/catch-error-name": "off",
+    "unicorn/escape-case": "off",
+    "unicorn/explicit-length-check": "off",
+    "unicorn/filename-case": "off",
+    "unicorn/no-array-callback-reference": "off",
+    "unicorn/no-array-for-each": "off",
+    "unicorn/no-array-reduce": "off",
+    "unicorn/no-await-expression-member": "off",
+    "unicorn/no-null": "off",
+    "unicorn/no-process-exit": "off",
+    "unicorn/no-static-only-class": "off",
+    "unicorn/no-useless-switch-case": "off",
+    "unicorn/no-useless-undefined": "off",
+    "unicorn/number-literal-case": "off",
+    "unicorn/prefer-string-replace-all": "off"
+  }
+}
