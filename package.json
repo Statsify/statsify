@@ -27,13 +27,13 @@
   "devDependencies": {
     "@eslint/js": "^9.19.0",
     "@j4cobi/eslint-plugin-sort-imports": "^1.0.2",
-    "@napi-rs/cli": "^3.1.5",
+    "@napi-rs/cli": "^3.7.0",
     "@rollup/pluginutils": "^5.1.0",
     "@stylistic/eslint-plugin": "^5.2.3",
     "@swc/cli": "^0.7.8",
     "@swc/core": "1.13.5",
     "@types/eslint__js": "^9.14.0",
-    "@types/node": "^24.3.0",
+    "@types/node": "^25.9.1",
     "@vitest/coverage-v8": "^3.0.4",
     "@vitest/ui": "^3.0.4",
     "eslint": "^9.19.0",
@@ -44,7 +44,7 @@
     "turbo": "^2.9.16",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.22.0",
-    "unplugin": "^2.1.2",
+    "unplugin": "^3.0.0",
     "vitest": "^3.0.4"
   }
 }
