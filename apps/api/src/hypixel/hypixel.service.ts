@@ -153,6 +153,9 @@ export class HypixelService {
     return this.httpService.get(url, { params }).pipe(
       tap((res) => {
         span?.setHttpStatus(res.status);
+        span?.setData("hypixel.ratelimit.limit", res.headers["ratelimit-limit"]);
+        span?.setData("hypixel.ratelimit.remaining", res.headers["ratelimit-remaining"]);
+        span?.setData("hypixel.ratelimit.reset", res.headers["ratelimit-reset"]);
       }),
       map((res) => res.data),
       catchError((err) => throwError(
