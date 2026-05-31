@@ -16,8 +16,7 @@
   },
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
-    "test:types": "tsc --noEmit",
-    "lint": "eslint"
+    "test:types": "tsc --noEmit"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.6",

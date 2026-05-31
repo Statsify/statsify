@@ -36,8 +36,7 @@
   },
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths --copy-files",
-    "test:types": "tsc --noEmit",
-    "lint": "eslint"
+    "test:types": "tsc --noEmit"
   },
   "dependencies": {
     "@nestjs/swagger": "^11.2.0",

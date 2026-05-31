@@ -1,6 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDependencies": ["pnpm.lock", "tsconfig.json", ".swcrc", "eslint.config.js"],
+  "globalDependencies": ["pnpm.lock", "tsconfig.json", ".swcrc"],
   "ui": "tui",
   "tasks": {
     "build": {
@@ -19,10 +19,6 @@
     "test:coverage": {
       "outputs": ["coverage"],
       "dependsOn": ["build", "^test:coverage"]
-    },
-    "lint": {
-      "outputs": [],
-      "dependsOn": ["^lint"]
     }
   }
 }

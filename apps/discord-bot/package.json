@@ -33,8 +33,7 @@
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src --out-dir dist --strip-leading-paths",
-    "test:types": "tsc --noEmit",
-    "lint": "eslint"
+    "test:types": "tsc --noEmit"
   },
   "dependencies": {
     "@sentry/node": "^7.118.0",
