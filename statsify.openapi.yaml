@@ -3629,12 +3629,6 @@ components:
         grenadeKills:
           type: number
           default: 0
-        shotsFired:
-          type: number
-          default: 0
-        shotsPerKill:
-          type: number
-          default: 0
       required:
         - wins
         - kills
@@ -3644,8 +3638,6 @@ components:
         - knifeKills
         - headshotKills
         - grenadeKills
-        - shotsFired
-        - shotsPerKill
     Defusal:
       type: object
       properties:
@@ -6396,8 +6388,6 @@ components:
           $ref: '#/components/schemas/Progression'
         overall:
           $ref: '#/components/schemas/SkyWarsMode'
-        core:
-          $ref: '#/components/schemas/SkyWarsMode'
         solo:
           $ref: '#/components/schemas/SkyWarsMode'
         doubles:
@@ -6423,7 +6413,6 @@ components:
         - nextLevelFormatted
         - progression
         - overall
-        - core
         - solo
         - doubles
         - mini
@@ -10416,15 +10405,6 @@ components:
             - stats.skywars.overall.gamesPlayed
             - stats.skywars.overall.assists
             - stats.skywars.overall.playtime
-            - stats.skywars.core.wins
-            - stats.skywars.core.losses
-            - stats.skywars.core.wlr
-            - stats.skywars.core.kills
-            - stats.skywars.core.deaths
-            - stats.skywars.core.kdr
-            - stats.skywars.core.gamesPlayed
-            - stats.skywars.core.assists
-            - stats.skywars.core.playtime
             - stats.skywars.solo.wins
             - stats.skywars.solo.losses
             - stats.skywars.solo.wlr
@@ -13196,15 +13176,6 @@ components:
               - stats.skywars.overall.gamesPlayed
               - stats.skywars.overall.assists
               - stats.skywars.overall.playtime
-              - stats.skywars.core.wins
-              - stats.skywars.core.losses
-              - stats.skywars.core.wlr
-              - stats.skywars.core.kills
-              - stats.skywars.core.deaths
-              - stats.skywars.core.kdr
-              - stats.skywars.core.gamesPlayed
-              - stats.skywars.core.assists
-              - stats.skywars.core.playtime
               - stats.skywars.solo.wins
               - stats.skywars.solo.losses
               - stats.skywars.solo.wlr

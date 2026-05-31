@@ -20,8 +20,16 @@ import { TypegooseModule } from "@m8a/nestjs-typegoose";
 import { UserModule } from "#user";
 import { config } from "@statsify/util";
 
-const mongoUri = await config("database.mongoUri");
-const redisUrl = await config("database.redisUrl");
+const isOpenApiGeneration = process.env.STATSIFY_OPENAPI_GENERATE === "1";
+
+const mongoUri = await config(
+  "database.mongoUri",
+  isOpenApiGeneration ? { default: "mongodb://127.0.0.1:27017/statsify-openapi" } : {}
+);
+const redisUrl = await config(
+  "database.redisUrl",
+  isOpenApiGeneration ? { default: "redis://127.0.0.1:6379" } : {}
+);
 
 @Module({
   imports: [

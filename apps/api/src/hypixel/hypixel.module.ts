@@ -11,12 +11,17 @@ import { HypixelService } from "./hypixel.service.js";
 import { Module } from "@nestjs/common";
 import { config } from "@statsify/util";
 
+const isOpenApiGeneration = process.env.STATSIFY_OPENAPI_GENERATE === "1";
+
 @Module({
   imports: [
     HttpModule.register({
       baseURL: "https://api.hypixel.net/",
       headers: {
-        "API-Key": await config("hypixelApi.key"),
+        "API-Key": await config(
+          "hypixelApi.key",
+          isOpenApiGeneration ? { default: "" } : {}
+        ),
         "accept-encoding": "*",
       },
       timeout: await config("hypixelApi.timeout", { default: 5000 }),

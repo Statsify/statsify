@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
-    "openapi:generate": "pnpm --filter @statsify/api-client build && pnpm build && node dist/openapi.js",
+    "openapi:generate": "pnpm --filter @statsify/util build && pnpm --filter @statsify/logger build && pnpm --filter @statsify/math build && pnpm --filter @statsify/schemas build && pnpm --filter @statsify/assets build && pnpm --filter @statsify/rendering build && pnpm --filter @statsify/api-client build && pnpm build && node dist/openapi.js",
     "test:types": "tsc --noEmit",
     "lint": "eslint"
   },

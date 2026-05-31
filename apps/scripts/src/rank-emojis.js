@@ -6,8 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Canvas } from "skia-canvas";
-import { FontRenderer } from "@statsify/rendering";
+import { FontRenderer, createCanvas } from "@statsify/rendering";
 import { Logger } from "@statsify/logger";
 import { RestClient } from "tiny-discord";
 import { config, minecraftColors } from "@statsify/util";
@@ -75,7 +74,7 @@ const drawRank = async (formatted) => {
   const nodes = renderer.lex(formatted);
   const { width, height } = renderer.measureText(nodes);
 
-  const textCanvas = new Canvas(width, height);
+  const textCanvas = createCanvas(width, height);
   const textCtx = textCanvas.getContext("2d");
   renderer.fillText(textCtx, nodes, 0, 0);
 
@@ -83,7 +82,7 @@ const drawRank = async (formatted) => {
   const images = [];
 
   for (let x = 0; x < imageCount; x++) {
-    const canvas = new Canvas(SIZE, SIZE);
+    const canvas = createCanvas(SIZE, SIZE);
     const ctx = canvas.getContext("2d");
     ctx.drawImage(textCanvas, SIZE * x, 0, SIZE, SIZE, 0, 0, SIZE, SIZE);
     images.push(await canvas.toDataURL("png"));

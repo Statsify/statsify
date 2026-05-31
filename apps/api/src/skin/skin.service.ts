@@ -23,12 +23,12 @@ export class SkinService {
   ) {}
 
   public async getHead(uuid: string, size: number): Promise<Buffer> {
-    const { Canvas } = await import("skia-canvas");
+    const { createCanvas } = await import("@statsify/rendering");
     const { skin } = await this.getSkin(uuid)
       .then((skin) => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false))
       .catch(() => this.resolveSkin(undefined, false));
 
-    const canvas = new Canvas(size, size);
+    const canvas = createCanvas(size, size);
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 

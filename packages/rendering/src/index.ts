@@ -8,6 +8,7 @@
 
 /* eslint-disable @typescript-eslint/no-namespace */
 export * from "./colors/index.js";
+export * from "./canvas.js";
 export * from "./font/index.js";
 export * from "./hooks/index.js";
 export * from "./jsx/index.js";

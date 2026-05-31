@@ -13,7 +13,10 @@ import { config, flatten } from "@statsify/util";
 import { readFile, rm, writeFile } from "node:fs/promises";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
-const mediaRoute = await config("api.mediaRoot");
+const mediaRoute = await config(
+  "api.mediaRoot",
+  process.env.STATSIFY_OPENAPI_GENERATE === "1" ? { default: "/tmp/statsify-openapi" } : {}
+);
 
 @Injectable()
 export class UserService {

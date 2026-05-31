@@ -6,12 +6,8 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import * as Sentry from "@sentry/node";
-import { AppModule } from "./app.module.js";
 import { FastifyAdapter, NestFastifyApplication } from "@nestjs/platform-fastify";
-import { Logger } from "@statsify/logger";
 import { NestFactory } from "@nestjs/core";
-import { SentryInterceptor } from "./sentry/index.js";
 import { Severity, setGlobalOptions } from "@typegoose/typegoose";
 import { ValidationPipe } from "@nestjs/common";
 import { config } from "@statsify/util";
@@ -23,28 +19,13 @@ import { mkdir, writeFile } from "node:fs/promises";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const logger = new Logger("openapi");
-const handleError = logger.error.bind(logger);
+process.env.STATSIFY_OPENAPI_GENERATE = "1";
+process.env.VITEST ??= "1";
 
-process.on("uncaughtException", handleError);
-process.on("unhandledRejection", handleError);
+process.on("uncaughtException", console.error);
+process.on("unhandledRejection", console.error);
 
-const sentryDsn = await config("sentry.apiDsn", { required: false });
-
-if (sentryDsn) {
-  Sentry.init({
-    dsn: sentryDsn,
-    integrations: [
-      new Sentry.Integrations.Http({ tracing: false, breadcrumbs: true }),
-      new Sentry.Integrations.Mongo({ useMongoose: true }),
-    ],
-    normalizeDepth: 3,
-    tracesSampleRate: await config("sentry.tracesSampleRate"),
-    environment: await config("environment"),
-  });
-}
-
-const mediaRoot = await config("api.mediaRoot");
+const mediaRoot = await config("api.mediaRoot", { default: "/tmp/statsify-openapi" });
 
 await mkdir(join(mediaRoot, "badges"), { recursive: true });
 
@@ -61,12 +42,13 @@ adapter
     done(null, body)
   );
 
+const { AppModule } = await import("./app.module.js");
+
 const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
-  logger: new Logger(),
+  logger: false,
 });
 
 app.useGlobalPipes(new ValidationPipe({ transform: true }));
-app.useGlobalInterceptors(new SentryInterceptor());
 
 const document = createSwaggerDocument(app);
 const outputPath = join(__dirname, "..", "..", "..", "statsify.openapi.yaml");
