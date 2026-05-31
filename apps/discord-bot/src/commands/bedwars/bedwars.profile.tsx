@@ -6,17 +6,44 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
+import { BedWarsMode, BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
 import {
   Container,
   Footer,
   Header,
   Historical,
   SidebarItem,
+  StatColumn,
   Table,
   formatProgression,
 } from "#components";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
+import type { LocalizeFunction } from "@statsify/discord";
+
+export function getBedWarsTable(stats: BedWarsMode, t: LocalizeFunction): StatColumn[][] {
+  return [
+    [
+      { title: t("stats.wins"), color: "§a", value: stats.wins },
+      { title: t("stats.losses"), color: "§c", value: stats.losses, lowerIsBetter: true },
+      { title: t("stats.wlr"), color: "§6", value: stats.wlr },
+    ],
+    [
+      { title: t("stats.finalKills"), color: "§a", value: stats.finalKills },
+      { title: t("stats.finalDeaths"), color: "§c", value: stats.finalDeaths, lowerIsBetter: true },
+      { title: t("stats.fkdr"), color: "§6", value: stats.fkdr },
+    ],
+    [
+      { title: t("stats.kills"), color: "§a", value: stats.kills },
+      { title: t("stats.deaths"), color: "§c", value: stats.deaths, lowerIsBetter: true },
+      { title: t("stats.kdr"), color: "§6", value: stats.kdr },
+    ],
+    [
+      { title: t("stats.bedsBroken"), color: "§a", value: stats.bedsBroken },
+      { title: t("stats.bedsLost"), color: "§c", value: stats.bedsLost, lowerIsBetter: true },
+      { title: t("stats.bblr"), color: "§6", value: stats.bblr },
+    ],
+  ];
+}
 
 export interface BedWarsProfileProps extends BaseProfileProps {
   mode: GameMode<BedWarsModes>;
@@ -71,47 +98,24 @@ export const BedWarsProfile = ({
         time={time}
       />
       <Table.table>
-        <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-          <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
-          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
-        </Table.tr>
-        <Table.tr>
-          <Table.td
-            title={t("stats.finalKills")}
-            value={t(stats.finalKills)}
-            color="§a"
-          />
-          <Table.td
-            title={t("stats.finalDeaths")}
-            value={t(stats.finalDeaths)}
-            color="§c"
-          />
-          <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color="§6" />
-        </Table.tr>
-        <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
-          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
-        </Table.tr>
-        <Table.tr>
-          <Table.td
-            title={t("stats.bedsBroken")}
-            value={t(stats.bedsBroken)}
-            color="§a"
-          />
-          <Table.td title={t("stats.bedsLost")} value={t(stats.bedsLost)} color="§c" />
-          <Table.td title={t("stats.bblr")} value={t(stats.bblr)} color="§6" />
-        </Table.tr>
-        <Historical.progression
-          time={time}
-          progression={bedwars.progression}
-          current={bedwars.levelFormatted}
-          next={bedwars.nextLevelFormatted}
-          t={t}
-          level={bedwars.level}
-          exp={bedwars.exp}
-        />
+        {[
+          ...getBedWarsTable(stats, t).map((row) => (
+            <Table.tr>
+              {row.map((col) => (
+                <Table.td title={col.title} value={t(col.value)} color={col.color} />
+              ))}
+            </Table.tr>
+          )),
+          <Historical.progression
+            time={time}
+            progression={bedwars.progression}
+            current={bedwars.levelFormatted}
+            next={bedwars.nextLevelFormatted}
+            t={t}
+            level={bedwars.level}
+            exp={bedwars.exp}
+          />,
+        ]}
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>
