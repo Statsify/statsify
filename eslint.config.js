@@ -32,18 +32,9 @@ export function defineConfig({ tsconfigDirName }) {
         },
       },
       rules: {
-        "@typescript-eslint/ban-ts-comment": [
-          "error",
-          {
-            minimumDescriptionLength: 3,
-            "ts-check": true,
-            "ts-expect-error": "allow-with-description",
-            "ts-ignore": "allow-with-description",
-            "ts-nocheck": true,
-          },
-        ],
-        "@typescript-eslint/default-param-last": "error",
-        "@typescript-eslint/explicit-member-accessibility": "error",
+        "@typescript-eslint/ban-ts-comment": "off", // replaced by oxlint typescript/ban-ts-comment
+        "@typescript-eslint/default-param-last": "off", // replaced by oxlint typescript/default-param-last
+        "@typescript-eslint/explicit-member-accessibility": "off", // replaced by oxlint typescript/explicit-member-accessibility
         "@typescript-eslint/member-ordering": [
           "error",
           {
@@ -92,17 +83,7 @@ export function defineConfig({ tsconfigDirName }) {
         "unicorn/escape-case": "off",
         "unicorn/explicit-length-check": "off",
         "unicorn/filename-case": "off",
-        "unicorn/import-style": [
-          "error",
-          {
-            styles: {
-              "node:path": {
-                named: true,
-                default: false,
-              },
-            },
-          },
-        ],
+        "unicorn/import-style": "off", // replaced by oxlint unicorn/import-style
         "unicorn/no-array-callback-reference": "off",
         "unicorn/no-array-for-each": "off",
         "unicorn/no-array-reduce": "off",
@@ -125,11 +106,11 @@ export function defineConfig({ tsconfigDirName }) {
             },
           },
         ],
-        "unicorn/prefer-at": "error",
+        "unicorn/prefer-at": "off", // replaced by oxlint unicorn/prefer-at
         "unicorn/prefer-string-replace-all": "off",
         "unicorn/prevent-abbreviations": "off",
-        "unicorn/relative-url-style": ["error", "always"],
-        "unicorn/switch-case-braces": ["error", "avoid"],
+        "unicorn/relative-url-style": "off", // replaced by oxlint unicorn/relative-url-style
+        "unicorn/switch-case-braces": "off", // replaced by oxlint unicorn/switch-case-braces
         "unused-imports/no-unused-imports": "error",
         "unused-imports/no-unused-vars": [
           "error",
@@ -149,7 +130,7 @@ export function defineConfig({ tsconfigDirName }) {
         "unused-imports": unusedImports,
       },
       rules: {
-        "arrow-body-style": ["error", "as-needed"],
+        "arrow-body-style": "off", // replaced by oxlint
         "license-header/header": [
           "error",
           [
@@ -163,13 +144,13 @@ export function defineConfig({ tsconfigDirName }) {
           ],
         ],
         "import/no-anonymous-default-export": "off",
-        "no-constant-binary-expression": "error",
-        "no-constructor-return": "error",
-        "no-duplicate-imports": "error",
-        "no-lonely-if": "error",
-        "object-shorthand": ["error", "always"],
+        "no-constant-binary-expression": "off", // replaced by oxlint
+        "no-constructor-return": "off", // replaced by oxlint
+        "no-duplicate-imports": "off", // replaced by oxlint
+        "no-lonely-if": "off", // replaced by oxlint
+        "object-shorthand": "off", // replaced by oxlint
         "one-var": ["error", "never"],
-        "prefer-template": "error",
+        "prefer-template": "off", // replaced by oxlint
         "sort-imports/sort-imports": [
           "error",
           {
