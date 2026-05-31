@@ -6,9 +6,6 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { randomUUID } from "node:crypto";
-
-export function minecraftHeadUrl(uuid: string) {
-  const dashlessUuid = uuid.replaceAll("-", "");
-  return `https://crafatar.com/avatars/${dashlessUuid}?size=160&default=MHF_Steve&overlay&id=${randomUUID()}`;
+export function minecraftHeadUrl(uuid: string, size = 160) {
+  return `https://api.statsify.net/skin/head?uuid=${uuid}&size=${size}`;
 }
