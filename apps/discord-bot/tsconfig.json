@@ -1,11 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "preserve",
-    "baseUrl": "./src",
+    "jsx": "preserve"
   },
-  "include": [
-    "src",
-    "eslint.config.js"
-  ]
+  "include": ["src", "eslint.config.js"]
 }
