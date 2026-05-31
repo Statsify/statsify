@@ -3,6 +3,7 @@ config.json
 dist
 node_modules
 .turbo
+'.turbo'
 package-lock.json
 out
 .yarn/install-state.gz
