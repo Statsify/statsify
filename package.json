@@ -23,7 +23,8 @@
     "support-bot": "pnpm --filter support-bot",
     "site": "pnpm --filter site",
     "scripts": "pnpm --filter scripts",
-    "verify-server": "pnpm --filter verify-server"
+    "verify-server": "pnpm --filter verify-server",
+    "knip": "knip"
   },
   "packageManager": "pnpm@10.15.0",
   "pnpm": {
@@ -51,6 +52,7 @@
     "eslint-plugin-license-header": "^0.8.0",
     "eslint-plugin-unicorn": "^60.0.0",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "knip": "^6.15.0",
     "pm2": "^6.0.8",
     "turbo": "^2.4.0",
     "typescript": "^5.7.3",
