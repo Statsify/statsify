@@ -63,6 +63,11 @@
   "pnpm": {
     "overrides": {
       "skia-canvas": "3.0.8"
+    },
+    "supportedArchitectures": {
+      "os": ["current", "linux"],
+      "cpu": ["current", "x64"],
+      "libc": ["current", "glibc"]
     }
   }
 }
