@@ -46,6 +46,8 @@ export interface ProfileData<T extends GamesWithBackgrounds, K = never> {
 }
 
 export type ModeEmoji = LocalizationString | false | undefined;
+const metadataString = (key?: string): LocalizationString | undefined =>
+  key ? (t) => t(key) : undefined;
 
 export interface BaseHypixelCommand<T extends GamesWithBackgrounds, K = never> {
   getPreProfileData?(player: Player): K | Promise<K>;
@@ -89,7 +91,8 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     const pages: Page[] = filteredModes.map((mode, index) => {
       const pageInput = {
         label: mode.formatted,
-        emoji: emojis[index],
+        description: metadataString(mode.description),
+        emoji: emojis[index] ?? metadataString(mode.emoji),
       };
 
       const filteredSubmodes = this.filterSubmodes?.(player, mode) ?? mode.submodes;
@@ -127,7 +130,8 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
 
       const subPages = filteredSubmodes.map((submode, index): SubPage => ({
         label: submode.formatted,
-        emoji: submodeEmojis[index],
+        description: metadataString(submode.description),
+        emoji: submodeEmojis[index] ?? metadataString(submode.emoji),
         generator: async (t) => {
           const background = await getBackground(...mapBackground(this.modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
 

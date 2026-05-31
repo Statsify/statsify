@@ -14,18 +14,21 @@ import {
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import {
   ClassMetadata,
+  type GameModes,
   LeaderboardScanner,
   METADATA_KEY,
   PlayerStats,
 } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
+type LeaderboardChoice = APIApplicationCommandOptionChoice & { aliases?: string[] };
+
 const entries = Object.entries(
   Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
 );
 
 const FUSE_OPTIONS = {
-  keys: ["name", "key"],
+  keys: ["name", "value", "aliases"],
   includeScore: false,
   shouldSort: true,
   isCaseSensitive: false,
@@ -41,7 +44,7 @@ const fields = entries.reduce((acc, [prefix, value]) => {
   const fuse = new Fuse(list, FUSE_OPTIONS);
 
   return { ...acc, [prefix]: [fuse, list] };
-}, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);
+}, {} as Record<keyof PlayerStats, [Fuse<LeaderboardChoice>, LeaderboardChoice[]]>);
 
 export class PlayerLeaderboardArgument extends AbstractArgument {
   public name = "leaderboard";
@@ -50,9 +53,22 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
   public required = true;
   public autocomplete = true;
 
-  public constructor(private prefix: keyof PlayerStats) {
+  private fuse: Fuse<LeaderboardChoice>;
+  private list: LeaderboardChoice[];
+
+  public constructor(private prefix: keyof PlayerStats, modes?: GameModes<any>) {
     super();
     this.description = (t) => t("arguments.player-leaderboard");
+
+    const [, baseList] = fields[this.prefix];
+    this.list = modes ?
+      baseList.map((choice) => ({
+        ...choice,
+        aliases: this.getAliases(choice.value as string, modes),
+      })) :
+      baseList;
+
+    this.fuse = new Fuse(this.list, FUSE_OPTIONS);
   }
 
   public autocompleteHandler(
@@ -60,13 +76,33 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
   ): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
 
-    const [fuse, list] = fields[this.prefix];
+    if (!currentValue) return this.toChoices(this.list.slice(0, 25));
 
-    if (!currentValue) return list.slice(0, 25);
+    return this.toChoices(
+      this.fuse
+        .search(currentValue)
+        .map((result) => result.item)
+        .slice(0, 25)
+    );
+  }
 
-    return fuse
-      .search(currentValue)
-      .map((result) => result.item)
-      .slice(0, 25);
+  private getAliases(key: string, modes: GameModes<any>): string[] {
+    const [modeKey, submodeKey] = key.split(".");
+    const aliases = new Set<string>();
+
+    const mode = modes.getModes().find(({ api }) => api === modeKey);
+
+    if (!mode) return [];
+
+    mode.aliases.forEach((alias: string) => aliases.add(alias));
+    mode.submodes
+      .find(({ api }) => api === submodeKey)
+      ?.aliases.forEach((alias: string) => aliases.add(alias));
+
+    return [...aliases];
+  }
+
+  private toChoices(choices: LeaderboardChoice[]): APIApplicationCommandOptionChoice[] {
+    return choices.map(({ name, value }) => ({ name, value }));
   }
 }

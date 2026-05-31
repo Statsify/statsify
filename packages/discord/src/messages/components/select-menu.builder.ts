@@ -51,7 +51,7 @@ export class SelectMenuOptionBuilder {
     return {
       label: translateField(locale, this.#label),
       value: this.#value,
-      description: translateField(locale, this.#description),
+      description: this.#description ? translateField(locale, this.#description) : undefined,
       emoji: this.#emoji ? parseEmoji(this.#emoji, locale) : undefined,
       default: this.#defaultValue,
     };
