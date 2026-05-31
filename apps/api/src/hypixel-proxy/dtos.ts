@@ -7,13 +7,19 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString, MaxLength, MinLength } from "class-validator";
+import { IsOptional, IsString, Matches, MaxLength, MinLength } from "class-validator";
+
+const UUID_PATTERN =
+  /^[0-9a-f]{32}$|^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i;
 
 export class RawHypixelPlayerDto {
   @IsOptional()
   @IsString()
   @MinLength(1)
   @MaxLength(36)
+  @Matches(UUID_PATTERN, {
+    message: "uuid must be a valid dashed or undashed Minecraft UUID",
+  })
   @ApiProperty({
     required: false,
     example: "20934ef9488c465180a78f861586b4cf",

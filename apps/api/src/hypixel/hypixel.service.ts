@@ -159,7 +159,10 @@ export class HypixelService {
   }): Promise<RawHypixelResponse> {
     this.assertExactlyOne("/hypixel/player", { name, uuid });
 
-    const resolvedUuid = await this.playerUuidResolverService.resolvePlayerUuid(uuid ?? name!);
+    const resolvedUuid = uuid ?
+      this.normalizeUuid(uuid) :
+      await this.playerUuidResolverService.resolvePlayerUuid(name!);
+
     return this.requestRaw("/player", { uuid: resolvedUuid });
   }
 
@@ -255,5 +258,9 @@ export class HypixelService {
     throw new BadRequestException(
       `${route} requires exactly one of ${Object.keys(params).join(", ")}`
     );
+  }
+
+  private normalizeUuid(uuid: string) {
+    return uuid.replaceAll("-", "").toLowerCase();
   }
 }
