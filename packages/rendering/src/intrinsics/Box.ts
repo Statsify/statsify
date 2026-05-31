@@ -26,10 +26,7 @@ export interface BoxRenderProps {
   outlineSize: number;
 }
 
-export interface BoxProps extends Omit<
-  Partial<BoxRenderProps>,
-  "color" | "outline"
-> {
+export interface BoxProps extends Omit<Partial<BoxRenderProps>, "color" | "outline"> {
   width?: JSX.Measurement;
   height?: JSX.Measurement;
   padding?: JSX.Spacing;
@@ -90,12 +87,7 @@ export const component: JSX.RawFC<BoxProps, BoxRenderProps> = ({
   children,
 });
 
-export const renderOverlay = (
-  ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  height: number
-) => {
+export const renderOverlay = (ctx: CanvasRenderingContext2D, x: number, y: number, height: number) => {
   ctx.globalCompositeOperation = "overlay";
   const overlay = ctx.createLinearGradient(x, y, x, y + height);
   overlay.addColorStop(0, "rgba(255, 255, 255, 0.30)");
@@ -107,14 +99,7 @@ export const renderOverlay = (
 
 export const render: JSX.Render<BoxRenderProps> = (
   ctx,
-  {
-    color = DEFAULT_COLOR,
-    border,
-    shadowDistance,
-    shadowOpacity = SHADOW_OPACITY,
-    outline,
-    outlineSize,
-  },
+  { color = DEFAULT_COLOR, border, shadowDistance, shadowOpacity = SHADOW_OPACITY, outline, outlineSize },
   { x, y, width, height, padding }
 ) => {
   const fill = resolveFill(color, ctx, x, y, width, height);
@@ -150,8 +135,7 @@ export const render: JSX.Render<BoxRenderProps> = (
   renderOverlay(ctx, x, y, height);
 
   if (outline) {
-    ctx.strokeStyle =
-      outline === true ? resolveFill(color, ctx, x, y, width, height) : outline;
+    ctx.strokeStyle = outline === true ? resolveFill(color, ctx, x, y, width, height) : outline;
     ctx.lineWidth = outlineSize;
     ctx.stroke();
   }
@@ -164,28 +148,16 @@ export const render: JSX.Render<BoxRenderProps> = (
   ctx.beginPath();
   ctx.moveTo(x + width, y + shadowDistance + border.topRight);
   ctx.lineTo(x + width + shadowDistance, y + shadowDistance + border.topRight);
-  ctx.lineTo(
-    x + width + shadowDistance,
-    y + height - border.bottomRight + shadowDistance
-  );
+  ctx.lineTo(x + width + shadowDistance, y + height - border.bottomRight + shadowDistance);
   ctx.lineTo(x + width, y + height - border.bottomRight + shadowDistance);
   ctx.closePath();
   ctx.fill();
 
   ctx.beginPath();
   ctx.moveTo(x + border.bottomLeft + shadowDistance, y + height);
-  ctx.lineTo(
-    x + border.bottomLeft + shadowDistance,
-    y + height + shadowDistance
-  );
-  ctx.lineTo(
-    x + width + shadowDistance - (border.bottomRight || shadowDistance),
-    y + height + shadowDistance
-  );
-  ctx.lineTo(
-    x + width + shadowDistance - (border.bottomRight || shadowDistance),
-    y + height
-  );
+  ctx.lineTo(x + border.bottomLeft + shadowDistance, y + height + shadowDistance);
+  ctx.lineTo(x + width + shadowDistance - (border.bottomRight || shadowDistance), y + height + shadowDistance);
+  ctx.lineTo(x + width + shadowDistance - (border.bottomRight || shadowDistance), y + height);
   ctx.closePath();
   ctx.fill();
 

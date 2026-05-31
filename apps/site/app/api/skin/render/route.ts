@@ -9,9 +9,7 @@
 import { type NextRequest } from "next/server";
 import { env } from "~/app/env";
 
-export async function GET(
-  request: NextRequest
-) {
+export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const uuid = searchParams.get("uuid");
   return fetch(`${env.API_URL}/skin?uuid=${uuid}`, { headers: { "X-API-KEY": env.API_KEY } });

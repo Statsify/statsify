@@ -12,11 +12,12 @@ import { Command, type IMessage } from "@statsify/discord";
 export class RecentGamesCommand {
   public run(): IMessage {
     return {
-      content: (t) => t("deprecated.merged-direct", {
-        oldCommandName: "`/recentgames`",
-        newCommandName: `${t("emojis:icons.status")} **Status**`,
-        newCommand: "</status:1140654940273000550>",
-      }),
+      content: (t) =>
+        t("deprecated.merged-direct", {
+          oldCommandName: "`/recentgames`",
+          newCommandName: `${t("emojis:icons.status")} **Status**`,
+          newCommand: "</status:1140654940273000550>",
+        }),
     };
   }
 }

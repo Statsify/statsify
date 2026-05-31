@@ -124,9 +124,7 @@ export class Guild {
     this.tagColor = new Color(data.tagColor ?? "GRAY");
     this.tagFormatted = this.tag ? `${this.tagColor}[${this.tag}${this.tagColor}]` : "";
 
-    this.nameFormatted = `${this.tagColor}${this.name}${
-      this.tagFormatted ? ` ${this.tagFormatted}` : ""
-    }`;
+    this.nameFormatted = `${this.tagColor}${this.name}${this.tagFormatted ? ` ${this.tagFormatted}` : ""}`;
 
     this.exp = data.exp;
 
@@ -138,9 +136,7 @@ export class Guild {
 
     this.achievements = new GuildAchievements(this.level, data.achievements ?? {});
 
-    this.preferredGames = (data.preferredGames ?? [])
-      .map((g: GameCode) => GameIdMapping[g])
-      .filter(Boolean);
+    this.preferredGames = (data.preferredGames ?? []).map((g: GameCode) => GameIdMapping[g]).filter(Boolean);
 
     this.publiclyListed = data.publiclyListed;
 

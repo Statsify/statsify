@@ -44,12 +44,7 @@ import {
   SubCommand,
 } from "@statsify/discord";
 import { Constructor, prettify } from "@statsify/util";
-import {
-  GamesWithBackgrounds,
-  MODES_TO_API,
-  MODES_TO_FORMATTED,
-  mapBackground,
-} from "#constants";
+import { GamesWithBackgrounds, MODES_TO_API, MODES_TO_FORMATTED, mapBackground } from "#constants";
 import { RatiosProfile, RatiosProfileProps } from "./ratios.profile.js";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -90,10 +85,7 @@ export class RatiosCommand {
       const [overall, ...kits] = modes;
 
       const filteredKits = kits
-        .sort(
-          (a, b) =>
-            (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp
-        )
+        .sort((a, b) => (blitzsg[b.api] as BlitzSGKit).exp - (blitzsg[a.api] as BlitzSGKit).exp)
         .slice(0, 24);
 
       return [overall, ...filteredKits];
@@ -258,10 +250,7 @@ export class RatiosCommand {
     return mode.api === "overall" ? stats || game : stats;
   }
 
-  private getRatiosPerMode<T extends GamesWithBackgrounds>(
-    key: keyof PlayerStats,
-    modes: GameModes<T>
-  ) {
+  private getRatiosPerMode<T extends GamesWithBackgrounds>(key: keyof PlayerStats, modes: GameModes<T>) {
     const gameClass = Reflect.getMetadata("design:type", PlayerStats.prototype, key);
 
     const ratioModes: [mode: GameModeWithSubModes<T>, ratios: Ratio[]][] = [];
@@ -274,17 +263,9 @@ export class RatiosCommand {
       if (!modeClass) continue;
 
       const ratios = LEADERBOARD_RATIOS.filter(([numerator, denominator]) => {
-        const numeratorType = Reflect.getMetadata(
-          "design:type",
-          modeClass.prototype,
-          numerator
-        );
+        const numeratorType = Reflect.getMetadata("design:type", modeClass.prototype, numerator);
 
-        const denominatorType = Reflect.getMetadata(
-          "design:type",
-          modeClass.prototype,
-          denominator
-        );
+        const denominatorType = Reflect.getMetadata("design:type", modeClass.prototype, denominator);
 
         return numeratorType === Number && denominatorType === Number;
       });

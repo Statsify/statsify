@@ -20,8 +20,7 @@ export class LeaderboardItem {
   public fields: number[];
 
   @ApiProperty({
-    description:
-      "The player's formatted name, it also includes prefixes like bedwars star or duels title",
+    description: "The player's formatted name, it also includes prefixes like bedwars star or duels title",
   })
   public name: string;
 

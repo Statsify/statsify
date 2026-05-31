@@ -106,10 +106,7 @@ export class BedWarsMode {
 
 export class DreamsBedWarsMode extends BedWarsMode {
   public static new(data: APIData, mode: string) {
-    const stats = deepAdd(
-      new BedWarsMode(data, `eight_two_${mode}`),
-      new BedWarsMode(data, `four_four_${mode}`)
-    );
+    const stats = deepAdd(new BedWarsMode(data, `eight_two_${mode}`), new BedWarsMode(data, `four_four_${mode}`));
 
     BedWarsMode.applyRatios(stats);
     stats.winstreak = 0;

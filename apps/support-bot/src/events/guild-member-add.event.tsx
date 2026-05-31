@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  APIGuildMember,
-  GatewayDispatchEvents,
-  GatewayGuildMemberAddDispatchData,
-} from "discord-api-types/v10";
+import { APIGuildMember, GatewayDispatchEvents, GatewayGuildMemberAddDispatchData } from "discord-api-types/v10";
 import {
   AbstractEventListener,
   ApiService,
@@ -65,9 +61,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
     const user = await this.apiService.getUser(memberId);
 
-    const message = user?.uuid ?
-      await this.sendVerifiedMessage(data) :
-      await this.sendUnverifiedMessage(data);
+    const message = user?.uuid ? await this.sendVerifiedMessage(data) : await this.sendUnverifiedMessage(data);
 
     const [avatar, background] = await Promise.all([
       this.getDiscordAvatar(data),
@@ -95,16 +89,9 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
   private getDiscordAvatar(member: APIGuildMember): Promise<Image> {
     const avatar = member.user?.avatar ?? member.avatar;
 
-    if (avatar)
-      return loadImage(
-        `https://cdn.discordapp.com/avatars/${member.user!.id}/${avatar}.png?size=96`
-      );
+    if (avatar) return loadImage(`https://cdn.discordapp.com/avatars/${member.user!.id}/${avatar}.png?size=96`);
 
-    return loadImage(
-      `https://cdn.discordapp.com/embed/avatars/${
-        Number(member.user!.discriminator) % 5
-      }.png?size=96`
-    );
+    return loadImage(`https://cdn.discordapp.com/embed/avatars/${Number(member.user!.discriminator) % 5}.png?size=96`);
   }
 
   private async sendVerifiedMessage(member: APIGuildMember): Promise<IMessage> {
@@ -121,9 +108,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
 
   private async sendUnverifiedMessage(member: APIGuildMember): Promise<IMessage> {
     await this.messageService.send(UNVERIFIED_CHANNEL_ID, {
-      content: `<@${
-        member.user!.id
-      }>, run and complete \`/verify\` to get access to the rest of the discord server.`,
+      content: `<@${member.user!.id}>, run and complete \`/verify\` to get access to the rest of the discord server.`,
     });
 
     const embed = new EmbedBuilder()

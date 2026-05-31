@@ -18,10 +18,7 @@ import { PlayerService } from "./player.service.js";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
-  imports: [
-    HypixelModule,
-    TypegooseModule.forFeature([Player]),
-  ],
+  imports: [HypixelModule, TypegooseModule.forFeature([Player])],
   controllers: [PlayerController, PlayerLeaderboardsController, PlayerSearchController],
   providers: [PlayerService, PlayerLeaderboardService, PlayerSearchService],
   exports: [PlayerService],

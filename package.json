@@ -1,13 +1,13 @@
 {
   "name": "statsify",
-  "description": "",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
+  "description": "",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Statsify/statsify.git"
   },
+  "type": "module",
   "scripts": {
     "build": "turbo run build --filter=!site --parallel --cache-dir='.turbo'",
     "build:watch": "turbo watch build --filter=!site",
@@ -27,12 +27,6 @@
     "site": "pnpm --filter site",
     "scripts": "pnpm --filter scripts",
     "verify-server": "pnpm --filter verify-server"
-  },
-  "packageManager": "pnpm@10.15.0",
-  "pnpm": {
-    "overrides": {
-      "skia-canvas": "3.0.8"
-    }
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
@@ -71,6 +65,12 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "packageManager": "pnpm@10.15.0",
+  "pnpm": {
+    "overrides": {
+      "skia-canvas": "3.0.8"
     }
   }
 }

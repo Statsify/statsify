@@ -18,11 +18,7 @@ interface GeneralProfileHeaderBodyProps {
   t: LocalizeFunction;
 }
 
-const GeneralProfileHeaderBody = ({
-  guild,
-  status,
-  t,
-}: GeneralProfileHeaderBodyProps) => {
+const GeneralProfileHeaderBody = ({ guild, status, t }: GeneralProfileHeaderBodyProps) => {
   const online = status.online ? `§a${t("stats.online")}` : `§c${t("stats.offline")}`;
 
   const format = "LL/dd/yy',' hh:mm a";
@@ -30,9 +26,9 @@ const GeneralProfileHeaderBody = ({
     locale: t.locale,
   });
 
-  const lastLogin = status.lastLogin ?
-    DateTime.fromMillis(status.lastLogin).toFormat(format, { locale: t.locale }) :
-    "N/A";
+  const lastLogin = status.lastLogin
+    ? DateTime.fromMillis(status.lastLogin).toFormat(format, { locale: t.locale })
+    : "N/A";
 
   return (
     <div height="remaining" width="remaining" direction="row">
@@ -93,61 +89,25 @@ export const GeneralProfile = ({
       </Header>
       <Table.table>
         <Table.tr>
-          <Table.td
-            title={t("stats.networkLevel")}
-            value={t(general.networkLevel)}
-            color="§6"
-          />
-          <Table.td
-            title={t("stats.achievementPoints")}
-            value={t(general.achievementPoints)}
-            color="§6"
-          />
+          <Table.td title={t("stats.networkLevel")} value={t(general.networkLevel)} color="§6" />
+          <Table.td title={t("stats.achievementPoints")} value={t(general.achievementPoints)} color="§6" />
         </Table.tr>
         <Table.tr>
           <Table.td title={t("stats.quests")} value={t(quests.total)} color="§a" />
-          <Table.td
-            title={t("stats.challenges")}
-            value={t(challenges.total)}
-            color="§a"
-          />
+          <Table.td title={t("stats.challenges")} value={t(challenges.total)} color="§a" />
         </Table.tr>
         <Table.tr>
           <Table.td title={t("stats.karma")} value={t(general.karma)} color="§d" />
-          <Table.td
-            title={t("stats.rewardStreak")}
-            value={t(general.currentRewardStreak)}
-            color="§d"
-          />
-          <Table.td
-            title={t("stats.giftsSent")}
-            value={t(general.giftsSent)}
-            color="§5"
-          />
-          <Table.td
-            title={t("stats.ranksGifted")}
-            value={t(general.ranksGifted)}
-            color="§5"
-          />
+          <Table.td title={t("stats.rewardStreak")} value={t(general.currentRewardStreak)} color="§d" />
+          <Table.td title={t("stats.giftsSent")} value={t(general.giftsSent)} color="§5" />
+          <Table.td title={t("stats.ranksGifted")} value={t(general.ranksGifted)} color="§5" />
         </Table.tr>
         <If condition={member}>
           {(member) => (
             <Table.tr>
-              <Table.td
-                title={t("stats.guild.quests")}
-                value={t(member.questParticipation)}
-                color="§2"
-              />
-              <Table.td
-                title={t("stats.guild.daily-gexp")}
-                value={t(member.daily)}
-                color="§2"
-              />
-              <Table.td
-                title={t("stats.guild.weekly-gexp")}
-                value={t(member.weekly)}
-                color="§2"
-              />
+              <Table.td title={t("stats.guild.quests")} value={t(member.questParticipation)} color="§2" />
+              <Table.td title={t("stats.guild.daily-gexp")} value={t(member.daily)} color="§2" />
+              <Table.td title={t("stats.guild.weekly-gexp")} value={t(member.weekly)} color="§2" />
             </Table.tr>
           )}
         </If>

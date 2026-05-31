@@ -12,9 +12,7 @@ import type { ReturnModelType } from "@typegoose/typegoose";
 
 @Service()
 export class UserService {
-  public constructor(
-    @Inject(() => User) private readonly userModel: ReturnModelType<typeof User>
-  ) {}
+  public constructor(@Inject(() => User) private readonly userModel: ReturnModelType<typeof User>) {}
 
   public async findAllPremium() {
     const users = await this.userModel
@@ -44,11 +42,7 @@ export class UserService {
 
   public async removeAllPremium(id: string) {
     await this.userModel
-      .updateOne(
-        { id },
-        { $unset: { tier: "", patreon: "", serverBooster: "" } },
-        { upsert: true }
-      )
+      .updateOne({ id }, { $unset: { tier: "", patreon: "", serverBooster: "" } }, { upsert: true })
       .lean()
       .exec();
   }
@@ -68,10 +62,7 @@ export class UserService {
   }
 
   public addServerBooster(id: string) {
-    return this.userModel
-      .findOneAndUpdate({ id }, { serverBooster: true }, { upsert: true })
-      .lean()
-      .exec();
+    return this.userModel.findOneAndUpdate({ id }, { serverBooster: true }, { upsert: true }).lean().exec();
   }
 
   public removeServerBooster(id: string) {

@@ -22,11 +22,7 @@ import { User, UserTier } from "@statsify/schemas";
 import { getAssetPath, getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
 import type { CommandResolvable } from "./command.resolvable.js";
-import type {
-  InteractionServer,
-  RestClient,
-  WebsocketShard,
-} from "tiny-discord";
+import type { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 
 export type InteractionHook = (
   interaction: Interaction
@@ -273,8 +269,7 @@ export abstract class AbstractCommandListener {
     }
 
     if (interaction.isAutocompleteInteraction()) return this.onAutocomplete(interaction);
-    if (interaction.isMessageComponentInteraction())
-      return this.onMessageComponent(interaction);
+    if (interaction.isMessageComponentInteraction()) return this.onMessageComponent(interaction);
     if (interaction.isModalInteraction()) return this.onModal(interaction);
 
     return { type: InteractionResponseType.Pong };
@@ -299,19 +294,13 @@ export abstract class AbstractCommandListener {
       const data = event.data as WebsocketShard.ShardReady;
       const user = data.user as APIUser;
 
-      this.logger.log(
-        `Connected to gateway with WebsocketShard on ${user.username}`
-      );
+      this.logger.log(`Connected to gateway with WebsocketShard on ${user.username}`);
     });
 
     client.on("event", async (event) => {
       if (event.t !== GatewayDispatchEvents.InteractionCreate) return;
 
-      const interaction = new Interaction(
-        this.rest,
-        event.d as InteractionServer.InteractionData,
-        this.applicationId
-      );
+      const interaction = new Interaction(this.rest, event.d as InteractionServer.InteractionData, this.applicationId);
 
       const response = await this.onInteraction(interaction);
       interaction.reply(response);

@@ -90,7 +90,7 @@ export enum FormattedGame {
   REPLAY = "§fReplay§f",
   IDLE = "§fIdle§f",
   LIMBO = "§fLimbo§f",
-  SMP = "§fSMP§f"
+  SMP = "§fSMP§f",
 }
 
 /**

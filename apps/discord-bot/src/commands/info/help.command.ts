@@ -17,12 +17,7 @@ export class HelpCommand {
   public async run(): Promise<IMessage> {
     const embed = new EmbedBuilder()
       .title((t) => t("embeds.help.title"))
-      .description(
-        (t) =>
-          `Need Support? Join our ${t(
-            "socials.discord"
-          )} and create a ticket to directly contact us.`
-      )
+      .description((t) => `Need Support? Join our ${t("socials.discord")} and create a ticket to directly contact us.`)
       .field(
         (t) => t("embeds.help.games.title"),
         (t) => t("embeds.help.games.description")

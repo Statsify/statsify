@@ -7,8 +7,22 @@
  */
 
 import { Container, Footer, Header, type SidebarItem, formatProgression } from "#components";
-import { FormattedGame, type GameMode, WarlordsMage, WarlordsModes, WarlordsPaladin, WarlordsShaman, WarlordsWarrior } from "@statsify/schemas";
-import { WarlordsCaptureTheFlagTable, WarlordsClassTable, WarlordsDeathmatchTable, WarlordsDominationTable, WarlordsOverallTable } from "./tables/index.js";
+import {
+  FormattedGame,
+  type GameMode,
+  WarlordsMage,
+  WarlordsModes,
+  WarlordsPaladin,
+  WarlordsShaman,
+  WarlordsWarrior,
+} from "@statsify/schemas";
+import {
+  WarlordsCaptureTheFlagTable,
+  WarlordsClassTable,
+  WarlordsDeathmatchTable,
+  WarlordsDominationTable,
+  WarlordsOverallTable,
+} from "./tables/index.js";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
@@ -29,11 +43,14 @@ export const WarlordsProfile = ({
 }: WarlordsProfileProps) => {
   const { warlords } = player.stats;
 
-  const sidebar: SidebarItem[] = [
-    [t("stats.coins"), t(warlords.coins), "§6"],
-  ];
+  const sidebar: SidebarItem[] = [[t("stats.coins"), t(warlords.coins), "§6"]];
 
-  if (mode.api !== "overall" && mode.api !== "captureTheFlag" && mode.api !== "domination" && mode.api !== "teamDeathmatch") {
+  if (
+    mode.api !== "overall" &&
+    mode.api !== "captureTheFlag" &&
+    mode.api !== "domination" &&
+    mode.api !== "teamDeathmatch"
+  ) {
     sidebar.push(
       [t("stats.spec"), prettify(warlords[mode.api].specification), "§a"],
       [t("stats.level"), t(warlords[mode.api].level), "§a"]
@@ -42,7 +59,8 @@ export const WarlordsProfile = ({
     sidebar.push([t("stats.class"), prettify(warlords.class), "§e"]);
     const clazz = warlords.class as "mage" | "warrior" | "paladin" | "shaman";
     // Verify that the cast is correct and the class is a valid class
-    if (clazz in warlords && typeof warlords[clazz] === "object") sidebar.push([t("stats.spec"), prettify(warlords[clazz].specification), "§a"]);
+    if (clazz in warlords && typeof warlords[clazz] === "object")
+      sidebar.push([t("stats.spec"), prettify(warlords[clazz].specification), "§a"]);
   }
 
   let table: JSX.Element;
@@ -89,9 +107,7 @@ export const WarlordsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.WARLORDS} §fStats §r(${mode.formatted})`}
-        description={`§7${t("stats.title")}: ${
-          warlords.titleFormatted
-        }\n${formatProgression({
+        description={`§7${t("stats.title")}: ${warlords.titleFormatted}\n${formatProgression({
           t,
           label: t("stats.progression.win"),
           progression: warlords.progression,

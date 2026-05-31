@@ -8,22 +8,12 @@
 
 import type { BasePropOptions } from "@typegoose/typegoose/lib/types.js";
 import type { Constructor } from "@statsify/util";
-import type {
-  HistoricalEnabledMetadata,
-  LeaderboardEnabledMetadata,
-  StoreMetadata,
-} from "./metadata.interface.js";
+import type { HistoricalEnabledMetadata, LeaderboardEnabledMetadata, StoreMetadata } from "./metadata.interface.js";
 
 export type TypeOptions = () => Constructor | [Constructor];
-export type LeaderboardOptions = Omit<
-  BasePropOptions | Partial<LeaderboardEnabledMetadata>,
-  "default"
->;
+export type LeaderboardOptions = Omit<BasePropOptions | Partial<LeaderboardEnabledMetadata>, "default">;
 
-export type HistoricalOptions = Omit<
-  BasePropOptions | Partial<HistoricalEnabledMetadata>,
-  "default"
->;
+export type HistoricalOptions = Omit<BasePropOptions | Partial<HistoricalEnabledMetadata>, "default">;
 
 export type StoreOptions = Partial<StoreMetadata>;
 

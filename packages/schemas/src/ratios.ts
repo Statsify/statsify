@@ -6,13 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-export type Ratio = [
-  numerator: string,
-  denominator: string,
-  name: string,
-  prettyName: string,
-  multiplier?: number
-];
+export type Ratio = [numerator: string, denominator: string, name: string, prettyName: string, multiplier?: number];
 
 export const LEADERBOARD_RATIOS: Ratio[] = [
   ["wins", "losses", "wlr", "WLR"],
@@ -21,9 +15,7 @@ export const LEADERBOARD_RATIOS: Ratio[] = [
   ["bedsBroken", "bedsLost", "bblr", "BBLR"],
 ];
 
-export const LEADERBOARD_RATIO_KEYS = LEADERBOARD_RATIOS.map(
-  (r) => [r[0], r[1], r[2]] as const
-);
+export const LEADERBOARD_RATIO_KEYS = LEADERBOARD_RATIOS.map((r) => [r[0], r[1], r[2]] as const);
 
 const EXTRA_RATIOS: Ratio[] = [
   ["kills", "wins", "kwr", "KWR"],

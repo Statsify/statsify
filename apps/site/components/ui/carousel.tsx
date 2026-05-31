@@ -57,7 +57,7 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
   const [[page, direction], setPage] = useState([0, 1]);
   const cards = Children.toArray(children) as ReactNode[];
 
-  const cardIndex = (((page % cards.length) + cards.length) % cards.length);
+  const cardIndex = ((page % cards.length) + cards.length) % cards.length;
 
   function paginate(newDirection: number) {
     setPage(([page]) => [page + newDirection, newDirection]);
@@ -77,7 +77,13 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
           <button aria-label="Previous Card" type="button" className="absolute inset-0" onClick={() => paginate(-1)} />
         </Box>
         <div className={cn("relative flex overflow-visible", "cursor-pointer")}>
-          <div className="grid grid-areas-stack">{cards.map((card, index) => <div key={index} className="grid-area-stack invisible">{card}</div>)}</div>
+          <div className="grid grid-areas-stack">
+            {cards.map((card, index) => (
+              <div key={index} className="grid-area-stack invisible">
+                {card}
+              </div>
+            ))}
+          </div>
           <div className="absolute w-full h-full">
             <AnimatePresence initial={false} custom={direction}>
               <motion.div
@@ -126,4 +132,3 @@ export function Carousel({ children, className }: { children: ReactNode; classNa
     </div>
   );
 }
-

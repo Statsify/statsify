@@ -413,4 +413,3 @@ export class Wizards {
     this.arcaneWizard = new WizardsClass(data, "arcane_wizard");
   }
 }
-

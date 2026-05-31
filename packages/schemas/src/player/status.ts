@@ -53,17 +53,18 @@ function findLastAction(data: APIData): { action: string; time: number } {
   // It really is not necessary to display which pet action was last done
   // Therefore just putting pet is explanation enough to the players last
   // known whereabouts.
-  actions.push({ action: "PET", time: lastPetTime }, {
-    action: "PET_JOURNEY",
-    time: data?.petJourneyTimestamp ?? 0,
-  });
+  actions.push(
+    { action: "PET", time: lastPetTime },
+    {
+      action: "PET_JOURNEY",
+      time: data?.petJourneyTimestamp ?? 0,
+    }
+  );
 
   if (data?.stats?.SkyWars) {
     // Lab modes are explained each first time any player enters the game
     // as well as when they click the book while in queue.
-    const explains = Object.entries(data?.stats?.SkyWars).filter((e) =>
-      e[0].endsWith("explained_last")
-    );
+    const explains = Object.entries(data?.stats?.SkyWars).filter((e) => e[0].endsWith("explained_last"));
 
     if (explains.length > 0) {
       const lastLabExplain = Math.max(...explains.map((e) => e[1] as number));

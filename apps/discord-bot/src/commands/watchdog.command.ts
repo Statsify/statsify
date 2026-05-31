@@ -23,25 +23,18 @@ export class WatchdogCommand {
       .field(
         "Overall",
         (t) =>
-          `\`•\` **Lifetime**: \`${t(watchdog.overall.bans)}\`\n\`•\` **Last Day**: \`${t(
-            watchdog.overall.lastDay
-          )}\``
+          `\`•\` **Lifetime**: \`${t(watchdog.overall.bans)}\`\n\`•\` **Last Day**: \`${t(watchdog.overall.lastDay)}\``
       )
       .field(
         "Watchdog",
         (t) =>
-          `\`•\` **Lifetime**: \`${t(
-            watchdog.watchdog.bans
-          )}\`\n\`•\` **Last Day**: \`${t(
+          `\`•\` **Lifetime**: \`${t(watchdog.watchdog.bans)}\`\n\`•\` **Last Day**: \`${t(
             watchdog.watchdog.lastDay
           )}\`\n\`•\` **Last Minute**: \`${t(watchdog.watchdog.lastMinute)}\``
       )
       .field(
         "Staff",
-        (t) =>
-          `\`•\` **Lifetime**: \`${t(watchdog.staff.bans)}\`\n\`•\` **Last Day**: \`${t(
-            watchdog.staff.lastDay
-          )}\``
+        (t) => `\`•\` **Lifetime**: \`${t(watchdog.staff.bans)}\`\n\`•\` **Last Day**: \`${t(watchdog.staff.lastDay)}\``
       )
       .color(STATUS_COLORS.info);
 

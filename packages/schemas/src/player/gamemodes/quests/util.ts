@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  type APIData,
-  type Constructor,
-  type UnwrapConstructor,
-  removeFormatting,
-} from "@statsify/util";
+import { type APIData, type Constructor, type UnwrapConstructor, removeFormatting } from "@statsify/util";
 import { DateTime } from "luxon";
 import { Field } from "#metadata";
 import { FormattedGame } from "#game";
@@ -24,7 +19,7 @@ export enum QuestTime {
   Daily,
   Weekly,
   Monthly,
-  Overall
+  Overall,
 }
 
 export interface QuestOption<TField extends string> {
@@ -42,7 +37,7 @@ export interface QuestOption<TField extends string> {
 export interface CreateQuestsOptions<
   DailyFields extends string,
   WeeklyFields extends string,
-  MonthlyFields extends string
+  MonthlyFields extends string,
 > {
   game: FormattedGame;
   fieldPrefix?: string;
@@ -79,11 +74,7 @@ const processQuests = (
   });
 };
 
-const assignQuestMetadata = (
-  constructor: Constructor<any>,
-  time: QuestTime,
-  options: QuestOption<string>[]
-) => {
+const assignQuestMetadata = (constructor: Constructor<any>, time: QuestTime, options: QuestOption<string>[]) => {
   options.forEach((quest) => {
     const hasOverall = quest.overall !== undefined;
     const canDisplayOverall = hasOverall && time === QuestTime.Overall;
@@ -121,13 +112,13 @@ type GameWithQuests<DailyFields extends string, WeeklyFields extends string, Mon
   daily: Constructor<GameWithQuestMode<DailyFields>>,
   weekly: Constructor<GameWithQuestMode<WeeklyFields>>,
   monthly: Constructor<GameWithQuestMode<MonthlyFields>>,
-  overall: Constructor<GameWithQuestMode<DailyFields | WeeklyFields | MonthlyFields>>
+  overall: Constructor<GameWithQuestMode<DailyFields | WeeklyFields | MonthlyFields>>,
 ];
 
 export function createGameModeQuests<
   DailyFields extends string,
   WeeklyFields extends string,
-  MonthlyFields extends string
+  MonthlyFields extends string,
 >({
   game,
   fieldPrefix,
@@ -202,23 +193,17 @@ type BaseGamesWithQuestsRecord = {
   [K in keyof typeof FormattedGame]?: GameWithQuests<string, string, string>;
 };
 
-type IQuestInstance<
-  Time extends QuestTime,
-  GamesWithQuests extends BaseGamesWithQuestsRecord
-> = Constructor<{
-  [K in keyof GamesWithQuests]: GamesWithQuests[K] extends GameWithQuests<string, string, string> ?
-    UnwrapConstructor<GamesWithQuests[K][Time]> :
-    never;
+type IQuestInstance<Time extends QuestTime, GamesWithQuests extends BaseGamesWithQuestsRecord> = Constructor<{
+  [K in keyof GamesWithQuests]: GamesWithQuests[K] extends GameWithQuests<string, string, string>
+    ? UnwrapConstructor<GamesWithQuests[K][Time]>
+    : never;
 }>;
 
-export function createQuestsInstance<
-  Time extends QuestTime,
-  GamesWithQuests extends BaseGamesWithQuestsRecord
->(time: Time, record: GamesWithQuests): IQuestInstance<Time, GamesWithQuests> {
-  const modes = Object.entries(record) as [
-    keyof typeof FormattedGame,
-    GameWithQuests<string, string, string>
-  ][];
+export function createQuestsInstance<Time extends QuestTime, GamesWithQuests extends BaseGamesWithQuestsRecord>(
+  time: Time,
+  record: GamesWithQuests
+): IQuestInstance<Time, GamesWithQuests> {
+  const modes = Object.entries(record) as [keyof typeof FormattedGame, GameWithQuests<string, string, string>][];
 
   class QuestInstance {
     [key: string]: Record<string, number>;
@@ -258,9 +243,7 @@ export const getQuestCountDuring = (time: QuestTime, quest: Quest | undefined) =
 
     case QuestTime.Weekly:
       t = t.startOf("week");
-      t = t.plus({ days: 4 }).toMillis() < Date.now() ?
-        t.plus({ days: 4 }) :
-        t.minus({ days: 3 });
+      t = t.plus({ days: 4 }).toMillis() < Date.now() ? t.plus({ days: 4 }) : t.minus({ days: 3 });
       break;
 
     case QuestTime.Monthly:

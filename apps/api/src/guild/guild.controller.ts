@@ -6,21 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ApiBadRequestResponse,
-  ApiNotFoundResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Auth } from "#auth";
 import { Controller, Get, Query } from "@nestjs/common";
-import {
-  ErrorResponse,
-  GetGuildResponse,
-  GuildNotFoundException,
-  PlayerNotFoundException,
-} from "@statsify/api-client";
+import { ErrorResponse, GetGuildResponse, GuildNotFoundException, PlayerNotFoundException } from "@statsify/api-client";
 import { GuildDto } from "#dtos";
 import { GuildService } from "./guild.service.js";
 

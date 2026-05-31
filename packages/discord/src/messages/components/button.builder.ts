@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  APIButtonComponentBase,
-  ButtonStyle,
-  ComponentType,
-} from "discord-api-types/v10";
+import { APIButtonComponentBase, ButtonStyle, ComponentType } from "discord-api-types/v10";
 import { LocalizationString, LocalizeFunction, translateField } from "../localize.js";
 import { parseEmoji } from "./parse-emoji.js";
 import { randomUUID } from "node:crypto";
@@ -64,9 +60,7 @@ export class ButtonBuilder {
     return this.#custom_id as string;
   }
 
-  public build(
-    locale: LocalizeFunction
-  ): APIButtonComponentBase<any> & { custom_id?: string; url?: string } {
+  public build(locale: LocalizeFunction): APIButtonComponentBase<any> & { custom_id?: string; url?: string } {
     return {
       label: translateField(locale, this.#label),
       style: this.#style,

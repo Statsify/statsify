@@ -74,13 +74,11 @@ function SkeletonCategoryOverview({ category, icon }: { category: Category; icon
       </div>
       <div className="flex flex-col justify-center gap-1">
         <p className="text-mc-gray">
-          <span className="text-mc-green">Easy</span>:{" "}
-          <span>0</span>
+          <span className="text-mc-green">Easy</span>: <span>0</span>
           <span className="text-mc-gray">/16</span> completed
         </p>
         <p className="text-mc-gray">
-          <span className="text-mc-red">Hard</span>:{" "}
-          <span>0</span>
+          <span className="text-mc-red">Hard</span>: <span>0</span>
           <span className="text-mc-gray">/16</span> completed
         </p>
       </div>
@@ -133,17 +131,15 @@ function RewardCard({
       <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
         {reward.name} Reward
       </p>
-      {typeof reward.description === "string" ?
-        (
-          <MinecraftText>{reward.description}</MinecraftText>
-        ) :
-        (
-          <div className="flex flex-col gap-0.5">
-            {reward.description.map((part) => (
-              <MinecraftText key={part}>{part}</MinecraftText>
-            ))}
-          </div>
-        )}
+      {typeof reward.description === "string" ? (
+        <MinecraftText>{reward.description}</MinecraftText>
+      ) : (
+        <div className="flex flex-col gap-0.5">
+          {reward.description.map((part) => (
+            <MinecraftText key={part}>{part}</MinecraftText>
+          ))}
+        </div>
+      )}
     </SkeletonBox>
   );
 }
@@ -162,8 +158,7 @@ function TaskCard({ task }: { task: Task }) {
         <p>{task.description}</p>
       </div>
       <p className="text-mc-gray">
-        Progress:{" "}
-        <span className="text-mc-red">0</span>
+        Progress: <span className="text-mc-red">0</span>
         <span className="text-mc-gray">/</span>
         <span className="text-mc-gray">{task.progress}</span>
       </p>

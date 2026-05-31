@@ -8,11 +8,7 @@
 
 import _positions from "../../positions.json" with { type: "json" };
 import _sizes from "../../sizes.json" with { type: "json" };
-import {
-  type Canvas,
-  type CanvasRenderingContext2D,
-  type ImageData,
-} from "skia-canvas";
+import { type Canvas, type CanvasRenderingContext2D, type ImageData } from "skia-canvas";
 import { type TextNode, type Token, tokens } from "./tokens.js";
 import { createCanvas } from "../canvas.js";
 import { join } from "node:path";
@@ -62,10 +58,7 @@ export class FontRenderer {
       this.canvases.set(ctx, canvas);
       this.scales.set(ctx, image.width / 256);
 
-      this.images.set(
-        file.replace("unicode_page_", "").replace(".png", ""),
-        ctx
-      );
+      this.images.set(file.replace("unicode_page_", "").replace(".png", ""), ctx);
     }
   }
 
@@ -88,23 +81,10 @@ export class FontRenderer {
     return { width, height };
   }
 
-  public fillText(
-    ctx: CanvasRenderingContext2D,
-    nodes: TextNode[],
-    x: number,
-    y: number
-  ) {
+  public fillText(ctx: CanvasRenderingContext2D, nodes: TextNode[], x: number, y: number) {
     const largestSize = Math.max(...nodes.map((node) => node.size));
 
-    for (const {
-      text,
-      color,
-      bold,
-      italic,
-      underline,
-      strikethrough,
-      size,
-    } of nodes) {
+    for (const { text, color, bold, italic, underline, strikethrough, size } of nodes) {
       const adjustY = y + size + (largestSize - size) * 5;
 
       for (const char of text) {
@@ -159,11 +139,7 @@ export class FontRenderer {
 
       if (!matches) continue;
 
-      const effect = token?.effect(
-        part,
-        matches as RegExpMatchArray,
-        defaultState
-      );
+      const effect = token?.effect(part, matches as RegExpMatchArray, defaultState);
       let text = effect?.text ?? part;
 
       if (matches) text = text.slice(matches[0].length);
@@ -193,22 +169,14 @@ export class FontRenderer {
   }
 
   private getCharacterImage(unicode: string, isAscii: boolean) {
-    return isAscii ?
-      this.images.get("ascii") :
-      this.images.get(`${unicode[0]}${unicode[1]}`);
+    return isAscii ? this.images.get("ascii") : this.images.get(`${unicode[0]}${unicode[1]}`);
   }
 
   private getTextureScale(image: CanvasRenderingContext2D) {
     return this.scales.get(image) ?? image.canvas.width / 256;
   }
 
-  private getImageData(
-    image: CanvasRenderingContext2D,
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  ) {
+  private getImageData(image: CanvasRenderingContext2D, x: number, y: number, width: number, height: number) {
     const ctx = this.canvases.get(image)?.getContext("2d") ?? image;
     return ctx.getImageData(x, y, width, height);
   }
@@ -241,8 +209,7 @@ export class FontRenderer {
 
     const scale = this.getTextureScale(image);
 
-    const characterSize =
-      sizes[isAscii ? "ascii" : "unicode"][unicode.toUpperCase()];
+    const characterSize = sizes[isAscii ? "ascii" : "unicode"][unicode.toUpperCase()];
 
     const startOffset = characterSize?.start ?? 0;
     const width = characterSize?.width ?? 0;
@@ -281,23 +248,12 @@ export class FontRenderer {
     return gap;
   }
 
-  private measureCharacter(
-    char: string,
-    textSize: number,
-    bold: boolean
-  ): number {
+  private measureCharacter(char: string, textSize: number, bold: boolean): number {
     const metadata = this.getCharacterMetadata(char, textSize);
 
     if (!metadata) return 0;
 
-    return this.getCharacterSpacing(
-      char,
-      metadata.isAscii,
-      metadata.size,
-      metadata.scale,
-      metadata.width,
-      bold
-    );
+    return this.getCharacterSpacing(char, metadata.isAscii, metadata.size, metadata.scale, metadata.width, bold);
   }
 
   private fillCharacter(
@@ -316,16 +272,7 @@ export class FontRenderer {
 
     if (!metadata) return 0;
 
-    const {
-      x: charX,
-      y: charY,
-      width,
-      height,
-      scale,
-      isAscii,
-      image,
-      size,
-    } = metadata;
+    const { x: charX, y: charY, width, height, scale, isAscii, image, size } = metadata;
 
     const imageData = this.getImageData(image, charX, charY, width, height);
 
@@ -398,62 +345,21 @@ export class FontRenderer {
       y += 2 * scale * size;
     }
 
-    this.fillPlainCharacter(
-      ctx,
-      imageData,
-      characterX,
-      characterY,
-      width,
-      scale,
-      size,
-      color,
-      italic
-    );
+    this.fillPlainCharacter(ctx, imageData, characterX, characterY, width, scale, size, color, italic);
 
     if (underline) this.fillUnderline(ctx, x, y, width, scale, size, color);
-    if (strikethrough)
-      this.fillStrikethrough(ctx, x, y, width, scale, size, color);
+    if (strikethrough) this.fillStrikethrough(ctx, x, y, width, scale, size, color);
 
     if (bold) {
-      this.fillPlainCharacter(
-        ctx,
-        imageData,
-        characterX + scale * size,
-        characterY,
-        width,
-        scale,
-        size,
-        color,
-        italic
-      );
+      this.fillPlainCharacter(ctx, imageData, characterX + scale * size, characterY, width, scale, size, color, italic);
 
       const boldOffset = 2 * scale * size;
 
       if (isAscii)
-        this.fillPlainCharacter(
-          ctx,
-          imageData,
-          characterX + boldOffset,
-          characterY,
-          width,
-          scale,
-          size,
-          color,
-          italic
-        );
+        this.fillPlainCharacter(ctx, imageData, characterX + boldOffset, characterY, width, scale, size, color, italic);
 
-      if (underline)
-        this.fillUnderline(ctx, x + boldOffset, y, width, scale, size, color);
-      if (strikethrough)
-        this.fillStrikethrough(
-          ctx,
-          x + boldOffset,
-          y,
-          width,
-          scale,
-          size,
-          color
-        );
+      if (underline) this.fillUnderline(ctx, x + boldOffset, y, width, scale, size, color);
+      if (strikethrough) this.fillStrikethrough(ctx, x + boldOffset, y, width, scale, size, color);
     }
   }
 
@@ -533,22 +439,12 @@ export class FontRenderer {
   ) {
     ctx.fillStyle = color;
 
-    ctx.fillRect(
-      x - 2 * scale * size,
-      y + 16 * size * scale,
-      width * size + 4 * scale * size,
-      2 * scale * size
-    );
+    ctx.fillRect(x - 2 * scale * size, y + 16 * size * scale, width * size + 4 * scale * size, 2 * scale * size);
 
     if (this.gradient) {
       ctx.globalCompositeOperation = "soft-light";
       ctx.fillStyle = GRADIENT_BOTTOM_OVERLAY;
-      ctx.fillRect(
-        x - 2 * scale * size,
-        y + 16 * size * scale,
-        width * size + 4 * scale * size,
-        2 * scale * size
-      );
+      ctx.fillRect(x - 2 * scale * size, y + 16 * size * scale, width * size + 4 * scale * size, 2 * scale * size);
       ctx.globalCompositeOperation = "source-over";
     }
   }
@@ -564,11 +460,6 @@ export class FontRenderer {
   ) {
     ctx.fillStyle = color;
 
-    ctx.fillRect(
-      x,
-      y + 6 * scale * size,
-      width * size + 2 * scale * size,
-      2 * scale * size
-    );
+    ctx.fillRect(x, y + 6 * scale * size, width * size + 2 * scale * size, 2 * scale * size);
   }
 }

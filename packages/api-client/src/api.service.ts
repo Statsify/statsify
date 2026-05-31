@@ -8,11 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import Axios, { AxiosInstance, AxiosRequestHeaders, Method, ResponseType } from "axios";
-import {
-  CacheLevel,
-  GuildQuery,
-  LeaderboardQuery,
-} from "./constants.js";
+import { CacheLevel, GuildQuery, LeaderboardQuery } from "./constants.js";
 import {
   DeletePlayerResponse,
   GetCommandUsageResponse,
@@ -49,12 +45,15 @@ interface UpdateUser {
   locale?: string | null;
 }
 
-const isProduction = await config("environment") === "prod";
+const isProduction = (await config("environment")) === "prod";
 
 export class ApiService {
   private axios: AxiosInstance;
 
-  public constructor(private apiRoute: string, private apiKey: string) {
+  public constructor(
+    private apiRoute: string,
+    private apiKey: string
+  ) {
     this.axios = Axios.create({
       baseURL: this.apiRoute,
       headers: {
@@ -97,20 +96,13 @@ export class ApiService {
   }
 
   public getPlayerRankings(fields: string[], uuid: string) {
-    return this.request<PostLeaderboardRankingsResponse[]>(
-      "/player/leaderboards/rankings",
-      {},
-      "POST",
-      { body: { fields, uuid } }
-    );
+    return this.request<PostLeaderboardRankingsResponse[]>("/player/leaderboards/rankings", {}, "POST", {
+      body: { fields, uuid },
+    });
   }
 
   public getPlayerAutocomplete(query: string) {
-    return this.requestKey<GetPlayerSearchResponse, "players">(
-      "/player/search",
-      "players",
-      { query }
-    );
+    return this.requestKey<GetPlayerSearchResponse, "players">("/player/search", "players", { query });
   }
 
   public getGuild(tag: string, type: GuildQuery) {
@@ -134,38 +126,24 @@ export class ApiService {
   }
 
   public getGuildRankings(fields: string[], id: string) {
-    return this.request<PostLeaderboardRankingsResponse[]>(
-      "/guild/leaderboards/rankings",
-      {},
-      "POST",
-      {
-        body: { fields, id },
-      }
-    );
+    return this.request<PostLeaderboardRankingsResponse[]>("/guild/leaderboards/rankings", {}, "POST", {
+      body: { fields, id },
+    });
   }
 
   public async getWatchdog() {
-    return this.requestKey<GetWatchdogResponse, "watchdog">(
-      "/hypixelresources/watchdog",
-      "watchdog"
-    );
+    return this.requestKey<GetWatchdogResponse, "watchdog">("/hypixelresources/watchdog", "watchdog");
   }
 
   public async getGamecounts() {
-    return this.requestKey<GetGamecountsResponse, "gamecounts">(
-      "/hypixelresources/gamecounts",
-      "gamecounts"
-    );
+    return this.requestKey<GetGamecountsResponse, "gamecounts">("/hypixelresources/gamecounts", "gamecounts");
   }
 
   public async getPlayerHead(uuid: string, size?: number) {
-    return this.requestImage(
-      isProduction ? "https://api.statsify.net/skin/head" : "/skin/head",
-      {
-        uuid,
-        size,
-      }
-    );
+    return this.requestImage(isProduction ? "https://api.statsify.net/skin/head" : "/skin/head", {
+      uuid,
+      size,
+    });
   }
 
   public getPlayerSkin(uuid: string, user: User | null) {
@@ -188,24 +166,12 @@ export class ApiService {
     });
   }
 
-  public resetPlayerSession(
-    tag: string
-  ) {
-    return this.request<GetPlayerResponse>(
-      "/session",
-      { player: tag },
-      "PATCH"
-    );
+  public resetPlayerSession(tag: string) {
+    return this.request<GetPlayerResponse>("/session", { player: tag }, "PATCH");
   }
 
-  public deletePlayerSession(
-    id: string
-  ) {
-    return this.request<SuccessResponse>(
-      "/session",
-      { id },
-      "DELETE"
-    );
+  public deletePlayerSession(id: string) {
+    return this.request<SuccessResponse>("/session", { id }, "DELETE");
   }
 
   public getKey() {
@@ -256,11 +222,7 @@ export class ApiService {
   }
 
   public getCommandUsage() {
-    return this.requestKey<GetCommandUsageResponse, "usage">(
-      "/commands",
-      "usage",
-      {}
-    ).catch(() => null);
+    return this.requestKey<GetCommandUsageResponse, "usage">("/commands", "usage", {}).catch(() => null);
   }
 
   public incrementCommand(command: string) {

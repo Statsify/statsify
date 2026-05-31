@@ -16,9 +16,7 @@ const now = DateTime.now();
 const getNextResetTime = (resetMinute, time) => {
   const hasResetToday = (resetMinute ?? 0) <= now.hour * 60 + now.minute;
 
-  let resetTime = now
-    .minus({ hours: now.hour, minutes: now.minute })
-    .plus({ minutes: resetMinute ?? 0 });
+  let resetTime = now.minus({ hours: now.hour, minutes: now.minute }).plus({ minutes: resetMinute ?? 0 });
 
   const isSunday = now.weekday === 7;
   const isStartOfMonth = now.day === 1;
@@ -27,10 +25,7 @@ const getNextResetTime = (resetMinute, time) => {
     resetTime = resetTime.plus({ days: 1 });
   } else if (time === "weekly" && ((isSunday && hasResetToday) || !isSunday)) {
     resetTime = resetTime.plus({ week: 1 }).minus({ days: isSunday ? 0 : now.weekday });
-  } else if (
-    time === "monthly" &&
-    ((isStartOfMonth && hasResetToday) || !isStartOfMonth)
-  ) {
+  } else if (time === "monthly" && ((isStartOfMonth && hasResetToday) || !isStartOfMonth)) {
     resetTime = resetTime.minus({ days: now.day - 1 }).plus({ months: 1 });
   }
 
@@ -41,9 +36,7 @@ const getNextResetTime = (resetMinute, time) => {
 const getLastResetTime = (resetMinute, time) => {
   const hasResetToday = (resetMinute ?? 0) <= now.hour * 60 + now.minute;
 
-  let resetTime = now
-    .minus({ hours: now.hour, minutes: now.minute })
-    .plus({ minutes: resetMinute ?? 0 });
+  let resetTime = now.minus({ hours: now.hour, minutes: now.minute }).plus({ minutes: resetMinute ?? 0 });
 
   const isSunday = now.weekday === 7;
   const isStartOfMonth = now.day === 1;
@@ -52,10 +45,7 @@ const getLastResetTime = (resetMinute, time) => {
     resetTime = resetTime.minus({ minutes: resetMinute ?? 0 });
   } else if (time === "weekly" && ((isSunday && hasResetToday) || !isSunday)) {
     resetTime = resetTime.minus({ week: 1 }).plus({ days: isSunday ? 0 : now.weekday });
-  } else if (
-    time === "monthly" &&
-    ((isStartOfMonth && hasResetToday) || !isStartOfMonth)
-  ) {
+  } else if (time === "monthly" && ((isStartOfMonth && hasResetToday) || !isStartOfMonth)) {
     resetTime = resetTime.minus({ days: now.day - 1 });
   }
 
@@ -82,12 +72,9 @@ const setTimestamps = async (collectionName) => {
     });
   });
 
-  if (!bulkOperations.length)
-    return console.log(`No players to update for ${collectionName}.`);
+  if (!bulkOperations.length) return console.log(`No players to update for ${collectionName}.`);
   collection.bulkWrite(bulkOperations).then((res) => {
-    console.log(
-      `Updated ${res.modifiedCount}/${players.length} players for ${collectionName}.`
-    );
+    console.log(`Updated ${res.modifiedCount}/${players.length} players for ${collectionName}.`);
   });
 };
 

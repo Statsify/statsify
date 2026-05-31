@@ -6,14 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  Command,
-  EmbedBuilder,
-  IMessage,
-  MessageService,
-} from "@statsify/discord";
+import { ActionRowBuilder, ButtonBuilder, Command, EmbedBuilder, IMessage, MessageService } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
@@ -38,10 +31,7 @@ export class TicketMenuCommand {
           .join("\n")}`
       );
 
-    const button = new ButtonBuilder()
-      .label("Create Ticket")
-      .style(ButtonStyle.Primary)
-      .customId("create-ticket");
+    const button = new ButtonBuilder().label("Create Ticket").style(ButtonStyle.Primary).customId("create-ticket");
 
     await this.messageService.send(await config("supportBot.createTicketChannel"), {
       embeds: [embed],

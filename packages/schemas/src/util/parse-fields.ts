@@ -19,8 +19,7 @@ export function parseAdditionalFields(field: string, additionalKey: string) {
 
   const splitIndex = fieldParts.findIndex((part) => additionalFieldParts.includes(part));
 
-  if (splitIndex === -1)
-    return [...fieldParts, ...additionalFieldParts, ending].join(".");
+  if (splitIndex === -1) return [...fieldParts, ...additionalFieldParts, ending].join(".");
 
   return [...fieldParts.slice(0, splitIndex), ...additionalFieldParts, ending].join(".");
 }

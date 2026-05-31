@@ -28,11 +28,7 @@ export const WoolWarsTable = ({ woolwars, submode, t }: WoolWarsTableProps) => {
           return (
             <Table.tr>
               <Table.td title={t("stats.wins")} value={t(overall.wins)} color="§a" />
-              <Table.td
-                title={t("stats.losses")}
-                value={t(overall.losses)}
-                color="§c"
-              />
+              <Table.td title={t("stats.losses")} value={t(overall.losses)} color="§c" />
               <Table.td title={t("stats.wlr")} value={t(overall.wlr)} color="§6" />
             </Table.tr>
           );

@@ -117,8 +117,7 @@ const PREFIX_SCHEME: Record<string, (prefix: string) => string> = {
   prefixscheme_ruthless_light_purple: (prefix) => `§d${prefix}`,
   prefixscheme_dried_dark_red: (prefix) => `§4${prefix}`,
   prefixscheme_guilty_blood_red: (prefix) => `§c${prefix}`,
-  prefixscheme_killer_khroma: (prefix) =>
-    cycleColors(prefix, ["§c", "§6", "§e", "§a", "§d"]),
+  prefixscheme_killer_khroma: (prefix) => cycleColors(prefix, ["§c", "§6", "§e", "§a", "§d"]),
 };
 
 const PREFIX_ICON: Record<string, string> = {
@@ -136,22 +135,10 @@ const PREFIX_ICON: Record<string, string> = {
   prefixicon_florin: "ƒ",
 };
 
-function createPrefix(
-  iconKey: string,
-  schemeKey: string,
-  statKey: string,
-  mm: MurderMystery
-) {
-  const icon =
-    iconKey in PREFIX_ICON ?
-      PREFIX_ICON[iconKey] :
-      PREFIX_ICON.prefixicon_default;
-  const scheme =
-    schemeKey in PREFIX_SCHEME ?
-      PREFIX_SCHEME[schemeKey] :
-      PREFIX_SCHEME.prefixscheme_none;
-  const statFn =
-    statKey in PREFIX_STAT ? PREFIX_STAT[statKey] : PREFIX_STAT.prefixstat_none;
+function createPrefix(iconKey: string, schemeKey: string, statKey: string, mm: MurderMystery) {
+  const icon = iconKey in PREFIX_ICON ? PREFIX_ICON[iconKey] : PREFIX_ICON.prefixicon_default;
+  const scheme = schemeKey in PREFIX_SCHEME ? PREFIX_SCHEME[schemeKey] : PREFIX_SCHEME.prefixscheme_none;
+  const statFn = statKey in PREFIX_STAT ? PREFIX_STAT[statKey] : PREFIX_STAT.prefixstat_none;
   const stat = statFn(mm);
 
   let formattedStat: string = "";

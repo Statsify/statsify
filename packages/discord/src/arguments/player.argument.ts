@@ -6,10 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  APIApplicationCommandOptionChoice,
-  ApplicationCommandOptionType,
-} from "discord-api-types/v10";
+import { APIApplicationCommandOptionChoice, ApplicationCommandOptionType } from "discord-api-types/v10";
 import { AbstractArgument } from "./abstract.argument.js";
 import { ApiService } from "#services";
 import { CommandContext } from "#command";
@@ -23,14 +20,15 @@ export class PlayerArgument extends AbstractArgument {
   public type = ApplicationCommandOptionType.String;
   public autocomplete = true;
 
-  public constructor(public name = "player", public required = false) {
+  public constructor(
+    public name = "player",
+    public required = false
+  ) {
     super();
     this.description = (t) => t("arguments.player");
   }
 
-  public async autocompleteHandler(
-    context: CommandContext
-  ): Promise<APIApplicationCommandOptionChoice[]> {
+  public async autocompleteHandler(context: CommandContext): Promise<APIApplicationCommandOptionChoice[]> {
     const query = context.option<string>(this.name).toLowerCase();
 
     const searched = { name: query, value: query };

@@ -2,49 +2,8 @@
   "name": "api",
   "version": "0.0.0",
   "private": true,
-  "main": "dist/index.js",
   "type": "module",
-  "scripts": {
-    "start": "node --enable-source-maps .",
-    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
-    "test:types": "tsc --noEmit",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "@fastify/static": "^8.2.0",
-    "@fastify/view": "^11.1.1",
-    "@m8a/nestjs-typegoose": "^12.0.0",
-    "@nestjs/axios": "^4.0.1",
-    "@nestjs/common": "^11.1.6",
-    "@nestjs/core": "^11.1.6",
-    "@nestjs/platform-fastify": "^11.1.6",
-    "@nestjs/swagger": "^11.2.0",
-    "@sentry/node": "^7.118.0",
-    "@statsify/api-client": "workspace:^",
-    "@statsify/assets": "workspace:^",
-    "@statsify/logger": "workspace:^",
-    "@statsify/rendering": "workspace:^",
-    "@statsify/schemas": "workspace:^",
-    "@statsify/skin-renderer": "workspace:^",
-    "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
-    "@typegoose/typegoose": "^12.6.0",
-    "class-transformer": "0.5.1",
-    "class-validator": "^0.14.1",
-    "fastify": "^5.5.0",
-    "handlebars": "^4.7.8",
-    "ioredis": "5.7.0",
-    "luxon": "^3.5.0",
-    "mongoose": "^8.5.2",
-    "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1",
-    "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz",
-    "toad-scheduler": "^3.0.1"
-  },
-  "devDependencies": {
-    "@nestjs/testing": "^11.1.6",
-    "@types/luxon": "^3.4.2"
-  },
+  "main": "dist/index.js",
   "imports": {
     "#auth": {
       "types": "./src/auth/index.ts",
@@ -98,5 +57,46 @@
       "types": "./src/redis/index.ts",
       "default": "./dist/redis/index.js"
     }
+  },
+  "scripts": {
+    "start": "node --enable-source-maps .",
+    "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
+    "test:types": "tsc --noEmit",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@fastify/static": "^8.2.0",
+    "@fastify/view": "^11.1.1",
+    "@m8a/nestjs-typegoose": "^12.0.0",
+    "@nestjs/axios": "^4.0.1",
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/core": "^11.1.6",
+    "@nestjs/platform-fastify": "^11.1.6",
+    "@nestjs/swagger": "^11.2.0",
+    "@sentry/node": "^7.118.0",
+    "@statsify/api-client": "workspace:^",
+    "@statsify/assets": "workspace:^",
+    "@statsify/logger": "workspace:^",
+    "@statsify/rendering": "workspace:^",
+    "@statsify/schemas": "workspace:^",
+    "@statsify/skin-renderer": "workspace:^",
+    "@statsify/util": "workspace:^",
+    "@swc/helpers": "^0.5.12",
+    "@typegoose/typegoose": "^12.6.0",
+    "class-transformer": "0.5.1",
+    "class-validator": "^0.14.1",
+    "fastify": "^5.5.0",
+    "handlebars": "^4.7.8",
+    "ioredis": "5.7.0",
+    "luxon": "^3.5.0",
+    "mongoose": "^8.5.2",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz",
+    "toad-scheduler": "^3.0.1"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "^11.1.6",
+    "@types/luxon": "^3.4.2"
   }
 }

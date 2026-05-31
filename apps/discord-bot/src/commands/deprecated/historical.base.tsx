@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  Command,
-  EmbedBuilder,
-  PlayerArgument,
-  SubCommand,
-} from "@statsify/discord";
+import { Command, EmbedBuilder, PlayerArgument, SubCommand } from "@statsify/discord";
 
 import { STATUS_COLORS } from "@statsify/logger";
 import { getAssetPath } from "@statsify/assets";

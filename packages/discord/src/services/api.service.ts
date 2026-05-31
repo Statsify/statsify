@@ -47,23 +47,17 @@ export class ApiService extends StatsifyApiService {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
-    return super
-      .getCachedPlayer(input, User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE)
-      .catch((err) => {
-        if (!err.response || !err.response.data) throw this.unknownError();
-        const error = err.response.data as PlayerNotFoundException;
+    return super.getCachedPlayer(input, User.isGold(user) ? CacheLevel.LIVE : CacheLevel.CACHE).catch((err) => {
+      if (!err.response || !err.response.data) throw this.unknownError();
+      const error = err.response.data as PlayerNotFoundException;
 
-        if (error.message === "player") throw this.missingPlayer(type, tag);
+      if (error.message === "player") throw this.missingPlayer(type, tag);
 
-        throw this.unknownError();
-      });
+      throw this.unknownError();
+    });
   }
 
-  public override async getPlayerSession(
-    tag: string,
-    userUuid?: string,
-    user: User | null = null
-  ) {
+  public override async getPlayerSession(tag: string, userUuid?: string, user: User | null = null) {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);
 
@@ -98,9 +92,7 @@ export class ApiService extends StatsifyApiService {
 
     return super.getStatus(input).catch((err) => {
       if (!err.response || !err.response.data) throw this.unknownError();
-      const error = err.response.data as
-        | StatusNotFoundException |
-        PlayerNotFoundException;
+      const error = err.response.data as StatusNotFoundException | PlayerNotFoundException;
 
       if (error.message === "player") throw this.missingPlayer(type, tag);
 
@@ -120,11 +112,7 @@ export class ApiService extends StatsifyApiService {
     });
   }
 
-  public override async getGuild(
-    tag: string,
-    type?: GuildQuery,
-    user: User | null = null
-  ) {
+  public override async getGuild(tag: string, type?: GuildQuery, user: User | null = null) {
     let input: string;
     let playerType: PlayerTag;
 
@@ -177,22 +165,14 @@ export class ApiService extends StatsifyApiService {
     });
   }
 
-  public override getPlayerLeaderboard(
-    field: string,
-    input: string | number,
-    type: LeaderboardQuery
-  ) {
+  public override getPlayerLeaderboard(field: string, input: string | number, type: LeaderboardQuery) {
     return super.getPlayerLeaderboard(field, input, type).catch((err: AxiosError) => {
       if ((err.response?.data as PlayerNotFoundException).statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
     });
   }
 
-  public override getGuildLeaderboard(
-    field: string,
-    input: string | number,
-    type: LeaderboardQuery
-  ) {
+  public override getGuildLeaderboard(field: string, input: string | number, type: LeaderboardQuery) {
     return super.getGuildLeaderboard(field, input, type).catch((err: AxiosError) => {
       if ((err.response?.data as GuildNotFoundException).statusCode === 404) return null;
       throw new ErrorMessage("errors.leaderboardNotFound");
@@ -204,7 +184,7 @@ export class ApiService extends StatsifyApiService {
    * @param tag Username, UUID, or Discord ID, or nothing. If nothing is provided it will attempt to fall back on the provided user.
    * @param user User to use if no tag is provided.
    * @returns a Skin
-  */
+   */
   public override async getPlayerSkinTextures(tag: string, user: User | null = null) {
     const [formattedTag, type] = this.parseTag(tag);
     const input = await this.resolveTag(formattedTag, type, user);

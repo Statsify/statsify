@@ -10,14 +10,7 @@ import { Box, Render } from "@statsify/rendering";
 
 export const render: Render<Box.BoxRenderProps> = (
   ctx,
-  {
-    color = Box.DEFAULT_COLOR,
-    border,
-    shadowDistance,
-    shadowOpacity = Box.SHADOW_OPACITY,
-    outline,
-    outlineSize,
-  },
+  { color = Box.DEFAULT_COLOR, border, shadowDistance, shadowOpacity = Box.SHADOW_OPACITY, outline, outlineSize },
   { x, y, width, height, padding }
 ) => {
   const fill = Box.resolveFill(color, ctx, x, y, width, height);
@@ -53,15 +46,9 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.lineTo(x + width - border.topRight, y + border.topRight + border.topRight);
   ctx.lineTo(x + width, y + border.topRight + border.topRight);
   ctx.lineTo(x + width, y + height - border.bottomRight - border.bottomRight);
-  ctx.lineTo(
-    x + width - border.bottomRight,
-    y + height - border.bottomRight - border.bottomRight
-  );
+  ctx.lineTo(x + width - border.bottomRight, y + height - border.bottomRight - border.bottomRight);
   ctx.lineTo(x + width - border.bottomRight, y + height - border.bottomRight);
-  ctx.lineTo(
-    x + width - border.bottomRight - border.bottomRight,
-    y + height - border.bottomRight
-  );
+  ctx.lineTo(x + width - border.bottomRight - border.bottomRight, y + height - border.bottomRight);
   ctx.lineTo(x + width - border.bottomRight - border.bottomRight, y + height);
   ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height);
   ctx.lineTo(x + border.bottomLeft + border.bottomLeft, y + height - border.bottomLeft);
@@ -72,8 +59,7 @@ export const render: Render<Box.BoxRenderProps> = (
   Box.renderOverlay(ctx, x, y, height);
 
   if (outline) {
-    ctx.strokeStyle =
-      outline === true ? Box.resolveFill(color, ctx, x, y, width, height) : outline;
+    ctx.strokeStyle = outline === true ? Box.resolveFill(color, ctx, x, y, width, height) : outline;
     ctx.lineWidth = outlineSize;
     ctx.stroke();
   }
@@ -88,23 +74,13 @@ export const render: Render<Box.BoxRenderProps> = (
     x + width,
     y + shadowDistance + border.topRight + border.topRight,
     shadowDistance,
-    height -
-    shadowDistance -
-    border.bottomRight -
-    border.bottomRight -
-    border.topRight -
-    border.topRight
+    height - shadowDistance - border.bottomRight - border.bottomRight - border.topRight - border.topRight
   );
 
   ctx.fillRect(
     x + shadowDistance + border.bottomLeft + border.bottomLeft,
     y + height,
-    width -
-    shadowDistance -
-    border.bottomRight -
-    border.bottomRight -
-    border.bottomLeft -
-    border.bottomLeft,
+    width - shadowDistance - border.bottomRight - border.bottomRight - border.bottomLeft - border.bottomLeft,
     shadowDistance
   );
 

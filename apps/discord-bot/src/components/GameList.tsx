@@ -12,9 +12,7 @@ import { Table } from "./Table/index.js";
 import { arrayGroup } from "@statsify/util";
 import type { Box } from "@statsify/rendering";
 
-export type GameEntry =
-  | [GameId, string] |
-  [GameId, string, Box.BoxProps | Box.BoxRenderProps];
+export type GameEntry = [GameId, string] | [GameId, string, Box.BoxProps | Box.BoxRenderProps];
 
 export interface GameListProps {
   gameIcons: Record<GameId, Image>;

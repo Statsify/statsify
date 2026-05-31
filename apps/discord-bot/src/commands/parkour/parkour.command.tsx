@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { GameId, PARKOUR_MODES, ParkourModes } from "@statsify/schemas";
 import { ParkourProfile } from "./parkour.profile.js";
@@ -31,10 +27,7 @@ export class ParkourCommand extends BaseHypixelCommand<ParkourModes, PreProfileD
     return { gameIcons: await getAllGameIcons() };
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { data }: ProfileData<ParkourModes, PreProfileData>
-  ): JSX.Element {
+  public getProfile(base: BaseProfileProps, { data }: ProfileData<ParkourModes, PreProfileData>): JSX.Element {
     return <ParkourProfile {...base} gameIcons={data.gameIcons} />;
   }
 }

@@ -6,10 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  APIApplicationCommandOptionChoice,
-  ApplicationCommandOptionType,
-} from "discord-api-types/v10";
+import { APIApplicationCommandOptionChoice, ApplicationCommandOptionType } from "discord-api-types/v10";
 import { AbstractArgument } from "./abstract.argument.js";
 import { LocalizationString } from "#messages";
 

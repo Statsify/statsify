@@ -30,9 +30,7 @@ export const parseDiscordResponse = <T>(response: RestClient.RequestResult): T =
 
 export const parseDiscordError = (error: any = {}, errorKey = ""): string => {
   if (typeof error.message === "string")
-    return `${errorKey.length ? `${errorKey} - ${error.code}` : `${error.code}`}: ${
-      error.message
-    }`.trim();
+    return `${errorKey.length ? `${errorKey} - ${error.code}` : `${error.code}`}: ${error.message}`.trim();
 
   const entries = Object.entries(error) as [string, any][];
   let message = "";
@@ -47,8 +45,7 @@ export const parseDiscordError = (error: any = {}, errorKey = ""): string => {
     }
 
     if (typeof value === "string") message += value;
-    else if ("_errors" in value)
-      for (const error of value._errors) message += parseDiscordError(error, nextKey);
+    else if ("_errors" in value) for (const error of value._errors) message += parseDiscordError(error, nextKey);
     else message += parseDiscordError(value, nextKey);
   }
 

@@ -46,26 +46,20 @@ export class GuildLeaderboardService extends LeaderboardService {
     return ranking[0].rank;
   }
 
-  protected async getAdditionalStats(
-    ids: string[],
-    fields: string[]
-  ): Promise<LeaderboardAdditionalStats[]> {
-    const selector = fields.reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {} as Record<string, boolean>);
+  protected async getAdditionalStats(ids: string[], fields: string[]): Promise<LeaderboardAdditionalStats[]> {
+    const selector = fields.reduce(
+      (acc, key) => {
+        acc[key] = true;
+        return acc;
+      },
+      {} as Record<string, boolean>
+    );
 
     selector.nameFormatted = true;
 
     return await Promise.all(
       ids.map(async (id) => {
-        const guild = await this.guildModel
-          .findOne()
-          .where("id")
-          .equals(id)
-          .select(selector)
-          .lean()
-          .exec();
+        const guild = await this.guildModel.findOne().where("id").equals(id).select(selector).lean().exec();
 
         const additionalStats = flatten(guild) as LeaderboardAdditionalStats;
         additionalStats.name = additionalStats.nameFormatted;

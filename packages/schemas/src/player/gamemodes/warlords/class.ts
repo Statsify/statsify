@@ -78,13 +78,13 @@ export class WarlordsClass extends WarlordsSpecification {
 
 export class WarlordsShaman extends WarlordsClass {
   @Field({ leaderboard: { name: "Thunderlord" } })
-  public declare attack: WarlordsSpecification;
+  declare public attack: WarlordsSpecification;
 
   @Field({ leaderboard: { name: "Spiritguard" } })
-  public declare defense: WarlordsSpecification;
+  declare public defense: WarlordsSpecification;
 
   @Field({ leaderboard: { name: "Earthwarden" } })
-  public declare healer: WarlordsSpecification;
+  declare public healer: WarlordsSpecification;
 
   public constructor(data: APIData) {
     super(data, "shaman", "thunderlord", "spiritguard", "earthwarden");
@@ -93,13 +93,13 @@ export class WarlordsShaman extends WarlordsClass {
 
 export class WarlordsMage extends WarlordsClass {
   @Field({ leaderboard: { name: "Pyromancer" } })
-  public declare attack: WarlordsSpecification;
+  declare public attack: WarlordsSpecification;
 
   @Field({ leaderboard: { name: "Cryomancer" } })
-  public declare defense: WarlordsSpecification;
+  declare public defense: WarlordsSpecification;
 
   @Field({ leaderboard: { name: "Aquamancer" } })
-  public declare healer: WarlordsSpecification;
+  declare public healer: WarlordsSpecification;
 
   public constructor(data: APIData) {
     super(data, "mage", "pyromancer", "cryomancer", "aquamancer");
@@ -108,13 +108,13 @@ export class WarlordsMage extends WarlordsClass {
 
 export class WarlordsWarrior extends WarlordsClass {
   @Field({ leaderboard: { name: "Berserker" } })
-  public declare attack: WarlordsSpecification;
+  declare public attack: WarlordsSpecification;
 
   @Field({ leaderboard: { name: "Defender" } })
-  public declare defense: WarlordsSpecification;
+  declare public defense: WarlordsSpecification;
 
   @Field({ leaderboard: { name: "Revenant" } })
-  public declare healer: WarlordsSpecification;
+  declare public healer: WarlordsSpecification;
 
   public constructor(data: APIData) {
     super(data, "warrior", "berserker", "defender", "revenant");
@@ -123,13 +123,13 @@ export class WarlordsWarrior extends WarlordsClass {
 
 export class WarlordsPaladin extends WarlordsClass {
   @Field({ leaderboard: { name: "Avenger" } })
-  public declare attack: WarlordsSpecification;
+  declare public attack: WarlordsSpecification;
 
   @Field({ leaderboard: { name: "Crusader" } })
-  public declare defense: WarlordsSpecification;
+  declare public defense: WarlordsSpecification;
 
   @Field({ leaderboard: { name: "Protector" } })
-  public declare healer: WarlordsSpecification;
+  declare public healer: WarlordsSpecification;
 
   public constructor(data: APIData) {
     super(data, "paladin", "avenger", "crusader", "protector");

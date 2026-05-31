@@ -15,7 +15,13 @@ export function useMeasure<T extends HTMLElement>(ref: RefObject<T | null>) {
 
   // This must check for window since ResizeObserver only exists on the web
   // eslint-disable-next-line unicorn/prefer-global-this
-  const observer = useMemo(() => typeof window !== "undefined" && window.ResizeObserver ? new ResizeObserver((entries) => setSize(entries[0].contentRect)) : undefined, []);
+  const observer = useMemo(
+    () =>
+      typeof window !== "undefined" && window.ResizeObserver
+        ? new ResizeObserver((entries) => setSize(entries[0].contentRect))
+        : undefined,
+    []
+  );
 
   useEffect(() => {
     if (!ref.current) return;

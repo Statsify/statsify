@@ -8,11 +8,7 @@
 
 import { ARENA_BRAWL_MODES, ArenaBrawlModes } from "@statsify/schemas";
 import { ArenaBrawlProfile } from "./arenabrawl.profile.js";
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.arenabrawl") })
@@ -21,10 +17,7 @@ export class ArenaBrawlCommand extends BaseHypixelCommand<ArenaBrawlModes> {
     super(ARENA_BRAWL_MODES);
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<ArenaBrawlModes, never>
-  ): JSX.Element {
+  public getProfile(base: BaseProfileProps, { mode }: ProfileData<ArenaBrawlModes, never>): JSX.Element {
     return <ArenaBrawlProfile {...base} mode={mode} />;
   }
 }

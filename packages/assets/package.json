@@ -1,9 +1,9 @@
 {
   "name": "@statsify/assets",
   "version": "0.0.0",
+  "type": "module",
   "main": "dist/index.js",
   "types": "src/index.ts",
-  "type": "module",
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",

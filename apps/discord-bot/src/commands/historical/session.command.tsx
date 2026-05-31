@@ -343,9 +343,7 @@ export class SessionCommand {
     const userId = context.getInteraction().getUserId();
     await this.apiService.deletePlayerSession(userId);
 
-    const embed = new EmbedBuilder()
-      .color(STATUS_COLORS.success)
-      .description((t) => t("historical.deleteSession"));
+    const embed = new EmbedBuilder().color(STATUS_COLORS.success).description((t) => t("historical.deleteSession"));
 
     return { embeds: [embed] };
   }
@@ -369,11 +367,7 @@ export class SessionCommand {
   }) {
     const user = context.getUser();
 
-    const player = await this.apiService.getPlayerSession(
-      context.option("player"),
-      user?.uuid,
-      user
-    );
+    const player = await this.apiService.getPlayerSession(context.option("player"), user?.uuid, user);
 
     const [logo, skin, badge] = await Promise.all([
       getLogo(user),
@@ -388,88 +382,89 @@ export class SessionCommand {
     const pages: Page[] = displayedModes.map((mode, index) => {
       const submodes = filterSubmodes?.(player, mode) ?? mode.submodes;
 
-      if (submodes.length === 0) return {
-        label: mode.formatted,
-        emoji: modeEmojis[index],
-        generator: async (t) => {
-          const background = await getBackground(...mapBackground(modes, mode.api));
+      if (submodes.length === 0)
+        return {
+          label: mode.formatted,
+          emoji: modeEmojis[index],
+          generator: async (t) => {
+            const background = await getBackground(...mapBackground(modes, mode.api));
 
-          const displayName = this.apiService.emojiDisplayName(t, player.displayName);
+            const displayName = this.apiService.emojiDisplayName(t, player.displayName);
 
-          let content: string | undefined = undefined;
+            let content: string | undefined = undefined;
 
-          if (player.isNew) {
-            content = t("historical.newSession", { displayName });
-          } else if (Math.random() < 0.1) {
-            content = t("tips.resetSession");
-          }
+            if (player.isNew) {
+              content = t("historical.newSession", { displayName });
+            } else if (Math.random() < 0.1) {
+              content = t("tips.resetSession");
+            }
 
-          const profile = getProfile(
-            {
-              player,
-              skin,
-              background,
-              logo,
-              t,
-              user,
-              badge,
-              time: {
-                timeType: HistoricalTimes.SESSION,
-                sessionReset: player.sessionReset ?
-                  DateTime.fromSeconds(player.sessionReset) :
-                  DateTime.now(),
+            const profile = getProfile(
+              {
+                player,
+                skin,
+                background,
+                logo,
+                t,
+                user,
+                badge,
+                time: {
+                  timeType: HistoricalTimes.SESSION,
+                  sessionReset: player.sessionReset ? DateTime.fromSeconds(player.sessionReset) : DateTime.now(),
+                },
               },
-            },
-            { ...mode, submode: undefined } as unknown as GameMode<T>
-          );
+              { ...mode, submode: undefined } as unknown as GameMode<T>
+            );
 
-          const canvas = render(profile, getTheme(user));
-          const buffer = await canvas.toBuffer("png");
+            const canvas = render(profile, getTheme(user));
+            const buffer = await canvas.toBuffer("png");
 
-          return {
-            content,
-            files: [{ name: "session.png", data: buffer, type: "image/png" }],
-            attachments: [],
-          };
-        },
-      };
+            return {
+              content,
+              files: [{ name: "session.png", data: buffer, type: "image/png" }],
+              attachments: [],
+            };
+          },
+        };
 
       const submodeEmojis = getSubModeEmojis ? getSubModeEmojis(mode.api, submodes) : [];
 
-      const subPages = submodes.map((submode, index): SubPage => ({
-        label: submode.formatted,
-        emoji: submodeEmojis[index],
-        generator: async (t) => {
-          const background = await getBackground(...mapBackground(modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
+      const subPages = submodes.map(
+        (submode, index): SubPage => ({
+          label: submode.formatted,
+          emoji: submodeEmojis[index],
+          generator: async (t) => {
+            const background = await getBackground(
+              ...mapBackground(modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>)
+            );
 
-          const profile = getProfile(
-            {
-              player,
-              skin,
-              background,
-              logo,
-              t,
-              user,
-              badge,
-              time: {
-                timeType: HistoricalTimes.SESSION,
-                sessionReset: player.sessionReset ?
-                  DateTime.fromSeconds(player.sessionReset) :
-                  DateTime.now(),
+            const profile = getProfile(
+              {
+                player,
+                skin,
+                background,
+                logo,
+                t,
+                user,
+                badge,
+                time: {
+                  timeType: HistoricalTimes.SESSION,
+                  sessionReset: player.sessionReset ? DateTime.fromSeconds(player.sessionReset) : DateTime.now(),
+                },
               },
-            },
-            { api: mode.api, formatted: mode.formatted, hypixel: mode.hypixel, submode } as GameMode<T>
-          );
+              { api: mode.api, formatted: mode.formatted, hypixel: mode.hypixel, submode } as GameMode<T>
+            );
 
-          const canvas = render(profile, getTheme(user));
-          const buffer = await canvas.toBuffer("png");
+            const canvas = render(profile, getTheme(user));
+            const buffer = await canvas.toBuffer("png");
 
-          return {
-            files: [{ name: "session.png", data: buffer, type: "image/png" }],
-            attachments: [],
-          };
-        },
-      }));
+            return {
+              files: [{ name: "session.png", data: buffer, type: "image/png" }],
+              attachments: [],
+            };
+          },
+        })
+      );
 
       return {
         label: mode.formatted,

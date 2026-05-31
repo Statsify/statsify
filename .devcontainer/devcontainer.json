@@ -16,9 +16,7 @@
       ]
     }
   },
-  "runArgs": [
-    "--privileged"
-  ],
+  "runArgs": ["--privileged"],
   "containerEnv": {
     "USE_POLLING": "true"
   },

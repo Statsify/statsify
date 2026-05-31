@@ -9,9 +9,7 @@
 import { type NextRequest } from "next/server";
 import { env } from "~/app/env";
 
-export async function GET(
-  request: NextRequest
-) {
+export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const uuid = searchParams.get("uuid");
   const size = searchParams.get("size") ?? 160;

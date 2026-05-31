@@ -20,11 +20,7 @@ import {
   ModalBuilder,
   TextInputBuilder,
 } from "@statsify/discord";
-import {
-  ButtonStyle,
-  InteractionResponseType,
-  TextInputStyle,
-} from "discord-api-types/v10";
+import { ButtonStyle, InteractionResponseType, TextInputStyle } from "discord-api-types/v10";
 import { STATUS_COLORS } from "@statsify/logger";
 import { config } from "@statsify/util";
 
@@ -64,7 +60,8 @@ export class VerifyCommand {
     const row = new ActionRowBuilder([VERIFY_BUTTON]);
 
     return {
-      content: (t) => `# [${t("verification.instructions.title")}](${VERIFY_VIDEO}) ${t("emojis:socials.h1.youtube")}\n${this.verificationSteps(t, false)}`,
+      content: (t) =>
+        `# [${t("verification.instructions.title")}](${VERIFY_VIDEO}) ${t("emojis:socials.h1.youtube")}\n${this.verificationSteps(t, false)}`,
       components: [row],
     };
   }

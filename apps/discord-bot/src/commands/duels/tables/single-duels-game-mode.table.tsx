@@ -6,7 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { BaseDuelsGameMode, PVPBaseDuelsGameMode, SingleDuelsGameMode, SinglePVPDuelsGameMode } from "@statsify/schemas";
+import {
+  BaseDuelsGameMode,
+  PVPBaseDuelsGameMode,
+  SingleDuelsGameMode,
+  SinglePVPDuelsGameMode,
+} from "@statsify/schemas";
 import { Historical, If, Table } from "#components";
 import { LocalizeFunction } from "@statsify/discord";
 import type { ProfileTime } from "#commands/base.hypixel-command";
@@ -17,20 +22,12 @@ interface SingleDuelsGameModeTableProps {
   time: ProfileTime;
 }
 
-export const SingleDuelsGameModeTable = ({
-  stats,
-  t,
-  time,
-}: SingleDuelsGameModeTableProps) => (
+export const SingleDuelsGameModeTable = ({ stats, t, time }: SingleDuelsGameModeTableProps) => (
   <Table.table>
     <Historical.exclude time={time}>
       <Table.tr>
         <Table.td title={t("stats.winstreak")} value={t(stats.winstreak)} color="§e" />
-        <Table.td
-          title={t("stats.bestWinstreak")}
-          value={t(stats.bestWinstreak)}
-          color="§e"
-        />
+        <Table.td title={t("stats.bestWinstreak")} value={t(stats.bestWinstreak)} color="§e" />
       </Table.tr>
     </Historical.exclude>
     <Table.tr>

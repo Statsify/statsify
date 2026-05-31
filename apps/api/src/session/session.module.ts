@@ -15,14 +15,7 @@ import { SessionService } from "./session.service.js";
 import { TypegooseModule } from "@m8a/nestjs-typegoose";
 
 @Module({
-  imports: [
-    forwardRef(() => PlayerModule),
-    TypegooseModule.forFeature([
-      Session,
-      Player,
-      User,
-    ]),
-  ],
+  imports: [forwardRef(() => PlayerModule), TypegooseModule.forFeature([Session, Player, User])],
   controllers: [SessionController],
   providers: [SessionService],
 })

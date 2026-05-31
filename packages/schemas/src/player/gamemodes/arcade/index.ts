@@ -47,11 +47,7 @@ export const ARCADE_MODES = new GameModes([
   {
     api: "dropper",
     hypixel: "DROPPER",
-    submodes: [
-      { api: "overall" },
-      { api: "bestTimes" },
-      { api: "completions" },
-    ],
+    submodes: [{ api: "overall" }, { api: "bestTimes" }, { api: "completions" }],
   },
   { api: "enderSpleef", hypixel: "ENDER" },
   { api: "farmHunt", hypixel: "FARM_HUNT" },

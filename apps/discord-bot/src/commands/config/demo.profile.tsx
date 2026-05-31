@@ -20,15 +20,7 @@ export interface DemoProfileProps {
   message: string;
 }
 
-export const DemoProfile = ({
-  background,
-  skin,
-  player,
-  badge,
-  user,
-  logo,
-  message,
-}: DemoProfileProps) => (
+export const DemoProfile = ({ background, skin, player, badge, user, logo, message }: DemoProfileProps) => (
   <Container background={background}>
     <div width="100%" height="100%">
       <Skin skin={skin} />

@@ -29,16 +29,8 @@ export const MiniWallsTable = ({ stats, t }: MiniWallsTableProps) => (
       <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
     </Table.tr>
     <Table.tr>
-      <Table.td
-        title={t("stats.witherKills")}
-        value={t(stats.witherKills)}
-        color="§#417286"
-      />
-      <Table.td
-        title={t("stats.witherDamage")}
-        value={t(stats.witherDamage)}
-        color="§#0668af"
-      />
+      <Table.td title={t("stats.witherKills")} value={t(stats.witherKills)} color="§#417286" />
+      <Table.td title={t("stats.witherDamage")} value={t(stats.witherDamage)} color="§#0668af" />
     </Table.tr>
   </Table.table>
 );

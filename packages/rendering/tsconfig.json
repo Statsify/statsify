@@ -1,12 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "jsx": "preserve",
+    "jsx": "preserve"
   },
-  "include": [
-    "src",
-    "tests",
-    "eslint.config.js",
-    "vitest.config.ts"
-  ]
+  "include": ["src", "tests", "eslint.config.js", "vitest.config.ts"]
 }

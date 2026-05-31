@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  AbstractCommandListener,
-  CommandContext,
-  CommandResolvable,
-  Interaction,
-} from "@statsify/discord";
+import { AbstractCommandListener, CommandContext, CommandResolvable, Interaction } from "@statsify/discord";
 import { ApiService } from "@statsify/api-client";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { config } from "@statsify/util";
@@ -24,11 +19,7 @@ export class CommandListener extends AbstractCommandListener {
   private readonly apiService: ApiService;
   private static instance: CommandListener;
 
-  private constructor(
-    client: WebsocketShard,
-    rest: RestClient,
-    commands: Map<string, CommandResolvable>
-  ) {
+  private constructor(client: WebsocketShard, rest: RestClient, commands: Map<string, CommandResolvable>) {
     super(client, rest, commands, applicationId);
 
     this.apiService = new ApiService(apiClientRoute, apiClientKey);
@@ -45,17 +36,14 @@ export class CommandListener extends AbstractCommandListener {
   protected async onCommand(interaction: Interaction): Promise<void> {
     const parentData = interaction.getData();
 
-    if (interaction.getGuildId() !== await config("supportBot.guild")) return;
+    if (interaction.getGuildId() !== (await config("supportBot.guild"))) return;
 
     const parentCommand = this.commands.get(parentData.name)!;
     if (!parentCommand) return;
 
     const id = interaction.getUserId();
 
-    const [command, data, commandName] = this.getCommandAndData(
-      parentCommand,
-      parentData
-    );
+    const [command, data, commandName] = this.getCommandAndData(parentCommand, parentData);
 
     const user = await this.apiService.getUser(id);
 
@@ -67,11 +55,7 @@ export class CommandListener extends AbstractCommandListener {
     return this.executeCommand({ commandName, command, context, preconditions });
   }
 
-  public static create(
-    client: WebsocketShard,
-    rest: RestClient,
-    commands: Map<string, CommandResolvable>
-  ) {
+  public static create(client: WebsocketShard, rest: RestClient, commands: Map<string, CommandResolvable>) {
     this.instance = new CommandListener(client, rest, commands);
     return this.instance;
   }

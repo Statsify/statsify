@@ -65,12 +65,7 @@ export class UserService {
 
     if (!user) throw new NotFoundException("user");
 
-    await this.userModel
-      .updateOne({ hasBadge: true })
-      .where("id")
-      .equals(user.id)
-      .lean()
-      .exec();
+    await this.userModel.updateOne({ hasBadge: true }).where("id").equals(user.id).lean().exec();
 
     await writeFile(this.getBadgePath(user.id), badge);
   }
@@ -78,12 +73,7 @@ export class UserService {
   public async deleteBadge(idOrUuid: string): Promise<void> {
     const [tag, type] = this.parseTag(idOrUuid);
 
-    const user = await this.userModel
-      .findOneAndUpdate({ hasBadge: false })
-      .where(type)
-      .equals(tag)
-      .lean()
-      .exec();
+    const user = await this.userModel.findOneAndUpdate({ hasBadge: false }).where(type).equals(tag).lean().exec();
 
     if (!user) throw new NotFoundException("user");
 
@@ -91,10 +81,7 @@ export class UserService {
   }
 
   public async verifyUser(uuidOrCode: string, id: string): Promise<User | null> {
-    const uuid =
-      uuidOrCode.length >= 32 ?
-        uuidOrCode.replace(/-/g, "") :
-        await this.getUuidFromCode(uuidOrCode);
+    const uuid = uuidOrCode.length >= 32 ? uuidOrCode.replace(/-/g, "") : await this.getUuidFromCode(uuidOrCode);
 
     // Unverify anyone previously linked to this UUID
     await this.userModel
@@ -104,11 +91,7 @@ export class UserService {
 
     // Link the discord id to the UUID
     const user = await this.userModel
-      .findOneAndUpdate(
-        { id },
-        { id, uuid, verifiedAt: Date.now() },
-        { upsert: true, new: true }
-      )
+      .findOneAndUpdate({ id }, { id, uuid, verifiedAt: Date.now() }, { upsert: true, new: true })
       .lean()
       .exec();
 
@@ -119,11 +102,7 @@ export class UserService {
     const [tag, type] = this.parseTag(idOrUuid);
 
     const user = await this.userModel
-      .findOneAndUpdate(
-        { [type]: tag },
-        { $unset: { uuid: "" }, unverifiedAt: Date.now() },
-        { new: true }
-      )
+      .findOneAndUpdate({ [type]: tag }, { $unset: { uuid: "" }, unverifiedAt: Date.now() }, { new: true })
       .lean()
       .exec();
 
@@ -131,12 +110,7 @@ export class UserService {
   }
 
   private async getUuidFromCode(code: string): Promise<string> {
-    const verifyCode = await this.verifyCodeModel
-      .findOneAndDelete()
-      .where("code")
-      .equals(code)
-      .lean()
-      .exec();
+    const verifyCode = await this.verifyCodeModel.findOneAndDelete().where("code").equals(code).lean().exec();
 
     if (!verifyCode) throw new NotFoundException("verifyCode");
 

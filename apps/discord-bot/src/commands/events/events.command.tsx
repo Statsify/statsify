@@ -6,13 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ApiService,
-  Command,
-  CommandContext,
-  PaginateService,
-  PlayerArgument,
-} from "@statsify/discord";
+import { ApiService, Command, CommandContext, PaginateService, PlayerArgument } from "@statsify/discord";
 import { EVENT_TYPES, GENERAL_MODES } from "@statsify/schemas";
 import { EventsProfile } from "./events.profile.js";
 import { arrayGroup } from "@statsify/util";
@@ -43,9 +37,7 @@ export class EventsCommand {
     return this.paginateService.scrollingPagination(
       context,
       arrayGroup(EVENT_TYPES, 4).map((events) => async () => {
-        const background = await getBackground(
-          ...mapBackground(GENERAL_MODES, GENERAL_MODES.getApiModes()[0])
-        );
+        const background = await getBackground(...mapBackground(GENERAL_MODES, GENERAL_MODES.getApiModes()[0]));
 
         return render(
           <EventsProfile

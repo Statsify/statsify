@@ -7,15 +7,7 @@
  */
 
 import { ArenaBrawlModes, FormattedGame, type GameMode } from "@statsify/schemas";
-import {
-  Container,
-  Footer,
-  Header,
-  Historical,
-  SidebarItem,
-  Table,
-  formatProgression,
-} from "#components";
+import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
@@ -56,9 +48,7 @@ export const ArenaBrawlProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.ARENA_BRAWL} §fStats §r(${mode.formatted})`}
-        description={`§7${t("stats.prefix")}: ${
-          arenabrawl.naturalPrefix
-        }\n${formatProgression({
+        description={`§7${t("stats.prefix")}: ${arenabrawl.naturalPrefix}\n${formatProgression({
           t,
           label: t("stats.progression.win"),
           progression: arenabrawl.progression,
@@ -81,32 +71,12 @@ export const ArenaBrawlProfile = ({
         <Historical.exclude time={time}>
           <Table.ts title="§6Skills">
             <Table.tr>
-              <Table.td
-                title={t("stats.offensive")}
-                value={prettify(arenabrawl.offensive)}
-                color="§c"
-                size="small"
-              />
-              <Table.td
-                title={t("stats.utility")}
-                value={prettify(arenabrawl.utility)}
-                color="§e"
-                size="small"
-              />
+              <Table.td title={t("stats.offensive")} value={prettify(arenabrawl.offensive)} color="§c" size="small" />
+              <Table.td title={t("stats.utility")} value={prettify(arenabrawl.utility)} color="§e" size="small" />
             </Table.tr>
             <Table.tr>
-              <Table.td
-                title={t("stats.support")}
-                value={prettify(arenabrawl.support)}
-                color="§a"
-                size="small"
-              />
-              <Table.td
-                title={t("stats.ultimate")}
-                value={prettify(arenabrawl.ultimate)}
-                color="§6"
-                size="small"
-              />
+              <Table.td title={t("stats.support")} value={prettify(arenabrawl.support)} color="§a" size="small" />
+              <Table.td title={t("stats.ultimate")} value={prettify(arenabrawl.ultimate)} color="§6" size="small" />
             </Table.tr>
           </Table.ts>
         </Historical.exclude>

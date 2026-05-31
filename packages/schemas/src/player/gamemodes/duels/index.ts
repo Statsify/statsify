@@ -28,10 +28,7 @@ import type { APIData } from "@statsify/util";
 export const DUELS_MODES = new GameModes([
   {
     api: "overall",
-    submodes: [
-      { api: "stats" },
-      { api: "titles" },
-    ],
+    submodes: [{ api: "stats" }, { api: "titles" }],
   },
   { api: "arena", hypixel: "DUELS_DUEL_ARENA" },
   {
@@ -48,13 +45,7 @@ export const DUELS_MODES = new GameModes([
   { api: "boxing", hypixel: "DUELS_BOXING_DUEL" },
   {
     api: "bridge",
-    submodes: [
-      { api: "overall" },
-      { api: "solo" },
-      { api: "doubles" },
-      { api: "threes" },
-      { api: "fours" },
-    ],
+    submodes: [{ api: "overall" }, { api: "solo" }, { api: "doubles" }, { api: "threes" }, { api: "fours" }],
   },
   { api: "classic", hypixel: "DUELS_CLASSIC_DUEL" },
   { api: "combo", hypixel: "DUELS_COMBO_DUEL" },
@@ -66,22 +57,13 @@ export const DUELS_MODES = new GameModes([
   { api: "skywars", formatted: "SkyWars" },
   {
     api: "spleef",
-    submodes: [
-      { api: "spleef" },
-      { api: "bowSpleef" },
-    ],
+    submodes: [{ api: "spleef" }, { api: "bowSpleef" }],
   },
   { api: "sumo", hypixel: "DUELS_SUMO_DUEL" },
   {
     api: "uhc",
     formatted: "UHC",
-    submodes: [
-      { api: "overall" },
-      { api: "solo" },
-      { api: "doubles" },
-      { api: "fours" },
-      { api: "deathmatch" },
-    ],
+    submodes: [{ api: "overall" }, { api: "solo" }, { api: "doubles" }, { api: "fours" }, { api: "deathmatch" }],
   },
   { hypixel: "DUELS_MW_DUEL", formatted: "MegaWalls Solo" },
   { hypixel: "DUELS_MW_DOUBLES", formatted: "MegaWalls Doubles" },

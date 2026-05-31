@@ -16,8 +16,8 @@ import unicorn from "eslint-plugin-unicorn";
 import { join } from "node:path";
 
 /**
- * 
- * @param {{ tsconfigDirName: string }} config 
+ *
+ * @param {{ tsconfigDirName: string }} config
  * @returns workspace eslint config
  */
 export function defineConfig({ tsconfigDirName }) {
@@ -29,14 +29,14 @@ export function defineConfig({ tsconfigDirName }) {
       languageOptions: {
         parserOptions: {
           project: [join(tsconfigDirName, "./tsconfig.json")],
-          tsconfigDirName
-        }
+          tsconfigDirName,
+        },
       },
       rules: {
         "@typescript-eslint/ban-ts-comment": [
           "error",
           {
-            "minimumDescriptionLength": 3,
+            minimumDescriptionLength: 3,
             "ts-check": true,
             "ts-expect-error": "allow-with-description",
             "ts-ignore": "allow-with-description",
@@ -81,8 +81,8 @@ export function defineConfig({ tsconfigDirName }) {
         "@typescript-eslint/no-unsafe-call": "off",
         "@typescript-eslint/no-unsafe-return": "off",
         "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/no-extraneous-class": "off"
-      }
+        "@typescript-eslint/no-extraneous-class": "off",
+      },
     },
     unicorn.configs["flat/recommended"],
     {
@@ -141,7 +141,7 @@ export function defineConfig({ tsconfigDirName }) {
             argsIgnorePattern: "^_",
           },
         ],
-      }
+      },
     },
     stylistic.configs.customize({
       jsx: true,
@@ -185,8 +185,8 @@ export function defineConfig({ tsconfigDirName }) {
         "@stylistic/type-generic-spacing": "error",
         "@stylistic/yield-star-spacing": ["error", { before: false, after: true }],
         "@stylistic/jsx-one-expression-per-line": "off",
-        "@stylistic/operator-linebreak": ["error", "after"]
-      }
+        "@stylistic/operator-linebreak": ["error", "after"],
+      },
     },
     {
       plugins: {
@@ -221,15 +221,10 @@ export function defineConfig({ tsconfigDirName }) {
           {
             ignoreCase: false,
             ignoreMemberSort: false,
-            memberSyntaxSortOrder: [
-              "all",
-              "single",
-              "multiple",
-              "none",
-            ],
+            memberSyntaxSortOrder: ["all", "single", "multiple", "none"],
           },
-        ]
-      }
+        ],
+      },
     }
   );
 }

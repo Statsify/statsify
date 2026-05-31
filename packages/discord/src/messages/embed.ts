@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  LocalizationString,
-  LocalizeFunction,
-  translateField,
-  translateObject,
-} from "./localize.js";
+import { LocalizationString, LocalizeFunction, translateField, translateObject } from "./localize.js";
 import type {
   APIEmbed,
   APIEmbedAuthor,
@@ -61,11 +56,7 @@ export class EmbedBuilder {
     return this;
   }
 
-  public field(
-    name: LocalizationString,
-    value: LocalizationString,
-    inline = false
-  ): this {
+  public field(name: LocalizationString, value: LocalizationString, inline = false): this {
     this.#fields = this.#fields || [];
     this.#fields.push({ name, value, inline });
 

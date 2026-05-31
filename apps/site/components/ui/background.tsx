@@ -56,7 +56,14 @@ export function Background({
 
   return (
     <div className={cn("absolute w-full pointer-events-none -z-50", className)}>
-      <Image src={Backgrounds[background]} alt="" fill={true} className="object-cover object-top" style={{ mask }} priority />
+      <Image
+        src={Backgrounds[background]}
+        alt=""
+        fill={true}
+        className="object-cover object-top"
+        style={{ mask }}
+        priority
+      />
       {/* Crossfade between oldBackground and currentBackground */}
       {oldBackground.current && oldBackground.current != background && (
         <motion.div style={{ opacity }}>

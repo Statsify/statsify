@@ -45,18 +45,13 @@ export const LeaderboardProfile = ({
   type,
 }: LeaderboardProfileProps) => {
   const titles = ["Pos", prettify(type), ...fields].map((field, index) => (
-    <box
-      width={index === 1 ? "remaining" : "100%"}
-      border={{ topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }}
-    >
+    <box width={index === 1 ? "remaining" : "100%"} border={{ topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 }}>
       <text>§l{field}</text>
     </box>
   ));
 
   const items = data.map((d) => {
-    const highlight = d.highlight ?
-      { color: "rgba(255, 255, 255, 0.35)", shadowOpacity: 0.3 } :
-      undefined;
+    const highlight = d.highlight ? { color: "rgba(255, 255, 255, 0.35)", shadowOpacity: 0.3 } : undefined;
 
     return (
       <>
@@ -94,11 +89,7 @@ export const LeaderboardProfile = ({
         <text>§^3^§l{name}</text>
       </box>
       <List items={[<>{titles}</>, ...items]} />
-      <Footer
-        logo={logo}
-        user={user}
-        border={{ bottomLeft: 4, bottomRight: 4, topLeft: 0, topRight: 0 }}
-      />
+      <Footer logo={logo} user={user} border={{ bottomLeft: 4, bottomRight: 4, topLeft: 0, topRight: 0 }} />
     </Container>
   );
 };

@@ -15,15 +15,15 @@ import type { ConsoleLoggerOptions, LogLevel, LoggerService } from "@nestjs/comm
 const DEFAULT_LOG_LEVELS: LogLevel[] = ["log", "error", "warn", "debug", "verbose", "fatal"];
 
 export const STATUS_COLORS = {
-  debug: 0xC700E7,
-  warn: 0xFAB627,
-  error: 0xCD1820,
-  info: 0x6469F5,
-  success: 0x36D494,
-  fatal: 0x81181A,
+  debug: 0xc700e7,
+  warn: 0xfab627,
+  error: 0xcd1820,
+  info: 0x6469f5,
+  success: 0x36d494,
+  fatal: 0x81181a,
 } as const;
 
-const isProduction = await config("environment") === "prod";
+const isProduction = (await config("environment")) === "prod";
 
 /**
  * A logger implementing the NestJS LoggerService interface. However can be used anywhere.
@@ -54,10 +54,7 @@ export class Logger implements LoggerService {
       return;
     }
 
-    const { messages, context } = this.getContextAndMessages([
-      message,
-      ...optionalParameters,
-    ]);
+    const { messages, context } = this.getContextAndMessages([message, ...optionalParameters]);
 
     this.printMessage(messages, context, "log");
   }
@@ -77,10 +74,7 @@ export class Logger implements LoggerService {
       message = message.stack;
     }
 
-    const { messages, context } = this.getContextAndMessages([
-      message,
-      ...optionalParameters,
-    ]);
+    const { messages, context } = this.getContextAndMessages([message, ...optionalParameters]);
 
     this.printMessage(messages, context, "error", "stderr", "📉");
   }
@@ -92,10 +86,7 @@ export class Logger implements LoggerService {
       return;
     }
 
-    const { messages, context } = this.getContextAndMessages([
-      message,
-      ...optionalParameters,
-    ]);
+    const { messages, context } = this.getContextAndMessages([message, ...optionalParameters]);
 
     this.printMessage(messages, context, "warn");
   }
@@ -107,10 +98,7 @@ export class Logger implements LoggerService {
       return;
     }
 
-    const { messages, context } = this.getContextAndMessages([
-      message,
-      ...optionalParameters,
-    ]);
+    const { messages, context } = this.getContextAndMessages([message, ...optionalParameters]);
 
     this.printMessage(messages, context, "debug");
   }
@@ -122,10 +110,7 @@ export class Logger implements LoggerService {
       return;
     }
 
-    const { messages, context } = this.getContextAndMessages([
-      message,
-      ...optionalParameters,
-    ]);
+    const { messages, context } = this.getContextAndMessages([message, ...optionalParameters]);
 
     this.printMessage(messages, context, "verbose");
   }
@@ -145,10 +130,7 @@ export class Logger implements LoggerService {
       message = message.stack;
     }
 
-    const { messages, context } = this.getContextAndMessages([
-      message,
-      ...optionalParameters,
-    ]);
+    const { messages, context } = this.getContextAndMessages([message, ...optionalParameters]);
 
     this.printMessage(messages, context, "fatal", "stderr", "📉");
   }

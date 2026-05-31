@@ -28,12 +28,7 @@ export interface ServerProfileProps extends ServerLogoProps {
   t: LocalizeFunction;
 }
 
-export const ServerProfile = ({
-  background,
-  server,
-  serverLogo,
-  t,
-}: ServerProfileProps) => (
+export const ServerProfile = ({ background, server, serverLogo, t }: ServerProfileProps) => (
   <Container background={background}>
     <box direction="column" width="100%">
       <text>
@@ -42,15 +37,9 @@ export const ServerProfile = ({
     </box>
     <div width="100%">
       <ServerLogo serverLogo={serverLogo} />
-      <box
-        width="remaining"
-        height="100%"
-        padding={{ left: 8, right: 4, top: 4, bottom: 4 }}
-      >
+      <box width="remaining" height="100%" padding={{ left: 8, right: 4, top: 4, bottom: 4 }}>
         <div height="100%" direction="column">
-          <Multiline margin={2}>
-            {server.motd.raw.map((m) => m.replace(/\s{2,}/g, "")).join("\n")}
-          </Multiline>
+          <Multiline margin={2}>{server.motd.raw.map((m) => m.replace(/\s{2,}/g, "")).join("\n")}</Multiline>
         </div>
       </box>
     </div>

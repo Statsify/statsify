@@ -7,15 +7,7 @@
  */
 
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  IsBoolean,
-  IsNumber,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-  ValidateNested,
-} from "class-validator";
+import { IsBoolean, IsNumber, IsOptional, IsString, MaxLength, MinLength, ValidateNested } from "class-validator";
 import { Transform } from "class-transformer";
 
 export class UserIdDto {

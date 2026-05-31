@@ -1,4 +1,4 @@
-import init, {  SkinRenderer, SkinMessenger } from "@statsify/skin-renderer/wasm"
+import init, { SkinRenderer, SkinMessenger } from "@statsify/skin-renderer/wasm";
 
 await init();
 

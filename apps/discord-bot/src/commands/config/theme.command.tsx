@@ -19,16 +19,7 @@ import {
 } from "@statsify/discord";
 import { ApplicationCommandOptionType } from "discord-api-types/v10";
 import { DemoProfile } from "./demo.profile.js";
-import {
-  User,
-  UserBoxes,
-  UserFont,
-  UserFooter,
-  UserLogo,
-  UserPalette,
-  UserTheme,
-  UserTier,
-} from "@statsify/schemas";
+import { User, UserBoxes, UserFont, UserFooter, UserLogo, UserPalette, UserTheme, UserTier } from "@statsify/schemas";
 import { convertColorCodes } from "#lib/convert-color-codes";
 import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -108,8 +99,7 @@ export class ThemeCommand {
     const user = context.getUser();
     const t = context.t();
 
-    if (!user?.uuid)
-      throw new ErrorMessage("verification.requiredVerification");
+    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
 
     const profile = await this.getProfile(t, "theme", user);
 
@@ -127,9 +117,7 @@ export class ThemeCommand {
     group: "footer",
   })
   public message(context: CommandContext) {
-    const message = convertColorCodes(
-      context.option<string>("message")
-    ).replace(/§\^\d\^/g, "");
+    const message = convertColorCodes(context.option<string>("message")).replace(/§\^\d\^/g, "");
 
     const length = removeFormatting(message).length;
 
@@ -166,13 +154,11 @@ export class ThemeCommand {
   })
   public icon(context: CommandContext) {
     const user = context.getUser();
-    if (!user?.uuid)
-      throw new ErrorMessage("verification.requiredVerification");
+    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
 
     const icon = context.option<UserLogo>("icon");
 
-    if (icon > (user.tier ?? UserTier.NONE))
-      throw new ErrorMessage("errors.higherTierRequiredForIcon");
+    if (icon > (user.tier ?? UserTier.NONE)) throw new ErrorMessage("errors.higherTierRequiredForIcon");
 
     return this.updateField(context, "footer", "icon", icon);
   }
@@ -185,8 +171,7 @@ export class ThemeCommand {
     const user = context.getUser();
     const t = context.t();
 
-    if (!user?.uuid)
-      throw new ErrorMessage("verification.requiredVerification");
+    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
 
     user.footer = {
       icon: User.tierToLogo(user.tier ?? UserTier.NONE),
@@ -206,18 +191,12 @@ export class ThemeCommand {
   private async updateField<
     M extends "theme" | "footer",
     K extends keyof T,
-    T = M extends "theme" ? UserTheme : UserFooter
-  >(
-    context: CommandContext,
-    mode: M,
-    field: K,
-    value: T[K]
-  ): Promise<IMessage> {
+    T = M extends "theme" ? UserTheme : UserFooter,
+  >(context: CommandContext, mode: M, field: K, value: T[K]): Promise<IMessage> {
     const user = context.getUser();
     const t = context.t();
 
-    if (!user?.uuid)
-      throw new ErrorMessage("verification.requiredVerification");
+    if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
 
     user[mode] = { ...user[mode], [field]: value };
     await this.apiService.updateUser(user.id, { [mode]: user[mode] });
@@ -225,17 +204,12 @@ export class ThemeCommand {
     const profile = await this.getProfile(t, mode, user);
 
     return {
-      content:
-        mode === "theme" ? t("config.theme.set") : t("config.footer.set"),
+      content: mode === "theme" ? t("config.theme.set") : t("config.footer.set"),
       files: [{ name: `${mode}.png`, data: profile, type: "image/png" }],
     };
   }
 
-  private async getProfile(
-    t: LocalizeFunction,
-    mode: "theme" | "footer",
-    user: User
-  ) {
+  private async getProfile(t: LocalizeFunction, mode: "theme" | "footer", user: User) {
     if (!user?.uuid) throw new ErrorMessage("errors.unknown");
 
     const [player, skin, badge, logo, background] = await Promise.all([
@@ -254,11 +228,7 @@ export class ThemeCommand {
         skin={skin}
         badge={badge}
         user={user}
-        message={
-          mode === "theme" ?
-            t("config.theme.profile") :
-            t("config.footer.profile")
-        }
+        message={mode === "theme" ? t("config.theme.profile") : t("config.footer.profile")}
       />,
       getTheme(user)
     );

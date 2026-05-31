@@ -93,40 +93,40 @@ export class MegaWallsKit {
 
 export class MegaWallsOverall extends MegaWallsKit {
   @Field()
-  public declare wins: number;
+  declare public wins: number;
 
   @Field()
-  public declare losses: number;
+  declare public losses: number;
 
   @Field()
-  public declare wlr: number;
+  declare public wlr: number;
 
   @Field()
-  public declare kills: number;
+  declare public kills: number;
 
   @Field()
-  public declare deaths: number;
+  declare public deaths: number;
 
   @Field()
-  public declare kdr: number;
+  declare public kdr: number;
 
   @Field()
-  public declare finalKills: number;
+  declare public finalKills: number;
 
   @Field()
-  public declare finalAssists: number;
+  declare public finalAssists: number;
 
   @Field()
-  public declare finalDeaths: number;
+  declare public finalDeaths: number;
 
   @Field()
-  public declare fkdr: number;
+  declare public fkdr: number;
 
   @Field()
-  public declare assists: number;
+  declare public assists: number;
 
   @Field({ leaderboard: { formatter: formatTime } })
-  public declare playtime: number;
+  declare public playtime: number;
 
   public constructor(data: APIData) {
     super(data, "");

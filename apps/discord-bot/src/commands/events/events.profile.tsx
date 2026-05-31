@@ -6,16 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  Container,
-  Footer,
-  Header,
-  Multiline,
-  SidebarItem,
-  Table,
-  formatProgression,
-  lineXpBar,
-} from "#components";
+import { Container, Footer, Header, Multiline, SidebarItem, Table, formatProgression, lineXpBar } from "#components";
 import { EVENT_COLORS } from "./event-colors.js";
 import { arrayGroup, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -59,16 +50,7 @@ interface EventsProfileProps extends Omit<BaseProfileProps, "time"> {
   eventNames: EventType[];
 }
 
-export const EventsProfile = ({
-  player,
-  skin,
-  background,
-  logo,
-  user,
-  badge,
-  t,
-  eventNames,
-}: EventsProfileProps) => {
+export const EventsProfile = ({ player, skin, background, logo, user, badge, t, eventNames }: EventsProfileProps) => {
   const { events } = player.stats.general;
 
   const sidebar: SidebarItem[] = [[t("stats.silver"), t(events.silver), "§7"]];

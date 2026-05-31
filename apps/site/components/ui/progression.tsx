@@ -38,10 +38,17 @@ export function Progression({
 }) {
   return (
     <Box className={`text-mc-gray ${className}`}>
-      <p>{label}: <MinecraftText>{currentLevel}</MinecraftText></p>
-      <p>{metric} Progress: <span className="text-mc-aqua">{t(progression.current)}</span>/<span className="text-mc-green">{t(progression.max)}</span></p>
       <p>
-        <MinecraftText>{naturalLevel} {xpBar(progression.percent)} {nextLevel}</MinecraftText>
+        {label}: <MinecraftText>{currentLevel}</MinecraftText>
+      </p>
+      <p>
+        {metric} Progress: <span className="text-mc-aqua">{t(progression.current)}</span>/
+        <span className="text-mc-green">{t(progression.max)}</span>
+      </p>
+      <p>
+        <MinecraftText>
+          {naturalLevel} {xpBar(progression.percent)} {nextLevel}
+        </MinecraftText>
       </p>
     </Box>
   );

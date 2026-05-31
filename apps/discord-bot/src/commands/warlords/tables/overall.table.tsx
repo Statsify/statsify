@@ -21,11 +21,7 @@ export const WarlordsOverallTable = ({ warlords, t }: WarlordsOverallTableProps)
       <Table.td title={t("stats.wins")} value={t(warlords.wins)} color="§a" />
       <Table.td title={t("stats.losses")} value={t(warlords.losses)} color="§c" />
       <Table.td title={t("stats.wlr")} value={t(warlords.wlr)} color="§6" />
-      <Table.td
-        title={t("stats.gamesPlayed")}
-        value={t(warlords.gamesPlayed)}
-        color="§e"
-      />
+      <Table.td title={t("stats.gamesPlayed")} value={t(warlords.gamesPlayed)} color="§e" />
     </Table.tr>
     <Table.tr>
       <Table.td title={t("stats.kills")} value={t(warlords.kills)} color="§a" />

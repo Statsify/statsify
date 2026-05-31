@@ -31,9 +31,9 @@ const runLimit = async (constructors, prefixes) => {
 
     await oldLeaderboardPipeline.exec();
 
-    const leaderboards = prefixes ?
-      fields.filter(([, value]) => value.historical.enabled) :
-      fields.filter(([, value]) => value.leaderboard.enabled);
+    const leaderboards = prefixes
+      ? fields.filter(([, value]) => value.historical.enabled)
+      : fields.filter(([, value]) => value.leaderboard.enabled);
 
     let memberCount = 0;
 
@@ -71,11 +71,7 @@ const limit = async () => {
     runLimit([Player, Guild]),
     runLimit(
       [Player, Player, Player],
-      [
-        CurrentHistoricalType.DAILY,
-        CurrentHistoricalType.WEEKLY,
-        CurrentHistoricalType.MONTHLY,
-      ]
+      [CurrentHistoricalType.DAILY, CurrentHistoricalType.WEEKLY, CurrentHistoricalType.MONTHLY]
     ),
   ]);
 };

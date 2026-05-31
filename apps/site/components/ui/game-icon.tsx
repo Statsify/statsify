@@ -79,12 +79,5 @@ const GameIcons = {
 export function GameIcon({ game }: { game: GameCode }) {
   if (!(game in GameIcons)) throw new Error(`Unsupported GameIcon ${game}`);
 
-  return (
-    <Image
-      src={GameIcons[game as keyof typeof GameIcons]}
-      width={32}
-      height={32}
-      alt={game.toLowerCase()}
-    />
-  );
+  return <Image src={GameIcons[game as keyof typeof GameIcons]} width={32} height={32} alt={game.toLowerCase()} />;
 }

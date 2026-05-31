@@ -14,10 +14,7 @@ import type { Constructor } from "@statsify/util";
 
 export class CommandBuilder {
   public static scan<T extends object>(target: T, constructor: Constructor<T>) {
-    const commandMetadata = Reflect.getMetadata(
-      "statsify:command",
-      constructor
-    ) as CommandMetadata;
+    const commandMetadata = Reflect.getMetadata("statsify:command", constructor) as CommandMetadata;
 
     if (!commandMetadata) {
       throw new Error(`Command metadata not found on ${constructor.name}`);
@@ -25,10 +22,7 @@ export class CommandBuilder {
 
     const commandResolvable = new CommandResolvable(commandMetadata, target);
 
-    const subcommandMetadata = Reflect.getMetadata(
-      "statsify:subcommand",
-      target
-    ) as Record<string, SubCommandMetadata>;
+    const subcommandMetadata = Reflect.getMetadata("statsify:subcommand", target) as Record<string, SubCommandMetadata>;
 
     if (!subcommandMetadata) return commandResolvable;
 
@@ -70,9 +64,7 @@ if (import.meta.vitest) {
   const { SubCommand } = await import("./subcommand.decorator.js");
   const { AbstractArgument } = await import("../arguments/abstract.argument.js");
 
-  const { ApplicationCommandOptionType, ApplicationCommandType } = await import(
-    "discord-api-types/v10"
-  );
+  const { ApplicationCommandOptionType, ApplicationCommandType } = await import("discord-api-types/v10");
 
   suite("CommandBuilder", () => {
     const integration_types = [ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall];

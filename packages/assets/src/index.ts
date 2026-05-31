@@ -16,8 +16,7 @@ const PRIVATE_PATH = join(PATH, "private");
 
 const hasPrivateAssets = existsSync(join(PRIVATE_PATH, "package.json"));
 
-const checkAsset = (file: string) =>
-  hasPrivateAssets && existsSync(join(PRIVATE_PATH, file)) ? "private" : "public";
+const checkAsset = (file: string) => (hasPrivateAssets && existsSync(join(PRIVATE_PATH, file)) ? "private" : "public");
 
 export const getAssetPath = (path: string) => join(PATH, checkAsset(path), path);
 
@@ -69,17 +68,11 @@ export function getBackground(pathOrGame: string, mode?: string): Promise<Image>
   return getImage(`out/backgrounds/${pathOrGame}.png`);
 }
 
-export function getLogo(
-  userOrLogoOrPath: User | UserLogo | string | null,
-  size?: number
-): Promise<Image> {
+export function getLogo(userOrLogoOrPath: User | UserLogo | string | null, size?: number): Promise<Image> {
   return loadImage(getLogoPath(userOrLogoOrPath as User, size));
 }
 
-export function getLogoPath(
-  userOrLogoOrPath: User | UserLogo | string | null,
-  size = 26
-): string {
+export function getLogoPath(userOrLogoOrPath: User | UserLogo | string | null, size = 26): string {
   let path: string | undefined;
   let logo: UserLogo | undefined;
 

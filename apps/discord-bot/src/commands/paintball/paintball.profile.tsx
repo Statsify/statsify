@@ -6,29 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  Container,
-  Footer,
-  Header,
-  Historical,
-  SidebarItem,
-  Table,
-  formatProgression,
-} from "#components";
+import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
 import { FormattedGame } from "@statsify/schemas";
 import { formatTime, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
-export const PaintballProfile = ({
-  skin,
-  player,
-  background,
-  logo,
-  user,
-  badge,
-  t,
-  time,
-}: BaseProfileProps) => {
+export const PaintballProfile = ({ skin, player, background, logo, user, badge, t, time }: BaseProfileProps) => {
   const { paintball } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -47,9 +30,7 @@ export const PaintballProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.PAINTBALL} §fStats`}
-        description={`§7${t("stats.prefix")}: ${
-          paintball.naturalPrefix
-        }\n${formatProgression({
+        description={`§7${t("stats.prefix")}: ${paintball.naturalPrefix}\n${formatProgression({
           t,
           label: t("stats.progression.kill"),
           progression: paintball.progression,
@@ -61,16 +42,8 @@ export const PaintballProfile = ({
       <Table.table>
         <Table.tr>
           <Table.td title={t("stats.wins")} value={t(paintball.wins)} color="§a" />
-          <Table.td
-            title={t("stats.shotsFired")}
-            value={t(paintball.shotsFired)}
-            color="§c"
-          />
-          <Table.td
-            title={t("stats.shotAccuracy")}
-            value={`${paintball.shotAccuracy}%`}
-            color="§6"
-          />
+          <Table.td title={t("stats.shotsFired")} value={t(paintball.shotsFired)} color="§c" />
+          <Table.td title={t("stats.shotAccuracy")} value={`${paintball.shotAccuracy}%`} color="§6" />
         </Table.tr>
         <Table.tr>
           <Table.td title={t("stats.kills")} value={t(paintball.kills)} color="§a" />
@@ -80,50 +53,15 @@ export const PaintballProfile = ({
         <Historical.exclude time={time}>
           <Table.ts title="§6Perks">
             <Table.tr>
-              <Table.td
-                title={t("stats.adrenaline")}
-                value={t(paintball.perks.adrenaline)}
-                color="§4"
-                size="small"
-              />
-              <Table.td
-                title={t("stats.endurance")}
-                value={t(paintball.perks.endurance)}
-                color="§d"
-                size="small"
-              />
-              <Table.td
-                title={t("stats.fortune")}
-                value={t(paintball.perks.fortune)}
-                color="§2"
-                size="small"
-              />
+              <Table.td title={t("stats.adrenaline")} value={t(paintball.perks.adrenaline)} color="§4" size="small" />
+              <Table.td title={t("stats.endurance")} value={t(paintball.perks.endurance)} color="§d" size="small" />
+              <Table.td title={t("stats.fortune")} value={t(paintball.perks.fortune)} color="§2" size="small" />
             </Table.tr>
             <Table.tr>
-              <Table.td
-                title={t("stats.godfather")}
-                value={t(paintball.perks.godfather)}
-                color="§e"
-                size="small"
-              />
-              <Table.td
-                title={t("stats.headstart")}
-                value={t(paintball.perks.headstart)}
-                color="§c"
-                size="small"
-              />
-              <Table.td
-                title={t("stats.superluck")}
-                value={t(paintball.perks.superluck)}
-                color="§6"
-                size="small"
-              />
-              <Table.td
-                title={t("stats.transfusion")}
-                value={t(paintball.perks.transfusion)}
-                color="§b"
-                size="small"
-              />
+              <Table.td title={t("stats.godfather")} value={t(paintball.perks.godfather)} color="§e" size="small" />
+              <Table.td title={t("stats.headstart")} value={t(paintball.perks.headstart)} color="§c" size="small" />
+              <Table.td title={t("stats.superluck")} value={t(paintball.perks.superluck)} color="§6" size="small" />
+              <Table.td title={t("stats.transfusion")} value={t(paintball.perks.transfusion)} color="§b" size="small" />
             </Table.tr>
           </Table.ts>
         </Historical.exclude>

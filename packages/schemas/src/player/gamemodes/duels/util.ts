@@ -98,11 +98,14 @@ export const getTitleAndProgression = ({
 
   const icon = iconKey in ICON_MAP ? ICON_MAP[iconKey as keyof typeof ICON_MAP] : ICON_MAP.none;
 
-  const scheme = schemeKey in SCHEME_MAP ?
-    SCHEME_MAP[schemeKey as keyof typeof SCHEME_MAP] :
-    SCHEME_MAP.default;
+  const scheme = schemeKey in SCHEME_MAP ? SCHEME_MAP[schemeKey as keyof typeof SCHEME_MAP] : SCHEME_MAP.default;
 
-  const titleFormatted = scheme.title(icon, `${mode}${title}${division > 1 ? ` ${romanNumeral(division)}` : ""}`, bold, defaultColor);
+  const titleFormatted = scheme.title(
+    icon,
+    `${mode}${title}${division > 1 ? ` ${romanNumeral(division)}` : ""}`,
+    bold,
+    defaultColor
+  );
   const titleLevelFormatted = scheme.level(romanNumeral(division), bold, defaultColor);
 
   let nextDivision = division + 1;
@@ -269,4 +272,3 @@ const SCHEME_MAP: Record<string, Scheme> = {
   variety_values: gradientColorScheme(["§b", "§f", "§f", "§f", "§b"]),
   og_fade: gradientColorScheme(["§6", "§e", "§f", "§7", "§8"]),
 };
-

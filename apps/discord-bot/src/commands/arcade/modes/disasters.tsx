@@ -6,13 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ArcadeModes,
-  DisasterSurvivals,
-  Disasters,
-  DisastersDeaths,
-  SubModeForMode,
-} from "@statsify/schemas";
+import { ArcadeModes, DisasterSurvivals, Disasters, DisastersDeaths, SubModeForMode } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import { Table } from "#components";
 import { arrayGroup, formatTime } from "@statsify/util";
@@ -24,38 +18,20 @@ interface DisastersTableProps {
 }
 
 export const DisastersTable = ({ stats, t, submode }: DisastersTableProps) => {
-  if (submode.api === "survivals")
-    return <DisastersSurvivalsTable stats={stats} t={t} />;
-  if (submode.api === "deaths")
-    return <DisastersDeathsTable stats={stats} t={t} />;
+  if (submode.api === "survivals") return <DisastersSurvivalsTable stats={stats} t={t} />;
+  if (submode.api === "deaths") return <DisastersDeathsTable stats={stats} t={t} />;
 
   return (
     <Table.table>
       <Table.tr>
         <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-        <Table.td
-          title={t("stats.losses")}
-          value={t(stats.losses)}
-          color="§c"
-        />
+        <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
         <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
       </Table.tr>
       <Table.tr>
-        <Table.td
-          title={t("stats.gamesPlayed")}
-          value={t(stats.gamesPlayed)}
-          color="§e"
-        />
-        <Table.td
-          title={t("stats.playtime")}
-          value={formatTime(stats.playtime)}
-          color="§b"
-        />
-        <Table.td
-          title={t("stats.survivals")}
-          value={t(stats.survivals.overall)}
-          color="§d"
-        />
+        <Table.td title={t("stats.gamesPlayed")} value={t(stats.gamesPlayed)} color="§e" />
+        <Table.td title={t("stats.playtime")} value={formatTime(stats.playtime)} color="§b" />
+        <Table.td title={t("stats.survivals")} value={t(stats.survivals.overall)} color="§d" />
       </Table.tr>
     </Table.table>
   );
@@ -92,14 +68,8 @@ const DisasterSurvivalsLabels: Record<keyof DisasterSurvivals, string> = {
   zombieApocalypse: "§l§2ZOMBIE APOCALYPSE",
 };
 
-const DisastersSurvivalsTable = ({
-  stats,
-  t,
-}: Omit<DisastersTableProps, "submode">) => {
-  const entries = Object.entries(DisasterSurvivalsLabels) as [
-    keyof DisasterSurvivals,
-    string
-  ][];
+const DisastersSurvivalsTable = ({ stats, t }: Omit<DisastersTableProps, "submode">) => {
+  const entries = Object.entries(DisasterSurvivalsLabels) as [keyof DisasterSurvivals, string][];
 
   const rows = arrayGroup(
     entries
@@ -113,12 +83,7 @@ const DisastersSurvivalsTable = ({
       {rows.map((row) => (
         <Table.tr>
           {row.map(({ label, survivals }) => (
-            <Table.td
-              title={label}
-              value={t(survivals)}
-              size="inline"
-              color="§f"
-            />
+            <Table.td title={label} value={t(survivals)} size="inline" color="§f" />
           ))}
         </Table.tr>
       ))}
@@ -153,19 +118,11 @@ const DisastersDeathsLabels: Record<keyof DisastersDeaths, string> = {
   zombieApocalypse: "§l§2ZOMBIE APOCALYPSE",
 };
 
-const DisastersDeathsTable = ({
-  stats,
-  t,
-}: Omit<DisastersTableProps, "submode">) => {
-  const entries = Object.entries(DisastersDeathsLabels) as [
-    keyof DisastersDeaths,
-    string
-  ][];
+const DisastersDeathsTable = ({ stats, t }: Omit<DisastersTableProps, "submode">) => {
+  const entries = Object.entries(DisastersDeathsLabels) as [keyof DisastersDeaths, string][];
 
   const rows = arrayGroup(
-    entries
-      .map(([key, label]) => ({ label, deaths: stats.deaths[key] }))
-      .toSorted((a, b) => b.deaths - a.deaths),
+    entries.map(([key, label]) => ({ label, deaths: stats.deaths[key] })).toSorted((a, b) => b.deaths - a.deaths),
     2
   );
 
@@ -174,12 +131,7 @@ const DisastersDeathsTable = ({
       {rows.map((row) => (
         <Table.tr>
           {row.map(({ label, deaths }) => (
-            <Table.td
-              title={label}
-              value={t(deaths)}
-              size="inline"
-              color="§f"
-            />
+            <Table.td title={label} value={t(deaths)} size="inline" color="§f" />
           ))}
         </Table.tr>
       ))}

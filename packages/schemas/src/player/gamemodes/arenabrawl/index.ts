@@ -9,13 +9,7 @@
 import { ArenaBrawlMode, ArenaBrawlModeExt } from "./mode.js";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import {
-  GamePrefix,
-  createPrefixProgression,
-  defaultPrefix,
-  getFormattedPrefix,
-  rainbow,
-} from "#prefixes";
+import { GamePrefix, createPrefixProgression, defaultPrefix, getFormattedPrefix, rainbow } from "#prefixes";
 import { Progression } from "#progression";
 import { deepAdd } from "@statsify/math";
 import type { APIData } from "@statsify/util";

@@ -38,11 +38,9 @@ export const ratio = (n1 = 0, n2 = 0, multiply = 1) => {
   }
 };
 
-export const add = (...args: number[]): number =>
-  args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
+export const add = (...args: number[]): number => args.reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
 
-export const sub = (...args: number[]): number =>
-  args.reduce((a, b) => (a ?? 0) - (b ?? 0));
+export const sub = (...args: number[]): number => args.reduce((a, b) => (a ?? 0) - (b ?? 0));
 
 /**
  *
@@ -55,9 +53,9 @@ const deep = <T>(fn: (...args: number[]) => unknown, ...args: T[]): T => {
   const object: Record<string, unknown> = {};
 
   for (const key in args[0]) {
-    object[key] = isObject(args[0][key]) ?
-      deep(fn, ...args.map((a) => a[key])) :
-      fn(...args.map((a) => a[key] as unknown as number));
+    object[key] = isObject(args[0][key])
+      ? deep(fn, ...args.map((a) => a[key]))
+      : fn(...args.map((a) => a[key] as unknown as number));
   }
 
   return object as T;
@@ -113,7 +111,10 @@ if (import.meta.vitest) {
 
   suite("math with classes", () => {
     class TestClass {
-      public constructor(public a: number, public b: number) {}
+      public constructor(
+        public a: number,
+        public b: number
+      ) {}
     }
 
     const a = new TestClass(1, 2);

@@ -8,11 +8,7 @@
 
 import { RATIOS, RATIO_STATS } from "#ratios";
 import { prettify } from "@statsify/util";
-import type {
-  HistoricalMetadata,
-  LeaderboardMetadata,
-  TypeMetadata,
-} from "../metadata.interface.js";
+import type { HistoricalMetadata, LeaderboardMetadata, TypeMetadata } from "../metadata.interface.js";
 import type { HistoricalOptions, LeaderboardOptions } from "../field.options.js";
 
 const getLeaderboardName = (field: string) => {
@@ -61,8 +57,7 @@ export const getLeaderboardMetadata = (
   const name = leaderboardOptions?.name ?? fieldName;
 
   const historicalFieldName = historicalOptions?.fieldName ?? fieldName;
-  const historicalName =
-    historicalOptions?.name ?? leaderboardOptions?.name ?? historicalFieldName;
+  const historicalName = historicalOptions?.name ?? leaderboardOptions?.name ?? historicalFieldName;
 
   let leaderboard: LeaderboardMetadata;
   let historical: LeaderboardMetadata;

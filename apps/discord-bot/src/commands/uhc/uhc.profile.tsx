@@ -6,14 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  Container,
-  Footer,
-  Header,
-  SidebarItem,
-  Table,
-  formatProgression,
-} from "#components";
+import { Container, Footer, Header, SidebarItem, Table, formatProgression } from "#components";
 import { FormattedGame, type GameMode, UHCModes } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -22,17 +15,7 @@ export interface UHCProfileProps extends BaseProfileProps {
   mode: GameMode<UHCModes>;
 }
 
-export const UHCProfile = ({
-  skin,
-  player,
-  background,
-  logo,
-  user,
-  badge,
-  mode,
-  t,
-  time,
-}: UHCProfileProps) => {
+export const UHCProfile = ({ skin, player, background, logo, user, badge, mode, t, time }: UHCProfileProps) => {
   const { uhc } = player.stats;
   const stats = uhc[mode.api];
 
@@ -69,21 +52,9 @@ export const UHCProfile = ({
           <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
         </Table.tr>
         <Table.tr>
-          <Table.td
-            title={t("stats.headsEaten")}
-            value={t(stats.headsEaten)}
-            color="§6"
-          />
-          <Table.td
-            title={t("stats.ultimatesCrafted")}
-            value={t(stats.ultimatesCrafted)}
-            color="§b"
-          />
-          <Table.td
-            title={t("stats.extraUltimates")}
-            value={t(stats.extraUltimates)}
-            color="§d"
-          />
+          <Table.td title={t("stats.headsEaten")} value={t(stats.headsEaten)} color="§6" />
+          <Table.td title={t("stats.ultimatesCrafted")} value={t(stats.ultimatesCrafted)} color="§b" />
+          <Table.td title={t("stats.extraUltimates")} value={t(stats.extraUltimates)} color="§d" />
         </Table.tr>
       </Table.table>
       <Footer logo={logo} user={user} />

@@ -2,8 +2,34 @@
   "name": "discord-bot",
   "version": "0.0.0",
   "private": true,
-  "main": "dist/index.js",
   "type": "module",
+  "main": "dist/index.js",
+  "imports": {
+    "#components": {
+      "types": "./src/components/index.ts",
+      "default": "./dist/components/index.js"
+    },
+    "#commands/*": {
+      "types": "./src/commands/*.ts",
+      "default": "./dist/commands/*.js"
+    },
+    "#services": {
+      "types": "./src/services/index.ts",
+      "default": "./dist/services/index.js"
+    },
+    "#constants": {
+      "types": "./src/constants.ts",
+      "default": "./dist/constants.js"
+    },
+    "#themes": {
+      "types": "./src/themes/index.ts",
+      "default": "./dist/themes/index.js"
+    },
+    "#lib/*": {
+      "types": "./src/lib/*.ts",
+      "default": "./dist/lib/*.js"
+    }
+  },
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src --out-dir dist --strip-leading-paths",
@@ -34,31 +60,5 @@
   },
   "devDependencies": {
     "@types/luxon": "^3.4.2"
-  },
-  "imports": {
-    "#components": {
-      "types": "./src/components/index.ts",
-      "default": "./dist/components/index.js"
-    },
-    "#commands/*": {
-      "types": "./src/commands/*.ts",
-      "default": "./dist/commands/*.js"
-    },
-    "#services": {
-      "types": "./src/services/index.ts",
-      "default": "./dist/services/index.js"
-    },
-    "#constants": {
-      "types": "./src/constants.ts",
-      "default": "./dist/constants.js"
-    },
-    "#themes": {
-      "types": "./src/themes/index.ts",
-      "default": "./dist/themes/index.js"
-    },
-    "#lib/*": {
-      "types": "./src/lib/*.ts",
-      "default": "./dist/lib/*.js"
-    }
   }
 }

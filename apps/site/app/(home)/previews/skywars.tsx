@@ -38,7 +38,11 @@ export function SkyWarsPreview({ className }: { className?: string }) {
           nextLevel={skywars.nextLevelFormatted}
         />
         <Box className="row-start-4 xl:row-start-3 xl:col-start-2">
-          <span className="font-bold"><span className="text-mc-aqua">Sky</span><span className="text-mc-yellow">Wars</span> Stats</span> (Overall)
+          <span className="font-bold">
+            <span className="text-mc-aqua">Sky</span>
+            <span className="text-mc-yellow">Wars</span> Stats
+          </span>{" "}
+          (Overall)
         </Box>
         <Sidebar className="row-start-3 xl:row-start-1 xl:row-end-4">
           <SidebarItem color="text-mc-gold" name="Coins" value={t(skywars.coins)} />
@@ -55,4 +59,3 @@ export function SkyWarsPreview({ className }: { className?: string }) {
     </div>
   );
 }
-

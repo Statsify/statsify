@@ -8,12 +8,7 @@
 
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import {
-  GamePrefix,
-  createPrefixProgression,
-  defaultPrefix,
-  getFormattedPrefix,
-} from "#prefixes";
+import { GamePrefix, createPrefixProgression, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { Progression } from "#progression";
 import { add, ratio } from "@statsify/math";
 import type { APIData } from "@statsify/util";

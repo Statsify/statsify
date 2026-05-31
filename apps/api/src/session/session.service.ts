@@ -6,27 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  CacheLevel,
-  PlayerNotFoundException,
-  SessionNotFoundException,
-} from "@statsify/api-client";
+import { CacheLevel, PlayerNotFoundException, SessionNotFoundException } from "@statsify/api-client";
 import { type Circular, flatten } from "@statsify/util";
 import { DateTime } from "luxon";
-import {
-  Inject,
-  Injectable,
-  UnauthorizedException,
-  forwardRef,
-} from "@nestjs/common";
+import { Inject, Injectable, UnauthorizedException, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import {
-  Player,
-  User,
-  createHistoricalPlayer,
-  deserialize,
-  serialize,
-} from "@statsify/schemas";
+import { Player, User, createHistoricalPlayer, deserialize, serialize } from "@statsify/schemas";
 import { PlayerService } from "#player";
 import { Session } from "./session.model.js";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -64,10 +49,7 @@ export class SessionService {
     return deserialize(Player, flatPlayer);
   }
 
-  public async get(
-    tag: string,
-    userUuid?: string
-  ): Promise<Player | null> {
+  public async get(tag: string, userUuid?: string): Promise<Player | null> {
     const player = await this.playerService.get(tag, CacheLevel.CACHE_ONLY, {
       uuid: true,
       displayName: true,
@@ -75,10 +57,7 @@ export class SessionService {
 
     if (!player) throw new PlayerNotFoundException();
 
-    let oldPlayer = await this.sessionModel
-      .findOne({ uuid: player.uuid })
-      .lean()
-      .exec() as Player;
+    let oldPlayer = (await this.sessionModel.findOne({ uuid: player.uuid }).lean().exec()) as Player;
 
     let isNew = false;
 
@@ -104,20 +83,10 @@ export class SessionService {
   }
 
   public async delete(discordId: string) {
-    const user = await this.userModel
-      .findOne()
-      .where("id")
-      .equals(discordId)
-      .lean()
-      .exec();
+    const user = await this.userModel.findOne().where("id").equals(discordId).lean().exec();
 
     if (!user || !user.uuid) throw new UnauthorizedException();
 
-    await this.sessionModel
-      .deleteOne()
-      .where("uuid")
-      .equals(user.uuid)
-      .lean()
-      .exec();
+    await this.sessionModel.deleteOne().where("uuid").equals(user.uuid).lean().exec();
   }
 }

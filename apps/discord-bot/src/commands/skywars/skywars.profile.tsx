@@ -6,15 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  Container,
-  Footer,
-  Header,
-  Historical,
-  SidebarItem,
-  Table,
-  formatProgression,
-} from "#components";
+import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
 import { FormattedGame, type GameMode, SkyWarsModes } from "@statsify/schemas";
 import { formatTime, prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -23,17 +15,7 @@ export interface SkyWarsProfileProps extends BaseProfileProps {
   mode: GameMode<SkyWarsModes>;
 }
 
-export const SkyWarsProfile = ({
-  skin,
-  player,
-  background,
-  logo,
-  user,
-  badge,
-  mode,
-  t,
-  time,
-}: SkyWarsProfileProps) => {
+export const SkyWarsProfile = ({ skin, player, background, logo, user, badge, mode, t, time }: SkyWarsProfileProps) => {
   const { skywars } = player.stats;
   const stats = skywars[mode.api];
 
@@ -54,9 +36,7 @@ export const SkyWarsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.SKYWARS} Stats §r(${mode.formatted})`}
-        description={`§7${t("stats.level")}: ${
-          skywars.levelFormatted
-        }\n${formatProgression({
+        description={`§7${t("stats.level")}: ${skywars.levelFormatted}\n${formatProgression({
           t,
           label: t("stats.progression.exp"),
           progression: skywars.progression,
@@ -78,11 +58,7 @@ export const SkyWarsProfile = ({
         </Table.tr>
         <Table.tr>
           <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§a" />
-          <Table.td
-            title={t("stats.playtime")}
-            value={formatTime(stats.playtime)}
-            color="§c"
-          />
+          <Table.td title={t("stats.playtime")} value={formatTime(stats.playtime)} color="§c" />
           <Table.td title={t("stats.kit")} value={prettify(stats.kit)} color="§6" />
         </Table.tr>
         <Historical.progression

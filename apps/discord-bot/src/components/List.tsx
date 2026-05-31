@@ -29,10 +29,7 @@ export const List = ({ width = "100%", items }: ListProps) => {
   return (
     <div width={width}>
       {columns.map((c, index) => (
-        <div
-          direction="column"
-          width={remainingColumns.includes(index) ? "remaining" : undefined}
-        >
+        <div direction="column" width={remainingColumns.includes(index) ? "remaining" : undefined}>
           {c}
         </div>
       ))}

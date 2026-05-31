@@ -73,5 +73,5 @@ export class VampireZHuman {
 
 export class VampireZVampire extends VampireZHuman {
   @Field({ leaderboard: { fieldName: "Humans Killed" } })
-  public declare kills: number;
+  declare public kills: number;
 }

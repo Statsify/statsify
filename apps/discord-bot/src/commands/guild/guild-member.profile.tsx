@@ -51,9 +51,7 @@ export const GuildMemberProfile = ({
   return (
     <Container background={background}>
       <Header
-        name={`${player.displayName}${
-          guild.tagFormatted ? ` §^2^${guild.tagFormatted}` : ""
-        }`}
+        name={`${player.displayName}${guild.tagFormatted ? ` §^2^${guild.tagFormatted}` : ""}`}
         skin={skin}
         time="LIVE"
         title="§l§2Guild Member §fStats"
@@ -65,19 +63,10 @@ export const GuildMemberProfile = ({
         <Table.tr>
           <Table.td title={t("stats.guild.daily")} value={t(member.daily)} color="§2" />
           <Table.td title={t("stats.guild.weekly")} value={t(member.weekly)} color="§2" />
-          <Table.td
-            title={t("stats.guild.monthly")}
-            value={t(member.monthly)}
-            color="§2"
-          />
+          <Table.td title={t("stats.guild.monthly")} value={t(member.monthly)} color="§2" />
         </Table.tr>
       </Table.table>
-      <GexpTable
-        dates={guild.expHistoryDays}
-        expHistory={member.expHistory}
-        positions={positions}
-        t={t}
-      />
+      <GexpTable dates={guild.expHistoryDays} expHistory={member.expHistory} positions={positions} t={t} />
       <Footer logo={logo} user={user} />
     </Container>
   );

@@ -32,8 +32,7 @@ export const rgbToHex = (rgb: RGB | RGBA): string =>
 
 export const rgbToString = (rgb: RGB | RGBA): string => `rgba(${rgb.join(", ")})`;
 
-export const mcShadow = (color: string): string =>
-  rgbToHex(hexToRgb(color).map((o) => Math.floor(o * 0.25)) as RGB);
+export const mcShadow = (color: string): string => rgbToHex(hexToRgb(color).map((o) => Math.floor(o * 0.25)) as RGB);
 
 export const parseColor = (color: string): RGBA => {
   if (color.startsWith("#")) {

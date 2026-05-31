@@ -31,12 +31,7 @@ export type LeaderboardAdditionalStats = Record<string, any> & { name: string };
 export abstract class LeaderboardService {
   public constructor(@InjectRedis() protected readonly redis: Redis) {}
 
-  public async addLeaderboards<T>(
-    constructor: Constructor<T>,
-    instance: Flatten<T>,
-    idField: keyof T,
-    remove = false
-  ) {
+  public async addLeaderboards<T>(constructor: Constructor<T>, instance: Flatten<T>, idField: keyof T, remove = false) {
     const fields = LeaderboardScanner.getLeaderboardFields(constructor);
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
@@ -88,10 +83,7 @@ export abstract class LeaderboardService {
       sort,
       name,
       hidden,
-    } = LeaderboardScanner.getLeaderboardField(
-      constructor,
-      field
-    ) as LeaderboardEnabledMetadata;
+    } = LeaderboardScanner.getLeaderboardField(constructor, field) as LeaderboardEnabledMetadata;
 
     let top: number;
     let bottom: number;
@@ -119,28 +111,19 @@ export abstract class LeaderboardService {
       }
     }
 
-    const leaderboard = await this.getLeaderboardFromRedis(
-      constructor,
-      field,
-      top,
-      bottom - 1,
-      sort
-    );
+    const leaderboard = await this.getLeaderboardFromRedis(constructor, field, top, bottom - 1, sort);
 
     const additionalFieldMetadata = additionalFields.map((k) =>
       LeaderboardScanner.getLeaderboardField(constructor, k, false)
     );
 
-    const extraDisplayMetadata = extraDisplay ?
-      LeaderboardScanner.getLeaderboardField(constructor, extraDisplay, false) :
-      undefined;
+    const extraDisplayMetadata = extraDisplay
+      ? LeaderboardScanner.getLeaderboardField(constructor, extraDisplay, false)
+      : undefined;
 
     const additionalStats = await this.getAdditionalStats(
       leaderboard.map(({ id }) => id),
-      [
-        ...additionalFields.filter((k) => k !== field),
-        ...(extraDisplay ? [extraDisplay] : []),
-      ]
+      [...additionalFields.filter((k) => k !== field), ...(extraDisplay ? [extraDisplay] : [])]
     );
 
     const data = leaderboard.map((doc, index) => {
@@ -157,8 +140,7 @@ export abstract class LeaderboardService {
       const additionalValues = additionalFields.map((key, index) => {
         const value = stats[key] ?? additionalFieldMetadata[index].default;
 
-        if (additionalFieldMetadata[index].formatter)
-          return additionalFieldMetadata[index].formatter?.(value);
+        if (additionalFieldMetadata[index].formatter) return additionalFieldMetadata[index].formatter?.(value);
 
         return value;
       });
@@ -189,11 +171,7 @@ export abstract class LeaderboardService {
     };
   }
 
-  public async getLeaderboardRankings<T>(
-    constructor: Constructor<T>,
-    fields: string[],
-    id: string
-  ) {
+  public async getLeaderboardRankings<T>(constructor: Constructor<T>, fields: string[], id: string) {
     const transaction = Sentry.getCurrentHub().getScope()?.getTransaction();
 
     const child = transaction?.startChild({
@@ -242,9 +220,7 @@ export abstract class LeaderboardService {
 
       const numberValue = Number(value);
 
-      const formattedValue = metadata.formatter ?
-        metadata.formatter(numberValue) :
-        numberValue;
+      const formattedValue = metadata.formatter ? metadata.formatter(numberValue) : numberValue;
 
       rankings.push({
         field: fields[index],
@@ -257,15 +233,9 @@ export abstract class LeaderboardService {
     return rankings;
   }
 
-  protected abstract searchLeaderboardInput(
-    input: string,
-    field: string
-  ): Promise<number>;
+  protected abstract searchLeaderboardInput(input: string, field: string): Promise<number>;
 
-  protected abstract getAdditionalStats(
-    ids: string[],
-    fields: string[]
-  ): Promise<LeaderboardAdditionalStats[]>;
+  protected abstract getAdditionalStats(ids: string[], fields: string[]): Promise<LeaderboardAdditionalStats[]>;
 
   private async getLeaderboardFromRedis<T>(
     constructor: Constructor<T>,
@@ -284,9 +254,9 @@ export abstract class LeaderboardService {
     const name = constructor.name.toLowerCase();
     field = `${name}.${field}`;
 
-    const scores = await (sort === "ASC" ?
-      this.redis.zrange(field, top, bottom, "WITHSCORES") :
-      this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
+    const scores = await (sort === "ASC"
+      ? this.redis.zrange(field, top, bottom, "WITHSCORES")
+      : this.redis.zrevrange(field, top, bottom, "WITHSCORES"));
 
     child?.finish();
 
@@ -303,11 +273,9 @@ export abstract class LeaderboardService {
   }
 
   private getLeaderboardExpiryTime(leaderboard: LeaderboardEnabledMetadata): number {
-    if (!leaderboard.resetEvery)
-      throw new Error("To get a leaderboard expiry time, `resetEvery` must be specified");
+    if (!leaderboard.resetEvery) throw new Error("To get a leaderboard expiry time, `resetEvery` must be specified");
 
-    if (leaderboard.resetEvery === "day")
-      return Math.ceil(DateTime.now().endOf("day").toSeconds());
+    if (leaderboard.resetEvery === "day") return Math.ceil(DateTime.now().endOf("day").toSeconds());
 
     const now = new Date();
     const dayIndex = DAYS_IN_WEEK[leaderboard.resetEvery];

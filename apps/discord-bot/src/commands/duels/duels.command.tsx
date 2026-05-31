@@ -7,12 +7,7 @@
  */
 
 import { ApiModeFromGameModes, DUELS_MODES, DuelsModes, GameModeWithSubModes } from "@statsify/schemas";
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ModeEmoji,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ModeEmoji, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { DuelsProfile } from "./duels.profile.js";
 import { getAssetPath } from "@statsify/assets";
@@ -45,10 +40,7 @@ export class DuelsCommand extends BaseHypixelCommand<DuelsModes, PreProfileData>
     return getDuelsModeEmojis(modes);
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode, data }: ProfileData<DuelsModes, PreProfileData>
-  ): JSX.Element {
+  public getProfile(base: BaseProfileProps, { mode, data }: ProfileData<DuelsModes, PreProfileData>): JSX.Element {
     return <DuelsProfile {...base} mode={mode} modeIcons={data.modeIcons} />;
   }
 }

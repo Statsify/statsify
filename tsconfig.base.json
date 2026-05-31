@@ -16,11 +16,7 @@
     "allowSyntheticDefaultImports": true,
     "target": "esnext",
     "strict": true,
-    "types": [
-      "vitest/importMeta"
-    ]
+    "types": ["vitest/importMeta"]
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

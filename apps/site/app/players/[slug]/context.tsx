@@ -15,13 +15,8 @@ const PlayerContext = createContext<{ player: Player | undefined }>({
   player: undefined,
 });
 
-export const PlayerProvider = ({ player, children }: {
-  player: Player;
-  children: ReactNode;
-}) => (
-  <PlayerContext value={{ player }}>
-    {children}
-  </PlayerContext>
+export const PlayerProvider = ({ player, children }: { player: Player; children: ReactNode }) => (
+  <PlayerContext value={{ player }}>{children}</PlayerContext>
 );
 
 export function usePlayer() {
@@ -33,4 +28,3 @@ export function usePlayer() {
 
   return player;
 }
-

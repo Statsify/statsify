@@ -226,17 +226,15 @@ function RewardCard({
       <p className={cn("font-bold text-mc-pink text-center", variant === "blackout" && "text-mc-dark-purple")}>
         {reward.name} Reward
       </p>
-      {typeof reward.description === "string" ?
-        (
-          <MinecraftText>{reward.description}</MinecraftText>
-        ) :
-        (
-          <div className="flex flex-col gap-0.5">
-            {reward.description.map((part) => (
-              <MinecraftText key={part}>{part}</MinecraftText>
-            ))}
-          </div>
-        )}
+      {typeof reward.description === "string" ? (
+        <MinecraftText>{reward.description}</MinecraftText>
+      ) : (
+        <div className="flex flex-col gap-0.5">
+          {reward.description.map((part) => (
+            <MinecraftText key={part}>{part}</MinecraftText>
+          ))}
+        </div>
+      )}
     </Box>
   );
 }
@@ -258,11 +256,11 @@ function TaskCard({ task, finished, complete }: { task: Task; finished: number; 
         Progress:{" "}
         <span
           className={`${
-            finished > 0 && finished < task.progress ?
-              "text-mc-yellow" :
-              (finished >= task.progress ?
-                "text-mc-green" :
-                "text-mc-red")
+            finished > 0 && finished < task.progress
+              ? "text-mc-yellow"
+              : finished >= task.progress
+                ? "text-mc-green"
+                : "text-mc-red"
           }`}
         >
           {finished}

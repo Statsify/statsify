@@ -18,15 +18,8 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle, InteractionResponseType } from "discord-api-types/v10";
 import { CommandListener } from "#lib/command.listener";
-import {
-  LeaderboardProfile,
-  LeaderboardProfileProps,
-  LeaderboardType,
-} from "./leaderboard.profile.js";
-import {
-  LeaderboardQuery,
-  PostLeaderboardResponse,
-} from "@statsify/api-client";
+import { LeaderboardProfile, LeaderboardProfileProps, LeaderboardType } from "./leaderboard.profile.js";
+import { LeaderboardQuery, PostLeaderboardResponse } from "@statsify/api-client";
 import { User } from "@statsify/schemas";
 import { getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
@@ -81,54 +74,46 @@ export class BaseLeaderboardCommand {
       type,
     };
 
-    const up = new ButtonBuilder()
-      .emoji(t("emojis:up"))
-      .style(ButtonStyle.Success)
-      .disable(true);
+    const up = new ButtonBuilder().emoji(t("emojis:up")).style(ButtonStyle.Success).disable(true);
 
     const down = new ButtonBuilder().emoji(t("emojis:down")).style(ButtonStyle.Danger);
 
-    const searchDocument = new ButtonBuilder()
-      .emoji(t(`emojis:search.${type}`))
-      .style(ButtonStyle.Primary);
+    const searchDocument = new ButtonBuilder().emoji(t(`emojis:search.${type}`)).style(ButtonStyle.Primary);
 
-    const searchPosition = new ButtonBuilder()
-      .emoji(t("emojis:search.position"))
-      .style(ButtonStyle.Primary);
+    const searchPosition = new ButtonBuilder().emoji(t("emojis:search.position")).style(ButtonStyle.Primary);
 
     let currentPage = 0;
 
-    const changePage =
-      (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
-        if (user?.locale) interaction.setLocale(user.locale);
+    const changePage = (fn: () => LeaderboardParams) => async (interaction: Interaction) => {
+      if (user?.locale) interaction.setLocale(user.locale);
 
-        const params = fn();
+      const params = fn();
 
-        const [message, page] = await this.getLeaderboardMessage(
-          user,
-          cache,
-          type,
-          getLeaderboard,
-          field,
-          params,
-          props,
-          getLeaderboardDataIcon
-        );
+      const [message, page] = await this.getLeaderboardMessage(
+        user,
+        cache,
+        type,
+        getLeaderboard,
+        field,
+        params,
+        props,
+        getLeaderboardDataIcon
+      );
 
-        if (interaction.getUserId() === userId && !message.ephemeral) {
-          up.disable(page === 0);
-          currentPage = page || currentPage;
-          const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
+      if (interaction.getUserId() === userId && !message.ephemeral) {
+        up.disable(page === 0);
+        currentPage = page || currentPage;
+        const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
 
-          context.reply({
-            ...message,
-            components: [row],
-            attachments: [],
-          });
-        } else {
-          interaction.sendFollowup({ ...message, ephemeral: true });
-        }
-      };
+        context.reply({
+          ...message,
+          components: [row],
+          attachments: [],
+        });
+      } else {
+        interaction.sendFollowup({ ...message, ephemeral: true });
+      }
+    };
 
     const listener = CommandListener.getInstance();
 
@@ -187,9 +172,7 @@ export class BaseLeaderboardCommand {
     listener.addHook(documentModal.getCustomId(), async (interaction) => {
       const data = interaction.getData();
       const documentInput = data.components[0].components[0].value;
-      changePage(() => ({ input: documentInput, type: LeaderboardQuery.INPUT }))(
-        interaction
-      );
+      changePage(() => ({ input: documentInput, type: LeaderboardQuery.INPUT }))(interaction);
     });
 
     listener.addHook(positionModal.getCustomId(), async (interaction) => {
@@ -209,9 +192,7 @@ export class BaseLeaderboardCommand {
         });
       }
 
-      changePage(() => ({ input: position, type: LeaderboardQuery.POSITION }))(
-        interaction
-      );
+      changePage(() => ({ input: position, type: LeaderboardQuery.POSITION }))(interaction);
     });
 
     const row = new ActionRowBuilder([up, down, searchDocument, searchPosition]);
@@ -305,22 +286,17 @@ export class BaseLeaderboardCommand {
       return [message, null];
     }
 
-    const leaderboardData = getLeaderboardDataIcon ?
-      await Promise.all(
-        leaderboard.data.map(async (d) => ({
-          ...d,
-          icon: await getLeaderboardDataIcon(d.id),
-        }))
-      ) :
-      leaderboard.data;
+    const leaderboardData = getLeaderboardDataIcon
+      ? await Promise.all(
+          leaderboard.data.map(async (d) => ({
+            ...d,
+            icon: await getLeaderboardDataIcon(d.id),
+          }))
+        )
+      : leaderboard.data;
 
     const canvas = render(
-      <LeaderboardProfile
-        {...props}
-        name={leaderboard.name}
-        fields={leaderboard.fields}
-        data={leaderboardData}
-      />,
+      <LeaderboardProfile {...props} name={leaderboard.name} fields={leaderboard.fields} data={leaderboardData} />,
       getTheme(user)
     );
 

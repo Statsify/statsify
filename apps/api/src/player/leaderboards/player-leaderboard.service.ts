@@ -45,26 +45,20 @@ export class PlayerLeaderboardService extends LeaderboardService {
     return ranking[0].rank;
   }
 
-  protected async getAdditionalStats(
-    ids: string[],
-    fields: string[]
-  ): Promise<LeaderboardAdditionalStats[]> {
-    const selector = fields.reduce((acc, key) => {
-      acc[key] = true;
-      return acc;
-    }, {} as Record<string, boolean>);
+  protected async getAdditionalStats(ids: string[], fields: string[]): Promise<LeaderboardAdditionalStats[]> {
+    const selector = fields.reduce(
+      (acc, key) => {
+        acc[key] = true;
+        return acc;
+      },
+      {} as Record<string, boolean>
+    );
 
     selector.displayName = true;
 
     return await Promise.all(
       ids.map(async (id) => {
-        const player = await this.playerModel
-          .findOne()
-          .where("uuid")
-          .equals(id)
-          .select(selector)
-          .lean()
-          .exec();
+        const player = await this.playerModel.findOne().where("uuid").equals(id).select(selector).lean().exec();
 
         const additionalStats = flatten(player) as LeaderboardAdditionalStats;
         additionalStats.name = additionalStats.displayName;

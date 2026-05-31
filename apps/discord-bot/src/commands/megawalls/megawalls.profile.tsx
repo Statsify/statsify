@@ -52,22 +52,10 @@ export const MegaWallsProfile = ({
           <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
         </Table.tr>
         <Table.tr>
-          <Table.td
-            title={t("stats.finalKills")}
-            value={t(stats.finalKills)}
-            color="§a"
-          />
-          <Table.td
-            title={t("stats.finalDeaths")}
-            value={t(stats.finalDeaths)}
-            color="§c"
-          />
+          <Table.td title={t("stats.finalKills")} value={t(stats.finalKills)} color="§a" />
+          <Table.td title={t("stats.finalDeaths")} value={t(stats.finalDeaths)} color="§c" />
           <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color="§6" />
-          <Table.td
-            title={t("stats.finalAssists")}
-            value={t(stats.finalAssists)}
-            color="§e"
-          />
+          <Table.td title={t("stats.finalAssists")} value={t(stats.finalAssists)} color="§e" />
         </Table.tr>
         <Table.tr>
           <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
@@ -76,21 +64,9 @@ export const MegaWallsProfile = ({
           <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
         </Table.tr>
         <Table.tr>
-          <Table.td
-            title={t("stats.playtime")}
-            value={formatTime(stats.playtime)}
-            color="§a"
-          />
-          <Table.td
-            title={t("stats.witherDamage")}
-            value={t(stats.witherDamage)}
-            color="§c"
-          />
-          <Table.td
-            title={t("stats.witherKills")}
-            value={t(stats.witherKills)}
-            color="§6"
-          />
+          <Table.td title={t("stats.playtime")} value={formatTime(stats.playtime)} color="§a" />
+          <Table.td title={t("stats.witherDamage")} value={t(stats.witherDamage)} color="§c" />
+          <Table.td title={t("stats.witherKills")} value={t(stats.witherKills)} color="§6" />
           <Table.td title={t("stats.points")} value={t(stats.points)} color="§e" />
         </Table.tr>
       </Table.table>
@@ -98,4 +74,3 @@ export const MegaWallsProfile = ({
     </Container>
   );
 };
-

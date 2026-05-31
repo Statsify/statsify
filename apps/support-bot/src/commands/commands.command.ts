@@ -66,10 +66,7 @@ export class CommandsCommand {
   ) {
     const embed = new EmbedBuilder()
       .title("Commands")
-      .footer(
-        (t) =>
-          `Total: ${t(totalCommands)}${highlight ? ` | Highlighting: ${highlight}` : ""}`
-      )
+      .footer((t) => `Total: ${t(totalCommands)}${highlight ? ` | Highlighting: ${highlight}` : ""}`)
       .color(STATUS_COLORS.info)
       .description((t) =>
         commands

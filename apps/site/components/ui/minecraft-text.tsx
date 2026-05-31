@@ -35,43 +35,52 @@ export function MinecraftText({ children, className }: { children: string | stri
   let italic = false;
   let color = "text-mc-white";
 
-  const elements = parts.map((part, index) => {
-    const modifier = part[0];
-    let text: string;
+  const elements = parts
+    .map((part, index) => {
+      const modifier = part[0];
+      let text: string;
 
-    switch (modifier) {
-      case "l":
-        bold = true;
-        text = part.slice(1);
-        break;
-
-      case "o":
-        italic = true;
-        text = part.slice(1);
-        break;
-
-      case "r":
-        bold = false;
-        italic = false;
-        color = "text-mc-white";
-        text = part.slice(1);
-        break;
-
-      default: {
-        const colorCode = minecraftColors.find((color) => color.code === modifier);
-        if (colorCode) {
-          color = colorCode.className;
+      switch (modifier) {
+        case "l":
+          bold = true;
           text = part.slice(1);
-        } else {
-          text = `§${part}`;
+          break;
+
+        case "o":
+          italic = true;
+          text = part.slice(1);
+          break;
+
+        case "r":
+          bold = false;
+          italic = false;
+          color = "text-mc-white";
+          text = part.slice(1);
+          break;
+
+        default: {
+          const colorCode = minecraftColors.find((color) => color.code === modifier);
+          if (colorCode) {
+            color = colorCode.className;
+            text = part.slice(1);
+          } else {
+            text = `§${part}`;
+          }
         }
       }
-    }
 
-    if (!text.length) return undefined;
+      if (!text.length) return undefined;
 
-    return <span key={index} className={`${bold ? "font-bold" : ""} ${italic ? "italic" : "not-italic"} ${color} ${className ?? ""}`}>{text}</span>;
-  }).filter((element) => element !== undefined);
+      return (
+        <span
+          key={index}
+          className={`${bold ? "font-bold" : ""} ${italic ? "italic" : "not-italic"} ${color} ${className ?? ""}`}
+        >
+          {text}
+        </span>
+      );
+    })
+    .filter((element) => element !== undefined);
 
   return <span>{elements}</span>;
 }

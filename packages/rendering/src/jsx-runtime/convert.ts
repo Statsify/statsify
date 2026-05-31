@@ -42,16 +42,10 @@ const normalizeNode = (node: ElementNode, side: Side, other: Side) => {
   const sideType = typeof node[side].size;
   const otherType = typeof node[other].size;
 
-  if (
-    sideType === "undefined" ||
-    (sideType === "number" && (node[side].size as number) < node[side].minSize)
-  )
+  if (sideType === "undefined" || (sideType === "number" && (node[side].size as number) < node[side].minSize))
     node[side].size = node[side].minSize;
 
-  if (
-    otherType === "undefined" ||
-    (otherType === "number" && (node[other].size as number) < node[other].minSize)
-  )
+  if (otherType === "undefined" || (otherType === "number" && (node[other].size as number) < node[other].minSize))
     node[other].size = node[other].minSize;
 
   return node;
@@ -86,8 +80,7 @@ const gatherSideData = (child: ElementNode, side: Side, data: SideData) => {
 
     const pixelPercentRatio = minSize / percent;
 
-    if (pixelPercentRatio > data.highestPixelToPercentRatio)
-      data.highestPixelToPercentRatio = pixelPercentRatio;
+    if (pixelPercentRatio > data.highestPixelToPercentRatio) data.highestPixelToPercentRatio = pixelPercentRatio;
   } else {
     data.staticLength += minSize;
   }
@@ -100,9 +93,7 @@ const processSideData = (data: SideData) => {
 
   const remainingPixelPercentRatio = data.staticLength / data.percentSpaceLeft;
 
-  return (
-    (Math.max(data.highestPixelToPercentRatio, remainingPixelPercentRatio)) + data.paddedLength
-  );
+  return Math.max(data.highestPixelToPercentRatio, remainingPixelPercentRatio) + data.paddedLength;
 };
 
 export const elementToNode = (
@@ -162,8 +153,7 @@ export const elementToNode = (
     if (typeof child[other].size === "string" && child[other].size !== "remaining") {
       const percent = toDecimal(child[other].size as Percent | Fraction);
 
-      const otherSize =
-        child[other].minSize / percent + getTotalSize(child[other], { size: false });
+      const otherSize = child[other].minSize / percent + getTotalSize(child[other], { size: false });
 
       if (otherSize > nodeOtherLength) nodeOtherLength = otherSize;
     } else {

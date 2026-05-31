@@ -44,11 +44,7 @@ export const component: JSX.RawFC<ImageProps> = ({
   children,
 });
 
-export const render: JSX.Render<ImageRenderProps> = (
-  ctx,
-  { image, crop },
-  { x, y, width, height }
-) => {
+export const render: JSX.Render<ImageRenderProps> = (ctx, { image, crop }, { x, y, width, height }) => {
   if (!crop || crop === "none") {
     crop = [0, 0, image.width, image.height];
   } else if (crop === "height-crop") {
@@ -88,12 +84,5 @@ export const render: JSX.Render<ImageRenderProps> = (
     crop = [sx, sy, resizeWidth, resizeHeight];
   }
 
-  ctx.drawImage(
-    image,
-    ...crop,
-    Math.round(x),
-    Math.round(y),
-    Math.round(width),
-    Math.round(height)
-  );
+  ctx.drawImage(image, ...crop, Math.round(x), Math.round(y), Math.round(width), Math.round(height));
 };

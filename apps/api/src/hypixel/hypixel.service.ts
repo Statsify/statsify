@@ -8,14 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import { CacheLevel } from "@statsify/api-client";
-import {
-  GameCounts,
-  Guild,
-  Player,
-  RecentGame,
-  Status,
-  Watchdog,
-} from "@statsify/schemas";
+import { GameCounts, Guild, Player, RecentGame, Status, Watchdog } from "@statsify/schemas";
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 import { Logger } from "@statsify/logger";
@@ -30,10 +23,7 @@ export class HypixelService {
   public constructor(private readonly httpService: HttpService) {}
 
   public shouldCache(expirey: number, cache: CacheLevel): boolean {
-    return (
-      cache !== CacheLevel.LIVE &&
-      (cache == CacheLevel.CACHE_ONLY || Date.now() < expirey)
-    );
+    return cache !== CacheLevel.LIVE && (cache == CacheLevel.CACHE_ONLY || Date.now() < expirey);
   }
 
   public getPlayer(tag: string) {

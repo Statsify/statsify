@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { WARLORDS_MODES, WarlordsModes } from "@statsify/schemas";
 import { WarlordsProfile } from "./warlords.profile.js";
@@ -21,10 +17,7 @@ export class WarlordsCommand extends BaseHypixelCommand<WarlordsModes> {
     super(WARLORDS_MODES);
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<WarlordsModes, never>
-  ): JSX.Element {
+  public getProfile(base: BaseProfileProps, { mode }: ProfileData<WarlordsModes, never>): JSX.Element {
     return <WarlordsProfile {...base} mode={mode} />;
   }
 }

@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { GENERAL_MODES, GeneralModes, Guild, Player } from "@statsify/schemas";
 import { GeneralProfile } from "./general.profile.js";
@@ -27,19 +23,14 @@ export class GeneralCommand extends BaseHypixelCommand<GeneralModes, PreProfileD
   }
 
   public async getPreProfileData(player: Player): Promise<PreProfileData> {
-    const guild = await this.apiService
-      .getGuild(player.uuid, GuildQuery.PLAYER)
-      .catch(() => undefined);
+    const guild = await this.apiService.getGuild(player.uuid, GuildQuery.PLAYER).catch(() => undefined);
 
     return {
       guild,
     };
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { data }: ProfileData<GeneralModes, PreProfileData>
-  ): JSX.Element {
+  public getProfile(base: BaseProfileProps, { data }: ProfileData<GeneralModes, PreProfileData>): JSX.Element {
     return <GeneralProfile {...base} guild={data.guild} />;
   }
 }

@@ -26,13 +26,9 @@ export class ResetCommand {
     const user = context.getUser();
     if (!user?.uuid) throw new ErrorMessage("verification.requiredVerification");
 
-    await this.apiService.resetPlayerSession(
-      user.uuid!
-    );
+    await this.apiService.resetPlayerSession(user.uuid!);
 
-    const embed = new EmbedBuilder()
-      .color(STATUS_COLORS.success)
-      .description((t) => t("historical.setSessionReset"));
+    const embed = new EmbedBuilder().color(STATUS_COLORS.success).description((t) => t("historical.setSessionReset"));
 
     return {
       embeds: [embed],

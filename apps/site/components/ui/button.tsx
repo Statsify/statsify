@@ -10,19 +10,11 @@ import styles from "./button.module.css";
 import { Slot, SlotProps, Slottable } from "@radix-ui/react-slot";
 import { cn } from "~/lib/util";
 
-export function Button({
-  children,
-  className,
-  asChild = false,
-  ...props
-}: SlotProps & { asChild?: boolean }) {
+export function Button({ children, className, asChild = false, ...props }: SlotProps & { asChild?: boolean }) {
   const Component = asChild ? Slot : "button";
 
   return (
-    <div
-      className={cn("text-mc-white", className)}
-      style={{ filter: `drop-shadow(8px 8px rgb(0 0 0 / 0.5))` }}
-    >
+    <div className={cn("text-mc-white", className)} style={{ filter: `drop-shadow(8px 8px rgb(0 0 0 / 0.5))` }}>
       <Component
         {...props}
         data-slot="content"

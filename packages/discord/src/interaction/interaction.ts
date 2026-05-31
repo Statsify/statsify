@@ -6,18 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  type APIGuildMember,
-  type APIUser,
-  ComponentType,
-  InteractionType,
-} from "discord-api-types/v10";
+import { type APIGuildMember, type APIUser, ComponentType, InteractionType } from "discord-api-types/v10";
 import { type IMessage, Message, getLocalizeFunction } from "#messages";
 import { parseDiscordResponse } from "#util/parse-discord-error";
-import type {
-  InteractionServer,
-  RestClient,
-} from "tiny-discord";
+import type { InteractionServer, RestClient } from "tiny-discord";
 
 export class Interaction {
   private locale: string | null = null;
@@ -45,17 +37,11 @@ export class Interaction {
   }
 
   public isButtonInteraction() {
-    return (
-      this.isMessageComponentInteraction() &&
-      this.getData().component_type === ComponentType.Button
-    );
+    return this.isMessageComponentInteraction() && this.getData().component_type === ComponentType.Button;
   }
 
   public isSelectMenuInteraction() {
-    return (
-      this.isMessageComponentInteraction() &&
-      this.getData().component_type === ComponentType.SelectMenu
-    );
+    return this.isMessageComponentInteraction() && this.getData().component_type === ComponentType.SelectMenu;
   }
 
   public isModalInteraction() {

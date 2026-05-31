@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { QUAKE_MODES, QuakeModes } from "@statsify/schemas";
 import { QuakeProfile } from "./quake.profile.js";
@@ -21,10 +17,7 @@ export class QuakeCommand extends BaseHypixelCommand<QuakeModes> {
     super(QUAKE_MODES);
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<QuakeModes, never>
-  ): JSX.Element {
+  public getProfile(base: BaseProfileProps, { mode }: ProfileData<QuakeModes, never>): JSX.Element {
     return <QuakeProfile {...base} mode={mode} />;
   }
 }

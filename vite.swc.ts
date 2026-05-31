@@ -32,11 +32,7 @@ export const resolveId = async (importee: string, importer?: string) => {
     const absolutePath = resolve(importer ? dirname(importer) : process.cwd(), importee);
     let resolved = resolveFile(absolutePath);
 
-    if (
-      !resolved &&
-      existsSync(absolutePath) &&
-      (await stat(absolutePath).then((stat) => stat.isDirectory()))
-    ) {
+    if (!resolved && existsSync(absolutePath) && (await stat(absolutePath).then((stat) => stat.isDirectory()))) {
       resolved = resolveFile(absolutePath, true);
     }
 

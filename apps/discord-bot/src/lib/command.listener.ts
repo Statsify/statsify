@@ -25,7 +25,7 @@ import { readFileSync } from "node:fs";
 import { tips } from "../tips.js";
 import type { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";
 
-const isDevelopment = await config("environment") === "dev";
+const isDevelopment = (await config("environment")) === "dev";
 const applicationId = await config("discordBot.applicationId");
 const port = await config("discordBot.port", { required: false });
 
@@ -39,13 +39,7 @@ export class CommandListener extends AbstractCommandListener {
     rest: RestClient,
     commands: Map<string, CommandResolvable>
   ) {
-    super(
-      client as InteractionServer,
-      rest,
-      commands,
-      applicationId,
-      port!
-    );
+    super(client as InteractionServer, rest, commands, applicationId, port!);
 
     this.apiService = Container.get(ApiService);
     this.cooldowns = new Map();
@@ -60,10 +54,7 @@ export class CommandListener extends AbstractCommandListener {
     const { id, username, discriminator } = interaction.getUser();
     const locale = interaction.getLocale();
 
-    const [command, data, commandName] = this.getCommandAndData(
-      parentCommand,
-      parentData
-    );
+    const [command, data, commandName] = this.getCommandAndData(parentCommand, parentData);
 
     const transaction = Sentry.startTransaction({ name: commandName, op: "command" });
 
@@ -106,11 +97,7 @@ export class CommandListener extends AbstractCommandListener {
     });
   }
 
-  private cooldownPrecondition(
-    command: CommandResolvable,
-    user: User | null,
-    userId: string
-  ) {
+  private cooldownPrecondition(command: CommandResolvable, user: User | null, userId: string) {
     if (isDevelopment) return true;
 
     const cooldownForCommand = this.cooldowns.get(command.name);
@@ -164,9 +151,7 @@ export class CommandListener extends AbstractCommandListener {
 
     if (User.isIron(user) || Math.random() > TIP_CHANCE) return undefined;
 
-    const useableTips = tips.filter(
-      (t) => !t.disabled?.includes(commandName) && !t.uneligible?.(user)
-    );
+    const useableTips = tips.filter((t) => !t.disabled?.includes(commandName) && !t.uneligible?.(user));
 
     if (!useableTips.length) return undefined;
 

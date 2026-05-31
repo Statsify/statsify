@@ -14,10 +14,7 @@ export interface IfProps<T> {
   children: JSX.Children | JSX.Children<(data: T) => JSX.Children>;
 }
 
-export function If<T>({
-  children: _children,
-  condition,
-}: IfProps<T>): JSX.Element | null {
+export function If<T>({ children: _children, condition }: IfProps<T>): JSX.Element | null {
   const children = useChildren(_children);
 
   if (condition) {

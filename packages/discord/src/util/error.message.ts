@@ -6,14 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  EmbedBuilder,
-  IMessage,
-  LocalizationString,
-  Message,
-} from "#messages";
+import { ActionRowBuilder, ButtonBuilder, EmbedBuilder, IMessage, LocalizationString, Message } from "#messages";
 import { STATUS_COLORS } from "@statsify/logger";
 import { getLogoPath } from "@statsify/assets";
 import { readFileSync } from "node:fs";
@@ -28,29 +21,18 @@ interface ErrorMessageOptions {
 
 export class ErrorMessage extends Message {
   public constructor(localizationKey: string);
-  public constructor(
-    title: LocalizationString,
-    description: LocalizationString,
-    options?: ErrorMessageOptions
-  );
+  public constructor(title: LocalizationString, description: LocalizationString, options?: ErrorMessageOptions);
   public constructor(
     titleOrKey: LocalizationString,
     description?: LocalizationString,
-    {
-      image,
-      thumbnail,
-      buttons = [],
-      color = STATUS_COLORS.error,
-    }: ErrorMessageOptions = {}
+    { image, thumbnail, buttons = [], color = STATUS_COLORS.error }: ErrorMessageOptions = {}
   ) {
     const embed = new EmbedBuilder().color(color);
 
     if (description) {
       embed.title(titleOrKey).description(description);
     } else {
-      embed
-        .title((t) => t(`${titleOrKey}.title`))
-        .description((t) => t(`${titleOrKey}.description`));
+      embed.title((t) => t(`${titleOrKey}.title`)).description((t) => t(`${titleOrKey}.description`));
     }
 
     const data: IMessage = { embeds: [embed] };

@@ -113,10 +113,8 @@ export class ClassicMurderMysteryMode extends StandardMurderMysteryMode {
     super(data, mode);
     mode = mode ? `_${mode}` : mode;
 
-    this.fastestDetectiveWin =
-      (data[`quickest_detective_win_time_seconds${mode}`] ?? 0) * 1000;
-    this.fastestMurdererWin =
-      (data[`quickest_murderer_win_time_seconds${mode}`] ?? 0) * 1000;
+    this.fastestDetectiveWin = (data[`quickest_detective_win_time_seconds${mode}`] ?? 0) * 1000;
+    this.fastestMurdererWin = (data[`quickest_murderer_win_time_seconds${mode}`] ?? 0) * 1000;
   }
 }
 
@@ -173,51 +171,51 @@ const KNIFE_EXP_LIMITS: Record<string, number> = {
 };
 
 const KNIFE_NAMES: Record<string, string> = {
-  "none": "Default Iron Sword",
+  none: "Default Iron Sword",
   "10000_spoons": "10,000 Spoons",
-  "apple": "Unfortunately Colored Jacket",
-  "basted_turkey": "Basted Turkey",
-  "blaze_stick": "Blaze Rod",
-  "bloody_brick": "Bloody Brick",
-  "bone": "Big Bone",
-  "campfire_leftovers": "Campfire Leftovers",
-  "carrot_on_stick": "Somewhat Sharp Rock",
-  "cheapo": "Cheapo Sword",
-  "cheese": "Freshly Frozen Baguette",
-  "chewed_bush": "Chewed Up Bush",
-  "diamond_shovel": "Only the Best",
-  "earthen_dagger": "Earthen Dagger",
-  "easter_basket": "Easter Basket",
-  "farming_implement": "Farming Implement",
-  "feather": "Jagged Knife",
-  "fragile_plant": "Fragile Plant",
-  "frisbee": "Frisbee",
-  "glistening_melon": "Glistening Melon",
-  "gold_digger": "Gold Digger",
-  "grilled_steak": "Grilled Steak",
-  "grimoire": "Grimoire",
-  "ice_shard": "Ice Shard",
-  "mvp": "MVP Diamond Sword",
-  "mouse_trap": "Mouse Trap",
-  "prickly": "Prickly",
-  "pumpkin_pie": "Pumpkin Pie",
-  "rudolphs_nose": "Rudolph's Nose",
-  "rudolphs_snack": "Rudolph's Favorite Snack",
-  "salmon": "Salmon",
-  "scythe": "The Scythe",
-  "shears": "Shears",
-  "shiny_snack": "Sparkly Snack",
-  "shovel": "Shovel",
-  "shred": "Shred",
-  "stake": "Stake",
-  "stick_with_hat": "Stick with a Hat",
-  "stick": "Stick",
-  "sweet_treat": "Sweet Treat",
-  "timber": "Timber",
-  "vip": "VIP Golden Sword",
-  "wood_axe": "Wooden Axe",
-  "double_death_scythe": "Double Death Scythe",
-  "spray_painted_shovel": "Gold Spray Painted Shovel",
+  apple: "Unfortunately Colored Jacket",
+  basted_turkey: "Basted Turkey",
+  blaze_stick: "Blaze Rod",
+  bloody_brick: "Bloody Brick",
+  bone: "Big Bone",
+  campfire_leftovers: "Campfire Leftovers",
+  carrot_on_stick: "Somewhat Sharp Rock",
+  cheapo: "Cheapo Sword",
+  cheese: "Freshly Frozen Baguette",
+  chewed_bush: "Chewed Up Bush",
+  diamond_shovel: "Only the Best",
+  earthen_dagger: "Earthen Dagger",
+  easter_basket: "Easter Basket",
+  farming_implement: "Farming Implement",
+  feather: "Jagged Knife",
+  fragile_plant: "Fragile Plant",
+  frisbee: "Frisbee",
+  glistening_melon: "Glistening Melon",
+  gold_digger: "Gold Digger",
+  grilled_steak: "Grilled Steak",
+  grimoire: "Grimoire",
+  ice_shard: "Ice Shard",
+  mvp: "MVP Diamond Sword",
+  mouse_trap: "Mouse Trap",
+  prickly: "Prickly",
+  pumpkin_pie: "Pumpkin Pie",
+  rudolphs_nose: "Rudolph's Nose",
+  rudolphs_snack: "Rudolph's Favorite Snack",
+  salmon: "Salmon",
+  scythe: "The Scythe",
+  shears: "Shears",
+  shiny_snack: "Sparkly Snack",
+  shovel: "Shovel",
+  shred: "Shred",
+  stake: "Stake",
+  stick_with_hat: "Stick with a Hat",
+  stick: "Stick",
+  sweet_treat: "Sweet Treat",
+  timber: "Timber",
+  vip: "VIP Golden Sword",
+  wood_axe: "Wooden Axe",
+  double_death_scythe: "Double Death Scythe",
+  spray_painted_shovel: "Gold Spray Painted Shovel",
 };
 
 export class MurderMysteryKnife {
@@ -236,9 +234,10 @@ export class MurderMysteryKnife {
     if (this.kind === "random_cosmetic") {
       let max: [string, number] | undefined = undefined;
 
-      const knifes = Object.entries(
-        data?.knifeSkinPrestiges?.xp ?? ({} as Record<string, number>)
-      ) as [string, number][];
+      const knifes = Object.entries(data?.knifeSkinPrestiges?.xp ?? ({} as Record<string, number>)) as [
+        string,
+        number,
+      ][];
 
       for (const knife of knifes) {
         const value = knife[1];

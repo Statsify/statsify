@@ -1,8 +1,30 @@
 {
   "name": "@statsify/rendering",
   "version": "0.0.0",
-  "types": "./src/index.ts",
   "type": "module",
+  "types": "./src/index.ts",
+  "imports": {
+    "#colors": {
+      "types": "./src/colors/index.ts",
+      "default": "./dist/colors/index.js"
+    },
+    "#intrinsics": {
+      "types": "./src/intrinsics/index.ts",
+      "default": "./dist/intrinsics/index.js"
+    },
+    "#font": {
+      "types": "./src/font/index.ts",
+      "default": "./dist/font/index.js"
+    },
+    "#hooks": {
+      "types": "./src/hooks/index.ts",
+      "default": "./dist/hooks/index.js"
+    },
+    "#jsx": {
+      "types": "./src/jsx/index.ts",
+      "default": "./dist/jsx/index.js"
+    }
+  },
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -26,27 +48,5 @@
     "axios": "1.11.0",
     "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz",
     "typedi": "^0.10.0"
-  },
-  "imports": {
-    "#colors": {
-      "types": "./src/colors/index.ts",
-      "default": "./dist/colors/index.js"
-    },
-    "#intrinsics": {
-      "types": "./src/intrinsics/index.ts",
-      "default": "./dist/intrinsics/index.js"
-    },
-    "#font": {
-      "types": "./src/font/index.ts",
-      "default": "./dist/font/index.js"
-    },
-    "#hooks": {
-      "types": "./src/hooks/index.ts",
-      "default": "./dist/hooks/index.js"
-    },
-    "#jsx": {
-      "types": "./src/jsx/index.ts",
-      "default": "./dist/jsx/index.js"
-    }
   }
 }

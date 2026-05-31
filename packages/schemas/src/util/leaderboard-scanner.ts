@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  type LeaderboardEnabledMetadata,
-  type LeaderboardMetadata,
-  MetadataScanner,
-} from "#metadata";
+import { type LeaderboardEnabledMetadata, type LeaderboardMetadata, MetadataScanner } from "#metadata";
 import { parseAdditionalFields } from "./parse-fields.js";
 import type { Constructor } from "@statsify/util";
 
@@ -52,13 +48,10 @@ export class LeaderboardScanner {
     leaderboard.default = store.default;
 
     if (Array.isArray(leaderboard.additionalFields)) {
-      leaderboard.additionalFields = leaderboard.additionalFields.map(
-        parseAdditionalFields.bind(this, key)
-      );
+      leaderboard.additionalFields = leaderboard.additionalFields.map(parseAdditionalFields.bind(this, key));
     }
 
-    if (leaderboard.extraDisplay)
-      leaderboard.extraDisplay = parseAdditionalFields(key, leaderboard.extraDisplay);
+    if (leaderboard.extraDisplay) leaderboard.extraDisplay = parseAdditionalFields(key, leaderboard.extraDisplay);
 
     return leaderboard;
   }

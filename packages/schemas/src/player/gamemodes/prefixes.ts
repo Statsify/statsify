@@ -31,29 +31,19 @@ type Prefixes<T extends unknown[] = []> = GamePrefix<T>[] | GameTitle<T>[];
  * @param skip The number of prefixes to skip
  * @returns The score needed to reach the requested prefix
  */
-const getPrefixRequirement = (
-  prefixes: Requirement[],
-  score: number,
-  skip = 0
-): number => {
+const getPrefixRequirement = (prefixes: Requirement[], score: number, skip = 0): number => {
   const prefixIndex = prefixes.findIndex((requirement) => requirement.req > (score || 0));
 
-  return prefixIndex === -1 ?
-    prefixes.at(-1)!.req :
-    prefixes[Math.min(prefixIndex + skip - 1, prefixes.length - 1)].req || 0;
+  return prefixIndex === -1
+    ? prefixes.at(-1)!.req
+    : prefixes[Math.min(prefixIndex + skip - 1, prefixes.length - 1)].req || 0;
 };
 
-export const createPrefixProgression = (
-  prefixes: Requirement[],
-  score: number
-) => {
+export const createPrefixProgression = (prefixes: Requirement[], score: number) => {
   const currentRequirement = getPrefixRequirement(prefixes, score);
   const nextRequirement = getPrefixRequirement(prefixes, score, 1);
 
-  return new Progression(
-    Math.abs(score - currentRequirement),
-    nextRequirement - currentRequirement
-  );
+  return new Progression(Math.abs(score - currentRequirement), nextRequirement - currentRequirement);
 };
 
 export interface FormatPrefixOptions<T extends unknown[] = []> {
@@ -101,8 +91,7 @@ export const getFormattedPrefix = <T extends unknown[] = []>({
 
   if ("title" in prefix) return prefix.fmt(prefix.title, ...prefixParams);
 
-  if (!abbreviation)
-    return prefix.fmt(`${trueScore ? Math.floor(score) : prefix.req}`, ...prefixParams);
+  if (!abbreviation) return prefix.fmt(`${trueScore ? Math.floor(score) : prefix.req}`, ...prefixParams);
 
   const [prefixNumber, prefixSuffix] = abbreviationNumber(prefix.req);
 
@@ -127,11 +116,7 @@ export const defaultPrefix = <T extends unknown[] = []>(
 
 const RAINBOW_COLORS = ["c", "6", "e", "a", "b", "d", "9"];
 
-export const rainbow = (text: string) => cycleColors(
-  text,
-  RAINBOW_COLORS
-);
+export const rainbow = (text: string) => cycleColors(text, RAINBOW_COLORS);
 
-export const cycleColors = (text: string, colors: string[]) => [...text]
-  .map((l, i) => `§${colors[i % colors.length]}${l}`)
-  .join("");
+export const cycleColors = (text: string, colors: string[]) =>
+  [...text].map((l, i) => `§${colors[i % colors.length]}${l}`).join("");

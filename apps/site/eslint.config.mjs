@@ -19,4 +19,3 @@ export default [
   ...defineConfig({ tsconfigDirName: import.meta.dirname }),
   ...compat.extends("next/core-web-vitals"),
 ];
-

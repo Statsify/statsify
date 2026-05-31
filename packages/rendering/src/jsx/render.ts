@@ -15,12 +15,7 @@ import { createCanvas } from "../canvas.js";
 import { createInstructions } from "./create-instructions.js";
 import { getPositionalDelta, getTotalSize } from "./util.js";
 import { noop } from "@statsify/util";
-import type {
-  ComputedThemeContext,
-  ElementNode,
-  Instruction,
-  Theme,
-} from "./types.js";
+import type { ComputedThemeContext, ElementNode, Instruction, Theme } from "./types.js";
 
 const _render = (
   ctx: CanvasRenderingContext2D,
@@ -52,13 +47,7 @@ const _render = (
     },
   };
 
-  intrinsicElements[instruction.type](
-    ctx,
-    instruction.props,
-    location,
-    context,
-    instruction.component
-  );
+  intrinsicElements[instruction.type](ctx, instruction.props, location, context, instruction.component);
 
   if (!instruction.children?.length) return;
 
@@ -103,9 +92,7 @@ const _render = (
         const oppositeSide = side === "x" ? "y" : "x";
         const delta =
           instruction[oppositeSide].size -
-          (child[oppositeSide].size +
-            child[oppositeSide].margin2 +
-            child[oppositeSide].padding2);
+          (child[oppositeSide].size + child[oppositeSide].margin2 + child[oppositeSide].padding2);
 
         applyDelta(delta, oppositeSide);
         _render(ctx, context, intrinsicElements, child, x, y);
@@ -151,14 +138,7 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
 
   if (!context.renderer) context.renderer = Container.get(FontRenderer);
 
-  _render(
-    ctx,
-    context,
-    { ...intrinsicRenders, ...theme?.elements },
-    instructions,
-    0,
-    0
-  );
+  _render(ctx, context, { ...intrinsicRenders, ...theme?.elements }, instructions, 0, 0);
 
   renderTransaction?.finish();
 

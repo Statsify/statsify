@@ -23,7 +23,5 @@ export const SkyWarsQuests = createGameModeQuests({
     { field: "weekly_wins", propertyKey: "skyWarsWins" },
     { field: "weekly_kills", propertyKey: "skyWarsKills" },
   ],
-  monthly: [
-    { field: "monthly_earn_opals", propertyKey: "earnAnOpal" },
-  ],
+  monthly: [{ field: "monthly_earn_opals", propertyKey: "earnAnOpal" }],
 });

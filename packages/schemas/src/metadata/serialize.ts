@@ -10,14 +10,8 @@ import { MetadataScanner } from "./metadata-scanner.js";
 import type { Constructor, Flatten } from "@statsify/util";
 import type { FieldMetadata } from "./metadata.interface.js";
 
-export const serialize = <T>(
-  constructor: Constructor<T>,
-  instance: Flatten<T>
-): Flatten<T> => {
-  const metadataEntries = MetadataScanner.scan(constructor) as [
-    keyof Flatten<T>,
-    FieldMetadata
-  ][];
+export const serialize = <T>(constructor: Constructor<T>, instance: Flatten<T>): Flatten<T> => {
+  const metadataEntries = MetadataScanner.scan(constructor) as [keyof Flatten<T>, FieldMetadata][];
 
   const serialized: Flatten<T> = {} as Flatten<T>;
 

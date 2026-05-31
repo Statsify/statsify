@@ -8,11 +8,7 @@
 
 import { DynamicModule, Global, Module, Provider } from "@nestjs/common";
 import { RedisModuleOptions } from "./redis.interfaces.js";
-import {
-  createRedisConnection,
-  getRedisConnectionToken,
-  getRedisOptionsToken,
-} from "./redis.utils.js";
+import { createRedisConnection, getRedisConnectionToken, getRedisOptionsToken } from "./redis.utils.js";
 
 @Global()
 @Module({})

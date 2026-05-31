@@ -25,15 +25,11 @@ export class GTBHelperCommand {
       );
     }
 
-    const embed = new EmbedBuilder()
-      .title((t) => t("embeds.gtbhelper.title"))
-      .color(STATUS_COLORS.info);
+    const embed = new EmbedBuilder().title((t) => t("embeds.gtbhelper.title")).color(STATUS_COLORS.info);
 
     const groups = arrayGroup(words, Math.ceil(words.length / 3));
 
-    groups.forEach((solutions) =>
-      embed.field("\u200b", solutions.map((s) => `\`•\` ${s}`).join("\n"), true)
-    );
+    groups.forEach((solutions) => embed.field("\u200b", solutions.map((s) => `\`•\` ${s}`).join("\n"), true));
 
     return { embeds: [embed] };
   }

@@ -24,7 +24,16 @@ import { getBackground, getLogo } from "@statsify/assets";
 import { getTheme } from "#themes";
 import { noop } from "@statsify/util";
 import { render } from "@statsify/rendering";
-import type { ApiModeFromGameModes, ApiSubModeForMode, GameMode, GameModeWithSubModes, GameModes, Player, SubModeForMode, User } from "@statsify/schemas";
+import type {
+  ApiModeFromGameModes,
+  ApiSubModeForMode,
+  GameMode,
+  GameModeWithSubModes,
+  GameModes,
+  Player,
+  SubModeForMode,
+  User,
+} from "@statsify/schemas";
 import type { Image } from "skia-canvas";
 
 export type ProfileTime = "LIVE" | HistoricalTimeData;
@@ -93,10 +102,8 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
       };
 
       const filteredSubmodes = this.filterSubmodes?.(player, mode) ?? mode.submodes;
-      const submodeEmojis = this.getSubModeEmojis?.(
-        mode.api,
-        filteredSubmodes as SubModeForMode<T, (typeof mode)["api"]>[]
-      ) ?? [];
+      const submodeEmojis =
+        this.getSubModeEmojis?.(mode.api, filteredSubmodes as SubModeForMode<T, (typeof mode)["api"]>[]) ?? [];
 
       if (filteredSubmodes.length === 0) {
         const gameMode = { ...mode, submode: undefined } as unknown as GameMode<T>;
@@ -125,36 +132,40 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
         };
       }
 
-      const subPages = filteredSubmodes.map((submode, index): SubPage => ({
-        label: submode.formatted,
-        emoji: submodeEmojis[index],
-        generator: async (t) => {
-          const background = await getBackground(...mapBackground(this.modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
+      const subPages = filteredSubmodes.map(
+        (submode, index): SubPage => ({
+          label: submode.formatted,
+          emoji: submodeEmojis[index],
+          generator: async (t) => {
+            const background = await getBackground(
+              ...mapBackground(this.modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>)
+            );
 
-          const gameMode = {
-            api: mode.api,
-            formatted: mode.formatted,
-            hypixel: mode.hypixel,
-            submode,
-          } as GameMode<T>;
+            const gameMode = {
+              api: mode.api,
+              formatted: mode.formatted,
+              hypixel: mode.hypixel,
+              submode,
+            } as GameMode<T>;
 
-          const profile = this.getProfile(
-            {
-              player,
-              skin,
-              background,
-              logo,
-              t,
-              user,
-              badge,
-              time: "LIVE",
-            },
-            { mode: gameMode, data }
-          );
+            const profile = this.getProfile(
+              {
+                player,
+                skin,
+                background,
+                logo,
+                t,
+                user,
+                badge,
+                time: "LIVE",
+              },
+              { mode: gameMode, data }
+            );
 
-          return render(profile, getTheme(user));
-        },
-      }));
+            return render(profile, getTheme(user));
+          },
+        })
+      );
 
       return { ...pageInput, subPages };
     });
@@ -162,8 +173,5 @@ export abstract class BaseHypixelCommand<T extends GamesWithBackgrounds, K = nev
     return this.paginateService.paginate(context, pages);
   }
 
-  public abstract getProfile(
-    base: BaseProfileProps,
-    extra: ProfileData<T, K>
-  ): JSX.Element;
+  public abstract getProfile(base: BaseProfileProps, extra: ProfileData<T, K>): JSX.Element;
 }

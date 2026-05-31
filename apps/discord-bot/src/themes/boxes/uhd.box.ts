@@ -10,14 +10,7 @@ import { Box, Render } from "@statsify/rendering";
 
 export const render: Render<Box.BoxRenderProps> = (
   ctx,
-  {
-    color = Box.DEFAULT_COLOR,
-    border,
-    shadowDistance,
-    shadowOpacity = Box.SHADOW_OPACITY,
-    outline,
-    outlineSize,
-  },
+  { color = Box.DEFAULT_COLOR, border, shadowDistance, shadowOpacity = Box.SHADOW_OPACITY, outline, outlineSize },
   { x, y, width, height, padding }
 ) => {
   const fill = Box.resolveFill(color, ctx, x, y, width, height);
@@ -65,8 +58,7 @@ export const render: Render<Box.BoxRenderProps> = (
   Box.renderOverlay(ctx, x, y, height);
 
   if (outline) {
-    ctx.strokeStyle =
-      outline === true ? Box.resolveFill(color, ctx, x, y, width, height) : outline;
+    ctx.strokeStyle = outline === true ? Box.resolveFill(color, ctx, x, y, width, height) : outline;
     ctx.lineWidth = outlineSize;
     ctx.stroke();
   }
@@ -80,17 +72,9 @@ export const render: Render<Box.BoxRenderProps> = (
   ctx.moveTo(x + width, y + shadowDistance);
 
   // Shadow Top Right Corner
-  ctx.quadraticCurveTo(
-    x + width,
-    y + shadowDistance,
-    x + width + shadowDistance,
-    y + border.topRight + shadowDistance
-  );
+  ctx.quadraticCurveTo(x + width, y + shadowDistance, x + width + shadowDistance, y + border.topRight + shadowDistance);
 
-  ctx.lineTo(
-    x + width + shadowDistance,
-    y + height - border.bottomRight + shadowDistance
-  );
+  ctx.lineTo(x + width + shadowDistance, y + height - border.bottomRight + shadowDistance);
 
   // Shadow Outer Bottom Right Corner
   ctx.quadraticCurveTo(
@@ -117,4 +101,3 @@ export const render: Render<Box.BoxRenderProps> = (
 
   ctx.globalAlpha = 1;
 };
-

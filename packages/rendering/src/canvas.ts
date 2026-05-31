@@ -10,10 +10,6 @@ import { Canvas } from "skia-canvas";
 
 type CanvasOptions = ConstructorParameters<typeof Canvas>[2] & { gpu?: boolean };
 
-export function createCanvas(
-  width?: number,
-  height?: number,
-  options: CanvasOptions = {}
-): Canvas {
+export function createCanvas(width?: number, height?: number, options: CanvasOptions = {}): Canvas {
   return new Canvas(width, height, { gpu: false, ...options });
 }

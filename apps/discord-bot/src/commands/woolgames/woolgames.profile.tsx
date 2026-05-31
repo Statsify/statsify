@@ -7,20 +7,8 @@
  */
 
 import { CaptureTheWoolTable } from "./capture-the-wool.table.js";
-import {
-  Container,
-  Footer,
-  Header,
-  Historical,
-  SidebarItem,
-  Table,
-  formatProgression,
-} from "#components";
-import {
-  FormattedGame,
-  type GameMode,
-  WoolGamesModes,
-} from "@statsify/schemas";
+import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
+import { FormattedGame, type GameMode, WoolGamesModes } from "@statsify/schemas";
 import { SheepWarsTable } from "./sheepwars.table.js";
 import { WoolWarsTable } from "./woolwars.table.js";
 import { formatTime } from "@statsify/util";
@@ -87,9 +75,7 @@ export const WoolGamesProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.WOOLGAMES} §fStats §r(${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""})`}
-        description={`§7${t("stats.level")}: ${
-          woolgames.levelFormatted
-        }\n${formatProgression({
+        description={`§7${t("stats.level")}: ${woolgames.levelFormatted}\n${formatProgression({
           t,
           label: t("stats.progression.exp"),
           progression: woolgames.progression,

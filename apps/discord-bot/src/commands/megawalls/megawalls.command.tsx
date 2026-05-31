@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { GameModeWithSubModes, MEGAWALLS_MODES, MegaWallsModes, Player } from "@statsify/schemas";
 import { MegaWallsProfile } from "./megawalls.profile.js";
@@ -28,10 +24,7 @@ export class MegaWallsCommand extends BaseHypixelCommand<MegaWallsModes> {
     return filterMegaWallsKits(player, modes);
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<MegaWallsModes, never>
-  ): JSX.Element {
+  public getProfile(base: BaseProfileProps, { mode }: ProfileData<MegaWallsModes, never>): JSX.Element {
     return <MegaWallsProfile {...base} mode={mode} />;
   }
 }
@@ -43,9 +36,7 @@ export function filterMegaWallsKits(
   const { megawalls } = player.stats;
   const [overall, ...kits] = modes;
 
-  const filteredKits = [...kits]
-    .sort((a, b) => megawalls[b.api].points - megawalls[a.api].points)
-    .slice(0, 24);
+  const filteredKits = [...kits].sort((a, b) => megawalls[b.api].points - megawalls[a.api].points).slice(0, 24);
 
   return [overall, ...filteredKits];
 }

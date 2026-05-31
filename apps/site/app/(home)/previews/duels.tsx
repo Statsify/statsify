@@ -38,7 +38,10 @@ export function DuelsPreview({ className }: { className?: string }) {
           nextLevel={stats.nextTitleLevelFormatted}
         />
         <Box className="row-start-4 xl:row-start-3 xl:col-start-2">
-          <span className="font-bold"><span className="text-mc-aqua">Duels</span> Stats</span> (Overall)
+          <span className="font-bold">
+            <span className="text-mc-aqua">Duels</span> Stats
+          </span>{" "}
+          (Overall)
         </Box>
         <Sidebar className="row-start-3 xl:row-start-1 xl:row-end-4">
           <SidebarItem color="text-mc-dark-green" name="Tokens" value={t(duels.tokens)} />
@@ -53,4 +56,3 @@ export function DuelsPreview({ className }: { className?: string }) {
     </div>
   );
 }
-

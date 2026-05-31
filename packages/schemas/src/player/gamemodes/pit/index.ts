@@ -21,10 +21,7 @@ import {
 } from "./util.js";
 import { add, ratio } from "@statsify/math";
 
-export const PIT_MODES = new GameModes([
-  { api: "overall" },
-  { hypixel: "PIT", formatted: "Pit" },
-] as const);
+export const PIT_MODES = new GameModes([{ api: "overall" }, { hypixel: "PIT", formatted: "Pit" }] as const);
 
 export type PitModes = ExtractGameModes<typeof PIT_MODES>;
 
@@ -169,10 +166,7 @@ export class Pit {
     );
 
     this.levelFormatted = getLevelFormatted(level, prestige);
-    this.nextLevelFormatted =
-      prestige === 50 ?
-        getLevelFormatted(120, prestige) :
-        getLevelFormatted(1, prestige + 1);
+    this.nextLevelFormatted = prestige === 50 ? getLevelFormatted(120, prestige) : getLevelFormatted(1, prestige + 1);
 
     this.contractsCompleted = data.contracts_completed;
 

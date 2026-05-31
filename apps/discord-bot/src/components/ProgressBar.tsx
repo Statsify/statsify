@@ -25,21 +25,8 @@ export const ProgressBar = ({ color, numerator, denominator, t }: ProgressBarPro
 
   return (
     <div width="100%">
-      <box
-        width="remaining"
-        padding={0}
-        shadowOpacity={0}
-        color="#262626"
-        location="left"
-      >
-        <box
-          width={`${percentage}%`}
-          margin={0}
-          padding={0}
-          shadowOpacity={0}
-          height="100%"
-          color={color}
-        >
+      <box width="remaining" padding={0} shadowOpacity={0} color="#262626" location="left">
+        <box width={`${percentage}%`} margin={0} padding={0} shadowOpacity={0} height="100%" color={color}>
           {isHalf ? inner : <></>}
         </box>
         {isHalf ? <></> : inner}

@@ -46,11 +46,7 @@ export const CopsAndCrimsProfile = ({
         <Table.table>
           <Table.tr>
             <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-            <Table.td
-              title={t("stats.roundWins")}
-              value={t(stats.roundWins)}
-              color="§b"
-            />
+            <Table.td title={t("stats.roundWins")} value={t(stats.roundWins)} color="§b" />
           </Table.tr>
           <Table.tr>
             <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
@@ -59,16 +55,8 @@ export const CopsAndCrimsProfile = ({
             <Table.td title={t("stats.assists")} value={t(stats.assists)} color="§e" />
           </Table.tr>
           <Table.tr>
-            <Table.td
-              title={t("stats.bombsDefused")}
-              value={t(stats.bombsDefused)}
-              color="§a"
-            />
-            <Table.td
-              title={t("stats.bombsPlanted")}
-              value={t(stats.bombsPlanted)}
-              color="§c"
-            />
+            <Table.td title={t("stats.bombsDefused")} value={t(stats.bombsDefused)} color="§a" />
+            <Table.td title={t("stats.bombsPlanted")} value={t(stats.bombsPlanted)} color="§c" />
           </Table.tr>
         </Table.table>
       );
@@ -103,11 +91,7 @@ export const CopsAndCrimsProfile = ({
           <Table.tr>
             <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
             <Historical.exclude time={time}>
-              <Table.td
-                title={t("stats.bestTime")}
-                value={formatTime(stats.fastestWin)}
-                color="§b"
-              />
+              <Table.td title={t("stats.bestTime")} value={formatTime(stats.fastestWin)} color="§b" />
             </Historical.exclude>
           </Table.tr>
           <Table.tr>

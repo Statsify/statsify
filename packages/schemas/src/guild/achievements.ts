@@ -90,15 +90,9 @@ export class GuildAchievements {
     this.winnersProgression = new Progression(winnersScore, winnersLevel?.req);
     this.winnersTier = winnersLevel?.tier;
 
-    const experienceKingsLevel = findScore(
-      EXPERIENCE_KINGS_REQUIREMENTS,
-      expierienceKingsScore
-    );
+    const experienceKingsLevel = findScore(EXPERIENCE_KINGS_REQUIREMENTS, expierienceKingsScore);
 
-    this.experienceKingsProgression = new Progression(
-      expierienceKingsScore,
-      experienceKingsLevel?.req
-    );
+    this.experienceKingsProgression = new Progression(expierienceKingsScore, experienceKingsLevel?.req);
 
     this.experienceKingsTier = experienceKingsLevel?.tier;
 

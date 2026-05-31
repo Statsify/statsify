@@ -11,20 +11,20 @@ import { Field } from "#metadata";
 export enum UserFont {
   DEFAULT = "default",
   HD = "hd",
-  FPACK = "fpack"
+  FPACK = "fpack",
 }
 
 export enum UserPalette {
   DEFAULT = "default",
   LIGHT = "light",
   DARK = "dark",
-  NO_BACKGROUNDS = "no-backgrounds"
+  NO_BACKGROUNDS = "no-backgrounds",
 }
 
 export enum UserBoxes {
   DEFAULT = "default",
   HD = "hd",
-  UHD = "uhd"
+  UHD = "uhd",
 }
 
 export class UserTheme {

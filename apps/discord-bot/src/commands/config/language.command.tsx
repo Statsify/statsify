@@ -70,9 +70,7 @@ export class LanguageCommand {
 
     const embed = new EmbedBuilder()
       .color(STATUS_COLORS.success)
-      .description((t) =>
-        t("config.language.description", { locale: interaction.getLocale() })
-      );
+      .description((t) => t("config.language.description", { locale: interaction.getLocale() }));
 
     return { embeds: [embed] };
   }

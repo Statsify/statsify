@@ -12,10 +12,10 @@ import type { ComponentProps, JSX } from "react";
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> & U[keyof U];
 
 export type BoxBorderRadius =
-  | Partial<{ topLeft: number; topRight: number; bottomLeft: number; bottomRight: number }> |
-  AtLeastOne<{ top: number; bottom: number }> |
-  AtLeastOne<{ left: number; right: number }> |
-  number;
+  | Partial<{ topLeft: number; topRight: number; bottomLeft: number; bottomRight: number }>
+  | AtLeastOne<{ top: number; bottom: number }>
+  | AtLeastOne<{ left: number; right: number }>
+  | number;
 
 const DEFAULT_BORDER_RADIUS = 8;
 
@@ -88,9 +88,9 @@ type BoxOnlyProps = {
 };
 
 export type BoxProps<T extends keyof JSX.IntrinsicElements = "div"> = BoxOnlyProps & { as?: T } & Omit<
-  ComponentProps<T>,
-  keyof BoxOnlyProps
->;
+    ComponentProps<T>,
+    keyof BoxOnlyProps
+  >;
 
 export function Box<T extends keyof JSX.IntrinsicElements = "div">({
   borderRadius: partialBorderRadius = {},
@@ -106,15 +106,15 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
   const Component = as ?? "div";
 
   const shadowPath = polygon(
-    ...(borderRadius.bottomRight === 0 ?
-      [] :
-      ([
-        `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-        `calc(100% - ${shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-        `calc(100% - ${shadow}px) calc(100% - ${shadow}px)`,
-        `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${shadow}px)`,
-        `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
-      ] as const)),
+    ...(borderRadius.bottomRight === 0
+      ? []
+      : ([
+          `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
+          `calc(100% - ${shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
+          `calc(100% - ${shadow}px) calc(100% - ${shadow}px)`,
+          `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${shadow}px)`,
+          `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
+        ] as const)),
 
     `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)`,
     `${borderRadius.bottomLeft}px 100%`,
@@ -123,7 +123,7 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
     `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)`,
 
     borderRadius.bottomRight !== 0 &&
-    `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
+      `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`,
 
     `calc(100% - ${shadow}px) ${borderRadius.topRight}px`,
     `100% ${borderRadius.topRight}px`,
@@ -131,9 +131,9 @@ export function Box<T extends keyof JSX.IntrinsicElements = "div">({
     `calc(100% - ${shadow}px) calc(100% - ${borderRadius.bottomRight}px)`,
     `calc(100% - ${shadow}px) ${borderRadius.topRight}px`,
 
-    borderRadius.bottomRight === 0 ?
-      `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)` :
-      `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`
+    borderRadius.bottomRight === 0
+      ? `${borderRadius.bottomLeft}px calc(100% - ${shadow}px)`
+      : `calc(100% - ${borderRadius.bottomRight + shadow}px) calc(100% - ${borderRadius.bottomRight + shadow}px)`
   );
 
   const contentPath = polygon(

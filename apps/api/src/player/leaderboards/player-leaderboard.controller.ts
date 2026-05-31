@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ApiBadRequestResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Auth } from "#auth";
 import { Body, Controller, Post } from "@nestjs/common";
 import {
@@ -27,18 +22,14 @@ import { PlayerLeaderboardService } from "./player-leaderboard.service.js";
 @Controller("/player/leaderboards")
 @ApiTags("Player Leaderboards")
 export class PlayerLeaderboardsController {
-  public constructor(
-    private readonly playerLeaderboardService: PlayerLeaderboardService
-  ) {}
+  public constructor(private readonly playerLeaderboardService: PlayerLeaderboardService) {}
 
   @Post()
   @ApiOperation({ summary: "Get a Player Leaderboard" })
   @ApiOkResponse({ type: PostLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 3 })
-  public getPlayerLeaderboard(
-    @Body() { field, page, player, position }: PlayerLeaderboardDto
-  ) {
+  public getPlayerLeaderboard(@Body() { field, page, player, position }: PlayerLeaderboardDto) {
     let input: number | string;
     let type: LeaderboardQuery;
 

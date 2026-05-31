@@ -12,10 +12,7 @@ import { roundTo } from "@statsify/math";
 import type { FieldMetadata } from "./metadata.interface.js";
 
 export const deserialize = <T>(constructor: Constructor<T>, instance: Flatten<T>): T => {
-  const metadataEntries = MetadataScanner.scan(constructor) as [
-    keyof Flatten<T>,
-    FieldMetadata
-  ][];
+  const metadataEntries = MetadataScanner.scan(constructor) as [keyof Flatten<T>, FieldMetadata][];
 
   const deserialized: Flatten<T> = {} as Flatten<T>;
 

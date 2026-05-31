@@ -21,11 +21,7 @@ export interface TextNode {
 
 export interface Token {
   regex: RegExp;
-  effect: (
-    part: string,
-    matches: RegExpMatchArray,
-    defaultState: Omit<TextNode, "text">,
-  ) => Partial<TextNode>;
+  effect: (part: string, matches: RegExpMatchArray, defaultState: Omit<TextNode, "text">) => Partial<TextNode>;
 }
 
 const bold: Token = { regex: /^l/, effect: () => ({ bold: true }) };
@@ -55,16 +51,11 @@ const reset: Token = {
   effect: (_, __, defaultState) => defaultState,
 };
 
-const minecraftColorList = minecraftColors.map((color) => [
-  color.code.replace("§", ""),
-  color.hex,
-]);
+const minecraftColorList = minecraftColors.map((color) => [color.code.replace("§", ""), color.hex]);
 
 const textColors = Object.fromEntries(minecraftColorList);
 
-const colorRegex = new RegExp(
-  `^${Object.keys(textColors).join("|^")}|^#([A-Fa-f0-9]{6})`
-);
+const colorRegex = new RegExp(`^${Object.keys(textColors).join("|^")}|^#([A-Fa-f0-9]{6})`);
 
 const color: Token = {
   regex: colorRegex,
@@ -80,13 +71,4 @@ const size: Token = {
   }),
 };
 
-export const tokens: Token[] = [
-  color,
-  bold,
-  reset,
-  size,
-  italic,
-  underline,
-  strikethrough,
-  obfuscated,
-];
+export const tokens: Token[] = [color, bold, reset, size, italic, underline, strikethrough, obfuscated];

@@ -39,10 +39,7 @@ export class TagsCommand {
     const content = context.option<string>("content").replaceAll(String.raw`\n`, "\n");
     const attachment = context.option<APIAttachment | null>("attachment");
 
-    if (
-      attachment &&
-      !["image/png", "image/jpeg", "image/gif"].includes(attachment.content_type ?? "")
-    )
+    if (attachment && !["image/png", "image/jpeg", "image/gif"].includes(attachment.content_type ?? ""))
       throw new ErrorMessage(
         (t) => t("errors.unsupportedFileType.title"),
         (t) => t("errors.unsupportedFileType.description")

@@ -20,9 +20,9 @@ import type { CommandMetadata } from "./command.interface.js";
 
 export class CommandResolvable {
   public type:
-    | ApplicationCommandType.ChatInput |
-    ApplicationCommandOptionType.Subcommand |
-    ApplicationCommandOptionType.SubcommandGroup;
+    | ApplicationCommandType.ChatInput
+    | ApplicationCommandOptionType.Subcommand
+    | ApplicationCommandOptionType.SubcommandGroup;
 
   public name: string;
   public description: string;
@@ -73,9 +73,7 @@ export class CommandResolvable {
     this.type = ApplicationCommandType.ChatInput;
     this.cooldown = cooldown;
 
-    const argsResolved = (args ?? [])?.map((a) =>
-      a instanceof AbstractArgument ? a : new a()
-    );
+    const argsResolved = (args ?? [])?.map((a) => (a instanceof AbstractArgument ? a : new a()));
 
     this.args = argsResolved;
     this.options = argsResolved;
@@ -126,25 +124,19 @@ export class CommandResolvable {
   public equals(other: CommandResolvable): boolean {
     const d = this.toJSON();
 
-    if (
-      d.name !== other.name ||
-      d.description !== other.description ||
-      d.type !== other.type
-    ) {
+    if (d.name !== other.name || d.description !== other.description || d.type !== other.type) {
       return false;
     }
 
     if (this.options?.length && other.options?.length) {
       if (this.options.length !== other.options.length) return false;
 
-      for (let i = 0; i < this.options.length; i++)
-        if (!this.options[i].equals(other.options[i])) return false;
+      for (let i = 0; i < this.options.length; i++) if (!this.options[i].equals(other.options[i])) return false;
     }
 
     if (d.description_localizations && other.description_localizations) {
       for (const key in this.description_localizations)
-        if (d.description_localizations[key] !== other.description_localizations[key])
-          return false;
+        if (d.description_localizations[key] !== other.description_localizations[key]) return false;
     }
 
     if (d.integration_types && other.integration_types) {
@@ -157,8 +149,7 @@ export class CommandResolvable {
     if (d.contexts && other.contexts) {
       if (d.contexts.length !== other.contexts.length) return false;
 
-      for (let i = 0; i < d.contexts.length; i++)
-        if (this.contexts[i] !== other.contexts[i]) return false;
+      for (let i = 0; i < d.contexts.length; i++) if (this.contexts[i] !== other.contexts[i]) return false;
     }
 
     return true;

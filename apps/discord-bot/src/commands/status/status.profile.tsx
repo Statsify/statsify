@@ -23,42 +23,18 @@ const OnlineTable = ({ status, t }: StatusTableProps) => (
   <>
     <Table.tr>
       <Table.td title={t("stats.status")} value={t("stats.online")} color="§a" />
-      <Table.td
-        title={t("stats.loginTime")}
-        value={relativeTime(status.actions.lastLogin)}
-        color="§b"
-      />
+      <Table.td title={t("stats.loginTime")} value={relativeTime(status.actions.lastLogin)} color="§b" />
     </Table.tr>
     <Table.tr>
-      <Table.td
-        title={t("stats.game")}
-        value={FormattedGame[status.game.id]}
-        color="§e"
-      />
+      <Table.td title={t("stats.game")} value={FormattedGame[status.game.id]} color="§e" />
       <If condition={status.mode}>
-        {(mode) => (
-          <Table.td
-            title={t("stats.mode")}
-            value={mapGame(status.game.id, mode)}
-            color="§e"
-          />
-        )}
+        {(mode) => <Table.td title={t("stats.mode")} value={mapGame(status.game.id, mode)} color="§e" />}
       </If>
-      <If condition={status.map}>
-        {(map) => <Table.td title={t("stats.map")} value={map} color="§e" />}
-      </If>
+      <If condition={status.map}>{(map) => <Table.td title={t("stats.map")} value={map} color="§e" />}</If>
     </Table.tr>
     <Table.tr>
-      <Table.td
-        title={t("stats.lastAction")}
-        value={prettify(status.actions.lastAction)}
-        color="§a"
-      />
-      <Table.td
-        title={t("stats.lastActionTime")}
-        value={relativeTime(status.actions.lastActionTime)}
-        color="§a"
-      />
+      <Table.td title={t("stats.lastAction")} value={prettify(status.actions.lastAction)} color="§a" />
+      <Table.td title={t("stats.lastActionTime")} value={relativeTime(status.actions.lastActionTime)} color="§a" />
     </Table.tr>
   </>
 );
@@ -69,16 +45,8 @@ const OfflineTable = ({ status, t }: StatusTableProps) => (
       <Table.td title={t("stats.status")} value={t("stats.offline")} color="§c" />
     </Table.tr>
     <Table.tr>
-      <Table.td
-        title={t("stats.lastGame")}
-        value={FormattedGame[status.actions.lastGame.id]}
-        color="§a"
-      />
-      <Table.td
-        title={t("stats.logoutTime")}
-        value={relativeTime(status.actions.lastLogout)}
-        color="§a"
-      />
+      <Table.td title={t("stats.lastGame")} value={FormattedGame[status.actions.lastGame.id]} color="§a" />
+      <Table.td title={t("stats.logoutTime")} value={relativeTime(status.actions.lastLogout)} color="§a" />
     </Table.tr>
   </>
 );
@@ -89,16 +57,8 @@ const HiddenTable = ({ status, t }: StatusTableProps) => (
       <Table.td title={t("stats.status")} value={t("stats.hidden")} color="§4" />
     </Table.tr>
     <Table.tr>
-      <Table.td
-        title={t("stats.lastAction")}
-        value={prettify(status.actions.lastAction)}
-        color="§a"
-      />
-      <Table.td
-        title={t("stats.lastActionTime")}
-        value={relativeTime(status.actions.lastActionTime)}
-        color="§a"
-      />
+      <Table.td title={t("stats.lastAction")} value={prettify(status.actions.lastAction)} color="§a" />
+      <Table.td title={t("stats.lastActionTime")} value={relativeTime(status.actions.lastActionTime)} color="§a" />
     </Table.tr>
   </>
 );
@@ -127,9 +87,7 @@ const RecentGamesTable = ({ recentGames, t, gameIcons }: RecentGamesTableProps) 
                     `§7${t("stats.mode")}: §f${mode ? mapGame(game.id, mode) : "N/A"}`,
                     `§7${t("stats.map")}: §f${map ?? "N/A"}`,
                     `§7${t("stats.started")}: §f${relativeTime(startedAt)}`,
-                    `§7${t("stats.ended")}: §f${
-                      endedAt ? relativeTime(endedAt) : "N/A"
-                    }`,
+                    `§7${t("stats.ended")}: §f${endedAt ? relativeTime(endedAt) : "N/A"}`,
                   ].join("\n")}
                 </Multiline>
               </div>
@@ -153,16 +111,7 @@ export interface StatusProfileProps extends Omit<BaseProfileProps, "player" | "t
   gameIcons: Record<GameId, Image>;
 }
 
-export const StatusProfile = ({
-  status,
-  gameIcons,
-  skin,
-  badge,
-  background,
-  logo,
-  user,
-  t,
-}: StatusProfileProps) => {
+export const StatusProfile = ({ status, gameIcons, skin, badge, background, logo, user, t }: StatusProfileProps) => {
   let table: JSX.Element;
 
   if (status.actions.statusHidden) {
@@ -175,25 +124,15 @@ export const StatusProfile = ({
 
   return (
     <Container background={background}>
-      <Header
-        name={status.prefixName}
-        skin={skin}
-        badge={badge}
-        title="§l§6Player Status"
-        time="LIVE"
-      />
+      <Header name={status.prefixName} skin={skin} badge={badge} title="§l§6Player Status" time="LIVE" />
       <Table.table>
         <If condition={status.recentGames.length > 0}>
-          <Table.ts title="§6Status">
-            {table}
-          </Table.ts>
+          <Table.ts title="§6Status">{table}</Table.ts>
           <Table.ts title="§6Recent Games">
             <RecentGamesTable recentGames={status.recentGames} gameIcons={gameIcons} t={t} />
           </Table.ts>
         </If>
-        <If condition={status.recentGames.length === 0}>
-          {table}
-        </If>
+        <If condition={status.recentGames.length === 0}>{table}</If>
       </Table.table>
       <Footer logo={logo} user={user} />
     </Container>

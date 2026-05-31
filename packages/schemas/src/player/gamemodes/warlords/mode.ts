@@ -68,4 +68,3 @@ export class WarlordsTeamDeathmatch {
     this.kills = data.kills_teamdeathmatch;
   }
 }
-

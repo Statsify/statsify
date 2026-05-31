@@ -37,23 +37,22 @@ export const TNTGamesProfile = ({
 
   switch (mode.api) {
     case "overall":
-
       table = (
         <Table.tr>
           <OverallColumn
             title="TNT Run"
             stats={
-              time === "LIVE" ?
-                [
-                  [t("stats.wins"), t(tntgames.tntRun.wins)],
-                  [t("stats.wlr"), t(tntgames.tntRun.wlr)],
-                  [t("stats.bestTime"), formatTime(tntgames.tntRun.record)],
-                ] :
-                [
-                  [t("stats.wins"), t(tntgames.tntRun.wins)],
-                  [t("stats.losses"), t(tntgames.tntRun.losses)],
-                  [t("stats.wlr"), t(tntgames.tntRun.wlr)],
-                ]
+              time === "LIVE"
+                ? [
+                    [t("stats.wins"), t(tntgames.tntRun.wins)],
+                    [t("stats.wlr"), t(tntgames.tntRun.wlr)],
+                    [t("stats.bestTime"), formatTime(tntgames.tntRun.record)],
+                  ]
+                : [
+                    [t("stats.wins"), t(tntgames.tntRun.wins)],
+                    [t("stats.losses"), t(tntgames.tntRun.losses)],
+                    [t("stats.wlr"), t(tntgames.tntRun.wlr)],
+                  ]
             }
           />
           <OverallColumn
@@ -206,22 +205,20 @@ export const TNTGamesProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.TNT_GAMES} §fStats §r(${mode.formatted}${mode.submode ? ` ${mode.submode.formatted}` : ""})`}
-        description={mode.api === "overall" ?
-          undefined :
-          `§7${t("stats.prefix")}: ${
-            tntgames[mode.api].naturalPrefix
-          }\n${formatProgression({
-            t,
-            label: t("stats.progression.win"),
-            progression: tntgames[mode.api].progression,
-            currentLevel: tntgames[mode.api].currentPrefix,
-            nextLevel: tntgames[mode.api].nextPrefix,
-          })}`}
+        description={
+          mode.api === "overall"
+            ? undefined
+            : `§7${t("stats.prefix")}: ${tntgames[mode.api].naturalPrefix}\n${formatProgression({
+                t,
+                label: t("stats.progression.win"),
+                progression: tntgames[mode.api].progression,
+                currentLevel: tntgames[mode.api].currentPrefix,
+                nextLevel: tntgames[mode.api].nextPrefix,
+              })}`
+        }
         time={time}
       />
-      <Table.table>
-        {table}
-      </Table.table>
+      <Table.table>{table}</Table.table>
       <Footer logo={logo} user={user} />
     </Container>
   );

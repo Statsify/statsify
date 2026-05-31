@@ -50,11 +50,7 @@ export const OverallArcadeTable = ({ stats, t }: OverallArcadeTableProps) => {
       {rows.map((row, index) => (
         <Table.tr>
           {row.map(([game, wins]) => (
-            <Table.td
-              title={game}
-              value={t(wins)}
-              color={colors[index]}
-            />
+            <Table.td title={game} value={t(wins)} color={colors[index]} />
           ))}
         </Table.tr>
       ))}

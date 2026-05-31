@@ -316,9 +316,7 @@ export class RankingsCommand {
 
     const isGameNotAll = game !== "all";
 
-    const filteredFields = isGameNotAll ?
-      fields.filter((f) => f.startsWith(`stats.${game}`)) :
-      fields;
+    const filteredFields = isGameNotAll ? fields.filter((f) => f.startsWith(`stats.${game}`)) : fields;
 
     const rankings = await this.apiService.getPlayerRankings(filteredFields, player.uuid);
 
@@ -343,9 +341,7 @@ export class RankingsCommand {
       10
     );
 
-    const formattedGame = isGameNotAll ?
-      games.find((g) => g.key === game)?.formatted :
-      undefined;
+    const formattedGame = isGameNotAll ? games.find((g) => g.key === game)?.formatted : undefined;
 
     return this.paginateService.scrollingPagination(
       context,

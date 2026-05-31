@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  APITextInputComponent,
-  ComponentType,
-  TextInputStyle,
-} from "discord-api-types/v10";
+import { APITextInputComponent, ComponentType, TextInputStyle } from "discord-api-types/v10";
 import { LocalizationString, LocalizeFunction, translateField } from "../localize.js";
 import { randomUUID } from "node:crypto";
 

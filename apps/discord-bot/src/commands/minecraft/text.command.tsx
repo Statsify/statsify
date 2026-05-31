@@ -6,14 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ChoiceArgument,
-  Command,
-  CommandContext,
-  IMessage,
-  NumberArgument,
-  TextArgument,
-} from "@statsify/discord";
+import { ChoiceArgument, Command, CommandContext, IMessage, NumberArgument, TextArgument } from "@statsify/discord";
 import { Container } from "typedi";
 import { FontRenderer, StyleLocation, render } from "@statsify/rendering";
 import { Multiline } from "#components";

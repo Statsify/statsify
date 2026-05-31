@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type {
-  CanvasGradient,
-  CanvasPattern,
-  CanvasRenderingContext2D,
-  CanvasTexture,
-} from "skia-canvas";
+import type { CanvasGradient, CanvasPattern, CanvasRenderingContext2D, CanvasTexture } from "skia-canvas";
 import type { FontRenderer } from "#font";
 import type { IntrinsicElement, IntrinsicRenders } from "./instrinsics.js";
 
@@ -74,7 +69,7 @@ export type Render<T = unknown> = (
   props: T,
   location: Location,
   theme: ComputedThemeContext,
-  component?: string,
+  component?: string
 ) => void;
 
 export interface ElementNodeBiDirectional {
@@ -119,15 +114,11 @@ export type Children<T = ElementNode> = T extends ElementNode ? T | T[] : T;
 export type PropsWithChildren<T, K = Children | undefined> = T &
   (K extends undefined ? { children?: K } : { children: K });
 
-export type FC<T = object> = (
-  props: T extends { children: any } ? T : PropsWithChildren<T>,
-) => ElementNode | null;
+export type FC<T = object> = (props: T extends { children: any } ? T : PropsWithChildren<T>) => ElementNode | null;
 
 /**
  * T is the type of the element's props
  * K is the type of the element's render function props
  * C is the type of the element's children
  */
-export type RawFC<T = object, K = T, C = Children | undefined> = (
-  props: PropsWithChildren<T, C>,
-) => RawElement<K>;
+export type RawFC<T = object, K = T, C = Children | undefined> = (props: PropsWithChildren<T, C>) => RawElement<K>;

@@ -12,15 +12,9 @@ export type Getter<T> = (target: T) => any;
 
 type NonHistoricalMetadata = "resetEvery" | "extraDisplay";
 
-export type HistoricalDisabledMetadata = Omit<
-  LeaderboardDisabledMetadata,
-  NonHistoricalMetadata
->;
+export type HistoricalDisabledMetadata = Omit<LeaderboardDisabledMetadata, NonHistoricalMetadata>;
 
-export type HistoricalEnabledMetadata = Omit<
-  LeaderboardEnabledMetadata,
-  NonHistoricalMetadata
->;
+export type HistoricalEnabledMetadata = Omit<LeaderboardEnabledMetadata, NonHistoricalMetadata>;
 
 export type HistoricalMetadata = HistoricalEnabledMetadata | HistoricalDisabledMetadata;
 
@@ -70,15 +64,7 @@ interface BaseLeaderboardMetadata {
   /**
    * When to reset the leaderboard, leaderboards will reset at the desired time at midnight.
    */
-  resetEvery?:
-    | "day" |
-    "monday" |
-    "tuesday" |
-    "wednesday" |
-    "thursday" |
-    "friday" |
-    "saturday" |
-    "sunday";
+  resetEvery?: "day" | "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
 }
 
 export interface LeaderboardDisabledMetadata extends BaseLeaderboardMetadata {
@@ -111,9 +97,7 @@ export interface LeaderboardEnabledMetadata extends BaseLeaderboardMetadata {
   limit: number;
 }
 
-export type LeaderboardMetadata =
-  | LeaderboardDisabledMetadata |
-  LeaderboardEnabledMetadata;
+export type LeaderboardMetadata = LeaderboardDisabledMetadata | LeaderboardEnabledMetadata;
 
 export interface StoreMetadata {
   /**

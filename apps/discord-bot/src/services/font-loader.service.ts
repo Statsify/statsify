@@ -23,8 +23,6 @@ export class FontLoaderService {
   public async init() {
     await renderer.loadImages(getMinecraftTexturePath("textures/font"));
     await hdRenderer.loadImages(getMinecraftTexturePath("textures/font", "hd"));
-    await fpackRenderer.loadImages(
-      getMinecraftTexturePath("textures/font", "fpack")
-    );
+    await fpackRenderer.loadImages(getMinecraftTexturePath("textures/font", "fpack"));
   }
 }

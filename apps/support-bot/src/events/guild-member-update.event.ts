@@ -6,30 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  AbstractEventListener,
-  ChannelService,
-  EmbedBuilder,
-  MemberService,
-  MessageService,
-} from "@statsify/discord";
-import {
-  GatewayDispatchEvents,
-  GatewayGuildMemberUpdateDispatchData,
-} from "discord-api-types/v10";
+import { AbstractEventListener, ChannelService, EmbedBuilder, MemberService, MessageService } from "@statsify/discord";
+import { GatewayDispatchEvents, GatewayGuildMemberUpdateDispatchData } from "discord-api-types/v10";
 import { Logger, STATUS_COLORS } from "@statsify/logger";
 import { Service } from "typedi";
 import { User, UserTier } from "@statsify/schemas";
 import { UserService } from "#services";
 import { config } from "@statsify/util";
 
-const PREMIUM_TIERS = [
-  UserTier.NETHERITE,
-  UserTier.EMERALD,
-  UserTier.GOLD,
-  UserTier.DIAMOND,
-  UserTier.IRON,
-] as const;
+const PREMIUM_TIERS = [UserTier.NETHERITE, UserTier.EMERALD, UserTier.GOLD, UserTier.DIAMOND, UserTier.IRON] as const;
 
 type PremiumTier = (typeof PREMIUM_TIERS)[number];
 
@@ -111,8 +96,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
     if (hasPatreonRole) return;
 
     // They were nitro boosting but stopped boosting
-    if (isServerBooster && !hasServerBoosterRole)
-      return this.serverBoosterRemove(memberId);
+    if (isServerBooster && !hasServerBoosterRole) return this.serverBoosterRemove(memberId);
 
     // Has the nitro boosting role but isn't registered as a booster
     if (hasServerBoosterRole && !isServerBooster) return this.serverBoosterAdd(memberId);
@@ -169,10 +153,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     const user = await this.userService.removePatreon(memberId);
 
-    await this.handlePremiumRemove(
-      memberId,
-      (user?.tier as PremiumTier) ?? UserTier.IRON
-    );
+    await this.handlePremiumRemove(memberId, (user?.tier as PremiumTier) ?? UserTier.IRON);
     if (user?.serverBooster) await this.handlePremiumAdd(memberId, UserTier.IRON);
   }
 
@@ -218,11 +199,7 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     await this.userService.addPremium(memberId, tier);
 
-    await this.roleService.addRole(
-      GUILD_ID,
-      memberId,
-      TIER_ROLES[tier as keyof typeof TIER_ROLES]
-    );
+    await this.roleService.addRole(GUILD_ID, memberId, TIER_ROLES[tier as keyof typeof TIER_ROLES]);
 
     await this.roleService.addRole(GUILD_ID, memberId, PREMIUM_ROLE);
 
@@ -231,14 +208,9 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     const embed = new EmbedBuilder()
       .color(STATUS_COLORS.success)
-      .title(
-        (t) => `Thank you for purchasing ${t(emoji)} Statsify ${User.getTierName(tier)}!`
-      )
+      .title((t) => `Thank you for purchasing ${t(emoji)} Statsify ${User.getTierName(tier)}!`)
       .description(
-        (t) =>
-          `We are very excited to have you as a ${tierName} member. Enjoy your perks! ${t(
-            "emojis:heart"
-          )}`
+        (t) => `We are very excited to have you as a ${tierName} member. Enjoy your perks! ${t("emojis:heart")}`
       );
 
     const { id } = await this.channelService.create(memberId);

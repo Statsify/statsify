@@ -149,10 +149,7 @@ export class Quests {
     this.daily = new DailyQuests(quests);
 
     // Some quests like SkyClash and Crazy Walls aren't stored by us.
-    this.total = Object.values(quests).reduce(
-      (p: number, c: APIData) => p + (c?.completions?.length ?? 0),
-      0
-    );
+    this.total = Object.values(quests).reduce((p: number, c: APIData) => p + (c?.completions?.length ?? 0), 0);
 
     this.weeklyTotal = Quests.getTotal(this.weekly);
     this.dailyTotal = Quests.getTotal(this.daily);

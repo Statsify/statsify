@@ -38,17 +38,7 @@ export interface ArcadeProfileProps extends BaseProfileProps {
   mode: GameMode<ArcadeModes>;
 }
 
-export const ArcadeProfile = ({
-  skin,
-  player,
-  background,
-  logo,
-  user,
-  badge,
-  mode,
-  t,
-  time,
-}: ArcadeProfileProps) => {
+export const ArcadeProfile = ({ skin, player, background, logo, user, badge, mode, t, time }: ArcadeProfileProps) => {
   const { arcade } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -75,9 +65,7 @@ export const ArcadeProfile = ({
 
     case "disasters":
       sidebar.push([t("stats.powerups"), t(arcade.disasters.powerups), "§5"]);
-      table = (
-        <DisastersTable stats={arcade[api]} t={t} submode={mode.submode} />
-      );
+      table = <DisastersTable stats={arcade[api]} t={t} submode={mode.submode} />;
       break;
 
     case "dragonWars":
@@ -85,14 +73,7 @@ export const ArcadeProfile = ({
       break;
 
     case "dropper":
-      table = (
-        <DropperTable
-          stats={arcade[api]}
-          t={t}
-          time={time}
-          submode={mode.submode}
-        />
-      );
+      table = <DropperTable stats={arcade[api]} t={t} time={time} submode={mode.submode} />;
       break;
 
     case "enderSpleef":
@@ -128,14 +109,7 @@ export const ArcadeProfile = ({
       break;
 
     case "partyGames":
-      table = (
-        <PartyGamesTable
-          stats={arcade[api]}
-          t={t}
-          submode={mode.submode}
-          time={time}
-        />
-      );
+      table = <PartyGamesTable stats={arcade[api]} t={t} submode={mode.submode} time={time} />;
       break;
 
     case "pixelPainters":
@@ -156,18 +130,11 @@ export const ArcadeProfile = ({
 
     case "zombies":
       table =
-        submode.api === "overall" ?
-          (
-            <ZombiesTable stats={arcade[api]} t={t} time={time} />
-          ) :
-          (
-            <ZombiesMapTable
-              stats={arcade[api]}
-              map={submode.api}
-              t={t}
-              time={time}
-            />
-          );
+        submode.api === "overall" ? (
+          <ZombiesTable stats={arcade[api]} t={t} time={time} />
+        ) : (
+          <ZombiesMapTable stats={arcade[api]} map={submode.api} t={t} time={time} />
+        );
       break;
 
     default:

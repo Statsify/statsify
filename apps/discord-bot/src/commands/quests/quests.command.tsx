@@ -90,30 +90,29 @@ export class QuestsCommand {
       modes = modes.filter((mode) => mode.api === "overall" || Object.entries(quests.monthly[mode.api]).length > 1);
     }
 
-    const pages: Page[] = modes
-      .map((mode) => ({
-        label: mode.formatted,
-        emoji: mode.api !== "overall" && ((t) => t(`emojis:games.${mode.api}`)),
-        generator: async (t) => {
-          const background = await getBackground(...mapBackground(this.modes, mode.api));
+    const pages: Page[] = modes.map((mode) => ({
+      label: mode.formatted,
+      emoji: mode.api !== "overall" && ((t) => t(`emojis:games.${mode.api}`)),
+      generator: async (t) => {
+        const background = await getBackground(...mapBackground(this.modes, mode.api));
 
-          const profile = this.getProfile({
-            player,
-            skin,
-            background,
-            logo,
-            t,
-            user,
-            badge,
-            time,
-            mode: { ...mode, submode: undefined },
-            gameIcons,
-            logos: [crossLogo, verifiedLogo],
-          });
+        const profile = this.getProfile({
+          player,
+          skin,
+          background,
+          logo,
+          t,
+          user,
+          badge,
+          time,
+          mode: { ...mode, submode: undefined },
+          gameIcons,
+          logos: [crossLogo, verifiedLogo],
+        });
 
-          return render(profile, getTheme(user));
-        },
-      }));
+        return render(profile, getTheme(user));
+      },
+    }));
 
     return this.paginateService.paginate(context, pages);
   }

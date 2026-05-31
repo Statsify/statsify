@@ -12,8 +12,16 @@ import { ComponentProps } from "react";
 
 export function Skin({ uuid, className = "", ...props }: ComponentProps<typeof Box> & { uuid: string }) {
   return (
-    <Box {...props} className={`content:relative content:flex content:justify-center content:min-w-[180px] content:h-full ${className}`}>
-      <Image src={`/api/skin/render?uuid=${uuid}`} fill alt="skin" className="object-top object-cover pointer-events-none" />
+    <Box
+      {...props}
+      className={`content:relative content:flex content:justify-center content:min-w-[180px] content:h-full ${className}`}
+    >
+      <Image
+        src={`/api/skin/render?uuid=${uuid}`}
+        fill
+        alt="skin"
+        className="object-top object-cover pointer-events-none"
+      />
     </Box>
   );
 }

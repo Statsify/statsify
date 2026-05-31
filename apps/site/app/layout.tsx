@@ -15,13 +15,10 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    env.ENVIRONMENT === "production" ?
-      "https://statsify.net" :
-      "http://localhost:5000"
-  ),
+  metadataBase: new URL(env.ENVIRONMENT === "production" ? "https://statsify.net" : "http://localhost:5000"),
   title: "Statsify",
-  description: "Statsify is the largest Hypixel Discord bot for viewing your Hypixel Network stats, leaderboards, sessions, and more. Easily track stats in BedWars, SkyWars, Duels, and all other minigames to see your progression and improvement over time.",
+  description:
+    "Statsify is the largest Hypixel Discord bot for viewing your Hypixel Network stats, leaderboards, sessions, and more. Easily track stats in BedWars, SkyWars, Duels, and all other minigames to see your progression and improvement over time.",
   icons: "../public/logos/logo_64.png",
   creator: "Statsify Team",
 };
@@ -58,9 +55,7 @@ const MinecraftFont = localFont({
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${MinecraftFont.variable} antialiased leading-[normal] h-screen flex flex-col bg-blackify-950`}
-      >
+      <body className={`${MinecraftFont.variable} antialiased leading-[normal] h-screen flex flex-col bg-blackify-950`}>
         {children}
         <Analytics />
         <SpeedInsights />

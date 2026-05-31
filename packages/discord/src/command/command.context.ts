@@ -39,9 +39,7 @@ export class CommandContext {
   }
 
   public option<T>(name: string, defaultValue?: T): T {
-    const data = (
-      this.data.options as APIApplicationCommandInteractionDataBasicOption[]
-    )?.find((o) => o.name === name);
+    const data = (this.data.options as APIApplicationCommandInteractionDataBasicOption[])?.find((o) => o.name === name);
 
     if (!data) {
       return defaultValue ?? noop();

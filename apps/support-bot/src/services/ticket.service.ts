@@ -93,10 +93,7 @@ export class TicketService {
         this.close(interaction.getChannelId()!, "channel", interaction.getUserId())
       );
 
-      listener.addHook(
-        this.copyUsernameButtonId(ticket.channel),
-        this.copyUsername.bind(this)
-      );
+      listener.addHook(this.copyUsernameButtonId(ticket.channel), this.copyUsername.bind(this));
     });
   }
 
@@ -138,16 +135,11 @@ export class TicketService {
     const embed = new EmbedBuilder()
       .color(STATUS_COLORS.info)
       .title("Support")
-      .description(
-        "Thank you for reaching out for support! Staff will be with you shortly."
-      )
+      .description("Thank you for reaching out for support! Staff will be with you shortly.")
       .field("Username", `\`${username}\``)
       .field("Issue", issue);
 
-    const closeTicketButton = new ButtonBuilder()
-      .label("Close Ticket")
-      .style(ButtonStyle.Success)
-      .customId(channel.id);
+    const closeTicketButton = new ButtonBuilder().label("Close Ticket").style(ButtonStyle.Success).customId(channel.id);
 
     const copyUsernameButton = new ButtonBuilder()
       .label("Copy Username")
@@ -165,9 +157,7 @@ export class TicketService {
     await this.messageService.send(channel.id, {
       content: `<@${user.id}>`,
       embeds: [embed],
-      components: [
-        new ActionRowBuilder().component(closeTicketButton).component(copyUsernameButton),
-      ],
+      components: [new ActionRowBuilder().component(closeTicketButton).component(copyUsernameButton)],
     });
   }
 
@@ -179,18 +169,8 @@ export class TicketService {
    * @param reason Why the ticket was closed
    * @returns whether or not the ticket was closed
    */
-  public async close(
-    channelIdOrOwnerId: string,
-    type: "channel" | "owner",
-    userId: string,
-    reason = "N/A"
-  ) {
-    const ticket = await this.ticketModel
-      .findOneAndDelete()
-      .where(type)
-      .equals(channelIdOrOwnerId)
-      .lean()
-      .exec();
+  public async close(channelIdOrOwnerId: string, type: "channel" | "owner", userId: string, reason = "N/A") {
+    const ticket = await this.ticketModel.findOneAndDelete().where(type).equals(channelIdOrOwnerId).lean().exec();
 
     if (!ticket) return false;
 
@@ -252,12 +232,7 @@ export class TicketService {
   }
 
   private async checkExistingTickets(userId: string) {
-    const ticket = await this.ticketModel
-      .findOne()
-      .where("owner")
-      .equals(userId)
-      .lean()
-      .exec();
+    const ticket = await this.ticketModel.findOne().where("owner").equals(userId).lean().exec();
 
     if (!ticket) return false;
 

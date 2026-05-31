@@ -22,9 +22,7 @@ function ModeTitle({ icon, title, wins, t }: { icon: Image; title: string; wins:
   return (
     <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
       <img image={icon} width={32} height={32} />
-      <text margin={{ left: 8 }}>
-        {title}
-      </text>
+      <text margin={{ left: 8 }}>{title}</text>
       <div width="remaining" margin={{ left: 4, right: 4 }} />
       <text>{t(wins)}</text>
     </box>
@@ -56,22 +54,12 @@ export const TitlesTable = ({ duels, t, modeIcons }: TitlesTableProps) => {
 
   return (
     <div width="100%" direction="column">
-      <ModeTitle
-        icon={modeIcons.overall}
-        title={duels.overall.titleFormatted}
-        wins={duels.overall.wins}
-        t={t}
-      />
+      <ModeTitle icon={modeIcons.overall} title={duels.overall.titleFormatted} wins={duels.overall.wins} t={t} />
       <div width="100%">
         {groups.map((group) => (
           <div width={`1/${groups.length}`} direction="column">
             {group.map(({ icon, title, wins }) => (
-              <ModeTitle
-                icon={icon}
-                title={title}
-                wins={wins}
-                t={t}
-              />
+              <ModeTitle icon={icon} title={title} wins={wins} t={t} />
             ))}
           </div>
         ))}

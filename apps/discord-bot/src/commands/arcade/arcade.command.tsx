@@ -6,14 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { ARCADE_MODES, ApiModeFromGameModes, ArcadeModes, GameModeWithSubModes, SubModeForMode } from "@statsify/schemas";
-import { ArcadeProfile } from "./arcade.profile.js";
 import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ModeEmoji,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+  ARCADE_MODES,
+  ApiModeFromGameModes,
+  ArcadeModes,
+  GameModeWithSubModes,
+  SubModeForMode,
+} from "@statsify/schemas";
+import { ArcadeProfile } from "./arcade.profile.js";
+import { BaseHypixelCommand, BaseProfileProps, ModeEmoji, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 
 @Command({ description: (t) => t("commands.arcade") })
@@ -33,10 +34,7 @@ export class ArcadeCommand extends BaseHypixelCommand<ArcadeModes> {
     return getArcadeSubModeEmojis(mode, submodes);
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<ArcadeModes>
-  ): JSX.Element {
+  public getProfile(base: BaseProfileProps, { mode }: ProfileData<ArcadeModes>): JSX.Element {
     return <ArcadeProfile {...base} mode={mode} />;
   }
 }
@@ -49,8 +47,7 @@ export function getArcadeSubModeEmojis<M extends ApiModeFromGameModes<ArcadeMode
   mode: M,
   submodes: SubModeForMode<ArcadeModes, M>[]
 ): ModeEmoji[] {
-  if (mode === "zombies")
-    return submodes.map((submode) => (t) => t(`emojis:zombies.${submode.api}`));
+  if (mode === "zombies") return submodes.map((submode) => (t) => t(`emojis:zombies.${submode.api}`));
 
   return [];
 }

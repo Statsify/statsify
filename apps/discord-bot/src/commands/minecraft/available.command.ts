@@ -6,13 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ApiService,
-  Command,
-  CommandContext,
-  EmbedBuilder,
-  MojangPlayerArgument,
-} from "@statsify/discord";
+import { ApiService, Command, CommandContext, EmbedBuilder, MojangPlayerArgument } from "@statsify/discord";
 import { minecraftHeadUrl } from "#lib/minecraft-head";
 
 @Command({
@@ -25,10 +19,7 @@ export class AvailableCommand {
   public async run(context: CommandContext) {
     const name = context.option<string>("player");
 
-    const base = new EmbedBuilder().field(
-      (t) => `${t("minecraft.username")} [${name.length}/16]`,
-      `\`${name}\``
-    );
+    const base = new EmbedBuilder().field((t) => `${t("minecraft.username")} [${name.length}/16]`, `\`${name}\``);
 
     const isInvalidLength = name.length > 16;
     const invalidName = !/^\w+$/i.test(name);
@@ -36,26 +27,21 @@ export class AvailableCommand {
     if (isInvalidLength || invalidName) {
       base.color(0xb7_6b_a3).field(
         (t) => t("stats.status"),
-        (t) =>
-          `\`${t(
-            `embeds.available.${isInvalidLength ? "tooLong" : "invalidCharacters"}`
-          )}\``
+        (t) => `\`${t(`embeds.available.${isInvalidLength ? "tooLong" : "invalidCharacters"}`)}\``
       );
 
       return { embeds: [base] };
     }
 
-    const uuid = await this.apiService.getPlayerSkinTextures(name.trim())
+    const uuid = await this.apiService
+      .getPlayerSkinTextures(name.trim())
       .then((player) => player.uuid.replaceAll("-", ""))
       .catch(() => undefined);
 
     if (uuid) {
       base
         .field((t) => t("minecraft.uuid"), `\`${uuid}\``)
-        .field(
-          "NameMC",
-          `[\`Here\`](https://namemc.com/profile/${uuid})`
-        )
+        .field("NameMC", `[\`Here\`](https://namemc.com/profile/${uuid})`)
         .field(
           (t) => t("stats.status"),
           (t) => `\`${t("minecraft.unavailable")}\``

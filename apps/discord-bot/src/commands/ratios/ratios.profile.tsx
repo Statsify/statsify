@@ -20,13 +20,7 @@ interface RatioProps {
   t: LocalizeFunction;
 }
 
-const Milestone = ({
-  ratioTitle,
-  numeratorTitle,
-  numeratorValue,
-  denominatorValue,
-  t,
-}: RatioProps) => {
+const Milestone = ({ ratioTitle, numeratorTitle, numeratorValue, denominatorValue, t }: RatioProps) => {
   const ratioValue = ratio(numeratorValue, denominatorValue);
   const newRatio = Math.floor(ratioValue) + 1;
   let needed = newRatio * denominatorValue - numeratorValue;
@@ -34,11 +28,7 @@ const Milestone = ({
 
   return (
     <>
-      <box
-        width="remaining"
-        direction="column"
-        border={{ bottomLeft: 4, topLeft: 4, topRight: 0, bottomRight: 0 }}
-      >
+      <box width="remaining" direction="column" border={{ bottomLeft: 4, topLeft: 4, topRight: 0, bottomRight: 0 }}>
         <text align="left">
           §a{numeratorTitle} §fto §6{t(newRatio)} {ratioTitle}
         </text>
@@ -50,28 +40,17 @@ const Milestone = ({
   );
 };
 
-const Estimation = ({
-  ratioTitle,
-  numeratorTitle,
-  numeratorValue,
-  denominatorValue,
-  t,
-}: RatioProps) => {
+const Estimation = ({ ratioTitle, numeratorTitle, numeratorValue, denominatorValue, t }: RatioProps) => {
   const ratioValue = ratio(numeratorValue, denominatorValue);
   const targetRatio = Math.floor(ratioValue) + 1;
 
   const newNumerator = Math.ceil(
-    (1 + targetRatio / (targetRatio + 1) - ratioValue / targetRatio) * numeratorValue +
-    denominatorValue
+    (1 + targetRatio / (targetRatio + 1) - ratioValue / targetRatio) * numeratorValue + denominatorValue
   );
 
   return (
     <>
-      <box
-        width="remaining"
-        direction="column"
-        border={{ bottomLeft: 4, topLeft: 4, topRight: 0, bottomRight: 0 }}
-      >
+      <box width="remaining" direction="column" border={{ bottomLeft: 4, topLeft: 4, topRight: 0, bottomRight: 0 }}>
         <text align="left">
           §a{numeratorTitle} §fat §6{t(targetRatio)} {ratioTitle}
         </text>
@@ -87,7 +66,7 @@ export type RatioWithStats = [
   numeratorValue: number,
   denominatorValue: number,
   numeratorTitle: string,
-  ratioTitle: string
+  ratioTitle: string,
 ];
 
 export interface RatiosProfileProps extends Omit<BaseProfileProps, "time"> {
@@ -121,26 +100,14 @@ export const RatiosProfile = ({
         <Table.ts title="Milestones">
           <List
             items={ratios.map((r) => (
-              <Milestone
-                numeratorValue={r[0]}
-                denominatorValue={r[1]}
-                numeratorTitle={r[2]}
-                ratioTitle={r[3]}
-                t={t}
-              />
+              <Milestone numeratorValue={r[0]} denominatorValue={r[1]} numeratorTitle={r[2]} ratioTitle={r[3]} t={t} />
             ))}
           />
         </Table.ts>
         <Table.ts title="Estimations">
           <List
             items={ratios.map((r) => (
-              <Estimation
-                numeratorValue={r[0]}
-                denominatorValue={r[1]}
-                numeratorTitle={r[2]}
-                ratioTitle={r[3]}
-                t={t}
-              />
+              <Estimation numeratorValue={r[0]} denominatorValue={r[1]} numeratorTitle={r[2]} ratioTitle={r[3]} t={t} />
             ))}
           />
         </Table.ts>

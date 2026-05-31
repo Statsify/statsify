@@ -19,10 +19,7 @@ export class MessageService {
   public async send(channelId: string, message: Message | IMessage): Promise<APIMessage> {
     const data = message instanceof Message ? message : new Message(message);
 
-    const response = await this.rest.post(
-      `/channels/${channelId}/messages`,
-      data.toAPI(getLocalizeFunction("en-US"))
-    );
+    const response = await this.rest.post(`/channels/${channelId}/messages`, data.toAPI(getLocalizeFunction("en-US")));
 
     return parseDiscordResponse(response);
   }
@@ -39,9 +36,7 @@ export class MessageService {
   }
 
   public async delete(channelId: string, messageId: string) {
-    const response = await this.rest.delete(
-      `/channels/${channelId}/messages/${messageId}`
-    );
+    const response = await this.rest.delete(`/channels/${channelId}/messages/${messageId}`);
 
     return parseDiscordResponse(response);
   }

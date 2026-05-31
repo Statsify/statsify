@@ -7,22 +7,12 @@
  */
 
 import Fuse from "fuse.js";
-import {
-  APIApplicationCommandOptionChoice,
-  ApplicationCommandOptionType,
-} from "discord-api-types/v10";
+import { APIApplicationCommandOptionChoice, ApplicationCommandOptionType } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
-import {
-  ClassMetadata,
-  LeaderboardScanner,
-  METADATA_KEY,
-  PlayerStats,
-} from "@statsify/schemas";
+import { ClassMetadata, LeaderboardScanner, METADATA_KEY, PlayerStats } from "@statsify/schemas";
 import { removeFormatting } from "@statsify/util";
 
-const entries = Object.entries(
-  Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata
-);
+const entries = Object.entries(Reflect.getMetadata(METADATA_KEY, PlayerStats.prototype) as ClassMetadata);
 
 const FUSE_OPTIONS = {
   keys: ["name", "key"],
@@ -33,15 +23,19 @@ const FUSE_OPTIONS = {
   ignoreLocation: true,
 };
 
-const fields = entries.reduce((acc, [prefix, value]) => {
-  const list = LeaderboardScanner.getLeaderboardFields(value.type.type).map(
-    ([key, { leaderboard }]) => ({ value: key, name: removeFormatting(leaderboard.name) })
-  );
+const fields = entries.reduce(
+  (acc, [prefix, value]) => {
+    const list = LeaderboardScanner.getLeaderboardFields(value.type.type).map(([key, { leaderboard }]) => ({
+      value: key,
+      name: removeFormatting(leaderboard.name),
+    }));
 
-  const fuse = new Fuse(list, FUSE_OPTIONS);
+    const fuse = new Fuse(list, FUSE_OPTIONS);
 
-  return { ...acc, [prefix]: [fuse, list] };
-}, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);
+    return { ...acc, [prefix]: [fuse, list] };
+  },
+  {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>
+);
 
 export class PlayerLeaderboardArgument extends AbstractArgument {
   public name = "leaderboard";
@@ -55,9 +49,7 @@ export class PlayerLeaderboardArgument extends AbstractArgument {
     this.description = (t) => t("arguments.player-leaderboard");
   }
 
-  public autocompleteHandler(
-    context: CommandContext
-  ): APIApplicationCommandOptionChoice[] {
+  public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
 
     const [fuse, list] = fields[this.prefix];

@@ -16,12 +16,7 @@ import {
 import { Color } from "#color";
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import {
-  GameTitle,
-  createPrefixProgression,
-  defaultPrefix,
-  getFormattedPrefix,
-} from "#prefixes";
+import { GameTitle, createPrefixProgression, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { Progression } from "#progression";
 import type { APIData } from "@statsify/util";
 

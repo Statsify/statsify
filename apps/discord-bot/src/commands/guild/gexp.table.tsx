@@ -26,13 +26,7 @@ const LEFT_BORDER = { topLeft: 4, bottomLeft: 4, bottomRight: 0, topRight: 0 };
 const RIGHT_BORDER = { topLeft: 0, bottomLeft: 0, bottomRight: 4, topRight: 4 };
 const NO_BORDER = { topLeft: 0, bottomLeft: 0, bottomRight: 0, topRight: 0 };
 
-export const GexpTable = ({
-  dates,
-  expHistory,
-  scaledExpHistory,
-  positions,
-  t,
-}: GexpTableProps) => {
+export const GexpTable = ({ dates, expHistory, scaledExpHistory, positions, t }: GexpTableProps) => {
   const expBorder = scaledExpHistory || positions ? NO_BORDER : RIGHT_BORDER;
 
   return (

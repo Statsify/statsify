@@ -7,12 +7,7 @@
  */
 
 import { type APIData, formatRaceTime, formatTime } from "@statsify/util";
-import {
-  EasterSimulator,
-  GrinchSimulator,
-  HalloweenSimulator,
-  ScubaSimulator,
-} from "./seasonal-mode.js";
+import { EasterSimulator, GrinchSimulator, HalloweenSimulator, ScubaSimulator } from "./seasonal-mode.js";
 import { Field } from "#metadata";
 import { add, deepAdd, deepSub, ratio, sub } from "@statsify/math";
 
@@ -815,10 +810,7 @@ export class FarmHunt {
     this.kills = data.kills_farm_hunt;
     this.animalKills = data.animal_kills_farm_hunt;
     this.hunterKills = data.hunter_kills_farm_hunt;
-    this.poopCollected = add(
-      data.poop_collected,
-      data.poop_collected_farm_hunt
-    );
+    this.poopCollected = add(data.poop_collected, data.poop_collected_farm_hunt);
     this.tauntsUsed = data.taunts_used_farm_hunt;
   }
 }
@@ -922,10 +914,7 @@ export class HideAndSeek {
 export class HoleInTheWall {
   @Field({
     leaderboard: {
-      additionalFields: [
-        "this.highestScoreQualifications",
-        "this.highestScoreFinals",
-      ],
+      additionalFields: ["this.highestScoreQualifications", "this.highestScoreFinals"],
     },
     historical: {
       additionalFields: [],
@@ -1429,10 +1418,7 @@ export class ZombiesMap {
       this.hard.fastestWin || Number.MAX_SAFE_INTEGER,
       this.rip.fastestWin || Number.MAX_SAFE_INTEGER
     );
-    this.overall.fastestWin =
-      this.overall.fastestWin === Number.MAX_SAFE_INTEGER ?
-        0 :
-        this.overall.fastestWin;
+    this.overall.fastestWin = this.overall.fastestWin === Number.MAX_SAFE_INTEGER ? 0 : this.overall.fastestWin;
   }
 }
 
@@ -1459,8 +1445,7 @@ export class Zombies {
 
     this.alienArcadium = new ZombiesMapDifficulty(data, "alienarcadium");
     // Alien Arcadium doesn't have different difficulties but fastest time is stored as "normal" difficulty
-    this.alienArcadium.fastestWin =
-      (data[`fastest_time_30_zombies_alienarcadium_normal`] ?? 0) * 1000;
+    this.alienArcadium.fastestWin = (data[`fastest_time_30_zombies_alienarcadium_normal`] ?? 0) * 1000;
 
     this.prison = new ZombiesMap(data, "prison");
   }

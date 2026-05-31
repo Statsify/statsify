@@ -21,16 +21,8 @@ export const BedWarsDuelsTable = ({ stats, t, time }: BedWarsDuelsTableProps) =>
   <Table.table>
     <Historical.exclude time={time}>
       <Table.tr>
-        <Table.td
-          title={t("stats.winstreak")}
-          value={t(stats.winstreak)}
-          color="§e"
-        />
-        <Table.td
-          title={t("stats.bestWinstreak")}
-          value={t(stats.bestWinstreak)}
-          color="§e"
-        />
+        <Table.td title={t("stats.winstreak")} value={t(stats.winstreak)} color="§e" />
+        <Table.td title={t("stats.bestWinstreak")} value={t(stats.bestWinstreak)} color="§e" />
       </Table.tr>
     </Historical.exclude>
     <Table.tr>

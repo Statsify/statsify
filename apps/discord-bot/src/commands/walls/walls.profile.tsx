@@ -6,27 +6,11 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  Container,
-  Footer,
-  Header,
-  SidebarItem,
-  Table,
-  formatProgression,
-} from "#components";
+import { Container, Footer, Header, SidebarItem, Table, formatProgression } from "#components";
 import { FormattedGame } from "@statsify/schemas";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
-export const WallsProfile = ({
-  skin,
-  player,
-  background,
-  logo,
-  user,
-  badge,
-  t,
-  time,
-}: BaseProfileProps) => {
+export const WallsProfile = ({ skin, player, background, logo, user, badge, t, time }: BaseProfileProps) => {
   const { walls } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -42,15 +26,13 @@ export const WallsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.WALLS} §fStats`}
-        description={`§7${t("stats.prefix")}: ${walls.naturalPrefix}\n${formatProgression(
-          {
-            t,
-            label: t("stats.progression.win"),
-            progression: walls.progression,
-            currentLevel: walls.currentPrefix,
-            nextLevel: walls.nextPrefix,
-          }
-        )}`}
+        description={`§7${t("stats.prefix")}: ${walls.naturalPrefix}\n${formatProgression({
+          t,
+          label: t("stats.progression.win"),
+          progression: walls.progression,
+          currentLevel: walls.currentPrefix,
+          nextLevel: walls.nextPrefix,
+        })}`}
         time={time}
       />
       <Table.table>

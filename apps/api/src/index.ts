@@ -58,11 +58,7 @@ setGlobalOptions({
 const adapter = new FastifyAdapter({ bodyLimit: 5e6 });
 
 // This parses the content for when PNGs are sent to the API
-adapter
-  .getInstance()
-  .addContentTypeParser("image/png", { parseAs: "buffer" }, (_, body, done) =>
-    done(null, body)
-  );
+adapter.getInstance().addContentTypeParser("image/png", { parseAs: "buffer" }, (_, body, done) => done(null, body));
 
 const app = await NestFactory.create<NestFastifyApplication>(AppModule, adapter, {
   logger: new Logger(),

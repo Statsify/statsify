@@ -6,13 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  type ElementNode,
-  type FC,
-  type IntrinsicElement,
-  type PropsWithChildren,
-  intrinsicElements,
-} from "#jsx";
+import { type ElementNode, type FC, type IntrinsicElement, type PropsWithChildren, intrinsicElements } from "#jsx";
 import { elementToNode } from "./convert.js";
 
 export const Fragment: FC = ({ children }) => children as unknown as null;
@@ -21,9 +15,7 @@ type Props = PropsWithChildren<unknown>;
 
 export const jsx = (type: IntrinsicElement | FC, props: Props): ElementNode | null => {
   if (props.children) {
-    props.children = Array.isArray(props.children) ?
-      props.children.flat().filter(Boolean) :
-      [props.children];
+    props.children = Array.isArray(props.children) ? props.children.flat().filter(Boolean) : [props.children];
   }
 
   if (typeof type === "string" && type in intrinsicElements) {

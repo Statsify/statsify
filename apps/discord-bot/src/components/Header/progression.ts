@@ -20,11 +20,11 @@ const xpBar: ProgressFunction = (percentage) => {
 
 export const lineXpBar =
   (color: string): ProgressFunction =>
-    (percentage: number) => {
-      const max = 40;
-      const count = Math.ceil(max * percentage);
-      return `§8[${color}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]§r`;
-    };
+  (percentage: number) => {
+    const max = 40;
+    const count = Math.ceil(max * percentage);
+    return `§8[${color}${"|".repeat(count)}§7${"|".repeat(max - count)}§8]§r`;
+  };
 
 interface BaseFormatProgressionOptions {
   t: LocalizeFunction;
@@ -45,9 +45,7 @@ interface UnlabeledFormatProgressionOptions extends BaseFormatProgressionOptions
   showProgress: false;
 }
 
-export type FormatProgressionOptions =
-  | LabeledFormatProgressionOptions |
-  UnlabeledFormatProgressionOptions;
+export type FormatProgressionOptions = LabeledFormatProgressionOptions | UnlabeledFormatProgressionOptions;
 
 export const formatProgression = ({
   t,
@@ -67,13 +65,11 @@ export const formatProgression = ({
     return output;
   }
 
-  if (showProgress)
-    output += `§7${label}: §b${t(progression.current)}§7/§a${t(progression.max)}`;
+  if (showProgress) output += `§7${label}: §b${t(progression.current)}§7/§a${t(progression.max)}`;
 
   if (showProgress && showLevel) output += "\n";
 
-  if (showLevel)
-    output += `${currentLevel} ${renderXp(progression.percent)} ${nextLevel}`;
+  if (showLevel) output += `${currentLevel} ${renderXp(progression.percent)} ${nextLevel}`;
 
   return output;
 };

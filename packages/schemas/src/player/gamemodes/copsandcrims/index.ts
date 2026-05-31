@@ -68,11 +68,13 @@ export class CopsAndCrims {
     this.overall = new CopsAndCrimsOverall(data, this.defusal, this.deathmatch, this.gunGame);
 
     if (data.score === undefined) {
-      this.score = Math.floor(add(
-        (this.overall.kills ?? 0) / 2,
-        add(this.defusal.bombsDefused, this.defusal.bombsPlanted) / 3,
-        this.overall.wins
-      ));
+      this.score = Math.floor(
+        add(
+          (this.overall.kills ?? 0) / 2,
+          add(this.defusal.bombsDefused, this.defusal.bombsPlanted) / 3,
+          this.overall.wins
+        )
+      );
 
       this.level = findScoreIndex(LEVEL_REQUIREMENTS, this.score) + 1;
     } else {

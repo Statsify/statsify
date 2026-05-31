@@ -6,14 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ApiService,
-  Command,
-  CommandContext,
-  EmbedBuilder,
-  IMessage,
-  MojangPlayerArgument,
-} from "@statsify/discord";
+import { ApiService, Command, CommandContext, EmbedBuilder, IMessage, MojangPlayerArgument } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { createCanvas } from "@statsify/rendering";
 
@@ -24,10 +17,7 @@ export class SkinCommand {
   public async run(context: CommandContext): Promise<IMessage> {
     const user = context.getUser();
 
-    const player = await this.apiService.getPlayerSkinTextures(
-      context.option<string>("player"),
-      user
-    );
+    const player = await this.apiService.getPlayerSkinTextures(context.option<string>("player"), user);
 
     const skin = await this.apiService.getPlayerSkin(player.uuid, user);
     const canvas = createCanvas(skin.width, skin.height);

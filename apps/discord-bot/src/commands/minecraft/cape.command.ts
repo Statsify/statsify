@@ -28,15 +28,9 @@ export class CapeCommand {
   public async run(context: CommandContext) {
     const user = context.getUser();
 
-    const player = await this.apiService.getPlayerSkinTextures(
-      context.option<string>("player"),
-      user
-    );
+    const player = await this.apiService.getPlayerSkinTextures(context.option<string>("player"), user);
 
-    const capes = await Promise.all([
-      this.getOptifineCape(player.username),
-      this.getMojangCape(player),
-    ]);
+    const capes = await Promise.all([this.getOptifineCape(player.username), this.getMojangCape(player)]);
 
     const pages = capes
       .filter((c) => !!c.image)
@@ -57,16 +51,12 @@ export class CapeCommand {
   private async getOptifineCape(username: string) {
     return {
       label: "Optifine",
-      image: await loadImage(`http://s.optifine.net/capes/${username}.png`).catch(
-        () => null
-      ),
+      image: await loadImage(`http://s.optifine.net/capes/${username}.png`).catch(() => null),
     };
   }
 
   private async getMojangCape(player: Skin) {
-    const image = player.capeUrl ?
-      await loadImage(player.capeUrl).catch(() => null) :
-      null;
+    const image = player.capeUrl ? await loadImage(player.capeUrl).catch(() => null) : null;
 
     return { label: "Mojang", image };
   }
@@ -115,17 +105,7 @@ export class CapeCommand {
 
     const ratio = Math.round(Math.min(canvas.width / width, canvas.height / height));
 
-    ctx.drawImage(
-      cape,
-      start,
-      start,
-      cape.width,
-      cape.height,
-      0,
-      0,
-      cape.width * ratio,
-      cape.height * ratio
-    );
+    ctx.drawImage(cape, start, start, cape.width, cape.height, 0, 0, cape.width * ratio, cape.height * ratio);
 
     return canvas;
   }

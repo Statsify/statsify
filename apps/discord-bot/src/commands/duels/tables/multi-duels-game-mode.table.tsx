@@ -19,21 +19,12 @@ interface MultiDuelsGameModeModeTableProps {
   time: ProfileTime;
 }
 
-const MultiDuelsGameModeModeTable = ({
-  title,
-  stats,
-  t,
-  time,
-}: MultiDuelsGameModeModeTableProps) => (
+const MultiDuelsGameModeModeTable = ({ title, stats, t, time }: MultiDuelsGameModeModeTableProps) => (
   <Table.ts title={`§6${prettify(title)}`}>
     <Historical.exclude time={time}>
       <Table.tr>
         <Table.td title={t("stats.winstreak")} value={t(stats.winstreak)} color="§e" />
-        <Table.td
-          title={t("stats.bestWinstreak")}
-          value={t(stats.bestWinstreak)}
-          color="§e"
-        />
+        <Table.td title={t("stats.bestWinstreak")} value={t(stats.bestWinstreak)} color="§e" />
       </Table.tr>
     </Historical.exclude>
     <Table.tr>
@@ -57,23 +48,14 @@ interface MultiDuelsGameModeTableProps {
   time: ProfileTime;
 }
 
-export const MultiDuelsGameModeTable = ({
-  stats,
-  t,
-  time,
-}: MultiDuelsGameModeTableProps) => {
+export const MultiDuelsGameModeTable = ({ stats, t, time }: MultiDuelsGameModeTableProps) => {
   const modes = ["overall", "solo", "doubles"] as const;
 
   return (
     <Table.table>
       <Table.tr>
         {modes.map((mode) => (
-          <MultiDuelsGameModeModeTable
-            title={mode}
-            stats={stats[mode]}
-            t={t}
-            time={time}
-          />
+          <MultiDuelsGameModeModeTable title={mode} stats={stats[mode]} t={t} time={time} />
         ))}
       </Table.tr>
     </Table.table>

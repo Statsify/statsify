@@ -8,12 +8,7 @@
 
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import {
-  GamePrefix,
-  createPrefixProgression,
-  defaultPrefix,
-  getFormattedPrefix,
-} from "#prefixes";
+import { GamePrefix, createPrefixProgression, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { Progression } from "#progression";
 import { QuakeMode } from "./mode.js";
 import { deepAdd } from "@statsify/math";
@@ -27,18 +22,7 @@ export const QUAKE_MODES = new GameModes([
 
 export type QuakeModes = ExtractGameModes<typeof QUAKE_MODES>;
 
-const indexes = [
-  "zero",
-  "one",
-  "two",
-  "three",
-  "four",
-  "five",
-  "six",
-  "seven",
-  "eight",
-  "nine",
-];
+const indexes = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
 const prefixes: GamePrefix[] = [
   { fmt: (n) => `§8[${n}]`, req: 0 },
@@ -131,9 +115,7 @@ export class Quake {
         ?.toLowerCase()
         .split("_")
         // Converts string numbers to actually number && remove the 'point'
-        .map((trigger: string) =>
-          indexes.includes(trigger) ? indexes.indexOf(trigger) : "."
-        )
+        .map((trigger: string) => (indexes.includes(trigger) ? indexes.indexOf(trigger) : "."))
         .join("") || 1.3;
   }
 }

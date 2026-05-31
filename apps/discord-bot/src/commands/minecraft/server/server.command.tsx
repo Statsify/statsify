@@ -39,18 +39,10 @@ export class ServerCommand {
 
     const server = await this.getServer(context.option<string>("server"));
 
-    const [serverLogo, background] = await Promise.all([
-      loadImage(server.icon),
-      getServerBackground(server.mapping),
-    ]);
+    const [serverLogo, background] = await Promise.all([loadImage(server.icon), getServerBackground(server.mapping)]);
 
     const canvas = render(
-      <ServerProfile
-        background={background}
-        server={server}
-        serverLogo={serverLogo}
-        t={t}
-      />,
+      <ServerProfile background={background} server={server} serverLogo={serverLogo} t={t} />,
       getTheme(user)
     );
 
@@ -63,9 +55,7 @@ export class ServerCommand {
     tag = tag.toLowerCase();
 
     const mappedServer = this.mappings.find(
-      (s) =>
-        s.name.toLowerCase() === tag ||
-        s.addresses.find((address) => tag.endsWith(address))
+      (s) => s.name.toLowerCase() === tag || s.addresses.find((address) => tag.endsWith(address))
     );
 
     const server = await this.axios

@@ -26,10 +26,7 @@ export class Event {
     this.exp = data.levelling?.experience ?? 0;
     this.level = Math.min(MAX_LEVEL, Math.floor(this.exp / expRequirement) + 1);
 
-    this.progression = new Progression(
-      this.exp % expRequirement,
-      this.level >= MAX_LEVEL ? 0 : expRequirement
-    );
+    this.progression = new Progression(this.exp % expRequirement, this.level >= MAX_LEVEL ? 0 : expRequirement);
   }
 }
 

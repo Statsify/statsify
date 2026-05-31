@@ -6,29 +6,12 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  Container,
-  Footer,
-  Header,
-  Historical,
-  SidebarItem,
-  Table,
-  formatProgression,
-} from "#components";
+import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
 import { FormattedGame } from "@statsify/schemas";
 import { formatTime } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
-export const PitProfile = ({
-  background,
-  logo,
-  skin,
-  t,
-  badge,
-  user,
-  player,
-  time,
-}: BaseProfileProps) => {
+export const PitProfile = ({ background, logo, skin, t, badge, user, player, time }: BaseProfileProps) => {
   const { pit } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -66,18 +49,10 @@ export const PitProfile = ({
         </Table.tr>
         <Table.tr>
           <Historical.exclude time={time}>
-            <Table.td
-              title={t("stats.highestStreak")}
-              value={t(pit.highestStreak)}
-              color="§d"
-            />
+            <Table.td title={t("stats.highestStreak")} value={t(pit.highestStreak)} color="§d" />
           </Historical.exclude>
 
-          <Table.td
-            title={t("stats.playtime")}
-            value={formatTime(pit.playtime)}
-            color="§b"
-          />
+          <Table.td title={t("stats.playtime")} value={formatTime(pit.playtime)} color="§b" />
           <Table.td title={t("stats.assists")} value={t(pit.assists)} color="§e" />
         </Table.tr>
       </Table.table>

@@ -18,7 +18,10 @@ export function SkeletonBox<T extends keyof JSX.IntrinsicElements = "div">({
   ...props
 }: BoxProps<T>) {
   return (
-    <Box className={`${className} content:overflow-clip content:relative content:!bg-blackify-800/50 content:*:nth-[n+4]:invisible`} {...props}>
+    <Box
+      className={`${className} content:overflow-clip content:relative content:!bg-blackify-800/50 content:*:nth-[n+4]:invisible`}
+      {...props}
+    >
       <div
         style={{ background: GRADIENT, animationDelay: "-1600ms" }}
         className="absolute inset-y-0 w-[300%] animate-gradient-loading-slide visbile"

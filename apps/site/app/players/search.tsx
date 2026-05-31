@@ -137,10 +137,12 @@ export function Search({
         ref={containerRef}
         className="w-full overflow-auto absolute bg-white/25 backdrop-blur-2xl z-100"
         animate={{
-          height: +focused * Math.min(
-            SEARCH_MAX_HEIGHT,
-            suggestions.isPending ? 3 * SEARCH_ITEM_HEIGHT : (suggestions.data?.length ?? 0) * SEARCH_ITEM_HEIGHT
-          ),
+          height:
+            +focused *
+            Math.min(
+              SEARCH_MAX_HEIGHT,
+              suggestions.isPending ? 3 * SEARCH_ITEM_HEIGHT : (suggestions.data?.length ?? 0) * SEARCH_ITEM_HEIGHT
+            ),
         }}
       >
         {focused && suggestions.isPending && (
@@ -160,7 +162,14 @@ export function Search({
   );
 }
 
-function SearchPlayer<RouteType extends string,>({ player, selected = false, ...props }: Omit<LinkProps<RouteType>, "href" | "aria-selected" | "className" | "children"> & { player: string; selected?: boolean }) {
+function SearchPlayer<RouteType extends string>({
+  player,
+  selected = false,
+  ...props
+}: Omit<LinkProps<RouteType>, "href" | "aria-selected" | "className" | "children"> & {
+  player: string;
+  selected?: boolean;
+}) {
   return (
     <Link<RouteType>
       {...props}

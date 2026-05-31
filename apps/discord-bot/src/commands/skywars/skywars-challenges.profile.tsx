@@ -38,9 +38,15 @@ export const SkyWarsChallengesProfile = ({
           <Table.tr>
             {row.map(([name, wins]) => (
               <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
-                <text>§l{wins > 0 ? "§a" : "§c"}{prettify(name).replace("Uhc", "UHC")}</text>
+                <text>
+                  §l{wins > 0 ? "§a" : "§c"}
+                  {prettify(name).replace("Uhc", "UHC")}
+                </text>
                 <div width="remaining" margin={{ left: 4, right: 4 }} />
-                <text>{wins > 0 ? "§a" : "§c"}{t(wins)}</text>
+                <text>
+                  {wins > 0 ? "§a" : "§c"}
+                  {t(wins)}
+                </text>
               </box>
             ))}
           </Table.tr>

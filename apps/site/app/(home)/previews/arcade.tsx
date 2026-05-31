@@ -18,10 +18,7 @@ import { cn } from "~/lib/util";
 import { t } from "~/localize";
 import { usePlayer } from "~/app/players/[slug]/context";
 
-export function arrayGroup<T extends unknown[] | string>(
-  arr: T,
-  groupSize: number
-): T[] {
+export function arrayGroup<T extends unknown[] | string>(arr: T, groupSize: number): T[] {
   return Array.from({ length: Math.ceil(arr.length / groupSize) }, (_, i) =>
     arr.slice(i * groupSize, (i + 1) * groupSize)
   ) as T[];
@@ -56,21 +53,12 @@ export function ArcadePreview({ className }: { className?: string }) {
   games.sort((a, b) => b[1] - a[1]);
 
   const rows = arrayGroup(games, 3);
-  const colors = [
-    "text-mc-aqua",
-    "text-mc-green",
-    "text-mc-yellow",
-    "text-mc-gold",
-    "text-mc-red",
-  ];
+  const colors = ["text-mc-aqua", "text-mc-green", "text-mc-yellow", "text-mc-gold", "text-mc-red"];
 
   return (
     <div className={cn("grid grid-cols-3 gap-2 whitespace-nowrap", className)}>
       <div className="col-span-3 grid grid-cols-1 xl:grid-cols-balanced gap-2 text-center">
-        <Skin
-          uuid={player.uuid}
-          className="xl:row-start-1 xl:row-end-4 hidden xl:block"
-        />
+        <Skin uuid={player.uuid} className="xl:row-start-1 xl:row-end-4 hidden xl:block" />
         <Nametag className="row-start-1 xl:col-start-2" />
         <Box className="row-start-3 xl:row-start-2 xl:row-span-2 xl:col-start-2">
           <span className="font-bold">
@@ -79,34 +67,15 @@ export function ArcadePreview({ className }: { className?: string }) {
           (Overall)
         </Box>
         <Sidebar className="row-start-2 xl:row-start-1 xl:row-end-4">
-          <SidebarItem
-            color="text-mc-gold"
-            name="Coins"
-            value={t(arcade.coins)}
-          />
-          <SidebarItem
-            color="text-mc-yellow"
-            name="Conversions"
-            value={t(arcade.coinConversions)}
-          />
-          <SidebarItem
-            color="text-mc-aqua"
-            name="Arcade Wins"
-            value={t(arcade.wins)}
-          />
+          <SidebarItem color="text-mc-gold" name="Coins" value={t(arcade.coins)} />
+          <SidebarItem color="text-mc-yellow" name="Conversions" value={t(arcade.coinConversions)} />
+          <SidebarItem color="text-mc-aqua" name="Arcade Wins" value={t(arcade.wins)} />
         </Sidebar>
       </div>
       {rows
         .slice(0, 2)
         .map((row, index) =>
-          row.map(([game, wins]) => (
-            <TableData
-              key={game}
-              title={game}
-              value={t(wins)}
-              color={colors[index]}
-            />
-          ))
+          row.map(([game, wins]) => <TableData key={game} title={game} value={t(wins)} color={colors[index]} />)
         )}
     </div>
   );

@@ -1,54 +1,28 @@
 {
-	"$schema": "https://turborepo.org/schema.json",
-	"globalDependencies": [
-		"pnpm.lock",
-		"tsconfig.json",
-		".swcrc",
-		"eslint.config.js"
-	],
-	"ui": "tui",
-	"tasks": {
-		"build": {
-			"env": [
-				"API_URL",
-				"API_KEY"
-			],
-			"outputs": [
-				"dist/**",
-				".next/**",
-				"pkg/**"
-			],
-			"dependsOn": [
-				"^build"
-			]
-		},
-		"test:types": {
-			"outputs": [],
-			"dependsOn": [
-				"^test:types"
-			]
-		},
-		"test": {
-			"outputs": [],
-			"dependsOn": [
-				"build",
-				"^test"
-			]
-		},
-		"test:coverage": {
-			"outputs": [
-				"coverage"
-			],
-			"dependsOn": [
-				"build",
-				"^test:coverage"
-			]
-		},
-		"lint": {
-			"outputs": [],
-			"dependsOn": [
-				"^lint"
-			]
-		}
-	}
+  "$schema": "https://turborepo.org/schema.json",
+  "globalDependencies": ["pnpm.lock", "tsconfig.json", ".swcrc", "eslint.config.js"],
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "env": ["API_URL", "API_KEY"],
+      "outputs": ["dist/**", ".next/**", "pkg/**"],
+      "dependsOn": ["^build"]
+    },
+    "test:types": {
+      "outputs": [],
+      "dependsOn": ["^test:types"]
+    },
+    "test": {
+      "outputs": [],
+      "dependsOn": ["build", "^test"]
+    },
+    "test:coverage": {
+      "outputs": ["coverage"],
+      "dependsOn": ["build", "^test:coverage"]
+    },
+    "lint": {
+      "outputs": [],
+      "dependsOn": ["^lint"]
+    }
+  }
 }

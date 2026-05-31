@@ -56,12 +56,6 @@ export class TNTGamesChallenges implements GameChallenges {
     this.tntTag = challenges.TNTGAMES__tnt_tag_challenge;
     this.tntWizards = challenges.TNTGAMES__tnt_wizards_challenge;
 
-    this.total = add(
-      this.tntRun,
-      this.pvpRun,
-      this.bowSpleef,
-      this.tntTag,
-      this.tntWizards
-    );
+    this.total = add(this.tntRun, this.pvpRun, this.bowSpleef, this.tntTag, this.tntWizards);
   }
 }

@@ -40,23 +40,18 @@ interface CustomHeaderBodyProps extends BaseHeaderProps {
   children: JSX.Children;
 }
 
-export type HeaderProps =
-  | SidebarlessHeaderProps |
-  SidebarHeaderProps |
-  CustomHeaderBodyProps;
+export type HeaderProps = SidebarlessHeaderProps | SidebarHeaderProps | CustomHeaderBodyProps;
 
 export const Header = (props: HeaderProps) => {
   const skin = <Skin skin={props.skin} />;
-  const nameTag = (
-    <HeaderNametag name={props.name} badge={props.badge} size={props.size} />
-  );
+  const nameTag = <HeaderNametag name={props.name} badge={props.badge} size={props.size} />;
 
   const sidebar =
-    "sidebar" in props &&
-    props.sidebar.length &&
-    (props.time === "LIVE" ? true : props.historicalSidebar) ?
-      <Sidebar items={props.sidebar} /> :
-      <></>;
+    "sidebar" in props && props.sidebar.length && (props.time === "LIVE" ? true : props.historicalSidebar) ? (
+      <Sidebar items={props.sidebar} />
+    ) : (
+      <></>
+    );
 
   let body: JSX.Element;
 
@@ -68,15 +63,7 @@ export const Header = (props: HeaderProps) => {
   }
 
   if (props.time !== "LIVE")
-    return (
-      <Historical.header
-        nameTag={nameTag}
-        skin={skin}
-        title={props.title}
-        time={props.time}
-        sidebar={sidebar}
-      />
-    );
+    return <Historical.header nameTag={nameTag} skin={skin} title={props.title} time={props.time} sidebar={sidebar} />;
 
   return (
     <div width="100%">

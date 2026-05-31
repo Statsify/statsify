@@ -66,7 +66,12 @@ const PRESTIGE_EMBLEMS = [
 ];
 
 const DEFAULT_SCHEME = "gray";
-const COLOR_SCHEMES = Object.fromEntries(minecraftColors.map((color) => [color.id.toLowerCase(), (level: number, emblem: string) => `${color.code}[${level}${emblem}]`]));
+const COLOR_SCHEMES = Object.fromEntries(
+  minecraftColors.map((color) => [
+    color.id.toLowerCase(),
+    (level: number, emblem: string) => `${color.code}[${level}${emblem}]`,
+  ])
+);
 const SCHEME_MAP: Record<string, (level: number, emblem: string) => string> = {
   ...COLOR_SCHEMES,
   chroma: (level, emblem) => {

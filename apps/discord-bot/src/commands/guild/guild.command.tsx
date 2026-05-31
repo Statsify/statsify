@@ -72,8 +72,7 @@ export class GuildCommand extends GuildTopSubCommand {
     return this.paginateService.paginate(context, [
       {
         label: "Overall",
-        generator: () =>
-          render(<GuildProfile {...props} page="overall" />, getTheme(user)),
+        generator: () => render(<GuildProfile {...props} page="overall" />, getTheme(user)),
       },
       {
         label: "GEXP",
@@ -81,8 +80,7 @@ export class GuildCommand extends GuildTopSubCommand {
       },
       {
         label: "GEXP Per Game",
-        generator: () =>
-          render(<GuildProfile {...props} page="expPerGame" />, getTheme(user)),
+        generator: () => render(<GuildProfile {...props} page="expPerGame" />, getTheme(user)),
       },
       {
         label: "Misc",
@@ -98,10 +96,7 @@ export class GuildCommand extends GuildTopSubCommand {
 
     const guild = await this.getGuild(context);
 
-    const [logo, background] = await Promise.all([
-      getLogo(user),
-      getBackground("hypixel", "overall"),
-    ]);
+    const [logo, background] = await Promise.all([getLogo(user), getBackground("hypixel", "overall")]);
 
     const props: GuildListProfileProps = {
       guild,

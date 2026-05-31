@@ -16,12 +16,7 @@ export interface WelcomeProfileProps {
   memberCount: number;
 }
 
-export const WelcomeProfile = ({
-  username,
-  avatar,
-  background,
-  memberCount,
-}: WelcomeProfileProps) => (
+export const WelcomeProfile = ({ username, avatar, background, memberCount }: WelcomeProfileProps) => (
   <img width="100%" height="100%" crop="resize" image={background}>
     <div width="95%" height="95%" direction="column" align="center">
       <div width="100%">

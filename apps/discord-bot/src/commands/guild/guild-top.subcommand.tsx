@@ -19,12 +19,7 @@ import {
 } from "@statsify/discord";
 import { ButtonStyle } from "discord-api-types/v10";
 import { CommandListener } from "#lib/command.listener";
-import {
-  GUILD_TOP_PAGE_SIZE,
-  GuildTopMember,
-  GuildTopProfile,
-  GuildTopProfileProps,
-} from "./guild-top.profile.js";
+import { GUILD_TOP_PAGE_SIZE, GuildTopMember, GuildTopProfile, GuildTopProfileProps } from "./guild-top.profile.js";
 import { GuildLeaderboardSubCommand } from "../leaderboards/guild-leaderboard.subcommand.js";
 import { GuildQuery } from "@statsify/api-client";
 import { Theme, render } from "@statsify/rendering";
@@ -48,10 +43,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
 
     const guild = await this.getGuild(context);
 
-    const [logo, background] = await Promise.all([
-      getLogo(user),
-      getBackground("hypixel", "overall"),
-    ]);
+    const [logo, background] = await Promise.all([getLogo(user), getBackground("hypixel", "overall")]);
 
     const props: BaseGuildTopProfileProps = {
       guild,
@@ -92,8 +84,7 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     const components = [new ActionRowBuilder().component(dropdown)];
 
     const pageCount = Math.ceil(guild.members.length / GUILD_TOP_PAGE_SIZE);
-    if (pageCount > 1)
-      components.push(new ActionRowBuilder().component(up).component(down));
+    if (pageCount > 1) components.push(new ActionRowBuilder().component(up).component(down));
 
     let page = 0;
     let modeIndex = 0;
@@ -102,35 +93,34 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
     const listener = CommandListener.getInstance();
 
     const changePage =
-      (fn: (interaction: Interaction) => Partial<GuildTopPageState>) =>
-        async (interaction: Interaction) => {
-          if (user?.locale) interaction.setLocale(user.locale);
+      (fn: (interaction: Interaction) => Partial<GuildTopPageState>) => async (interaction: Interaction) => {
+        if (user?.locale) interaction.setLocale(user.locale);
 
-          const state = fn(interaction);
+        const state = fn(interaction);
 
-          const mode = modes[state.modeIndex ?? modeIndex];
+        const mode = modes[state.modeIndex ?? modeIndex];
 
-          const message = await this.getGuildTopPageMessage(
-            cache,
-            components,
-            props,
-            mode[1],
-            mode[0],
-            state.page ?? page,
-            theme
-          );
+        const message = await this.getGuildTopPageMessage(
+          cache,
+          components,
+          props,
+          mode[1],
+          mode[0],
+          state.page ?? page,
+          theme
+        );
 
-          if (interaction.getUserId() === userId) {
-            if (state.page !== undefined) page = state.page;
-            if (state.modeIndex !== undefined) modeIndex = state.modeIndex;
+        if (interaction.getUserId() === userId) {
+          if (state.page !== undefined) page = state.page;
+          if (state.modeIndex !== undefined) modeIndex = state.modeIndex;
 
-            dropdown.activeOption(modeIndex);
+          dropdown.activeOption(modeIndex);
 
-            context.reply(message);
-          } else {
-            interaction.sendFollowup({ ...message, components: [], ephemeral: true });
-          }
-        };
+          context.reply(message);
+        } else {
+          interaction.sendFollowup({ ...message, components: [], ephemeral: true });
+        }
+      };
 
     listener.addHook(
       up.getCustomId(),
@@ -220,15 +210,12 @@ export class GuildTopSubCommand extends GuildLeaderboardSubCommand {
           ({
             name: m.displayName,
             value: typeof key === "string" ? m[key] : m.expHistory[key],
-          } as GuildTopMember)
+          }) as GuildTopMember
       )
       .sort((a, b) => b.value - a.value)
       .slice(page * GUILD_TOP_PAGE_SIZE, (page + 1) * GUILD_TOP_PAGE_SIZE);
 
-    const canvas = render(
-      <GuildTopProfile {...props} members={members} title={title} page={page} />,
-      theme
-    );
+    const canvas = render(<GuildTopProfile {...props} members={members} title={title} page={page} />, theme);
 
     const buffer = await canvas.toBuffer("png");
 

@@ -7,10 +7,7 @@
  */
 
 import { AbstractEventListener, ApiService } from "@statsify/discord";
-import {
-  GatewayDispatchEvents,
-  GatewayGuildMemberRemoveDispatchData,
-} from "discord-api-types/v10";
+import { GatewayDispatchEvents, GatewayGuildMemberRemoveDispatchData } from "discord-api-types/v10";
 import { Service } from "typedi";
 import { TicketService, UserService } from "#services";
 import { config } from "@statsify/util";
@@ -38,12 +35,7 @@ export class GuildMemberRemoveEventListener extends AbstractEventListener<Gatewa
     await Promise.all([
       this.apiService.updateUser(memberId, { serverMember: false }),
       this.userService.removeAllPremium(memberId),
-      this.ticketService.close(
-        memberId,
-        "owner",
-        await config("supportBot.applicationId"),
-        "Member Left"
-      ),
+      this.ticketService.close(memberId, "owner", await config("supportBot.applicationId"), "Member Left"),
     ]);
   }
 }

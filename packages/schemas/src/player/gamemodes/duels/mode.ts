@@ -376,7 +376,11 @@ export class SkyWarsDuels extends MultiPVPDuelsGameMode {
     super(data, "SkyWars", "sw", "skywars", "default");
 
     const kit = data.sw_duels_kit_new3 ?? data.sw_duels_kit_new2 ?? data.sw_duels_kit_new ?? "none";
-    this.kit = kit.replace("kit_", "").replaceAll("ranked_", "").replaceAll("mega_", "").replaceAll("defending_team_", "");
+    this.kit = kit
+      .replace("kit_", "")
+      .replaceAll("ranked_", "")
+      .replaceAll("mega_", "")
+      .replaceAll("defending_team_", "");
   }
 }
 

@@ -8,12 +8,7 @@
 
 import { type ExtractGameModes, GameModes } from "#game";
 import { Field } from "#metadata";
-import {
-  GamePrefix,
-  createPrefixProgression,
-  defaultPrefix,
-  getFormattedPrefix,
-} from "#prefixes";
+import { GamePrefix, createPrefixProgression, defaultPrefix, getFormattedPrefix } from "#prefixes";
 import { PaintballPerks } from "./perks.js";
 import { Progression } from "#progression";
 import { ratio } from "@statsify/math";

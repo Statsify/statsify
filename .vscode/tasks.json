@@ -4,9 +4,7 @@
     {
       "type": "shell",
       "command": "pnpm",
-      "args": [
-        "build"
-      ],
+      "args": ["build"],
       "label": "build",
       "group": "build",
       "presentation": {
@@ -23,9 +21,7 @@
     {
       "type": "shell",
       "command": "pnpm",
-      "args": [
-        "build:watch"
-      ],
+      "args": ["build:watch"],
       "label": "build:watch",
       "presentation": {
         "echo": true,
@@ -42,37 +38,25 @@
     {
       "type": "shell",
       "command": "pnpm",
-      "args": [
-        "test"
-      ],
+      "args": ["test"],
       "label": "test",
       "group": "test",
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"],
       "detail": "Tests monorepo using turbo"
     },
     {
       "type": "shell",
       "command": "pnpm",
-      "args": [
-        "test:types"
-      ],
+      "args": ["test:types"],
       "label": "test:types",
-      "dependsOn": [
-        "build"
-      ]
+      "dependsOn": ["build"]
     },
     {
       "type": "shell",
       "command": "pnpm",
-      "args": [
-        "test:coverage"
-      ],
+      "args": ["test:coverage"],
       "label": "test:coverage",
-      "dependsOn": [
-        "build"
-      ],
+      "dependsOn": ["build"]
     }
   ]
 }

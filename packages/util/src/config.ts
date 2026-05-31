@@ -298,11 +298,9 @@ export const config = async <T extends keyof FlatConfig>(
 ): Promise<FlatConfig[T]> => {
   // Don't load the config while testing
   if (process.env.VITEST) return defaultValue as FlatConfig[T];
-  if (!cfg)
-    cfg = await loadConfig().then((c) => c.default);
+  if (!cfg) cfg = await loadConfig().then((c) => c.default);
 
-  const value =
-    (key as string).split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;
+  const value = (key as string).split(".").reduce((a: any, b) => a?.[b], cfg) || undefined;
 
   const isValueDefined = value !== undefined && value !== "";
 
@@ -310,11 +308,7 @@ export const config = async <T extends keyof FlatConfig>(
     if (defaultValue) return defaultValue;
 
     if (required)
-      throw new Error(
-        `Missing required environment variable: ${key as string} | Add ${
-          key as string
-        } to your config`
-      );
+      throw new Error(`Missing required environment variable: ${key as string} | Add ${key as string} to your config`);
   }
 
   return value;

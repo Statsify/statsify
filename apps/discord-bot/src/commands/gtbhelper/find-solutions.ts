@@ -15,8 +15,7 @@ export const findSolutions = (hint: string, limit?: number) => {
 
   for (let word of words) {
     // Check if the word and hint have the same length and the same amount of words
-    if (word.length !== hint.length || hint.split(" ").length !== word.split(" ").length)
-      continue;
+    if (word.length !== hint.length || hint.split(" ").length !== word.split(" ").length) continue;
 
     word = word.toLowerCase();
 

@@ -84,7 +84,8 @@ export class PaginateService {
     const mainController = new PageController(pages, currentIndex);
 
     const page = pages[currentIndex];
-    let subController = "subPages" in page && page.subPages.length > 1 ? new PageController(page.subPages, currentSubIndex) : undefined;
+    let subController =
+      "subPages" in page && page.subPages.length > 1 ? new PageController(page.subPages, currentSubIndex) : undefined;
 
     mainController.register(listener, (interaction, index) => handler(interaction, index, 0));
     subController?.register(listener, (interaction, subIndex) => handler(interaction, currentIndex, subIndex));
@@ -118,8 +119,9 @@ export class PaginateService {
 
       const message = await getMessage(index, subIndex);
 
-      message.components = [mainController.getActionRow(), subController?.getActionRow()]
-        .filter((row) => row !== undefined);
+      message.components = [mainController.getActionRow(), subController?.getActionRow()].filter(
+        (row) => row !== undefined
+      );
 
       return context.reply(message);
     }
@@ -134,8 +136,9 @@ export class PaginateService {
     setTimeout(onTimeout, timeout);
 
     const message = await getMessage(currentIndex, currentSubIndex);
-    message.components = [mainController.getActionRow(), subController?.getActionRow()]
-      .filter((row) => row !== undefined);
+    message.components = [mainController.getActionRow(), subController?.getActionRow()].filter(
+      (row) => row !== undefined
+    );
 
     return message;
   }
@@ -229,10 +232,11 @@ export class PaginateService {
   private async toMessage(content: PaginateInteractionContent): Promise<Message> {
     if (content instanceof Message) return content;
     if (content instanceof EmbedBuilder) return new Message({ embeds: [content] });
-    if (content instanceof Canvas) return new Message({
-      files: [{ name: "image.png", data: await content.toBuffer("png"), type: "image/png" }],
-      attachments: [],
-    });
+    if (content instanceof Canvas)
+      return new Message({
+        files: [{ name: "image.png", data: await content.toBuffer("png"), type: "image/png" }],
+        attachments: [],
+      });
 
     return new Message(content);
   }

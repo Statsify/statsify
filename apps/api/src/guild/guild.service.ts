@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  CacheLevel,
-  GuildNotFoundException,
-  GuildQuery,
-  PlayerNotFoundException,
-} from "@statsify/api-client";
+import { CacheLevel, GuildNotFoundException, GuildQuery, PlayerNotFoundException } from "@statsify/api-client";
 import { Guild, GuildMember, Player, deserialize, serialize } from "@statsify/schemas";
 import { GuildLeaderboardService } from "./leaderboards/guild-leaderboard.service.js";
 import { HypixelService } from "#hypixel";
@@ -34,11 +29,7 @@ export class GuildService {
     @InjectModel(Player) private readonly playerModel: ReturnModelType<typeof Player>
   ) {}
 
-  public async get(
-    inputtedTag: string,
-    type: GuildQuery,
-    cache: CacheLevel
-  ): Promise<Guild | null> {
+  public async get(inputtedTag: string, type: GuildQuery, cache: CacheLevel): Promise<Guild | null> {
     // eslint-disable-next-line prefer-const
     let [cachedGuild, tag, displayName] = await this.getCachedGuild(inputtedTag, type);
 
@@ -49,10 +40,7 @@ export class GuildService {
       };
     }
 
-    const guild = await this.hypixelService.getGuild(
-      tag,
-      type.toLowerCase() as Lowercase<GuildQuery>
-    );
+    const guild = await this.hypixelService.getGuild(tag, type.toLowerCase() as Lowercase<GuildQuery>);
 
     if (!guild) {
       await this.handleGuildNotFound(cachedGuild, tag, type);
@@ -64,9 +52,7 @@ export class GuildService {
       cachedGuild = null;
     }
 
-    const memberMap = Object.fromEntries(
-      (cachedGuild?.members ?? []).map((member) => [member.uuid, member])
-    );
+    const memberMap = Object.fromEntries((cachedGuild?.members ?? []).map((member) => [member.uuid, member]));
 
     const guildExpHistory: Record<string, number> = {};
     const requireGuildId: string[] = [];
@@ -88,9 +74,7 @@ export class GuildService {
           (acc, day, index) => ({ ...acc, [day]: cacheMember.expHistory[index] }),
           {}
         ),
-        ...Object.fromEntries(
-          member.expHistoryDays.map((day, index) => [day, member.expHistory[index]])
-        ),
+        ...Object.fromEntries(member.expHistoryDays.map((day, index) => [day, member.expHistory[index]])),
       };
 
       // Add all the days to the guild total exp history
@@ -149,10 +133,7 @@ export class GuildService {
     const flatGuild = flatten(guild);
     const serializedGuild = serialize(Guild, flatGuild);
 
-    await this.guildModel
-      .replaceOne({ id: guild.id }, serializedGuild, { upsert: true })
-      .lean()
-      .exec();
+    await this.guildModel.replaceOne({ id: guild.id }, serializedGuild, { upsert: true }).lean().exec();
 
     await this.guildLeaderboardService.addLeaderboards(Guild, serializedGuild, "id");
 
@@ -176,12 +157,7 @@ export class GuildService {
 
       if (!player.guildId) return [null, player.uuid, player.displayName];
 
-      const guild = (await this.guildModel
-        .findOne()
-        .where("id")
-        .equals(player.guildId)
-        .lean()
-        .exec()) as Guild;
+      const guild = (await this.guildModel.findOne().where("id").equals(player.guildId).lean().exec()) as Guild;
 
       return [guild, player.uuid, player.displayName];
     }
@@ -196,11 +172,7 @@ export class GuildService {
     return [guild, tag];
   }
 
-  private async handleGuildNotFound(
-    cachedGuild: Guild | null,
-    tag: string,
-    type: GuildQuery
-  ) {
+  private async handleGuildNotFound(cachedGuild: Guild | null, tag: string, type: GuildQuery) {
     // There is nothing to delete so just escape
     if (!cachedGuild) return;
 

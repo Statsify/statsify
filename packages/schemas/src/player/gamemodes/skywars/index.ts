@@ -145,20 +145,15 @@ export class SkyWars {
 
     this.progression = getLevelProgress(this.exp, this.level);
 
-    const normalKit = parseKit(
-      data.activeKit_SOLO_random ? "random" : data.activeKit_SOLO
-    );
-    const insaneKit = parseKit(
-      data.activeKit_TEAMS_random ? "random" : data.activeKit_TEAMS
-    );
+    const normalKit = parseKit(data.activeKit_SOLO_random ? "random" : data.activeKit_SOLO);
+    const insaneKit = parseKit(data.activeKit_TEAMS_random ? "random" : data.activeKit_TEAMS);
 
     const soloInsaneWins = data.wins_solo_insane;
     const soloNormalWins = data.wins_solo_normal;
     const doublesInsaneWins = data.wins_team_insane;
     const doublesNormalWins = data.wins_team_normal;
 
-    const chooseKit = (insane = 0, normal = 0) =>
-      insane > normal ? insaneKit : normalKit;
+    const chooseKit = (insane = 0, normal = 0) => (insane > normal ? insaneKit : normalKit);
 
     this.overall = new SkyWarsMode(data, "");
 
@@ -168,10 +163,7 @@ export class SkyWars {
     this.doubles = new SkyWarsMode(data, "team");
     this.doubles.kit = chooseKit(doublesInsaneWins, doublesNormalWins);
 
-    this.overall.kit = chooseKit(
-      add(soloInsaneWins, doublesInsaneWins),
-      add(soloNormalWins, doublesNormalWins)
-    );
+    this.overall.kit = chooseKit(add(soloInsaneWins, doublesInsaneWins), add(soloNormalWins, doublesNormalWins));
 
     this.mini = new SkyWarsMini(data);
     this.mini.kit = parseKit(data.activeKit_SOLO);

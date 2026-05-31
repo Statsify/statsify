@@ -2,8 +2,22 @@
   "name": "support-bot",
   "version": "0.0.0",
   "private": true,
-  "main": "dist/index.js",
   "type": "module",
+  "main": "dist/index.js",
+  "imports": {
+    "#services": {
+      "types": "./src/services/index.ts",
+      "default": "./dist/services/index.js"
+    },
+    "#constants": {
+      "types": "./src/constants.ts",
+      "default": "./dist/constants.js"
+    },
+    "#lib": {
+      "types": "./src/lib/index.ts",
+      "default": "./dist/lib/index.js"
+    }
+  },
   "scripts": {
     "start": "node --enable-source-maps .",
     "build": "swc src --out-dir dist --strip-leading-paths",
@@ -33,19 +47,5 @@
   },
   "devDependencies": {
     "@types/luxon": "^3.4.2"
-  },
-  "imports": {
-    "#services": {
-      "types": "./src/services/index.ts",
-      "default": "./dist/services/index.js"
-    },
-    "#constants": {
-      "types": "./src/constants.ts",
-      "default": "./dist/constants.js"
-    },
-    "#lib": {
-      "types": "./src/lib/index.ts",
-      "default": "./dist/lib/index.js"
-    }
   }
 }

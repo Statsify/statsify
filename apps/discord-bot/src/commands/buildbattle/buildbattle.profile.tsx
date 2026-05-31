@@ -6,14 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  Container,
-  Footer,
-  Header,
-  SidebarItem,
-  Table,
-  formatProgression,
-} from "#components";
+import { Container, Footer, Header, SidebarItem, Table, formatProgression } from "#components";
 import { FormattedGame } from "@statsify/schemas";
 import { LocalizeFunction } from "@statsify/discord";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -32,16 +25,7 @@ const BuildBattleModeTable = ({ title, stats, t }: BuildBattleModeTableProps) =>
   </Table.table>
 );
 
-export const BuildBattleProfile = ({
-  player,
-  background,
-  logo,
-  skin,
-  t,
-  badge,
-  user,
-  time,
-}: BaseProfileProps) => {
+export const BuildBattleProfile = ({ player, background, logo, skin, t, badge, user, time }: BaseProfileProps) => {
   const { buildbattle } = player.stats;
 
   const sidebar: SidebarItem[] = [
@@ -62,9 +46,7 @@ export const BuildBattleProfile = ({
         sidebar={sidebar}
         historicalSidebar
         title={`§l${FormattedGame.BUILD_BATTLE} §fStats`}
-        description={`§7${t("stats.title")}: ${
-          buildbattle.titleFormatted
-        }\n${formatProgression({
+        description={`§7${t("stats.title")}: ${buildbattle.titleFormatted}\n${formatProgression({
           t,
           label: t("stats.progression.score"),
           progression: buildbattle.progression,
@@ -77,11 +59,7 @@ export const BuildBattleProfile = ({
         <Table.tr>
           <BuildBattleModeTable title="Overall" stats={buildbattle.overall} t={t} />
           <BuildBattleModeTable title="Pro" stats={buildbattle.pro} t={t} />
-          <BuildBattleModeTable
-            title="Speed Builders"
-            stats={{ wins: buildbattle.speedBuilders.wins }}
-            t={t}
-          />
+          <BuildBattleModeTable title="Speed Builders" stats={{ wins: buildbattle.speedBuilders.wins }} t={t} />
         </Table.tr>
         <Table.tr>
           <BuildBattleModeTable title="Solo" stats={buildbattle.solo} t={t} />

@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  APISelectMenuComponent,
-  APISelectMenuOption,
-  ComponentType,
-} from "discord-api-types/v10";
+import { APISelectMenuComponent, APISelectMenuOption, ComponentType } from "discord-api-types/v10";
 import { LocalizationString, LocalizeFunction, translateField } from "../localize.js";
 import { parseEmoji } from "./parse-emoji.js";
 import { randomUUID } from "node:crypto";

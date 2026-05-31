@@ -8,15 +8,7 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { Guild, LeaderboardScanner } from "@statsify/schemas";
-import {
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsString,
-  MaxLength,
-  Min,
-  MinLength,
-} from "class-validator";
+import { IsEnum, IsInt, IsOptional, IsString, MaxLength, Min, MinLength } from "class-validator";
 import { Transform } from "class-transformer";
 
 const fields = LeaderboardScanner.getLeaderboardFields(Guild).map(([key]) => key);

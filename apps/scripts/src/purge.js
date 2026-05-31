@@ -28,10 +28,7 @@ const exec = (script) =>
     cwd: resolve(__dirname, "../../../"),
   });
 
-const workspaces = [
-  ...(await fetchWorkspaces("apps")),
-  ...(await fetchWorkspaces("packages")),
-];
+const workspaces = [...(await fetchWorkspaces("apps")), ...(await fetchWorkspaces("packages"))];
 
 /**
  *
@@ -40,11 +37,7 @@ const workspaces = [
  * @returns {Promise<void>}
  */
 function deleteFromWorkspaces(path, _workspaces = workspaces) {
-  return Promise.all(
-    _workspaces.map((workspace) =>
-      rm(join(workspace, path), { recursive: true, force: true })
-    )
-  );
+  return Promise.all(_workspaces.map((workspace) => rm(join(workspace, path), { recursive: true, force: true })));
 }
 
 const nodeModules = async () => {

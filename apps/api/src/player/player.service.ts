@@ -7,18 +7,11 @@
  */
 
 import { type APIData, type Circular, type Flatten, flatten } from "@statsify/util";
-import {
-  CacheLevel,
-  StatusNotFoundException,
-} from "@statsify/api-client";
+import { CacheLevel, StatusNotFoundException } from "@statsify/api-client";
 import { HypixelService } from "#hypixel";
 import { Inject, Injectable, NotFoundException, forwardRef } from "@nestjs/common";
 import { InjectModel } from "@m8a/nestjs-typegoose";
-import {
-  Player,
-  deserialize,
-  serialize,
-} from "@statsify/schemas";
+import { Player, deserialize, serialize } from "@statsify/schemas";
 import { PlayerLeaderboardService } from "./leaderboards/player-leaderboard.service.js";
 import { PlayerSearchService, RedisPlayer } from "./search/player-search.service.js";
 import type { ReturnModelType } from "@typegoose/typegoose";
@@ -41,17 +34,10 @@ export class PlayerService {
    * @param cacheLevel What type of data to return (cached/live)
    * @param selector (optional) A mongo selector to select specific fields
    */
-  public async get(
-    tag: string,
-    cacheLevel: CacheLevel,
-    selector?: Record<string, boolean>
-  ): Promise<Player | null> {
+  public async get(tag: string, cacheLevel: CacheLevel, selector?: Record<string, boolean>): Promise<Player | null> {
     const mongoPlayer = await this.findMongoDocument(tag, selector);
 
-    if (
-      mongoPlayer &&
-      this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)
-    ) {
+    if (mongoPlayer && this.hypixelService.shouldCache(mongoPlayer.expiresAt, cacheLevel)) {
       return deserialize(Player, mongoPlayer);
     }
 
@@ -95,12 +81,7 @@ export class PlayerService {
   }
 
   public getPlayers(start: number, end: number) {
-    return this.playerLeaderboardService["getLeaderboardFromRedis"](
-      Player,
-      "stats.general.networkExp",
-      start,
-      end
-    );
+    return this.playerLeaderboardService["getLeaderboardFromRedis"](Player, "stats.general.networkExp", start, end);
   }
 
   public async getStatus(tag: string) {
@@ -152,14 +133,11 @@ export class PlayerService {
     const serializedPlayer = serialize<Player>(Player, flatPlayer);
 
     const promises = [
-      this.playerModel
-        .replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true })
-        .exec(),
+      this.playerModel.replaceOne({ uuid: player.uuid }, serializedPlayer, { upsert: true }).exec(),
       this.playerLeaderboardService.addLeaderboards(Player, flatPlayer, "uuid", false),
     ];
 
-    if (registerAutocomplete)
-      promises.push(this.playerSearchService.add(flatPlayer as RedisPlayer));
+    if (registerAutocomplete) promises.push(this.playerSearchService.add(flatPlayer as RedisPlayer));
 
     await Promise.all(promises);
     return flatPlayer;

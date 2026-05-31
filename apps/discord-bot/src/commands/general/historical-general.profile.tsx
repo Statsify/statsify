@@ -37,16 +37,8 @@ export const HistoricalGeneralProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td
-            title={t("stats.levelsGained")}
-            value={t(general.networkLevel)}
-            color="§b"
-          />
-          <Table.td
-            title={t("stats.achievementPoints")}
-            value={t(general.achievementPoints)}
-            color="§6"
-          />
+          <Table.td title={t("stats.levelsGained")} value={t(general.networkLevel)} color="§b" />
+          <Table.td title={t("stats.achievementPoints")} value={t(general.achievementPoints)} color="§6" />
           <Table.td
             title={t("stats.event-exp")}
             value={t(general.events[latestEvent.key].exp)}
@@ -55,11 +47,7 @@ export const HistoricalGeneralProfile = ({
         </Table.tr>
         <Table.tr>
           <Table.td title={t("stats.quests")} value={t(quests.total)} color="§e" />
-          <Table.td
-            title={t("stats.challenges")}
-            value={t(challenges.total)}
-            color="§a"
-          />
+          <Table.td title={t("stats.challenges")} value={t(challenges.total)} color="§a" />
           <Table.td title={t("stats.karma")} value={t(general.karma)} color="§d" />
         </Table.tr>
       </Table.table>

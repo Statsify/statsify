@@ -36,20 +36,13 @@ import {
   WARLORDS_MODES,
   WOOLGAMES_MODES,
 } from "@statsify/schemas";
-import {
-  ApiService,
-  Command,
-  CommandContext,
-  SubCommand,
-} from "@statsify/discord";
+import { ApiService, Command, CommandContext, SubCommand } from "@statsify/discord";
 import { BaseLeaderboardCommand } from "./base.leaderboard-command.js";
 import { Container } from "typedi";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { GuildLeaderboardArgument } from "./guild-leaderboard.argument.js";
 import { GuildLeaderboardSubCommand } from "./guild-leaderboard.subcommand.js";
-import {
-  PlayerLeaderboardArgument,
-} from "./player-leaderboard.argument.js";
+import { PlayerLeaderboardArgument } from "./player-leaderboard.argument.js";
 import { getBackground } from "@statsify/assets";
 
 @Command({
@@ -292,9 +285,7 @@ export class PlayerLeaderboardCommand extends BaseLeaderboardCommand {
 
     const field = `stats.${prefix}.${leaderboard.replaceAll(" ", ".")}`;
 
-    const background = await getBackground(
-      ...mapBackground(modes, modes.getApiModes()[0])
-    );
+    const background = await getBackground(...mapBackground(modes, modes.getApiModes()[0]));
 
     const getLeaderboard = this.apiService.getPlayerLeaderboard.bind(this.apiService);
 

@@ -53,7 +53,8 @@ export default async function Home() {
           className="absolute w-full h-full -z-10"
           style={{
             // Where the gradient ends needs to be added onto the padding bottom of the header so py-30 + pb-6 = pb-36
-            background: "linear-gradient(180deg, transparent 80%, var(--color-blackify-950) calc(100% - (var(--spacing) * 6)))",
+            background:
+              "linear-gradient(180deg, transparent 80%, var(--color-blackify-950) calc(100% - (var(--spacing) * 6)))",
           }}
         />
         <div className="w-container flex flex-col-reverse lg:flex-row text-center gap-4 lg:gap-12 lg:text-start lg:justify-between items-center text-mc-white py-15 pb-21 lg:py-30 lg:pb-36">
@@ -99,7 +100,9 @@ export default async function Home() {
             style={{ imageRendering: "pixelated" }}
             className="mb-3"
           />
-          <p className="text-center text-mc-3 text-mc-white font-bold"><AnimatedNumber value={50_000_000} /></p>
+          <p className="text-center text-mc-3 text-mc-white font-bold">
+            <AnimatedNumber value={50_000_000} />
+          </p>
           <p className="text-center text-mc-2 text-mc-white">Commands Ran</p>
         </Box>
       </div>

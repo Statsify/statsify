@@ -20,13 +20,7 @@ export interface GuildListProfileProps {
   user: User | null;
 }
 
-export const GuildListProfile = ({
-  guild,
-  background,
-  logo,
-  user,
-  t,
-}: GuildListProfileProps) => {
+export const GuildListProfile = ({ guild, background, logo, user, t }: GuildListProfileProps) => {
   // The width of each member row
   const WIDTH = 1600;
 
@@ -45,23 +39,22 @@ export const GuildListProfile = ({
   });
 
   // A map of the all the ranks in the guild
-  const guildRankMap = guild.ranks.reduce((acc, rank) => {
-    acc[rank.name] = rank;
-    return acc;
-  }, {} as Record<string, GuildRank>);
+  const guildRankMap = guild.ranks.reduce(
+    (acc, rank) => {
+      acc[rank.name] = rank;
+      return acc;
+    },
+    {} as Record<string, GuildRank>
+  );
 
   const ranks = Object.entries(rankMap)
     .sort(
-      ([rankNameA], [rankNameB]) =>
-        (guildRankMap[rankNameB]?.priority ?? 0) -
-        (guildRankMap[rankNameA]?.priority ?? 0)
+      ([rankNameA], [rankNameB]) => (guildRankMap[rankNameB]?.priority ?? 0) - (guildRankMap[rankNameA]?.priority ?? 0)
     )
     .map(([rankName, members]) => {
       const guildRank = guildRankMap[rankName];
 
-      const guildRankName = guildRank ?
-        `${guildRank.name}${guildRank.tag ? ` [${guildRank.tag}]` : ""}` :
-        rankName;
+      const guildRankName = guildRank ? `${guildRank.name}${guildRank.tag ? ` [${guildRank.tag}]` : ""}` : rankName;
 
       const rows: JSX.Element[][] = [[]];
       let currentRowWidth = 0;

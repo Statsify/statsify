@@ -6,14 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ApiService,
-  Command,
-  CommandContext,
-  EmbedBuilder,
-  ErrorMessage,
-  UserArgument,
-} from "@statsify/discord";
+import { ApiService, Command, CommandContext, EmbedBuilder, ErrorMessage, UserArgument } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { User, UserLogo, UserTier } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
@@ -41,19 +34,9 @@ export class UserCommand {
     this.addField(embed, "Id", user.id);
     this.addField(embed, "UUID", user.uuid);
 
-    this.addField(
-      embed,
-      "Verified",
-      user.verifiedAt,
-      (v) => `<t:${Math.round(v / 1000)}:R>`
-    );
+    this.addField(embed, "Verified", user.verifiedAt, (v) => `<t:${Math.round(v / 1000)}:R>`);
 
-    this.addField(
-      embed,
-      "Unverified",
-      user.unverifiedAt,
-      (v) => `<t:${Math.round(v / 1000)}:R>`
-    );
+    this.addField(embed, "Unverified", user.unverifiedAt, (v) => `<t:${Math.round(v / 1000)}:R>`);
 
     this.addField(embed, "Server Member", user.serverMember);
 
@@ -78,9 +61,7 @@ export class UserCommand {
     return { embeds: [embed] };
   }
 
-  private async getUser(
-    context: CommandContext
-  ): Promise<[user: User | null, userId: string]> {
+  private async getUser(context: CommandContext): Promise<[user: User | null, userId: string]> {
     const userId = context.option<string | undefined>("user");
 
     if (!userId) return [context.getUser(), context.getInteraction().getUserId()];

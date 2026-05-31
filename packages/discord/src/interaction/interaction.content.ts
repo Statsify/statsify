@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import type {
-  APIAllowedMentions,
-  APIAttachment,
-  APIBaseComponent,
-  APIEmbed,
-} from "discord-api-types/v10";
+import type { APIAllowedMentions, APIAttachment, APIBaseComponent, APIEmbed } from "discord-api-types/v10";
 
 export interface InteractionAttachment {
   name: string;

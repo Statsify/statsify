@@ -21,5 +21,4 @@ export const titleScores = [
   { req: 85_550, title: "God Speed" },
 ];
 
-export const getLevelIndex = (score: number): number =>
-  findScoreIndex(titleScores, score);
+export const getLevelIndex = (score: number): number => findScoreIndex(titleScores, score);

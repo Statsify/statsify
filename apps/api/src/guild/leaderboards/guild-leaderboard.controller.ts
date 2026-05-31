@@ -28,9 +28,7 @@ export class GuildLeaderboardController {
   @ApiOkResponse({ type: PostLeaderboardResponse })
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Auth({ weight: 10 })
-  public async getGuildLeaderboard(
-    @Body() { field, page, guild, position }: GuildLeaderboardDto
-  ) {
+  public async getGuildLeaderboard(@Body() { field, page, guild, position }: GuildLeaderboardDto) {
     let input: number | string;
     let type: LeaderboardQuery;
 
@@ -45,12 +43,7 @@ export class GuildLeaderboardController {
       type = LeaderboardQuery.PAGE;
     }
 
-    const leaderboard = await this.guildLeaderboardService.getLeaderboard(
-      Guild,
-      field,
-      input,
-      type
-    );
+    const leaderboard = await this.guildLeaderboardService.getLeaderboard(Guild, field, input, type);
 
     return leaderboard;
   }

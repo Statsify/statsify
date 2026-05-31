@@ -70,37 +70,36 @@ import {
 } from "@statsify/schemas";
 import { noop, prettify } from "@statsify/util";
 
-const getDefaultApiMode = <T extends Mode[]>(modes: GameModes<T>) =>
-  modes.getApiModes()[0];
+const getDefaultApiMode = <T extends Mode[]>(modes: GameModes<T>) => modes.getApiModes()[0];
 
 export type GamesWithBackgrounds =
-  | ArcadeModes |
-  ArenaBrawlModes |
-  BedWarsModes |
-  BlitzSGModes |
-  BuildBattleModes |
-  CopsAndCrimsModes |
-  DuelsModes |
-  GeneralModes |
-  ChallengeModes |
-  MegaWallsModes |
-  MurderMysteryModes |
-  PaintballModes |
-  ParkourModes |
-  PitModes |
-  QuakeModes |
-  SkyWarsModes |
-  SmashHeroesModes |
-  SpeedUHCModes |
-  TNTGamesModes |
-  TurboKartRacersModes |
-  UHCModes |
-  VampireZModes |
-  WallsModes |
-  WarlordsModes |
-  WoolGamesModes |
-  QuestModes |
-  ChallengeModes;
+  | ArcadeModes
+  | ArenaBrawlModes
+  | BedWarsModes
+  | BlitzSGModes
+  | BuildBattleModes
+  | CopsAndCrimsModes
+  | DuelsModes
+  | GeneralModes
+  | ChallengeModes
+  | MegaWallsModes
+  | MurderMysteryModes
+  | PaintballModes
+  | ParkourModes
+  | PitModes
+  | QuakeModes
+  | SkyWarsModes
+  | SmashHeroesModes
+  | SpeedUHCModes
+  | TNTGamesModes
+  | TurboKartRacersModes
+  | UHCModes
+  | VampireZModes
+  | WallsModes
+  | WarlordsModes
+  | WoolGamesModes
+  | QuestModes
+  | ChallengeModes;
 
 export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeFromGameModes<T>>(
   modes: GameModes<T>,
@@ -240,19 +239,13 @@ export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeF
           return mapBackground(DUELS_MODES, getDefaultApiMode(DUELS_MODES));
 
         case "COPS_AND_CRIMS":
-          return mapBackground(
-            COPS_AND_CRIMS_MODES,
-            getDefaultApiMode(COPS_AND_CRIMS_MODES)
-          );
+          return mapBackground(COPS_AND_CRIMS_MODES, getDefaultApiMode(COPS_AND_CRIMS_MODES));
 
         case "MEGAWALLS":
           return mapBackground(MEGAWALLS_MODES, getDefaultApiMode(MEGAWALLS_MODES));
 
         case "MURDER_MYSTERY":
-          return mapBackground(
-            MURDER_MYSTERY_MODES,
-            getDefaultApiMode(MURDER_MYSTERY_MODES)
-          );
+          return mapBackground(MURDER_MYSTERY_MODES, getDefaultApiMode(MURDER_MYSTERY_MODES));
 
         case "PAINTBALL":
           return mapBackground(PAINTBALL_MODES, getDefaultApiMode(PAINTBALL_MODES));
@@ -276,10 +269,7 @@ export const mapBackground = <T extends GamesWithBackgrounds, M extends ApiModeF
           return ["tntgames", "overall"];
 
         case "TURBO_KART_RACERS":
-          return mapBackground(
-            TURBO_KART_RACERS_MODES,
-            getDefaultApiMode(TURBO_KART_RACERS_MODES)
-          );
+          return mapBackground(TURBO_KART_RACERS_MODES, getDefaultApiMode(TURBO_KART_RACERS_MODES));
 
         case "UHC":
           return mapBackground(UHC_MODES, getDefaultApiMode(UHC_MODES));
@@ -437,34 +427,32 @@ export const MODES_TO_API = new Map<GameModes<GamesWithBackgrounds>, keyof Playe
   [WOOLGAMES_MODES, "woolgames"],
 ]);
 
-export const MODES_TO_FORMATTED = new Map<GameModes<GamesWithBackgrounds>, FormattedGame>(
-  [
-    [ARCADE_MODES, FormattedGame.ARCADE],
-    [ARENA_BRAWL_MODES, FormattedGame.ARENA_BRAWL],
-    [BEDWARS_MODES, FormattedGame.BEDWARS],
-    [BLITZSG_MODES, FormattedGame.BLITZSG],
-    [BUILD_BATTLE_MODES, FormattedGame.BUILD_BATTLE],
-    [COPS_AND_CRIMS_MODES, FormattedGame.COPS_AND_CRIMS],
-    [DUELS_MODES, FormattedGame.DUELS],
-    [GENERAL_MODES, FormattedGame.GENERAL],
-    [MEGAWALLS_MODES, FormattedGame.MEGAWALLS],
-    [MURDER_MYSTERY_MODES, FormattedGame.MURDER_MYSTERY],
-    [PAINTBALL_MODES, FormattedGame.PAINTBALL],
-    [PIT_MODES, FormattedGame.PIT],
-    [PARKOUR_MODES, FormattedGame.PARKOUR],
-    [QUAKE_MODES, FormattedGame.QUAKE],
-    [SKYWARS_MODES, FormattedGame.SKYWARS],
-    [SMASH_HEROES_MODES, FormattedGame.SMASH_HEROES],
-    [SPEED_UHC_MODES, FormattedGame.SPEED_UHC],
-    [TNT_GAMES_MODES, FormattedGame.TNT_GAMES],
-    [TURBO_KART_RACERS_MODES, FormattedGame.TURBO_KART_RACERS],
-    [UHC_MODES, FormattedGame.UHC],
-    [VAMPIREZ_MODES, FormattedGame.VAMPIREZ],
-    [WALLS_MODES, FormattedGame.WALLS],
-    [WARLORDS_MODES, FormattedGame.WARLORDS],
-    [WOOLGAMES_MODES, FormattedGame.WOOLGAMES],
-  ]
-);
+export const MODES_TO_FORMATTED = new Map<GameModes<GamesWithBackgrounds>, FormattedGame>([
+  [ARCADE_MODES, FormattedGame.ARCADE],
+  [ARENA_BRAWL_MODES, FormattedGame.ARENA_BRAWL],
+  [BEDWARS_MODES, FormattedGame.BEDWARS],
+  [BLITZSG_MODES, FormattedGame.BLITZSG],
+  [BUILD_BATTLE_MODES, FormattedGame.BUILD_BATTLE],
+  [COPS_AND_CRIMS_MODES, FormattedGame.COPS_AND_CRIMS],
+  [DUELS_MODES, FormattedGame.DUELS],
+  [GENERAL_MODES, FormattedGame.GENERAL],
+  [MEGAWALLS_MODES, FormattedGame.MEGAWALLS],
+  [MURDER_MYSTERY_MODES, FormattedGame.MURDER_MYSTERY],
+  [PAINTBALL_MODES, FormattedGame.PAINTBALL],
+  [PIT_MODES, FormattedGame.PIT],
+  [PARKOUR_MODES, FormattedGame.PARKOUR],
+  [QUAKE_MODES, FormattedGame.QUAKE],
+  [SKYWARS_MODES, FormattedGame.SKYWARS],
+  [SMASH_HEROES_MODES, FormattedGame.SMASH_HEROES],
+  [SPEED_UHC_MODES, FormattedGame.SPEED_UHC],
+  [TNT_GAMES_MODES, FormattedGame.TNT_GAMES],
+  [TURBO_KART_RACERS_MODES, FormattedGame.TURBO_KART_RACERS],
+  [UHC_MODES, FormattedGame.UHC],
+  [VAMPIREZ_MODES, FormattedGame.VAMPIREZ],
+  [WALLS_MODES, FormattedGame.WALLS],
+  [WARLORDS_MODES, FormattedGame.WARLORDS],
+  [WOOLGAMES_MODES, FormattedGame.WOOLGAMES],
+]);
 
 export const mapGameIdToBackground = (id: GameId) => {
   const modes = GAME_ID_TO_MODES[id] ?? GENERAL_MODES;
@@ -476,8 +464,7 @@ const HYPIXEL_GAME_LIST = Object.fromEntries(
 );
 
 export const mapGame = (game: GameId, mode: string) => {
-  if (HYPIXEL_GAME_LIST[game] && mode in HYPIXEL_GAME_LIST[game]!)
-    return HYPIXEL_GAME_LIST[game]![mode];
+  if (HYPIXEL_GAME_LIST[game] && mode in HYPIXEL_GAME_LIST[game]!) return HYPIXEL_GAME_LIST[game]![mode];
 
   // Pit's mode in the  api is also called PIT
   if (mode === game) return prettify(mode);

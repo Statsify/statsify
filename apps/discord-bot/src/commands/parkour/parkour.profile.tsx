@@ -16,15 +16,7 @@ interface ParkourProfileProps extends BaseProfileProps {
   gameIcons: Record<GameId, Image>;
 }
 
-export const ParkourProfile = ({
-  skin,
-  player,
-  badge,
-  logo,
-  user,
-  background,
-  gameIcons,
-}: ParkourProfileProps) => {
+export const ParkourProfile = ({ skin, player, badge, logo, user, background, gameIcons }: ParkourProfileProps) => {
   const { parkour } = player.stats;
 
   const times: [GameId, any][] = Object.entries(parkour)

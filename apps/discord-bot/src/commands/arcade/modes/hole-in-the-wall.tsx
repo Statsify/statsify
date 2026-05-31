@@ -30,11 +30,7 @@ export const HoleInTheWallTable = ({ stats, t, time }: HoleInTheWallTableProps) 
           value={t(stats.highestScoreQualifications)}
           color="§b"
         />
-        <Table.td
-          title={t("stats.highestScoreFinals")}
-          value={t(stats.highestScoreFinals)}
-          color="§6"
-        />
+        <Table.td title={t("stats.highestScoreFinals")} value={t(stats.highestScoreFinals)} color="§6" />
       </Table.tr>
     </Historical.exclude>
   </Table.table>

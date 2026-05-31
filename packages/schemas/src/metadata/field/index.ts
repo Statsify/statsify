@@ -52,21 +52,21 @@ export function Field({
     );
 
     // Swagger api doc options
-    const apiProperty = docsOptions?.hide ?
-      ApiHideProperty() :
-      ApiProperty({
-        type: type.type,
-        isArray: type.array,
-        default: store.default,
-        description: docsOptions?.description,
-        required: store.required,
-        examples: docsOptions?.examples,
-        enum: docsOptions?.enum,
-        enumName: docsOptions?.enumName,
-        deprecated: docsOptions?.deprecated,
-        minimum: docsOptions?.min,
-        maximum: docsOptions?.max,
-      });
+    const apiProperty = docsOptions?.hide
+      ? ApiHideProperty()
+      : ApiProperty({
+          type: type.type,
+          isArray: type.array,
+          default: store.default,
+          description: docsOptions?.description,
+          required: store.required,
+          examples: docsOptions?.examples,
+          enum: docsOptions?.enum,
+          enumName: docsOptions?.enumName,
+          deprecated: docsOptions?.deprecated,
+          minimum: docsOptions?.min,
+          maximum: docsOptions?.max,
+        });
 
     apiProperty(target, propertyKey);
 

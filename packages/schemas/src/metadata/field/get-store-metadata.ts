@@ -7,11 +7,7 @@
  */
 
 import type { Constructor } from "@statsify/util";
-import type {
-  LeaderboardMetadata,
-  StoreMetadata,
-  TypeMetadata,
-} from "../metadata.interface.js";
+import type { LeaderboardMetadata, StoreMetadata, TypeMetadata } from "../metadata.interface.js";
 import type { StoreOptions } from "../field.options.js";
 
 const getDefaultValue = (type: Constructor) => {

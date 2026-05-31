@@ -43,22 +43,16 @@ export class HistoricalScanner {
     key: string,
     leaderboardMustBeEnabled = true
   ): HistoricalMetadata {
-    const field: MetadataEntry | undefined = MetadataScanner.scan(constructor).find(
-      ([k]) => k === key
-    );
+    const field: MetadataEntry | undefined = MetadataScanner.scan(constructor).find(([k]) => k === key);
     if (!field) throw new Error(`${key} is not a field for ${constructor.name}`);
 
     const [, { historical }] = field;
 
     if (!historical.enabled && leaderboardMustBeEnabled)
-      throw new Error(
-        `${key} is not a historical leaderboard field for ${constructor.name}`
-      );
+      throw new Error(`${key} is not a historical leaderboard field for ${constructor.name}`);
 
     if (Array.isArray(historical.additionalFields)) {
-      historical.additionalFields = historical.additionalFields.map(
-        parseAdditionalFields.bind(this, key)
-      );
+      historical.additionalFields = historical.additionalFields.map(parseAdditionalFields.bind(this, key));
     }
 
     return historical;

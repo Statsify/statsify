@@ -24,12 +24,7 @@ export const HeaderBody = ({ description, title }: HeaderBodyProps) => {
 
   return (
     <div direction="column" width="remaining" height="remaining">
-      <box
-        width="100%"
-        direction="column"
-        height="remaining"
-        padding={{ bottom: 5, left: 10, right: 10, top: 5 }}
-      >
+      <box width="100%" direction="column" height="remaining" padding={{ bottom: 5, left: 10, right: 10, top: 5 }}>
         <Multiline>{description}</Multiline>
       </box>
       <box width="100%">

@@ -14,7 +14,10 @@ export class FileArgument extends AbstractArgument {
   public description: LocalizationString;
   public type = ApplicationCommandOptionType.Attachment;
 
-  public constructor(public name = "file", public required = false) {
+  public constructor(
+    public name = "file",
+    public required = false
+  ) {
     super();
     this.description = (t) => t("arguments.file");
   }

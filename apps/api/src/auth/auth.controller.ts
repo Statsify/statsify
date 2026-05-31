@@ -29,10 +29,7 @@ export class AuthController {
   @Get("/key")
   @Auth()
   @ApiOkResponse({ type: GetKeyResponse })
-  public async getKey(
-    @Query() { key }: KeyParamDto,
-    @Headers() { "x-api-key": keyHeader }: KeyHeaderDto
-  ) {
+  public async getKey(@Query() { key }: KeyParamDto, @Headers() { "x-api-key": keyHeader }: KeyHeaderDto) {
     const keyData = await this.authService.getKey(key ?? keyHeader);
 
     return {

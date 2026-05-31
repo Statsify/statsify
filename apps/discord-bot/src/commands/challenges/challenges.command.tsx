@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ModeEmoji,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ModeEmoji, ProfileData } from "#commands/base.hypixel-command";
 import { CHALLENGE_MODES, ChallengeModes, GameId, GameModeWithSubModes } from "@statsify/schemas";
 import { ChallengesProfile } from "./challenges.profile.js";
 import { Command } from "@statsify/discord";
@@ -23,10 +18,7 @@ interface PreProfileData {
 }
 
 @Command({ description: (t) => t("commands.challenges") })
-export class ChallengesCommand extends BaseHypixelCommand<
-  ChallengeModes,
-  PreProfileData
-> {
+export class ChallengesCommand extends BaseHypixelCommand<ChallengeModes, PreProfileData> {
   public constructor() {
     super(CHALLENGE_MODES);
   }
@@ -39,10 +31,7 @@ export class ChallengesCommand extends BaseHypixelCommand<
     return modes.map((m) => m.api !== "overall" && ((t) => t(`emojis:games.${m.api}`)));
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { data, mode }: ProfileData<ChallengeModes, PreProfileData>
-  ): JSX.Element {
+  public getProfile(base: BaseProfileProps, { data, mode }: ProfileData<ChallengeModes, PreProfileData>): JSX.Element {
     return <ChallengesProfile {...base} mode={mode} gameIcons={data.gameIcons} />;
   }
 }

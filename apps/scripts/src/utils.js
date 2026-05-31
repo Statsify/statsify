@@ -11,11 +11,7 @@ import inquirer from "inquirer";
 import { join } from "node:path";
 import { readdir } from "node:fs/promises";
 export const inquirerLogger = (title, message, newLine = true) => {
-  console.log(
-    `${newLine ? "\n" : ""}${chalk.magenta("!")} ${chalk.bold(title)} ${chalk.magenta(
-      message
-    )}`
-  );
+  console.log(`${newLine ? "\n" : ""}${chalk.magenta("!")} ${chalk.bold(title)} ${chalk.magenta(message)}`);
 };
 
 export const inquirerConfirmation = async (message = "Are you sure?", selected = true) =>

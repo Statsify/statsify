@@ -24,15 +24,7 @@ import {
   UserPalette,
   WeeklyQuests,
 } from "@statsify/schemas";
-import {
-  Container,
-  Footer,
-  GameEntry,
-  GameList,
-  Header,
-  type HistoricalTimeData,
-  SidebarItem,
-} from "#components";
+import { Container, Footer, GameEntry, GameList, Header, type HistoricalTimeData, SidebarItem } from "#components";
 import { DateTime } from "luxon";
 import { HistoricalTimes } from "@statsify/api-client";
 import { Palette, getColorPalette } from "../../themes/palette.js";
@@ -43,14 +35,9 @@ import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
 
 function getQuestMetadata<T>(constructor: Constructor<T>) {
-  const entries = Object.entries(
-    Reflect.getMetadata(METADATA_KEY, constructor.prototype) as ClassMetadata
-  );
+  const entries = Object.entries(Reflect.getMetadata(METADATA_KEY, constructor.prototype) as ClassMetadata);
 
-  const metadata = entries.map(([key, data]) => [
-    key,
-    Object.fromEntries(MetadataScanner.scan(data.type.type)),
-  ]);
+  const metadata = entries.map(([key, data]) => [key, Object.fromEntries(MetadataScanner.scan(data.type.type))]);
 
   return Object.fromEntries(metadata);
 }
@@ -102,32 +89,16 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
 
       if (completed === total) {
         textColor = "§a";
-        boxColor = useGradient(
-          "horizontal",
-          [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsla(120, 100%, 30%, 0.5)"]
-        );
+        boxColor = useGradient("horizontal", [GRADIENT_OFFSET, BOX_COLOR], [1, "hsla(120, 100%, 30%, 0.5)"]);
       } else if (completed >= 1) {
         textColor = "§6";
-        boxColor = useGradient(
-          "horizontal",
-          [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsla(40, 100%, 30%, 0.5)"]
-        );
+        boxColor = useGradient("horizontal", [GRADIENT_OFFSET, BOX_COLOR], [1, "hsla(40, 100%, 30%, 0.5)"]);
       } else {
         textColor = "§c";
-        boxColor = useGradient(
-          "horizontal",
-          [GRADIENT_OFFSET, BOX_COLOR],
-          [1, "hsla(0, 100%, 30%, 0.5)"]
-        );
+        boxColor = useGradient("horizontal", [GRADIENT_OFFSET, BOX_COLOR], [1, "hsla(0, 100%, 30%, 0.5)"]);
       }
 
-      return [
-        k as GameId,
-        `${textColor}${t(completed)}/${t(total)}`,
-        { color: boxColor },
-      ];
+      return [k as GameId, `${textColor}${t(completed)}/${t(total)}`, { color: boxColor }];
     });
 
   return <GameList entries={entries} gameIcons={gameIcons} />;
@@ -156,9 +127,7 @@ const GameTable = ({ quests, t, game, time, logos: [cross, check] }: GameTablePr
             {completions > 0 ? "§a" : "§c"}§l{name}
           </text>
           <div width="remaining" />
-          {isOverall ?
-            <text>{t(completions)}</text> :
-            <img margin={2} image={completions === 0 ? cross : check} />}
+          {isOverall ? <text>{t(completions)}</text> : <img margin={2} image={completions === 0 ? cross : check} />}
         </box>
       );
     });
@@ -213,62 +182,37 @@ export const QuestsProfile = ({
   const { api, formatted } = mode;
   let table: JSX.Element;
 
-  const colorPalette = User.isDiamond(user) ?
-    getColorPalette(user?.theme?.palette ?? UserPalette.DEFAULT) :
-    undefined;
+  const colorPalette = User.isDiamond(user) ? getColorPalette(user?.theme?.palette ?? UserPalette.DEFAULT) : undefined;
 
   switch (api) {
     case "overall":
       table = (
-        <NormalTable
-          quests={quests[period]}
-          time={time}
-          t={t}
-          gameIcons={gameIcons}
-          colorPalette={colorPalette}
-        />
+        <NormalTable quests={quests[period]} time={time} t={t} gameIcons={gameIcons} colorPalette={colorPalette} />
       );
       break;
 
     default:
-      table = (
-        <GameTable
-          quests={quests[period][api]}
-          game={api}
-          time={time}
-          logos={logos}
-          t={t}
-        />
-      );
+      table = <GameTable quests={quests[period][api]} game={api} time={time} logos={logos} t={t} />;
       break;
   }
 
   const sidebar: SidebarItem[] = [[t("stats.total"), t(quests.total), "§b"]];
 
   if (api !== "overall") {
-    sidebar.push([
-      t("stats.game-total", { game: formatted }),
-      t(quests[period][api].total),
-      "§a",
-    ]);
+    sidebar.push([t("stats.game-total", { game: formatted }), t(quests[period][api].total), "§a"]);
   }
 
-  const title =
-    api in FormattedGame ?
-      `§l${FormattedGame[api as keyof typeof FormattedGame]}` :
-      formatted;
+  const title = api in FormattedGame ? `§l${FormattedGame[api as keyof typeof FormattedGame]}` : formatted;
 
   if (time === QuestTime.Weekly) {
     const dt = DateTime.now().setZone("America/New_York").startOf("week");
 
     (historicalTime as HistoricalTimeData).startTime =
-      dt.plus({ days: 4 }).toMillis() < Date.now() ?
-        dt.plus({ days: 4 }) :
-        dt.minus({ days: 3 });
+      dt.plus({ days: 4 }).toMillis() < Date.now() ? dt.plus({ days: 4 }) : dt.minus({ days: 3 });
 
-    (historicalTime as HistoricalTimeData).endTime = (
-      historicalTime as HistoricalTimeData
-    ).startTime!.plus({ days: 6 });
+    (historicalTime as HistoricalTimeData).endTime = (historicalTime as HistoricalTimeData).startTime!.plus({
+      days: 6,
+    });
   }
 
   return (

@@ -7,10 +7,7 @@
  */
 
 import Fuse from "fuse.js";
-import {
-  APIApplicationCommandOptionChoice,
-  ApplicationCommandOptionType,
-} from "discord-api-types/v10";
+import { APIApplicationCommandOptionChoice, ApplicationCommandOptionType } from "discord-api-types/v10";
 import { AbstractArgument, CommandContext, LocalizationString } from "@statsify/discord";
 import { type ServerMappingsServer, getServerMappings } from "./server.util.js";
 
@@ -41,15 +38,11 @@ export class ServerArgument extends AbstractArgument {
     });
   }
 
-  public autocompleteHandler(
-    context: CommandContext
-  ): APIApplicationCommandOptionChoice[] {
+  public autocompleteHandler(context: CommandContext): APIApplicationCommandOptionChoice[] {
     const currentValue = context.option<string>(this.name, "").toLowerCase();
 
     if (!currentValue) {
-      return this.servers
-        .map((result) => ({ name: result.name, value: result.primaryAddress }))
-        .slice(0, 25);
+      return this.servers.map((result) => ({ name: result.name, value: result.primaryAddress })).slice(0, 25);
     }
 
     return this.fuse

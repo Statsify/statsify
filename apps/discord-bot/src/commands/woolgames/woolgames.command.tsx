@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { WOOLGAMES_MODES, WoolGamesModes } from "@statsify/schemas";
 import { WoolGamesProfile } from "./woolgames.profile.js";
@@ -21,10 +17,7 @@ export class WoolGamesCommand extends BaseHypixelCommand<WoolGamesModes> {
     super(WOOLGAMES_MODES);
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<WoolGamesModes>
-  ): JSX.Element {
+  public getProfile(base: BaseProfileProps, { mode }: ProfileData<WoolGamesModes>): JSX.Element {
     return <WoolGamesProfile {...base} mode={mode} />;
   }
 }

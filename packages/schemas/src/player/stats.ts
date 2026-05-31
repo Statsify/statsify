@@ -223,24 +223,15 @@ export class PlayerStats {
     this.bedwars = new BedWars(stats.Bedwars ?? {});
     this.blitzsg = new BlitzSG(stats.HungerGames ?? {});
     this.buildbattle = new BuildBattle(stats.BuildBattle ?? {}, achievements);
-    this.challenges = new Challenges(
-      data?.challenges?.all_time ?? {},
-      achievements
-    );
+    this.challenges = new Challenges(data?.challenges?.all_time ?? {}, achievements);
     this.copsandcrims = new CopsAndCrims(stats.MCGO ?? {});
     this.duels = new Duels(stats.Duels ?? {});
     this.general = new General(data, legacy);
     this.megawalls = new MegaWalls(stats.Walls3 ?? {});
-    this.murdermystery = new MurderMystery(
-      stats.MurderMystery ?? {},
-      achievements
-    );
+    this.murdermystery = new MurderMystery(stats.MurderMystery ?? {}, achievements);
     this.paintball = new Paintball(stats.Paintball ?? {}, legacy);
     this.parkour = new Parkour(data.parkourCompletions ?? {});
-    this.pit = new Pit(
-      stats.Pit?.profile ?? {},
-      stats.Pit?.pit_stats_ptl ?? {}
-    );
+    this.pit = new Pit(stats.Pit?.profile ?? {}, stats.Pit?.pit_stats_ptl ?? {});
     this.quake = new Quake(stats.Quake ?? {}, achievements, legacy);
     this.quests = new Quests(data.quests ?? {});
     this.skywars = new SkyWars(stats.SkyWars ?? {}, achievements);

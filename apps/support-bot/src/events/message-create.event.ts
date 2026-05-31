@@ -8,10 +8,7 @@
 
 import { AbstractEventListener, ApiService, MemberService } from "@statsify/discord";
 import { CacheLevel } from "@statsify/api-client";
-import {
-  GatewayDispatchEvents,
-  GatewayMessageCreateDispatchData,
-} from "discord-api-types/v10";
+import { GatewayDispatchEvents, GatewayMessageCreateDispatchData } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
 import { Service } from "typedi";
 import { SimpleIntervalJob, Task } from "toad-scheduler";
@@ -58,18 +55,14 @@ export class MessageCreateEventListener extends AbstractEventListener<GatewayDis
       return;
     }
 
-    const player = await this.apiService
-      .getCachedPlayer(user.uuid, CacheLevel.CACHE_ONLY)
-      .catch(() => null);
+    const player = await this.apiService.getCachedPlayer(user.uuid, CacheLevel.CACHE_ONLY).catch(() => null);
 
     if (!player) {
       this.logger.error(`Could not get player for ${user.id} | ${user.uuid}`);
       return;
     }
 
-    await this.memberService
-      .changeNickname(GUILD_ID, userId, player.username)
-      .catch(() => null);
+    await this.memberService.changeNickname(GUILD_ID, userId, player.username).catch(() => null);
 
     this.cache.add(userId);
   }

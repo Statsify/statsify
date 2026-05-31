@@ -4,9 +4,9 @@ packages:
   - assets/**
 
 onlyBuiltDependencies:
-  - '@nestjs/core'
-  - '@scarf/scarf'
-  - '@swc/core'
+  - "@nestjs/core"
+  - "@scarf/scarf"
+  - "@swc/core"
   - esbuild
   - sharp
   - skia-canvas

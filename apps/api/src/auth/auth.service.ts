@@ -29,12 +29,7 @@ export class AuthService {
   public async limited(apiKey: string, weight: number, role: AuthRole) {
     const hash = this.hash(apiKey);
 
-    const [name, ...keyInfo] = await this.redis.hmget(
-      `key:${hash}`,
-      "name",
-      "role",
-      "limit"
-    );
+    const [name, ...keyInfo] = await this.redis.hmget(`key:${hash}`, "name", "role", "limit");
 
     if (name === null) throw new UnauthorizedException();
 
@@ -89,17 +84,7 @@ export class AuthService {
     const apiKey = randomUUID().replaceAll("-", "");
     const hash = this.hash(apiKey);
 
-    await this.redis.hmset(
-      `key:${hash}`,
-      "name",
-      name,
-      "role",
-      AuthRole.MEMBER,
-      "limit",
-      30,
-      "requests",
-      0
-    );
+    await this.redis.hmset(`key:${hash}`, "name", name, "role", AuthRole.MEMBER, "limit", 30, "requests", 0);
 
     return apiKey;
   }
@@ -126,8 +111,7 @@ export class AuthService {
 
     const time = Date.now();
 
-    const resetTime =
-      60_000 - (time - Number((requests[1] as [Error | null, number])[1]));
+    const resetTime = 60_000 - (time - Number((requests[1] as [Error | null, number])[1]));
 
     return {
       name,

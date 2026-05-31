@@ -1,9 +1,19 @@
 {
   "name": "@statsify/api-client",
   "version": "0.0.0",
+  "type": "module",
   "main": "dist/index.js",
   "types": "src/index.ts",
-  "type": "module",
+  "imports": {
+    "#exceptions": {
+      "types": "./src/exceptions/index.ts",
+      "default": "./dist/exceptions/index.js"
+    },
+    "#responses": {
+      "types": "./src/responses/index.ts",
+      "default": "./dist/responses/index.js"
+    }
+  },
   "scripts": {
     "build": "swc src  --config-file ../../.swcrc --out-dir dist --strip-leading-paths",
     "test:types": "tsc --noEmit",
@@ -18,15 +28,5 @@
     "@statsify/util": "workspace:^",
     "@swc/helpers": "^0.5.12",
     "axios": "^1.11.0"
-  },
-  "imports": {
-    "#exceptions": {
-      "types": "./src/exceptions/index.ts",
-      "default": "./dist/exceptions/index.js"
-    },
-    "#responses": {
-      "types": "./src/responses/index.ts",
-      "default": "./dist/responses/index.js"
-    }
   }
 }

@@ -13,8 +13,7 @@ import { formatPosition } from "#lib/format-position";
 import { games, removeGameDash } from "./games.js";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
-const shouldColor = (stats: string[], field: string) =>
-  stats.some((s) => field.includes(s));
+const shouldColor = (stats: string[], field: string) => stats.some((s) => field.includes(s));
 
 const formatStat = (stat: PostLeaderboardRankingsResponse, game?: string) => {
   const field = stat.field.toLowerCase();
@@ -105,11 +104,7 @@ export const RankingsProfile = ({
         badge={badge}
       />
       <List items={[<>{titles}</>, ...items]} />
-      <Footer
-        logo={logo}
-        user={user}
-        border={{ bottomLeft: 4, bottomRight: 4, topLeft: 0, topRight: 0 }}
-      />
+      <Footer logo={logo} user={user} border={{ bottomLeft: 4, bottomRight: 4, topLeft: 0, topRight: 0 }} />
     </Container>
   );
 };

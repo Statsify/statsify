@@ -35,12 +35,7 @@ export const HistoricalProgression = ({
   <If condition={time !== "LIVE"}>
     <>
       <Table.tr>
-        <Table.td
-          title={t("stats.levelsGained")}
-          value={t(level)}
-          color="§b"
-          size="small"
-        />
+        <Table.td title={t("stats.levelsGained")} value={t(level)} color="§b" size="small" />
         <Table.td title={t("stats.expGained")} value={t(exp)} color="§b" size="small" />
       </Table.tr>
       <Table.tr>

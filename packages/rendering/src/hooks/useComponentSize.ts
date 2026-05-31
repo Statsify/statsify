@@ -17,11 +17,7 @@ interface UseComponentSizeOptions {
 const useComponentSize = (
   node: ElementNode,
   side: "x" | "y",
-  {
-    includeMargin = true,
-    includePadding = true,
-    includeSize = true,
-  }: UseComponentSizeOptions = {}
+  { includeMargin = true, includePadding = true, includeSize = true }: UseComponentSizeOptions = {}
 ): number =>
   getTotalSize(node[side], {
     margin: includeMargin,

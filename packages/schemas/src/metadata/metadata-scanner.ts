@@ -8,11 +8,7 @@
 
 import { LEADERBOARD_RATIO_KEYS } from "#ratios";
 import { METADATA_KEY } from "./constants.js";
-import type {
-  ClassMetadata,
-  FieldMetadata,
-  LeaderboardEnabledMetadata,
-} from "./metadata.interface.js";
+import type { ClassMetadata, FieldMetadata, LeaderboardEnabledMetadata } from "./metadata.interface.js";
 import type { Constructor } from "@statsify/util";
 
 export type MetadataEntry = [string, FieldMetadata];
@@ -30,15 +26,8 @@ export class MetadataScanner {
     return metadata;
   }
 
-  private static getMetadataEntries(
-    constructor: Constructor,
-    base = "",
-    baseName = ""
-  ): MetadataEntry[] {
-    const classMetadata = Reflect.getMetadata(
-      METADATA_KEY,
-      constructor.prototype
-    ) as ClassMetadata;
+  private static getMetadataEntries(constructor: Constructor, base = "", baseName = ""): MetadataEntry[] {
+    const classMetadata = Reflect.getMetadata(METADATA_KEY, constructor.prototype) as ClassMetadata;
 
     if (!classMetadata) return [];
 
@@ -49,13 +38,11 @@ export class MetadataScanner {
 
     entries.forEach(([key, value]) => {
       const path = `${base ? `${base}.` : ""}${key}`;
-      const name = value.leaderboard.name ?
-        `${baseName ? `${baseName} ` : ""}${value.leaderboard.name}` :
-        baseName;
+      const name = value.leaderboard.name ? `${baseName ? `${baseName} ` : ""}${value.leaderboard.name}` : baseName;
 
-      const historicalName = value.historical.name ?
-        `${baseName ? `${baseName} ` : ""}${value.historical.name}` :
-        baseName;
+      const historicalName = value.historical.name
+        ? `${baseName ? `${baseName} ` : ""}${value.historical.name}`
+        : baseName;
 
       for (const ratio of LEADERBOARD_RATIO_KEYS) {
         if (!ratio.includes(key)) continue;
@@ -75,10 +62,7 @@ export class MetadataScanner {
       }
 
       // Apply metadata to historical
-      if (
-        !value.historical.additionalFields ||
-        value.historical.additionalFields.length === 0
-      )
+      if (!value.historical.additionalFields || value.historical.additionalFields.length === 0)
         value.historical.additionalFields = value.leaderboard.additionalFields;
 
       if (value.type.primitive || value.type.array)
@@ -92,23 +76,20 @@ export class MetadataScanner {
         ]);
 
       // Carry the metadata down to the children
-      const subMetadataEntries = this.getMetadataEntries(value.type.type, path, name).map(
-        ([keyPath, metadata]) => {
-          if (!metadata.leaderboard.additionalFields?.length)
-            metadata.leaderboard.additionalFields = value.leaderboard.additionalFields;
+      const subMetadataEntries = this.getMetadataEntries(value.type.type, path, name).map(([keyPath, metadata]) => {
+        if (!metadata.leaderboard.additionalFields?.length)
+          metadata.leaderboard.additionalFields = value.leaderboard.additionalFields;
 
-          if (!metadata.leaderboard.extraDisplay)
-            metadata.leaderboard.extraDisplay = value.leaderboard.extraDisplay;
+        if (!metadata.leaderboard.extraDisplay) metadata.leaderboard.extraDisplay = value.leaderboard.extraDisplay;
 
-          if (value.leaderboard.resetEvery && !metadata.leaderboard.resetEvery)
-            metadata.leaderboard.resetEvery = value.leaderboard.resetEvery;
+        if (value.leaderboard.resetEvery && !metadata.leaderboard.resetEvery)
+          metadata.leaderboard.resetEvery = value.leaderboard.resetEvery;
 
-          if (!metadata.historical.additionalFields?.length)
-            metadata.historical.additionalFields = value.historical.additionalFields;
+        if (!metadata.historical.additionalFields?.length)
+          metadata.historical.additionalFields = value.historical.additionalFields;
 
-          return [keyPath, metadata] as MetadataEntry;
-        }
-      );
+        return [keyPath, metadata] as MetadataEntry;
+      });
 
       metadataEntries.push(...subMetadataEntries);
     });
@@ -162,9 +143,7 @@ if (import.meta.vitest) {
         public fieldA: string;
       }
 
-      expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry[]>([
-        ["fieldA", stringMetadata("fieldA")],
-      ]);
+      expect(MetadataScanner.scan(Clazz)).toEqual<MetadataEntry[]>([["fieldA", stringMetadata("fieldA")]]);
     });
 
     it("should read and write basic number metadata", () => {

@@ -74,22 +74,16 @@ export class SkinService {
     });
 
     // Cache for 3 hours
-    skin.expiresAt = Date.now() + (1000 * 60 * 60 * 3);
+    skin.expiresAt = Date.now() + 1000 * 60 * 60 * 3;
 
     await this.skinModel.replaceOne({ uuid }, skin, { upsert: true }).lean().exec();
 
     return skin;
   }
 
-  private async resolveSkin(
-    skinUrl?: string,
-    slim?: boolean
-  ): Promise<{ skin: Image; slim: boolean }> {
+  private async resolveSkin(skinUrl?: string, slim?: boolean): Promise<{ skin: Image; slim: boolean }> {
     if (!skinUrl) {
-      return this.resolveSkin(
-        getMinecraftTexturePath("textures/entity/steve.png"),
-        false
-      );
+      return this.resolveSkin(getMinecraftTexturePath("textures/entity/steve.png"), false);
     }
 
     const skin = await loadImage(skinUrl);

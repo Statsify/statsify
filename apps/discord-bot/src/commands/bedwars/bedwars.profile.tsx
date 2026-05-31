@@ -7,32 +7,14 @@
  */
 
 import { BedWarsModes, FormattedGame, type GameMode } from "@statsify/schemas";
-import {
-  Container,
-  Footer,
-  Header,
-  Historical,
-  SidebarItem,
-  Table,
-  formatProgression,
-} from "#components";
+import { Container, Footer, Header, Historical, SidebarItem, Table, formatProgression } from "#components";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
 
 export interface BedWarsProfileProps extends BaseProfileProps {
   mode: GameMode<BedWarsModes>;
 }
 
-export const BedWarsProfile = ({
-  skin,
-  player,
-  background,
-  logo,
-  user,
-  badge,
-  mode,
-  t,
-  time,
-}: BedWarsProfileProps) => {
+export const BedWarsProfile = ({ skin, player, background, logo, user, badge, mode, t, time }: BedWarsProfileProps) => {
   const { bedwars } = player.stats;
   const stats = bedwars[mode.api];
 
@@ -44,10 +26,11 @@ export const BedWarsProfile = ({
     [t("stats.emeralds"), t(stats.itemsCollected.emerald), "§2"],
   ];
 
-  if (bedwars.slumber.wallet) sidebar.push(
-    [t("stats.slumberTickets"), `${t(bedwars.slumber.tickets)}§7/${t(bedwars.slumber.wallet)}`, "§b"],
-    [t("stats.totalSlumberTickets"), t(bedwars.slumber.totalTickets), "§d"]
-  );
+  if (bedwars.slumber.wallet)
+    sidebar.push(
+      [t("stats.slumberTickets"), `${t(bedwars.slumber.tickets)}§7/${t(bedwars.slumber.wallet)}`, "§b"],
+      [t("stats.totalSlumberTickets"), t(bedwars.slumber.totalTickets), "§d"]
+    );
 
   if (time === "LIVE" && stats.winstreak) sidebar.push([t("stats.winstreak"), t(stats.winstreak), "§a"]);
 
@@ -59,9 +42,7 @@ export const BedWarsProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.BEDWARS} §fStats §r(${mode.formatted})`}
-        description={`§7${t("stats.level")}: ${
-          bedwars.levelFormatted
-        }\n${formatProgression({
+        description={`§7${t("stats.level")}: ${bedwars.levelFormatted}\n${formatProgression({
           t,
           label: t("stats.progression.exp"),
           progression: bedwars.progression,
@@ -77,16 +58,8 @@ export const BedWarsProfile = ({
           <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
         </Table.tr>
         <Table.tr>
-          <Table.td
-            title={t("stats.finalKills")}
-            value={t(stats.finalKills)}
-            color="§a"
-          />
-          <Table.td
-            title={t("stats.finalDeaths")}
-            value={t(stats.finalDeaths)}
-            color="§c"
-          />
+          <Table.td title={t("stats.finalKills")} value={t(stats.finalKills)} color="§a" />
+          <Table.td title={t("stats.finalDeaths")} value={t(stats.finalDeaths)} color="§c" />
           <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color="§6" />
         </Table.tr>
         <Table.tr>
@@ -95,11 +68,7 @@ export const BedWarsProfile = ({
           <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
         </Table.tr>
         <Table.tr>
-          <Table.td
-            title={t("stats.bedsBroken")}
-            value={t(stats.bedsBroken)}
-            color="§a"
-          />
+          <Table.td title={t("stats.bedsBroken")} value={t(stats.bedsBroken)} color="§a" />
           <Table.td title={t("stats.bedsLost")} value={t(stats.bedsLost)} color="§c" />
           <Table.td title={t("stats.bblr")} value={t(stats.bblr)} color="§6" />
         </Table.tr>

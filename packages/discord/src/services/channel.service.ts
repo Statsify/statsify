@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  APIChannel,
-  APIDMChannel,
-  APIGuildCreatePartialChannel,
-  APIMessage,
-} from "discord-api-types/v10";
+import { APIChannel, APIDMChannel, APIGuildCreatePartialChannel, APIMessage } from "discord-api-types/v10";
 import { RestClient } from "tiny-discord";
 import { Service } from "typedi";
 import { parseDiscordResponse } from "#util/parse-discord-error";
@@ -21,19 +16,13 @@ export class ChannelService {
   public constructor(private readonly rest: RestClient) {}
 
   public async create(userId: string): Promise<APIDMChannel>;
-  public async create(
-    guildId: string,
-    channel: APIGuildCreatePartialChannel
-  ): Promise<APIChannel>;
+  public async create(guildId: string, channel: APIGuildCreatePartialChannel): Promise<APIChannel>;
   public async create(
     guildIdOrUserId: string,
     channel?: APIGuildCreatePartialChannel
   ): Promise<APIChannel | APIDMChannel> {
     if (channel) {
-      const response = await this.rest.post(
-        `/guilds/${guildIdOrUserId}/channels`,
-        channel
-      );
+      const response = await this.rest.post(`/guilds/${guildIdOrUserId}/channels`, channel);
 
       return parseDiscordResponse(response);
     }

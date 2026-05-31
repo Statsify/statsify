@@ -33,7 +33,6 @@ export async function getPlayerSuggestions(query: string): Promise<string[]> {
 export async function getGuild(slug: string): Promise<Guild> {
   const response = await fetch(`${env.API_URL}/guild?guild=${slug}&type=PLAYER`, {
     headers: { "X-API-KEY": env.API_KEY },
-
   });
   const { guild } = await response.json();
   return guild;

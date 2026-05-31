@@ -38,9 +38,7 @@ if (sentryDsn) {
   });
 }
 
-await Promise.all(
-  [I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init())
-);
+await Promise.all([I18nLoaderService, FontLoaderService].map((service) => Container.get(service).init()));
 
 const rest = new RestClient({ token: await config("discordBot.token"), timeout: 60 * 1000 });
 Container.set(RestClient, rest);
@@ -58,9 +56,9 @@ await poster.post(
 const port = await config("discordBot.port", { required: false });
 
 const listener = CommandListener.create(
-  port ?
-    new InteractionServer({ key: await config("discordBot.publicKey")! }) :
-    new WebsocketShard({ token: await config("discordBot.token"), intents: 1 }),
+  port
+    ? new InteractionServer({ key: await config("discordBot.publicKey")! })
+    : new WebsocketShard({ token: await config("discordBot.token"), intents: 1 }),
   rest,
   commands
 );

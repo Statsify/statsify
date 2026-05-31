@@ -21,7 +21,11 @@ interface PartyGamesTableProps {
 
 export const PartyGamesTable = ({ stats, t, submode, time }: PartyGamesTableProps) => (
   <Table.table>
-    {submode.api === "overall" ? <PartyGamesOverallTable stats={stats} t={t} time={time} /> : <PartyGamesWinsTable stats={stats} t={t} time={time} />}
+    {submode.api === "overall" ? (
+      <PartyGamesOverallTable stats={stats} t={t} time={time} />
+    ) : (
+      <PartyGamesWinsTable stats={stats} t={t} time={time} />
+    )}
   </Table.table>
 );
 
@@ -42,19 +46,64 @@ const PartyGamesOverallTable = ({ stats, t, time }: PartyGamesSubModeTableProps)
     <Historical.exclude time={time}>
       <Table.ts title="Best Times">
         <Table.tr>
-          <Table.td title="Anvil Spleef" value={stats.anvilSpleefBestTime === 0 ? "§7N/A" : formatRaceTime(stats.anvilSpleefBestTime)} color="§a" size="inline" />
-          <Table.td title="Lab Escape" value={stats.labEscapeBestTime === 0 ? "§7N/A" : formatRaceTime(stats.labEscapeBestTime)} color="§a" size="inline" />
-          <Table.td title="Jigsaw Rush" value={stats.jigsawRushBestTime === 0 ? "§7N/A" : formatRaceTime(stats.jigsawRushBestTime)} color="§a" size="inline" />
+          <Table.td
+            title="Anvil Spleef"
+            value={stats.anvilSpleefBestTime === 0 ? "§7N/A" : formatRaceTime(stats.anvilSpleefBestTime)}
+            color="§a"
+            size="inline"
+          />
+          <Table.td
+            title="Lab Escape"
+            value={stats.labEscapeBestTime === 0 ? "§7N/A" : formatRaceTime(stats.labEscapeBestTime)}
+            color="§a"
+            size="inline"
+          />
+          <Table.td
+            title="Jigsaw Rush"
+            value={stats.jigsawRushBestTime === 0 ? "§7N/A" : formatRaceTime(stats.jigsawRushBestTime)}
+            color="§a"
+            size="inline"
+          />
         </Table.tr>
         <Table.tr>
-          <Table.td title="The Floor Is Lava" value={stats.theFloorIsLavaBestTime === 0 ? "§7N/A" : formatRaceTime(stats.theFloorIsLavaBestTime)} color="§a" size="inline" />
-          <Table.td title="Chicken Rings" value={stats.chickenRingsBestTime === 0 ? "§7N/A" : formatRaceTime(stats.chickenRingsBestTime)} color="§a" size="inline" />
-          <Table.td title="Jungle Jump" value={stats.jungleJumpBestTime === 0 ? "§7N/A" : formatRaceTime(stats.jungleJumpBestTime)} color="§a" size="inline" />
+          <Table.td
+            title="The Floor Is Lava"
+            value={stats.theFloorIsLavaBestTime === 0 ? "§7N/A" : formatRaceTime(stats.theFloorIsLavaBestTime)}
+            color="§a"
+            size="inline"
+          />
+          <Table.td
+            title="Chicken Rings"
+            value={stats.chickenRingsBestTime === 0 ? "§7N/A" : formatRaceTime(stats.chickenRingsBestTime)}
+            color="§a"
+            size="inline"
+          />
+          <Table.td
+            title="Jungle Jump"
+            value={stats.jungleJumpBestTime === 0 ? "§7N/A" : formatRaceTime(stats.jungleJumpBestTime)}
+            color="§a"
+            size="inline"
+          />
         </Table.tr>
         <Table.tr>
-          <Table.td title="Bombardment" value={stats.bombardmentBestTime === 0 ? "§7N/A" : formatRaceTime(stats.bombardmentBestTime)} color="§a" size="inline" />
-          <Table.td title="Minecart Racing" value={stats.minecartRacingBestTime === 0 ? "§7N/A" : formatRaceTime(stats.minecartRacingBestTime)} color="§a" size="inline" />
-          <Table.td title="Spider Maze" value={stats.spiderMazeBestTime === 0 ? "§7N/A" : formatRaceTime(stats.spiderMazeBestTime)} color="§a" size="inline" />
+          <Table.td
+            title="Bombardment"
+            value={stats.bombardmentBestTime === 0 ? "§7N/A" : formatRaceTime(stats.bombardmentBestTime)}
+            color="§a"
+            size="inline"
+          />
+          <Table.td
+            title="Minecart Racing"
+            value={stats.minecartRacingBestTime === 0 ? "§7N/A" : formatRaceTime(stats.minecartRacingBestTime)}
+            color="§a"
+            size="inline"
+          />
+          <Table.td
+            title="Spider Maze"
+            value={stats.spiderMazeBestTime === 0 ? "§7N/A" : formatRaceTime(stats.spiderMazeBestTime)}
+            color="§a"
+            size="inline"
+          />
         </Table.tr>
       </Table.ts>
       <Table.ts title="Best Scores">

@@ -48,9 +48,15 @@ export const BedWarsChallengesProfile = ({
           <Table.tr>
             {row.map(([name, completions]) => (
               <box width="100%" padding={{ left: 8, right: 8, top: 4, bottom: 4 }}>
-                <text>§l{completions > 0 ? "§a" : "§c"}{prettify(name).replace("Ultimate U H C", "Ultimate UHC")}</text>
+                <text>
+                  §l{completions > 0 ? "§a" : "§c"}
+                  {prettify(name).replace("Ultimate U H C", "Ultimate UHC")}
+                </text>
                 <div width="remaining" margin={{ left: 4, right: 4 }} />
-                <text>{completions > 0 ? "§a" : "§c"}{t(completions)}</text>
+                <text>
+                  {completions > 0 ? "§a" : "§c"}
+                  {t(completions)}
+                </text>
               </box>
             ))}
           </Table.tr>

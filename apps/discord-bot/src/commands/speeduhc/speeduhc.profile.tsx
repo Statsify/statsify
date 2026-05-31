@@ -6,15 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  Container,
-  Footer,
-  Header,
-  If,
-  SidebarItem,
-  Table,
-  formatProgression,
-} from "#components";
+import { Container, Footer, Header, If, SidebarItem, Table, formatProgression } from "#components";
 import { FormattedGame, type GameMode, SpeedUHCMode, SpeedUHCModes } from "@statsify/schemas";
 import { prettify } from "@statsify/util";
 import type { BaseProfileProps } from "#commands/base.hypixel-command";
@@ -52,9 +44,7 @@ export const SpeedUHCProfile = ({
         badge={badge}
         sidebar={sidebar}
         title={`§l${FormattedGame.SPEED_UHC} §fStats §r(${mode.formatted})`}
-        description={`§7${t("stats.level")}: ${
-          speeduhc.levelFormatted
-        }\n${formatProgression({
+        description={`§7${t("stats.level")}: ${speeduhc.levelFormatted}\n${formatProgression({
           t,
           label: t("stats.progression.score"),
           progression: speeduhc.progression,
@@ -75,11 +65,7 @@ export const SpeedUHCProfile = ({
           <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
           <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
           <If condition={Boolean("assists" in stats)}>
-            <Table.td
-              title={t("stats.assists")}
-              value={t((stats as SpeedUHCMode).assists ?? 0)}
-              color="§e"
-            />
+            <Table.td title={t("stats.assists")} value={t((stats as SpeedUHCMode).assists ?? 0)} color="§e" />
           </If>
         </Table.tr>
       </Table.table>

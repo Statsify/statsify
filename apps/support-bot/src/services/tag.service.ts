@@ -75,9 +75,7 @@ export class TagService {
       run(context: CommandContext) {
         const user = context.option<string | null>("user");
 
-        const embed = new EmbedBuilder()
-          .color(STATUS_COLORS.info)
-          .description(tag.content);
+        const embed = new EmbedBuilder().color(STATUS_COLORS.info).description(tag.content);
 
         if (tag.attachment) embed.image(tag.attachment);
 
@@ -97,33 +95,19 @@ export class TagService {
   public async delete(name: string) {
     const listener = CommandListener.getInstance();
 
-    const tag = await this.tagModel
-      .findOneAndDelete()
-      .where("name")
-      .equals(name)
-      .lean()
-      .exec();
+    const tag = await this.tagModel.findOneAndDelete().where("name").equals(name).lean().exec();
 
     if (!tag) throw new ErrorMessage("errors.tagNotFound");
 
     listener.removeCommand(name);
 
-    await this.commandPoster.delete(
-      tag.id,
-      await config("supportBot.applicationId"),
-      await config("supportBot.guild")
-    );
+    await this.commandPoster.delete(tag.id, await config("supportBot.applicationId"), await config("supportBot.guild"));
   }
 
   public async rename(originalName: string, newName: string) {
     this.validateName(newName);
 
-    const tag = await this.tagModel
-      .findOne()
-      .where("name")
-      .equals(originalName)
-      .lean()
-      .exec();
+    const tag = await this.tagModel.findOne().where("name").equals(originalName).lean().exec();
 
     if (!tag) throw new ErrorMessage("errors.tagNotFound");
 

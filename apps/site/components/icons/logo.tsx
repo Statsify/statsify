@@ -8,23 +8,11 @@
 
 import { cn } from "~/lib/util";
 
-function LogoBarShadow({
-  id, color,
-}: { id: string; color: string }) {
+function LogoBarShadow({ id, color }: { id: string; color: string }) {
   return (
     <filter id={id}>
-      <feDropShadow
-        dx="0"
-        dy="-1"
-        stdDeviation="0"
-        floodColor={`color-mix(in srgb, var(${color}) 85%, #fff 15%)`}
-      />
-      <feDropShadow
-        dx="0"
-        dy="1"
-        stdDeviation="0"
-        floodColor={`color-mix(in srgb, var(${color}) 25%, #000 75%)`}
-      />
+      <feDropShadow dx="0" dy="-1" stdDeviation="0" floodColor={`color-mix(in srgb, var(${color}) 85%, #fff 15%)`} />
+      <feDropShadow dx="0" dy="1" stdDeviation="0" floodColor={`color-mix(in srgb, var(${color}) 25%, #000 75%)`} />
     </filter>
   );
 }
@@ -32,14 +20,16 @@ function LogoBarShadow({
 // Icon
 export function Logo({ className }: { className?: string }) {
   return (
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 32 32"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
       <filter id="arrow">
-        <feDropShadow
-          dx="0"
-          dy="1"
-          stdDeviation="0"
-          floodColor="#404040"
-        />
+        <feDropShadow dx="0" dy="1" stdDeviation="0" floodColor="#404040" />
       </filter>
       <path
         fillRule="evenodd"
@@ -49,13 +39,37 @@ export function Logo({ className }: { className?: string }) {
         filter="url(#arrow)"
       />
       <LogoBarShadow id="bar1" color="--color-blueify-100" />
-      <path fillRule="evenodd" clipRule="evenodd" d="M4 19H7V20H8V27H7V28H4V27H3V20H4V19Z" className="fill-blueify-100 transform-gpu" filter="url(#bar1)" />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M4 19H7V20H8V27H7V28H4V27H3V20H4V19Z"
+        className="fill-blueify-100 transform-gpu"
+        filter="url(#bar1)"
+      />
       <LogoBarShadow id="bar2" color="--color-blueify-200" />
-      <path fillRule="evenodd" clipRule="evenodd" d="M11 15H14V16H15V27H14V28H11V27H10V16H11V15Z" className="fill-blueify-300 transform-gpu" filter="url(#bar2)" />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M11 15H14V16H15V27H14V28H11V27H10V16H11V15Z"
+        className="fill-blueify-300 transform-gpu"
+        filter="url(#bar2)"
+      />
       <LogoBarShadow id="bar3" color="--color-blueify-300" />
-      <path fillRule="evenodd" clipRule="evenodd" d="M18 16H21V17H22V27H21V28H18V27H17V17H18V16Z" className="fill-blueify-600 transform-gpu" filter="url(#bar3)" />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M18 16H21V17H22V27H21V28H18V27H17V17H18V16Z"
+        className="fill-blueify-600 transform-gpu"
+        filter="url(#bar3)"
+      />
       <LogoBarShadow id="bar4" color="--color-blueify-400" />
-      <path fillRule="evenodd" clipRule="evenodd" d="M25 12H28V13H29V27H28V28H25V27H24V13H25V12Z" className="fill-blueify-800 transform-gpu" filter="url(#bar4)" />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M25 12H28V13H29V27H28V28H25V27H24V13H25V12Z"
+        className="fill-blueify-800 transform-gpu"
+        filter="url(#bar4)"
+      />
     </svg>
   );
 }

@@ -8,12 +8,7 @@
 
 import { AuthRole } from "./auth.role.js";
 import { AuthService } from "./auth.service.js";
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { config } from "@statsify/util";
 import type { FastifyReply, FastifyRequest } from "fastify";
@@ -39,9 +34,7 @@ export class AuthGuard implements CanActivate {
 
     const req = context.switchToHttp().getRequest<FastifyRequest>();
 
-    const apiKey: string =
-      (req.headers["x-api-key"] as string) ??
-      (req.query as Record<string, string>)["key"];
+    const apiKey: string = (req.headers["x-api-key"] as string) ?? (req.query as Record<string, string>)["key"];
 
     if (!apiKey) throw new UnauthorizedException();
 

@@ -6,14 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ApiService,
-  Command,
-  CommandContext,
-  EmbedBuilder,
-  ErrorMessage,
-  PlayerArgument,
-} from "@statsify/discord";
+import { ApiService, Command, CommandContext, EmbedBuilder, ErrorMessage, PlayerArgument } from "@statsify/discord";
 import { STATUS_COLORS } from "@statsify/logger";
 import { UserTier } from "@statsify/schemas";
 

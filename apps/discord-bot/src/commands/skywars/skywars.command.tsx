@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { SKYWARS_MODES, SkyWarsModes } from "@statsify/schemas";
 import { SkyWarsProfile } from "./skywars.profile.js";
@@ -21,10 +17,7 @@ export class SkyWarsCommand extends BaseHypixelCommand<SkyWarsModes> {
     super(SKYWARS_MODES);
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<SkyWarsModes, never>
-  ): JSX.Element {
+  public getProfile(base: BaseProfileProps, { mode }: ProfileData<SkyWarsModes, never>): JSX.Element {
     return <SkyWarsProfile {...base} mode={mode} />;
   }
 }

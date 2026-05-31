@@ -21,9 +21,7 @@ export class I18nLoaderService {
 
   public async init() {
     this.languages = await readdir("../../locales");
-    this.namespaces = (await readdir(`../../locales/${DEFAULT_LANGUAGE}/`)).map((p) =>
-      p.replace(".json", "")
-    );
+    this.namespaces = (await readdir(`../../locales/${DEFAULT_LANGUAGE}/`)).map((p) => p.replace(".json", ""));
 
     await i18next.use(Backend).init({
       backend: {

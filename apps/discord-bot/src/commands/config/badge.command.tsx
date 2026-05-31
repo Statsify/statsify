@@ -56,10 +56,7 @@ export class BadgeCommand {
     return this.run(context, "reset");
   }
 
-  private async run(
-    context: CommandContext,
-    mode: "view" | "set" | "reset"
-  ): Promise<IMessage> {
+  private async run(context: CommandContext, mode: "view" | "set" | "reset"): Promise<IMessage> {
     const userId = context.getInteraction().getUserId();
     const file = context.option<APIAttachment | null>("badge");
     const user = context.getUser();

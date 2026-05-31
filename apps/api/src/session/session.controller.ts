@@ -6,20 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ApiBadRequestResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
-} from "@nestjs/swagger";
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { Auth, AuthRole } from "#auth";
 import { Controller, Delete, Get, Patch, Query } from "@nestjs/common";
-import {
-  ErrorResponse,
-  GetPlayerResponse,
-  GetSessionResponse,
-  SuccessResponse,
-} from "@statsify/api-client";
+import { ErrorResponse, GetPlayerResponse, GetSessionResponse, SuccessResponse } from "@statsify/api-client";
 import { PlayerDto, SessionDto, UserIdDto } from "#dtos";
 import { SessionService } from "./session.service.js";
 
@@ -47,9 +37,7 @@ export class SessionController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Patch()
   @Auth({ role: AuthRole.MEMBER })
-  public async resetSession(
-    @Query() { player: tag }: PlayerDto
-  ) {
+  public async resetSession(@Query() { player: tag }: PlayerDto) {
     const player = await this.sessionService.getAndReset(tag);
     return { success: !!player, player };
   }
@@ -59,9 +47,7 @@ export class SessionController {
   @ApiBadRequestResponse({ type: ErrorResponse })
   @Delete()
   @Auth({ role: AuthRole.MEMBER })
-  public async deleteSession(
-    @Query() { id }: UserIdDto
-  ) {
+  public async deleteSession(@Query() { id }: UserIdDto) {
     await this.sessionService.delete(id);
     return { success: true };
   }

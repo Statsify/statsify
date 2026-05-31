@@ -56,10 +56,7 @@ const getKeys = async () => {
 
   const keyValues = await pipeline.exec();
 
-  return Object.assign(
-    {},
-    ...keyValues.map((key, index) => ({ [keys[index].replace("key:", "")]: key[1] }))
-  );
+  return Object.assign({}, ...keyValues.map((key, index) => ({ [keys[index].replace("key:", "")]: key[1] })));
 };
 
 const getKeyNames = async () => Object.values(await getKeys()).map((key) => key.name);
@@ -170,10 +167,7 @@ const createNewKey = async () => {
   let keyCreated = await createKey({ key, name, role, limit });
 
   if (keyCreated)
-    inquirerLogger(
-      "New Key!",
-      `${key} with ID of ${name} and role of ${role} with weighted limit of ${limit}.`
-    );
+    inquirerLogger("New Key!", `${key} with ID of ${name} and role of ${role} with weighted limit of ${limit}.`);
 };
 
 const deleteKey = async () => {
@@ -195,10 +189,7 @@ const deleteKey = async () => {
 
     if (currentKey.name === deletedKey) {
       await redis.del(`key:${key}`);
-      inquirerLogger(
-        "Deleted Key!",
-        `Key with ID of ${deletedKey} has been deleted (${key})`
-      );
+      inquirerLogger("Deleted Key!", `Key with ID of ${deletedKey} has been deleted (${key})`);
       return;
     }
   }
@@ -207,9 +198,7 @@ const deleteKey = async () => {
 const listKeys = async () => {
   const activeKeys = await getKeys();
 
-  const idToRole = Object.fromEntries(
-    Object.entries(roles).map(([key, value]) => [value, key])
-  );
+  const idToRole = Object.fromEntries(Object.entries(roles).map(([key, value]) => [value, key]));
 
   for (const key in activeKeys) {
     let currentKey = activeKeys[key];

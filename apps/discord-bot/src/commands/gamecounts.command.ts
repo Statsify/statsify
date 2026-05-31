@@ -6,14 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  ApiService,
-  Command,
-  CommandContext,
-  EmbedBuilder,
-  Page,
-  PaginateService,
-} from "@statsify/discord";
+import { ApiService, Command, CommandContext, EmbedBuilder, Page, PaginateService } from "@statsify/discord";
 import { FormattedGame, GameId, GamePlayers } from "@statsify/schemas";
 import { STATUS_COLORS } from "@statsify/logger";
 import { mapGame } from "#constants";
@@ -46,9 +39,7 @@ export class GameCountsCommand {
           .description(
             (t) =>
               `${this.formatGameCount(t("stats.total"), t(players))}\n\n${list
-                .map(([mode, players]) =>
-                  this.formatGameCount(mapGame(id, mode), t(players))
-                )
+                .map(([mode, players]) => this.formatGameCount(mapGame(id, mode), t(players)))
                 .join("\n")}`
           );
 
@@ -64,20 +55,14 @@ export class GameCountsCommand {
     const list = gamecountEntries
       .toSorted((a, b) => (b[1].players ?? 0) - (a[1].players ?? 0))
       .map(([id, { players }]) =>
-        this.formatGameCount(
-          removeFormatting(FormattedGame[id]),
-          t(players),
-          t(`emojis:games.${id}`)
-        )
+        this.formatGameCount(removeFormatting(FormattedGame[id]), t(players), t(`emojis:games.${id}`))
       )
       .join("\n");
 
     const overall = new EmbedBuilder()
       .title((t) => t("embeds.gameCounts.title"))
       .color(STATUS_COLORS.info)
-      .description(
-        (t) => `${this.formatGameCount(t("stats.total"), t(total))}\n\n${list}`
-      );
+      .description((t) => `${this.formatGameCount(t("stats.total"), t(total))}\n\n${list}`);
 
     const pages: Page[] = [
       {

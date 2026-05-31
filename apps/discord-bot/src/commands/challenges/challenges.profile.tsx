@@ -152,30 +152,17 @@ export const ChallengesProfile = ({
       break;
 
     default:
-      table = (
-        <GameTable
-          gameChallenges={challenges[api]}
-          mode={api}
-          t={t}
-        />
-      );
+      table = <GameTable gameChallenges={challenges[api]} mode={api} t={t} />;
       break;
   }
 
   const sidebar: SidebarItem[] = [[t("stats.total"), t(challenges.total), "§b"]];
 
   if (api !== "overall") {
-    sidebar.push([
-      t("stats.game-total", { game: formatted }),
-      t(challenges[api].total),
-      "§a",
-    ]);
+    sidebar.push([t("stats.game-total", { game: formatted }), t(challenges[api].total), "§a"]);
   }
 
-  const title =
-    api in FormattedGame ?
-      `§l${FormattedGame[api as keyof typeof FormattedGame]}` :
-      formatted;
+  const title = api in FormattedGame ? `§l${FormattedGame[api as keyof typeof FormattedGame]}` : formatted;
 
   return (
     <Container background={background}>

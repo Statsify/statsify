@@ -20,15 +20,13 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "api.statsify.net" },
       { protocol: "http", hostname: "localhost:3000" },
     ],
-    localPatterns: [
-      { pathname: "/api/skin/head" },
-      { pathname: "/api/skin/render" },
-    ],
+    localPatterns: [{ pathname: "/api/skin/head" }, { pathname: "/api/skin/render" }],
   },
   redirects: async () => [
     {
       source: "/invite",
-      destination: "https://discord.com/oauth2/authorize?client_id=718827787422793820&scope=applications.commands%20bot&permissions=412384021568",
+      destination:
+        "https://discord.com/oauth2/authorize?client_id=718827787422793820&scope=applications.commands%20bot&permissions=412384021568",
       permanent: true,
     },
     {

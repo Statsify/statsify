@@ -27,11 +27,7 @@ export interface TextRenderProps {
   text: TextNode[];
 }
 
-export const component: JSX.RawFC<
-  TextProps,
-  TextRenderProps,
-  TextProps["children"]
-> = ({
+export const component: JSX.RawFC<TextProps, TextRenderProps, TextProps["children"]> = ({
   margin = 6,
   children,
   align = "center",
@@ -78,11 +74,6 @@ export const component: JSX.RawFC<
   };
 };
 
-export const render: JSX.Render<TextRenderProps> = (
-  ctx,
-  { text },
-  { x, y },
-  { renderer }
-) => {
+export const render: JSX.Render<TextRenderProps> = (ctx, { text }, { x, y }, { renderer }) => {
   renderer.fillText(ctx, text, x, y);
 };

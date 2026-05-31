@@ -30,16 +30,7 @@ export interface GuildTopProfileProps {
 
 export const GUILD_TOP_PAGE_SIZE = 30;
 
-export const GuildTopProfile = ({
-  guild,
-  members,
-  title,
-  page,
-  t,
-  background,
-  user,
-  logo,
-}: GuildTopProfileProps) => {
+export const GuildTopProfile = ({ guild, members, title, page, t, background, user, logo }: GuildTopProfileProps) => {
   const groups = arrayGroup(members, Math.ceil(members.length / 2));
   const indexOffset = page * GUILD_TOP_PAGE_SIZE + 1;
 
@@ -51,17 +42,10 @@ export const GuildTopProfile = ({
           <box border={{ bottomLeft: 4, topLeft: 4, bottomRight: 0, topRight: 0 }}>
             <text>#§l{t(indexOffset + index + (groups[i - 1]?.length ?? 0))}</text>
           </box>
-          <box
-            width="remaining"
-            border={{ bottomLeft: 0, topLeft: 0, bottomRight: 0, topRight: 0 }}
-            direction="column"
-          >
+          <box width="remaining" border={{ bottomLeft: 0, topLeft: 0, bottomRight: 0, topRight: 0 }} direction="column">
             <text align="left">{member.name}</text>
           </box>
-          <box
-            padding={{ left: 4, right: 4 }}
-            border={{ bottomLeft: 0, topLeft: 0, bottomRight: 4, topRight: 4 }}
-          >
+          <box padding={{ left: 4, right: 4 }} border={{ bottomLeft: 0, topLeft: 0, bottomRight: 4, topRight: 4 }}>
             <text>{t(member.value)}</text>
           </box>
         </>

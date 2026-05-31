@@ -6,11 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  BaseHypixelCommand,
-  BaseProfileProps,
-  ProfileData,
-} from "#commands/base.hypixel-command";
+import { BaseHypixelCommand, BaseProfileProps, ProfileData } from "#commands/base.hypixel-command";
 import { Command } from "@statsify/discord";
 import { SMASH_HEROES_MODES, SmashHeroesModes } from "@statsify/schemas";
 import { SmashHeroesProfile } from "./smashheroes.profile.js";
@@ -21,10 +17,7 @@ export class SmashHeroesCommand extends BaseHypixelCommand<SmashHeroesModes> {
     super(SMASH_HEROES_MODES);
   }
 
-  public getProfile(
-    base: BaseProfileProps,
-    { mode }: ProfileData<SmashHeroesModes, never>
-  ): JSX.Element {
+  public getProfile(base: BaseProfileProps, { mode }: ProfileData<SmashHeroesModes, never>): JSX.Element {
     return <SmashHeroesProfile {...base} mode={mode} />;
   }
 }

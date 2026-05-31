@@ -26,5 +26,4 @@ export const titleScores = [
   { req: 25_210, title: "High Champion" },
 ];
 
-export const getLevelIndex = (score: number): number =>
-  findScoreIndex(titleScores, score);
+export const getLevelIndex = (score: number): number => findScoreIndex(titleScores, score);

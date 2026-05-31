@@ -111,9 +111,7 @@ const drawColorChanger = async (rank, prefixIndex) => {
   const coloredEmojis = [
     color0,
     color1,
-    ...(await Promise.all(
-      remainingColors.map((color) => drawRank(rankMap[rank](color.code)))
-    )),
+    ...(await Promise.all(remainingColors.map((color) => drawRank(rankMap[rank](color.code))))),
   ];
 
   Object.entries(sharedImages).forEach(([index, image]) => {
@@ -176,15 +174,11 @@ const json = {};
 const client = new RestClient({ token });
 
 for (let i = 0; i < serverCount; i++) {
-  const guild = await client
-    .post("/guilds", { name: `Statsify Ranks ${i + 1}` })
-    .then((res) => res.body.json);
+  const guild = await client.post("/guilds", { name: `Statsify Ranks ${i + 1}` }).then((res) => res.body.json);
 
   const channel = guild.system_channel_id;
 
-  const invite = await client
-    .post(`/channels/${channel}/invites`, { type: 1 })
-    .then((res) => res.body.json);
+  const invite = await client.post(`/channels/${channel}/invites`, { type: 1 }).then((res) => res.body.json);
 
   logger.log(`Created guild ${guild.id} with invite: discord.gg/${invite.code}`);
 

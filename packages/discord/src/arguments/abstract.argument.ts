@@ -6,12 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import {
-  LocalizationString,
-  getLocalizeFunction,
-  translateField,
-  translateToAllLanguages,
-} from "#messages";
+import { LocalizationString, getLocalizeFunction, translateField, translateToAllLanguages } from "#messages";
 import type {
   APIApplicationCommandOptionChoice,
   ApplicationCommandOptionType,
@@ -74,10 +69,7 @@ export abstract class AbstractArgument {
       if (d.choices.length !== other.choices.length) return false;
 
       for (let i = 0; i < d.choices.length; i++)
-        if (
-          d.choices[i].name !== other.choices[i].name ||
-          d.choices[i].value !== other.choices[i].value
-        ) {
+        if (d.choices[i].name !== other.choices[i].name || d.choices[i].value !== other.choices[i].value) {
           return false;
         }
     }

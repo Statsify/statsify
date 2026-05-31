@@ -12,12 +12,13 @@ import { Command, type IMessage } from "@statsify/discord";
 export class DropperCommand {
   public run(): IMessage {
     return {
-      content: (t) => t("deprecated.merged-dropdown", {
-        oldCommandName: "`/dropper`",
-        newCommand: "</arcade:1140654940273000557>",
-        newCommandName: `${t("emojis:games.ARCADE")} **Arcade**`,
-        mode: "**Dropper**",
-      }),
+      content: (t) =>
+        t("deprecated.merged-dropdown", {
+          oldCommandName: "`/dropper`",
+          newCommand: "</arcade:1140654940273000557>",
+          newCommandName: `${t("emojis:games.ARCADE")} **Arcade**`,
+          mode: "**Dropper**",
+        }),
     };
   }
 }
