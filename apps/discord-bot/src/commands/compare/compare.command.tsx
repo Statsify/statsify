@@ -25,7 +25,7 @@ import {
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
-import { CompareProfile } from "./compare.profile.js";
+import { CompareProfile, HEAD_SIZE } from "./compare.profile.js";
 import { GamesWithBackgrounds, mapBackground } from "#constants";
 import { StatColumn } from "#components";
 import { getBackground, getLogo } from "@statsify/assets";
@@ -69,7 +69,12 @@ export class CompareCommand {
       this.apiService.getPlayer(context.option("player2", ""), user),
     ]);
 
-    const logo = await getLogo(user);
+    const [logo, head1, head2] = await Promise.all([
+      getLogo(user),
+      this.apiService.getPlayerHead(player.uuid, HEAD_SIZE).catch(() => null),
+      this.apiService.getPlayerHead(player2.uuid, HEAD_SIZE).catch(() => null),
+    ]);
+
     const allModes = modes.getModes();
 
     const pages: Page[] = allModes.map((mode) => ({
@@ -83,6 +88,8 @@ export class CompareCommand {
           <CompareProfile
             player={player}
             player2={player2}
+            head1={head1}
+            head2={head2}
             background={bg}
             logo={logo}
             user={user}
