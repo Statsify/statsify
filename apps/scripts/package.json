@@ -11,7 +11,8 @@
     "purge": "node src/purge.js",
     "rank-emojis": "node src/rank-emojis.js",
     "timestamp": "node --no-warnings src/timestamp.js",
-    "validate-commands": "node --no-warnings src/validate-commands.js"
+    "validate-commands": "node --no-warnings src/validate-commands.js",
+    "sweeper": "node src/hypixel-sweeper.js"
   },
   "dependencies": {
     "@statsify/api-client": "workspace:^",
@@ -26,6 +27,7 @@
     "discord-bot": "workspace:^",
     "inquirer": "^10.1.8",
     "ioredis": "^5.7.0",
+    "mongoose": "^8.0.0",
     "skia-canvas": "https://github.com/samizdatco/skia-canvas/releases/download/v0.9.30/skia-canvas-v0.9.30-linux-x64-glibc.tar.gz",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
     "toad-scheduler": "^3.0.1",

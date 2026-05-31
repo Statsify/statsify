@@ -59,6 +59,7 @@ export class Player {
 
   @Field({
     leaderboard: { enabled: false },
+    mongo: { index: true },
     docs: { description: "The time the player's cache expires" },
   })
   public expiresAt: number;

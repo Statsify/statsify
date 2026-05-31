@@ -230,6 +230,29 @@ export interface Config {
     tracesSampleRate?: number;
   };
 
+  sweeper?: {
+    /**
+     * Max Hypixel LIVE requests per minute during a sweep run
+     * @default 100
+     */
+    requestsPerMinute?: number;
+    /**
+     * Max players to refresh per sweep run
+     * @default 10000
+     */
+    batchSize?: number;
+    /**
+     * Refresh players whose expiresAt is older than this many days
+     * @default 7
+     */
+    staleAfterDays?: number;
+    /**
+     * How long (in ms) to penalise a player that fails to refresh before retrying
+     * @default 86400000
+     */
+    penaltyMs?: number;
+  };
+
   /**
    * The current environment the bot is running in
    * @example dev
