@@ -11,8 +11,29 @@ export interface GraphPoint {
   value: number;
 }
 
-export interface GraphProps {
+export interface GraphSeries {
   points: GraphPoint[];
+  color?: JSX.IntrinsicElements["graph"]["color"];
+  fillColor?: JSX.IntrinsicElements["graph"]["fillColor"];
+  lineWidth?: number;
+}
+
+export interface GraphBand {
+  min: number;
+  max: number;
+  color: string;
+}
+
+export interface GraphMarker {
+  index: number;
+  label?: string;
+  color?: JSX.IntrinsicElements["graph"]["color"];
+  radius?: number;
+}
+
+export interface GraphProps {
+  points?: GraphPoint[];
+  series?: GraphSeries[];
   width?: JSX.Measurement;
   height?: JSX.Measurement;
   color?: JSX.IntrinsicElements["graph"]["color"];
@@ -20,12 +41,18 @@ export interface GraphProps {
   referenceValue?: number;
   min?: number;
   max?: number;
+  baselineZero?: boolean;
   smooth?: boolean;
   showLabels?: boolean;
+  bands?: GraphBand[];
+  markers?: GraphMarker[];
+  showLastValue?: boolean;
+  lastPointColor?: JSX.IntrinsicElements["graph"]["color"];
 }
 
 export const Graph = ({
-  points,
+  points = [],
+  series,
   width = "100%",
   height = 96,
   color = "#9ca3af",
@@ -33,28 +60,50 @@ export const Graph = ({
   referenceValue,
   min,
   max,
+  baselineZero,
   smooth = true,
   showLabels = true,
+  bands,
+  markers,
+  showLastValue,
+  lastPointColor,
 }: GraphProps) => {
-  const labels = points.length <= 5 ? points : [points[0], points.at(-1)!];
+  const allPoints = [
+    ...points,
+    ...(series ?? []).flatMap((s) => s.points),
+  ];
+  const labelPoints = allPoints.length <= 5 ? points : [points[0], points.at(-1)].filter(Boolean) as GraphPoint[];
+
+  const extraSeries = series?.map((s) => ({
+    data: s.points.map((p) => p.value),
+    color: s.color ?? "#9ca3af",
+    fillColor: s.fillColor,
+    lineWidth: s.lineWidth,
+  }));
 
   return (
     <div width={width} direction="column">
       <graph
         width="100%"
         height={height}
-        data={points.map((point) => point.value)}
+        data={points.map((p) => p.value)}
         min={min}
         max={max}
+        baselineZero={baselineZero}
         color={color}
         fillColor={fillColor}
         referenceValue={referenceValue}
         smooth={smooth}
+        series={extraSeries}
+        bands={bands}
+        markers={markers}
+        showLastPoint={showLastValue}
+        lastPointColor={lastPointColor}
       />
-      {showLabels && labels.length ?
+      {showLabels && labelPoints.length ?
         (
           <div width="100%" location="center">
-            {labels.map((point) => (
+            {labelPoints.map((point) => (
               <text margin={{ top: 0, bottom: 2, left: 8, right: 8 }} size={1.5}>
                 {`§7${point.label}`}
               </text>
