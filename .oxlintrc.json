@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["typescript", "unicorn", "import", "oxc", "nextjs"],
+  "plugins": ["typescript", "unicorn", "import", "oxc"],
   "jsPlugins": [
     {
       "name": "header",
@@ -14,7 +14,14 @@
     "builtin": true,
     "es2022": true
   },
-  "ignorePatterns": ["**/dist/**", "**/node_modules/**", "**/.next/**", "**/pkg/**"],
+  "ignorePatterns": [
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/pkg/**",
+    "packages/skin-renderer/index.cjs",
+    "packages/skin-renderer/index.d.ts"
+  ],
   "rules": {
     "header/header": [
       "error",
@@ -98,5 +105,11 @@
     "unicorn/no-useless-undefined": "off",
     "unicorn/number-literal-case": "off",
     "unicorn/prefer-string-replace-all": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["apps/site/**"],
+      "plugins": ["nextjs"]
+    }
+  ]
 }
