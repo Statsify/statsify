@@ -4,7 +4,6 @@
     "pnpm.lock",
     "tsconfig.json",
     ".swcrc",
-    "eslint.config.js"
   ],
   "ui": "tui",
   "tasks": {

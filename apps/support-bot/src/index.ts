@@ -25,12 +25,11 @@ import { GatewayIntentBits } from "discord-api-types/v10";
 import { Logger } from "@statsify/logger";
 import { RestClient, WebsocketShard } from "tiny-discord";
 import { config } from "@statsify/util";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { join } from "node:path";
 import { setGlobalOptions } from "@typegoose/typegoose";
 import "reflect-metadata";
 
-const directory = dirname(fileURLToPath(import.meta.url));
+const directory = import.meta.dirname;
 
 const logger = new Logger("support-bot");
 const handleError = logger.error.bind(logger);
@@ -64,7 +63,9 @@ await Promise.all(
 const commands = await loadCommands(join(directory, "./commands"));
 
 const tags = await Container.get(TagService).fetch();
-tags.forEach((tag) => commands.set(tag.name, tag));
+for (const tag of tags) {
+  commands.set(tag.name, tag);
+}
 
 const poster = Container.get(CommandPoster);
 
