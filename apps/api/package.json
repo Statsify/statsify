@@ -42,7 +42,6 @@
     "toad-scheduler": "^3.0.1"
   },
   "devDependencies": {
-    "@nestjs/testing": "^11.1.6",
     "@types/luxon": "^3.4.2"
   },
   "imports": {

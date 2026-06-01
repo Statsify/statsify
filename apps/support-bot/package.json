@@ -31,9 +31,6 @@
     "toad-scheduler": "^3.0.1",
     "typedi": "^0.10.0"
   },
-  "devDependencies": {
-    "@types/luxon": "^3.4.2"
-  },
   "imports": {
     "#services": {
       "types": "./src/services/index.ts",
