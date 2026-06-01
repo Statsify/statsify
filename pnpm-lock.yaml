@@ -173,9 +173,6 @@ importers:
       skia-canvas:
         specifier: 3.0.8
         version: 3.0.8
-      toad-scheduler:
-        specifier: ^3.0.1
-        version: 3.1.0
     devDependencies:
       '@types/luxon':
         specifier: ^3.4.2
@@ -213,9 +210,6 @@ importers:
       '@swc/helpers':
         specifier: ^0.5.12
         version: 0.5.17
-      '@typegoose/typegoose':
-        specifier: ^12.6.0
-        version: 12.19.0(mongoose@8.18.0(socks@2.8.7))
       axios:
         specifier: 1.11.0
         version: 1.11.0
@@ -228,9 +222,6 @@ importers:
       luxon:
         specifier: ^3.5.0
         version: 3.7.1
-      mongoose:
-        specifier: ^8.5.2
-        version: 8.18.0(socks@2.8.7)
       reflect-metadata:
         specifier: ^0.2.2
         version: 0.2.2
@@ -286,9 +277,6 @@ importers:
       ioredis:
         specifier: ^5.7.0
         version: 5.7.0
-      skia-canvas:
-        specifier: 3.0.8
-        version: 3.0.8
       tiny-discord:
         specifier: https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d
         version: https://codeload.github.com/timotejroiko/tiny-discord/tar.gz/f6d020085ea88e33ebaf6ce323930deffe74fb0d
@@ -414,15 +402,9 @@ importers:
       '@typegoose/typegoose':
         specifier: ^12.6.0
         version: 12.19.0(mongoose@8.18.0(socks@2.8.7))
-      axios:
-        specifier: 1.11.0
-        version: 1.11.0
       discord-api-types:
         specifier: ^0.38.22
         version: 0.38.22
-      luxon:
-        specifier: ^3.5.0
-        version: 3.7.1
       mongoose:
         specifier: ^8.5.2
         version: 8.18.0(socks@2.8.7)
@@ -532,18 +514,12 @@ importers:
 
   packages/assets:
     dependencies:
-      '@statsify/logger':
-        specifier: workspace:^
-        version: link:../logger
       '@statsify/schemas':
         specifier: workspace:^
         version: link:../schemas
       '@swc/helpers':
         specifier: ^0.5.12
         version: 0.5.17
-      axios:
-        specifier: 1.11.0
-        version: 1.11.0
       skia-canvas:
         specifier: 3.0.8
         version: 3.0.8
@@ -635,9 +611,6 @@ importers:
       '@sentry/node':
         specifier: ^7.118.0
         version: 7.120.4
-      '@statsify/assets':
-        specifier: workspace:^
-        version: link:../assets
       '@statsify/util':
         specifier: workspace:^
         version: link:../util
@@ -659,9 +632,6 @@ importers:
       '@nestjs/swagger':
         specifier: ^11.2.0
         version: 11.2.0(@fastify/static@8.2.0)(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6(@nestjs/common@11.1.6(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)(rxjs@7.8.2))(reflect-metadata@0.2.2)(rxjs@7.8.2))(class-transformer@0.5.1)(class-validator@0.14.2)(reflect-metadata@0.2.2)
-      '@statsify/logger':
-        specifier: workspace:^
-        version: link:../logger
       '@statsify/math':
         specifier: workspace:^
         version: link:../math
