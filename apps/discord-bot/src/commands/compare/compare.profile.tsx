@@ -16,6 +16,7 @@ import {
 import type { Image } from "skia-canvas";
 import type { LocalizeFunction } from "@statsify/discord";
 import type { Player, User } from "@statsify/schemas";
+import { roundTo } from "@statsify/math";
 
 export const HEAD_SIZE = 32;
 
@@ -64,7 +65,7 @@ export const CompareProfile = ({
           <Table.tr>
             {row.map((col1, ci) => {
               const col2 = table2[ri][ci];
-              const delta = Math.abs(col1.value - col2.value);
+              const delta = roundTo(Math.abs(col1.value - col2.value));
               if (col1.comparable === false) {
                 return (
                   <Table.td
