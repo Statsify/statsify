@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "lint": "eslint",
+    "lint": "oxlint",
     "api-key": "node src/api-key.js",
     "delete-sessions": "node src/delete-sessions.js",
     "limit-redis": "node src/limit-redis.js",
