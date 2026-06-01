@@ -2,6 +2,7 @@
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "ignoreExportsUsedInFile": true,
   "ignoreDependencies": ["@swc/helpers"],
+  "ignoreBinaries": ["blur", "wasm-pack"],
   "workspaces": {
     ".": {
       "entry": [

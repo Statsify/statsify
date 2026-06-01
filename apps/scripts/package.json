@@ -26,6 +26,8 @@
     "discord-bot": "workspace:^",
     "inquirer": "^10.1.8",
     "ioredis": "^5.7.0",
+    "luxon": "^3.7.1",
+    "mongoose": "^8.18.0",
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
     "toad-scheduler": "^3.0.1",
     "zod": "^4.1.5"
