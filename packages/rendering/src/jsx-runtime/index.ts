@@ -40,4 +40,5 @@ export const jsx = (type: IntrinsicElement | FC, props: Props): ElementNode | nu
   throw new Error(`Unknown JSX element, with type ${type}`);
 };
 
-export const jsxs = jsx;
+// jsxs is identical to jsx in this runtime (no static-children optimisation)
+export const jsxs: typeof jsx = (type, props) => jsx(type, props);

@@ -23,7 +23,8 @@
     "support-bot": "pnpm --filter support-bot",
     "site": "pnpm --filter site",
     "scripts": "pnpm --filter scripts",
-    "verify-server": "pnpm --filter verify-server"
+    "verify-server": "pnpm --filter verify-server",
+    "knip": "knip"
   },
   "packageManager": "pnpm@10.15.0",
   "pnpm": {
@@ -41,7 +42,6 @@
     "@stylistic/eslint-plugin": "^5.2.3",
     "@swc/cli": "^0.7.8",
     "@swc/core": "1.13.5",
-    "@types/eslint__js": "^9.14.0",
     "@types/node": "^24.3.0",
     "@vitest/coverage-v8": "^3.0.4",
     "@vitest/ui": "^3.0.4",
@@ -51,6 +51,7 @@
     "eslint-plugin-license-header": "^0.8.0",
     "eslint-plugin-unicorn": "^60.0.0",
     "eslint-plugin-unused-imports": "^4.1.4",
+    "knip": "^6.15.0",
     "pm2": "^6.0.8",
     "turbo": "^2.4.0",
     "typescript": "^5.7.3",

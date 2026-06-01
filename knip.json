@@ -1,0 +1,117 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignoreExportsUsedInFile": true,
+  "ignoreDependencies": ["@swc/helpers"],
+  "ignoreBinaries": ["blur", "wasm-pack"],
+  "workspaces": {
+    ".": {
+      "entry": [
+        "config.js",
+        "config.schema.js",
+        "eslint.config.js",
+        "vitest.shared.ts",
+        "vite.swc.ts",
+        "vitest.workspace.ts",
+        "pm2.config.cjs"
+      ],
+      "ignoreDependencies": [
+        "commitizen",
+        "cz-conventional-changelog",
+        "@commitlint/cli",
+        "@vitest/coverage-v8"
+      ]
+    },
+    "apps/api": {
+      "entry": [
+        "src/index.ts",
+        "src/**/*.module.ts",
+        "src/**/*.controller.ts",
+        "src/**/*.service.ts",
+        "src/**/*.guard.ts",
+        "src/**/*.interceptor.ts",
+        "src/**/*.decorator.ts"
+      ]
+    },
+    "apps/discord-bot": {
+      "entry": [
+        "src/index.ts",
+        "src/commands/**/*.command.ts",
+        "src/commands/**/*.argument.ts",
+        "src/commands/**/*.subcommand.ts",
+        "src/commands/**/*.tsx",
+        "src/components/index.ts",
+        "src/services/index.ts",
+        "src/themes/index.ts",
+        "src/constants.ts",
+        "src/lib/*.ts"
+      ],
+      "ignoreDependencies": ["reflect-metadata"]
+    },
+    "apps/scripts": {
+      "entry": ["src/*.js"],
+      "ignoreDependencies": ["globals", "@swc/core"]
+    },
+    "apps/site": {
+      "entry": [
+        "app/**/{page,layout,loading,error,not-found,template,default,providers,route}.{ts,tsx}",
+        "app/**/*.{ts,tsx}",
+        "components/**/*.{ts,tsx}",
+        "hooks/**/*.{ts,tsx}",
+        "lib/**/*.{ts,tsx}",
+        "localize/**/*.{ts,tsx}",
+        "next.config.ts",
+        "eslint.config.mjs"
+      ],
+      "ignoreDependencies": [
+        "tailwindcss",
+        "eslint-config-next",
+        "mongoose"
+      ]
+    },
+    "apps/support-bot": {
+      "entry": [
+        "src/index.ts",
+        "src/commands/**/*.command.ts",
+        "src/events/**/*.event.{ts,tsx}",
+        "src/lib/index.ts",
+        "src/services/index.ts"
+      ]
+    },
+    "apps/verify-server": {
+      "entry": ["src/index.ts"]
+    },
+    "assets/private": {
+      "entry": ["blur.mjs"]
+    },
+    "assets/public": {
+      "entry": ["blur.mjs"]
+    },
+    "packages/api-client": {
+      "entry": ["src/**/*.ts"]
+    },
+    "packages/assets": {
+      "entry": ["src/**/*.ts"]
+    },
+    "packages/discord": {
+      "entry": ["src/**/*.ts"]
+    },
+    "packages/logger": {
+      "entry": ["src/**/*.ts"]
+    },
+    "packages/math": {
+      "entry": ["src/**/*.ts"]
+    },
+    "packages/rendering": {
+      "entry": ["src/**/*.ts"]
+    },
+    "packages/schemas": {
+      "entry": ["src/**/*.ts"]
+    },
+    "packages/skin-renderer": {
+      "ignore": ["index.cjs"]
+    },
+    "packages/util": {
+      "entry": ["src/**/*.ts"]
+    }
+  }
+}

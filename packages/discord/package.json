@@ -26,9 +26,6 @@
     "tiny-discord": "https://github.com/timotejroiko/tiny-discord.git#f6d020085ea88e33ebaf6ce323930deffe74fb0d",
     "typedi": "^0.10.0"
   },
-  "devDependencies": {
-    "@types/i18next-fs-backend": "^1.1.5"
-  },
   "imports": {
     "#arguments": {
       "types": "./src/arguments/index.ts",
