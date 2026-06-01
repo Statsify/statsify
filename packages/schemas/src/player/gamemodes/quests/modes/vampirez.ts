@@ -20,7 +20,7 @@ export const VampireZQuests = createGameModeQuests({
   ],
   weekly: [
     { field: "weekly_win", propertyKey: "vampireWinner" },
-    { field: "vampirez_weekly_kill", propertyKey: "vampireSlayer" },
+    { field: "weekly_kill", propertyKey: "vampireSlayer" },
     { field: "weekly_human_kill", propertyKey: "humanSlayer" },
   ],
 });

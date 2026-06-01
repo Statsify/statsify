@@ -77,7 +77,7 @@ function buildTargetsMap(hypixelQuests) {
     .flat()
     .map((quest) => {
       const objectives = Object.fromEntries(
-        quest.objectives
+        (quest.objectives ?? [])
           .filter((o) => typeof o.integer === "number")
           .map((o) => [o.id, o.integer])
       );
@@ -215,7 +215,7 @@ function printDriftReport(localIds, newTargets, existingTargets) {
     }
   }
 
-  if (issues === 0 && changes.length === 0) {
+  if (issues === 0) {
     console.log("\n✓ No drift detected — generated map is current.");
   } else {
     console.log(`\n⚠  Drift detected: ${issues} issue(s) found. Review and update the schema or re-run after Hypixel fixes.`);

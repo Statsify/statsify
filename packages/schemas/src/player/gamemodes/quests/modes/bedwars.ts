@@ -21,7 +21,7 @@ export const BedWarsQuests = createGameModeQuests({
   weekly: [
     { field: "weekly_bed_elims", propertyKey: "bedRemovalCo", name: "Bed Removal Co." },
     { field: "weekly_dream_win", propertyKey: "sleepTight", name: "Sleep Tight." },
-    { field: "weekly_challenges", propertyKey: "challenger" },
+    { field: "weekly_challenges_win", propertyKey: "challenger" },
     { field: "weekly_final_killer", propertyKey: "finishingTheJob" },
   ],
 });

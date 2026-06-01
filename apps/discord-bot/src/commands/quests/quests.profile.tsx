@@ -17,7 +17,9 @@ import {
   GenericQuestInstance,
   METADATA_KEY,
   MetadataScanner,
+  MonthlyQuests,
   OverallQuests,
+  type QuestProgress,
   QuestModes,
   QuestTime,
   User,
@@ -55,9 +57,12 @@ function getQuestMetadata<T>(constructor: Constructor<T>) {
   return Object.fromEntries(metadata);
 }
 
-const questMetadata = [DailyQuests, WeeklyQuests, OverallQuests].map((constructor) =>
-  getQuestMetadata(constructor as Constructor<GenericQuestInstance>)
-);
+const questMetadata = {
+  [QuestTime.Daily]: getQuestMetadata(DailyQuests as Constructor<GenericQuestInstance>),
+  [QuestTime.Weekly]: getQuestMetadata(WeeklyQuests as Constructor<GenericQuestInstance>),
+  [QuestTime.Monthly]: getQuestMetadata(MonthlyQuests as Constructor<GenericQuestInstance>),
+  [QuestTime.Overall]: getQuestMetadata(OverallQuests as Constructor<GenericQuestInstance>),
+};
 
 export interface QuestProfileProps extends Omit<BaseProfileProps, "time"> {
   mode: GameMode<QuestModes>;
@@ -90,9 +95,11 @@ const NormalTable = ({ quests, t, gameIcons, colorPalette, time }: NormalTablePr
   const BOX_COLOR = (colorPalette?.boxes?.color as string) ?? Box.DEFAULT_COLOR;
 
   const entries: GameEntry[] = questEntries
-    // Require more than just a total field
-    .filter(([_, q]) => Object.keys(q).length > 1)
-    .map(([k, v]) => [k, v, Object.keys(v).length - 1] as const)
+    .map(([k, v]) => {
+      const questCount = Object.keys(v).filter((key) => key !== "total" && key !== "_progress").length;
+      return [k, v, questCount] as const;
+    })
+    .filter(([_, __, questCount]) => questCount > 0)
     .sort((a, b) => ratio(b[1]?.total ?? 0, b[2]) - ratio(a[1]?.total ?? 0, a[2]))
     .map(([k, v, total]) => {
       const completed = v.total;
@@ -145,20 +152,26 @@ const GameTable = ({ quests, t, game, time, logos: [cross, check] }: GameTablePr
   const isOverall = time === QuestTime.Overall;
 
   const entries = Object.entries(quests)
-    .filter(([k, v]) => k !== "total" && v !== null)
-    .sort((a, b) => b[1] - a[1])
+    .filter(([k, v]) => k !== "total" && k !== "_progress" && v !== null)
+    .sort((a, b) => (b[1] as number) - (a[1] as number))
     .map(([quest, completions]) => {
       const name = questMetadata[time][game][quest].leaderboard.name;
+      const questProgress = quests._progress?.[quest] as QuestProgress | undefined;
 
       return (
         <box width="100%">
           <text align="left">
-            {completions > 0 ? "§a" : "§c"}§l{name}
+            {(completions as number) > 0 ? "§a" : "§c"}§l{name}
           </text>
           <div width="remaining" />
           {isOverall ?
-            <text>{t(completions)}</text> :
-            <img margin={2} image={completions === 0 ? cross : check} />}
+            <text>{t(completions as number)}</text> :
+            (completions as number) > 0 ?
+              <img margin={2} image={check} /> :
+              questProgress ?
+                <text>§e{t(questProgress.current)}/{t(questProgress.target)}</text> :
+                <img margin={2} image={cross} />
+          }
         </box>
       );
     });
