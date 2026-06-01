@@ -15,6 +15,14 @@ import {
   Logger,
   UnauthorizedException,
 } from "@nestjs/common";
+
+export class RateLimitException extends HttpException {
+  public readonly resetTime: number;
+  public constructor(resetTime: number) {
+    super("Too Many Requests", 429);
+    this.resetTime = resetTime;
+  }
+}
 import { InjectRedis } from "#redis";
 import { Key } from "@statsify/schemas";
 import { Redis } from "ioredis";
@@ -66,15 +74,18 @@ for i = 1, #buckets, 2 do
   end
 end
 
-weightedTotal = weightedTotal + weight
+local projectedTotal = weightedTotal + weight
+local resetTime = ((oldestSecond + windowSeconds) * 1000) - now
+
+if projectedTotal > apiKeyLimit then
+  return { "ok", name, apiKeyLimit, projectedTotal, resetTime }
+end
 
 redis.call("HINCRBY", rateLimitKey, currentSecond, weight)
 redis.call("HINCRBY", key, "requests", weight)
 redis.call("EXPIRE", rateLimitKey, windowSeconds)
 
-local resetTime = ((oldestSecond + windowSeconds) * 1000) - now
-
-return { "ok", name, apiKeyLimit, weightedTotal, resetTime }
+return { "ok", name, apiKeyLimit, projectedTotal, resetTime }
 `;
 
 type RateLimitResult =
@@ -111,7 +122,7 @@ export class AuthService {
         `${name} has exceeded their request limit of ${apiKeyLimit} and has requested ${weightedTotal} times`
       );
 
-      throw new HttpException("Too Many Requests", 429);
+      throw new RateLimitException(Number(resetTime));
     }
 
     return {
