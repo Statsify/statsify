@@ -42,15 +42,12 @@ export class ArcadeCommand extends BaseHypixelCommand<ArcadeModes> {
 }
 
 export function getArcadeModeEmojis(modes: GameModeWithSubModes<ArcadeModes>[]): ModeEmoji[] {
-  return modes.map((mode) => (t) => t(`emojis:arcade.${mode.api}`));
+  return modes.map(({ emoji }) => emoji ? (t) => t(emoji) : undefined);
 }
 
 export function getArcadeSubModeEmojis<M extends ApiModeFromGameModes<ArcadeModes>>(
-  mode: M,
+  _mode: M,
   submodes: SubModeForMode<ArcadeModes, M>[]
 ): ModeEmoji[] {
-  if (mode === "zombies")
-    return submodes.map((submode) => (t) => t(`emojis:zombies.${submode.api}`));
-
-  return [];
+  return submodes.map(({ emoji }) => emoji ? (t) => t(emoji) : undefined);
 }

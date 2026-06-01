@@ -43,6 +43,7 @@ import {
   Command,
   CommandContext,
   EmbedBuilder,
+  LocalizationString,
   Page,
   PaginateService,
   PlayerArgument,
@@ -85,6 +86,9 @@ import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 import type { BaseProfileProps, ModeEmoji } from "#commands/base.hypixel-command";
 import type { HistoricalTimeData } from "#components";
+
+const metadataString = (key?: string): LocalizationString | undefined =>
+  key ? (t) => t(key) : undefined;
 
 @Command({ description: "session stats" })
 export class SessionCommand {
@@ -390,7 +394,8 @@ export class SessionCommand {
 
       if (submodes.length === 0) return {
         label: mode.formatted,
-        emoji: modeEmojis[index],
+        description: metadataString(mode.description),
+        emoji: modeEmojis[index] ?? metadataString(mode.emoji),
         generator: async (t) => {
           const background = await getBackground(...mapBackground(modes, mode.api));
 
@@ -438,7 +443,8 @@ export class SessionCommand {
 
       const subPages = submodes.map((submode, index): SubPage => ({
         label: submode.formatted,
-        emoji: submodeEmojis[index],
+        description: metadataString(submode.description),
+        emoji: submodeEmojis[index] ?? metadataString(submode.emoji),
         generator: async (t) => {
           const background = await getBackground(...mapBackground(modes, mode.api, submode.api as ApiSubModeForMode<T, (typeof mode)["api"]>));
 
@@ -473,7 +479,8 @@ export class SessionCommand {
 
       return {
         label: mode.formatted,
-        emoji: modeEmojis[index],
+        description: metadataString(mode.description),
+        emoji: modeEmojis[index] ?? metadataString(mode.emoji),
         subPages,
       };
     });

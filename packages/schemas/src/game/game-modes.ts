@@ -8,11 +8,28 @@
 
 import { prettify } from "@statsify/util";
 
+export interface CommandOptionMetadata<Value extends string | undefined = string> {
+  label: string;
+  value: Value;
+  emoji?: string;
+  aliases: string[];
+  description?: string;
+}
+
+type OptionMetadata = {
+  aliases?: readonly string[];
+  description?: string;
+  emoji?: string;
+};
+
 export type GameMode<Modes extends Mode[]> = {
   [Key in ApiModeFromGameModes<Modes>]: {
     api: Key;
     formatted: string;
     hypixel?: string;
+    aliases: string[];
+    description?: string;
+    emoji?: string;
     submode: [SubModeForMode<Modes, Key>] extends [never] ? undefined : SubModeForMode<Modes, Key>;
   }
 }[ApiModeFromGameModes<Modes>];
@@ -22,11 +39,14 @@ export type GameModeWithSubModes<Modes extends Mode[]> = {
     api: Key;
     formatted: string;
     hypixel?: string;
+    aliases: string[];
+    description?: string;
+    emoji?: string;
     submodes: SubModeForMode<Modes, Key>[];
   }
 }[ApiModeFromGameModes<Modes>];
 
-export type Mode = {
+export type Mode = ({
   hypixel: string;
   formatted: string;
 } | {
@@ -34,9 +54,9 @@ export type Mode = {
   api: string;
   formatted?: string;
   submodes?: SubMode[];
-};
+}) & OptionMetadata;
 
-type SubMode = { api: string; formatted?: string };
+type SubMode = { api: string; formatted?: string } & OptionMetadata;
 
 export class GameModes<Modes extends Mode[]> {
   private modes: GameModeWithSubModes<Modes>[];
@@ -47,7 +67,16 @@ export class GameModes<Modes extends Mode[]> {
       hypixel: m.hypixel,
       api: m.api,
       formatted: m.formatted ?? prettify(m.api),
-      submodes: m.submodes?.map((sm) => ({ api: sm.api, formatted: sm.formatted ?? prettify(sm.api) })) ?? [],
+      aliases: [...(m.aliases ?? [])],
+      description: m.description,
+      emoji: m.emoji,
+      submodes: m.submodes?.map((sm) => ({
+        api: sm.api,
+        formatted: sm.formatted ?? prettify(sm.api),
+        aliases: [...(sm.aliases ?? [])],
+        description: sm.description,
+        emoji: sm.emoji,
+      })) ?? [],
     })) as GameModeWithSubModes<Modes>[];
 
     this.hypixelModes = Object.fromEntries(
@@ -72,6 +101,28 @@ export class GameModes<Modes extends Mode[]> {
     return this.modes;
   }
 
+  public getModeOptions(): CommandOptionMetadata<ApiModeFromGameModes<Modes>>[] {
+    return this.modes.map((mode) => ({
+      label: mode.formatted,
+      value: mode.api,
+      emoji: mode.emoji,
+      aliases: mode.aliases,
+      description: mode.description,
+    }));
+  }
+
+  public getSubModeOptions<M extends ApiModeFromGameModes<Modes>>(
+    mode: M
+  ): CommandOptionMetadata<ApiSubModeForMode<Modes, M>>[] {
+    return (this.modes.find((m) => m.api === mode)?.submodes ?? []).map((submode) => ({
+      label: submode.formatted,
+      value: submode.api as ApiSubModeForMode<Modes, M>,
+      emoji: submode.emoji,
+      aliases: submode.aliases,
+      description: submode.description,
+    }));
+  }
+
   public getHypixelModes() {
     return this.hypixelModes;
   }
@@ -86,7 +137,12 @@ type ExtractSubModes<T extends Mode[], M extends ApiModeFromGameModes<T>> = Extr
 export type SubModeForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> =
   [ExtractSubModes<T, M>] extends [never] ?
     never :
-    ExtractSubModes<T, M> & { formatted: string };
+      ExtractSubModes<T, M> & {
+        aliases: string[];
+        description?: string;
+        emoji?: string;
+        formatted: string;
+      };
 
 export type ApiSubModeForMode<T extends Mode[], M extends ApiModeFromGameModes<T>> = NeverToUndefined<ExtractSubModes<T, M>["api"]>;
 

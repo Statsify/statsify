@@ -38,6 +38,7 @@ import {
   ApiService,
   Command,
   CommandContext,
+  LocalizationString,
   Page,
   PaginateService,
   PlayerArgument,
@@ -56,6 +57,8 @@ import { getTheme } from "#themes";
 import { render } from "@statsify/rendering";
 
 const args = [PlayerArgument];
+const metadataString = (key?: string): LocalizationString | undefined =>
+  key ? (t) => t(key) : undefined;
 
 @Command({ description: (t) => t("commands.ratios") })
 export class RatiosCommand {
@@ -208,6 +211,8 @@ export class RatiosCommand {
 
     const pages: Page[] = displayedModes.map((mode, index) => ({
       label: mode.formatted,
+      description: metadataString(mode.description),
+      emoji: metadataString(mode.emoji),
       generator: async (t) => {
         const background = await getBackground(...mapBackground(modes, mode.api));
 

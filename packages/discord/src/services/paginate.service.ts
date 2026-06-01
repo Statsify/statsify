@@ -35,6 +35,7 @@ export type SubPage = PageInput & { generator: PaginateInteractionContentGenerat
 
 interface PageInput {
   label: LocalizationString;
+  description?: LocalizationString;
   emoji?: LocalizationString | false;
 }
 
@@ -247,6 +248,7 @@ class PageController {
 
       pages.forEach((page, index) => {
         const option = new SelectMenuOptionBuilder().label(page.label).value(`${index}`);
+        if (page.description) option.description(page.description);
         if (page.emoji) option.emoji(page.emoji);
         menu.option(option);
       });
