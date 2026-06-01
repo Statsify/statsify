@@ -206,7 +206,7 @@ export abstract class LeaderboardService {
 
     const leaderboardFields: LeaderboardEnabledMetadata[] = [];
 
-    fields.forEach((field) => {
+    for (const field of fields) {
       const metadata = getLeaderboardField(constructor, field);
       leaderboardFields.push(metadata);
 
@@ -219,7 +219,7 @@ export abstract class LeaderboardService {
       } else {
         pipeline.zrevrank(key, id);
       }
-    });
+    }
 
     const responses = await pipeline.exec();
 

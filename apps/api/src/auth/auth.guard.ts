@@ -35,7 +35,7 @@ export class AuthGuard implements CanActivate {
     const weight = this.reflector.get<number>("auth-weight", handler);
     const role = this.reflector.get<AuthRole>("auth-role", handler);
 
-    if (!weight || role == undefined) return true;
+    if (!weight || role === undefined) return true;
 
     const req = context.switchToHttp().getRequest<FastifyRequest>();
 
