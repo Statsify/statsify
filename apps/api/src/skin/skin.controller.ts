@@ -10,7 +10,7 @@ import { ApiBadRequestResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation
 import { Auth } from "#auth";
 import { Controller, Get, Query, StreamableFile } from "@nestjs/common";
 import { ErrorResponse, GetSkinTexturesResponse, PlayerNotFoundException } from "@statsify/api-client";
-import { HeadDto, PlayerDto, UuidDto } from "#dtos";
+import { HeadDto, PlayerDto, SkinRenderDto } from "#dtos";
 import { SkinService } from "./skin.service.js";
 
 @Controller("/skin")
@@ -32,8 +32,8 @@ export class SkinController {
   @Auth()
   @ApiOperation({ summary: "Get a Player Render" })
   @ApiBadRequestResponse({ type: ErrorResponse })
-  public async getRender(@Query() { uuid }: UuidDto) {
-    const render = await this.skinService.getRender(uuid, false);
+  public async getRender(@Query() { uuid, yaw }: SkinRenderDto) {
+    const render = await this.skinService.getRender(uuid, false, yaw);
     return new StreamableFile(render, { type: "image/png" });
   }
 
@@ -41,8 +41,8 @@ export class SkinController {
   @Auth()
   @ApiOperation({ summary: "Get an Extruded Player Render" })
   @ApiBadRequestResponse({ type: ErrorResponse })
-  public async getExtrudedRender(@Query() { uuid }: UuidDto) {
-    const render = await this.skinService.getRender(uuid, true);
+  public async getExtrudedRender(@Query() { uuid, yaw }: SkinRenderDto) {
+    const render = await this.skinService.getRender(uuid, true, yaw);
     return new StreamableFile(render, { type: "image/png" });
   }
 

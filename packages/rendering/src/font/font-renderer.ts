@@ -23,8 +23,31 @@ import type { Fill } from "#jsx";
 const sizes: Sizes = _sizes;
 const positions: string[][] = _positions;
 
+// Memoised pool for §k (obfuscated): maps atlas pixel-width → candidate chars.
+// Built once at module init from printable ASCII U+0021–U+007E that exist in sizes.ascii.
+// Same-width substitution guarantees layout never jitters regardless of text size or bold.
+const obfuscatedPool: Map<number, string[]> = (() => {
+  const pool = new Map<number, string[]>();
+  for (let cp = 0x21; cp <= 0x7e; cp++) {
+    const unicode = cp.toString(16).padStart(4, "0").toUpperCase();
+    const entry = sizes.ascii[unicode];
+    if (!entry?.width) continue;
+    let bucket = pool.get(entry.width);
+    if (!bucket) {
+      bucket = [];
+      pool.set(entry.width, bucket);
+    }
+    bucket.push(String.fromCodePoint(cp));
+  }
+  return pool;
+})();
+
 const GRADIENT_TOP_OVERLAY = "rgb(255 255 255 / 0.85)";
 const GRADIENT_BOTTOM_OVERLAY = "rgb(0 0 0 / 0.60)";
+
+// Hue advance per character for §y rainbow text.
+// 16 chars ≈ one full rainbow cycle — enough to show vivid variation in a short word.
+const HUE_STEP_PER_CHAR = 22.5; // degrees
 
 type CharacterSizes = Record<string, { start?: number; width?: number }>;
 
@@ -34,6 +57,9 @@ interface Sizes {
 }
 
 export class FontRenderer {
+  /** Set to [0, 1) before each animated frame to drive §y rainbow hue and §k reseed. */
+  public animationPhase = 0;
+
   private images: Map<string, CanvasRenderingContext2D>;
   private canvases: WeakMap<CanvasRenderingContext2D, Canvas>;
   private scales: WeakMap<CanvasRenderingContext2D, number>;
@@ -95,6 +121,9 @@ export class FontRenderer {
     y: number
   ) {
     const largestSize = Math.max(...nodes.map((node) => node.size));
+    // Global char index advances across all nodes so rainbow hue is continuous
+    // across a full text run (including spaces, maintaining hue through gaps).
+    let charIndex = 0;
 
     for (const {
       text,
@@ -103,14 +132,24 @@ export class FontRenderer {
       italic,
       underline,
       strikethrough,
+      obfuscated,
+      rainbow,
       size,
     } of nodes) {
       const adjustY = y + size + (largestSize - size) * 5;
 
       for (const char of text) {
+        const drawChar =
+          obfuscated && char !== " " && char !== "\n" ?
+            this.pickObfuscatedChar(char) :
+            char;
+        const charColor = rainbow ?
+          this.hueToHex(charIndex * HUE_STEP_PER_CHAR + this.animationPhase * 360) :
+          color;
+        charIndex++;
         x += this.fillCharacter(
           ctx,
-          char,
+          drawChar,
           Math.round(x),
           Math.round(adjustY),
           size,
@@ -118,7 +157,7 @@ export class FontRenderer {
           italic,
           underline,
           strikethrough,
-          color
+          charColor
         );
       }
     }
@@ -130,6 +169,8 @@ export class FontRenderer {
       italic: false,
       underline: false,
       strikethrough: false,
+      obfuscated: false,
+      rainbow: false,
       color: "#FFFFFF",
       size: 2,
       ...inputState,
@@ -181,6 +222,46 @@ export class FontRenderer {
     }
 
     return nodes;
+  }
+
+  private pickObfuscatedChar(char: string): string {
+    const unicode = this.getUnicode(char).toUpperCase();
+    const width = sizes.ascii[unicode]?.width;
+    if (!width) return char;
+    const pool = obfuscatedPool.get(width);
+    if (!pool?.length) return char;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  /** Converts a hue angle (degrees, any value) to a full-saturation CSS hex color. */
+  private hueToHex(hue: number): string {
+    const h = ((hue % 360) + 360) % 360;
+    const sector = h / 60;
+    const x = 1 - Math.abs(sector % 2 - 1);
+    let r = 0;
+    let g = 0;
+    let b = 0;
+    if (sector < 1) {
+      r = 1;
+      g = x;
+    } else if (sector < 2) {
+      r = x;
+      g = 1;
+    } else if (sector < 3) {
+      g = 1;
+      b = x;
+    } else if (sector < 4) {
+      g = x;
+      b = 1;
+    } else if (sector < 5) {
+      r = x;
+      b = 1;
+    } else {
+      r = 1;
+      b = x;
+    }
+    const hex = (v: number) => Math.round(v * 255).toString(16).padStart(2, "0");
+    return `#${hex(r)}${hex(g)}${hex(b)}`;
   }
 
   private getUnicode(char: string) {

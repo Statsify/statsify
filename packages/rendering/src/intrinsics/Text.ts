@@ -21,10 +21,14 @@ export interface TextProps {
   italic?: boolean;
   underline?: boolean;
   size?: number;
+  animated?: boolean;
+  numericValue?: number;
 }
 
 export interface TextRenderProps {
   text: TextNode[];
+  animated?: boolean;
+  numericValue?: number;
 }
 
 export const component: JSX.RawFC<
@@ -40,6 +44,8 @@ export const component: JSX.RawFC<
   italic = false,
   underline = false,
   size = 2,
+  animated,
+  numericValue,
 }) => {
   let text: string;
 
@@ -73,7 +79,7 @@ export const component: JSX.RawFC<
       height,
     },
     style: { location: "center", direction: "row", align },
-    props: { text: nodes },
+    props: { text: nodes, animated, numericValue },
     children: [],
   };
 };

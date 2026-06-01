@@ -44,6 +44,10 @@ pub struct OrbitalCamera {
 
 impl OrbitalCamera {
   pub fn new(target: Point3<f32>, width: f32, height: f32) -> Self {
+    Self::with_theta(target, width, height, -0.3)
+  }
+
+  pub fn with_theta(target: Point3<f32>, width: f32, height: f32, theta: f32) -> Self {
     Self {
       target,
 
@@ -54,7 +58,7 @@ impl OrbitalCamera {
       max_radius: 100.0,
 
       radius: 50.0,
-      theta: -0.3,
+      theta,
       phi: 1.383,
 
       min_polar_angle: f32::NEG_INFINITY,

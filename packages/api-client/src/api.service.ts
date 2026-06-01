@@ -175,6 +175,14 @@ export class ApiService {
     });
   }
 
+  public getPlayerSkinAtYaw(uuid: string, user: User | null, yaw: number) {
+    const route = User.hasExtrudedSkins(user) ? "skin/extruded" : "skin";
+    return this.requestImage(isProduction ? `https://api.statsify.net/${route}` : `/${route}`, {
+      uuid,
+      yaw,
+    });
+  }
+
   public getPlayerSkinTextures(tag: string) {
     return this.requestKey<GetSkinTexturesResponse, "skin">("/skin/textures", "skin", {
       player: tag,

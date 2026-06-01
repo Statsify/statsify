@@ -72,36 +72,42 @@ export const BedWarsProfile = ({
       />
       <Table.table>
         <Table.tr>
-          <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" />
-          <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" />
-          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" />
+          <Table.td title={t("stats.wins")} value={t(stats.wins)} color="§a" animated numericValue={stats.wins} />
+          <Table.td title={t("stats.losses")} value={t(stats.losses)} color="§c" animated numericValue={stats.losses} />
+          <Table.td title={t("stats.wlr")} value={t(stats.wlr)} color="§6" animated numericValue={stats.wlr} />
         </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.finalKills")}
             value={t(stats.finalKills)}
             color="§a"
+            animated
+            numericValue={stats.finalKills}
           />
           <Table.td
             title={t("stats.finalDeaths")}
             value={t(stats.finalDeaths)}
             color="§c"
+            animated
+            numericValue={stats.finalDeaths}
           />
-          <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color="§6" />
+          <Table.td title={t("stats.fkdr")} value={t(stats.fkdr)} color="§6" animated numericValue={stats.fkdr} />
         </Table.tr>
         <Table.tr>
-          <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" />
-          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" />
-          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" />
+          <Table.td title={t("stats.kills")} value={t(stats.kills)} color="§a" animated numericValue={stats.kills} />
+          <Table.td title={t("stats.deaths")} value={t(stats.deaths)} color="§c" animated numericValue={stats.deaths} />
+          <Table.td title={t("stats.kdr")} value={t(stats.kdr)} color="§6" animated numericValue={stats.kdr} />
         </Table.tr>
         <Table.tr>
           <Table.td
             title={t("stats.bedsBroken")}
             value={t(stats.bedsBroken)}
             color="§a"
+            animated
+            numericValue={stats.bedsBroken}
           />
-          <Table.td title={t("stats.bedsLost")} value={t(stats.bedsLost)} color="§c" />
-          <Table.td title={t("stats.bblr")} value={t(stats.bblr)} color="§6" />
+          <Table.td title={t("stats.bedsLost")} value={t(stats.bedsLost)} color="§c" animated numericValue={stats.bedsLost} />
+          <Table.td title={t("stats.bblr")} value={t(stats.bblr)} color="§6" animated numericValue={stats.bblr} />
         </Table.tr>
         <Historical.progression
           time={time}
