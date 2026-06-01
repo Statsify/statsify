@@ -7,7 +7,7 @@
  */
 
 import { AuthRole } from "./auth.role.js";
-import { AuthService } from "./auth.service.js";
+import { AuthService, RateLimitException } from "./auth.service.js";
 import {
   CanActivate,
   ExecutionContext,
@@ -45,7 +45,18 @@ export class AuthGuard implements CanActivate {
 
     if (!apiKey) throw new UnauthorizedException();
 
-    const keyInfo = await this.authService.limited(apiKey, weight, role);
+    let keyInfo;
+    try {
+      keyInfo = await this.authService.limited(apiKey, weight, role);
+    } catch (err) {
+      if (err instanceof RateLimitException) {
+        context.switchToHttp().getResponse<FastifyReply>().headers({
+          "retry-after": err.resetTime,
+          "x-ratelimit-timeout": err.resetTime,
+        });
+      }
+      throw err;
+    }
 
     context.switchToHttp().getResponse<FastifyReply>().headers({
       "x-ratelimit-used": keyInfo.used,

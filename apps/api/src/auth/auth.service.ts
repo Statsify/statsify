@@ -15,10 +15,83 @@ import {
   Logger,
   UnauthorizedException,
 } from "@nestjs/common";
+
+export class RateLimitException extends HttpException {
+  public readonly resetTime: number;
+  public constructor(resetTime: number) {
+    super("Too Many Requests", 429);
+    this.resetTime = resetTime;
+  }
+}
 import { InjectRedis } from "#redis";
 import { Key } from "@statsify/schemas";
 import { Redis } from "ioredis";
 import { createHash, randomUUID } from "node:crypto";
+
+const RATE_LIMIT_WINDOW_SECONDS = 60;
+
+const RATE_LIMIT_SCRIPT = `
+local key = KEYS[1]
+local rateLimitKey = KEYS[2]
+
+local requiredRole = tonumber(ARGV[1])
+local weight = tonumber(ARGV[2])
+local now = tonumber(ARGV[3])
+local windowSeconds = tonumber(ARGV[4])
+local currentSecond = math.floor(now / 1000)
+local windowStart = currentSecond - windowSeconds + 1
+
+local keyData = redis.call("HMGET", key, "name", "role", "limit")
+local name = keyData[1]
+
+if not name then
+  return { "unauthorized" }
+end
+
+local apiKeyRole = tonumber(keyData[2]) or 0
+local apiKeyLimit = tonumber(keyData[3]) or 0
+
+if apiKeyRole < requiredRole then
+  return { "forbidden" }
+end
+
+local buckets = redis.call("HGETALL", rateLimitKey)
+local weightedTotal = 0
+local oldestSecond = currentSecond
+
+for i = 1, #buckets, 2 do
+  local bucketSecond = tonumber(buckets[i])
+  local bucketWeight = tonumber(buckets[i + 1])
+
+  if bucketSecond < windowStart then
+    redis.call("HDEL", rateLimitKey, buckets[i])
+  else
+    weightedTotal = weightedTotal + bucketWeight
+
+    if bucketSecond < oldestSecond then
+      oldestSecond = bucketSecond
+    end
+  end
+end
+
+local projectedTotal = weightedTotal + weight
+local resetTime = ((oldestSecond + windowSeconds) * 1000) - now
+
+if projectedTotal > apiKeyLimit then
+  return { "ok", name, apiKeyLimit, projectedTotal, resetTime }
+end
+
+redis.call("HINCRBY", rateLimitKey, currentSecond, weight)
+redis.call("HINCRBY", key, "requests", weight)
+redis.call("EXPIRE", rateLimitKey, windowSeconds)
+
+return { "ok", name, apiKeyLimit, projectedTotal, resetTime }
+`;
+
+type RateLimitResult =
+  ["unauthorized"] |
+  ["forbidden"] |
+  ["ok", string, number, number, number];
 
 @Injectable()
 export class AuthService {
@@ -28,60 +101,35 @@ export class AuthService {
 
   public async limited(apiKey: string, weight: number, role: AuthRole) {
     const hash = this.hash(apiKey);
-
-    const [name, ...keyInfo] = await this.redis.hmget(
+    const result = await this.redis.eval(
+      RATE_LIMIT_SCRIPT,
+      2,
       `key:${hash}`,
-      "name",
-      "role",
-      "limit"
-    );
+      `ratelimit:v2:${hash}`,
+      role,
+      weight,
+      Date.now(),
+      RATE_LIMIT_WINDOW_SECONDS
+    ) as RateLimitResult;
 
-    if (name === null) throw new UnauthorizedException();
+    const [status, name, apiKeyLimit, weightedTotal, resetTime] = result;
 
-    const [apiKeyRole, apiKeyLimit] = keyInfo.map(Number);
+    if (status === "unauthorized") throw new UnauthorizedException();
+    if (status === "forbidden") throw new ForbiddenException();
 
-    if (apiKeyRole < role) throw new ForbiddenException();
-
-    const pipeline = this.redis.pipeline();
-
-    const time = Date.now();
-    const expirey = 60_000;
-
-    const key = `ratelimit:${hash}`;
-
-    pipeline.zremrangebyscore(key, 0, time - expirey);
-    pipeline.zadd(key, time, `${randomUUID()}:${weight}`);
-    pipeline.zrange(key, 0, -1, "WITHSCORES");
-    pipeline.hincrby(`key:${hash}`, "requests", weight);
-    pipeline.expire(key, expirey / 1000);
-
-    const pipelineResult = await pipeline.exec();
-
-    if (!pipelineResult) throw new InternalServerErrorException();
-
-    const requests = pipelineResult[2];
-
-    if (requests[0]) throw new InternalServerErrorException();
-
-    const weightedTotal = (requests[1] as string[])
-      .filter((_, i) => i % 2 === 0)
-      .reduce((acc, key) => acc + Number(key.split(":")[1]), 0);
-
-    const resetTime = 60_000 - (time - (requests[1] as [Error | null, number])[1]);
-
-    if (weightedTotal > apiKeyLimit) {
+    if (Number(weightedTotal) > Number(apiKeyLimit)) {
       this.logger.warn(
         `${name} has exceeded their request limit of ${apiKeyLimit} and has requested ${weightedTotal} times`
       );
 
-      throw new HttpException("Too Many Requests", 429);
+      throw new RateLimitException(Number(resetTime));
     }
 
     return {
       canActivate: true,
-      used: weightedTotal,
-      limit: apiKeyLimit,
-      resetTime,
+      used: Number(weightedTotal),
+      limit: Number(apiKeyLimit),
+      resetTime: Number(resetTime),
     };
   }
 
@@ -106,11 +154,11 @@ export class AuthService {
 
   public async getKey(apiKey: string): Promise<Key> {
     const hash = this.hash(apiKey);
-    const key = `ratelimit:${hash}`;
+    const key = `ratelimit:v2:${hash}`;
 
     const pipeline = this.redis.pipeline();
     pipeline.hmget(`key:${hash}`, "name", "requests", "limit");
-    pipeline.zrange(key, 0, -1, "WITHSCORES");
+    pipeline.hgetall(key);
 
     const pipelineResult = await pipeline.exec();
 
@@ -119,15 +167,11 @@ export class AuthService {
     const [keydata, requests] = pipelineResult;
 
     const [name, lifetimeRequests, limit] = keydata[1] as [string, number, number];
-
-    const recentRequests = (requests[1] as string[])
-      .filter((_, i) => i % 2 === 0)
-      .reduce((acc, key) => acc + Number(key.split(":")[1]), 0);
-
-    const time = Date.now();
-
-    const resetTime =
-      60_000 - (time - Number((requests[1] as [Error | null, number])[1]));
+    const requestBuckets = requests[1] as Record<string, string>;
+    const { recentRequests, resetTime } = getRateLimitBucketStats(
+      requestBuckets,
+      Date.now()
+    );
 
     return {
       name,
@@ -141,4 +185,31 @@ export class AuthService {
   private hash(apiKey: string): string {
     return createHash("sha256").update(apiKey).digest("hex");
   }
+}
+
+export function getRateLimitBucketStats(buckets: Record<string, string>, now: number) {
+  const currentSecond = Math.floor(now / 1000);
+  const windowStart = currentSecond - RATE_LIMIT_WINDOW_SECONDS + 1;
+
+  let oldestSecond = currentSecond;
+  let recentRequests = 0;
+
+  for (const [bucket, weight] of Object.entries(buckets)) {
+    const bucketSecond = Number(bucket);
+
+    if (bucketSecond < windowStart) continue;
+
+    recentRequests += Number(weight);
+
+    if (bucketSecond < oldestSecond) {
+      oldestSecond = bucketSecond;
+    }
+  }
+
+  return {
+    recentRequests,
+    resetTime: recentRequests > 0 ?
+      (oldestSecond + RATE_LIMIT_WINDOW_SECONDS) * 1000 - now :
+      0,
+  };
 }
