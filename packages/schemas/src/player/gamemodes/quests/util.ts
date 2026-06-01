@@ -15,9 +15,18 @@ import {
 import { DateTime } from "luxon";
 import { Field } from "#metadata";
 import { FormattedGame } from "#game";
+import { QUEST_OBJECTIVE_TARGETS } from "./objective-targets.generated.js";
+
+export interface QuestProgress {
+  current: number;
+  target: number;
+}
 
 interface Quest {
   completions?: { time: number }[];
+  active?: {
+    objectives?: Record<string, number>;
+  };
 }
 
 export enum QuestTime {
@@ -37,6 +46,8 @@ export interface QuestOption<TField extends string> {
     fieldName?: string;
     name?: string;
   };
+  /** Objective id → integer target, sourced from the Hypixel quests resource. Populated by createGameModeQuests; do not set manually. */
+  objectives?: Record<string, number>;
 }
 
 export interface CreateQuestsOptions<
@@ -63,8 +74,10 @@ export interface CreateQuestsOptions<
   monthly?: QuestOption<MonthlyFields>[];
 }
 
+type QuestInstance = Record<string, number | Record<string, QuestProgress>>;
+
 const processQuests = (
-  instance: Record<string, number>,
+  instance: QuestInstance,
   quests: APIData,
   time: QuestTime,
   options: QuestOption<string>[],
@@ -75,7 +88,18 @@ const processQuests = (
     const field = fieldPrefix ? `${fieldPrefix}_${quest.field}` : quest.field;
 
     instance[k] = getQuestCountDuring(time, quests[field]);
-    instance.total += instance[k] ?? 0;
+    instance.total = (instance.total as number) + ((instance[k] as number) ?? 0);
+
+    if ("_progress" in instance && quest.objectives) {
+      const active = (quests[field] as Quest | undefined)?.active?.objectives;
+      if (active) {
+        const current = Object.keys(quest.objectives).reduce((sum, id) => sum + (active[id] ?? 0), 0);
+        if (current > 0) {
+          const target = Object.values(quest.objectives).reduce((sum, v) => sum + v, 0);
+          (instance._progress as Record<string, QuestProgress>)[k] = { current, target };
+        }
+      }
+    }
   });
 };
 
@@ -139,11 +163,22 @@ export function createGameModeQuests<
   WeeklyFields,
   MonthlyFields
 > {
+  for (const quest of [...daily, ...weekly, ...monthly]) {
+    if (quest.objectives === undefined) {
+      const id = fieldPrefix ? `${fieldPrefix}_${quest.field}` : quest.field;
+      const targets = QUEST_OBJECTIVE_TARGETS[id];
+      if (targets !== undefined) quest.objectives = targets;
+    }
+  }
+
   class Daily {
-    [key: string]: number;
+    [key: string]: number | Record<string, QuestProgress>;
 
     @Field(questTotalFieldData(game))
     public total: number = 0;
+
+    @Field({ leaderboard: { enabled: false }, historical: { enabled: false } })
+    public _progress: Record<string, QuestProgress> = {};
 
     public constructor(quests: APIData) {
       processQuests(this, quests, QuestTime.Daily, daily, fieldPrefix);
@@ -153,10 +188,13 @@ export function createGameModeQuests<
   assignQuestMetadata(Daily, QuestTime.Daily, daily);
 
   class Weekly {
-    [key: string]: number;
+    [key: string]: number | Record<string, QuestProgress>;
 
     @Field(questTotalFieldData(game))
     public total: number = 0;
+
+    @Field({ leaderboard: { enabled: false }, historical: { enabled: false } })
+    public _progress: Record<string, QuestProgress> = {};
 
     public constructor(quests: APIData) {
       processQuests(this, quests, QuestTime.Weekly, weekly, fieldPrefix);
@@ -166,10 +204,13 @@ export function createGameModeQuests<
   assignQuestMetadata(Weekly, QuestTime.Weekly, weekly);
 
   class Monthly {
-    [key: string]: number;
+    [key: string]: number | Record<string, QuestProgress>;
 
     @Field(questTotalFieldData(game))
     public total: number = 0;
+
+    @Field({ leaderboard: { enabled: false }, historical: { enabled: false } })
+    public _progress: Record<string, QuestProgress> = {};
 
     public constructor(quests: APIData) {
       processQuests(this, quests, QuestTime.Monthly, monthly, fieldPrefix);

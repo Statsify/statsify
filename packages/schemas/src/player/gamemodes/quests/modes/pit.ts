@@ -11,7 +11,7 @@ import { createGameModeQuests } from "../util.js";
 
 export const PitQuests = createGameModeQuests({
   game: FormattedGame.PIT,
-  fieldPrefix: "prototype_pit",
+  fieldPrefix: "pit",
   daily: [
     { field: "daily_kills", propertyKey: "hunter" },
     { field: "daily_contract", propertyKey: "contracted" },

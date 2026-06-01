@@ -33,7 +33,8 @@ import {
 } from "./modes/index.js";
 import { ExtractGameModes, FormattedGame, GameModes } from "#game";
 import { Field } from "#metadata";
-import { QuestTime, createQuestsInstance } from "./util.js";
+import { type QuestProgress, QuestTime, createQuestsInstance } from "./util.js";
+export type { QuestProgress } from "./util.js";
 
 export const QUEST_MODES = new GameModes([
   { api: "overall" },
@@ -95,6 +96,7 @@ export const OverallQuests = createQuestsInstance(QuestTime.Overall, questModes)
 
 export interface GameQuests {
   total: number;
+  _progress?: Record<string, QuestProgress>;
 }
 
 export type GenericQuestInstance = {
