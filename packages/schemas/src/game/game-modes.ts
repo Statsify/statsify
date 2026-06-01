@@ -53,7 +53,7 @@ export class GameModes<Modes extends Mode[]> {
     this.hypixelModes = Object.fromEntries(
       modes
         .map((m) => {
-          if (typeof m.hypixel !== "string") return undefined;
+          if (typeof m.hypixel !== "string") return;
           const formatted = m.formatted ?? prettify((m as { api: string }).api);
           return [m.hypixel, formatted] as const;
         }).filter((entry) => entry !== undefined)

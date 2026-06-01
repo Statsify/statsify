@@ -70,13 +70,13 @@ const processQuests = (
   options: QuestOption<string>[],
   fieldPrefix?: string
 ) => {
-  options.forEach((quest) => {
+  for (const quest of options) {
     const k = quest.propertyKey ?? quest.field;
     const field = fieldPrefix ? `${fieldPrefix}_${quest.field}` : quest.field;
 
     instance[k] = getQuestCountDuring(time, quests[field]);
     instance.total += instance[k] ?? 0;
-  });
+  }
 };
 
 const assignQuestMetadata = (
@@ -84,7 +84,7 @@ const assignQuestMetadata = (
   time: QuestTime,
   options: QuestOption<string>[]
 ) => {
-  options.forEach((quest) => {
+  for (const quest of options) {
     const hasOverall = quest.overall !== undefined;
     const canDisplayOverall = hasOverall && time === QuestTime.Overall;
 
@@ -101,7 +101,7 @@ const assignQuestMetadata = (
     });
 
     decorator(constructor.prototype, quest.propertyKey ?? quest.field);
-  });
+  }
 };
 
 const questTotalFieldData = (game: FormattedGame, enabled = false) => ({
@@ -224,13 +224,13 @@ export function createQuestsInstance<
     [key: string]: Record<string, number>;
 
     public constructor(data: APIData) {
-      modes.forEach(([game, quests]) => {
+      for (const [game, quests] of modes) {
         this[game] = new quests[time](data);
-      });
+      }
     }
   }
 
-  modes.forEach(([gameName, quests]) => {
+  for (const [gameName, quests] of modes) {
     const GameModeClass = quests[time];
 
     const decorator = Field({
@@ -240,7 +240,7 @@ export function createQuestsInstance<
     });
 
     decorator(QuestInstance.prototype, gameName);
-  });
+  }
 
   return QuestInstance as unknown as IQuestInstance<Time, GamesWithQuests>;
 }

@@ -11,7 +11,7 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import type { DeepFlatten } from "./flatten.js";
 
-const directory = dirname(fileURLToPath(import.meta.url));
+const directory = import.meta.dirname;
 
 export interface Config {
   database: {
@@ -285,12 +285,12 @@ async function loadConfig(): Promise<{ default: Config }> {
     return import(join(directory, "../../../config.json"));
   } else if (existsSync(join(directory, "../../../config.js"))) {
     return import(join(directory, "../../../config.js"));
-  } else {
-    throw new Error("No config file detected!");
   }
+    throw new Error("No config file detected!");
+  
 }
 
-let cfg: Config | undefined = undefined;
+let cfg;
 
 export interface ConfigOptions<T extends keyof FlatConfig> {
   required?: boolean;

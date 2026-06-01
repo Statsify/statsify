@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type APIData } from "@statsify/util";
+import type { APIData } from "@statsify/util";
 import { Field } from "#metadata";
 import { ratio } from "@statsify/math";
 

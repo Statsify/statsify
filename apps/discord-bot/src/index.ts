@@ -8,7 +8,7 @@
 
 import * as Sentry from "@sentry/node";
 import { CommandListener } from "#lib/command.listener";
-import { loadCommands, CommandPoster, I18nLoaderService } from "@statsify/discord";
+import { CommandPoster, I18nLoaderService, loadCommands } from "@statsify/discord";
 import { Container } from "typedi";
 import { FontLoaderService } from "#services";
 import { InteractionServer, RestClient, WebsocketShard } from "tiny-discord";

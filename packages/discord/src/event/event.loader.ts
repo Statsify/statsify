@@ -17,16 +17,12 @@ import { statSync } from "node:fs";
 const logger = new Logger("EventLoader");
 
 export async function loadEvents(websocket: WebsocketShard, dir: string) {
-  const events = new Map<GatewayDispatchEvents, AbstractEventListener<any>>();
   const files = await getEventFiles(dir);
-
-  for (const file of files) {
-    const imports = await importEvent(file);
-    for (const event of imports) events.set(event.event, event);
-  }
+  const events = await Promise.all(files.map(importEvent));
+  const eventsMap = new Map<GatewayDispatchEvents, AbstractEventListener<any>>(events.flat().map((event) => [event.event, event]));
 
   websocket.on("event", (event) => {
-    const listener = events.get(event.t as GatewayDispatchEvents);
+    const listener = eventsMap.get(event.t as GatewayDispatchEvents);
     if (listener) listener.onEvent(event.d);
   });
 }

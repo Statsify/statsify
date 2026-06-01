@@ -46,7 +46,7 @@ function getMetadataEntries(
 
   const metadataEntries: MetadataEntry[] = [];
 
-  entries.forEach(([key, value]) => {
+  for (const [key, value] of entries) {
     const path = `${base ? `${base}.` : ""}${key}`;
     const name = value.leaderboard.name
       ? `${baseName ? `${baseName} ` : ""}${value.leaderboard.name}`
@@ -63,7 +63,7 @@ function getMetadataEntries(
         .filter((r) => r !== key && keys.includes(r))
         .map((r) => `${base ? `${base}.` : ""}${r}`);
 
-      if (!remainingStats.length) continue;
+      if (remainingStats.length === 0) continue;
 
       value.leaderboard.additionalFields = remainingStats;
       // TODO: Investigate if this is needed or if there is another way
@@ -117,7 +117,7 @@ function getMetadataEntries(
     });
 
     metadataEntries.push(...subMetadataEntries);
-  });
+  }
 
   return metadataEntries;
 }

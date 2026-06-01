@@ -50,7 +50,7 @@ export function getPlayerRank(data: APIData) {
   }
 
   if (data.prefix) {
-    rank = data.prefix.replace(/§.|\[|]/g, "");
+    rank = data.prefix.replaceAll(/§.|\[|]/g, "");
   }
 
   rank = replaceRank(rank);

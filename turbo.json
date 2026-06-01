@@ -27,11 +27,11 @@
     },
     "lint": {
       "outputs": [],
-      "dependsOn": ["^lint"]
+      "dependsOn": []
     },
     "fmt": {
       "outputs": [],
-      "dependsOn": ["^fmt"]
+      "dependsOn": []
     }
   }
 }

@@ -16,19 +16,15 @@ import { scanCommands } from "./command.builder.js";
 const logger = new Logger("CommandLoader");
 
 export async function loadCommands(dir: string) {
-  const commands = new Map<string, CommandResolvable>();
   const files = await getCommandFiles(dir);
+  const commands = await Promise.all(files.map(importCommand));
 
-  for (const file of files) {
-    const imports = await importCommand(file);
-
-    for (const command of imports) {
-      if (!command) continue;
-      commands.set(command.name, command);
-    }
-  }
-
-  return commands;
+  return new Map<string, CommandResolvable>(
+    commands
+      .flat()
+      .filter((command) => command !== undefined)
+      .map((command) => [command.name, command] as const),
+  );
 }
 
 async function importCommand(file: string) {
