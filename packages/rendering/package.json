@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "swc src --out-dir dist --strip-leading-paths",
-    "test:types": "tsc --noEmit",
+    "test:types": "tsgo --noEmit",
     "lint": "eslint"
   },
   "dependencies": {
