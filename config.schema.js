@@ -69,11 +69,5 @@ export default {
     supportBotDsn: "",
     tracesSampleRate: 1,
   },
-  sweeper: {
-    requestsPerMinute: 100,
-    batchSize: 10000,
-    staleAfterDays: 7,
-    penaltyMs: 86_400_000,
-  },
   environment: "dev",
 };

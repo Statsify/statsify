@@ -62,14 +62,6 @@ module.exports = {
       exp_backoff_restart_delay,
       interpreter,
       env,
-    },
-    {
-      name: "hypixel-sweeper",
-      args: `scripts sweeper start ${with_color}`,
-      script,
-      exp_backoff_restart_delay,
-      interpreter,
-      env,
-    },
+    }
   ],
 };
