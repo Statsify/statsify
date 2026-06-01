@@ -18,7 +18,7 @@ import { config } from "@statsify/util";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const directory = dirname(fileURLToPath(import.meta.url));
+const directory = import.meta.dirname;
 
 const logger = new Logger("discord-bot");
 const handleError = logger.error.bind(logger);

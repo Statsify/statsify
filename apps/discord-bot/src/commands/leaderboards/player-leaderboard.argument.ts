@@ -39,8 +39,9 @@ const fields = entries.reduce((acc, [prefix, value]) => {
   );
 
   const fuse = new Fuse(list, FUSE_OPTIONS);
+  acc[prefix] = [fuse, list];
 
-  return { ...acc, [prefix]: [fuse, list] };
+  return acc;
 }, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);
 
 export class PlayerLeaderboardArgument extends AbstractArgument {

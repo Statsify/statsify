@@ -127,8 +127,7 @@ export class CommandListener extends AbstractCommandListener {
     const newCooldown = now + command.cooldown * 1000 * reduction;
 
     if (!cooldownForCommand) {
-      const cooldownForCommand = new Map();
-      cooldownForCommand.set(userId, newCooldown);
+      const cooldownForCommand = new Map([userId, newCooldown]);
       this.cooldowns.set(command.name, cooldownForCommand);
 
       return;
@@ -168,7 +167,7 @@ export class CommandListener extends AbstractCommandListener {
       (t) => !t.disabled?.includes(commandName) && !t.uneligible?.(user)
     );
 
-    if (!useableTips.length) return undefined;
+    if (useableTips.length === 0) return undefined;
 
     const tip = useableTips[Math.floor(Math.random() * useableTips.length)];
     return tip.message;

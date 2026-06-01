@@ -322,7 +322,7 @@ export class RankingsCommand {
 
     const rankings = await this.apiService.getPlayerRankings(filteredFields, player.uuid);
 
-    if (!rankings.length)
+    if (rankings.length === 0)
       throw new ErrorMessage(
         (t) => t("errors.noRankings.title"),
         (t) =>

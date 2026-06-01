@@ -248,7 +248,7 @@ export class RatiosCommand {
   }
 
   private getModeStats(game: PlayerStats[keyof PlayerStats], mode: GameModeWithSubModes<any>) {
-    if (mode.submodes.length !== 0) {
+    if (mode.submodes.length > 0) {
       let stats = game[mode.api as keyof typeof game];
       stats = stats[mode.submodes[0].api as keyof typeof game];
       return mode.submodes[0].api === "overall" ? stats || game : stats;
@@ -289,7 +289,7 @@ export class RatiosCommand {
         return numeratorType === Number && denominatorType === Number;
       });
 
-      if (!ratios.length) continue;
+      if (ratios.length === 0) continue;
 
       ratioModes.push([mode, ratios]);
     }
