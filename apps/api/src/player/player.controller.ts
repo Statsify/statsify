@@ -15,7 +15,7 @@ import {
 } from "@nestjs/swagger";
 import { Auth, AuthRole } from "#auth";
 import { Body, Controller, Delete, Get, Post, Query } from "@nestjs/common";
-import { CachedPlayerDto, PlayerDto, PlayerGroupDto, UpdatePlayerDto } from "#dtos";
+import { CachedPlayerDto, PlayerDto, PlayerGroupDto, PlayerStaleDto, UpdatePlayerDto } from "#dtos";
 import {
   DeletePlayerResponse,
   ErrorResponse,
@@ -61,6 +61,13 @@ export class PlayerController {
   @Get("/group")
   public getPlayerGroup(@Query() { start, end }: PlayerGroupDto) {
     return this.playerService.getPlayers(start, end);
+  }
+
+  @ApiOperation({ summary: "Get Stale Players" })
+  @Auth({ role: AuthRole.WORKER, weight: 10 })
+  @Get("/stale")
+  public getStale(@Query() { limit, staleAfterDays }: PlayerStaleDto) {
+    return this.playerService.getStale(limit, staleAfterDays);
   }
 
   @ApiOperation({ summary: "Deletes a Player" })

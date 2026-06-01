@@ -103,6 +103,19 @@ export class PlayerService {
     );
   }
 
+  public async getStale(limit: number, staleAfterDays: number): Promise<string[]> {
+    const threshold = Date.now() - staleAfterDays * 24 * 60 * 60 * 1000;
+
+    const players = await this.playerModel
+      .find({ expiresAt: { $lt: threshold } } as any, { uuid: 1, _id: 0 })
+      .sort({ expiresAt: 1 })
+      .limit(limit)
+      .lean()
+      .exec();
+
+    return (players as any[]).map((p) => p.uuid);
+  }
+
   public async getStatus(tag: string) {
     const player = await this.get(tag, CacheLevel.CACHE, {
       uuid: true,

@@ -17,6 +17,7 @@ export * from "./verify-code.dto.js";
 export * from "./command.dto.js";
 export * from "./update-player.dto.js";
 export * from "./player-group.dto.js";
+export * from "./player-stale.dto.js";
 export * from "./player-search.dto.js";
 export * from "./player.dto.js";
 export * from "./key.dto.js";
