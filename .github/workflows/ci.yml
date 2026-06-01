@@ -49,7 +49,7 @@ jobs:
         id: affected
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            echo "filter=--filter=...[origin/main]" >> $GITHUB_OUTPUT
+            echo "filter=--affected" >> $GITHUB_OUTPUT
           else
             echo "filter=" >> $GITHUB_OUTPUT
           fi
