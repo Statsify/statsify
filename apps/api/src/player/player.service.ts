@@ -107,7 +107,8 @@ export class PlayerService {
     const threshold = Date.now() - staleAfterDays * 24 * 60 * 60 * 1000;
 
     const players = await this.playerModel
-      .find({ expiresAt: { $lt: threshold } } as any, { uuid: 1, _id: 0 })
+      .find({ expiresAt: { $lt: threshold } })
+      .select({ uuid: 1, _id: 0 })
       .sort({ expiresAt: 1 })
       .limit(limit)
       .lean()
