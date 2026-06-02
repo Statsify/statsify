@@ -17,7 +17,7 @@
     "@statsify/rendering": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
+    "@swc/helpers": "^0.5.23",
     "axios": "^1.11.0"
   },
   "imports": {

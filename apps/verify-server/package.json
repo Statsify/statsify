@@ -17,7 +17,7 @@
     "@statsify/logger": "workspace:^",
     "@statsify/schemas": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
+    "@swc/helpers": "^0.5.23",
     "@typegoose/typegoose": "^12.6.0",
     "minecraft-protocol": "^1.61.0",
     "mongoose": "^8.5.2"

@@ -28,7 +28,7 @@
     "@statsify/schemas": "workspace:^",
     "@statsify/skin-renderer": "workspace:^",
     "@statsify/util": "workspace:^",
-    "@swc/helpers": "^0.5.12",
+    "@swc/helpers": "^0.5.23",
     "@typegoose/typegoose": "^12.6.0",
     "class-transformer": "0.5.1",
     "class-validator": "^0.14.1",

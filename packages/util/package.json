@@ -12,6 +12,6 @@
     "fmt": "oxfmt"
   },
   "dependencies": {
-    "@swc/helpers": "^0.5.12"
+    "@swc/helpers": "^0.5.23"
   }
 }
