@@ -30,8 +30,8 @@ const getImage = (path: string) => loadImage(getAssetPath(path));
  * @returns the full path to the texture
  */
 export const getMinecraftTexturePath = (texturePath: string, pack = "default") => {
-  if (!hasPrivateAssets) pack = "default";
-  return join(getAssetPath(`minecraft-textures/${pack}/assets/minecraft/`), texturePath);
+  const effectivePack = !hasPrivateAssets ? "default" : pack;
+  return join(getAssetPath(`minecraft-textures/${effectivePack}/assets/minecraft/`), texturePath);
 };
 
 export const getAllGameIcons = async () => {

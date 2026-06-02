@@ -25,6 +25,5 @@ apps/support-bot/commands.json
 Cargo.lock
 /target
 /data
-compose.dev.yml
 *.node
 .env

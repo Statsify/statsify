@@ -123,11 +123,11 @@ export class GuildMemberUpdateEventListener extends AbstractEventListener<Gatewa
 
     const users = await this.userService.findAllPremium();
 
-    users.forEach((user) => {
+    for (const user of users) {
       if (user.tier in this.tiers) this.tiers[user.tier as PremiumTier].add(user.id);
       if (user.patreon) this.patreons.add(user.id);
       if (user.serverBooster) this.serverBoosters.add(user.id);
-    });
+    }
   }
 
   private findTier(memberId: string) {

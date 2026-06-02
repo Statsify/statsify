@@ -20,9 +20,9 @@ export const unflatten = <T>(instance: Flatten<T>): T => {
   const result: APIData = {};
   const obj = instance as APIData;
 
-  Object.keys(obj).forEach((k) => {
-    if (k.includes(".")) {
-      const path = k.split(".");
+  for (const key of Object.keys(obj)) {
+    if (key.includes(".")) {
+      const path = key.split(".");
       const x = path.pop();
 
       const body = path.reduce((cur, p) => {
@@ -30,11 +30,11 @@ export const unflatten = <T>(instance: Flatten<T>): T => {
         return cur[p];
       }, result);
 
-      body[x ?? ""] = obj[k];
+      body[x ?? ""] = obj[key];
     } else {
-      result[k] = obj[k];
+      result[key] = obj[key];
     }
-  });
+  }
 
   return result as T;
 };
