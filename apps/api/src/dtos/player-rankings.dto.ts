@@ -8,10 +8,10 @@
 
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum } from "class-validator";
-import { LeaderboardScanner, Player } from "@statsify/schemas";
+import { Player, getLeaderboardFields } from "@statsify/schemas";
 import { UuidDto } from "./uuid.dto.js";
 
-const fields = LeaderboardScanner.getLeaderboardFields(Player).map(([key]) => key);
+const fields = getLeaderboardFields(Player).map(([key]) => key);
 
 export class PlayerRankingsDto extends UuidDto {
   @ApiProperty({ enum: fields, type: [String] })

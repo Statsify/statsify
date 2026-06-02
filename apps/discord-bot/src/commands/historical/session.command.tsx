@@ -44,7 +44,7 @@ import {
   CommandContext,
   EmbedBuilder,
   Page,
-  PaginateService,
+  paginate,
   PlayerArgument,
   SubCommand,
   SubPage,
@@ -88,10 +88,7 @@ import type { HistoricalTimeData } from "#components";
 
 @Command({ description: "session stats" })
 export class SessionCommand {
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({ description: (t) => t("commands.session-arcade"), args: [PlayerArgument] })
   public arcade(context: CommandContext) {
@@ -478,6 +475,6 @@ export class SessionCommand {
       };
     });
 
-    return this.paginateService.paginate(context, pages);
+    return paginate(context, pages);
   }
 }

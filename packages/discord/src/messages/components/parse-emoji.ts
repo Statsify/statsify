@@ -15,7 +15,7 @@ export function parseEmoji(
 ): APIMessageComponentEmoji {
   const emoji = translateField(locale, emote);
   const animated = emoji.startsWith("<a:");
-  const name = emoji.replace(/<:|<a:|>/g, "");
+  const name = emoji.replaceAll(/<:|<a:|>/g, "");
   const id = name.split(":")[1];
 
   return { name: name.replace(id, ""), animated, id };

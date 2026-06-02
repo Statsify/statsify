@@ -9,14 +9,16 @@
 import type { ReturnModelType } from "@typegoose/typegoose";
 import type { VerifyCode } from "@statsify/schemas";
 
-const createCode = () => Math.floor(Math.random() * (9999 - 1000 + 1) + 1000).toString();
+const createCode = () =>
+  Math.floor(Math.random() * (9999 - 1000 + 1) + 1000).toString();
 
 export const generateCode = async (
-  verifyCodesModel: ReturnModelType<typeof VerifyCode>
+  verifyCodesModel: ReturnModelType<typeof VerifyCode>,
 ) => {
   let code = createCode();
 
-  // Make sure the code is unique
+  // Make sure the code is unique by serially checking if each generated code already exists
+  // oxlint-disable-next-line no-await-in-loop
   while (await verifyCodesModel.exists({ code }).lean().exec()) {
     code = createCode();
   }

@@ -6,15 +6,15 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { Canvas, type Image } from "skia-canvas";
 import { HttpService } from "@nestjs/axios";
+import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
 import { Skin } from "@statsify/schemas";
 import { catchError, lastValueFrom, map } from "rxjs";
+import { createCanvas, loadImage } from "@statsify/rendering";
 import { getMinecraftTexturePath } from "@statsify/assets";
-import { loadImage } from "@statsify/rendering";
 import { renderSkin } from "@statsify/skin-renderer";
 import type { ReturnModelType } from "@typegoose/typegoose";
 
@@ -30,7 +30,7 @@ export class SkinService {
       .then((skin) => this.resolveSkin(skin?.skinUrl, skin?.slim ?? false))
       .catch(() => this.resolveSkin(undefined, false));
 
-    const canvas = new Canvas(size, size);
+    const canvas = createCanvas(size, size);
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 

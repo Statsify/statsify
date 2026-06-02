@@ -7,10 +7,11 @@
  */
 
 import * as Sentry from "@sentry/node";
-import { Canvas, type CanvasRenderingContext2D } from "skia-canvas";
+import type { Canvas, CanvasRenderingContext2D } from "skia-canvas";
 import { Container } from "typedi";
 import { FontRenderer } from "#font";
 import { IntrinsicRenders, intrinsicRenders } from "./instrinsics.js";
+import { createCanvas } from "../canvas.js";
 import { createInstructions } from "./create-instructions.js";
 import { getPositionalDelta, getTotalSize } from "./util.js";
 import { noop } from "@statsify/util";
@@ -21,7 +22,7 @@ import type {
   Theme,
 } from "./types.js";
 
-const _render = (
+const renderRecursive = (
   ctx: CanvasRenderingContext2D,
   context: ComputedThemeContext,
   intrinsicElements: IntrinsicRenders,
@@ -80,7 +81,7 @@ const _render = (
 
   applyDelta(getPositionalDelta(instruction, side), side);
 
-  instruction.children.forEach((child) => {
+  for (const child of instruction.children) {
     const size = getTotalSize(child[side]);
 
     switch (child.style.align) {
@@ -91,12 +92,12 @@ const _render = (
         const centerDelta = (instruction[oppositeSide].size - oppositeSize) / 2;
 
         applyDelta(centerDelta, oppositeSide);
-        _render(ctx, context, intrinsicElements, child, x, y);
+        renderRecursive(ctx, context, intrinsicElements, child, x, y);
         applyDelta(-centerDelta, oppositeSide);
         break;
       }
       case "left":
-        _render(ctx, context, intrinsicElements, child, x, y);
+        renderRecursive(ctx, context, intrinsicElements, child, x, y);
         break;
       case "right": {
         const oppositeSide = side === "x" ? "y" : "x";
@@ -107,14 +108,14 @@ const _render = (
             child[oppositeSide].padding2);
 
         applyDelta(delta, oppositeSide);
-        _render(ctx, context, intrinsicElements, child, x, y);
+        renderRecursive(ctx, context, intrinsicElements, child, x, y);
         applyDelta(-delta, oppositeSide);
         break;
       }
     }
 
     applyDelta(size, side);
-  });
+  }
 };
 
 export function render(node: ElementNode, theme?: Theme): Canvas {
@@ -137,7 +138,7 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
     description: "Render JSX",
   });
 
-  const canvas = new Canvas(width, height);
+  const canvas = createCanvas(width, height);
   const ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = false;
 
@@ -150,7 +151,7 @@ export function render(node: ElementNode, theme?: Theme): Canvas {
 
   if (!context.renderer) context.renderer = Container.get(FontRenderer);
 
-  _render(
+  renderRecursive(
     ctx,
     context,
     { ...intrinsicRenders, ...theme?.elements },
