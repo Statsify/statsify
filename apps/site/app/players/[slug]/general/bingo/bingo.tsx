@@ -84,8 +84,8 @@ function completetionColor(completion: number) {
 
 function CategoryOverview({ category, icon }: { category: Category; icon: StaticImport }) {
   const player = usePlayer();
-  const [_, setCategory] = useUrlState<Category>("category", CategorySchema, "casual");
-  const [__, setDifficulty] = useUrlState<Difficulty>("difficulty", DifficultySchema, "easy");
+  const [, setCategory] = useUrlState<Category>("category", CategorySchema, "casual");
+  const [, setDifficulty] = useUrlState<Difficulty>("difficulty", DifficultySchema, "easy");
 
   const easyBingo = player.stats.general.bingo.easy[category];
   const hardBingo = player.stats.general.bingo.hard[category];

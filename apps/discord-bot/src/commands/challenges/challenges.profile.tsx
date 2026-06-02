@@ -56,7 +56,8 @@ interface NormalTableProps {
 }
 
 const NormalTable = ({ challenges, t, gameIcons }: NormalTableProps) => {
-  const { total: _, ...challengesByGame } = challenges;
+  const { total, ...challengesByGame } = challenges;
+  void total;
 
   const entries: [GameId, any][] = Object.entries(challengesByGame)
     .sort((a, b) => (b[1]?.total ?? 0) - (a[1]?.total ?? 0))
@@ -106,7 +107,7 @@ const GameTable = ({ gameChallenges, mode, t }: GameTableProps) => {
       .filter(([k]) => k !== "total")
       .sort((a, b) => b[1] - a[1])
       .map(([challenge, completions]) => {
-        const [_, field] = metadata.find(([k]) => k === challenge)!;
+        const [, field] = metadata.find(([k]) => k === challenge)!;
 
         const realName = field.leaderboard?.name ?? prettify(challenge);
         return [realName, t(completions)];
