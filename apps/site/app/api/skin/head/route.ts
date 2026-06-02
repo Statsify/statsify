@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { env } from "~/app/env";
 
 export async function GET(

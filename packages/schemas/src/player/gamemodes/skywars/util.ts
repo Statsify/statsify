@@ -461,7 +461,7 @@ export function getFormattedLevel(
   selectedEmblem = selectedEmblem?.replace("emblem_", "");
 
   let schemeKey: keyof typeof SCHEME_MAP;
-  let emblemKey: keyof typeof EMBLEM_MAP | undefined = undefined;
+  let emblemKey: keyof typeof EMBLEM_MAP;
 
   if (selectedScheme) {
     if (selectedScheme in SCHEME_MAP) {
@@ -485,7 +485,7 @@ export function getFormattedLevel(
     emblemKey = "default";
   }
 
-  const emblem = emblemKey ? EMBLEM_MAP[emblemKey] : undefined;
+  const emblem = EMBLEM_MAP[emblemKey];
   const scheme = SCHEME_MAP[schemeKey];
 
   return scheme(level, bold, underline, strikethrough, emblem);
