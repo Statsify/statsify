@@ -11,7 +11,7 @@ import {
   Command,
   CommandContext,
   Page,
-  PaginateService,
+  paginate,
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
@@ -26,10 +26,7 @@ import { render } from "@statsify/rendering";
 export class QuestsCommand {
   private readonly modes = QUEST_MODES;
 
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({
     description: (t) => t("commands.quests-overall"),
@@ -115,6 +112,6 @@ export class QuestsCommand {
         },
       }));
 
-    return this.paginateService.paginate(context, pages);
+    return paginate(context, pages);
   }
 }

@@ -225,7 +225,7 @@ export class ApiService {
   }
 
   public getUserBadge(tag: string) {
-    return this.requestImage("/user/badge", { tag }).catch(() => {});
+    return this.requestImage("/user/badge", { tag }).catch(() => undefined);
   }
 
   public updateUserBadge(tag: string, badge: Buffer) {

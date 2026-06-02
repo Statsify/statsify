@@ -290,7 +290,7 @@ async function loadConfig(): Promise<{ default: Config }> {
   
 }
 
-let cfg;
+let cfg: Config;
 
 export interface ConfigOptions<T extends keyof FlatConfig> {
   required?: boolean;

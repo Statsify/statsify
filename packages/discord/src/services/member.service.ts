@@ -15,10 +15,7 @@ export class MemberService {
   public constructor(private readonly rest: RestClient) {}
 
   public async addRole(guildId: string, userId: string, roleId: string) {
-    const response = await this.rest.put(
-      `/guilds/${guildId}/members/${userId}/roles/${roleId}`
-    );
-
+    const response = await this.rest.put(`/guilds/${guildId}/members/${userId}/roles/${roleId}`, {});
     return parseDiscordResponse(response);
   }
 

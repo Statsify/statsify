@@ -97,7 +97,7 @@ export class GuildMemberAddEventListener extends AbstractEventListener<GatewayDi
     await this.apiService.updateUser(member.user!.id, { serverMember: true });
 
     const embed = new EmbedBuilder()
-      .description(`<@${member.user!.id}> ${this.randomJoinMessage()}`)
+      .description(`<@${member.user!.id}> ${randomJoinMessage()}`)
       .image("attachment://welcome.png")
       .color(STATUS_COLORS.info);
 

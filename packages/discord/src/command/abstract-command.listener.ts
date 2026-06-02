@@ -287,7 +287,6 @@ export abstract class AbstractCommandListener {
       this.logger.error(err);
     });
 
-    // @ts-expect-error Discord supports sending a blank object as a response
     client.on("interaction", async (event) => {
       const interaction = new Interaction(this.rest, event.interaction, this.applicationId);
       const response = await this.onInteraction(interaction);

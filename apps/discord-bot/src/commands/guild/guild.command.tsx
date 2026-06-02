@@ -13,7 +13,7 @@ import {
   ErrorMessage,
   GuildArgument,
   IMessage,
-  PaginateService,
+  paginate,
   PlayerArgument,
   SubCommand,
 } from "@statsify/discord";
@@ -29,10 +29,7 @@ import { render } from "@statsify/rendering";
 
 @Command({ description: (t) => t("commands.guild") })
 export class GuildCommand extends GuildTopSubCommand {
-  public constructor(
-    protected readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {
+  public constructor(protected readonly apiService: ApiService,) {
     super(apiService);
   }
 
@@ -69,7 +66,7 @@ export class GuildCommand extends GuildTopSubCommand {
       gameIcons,
     };
 
-    return this.paginateService.paginate(context, [
+    return paginate(context, [
       {
         label: "Overall",
         generator: () =>

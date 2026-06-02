@@ -90,7 +90,7 @@ function getMetadataEntries(
         },
       ]);
 
-      return;
+      continue;
     }
 
     // Carry the metadata down to the children

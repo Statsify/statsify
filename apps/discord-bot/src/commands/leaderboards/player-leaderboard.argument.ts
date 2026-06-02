@@ -39,7 +39,7 @@ const fields = entries.reduce((acc, [prefix, value]) => {
   );
 
   const fuse = new Fuse(list, FUSE_OPTIONS);
-  acc[prefix] = [fuse, list];
+  acc[prefix as keyof PlayerStats] = [fuse, list];
 
   return acc;
 }, {} as Record<keyof PlayerStats, [Fuse<APIApplicationCommandOptionChoice>, APIApplicationCommandOptionChoice[]]>);

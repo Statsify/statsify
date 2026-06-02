@@ -269,7 +269,7 @@ if (import.meta.vitest) {
     });
 
     it("returns false for other types", () => {
-      expect(isObject()).toBe(false);
+      expect(isObject(undefined)).toBe(false);
       expect(isObject(1)).toBe(false);
       expect(isObject("hello")).toBe(false);
     });

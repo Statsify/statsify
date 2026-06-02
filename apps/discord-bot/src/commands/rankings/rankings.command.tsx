@@ -46,7 +46,7 @@ import {
   Command,
   CommandContext,
   ErrorMessage,
-  PaginateService,
+  scrollingPagination,
   PlayerArgument,
   SubCommand,
   type SubCommandOptions,
@@ -77,10 +77,7 @@ const options: Partial<SubCommandOptions> = {
   preview: "rankings.png",
 })
 export class RankingsCommand {
-  public constructor(
-    private readonly apiService: ApiService,
-    private readonly paginateService: PaginateService
-  ) {}
+  public constructor(private readonly apiService: ApiService) {}
 
   @SubCommand({
     ...options,
@@ -347,7 +344,7 @@ export class RankingsCommand {
       games.find((g) => g.key === game)?.formatted :
       undefined;
 
-    return this.paginateService.scrollingPagination(
+    return scrollingPagination(
       context,
       groups.map(
         (group) => () =>

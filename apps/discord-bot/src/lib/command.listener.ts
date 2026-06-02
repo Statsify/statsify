@@ -127,7 +127,7 @@ export class CommandListener extends AbstractCommandListener {
     const newCooldown = now + command.cooldown * 1000 * reduction;
 
     if (!cooldownForCommand) {
-      const cooldownForCommand = new Map([userId, newCooldown]);
+      const cooldownForCommand = new Map([[userId, newCooldown]]);
       this.cooldowns.set(command.name, cooldownForCommand);
 
       return;
