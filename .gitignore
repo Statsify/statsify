@@ -3,6 +3,7 @@ config.json
 dist
 node_modules
 .turbo
+'.turbo'
 package-lock.json
 out
 .yarn/install-state.gz
@@ -24,6 +25,5 @@ apps/support-bot/commands.json
 Cargo.lock
 /target
 /data
-compose.dev.yml
 *.node
 .env

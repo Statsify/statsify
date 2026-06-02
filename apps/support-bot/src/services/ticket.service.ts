@@ -88,7 +88,7 @@ export class TicketService {
     // Add hooks for all tickets in the database since they may have been created before the bot was started
     const tickets = await this.ticketModel.find().select({ channel: true }).lean().exec();
 
-    tickets.forEach((ticket) => {
+    for (const ticket of tickets) {
       listener.addHook(ticket.channel, (interaction) =>
         this.close(interaction.getChannelId()!, "channel", interaction.getUserId())
       );
@@ -97,7 +97,7 @@ export class TicketService {
         this.copyUsernameButtonId(ticket.channel),
         this.copyUsername.bind(this)
       );
-    });
+    }
   }
 
   public async create(guildId: string, user: APIUser, username: string, issue: string) {
@@ -202,12 +202,11 @@ export class TicketService {
     listener.removeHook(this.copyUsernameButtonId(ticket.channel));
 
     // A list of people who talked in the ticket
-    const participants: Set<string> = new Set();
-    participants.add(`<@${ticket.owner}>`);
+    const participants: Set<string> = new Set(`<@${ticket.owner}>`);
 
     const logs: string[] = [];
 
-    messages.forEach((m) => {
+    for (const m of messages) {
       if (!m.author.bot) participants.add(`<@${m.author.id}>`);
 
       const message = [
@@ -216,7 +215,7 @@ export class TicketService {
       ].join("\n");
 
       logs.push(message);
-    });
+    }
 
     const embed = new EmbedBuilder()
       .title("Ticket Resolved")

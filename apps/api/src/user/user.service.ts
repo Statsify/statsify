@@ -25,12 +25,12 @@ export class UserService {
   ) {}
 
   public get(idOrUuid: string): Promise<User | null> {
-    const [tag, type] = this.parseTag(idOrUuid);
+    const [tag, type] = parseTag(idOrUuid);
     return this.userModel.findOne().where(type).equals(tag).lean().exec();
   }
 
   public update(idOrUuid: string, user: Partial<User>): Promise<User | null> {
-    const [tag, type] = this.parseTag(idOrUuid);
+    const [tag, type] = parseTag(idOrUuid);
 
     return this.userModel
       .findOneAndUpdate({ [type]: tag }, { $set: flatten(user) })
@@ -39,7 +39,7 @@ export class UserService {
   }
 
   public async getBadge(idOrUuid: string): Promise<Buffer> {
-    const [tag, type] = this.parseTag(idOrUuid);
+    const [tag, type] = parseTag(idOrUuid);
     const user = await this.userModel.findOne().where(type).equals(tag).lean().exec();
 
     if (!user) throw new NotFoundException("user");
@@ -47,7 +47,7 @@ export class UserService {
     let badgePath: string | undefined = undefined;
 
     if (user.hasBadge && User.isGold(user)) {
-      badgePath = this.getBadgePath(user.id);
+      badgePath = getBadgePath(user.id);
     } else if (user.tier) {
       badgePath = getLogoPath(user);
     } else if (user.uuid) {
@@ -60,7 +60,7 @@ export class UserService {
   }
 
   public async updateBadge(idOrUuid: string, badge: Buffer): Promise<void> {
-    const [tag, type] = this.parseTag(idOrUuid);
+    const [tag, type] = parseTag(idOrUuid);
     const user = await this.userModel.findOne().where(type).equals(tag).lean().exec();
 
     if (!user) throw new NotFoundException("user");
@@ -72,11 +72,11 @@ export class UserService {
       .lean()
       .exec();
 
-    await writeFile(this.getBadgePath(user.id), badge);
+    await writeFile(getBadgePath(user.id), badge);
   }
 
   public async deleteBadge(idOrUuid: string): Promise<void> {
-    const [tag, type] = this.parseTag(idOrUuid);
+    const [tag, type] = parseTag(idOrUuid);
 
     const user = await this.userModel
       .findOneAndUpdate({ hasBadge: false })
@@ -87,13 +87,16 @@ export class UserService {
 
     if (!user) throw new NotFoundException("user");
 
-    await rm(this.getBadgePath(user.id));
+    await rm(getBadgePath(user.id));
   }
 
-  public async verifyUser(uuidOrCode: string, id: string): Promise<User | null> {
+  public async verifyUser(
+    uuidOrCode: string,
+    id: string,
+  ): Promise<User | null> {
     const uuid =
       uuidOrCode.length >= 32 ?
-        uuidOrCode.replace(/-/g, "") :
+        uuidOrCode.replaceAll("-", "") :
         await this.getUuidFromCode(uuidOrCode);
 
     // Unverify anyone previously linked to this UUID
@@ -116,13 +119,13 @@ export class UserService {
   }
 
   public async unverifyUser(idOrUuid: string): Promise<User | null> {
-    const [tag, type] = this.parseTag(idOrUuid);
+    const [tag, type] = parseTag(idOrUuid);
 
     const user = await this.userModel
       .findOneAndUpdate(
         { [type]: tag },
         { $unset: { uuid: "" }, unverifiedAt: Date.now() },
-        { new: true }
+        { new: true },
       )
       .lean()
       .exec();
@@ -142,15 +145,13 @@ export class UserService {
 
     return verifyCode.uuid;
   }
-
-  private parseTag(tag: string): [tag: string, type: string] {
-    tag = tag.replaceAll("-", "");
-    const type = tag.length >= 32 ? "uuid" : "id";
-
-    return [tag, type];
-  }
-
-  private getBadgePath(id: string) {
-    return `${mediaRoute}/badges/${id}.png`;
-  }
 }
+
+const parseTag = (tag: string): [tag: string, type: string] => {
+  const normalizedTag = tag.replaceAll("-", "");
+  const type = normalizedTag.length >= 32 ? "uuid" : "id";
+
+  return [normalizedTag, type];
+};
+
+const getBadgePath = (id: string) => `${mediaRoute}/badges/${id}.png`;

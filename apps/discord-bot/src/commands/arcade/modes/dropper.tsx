@@ -6,7 +6,7 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { type ArcadeModes, type Dropper, DropperMaps, MetadataScanner, type SubModeForMode } from "@statsify/schemas";
+import { type ArcadeModes, type Dropper, DropperMaps, type SubModeForMode, scanMetadata } from "@statsify/schemas";
 import { Historical, If, Table } from "#components";
 import { arrayGroup, formatRaceTime, formatTime } from "@statsify/util";
 import type { LocalizeFunction } from "@statsify/discord";
@@ -46,7 +46,7 @@ export const DropperTable = ({ stats, submode, t, time }: DropperTableProps) => 
 };
 
 // This will return the leaderboard names for each dropper map, we only want the map names
-const DROPPER_MAPS = MetadataScanner.scan(DropperMaps)
+const DROPPER_MAPS = scanMetadata(DropperMaps)
   .filter(([key]) => key.endsWith(".bestTime"))
   .map(([key, metadata]) => [
     key.replace(".bestTime", ""),

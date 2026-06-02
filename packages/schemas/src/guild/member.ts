@@ -62,14 +62,12 @@ export class GuildMember {
     this.weekly = 0;
     this.monthly = 0;
 
-    Object.entries(data.expHistory as Record<string, number>).forEach(
-      ([day, exp], index) => {
+    for (const [index, [day, exp]] of Object.entries(data.expHistory as Record<string, number>).entries()) {
         this.expHistory[index] = exp;
         this.expHistoryDays[index] = day;
         if (index === 0) this.daily = exp;
         this.weekly += exp;
-      }
-    );
+    }
   }
 
   public static isGuildMaster(member: GuildMember): boolean {
