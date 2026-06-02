@@ -45,13 +45,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint
-        run: pnpm lint:ci
+        run: pnpm lint:ci --affected
 
       - name: Typecheck
-        run: pnpm typecheck
+        run: pnpm typecheck --affected
 
       - name: Build
-        run: pnpm build
+        run: pnpm build --affected
 
       - name: Test
-        run: pnpm test:coverage
+        run: pnpm test:coverage --affected
