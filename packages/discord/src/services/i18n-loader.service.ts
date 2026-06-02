@@ -39,32 +39,32 @@ export class I18nLoaderService {
       initImmediate: false,
       defaultNS: "default",
       interpolation: {
-        format: this.format,
+        format,
         escapeValue: false,
       },
     });
   }
+}
 
-  private format(value: any, format?: string | undefined, lng?: string): string {
-    switch (format) {
-      case "number": {
-        const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
-        const digits = hasDecimals ? 2 : 0;
+function format(value: any, format?: string | undefined, lng?: string): string {
+  switch (format) {
+    case "number": {
+      const hasDecimals = value >= 1_000_000 || !Number.isInteger(+value);
+      const digits = hasDecimals ? 2 : 0;
 
-        const formatOptions = {
-          maximumFractionDigits: digits,
-          minimumFractionDigits: digits,
-        };
+      const formatOptions = {
+        maximumFractionDigits: digits,
+        minimumFractionDigits: digits,
+      };
 
-        if ((value as number) >= 1_000_000) {
-          const [number, suffix] = abbreviationNumber(value);
-          return `${Intl.NumberFormat(lng, formatOptions).format(number)}${suffix}`;
-        }
-
-        return Intl.NumberFormat(lng, formatOptions).format(value as number);
+      if ((value as number) >= 1_000_000) {
+        const [number, suffix] = abbreviationNumber(value);
+        return `${Intl.NumberFormat(lng, formatOptions).format(number)}${suffix}`;
       }
-    }
 
-    return value;
+      return Intl.NumberFormat(lng, formatOptions).format(value as number);
+    }
   }
+
+  return value;
 }

@@ -30,6 +30,7 @@ export class ServerCommand {
 
     getServerMappings().then((mappings) => {
       this.mappings = mappings;
+      return undefined;
     });
   }
 

@@ -16,13 +16,13 @@ import {
   GameQuests,
   GenericQuestInstance,
   METADATA_KEY,
-  MetadataScanner,
   OverallQuests,
   QuestModes,
   QuestTime,
   User,
   UserPalette,
   WeeklyQuests,
+  scanMetadata,
 } from "@statsify/schemas";
 import {
   Container,
@@ -49,7 +49,7 @@ function getQuestMetadata<T>(constructor: Constructor<T>) {
 
   const metadata = entries.map(([key, data]) => [
     key,
-    Object.fromEntries(MetadataScanner.scan(data.type.type)),
+    Object.fromEntries(scanMetadata(data.type.type)),
   ]);
 
   return Object.fromEntries(metadata);
