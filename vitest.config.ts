@@ -6,6 +6,10 @@
  * https://github.com/Statsify/statsify/blob/main/LICENSE
  */
 
-import { defineConfig } from "../../eslint.config.js";
+import { defineConfig } from "vitest/config";
 
-export default defineConfig({ tsconfigDirName: import.meta.dirname });
+export default defineConfig({
+  test: {
+    projects: ["./apps/*/vitest.config.ts", "./packages/*/vitest.config.ts"],
+  },
+});

@@ -7,7 +7,7 @@
  */
 
 import { HttpService } from "@nestjs/axios";
-import { type Image } from "skia-canvas";
+import type { Image } from "skia-canvas";
 import { InjectModel } from "@m8a/nestjs-typegoose";
 import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PlayerNotFoundException } from "@statsify/api-client";
